@@ -12,7 +12,7 @@
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "module": "lib/module/index.js",
-  "types": "lib/typescript/index.d.ts",
+  "types": "lib/typescript/src/index.d.ts",
   "files": [
     "src",
     "lib"
@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.7.7",
-    "@react-native-community/bob": "^0.7.0",
+    "@react-native-community/bob": "^0.7.1",
     "@types/react": "^16.9.17",
     "@types/shortid": "^0.0.29",
     "del-cli": "^3.0.0",

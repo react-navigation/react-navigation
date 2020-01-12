@@ -12,7 +12,7 @@
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "module": "lib/module/index.js",
-  "types": "lib/typescript/native-stack/src/index.d.ts",
+  "types": "lib/typescript/src/index.d.ts",
   "files": [
     "src",
     "lib"
@@ -28,7 +28,7 @@
     "@react-navigation/routers": "^5.0.0-alpha.22"
   },
   "devDependencies": {
-    "@react-native-community/bob": "^0.7.0",
+    "@react-native-community/bob": "^0.7.1",
     "del-cli": "^3.0.0",
     "react-native-screens": "^2.0.0-alpha.22",
     "typescript": "^3.7.4"
