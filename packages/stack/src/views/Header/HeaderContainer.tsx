@@ -10,7 +10,7 @@ import { EdgeInsets } from 'react-native-safe-area-context';
 
 import Header from './Header';
 import {
-  forStatic,
+  forSlide,
   forNoAnimation,
 } from '../../TransitionConfigs/HeaderStyleInterpolators';
 import {
@@ -100,7 +100,7 @@ export default function HeaderContainer({
           styleInterpolator:
             mode === 'float'
               ? isHeaderStatic
-                ? forStatic
+                ? forSlide
                 : styleInterpolator
               : forNoAnimation,
         };

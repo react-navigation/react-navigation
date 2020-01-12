@@ -147,7 +147,7 @@ export function forFade({
 /**
  * Simple translate animation to translate the header along with the sliding screen.
  */
-export function forStatic({
+export function forSlide({
   current,
   next,
   layouts: { screen },
