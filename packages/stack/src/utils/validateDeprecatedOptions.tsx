@@ -90,7 +90,7 @@ const validations: Validation[] = [
     updated: 'headerTitle: () => <SomeElement />',
     compat: o => ({ ...o, headerTitle: () => o.headerTitle }),
   },
-  ...['headerLeft', 'headerRight', 'headerBackground', 'backImage'].map(
+  ...['headerLeft', 'headerRight', 'headerBackground', 'headerBackImage'].map(
     (p): Validation => ({
       check: (o: any) => o[p] !== undefined && typeof o[p] !== 'function',
       deprecated: `${p}: <SomeElement />`,
