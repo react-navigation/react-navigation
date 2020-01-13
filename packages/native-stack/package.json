@@ -28,7 +28,7 @@
     "@react-navigation/routers": "^5.0.0-alpha.23"
   },
   "devDependencies": {
-    "@react-native-community/bob": "^0.7.1",
+    "@react-native-community/bob": "^0.8.0",
     "del-cli": "^3.0.0",
     "react-native-screens": "^2.0.0-alpha.22",
     "typescript": "^3.7.4"
@@ -45,7 +45,7 @@
     "targets": [
       "commonjs",
       "module",
-      "typescript"
+      ["typescript", {"project": "tsconfig.build.json"}]
     ]
   }
 }

@@ -32,9 +32,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.7.7",
-    "@react-native-community/bob": "^0.7.1",
+    "@react-native-community/bob": "^0.8.0",
     "@types/react": "^16.9.17",
     "@types/shortid": "^0.0.29",
+    "@types/use-subscription": "^1.0.0",
     "del-cli": "^3.0.0",
     "react": "~16.9.0",
     "react-native-testing-library": "^1.12.0",
@@ -50,7 +51,12 @@
     "targets": [
       "commonjs",
       "module",
-      "typescript"
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
     ]
   }
 }

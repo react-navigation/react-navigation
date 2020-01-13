@@ -2749,10 +2749,10 @@
   dependencies:
     "@types/node" ">= 8"
 
-"@react-native-community/bob@^0.7.1":
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/@react-native-community/bob/-/bob-0.7.1.tgz#481bf46704c5846ab5a9551c90d25a59bfd5bb0c"
-  integrity sha512-lTTRVfk1crR3HT6vxT+JFrhWATy/HVtbMxewkfWqaxiiYtnIc19y/WuguvSyOGpGgDniuGBU62fUVnlD8n7pWg==
+"@react-native-community/bob@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@react-native-community/bob/-/bob-0.8.0.tgz#8eb33d18393584b2769adde55a042337c5311c80"
+  integrity sha512-b4I3YY/3RrJtsBN7BBE56QGH2/jEoEKeEJqnkXiK4hbEEOnHl6/4mEQTZRM1OX8UUhQy9xHdmFfne+xjhSvs9g==
   dependencies:
     "@babel/core" "^7.7.7"
     chalk "^3.0.0"
@@ -3151,6 +3151,11 @@
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/untildify/-/untildify-3.0.0.tgz#cd3e6624e46ccf292d3823fb48fa90dda0deaec0"
   integrity sha512-FTktI3Y1h+gP9GTjTvXBP5v8xpH4RU6uS9POoBcGy4XkS2Np6LNtnP1eiNNth4S7P+qw2c/rugkwBasSHFzJEg==
+
+"@types/use-subscription@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/use-subscription/-/use-subscription-1.0.0.tgz#d146f8d834f70f50d48bd8246a481d096f11db19"
+  integrity sha512-0WWZ5GUDKMXUY/1zy4Ur5/zsC0s/B+JjXfHdkvx6JgDNZzZV5eW+KKhDqsTGyqX56uh99gwGwbsKbVwkcVIKQA==
 
 "@types/uuid-js@^0.7.1":
   version "0.7.2"
