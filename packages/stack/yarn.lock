@@ -1369,10 +1369,10 @@
     query-string "^6.4.2"
     react-is "^16.8.6"
 
-"@react-navigation/core@^5.0.0-alpha.32":
-  version "5.0.0-alpha.32"
-  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-5.0.0-alpha.32.tgz#b7c4f68e405080062df95936998be8e44ceb3e2a"
-  integrity sha512-HCPNXPoTzE8IOsexrjqr14F/w1B5C9ZoTdeokKphK7oxvMrt8ceDkb1AR7KmNT2zEXbzt3FZ9LW0V+Y9sGY2LA==
+"@react-navigation/core@^5.0.0-alpha.33":
+  version "5.0.0-alpha.33"
+  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-5.0.0-alpha.33.tgz#940f55fd29cd6bb81b7be84e86a88a0662df645d"
+  integrity sha512-lVWKbK6XR9aPCO/972qxZeAkPO1xvDsSGiAmrnQXM74ihnkXLnAqtSZaqP9JfXa/NrgqIi+LSKpocPpcy8/hiA==
   dependencies:
     escape-string-regexp "^2.0.0"
     query-string "^6.9.0"
@@ -1388,20 +1388,20 @@
     react-native-safe-area-view "^0.14.1"
     react-native-screens "^1.0.0 || ^1.0.0-alpha"
 
-"@react-navigation/routers@^5.0.0-alpha.22":
-  version "5.0.0-alpha.22"
-  resolved "https://registry.yarnpkg.com/@react-navigation/routers/-/routers-5.0.0-alpha.22.tgz#db2086012ad9660da95df7b34fcb23b89f4a7429"
-  integrity sha512-GaTDJk7PeSbdStUfODb4VSDkwPUNtuZRYToTqwbI7WvY1yuRJbYZS2Jkrk/waOdf13U0rt7xDcdpmfGUNuZ2DQ==
+"@react-navigation/routers@^5.0.0-alpha.23":
+  version "5.0.0-alpha.23"
+  resolved "https://registry.yarnpkg.com/@react-navigation/routers/-/routers-5.0.0-alpha.23.tgz#a2ffda30d2000f074419bd2722edbfab1adaeb20"
+  integrity sha512-ea9nWS/BYtI6fAitLMobg60VsWa89KuL5QIX3A2ExivofG3fU1P1Ic8MIhicRFfcSV/36rmF5ilCKYesHHnTrA==
   dependencies:
-    "@react-navigation/core" "^5.0.0-alpha.32"
+    "@react-navigation/core" "^5.0.0-alpha.33"
     shortid "^2.2.15"
 
-"@react-navigation/stack@^5.0.0-alpha.58":
-  version "5.0.0-alpha.58"
-  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-5.0.0-alpha.58.tgz#4c2dbd2356ea7c5cc6a934a79ef9c353bdac9b55"
-  integrity sha512-oHwG5D6dZLoB7jZBxlKuIzXaNcFTwnyL948UNbQaNBBLj1umW3B9Wn3ekoRUhBY40P/wcCQkGnUARTzH1c1dhw==
+"@react-navigation/stack@^5.0.0-alpha.59":
+  version "5.0.0-alpha.59"
+  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-5.0.0-alpha.59.tgz#fed7e2ed51aea2c607366dda7c82ffc80dd44797"
+  integrity sha512-10xUKYRh79nW7Aea9VRAfdsMf88yajKYDOmq7ZPFZvqe2Ugyj75fzLtiAPoYoKRNcn9WuV/7lQWAAOP4luZcjg==
   dependencies:
-    "@react-navigation/routers" "^5.0.0-alpha.22"
+    "@react-navigation/routers" "^5.0.0-alpha.23"
     color "^3.1.2"
     react-native-iphone-x-helper "^1.2.1"
 
