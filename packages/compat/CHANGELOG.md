@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.25](https://github.com/react-navigation/navigation-ex/tree/master/packages/compat/compare/@react-navigation/compat@5.0.0-alpha.24...@react-navigation/compat@5.0.0-alpha.25) (2020-01-13)
+
+
+### Bug Fixes
+
+* make sure paths aren't aliased when building definitions ([65a5dac](https://github.com/react-navigation/navigation-ex/tree/master/packages/compat/commit/65a5dac2bf887f4ba081ab15bd4c9870bb15697f)), closes [#265](https://github.com/react-navigation/navigation-ex/tree/master/packages/compat/issues/265)
+
+
+
+
+
 # [5.0.0-alpha.24](https://github.com/react-navigation/navigation-ex/tree/master/packages/compat/compare/@react-navigation/compat@5.0.0-alpha.23...@react-navigation/compat@5.0.0-alpha.24) (2020-01-13)
 
 **Note:** Version bump only for package @react-navigation/compat

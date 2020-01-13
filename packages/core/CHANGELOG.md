@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.34](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.33...@react-navigation/core@5.0.0-alpha.34) (2020-01-13)
+
+
+### Bug Fixes
+
+* make sure paths aren't aliased when building definitions ([65a5dac](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/65a5dac2bf887f4ba081ab15bd4c9870bb15697f)), closes [#265](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/issues/265)
+
+
+
+
+
 # [5.0.0-alpha.33](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.32...@react-navigation/core@5.0.0-alpha.33) (2020-01-13)
 
 **Note:** Version bump only for package @react-navigation/core

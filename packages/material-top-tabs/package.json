@@ -11,7 +11,7 @@
     "material",
     "tab"
   ],
-  "version": "5.0.0-alpha.31",
+  "version": "5.0.0-alpha.32",
   "license": "MIT",
   "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs",
   "main": "lib/commonjs/index.js",
@@ -30,7 +30,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/routers": "^5.0.0-alpha.23",
+    "@react-navigation/routers": "^5.0.0-alpha.24",
     "color": "^3.1.2"
   },
   "devDependencies": {
@@ -59,7 +59,12 @@
     "targets": [
       "commonjs",
       "module",
-      ["typescript", {"project": "tsconfig.build.json"}]
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
     ]
   }
 }
