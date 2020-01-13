@@ -6,7 +6,7 @@
     "react-native",
     "react-navigation"
   ],
-  "version": "5.0.0-alpha.33",
+  "version": "5.0.0-alpha.34",
   "license": "MIT",
   "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/core",
   "main": "lib/commonjs/index.js",

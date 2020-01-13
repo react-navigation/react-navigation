@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.38](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.37...@react-navigation/drawer@5.0.0-alpha.38) (2020-01-13)
+
+
+### Bug Fixes
+
+* make sure paths aren't aliased when building definitions ([65a5dac](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/65a5dac2bf887f4ba081ab15bd4c9870bb15697f)), closes [#265](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/issues/265)
+
+
+
+
+
 # [5.0.0-alpha.37](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.36...@react-navigation/drawer@5.0.0-alpha.37) (2020-01-13)
 
 **Note:** Version bump only for package @react-navigation/drawer
