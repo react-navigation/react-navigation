@@ -2,10 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@react-navigation/*": [
-        "./packages/*/src"
-      ],
-      "use-subscription": ["./typings/use-subscription.d"]
+      "@react-navigation/*": ["./packages/*/src"]
     },
     "composite": true,
     "allowUnreachableCode": false,
