@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.23](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.22...@react-navigation/routers@5.0.0-alpha.23) (2020-01-13)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+
+
+
+
 # [5.0.0-alpha.22](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.20...@react-navigation/routers@5.0.0-alpha.22) (2020-01-09)
 
 
