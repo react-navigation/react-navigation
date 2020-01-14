@@ -391,6 +391,8 @@ it('fires custom events', () => {
   expect(thirdCallback).toBeCalledTimes(1);
   expect(thirdCallback.mock.calls[0][0].type).toBe('someSuperCoolEvent');
   expect(thirdCallback.mock.calls[0][0].data).toBe(42);
+  expect(thirdCallback.mock.calls[0][0].defaultPrevented).toBe(undefined);
+  expect(thirdCallback.mock.calls[0][0].preventDefault).toBe(undefined);
 
   act(() => {
     ref.current.navigation.emit({ type: eventName });
@@ -399,4 +401,63 @@ it('fires custom events', () => {
   expect(firstCallback).toBeCalledTimes(1);
   expect(secondCallback).toBeCalledTimes(1);
   expect(thirdCallback).toBeCalledTimes(2);
+});
+
+it('has option to prevent default', () => {
+  expect.assertions(5);
+
+  const eventName = 'someSuperCoolEvent';
+
+  const TestNavigator = React.forwardRef((props: any, ref: any): any => {
+    const { state, navigation, descriptors } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    React.useImperativeHandle(ref, () => ({ navigation, state }), [
+      navigation,
+      state,
+    ]);
+
+    return state.routes.map(route => descriptors[route.key].render());
+  });
+
+  const callback = (e: any) => {
+    expect(e.type).toBe('someSuperCoolEvent');
+    expect(e.data).toBe(42);
+    expect(e.defaultPrevented).toBe(false);
+    expect(e.preventDefault).not.toBe(undefined);
+
+    e.preventDefault();
+
+    expect(e.defaultPrevented).toBe(true);
+  };
+
+  const Test = ({ navigation }: any) => {
+    React.useEffect(() => navigation.addListener(eventName, callback), [
+      navigation,
+    ]);
+
+    return null;
+  };
+
+  const ref = React.createRef<any>();
+
+  const element = (
+    <NavigationContainer>
+      <TestNavigator ref={ref}>
+        <Screen name="first" component={Test} />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  render(element);
+
+  act(() => {
+    ref.current.navigation.emit({
+      type: eventName,
+      data: 42,
+      canPreventDefault: true,
+    });
+  });
 });

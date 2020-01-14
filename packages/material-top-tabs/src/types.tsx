@@ -13,19 +13,19 @@ export type MaterialTopTabNavigationEventMap = {
   /**
    * Event which fires on tapping on the tab in the tab bar.
    */
-  tabPress: undefined;
+  tabPress: { data: undefined; canPreventDefault: true };
   /**
    * Event which fires on long press on the tab in the tab bar.
    */
-  tabLongPress: undefined;
+  tabLongPress: { data: undefined };
   /**
    * Event which fires when a swipe gesture starts, i.e. finger touches the screen.
    */
-  swipeStart: undefined;
+  swipeStart: { data: undefined };
   /**
    * Event which fires when a swipe gesture ends, i.e. finger leaves the screen.
    */
-  swipeEnd: undefined;
+  swipeEnd: { data: undefined };
 };
 
 export type MaterialTopTabNavigationHelpers = NavigationHelpers<

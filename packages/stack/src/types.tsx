@@ -20,11 +20,11 @@ export type StackNavigationEventMap = {
   /**
    * Event which fires when a transition animation starts.
    */
-  transitionStart: { closing: boolean };
+  transitionStart: { data: { closing: boolean } };
   /**
    * Event which fires when a transition animation ends.
    */
-  transitionEnd: { closing: boolean };
+  transitionEnd: { data: { closing: boolean } };
 };
 
 export type StackNavigationHelpers = NavigationHelpers<

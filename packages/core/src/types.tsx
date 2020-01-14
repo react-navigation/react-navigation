@@ -207,31 +207,51 @@ export type Router<
 
 export type ParamListBase = Record<string, object | undefined>;
 
-export type EventMapBase = {
-  focus: undefined;
-  blur: undefined;
+export type EventMapBase = Record<
+  string,
+  { data?: any; canPreventDefault?: boolean }
+>;
+
+export type EventMapCore = {
+  focus: { data: undefined };
+  blur: { data: undefined };
 };
 
-export type EventArg<EventName extends string, Data = undefined> = {
+export type EventArg<
+  EventName extends string,
+  CanPreventDefault extends boolean | undefined = false,
+  Data = undefined
+> = {
   /**
    * Type of the event (e.g. `focus`, `blur`)
    */
   readonly type: EventName;
-  /**
-   * Whether `event.preventDefault()` was called on this event object.
-   */
-  readonly defaultPrevented: boolean;
-  /**
-   * Prevent the default action which happens on this event.
-   */
-  preventDefault(): void;
-} & (Data extends undefined ? {} : { readonly data: Data });
+} & (CanPreventDefault extends true
+  ? {
+      /**
+       * Whether `event.preventDefault()` was called on this event object.
+       */
+      readonly defaultPrevented: boolean;
+      /**
+       * Prevent the default action which happens on this event.
+       */
+      preventDefault(): void;
+    }
+  : {}) &
+  (Data extends undefined ? {} : { readonly data: Data });
 
-export type EventListenerCallback<EventName extends string, Data> = (
-  e: EventArg<EventName, Data>
+export type EventListenerCallback<
+  EventMap extends EventMapBase,
+  EventName extends keyof EventMap
+> = (
+  e: EventArg<
+    Extract<EventName, string>,
+    EventMap[EventName]['canPreventDefault'],
+    EventMap[EventName]['data']
+  >
 ) => void;
 
-export type EventConsumer<EventMap extends Record<string, any>> = {
+export type EventConsumer<EventMap extends EventMapBase> = {
   /**
    * Subscribe to events from the parent navigator.
    *
@@ -240,15 +260,15 @@ export type EventConsumer<EventMap extends Record<string, any>> = {
    */
   addListener<EventName extends Extract<keyof EventMap, string>>(
     type: EventName,
-    callback: EventListenerCallback<EventName, EventMap[EventName]>
+    callback: EventListenerCallback<EventMap, EventName>
   ): () => void;
   removeListener<EventName extends Extract<keyof EventMap, string>>(
     type: EventName,
-    callback: EventListenerCallback<EventName, EventMap[EventName]>
+    callback: EventListenerCallback<EventMap, EventName>
   ): void;
 };
 
-export type EventEmitter<EventMap extends Record<string, any>> = {
+export type EventEmitter<EventMap extends EventMapBase> = {
   /**
    * Emit an event to child screens.
    *
@@ -257,14 +277,19 @@ export type EventEmitter<EventMap extends Record<string, any>> = {
    * @param [options.target] Key of the target route which should receive the event.
    * If not specified, all routes receive the event.
    */
-  emit<EventName extends Extract<keyof EventMap, string>>(
+  emit<
+    EventName extends Extract<keyof EventMap, string>,
+    CanPreventDefault extends EventMap[EventName]['canPreventDefault'],
+    Data extends EventMap[EventName]['data']
+  >(
     options: {
       type: EventName;
       target?: string;
-    } & (EventMap[EventName] extends undefined
-      ? {}
-      : { data: EventMap[EventName] })
-  ): EventArg<EventName, EventMap[EventName]>;
+    } & (CanPreventDefault extends true
+      ? { canPreventDefault: CanPreventDefault }
+      : {}) &
+      (Data extends undefined ? {} : { data: Data })
+  ): EventArg<EventName, CanPreventDefault, Data>;
 };
 
 export class PrivateValueStore<A, B, C> {
@@ -368,7 +393,7 @@ type NavigationHelpersCommon<
 
 export type NavigationHelpers<
   ParamList extends ParamListBase,
-  EventMap extends Record<string, any> = {}
+  EventMap extends EventMapBase = {}
 > = NavigationHelpersCommon<ParamList> &
   EventEmitter<EventMap> & {
     /**
@@ -408,7 +433,7 @@ export type NavigationProp<
   RouteName extends keyof ParamList = string,
   State extends NavigationState = NavigationState,
   ScreenOptions extends object = {},
-  EventMap extends Record<string, any> = {}
+  EventMap extends EventMapBase = {}
 > = NavigationHelpersCommon<ParamList, State> & {
   /**
    * Update the param object for the route.
@@ -439,7 +464,7 @@ export type NavigationProp<
    * Note that this method doesn't re-render screen when the result changes. So don't use it in `render`.
    */
   dangerouslyGetState(): State;
-} & EventConsumer<EventMap & EventMapBase> &
+} & EventConsumer<EventMap & EventMapCore> &
   PrivateValueStore<ParamList, RouteName, EventMap>;
 
 export type RouteProp<
@@ -493,7 +518,7 @@ export type Descriptor<
   RouteName extends keyof ParamList = string,
   State extends NavigationState = NavigationState,
   ScreenOptions extends object = {},
-  EventMap extends Record<string, any> = {}
+  EventMap extends EventMapBase = {}
 > = {
   /**
    * Render the component associated with this route.

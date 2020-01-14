@@ -49,6 +49,7 @@ export default function TabBarTop(props: MaterialTopTabBarProps) {
         const event = navigation.emit({
           type: 'tabPress',
           target: route.key,
+          canPreventDefault: true,
         });
 
         if (event.defaultPrevented) {
