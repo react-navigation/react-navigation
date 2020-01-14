@@ -269,15 +269,18 @@ export type EventEmitter<EventMap extends Record<string, any>> = {
 
 export class PrivateValueStore<A, B, C> {
   /**
-   * TypeScript requires a type to be actually used to be able to infer it.
-   * This is a hacky way of storing type in a property without surfacing it in intellisense.
+   * UGLY HACK! DO NOT USE THE TYPE!!!
+   *
+   * TypeScript requires a type to be used to be able to infer it.
+   * The type should exist as its own without any operations such as union.
+   * So we need to figure out a way to store this type in a property.
+   * The problem with a normal property is that it shows up in intelliSense.
+   * Adding private keyword works, but the annotation is stripped away in declaration.
+   * Turns out if we use an empty string, it doesn't show up in intelliSense.
+   *
+   * @protected
    */
-  // @ts-ignore
-  private __private_value_type_a?: A;
-  // @ts-ignore
-  private __private_value_type_b?: B;
-  // @ts-ignore
-  private __private_value_type_c?: C;
+  ''?: { a: A; b: B; c: C };
 }
 
 type NavigationHelpersCommon<
