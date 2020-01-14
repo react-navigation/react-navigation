@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.35](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.34...@react-navigation/core@5.0.0-alpha.35) (2020-01-14)
+
+
+### Bug Fixes
+
+* fix intellisense for CompositeNavigationProp ([a912323](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/a912323c1dfa0c3564ca82c448a86f85d1658f7f))
+
+
+
+
+
 # [5.0.0-alpha.34](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.33...@react-navigation/core@5.0.0-alpha.34) (2020-01-13)
 
 
