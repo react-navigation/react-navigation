@@ -302,10 +302,8 @@ export class PrivateValueStore<A, B, C> {
    * The problem with a normal property is that it shows up in intelliSense.
    * Adding private keyword works, but the annotation is stripped away in declaration.
    * Turns out if we use an empty string, it doesn't show up in intelliSense.
-   *
-   * @protected
    */
-  ''?: { a: A; b: B; c: C };
+  protected ''?: { a: A; b: B; c: C };
 }
 
 type NavigationHelpersCommon<
