@@ -98,6 +98,12 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
   }
 
   @Override
+  protected void removeAllScreens() {
+    mDismissed.clear();
+    super.removeAllScreens();
+  }
+
+  @Override
   protected boolean hasScreen(ScreenFragment screenFragment) {
     return super.hasScreen(screenFragment) && !mDismissed.contains(screenFragment);
   }

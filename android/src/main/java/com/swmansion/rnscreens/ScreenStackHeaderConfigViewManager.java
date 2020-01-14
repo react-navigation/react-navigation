@@ -33,6 +33,11 @@ public class ScreenStackHeaderConfigViewManager extends ViewGroupManager<ScreenS
   }
 
   @Override
+  public void removeAllViews(ScreenStackHeaderConfig parent) {
+    parent.removeAllConfigSubviews();
+  }
+
+  @Override
   public void removeViewAt(ScreenStackHeaderConfig parent, int index) {
     parent.removeConfigSubview(index);
   }

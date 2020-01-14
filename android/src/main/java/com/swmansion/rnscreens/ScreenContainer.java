@@ -105,6 +105,14 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
     markUpdated();
   }
 
+  protected void removeAllScreens() {
+    for (int i = 0, size = mScreenFragments.size(); i < size; i++) {
+      mScreenFragments.get(i).getScreen().setContainer(null);
+    }
+    mScreenFragments.clear();
+    markUpdated();
+  }
+
   @Override
   public void startViewTransition(View view) {
     super.startViewTransition(view);
