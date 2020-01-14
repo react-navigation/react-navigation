@@ -205,6 +205,7 @@ export default function BottomTabBar({
                 const event = navigation.emit({
                   type: 'tabPress',
                   target: route.key,
+                  canPreventDefault: true,
                 });
 
                 if (!focused && !event.defaultPrevented) {

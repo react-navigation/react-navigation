@@ -66,7 +66,7 @@ export default function useScrollToTop(
       // in addition, there are multiple tab implementations
       // @ts-ignore
       'tabPress',
-      (e: EventArg<'tabPress'>) => {
+      (e: EventArg<'tabPress', true>) => {
         // We should scroll to top only when the screen is focused
         const isFocused = navigation.isFocused();
 

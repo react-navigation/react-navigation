@@ -173,11 +173,11 @@ export type DrawerNavigationEventMap = {
   /**
    * Event which fires when the drawer opens.
    */
-  drawerOpen: undefined;
+  drawerOpen: { data: undefined };
   /**
    * Event which fires when the drawer closes.
    */
-  drawerClose: undefined;
+  drawerClose: { data: undefined };
 };
 
 export type DrawerNavigationHelpers = NavigationHelpers<

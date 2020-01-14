@@ -17,11 +17,11 @@ export type BottomTabNavigationEventMap = {
   /**
    * Event which fires on tapping on the tab in the tab bar.
    */
-  tabPress: undefined;
+  tabPress: { data: undefined; canPreventDefault: true };
   /**
    * Event which fires on long press on the tab in the tab bar.
    */
-  tabLongPress: undefined;
+  tabLongPress: { data: undefined };
 };
 
 export type LabelPosition = 'beside-icon' | 'below-icon';

@@ -11,7 +11,7 @@ export type MaterialBottomTabNavigationEventMap = {
   /**
    * Event which fires on tapping on the tab in the tab bar.
    */
-  tabPress: undefined;
+  tabPress: { data: undefined };
 };
 
 export type MaterialBottomTabNavigationHelpers = NavigationHelpers<

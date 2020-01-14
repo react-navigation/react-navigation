@@ -43,7 +43,17 @@ export default function useEventEmitter(): NavigationEventEmitter {
   }, []);
 
   const emit = React.useCallback(
-    ({ type, data, target }: { type: string; data?: any; target?: string }) => {
+    ({
+      type,
+      data,
+      target,
+      canPreventDefault,
+    }: {
+      type: string;
+      data?: any;
+      target?: string;
+      canPreventDefault?: boolean;
+    }) => {
       const items = listeners.current[type] || {};
 
       // Copy the current list of callbacks in case they are mutated during execution
@@ -52,26 +62,40 @@ export default function useEventEmitter(): NavigationEventEmitter {
           ? items[target] && items[target].slice()
           : ([] as Listeners).concat(...Object.keys(items).map(t => items[t]));
 
-      let defaultPrevented = false;
-
-      const event: EventArg<any, any> = {
+      const event: EventArg<any, any, any> = {
         get type() {
           return type;
         },
-        get data() {
-          return data;
-        },
-        get defaultPrevented() {
-          return defaultPrevented;
-        },
-        preventDefault() {
-          defaultPrevented = true;
-        },
       };
+
+      if (data !== undefined) {
+        Object.defineProperty(event, 'data', {
+          get() {
+            return data;
+          },
+        });
+      }
+
+      if (canPreventDefault) {
+        let defaultPrevented = false;
+
+        Object.defineProperties(event, {
+          defaultPrevented: {
+            get() {
+              return defaultPrevented;
+            },
+          },
+          preventDefault: {
+            value() {
+              defaultPrevented = true;
+            },
+          },
+        });
+      }
 
       callbacks?.forEach(cb => cb(event));
 
-      return event;
+      return event as any;
     },
     []
   );
