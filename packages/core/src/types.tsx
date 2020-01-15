@@ -277,19 +277,21 @@ export type EventEmitter<EventMap extends EventMapBase> = {
    * @param [options.target] Key of the target route which should receive the event.
    * If not specified, all routes receive the event.
    */
-  emit<
-    EventName extends Extract<keyof EventMap, string>,
-    CanPreventDefault extends EventMap[EventName]['canPreventDefault'],
-    Data extends EventMap[EventName]['data']
-  >(
+  emit<EventName extends Extract<keyof EventMap, string>>(
     options: {
       type: EventName;
       target?: string;
-    } & (CanPreventDefault extends true
-      ? { canPreventDefault: CanPreventDefault }
+    } & (EventMap[EventName]['canPreventDefault'] extends true
+      ? { canPreventDefault: true }
       : {}) &
-      (Data extends undefined ? {} : { data: Data })
-  ): EventArg<EventName, CanPreventDefault, Data>;
+      (EventMap[EventName]['data'] extends undefined
+        ? {}
+        : { data: EventMap[EventName]['data'] })
+  ): EventArg<
+    EventName,
+    EventMap[EventName]['canPreventDefault'],
+    EventMap[EventName]['data']
+  >;
 };
 
 export class PrivateValueStore<A, B, C> {
