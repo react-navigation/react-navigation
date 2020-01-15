@@ -4,10 +4,11 @@ import android.view.View;
 
 import com.facebook.react.bridge.JSApplicationCausedNativeException;
 import com.facebook.react.module.annotations.ReactModule;
-import com.facebook.react.uimanager.PixelUtil;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.ViewGroupManager;
 import com.facebook.react.uimanager.annotations.ReactProp;
+
+import javax.annotation.Nonnull;
 
 @ReactModule(name = ScreenStackHeaderConfigViewManager.REACT_CLASS)
 public class ScreenStackHeaderConfigViewManager extends ViewGroupManager<ScreenStackHeaderConfig> {
@@ -30,6 +31,11 @@ public class ScreenStackHeaderConfigViewManager extends ViewGroupManager<ScreenS
       throw new JSApplicationCausedNativeException("Config children should be of type " + ScreenStackHeaderSubviewManager.REACT_CLASS);
     }
     parent.addConfigSubview((ScreenStackHeaderSubview) child, index);
+  }
+
+  @Override
+  public void onDropViewInstance(@Nonnull ScreenStackHeaderConfig view) {
+    view.destroy();
   }
 
   @Override

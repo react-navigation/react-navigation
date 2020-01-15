@@ -33,6 +33,7 @@ public class ScreenStackHeaderConfig extends ViewGroup {
   private boolean mGestureEnabled = true;
   private boolean mIsBackButtonHidden;
   private boolean mIsShadowHidden;
+  private boolean mDestroyed;
   private int mTintColor;
   private final Toolbar mToolbar;
 
@@ -61,6 +62,10 @@ public class ScreenStackHeaderConfig extends ViewGroup {
   @Override
   protected void onLayout(boolean changed, int l, int t, int r, int b) {
     // no-op
+  }
+
+  public void destroy() {
+    mDestroyed = true;
   }
 
   @Override
@@ -116,7 +121,7 @@ public class ScreenStackHeaderConfig extends ViewGroup {
     boolean isRoot = stack == null ? true : stack.getRootScreen() == parent;
     boolean isTop = stack == null ? true : stack.getTopScreen() == parent;
 
-    if (!mIsAttachedToWindow || !isTop) {
+    if (!mIsAttachedToWindow || !isTop || mDestroyed) {
       return;
     }
 
@@ -225,7 +230,7 @@ public class ScreenStackHeaderConfig extends ViewGroup {
   }
 
   private void maybeUpdate() {
-    if (getParent() != null) {
+    if (getParent() != null && !mDestroyed) {
       onUpdate();
     }
   }
