@@ -22,7 +22,7 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
   private final FragmentManager.OnBackStackChangedListener mBackStackListener = new FragmentManager.OnBackStackChangedListener() {
     @Override
     public void onBackStackChanged() {
-      if (getFragmentManager().getBackStackEntryCount() == 0) {
+      if (mFragmentManager.getBackStackEntryCount() == 0) {
         // when back stack entry count hits 0 it means the user's navigated back using hw back
         // button. As the "fake" transaction we installed on the back stack does nothing we need
         // to handle back navigation on our own.
@@ -70,24 +70,22 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
 
   @Override
   protected void onDetachedFromWindow() {
-    super.onDetachedFromWindow();
-    FragmentManager fm = getFragmentManager();
-    fm.removeOnBackStackChangedListener(mBackStackListener);
-    getFragmentManager().unregisterFragmentLifecycleCallbacks(mLifecycleCallbacks);
-    if (!fm.isStateSaved()) {
+    mFragmentManager.removeOnBackStackChangedListener(mBackStackListener);
+    mFragmentManager.unregisterFragmentLifecycleCallbacks(mLifecycleCallbacks);
+    if (!mFragmentManager.isStateSaved()) {
       // state save means that the container where fragment manager was installed has been unmounted.
       // This could happen as a result of dismissing nested stack. In such a case we don't need to
       // reset back stack as it'd result in a crash caused by the fact the fragment manager is no
       // longer attached.
-      fm.popBackStack(BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      mFragmentManager.popBackStack(BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
-
+    super.onDetachedFromWindow();
   }
 
   @Override
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
-    getFragmentManager().registerFragmentLifecycleCallbacks(mLifecycleCallbacks, false);
+    mFragmentManager.registerFragmentLifecycleCallbacks(mLifecycleCallbacks, false);
   }
 
   @Override
@@ -230,8 +228,8 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
       // notified when it gets resumed so that we can install the handler.
       return;
     }
-    getFragmentManager().removeOnBackStackChangedListener(mBackStackListener);
-    getFragmentManager().popBackStack(BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    mFragmentManager.removeOnBackStackChangedListener(mBackStackListener);
+    mFragmentManager.popBackStack(BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     ScreenStackFragment firstScreen = null;
     for (int i = 0, size = mStack.size(); i < size; i++) {
       ScreenStackFragment screen = mStack.get(i);
@@ -241,14 +239,14 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
       }
     }
     if (topScreen != firstScreen && topScreen.isDismissable()) {
-      getFragmentManager()
+      mFragmentManager
               .beginTransaction()
               .hide(topScreen)
               .show(topScreen)
               .addToBackStack(BACK_STACK_TAG)
               .setPrimaryNavigationFragment(topScreen)
               .commitAllowingStateLoss();
-      getFragmentManager().addOnBackStackChangedListener(mBackStackListener);
+      mFragmentManager.addOnBackStackChangedListener(mBackStackListener);
     }
   }
 }
