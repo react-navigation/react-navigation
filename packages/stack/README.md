@@ -26,7 +26,7 @@ npm install react-navigation-stack @react-native-community/masked-view
 import { createStackNavigator } from 'react-navigation-stack';
 
 export default createStackNavigator({
-  Inbox: InboxScreen
+  Inbox: InboxScreen,
   Drafts: DraftsScreen,
 }, {
   initialRouteName: 'Inbox',
