@@ -12,7 +12,7 @@ type RouteConfig = {
   match: RegExp;
   pattern: string;
   routeNames: string[];
-  parse: Record<string, (value: string) => any> | undefined;
+  parse: ParseConfig | undefined;
 };
 
 type ResultState = PartialState<NavigationState> & {

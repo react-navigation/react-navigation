@@ -1,9 +1,13 @@
 import getStateFromPath from '../getStateFromPath';
+import getPathFromState from '../getPathFromState';
+
+it('returns undefined for invalid path', () => {
+  expect(getStateFromPath('//')).toBe(undefined);
+});
 
 it('converts path string to initial state', () => {
-  expect(
-    getStateFromPath('foo/bar/baz%20qux?author=jane%20%26%20co&valid=true')
-  ).toEqual({
+  const path = 'foo/bar/baz%20qux?author=jane%20%26%20co&valid=true';
+  const state = {
     routes: [
       {
         name: 'foo',
@@ -24,28 +28,31 @@ it('converts path string to initial state', () => {
         },
       },
     ],
-  });
+  };
+
+  expect(getStateFromPath(path)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state))).toEqual(state);
 });
 
 it('converts path string to initial state with config', () => {
-  expect(
-    getStateFromPath(
-      '/few/bar/sweet/apple/baz/jane?count=10&answer=42&valid=true',
-      {
-        Foo: 'few',
-        Bar: 'bar/:type/:fruit',
-        Baz: {
-          path: 'baz/:author',
-          parse: {
-            author: (author: string) =>
-              author.replace(/^\w/, c => c.toUpperCase()),
-            count: Number,
-            valid: Boolean,
-          },
-        },
-      }
-    )
-  ).toEqual({
+  const path = '/few/bar/sweet/apple/baz/jane?count=10&answer=42&valid=true';
+  const config = {
+    Foo: 'few',
+    Bar: 'bar/:type/:fruit',
+    Baz: {
+      path: 'baz/:author',
+      parse: {
+        author: (author: string) => author.replace(/^\w/, c => c.toUpperCase()),
+        count: Number,
+        valid: Boolean,
+      },
+      stringify: {
+        author: (author: string) => author.toLowerCase(),
+      },
+    },
+  };
+
+  const state = {
     routes: [
       {
         name: 'Foo',
@@ -72,7 +79,12 @@ it('converts path string to initial state with config', () => {
         },
       },
     ],
-  });
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
 });
 
 it('handles leading slash when converting', () => {
@@ -112,7 +124,8 @@ it('handles ending slash when converting', () => {
 });
 
 it('handles route without param', () => {
-  expect(getStateFromPath('foo/bar')).toEqual({
+  const path = 'foo/bar';
+  const state = {
     routes: [
       {
         name: 'foo',
@@ -121,34 +134,33 @@ it('handles route without param', () => {
         },
       },
     ],
-  });
-});
+  };
 
-it('returns undefined for invalid path', () => {
-  expect(getStateFromPath('//')).toBe(undefined);
+  expect(getStateFromPath(path)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state))).toEqual(state);
 });
 
 it('converts path string to initial state with config with nested screens', () => {
-  expect(
-    getStateFromPath(
-      '/few/bar/sweet/apple/baz/jane?count=10&answer=42&valid=true',
-      {
-        Foo: {
-          Foe: 'few',
-        },
-        Bar: 'bar/:type/:fruit',
-        Baz: {
-          path: 'baz/:author',
-          parse: {
-            author: (author: string) =>
-              author.replace(/^\w/, c => c.toUpperCase()),
-            count: Number,
-            valid: Boolean,
-          },
-        },
-      }
-    )
-  ).toEqual({
+  const path = '/few/bar/sweet/apple/baz/jane?count=10&answer=42&valid=true';
+  const config = {
+    Foo: {
+      Foe: 'few',
+    },
+    Bar: 'bar/:type/:fruit',
+    Baz: {
+      path: 'baz/:author',
+      parse: {
+        author: (author: string) => author.replace(/^\w/, c => c.toUpperCase()),
+        count: Number,
+        valid: Boolean,
+      },
+      stringify: {
+        author: (author: string) => author.toLowerCase(),
+      },
+    },
+  };
+
+  const state = {
     routes: [
       {
         name: 'Foo',
@@ -182,26 +194,32 @@ it('converts path string to initial state with config with nested screens', () =
         },
       },
     ],
-  });
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
 });
 
-it('converts path string to initial state with config with nested screens and unused configs', () => {
-  expect(
-    getStateFromPath('/few/baz/jane?count=10&answer=42&valid=true', {
-      Foo: {
-        Foe: 'few',
+it('converts path string to initial state with config with nested screens and unused parse functions', () => {
+  const path = '/few/baz/jane?count=10&answer=42&valid=true';
+  const config = {
+    Foo: {
+      Foe: 'few',
+    },
+    Baz: {
+      path: 'baz/:author',
+      parse: {
+        author: (author: string) => author.replace(/^\w/, c => c.toUpperCase()),
+        count: Number,
+        valid: Boolean,
+        id: Boolean,
       },
-      Baz: {
-        path: 'baz/:author',
-        parse: {
-          author: (author: string) =>
-            author.replace(/^\w/, c => c.toUpperCase()),
-          count: Number,
-          valid: Boolean,
-        },
-      },
-    })
-  ).toEqual({
+    },
+  };
+
+  const state = {
     routes: [
       {
         name: 'Foo',
@@ -227,32 +245,36 @@ it('converts path string to initial state with config with nested screens and un
         },
       },
     ],
-  });
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
 });
 
-it('handles parse in nested object with parse in it', () => {
-  expect(
-    getStateFromPath(
-      '/bar/sweet/apple/few/bis/jane?count=10&answer=42&valid=true',
-      {
-        Foo: {
-          Foe: 'few',
+it('handles nested object with unused configs and with parse in it', () => {
+  const path = '/bar/sweet/apple/few/bis/jane?count=10&answer=42&valid=true';
+  const config = {
+    Foo: {
+      Foe: 'few',
+    },
+    Bar: 'bar/:type/:fruit',
+    Baz: {
+      Bos: 'bos',
+      Bis: {
+        path: 'bis/:author',
+        parse: {
+          author: (author: string) =>
+            author.replace(/^\w/, c => c.toUpperCase()),
+          count: Number,
+          valid: Boolean,
         },
-        Bar: 'bar/:type/:fruit',
-        Baz: {
-          Bis: {
-            path: 'bis/:author',
-            parse: {
-              author: (author: string) =>
-                author.replace(/^\w/, c => c.toUpperCase()),
-              count: Number,
-              valid: Boolean,
-            },
-          },
-        },
-      }
-    )
-  ).toEqual({
+      },
+    },
+  };
+
+  const state = {
     routes: [
       {
         name: 'Bar',
@@ -293,21 +315,27 @@ it('handles parse in nested object with parse in it', () => {
         },
       },
     ],
-  });
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
 });
 
 it('handles parse in nested object for second route depth', () => {
-  expect(
-    getStateFromPath('/baz', {
-      Foo: {
-        path: 'foo',
-        Foe: 'foe',
-        Bar: {
-          Baz: 'baz',
-        },
+  const path = '/baz';
+  const config = {
+    Foo: {
+      path: 'foo',
+      Foe: 'foe',
+      Bar: {
+        Baz: 'baz',
       },
-    })
-  ).toEqual({
+    },
+  };
+
+  const state = {
     routes: [
       {
         name: 'Foo',
@@ -323,28 +351,40 @@ it('handles parse in nested object for second route depth', () => {
         },
       },
     ],
-  });
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
 });
 
 it('handles parse in nested object for second route depth and and path and parse in roots', () => {
-  expect(
-    getStateFromPath('/baz', {
-      Foo: {
-        path: 'foo/:id',
+  const path = '/baz';
+  const config = {
+    Foo: {
+      path: 'foo/:id',
+      parse: {
+        id: Number,
+      },
+      stringify: {
+        id: (id: number) => `id=${id}`,
+      },
+      Foe: 'foe',
+      Bar: {
+        path: 'bar/:id',
         parse: {
           id: Number,
         },
-        Foe: 'foe',
-        Bar: {
-          path: 'bar/:id',
-          parse: {
-            id: Number,
-          },
-          Baz: 'baz',
+        stringify: {
+          id: (id: number) => `id=${id}`,
         },
+        Baz: 'baz',
       },
-    })
-  ).toEqual({
+    },
+  };
+
+  const state = {
     routes: [
       {
         name: 'Foo',
@@ -360,5 +400,10 @@ it('handles parse in nested object for second route depth and and path and parse
         },
       },
     ],
-  });
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
 });
