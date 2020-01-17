@@ -6,7 +6,10 @@ type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 type StringifyConfig = Record<string, (value: any) => string>;
 
 type Options = {
-  [routeName: string]: string | { path: string; stringify?: StringifyConfig };
+  [routeName: string]:
+    | string
+    | { path: string; stringify?: StringifyConfig }
+    | Options;
 };
 
 /**
@@ -37,7 +40,7 @@ type Options = {
  * @returns Path representing the state, e.g. /foo/bar?count=42.
  */
 export default function getPathFromState(
-  state: State,
+  state?: State,
   options: Options = {}
 ): string {
   let path = '/';
@@ -45,14 +48,35 @@ export default function getPathFromState(
   let current: State | undefined = state;
 
   while (current) {
-    const index = typeof current.index === 'number' ? current.index : 0;
-    const route = current.routes[index] as Route<string> & {
+    let index = typeof current.index === 'number' ? current.index : 0;
+    let route = current.routes[index] as Route<string> & {
       state?: State | undefined;
     };
+    let currentOptions = options;
+    let pattern = route.name;
+
+    while (route.name in currentOptions) {
+      if (typeof currentOptions[route.name] === 'string') {
+        pattern = currentOptions[route.name] as string;
+        break;
+      } else if (typeof currentOptions[route.name] === 'object') {
+        if (route.state === undefined) {
+          pattern = (currentOptions[route.name] as { path: string }).path;
+          break;
+        } else {
+          currentOptions = currentOptions[route.name] as Options;
+          index = typeof route.state.index === 'number' ? route.state.index : 0;
+          route = route.state.routes[index] as Route<string> & {
+            state?: State | undefined;
+          };
+        }
+      }
+    }
 
     const config =
-      options[route.name] !== undefined
-        ? (options[route.name] as { stringify?: StringifyConfig }).stringify
+      currentOptions[route.name] !== undefined
+        ? (currentOptions[route.name] as { stringify?: StringifyConfig })
+            .stringify
         : undefined;
 
     const params = route.params
@@ -65,12 +89,7 @@ export default function getPathFromState(
         }, {})
       : undefined;
 
-    if (options[route.name] !== undefined) {
-      const pattern =
-        typeof options[route.name] === 'string'
-          ? (options[route.name] as string)
-          : (options[route.name] as { path: string }).path;
-
+    if (currentOptions[route.name] !== undefined) {
       path += pattern
         .split('/')
         .map(p => {
