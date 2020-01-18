@@ -6,7 +6,7 @@ import {
   forFadeFromBottomAndroid,
   forModalPresentationIOS,
 } from './CardStyleInterpolators';
-import { forNoAnimation, forFade } from './HeaderStyleInterpolators';
+import { forFade } from './HeaderStyleInterpolators';
 import {
   TransitionIOSSpec,
   ScaleFromCenterAndroidSpec,
@@ -42,7 +42,7 @@ export const ModalSlideFromBottomIOS: TransitionPreset = {
     close: TransitionIOSSpec,
   },
   cardStyleInterpolator: forVerticalIOS,
-  headerStyleInterpolator: forNoAnimation,
+  headerStyleInterpolator: forFade,
 };
 
 /**
@@ -55,7 +55,7 @@ export const ModalPresentationIOS: TransitionPreset = {
     close: TransitionIOSSpec,
   },
   cardStyleInterpolator: forModalPresentationIOS,
-  headerStyleInterpolator: forNoAnimation,
+  headerStyleInterpolator: forFade,
 };
 
 /**
@@ -68,7 +68,7 @@ export const FadeFromBottomAndroid: TransitionPreset = {
     close: FadeOutToBottomAndroidSpec,
   },
   cardStyleInterpolator: forFadeFromBottomAndroid,
-  headerStyleInterpolator: forNoAnimation,
+  headerStyleInterpolator: forFade,
 };
 
 /**
@@ -81,7 +81,7 @@ export const RevealFromBottomAndroid: TransitionPreset = {
     close: RevealFromBottomAndroidSpec,
   },
   cardStyleInterpolator: forRevealFromBottomAndroid,
-  headerStyleInterpolator: forNoAnimation,
+  headerStyleInterpolator: forFade,
 };
 
 /**
@@ -94,7 +94,7 @@ export const ScaleFromCenterAndroid: TransitionPreset = {
     close: ScaleFromCenterAndroidSpec,
   },
   cardStyleInterpolator: forScaleFromCenterAndroid,
-  headerStyleInterpolator: forNoAnimation,
+  headerStyleInterpolator: forFade,
 };
 
 /**
