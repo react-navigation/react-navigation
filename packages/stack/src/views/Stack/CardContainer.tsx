@@ -175,6 +175,7 @@ function CardContainer({
               scenes: [previousScene, scene],
               state,
               getPreviousRoute,
+              gestureDirection,
               styleInterpolator: headerStyleInterpolator,
               onContentHeightChange: onHeaderHeightChange,
             })
