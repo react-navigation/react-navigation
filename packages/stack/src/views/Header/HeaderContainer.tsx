@@ -10,7 +10,8 @@ import { EdgeInsets } from 'react-native-safe-area-context';
 
 import Header from './Header';
 import {
-  forSlide,
+  forSlideLeft,
+  forSlideUp,
   forNoAnimation,
 } from '../../TransitionConfigs/HeaderStyleInterpolators';
 import {
@@ -18,6 +19,7 @@ import {
   Scene,
   StackHeaderStyleInterpolator,
   StackNavigationProp,
+  GestureDirection,
 } from '../../types';
 
 export type Props = {
@@ -34,6 +36,7 @@ export type Props = {
     height: number;
   }) => void;
   styleInterpolator: StackHeaderStyleInterpolator;
+  gestureDirection: GestureDirection;
   style?: StyleProp<ViewStyle>;
 };
 
@@ -45,6 +48,7 @@ export default function HeaderContainer({
   state,
   getPreviousRoute,
   onContentHeightChange,
+  gestureDirection,
   styleInterpolator,
   style,
 }: Props) {
@@ -100,7 +104,10 @@ export default function HeaderContainer({
           styleInterpolator:
             mode === 'float'
               ? isHeaderStatic
-                ? forSlide
+                ? gestureDirection === 'vertical' ||
+                  gestureDirection === 'vertical-inverted'
+                  ? forSlideUp
+                  : forSlideLeft
                 : styleInterpolator
               : forNoAnimation,
         };

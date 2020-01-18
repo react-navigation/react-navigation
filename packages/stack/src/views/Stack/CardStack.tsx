@@ -548,6 +548,10 @@ export default class CardStack extends React.Component<Props, State> {
               state,
               getPreviousRoute,
               onContentHeightChange: this.handleHeaderLayout,
+              gestureDirection:
+                focusedOptions.gestureDirection !== undefined
+                  ? focusedOptions.gestureDirection
+                  : defaultTransitionPreset.gestureDirection,
               styleInterpolator:
                 focusedOptions.headerStyleInterpolator !== undefined
                   ? focusedOptions.headerStyleInterpolator
