@@ -114,7 +114,11 @@ export default function getPathFromState(
     if (route.state) {
       path += '/';
     } else if (params) {
-      path += `?${queryString.stringify(params)}`;
+      const query = queryString.stringify(params);
+
+      if (query) {
+        path += `?${query}`;
+      }
     }
 
     current = route.state;
