@@ -11,13 +11,13 @@ Stack navigator for use on iOS and Android.
 Open a Terminal in your project's folder and run,
 
 ```sh
-yarn add react-navigation-stack @react-native-community/masked-view
+yarn add react-navigation-stack @react-native-community/masked-view react-native-safe-area-context
 ```
 
 or
 
 ```sh
-npm install react-navigation-stack @react-native-community/masked-view
+npm install react-navigation-stack @react-native-community/masked-view react-native-safe-area-context
 ```
 
 ## Usage
