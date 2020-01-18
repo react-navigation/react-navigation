@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "expo start",
-    "web": "expo start --web",
+    "web": "expo start:web",
     "native": "react-native start",
     "android": "react-native run-android",
     "ios": "react-native run-ios"
