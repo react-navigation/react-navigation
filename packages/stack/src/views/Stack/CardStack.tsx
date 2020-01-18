@@ -75,39 +75,78 @@ type State = {
 };
 
 const EPSILON = 1e-5;
+const FAR_FAR_AWAY = 9000;
 
 const dimensions = Dimensions.get('window');
 const layout = { width: dimensions.width, height: dimensions.height };
 
 const MaybeScreenContainer = ({
   enabled,
+  style,
   ...rest
 }: ViewProps & {
   enabled: boolean;
   children: React.ReactNode;
 }) => {
-  if (Platform.OS !== 'ios' && enabled && screensEnabled()) {
-    return <ScreenContainer {...rest} />;
+  if (enabled && screensEnabled()) {
+    return <ScreenContainer style={style} {...rest} />;
   }
 
-  return <View {...rest} />;
+  return (
+    <View
+      collapsable={!enabled}
+      removeClippedSubviews={Platform.OS !== 'ios' && enabled}
+      style={[style, { overflow: 'hidden' }]}
+      {...rest}
+    />
+  );
 };
 
 const MaybeScreen = ({
   enabled,
   active,
+  style,
   ...rest
 }: ViewProps & {
   enabled: boolean;
   active: number | Animated.AnimatedInterpolation;
   children: React.ReactNode;
 }) => {
-  if (Platform.OS !== 'ios' && enabled && screensEnabled()) {
+  if (enabled && screensEnabled()) {
     // @ts-ignore
-    return <Screen active={active} {...rest} />;
+    return <Screen active={active} style={style} {...rest} />;
   }
 
-  return <View {...rest} />;
+  return (
+    <Animated.View
+      style={[
+        style,
+        {
+          overflow: 'hidden',
+          // Position the screen offscreen to take advantage of offscreen perf optimization
+          // https://facebook.github.io/react-native/docs/view#removeclippedsubviews
+          // This can be useful if screens is not enabled
+          // It's buggy on iOS, so we don't enable it there
+          transform: [
+            {
+              translateY:
+                Platform.OS !== 'ios' && enabled
+                  ? typeof active === 'number'
+                    ? active
+                      ? 0
+                      : FAR_FAR_AWAY
+                    : active.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [FAR_FAR_AWAY, 0],
+                      })
+                  : 0,
+            },
+          ],
+        },
+      ]}
+      {...rest}
+    />
+  );
 };
 
 const FALLBACK_DESCRIPTOR = Object.freeze({ options: {} });
@@ -396,10 +435,14 @@ export default class CardStack extends React.Component<Props, State> {
       left = insets.left,
     } = focusedOptions.safeAreaInsets || {};
 
+    // Screens is buggy on iOS, so we don't enable it there
+    // For modals, usually we want the screen underneath to be visible, so also disable it there
+    const isScreensEnabled = Platform.OS !== 'ios' && mode !== 'modal';
+
     return (
       <React.Fragment>
         <MaybeScreenContainer
-          enabled={mode !== 'modal'}
+          enabled={isScreensEnabled}
           style={styles.container}
           onLayout={this.handleLayout}
         >
@@ -494,7 +537,7 @@ export default class CardStack extends React.Component<Props, State> {
               <MaybeScreen
                 key={route.key}
                 style={StyleSheet.absoluteFill}
-                enabled={mode !== 'modal'}
+                enabled={isScreensEnabled}
                 active={isScreenActive}
                 pointerEvents="box-none"
               >
