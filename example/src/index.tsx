@@ -153,7 +153,7 @@ export default function App() {
       try {
         let state = await getInitialState();
 
-        if (state === undefined) {
+        if (Platform.OS !== 'web' && state === undefined) {
           const savedState = await AsyncStorage.getItem(
             NAVIGATION_PERSISTENCE_KEY
           );

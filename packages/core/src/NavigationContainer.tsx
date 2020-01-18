@@ -16,6 +16,7 @@ import {
   NavigationContainerRef,
   NavigationContainerProps,
 } from './types';
+import useEventEmitter from './useEventEmitter';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
 
@@ -205,6 +206,8 @@ const Container = React.forwardRef(function NavigationContainer(
     return getStateForRoute('root');
   }, [getStateForRoute]);
 
+  const emitter = useEventEmitter();
+
   React.useImperativeHandle(ref, () => ({
     ...(Object.keys(CommonActions) as (keyof typeof CommonActions)[]).reduce<
       any
@@ -218,6 +221,7 @@ const Container = React.forwardRef(function NavigationContainer(
         );
       return acc;
     }, {}),
+    ...emitter.create('root'),
     resetRoot,
     dispatch,
     canGoBack,
@@ -258,6 +262,11 @@ const Container = React.forwardRef(function NavigationContainer(
       }
     }
 
+    emitter.emit({
+      type: 'state',
+      data: { state },
+    });
+
     if (skipTrackingRef.current) {
       skipTrackingRef.current = false;
     } else {
@@ -272,7 +281,7 @@ const Container = React.forwardRef(function NavigationContainer(
     }
 
     isFirstMountRef.current = false;
-  }, [state, onStateChange, trackState, getRootState]);
+  }, [state, onStateChange, trackState, getRootState, emitter]);
 
   return (
     <NavigationBuilderContext.Provider value={builderContext}>

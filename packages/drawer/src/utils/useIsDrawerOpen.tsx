@@ -17,16 +17,22 @@ export default function useIsDrawerOpen() {
   }
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(() =>
-    drawer ? drawer.dangerouslyGetState().isDrawerOpen : false
+    drawer
+      ? Boolean(
+          drawer.dangerouslyGetState().history.find(it => it.type === 'drawer')
+        )
+      : false
   );
 
   React.useEffect(() => {
     const unsubscribe = drawer.addListener('state', e => {
-      setIsDrawerOpen(e.data.state.isDrawerOpen);
+      setIsDrawerOpen(
+        Boolean(e.data.state.history.find(it => it.type === 'drawer'))
+      );
     });
 
     return unsubscribe;
-  }, [drawer]);
+  }, [drawer, isDrawerOpen]);
 
   return isDrawerOpen;
 }

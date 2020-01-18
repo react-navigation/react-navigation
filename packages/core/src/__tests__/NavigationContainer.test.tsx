@@ -254,9 +254,7 @@ it('handle dispatching with ref', () => {
   render(element).update(element);
 
   act(() => {
-    if (ref.current != null) {
-      ref.current.dispatch({ type: 'REVERSE' });
-    }
+    ref.current?.dispatch({ type: 'REVERSE' });
   });
 
   expect(onStateChange).toBeCalledTimes(1);
@@ -350,9 +348,7 @@ it('handle resetting state with ref', () => {
   };
 
   act(() => {
-    if (ref.current != null) {
-      ref.current.resetRoot(state);
-    }
+    ref.current?.resetRoot(state);
   });
 
   expect(onStateChange).toBeCalledTimes(1);
@@ -383,7 +379,7 @@ it('handle resetting state with ref', () => {
   });
 });
 
-it('handle getRootState', () => {
+it('handles getRootState', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -438,5 +434,70 @@ it('handle getRootState', () => {
     ],
     stale: false,
     type: 'test',
+  });
+});
+it('emits state events when the state changes', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return (
+      <React.Fragment>
+        {state.routes.map(route => descriptors[route.key].render())}
+      </React.Fragment>
+    );
+  };
+
+  const ref = React.createRef<NavigationContainerRef>();
+
+  const element = (
+    <NavigationContainer ref={ref}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar">{() => null}</Screen>
+        <Screen name="baz">{() => null}</Screen>
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  render(element).update(element);
+
+  const listener = jest.fn();
+
+  ref.current?.addListener('state', listener);
+
+  expect(listener).not.toHaveBeenCalled();
+
+  act(() => {
+    ref.current?.navigate('bar');
+  });
+
+  expect(listener.mock.calls[0][0].data.state).toEqual({
+    type: 'test',
+    stale: false,
+    index: 1,
+    key: '9',
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+      { key: 'baz', name: 'baz' },
+    ],
+  });
+
+  act(() => {
+    ref.current?.navigate('baz', { answer: 42 });
+  });
+
+  expect(listener.mock.calls[1][0].data.state).toEqual({
+    type: 'test',
+    stale: false,
+    index: 2,
+    key: '9',
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+      { key: 'baz', name: 'baz', params: { answer: 42 } },
+    ],
   });
 });
