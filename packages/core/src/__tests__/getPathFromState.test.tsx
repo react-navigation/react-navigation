@@ -100,6 +100,21 @@ it('handles route without param', () => {
   expect(getPathFromState(getStateFromPath(path))).toBe(path);
 });
 
+it("doesn't add query param for empty params", () => {
+  const path = '/foo';
+  const state = {
+    routes: [
+      {
+        name: 'foo',
+        params: {},
+      },
+    ],
+  };
+
+  expect(getPathFromState(state)).toBe(path);
+  expect(getPathFromState(getStateFromPath(path))).toBe(path);
+});
+
 it('handles state with config with nested screens', () => {
   const path = '/few/bar/sweet/apple/baz/jane?answer=42&count=10&valid=true';
   const config = {
