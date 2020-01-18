@@ -18,7 +18,7 @@ export default function useFocusEvents({ state, emitter }: Options) {
   const currentFocusedKey = state.routes[state.index].key;
 
   // When the parent screen changes its focus state, we also need to change child's focus
-  // Coz the child screen can't be focused if the parent screen is out of fcous
+  // Coz the child screen can't be focused if the parent screen is out of focus
   React.useEffect(
     () =>
       navigation?.addListener('focus', () =>

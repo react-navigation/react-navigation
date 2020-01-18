@@ -215,6 +215,7 @@ export type EventMapBase = Record<
 export type EventMapCore = {
   focus: { data: undefined };
   blur: { data: undefined };
+  state: { data: { state: NavigationState } };
 };
 
 export type EventArg<

@@ -293,6 +293,10 @@ export default function useNavigationBuilder<
 
   useFocusEvents({ state, emitter });
 
+  React.useEffect(() => {
+    emitter.emit({ type: 'state', data: { state } });
+  }, [emitter, state]);
+
   const {
     listeners: actionListeners,
     addListener: addActionListener,
