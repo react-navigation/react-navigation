@@ -4,6 +4,7 @@ import {
   useRoute,
   NavigationProp,
   ParamListBase,
+  useNavigationState,
 } from '@react-navigation/native';
 import createCompatNavigationProp from './createCompatNavigationProp';
 import { CompatNavigationProp } from './types';
@@ -14,12 +15,17 @@ export default function useCompatNavigation<
   const navigation = useNavigation();
   const route = useRoute();
 
+  const isFirstRouteInParent = useNavigationState(
+    state => state.routes[0].key === route.key
+  );
+
   return React.useMemo(
     () =>
       createCompatNavigationProp(
         navigation,
-        route as any
+        route as any,
+        isFirstRouteInParent
       ) as CompatNavigationProp<T>,
-    [navigation, route]
+    [isFirstRouteInParent, navigation, route]
   );
 }

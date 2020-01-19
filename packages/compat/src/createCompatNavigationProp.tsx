@@ -28,7 +28,8 @@ export default function createCompatNavigationProp<
         state?: NavigationState | PartialState<NavigationState>;
       })
     | NavigationState
-    | PartialState<NavigationState>
+    | PartialState<NavigationState>,
+  isFirstRouteInParent?: boolean
 ): CompatNavigationProp<NavigationPropType> {
   return {
     ...navigation,
@@ -174,6 +175,10 @@ export default function createCompatNavigationProp<
       return defaultValue;
     },
     isFirstRouteInParent(): boolean {
+      if (typeof isFirstRouteInParent === 'boolean') {
+        return isFirstRouteInParent;
+      }
+
       const { routes } = navigation.dangerouslyGetState();
 
       // @ts-ignore
