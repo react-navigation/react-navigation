@@ -240,6 +240,7 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
     mIsAttached = true;
+    mNeedUpdate = true;
     mFragmentManager = findFragmentManager();
     updateIfNeeded();
   }
@@ -253,6 +254,7 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
     mFragmentManager = null;
     // so we don't add the same screen twice after re-attach
     removeAllViews();
+    mActiveScreenFragments.clear();
     // after re-attach we'll update the screen and add views again
     markUpdated();
   }
