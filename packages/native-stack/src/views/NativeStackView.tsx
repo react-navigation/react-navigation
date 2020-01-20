@@ -3,7 +3,6 @@ import { View, StyleSheet } from 'react-native';
 import { StackNavigationState, StackActions } from '@react-navigation/routers';
 
 import {
-  // @ts-ignore
   ScreenStack,
   Screen as ScreenComponent,
   ScreenProps,
@@ -16,13 +15,7 @@ import {
   NativeStackDescriptorMap,
 } from '../types';
 
-const Screen = (ScreenComponent as unknown) as React.ComponentType<
-  ScreenProps & {
-    stackPresentation?: 'push' | 'modal' | 'transparentModal';
-    stackAnimation?: 'default' | 'fade' | 'none';
-    onDismissed?: () => void;
-  }
->;
+const Screen = (ScreenComponent as unknown) as React.ComponentType<ScreenProps>;
 
 type Props = {
   state: StackNavigationState;
@@ -49,7 +42,18 @@ export default function NativeStackView({
             style={StyleSheet.absoluteFill}
             stackPresentation={presentation}
             stackAnimation={animation}
+            onAppear={() => {
+              navigation.emit({
+                type: 'appear',
+                target: route.key,
+              });
+            }}
             onDismissed={() => {
+              navigation.emit({
+                type: 'dismiss',
+                target: route.key,
+              });
+
               navigation.dispatch({
                 ...StackActions.pop(),
                 source: route.key,

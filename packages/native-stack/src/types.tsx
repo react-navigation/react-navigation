@@ -12,6 +12,17 @@ import {
   StackRouterOptions,
 } from '@react-navigation/routers';
 
+export type NativeStackNavigationEventMap = {
+  /**
+   * Event which fires when the screen appears.
+   */
+  appear: { data: undefined };
+  /**
+   * Event which fires when the current screen is dismissed by hardware back (on Android) or dismiss gesture (swipe back or down).
+   */
+  dismiss: { data: undefined };
+};
+
 export type NativeStackNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string
@@ -20,7 +31,7 @@ export type NativeStackNavigationProp<
   RouteName,
   StackNavigationState,
   NativeStackNavigationOptions,
-  {}
+  NativeStackNavigationEventMap
 > & {
   /**
    * Push a new screen onto the stack.
@@ -45,7 +56,10 @@ export type NativeStackNavigationProp<
   popToTop(): void;
 };
 
-export type NativeStackNavigationHelpers = NavigationHelpers<ParamListBase, {}>;
+export type NativeStackNavigationHelpers = NavigationHelpers<
+  ParamListBase,
+  NativeStackNavigationEventMap
+>;
 
 export type NativeStackNavigationConfig = {};
 

@@ -44,7 +44,7 @@
     "react-native": "~0.61.5",
     "react-native-gesture-handler": "^1.5.3",
     "react-native-safe-area-context": "^0.6.2",
-    "react-native-screens": "^2.0.0-alpha.22",
+    "react-native-screens": "^2.0.0-alpha.25",
     "typescript": "^3.7.4"
   },
   "peerDependencies": {

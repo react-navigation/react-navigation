@@ -1,8 +1,6 @@
 import * as React from 'react';
 import {
-  // @ts-ignore
   ScreenStackHeaderConfig,
-  // @ts-ignore
   ScreenStackHeaderRightView,
   // eslint-disable-next-line import/no-unresolved
 } from 'react-native-screens';
