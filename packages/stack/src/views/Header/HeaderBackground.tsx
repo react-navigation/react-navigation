@@ -2,7 +2,11 @@ import * as React from 'react';
 import { Animated, StyleSheet, Platform, ViewProps } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
-export default function HeaderBackground({ style, ...rest }: ViewProps) {
+type Props = ViewProps & {
+  children?: React.ReactNode;
+};
+
+export default function HeaderBackground({ style, ...rest }: Props) {
   const { colors } = useTheme();
 
   return (

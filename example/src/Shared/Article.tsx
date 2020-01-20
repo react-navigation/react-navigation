@@ -1,8 +1,15 @@
 import * as React from 'react';
-import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  StyleSheet,
+  ScrollViewProps,
+} from 'react-native';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
 
-type Props = {
+type Props = Partial<ScrollViewProps> & {
   date?: string;
   author?: {
     name: string;
@@ -14,6 +21,7 @@ export default function Article({
   author = {
     name: 'Knowledge Bot',
   },
+  ...rest
 }: Props) {
   const ref = React.useRef<ScrollView>(null);
 
@@ -26,6 +34,7 @@ export default function Article({
       ref={ref}
       style={{ backgroundColor: colors.card }}
       contentContainerStyle={styles.content}
+      {...rest}
     >
       <View style={styles.author}>
         <Image

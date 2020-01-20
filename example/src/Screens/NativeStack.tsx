@@ -137,7 +137,7 @@ const AlbumsScreen = ({
 }: {
   navigation: NativeStackNavigation;
 }) => (
-  <React.Fragment>
+  <ScrollView>
     <View style={styles.buttons}>
       <Button
         mode="contained"
@@ -154,8 +154,8 @@ const AlbumsScreen = ({
         Go back
       </Button>
     </View>
-    <Albums />
-  </React.Fragment>
+    <Albums scrollEnabled={false} />
+  </ScrollView>
 );
 
 const NativeStack = createNativeStackNavigator<NativeStackParams>();

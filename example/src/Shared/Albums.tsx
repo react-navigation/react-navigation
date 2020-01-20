@@ -1,7 +1,13 @@
 /* eslint-disable import/no-commonjs */
 
 import * as React from 'react';
-import { Image, Dimensions, ScrollView, StyleSheet } from 'react-native';
+import {
+  Image,
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  ScrollViewProps,
+} from 'react-native';
 import { useScrollToTop } from '@react-navigation/native';
 
 const COVERS = [
@@ -15,7 +21,7 @@ const COVERS = [
   require('../../assets/album-art-8.jpg'),
 ];
 
-export default function Albums() {
+export default function Albums(props: Partial<ScrollViewProps>) {
   const ref = React.useRef<ScrollView>(null);
 
   useScrollToTop(ref);
@@ -25,6 +31,7 @@ export default function Albums() {
       ref={ref}
       style={styles.container}
       contentContainerStyle={styles.content}
+      {...props}
     >
       {COVERS.map((source, i) => (
         // eslint-disable-next-line react/no-array-index-key

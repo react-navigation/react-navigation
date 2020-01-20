@@ -42,9 +42,11 @@ import LinkingPrefixes from './LinkingPrefixes';
 import SimpleStack from './Screens/SimpleStack';
 import NativeStack from './Screens/NativeStack';
 import ModalPresentationStack from './Screens/ModalPresentationStack';
+import StackHeaderCustomization from './Screens/StackHeaderCustomization';
 import BottomTabs from './Screens/BottomTabs';
 import MaterialTopTabsScreen from './Screens/MaterialTopTabs';
 import MaterialBottomTabs from './Screens/MaterialBottomTabs';
+import DynamicTabs from './Screens/DynamicTabs';
 import AuthFlow from './Screens/AuthFlow';
 import CompatAPI from './Screens/CompatAPI';
 
@@ -68,6 +70,10 @@ const SCREENS = {
     title: 'Modal Presentation Stack',
     component: ModalPresentationStack,
   },
+  StackHeaderCustomization: {
+    title: 'Header Customization in Stack',
+    component: StackHeaderCustomization,
+  },
   BottomTabs: { title: 'Bottom Tabs', component: BottomTabs },
   MaterialTopTabs: {
     title: 'Material Top Tabs',
@@ -76,6 +82,10 @@ const SCREENS = {
   MaterialBottomTabs: {
     title: 'Material Bottom Tabs',
     component: MaterialBottomTabs,
+  },
+  DynamicTabs: {
+    title: 'Dynamic Tabs',
+    component: DynamicTabs,
   },
   AuthFlow: {
     title: 'Auth Flow',
