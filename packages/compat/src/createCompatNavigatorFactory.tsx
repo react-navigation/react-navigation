@@ -110,7 +110,7 @@ export default function createCompatNavigatorFactory<
                   ? {
                       navigation: createCompatNavigationProp<
                         NavigationPropType
-                      >(navigation, route),
+                      >(navigation, route, {}),
                       navigationOptions: defaultNavigationOptions || {},
                       screenProps,
                     }
