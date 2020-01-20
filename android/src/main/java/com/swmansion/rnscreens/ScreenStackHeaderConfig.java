@@ -51,6 +51,10 @@ public class ScreenStackHeaderConfig extends ViewGroup {
     setVisibility(View.GONE);
 
     mToolbar = new Toolbar(context);
+    // reset content insets to be 0 to allow react position custom navbar views. Note that this does
+    // not affect platform native back button as toolbar does not apply left inset when navigation
+    // button is specified
+    mToolbar.setContentInsetsAbsolute(0, 0);
 
     // set primary color as background by default
     TypedValue tv = new TypedValue();
