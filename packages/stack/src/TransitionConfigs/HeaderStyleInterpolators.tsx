@@ -145,7 +145,7 @@ export function forFade({
 }
 
 /**
- * Simple translate animation to translate the header along with the sliding screen.
+ * Simple translate animation to translate the header to left.
  */
 export function forSlideLeft({
   current,
@@ -172,6 +172,46 @@ export function forSlideLeft({
     outputRange: I18nManager.isRTL
       ? [-screen.width, 0, screen.width]
       : [screen.width, 0, -screen.width],
+  });
+
+  const transform = [{ translateX }];
+
+  return {
+    leftButtonStyle: { transform },
+    rightButtonStyle: { transform },
+    titleStyle: { transform },
+    backgroundStyle: { transform },
+  };
+}
+
+/**
+ * Simple translate animation to translate the header to right.
+ */
+export function forSlideRight({
+  current,
+  next,
+  layouts: { screen },
+}: StackHeaderInterpolationProps): StackHeaderInterpolatedStyle {
+  const progress = add(
+    current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    }),
+    next
+      ? next.progress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, 1],
+          extrapolate: 'clamp',
+        })
+      : 0
+  );
+
+  const translateX = progress.interpolate({
+    inputRange: [0, 1, 2],
+    outputRange: I18nManager.isRTL
+      ? [screen.width, 0, -screen.width]
+      : [-screen.width, 0, screen.width],
   });
 
   const transform = [{ translateX }];
