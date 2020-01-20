@@ -1,21 +1,19 @@
 import * as React from 'react';
 import {
-  View,
   ScrollView,
   AsyncStorage,
   YellowBox,
   Platform,
   StatusBar,
+  I18nManager,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import {
   Provider as PaperProvider,
   DefaultTheme as PaperLightTheme,
   DarkTheme as PaperDarkTheme,
-  Subheading,
   Appbar,
   List,
-  Switch,
   Divider,
 } from 'react-native-paper';
 import { Asset } from 'expo-asset';
@@ -49,6 +47,8 @@ import MaterialBottomTabs from './Screens/MaterialBottomTabs';
 import DynamicTabs from './Screens/DynamicTabs';
 import AuthFlow from './Screens/AuthFlow';
 import CompatAPI from './Screens/CompatAPI';
+import SettingsItem from './Shared/SettingsItem';
+import { Updates } from 'expo';
 
 YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
 
@@ -243,27 +243,27 @@ export default function App() {
                     <ScrollView
                       style={{ backgroundColor: theme.colors.background }}
                     >
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          padding: 16,
+                      <SettingsItem
+                        label="Right to left"
+                        value={I18nManager.isRTL}
+                        onValueChange={() => {
+                          I18nManager.forceRTL(!I18nManager.isRTL);
+                          Updates.reloadFromCache();
                         }}
-                      >
-                        <Subheading>Dark theme</Subheading>
-                        <Switch
-                          value={theme.dark}
-                          onValueChange={() => {
-                            AsyncStorage.setItem(
-                              THEME_PERSISTENCE_KEY,
-                              theme.dark ? 'light' : 'dark'
-                            );
+                      />
+                      <Divider />
+                      <SettingsItem
+                        label="Dark theme"
+                        value={theme.dark}
+                        onValueChange={() => {
+                          AsyncStorage.setItem(
+                            THEME_PERSISTENCE_KEY,
+                            theme.dark ? 'light' : 'dark'
+                          );
 
-                            setTheme(t => (t.dark ? DefaultTheme : DarkTheme));
-                          }}
-                        />
-                      </View>
+                          setTheme(t => (t.dark ? DefaultTheme : DarkTheme));
+                        }}
+                      />
                       <Divider />
                       {(Object.keys(SCREENS) as (keyof typeof SCREENS)[]).map(
                         name => (
