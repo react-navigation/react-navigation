@@ -20,6 +20,7 @@ import NativeStackView from '../views/NativeStackView';
 import {
   NativeStackNavigatorProps,
   NativeStackNavigationOptions,
+  NativeStackNavigationEventMap,
 } from '../types';
 
 function NativeStackNavigator(props: NativeStackNavigatorProps) {
@@ -34,7 +35,7 @@ function NativeStackNavigator(props: NativeStackNavigatorProps) {
     StackNavigationState,
     StackRouterOptions,
     NativeStackNavigationOptions,
-    {}
+    NativeStackNavigationEventMap
   >(StackRouter, {
     initialRouteName,
     children,
