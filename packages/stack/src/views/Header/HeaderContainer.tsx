@@ -13,6 +13,7 @@ import {
   forSlideLeft,
   forSlideUp,
   forNoAnimation,
+  forSlideRight,
 } from '../../TransitionConfigs/HeaderStyleInterpolators';
 import {
   Layout,
@@ -107,6 +108,8 @@ export default function HeaderContainer({
                 ? gestureDirection === 'vertical' ||
                   gestureDirection === 'vertical-inverted'
                   ? forSlideUp
+                  : gestureDirection === 'horizontal-inverted'
+                  ? forSlideRight
                   : forSlideLeft
                 : styleInterpolator
               : forNoAnimation,
