@@ -8,11 +8,17 @@ import {
 import * as helpers from './helpers';
 import { CompatNavigationProp } from './types';
 
-type EventName = 'willFocus' | 'willBlur' | 'didFocus' | 'didBlur' | 'refocus';
+type EventName =
+  | 'action'
+  | 'willFocus'
+  | 'willBlur'
+  | 'didFocus'
+  | 'didBlur'
+  | 'refocus';
 
-const focusSubscriptions = new WeakMap<() => void, () => void>();
-const blurSubscriptions = new WeakMap<() => void, () => void>();
-const refocusSubscriptions = new WeakMap<() => void, () => void>();
+// const focusSubscriptions = new WeakMap<() => void, () => void>();
+// const blurSubscriptions = new WeakMap<() => void, () => void>();
+// const refocusSubscriptions = new WeakMap<() => void, () => void>();
 
 export default function createCompatNavigationProp<
   NavigationPropType extends NavigationProp<ParamListBase>,
@@ -29,8 +35,16 @@ export default function createCompatNavigationProp<
       })
     | NavigationState
     | PartialState<NavigationState>,
+  context: Record<string, any>,
   isFirstRouteInParent?: boolean
 ): CompatNavigationProp<NavigationPropType> {
+  context.parent = context.parent || {};
+  context.subscriptions = context.subscriptions || {
+    didFocus: new Map<() => void, () => void>(),
+    didBlur: new Map<() => void, () => void>(),
+    refocus: new Map<() => void, () => void>(),
+  };
+
   return {
     ...navigation,
     ...Object.entries(helpers).reduce<{
@@ -62,7 +76,7 @@ export default function createCompatNavigationProp<
 
           // @ts-ignore
           unsubscribe = navigation.addListener('transitionEnd', listener);
-          focusSubscriptions.set(callback, unsubscribe);
+          context.subscriptions.didFocus.set(callback, unsubscribe);
           break;
         }
         case 'didBlur': {
@@ -74,7 +88,7 @@ export default function createCompatNavigationProp<
 
           // @ts-ignore
           unsubscribe = navigation.addListener('transitionEnd', listener);
-          blurSubscriptions.set(callback, unsubscribe);
+          context.subscriptions.didBlur.set(callback, unsubscribe);
           break;
         }
         case 'refocus': {
@@ -86,9 +100,11 @@ export default function createCompatNavigationProp<
 
           // @ts-ignore
           unsubscribe = navigation.addListener('tabPress', listener);
-          refocusSubscriptions.set(callback, unsubscribe);
+          context.subscriptions.refocus.set(callback, unsubscribe);
           break;
         }
+        case 'action':
+          throw new Error("Listening to 'action' events is not supported.");
         default:
           // @ts-ignore
           unsubscribe = navigation.addListener(type, callback);
@@ -101,6 +117,8 @@ export default function createCompatNavigationProp<
       return subscription;
     },
     removeListener(type: EventName, callback: () => void) {
+      context.subscriptions = context.subscriptions || {};
+
       switch (type) {
         case 'willFocus':
           navigation.removeListener('focus', callback);
@@ -109,20 +127,22 @@ export default function createCompatNavigationProp<
           navigation.removeListener('blur', callback);
           break;
         case 'didFocus': {
-          const unsubscribe = focusSubscriptions.get(callback);
+          const unsubscribe = context.subscriptions.didFocus.get(callback);
           unsubscribe?.();
           break;
         }
         case 'didBlur': {
-          const unsubscribe = blurSubscriptions.get(callback);
+          const unsubscribe = context.subscriptions.didBlur.get(callback);
           unsubscribe?.();
           break;
         }
         case 'refocus': {
-          const unsubscribe = refocusSubscriptions.get(callback);
+          const unsubscribe = context.subscriptions.refocus.get(callback);
           unsubscribe?.();
           break;
         }
+        case 'action':
+          throw new Error("Listening to 'action' events is not supported.");
         default:
           // @ts-ignore
           navigation.removeListener(type, callback);
@@ -190,7 +210,8 @@ export default function createCompatNavigationProp<
       if (parent) {
         return createCompatNavigationProp(
           parent,
-          navigation.dangerouslyGetState()
+          navigation.dangerouslyGetState(),
+          context.parent
         );
       }
 
