@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { Button } from 'react-native-paper';
 import { RouteProp, ParamListBase } from '@react-navigation/native';
 import {
@@ -25,7 +25,7 @@ const ArticleScreen = ({
   route: RouteProp<ModalStackParams, 'Article'>;
 }) => {
   return (
-    <React.Fragment>
+    <ScrollView>
       <View style={styles.buttons}>
         <Button
           mode="contained"
@@ -42,14 +42,14 @@ const ArticleScreen = ({
           Go back
         </Button>
       </View>
-      <Article author={{ name: route.params.author }} />
-    </React.Fragment>
+      <Article author={{ name: route.params.author }} scrollEnabled={false} />
+    </ScrollView>
   );
 };
 
 const AlbumsScreen = ({ navigation }: { navigation: ModalStackNavigation }) => {
   return (
-    <React.Fragment>
+    <ScrollView>
       <View style={styles.buttons}>
         <Button
           mode="contained"
@@ -66,8 +66,8 @@ const AlbumsScreen = ({ navigation }: { navigation: ModalStackNavigation }) => {
           Go back
         </Button>
       </View>
-      <Albums />
-    </React.Fragment>
+      <Albums scrollEnabled={false} />
+    </ScrollView>
   );
 };
 

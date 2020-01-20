@@ -6,6 +6,7 @@ import {
   TextInput,
   ScrollView,
   StyleSheet,
+  ScrollViewProps,
 } from 'react-native';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
 import Color from 'color';
@@ -17,7 +18,7 @@ const MESSAGES = [
   'make me a sandwich',
 ];
 
-export default function Chat() {
+export default function Chat(props: Partial<ScrollViewProps>) {
   const ref = React.useRef<ScrollView>(null);
 
   useScrollToTop(ref);
@@ -29,6 +30,7 @@ export default function Chat() {
       <ScrollView
         style={styles.inverted}
         contentContainerStyle={styles.content}
+        {...props}
       >
         {MESSAGES.map((text, i) => {
           const odd = i % 2;

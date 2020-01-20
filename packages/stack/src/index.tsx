@@ -22,6 +22,7 @@ export { default as StackView } from './views/Stack/StackView';
 export { default as Header } from './views/Header/Header';
 export { default as HeaderTitle } from './views/Header/HeaderTitle';
 export { default as HeaderBackButton } from './views/Header/HeaderBackButton';
+export { default as HeaderBackground } from './views/Header/HeaderBackground';
 
 /**
  * Transition presets

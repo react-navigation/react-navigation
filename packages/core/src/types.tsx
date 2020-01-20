@@ -572,10 +572,7 @@ export type RouteConfig<
       /**
        * React component to render for this screen.
        */
-      component: React.ComponentType<{
-        route: RouteProp<ParamList, RouteName>;
-        navigation: any;
-      }>;
+      component: React.ComponentType<any>;
     }
   | {
       /**
