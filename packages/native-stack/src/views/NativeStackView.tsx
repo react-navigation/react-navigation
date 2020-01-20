@@ -34,14 +34,18 @@ export default function NativeStackView({
     <ScreenStack style={styles.container}>
       {state.routes.map(route => {
         const { options, render: renderScene } = descriptors[route.key];
-        const { presentation = 'push', animation, contentStyle } = options;
+        const {
+          stackPresentation = 'push',
+          stackAnimation,
+          contentStyle,
+        } = options;
 
         return (
           <Screen
             key={route.key}
             style={StyleSheet.absoluteFill}
-            stackPresentation={presentation}
-            stackAnimation={animation}
+            stackPresentation={stackPresentation}
+            stackAnimation={stackAnimation}
             onAppear={() => {
               navigation.emit({
                 type: 'appear',
