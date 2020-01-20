@@ -27,6 +27,8 @@ type Props = BottomTabBarProps & {
 const DEFAULT_TABBAR_HEIGHT = 50;
 const DEFAULT_MAX_TAB_ITEM_WIDTH = 125;
 
+const useNativeDriver = Platform.OS !== 'web';
+
 export default function BottomTabBar({
   state,
   navigation,
@@ -60,7 +62,7 @@ export default function BottomTabBar({
       Animated.timing(visible, {
         toValue: 0,
         duration: 200,
-        useNativeDriver: true,
+        useNativeDriver,
       }).start();
     }
   }, [keyboardShown, visible]);
@@ -76,7 +78,7 @@ export default function BottomTabBar({
       Animated.timing(visible, {
         toValue: 1,
         duration: 250,
-        useNativeDriver: true,
+        useNativeDriver,
       }).start(({ finished }) => {
         if (finished) {
           setKeyboardShown(false);

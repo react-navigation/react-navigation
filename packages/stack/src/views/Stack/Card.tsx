@@ -72,6 +72,8 @@ const FALSE = 0;
 const GESTURE_RESPONSE_DISTANCE_HORIZONTAL = 50;
 const GESTURE_RESPONSE_DISTANCE_VERTICAL = 135;
 
+const useNativeDriver = Platform.OS !== 'web';
+
 export default class Card extends React.Component<Props> {
   static defaultProps = {
     overlayEnabled: Platform.OS !== 'ios',
@@ -164,7 +166,7 @@ export default class Card extends React.Component<Props> {
       ...spec.config,
       velocity,
       toValue,
-      useNativeDriver: true,
+      useNativeDriver,
       isInteraction: false,
     }).start(({ finished }) => {
       this.handleEndInteraction();
@@ -442,7 +444,7 @@ export default class Card extends React.Component<Props> {
                   : { translationX: gesture },
             },
           ],
-          { useNativeDriver: true }
+          { useNativeDriver }
         )
       : undefined;
 

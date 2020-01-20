@@ -8,6 +8,8 @@ type Props = React.ComponentProps<typeof BaseButton> & {
   activeOpacity: number;
 };
 
+const useNativeDriver = Platform.OS !== 'web';
+
 export default class BorderlessButton extends React.Component<Props> {
   static defaultProps = {
     activeOpacity: 0.3,
@@ -26,7 +28,7 @@ export default class BorderlessButton extends React.Component<Props> {
         restDisplacementThreshold: 0.01,
         restSpeedThreshold: 0.01,
         toValue: active ? this.props.activeOpacity : 1,
-        useNativeDriver: true,
+        useNativeDriver,
       }).start();
     }
 
