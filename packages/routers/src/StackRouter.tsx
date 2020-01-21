@@ -203,7 +203,7 @@ export default function StackRouter(options: StackRouterOptions) {
               : state.index;
 
           if (index > 0) {
-            const count = Math.max(index - action.payload.count + 1, 0);
+            const count = Math.max(index - action.payload.count + 1, 1);
             const routes = state.routes
               .slice(0, count)
               .concat(state.routes.slice(index + 1));
