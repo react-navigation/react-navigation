@@ -16,11 +16,13 @@ export type TabActionType = {
   target?: string;
 };
 
+export type BackBehavior = 'initialRoute' | 'order' | 'history' | 'none';
+
 export type TabRouterOptions = DefaultRouterOptions & {
-  backBehavior?: 'initialRoute' | 'order' | 'history' | 'none';
+  backBehavior?: BackBehavior;
 };
 
-export type TabNavigationState = NavigationState & {
+export type TabNavigationState = Omit<NavigationState, 'history'> & {
   /**
    * Type of the router, in this case, it's tab.
    */
@@ -28,8 +30,10 @@ export type TabNavigationState = NavigationState & {
   /**
    * List of previously visited route keys.
    */
-  routeKeyHistory: string[];
+  history: { type: 'route'; key: string }[];
 };
+
+const TYPE_ROUTE = 'route' as const;
 
 export const TabActions = {
   jumpTo(name: string, params?: object): TabActionType {
@@ -37,17 +41,53 @@ export const TabActions = {
   },
 };
 
-const changeIndex = (state: TabNavigationState, index: number) => {
-  const previousKey = state.routes[state.index].key;
-  const currentKey = state.routes[index].key;
-  const routeKeyHistory = state.routeKeyHistory
-    .filter(key => key !== currentKey && key !== previousKey)
-    .concat(previousKey);
+const getRouteHistory = (
+  routes: Route<string>[],
+  index: number,
+  backBehavior: BackBehavior
+) => {
+  const history = [{ type: TYPE_ROUTE, key: routes[index].key }];
+
+  switch (backBehavior) {
+    case 'initialRoute':
+      if (index !== 0) {
+        history.unshift({ type: TYPE_ROUTE, key: routes[0].key });
+      }
+      break;
+    case 'order':
+      for (let i = index; i > 0; i--) {
+        history.unshift({ type: TYPE_ROUTE, key: routes[i - 1].key });
+      }
+      break;
+    case 'history':
+      // The history will fill up on navigation
+      break;
+  }
+
+  return history;
+};
+
+const changeIndex = (
+  state: TabNavigationState,
+  index: number,
+  backBehavior: BackBehavior
+) => {
+  let history;
+
+  if (backBehavior === 'history') {
+    const currentKey = state.routes[index].key;
+
+    history = state.history
+      .filter(it => (it.type === 'route' ? it.key !== currentKey : false))
+      .concat({ type: TYPE_ROUTE, key: currentKey });
+  } else {
+    history = getRouteHistory(state.routes, index, backBehavior);
+  }
 
   return {
     ...state,
     index,
-    routeKeyHistory,
+    history,
   };
 };
 
@@ -66,18 +106,22 @@ export default function TabRouter({
           ? routeNames.indexOf(initialRouteName)
           : 0;
 
+      const routes = routeNames.map(name => ({
+        name,
+        key: `${name}-${shortid()}`,
+        params: routeParamList[name],
+      }));
+
+      const history = getRouteHistory(routes, index, backBehavior);
+
       return {
         stale: false,
         type: 'tab',
         key: `tab-${shortid()}`,
         index,
         routeNames,
-        routeKeyHistory: [],
-        routes: routeNames.map(name => ({
-          name,
-          key: `${name}-${shortid()}`,
-          params: routeParamList[name],
-        })),
+        history,
+        routes,
       };
     },
 
@@ -122,9 +166,13 @@ export default function TabRouter({
         routes.length - 1
       );
 
-      const routeKeyHistory = state.routeKeyHistory
-        ? state.routeKeyHistory.filter(key => routes.find(r => r.key === key))
-        : [];
+      let history = state.history?.filter(it =>
+        routes.find(r => r.key === it.key)
+      );
+
+      if (!history?.length) {
+        history = getRouteHistory(routes, index, backBehavior);
+      }
 
       return {
         stale: false,
@@ -132,7 +180,7 @@ export default function TabRouter({
         key: `tab-${shortid()}`,
         index,
         routeNames,
-        routeKeyHistory,
+        history,
         routes,
       };
     },
@@ -152,8 +200,17 @@ export default function TabRouter({
         routeNames.indexOf(state.routes[state.index].name)
       );
 
+      let history = state.history.filter(it =>
+        routes.find(r => r.key === it.key)
+      );
+
+      if (!history.length) {
+        history = getRouteHistory(routes, index, backBehavior);
+      }
+
       return {
         ...state,
+        history,
         routeNames,
         routes,
         index,
@@ -167,7 +224,7 @@ export default function TabRouter({
         return state;
       }
 
-      return changeIndex(state, index);
+      return changeIndex(state, index, backBehavior);
     },
 
     getStateForAction(state, action) {
@@ -208,55 +265,31 @@ export default function TabRouter({
                     )
                   : state.routes,
             },
-            index
+            index,
+            backBehavior
           );
         }
 
-        case 'GO_BACK':
-          switch (backBehavior) {
-            case 'initialRoute': {
-              const index = initialRouteName
-                ? state.routeNames.indexOf(initialRouteName)
-                : 0;
-
-              if (index === -1 || index === state.index) {
-                return null;
-              }
-
-              return { ...state, index };
-            }
-
-            case 'order':
-              if (state.index === 0) {
-                return null;
-              }
-
-              return {
-                ...state,
-                index: state.index - 1,
-              };
-
-            case 'history': {
-              const previousKey =
-                state.routeKeyHistory[state.routeKeyHistory.length - 1];
-              const index = state.routes.findIndex(
-                route => route.key === previousKey
-              );
-
-              if (index === -1) {
-                return null;
-              }
-
-              return {
-                ...state,
-                routeKeyHistory: state.routeKeyHistory.slice(0, -1),
-                index,
-              };
-            }
-
-            default:
-              return null;
+        case 'GO_BACK': {
+          if (state.history.length === 1) {
+            return null;
           }
+
+          const previousKey = state.history[state.history.length - 2].key;
+          const index = state.routes.findIndex(
+            route => route.key === previousKey
+          );
+
+          if (index === -1) {
+            return null;
+          }
+
+          return {
+            ...state,
+            history: state.history.slice(0, -1),
+            index,
+          };
+        }
 
         default:
           return BaseRouter.getStateForAction(state, action);

@@ -168,7 +168,7 @@ export default function DrawerView({
     <SafeAreaProviderCompat>
       <DrawerGestureContext.Provider value={drawerGestureRef}>
         <Drawer
-          open={state.isDrawerOpen}
+          open={Boolean(state.history.find(it => it.type === 'drawer'))}
           gestureEnabled={gestureEnabled !== false}
           onOpen={handleDrawerOpen}
           onClose={handleDrawerClose}
