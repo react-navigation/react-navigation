@@ -5,6 +5,7 @@ import useNavigationState from '../useNavigationState';
 import NavigationContainer from '../NavigationContainer';
 import Screen from '../Screen';
 import MockRouter from './__fixtures__/MockRouter';
+import { NavigationState } from '../types';
 
 it('gets the current navigation state', () => {
   const TestNavigator = (props: any): any => {
@@ -105,4 +106,51 @@ it('gets the current navigation state with selector', () => {
 
   expect(callback).toBeCalledTimes(4);
   expect(callback.mock.calls[3][0]).toBe(1);
+});
+
+it('gets the correct value if selector changes', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return state.routes.map(route => descriptors[route.key].render());
+  };
+
+  const callback = jest.fn();
+
+  const SelectorContext = React.createContext<any>(null);
+
+  const Test = () => {
+    const selector = React.useContext(SelectorContext);
+    const result = useNavigationState(selector);
+
+    callback(result);
+
+    return null;
+  };
+
+  const navigation = React.createRef<any>();
+
+  const App = ({ selector }: { selector: (state: NavigationState) => any }) => {
+    return (
+      <SelectorContext.Provider value={selector}>
+        <NavigationContainer ref={navigation}>
+          <TestNavigator>
+            <Screen name="first" component={Test} />
+            <Screen name="second">{() => null}</Screen>
+            <Screen name="third">{() => null}</Screen>
+          </TestNavigator>
+        </NavigationContainer>
+      </SelectorContext.Provider>
+    );
+  };
+
+  const root = render(<App selector={state => state.index} />);
+
+  expect(callback).toBeCalledTimes(1);
+  expect(callback.mock.calls[0][0]).toBe(0);
+
+  root.update(<App selector={state => state.routes[state.index].name} />);
+
+  expect(callback).toBeCalledTimes(2);
+  expect(callback.mock.calls[1][0]).toBe('first');
 });

@@ -12,7 +12,9 @@ type Selector<T> = (state: NavigationState) => T;
 export default function useNavigationState<T>(selector: Selector<T>): T {
   const navigation = useNavigation();
 
-  const [result, setResult] = React.useState(() =>
+  // We don't care about the state value, we run the selector again at the end
+  // The state is only to make sure that there's a re-render when we have a new value
+  const [, setResult] = React.useState(() =>
     selector(navigation.dangerouslyGetState())
   );
 
@@ -31,5 +33,5 @@ export default function useNavigationState<T>(selector: Selector<T>): T {
     return unsubscribe;
   }, [navigation]);
 
-  return result;
+  return selector(navigation.dangerouslyGetState());
 }
