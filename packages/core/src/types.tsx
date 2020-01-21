@@ -17,6 +17,10 @@ export type NavigationState = {
    */
   routeNames: string[];
   /**
+   * Alternative entries for history.
+   */
+  history?: unknown[];
+  /**
    * List of rendered routes.
    */
   routes: (Route<string> & {
