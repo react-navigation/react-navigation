@@ -19,7 +19,7 @@ import {
 } from './types';
 import Pager, { Props as ChildProps } from './Pager';
 
-type Props<T extends Route> = PagerCommonProps & {
+export type Props<T extends Route> = PagerCommonProps & {
   position?: Animated.Value<number>;
   onIndexChange: (index: number) => void;
   navigationState: NavigationState<T>;
