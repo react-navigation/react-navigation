@@ -89,11 +89,16 @@ export default function MaterialBottomTabView({
         descriptors[route.key].options.tabBarAccessibilityLabel
       }
       getTestID={({ route }) => descriptors[route.key].options.tabBarTestID}
-      onTabPress={({ route }) => {
-        navigation.emit({
+      onTabPress={({ route, preventDefault }) => {
+        const event = navigation.emit({
           type: 'tabPress',
           target: route.key,
+          canPreventDefault: true,
         });
+
+        if (event.defaultPrevented) {
+          preventDefault();
+        }
       }}
     />
   );

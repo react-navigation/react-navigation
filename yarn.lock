@@ -13555,10 +13555,10 @@ react-native-iphone-x-helper@^1.2.1:
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.2.1.tgz#645e2ffbbb49e80844bb4cbbe34a126fda1e6772"
   integrity sha512-/VbpIEp8tSNNHIvstuA3Swx610whci1Zpc9mqNkqn14DkMbw+ORviln2u0XyHG1kPvvwTNGZY6QpeFwxYaSdbQ==
 
-react-native-paper@^3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-3.4.0.tgz#b8d3643b33177ff41a2505aaa801d313defaf707"
-  integrity sha512-QVd6vZ4iJbUqp1OI1DY/0HwBS4y0SVixa2IeBIVyYM4ZZeoeOOlWCXdgtQk7tlf1ju5t1MJunyRGPOXOXTLGNg==
+react-native-paper@^3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-3.5.0.tgz#d74db26fa1714911ec1c9187c430726c680f4b52"
+  integrity sha512-W347plzhV/EsVzC8aT8se6s/jmIx1kSF7E4fpbptA950OHxb4gPFFruHZkffHTByLUiZEgKl3nXKqXkRDDp1UA==
   dependencies:
     "@callstack/react-theme-provider" "^3.0.5"
     color "^3.1.2"
