@@ -5,6 +5,7 @@ import NavigationBuilderContext from './NavigationBuilderContext';
 import useFocusedListeners from './useFocusedListeners';
 import useDevTools from './useDevTools';
 import useStateGetters from './useStateGetters';
+import isSerializable from './isSerializable';
 
 import {
   Route,
@@ -43,6 +44,8 @@ export const NavigationStateContext = React.createContext<{
     throw new Error(MISSING_CONTEXT_ERROR);
   },
 });
+
+let hasWarnedForSerialization = false;
 
 /**
  * Remove `key` and `routeNames` from the state objects recursively to get partial state.
@@ -241,6 +244,20 @@ const Container = React.forwardRef(function NavigationContainer(
   );
 
   React.useEffect(() => {
+    if (process.env.NODE_ENV !== 'production') {
+      if (
+        state !== undefined &&
+        !isSerializable(state) &&
+        !hasWarnedForSerialization
+      ) {
+        hasWarnedForSerialization = true;
+
+        console.warn(
+          "We found non-serializable values in the navigation state, which can break usage such as persisting and restoring state. This might happen if you passed non-serializable values such as function, class instances etc. in params. If you need to use functions in your options, you can use 'navigation.setOptions' instead."
+        );
+      }
+    }
+
     if (skipTrackingRef.current) {
       skipTrackingRef.current = false;
     } else {
