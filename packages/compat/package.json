@@ -12,6 +12,7 @@
     "src",
     "lib"
   ],
+  "sideEffects": false,
   "publishConfig": {
     "access": "public"
   },
