@@ -8,9 +8,11 @@ import {
 } from '@react-navigation/stack';
 import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
+import NewsFeed from '../Shared/NewsFeed';
 
 type SimpleStackParams = {
   Article: { author: string };
+  NewsFeed: undefined;
   Album: undefined;
 };
 
@@ -28,10 +30,38 @@ const ArticleScreen = ({
       <View style={styles.buttons}>
         <Button
           mode="contained"
-          onPress={() => navigation.push('Album')}
+          onPress={() => navigation.replace('NewsFeed')}
           style={styles.button}
         >
-          Push album
+          Replace with feed
+        </Button>
+        <Button
+          mode="outlined"
+          onPress={() => navigation.pop()}
+          style={styles.button}
+        >
+          Pop screen
+        </Button>
+      </View>
+      <Article author={{ name: route.params.author }} scrollEnabled={false} />
+    </ScrollView>
+  );
+};
+
+const NewsFeedScreen = ({
+  navigation,
+}: {
+  navigation: SimpleStackNavigation;
+}) => {
+  return (
+    <ScrollView>
+      <View style={styles.buttons}>
+        <Button
+          mode="contained"
+          onPress={() => navigation.navigate('Album')}
+          style={styles.button}
+        >
+          Navigate to album
         </Button>
         <Button
           mode="outlined"
@@ -41,7 +71,7 @@ const ArticleScreen = ({
           Go back
         </Button>
       </View>
-      <Article author={{ name: route.params.author }} scrollEnabled={false} />
+      <NewsFeed scrollEnabled={false} />
     </ScrollView>
   );
 };
@@ -63,10 +93,10 @@ const AlbumsScreen = ({
         </Button>
         <Button
           mode="outlined"
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.pop(2)}
           style={styles.button}
         >
-          Go back
+          Pop by 2
         </Button>
       </View>
       <Albums scrollEnabled={false} />
@@ -94,6 +124,11 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
           title: `Article by ${route.params.author}`,
         })}
         initialParams={{ author: 'Gandalf' }}
+      />
+      <SimpleStack.Screen
+        name="NewsFeed"
+        component={NewsFeedScreen}
+        options={{ title: 'Feed' }}
       />
       <SimpleStack.Screen
         name="Album"
