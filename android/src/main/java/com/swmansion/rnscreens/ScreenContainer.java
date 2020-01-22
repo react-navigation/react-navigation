@@ -33,6 +33,7 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
   private boolean mIsTransitioning;
   private boolean mLayoutEnqueued = false;
 
+
   private final ChoreographerCompat.FrameCallback mFrameCallback = new ChoreographerCompat.FrameCallback() {
     @Override
     public void doFrame(long frameTimeNanos) {
@@ -40,9 +41,9 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
     }
   };
 
-  private final Runnable mLayoutRunnable = new Runnable() {
+  private final ChoreographerCompat.FrameCallback mLayoutCallback = new ChoreographerCompat.FrameCallback() {
     @Override
-    public void run() {
+    public void doFrame(long frameTimeNanos) {
       mLayoutEnqueued = false;
       measure(
               MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
@@ -66,9 +67,13 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
   public void requestLayout() {
     super.requestLayout();
 
-    if (!mLayoutEnqueued) {
+    if (!mLayoutEnqueued && mLayoutCallback != null) {
       mLayoutEnqueued = true;
-      post(mLayoutRunnable);
+      // we use NATIVE_ANIMATED_MODULE choreographer queue because it allows us to catch the current
+      // looper loop instead of enqueueing the update in the next loop causing a one frame delay.
+      ReactChoreographer.getInstance().postFrameCallback(
+              ReactChoreographer.CallbackType.NATIVE_ANIMATED_MODULE,
+              mLayoutCallback);
     }
   }
 
