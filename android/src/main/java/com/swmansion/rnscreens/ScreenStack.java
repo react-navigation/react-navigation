@@ -243,7 +243,6 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
     if (topScreen != firstScreen && topScreen.isDismissable()) {
       mFragmentManager
               .beginTransaction()
-              .hide(topScreen)
               .show(topScreen)
               .addToBackStack(BACK_STACK_TAG)
               .setPrimaryNavigationFragment(topScreen)
