@@ -3,12 +3,19 @@
 exports[`StackNavigator applies correct values when headerRight is present 1`] = `
 Array [
   <View
+    collapsable={true}
     onLayout={[Function]}
+    removeClippedSubviews={false}
     style={
-      Object {
-        "flex": 1,
-        "overflow": "hidden",
-      }
+      Array [
+        Object {
+          "flex": 1,
+          "overflow": "hidden",
+        },
+        Object {
+          "overflow": "hidden",
+        },
+      ]
     }
   >
     <View
@@ -17,9 +24,15 @@ Array [
         Object {
           "bottom": 0,
           "left": 0,
+          "overflow": "hidden",
           "position": "absolute",
           "right": 0,
           "top": 0,
+          "transform": Array [
+            Object {
+              "translateY": 0,
+            },
+          ],
         }
       }
     >
@@ -300,12 +313,19 @@ Array [
 exports[`StackNavigator renders successfully 1`] = `
 Array [
   <View
+    collapsable={true}
     onLayout={[Function]}
+    removeClippedSubviews={false}
     style={
-      Object {
-        "flex": 1,
-        "overflow": "hidden",
-      }
+      Array [
+        Object {
+          "flex": 1,
+          "overflow": "hidden",
+        },
+        Object {
+          "overflow": "hidden",
+        },
+      ]
     }
   >
     <View
@@ -314,9 +334,15 @@ Array [
         Object {
           "bottom": 0,
           "left": 0,
+          "overflow": "hidden",
           "position": "absolute",
           "right": 0,
           "top": 0,
+          "transform": Array [
+            Object {
+              "translateY": 0,
+            },
+          ],
         }
       }
     >
