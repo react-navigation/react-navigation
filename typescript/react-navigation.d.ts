@@ -482,7 +482,7 @@ declare module 'react-navigation' {
     | NavigationSwitchAction
     | { type: 'CHILD_ACTION'; key?: string };
 
-  export type NavigationRouteConfig<Options, NavigationScreenPropType> =
+  export type NavigationRouteConfig<Options, NavigationScreenPropType, ScreenProps = unknown> =
     | NavigationComponent<Options, NavigationScreenPropType>
     | (
         | { screen: NavigationComponent<Options, NavigationScreenPropType> }
@@ -494,7 +494,8 @@ declare module 'react-navigation' {
           }) & {
         navigationOptions?: NavigationScreenConfig<
           Options,
-          NavigationScreenPropType
+          NavigationScreenPropType,
+          ScreenProps
         >;
         params?: { [key: string]: any };
         path?: string;
@@ -514,10 +515,11 @@ declare module 'react-navigation' {
     resetOnBlur?: boolean;
   }
 
-  export interface NavigationRouteConfigMap<Options, NavigationScreenPropType> {
+  export interface NavigationRouteConfigMap<Options, NavigationScreenPropType, ScreenProps = unknown> {
     [routeName: string]: NavigationRouteConfig<
       Options,
-      NavigationScreenPropType
+      NavigationScreenPropType,
+      ScreenProps
     >;
   }
 
