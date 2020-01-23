@@ -291,7 +291,7 @@ declare module 'react-navigation' {
     newKey?: string;
     routeName: string;
     params?: NavigationParams;
-    action?: NavigationNavigateAction;
+    action?: NavigationAction;
   }
 
   export interface NavigationReplaceAction {
@@ -299,7 +299,7 @@ declare module 'react-navigation' {
     key: string;
     routeName: string;
     params?: NavigationParams;
-    action?: NavigationNavigateAction;
+    action?: NavigationAction;
   }
 
   export interface NavigationCompleteTransitionActionPayload {
