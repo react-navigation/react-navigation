@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as CommonActions from './CommonActions';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
 import NavigationBuilderContext from './NavigationBuilderContext';
-import ResetRootContext from './ResetRootContext';
 import useFocusedListeners from './useFocusedListeners';
 import useDevTools from './useDevTools';
 import useStateGetters from './useStateGetters';
@@ -261,9 +260,7 @@ const Container = React.forwardRef(function NavigationContainer(
   return (
     <NavigationBuilderContext.Provider value={builderContext}>
       <NavigationStateContext.Provider value={context}>
-        <ResetRootContext.Provider value={resetRoot}>
-          <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
-        </ResetRootContext.Provider>
+        <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
       </NavigationStateContext.Provider>
     </NavigationBuilderContext.Provider>
   );
