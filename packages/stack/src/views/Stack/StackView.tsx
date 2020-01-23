@@ -244,6 +244,7 @@ class StackView extends React.Component<Props, State> {
         (!closingRouteKeys.includes(r.key) &&
           !replacingRouteKeys.includes(r.key))
     );
+
     const index = routes.findIndex(r => r.key === route.key);
 
     return routes[index - 1];
