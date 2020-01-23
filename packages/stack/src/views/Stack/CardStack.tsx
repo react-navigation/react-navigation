@@ -533,6 +533,23 @@ export default class CardStack extends React.Component<Props, State> {
               left: safeAreaInsetLeft = insets.left,
             } = safeAreaInsets || {};
 
+            const previousRoute = getPreviousRoute({ route: scene.route });
+
+            let previousScene = scenes[index - 1];
+
+            if (previousRoute) {
+              // The previous scene will be shortly before the current scene in the array
+              // So loop back from current index to avoid looping over the full array
+              for (let j = index - 1; j >= 0; j--) {
+                const s = scenes[j];
+
+                if (s && s.route.key === previousRoute.key) {
+                  previousScene = s;
+                  break;
+                }
+              }
+            }
+
             return (
               <MaybeScreen
                 key={route.key}
@@ -549,7 +566,7 @@ export default class CardStack extends React.Component<Props, State> {
                   layout={layout}
                   gesture={gesture}
                   scene={scene}
-                  previousScene={scenes[index - 1]}
+                  previousScene={previousScene}
                   state={state}
                   safeAreaInsetTop={safeAreaInsetTop}
                   safeAreaInsetRight={safeAreaInsetRight}
