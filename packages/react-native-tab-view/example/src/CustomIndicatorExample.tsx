@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, I18nManager } from 'react-native';
+import { View, Text, StyleSheet, I18nManager, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
   TabView,
@@ -7,6 +7,7 @@ import {
   SceneMap,
   NavigationState,
   SceneRendererProps,
+  ScrollPager,
 } from 'react-native-tab-view';
 import Animated from 'react-native-reanimated';
 import Albums from './Shared/Albums';
@@ -162,6 +163,11 @@ export default class CustomIndicatorExample extends React.Component<{}, State> {
         renderScene={this.renderScene}
         renderTabBar={this.renderTabBar}
         tabBarPosition="bottom"
+        renderPager={
+          Platform.OS === 'ios'
+            ? props => <ScrollPager {...props} />
+            : undefined
+        }
         onIndexChange={this.handleIndexChange}
       />
     );
