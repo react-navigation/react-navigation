@@ -936,3 +936,100 @@ it('switches rendered navigators', () => {
     'Another navigator is already registered for this container.'
   );
 });
+
+it('throws if both children and component are passed', () => {
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const element = (
+    <NavigationContainer>
+      <TestNavigator>
+        <Screen name="foo" component={jest.fn()}>
+          {jest.fn()}
+        </Screen>
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  expect(() => render(element).update(element)).toThrowError(
+    "We got both 'component' and 'children' props for 'Screen'. You must pass only one of them."
+  );
+});
+
+it('throws descriptive error for undefined screen component', () => {
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const element = (
+    <NavigationContainer>
+      <TestNavigator>
+        <Screen name="foo" component={undefined as any} />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  expect(() => render(element).update(element)).toThrowError(
+    "We couldn't find a 'component' or 'children' prop for 'Screen'"
+  );
+});
+
+it('throws descriptive error for invalid screen component', () => {
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const element = (
+    <NavigationContainer>
+      <TestNavigator>
+        <Screen name="foo" component={{} as any} />
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  expect(() => render(element).update(element)).toThrowError(
+    "We got an invalid value for 'component' prop for 'Screen'. It must be a a valid React Component."
+  );
+});
+
+it('throws descriptive error for invalid children', () => {
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const element = (
+    <NavigationContainer>
+      <TestNavigator>
+        <Screen name="foo">{[] as any}</Screen>
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  expect(() => render(element).update(element)).toThrowError(
+    "We got an invalid value for 'children' prop for 'Screen'. It must be a function returning a React Element."
+  );
+});
+
+it("doesn't throw if children is null", () => {
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const element = (
+    <NavigationContainer>
+      <TestNavigator>
+        <Screen name="foo" component={jest.fn()}>
+          {null as any}
+        </Screen>
+      </TestNavigator>
+    </NavigationContainer>
+  );
+
+  expect(() => render(element).update(element)).not.toThrowError();
+});
