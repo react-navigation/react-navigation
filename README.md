@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/react-navigation.svg)](https://badge.fury.io/js/react-navigation) [![CircleCI badge](https://circleci.com/gh/react-navigation/react-navigation/tree/master.svg?style=shield)](https://circleci.com/gh/react-navigation/react-navigation/tree/master) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://reactnavigation.org/docs/contributing.html)
 
-React Navigation is born from the React Native community's need for an extensible yet easy-to-use navigation solution based on Javascript.
+React Navigation is born from the React Native community's need for an extensible yet easy-to-use navigation solution based on JavaScript.
 
 ## Installation
 
@@ -19,7 +19,7 @@ See: https://reactnavigation.org/docs/en/getting-started.html
 
 ## Changelog
 
-The changes for each release are outlined on [the Github releases page](https://github.com/react-navigation/react-navigation/releases).
+The changes for each release are outlined on [the GitHub releases page](https://github.com/react-navigation/react-navigation/releases).
 
 ## Try it out
 
