@@ -15,12 +15,6 @@ export type Action =
       target?: string;
     }
   | {
-      type: 'REPLACE';
-      payload: { name: string; key?: string; params?: object };
-      source?: string;
-      target?: string;
-    }
-  | {
       type: 'RESET';
       payload: PartialState<NavigationState>;
       source?: string;
@@ -57,10 +51,6 @@ export function navigate(...args: any): Action {
 
     return { type: 'NAVIGATE', payload };
   }
-}
-
-export function replace(name: string, params?: object): Action {
-  return { type: 'REPLACE', payload: { name, params } };
 }
 
 export function reset(state: PartialState<NavigationState>): Action {
