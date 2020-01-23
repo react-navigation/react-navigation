@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.62](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.61...@react-navigation/stack@5.0.0-alpha.62) (2020-01-23)
+
+
+### Bug Fixes
+
+* don't use native driver on web ([0a982ee](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/0a982ee6984b24c0ba053a30223e255f3835e050))
+* handle header translation for horizontal-inverted ([321fa65](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/321fa653add8366b7f24fb9de9a950064421dfc1))
+* position inactivscreensws offscreen by default ([38520a9](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/38520a97ff90af0a2f89f95676487a54104068d3))
+* slide the header up to hide it for vertical animation ([43d2c45](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/43d2c456beb58a8a57104ac308559cbd62998a52))
+* use a fade animation for header in all presets ([fe82276](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/fe82276b1f0d1a991744e642dcfa9034fb767caf))
+
+
+### Features
+
+* emit appear and dismiss events for native stack ([f1df4a0](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/f1df4a080877b3642e748a41a5ffc2da8c449a8c))
+* let the navigator specify if default can be prevented ([da67e13](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/da67e134d2157201360427d3c10da24f24cae7aa))
+
+
+
+
+
 # [5.0.0-alpha.61](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.60...@react-navigation/stack@5.0.0-alpha.61) (2020-01-14)
 
 **Note:** Version bump only for package @react-navigation/stack

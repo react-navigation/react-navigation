@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.35](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-bottom-tabs/compare/@react-navigation/material-bottom-tabs@5.0.0-alpha.34...@react-navigation/material-bottom-tabs@5.0.0-alpha.35) (2020-01-23)
+
+
+### Features
+
+* add preventDefault functionality in material bottom tabs ([3dede31](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-bottom-tabs/commit/3dede316ccab3b2403a475f60ce20b5c4e4cc068))
+* let the navigator specify if default can be prevented ([da67e13](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-bottom-tabs/commit/da67e134d2157201360427d3c10da24f24cae7aa))
+
+
+
+
+
 # [5.0.0-alpha.34](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-bottom-tabs/compare/@react-navigation/material-bottom-tabs@5.0.0-alpha.33...@react-navigation/material-bottom-tabs@5.0.0-alpha.34) (2020-01-14)
 
 **Note:** Version bump only for package @react-navigation/material-bottom-tabs

@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.36](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.35...@react-navigation/core@5.0.0-alpha.36) (2020-01-23)
+
+
+### Bug Fixes
+
+* disallow canPreventDefault option if not present in types ([d9059b5](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/d9059b56d8a89b39fec43d38a7b0514d41c0b550))
+* don't add ?if query params is empty ([3bf5ddd](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/3bf5ddde2ac1ba45f1123752d37532175f18a3d9))
+* fix types for useFocusEffect ([23ab45a](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/23ab45aceb72cc27ebfacdedfbf60d0c540fecfb)), closes [#270](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/issues/270)
+* make sure that we return correct value if selector changes ([6c2acbb](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/6c2acbb304a9f11789b45a410b6c41911eca3947)), closes [/github.com/react-navigation/navigation-ex/pull/273#issuecomment-576581225](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/issues/issuecomment-576581225)
+* use protected for private value store ([ad4eaff](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/ad4eaff1e99e4f9fca3a193764fd0f26efa41341))
+
+
+### Features
+
+* add useNavigationState hook ([32a2206](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/32a2206513bc084d8da07187385d11db498f1e2a))
+* let the navigator specify if default can be prevented ([da67e13](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/da67e134d2157201360427d3c10da24f24cae7aa))
+* support nested config in getPathFromState ([#266](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/issues/266)) ([1e53821](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/1e53821d52be182369add07a86c72221c5dba53e))
+
+
+
+
+
 # [5.0.0-alpha.35](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.34...@react-navigation/core@5.0.0-alpha.35) (2020-01-14)
 
 

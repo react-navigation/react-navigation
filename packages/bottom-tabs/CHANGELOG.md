@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.38](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.37...@react-navigation/bottom-tabs@5.0.0-alpha.38) (2020-01-23)
+
+
+### Bug Fixes
+
+* don't use native driver on web ([0a982ee](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/commit/0a982ee6984b24c0ba053a30223e255f3835e050))
+
+
+### Features
+
+* let the navigator specify if default can be prevented ([da67e13](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/commit/da67e134d2157201360427d3c10da24f24cae7aa))
+
+
+
+
+
 # [5.0.0-alpha.37](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.36...@react-navigation/bottom-tabs@5.0.0-alpha.37) (2020-01-14)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

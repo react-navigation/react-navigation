@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.28](https://github.com/react-navigation/navigation-ex/tree/master/packages/native-stack/compare/@react-navigation/native-stack@5.0.0-alpha.27...@react-navigation/native-stack@5.0.0-alpha.28) (2020-01-23)
+
+
+### Bug Fixes
+
+* fix types for native stack ([1da4a64](https://github.com/react-navigation/navigation-ex/tree/master/packages/native-stack/commit/1da4a6437f4607c1d4547d26dd5068615631982e))
+
+
+### Features
+
+* emit appear and dismiss events for native stack ([f1df4a0](https://github.com/react-navigation/navigation-ex/tree/master/packages/native-stack/commit/f1df4a080877b3642e748a41a5ffc2da8c449a8c))
+* let the navigator specify if default can be prevented ([da67e13](https://github.com/react-navigation/navigation-ex/tree/master/packages/native-stack/commit/da67e134d2157201360427d3c10da24f24cae7aa))
+
+
+
+
+
 # [5.0.0-alpha.27](https://github.com/react-navigation/navigation-ex/tree/master/packages/native-stack/compare/@react-navigation/native-stack@5.0.0-alpha.26...@react-navigation/native-stack@5.0.0-alpha.27) (2020-01-14)
 
 **Note:** Version bump only for package @react-navigation/native-stack
