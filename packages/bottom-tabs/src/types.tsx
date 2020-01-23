@@ -176,14 +176,9 @@ export type BottomTabBarOptions = {
   tabStyle?: StyleProp<ViewStyle>;
   /**
    * Whether the label is renderd below the icon or beside the icon.
-   * When a function is passed, it receives the device dimensions to render the label differently.
    * By default, in `vertical` orinetation, label is rendered below and in `horizontal` orientation, it's renderd beside.
    */
-  labelPosition?:
-    | LabelPosition
-    | ((options: {
-        dimensions: { height: number; width: number };
-      }) => LabelPosition);
+  labelPosition?: LabelPosition;
   /**
    * Whether the label position should adapt to the orientation.
    */
