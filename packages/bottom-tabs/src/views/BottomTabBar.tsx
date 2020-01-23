@@ -50,7 +50,10 @@ export default function BottomTabBar({
   const { colors } = useTheme();
 
   const [dimensions, setDimensions] = React.useState(Dimensions.get('window'));
-  const [layout, setLayout] = React.useState({ height: 0, width: 0 });
+  const [layout, setLayout] = React.useState({
+    height: 0,
+    width: dimensions.width,
+  });
   const [keyboardShown, setKeyboardShown] = React.useState(false);
 
   const [visible] = React.useState(() => new Animated.Value(0));
@@ -124,27 +127,15 @@ export default function BottomTabBar({
   };
 
   const shouldUseHorizontalLabels = () => {
-    const isLandscape = dimensions.width > dimensions.height;
-
     if (labelPosition) {
-      let position;
-
-      if (typeof labelPosition === 'string') {
-        position = labelPosition;
-      } else {
-        position = labelPosition({ dimensions });
-      }
-
-      if (position) {
-        return position === 'beside-icon';
-      }
+      return labelPosition === 'beside-icon';
     }
 
     if (!adaptive) {
       return false;
     }
 
-    if (dimensions.width >= 768) {
+    if (layout.width >= 768) {
       // Screen size matches a tablet
       let maxTabItemWidth = DEFAULT_MAX_TAB_ITEM_WIDTH;
 
@@ -158,8 +149,10 @@ export default function BottomTabBar({
         }
       }
 
-      return routes.length * maxTabItemWidth <= dimensions.width;
+      return routes.length * maxTabItemWidth <= layout.width;
     } else {
+      const isLandscape = dimensions.width > dimensions.height;
+
       return isLandscape;
     }
   };
