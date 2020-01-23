@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.27](https://github.com/react-navigation/navigation-ex/tree/master/packages/compat/compare/@react-navigation/compat@5.0.0-alpha.26...@react-navigation/compat@5.0.0-alpha.27) (2020-01-23)
+
+
+### Bug Fixes
+
+* ensure re-render on isFirstRouteInParent change in compat layer ([14ae373](https://github.com/react-navigation/navigation-ex/tree/master/packages/compat/commit/14ae3738cf46088e082bd1c60b9dcc6dacacd1bf))
+* improvements to the compat layer ([2a76dc4](https://github.com/react-navigation/navigation-ex/tree/master/packages/compat/commit/2a76dc4d3c4cc0365a3afcff6ac321145efed026))
+
+
+
+
+
 # [5.0.0-alpha.26](https://github.com/react-navigation/navigation-ex/tree/master/packages/compat/compare/@react-navigation/compat@5.0.0-alpha.25...@react-navigation/compat@5.0.0-alpha.26) (2020-01-14)
 
 **Note:** Version bump only for package @react-navigation/compat

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.34](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.33...@react-navigation/material-top-tabs@5.0.0-alpha.34) (2020-01-23)
+
+
+### Features
+
+* let the navigator specify if default can be prevented ([da67e13](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/commit/da67e134d2157201360427d3c10da24f24cae7aa))
+
+
+
+
+
 # [5.0.0-alpha.33](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.32...@react-navigation/material-top-tabs@5.0.0-alpha.33) (2020-01-14)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

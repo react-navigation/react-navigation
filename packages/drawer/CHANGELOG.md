@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.40](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.39...@react-navigation/drawer@5.0.0-alpha.40) (2020-01-23)
+
+
+### Features
+
+* emit appear and dismiss events for native stack ([f1df4a0](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/f1df4a080877b3642e748a41a5ffc2da8c449a8c))
+* let the navigator specify if default can be prevented ([da67e13](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/da67e134d2157201360427d3c10da24f24cae7aa))
+
+
+
+
+
 # [5.0.0-alpha.39](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.38...@react-navigation/drawer@5.0.0-alpha.39) (2020-01-14)
 
 **Note:** Version bump only for package @react-navigation/drawer

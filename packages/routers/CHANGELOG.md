@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.26](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.25...@react-navigation/routers@5.0.0-alpha.26) (2020-01-23)
+
+
+### Bug Fixes
+
+* handle popping more than available screens in stack ([68ed8a7](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/commit/68ed8a725950f39228847ab10b3dd7f3ebd2e2dc))
+
+
+
+
+
 # [5.0.0-alpha.25](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.24...@react-navigation/routers@5.0.0-alpha.25) (2020-01-14)
 
 **Note:** Version bump only for package @react-navigation/routers
