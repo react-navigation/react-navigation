@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { isValidElementType } from 'react-is';
 import { NavigationStateContext } from './NavigationContainer';
 import NavigationRouteContext from './NavigationRouteContext';
 import Screen from './Screen';
@@ -53,8 +54,8 @@ const isArrayEqual = (a: any[], b: any[]) =>
  */
 const getRouteConfigsFromChildren = <ScreenOptions extends object>(
   children: React.ReactNode
-) =>
-  React.Children.toArray(children).reduce<
+) => {
+  const configs = React.Children.toArray(children).reduce<
     RouteConfig<ParamListBase, string, ScreenOptions>[]
   >((acc, child) => {
     if (React.isValidElement(child)) {
@@ -84,6 +85,39 @@ const getRouteConfigsFromChildren = <ScreenOptions extends object>(
       }')`
     );
   }, []);
+
+  if (process.env.NODE_ENV !== 'production') {
+    configs.forEach(config => {
+      const { children, component } = config as any;
+
+      if (children != null || component !== undefined) {
+        if (children != null && component !== undefined) {
+          throw new Error(
+            "We got both 'component' and 'children' props for 'Screen'. You must pass only one of them."
+          );
+        }
+
+        if (children != null && typeof children !== 'function') {
+          throw new Error(
+            `We got an invalid value for 'children' prop for 'Screen'. It must be a function returning a React Element.`
+          );
+        }
+
+        if (component !== undefined && !isValidElementType(component)) {
+          throw new Error(
+            `We got an invalid value for 'component' prop for 'Screen'. It must be a a valid React Component.`
+          );
+        }
+      } else {
+        throw new Error(
+          "We couldn't find a 'component' or 'children' prop for 'Screen'. This can happen if you passed 'undefined'. You likely forgot to export your component from the file it's defined in, or mixed up default import and named import when importing."
+        );
+      }
+    });
+  }
+
+  return configs;
+};
 
 /**
  * Hook for building navigators.
