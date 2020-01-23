@@ -10,6 +10,12 @@ import {
 
 export type StackActionType =
   | {
+      type: 'REPLACE';
+      payload: { name: string; key?: string | undefined; params?: object };
+      source?: string;
+      target?: string;
+    }
+  | {
       type: 'PUSH';
       payload: { name: string; key?: string | undefined; params?: object };
       source?: string;
@@ -37,6 +43,9 @@ export type StackNavigationState = NavigationState & {
 };
 
 export const StackActions = {
+  replace(name: string, params?: object): StackActionType {
+    return { type: 'REPLACE', payload: { name, params } };
+  },
   push(name: string, params?: object): StackActionType {
     return { type: 'PUSH', payload: { name, params } };
   },
@@ -169,6 +178,35 @@ export default function StackRouter(options: StackRouterOptions) {
       const { routeParamList } = options;
 
       switch (action.type) {
+        case 'REPLACE': {
+          const index = action.source
+            ? state.routes.findIndex(r => r.key === action.source)
+            : state.index;
+
+          if (index === -1) {
+            return null;
+          }
+
+          const { name, key, params } = action.payload;
+
+          if (!state.routeNames.includes(name)) {
+            return null;
+          }
+
+          return {
+            ...state,
+            routes: state.routes.map((route, i) =>
+              i === index
+                ? {
+                    key: key !== undefined ? key : `${name}-${shortid()}`,
+                    name,
+                    params,
+                  }
+                : route
+            ),
+          };
+        }
+
         case 'PUSH':
           if (state.routeNames.includes(action.payload.name)) {
             return {

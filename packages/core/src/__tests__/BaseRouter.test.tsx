@@ -16,64 +16,6 @@ const STATE = {
   routeNames: ['foo', 'bar', 'baz', 'qux'],
 };
 
-it('replaces focused screen with REPLACE', () => {
-  const result = BaseRouter.getStateForAction(
-    STATE,
-    CommonActions.replace('qux', { answer: 42 })
-  );
-
-  expect(result).toEqual({
-    stale: false,
-    type: 'test',
-    key: 'root',
-    index: 1,
-    routes: [
-      { key: 'foo', name: 'foo' },
-      { key: 'qux-test', name: 'qux', params: { answer: 42 } },
-      { key: 'baz', name: 'baz' },
-    ],
-    routeNames: ['foo', 'bar', 'baz', 'qux'],
-  });
-});
-
-it('replaces source screen with REPLACE', () => {
-  const result = BaseRouter.getStateForAction(STATE, {
-    ...CommonActions.replace('qux', { answer: 42 }),
-    source: 'baz',
-  });
-
-  expect(result).toEqual({
-    stale: false,
-    type: 'test',
-    key: 'root',
-    index: 1,
-    routes: [
-      { key: 'foo', name: 'foo' },
-      { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
-      { key: 'qux-test', name: 'qux', params: { answer: 42 } },
-    ],
-    routeNames: ['foo', 'bar', 'baz', 'qux'],
-  });
-});
-
-it("doesn't handle REPLACE if source key isn't present", () => {
-  const result = BaseRouter.getStateForAction(STATE, {
-    ...CommonActions.replace('qux', { answer: 42 }),
-    source: 'magic',
-  });
-
-  expect(result).toBe(null);
-});
-
-it("doesn't handle REPLACE if screen to replace with isn't present", () => {
-  const result = BaseRouter.getStateForAction(
-    STATE,
-    CommonActions.replace('nonexistent', { answer: 42 })
-  );
-
-  expect(result).toBe(null);
-});
-
 it('sets params for the focused screen with SET_PARAMS', () => {
   const result = BaseRouter.getStateForAction(
     STATE,

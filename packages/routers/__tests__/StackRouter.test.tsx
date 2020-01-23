@@ -683,6 +683,145 @@ it('handles pop to top action', () => {
   });
 });
 
+it('replaces focused screen with replace', () => {
+  const router = StackRouter({});
+  const options = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        routes: [
+          { key: 'foo', name: 'foo' },
+          { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
+          { key: 'baz', name: 'baz' },
+        ],
+        routeNames: ['foo', 'bar', 'baz', 'qux'],
+      },
+      StackActions.replace('qux', { answer: 42 }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'qux-test', name: 'qux', params: { answer: 42 } },
+      { key: 'baz', name: 'baz' },
+    ],
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+  });
+});
+
+it('replaces source screen with replace', () => {
+  const router = StackRouter({});
+  const options = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        routes: [
+          { key: 'foo', name: 'foo' },
+          { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
+          { key: 'baz', name: 'baz' },
+        ],
+        routeNames: ['foo', 'bar', 'baz', 'qux'],
+      },
+      {
+        ...StackActions.replace('qux', { answer: 42 }),
+        source: 'baz',
+      },
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
+      { key: 'qux-test', name: 'qux', params: { answer: 42 } },
+    ],
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+  });
+});
+
+it("doesn't handle replace if source key isn't present", () => {
+  const router = StackRouter({});
+  const options = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        routes: [
+          { key: 'foo', name: 'foo' },
+          { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
+          { key: 'baz', name: 'baz' },
+        ],
+        routeNames: ['foo', 'bar', 'baz', 'qux'],
+      },
+      {
+        ...StackActions.replace('qux', { answer: 42 }),
+        source: 'magic',
+      },
+      options
+    )
+  ).toBe(null);
+});
+
+it("doesn't handle replace if screen to replace with isn't present", () => {
+  const router = StackRouter({});
+  const options = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        routes: [
+          { key: 'foo', name: 'foo' },
+          { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
+          { key: 'baz', name: 'baz' },
+        ],
+        routeNames: ['foo', 'bar', 'baz', 'qux'],
+      },
+      {
+        ...StackActions.replace('nonexistent', { answer: 42 }),
+        source: 'magic',
+      },
+      options
+    )
+  ).toBe(null);
+});
+
 it('handles push action', () => {
   const router = StackRouter({});
   const options = {
