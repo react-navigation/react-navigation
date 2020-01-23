@@ -2,11 +2,12 @@
   "name": "tabviewexample",
   "version": "0.0.1",
   "private": true,
-  "main": "index.js",
+  "main": "index",
   "scripts": {
     "start": "expo start",
     "android": "expo android",
-    "ios": "expo ios"
+    "ios": "expo ios",
+    "web": "expo start:web"
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.0",
@@ -15,15 +16,20 @@
     "expo-constants": "~8.0.0",
     "expo-keep-awake": "~8.0.0",
     "react": "16.9.0",
+    "react-dom": "^16.12.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
     "react-native-gesture-handler": "~1.5.0",
     "react-native-reanimated": "~1.4.0",
+    "react-native-web": "0.11.0",
     "scheduler": "^0.18.0"
   },
   "devDependencies": {
+    "@types/react": "~16.9.0",
+    "@types/react-native": "~0.60.23",
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-preset-expo": "^8.0.0",
-    "expo-cli": "^3.11.1"
+    "expo-cli": "^3.11.1",
+    "typescript": "~3.6.3"
   },
   "resolutions": {
     "@babel/runtime": "7.3.1"
