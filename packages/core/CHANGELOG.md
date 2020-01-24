@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.37](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.36...@react-navigation/core@5.0.0-alpha.37) (2020-01-24)
+
+
+### Bug Fixes
+
+* add error message when trying to use v4 API with v5 ([179e807](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/179e807a64a7d031d671c2c4b12edaee3c3440c5))
+* validate screen configs ([2f1f0af](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/2f1f0af862ef8625da4c2aaf463d45fe17a4ac88))
+* warn if non-serializable values found in state ([5751e7f](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/5751e7f97a1731a5c71862174dfd931b6ffe13e2))
+
+
+
+
+
 # [5.0.0-alpha.36](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.35...@react-navigation/core@5.0.0-alpha.36) (2020-01-23)
 
 

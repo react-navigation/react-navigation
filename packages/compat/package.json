@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/compat",
   "description": "Compatibility layer to write navigator definitions in static configuration format",
-  "version": "5.0.0-alpha.27",
+  "version": "5.0.0-alpha.28",
   "license": "MIT",
   "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/compat",
   "main": "lib/commonjs/index.js",
@@ -21,7 +21,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/routers": "^5.0.0-alpha.26"
+    "@react-navigation/routers": "^5.0.0-alpha.27"
   },
   "devDependencies": {
     "@types/react": "^16.9.17",
