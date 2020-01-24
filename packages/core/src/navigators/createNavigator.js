@@ -24,7 +24,7 @@ function createNavigator(NavigatorView, router, navigationConfig) {
       const { navigation, screenProps } = nextProps;
       invariant(
         navigation != null,
-        'The navigation prop is missing for this navigator. In react-navigation 3 you must set up your app container directly. More info: https://reactnavigation.org/docs/en/app-containers.html'
+        'The navigation prop is missing for this navigator. In react-navigation v3 and v4 you must set up your app container directly. More info: https://reactnavigation.org/docs/en/app-containers.html'
       );
       const { state } = navigation;
       const { routes } = state;
