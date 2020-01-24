@@ -52,6 +52,7 @@ public class Screen extends ViewGroup implements ReactPointerEventsView {
   private boolean mTransitioning;
   private StackPresentation mStackPresentation = StackPresentation.PUSH;
   private StackAnimation mStackAnimation = StackAnimation.DEFAULT;
+  private boolean mGestureEnabled = true;
 
   public Screen(ReactContext context) {
     super(context);
@@ -122,6 +123,10 @@ public class Screen extends ViewGroup implements ReactPointerEventsView {
     mStackAnimation = stackAnimation;
   }
 
+  public void setGestureEnabled(boolean gestureEnabled) {
+    mGestureEnabled = gestureEnabled;
+  }
+
   public StackAnimation getStackAnimation() {
     return mStackAnimation;
   }
@@ -168,5 +173,9 @@ public class Screen extends ViewGroup implements ReactPointerEventsView {
 
   public boolean isActive() {
     return mActive;
+  }
+
+  public boolean isGestureEnabled() {
+    return mGestureEnabled;
   }
 }

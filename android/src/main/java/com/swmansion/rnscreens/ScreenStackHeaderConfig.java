@@ -30,7 +30,6 @@ public class ScreenStackHeaderConfig extends ViewGroup {
   private float mTitleFontSize;
   private int mBackgroundColor;
   private boolean mIsHidden;
-  private boolean mGestureEnabled = true;
   private boolean mIsBackButtonHidden;
   private boolean mIsShadowHidden;
   private boolean mDestroyed;
@@ -113,10 +112,6 @@ public class ScreenStackHeaderConfig extends ViewGroup {
       }
     }
     return null;
-  }
-
-  public boolean isDismissable() {
-    return mGestureEnabled;
   }
 
   public void onUpdate() {
@@ -301,10 +296,6 @@ public class ScreenStackHeaderConfig extends ViewGroup {
 
   public void setHideShadow(boolean hideShadow) {
     mIsShadowHidden = hideShadow;
-  }
-
-  public void setGestureEnabled(boolean gestureEnabled) {
-    mGestureEnabled = gestureEnabled;
   }
 
   public void setHideBackButton(boolean hideBackButton) {

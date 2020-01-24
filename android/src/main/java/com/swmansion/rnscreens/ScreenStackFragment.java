@@ -97,10 +97,6 @@ public class ScreenStackFragment extends ScreenFragment {
   }
 
   public boolean isDismissable() {
-    View child = mScreenView.getChildAt(0);
-    if (child instanceof ScreenStackHeaderConfig) {
-      return ((ScreenStackHeaderConfig) child).isDismissable();
-    }
-    return true;
+    return mScreenView.isGestureEnabled();
   }
 }

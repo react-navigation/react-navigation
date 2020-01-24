@@ -23,7 +23,6 @@
 @property (nonatomic) BOOL hideBackButton;
 @property (nonatomic) BOOL hideShadow;
 @property (nonatomic) BOOL translucent;
-@property (nonatomic) BOOL gestureEnabled;
 
 + (void)willShowViewController:(UIViewController *)vc withConfig:(RNSScreenStackHeaderConfig*)config;
 

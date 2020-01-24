@@ -60,7 +60,6 @@
     self.hidden = YES;
     _translucent = YES;
     _reactSubviews = [NSMutableArray new];
-    _gestureEnabled = YES;
   }
   return self;
 }
@@ -269,7 +268,7 @@
   [navctr setNavigationBarHidden:shouldHide animated:YES];
 #ifdef __IPHONE_13_0
   if (@available(iOS 13.0, *)) {
-    vc.modalInPresentation = !config.gestureEnabled;
+    vc.modalInPresentation = !config.screenView.gestureEnabled;
   }
 #endif
   if (shouldHide) {
@@ -454,7 +453,6 @@ RCT_EXPORT_VIEW_PROPERTY(hideShadow, BOOL)
 // `hidden` is an UIView property, we need to use different name internally
 RCT_REMAP_VIEW_PROPERTY(hidden, hide, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(translucent, BOOL)
-RCT_EXPORT_VIEW_PROPERTY(gestureEnabled, BOOL)
 
 @end
 

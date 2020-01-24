@@ -99,11 +99,6 @@ public class ScreenStackHeaderConfigViewManager extends ViewGroupManager<ScreenS
     config.setHideShadow(hideShadow);
   }
 
-  @ReactProp(name = "gestureEnabled", defaultBoolean = true)
-  public void setGestureEnabled(ScreenStackHeaderConfig config, boolean gestureEnabled) {
-    config.setGestureEnabled(gestureEnabled);
-  }
-
   @ReactProp(name = "hideBackButton")
   public void setHideBackButton(ScreenStackHeaderConfig config, boolean hideBackButton) {
     config.setHideBackButton(hideBackButton);

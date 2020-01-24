@@ -57,6 +57,11 @@ public class ScreenViewManager extends ViewGroupManager<Screen> {
     }
   }
 
+  @ReactProp(name = "gestureEnabled", defaultBoolean = true)
+  public void setGestureEnabled(Screen view, boolean gestureEnabled) {
+    view.setGestureEnabled(gestureEnabled);
+  }
+
   @Nullable
   @Override
   public Map getExportedCustomDirectEventTypeConstants() {

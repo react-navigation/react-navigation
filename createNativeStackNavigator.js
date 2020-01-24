@@ -75,7 +75,6 @@ class StackView extends React.Component {
         headerBackTitleStyle && headerBackTitleStyle.fontFamily,
       backTitleFontSize: headerBackTitleStyle && headerBackTitleStyle.fontSize,
       color: headerTintColor,
-      gestureEnabled: gestureEnabled === undefined ? true : gestureEnabled,
       largeTitle,
       largeTitleFontFamily:
         headerLargeTitleStyle && headerLargeTitleStyle.fontFamily,
@@ -191,6 +190,7 @@ class StackView extends React.Component {
         style={options.cardStyle}
         stackAnimation={stackAnimation}
         stackPresentation={stackPresentation}
+        gestureEnabled={gestureEnabled === undefined ? true : gestureEnabled}
         onAppear={() => this._onSceneFocus(route, descriptor)}
         onDismissed={() => this._removeScene(route)}>
         {this._renderHeaderConfig(index, route, descriptor)}

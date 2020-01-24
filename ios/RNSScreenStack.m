@@ -102,16 +102,9 @@
   RCTRootContentView *rootView = (RCTRootContentView *)parent;
   [rootView.touchHandler cancel];
 
-  UIView *topView = _controller.viewControllers.lastObject.view;
-  RNSScreenStackHeaderConfig *config = nil;
-  for (UIView *subview in topView.reactSubviews) {
-    if ([subview isKindOfClass:[RNSScreenStackHeaderConfig class]]) {
-      config = (RNSScreenStackHeaderConfig*) subview;
-      break;
-    }
-  }
+  RNSScreenView *topScreen = (RNSScreenView *)_controller.viewControllers.lastObject.view;
 
-  return _controller.viewControllers.count > 1 && (config == nil || config.gestureEnabled);
+  return _controller.viewControllers.count > 1 && topScreen.gestureEnabled;
 }
 
 - (void)markChildUpdated
