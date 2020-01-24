@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.39](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.38...@react-navigation/bottom-tabs@5.0.0-alpha.39) (2020-01-24)
+
+
+### Bug Fixes
+
+* use layout instead of dimensions for determining tab bar layout ([f1fe951](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/commit/f1fe951cf9d602e1b6d4932e3c6c77bbeaaec5c0))
+
+
+
+
+
 # [5.0.0-alpha.38](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.37...@react-navigation/bottom-tabs@5.0.0-alpha.38) (2020-01-23)
 
 

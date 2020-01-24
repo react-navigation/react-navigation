@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.63](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.62...@react-navigation/stack@5.0.0-alpha.63) (2020-01-24)
+
+
+### Bug Fixes
+
+* pass correct previous scene to header with headerMode: screen ([16c64e7](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/16c64e729896a157b2b5bb96d6e3eead827626a0))
+
+
+
+
+
 # [5.0.0-alpha.62](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.61...@react-navigation/stack@5.0.0-alpha.62) (2020-01-23)
 
 
