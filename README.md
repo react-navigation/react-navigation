@@ -131,7 +131,7 @@ Screen stack component expects one or more `Screen` components as direct childre
 
 `StackScreen` extends the capabilities of `Screen` component to allow additional customizations and to make it possible to handle events such as using hardware back or back gesture to dismiss the top screen. Below is the list of additional properties that can be used for `Screen` component:
 
-#### `onDismiss`
+#### `onDismissed`
 
 A callback that gets called when the current screen is dismissed by hardware back (on Android) or dismiss gesture (swipe back or down). The callback takes no arguments.
 
