@@ -88,29 +88,37 @@ const getRouteConfigsFromChildren = <ScreenOptions extends object>(
 
   if (process.env.NODE_ENV !== 'production') {
     configs.forEach(config => {
-      const { children, component } = config as any;
+      const { name, children, component } = config as any;
+
+      if (typeof name !== 'string' || !name) {
+        throw new Error(
+          `We got an invalid name (${JSON.stringify(
+            name
+          )}) for the screen. It must be a non-empty string.`
+        );
+      }
 
       if (children != null || component !== undefined) {
         if (children != null && component !== undefined) {
           throw new Error(
-            "We got both 'component' and 'children' props for 'Screen'. You must pass only one of them."
+            `We got both 'component' and 'children' props for the screen '${name}'. You must pass only one of them.`
           );
         }
 
         if (children != null && typeof children !== 'function') {
           throw new Error(
-            `We got an invalid value for 'children' prop for 'Screen'. It must be a function returning a React Element.`
+            `We got an invalid value for 'children' prop for the screen '${name}'. It must be a function returning a React Element.`
           );
         }
 
         if (component !== undefined && !isValidElementType(component)) {
           throw new Error(
-            `We got an invalid value for 'component' prop for 'Screen'. It must be a a valid React Component.`
+            `We got an invalid value for 'component' prop for the screen '${name}'. It must be a a valid React Component.`
           );
         }
       } else {
         throw new Error(
-          "We couldn't find a 'component' or 'children' prop for 'Screen'. This can happen if you passed 'undefined'. You likely forgot to export your component from the file it's defined in, or mixed up default import and named import when importing."
+          `We couldn't find a 'component' or 'children' prop for the screen '${name}'. This can happen if you passed 'undefined'. You likely forgot to export your component from the file it's defined in, or mixed up default import and named import when importing.`
         );
       }
     });
