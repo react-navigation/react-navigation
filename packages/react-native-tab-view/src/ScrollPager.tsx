@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Keyboard } from 'react-native';
+import { StyleSheet, Keyboard, InteractionManager } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Props } from './Pager';
 import { Route, Listener } from './types';
@@ -54,10 +54,19 @@ export default class ScrollPager<T extends Route> extends React.Component<
     }
   }
 
+  componentWillUnmount() {
+    if (this.interactionHandle !== null) {
+      InteractionManager.clearInteractionHandle(this.interactionHandle);
+    }
+  }
+
   private initialOffset = {
     x: this.props.navigationState.index * this.props.layout.width,
     y: 0,
   };
+
+  // InteractionHandle to handle tasks around animations
+  private interactionHandle: number | null = null;
 
   private scrollViewRef = React.createRef<Animated.ScrollView>();
 
@@ -137,6 +146,18 @@ export default class ScrollPager<T extends Route> extends React.Component<
       navigationState,
     } = this.props;
 
+    const handleSwipeStart = () => {
+      onSwipeStart && onSwipeStart();
+      this.interactionHandle = InteractionManager.createInteractionHandle();
+    };
+
+    const handleSwipeEnd = () => {
+      onSwipeEnd && onSwipeEnd();
+      if (this.interactionHandle !== null) {
+        InteractionManager.clearInteractionHandle(this.interactionHandle);
+      }
+    };
+
     return children({
       position: this.relativePosition,
       addListener: this.addListener,
@@ -157,8 +178,8 @@ export default class ScrollPager<T extends Route> extends React.Component<
           showsHorizontalScrollIndicator={false}
           scrollEventThrottle={1}
           onScroll={this.onScroll}
-          onScrollBeginDrag={onSwipeStart}
-          onScrollEndDrag={onSwipeEnd}
+          onScrollBeginDrag={handleSwipeStart}
+          onScrollEndDrag={handleSwipeEnd}
           onMomentumScrollEnd={this.onScroll}
           contentOffset={this.initialOffset}
           style={styles.container}

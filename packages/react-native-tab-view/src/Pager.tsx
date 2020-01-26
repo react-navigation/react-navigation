@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { StyleSheet, TextInput, Keyboard, I18nManager } from 'react-native';
+import {
+  StyleSheet,
+  TextInput,
+  Keyboard,
+  I18nManager,
+  InteractionManager,
+} from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import Animated, { Easing } from 'react-native-reanimated';
 import memoize from './memoize';
@@ -219,6 +225,12 @@ export default class Pager<T extends Route> extends React.Component<
     }
   }
 
+  componentWillUnmount() {
+    if (this.interactionHandle !== null) {
+      InteractionManager.clearInteractionHandle(this.interactionHandle);
+    }
+  }
+
   static contextType = PagerContext;
 
   // Mechanism to add child PanGestureHandler refs in the case that this
@@ -372,6 +384,9 @@ export default class Pager<T extends Route> extends React.Component<
 
   // Listeners for the entered screen
   private enterListeners: Listener[] = [];
+
+  // InteractionHandle to handle tasks around animations
+  private interactionHandle: number | null = null;
 
   private jumpToIndex = (index: number) => {
     // If the index changed, we need to trigger a tab switch
@@ -595,6 +610,7 @@ export default class Pager<T extends Route> extends React.Component<
 
             if (isSwiping === TRUE) {
               onSwipeStart && onSwipeStart();
+              this.interactionHandle = InteractionManager.createInteractionHandle();
 
               if (keyboardDismissMode === 'auto') {
                 const input = TextInput.State.currentlyFocusedField();
@@ -609,6 +625,12 @@ export default class Pager<T extends Route> extends React.Component<
               }
             } else {
               onSwipeEnd && onSwipeEnd();
+
+              if (this.interactionHandle !== null) {
+                InteractionManager.clearInteractionHandle(
+                  this.interactionHandle
+                );
+              }
 
               if (keyboardDismissMode === 'auto') {
                 if (indexAtSwipeEnd === currentIndex) {
