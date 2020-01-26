@@ -165,7 +165,25 @@ export default function createCompatNavigatorFactory<
     return Navigator;
   };
 
-  createCompatNavigator.isCompat = true;
+  Object.defineProperties(createCompatNavigator, {
+    isCompat: {
+      get() {
+        return true;
+      },
+    },
+    router: {
+      get() {
+        throw new Error(
+          "It's no longer possible to access the router with the 'router' property."
+        );
+      },
+      set() {
+        throw new Error(
+          "It's no longer possible to override the router by assigning the 'router' property."
+        );
+      },
+    },
+  });
 
   return createCompatNavigator;
 }
