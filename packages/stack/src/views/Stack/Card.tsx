@@ -200,11 +200,8 @@ export default class Card extends React.Component<Props> {
   private setPointerEventsEnabled = (enabled: boolean) => {
     const pointerEvents = enabled ? 'box-none' : 'none';
 
-    this.content.current &&
-      this.content.current.setNativeProps({ pointerEvents });
+    this.contentRef.current?.setNativeProps({ pointerEvents });
   };
-
-  private content = React.createRef<View>();
 
   private handleStartInteraction = () => {
     if (this.interactionHandle === undefined) {
@@ -382,7 +379,9 @@ export default class Card extends React.Component<Props> {
     }
   }
 
-  private gestureRef: React.Ref<PanGestureHandler> = React.createRef();
+  private gestureRef = React.createRef<PanGestureHandler>();
+
+  private contentRef = React.createRef<View>();
 
   render() {
     const {
@@ -478,14 +477,21 @@ export default class Card extends React.Component<Props> {
                   style={[
                     styles.shadow,
                     gestureDirection === 'horizontal'
-                      ? styles.shadowHorizontal
-                      : styles.shadowVertical,
+                      ? [styles.shadowHorizontal, styles.shadowLeft]
+                      : gestureDirection === 'horizontal-inverted'
+                      ? [styles.shadowHorizontal, styles.shadowRight]
+                      : gestureDirection === 'vertical'
+                      ? [styles.shadowVertical, styles.shadowTop]
+                      : [styles.shadowVertical, styles.shadowBottom],
                     shadowStyle,
                   ]}
                   pointerEvents="none"
                 />
               ) : null}
-              <View ref={this.content} style={[styles.content, contentStyle]}>
+              <View
+                ref={this.contentRef}
+                style={[styles.content, contentStyle]}
+              >
                 <StackGestureRefContext.Provider value={this.gestureRef}>
                   <CardAnimationContext.Provider value={animationContext}>
                     {children}
@@ -521,16 +527,26 @@ const styles = StyleSheet.create({
   },
   shadowHorizontal: {
     top: 0,
-    left: 0,
     bottom: 0,
     width: 3,
     shadowOffset: { width: -1, height: 1 },
   },
+  shadowLeft: {
+    left: 0,
+  },
+  shadowRight: {
+    right: 0,
+  },
   shadowVertical: {
-    top: 0,
     left: 0,
     right: 0,
     height: 3,
     shadowOffset: { width: 1, height: -1 },
+  },
+  shadowTop: {
+    top: 0,
+  },
+  shadowBottom: {
+    bottom: 0,
   },
 });
