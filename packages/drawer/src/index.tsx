@@ -17,6 +17,8 @@ export { default as DrawerContentScrollView } from './views/DrawerContentScrollV
  */
 export { default as DrawerGestureContext } from './utils/DrawerGestureContext';
 
+export { default as useIsDrawerOpen } from './utils/useIsDrawerOpen';
+
 /**
  * Types
  */

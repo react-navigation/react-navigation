@@ -212,10 +212,10 @@ export type EventMapBase = Record<
   { data?: any; canPreventDefault?: boolean }
 >;
 
-export type EventMapCore = {
+export type EventMapCore<State extends NavigationState> = {
   focus: { data: undefined };
   blur: { data: undefined };
-  state: { data: { state: NavigationState } };
+  state: { data: { state: State } };
 };
 
 export type EventArg<
@@ -458,7 +458,7 @@ export type NavigationProp<
    * Note that this method doesn't re-render screen when the result changes. So don't use it in `render`.
    */
   dangerouslyGetState(): State;
-} & EventConsumer<EventMap & EventMapCore> &
+} & EventConsumer<EventMap & EventMapCore<State>> &
   PrivateValueStore<ParamList, RouteName, EventMap>;
 
 export type RouteProp<
