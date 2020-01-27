@@ -16,7 +16,7 @@ import com.facebook.react.uimanager.PointerEvents;
 import com.facebook.react.uimanager.ReactPointerEventsView;
 import com.facebook.react.uimanager.UIManagerModule;
 
-public class Screen extends ViewGroup implements ReactPointerEventsView {
+public class Screen extends ViewGroup {
 
   public enum StackPresentation {
     PUSH,
@@ -133,11 +133,6 @@ public class Screen extends ViewGroup implements ReactPointerEventsView {
 
   public StackPresentation getStackPresentation() {
     return mStackPresentation;
-  }
-
-  @Override
-  public PointerEvents getPointerEvents() {
-    return mTransitioning ? PointerEvents.NONE : PointerEvents.AUTO;
   }
 
   @Override
