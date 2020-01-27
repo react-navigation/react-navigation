@@ -80,8 +80,11 @@ export default function DrawerView({
   unmountInactiveScreens,
 }: Props) {
   const [loaded, setLoaded] = React.useState([state.index]);
+
+  const { width, height } = Dimensions.get('window');
+  const isBigScreen = Math.min(width, height) >= 768;
   const [drawerWidth, setDrawerWidth] = React.useState(() =>
-    getDefaultDrawerWidth(Dimensions.get('window'))
+    getDefaultDrawerWidth({ width, height })
   );
 
   const drawerGestureRef = React.useRef<PanGestureHandler>(null);
@@ -103,6 +106,10 @@ export default function DrawerView({
   }
 
   const handleDrawerOpen = () => {
+    if (isBigScreen) {
+      return;
+    }
+
     navigation.dispatch({
       ...DrawerActions.openDrawer(),
       target: state.key,
@@ -112,6 +119,10 @@ export default function DrawerView({
   };
 
   const handleDrawerClose = () => {
+    if (isBigScreen) {
+      return;
+    }
+
     navigation.dispatch({
       ...DrawerActions.closeDrawer(),
       target: state.key,
@@ -163,13 +174,15 @@ export default function DrawerView({
 
   const activeKey = state.routes[state.index].key;
   const { gestureEnabled } = descriptors[activeKey].options;
+  const bigScreenSidebar = drawerType === 'sidebar' && isBigScreen;
+  console.log({ view: bigScreenSidebar || state.isDrawerOpen });
 
   return (
     <SafeAreaProviderCompat>
       <DrawerGestureContext.Provider value={drawerGestureRef}>
         <Drawer
-          open={state.isDrawerOpen}
-          gestureEnabled={gestureEnabled !== false}
+          open={bigScreenSidebar || state.isDrawerOpen}
+          gestureEnabled={!bigScreenSidebar && gestureEnabled !== false}
           onOpen={handleDrawerOpen}
           onClose={handleDrawerClose}
           onGestureRef={ref => {
@@ -196,6 +209,7 @@ export default function DrawerView({
           renderSceneContent={renderContent}
           keyboardDismissMode={keyboardDismissMode}
           drawerPostion={drawerPosition}
+          isBigScreen={isBigScreen}
         />
       </DrawerGestureContext.Provider>
     </SafeAreaProviderCompat>

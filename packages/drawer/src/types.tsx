@@ -27,7 +27,7 @@ export type DrawerNavigationConfig<T = DrawerContentOptions> = {
    * - `back`: The drawer is revealed behind the screen on swipe.
    * - `slide`: Both the screen and the drawer slide on swipe to reveal the drawer.
    */
-  drawerType?: 'front' | 'back' | 'slide';
+  drawerType?: 'front' | 'back' | 'slide' | 'sidebar';
   /**
    * How far from the edge of the screen the swipe gesture should activate.
    */

@@ -81,7 +81,7 @@ type Props = {
   onGestureRef?: (ref: PanGestureHandler | null) => void;
   gestureEnabled: boolean;
   drawerPosition: 'left' | 'right';
-  drawerType: 'front' | 'back' | 'slide';
+  drawerType: 'front' | 'back' | 'slide' | 'sidebar';
   keyboardDismissMode: 'none' | 'on-drag';
   swipeEdgeWidth: number;
   swipeDistanceThreshold?: number;
@@ -94,6 +94,7 @@ type Props = {
   renderDrawerContent: Renderer;
   renderSceneContent: Renderer;
   gestureHandlerProps?: React.ComponentProps<typeof PanGestureHandler>;
+  isBigScreen?: boolean;
 };
 
 export default class DrawerView extends React.PureComponent<Props> {
@@ -106,6 +107,7 @@ export default class DrawerView extends React.PureComponent<Props> {
     keyboardDismissMode: 'on-drag',
     hideStatusBar: false,
     statusBarAnimation: 'slide',
+    isBigScreen: false,
   };
 
   componentDidUpdate(prevProps: Props) {
@@ -178,6 +180,9 @@ export default class DrawerView extends React.PureComponent<Props> {
     }
   };
 
+  private bigScreenSidebar =
+    this.props.drawerType === 'sidebar' && this.props.isBigScreen;
+
   private clock = new Clock();
   private interactionHandle: number | undefined;
 
@@ -197,11 +202,12 @@ export default class DrawerView extends React.PureComponent<Props> {
   private velocityX = new Value<number>(0);
   private gestureX = new Value<number>(0);
   private offsetX = new Value<number>(0);
-  private position = new Value<number>(0);
+  private position = new Value<number>(this.bigScreenSidebar ? 1 : 0);
 
   private containerWidth = new Value<number>(0);
   private drawerWidth = new Value<number>(0);
-  private drawerOpacity = new Value<number>(0);
+  // make drawer initially visible on the big screen to avoid annoying animation
+  private drawerOpacity = new Value<number>(this.bigScreenSidebar ? 1 : 0);
   private drawerPosition = new Value<number>(
     this.props.drawerPosition === 'right' ? DIRECTION_RIGHT : DIRECTION_LEFT
   );
@@ -510,6 +516,10 @@ export default class DrawerView extends React.PureComponent<Props> {
   };
 
   render() {
+    console.log({
+      bigScreenSidebar: this.bigScreenSidebar,
+      open: this.props.open,
+    });
     const {
       open,
       gestureEnabled,
@@ -574,17 +584,25 @@ export default class DrawerView extends React.PureComponent<Props> {
               importantForAccessibility={open ? 'no-hide-descendants' : 'auto'}
               style={styles.content}
             >
-              {renderSceneContent({ progress: this.progress })}
+              {renderSceneContent({
+                // make 'sidebar' initially visible on the big screen to avoid annoying animation
+                progress: this.bigScreenSidebar
+                  ? new Animated.Value(1)
+                  : this.progress,
+              })}
             </View>
             <TapGestureHandler onHandlerStateChange={this.handleTapStateChange}>
               <Animated.View
                 style={[
                   styles.overlay,
                   {
-                    opacity: interpolate(this.progress, {
-                      inputRange: [PROGRESS_EPSILON, 1],
-                      outputRange: [0, 1],
-                    }),
+                    // disable overlay if 'sidebar' on the big screen
+                    opacity: this.bigScreenSidebar
+                      ? 0
+                      : interpolate(this.progress, {
+                          inputRange: [PROGRESS_EPSILON, 1],
+                          outputRange: [0, 1],
+                        }),
                     // We don't want the user to be able to press through the overlay when drawer is open
                     // One approach is to adjust the pointerEvents based on the progress
                     // But we can also send the overlay behind the screen, which works, and is much less code
@@ -617,7 +635,14 @@ export default class DrawerView extends React.PureComponent<Props> {
               styles.container,
               right ? { right: offset } : { left: offset },
               {
-                transform: [{ translateX: drawerTranslateX }],
+                transform: [
+                  {
+                    // make 'sidebar' always visible on the big screen
+                    translateX: this.bigScreenSidebar
+                      ? this.drawerWidth
+                      : drawerTranslateX,
+                  },
+                ],
                 opacity: this.drawerOpacity,
                 zIndex: drawerType === 'back' ? -1 : 0,
               },
