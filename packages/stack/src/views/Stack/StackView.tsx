@@ -96,6 +96,12 @@ class StackView extends React.Component<Props, State> {
       return descriptor ? descriptor.options.animationEnabled !== false : true;
     };
 
+    const getAnimationTypeForReplace = (key: string) => {
+      const descriptor = props.descriptors[key] || state.descriptors[key];
+
+      return descriptor.options.animationTypeForReplace ?? 'push';
+    };
+
     if (
       previousFocusedRoute &&
       previousFocusedRoute.key !== nextFocusedRoute.key
@@ -125,23 +131,41 @@ class StackView extends React.Component<Props, State> {
           if (!routes.find(r => r.key === previousFocusedRoute.key)) {
             // The previous focused route isn't present in state, we treat this as a replace
 
-            replacingRouteKeys = [
-              ...replacingRouteKeys,
-              previousFocusedRoute.key,
-            ];
-
             openingRouteKeys = openingRouteKeys.filter(
               key => key !== previousFocusedRoute.key
             );
-            closingRouteKeys = closingRouteKeys.filter(
-              key => key !== previousFocusedRoute.key
-            );
 
-            // Keep the old route in state because it's visible under the new route, and removing it will feel abrupt
-            // We need to insert it just before the focused one (the route being pushed)
-            // After the push animation is completed, routes being replaced will be removed completely
-            routes = routes.slice();
-            routes.splice(routes.length - 1, 0, previousFocusedRoute);
+            if (getAnimationTypeForReplace(nextFocusedRoute.key) === 'pop') {
+              closingRouteKeys = [
+                ...closingRouteKeys,
+                previousFocusedRoute.key,
+              ];
+
+              // By default, new routes have a push animation, so we add it to `openingRouteKeys` before
+              // But since user configured it to animate the old screen like a pop, we need to add this without animation
+              // So remove it from `openingRouteKeys` which will remove the animation
+              openingRouteKeys = openingRouteKeys.filter(
+                key => key !== nextFocusedRoute.key
+              );
+
+              // Keep the route being removed at the end to animate it out
+              routes = [...routes, previousFocusedRoute];
+            } else {
+              replacingRouteKeys = [
+                ...replacingRouteKeys,
+                previousFocusedRoute.key,
+              ];
+
+              closingRouteKeys = closingRouteKeys.filter(
+                key => key !== previousFocusedRoute.key
+              );
+
+              // Keep the old route in the state because it's visible under the new route, and removing it will feel abrupt
+              // We need to insert it just before the focused one (the route being pushed)
+              // After the push animation is completed, routes being replaced will be removed completely
+              routes = routes.slice();
+              routes.splice(routes.length - 1, 0, previousFocusedRoute);
+            }
           }
         }
       } else if (!routes.find(r => r.key === previousFocusedRoute.key)) {
@@ -151,10 +175,10 @@ class StackView extends React.Component<Props, State> {
           isAnimationEnabled(previousFocusedRoute.key) &&
           !closingRouteKeys.includes(previousFocusedRoute.key)
         ) {
-          // Sometimes a route can be closed before the opening animation finishes
-          // So we also need to remove it from the opening list
           closingRouteKeys = [...closingRouteKeys, previousFocusedRoute.key];
 
+          // Sometimes a route can be closed before the opening animation finishes
+          // So we also need to remove it from the opening list
           openingRouteKeys = openingRouteKeys.filter(
             key => key !== previousFocusedRoute.key
           );
@@ -185,7 +209,9 @@ class StackView extends React.Component<Props, State> {
     }
 
     if (!routes.length) {
-      throw new Error(`There should always be at least one route.`);
+      throw new Error(
+        'There should always be at least one route in the navigation state.'
+      );
     }
 
     const descriptors = routes.reduce<StackDescriptorMap>((acc, route) => {
