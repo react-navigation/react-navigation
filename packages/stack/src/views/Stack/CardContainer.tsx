@@ -55,6 +55,8 @@ type Props = TransitionPreset & {
   }) => void;
 };
 
+const EPSILON = 0.01;
+
 function CardContainer({
   active,
   cardOverlayEnabled,
@@ -128,6 +130,24 @@ function CardContainer({
 
   const { colors } = useTheme();
 
+  const [pointerEvents, setPointerEvents] = React.useState<'box-none' | 'none'>(
+    'box-none'
+  );
+
+  React.useEffect(() => {
+    const valueListenerCallback = ({ value }: { value: number }) => {
+      setPointerEvents(value <= EPSILON ? 'box-none' : 'none');
+    };
+    // @ts-ignore
+    const listener = scene.progress.next?.addListener(valueListenerCallback);
+    return () => {
+      if (listener) {
+        // @ts-ignore
+        scene.progress.next?.removeListener(listener);
+      }
+    };
+  }, [pointerEvents, scene.progress.next]);
+
   return (
     <Card
       index={index}
@@ -152,7 +172,7 @@ function CardContainer({
       styleInterpolator={cardStyleInterpolator}
       accessibilityElementsHidden={!focused}
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
-      pointerEvents="box-none"
+      pointerEvents={active ? 'box-none' : pointerEvents}
       containerStyle={
         headerMode === 'float' && !headerTransparent && headerShown !== false
           ? { marginTop: headerHeight }
