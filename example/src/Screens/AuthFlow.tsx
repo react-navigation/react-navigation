@@ -73,6 +73,7 @@ type Props = {
 
 type State = {
   isLoading: boolean;
+  isSignout: boolean;
   userToken: undefined | string;
 };
 
@@ -94,17 +95,20 @@ export default function SimpleStackScreen({ navigation }: Props) {
         case 'SIGN_IN':
           return {
             ...prevState,
+            isSignout: false,
             userToken: action.token,
           };
         case 'SIGN_OUT':
           return {
             ...prevState,
+            isSignout: true,
             userToken: undefined,
           };
       }
     },
     {
       isLoading: true,
+      isSignout: false,
       userToken: undefined,
     }
   );
@@ -147,7 +151,10 @@ export default function SimpleStackScreen({ navigation }: Props) {
         ) : state.userToken === undefined ? (
           <SimpleStack.Screen
             name="SignIn"
-            options={{ title: 'Sign in' }}
+            options={{
+              title: 'Sign in',
+              animationTypeForReplace: state.isSignout ? 'pop' : 'push',
+            }}
             component={SignInScreen}
           />
         ) : (

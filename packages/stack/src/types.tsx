@@ -296,6 +296,11 @@ export type StackNavigationOptions = StackHeaderOptions &
      */
     animationEnabled?: boolean;
     /**
+     * The type of animation to use when this screen replaces another screen. Defaults to `push`.
+     * When `pop` is used, the `pop` animation is applied to the screen being replaced.
+     */
+    animationTypeForReplace?: 'push' | 'pop';
+    /**
      * Whether you can use gestures to dismiss this screen. Defaults to `true` on iOS, `false` on Android.
      */
     gestureEnabled?: boolean;
