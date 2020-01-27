@@ -95,7 +95,16 @@
 {
   UIViewController *vc = _screenView.controller;
   UINavigationController *nav = (UINavigationController*) vc.parentViewController;
-  if (vc != nil && nav.visibleViewController == vc) {
+  UIViewController *nextVC = nav.visibleViewController;
+  if (nav.transitionCoordinator != nil) {
+    // if navigator is performing transition instead of allowing to update of `visibleConttroller`
+    // we look at `topController`. This is because during transitiong the `visibleController` won't
+    // point to the controller that is going to be revealed after transition. This check fixes the
+    // problem when config gets updated while the transition is ongoing.
+    nextVC = nav.topViewController;
+  }
+
+  if (vc != nil && nextVC == vc) {
     [RNSScreenStackHeaderConfig updateViewController:self.screenView.controller withConfig:self];
   }
 }
