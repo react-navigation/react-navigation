@@ -38,6 +38,14 @@ type GestureValues = {
   [key: string]: Animated.Value;
 };
 
+// @ts-ignore
+const maybeExpoVersion = global.Expo?.Constants.manifest.sdkVersion.split(
+  '.'
+)[0];
+const isInsufficientExpoVersion = maybeExpoVersion
+  ? Number(maybeExpoVersion) <= 36
+  : false;
+
 type Props = {
   mode: StackCardMode;
   insets: EdgeInsets;
@@ -74,7 +82,7 @@ type State = {
   headerHeights: Record<string, number>;
 };
 
-const EPSILON = 1e-5;
+const EPSILON = 0.01;
 const FAR_FAR_AWAY = 9000;
 
 const dimensions = Dimensions.get('window');
@@ -437,7 +445,7 @@ export default class CardStack extends React.Component<Props, State> {
 
     // Screens is buggy on iOS, so we don't enable it there
     // For modals, usually we want the screen underneath to be visible, so also disable it there
-    const isScreensEnabled = Platform.OS !== 'ios' && mode !== 'modal';
+    const isScreensEnabled = Platform.OS !== 'ios';
 
     return (
       <React.Fragment>
@@ -452,21 +460,25 @@ export default class CardStack extends React.Component<Props, State> {
             const scene = scenes[index];
 
             // Display current screen and a screen beneath.
-            // On Android screen beneath is hidden on animation finished bs of RNS's issue.
-            const isScreenActive =
-              index === self.length - 1
-                ? 1
-                : Platform.OS === 'android'
-                ? scene.progress.next
-                  ? scene.progress.next.interpolate({
-                      inputRange: [0, 1 - EPSILON, 1],
-                      outputRange: [1, 1, 0],
-                      extrapolate: 'clamp',
-                    })
-                  : 1
-                : index === self.length - 2
-                ? 1
-                : 0;
+
+            let isScreenActive: Animated.AnimatedInterpolation | 0 | 1 =
+              index >= self.length - 2 ? 1 : 0;
+            if (isInsufficientExpoVersion) {
+              isScreenActive =
+                index === self.length - 1
+                  ? 1
+                  : Platform.OS === 'android'
+                  ? scene.progress.next
+                    ? scene.progress.next.interpolate({
+                        inputRange: [0, 1 - EPSILON, 1],
+                        outputRange: [1, 1, 0],
+                        extrapolate: 'clamp',
+                      })
+                    : 1
+                  : index === self.length - 2
+                  ? 1
+                  : 0;
+            }
 
             const {
               safeAreaInsets,
