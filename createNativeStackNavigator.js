@@ -31,7 +31,9 @@ class StackView extends React.Component {
   };
 
   _onSceneFocus = (route, descriptor) => {
-    descriptor.options && descriptor.options.onAppear && descriptor.options.onAppear()
+    descriptor.options &&
+      descriptor.options.onAppear &&
+      descriptor.options.onAppear();
     this.props.navigation.dispatch(
       StackActions.completeTransition({ toChildKey: route.key })
     );
@@ -50,7 +52,6 @@ class StackView extends React.Component {
       headerBackTitle,
       headerBackTitleVisible,
       headerTintColor,
-      gestureEnabled,
       largeTitle,
       headerLargeTitleStyle,
       translucent,
@@ -190,7 +191,9 @@ class StackView extends React.Component {
         style={options.cardStyle}
         stackAnimation={stackAnimation}
         stackPresentation={stackPresentation}
-        gestureEnabled={gestureEnabled === undefined ? true : gestureEnabled}
+        gestureEnabled={
+          options.gestureEnabled === undefined ? true : options.gestureEnabled
+        }
         onAppear={() => this._onSceneFocus(route, descriptor)}
         onDismissed={() => this._removeScene(route)}>
         {this._renderHeaderConfig(index, route, descriptor)}
