@@ -44,7 +44,7 @@ const maybeExpoVersion = global.Expo?.Constants.manifest.sdkVersion.split(
 )[0];
 const isInsufficientExpoVersion = maybeExpoVersion
   ? Number(maybeExpoVersion) <= 36
-  : false;
+  : maybeExpoVersion === 'UNVERSIONED';
 
 type Props = {
   mode: StackCardMode;
