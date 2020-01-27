@@ -17,6 +17,7 @@ import {
   State,
 } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
+import Overlay from './Overlay';
 
 const {
   Clock,
@@ -25,7 +26,6 @@ const {
   clockRunning,
   startClock,
   stopClock,
-  interpolate,
   spring,
   abs,
   add,
@@ -51,8 +51,6 @@ const TRUE = 1;
 const FALSE = 0;
 const NOOP = 0;
 const UNSET = -1;
-
-const PROGRESS_EPSILON = 0.05;
 
 const DIRECTION_LEFT = 1;
 const DIRECTION_RIGHT = -1;
@@ -577,26 +575,7 @@ export default class DrawerView extends React.PureComponent<Props> {
               {renderSceneContent({ progress: this.progress })}
             </View>
             <TapGestureHandler onHandlerStateChange={this.handleTapStateChange}>
-              <Animated.View
-                style={[
-                  styles.overlay,
-                  {
-                    opacity: interpolate(this.progress, {
-                      inputRange: [PROGRESS_EPSILON, 1],
-                      outputRange: [0, 1],
-                    }),
-                    // We don't want the user to be able to press through the overlay when drawer is open
-                    // One approach is to adjust the pointerEvents based on the progress
-                    // But we can also send the overlay behind the screen, which works, and is much less code
-                    zIndex: cond(
-                      greaterThan(this.progress, PROGRESS_EPSILON),
-                      0,
-                      -1
-                    ),
-                  },
-                  overlayStyle,
-                ]}
-              />
+              <Overlay progress={this.progress} style={overlayStyle} />
             </TapGestureHandler>
           </Animated.View>
           <Animated.Code
@@ -640,10 +619,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: '80%',
     maxWidth: '100%',
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   content: {
     flex: 1,
