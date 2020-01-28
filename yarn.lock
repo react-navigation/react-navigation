@@ -3088,6 +3088,11 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-native-restart@^0.0.0":
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/@types/react-native-restart/-/react-native-restart-0.0.0.tgz#5c86bd8d3acb9dc8c8e41963cc038b8ac76d3271"
+  integrity sha512-MLawyWpEkVlzxAZkdWDYabpL4zPRo7oBd1gE683WEr/7szwh+WVIjReSsLdFeRiiFoNuEEjAthnGx2YLFzwHEQ==
+
 "@types/react-native-vector-icons@^6.4.5":
   version "6.4.5"
   resolved "https://registry.yarnpkg.com/@types/react-native-vector-icons/-/react-native-vector-icons-6.4.5.tgz#74cbfc564bd8435e43ad6728572a0e5b49c335d1"
@@ -13575,6 +13580,11 @@ react-native-reanimated@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-1.4.0.tgz#7f1acbf9be08492d834f512700570978052be2f9"
   integrity sha512-tO7nSNNP+iRLVbkcSS5GXyDBb7tSI02+XuRL3/S39EAr35rnvUy2JfeLUQG+fWSObJjnMVhasUDEUwlENk8IXw==
+
+react-native-restart@^0.0.13:
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/react-native-restart/-/react-native-restart-0.0.13.tgz#88003fd6b1cce9de5bafa2570ba4ef8ff1ea2937"
+  integrity sha512-p4rBiTliPiJEejA0IhExHuM7Ge6TuLpUAm98TbtkmiISWDRK2a/DeZ4Wno7bawcMr1Yb6O5eeTHPO0rUltRD/A==
 
 react-native-safe-area-context@^0.6.2:
   version "0.6.2"

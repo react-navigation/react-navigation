@@ -2,6 +2,8 @@ PODS:
   - boost-for-react-native (1.63.0)
   - DoubleConversion (1.1.6)
   - EXAppLoaderProvider (8.0.0)
+  - EXBlur (8.0.0):
+    - UMCore
   - EXConstants (8.0.0):
     - UMConstantsInterface
     - UMCore
@@ -48,6 +50,8 @@ PODS:
     - glog
   - glog (0.3.5)
   - RCTRequired (0.61.5)
+  - RCTRestart (0.0.13):
+    - React
   - RCTTypeSafety (0.61.5):
     - FBLazyVector (= 0.61.5)
     - Folly (= 2018.10.22.00)
@@ -253,7 +257,7 @@ PODS:
     - React
   - RNReanimated (1.4.0):
     - React
-  - RNScreens (2.0.0-alpha.22):
+  - RNScreens (2.0.0-alpha.31):
     - React
   - UMBarCodeScannerInterface (5.0.0)
   - UMCameraInterface (5.0.0)
@@ -275,6 +279,7 @@ PODS:
 DEPENDENCIES:
   - DoubleConversion (from `../../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EXAppLoaderProvider (from `../../node_modules/expo-app-loader-provider/ios`)
+  - EXBlur (from `../../node_modules/expo-blur/ios`)
   - EXConstants (from `../../node_modules/expo-constants/ios`)
   - EXErrorRecovery (from `../../node_modules/expo-error-recovery/ios`)
   - EXFileSystem (from `../../node_modules/expo-file-system/ios`)
@@ -290,6 +295,7 @@ DEPENDENCIES:
   - Folly (from `../../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - RCTRequired (from `../../node_modules/react-native/Libraries/RCTRequired`)
+  - RCTRestart (from `../../node_modules/react-native-restart/ios`)
   - RCTTypeSafety (from `../../node_modules/react-native/Libraries/TypeSafety`)
   - React (from `../../node_modules/react-native/`)
   - React-Core (from `../../node_modules/react-native/`)
@@ -340,6 +346,9 @@ EXTERNAL SOURCES:
   EXAppLoaderProvider:
     :path: !ruby/object:Pathname
     path: "../../node_modules/expo-app-loader-provider/ios"
+  EXBlur:
+    :path: !ruby/object:Pathname
+    path: "../../node_modules/expo-blur/ios"
   EXConstants:
     :path: !ruby/object:Pathname
     path: "../../node_modules/expo-constants/ios"
@@ -380,6 +389,8 @@ EXTERNAL SOURCES:
     :podspec: "../../node_modules/react-native/third-party-podspecs/glog.podspec"
   RCTRequired:
     :path: "../../node_modules/react-native/Libraries/RCTRequired"
+  RCTRestart:
+    :path: "../../node_modules/react-native-restart/ios"
   RCTTypeSafety:
     :path: "../../node_modules/react-native/Libraries/TypeSafety"
   React:
@@ -469,6 +480,7 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
   EXAppLoaderProvider: ebdb6bc2632c1ccadbe49f5e4104d8d690969c49
+  EXBlur: d1604f66f89a9414f5ee65dfb23874437c1bb147
   EXConstants: 4051b16c17ef3defa03c541d42811dc92b249146
   EXErrorRecovery: d36db99ec6a3808f313f01b0890eb443796dd1c2
   EXFileSystem: 6e0d9bb6cc4ea404dbb8f583c1a8a2dcdf4b83b6
@@ -484,6 +496,7 @@ SPEC CHECKSUMS:
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
   RCTRequired: b153add4da6e7dbc44aebf93f3cf4fcae392ddf1
+  RCTRestart: dd19aab87fc1118e05b6b5b91b959105647f56b4
   RCTTypeSafety: 9aa1b91d7f9310fc6eadc3cf95126ffe818af320
   React: b6a59ef847b2b40bb6e0180a97d0ca716969ac78
   React-Core: 688b451f7d616cc1134ac95295b593d1b5158a04
@@ -506,7 +519,7 @@ SPEC CHECKSUMS:
   RNCMaskedView: dd13f9f7b146a9ad82f9b7eb6c9b5548fcf6e990
   RNGestureHandler: 02905abe54e1f6e59c081a10b4bd689721e17aa6
   RNReanimated: b2ab0b693dddd2339bd2f300e770f6302d2e960c
-  RNScreens: 6adf01eb4080f44af6cca551207c6b0505066857
+  RNScreens: 5fcc247984ffae92240e7e8e39e1e19c0a0f6f67
   UMBarCodeScannerInterface: 3802c8574ef119c150701d679ab386e2266d6a54
   UMCameraInterface: 985d301f688ed392f815728f0dd906ca34b7ccb1
   UMConstantsInterface: bda5f8bd3403ad99e663eb3c4da685d063c5653c
