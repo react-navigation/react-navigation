@@ -7,6 +7,7 @@ import {
   StatusBar,
   I18nManager,
 } from 'react-native';
+import RNRestart from 'react-native-restart';
 import { MaterialIcons } from '@expo/vector-icons';
 import {
   Provider as PaperProvider,
@@ -248,7 +249,12 @@ export default function App() {
                         value={I18nManager.isRTL}
                         onValueChange={() => {
                           I18nManager.forceRTL(!I18nManager.isRTL);
-                          Updates.reloadFromCache();
+                          // @ts-ignore
+                          if (global.Expo) {
+                            Updates.reloadFromCache();
+                          } else {
+                            RNRestart.Restart();
+                          }
                         }}
                       />
                       <Divider />
