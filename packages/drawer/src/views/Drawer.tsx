@@ -516,10 +516,6 @@ export default class DrawerView extends React.PureComponent<Props> {
   };
 
   render() {
-    console.log({
-      bigScreenSidebar: this.bigScreenSidebar,
-      open: this.props.open,
-    });
     const {
       open,
       gestureEnabled,
