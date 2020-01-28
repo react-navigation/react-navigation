@@ -83,6 +83,7 @@ export default function DrawerView({
 
   const { width, height } = Dimensions.get('window');
   const isBigScreen = Math.min(width, height) >= 768;
+  const bigScreenSidebar = drawerType === 'sidebar' && isBigScreen;
   const [drawerWidth, setDrawerWidth] = React.useState(() =>
     getDefaultDrawerWidth({ width, height })
   );
@@ -106,7 +107,7 @@ export default function DrawerView({
   }
 
   const handleDrawerOpen = () => {
-    if (isBigScreen) {
+    if (bigScreenSidebar) {
       return;
     }
 
@@ -119,7 +120,7 @@ export default function DrawerView({
   };
 
   const handleDrawerClose = () => {
-    if (isBigScreen) {
+    if (bigScreenSidebar) {
       return;
     }
 
@@ -174,8 +175,6 @@ export default function DrawerView({
 
   const activeKey = state.routes[state.index].key;
   const { gestureEnabled } = descriptors[activeKey].options;
-  const bigScreenSidebar = drawerType === 'sidebar' && isBigScreen;
-  console.log({ view: bigScreenSidebar || state.isDrawerOpen });
 
   return (
     <SafeAreaProviderCompat>
