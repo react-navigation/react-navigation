@@ -205,7 +205,7 @@ export default function DrawerView({
         <DrawerGestureContext.Provider value={drawerGestureRef}>
           <Drawer
             open={isDrawerOpen}
-            gestureEnabled={gestureEnabled !== false}
+            gestureEnabled={gestureEnabled}
             onOpen={handleDrawerOpen}
             onClose={handleDrawerClose}
             onGestureRef={ref => {
