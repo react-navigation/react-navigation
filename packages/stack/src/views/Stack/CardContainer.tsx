@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { Animated, View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import {
+  Animated,
+  View,
+  StyleSheet,
+  StyleProp,
+  ViewStyle,
+  Platform,
+} from 'react-native';
 import { StackNavigationState } from '@react-navigation/routers';
 import { Route, useTheme } from '@react-navigation/native';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
@@ -135,6 +142,9 @@ function CardContainer({
   );
 
   React.useEffect(() => {
+    if (Platform.OS === 'web') {
+      return;
+    }
     const valueListenerCallback = ({ value }: { value: number }) => {
       setPointerEvents(value <= EPSILON ? 'box-none' : 'none');
     };
