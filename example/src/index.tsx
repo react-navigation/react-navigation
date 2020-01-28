@@ -41,6 +41,7 @@ import LinkingPrefixes from './LinkingPrefixes';
 import SimpleStack from './Screens/SimpleStack';
 import NativeStack from './Screens/NativeStack';
 import ModalPresentationStack from './Screens/ModalPresentationStack';
+import StackTransparent from './Screens/StackTransparent';
 import StackHeaderCustomization from './Screens/StackHeaderCustomization';
 import BottomTabs from './Screens/BottomTabs';
 import MaterialTopTabsScreen from './Screens/MaterialTopTabs';
@@ -70,6 +71,10 @@ const SCREENS = {
   ModalPresentationStack: {
     title: 'Modal Presentation Stack',
     component: ModalPresentationStack,
+  },
+  StackTransparent: {
+    title: 'Transparent Stack',
+    component: StackTransparent,
   },
   StackHeaderCustomization: {
     title: 'Header Customization in Stack',
