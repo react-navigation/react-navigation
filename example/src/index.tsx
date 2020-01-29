@@ -123,18 +123,21 @@ export default function App() {
   const { getInitialState } = useLinking(containerRef, {
     prefixes: LinkingPrefixes,
     config: {
-      Root: Object.keys(SCREENS).reduce<{ [key: string]: string }>(
-        (acc, name) => {
-          // Convert screen names such as SimpleStack to kebab case (simple-stack)
-          acc[name] = name
-            .replace(/([A-Z]+)/g, '-$1')
-            .replace(/^-/, '')
-            .toLowerCase();
+      Root: {
+        path: 'root',
+        screens: Object.keys(SCREENS).reduce<{ [key: string]: string }>(
+          (acc, name) => {
+            // Convert screen names such as SimpleStack to kebab case (simple-stack)
+            acc[name] = name
+              .replace(/([A-Z]+)/g, '-$1')
+              .replace(/^-/, '')
+              .toLowerCase();
 
-          return acc;
-        },
-        {}
-      ),
+            return acc;
+          },
+          {}
+        ),
+      },
     },
   });
 
