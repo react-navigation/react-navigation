@@ -77,7 +77,6 @@ export default function DrawerView({
   gestureHandlerProps,
   minSwipeDistance,
   sceneContainerStyle,
-  unmountInactiveScreens,
 }: Props) {
   const [loaded, setLoaded] = React.useState([state.index]);
   const [drawerWidth, setDrawerWidth] = React.useState(() =>
@@ -135,17 +134,18 @@ export default function DrawerView({
     return (
       <ScreenContainer style={styles.content}>
         {state.routes.map((route, index) => {
-          if (unmountInactiveScreens && index !== state.index) {
+          const descriptor = descriptors[route.key];
+          const { unmountOnBlur } = descriptor.options;
+          const isFocused = state.index === index;
+
+          if (unmountOnBlur && !isFocused) {
             return null;
           }
 
-          if (lazy && !loaded.includes(index) && index !== state.index) {
+          if (lazy && !loaded.includes(index) && !isFocused) {
             // Don't render a screen if we've never navigated to it
             return null;
           }
-
-          const isFocused = state.index === index;
-          const descriptor = descriptors[route.key];
 
           return (
             <ResourceSavingScene
