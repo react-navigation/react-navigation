@@ -10,13 +10,6 @@ type State = {
   initialOffset: { x: number; y: number };
 };
 
-// @TODO osdnk: Remove it after fixing in DefinitelyTyped
-declare module 'react-native' {
-  export interface ScrollViewProps {
-    scrollToOverflowEnabled?: boolean;
-  }
-}
-
 export default class ScrollPager<T extends Route> extends React.Component<
   Props<T> & { overscroll?: boolean },
   State
