@@ -36,10 +36,24 @@ type Options = {
   getStateFromPath?: GetStateFromPath;
 };
 
+let isListenerSet = false;
+
 export default function useLinking(
   ref: React.RefObject<NavigationContainerRef>,
   { prefixes, config, getStateFromPath = getStateFromPathDefault }: Options
 ) {
+  React.useEffect(() => {
+    if (isListenerSet) {
+      throw new Error(
+        "Looks like you are using 'useLinking' in multiple components. This is likely an error since deep links need to be handled only once."
+      );
+    } else {
+      isListenerSet = true;
+    }
+    return () => {
+      isListenerSet = false;
+    };
+  });
   // We store these options in ref to avoid re-creating getInitialState and re-subscribing listeners
   // This lets user avoid wrapping the items in `React.useCallback` or `React.useMemo`
   // Not re-creating `getInitialState` is important coz it makes it easier for the user to use in an effect
