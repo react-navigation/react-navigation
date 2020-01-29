@@ -139,6 +139,100 @@ describe('SwitchRouter', () => {
     expect(getSubState(2).routeName).toEqual('B1');
   });
 
+  it('handles back and does not apply back action to inactive child', () => {
+    const { navigateTo, back, getSubState } = getRouterTestHelper(
+      getExampleRouter({
+        backBehavior: 'initialRoute',
+        resetOnBlur: false, // Don't erase the state of substack B when we switch back to A
+      })
+    );
+
+    expect(getSubState(1).routeName).toEqual('A');
+
+    navigateTo('B');
+    navigateTo('B2');
+    expect(getSubState(1).routeName).toEqual('B');
+    expect(getSubState(2).routeName).toEqual('B2');
+
+    navigateTo('A');
+    expect(getSubState(1).routeName).toEqual('A');
+
+    // The back action should not switch to B. It should stay on A
+    back({ key: null });
+    expect(getSubState(1).routeName).toEqual('A');
+  });
+
+  it('handles pop and does not apply pop action to inactive child', () => {
+    const { navigateTo, pop, getSubState } = getRouterTestHelper(
+      getExampleRouter({
+        backBehavior: 'initialRoute',
+        resetOnBlur: false, // Don't erase the state of substack B when we switch back to A
+      })
+    );
+
+    expect(getSubState(1).routeName).toEqual('A');
+
+    navigateTo('B');
+    navigateTo('B2');
+    expect(getSubState(1).routeName).toEqual('B');
+    expect(getSubState(2).routeName).toEqual('B2');
+
+    navigateTo('A');
+    expect(getSubState(1).routeName).toEqual('A');
+
+    // The pop action should not switch to B. It should stay on A
+    pop();
+    expect(getSubState(1).routeName).toEqual('A');
+  });
+
+  it('handles popToTop and does not apply popToTop action to inactive child', () => {
+    const { navigateTo, popToTop, getSubState } = getRouterTestHelper(
+      getExampleRouter({
+        backBehavior: 'initialRoute',
+        resetOnBlur: false, // Don't erase the state of substack B when we switch back to A
+      })
+    );
+
+    expect(getSubState(1).routeName).toEqual('A');
+
+    navigateTo('B');
+    navigateTo('B2');
+    expect(getSubState(1).routeName).toEqual('B');
+    expect(getSubState(2).routeName).toEqual('B2');
+
+    navigateTo('A');
+    expect(getSubState(1).routeName).toEqual('A');
+
+    // The popToTop action should not switch to B. It should stay on A
+    popToTop();
+    expect(getSubState(1).routeName).toEqual('A');
+  });
+
+  it('handles back and does switch to inactive child with matching key', () => {
+    const { navigateTo, back, getSubState } = getRouterTestHelper(
+      getExampleRouter({
+        backBehavior: 'initialRoute',
+        resetOnBlur: false, // Don't erase the state of substack B when we switch back to A
+      })
+    );
+
+    expect(getSubState(1).routeName).toEqual('A');
+
+    navigateTo('B');
+    navigateTo('B2');
+    expect(getSubState(1).routeName).toEqual('B');
+    expect(getSubState(2).routeName).toEqual('B2');
+    const b2Key = getSubState(2).key;
+
+    navigateTo('A');
+    expect(getSubState(1).routeName).toEqual('A');
+
+    // The back action should switch to B and go back from B2 to B1
+    back(b2Key);
+    expect(getSubState(1).routeName).toEqual('B');
+    expect(getSubState(2).routeName).toEqual('B1');
+  });
+
   it('handles nested actions', () => {
     const { navigateTo, getSubState } = getRouterTestHelper(getExampleRouter());
 
