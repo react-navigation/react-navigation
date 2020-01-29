@@ -35,11 +35,15 @@ declare module 'react-native-screens' {
      *  @type "none" – the screen appears/dissapears without an animation
      */
     stackAnimation?: StackAnimationTypes;
+    /**
+     * @description When set to false the back swipe gesture will be disabled when the parent Screen is on top of the stack. The default value is true.
+     */
+    gestureEnabled?: boolean;
   }
 
 
   export type ScreenContainerProps = ViewProps;
-  
+
   export interface ScreenStackProps extends ViewProps {
     transitioning?: number;
     progress?: number;
@@ -82,10 +86,6 @@ declare module 'react-native-screens' {
      * @description If set to true the back button will not be rendered as a part of navigation header.
      */
     hideBackButton?: boolean;
-    /**
-     * @description When set to false the back swipe gesture will be disabled when the parent Screen is on top of the stack. The default value is true.
-     */
-    gestureEnabled?: boolean;
     /**
      * @host (iOS only)
      * @description When set to true, it makes native navigation bar on iOS semi transparent with blur effect. It is a common way of presenting navigation bar introduced in iOS 11. The default value is false
