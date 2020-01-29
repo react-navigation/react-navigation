@@ -64,11 +64,6 @@ export type DrawerNavigationConfig<T = DrawerContentOptions> = {
    */
   lazy?: boolean;
   /**
-   * Whether a screen should be unmounted when navigating away from it.
-   * Defaults to `false`.
-   */
-  unmountInactiveScreens?: boolean;
-  /**
    * Function that returns React element to render as the content of the drawer, for example, navigation items.
    * Defaults to `DrawerContent`.
    */
@@ -117,6 +112,11 @@ export type DrawerNavigationOptions = {
    * Defaults to `true`
    */
   gestureEnabled?: boolean;
+  /**
+   * Whether this screen should be unmounted when navigating away from it.
+   * Defaults to `false`.
+   */
+  unmountOnBlur?: boolean;
 };
 
 export type DrawerContentComponentProps<T = DrawerContentOptions> = T & {

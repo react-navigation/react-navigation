@@ -99,6 +99,12 @@ export type BottomTabNavigationOptions = {
    * Renders `TouchableWithoutFeedback` by default.
    */
   tabBarButton?: (props: BottomTabBarButtonProps) => React.ReactNode;
+
+  /**
+   * Whether this screen should be unmounted when navigating away from it.
+   * Defaults to `false`.
+   */
+  unmountOnBlur?: boolean;
 };
 
 export type BottomTabDescriptor = Descriptor<
@@ -118,11 +124,6 @@ export type BottomTabNavigationConfig = {
    * Set it to `false` if you want to render all screens on initial render.
    */
   lazy?: boolean;
-  /**
-   * Whether a screen should be unmounted when navigating away from it.
-   * Defaults to `false`.
-   */
-  unmountInactiveScreens?: boolean;
   /**
    * Function that returns a React element to display as the tab bar.
    */
