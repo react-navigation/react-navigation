@@ -1,6 +1,6 @@
 {
   "name": "@react-navigation/core",
-  "version": "3.5.1",
+  "version": "3.5.2",
   "description": "Core utilities for the react-navigation framework",
   "main": "lib/commonjs/index.js",
   "react-native": "lib/module/index.js",
