@@ -39,6 +39,10 @@
     "url": "https://github.com/react-navigation/react-navigation-native/issues"
   },
   "homepage": "https://github.com/react-navigation/react-navigation-native#readme",
+  "dependencies": {
+    "hoist-non-react-statics": "^3.3.2",
+    "react-native-safe-area-view": "^0.14.1"
+  },
   "devDependencies": {
     "@expo/vector-icons": "^6.2.0",
     "@react-navigation/core": "^3.5.0-alpha.4",
@@ -59,6 +63,7 @@
     "react": "16.6.3",
     "react-dom": "16.3.2",
     "react-native": "^0.57.7",
+    "react-native-screens": "^2.0.0-alpha.32",
     "react-navigation": "^2.11.2",
     "react-test-renderer": "16.6.3",
     "release-it": "^7.6.1"
@@ -88,10 +93,5 @@
   "prettier": {
     "trailingComma": "es5",
     "singleQuote": true
-  },
-  "dependencies": {
-    "hoist-non-react-statics": "^3.0.1",
-    "react-native-safe-area-view": "^0.14.1",
-    "react-native-screens": "^1.0.0 || ^1.0.0-alpha"
   }
 }
