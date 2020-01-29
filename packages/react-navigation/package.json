@@ -31,8 +31,8 @@
     "react-native": "*"
   },
   "dependencies": {
-    "@react-navigation/core": "^3.5.1",
-    "@react-navigation/native": "^3.6.2"
+    "@react-navigation/core": "^3.5.2",
+    "@react-navigation/native": "^3.6.3"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^8.3.4",
