@@ -233,8 +233,8 @@ it('handle dispatching with ref', () => {
         <Screen name="foo2">
           {() => (
             <ChildNavigator>
-              <Screen name="qux" component={() => null} />
-              <Screen name="lex" component={() => null} />
+              <Screen name="qux">{() => null}</Screen>
+              <Screen name="lex">{() => null}</Screen>
             </ChildNavigator>
           )}
         </Screen>
@@ -242,8 +242,8 @@ it('handle dispatching with ref', () => {
         <Screen name="baz">
           {() => (
             <ChildNavigator>
-              <Screen name="qux" component={() => null} />
-              <Screen name="lex" component={() => null} />
+              <Screen name="qux">{() => null}</Screen>
+              <Screen name="lex">{() => null}</Screen>
             </ChildNavigator>
           )}
         </Screen>
@@ -307,8 +307,8 @@ it('handle resetting state with ref', () => {
         <Screen name="foo2">
           {() => (
             <TestNavigator>
-              <Screen name="qux" component={() => null} />
-              <Screen name="lex" component={() => null} />
+              <Screen name="qux">{() => null}</Screen>
+              <Screen name="lex">{() => null}</Screen>
             </TestNavigator>
           )}
         </Screen>
@@ -316,8 +316,8 @@ it('handle resetting state with ref', () => {
         <Screen name="baz">
           {() => (
             <TestNavigator>
-              <Screen name="qux" component={() => null} />
-              <Screen name="lex" component={() => null} />
+              <Screen name="qux">{() => null}</Screen>
+              <Screen name="lex">{() => null}</Screen>
             </TestNavigator>
           )}
         </Screen>
@@ -394,12 +394,12 @@ it('handles getRootState', () => {
         <Screen name="foo">
           {() => (
             <TestNavigator>
-              <Screen name="qux" component={() => null} />
-              <Screen name="lex" component={() => null} />
+              <Screen name="qux">{() => null}</Screen>
+              <Screen name="lex">{() => null}</Screen>
             </TestNavigator>
           )}
         </Screen>
-        <Screen name="bar" component={() => null} />
+        <Screen name="bar">{() => null}</Screen>
       </TestNavigator>
     </NavigationContainer>
   );

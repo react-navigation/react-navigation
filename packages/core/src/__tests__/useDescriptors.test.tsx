@@ -592,7 +592,7 @@ it('returns true for canGoBack when parent router handles GO_BACK', () => {
         <Screen name="qux">
           {() => (
             <OverrodeNavigator>
-              <Screen name="qux" component={() => null} />
+              <Screen name="qux">{() => null}</Screen>
             </OverrodeNavigator>
           )}
         </Screen>

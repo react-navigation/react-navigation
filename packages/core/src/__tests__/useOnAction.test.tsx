@@ -181,8 +181,8 @@ it("lets children handle the action if parent didn't", () => {
         <Screen name="baz">
           {() => (
             <ChildNavigator>
-              <Screen name="qux" component={() => null} />
-              <Screen name="lex" component={() => null} />
+              <Screen name="qux">{() => null}</Screen>
+              <Screen name="lex">{() => null}</Screen>
             </ChildNavigator>
           )}
         </Screen>
@@ -291,8 +291,8 @@ it("action doesn't bubble if target is specified", () => {
         <Screen name="baz">
           {() => (
             <ChildNavigator>
-              <Screen name="qux" component={() => null} />
-              <Screen name="lex" component={() => null} />
+              <Screen name="qux">{() => null}</Screen>
+              <Screen name="lex">{() => null}</Screen>
             </ChildNavigator>
           )}
         </Screen>
@@ -356,8 +356,8 @@ it('logs error if no navigator handled the action', () => {
         <Screen name="baz">
           {() => (
             <TestNavigator>
-              <Screen name="qux" component={() => null} />
-              <Screen name="lex" component={() => null} />
+              <Screen name="qux">{() => null}</Screen>
+              <Screen name="lex">{() => null}</Screen>
             </TestNavigator>
           )}
         </Screen>
