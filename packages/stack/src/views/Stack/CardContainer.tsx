@@ -62,7 +62,7 @@ type Props = TransitionPreset & {
   }) => void;
 };
 
-const EPSILON = 0.01;
+const EPSILON = 0.1;
 
 function CardContainer({
   active,
