@@ -590,7 +590,9 @@ export default class DrawerView extends React.PureComponent<Props> {
             </View>
             {// disable overlay if 'sidebar' on the big screen
             this.bigScreenSidebar ? null : (
-              <TapGestureHandler onHandlerStateChange={this.handleTapStateChange}>
+              <TapGestureHandler
+                onHandlerStateChange={this.handleTapStateChange}
+              >
                 <Overlay progress={this.progress} style={overlayStyle} />
               </TapGestureHandler>
             )}

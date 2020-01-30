@@ -180,7 +180,10 @@ export default function DrawerView({
     <SafeAreaProviderCompat>
       <DrawerGestureContext.Provider value={drawerGestureRef}>
         <Drawer
-          open={bigScreenSidebar || Boolean(state.history.find(it => it.type === 'drawer'))}
+          open={
+            bigScreenSidebar ||
+            Boolean(state.history.find(it => it.type === 'drawer'))
+          }
           gestureEnabled={!bigScreenSidebar && gestureEnabled !== false}
           onOpen={handleDrawerOpen}
           onClose={handleDrawerClose}
