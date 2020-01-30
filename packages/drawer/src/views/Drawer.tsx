@@ -564,12 +564,15 @@ export default class DrawerView extends React.PureComponent<Props> {
       >
         <Animated.View
           onLayout={this.handleContainerLayout}
-          style={styles.main}
+          style={[
+            styles.main,
+            this.bigScreenSidebar && { flexDirection: 'row-reverse' },
+          ]}
         >
           <Animated.View
             style={[
               styles.content,
-              {
+              !this.bigScreenSidebar && {
                 transform: [{ translateX: contentTranslateX }],
               },
               sceneContainerStyle as any,
@@ -587,59 +590,70 @@ export default class DrawerView extends React.PureComponent<Props> {
                   : this.progress,
               })}
             </View>
-            <TapGestureHandler onHandlerStateChange={this.handleTapStateChange}>
-              <Animated.View
-                style={[
-                  styles.overlay,
-                  {
-                    // disable overlay if 'sidebar' on the big screen
-                    opacity: this.bigScreenSidebar
-                      ? 0
-                      : interpolate(this.progress, {
-                          inputRange: [PROGRESS_EPSILON, 1],
-                          outputRange: [0, 1],
-                        }),
-                    // We don't want the user to be able to press through the overlay when drawer is open
-                    // One approach is to adjust the pointerEvents based on the progress
-                    // But we can also send the overlay behind the screen, which works, and is much less code
-                    zIndex: cond(
-                      greaterThan(this.progress, PROGRESS_EPSILON),
-                      0,
-                      -1
-                    ),
-                  },
-                  overlayStyle,
-                ]}
-              />
-            </TapGestureHandler>
+            {// disable overlay if 'sidebar' on the big screen
+            this.bigScreenSidebar ? null : (
+              <TapGestureHandler
+                onHandlerStateChange={this.handleTapStateChange}
+              >
+                <Animated.View
+                  style={[
+                    styles.overlay,
+                    {
+                      opacity: interpolate(this.progress, {
+                        inputRange: [PROGRESS_EPSILON, 1],
+                        outputRange: [0, 1],
+                      }),
+                      // We don't want the user to be able to press through the overlay when drawer is open
+                      // One approach is to adjust the pointerEvents based on the progress
+                      // But we can also send the overlay behind the screen, which works, and is much less code
+                      zIndex: cond(
+                        greaterThan(this.progress, PROGRESS_EPSILON),
+                        0,
+                        -1
+                      ),
+                    },
+                    overlayStyle,
+                  ]}
+                />
+              </TapGestureHandler>
+            )}
           </Animated.View>
-          <Animated.Code
-            exec={block([
-              onChange(this.manuallyTriggerSpring, [
-                cond(eq(this.manuallyTriggerSpring, TRUE), [
-                  set(this.nextIsOpen, FALSE),
-                  call([], () => (this.currentOpenValue = false)),
+          {this.bigScreenSidebar ? null : (
+            <Animated.Code
+              exec={block([
+                onChange(this.manuallyTriggerSpring, [
+                  cond(eq(this.manuallyTriggerSpring, TRUE), [
+                    set(this.nextIsOpen, FALSE),
+                    call([], () => (this.currentOpenValue = false)),
+                  ]),
                 ]),
-              ]),
-            ])}
-          />
+              ])}
+            />
+          )}
           <Animated.View
             accessibilityViewIsModal={open}
             removeClippedSubviews={Platform.OS !== 'ios'}
             onLayout={this.handleDrawerLayout}
             style={[
               styles.container,
-              right ? { right: offset } : { left: offset },
-              {
+              !this.bigScreenSidebar && {
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                width: '80%',
                 transform: [
                   {
-                    // make 'sidebar' always visible on the big screen
-                    translateX: this.bigScreenSidebar
-                      ? this.drawerWidth
-                      : drawerTranslateX,
+                    translateX: drawerTranslateX,
                   },
                 ],
                 opacity: this.drawerOpacity,
+              },
+              this.bigScreenSidebar
+                ? {}
+                : right
+                ? { right: offset }
+                : { left: offset },
+              {
                 zIndex: drawerType === 'back' ? -1 : 0,
               },
               drawerStyle as any,
@@ -656,10 +670,6 @@ export default class DrawerView extends React.PureComponent<Props> {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    width: '80%',
     maxWidth: '100%',
   },
   overlay: {
