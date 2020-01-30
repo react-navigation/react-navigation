@@ -7,6 +7,7 @@ import {
   StatusBar,
   I18nManager,
 } from 'react-native';
+import RNRestart from 'react-native-restart';
 import { MaterialIcons } from '@expo/vector-icons';
 import {
   Provider as PaperProvider,
@@ -40,6 +41,7 @@ import LinkingPrefixes from './LinkingPrefixes';
 import SimpleStack from './Screens/SimpleStack';
 import NativeStack from './Screens/NativeStack';
 import ModalPresentationStack from './Screens/ModalPresentationStack';
+import StackTransparent from './Screens/StackTransparent';
 import StackHeaderCustomization from './Screens/StackHeaderCustomization';
 import BottomTabs from './Screens/BottomTabs';
 import MaterialTopTabsScreen from './Screens/MaterialTopTabs';
@@ -69,6 +71,10 @@ const SCREENS = {
   ModalPresentationStack: {
     title: 'Modal Presentation Stack',
     component: ModalPresentationStack,
+  },
+  StackTransparent: {
+    title: 'Transparent Stack',
+    component: StackTransparent,
   },
   StackHeaderCustomization: {
     title: 'Header Customization in Stack',
@@ -111,22 +117,27 @@ export default function App() {
   // To test deep linking on, run the following in the Terminal:
   // Android: adb shell am start -a android.intent.action.VIEW -d "exp://127.0.0.1:19000/--/simple-stack"
   // iOS: xcrun simctl openurl booted exp://127.0.0.1:19000/--/simple-stack
+  // Android (bare): adb shell am start -a android.intent.action.VIEW -d "rne://127.0.0.1:19000/--/simple-stack"
+  // iOS (bare): xcrun simctl openurl booted rne://127.0.0.1:19000/--/simple-stack
   // The first segment of the link is the the scheme + host (returned by `Linking.makeUrl`)
   const { getInitialState } = useLinking(containerRef, {
     prefixes: LinkingPrefixes,
     config: {
-      Root: Object.keys(SCREENS).reduce<{ [key: string]: string }>(
-        (acc, name) => {
-          // Convert screen names such as SimpleStack to kebab case (simple-stack)
-          acc[name] = name
-            .replace(/([A-Z]+)/g, '-$1')
-            .replace(/^-/, '')
-            .toLowerCase();
+      Root: {
+        path: 'root',
+        screens: Object.keys(SCREENS).reduce<{ [key: string]: string }>(
+          (acc, name) => {
+            // Convert screen names such as SimpleStack to kebab case (simple-stack)
+            acc[name] = name
+              .replace(/([A-Z]+)/g, '-$1')
+              .replace(/^-/, '')
+              .toLowerCase();
 
-          return acc;
-        },
-        {}
-      ),
+            return acc;
+          },
+          {}
+        ),
+      },
     },
   });
 
@@ -142,7 +153,7 @@ export default function App() {
       try {
         let state = await getInitialState();
 
-        if (state === undefined) {
+        if (Platform.OS !== 'web' && state === undefined) {
           const savedState = await AsyncStorage.getItem(
             NAVIGATION_PERSISTENCE_KEY
           );
@@ -248,7 +259,12 @@ export default function App() {
                         value={I18nManager.isRTL}
                         onValueChange={() => {
                           I18nManager.forceRTL(!I18nManager.isRTL);
-                          Updates.reloadFromCache();
+                          // @ts-ignore
+                          if (global.Expo) {
+                            Updates.reloadFromCache();
+                          } else {
+                            RNRestart.Restart();
+                          }
                         }}
                       />
                       <Divider />

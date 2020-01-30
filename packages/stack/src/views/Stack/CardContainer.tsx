@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { Animated, View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import {
+  Animated,
+  View,
+  StyleSheet,
+  StyleProp,
+  ViewStyle,
+  Platform,
+} from 'react-native';
 import { StackNavigationState } from '@react-navigation/routers';
 import { Route, useTheme } from '@react-navigation/native';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
@@ -54,6 +61,8 @@ type Props = TransitionPreset & {
     height: number;
   }) => void;
 };
+
+const EPSILON = 0.01;
 
 function CardContainer({
   active,
@@ -128,6 +137,27 @@ function CardContainer({
 
   const { colors } = useTheme();
 
+  const [pointerEvents, setPointerEvents] = React.useState<'box-none' | 'none'>(
+    'box-none'
+  );
+
+  React.useEffect(() => {
+    if (Platform.OS === 'web') {
+      return;
+    }
+    const valueListenerCallback = ({ value }: { value: number }) => {
+      setPointerEvents(value <= EPSILON ? 'box-none' : 'none');
+    };
+    // @ts-ignore
+    const listener = scene.progress.next?.addListener(valueListenerCallback);
+    return () => {
+      if (listener) {
+        // @ts-ignore
+        scene.progress.next?.removeListener(listener);
+      }
+    };
+  }, [pointerEvents, scene.progress.next]);
+
   return (
     <Card
       index={index}
@@ -152,7 +182,7 @@ function CardContainer({
       styleInterpolator={cardStyleInterpolator}
       accessibilityElementsHidden={!focused}
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
-      pointerEvents="box-none"
+      pointerEvents={active ? 'box-none' : pointerEvents}
       containerStyle={
         headerMode === 'float' && !headerTransparent && headerShown !== false
           ? { marginTop: headerHeight }

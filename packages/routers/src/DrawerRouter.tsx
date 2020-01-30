@@ -1,5 +1,5 @@
 import shortid from 'shortid';
-import { CommonAction, Router } from '@react-navigation/core';
+import { CommonAction, Router, PartialState } from '@react-navigation/core';
 import TabRouter, {
   TabActions,
   TabActionType,
@@ -17,15 +17,18 @@ export type DrawerActionType =
 
 export type DrawerRouterOptions = TabRouterOptions;
 
-export type DrawerNavigationState = Omit<TabNavigationState, 'type'> & {
+export type DrawerNavigationState = Omit<
+  TabNavigationState,
+  'type' | 'history'
+> & {
   /**
    * Type of the router, in this case, it's drawer.
    */
   type: 'drawer';
   /**
-   * Whether the drawer is open or closed.
+   * List of previously visited route keys and drawer open status.
    */
-  isDrawerOpen: boolean;
+  history: ({ type: 'route'; key: string } | { type: 'drawer' })[];
 };
 
 export const DrawerActions = {
@@ -39,6 +42,32 @@ export const DrawerActions = {
   toggleDrawer(): DrawerActionType {
     return { type: 'TOGGLE_DRAWER' };
   },
+};
+
+const isDrawerOpen = (
+  state: DrawerNavigationState | PartialState<DrawerNavigationState>
+) => Boolean(state.history?.find(it => it.type === 'drawer'));
+
+const openDrawer = (state: DrawerNavigationState): DrawerNavigationState => {
+  if (isDrawerOpen(state)) {
+    return state;
+  }
+
+  return {
+    ...state,
+    history: [...state.history, { type: 'drawer' }],
+  };
+};
+
+const closeDrawer = (state: DrawerNavigationState): DrawerNavigationState => {
+  if (!isDrawerOpen(state)) {
+    return state;
+  }
+
+  return {
+    ...state,
+    history: state.history.filter(it => it.type !== 'drawer'),
+  };
 };
 
 export default function DrawerRouter(
@@ -55,24 +84,13 @@ export default function DrawerRouter(
     type: 'drawer',
 
     getInitialState({ routeNames, routeParamList }) {
-      const index =
-        options.initialRouteName === undefined
-          ? 0
-          : routeNames.indexOf(options.initialRouteName);
+      const state = router.getInitialState({ routeNames, routeParamList });
 
       return {
+        ...state,
         stale: false,
         type: 'drawer',
         key: `drawer-${shortid()}`,
-        index,
-        routeNames,
-        routeKeyHistory: [],
-        routes: routeNames.map(name => ({
-          name,
-          key: `${name}-${shortid()}`,
-          params: routeParamList[name],
-        })),
-        isDrawerOpen: false,
       };
     },
 
@@ -81,84 +99,46 @@ export default function DrawerRouter(
         return partialState;
       }
 
-      const state = router.getRehydratedState(partialState, {
+      let state = router.getRehydratedState(partialState, {
         routeNames,
         routeParamList,
       });
+
+      if (isDrawerOpen(partialState)) {
+        state = openDrawer(state);
+      }
 
       return {
         ...state,
         type: 'drawer',
         key: `drawer-${shortid()}`,
-        isDrawerOpen:
-          typeof partialState.isDrawerOpen === 'boolean'
-            ? partialState.isDrawerOpen
-            : false,
       };
     },
 
     getStateForRouteFocus(state, key) {
-      const index = state.routes.findIndex(r => r.key === key);
+      const result = router.getStateForRouteFocus(state, key);
 
-      const result =
-        index === -1 || index === state.index
-          ? state
-          : router.getStateForRouteFocus(state, key);
-
-      if (result.isDrawerOpen) {
-        return {
-          ...result,
-          isDrawerOpen: false,
-        };
-      }
-
-      return result;
+      return closeDrawer(result);
     },
 
     getStateForAction(state, action, options) {
       switch (action.type) {
         case 'OPEN_DRAWER':
-          if (state.isDrawerOpen) {
-            return state;
-          }
-
-          return {
-            ...state,
-            isDrawerOpen: true,
-          };
+          return openDrawer(state);
 
         case 'CLOSE_DRAWER':
-          if (!state.isDrawerOpen) {
-            return state;
-          }
-
-          return {
-            ...state,
-            isDrawerOpen: false,
-          };
+          return closeDrawer(state);
 
         case 'TOGGLE_DRAWER':
-          return {
-            ...state,
-            isDrawerOpen: !state.isDrawerOpen,
-          };
+          if (isDrawerOpen(state)) {
+            return closeDrawer(state);
+          }
 
-        case 'NAVIGATE':
-          return router.getStateForAction(
-            {
-              ...state,
-              isDrawerOpen: false,
-            },
-            action,
-            options
-          );
+          return openDrawer(state);
 
         case 'GO_BACK':
-          if (state.isDrawerOpen) {
-            return {
-              ...state,
-              isDrawerOpen: false,
-            };
+          if (isDrawerOpen(state)) {
+            return closeDrawer(state);
           }
 
           return router.getStateForAction(state, action, options);

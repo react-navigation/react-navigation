@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, TextInput, ActivityIndicator, StyleSheet } from 'react-native';
 import { Title, Button } from 'react-native-paper';
-import { ParamListBase } from '@react-navigation/native';
+import { useTheme, ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
   HeaderBackButton,
@@ -40,11 +40,25 @@ const SplashScreen = () => {
 
 const SignInScreen = () => {
   const { signIn } = React.useContext(AuthContext);
+  const { colors } = useTheme();
 
   return (
     <View style={styles.content}>
-      <TextInput placeholder="Username" style={styles.input} />
-      <TextInput placeholder="Password" secureTextEntry style={styles.input} />
+      <TextInput
+        placeholder="Username"
+        style={[
+          styles.input,
+          { backgroundColor: colors.card, color: colors.text },
+        ]}
+      />
+      <TextInput
+        placeholder="Password"
+        secureTextEntry
+        style={[
+          styles.input,
+          { backgroundColor: colors.card, color: colors.text },
+        ]}
+      />
       <Button mode="contained" onPress={signIn} style={styles.button}>
         Sign in
       </Button>
@@ -73,6 +87,7 @@ type Props = {
 
 type State = {
   isLoading: boolean;
+  isSignout: boolean;
   userToken: undefined | string;
 };
 
@@ -94,17 +109,20 @@ export default function SimpleStackScreen({ navigation }: Props) {
         case 'SIGN_IN':
           return {
             ...prevState,
+            isSignout: false,
             userToken: action.token,
           };
         case 'SIGN_OUT':
           return {
             ...prevState,
+            isSignout: true,
             userToken: undefined,
           };
       }
     },
     {
       isLoading: true,
+      isSignout: false,
       userToken: undefined,
     }
   );
@@ -147,7 +165,10 @@ export default function SimpleStackScreen({ navigation }: Props) {
         ) : state.userToken === undefined ? (
           <SimpleStack.Screen
             name="SignIn"
-            options={{ title: 'Sign in' }}
+            options={{
+              title: 'Sign in',
+              animationTypeForReplace: state.isSignout ? 'pop' : 'push',
+            }}
             component={SignInScreen}
           />
         ) : (
@@ -171,7 +192,6 @@ const styles = StyleSheet.create({
   input: {
     margin: 8,
     padding: 10,
-    backgroundColor: 'white',
     borderRadius: 3,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: 'rgba(0, 0, 0, 0.08)',

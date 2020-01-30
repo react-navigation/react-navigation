@@ -8,8 +8,11 @@ type StringifyConfig = Record<string, (value: any) => string>;
 type Options = {
   [routeName: string]:
     | string
-    | { path: string; stringify?: StringifyConfig }
-    | Options;
+    | {
+        path: string;
+        stringify?: StringifyConfig;
+        screens?: Options;
+      };
 };
 
 /**
@@ -43,6 +46,9 @@ export default function getPathFromState(
   state?: State,
   options: Options = {}
 ): string {
+  if (state === undefined) {
+    throw Error('NavigationState not passed');
+  }
   let path = '/';
 
   let current: State | undefined = state;
@@ -50,7 +56,7 @@ export default function getPathFromState(
   while (current) {
     let index = typeof current.index === 'number' ? current.index : 0;
     let route = current.routes[index] as Route<string> & {
-      state?: State | undefined;
+      state?: State;
     };
     let currentOptions = options;
     let pattern = route.name;
@@ -64,10 +70,14 @@ export default function getPathFromState(
           pattern = (currentOptions[route.name] as { path: string }).path;
           break;
         } else {
-          currentOptions = currentOptions[route.name] as Options;
+          if (!(currentOptions[route.name] as { screens?: Options }).screens) {
+            throw Error('Wrong Options object passed');
+          }
+          currentOptions = (currentOptions[route.name] as { screens: Options })
+            .screens;
           index = typeof route.state.index === 'number' ? route.state.index : 0;
           route = route.state.routes[index] as Route<string> & {
-            state?: State | undefined;
+            state?: State;
           };
         }
       }

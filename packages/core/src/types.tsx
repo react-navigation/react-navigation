@@ -17,6 +17,10 @@ export type NavigationState = {
    */
   routeNames: string[];
   /**
+   * Alternative entries for history.
+   */
+  history?: unknown[];
+  /**
    * List of rendered routes.
    */
   routes: (Route<string> & {
@@ -212,10 +216,10 @@ export type EventMapBase = Record<
   { data?: any; canPreventDefault?: boolean }
 >;
 
-export type EventMapCore = {
+export type EventMapCore<State extends NavigationState> = {
   focus: { data: undefined };
   blur: { data: undefined };
-  state: { data: { state: NavigationState } };
+  state: { data: { state: State } };
 };
 
 export type EventArg<
@@ -366,13 +370,6 @@ type NavigationHelpersCommon<
   reset(state: PartialState<State> | State): void;
 
   /**
-   * Reset the navigation state of the root navigator to the provided state.
-   *
-   * @param state Navigation state object.
-   */
-  resetRoot(state?: PartialState<NavigationState> | NavigationState): void;
-
-  /**
    * Go back to the previous route in history.
    */
   goBack(): void;
@@ -465,7 +462,7 @@ export type NavigationProp<
    * Note that this method doesn't re-render screen when the result changes. So don't use it in `render`.
    */
   dangerouslyGetState(): State;
-} & EventConsumer<EventMap & EventMapCore> &
+} & EventConsumer<EventMap & EventMapCore<State>> &
   PrivateValueStore<ParamList, RouteName, EventMap>;
 
 export type RouteProp<
@@ -586,15 +583,21 @@ export type RouteConfig<
 );
 
 export type NavigationContainerRef =
-  | (NavigationHelpers<ParamListBase> & {
-      /**
-       * Reset the navigation state of the root navigator to the provided state.
-       *
-       * @param state Navigation state object.
-       */
-      resetRoot(state?: PartialState<NavigationState> | NavigationState): void;
-      getRootState(): NavigationState;
-    })
+  | (NavigationHelpers<ParamListBase> &
+      EventConsumer<{ state: { data: { state: NavigationState } } }> & {
+        /**
+         * Reset the navigation state of the root navigator to the provided state.
+         *
+         * @param state Navigation state object.
+         */
+        resetRoot(
+          state?: PartialState<NavigationState> | NavigationState
+        ): void;
+        /**
+         * Get the rehydrated navigation state of the navigation tree.
+         */
+        getRootState(): NavigationState;
+      })
   | undefined
   | null;
 

@@ -1,4 +1,3 @@
-import shortid from 'shortid';
 import { CommonAction, NavigationState, PartialState } from './types';
 
 /**
@@ -11,35 +10,6 @@ const BaseRouter = {
     action: CommonAction
   ): State | PartialState<State> | null {
     switch (action.type) {
-      case 'REPLACE': {
-        const index = action.source
-          ? state.routes.findIndex(r => r.key === action.source)
-          : state.index;
-
-        if (index === -1) {
-          return null;
-        }
-
-        const { name, key, params } = action.payload;
-
-        if (!state.routeNames.includes(name)) {
-          return null;
-        }
-
-        return {
-          ...state,
-          routes: state.routes.map((route, i) =>
-            i === index
-              ? {
-                  key: key !== undefined ? key : `${name}-${shortid()}`,
-                  name,
-                  params,
-                }
-              : route
-          ),
-        };
-      }
-
       case 'SET_PARAMS': {
         const index = action.source
           ? state.routes.findIndex(r => r.key === action.source)

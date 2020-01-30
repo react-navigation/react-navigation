@@ -5,7 +5,13 @@ import { NavigationState, PartialState, InitialState } from './types';
 type ParseConfig = Record<string, (value: string) => any>;
 
 type Options = {
-  [routeName: string]: string | { path: string; parse?: ParseConfig } | Options;
+  [routeName: string]:
+    | string
+    | {
+        path: string;
+        parse?: ParseConfig;
+        screens?: Options;
+      };
 };
 
 type RouteConfig = {
@@ -42,6 +48,9 @@ export default function getStateFromPath(
   path: string,
   options: Options = {}
 ): ResultState | undefined {
+  if (path === '') {
+    return undefined;
+  }
   // Create a normalized configs array which will be easier to use
   const configs = ([] as RouteConfig[]).concat(
     ...Object.keys(options).map(key => createNormalizedConfigs(key, options))
@@ -65,7 +74,7 @@ export default function getStateFromPath(
 
       // If our regex matches, we need to extract params from the path
       if (match) {
-        routeNames = config.routeNames;
+        routeNames = [...config.routeNames];
 
         const paramPatterns = config.pattern
           .split('/')
@@ -164,7 +173,7 @@ export default function getStateFromPath(
     const route = current.routes[0];
 
     const params = queryString.parse(query);
-    const parseFunction = findParseConfigForRoute(route.name, options);
+    const parseFunction = findParseConfigForRoute(route.name, configs);
 
     if (parseFunction) {
       Object.keys(params).forEach(name => {
@@ -185,7 +194,7 @@ function createNormalizedConfigs(
   routeConfig: Options,
   routeNames: string[] = []
 ): RouteConfig[] {
-  const configs = [];
+  const configs: RouteConfig[] = [];
 
   routeNames.push(key);
 
@@ -196,30 +205,19 @@ function createNormalizedConfigs(
     configs.push(createConfigItem(routeNames, value));
   } else if (typeof value === 'object') {
     // if an object is specified as the value (e.g. Foo: { ... }),
-    // it could have config object and optionally nested config
-    Object.keys(value).forEach(nestedKey => {
-      if (nestedKey === 'path') {
-        configs.push(
-          createConfigItem(
-            routeNames,
-            value[nestedKey] as string,
-            value.parse ? (value.parse as ParseConfig) : undefined
-          )
-        );
-      } else if (nestedKey === 'parse') {
-        // We handle custom parse function when a `path` is specified (in nestedKey === path)
-      } else {
-        // If the name of the key is not `path` or `parse`, it's a nested config for route
-        // So we need to traverse into it and collect the configs
+    // it has `path` property and
+    // it could have `screens` prop which has nested configs
+    configs.push(createConfigItem(routeNames, value.path, value.parse));
+    if (value.screens) {
+      Object.keys(value.screens).forEach(nestedConfig => {
         const result = createNormalizedConfigs(
-          nestedKey,
-          routeConfig[key] as Options,
+          nestedConfig,
+          value.screens as Options,
           routeNames
         );
-
         configs.push(...result);
-      }
-    });
+      });
+    }
   }
 
   routeNames.pop();
@@ -247,21 +245,12 @@ function createConfigItem(
 
 function findParseConfigForRoute(
   routeName: string,
-  config: Options
+  flatConfig: RouteConfig[]
 ): ParseConfig | undefined {
-  if (config[routeName]) {
-    return (config[routeName] as { parse?: ParseConfig }).parse;
-  }
-
-  for (const name in config) {
-    if (typeof config[name] === 'object') {
-      const parse = findParseConfigForRoute(routeName, config[name] as Options);
-
-      if (parse) {
-        return parse;
-      }
+  for (const config of flatConfig) {
+    if (routeName === config.routeNames[config.routeNames.length - 1]) {
+      return config.parse;
     }
   }
-
   return undefined;
 }

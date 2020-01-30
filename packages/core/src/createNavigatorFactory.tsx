@@ -13,11 +13,17 @@ export default function createNavigatorFactory<
   ScreenOptions extends object,
   NavigatorComponent extends React.ComponentType<any>
 >(Navigator: NavigatorComponent) {
-  return <ParamList extends ParamListBase>(): TypedNavigator<
+  return function<ParamList extends ParamListBase>(): TypedNavigator<
     ParamList,
     ScreenOptions,
     typeof Navigator
-  > => {
+  > {
+    if (arguments[0] !== undefined) {
+      throw new Error(
+        "Creating a navigator doesn't take an argument. Maybe you are trying to use React Navigation 4 API with React Navigation 5?"
+      );
+    }
+
     return {
       Navigator,
       Screen,

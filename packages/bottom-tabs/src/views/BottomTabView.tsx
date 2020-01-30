@@ -92,7 +92,7 @@ export default class BottomTabView extends React.Component<Props, State> {
   };
 
   render() {
-    const { state, descriptors, lazy, unmountInactiveScreens } = this.props;
+    const { state, descriptors, lazy } = this.props;
     const { routes } = state;
     const { loaded } = this.state;
 
@@ -101,16 +101,18 @@ export default class BottomTabView extends React.Component<Props, State> {
         <View style={styles.container}>
           <ScreenContainer style={styles.pages}>
             {routes.map((route, index) => {
-              if (unmountInactiveScreens && index !== state.index) {
+              const descriptor = descriptors[route.key];
+              const { unmountOnBlur } = descriptor.options;
+              const isFocused = state.index === index;
+
+              if (unmountOnBlur && !isFocused) {
                 return null;
               }
 
-              if (lazy && !loaded.includes(index)) {
+              if (lazy && !loaded.includes(index) && !isFocused) {
                 // Don't render a screen if we've never navigated to it
                 return null;
               }
-
-              const isFocused = state.index === index;
 
               return (
                 <ResourceSavingScene
@@ -119,7 +121,7 @@ export default class BottomTabView extends React.Component<Props, State> {
                   isVisible={isFocused}
                 >
                   <SceneContent isFocused={isFocused}>
-                    {descriptors[route.key].render()}
+                    {descriptor.render()}
                   </SceneContent>
                 </ResourceSavingScene>
               );

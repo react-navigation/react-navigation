@@ -1,3 +1,8 @@
+import {
+  getStateFromPath as getStateFromPathDefault,
+  getPathFromState as getPathFromStateDefault,
+} from '@react-navigation/core';
+
 export type Theme = {
   dark: boolean;
   colors: {
@@ -7,4 +12,34 @@ export type Theme = {
     text: string;
     border: string;
   };
+};
+
+export type LinkingOptions = {
+  /**
+   * The prefixes are stripped from the URL before parsing them.
+   * Usually they are the `scheme` + `host` (e.g. `myapp://chat?user=jane`)
+   */
+  prefixes: string[];
+  /**
+   * Config to fine-tune how to parse the path.
+   *
+   * Example:
+   * ```js
+   * {
+   *   Chat: {
+   *     path: 'chat/:author/:id',
+   *     parse: { id: Number }
+   *   }
+   * }
+   * ```
+   */
+  config?: Parameters<typeof getStateFromPathDefault>[1];
+  /**
+   * Custom function to parse the URL to a valid navigation state (advanced).
+   */
+  getStateFromPath?: typeof getStateFromPathDefault;
+  /**
+   * Custom function to conver the state object to a valid URL (advanced).
+   */
+  getPathFromState?: typeof getPathFromStateDefault;
 };

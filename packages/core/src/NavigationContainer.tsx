@@ -2,10 +2,10 @@ import * as React from 'react';
 import * as CommonActions from './CommonActions';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
 import NavigationBuilderContext from './NavigationBuilderContext';
-import ResetRootContext from './ResetRootContext';
 import useFocusedListeners from './useFocusedListeners';
 import useDevTools from './useDevTools';
 import useStateGetters from './useStateGetters';
+import isSerializable from './isSerializable';
 
 import {
   Route,
@@ -16,6 +16,7 @@ import {
   NavigationContainerRef,
   NavigationContainerProps,
 } from './types';
+import useEventEmitter from './useEventEmitter';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
 
@@ -44,6 +45,8 @@ export const NavigationStateContext = React.createContext<{
     throw new Error(MISSING_CONTEXT_ERROR);
   },
 });
+
+let hasWarnedForSerialization = false;
 
 /**
  * Remove `key` and `routeNames` from the state objects recursively to get partial state.
@@ -203,6 +206,8 @@ const Container = React.forwardRef(function NavigationContainer(
     return getStateForRoute('root');
   }, [getStateForRoute]);
 
+  const emitter = useEventEmitter();
+
   React.useImperativeHandle(ref, () => ({
     ...(Object.keys(CommonActions) as (keyof typeof CommonActions)[]).reduce<
       any
@@ -216,6 +221,7 @@ const Container = React.forwardRef(function NavigationContainer(
         );
       return acc;
     }, {}),
+    ...emitter.create('root'),
     resetRoot,
     dispatch,
     canGoBack,
@@ -242,6 +248,25 @@ const Container = React.forwardRef(function NavigationContainer(
   );
 
   React.useEffect(() => {
+    if (process.env.NODE_ENV !== 'production') {
+      if (
+        state !== undefined &&
+        !isSerializable(state) &&
+        !hasWarnedForSerialization
+      ) {
+        hasWarnedForSerialization = true;
+
+        console.warn(
+          "We found non-serializable values in the navigation state, which can break usage such as persisting and restoring state. This might happen if you passed non-serializable values such as function, class instances etc. in params. If you need to use functions in your options, you can use 'navigation.setOptions' instead."
+        );
+      }
+    }
+
+    emitter.emit({
+      type: 'state',
+      data: { state },
+    });
+
     if (skipTrackingRef.current) {
       skipTrackingRef.current = false;
     } else {
@@ -256,14 +281,12 @@ const Container = React.forwardRef(function NavigationContainer(
     }
 
     isFirstMountRef.current = false;
-  }, [state, onStateChange, trackState, getRootState]);
+  }, [state, onStateChange, trackState, getRootState, emitter]);
 
   return (
     <NavigationBuilderContext.Provider value={builderContext}>
       <NavigationStateContext.Provider value={context}>
-        <ResetRootContext.Provider value={resetRoot}>
-          <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
-        </ResetRootContext.Provider>
+        <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
       </NavigationStateContext.Provider>
     </NavigationBuilderContext.Provider>
   );

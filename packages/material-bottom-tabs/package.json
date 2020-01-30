@@ -11,7 +11,7 @@
     "material",
     "tab"
   ],
-  "version": "5.0.0-alpha.34",
+  "version": "5.0.0-alpha.36",
   "license": "MIT",
   "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/material-bottom-tabs",
   "main": "lib/commonjs/index.js",
@@ -22,6 +22,7 @@
     "src",
     "lib"
   ],
+  "sideEffects": false,
   "publishConfig": {
     "access": "public"
   },
@@ -30,7 +31,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/routers": "^5.0.0-alpha.25"
+    "@react-navigation/routers": "^5.0.0-alpha.27"
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.8.0",
@@ -40,7 +41,7 @@
     "del-cli": "^3.0.0",
     "react": "~16.9.0",
     "react-native": "~0.61.5",
-    "react-native-paper": "^3.4.0",
+    "react-native-paper": "^3.5.0",
     "react-native-vector-icons": "^6.6.0",
     "typescript": "^3.7.4"
   },
@@ -48,7 +49,7 @@
     "@react-navigation/native": "^5.0.0-alpha.0",
     "react": "*",
     "react-native": "*",
-    "react-native-paper": "^3.0.0",
+    "react-native-paper": "^3.5.0",
     "react-native-vector-icons": "^6.0.0"
   },
   "@react-native-community/bob": {

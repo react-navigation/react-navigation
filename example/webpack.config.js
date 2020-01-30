@@ -10,6 +10,8 @@ const packages = path.resolve(__dirname, '..', 'packages');
 module.exports = async function(env, argv) {
   const config = await createExpoWebpackConfigAsync(env, argv);
 
+  config.context = path.resolve(__dirname, '..');
+
   config.module.rules.push({
     test: /\.(js|ts|tsx)$/,
     include: /(packages|example)\/.+/,

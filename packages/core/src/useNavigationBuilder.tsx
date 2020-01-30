@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { isValidElementType } from 'react-is';
 import { NavigationStateContext } from './NavigationContainer';
 import NavigationRouteContext from './NavigationRouteContext';
 import Screen from './Screen';
@@ -53,8 +54,8 @@ const isArrayEqual = (a: any[], b: any[]) =>
  */
 const getRouteConfigsFromChildren = <ScreenOptions extends object>(
   children: React.ReactNode
-) =>
-  React.Children.toArray(children).reduce<
+) => {
+  const configs = React.Children.toArray(children).reduce<
     RouteConfig<ParamListBase, string, ScreenOptions>[]
   >((acc, child) => {
     if (React.isValidElement(child)) {
@@ -84,6 +85,56 @@ const getRouteConfigsFromChildren = <ScreenOptions extends object>(
       }')`
     );
   }, []);
+
+  if (process.env.NODE_ENV !== 'production') {
+    configs.forEach(config => {
+      const { name, children, component } = config as any;
+
+      if (typeof name !== 'string' || !name) {
+        throw new Error(
+          `Got an invalid name (${JSON.stringify(
+            name
+          )}) for the screen. It must be a non-empty string.`
+        );
+      }
+
+      if (children != null || component !== undefined) {
+        if (children != null && component !== undefined) {
+          throw new Error(
+            `Got both 'component' and 'children' props for the screen '${name}'. You must pass only one of them.`
+          );
+        }
+
+        if (children != null && typeof children !== 'function') {
+          throw new Error(
+            `Got an invalid value for 'children' prop for the screen '${name}'. It must be a function returning a React Element.`
+          );
+        }
+
+        if (component !== undefined && !isValidElementType(component)) {
+          throw new Error(
+            `Got an invalid value for 'component' prop for the screen '${name}'. It must be a a valid React Component.`
+          );
+        }
+
+        if (typeof component === 'function' && component.name === 'component') {
+          // Inline anonymous functions passed in the `component` prop will have the name of the prop
+          // It's relatively safe to assume that it's not a component since it should also have PascalCase name
+          // We won't catch all scenarios here, but this should catch a good chunk of incorrect use.
+          console.warn(
+            `Looks like you're passing an inline function for 'component' prop for the screen '${name}' (e.g. component={() => <SomeComponent />}). Passing an inline function will cause the component state to be lost on re-render and cause perf issues since it's re-created every render. You can pass the function as children to 'Screen' instead to achieve the desired behaviour.`
+          );
+        }
+      } else {
+        throw new Error(
+          `Couldn't find a 'component' or 'children' prop for the screen '${name}'. This can happen if you passed 'undefined'. You likely forgot to export your component from the file it's defined in, or mixed up default import and named import when importing.`
+        );
+      }
+    });
+  }
+
+  return configs;
+};
 
 /**
  * Hook for building navigators.

@@ -99,6 +99,12 @@ export type BottomTabNavigationOptions = {
    * Renders `TouchableWithoutFeedback` by default.
    */
   tabBarButton?: (props: BottomTabBarButtonProps) => React.ReactNode;
+
+  /**
+   * Whether this screen should be unmounted when navigating away from it.
+   * Defaults to `false`.
+   */
+  unmountOnBlur?: boolean;
 };
 
 export type BottomTabDescriptor = Descriptor<
@@ -118,11 +124,6 @@ export type BottomTabNavigationConfig = {
    * Set it to `false` if you want to render all screens on initial render.
    */
   lazy?: boolean;
-  /**
-   * Whether a screen should be unmounted when navigating away from it.
-   * Defaults to `false`.
-   */
-  unmountInactiveScreens?: boolean;
   /**
    * Function that returns a React element to display as the tab bar.
    */
@@ -176,14 +177,9 @@ export type BottomTabBarOptions = {
   tabStyle?: StyleProp<ViewStyle>;
   /**
    * Whether the label is renderd below the icon or beside the icon.
-   * When a function is passed, it receives the device dimensions to render the label differently.
    * By default, in `vertical` orinetation, label is rendered below and in `horizontal` orientation, it's renderd beside.
    */
-  labelPosition?:
-    | LabelPosition
-    | ((options: {
-        dimensions: { height: number; width: number };
-      }) => LabelPosition);
+  labelPosition?: LabelPosition;
   /**
    * Whether the label position should adapt to the orientation.
    */

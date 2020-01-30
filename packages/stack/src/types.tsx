@@ -1,6 +1,5 @@
 import {
   Animated,
-  EasingFunction,
   StyleProp,
   TextStyle,
   ViewStyle,
@@ -296,6 +295,11 @@ export type StackNavigationOptions = StackHeaderOptions &
      */
     animationEnabled?: boolean;
     /**
+     * The type of animation to use when this screen replaces another screen. Defaults to `push`.
+     * When `pop` is used, the `pop` animation is applied to the screen being replaced.
+     */
+    animationTypeForReplace?: 'push' | 'pop';
+    /**
      * Whether you can use gestures to dismiss this screen. Defaults to `true` on iOS, `false` on Android.
      */
     gestureEnabled?: boolean;
@@ -425,29 +429,21 @@ export type StackHeaderTitleProps = {
   style?: StyleProp<TextStyle>;
 };
 
-export type Screen = React.ComponentType<any> & {
-  navigationOptions?: StackNavigationOptions & {
-    [key: string]: any;
-  };
-};
-
-export type SpringConfig = {
-  damping: number;
-  mass: number;
-  stiffness: number;
-  restSpeedThreshold: number;
-  restDisplacementThreshold: number;
-  overshootClamping: boolean;
-};
-
-export type TimingConfig = {
-  duration: number;
-  easing: EasingFunction;
-};
-
 export type TransitionSpec =
-  | { animation: 'spring'; config: SpringConfig }
-  | { animation: 'timing'; config: TimingConfig };
+  | {
+      animation: 'spring';
+      config: Omit<
+        Animated.SpringAnimationConfig,
+        'toValue' | keyof Animated.AnimationConfig
+      >;
+    }
+  | {
+      animation: 'timing';
+      config: Omit<
+        Animated.TimingAnimationConfig,
+        'toValue' | keyof Animated.AnimationConfig
+      >;
+    };
 
 export type StackCardInterpolationProps = {
   /**
