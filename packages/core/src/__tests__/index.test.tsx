@@ -952,7 +952,7 @@ it('throws if no name is passed to Screen', () => {
   );
 
   expect(() => render(element).update(element)).toThrowError(
-    'We got an invalid name (undefined) for the screen. It must be a non-empty string.'
+    'Got an invalid name (undefined) for the screen. It must be a non-empty string.'
   );
 });
 
@@ -971,7 +971,7 @@ it('throws if invalid name is passed to Screen', () => {
   );
 
   expect(() => render(element).update(element)).toThrowError(
-    'We got an invalid name ([]) for the screen. It must be a non-empty string.'
+    'Got an invalid name ([]) for the screen. It must be a non-empty string.'
   );
 });
 
@@ -992,7 +992,7 @@ it('throws if both children and component are passed', () => {
   );
 
   expect(() => render(element).update(element)).toThrowError(
-    "We got both 'component' and 'children' props for the screen 'foo'. You must pass only one of them."
+    "Got both 'component' and 'children' props for the screen 'foo'. You must pass only one of them."
   );
 });
 
@@ -1011,7 +1011,7 @@ it('throws descriptive error for undefined screen component', () => {
   );
 
   expect(() => render(element).update(element)).toThrowError(
-    "We couldn't find a 'component' or 'children' prop for the screen 'foo'"
+    "Couldn't find a 'component' or 'children' prop for the screen 'foo'"
   );
 });
 
@@ -1030,7 +1030,7 @@ it('throws descriptive error for invalid screen component', () => {
   );
 
   expect(() => render(element).update(element)).toThrowError(
-    "We got an invalid value for 'component' prop for the screen 'foo'. It must be a a valid React Component."
+    "Got an invalid value for 'component' prop for the screen 'foo'. It must be a a valid React Component."
   );
 });
 
@@ -1049,7 +1049,7 @@ it('throws descriptive error for invalid children', () => {
   );
 
   expect(() => render(element).update(element)).toThrowError(
-    "We got an invalid value for 'children' prop for the screen 'foo'. It must be a function returning a React Element."
+    "Got an invalid value for 'children' prop for the screen 'foo'. It must be a function returning a React Element."
   );
 });
 
