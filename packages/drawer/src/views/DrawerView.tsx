@@ -5,6 +5,8 @@ import {
   I18nManager,
   Platform,
   ScaledSize,
+  BackHandler,
+  NativeEventSubscription,
 } from 'react-native';
 // eslint-disable-next-line import/no-unresolved
 import { ScreenContainer } from 'react-native-screens';
@@ -87,6 +89,47 @@ export default function DrawerView({
 
   const { colors } = useTheme();
 
+  const isDrawerOpen = Boolean(state.history.find(it => it.type === 'drawer'));
+
+  const handleDrawerOpen = React.useCallback(() => {
+    navigation.dispatch({
+      ...DrawerActions.openDrawer(),
+      target: state.key,
+    });
+  }, [navigation, state.key]);
+
+  const handleDrawerClose = React.useCallback(() => {
+    navigation.dispatch({
+      ...DrawerActions.closeDrawer(),
+      target: state.key,
+    });
+  }, [navigation, state.key]);
+
+  React.useEffect(() => {
+    if (isDrawerOpen) {
+      navigation.emit({ type: 'drawerOpen' });
+    } else {
+      navigation.emit({ type: 'drawerClose' });
+    }
+  }, [isDrawerOpen, navigation]);
+
+  React.useEffect(() => {
+    let subscription: NativeEventSubscription | undefined;
+
+    if (isDrawerOpen) {
+      // We only add the subscription when drawer opens
+      // This way we can make sure that the subscription is added as late as possible
+      // This will make sure that our handler will run first when back button is pressed
+      subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+        handleDrawerClose();
+
+        return true;
+      });
+    }
+
+    return () => subscription?.remove();
+  }, [handleDrawerClose, isDrawerOpen, navigation, state.key]);
+
   React.useEffect(() => {
     const updateWidth = ({ window }: { window: ScaledSize }) => {
       setDrawerWidth(getDefaultDrawerWidth(window));
@@ -100,24 +143,6 @@ export default function DrawerView({
   if (!loaded.includes(state.index)) {
     setLoaded([...loaded, state.index]);
   }
-
-  const handleDrawerOpen = () => {
-    navigation.dispatch({
-      ...DrawerActions.openDrawer(),
-      target: state.key,
-    });
-
-    navigation.emit({ type: 'drawerOpen' });
-  };
-
-  const handleDrawerClose = () => {
-    navigation.dispatch({
-      ...DrawerActions.closeDrawer(),
-      target: state.key,
-    });
-
-    navigation.emit({ type: 'drawerClose' });
-  };
 
   const renderNavigationView = ({ progress }: any) => {
     return drawerContent({
@@ -168,7 +193,7 @@ export default function DrawerView({
     <SafeAreaProviderCompat>
       <DrawerGestureContext.Provider value={drawerGestureRef}>
         <Drawer
-          open={Boolean(state.history.find(it => it.type === 'drawer'))}
+          open={isDrawerOpen}
           gestureEnabled={gestureEnabled !== false}
           onOpen={handleDrawerOpen}
           onClose={handleDrawerClose}
