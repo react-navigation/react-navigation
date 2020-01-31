@@ -523,21 +523,29 @@ export default class DrawerView extends React.PureComponent<Props> {
       gestureHandlerProps,
     } = this.props;
 
-    const right = drawerPosition === 'right';
+    const isRight = drawerPosition === 'right';
 
     const contentTranslateX = drawerType === 'front' ? 0 : this.translateX;
     const drawerTranslateX =
       drawerType === 'back'
         ? I18nManager.isRTL
-          ? multiply(this.drawerWidth, DIRECTION_RIGHT)
-          : this.drawerWidth
+          ? multiply(
+              sub(this.containerWidth, this.drawerWidth),
+              isRight ? 1 : -1
+            )
+          : 0
         : this.translateX;
 
-    const offset = I18nManager.isRTL ? '100%' : multiply(this.drawerWidth, -1);
+    const offset =
+      drawerType === 'back'
+        ? 0
+        : I18nManager.isRTL
+        ? '100%'
+        : multiply(this.drawerWidth, -1);
 
     // FIXME: Currently hitSlop is broken when on Android when drawer is on right
     // https://github.com/kmagiera/react-native-gesture-handler/issues/569
-    const hitSlop = right
+    const hitSlop = isRight
       ? // Extend hitSlop to the side of the screen when drawer is closed
         // This lets the user drag the drawer from the side of the screen
         { right: 0, width: open ? undefined : swipeEdgeWidth }
@@ -594,7 +602,7 @@ export default class DrawerView extends React.PureComponent<Props> {
             onLayout={this.handleDrawerLayout}
             style={[
               styles.container,
-              right ? { right: offset } : { left: offset },
+              isRight ? { right: offset } : { left: offset },
               {
                 transform: [{ translateX: drawerTranslateX }],
                 opacity: this.drawerOpacity,
