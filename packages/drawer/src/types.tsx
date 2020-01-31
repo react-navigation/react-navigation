@@ -128,10 +128,6 @@ export type DrawerContentComponentProps<T = DrawerContentOptions> = T & {
    * `0` is closed, `1` is open.
    */
   progress: Animated.Node<number>;
-  /**
-   * Position of the drawer on the screen.
-   */
-  drawerPosition: 'left' | 'right';
 };
 
 export type DrawerContentOptions = {

@@ -28,6 +28,7 @@ import {
   DrawerNavigationHelpers,
   DrawerContentComponentProps,
 } from '../types';
+import DrawerPositionContext from '../utils/DrawerPositionContext';
 
 type Props = DrawerNavigationConfig & {
   state: DrawerNavigationState;
@@ -145,14 +146,17 @@ export default function DrawerView({
   }
 
   const renderNavigationView = ({ progress }: any) => {
-    return drawerContent({
-      ...drawerContentOptions,
-      progress: progress,
-      state: state,
-      navigation: navigation,
-      descriptors: descriptors,
-      drawerPosition: drawerPosition,
-    });
+    return (
+      <DrawerPositionContext.Provider value={drawerPosition}>
+        {drawerContent({
+          ...drawerContentOptions,
+          progress: progress,
+          state: state,
+          navigation: navigation,
+          descriptors: descriptors,
+        })}
+      </DrawerPositionContext.Provider>
+    );
   };
 
   const renderContent = () => {
