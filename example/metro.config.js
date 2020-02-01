@@ -6,7 +6,7 @@ const escape = require('escape-string-regexp');
 const blacklist = require('metro-config/src/defaults/blacklist');
 
 const root = path.resolve(__dirname, '..');
-const packages = path.resolve(__dirname, '..', 'packages');
+const packages = path.resolve(root, 'packages');
 
 // Get the list of dependencies for all packages in the monorepo
 const modules = ['@expo/vector-icons']
@@ -22,7 +22,7 @@ const modules = ['@expo/vector-icons']
         );
 
         // We need to collect list of deps that this package imports
-        // Collecting both dependencies are peerDependencies sould do it
+        // Collecting both dependencies are peerDependencies should do it
         return Object.keys({
           ...pak.dependencies,
           ...pak.peerDependencies,
@@ -59,7 +59,7 @@ module.exports = {
     // When we import a package from the monorepo, metro won't be able to find their deps
     // We need to specify them in `extraNodeModules` to tell metro where to find them
     extraNodeModules: modules.reduce((acc, name) => {
-      acc[name] = path.join(__dirname, '..', 'node_modules', name);
+      acc[name] = path.join(root, 'node_modules', name);
       return acc;
     }, {}),
   },
@@ -67,11 +67,11 @@ module.exports = {
   server: {
     enhanceMiddleware: middleware => {
       return (req, res, next) => {
+        // When an asset is imported outside the project root, it has wrong path on Android
+        // This happens for the back button in stack, so we fix the path to correct one
         const assets = '/packages/stack/src/views/assets';
 
         if (req.url.startsWith(assets)) {
-          // When an asset is imported outside the project root, it has wrong path on Android
-          // This happens for the back button in stack, so we fix the path to correct one
           req.url = req.url.replace(
             assets,
             '/assets/../packages/stack/src/views/assets'
