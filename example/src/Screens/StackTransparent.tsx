@@ -86,7 +86,7 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
   });
 
   return (
-    <SimpleStack.Navigator headerMode="screen" {...rest}>
+    <SimpleStack.Navigator mode="modal" {...rest}>
       <SimpleStack.Screen
         name="Article"
         component={ArticleScreen}
@@ -99,8 +99,6 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
           headerShown: false,
           cardStyle: { backgroundColor: 'transparent' },
           cardOverlayEnabled: true,
-          gestureEnabled: true,
-          gestureDirection: 'vertical-inverted',
           cardStyleInterpolator: ({ current: { progress } }) => ({
             cardStyle: {
               opacity: progress.interpolate({
@@ -147,12 +145,8 @@ const styles = StyleSheet.create({
   dialog: {
     padding: 16,
     width: '90%',
+    maxWidth: 400,
     borderRadius: 3,
-    elevation: 6,
-    shadowColor: 'black',
-    shadowOpacity: 0.15,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 10,
   },
   close: {
     alignSelf: 'flex-end',

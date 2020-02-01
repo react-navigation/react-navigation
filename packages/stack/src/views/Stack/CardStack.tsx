@@ -135,18 +135,18 @@ const MaybeScreen = ({
           // https://facebook.github.io/react-native/docs/view#removeclippedsubviews
           // This can be useful if screens is not enabled
           // It's buggy on iOS, so we don't enable it there
+          top:
+            enabled && typeof active === 'number' && !active ? FAR_FAR_AWAY : 0,
           transform: [
             {
+              // If the `active` prop is animated node, we can't use the `left` property due to native driver
+              // So we use `translateY` instead
               translateY:
-                Platform.OS !== 'ios' && enabled
-                  ? typeof active === 'number'
-                    ? active
-                      ? 0
-                      : FAR_FAR_AWAY
-                    : active.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [FAR_FAR_AWAY, 0],
-                      })
+                enabled && typeof active !== 'number'
+                  ? active.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [FAR_FAR_AWAY, 0],
+                    })
                   : 0,
             },
           ],
@@ -445,7 +445,9 @@ export default class CardStack extends React.Component<Props, State> {
 
     // Screens is buggy on iOS, so we don't enable it there
     // For modals, usually we want the screen underneath to be visible, so also disable it there
-    const isScreensEnabled = Platform.OS !== 'ios';
+    const isScreensEnabled =
+      Platform.OS !== 'ios' &&
+      (isInsufficientExpoVersion ? mode !== 'modal' : true);
 
     return (
       <React.Fragment>
@@ -460,9 +462,9 @@ export default class CardStack extends React.Component<Props, State> {
             const scene = scenes[index];
 
             // Display current screen and a screen beneath.
-
             let isScreenActive: Animated.AnimatedInterpolation | 0 | 1 =
               index >= self.length - 2 ? 1 : 0;
+
             if (isInsufficientExpoVersion) {
               isScreenActive =
                 index === self.length - 1
