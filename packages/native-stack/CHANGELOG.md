@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.30](https://github.com/react-navigation/navigation-ex/tree/master/packages/native-stack/compare/@react-navigation/native-stack@5.0.0-alpha.29...@react-navigation/native-stack@5.0.0-alpha.30) (2020-02-02)
+
+
+### Bug Fixes
+
+* add licenses ([0c159db](https://github.com/react-navigation/navigation-ex/tree/master/packages/native-stack/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
+* screens integration on Android ([#294](https://github.com/react-navigation/navigation-ex/tree/master/packages/native-stack/issues/294)) ([9bfb295](https://github.com/react-navigation/navigation-ex/tree/master/packages/native-stack/commit/9bfb29562020c61b4d5c9bee278bcb1c7bdb8b67))
+* update screens for native stack ([5411816](https://github.com/react-navigation/navigation-ex/tree/master/packages/native-stack/commit/54118161885738a6d20b062c7e6679f3bace8424))
+
+
+
+
+
 # [5.0.0-alpha.29](https://github.com/react-navigation/navigation-ex/tree/master/packages/native-stack/compare/@react-navigation/native-stack@5.0.0-alpha.28...@react-navigation/native-stack@5.0.0-alpha.29) (2020-01-24)
 
 **Note:** Version bump only for package @react-navigation/native-stack

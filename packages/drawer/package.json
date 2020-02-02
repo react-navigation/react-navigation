@@ -11,7 +11,7 @@
     "material",
     "drawer"
   ],
-  "version": "5.0.0-alpha.41",
+  "version": "5.0.0-alpha.42",
   "license": "MIT",
   "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer",
   "main": "lib/commonjs/index.js",
@@ -31,7 +31,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/routers": "^5.0.0-alpha.27",
+    "@react-navigation/routers": "^5.0.0-alpha.28",
     "color": "^3.1.2",
     "react-native-iphone-x-helper": "^1.2.1"
   },

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.29](https://github.com/react-navigation/navigation-ex/tree/master/packages/compat/compare/@react-navigation/compat@5.0.0-alpha.28...@react-navigation/compat@5.0.0-alpha.29) (2020-02-02)
+
+
+### Bug Fixes
+
+* add licenses ([0c159db](https://github.com/react-navigation/navigation-ex/tree/master/packages/compat/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
+* throw when assigning or accessing the router property in compat ([944fa35](https://github.com/react-navigation/navigation-ex/tree/master/packages/compat/commit/944fa35ed4778ebc7fa7cd50092719cbd5bf3caf))
+
+
+
+
+
 # [5.0.0-alpha.28](https://github.com/react-navigation/navigation-ex/tree/master/packages/compat/compare/@react-navigation/compat@5.0.0-alpha.27...@react-navigation/compat@5.0.0-alpha.28) (2020-01-24)
 
 **Note:** Version bump only for package @react-navigation/compat
