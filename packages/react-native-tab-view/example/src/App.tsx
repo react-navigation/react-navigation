@@ -147,10 +147,9 @@ export default class ExampleList extends React.Component<any, State> {
     const { index } = this.state;
 
     const ExampleComponent = EXAMPLE_COMPONENTS[index] || null;
-    const backgroundColor =
-      ExampleComponent && ExampleComponent.backgroundColor
-        ? ExampleComponent.backgroundColor
-        : '#111';
+    const backgroundColor = ExampleComponent?.backgroundColor
+      ? ExampleComponent.backgroundColor
+      : '#111';
     const tintColor =
       ExampleComponent && typeof ExampleComponent.tintColor === 'string'
         ? ExampleComponent.tintColor

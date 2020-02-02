@@ -195,7 +195,7 @@ export default class TabBarItem<T extends Route> extends React.Component<
     }
 
     const tabStyle = StyleSheet.flatten(style);
-    const isWidthSet = tabStyle && tabStyle.width !== undefined;
+    const isWidthSet = tabStyle?.width !== undefined;
     const tabContainerStyle: ViewStyle | null = isWidthSet ? null : { flex: 1 };
 
     const scene = { route };

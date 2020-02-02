@@ -609,7 +609,7 @@ export default class Pager<T extends Route> extends React.Component<
             } = this.props;
 
             if (isSwiping === TRUE) {
-              onSwipeStart && onSwipeStart();
+              onSwipeStart?.();
               this.interactionHandle = InteractionManager.createInteractionHandle();
 
               if (keyboardDismissMode === 'auto') {
@@ -624,7 +624,7 @@ export default class Pager<T extends Route> extends React.Component<
                 Keyboard.dismiss();
               }
             } else {
-              onSwipeEnd && onSwipeEnd();
+              onSwipeEnd?.();
 
               if (this.interactionHandle !== null) {
                 InteractionManager.clearInteractionHandle(

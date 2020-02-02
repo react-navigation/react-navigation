@@ -1,3 +1,5 @@
+/* eslint-disable import/no-commonjs */
+
 import * as React from 'react';
 import {
   View,

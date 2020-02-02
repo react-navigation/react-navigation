@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.0",
-    "expo": "^36.0.0",
+    "expo": "^36.0.2",
     "expo-asset": "~8.0.0",
     "expo-constants": "~8.0.0",
     "expo-keep-awake": "~8.0.0",
@@ -32,6 +32,6 @@
     "typescript": "~3.6.3"
   },
   "resolutions": {
-    "@babel/runtime": "7.3.1"
+    "@babel/runtime": "7.8.4"
   }
 }
