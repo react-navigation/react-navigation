@@ -10,7 +10,7 @@
     "android",
     "stack"
   ],
-  "version": "5.0.0-alpha.63",
+  "version": "5.0.0-alpha.64",
   "license": "MIT",
   "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/stack",
   "main": "lib/commonjs/index.js",
@@ -30,7 +30,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/routers": "^5.0.0-alpha.27",
+    "@react-navigation/routers": "^5.0.0-alpha.28",
     "color": "^3.1.2",
     "react-native-iphone-x-helper": "^1.2.1"
   },

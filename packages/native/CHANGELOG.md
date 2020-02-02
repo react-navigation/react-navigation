@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.30](https://github.com/react-navigation/navigation-ex/tree/master/packages/native/compare/@react-navigation/native@5.0.0-alpha.29...@react-navigation/native@5.0.0-alpha.30) (2020-02-02)
+
+
+### Bug Fixes
+
+* add licenses ([0c159db](https://github.com/react-navigation/navigation-ex/tree/master/packages/native/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
+
+
+### Features
+
+* add error if multiple instances of useLinking are used ([#310](https://github.com/react-navigation/navigation-ex/tree/master/packages/native/issues/310)) ([4bc0c8f](https://github.com/react-navigation/navigation-ex/tree/master/packages/native/commit/4bc0c8f66f98c0f8ce4e766648125640d01780c4))
+* integrate with history API on web ([5a3f835](https://github.com/react-navigation/navigation-ex/tree/master/packages/native/commit/5a3f8356b05bff7ed20893a5db6804612da3e568))
+
+
+
+
+
 # [5.0.0-alpha.29](https://github.com/react-navigation/navigation-ex/tree/master/packages/native/compare/@react-navigation/native@5.0.0-alpha.28...@react-navigation/native@5.0.0-alpha.29) (2020-01-24)
 
 **Note:** Version bump only for package @react-navigation/native

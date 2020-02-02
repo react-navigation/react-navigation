@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.64](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.63...@react-navigation/stack@5.0.0-alpha.64) (2020-02-02)
+
+
+### Bug Fixes
+
+* add accessibilityRole=header to header title ([0ead266](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/0ead2662ec10078b5e238f53f4607a8c712c20a4))
+* add licenses ([0c159db](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
+* disable screens when mode is modal on older expo versions ([94d7b28](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/94d7b28c0b2ce0d56c99b224610f305be6451626))
+* fix shadow position for inverted animations ([5fe140e](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/5fe140e61b9d6038490b1975b99331613933eb39))
+* increase epsilon in CardContainer.tsx ([9be904d](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/9be904d9c4c74c23a7d1d60d81f4366c601f5082))
+* make UNVERSIONED insufficient expo version ([a6f5867](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/a6f58677dce9c8446de7879014490c9ab76eceb9))
+* screens integration on Android ([#294](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/issues/294)) ([9bfb295](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/9bfb29562020c61b4d5c9bee278bcb1c7bdb8b67))
+* update screens for native stack ([5411816](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/54118161885738a6d20b062c7e6679f3bace8424))
+* web with internal interpolation listener ([edf96d8](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/edf96d839fea3a9919e4133bd476df303d7a2b00))
+
+
+### Features
+
+* add `animationTypeForReplace` option ([#297](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/issues/297)) ([6262f72](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/6262f7298bff843571fb4b1a677d3beabe29833e))
+
+
+
+
+
 # [5.0.0-alpha.63](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.62...@react-navigation/stack@5.0.0-alpha.63) (2020-01-24)
 
 

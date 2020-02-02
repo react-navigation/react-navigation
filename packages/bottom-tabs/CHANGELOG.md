@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.40](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.39...@react-navigation/bottom-tabs@5.0.0-alpha.40) (2020-02-02)
+
+
+### Bug Fixes
+
+* add licenses ([0c159db](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
+
+
+
+
+
 # [5.0.0-alpha.39](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.38...@react-navigation/bottom-tabs@5.0.0-alpha.39) (2020-01-24)
 
 
