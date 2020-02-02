@@ -10,7 +10,7 @@
     "android",
     "tab"
   ],
-  "version": "5.0.0-alpha.40",
+  "version": "5.0.0-alpha.41",
   "license": "MIT",
   "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs",
   "main": "lib/commonjs/index.js",

@@ -7,7 +7,7 @@
     "ios",
     "android"
   ],
-  "version": "5.0.0-alpha.30",
+  "version": "5.0.0-alpha.31",
   "license": "MIT",
   "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/native",
   "main": "lib/commonjs/index.js",
