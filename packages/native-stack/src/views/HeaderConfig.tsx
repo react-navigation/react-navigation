@@ -59,7 +59,9 @@ export default function HeaderConfig(props: Props) {
       backTitleFontFamily={headerBackTitleStyle.fontFamily}
       backTitleFontSize={headerBackTitleStyle.fontSize}
       color={headerTintColor !== undefined ? headerTintColor : colors.primary}
-      gestureEnabled={gestureEnabled === undefined ? true : gestureEnabled}
+      // Keep this temporarily for compatibility with old versions of screens
+      // @ts-ignore
+      gestureEnabled={gestureEnabled}
       largeTitle={headerLargeTitle}
       largeTitleFontFamily={headerLargeTitleStyle.fontFamily}
       largeTitleFontSize={headerLargeTitleStyle.fontSize}
