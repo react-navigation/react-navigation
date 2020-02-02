@@ -12,7 +12,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 10.x
 
       - name: Setup Expo
         uses: expo/expo-github-action@v5
