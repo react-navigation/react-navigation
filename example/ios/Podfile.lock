@@ -253,7 +253,7 @@ PODS:
     - ReactCommon/jscallinvoker (= 0.61.5)
   - RNCMaskedView (0.1.5):
     - React
-  - RNGestureHandler (1.5.3):
+  - RNGestureHandler (1.5.5):
     - React
   - RNReanimated (1.4.0):
     - React
@@ -517,7 +517,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: a49a1f42bf8f5acf1c3e297097517c6b3af377ad
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
   RNCMaskedView: dd13f9f7b146a9ad82f9b7eb6c9b5548fcf6e990
-  RNGestureHandler: 02905abe54e1f6e59c081a10b4bd689721e17aa6
+  RNGestureHandler: d2270608171c868581b840cfc692f2962c05cd17
   RNReanimated: b2ab0b693dddd2339bd2f300e770f6302d2e960c
   RNScreens: 1c7fd499b915c77c21e8e6c327890c5af9b4cf7e
   UMBarCodeScannerInterface: 3802c8574ef119c150701d679ab386e2266d6a54
