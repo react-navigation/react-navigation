@@ -6,7 +6,10 @@ import {
   ViewStyle,
   LayoutChangeEvent,
 } from 'react-native';
-import { PanGestureHandler } from 'react-native-gesture-handler';
+import {
+  PanGestureHandler,
+  GestureHandlerRootView,
+} from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import TabBar, { Props as TabBarProps } from './TabBar';
 import SceneView from './SceneView';
@@ -48,6 +51,8 @@ export type Props<T extends Route> = PagerCommonProps & {
 type State = {
   layout: Layout;
 };
+
+const GestureHandlerWrapper = GestureHandlerRootView ?? View;
 
 export default class TabView<T extends Route> extends React.Component<
   Props<T>,
@@ -125,7 +130,10 @@ export default class TabView<T extends Route> extends React.Component<
     const { layout } = this.state;
 
     return (
-      <View onLayout={this.handleLayout} style={[styles.pager, style]}>
+      <GestureHandlerWrapper
+        onLayout={this.handleLayout}
+        style={[styles.pager, style]}
+      >
         {renderPager({
           navigationState,
           layout,
@@ -202,7 +210,7 @@ export default class TabView<T extends Route> extends React.Component<
             );
           },
         })}
-      </View>
+      </GestureHandlerWrapper>
     );
   }
 }

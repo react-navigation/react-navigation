@@ -61,7 +61,7 @@
     "prettier": "^1.19.1",
     "react": "~16.9.0",
     "react-native": "~0.61.5",
-    "react-native-gesture-handler": "^1.5.2",
+    "react-native-gesture-handler": "^1.5.5",
     "react-native-reanimated": "^1.4.0",
     "release-it": "^12.4.3",
     "typescript": "^3.7.3"
