@@ -21,7 +21,7 @@
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "~0.61.5",
-    "react-native-gesture-handler": "~1.5.5",
+    "react-native-gesture-handler": "^1.5.5",
     "react-native-paper": "^3.5.0",
     "react-native-reanimated": "^1.4.0",
     "react-native-restart": "^0.0.13",
