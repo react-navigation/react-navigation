@@ -7,7 +7,7 @@
     "ios",
     "android"
   ],
-  "version": "5.0.0-alpha.31",
+  "version": "5.0.0-alpha.32",
   "license": "MIT",
   "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/native",
   "main": "lib/commonjs/index.js",
@@ -27,7 +27,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/core": "^5.0.0-alpha.38"
+    "@react-navigation/core": "^5.0.0-alpha.40"
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.8.0",

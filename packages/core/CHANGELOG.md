@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.40](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.37...@react-navigation/core@5.0.0-alpha.40) (2020-02-02)
+
+
+### Bug Fixes
+
+* add licenses ([0c159db](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
+* add warning when passing inline function to component prop ([fa4a959](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/fa4a959549ccd9dc2f9bd2ea495e99abdedc9f94))
+* tweak error messages for validation ([2243b45](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/2243b45cc1addf83727166d82736d214f181b1fb))
+
+
+### Features
+
+* add `screens` prop for nested configs ([#308](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/issues/308)) ([b931ae6](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/b931ae62dfb2c5253c94ea5ace73e9070ec17c4a))
+* add useIsDrawerOpen hook ([#299](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/issues/299)) ([ecd68af](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/ecd68afb46a4c56200748da5e5fb284fa5a839db))
+* integrate with history API on web ([5a3f835](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/5a3f8356b05bff7ed20893a5db6804612da3e568))
+
+
+
+
+
 # [5.0.0-alpha.38](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.37...@react-navigation/core@5.0.0-alpha.38) (2020-02-02)
 
 
