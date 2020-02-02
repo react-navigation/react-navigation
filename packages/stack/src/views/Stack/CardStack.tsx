@@ -398,6 +398,12 @@ export default class CardStack extends React.Component<Props, State> {
     });
   };
 
+  private getFocusedRoute = () => {
+    const { state } = this.props;
+
+    return state.routes[state.index];
+  };
+
   render() {
     const {
       mode,
@@ -581,7 +587,6 @@ export default class CardStack extends React.Component<Props, State> {
                   gesture={gesture}
                   scene={scene}
                   previousScene={previousScene}
-                  state={state}
                   safeAreaInsetTop={safeAreaInsetTop}
                   safeAreaInsetRight={safeAreaInsetRight}
                   safeAreaInsetBottom={safeAreaInsetBottom}
@@ -596,6 +601,7 @@ export default class CardStack extends React.Component<Props, State> {
                   headerHeight={headerHeights[route.key]}
                   onHeaderHeightChange={this.handleHeaderLayout}
                   getPreviousRoute={getPreviousRoute}
+                  getFocusedRoute={this.getFocusedRoute}
                   headerMode={headerMode}
                   headerShown={headerShown}
                   headerTransparent={headerTransparent}
@@ -619,8 +625,8 @@ export default class CardStack extends React.Component<Props, State> {
               layout,
               insets: { top, right, bottom, left },
               scenes,
-              state,
               getPreviousRoute,
+              getFocusedRoute: this.getFocusedRoute,
               onContentHeightChange: this.handleHeaderLayout,
               gestureDirection:
                 focusedOptions.gestureDirection !== undefined

@@ -133,6 +133,8 @@ export default class Card extends React.Component<Props> {
 
   private interactionHandle: number | undefined;
 
+  private pendingGestureCallback: number | undefined;
+
   private animate = ({
     closing,
     velocity,
@@ -161,6 +163,8 @@ export default class Card extends React.Component<Props> {
     this.setPointerEventsEnabled(!closing);
     this.handleStartInteraction();
 
+    clearTimeout(this.pendingGestureCallback);
+
     onTransitionStart?.({ closing });
     animation(gesture, {
       ...spec.config,
@@ -170,6 +174,8 @@ export default class Card extends React.Component<Props> {
       isInteraction: false,
     }).start(({ finished }) => {
       this.handleEndInteraction();
+
+      clearTimeout(this.pendingGestureCallback);
 
       if (finished) {
         if (closing) {
@@ -221,6 +227,7 @@ export default class Card extends React.Component<Props> {
   }: PanGestureHandlerGestureEvent) => {
     const {
       layout,
+      onClose,
       onGestureBegin,
       onGestureCanceled,
       onGestureEnd,
@@ -266,6 +273,16 @@ export default class Card extends React.Component<Props> {
             : false;
 
         this.animate({ closing, velocity });
+
+        if (closing) {
+          // We call onClose with a delay to make sure that the animation has already started
+          // This will make sure that the state update caused by this doesn't affect start of animation
+          this.pendingGestureCallback = (setTimeout(
+            onClose,
+            32
+          ) as any) as number;
+        }
+
         onGestureEnd?.();
         break;
       }

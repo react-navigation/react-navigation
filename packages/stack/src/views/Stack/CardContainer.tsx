@@ -7,7 +7,6 @@ import {
   ViewStyle,
   Platform,
 } from 'react-native';
-import { StackNavigationState } from '@react-navigation/routers';
 import { Route, useTheme } from '@react-navigation/native';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
@@ -23,7 +22,6 @@ type Props = TransitionPreset & {
   gesture: Animated.Value;
   previousScene?: Scene<Route<string>>;
   scene: Scene<Route<string>>;
-  state: StackNavigationState;
   safeAreaInsetTop: number;
   safeAreaInsetRight: number;
   safeAreaInsetBottom: number;
@@ -34,6 +32,7 @@ type Props = TransitionPreset & {
   getPreviousRoute: (props: {
     route: Route<string>;
   }) => Route<string> | undefined;
+  getFocusedRoute: () => Route<string>;
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
   renderScene: (props: { route: Route<string> }) => React.ReactNode;
   onOpenRoute: (props: { route: Route<string> }) => void;
@@ -78,6 +77,7 @@ function CardContainer({
   gestureResponseDistance,
   gestureVelocityImpact,
   getPreviousRoute,
+  getFocusedRoute,
   headerMode,
   headerShown,
   headerStyleInterpolator,
@@ -101,7 +101,6 @@ function CardContainer({
   safeAreaInsetRight,
   safeAreaInsetTop,
   scene,
-  state,
   transitionSpec,
 }: Props) {
   React.useEffect(() => {
@@ -203,8 +202,8 @@ function CardContainer({
               layout,
               insets,
               scenes: [previousScene, scene],
-              state,
               getPreviousRoute,
+              getFocusedRoute,
               gestureDirection,
               styleInterpolator: headerStyleInterpolator,
               onContentHeightChange: onHeaderHeightChange,

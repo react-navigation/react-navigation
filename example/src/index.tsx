@@ -286,7 +286,7 @@ export default function App() {
                           <List.Item
                             key={name}
                             title={SCREENS[name].title}
-                            onPress={() => navigation.push(name)}
+                            onPress={() => navigation.navigate(name)}
                           />
                         )
                       )}
