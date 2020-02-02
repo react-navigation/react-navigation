@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.44](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.41...@react-navigation/drawer@5.0.0-alpha.44) (2020-02-02)
+
+
+### Bug Fixes
+
+* add licenses ([0c159db](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
+* fix drawerType=back when drawer is on right ([9198597](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/9198597b7f0a34fbe3844ec86a8b82171036f8ed)), closes [#316](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/issues/316)
+* handle back button in drawer itself ([0e8fda3](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/0e8fda319685a34090cfe82da08084c156eb5783))
+* screens integration on Android ([#294](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/issues/294)) ([9bfb295](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/9bfb29562020c61b4d5c9bee278bcb1c7bdb8b67))
+* update screens for native stack ([5411816](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/54118161885738a6d20b062c7e6679f3bace8424))
+* wrap navigators in gesture handler root ([41a5e1a](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/41a5e1a385aa5180abc3992a4c67077c37b998b9))
+
+
+### Features
+
+* add useIsDrawerOpen hook ([#299](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/issues/299)) ([ecd68af](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/ecd68afb46a4c56200748da5e5fb284fa5a839db))
+* integrate with history API on web ([5a3f835](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/5a3f8356b05bff7ed20893a5db6804612da3e568))
+
+
+
+
+
 # [5.0.0-alpha.42](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.41...@react-navigation/drawer@5.0.0-alpha.42) (2020-02-02)
 
 
