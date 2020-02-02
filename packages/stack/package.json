@@ -45,7 +45,7 @@
     "react-native": "~0.61.5",
     "react-native-gesture-handler": "^1.5.3",
     "react-native-safe-area-context": "^0.6.2",
-    "react-native-screens": "^2.0.0-alpha.31",
+    "react-native-screens": "^2.0.0-alpha.33",
     "typescript": "^3.7.4"
   },
   "peerDependencies": {
@@ -55,7 +55,7 @@
     "react-native": "*",
     "react-native-gesture-handler": "^1.0.0",
     "react-native-safe-area-context": "^0.6.0",
-    "react-native-screens": "^1.0.0-alpha.0 || ^2.0.0-alpha.31"
+    "react-native-screens": "^2.0.0-alpha.33"
   },
   "@react-native-community/bob": {
     "source": "src",
