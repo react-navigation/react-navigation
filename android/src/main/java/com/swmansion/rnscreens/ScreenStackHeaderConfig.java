@@ -215,11 +215,10 @@ public class ScreenStackHeaderConfig extends ViewGroup {
         case RIGHT:
           params.gravity = Gravity.RIGHT;
           break;
-        case TITLE:
-          params.width = LayoutParams.MATCH_PARENT;
-          mToolbar.setTitle(null);
         case CENTER:
+          params.width = LayoutParams.MATCH_PARENT;
           params.gravity = Gravity.CENTER_HORIZONTAL;
+          mToolbar.setTitle(null);
           break;
       }
 

@@ -171,14 +171,6 @@ const ScreenStackHeaderLeftView = props => (
   />
 );
 
-const ScreenStackHeaderTitleView = props => (
-  <ScreensNativeModules.NativeScreenStackHeaderSubview
-    {...props}
-    type="title"
-    style={styles.headerSubview}
-  />
-);
-
 const ScreenStackHeaderCenterView = props => (
   <ScreensNativeModules.NativeScreenStackHeaderSubview
     {...props}
@@ -210,7 +202,6 @@ module.exports = {
   ScreenStackHeaderBackButtonImage,
   ScreenStackHeaderRightView,
   ScreenStackHeaderLeftView,
-  ScreenStackHeaderTitleView,
   ScreenStackHeaderCenterView,
 
   enableScreens,

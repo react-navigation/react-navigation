@@ -15,7 +15,7 @@ import {
   ScreenStackHeaderBackButtonImage,
   ScreenStackHeaderLeftView,
   ScreenStackHeaderRightView,
-  ScreenStackHeaderTitleView,
+  ScreenStackHeaderCenterView,
 } from 'react-native-screens';
 
 function renderComponentOrThunk(componentOrThunk, props) {
@@ -141,9 +141,9 @@ class StackView extends React.Component {
         headerOptions.title = options.headerTitle;
       } else {
         children.push(
-          <ScreenStackHeaderTitleView key="title">
+          <ScreenStackHeaderCenterView key="center">
             {renderComponentOrThunk(options.headerTitle, { scene })}
-          </ScreenStackHeaderTitleView>
+          </ScreenStackHeaderCenterView>
         );
       }
     }

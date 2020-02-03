@@ -20,34 +20,15 @@
 @end
 
 
-@interface RNSScreenHeaderItemMeasurements : NSObject
-@property (nonatomic, readonly) CGSize headerSize;
-@property (nonatomic, readonly) CGFloat leftPadding;
-@property (nonatomic, readonly) CGFloat rightPadding;
-
-- (instancetype)initWithHeaderSize:(CGSize)headerSize leftPadding:(CGFloat)leftPadding rightPadding:(CGFloat)rightPadding;
-@end
-
-@implementation RNSScreenHeaderItemMeasurements
-
-- (instancetype)initWithHeaderSize:(CGSize)headerSize leftPadding:(CGFloat)leftPadding rightPadding:(CGFloat)rightPadding
-{
-  if (self = [super init]) {
-    _headerSize = headerSize;
-    _leftPadding = leftPadding;
-    _rightPadding = rightPadding;
-  }
-  return self;
-}
-
-@end
-
 @interface RNSScreenStackHeaderSubview : UIView
 
 @property (nonatomic, weak) RCTBridge *bridge;
 @property (nonatomic, weak) UIView *reactSuperview;
 @property (nonatomic) RNSScreenStackHeaderSubviewType type;
 
+@end
+
+@implementation RNSScreenStackHeaderSubview
 @end
 
 @implementation RNSScreenStackHeaderConfig {
@@ -403,7 +384,6 @@
       }
       case RNSScreenStackHeaderSubviewTypeCenter:
       case RNSScreenStackHeaderSubviewTypeTitle: {
-        subview.translatesAutoresizingMaskIntoConstraints = NO;
         navitem.titleView = subview;
         break;
       }
@@ -477,67 +457,6 @@ RCT_ENUM_CONVERTER(RNSScreenStackHeaderSubviewType, (@{
 
 @end
 
-@implementation RNSScreenStackHeaderSubview
-
-- (instancetype)initWithBridge:(RCTBridge *)bridge
-{
-  if (self = [super init]) {
-    _bridge = bridge;
-  }
-  return self;
-}
-
-- (void)layoutSubviews
-{
-  [super layoutSubviews];
-  if (!self.translatesAutoresizingMaskIntoConstraints) {
-    CGSize size = self.superview.frame.size;
-    CGFloat right = size.width - self.frame.size.width - self.frame.origin.x;
-    CGFloat left = self.frame.origin.x;
-    [_bridge.uiManager
-     setLocalData:[[RNSScreenHeaderItemMeasurements alloc]
-                   initWithHeaderSize:size
-                   leftPadding:left rightPadding:right]
-     forView:self];
-  }
-}
-
-- (void)reactSetFrame:(CGRect)frame
-{
-  if (self.translatesAutoresizingMaskIntoConstraints) {
-    [super reactSetFrame:frame];
-  }
-}
-
-- (CGSize)intrinsicContentSize
-{
-  return UILayoutFittingExpandedSize;
-}
-
-@end
-
-@interface RNSScreenStackHeaderSubviewShadow : RCTShadowView
-@end
-
-@implementation RNSScreenStackHeaderSubviewShadow
-
-- (void)setLocalData:(RNSScreenHeaderItemMeasurements *)data
-{
-  self.width = (YGValue){data.headerSize.width - data.leftPadding - data.rightPadding, YGUnitPoint};
-  self.height = (YGValue){data.headerSize.height, YGUnitPoint};
-
-  if (data.leftPadding > data.rightPadding) {
-    self.paddingLeft = (YGValue){0, YGUnitPoint};
-    self.paddingRight = (YGValue){data.leftPadding - data.rightPadding, YGUnitPoint};
-  } else {
-    self.paddingLeft = (YGValue){data.rightPadding - data.leftPadding, YGUnitPoint};
-    self.paddingRight = (YGValue){0, YGUnitPoint};
-  }
-  [self didSetProps:@[@"width", @"height", @"paddingLeft", @"paddingRight"]];
-}
-
-@end
-
 @implementation RNSScreenStackHeaderSubviewManager
 
 RCT_EXPORT_MODULE()
@@ -546,12 +465,7 @@ RCT_EXPORT_VIEW_PROPERTY(type, RNSScreenStackHeaderSubviewType)
 
 - (UIView *)view
 {
-  return [[RNSScreenStackHeaderSubview alloc] initWithBridge:self.bridge];
-}
-
-- (RCTShadowView *)shadowView
-{
-  return [RNSScreenStackHeaderSubviewShadow new];
+  return [RNSScreenStackHeaderSubview new];
 }
 
 @end
