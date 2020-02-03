@@ -10,7 +10,7 @@
     "android",
     "stack"
   ],
-  "version": "5.0.0-alpha.67",
+  "version": "5.0.0-alpha.68",
   "license": "MIT",
   "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/stack",
   "main": "lib/commonjs/index.js",
