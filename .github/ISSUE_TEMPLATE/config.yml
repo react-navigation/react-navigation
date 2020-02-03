@@ -16,13 +16,13 @@ contact_links:
     url: https://github.com/react-navigation/animated-switch/issues/new
     about: Submit a bug report for Animated Switch Navigator (react-navigation-animated-switch).
   - name: React Navigation 5
-    url: https://github.com/react-navigation/navigation-ex/issues/new/choose
+    url: https://github.com/react-navigation/react-navigation/issues/new/choose
     about: Submit a bug report for React Navigation 5.
   - name: Common mistakes
-    url: https://reactnavigation.org/docs/en/common-mistakes.html
+    url: https://reactnavigation.org/docs/4.x/common-mistakes.html
     about: Read about common mistakes and how to fix them.
   - name: Documentation
-    url: https://reactnavigation.org
+    url: https://reactnavigation.org/docs/4.x/getting-started.html
     about: Read the official documentation.
   - name: Feature requests
     url: https://react-navigation.canny.io/feature-requests

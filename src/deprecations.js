@@ -2,7 +2,7 @@
 
 const throwError = (message, page) => {
   throw new Error(
-    `${message}. See https://reactnavigation.org/docs/${page}.html for more details.`
+    `${message}. See https://reactnavigation.org/docs/4.x/${page}.html for more details.`
   );
 };
 

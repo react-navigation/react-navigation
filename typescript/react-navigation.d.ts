@@ -631,7 +631,7 @@ export interface NavigationContainerProps<
   /**
    * Controls whether the navigation container handles URLs opened via 'Linking'
    * @see https://facebook.github.io/react-native/docs/linking
-   * @see https://reactnavigation.org/docs/en/deep-linking.html
+   * @see https://reactnavigation.org/docs/4.x/deep-linking.html
    */
   enableURLHandling?: boolean; // defaults to true
   onNavigationStateChange?: (
