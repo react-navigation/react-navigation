@@ -909,6 +909,13 @@
   dependencies:
     find-up "^4.0.0"
 
+"@egjs/hammerjs@^2.0.17":
+  version "2.0.17"
+  resolved "https://registry.yarnpkg.com/@egjs/hammerjs/-/hammerjs-2.0.17.tgz#5dc02af75a6a06e4c2db0202cae38c9263895124"
+  integrity sha512-XQsZgjm2EcVUiZQf11UBJQfmZeEmOW8DpI1gsFeln6w0ae0ii4dMQEQ0kjl6DspdWX1aGY1/loyXnP0JS06e/A==
+  dependencies:
+    "@types/hammerjs" "^2.0.36"
+
 "@expo/vector-icons@^10.0.6":
   version "10.0.6"
   resolved "https://registry.yarnpkg.com/@expo/vector-icons/-/vector-icons-10.0.6.tgz#5718953ff0b97827d11dae5787976fa8ce5caaed"
@@ -1369,13 +1376,14 @@
     query-string "^6.4.2"
     react-is "^16.8.6"
 
-"@react-navigation/core@^5.0.0-alpha.36":
-  version "5.0.0-alpha.36"
-  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-5.0.0-alpha.36.tgz#6047cfd2e73aea802800eab68f068764ff3f8d4d"
-  integrity sha512-VfuUd46N/e4Oe7/cKywy1IIRetXQH9NP58QhxznmMOAG/XCIsD5+EA/nIY0NdRem57A3gnrgVxK83h6/g8mZVw==
+"@react-navigation/core@^5.0.0-alpha.40":
+  version "5.0.0-alpha.40"
+  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-5.0.0-alpha.40.tgz#a91cd624c85ff0d02477938229ae2094f6a7e9f2"
+  integrity sha512-SoxTNW2yL9XL2A5yNDIg8PP8owob2r+T3g4IeBQqVRBJJN8Rp9elfEbPkUmmHyBBYAmc/sxcKHqM+6KwFAfHTQ==
   dependencies:
     escape-string-regexp "^2.0.0"
     query-string "^6.9.0"
+    react-is "^16.12.0"
     shortid "^2.2.15"
     use-subscription "^1.3.0"
 
@@ -1388,20 +1396,20 @@
     react-native-safe-area-view "^0.14.1"
     react-native-screens "^1.0.0 || ^1.0.0-alpha"
 
-"@react-navigation/routers@^5.0.0-alpha.26":
-  version "5.0.0-alpha.26"
-  resolved "https://registry.yarnpkg.com/@react-navigation/routers/-/routers-5.0.0-alpha.26.tgz#139c097c55e556c11dcd96e78409165080c3a75b"
-  integrity sha512-y/Z4dseD0gCrrWA/Frz4+2k2ZMUjXfIdw+Jd+qhXEkcOTGb6NoGujgZndozHsBYZ7zuUwURKhf6vE3lVulAldA==
+"@react-navigation/routers@^5.0.0-alpha.30":
+  version "5.0.0-alpha.30"
+  resolved "https://registry.yarnpkg.com/@react-navigation/routers/-/routers-5.0.0-alpha.30.tgz#f7ccf09ed70520a0789fabd23074c72a4c87f062"
+  integrity sha512-ilDhhzlyg0EnjfrZHCzZuOFJoUckK25S1N0y0JFsQuhJMCssqt6qtc0kLg7DPKCn8fPrPnBhex6x3vcgSdF9oA==
   dependencies:
-    "@react-navigation/core" "^5.0.0-alpha.36"
+    "@react-navigation/core" "^5.0.0-alpha.40"
     shortid "^2.2.15"
 
-"@react-navigation/stack@^5.0.0-alpha.62":
-  version "5.0.0-alpha.62"
-  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-5.0.0-alpha.62.tgz#fea465ddfe70c150de1d9e03e82ae3e30a572419"
-  integrity sha512-Bo6y3dD1DODBVLw9Xqcim+nXKHE/mCBmpdeCgFi+3VX5QS2bm+NotbRHz8AQNI8d4w6qWQs8EairfcxlTr11NA==
+"@react-navigation/stack@^5.0.0-alpha.66":
+  version "5.0.0-alpha.66"
+  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-5.0.0-alpha.66.tgz#4eb490dc23e272324241344b2b54179f9c93206c"
+  integrity sha512-MLdBtTnTASAK4PZzNlnlALbV0uYMA8Q4LBqP83ve768mPw0zCjaSLknugB4W+iW5pbzyMGn++sdIbwBePZtIGA==
   dependencies:
-    "@react-navigation/routers" "^5.0.0-alpha.26"
+    "@react-navigation/routers" "^5.0.0-alpha.30"
     color "^3.1.2"
     react-native-iphone-x-helper "^1.2.1"
 
@@ -1498,6 +1506,11 @@
     "@types/events" "*"
     "@types/minimatch" "*"
     "@types/node" "*"
+
+"@types/hammerjs@^2.0.36":
+  version "2.0.36"
+  resolved "https://registry.yarnpkg.com/@types/hammerjs/-/hammerjs-2.0.36.tgz#17ce0a235e9ffbcdcdf5095646b374c2bf615a4c"
+  integrity sha512-7TUK/k2/QGpEAv/BCwSHlYu3NXZhQ9ZwBYpzr9tjlPIL2C5BeGhH3DmVavRx3ZNyELX5TLC91JTz/cen6AAtIQ==
 
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0":
   version "2.0.1"
@@ -4426,10 +4439,11 @@ growly@^1.3.0:
   resolved "https://registry.yarnpkg.com/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
   integrity sha1-8QdIy+dq+WS3yWyTxrzCivEgwIE=
 
-hammerjs@^2.0.8:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/hammerjs/-/hammerjs-2.0.8.tgz#04ef77862cff2bb79d30f7692095930222bf60f1"
-  integrity sha1-BO93hiz/K7edMPdpIJWTAiK/YPE=
+"hammerjs@https://github.com/naver/hammer.js.git":
+  version "2.0.17-snapshot"
+  resolved "https://github.com/naver/hammer.js.git#54bc698b25edd6e1b76ca975ebaced5ce0467d51"
+  dependencies:
+    "@types/hammerjs" "^2.0.36"
 
 handlebars@^4.1.0, handlebars@^4.1.2:
   version "4.1.2"
@@ -7579,22 +7593,23 @@ react-dom@~16.9.0:
     prop-types "^15.6.2"
     scheduler "^0.15.0"
 
+react-is@^16.12.0, react-is@^16.9.0:
+  version "16.12.0"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.12.0.tgz#2cc0fe0fba742d97fd527c42a13bec4eeb06241c"
+  integrity sha512-rPCkf/mWBtKc97aLL9/txD8DZdemK0vkA3JMLShjlJB3Pj3s+lpf1KaBzMfQrAmhMQB0n1cU/SUGgKKBCe837Q==
+
 react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.4, react-is@^16.8.6:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.6.tgz#5bbc1e2d29141c9fbdfed456343fe2bc430a6a16"
   integrity sha512-aUk3bHfZ2bRSVFFbbeVS4i+lNPZr3/WM5jT2J5omUVV1zzcs1nAaf3l51ctA5FFvCRbhrH0bdAsRRQddFJZPtA==
 
-react-is@^16.9.0:
-  version "16.12.0"
-  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.12.0.tgz#2cc0fe0fba742d97fd527c42a13bec4eeb06241c"
-  integrity sha512-rPCkf/mWBtKc97aLL9/txD8DZdemK0vkA3JMLShjlJB3Pj3s+lpf1KaBzMfQrAmhMQB0n1cU/SUGgKKBCe837Q==
-
-react-native-gesture-handler@^1.5.3:
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.5.3.tgz#191b44701fab7ba54c27a2438cb5eaa252666e66"
-  integrity sha512-y2/jw0uHAQtEPR02PHAah6tdMymrVtZFoHqjlEWdhK807w2sgU5CySYINK/nOTczd+zB4GMX+9euA3VfbGJ5aA==
+react-native-gesture-handler@^1.5.5:
+  version "1.5.5"
+  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.5.5.tgz#513d6d65c4e24efd6d69be0006c7cd3bc9045358"
+  integrity sha512-viypCSRpo064BdpkVL2FnPLZiEK3piJ1WZxydFXgeZj+avJxd6VnTFoh9+IDFk2M0Eadoy6D1ZV1TqBMGHtqGg==
   dependencies:
-    hammerjs "^2.0.8"
+    "@egjs/hammerjs" "^2.0.17"
+    hammerjs "https://github.com/naver/hammer.js.git"
     hoist-non-react-statics "^2.3.1"
     invariant "^2.2.4"
     prop-types "^15.7.2"

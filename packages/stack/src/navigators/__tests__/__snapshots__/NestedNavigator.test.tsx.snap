@@ -1,7 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Nested navigators renders succesfully as direct child 1`] = `
-Array [
+<View
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
   <View
     collapsable={true}
     onLayout={[Function]}
@@ -170,263 +176,90 @@ Array [
                     }
                   >
                     <View
-                      collapsable={true}
-                      onLayout={[Function]}
-                      removeClippedSubviews={false}
-                      style={
-                        Array [
-                          Object {
-                            "flex": 1,
-                            "overflow": "hidden",
-                          },
-                          Object {
-                            "overflow": "hidden",
-                          },
-                        ]
-                      }
-                    >
-                      <View
-                        pointerEvents="box-none"
-                        style={
-                          Object {
-                            "bottom": 0,
-                            "left": 0,
-                            "overflow": "hidden",
-                            "position": "absolute",
-                            "right": 0,
-                            "top": 0,
-                            "transform": Array [
-                              Object {
-                                "translateY": 0,
-                              },
-                            ],
-                          }
-                        }
-                      >
-                        <View
-                          accessibilityElementsHidden={false}
-                          closing={false}
-                          gestureVelocityImpact={0.3}
-                          importantForAccessibility="auto"
-                          onClose={[Function]}
-                          onGestureBegin={[Function]}
-                          onGestureCanceled={[Function]}
-                          onOpen={[Function]}
-                          onTransitionStart={[Function]}
-                          pointerEvents="box-none"
-                          style={
-                            Object {
-                              "bottom": 0,
-                              "left": 0,
-                              "position": "absolute",
-                              "right": 0,
-                              "top": 0,
-                            }
-                          }
-                          transitionSpec={
-                            Object {
-                              "close": Object {
-                                "animation": "spring",
-                                "config": Object {
-                                  "damping": 500,
-                                  "mass": 3,
-                                  "overshootClamping": true,
-                                  "restDisplacementThreshold": 0.01,
-                                  "restSpeedThreshold": 0.01,
-                                  "stiffness": 1000,
-                                },
-                              },
-                              "open": Object {
-                                "animation": "spring",
-                                "config": Object {
-                                  "damping": 500,
-                                  "mass": 3,
-                                  "overshootClamping": true,
-                                  "restDisplacementThreshold": 0.01,
-                                  "restSpeedThreshold": 0.01,
-                                  "stiffness": 1000,
-                                },
-                              },
-                            }
-                          }
-                        >
-                          <View
-                            pointerEvents="box-none"
-                            style={
-                              Object {
-                                "flex": 1,
-                                "marginTop": 44,
-                              }
-                            }
-                          >
-                            <PanGestureHandler
-                              enabled={false}
-                              hitSlop={
-                                Object {
-                                  "right": -700,
-                                }
-                              }
-                              maxDeltaY={20}
-                              minOffsetX={5}
-                              onHandlerStateChange={[Function]}
-                            >
-                              <View
-                                style={
-                                  Object {
-                                    "flex": 1,
-                                    "transform": Array [
-                                      Object {
-                                        "translateX": 0,
-                                      },
-                                      Object {
-                                        "translateX": 0,
-                                      },
-                                    ],
-                                  }
-                                }
-                              >
-                                <View
-                                  pointerEvents="none"
-                                  style={
-                                    Object {
-                                      "backgroundColor": "#fff",
-                                      "bottom": 0,
-                                      "left": 0,
-                                      "position": "absolute",
-                                      "shadowColor": "#000",
-                                      "shadowOffset": Object {
-                                        "height": 1,
-                                        "width": -1,
-                                      },
-                                      "shadowOpacity": 0.3,
-                                      "shadowRadius": 5,
-                                      "top": 0,
-                                      "width": 3,
-                                    }
-                                  }
-                                />
-                                <View
-                                  style={
-                                    Array [
-                                      Object {
-                                        "flex": 1,
-                                        "overflow": "hidden",
-                                      },
-                                      Array [
-                                        Object {
-                                          "backgroundColor": "rgb(242, 242, 242)",
-                                        },
-                                        undefined,
-                                      ],
-                                    ]
-                                  }
-                                >
-                                  <View
-                                    style={
-                                      Object {
-                                        "flex": 1,
-                                        "flexDirection": "column-reverse",
-                                      }
-                                    }
-                                  >
-                                    <View
-                                      style={
-                                        Object {
-                                          "flex": 1,
-                                        }
-                                      }
-                                    />
-                                  </View>
-                                </View>
-                              </View>
-                            </PanGestureHandler>
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-                    <View
-                      pointerEvents="box-none"
                       style={
                         Object {
-                          "left": 0,
-                          "position": "absolute",
-                          "right": 0,
-                          "top": 0,
+                          "flex": 1,
                         }
                       }
                     >
                       <View
-                        accessibilityElementsHidden={false}
-                        importantForAccessibility="auto"
+                        collapsable={true}
                         onLayout={[Function]}
-                        pointerEvents="box-none"
+                        removeClippedSubviews={false}
                         style={
-                          Object {
-                            "left": 0,
-                            "position": "absolute",
-                            "right": 0,
-                            "top": 0,
-                          }
+                          Array [
+                            Object {
+                              "flex": 1,
+                              "overflow": "hidden",
+                            },
+                            Object {
+                              "overflow": "hidden",
+                            },
+                          ]
                         }
                       >
-                        <View
-                          pointerEvents="none"
-                          style={
-                            Object {
-                              "bottom": 0,
-                              "left": 0,
-                              "opacity": 1,
-                              "position": "absolute",
-                              "right": 0,
-                              "top": 0,
-                            }
-                          }
-                        >
-                          <View
-                            style={
-                              Object {
-                                "backgroundColor": "#fff",
-                                "borderBottomColor": "#a7a7aa",
-                                "flex": 1,
-                                "shadowColor": "#a7a7aa",
-                                "shadowOffset": Object {
-                                  "height": 0.5,
-                                  "width": 0,
-                                },
-                                "shadowOpacity": 0.85,
-                                "shadowRadius": 0,
-                              }
-                            }
-                          />
-                        </View>
                         <View
                           pointerEvents="box-none"
                           style={
                             Object {
-                              "height": 44,
-                              "maxHeight": undefined,
-                              "minHeight": undefined,
-                              "opacity": undefined,
-                              "transform": undefined,
+                              "bottom": 0,
+                              "left": 0,
+                              "overflow": "hidden",
+                              "position": "absolute",
+                              "right": 0,
+                              "top": 0,
+                              "transform": Array [
+                                Object {
+                                  "translateY": 0,
+                                },
+                              ],
                             }
                           }
                         >
                           <View
-                            pointerEvents="none"
-                            style={
-                              Object {
-                                "height": 0,
-                              }
-                            }
-                          />
-                          <View
+                            accessibilityElementsHidden={false}
+                            closing={false}
+                            gestureVelocityImpact={0.3}
+                            importantForAccessibility="auto"
+                            onClose={[Function]}
+                            onGestureBegin={[Function]}
+                            onGestureCanceled={[Function]}
+                            onOpen={[Function]}
+                            onTransitionStart={[Function]}
                             pointerEvents="box-none"
                             style={
                               Object {
-                                "alignItems": "center",
-                                "flex": 1,
-                                "flexDirection": "row",
-                                "justifyContent": "center",
+                                "bottom": 0,
+                                "left": 0,
+                                "position": "absolute",
+                                "right": 0,
+                                "top": 0,
+                              }
+                            }
+                            transitionSpec={
+                              Object {
+                                "close": Object {
+                                  "animation": "spring",
+                                  "config": Object {
+                                    "damping": 500,
+                                    "mass": 3,
+                                    "overshootClamping": true,
+                                    "restDisplacementThreshold": 0.01,
+                                    "restSpeedThreshold": 0.01,
+                                    "stiffness": 1000,
+                                  },
+                                },
+                                "open": Object {
+                                  "animation": "spring",
+                                  "config": Object {
+                                    "damping": 500,
+                                    "mass": 3,
+                                    "overshootClamping": true,
+                                    "restDisplacementThreshold": 0.01,
+                                    "restSpeedThreshold": 0.01,
+                                    "stiffness": 1000,
+                                  },
+                                },
                               }
                             }
                           >
@@ -434,24 +267,206 @@ Array [
                               pointerEvents="box-none"
                               style={
                                 Object {
-                                  "marginHorizontal": 18,
-                                  "opacity": 1,
+                                  "flex": 1,
+                                  "marginTop": 44,
                                 }
                               }
                             >
-                              <Text
-                                numberOfLines={1}
-                                onLayout={[Function]}
+                              <PanGestureHandler
+                                enabled={false}
+                                hitSlop={
+                                  Object {
+                                    "right": -700,
+                                  }
+                                }
+                                maxDeltaY={20}
+                                minOffsetX={5}
+                                onHandlerStateChange={[Function]}
+                              >
+                                <View
+                                  style={
+                                    Object {
+                                      "flex": 1,
+                                      "transform": Array [
+                                        Object {
+                                          "translateX": 0,
+                                        },
+                                        Object {
+                                          "translateX": 0,
+                                        },
+                                      ],
+                                    }
+                                  }
+                                >
+                                  <View
+                                    pointerEvents="none"
+                                    style={
+                                      Object {
+                                        "backgroundColor": "#fff",
+                                        "bottom": 0,
+                                        "left": 0,
+                                        "position": "absolute",
+                                        "shadowColor": "#000",
+                                        "shadowOffset": Object {
+                                          "height": 1,
+                                          "width": -1,
+                                        },
+                                        "shadowOpacity": 0.3,
+                                        "shadowRadius": 5,
+                                        "top": 0,
+                                        "width": 3,
+                                      }
+                                    }
+                                  />
+                                  <View
+                                    style={
+                                      Array [
+                                        Object {
+                                          "flex": 1,
+                                          "overflow": "hidden",
+                                        },
+                                        Array [
+                                          Object {
+                                            "backgroundColor": "rgb(242, 242, 242)",
+                                          },
+                                          undefined,
+                                        ],
+                                      ]
+                                    }
+                                  >
+                                    <View
+                                      style={
+                                        Object {
+                                          "flex": 1,
+                                          "flexDirection": "column-reverse",
+                                        }
+                                      }
+                                    >
+                                      <View
+                                        style={
+                                          Object {
+                                            "flex": 1,
+                                          }
+                                        }
+                                      />
+                                    </View>
+                                  </View>
+                                </View>
+                              </PanGestureHandler>
+                            </View>
+                          </View>
+                        </View>
+                      </View>
+                      <View
+                        pointerEvents="box-none"
+                        style={
+                          Object {
+                            "left": 0,
+                            "position": "absolute",
+                            "right": 0,
+                            "top": 0,
+                          }
+                        }
+                      >
+                        <View
+                          accessibilityElementsHidden={false}
+                          importantForAccessibility="auto"
+                          onLayout={[Function]}
+                          pointerEvents="box-none"
+                          style={
+                            Object {
+                              "left": 0,
+                              "position": "absolute",
+                              "right": 0,
+                              "top": 0,
+                            }
+                          }
+                        >
+                          <View
+                            pointerEvents="none"
+                            style={
+                              Object {
+                                "bottom": 0,
+                                "left": 0,
+                                "opacity": 1,
+                                "position": "absolute",
+                                "right": 0,
+                                "top": 0,
+                              }
+                            }
+                          >
+                            <View
+                              style={
+                                Object {
+                                  "backgroundColor": "#fff",
+                                  "borderBottomColor": "#a7a7aa",
+                                  "flex": 1,
+                                  "shadowColor": "#a7a7aa",
+                                  "shadowOffset": Object {
+                                    "height": 0.5,
+                                    "width": 0,
+                                  },
+                                  "shadowOpacity": 0.85,
+                                  "shadowRadius": 0,
+                                }
+                              }
+                            />
+                          </View>
+                          <View
+                            pointerEvents="box-none"
+                            style={
+                              Object {
+                                "height": 44,
+                                "maxHeight": undefined,
+                                "minHeight": undefined,
+                                "opacity": undefined,
+                                "transform": undefined,
+                              }
+                            }
+                          >
+                            <View
+                              pointerEvents="none"
+                              style={
+                                Object {
+                                  "height": 0,
+                                }
+                              }
+                            />
+                            <View
+                              pointerEvents="box-none"
+                              style={
+                                Object {
+                                  "alignItems": "center",
+                                  "flex": 1,
+                                  "flexDirection": "row",
+                                  "justifyContent": "center",
+                                }
+                              }
+                            >
+                              <View
+                                pointerEvents="box-none"
                                 style={
                                   Object {
-                                    "color": "rgba(0, 0, 0, 0.9)",
-                                    "fontSize": 17,
-                                    "fontWeight": "600",
+                                    "marginHorizontal": 18,
+                                    "opacity": 1,
                                   }
                                 }
                               >
-                                Home
-                              </Text>
+                                <Text
+                                  accessibilityRole="header"
+                                  numberOfLines={1}
+                                  onLayout={[Function]}
+                                  style={
+                                    Object {
+                                      "color": "rgba(0, 0, 0, 0.9)",
+                                      "fontSize": 17,
+                                      "fontWeight": "600",
+                                    }
+                                  }
+                                >
+                                  Home
+                                </Text>
+                              </View>
                             </View>
                           </View>
                         </View>
@@ -465,7 +480,7 @@ Array [
         </View>
       </View>
     </View>
-  </View>,
+  </View>
   <View
     pointerEvents="box-none"
     style={
@@ -562,6 +577,7 @@ Array [
             }
           >
             <Text
+              accessibilityRole="header"
               numberOfLines={1}
               onLayout={[Function]}
               style={
@@ -578,8 +594,8 @@ Array [
         </View>
       </View>
     </View>
-  </View>,
-]
+  </View>
+</View>
 `;
 
 exports[`Nested navigators throw when trying to pass navigation prop 1`] = `"No \\"routes\\" found in navigation state. Did you try to pass the navigation prop of a React component to a Navigator child? See https://reactnavigation.org/docs/en/custom-navigators.html#navigator-navigation-prop"`;
