@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.68](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.67...@react-navigation/stack@5.0.0-alpha.68) (2020-02-03)
+
+
+### Bug Fixes
+
+* use .native for masked view instead of .web ([abdf9d1](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/abdf9d12b5c3fbde6414b50e3b6e082b67899772))
+
+
+
+
+
 # [5.0.0-alpha.67](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.66...@react-navigation/stack@5.0.0-alpha.67) (2020-02-03)
 
 **Note:** Version bump only for package @react-navigation/stack
