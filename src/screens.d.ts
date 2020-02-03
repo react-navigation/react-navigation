@@ -3,7 +3,13 @@
 
 declare module 'react-native-screens' {
   import { ComponentClass } from 'react';
-  import { ViewProps, Animated, NativeSyntheticEvent, NativeTouchEvent, ImageProps } from 'react-native';
+  import {
+    ViewProps,
+    Animated,
+    NativeSyntheticEvent,
+    NativeTouchEvent,
+    ImageProps,
+  } from 'react-native';
 
   export function useScreens(shouldUseScreens?: boolean): void;
   export function enableScreens(shouldEnableScreens?: boolean): void;
@@ -40,7 +46,6 @@ declare module 'react-native-screens' {
      */
     gestureEnabled?: boolean;
   }
-
 
   export type ScreenContainerProps = ViewProps;
 
@@ -135,7 +140,6 @@ declare module 'react-native-screens' {
   export const ScreenStackHeaderBackButtonImage: ComponentClass<ImageProps>;
   export const ScreenStackHeaderLeftView: ComponentClass<ViewProps>;
   export const ScreenStackHeaderRightView: ComponentClass<ViewProps>;
-  export const ScreenStackHeaderTitleView: ComponentClass<ViewProps>;
   export const ScreenStackHeaderConfig: ComponentClass<
     ScreenStackHeaderConfigProps
   >;
