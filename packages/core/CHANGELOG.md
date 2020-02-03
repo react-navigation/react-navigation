@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.41](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.40...@react-navigation/core@5.0.0-alpha.41) (2020-02-03)
+
+
+### Bug Fixes
+
+* ignore circular references when checking serializable ([e5063b9](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/e5063b93398350511f3fd2ef48425559f871781f))
+
+
+
+
+
 # [5.0.0-alpha.40](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.37...@react-navigation/core@5.0.0-alpha.40) (2020-02-02)
 
 
