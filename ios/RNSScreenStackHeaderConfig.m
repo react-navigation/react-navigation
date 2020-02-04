@@ -26,9 +26,20 @@
 @property (nonatomic, weak) UIView *reactSuperview;
 @property (nonatomic) RNSScreenStackHeaderSubviewType type;
 
+- (instancetype)initWithBridge:(RCTBridge*)bridge;
+
 @end
 
 @implementation RNSScreenStackHeaderSubview
+
+- (instancetype)initWithBridge:(RCTBridge *)bridge
+{
+  if (self = [super init]) {
+    _bridge = bridge;
+  }
+  return self;
+}
+
 @end
 
 @implementation RNSScreenStackHeaderConfig {
@@ -390,10 +401,16 @@
     }
   }
 
-  if (vc.transitionCoordinator != nil && !wasHidden) {
-    [vc.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {
-
-    } completion:nil];
+  if (vc.transitionCoordinator != nil
+      && vc.transitionCoordinator.presentationStyle == UIModalPresentationNone
+      && !wasHidden) {
+    // when there is an ongoing transition we may need to update navbar setting in animation block
+    // using animateAlongsideTransition. However, we only do that given the transition is not a modal
+    // transition (presentationStyle == UIModalPresentationNone) and that the bar was not previously
+    // hidden. This is because both for modal transitions and transitions from screen with hidden bar
+    // the transition animation block does not get triggered. This is ok, because with both of those
+    // types of transitions there is no "shared" navigation bar that needs to be updated in an animated
+    // way.
     [vc.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
       [self setAnimatedConfig:vc withConfig:config];
     } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
@@ -465,7 +482,7 @@ RCT_EXPORT_VIEW_PROPERTY(type, RNSScreenStackHeaderSubviewType)
 
 - (UIView *)view
 {
-  return [RNSScreenStackHeaderSubview new];
+  return [[RNSScreenStackHeaderSubview alloc] initWithBridge:self.bridge];
 }
 
 @end
