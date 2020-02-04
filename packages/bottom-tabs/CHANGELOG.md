@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.45](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.44...@react-navigation/bottom-tabs@5.0.0-alpha.45) (2020-02-04)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
 # [5.0.0-alpha.44](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.43...@react-navigation/bottom-tabs@5.0.0-alpha.44) (2020-02-04)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

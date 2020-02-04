@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.43](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.42...@react-navigation/core@5.0.0-alpha.43) (2020-02-04)
+
+
+### Bug Fixes
+
+* improve error message for unhandled action ([ca4a360](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/ca4a36070a21c4fe86cb1cc55a4452dca293f215))
+
+
+### Features
+
+* add initialRouteName property to config ([#322](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/issues/322)) ([4ca5cc6](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/4ca5cc632992187f12870281e4cf4c7d1f799967))
+
+
+
+
+
 # [5.0.0-alpha.42](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.41...@react-navigation/core@5.0.0-alpha.42) (2020-02-04)
 
 **Note:** Version bump only for package @react-navigation/core

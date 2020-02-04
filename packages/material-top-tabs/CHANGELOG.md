@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.41](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.40...@react-navigation/material-top-tabs@5.0.0-alpha.41) (2020-02-04)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
 # [5.0.0-alpha.40](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.39...@react-navigation/material-top-tabs@5.0.0-alpha.40) (2020-02-04)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
