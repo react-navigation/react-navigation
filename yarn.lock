@@ -1106,13 +1106,13 @@
     query-string "^6.4.2"
     react-is "^16.8.6"
 
-"@react-navigation/native@^3.6.3":
-  version "3.6.3"
-  resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-3.6.3.tgz#50b4519ebd001eaf2f07cb1ef531e7290ebd06d2"
-  integrity sha512-pkerjx3p9qs48nGwAyL4/IE9M971i4TEnAVlGAwBI48D+ZYkm9Rzn0rV0TdrUnUzwrYuBhwQQtVVKnMNMn8ABg==
+"@react-navigation/native@^3.6.5":
+  version "3.6.5"
+  resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-3.6.5.tgz#97b0b9a48f059a0704e3527f40fb034720ef363d"
+  integrity sha512-ttEmnokFVf09CvrkzlPIdfA693KfYcRxTYf9OZwp0Ll6El27UYjJD4arwGc+zvlohjTErCdba6CAKV702Wv28w==
   dependencies:
     hoist-non-react-statics "^3.3.2"
-    react-native-safe-area-view "^0.14.1"
+    react-native-safe-area-view "^0.14.8"
 
 "@release-it/conventional-changelog@^1.1.0":
   version "1.1.0"
@@ -7285,10 +7285,10 @@ react-is@^16.8.3:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.9.0.tgz#21ca9561399aad0ff1a7701c01683e8ca981edcb"
   integrity sha512-tJBzzzIgnnRfEm046qRcURvwQnZVXmuCbscxUO5RWrGTXpon2d4c8mI0D8WE6ydVIm29JiLB6+RslkIvym9Rjw==
 
-react-native-safe-area-view@^0.14.1:
-  version "0.14.3"
-  resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.14.3.tgz#3cc34d2fcc8886bc8a8bd1ab226d4345d02c23b0"
-  integrity sha512-TNs2aJ9HZs4adWRo8ICVyggyqqu72VqTbkxVSS8utlI4VTQ0ERxY6PlFEYRkO3/OcSwV8X/fifWJWiVp+r/NCg==
+react-native-safe-area-view@^0.14.8:
+  version "0.14.8"
+  resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.14.8.tgz#ef33c46ff8164ae77acad48c3039ec9c34873e5b"
+  integrity sha512-MtRSIcZNstxv87Jet+UsPhEd1tpGe8cVskDXlP657x6rHpSrbrc+y13ZNXrwAgGNNhqQNX7UJT68ZIq//ZRmvw==
   dependencies:
     hoist-non-react-statics "^2.3.1"
 
