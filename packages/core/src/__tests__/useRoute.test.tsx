@@ -2,7 +2,7 @@ import * as React from 'react';
 import { render } from 'react-native-testing-library';
 import useNavigationBuilder from '../useNavigationBuilder';
 import useRoute from '../useRoute';
-import NavigationContainer from '../NavigationContainer';
+import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
 import MockRouter from './__fixtures__/MockRouter';
 import { RouteProp } from '../types';
@@ -25,10 +25,10 @@ it('gets route prop from context', () => {
   };
 
   render(
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" component={Test} initialParams={{ x: 1 }} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 });

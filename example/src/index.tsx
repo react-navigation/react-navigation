@@ -22,7 +22,7 @@ import {
   InitialState,
   useLinking,
   NavigationContainerRef,
-  NavigationNativeContainer,
+  NavigationContainer,
   DefaultTheme,
   DarkTheme,
 } from '@react-navigation/native';
@@ -202,7 +202,7 @@ export default function App() {
       {Platform.OS === 'ios' && (
         <StatusBar barStyle={theme.dark ? 'light-content' : 'dark-content'} />
       )}
-      <NavigationNativeContainer
+      <NavigationContainer
         ref={containerRef}
         initialState={initialState}
         onStateChange={state =>
@@ -307,7 +307,7 @@ export default function App() {
             )}
           </Drawer.Screen>
         </Drawer.Navigator>
-      </NavigationNativeContainer>
+      </NavigationContainer>
     </PaperProvider>
   );
 }

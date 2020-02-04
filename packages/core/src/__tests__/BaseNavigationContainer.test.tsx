@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { act, render } from 'react-native-testing-library';
-import NavigationContainer, {
+import BaseNavigationContainer, {
   NavigationStateContext,
-} from '../NavigationContainer';
+} from '../BaseNavigationContainer';
 import MockRouter, { MockActions } from './__fixtures__/MockRouter';
 import useNavigationBuilder from '../useNavigationBuilder';
 import Screen from '../Screen';
@@ -85,9 +85,9 @@ it('throws when setState is called outside performTransaction', () => {
   };
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <Test />
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(() => render(element).update(element)).toThrowError(
@@ -112,9 +112,9 @@ it('throws when nesting performTransaction', () => {
   };
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <Test />
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(() => render(element).update(element)).toThrowError(
@@ -125,11 +125,11 @@ it('throws when nesting performTransaction', () => {
 it('throws when nesting containers', () => {
   expect(() =>
     render(
-      <NavigationContainer>
-        <NavigationContainer>
+      <BaseNavigationContainer>
+        <BaseNavigationContainer>
           <React.Fragment />
-        </NavigationContainer>
-      </NavigationContainer>
+        </BaseNavigationContainer>
+      </BaseNavigationContainer>
     )
   ).toThrowError(
     "Looks like you have nested a 'NavigationContainer' inside another."
@@ -137,11 +137,11 @@ it('throws when nesting containers', () => {
 
   expect(() =>
     render(
-      <NavigationContainer>
-        <NavigationContainer independent>
+      <BaseNavigationContainer>
+        <BaseNavigationContainer independent>
           <React.Fragment />
-        </NavigationContainer>
-      </NavigationContainer>
+        </BaseNavigationContainer>
+      </BaseNavigationContainer>
     )
   ).not.toThrowError(
     "Looks like you have nested a 'NavigationContainer' inside another."
@@ -223,7 +223,7 @@ it('handle dispatching with ref', () => {
   };
 
   const element = (
-    <NavigationContainer
+    <BaseNavigationContainer
       ref={ref}
       initialState={initialState}
       onStateChange={onStateChange}
@@ -248,7 +248,7 @@ it('handle dispatching with ref', () => {
           )}
         </Screen>
       </ParentNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element).update(element);
@@ -301,7 +301,7 @@ it('handle resetting state with ref', () => {
   const onStateChange = jest.fn();
 
   const element = (
-    <NavigationContainer ref={ref} onStateChange={onStateChange}>
+    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="foo2">
@@ -322,7 +322,7 @@ it('handle resetting state with ref', () => {
           )}
         </Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element).update(element);
@@ -389,7 +389,7 @@ it('handles getRootState', () => {
   const ref = React.createRef<NavigationContainerRef>();
 
   const element = (
-    <NavigationContainer ref={ref}>
+    <BaseNavigationContainer ref={ref}>
       <TestNavigator initialRouteName="foo">
         <Screen name="foo">
           {() => (
@@ -401,7 +401,7 @@ it('handles getRootState', () => {
         </Screen>
         <Screen name="bar">{() => null}</Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element);
@@ -450,13 +450,13 @@ it('emits state events when the state changes', () => {
   const ref = React.createRef<NavigationContainerRef>();
 
   const element = (
-    <NavigationContainer ref={ref}>
+    <BaseNavigationContainer ref={ref}>
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar">{() => null}</Screen>
         <Screen name="baz">{() => null}</Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element).update(element);

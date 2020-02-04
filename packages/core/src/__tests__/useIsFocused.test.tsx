@@ -2,7 +2,7 @@ import * as React from 'react';
 import { render, act } from 'react-native-testing-library';
 import useNavigationBuilder from '../useNavigationBuilder';
 import useIsFocused from '../useIsFocused';
-import NavigationContainer from '../NavigationContainer';
+import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
 import MockRouter from './__fixtures__/MockRouter';
 
@@ -24,13 +24,13 @@ it('renders correct focus state', () => {
   const navigation = React.createRef<any>();
 
   const root = render(
-    <NavigationContainer ref={navigation}>
+    <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
         <Screen name="first">{() => null}</Screen>
         <Screen name="second" component={Test} />
         <Screen name="third">{() => null}</Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(root).toMatchInlineSnapshot(`"unfocused"`);

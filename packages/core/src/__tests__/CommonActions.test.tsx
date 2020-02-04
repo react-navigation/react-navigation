@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { render } from 'react-native-testing-library';
 import Screen from '../Screen';
-import NavigationContainer from '../NavigationContainer';
+import BaseNavigationContainer from '../BaseNavigationContainer';
 import useNavigationBuilder from '../useNavigationBuilder';
 import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
 
@@ -26,7 +26,7 @@ it('throws if NAVIGATE dispatched neither key nor name', () => {
   const onStateChange = jest.fn();
 
   const element = (
-    <NavigationContainer onStateChange={onStateChange}>
+    <BaseNavigationContainer onStateChange={onStateChange}>
       <TestNavigator initialRouteName="foo">
         <Screen
           name="foo"
@@ -34,7 +34,7 @@ it('throws if NAVIGATE dispatched neither key nor name', () => {
           initialParams={{ count: 10 }}
         />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(() => render(element).update(element)).toThrowError(

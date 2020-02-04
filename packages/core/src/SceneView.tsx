@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { NavigationStateContext } from './NavigationContainer';
+import { NavigationStateContext } from './BaseNavigationContainer';
 import NavigationContext from './NavigationContext';
 import NavigationRouteContext from './NavigationRouteContext';
 import StaticContainer from './StaticContainer';

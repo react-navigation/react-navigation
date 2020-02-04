@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as CommonActions from './CommonActions';
 import NavigationContext from './NavigationContext';
-import { NavigationStateContext } from './NavigationContainer';
+import { NavigationStateContext } from './BaseNavigationContainer';
 import { NavigationEventEmitter } from './useEventEmitter';
 import {
   NavigationHelpers,

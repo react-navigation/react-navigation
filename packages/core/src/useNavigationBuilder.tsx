@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
-import { NavigationStateContext } from './NavigationContainer';
+import { NavigationStateContext } from './BaseNavigationContainer';
 import NavigationRouteContext from './NavigationRouteContext';
 import Screen from './Screen';
 import { navigate } from './CommonActions';

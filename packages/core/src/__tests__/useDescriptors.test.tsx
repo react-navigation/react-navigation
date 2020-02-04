@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { render, act } from 'react-native-testing-library';
 import useNavigationBuilder from '../useNavigationBuilder';
-import NavigationContainer from '../NavigationContainer';
+import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
 import MockRouter, {
   MockActions,
@@ -34,7 +34,7 @@ it('sets options with options prop as an object', () => {
   const TestScreen = (): any => 'Test screen';
 
   const root = render(
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen
           name="foo"
@@ -43,7 +43,7 @@ it('sets options with options prop as an object', () => {
         />
         <Screen name="bar" component={jest.fn()} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(root).toMatchInlineSnapshot(`
@@ -79,7 +79,7 @@ it('sets options with options prop as a fuction', () => {
   const TestScreen = (): any => 'Test screen';
 
   const root = render(
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen
           name="foo"
@@ -89,7 +89,7 @@ it('sets options with options prop as a fuction', () => {
         />
         <Screen name="bar" component={jest.fn()} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(root).toMatchInlineSnapshot(`
@@ -134,12 +134,12 @@ it('sets options with screenOptions prop as an object', () => {
   const TestScreenB = (): any => 'Test screen B';
 
   const root = render(
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator screenOptions={{ title: 'Hello world' }}>
         <Screen name="foo" component={TestScreenA} />
         <Screen name="bar" component={TestScreenB} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(root).toMatchInlineSnapshot(`
@@ -194,7 +194,7 @@ it('sets options with screenOptions prop as a fuction', () => {
   const TestScreenB = (): any => 'Test screen B';
 
   const root = render(
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator
         screenOptions={({ route }: any) => ({
           title: `${route.name}: ${route.params.author || route.params.fruit}`,
@@ -211,7 +211,7 @@ it('sets options with screenOptions prop as a fuction', () => {
           initialParams={{ fruit: 'Apple' }}
         />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(root).toMatchInlineSnapshot(`
@@ -266,14 +266,14 @@ it('sets initial options with setOptions', () => {
   };
 
   const root = render(
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" options={{ color: 'blue' }}>
           {props => <TestScreen {...props} />}
         </Screen>
         <Screen name="bar" component={jest.fn()} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(root).toMatchInlineSnapshot(`
@@ -331,14 +331,14 @@ it('updates options with setOptions', () => {
   };
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" options={{ color: 'blue' }}>
           {props => <TestScreen {...props} />}
         </Screen>
         <Screen name="bar" component={jest.fn()} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   const root = render(element);
@@ -396,7 +396,7 @@ it("returns correct value for canGoBack when it's not overridden", () => {
   };
 
   const root = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen
           name="foo"
@@ -405,7 +405,7 @@ it("returns correct value for canGoBack when it's not overridden", () => {
         />
         <Screen name="bar" component={jest.fn()} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(root).update(root);
@@ -452,11 +452,11 @@ it(`returns false for canGoBack when current router doesn't handle GO_BACK`, () 
   };
 
   const root = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="baz" component={TestScreen} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(root).update(root);
@@ -513,7 +513,7 @@ it('returns true for canGoBack when current router handles GO_BACK', () => {
   };
 
   const root = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <ParentNavigator>
         <Screen name="baz">
           {() => (
@@ -523,7 +523,7 @@ it('returns true for canGoBack when current router handles GO_BACK', () => {
           )}
         </Screen>
       </ParentNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(root).update(root);
@@ -580,7 +580,7 @@ it('returns true for canGoBack when parent router handles GO_BACK', () => {
   };
 
   const root = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="baz">
           {() => (
@@ -597,7 +597,7 @@ it('returns true for canGoBack when parent router handles GO_BACK', () => {
           )}
         </Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(root).update(root);
