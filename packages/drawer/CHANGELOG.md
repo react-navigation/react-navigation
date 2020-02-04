@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.46](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.45...@react-navigation/drawer@5.0.0-alpha.46) (2020-02-04)
+
+
+### Features
+
+* disable pan gesture by default in the browser for Apple devices ([b277927](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/b2779279251b1f157ba825cc34e39046b44f00d8)), closes [#287](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/issues/287)
+
+
+
+
+
 # [5.0.0-alpha.45](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.44...@react-navigation/drawer@5.0.0-alpha.45) (2020-02-03)
 
 **Note:** Version bump only for package @react-navigation/drawer

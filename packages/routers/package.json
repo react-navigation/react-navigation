@@ -6,7 +6,7 @@
     "react-native",
     "react-navigation"
   ],
-  "version": "5.0.0-alpha.31",
+  "version": "5.0.0-alpha.32",
   "license": "MIT",
   "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/routers",
   "main": "lib/commonjs/index.js",
@@ -26,7 +26,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/core": "^5.0.0-alpha.41",
+    "@react-navigation/core": "^5.0.0-alpha.42",
     "shortid": "^2.2.15"
   },
   "devDependencies": {
