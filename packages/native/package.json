@@ -1,6 +1,6 @@
 {
   "name": "@react-navigation/native",
-  "version": "3.6.4",
+  "version": "3.6.5",
   "description": "React Native support for React Navigation",
   "main": "dist/index.js",
   "files": [
