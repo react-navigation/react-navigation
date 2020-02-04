@@ -99,4 +99,13 @@ public class ScreenStackFragment extends ScreenFragment {
   public boolean isDismissable() {
     return mScreenView.isGestureEnabled();
   }
+
+  public void dismiss() {
+    ScreenContainer container = mScreenView.getContainer();
+    if (container instanceof ScreenStack) {
+      ((ScreenStack) container).dismiss(this);
+    } else {
+      throw new IllegalStateException("ScreenStackFragment added into a non-stack container");
+    }
+  }
 }

@@ -41,7 +41,16 @@ public class ScreenStackHeaderConfig extends ViewGroup {
   private OnClickListener mBackClickListener = new OnClickListener() {
     @Override
     public void onClick(View view) {
-      getScreenStack().dismiss(getScreenFragment());
+      ScreenStack stack = getScreenStack();
+      ScreenStackFragment fragment = getScreenFragment();
+      if (stack.getRootScreen() == fragment.getScreen()) {
+        Fragment parentFragment = fragment.getParentFragment();
+        if (parentFragment instanceof ScreenStackFragment) {
+          ((ScreenStackFragment) parentFragment).dismiss();
+        }
+      } else {
+        fragment.dismiss();
+      }
     }
   };
 
@@ -117,7 +126,6 @@ public class ScreenStackHeaderConfig extends ViewGroup {
   public void onUpdate() {
     Screen parent = (Screen) getParent();
     final ScreenStack stack = getScreenStack();
-    boolean isRoot = stack == null ? true : stack.getRootScreen() == parent;
     boolean isTop = stack == null ? true : stack.getTopScreen() == parent;
 
     if (!mIsAttachedToWindow || !isTop || mDestroyed) {
@@ -131,6 +139,9 @@ public class ScreenStackHeaderConfig extends ViewGroup {
       return;
     }
 
+    boolean isRoot = stack == null ? true : stack.getRootScreen() == parent;
+    boolean isNested = (parent.getFragment().getParentFragment() instanceof ScreenStackFragment);
+
     if (mToolbar.getParent() == null) {
       getScreenFragment().setToolbar(mToolbar);
     }
@@ -140,7 +151,7 @@ public class ScreenStackHeaderConfig extends ViewGroup {
     ActionBar actionBar = activity.getSupportActionBar();
 
     // hide back button
-    actionBar.setDisplayHomeAsUpEnabled(isRoot ? false : !mIsBackButtonHidden);
+    actionBar.setDisplayHomeAsUpEnabled((isRoot && !isNested) ? false : !mIsBackButtonHidden);
 
     // when setSupportActionBar is called a toolbar wrapper gets initialized that overwrites
     // navigation click listener. The default behavior set in the wrapper is to call into
