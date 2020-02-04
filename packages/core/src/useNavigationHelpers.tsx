@@ -51,7 +51,7 @@ export default function useNavigationHelpers<
           console.error(
             `The action '${payload.type}' with payload '${JSON.stringify(
               payload.payload
-            )}' was not handled by any navigator.`
+            )}' was not handled by any navigator. If you are trying to navigate to a screen, check if the screen exists in your navigator.`
           );
         }
       });
