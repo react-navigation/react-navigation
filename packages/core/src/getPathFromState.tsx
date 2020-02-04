@@ -9,7 +9,7 @@ type Options = {
   [routeName: string]:
     | string
     | {
-        path: string;
+        path?: string;
         stringify?: StringifyConfig;
         screens?: Options;
       };
