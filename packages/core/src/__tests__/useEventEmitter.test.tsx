@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { render, act } from 'react-native-testing-library';
 import useNavigationBuilder from '../useNavigationBuilder';
-import NavigationContainer from '../NavigationContainer';
+import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
 import MockRouter from './__fixtures__/MockRouter';
 import { Router, NavigationState } from '../types';
@@ -47,7 +47,7 @@ it('fires focus and blur events in root navigator', () => {
   const navigation = React.createRef<any>();
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator ref={navigation}>
         <Screen
           name="first"
@@ -66,7 +66,7 @@ it('fires focus and blur events in root navigator', () => {
           component={createComponent(fourthFocusCallback, fourthBlurCallback)}
         />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element);
@@ -139,7 +139,7 @@ it('fires focus and blur events in nested navigator', () => {
   const child = React.createRef<any>();
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator ref={parent}>
         <Screen
           name="first"
@@ -170,7 +170,7 @@ it('fires focus and blur events in nested navigator', () => {
           )}
         </Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element);
@@ -307,12 +307,12 @@ it('fires blur event when a route is removed with a delay', async () => {
   const navigation = React.createRef<any>();
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator ref={navigation}>
         <Screen name="first" component={First} />
         <Screen name="second" component={Second} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element);
@@ -363,13 +363,13 @@ it('fires custom events', () => {
   const ref = React.createRef<any>();
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator ref={ref}>
         <Screen name="first" component={createComponent(firstCallback)} />
         <Screen name="second" component={createComponent(secondCallback)} />
         <Screen name="third" component={createComponent(thirdCallback)} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element);
@@ -444,11 +444,11 @@ it('has option to prevent default', () => {
   const ref = React.createRef<any>();
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator ref={ref}>
         <Screen name="first" component={Test} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element);

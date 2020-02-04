@@ -2,7 +2,7 @@ import * as React from 'react';
 import { render, act } from 'react-native-testing-library';
 import useNavigationBuilder from '../useNavigationBuilder';
 import useFocusEffect from '../useFocusEffect';
-import NavigationContainer from '../NavigationContainer';
+import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
 import MockRouter from './__fixtures__/MockRouter';
 
@@ -31,13 +31,13 @@ it('runs focus effect on focus change', () => {
   const navigation = React.createRef<any>();
 
   const element = (
-    <NavigationContainer ref={navigation}>
+    <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
         <Screen name="first">{() => null}</Screen>
         <Screen name="second" component={Test} />
         <Screen name="third">{() => null}</Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element);
@@ -84,12 +84,12 @@ it('runs focus effect on deps change', () => {
   };
 
   const App = ({ count }: { count: number }) => (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="first">{() => <Test count={count} />}</Screen>
         <Screen name="second">{() => null}</Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   const root = render(<App count={1} />);
@@ -135,13 +135,13 @@ it('runs focus effect when initial state is given', () => {
   const navigation = React.createRef<any>();
 
   const element = (
-    <NavigationContainer ref={navigation} initialState={initialState}>
+    <BaseNavigationContainer ref={navigation} initialState={initialState}>
       <TestNavigator>
         <Screen name="first">{() => null}</Screen>
         <Screen name="second">{() => null}</Screen>
         <Screen name="third" component={Test} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element);
@@ -178,13 +178,13 @@ it('runs focus effect when only focused route is rendered', () => {
   const navigation = React.createRef<any>();
 
   const element = (
-    <NavigationContainer ref={navigation}>
+    <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
         <Screen name="first" component={Test} />
         <Screen name="second">{() => null}</Screen>
         <Screen name="third">{() => null}</Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element);
@@ -221,12 +221,12 @@ it('runs cleanup when component is unmounted', () => {
   const TestB = () => null;
 
   const App = ({ mounted }: { mounted: boolean }) => (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="first" component={mounted ? TestA : TestB} />
         <Screen name="second">{() => null}</Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   const root = render(<App mounted />);
