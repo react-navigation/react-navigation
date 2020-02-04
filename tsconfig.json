@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "react-navigation": ["../src/index"]
+      "react-navigation": ["./typescript/react-navigation"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
