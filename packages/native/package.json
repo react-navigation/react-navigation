@@ -41,7 +41,7 @@
   "homepage": "https://github.com/react-navigation/react-navigation-native#readme",
   "dependencies": {
     "hoist-non-react-statics": "^3.3.2",
-    "react-native-safe-area-view": "^0.14.1"
+    "react-native-safe-area-view": "^0.14.8"
   },
   "devDependencies": {
     "@expo/vector-icons": "^6.2.0",
