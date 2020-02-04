@@ -1,7 +1,5 @@
 /* eslint-disable import/no-commonjs */
 
-import throwIfWrongVersion from './throwIfWrongVersion';
-
 module.exports = {
   get createAppContainer() {
     return require('./createAppContainer').default;
@@ -43,9 +41,9 @@ module.exports = {
   },
 
   get createNavigationFactory() {
-    return throwIfWrongVersion;
+    return require('./throwIfWrongVersion').default;
   },
   get NavigationContainer() {
-    return throwIfWrongVersion;
+    return require('./throwIfWrongVersion').default;
   },
 };
