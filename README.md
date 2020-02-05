@@ -6,7 +6,7 @@
 
 Routing and navigation for your React Native apps with a component-first API.
 
-Documentation can be found at [next.reactnavigation.org](https://next.reactnavigation.org/).
+Documentation can be found at [next.reactnavigation.org](https://reactnavigation.org/).
 
 ## Contributing
 
@@ -106,9 +106,9 @@ Remember to replace `<user>`, `<repo>` and `<name>` with right values.
 
 <!-- badges -->
 
-[build-badge]: https://img.shields.io/circleci/project/github/react-navigation/navigation-ex/master.svg?style=flat-square
-[build]: https://circleci.com/gh/react-navigation/navigation-ex
-[coverage-badge]: https://img.shields.io/codecov/c/github/react-navigation/navigation-ex.svg?style=flat-square
-[coverage]: https://codecov.io/github/react-navigation/navigation-ex
+[build-badge]: https://img.shields.io/circleci/project/github/react-navigation/react-navigation/master.svg?style=flat-square
+[build]: https://circleci.com/gh/react-navigation/react-navigation
+[coverage-badge]: https://img.shields.io/codecov/c/github/react-navigation/react-navigation.svg?style=flat-square
+[coverage]: https://codecov.io/github/react-navigation/react-navigation
 [license-badge]: https://img.shields.io/npm/l/@react-navigation/core.svg?style=flat-square
 [license]: https://opensource.org/licenses/MIT

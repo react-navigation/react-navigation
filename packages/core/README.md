@@ -1,6 +1,6 @@
 # `@react-navigation/core`
 
-Core utilities for building navigators.
+Core utilities for building navigators independent of the platform.
 
 ## Installation
 

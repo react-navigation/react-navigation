@@ -12,7 +12,7 @@
   ],
   "version": "5.0.0-alpha.45",
   "license": "MIT",
-  "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs",
+  "repository": "https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs",
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "module": "lib/module/index.js",
@@ -46,7 +46,7 @@
     "typescript": "^3.7.4"
   },
   "peerDependencies": {
-    "@react-navigation/native": "^5.0.0-alpha.0",
+    "@react-navigation/native": "^5.0.0",
     "react": "*",
     "react-native": "*",
     "react-native-safe-area-context": "^0.6.0"

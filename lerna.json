@@ -11,8 +11,6 @@
       "allowBranch": "master",
       "conventionalCommits": true,
       "createRelease": "github",
-      "preId": "alpha",
-      "preDistTag": "next",
       "message": "chore: publish",
       "ignoreChanges": [
         "**/__fixtures__/**",
