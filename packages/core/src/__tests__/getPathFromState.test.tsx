@@ -236,12 +236,14 @@ it('handles state with config with nested screens and unused configs', () => {
 });
 
 it('handles nested object with stringify in it', () => {
-  const path = '/bar/sweet/apple/foe/bis/jane?answer=42&count=10&valid=true';
+  const path = '/bar/sweet/apple/foo/bis/jane?answer=42&count=10&valid=true';
   const config = {
     Foo: {
       path: 'foo',
       screens: {
-        Foe: 'foe',
+        Foe: {
+          path: 'foe',
+        },
       },
     },
     Bar: 'bar/:type/:fruit',
@@ -278,23 +280,16 @@ it('handles nested object with stringify in it', () => {
               state: {
                 routes: [
                   {
-                    name: 'Foe',
+                    name: 'Baz',
                     state: {
                       routes: [
                         {
-                          name: 'Baz',
-                          state: {
-                            routes: [
-                              {
-                                name: 'Bis',
-                                params: {
-                                  author: 'Jane',
-                                  count: 10,
-                                  answer: '42',
-                                  valid: true,
-                                },
-                              },
-                            ],
+                          name: 'Bis',
+                          params: {
+                            author: 'Jane',
+                            count: 10,
+                            answer: '42',
+                            valid: true,
                           },
                         },
                       ],
@@ -376,6 +371,101 @@ it('handles nested object for second route depth and and path and stringify in r
         },
       },
     },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              state: {
+                routes: [{ name: 'Baz' }],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+});
+
+it('ignores empty string paths', () => {
+  const path = '/bar';
+  const config = {
+    Foo: {
+      path: '',
+      screens: {
+        Foe: 'foe',
+      },
+    },
+    Bar: 'bar',
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [{ name: 'Bar' }],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+});
+
+it('cuts nested configs too', () => {
+  const path = '/baz';
+  const config = {
+    Foo: {
+      path: 'foo',
+      screens: {
+        Bar: '',
+      },
+    },
+    Baz: { path: 'baz' },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              state: {
+                routes: [{ name: 'Baz' }],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+});
+
+it('handles empty path at the end', () => {
+  const path = '/bar';
+  const config = {
+    Foo: {
+      path: 'foo',
+      screens: {
+        Bar: 'bar',
+      },
+    },
+    Baz: { path: '' },
   };
 
   const state = {
