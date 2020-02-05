@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.71](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.70...@react-navigation/stack@5.0.0-alpha.71) (2020-02-05)
+
+
+### Bug Fixes
+
+* use addListener only when available ([f746ece](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/f746ece61b8d2c4088e5d1dc3acbf00b089ad3e2))
+
+
+
+
+
 # [5.0.0-alpha.70](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.69...@react-navigation/stack@5.0.0-alpha.70) (2020-02-04)
 
 **Note:** Version bump only for package @react-navigation/stack
