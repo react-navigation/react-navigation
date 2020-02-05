@@ -211,12 +211,14 @@ function createNormalizedConfigs(
 
   if (typeof value === 'string') {
     // If a string is specified as the value of the key(e.g. Foo: '/path'), use it as the pattern
-    configs.push(createConfigItem(routeNames, value));
+    if (value !== '') {
+      configs.push(createConfigItem(routeNames, value));
+    }
   } else if (typeof value === 'object') {
     // if an object is specified as the value (e.g. Foo: { ... }),
     // it can have `path` property and
     // it could have `screens` prop which has nested configs
-    if (value.path) {
+    if (value.path && value.path !== '') {
       configs.push(createConfigItem(routeNames, value.path, value.parse));
     }
     if (value.screens) {
