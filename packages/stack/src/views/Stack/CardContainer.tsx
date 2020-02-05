@@ -1,12 +1,5 @@
 import * as React from 'react';
-import {
-  Animated,
-  View,
-  StyleSheet,
-  StyleProp,
-  ViewStyle,
-  Platform,
-} from 'react-native';
+import { Animated, View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { Route, useTheme } from '@react-navigation/native';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
@@ -141,18 +134,18 @@ function CardContainer({
   );
 
   React.useEffect(() => {
-    if (Platform.OS === 'web') {
-      return;
-    }
-    const valueListenerCallback = ({ value }: { value: number }) => {
-      setPointerEvents(value <= EPSILON ? 'box-none' : 'none');
-    };
+    // `addListener` may not exist on web and older versions of React Native
     // @ts-ignore
-    const listener = scene.progress.next?.addListener(valueListenerCallback);
+    const listener = scene.progress.next?.addListener?.(
+      ({ value }: { value: number }) => {
+        setPointerEvents(value <= EPSILON ? 'box-none' : 'none');
+      }
+    );
+
     return () => {
       if (listener) {
         // @ts-ignore
-        scene.progress.next?.removeListener(listener);
+        scene.progress.next?.removeListener?.(listener);
       }
     };
   }, [pointerEvents, scene.progress.next]);
