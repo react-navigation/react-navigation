@@ -1,10 +1,12 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Bugs for React Navigation 4
+    url: https://github.com/react-navigation/react-navigation-4/issues/new/choose
   - name: Troubleshooting
-    url: https://reactnavigation.org/docs/en/next/troubleshooting.html
+    url: https://reactnavigation.org/docs/troubleshooting.html
     about: Read how to troubleshoot and fix common issues and mistakes.
   - name: Documentation
-    url: https://next.reactnavigation.org
+    url: https://reactnavigation.org
     about: Read the official documentation.
   - name: Feature requests
     url: https://react-navigation.canny.io/feature-requests

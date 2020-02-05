@@ -1,15 +1,19 @@
 {
   "name": "@react-navigation/native",
   "description": "React Native integration for React Navigation",
+  "version": "5.0.0-alpha.32",
   "keywords": [
     "react-native",
     "react-navigation",
     "ios",
     "android"
   ],
-  "version": "5.0.0-alpha.35",
   "license": "MIT",
-  "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/native",
+  "repository": "https://github.com/react-navigation/react-navigation/tree/master/packages/native",
+  "bugs": {
+    "url": "https://github.com/react-navigation/react-navigation/issues"
+  },
+  "homepage": "https://reactnavigation.org",
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "module": "lib/module/index.js",

@@ -1,14 +1,18 @@
 {
   "name": "@react-navigation/core",
   "description": "Core utilities for building navigators",
+  "version": "5.0.0-alpha.40",
   "keywords": [
     "react",
     "react-native",
     "react-navigation"
   ],
-  "version": "5.0.0-alpha.43",
   "license": "MIT",
-  "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/core",
+  "repository": "https://github.com/react-navigation/react-navigation/tree/master/packages/core",
+  "bugs": {
+    "url": "https://github.com/react-navigation/react-navigation/issues"
+  },
+  "homepage": "https://reactnavigation.org",
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "module": "lib/module/index.js",

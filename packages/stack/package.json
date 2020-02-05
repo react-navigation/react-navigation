@@ -1,6 +1,7 @@
 {
   "name": "@react-navigation/stack",
   "description": "Stack navigator component for iOS and Android with animated transitions and gestures",
+  "version": "5.0.0-alpha.66",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -10,9 +11,12 @@
     "android",
     "stack"
   ],
-  "version": "5.0.0-alpha.71",
   "license": "MIT",
-  "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/stack",
+  "repository": "https://github.com/react-navigation/react-navigation/tree/master/packages/stack",
+  "bugs": {
+    "url": "https://github.com/react-navigation/react-navigation/issues"
+  },
+  "homepage": "https://reactnavigation.org/docs/stack-navigator.html",
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "module": "lib/module/index.js",
@@ -50,7 +54,7 @@
   },
   "peerDependencies": {
     "@react-native-community/masked-view": "^0.1.1",
-    "@react-navigation/native": "^5.0.0-alpha.0",
+    "@react-navigation/native": "^5.0.0",
     "react": "*",
     "react-native": "*",
     "react-native-gesture-handler": "^1.0.0",
