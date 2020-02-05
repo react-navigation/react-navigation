@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/native-stack",
   "description": "Native stack navigator component for iOS and Android",
-  "version": "5.0.0-alpha.32",
+  "version": "5.0.0",
   "keywords": [
     "react",
     "react-native",
@@ -30,7 +30,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/routers": "^5.0.0-alpha.33"
+    "@react-navigation/routers": "^5.0.0"
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.8.0",

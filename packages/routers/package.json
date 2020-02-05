@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/routers",
   "description": "Routers to help build custom navigators",
-  "version": "5.0.0-alpha.30",
+  "version": "5.0.0",
   "keywords": [
     "react",
     "react-native",
@@ -30,7 +30,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/core": "^5.0.0-alpha.43",
+    "@react-navigation/core": "^5.0.0",
     "shortid": "^2.2.15"
   },
   "devDependencies": {
