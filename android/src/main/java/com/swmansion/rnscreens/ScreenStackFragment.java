@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
 
 import com.facebook.react.uimanager.PixelUtil;
 import com.google.android.material.appbar.AppBarLayout;
@@ -98,6 +99,26 @@ public class ScreenStackFragment extends ScreenFragment {
 
   public boolean isDismissable() {
     return mScreenView.isGestureEnabled();
+  }
+
+  public boolean canNavigateBack() {
+    ScreenContainer container = mScreenView.getContainer();
+    if (container instanceof ScreenStack) {
+      if (((ScreenStack) container).getRootScreen() == getScreen()) {
+        // this screen is the root of the container, if it is nested we can check parent container
+        // if it is also a root or not
+        Fragment parentFragment = getParentFragment();
+        if (parentFragment instanceof ScreenStackFragment) {
+          return ((ScreenStackFragment) parentFragment).canNavigateBack();
+        } else {
+          return false;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      throw new IllegalStateException("ScreenStackFragment added into a non-stack container");
+    }
   }
 
   public void dismiss() {
