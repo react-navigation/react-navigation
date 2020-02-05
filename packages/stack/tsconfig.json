@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "react-navigation": ["react-navigation"],
+      "react-navigation": ["./node_modules/react-navigation"],
       "react-navigation-stack": ["./src/index"],
       "react-native-gesture-handler": ["react-native-gesture-handler", "example/node_modules/react-native-gesture-handler/react-native-gesture-handler"],
       "@react-native-community/masked-view": ["@react-native-community/masked-view"],

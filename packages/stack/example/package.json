@@ -26,7 +26,7 @@
     "react-native-unimodules": "^0.7.0-rc.1",
     "react-native-web": "^0.11.4",
     "react-native-webview": "7.4.3",
-    "react-navigation": "^4.0.10",
+    "react-navigation": "^4.1.1",
     "react-navigation-drawer": "^2.2.2",
     "react-navigation-tabs": "^2.5.5"
   },
