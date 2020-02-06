@@ -2,6 +2,8 @@ package com.swmansion.rnscreens;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.os.Parcelable;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -66,6 +68,18 @@ public class Screen extends ViewGroup {
     // params this way is not the most elegant way to solve this problem but workarounds it for the
     // time being
     setLayoutParams(new WindowManager.LayoutParams(WindowManager.LayoutParams.TYPE_APPLICATION));
+  }
+
+  @Override
+  protected void dispatchSaveInstanceState(SparseArray<Parcelable> container) {
+    // do nothing, react native will keep the view hierarchy so no need to serialize/deserialize
+    // view's states. The side effect of restoring is that TextInput components would trigger set-text
+    // events which may confuse text input handling.
+  }
+
+  @Override
+  protected void dispatchRestoreInstanceState(SparseArray<Parcelable> container) {
+    // ignore restoring instance state too as we are not saving anything anyways.
   }
 
   @Override
