@@ -77,7 +77,7 @@ type Props = {
   onOpen: () => void;
   onClose: () => void;
   onGestureRef?: (ref: PanGestureHandler | null) => void;
-  locked: boolean;
+  gestureEnabled: boolean;
   drawerPosition: 'left' | 'right';
   drawerType: 'front' | 'back' | 'slide';
   keyboardDismissMode: 'none' | 'on-drag';
@@ -94,9 +94,9 @@ type Props = {
   gestureHandlerProps?: React.ComponentProps<typeof PanGestureHandler>;
 };
 
-export default class DrawerView extends React.PureComponent<Props> {
+export default class Drawer extends React.PureComponent<Props> {
   static defaultProps = {
-    locked: false,
+    gestureEnabled: true,
     drawerPostion: I18nManager.isRTL ? 'left' : 'right',
     drawerType: 'front',
     swipeEdgeWidth: 32,
@@ -111,15 +111,10 @@ export default class DrawerView extends React.PureComponent<Props> {
       open,
       drawerPosition,
       drawerType,
-      locked,
       swipeDistanceThreshold,
       swipeVelocityThreshold,
       hideStatusBar,
     } = this.props;
-
-    if (prevProps.locked !== locked) {
-      this.isLocked.setValue(locked ? TRUE : FALSE);
-    }
 
     if (
       // If we're not in the middle of a transition, sync the drawer's open state
@@ -167,7 +162,6 @@ export default class DrawerView extends React.PureComponent<Props> {
   private isDrawerTypeFront = new Value<Binary>(
     this.props.drawerType === 'front' ? TRUE : FALSE
   );
-  private isLocked = new Value(this.props.locked ? TRUE : FALSE);
 
   private isOpen = new Value<Binary>(this.props.open ? TRUE : FALSE);
   private nextIsOpen = new Value<Binary | -1>(UNSET);
@@ -444,10 +438,7 @@ export default class DrawerView extends React.PureComponent<Props> {
     {
       nativeEvent: {
         oldState: (s: Animated.Value<number>) =>
-          cond(
-            and(eq(s, State.ACTIVE), eq(this.isLocked, FALSE)),
-            set(this.manuallyTriggerSpring, TRUE)
-          ),
+          cond(eq(s, State.ACTIVE), set(this.manuallyTriggerSpring, TRUE)),
       },
     },
   ]);
@@ -462,7 +453,9 @@ export default class DrawerView extends React.PureComponent<Props> {
     // Until layout is available, drawer is hidden with opacity: 0 by default
     // Show it in the next frame when layout is available
     // If we don't delay it until the next frame, there's a visible flicker
-    requestAnimationFrame(() => this.drawerOpacity.setValue(1));
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => this.drawerOpacity.setValue(1))
+    );
   };
 
   private toggleDrawer = (open: boolean) => {
@@ -487,7 +480,7 @@ export default class DrawerView extends React.PureComponent<Props> {
   render() {
     const {
       open,
-      locked,
+      gestureEnabled,
       drawerPosition,
       drawerType,
       swipeEdgeWidth,
@@ -529,7 +522,7 @@ export default class DrawerView extends React.PureComponent<Props> {
           onGestureEvent={this.handleGestureEvent}
           onHandlerStateChange={this.handleGestureStateChange}
           hitSlop={hitSlop}
-          enabled={!locked}
+          enabled={gestureEnabled}
           {...gestureHandlerProps}
         >
           <Animated.View
@@ -548,6 +541,7 @@ export default class DrawerView extends React.PureComponent<Props> {
             >
               {renderSceneContent({ progress: this.progress })}
               <TapGestureHandler
+                enabled={gestureEnabled}
                 onHandlerStateChange={this.handleTapStateChange}
               >
                 <Animated.View

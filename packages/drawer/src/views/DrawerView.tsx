@@ -85,7 +85,25 @@ export default class DrawerView extends React.PureComponent<Props, State> {
   };
 
   componentDidMount() {
+    // If drawerLockMode was set to `locked-open`, we should open the drawer on mount
+    if (this.getLockMode(this.props) === 'locked-open') {
+      this.handleDrawerOpen();
+    }
+
     Dimensions.addEventListener('change', this.updateWidth);
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    const prevLockMode = this.getLockMode(prevProps);
+    const nextLockMode = this.getLockMode(this.props);
+
+    if (prevLockMode !== nextLockMode) {
+      if (nextLockMode === 'locked-open') {
+        this.handleDrawerOpen();
+      } else {
+        this.handleDrawerClose();
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -95,6 +113,13 @@ export default class DrawerView extends React.PureComponent<Props, State> {
   context!: React.ContextType<typeof ThemeContext>;
 
   private drawerGestureRef = React.createRef<PanGestureHandler>();
+
+  private getLockMode = ({ navigation, descriptors }: Props) => {
+    const activeKey = navigation.state.routes[navigation.state.index].key;
+    const { drawerLockMode } = descriptors[activeKey].options;
+
+    return drawerLockMode;
+  };
 
   private handleDrawerOpen = () => {
     const { navigation } = this.props;
@@ -223,7 +248,7 @@ export default class DrawerView extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { navigation } = this.props;
+    const { navigation, navigationConfig } = this.props;
     const {
       drawerType,
       sceneContainerStyle,
@@ -232,27 +257,19 @@ export default class DrawerView extends React.PureComponent<Props, State> {
       hideStatusBar,
       statusBarAnimation,
       gestureHandlerProps,
-    } = this.props.navigationConfig;
-    const activeKey = navigation.state.routes[navigation.state.index].key;
-    const { drawerLockMode } = this.props.descriptors[activeKey].options;
+    } = navigationConfig;
 
+    const drawerLockMode = this.getLockMode(this.props);
     const drawerBackgroundColor = this.getDrawerBackgroundColor();
     const overlayColor = this.getOverlayColor();
-
-    const isOpen =
-      drawerLockMode === 'locked-closed'
-        ? false
-        : drawerLockMode === 'locked-open'
-        ? true
-        : this.props.navigation.state.isDrawerOpen;
 
     return (
       <DrawerGestureContext.Provider value={this.drawerGestureRef}>
         <Drawer
-          open={isOpen}
-          locked={
-            drawerLockMode === 'locked-open' ||
-            drawerLockMode === 'locked-closed'
+          open={navigation.state.isDrawerOpen}
+          gestureEnabled={
+            drawerLockMode !== 'locked-open' &&
+            drawerLockMode !== 'locked-closed'
           }
           onOpen={this.handleDrawerOpen}
           onClose={this.handleDrawerClose}
