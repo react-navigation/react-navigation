@@ -1,8 +1,8 @@
 /* eslint-disable import/no-commonjs */
 
 import pathToRegexp, { compile } from 'path-to-regexp';
-import * as NavigationActions from '../NavigationActions';
-import invariant from '../utils/invariant';
+import * as NavigationActions from '../NavigationActions.ts';
+import invariant from '../utils/invariant.ts';
 
 const queryString = require('query-string');
 

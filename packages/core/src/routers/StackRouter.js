@@ -1,11 +1,11 @@
-import * as NavigationActions from '../NavigationActions';
+import * as NavigationActions from '../NavigationActions.ts';
 import * as StackActions from './StackActions';
 import createConfigGetter from './createConfigGetter';
 import getScreenForRouteName from './getScreenForRouteName';
 import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
-import invariant from '../utils/invariant';
-import { generateKey } from './KeyGenerator';
+import invariant from '../utils/invariant.ts';
+import { generateKey } from './KeyGenerator.ts';
 import { createPathParser } from './pathUtils';
 
 function behavesLikePushAction(action) {
@@ -104,7 +104,7 @@ export default (routeConfigs, stackConfig = {}) => {
       ...route,
       ...(params ? { params } : {}),
       routeName: initialRouteName,
-      key: action.key || (initialRouteKey || generateKey()),
+      key: action.key || initialRouteKey || generateKey(),
     };
     return {
       key: 'StackRouterRoot',
@@ -487,7 +487,7 @@ export default (routeConfigs, stackConfig = {}) => {
 
       if (action.type === StackActions.RESET) {
         // Only handle reset actions that are unspecified or match this state key
-        if (action.key != null && action.key != state.key) {
+        if (action.key != null && action.key !== state.key) {
           // Deliberately use != instead of !== so we can match null with
           // undefined on either the state or the action
           return state;

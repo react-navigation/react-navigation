@@ -2,26 +2,16 @@
   "name": "@react-navigation/native",
   "version": "3.6.5",
   "description": "React Native support for React Navigation",
-  "main": "dist/index.js",
+  "main": "lib/commonjs/index.js",
+  "react-native": "lib/module/index.js",
+  "module": "lib/module/index.js",
   "files": [
-    "dist/",
-    "src/",
-    "LICENSE.md",
-    "README.md"
+    "src",
+    "lib"
   ],
-  "react-native": "src/index.js",
-  "scripts": {
-    "test": "jest",
-    "lint": "eslint .",
-    "format": "eslint . --fix",
-    "babel": "babel --no-babelrc --plugins=syntax-jsx,syntax-class-properties,syntax-object-rest-spread,transform-flow-strip-types src --copy-files --ignore '**/__tests__/**'",
-    "build": "yarn babel --out-dir dist",
-    "dev": "yarn babel --watch src --out-dir example/node_modules/@react-navigation/native/dist",
-    "prepare": "yarn build",
-    "release": "release-it"
-  },
+  "sideEffects": false,
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "access": "public"
   },
   "keywords": [
     "react-native",
@@ -44,54 +34,21 @@
     "react-native-safe-area-view": "^0.14.8"
   },
   "devDependencies": {
-    "@expo/vector-icons": "^6.2.0",
     "@react-navigation/core": "^3.5.0-alpha.4",
-    "babel-cli": "^6.26.0",
-    "babel-jest": "^22.4.1",
-    "babel-plugin-syntax-class-properties": "^6.13.0",
-    "babel-plugin-syntax-jsx": "^6.18.0",
-    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
-    "babel-plugin-transform-flow-strip-types": "^6.22.0",
-    "babel-preset-react-native": "^4.0.0",
-    "del-cli": "^1.1.0",
-    "eslint": "^4.12.1",
-    "eslint-config-satya164": "^1.0.1",
-    "eslint-plugin-react-native-globals": "^0.1.0",
-    "husky": "^0.14.3",
-    "jest": "^23.6.0",
-    "prettier": "^1.8.2",
-    "react": "16.6.3",
-    "react-dom": "16.3.2",
-    "react-native": "^0.57.7",
-    "react-native-screens": "^2.0.0-alpha.32",
-    "react-navigation": "^2.11.2",
-    "react-test-renderer": "16.6.3",
-    "release-it": "^7.6.1"
+    "@types/react-test-renderer": "^16.9.2",
+    "del-cli": "^3.0.0",
+    "react": "~16.9.0",
+    "react-native": "~0.61.5",
+    "react-native-gesture-handler": "^1.6.0",
+    "react-native-screens": "^2.0.0-beta.10",
+    "react-test-renderer": "^16.9.2"
   },
-  "peerDependencies": {
-    "@react-navigation/core": "^3.0.0",
-    "react": "*",
-    "react-native": "*",
-    "react-native-gesture-handler": "*"
-  },
-  "jest": {
-    "preset": "react-native",
-    "testRegex": "/__tests__/[^/]+-test\\.js$",
-    "setupFiles": [
-      "<rootDir>/jest-setup.js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "jest-setup.js"
-    ],
-    "modulePathIgnorePatterns": [
-      "<rootDir>/example/"
-    ],
-    "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|react-navigation-deprecated-tab-navigator|react-navigation|@react-navigation/core)"
+  "@react-native-community/bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module"
     ]
-  },
-  "prettier": {
-    "trailingComma": "es5",
-    "singleQuote": true
   }
 }

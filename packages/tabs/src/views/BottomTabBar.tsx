@@ -144,8 +144,7 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
     const defaultKeyboardAnimationConfig =
       DEFAULT_KEYBOARD_ANIMATION_CONFIG[type];
     const keyboardAnimationConfig =
-      (keyboardHidesTabBarAnimationConfig &&
-        keyboardHidesTabBarAnimationConfig[type]) ||
+      keyboardHidesTabBarAnimationConfig?.[type] ||
       defaultKeyboardAnimationConfig;
 
     // merge config only `timing` animation

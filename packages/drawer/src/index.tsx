@@ -3,9 +3,7 @@ import * as DrawerActions from './routers/DrawerActions';
 /**
  * Navigators
  */
-export {
-  default as createDrawerNavigator,
-} from './navigators/createDrawerNavigator';
+export { default as createDrawerNavigator } from './navigators/createDrawerNavigator';
 
 /**
  * Router
@@ -23,9 +21,7 @@ export { default as DrawerView } from './views/DrawerView';
 
 export { default as DrawerGestureContext } from './utils/DrawerGestureContext';
 
-export {
-  default as DrawerProgressContext,
-} from './utils/DrawerProgressContext';
+export { default as DrawerProgressContext } from './utils/DrawerProgressContext';
 
 /**
  * Types

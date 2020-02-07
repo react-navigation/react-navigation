@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig",
+  "references": [
+    { "path": "../packages/animated-switch" },
+    { "path": "../packages/core" },
+    { "path": "../packages/drawer" },
+    { "path": "../packages/material-bottom-tabs" },
+    { "path": "../packages/native" },
+    { "path": "../packages/react-navigation" },
+    { "path": "../packages/stack" },
+    { "path": "../packages/tabs" }
+  ]
+}

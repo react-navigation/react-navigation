@@ -2,13 +2,11 @@ import React from 'react';
 import hoistStatics from 'hoist-non-react-statics';
 import { withNavigation } from '@react-navigation/core';
 
-export default function createNavigationAwareScrollable(Component: any) {
+export default function createNavigationAwareScrollable(Component) {
   const ComponentWithNavigationScrolling = withNavigation(
     class extends React.PureComponent<any> {
       static displayName = `withNavigationScrolling(${Component.displayName ||
         Component.name})`;
-
-      _subscription: any;
 
       componentDidMount() {
         this._subscription = this.props.navigation.addListener(
@@ -28,6 +26,12 @@ export default function createNavigationAwareScrollable(Component: any) {
         );
       }
 
+      componentWillUnmount() {
+        if (this._subscription != null) {
+          this._subscription.remove();
+        }
+      }
+
       getNode() {
         if (this._scrollRef === null) {
           return null;
@@ -39,12 +43,6 @@ export default function createNavigationAwareScrollable(Component: any) {
           return this._scrollRef.getNode();
         } else {
           return this._scrollRef;
-        }
-      }
-
-      componentWillUnmount() {
-        if (this._subscription != null) {
-          this._subscription.remove();
         }
       }
 

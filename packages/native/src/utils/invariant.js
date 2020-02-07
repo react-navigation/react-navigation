@@ -11,7 +11,7 @@
 
 var validateFormat = function() {};
 
-if (__DEV__) {
+if (process.env.NODE_ENV !== 'production') {
   validateFormat = function(format) {
     if (format === undefined) {
       throw new Error('invariant requires an error message argument');

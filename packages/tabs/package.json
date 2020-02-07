@@ -11,16 +11,12 @@
     "lib"
   ],
   "scripts": {
-    "test": "jest",
-    "typescript": "tsc --noEmit",
-    "lint": "eslint --ext .js,.ts,.tsx .",
-    "bootstrap": "yarn --cwd example && yarn",
-    "example": "yarn --cwd example",
-    "release": "yarn release-it",
-    "prepare": "bob build"
+    "prepare": "bob build",
+    "clean": "del lib"
   },
+  "sideEffects": false,
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "access": "public"
   },
   "keywords": [
     "react-native-component",
@@ -44,40 +40,24 @@
   },
   "homepage": "https://github.com/react-navigation/tabs#readme",
   "dependencies": {
-    "hoist-non-react-statics": "^3.3.0",
+    "hoist-non-react-statics": "^3.3.2",
     "react-lifecycles-compat": "^3.0.4",
     "react-native-safe-area-view": "^0.14.6",
     "react-native-tab-view": "^2.11.0"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^7.5.0",
-    "@expo/vector-icons": "^10.0.1",
-    "@react-native-community/bob": "^0.6.1",
+    "@react-native-community/bob": "^0.9.7",
     "@types/hoist-non-react-statics": "^3.3.1",
-    "@types/react": "^16.8.17",
-    "@types/react-native": "^0.57.57",
-    "babel-jest": "^24.5.0",
-    "commitlint": "^7.5.2",
-    "conventional-changelog-cli": "^2.0.12",
-    "enzyme": "3.9.0",
-    "enzyme-adapter-react-16": "^1.11.2",
-    "enzyme-to-json": "^3.2.2",
-    "eslint": "^6.5.1",
-    "eslint-config-satya164": "^3.1.2",
-    "eslint-plugin-react-native-globals": "^0.1.0",
-    "flow-bin": "~0.78.0",
-    "husky": "^1.3.1",
-    "jest": "^24.5.0",
-    "prettier": "^1.18.2",
-    "react": "16.5.0",
-    "react-dom": "16.5.0",
-    "react-native": "~0.57.1",
-    "react-native-gesture-handler": "^1.4.1",
+    "@types/react": "^16.9.22",
+    "@types/react-native": "^0.61.17",
+    "del-cli": "^3.0.0",
+    "react": "~16.9.0",
+    "react-native": "~0.61.5",
+    "react-native-gesture-handler": "^1.6.0",
     "react-native-reanimated": "^1.2.0",
-    "react-navigation": "^4.0.7",
-    "react-test-renderer": "16.5.0",
-    "release-it": "^10.3.1",
-    "typescript": "^3.5.2"
+    "react-native-tab-view": "^2.13.0",
+    "react-navigation": "^4.1.1",
+    "typescript": "~3.7.5"
   },
   "peerDependencies": {
     "react": "*",
@@ -85,26 +65,7 @@
     "react-native-gesture-handler": "^1.0.0",
     "react-native-reanimated": "^1.0.0-alpha",
     "react-native-screens": "^1.0.0 || ^1.0.0-alpha",
-    "react-navigation": "^4.0.7"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "yarn lint && yarn flow check"
-    }
-  },
-  "jest": {
-    "preset": "react-native",
-    "setupFiles": [
-      "<rootDir>/__setup__/enzyme.js"
-    ],
-    "modulePathIgnorePatterns": [
-      "<rootDir>/example/node_modules",
-      "<rootDir>/lib/"
-    ],
-    "snapshotSerializers": [
-      "enzyme-to-json/serializer"
-    ]
+    "react-navigation": "^4.1.1"
   },
   "@react-native-community/bob": {
     "source": "src",
@@ -112,7 +73,12 @@
     "targets": [
       "commonjs",
       "module",
-      "typescript"
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
     ]
   }
 }

@@ -1,12 +1,8 @@
 /**
  * Navigators
  */
-export {
-  default as createBottomTabNavigator,
-} from './navigators/createBottomTabNavigator';
-export {
-  default as createMaterialTopTabNavigator,
-} from './navigators/createMaterialTopTabNavigator';
+export { default as createBottomTabNavigator } from './navigators/createBottomTabNavigator';
+export { default as createMaterialTopTabNavigator } from './navigators/createMaterialTopTabNavigator';
 
 /**
  * Views

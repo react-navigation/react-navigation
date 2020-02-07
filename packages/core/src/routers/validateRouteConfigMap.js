@@ -1,6 +1,6 @@
 import { isValidElementType } from 'react-is';
 
-import invariant from '../utils/invariant';
+import invariant from '../utils/invariant.ts';
 
 /**
  * Make sure the config passed e.g. to StackRouter, TabRouter has

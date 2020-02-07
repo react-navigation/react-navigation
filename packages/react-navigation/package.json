@@ -2,7 +2,7 @@
   "name": "react-navigation",
   "version": "4.1.1",
   "description": "Routing and navigation for your React Native apps",
-  "main": "src/react-navigation.js",
+  "main": "src/index.js",
   "types": "typescript/react-navigation.d.ts",
   "repository": {
     "url": "git@github.com:react-navigation/react-navigation.git",
@@ -10,16 +10,9 @@
   },
   "author": "Adam Miskiewicz <adam@sk3vy.com>, Eric Vicenti <ericvicenti@gmail.com>, Brent Vatne <brent@expo.io>, Satyajit Sahoo <satyajit.happy@gmail.com>",
   "license": "MIT",
-  "scripts": {
-    "bootstrap": "yarn example && yarn",
-    "example": "yarn --cwd example",
-    "test": "jest",
-    "lint": "eslint . --ext '.js,.ts,.tsx'",
-    "typescript": "tsc --noEmit",
-    "release": "release-it"
-  },
+  "sideEffects": false,
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "access": "public"
   },
   "files": [
     "src",
@@ -35,61 +28,12 @@
     "@react-navigation/native": "^3.6.5"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^8.3.4",
-    "@release-it/conventional-changelog": "^1.1.0",
-    "@types/jest": "^24.0.25",
-    "@types/react": "^16.9.17",
-    "@types/react-native": "^0.60.27",
-    "codecov": "^3.6.1",
-    "commitlint": "^8.3.4",
-    "eslint": "^6.8.0",
-    "eslint-config-satya164": "^3.1.5",
-    "eslint-plugin-react-native-globals": "^0.1.0",
-    "husky": "^3.1.0",
-    "jest": "^24.9.0",
-    "prettier": "^1.19.1",
-    "react": "16.8.3",
-    "react-native": "~0.59.8",
-    "react-test-renderer": "16.8.3",
-    "release-it": "^12.4.3",
-    "typescript": "^3.7.4"
-  },
-  "jest": {
-    "notify": true,
-    "preset": "react-native",
-    "testRegex": "/__tests__/[^/]+-test\\.js$",
-    "setupFiles": [
-      "<rootDir>/jest-setup.js"
-    ],
-    "coverageDirectory": "./coverage/",
-    "collectCoverage": true,
-    "coverageReporters": [
-      "lcov"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "jest-setup.js"
-    ],
-    "moduleNameMapper": {
-      "\\.png$": "<rootDir>/assetsTransformer.js"
-    },
-    "modulePathIgnorePatterns": [
-      "<rootDir>/example/"
-    ],
-    "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|react-navigation-stack|@react-navigation/core|@react-navigation/native)"
-    ]
-  },
-  "prettier": {
-    "trailingComma": "es5",
-    "singleQuote": true
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn typescript && yarn lint && yarn test",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
+    "@types/react": "^16.9.22",
+    "@types/react-native": "^0.61.17",
+    "@types/react-test-renderer": "^16.9.2",
+    "react": "~16.9.0",
+    "react-native": "~0.61.5",
+    "react-test-renderer": "^16.9.2",
+    "typescript": "~3.7.5"
   }
 }

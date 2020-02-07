@@ -1,7 +1,7 @@
 import React from 'react';
 import hoistStatics from 'hoist-non-react-statics';
-import invariant from '../utils/invariant';
-import NavigationContext from './NavigationContext';
+import invariant from '../utils/invariant.ts';
+import NavigationContext from './NavigationContext.ts';
 
 export default function withNavigation(
   Component,

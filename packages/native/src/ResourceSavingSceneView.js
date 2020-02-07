@@ -21,6 +21,10 @@ class ResourceSavingSceneView extends React.PureComponent {
     };
   }
 
+  _mustAlwaysBeVisible = () => {
+    return this.props.animationEnabled || this.props.swipeEnabled;
+  };
+
   render() {
     const { awake } = this.state;
     const {
@@ -52,10 +56,6 @@ class ResourceSavingSceneView extends React.PureComponent {
       </View>
     );
   }
-
-  _mustAlwaysBeVisible = () => {
-    return this.props.animationEnabled || this.props.swipeEnabled;
-  };
 }
 
 const styles = StyleSheet.create({

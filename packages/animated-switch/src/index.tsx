@@ -64,10 +64,8 @@ class AnimatedSwitchView extends React.Component<Props> {
     const descriptor = this.props.descriptors[activeKey];
     const ChildComponent = descriptor.getComponent();
 
-    const transition =
-      (navigationConfig && navigationConfig.transition) || DEFAULT_TRANSITION;
-    const transitionViewStyle =
-      (navigationConfig && navigationConfig.transitionViewStyle) || null;
+    const transition = navigationConfig?.transition || DEFAULT_TRANSITION;
+    const transitionViewStyle = navigationConfig?.transitionViewStyle || null;
 
     return (
       <Transitioning.View

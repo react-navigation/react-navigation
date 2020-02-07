@@ -1,9 +1,10 @@
 import React from 'react';
-import invariant from '../utils/invariant';
-import ThemeContext from '../views/ThemeContext';
+import invariant from '../utils/invariant.ts';
+import ThemeContext from '../views/ThemeContext.ts';
 
 function createNavigator(NavigatorView, router, navigationConfig) {
   class Navigator extends React.Component {
+    // eslint-disable-next-line react/sort-comp
     static contextType = ThemeContext;
     static router = router;
     static navigationOptions = navigationConfig.navigationOptions;

@@ -9,19 +9,12 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
   }
 >
   <View
-    collapsable={true}
     onLayout={[Function]}
-    removeClippedSubviews={false}
     style={
-      Array [
-        Object {
-          "flex": 1,
-          "overflow": "hidden",
-        },
-        Object {
-          "overflow": "hidden",
-        },
-      ]
+      Object {
+        "flex": 1,
+        "overflow": "hidden",
+      }
     }
   >
     <View
@@ -30,15 +23,9 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
         Object {
           "bottom": 0,
           "left": 0,
-          "overflow": "hidden",
           "position": "absolute",
           "right": 0,
           "top": 0,
-          "transform": Array [
-            Object {
-              "translateY": 0,
-            },
-          ],
         }
       }
     >
@@ -199,14 +186,7 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
       importantForAccessibility="auto"
       onLayout={[Function]}
       pointerEvents="box-none"
-      style={
-        Object {
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        }
-      }
+      style={null}
     >
       <View
         pointerEvents="none"
@@ -326,19 +306,12 @@ exports[`StackNavigator renders successfully 1`] = `
   }
 >
   <View
-    collapsable={true}
     onLayout={[Function]}
-    removeClippedSubviews={false}
     style={
-      Array [
-        Object {
-          "flex": 1,
-          "overflow": "hidden",
-        },
-        Object {
-          "overflow": "hidden",
-        },
-      ]
+      Object {
+        "flex": 1,
+        "overflow": "hidden",
+      }
     }
   >
     <View
@@ -347,15 +320,9 @@ exports[`StackNavigator renders successfully 1`] = `
         Object {
           "bottom": 0,
           "left": 0,
-          "overflow": "hidden",
           "position": "absolute",
           "right": 0,
           "top": 0,
-          "transform": Array [
-            Object {
-              "translateY": 0,
-            },
-          ],
         }
       }
     >
@@ -516,14 +483,7 @@ exports[`StackNavigator renders successfully 1`] = `
       importantForAccessibility="auto"
       onLayout={[Function]}
       pointerEvents="box-none"
-      style={
-        Object {
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        }
-      }
+      style={null}
     >
       <View
         pointerEvents="none"

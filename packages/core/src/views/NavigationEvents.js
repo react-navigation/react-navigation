@@ -11,8 +11,6 @@ const EventNameToPropName = {
 const EventNames = Object.keys(EventNameToPropName);
 
 class NavigationEvents extends React.Component {
-  getPropListener = eventName => this.props[EventNameToPropName[eventName]];
-
   componentDidMount() {
     this.subscriptions = {};
 
@@ -35,6 +33,8 @@ class NavigationEvents extends React.Component {
       this.subscriptions[eventName].remove();
     });
   }
+
+  getPropListener = eventName => this.props[EventNameToPropName[eventName]];
 
   render() {
     return null;

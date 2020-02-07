@@ -5,22 +5,17 @@
   "main": "lib/commonjs/index.js",
   "react-native": "lib/module/index.js",
   "module": "lib/module/index.js",
-  "sideEffects": false,
   "files": [
     "src",
     "lib"
   ],
   "scripts": {
-    "test": "jest",
-    "lint": "eslint --ext .js,.ts,.tsx .",
-    "typescript": "tsc --noEmit",
-    "example": "yarn --cwd example",
-    "bootstrap": "yarn && yarn example",
     "prepare": "bob build",
-    "release": "release-it"
+    "clean": "del lib"
   },
+  "sideEffects": false,
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "access": "public"
   },
   "keywords": [
     "react-navigation",
@@ -39,80 +34,28 @@
   },
   "homepage": "https://github.com/react-navigation/react-navigation-core#readme",
   "dependencies": {
-    "hoist-non-react-statics": "^3.3.0",
-    "path-to-regexp": "^1.7.0",
-    "query-string": "^6.4.2",
+    "hoist-non-react-statics": "^3.3.2",
+    "path-to-regexp": "^1.8.0",
+    "query-string": "^6.11.0",
     "react-is": "^16.8.6"
   },
   "devDependencies": {
-    "@babel/cli": "^7.4.3",
-    "@commitlint/config-conventional": "^7.5.0",
-    "@react-native-community/bob": "^0.7.0",
-    "@react-navigation/core": "^3.3.1",
-    "@react-navigation/native": "^3.4.1",
-    "@types/react": "~16.8.3",
-    "babel-core": "7.0.0-bridge.0",
-    "babel-eslint": "^10.0.1",
-    "babel-jest": "^24.7.1",
-    "commitlint": "^7.5.2",
-    "conventional-changelog-cli": "^2.0.5",
-    "del-cli": "^1.1.0",
-    "eslint": "^5.16.0",
-    "eslint-config-satya164": "^2.4.1",
-    "eslint-plugin-react-native-globals": "^0.1.0",
-    "husky": "^1.1.2",
-    "jest": "^24.7.1",
-    "jest-expo": "^32.0.0",
-    "metro-react-native-babel-preset": "^0.53.1",
-    "prettier": "^1.17.0",
-    "react": "16.8.3",
-    "react-dom": "16.6.3",
-    "react-native": "^0.58.6",
-    "react-native-testing-library": "^1.7.0",
-    "react-test-renderer": "16.8.6",
-    "release-it": "^10.4.2",
-    "typescript": "^3.4.3"
+    "@react-native-community/bob": "^0.9.7",
+    "del-cli": "^3.0.0",
+    "react": "~16.9.0",
+    "react-native": "~0.61.5",
+    "react-native-testing-library": "^1.12.0",
+    "react-test-renderer": "^16.9.2"
   },
   "peerDependencies": {
     "react": "*"
-  },
-  "jest": {
-    "preset": "react-native",
-    "testRegex": "/__tests__/[^/]+-test\\.(js|tsx)?$",
-    "setupFiles": [
-      "<rootDir>/jest-setup.js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "jest-setup.js"
-    ],
-    "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-navigation)"
-    ],
-    "transform": {
-      "^.+\\.(js|ts|tsx)$": "babel-jest"
-    },
-    "modulePathIgnorePatterns": [
-      "<rootDir>/example/",
-      "<rootDir>/lib/"
-    ]
-  },
-  "prettier": {
-    "trailingComma": "es5",
-    "singleQuote": true
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn lint && yarn typescript && yarn test",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
   },
   "@react-native-community/bob": {
     "source": "src",
     "output": "lib",
     "targets": [
       "commonjs",
-      "module",
-      "typescript"
+      "module"
     ]
   }
 }

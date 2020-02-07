@@ -60,6 +60,7 @@ type State = {
  * Component that renders the drawer.
  */
 export default class DrawerView extends React.PureComponent<Props, State> {
+  // eslint-disable-next-line react/sort-comp
   static contextType = ThemeContext;
   static defaultProps = {
     lazy: true,

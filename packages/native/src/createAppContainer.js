@@ -1,3 +1,5 @@
+/* eslint-disable react/sort-comp */
+
 import React from 'react';
 import { Linking, Platform, BackHandler } from 'react-native';
 import {
@@ -198,7 +200,7 @@ export default function createNavigationContainer(Component) {
         return;
       }
 
-      if (__DEV__ && !this.props.detached) {
+      if (process.env.NODE_ENV !== 'production' && !this.props.detached) {
         if (_statefulContainerCount > 0) {
           // Temporarily only show this on iOS due to this issue:
           // https://github.com/react-navigation/react-navigation/issues/4196#issuecomment-390827829
@@ -228,6 +230,7 @@ export default function createNavigationContainer(Component) {
       // so we don't end up with a different value for this.state.nav
       // due to changes while async function was resolving
       let action = this._initialAction;
+      // eslint-disable-next-line react/no-access-state-in-setstate
       let startupState = this.state.nav;
       if (!startupState && !userProvidedStartupState) {
         !!process.env.REACT_NAV_LOGGING &&
@@ -395,9 +398,7 @@ export default function createNavigationContainer(Component) {
         return 'light';
       } else {
         console.warn(
-          `Invalid theme provided: ${
-            this.props.theme
-          }. Only 'light' and 'dark' are supported. Falling back to 'light'`
+          `Invalid theme provided: ${this.props.theme}. Only 'light' and 'dark' are supported. Falling back to 'light'`
         );
         return 'light';
       }

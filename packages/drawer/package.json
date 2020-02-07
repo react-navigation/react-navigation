@@ -11,16 +11,12 @@
     "lib"
   ],
   "scripts": {
-    "test": "jest",
-    "lint": "eslint --ext .js,.ts,.tsx .",
-    "typescript": "tsc --noEmit",
-    "example": "yarn --cwd example",
-    "bootstrap": "yarn example && yarn",
     "prepare": "bob build",
-    "release": "release-it"
+    "clean": "del lib"
   },
+  "sideEffects": false,
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "access": "public"
   },
   "keywords": [
     "react-native-component",
@@ -42,36 +38,19 @@
   },
   "homepage": "https://github.com/react-navigation/drawer#readme",
   "devDependencies": {
-    "@babel/core": "^7.4.3",
-    "@commitlint/config-conventional": "^7.5.0",
-    "@expo/vector-icons": "^10.0.1",
-    "@react-native-community/bob": "^0.3.4",
-    "@release-it/conventional-changelog": "^1.1.0",
-    "@types/jest": "^24.0.11",
-    "@types/react": "^16.8.13",
-    "@types/react-native": "^0.57.49",
-    "@types/react-test-renderer": "^16.8.1",
-    "babel-jest": "^24.7.1",
-    "commitlint": "^7.5.2",
-    "escape-string-regexp": "^1.0.5",
-    "eslint": "^5.16.0",
-    "eslint-config-satya164": "^2.4.1",
-    "eslint-plugin-react-native-globals": "^0.1.0",
-    "husky": "^1.3.1",
-    "jest": "^24.7.1",
-    "prettier": "^1.17.0",
-    "react": "16.8.3",
-    "react-dom": "16.8.3",
+    "@react-native-community/bob": "^0.9.7",
+    "@types/react": "^16.9.22",
+    "@types/react-native": "^0.61.17",
+    "del-cli": "^3.0.0",
+    "react": "~16.9.0",
     "react-lifecycles-compat": "^3.0.4",
-    "react-native": "~0.59.10",
-    "react-native-gesture-handler": "^1.1.0",
+    "react-native": "~0.61.5",
+    "react-native-gesture-handler": "^1.6.0",
     "react-native-reanimated": "^1.2.0",
-    "react-native-screens": "^1.0.0-alpha.23",
-    "react-native-testing-library": "^1.7.0",
-    "react-navigation": "^4.0.7",
-    "react-test-renderer": "16.8.6",
-    "release-it": "^12.3.6",
-    "typescript": "^3.4.5"
+    "react-native-screens": "^2.0.0-beta.10",
+    "react-native-testing-library": "^1.12.0",
+    "react-navigation": "^4.1.1",
+    "typescript": "~3.7.5"
   },
   "dependencies": {},
   "peerDependencies": {
@@ -80,37 +59,7 @@
     "react-native-gesture-handler": "^1.0.12",
     "react-native-reanimated": "^1.0.0",
     "react-native-screens": "^1.0.0 || ^1.0.0-alpha",
-    "react-navigation": "^4.0.7"
-  },
-  "jest": {
-    "preset": "react-native",
-    "setupFiles": [
-      "<rootDir>/jest-setup.js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "jest-setup.js"
-    ],
-    "modulePathIgnorePatterns": [
-      "<rootDir>/example/"
-    ],
-    "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-navigation|@react-navigation/core|@react-navigation/native)"
-    ],
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/lib/"
-    ],
-    "testRegex": "/__tests__/.*\\.(test|spec)\\.(js|tsx?)$",
-    "testEnvironment": "node",
-    "transform": {
-      "^.+\\.(js|ts|tsx)$": "babel-jest"
-    }
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn lint && yarn typescript && yarn test",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
+    "react-navigation": "^4.1.1"
   },
   "@react-native-community/bob": {
     "source": "src",
@@ -118,7 +67,12 @@
     "targets": [
       "commonjs",
       "module",
-      "typescript"
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
     ]
   }
 }

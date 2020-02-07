@@ -1,4 +1,4 @@
-import getNavigationActionCreators from './routers/getNavigationActionCreators';
+import getNavigationActionCreators from './routers/getNavigationActionCreators.ts';
 import getChildNavigation from './getChildNavigation';
 import getChildrenNavigationCache from './getChildrenNavigationCache';
 

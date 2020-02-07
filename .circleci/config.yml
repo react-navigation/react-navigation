@@ -38,7 +38,6 @@ jobs:
             at: ~/project
         - run: |
             yarn test --coverage
-            cat ./coverage/lcov.info | ./node_modules/.bin/codecov
         - store_artifacts:
             path: coverage
             destination: coverage

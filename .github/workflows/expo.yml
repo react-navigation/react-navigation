@@ -2,7 +2,7 @@ name: Expo Publish
 on:
   push:
     branches:
-      - master
+      - 4.x
 
 jobs:
   publish:

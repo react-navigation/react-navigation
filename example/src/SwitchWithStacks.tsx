@@ -1,0 +1,121 @@
+import * as React from 'react';
+import {
+  ActivityIndicator,
+  Button,
+  AsyncStorage,
+  StatusBar,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { createSwitchNavigator } from 'react-navigation';
+import {
+  createStackNavigator,
+  NavigationStackScreenProps,
+} from 'react-navigation-stack';
+
+class SignInScreen extends React.Component<NavigationStackScreenProps> {
+  static navigationOptions = {
+    title: 'Please sign in',
+  };
+
+  _signInAsync = async () => {
+    await AsyncStorage.setItem('userToken', 'abc');
+    this.props.navigation.navigate('Index');
+  };
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <Button title="Sign in!" onPress={this._signInAsync} />
+        <Button
+          title="Go back to other examples"
+          onPress={() => this.props.navigation.goBack(null)}
+        />
+        <StatusBar barStyle="default" />
+      </View>
+    );
+  }
+}
+
+class HomeScreen extends React.Component<NavigationStackScreenProps> {
+  static navigationOptions = {
+    title: 'Welcome to the app!',
+  };
+
+  _showMoreApp = () => {
+    this.props.navigation.navigate('Other');
+  };
+
+  _signOutAsync = async () => {
+    await AsyncStorage.clear();
+    this.props.navigation.navigate('Auth');
+  };
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <Button title="Show me more of the app" onPress={this._showMoreApp} />
+        <Button title="Actually, sign me out :)" onPress={this._signOutAsync} />
+        <StatusBar barStyle="default" />
+      </View>
+    );
+  }
+}
+
+class OtherScreen extends React.Component<NavigationStackScreenProps> {
+  static navigationOptions = {
+    title: 'Lots of features here',
+  };
+
+  _signOutAsync = async () => {
+    await AsyncStorage.clear();
+    this.props.navigation.navigate('Auth');
+  };
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <Button title="I'm done, sign me out" onPress={this._signOutAsync} />
+        <StatusBar barStyle="default" />
+      </View>
+    );
+  }
+}
+
+class LoadingScreen extends React.Component<NavigationStackScreenProps> {
+  componentDidMount() {
+    this._bootstrapAsync();
+  }
+
+  _bootstrapAsync = async () => {
+    const userToken = await AsyncStorage.getItem('userToken');
+    let initialRouteName = userToken ? 'App' : 'Auth';
+    this.props.navigation.navigate(initialRouteName);
+  };
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator />
+        <StatusBar barStyle="default" />
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
+const AppStack = createStackNavigator({ Home: HomeScreen, Other: OtherScreen });
+const AuthStack = createStackNavigator({ SignIn: SignInScreen });
+
+export default createSwitchNavigator({
+  Loading: LoadingScreen,
+  App: AppStack,
+  Auth: AuthStack,
+});

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 
-// eslint-disable-next-line import/no-unresolved
 import { Screen, screensEnabled } from 'react-native-screens';
 
 type Props = {
@@ -14,7 +13,7 @@ const FAR_FAR_AWAY = 3000; // this should be big enough to move the whole view o
 
 export default class ResourceSavingScene extends React.Component<Props> {
   render() {
-    if (screensEnabled && screensEnabled()) {
+    if (screensEnabled?.()) {
       const { isVisible, ...rest } = this.props;
       // @ts-ignore
       return <Screen active={isVisible ? 1 : 0} {...rest} />;

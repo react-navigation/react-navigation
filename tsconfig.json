@@ -2,7 +2,14 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@react-navigation/*": ["./packages/*/src"]
+      "@react-navigation/core": ["./packages/core/src"],
+      "@react-navigation/native": ["./packages/native/src"],
+      "react-navigation": ["./packages/react-navigation/src"],
+      "react-navigation-animated-switch": ["./packages/animated-switch/src"],
+      "react-navigation-drawer": ["./packages/drawer/src"],
+      "react-navigation-material-bottom-tabs": ["./packages/material-bottom-tabs/src"],
+      "react-navigation-stack": ["./packages/stack/src"],
+      "react-navigation-tabs": ["./packages/tabs/src"],
     },
     "composite": true,
     "allowUnreachableCode": false,

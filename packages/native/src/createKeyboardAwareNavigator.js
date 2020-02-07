@@ -7,18 +7,6 @@ export default (Navigator, navigatorConfig) =>
     static navigationOptions = Navigator.navigationOptions;
     _previouslyFocusedTextInput = null;
 
-    render() {
-      return (
-        <Navigator
-          {...this.props}
-          onGestureBegin={this._handleGestureBegin}
-          onGestureCanceled={this._handleGestureCanceled}
-          onGestureEnd={this._handleGestureEnd}
-          onTransitionStart={this._handleTransitionStart}
-        />
-      );
-    }
-
     _handleGestureBegin = () => {
       this._previouslyFocusedTextInput = TextInput.State.currentlyFocusedField();
       if (this._previouslyFocusedTextInput) {
@@ -55,4 +43,16 @@ export default (Navigator, navigatorConfig) =>
       onTransitionStart &&
         onTransitionStart(transitionProps, prevTransitionProps);
     };
+
+    render() {
+      return (
+        <Navigator
+          {...this.props}
+          onGestureBegin={this._handleGestureBegin}
+          onGestureCanceled={this._handleGestureCanceled}
+          onGestureEnd={this._handleGestureEnd}
+          onTransitionStart={this._handleTransitionStart}
+        />
+      );
+    }
   };

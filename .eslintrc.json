@@ -5,9 +5,13 @@
     "import/core-modules": [
       "@react-navigation/core",
       "@react-navigation/native",
+      "react-navigation",
+      "react-navigation-animated-switch",
       "react-navigation-stack",
       "react-navigation-drawer",
-      "react-navigation-tabs"
+      "react-navigation-material-bottom-tabs",
+      "react-navigation-tabs",
+      "react-native-screens"
     ]
   },
   "env": { "browser": true, "node": true }

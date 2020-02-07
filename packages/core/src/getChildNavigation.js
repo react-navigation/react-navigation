@@ -1,6 +1,6 @@
 import getChildEventSubscriber from './getChildEventSubscriber';
-import getChildRouter from './getChildRouter';
-import getNavigationActionCreators from './routers/getNavigationActionCreators';
+import getChildRouter from './getChildRouter.ts';
+import getNavigationActionCreators from './routers/getNavigationActionCreators.ts';
 import getChildrenNavigationCache from './getChildrenNavigationCache';
 
 const createParamGetter = route => (paramName, defaultValue) => {

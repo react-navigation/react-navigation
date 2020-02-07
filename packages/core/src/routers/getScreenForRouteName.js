@@ -1,6 +1,6 @@
 import { isValidElementType } from 'react-is';
 
-import invariant from '../utils/invariant';
+import invariant from '../utils/invariant.ts';
 
 /**
  * Simple helper that gets a single screen (React component or navigator)

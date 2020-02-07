@@ -1,0 +1,75 @@
+import * as React from 'react';
+import { Button, View, Text } from 'react-native';
+import {
+  createStackNavigator,
+  TransitionPresets,
+  NavigationStackScreenProps,
+} from 'react-navigation-stack';
+
+class ListScreen extends React.Component<NavigationStackScreenProps> {
+  static navigationOptions = {
+    title: 'My Modal',
+  };
+
+  render() {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>List Screen</Text>
+        <Text>A list may go here</Text>
+        <Button
+          title="Go to Details"
+          onPress={() => this.props.navigation.navigate('Details')}
+        />
+        <Button
+          title="Go back to all examples"
+          onPress={() => this.props.navigation.navigate('Index')}
+        />
+      </View>
+    );
+  }
+}
+
+class DetailsScreen extends React.Component<NavigationStackScreenProps> {
+  static navigationOptions = {
+    headerShown: false,
+  };
+
+  render() {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Details Screen</Text>
+        <Button
+          title="Go to Details... again"
+          onPress={() => this.props.navigation.push('Details')}
+        />
+        <Button
+          title="Go to List"
+          onPress={() => this.props.navigation.navigate('List')}
+        />
+        <Button
+          title="Go back"
+          onPress={() => this.props.navigation.goBack()}
+        />
+        <Button
+          title="Go back to all examples"
+          onPress={() => this.props.navigation.navigate('Index')}
+        />
+      </View>
+    );
+  }
+}
+
+export default createStackNavigator(
+  {
+    List: ListScreen,
+    Details: DetailsScreen,
+  },
+  {
+    mode: 'modal',
+    defaultNavigationOptions: {
+      ...TransitionPresets.ModalPresentationIOS,
+      cardOverlayEnabled: true,
+      gestureEnabled: true,
+    },
+  }
+);

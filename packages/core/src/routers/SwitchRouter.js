@@ -1,9 +1,9 @@
-import invariant from '../utils/invariant';
+import invariant from '../utils/invariant.ts';
 import getScreenForRouteName from './getScreenForRouteName';
 import createConfigGetter from './createConfigGetter';
 
-import * as NavigationActions from '../NavigationActions';
-import * as SwitchActions from './SwitchActions';
+import * as NavigationActions from '../NavigationActions.ts';
+import * as SwitchActions from './SwitchActions.ts';
 import * as StackActions from './StackActions';
 import validateRouteConfigMap from './validateRouteConfigMap';
 import { createPathParser } from './pathUtils';
@@ -180,9 +180,7 @@ export default (routeConfigs, config = {}) => {
 
         if (index === -1) {
           throw new Error(
-            `There is no route named '${
-              action.routeName
-            }' in the navigator with the key '${action.key}'.\n` +
+            `There is no route named '${action.routeName}' in the navigator with the key '${action.key}'.\n` +
               `Must be one of: ${state.routes
                 .map(route => `'${route.routeName}'`)
                 .join(',')}`

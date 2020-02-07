@@ -1,33 +1,9 @@
 {
+  "extends": "../../tsconfig",
+  "references": [
+    { "path": "../react-navigation" }
+  ],
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "react-navigation-animated-switch": ["./src/index"]
-    },
-    "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
-    "alwaysStrict": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "jsx": "react",
-    "lib": ["esnext"],
-    "module": "esnext",
-    "moduleResolution": "node",
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noImplicitUseStrict": false,
-    "noStrictGenericChecks": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "target": "esnext"
-  },
-  "typeAcquisition": {
-    "enable": true,
-    "include": ["react", "react-native"]
+    "outDir": "./lib/typescript"
   }
 }

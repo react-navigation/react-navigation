@@ -34,11 +34,9 @@
 import * as React from 'react';
 
 import {
-  Animated,
   Text,
   TextInput,
   StatusBar,
-  TextStyle,
   ViewProps,
   ViewStyle,
   StyleProp,
@@ -330,6 +328,7 @@ export interface NavigationPopActionPayload {
   // n: the number of routes to pop of the stack
   n?: number;
   immediate?: boolean;
+  key?: string;
 }
 
 export interface NavigationPopAction extends NavigationPopActionPayload {
@@ -691,17 +690,21 @@ export function createSwitchNavigator(
  * NavigationActions
  */
 export namespace NavigationActions {
-  const BACK: 'Navigation/BACK';
-  const INIT: 'Navigation/INIT';
-  const NAVIGATE: 'Navigation/NAVIGATE';
-  const SET_PARAMS: 'Navigation/SET_PARAMS';
+  declare const BACK: 'Navigation/BACK';
+  declare const INIT: 'Navigation/INIT';
+  declare const NAVIGATE: 'Navigation/NAVIGATE';
+  declare const SET_PARAMS: 'Navigation/SET_PARAMS';
 
-  function init(options?: NavigationInitActionPayload): NavigationInitAction;
-  function navigate(
+  declare function init(
+    options?: NavigationInitActionPayload
+  ): NavigationInitAction;
+  declare function navigate(
     options: NavigationNavigateActionPayload
   ): NavigationNavigateAction;
-  function back(options?: NavigationBackActionPayload): NavigationBackAction;
-  function setParams(
+  declare function back(
+    options?: NavigationBackActionPayload
+  ): NavigationBackAction;
+  declare function setParams(
     options: NavigationSetParamsActionPayload
   ): NavigationSetParamsAction;
 }
@@ -710,39 +713,45 @@ export namespace NavigationActions {
  * DrawerActions
  */
 export namespace DrawerActions {
-  const OPEN_DRAWER: 'Navigation/OPEN_DRAWER';
-  const CLOSE_DRAWER: 'Navigation/CLOSE_DRAWER';
-  const TOGGLE_DRAWER: 'Navigation/TOGGLE_DRAWER';
+  declare const OPEN_DRAWER: 'Navigation/OPEN_DRAWER';
+  declare const CLOSE_DRAWER: 'Navigation/CLOSE_DRAWER';
+  declare const TOGGLE_DRAWER: 'Navigation/TOGGLE_DRAWER';
 
-  function openDrawer(): NavigationOpenDrawerAction;
-  function closeDrawer(): NavigationCloseDrawerAction;
-  function toggleDrawer(): NavigationToggleDrawerAction;
+  declare function openDrawer(): NavigationOpenDrawerAction;
+  declare function closeDrawer(): NavigationCloseDrawerAction;
+  declare function toggleDrawer(): NavigationToggleDrawerAction;
 }
 
 /**
  * StackActions
  */
 export namespace StackActions {
-  const POP: 'Navigation/POP';
-  const POP_TO_TOP: 'Navigation/POP_TO_TOP';
-  const PUSH: 'Navigation/PUSH';
-  const RESET: 'Navigation/RESET';
-  const REPLACE: 'Navigation/REPLACE';
-  const COMPLETE_TRANSITION: 'Navigation/COMPLETE_TRANSITION';
+  declare const POP: 'Navigation/POP';
+  declare const POP_TO_TOP: 'Navigation/POP_TO_TOP';
+  declare const PUSH: 'Navigation/PUSH';
+  declare const RESET: 'Navigation/RESET';
+  declare const REPLACE: 'Navigation/REPLACE';
+  declare const COMPLETE_TRANSITION: 'Navigation/COMPLETE_TRANSITION';
 
-  function pop(options: NavigationPopActionPayload): NavigationPopAction;
-  function popToTop(
+  declare function pop(
+    options: NavigationPopActionPayload
+  ): NavigationPopAction;
+  declare function popToTop(
     options?: NavigationPopToTopActionPayload
   ): NavigationPopToTopAction;
 
-  function push(options: NavigationPushActionPayload): NavigationPushAction;
-  function reset(options: NavigationResetActionPayload): NavigationResetAction;
+  declare function push(
+    options: NavigationPushActionPayload
+  ): NavigationPushAction;
+  declare function reset(
+    options: NavigationResetActionPayload
+  ): NavigationResetAction;
 
-  function replace(
+  declare function replace(
     options: NavigationReplaceActionPayload
   ): NavigationReplaceAction;
 
-  function completeTransition(
+  declare function completeTransition(
     payload?: NavigationCompleteTransitionActionPayload
   ): NavigationCompleteTransitionAction;
 }
@@ -751,9 +760,9 @@ export namespace StackActions {
  * SwitchActions
  */
 export namespace SwitchActions {
-  const JUMP_TO: 'Navigation/JUMP_TO';
+  declare const JUMP_TO: 'Navigation/JUMP_TO';
 
-  function jumpTo(
+  declare function jumpTo(
     options: NavigationJumpToActionPayload
   ): NavigationJumpToAction;
 }
@@ -868,11 +877,6 @@ export type InferProps<
 export interface NavigationOrientationInjectedProps {
   isLandscape: boolean;
 }
-
-export function createKeyboardAwareNavigator<Props>(
-  Comp: React.ComponentType<Props>,
-  stackConfig: object
-): React.ComponentType<Props>;
 
 export function withOrientation<P extends NavigationOrientationInjectedProps>(
   Component: React.ComponentType<P>

@@ -1,0 +1,28 @@
+{
+  "name": "ReactNavigationExample",
+  "displayName": "React Navigation Example",
+  "expo": {
+    "name": "react-navigation-example",
+    "owner": "react-navigation",
+    "slug": "react-navigation-4-example",
+    "description": "Demo app to showcase various functionality of React Navigation",
+    "privacy": "public",
+    "sdkVersion": "36.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "version": "1.0.0",
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "entryPoint": "App.tsx"
+  }
+}

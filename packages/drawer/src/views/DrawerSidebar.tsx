@@ -73,6 +73,7 @@ class DrawerSidebar extends React.PureComponent<Props> {
     focused: boolean;
   }) => {
     if (focused) {
+      // @ts-ignore
       this.props.navigation.closeDrawer();
     } else {
       this.props.navigation.dispatch(
