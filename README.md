@@ -4,9 +4,11 @@
 [![Code Coverage][coverage-badge]][coverage]
 [![MIT License][license-badge]][license]
 
-Routing and navigation for your React Native apps with a component-first API.
+Routing and navigation for your React Native apps.
 
-Documentation can be found at [next.reactnavigation.org](https://reactnavigation.org/).
+Documentation can be found at [reactnavigation.org](https://reactnavigation.org/).
+
+If you are looking for version 4, the code can be found in the [4.x branch](https://github.com/react-navigation/react-navigation/tree/4.x).
 
 ## Contributing
 
