@@ -31,7 +31,7 @@ jobs:
         - run: |
             yarn lint
             yarn typescript
-  unit-test:
+  unit-tests:
       <<: *defaults
       steps:
         - attach_workspace:
@@ -59,7 +59,7 @@ workflows:
       - lint-and-typecheck:
           requires:
             - install-dependencies
-      - unit-test:
+      - unit-tests:
           requires:
             - install-dependencies
       - build-packages:
