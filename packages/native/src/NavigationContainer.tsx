@@ -8,6 +8,11 @@ import ThemeProvider from './theming/ThemeProvider';
 import DefaultTheme from './theming/DefaultTheme';
 import useBackButton from './useBackButton';
 import { Theme } from './types';
+import {
+  useBrowserBackAndForwardListener,
+  getInitialStateFromLocation,
+  syncStateWithHistory,
+} from './browserHistory';
 
 type Props = NavigationContainerProps & {
   theme?: Theme;
@@ -25,18 +30,37 @@ type Props = NavigationContainerProps & {
  * @param props.ref Ref object which refers to the navigation object containing helper methods.
  */
 const NavigationContainer = React.forwardRef(function NavigationContainer(
-  { theme = DefaultTheme, ...rest }: Props,
+  { theme = DefaultTheme, initialState, onStateChange, ...rest }: Props,
   ref: React.Ref<NavigationContainerRef>
 ) {
   const refContainer = React.useRef<NavigationContainerRef>(null);
 
   useBackButton(refContainer);
 
+  useBrowserBackAndForwardListener({ navigationRef: refContainer });
+
+  const _initialState = React.useMemo(() => {
+    return initialState ? initialState : getInitialStateFromLocation();
+  }, [initialState]);
+
+  const _onStateChange = React.useCallback(
+    state => {
+      syncStateWithHistory(state);
+      onStateChange?.(state);
+    },
+    [onStateChange]
+  );
+
   React.useImperativeHandle(ref, () => refContainer.current);
 
   return (
     <ThemeProvider value={theme}>
-      <BaseNavigationContainer {...rest} ref={refContainer} />
+      <BaseNavigationContainer
+        {...rest}
+        initialState={_initialState}
+        onStateChange={_onStateChange}
+        ref={refContainer}
+      />
     </ThemeProvider>
   );
 });

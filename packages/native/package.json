@@ -31,7 +31,8 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/core": "^5.0.0"
+    "@react-navigation/core": "^5.0.0",
+    "query-string": "^6.10.1"
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.8.0",
