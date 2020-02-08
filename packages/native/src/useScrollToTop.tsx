@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useNavigation, useRoute, EventArg } from '@react-navigation/core';
 
-type ScrollOptions = { y?: number; animated?: boolean };
+type ScrollOptions = { offset?: number; animated?: boolean };
 
 type ScrollableView =
   | { scrollToTop(): void }
@@ -43,7 +43,8 @@ function getScrollableNode(ref: React.RefObject<ScrollableWrapper>) {
 }
 
 export default function useScrollToTop(
-  ref: React.RefObject<ScrollableWrapper>
+  ref: React.RefObject<ScrollableWrapper>,
+  offset: number = 0
 ) {
   const navigation = useNavigation();
   const route = useRoute();
@@ -82,14 +83,17 @@ export default function useScrollToTop(
           const scrollable = getScrollableNode(ref);
 
           if (isFocused && isFirst && scrollable && !e.defaultPrevented) {
-            if ('scrollToTop' in scrollable) {
-              scrollable.scrollToTop();
-            } else if ('scrollTo' in scrollable) {
-              scrollable.scrollTo({ y: 0, animated: true });
+            if ('scrollTo' in scrollable) {
+              scrollable.scrollTo({ offset, animated: true });
             } else if ('scrollToOffset' in scrollable) {
-              scrollable.scrollToOffset({ y: 0, animated: true });
+              scrollable.scrollToOffset({ offset, animated: true });
             } else if ('scrollResponderScrollTo' in scrollable) {
-              scrollable.scrollResponderScrollTo({ y: 0, animated: true });
+              scrollable.scrollResponderScrollTo({
+                offset,
+                animated: true,
+              });
+            } else if ('scrollToTop' in scrollable) {
+              scrollable.scrollToTop();
             }
           }
         });
@@ -97,5 +101,5 @@ export default function useScrollToTop(
     );
 
     return unsubscribe;
-  }, [navigation, ref, route.key]);
+  }, [navigation, ref, route.key, offset]);
 }
