@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Platform } from 'react-native';
 import {
   ScreenStackHeaderConfig,
   ScreenStackHeaderLeftView,
@@ -73,7 +74,7 @@ export default function HeaderConfig(props: Props) {
           : colors.card
       }
     >
-      {headerLeft !== undefined ? (
+      {headerLeft !== undefined && Platform.OS === 'ios' ? (
         <ScreenStackHeaderLeftView>{headerLeft()}</ScreenStackHeaderLeftView>
       ) : null}
 

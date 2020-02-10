@@ -107,6 +107,12 @@ export type NativeStackNavigationOptions = {
    */
   headerLargeTitle?: boolean;
   /**
+   * Function which returns a React Element to display on the left side of the header.
+   *
+   * @platform ios
+   */
+  headerLeft?: () => React.ReactNode;
+  /**
    * Function which returns a React Element to display on the right side of the header.
    */
   headerRight?: () => React.ReactNode;
