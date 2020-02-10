@@ -188,6 +188,10 @@ export type BottomTabBarOptions = {
    * Style object for the tab bar container.
    */
   style?: StyleProp<ViewStyle>;
+  /**
+   * Style object for the screen and the tab bar container.
+   */
+  containerStyle?: StyleProp<ViewStyle>;
 };
 
 export type BottomTabBarProps = BottomTabBarOptions & {

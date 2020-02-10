@@ -92,13 +92,14 @@ export default class BottomTabView extends React.Component<Props, State> {
   };
 
   render() {
-    const { state, descriptors, lazy } = this.props;
+    const { state, descriptors, lazy, tabBarOptions = {} } = this.props;
     const { routes } = state;
     const { loaded } = this.state;
+    const { containerStyle } = tabBarOptions;
 
     return (
       <SafeAreaProviderCompat>
-        <View style={styles.container}>
+        <View style={[styles.container, containerStyle]}>
           <ScreenContainer style={styles.pages}>
             {routes.map((route, index) => {
               const descriptor = descriptors[route.key];

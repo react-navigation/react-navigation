@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  View,
   Animated,
   StyleSheet,
   Keyboard,
@@ -190,78 +189,77 @@ export default function BottomTabBar({
             style,
           ]}
           pointerEvents={keyboardHidesTabBar && keyboardShown ? 'none' : 'auto'}
+          onLayout={handleLayout}
         >
-          <View style={styles.content} onLayout={handleLayout}>
-            {routes.map((route, index) => {
-              const focused = index === state.index;
-              const { options } = descriptors[route.key];
+          {routes.map((route, index) => {
+            const focused = index === state.index;
+            const { options } = descriptors[route.key];
 
-              const onPress = () => {
-                const event = navigation.emit({
-                  type: 'tabPress',
-                  target: route.key,
-                  canPreventDefault: true,
+            const onPress = () => {
+              const event = navigation.emit({
+                type: 'tabPress',
+                target: route.key,
+                canPreventDefault: true,
+              });
+
+              if (!focused && !event.defaultPrevented) {
+                navigation.dispatch({
+                  ...CommonActions.navigate(route.name),
+                  target: state.key,
                 });
+              }
+            };
 
-                if (!focused && !event.defaultPrevented) {
-                  navigation.dispatch({
-                    ...CommonActions.navigate(route.name),
-                    target: state.key,
-                  });
-                }
-              };
+            const onLongPress = () => {
+              navigation.emit({
+                type: 'tabLongPress',
+                target: route.key,
+              });
+            };
 
-              const onLongPress = () => {
-                navigation.emit({
-                  type: 'tabLongPress',
-                  target: route.key,
-                });
-              };
+            const label =
+              options.tabBarLabel !== undefined
+                ? options.tabBarLabel
+                : options.title !== undefined
+                ? options.title
+                : route.name;
 
-              const label =
-                options.tabBarLabel !== undefined
-                  ? options.tabBarLabel
-                  : options.title !== undefined
-                  ? options.title
-                  : route.name;
+            const accessibilityLabel =
+              options.tabBarAccessibilityLabel !== undefined
+                ? options.tabBarAccessibilityLabel
+                : typeof label === 'string'
+                ? `${label}, tab, ${index + 1} of ${routes.length}`
+                : undefined;
 
-              const accessibilityLabel =
-                options.tabBarAccessibilityLabel !== undefined
-                  ? options.tabBarAccessibilityLabel
-                  : typeof label === 'string'
-                  ? `${label}, tab, ${index + 1} of ${routes.length}`
-                  : undefined;
-
-              return (
-                <NavigationContext.Provider
-                  key={route.key}
-                  value={descriptors[route.key].navigation}
-                >
-                  <BottomTabItem
-                    route={route}
-                    focused={focused}
-                    horizontal={shouldUseHorizontalLabels()}
-                    onPress={onPress}
-                    onLongPress={onLongPress}
-                    accessibilityLabel={accessibilityLabel}
-                    testID={options.tabBarTestID}
-                    allowFontScaling={allowFontScaling}
-                    activeTintColor={activeTintColor}
-                    inactiveTintColor={inactiveTintColor}
-                    activeBackgroundColor={activeBackgroundColor}
-                    inactiveBackgroundColor={inactiveBackgroundColor}
-                    button={options.tabBarButton}
-                    icon={options.tabBarIcon}
-                    label={label}
-                    showIcon={showIcon}
-                    showLabel={showLabel}
-                    labelStyle={labelStyle}
-                    style={tabStyle}
-                  />
-                </NavigationContext.Provider>
-              );
-            })}
-          </View>
+            return (
+              <NavigationContext.Provider
+                key={route.key}
+                value={descriptors[route.key].navigation}
+              >
+                <BottomTabItem
+                  route={route}
+                  focused={focused}
+                  horizontal={shouldUseHorizontalLabels()}
+                  onPress={onPress}
+                  onLongPress={onLongPress}
+                  accessibilityLabel={accessibilityLabel}
+                  testID={options.tabBarTestID}
+                  allowFontScaling={allowFontScaling}
+                  activeTintColor={activeTintColor}
+                  inactiveTintColor={inactiveTintColor}
+                  activeBackgroundColor={activeBackgroundColor}
+                  inactiveBackgroundColor={inactiveBackgroundColor}
+                  button={options.tabBarButton}
+                  icon={options.tabBarIcon}
+                  label={label}
+                  showIcon={showIcon}
+                  showLabel={showLabel}
+                  labelStyle={labelStyle}
+                  style={tabStyle}
+                />
+              </NavigationContext.Provider>
+            );
+          })}
         </Animated.View>
       )}
     </SafeAreaConsumer>
@@ -275,9 +273,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     borderTopWidth: StyleSheet.hairlineWidth,
     elevation: 8,
-  },
-  content: {
-    flex: 1,
     flexDirection: 'row',
   },
 });
