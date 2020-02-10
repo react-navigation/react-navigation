@@ -35,4 +35,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: comment "Hey! The issue tracker is intended for only tracking bug reports. Seems you have a usage question. Please ask the question on [StackOverflow](https://stackoverflow.com/questions/tagged/react-navigation) instead using the `react-navigation` label. You can also chat with other community members on [Reactiflux Discord server](https://www.reactiflux.com/) in the `#react-navigation` channel."
+          args: comment "Hey! Thanks for opening the issue. The issue tracker is intended for only tracking bug reports. This helps us prioritize fixing bugs in the library. Seems you have a usage question. Please ask the question on [StackOverflow](https://stackoverflow.com/questions/tagged/react-navigation) instead using the `react-navigation` label. You can also chat with other community members on [Reactiflux Discord server](https://www.reactiflux.com/) in the `#react-navigation` channel."
