@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: 10,
     marginVertical: 4,
+    overflow: 'hidden',
   },
   wrapper: {
     flexDirection: 'row',
