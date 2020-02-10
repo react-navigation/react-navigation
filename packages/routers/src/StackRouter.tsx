@@ -203,7 +203,13 @@ export default function StackRouter(options: StackRouterOptions) {
                 ? {
                     key: key !== undefined ? key : `${name}-${shortid()}`,
                     name,
-                    params,
+                    params:
+                      routeParamList[name] !== undefined
+                        ? {
+                            ...routeParamList[name],
+                            ...params,
+                          }
+                        : params,
                   }
                 : route
             ),
