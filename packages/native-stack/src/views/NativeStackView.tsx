@@ -1,14 +1,16 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { StackNavigationState, StackActions } from '@react-navigation/routers';
-
 import {
   ScreenStack,
   Screen as ScreenComponent,
   ScreenProps,
   // eslint-disable-next-line import/no-unresolved
 } from 'react-native-screens';
-import { useTheme } from '@react-navigation/native';
+import {
+  StackNavigationState,
+  StackActions,
+  useTheme,
+} from '@react-navigation/native';
 import HeaderConfig from './HeaderConfig';
 import {
   NativeStackNavigationHelpers,

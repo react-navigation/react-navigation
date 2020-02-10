@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { act, render } from 'react-native-testing-library';
+import {
+  DefaultRouterOptions,
+  NavigationState,
+  Router,
+} from '@react-navigation/routers';
 import BaseNavigationContainer, {
   NavigationStateContext,
 } from '../BaseNavigationContainer';
 import MockRouter, { MockActions } from './__fixtures__/MockRouter';
 import useNavigationBuilder from '../useNavigationBuilder';
 import Screen from '../Screen';
-import {
-  DefaultRouterOptions,
-  NavigationState,
-  Router,
-  NavigationContainerRef,
-} from '../types';
+import { NavigationContainerRef } from '../types';
 
 it('throws when getState is accessed without a container', () => {
   expect.assertions(1);

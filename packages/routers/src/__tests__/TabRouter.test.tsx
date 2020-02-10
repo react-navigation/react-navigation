@@ -1,5 +1,4 @@
-import { CommonActions } from '@react-navigation/core';
-import { TabRouter, TabActions, TabNavigationState } from '../src';
+import { CommonActions, TabRouter, TabActions, TabNavigationState } from '..';
 
 jest.mock('shortid', () => () => 'test');
 

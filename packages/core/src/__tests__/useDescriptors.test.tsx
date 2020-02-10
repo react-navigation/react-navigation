@@ -1,5 +1,10 @@
 import * as React from 'react';
 import { render, act } from 'react-native-testing-library';
+import {
+  DefaultRouterOptions,
+  NavigationState,
+  Router,
+} from '@react-navigation/routers';
 import useNavigationBuilder from '../useNavigationBuilder';
 import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
@@ -7,7 +12,6 @@ import MockRouter, {
   MockActions,
   MockRouterKey,
 } from './__fixtures__/MockRouter';
-import { DefaultRouterOptions, NavigationState, Router } from '../types';
 
 jest.useFakeTimers();
 

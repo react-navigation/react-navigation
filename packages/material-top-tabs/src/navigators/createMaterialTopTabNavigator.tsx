@@ -3,12 +3,10 @@ import {
   useNavigationBuilder,
   createNavigatorFactory,
   DefaultNavigatorOptions,
-} from '@react-navigation/native';
-import {
   TabRouter,
   TabRouterOptions,
   TabNavigationState,
-} from '@react-navigation/routers';
+} from '@react-navigation/native';
 import MaterialTopTabView from '../views/MaterialTopTabView';
 import {
   MaterialTopTabNavigationConfig,

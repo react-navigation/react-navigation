@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { render, act } from 'react-native-testing-library';
+import { Router, NavigationState } from '@react-navigation/routers';
 import useNavigationBuilder from '../useNavigationBuilder';
 import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
 import MockRouter from './__fixtures__/MockRouter';
-import { Router, NavigationState } from '../types';
 
 it('fires focus and blur events in root navigator', () => {
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {

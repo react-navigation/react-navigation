@@ -1,5 +1,5 @@
 import shortid from 'shortid';
-import { CommonAction, Router, PartialState } from '@react-navigation/core';
+import { PartialState, CommonNavigationAction, Router } from './types';
 import TabRouter, {
   TabActions,
   TabActionType,
@@ -72,10 +72,10 @@ const closeDrawer = (state: DrawerNavigationState): DrawerNavigationState => {
 
 export default function DrawerRouter(
   options: DrawerRouterOptions
-): Router<DrawerNavigationState, DrawerActionType | CommonAction> {
+): Router<DrawerNavigationState, DrawerActionType | CommonNavigationAction> {
   const router = (TabRouter(options) as unknown) as Router<
     DrawerNavigationState,
-    TabActionType | CommonAction
+    TabActionType | CommonNavigationAction
   >;
 
   return {

@@ -1,4 +1,10 @@
 import * as React from 'react';
+import {
+  NavigationAction,
+  NavigationState,
+  ParamListBase,
+  Router,
+} from '@react-navigation/routers';
 import SceneView from './SceneView';
 import NavigationBuilderContext, {
   ChildActionListener,
@@ -7,16 +13,7 @@ import NavigationBuilderContext, {
 } from './NavigationBuilderContext';
 import { NavigationEventEmitter } from './useEventEmitter';
 import useNavigationCache from './useNavigationCache';
-import {
-  Descriptor,
-  NavigationAction,
-  NavigationHelpers,
-  NavigationState,
-  ParamListBase,
-  RouteConfig,
-  RouteProp,
-  Router,
-} from './types';
+import { Descriptor, NavigationHelpers, RouteConfig, RouteProp } from './types';
 
 type Options<State extends NavigationState, ScreenOptions extends object> = {
   state: State;

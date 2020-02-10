@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { NavigationState, NavigationAction, PartialState } from './types';
+import {
+  NavigationState,
+  NavigationAction,
+  PartialState,
+} from '@react-navigation/routers';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
 

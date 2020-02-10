@@ -1,14 +1,14 @@
 import * as React from 'react';
-import NavigationBuilderContext, {
-  ChildActionListener,
-} from './NavigationBuilderContext';
 import {
   NavigationAction,
   NavigationState,
   PartialState,
   Router,
   RouterConfigOptions,
-} from './types';
+} from '@react-navigation/routers';
+import NavigationBuilderContext, {
+  ChildActionListener,
+} from './NavigationBuilderContext';
 
 type Options = {
   router: Router<NavigationState, NavigationAction>;

@@ -1,13 +1,13 @@
-import BaseRouter from '../../BaseRouter';
 import {
+  BaseRouter,
   Router,
-  CommonAction,
+  CommonNavigationAction,
   NavigationState,
   Route,
   DefaultRouterOptions,
-} from '../../types';
+} from '@react-navigation/routers';
 
-export type MockActions = CommonAction | { type: 'NOOP' | 'UPDATE' };
+export type MockActions = CommonNavigationAction | { type: 'NOOP' | 'UPDATE' };
 
 export const MockRouterKey = { current: 0 };
 

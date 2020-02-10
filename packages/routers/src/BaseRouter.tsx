@@ -1,4 +1,4 @@
-import { CommonAction, NavigationState, PartialState } from './types';
+import { CommonNavigationAction, NavigationState, PartialState } from './types';
 
 /**
  * Base router object that can be used when writing custom routers.
@@ -7,7 +7,7 @@ import { CommonAction, NavigationState, PartialState } from './types';
 const BaseRouter = {
   getStateForAction<State extends NavigationState>(
     state: State,
-    action: CommonAction
+    action: CommonNavigationAction
   ): State | PartialState<State> | null {
     switch (action.type) {
       case 'SET_PARAMS': {
@@ -37,7 +37,7 @@ const BaseRouter = {
     }
   },
 
-  shouldActionChangeFocus(action: CommonAction) {
+  shouldActionChangeFocus(action: CommonNavigationAction) {
     return action.type === 'NAVIGATE';
   },
 };

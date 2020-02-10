@@ -1,17 +1,16 @@
 import * as React from 'react';
+import {
+  Route,
+  ParamListBase,
+  NavigationState,
+  PartialState,
+} from '@react-navigation/routers';
 import { NavigationStateContext } from './BaseNavigationContainer';
 import NavigationContext from './NavigationContext';
 import NavigationRouteContext from './NavigationRouteContext';
 import StaticContainer from './StaticContainer';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
-import {
-  Route,
-  ParamListBase,
-  NavigationState,
-  NavigationProp,
-  RouteConfig,
-  PartialState,
-} from './types';
+import { NavigationProp, RouteConfig } from './types';
 
 type Props<State extends NavigationState, ScreenOptions extends object> = {
   screen: RouteConfig<ParamListBase, string, ScreenOptions>;

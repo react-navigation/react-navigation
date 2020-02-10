@@ -11,8 +11,7 @@ import {
 import { EdgeInsets } from 'react-native-safe-area-context';
 // eslint-disable-next-line import/no-unresolved
 import { ScreenContainer, Screen, screensEnabled } from 'react-native-screens'; // Import with * as to prevent getters being called
-import { Route } from '@react-navigation/native';
-import { StackNavigationState } from '@react-navigation/routers';
+import { Route, StackNavigationState } from '@react-navigation/native';
 
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';

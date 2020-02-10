@@ -1,17 +1,15 @@
 import * as React from 'react';
-import * as CommonActions from './CommonActions';
-import NavigationContext from './NavigationContext';
-import { NavigationStateContext } from './BaseNavigationContainer';
-import { NavigationEventEmitter } from './useEventEmitter';
 import {
-  NavigationHelpers,
-  NavigationProp,
+  CommonActions,
   NavigationAction,
   NavigationState,
   ParamListBase,
   Router,
-  PrivateValueStore,
-} from './types';
+} from '@react-navigation/routers';
+import NavigationContext from './NavigationContext';
+import { NavigationStateContext } from './BaseNavigationContainer';
+import { NavigationEventEmitter } from './useEventEmitter';
+import { NavigationHelpers, NavigationProp, PrivateValueStore } from './types';
 
 // This is to make TypeScript compiler happy
 // eslint-disable-next-line babel/no-unused-expressions

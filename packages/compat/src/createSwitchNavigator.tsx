@@ -2,12 +2,10 @@ import {
   useNavigationBuilder,
   createNavigatorFactory,
   DefaultNavigatorOptions,
-} from '@react-navigation/native';
-import {
   TabRouter,
   TabRouterOptions,
   TabNavigationState,
-} from '@react-navigation/routers';
+} from '@react-navigation/native';
 import createCompatNavigatorFactory from './createCompatNavigatorFactory';
 
 type Props = DefaultNavigatorOptions<{}> & TabRouterOptions;

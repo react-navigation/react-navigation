@@ -1,5 +1,8 @@
-import { CommonActions } from '@react-navigation/native';
-import { StackActions, StackActionType } from '@react-navigation/routers';
+import {
+  CommonActions,
+  StackActions,
+  StackActionType,
+} from '@react-navigation/native';
 
 export function reset(): CommonActions.Action {
   throw new Error(

@@ -4,13 +4,11 @@ import {
   createNavigatorFactory,
   DefaultNavigatorOptions,
   EventArg,
-} from '@react-navigation/native';
-import {
   StackRouter,
   StackRouterOptions,
   StackNavigationState,
   StackActions,
-} from '@react-navigation/routers';
+} from '@react-navigation/native';
 import StackView from '../views/Stack/StackView';
 import {
   StackNavigationConfig,

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { CommonActions } from '@react-navigation/native';
 import {
+  CommonActions,
   DrawerActions,
   DrawerNavigationState,
-} from '@react-navigation/routers';
+} from '@react-navigation/native';
 import DrawerItem from './DrawerItem';
 import {
   DrawerNavigationHelpers,

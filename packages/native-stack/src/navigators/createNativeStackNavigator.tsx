@@ -3,14 +3,11 @@ import {
   createNavigatorFactory,
   useNavigationBuilder,
   EventArg,
-} from '@react-navigation/native';
-
-import {
   StackRouter,
   StackNavigationState,
   StackRouterOptions,
   StackActions,
-} from '@react-navigation/routers';
+} from '@react-navigation/native';
 
 import {
   screensEnabled,

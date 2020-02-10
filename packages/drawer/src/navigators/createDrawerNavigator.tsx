@@ -3,12 +3,10 @@ import {
   createNavigatorFactory,
   useNavigationBuilder,
   DefaultNavigatorOptions,
-} from '@react-navigation/native';
-import {
   DrawerNavigationState,
   DrawerRouterOptions,
   DrawerRouter,
-} from '@react-navigation/routers';
+} from '@react-navigation/native';
 
 import DrawerView from '../views/DrawerView';
 import {

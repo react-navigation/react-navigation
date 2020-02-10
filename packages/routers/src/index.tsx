@@ -1,3 +1,9 @@
+import * as CommonActions from './CommonActions';
+
+export { CommonActions };
+
+export { default as BaseRouter } from './BaseRouter';
+
 export {
   default as StackRouter,
   StackActions,
@@ -21,3 +27,5 @@ export {
   DrawerRouterOptions,
   DrawerNavigationState,
 } from './DrawerRouter';
+
+export * from './types';

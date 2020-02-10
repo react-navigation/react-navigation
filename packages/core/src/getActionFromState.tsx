@@ -1,4 +1,4 @@
-import { PartialState, NavigationState } from './types';
+import { PartialState, NavigationState } from '@react-navigation/routers';
 
 type NavigateParams = {
   screen?: string;
