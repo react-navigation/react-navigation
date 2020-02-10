@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.1](https://github.com/react-navigation/react-navigation/tree/master/packages/native/compare/@react-navigation/native@5.0.0-alpha.35...@react-navigation/native@5.0.1) (2020-02-10)
+
+**Note:** Version bump only for package @react-navigation/native
+
+
+
+
+
 # [5.0.0-alpha.35](https://github.com/react-navigation/navigation-ex/tree/master/packages/native/compare/@react-navigation/native@5.0.0-alpha.34...@react-navigation/native@5.0.0-alpha.35) (2020-02-04)
 
 **Note:** Version bump only for package @react-navigation/native

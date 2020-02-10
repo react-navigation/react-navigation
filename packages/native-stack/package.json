@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/native-stack",
   "description": "Native stack navigator component for iOS and Android",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "keywords": [
     "react",
     "react-native",
@@ -29,10 +29,9 @@
     "prepare": "bob build",
     "clean": "del lib"
   },
-  "dependencies": {},
   "devDependencies": {
     "@react-native-community/bob": "^0.9.3",
-    "@react-navigation/native": "^5.0.0",
+    "@react-navigation/native": "^5.0.1",
     "del-cli": "^3.0.0",
     "react-native-screens": "^2.0.0-beta.2",
     "typescript": "^3.7.5"
