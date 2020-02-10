@@ -13,7 +13,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: comment "Hey! Thanks for opening the issue. Can you provide more information about the issue? Please fill the issue template when opening the issue without deleting any section. We need all the information we can, to be able to help. Make sure to at least provide - Current behaviour, Expected behaviour, A way to reproduce the issue with minimal code (link to [snack.expo.io](https://snack.expo.io)) or a repo on GitHub, and the information about your environment (such as the platform of the device, exact versions of all the packages mentioned in the template etc.)."
+          args: comment "Hey! Thanks for opening the issue. Can you provide more information about the issue? Please fill the issue template when opening the issue without deleting any section. We need all the information we can to be able to help. Make sure to at least provide - Current behaviour, Expected behaviour, A way to reproduce the issue with minimal code (link to [snack.expo.io](https://snack.expo.io)) or a repo on GitHub, and the information about your environment (such as the platform of the device, exact versions of all the packages mentioned in the template etc.)."
 
   needs-repro:
     runs-on: ubuntu-latest
