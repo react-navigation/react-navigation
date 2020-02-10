@@ -10,15 +10,9 @@ Documentation can be found at [reactnavigation.org](https://reactnavigation.org/
 
 If you are looking for version 4, the code can be found in the [4.x branch](https://github.com/react-navigation/react-navigation/tree/4.x).
 
-## Publishing
+## Contributing
 
-To publish a new version, first we need to export a `GH_TOKEN` environment variable as mentioned [here](https://github.com/lerna/lerna/tree/master/commands/version#--create-release-type). Then run:
-
-```sh
-yarn lerna publish
-```
-
-This will automatically bump the version and publish the packages. It'll also publish the changelogs on GitHub for each package.
+Please read through our [contribution guide](CONTRIBUTING.md) a to get started!
 
 ## Installing from a fork on GitHub
 
