@@ -1,5 +1,4 @@
-import { CommonActions } from '@react-navigation/core';
-import { StackRouter, StackActions } from '../src';
+import { CommonActions, StackRouter, StackActions } from '..';
 
 jest.mock('shortid', () => () => 'test');
 

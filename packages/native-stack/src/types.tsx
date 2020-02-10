@@ -8,11 +8,9 @@ import {
   NavigationHelpers,
   NavigationProp,
   ParamListBase,
-} from '@react-navigation/native';
-import {
   StackNavigationState,
   StackRouterOptions,
-} from '@react-navigation/routers';
+} from '@react-navigation/native';
 
 export type NativeStackNavigationEventMap = {
   /**

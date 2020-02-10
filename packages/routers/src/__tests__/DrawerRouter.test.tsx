@@ -1,5 +1,9 @@
-import { CommonActions } from '@react-navigation/core';
-import { DrawerRouter, DrawerActions, DrawerNavigationState } from '../src';
+import {
+  CommonActions,
+  DrawerRouter,
+  DrawerActions,
+  DrawerNavigationState,
+} from '..';
 
 jest.mock('shortid', () => () => 'test');
 

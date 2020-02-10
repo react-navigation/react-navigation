@@ -1,9 +1,18 @@
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
+import {
+  CommonActions,
+  DefaultRouterOptions,
+  NavigationState,
+  ParamListBase,
+  Router,
+  RouterFactory,
+  PartialState,
+  NavigationAction,
+} from '@react-navigation/routers';
 import { NavigationStateContext } from './BaseNavigationContainer';
 import NavigationRouteContext from './NavigationRouteContext';
 import Screen from './Screen';
-import { navigate } from './CommonActions';
 import useEventEmitter from './useEventEmitter';
 import useRegisterNavigator from './useRegisterNavigator';
 import useDescriptors from './useDescriptors';
@@ -15,16 +24,9 @@ import useChildActionListeners from './useChildActionListeners';
 import useFocusedListeners from './useFocusedListeners';
 import useFocusedListenersChildrenAdapter from './useFocusedListenersChildrenAdapter';
 import {
-  DefaultRouterOptions,
   DefaultNavigatorOptions,
-  NavigationState,
-  ParamListBase,
   RouteConfig,
-  Router,
-  RouterFactory,
-  PartialState,
   PrivateValueStore,
-  NavigationAction,
 } from './types';
 import useStateGetters from './useStateGetters';
 import useOnGetState from './useOnGetState';
@@ -292,7 +294,7 @@ export default function useNavigationBuilder<
     // The update should be limited to current navigator only, so we call the router manually
     const updatedState = router.getStateForAction(
       state,
-      navigate(route.params.screen, route.params.params),
+      CommonActions.navigate(route.params.screen, route.params.params),
       {
         routeNames,
         routeParamList,

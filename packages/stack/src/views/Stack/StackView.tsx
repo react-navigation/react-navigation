@@ -2,8 +2,11 @@ import * as React from 'react';
 import { View, Platform, StyleSheet } from 'react-native';
 import { SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Route } from '@react-navigation/native';
-import { StackActions, StackNavigationState } from '@react-navigation/routers';
+import {
+  StackActions,
+  StackNavigationState,
+  Route,
+} from '@react-navigation/native';
 
 import CardStack from './CardStack';
 import KeyboardManager from '../KeyboardManager';

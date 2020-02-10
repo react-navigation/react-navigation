@@ -1,5 +1,9 @@
 import queryString from 'query-string';
-import { NavigationState, PartialState, Route } from './types';
+import {
+  NavigationState,
+  PartialState,
+  Route,
+} from '@react-navigation/routers';
 
 type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 

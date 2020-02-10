@@ -29,11 +29,10 @@
     "prepare": "bob build",
     "clean": "del lib"
   },
-  "dependencies": {
-    "@react-navigation/routers": "^5.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@react-native-community/bob": "^0.9.3",
+    "@react-navigation/native": "^5.0.0",
     "del-cli": "^3.0.0",
     "react-native-screens": "^2.0.0-beta.2",
     "typescript": "^3.7.5"

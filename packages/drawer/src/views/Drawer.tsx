@@ -601,7 +601,10 @@ export default class DrawerView extends React.PureComponent<Props> {
             >
               {renderSceneContent({ progress: this.progress })}
             </View>
-            <TapGestureHandler onHandlerStateChange={this.handleTapStateChange}>
+            <TapGestureHandler
+              enabled={gestureEnabled}
+              onHandlerStateChange={this.handleTapStateChange}
+            >
               <Overlay progress={this.progress} style={overlayStyle} />
             </TapGestureHandler>
           </Animated.View>
