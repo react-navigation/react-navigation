@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   ScreenStackHeaderConfig,
+  ScreenStackHeaderLeftView,
   ScreenStackHeaderRightView,
   // eslint-disable-next-line import/no-unresolved
 } from 'react-native-screens';
@@ -16,6 +17,7 @@ export default function HeaderConfig(props: Props) {
   const {
     route,
     title,
+    headerLeft,
     headerRight,
     headerTitle,
     headerBackTitle,
@@ -71,6 +73,10 @@ export default function HeaderConfig(props: Props) {
           : colors.card
       }
     >
+      {headerLeft !== undefined ? (
+        <ScreenStackHeaderLeftView>{headerLeft()}</ScreenStackHeaderLeftView>
+      ) : null}
+
       {headerRight !== undefined ? (
         <ScreenStackHeaderRightView>{headerRight()}</ScreenStackHeaderRightView>
       ) : null}
