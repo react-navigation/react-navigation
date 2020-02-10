@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/material-bottom-tabs",
   "description": "Integration for bottom navigation component from react-native-paper",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -34,10 +34,9 @@
     "prepare": "bob build",
     "clean": "del lib"
   },
-  "dependencies": {},
   "devDependencies": {
     "@react-native-community/bob": "^0.9.3",
-    "@react-navigation/native": "^5.0.0",
+    "@react-navigation/native": "^5.0.1",
     "@types/react": "^16.9.19",
     "@types/react-native": "^0.60.30",
     "@types/react-native-vector-icons": "^6.4.5",

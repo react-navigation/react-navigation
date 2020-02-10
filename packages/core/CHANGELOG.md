@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.1.0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.43...@react-navigation/core@5.1.0) (2020-02-10)
+
+
+### Bug Fixes
+
+* add some links in the error messages ([13b4e07](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/13b4e07348496f7cb516d625b44a6a7d310ef9af))
+
+
+### Features
+
+* support ignoring empty path strings ([#349](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/349)) ([61b1134](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/61b1134f90310390fe819622c1f33273fca0bd42))
+
+
+
+
+
 # [5.0.0-alpha.43](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.42...@react-navigation/core@5.0.0-alpha.43) (2020-02-04)
 
 
