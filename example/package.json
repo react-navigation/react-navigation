@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.0",
-    "@react-native-community/masked-view": "0.1.5",
+    "@react-native-community/masked-view": "0.1.6",
     "@types/react-native-restart": "^0.0.0",
     "color": "^3.1.2",
     "expo": "^36.0.2",
@@ -21,23 +21,22 @@
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "~0.61.5",
-    "react-native-gesture-handler": "^1.5.5",
-    "react-native-paper": "^3.5.0",
-    "react-native-reanimated": "^1.4.0",
+    "react-native-gesture-handler": "^1.5.6",
+    "react-native-paper": "^3.6.0",
+    "react-native-reanimated": "^1.7.0",
     "react-native-restart": "^0.0.13",
-    "react-native-safe-area-context": "^0.6.2",
-    "react-native-screens": "^2.0.0-alpha.33",
+    "react-native-safe-area-context": "^0.7.2",
+    "react-native-screens": "^2.0.0-beta.2",
     "react-native-tab-view": "2.13.0",
     "react-native-unimodules": "^0.7.0",
     "react-native-web": "^0.11.7"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.7",
-    "@expo/webpack-config": "^0.10.9",
-    "@types/react": "^16.9.17",
+    "@expo/webpack-config": "^0.10.12",
+    "@types/react": "^16.9.19",
     "@types/react-native": "^0.60.30",
     "babel-preset-expo": "^8.0.0",
-    "expo-cli": "^3.11.5",
-    "typescript": "^3.7.4"
+    "expo-cli": "^3.11.9",
+    "typescript": "^3.7.5"
   }
 }
