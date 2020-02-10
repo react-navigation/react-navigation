@@ -1,5 +1,12 @@
 import * as React from 'react';
-import * as CommonActions from './CommonActions';
+import {
+  CommonActions,
+  Route,
+  NavigationState,
+  InitialState,
+  PartialState,
+  NavigationAction,
+} from '@react-navigation/routers';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
 import NavigationBuilderContext from './NavigationBuilderContext';
 import useFocusedListeners from './useFocusedListeners';
@@ -7,15 +14,7 @@ import useDevTools from './useDevTools';
 import useStateGetters from './useStateGetters';
 import isSerializable from './isSerializable';
 
-import {
-  Route,
-  NavigationState,
-  InitialState,
-  PartialState,
-  NavigationAction,
-  NavigationContainerRef,
-  NavigationContainerProps,
-} from './types';
+import { NavigationContainerRef, NavigationContainerProps } from './types';
 import useEventEmitter from './useEventEmitter';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;

@@ -29,6 +29,7 @@
     "clean": "del lib"
   },
   "dependencies": {
+    "@react-navigation/routers": "^5.0.0",
     "escape-string-regexp": "^2.0.0",
     "query-string": "^6.10.1",
     "react-is": "^16.12.0",

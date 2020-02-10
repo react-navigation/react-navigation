@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { ParamListBase } from '@react-navigation/routers';
 import Screen from './Screen';
-import { ParamListBase, TypedNavigator } from './types';
+import { TypedNavigator } from './types';
 
 /**
  * Higher order component to create a `Navigator` and `Screen` pair.

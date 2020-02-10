@@ -12,8 +12,8 @@ import {
   Descriptor,
   Route,
   NavigationHelpers,
+  StackNavigationState,
 } from '@react-navigation/native';
-import { StackNavigationState } from '@react-navigation/routers';
 
 export type StackNavigationEventMap = {
   /**

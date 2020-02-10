@@ -18,8 +18,8 @@ import {
 import {
   DrawerNavigationState,
   DrawerActions,
-} from '@react-navigation/routers';
-import { useTheme } from '@react-navigation/native';
+  useTheme,
+} from '@react-navigation/native';
 
 import DrawerGestureContext from '../utils/DrawerGestureContext';
 import SafeAreaProviderCompat from './SafeAreaProviderCompat';

@@ -2,8 +2,12 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { BottomNavigation, DefaultTheme, DarkTheme } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Route, useTheme } from '@react-navigation/native';
-import { TabNavigationState, TabActions } from '@react-navigation/routers';
+import {
+  Route,
+  TabNavigationState,
+  TabActions,
+  useTheme,
+} from '@react-navigation/native';
 
 import {
   MaterialBottomTabDescriptorMap,

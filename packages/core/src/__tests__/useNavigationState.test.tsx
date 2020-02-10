@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { render, act } from 'react-native-testing-library';
+import { NavigationState } from '@react-navigation/routers';
 import useNavigationBuilder from '../useNavigationBuilder';
 import useNavigationState from '../useNavigationState';
 import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
 import MockRouter from './__fixtures__/MockRouter';
-import { NavigationState } from '../types';
 
 it('gets the current navigation state', () => {
   const TestNavigator = (props: any): any => {

@@ -1,8 +1,5 @@
-import * as CommonActions from './CommonActions';
+export * from '@react-navigation/routers';
 
-export { CommonActions };
-
-export { default as BaseRouter } from './BaseRouter';
 export { default as BaseNavigationContainer } from './BaseNavigationContainer';
 export { default as createNavigatorFactory } from './createNavigatorFactory';
 
