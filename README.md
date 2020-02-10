@@ -10,59 +10,6 @@ Documentation can be found at [reactnavigation.org](https://reactnavigation.org/
 
 If you are looking for version 4, the code can be found in the [4.x branch](https://github.com/react-navigation/react-navigation/tree/4.x).
 
-## Contributing
-
-The project uses a monorepo structure for the packages managed by [yarn workspaces](https://yarnpkg.com/lang/en/docs/workspaces/) and [lerna](https://lerna.js.org). To get started with the project, run `yarn` in the root directory to install the required dependencies for each package:
-
-```sh
-yarn
-```
-
-While developing, you can run the [example app](/example/) with [Expo](https://expo.io/) to test your changes:
-
-```sh
-yarn example start
-```
-
-Make sure your code passes TypeScript and ESLint. Run the following to verify:
-
-```sh
-yarn typescript
-yarn lint
-```
-
-To fix formatting errors, run the following:
-
-```sh
-yarn lint --fix
-```
-
-Remember to add tests for your change if possible. Run the unit tests by:
-
-```sh
-yarn test
-```
-
-Running the e2e tests with Detox (on iOS) requires the following:
-
-- Mac with macOS (at least macOS High Sierra 10.13.6)
-- Xcode 10.1+ with Xcode command line tools
-
-First you need to install `applesimutils` and `detox-cli`:
-
-```sh
-brew tap wix/brew
-brew install applesimutils
-yarn global add detox-cli
-```
-
-Then you can build and run the tests:
-
-```sh
-detox build -c ios.sim.debug
-detox test -c ios.sim.debug
-```
-
 ## Publishing
 
 To publish a new version, first we need to export a `GH_TOKEN` environment variable as mentioned [here](https://github.com/lerna/lerna/tree/master/commands/version#--create-release-type). Then run:
