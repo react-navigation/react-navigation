@@ -108,6 +108,16 @@ When you're sending a pull request:
 - Follow the pull request template when opening a pull request.
 - For pull requests that change the API or implementation, discuss with maintainers first by opening an issue.
 
+## Publishing
+
+Maintainers with write access to the GitHub repo and the npm organization can publish new versions. To publish a new version, first, you need to export a `GH_TOKEN` environment variable as mentioned [here](https://github.com/lerna/lerna/tree/master/commands/version#--create-release-type). Then run:
+
+```sh
+yarn lerna publish
+```
+
+This will automatically bump the version and publish the packages. It'll also publish the changelogs on GitHub for each package.
+
 ## Code of Conduct
 
 ### Our Pledge
@@ -149,7 +159,7 @@ This Code of Conduct applies within all community spaces, and also applies when 
 
 ### Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to Brent Vatne ([brentvatne@gmail.com]), Satyajit Sahoo ([satyajit.happy@gmail.com]) or Michał Osadnik ([micosa97@gmail.com]). All complaints will be reviewed and investigated promptly and fairly.
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to Brent Vatne ([brentvatne@gmail.com](mailto:brentvatne@gmail.com)), Satyajit Sahoo ([satyajit.happy@gmail.com](mailto:satyajit.happy@gmail.com)) or Michał Osadnik ([micosa97@gmail.com](mailto:micosa97@gmail.com)). All complaints will be reviewed and investigated promptly and fairly.
 
 All community leaders are obligated to respect the privacy and security of the reporter of any incident.
 
