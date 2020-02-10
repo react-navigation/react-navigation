@@ -49,7 +49,7 @@ export default function useNavigationHelpers<
           console.error(
             `The action '${payload.type}' with payload '${JSON.stringify(
               payload.payload
-            )}' was not handled by any navigator. If you are trying to navigate to a screen, check if the screen exists in your navigator.`
+            )}' was not handled by any navigator. If you are trying to navigate to a screen, check if the screen exists in your navigator. If you're trying to navigate to a screen in a nested navigator, see https://reactnavigation.org/docs/en/nesting-navigators.html#navigating-to-a-screen-in-a-nested-navigator.`
           );
         }
       });
