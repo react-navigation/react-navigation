@@ -20,7 +20,7 @@ import useEventEmitter from './useEventEmitter';
 type State = NavigationState | PartialState<NavigationState> | undefined;
 
 const MISSING_CONTEXT_ERROR =
-  "We couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?";
+  "We couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'? See https://reactnavigation.org/docs/en/getting-started.html for setup instructions.";
 
 export const NavigationStateContext = React.createContext<{
   isDefault?: true;
@@ -101,7 +101,7 @@ const BaseNavigationContainer = React.forwardRef(
 
     if (!parent.isDefault && !independent) {
       throw new Error(
-        "Looks like you have nested a 'NavigationContainer' inside another. Normally you need only one container at the root of the app, so this was probably an error. If this was intentional, pass 'independent={true}' explicitely."
+        "Looks like you have nested a 'NavigationContainer' inside another. Normally you need only one container at the root of the app, so this was probably an error. If this was intentional, pass 'independent={true}' explicitely. Note that this will make the child navigators disconnected from the parent and you won't be able to navigate between them."
       );
     }
 
@@ -260,7 +260,7 @@ const BaseNavigationContainer = React.forwardRef(
           hasWarnedForSerialization = true;
 
           console.warn(
-            "We found non-serializable values in the navigation state, which can break usage such as persisting and restoring state. This might happen if you passed non-serializable values such as function, class instances etc. in params. If you need to use functions in your options, you can use 'navigation.setOptions' instead."
+            "We found non-serializable values in the navigation state, which can break usage such as persisting and restoring state. This might happen if you passed non-serializable values such as function, class instances etc. in params. If you need to use components with callbacks in your options, you can use 'navigation.setOptions' instead. See https://reactnavigation.org/docs/en/header-buttons.html#header-interaction-with-its-screen-component for docs."
           );
         }
       }

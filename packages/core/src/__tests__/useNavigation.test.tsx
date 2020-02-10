@@ -112,7 +112,7 @@ it('throws if called outside a navigation context', () => {
   const Test = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     expect(() => useNavigation()).toThrow(
-      "We couldn't find a navigation object. Is your component inside a navigator?"
+      "We couldn't find a navigation object. Is your component inside a screen in a navigator?"
     );
 
     return null;
