@@ -25,9 +25,10 @@
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.7.0",
     "@babel/plugin-proposal-optional-chaining": "^7.7.5",
-    "@babel/preset-env": "^7.7.7",
-    "@babel/preset-react": "^7.7.0",
-    "@babel/preset-typescript": "^7.7.7",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/preset-flow": "^7.8.3",
+    "@babel/preset-react": "^7.8.3",
+    "@babel/preset-typescript": "^7.8.3",
     "@babel/runtime": "^7.7.7",
     "@commitlint/config-conventional": "^8.3.4",
     "@types/jest": "^24.0.25",

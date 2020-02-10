@@ -1,0 +1,27 @@
+name: Triage
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  needs-more-info:
+    runs-on: ubuntu-latest
+    if: github.event.label.name == 'needs more info'
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/github@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: comment "Hey! Thanks for opening the issue. Can you provide more information about the issue? Please fill the issue template when opening the issue without deleting any section. We need all the information we can, to be able to help. Make sure to at least provide - Current behaviour, Expected behaviour, A way to reproduce the issue with minimal code (link to [snack.expo.io](https://snack.expo.io)) or a repo on GitHub, and the information about your environment (such as the platform of the device, versions of all the packages etc.)."
+
+  needs-repro:
+    runs-on: ubuntu-latest
+    if: github.event.label.name == 'needs repro'
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/github@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: comment "Hey! Thanks for opening the issue. Can you provide a minimal repro which demonstrates the issue? Posting a snippet of your code in the issue is useful, but it's not usually straightforward to run. A repro will help us debug the issue faster. Please try to keep the repro as small as possible. The easiest way to provide a repro is on [snack.expo.io](https://snack.expo.io). If it's not possible to repro it on [snack.expo.io](https://snack.expo.io), then you can also provide the repro in a GitHub repository."
