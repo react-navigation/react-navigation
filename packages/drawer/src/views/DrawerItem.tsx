@@ -101,7 +101,6 @@ export default function DrawerItem(props: Props) {
       style={[styles.container, { borderRadius, backgroundColor }, style]}
     >
       <TouchableItem
-        borderless
         delayPressIn={0}
         onPress={onPress}
         style={[styles.wrapper, { borderRadius }]}
