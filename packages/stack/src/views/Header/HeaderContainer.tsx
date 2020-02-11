@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import {
   NavigationContext,
+  NavigationRouteContext,
   Route,
   ParamListBase,
 } from '@react-navigation/native';
@@ -119,35 +120,37 @@ export default function HeaderContainer({
             key={scene.route.key}
             value={scene.descriptor.navigation}
           >
-            <View
-              onLayout={
-                onContentHeightChange
-                  ? e =>
-                      onContentHeightChange({
-                        route: scene.route,
-                        height: e.nativeEvent.layout.height,
-                      })
-                  : undefined
-              }
-              pointerEvents={isFocused ? 'box-none' : 'none'}
-              accessibilityElementsHidden={!isFocused}
-              importantForAccessibility={
-                isFocused ? 'auto' : 'no-hide-descendants'
-              }
-              style={
-                mode === 'float' || options.headerTransparent
-                  ? styles.header
-                  : null
-              }
-            >
-              {options.headerShown !== false ? (
-                options.header !== undefined ? (
-                  options.header(props)
-                ) : (
-                  <Header {...props} />
-                )
-              ) : null}
-            </View>
+            <NavigationRouteContext.Provider value={scene.route}>
+              <View
+                onLayout={
+                  onContentHeightChange
+                    ? e =>
+                        onContentHeightChange({
+                          route: scene.route,
+                          height: e.nativeEvent.layout.height,
+                        })
+                    : undefined
+                }
+                pointerEvents={isFocused ? 'box-none' : 'none'}
+                accessibilityElementsHidden={!isFocused}
+                importantForAccessibility={
+                  isFocused ? 'auto' : 'no-hide-descendants'
+                }
+                style={
+                  mode === 'float' || options.headerTransparent
+                    ? styles.header
+                    : null
+                }
+              >
+                {options.headerShown !== false ? (
+                  options.header !== undefined ? (
+                    options.header(props)
+                  ) : (
+                    <Header {...props} />
+                  )
+                ) : null}
+              </View>
+            </NavigationRouteContext.Provider>
           </NavigationContext.Provider>
         );
       })}

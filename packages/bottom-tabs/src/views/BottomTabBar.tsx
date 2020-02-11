@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import {
   NavigationContext,
+  NavigationRouteContext,
   CommonActions,
   useTheme,
 } from '@react-navigation/native';
@@ -237,27 +238,29 @@ export default function BottomTabBar({
                   key={route.key}
                   value={descriptors[route.key].navigation}
                 >
-                  <BottomTabItem
-                    route={route}
-                    focused={focused}
-                    horizontal={shouldUseHorizontalLabels()}
-                    onPress={onPress}
-                    onLongPress={onLongPress}
-                    accessibilityLabel={accessibilityLabel}
-                    testID={options.tabBarTestID}
-                    allowFontScaling={allowFontScaling}
-                    activeTintColor={activeTintColor}
-                    inactiveTintColor={inactiveTintColor}
-                    activeBackgroundColor={activeBackgroundColor}
-                    inactiveBackgroundColor={inactiveBackgroundColor}
-                    button={options.tabBarButton}
-                    icon={options.tabBarIcon}
-                    label={label}
-                    showIcon={showIcon}
-                    showLabel={showLabel}
-                    labelStyle={labelStyle}
-                    style={tabStyle}
-                  />
+                  <NavigationRouteContext.Provider value={route}>
+                    <BottomTabItem
+                      route={route}
+                      focused={focused}
+                      horizontal={shouldUseHorizontalLabels()}
+                      onPress={onPress}
+                      onLongPress={onLongPress}
+                      accessibilityLabel={accessibilityLabel}
+                      testID={options.tabBarTestID}
+                      allowFontScaling={allowFontScaling}
+                      activeTintColor={activeTintColor}
+                      inactiveTintColor={inactiveTintColor}
+                      activeBackgroundColor={activeBackgroundColor}
+                      inactiveBackgroundColor={inactiveBackgroundColor}
+                      button={options.tabBarButton}
+                      icon={options.tabBarIcon}
+                      label={label}
+                      showIcon={showIcon}
+                      showLabel={showLabel}
+                      labelStyle={labelStyle}
+                      style={tabStyle}
+                    />
+                  </NavigationRouteContext.Provider>
                 </NavigationContext.Provider>
               );
             })}
