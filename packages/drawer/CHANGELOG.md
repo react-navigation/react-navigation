@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.2](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.1...@react-navigation/drawer@5.0.2) (2020-02-11)
+
+
+### Bug Fixes
+
+* remove unnecessary borderless from drawer item ([031136f](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/031136f7c86eff3c9139d1baa243da9f19bc61d4)), closes [#6801](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/6801)
+
+
+
+
+
 ## [5.0.1](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.47...@react-navigation/drawer@5.0.1) (2020-02-10)
 
 
