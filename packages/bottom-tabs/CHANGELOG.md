@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.2](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.1...@react-navigation/bottom-tabs@5.0.2) (2020-02-11)
+
+
+### Bug Fixes
+
+* initialize keyboard-hiding tabBar to visible=true ([#6740](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/issues/6740), [#6799](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/issues/6799)) ([0c59ef7](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/0c59ef7328c63108a2a2c04e927794d73cead63a))
+* provide route context to header and bottom tabs ([b6e7e08](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/b6e7e08b9a05be6c04ed21e938b9580876239116))
+
+
+
+
+
 ## [5.0.1](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.45...@react-navigation/bottom-tabs@5.0.1) (2020-02-10)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

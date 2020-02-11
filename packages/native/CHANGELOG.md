@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.2](https://github.com/react-navigation/react-navigation/tree/master/packages/native/compare/@react-navigation/native@5.0.1...@react-navigation/native@5.0.2) (2020-02-11)
+
+
+### Bug Fixes
+
+* make getInitialState async on web ([6c6102b](https://github.com/react-navigation/react-navigation/tree/master/packages/native/commit/6c6102b4597b5f0e3eada9e802bc5c171ee988d0))
+
+
+
+
+
 ## [5.0.1](https://github.com/react-navigation/react-navigation/tree/master/packages/native/compare/@react-navigation/native@5.0.0-alpha.35...@react-navigation/native@5.0.1) (2020-02-10)
 
 **Note:** Version bump only for package @react-navigation/native
