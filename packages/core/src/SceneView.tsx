@@ -38,6 +38,14 @@ export default function SceneView<
 }: Props<State, ScreenOptions>) {
   const { performTransaction } = React.useContext(NavigationStateContext);
 
+  const navigatorKeyRef = React.useRef<string | undefined>();
+
+  const getKey = React.useCallback(() => navigatorKeyRef.current, []);
+
+  const setKey = React.useCallback((key: string) => {
+    navigatorKeyRef.current = key;
+  }, []);
+
   const getCurrentState = React.useCallback(() => {
     const state = getState();
     const currentRoute = state.routes.find(r => r.key === route.key);
@@ -65,14 +73,16 @@ export default function SceneView<
       getState: getCurrentState,
       setState: setCurrentState,
       performTransaction,
-      key: route.key,
+      getKey,
+      setKey,
     }),
     [
       getCurrentState,
+      getKey,
       performTransaction,
-      route.key,
       route.state,
       setCurrentState,
+      setKey,
     ]
   );
 
