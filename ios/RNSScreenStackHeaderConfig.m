@@ -118,9 +118,12 @@
   UINavigationBar *navbar = ((UINavigationController *)vc.parentViewController).navigationBar;
   [navbar setTintColor:config.color];
 
+#ifdef __IPHONE_13_0
   if (@available(iOS 13.0, *)) {
     // font customized on the navigation item level, so nothing to do here
-  } else {
+  } else
+#endif
+  {
     BOOL hideShadow = config.hideShadow;
 
     if (config.backgroundColor && CGColorGetAlpha(config.backgroundColor.CGColor) == 0.) {
@@ -165,15 +168,6 @@
         [navbar setLargeTitleTextAttributes:largeAttrs];
       }
     }
-
-    UIImage *backButtonImage = [self loadBackButtonImageInViewController:vc withConfig:config];
-    if (backButtonImage) {
-      navbar.backIndicatorImage = backButtonImage;
-      navbar.backIndicatorTransitionMaskImage = backButtonImage;
-    } else if (navbar.backIndicatorImage) {
-      navbar.backIndicatorImage = nil;
-      navbar.backIndicatorTransitionMaskImage = nil;
-    }
   }
 }
 
@@ -196,6 +190,20 @@
     if (subview.type == RNSScreenStackHeaderSubviewTypeBackButton && subview.subviews.count > 0) {
       hasBackButtonImage = YES;
       RCTImageView *imageView = subview.subviews[0];
+      if (imageView.image == nil) {
+        // This is yet another workaround for loading custom back icon. It turns out that under
+        // certain circumstances image attribute can be null despite the app running in production
+        // mode (when images are loaded from the filesystem). This can happen because image attribute
+        // is reset when image view is detached from window, and also in some cases initialization
+        // does not populate the frame of the image view before the loading start. The latter result
+        // in the image attribute not being updated. We manually set frame to the size of an image
+        // in order to trigger proper reload that'd update the image attribute.
+        RCTImageSource *source = imageView.imageSources[0];
+        [imageView reactSetFrame:CGRectMake(imageView.frame.origin.x,
+                                            imageView.frame.origin.y,
+                                            source.size.width, 
+                                            source.size.height)];
+      }
       UIImage *image = imageView.image;
       // IMPORTANT!!!
       // image can be nil in DEV MODE ONLY
@@ -375,8 +383,20 @@
     navitem.standardAppearance = appearance;
     navitem.compactAppearance = appearance;
     navitem.scrollEdgeAppearance = appearance;
-  }
+  } else
 #endif
+  {
+    // updating backIndicatotImage does not work when called during transition. On iOS pre 13 we need
+    // to update it before the navigation starts.
+    UIImage *backButtonImage = [self loadBackButtonImageInViewController:vc withConfig:config];
+    if (backButtonImage) {
+      navctr.navigationBar.backIndicatorImage = backButtonImage;
+      navctr.navigationBar.backIndicatorTransitionMaskImage = backButtonImage;
+    } else if (navctr.navigationBar.backIndicatorImage) {
+      navctr.navigationBar.backIndicatorImage = nil;
+      navctr.navigationBar.backIndicatorTransitionMaskImage = nil;
+    }
+  }
   navitem.hidesBackButton = config.hideBackButton;
   navitem.leftBarButtonItem = nil;
   navitem.rightBarButtonItem = nil;
