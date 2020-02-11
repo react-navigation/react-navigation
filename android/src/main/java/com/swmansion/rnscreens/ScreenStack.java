@@ -50,7 +50,7 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
   }
 
   public Screen getTopScreen() {
-    return mTopScreen.getScreen();
+    return mTopScreen != null ? mTopScreen.getScreen() : null;
   }
 
   public Screen getRootScreen() {
