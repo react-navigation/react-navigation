@@ -56,7 +56,7 @@ export default function BottomTabBar({
   });
   const [keyboardShown, setKeyboardShown] = React.useState(false);
 
-  const [visible] = React.useState(() => new Animated.Value(0));
+  const [visible] = React.useState(() => new Animated.Value(1));
 
   const { routes } = state;
 
