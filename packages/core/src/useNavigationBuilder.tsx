@@ -36,6 +36,7 @@ import useOnGetState from './useOnGetState';
 PrivateValueStore;
 
 type NavigatorRoute = {
+  key: string;
   params?: {
     screen?: string;
     params?: object;
@@ -154,7 +155,7 @@ export default function useNavigationBuilder<
   createRouter: RouterFactory<State, any, RouterOptions>,
   options: DefaultNavigatorOptions<ScreenOptions> & RouterOptions
 ) {
-  useRegisterNavigator();
+  const navigatorKey = useRegisterNavigator();
 
   const route = React.useContext(NavigationRouteContext) as
     | NavigatorRoute
@@ -232,7 +233,8 @@ export default function useNavigationBuilder<
     state: currentState,
     getState: getCurrentState,
     setState,
-    key,
+    setKey,
+    getKey,
     performTransaction,
   } = React.useContext(NavigationStateContext);
 
@@ -325,11 +327,15 @@ export default function useNavigationBuilder<
   state = nextState;
 
   React.useEffect(() => {
+    setKey(navigatorKey);
+
     return () => {
       // We need to clean up state for this navigator on unmount
-      performTransaction(
-        () => getCurrentState() !== undefined && setState(undefined)
-      );
+      performTransaction(() => {
+        if (getCurrentState() !== undefined && getKey() === navigatorKey) {
+          setState(undefined);
+        }
+      });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -366,7 +372,7 @@ export default function useNavigationBuilder<
     router,
     getState,
     setState,
-    key,
+    key: route?.key,
     listeners: actionListeners,
     routerConfigOptions: {
       routeNames,
@@ -376,7 +382,7 @@ export default function useNavigationBuilder<
 
   const onRouteFocus = useOnRouteFocus({
     router,
-    key,
+    key: route?.key,
     getState,
     setState,
   });

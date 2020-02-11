@@ -25,15 +25,22 @@ const MISSING_CONTEXT_ERROR =
 export const NavigationStateContext = React.createContext<{
   isDefault?: true;
   state?: NavigationState | PartialState<NavigationState>;
+  getKey: () => string | undefined;
+  setKey: (key: string) => void;
   getState: () => NavigationState | PartialState<NavigationState> | undefined;
   setState: (
     state: NavigationState | PartialState<NavigationState> | undefined
   ) => void;
-  key?: string;
   performTransaction: (action: () => void) => void;
 }>({
   isDefault: true,
 
+  get getKey(): any {
+    throw new Error(MISSING_CONTEXT_ERROR);
+  },
+  get setKey(): any {
+    throw new Error(MISSING_CONTEXT_ERROR);
+  },
   get getState(): any {
     throw new Error(MISSING_CONTEXT_ERROR);
   },
@@ -114,6 +121,14 @@ const BaseNavigationContainer = React.forwardRef(
     const isTransactionActiveRef = React.useRef<boolean>(false);
     const isFirstMountRef = React.useRef<boolean>(true);
     const skipTrackingRef = React.useRef<boolean>(false);
+
+    const navigatorKeyRef = React.useRef<string | undefined>();
+
+    const getKey = React.useCallback(() => navigatorKeyRef.current, []);
+
+    const setKey = React.useCallback((key: string) => {
+      navigatorKeyRef.current = key;
+    }, []);
 
     const performTransaction = React.useCallback((callback: () => void) => {
       if (isTransactionActiveRef.current) {
@@ -246,8 +261,10 @@ const BaseNavigationContainer = React.forwardRef(
         performTransaction,
         getState,
         setState,
+        getKey,
+        setKey,
       }),
-      [getState, performTransaction, setState, state]
+      [getKey, getState, performTransaction, setKey, setState, state]
     );
 
     React.useEffect(() => {
