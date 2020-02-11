@@ -32,7 +32,6 @@ let isUsingLinking = false;
 export default function useLinking(
   ref: React.RefObject<NavigationContainerRef>,
   {
-    prefixes,
     config,
     getStateFromPath = getStateFromPathDefault,
     getPathFromState = getPathFromStateDefault,
@@ -55,19 +54,18 @@ export default function useLinking(
   // We store these options in ref to avoid re-creating getInitialState and re-subscribing listeners
   // This lets user avoid wrapping the items in `React.useCallback` or `React.useMemo`
   // Not re-creating `getInitialState` is important coz it makes it easier for the user to use in an effect
-  const prefixesRef = React.useRef(prefixes);
   const configRef = React.useRef(config);
   const getStateFromPathRef = React.useRef(getStateFromPath);
   const getPathFromStateRef = React.useRef(getPathFromState);
 
   React.useEffect(() => {
-    prefixesRef.current = prefixes;
     configRef.current = config;
     getStateFromPathRef.current = getStateFromPath;
     getPathFromStateRef.current = getPathFromState;
-  }, [config, getPathFromState, getStateFromPath, prefixes]);
+  }, [config, getPathFromState, getStateFromPath]);
 
-  const getInitialState = React.useCallback(() => {
+  // Make it an async function to keep consistent with the native impl
+  const getInitialState = React.useCallback(async () => {
     const path = location.pathname + location.search;
 
     if (path) {
