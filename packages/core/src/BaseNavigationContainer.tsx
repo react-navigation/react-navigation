@@ -22,6 +22,9 @@ type State = NavigationState | PartialState<NavigationState> | undefined;
 const MISSING_CONTEXT_ERROR =
   "We couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'? See https://reactnavigation.org/docs/en/getting-started.html for setup instructions.";
 
+const NOT_INITIALIZED_ERROR =
+  "The 'navigation' object hasn't been initialized yet. This might happen if you don't have a navigator mounted, or if the navigator hasn't finished mounting. You can ensure that all navigators have mounted after the callback to 'useEffect' is called in your root component.";
+
 export const NavigationStateContext = React.createContext<{
   isDefault?: true;
   state?: NavigationState | PartialState<NavigationState>;
@@ -195,10 +198,18 @@ const BaseNavigationContainer = React.forwardRef(
     const dispatch = (
       action: NavigationAction | ((state: NavigationState) => NavigationAction)
     ) => {
+      if (listeners[0] == null) {
+        throw new Error(NOT_INITIALIZED_ERROR);
+      }
+
       listeners[0](navigation => navigation.dispatch(action));
     };
 
     const canGoBack = () => {
+      if (listeners[0] == null) {
+        throw new Error(NOT_INITIALIZED_ERROR);
+      }
+
       const { result, handled } = listeners[0](navigation =>
         navigation.canGoBack()
       );
