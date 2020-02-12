@@ -1,6 +1,6 @@
 const isSerializableWithoutCircularReference = (
   o: { [key: string]: any },
-  seen = new Set<any>()
+  seen: Set<any>
 ): boolean => {
   if (
     o === undefined ||
@@ -27,13 +27,13 @@ const isSerializableWithoutCircularReference = (
 
   if (Array.isArray(o)) {
     for (const it of o) {
-      if (!isSerializableWithoutCircularReference(it, seen)) {
+      if (!isSerializableWithoutCircularReference(it, new Set<any>(seen))) {
         return false;
       }
     }
   } else {
     for (const key in o) {
-      if (!isSerializableWithoutCircularReference(o[key], seen)) {
+      if (!isSerializableWithoutCircularReference(o[key], new Set<any>(seen))) {
         return false;
       }
     }
@@ -43,5 +43,5 @@ const isSerializableWithoutCircularReference = (
 };
 
 export default function isSerializable(o: { [key: string]: any }) {
-  return isSerializableWithoutCircularReference(o);
+  return isSerializableWithoutCircularReference(o, new Set<any>());
 }
