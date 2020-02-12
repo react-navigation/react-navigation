@@ -9,6 +9,16 @@ import {
   ParamListBase,
 } from '@react-navigation/routers';
 
+export type ScreenNavigationProps<
+  ParamList extends ParamListBase = ParamListBase,
+  RouteName extends keyof ParamList = string
+> = {
+  route: RouteProp<ParamList, RouteName>;
+  navigation: any;
+};
+
+export type ScreenOptionsCallback<ScreenOptions extends object = object> = (props: ScreenNavigationProps) => ScreenOptions;
+
 export type DefaultNavigatorOptions<
   ScreenOptions extends object
 > = DefaultRouterOptions & {
@@ -22,10 +32,7 @@ export type DefaultNavigatorOptions<
    */
   screenOptions?:
     | ScreenOptions
-    | ((props: {
-        route: RouteProp<ParamListBase, string>;
-        navigation: any;
-      }) => ScreenOptions);
+    | ScreenOptionsCallback<ScreenOptions>;
 };
 
 export type EventMapBase = Record<
@@ -372,10 +379,7 @@ export type RouteConfig<
    */
   options?:
     | ScreenOptions
-    | ((props: {
-        route: RouteProp<ParamList, RouteName>;
-        navigation: any;
-      }) => ScreenOptions);
+    | ScreenOptionsCallback<ScreenOptions>;
 
   /**
    * Initial params object for the route.
@@ -392,10 +396,7 @@ export type RouteConfig<
       /**
        * Render callback to render content of this screen.
        */
-      children: (props: {
-        route: RouteProp<ParamList, RouteName>;
-        navigation: any;
-      }) => React.ReactNode;
+      children: (props: ScreenNavigationProps) => React.ReactNode;
     }
 );
 
@@ -441,10 +442,7 @@ export type TypedNavigator<
        */
       screenOptions?:
         | ScreenOptions
-        | ((props: {
-            route: RouteProp<ParamList, keyof ParamList>;
-            navigation: any;
-          }) => ScreenOptions);
+        | ScreenOptionsCallback<ScreenOptions>;
     }
   >;
   /**
