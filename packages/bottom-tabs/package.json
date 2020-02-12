@@ -10,7 +10,7 @@
     "android",
     "tab"
   ],
-  "version": "5.0.2",
+  "version": "5.0.3",
   "license": "MIT",
   "repository": "https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs",
   "main": "lib/commonjs/index.js",
@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.9.3",
-    "@react-navigation/native": "^5.0.2",
+    "@react-navigation/native": "^5.0.3",
     "@types/color": "^3.0.1",
     "@types/react": "^16.9.19",
     "@types/react-native": "^0.60.30",
