@@ -207,7 +207,7 @@ const BaseNavigationContainer = React.forwardRef(
 
     const canGoBack = () => {
       if (listeners[0] == null) {
-        throw new Error(NOT_INITIALIZED_ERROR);
+        return false;
       }
 
       const { result, handled } = listeners[0](navigation =>
