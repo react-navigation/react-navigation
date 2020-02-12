@@ -17,7 +17,9 @@ export type ScreenNavigationProps<
   navigation: any;
 };
 
-export type ScreenOptionsCallback<ScreenOptions extends object = object> = (props: ScreenNavigationProps) => ScreenOptions;
+export type ScreenOptionsCallback<ScreenOptions extends object = object> = (
+  props: ScreenNavigationProps
+) => ScreenOptions;
 
 export type DefaultNavigatorOptions<
   ScreenOptions extends object
@@ -30,9 +32,7 @@ export type DefaultNavigatorOptions<
   /**
    * Default options for all screens under this navigator.
    */
-  screenOptions?:
-    | ScreenOptions
-    | ScreenOptionsCallback<ScreenOptions>;
+  screenOptions?: ScreenOptions | ScreenOptionsCallback<ScreenOptions>;
 };
 
 export type EventMapBase = Record<
@@ -377,9 +377,7 @@ export type RouteConfig<
   /**
    * Navigator options for this screen.
    */
-  options?:
-    | ScreenOptions
-    | ScreenOptionsCallback<ScreenOptions>;
+  options?: ScreenOptions | ScreenOptionsCallback<ScreenOptions>;
 
   /**
    * Initial params object for the route.
@@ -440,9 +438,7 @@ export type TypedNavigator<
       /**
        * Default options for all screens under this navigator.
        */
-      screenOptions?:
-        | ScreenOptions
-        | ScreenOptionsCallback<ScreenOptions>;
+      screenOptions?: ScreenOptions | ScreenOptionsCallback<ScreenOptions>;
     }
   >;
   /**
