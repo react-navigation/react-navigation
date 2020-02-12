@@ -55,11 +55,14 @@ export default React.memo(function Header(props: StackHeaderProps) {
       }
       onGoBack={
         previous
-          ? () =>
-              navigation.dispatch({
-                ...StackActions.pop(),
-                source: scene.route.key,
-              })
+          ? () => {
+              if (navigation.canGoBack()) {
+                navigation.dispatch({
+                  ...StackActions.pop(),
+                  source: scene.route.key,
+                });
+              }
+            }
           : undefined
       }
       styleInterpolator={styleInterpolator}
