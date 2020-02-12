@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.3](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.2...@react-navigation/stack@5.0.3) (2020-02-12)
+
+
+### Bug Fixes
+
+* check if we can go baack before dispatching pop ([6c9447a](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/6c9447a38c74ca029fc9def8aca0a2d2cca9639c))
+
+
+
+
+
 ## [5.0.2](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.1...@react-navigation/stack@5.0.2) (2020-02-11)
 
 
