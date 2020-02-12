@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.2](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.1...@react-navigation/core@5.1.2) (2020-02-12)
+
+
+### Bug Fixes
+
+* fix false positives for circular object check ([030c63c](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/030c63c89fe447aa484b767831c8f8e26e90431c)), closes [#6827](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/6827)
+* static container memo check ([#6825](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/6825)) ([2bf0958](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/2bf09585021470f500d967e9242836840efe970f))
+
+
+
+
+
 ## [5.1.1](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.0...@react-navigation/core@5.1.1) (2020-02-11)
 
 
