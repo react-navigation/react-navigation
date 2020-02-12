@@ -8,12 +8,19 @@ function StaticContainer(props: any) {
 }
 
 export default React.memo(StaticContainer, (prevProps: any, nextProps: any) => {
-  for (const prop in prevProps) {
-    if (prop === 'children') {
+  const prevPropKeys = Object.keys(prevProps);
+  const nextPropKeys = Object.keys(nextProps);
+
+  if (prevPropKeys.length !== nextPropKeys.length) {
+    return false;
+  }
+
+  for (const key of prevPropKeys) {
+    if (key === 'children') {
       continue;
     }
 
-    if (prevProps[prop] !== nextProps[prop]) {
+    if (prevProps[key] !== nextProps[key]) {
       return false;
     }
   }
