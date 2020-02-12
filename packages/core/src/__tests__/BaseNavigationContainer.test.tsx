@@ -501,3 +501,51 @@ it('emits state events when the state changes', () => {
     ],
   });
 });
+
+it('throws if there is no navigator rendered', () => {
+  expect.assertions(1);
+
+  const ref = React.createRef<NavigationContainerRef>();
+
+  const element = <BaseNavigationContainer ref={ref} children={null} />;
+
+  render(element);
+
+  act(() => {
+    expect(() => ref.current?.dispatch({ type: 'WHATEVER' })).toThrow(
+      "The 'navigation' object hasn't been initialized yet."
+    );
+  });
+});
+
+it("throws if the ref hasn't finished initializing", () => {
+  expect.assertions(1);
+
+  const ref = React.createRef<NavigationContainerRef>();
+
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestScreen = () => {
+    React.useEffect(() => {
+      expect(() => ref.current?.dispatch({ type: 'WHATEVER' })).toThrow(
+        "The 'navigation' object hasn't been initialized yet."
+      );
+    }, []);
+
+    return null;
+  };
+
+  const element = (
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator>
+        <Screen name="foo" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(element);
+});
