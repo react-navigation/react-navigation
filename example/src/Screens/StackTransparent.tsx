@@ -91,25 +91,29 @@ const BottomSheetScreen = ({
 
   return (
     <View style={styles.bottomSheetContainer} pointerEvents="box-none">
-      <Appbar.Header style={styles.bottomSheetHeader}>
-        <Appbar.Content title="Mise en place" subtitle="French term" />
-      </Appbar.Header>
+      <View style={styles.bottomSheet} pointerEvents="box-none">
+        <Appbar.Header style={styles.bottomSheetHeader}>
+          <Appbar.Content title="Mise en place" subtitle="French term" />
+        </Appbar.Header>
 
-      <View style={[styles.bottomSheet, { backgroundColor: colors.card }]}>
-        <Paragraph>
-          Mise en place is a French term that literally means “put in place.” It
-          also refers to a way cooks in professional kitchens and restaurants
-          set up their work stations—first by gathering all ingredients for a
-          recipes, partially preparing them (like measuring out and chopping),
-          and setting them all near each other. Setting up mise en place before
-          cooking is another top tip for home cooks, as it seriously helps with
-          organization. It’ll pretty much guarantee you never forget to add an
-          ingredient and save you time from running back and forth from the
-          pantry ten times.
-        </Paragraph>
-        <Button style={styles.close} compact onPress={navigation.goBack}>
-          Okay
-        </Button>
+        <View
+          style={[styles.bottomSheetContent, { backgroundColor: colors.card }]}
+        >
+          <Paragraph>
+            Mise en place is a French term that literally means “put in place.”
+            It also refers to a way cooks in professional kitchens and
+            restaurants set up their work stations—first by gathering all
+            ingredients for a recipes, partially preparing them (like measuring
+            out and chopping), and setting them all near each other. Setting up
+            mise en place before cooking is another top tip for home cooks, as
+            it seriously helps with organization. It’ll pretty much guarantee
+            you never forget to add an ingredient and save you time from running
+            back and forth from the pantry ten times.
+          </Paragraph>
+          <Button style={styles.close} compact onPress={navigation.goBack}>
+            Okay
+          </Button>
+        </View>
       </View>
     </View>
   );
@@ -223,15 +227,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
+  bottomSheet: {
+    width: '100%',
+    maxWidth: 400,
+  },
   bottomSheetHeader: {
     width: '100%',
     height: 64,
   },
-  bottomSheet: {
+  bottomSheetContent: {
     padding: 16,
-    width: '100%',
-    maxWidth: 400,
-    margin: 0,
   },
   close: {
     alignSelf: 'flex-end',
