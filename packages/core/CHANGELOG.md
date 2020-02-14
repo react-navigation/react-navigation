@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.3](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.2...@react-navigation/core@5.1.3) (2020-02-14)
+
+
+### Bug Fixes
+
+* return false for canGoBack if navigator hasn't finished mounting ([c8ac5fa](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/c8ac5fab61cf127985431075a3c59c1f3dfa42da))
+* throw a descriptive error if navigation object hasn't initialized ([b6accd0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/b6accd03f69dd438e595094d8bf8599cc12e71ac))
+* update links in error messages ([f964200](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/f964200b0dcbc19d5f88ad2dd1eb8e5576973497))
+
+
+
+
+
 ## [5.1.2](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.1...@react-navigation/core@5.1.2) (2020-02-12)
 
 
