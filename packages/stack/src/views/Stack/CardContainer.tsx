@@ -182,8 +182,8 @@ function CardContainer({
       contentStyle={[{ backgroundColor: colors.background }, cardStyle]}
       style={StyleSheet.absoluteFill}
     >
-      <View style={styles.container} pointerEvents="none">
-        <View style={styles.scene}>
+      <View style={styles.container} pointerEvents="box-none">
+        <View style={styles.scene} pointerEvents="box-none">
           <HeaderHeightContext.Provider value={headerHeight}>
             {renderScene({ route: scene.route })}
           </HeaderHeightContext.Provider>
