@@ -41,6 +41,43 @@ it('gets navigate action from state', () => {
     },
     type: 'NAVIGATE',
   });
+
+  expect(
+    getActionFromState({
+      routes: [
+        {
+          name: 'foo',
+          state: {
+            routes: [
+              {
+                name: 'bar',
+                state: {
+                  routes: [
+                    {
+                      name: 'qux',
+                      params: { author: 'jane' },
+                    },
+                    { name: 'quz' },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    })
+  ).toEqual({
+    payload: {
+      name: 'foo',
+      params: {
+        screen: 'bar',
+        params: {
+          screen: 'quz',
+        },
+      },
+    },
+    type: 'NAVIGATE',
+  });
 });
 
 it('gets reset action from state', () => {
@@ -53,13 +90,7 @@ it('gets reset action from state', () => {
             {
               name: 'bar',
               state: {
-                routes: [
-                  {
-                    name: 'qux',
-                    params: { author: 'jane' },
-                  },
-                  { name: 'quz' },
-                ],
+                routes: [],
               },
             },
           ],
@@ -68,8 +99,6 @@ it('gets reset action from state', () => {
     ],
   };
 
-  expect(getActionFromState(state)).toEqual({
-    payload: state,
-    type: 'RESET_ROOT',
-  });
+  expect(getActionFromState(state)).toBe(undefined);
+  expect(getActionFromState({ routes: [] })).toBe(undefined);
 });
