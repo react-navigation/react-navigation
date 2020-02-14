@@ -176,8 +176,8 @@ export type BottomTabBarOptions = {
    */
   tabStyle?: StyleProp<ViewStyle>;
   /**
-   * Whether the label is renderd below the icon or beside the icon.
-   * By default, in `vertical` orinetation, label is rendered below and in `horizontal` orientation, it's renderd beside.
+   * Whether the label is rendered below the icon or beside the icon.
+   * By default, in `vertical` orinetation, label is rendered below and in `horizontal` orientation, it's rendered beside.
    */
   labelPosition?: LabelPosition;
   /**
