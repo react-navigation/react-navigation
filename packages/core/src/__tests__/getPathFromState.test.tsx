@@ -489,3 +489,31 @@ it('handles empty path at the end', () => {
   expect(getPathFromState(state, config)).toBe(path);
   expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
 });
+
+it('returns "/" for empty path', () => {
+  const config = {
+    Foo: {
+      path: '',
+      screens: {
+        Bar: '',
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe('/');
+});
