@@ -119,19 +119,20 @@ export default function App() {
     prefixes: LinkingPrefixes,
     config: {
       Root: {
-        path: 'root',
-        screens: Object.keys({
-          Home: { title: 'Example' },
-          ...SCREENS,
-        }).reduce<{ [key: string]: string }>((acc, name) => {
-          // Convert screen names such as SimpleStack to kebab case (simple-stack)
-          acc[name] = name
-            .replace(/([A-Z]+)/g, '-$1')
-            .replace(/^-/, '')
-            .toLowerCase();
+        path: '',
+        initialRouteName: 'Home',
+        screens: Object.keys(SCREENS).reduce<{ [key: string]: string }>(
+          (acc, name) => {
+            // Convert screen names such as SimpleStack to kebab case (simple-stack)
+            acc[name] = name
+              .replace(/([A-Z]+)/g, '-$1')
+              .replace(/^-/, '')
+              .toLowerCase();
 
-          return acc;
-        }, {}),
+            return acc;
+          },
+          { Home: '' }
+        ),
       },
     },
   });

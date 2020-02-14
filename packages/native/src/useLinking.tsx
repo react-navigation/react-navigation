@@ -162,10 +162,10 @@ export default function useLinking(
 
           pendingStateUpdateRef.current = true;
 
-          if (action.type === 'RESET_ROOT') {
-            navigation.resetRoot(action.payload);
-          } else {
+          if (action !== undefined) {
             navigation.dispatch(action);
+          } else {
+            navigation.resetRoot(state);
           }
         }
       }
