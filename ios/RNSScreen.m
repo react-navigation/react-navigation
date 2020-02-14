@@ -191,6 +191,19 @@
   [_touchHandler reset];
 }
 
+- (BOOL)presentationControllerShouldDismiss:(UIPresentationController *)presentationController
+{
+  return _gestureEnabled;
+}
+
+- (void)presentationControllerDidDismiss:(UIPresentationController *)presentationController
+{
+  if ([_reactSuperview respondsToSelector:@selector(presentationControllerDidDismiss:)]) {
+    [_reactSuperview performSelector:@selector(presentationControllerDidDismiss:)
+                          withObject:presentationController];
+  }
+}
+
 @end
 
 @implementation RNSScreen {
@@ -247,6 +260,8 @@
   if (self.parentViewController == nil && self.presentingViewController == nil) {
     // screen dismissed, send event
     [((RNSScreenView *)self.view) notifyDismissed];
+    _view = self.view;
+    self.view = nil;
   }
 }
 

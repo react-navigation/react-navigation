@@ -27,16 +27,34 @@ function renderComponentOrThunk(componentOrThunk, props) {
 
 class StackView extends React.Component {
   _removeScene = route => {
+    console.warn('REMOVE SCENE');
     this.props.navigation.dispatch(StackActions.pop({ key: route.key }));
   };
 
-  _onSceneFocus = (route, descriptor) => {
+  _onAppear = (route, descriptor) => {
     descriptor.options &&
       descriptor.options.onAppear &&
       descriptor.options.onAppear();
     this.props.navigation.dispatch(
-      StackActions.completeTransition({ toChildKey: route.key })
+      StackActions.completeTransition({
+        toChildKey: route.key,
+        key: this.props.navigation.state.key,
+      })
     );
+  };
+
+  _onFinishTransitioning = () => {
+    console.warn('FINISH TRANSITIONING');
+    const { routes } = this.props.navigation.state;
+    let lastRoute = routes && routes.length && routes[routes.length - 1];
+    if (lastRoute) {
+      this.props.navigation.dispatch(
+        StackActions.completeTransition({
+          toChildKey: lastRoute.key,
+          key: this.props.navigation.state.key,
+        })
+      );
+    }
   };
 
   _renderHeaderConfig = (index, route, descriptor) => {
@@ -194,7 +212,7 @@ class StackView extends React.Component {
         gestureEnabled={
           options.gestureEnabled === undefined ? true : options.gestureEnabled
         }
-        onAppear={() => this._onSceneFocus(route, descriptor)}
+        onAppear={() => this._onAppear(route, descriptor)}
         onDismissed={() => this._removeScene(route)}>
         {this._renderHeaderConfig(index, route, descriptor)}
         <SceneView
@@ -210,7 +228,9 @@ class StackView extends React.Component {
     const { navigation, descriptors } = this.props;
 
     return (
-      <ScreenStack style={styles.scenes}>
+      <ScreenStack
+        style={styles.scenes}
+        onFinishTransitioning={this._onFinishTransitioning}>
         {navigation.state.routes.map((route, i) =>
           this._renderScene(i, route, descriptors[route.key])
         )}

@@ -4,6 +4,8 @@
 
 @interface RNSScreenStackView : UIView <RNSScreenContainerDelegate, RCTInvalidating>
 
+@property (nonatomic, copy) RCTDirectEventBlock onFinishTransitioning;
+
 - (void)markChildUpdated;
 - (void)didUpdateChildren;
 

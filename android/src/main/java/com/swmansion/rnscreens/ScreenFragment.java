@@ -45,19 +45,15 @@ public class ScreenFragment extends Fragment {
   }
 
   @Override
-  public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    ScreenContainer container = mScreenView.getContainer();
-    if (container.isTransitioning()) {
-      container.postAfterTransition(new Runnable() {
-        @Override
-        public void run() {
-          dispatchOnAppear();
-        }
-      });
-    } else {
-      dispatchOnAppear();
-    }
+  public void onResume() {
+    super.onResume();
+  }
+
+  public void onViewAnimationEnd() {
+    // onViewAnimationEnd is triggered from View#onAnimationEnd method of the fragment's root view.
+    // We override Screen#onAnimationEnd and an appropriate method of the StackFragment's root view
+    // in order to achieve this.
+    dispatchOnAppear();
   }
 
   @Override

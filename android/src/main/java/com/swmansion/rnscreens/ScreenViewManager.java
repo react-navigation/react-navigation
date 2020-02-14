@@ -69,6 +69,8 @@ public class ScreenViewManager extends ViewGroupManager<Screen> {
             ScreenDismissedEvent.EVENT_NAME,
             MapBuilder.of("registrationName", "onDismissed"),
             ScreenAppearEvent.EVENT_NAME,
-            MapBuilder.of("registrationName", "onAppear"));
+            MapBuilder.of("registrationName", "onAppear"),
+            StackFinishTransitioningEvent.EVENT_NAME,
+            MapBuilder.of("registrationName", "onFinishTransitioning"));
   }
 }

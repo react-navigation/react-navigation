@@ -1,13 +1,17 @@
 package com.swmansion.rnscreens;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.view.animation.Animation;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -17,6 +21,27 @@ import com.facebook.react.uimanager.PixelUtil;
 import com.google.android.material.appbar.AppBarLayout;
 
 public class ScreenStackFragment extends ScreenFragment {
+
+  private static class NotifyingCoordinatorLayout extends CoordinatorLayout {
+
+    private final ScreenFragment mFragment;
+
+    public NotifyingCoordinatorLayout(@NonNull Context context, ScreenFragment fragment) {
+      super(context);
+      mFragment = fragment;
+    }
+
+    @Override
+    public void startAnimation(Animation animation) {
+      super.startAnimation(animation);
+    }
+
+    @Override
+    protected void onAnimationEnd() {
+      super.onAnimationEnd();
+      mFragment.onViewAnimationEnd();
+    }
+  }
 
   private static final float TOOLBAR_ELEVATION = PixelUtil.toPixelFromDIP(4);
 
@@ -62,7 +87,7 @@ public class ScreenStackFragment extends ScreenFragment {
   }
 
   private CoordinatorLayout configureView() {
-    CoordinatorLayout view = new CoordinatorLayout(getContext());
+    CoordinatorLayout view = new NotifyingCoordinatorLayout(getContext(), this);
     CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
     params.setBehavior(new AppBarLayout.ScrollingViewBehavior());
@@ -84,6 +109,30 @@ public class ScreenStackFragment extends ScreenFragment {
     }
 
     return view;
+  }
+
+  @Override
+  public void onViewAnimationEnd() {
+    super.onViewAnimationEnd();
+    notifyViewAppearTransitionEnd();
+  }
+
+  @Nullable
+  @Override
+  public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+    if (enter && transit == 0) {
+      // this means that the fragment will appear without transition, in this case onViewAnimationEnd
+      // won't be called and we need to notify stack directly from here.
+      notifyViewAppearTransitionEnd();
+    }
+    return null;
+  }
+
+  private void notifyViewAppearTransitionEnd() {
+    ViewParent screenStack = getView().getParent();
+    if (screenStack instanceof ScreenStack) {
+      ((ScreenStack) screenStack).onViewAppearTransitionEnd();
+    }
   }
 
   @Override

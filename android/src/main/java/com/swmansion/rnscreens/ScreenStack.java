@@ -1,10 +1,14 @@
 package com.swmansion.rnscreens;
 
 import android.content.Context;
+import android.view.View;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.uimanager.UIManagerModule;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,6 +22,7 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
   private final Set<ScreenStackFragment> mDismissed = new HashSet<>();
 
   private ScreenStackFragment mTopScreen = null;
+  private boolean mRemovalTransitionStarted = false;
 
   private final FragmentManager.OnBackStackChangedListener mBackStackListener = new FragmentManager.OnBackStackChangedListener() {
     @Override
@@ -88,6 +93,34 @@ public class ScreenStack extends ScreenContainer<ScreenStackFragment> {
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
     mFragmentManager.registerFragmentLifecycleCallbacks(mLifecycleCallbacks, false);
+  }
+
+  @Override
+  public void startViewTransition(View view) {
+    super.startViewTransition(view);
+    mRemovalTransitionStarted = true;
+  }
+
+  @Override
+  public void endViewTransition(View view) {
+    super.endViewTransition(view);
+    if (mRemovalTransitionStarted) {
+      mRemovalTransitionStarted = false;
+      dispatchOnFinishTransitioning();
+    }
+  }
+
+  public void onViewAppearTransitionEnd() {
+    if (!mRemovalTransitionStarted) {
+      dispatchOnFinishTransitioning();
+    }
+  }
+
+  private void dispatchOnFinishTransitioning() {
+    ((ReactContext) getContext())
+            .getNativeModule(UIManagerModule.class)
+            .getEventDispatcher()
+            .dispatchEvent(new StackFinishTransitioningEvent(getId()));
   }
 
   @Override

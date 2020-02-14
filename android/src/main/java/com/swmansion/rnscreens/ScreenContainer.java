@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -22,15 +23,12 @@ import java.util.Set;
 public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
 
   protected final ArrayList<T> mScreenFragments = new ArrayList<>();
-  private final Set<ScreenFragment> mActiveScreenFragments = new HashSet<>();
-  private final ArrayList<Runnable> mAfterTransitionRunnables = new ArrayList<>(1);
 
   protected @Nullable FragmentManager mFragmentManager;
   private @Nullable FragmentTransaction mCurrentTransaction;
   private @Nullable FragmentTransaction mProcessingTransaction;
   private boolean mNeedUpdate;
   private boolean mIsAttached;
-  private boolean mIsTransitioning;
   private boolean mLayoutEnqueued = false;
 
 
@@ -118,36 +116,6 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
     markUpdated();
   }
 
-  @Override
-  public void startViewTransition(View view) {
-    super.startViewTransition(view);
-    mIsTransitioning = true;
-  }
-
-  @Override
-  public void endViewTransition(View view) {
-    super.endViewTransition(view);
-    if (mIsTransitioning) {
-      mIsTransitioning = false;
-      notifyTransitionFinished();
-    }
-  }
-
-  public boolean isTransitioning() {
-    return mIsTransitioning || mProcessingTransaction != null;
-  }
-
-  public void postAfterTransition(Runnable runnable) {
-    mAfterTransitionRunnables.add(runnable);
-  }
-
-  protected void notifyTransitionFinished() {
-    for (int i = 0, size = mAfterTransitionRunnables.size(); i < size; i++) {
-      mAfterTransitionRunnables.get(i).run();
-    }
-    mAfterTransitionRunnables.clear();
-  }
-
   protected int getScreenCount() {
     return mScreenFragments.size();
   }
@@ -219,7 +187,6 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
 
   private void attachScreen(ScreenFragment screenFragment) {
     getOrCreateTransaction().add(getId(), screenFragment);
-    mActiveScreenFragments.add(screenFragment);
   }
 
   private void moveToFront(ScreenFragment screenFragment) {
@@ -230,7 +197,6 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
 
   private void detachScreen(ScreenFragment screenFragment) {
     getOrCreateTransaction().remove(screenFragment);
-    mActiveScreenFragments.remove(screenFragment);
   }
 
   protected boolean isScreenActive(ScreenFragment screenFragment) {
@@ -259,7 +225,6 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
     mFragmentManager = null;
     // so we don't add the same screen twice after re-attach
     removeAllViews();
-    mActiveScreenFragments.clear();
     // after re-attach we'll update the screen and add views again
     markUpdated();
   }
@@ -282,11 +247,11 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
 
   protected void onUpdate() {
     // detach screens that are no longer active
-    Set<ScreenFragment> orphaned = new HashSet<>(mActiveScreenFragments);
+    Set<Fragment> orphaned = new HashSet<>(mFragmentManager.getFragments());
     for (int i = 0, size = mScreenFragments.size(); i < size; i++) {
       ScreenFragment screenFragment = mScreenFragments.get(i);
       boolean isActive = isScreenActive(screenFragment);
-      if (!isActive && mActiveScreenFragments.contains(screenFragment)) {
+      if (!isActive && screenFragment.isAdded()) {
         detachScreen(screenFragment);
       }
       orphaned.remove(screenFragment);
@@ -312,7 +277,7 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
     for (int i = 0, size = mScreenFragments.size(); i < size; i++) {
       ScreenFragment screenFragment = mScreenFragments.get(i);
       boolean isActive = isScreenActive(screenFragment);
-      if (isActive && !mActiveScreenFragments.contains(screenFragment)) {
+      if (isActive && !screenFragment.isAdded()) {
         addedBefore = true;
         attachScreen(screenFragment);
       } else if (isActive && addedBefore) {

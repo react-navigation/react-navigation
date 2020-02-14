@@ -9,7 +9,7 @@
 #import <React/RCTRootContentView.h>
 #import <React/RCTTouchHandler.h>
 
-@interface RNSScreenStackView () <UINavigationControllerDelegate, UIGestureRecognizerDelegate>
+@interface RNSScreenStackView () <UINavigationControllerDelegate, UIAdaptivePresentationControllerDelegate, UIGestureRecognizerDelegate>
 @end
 
 @interface RNSScreenStackAnimator : NSObject <UIViewControllerAnimatedTransitioning>
@@ -22,7 +22,6 @@
   NSMutableArray<RNSScreenView *> *_reactSubviews;
   NSMutableSet<RNSScreenView *> *_dismissedScreens;
   NSMutableArray<UIViewController *> *_presentedModals;
-  __weak UIViewController* recentPopped;
   __weak RNSScreenStackManager *_manager;
 }
 
@@ -64,15 +63,36 @@
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
   for (NSUInteger i = _reactSubviews.count; i > 0; i--) {
-    if ([viewController isEqual:[_reactSubviews objectAtIndex:i - 1].controller]) {
+    RNSScreenView *screenView = [_reactSubviews objectAtIndex:i - 1];
+    if ([viewController isEqual:screenView.controller]) {
       break;
-    } else {
-      [_dismissedScreens addObject:[_reactSubviews objectAtIndex:i - 1]];
+    } else if (screenView.stackPresentation == RNSScreenStackPresentationPush) {
+      [_dismissedScreens addObject:screenView];
     }
   }
-  if (recentPopped != nil) {
-    recentPopped.view = nil;
-    recentPopped = nil;
+  if (self.onFinishTransitioning) {
+    self.onFinishTransitioning(nil);
+  }
+}
+
+- (void)presentationControllerDidDismiss:(UIPresentationController *)presentationController
+{
+  // We don't directly set presentation delegate but instead rely on the ScreenView's delegate to
+  // forward certain calls to the container (Stack).
+  UIView *screenView = presentationController.presentedViewController.view;
+  if ([screenView isKindOfClass:[RNSScreenView class]]) {
+    [_dismissedScreens addObject:(RNSScreenView *)screenView];
+    [_presentedModals removeObject:presentationController.presentedViewController];
+    if (self.onFinishTransitioning) {
+      // instead of directly triggering onFinishTransitioning this time we enqueue the event on the
+      // main queue. We do that because onDismiss event is also enqueued and we want for the transition
+      // finish event to arrive later than onDismiss (see RNSScreen#notifyDismiss)
+      dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.onFinishTransitioning) {
+          self.onFinishTransitioning(nil);
+        }
+      });
+    }
   }
 }
 
@@ -83,7 +103,6 @@
     screen = (RNSScreenView *) toVC.view;
   } else if (operation == UINavigationControllerOperationPop) {
     screen = (RNSScreenView *) fromVC.view;
-    recentPopped = fromVC;
   }
   if (screen != nil && (screen.stackAnimation == RNSScreenStackAnimationFade || screen.stackAnimation == RNSScreenStackAnimationNone)) {
     return  [[RNSScreenStackAnimator alloc] initWithOperation:operation];
@@ -123,11 +142,13 @@
     RCTLogError(@"ScreenStack only accepts children of type Screen");
     return;
   }
+  subview.reactSuperview = self;
   [_reactSubviews insertObject:subview atIndex:atIndex];
 }
 
 - (void)removeReactSubview:(RNSScreenView *)subview
 {
+  subview.reactSuperview = nil;
   [_reactSubviews removeObject:subview];
   [_dismissedScreens removeObject:subview];
 }
@@ -176,14 +197,26 @@
     }
   }
 
+  __weak RNSScreenStackView *weakSelf = self;
+
+  void (^dispatchFinishTransitioning)(void) = ^{
+    if (weakSelf.onFinishTransitioning) {
+      weakSelf.onFinishTransitioning(nil);
+    }
+  };
+
   void (^finish)(void) = ^{
     UIViewController *previous = changeRootController;
     for (NSUInteger i = changeRootIndex; i < controllers.count; i++) {
       UIViewController *next = controllers[i];
+      BOOL animate = (i == controllers.count - 1);
       [previous presentViewController:next
-                             animated:(i == controllers.count - 1)
-                             completion:nil];
+                             animated:animate
+                           completion:animate ? dispatchFinishTransitioning : nil];
       previous = next;
+    }
+    if (changeRootIndex >= controllers.count) {
+      dispatchFinishTransitioning();
     }
   };
 
@@ -299,8 +332,7 @@
 
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_VIEW_PROPERTY(transitioning, NSInteger)
-RCT_EXPORT_VIEW_PROPERTY(progress, CGFloat)
+RCT_EXPORT_VIEW_PROPERTY(onFinishTransitioning, RCTDirectEventBlock);
 
 - (UIView *)view
 {

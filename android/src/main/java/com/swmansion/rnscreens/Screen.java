@@ -11,7 +11,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import com.facebook.react.bridge.GuardedRunnable;
 import com.facebook.react.bridge.ReactContext;
@@ -47,13 +46,21 @@ public class Screen extends ViewGroup {
     }
   };
 
-  private @Nullable Fragment mFragment;
+  private @Nullable ScreenFragment mFragment;
   private @Nullable ScreenContainer mContainer;
   private boolean mActive;
   private boolean mTransitioning;
   private StackPresentation mStackPresentation = StackPresentation.PUSH;
   private StackAnimation mStackAnimation = StackAnimation.DEFAULT;
   private boolean mGestureEnabled = true;
+
+  @Override
+  protected void onAnimationEnd() {
+    super.onAnimationEnd();
+    if (mFragment != null) {
+      mFragment.onViewAnimationEnd();
+    }
+  }
 
   public Screen(ReactContext context) {
     super(context);
@@ -168,11 +175,11 @@ public class Screen extends ViewGroup {
     mContainer = container;
   }
 
-  protected void setFragment(Fragment fragment) {
+  protected void setFragment(ScreenFragment fragment) {
     mFragment = fragment;
   }
 
-  protected @Nullable Fragment getFragment() {
+  protected @Nullable ScreenFragment getFragment() {
     return mFragment;
   }
 
