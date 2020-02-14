@@ -56,7 +56,7 @@ const warnIfHeaderStylesDefined = (styles: Record<string, any>) => {
 export const getDefaultHeaderHeight = (
   layout: Layout,
   statusBarHeight: number
-) => {
+): number => {
   const isLandscape = layout.width > layout.height;
 
   let headerHeight;
@@ -120,12 +120,17 @@ export default class HeaderSegment extends React.Component<Props, State> {
       current: Animated.AnimatedInterpolation,
       next: Animated.AnimatedInterpolation | undefined,
       titleLayout: Layout | undefined,
-      leftLabelLayout: Layout | undefined
+      leftLabelLayout: Layout | undefined,
+      headerHeight: number
     ) =>
       styleInterpolator({
         current: { progress: current },
         next: next && { progress: next },
         layouts: {
+          header: {
+            height: headerHeight,
+            width: layout.width,
+          },
           screen: layout,
           title: titleLayout,
           leftLabel: leftLabelLayout,
@@ -172,23 +177,10 @@ export default class HeaderSegment extends React.Component<Props, State> {
 
     const { leftLabelLayout, titleLayout } = this.state;
 
-    const {
-      titleStyle,
-      leftButtonStyle,
-      leftLabelStyle,
-      rightButtonStyle,
-      backgroundStyle,
-    } = this.getInterpolatedStyle(
-      styleInterpolator,
-      layout,
-      scene.progress.current,
-      scene.progress.next,
-      titleLayout,
-      previousTitle ? leftLabelLayout : undefined
-    );
+    const defaultHeight = getDefaultHeaderHeight(layout, headerStatusBarHeight);
 
     const {
-      height = getDefaultHeaderHeight(layout, headerStatusBarHeight),
+      height = defaultHeight,
       minHeight,
       maxHeight,
       backgroundColor,
@@ -280,6 +272,22 @@ export default class HeaderSegment extends React.Component<Props, State> {
         delete safeStyles[styleProp];
       }
     }
+
+    const {
+      titleStyle,
+      leftButtonStyle,
+      leftLabelStyle,
+      rightButtonStyle,
+      backgroundStyle,
+    } = this.getInterpolatedStyle(
+      styleInterpolator,
+      layout,
+      scene.progress.current,
+      scene.progress.next,
+      titleLayout,
+      previousTitle ? leftLabelLayout : undefined,
+      typeof height === 'number' ? height : defaultHeight
+    );
 
     const leftButton = left
       ? left({

@@ -549,6 +549,10 @@ export type StackHeaderInterpolationProps = {
    */
   layouts: {
     /**
+     * Layout of the header
+     */
+    header: Layout;
+    /**
      * Layout of the whole screen.
      */
     screen: Layout;
