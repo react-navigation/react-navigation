@@ -375,7 +375,7 @@ export default class StackView extends React.Component<Props, State> {
       mode !== 'modal' && Platform.OS === 'ios' ? 'float' : 'screen';
 
     return (
-      <GestureHandlerWrapper style={styles.container}>
+      <GestureHandlerWrapper style={styles.container} pointerEvents="box-none">
         <SafeAreaProviderCompat>
           <SafeAreaConsumer>
             {insets => (

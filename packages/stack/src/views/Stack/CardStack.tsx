@@ -460,6 +460,7 @@ export default class CardStack extends React.Component<Props, State> {
           enabled={isScreensEnabled}
           style={styles.container}
           onLayout={this.handleLayout}
+          pointerEvents="box-none"
         >
           {routes.map((route, index, self) => {
             const focused = focusedRoute.key === route.key;
