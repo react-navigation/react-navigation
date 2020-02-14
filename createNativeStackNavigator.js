@@ -27,7 +27,6 @@ function renderComponentOrThunk(componentOrThunk, props) {
 
 class StackView extends React.Component {
   _removeScene = route => {
-    console.warn('REMOVE SCENE');
     this.props.navigation.dispatch(StackActions.pop({ key: route.key }));
   };
 
@@ -44,7 +43,6 @@ class StackView extends React.Component {
   };
 
   _onFinishTransitioning = () => {
-    console.warn('FINISH TRANSITIONING');
     const { routes } = this.props.navigation.state;
     let lastRoute = routes && routes.length && routes[routes.length - 1];
     if (lastRoute) {
