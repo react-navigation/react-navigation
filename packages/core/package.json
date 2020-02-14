@@ -49,7 +49,7 @@
     "typescript": "^3.7.5"
   },
   "peerDependencies": {
-    "react": "~16.9.0"
+    "react": "*"
   },
   "@react-native-community/bob": {
     "source": "src",

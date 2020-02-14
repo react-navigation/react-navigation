@@ -33,7 +33,7 @@
   },
   "peerDependencies": {
     "@react-navigation/native": "^5.0.0",
-    "react": "~16.9.0"
+    "react": "*"
   },
   "@react-native-community/bob": {
     "source": "src",
