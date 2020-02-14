@@ -161,32 +161,33 @@
     <orderEntry type="library" name="Gradle: com.facebook.fresco:imagepipeline-okhttp3:2.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: io.nlopez.smartlocation:library:3.2.11@aar" level="project" />
     <orderEntry type="library" name="Gradle: org.webkit:android-jsc:r245459@aar" level="project" />
-    <orderEntry type="module" module-name="android-expo-permissions" />
-    <orderEntry type="module" module-name="android-expo-constants" />
-    <orderEntry type="module" module-name="android-unimodules-image-loader-interface" />
-    <orderEntry type="module" module-name="android-expo-web-browser" />
-    <orderEntry type="module" module-name="android-unimodules-react-native-adapter" />
-    <orderEntry type="module" module-name="android-expo-file-system" />
-    <orderEntry type="module" module-name="android-expo-location" />
-    <orderEntry type="module" module-name="android-expo-error-recovery" />
-    <orderEntry type="module" module-name="android-unimodules-permissions-interface" />
-    <orderEntry type="module" module-name="android-unimodules-core" />
-    <orderEntry type="module" module-name="android-expo-app-loader-provider" />
-    <orderEntry type="module" module-name="android-expo-font" />
-    <orderEntry type="module" module-name="android-expo-keep-awake" />
-    <orderEntry type="module" module-name="android-expo-linear-gradient" />
-    <orderEntry type="module" module-name="android-expo-sqlite" />
-    <orderEntry type="module" module-name="android-unimodules-barcode-scanner-interface" />
-    <orderEntry type="module" module-name="android-unimodules-camera-interface" />
-    <orderEntry type="module" module-name="android-unimodules-constants-interface" />
-    <orderEntry type="module" module-name="android-unimodules-face-detector-interface" />
-    <orderEntry type="module" module-name="android-unimodules-file-system-interface" />
-    <orderEntry type="module" module-name="android-unimodules-font-interface" />
-    <orderEntry type="module" module-name="android-unimodules-sensors-interface" />
-    <orderEntry type="module" module-name="android-unimodules-task-manager-interface" />
-    <orderEntry type="module" module-name="android-@react-native-community_masked-view" />
-    <orderEntry type="module" module-name="android-react-native-gesture-handler" />
-    <orderEntry type="module" module-name="android-react-native-reanimated" />
+    <orderEntry type="module" module-name="expo-permissions" />
+    <orderEntry type="module" module-name="expo-constants" />
+    <orderEntry type="module" module-name="unimodules-image-loader-interface" />
+    <orderEntry type="module" module-name="expo-web-browser" />
+    <orderEntry type="module" module-name="unimodules-react-native-adapter" />
+    <orderEntry type="module" module-name="expo-file-system" />
+    <orderEntry type="module" module-name="expo-location" />
+    <orderEntry type="module" module-name="expo-error-recovery" />
+    <orderEntry type="module" module-name="unimodules-permissions-interface" />
+    <orderEntry type="module" module-name="unimodules-core" />
+    <orderEntry type="module" module-name="expo-app-loader-provider" />
+    <orderEntry type="module" module-name="expo-font" />
+    <orderEntry type="module" module-name="expo-keep-awake" />
+    <orderEntry type="module" module-name="expo-linear-gradient" />
+    <orderEntry type="module" module-name="expo-sqlite" />
+    <orderEntry type="module" module-name="unimodules-barcode-scanner-interface" />
+    <orderEntry type="module" module-name="unimodules-camera-interface" />
+    <orderEntry type="module" module-name="unimodules-constants-interface" />
+    <orderEntry type="module" module-name="unimodules-face-detector-interface" />
+    <orderEntry type="module" module-name="unimodules-file-system-interface" />
+    <orderEntry type="module" module-name="unimodules-font-interface" />
+    <orderEntry type="module" module-name="unimodules-sensors-interface" />
+    <orderEntry type="module" module-name="unimodules-task-manager-interface" />
+    <orderEntry type="module" module-name="@react-native-community_masked-view" />
+    <orderEntry type="module" module-name="react-native-gesture-handler" />
+    <orderEntry type="module" module-name="react-native-reanimated" />
+    <orderEntry type="module" module-name="react-native-restart" />
     <orderEntry type="module" module-name="react-native-safe-area-context" />
     <orderEntry type="module" module-name="react-native-screens" />
   </component>
