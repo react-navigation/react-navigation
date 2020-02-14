@@ -49,7 +49,7 @@
     "@react-navigation/native": "^5.0.0",
     "react": "*",
     "react-native": "*",
-    "react-native-safe-area-context": "^0.6.0"
+    "react-native-safe-area-context": ">= 0.6.0"
   },
   "@react-native-community/bob": {
     "source": "src",

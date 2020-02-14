@@ -56,10 +56,10 @@
     "@react-navigation/native": "^5.0.0",
     "react": "*",
     "react-native": "*",
-    "react-native-gesture-handler": "^1.0.0",
-    "react-native-reanimated": "^1.0.0",
-    "react-native-safe-area-context": "^0.6.0",
-    "react-native-screens": "^2.0.0-alpha.33"
+    "react-native-gesture-handler": ">= 1.0.0",
+    "react-native-reanimated": ">= 1.0.0",
+    "react-native-safe-area-context": ">= 0.6.0",
+    "react-native-screens": ">= 2.0.0-alpha.0 || >= 2.0.0-beta.0"
   },
   "@react-native-community/bob": {
     "source": "src",
