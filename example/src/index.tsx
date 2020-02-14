@@ -124,7 +124,8 @@ export default function App() {
     prefixes: LinkingPrefixes,
     config: {
       Root: {
-        path: 'root',
+        path: '',
+        initialRouteName: 'Home',
         screens: Object.keys(SCREENS).reduce<{ [key: string]: string }>(
           (acc, name) => {
             // Convert screen names such as SimpleStack to kebab case (simple-stack)
@@ -135,7 +136,7 @@ export default function App() {
 
             return acc;
           },
-          {}
+          { Home: '' }
         ),
       },
     },
