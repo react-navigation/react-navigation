@@ -174,7 +174,6 @@ function CardContainer({
       styleInterpolator={cardStyleInterpolator}
       accessibilityElementsHidden={!focused}
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
-      pointerEvents={active ? 'box-none' : pointerEvents}
       containerStyle={
         headerMode === 'float' && !headerTransparent && headerShown !== false
           ? { marginTop: headerHeight }
@@ -183,7 +182,7 @@ function CardContainer({
       contentStyle={[{ backgroundColor: colors.background }, cardStyle]}
       style={StyleSheet.absoluteFill}
     >
-      <View style={styles.container}>
+      <View style={styles.container} pointerEvents="none">
         <View style={styles.scene}>
           <HeaderHeightContext.Provider value={headerHeight}>
             {renderScene({ route: scene.route })}
