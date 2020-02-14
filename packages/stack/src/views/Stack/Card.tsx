@@ -488,7 +488,7 @@ export default class Card extends React.Component<Props> {
             onHandlerStateChange={this.handleGestureStateChange}
             {...this.gestureActivationCriteria()}
           >
-            <Animated.View style={[styles.container, cardStyle]}>
+            <Animated.View style={[styles.container, cardStyle]} pointerEvents="none">
               {shadowEnabled && shadowStyle && !isTransparent ? (
                 <Animated.View
                   style={[
