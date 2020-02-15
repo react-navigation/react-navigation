@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -13,6 +14,17 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.uimanager.UIManagerModule;
 
 public class ScreenFragment extends Fragment {
+
+  protected static View recycleView(View view) {
+    // screen fragments reuse view instances instead of creating new ones. In order to reuse a given
+    // view it needs to be detached from the view hierarchy to allow the fragment to attach it back.
+    ViewParent parent = view.getParent();
+    if (parent != null) {
+      ((ViewGroup) parent).endViewTransition(view);
+      ((ViewGroup) parent).removeView(view);
+    }
+    return view;
+  }
 
   protected Screen mScreenView;
 
@@ -30,7 +42,7 @@ public class ScreenFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater,
                            @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
-    return mScreenView;
+    return recycleView(mScreenView);
   }
 
   public Screen getScreen() {
@@ -54,6 +66,12 @@ public class ScreenFragment extends Fragment {
     // We override Screen#onAnimationEnd and an appropriate method of the StackFragment's root view
     // in order to achieve this.
     dispatchOnAppear();
+  }
+
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    recycleView(getView());
   }
 
   @Override

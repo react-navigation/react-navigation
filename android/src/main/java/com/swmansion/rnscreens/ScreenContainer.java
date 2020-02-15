@@ -220,13 +220,6 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
   protected void onDetachedFromWindow() {
     super.onDetachedFromWindow();
     mIsAttached = false;
-
-    // fragment manager is destroyed so we can't do anything with it anymore
-    mFragmentManager = null;
-    // so we don't add the same screen twice after re-attach
-    removeAllViews();
-    // after re-attach we'll update the screen and add views again
-    markUpdated();
   }
 
   @Override

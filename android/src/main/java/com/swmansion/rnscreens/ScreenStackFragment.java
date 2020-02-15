@@ -143,7 +143,7 @@ public class ScreenStackFragment extends ScreenFragment {
       mScreenRootView = configureView();
     }
 
-    return mScreenRootView;
+    return recycleView(mScreenRootView);
   }
 
   public boolean isDismissable() {

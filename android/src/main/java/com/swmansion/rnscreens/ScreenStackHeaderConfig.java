@@ -132,6 +132,11 @@ public class ScreenStackHeaderConfig extends ViewGroup {
       return;
     }
 
+    AppCompatActivity activity = (AppCompatActivity) getScreenFragment().getActivity();
+    if (activity == null) {
+      return;
+    }
+
     if (mIsHidden) {
       if (mToolbar.getParent() != null) {
         getScreenFragment().removeToolbar();
@@ -143,7 +148,6 @@ public class ScreenStackHeaderConfig extends ViewGroup {
       getScreenFragment().setToolbar(mToolbar);
     }
 
-    AppCompatActivity activity = (AppCompatActivity) getScreenFragment().getActivity();
     activity.setSupportActionBar(mToolbar);
     ActionBar actionBar = activity.getSupportActionBar();
 

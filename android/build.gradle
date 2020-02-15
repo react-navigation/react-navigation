@@ -49,8 +49,9 @@ repositories {
 dependencies {
     implementation 'com.facebook.react:react-native:+'
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.fragment:fragment:1.2.1'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
+    implementation 'com.google.android.material:material:1.1.0'
 }
 
 def configureReactNativePom(def pom) {
