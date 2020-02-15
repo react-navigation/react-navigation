@@ -235,7 +235,6 @@ export default function useNavigationBuilder<
     setState,
     setKey,
     getKey,
-    performTransaction,
   } = React.useContext(NavigationStateContext);
 
   const previousStateRef = React.useRef<
@@ -316,9 +315,7 @@ export default function useNavigationBuilder<
     // If the state needs to be updated, we'll schedule an update with React
     // setState in render seems hacky, but that's how React docs implement getDerivedPropsFromState
     // https://reactjs.org/docs/hooks-faq.html#how-do-i-implement-getderivedstatefromprops
-    performTransaction(() => {
-      setState(nextState);
-    });
+    setState(nextState);
   }
 
   // The up-to-date state will come in next render, but we don't need to wait for it
@@ -331,11 +328,9 @@ export default function useNavigationBuilder<
 
     return () => {
       // We need to clean up state for this navigator on unmount
-      performTransaction(() => {
-        if (getCurrentState() !== undefined && getKey() === navigatorKey) {
-          setState(undefined);
-        }
-      });
+      if (getCurrentState() !== undefined && getKey() === navigatorKey) {
+        setState(undefined);
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

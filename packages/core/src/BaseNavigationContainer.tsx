@@ -16,6 +16,7 @@ import isSerializable from './isSerializable';
 
 import { NavigationContainerRef, NavigationContainerProps } from './types';
 import useEventEmitter from './useEventEmitter';
+import useSyncState from './useSyncState';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
 
@@ -34,7 +35,6 @@ export const NavigationStateContext = React.createContext<{
   setState: (
     state: NavigationState | PartialState<NavigationState> | undefined
   ) => void;
-  performTransaction: (action: () => void) => void;
 }>({
   isDefault: true,
 
@@ -48,9 +48,6 @@ export const NavigationStateContext = React.createContext<{
     throw new Error(MISSING_CONTEXT_ERROR);
   },
   get setState(): any {
-    throw new Error(MISSING_CONTEXT_ERROR);
-  },
-  get performTransaction(): any {
     throw new Error(MISSING_CONTEXT_ERROR);
   },
 });
@@ -115,13 +112,10 @@ const BaseNavigationContainer = React.forwardRef(
       );
     }
 
-    const [state, setNavigationState] = React.useState<State>(() =>
+    const [state, getState, setState] = useSyncState<State>(() =>
       getPartialState(initialState == null ? undefined : initialState)
     );
 
-    const navigationStateRef = React.useRef<State>();
-    const transactionStateRef = React.useRef<State | null>(null);
-    const isTransactionActiveRef = React.useRef<boolean>(false);
     const isFirstMountRef = React.useRef<boolean>(true);
     const skipTrackingRef = React.useRef<boolean>(false);
 
@@ -133,53 +127,12 @@ const BaseNavigationContainer = React.forwardRef(
       navigatorKeyRef.current = key;
     }, []);
 
-    const performTransaction = React.useCallback((callback: () => void) => {
-      if (isTransactionActiveRef.current) {
-        throw new Error(
-          "Only one transaction can be active at a time. Did you accidentally nest 'performTransaction'?"
-        );
-      }
-
-      setNavigationState((navigationState: State) => {
-        isTransactionActiveRef.current = true;
-        transactionStateRef.current = navigationState;
-
-        try {
-          callback();
-        } finally {
-          isTransactionActiveRef.current = false;
-        }
-
-        return transactionStateRef.current;
-      });
-    }, []);
-
-    const getState = React.useCallback(
-      () =>
-        transactionStateRef.current !== null
-          ? transactionStateRef.current
-          : navigationStateRef.current,
-      []
-    );
-
-    const setState = React.useCallback((navigationState: State) => {
-      if (transactionStateRef.current === null) {
-        throw new Error(
-          "Any 'setState' calls need to be done inside 'performTransaction'"
-        );
-      }
-
-      transactionStateRef.current = navigationState;
-    }, []);
-
     const reset = React.useCallback(
       (state: NavigationState) => {
-        performTransaction(() => {
-          skipTrackingRef.current = true;
-          setState(state);
-        });
+        skipTrackingRef.current = true;
+        setState(state);
       },
-      [performTransaction, setState]
+      [setState]
     );
 
     const { trackState, trackAction } = useDevTools({
@@ -223,12 +176,10 @@ const BaseNavigationContainer = React.forwardRef(
 
     const resetRoot = React.useCallback(
       (state?: PartialState<NavigationState> | NavigationState) => {
-        performTransaction(() => {
-          trackAction('@@RESET_ROOT');
-          setState(state);
-        });
+        trackAction('@@RESET_ROOT');
+        setState(state);
       },
-      [performTransaction, setState, trackAction]
+      [setState, trackAction]
     );
 
     const getRootState = React.useCallback(() => {
@@ -269,13 +220,12 @@ const BaseNavigationContainer = React.forwardRef(
     const context = React.useMemo(
       () => ({
         state,
-        performTransaction,
         getState,
         setState,
         getKey,
         setKey,
       }),
-      [getKey, getState, performTransaction, setKey, setState, state]
+      [getKey, getState, setKey, setState, state]
     );
 
     React.useEffect(() => {
@@ -304,15 +254,12 @@ const BaseNavigationContainer = React.forwardRef(
         trackState(getRootState);
       }
 
-      navigationStateRef.current = state;
-      transactionStateRef.current = null;
-
       if (!isFirstMountRef.current && onStateChange) {
         onStateChange(getRootState());
       }
 
       isFirstMountRef.current = false;
-    }, [state, onStateChange, trackState, getRootState, emitter]);
+    }, [onStateChange, trackState, getRootState, emitter, state]);
 
     return (
       <NavigationBuilderContext.Provider value={builderContext}>
