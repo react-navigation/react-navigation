@@ -13,9 +13,8 @@ import {
   Provider as PaperProvider,
   DefaultTheme as PaperLightTheme,
   DarkTheme as PaperDarkTheme,
-  Appbar,
-  List,
   Divider,
+  Appbar,
 } from 'react-native-paper';
 import { Asset } from 'expo-asset';
 import {
@@ -26,14 +25,10 @@ import {
   DefaultTheme,
   DarkTheme,
 } from '@react-navigation/native';
-import {
-  createDrawerNavigator,
-  DrawerNavigationProp,
-} from '@react-navigation/drawer';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import {
   createStackNavigator,
   Assets as StackAssets,
-  StackNavigationProp,
   HeaderStyleInterpolators,
 } from '@react-navigation/stack';
 
@@ -51,18 +46,18 @@ import AuthFlow from './Screens/AuthFlow';
 import CompatAPI from './Screens/CompatAPI';
 import SettingsItem from './Shared/SettingsItem';
 import { Updates } from 'expo';
+import { DrawerActions } from '@react-navigation/routers';
 
 YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
 
 type RootDrawerParamList = {
-  Root: undefined;
-  Another: undefined;
-};
-
-type RootStackParamList = {
   Home: undefined;
 } & {
   [P in keyof typeof SCREENS]: undefined;
+};
+
+type RootStackParamList = {
+  Root: undefined;
 };
 
 const SCREENS = {
@@ -125,18 +120,18 @@ export default function App() {
     config: {
       Root: {
         path: 'root',
-        screens: Object.keys(SCREENS).reduce<{ [key: string]: string }>(
-          (acc, name) => {
-            // Convert screen names such as SimpleStack to kebab case (simple-stack)
-            acc[name] = name
-              .replace(/([A-Z]+)/g, '-$1')
-              .replace(/^-/, '')
-              .toLowerCase();
+        screens: Object.keys({
+          Home: { title: 'Example' },
+          ...SCREENS,
+        }).reduce<{ [key: string]: string }>((acc, name) => {
+          // Convert screen names such as SimpleStack to kebab case (simple-stack)
+          acc[name] = name
+            .replace(/([A-Z]+)/g, '-$1')
+            .replace(/^-/, '')
+            .toLowerCase();
 
-            return acc;
-          },
-          {}
-        ),
+          return acc;
+        }, {}),
       },
     },
   });
@@ -213,44 +208,44 @@ export default function App() {
         }
         theme={theme}
       >
-        <Drawer.Navigator>
-          <Drawer.Screen
+        <Stack.Navigator
+          screenOptions={{
+            headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
+          }}
+        >
+          <Stack.Screen
             name="Root"
             options={{
               title: 'Examples',
-              drawerIcon: ({ size, color }) => (
-                <MaterialIcons size={size} color={color} name="folder" />
-              ),
+              ...(Platform.OS !== 'web' && {
+                headerLeft: () => (
+                  <Appbar.Action
+                    color={theme.colors.text}
+                    icon="menu"
+                    onPress={() =>
+                      containerRef.current?.dispatch(
+                        DrawerActions.toggleDrawer()
+                      )
+                    }
+                  />
+                ),
+              }),
             }}
           >
-            {({
-              navigation,
-            }: {
-              navigation: DrawerNavigationProp<RootDrawerParamList>;
-            }) => (
-              <Stack.Navigator
-                screenOptions={{
-                  headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
-                }}
+            {() => (
+              <Drawer.Navigator
+                drawerType={Platform.OS === 'web' ? 'sidebar' : 'front'}
               >
-                <Stack.Screen
+                <Drawer.Screen
                   name="Home"
                   options={{
                     title: 'Examples',
-                    headerLeft: () => (
-                      <Appbar.Action
-                        color={theme.colors.text}
-                        icon="menu"
-                        onPress={() => navigation.toggleDrawer()}
-                      />
+                    drawerIcon: ({ size, color }) => (
+                      <MaterialIcons size={size} color={color} name="folder" />
                     ),
                   }}
                 >
-                  {({
-                    navigation,
-                  }: {
-                    navigation: StackNavigationProp<RootStackParamList>;
-                  }) => (
+                  {() => (
                     <ScrollView
                       style={{ backgroundColor: theme.colors.background }}
                     >
@@ -281,21 +276,12 @@ export default function App() {
                         }}
                       />
                       <Divider />
-                      {(Object.keys(SCREENS) as (keyof typeof SCREENS)[]).map(
-                        name => (
-                          <List.Item
-                            key={name}
-                            title={SCREENS[name].title}
-                            onPress={() => navigation.navigate(name)}
-                          />
-                        )
-                      )}
                     </ScrollView>
                   )}
-                </Stack.Screen>
+                </Drawer.Screen>
                 {(Object.keys(SCREENS) as (keyof typeof SCREENS)[]).map(
                   name => (
-                    <Stack.Screen
+                    <Drawer.Screen
                       key={name}
                       name={name}
                       component={SCREENS[name].component}
@@ -303,10 +289,10 @@ export default function App() {
                     />
                   )
                 )}
-              </Stack.Navigator>
+              </Drawer.Navigator>
             )}
-          </Drawer.Screen>
-        </Drawer.Navigator>
+          </Stack.Screen>
+        </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
   );
