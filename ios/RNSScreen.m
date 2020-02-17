@@ -34,11 +34,16 @@
 
 - (void)reactSetFrame:(CGRect)frame
 {
-  if (_active) {
+  if (![self.reactViewController.parentViewController
+        isKindOfClass:[UINavigationController class]]) {
     [super reactSetFrame:frame];
   }
-  // ignore setFrame call from react, the frame of this view
-  // is controlled by the UIViewController it is contained in
+  // when screen is mounted under UINavigationController it's size is controller
+  // by the navigation controller itself. That is, it is set to fill space of
+  // the controller. In that case we ignore react layout system from managing
+  // the screen dimentions and we wait for the screen VC to update and then we
+  // pass the dimentions to ui view manager to take into account when laying out
+  // subviews
 }
 
 - (void)updateBounds
