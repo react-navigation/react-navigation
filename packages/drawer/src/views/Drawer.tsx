@@ -79,7 +79,7 @@ type Props = {
   onGestureRef?: (ref: PanGestureHandler | null) => void;
   gestureEnabled: boolean;
   drawerPosition: 'left' | 'right';
-  drawerType: 'front' | 'back' | 'slide';
+  drawerType: 'front' | 'back' | 'slide' | 'sidebar';
   keyboardDismissMode: 'none' | 'on-drag';
   swipeEdgeWidth: number;
   swipeDistanceThreshold?: number;
@@ -543,6 +543,7 @@ export default class DrawerView extends React.PureComponent<Props> {
     } = this.props;
 
     const isRight = drawerPosition === 'right';
+    const isSidebar = drawerType === 'sidebar';
 
     const contentTranslateX = drawerType === 'front' ? 0 : this.translateX;
     const drawerTranslateX =
@@ -578,18 +579,27 @@ export default class DrawerView extends React.PureComponent<Props> {
         onGestureEvent={this.handleGestureEvent}
         onHandlerStateChange={this.handleGestureStateChange}
         hitSlop={hitSlop}
-        enabled={gestureEnabled}
+        enabled={isSidebar ? false : gestureEnabled}
         {...gestureHandlerProps}
       >
         <Animated.View
           onLayout={this.handleContainerLayout}
-          style={styles.main}
+          style={[
+            styles.main,
+            isSidebar && {
+              flexDirection: isRight ? 'row' : 'row-reverse',
+            },
+          ]}
         >
           <Animated.View
             style={[
               styles.content,
               {
-                transform: [{ translateX: contentTranslateX }],
+                transform: [
+                  {
+                    translateX: isSidebar ? 0 : contentTranslateX,
+                  },
+                ],
               },
               sceneContainerStyle as any,
             ]}
@@ -624,9 +634,18 @@ export default class DrawerView extends React.PureComponent<Props> {
             onLayout={this.handleDrawerLayout}
             style={[
               styles.container,
-              isRight ? { right: offset } : { left: offset },
+              !isSidebar && styles.drawerContent,
+              isSidebar
+                ? undefined
+                : isRight
+                ? { right: offset }
+                : { left: offset },
               {
-                transform: [{ translateX: drawerTranslateX }],
+                transform: [
+                  {
+                    translateX: isSidebar ? 0 : drawerTranslateX,
+                  },
+                ],
                 opacity: this.drawerOpacity,
                 zIndex: drawerType === 'back' ? -1 : 0,
               },
@@ -644,6 +663,8 @@ export default class DrawerView extends React.PureComponent<Props> {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
+  },
+  drawerContent: {
     position: 'absolute',
     top: 0,
     bottom: 0,
