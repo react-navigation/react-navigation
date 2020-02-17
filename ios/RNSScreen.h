@@ -10,7 +10,9 @@ typedef NS_ENUM(NSInteger, RNSScreenStackPresentation) {
   RNSScreenStackPresentationModal,
   RNSScreenStackPresentationTransparentModal,
   RNSScreenStackPresentationContainedModal,
-  RNSScreenStackPresentationContainedTransparentModal
+  RNSScreenStackPresentationContainedTransparentModal,
+  RNSScreenStackPresentationFullScreenModal,
+  RNSScreenStackPresentationFormSheet
 };
 
 typedef NS_ENUM(NSInteger, RNSScreenStackAnimation) {

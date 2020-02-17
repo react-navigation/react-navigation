@@ -80,6 +80,12 @@
       _controller.modalPresentationStyle = UIModalPresentationFullScreen;
 #endif
       break;
+    case RNSScreenStackPresentationFullScreenModal:
+      _controller.modalPresentationStyle = UIModalPresentationFullScreen;
+      break;
+    case RNSScreenStackPresentationFormSheet:
+      _controller.modalPresentationStyle = UIModalPresentationFormSheet;
+      break;
     case RNSScreenStackPresentationTransparentModal:
       _controller.modalPresentationStyle = UIModalPresentationOverFullScreen;
       break;
@@ -315,6 +321,8 @@ RCT_EXPORT_VIEW_PROPERTY(onDismissed, RCTDirectEventBlock);
 RCT_ENUM_CONVERTER(RNSScreenStackPresentation, (@{
                                                   @"push": @(RNSScreenStackPresentationPush),
                                                   @"modal": @(RNSScreenStackPresentationModal),
+                                                  @"fullScreenModal": @(RNSScreenStackPresentationFullScreenModal),
+                                                  @"formSheet": @(RNSScreenStackPresentationFormSheet),
                                                   @"containedModal": @(RNSScreenStackPresentationContainedModal),
                                                   @"transparentModal": @(RNSScreenStackPresentationTransparentModal),
                                                   @"containedTransparentModal": @(RNSScreenStackPresentationContainedTransparentModal)

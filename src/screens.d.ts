@@ -15,7 +15,7 @@ declare module 'react-native-screens' {
   export function enableScreens(shouldEnableScreens?: boolean): void;
   export function screensEnabled(): boolean;
 
-  export type StackPresentationTypes = 'push' | 'modal' | 'transparentModal';
+  export type StackPresentationTypes = 'push' | 'modal' | 'transparentModal' | 'fullScreenModal' | 'formSheet';
   export type StackAnimationTypes = 'default' | 'fade' | 'flip' | 'none';
 
   export interface ScreenProps extends ViewProps {
