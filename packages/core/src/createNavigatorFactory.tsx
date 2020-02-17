@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { ParamListBase } from '@react-navigation/routers';
 import Screen from './Screen';
-import { ParamListBase, TypedNavigator } from './types';
+import { TypedNavigator } from './types';
 
 /**
  * Higher order component to create a `Navigator` and `Screen` pair.
@@ -20,7 +21,7 @@ export default function createNavigatorFactory<
   > {
     if (arguments[0] !== undefined) {
       throw new Error(
-        "Creating a navigator doesn't take an argument. Maybe you are trying to use React Navigation 4 API with React Navigation 5?"
+        "Creating a navigator doesn't take an argument. Maybe you are trying to use React Navigation 4 API with React Navigation 5? See https://reactnavigation.org/docs/en/upgrading-from-4.x.html for migration guide."
       );
     }
 

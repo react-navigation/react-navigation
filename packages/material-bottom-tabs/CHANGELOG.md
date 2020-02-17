@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.5](https://github.com/react-navigation/react-navigation/tree/master/packages/material-bottom-tabs/compare/@react-navigation/material-bottom-tabs@5.0.4...@react-navigation/material-bottom-tabs@5.0.5) (2020-02-14)
+
+**Note:** Version bump only for package @react-navigation/material-bottom-tabs
+
+
+
+
+
+## [5.0.4](https://github.com/react-navigation/react-navigation/tree/master/packages/material-bottom-tabs/compare/@react-navigation/material-bottom-tabs@5.0.3...@react-navigation/material-bottom-tabs@5.0.4) (2020-02-14)
+
+**Note:** Version bump only for package @react-navigation/material-bottom-tabs
+
+
+
+
+
+## [5.0.3](https://github.com/react-navigation/react-navigation/tree/master/packages/material-bottom-tabs/compare/@react-navigation/material-bottom-tabs@5.0.2...@react-navigation/material-bottom-tabs@5.0.3) (2020-02-12)
+
+**Note:** Version bump only for package @react-navigation/material-bottom-tabs
+
+
+
+
+
+## [5.0.2](https://github.com/react-navigation/react-navigation/tree/master/packages/material-bottom-tabs/compare/@react-navigation/material-bottom-tabs@5.0.1...@react-navigation/material-bottom-tabs@5.0.2) (2020-02-11)
+
+**Note:** Version bump only for package @react-navigation/material-bottom-tabs
+
+
+
+
+
+## [5.0.1](https://github.com/react-navigation/react-navigation/tree/master/packages/material-bottom-tabs/compare/@react-navigation/material-bottom-tabs@5.0.0-alpha.42...@react-navigation/material-bottom-tabs@5.0.1) (2020-02-10)
+
+**Note:** Version bump only for package @react-navigation/material-bottom-tabs
+
+
+
+
+
 # [5.0.0-alpha.42](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-bottom-tabs/compare/@react-navigation/material-bottom-tabs@5.0.0-alpha.41...@react-navigation/material-bottom-tabs@5.0.0-alpha.42) (2020-02-04)
 
 **Note:** Version bump only for package @react-navigation/material-bottom-tabs

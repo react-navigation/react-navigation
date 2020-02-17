@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.5](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.4...@react-navigation/drawer@5.0.5) (2020-02-14)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+## [5.0.4](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.3...@react-navigation/drawer@5.0.4) (2020-02-14)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+## [5.0.3](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.2...@react-navigation/drawer@5.0.3) (2020-02-12)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+## [5.0.2](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.1...@react-navigation/drawer@5.0.2) (2020-02-11)
+
+
+### Bug Fixes
+
+* remove unnecessary borderless from drawer item ([031136f](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/031136f7c86eff3c9139d1baa243da9f19bc61d4)), closes [#6801](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/6801)
+
+
+
+
+
+## [5.0.1](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.47...@react-navigation/drawer@5.0.1) (2020-02-10)
+
+
+### Bug Fixes
+
+* prevent ripple from bleeding out of drawer item ([688d16d](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/688d16de5d9f4c5116b92e3ebf3029b56a659d7a)), closes [#6801](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/6801)
+
+
+
+
+
 # [5.0.0-alpha.47](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.46...@react-navigation/drawer@5.0.0-alpha.47) (2020-02-04)
 
 **Note:** Version bump only for package @react-navigation/drawer

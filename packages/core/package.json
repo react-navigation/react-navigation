@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/core",
   "description": "Core utilities for building navigators",
-  "version": "5.0.0",
+  "version": "5.1.3",
   "keywords": [
     "react",
     "react-native",
@@ -29,16 +29,16 @@
     "clean": "del lib"
   },
   "dependencies": {
+    "@react-navigation/routers": "^5.0.1",
     "escape-string-regexp": "^2.0.0",
-    "query-string": "^6.9.0",
+    "query-string": "^6.10.1",
     "react-is": "^16.12.0",
     "shortid": "^2.2.15",
     "use-subscription": "^1.3.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.7",
-    "@react-native-community/bob": "^0.8.0",
-    "@types/react": "^16.9.17",
+    "@react-native-community/bob": "^0.9.3",
+    "@types/react": "^16.9.19",
     "@types/react-is": "^16.7.1",
     "@types/shortid": "^0.0.29",
     "@types/use-subscription": "^1.0.0",
@@ -46,10 +46,10 @@
     "react": "~16.9.0",
     "react-native-testing-library": "^1.12.0",
     "react-test-renderer": "~16.12.0",
-    "typescript": "^3.7.4"
+    "typescript": "^3.7.5"
   },
   "peerDependencies": {
-    "react": "~16.9.0"
+    "react": "*"
   },
   "@react-native-community/bob": {
     "source": "src",

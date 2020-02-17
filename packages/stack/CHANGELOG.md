@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.5](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.4...@react-navigation/stack@5.0.5) (2020-02-14)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+## [5.0.4](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.3...@react-navigation/stack@5.0.4) (2020-02-14)
+
+
+### Bug Fixes
+
+* hard code header height for animation ([8f40a98](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/8f40a980862a182a9e86dbb1e4764a39d824cd70)), closes [#6818](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/6818)
+
+
+
+
+
+## [5.0.3](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.2...@react-navigation/stack@5.0.3) (2020-02-12)
+
+
+### Bug Fixes
+
+* check if we can go baack before dispatching pop ([6c9447a](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/6c9447a38c74ca029fc9def8aca0a2d2cca9639c))
+
+
+
+
+
+## [5.0.2](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.1...@react-navigation/stack@5.0.2) (2020-02-11)
+
+
+### Bug Fixes
+
+* provide route context to header and bottom tabs ([b6e7e08](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/b6e7e08b9a05be6c04ed21e938b9580876239116))
+
+
+
+
+
+## [5.0.1](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.71...@react-navigation/stack@5.0.1) (2020-02-10)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
 # [5.0.0-alpha.71](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.70...@react-navigation/stack@5.0.0-alpha.71) (2020-02-05)
 
 

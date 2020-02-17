@@ -18,6 +18,7 @@ export type LinkingOptions = {
   /**
    * The prefixes are stripped from the URL before parsing them.
    * Usually they are the `scheme` + `host` (e.g. `myapp://chat?user=jane`)
+   * Only applicable on Android and iOS.
    */
   prefixes: string[];
   /**
@@ -36,6 +37,7 @@ export type LinkingOptions = {
   config?: Parameters<typeof getStateFromPathDefault>[1];
   /**
    * Custom function to parse the URL to a valid navigation state (advanced).
+   * Only applicable on Web.
    */
   getStateFromPath?: typeof getStateFromPathDefault;
   /**

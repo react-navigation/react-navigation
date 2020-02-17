@@ -6,8 +6,8 @@ import {
   NavigationHelpers,
   Route,
   NavigationProp,
+  TabNavigationState,
 } from '@react-navigation/native';
-import { TabNavigationState } from '@react-navigation/routers';
 
 export type MaterialTopTabNavigationEventMap = {
   /**

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StackActions } from '@react-navigation/routers';
+import { StackActions } from '@react-navigation/native';
 
 import HeaderSegment from './HeaderSegment';
 import { StackHeaderProps, StackHeaderTitleProps } from '../../types';
@@ -55,11 +55,14 @@ export default React.memo(function Header(props: StackHeaderProps) {
       }
       onGoBack={
         previous
-          ? () =>
-              navigation.dispatch({
-                ...StackActions.pop(),
-                source: scene.route.key,
-              })
+          ? () => {
+              if (navigation.canGoBack()) {
+                navigation.dispatch({
+                  ...StackActions.pop(),
+                  source: scene.route.key,
+                });
+              }
+            }
           : undefined
       }
       styleInterpolator={styleInterpolator}

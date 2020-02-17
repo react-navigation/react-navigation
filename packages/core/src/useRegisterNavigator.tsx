@@ -23,4 +23,6 @@ export default function useRegisterNavigator() {
 
     return () => unregister(key);
   }, [container, key]);
+
+  return key;
 }

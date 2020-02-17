@@ -51,20 +51,55 @@ it('returns false for non-serializable object', () => {
 });
 
 it('returns false for circular references', () => {
-  const o = {
-    index: 0,
-    key: '7',
-    routeNames: ['foo', 'bar'],
-    routes: [
-      {
-        key: 'foo',
-        name: 'foo',
-      },
-    ],
+  const x = {
+    a: 1,
+    b: { b1: 1 },
   };
 
   // @ts-ignore
-  o.routes[0].state = o;
+  x.b.b2 = x;
+  // @ts-ignore
+  x.c = x.b;
 
-  expect(isSerializable(o)).toBe(false);
+  expect(isSerializable(x)).toBe(false);
+
+  const y = [
+    {
+      label: 'home',
+      children: [{ label: 'product' }],
+    },
+    { label: 'about', extend: {} },
+  ];
+
+  // @ts-ignore
+  y[0].children[0].parent = y[0];
+  // @ts-ignore
+  y[1].extend.home = y[0].children[0];
+
+  expect(isSerializable(y)).toBe(false);
+
+  const z = {
+    name: 'sun',
+    child: [{ name: 'flower' }],
+  };
+
+  // @ts-ignore
+  z.child[0].parent = z;
+
+  expect(isSerializable(z)).toBe(false);
+});
+
+it("doesn't fail if same object used multiple times", () => {
+  const o = { foo: 'bar' };
+
+  expect(
+    isSerializable({
+      baz: 'bax',
+      first: o,
+      second: o,
+      stuff: {
+        b: o,
+      },
+    })
+  ).toBe(true);
 });

@@ -1,5 +1,9 @@
 import queryString from 'query-string';
-import { NavigationState, PartialState, Route } from './types';
+import {
+  NavigationState,
+  PartialState,
+  Route,
+} from '@react-navigation/routers';
 
 type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 
@@ -154,6 +158,10 @@ export default function getPathFromState(
     current = route.state;
   }
 
-  path = path.slice(path.length - 1) === '/' ? path.slice(0, -1) : path;
+  path =
+    path !== '/' && path.slice(path.length - 1) === '/'
+      ? path.slice(0, -1)
+      : path;
+
   return path;
 }

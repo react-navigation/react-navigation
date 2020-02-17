@@ -1,9 +1,18 @@
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
+import {
+  CommonActions,
+  DefaultRouterOptions,
+  NavigationState,
+  ParamListBase,
+  Router,
+  RouterFactory,
+  PartialState,
+  NavigationAction,
+} from '@react-navigation/routers';
 import { NavigationStateContext } from './BaseNavigationContainer';
 import NavigationRouteContext from './NavigationRouteContext';
 import Screen from './Screen';
-import { navigate } from './CommonActions';
 import useEventEmitter from './useEventEmitter';
 import useRegisterNavigator from './useRegisterNavigator';
 import useDescriptors from './useDescriptors';
@@ -15,16 +24,9 @@ import useChildActionListeners from './useChildActionListeners';
 import useFocusedListeners from './useFocusedListeners';
 import useFocusedListenersChildrenAdapter from './useFocusedListenersChildrenAdapter';
 import {
-  DefaultRouterOptions,
   DefaultNavigatorOptions,
-  NavigationState,
-  ParamListBase,
   RouteConfig,
-  Router,
-  RouterFactory,
-  PartialState,
   PrivateValueStore,
-  NavigationAction,
 } from './types';
 import useStateGetters from './useStateGetters';
 import useOnGetState from './useOnGetState';
@@ -34,6 +36,7 @@ import useOnGetState from './useOnGetState';
 PrivateValueStore;
 
 type NavigatorRoute = {
+  key: string;
   params?: {
     screen?: string;
     params?: object;
@@ -152,7 +155,7 @@ export default function useNavigationBuilder<
   createRouter: RouterFactory<State, any, RouterOptions>,
   options: DefaultNavigatorOptions<ScreenOptions> & RouterOptions
 ) {
-  useRegisterNavigator();
+  const navigatorKey = useRegisterNavigator();
 
   const route = React.useContext(NavigationRouteContext) as
     | NavigatorRoute
@@ -230,8 +233,8 @@ export default function useNavigationBuilder<
     state: currentState,
     getState: getCurrentState,
     setState,
-    key,
-    performTransaction,
+    setKey,
+    getKey,
   } = React.useContext(NavigationStateContext);
 
   const previousStateRef = React.useRef<
@@ -292,7 +295,7 @@ export default function useNavigationBuilder<
     // The update should be limited to current navigator only, so we call the router manually
     const updatedState = router.getStateForAction(
       state,
-      navigate(route.params.screen, route.params.params),
+      CommonActions.navigate(route.params.screen, route.params.params),
       {
         routeNames,
         routeParamList,
@@ -312,9 +315,7 @@ export default function useNavigationBuilder<
     // If the state needs to be updated, we'll schedule an update with React
     // setState in render seems hacky, but that's how React docs implement getDerivedPropsFromState
     // https://reactjs.org/docs/hooks-faq.html#how-do-i-implement-getderivedstatefromprops
-    performTransaction(() => {
-      setState(nextState);
-    });
+    setState(nextState);
   }
 
   // The up-to-date state will come in next render, but we don't need to wait for it
@@ -323,11 +324,13 @@ export default function useNavigationBuilder<
   state = nextState;
 
   React.useEffect(() => {
+    setKey(navigatorKey);
+
     return () => {
       // We need to clean up state for this navigator on unmount
-      performTransaction(
-        () => getCurrentState() !== undefined && setState(undefined)
-      );
+      if (getCurrentState() !== undefined && getKey() === navigatorKey) {
+        setState(undefined);
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -364,7 +367,7 @@ export default function useNavigationBuilder<
     router,
     getState,
     setState,
-    key,
+    key: route?.key,
     listeners: actionListeners,
     routerConfigOptions: {
       routeNames,
@@ -374,7 +377,7 @@ export default function useNavigationBuilder<
 
   const onRouteFocus = useOnRouteFocus({
     router,
-    key,
+    key: route?.key,
     getState,
     setState,
   });

@@ -1,4 +1,4 @@
-import { DrawerActions, DrawerActionType } from '@react-navigation/routers';
+import { DrawerActions, DrawerActionType } from '@react-navigation/native';
 
 export function openDrawer(): DrawerActionType {
   return DrawerActions.openDrawer();

@@ -12,8 +12,8 @@ import {
   Descriptor,
   Route,
   NavigationHelpers,
+  StackNavigationState,
 } from '@react-navigation/native';
-import { StackNavigationState } from '@react-navigation/routers';
 
 export type StackNavigationEventMap = {
   /**
@@ -548,6 +548,10 @@ export type StackHeaderInterpolationProps = {
    * Layout measurements for various items we use for animation.
    */
   layouts: {
+    /**
+     * Layout of the header
+     */
+    header: Layout;
     /**
      * Layout of the whole screen.
      */

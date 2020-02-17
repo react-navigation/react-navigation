@@ -504,7 +504,9 @@ export default class DrawerView extends React.PureComponent<Props> {
     // Until layout is available, drawer is hidden with opacity: 0 by default
     // Show it in the next frame when layout is available
     // If we don't delay it until the next frame, there's a visible flicker
-    requestAnimationFrame(() => this.drawerOpacity.setValue(1));
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => this.drawerOpacity.setValue(1))
+    );
   };
 
   private toggleDrawer = (open: boolean) => {
@@ -611,7 +613,10 @@ export default class DrawerView extends React.PureComponent<Props> {
             >
               {renderSceneContent({ progress: this.progress })}
             </View>
-            <TapGestureHandler onHandlerStateChange={this.handleTapStateChange}>
+            <TapGestureHandler
+              enabled={gestureEnabled}
+              onHandlerStateChange={this.handleTapStateChange}
+            >
               <Overlay progress={this.progress} style={overlayStyle} />
             </TapGestureHandler>
             {// disable overlay if 'sidebar' on the big screen

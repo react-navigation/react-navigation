@@ -1,12 +1,12 @@
 import shortid from 'shortid';
+import BaseRouter from './BaseRouter';
 import {
   NavigationState,
-  CommonAction,
+  CommonNavigationAction,
   Router,
-  BaseRouter,
   DefaultRouterOptions,
   Route,
-} from '@react-navigation/core';
+} from './types';
 
 export type StackActionType =
   | {
@@ -58,7 +58,10 @@ export const StackActions = {
 };
 
 export default function StackRouter(options: StackRouterOptions) {
-  const router: Router<StackNavigationState, CommonAction | StackActionType> = {
+  const router: Router<
+    StackNavigationState,
+    CommonNavigationAction | StackActionType
+  > = {
     ...BaseRouter,
 
     type: 'stack',
@@ -200,7 +203,13 @@ export default function StackRouter(options: StackRouterOptions) {
                 ? {
                     key: key !== undefined ? key : `${name}-${shortid()}`,
                     name,
-                    params,
+                    params:
+                      routeParamList[name] !== undefined
+                        ? {
+                            ...routeParamList[name],
+                            ...params,
+                          }
+                        : params,
                   }
                 : route
             ),

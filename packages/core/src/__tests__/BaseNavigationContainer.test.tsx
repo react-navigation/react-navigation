@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { act, render } from 'react-native-testing-library';
+import {
+  DefaultRouterOptions,
+  NavigationState,
+  Router,
+} from '@react-navigation/routers';
 import BaseNavigationContainer, {
   NavigationStateContext,
 } from '../BaseNavigationContainer';
 import MockRouter, { MockActions } from './__fixtures__/MockRouter';
 import useNavigationBuilder from '../useNavigationBuilder';
 import Screen from '../Screen';
-import {
-  DefaultRouterOptions,
-  NavigationState,
-  Router,
-  NavigationContainerRef,
-} from '../types';
+import { NavigationContainerRef } from '../types';
 
 it('throws when getState is accessed without a container', () => {
   expect.assertions(1);
@@ -48,77 +48,6 @@ it('throws when setState is accessed without a container', () => {
 
   expect(() => render(element).update(element)).toThrowError(
     "We couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?"
-  );
-});
-
-it('throws when performTransaction is accessed without a container', () => {
-  expect.assertions(1);
-
-  const Test = () => {
-    const { performTransaction } = React.useContext(NavigationStateContext);
-
-    // eslint-disable-next-line babel/no-unused-expressions
-    performTransaction;
-
-    return null;
-  };
-
-  const element = <Test />;
-
-  expect(() => render(element).update(element)).toThrowError(
-    "We couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?"
-  );
-});
-
-it('throws when setState is called outside performTransaction', () => {
-  expect.assertions(1);
-
-  const Test = () => {
-    const { setState } = React.useContext(NavigationStateContext);
-
-    React.useEffect(() => {
-      setState(undefined);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    return null;
-  };
-
-  const element = (
-    <BaseNavigationContainer>
-      <Test />
-    </BaseNavigationContainer>
-  );
-
-  expect(() => render(element).update(element)).toThrowError(
-    "Any 'setState' calls need to be done inside 'performTransaction'"
-  );
-});
-
-it('throws when nesting performTransaction', () => {
-  expect.assertions(1);
-
-  const Test = () => {
-    const { performTransaction } = React.useContext(NavigationStateContext);
-
-    React.useEffect(() => {
-      performTransaction(() => {
-        performTransaction(() => {});
-      });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    return null;
-  };
-
-  const element = (
-    <BaseNavigationContainer>
-      <Test />
-    </BaseNavigationContainer>
-  );
-
-  expect(() => render(element).update(element)).toThrowError(
-    "Only one transaction can be active at a time. Did you accidentally nest 'performTransaction'?"
   );
 });
 
@@ -500,4 +429,52 @@ it('emits state events when the state changes', () => {
       { key: 'baz', name: 'baz', params: { answer: 42 } },
     ],
   });
+});
+
+it('throws if there is no navigator rendered', () => {
+  expect.assertions(1);
+
+  const ref = React.createRef<NavigationContainerRef>();
+
+  const element = <BaseNavigationContainer ref={ref} children={null} />;
+
+  render(element);
+
+  act(() => {
+    expect(() => ref.current?.dispatch({ type: 'WHATEVER' })).toThrow(
+      "The 'navigation' object hasn't been initialized yet."
+    );
+  });
+});
+
+it("throws if the ref hasn't finished initializing", () => {
+  expect.assertions(1);
+
+  const ref = React.createRef<NavigationContainerRef>();
+
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestScreen = () => {
+    React.useEffect(() => {
+      expect(() => ref.current?.dispatch({ type: 'WHATEVER' })).toThrow(
+        "The 'navigation' object hasn't been initialized yet."
+      );
+    }, []);
+
+    return null;
+  };
+
+  const element = (
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator>
+        <Screen name="foo" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(element);
 });
