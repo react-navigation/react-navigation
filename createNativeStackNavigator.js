@@ -204,7 +204,7 @@ class StackView extends React.Component {
     return (
       <Screen
         key={`screen_${route.key}`}
-        style={options.cardStyle}
+        style={[StyleSheet.absoluteFill, options.cardStyle]}
         stackAnimation={stackAnimation}
         stackPresentation={stackPresentation}
         gestureEnabled={
