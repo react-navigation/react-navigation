@@ -83,14 +83,16 @@ export default function useScrollToTop(
           const scrollable = getScrollableNode(ref);
 
           if (isFocused && isFirst && scrollable && !e.defaultPrevented) {
+            const contentOffsetY = scrollable.props.contentOffset?.y || 0;
+            
             if ('scrollToTop' in scrollable) {
               scrollable.scrollToTop();
             } else if ('scrollTo' in scrollable) {
-              scrollable.scrollTo({ y: 0, animated: true });
+              scrollable.scrollTo({ y: contentOffsetY, animated: true });
             } else if ('scrollToOffset' in scrollable) {
-              scrollable.scrollToOffset({ offset: 0, animated: true });
+              scrollable.scrollToOffset({ offset: contentOffsetY, animated: true });
             } else if ('scrollResponderScrollTo' in scrollable) {
-              scrollable.scrollResponderScrollTo({ y: 0, animated: true });
+              scrollable.scrollResponderScrollTo({ y: contentOffsetY, animated: true });
             }
           }
         });
