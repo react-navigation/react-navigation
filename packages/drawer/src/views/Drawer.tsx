@@ -614,17 +614,27 @@ export default class DrawerView extends React.PureComponent<Props> {
             <TapGestureHandler onHandlerStateChange={this.handleTapStateChange}>
               <Overlay progress={this.progress} style={overlayStyle} />
             </TapGestureHandler>
+            {// disable overlay if 'sidebar' on the big screen
+            isSidebar ? null : (
+              <TapGestureHandler
+                onHandlerStateChange={this.handleTapStateChange}
+              >
+                <Overlay progress={this.progress} style={overlayStyle} />
+              </TapGestureHandler>
+            )}
           </Animated.View>
-          <Animated.Code
-            exec={block([
-              onChange(this.manuallyTriggerSpring, [
-                cond(eq(this.manuallyTriggerSpring, TRUE), [
-                  set(this.nextIsOpen, FALSE),
-                  call([], () => (this.currentOpenValue = false)),
+          {isSidebar ? null : (
+            <Animated.Code
+              exec={block([
+                onChange(this.manuallyTriggerSpring, [
+                  cond(eq(this.manuallyTriggerSpring, TRUE), [
+                    set(this.nextIsOpen, FALSE),
+                    call([], () => (this.currentOpenValue = false)),
+                  ]),
                 ]),
-              ]),
-            ])}
-          />
+              ])}
+            />
+          )}
           <Animated.View
             accessibilityViewIsModal={open}
             removeClippedSubviews={Platform.OS !== 'ios'}
