@@ -134,6 +134,7 @@ export default function App() {
           { Home: '' }
         ),
       },
+    },
   });
 
   const [theme, setTheme] = React.useState(DefaultTheme);
