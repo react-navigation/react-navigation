@@ -236,6 +236,7 @@ export default function App() {
             {() => (
               <Drawer.Navigator
                 drawerType={Platform.OS === 'web' ? 'sidebar' : 'front'}
+                screenOptions={{ unmountOnBlur: true }}
               >
                 <Drawer.Screen
                   name="Home"
