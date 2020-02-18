@@ -39,7 +39,6 @@ import {
 
 import LinkingPrefixes from './LinkingPrefixes';
 import SimpleStack from './Screens/SimpleStack';
-import NativeStack from './Screens/NativeStack';
 import ModalPresentationStack from './Screens/ModalPresentationStack';
 import StackTransparent from './Screens/StackTransparent';
 import StackHeaderCustomization from './Screens/StackHeaderCustomization';
@@ -67,7 +66,6 @@ type RootStackParamList = {
 
 const SCREENS = {
   SimpleStack: { title: 'Simple Stack', component: SimpleStack },
-  NativeStack: { title: 'Native Stack', component: NativeStack },
   ModalPresentationStack: {
     title: 'Modal Presentation Stack',
     component: ModalPresentationStack,
