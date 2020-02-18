@@ -32,11 +32,6 @@ public class ScreenStackFragment extends ScreenFragment {
     }
 
     @Override
-    public void startAnimation(Animation animation) {
-      super.startAnimation(animation);
-    }
-
-    @Override
     protected void onAnimationEnd() {
       super.onAnimationEnd();
       mFragment.onViewAnimationEnd();

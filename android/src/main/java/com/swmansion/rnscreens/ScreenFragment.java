@@ -23,6 +23,10 @@ public class ScreenFragment extends Fragment {
       ((ViewGroup) parent).endViewTransition(view);
       ((ViewGroup) parent).removeView(view);
     }
+    // view detached from fragment manager get their visibility changed to GONE after their state is
+    // dumped. Since we don't restore the state but want to reuse the view we need to change visibility
+    // back to VISIBLE in order for the fragment manager to animate in the view.
+    view.setVisibility(View.VISIBLE);
     return view;
   }
 
