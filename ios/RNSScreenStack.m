@@ -10,6 +10,11 @@
 #import <React/RCTTouchHandler.h>
 
 @interface RNSScreenStackView () <UINavigationControllerDelegate, UIAdaptivePresentationControllerDelegate, UIGestureRecognizerDelegate>
+
+@property (nonatomic) NSMutableArray<UIViewController *> *presentedModals;
+@property (nonatomic) BOOL updatingModals;
+@property (nonatomic) BOOL scheduleModalsUpdate;
+
 @end
 
 @interface RNSScreenStackAnimator : NSObject <UIViewControllerAnimatedTransitioning>
@@ -21,7 +26,6 @@
   UINavigationController *_controller;
   NSMutableArray<RNSScreenView *> *_reactSubviews;
   NSMutableSet<RNSScreenView *> *_dismissedScreens;
-  NSMutableArray<UIViewController *> *_presentedModals;
   __weak RNSScreenStackManager *_manager;
 }
 
@@ -160,8 +164,18 @@
 
 - (void)didUpdateReactSubviews
 {
-  // do nothing
   [self updateContainer];
+}
+
+- (void)didMoveToWindow
+{
+  [super didMoveToWindow];
+  if (self.window) {
+    // when stack is added to a window we try to update push and modal view controllers. It is
+    // because modal operations are blocked by UIKit when parent VC is not mounted, so we need
+    // to redo them when the stack is attached.
+    [self updateContainer];
+  }
 }
 
 - (void)setModalViewControllers:(NSArray<UIViewController *> *)controllers
@@ -197,26 +211,57 @@
     }
   }
 
+  // prevent re-entry
+  if (_updatingModals) {
+    _scheduleModalsUpdate = YES;
+    return;
+  }
+  _updatingModals = YES;
+
   __weak RNSScreenStackView *weakSelf = self;
 
-  void (^dispatchFinishTransitioning)(void) = ^{
+  void (^afterTransitions)(void) = ^{
     if (weakSelf.onFinishTransitioning) {
       weakSelf.onFinishTransitioning(nil);
+    }
+    weakSelf.updatingModals = NO;
+    if (weakSelf.scheduleModalsUpdate) {
+      // if modals update was requested during setModalViewControllers we set scheduleModalsUpdate
+      // flag in order to perform updates at a later point. Here we are done with all modals
+      // transitions and check this flag again. If it was set, we reset the flag and execute updates.
+      weakSelf.scheduleModalsUpdate = NO;
+      [weakSelf updateContainer];
     }
   };
 
   void (^finish)(void) = ^{
-    UIViewController *previous = changeRootController;
-    for (NSUInteger i = changeRootIndex; i < controllers.count; i++) {
-      UIViewController *next = controllers[i];
-      BOOL animate = (i == controllers.count - 1);
-      [previous presentViewController:next
-                             animated:animate
-                           completion:animate ? dispatchFinishTransitioning : nil];
-      previous = next;
+    NSUInteger oldCount = weakSelf.presentedModals.count;
+    if (changeRootIndex < oldCount) {
+      [weakSelf.presentedModals
+       removeObjectsInRange:NSMakeRange(changeRootIndex, oldCount - changeRootIndex)];
     }
-    if (changeRootIndex >= controllers.count) {
-      dispatchFinishTransitioning();
+    if (changeRootController.view.window == nil || changeRootIndex >= controllers.count) {
+      // if change controller view is not attached, presenting modals will silently fail on iOS.
+      // In such a case we trigger controllers update from didMoveToWindow.
+      // We also don't run any present transitions if changeRootIndex is greater or equal to the size
+      // of new controllers array. This means that no new controllers should be presented.
+      afterTransitions();
+      return;
+    } else {
+      UIViewController *previous = changeRootController;
+      for (NSUInteger i = changeRootIndex; i < controllers.count; i++) {
+        UIViewController *next = controllers[i];
+        BOOL lastModal = (i == controllers.count - 1);
+        [previous presentViewController:next
+                               animated:lastModal
+                             completion:^{
+          [weakSelf.presentedModals addObject:next];
+          if (lastModal) {
+            afterTransitions();
+          };
+        }];
+        previous = next;
+      }
     }
   };
 
@@ -227,7 +272,6 @@
   } else {
     finish();
   }
-  [_presentedModals setArray:controllers];
 }
 
 - (void)setPushViewControllers:(NSArray<UIViewController *> *)controllers
