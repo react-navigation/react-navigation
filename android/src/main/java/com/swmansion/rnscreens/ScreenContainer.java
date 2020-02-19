@@ -252,7 +252,9 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
     if (!orphaned.isEmpty()) {
       Object[] orphanedAry = orphaned.toArray();
       for (int i = 0; i < orphanedAry.length; i++) {
-        detachScreen((ScreenFragment) orphanedAry[i]);
+        if (orphanedAry[i] instanceof ScreenFragment) {
+          detachScreen((ScreenFragment) orphanedAry[i]);
+        }
       }
     }
 
