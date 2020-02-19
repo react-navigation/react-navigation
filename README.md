@@ -67,9 +67,9 @@ yarn add react-native-screens
 2. Open your App.js file and add the following snippet somewhere near the top of the file (e.g. right after import statements):
 
 ```js
-import { useScreens } from 'react-native-screens';
+import { enableScreens } from 'react-native-screens';
 
-useScreens();
+enableScreens();
 ```
 
 3. That's all 🎉 – enjoy faster navigation in your Expo app. Keep in mind screens are in pretty early phase so please report if you discover some issues.
