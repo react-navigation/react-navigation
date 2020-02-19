@@ -113,7 +113,7 @@ When you're sending a pull request:
 Maintainers with write access to the GitHub repo and the npm organization can publish new versions. To publish a new version, first, you need to export a `GH_TOKEN` environment variable as mentioned [here](https://github.com/lerna/lerna/tree/master/commands/version#--create-release-type). Then run:
 
 ```sh
-yarn lerna publish
+yarn release
 ```
 
 This will automatically bump the version and publish the packages. It'll also publish the changelogs on GitHub for each package.
