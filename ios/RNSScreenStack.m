@@ -22,7 +22,6 @@
 @end
 
 @implementation RNSScreenStackView {
-  BOOL _needUpdate;
   UINavigationController *_controller;
   NSMutableArray<RNSScreenView *> *_reactSubviews;
   NSMutableSet<RNSScreenView *> *_dismissedScreens;
@@ -38,7 +37,6 @@
     _dismissedScreens = [NSMutableSet new];
     _controller = [[UINavigationController alloc] init];
     _controller.delegate = self;
-    _needUpdate = NO;
     [self addSubview:_controller.view];
     _controller.interactivePopGestureRecognizer.delegate = self;
 
@@ -164,7 +162,12 @@
 
 - (void)didUpdateReactSubviews
 {
-  [self updateContainer];
+  // we need to wait until children have their layout set. At this point they don't have the layout
+  // set yet, however the layout call is already enqueued on ui thread. Enqueuing update call on the
+  // ui queue will guarantee that the update will run after layout.
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self updateContainer];
+  });
 }
 
 - (void)didMoveToWindow
@@ -278,6 +281,12 @@
 {
   // when there is no change we return immediately
   if ([_controller.viewControllers isEqualToArray:controllers]) {
+    return;
+  }
+
+  // if view controller is not yet attached to window we skip updates now and run them when view
+  // is attached
+  if (self.window == nil) {
     return;
   }
 
