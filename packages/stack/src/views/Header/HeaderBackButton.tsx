@@ -29,6 +29,7 @@ export default function HeaderBackButton({
   tintColor: customTintColor,
   titleLayout,
   truncatedLabel = 'Back',
+  accessibilityLabel = label && label !== 'Back' ? `${label}, back` : 'Go back',
 }: Props) {
   const { dark, colors } = useTheme();
 
@@ -153,9 +154,7 @@ export default function HeaderBackButton({
       accessible
       accessibilityRole="button"
       accessibilityComponentType="button"
-      accessibilityLabel={
-        label && label !== 'Back' ? `${label}, back` : 'Go back'
-      }
+      accessibilityLabel={accessibilityLabel}
       accessibilityTraits="button"
       testID="header-back"
       delayPressIn={0}
