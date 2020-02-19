@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.5](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.4...@react-navigation/core@5.1.5) (2020-02-19)
+
+
+### Bug Fixes
+
+* show descriptive error for invalid return for useFocusEffect ([1a28c29](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/1a28c299b5e3f0805eb6e9ea3cf5e9cc90c7a280))
+
+
+
+
+
 ## [5.1.4](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.3...@react-navigation/core@5.1.4) (2020-02-14)
 
 
