@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.6](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.5...@react-navigation/drawer@5.0.6) (2020-02-19)
+
+
+### Bug Fixes
+
+* delay showing drawer by one frame after layout ([e0c3298](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/e0c3298e64970dc01a61401cfbd7a623eb0fd735))
+
+
+
+
+
 ## [5.0.5](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.4...@react-navigation/drawer@5.0.5) (2020-02-14)
 
 **Note:** Version bump only for package @react-navigation/drawer
