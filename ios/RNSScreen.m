@@ -120,6 +120,17 @@
   }
 }
 
+- (void)setGestureEnabled:(BOOL)gestureEnabled
+{
+  #ifdef __IPHONE_13_0
+    if (@available(iOS 13.0, *)) {
+      _controller.modalInPresentation = !gestureEnabled;
+    }
+  #endif
+
+  _gestureEnabled = gestureEnabled;
+}
+
 - (UIView *)reactSuperview
 {
   return _reactSuperview;
