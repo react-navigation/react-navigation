@@ -14,4 +14,6 @@ export { default as createSwitchNavigator } from './createSwitchNavigator';
 export { default as withNavigation } from './withNavigation';
 export { default as withNavigationFocus } from './withNavigationFocus';
 
+export { default as NavigationEvents } from './NavigationEvents';
+
 export * from './types';
