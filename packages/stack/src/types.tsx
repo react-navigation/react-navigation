@@ -404,6 +404,10 @@ export type StackHeaderLeftButtonProps = {
    * Whether it's possible to navigate back in stack.
    */
   canGoBack?: boolean;
+  /**
+   * Accessibility label for the button for screen readers.
+   */
+  accessibilityLabel?: string;
 };
 
 export type StackHeaderTitleProps = {
