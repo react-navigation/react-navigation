@@ -174,9 +174,26 @@
 {
   [super didMoveToWindow];
   if (self.window) {
+    [self reactAddControllerToClosestParent:_controller];
     // when stack is added to a window we try to update push and modal view controllers. It is
     // because modal operations are blocked by UIKit when parent VC is not mounted, so we need
     // to redo them when the stack is attached.
+    [self updateContainerAfterBatch];
+  } else {
+    [_controller removeFromParentViewController];
+    [_controller didMoveToParentViewController:nil];
+  }
+}
+
+- (void)updateContainerAfterBatch
+{
+  if ([_manager.bridge isBatchActive]) {
+    [_manager.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
+      dispatch_async(dispatch_get_main_queue(), ^{
+        [self updateContainer];
+      });
+    }];
+  } else {
     [self updateContainer];
   }
 }
@@ -233,7 +250,7 @@
       // flag in order to perform updates at a later point. Here we are done with all modals
       // transitions and check this flag again. If it was set, we reset the flag and execute updates.
       weakSelf.scheduleModalsUpdate = NO;
-      [weakSelf updateContainer];
+      [weakSelf updateContainerAfterBatch];
     }
   };
 
@@ -299,7 +316,7 @@
   // controller is still there
   BOOL firstTimePush = ![lastTop isKindOfClass:[RNSScreen class]];
 
-  BOOL shouldAnimate = !firstTimePush && ((RNSScreenView *) lastTop.view).stackAnimation != RNSScreenStackAnimationNone && !_controller.presentedViewController;
+  BOOL shouldAnimate = !firstTimePush && ((RNSScreenView *) lastTop.view).stackAnimation != RNSScreenStackAnimationNone;
 
   if (firstTimePush) {
     // nothing pushed yet
@@ -358,7 +375,6 @@
 - (void)layoutSubviews
 {
   [super layoutSubviews];
-  [self reactAddControllerToClosestParent:_controller];
   _controller.view.frame = self.bounds;
 }
 
