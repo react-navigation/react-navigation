@@ -178,23 +178,10 @@
     // when stack is added to a window we try to update push and modal view controllers. It is
     // because modal operations are blocked by UIKit when parent VC is not mounted, so we need
     // to redo them when the stack is attached.
-    [self updateContainerAfterBatch];
+    [self updateContainer];
   } else {
     [_controller removeFromParentViewController];
     [_controller didMoveToParentViewController:nil];
-  }
-}
-
-- (void)updateContainerAfterBatch
-{
-  if ([_manager.bridge isBatchActive]) {
-    [_manager.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
-      dispatch_async(dispatch_get_main_queue(), ^{
-        [self updateContainer];
-      });
-    }];
-  } else {
-    [self updateContainer];
   }
 }
 
@@ -250,7 +237,7 @@
       // flag in order to perform updates at a later point. Here we are done with all modals
       // transitions and check this flag again. If it was set, we reset the flag and execute updates.
       weakSelf.scheduleModalsUpdate = NO;
-      [weakSelf updateContainerAfterBatch];
+      [weakSelf updateContainer];
     }
   };
 
