@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.8](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.7...@react-navigation/stack@5.0.8) (2020-02-21)
+
+
+### Bug Fixes
+
+* fix transparent header on Android ([a67b494](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/a67b49477eb500c81fedcd73bbd8102901a95170))
+
+
+
+
+
 ## [5.0.7](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.6...@react-navigation/stack@5.0.7) (2020-02-21)
 
 
