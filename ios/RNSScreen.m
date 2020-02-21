@@ -8,7 +8,13 @@
 #import <React/RCTShadowView.h>
 #import <React/RCTTouchHandler.h>
 
-@interface RNSScreenView () <UIAdaptivePresentationControllerDelegate>
+@interface RNSScreen ()
+
+- (void)invalidate;
+
+@end
+
+@interface RNSScreenView () <UIAdaptivePresentationControllerDelegate, RCTInvalidating>
 @end
 
 @implementation RNSScreenView {
@@ -231,18 +237,24 @@
   }
 }
 
+- (void)invalidate
+{
+  [_controller invalidate];
+}
+
 @end
 
 @implementation RNSScreen {
-  __weak UIView *_view;
   __weak id _previousFirstResponder;
   CGRect _lastViewFrame;
+  BOOL disappeared;
+  BOOL invalidated;
 }
 
 - (instancetype)initWithView:(UIView *)view
 {
   if (self = [super init]) {
-    _view = view;
+    self.view = view;
   }
   return self;
 }
@@ -289,12 +301,23 @@
     // screen dismissed, send event
     [((RNSScreenView *)self.view) notifyDismissed];
   }
-  _view = self.view;
-  self.view = nil;
+  disappeared = YES;
+  if (invalidated) {
+    self.view = nil;
+  }
+}
+
+- (void)invalidate
+{
+  if (disappeared) {
+    self.view = nil;
+  }
+  invalidated = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
+  disappeared = NO;
   [super viewDidAppear:animated];
   [((RNSScreenView *)self.view) notifyAppear];
 }
@@ -303,14 +326,6 @@
 {
   [_previousFirstResponder becomeFirstResponder];
   _previousFirstResponder = nil;
-}
-
-- (void)loadView
-{
-  if (_view != nil) {
-    self.view = _view;
-    _view = nil;
-  }
 }
 
 @end

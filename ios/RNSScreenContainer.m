@@ -11,7 +11,7 @@
 
 @end
 
-@interface RNSScreenContainerView ()
+@interface RNSScreenContainerView () <RCTInvalidating>
 
 @property (nonatomic, retain) UIViewController *controller;
 @property (nonatomic, retain) NSMutableSet<RNSScreenView *> *activeScreens;
@@ -54,7 +54,6 @@
 {
   subview.reactSuperview = self;
   [_reactSubviews insertObject:subview atIndex:atIndex];
-  subview.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height);
 }
 
 - (void)removeReactSubview:(RNSScreenView *)subview
@@ -68,6 +67,11 @@
   return _reactSubviews;
 }
 
+- (UIViewController *)reactViewController
+{
+  return _controller;
+}
+
 - (void)detachScreen:(RNSScreenView *)screen
 {
   [screen.controller willMoveToParentViewController:nil];
@@ -79,6 +83,7 @@
 - (void)attachScreen:(RNSScreenView *)screen
 {
   [_controller addChildViewController:screen.controller];
+  screen.controller.view.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height);
   [_controller.view addSubview:screen.controller.view];
   [screen.controller didMoveToParentViewController:_controller];
   [_activeScreens addObject:screen];
@@ -155,10 +160,22 @@
   [self markChildUpdated];
 }
 
+- (void)didMoveToWindow
+{
+  if (self.window) {
+    [self reactAddControllerToClosestParent:_controller];
+  }
+}
+
+- (void)invalidate
+{
+  [_controller willMoveToParentViewController:nil];
+  [_controller removeFromParentViewController];
+}
+
 - (void)layoutSubviews
 {
   [super layoutSubviews];
-  [self reactAddControllerToClosestParent:_controller];
   _controller.view.frame = self.bounds;
   for (RNSScreenView *subview in _reactSubviews) {
     subview.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height);
