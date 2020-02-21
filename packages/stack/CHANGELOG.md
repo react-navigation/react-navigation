@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.7](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.6...@react-navigation/stack@5.0.7) (2020-02-21)
+
+
+### Bug Fixes
+
+* debounce back button by default in stack header ([c7dd3a5](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/c7dd3a58b18d7a267d94009d459944c251ea74c1))
+* make sure header is visibile to accessibility tools on iOS ([240ce01](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/240ce01822febac2c1aa324c01e43fdc88a235a0))
+
+
+
+
+
 ## [5.0.6](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.5...@react-navigation/stack@5.0.6) (2020-02-19)
 
 

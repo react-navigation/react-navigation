@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.6](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.5...@react-navigation/core@5.1.6) (2020-02-21)
+
+
+### Bug Fixes
+
+* avoid emitting focus events twice ([f167008](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/f16700812f3757713b04ca3a860209795b4a6c44)), closes [#6749](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/6749)
+* preserve screen order with numeric names ([125bd70](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/125bd70e49b708d936a2eee72ba5cb92eacf26a9)), closes [#6900](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/6900)
+
+
+
+
+
 ## [5.1.5](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.4...@react-navigation/core@5.1.5) (2020-02-19)
 
 

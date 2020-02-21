@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.2](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.0.1...@react-navigation/routers@5.0.2) (2020-02-21)
+
+
+### Bug Fixes
+
+* tweak error message for navigate ([c8ea419](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/c8ea4199f4b19a58d5e409cfcc96e587fe354a9a))
+
+
+
+
+
 ## [5.0.1](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.33...@react-navigation/routers@5.0.1) (2020-02-10)
 
 
