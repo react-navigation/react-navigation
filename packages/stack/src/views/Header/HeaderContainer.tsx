@@ -137,7 +137,9 @@ export default function HeaderContainer({
                   isFocused ? 'auto' : 'no-hide-descendants'
                 }
                 style={
-                  mode === 'float' || options.headerTransparent
+                  // Avoid positioning the focused header absolutely
+                  // Otherwise accessibility tools don't seem to be able to find it
+                  (mode === 'float' || options.headerTransparent) && !isFocused
                     ? styles.header
                     : null
                 }
