@@ -188,10 +188,12 @@ it('fires focus and blur events in nested navigator', () => {
 
   expect(thirdFocusCallback).toBeCalledTimes(0);
   expect(secondFocusCallback).toBeCalledTimes(1);
+  expect(fourthBlurCallback).toBeCalledTimes(0);
 
   act(() => parent.current.navigate('nested'));
 
   expect(firstBlurCallback).toBeCalledTimes(1);
+  expect(secondBlurCallback).toBeCalledTimes(1);
   expect(thirdFocusCallback).toBeCalledTimes(0);
   expect(fourthFocusCallback).toBeCalledTimes(1);
 
@@ -199,6 +201,35 @@ it('fires focus and blur events in nested navigator', () => {
 
   expect(fourthBlurCallback).toBeCalledTimes(1);
   expect(thirdFocusCallback).toBeCalledTimes(1);
+
+  act(() => parent.current.navigate('first'));
+
+  expect(firstFocusCallback).toBeCalledTimes(2);
+  expect(thirdBlurCallback).toBeCalledTimes(1);
+
+  act(() => parent.current.navigate('nested', { screen: 'fourth' }));
+
+  expect(fourthFocusCallback).toBeCalledTimes(2);
+  expect(thirdBlurCallback).toBeCalledTimes(1);
+  expect(firstBlurCallback).toBeCalledTimes(2);
+
+  act(() => parent.current.navigate('nested', { screen: 'third' }));
+
+  expect(thirdFocusCallback).toBeCalledTimes(2);
+  expect(fourthBlurCallback).toBeCalledTimes(2);
+
+  // Make sure nothing else has changed
+  expect(firstFocusCallback).toBeCalledTimes(2);
+  expect(firstBlurCallback).toBeCalledTimes(2);
+
+  expect(secondFocusCallback).toBeCalledTimes(1);
+  expect(secondBlurCallback).toBeCalledTimes(1);
+
+  expect(thirdFocusCallback).toBeCalledTimes(2);
+  expect(thirdBlurCallback).toBeCalledTimes(1);
+
+  expect(fourthFocusCallback).toBeCalledTimes(2);
+  expect(fourthBlurCallback).toBeCalledTimes(2);
 });
 
 it('fires blur event when a route is removed with a delay', async () => {
