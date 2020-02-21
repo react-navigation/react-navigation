@@ -158,20 +158,11 @@
 - (void)layoutSubviews
 {
   [super layoutSubviews];
+  [self reactAddControllerToClosestParent:_controller];
   _controller.view.frame = self.bounds;
   for (RNSScreenView *subview in _reactSubviews) {
     subview.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height);
     [subview setNeedsLayout];
-  }
-}
-
-- (void)didMoveToWindow
-{
-  if (self.window) {
-    [self reactAddControllerToClosestParent:_controller];
-  } else {
-    [_controller removeFromParentViewController];
-    [_controller didMoveToParentViewController:nil];
   }
 }
 

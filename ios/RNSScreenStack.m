@@ -37,7 +37,6 @@
     _dismissedScreens = [NSMutableSet new];
     _controller = [[UINavigationController alloc] init];
     _controller.delegate = self;
-    [self addSubview:_controller.view];
     _controller.interactivePopGestureRecognizer.delegate = self;
 
     // we have to initialize viewControllers with a non empty array for
@@ -47,6 +46,11 @@
     [_controller setViewControllers:@[[UIViewController new]]];
   }
   return self;
+}
+
+- (UIViewController *)reactViewController
+{
+  return _controller;
 }
 
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
@@ -174,14 +178,35 @@
 {
   [super didMoveToWindow];
   if (self.window) {
-    [self reactAddControllerToClosestParent:_controller];
-    // when stack is added to a window we try to update push and modal view controllers. It is
-    // because modal operations are blocked by UIKit when parent VC is not mounted, so we need
-    // to redo them when the stack is attached.
+    // when stack is attached to a window we do two things:
+    // 1) we run updateContainer – we do this because we want push view controllers to be installed
+    // before the VC is mounted. If we do that after it is added to parent the push updates operations
+    // are going to be blocked by UIKit.
+    // 2) we add navigation VS to parent – this is needed for the VC lifecycle events to be dispatched
+    // properly
+    // 3) we again call updateContainer – this time we do this to open modal controllers. Modals
+    // won't open in (1) because they require navigator to be added to parent. We handle that case
+    // gracefully in setModalViewControllers and can retry opening at any point.
     [self updateContainer];
-  } else {
-    [_controller removeFromParentViewController];
-    [_controller didMoveToParentViewController:nil];
+    [self reactAddControllerToClosestParent:_controller];
+    [self updateContainer];
+  }
+}
+
+- (void)reactAddControllerToClosestParent:(UIViewController *)controller
+{
+  if (!controller.parentViewController) {
+    UIView *parentView = (UIView *)self.reactSuperview;
+    while (parentView) {
+      if (parentView.reactViewController) {
+        [parentView.reactViewController addChildViewController:controller];
+        [self addSubview:controller.view];
+        [controller didMoveToParentViewController:parentView.reactViewController];
+        break;
+      }
+      parentView = (UIView *)parentView.reactSuperview;
+    }
+    return;
   }
 }
 
@@ -247,7 +272,8 @@
       [weakSelf.presentedModals
        removeObjectsInRange:NSMakeRange(changeRootIndex, oldCount - changeRootIndex)];
     }
-    if (changeRootController.view.window == nil || changeRootIndex >= controllers.count) {
+    BOOL isAttached = changeRootController.parentViewController != nil || changeRootController.presentingViewController != nil;
+    if (!isAttached || changeRootIndex >= controllers.count) {
       // if change controller view is not attached, presenting modals will silently fail on iOS.
       // In such a case we trigger controllers update from didMoveToWindow.
       // We also don't run any present transitions if changeRootIndex is greater or equal to the size
@@ -371,6 +397,8 @@
     [controller dismissViewControllerAnimated:NO completion:nil];
   }
   [_presentedModals removeAllObjects];
+  [_controller willMoveToParentViewController:nil];
+  [_controller removeFromParentViewController];
 }
 
 - (void)dismissOnReload

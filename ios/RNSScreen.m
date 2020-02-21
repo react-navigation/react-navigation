@@ -46,6 +46,11 @@
   // subviews
 }
 
+- (UIViewController *)reactViewController
+{
+  return _controller;
+}
+
 - (void)updateBounds
 {
   [_bridge.uiManager setSize:self.bounds.size forView:self];
@@ -268,6 +273,7 @@
 
 - (void)willMoveToParentViewController:(UIViewController *)parent
 {
+  [super willMoveToParentViewController:parent];
   if (parent == nil) {
     id responder = [self findFirstResponder:self.view];
     if (responder != nil) {
@@ -282,9 +288,9 @@
   if (self.parentViewController == nil && self.presentingViewController == nil) {
     // screen dismissed, send event
     [((RNSScreenView *)self.view) notifyDismissed];
-    _view = self.view;
-    self.view = nil;
   }
+  _view = self.view;
+  self.view = nil;
 }
 
 - (void)viewDidAppear:(BOOL)animated
