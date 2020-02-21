@@ -2,8 +2,9 @@ import * as React from 'react';
 import { StackActions } from '@react-navigation/native';
 
 import HeaderSegment from './HeaderSegment';
-import { StackHeaderProps, StackHeaderTitleProps } from '../../types';
 import HeaderTitle from './HeaderTitle';
+import debounce from '../../utils/debounce';
+import { StackHeaderProps, StackHeaderTitleProps } from '../../types';
 
 export default React.memo(function Header(props: StackHeaderProps) {
   const {
@@ -40,6 +41,18 @@ export default React.memo(function Header(props: StackHeaderProps) {
         : previous.route.name;
   }
 
+  const goBack = React.useCallback(
+    debounce(() => {
+      if (navigation.canGoBack()) {
+        navigation.dispatch({
+          ...StackActions.pop(),
+          source: scene.route.key,
+        });
+      }
+    }, 50),
+    [navigation, scene.route.key]
+  );
+
   return (
     <HeaderSegment
       {...options}
@@ -53,18 +66,7 @@ export default React.memo(function Header(props: StackHeaderProps) {
           ? (props: StackHeaderTitleProps) => <HeaderTitle {...props} />
           : options.headerTitle
       }
-      onGoBack={
-        previous
-          ? () => {
-              if (navigation.canGoBack()) {
-                navigation.dispatch({
-                  ...StackActions.pop(),
-                  source: scene.route.key,
-                });
-              }
-            }
-          : undefined
-      }
+      onGoBack={previous ? goBack : undefined}
       styleInterpolator={styleInterpolator}
     />
   );
