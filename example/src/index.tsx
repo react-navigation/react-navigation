@@ -7,7 +7,11 @@ import {
   StatusBar,
   I18nManager,
 } from 'react-native';
+// eslint-disable-next-line import/no-unresolved
+import { enableScreens } from 'react-native-screens';
 import RNRestart from 'react-native-restart';
+import { Updates } from 'expo';
+import { Asset } from 'expo-asset';
 import { MaterialIcons } from '@expo/vector-icons';
 import {
   Provider as PaperProvider,
@@ -17,7 +21,6 @@ import {
   List,
   Divider,
 } from 'react-native-paper';
-import { Asset } from 'expo-asset';
 import {
   InitialState,
   useLinking,
@@ -49,9 +52,10 @@ import DynamicTabs from './Screens/DynamicTabs';
 import AuthFlow from './Screens/AuthFlow';
 import CompatAPI from './Screens/CompatAPI';
 import SettingsItem from './Shared/SettingsItem';
-import { Updates } from 'expo';
 
 YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
+
+enableScreens();
 
 type RootDrawerParamList = {
   Root: undefined;
