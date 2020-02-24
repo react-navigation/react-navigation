@@ -4,6 +4,7 @@ import {
   StackCardInterpolationProps,
   StackCardInterpolatedStyle,
 } from '../types';
+import { isIphoneX } from 'react-native-iphone-x-helper';
 
 const { add, multiply } = Animated;
 
@@ -152,8 +153,8 @@ export function forModalPresentationIOS({
     ? 0
     : index === 0
     ? progress.interpolate({
-        inputRange: [0, 1, 2],
-        outputRange: [0, 0, 10],
+        inputRange: [0, 1, 1.0001, 2],
+        outputRange: [0, 0, isIphoneX() ? 38 : 0, 10],
       })
     : 10;
 
