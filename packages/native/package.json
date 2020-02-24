@@ -1,12 +1,13 @@
 {
   "name": "@react-navigation/native",
-  "version": "3.7.1",
+  "version": "3.7.2",
   "description": "React Native support for React Navigation",
   "main": "lib/commonjs/index.js",
   "react-native": "lib/module/index.js",
   "module": "lib/module/index.js",
   "files": [
-    "src"
+    "src",
+    "lib"
   ],
   "scripts": {
     "prepare": "bob build",
