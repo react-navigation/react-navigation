@@ -1,4 +1,4 @@
-import * as NavigationActions from '../NavigationActions.ts';
+import * as NavigationActions from '../NavigationActions';
 
 describe('generic navigation actions', () => {
   const params = { foo: 'bar' };

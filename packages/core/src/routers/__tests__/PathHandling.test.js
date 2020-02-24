@@ -5,8 +5,8 @@ import React from 'react';
 import SwitchRouter from '../SwitchRouter';
 import StackRouter from '../StackRouter';
 import TabRouter from '../TabRouter';
-import * as NavigationActions from '../../NavigationActions.ts';
-import { _TESTING_ONLY_normalize_keys } from '../KeyGenerator.ts';
+import * as NavigationActions from '../../NavigationActions';
+import { _TESTING_ONLY_normalize_keys } from '../KeyGenerator';
 
 beforeEach(() => {
   _TESTING_ONLY_normalize_keys();

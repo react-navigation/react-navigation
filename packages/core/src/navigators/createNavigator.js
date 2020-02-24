@@ -1,6 +1,6 @@
 import React from 'react';
-import invariant from '../utils/invariant.ts';
-import ThemeContext from '../views/ThemeContext.ts';
+import invariant from '../utils/invariant';
+import ThemeContext from '../views/ThemeContext';
 
 function createNavigator(NavigatorView, router, navigationConfig) {
   class Navigator extends React.Component {

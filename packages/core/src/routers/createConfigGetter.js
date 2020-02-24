@@ -1,4 +1,4 @@
-import invariant from '../utils/invariant.ts';
+import invariant from '../utils/invariant';
 
 import getScreenForRouteName from './getScreenForRouteName';
 import validateScreenOptions from './validateScreenOptions';

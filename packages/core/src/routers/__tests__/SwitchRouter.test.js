@@ -3,7 +3,7 @@
 import React from 'react';
 import SwitchRouter from '../SwitchRouter';
 import StackRouter from '../StackRouter';
-import * as NavigationActions from '../../NavigationActions.ts';
+import * as NavigationActions from '../../NavigationActions';
 import { getRouterTestHelper } from './routerTestHelper';
 
 describe('SwitchRouter', () => {

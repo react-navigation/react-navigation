@@ -1,5 +1,5 @@
-import * as NavigationActions from '../../NavigationActions.ts';
-import * as SwitchActions from '../../routers/SwitchActions.ts';
+import * as NavigationActions from '../../NavigationActions';
+import * as SwitchActions from '../../routers/SwitchActions';
 import * as StackActions from '../../routers/StackActions';
 
 // A simple helper that makes it easier to write basic routing tests

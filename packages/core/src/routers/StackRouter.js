@@ -1,11 +1,11 @@
-import * as NavigationActions from '../NavigationActions.ts';
+import * as NavigationActions from '../NavigationActions';
 import * as StackActions from './StackActions';
 import createConfigGetter from './createConfigGetter';
 import getScreenForRouteName from './getScreenForRouteName';
 import StateUtils from '../StateUtils';
 import validateRouteConfigMap from './validateRouteConfigMap';
-import invariant from '../utils/invariant.ts';
-import { generateKey } from './KeyGenerator.ts';
+import invariant from '../utils/invariant';
+import { generateKey } from './KeyGenerator';
 import { createPathParser } from './pathUtils';
 
 function behavesLikePushAction(action) {

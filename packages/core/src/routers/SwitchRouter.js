@@ -1,9 +1,9 @@
-import invariant from '../utils/invariant.ts';
+import invariant from '../utils/invariant';
 import getScreenForRouteName from './getScreenForRouteName';
 import createConfigGetter from './createConfigGetter';
 
-import * as NavigationActions from '../NavigationActions.ts';
-import * as SwitchActions from './SwitchActions.ts';
+import * as NavigationActions from '../NavigationActions';
+import * as SwitchActions from './SwitchActions';
 import * as StackActions from './StackActions';
 import validateRouteConfigMap from './validateRouteConfigMap';
 import { createPathParser } from './pathUtils';

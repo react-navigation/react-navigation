@@ -1,7 +1,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import NavigationEvents from '../NavigationEvents';
-import NavigationContext from '../NavigationContext.ts';
+import NavigationContext from '../NavigationContext';
 
 const createPropListener = () => jest.fn();
 

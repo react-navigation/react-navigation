@@ -1,4 +1,4 @@
-import invariant from './utils/invariant.ts';
+import invariant from './utils/invariant';
 
 /**
  * Utilities to perform atomic operation with navigate state and routes.
