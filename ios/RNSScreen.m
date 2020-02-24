@@ -8,12 +8,6 @@
 #import <React/RCTShadowView.h>
 #import <React/RCTTouchHandler.h>
 
-@interface RNSScreen ()
-
-- (void)invalidate;
-
-@end
-
 @interface RNSScreenView () <UIAdaptivePresentationControllerDelegate, RCTInvalidating>
 @end
 
@@ -78,7 +72,6 @@
 
 - (void)setStackPresentation:(RNSScreenStackPresentation)stackPresentation
 {
-  _stackPresentation = stackPresentation;
   switch (stackPresentation) {
     case RNSScreenStackPresentationModal:
 #ifdef __IPHONE_13_0
@@ -106,11 +99,23 @@
     case RNSScreenStackPresentationContainedTransparentModal:
       _controller.modalPresentationStyle = UIModalPresentationOverCurrentContext;
       break;
+    case RNSScreenStackPresentationPush:
+      // ignored, we only need to keep in mind not to set presentation delegate
+      break;
   }
-  // `modalPresentationStyle` must be set before accessing `presentationController`
-  // otherwise a default controller will be created and cannot be changed after.
-  // Documented here: https://developer.apple.com/documentation/uikit/uiviewcontroller/1621426-presentationcontroller?language=objc
-  _controller.presentationController.delegate = self;
+  // There is a bug in UIKit which causes retain loop when presentationController is accessed for a
+  // controller that is not going to be presented modally. We therefore need to avoid setting the
+  // delegate for screens presented using push. This also means that when controller is updated from
+  // modal to push type, this may cause memory leak, we warn about that as well.
+  if (stackPresentation != RNSScreenStackPresentationPush) {
+    // `modalPresentationStyle` must be set before accessing `presentationController`
+    // otherwise a default controller will be created and cannot be changed after.
+    // Documented here: https://developer.apple.com/documentation/uikit/uiviewcontroller/1621426-presentationcontroller?language=objc
+    _controller.presentationController.delegate = self;
+  } else if (_stackPresentation != RNSScreenStackPresentationPush) {
+    RCTLogError(@"Screen presentation updated from modal to push, this may likely result in a screen object leakage. If you need to change presentation style create a new screen object instead");
+  }
+  _stackPresentation = stackPresentation;
 }
 
 - (void)setStackAnimation:(RNSScreenStackAnimation)stackAnimation
@@ -239,7 +244,7 @@
 
 - (void)invalidate
 {
-  [_controller invalidate];
+  _controller = nil;
 }
 
 @end
@@ -247,8 +252,6 @@
 @implementation RNSScreen {
   __weak id _previousFirstResponder;
   CGRect _lastViewFrame;
-  BOOL disappeared;
-  BOOL invalidated;
 }
 
 - (instancetype)initWithView:(UIView *)view
@@ -265,7 +268,7 @@
 
   if (!CGRectEqualToRect(_lastViewFrame, self.view.frame)) {
     _lastViewFrame = self.view.frame;
-    [((RNSScreenView *)self.view) updateBounds];
+    [((RNSScreenView *)self.viewIfLoaded) updateBounds];
   }
 }
 
@@ -301,23 +304,10 @@
     // screen dismissed, send event
     [((RNSScreenView *)self.view) notifyDismissed];
   }
-  disappeared = YES;
-  if (invalidated) {
-    self.view = nil;
-  }
-}
-
-- (void)invalidate
-{
-  if (disappeared) {
-    self.view = nil;
-  }
-  invalidated = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-  disappeared = NO;
   [super viewDidAppear:animated];
   [((RNSScreenView *)self.view) notifyAppear];
 }
