@@ -1,13 +1,13 @@
 import shortid from 'shortid';
+import BaseRouter from './BaseRouter';
 import {
-  CommonAction,
-  BaseRouter,
-  PartialState,
   NavigationState,
-  DefaultRouterOptions,
+  PartialState,
+  CommonNavigationAction,
   Router,
+  DefaultRouterOptions,
   Route,
-} from '@react-navigation/core';
+} from './types';
 
 export type TabActionType = {
   type: 'JUMP_TO';
@@ -95,7 +95,10 @@ export default function TabRouter({
   initialRouteName,
   backBehavior = 'history',
 }: TabRouterOptions) {
-  const router: Router<TabNavigationState, TabActionType | CommonAction> = {
+  const router: Router<
+    TabNavigationState,
+    TabActionType | CommonNavigationAction
+  > = {
     ...BaseRouter,
 
     type: 'tab',

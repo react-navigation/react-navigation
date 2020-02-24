@@ -14,27 +14,4 @@ yarn add @react-navigation/routers
 
 ## Usage
 
-A basic custom navigator bundling a router and a view looks like this:
-
-```js
-import { createNavigatorFactory, useNavigationBuilder } from '@react-navigation/native';
-import { StackRouter } from '@react-navigation/routers';
-
-function StackNavigator({ initialRouteName, children, ...rest }) {
-  const { state, navigation, descriptors } = useNavigationBuilder(StackRouter, {
-    initialRouteName,
-    children,
-  });
-
-  return (
-    <StackView
-      state={state}
-      navigation={navigation}
-      descriptors={descriptors}
-      {...rest}
-    />
-  );
-}
-
-export default createNavigatorFactory(StackNavigator);
-```
+Documentation can be found on the [React Navigation website](https://reactnavigation.org/docs/custom-routers.html).

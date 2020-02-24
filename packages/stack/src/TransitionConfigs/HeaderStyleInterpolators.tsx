@@ -230,6 +230,7 @@ export function forSlideRight({
 export function forSlideUp({
   current,
   next,
+  layouts: { header },
 }: StackHeaderInterpolationProps): StackHeaderInterpolatedStyle {
   const progress = add(
     current.progress.interpolate({
@@ -248,7 +249,7 @@ export function forSlideUp({
 
   const translateY = progress.interpolate({
     inputRange: [0, 1, 2],
-    outputRange: ['-100%', '0%', '-100%'],
+    outputRange: [-header.height, 0, -header.height],
   });
 
   const transform = [{ translateY }];

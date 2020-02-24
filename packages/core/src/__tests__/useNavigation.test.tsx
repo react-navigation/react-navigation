@@ -2,7 +2,7 @@ import * as React from 'react';
 import { render } from 'react-native-testing-library';
 import useNavigationBuilder from '../useNavigationBuilder';
 import useNavigation from '../useNavigation';
-import NavigationContainer from '../NavigationContainer';
+import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
 import MockRouter from './__fixtures__/MockRouter';
 
@@ -24,11 +24,11 @@ it('gets navigation prop from context', () => {
   };
 
   render(
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" component={Test} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 });
 
@@ -50,7 +50,7 @@ it("gets navigation's parent from context", () => {
   };
 
   render(
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo">
           {() => (
@@ -60,7 +60,7 @@ it("gets navigation's parent from context", () => {
           )}
         </Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 });
 
@@ -86,7 +86,7 @@ it("gets navigation's parent's parent from context", () => {
   };
 
   render(
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo">
           {() => (
@@ -102,7 +102,7 @@ it("gets navigation's parent's parent from context", () => {
           )}
         </Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 });
 
@@ -112,7 +112,7 @@ it('throws if called outside a navigation context', () => {
   const Test = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     expect(() => useNavigation()).toThrow(
-      "We couldn't find a navigation object. Is your component inside a navigator?"
+      "We couldn't find a navigation object. Is your component inside a screen in a navigator?"
     );
 
     return null;

@@ -3,6 +3,74 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.2](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.0.1...@react-navigation/routers@5.0.2) (2020-02-21)
+
+
+### Bug Fixes
+
+* tweak error message for navigate ([c8ea419](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/c8ea4199f4b19a58d5e409cfcc96e587fe354a9a))
+
+
+
+
+
+## [5.0.1](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.33...@react-navigation/routers@5.0.1) (2020-02-10)
+
+
+### Bug Fixes
+
+* merge initial params on replace ([80629bf](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/80629bf30baf8f17620e6d3127e00376182af074))
+
+
+
+
+
+# [5.0.0-alpha.33](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.32...@react-navigation/routers@5.0.0-alpha.33) (2020-02-04)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+
+
+
+
+# [5.0.0-alpha.32](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.31...@react-navigation/routers@5.0.0-alpha.32) (2020-02-04)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+
+
+
+
+# [5.0.0-alpha.31](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.30...@react-navigation/routers@5.0.0-alpha.31) (2020-02-03)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+
+
+
+
+# [5.0.0-alpha.30](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.27...@react-navigation/routers@5.0.0-alpha.30) (2020-02-02)
+
+
+### Bug Fixes
+
+* add licenses ([0c159db](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
+
+
+
+
+
+# [5.0.0-alpha.28](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.27...@react-navigation/routers@5.0.0-alpha.28) (2020-02-02)
+
+
+### Bug Fixes
+
+* add licenses ([0c159db](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
+
+
+
+
+
 # [5.0.0-alpha.27](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.26...@react-navigation/routers@5.0.0-alpha.27) (2020-01-24)
 
 **Note:** Version bump only for package @react-navigation/routers

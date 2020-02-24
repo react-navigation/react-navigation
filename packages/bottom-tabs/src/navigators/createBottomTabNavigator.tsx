@@ -3,12 +3,10 @@ import {
   useNavigationBuilder,
   createNavigatorFactory,
   DefaultNavigatorOptions,
-} from '@react-navigation/native';
-import {
   TabRouter,
   TabRouterOptions,
   TabNavigationState,
-} from '@react-navigation/routers';
+} from '@react-navigation/native';
 import BottomTabView from '../views/BottomTabView';
 import {
   BottomTabNavigationConfig,

@@ -3,6 +3,168 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.6](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.5...@react-navigation/core@5.1.6) (2020-02-21)
+
+
+### Bug Fixes
+
+* avoid emitting focus events twice ([f167008](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/f16700812f3757713b04ca3a860209795b4a6c44)), closes [#6749](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/6749)
+* preserve screen order with numeric names ([125bd70](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/125bd70e49b708d936a2eee72ba5cb92eacf26a9)), closes [#6900](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/6900)
+
+
+
+
+
+## [5.1.5](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.4...@react-navigation/core@5.1.5) (2020-02-19)
+
+
+### Bug Fixes
+
+* show descriptive error for invalid return for useFocusEffect ([1a28c29](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/1a28c299b5e3f0805eb6e9ea3cf5e9cc90c7a280))
+
+
+
+
+
+## [5.1.4](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.3...@react-navigation/core@5.1.4) (2020-02-14)
+
+
+### Bug Fixes
+
+* link to migration guide on invalid usage ([c5fcfbd](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/c5fcfbd4277541e131acbaa7602a5d7e636afebb))
+* return '/' for empty paths ([aaf01e0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/aaf01e01e7b47b375f68aebe6d0effe82878d060))
+
+
+
+
+
+## [5.1.3](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.2...@react-navigation/core@5.1.3) (2020-02-14)
+
+
+### Bug Fixes
+
+* return false for canGoBack if navigator hasn't finished mounting ([c8ac5fa](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/c8ac5fab61cf127985431075a3c59c1f3dfa42da))
+* throw a descriptive error if navigation object hasn't initialized ([b6accd0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/b6accd03f69dd438e595094d8bf8599cc12e71ac))
+* update links in error messages ([f964200](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/f964200b0dcbc19d5f88ad2dd1eb8e5576973497))
+
+
+
+
+
+## [5.1.2](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.1...@react-navigation/core@5.1.2) (2020-02-12)
+
+
+### Bug Fixes
+
+* fix false positives for circular object check ([030c63c](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/030c63c89fe447aa484b767831c8f8e26e90431c)), closes [#6827](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/6827)
+* static container memo check ([#6825](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/6825)) ([2bf0958](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/2bf09585021470f500d967e9242836840efe970f))
+
+
+
+
+
+## [5.1.1](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.0...@react-navigation/core@5.1.1) (2020-02-11)
+
+
+### Bug Fixes
+
+* don't cleanup state on switching navigator ([359ae1b](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/359ae1bfacec5ef880b3944f465c881aedb16767))
+
+
+
+
+
+# [5.1.0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.43...@react-navigation/core@5.1.0) (2020-02-10)
+
+
+### Bug Fixes
+
+* add some links in the error messages ([13b4e07](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/13b4e07348496f7cb516d625b44a6a7d310ef9af))
+
+
+### Features
+
+* support ignoring empty path strings ([#349](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/349)) ([61b1134](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/61b1134f90310390fe819622c1f33273fca0bd42))
+
+
+
+
+
+# [5.0.0-alpha.43](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.42...@react-navigation/core@5.0.0-alpha.43) (2020-02-04)
+
+
+### Bug Fixes
+
+* improve error message for unhandled action ([ca4a360](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/ca4a36070a21c4fe86cb1cc55a4452dca293f215))
+
+
+### Features
+
+* add initialRouteName property to config ([#322](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/issues/322)) ([4ca5cc6](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/4ca5cc632992187f12870281e4cf4c7d1f799967))
+
+
+
+
+
+# [5.0.0-alpha.42](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.41...@react-navigation/core@5.0.0-alpha.42) (2020-02-04)
+
+**Note:** Version bump only for package @react-navigation/core
+
+
+
+
+
+# [5.0.0-alpha.41](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.40...@react-navigation/core@5.0.0-alpha.41) (2020-02-03)
+
+
+### Bug Fixes
+
+* ignore circular references when checking serializable ([e5063b9](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/e5063b93398350511f3fd2ef48425559f871781f))
+
+
+
+
+
+# [5.0.0-alpha.40](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.37...@react-navigation/core@5.0.0-alpha.40) (2020-02-02)
+
+
+### Bug Fixes
+
+* add licenses ([0c159db](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
+* add warning when passing inline function to component prop ([fa4a959](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/fa4a959549ccd9dc2f9bd2ea495e99abdedc9f94))
+* tweak error messages for validation ([2243b45](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/2243b45cc1addf83727166d82736d214f181b1fb))
+
+
+### Features
+
+* add `screens` prop for nested configs ([#308](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/issues/308)) ([b931ae6](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/b931ae62dfb2c5253c94ea5ace73e9070ec17c4a))
+* add useIsDrawerOpen hook ([#299](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/issues/299)) ([ecd68af](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/ecd68afb46a4c56200748da5e5fb284fa5a839db))
+* integrate with history API on web ([5a3f835](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/5a3f8356b05bff7ed20893a5db6804612da3e568))
+
+
+
+
+
+# [5.0.0-alpha.38](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.37...@react-navigation/core@5.0.0-alpha.38) (2020-02-02)
+
+
+### Bug Fixes
+
+* add licenses ([0c159db](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
+* add warning when passing inline function to component prop ([fa4a959](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/fa4a959549ccd9dc2f9bd2ea495e99abdedc9f94))
+* tweak error messages for validation ([2243b45](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/2243b45cc1addf83727166d82736d214f181b1fb))
+
+
+### Features
+
+* add `screens` prop for nested configs ([#308](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/issues/308)) ([b931ae6](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/b931ae62dfb2c5253c94ea5ace73e9070ec17c4a))
+* add useIsDrawerOpen hook ([#299](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/issues/299)) ([ecd68af](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/ecd68afb46a4c56200748da5e5fb284fa5a839db))
+* integrate with history API on web ([5a3f835](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/commit/5a3f8356b05bff7ed20893a5db6804612da3e568))
+
+
+
+
+
 # [5.0.0-alpha.37](https://github.com/react-navigation/navigation-ex/tree/master/packages/core/compare/@react-navigation/core@5.0.0-alpha.36...@react-navigation/core@5.0.0-alpha.37) (2020-01-24)
 
 

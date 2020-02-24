@@ -1,19 +1,25 @@
 import * as React from 'react';
 import {
+  View,
   Dimensions,
   StyleSheet,
   I18nManager,
   Platform,
   ScaledSize,
+  BackHandler,
+  NativeEventSubscription,
 } from 'react-native';
 // eslint-disable-next-line import/no-unresolved
 import { ScreenContainer } from 'react-native-screens';
-import { PanGestureHandler } from 'react-native-gesture-handler';
+import {
+  PanGestureHandler,
+  GestureHandlerRootView,
+} from 'react-native-gesture-handler';
 import {
   DrawerNavigationState,
   DrawerActions,
-} from '@react-navigation/routers';
-import { useTheme } from '@react-navigation/native';
+  useTheme,
+} from '@react-navigation/native';
 
 import DrawerGestureContext from '../utils/DrawerGestureContext';
 import SafeAreaProviderCompat from './SafeAreaProviderCompat';
@@ -26,6 +32,7 @@ import {
   DrawerNavigationHelpers,
   DrawerContentComponentProps,
 } from '../types';
+import DrawerPositionContext from '../utils/DrawerPositionContext';
 
 type Props = DrawerNavigationConfig & {
   state: DrawerNavigationState;
@@ -53,6 +60,8 @@ const getDefaultDrawerWidth = ({
 
   return Math.min(smallerAxisSize - appBarHeight, maxWidth);
 };
+
+const GestureHandlerWrapper = GestureHandlerRootView ?? View;
 
 /**
  * Component that renders the drawer.
@@ -91,6 +100,47 @@ export default function DrawerView({
 
   const { colors } = useTheme();
 
+  const isDrawerOpen = Boolean(state.history.find(it => it.type === 'drawer'));
+
+  const handleDrawerOpen = React.useCallback(() => {
+    navigation.dispatch({
+      ...DrawerActions.openDrawer(),
+      target: state.key,
+    });
+  }, [navigation, state.key]);
+
+  const handleDrawerClose = React.useCallback(() => {
+    navigation.dispatch({
+      ...DrawerActions.closeDrawer(),
+      target: state.key,
+    });
+  }, [navigation, state.key]);
+
+  React.useEffect(() => {
+    if (isDrawerOpen) {
+      navigation.emit({ type: 'drawerOpen' });
+    } else {
+      navigation.emit({ type: 'drawerClose' });
+    }
+  }, [isDrawerOpen, navigation]);
+
+  React.useEffect(() => {
+    let subscription: NativeEventSubscription | undefined;
+
+    if (isDrawerOpen) {
+      // We only add the subscription when drawer opens
+      // This way we can make sure that the subscription is added as late as possible
+      // This will make sure that our handler will run first when back button is pressed
+      subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+        handleDrawerClose();
+
+        return true;
+      });
+    }
+
+    return () => subscription?.remove();
+  }, [handleDrawerClose, isDrawerOpen, navigation, state.key]);
+
   React.useEffect(() => {
     const updateWidth = ({ window }: { window: ScaledSize }) => {
       setDrawerWidth(getDefaultDrawerWidth(window));
@@ -104,7 +154,7 @@ export default function DrawerView({
   if (!loaded.includes(state.index)) {
     setLoaded([...loaded, state.index]);
   }
-
+  
   const handleDrawerOpen = () => {
     if (bigScreenSidebar) {
       return;
@@ -132,14 +182,17 @@ export default function DrawerView({
   };
 
   const renderNavigationView = ({ progress }: any) => {
-    return drawerContent({
-      ...drawerContentOptions,
-      progress: progress,
-      state: state,
-      navigation: navigation,
-      descriptors: descriptors,
-      drawerPosition: drawerPosition,
-    });
+    return (
+      <DrawerPositionContext.Provider value={drawerPosition}>
+        {drawerContent({
+          ...drawerContentOptions,
+          progress: progress,
+          state: state,
+          navigation: navigation,
+          descriptors: descriptors,
+        })}
+      </DrawerPositionContext.Provider>
+    );
   };
 
   const renderContent = () => {
@@ -177,44 +230,43 @@ export default function DrawerView({
   const { gestureEnabled } = descriptors[activeKey].options;
 
   return (
-    <SafeAreaProviderCompat>
-      <DrawerGestureContext.Provider value={drawerGestureRef}>
-        <Drawer
-          open={
-            bigScreenSidebar ||
-            Boolean(state.history.find(it => it.type === 'drawer'))
-          }
-          gestureEnabled={!bigScreenSidebar && gestureEnabled !== false}
-          onOpen={handleDrawerOpen}
-          onClose={handleDrawerClose}
-          onGestureRef={ref => {
-            // @ts-ignore
-            drawerGestureRef.current = ref;
-          }}
-          gestureHandlerProps={gestureHandlerProps}
-          drawerType={drawerType}
-          drawerPosition={drawerPosition}
-          sceneContainerStyle={[
-            { backgroundColor: colors.background },
-            sceneContainerStyle,
-          ]}
-          drawerStyle={[
-            { width: drawerWidth, backgroundColor: colors.card },
-            drawerStyle,
-          ]}
-          overlayStyle={{ backgroundColor: overlayColor }}
-          swipeEdgeWidth={edgeWidth}
-          swipeDistanceThreshold={minSwipeDistance}
-          hideStatusBar={hideStatusBar}
-          statusBarAnimation={statusBarAnimation}
-          renderDrawerContent={renderNavigationView}
-          renderSceneContent={renderContent}
-          keyboardDismissMode={keyboardDismissMode}
-          drawerPostion={drawerPosition}
-          isBigScreen={isBigScreen}
-        />
-      </DrawerGestureContext.Provider>
-    </SafeAreaProviderCompat>
+    <GestureHandlerWrapper style={styles.content}>
+      <SafeAreaProviderCompat>
+        <DrawerGestureContext.Provider value={drawerGestureRef}>
+          <Drawer
+            open={bigScreenSidebar || isDrawerOpen}
+            gestureEnabled={!bigScreenSidebar && gestureEnabled}
+            onOpen={handleDrawerOpen}
+            onClose={handleDrawerClose}
+            onGestureRef={ref => {
+              // @ts-ignore
+              drawerGestureRef.current = ref;
+            }}
+            gestureHandlerProps={gestureHandlerProps}
+            drawerType={drawerType}
+            drawerPosition={drawerPosition}
+            sceneContainerStyle={[
+              { backgroundColor: colors.background },
+              sceneContainerStyle,
+            ]}
+            drawerStyle={[
+              { width: drawerWidth, backgroundColor: colors.card },
+              drawerStyle,
+            ]}
+            overlayStyle={{ backgroundColor: overlayColor }}
+            swipeEdgeWidth={edgeWidth}
+            swipeDistanceThreshold={minSwipeDistance}
+            hideStatusBar={hideStatusBar}
+            statusBarAnimation={statusBarAnimation}
+            renderDrawerContent={renderNavigationView}
+            renderSceneContent={renderContent}
+            keyboardDismissMode={keyboardDismissMode}
+            drawerPostion={drawerPosition}
+            isBigScreen={isBigScreen}
+          />
+        </DrawerGestureContext.Provider>
+      </SafeAreaProviderCompat>
+    </GestureHandlerWrapper>
   );
 }
 

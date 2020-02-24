@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { render, act } from 'react-native-testing-library';
+import { NavigationState } from '@react-navigation/routers';
 import Screen from '../Screen';
-import NavigationContainer from '../NavigationContainer';
+import BaseNavigationContainer from '../BaseNavigationContainer';
 import useNavigationBuilder from '../useNavigationBuilder';
 import useNavigation from '../useNavigation';
 import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
-import { NavigationState, NavigationContainerRef } from '../types';
+import { NavigationContainerRef } from '../types';
 
 beforeEach(() => (MockRouterKey.current = 0));
 
@@ -28,7 +29,7 @@ it('initializes state for a navigator on navigation', () => {
   const onStateChange = jest.fn();
 
   const element = (
-    <NavigationContainer onStateChange={onStateChange}>
+    <BaseNavigationContainer onStateChange={onStateChange}>
       <TestNavigator initialRouteName="foo">
         <Screen
           name="foo"
@@ -44,7 +45,7 @@ it('initializes state for a navigator on navigation', () => {
           )}
         </Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element).update(element);
@@ -75,11 +76,11 @@ it("doesn't crash when initialState is null", () => {
 
   const element = (
     // @ts-ignore
-    <NavigationContainer initialState={null}>
+    <BaseNavigationContainer initialState={null}>
       <TestNavigator>
         <Screen name="foo" component={TestScreen} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(() => render(element)).not.toThrowError();
@@ -112,7 +113,7 @@ it('rehydrates state for a navigator on navigation', () => {
   const onStateChange = jest.fn();
 
   const element = (
-    <NavigationContainer
+    <BaseNavigationContainer
       initialState={initialState}
       onStateChange={onStateChange}
     >
@@ -120,7 +121,7 @@ it('rehydrates state for a navigator on navigation', () => {
         <Screen name="foo" component={jest.fn()} />
         <Screen name="bar" component={BarScreen} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element).update(element);
@@ -166,7 +167,7 @@ it("doesn't rehydrate state if the type of state didn't match router", () => {
   const onStateChange = jest.fn();
 
   const element = (
-    <NavigationContainer
+    <BaseNavigationContainer
       initialState={initialState}
       onStateChange={onStateChange}
     >
@@ -178,7 +179,7 @@ it("doesn't rehydrate state if the type of state didn't match router", () => {
         />
         <Screen name="bar" component={jest.fn()} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element).update(element);
@@ -219,7 +220,7 @@ it('initializes state for nested screens in React.Fragment', () => {
   const onStateChange = jest.fn();
 
   const element = (
-    <NavigationContainer onStateChange={onStateChange}>
+    <BaseNavigationContainer onStateChange={onStateChange}>
       <TestNavigator>
         <Screen name="foo" component={TestScreen} />
         <React.Fragment>
@@ -227,7 +228,7 @@ it('initializes state for nested screens in React.Fragment', () => {
           <Screen name="baz" component={jest.fn()} />
         </React.Fragment>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element).update(element);
@@ -266,7 +267,7 @@ it('initializes state for nested navigator on navigation', () => {
   const onStateChange = jest.fn();
 
   const element = (
-    <NavigationContainer onStateChange={onStateChange}>
+    <BaseNavigationContainer onStateChange={onStateChange}>
       <TestNavigator initialRouteName="baz">
         <Screen name="foo" component={jest.fn()} />
         <Screen name="bar" component={jest.fn()} />
@@ -278,7 +279,7 @@ it('initializes state for nested navigator on navigation', () => {
           )}
         </Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element).update(element);
@@ -328,12 +329,12 @@ it("doesn't update state if nothing changed", () => {
   const onStateChange = jest.fn();
 
   render(
-    <NavigationContainer onStateChange={onStateChange}>
+    <BaseNavigationContainer onStateChange={onStateChange}>
       <TestNavigator initialRouteName="foo">
         <Screen name="foo" component={FooScreen} />
         <Screen name="bar" component={jest.fn()} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(onStateChange).toBeCalledTimes(0);
@@ -360,12 +361,12 @@ it("doesn't update state if action wasn't handled", () => {
   const spy = jest.spyOn(console, 'error').mockImplementation();
 
   render(
-    <NavigationContainer onStateChange={onStateChange}>
+    <BaseNavigationContainer onStateChange={onStateChange}>
       <TestNavigator initialRouteName="foo">
         <Screen name="foo" component={FooScreen} />
         <Screen name="bar" component={jest.fn()} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(onStateChange).toBeCalledTimes(0);
@@ -396,12 +397,12 @@ it('cleans up state when the navigator unmounts', () => {
   const onStateChange = jest.fn();
 
   const element = (
-    <NavigationContainer onStateChange={onStateChange}>
+    <BaseNavigationContainer onStateChange={onStateChange}>
       <TestNavigator>
         <Screen name="foo" component={FooScreen} />
         <Screen name="bar" component={jest.fn()} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   const root = render(element);
@@ -422,7 +423,7 @@ it('cleans up state when the navigator unmounts', () => {
   });
 
   root.update(
-    <NavigationContainer onStateChange={onStateChange} children={null} />
+    <BaseNavigationContainer onStateChange={onStateChange} children={null} />
   );
 
   expect(onStateChange).toBeCalledTimes(2);
@@ -454,12 +455,12 @@ it('allows state updates by dispatching a function returning an action', () => {
   const onStateChange = jest.fn();
 
   const element = (
-    <NavigationContainer onStateChange={onStateChange}>
+    <BaseNavigationContainer onStateChange={onStateChange}>
       <TestNavigator initialRouteName="foo">
         <Screen name="foo" component={FooScreen} />
         <Screen name="bar" component={BarScreen} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element).update(element);
@@ -496,12 +497,12 @@ it('updates route params with setParams', () => {
   const onStateChange = jest.fn();
 
   render(
-    <NavigationContainer onStateChange={onStateChange}>
+    <BaseNavigationContainer onStateChange={onStateChange}>
       <TestNavigator initialRouteName="foo">
         <Screen name="foo" component={FooScreen} />
         <Screen name="bar" component={jest.fn()} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   act(() => setParams({ username: 'alice' }));
@@ -556,7 +557,7 @@ it('updates route params with setParams applied to parent', () => {
   const onStateChange = jest.fn();
 
   render(
-    <NavigationContainer onStateChange={onStateChange}>
+    <BaseNavigationContainer onStateChange={onStateChange}>
       <TestNavigator initialRouteName="foo">
         <Screen name="foo">
           {() => (
@@ -567,7 +568,7 @@ it('updates route params with setParams applied to parent', () => {
         </Screen>
         <Screen name="bar" component={jest.fn()} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   act(() => setParams({ username: 'alice' }));
@@ -634,22 +635,22 @@ it('handles change in route names', () => {
   const onStateChange = jest.fn();
 
   const root = render(
-    <NavigationContainer onStateChange={onStateChange}>
+    <BaseNavigationContainer onStateChange={onStateChange}>
       <TestNavigator initialRouteName="bar">
         <Screen name="foo" component={jest.fn()} />
         <Screen name="bar" component={jest.fn()} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   root.update(
-    <NavigationContainer onStateChange={onStateChange}>
+    <BaseNavigationContainer onStateChange={onStateChange}>
       <TestNavigator>
         <Screen name="foo" component={jest.fn()} />
         <Screen name="baz" component={jest.fn()} />
         <Screen name="qux" component={jest.fn()} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(onStateChange).toBeCalledWith({
@@ -677,7 +678,7 @@ it('navigates to nested child in a navigator', () => {
   const navigation = React.createRef<NavigationContainerRef>();
 
   const element = render(
-    <NavigationContainer ref={navigation} onStateChange={onStateChange}>
+    <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
       <TestNavigator>
         <Screen name="foo">
           {() => (
@@ -704,7 +705,7 @@ it('navigates to nested child in a navigator', () => {
           )}
         </Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(element).toMatchInlineSnapshot(`"[foo-a, undefined]"`);
@@ -752,11 +753,11 @@ it('gives access to internal state', () => {
   };
 
   const root = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator initialRouteName="bar">
         <Screen name="bar" component={Test} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(root).update(root);
@@ -771,6 +772,60 @@ it('gives access to internal state', () => {
   });
 });
 
+it('preserves order of screens in state with non-numeric names', () => {
+  const TestNavigator = (props: any): any => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const navigation = React.createRef<NavigationContainerRef>();
+
+  const root = (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="foo" component={jest.fn()} />
+        <Screen name="bar" component={jest.fn()} />
+        <Screen name="baz" component={jest.fn()} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(root);
+
+  expect(navigation.current?.getRootState().routeNames).toEqual([
+    'foo',
+    'bar',
+    'baz',
+  ]);
+});
+
+it('preserves order of screens in state with numeric names', () => {
+  const TestNavigator = (props: any): any => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const navigation = React.createRef<NavigationContainerRef>();
+
+  const root = (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="4" component={jest.fn()} />
+        <Screen name="7" component={jest.fn()} />
+        <Screen name="1" component={jest.fn()} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(root);
+
+  expect(navigation.current?.getRootState().routeNames).toEqual([
+    '4',
+    '7',
+    '1',
+  ]);
+});
+
 it("throws if navigator doesn't have any screens", () => {
   const TestNavigator = (props: any) => {
     useNavigationBuilder(MockRouter, props);
@@ -778,9 +833,9 @@ it("throws if navigator doesn't have any screens", () => {
   };
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator />
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(() => render(element).update(element)).toThrowError(
@@ -812,14 +867,14 @@ it('throws if multiple navigators rendered under one container', () => {
   };
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" component={jest.fn()} />
       </TestNavigator>
       <TestNavigator>
         <Screen name="foo" component={jest.fn()} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(() => render(element).update(element)).toThrowError(
@@ -836,12 +891,12 @@ it('throws when Screen is not the direct children', () => {
   const Bar = () => null;
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" component={jest.fn()} />
         <Bar />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(() => render(element).update(element)).toThrowError(
@@ -856,12 +911,12 @@ it('throws when a React Element is not the direct children', () => {
   };
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" component={jest.fn()} />
         Hello world
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(() => render(element).update(element)).toThrowError(
@@ -877,7 +932,7 @@ it("doesn't throw when direct children is Screen or empty element", () => {
   };
 
   render(
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" component={jest.fn()} />
         {null}
@@ -885,7 +940,7 @@ it("doesn't throw when direct children is Screen or empty element", () => {
         {false}
         {true}
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 });
 
@@ -896,13 +951,13 @@ it('throws when multiple screens with same name are defined', () => {
   };
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" component={jest.fn()} />
         <Screen name="bar" component={jest.fn()} />
         <Screen name="foo" component={jest.fn()} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(() => render(element).update(element)).toThrowError(
@@ -917,20 +972,20 @@ it('switches rendered navigators', () => {
   };
 
   const root = render(
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator key="a">
         <Screen name="foo" component={jest.fn()} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(() =>
     root.update(
-      <NavigationContainer>
+      <BaseNavigationContainer>
         <TestNavigator key="b">
           <Screen name="foo" component={jest.fn()} />
         </TestNavigator>
-      </NavigationContainer>
+      </BaseNavigationContainer>
     )
   ).not.toThrowError(
     'Another navigator is already registered for this container.'
@@ -944,11 +999,11 @@ it('throws if no name is passed to Screen', () => {
   };
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name={undefined as any} component={jest.fn()} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(() => render(element).update(element)).toThrowError(
@@ -963,11 +1018,11 @@ it('throws if invalid name is passed to Screen', () => {
   };
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name={[] as any} component={jest.fn()} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(() => render(element).update(element)).toThrowError(
@@ -982,13 +1037,13 @@ it('throws if both children and component are passed', () => {
   };
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" component={jest.fn()}>
           {jest.fn()}
         </Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(() => render(element).update(element)).toThrowError(
@@ -1003,11 +1058,11 @@ it('throws descriptive error for undefined screen component', () => {
   };
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" component={undefined as any} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(() => render(element).update(element)).toThrowError(
@@ -1022,11 +1077,11 @@ it('throws descriptive error for invalid screen component', () => {
   };
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" component={{} as any} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(() => render(element).update(element)).toThrowError(
@@ -1041,11 +1096,11 @@ it('throws descriptive error for invalid children', () => {
   };
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo">{[] as any}</Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(() => render(element).update(element)).toThrowError(
@@ -1060,13 +1115,13 @@ it("doesn't throw if children is null", () => {
   };
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" component={jest.fn()}>
           {null as any}
         </Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(() => render(element).update(element)).not.toThrowError();

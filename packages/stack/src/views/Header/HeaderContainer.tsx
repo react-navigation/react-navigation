@@ -2,10 +2,10 @@ import * as React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import {
   NavigationContext,
+  NavigationRouteContext,
   Route,
   ParamListBase,
 } from '@react-navigation/native';
-import { StackNavigationState } from '@react-navigation/routers';
 import { EdgeInsets } from 'react-native-safe-area-context';
 
 import Header from './Header';
@@ -28,10 +28,10 @@ export type Props = {
   layout: Layout;
   insets: EdgeInsets;
   scenes: (Scene<Route<string>> | undefined)[];
-  state: StackNavigationState;
   getPreviousRoute: (props: {
     route: Route<string>;
   }) => Route<string> | undefined;
+  getFocusedRoute: () => Route<string>;
   onContentHeightChange?: (props: {
     route: Route<string>;
     height: number;
@@ -46,14 +46,14 @@ export default function HeaderContainer({
   scenes,
   layout,
   insets,
-  state,
+  getFocusedRoute,
   getPreviousRoute,
   onContentHeightChange,
   gestureDirection,
   styleInterpolator,
   style,
 }: Props) {
-  const focusedRoute = state.routes[state.index];
+  const focusedRoute = getFocusedRoute();
 
   return (
     <View pointerEvents="box-none" style={style}>
@@ -120,35 +120,39 @@ export default function HeaderContainer({
             key={scene.route.key}
             value={scene.descriptor.navigation}
           >
-            <View
-              onLayout={
-                onContentHeightChange
-                  ? e =>
-                      onContentHeightChange({
-                        route: scene.route,
-                        height: e.nativeEvent.layout.height,
-                      })
-                  : undefined
-              }
-              pointerEvents={isFocused ? 'box-none' : 'none'}
-              accessibilityElementsHidden={!isFocused}
-              importantForAccessibility={
-                isFocused ? 'auto' : 'no-hide-descendants'
-              }
-              style={
-                mode === 'float' || options.headerTransparent
-                  ? styles.header
-                  : null
-              }
-            >
-              {options.headerShown !== false ? (
-                options.header !== undefined ? (
-                  options.header(props)
-                ) : (
-                  <Header {...props} />
-                )
-              ) : null}
-            </View>
+            <NavigationRouteContext.Provider value={scene.route}>
+              <View
+                onLayout={
+                  onContentHeightChange
+                    ? e =>
+                        onContentHeightChange({
+                          route: scene.route,
+                          height: e.nativeEvent.layout.height,
+                        })
+                    : undefined
+                }
+                pointerEvents={isFocused ? 'box-none' : 'none'}
+                accessibilityElementsHidden={!isFocused}
+                importantForAccessibility={
+                  isFocused ? 'auto' : 'no-hide-descendants'
+                }
+                style={
+                  // Avoid positioning the focused header absolutely
+                  // Otherwise accessibility tools don't seem to be able to find it
+                  (mode === 'float' && !isFocused) || options.headerTransparent
+                    ? styles.header
+                    : null
+                }
+              >
+                {options.headerShown !== false ? (
+                  options.header !== undefined ? (
+                    options.header(props)
+                  ) : (
+                    <Header {...props} />
+                  )
+                ) : null}
+              </View>
+            </NavigationRouteContext.Provider>
           </NavigationContext.Provider>
         );
       })}

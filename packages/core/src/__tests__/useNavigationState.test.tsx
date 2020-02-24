@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { render, act } from 'react-native-testing-library';
+import { NavigationState } from '@react-navigation/routers';
 import useNavigationBuilder from '../useNavigationBuilder';
 import useNavigationState from '../useNavigationState';
-import NavigationContainer from '../NavigationContainer';
+import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
 import MockRouter from './__fixtures__/MockRouter';
-import { NavigationState } from '../types';
 
 it('gets the current navigation state', () => {
   const TestNavigator = (props: any): any => {
@@ -27,13 +27,13 @@ it('gets the current navigation state', () => {
   const navigation = React.createRef<any>();
 
   const element = (
-    <NavigationContainer ref={navigation}>
+    <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
         <Screen name="first" component={Test} />
         <Screen name="second">{() => null}</Screen>
         <Screen name="third">{() => null}</Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element);
@@ -78,13 +78,13 @@ it('gets the current navigation state with selector', () => {
   const navigation = React.createRef<any>();
 
   const element = (
-    <NavigationContainer ref={navigation}>
+    <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
         <Screen name="first" component={Test} />
         <Screen name="second">{() => null}</Screen>
         <Screen name="third">{() => null}</Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element);
@@ -133,13 +133,13 @@ it('gets the correct value if selector changes', () => {
   const App = ({ selector }: { selector: (state: NavigationState) => any }) => {
     return (
       <SelectorContext.Provider value={selector}>
-        <NavigationContainer ref={navigation}>
+        <BaseNavigationContainer ref={navigation}>
           <TestNavigator>
             <Screen name="first" component={Test} />
             <Screen name="second">{() => null}</Screen>
             <Screen name="third">{() => null}</Screen>
           </TestNavigator>
-        </NavigationContainer>
+        </BaseNavigationContainer>
       </SelectorContext.Provider>
     );
   };

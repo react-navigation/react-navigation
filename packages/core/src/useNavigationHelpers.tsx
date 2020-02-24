@@ -1,17 +1,14 @@
 import * as React from 'react';
-import * as CommonActions from './CommonActions';
-import NavigationContext from './NavigationContext';
-import { NavigationStateContext } from './NavigationContainer';
-import { NavigationEventEmitter } from './useEventEmitter';
 import {
-  NavigationHelpers,
-  NavigationProp,
+  CommonActions,
   NavigationAction,
   NavigationState,
   ParamListBase,
   Router,
-  PrivateValueStore,
-} from './types';
+} from '@react-navigation/routers';
+import NavigationContext from './NavigationContext';
+import { NavigationEventEmitter } from './useEventEmitter';
+import { NavigationHelpers, NavigationProp, PrivateValueStore } from './types';
 
 // This is to make TypeScript compiler happy
 // eslint-disable-next-line babel/no-unused-expressions
@@ -37,24 +34,21 @@ export default function useNavigationHelpers<
   EventMap extends Record<string, any>
 >({ onAction, getState, emitter, router }: Options<State, Action>) {
   const parentNavigationHelpers = React.useContext(NavigationContext);
-  const { performTransaction } = React.useContext(NavigationStateContext);
 
   return React.useMemo(() => {
     const dispatch = (action: Action | ((state: State) => Action)) => {
-      performTransaction(() => {
-        const payload =
-          typeof action === 'function' ? action(getState()) : action;
+      const payload =
+        typeof action === 'function' ? action(getState()) : action;
 
-        const handled = onAction(payload);
+      const handled = onAction(payload);
 
-        if (!handled && process.env.NODE_ENV !== 'production') {
-          console.error(
-            `The action '${payload.type}' with payload '${JSON.stringify(
-              payload.payload
-            )}' was not handled by any navigator.`
-          );
-        }
-      });
+      if (!handled && process.env.NODE_ENV !== 'production') {
+        console.error(
+          `The action '${payload.type}' with payload '${JSON.stringify(
+            payload.payload
+          )}' was not handled by any navigator. If you are trying to navigate to a screen, check if the screen exists in your navigator. If you're trying to navigate to a screen in a nested navigator, see https://reactnavigation.org/docs/en/nesting-navigators.html#navigating-to-a-screen-in-a-nested-navigator.`
+        );
+      }
     };
 
     const actions = {
@@ -93,12 +87,5 @@ export default function useNavigationHelpers<
       },
     } as NavigationHelpers<ParamListBase, EventMap> &
       (NavigationProp<ParamListBase, string, any, any, any> | undefined);
-  }, [
-    router,
-    getState,
-    parentNavigationHelpers,
-    emitter.emit,
-    performTransaction,
-    onAction,
-  ]);
+  }, [router, getState, parentNavigationHelpers, emitter.emit, onAction]);
 }

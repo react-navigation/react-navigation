@@ -1,8 +1,12 @@
 import * as React from 'react';
-import { Platform } from 'react-native';
+import { View, Platform, StyleSheet } from 'react-native';
 import { SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
-import { Route } from '@react-navigation/native';
-import { StackActions, StackNavigationState } from '@react-navigation/routers';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import {
+  StackActions,
+  StackNavigationState,
+  Route,
+} from '@react-navigation/native';
 
 import CardStack from './CardStack';
 import KeyboardManager from '../KeyboardManager';
@@ -40,7 +44,9 @@ type State = {
   descriptors: StackDescriptorMap;
 };
 
-class StackView extends React.Component<Props, State> {
+const GestureHandlerWrapper = GestureHandlerRootView ?? View;
+
+export default class StackView extends React.Component<Props, State> {
   static getDerivedStateFromProps(
     props: Readonly<Props>,
     state: Readonly<State>
@@ -314,14 +320,18 @@ class StackView extends React.Component<Props, State> {
         source: route.key,
         target: state.key,
       });
+    } else {
+      // We need to clean up any state tracking the route and pop it immediately
+      this.setState(state => ({
+        routes: state.routes.filter(r => r.key !== route.key),
+        openingRouteKeys: state.openingRouteKeys.filter(
+          key => key !== route.key
+        ),
+        closingRouteKeys: state.closingRouteKeys.filter(
+          key => key !== route.key
+        ),
+      }));
     }
-
-    // We need to clean up any state tracking the route and pop it immediately
-    this.setState(state => ({
-      routes: state.routes.filter(r => r.key !== route.key),
-      openingRouteKeys: state.openingRouteKeys.filter(key => key !== route.key),
-      closingRouteKeys: state.closingRouteKeys.filter(key => key !== route.key),
-    }));
   };
 
   private handleTransitionStart = (
@@ -365,38 +375,44 @@ class StackView extends React.Component<Props, State> {
       mode !== 'modal' && Platform.OS === 'ios' ? 'float' : 'screen';
 
     return (
-      <SafeAreaProviderCompat>
-        <SafeAreaConsumer>
-          {insets => (
-            <KeyboardManager enabled={keyboardHandlingEnabled !== false}>
-              {props => (
-                <CardStack
-                  mode={mode}
-                  insets={insets as EdgeInsets}
-                  getPreviousRoute={this.getPreviousRoute}
-                  getGesturesEnabled={this.getGesturesEnabled}
-                  routes={routes}
-                  openingRouteKeys={openingRouteKeys}
-                  closingRouteKeys={closingRouteKeys}
-                  onOpenRoute={this.handleOpenRoute}
-                  onCloseRoute={this.handleCloseRoute}
-                  onTransitionStart={this.handleTransitionStart}
-                  onTransitionEnd={this.handleTransitionEnd}
-                  renderHeader={this.renderHeader}
-                  renderScene={this.renderScene}
-                  headerMode={headerMode}
-                  state={state}
-                  descriptors={descriptors}
-                  {...rest}
-                  {...props}
-                />
-              )}
-            </KeyboardManager>
-          )}
-        </SafeAreaConsumer>
-      </SafeAreaProviderCompat>
+      <GestureHandlerWrapper style={styles.container}>
+        <SafeAreaProviderCompat>
+          <SafeAreaConsumer>
+            {insets => (
+              <KeyboardManager enabled={keyboardHandlingEnabled !== false}>
+                {props => (
+                  <CardStack
+                    mode={mode}
+                    insets={insets as EdgeInsets}
+                    getPreviousRoute={this.getPreviousRoute}
+                    getGesturesEnabled={this.getGesturesEnabled}
+                    routes={routes}
+                    openingRouteKeys={openingRouteKeys}
+                    closingRouteKeys={closingRouteKeys}
+                    onOpenRoute={this.handleOpenRoute}
+                    onCloseRoute={this.handleCloseRoute}
+                    onTransitionStart={this.handleTransitionStart}
+                    onTransitionEnd={this.handleTransitionEnd}
+                    renderHeader={this.renderHeader}
+                    renderScene={this.renderScene}
+                    headerMode={headerMode}
+                    state={state}
+                    descriptors={descriptors}
+                    {...rest}
+                    {...props}
+                  />
+                )}
+              </KeyboardManager>
+            )}
+          </SafeAreaConsumer>
+        </SafeAreaProviderCompat>
+      </GestureHandlerWrapper>
     );
   }
 }
 
-export default StackView;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

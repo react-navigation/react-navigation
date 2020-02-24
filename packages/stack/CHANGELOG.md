@@ -3,6 +3,185 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.8](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.7...@react-navigation/stack@5.0.8) (2020-02-21)
+
+
+### Bug Fixes
+
+* fix transparent header on Android ([a67b494](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/a67b49477eb500c81fedcd73bbd8102901a95170))
+
+
+
+
+
+## [5.0.7](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.6...@react-navigation/stack@5.0.7) (2020-02-21)
+
+
+### Bug Fixes
+
+* debounce back button by default in stack header ([c7dd3a5](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/c7dd3a58b18d7a267d94009d459944c251ea74c1))
+* make sure header is visibile to accessibility tools on iOS ([240ce01](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/240ce01822febac2c1aa324c01e43fdc88a235a0))
+
+
+
+
+
+## [5.0.6](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.5...@react-navigation/stack@5.0.6) (2020-02-19)
+
+
+### Bug Fixes
+
+* add accessibilityLabel prop to back button ([bf76075](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/bf76075e0fbf51961e81e9337ef194e43cc6b986)), closes [#6895](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/6895)
+
+
+
+
+
+## [5.0.5](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.4...@react-navigation/stack@5.0.5) (2020-02-14)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+## [5.0.4](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.3...@react-navigation/stack@5.0.4) (2020-02-14)
+
+
+### Bug Fixes
+
+* hard code header height for animation ([8f40a98](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/8f40a980862a182a9e86dbb1e4764a39d824cd70)), closes [#6818](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/6818)
+
+
+
+
+
+## [5.0.3](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.2...@react-navigation/stack@5.0.3) (2020-02-12)
+
+
+### Bug Fixes
+
+* check if we can go baack before dispatching pop ([6c9447a](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/6c9447a38c74ca029fc9def8aca0a2d2cca9639c))
+
+
+
+
+
+## [5.0.2](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.1...@react-navigation/stack@5.0.2) (2020-02-11)
+
+
+### Bug Fixes
+
+* provide route context to header and bottom tabs ([b6e7e08](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/b6e7e08b9a05be6c04ed21e938b9580876239116))
+
+
+
+
+
+## [5.0.1](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.71...@react-navigation/stack@5.0.1) (2020-02-10)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [5.0.0-alpha.71](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.70...@react-navigation/stack@5.0.0-alpha.71) (2020-02-05)
+
+
+### Bug Fixes
+
+* use addListener only when available ([f746ece](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/f746ece61b8d2c4088e5d1dc3acbf00b089ad3e2))
+
+
+
+
+
+# [5.0.0-alpha.70](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.69...@react-navigation/stack@5.0.0-alpha.70) (2020-02-04)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [5.0.0-alpha.69](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.68...@react-navigation/stack@5.0.0-alpha.69) (2020-02-04)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [5.0.0-alpha.68](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.67...@react-navigation/stack@5.0.0-alpha.68) (2020-02-03)
+
+
+### Bug Fixes
+
+* use .native for masked view instead of .web ([abdf9d1](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/abdf9d12b5c3fbde6414b50e3b6e082b67899772))
+
+
+
+
+
+# [5.0.0-alpha.67](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.66...@react-navigation/stack@5.0.0-alpha.67) (2020-02-03)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [5.0.0-alpha.66](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.63...@react-navigation/stack@5.0.0-alpha.66) (2020-02-02)
+
+
+### Bug Fixes
+
+* add accessibilityRole=header to header title ([0ead266](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/0ead2662ec10078b5e238f53f4607a8c712c20a4))
+* add licenses ([0c159db](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
+* disable screens when mode is modal on older expo versions ([94d7b28](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/94d7b28c0b2ce0d56c99b224610f305be6451626))
+* dispatch pop early when screen is closed with gesture ([#336](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/issues/336)) ([3d937d1](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/3d937d1e6571cd613e830d64f7b2e7426076d371)), closes [#267](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/issues/267)
+* fix shadow position for inverted animations ([5fe140e](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/5fe140e61b9d6038490b1975b99331613933eb39))
+* increase epsilon in CardContainer.tsx ([9be904d](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/9be904d9c4c74c23a7d1d60d81f4366c601f5082))
+* make UNVERSIONED insufficient expo version ([a6f5867](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/a6f58677dce9c8446de7879014490c9ab76eceb9))
+* screens integration on Android ([#294](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/issues/294)) ([9bfb295](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/9bfb29562020c61b4d5c9bee278bcb1c7bdb8b67))
+* update screens for native stack ([5411816](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/54118161885738a6d20b062c7e6679f3bace8424))
+* web with internal interpolation listener ([edf96d8](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/edf96d839fea3a9919e4133bd476df303d7a2b00))
+* wrap navigators in gesture handler root ([41a5e1a](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/41a5e1a385aa5180abc3992a4c67077c37b998b9))
+
+
+### Features
+
+* add `animationTypeForReplace` option ([#297](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/issues/297)) ([6262f72](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/6262f7298bff843571fb4b1a677d3beabe29833e))
+
+
+
+
+
+# [5.0.0-alpha.64](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.63...@react-navigation/stack@5.0.0-alpha.64) (2020-02-02)
+
+
+### Bug Fixes
+
+* add accessibilityRole=header to header title ([0ead266](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/0ead2662ec10078b5e238f53f4607a8c712c20a4))
+* add licenses ([0c159db](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
+* disable screens when mode is modal on older expo versions ([94d7b28](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/94d7b28c0b2ce0d56c99b224610f305be6451626))
+* fix shadow position for inverted animations ([5fe140e](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/5fe140e61b9d6038490b1975b99331613933eb39))
+* increase epsilon in CardContainer.tsx ([9be904d](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/9be904d9c4c74c23a7d1d60d81f4366c601f5082))
+* make UNVERSIONED insufficient expo version ([a6f5867](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/a6f58677dce9c8446de7879014490c9ab76eceb9))
+* screens integration on Android ([#294](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/issues/294)) ([9bfb295](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/9bfb29562020c61b4d5c9bee278bcb1c7bdb8b67))
+* update screens for native stack ([5411816](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/54118161885738a6d20b062c7e6679f3bace8424))
+* web with internal interpolation listener ([edf96d8](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/edf96d839fea3a9919e4133bd476df303d7a2b00))
+
+
+### Features
+
+* add `animationTypeForReplace` option ([#297](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/issues/297)) ([6262f72](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/commit/6262f7298bff843571fb4b1a677d3beabe29833e))
+
+
+
+
+
 # [5.0.0-alpha.63](https://github.com/react-navigation/navigation-ex/tree/master/packages/stack/compare/@react-navigation/stack@5.0.0-alpha.62...@react-navigation/stack@5.0.0-alpha.63) (2020-01-24)
 
 

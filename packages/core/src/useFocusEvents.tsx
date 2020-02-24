@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { NavigationState } from '@react-navigation/routers';
 import NavigationContext from './NavigationContext';
 import { NavigationEventEmitter } from './useEventEmitter';
-import { NavigationState } from './types';
 
 type Options = {
   state: NavigationState;
@@ -21,17 +21,19 @@ export default function useFocusEvents({ state, emitter }: Options) {
   // Coz the child screen can't be focused if the parent screen is out of focus
   React.useEffect(
     () =>
-      navigation?.addListener('focus', () =>
-        emitter.emit({ type: 'focus', target: currentFocusedKey })
-      ),
+      navigation?.addListener('focus', () => {
+        lastFocusedKeyRef.current = currentFocusedKey;
+        emitter.emit({ type: 'focus', target: currentFocusedKey });
+      }),
     [currentFocusedKey, emitter, navigation]
   );
 
   React.useEffect(
     () =>
-      navigation?.addListener('blur', () =>
-        emitter.emit({ type: 'blur', target: currentFocusedKey })
-      ),
+      navigation?.addListener('blur', () => {
+        lastFocusedKeyRef.current = undefined;
+        emitter.emit({ type: 'blur', target: currentFocusedKey });
+      }),
     [currentFocusedKey, emitter, navigation]
   );
 
@@ -60,14 +62,7 @@ export default function useFocusEvents({ state, emitter }: Options) {
       return;
     }
 
-    emitter.emit({
-      type: 'focus',
-      target: currentFocusedKey,
-    });
-
-    emitter.emit({
-      type: 'blur',
-      target: lastFocusedKey,
-    });
+    emitter.emit({ type: 'focus', target: currentFocusedKey });
+    emitter.emit({ type: 'blur', target: lastFocusedKey });
   }, [currentFocusedKey, emitter, navigation]);
 }

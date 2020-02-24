@@ -1,6 +1,7 @@
 {
   "name": "@react-navigation/stack",
   "description": "Stack navigator component for iOS and Android with animated transitions and gestures",
+  "version": "5.0.8",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -10,9 +11,12 @@
     "android",
     "stack"
   ],
-  "version": "5.0.0-alpha.63",
   "license": "MIT",
-  "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/stack",
+  "repository": "https://github.com/react-navigation/react-navigation/tree/master/packages/stack",
+  "bugs": {
+    "url": "https://github.com/react-navigation/react-navigation/issues"
+  },
+  "homepage": "https://reactnavigation.org/docs/stack-navigator.html",
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "module": "lib/module/index.js",
@@ -30,32 +34,32 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/routers": "^5.0.0-alpha.27",
     "color": "^3.1.2",
     "react-native-iphone-x-helper": "^1.2.1"
   },
   "devDependencies": {
-    "@react-native-community/bob": "^0.8.0",
-    "@react-native-community/masked-view": "^0.1.5",
+    "@react-native-community/bob": "^0.9.3",
+    "@react-native-community/masked-view": "^0.1.6",
+    "@react-navigation/native": "^5.0.7",
     "@types/color": "^3.0.1",
-    "@types/react": "^16.9.17",
+    "@types/react": "^16.9.19",
     "@types/react-native": "^0.60.30",
     "del-cli": "^3.0.0",
     "react": "~16.9.0",
     "react-native": "~0.61.5",
-    "react-native-gesture-handler": "^1.5.3",
-    "react-native-safe-area-context": "^0.6.2",
-    "react-native-screens": "^2.0.0-alpha.31",
-    "typescript": "^3.7.4"
+    "react-native-gesture-handler": "^1.5.6",
+    "react-native-safe-area-context": "^0.7.2",
+    "react-native-screens": "^2.0.0-beta.2",
+    "typescript": "^3.7.5"
   },
   "peerDependencies": {
-    "@react-native-community/masked-view": "^0.1.1",
-    "@react-navigation/native": "^5.0.0-alpha.0",
+    "@react-native-community/masked-view": ">= 0.1.0",
+    "@react-navigation/native": "^5.0.5",
     "react": "*",
     "react-native": "*",
-    "react-native-gesture-handler": "^1.0.0",
-    "react-native-safe-area-context": "^0.6.0",
-    "react-native-screens": "^1.0.0-alpha.0 || ^2.0.0-alpha.31"
+    "react-native-gesture-handler": ">= 1.0.0",
+    "react-native-safe-area-context": ">= 0.6.0",
+    "react-native-screens": ">= 2.0.0-alpha.0 || >= 2.0.0-beta.0"
   },
   "@react-native-community/bob": {
     "source": "src",

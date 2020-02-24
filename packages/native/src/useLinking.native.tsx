@@ -76,10 +76,10 @@ export default function useLinking(
         if (state) {
           const action = getActionFromState(state);
 
-          if (action.type === 'RESET_ROOT') {
-            navigation.resetRoot(action.payload);
-          } else {
+          if (action !== undefined) {
             navigation.dispatch(action);
+          } else {
+            navigation.resetRoot(state);
           }
         }
       }

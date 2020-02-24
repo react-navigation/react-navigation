@@ -6,8 +6,8 @@ import {
   NavigationProp,
   Descriptor,
   NavigationHelpers,
+  DrawerNavigationState,
 } from '@react-navigation/native';
-import { DrawerNavigationState } from '@react-navigation/routers';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 
 export type Scene = {
@@ -128,10 +128,6 @@ export type DrawerContentComponentProps<T = DrawerContentOptions> = T & {
    * `0` is closed, `1` is open.
    */
   progress: Animated.Node<number>;
-  /**
-   * Position of the drawer on the screen.
-   */
-  drawerPosition: 'left' | 'right';
 };
 
 export type DrawerContentOptions = {

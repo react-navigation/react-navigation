@@ -7,7 +7,11 @@ import {
   StatusBar,
   I18nManager,
 } from 'react-native';
+// eslint-disable-next-line import/no-unresolved
+import { enableScreens } from 'react-native-screens';
 import RNRestart from 'react-native-restart';
+import { Updates } from 'expo';
+import { Asset } from 'expo-asset';
 import { MaterialIcons } from '@expo/vector-icons';
 import {
   Provider as PaperProvider,
@@ -17,12 +21,11 @@ import {
   List,
   Divider,
 } from 'react-native-paper';
-import { Asset } from 'expo-asset';
 import {
   InitialState,
   useLinking,
   NavigationContainerRef,
-  NavigationNativeContainer,
+  NavigationContainer,
   DefaultTheme,
   DarkTheme,
 } from '@react-navigation/native';
@@ -39,7 +42,6 @@ import {
 
 import LinkingPrefixes from './LinkingPrefixes';
 import SimpleStack from './Screens/SimpleStack';
-import NativeStack from './Screens/NativeStack';
 import ModalPresentationStack from './Screens/ModalPresentationStack';
 import StackTransparent from './Screens/StackTransparent';
 import StackHeaderCustomization from './Screens/StackHeaderCustomization';
@@ -50,9 +52,10 @@ import DynamicTabs from './Screens/DynamicTabs';
 import AuthFlow from './Screens/AuthFlow';
 import CompatAPI from './Screens/CompatAPI';
 import SettingsItem from './Shared/SettingsItem';
-import { Updates } from 'expo';
 
 YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
+
+enableScreens();
 
 type RootDrawerParamList = {
   Root: undefined;
@@ -67,7 +70,6 @@ type RootStackParamList = {
 
 const SCREENS = {
   SimpleStack: { title: 'Simple Stack', component: SimpleStack },
-  NativeStack: { title: 'Native Stack', component: NativeStack },
   ModalPresentationStack: {
     title: 'Modal Presentation Stack',
     component: ModalPresentationStack,
@@ -124,7 +126,8 @@ export default function App() {
     prefixes: LinkingPrefixes,
     config: {
       Root: {
-        path: 'root',
+        path: '',
+        initialRouteName: 'Home',
         screens: Object.keys(SCREENS).reduce<{ [key: string]: string }>(
           (acc, name) => {
             // Convert screen names such as SimpleStack to kebab case (simple-stack)
@@ -135,7 +138,7 @@ export default function App() {
 
             return acc;
           },
-          {}
+          { Home: '' }
         ),
       },
     },
@@ -202,7 +205,7 @@ export default function App() {
       {Platform.OS === 'ios' && (
         <StatusBar barStyle={theme.dark ? 'light-content' : 'dark-content'} />
       )}
-      <NavigationNativeContainer
+      <NavigationContainer
         ref={containerRef}
         initialState={initialState}
         onStateChange={state =>
@@ -286,7 +289,7 @@ export default function App() {
                           <List.Item
                             key={name}
                             title={SCREENS[name].title}
-                            onPress={() => navigation.push(name)}
+                            onPress={() => navigation.navigate(name)}
                           />
                         )
                       )}
@@ -307,7 +310,7 @@ export default function App() {
             )}
           </Drawer.Screen>
         </Drawer.Navigator>
-      </NavigationNativeContainer>
+      </NavigationContainer>
     </PaperProvider>
   );
 }

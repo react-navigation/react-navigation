@@ -11,8 +11,7 @@ import {
 import { EdgeInsets } from 'react-native-safe-area-context';
 // eslint-disable-next-line import/no-unresolved
 import { ScreenContainer, Screen, screensEnabled } from 'react-native-screens'; // Import with * as to prevent getters being called
-import { Route } from '@react-navigation/native';
-import { StackNavigationState } from '@react-navigation/routers';
+import { Route, StackNavigationState } from '@react-navigation/native';
 
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
@@ -37,14 +36,6 @@ import {
 type GestureValues = {
   [key: string]: Animated.Value;
 };
-
-// @ts-ignore
-const maybeExpoVersion = global.Expo?.Constants.manifest.sdkVersion.split(
-  '.'
-)[0];
-const isInsufficientExpoVersion = maybeExpoVersion
-  ? Number(maybeExpoVersion) <= 36
-  : maybeExpoVersion === 'UNVERSIONED';
 
 type Props = {
   mode: StackCardMode;
@@ -83,37 +74,27 @@ type State = {
 };
 
 const EPSILON = 0.01;
-const FAR_FAR_AWAY = 9000;
 
 const dimensions = Dimensions.get('window');
 const layout = { width: dimensions.width, height: dimensions.height };
 
 const MaybeScreenContainer = ({
   enabled,
-  style,
   ...rest
 }: ViewProps & {
   enabled: boolean;
   children: React.ReactNode;
 }) => {
   if (enabled && screensEnabled()) {
-    return <ScreenContainer style={style} {...rest} />;
+    return <ScreenContainer {...rest} />;
   }
 
-  return (
-    <View
-      collapsable={!enabled}
-      removeClippedSubviews={Platform.OS !== 'ios' && enabled}
-      style={[style, { overflow: 'hidden' }]}
-      {...rest}
-    />
-  );
+  return <View {...rest} />;
 };
 
 const MaybeScreen = ({
   enabled,
   active,
-  style,
   ...rest
 }: ViewProps & {
   enabled: boolean;
@@ -122,39 +103,10 @@ const MaybeScreen = ({
 }) => {
   if (enabled && screensEnabled()) {
     // @ts-ignore
-    return <Screen active={active} style={style} {...rest} />;
+    return <Screen active={active} {...rest} />;
   }
 
-  return (
-    <Animated.View
-      style={[
-        style,
-        {
-          overflow: 'hidden',
-          // Position the screen offscreen to take advantage of offscreen perf optimization
-          // https://facebook.github.io/react-native/docs/view#removeclippedsubviews
-          // This can be useful if screens is not enabled
-          // It's buggy on iOS, so we don't enable it there
-          transform: [
-            {
-              translateY:
-                Platform.OS !== 'ios' && enabled
-                  ? typeof active === 'number'
-                    ? active
-                      ? 0
-                      : FAR_FAR_AWAY
-                    : active.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [FAR_FAR_AWAY, 0],
-                      })
-                  : 0,
-            },
-          ],
-        },
-      ]}
-      {...rest}
-    />
-  );
+  return <View {...rest} />;
 };
 
 const FALLBACK_DESCRIPTOR = Object.freeze({ options: {} });
@@ -398,6 +350,12 @@ export default class CardStack extends React.Component<Props, State> {
     });
   };
 
+  private getFocusedRoute = () => {
+    const { state } = this.props;
+
+    return state.routes[state.index];
+  };
+
   render() {
     const {
       mode,
@@ -445,7 +403,7 @@ export default class CardStack extends React.Component<Props, State> {
 
     // Screens is buggy on iOS, so we don't enable it there
     // For modals, usually we want the screen underneath to be visible, so also disable it there
-    const isScreensEnabled = Platform.OS !== 'ios';
+    const isScreensEnabled = Platform.OS !== 'ios' && mode !== 'modal';
 
     return (
       <React.Fragment>
@@ -459,26 +417,13 @@ export default class CardStack extends React.Component<Props, State> {
             const gesture = gestures[route.key];
             const scene = scenes[index];
 
-            // Display current screen and a screen beneath.
-
-            let isScreenActive: Animated.AnimatedInterpolation | 0 | 1 =
-              index >= self.length - 2 ? 1 : 0;
-            if (isInsufficientExpoVersion) {
-              isScreenActive =
-                index === self.length - 1
-                  ? 1
-                  : Platform.OS === 'android'
-                  ? scene.progress.next
-                    ? scene.progress.next.interpolate({
-                        inputRange: [0, 1 - EPSILON, 1],
-                        outputRange: [1, 1, 0],
-                        extrapolate: 'clamp',
-                      })
-                    : 1
-                  : index === self.length - 2
-                  ? 1
-                  : 0;
-            }
+            const isScreenActive = scene.progress.next
+              ? scene.progress.next.interpolate({
+                  inputRange: [0, 1 - EPSILON, 1],
+                  outputRange: [1, 1, 0],
+                  extrapolate: 'clamp',
+                })
+              : 1;
 
             const {
               safeAreaInsets,
@@ -579,7 +524,6 @@ export default class CardStack extends React.Component<Props, State> {
                   gesture={gesture}
                   scene={scene}
                   previousScene={previousScene}
-                  state={state}
                   safeAreaInsetTop={safeAreaInsetTop}
                   safeAreaInsetRight={safeAreaInsetRight}
                   safeAreaInsetBottom={safeAreaInsetBottom}
@@ -594,6 +538,7 @@ export default class CardStack extends React.Component<Props, State> {
                   headerHeight={headerHeights[route.key]}
                   onHeaderHeightChange={this.handleHeaderLayout}
                   getPreviousRoute={getPreviousRoute}
+                  getFocusedRoute={this.getFocusedRoute}
                   headerMode={headerMode}
                   headerShown={headerShown}
                   headerTransparent={headerTransparent}
@@ -617,8 +562,8 @@ export default class CardStack extends React.Component<Props, State> {
               layout,
               insets: { top, right, bottom, left },
               scenes,
-              state,
               getPreviousRoute,
+              getFocusedRoute: this.getFocusedRoute,
               onContentHeightChange: this.handleHeaderLayout,
               gestureDirection:
                 focusedOptions.gestureDirection !== undefined

@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { ParamListBase } from '@react-navigation/routers';
 import NavigationRouteContext from './NavigationRouteContext';
-import { ParamListBase, RouteProp } from './types';
+import { RouteProp } from './types';
 
 /**
  * Hook to access the route prop of the parent screen anywhere.
@@ -14,7 +15,7 @@ export default function useRoute<
 
   if (route === undefined) {
     throw new Error(
-      "We couldn't find a route object. Is your component inside a navigator?"
+      "We couldn't find a route object. Is your component inside a screen in a navigator?"
     );
   }
 

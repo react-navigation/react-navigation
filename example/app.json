@@ -3,6 +3,7 @@
   "displayName": "React Navigation Example",
   "expo": {
     "name": "@react-navigation/example",
+    "owner": "react-navigation",
     "slug": "react-navigation-example",
     "description": "Demo app to showcase various functionality of React Navigation",
     "privacy": "public",

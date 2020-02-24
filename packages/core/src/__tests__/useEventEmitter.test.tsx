@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { render, act } from 'react-native-testing-library';
+import { Router, NavigationState } from '@react-navigation/routers';
 import useNavigationBuilder from '../useNavigationBuilder';
-import NavigationContainer from '../NavigationContainer';
+import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
 import MockRouter from './__fixtures__/MockRouter';
-import { Router, NavigationState } from '../types';
 
 it('fires focus and blur events in root navigator', () => {
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
@@ -47,7 +47,7 @@ it('fires focus and blur events in root navigator', () => {
   const navigation = React.createRef<any>();
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator ref={navigation}>
         <Screen
           name="first"
@@ -66,7 +66,7 @@ it('fires focus and blur events in root navigator', () => {
           component={createComponent(fourthFocusCallback, fourthBlurCallback)}
         />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element);
@@ -139,7 +139,7 @@ it('fires focus and blur events in nested navigator', () => {
   const child = React.createRef<any>();
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator ref={parent}>
         <Screen
           name="first"
@@ -170,7 +170,7 @@ it('fires focus and blur events in nested navigator', () => {
           )}
         </Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element);
@@ -188,10 +188,12 @@ it('fires focus and blur events in nested navigator', () => {
 
   expect(thirdFocusCallback).toBeCalledTimes(0);
   expect(secondFocusCallback).toBeCalledTimes(1);
+  expect(fourthBlurCallback).toBeCalledTimes(0);
 
   act(() => parent.current.navigate('nested'));
 
   expect(firstBlurCallback).toBeCalledTimes(1);
+  expect(secondBlurCallback).toBeCalledTimes(1);
   expect(thirdFocusCallback).toBeCalledTimes(0);
   expect(fourthFocusCallback).toBeCalledTimes(1);
 
@@ -199,6 +201,35 @@ it('fires focus and blur events in nested navigator', () => {
 
   expect(fourthBlurCallback).toBeCalledTimes(1);
   expect(thirdFocusCallback).toBeCalledTimes(1);
+
+  act(() => parent.current.navigate('first'));
+
+  expect(firstFocusCallback).toBeCalledTimes(2);
+  expect(thirdBlurCallback).toBeCalledTimes(1);
+
+  act(() => parent.current.navigate('nested', { screen: 'fourth' }));
+
+  expect(fourthFocusCallback).toBeCalledTimes(2);
+  expect(thirdBlurCallback).toBeCalledTimes(1);
+  expect(firstBlurCallback).toBeCalledTimes(2);
+
+  act(() => parent.current.navigate('nested', { screen: 'third' }));
+
+  expect(thirdFocusCallback).toBeCalledTimes(2);
+  expect(fourthBlurCallback).toBeCalledTimes(2);
+
+  // Make sure nothing else has changed
+  expect(firstFocusCallback).toBeCalledTimes(2);
+  expect(firstBlurCallback).toBeCalledTimes(2);
+
+  expect(secondFocusCallback).toBeCalledTimes(1);
+  expect(secondBlurCallback).toBeCalledTimes(1);
+
+  expect(thirdFocusCallback).toBeCalledTimes(2);
+  expect(thirdBlurCallback).toBeCalledTimes(1);
+
+  expect(fourthFocusCallback).toBeCalledTimes(2);
+  expect(fourthBlurCallback).toBeCalledTimes(2);
 });
 
 it('fires blur event when a route is removed with a delay', async () => {
@@ -307,12 +338,12 @@ it('fires blur event when a route is removed with a delay', async () => {
   const navigation = React.createRef<any>();
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator ref={navigation}>
         <Screen name="first" component={First} />
         <Screen name="second" component={Second} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element);
@@ -363,13 +394,13 @@ it('fires custom events', () => {
   const ref = React.createRef<any>();
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator ref={ref}>
         <Screen name="first" component={createComponent(firstCallback)} />
         <Screen name="second" component={createComponent(secondCallback)} />
         <Screen name="third" component={createComponent(thirdCallback)} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element);
@@ -444,11 +475,11 @@ it('has option to prevent default', () => {
   const ref = React.createRef<any>();
 
   const element = (
-    <NavigationContainer>
+    <BaseNavigationContainer>
       <TestNavigator ref={ref}>
         <Screen name="first" component={Test} />
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element);

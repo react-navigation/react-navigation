@@ -1,6 +1,7 @@
 {
   "name": "@react-navigation/material-bottom-tabs",
   "description": "Integration for bottom navigation component from react-native-paper",
+  "version": "5.0.7",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -11,9 +12,12 @@
     "material",
     "tab"
   ],
-  "version": "5.0.0-alpha.36",
   "license": "MIT",
-  "repository": "https://github.com/react-navigation/navigation-ex/tree/master/packages/material-bottom-tabs",
+  "repository": "https://github.com/react-navigation/react-navigation/tree/master/packages/material-bottom-tabs",
+  "bugs": {
+    "url": "https://github.com/react-navigation/react-navigation/issues"
+  },
+  "homepage": "https://reactnavigation.org/docs/material-bottom-tab-navigator.html",
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "module": "lib/module/index.js",
@@ -30,27 +34,25 @@
     "prepare": "bob build",
     "clean": "del lib"
   },
-  "dependencies": {
-    "@react-navigation/routers": "^5.0.0-alpha.27"
-  },
   "devDependencies": {
-    "@react-native-community/bob": "^0.8.0",
-    "@types/react": "^16.9.17",
+    "@react-native-community/bob": "^0.9.3",
+    "@react-navigation/native": "^5.0.7",
+    "@types/react": "^16.9.19",
     "@types/react-native": "^0.60.30",
     "@types/react-native-vector-icons": "^6.4.5",
     "del-cli": "^3.0.0",
     "react": "~16.9.0",
     "react-native": "~0.61.5",
-    "react-native-paper": "^3.5.0",
+    "react-native-paper": "^3.6.0",
     "react-native-vector-icons": "^6.6.0",
-    "typescript": "^3.7.4"
+    "typescript": "^3.7.5"
   },
   "peerDependencies": {
-    "@react-navigation/native": "^5.0.0-alpha.0",
+    "@react-navigation/native": "^5.0.5",
     "react": "*",
     "react-native": "*",
-    "react-native-paper": "^3.5.0",
-    "react-native-vector-icons": "^6.0.0"
+    "react-native-paper": ">= 3.0.0",
+    "react-native-vector-icons": ">= 6.0.0"
   },
   "@react-native-community/bob": {
     "source": "src",

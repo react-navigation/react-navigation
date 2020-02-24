@@ -1,4 +1,5 @@
-import { RouteConfig, ParamListBase } from './types';
+import { ParamListBase } from '@react-navigation/routers';
+import { RouteConfig } from './types';
 
 /**
  * Empty component used for specifying route configuration.

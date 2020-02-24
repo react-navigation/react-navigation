@@ -1,13 +1,17 @@
 import * as React from 'react';
 import { render } from 'react-native-testing-library';
+import {
+  Router,
+  DefaultRouterOptions,
+  NavigationState,
+} from '@react-navigation/routers';
 import useNavigationBuilder from '../useNavigationBuilder';
-import NavigationContainer from '../NavigationContainer';
+import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
 import MockRouter, {
   MockActions,
   MockRouterKey,
 } from './__fixtures__/MockRouter';
-import { Router, DefaultRouterOptions, NavigationState } from '../types';
 
 beforeEach(() => (MockRouterKey.current = 0));
 
@@ -58,7 +62,7 @@ it("lets parent handle the action if child didn't", () => {
   const onStateChange = jest.fn();
 
   render(
-    <NavigationContainer onStateChange={onStateChange}>
+    <BaseNavigationContainer onStateChange={onStateChange}>
       <ParentNavigator initialRouteName="baz">
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar">{() => null}</Screen>
@@ -70,7 +74,7 @@ it("lets parent handle the action if child didn't", () => {
           )}
         </Screen>
       </ParentNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   expect(onStateChange).toBeCalledTimes(1);
@@ -171,7 +175,7 @@ it("lets children handle the action if parent didn't", () => {
   };
 
   const element = (
-    <NavigationContainer
+    <BaseNavigationContainer
       initialState={initialState}
       onStateChange={onStateChange}
     >
@@ -187,7 +191,7 @@ it("lets children handle the action if parent didn't", () => {
           )}
         </Screen>
       </ParentNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element).update(element);
@@ -284,7 +288,7 @@ it("action doesn't bubble if target is specified", () => {
   const onStateChange = jest.fn();
 
   const element = (
-    <NavigationContainer onStateChange={onStateChange}>
+    <BaseNavigationContainer onStateChange={onStateChange}>
       <ParentNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar" component={TestScreen} />
@@ -297,7 +301,7 @@ it("action doesn't bubble if target is specified", () => {
           )}
         </Screen>
       </ParentNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   render(element).update(element);
@@ -349,7 +353,7 @@ it('logs error if no navigator handled the action', () => {
   };
 
   const element = (
-    <NavigationContainer initialState={initialState}>
+    <BaseNavigationContainer initialState={initialState}>
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar" component={TestScreen} />
@@ -362,7 +366,7 @@ it('logs error if no navigator handled the action', () => {
           )}
         </Screen>
       </TestNavigator>
-    </NavigationContainer>
+    </BaseNavigationContainer>
   );
 
   const spy = jest.spyOn(console, 'error').mockImplementation();

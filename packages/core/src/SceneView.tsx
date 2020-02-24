@@ -1,17 +1,16 @@
 import * as React from 'react';
-import { NavigationStateContext } from './NavigationContainer';
-import NavigationContext from './NavigationContext';
-import NavigationRouteContext from './NavigationRouteContext';
-import StaticContainer from './StaticContainer';
-import EnsureSingleNavigator from './EnsureSingleNavigator';
 import {
   Route,
   ParamListBase,
   NavigationState,
-  NavigationProp,
-  RouteConfig,
   PartialState,
-} from './types';
+} from '@react-navigation/routers';
+import { NavigationStateContext } from './BaseNavigationContainer';
+import NavigationContext from './NavigationContext';
+import NavigationRouteContext from './NavigationRouteContext';
+import StaticContainer from './StaticContainer';
+import EnsureSingleNavigator from './EnsureSingleNavigator';
+import { NavigationProp, RouteConfig } from './types';
 
 type Props<State extends NavigationState, ScreenOptions extends object> = {
   screen: RouteConfig<ParamListBase, string, ScreenOptions>;
@@ -37,7 +36,13 @@ export default function SceneView<
   getState,
   setState,
 }: Props<State, ScreenOptions>) {
-  const { performTransaction } = React.useContext(NavigationStateContext);
+  const navigatorKeyRef = React.useRef<string | undefined>();
+
+  const getKey = React.useCallback(() => navigatorKeyRef.current, []);
+
+  const setKey = React.useCallback((key: string) => {
+    navigatorKeyRef.current = key;
+  }, []);
 
   const getCurrentState = React.useCallback(() => {
     const state = getState();
@@ -65,16 +70,10 @@ export default function SceneView<
       state: route.state,
       getState: getCurrentState,
       setState: setCurrentState,
-      performTransaction,
-      key: route.key,
+      getKey,
+      setKey,
     }),
-    [
-      getCurrentState,
-      performTransaction,
-      route.key,
-      route.state,
-      setCurrentState,
-    ]
+    [getCurrentState, getKey, route.state, setCurrentState, setKey]
   );
 
   return (
