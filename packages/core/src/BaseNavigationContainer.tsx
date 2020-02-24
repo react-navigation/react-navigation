@@ -24,7 +24,7 @@ const MISSING_CONTEXT_ERROR =
   "We couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'? See https://reactnavigation.org/docs/en/getting-started.html for setup instructions.";
 
 const NOT_INITIALIZED_ERROR =
-  "The 'navigation' object hasn't been initialized yet. This might happen if you don't have a navigator mounted, or if the navigator hasn't finished mounting. You can ensure that all navigators have mounted after the callback to 'useEffect' is called in your root component. See https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html#handling-initialization for more details.";
+  "The 'navigation' object hasn't been initialized yet. This might happen if you don't have a navigator mounted, or if the navigator hasn't finished mounting. See https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html#handling-initialization for more details.";
 
 export const NavigationStateContext = React.createContext<{
   isDefault?: true;

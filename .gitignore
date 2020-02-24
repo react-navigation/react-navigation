@@ -4,6 +4,8 @@
 .idea
 .expo
 .gradle
+.project
+.settings
 
 local.properties
 

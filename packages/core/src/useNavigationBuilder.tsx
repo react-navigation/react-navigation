@@ -177,20 +177,21 @@ export default function useNavigationBuilder<
     })
   );
 
-  const screens = getRouteConfigsFromChildren<ScreenOptions>(children).reduce<
+  const routeConfigs = getRouteConfigsFromChildren<ScreenOptions>(children);
+  const screens = routeConfigs.reduce<
     Record<string, RouteConfig<ParamListBase, string, ScreenOptions>>
-  >((acc, curr) => {
-    if (curr.name in acc) {
+  >((acc, config) => {
+    if (config.name in acc) {
       throw new Error(
-        `A navigator cannot contain multiple 'Screen' components with the same name (found duplicate screen named '${curr.name}')`
+        `A navigator cannot contain multiple 'Screen' components with the same name (found duplicate screen named '${config.name}')`
       );
     }
 
-    acc[curr.name] = curr;
+    acc[config.name] = config;
     return acc;
   }, {});
 
-  const routeNames = Object.keys(screens);
+  const routeNames = routeConfigs.map(config => config.name);
   const routeParamList = routeNames.reduce<Record<string, object | undefined>>(
     (acc, curr) => {
       const { initialParams } = screens[curr];

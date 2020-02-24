@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.8](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.7...@react-navigation/stack@5.0.8) (2020-02-21)
+
+
+### Bug Fixes
+
+* fix transparent header on Android ([a67b494](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/a67b49477eb500c81fedcd73bbd8102901a95170))
+
+
+
+
+
+## [5.0.7](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.6...@react-navigation/stack@5.0.7) (2020-02-21)
+
+
+### Bug Fixes
+
+* debounce back button by default in stack header ([c7dd3a5](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/c7dd3a58b18d7a267d94009d459944c251ea74c1))
+* make sure header is visibile to accessibility tools on iOS ([240ce01](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/240ce01822febac2c1aa324c01e43fdc88a235a0))
+
+
+
+
+
+## [5.0.6](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.5...@react-navigation/stack@5.0.6) (2020-02-19)
+
+
+### Bug Fixes
+
+* add accessibilityLabel prop to back button ([bf76075](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/bf76075e0fbf51961e81e9337ef194e43cc6b986)), closes [#6895](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/6895)
+
+
+
+
+
 ## [5.0.5](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.4...@react-navigation/stack@5.0.5) (2020-02-14)
 
 **Note:** Version bump only for package @react-navigation/stack

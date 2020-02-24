@@ -7,7 +7,11 @@ import {
   StatusBar,
   I18nManager,
 } from 'react-native';
+// eslint-disable-next-line import/no-unresolved
+import { enableScreens } from 'react-native-screens';
 import RNRestart from 'react-native-restart';
+import { Updates } from 'expo';
+import { Asset } from 'expo-asset';
 import { MaterialIcons } from '@expo/vector-icons';
 import {
   Provider as PaperProvider,
@@ -16,7 +20,6 @@ import {
   Divider,
   Appbar,
 } from 'react-native-paper';
-import { Asset } from 'expo-asset';
 import {
   InitialState,
   useLinking,
@@ -34,7 +37,6 @@ import {
 
 import LinkingPrefixes from './LinkingPrefixes';
 import SimpleStack from './Screens/SimpleStack';
-import NativeStack from './Screens/NativeStack';
 import ModalPresentationStack from './Screens/ModalPresentationStack';
 import StackTransparent from './Screens/StackTransparent';
 import StackHeaderCustomization from './Screens/StackHeaderCustomization';
@@ -45,10 +47,11 @@ import DynamicTabs from './Screens/DynamicTabs';
 import AuthFlow from './Screens/AuthFlow';
 import CompatAPI from './Screens/CompatAPI';
 import SettingsItem from './Shared/SettingsItem';
-import { Updates } from 'expo';
 import { DrawerActions } from '@react-navigation/routers';
 
 YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
+
+enableScreens();
 
 type RootDrawerParamList = {
   Home: undefined;
@@ -62,7 +65,6 @@ type RootStackParamList = {
 
 const SCREENS = {
   SimpleStack: { title: 'Simple Stack', component: SimpleStack },
-  NativeStack: { title: 'Native Stack', component: NativeStack },
   ModalPresentationStack: {
     title: 'Modal Presentation Stack',
     component: ModalPresentationStack,
