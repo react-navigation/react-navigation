@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.9](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.8...@react-navigation/stack@5.0.9) (2020-02-24)
+
+
+### Bug Fixes
+
+* enhance border radius in modals on new iPhones ([#6945](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/6945)) ([80a3370](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/80a337024abc53537ff4a63916cea38bb4f374bf))
+
+
+
+
+
 ## [5.0.8](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.7...@react-navigation/stack@5.0.8) (2020-02-21)
 
 
