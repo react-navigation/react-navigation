@@ -218,6 +218,10 @@ public class ScreenContainer<T extends ScreenFragment> extends ViewGroup {
 
   @Override
   protected void onDetachedFromWindow() {
+    // if there are pending transactions and this view is about to get detached we need to perform
+    // them here as otherwise fragment manager will crash because it won't be able to find container
+    // view.
+    mFragmentManager.executePendingTransactions();
     super.onDetachedFromWindow();
     mIsAttached = false;
   }
