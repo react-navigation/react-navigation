@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.6.1](https://github.com/react-navigation/react-navigation-core/compare/@react-navigation/core@3.6.0...@react-navigation/core@3.6.1) (2020-02-24)
+
+
+### Bug Fixes
+
+* fix file extensions. closes [#7246](https://github.com/react-navigation/react-navigation-core/issues/7246) ([fc24ebd](https://github.com/react-navigation/react-navigation-core/commit/fc24ebd16c1010be4caaf3ead705909f283532f4))
+
+
+
+
+
 # 3.6.0 (2020-02-24)
 
 
