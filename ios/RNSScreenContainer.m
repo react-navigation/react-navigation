@@ -54,6 +54,7 @@
 {
   subview.reactSuperview = self;
   [_reactSubviews insertObject:subview atIndex:atIndex];
+  subview.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height);
 }
 
 - (void)removeReactSubview:(RNSScreenView *)subview
@@ -83,7 +84,9 @@
 - (void)attachScreen:(RNSScreenView *)screen
 {
   [_controller addChildViewController:screen.controller];
-  screen.controller.view.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height);
+  // the frame is already set at this moment because we adjust it in insertReactSubview. We don't
+  // want to update it here as react-driven animations may already run and hence changing the frame
+  // would result in visual glitches
   [_controller.view addSubview:screen.controller.view];
   [screen.controller didMoveToParentViewController:_controller];
   [_activeScreens addObject:screen];
