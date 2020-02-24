@@ -1,14 +1,17 @@
 {
   "name": "@react-navigation/native",
-  "version": "3.7.0",
+  "version": "3.7.1",
   "description": "React Native support for React Navigation",
   "main": "lib/commonjs/index.js",
   "react-native": "lib/module/index.js",
   "module": "lib/module/index.js",
   "files": [
-    "src",
-    "lib"
+    "src"
   ],
+  "scripts": {
+    "prepare": "bob build",
+    "clean": "del lib"
+  },
   "sideEffects": false,
   "publishConfig": {
     "access": "public"
@@ -34,6 +37,7 @@
     "react-native-safe-area-view": "^0.14.8"
   },
   "devDependencies": {
+    "@react-native-community/bob": "^0.9.7",
     "@react-navigation/core": "^3.6.0",
     "@types/react-test-renderer": "^16.9.2",
     "del-cli": "^3.0.0",
