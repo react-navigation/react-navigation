@@ -1,6 +1,6 @@
 {
   "name": "@react-navigation/native",
-  "version": "3.6.5",
+  "version": "3.7.0",
   "description": "React Native support for React Navigation",
   "main": "lib/commonjs/index.js",
   "react-native": "lib/module/index.js",
@@ -34,7 +34,7 @@
     "react-native-safe-area-view": "^0.14.8"
   },
   "devDependencies": {
-    "@react-navigation/core": "^3.5.0-alpha.4",
+    "@react-navigation/core": "^3.6.0",
     "@types/react-test-renderer": "^16.9.2",
     "del-cli": "^3.0.0",
     "react": "~16.9.0",
