@@ -15,7 +15,7 @@ export default function useRoute<
 
   if (route === undefined) {
     throw new Error(
-      "We couldn't find a route object. Is your component inside a screen in a navigator?"
+      "Couldn't find a route object. Is your component inside a screen in a navigator?"
     );
   }
 

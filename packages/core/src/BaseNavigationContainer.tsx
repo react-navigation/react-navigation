@@ -21,7 +21,7 @@ import useSyncState from './useSyncState';
 type State = NavigationState | PartialState<NavigationState> | undefined;
 
 const MISSING_CONTEXT_ERROR =
-  "We couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'? See https://reactnavigation.org/docs/getting-started.html for setup instructions.";
+  "Couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'? See https://reactnavigation.org/docs/getting-started.html for setup instructions.";
 
 const NOT_INITIALIZED_ERROR =
   "The 'navigation' object hasn't been initialized yet. This might happen if you don't have a navigator mounted, or if the navigator hasn't finished mounting. See https://reactnavigation.org/docs/navigating-without-navigation-prop.html#handling-initialization for more details.";
@@ -238,7 +238,7 @@ const BaseNavigationContainer = React.forwardRef(
           hasWarnedForSerialization = true;
 
           console.warn(
-            "We found non-serializable values in the navigation state, which can break usage such as persisting and restoring state. This might happen if you passed non-serializable values such as function, class instances etc. in params. If you need to use components with callbacks in your options, you can use 'navigation.setOptions' instead. See https://reactnavigation.org/docs/troubleshooting.html#i-get-the-warning-we-found-non-serializable-values-in-the-navigation-state for more details."
+            "Non-serializable values were found in the navigation state, which can break usage such as persisting and restoring state. This might happen if you passed non-serializable values such as function, class instances etc. in params. If you need to use components with callbacks in your options, you can use 'navigation.setOptions' instead. See https://reactnavigation.org/docs/troubleshooting.html#i-get-the-warning-we-found-non-serializable-values-in-the-navigation-state for more details."
           );
         }
       }

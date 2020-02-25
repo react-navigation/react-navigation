@@ -15,7 +15,7 @@ export default function useNavigation<
 
   if (navigation === undefined) {
     throw new Error(
-      "We couldn't find a navigation object. Is your component inside a screen in a navigator?"
+      "Couldn't find a navigation object. Is your component inside a screen in a navigator?"
     );
   }
 
