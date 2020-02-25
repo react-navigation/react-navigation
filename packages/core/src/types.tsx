@@ -48,6 +48,7 @@ export type EventArg<
    * Type of the event (e.g. `focus`, `blur`)
    */
   readonly type: EventName;
+  readonly target?: string;
 } & (CanPreventDefault extends true
   ? {
       /**
@@ -360,7 +361,9 @@ export type Descriptor<
 export type RouteConfig<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList,
-  ScreenOptions extends object
+  State extends NavigationState,
+  ScreenOptions extends object,
+  EventMap extends EventMapBase
 > = {
   /**
    * Route name of this screen.
@@ -376,6 +379,16 @@ export type RouteConfig<
         route: RouteProp<ParamList, RouteName>;
         navigation: any;
       }) => ScreenOptions);
+
+  /**
+   * Event listeners for this screen.
+   */
+  listeners?: Partial<
+    {
+      [EventName in keyof (EventMap &
+        EventMapCore<State>)]: EventListenerCallback<EventMap, EventName>;
+    }
+  >;
 
   /**
    * Initial params object for the route.
@@ -420,7 +433,9 @@ export type NavigationContainerRef =
 
 export type TypedNavigator<
   ParamList extends ParamListBase,
+  State extends NavigationState,
   ScreenOptions extends object,
+  EventMap extends EventMapBase,
   Navigator extends React.ComponentType<any>
 > = {
   /**
@@ -451,6 +466,6 @@ export type TypedNavigator<
    * Component used for specifying route configuration.
    */
   Screen: <RouteName extends keyof ParamList>(
-    _: RouteConfig<ParamList, RouteName, ScreenOptions>
+    _: RouteConfig<ParamList, RouteName, State, ScreenOptions, EventMap>
   ) => null;
 };
