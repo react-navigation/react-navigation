@@ -36,18 +36,45 @@ export default function useNavigationHelpers<
   const parentNavigationHelpers = React.useContext(NavigationContext);
 
   return React.useMemo(() => {
-    const dispatch = (action: Action | ((state: State) => Action)) => {
-      const payload =
-        typeof action === 'function' ? action(getState()) : action;
+    const dispatch = (op: Action | ((state: State) => Action)) => {
+      const action = typeof op === 'function' ? op(getState()) : op;
 
-      const handled = onAction(payload);
+      const handled = onAction(action);
 
       if (!handled && process.env.NODE_ENV !== 'production') {
-        console.error(
-          `The action '${payload.type}' with payload '${JSON.stringify(
-            payload.payload
-          )}' was not handled by any navigator. If you are trying to navigate to a screen, check if the screen exists in your navigator. If you're trying to navigate to a screen in a nested navigator, see https://reactnavigation.org/docs/en/nesting-navigators.html#navigating-to-a-screen-in-a-nested-navigator.`
-        );
+        const payload: Record<string, any> | undefined = action.payload;
+
+        let message = `The action '${action.type}'${
+          payload ? ` with payload ${JSON.stringify(action.payload)}` : ''
+        } was not handled by any navigator.`;
+
+        switch (action.type) {
+          case 'NAVIGATE':
+          case 'PUSH':
+          case 'REPLACE':
+          case 'JUMP_TO':
+            if (payload?.name) {
+              message += `\n\nDo you have a screen named '${payload.name}'?\n\nIf you're trying to navigate to a screen in a nested navigator, see https://reactnavigation.org/docs/nesting-navigators.html#navigating-to-a-screen-in-a-nested-navigator.`;
+            } else {
+              message += `\n\nYou need to pass the name of the screen to navigate to.\n\nSee https://reactnavigation.org/docs/navigation-actions.html for usage.`;
+            }
+
+            break;
+          case 'GO_BACK':
+          case 'POP':
+          case 'POP_TO_TOP':
+            message += `\n\nIs there any screen to go back to?`;
+            break;
+          case 'OPEN_DRAWER':
+          case 'CLOSE_DRAWER':
+          case 'TOGGLE_DRAWER':
+            message += `\n\nIs your screen inside a Drawer navigator?`;
+            break;
+        }
+
+        message += `\n\nThis is a development-only warning and won't be shown in production.`;
+
+        console.error(message);
       }
     };
 

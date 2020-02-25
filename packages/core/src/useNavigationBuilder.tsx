@@ -116,7 +116,7 @@ const getRouteConfigsFromChildren = <ScreenOptions extends object>(
 
         if (component !== undefined && !isValidElementType(component)) {
           throw new Error(
-            `Got an invalid value for 'component' prop for the screen '${name}'. It must be a a valid React Component.`
+            `Got an invalid value for 'component' prop for the screen '${name}'. It must be a valid React Component.`
           );
         }
 
