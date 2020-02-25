@@ -374,7 +374,7 @@ it('logs error if no navigator handled the action', () => {
   render(element).update(element);
 
   expect(spy.mock.calls[0][0]).toMatch(
-    "The action 'UNKNOWN' with payload 'undefined' was not handled by any navigator."
+    "The action 'UNKNOWN' was not handled by any navigator."
   );
 
   spy.mockRestore();

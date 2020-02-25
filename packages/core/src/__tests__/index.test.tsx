@@ -372,7 +372,7 @@ it("doesn't update state if action wasn't handled", () => {
   expect(onStateChange).toBeCalledTimes(0);
 
   expect(spy.mock.calls[0][0]).toMatch(
-    "The action 'INVALID' with payload 'undefined' was not handled by any navigator."
+    "The action 'INVALID' was not handled by any navigator."
   );
 
   spy.mockRestore();
@@ -1085,7 +1085,7 @@ it('throws descriptive error for invalid screen component', () => {
   );
 
   expect(() => render(element).update(element)).toThrowError(
-    "Got an invalid value for 'component' prop for the screen 'foo'. It must be a a valid React Component."
+    "Got an invalid value for 'component' prop for the screen 'foo'. It must be a valid React Component."
   );
 });
 
