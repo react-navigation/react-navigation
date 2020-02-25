@@ -49,6 +49,8 @@ function DrawerNavigator({
 }
 
 export default createNavigatorFactory<
+  DrawerNavigationState,
   DrawerNavigationOptions,
+  DrawerNavigationEventMap,
   typeof DrawerNavigator
 >(DrawerNavigator);

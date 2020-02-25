@@ -13,11 +13,24 @@ import NavigationBuilderContext, {
 } from './NavigationBuilderContext';
 import { NavigationEventEmitter } from './useEventEmitter';
 import useNavigationCache from './useNavigationCache';
-import { Descriptor, NavigationHelpers, RouteConfig, RouteProp } from './types';
+import {
+  Descriptor,
+  NavigationHelpers,
+  RouteConfig,
+  RouteProp,
+  EventMapBase,
+} from './types';
 
-type Options<State extends NavigationState, ScreenOptions extends object> = {
+type Options<
+  State extends NavigationState,
+  ScreenOptions extends object,
+  EventMap extends EventMapBase
+> = {
   state: State;
-  screens: Record<string, RouteConfig<ParamListBase, string, ScreenOptions>>;
+  screens: Record<
+    string,
+    RouteConfig<ParamListBase, string, State, ScreenOptions, EventMap>
+  >;
   navigation: NavigationHelpers<ParamListBase>;
   screenOptions?:
     | ScreenOptions
@@ -49,7 +62,8 @@ type Options<State extends NavigationState, ScreenOptions extends object> = {
  */
 export default function useDescriptors<
   State extends NavigationState,
-  ScreenOptions extends object
+  ScreenOptions extends object,
+  EventMap extends EventMapBase
 >({
   state,
   screens,
@@ -64,7 +78,7 @@ export default function useDescriptors<
   onRouteFocus,
   router,
   emitter,
-}: Options<State, ScreenOptions>) {
+}: Options<State, ScreenOptions, EventMap>) {
   const [options, setOptions] = React.useState<Record<string, object>>({});
   const { trackAction } = React.useContext(NavigationBuilderContext);
 
@@ -133,6 +147,7 @@ export default function useDescriptors<
             : screen.options({
                 // @ts-ignore
                 route,
+                // @ts-ignore
                 navigation,
               })),
           // The options set via `navigation.setOptions`
