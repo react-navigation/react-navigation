@@ -6,6 +6,7 @@ import {
   TypedNavigator,
   NavigationProp,
   RouteProp,
+  EventMapBase,
 } from '@react-navigation/native';
 import CompatScreen from './CompatScreen';
 import ScreenPropsContext from './ScreenPropsContext';
@@ -15,7 +16,9 @@ import { CompatScreenType, CompatRouteConfig } from './types';
 export default function createCompatNavigatorFactory<
   CreateNavigator extends () => TypedNavigator<
     ParamListBase,
+    NavigationState,
     {},
+    EventMapBase,
     React.ComponentType<any>
   >
 >(createNavigator: CreateNavigator) {

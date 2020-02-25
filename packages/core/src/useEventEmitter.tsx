@@ -5,12 +5,20 @@ export type NavigationEventEmitter = EventEmitter<Record<string, any>> & {
   create: (target: string) => EventConsumer<Record<string, any>>;
 };
 
-type Listeners = ((data: any) => void)[];
+type Listeners = ((e: any) => void)[];
 
 /**
  * Hook to manage the event system used by the navigator to notify screens of various events.
  */
-export default function useEventEmitter(): NavigationEventEmitter {
+export default function useEventEmitter(
+  listen?: (e: any) => void
+): NavigationEventEmitter {
+  const listenRef = React.useRef(listen);
+
+  React.useEffect(() => {
+    listenRef.current = listen;
+  });
+
   const listeners = React.useRef<Record<string, Record<string, Listeners>>>({});
 
   const create = React.useCallback((target: string) => {
@@ -60,7 +68,9 @@ export default function useEventEmitter(): NavigationEventEmitter {
       const callbacks =
         target !== undefined
           ? items[target] && items[target].slice()
-          : ([] as Listeners).concat(...Object.keys(items).map(t => items[t]));
+          : ([] as Listeners)
+              .concat(...Object.keys(items).map(t => items[t]))
+              .filter((cb, i, self) => self.lastIndexOf(cb) === i);
 
       const event: EventArg<any, any, any> = {
         get type() {
@@ -68,8 +78,18 @@ export default function useEventEmitter(): NavigationEventEmitter {
         },
       };
 
+      if (target !== undefined) {
+        Object.defineProperty(event, 'target', {
+          enumerable: true,
+          get() {
+            return target;
+          },
+        });
+      }
+
       if (data !== undefined) {
         Object.defineProperty(event, 'data', {
+          enumerable: true,
           get() {
             return data;
           },
@@ -81,17 +101,21 @@ export default function useEventEmitter(): NavigationEventEmitter {
 
         Object.defineProperties(event, {
           defaultPrevented: {
+            enumerable: true,
             get() {
               return defaultPrevented;
             },
           },
           preventDefault: {
+            enumerable: true,
             value() {
               defaultPrevented = true;
             },
           },
         });
       }
+
+      listenRef.current?.(event);
 
       callbacks?.forEach(cb => cb(event));
 

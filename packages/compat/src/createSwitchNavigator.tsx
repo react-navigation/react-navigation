@@ -22,5 +22,7 @@ function SwitchNavigator(props: Props) {
 }
 
 export default createCompatNavigatorFactory(
-  createNavigatorFactory<{}, typeof SwitchNavigator>(SwitchNavigator)
+  createNavigatorFactory<TabNavigationState, {}, {}, typeof SwitchNavigator>(
+    SwitchNavigator
+  )
 );

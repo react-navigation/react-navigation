@@ -74,6 +74,8 @@ function StackNavigator({
 }
 
 export default createNavigatorFactory<
+  StackNavigationState,
   StackNavigationOptions,
+  StackNavigationEventMap,
   typeof StackNavigator
 >(StackNavigator);

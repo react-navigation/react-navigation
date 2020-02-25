@@ -48,6 +48,8 @@ function BottomTabNavigator({
 }
 
 export default createNavigatorFactory<
+  TabNavigationState,
   BottomTabNavigationOptions,
+  BottomTabNavigationEventMap,
   typeof BottomTabNavigator
 >(BottomTabNavigator);
