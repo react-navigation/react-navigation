@@ -245,7 +245,8 @@ export default function StackRouter(options: StackRouterOptions) {
 
         case 'POP': {
           const index =
-            action.target === state.key && action.source
+            (action.target === state.key || action.target === undefined) &&
+            action.source
               ? state.routes.findIndex(r => r.key === action.source)
               : state.index;
 
