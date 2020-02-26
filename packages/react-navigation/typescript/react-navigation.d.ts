@@ -690,21 +690,21 @@ export function createSwitchNavigator(
  * NavigationActions
  */
 export namespace NavigationActions {
-  declare const BACK: 'Navigation/BACK';
-  declare const INIT: 'Navigation/INIT';
-  declare const NAVIGATE: 'Navigation/NAVIGATE';
-  declare const SET_PARAMS: 'Navigation/SET_PARAMS';
+  export const BACK: 'Navigation/BACK';
+  export const INIT: 'Navigation/INIT';
+  export const NAVIGATE: 'Navigation/NAVIGATE';
+  export const SET_PARAMS: 'Navigation/SET_PARAMS';
 
-  declare function init(
+  export function init(
     options?: NavigationInitActionPayload
   ): NavigationInitAction;
-  declare function navigate(
+  export function navigate(
     options: NavigationNavigateActionPayload
   ): NavigationNavigateAction;
-  declare function back(
+  export function back(
     options?: NavigationBackActionPayload
   ): NavigationBackAction;
-  declare function setParams(
+  export function setParams(
     options: NavigationSetParamsActionPayload
   ): NavigationSetParamsAction;
 }
@@ -713,45 +713,43 @@ export namespace NavigationActions {
  * DrawerActions
  */
 export namespace DrawerActions {
-  declare const OPEN_DRAWER: 'Navigation/OPEN_DRAWER';
-  declare const CLOSE_DRAWER: 'Navigation/CLOSE_DRAWER';
-  declare const TOGGLE_DRAWER: 'Navigation/TOGGLE_DRAWER';
+  export const OPEN_DRAWER: 'Navigation/OPEN_DRAWER';
+  export const CLOSE_DRAWER: 'Navigation/CLOSE_DRAWER';
+  export const TOGGLE_DRAWER: 'Navigation/TOGGLE_DRAWER';
 
-  declare function openDrawer(): NavigationOpenDrawerAction;
-  declare function closeDrawer(): NavigationCloseDrawerAction;
-  declare function toggleDrawer(): NavigationToggleDrawerAction;
+  export function openDrawer(): NavigationOpenDrawerAction;
+  export function closeDrawer(): NavigationCloseDrawerAction;
+  export function toggleDrawer(): NavigationToggleDrawerAction;
 }
 
 /**
  * StackActions
  */
 export namespace StackActions {
-  declare const POP: 'Navigation/POP';
-  declare const POP_TO_TOP: 'Navigation/POP_TO_TOP';
-  declare const PUSH: 'Navigation/PUSH';
-  declare const RESET: 'Navigation/RESET';
-  declare const REPLACE: 'Navigation/REPLACE';
-  declare const COMPLETE_TRANSITION: 'Navigation/COMPLETE_TRANSITION';
+  export const POP: 'Navigation/POP';
+  export const POP_TO_TOP: 'Navigation/POP_TO_TOP';
+  export const PUSH: 'Navigation/PUSH';
+  export const RESET: 'Navigation/RESET';
+  export const REPLACE: 'Navigation/REPLACE';
+  export const COMPLETE_TRANSITION: 'Navigation/COMPLETE_TRANSITION';
 
-  declare function pop(
-    options: NavigationPopActionPayload
-  ): NavigationPopAction;
-  declare function popToTop(
+  export function pop(options: NavigationPopActionPayload): NavigationPopAction;
+  export function popToTop(
     options?: NavigationPopToTopActionPayload
   ): NavigationPopToTopAction;
 
-  declare function push(
+  export function push(
     options: NavigationPushActionPayload
   ): NavigationPushAction;
-  declare function reset(
+  export function reset(
     options: NavigationResetActionPayload
   ): NavigationResetAction;
 
-  declare function replace(
+  export function replace(
     options: NavigationReplaceActionPayload
   ): NavigationReplaceAction;
 
-  declare function completeTransition(
+  export function completeTransition(
     payload?: NavigationCompleteTransitionActionPayload
   ): NavigationCompleteTransitionAction;
 }
@@ -760,9 +758,9 @@ export namespace StackActions {
  * SwitchActions
  */
 export namespace SwitchActions {
-  declare const JUMP_TO: 'Navigation/JUMP_TO';
+  export const JUMP_TO: 'Navigation/JUMP_TO';
 
-  declare function jumpTo(
+  export function jumpTo(
     options: NavigationJumpToActionPayload
   ): NavigationJumpToAction;
 }
