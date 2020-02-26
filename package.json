@@ -20,6 +20,7 @@
     "lint": "eslint --ext '.js,.ts,.tsx' .",
     "typescript": "tsc --noEmit",
     "test": "jest",
+    "prerelease": "lerna run clean",
     "release": "lerna publish",
     "example": "yarn --cwd example"
   },
