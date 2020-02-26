@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.2](https://github.com/react-navigation/react-navigation-stack/compare/react-navigation-stack@2.2.1...react-navigation-stack@2.2.2) (2020-02-26)
+
+
+### Bug Fixes
+
+* fix typescript errors in the definition file ([3bb2c19](https://github.com/react-navigation/react-navigation-stack/commit/3bb2c196e4acfa069791003c2b448b5ab51004d2))
+
+
+
+
+
 ## [2.2.1](https://github.com/react-navigation/react-navigation-stack/compare/react-navigation-stack@2.2.0...react-navigation-stack@2.2.1) (2020-02-24)
 
 **Note:** Version bump only for package react-navigation-stack
