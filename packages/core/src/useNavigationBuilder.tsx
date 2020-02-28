@@ -333,12 +333,14 @@ export default function useNavigationBuilder<
         : state;
   }
 
-  if (state !== nextState) {
-    // If the state needs to be updated, we'll schedule an update with React
-    // setState in render seems hacky, but that's how React docs implement getDerivedPropsFromState
-    // https://reactjs.org/docs/hooks-faq.html#how-do-i-implement-getderivedstatefromprops
-    setState(nextState);
-  }
+  const shouldUpdate = state !== nextState;
+
+  React.useEffect(() => {
+    if (shouldUpdate) {
+      // If the state needs to be updated, we'll schedule an update with React
+      setState(nextState);
+    }
+  }, [nextState, setState, shouldUpdate]);
 
   // The up-to-date state will come in next render, but we don't need to wait for it
   // We can't use the outdated state since the screens have changed, which will cause error due to mismatched config
