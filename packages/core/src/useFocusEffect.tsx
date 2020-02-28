@@ -46,7 +46,7 @@ export default function useFocusEffect(effect: EffectCallback) {
             '    fetchData();\n' +
             '  }, [someId])\n' +
             '};\n\n' +
-            'See usage guide: https://reactnavigation.org/docs/use-focus-effect.html';
+            'See usage guide: https://reactnavigation.org/docs/use-focus-effect';
         } else {
           message += ` You returned: '${JSON.stringify(destroy)}'`;
         }
