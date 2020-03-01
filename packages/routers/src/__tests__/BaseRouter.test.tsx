@@ -83,3 +83,34 @@ it('resets state to new state with RESET', () => {
 
   expect(result).toEqual({ index: 0, routes });
 });
+
+it("doesn't handle RESET if routes don't match routeNames", () => {
+  const routes = [
+    { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
+    { key: 'baz', name: 'baz' },
+    { key: 'qux', name: 'quz' },
+  ];
+
+  const result = BaseRouter.getStateForAction(
+    STATE,
+    CommonActions.reset({
+      index: 0,
+      routes,
+    })
+  );
+
+  expect(result).toEqual(null);
+});
+
+it("doesn't handle RESET if routeNames don't match", () => {
+  const result = BaseRouter.getStateForAction(
+    STATE,
+    CommonActions.reset({
+      ...STATE,
+      // @ts-ignore
+      routeNames: ['ten'],
+    })
+  );
+
+  expect(result).toEqual(null);
+});
