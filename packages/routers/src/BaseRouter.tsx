@@ -29,8 +29,28 @@ const BaseRouter = {
         };
       }
 
-      case 'RESET':
-        return action.payload as PartialState<State>;
+      case 'RESET': {
+        const nextState = action.payload as State | PartialState<State>;
+
+        if (nextState.stale === false) {
+          if (
+            state.routeNames.length !== nextState.routeNames.length ||
+            nextState.routeNames.some(name => !state.routeNames.includes(name))
+          ) {
+            return null;
+          }
+        }
+
+        if (
+          nextState.routes.some(
+            (route: { name: string }) => !state.routeNames.includes(route.name)
+          )
+        ) {
+          return null;
+        }
+
+        return nextState;
+      }
 
       default:
         return null;
