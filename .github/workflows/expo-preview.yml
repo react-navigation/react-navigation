@@ -44,7 +44,7 @@ jobs:
 
       - name: Get expo link
         id: expo
-        run: echo "::set-output name=path::@react-navigation/react-react-navigationample?release-channel=pr-${{ github.event.number }}"
+        run: echo "::set-output name=path::@react-navigation/react-navigation-example?release-channel=pr-${{ github.event.number }}"
 
       - name: Comment on PR
         uses: unsplash/comment-on-pr@master
