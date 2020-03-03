@@ -27,6 +27,18 @@ export type StackNavigationEventMap = {
    * Event which fires when a transition animation ends.
    */
   transitionEnd: { data: { closing: boolean } };
+  /**
+   * Event which fires when a page change gesture starts.
+   */
+  gestureStart: {};
+  /**
+   * Event which fires when a page change gesture is completed.
+   */
+  gestureEnd: {};
+  /**
+   * Event which fires when a page change gesture is cancelled.
+   */
+  gestureCancel: {};
 };
 
 export type StackNavigationHelpers = NavigationHelpers<

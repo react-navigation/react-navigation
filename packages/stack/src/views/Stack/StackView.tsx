@@ -403,6 +403,36 @@ export default class StackView extends React.Component<Props, State> {
       target: route.key,
     });
 
+  private handleGestureStart = () => {
+    const { navigation, state } = this.props;
+    const currentRoute = state.routes[state.index];
+    navigation.emit({
+      type: 'gestureStart',
+      data: {},
+      target: currentRoute.key,
+    });
+  };
+
+  private handleGestureEnd = () => {
+    const { navigation, state } = this.props;
+    const currentRoute = state.routes[state.index];
+    navigation.emit({
+      type: 'gestureEnd',
+      data: {},
+      target: currentRoute.key,
+    });
+  };
+
+  private handleGestureCancel = () => {
+    const { navigation, state } = this.props;
+    const currentRoute = state.routes[state.index];
+    navigation.emit({
+      type: 'gestureCancel',
+      data: {},
+      target: currentRoute.key,
+    });
+  };
+
   render() {
     const {
       state,
@@ -448,7 +478,18 @@ export default class StackView extends React.Component<Props, State> {
                       state={state}
                       descriptors={descriptors}
                       {...rest}
-                      {...props}
+                      onPageChangeStart={() => {
+                        props.onPageChangeStart();
+                        this.handleGestureStart();
+                      }}
+                      onPageChangeConfirm={() => {
+                        props.onPageChangeConfirm();
+                        this.handleGestureEnd();
+                      }}
+                      onPageChangeCancel={() => {
+                        props.onPageChangeCancel();
+                        this.handleGestureCancel();
+                      }}
                     />
                   )}
                 </KeyboardManager>

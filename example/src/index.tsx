@@ -51,7 +51,6 @@ import MaterialBottomTabs from './Screens/MaterialBottomTabs';
 import DynamicTabs from './Screens/DynamicTabs';
 import AuthFlow from './Screens/AuthFlow';
 import CompatAPI from './Screens/CompatAPI';
-import LinkComponent from './Screens/LinkComponent';
 import MasterDetail from './Screens/MasterDetail';
 import LinkComponent from './Screens/LinkComponent';
 
