@@ -43,7 +43,7 @@ export default React.memo(function Header(props: StackHeaderProps) {
 
   const goBack = React.useCallback(
     debounce(() => {
-      if (navigation.canGoBack()) {
+      if (navigation.isFocused() && navigation.canGoBack()) {
         navigation.dispatch({
           ...StackActions.pop(),
           source: scene.route.key,
