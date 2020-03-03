@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.1](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.1.0...@react-navigation/stack@5.1.1) (2020-03-03)
+
+
+### Bug Fixes
+
+* ignore back button press if screen isn't focused. closes [#7673](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/7673) ([296c836](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/296c836064447e055a88e43cfbbf5f9de93838f0))
+
+
+
+
+
 # [5.1.0](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.9...@react-navigation/stack@5.1.0) (2020-02-26)
 
 
