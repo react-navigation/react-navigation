@@ -405,6 +405,27 @@ export default class StackView extends React.Component<Props, State> {
       target: route.key,
     });
 
+  private handleGestureStart = ({ route }: { route: Route<string> }) => {
+    this.props.navigation.emit({
+      type: 'gestureStart',
+      target: route.key,
+    });
+  };
+
+  private handleGestureEnd = ({ route }: { route: Route<string> }) => {
+    this.props.navigation.emit({
+      type: 'gestureEnd',
+      target: route.key,
+    });
+  };
+
+  private handleGestureCancel = ({ route }: { route: Route<string> }) => {
+    this.props.navigation.emit({
+      type: 'gestureCancel',
+      target: route.key,
+    });
+  };
+
   render() {
     const {
       state,
@@ -451,6 +472,9 @@ export default class StackView extends React.Component<Props, State> {
                       headerMode={headerMode}
                       state={state}
                       descriptors={descriptors}
+                      onGestureStart={this.handleGestureStart}
+                      onGestureEnd={this.handleGestureEnd}
+                      onGestureCancel={this.handleGestureCancel}
                       {...rest}
                       {...props}
                     />
