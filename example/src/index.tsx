@@ -6,6 +6,7 @@ import {
   Platform,
   StatusBar,
   I18nManager,
+  Dimensions,
 } from 'react-native';
 // eslint-disable-next-line import/no-unresolved
 import { enableScreens } from 'react-native-screens';
@@ -109,6 +110,7 @@ const THEME_PERSISTENCE_KEY = 'THEME_TYPE';
 Asset.loadAsync(StackAssets);
 
 export default function App() {
+  const { width } = Dimensions.get('window');
   const containerRef = React.useRef<NavigationContainerRef>();
 
   // To test deep linking on, run the following in the Terminal:
@@ -220,7 +222,7 @@ export default function App() {
             name="Root"
             options={{
               title: 'Examples',
-              ...(Platform.OS !== 'web' && {
+              ...(width <= 800 && {
                 headerLeft: () => (
                   <Appbar.Action
                     color={theme.colors.text}
@@ -237,7 +239,7 @@ export default function App() {
           >
             {() => (
               <Drawer.Navigator
-                drawerType={Platform.OS === 'web' ? 'sidebar' : 'front'}
+                drawerType={width > 800 ? 'sidebar' : 'front'}
                 screenOptions={{ unmountOnBlur: true }}
               >
                 <Drawer.Screen
