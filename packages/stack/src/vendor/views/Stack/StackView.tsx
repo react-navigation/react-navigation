@@ -309,10 +309,16 @@ export default class StackView extends React.Component<Props, State> {
   };
 
   private handleTransitionComplete = ({ route }: { route: Route<string> }) => {
-    // TODO: remove when the new event system lands
-    this.props.navigation.dispatch(
-      StackActions.completeTransition({ toChildKey: route.key })
-    );
+    const { state, navigation } = this.props;
+
+    if (state.isTransitioning) {
+      navigation.dispatch(
+        StackActions.completeTransition({
+          key: navigation.state.key,
+          toChildKey: route.key,
+        })
+      );
+    }
   };
 
   private handleOpenRoute = ({ route }: { route: Route<string> }) => {
@@ -417,6 +423,7 @@ export default class StackView extends React.Component<Props, State> {
                     closingRouteKeys={closingRouteKeys}
                     onOpenRoute={this.handleOpenRoute}
                     onCloseRoute={this.handleCloseRoute}
+                    onTransitionComplete={this.handleTransitionComplete}
                     onTransitionStart={this.handleTransitionStart}
                     onTransitionEnd={this.handleTransitionEnd}
                     renderHeader={this.renderHeader}

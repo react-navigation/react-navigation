@@ -41,6 +41,7 @@ type Props = TransitionPreset & {
     closing: boolean
   ) => void;
   onTransitionEnd?: (props: { route: Route<string> }, closing: boolean) => void;
+  onTransitionComplete: (props: { route: Route<string> }) => void;
   onPageChangeStart?: () => void;
   onPageChangeConfirm?: () => void;
   onPageChangeCancel?: () => void;
@@ -87,6 +88,7 @@ function CardContainer({
   layout,
   onCloseRoute,
   onOpenRoute,
+  onTransitionComplete,
   onPageChangeCancel,
   onPageChangeConfirm,
   onPageChangeStart,
@@ -155,6 +157,9 @@ function CardContainer({
       }
     };
   }, [pointerEvents, scene.progress.next]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  React.useEffect(() => onTransitionComplete({ route: scene.route }), []);
 
   return (
     <Card

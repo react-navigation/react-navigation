@@ -54,6 +54,7 @@ type Props = {
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
   renderScene: (props: { route: Route<string> }) => React.ReactNode;
   headerMode: StackHeaderMode;
+  onTransitionComplete: (props: { route: Route<string> }) => void;
   onTransitionStart: (
     props: { route: Route<string> },
     closing: boolean
@@ -371,6 +372,7 @@ export default class CardStack extends React.Component<Props, State> {
       renderHeader,
       renderScene,
       headerMode,
+      onTransitionComplete,
       onTransitionStart,
       onTransitionEnd,
       onPageChangeStart,
@@ -546,6 +548,7 @@ export default class CardStack extends React.Component<Props, State> {
                   renderScene={renderScene}
                   onOpenRoute={onOpenRoute}
                   onCloseRoute={onCloseRoute}
+                  onTransitionComplete={onTransitionComplete}
                   onTransitionStart={onTransitionStart}
                   onTransitionEnd={onTransitionEnd}
                   gestureEnabled={index !== 0 && getGesturesEnabled({ route })}
