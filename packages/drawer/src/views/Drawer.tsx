@@ -18,6 +18,7 @@ import {
 } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import Overlay from './Overlay';
+import DrawerOpenContext from './DrawerOpenContext';
 
 const {
   Clock,
@@ -635,7 +636,9 @@ export default class DrawerView extends React.PureComponent<Props> {
               drawerStyle as any,
             ]}
           >
-            {renderDrawerContent({ progress: this.progress })}
+            <DrawerOpenContext.Provider value={open}>
+              {renderDrawerContent({ progress: this.progress })}
+            </DrawerOpenContext.Provider>
           </Animated.View>
         </Animated.View>
       </PanGestureHandler>
