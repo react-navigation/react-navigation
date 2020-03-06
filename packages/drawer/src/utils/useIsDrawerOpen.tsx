@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useNavigation, ParamListBase } from '@react-navigation/native';
 import { DrawerNavigationProp } from '../types';
+import DrawerOpenContext from '../views/DrawerOpenContext';
 
 /**
  * Hook to detect if the drawer is open in a parent navigator.
@@ -9,6 +10,8 @@ export default function useIsDrawerOpen() {
   const navigation = useNavigation();
 
   let drawer = navigation as DrawerNavigationProp<ParamListBase>;
+
+  const drawerOpenContext = React.useContext(DrawerOpenContext);
 
   // The screen might be inside another navigator such as stack nested in drawer
   // We need to find the closest drawer navigator and add the listener there
@@ -33,6 +36,10 @@ export default function useIsDrawerOpen() {
 
     return unsubscribe;
   }, [drawer, isDrawerOpen]);
+
+  if (drawerOpenContext !== null) {
+    return drawerOpenContext;
+  }
 
   return isDrawerOpen;
 }
