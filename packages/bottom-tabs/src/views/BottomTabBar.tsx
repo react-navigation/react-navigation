@@ -15,7 +15,7 @@ import {
   CommonActions,
   useTheme,
 } from '@react-navigation/native';
-import { SafeAreaConsumer } from 'react-native-safe-area-context';
+import { useSafeArea } from 'react-native-safe-area-context';
 
 import BottomTabItem from './BottomTabItem';
 import { BottomTabBarProps } from '../types';
@@ -43,6 +43,7 @@ export default function BottomTabBar({
   keyboardHidesTabBar = false,
   labelPosition,
   labelStyle,
+  safeAreaInsets,
   showIcon,
   showLabel,
   style,
@@ -158,116 +159,122 @@ export default function BottomTabBar({
     }
   };
 
+  const defaultInsets = useSafeArea();
+
+  const insets = {
+    top: safeAreaInsets?.top ?? defaultInsets.top,
+    right: safeAreaInsets?.right ?? defaultInsets.right,
+    bottom: safeAreaInsets?.bottom ?? defaultInsets.bottom,
+    left: safeAreaInsets?.left ?? defaultInsets.left,
+  };
+
   return (
-    <SafeAreaConsumer>
-      {insets => (
-        <Animated.View
-          style={[
-            styles.tabBar,
-            {
-              backgroundColor: colors.card,
-              borderTopColor: colors.border,
-            },
-            keyboardHidesTabBar
-              ? {
-                  // When the keyboard is shown, slide down the tab bar
-                  transform: [
-                    {
-                      translateY: visible.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [layout.height, 0],
-                      }),
-                    },
-                  ],
-                  // Absolutely position the tab bar so that the content is below it
-                  // This is needed to avoid gap at bottom when the tab bar is hidden
-                  position: keyboardShown ? 'absolute' : null,
-                }
-              : null,
-            {
-              height: DEFAULT_TABBAR_HEIGHT + (insets ? insets.bottom : 0),
-              paddingBottom: insets ? insets.bottom : 0,
-            },
-            style,
-          ]}
-          pointerEvents={keyboardHidesTabBar && keyboardShown ? 'none' : 'auto'}
-        >
-          <View style={styles.content} onLayout={handleLayout}>
-            {routes.map((route, index) => {
-              const focused = index === state.index;
-              const { options } = descriptors[route.key];
+    <Animated.View
+      style={[
+        styles.tabBar,
+        {
+          backgroundColor: colors.card,
+          borderTopColor: colors.border,
+        },
+        keyboardHidesTabBar
+          ? {
+              // When the keyboard is shown, slide down the tab bar
+              transform: [
+                {
+                  translateY: visible.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [layout.height, 0],
+                  }),
+                },
+              ],
+              // Absolutely position the tab bar so that the content is below it
+              // This is needed to avoid gap at bottom when the tab bar is hidden
+              position: keyboardShown ? 'absolute' : null,
+            }
+          : null,
+        {
+          height: DEFAULT_TABBAR_HEIGHT + insets.bottom,
+          paddingBottom: insets.bottom,
+          paddingHorizontal: Math.max(insets.left, insets.right),
+        },
+        style,
+      ]}
+      pointerEvents={keyboardHidesTabBar && keyboardShown ? 'none' : 'auto'}
+    >
+      <View style={styles.content} onLayout={handleLayout}>
+        {routes.map((route, index) => {
+          const focused = index === state.index;
+          const { options } = descriptors[route.key];
 
-              const onPress = () => {
-                const event = navigation.emit({
-                  type: 'tabPress',
-                  target: route.key,
-                  canPreventDefault: true,
-                });
+          const onPress = () => {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+              canPreventDefault: true,
+            });
 
-                if (!focused && !event.defaultPrevented) {
-                  navigation.dispatch({
-                    ...CommonActions.navigate(route.name),
-                    target: state.key,
-                  });
-                }
-              };
+            if (!focused && !event.defaultPrevented) {
+              navigation.dispatch({
+                ...CommonActions.navigate(route.name),
+                target: state.key,
+              });
+            }
+          };
 
-              const onLongPress = () => {
-                navigation.emit({
-                  type: 'tabLongPress',
-                  target: route.key,
-                });
-              };
+          const onLongPress = () => {
+            navigation.emit({
+              type: 'tabLongPress',
+              target: route.key,
+            });
+          };
 
-              const label =
-                options.tabBarLabel !== undefined
-                  ? options.tabBarLabel
-                  : options.title !== undefined
-                  ? options.title
-                  : route.name;
+          const label =
+            options.tabBarLabel !== undefined
+              ? options.tabBarLabel
+              : options.title !== undefined
+              ? options.title
+              : route.name;
 
-              const accessibilityLabel =
-                options.tabBarAccessibilityLabel !== undefined
-                  ? options.tabBarAccessibilityLabel
-                  : typeof label === 'string'
-                  ? `${label}, tab, ${index + 1} of ${routes.length}`
-                  : undefined;
+          const accessibilityLabel =
+            options.tabBarAccessibilityLabel !== undefined
+              ? options.tabBarAccessibilityLabel
+              : typeof label === 'string'
+              ? `${label}, tab, ${index + 1} of ${routes.length}`
+              : undefined;
 
-              return (
-                <NavigationContext.Provider
-                  key={route.key}
-                  value={descriptors[route.key].navigation}
-                >
-                  <NavigationRouteContext.Provider value={route}>
-                    <BottomTabItem
-                      route={route}
-                      focused={focused}
-                      horizontal={shouldUseHorizontalLabels()}
-                      onPress={onPress}
-                      onLongPress={onLongPress}
-                      accessibilityLabel={accessibilityLabel}
-                      testID={options.tabBarTestID}
-                      allowFontScaling={allowFontScaling}
-                      activeTintColor={activeTintColor}
-                      inactiveTintColor={inactiveTintColor}
-                      activeBackgroundColor={activeBackgroundColor}
-                      inactiveBackgroundColor={inactiveBackgroundColor}
-                      button={options.tabBarButton}
-                      icon={options.tabBarIcon}
-                      label={label}
-                      showIcon={showIcon}
-                      showLabel={showLabel}
-                      labelStyle={labelStyle}
-                      style={tabStyle}
-                    />
-                  </NavigationRouteContext.Provider>
-                </NavigationContext.Provider>
-              );
-            })}
-          </View>
-        </Animated.View>
-      )}
-    </SafeAreaConsumer>
+          return (
+            <NavigationContext.Provider
+              key={route.key}
+              value={descriptors[route.key].navigation}
+            >
+              <NavigationRouteContext.Provider value={route}>
+                <BottomTabItem
+                  route={route}
+                  focused={focused}
+                  horizontal={shouldUseHorizontalLabels()}
+                  onPress={onPress}
+                  onLongPress={onLongPress}
+                  accessibilityLabel={accessibilityLabel}
+                  testID={options.tabBarTestID}
+                  allowFontScaling={allowFontScaling}
+                  activeTintColor={activeTintColor}
+                  inactiveTintColor={inactiveTintColor}
+                  activeBackgroundColor={activeBackgroundColor}
+                  inactiveBackgroundColor={inactiveBackgroundColor}
+                  button={options.tabBarButton}
+                  icon={options.tabBarIcon}
+                  label={label}
+                  showIcon={showIcon}
+                  showLabel={showLabel}
+                  labelStyle={labelStyle}
+                  style={tabStyle}
+                />
+              </NavigationRouteContext.Provider>
+            </NavigationContext.Provider>
+          );
+        })}
+      </View>
+    </Animated.View>
   );
 }
 
