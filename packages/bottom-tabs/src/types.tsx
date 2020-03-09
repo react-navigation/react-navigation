@@ -185,6 +185,16 @@ export type BottomTabBarOptions = {
    */
   adaptive?: boolean;
   /**
+   * Safe area insets for the tab bar. This is used to avoid elements like the navigation bar on Android and bottom safe area on iOS.
+   * By default, the device's safe area insets are automatically detected. You can override the behavior with this option.
+   */
+  safeAreaInsets?: {
+    top?: number;
+    right?: number;
+    bottom?: number;
+    left?: number;
+  };
+  /**
    * Style object for the tab bar container.
    */
   style?: StyleProp<ViewStyle>;

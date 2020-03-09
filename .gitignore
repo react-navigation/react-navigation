@@ -6,6 +6,7 @@
 .gradle
 .project
 .settings
+.history
 
 local.properties
 
