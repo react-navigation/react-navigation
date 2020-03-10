@@ -103,18 +103,24 @@ export default function DrawerView({
   const isDrawerOpen = Boolean(state.history.find(it => it.type === 'drawer'));
 
   const handleDrawerOpen = React.useCallback(() => {
+    if (bigScreenSidebar) {
+      return;
+    }
     navigation.dispatch({
       ...DrawerActions.openDrawer(),
       target: state.key,
     });
-  }, [navigation, state.key]);
+  }, [navigation, state.key, bigScreenSidebar]);
 
   const handleDrawerClose = React.useCallback(() => {
+    if (bigScreenSidebar) {
+      return;
+    }
     navigation.dispatch({
       ...DrawerActions.closeDrawer(),
       target: state.key,
     });
-  }, [navigation, state.key]);
+  }, [navigation, state.key, bigScreenSidebar]);
 
   React.useEffect(() => {
     if (isDrawerOpen) {
@@ -154,32 +160,6 @@ export default function DrawerView({
   if (!loaded.includes(state.index)) {
     setLoaded([...loaded, state.index]);
   }
-  
-  const handleDrawerOpen = () => {
-    if (bigScreenSidebar) {
-      return;
-    }
-
-    navigation.dispatch({
-      ...DrawerActions.openDrawer(),
-      target: state.key,
-    });
-
-    navigation.emit({ type: 'drawerOpen' });
-  };
-
-  const handleDrawerClose = () => {
-    if (bigScreenSidebar) {
-      return;
-    }
-
-    navigation.dispatch({
-      ...DrawerActions.closeDrawer(),
-      target: state.key,
-    });
-
-    navigation.emit({ type: 'drawerClose' });
-  };
 
   const renderNavigationView = ({ progress }: any) => {
     return (

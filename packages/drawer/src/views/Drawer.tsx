@@ -659,7 +659,7 @@ export default class DrawerView extends React.PureComponent<Props> {
               },
               this.bigScreenSidebar
                 ? {}
-                : right
+                : isRight
                 ? { right: offset }
                 : { left: offset },
               {
