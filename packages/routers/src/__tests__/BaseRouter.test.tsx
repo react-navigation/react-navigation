@@ -114,3 +114,15 @@ it("doesn't handle RESET if routeNames don't match", () => {
 
   expect(result).toEqual(null);
 });
+
+it("doesn't handle RESET if there are no routes", () => {
+  const result = BaseRouter.getStateForAction(
+    STATE,
+    CommonActions.reset({
+      index: 0,
+      routes: [],
+    })
+  );
+
+  expect(result).toEqual(null);
+});

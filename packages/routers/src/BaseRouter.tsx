@@ -42,6 +42,7 @@ const BaseRouter = {
         }
 
         if (
+          nextState.routes.length === 0 ||
           nextState.routes.some(
             (route: { name: string }) => !state.routeNames.includes(route.name)
           )
