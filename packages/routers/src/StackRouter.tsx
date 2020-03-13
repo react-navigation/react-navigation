@@ -6,6 +6,7 @@ import {
   Router,
   DefaultRouterOptions,
   Route,
+  ParamListBase,
 } from './types';
 
 export type StackActionType =
@@ -40,6 +41,42 @@ export type StackNavigationState = NavigationState & {
    * Type of the router, in this case, it's stack.
    */
   type: 'stack';
+};
+
+export type StackActionHelpers<ParamList extends ParamListBase> = {
+  /**
+   * Replace the current route with a new one.
+   *
+   * @param name Route name of the new route.
+   * @param [params] Params object for the new route.
+   */
+  replace<RouteName extends keyof ParamList>(
+    ...args: ParamList[RouteName] extends undefined
+      ? [RouteName] | [RouteName, ParamList[RouteName]]
+      : [RouteName, ParamList[RouteName]]
+  ): void;
+
+  /**
+   * Push a new screen onto the stack.
+   *
+   * @param name Name of the route for the tab.
+   * @param [params] Params object for the route.
+   */
+  push<RouteName extends keyof ParamList>(
+    ...args: ParamList[RouteName] extends undefined | any
+      ? [RouteName] | [RouteName, ParamList[RouteName]]
+      : [RouteName, ParamList[RouteName]]
+  ): void;
+
+  /**
+   * Pop a screen from the stack.
+   */
+  pop(count?: number): void;
+
+  /**
+   * Pop to the first route in the stack, dismissing all other screens.
+   */
+  popToTop(): void;
 };
 
 export const StackActions = {

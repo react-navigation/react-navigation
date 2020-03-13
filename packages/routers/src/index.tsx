@@ -7,6 +7,7 @@ export { default as BaseRouter } from './BaseRouter';
 export {
   default as StackRouter,
   StackActions,
+  StackActionHelpers,
   StackActionType,
   StackRouterOptions,
   StackNavigationState,
@@ -15,6 +16,7 @@ export {
 export {
   default as TabRouter,
   TabActions,
+  TabActionHelpers,
   TabActionType,
   TabRouterOptions,
   TabNavigationState,
@@ -23,6 +25,7 @@ export {
 export {
   default as DrawerRouter,
   DrawerActions,
+  DrawerActionHelpers,
   DrawerActionType,
   DrawerRouterOptions,
   DrawerNavigationState,
