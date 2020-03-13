@@ -1,10 +1,16 @@
 import shortid from 'shortid';
-import { PartialState, CommonNavigationAction, Router } from './types';
+import {
+  PartialState,
+  CommonNavigationAction,
+  Router,
+  ParamListBase,
+} from './types';
 import TabRouter, {
   TabActions,
   TabActionType,
   TabRouterOptions,
   TabNavigationState,
+  TabActionHelpers,
 } from './TabRouter';
 
 export type DrawerActionType =
@@ -29,6 +35,25 @@ export type DrawerNavigationState = Omit<
    * List of previously visited route keys and drawer open status.
    */
   history: ({ type: 'route'; key: string } | { type: 'drawer' })[];
+};
+
+export type DrawerActionHelpers<
+  ParamList extends ParamListBase
+> = TabActionHelpers<ParamList> & {
+  /**
+   * Open the drawer sidebar.
+   */
+  openDrawer(): void;
+
+  /**
+   * Close the drawer sidebar.
+   */
+  closeDrawer(): void;
+
+  /**
+   * Open the drawer sidebar if closed, or close if opened.
+   */
+  toggleDrawer(): void;
 };
 
 export const DrawerActions = {

@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   Animated,
   StyleProp,
@@ -13,6 +14,7 @@ import {
   Route,
   NavigationHelpers,
   StackNavigationState,
+  StackActionHelpers,
 } from '@react-navigation/native';
 
 export type StackNavigationEventMap = {
@@ -40,29 +42,8 @@ export type StackNavigationProp<
   StackNavigationState,
   StackNavigationOptions,
   StackNavigationEventMap
-> & {
-  /**
-   * Push a new screen onto the stack.
-   *
-   * @param name Name of the route for the tab.
-   * @param [params] Params object for the route.
-   */
-  push<RouteName extends keyof ParamList>(
-    ...args: ParamList[RouteName] extends undefined | any
-      ? [RouteName] | [RouteName, ParamList[RouteName]]
-      : [RouteName, ParamList[RouteName]]
-  ): void;
-
-  /**
-   * Pop a screen from the stack.
-   */
-  pop(count?: number): void;
-
-  /**
-   * Pop to the first route in the stack, dismissing all other screens.
-   */
-  popToTop(): void;
-};
+> &
+  StackActionHelpers<ParamList>;
 
 export type Layout = { width: number; height: number };
 
