@@ -7,6 +7,7 @@ import {
   Route,
   NavigationProp,
   TabNavigationState,
+  TabActionHelpers,
 } from '@react-navigation/native';
 
 export type MaterialTopTabNavigationEventMap = {
@@ -42,19 +43,8 @@ export type MaterialTopTabNavigationProp<
   TabNavigationState,
   MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationEventMap
-> & {
-  /**
-   * Jump to an existing tab.
-   *
-   * @param name Name of the route for the tab.
-   * @param [params] Params object for the route.
-   */
-  jumpTo<RouteName extends Extract<keyof ParamList, string>>(
-    ...args: ParamList[RouteName] extends undefined | any
-      ? [RouteName] | [RouteName, ParamList[RouteName]]
-      : [RouteName, ParamList[RouteName]]
-  ): void;
-};
+> &
+  TabActionHelpers<ParamList>;
 
 export type MaterialTopTabNavigationOptions = {
   /**

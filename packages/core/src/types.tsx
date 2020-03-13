@@ -169,18 +169,6 @@ type NavigationHelpersCommon<
   ): void;
 
   /**
-   * Replace the current route with a new one.
-   *
-   * @param name Route name of the new route.
-   * @param [params] Params object for the new route.
-   */
-  replace<RouteName extends keyof ParamList>(
-    ...args: ParamList[RouteName] extends undefined
-      ? [RouteName] | [RouteName, ParamList[RouteName]]
-      : [RouteName, ParamList[RouteName]]
-  ): void;
-
-  /**
    * Reset the navigation state to the provided state.
    *
    * @param state Navigation state object.
