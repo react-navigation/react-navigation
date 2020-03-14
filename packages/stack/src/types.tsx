@@ -313,6 +313,10 @@ export type StackNavigationOptions = StackHeaderOptions &
       bottom?: number;
       left?: number;
     };
+    /**
+     * todo
+     */
+    renderOverlay?: (style: StyleProp<ViewStyle>) => React.ReactNode;
   };
 
 export type StackNavigationConfig = {

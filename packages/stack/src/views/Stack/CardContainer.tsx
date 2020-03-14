@@ -52,6 +52,7 @@ type Props = TransitionPreset & {
     route: Route<string>;
     height: number;
   }) => void;
+  renderOverlay?: (style: StyleProp<ViewStyle>) => React.ReactNode;
 };
 
 const EPSILON = 0.1;
@@ -95,6 +96,7 @@ function CardContainer({
   safeAreaInsetTop,
   scene,
   transitionSpec,
+  renderOverlay,
 }: Props) {
   React.useEffect(() => {
     onPageChangeConfirm?.();
@@ -182,6 +184,7 @@ function CardContainer({
       }
       contentStyle={[{ backgroundColor: colors.background }, cardStyle]}
       style={StyleSheet.absoluteFill}
+      renderOverlay={renderOverlay}
     >
       <View style={styles.container}>
         <View style={styles.scene}>
