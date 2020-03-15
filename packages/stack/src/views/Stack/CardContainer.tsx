@@ -52,7 +52,7 @@ type Props = TransitionPreset & {
     route: Route<string>;
     height: number;
   }) => void;
-  overlay?: (style: StyleProp<ViewStyle>) => React.ReactNode;
+  overlay?: (props: { style: StyleProp<ViewStyle> }) => React.ReactNode;
 };
 
 const EPSILON = 0.1;
