@@ -437,7 +437,7 @@ export default class CardStack extends React.Component<Props, State> {
               gestureVelocityImpact,
               gestureDirection = defaultTransitionPreset.gestureDirection,
               transitionSpec = defaultTransitionPreset.transitionSpec,
-              renderOverlay,
+              overlay,
               cardStyleInterpolator = animationEnabled === false
                 ? forNoAnimationCard
                 : defaultTransitionPreset.cardStyleInterpolator,
@@ -551,7 +551,7 @@ export default class CardStack extends React.Component<Props, State> {
                   onTransitionEnd={onTransitionEnd}
                   gestureEnabled={index !== 0 && getGesturesEnabled({ route })}
                   gestureVelocityImpact={gestureVelocityImpact}
-                  renderOverlay={renderOverlay}
+                  overlay={overlay}
                   {...transitionConfig}
                 />
               </MaybeScreen>

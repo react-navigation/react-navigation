@@ -59,7 +59,7 @@ type Props = ViewProps & {
   styleInterpolator: StackCardStyleInterpolator;
   containerStyle?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
-  renderOverlay: (style: StyleProp<ViewStyle>) => React.ReactNode;
+  overlay: (style: StyleProp<ViewStyle>) => React.ReactNode;
 };
 
 const GESTURE_VELOCITY_IMPACT = 0.3;
@@ -81,7 +81,7 @@ export default class Card extends React.Component<Props> {
     shadowEnabled: true,
     gestureEnabled: true,
     gestureVelocityImpact: GESTURE_VELOCITY_IMPACT,
-    renderOverlay: (style: StyleProp<View>) => (
+    overlay: (style: StyleProp<View>) => (
       <Animated.View pointerEvents="none" style={[styles.overlay, style]} />
     ),
   };
@@ -476,7 +476,7 @@ export default class Card extends React.Component<Props> {
     return (
       <View pointerEvents="box-none" {...rest}>
         {overlayEnabled && overlayStyle
-          ? this.props.renderOverlay(overlayStyle)
+          ? this.props.overlay(overlayStyle)
           : null}
         <Animated.View
           style={[styles.container, containerStyle, customContainerStyle]}

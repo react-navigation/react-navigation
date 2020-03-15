@@ -314,9 +314,9 @@ export type StackNavigationOptions = StackHeaderOptions &
       left?: number;
     };
     /**
-     * todo
+     * Function that given `style` returns a React Element to display as a overlay.
      */
-    renderOverlay?: (style: StyleProp<ViewStyle>) => React.ReactNode;
+    overlay?: (style: StyleProp<ViewStyle>) => React.ReactNode;
   };
 
 export type StackNavigationConfig = {
