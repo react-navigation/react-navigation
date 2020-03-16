@@ -267,8 +267,7 @@ export default class Card extends React.Component<Props> {
         }
 
         const closing =
-          Math.abs(translation + velocity * gestureVelocityImpact) >
-          distance / 2
+          translation + velocity * gestureVelocityImpact > distance / 2
             ? velocity !== 0 || translation !== 0
             : false;
 
