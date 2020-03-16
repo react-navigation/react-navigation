@@ -79,7 +79,7 @@ type Props = {
   onGestureRef?: (ref: PanGestureHandler | null) => void;
   gestureEnabled: boolean;
   drawerPosition: 'left' | 'right';
-  drawerType: 'front' | 'back' | 'slide' | 'sidebar';
+  drawerType: 'front' | 'back' | 'slide' | 'permanent';
   keyboardDismissMode: 'none' | 'on-drag';
   swipeEdgeWidth: number;
   swipeDistanceThreshold?: number;
@@ -198,7 +198,7 @@ export default class DrawerView extends React.PureComponent<Props> {
   };
 
   private bigScreenSidebar =
-    this.props.drawerType === 'sidebar' && this.props.isBigScreen;
+    this.props.drawerType === 'permanent' && this.props.isBigScreen;
 
   private clock = new Clock();
   private interactionHandle: number | undefined;

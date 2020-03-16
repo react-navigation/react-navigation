@@ -91,7 +91,7 @@ export default function DrawerView({
 
   const { width, height } = Dimensions.get('window');
   const isBigScreen = Math.min(width, height) >= 768;
-  const bigScreenSidebar = drawerType === 'sidebar' && isBigScreen;
+  const bigScreenSidebar = drawerType === 'permanent' && isBigScreen;
   const [drawerWidth, setDrawerWidth] = React.useState(() =>
     getDefaultDrawerWidth({ width, height })
   );
