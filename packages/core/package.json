@@ -36,11 +36,11 @@
   "dependencies": {
     "hoist-non-react-statics": "^3.3.2",
     "path-to-regexp": "^1.8.0",
-    "query-string": "^6.11.0",
-    "react-is": "^16.8.6"
+    "query-string": "^6.11.1",
+    "react-is": "^16.13.0"
   },
   "devDependencies": {
-    "@react-native-community/bob": "^0.9.7",
+    "@react-native-community/bob": "^0.10.0",
     "del-cli": "^3.0.0",
     "react": "~16.9.0",
     "react-native": "~0.61.5",

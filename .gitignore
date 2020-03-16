@@ -4,6 +4,7 @@
 .idea
 .expo
 .gradle
+.history
 
 local.properties
 

@@ -35,17 +35,16 @@
   "homepage": "https://github.com/react-navigation/react-navigation-native#readme",
   "dependencies": {
     "hoist-non-react-statics": "^3.3.2",
-    "react-native-safe-area-view": "^0.14.8"
+    "react-native-safe-area-view": "^1.0.0"
   },
   "devDependencies": {
-    "@react-native-community/bob": "^0.9.7",
+    "@react-native-community/bob": "^0.10.0",
     "@react-navigation/core": "^3.6.1",
     "@types/react-test-renderer": "^16.9.2",
     "del-cli": "^3.0.0",
     "react": "~16.9.0",
     "react-native": "~0.61.5",
     "react-native-gesture-handler": "^1.6.0",
-    "react-native-screens": "^2.0.0-beta.10",
     "react-test-renderer": "^16.9.2"
   },
   "@react-native-community/bob": {

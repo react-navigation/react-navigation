@@ -38,10 +38,10 @@
   },
   "homepage": "https://github.com/react-navigation/react-navigation-material-bottom-tabs#readme",
   "devDependencies": {
-    "@react-native-community/bob": "^0.9.7",
+    "@react-native-community/bob": "^0.10.0",
     "@types/hoist-non-react-statics": "^3.3.1",
-    "@types/react": "^16.9.22",
-    "@types/react-native": "^0.61.17",
+    "@types/react": "^16.9.23",
+    "@types/react-native": "^0.61.22",
     "del-cli": "^3.0.0",
     "react": "~16.9.0",
     "react-native": "~0.61.5",
