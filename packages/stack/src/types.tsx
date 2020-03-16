@@ -103,7 +103,7 @@ export type StackHeaderOptions = {
   /**
    * Style object for the title component.
    */
-  headerTitleStyle?: StyleProp<TextStyle>;
+  headerTitleStyle?: React.ComponentProps<typeof Animated.Text>['style'];
   /**
    * Style object for the container of the `headerTitle` component, for example to add padding.
    * By default, `headerTitleContainerStyle` is with an absolute position style and offsets both `left` and `right`.
@@ -415,7 +415,7 @@ export type StackHeaderTitleProps = {
   /**
    * Style object for the title element.
    */
-  style?: StyleProp<TextStyle>;
+  style?: React.ComponentProps<typeof Animated.Text>['style'];
 };
 
 export type TransitionSpec =

@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Animated, StyleSheet, Platform, TextProps } from 'react-native';
+import { Animated, StyleSheet, Platform } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
-type Props = TextProps & {
+type Props = React.ComponentProps<typeof Animated.Text> & {
   tintColor?: string;
   children?: string;
 };
