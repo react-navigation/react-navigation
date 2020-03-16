@@ -341,7 +341,7 @@ export default class StackView extends React.Component<Props, State> {
       // This will happen in when the route was closed from the card component
       // e.g. When the close animation triggered from a gesture ends
       // @ts-ignore
-      navigation.dispatch(StackActions.pop({ key: route.key }));
+      navigation.dispatch(StackActions.pop({ key: route.key, prune: false }));
     } else {
       // While closing route we need to point to the previous one assuming that
       // this previous one in routes array

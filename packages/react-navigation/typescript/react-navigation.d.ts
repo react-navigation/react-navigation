@@ -328,6 +328,7 @@ export interface NavigationPopActionPayload {
   // n: the number of routes to pop of the stack
   n?: number;
   immediate?: boolean;
+  prune?: boolean;
   key?: string;
 }
 

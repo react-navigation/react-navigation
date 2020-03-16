@@ -562,6 +562,31 @@ describe('StackRouter', () => {
     expect(poppedState3.routes.length).toBe(1);
     expect(poppedState3.index).toBe(0);
     expect(poppedState3.isTransitioning).toBe(true);
+
+    const poppedState4 = TestRouter.getStateForAction(
+      StackActions.pop({ key: 'C', prune: false, immediate: true }),
+      state
+    );
+    expect(poppedState4.routes.length).toBe(3);
+    expect(poppedState4.index).toBe(2);
+    expect(poppedState4.isTransitioning).toBe(false);
+    expect(poppedState4.routes).toEqual([
+      { key: 'A', routeName: 'foo' },
+      { key: 'B', routeName: 'bar', params: { bazId: '321' } },
+      { key: 'D', routeName: 'bar' },
+    ]);
+
+    const poppedState5 = TestRouter.getStateForAction(
+      StackActions.pop({ n: 2, key: 'C', prune: false }),
+      state
+    );
+    expect(poppedState5.routes.length).toBe(2);
+    expect(poppedState5.index).toBe(1);
+    expect(poppedState5.isTransitioning).toBe(true);
+    expect(poppedState5.routes).toEqual([
+      { key: 'A', routeName: 'foo' },
+      { key: 'D', routeName: 'bar' },
+    ]);
   });
 
   it('popToTop works as expected', () => {

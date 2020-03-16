@@ -532,24 +532,43 @@ export default (routeConfigs, stackConfig = {}) => {
         action.type === NavigationActions.BACK ||
         action.type === StackActions.POP
       ) {
-        const { key, n, immediate } = action;
-        let backRouteIndex = state.index;
-        if (action.type === StackActions.POP && n != null) {
-          // determine the index to go back *from*. In this case, n=1 means to go
-          // back from state.index, as if it were a normal "BACK" action
-          backRouteIndex = Math.max(1, state.index - n + 1);
-        } else if (key) {
-          const backRoute = state.routes.find(route => route.key === key);
-          backRouteIndex = state.routes.indexOf(backRoute);
-        }
+        const { key, n, immediate, prune } = action;
 
-        if (backRouteIndex > 0) {
-          return {
-            ...state,
-            routes: state.routes.slice(0, backRouteIndex),
-            index: backRouteIndex - 1,
-            isTransitioning: immediate !== true,
-          };
+        if (action.type === StackActions.POP && prune === false && key) {
+          const index = state.routes.findIndex(r => r.key === key);
+          const count = Math.max(index - (n == null ? 1 : n) + 1, 1);
+          const routes = state.routes
+            .slice(0, count)
+            .concat(state.routes.slice(index + 1));
+
+          if (routes.length) {
+            return {
+              ...state,
+              routes,
+              index: routes.length - 1,
+              isTransitioning: immediate !== true,
+            };
+          }
+        } else {
+          let backRouteIndex = state.index;
+
+          if (action.type === StackActions.POP && n != null) {
+            // determine the index to go back *from*. In this case, n=1 means to go
+            // back from state.index, as if it were a normal "BACK" action
+            backRouteIndex = Math.max(1, state.index - n + 1);
+          } else if (key) {
+            const backRoute = state.routes.find(route => route.key === key);
+            backRouteIndex = state.routes.indexOf(backRoute);
+          }
+
+          if (backRouteIndex > 0) {
+            return {
+              ...state,
+              routes: state.routes.slice(0, backRouteIndex),
+              index: backRouteIndex - 1,
+              isTransitioning: immediate !== true,
+            };
+          }
         }
       }
 

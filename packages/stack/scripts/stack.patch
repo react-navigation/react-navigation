@@ -547,7 +547,7 @@ diff -Naur ../../node_modules/@react-navigation/stack/src/views/Stack/CardStack.
                    gestureEnabled={index !== 0 && getGesturesEnabled({ route })}
 diff -Naur ../../node_modules/@react-navigation/stack/src/views/Stack/StackView.tsx src/vendor/views/Stack/StackView.tsx
 --- ../../node_modules/@react-navigation/stack/src/views/Stack/StackView.tsx	2020-03-16 14:39:49.000000000 +0100
-+++ src/vendor/views/Stack/StackView.tsx	2020-03-16 14:41:16.000000000 +0100
++++ src/vendor/views/Stack/StackView.tsx	2020-03-16 15:41:41.000000000 +0100
 @@ -4,9 +4,9 @@
  import { GestureHandlerRootView } from 'react-native-gesture-handler';
  import {
@@ -626,7 +626,7 @@ diff -Naur ../../node_modules/@react-navigation/stack/src/views/Stack/StackView.
 -        target: state.key,
 -      });
 +      // @ts-ignore
-+      navigation.dispatch(StackActions.pop({ key: route.key }));
++      navigation.dispatch(StackActions.pop({ key: route.key, prune: false }));
      } else {
 +      // While closing route we need to point to the previous one assuming that
 +      // this previous one in routes array
