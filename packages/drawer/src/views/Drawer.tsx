@@ -612,7 +612,7 @@ export default class DrawerView extends React.PureComponent<Props> {
             >
               {renderSceneContent({ progress: this.progress })}
             </View>
-            {// disable overlay if 'sidebar' on the big screen
+            {// disable overlay if sidebar is permanent
             this.props.drawerType === 'permanent' ? null : (
               <TapGestureHandler
                 enabled={gestureEnabled}
