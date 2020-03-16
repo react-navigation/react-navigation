@@ -32,7 +32,8 @@ const styles = StyleSheet.create({
     },
     android: {
       fontSize: 20,
-      fontWeight: '500',
+      fontFamily: 'sans-serif-medium',
+      fontWeight: 'normal',
     },
     default: {
       fontSize: 18,
