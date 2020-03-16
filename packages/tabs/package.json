@@ -1,6 +1,6 @@
 {
   "name": "react-navigation-tabs",
-  "version": "2.8.2",
+  "version": "2.8.3",
   "description": "Tab Navigation components for React Navigation",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
@@ -56,7 +56,7 @@
     "react-native-gesture-handler": "^1.6.0",
     "react-native-reanimated": "^1.2.0",
     "react-native-tab-view": "^2.13.0",
-    "react-navigation": "^4.2.2",
+    "react-navigation": "^4.3.0",
     "typescript": "~3.7.5"
   },
   "peerDependencies": {

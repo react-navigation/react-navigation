@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.3.0](https://github.com/react-navigation/react-navigation-stack/compare/react-navigation-stack@2.2.3...react-navigation-stack@2.3.0) (2020-03-16)
+
+
+### Features
+
+* add prune option to pop action to match v5 behaviour ([5927f42](https://github.com/react-navigation/react-navigation-stack/commit/5927f4287f5e1ab106537865523daa1c03b14b47))
+
+
+
+
+
 ## [2.2.3](https://github.com/react-navigation/react-navigation-stack/compare/react-navigation-stack@2.2.2...react-navigation-stack@2.2.3) (2020-03-04)
 
 
