@@ -609,10 +609,7 @@ export default class DrawerView extends React.PureComponent<Props> {
               importantForAccessibility={open ? 'no-hide-descendants' : 'auto'}
               style={styles.content}
             >
-              {renderSceneContent({
-                // make 'sidebar' initially visible on the big screen to avoid annoying animation
-                progress: this.progress,
-              })}
+              {renderSceneContent({ progress: this.progress })}
             </View>
             {// disable overlay if 'sidebar' on the big screen
             this.props.drawerType === 'permanent' ? null : (
