@@ -77,7 +77,7 @@ export default function DrawerView({
   drawerPosition = I18nManager.isRTL ? 'right' : 'left',
   keyboardDismissMode = 'on-drag',
   overlayColor = 'rgba(0, 0, 0, 0.5)',
-  drawerType = 'front',
+  drawerType: drawerTypeProp = 'front',
   hideStatusBar = false,
   statusBarAnimation = 'slide',
   drawerContentOptions,
@@ -90,8 +90,9 @@ export default function DrawerView({
   const [loaded, setLoaded] = React.useState([state.index]);
 
   const { width, height } = Dimensions.get('window');
-  const isBigScreen = Math.min(width, height) >= 768;
-  const bigScreenSidebar = drawerType === 'permanent' && isBigScreen;
+  const smallScreen = Math.min(width, height) >= 768;
+  const drawerType =
+    drawerTypeProp === 'permanent' && smallScreen ? 'front' : drawerTypeProp;
   const [drawerWidth, setDrawerWidth] = React.useState(() =>
     getDefaultDrawerWidth({ width, height })
   );
@@ -103,24 +104,24 @@ export default function DrawerView({
   const isDrawerOpen = Boolean(state.history.find(it => it.type === 'drawer'));
 
   const handleDrawerOpen = React.useCallback(() => {
-    if (bigScreenSidebar) {
+    if (drawerType === 'permanent') {
       return;
     }
     navigation.dispatch({
       ...DrawerActions.openDrawer(),
       target: state.key,
     });
-  }, [navigation, state.key, bigScreenSidebar]);
+  }, [navigation, state.key, drawerType]);
 
   const handleDrawerClose = React.useCallback(() => {
-    if (bigScreenSidebar) {
+    if (drawerType === 'permanent') {
       return;
     }
     navigation.dispatch({
       ...DrawerActions.closeDrawer(),
       target: state.key,
     });
-  }, [navigation, state.key, bigScreenSidebar]);
+  }, [navigation, state.key, drawerType]);
 
   React.useEffect(() => {
     if (isDrawerOpen) {
@@ -214,8 +215,8 @@ export default function DrawerView({
       <SafeAreaProviderCompat>
         <DrawerGestureContext.Provider value={drawerGestureRef}>
           <Drawer
-            open={bigScreenSidebar || isDrawerOpen}
-            gestureEnabled={!bigScreenSidebar && gestureEnabled}
+            open={drawerType === 'permanent' || isDrawerOpen}
+            gestureEnabled={drawerType !== 'permanent' && gestureEnabled}
             onOpen={handleDrawerOpen}
             onClose={handleDrawerClose}
             onGestureRef={ref => {
@@ -242,7 +243,6 @@ export default function DrawerView({
             renderSceneContent={renderContent}
             keyboardDismissMode={keyboardDismissMode}
             drawerPostion={drawerPosition}
-            isBigScreen={isBigScreen}
           />
         </DrawerGestureContext.Provider>
       </SafeAreaProviderCompat>

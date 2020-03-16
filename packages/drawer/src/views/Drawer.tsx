@@ -92,7 +92,6 @@ type Props = {
   renderDrawerContent: Renderer;
   renderSceneContent: Renderer;
   gestureHandlerProps?: React.ComponentProps<typeof PanGestureHandler>;
-  isBigScreen?: boolean;
 };
 
 /**
@@ -124,7 +123,6 @@ export default class DrawerView extends React.PureComponent<Props> {
     keyboardDismissMode: 'on-drag',
     hideStatusBar: false,
     statusBarAnimation: 'slide',
-    isBigScreen: false,
   };
 
   componentDidUpdate(prevProps: Props) {
@@ -197,9 +195,6 @@ export default class DrawerView extends React.PureComponent<Props> {
     }
   };
 
-  private bigScreenSidebar =
-    this.props.drawerType === 'permanent' && this.props.isBigScreen;
-
   private clock = new Clock();
   private interactionHandle: number | undefined;
 
@@ -219,12 +214,16 @@ export default class DrawerView extends React.PureComponent<Props> {
   private velocityX = new Value<number>(0);
   private gestureX = new Value<number>(0);
   private offsetX = new Value<number>(0);
-  private position = new Value<number>(this.bigScreenSidebar ? 1 : 0);
+  private position = new Value<number>(
+    this.props.drawerType === 'permanent' ? 1 : 0
+  );
 
   private containerWidth = new Value<number>(0);
   private drawerWidth = new Value<number>(0);
   // make drawer initially visible on the big screen to avoid annoying animation
-  private drawerOpacity = new Value<number>(this.bigScreenSidebar ? 1 : 0);
+  private drawerOpacity = new Value<number>(
+    this.props.drawerType === 'permanent' ? 1 : 0
+  );
   private drawerPosition = new Value<number>(
     this.props.drawerPosition === 'right' ? DIRECTION_RIGHT : DIRECTION_LEFT
   );
@@ -593,13 +592,15 @@ export default class DrawerView extends React.PureComponent<Props> {
           onLayout={this.handleContainerLayout}
           style={[
             styles.main,
-            this.bigScreenSidebar && { flexDirection: 'row-reverse' },
+            this.props.drawerType === 'permanent' && {
+              flexDirection: 'row-reverse',
+            },
           ]}
         >
           <Animated.View
             style={[
               styles.content,
-              !this.bigScreenSidebar && {
+              this.props.drawerType !== 'permanent' && {
                 transform: [{ translateX: contentTranslateX }],
               },
               sceneContainerStyle as any,
@@ -612,13 +613,14 @@ export default class DrawerView extends React.PureComponent<Props> {
             >
               {renderSceneContent({
                 // make 'sidebar' initially visible on the big screen to avoid annoying animation
-                progress: this.bigScreenSidebar
-                  ? new Animated.Value(1)
-                  : this.progress,
+                progress:
+                  this.props.drawerType === 'permanent'
+                    ? new Animated.Value(1)
+                    : this.progress,
               })}
             </View>
             {// disable overlay if 'sidebar' on the big screen
-            this.bigScreenSidebar ? null : (
+            this.props.drawerType === 'permanent' ? null : (
               <TapGestureHandler
                 enabled={gestureEnabled}
                 onHandlerStateChange={this.handleTapStateChange}
@@ -627,7 +629,7 @@ export default class DrawerView extends React.PureComponent<Props> {
               </TapGestureHandler>
             )}
           </Animated.View>
-          {this.bigScreenSidebar ? null : (
+          {this.props.drawerType === 'permanent' ? null : (
             <Animated.Code
               exec={block([
                 onChange(this.manuallyTriggerSpring, [
@@ -645,7 +647,7 @@ export default class DrawerView extends React.PureComponent<Props> {
             onLayout={this.handleDrawerLayout}
             style={[
               styles.container,
-              !this.bigScreenSidebar && {
+              this.props.drawerType !== 'permanent' && {
                 position: 'absolute',
                 top: 0,
                 bottom: 0,
@@ -657,7 +659,7 @@ export default class DrawerView extends React.PureComponent<Props> {
                 ],
                 opacity: this.drawerOpacity,
               },
-              this.bigScreenSidebar
+              this.props.drawerType === 'permanent'
                 ? {}
                 : isRight
                 ? { right: offset }
