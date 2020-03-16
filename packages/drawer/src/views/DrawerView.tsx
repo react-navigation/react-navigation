@@ -229,6 +229,10 @@ export default function DrawerView({
             ]}
             drawerStyle={[
               { width: drawerWidth, backgroundColor: colors.card },
+              drawerType === 'permanent' && {
+                borderRightColor: colors.border,
+                borderRightWidth: 1,
+              },
               drawerStyle,
             ]}
             overlayStyle={{ backgroundColor: overlayColor }}
