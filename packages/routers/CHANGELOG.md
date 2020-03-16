@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.1](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.1.0...@react-navigation/routers@5.1.1) (2020-03-16)
+
+
+### Bug Fixes
+
+* don't handle action if no routes are present ([660cac3](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/660cac3557bce8978812ce2750e961e7ada92d13))
+
+
+
+
+
 # [5.1.0](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.0.3...@react-navigation/routers@5.1.0) (2020-03-03)
 
 

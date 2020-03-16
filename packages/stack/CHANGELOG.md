@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.1.1...@react-navigation/stack@5.2.0) (2020-03-16)
+
+
+### Bug Fixes
+
+* fix android header title font weight ([#7720](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/7720)) ([0dcaea3](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/0dcaea32428484cdc9b4d56f7bf38f9f1bdf1dee))
+* fix back gesture cancellation ([#7700](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/7700)) ([469d054](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/469d0542c7341dc524a597d70216ba743602a51e)), closes [#6782](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/6782)
+
+
+### Features
+
+* add an option to change use a custom card overlay ([#7809](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/7809)) ([70029d6](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/70029d6c130f0f47de94b6a6c4cbee6afa12b405))
+
+
+
+
+
 ## [5.1.1](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.1.0...@react-navigation/stack@5.1.1) (2020-03-03)
 
 
