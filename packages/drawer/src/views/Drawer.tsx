@@ -218,7 +218,6 @@ export default class DrawerView extends React.PureComponent<Props> {
 
   private containerWidth = new Value<number>(0);
   private drawerWidth = new Value<number>(0);
-  // make drawer initially visible on the big screen to avoid annoying animation
   private drawerOpacity = new Value<number>(0);
   private drawerPosition = new Value<number>(
     this.props.drawerPosition === 'right' ? DIRECTION_RIGHT : DIRECTION_LEFT
