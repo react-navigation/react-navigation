@@ -28,7 +28,7 @@ it('throws when getState is accessed without a container', () => {
   const element = <Test />;
 
   expect(() => render(element).update(element)).toThrowError(
-    "We couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?"
+    "Couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?"
   );
 });
 
@@ -47,7 +47,7 @@ it('throws when setState is accessed without a container', () => {
   const element = <Test />;
 
   expect(() => render(element).update(element)).toThrowError(
-    "We couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?"
+    "Couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?"
   );
 });
 

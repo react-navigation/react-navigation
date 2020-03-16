@@ -7,6 +7,7 @@ import {
   Descriptor,
   NavigationHelpers,
   DrawerNavigationState,
+  DrawerActionHelpers,
 } from '@react-navigation/native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 
@@ -190,22 +191,8 @@ export type DrawerNavigationProp<
   DrawerNavigationState,
   DrawerNavigationOptions,
   DrawerNavigationEventMap
-> & {
-  /**
-   * Open the drawer sidebar.
-   */
-  openDrawer(): void;
-
-  /**
-   * Close the drawer sidebar.
-   */
-  closeDrawer(): void;
-
-  /**
-   * Open the drawer sidebar if closed, or close if opened.
-   */
-  toggleDrawer(): void;
-};
+> &
+  DrawerActionHelpers<ParamList>;
 
 export type DrawerDescriptor = Descriptor<
   ParamListBase,

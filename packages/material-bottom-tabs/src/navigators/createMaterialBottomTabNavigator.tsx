@@ -49,6 +49,8 @@ function MaterialBottomTabNavigator({
 }
 
 export default createNavigatorFactory<
+  TabNavigationState,
   MaterialBottomTabNavigationOptions,
+  MaterialBottomTabNavigationEventMap,
   typeof MaterialBottomTabNavigator
 >(MaterialBottomTabNavigator);

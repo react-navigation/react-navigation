@@ -48,6 +48,8 @@ function MaterialTopTabNavigator({
 }
 
 export default createNavigatorFactory<
+  TabNavigationState,
   MaterialTopTabNavigationOptions,
+  MaterialTopTabNavigationEventMap,
   typeof MaterialTopTabNavigator
 >(MaterialTopTabNavigator);

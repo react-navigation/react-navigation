@@ -7,6 +7,7 @@ import {
   Router,
   DefaultRouterOptions,
   Route,
+  ParamListBase,
 } from './types';
 
 export type TabActionType = {
@@ -31,6 +32,20 @@ export type TabNavigationState = Omit<NavigationState, 'history'> & {
    * List of previously visited route keys.
    */
   history: { type: 'route'; key: string }[];
+};
+
+export type TabActionHelpers<ParamList extends ParamListBase> = {
+  /**
+   * Jump to an existing tab.
+   *
+   * @param name Name of the route for the tab.
+   * @param [params] Params object for the route.
+   */
+  jumpTo<RouteName extends Extract<keyof ParamList, string>>(
+    ...args: ParamList[RouteName] extends undefined | any
+      ? [RouteName] | [RouteName, ParamList[RouteName]]
+      : [RouteName, ParamList[RouteName]]
+  ): void;
 };
 
 const TYPE_ROUTE = 'route' as const;

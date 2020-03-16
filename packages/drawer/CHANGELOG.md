@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.1.1...@react-navigation/drawer@5.2.0) (2020-03-16)
+
+
+### Features
+
+* make useIsDrawerOpen workable inside drawer content ([#7746](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/7746)) ([cb46d0b](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/cb46d0bca4e17e847fff46ac94276213ac9697bf))
+
+
+
+
+
+## [5.1.1](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.1.0...@react-navigation/drawer@5.1.1) (2020-03-03)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+# [5.1.0](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.7...@react-navigation/drawer@5.1.0) (2020-02-26)
+
+
+### Features
+
+* add ability add listeners with listeners prop ([1624108](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/162410843c4f175ae107756de1c3af04d1d47aa7)), closes [#6756](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/6756)
+
+
+
+
+
 ## [5.0.7](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.6...@react-navigation/drawer@5.0.7) (2020-02-21)
 
 **Note:** Version bump only for package @react-navigation/drawer

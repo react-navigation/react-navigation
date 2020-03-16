@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.1](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.1.0...@react-navigation/routers@5.1.1) (2020-03-16)
+
+
+### Bug Fixes
+
+* don't handle action if no routes are present ([660cac3](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/660cac3557bce8978812ce2750e961e7ada92d13))
+
+
+
+
+
+# [5.1.0](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.0.3...@react-navigation/routers@5.1.0) (2020-03-03)
+
+
+### Bug Fixes
+
+* fix links for documentation ([5bb0f40](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/5bb0f405ceb5755d39a0b5b1f2e4ecee0da051bc))
+
+
+### Features
+
+* make reset bubble up ([09f6808](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/09f6808d7d43c70b2c502151f9f20fad03972886))
+
+
+
+
+
+## [5.0.3](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.0.2...@react-navigation/routers@5.0.3) (2020-02-26)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+
+
+
+
 ## [5.0.2](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.0.1...@react-navigation/routers@5.0.2) (2020-02-21)
 
 
