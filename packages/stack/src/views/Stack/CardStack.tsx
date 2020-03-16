@@ -431,13 +431,13 @@ export default class CardStack extends React.Component<Props, State> {
               headerTransparent,
               cardShadowEnabled,
               cardOverlayEnabled,
+              cardOverlay,
               cardStyle,
               animationEnabled,
               gestureResponseDistance,
               gestureVelocityImpact,
               gestureDirection = defaultTransitionPreset.gestureDirection,
               transitionSpec = defaultTransitionPreset.transitionSpec,
-              overlay,
               cardStyleInterpolator = animationEnabled === false
                 ? forNoAnimationCard
                 : defaultTransitionPreset.cardStyleInterpolator,
@@ -529,6 +529,7 @@ export default class CardStack extends React.Component<Props, State> {
                   safeAreaInsetRight={safeAreaInsetRight}
                   safeAreaInsetBottom={safeAreaInsetBottom}
                   safeAreaInsetLeft={safeAreaInsetLeft}
+                  cardOverlay={cardOverlay}
                   cardOverlayEnabled={cardOverlayEnabled}
                   cardShadowEnabled={cardShadowEnabled}
                   cardStyle={cardStyle}
@@ -551,7 +552,6 @@ export default class CardStack extends React.Component<Props, State> {
                   onTransitionEnd={onTransitionEnd}
                   gestureEnabled={index !== 0 && getGesturesEnabled({ route })}
                   gestureVelocityImpact={gestureVelocityImpact}
-                  overlay={overlay}
                   {...transitionConfig}
                 />
               </MaybeScreen>

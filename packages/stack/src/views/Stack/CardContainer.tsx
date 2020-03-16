@@ -19,6 +19,7 @@ type Props = TransitionPreset & {
   safeAreaInsetRight: number;
   safeAreaInsetBottom: number;
   safeAreaInsetLeft: number;
+  cardOverlay?: (props: { style: StyleProp<ViewStyle> }) => React.ReactNode;
   cardOverlayEnabled?: boolean;
   cardShadowEnabled?: boolean;
   cardStyle?: StyleProp<ViewStyle>;
@@ -52,13 +53,13 @@ type Props = TransitionPreset & {
     route: Route<string>;
     height: number;
   }) => void;
-  overlay?: (props: { style: StyleProp<ViewStyle> }) => React.ReactNode;
 };
 
 const EPSILON = 0.1;
 
 function CardContainer({
   active,
+  cardOverlay,
   cardOverlayEnabled,
   cardShadowEnabled,
   cardStyle,
@@ -96,7 +97,6 @@ function CardContainer({
   safeAreaInsetTop,
   scene,
   transitionSpec,
-  overlay,
 }: Props) {
   React.useEffect(() => {
     onPageChangeConfirm?.();
@@ -164,6 +164,7 @@ function CardContainer({
       closing={closing}
       onOpen={handleOpen}
       onClose={handleClose}
+      overlay={cardOverlay}
       overlayEnabled={cardOverlayEnabled}
       shadowEnabled={cardShadowEnabled}
       onTransitionStart={handleTransitionStart}
@@ -184,7 +185,6 @@ function CardContainer({
       }
       contentStyle={[{ backgroundColor: colors.background }, cardStyle]}
       style={StyleSheet.absoluteFill}
-      overlay={overlay}
     >
       <View style={styles.container}>
         <View style={styles.scene}>

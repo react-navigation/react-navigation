@@ -261,6 +261,10 @@ export type StackNavigationOptions = StackHeaderOptions &
      */
     cardOverlayEnabled?: boolean;
     /**
+     * Function that returns a React Element to display as a overlay for the card.
+     */
+    cardOverlay?: (props: { style: StyleProp<ViewStyle> }) => React.ReactNode;
+    /**
      * Style object for the card in stack.
      * You can provide a custom background color to use instead of the default background here.
      *
@@ -313,10 +317,6 @@ export type StackNavigationOptions = StackHeaderOptions &
       bottom?: number;
       left?: number;
     };
-    /**
-     * Function that returns a React Element to display as a overlay.
-     */
-    overlay?: (props: { style: StyleProp<ViewStyle> }) => React.ReactNode;
   };
 
 export type StackNavigationConfig = {
