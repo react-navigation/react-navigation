@@ -77,7 +77,7 @@ export default function DrawerView({
   drawerPosition = I18nManager.isRTL ? 'right' : 'left',
   keyboardDismissMode = 'on-drag',
   overlayColor = 'rgba(0, 0, 0, 0.5)',
-  drawerType: drawerTypeProp = 'front',
+  drawerType = 'front',
   hideStatusBar = false,
   statusBarAnimation = 'slide',
   drawerContentOptions,
@@ -90,9 +90,6 @@ export default function DrawerView({
   const [loaded, setLoaded] = React.useState([state.index]);
 
   const { width, height } = Dimensions.get('window');
-  const smallScreen = Math.min(width, height) >= 768;
-  const drawerType =
-    drawerTypeProp === 'permanent' && smallScreen ? 'front' : drawerTypeProp;
   const [drawerWidth, setDrawerWidth] = React.useState(() =>
     getDefaultDrawerWidth({ width, height })
   );

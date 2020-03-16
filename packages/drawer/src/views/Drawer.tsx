@@ -214,16 +214,12 @@ export default class DrawerView extends React.PureComponent<Props> {
   private velocityX = new Value<number>(0);
   private gestureX = new Value<number>(0);
   private offsetX = new Value<number>(0);
-  private position = new Value<number>(
-    this.props.drawerType === 'permanent' ? 1 : 0
-  );
+  private position = new Value<number>(0);
 
   private containerWidth = new Value<number>(0);
   private drawerWidth = new Value<number>(0);
   // make drawer initially visible on the big screen to avoid annoying animation
-  private drawerOpacity = new Value<number>(
-    this.props.drawerType === 'permanent' ? 1 : 0
-  );
+  private drawerOpacity = new Value<number>(0);
   private drawerPosition = new Value<number>(
     this.props.drawerPosition === 'right' ? DIRECTION_RIGHT : DIRECTION_LEFT
   );
@@ -465,12 +461,15 @@ export default class DrawerView extends React.PureComponent<Props> {
     max(min(this.drawerWidth, this.dragX), 0)
   );
 
-  private progress = cond(
-    // Check if the drawer width is available to avoid division by zero
-    eq(this.drawerWidth, 0),
-    0,
-    abs(divide(this.translateX, this.drawerWidth))
-  );
+  private progress =
+    this.props.drawerType === 'permanent'
+      ? new Animated.Value(1)
+      : cond(
+          // Check if the drawer width is available to avoid division by zero
+          eq(this.drawerWidth, 0),
+          0,
+          abs(divide(this.translateX, this.drawerWidth))
+        );
 
   private handleGestureEvent = event([
     {
@@ -613,10 +612,7 @@ export default class DrawerView extends React.PureComponent<Props> {
             >
               {renderSceneContent({
                 // make 'sidebar' initially visible on the big screen to avoid annoying animation
-                progress:
-                  this.props.drawerType === 'permanent'
-                    ? new Animated.Value(1)
-                    : this.progress,
+                progress: this.progress,
               })}
             </View>
             {// disable overlay if 'sidebar' on the big screen
