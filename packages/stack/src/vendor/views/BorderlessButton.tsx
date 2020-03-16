@@ -32,7 +32,7 @@ export default class BorderlessButton extends React.Component<Props> {
       }).start();
     }
 
-    this.props.onActiveStateChange && this.props.onActiveStateChange(active);
+    this.props.onActiveStateChange?.(active);
   };
 
   render() {

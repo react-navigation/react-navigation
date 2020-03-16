@@ -433,6 +433,7 @@ export default class CardStack extends React.Component<Props, State> {
               headerTransparent,
               cardShadowEnabled,
               cardOverlayEnabled,
+              cardOverlay,
               cardStyle,
               animationEnabled,
               gestureResponseDistance,
@@ -530,6 +531,7 @@ export default class CardStack extends React.Component<Props, State> {
                   safeAreaInsetRight={safeAreaInsetRight}
                   safeAreaInsetBottom={safeAreaInsetBottom}
                   safeAreaInsetLeft={safeAreaInsetLeft}
+                  cardOverlay={cardOverlay}
                   cardOverlayEnabled={cardOverlayEnabled}
                   cardShadowEnabled={cardShadowEnabled}
                   cardStyle={cardStyle}
