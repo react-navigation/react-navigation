@@ -27,8 +27,9 @@ export type DrawerNavigationConfig<T = DrawerContentOptions> = {
    * - `front`: Traditional drawer which covers the screen with a overlay behind it.
    * - `back`: The drawer is revealed behind the screen on swipe.
    * - `slide`: Both the screen and the drawer slide on swipe to reveal the drawer.
+   * - `permanent`: A permanent drawer is shown as a sidebar.
    */
-  drawerType?: 'front' | 'back' | 'slide';
+  drawerType?: 'front' | 'back' | 'slide' | 'permanent';
   /**
    * How far from the edge of the screen the swipe gesture should activate.
    */
