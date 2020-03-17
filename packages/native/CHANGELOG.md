@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.1.0](https://github.com/react-navigation/react-navigation/tree/master/packages/native/compare/@react-navigation/native@5.0.10...@react-navigation/native@5.1.0) (2020-03-17)
+
+
+### Features
+
+* add permanent drawer type ([#7818](https://github.com/react-navigation/react-navigation/tree/master/packages/native/issues/7818)) ([6a5d0a0](https://github.com/react-navigation/react-navigation/tree/master/packages/native/commit/6a5d0a035afae60d91aef78401ec8826295746fe))
+
+
+
+
+
 ## [5.0.10](https://github.com/react-navigation/react-navigation/tree/master/packages/native/compare/@react-navigation/native@5.0.9...@react-navigation/native@5.0.10) (2020-03-16)
 
 **Note:** Version bump only for package @react-navigation/native
