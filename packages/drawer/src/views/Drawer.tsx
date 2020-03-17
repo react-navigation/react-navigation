@@ -644,15 +644,20 @@ export default class DrawerView extends React.PureComponent<Props> {
             onLayout={this.handleDrawerLayout}
             style={[
               styles.container,
-              drawerType !== 'permanent' && [
-                styles.nonPermanent,
-                {
-                  transform: [{ translateX: drawerTranslateX }],
-                  opacity: this.drawerOpacity,
-                },
-                isRight ? { right: offset } : { left: offset },
-                { zIndex: drawerType === 'back' ? -1 : 0 },
-              ],
+              drawerType === 'permanent'
+                ? // Without this, the `left`/`right` values don't get reset
+                  isRight
+                  ? { right: 0 }
+                  : { left: 0 }
+                : [
+                    styles.nonPermanent,
+                    {
+                      transform: [{ translateX: drawerTranslateX }],
+                      opacity: this.drawerOpacity,
+                    },
+                    isRight ? { right: offset } : { left: offset },
+                    { zIndex: drawerType === 'back' ? -1 : 0 },
+                  ],
               drawerStyle as any,
             ]}
           >
