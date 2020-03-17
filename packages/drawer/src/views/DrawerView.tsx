@@ -99,24 +99,18 @@ export default function DrawerView({
   const isDrawerOpen = Boolean(state.history.find(it => it.type === 'drawer'));
 
   const handleDrawerOpen = React.useCallback(() => {
-    if (drawerType === 'permanent') {
-      return;
-    }
     navigation.dispatch({
       ...DrawerActions.openDrawer(),
       target: state.key,
     });
-  }, [navigation, state.key, drawerType]);
+  }, [navigation, state.key]);
 
   const handleDrawerClose = React.useCallback(() => {
-    if (drawerType === 'permanent') {
-      return;
-    }
     navigation.dispatch({
       ...DrawerActions.closeDrawer(),
       target: state.key,
     });
-  }, [navigation, state.key, drawerType]);
+  }, [navigation, state.key]);
 
   React.useEffect(() => {
     if (isDrawerOpen) {
@@ -210,8 +204,8 @@ export default function DrawerView({
       <SafeAreaProviderCompat>
         <DrawerGestureContext.Provider value={drawerGestureRef}>
           <Drawer
-            open={drawerType === 'permanent' || isDrawerOpen}
-            gestureEnabled={drawerType !== 'permanent' && gestureEnabled}
+            open={isDrawerOpen}
+            gestureEnabled={gestureEnabled}
             onOpen={handleDrawerOpen}
             onClose={handleDrawerClose}
             onGestureRef={ref => {
@@ -229,7 +223,7 @@ export default function DrawerView({
               { width: drawerWidth, backgroundColor: colors.card },
               drawerType === 'permanent' && {
                 borderRightColor: colors.border,
-                borderRightWidth: 1,
+                borderRightWidth: StyleSheet.hairlineWidth,
               },
               drawerStyle,
             ]}
