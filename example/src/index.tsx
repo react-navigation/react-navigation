@@ -6,6 +6,8 @@ import {
   Platform,
   StatusBar,
   I18nManager,
+  Dimensions,
+  ScaledSize,
 } from 'react-native';
 // eslint-disable-next-line import/no-unresolved
 import { enableScreens } from 'react-native-screens';
@@ -196,9 +198,23 @@ export default function App() {
     };
   }, [theme.colors, theme.dark]);
 
+  const [dimensions, setDimensions] = React.useState(Dimensions.get('window'));
+
+  React.useEffect(() => {
+    const onDimensionsChange = ({ window }: { window: ScaledSize }) => {
+      setDimensions(window);
+    };
+
+    Dimensions.addEventListener('change', onDimensionsChange);
+
+    return () => Dimensions.removeEventListener('change', onDimensionsChange);
+  }, []);
+
   if (!isReady) {
     return null;
   }
+
+  const isLargeScreen = dimensions.width > 900;
 
   return (
     <PaperProvider theme={paperTheme}>
@@ -216,7 +232,7 @@ export default function App() {
         }
         theme={theme}
       >
-        <Drawer.Navigator>
+        <Drawer.Navigator drawerType={isLargeScreen ? 'permanent' : undefined}>
           <Drawer.Screen
             name="Root"
             options={{
@@ -240,13 +256,15 @@ export default function App() {
                   name="Home"
                   options={{
                     title: 'Examples',
-                    headerLeft: () => (
-                      <Appbar.Action
-                        color={theme.colors.text}
-                        icon="menu"
-                        onPress={() => navigation.toggleDrawer()}
-                      />
-                    ),
+                    headerLeft: isLargeScreen
+                      ? undefined
+                      : () => (
+                          <Appbar.Action
+                            color={theme.colors.text}
+                            icon="menu"
+                            onPress={() => navigation.toggleDrawer()}
+                          />
+                        ),
                   }}
                 >
                   {({
