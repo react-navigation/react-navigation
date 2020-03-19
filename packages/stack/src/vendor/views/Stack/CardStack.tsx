@@ -76,9 +76,6 @@ type State = {
 
 const EPSILON = 0.01;
 
-const dimensions = Dimensions.get('window');
-const layout = { width: dimensions.width, height: dimensions.height };
-
 const MaybeScreenContainer = ({
   enabled,
   ...rest
@@ -161,7 +158,16 @@ const getProgressFromGesture = (
   layout: Layout,
   descriptor?: StackDescriptor
 ) => {
-  const distance = getDistanceFromOptions(mode, layout, descriptor);
+  const distance = getDistanceFromOptions(
+    mode,
+    {
+      // Make sure that we have a non-zero distance, otherwise there will be incorrect progress
+      // This causes blank screen on web if it was previously inside container with display: none
+      width: Math.max(1, layout.width),
+      height: Math.max(1, layout.height),
+    },
+    descriptor
+  );
 
   if (distance > 0) {
     return gesture.interpolate({
@@ -291,19 +297,25 @@ export default class CardStack extends React.Component<Props, State> {
     };
   }
 
-  state: State = {
-    routes: [],
-    scenes: [],
-    gestures: {},
-    layout,
-    descriptors: this.props.descriptors,
-    // Used when card's header is null and mode is float to make transition
-    // between screens with headers and those without headers smooth.
-    // This is not a great heuristic here. We don't know synchronously
-    // on mount what the header height is so we have just used the most
-    // common cases here.
-    headerHeights: {},
-  };
+  constructor(props: Props) {
+    super(props);
+
+    const { height = 0, width = 0 } = Dimensions.get('window');
+
+    this.state = {
+      routes: [],
+      scenes: [],
+      gestures: {},
+      layout: { height, width },
+      descriptors: this.props.descriptors,
+      // Used when card's header is null and mode is float to make transition
+      // between screens with headers and those without headers smooth.
+      // This is not a great heuristic here. We don't know synchronously
+      // on mount what the header height is so we have just used the most
+      // common cases here.
+      headerHeights: {},
+    };
+  }
 
   private handleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
@@ -403,9 +415,9 @@ export default class CardStack extends React.Component<Props, State> {
       left = insets.left,
     } = focusedOptions.safeAreaInsets || {};
 
-    // Screens is buggy on iOS, so we don't enable it there
+    // Screens is buggy on iOS and web, so we only enable it on Android
     // For modals, usually we want the screen underneath to be visible, so also disable it there
-    const isScreensEnabled = Platform.OS !== 'ios' && mode !== 'modal';
+    const isScreensEnabled = Platform.OS === 'android' && mode !== 'modal';
 
     return (
       <React.Fragment>
