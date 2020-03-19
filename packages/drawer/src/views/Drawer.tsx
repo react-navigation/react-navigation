@@ -592,8 +592,9 @@ export default class DrawerView extends React.PureComponent<Props> {
           onLayout={this.handleContainerLayout}
           style={[
             styles.main,
-            drawerType === 'permanent' && {
-              flexDirection: 'row-reverse',
+            {
+              flexDirection:
+                drawerType === 'permanent' && !isRight ? 'row-reverse' : 'row',
             },
           ]}
         >
