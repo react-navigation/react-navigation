@@ -271,16 +271,15 @@ export default class Card extends React.Component<Props> {
           velocity = nativeEvent.velocityX;
         }
 
-        if (
-          gestureDirection === 'horizontal-inverted' ||
-          gestureDirection === 'vertical-inverted'
-        ) {
-          translation *= -1;
-          velocity *= -1;
-        }
+        const gestureDirectionFactor =
+          gestureDirection === 'horizontal' || gestureDirection === 'vertical'
+            ? 1
+            : -1;
 
         const closing =
-          translation + velocity * gestureVelocityImpact > distance / 2
+          gestureDirectionFactor *
+            (translation + velocity * gestureVelocityImpact) >
+          distance / 2
             ? velocity !== 0 || translation !== 0
             : false;
 
