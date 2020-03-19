@@ -276,7 +276,7 @@ export default class Card extends React.Component<Props> {
           gestureDirection === 'vertical-inverted'
         ) {
           translation = Math.abs(translation);
-          velocity = Math.abs(translation);
+          velocity = Math.abs(velocity);
         }
 
         const closing =
