@@ -8,6 +8,7 @@ import {
 type State = NavigationState | PartialState<NavigationState> | undefined;
 
 type Options = {
+  enabled: boolean;
   name: string;
   reset: (state: NavigationState) => void;
   state: State;
@@ -35,10 +36,11 @@ declare global {
   }
 }
 
-export default function useDevTools({ name, reset, state }: Options) {
+export default function useDevTools({ name, reset, state, enabled }: Options) {
   const devToolsRef = React.useRef<DevTools>();
 
   if (
+    enabled &&
     process.env.NODE_ENV !== 'production' &&
     global.__REDUX_DEVTOOLS_EXTENSION__ &&
     devToolsRef.current === undefined

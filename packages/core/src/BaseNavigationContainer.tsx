@@ -136,6 +136,7 @@ const BaseNavigationContainer = React.forwardRef(
     );
 
     const { trackState, trackAction } = useDevTools({
+      enabled: false,
       name: '@react-navigation',
       reset,
       state,
