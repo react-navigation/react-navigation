@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.3](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.2...@react-navigation/stack@5.2.3) (2020-03-19)
+
+
+### Bug Fixes
+
+* use the correct velocity value in closing animation ([#7836](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/7836)) ([adbfedc](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/adbfedcd58d4e3d358c6c9691710bb8e4e0d8afb))
+
+
+
+
+
 ## [5.2.2](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.1...@react-navigation/stack@5.2.2) (2020-03-19)
 
 
