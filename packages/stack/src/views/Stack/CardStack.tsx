@@ -160,7 +160,16 @@ const getProgressFromGesture = (
   layout: Layout,
   descriptor?: StackDescriptor
 ) => {
-  const distance = getDistanceFromOptions(mode, layout, descriptor);
+  const distance = getDistanceFromOptions(
+    mode,
+    {
+      // Make sure that we have a non-zero distance, otherwise there will be incorrect progress
+      // This causes blank screen on web if it was previously inside container with display: none
+      width: Math.max(1, layout.width),
+      height: Math.max(1, layout.height),
+    },
+    descriptor
+  );
 
   if (distance > 0) {
     return gesture.interpolate({
