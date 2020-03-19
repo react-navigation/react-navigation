@@ -75,9 +75,6 @@ type State = {
 
 const EPSILON = 0.01;
 
-const dimensions = Dimensions.get('window');
-const layout = { width: dimensions.width, height: dimensions.height };
-
 const MaybeScreenContainer = ({
   enabled,
   ...rest
@@ -299,19 +296,25 @@ export default class CardStack extends React.Component<Props, State> {
     };
   }
 
-  state: State = {
-    routes: [],
-    scenes: [],
-    gestures: {},
-    layout,
-    descriptors: this.props.descriptors,
-    // Used when card's header is null and mode is float to make transition
-    // between screens with headers and those without headers smooth.
-    // This is not a great heuristic here. We don't know synchronously
-    // on mount what the header height is so we have just used the most
-    // common cases here.
-    headerHeights: {},
-  };
+  constructor(props: Props) {
+    super(props);
+
+    const { height = 0, width = 0 } = Dimensions.get('window');
+
+    this.state = {
+      routes: [],
+      scenes: [],
+      gestures: {},
+      layout: { height, width },
+      descriptors: this.props.descriptors,
+      // Used when card's header is null and mode is float to make transition
+      // between screens with headers and those without headers smooth.
+      // This is not a great heuristic here. We don't know synchronously
+      // on mount what the header height is so we have just used the most
+      // common cases here.
+      headerHeights: {},
+    };
+  }
 
   private handleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;

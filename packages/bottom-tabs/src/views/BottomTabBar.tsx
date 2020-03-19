@@ -51,7 +51,12 @@ export default function BottomTabBar({
 }: Props) {
   const { colors } = useTheme();
 
-  const [dimensions, setDimensions] = React.useState(Dimensions.get('window'));
+  const [dimensions, setDimensions] = React.useState(() => {
+    const { height = 0, width = 0 } = Dimensions.get('window');
+
+    return { height, width };
+  });
+
   const [layout, setLayout] = React.useState({
     height: 0,
     width: dimensions.width,
