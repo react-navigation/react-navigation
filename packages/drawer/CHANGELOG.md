@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.5](https://github.com/react-navigation/drawer/compare/react-navigation-drawer@2.4.4...react-navigation-drawer@2.4.5) (2020-03-19)
+
+
+### Bug Fixes
+
+* don't use react-native-screens on web ([44c3900](https://github.com/react-navigation/drawer/commit/44c390075f7b76664e09fd9a1a7926645133ebec)), closes [#7485](https://github.com/react-navigation/drawer/issues/7485)
+
+
+
+
+
 ## [2.4.4](https://github.com/react-navigation/drawer/compare/react-navigation-drawer@2.4.3...react-navigation-drawer@2.4.4) (2020-03-16)
 
 **Note:** Version bump only for package react-navigation-drawer
