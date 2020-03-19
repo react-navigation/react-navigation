@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.2](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.2.1...@react-navigation/bottom-tabs@5.2.2) (2020-03-19)
+
+
+### Bug Fixes
+
+* don't use react-native-screens on web ([b1a65fc](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/b1a65fc73e8603ae2c06ef101a74df31e80bb9b2)), closes [#7485](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/issues/7485)
+* initialize height and width to zero if undefined ([3df65e2](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/3df65e28197db3bb8371059146546d57661c5ba3)), closes [#6789](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/issues/6789)
+
+
+
+
+
 ## [5.2.1](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.2.0...@react-navigation/bottom-tabs@5.2.1) (2020-03-17)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

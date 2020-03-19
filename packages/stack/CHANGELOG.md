@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.2](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.1...@react-navigation/stack@5.2.2) (2020-03-19)
+
+
+### Bug Fixes
+
+* don't use react-native-screens on web ([b1a65fc](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/b1a65fc73e8603ae2c06ef101a74df31e80bb9b2)), closes [#7485](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/7485)
+* fix blank page if stack was inside display: none before ([49f6fed](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/49f6fed6d3da878e02a9fe9115c05bcf84e332bf))
+* fix closing stack using inverted gesture. ([#7824](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/7824)) ([f24d3a3](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/f24d3a3461ee8a566c25ce7d13f31035b4be2691))
+* initialize height and width to zero if undefined ([3df65e2](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/3df65e28197db3bb8371059146546d57661c5ba3)), closes [#6789](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/6789)
+* only dismiss previously focused input on page change. closes [#6918](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/6918) ([b1fe730](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/b1fe73097f3ad58d3ba4a8a9b875276d1d8d220c))
+
+
+
+
+
 ## [5.2.1](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.0...@react-navigation/stack@5.2.1) (2020-03-17)
 
 **Note:** Version bump only for package @react-navigation/stack
