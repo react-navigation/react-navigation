@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.3.2](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.3.1...@react-navigation/drawer@5.3.2) (2020-03-19)
+
+
+### Bug Fixes
+
+* close drawer on pressing Esc on web ([5c4afc5](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/5c4afc5cb40c1206a9d8c40efe3cf947030da48e)), closes [#6745](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/6745)
+* don't use react-native-screens on web ([b1a65fc](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/b1a65fc73e8603ae2c06ef101a74df31e80bb9b2)), closes [#7485](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/7485)
+* fix permanent sidebar position ([#7830](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/7830)) ([3ea8eec](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/3ea8eec4324ea82f0ed427f4662e68e1115e60ab))
+* initialize height and width to zero if undefined ([3df65e2](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/3df65e28197db3bb8371059146546d57661c5ba3)), closes [#6789](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/6789)
+
+
+
+
+
 ## [5.3.1](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.3.0...@react-navigation/drawer@5.3.1) (2020-03-17)
 
 **Note:** Version bump only for package @react-navigation/drawer
