@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TextInput, Keyboard } from 'react-native';
+import { TextInput } from 'react-native';
 
 type Props = {
   enabled: boolean;
@@ -54,7 +54,11 @@ export default class KeyboardManager extends React.Component<Props> {
 
     this.clearKeyboardTimeout();
 
-    Keyboard.dismiss();
+    const input = this.previouslyFocusedTextInput;
+
+    if (input) {
+      TextInput.State.blurTextInput(input);
+    }
 
     // Cleanup the ID on successful page change
     this.previouslyFocusedTextInput = null;
