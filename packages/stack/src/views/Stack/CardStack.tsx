@@ -401,9 +401,9 @@ export default class CardStack extends React.Component<Props, State> {
       left = insets.left,
     } = focusedOptions.safeAreaInsets || {};
 
-    // Screens is buggy on iOS, so we don't enable it there
+    // Screens is buggy on iOS and web, so we only enable it on Android
     // For modals, usually we want the screen underneath to be visible, so also disable it there
-    const isScreensEnabled = Platform.OS !== 'ios' && mode !== 'modal';
+    const isScreensEnabled = Platform.OS === 'android' && mode !== 'modal';
 
     return (
       <React.Fragment>
