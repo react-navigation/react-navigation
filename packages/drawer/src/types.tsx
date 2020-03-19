@@ -115,6 +115,11 @@ export type DrawerNavigationOptions = {
    */
   gestureEnabled?: boolean;
   /**
+   * Whether you can close the drawer with tap gesture.
+   * Defaults to `true`
+   */
+  closeDrawerOnTap?: boolean;
+  /**
    * Whether this screen should be unmounted when navigating away from it.
    * Defaults to `false`.
    */
