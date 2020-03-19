@@ -89,9 +89,11 @@ export default function DrawerView({
   sceneContainerStyle,
 }: Props) {
   const [loaded, setLoaded] = React.useState([state.index]);
-  const [drawerWidth, setDrawerWidth] = React.useState(() =>
-    getDefaultDrawerWidth(Dimensions.get('window'))
-  );
+  const [drawerWidth, setDrawerWidth] = React.useState(() => {
+    const { height = 0, width = 0 } = Dimensions.get('window');
+
+    return getDefaultDrawerWidth({ height, width });
+  });
 
   const drawerGestureRef = React.useRef<PanGestureHandler>(null);
 
