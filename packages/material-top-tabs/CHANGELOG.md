@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.3](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.2...@react-navigation/material-top-tabs@5.1.3) (2020-03-17)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+## [5.1.2](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.1...@react-navigation/material-top-tabs@5.1.2) (2020-03-16)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+## [5.1.1](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.0...@react-navigation/material-top-tabs@5.1.1) (2020-03-03)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+# [5.1.0](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.7...@react-navigation/material-top-tabs@5.1.0) (2020-02-26)
+
+
+### Features
+
+* add ability add listeners with listeners prop ([1624108](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/commit/162410843c4f175ae107756de1c3af04d1d47aa7)), closes [#6756](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/issues/6756)
+
+
+
+
+
 ## [5.0.7](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.6...@react-navigation/material-top-tabs@5.0.7) (2020-02-21)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

@@ -3,6 +3,64 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.1](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.0...@react-navigation/stack@5.2.1) (2020-03-17)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [5.2.0](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.1.1...@react-navigation/stack@5.2.0) (2020-03-16)
+
+
+### Bug Fixes
+
+* fix android header title font weight ([#7720](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/7720)) ([0dcaea3](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/0dcaea32428484cdc9b4d56f7bf38f9f1bdf1dee))
+* fix back gesture cancellation ([#7700](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/7700)) ([469d054](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/469d0542c7341dc524a597d70216ba743602a51e)), closes [#6782](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/6782)
+
+
+### Features
+
+* add an option to change use a custom card overlay ([#7809](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/7809)) ([70029d6](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/70029d6c130f0f47de94b6a6c4cbee6afa12b405))
+
+
+
+
+
+## [5.1.1](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.1.0...@react-navigation/stack@5.1.1) (2020-03-03)
+
+
+### Bug Fixes
+
+* ignore back button press if screen isn't focused. closes [#7673](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/7673) ([296c836](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/296c836064447e055a88e43cfbbf5f9de93838f0))
+
+
+
+
+
+# [5.1.0](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.9...@react-navigation/stack@5.1.0) (2020-02-26)
+
+
+### Features
+
+* add ability add listeners with listeners prop ([1624108](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/162410843c4f175ae107756de1c3af04d1d47aa7)), closes [#6756](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/6756)
+
+
+
+
+
+## [5.0.9](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.8...@react-navigation/stack@5.0.9) (2020-02-24)
+
+
+### Bug Fixes
+
+* enhance border radius in modals on new iPhones ([#6945](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/6945)) ([80a3370](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/80a337024abc53537ff4a63916cea38bb4f374bf))
+
+
+
+
+
 ## [5.0.8](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.0.7...@react-navigation/stack@5.0.8) (2020-02-21)
 
 

@@ -6,11 +6,11 @@ type ScrollOptions = { y?: number; animated?: boolean };
 type ScrollableView =
   | { scrollToTop(): void }
   | { scrollTo(options: ScrollOptions): void }
-  | { scrollToOffset(options: ScrollOptions): void }
+  | { scrollToOffset(options: { offset?: number; animated?: boolean }): void }
   | { scrollResponderScrollTo(options: ScrollOptions): void };
 
 type ScrollableWrapper =
-  | { getScrollResponder(): ScrollableView }
+  | { getScrollResponder(): React.ReactNode }
   | { getNode(): ScrollableView }
   | ScrollableView;
 
@@ -79,7 +79,7 @@ export default function useScrollToTop(
         // Run the operation in the next frame so we're sure all listeners have been run
         // This is necessary to know if preventDefault() has been called
         requestAnimationFrame(() => {
-          const scrollable = getScrollableNode(ref);
+          const scrollable = getScrollableNode(ref) as ScrollableWrapper;
 
           if (isFocused && isFirst && scrollable && !e.defaultPrevented) {
             if ('scrollToTop' in scrollable) {
@@ -87,7 +87,7 @@ export default function useScrollToTop(
             } else if ('scrollTo' in scrollable) {
               scrollable.scrollTo({ y: 0, animated: true });
             } else if ('scrollToOffset' in scrollable) {
-              scrollable.scrollToOffset({ y: 0, animated: true });
+              scrollable.scrollToOffset({ offset: 0, animated: true });
             } else if ('scrollResponderScrollTo' in scrollable) {
               scrollable.scrollResponderScrollTo({ y: 0, animated: true });
             }

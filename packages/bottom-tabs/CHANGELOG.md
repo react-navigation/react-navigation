@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.1](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.2.0...@react-navigation/bottom-tabs@5.2.1) (2020-03-17)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [5.2.0](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.1.1...@react-navigation/bottom-tabs@5.2.0) (2020-03-16)
+
+
+### Features
+
+* add safeAreaInsets to bottom tabs ([82af7be](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/82af7bed7135e42e24693b48cf7f1c6f9f5a6981))
+
+
+
+
+
+## [5.1.1](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.1.0...@react-navigation/bottom-tabs@5.1.1) (2020-03-03)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [5.1.0](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.7...@react-navigation/bottom-tabs@5.1.0) (2020-02-26)
+
+
+### Features
+
+* add ability add listeners with listeners prop ([1624108](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/162410843c4f175ae107756de1c3af04d1d47aa7)), closes [#6756](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/issues/6756)
+
+
+
+
+
 ## [5.0.7](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.6...@react-navigation/bottom-tabs@5.0.7) (2020-02-21)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

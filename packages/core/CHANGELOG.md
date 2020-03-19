@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.2](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.2.1...@react-navigation/core@5.2.2) (2020-03-16)
+
+**Note:** Version bump only for package @react-navigation/core
+
+
+
+
+
+## [5.2.1](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.2.0...@react-navigation/core@5.2.1) (2020-03-03)
+
+
+### Bug Fixes
+
+* fix links for documentation ([5bb0f40](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/5bb0f405ceb5755d39a0b5b1f2e4ecee0da051bc))
+* move updating state to useEffect ([2dfa4f3](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/2dfa4f36293a2acb718814f6b2fa79d7c7ddf09c))
+
+
+
+
+
+# [5.2.0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.6...@react-navigation/core@5.2.0) (2020-02-26)
+
+
+### Features
+
+* add ability add listeners with listeners prop ([1624108](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/162410843c4f175ae107756de1c3af04d1d47aa7)), closes [#6756](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/6756)
+
+
+
+
+
 ## [5.1.6](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.5...@react-navigation/core@5.1.6) (2020-02-21)
 
 

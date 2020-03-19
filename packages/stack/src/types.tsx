@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   Animated,
   StyleProp,
@@ -13,6 +14,7 @@ import {
   Route,
   NavigationHelpers,
   StackNavigationState,
+  StackActionHelpers,
 } from '@react-navigation/native';
 
 export type StackNavigationEventMap = {
@@ -40,29 +42,8 @@ export type StackNavigationProp<
   StackNavigationState,
   StackNavigationOptions,
   StackNavigationEventMap
-> & {
-  /**
-   * Push a new screen onto the stack.
-   *
-   * @param name Name of the route for the tab.
-   * @param [params] Params object for the route.
-   */
-  push<RouteName extends keyof ParamList>(
-    ...args: ParamList[RouteName] extends undefined | any
-      ? [RouteName] | [RouteName, ParamList[RouteName]]
-      : [RouteName, ParamList[RouteName]]
-  ): void;
-
-  /**
-   * Pop a screen from the stack.
-   */
-  pop(count?: number): void;
-
-  /**
-   * Pop to the first route in the stack, dismissing all other screens.
-   */
-  popToTop(): void;
-};
+> &
+  StackActionHelpers<ParamList>;
 
 export type Layout = { width: number; height: number };
 
@@ -122,7 +103,7 @@ export type StackHeaderOptions = {
   /**
    * Style object for the title component.
    */
-  headerTitleStyle?: StyleProp<TextStyle>;
+  headerTitleStyle?: React.ComponentProps<typeof Animated.Text>['style'];
   /**
    * Style object for the container of the `headerTitle` component, for example to add padding.
    * By default, `headerTitleContainerStyle` is with an absolute position style and offsets both `left` and `right`.
@@ -280,6 +261,10 @@ export type StackNavigationOptions = StackHeaderOptions &
      */
     cardOverlayEnabled?: boolean;
     /**
+     * Function that returns a React Element to display as a overlay for the card.
+     */
+    cardOverlay?: (props: { style: StyleProp<ViewStyle> }) => React.ReactNode;
+    /**
      * Style object for the card in stack.
      * You can provide a custom background color to use instead of the default background here.
      *
@@ -430,7 +415,7 @@ export type StackHeaderTitleProps = {
   /**
    * Style object for the title element.
    */
-  style?: StyleProp<TextStyle>;
+  style?: React.ComponentProps<typeof Animated.Text>['style'];
 };
 
 export type TransitionSpec =

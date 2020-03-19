@@ -19,6 +19,7 @@ type Props = TransitionPreset & {
   safeAreaInsetRight: number;
   safeAreaInsetBottom: number;
   safeAreaInsetLeft: number;
+  cardOverlay?: (props: { style: StyleProp<ViewStyle> }) => React.ReactNode;
   cardOverlayEnabled?: boolean;
   cardShadowEnabled?: boolean;
   cardStyle?: StyleProp<ViewStyle>;
@@ -58,6 +59,7 @@ const EPSILON = 0.1;
 
 function CardContainer({
   active,
+  cardOverlay,
   cardOverlayEnabled,
   cardShadowEnabled,
   cardStyle,
@@ -162,6 +164,7 @@ function CardContainer({
       closing={closing}
       onOpen={handleOpen}
       onClose={handleClose}
+      overlay={cardOverlay}
       overlayEnabled={cardOverlayEnabled}
       shadowEnabled={cardShadowEnabled}
       onTransitionStart={handleTransitionStart}

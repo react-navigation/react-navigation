@@ -27,6 +27,7 @@ import {
   DefaultNavigatorOptions,
   RouteConfig,
   PrivateValueStore,
+  EventMapBase,
 } from './types';
 import useStateGetters from './useStateGetters';
 import useOnGetState from './useOnGetState';
@@ -55,18 +56,28 @@ const isArrayEqual = (a: any[], b: any[]) =>
  *
  * @param children React Elements to extract the config from.
  */
-const getRouteConfigsFromChildren = <ScreenOptions extends object>(
+const getRouteConfigsFromChildren = <
+  State extends NavigationState,
+  ScreenOptions extends object,
+  EventMap extends EventMapBase
+>(
   children: React.ReactNode
 ) => {
   const configs = React.Children.toArray(children).reduce<
-    RouteConfig<ParamListBase, string, ScreenOptions>[]
+    RouteConfig<ParamListBase, string, State, ScreenOptions, EventMap>[]
   >((acc, child) => {
     if (React.isValidElement(child)) {
       if (child.type === Screen) {
         // We can only extract the config from `Screen` elements
         // If something else was rendered, it's probably a bug
         acc.push(
-          child.props as RouteConfig<ParamListBase, string, ScreenOptions>
+          child.props as RouteConfig<
+            ParamListBase,
+            string,
+            State,
+            ScreenOptions,
+            EventMap
+          >
         );
         return acc;
       }
@@ -75,7 +86,9 @@ const getRouteConfigsFromChildren = <ScreenOptions extends object>(
         // When we encounter a fragment, we need to dive into its children to extract the configs
         // This is handy to conditionally define a group of screens
         acc.push(
-          ...getRouteConfigsFromChildren<ScreenOptions>(child.props.children)
+          ...getRouteConfigsFromChildren<State, ScreenOptions, EventMap>(
+            child.props.children
+          )
         );
         return acc;
       }
@@ -116,7 +129,7 @@ const getRouteConfigsFromChildren = <ScreenOptions extends object>(
 
         if (component !== undefined && !isValidElementType(component)) {
           throw new Error(
-            `Got an invalid value for 'component' prop for the screen '${name}'. It must be a a valid React Component.`
+            `Got an invalid value for 'component' prop for the screen '${name}'. It must be a valid React Component.`
           );
         }
 
@@ -177,9 +190,17 @@ export default function useNavigationBuilder<
     })
   );
 
-  const routeConfigs = getRouteConfigsFromChildren<ScreenOptions>(children);
+  const routeConfigs = getRouteConfigsFromChildren<
+    State,
+    ScreenOptions,
+    EventMap
+  >(children);
+
   const screens = routeConfigs.reduce<
-    Record<string, RouteConfig<ParamListBase, string, ScreenOptions>>
+    Record<
+      string,
+      RouteConfig<ParamListBase, string, State, ScreenOptions, EventMap>
+    >
   >((acc, config) => {
     if (config.name in acc) {
       throw new Error(
@@ -312,12 +333,14 @@ export default function useNavigationBuilder<
         : state;
   }
 
-  if (state !== nextState) {
-    // If the state needs to be updated, we'll schedule an update with React
-    // setState in render seems hacky, but that's how React docs implement getDerivedPropsFromState
-    // https://reactjs.org/docs/hooks-faq.html#how-do-i-implement-getderivedstatefromprops
-    setState(nextState);
-  }
+  const shouldUpdate = state !== nextState;
+
+  React.useEffect(() => {
+    if (shouldUpdate) {
+      // If the state needs to be updated, we'll schedule an update with React
+      setState(nextState);
+    }
+  }, [nextState, setState, shouldUpdate]);
 
   // The up-to-date state will come in next render, but we don't need to wait for it
   // We can't use the outdated state since the screens have changed, which will cause error due to mismatched config
@@ -344,7 +367,35 @@ export default function useNavigationBuilder<
       : (initializedStateRef.current as State);
   }, [getCurrentState, isStateInitialized]);
 
-  const emitter = useEventEmitter();
+  const emitter = useEventEmitter(e => {
+    let routeNames = [];
+
+    if (e.target) {
+      const name = state.routes.find(route => route.key === e.target)?.name;
+
+      if (name) {
+        routeNames.push(name);
+      }
+    } else {
+      routeNames.push(...Object.keys(screens));
+    }
+
+    const listeners = ([] as (((e: any) => void) | undefined)[])
+      .concat(
+        ...routeNames.map(name => {
+          const { listeners } = screens[name];
+
+          return listeners
+            ? Object.keys(listeners)
+                .filter(type => type === e.type)
+                .map(type => listeners[type])
+            : undefined;
+        })
+      )
+      .filter((cb, i, self) => cb && self.lastIndexOf(cb) === i);
+
+    listeners.forEach(listener => listener?.(e));
+  });
 
   useFocusEvents({ state, emitter });
 
@@ -400,7 +451,7 @@ export default function useNavigationBuilder<
     getStateForRoute,
   });
 
-  const descriptors = useDescriptors<State, ScreenOptions>({
+  const descriptors = useDescriptors<State, ScreenOptions, EventMap>({
     state,
     screens,
     navigation,
