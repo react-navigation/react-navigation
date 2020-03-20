@@ -19,7 +19,7 @@ if (process.env.NODE_ENV !== 'production') {
   };
 }
 
-function invariant(condition, format, a, b, c, d, e, f) {
+export default function invariant(condition, format, a, b, c, d, e, f) {
   validateFormat(format);
 
   if (!condition) {
@@ -43,6 +43,3 @@ function invariant(condition, format, a, b, c, d, e, f) {
     throw error;
   }
 }
-
-// eslint-disable-next-line import/no-commonjs
-module.exports = invariant;

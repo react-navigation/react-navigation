@@ -68,9 +68,8 @@ const WrappedSectionList = React.forwardRef((props, ref) => (
   />
 ));
 
-// eslint-disable-next-line import/no-commonjs
-module.exports = {
-  ScrollView: WrappedScrollView,
-  FlatList: WrappedFlatList,
-  SectionList: WrappedSectionList,
+export {
+  WrappedScrollView as ScrollView,
+  WrappedFlatList as FlatList,
+  WrappedSectionList as SectionList,
 };
