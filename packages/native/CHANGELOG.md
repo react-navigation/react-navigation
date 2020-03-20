@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.6](https://github.com/react-navigation/react-navigation-native/compare/@react-navigation/native@3.7.5...@react-navigation/native@3.7.6) (2020-03-20)
+
+
+### Bug Fixes
+
+* don't mix import and module.exports. closes [#7660](https://github.com/react-navigation/react-navigation-native/issues/7660) ([80c8c9d](https://github.com/react-navigation/react-navigation-native/commit/80c8c9d1dead57eab3b977a1eebf1e9f5f35cd1a))
+
+
+
+
+
 ## [3.7.5](https://github.com/react-navigation/react-navigation-native/compare/@react-navigation/native@3.7.4...@react-navigation/native@3.7.5) (2020-03-16)
 
 
