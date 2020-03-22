@@ -3268,10 +3268,10 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/masked-view/-/masked-view-0.1.7.tgz#a65ce0702f55cb67fd777995de6fc7b3e5781903"
   integrity sha512-9KbP7LTLFz9dx1heURJbO6nuVMdSjDez8znlrUzaB1nUwKVsTTwlKRuHxGUYIIkReLWrJQeCv9tidy+84z2eCw==
 
-"@react-navigation/stack@^5.2.3":
-  version "5.2.3"
-  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-5.2.3.tgz#2c92ee6f0a032720960acfa037e13061c378781e"
-  integrity sha512-mCji6N6r03sTMF09hbVmhdCZHcuIrZCr/MY8yuiG+kzzYcFfj+72wwJ885erKw32jBKAaJV8wZNq8W0K+ZiCQQ==
+"@react-navigation/stack@^5.2.4":
+  version "5.2.4"
+  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-5.2.4.tgz#57c042fd326c798dfcbc8f4085ccf9a30527575a"
+  integrity sha512-iPXRfc7ozZikxKOc5sOSg/DefpgGEX9B88EjcuNOhkOuo1XoLFQEXxi10hu9XrS70ciGf0eqC7JS2D55wukA6g==
   dependencies:
     color "^3.1.2"
     react-native-iphone-x-helper "^1.2.1"
