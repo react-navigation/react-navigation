@@ -346,6 +346,16 @@ export type Descriptor<
   >;
 };
 
+export type ScreenListeners<
+  State extends NavigationState,
+  EventMap extends EventMapBase
+> = Partial<
+  {
+    [EventName in keyof (EventMap &
+      EventMapCore<State>)]: EventListenerCallback<EventMap, EventName>;
+  }
+>;
+
 export type RouteConfig<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList,
@@ -371,12 +381,12 @@ export type RouteConfig<
   /**
    * Event listeners for this screen.
    */
-  listeners?: Partial<
-    {
-      [EventName in keyof (EventMap &
-        EventMapCore<State>)]: EventListenerCallback<EventMap, EventName>;
-    }
-  >;
+  listeners?:
+    | ScreenListeners<State, EventMap>
+    | ((props: {
+        route: RouteProp<ParamList, RouteName>;
+        navigation: any;
+      }) => ScreenListeners<State, EventMap>);
 
   /**
    * Initial params object for the route.

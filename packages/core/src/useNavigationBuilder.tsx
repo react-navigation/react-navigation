@@ -9,6 +9,7 @@ import {
   RouterFactory,
   PartialState,
   NavigationAction,
+  Route,
 } from '@react-navigation/routers';
 import { NavigationStateContext } from './BaseNavigationContainer';
 import NavigationRouteContext from './NavigationRouteContext';
@@ -370,11 +371,13 @@ export default function useNavigationBuilder<
   const emitter = useEventEmitter(e => {
     let routeNames = [];
 
-    if (e.target) {
-      const name = state.routes.find(route => route.key === e.target)?.name;
+    let target: Route<string> | undefined;
 
-      if (name) {
-        routeNames.push(name);
+    if (e.target) {
+      target = state.routes.find(route => route.key === e.target);
+
+      if (target?.name) {
+        routeNames.push(target.name);
       }
     } else {
       routeNames.push(...Object.keys(screens));
@@ -388,7 +391,16 @@ export default function useNavigationBuilder<
           return listeners
             ? Object.keys(listeners)
                 .filter(type => type === e.type)
-                .map(type => listeners[type])
+                .map(type => {
+                  if (typeof listeners === 'function') {
+                    const route = target ?? state.routes[state.index];
+                    const navigation = descriptors[route.key].navigation;
+
+                    return listeners({ route: route as any, navigation })[type];
+                  }
+
+                  return listeners[type];
+                })
             : undefined;
         })
       )
