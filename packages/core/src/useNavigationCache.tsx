@@ -63,7 +63,7 @@ export default function useNavigationCache<
   };
 
   cache.current = state.routes.reduce<NavigationCache<State, ScreenOptions>>(
-    (acc, route, index) => {
+    (acc, route) => {
       const previous = cache.current[route.key];
 
       if (previous) {
@@ -110,7 +110,7 @@ export default function useNavigationCache<
           isFocused: () => {
             const state = getState();
 
-            if (index !== state.index) {
+            if (state.routes[state.index].key !== route.key) {
               return false;
             }
 
