@@ -7,7 +7,7 @@ const deprecatedKeys = ['tabBar'];
 export default (screenOptions, route) => {
   const keys = Object.keys(screenOptions);
 
-  const deprecatedKey = keys.find(key => deprecatedKeys.includes(key));
+  const deprecatedKey = keys.find((key) => deprecatedKeys.includes(key));
 
   if (typeof screenOptions.title === 'function') {
     throw new Error(
@@ -54,7 +54,7 @@ export default (screenOptions, route) => {
         '{',
         `    ${deprecatedKey}: {`,
         ...Object.keys(screenOptions[deprecatedKey]).map(
-          key => `        ${key}: ...,`
+          (key) => `        ${key}: ...,`
         ),
         '    },',
         '}',
@@ -62,7 +62,7 @@ export default (screenOptions, route) => {
         'with:',
         '{',
         ...Object.keys(screenOptions[deprecatedKey]).map(
-          key =>
+          (key) =>
             `    ${deprecatedKey + key[0].toUpperCase() + key.slice(1)}: ...,`
         ),
         '}',

@@ -335,7 +335,7 @@ class MainScreen extends React.Component<any, State> {
                 }}
               >
                 {(Object.keys(ExampleInfo) as (keyof typeof ExampleInfo)[]).map(
-                  routeName => (
+                  (routeName) => (
                     <RectButton
                       key={routeName}
                       underlayColor="#ccc"

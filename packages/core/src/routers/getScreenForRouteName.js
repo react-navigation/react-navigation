@@ -13,7 +13,7 @@ export default function getScreenForRouteName(routeConfigs, routeName) {
     throw new Error(
       `There is no route defined for key ${routeName}.\n` +
         `Must be one of: ${Object.keys(routeConfigs)
-          .map(a => `'${a}'`)
+          .map((a) => `'${a}'`)
           .join(',')}`
     );
   }

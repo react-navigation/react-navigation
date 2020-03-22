@@ -4,8 +4,9 @@ import withNavigation from './withNavigation';
 
 export default function withNavigationFocus(Component) {
   class ComponentWithNavigationFocus extends React.Component {
-    static displayName = `withNavigationFocus(${Component.displayName ||
-      Component.name})`;
+    static displayName = `withNavigationFocus(${
+      Component.displayName || Component.name
+    })`;
 
     constructor(props) {
       super(props);
@@ -25,7 +26,7 @@ export default function withNavigationFocus(Component) {
     }
 
     componentWillUnmount() {
-      this.subscriptions.forEach(sub => sub.remove());
+      this.subscriptions.forEach((sub) => sub.remove());
     }
 
     render() {

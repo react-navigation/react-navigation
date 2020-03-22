@@ -44,7 +44,7 @@ const ContainerWithButtons = withNavigation(
 const MapScreen = () => (
   <ContainerWithButtons>
     <DrawerGestureContext.Consumer>
-      {ref => (
+      {(ref) => (
         <NativeViewGestureHandler waitFor={ref}>
           <MapView style={{ flex: 1 }} />
         </NativeViewGestureHandler>
@@ -60,7 +60,7 @@ MapScreen.navigationOptions = {
 const WebViewScreen = () => (
   <ContainerWithButtons>
     <DrawerGestureContext.Consumer>
-      {ref => (
+      {(ref) => (
         <NativeViewGestureHandler waitFor={ref}>
           <WebView
             style={{ flex: 1 }}

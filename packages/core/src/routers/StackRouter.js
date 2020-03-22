@@ -29,7 +29,7 @@ export default (routeConfigs, stackConfig = {}) => {
   const routeNames = Object.keys(routeConfigs);
 
   // Loop through routes and find child routers
-  routeNames.forEach(routeName => {
+  routeNames.forEach((routeName) => {
     // We're not using `getScreenForRouteName` here to preserve the lazy loading
     // behaviour of routes. This means that routes with child routers must be
     // defined using a component directly or with an object with a screen prop.
@@ -152,7 +152,7 @@ export default (routeConfigs, stackConfig = {}) => {
             n,
             ...params,
           }),
-        popToTop: params => StackActions.popToTop(params),
+        popToTop: (params) => StackActions.popToTop(params),
         push: (routeName, params, action) =>
           StackActions.push({
             routeName,
@@ -280,7 +280,7 @@ export default (routeConfigs, stackConfig = {}) => {
 
         // Before pushing a new route we first try to find one in the existing route stack
         // More information on this: https://github.com/react-navigation/rfcs/blob/master/text/0004-less-pushy-navigate.md
-        const lastRouteIndex = state.routes.findIndex(r => {
+        const lastRouteIndex = state.routes.findIndex((r) => {
           if (action.key) {
             return r.key === action.key;
           } else {
@@ -425,7 +425,7 @@ export default (routeConfigs, stackConfig = {}) => {
         if (action.key === undefined && state.routes.length) {
           routeIndex = state.routes.length - 1;
         } else {
-          routeIndex = state.routes.findIndex(r => r.key === action.key);
+          routeIndex = state.routes.findIndex((r) => r.key === action.key);
         }
 
         // Only replace if the key matches one of our routes
@@ -467,7 +467,7 @@ export default (routeConfigs, stackConfig = {}) => {
 
       if (action.type === NavigationActions.SET_PARAMS) {
         const key = action.key;
-        const lastRoute = state.routes.find(route => route.key === key);
+        const lastRoute = state.routes.find((route) => route.key === key);
         if (lastRoute) {
           const params = {
             ...lastRoute.params,
@@ -496,7 +496,7 @@ export default (routeConfigs, stackConfig = {}) => {
 
         return {
           ...state,
-          routes: newStackActions.map(newStackAction => {
+          routes: newStackActions.map((newStackAction) => {
             const router = childRouters[newStackAction.routeName];
 
             let childState = {};
@@ -535,7 +535,7 @@ export default (routeConfigs, stackConfig = {}) => {
         const { key, n, immediate, prune } = action;
 
         if (action.type === StackActions.POP && prune === false && key) {
-          const index = state.routes.findIndex(r => r.key === key);
+          const index = state.routes.findIndex((r) => r.key === key);
           const count = Math.max(index - (n == null ? 1 : n) + 1, 1);
           const routes = state.routes
             .slice(0, count)
@@ -557,7 +557,7 @@ export default (routeConfigs, stackConfig = {}) => {
             // back from state.index, as if it were a normal "BACK" action
             backRouteIndex = Math.max(1, state.index - n + 1);
           } else if (key) {
-            const backRoute = state.routes.find(route => route.key === key);
+            const backRoute = state.routes.find((route) => route.key === key);
             backRouteIndex = state.routes.indexOf(backRoute);
           }
 

@@ -82,7 +82,7 @@ class ListScreen extends React.Component<
   state = { isInverted: false };
 
   onSwitch = () =>
-    this.setState(prevState => ({ isInverted: !prevState.isInverted }));
+    this.setState((prevState) => ({ isInverted: !prevState.isInverted }));
 
   render() {
     return (

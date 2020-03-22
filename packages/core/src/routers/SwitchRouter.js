@@ -30,12 +30,12 @@ export default (routeConfigs, config = {}) => {
   if (initialRouteIndex === -1) {
     throw new Error(
       `Invalid initialRouteName '${initialRouteName}'.` +
-        `Should be one of ${order.map(n => `"${n}"`).join(', ')}`
+        `Should be one of ${order.map((n) => `"${n}"`).join(', ')}`
     );
   }
 
   const childRouters = {};
-  order.forEach(routeName => {
+  order.forEach((routeName) => {
     childRouters[routeName] = null;
     const screen = getScreenForRouteName(routeConfigs, routeName);
     if (screen.router) {
@@ -93,7 +93,7 @@ export default (routeConfigs, config = {}) => {
       if (action.type === NavigationActions.NAVIGATE) {
         nextRouteKeyHistory = [...nextRouteKeyHistory]; // copy
         const keyToAdd = nextState.routes[nextState.index].key;
-        nextRouteKeyHistory = nextRouteKeyHistory.filter(k => k !== keyToAdd); // dedup
+        nextRouteKeyHistory = nextRouteKeyHistory.filter((k) => k !== keyToAdd); // dedup
         nextRouteKeyHistory.push(keyToAdd);
       } else if (action.type === NavigationActions.BACK) {
         nextRouteKeyHistory = [...nextRouteKeyHistory]; // copy
@@ -156,7 +156,7 @@ export default (routeConfigs, config = {}) => {
         // Merge any params from the action into all the child routes
         const { params } = action;
         if (params) {
-          state.routes = state.routes.map(route => ({
+          state.routes = state.routes.map((route) => ({
             ...route,
             params: {
               ...route.params,
@@ -175,14 +175,14 @@ export default (routeConfigs, config = {}) => {
       ) {
         const { params } = action;
         const index = state.routes.findIndex(
-          route => route.routeName === action.routeName
+          (route) => route.routeName === action.routeName
         );
 
         if (index === -1) {
           throw new Error(
             `There is no route named '${action.routeName}' in the navigator with the key '${action.key}'.\n` +
               `Must be one of: ${state.routes
-                .map(route => `'${route.routeName}'`)
+                .map((route) => `'${route.routeName}'`)
                 .join(',')}`
           );
         }
@@ -305,7 +305,7 @@ export default (routeConfigs, config = {}) => {
 
       if (action.type === NavigationActions.SET_PARAMS) {
         const key = action.key;
-        const lastRoute = state.routes.find(route => route.key === key);
+        const lastRoute = state.routes.find((route) => route.key === key);
         if (lastRoute) {
           const params = {
             ...lastRoute.params,

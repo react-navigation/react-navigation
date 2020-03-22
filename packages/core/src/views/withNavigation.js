@@ -8,14 +8,15 @@ export default function withNavigation(
   config = { forwardRef: true }
 ) {
   class ComponentWithNavigation extends React.Component {
-    static displayName = `withNavigation(${Component.displayName ||
-      Component.name})`;
+    static displayName = `withNavigation(${
+      Component.displayName || Component.name
+    })`;
 
     render() {
       const navigationProp = this.props.navigation;
       return (
         <NavigationContext.Consumer>
-          {navigationContext => {
+          {(navigationContext) => {
             const navigation = navigationProp || navigationContext;
             invariant(
               !!navigation,

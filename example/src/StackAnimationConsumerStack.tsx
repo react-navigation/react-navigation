@@ -25,7 +25,7 @@ const ListScreen = (props: NavigationStackScreenProps) => (
 
 const AnotherScreen = () => (
   <CardAnimationContext.Consumer>
-    {value => {
+    {(value) => {
       const scale = value
         ? value.current.progress.interpolate({
             inputRange: [0, 1],
@@ -67,7 +67,7 @@ const YetAnotherScreen = () => (
     }}
   >
     <CardAnimationContext.Consumer>
-      {value => (
+      {(value) => (
         <Animated.Text
           style={{
             fontSize: 24,
@@ -84,7 +84,7 @@ const YetAnotherScreen = () => (
       )}
     </CardAnimationContext.Consumer>
     <CardAnimationContext.Consumer>
-      {value => (
+      {(value) => (
         <Animated.Text
           style={{
             fontSize: 24,

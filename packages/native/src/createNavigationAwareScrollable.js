@@ -5,8 +5,9 @@ import { withNavigation } from '@react-navigation/core';
 export default function createNavigationAwareScrollable(Component) {
   const ComponentWithNavigationScrolling = withNavigation(
     class extends React.PureComponent<any> {
-      static displayName = `withNavigationScrolling(${Component.displayName ||
-        Component.name})`;
+      static displayName = `withNavigationScrolling(${
+        Component.displayName || Component.name
+      })`;
 
       componentDidMount() {
         this._subscription = this.props.navigation.addListener(
@@ -49,7 +50,7 @@ export default function createNavigationAwareScrollable(Component) {
       render() {
         return (
           <Component
-            ref={view => {
+            ref={(view) => {
               this._scrollRef = view;
             }}
             {...this.props}
@@ -60,10 +61,11 @@ export default function createNavigationAwareScrollable(Component) {
   );
 
   class NavigationAwareScrollable extends React.PureComponent<any> {
-    static displayName = `NavigationAwareScrollable(${Component.displayName ||
-      Component.name})`;
+    static displayName = `NavigationAwareScrollable(${
+      Component.displayName || Component.name
+    })`;
 
-    _captureRef = view => {
+    _captureRef = (view) => {
       this._innerRef = view;
       this.props.onRef && this.props.onRef(view);
     };

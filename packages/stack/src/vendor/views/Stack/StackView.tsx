@@ -117,7 +117,7 @@ export default class StackView extends React.Component<Props, State> {
       // We only need to animate routes if the focused route changed
       // Animating previous routes won't be visible coz the focused route is on top of everything
 
-      if (!previousRoutes.find(r => r.key === nextFocusedRoute.key)) {
+      if (!previousRoutes.find((r) => r.key === nextFocusedRoute.key)) {
         // A new route has come to the focus, we treat this as a push
         // A replace can also trigger this, the animation should look like push
 
@@ -130,17 +130,17 @@ export default class StackView extends React.Component<Props, State> {
           openingRouteKeys = [...openingRouteKeys, nextFocusedRoute.key];
 
           closingRouteKeys = closingRouteKeys.filter(
-            key => key !== nextFocusedRoute.key
+            (key) => key !== nextFocusedRoute.key
           );
           replacingRouteKeys = replacingRouteKeys.filter(
-            key => key !== nextFocusedRoute.key
+            (key) => key !== nextFocusedRoute.key
           );
 
-          if (!routes.find(r => r.key === previousFocusedRoute.key)) {
+          if (!routes.find((r) => r.key === previousFocusedRoute.key)) {
             // The previous focused route isn't present in state, we treat this as a replace
 
             openingRouteKeys = openingRouteKeys.filter(
-              key => key !== previousFocusedRoute.key
+              (key) => key !== previousFocusedRoute.key
             );
 
             if (getAnimationTypeForReplace(nextFocusedRoute.key) === 'pop') {
@@ -153,7 +153,7 @@ export default class StackView extends React.Component<Props, State> {
               // But since user configured it to animate the old screen like a pop, we need to add this without animation
               // So remove it from `openingRouteKeys` which will remove the animation
               openingRouteKeys = openingRouteKeys.filter(
-                key => key !== nextFocusedRoute.key
+                (key) => key !== nextFocusedRoute.key
               );
 
               // Keep the route being removed at the end to animate it out
@@ -165,7 +165,7 @@ export default class StackView extends React.Component<Props, State> {
               ];
 
               closingRouteKeys = closingRouteKeys.filter(
-                key => key !== previousFocusedRoute.key
+                (key) => key !== previousFocusedRoute.key
               );
 
               // Keep the old route in the state because it's visible under the new route, and removing it will feel abrupt
@@ -176,7 +176,7 @@ export default class StackView extends React.Component<Props, State> {
             }
           }
         }
-      } else if (!routes.find(r => r.key === previousFocusedRoute.key)) {
+      } else if (!routes.find((r) => r.key === previousFocusedRoute.key)) {
         // The previously focused route was removed, we treat this as a pop
 
         if (
@@ -188,10 +188,10 @@ export default class StackView extends React.Component<Props, State> {
           // Sometimes a route can be closed before the opening animation finishes
           // So we also need to remove it from the opening list
           openingRouteKeys = openingRouteKeys.filter(
-            key => key !== previousFocusedRoute.key
+            (key) => key !== previousFocusedRoute.key
           );
           replacingRouteKeys = replacingRouteKeys.filter(
-            key => key !== previousFocusedRoute.key
+            (key) => key !== previousFocusedRoute.key
           );
 
           // Keep a copy of route being removed in the state to be able to animate it
@@ -273,13 +273,13 @@ export default class StackView extends React.Component<Props, State> {
   private getPreviousRoute = ({ route }: { route: Route<string> }) => {
     const { closingRouteKeys, replacingRouteKeys } = this.state;
     const routes = this.state.routes.filter(
-      r =>
+      (r) =>
         r.key === route.key ||
         (!closingRouteKeys.includes(r.key) &&
           !replacingRouteKeys.includes(r.key))
     );
 
-    const index = routes.findIndex(r => r.key === route.key);
+    const index = routes.findIndex((r) => r.key === route.key);
 
     return routes[index - 1];
   };
@@ -323,12 +323,16 @@ export default class StackView extends React.Component<Props, State> {
 
   private handleOpenRoute = ({ route }: { route: Route<string> }) => {
     this.handleTransitionComplete({ route });
-    this.setState(state => ({
+    this.setState((state) => ({
       routes: state.replacingRouteKeys.length
-        ? state.routes.filter(r => !state.replacingRouteKeys.includes(r.key))
+        ? state.routes.filter((r) => !state.replacingRouteKeys.includes(r.key))
         : state.routes,
-      openingRouteKeys: state.openingRouteKeys.filter(key => key !== route.key),
-      closingRouteKeys: state.closingRouteKeys.filter(key => key !== route.key),
+      openingRouteKeys: state.openingRouteKeys.filter(
+        (key) => key !== route.key
+      ),
+      closingRouteKeys: state.closingRouteKeys.filter(
+        (key) => key !== route.key
+      ),
       replacingRouteKeys: [],
     }));
   };
@@ -336,7 +340,7 @@ export default class StackView extends React.Component<Props, State> {
   private handleCloseRoute = ({ route }: { route: Route<string> }) => {
     const { state, navigation } = this.props;
 
-    if (state.routes.find(r => r.key === route.key)) {
+    if (state.routes.find((r) => r.key === route.key)) {
       // If a route exists in state, trigger a pop
       // This will happen in when the route was closed from the card component
       // e.g. When the close animation triggered from a gesture ends
@@ -345,20 +349,20 @@ export default class StackView extends React.Component<Props, State> {
     } else {
       // While closing route we need to point to the previous one assuming that
       // this previous one in routes array
-      const index = this.state.routes.findIndex(r => r.key === route.key);
+      const index = this.state.routes.findIndex((r) => r.key === route.key);
 
       this.handleTransitionComplete({
         route: this.state.routes[Math.max(index - 1, 0)],
       });
 
       // We need to clean up any state tracking the route and pop it immediately
-      this.setState(state => ({
-        routes: state.routes.filter(r => r.key !== route.key),
+      this.setState((state) => ({
+        routes: state.routes.filter((r) => r.key !== route.key),
         openingRouteKeys: state.openingRouteKeys.filter(
-          key => key !== route.key
+          (key) => key !== route.key
         ),
         closingRouteKeys: state.closingRouteKeys.filter(
-          key => key !== route.key
+          (key) => key !== route.key
         ),
       }));
     }
@@ -410,9 +414,9 @@ export default class StackView extends React.Component<Props, State> {
       <GestureHandlerWrapper style={styles.container}>
         <SafeAreaProviderCompat>
           <SafeAreaConsumer>
-            {insets => (
+            {(insets) => (
               <KeyboardManager enabled={keyboardHandlingEnabled !== false}>
-                {props => (
+                {(props) => (
                   <CardStack
                     mode={mode}
                     insets={insets as EdgeInsets}

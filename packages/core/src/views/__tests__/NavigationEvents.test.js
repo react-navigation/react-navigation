@@ -26,13 +26,15 @@ const createTestNavigationAndHelpers = () => {
         listeners[eventName].push(handler);
       },
       remove: (eventName, handler) => {
-        listeners[eventName] = listeners[eventName].filter(h => h !== handler);
+        listeners[eventName] = listeners[eventName].filter(
+          (h) => h !== handler
+        );
       },
-      get: eventName => {
+      get: (eventName) => {
         return listeners[eventName];
       },
-      call: eventName => {
-        listeners[eventName].forEach(listener => listener());
+      call: (eventName) => {
+        listeners[eventName].forEach((listener) => listener());
       },
     };
   })();

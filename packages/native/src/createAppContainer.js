@@ -266,7 +266,7 @@ export default function createNavigationContainer(Component) {
       }
 
       const dispatchActions = () =>
-        this._actionEventSubscribers.forEach(subscriber =>
+        this._actionEventSubscribers.forEach((subscriber) =>
           subscriber({
             type: 'action',
             action,
@@ -316,7 +316,7 @@ export default function createNavigationContainer(Component) {
       }
     }
 
-    _persistNavigationState = async nav => {
+    _persistNavigationState = async (nav) => {
       const { persistNavigationState } = this.props;
       if (persistNavigationState) {
         try {
@@ -341,7 +341,7 @@ export default function createNavigationContainer(Component) {
 
     // Per-tick temporary storage for state.nav
 
-    dispatch = action => {
+    dispatch = (action) => {
       if (this.props.navigation) {
         return this.props.navigation.dispatch(action);
       }
@@ -357,7 +357,7 @@ export default function createNavigationContainer(Component) {
       const navState = reducedState === null ? lastNavState : reducedState;
 
       const dispatchActionEvents = () => {
-        this._actionEventSubscribers.forEach(subscriber =>
+        this._actionEventSubscribers.forEach((subscriber) =>
           subscriber({
             type: 'action',
             action,

@@ -11,8 +11,8 @@ const modules = ['@expo/vector-icons']
       // List all packages under `packages/`
       .readdirSync(packages)
       // Ignore hidden files such as .DS_Store
-      .filter(p => !p.startsWith('.'))
-      .map(p => {
+      .filter((p) => !p.startsWith('.'))
+      .map((p) => {
         const pak = JSON.parse(
           fs.readFileSync(path.join(packages, p, 'package.json'), 'utf8')
         );
@@ -50,7 +50,7 @@ module.exports = {
   },
 
   server: {
-    enhanceMiddleware: middleware => {
+    enhanceMiddleware: (middleware) => {
       return (req, res, next) => {
         // When an asset is imported outside the project root, it has wrong path on Android
         // This happens for the back button in stack, so we fix the path to correct one

@@ -775,7 +775,7 @@ describe('TabRouter', () => {
       routes: [screenApreState],
     };
 
-    const comparable = state => {
+    const comparable = (state) => {
       let result = {};
       if (typeof state.routeName === 'string') {
         result = { ...result, routeName: state.routeName };

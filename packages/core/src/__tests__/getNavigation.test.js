@@ -30,7 +30,7 @@ it('getNavigation provides default action helpers', () => {
 it.skip('getNavigation provides router action helpers', () => {
   const router = {
     getActionCreators: () => ({
-      foo: bar => ({ type: 'FooBarAction', bar }),
+      foo: (bar) => ({ type: 'FooBarAction', bar }),
     }),
     getStateForAction(action, lastState = {}) {
       return lastState;

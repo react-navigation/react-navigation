@@ -62,7 +62,7 @@ const CustomTabBar = ({
   const { routes } = navigation.state;
   return (
     <SafeAreaView style={styles.tabContainer}>
-      {routes.map(route => (
+      {routes.map((route) => (
         <BorderlessButton
           onPress={() => navigation.navigate(route.routeName)}
           style={styles.tab}

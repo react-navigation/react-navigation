@@ -58,7 +58,7 @@ export default function validateDeprecatedConfig(
 ) {
   let result = options;
 
-  Object.keys(validations).forEach(name => {
+  Object.keys(validations).forEach((name) => {
     if (name in config) {
       const { compat, message } = validations[name];
 

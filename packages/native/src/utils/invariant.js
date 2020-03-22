@@ -9,10 +9,10 @@
  * will remain to ensure logic does not differ in production.
  */
 
-var validateFormat = function() {};
+var validateFormat = function () {};
 
 if (process.env.NODE_ENV !== 'production') {
-  validateFormat = function(format) {
+  validateFormat = function (format) {
     if (format === undefined) {
       throw new Error('invariant requires an error message argument');
     }
@@ -32,7 +32,7 @@ export default function invariant(condition, format, a, b, c, d, e, f) {
       var args = [a, b, c, d, e, f];
       var argIndex = 0;
       error = new Error(
-        format.replace(/%s/g, function() {
+        format.replace(/%s/g, function () {
           return args[argIndex++];
         })
       );

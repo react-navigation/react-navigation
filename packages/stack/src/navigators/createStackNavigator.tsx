@@ -30,7 +30,7 @@ function createStackNavigator(
   return createNavigator(
     // TODO: don't have time to fix it right now
     // @ts-ignore
-    navigatorProps => <StackView {...navigatorProps} />,
+    (navigatorProps) => <StackView {...navigatorProps} />,
     router,
     stackConfig
   );

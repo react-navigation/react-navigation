@@ -33,7 +33,7 @@ const BarCodeScreenBase = (
       <BarCodeScanner
         onBarCodeScanned={
           props.isFocused
-            ? data => {
+            ? (data) => {
                 console.log('scanned...');
                 props.navigation.navigate('Info', { data });
               }
@@ -51,7 +51,7 @@ BarCodeScreenBase.navigationOptions = {
 
 const BarCodeScreen = withNavigationFocus(BarCodeScreenBase);
 
-const InfoScreen: NavigationStackScreenComponent = props => {
+const InfoScreen: NavigationStackScreenComponent = (props) => {
   return (
     <View style={{ flex: 1 }}>
       <Text>{JSON.stringify(props.navigation.getParam('data'))}</Text>

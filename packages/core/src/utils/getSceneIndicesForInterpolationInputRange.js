@@ -5,8 +5,10 @@ function getSceneIndicesForInterpolationInputRange(props) {
   const isBack = !scenes[lastSceneIndexInScenes].isActive;
 
   if (isBack) {
-    const currentSceneIndexInScenes = scenes.findIndex(item => item === scene);
-    const targetSceneIndexInScenes = scenes.findIndex(item => item.isActive);
+    const currentSceneIndexInScenes = scenes.findIndex(
+      (item) => item === scene
+    );
+    const targetSceneIndexInScenes = scenes.findIndex((item) => item.isActive);
     const targetSceneIndex = scenes[targetSceneIndexInScenes].index;
     const lastSceneIndex = scenes[lastSceneIndexInScenes].index;
 

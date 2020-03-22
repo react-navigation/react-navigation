@@ -131,7 +131,9 @@ class TabNavigationView extends React.PureComponent<Props, State> {
   _jumpTo = (key: string) => {
     const { navigation, onIndexChange } = this.props;
 
-    const index = navigation.state.routes.findIndex(route => route.key === key);
+    const index = navigation.state.routes.findIndex(
+      (route) => route.key === key
+    );
 
     onIndexChange(index);
   };

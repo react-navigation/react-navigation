@@ -24,7 +24,7 @@ const dummyEventSubscriber = () => ({
   remove: () => {},
 });
 
-Object.keys(ROUTERS).forEach(routerName => {
+Object.keys(ROUTERS).forEach((routerName) => {
   const Router = ROUTERS[routerName];
 
   describe(`General router features - ${routerName}`, () => {
@@ -441,7 +441,7 @@ it('Inner actions are only unpacked if the current tab matches', () => {
     routes: [screenApreState],
   };
 
-  const comparable = state => {
+  const comparable = (state) => {
     let result = {};
     if (typeof state.routeName === 'string') {
       result = { ...result, routeName: state.routeName };

@@ -158,7 +158,7 @@ const DrawerContents = ({
     <Animated.View style={{ transform: [{ translateX }] }}>
       <ScrollView>
         <SafeAreaView forceInset={{ top: 'always' }}>
-          {navigation.state.routes.map(route => (
+          {navigation.state.routes.map((route) => (
             <DrawerItem
               key={route.key}
               navigation={descriptors[route.key].navigation}

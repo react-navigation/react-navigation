@@ -52,7 +52,7 @@ const WrappedFlatList = React.forwardRef((props, ref) => (
   <FlatList
     ref={ref}
     {...props}
-    renderScrollComponent={props => (
+    renderScrollComponent={(props) => (
       <WrappedScrollView {...propsMaybeWithRefreshControl(props)} />
     )}
   />
@@ -62,7 +62,7 @@ const WrappedSectionList = React.forwardRef((props, ref) => (
   <SectionList
     ref={ref}
     {...props}
-    renderScrollComponent={props => (
+    renderScrollComponent={(props) => (
       <WrappedScrollView {...propsMaybeWithRefreshControl(props)} />
     )}
   />

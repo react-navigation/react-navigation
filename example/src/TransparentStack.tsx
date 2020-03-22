@@ -5,7 +5,7 @@ import {
   NavigationStackScreenComponent,
 } from 'react-navigation-stack';
 
-const ListScreen: NavigationStackScreenComponent = function(props) {
+const ListScreen: NavigationStackScreenComponent = function (props) {
   return (
     <View
       style={{
@@ -29,7 +29,7 @@ const ListScreen: NavigationStackScreenComponent = function(props) {
   );
 };
 
-const ModalDialogScreen: NavigationStackScreenComponent = function(props) {
+const ModalDialogScreen: NavigationStackScreenComponent = function (props) {
   return (
     <View
       style={{

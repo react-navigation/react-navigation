@@ -59,7 +59,7 @@ export default function PhotoGrid({ id }: { id: string }) {
 
   return (
     <NavigationAwareScrollView contentContainerStyle={styles.content}>
-      {PHOTOS.map(uri => (
+      {PHOTOS.map((uri) => (
         <View key={uri} style={styles.item}>
           <Image source={{ uri }} style={styles.photo} />
         </View>

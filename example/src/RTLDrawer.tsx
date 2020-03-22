@@ -32,7 +32,7 @@ class RightDrawer extends Component<DrawerContentComponentProps> {
         <ScrollView
           style={{ height: '100%', width: '100%', backgroundColor: '#333333' }}
         >
-          {this.state.categories.map(key => {
+          {this.state.categories.map((key) => {
             return (
               <TouchableOpacity
                 key={key.n}

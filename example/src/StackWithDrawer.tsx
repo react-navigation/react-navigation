@@ -59,7 +59,7 @@ const Drawer = createDrawerNavigator(
     },
   },
   {
-    contentComponent: props => <Menu {...props} />,
+    contentComponent: (props) => <Menu {...props} />,
     navigationOptions: { title: 'Example' },
   }
 );

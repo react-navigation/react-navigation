@@ -13,7 +13,7 @@ function validateRouteConfigMap(routeConfigs) {
     'Please specify at least one route when configuring a navigator.'
   );
 
-  routeNames.forEach(routeName => {
+  routeNames.forEach((routeName) => {
     const routeConfig = routeConfigs[routeName];
     const screenComponent = getScreenComponent(routeConfig);
 

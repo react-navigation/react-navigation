@@ -18,9 +18,9 @@ export default function getNavigation(
     state,
     dispatch,
     getScreenProps,
-    getChildNavigation: childKey =>
+    getChildNavigation: (childKey) =>
       getChildNavigation(navigation, childKey, getCurrentNavigation),
-    isFocused: childKey => {
+    isFocused: (childKey) => {
       const { routes, index } = getCurrentNavigation().state;
       if (childKey == null || routes[index].key === childKey) {
         return true;
@@ -48,7 +48,7 @@ export default function getNavigation(
     ...actions,
   };
 
-  Object.keys(actionCreators).forEach(actionName => {
+  Object.keys(actionCreators).forEach((actionName) => {
     navigation[actionName] = (...args) =>
       navigation.dispatch(actionCreators[actionName](...args));
   });

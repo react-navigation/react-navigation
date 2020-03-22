@@ -17,7 +17,7 @@ export const getRouterTestHelper = (router, options = defaultOptions) => {
       ? undefined
       : router.getStateForAction({ type: NavigationActions.INIT });
 
-  const applyAction = action => {
+  const applyAction = (action) => {
     state = router.getStateForAction(action, state);
   };
 
@@ -35,7 +35,7 @@ export const getRouterTestHelper = (router, options = defaultOptions) => {
       ...otherActionAttributes,
     });
 
-  const back = key =>
+  const back = (key) =>
     applyAction({
       type: NavigationActions.BACK,
       key,

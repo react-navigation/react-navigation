@@ -274,7 +274,7 @@ describe('NavigationContainer', () => {
   });
 
   // https://github.com/facebook/jest/issues/2157#issuecomment-279171856
-  const flushPromises = () => new Promise(resolve => setImmediate(resolve));
+  const flushPromises = () => new Promise((resolve) => setImmediate(resolve));
 
   describe('state persistence', () => {
     async function createPersistenceEnabledContainer(

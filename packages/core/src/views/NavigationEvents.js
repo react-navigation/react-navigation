@@ -17,7 +17,7 @@ class NavigationEvents extends React.Component {
     // We register all navigation listeners on mount to ensure listener stability across re-render
     // A former implementation was replacing (removing/adding) listeners on all update (if prop provided)
     // but there were issues (see https://github.com/react-navigation/react-navigation/issues/5058)
-    EventNames.forEach(eventName => {
+    EventNames.forEach((eventName) => {
       this.subscriptions[eventName] = this.props.navigation.addListener(
         eventName,
         (...args) => {
@@ -29,12 +29,12 @@ class NavigationEvents extends React.Component {
   }
 
   componentWillUnmount() {
-    EventNames.forEach(eventName => {
+    EventNames.forEach((eventName) => {
       this.subscriptions[eventName].remove();
     });
   }
 
-  getPropListener = eventName => this.props[EventNameToPropName[eventName]];
+  getPropListener = (eventName) => this.props[EventNameToPropName[eventName]];
 
   render() {
     return null;

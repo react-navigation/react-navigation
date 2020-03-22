@@ -9,10 +9,10 @@
  * will remain to ensure logic does not differ in production.
  */
 
-let validateFormat: (format?: string) => void = function() {};
+let validateFormat: (format?: string) => void = function () {};
 
 if (process.env.NODE_ENV !== 'production') {
-  validateFormat = function(format?: string) {
+  validateFormat = function (format?: string) {
     if (format === undefined) {
       throw new Error('invariant requires an error message argument');
     }

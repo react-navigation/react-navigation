@@ -2,8 +2,8 @@ import getChildEventSubscriber from '../getChildEventSubscriber';
 
 it('child action events only flow when focused', () => {
   const parentSubscriber = jest.fn();
-  const emitParentAction = payload => {
-    parentSubscriber.mock.calls.forEach(subs => {
+  const emitParentAction = (payload) => {
+    parentSubscriber.mock.calls.forEach((subs) => {
       if (subs[0] === payload.type) {
         subs[1](payload);
       }
@@ -52,8 +52,8 @@ it('child action events only flow when focused', () => {
 
 it('grandchildren subscription', () => {
   const grandParentSubscriber = jest.fn();
-  const emitGrandParentAction = payload => {
-    grandParentSubscriber.mock.calls.forEach(subs => {
+  const emitGrandParentAction = (payload) => {
+    grandParentSubscriber.mock.calls.forEach((subs) => {
       if (subs[0] === payload.type) {
         subs[1](payload);
       }
@@ -119,8 +119,8 @@ it('grandchildren subscription', () => {
 
 it('grandchildren transitions', () => {
   const grandParentSubscriber = jest.fn();
-  const emitGrandParentAction = payload => {
-    grandParentSubscriber.mock.calls.forEach(subs => {
+  const emitGrandParentAction = (payload) => {
+    grandParentSubscriber.mock.calls.forEach((subs) => {
       if (subs[0] === payload.type) {
         subs[1](payload);
       }
@@ -212,8 +212,8 @@ it('grandchildren transitions', () => {
 
 it('grandchildren pass through transitions', () => {
   const grandParentSubscriber = jest.fn();
-  const emitGrandParentAction = payload => {
-    grandParentSubscriber.mock.calls.forEach(subs => {
+  const emitGrandParentAction = (payload) => {
+    grandParentSubscriber.mock.calls.forEach((subs) => {
       if (subs[0] === payload.type) {
         subs[1](payload);
       }
@@ -305,8 +305,8 @@ it('grandchildren pass through transitions', () => {
 
 it('child focus with transition', () => {
   const parentSubscriber = jest.fn();
-  const emitParentAction = payload => {
-    parentSubscriber.mock.calls.forEach(subs => {
+  const emitParentAction = (payload) => {
+    parentSubscriber.mock.calls.forEach((subs) => {
       if (subs[0] === payload.type) {
         subs[1](payload);
       }
@@ -398,8 +398,8 @@ it('child focus with transition', () => {
 
 it('child focus with immediate transition', () => {
   const parentSubscriber = jest.fn();
-  const emitParentAction = payload => {
-    parentSubscriber.mock.calls.forEach(subs => {
+  const emitParentAction = (payload) => {
+    parentSubscriber.mock.calls.forEach((subs) => {
       if (subs[0] === payload.type) {
         subs[1](payload);
       }
@@ -461,8 +461,8 @@ it('child focus with immediate transition', () => {
 
 const setupEventTest = (subscriptionKey, initialLastFocusEvent) => {
   const parentSubscriber = jest.fn();
-  const emitEvent = payload => {
-    parentSubscriber.mock.calls.forEach(subs => {
+  const emitEvent = (payload) => {
+    parentSubscriber.mock.calls.forEach((subs) => {
       if (subs[0] === payload.type) {
         subs[1](payload);
       }

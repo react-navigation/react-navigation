@@ -12,10 +12,10 @@ const shownWarnings: string[] = [];
 
 const validations: Validation[] = [
   {
-    check: o => typeof o.headerForceInset === 'object',
+    check: (o) => typeof o.headerForceInset === 'object',
     deprecated: 'headerForceInset',
     updated: 'safeAreaInsets',
-    compat: o => {
+    compat: (o) => {
       const { headerForceInset, ...rest } = o;
 
       let safeAreaInsets: Partial<EdgeInsets> | undefined = {
@@ -55,20 +55,20 @@ const validations: Validation[] = [
     },
   },
   {
-    check: o => o.gesturesEnabled !== undefined,
+    check: (o) => o.gesturesEnabled !== undefined,
     deprecated: 'gesturesEnabled',
     updated: 'gestureEnabled',
-    compat: o => {
+    compat: (o) => {
       const { gesturesEnabled, ...rest } = o;
 
       return { ...rest, gestureEnabled: gesturesEnabled };
     },
   },
   {
-    check: o => o.header === null,
+    check: (o) => o.header === null,
     deprecated: 'header: null',
     updated: 'headerShown: false',
-    compat: o => {
+    compat: (o) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { header, ...rest } = o;
 
@@ -76,26 +76,26 @@ const validations: Validation[] = [
     },
   },
   {
-    check: o => o.header != null && typeof o.header !== 'function',
+    check: (o) => o.header != null && typeof o.header !== 'function',
     deprecated: 'header: <SomeElement />',
     updated: 'header: () => <SomeElement />',
-    compat: o => ({ ...o, header: () => o.header }),
+    compat: (o) => ({ ...o, header: () => o.header }),
   },
   {
-    check: o =>
+    check: (o) =>
       o.headerTitle !== undefined &&
       typeof o.headerTitle !== 'string' &&
       typeof o.headerTitle !== 'function',
     deprecated: 'headerTitle: <SomeElement />',
     updated: 'headerTitle: () => <SomeElement />',
-    compat: o => ({ ...o, headerTitle: () => o.headerTitle }),
+    compat: (o) => ({ ...o, headerTitle: () => o.headerTitle }),
   },
   ...['headerLeft', 'headerRight', 'headerBackground', 'headerBackImage'].map(
     (p): Validation => ({
       check: (o: any) => o[p] !== undefined && typeof o[p] !== 'function',
       deprecated: `${p}: <SomeElement />`,
       updated: `${p}: () => <SomeElement />`,
-      compat: o => ({ ...o, [p]: () => o[p] }),
+      compat: (o) => ({ ...o, [p]: () => o[p] }),
     })
   ),
 ];
@@ -108,7 +108,7 @@ export default function validateDeprecatedOptions(
   const warnings: Validation[] = [];
 
   // Validate options to show warnings for deprecations
-  validations.forEach(v => {
+  validations.forEach((v) => {
     if (v.check(options)) {
       result = v.compat(result);
 
@@ -127,7 +127,7 @@ export default function validateDeprecatedOptions(
     console.warn(
       `Deprecation in 'navigationOptions':\n${warnings
         .map(
-          v =>
+          (v) =>
             `- '${v.deprecated}' will be removed in a future version. Use '${v.updated}' instead`
         )
         .join('\n')}`

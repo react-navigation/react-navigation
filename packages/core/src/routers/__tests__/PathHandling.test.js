@@ -12,7 +12,7 @@ beforeEach(() => {
   _TESTING_ONLY_normalize_keys();
 });
 
-const performRouterTest = createTestRouter => {
+const performRouterTest = (createTestRouter) => {
   const ListScreen = () => <div />;
 
   const ProfileNavigator = () => <div />;
@@ -584,7 +584,7 @@ it('Handles nested switch routers', () => {
   expect(action.action.routeName).toEqual('B');
 });
 
-const performRouteNameAsPathDisabledTest = createTestRouter => {
+const performRouteNameAsPathDisabledTest = (createTestRouter) => {
   const BScreen = () => <div />;
   const NestedNavigator = () => <div />;
   NestedNavigator.router = createTestRouter({
