@@ -104,7 +104,7 @@ const getRouteConfigsFromChildren = <
   }, []);
 
   if (process.env.NODE_ENV !== 'production') {
-    configs.forEach(config => {
+    configs.forEach((config) => {
       const { name, children, component } = config as any;
 
       if (typeof name !== 'string' || !name) {
@@ -213,7 +213,7 @@ export default function useNavigationBuilder<
     return acc;
   }, {});
 
-  const routeNames = routeConfigs.map(config => config.name);
+  const routeNames = routeConfigs.map((config) => config.name);
   const routeParamList = routeNames.reduce<Record<string, object | undefined>>(
     (acc, curr) => {
       const { initialParams } = screens[curr];
@@ -242,12 +242,12 @@ export default function useNavigationBuilder<
   }
 
   const isStateValid = React.useCallback(
-    state => state.type === undefined || state.type === router.type,
+    (state) => state.type === undefined || state.type === router.type,
     [router.type]
   );
 
   const isStateInitialized = React.useCallback(
-    state =>
+    (state) =>
       state !== undefined && state.stale === false && isStateValid(state),
     [isStateValid]
   );
@@ -368,13 +368,13 @@ export default function useNavigationBuilder<
       : (initializedStateRef.current as State);
   }, [getCurrentState, isStateInitialized]);
 
-  const emitter = useEventEmitter(e => {
+  const emitter = useEventEmitter((e) => {
     let routeNames = [];
 
     let target: Route<string> | undefined;
 
     if (e.target) {
-      target = state.routes.find(route => route.key === e.target);
+      target = state.routes.find((route) => route.key === e.target);
 
       if (target?.name) {
         routeNames.push(target.name);
@@ -385,13 +385,13 @@ export default function useNavigationBuilder<
 
     const listeners = ([] as (((e: any) => void) | undefined)[])
       .concat(
-        ...routeNames.map(name => {
+        ...routeNames.map((name) => {
           const { listeners } = screens[name];
 
           return listeners
             ? Object.keys(listeners)
-                .filter(type => type === e.type)
-                .map(type => {
+                .filter((type) => type === e.type)
+                .map((type) => {
                   if (typeof listeners === 'function') {
                     const route = target ?? state.routes[state.index];
                     const navigation = descriptors[route.key].navigation;
@@ -406,7 +406,7 @@ export default function useNavigationBuilder<
       )
       .filter((cb, i, self) => cb && self.lastIndexOf(cb) === i);
 
-    listeners.forEach(listener => listener?.(e));
+    listeners.forEach((listener) => listener?.(e));
   });
 
   useFocusEvents({ state, emitter });

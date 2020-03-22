@@ -16,7 +16,7 @@ export default function useCompatNavigation<
   const route = useRoute();
 
   const isFirstRouteInParent = useNavigationState(
-    state => state.routes[0].key === route.key
+    (state) => state.routes[0].key === route.key
   );
 
   const context = React.useRef<Record<string, any>>({});

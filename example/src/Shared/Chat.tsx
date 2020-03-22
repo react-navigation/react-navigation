@@ -68,10 +68,7 @@ export default function Chat(props: Partial<ScrollViewProps>) {
           styles.input,
           { backgroundColor: colors.card, color: colors.text },
         ]}
-        placeholderTextColor={Color(colors.text)
-          .alpha(0.5)
-          .rgb()
-          .string()}
+        placeholderTextColor={Color(colors.text).alpha(0.5).rgb().string()}
         placeholder="Write a message"
         underlineColorAndroid="transparent"
       />

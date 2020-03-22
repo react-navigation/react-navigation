@@ -71,7 +71,7 @@ export const DrawerActions = {
 
 const isDrawerOpen = (
   state: DrawerNavigationState | PartialState<DrawerNavigationState>
-) => Boolean(state.history?.find(it => it.type === 'drawer'));
+) => Boolean(state.history?.find((it) => it.type === 'drawer'));
 
 const openDrawer = (state: DrawerNavigationState): DrawerNavigationState => {
   if (isDrawerOpen(state)) {
@@ -91,7 +91,7 @@ const closeDrawer = (state: DrawerNavigationState): DrawerNavigationState => {
 
   return {
     ...state,
-    history: state.history.filter(it => it.type !== 'drawer'),
+    history: state.history.filter((it) => it.type !== 'drawer'),
   };
 };
 

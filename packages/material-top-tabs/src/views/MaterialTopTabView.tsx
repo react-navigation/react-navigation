@@ -47,7 +47,7 @@ export default function MaterialTopTabView({
   return (
     <TabView
       {...rest}
-      onIndexChange={index =>
+      onIndexChange={(index) =>
         navigation.dispatch({
           ...TabActions.jumpTo(state.routes[index].name),
           target: state.key,

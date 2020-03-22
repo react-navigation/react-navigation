@@ -43,7 +43,7 @@ it('preserves reference for navigation objects', () => {
     });
 
     if (previous.current) {
-      Object.keys(navigations).forEach(key => {
+      Object.keys(navigations).forEach((key) => {
         expect(navigations[key]).toBe(previous.current[key]);
       });
     }
@@ -64,7 +64,7 @@ it('returns correct value for isFocused', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
-    return state.routes.map(route => descriptors[route.key].render());
+    return state.routes.map((route) => descriptors[route.key].render());
   };
 
   let navigation: any;
@@ -111,8 +111,8 @@ it('returns correct value for isFocused after changing screens', () => {
 
       getStateForRouteNamesChange(state, { routeNames }) {
         const routes = routeNames.map(
-          name =>
-            state.routes.find(r => r.name === name) || {
+          (name) =>
+            state.routes.find((r) => r.name === name) || {
               name,
               key: name,
             }
@@ -131,7 +131,7 @@ it('returns correct value for isFocused after changing screens', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(TestRouter, props);
 
-    return state.routes.map(route => descriptors[route.key].render());
+    return state.routes.map((route) => descriptors[route.key].render());
   };
 
   let navigation: any;

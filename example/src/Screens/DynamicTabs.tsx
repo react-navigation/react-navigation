@@ -15,7 +15,7 @@ export default function BottomTabsScreen() {
 
   return (
     <BottomTabs.Navigator>
-      {tabs.map(i => (
+      {tabs.map((i) => (
         <BottomTabs.Screen
           key={i}
           name={`tab-${i}`}
@@ -29,12 +29,14 @@ export default function BottomTabsScreen() {
           {() => (
             <View style={styles.container}>
               <Title>Tab {i}</Title>
-              <Button onPress={() => setTabs(tabs => [...tabs, tabs.length])}>
+              <Button onPress={() => setTabs((tabs) => [...tabs, tabs.length])}>
                 Add a tab
               </Button>
               <Button
                 onPress={() =>
-                  setTabs(tabs => (tabs.length > 1 ? tabs.slice(0, -1) : tabs))
+                  setTabs((tabs) =>
+                    tabs.length > 1 ? tabs.slice(0, -1) : tabs
+                  )
                 }
               >
                 Remove a tab

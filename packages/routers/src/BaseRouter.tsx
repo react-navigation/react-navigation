@@ -13,7 +13,7 @@ const BaseRouter = {
     switch (action.type) {
       case 'SET_PARAMS': {
         const index = action.source
-          ? state.routes.findIndex(r => r.key === action.source)
+          ? state.routes.findIndex((r) => r.key === action.source)
           : state.index;
 
         if (index === -1) {
@@ -45,14 +45,16 @@ const BaseRouter = {
         if (nextState.stale === false) {
           if (
             state.routeNames.length !== nextState.routeNames.length ||
-            nextState.routeNames.some(name => !state.routeNames.includes(name))
+            nextState.routeNames.some(
+              (name) => !state.routeNames.includes(name)
+            )
           ) {
             return null;
           }
 
           return {
             ...nextState,
-            routes: nextState.routes.map(route =>
+            routes: nextState.routes.map((route) =>
               route.key
                 ? route
                 : { ...route, key: `${route.name}-${shortid()}` }

@@ -51,7 +51,7 @@ export default function SceneView<
 
   const getCurrentState = React.useCallback(() => {
     const state = getState();
-    const currentRoute = state.routes.find(r => r.key === route.key);
+    const currentRoute = state.routes.find((r) => r.key === route.key);
 
     return currentRoute ? currentRoute.state : undefined;
   }, [getState, route.key]);
@@ -62,7 +62,7 @@ export default function SceneView<
 
       setState({
         ...state,
-        routes: state.routes.map(r =>
+        routes: state.routes.map((r) =>
           r.key === route.key ? { ...r, state: child } : r
         ),
       });

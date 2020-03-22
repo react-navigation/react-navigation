@@ -58,7 +58,7 @@ export default function useDevTools({ name, reset, state, enabled }: Options) {
 
   React.useEffect(
     () =>
-      devTools?.subscribe(message => {
+      devTools?.subscribe((message) => {
         if (message.type === 'DISPATCH' && message.state) {
           reset(JSON.parse(message.state));
         }

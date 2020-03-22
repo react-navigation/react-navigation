@@ -125,7 +125,7 @@ export default function getPathFromState(
       if (currentOptions[route.name] !== undefined) {
         path += pattern
           .split('/')
-          .map(p => {
+          .map((p) => {
             const name = p.replace(/^:/, '');
 
             // If the path has a pattern for a param, put the param in the path

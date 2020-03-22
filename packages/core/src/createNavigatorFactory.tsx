@@ -16,7 +16,7 @@ export default function createNavigatorFactory<
   EventMap extends EventMapBase,
   NavigatorComponent extends React.ComponentType<any>
 >(Navigator: NavigatorComponent) {
-  return function<ParamList extends ParamListBase>(): TypedNavigator<
+  return function <ParamList extends ParamListBase>(): TypedNavigator<
     ParamList,
     State,
     ScreenOptions,

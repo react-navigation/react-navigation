@@ -72,14 +72,8 @@ export default function DrawerItem(props: Props) {
     labelStyle,
     focused = false,
     activeTintColor = colors.primary,
-    inactiveTintColor = Color(colors.text)
-      .alpha(0.68)
-      .rgb()
-      .string(),
-    activeBackgroundColor = Color(activeTintColor)
-      .alpha(0.12)
-      .rgb()
-      .string(),
+    inactiveTintColor = Color(colors.text).alpha(0.68).rgb().string(),
+    activeBackgroundColor = Color(activeTintColor).alpha(0.12).rgb().string(),
     inactiveBackgroundColor = 'transparent',
     style,
     onPress,

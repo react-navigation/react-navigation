@@ -51,10 +51,7 @@ export default function NewsFeed(props: Props) {
       <Card style={styles.card}>
         <TextInput
           placeholder="What's on your mind?"
-          placeholderTextColor={Color(colors.text)
-            .alpha(0.5)
-            .rgb()
-            .string()}
+          placeholderTextColor={Color(colors.text).alpha(0.5).rgb().string()}
           style={styles.input}
         />
       </Card>

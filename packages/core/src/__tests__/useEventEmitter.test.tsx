@@ -15,7 +15,7 @@ it('fires focus and blur events in root navigator', () => {
 
     React.useImperativeHandle(ref, () => navigation, [navigation]);
 
-    return state.routes.map(route => descriptors[route.key].render());
+    return state.routes.map((route) => descriptors[route.key].render());
   });
 
   const firstFocusCallback = jest.fn();
@@ -106,7 +106,7 @@ it('fires focus and blur events in nested navigator', () => {
 
     React.useImperativeHandle(ref, () => navigation, [navigation]);
 
-    return state.routes.map(route => descriptors[route.key].render());
+    return state.routes.map((route) => descriptors[route.key].render());
   });
 
   const firstFocusCallback = jest.fn();
@@ -376,7 +376,7 @@ it('fires custom events added with addListener', () => {
       state,
     ]);
 
-    return state.routes.map(route => descriptors[route.key].render());
+    return state.routes.map((route) => descriptors[route.key].render());
   });
 
   const firstCallback = jest.fn();
@@ -456,7 +456,7 @@ it("doesn't call same listener multiple times with addListener", () => {
       state,
     ]);
 
-    return state.routes.map(route => descriptors[route.key].render());
+    return state.routes.map((route) => descriptors[route.key].render());
   });
 
   const callback = jest.fn();
@@ -640,7 +640,7 @@ it('has option to prevent default', () => {
       state,
     ]);
 
-    return state.routes.map(route => descriptors[route.key].render());
+    return state.routes.map((route) => descriptors[route.key].render());
   });
 
   const callback = (e: any) => {

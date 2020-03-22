@@ -103,7 +103,7 @@ export default function useNavigationCache<
           dangerouslyGetState: getState,
           dispatch,
           setOptions: (options: object) =>
-            setOptions(o => ({
+            setOptions((o) => ({
               ...o,
               [route.key]: { ...o[route.key], ...options },
             })),

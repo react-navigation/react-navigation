@@ -26,8 +26,9 @@ export default function withNavigation<
     return <Comp ref={onRef} navigation={navigation} {...rest} />;
   };
 
-  WrappedComponent.displayName = `withNavigation(${Comp.displayName ||
-    Comp.name})`;
+  WrappedComponent.displayName = `withNavigation(${
+    Comp.displayName || Comp.name
+  })`;
 
   return WrappedComponent;
 }

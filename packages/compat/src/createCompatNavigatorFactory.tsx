@@ -69,7 +69,7 @@ export default function createCompatNavigatorFactory<
     function Navigator({ screenProps }: { screenProps?: unknown }) {
       const screens = React.useMemo(
         () =>
-          routeNames.map(name => {
+          routeNames.map((name) => {
             let getScreenComponent: () => CompatScreenType<NavigationPropType>;
 
             let initialParams;
