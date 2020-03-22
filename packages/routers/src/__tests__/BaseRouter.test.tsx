@@ -84,6 +84,22 @@ it('resets state to new state with RESET', () => {
   expect(result).toEqual({ index: 0, routes });
 });
 
+it('adds keys to routes missing keys during RESET', () => {
+  const result = BaseRouter.getStateForAction(
+    STATE,
+    // @ts-ignore
+    CommonActions.reset({
+      ...STATE,
+      routes: [...STATE.routes, { name: 'qux' }],
+    })
+  );
+
+  expect(result).toEqual({
+    ...STATE,
+    routes: [...STATE.routes, { key: 'qux-test', name: 'qux' }],
+  });
+});
+
 it("doesn't handle RESET if routes don't match routeNames", () => {
   const routes = [
     { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
