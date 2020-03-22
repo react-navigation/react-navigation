@@ -15,7 +15,8 @@
   },
   "sideEffects": false,
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "tag": "4.x"
   },
   "keywords": [
     "react-native",
