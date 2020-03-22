@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.2.3...@react-navigation/core@5.3.0) (2020-03-22)
+
+
+### Bug Fixes
+
+* return correct value for isFocused after changing screens ([5b15c71](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/5b15c7164f5503f2f0d51006a3f23bd0c58fd9b7)), closes [#7843](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/7843)
+
+
+### Features
+
+* support function in listeners prop ([3709e65](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/3709e652f41a16c2c2b05d5dbbe1da2017ba2c3f))
+
+
+
+
+
 ## [5.2.3](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.2.2...@react-navigation/core@5.2.3) (2020-03-19)
 
 **Note:** Version bump only for package @react-navigation/core

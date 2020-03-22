@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.1.1...@react-navigation/routers@5.2.0) (2020-03-22)
+
+
+### Features
+
+* add keys to routes missing keys during reset ([813a590](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/813a5903b5f44506b9097538ed85229e565b855e))
+
+
+
+
+
 ## [5.1.1](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.1.0...@react-navigation/routers@5.1.1) (2020-03-16)
 
 
