@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.4](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.3...@react-navigation/stack@5.2.4) (2020-03-22)
+
+
+### Bug Fixes
+
+* fix swipe not dismissing card in RTL ([043924c](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/043924ca4843b6f02626532cbf4aafc7cad9fab1)), closes [#7841](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/7841)
+
+
+
+
+
 ## [5.2.3](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.2...@react-navigation/stack@5.2.3) (2020-03-19)
 
 
