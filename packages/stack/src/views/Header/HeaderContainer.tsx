@@ -124,7 +124,7 @@ export default function HeaderContainer({
               <View
                 onLayout={
                   onContentHeightChange
-                    ? e =>
+                    ? (e) =>
                         onContentHeightChange({
                           route: scene.route,
                           height: e.nativeEvent.layout.height,

@@ -23,8 +23,9 @@ export default function withNavigationFocus<
     return <Comp ref={onRef} isFocused={isFocused} {...rest} />;
   };
 
-  WrappedComponent.displayName = `withNavigationFocus(${Comp.displayName ||
-    Comp.name})`;
+  WrappedComponent.displayName = `withNavigationFocus(${
+    Comp.displayName || Comp.name
+  })`;
 
   return WrappedComponent;
 }

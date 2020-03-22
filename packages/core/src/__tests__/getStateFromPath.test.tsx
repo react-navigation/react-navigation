@@ -42,7 +42,8 @@ it('converts path string to initial state with config', () => {
     Baz: {
       path: 'baz/:author',
       parse: {
-        author: (author: string) => author.replace(/^\w/, c => c.toUpperCase()),
+        author: (author: string) =>
+          author.replace(/^\w/, (c) => c.toUpperCase()),
         count: Number,
         valid: Boolean,
       },
@@ -153,7 +154,8 @@ it('converts path string to initial state with config with nested screens', () =
     Baz: {
       path: 'baz/:author',
       parse: {
-        author: (author: string) => author.replace(/^\w/, c => c.toUpperCase()),
+        author: (author: string) =>
+          author.replace(/^\w/, (c) => c.toUpperCase()),
         count: Number,
         valid: Boolean,
       },
@@ -217,7 +219,8 @@ it('converts path string to initial state with config with nested screens and un
     Baz: {
       path: 'baz/:author',
       parse: {
-        author: (author: string) => author.replace(/^\w/, c => c.toUpperCase()),
+        author: (author: string) =>
+          author.replace(/^\w/, (c) => c.toUpperCase()),
         count: Number,
         valid: Boolean,
         id: Boolean,
@@ -277,11 +280,11 @@ it('handles nested object with unused configs and with parse in it', () => {
           path: 'bis/:author',
           stringify: {
             author: (author: string) =>
-              author.replace(/^\w/, c => c.toLowerCase()),
+              author.replace(/^\w/, (c) => c.toLowerCase()),
           },
           parse: {
             author: (author: string) =>
-              author.replace(/^\w/, c => c.toUpperCase()),
+              author.replace(/^\w/, (c) => c.toUpperCase()),
             count: Number,
             valid: Boolean,
           },
@@ -528,11 +531,11 @@ it('handles two initialRouteNames', () => {
           path: 'bis/:author',
           stringify: {
             author: (author: string) =>
-              author.replace(/^\w/, c => c.toLowerCase()),
+              author.replace(/^\w/, (c) => c.toLowerCase()),
           },
           parse: {
             author: (author: string) =>
-              author.replace(/^\w/, c => c.toUpperCase()),
+              author.replace(/^\w/, (c) => c.toUpperCase()),
             count: Number,
             valid: Boolean,
           },
@@ -610,11 +613,11 @@ it('accepts initialRouteName without config for it', () => {
           path: 'bis/:author',
           stringify: {
             author: (author: string) =>
-              author.replace(/^\w/, c => c.toLowerCase()),
+              author.replace(/^\w/, (c) => c.toLowerCase()),
           },
           parse: {
             author: (author: string) =>
-              author.replace(/^\w/, c => c.toUpperCase()),
+              author.replace(/^\w/, (c) => c.toUpperCase()),
             count: Number,
             valid: Boolean,
           },

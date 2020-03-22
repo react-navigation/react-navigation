@@ -121,7 +121,7 @@ export default function BottomTabBar({
   const handleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
 
-    setLayout(layout => {
+    setLayout((layout) => {
       if (height === layout.height && width === layout.width) {
         return layout;
       } else {

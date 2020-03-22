@@ -69,7 +69,7 @@ export default function useEventEmitter(
         target !== undefined
           ? items[target] && items[target].slice()
           : ([] as Listeners)
-              .concat(...Object.keys(items).map(t => items[t]))
+              .concat(...Object.keys(items).map((t) => items[t]))
               .filter((cb, i, self) => self.lastIndexOf(cb) === i);
 
       const event: EventArg<any, any, any> = {
@@ -117,7 +117,7 @@ export default function useEventEmitter(
 
       listenRef.current?.(event);
 
-      callbacks?.forEach(cb => cb(event));
+      callbacks?.forEach((cb) => cb(event));
 
       return event as any;
     },

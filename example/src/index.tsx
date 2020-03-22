@@ -224,7 +224,7 @@ export default function App() {
       <NavigationContainer
         ref={containerRef}
         initialState={initialState}
-        onStateChange={state =>
+        onStateChange={(state) =>
           AsyncStorage.setItem(
             NAVIGATION_PERSISTENCE_KEY,
             JSON.stringify(state)
@@ -298,12 +298,12 @@ export default function App() {
                             theme.dark ? 'light' : 'dark'
                           );
 
-                          setTheme(t => (t.dark ? DefaultTheme : DarkTheme));
+                          setTheme((t) => (t.dark ? DefaultTheme : DarkTheme));
                         }}
                       />
                       <Divider />
                       {(Object.keys(SCREENS) as (keyof typeof SCREENS)[]).map(
-                        name => (
+                        (name) => (
                           <List.Item
                             key={name}
                             title={SCREENS[name].title}
@@ -315,7 +315,7 @@ export default function App() {
                   )}
                 </Stack.Screen>
                 {(Object.keys(SCREENS) as (keyof typeof SCREENS)[]).map(
-                  name => (
+                  (name) => (
                     <Stack.Screen
                       key={name}
                       name={name}

@@ -38,7 +38,7 @@ type State = {
 };
 
 const warnIfHeaderStylesDefined = (styles: Record<string, any>) => {
-  Object.keys(styles).forEach(styleProp => {
+  Object.keys(styles).forEach((styleProp) => {
     const value = styles[styleProp];
 
     if (styleProp === 'position' && value === 'absolute') {

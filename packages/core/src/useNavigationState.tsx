@@ -26,7 +26,7 @@ export default function useNavigationState<T>(selector: Selector<T>): T {
   });
 
   React.useEffect(() => {
-    const unsubscribe = navigation.addListener('state', e => {
+    const unsubscribe = navigation.addListener('state', (e) => {
       setResult(selectorRef.current(e.data.state));
     });
 

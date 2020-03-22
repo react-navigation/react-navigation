@@ -137,7 +137,7 @@ it("lets children handle the action if parent didn't", () => {
 
     return (
       <React.Fragment>
-        {state.routes.map(route => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key].render())}
       </React.Fragment>
     );
   };
@@ -270,7 +270,7 @@ it("action doesn't bubble if target is specified", () => {
 
     return (
       <React.Fragment>
-        {state.routes.map(route => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key].render())}
       </React.Fragment>
     );
   };
@@ -317,7 +317,7 @@ it('logs error if no navigator handled the action', () => {
 
     return (
       <React.Fragment>
-        {state.routes.map(route => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key].render())}
       </React.Fragment>
     );
   };

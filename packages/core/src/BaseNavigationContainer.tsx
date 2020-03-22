@@ -73,7 +73,7 @@ const getPartialState = (
   return {
     ...partialState,
     stale: true,
-    routes: state.routes.map(route => {
+    routes: state.routes.map((route) => {
       if (route.state === undefined) {
         return route as Route<string> & {
           state?: PartialState<NavigationState>;
@@ -156,7 +156,7 @@ const BaseNavigationContainer = React.forwardRef(
         throw new Error(NOT_INITIALIZED_ERROR);
       }
 
-      listeners[0](navigation => navigation.dispatch(action));
+      listeners[0]((navigation) => navigation.dispatch(action));
     };
 
     const canGoBack = () => {
@@ -164,7 +164,7 @@ const BaseNavigationContainer = React.forwardRef(
         return false;
       }
 
-      const { result, handled } = listeners[0](navigation =>
+      const { result, handled } = listeners[0]((navigation) =>
         navigation.canGoBack()
       );
 

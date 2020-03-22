@@ -93,7 +93,7 @@ const changeIndex = (
     const currentKey = state.routes[index].key;
 
     history = state.history
-      .filter(it => (it.type === 'route' ? it.key !== currentKey : false))
+      .filter((it) => (it.type === 'route' ? it.key !== currentKey : false))
       .concat({ type: TYPE_ROUTE, key: currentKey });
   } else {
     history = getRouteHistory(state.routes, index, backBehavior);
@@ -124,7 +124,7 @@ export default function TabRouter({
           ? routeNames.indexOf(initialRouteName)
           : 0;
 
-      const routes = routeNames.map(name => ({
+      const routes = routeNames.map((name) => ({
         name,
         key: `${name}-${shortid()}`,
         params: routeParamList[name],
@@ -150,9 +150,9 @@ export default function TabRouter({
         return state;
       }
 
-      const routes = routeNames.map(name => {
+      const routes = routeNames.map((name) => {
         const route = (state as PartialState<TabNavigationState>).routes.find(
-          r => r.name === name
+          (r) => r.name === name
         );
 
         return {
@@ -184,8 +184,8 @@ export default function TabRouter({
         routes.length - 1
       );
 
-      let history = state.history?.filter(it =>
-        routes.find(r => r.key === it.key)
+      let history = state.history?.filter((it) =>
+        routes.find((r) => r.key === it.key)
       );
 
       if (!history?.length) {
@@ -205,8 +205,8 @@ export default function TabRouter({
 
     getStateForRouteNamesChange(state, { routeNames, routeParamList }) {
       const routes = routeNames.map(
-        name =>
-          state.routes.find(r => r.name === name) || {
+        (name) =>
+          state.routes.find((r) => r.name === name) || {
             name,
             key: `${name}-${shortid()}`,
             params: routeParamList[name],
@@ -218,8 +218,8 @@ export default function TabRouter({
         routeNames.indexOf(state.routes[state.index].name)
       );
 
-      let history = state.history.filter(it =>
-        routes.find(r => r.key === it.key)
+      let history = state.history.filter((it) =>
+        routes.find((r) => r.key === it.key)
       );
 
       if (!history.length) {
@@ -236,7 +236,7 @@ export default function TabRouter({
     },
 
     getStateForRouteFocus(state, key) {
-      const index = state.routes.findIndex(r => r.key === key);
+      const index = state.routes.findIndex((r) => r.key === key);
 
       if (index === -1 || index === state.index) {
         return state;
@@ -253,11 +253,11 @@ export default function TabRouter({
 
           if (action.type === 'NAVIGATE' && action.payload.key) {
             index = state.routes.findIndex(
-              route => route.key === action.payload.key
+              (route) => route.key === action.payload.key
             );
           } else {
             index = state.routes.findIndex(
-              route => route.name === action.payload.name
+              (route) => route.name === action.payload.name
             );
           }
 
@@ -295,7 +295,7 @@ export default function TabRouter({
 
           const previousKey = state.history[state.history.length - 2].key;
           const index = state.routes.findIndex(
-            route => route.key === previousKey
+            (route) => route.key === previousKey
           );
 
           if (index === -1) {

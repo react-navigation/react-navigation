@@ -10,7 +10,7 @@ it('runs focus effect on focus change', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
-    return state.routes.map(route => descriptors[route.key].render());
+    return state.routes.map((route) => descriptors[route.key].render());
   };
 
   const focusEffect = jest.fn();
@@ -107,7 +107,7 @@ it('runs focus effect when initial state is given', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
-    return state.routes.map(route => descriptors[route.key].render());
+    return state.routes.map((route) => descriptors[route.key].render());
   };
 
   const focusEffect = jest.fn();

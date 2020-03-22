@@ -7,7 +7,7 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const node_modules = path.resolve(__dirname, '..', 'node_modules');
 const packages = path.resolve(__dirname, '..', 'packages');
 
-module.exports = async function(env, argv) {
+module.exports = async function (env, argv) {
   const config = await createExpoWebpackConfigAsync(env, argv);
 
   config.context = path.resolve(__dirname, '..');
@@ -20,7 +20,7 @@ module.exports = async function(env, argv) {
   });
 
   config.resolve.plugins = config.resolve.plugins.filter(
-    p => !(p instanceof ModuleScopePlugin)
+    (p) => !(p instanceof ModuleScopePlugin)
   );
 
   Object.assign(config.resolve.alias, {
@@ -30,7 +30,7 @@ module.exports = async function(env, argv) {
     '@expo/vector-icons': path.resolve(node_modules, '@expo/vector-icons'),
   });
 
-  fs.readdirSync(packages).forEach(name => {
+  fs.readdirSync(packages).forEach((name) => {
     config.resolve.alias[`@react-navigation/${name}`] = path.resolve(
       packages,
       name,

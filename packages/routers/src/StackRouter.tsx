@@ -134,9 +134,9 @@ export default function StackRouter(options: StackRouterOptions) {
       }
 
       const routes = state.routes
-        .filter(route => routeNames.includes(route.name))
+        .filter((route) => routeNames.includes(route.name))
         .map(
-          route =>
+          (route) =>
             ({
               ...route,
               key: route.key || `${route.name}-${shortid()}`,
@@ -174,7 +174,7 @@ export default function StackRouter(options: StackRouterOptions) {
     },
 
     getStateForRouteNamesChange(state, { routeNames, routeParamList }) {
-      const routes = state.routes.filter(route =>
+      const routes = state.routes.filter((route) =>
         routeNames.includes(route.name)
       );
 
@@ -201,7 +201,7 @@ export default function StackRouter(options: StackRouterOptions) {
     },
 
     getStateForRouteFocus(state, key) {
-      const index = state.routes.findIndex(r => r.key === key);
+      const index = state.routes.findIndex((r) => r.key === key);
 
       if (index === -1 || index === state.index) {
         return state;
@@ -220,7 +220,7 @@ export default function StackRouter(options: StackRouterOptions) {
       switch (action.type) {
         case 'REPLACE': {
           const index = action.source
-            ? state.routes.findIndex(r => r.key === action.source)
+            ? state.routes.findIndex((r) => r.key === action.source)
             : state.index;
 
           if (index === -1) {
@@ -283,7 +283,7 @@ export default function StackRouter(options: StackRouterOptions) {
         case 'POP': {
           const index =
             action.target === state.key && action.source
-              ? state.routes.findIndex(r => r.key === action.source)
+              ? state.routes.findIndex((r) => r.key === action.source)
               : state.index;
 
           if (index > 0) {

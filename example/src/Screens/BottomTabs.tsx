@@ -28,7 +28,7 @@ export default function BottomTabsScreen() {
   return (
     <BottomTabs.Navigator
       screenOptions={{
-        tabBarButton: props => <TouchableBounce {...props} />,
+        tabBarButton: (props) => <TouchableBounce {...props} />,
       }}
     >
       <BottomTabs.Screen
@@ -38,7 +38,7 @@ export default function BottomTabsScreen() {
           tabBarIcon: getTabBarIcon('file-document-box'),
         }}
       >
-        {props => <SimpleStackScreen {...props} headerMode="none" />}
+        {(props) => <SimpleStackScreen {...props} headerMode="none" />}
       </BottomTabs.Screen>
       <BottomTabs.Screen
         name="Chat"

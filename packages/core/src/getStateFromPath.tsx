@@ -64,7 +64,7 @@ export default function getStateFromPath(
   let initialRoutes: InitialRouteConfig[] = [];
   // Create a normalized configs array which will be easier to use
   const configs = ([] as RouteConfig[]).concat(
-    ...Object.keys(options).map(key =>
+    ...Object.keys(options).map((key) =>
       createNormalizedConfigs(key, options, [], initialRoutes)
     )
   );
@@ -91,7 +91,7 @@ export default function getStateFromPath(
 
         const paramPatterns = config.pattern
           .split('/')
-          .filter(p => p.startsWith(':'));
+          .filter((p) => p.startsWith(':'));
 
         if (paramPatterns.length) {
           params = paramPatterns.reduce<Record<string, any>>((acc, p, i) => {
@@ -188,7 +188,7 @@ export default function getStateFromPath(
     const parseFunction = findParseConfigForRoute(route.name, configs);
 
     if (parseFunction) {
-      Object.keys(params).forEach(name => {
+      Object.keys(params).forEach((name) => {
         if (parseFunction[name] && typeof params[name] === 'string') {
           params[name] = parseFunction[name](params[name] as string);
         }
@@ -233,7 +233,7 @@ function createNormalizedConfigs(
           connectedRoutes: Object.keys(value.screens),
         });
       }
-      Object.keys(value.screens).forEach(nestedConfig => {
+      Object.keys(value.screens).forEach((nestedConfig) => {
         const result = createNormalizedConfigs(
           nestedConfig,
           value.screens as Options,

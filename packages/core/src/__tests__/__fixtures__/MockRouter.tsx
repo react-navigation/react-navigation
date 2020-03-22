@@ -27,7 +27,7 @@ export default function MockRouter(options: DefaultRouterOptions) {
         key: String(MockRouterKey.current++),
         index,
         routeNames,
-        routes: routeNames.map(name => ({
+        routes: routeNames.map((name) => ({
           name,
           key: name,
           params: routeParamList[name],
@@ -43,9 +43,9 @@ export default function MockRouter(options: DefaultRouterOptions) {
       }
 
       const routes = state.routes
-        .filter(route => routeNames.includes(route.name))
+        .filter((route) => routeNames.includes(route.name))
         .map(
-          route =>
+          (route) =>
             ({
               ...route,
               key: route.key || `${route.name}-${MockRouterKey.current++}`,
@@ -73,7 +73,7 @@ export default function MockRouter(options: DefaultRouterOptions) {
     },
 
     getStateForRouteNamesChange(state, { routeNames }) {
-      const routes = state.routes.filter(route =>
+      const routes = state.routes.filter((route) =>
         routeNames.includes(route.name)
       );
 
@@ -86,7 +86,7 @@ export default function MockRouter(options: DefaultRouterOptions) {
     },
 
     getStateForRouteFocus(state, key) {
-      const index = state.routes.findIndex(r => r.key === key);
+      const index = state.routes.findIndex((r) => r.key === key);
 
       if (index === -1 || index === state.index) {
         return state;
@@ -105,7 +105,7 @@ export default function MockRouter(options: DefaultRouterOptions) {
 
         case 'NAVIGATE': {
           const index = state.routes.findIndex(
-            route => route.name === action.payload.name
+            (route) => route.name === action.payload.name
           );
 
           if (index === -1) {

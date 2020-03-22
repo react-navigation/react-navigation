@@ -43,7 +43,7 @@
     "husky": "^4.2.3",
     "jest": "^25.1.0",
     "lerna": "^3.20.2",
-    "prettier": "^1.19.1",
+    "prettier": "^2.0.1",
     "typescript": "^3.7.5"
   },
   "resolutions": {

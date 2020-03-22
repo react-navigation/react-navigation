@@ -9,7 +9,7 @@ const packages = path.join(__dirname, '..', 'packages');
 
 const invalid = [];
 
-fs.readdirSync(packages).forEach(name => {
+fs.readdirSync(packages).forEach((name) => {
   const dir = path.join(packages, name);
 
   if (fs.statSync(path.join(packages, name)).isDirectory()) {
@@ -26,6 +26,6 @@ fs.readdirSync(packages).forEach(name => {
 if (invalid.length) {
   console.log(
     'Found invalid path to type definitions in the following packages:\n',
-    invalid.map(p => `- ${p.name} (${p.types})`).join('\n')
+    invalid.map((p) => `- ${p.name} (${p.types})`).join('\n')
   );
 }

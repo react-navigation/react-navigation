@@ -11,13 +11,13 @@ it('gets the current navigation state', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
-    return state.routes.map(route => descriptors[route.key].render());
+    return state.routes.map((route) => descriptors[route.key].render());
   };
 
   const callback = jest.fn();
 
   const Test = () => {
-    const state = useNavigationState(state => state);
+    const state = useNavigationState((state) => state);
 
     callback(state);
 
@@ -62,13 +62,13 @@ it('gets the current navigation state with selector', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
-    return state.routes.map(route => descriptors[route.key].render());
+    return state.routes.map((route) => descriptors[route.key].render());
   };
 
   const callback = jest.fn();
 
   const Test = () => {
-    const index = useNavigationState(state => state.index);
+    const index = useNavigationState((state) => state.index);
 
     callback(index);
 
@@ -112,7 +112,7 @@ it('gets the correct value if selector changes', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
-    return state.routes.map(route => descriptors[route.key].render());
+    return state.routes.map((route) => descriptors[route.key].render());
   };
 
   const callback = jest.fn();
@@ -144,12 +144,12 @@ it('gets the correct value if selector changes', () => {
     );
   };
 
-  const root = render(<App selector={state => state.index} />);
+  const root = render(<App selector={(state) => state.index} />);
 
   expect(callback).toBeCalledTimes(1);
   expect(callback.mock.calls[0][0]).toBe(0);
 
-  root.update(<App selector={state => state.routes[state.index].name} />);
+  root.update(<App selector={(state) => state.routes[state.index].name} />);
 
   expect(callback).toBeCalledTimes(2);
   expect(callback.mock.calls[1][0]).toBe('first');

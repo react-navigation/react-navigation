@@ -99,7 +99,7 @@ export default function DrawerView({
 
   const { colors } = useTheme();
 
-  const isDrawerOpen = state.history.some(it => it.type === 'drawer');
+  const isDrawerOpen = state.history.some((it) => it.type === 'drawer');
 
   const handleDrawerOpen = React.useCallback(() => {
     navigation.dispatch({
@@ -212,7 +212,7 @@ export default function DrawerView({
               gestureEnabled={gestureEnabled}
               onOpen={handleDrawerOpen}
               onClose={handleDrawerClose}
-              onGestureRef={ref => {
+              onGestureRef={(ref) => {
                 // @ts-ignore
                 drawerGestureRef.current = ref;
               }}

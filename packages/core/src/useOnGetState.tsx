@@ -18,7 +18,7 @@ export default function useOnGetState({
     const state = getState();
     return {
       ...state,
-      routes: state.routes.map(route => ({
+      routes: state.routes.map((route) => ({
         ...route,
         state: getStateForRoute(route.key),
       })),

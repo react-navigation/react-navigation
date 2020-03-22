@@ -122,7 +122,7 @@ it('handle dispatching with ref', () => {
 
     return (
       <React.Fragment>
-        {state.routes.map(route => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key].render())}
       </React.Fragment>
     );
   };
@@ -220,7 +220,7 @@ it('handle resetting state with ref', () => {
 
     return (
       <React.Fragment>
-        {state.routes.map(route => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key].render())}
       </React.Fragment>
     );
   };
@@ -371,7 +371,7 @@ it('emits state events when the state changes', () => {
 
     return (
       <React.Fragment>
-        {state.routes.map(route => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key].render())}
       </React.Fragment>
     );
   };
