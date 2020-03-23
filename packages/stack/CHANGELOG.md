@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.5](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.4...@react-navigation/stack@5.2.5) (2020-03-23)
+
+
+### Bug Fixes
+
+* fix swipe gestures requiring a lot of velocity to dismiss ([61f16d3](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/61f16d3f25cbbcc00d699dd09c5f4abde9b17d5a))
+
+
+
+
+
 ## [5.2.4](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.3...@react-navigation/stack@5.2.4) (2020-03-22)
 
 
