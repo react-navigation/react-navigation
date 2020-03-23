@@ -381,7 +381,9 @@ export default function useNavigationBuilder<
       }
     } else {
       route = state.routes[state.index];
-      routeNames.push(...Object.keys(screens));
+      routeNames.push(
+        ...Object.keys(screens).filter((name) => route?.name === name)
+      );
     }
 
     if (route == null) {
@@ -394,17 +396,15 @@ export default function useNavigationBuilder<
       .concat(
         ...routeNames.map((name) => {
           const { listeners } = screens[name];
+          const map =
+            typeof listeners === 'function'
+              ? listeners({ route: route as any, navigation })
+              : listeners;
 
-          return listeners
-            ? Object.keys(listeners)
+          return map
+            ? Object.keys(map)
                 .filter((type) => type === e.type)
-                .map((type) => {
-                  if (typeof listeners === 'function') {
-                    return listeners({ route: route as any, navigation })[type];
-                  }
-
-                  return listeners[type];
-                })
+                .map((type) => map?.[type])
             : undefined;
         })
       )
