@@ -371,17 +371,24 @@ export default function useNavigationBuilder<
   const emitter = useEventEmitter((e) => {
     let routeNames = [];
 
-    let target: Route<string> | undefined;
+    let route: Route<string> | undefined;
 
     if (e.target) {
-      target = state.routes.find((route) => route.key === e.target);
+      route = state.routes.find((route) => route.key === e.target);
 
-      if (target?.name) {
-        routeNames.push(target.name);
+      if (route?.name) {
+        routeNames.push(route.name);
       }
     } else {
+      route = state.routes[state.index];
       routeNames.push(...Object.keys(screens));
     }
+
+    if (route == null) {
+      return;
+    }
+
+    const navigation = descriptors[route.key].navigation;
 
     const listeners = ([] as (((e: any) => void) | undefined)[])
       .concat(
@@ -393,9 +400,6 @@ export default function useNavigationBuilder<
                 .filter((type) => type === e.type)
                 .map((type) => {
                   if (typeof listeners === 'function') {
-                    const route = target ?? state.routes[state.index];
-                    const navigation = descriptors[route.key].navigation;
-
                     return listeners({ route: route as any, navigation })[type];
                   }
 
