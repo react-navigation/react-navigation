@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Linking } from 'react-native';
+import { Linking, Platform } from 'react-native';
 import {
   getActionFromState,
   getStateFromPath as getStateFromPathDefault,
@@ -20,7 +20,9 @@ export default function useLinking(
   React.useEffect(() => {
     if (isUsingLinking) {
       throw new Error(
-        "Looks like you are using 'useLinking' in multiple components. This is likely an error since deep links should only be handled in one place to avoid conflicts."
+        Platform.OS === 'android'
+          ? "Ensure that you set 'android:launchMode=singleTask' in the '<activity />' of your AndroidManifest.xml file. Also be sure you are not using 'useLinking' in multiple components. Deep links should only be handled in one place to avoid conflicts."
+          : "Looks like you are using 'useLinking' in multiple components. This is likely an error since deep links should only be handled in one place to avoid conflicts."
       );
     } else {
       isUsingLinking = true;
