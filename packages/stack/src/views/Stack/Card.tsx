@@ -272,8 +272,7 @@ export default class Card extends React.Component<Props> {
         }
 
         const closing =
-          (translation + velocity) *
-            gestureVelocityImpact *
+          (translation + velocity * gestureVelocityImpact) *
             getInvertedMultiplier(gestureDirection) >
           distance / 2
             ? velocity !== 0 || translation !== 0
