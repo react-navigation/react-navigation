@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.3](https://github.com/react-navigation/react-navigation/tree/master/packages/native/compare/@react-navigation/native@5.1.2...@react-navigation/native@5.1.3) (2020-03-23)
+
+
+### Bug Fixes
+
+* add info about android launchMode in useLinking error ([d94e43c](https://github.com/react-navigation/react-navigation/tree/master/packages/native/commit/d94e43c3c8625b209a5c883b8cb560496d07fda7))
+
+
+
+
+
 ## [5.1.2](https://github.com/react-navigation/react-navigation/tree/master/packages/native/compare/@react-navigation/native@5.1.1...@react-navigation/native@5.1.2) (2020-03-22)
 
 **Note:** Version bump only for package @react-navigation/native

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.3.1](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.3.0...@react-navigation/core@5.3.1) (2020-03-23)
+
+
+### Bug Fixes
+
+* don't emit events for screens that don't exist anymore ([1c00142](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/1c001424b595b40f9db9343096c833f75353b099))
+* only call listeners for focused screen for global events ([3096de6](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/3096de62868a7ed9ed65e529c8ddfa001b9be486))
+
+
+
+
+
 # [5.3.0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.2.3...@react-navigation/core@5.3.0) (2020-03-22)
 
 
