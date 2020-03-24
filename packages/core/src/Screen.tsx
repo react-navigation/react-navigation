@@ -1,5 +1,5 @@
-import { ParamListBase } from '@react-navigation/routers';
-import { RouteConfig } from './types';
+import { ParamListBase, NavigationState } from '@react-navigation/routers';
+import { RouteConfig, EventMapBase } from './types';
 
 /**
  * Empty component used for specifying route configuration.
@@ -7,8 +7,10 @@ import { RouteConfig } from './types';
 export default function Screen<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList,
-  ScreenOptions extends object
->(_: RouteConfig<ParamList, RouteName, ScreenOptions>) {
+  State extends NavigationState,
+  ScreenOptions extends object,
+  EventMap extends EventMapBase
+>(_: RouteConfig<ParamList, RouteName, State, ScreenOptions, EventMap>) {
   /* istanbul ignore next */
   return null;
 }

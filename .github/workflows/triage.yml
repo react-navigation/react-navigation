@@ -36,3 +36,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           args: comment "Hey! Thanks for opening the issue. The issue tracker is intended for only tracking bug reports. This helps us prioritize fixing bugs in the library. Seems you have a usage question. Please ask the question on [StackOverflow](https://stackoverflow.com/questions/tagged/react-navigation) instead using the `react-navigation` label. You can also chat with other community members on [Reactiflux Discord server](https://www.reactiflux.com/) in the `#react-navigation` channel."
+
+  feature-request:
+    runs-on: ubuntu-latest
+    if: github.event.label.name == 'feature-request'
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/github@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: comment "Hey! Thanks for opening the issue. The issue tracker is intended for only tracking bug reports. Seems you have a feature request. Please post the feature request on [Canny](https://react-navigation.canny.io/feature-requests). This lets other users upvote your feature request and helps us prioritize the most requested features."

@@ -11,6 +11,7 @@ import {
   ParamListBase,
   Descriptor,
   TabNavigationState,
+  TabActionHelpers,
 } from '@react-navigation/native';
 
 export type BottomTabNavigationEventMap = {
@@ -40,19 +41,8 @@ export type BottomTabNavigationProp<
   TabNavigationState,
   BottomTabNavigationOptions,
   BottomTabNavigationEventMap
-> & {
-  /**
-   * Jump to an existing tab.
-   *
-   * @param name Name of the route for the tab.
-   * @param [params] Params object for the route.
-   */
-  jumpTo<RouteName extends Extract<keyof ParamList, string>>(
-    ...args: ParamList[RouteName] extends undefined | any
-      ? [RouteName] | [RouteName, ParamList[RouteName]]
-      : [RouteName, ParamList[RouteName]]
-  ): void;
-};
+> &
+  TabActionHelpers<ParamList>;
 
 export type BottomTabNavigationOptions = {
   /**
@@ -184,6 +174,16 @@ export type BottomTabBarOptions = {
    * Whether the label position should adapt to the orientation.
    */
   adaptive?: boolean;
+  /**
+   * Safe area insets for the tab bar. This is used to avoid elements like the navigation bar on Android and bottom safe area on iOS.
+   * By default, the device's safe area insets are automatically detected. You can override the behavior with this option.
+   */
+  safeAreaInsets?: {
+    top?: number;
+    right?: number;
+    bottom?: number;
+    left?: number;
+  };
   /**
    * Style object for the tab bar container.
    */

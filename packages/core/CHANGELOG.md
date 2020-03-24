@@ -3,6 +3,121 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.3.1](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.3.0...@react-navigation/core@5.3.1) (2020-03-23)
+
+
+### Bug Fixes
+
+* don't emit events for screens that don't exist anymore ([1c00142](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/1c001424b595b40f9db9343096c833f75353b099))
+* only call listeners for focused screen for global events ([3096de6](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/3096de62868a7ed9ed65e529c8ddfa001b9be486))
+
+
+
+
+
+# [5.3.0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.2.3...@react-navigation/core@5.3.0) (2020-03-22)
+
+
+### Bug Fixes
+
+* return correct value for isFocused after changing screens ([5b15c71](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/5b15c7164f5503f2f0d51006a3f23bd0c58fd9b7)), closes [#7843](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/7843)
+
+
+### Features
+
+* support function in listeners prop ([3709e65](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/3709e652f41a16c2c2b05d5dbbe1da2017ba2c3f))
+
+
+
+
+
+## [5.2.3](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.2.2...@react-navigation/core@5.2.3) (2020-03-19)
+
+**Note:** Version bump only for package @react-navigation/core
+
+
+
+
+
+## [5.2.2](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.2.1...@react-navigation/core@5.2.2) (2020-03-16)
+
+**Note:** Version bump only for package @react-navigation/core
+
+
+
+
+
+## [5.2.1](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.2.0...@react-navigation/core@5.2.1) (2020-03-03)
+
+
+### Bug Fixes
+
+* fix links for documentation ([5bb0f40](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/5bb0f405ceb5755d39a0b5b1f2e4ecee0da051bc))
+* move updating state to useEffect ([2dfa4f3](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/2dfa4f36293a2acb718814f6b2fa79d7c7ddf09c))
+
+
+
+
+
+# [5.2.0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.6...@react-navigation/core@5.2.0) (2020-02-26)
+
+
+### Features
+
+* add ability add listeners with listeners prop ([1624108](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/162410843c4f175ae107756de1c3af04d1d47aa7)), closes [#6756](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/6756)
+
+
+
+
+
+## [5.1.6](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.5...@react-navigation/core@5.1.6) (2020-02-21)
+
+
+### Bug Fixes
+
+* avoid emitting focus events twice ([f167008](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/f16700812f3757713b04ca3a860209795b4a6c44)), closes [#6749](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/6749)
+* preserve screen order with numeric names ([125bd70](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/125bd70e49b708d936a2eee72ba5cb92eacf26a9)), closes [#6900](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/6900)
+
+
+
+
+
+## [5.1.5](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.4...@react-navigation/core@5.1.5) (2020-02-19)
+
+
+### Bug Fixes
+
+* show descriptive error for invalid return for useFocusEffect ([1a28c29](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/1a28c299b5e3f0805eb6e9ea3cf5e9cc90c7a280))
+
+
+
+
+
+## [5.1.4](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.3...@react-navigation/core@5.1.4) (2020-02-14)
+
+
+### Bug Fixes
+
+* link to migration guide on invalid usage ([c5fcfbd](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/c5fcfbd4277541e131acbaa7602a5d7e636afebb))
+* return '/' for empty paths ([aaf01e0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/aaf01e01e7b47b375f68aebe6d0effe82878d060))
+
+
+
+
+
+## [5.1.3](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.2...@react-navigation/core@5.1.3) (2020-02-14)
+
+
+### Bug Fixes
+
+* return false for canGoBack if navigator hasn't finished mounting ([c8ac5fa](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/c8ac5fab61cf127985431075a3c59c1f3dfa42da))
+* throw a descriptive error if navigation object hasn't initialized ([b6accd0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/b6accd03f69dd438e595094d8bf8599cc12e71ac))
+* update links in error messages ([f964200](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/f964200b0dcbc19d5f88ad2dd1eb8e5576973497))
+
+
+
+
+
 ## [5.1.2](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.1.1...@react-navigation/core@5.1.2) (2020-02-12)
 
 

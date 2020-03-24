@@ -10,7 +10,7 @@ it('renders correct focus state', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
-    return state.routes.map(route => descriptors[route.key].render());
+    return state.routes.map((route) => descriptors[route.key].render());
   };
 
   const Test = () => {

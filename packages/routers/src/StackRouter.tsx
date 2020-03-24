@@ -6,6 +6,7 @@ import {
   Router,
   DefaultRouterOptions,
   Route,
+  ParamListBase,
 } from './types';
 
 export type StackActionType =
@@ -40,6 +41,42 @@ export type StackNavigationState = NavigationState & {
    * Type of the router, in this case, it's stack.
    */
   type: 'stack';
+};
+
+export type StackActionHelpers<ParamList extends ParamListBase> = {
+  /**
+   * Replace the current route with a new one.
+   *
+   * @param name Route name of the new route.
+   * @param [params] Params object for the new route.
+   */
+  replace<RouteName extends keyof ParamList>(
+    ...args: ParamList[RouteName] extends undefined
+      ? [RouteName] | [RouteName, ParamList[RouteName]]
+      : [RouteName, ParamList[RouteName]]
+  ): void;
+
+  /**
+   * Push a new screen onto the stack.
+   *
+   * @param name Name of the route for the tab.
+   * @param [params] Params object for the route.
+   */
+  push<RouteName extends keyof ParamList>(
+    ...args: ParamList[RouteName] extends undefined | any
+      ? [RouteName] | [RouteName, ParamList[RouteName]]
+      : [RouteName, ParamList[RouteName]]
+  ): void;
+
+  /**
+   * Pop a screen from the stack.
+   */
+  pop(count?: number): void;
+
+  /**
+   * Pop to the first route in the stack, dismissing all other screens.
+   */
+  popToTop(): void;
 };
 
 export const StackActions = {
@@ -97,9 +134,9 @@ export default function StackRouter(options: StackRouterOptions) {
       }
 
       const routes = state.routes
-        .filter(route => routeNames.includes(route.name))
+        .filter((route) => routeNames.includes(route.name))
         .map(
-          route =>
+          (route) =>
             ({
               ...route,
               key: route.key || `${route.name}-${shortid()}`,
@@ -137,7 +174,7 @@ export default function StackRouter(options: StackRouterOptions) {
     },
 
     getStateForRouteNamesChange(state, { routeNames, routeParamList }) {
-      const routes = state.routes.filter(route =>
+      const routes = state.routes.filter((route) =>
         routeNames.includes(route.name)
       );
 
@@ -164,7 +201,7 @@ export default function StackRouter(options: StackRouterOptions) {
     },
 
     getStateForRouteFocus(state, key) {
-      const index = state.routes.findIndex(r => r.key === key);
+      const index = state.routes.findIndex((r) => r.key === key);
 
       if (index === -1 || index === state.index) {
         return state;
@@ -183,7 +220,7 @@ export default function StackRouter(options: StackRouterOptions) {
       switch (action.type) {
         case 'REPLACE': {
           const index = action.source
-            ? state.routes.findIndex(r => r.key === action.source)
+            ? state.routes.findIndex((r) => r.key === action.source)
             : state.index;
 
           if (index === -1) {
@@ -246,7 +283,7 @@ export default function StackRouter(options: StackRouterOptions) {
         case 'POP': {
           const index =
             action.target === state.key && action.source
-              ? state.routes.findIndex(r => r.key === action.source)
+              ? state.routes.findIndex((r) => r.key === action.source)
               : state.index;
 
           if (index > 0) {

@@ -6,8 +6,14 @@ import {
   Platform,
   StatusBar,
   I18nManager,
+  Dimensions,
+  ScaledSize,
 } from 'react-native';
+// eslint-disable-next-line import/no-unresolved
+import { enableScreens } from 'react-native-screens';
 import RNRestart from 'react-native-restart';
+import { Updates } from 'expo';
+import { Asset } from 'expo-asset';
 import { MaterialIcons } from '@expo/vector-icons';
 import {
   Provider as PaperProvider,
@@ -17,7 +23,6 @@ import {
   List,
   Divider,
 } from 'react-native-paper';
-import { Asset } from 'expo-asset';
 import {
   InitialState,
   useLinking,
@@ -39,7 +44,6 @@ import {
 
 import LinkingPrefixes from './LinkingPrefixes';
 import SimpleStack from './Screens/SimpleStack';
-import NativeStack from './Screens/NativeStack';
 import ModalPresentationStack from './Screens/ModalPresentationStack';
 import StackTransparent from './Screens/StackTransparent';
 import StackHeaderCustomization from './Screens/StackHeaderCustomization';
@@ -50,9 +54,10 @@ import DynamicTabs from './Screens/DynamicTabs';
 import AuthFlow from './Screens/AuthFlow';
 import CompatAPI from './Screens/CompatAPI';
 import SettingsItem from './Shared/SettingsItem';
-import { Updates } from 'expo';
 
 YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
+
+enableScreens();
 
 type RootDrawerParamList = {
   Root: undefined;
@@ -67,7 +72,6 @@ type RootStackParamList = {
 
 const SCREENS = {
   SimpleStack: { title: 'Simple Stack', component: SimpleStack },
-  NativeStack: { title: 'Native Stack', component: NativeStack },
   ModalPresentationStack: {
     title: 'Modal Presentation Stack',
     component: ModalPresentationStack,
@@ -124,7 +128,8 @@ export default function App() {
     prefixes: LinkingPrefixes,
     config: {
       Root: {
-        path: 'root',
+        path: '',
+        initialRouteName: 'Home',
         screens: Object.keys(SCREENS).reduce<{ [key: string]: string }>(
           (acc, name) => {
             // Convert screen names such as SimpleStack to kebab case (simple-stack)
@@ -135,7 +140,7 @@ export default function App() {
 
             return acc;
           },
-          {}
+          { Home: '' }
         ),
       },
     },
@@ -193,9 +198,23 @@ export default function App() {
     };
   }, [theme.colors, theme.dark]);
 
+  const [dimensions, setDimensions] = React.useState(Dimensions.get('window'));
+
+  React.useEffect(() => {
+    const onDimensionsChange = ({ window }: { window: ScaledSize }) => {
+      setDimensions(window);
+    };
+
+    Dimensions.addEventListener('change', onDimensionsChange);
+
+    return () => Dimensions.removeEventListener('change', onDimensionsChange);
+  }, []);
+
   if (!isReady) {
     return null;
   }
+
+  const isLargeScreen = dimensions.width > 900;
 
   return (
     <PaperProvider theme={paperTheme}>
@@ -205,7 +224,7 @@ export default function App() {
       <NavigationContainer
         ref={containerRef}
         initialState={initialState}
-        onStateChange={state =>
+        onStateChange={(state) =>
           AsyncStorage.setItem(
             NAVIGATION_PERSISTENCE_KEY,
             JSON.stringify(state)
@@ -213,7 +232,7 @@ export default function App() {
         }
         theme={theme}
       >
-        <Drawer.Navigator>
+        <Drawer.Navigator drawerType={isLargeScreen ? 'permanent' : undefined}>
           <Drawer.Screen
             name="Root"
             options={{
@@ -237,13 +256,15 @@ export default function App() {
                   name="Home"
                   options={{
                     title: 'Examples',
-                    headerLeft: () => (
-                      <Appbar.Action
-                        color={theme.colors.text}
-                        icon="menu"
-                        onPress={() => navigation.toggleDrawer()}
-                      />
-                    ),
+                    headerLeft: isLargeScreen
+                      ? undefined
+                      : () => (
+                          <Appbar.Action
+                            color={theme.colors.text}
+                            icon="menu"
+                            onPress={() => navigation.toggleDrawer()}
+                          />
+                        ),
                   }}
                 >
                   {({
@@ -277,12 +298,12 @@ export default function App() {
                             theme.dark ? 'light' : 'dark'
                           );
 
-                          setTheme(t => (t.dark ? DefaultTheme : DarkTheme));
+                          setTheme((t) => (t.dark ? DefaultTheme : DarkTheme));
                         }}
                       />
                       <Divider />
                       {(Object.keys(SCREENS) as (keyof typeof SCREENS)[]).map(
-                        name => (
+                        (name) => (
                           <List.Item
                             key={name}
                             title={SCREENS[name].title}
@@ -294,7 +315,7 @@ export default function App() {
                   )}
                 </Stack.Screen>
                 {(Object.keys(SCREENS) as (keyof typeof SCREENS)[]).map(
-                  name => (
+                  (name) => (
                     <Stack.Screen
                       key={name}
                       name={name}

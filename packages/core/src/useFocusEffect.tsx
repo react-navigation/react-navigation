@@ -10,12 +10,50 @@ type EffectCallback = () => undefined | void | (() => void);
  *
  * @param callback Memoized callback containing the effect, should optionally return a cleanup function.
  */
-export default function useFocusEffect(callback: EffectCallback) {
+export default function useFocusEffect(effect: EffectCallback) {
   const navigation = useNavigation();
 
   React.useEffect(() => {
     let isFocused = false;
     let cleanup: undefined | void | (() => void);
+
+    const callback = () => {
+      const destroy = effect();
+
+      if (destroy === undefined || typeof destroy === 'function') {
+        return destroy;
+      }
+
+      if (process.env.NODE_ENV !== 'production') {
+        let message =
+          'An effect function must not return anything besides a function, which is used for clean-up.';
+
+        if (destroy === null) {
+          message +=
+            " You returned 'null'. If your effect does not require clean-up, return 'undefined' (or nothing).";
+        } else if (typeof (destroy as any).then === 'function') {
+          message +=
+            "\n\nIt looks like you wrote 'useFocusEffect(async () => ...)' or returned a Promise. " +
+            'Instead, write the async function inside your effect ' +
+            'and call it immediately:\n\n' +
+            'useFocusEffect(\n' +
+            '  React.useCallback() => {\n' +
+            '    async function fetchData() {\n' +
+            '      // You can await here\n' +
+            '      const response = await MyAPI.getData(someId);\n' +
+            '      // ...\n' +
+            '    }\n\n' +
+            '    fetchData();\n' +
+            '  }, [someId])\n' +
+            '};\n\n' +
+            'See usage guide: https://reactnavigation.org/docs/use-focus-effect';
+        } else {
+          message += ` You returned: '${JSON.stringify(destroy)}'`;
+        }
+
+        console.error(message);
+      }
+    };
 
     // We need to run the effect on intial render/dep changes if the screen is focused
     if (navigation.isFocused()) {
@@ -55,5 +93,5 @@ export default function useFocusEffect(callback: EffectCallback) {
       unsubscribeFocus();
       unsubscribeBlur();
     };
-  }, [callback, navigation]);
+  }, [effect, navigation]);
 }

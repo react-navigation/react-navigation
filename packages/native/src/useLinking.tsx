@@ -40,7 +40,7 @@ export default function useLinking(
   React.useEffect(() => {
     if (isUsingLinking) {
       throw new Error(
-        "Looks like you are using 'useLinking' in multiple components. This is likely an error since URL integration should only be handled in one place to avoid conflicts."
+        "Looks like you are using 'useLinking' in multiple components. This is likely an error since URL integration should only be handled in one place to avoid conflicts. Also ensure that you set your android activity launchMode to single task in your AndroiManifest.xml file."
       );
     } else {
       isUsingLinking = true;
@@ -162,10 +162,10 @@ export default function useLinking(
 
           pendingStateUpdateRef.current = true;
 
-          if (action.type === 'RESET_ROOT') {
-            navigation.resetRoot(action.payload);
-          } else {
+          if (action !== undefined) {
             navigation.dispatch(action);
+          } else {
+            navigation.resetRoot(state);
           }
         }
       }

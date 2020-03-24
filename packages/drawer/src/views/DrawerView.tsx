@@ -32,6 +32,7 @@ import {
   DrawerNavigationHelpers,
   DrawerContentComponentProps,
 } from '../types';
+import DrawerOpenContext from '../utils/DrawerOpenContext';
 import DrawerPositionContext from '../utils/DrawerPositionContext';
 
 type Props = DrawerNavigationConfig & {
@@ -88,15 +89,17 @@ export default function DrawerView({
   sceneContainerStyle,
 }: Props) {
   const [loaded, setLoaded] = React.useState([state.index]);
-  const [drawerWidth, setDrawerWidth] = React.useState(() =>
-    getDefaultDrawerWidth(Dimensions.get('window'))
-  );
+  const [drawerWidth, setDrawerWidth] = React.useState(() => {
+    const { height = 0, width = 0 } = Dimensions.get('window');
+
+    return getDefaultDrawerWidth({ height, width });
+  });
 
   const drawerGestureRef = React.useRef<PanGestureHandler>(null);
 
   const { colors } = useTheme();
 
-  const isDrawerOpen = Boolean(state.history.find(it => it.type === 'drawer'));
+  const isDrawerOpen = state.history.some((it) => it.type === 'drawer');
 
   const handleDrawerOpen = React.useCallback(() => {
     navigation.dispatch({
@@ -203,36 +206,48 @@ export default function DrawerView({
     <GestureHandlerWrapper style={styles.content}>
       <SafeAreaProviderCompat>
         <DrawerGestureContext.Provider value={drawerGestureRef}>
-          <Drawer
-            open={isDrawerOpen}
-            gestureEnabled={gestureEnabled}
-            onOpen={handleDrawerOpen}
-            onClose={handleDrawerClose}
-            onGestureRef={ref => {
-              // @ts-ignore
-              drawerGestureRef.current = ref;
-            }}
-            gestureHandlerProps={gestureHandlerProps}
-            drawerType={drawerType}
-            drawerPosition={drawerPosition}
-            sceneContainerStyle={[
-              { backgroundColor: colors.background },
-              sceneContainerStyle,
-            ]}
-            drawerStyle={[
-              { width: drawerWidth, backgroundColor: colors.card },
-              drawerStyle,
-            ]}
-            overlayStyle={{ backgroundColor: overlayColor }}
-            swipeEdgeWidth={edgeWidth}
-            swipeDistanceThreshold={minSwipeDistance}
-            hideStatusBar={hideStatusBar}
-            statusBarAnimation={statusBarAnimation}
-            renderDrawerContent={renderNavigationView}
-            renderSceneContent={renderContent}
-            keyboardDismissMode={keyboardDismissMode}
-            drawerPostion={drawerPosition}
-          />
+          <DrawerOpenContext.Provider value={isDrawerOpen}>
+            <Drawer
+              open={isDrawerOpen}
+              gestureEnabled={gestureEnabled}
+              onOpen={handleDrawerOpen}
+              onClose={handleDrawerClose}
+              onGestureRef={(ref) => {
+                // @ts-ignore
+                drawerGestureRef.current = ref;
+              }}
+              gestureHandlerProps={gestureHandlerProps}
+              drawerType={drawerType}
+              drawerPosition={drawerPosition}
+              sceneContainerStyle={[
+                { backgroundColor: colors.background },
+                sceneContainerStyle,
+              ]}
+              drawerStyle={[
+                { width: drawerWidth, backgroundColor: colors.card },
+                drawerType === 'permanent' &&
+                  (drawerPosition === 'left'
+                    ? {
+                        borderRightColor: colors.border,
+                        borderRightWidth: StyleSheet.hairlineWidth,
+                      }
+                    : {
+                        borderLeftColor: colors.border,
+                        borderLeftWidth: StyleSheet.hairlineWidth,
+                      }),
+                drawerStyle,
+              ]}
+              overlayStyle={{ backgroundColor: overlayColor }}
+              swipeEdgeWidth={edgeWidth}
+              swipeDistanceThreshold={minSwipeDistance}
+              hideStatusBar={hideStatusBar}
+              statusBarAnimation={statusBarAnimation}
+              renderDrawerContent={renderNavigationView}
+              renderSceneContent={renderContent}
+              keyboardDismissMode={keyboardDismissMode}
+              drawerPostion={drawerPosition}
+            />
+          </DrawerOpenContext.Provider>
         </DrawerGestureContext.Provider>
       </SafeAreaProviderCompat>
     </GestureHandlerWrapper>

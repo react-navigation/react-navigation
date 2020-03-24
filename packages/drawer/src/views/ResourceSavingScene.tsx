@@ -9,21 +9,29 @@ type Props = {
   style?: any;
 };
 
-const FAR_FAR_AWAY = 3000; // this should be big enough to move the whole view out of its container
+const FAR_FAR_AWAY = 30000; // this should be big enough to move the whole view out of its container
 
 export default class ResourceSavingScene extends React.Component<Props> {
   render() {
-    if (screensEnabled?.()) {
+    // react-native-screens is buggy on web
+    if (screensEnabled?.() && Platform.OS !== 'web') {
       const { isVisible, ...rest } = this.props;
 
       // @ts-ignore
       return <Screen active={isVisible ? 1 : 0} {...rest} />;
     }
+
     const { isVisible, children, style, ...rest } = this.props;
 
     return (
       <View
-        style={[styles.container, style]}
+        style={[
+          styles.container,
+          Platform.OS === 'web'
+            ? { display: isVisible ? 'flex' : 'none' }
+            : null,
+          style,
+        ]}
         collapsable={false}
         removeClippedSubviews={
           // On iOS, set removeClippedSubviews to true only when not focused

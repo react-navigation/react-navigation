@@ -12,7 +12,7 @@ it('gets navigation prop from context', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
-    return state.routes.map(route => descriptors[route.key].render());
+    return state.routes.map((route) => descriptors[route.key].render());
   };
 
   const Test = () => {
@@ -38,7 +38,7 @@ it("gets navigation's parent from context", () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
-    return state.routes.map(route => descriptors[route.key].render());
+    return state.routes.map((route) => descriptors[route.key].render());
   };
 
   const Test = () => {
@@ -70,7 +70,7 @@ it("gets navigation's parent's parent from context", () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
-    return state.routes.map(route => descriptors[route.key].render());
+    return state.routes.map((route) => descriptors[route.key].render());
   };
 
   const Test = () => {
@@ -112,7 +112,7 @@ it('throws if called outside a navigation context', () => {
   const Test = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     expect(() => useNavigation()).toThrow(
-      "We couldn't find a navigation object. Is your component inside a screen in a navigator?"
+      "Couldn't find a navigation object. Is your component inside a screen in a navigator?"
     );
 
     return null;

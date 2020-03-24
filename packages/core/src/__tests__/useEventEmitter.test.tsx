@@ -15,7 +15,7 @@ it('fires focus and blur events in root navigator', () => {
 
     React.useImperativeHandle(ref, () => navigation, [navigation]);
 
-    return state.routes.map(route => descriptors[route.key].render());
+    return state.routes.map((route) => descriptors[route.key].render());
   });
 
   const firstFocusCallback = jest.fn();
@@ -106,7 +106,7 @@ it('fires focus and blur events in nested navigator', () => {
 
     React.useImperativeHandle(ref, () => navigation, [navigation]);
 
-    return state.routes.map(route => descriptors[route.key].render());
+    return state.routes.map((route) => descriptors[route.key].render());
   });
 
   const firstFocusCallback = jest.fn();
@@ -188,10 +188,12 @@ it('fires focus and blur events in nested navigator', () => {
 
   expect(thirdFocusCallback).toBeCalledTimes(0);
   expect(secondFocusCallback).toBeCalledTimes(1);
+  expect(fourthBlurCallback).toBeCalledTimes(0);
 
   act(() => parent.current.navigate('nested'));
 
   expect(firstBlurCallback).toBeCalledTimes(1);
+  expect(secondBlurCallback).toBeCalledTimes(1);
   expect(thirdFocusCallback).toBeCalledTimes(0);
   expect(fourthFocusCallback).toBeCalledTimes(1);
 
@@ -199,6 +201,35 @@ it('fires focus and blur events in nested navigator', () => {
 
   expect(fourthBlurCallback).toBeCalledTimes(1);
   expect(thirdFocusCallback).toBeCalledTimes(1);
+
+  act(() => parent.current.navigate('first'));
+
+  expect(firstFocusCallback).toBeCalledTimes(2);
+  expect(thirdBlurCallback).toBeCalledTimes(1);
+
+  act(() => parent.current.navigate('nested', { screen: 'fourth' }));
+
+  expect(fourthFocusCallback).toBeCalledTimes(2);
+  expect(thirdBlurCallback).toBeCalledTimes(1);
+  expect(firstBlurCallback).toBeCalledTimes(2);
+
+  act(() => parent.current.navigate('nested', { screen: 'third' }));
+
+  expect(thirdFocusCallback).toBeCalledTimes(2);
+  expect(fourthBlurCallback).toBeCalledTimes(2);
+
+  // Make sure nothing else has changed
+  expect(firstFocusCallback).toBeCalledTimes(2);
+  expect(firstBlurCallback).toBeCalledTimes(2);
+
+  expect(secondFocusCallback).toBeCalledTimes(1);
+  expect(secondBlurCallback).toBeCalledTimes(1);
+
+  expect(thirdFocusCallback).toBeCalledTimes(2);
+  expect(thirdBlurCallback).toBeCalledTimes(1);
+
+  expect(fourthFocusCallback).toBeCalledTimes(2);
+  expect(fourthBlurCallback).toBeCalledTimes(2);
 });
 
 it('fires blur event when a route is removed with a delay', async () => {
@@ -331,7 +362,7 @@ it('fires blur event when a route is removed with a delay', async () => {
   expect(blurCallback).toBeCalledTimes(1);
 });
 
-it('fires custom events', () => {
+it('fires custom events added with addListener', () => {
   const eventName = 'someSuperCoolEvent';
 
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
@@ -345,7 +376,7 @@ it('fires custom events', () => {
       state,
     ]);
 
-    return state.routes.map(route => descriptors[route.key].render());
+    return state.routes.map((route) => descriptors[route.key].render());
   });
 
   const firstCallback = jest.fn();
@@ -378,10 +409,13 @@ it('fires custom events', () => {
   expect(secondCallback).toBeCalledTimes(0);
   expect(thirdCallback).toBeCalledTimes(0);
 
+  const target =
+    ref.current.state.routes[ref.current.state.routes.length - 1].key;
+
   act(() => {
     ref.current.navigation.emit({
       type: eventName,
-      target: ref.current.state.routes[ref.current.state.routes.length - 1].key,
+      target,
       data: 42,
     });
   });
@@ -391,6 +425,7 @@ it('fires custom events', () => {
   expect(thirdCallback).toBeCalledTimes(1);
   expect(thirdCallback.mock.calls[0][0].type).toBe('someSuperCoolEvent');
   expect(thirdCallback.mock.calls[0][0].data).toBe(42);
+  expect(thirdCallback.mock.calls[0][0].target).toBe(target);
   expect(thirdCallback.mock.calls[0][0].defaultPrevented).toBe(undefined);
   expect(thirdCallback.mock.calls[0][0].preventDefault).toBe(undefined);
 
@@ -398,9 +433,278 @@ it('fires custom events', () => {
     ref.current.navigation.emit({ type: eventName });
   });
 
+  expect(firstCallback.mock.calls[0][0].target).toBe(undefined);
+  expect(secondCallback.mock.calls[0][0].target).toBe(undefined);
+  expect(thirdCallback.mock.calls[1][0].target).toBe(undefined);
+
   expect(firstCallback).toBeCalledTimes(1);
   expect(secondCallback).toBeCalledTimes(1);
   expect(thirdCallback).toBeCalledTimes(2);
+});
+
+it("doesn't call same listener multiple times with addListener", () => {
+  const eventName = 'someSuperCoolEvent';
+
+  const TestNavigator = React.forwardRef((props: any, ref: any): any => {
+    const { state, navigation, descriptors } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    React.useImperativeHandle(ref, () => ({ navigation, state }), [
+      navigation,
+      state,
+    ]);
+
+    return state.routes.map((route) => descriptors[route.key].render());
+  });
+
+  const callback = jest.fn();
+
+  const Test = ({ navigation }: any) => {
+    React.useEffect(() => navigation.addListener(eventName, callback), [
+      navigation,
+    ]);
+
+    return null;
+  };
+
+  const ref = React.createRef<any>();
+
+  const element = (
+    <BaseNavigationContainer>
+      <TestNavigator ref={ref}>
+        <Screen name="first" component={Test} />
+        <Screen name="second" component={Test} />
+        <Screen name="third" component={Test} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(element);
+
+  expect(callback).toBeCalledTimes(0);
+
+  act(() => {
+    ref.current.navigation.emit({ type: eventName });
+  });
+
+  expect(callback).toBeCalledTimes(1);
+});
+
+it('fires custom events added with listeners prop', () => {
+  const eventName = 'someSuperCoolEvent';
+
+  const TestNavigator = React.forwardRef((props: any, ref: any): any => {
+    const { state, navigation } = useNavigationBuilder(MockRouter, props);
+
+    React.useImperativeHandle(ref, () => ({ navigation, state }), [
+      navigation,
+      state,
+    ]);
+
+    return null;
+  });
+
+  const firstCallback = jest.fn();
+  const secondCallback = jest.fn();
+  const thirdCallback = jest.fn();
+
+  const ref = React.createRef<any>();
+
+  const element = (
+    <BaseNavigationContainer>
+      <TestNavigator ref={ref}>
+        <Screen
+          name="first"
+          listeners={{ someSuperCoolEvent: firstCallback }}
+          component={jest.fn()}
+        />
+        <Screen
+          name="second"
+          listeners={{ someSuperCoolEvent: secondCallback }}
+          component={jest.fn()}
+        />
+        <Screen
+          name="third"
+          listeners={{ someSuperCoolEvent: thirdCallback }}
+          component={jest.fn()}
+        />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(element);
+
+  expect(firstCallback).toBeCalledTimes(0);
+  expect(secondCallback).toBeCalledTimes(0);
+  expect(thirdCallback).toBeCalledTimes(0);
+
+  const target =
+    ref.current.state.routes[ref.current.state.routes.length - 1].key;
+
+  act(() => {
+    ref.current.navigation.emit({
+      type: eventName,
+      target,
+      data: 42,
+    });
+  });
+
+  expect(firstCallback).toBeCalledTimes(0);
+  expect(secondCallback).toBeCalledTimes(0);
+  expect(thirdCallback).toBeCalledTimes(1);
+  expect(thirdCallback.mock.calls[0][0].type).toBe('someSuperCoolEvent');
+  expect(thirdCallback.mock.calls[0][0].data).toBe(42);
+  expect(thirdCallback.mock.calls[0][0].target).toBe(target);
+  expect(thirdCallback.mock.calls[0][0].defaultPrevented).toBe(undefined);
+  expect(thirdCallback.mock.calls[0][0].preventDefault).toBe(undefined);
+
+  act(() => {
+    ref.current.navigation.emit({ type: eventName });
+  });
+
+  expect(firstCallback.mock.calls[0][0].target).toBe(undefined);
+
+  expect(firstCallback).toBeCalledTimes(1);
+  expect(secondCallback).toBeCalledTimes(0);
+  expect(thirdCallback).toBeCalledTimes(1);
+});
+
+it("doesn't call same listener multiple times with listeners", () => {
+  const eventName = 'someSuperCoolEvent';
+
+  const TestNavigator = React.forwardRef((props: any, ref: any): any => {
+    const { state, navigation } = useNavigationBuilder(MockRouter, props);
+
+    React.useImperativeHandle(ref, () => ({ navigation, state }), [
+      navigation,
+      state,
+    ]);
+
+    return null;
+  });
+
+  const callback = jest.fn();
+
+  const ref = React.createRef<any>();
+
+  const element = (
+    <BaseNavigationContainer>
+      <TestNavigator ref={ref}>
+        <Screen
+          name="first"
+          listeners={{ someSuperCoolEvent: callback }}
+          component={jest.fn()}
+        />
+        <Screen
+          name="second"
+          listeners={{ someSuperCoolEvent: callback }}
+          component={jest.fn()}
+        />
+        <Screen
+          name="third"
+          listeners={{ someSuperCoolEvent: callback }}
+          component={jest.fn()}
+        />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(element);
+
+  expect(callback).toBeCalledTimes(0);
+
+  act(() => {
+    ref.current.navigation.emit({ type: eventName });
+  });
+
+  expect(callback).toBeCalledTimes(1);
+});
+
+it('fires listeners when callback is provided for listeners prop', () => {
+  const eventName = 'someSuperCoolEvent';
+
+  const TestNavigator = React.forwardRef((props: any, ref: any): any => {
+    const { state, navigation } = useNavigationBuilder(MockRouter, props);
+
+    React.useImperativeHandle(ref, () => ({ navigation, state }), [
+      navigation,
+      state,
+    ]);
+
+    return null;
+  });
+
+  const firstCallback = jest.fn();
+  const secondCallback = jest.fn();
+  const thirdCallback = jest.fn();
+
+  const ref = React.createRef<any>();
+
+  const element = (
+    <BaseNavigationContainer>
+      <TestNavigator ref={ref}>
+        <Screen
+          name="first"
+          listeners={({ route, navigation }) => ({
+            someSuperCoolEvent: (e) => firstCallback(e, route, navigation),
+          })}
+          component={jest.fn()}
+        />
+        <Screen
+          name="second"
+          listeners={({ route, navigation }) => ({
+            someSuperCoolEvent: (e) => secondCallback(e, route, navigation),
+          })}
+          component={jest.fn()}
+        />
+        <Screen
+          name="third"
+          listeners={({ route, navigation }) => ({
+            someSuperCoolEvent: (e) => thirdCallback(e, route, navigation),
+          })}
+          component={jest.fn()}
+        />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(element);
+
+  expect(firstCallback).toBeCalledTimes(0);
+  expect(secondCallback).toBeCalledTimes(0);
+  expect(thirdCallback).toBeCalledTimes(0);
+
+  const target =
+    ref.current.state.routes[ref.current.state.routes.length - 1].key;
+
+  act(() => {
+    ref.current.navigation.emit({
+      type: eventName,
+      target,
+      data: 42,
+    });
+  });
+
+  expect(firstCallback).toBeCalledTimes(0);
+  expect(secondCallback).toBeCalledTimes(0);
+  expect(thirdCallback).toBeCalledTimes(1);
+  expect(thirdCallback.mock.calls[0][0].type).toBe('someSuperCoolEvent');
+  expect(thirdCallback.mock.calls[0][0].data).toBe(42);
+  expect(thirdCallback.mock.calls[0][0].target).toBe(target);
+  expect(thirdCallback.mock.calls[0][0].defaultPrevented).toBe(undefined);
+  expect(thirdCallback.mock.calls[0][0].preventDefault).toBe(undefined);
+
+  act(() => {
+    ref.current.navigation.emit({ type: eventName });
+  });
+
+  expect(firstCallback.mock.calls[0][0].target).toBe(undefined);
+
+  expect(firstCallback).toBeCalledTimes(1);
+  expect(secondCallback).toBeCalledTimes(0);
+  expect(thirdCallback).toBeCalledTimes(1);
 });
 
 it('has option to prevent default', () => {
@@ -419,7 +723,7 @@ it('has option to prevent default', () => {
       state,
     ]);
 
-    return state.routes.map(route => descriptors[route.key].render());
+    return state.routes.map((route) => descriptors[route.key].render());
   });
 
   const callback = (e: any) => {

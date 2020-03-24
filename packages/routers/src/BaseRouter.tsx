@@ -1,3 +1,4 @@
+import shortid from 'shortid';
 import { CommonNavigationAction, NavigationState, PartialState } from './types';
 
 /**
@@ -12,7 +13,7 @@ const BaseRouter = {
     switch (action.type) {
       case 'SET_PARAMS': {
         const index = action.source
-          ? state.routes.findIndex(r => r.key === action.source)
+          ? state.routes.findIndex((r) => r.key === action.source)
           : state.index;
 
         if (index === -1) {
@@ -29,8 +30,40 @@ const BaseRouter = {
         };
       }
 
-      case 'RESET':
-        return action.payload as PartialState<State>;
+      case 'RESET': {
+        const nextState = action.payload as State | PartialState<State>;
+
+        if (
+          nextState.routes.length === 0 ||
+          nextState.routes.some(
+            (route: { name: string }) => !state.routeNames.includes(route.name)
+          )
+        ) {
+          return null;
+        }
+
+        if (nextState.stale === false) {
+          if (
+            state.routeNames.length !== nextState.routeNames.length ||
+            nextState.routeNames.some(
+              (name) => !state.routeNames.includes(name)
+            )
+          ) {
+            return null;
+          }
+
+          return {
+            ...nextState,
+            routes: nextState.routes.map((route) =>
+              route.key
+                ? route
+                : { ...route, key: `${route.name}-${shortid()}` }
+            ),
+          };
+        }
+
+        return nextState;
+      }
 
       default:
         return null;

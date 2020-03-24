@@ -14,17 +14,11 @@ export default function TabBarTop(props: MaterialTopTabBarProps) {
     navigation,
     descriptors,
     activeTintColor = colors.text,
-    inactiveTintColor = Color(activeTintColor)
-      .alpha(0.5)
-      .rgb()
-      .string(),
+    inactiveTintColor = Color(activeTintColor).alpha(0.5).rgb().string(),
     allowFontScaling = true,
     showIcon = false,
     showLabel = true,
-    pressColor = Color(activeTintColor)
-      .alpha(0.08)
-      .rgb()
-      .string(),
+    pressColor = Color(activeTintColor).alpha(0.08).rgb().string(),
     iconStyle,
     labelStyle,
     indicatorStyle,

@@ -28,7 +28,7 @@ it('throws when getState is accessed without a container', () => {
   const element = <Test />;
 
   expect(() => render(element).update(element)).toThrowError(
-    "We couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?"
+    "Couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?"
   );
 });
 
@@ -47,78 +47,7 @@ it('throws when setState is accessed without a container', () => {
   const element = <Test />;
 
   expect(() => render(element).update(element)).toThrowError(
-    "We couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?"
-  );
-});
-
-it('throws when performTransaction is accessed without a container', () => {
-  expect.assertions(1);
-
-  const Test = () => {
-    const { performTransaction } = React.useContext(NavigationStateContext);
-
-    // eslint-disable-next-line babel/no-unused-expressions
-    performTransaction;
-
-    return null;
-  };
-
-  const element = <Test />;
-
-  expect(() => render(element).update(element)).toThrowError(
-    "We couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?"
-  );
-});
-
-it('throws when setState is called outside performTransaction', () => {
-  expect.assertions(1);
-
-  const Test = () => {
-    const { setState } = React.useContext(NavigationStateContext);
-
-    React.useEffect(() => {
-      setState(undefined);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    return null;
-  };
-
-  const element = (
-    <BaseNavigationContainer>
-      <Test />
-    </BaseNavigationContainer>
-  );
-
-  expect(() => render(element).update(element)).toThrowError(
-    "Any 'setState' calls need to be done inside 'performTransaction'"
-  );
-});
-
-it('throws when nesting performTransaction', () => {
-  expect.assertions(1);
-
-  const Test = () => {
-    const { performTransaction } = React.useContext(NavigationStateContext);
-
-    React.useEffect(() => {
-      performTransaction(() => {
-        performTransaction(() => {});
-      });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    return null;
-  };
-
-  const element = (
-    <BaseNavigationContainer>
-      <Test />
-    </BaseNavigationContainer>
-  );
-
-  expect(() => render(element).update(element)).toThrowError(
-    "Only one transaction can be active at a time. Did you accidentally nest 'performTransaction'?"
+    "Couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?"
   );
 });
 
@@ -193,7 +122,7 @@ it('handle dispatching with ref', () => {
 
     return (
       <React.Fragment>
-        {state.routes.map(route => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key].render())}
       </React.Fragment>
     );
   };
@@ -291,7 +220,7 @@ it('handle resetting state with ref', () => {
 
     return (
       <React.Fragment>
-        {state.routes.map(route => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key].render())}
       </React.Fragment>
     );
   };
@@ -442,7 +371,7 @@ it('emits state events when the state changes', () => {
 
     return (
       <React.Fragment>
-        {state.routes.map(route => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key].render())}
       </React.Fragment>
     );
   };

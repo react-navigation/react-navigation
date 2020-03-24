@@ -1,10 +1,16 @@
 import shortid from 'shortid';
-import { PartialState, CommonNavigationAction, Router } from './types';
+import {
+  PartialState,
+  CommonNavigationAction,
+  Router,
+  ParamListBase,
+} from './types';
 import TabRouter, {
   TabActions,
   TabActionType,
   TabRouterOptions,
   TabNavigationState,
+  TabActionHelpers,
 } from './TabRouter';
 
 export type DrawerActionType =
@@ -31,6 +37,25 @@ export type DrawerNavigationState = Omit<
   history: ({ type: 'route'; key: string } | { type: 'drawer' })[];
 };
 
+export type DrawerActionHelpers<
+  ParamList extends ParamListBase
+> = TabActionHelpers<ParamList> & {
+  /**
+   * Open the drawer sidebar.
+   */
+  openDrawer(): void;
+
+  /**
+   * Close the drawer sidebar.
+   */
+  closeDrawer(): void;
+
+  /**
+   * Open the drawer sidebar if closed, or close if opened.
+   */
+  toggleDrawer(): void;
+};
+
 export const DrawerActions = {
   ...TabActions,
   openDrawer(): DrawerActionType {
@@ -46,7 +71,7 @@ export const DrawerActions = {
 
 const isDrawerOpen = (
   state: DrawerNavigationState | PartialState<DrawerNavigationState>
-) => Boolean(state.history?.find(it => it.type === 'drawer'));
+) => Boolean(state.history?.find((it) => it.type === 'drawer'));
 
 const openDrawer = (state: DrawerNavigationState): DrawerNavigationState => {
   if (isDrawerOpen(state)) {
@@ -66,7 +91,7 @@ const closeDrawer = (state: DrawerNavigationState): DrawerNavigationState => {
 
   return {
     ...state,
-    history: state.history.filter(it => it.type !== 'drawer'),
+    history: state.history.filter((it) => it.type !== 'drawer'),
   };
 };
 

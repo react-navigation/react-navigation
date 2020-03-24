@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.1.1...@react-navigation/routers@5.2.0) (2020-03-22)
+
+
+### Features
+
+* add keys to routes missing keys during reset ([813a590](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/813a5903b5f44506b9097538ed85229e565b855e))
+
+
+
+
+
+## [5.1.1](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.1.0...@react-navigation/routers@5.1.1) (2020-03-16)
+
+
+### Bug Fixes
+
+* don't handle action if no routes are present ([660cac3](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/660cac3557bce8978812ce2750e961e7ada92d13))
+
+
+
+
+
+# [5.1.0](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.0.3...@react-navigation/routers@5.1.0) (2020-03-03)
+
+
+### Bug Fixes
+
+* fix links for documentation ([5bb0f40](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/5bb0f405ceb5755d39a0b5b1f2e4ecee0da051bc))
+
+
+### Features
+
+* make reset bubble up ([09f6808](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/09f6808d7d43c70b2c502151f9f20fad03972886))
+
+
+
+
+
+## [5.0.3](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.0.2...@react-navigation/routers@5.0.3) (2020-02-26)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+
+
+
+
+## [5.0.2](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.0.1...@react-navigation/routers@5.0.2) (2020-02-21)
+
+
+### Bug Fixes
+
+* tweak error message for navigate ([c8ea419](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/c8ea4199f4b19a58d5e409cfcc96e587fe354a9a))
+
+
+
+
+
 ## [5.0.1](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.33...@react-navigation/routers@5.0.1) (2020-02-10)
 
 

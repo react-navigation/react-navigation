@@ -16,14 +16,15 @@ import isSerializable from './isSerializable';
 
 import { NavigationContainerRef, NavigationContainerProps } from './types';
 import useEventEmitter from './useEventEmitter';
+import useSyncState from './useSyncState';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
 
 const MISSING_CONTEXT_ERROR =
-  "We couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'? See https://reactnavigation.org/docs/en/getting-started.html for setup instructions.";
+  "Couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'? See https://reactnavigation.org/docs/getting-started for setup instructions.";
 
 const NOT_INITIALIZED_ERROR =
-  "The 'navigation' object hasn't been initialized yet. This might happen if you don't have a navigator mounted, or if the navigator hasn't finished mounting. You can ensure that all navigators have mounted after the callback to 'useEffect' is called in your root component.";
+  "The 'navigation' object hasn't been initialized yet. This might happen if you don't have a navigator mounted, or if the navigator hasn't finished mounting. See https://reactnavigation.org/docs/navigating-without-navigation-prop#handling-initialization for more details.";
 
 export const NavigationStateContext = React.createContext<{
   isDefault?: true;
@@ -34,7 +35,6 @@ export const NavigationStateContext = React.createContext<{
   setState: (
     state: NavigationState | PartialState<NavigationState> | undefined
   ) => void;
-  performTransaction: (action: () => void) => void;
 }>({
   isDefault: true,
 
@@ -48,9 +48,6 @@ export const NavigationStateContext = React.createContext<{
     throw new Error(MISSING_CONTEXT_ERROR);
   },
   get setState(): any {
-    throw new Error(MISSING_CONTEXT_ERROR);
-  },
-  get performTransaction(): any {
     throw new Error(MISSING_CONTEXT_ERROR);
   },
 });
@@ -76,7 +73,7 @@ const getPartialState = (
   return {
     ...partialState,
     stale: true,
-    routes: state.routes.map(route => {
+    routes: state.routes.map((route) => {
       if (route.state === undefined) {
         return route as Route<string> & {
           state?: PartialState<NavigationState>;
@@ -115,13 +112,10 @@ const BaseNavigationContainer = React.forwardRef(
       );
     }
 
-    const [state, setNavigationState] = React.useState<State>(() =>
+    const [state, getState, setState] = useSyncState<State>(() =>
       getPartialState(initialState == null ? undefined : initialState)
     );
 
-    const navigationStateRef = React.useRef<State>();
-    const transactionStateRef = React.useRef<State | null>(null);
-    const isTransactionActiveRef = React.useRef<boolean>(false);
     const isFirstMountRef = React.useRef<boolean>(true);
     const skipTrackingRef = React.useRef<boolean>(false);
 
@@ -133,56 +127,16 @@ const BaseNavigationContainer = React.forwardRef(
       navigatorKeyRef.current = key;
     }, []);
 
-    const performTransaction = React.useCallback((callback: () => void) => {
-      if (isTransactionActiveRef.current) {
-        throw new Error(
-          "Only one transaction can be active at a time. Did you accidentally nest 'performTransaction'?"
-        );
-      }
-
-      setNavigationState((navigationState: State) => {
-        isTransactionActiveRef.current = true;
-        transactionStateRef.current = navigationState;
-
-        try {
-          callback();
-        } finally {
-          isTransactionActiveRef.current = false;
-        }
-
-        return transactionStateRef.current;
-      });
-    }, []);
-
-    const getState = React.useCallback(
-      () =>
-        transactionStateRef.current !== null
-          ? transactionStateRef.current
-          : navigationStateRef.current,
-      []
-    );
-
-    const setState = React.useCallback((navigationState: State) => {
-      if (transactionStateRef.current === null) {
-        throw new Error(
-          "Any 'setState' calls need to be done inside 'performTransaction'"
-        );
-      }
-
-      transactionStateRef.current = navigationState;
-    }, []);
-
     const reset = React.useCallback(
       (state: NavigationState) => {
-        performTransaction(() => {
-          skipTrackingRef.current = true;
-          setState(state);
-        });
+        skipTrackingRef.current = true;
+        setState(state);
       },
-      [performTransaction, setState]
+      [setState]
     );
 
     const { trackState, trackAction } = useDevTools({
+      enabled: false,
       name: '@react-navigation',
       reset,
       state,
@@ -202,7 +156,7 @@ const BaseNavigationContainer = React.forwardRef(
         throw new Error(NOT_INITIALIZED_ERROR);
       }
 
-      listeners[0](navigation => navigation.dispatch(action));
+      listeners[0]((navigation) => navigation.dispatch(action));
     };
 
     const canGoBack = () => {
@@ -210,7 +164,7 @@ const BaseNavigationContainer = React.forwardRef(
         return false;
       }
 
-      const { result, handled } = listeners[0](navigation =>
+      const { result, handled } = listeners[0]((navigation) =>
         navigation.canGoBack()
       );
 
@@ -223,12 +177,10 @@ const BaseNavigationContainer = React.forwardRef(
 
     const resetRoot = React.useCallback(
       (state?: PartialState<NavigationState> | NavigationState) => {
-        performTransaction(() => {
-          trackAction('@@RESET_ROOT');
-          setState(state);
-        });
+        trackAction('@@RESET_ROOT');
+        setState(state);
       },
-      [performTransaction, setState, trackAction]
+      [setState, trackAction]
     );
 
     const getRootState = React.useCallback(() => {
@@ -269,13 +221,12 @@ const BaseNavigationContainer = React.forwardRef(
     const context = React.useMemo(
       () => ({
         state,
-        performTransaction,
         getState,
         setState,
         getKey,
         setKey,
       }),
-      [getKey, getState, performTransaction, setKey, setState, state]
+      [getKey, getState, setKey, setState, state]
     );
 
     React.useEffect(() => {
@@ -288,7 +239,7 @@ const BaseNavigationContainer = React.forwardRef(
           hasWarnedForSerialization = true;
 
           console.warn(
-            "We found non-serializable values in the navigation state, which can break usage such as persisting and restoring state. This might happen if you passed non-serializable values such as function, class instances etc. in params. If you need to use components with callbacks in your options, you can use 'navigation.setOptions' instead. See https://reactnavigation.org/docs/en/header-buttons.html#header-interaction-with-its-screen-component for docs."
+            "Non-serializable values were found in the navigation state, which can break usage such as persisting and restoring state. This might happen if you passed non-serializable values such as function, class instances etc. in params. If you need to use components with callbacks in your options, you can use 'navigation.setOptions' instead. See https://reactnavigation.org/docs/troubleshooting#i-get-the-warning-non-serializable-values-were-found-in-the-navigation-state for more details."
           );
         }
       }
@@ -304,15 +255,12 @@ const BaseNavigationContainer = React.forwardRef(
         trackState(getRootState);
       }
 
-      navigationStateRef.current = state;
-      transactionStateRef.current = null;
-
       if (!isFirstMountRef.current && onStateChange) {
         onStateChange(getRootState());
       }
 
       isFirstMountRef.current = false;
-    }, [state, onStateChange, trackState, getRootState, emitter]);
+    }, [onStateChange, trackState, getRootState, emitter, state]);
 
     return (
       <NavigationBuilderContext.Provider value={builderContext}>

@@ -372,7 +372,7 @@ it("doesn't update state if action wasn't handled", () => {
   expect(onStateChange).toBeCalledTimes(0);
 
   expect(spy.mock.calls[0][0]).toMatch(
-    "The action 'INVALID' with payload 'undefined' was not handled by any navigator."
+    "The action 'INVALID' was not handled by any navigator."
   );
 
   spy.mockRestore();
@@ -772,6 +772,60 @@ it('gives access to internal state', () => {
   });
 });
 
+it('preserves order of screens in state with non-numeric names', () => {
+  const TestNavigator = (props: any): any => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const navigation = React.createRef<NavigationContainerRef>();
+
+  const root = (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="foo" component={jest.fn()} />
+        <Screen name="bar" component={jest.fn()} />
+        <Screen name="baz" component={jest.fn()} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(root);
+
+  expect(navigation.current?.getRootState().routeNames).toEqual([
+    'foo',
+    'bar',
+    'baz',
+  ]);
+});
+
+it('preserves order of screens in state with numeric names', () => {
+  const TestNavigator = (props: any): any => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const navigation = React.createRef<NavigationContainerRef>();
+
+  const root = (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="4" component={jest.fn()} />
+        <Screen name="7" component={jest.fn()} />
+        <Screen name="1" component={jest.fn()} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(root);
+
+  expect(navigation.current?.getRootState().routeNames).toEqual([
+    '4',
+    '7',
+    '1',
+  ]);
+});
+
 it("throws if navigator doesn't have any screens", () => {
   const TestNavigator = (props: any) => {
     useNavigationBuilder(MockRouter, props);
@@ -1031,7 +1085,7 @@ it('throws descriptive error for invalid screen component', () => {
   );
 
   expect(() => render(element).update(element)).toThrowError(
-    "Got an invalid value for 'component' prop for the screen 'foo'. It must be a a valid React Component."
+    "Got an invalid value for 'component' prop for the screen 'foo'. It must be a valid React Component."
   );
 });
 

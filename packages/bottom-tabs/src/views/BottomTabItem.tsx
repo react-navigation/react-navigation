@@ -133,9 +133,7 @@ export default function BottomTabBarItem({
 
   const inactiveTintColor =
     customInactiveTintColor === undefined
-      ? Color(colors.text)
-          .mix(Color(colors.card), 0.5)
-          .hex()
+      ? Color(colors.text).mix(Color(colors.card), 0.5).hex()
       : customInactiveTintColor;
 
   const renderLabel = ({ focused }: { focused: boolean }) => {

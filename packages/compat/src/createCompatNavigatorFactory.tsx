@@ -6,6 +6,7 @@ import {
   TypedNavigator,
   NavigationProp,
   RouteProp,
+  EventMapBase,
 } from '@react-navigation/native';
 import CompatScreen from './CompatScreen';
 import ScreenPropsContext from './ScreenPropsContext';
@@ -15,7 +16,9 @@ import { CompatScreenType, CompatRouteConfig } from './types';
 export default function createCompatNavigatorFactory<
   CreateNavigator extends () => TypedNavigator<
     ParamListBase,
+    NavigationState,
     {},
+    EventMapBase,
     React.ComponentType<any>
   >
 >(createNavigator: CreateNavigator) {
@@ -66,7 +69,7 @@ export default function createCompatNavigatorFactory<
     function Navigator({ screenProps }: { screenProps?: unknown }) {
       const screens = React.useMemo(
         () =>
-          routeNames.map(name => {
+          routeNames.map((name) => {
             let getScreenComponent: () => CompatScreenType<NavigationPropType>;
 
             let initialParams;
