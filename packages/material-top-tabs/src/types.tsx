@@ -144,6 +144,7 @@ export type MaterialTopTabBarOptions = Partial<
     | 'getTestID'
     | 'onTabPress'
     | 'onTabLongPress'
+    | 'renderIndicator'
     | keyof SceneRendererProps
   >
 > & {
@@ -174,7 +175,11 @@ export type MaterialTopTabBarOptions = Partial<
   /**
    * Whether label font should scale to respect Text Size accessibility settings.
    */
-  allowFontScaling?: boolean;
+  allowFontScaling?: boolean; 
+  /**
+   * Whether label font should scale to respect Text Size accessibility settings.
+   */
+  renderIndicator?:any 
 };
 
 export type MaterialTopTabBarProps = MaterialTopTabBarOptions &
