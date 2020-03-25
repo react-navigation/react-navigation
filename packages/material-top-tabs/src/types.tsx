@@ -175,11 +175,11 @@ export type MaterialTopTabBarOptions = Partial<
   /**
    * Whether label font should scale to respect Text Size accessibility settings.
    */
-  allowFontScaling?: boolean; 
+  allowFontScaling?: boolean;
   /**
    * rendor indicator as a custom component
    */
-  renderIndicator?:any 
+  renderIndicator?: any;
 };
 
 export type MaterialTopTabBarProps = MaterialTopTabBarOptions &
