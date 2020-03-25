@@ -427,7 +427,6 @@ export default class StackView extends React.Component<Props, State> {
                     closingRouteKeys={closingRouteKeys}
                     onOpenRoute={this.handleOpenRoute}
                     onCloseRoute={this.handleCloseRoute}
-                    onTransitionComplete={this.handleTransitionComplete}
                     onTransitionStart={this.handleTransitionStart}
                     onTransitionEnd={this.handleTransitionEnd}
                     renderHeader={this.renderHeader}
