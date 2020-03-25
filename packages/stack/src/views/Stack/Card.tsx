@@ -60,6 +60,7 @@ type Props = ViewProps & {
   styleInterpolator: StackCardStyleInterpolator;
   containerStyle?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
+  containerPointerEvents: ViewProps['pointerEvents'];
 };
 
 const GESTURE_VELOCITY_IMPACT = 0.3;
@@ -85,6 +86,7 @@ export default class Card extends React.Component<Props> {
       style ? (
         <Animated.View pointerEvents="none" style={[styles.overlay, style]} />
       ) : null,
+    containerPointerEvents: 'auto',
   };
 
   componentDidMount() {
@@ -423,6 +425,7 @@ export default class Card extends React.Component<Props> {
       children,
       containerStyle: customContainerStyle,
       contentStyle,
+      containerPointerEvents,
       ...rest
     } = this.props;
 
@@ -488,34 +491,6 @@ export default class Card extends React.Component<Props> {
             style={[styles.container, containerStyle, customContainerStyle]}
             pointerEvents="box-none"
           >
-<<<<<<< HEAD
-            <Animated.View
-              style={[styles.container, cardStyle]}
-              pointerEvents="box-none"
-            >
-              {shadowEnabled && shadowStyle && !isTransparent ? (
-                <Animated.View
-                  style={[
-                    styles.shadow,
-                    gestureDirection === 'horizontal'
-                      ? [styles.shadowHorizontal, styles.shadowLeft]
-                      : gestureDirection === 'horizontal-inverted'
-                      ? [styles.shadowHorizontal, styles.shadowRight]
-                      : gestureDirection === 'vertical'
-                      ? [styles.shadowVertical, styles.shadowTop]
-                      : [styles.shadowVertical, styles.shadowBottom],
-                    shadowStyle,
-                  ]}
-                  pointerEvents="none"
-                />
-              ) : null}
-              <View
-                ref={this.contentRef}
-                style={[styles.content, contentStyle]}
-              >
-                <StackGestureRefContext.Provider value={this.gestureRef}>
-                  <CardAnimationContext.Provider value={animationContext}>
-=======
             <PanGestureHandler
               ref={this.gestureRef}
               enabled={layout.width !== 0 && gestureEnabled}
@@ -523,7 +498,10 @@ export default class Card extends React.Component<Props> {
               onHandlerStateChange={this.handleGestureStateChange}
               {...this.gestureActivationCriteria()}
             >
-              <Animated.View style={[styles.container, cardStyle]}>
+              <Animated.View
+                style={[styles.container, cardStyle]}
+                pointerEvents={containerPointerEvents}
+              >
                 {shadowEnabled && shadowStyle && !isTransparent ? (
                   <Animated.View
                     style={[
@@ -543,9 +521,9 @@ export default class Card extends React.Component<Props> {
                 <View
                   ref={this.contentRef}
                   style={[styles.content, contentStyle]}
+                  pointerEvents={containerPointerEvents}
                 >
                   <StackGestureRefContext.Provider value={this.gestureRef}>
->>>>>>> upstream/master
                     {children}
                   </StackGestureRefContext.Provider>
                 </View>

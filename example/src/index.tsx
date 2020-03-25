@@ -54,6 +54,7 @@ import DynamicTabs from './Screens/DynamicTabs';
 import AuthFlow from './Screens/AuthFlow';
 import CompatAPI from './Screens/CompatAPI';
 import SettingsItem from './Shared/SettingsItem';
+import SplitStack from './Screens/SplitStack';
 
 YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
 
@@ -104,6 +105,10 @@ const SCREENS = {
   CompatAPI: {
     title: 'Compat Layer',
     component: CompatAPI,
+  },
+  SplitStack: {
+    title: 'Split Stack',
+    component: SplitStack,
   },
 };
 

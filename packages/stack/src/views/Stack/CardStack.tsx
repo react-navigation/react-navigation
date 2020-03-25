@@ -62,6 +62,7 @@ type Props = {
   onPageChangeStart?: () => void;
   onPageChangeConfirm?: () => void;
   onPageChangeCancel?: () => void;
+  containerPointerEvents: ViewProps['pointerEvents'];
 };
 
 type State = {
@@ -388,6 +389,7 @@ export default class CardStack extends React.Component<Props, State> {
       onPageChangeStart,
       onPageChangeConfirm,
       onPageChangeCancel,
+      containerPointerEvents,
     } = this.props;
 
     const { scenes, layout, gestures, headerHeights } = this.state;
@@ -423,7 +425,7 @@ export default class CardStack extends React.Component<Props, State> {
           enabled={isScreensEnabled}
           style={styles.container}
           onLayout={this.handleLayout}
-          pointerEvents="box-none"
+          pointerEvents={containerPointerEvents}
         >
           {routes.map((route, index, self) => {
             const focused = focusedRoute.key === route.key;
@@ -443,9 +445,13 @@ export default class CardStack extends React.Component<Props, State> {
               headerShown,
               headerTransparent,
               cardShadowEnabled,
-              cardOverlayEnabled,
+              cardOverlayEnabled = mode === 'split' ? false : undefined,
               cardOverlay,
-              cardStyle,
+              cardStyle = mode === 'split'
+                ? {
+                    backgroundColor: 'transparent',
+                  }
+                : undefined,
               animationEnabled,
               gestureResponseDistance,
               gestureVelocityImpact,
@@ -565,6 +571,7 @@ export default class CardStack extends React.Component<Props, State> {
                   onTransitionEnd={onTransitionEnd}
                   gestureEnabled={index !== 0 && getGesturesEnabled({ route })}
                   gestureVelocityImpact={gestureVelocityImpact}
+                  containerPointerEvents={containerPointerEvents}
                   {...transitionConfig}
                 />
               </MaybeScreen>

@@ -85,7 +85,7 @@ export type Scene<T> = {
 
 export type StackHeaderMode = 'float' | 'screen' | 'none';
 
-export type StackCardMode = 'card' | 'modal';
+export type StackCardMode = 'card' | 'modal' | 'split';
 
 export type StackHeaderOptions = {
   /**

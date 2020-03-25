@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { Animated, View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import {
+  Animated,
+  View,
+  StyleSheet,
+  StyleProp,
+  ViewStyle,
+  ViewProps,
+} from 'react-native';
 import { Route, useTheme } from '@react-navigation/native';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
@@ -53,6 +60,7 @@ type Props = TransitionPreset & {
     route: Route<string>;
     height: number;
   }) => void;
+  containerPointerEvents: ViewProps['pointerEvents'];
 };
 
 const EPSILON = 0.1;
@@ -97,6 +105,7 @@ function CardContainer({
   safeAreaInsetTop,
   scene,
   transitionSpec,
+  containerPointerEvents,
 }: Props) {
   React.useEffect(() => {
     onPageChangeConfirm?.();
@@ -184,9 +193,10 @@ function CardContainer({
       }
       contentStyle={[{ backgroundColor: colors.background }, cardStyle]}
       style={StyleSheet.absoluteFill}
+      containerPointerEvents={containerPointerEvents}
     >
-      <View style={styles.container} pointerEvents="box-none">
-        <View style={styles.scene} pointerEvents="box-none">
+      <View style={styles.container} pointerEvents={containerPointerEvents}>
+        <View style={styles.scene} pointerEvents={containerPointerEvents}>
           <HeaderHeightContext.Provider value={headerHeight}>
             {renderScene({ route: scene.route })}
           </HeaderHeightContext.Provider>

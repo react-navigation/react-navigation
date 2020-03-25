@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Animated, View, StyleSheet, ScrollView } from 'react-native';
-import { Button, Paragraph, Appbar } from 'react-native-paper';
+import { View, StyleSheet, ScrollView } from 'react-native';
+import { Button, Paragraph } from 'react-native-paper';
 import { RouteProp, ParamListBase, useTheme } from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -11,7 +11,6 @@ import Article from '../Shared/Article';
 type SimpleStackParams = {
   Article: { author: string };
   Dialog: undefined;
-  BottomSheet: undefined;
 };
 
 type SimpleStackNavigation = StackNavigationProp<SimpleStackParams>;
@@ -34,13 +33,6 @@ const ArticleScreen = ({
           Show Dialog
         </Button>
         <Button
-          mode="contained"
-          onPress={() => navigation.push('BottomSheet')}
-          style={styles.button}
-        >
-          Show Sheet
-        </Button>
-        <Button
           mode="outlined"
           onPress={() => navigation.goBack()}
           style={styles.button}
@@ -61,7 +53,7 @@ const DialogScreen = ({
   const { colors } = useTheme();
 
   return (
-    <View style={styles.dialogContainer}>
+    <View style={styles.container}>
       <View style={[styles.dialog, { backgroundColor: colors.card }]}>
         <Paragraph>
           Mise en place is a French term that literally means “put in place.” It
@@ -77,43 +69,6 @@ const DialogScreen = ({
         <Button style={styles.close} compact onPress={navigation.goBack}>
           Okay
         </Button>
-      </View>
-    </View>
-  );
-};
-
-const BottomSheetScreen = ({
-  navigation,
-}: {
-  navigation: SimpleStackNavigation;
-}) => {
-  const { colors } = useTheme();
-
-  return (
-    <View style={styles.bottomSheetContainer} pointerEvents="box-none">
-      <View style={styles.bottomSheet} pointerEvents="box-none">
-        <Appbar.Header style={styles.bottomSheetHeader}>
-          <Appbar.Content title="Mise en place" subtitle="French term" />
-        </Appbar.Header>
-
-        <View
-          style={[styles.bottomSheetContent, { backgroundColor: colors.card }]}
-        >
-          <Paragraph>
-            Mise en place is a French term that literally means “put in place.”
-            It also refers to a way cooks in professional kitchens and
-            restaurants set up their work stations—first by gathering all
-            ingredients for a recipes, partially preparing them (like measuring
-            out and chopping), and setting them all near each other. Setting up
-            mise en place before cooking is another top tip for home cooks, as
-            it seriously helps with organization. It’ll pretty much guarantee
-            you never forget to add an ingredient and save you time from running
-            back and forth from the pantry ten times.
-          </Paragraph>
-          <Button style={styles.close} compact onPress={navigation.goBack}>
-            Okay
-          </Button>
-        </View>
       </View>
     </View>
   );
@@ -170,35 +125,6 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
           }),
         }}
       />
-      <SimpleStack.Screen
-        name="BottomSheet"
-        component={BottomSheetScreen}
-        options={{
-          headerShown: false,
-          cardStyle: { backgroundColor: 'transparent' },
-          cardOverlayEnabled: false,
-          cardStyleInterpolator: ({
-            current,
-            inverted,
-            layouts: { screen },
-          }) => {
-            const translateY = Animated.multiply(
-              current.progress.interpolate({
-                inputRange: [0, 1],
-                outputRange: [screen.height, 0],
-                extrapolate: 'clamp',
-              }),
-              inverted
-            );
-
-            return {
-              cardStyle: {
-                transform: [{ translateY }],
-              },
-            };
-          },
-        }}
-      />
     </SimpleStack.Navigator>
   );
 }
@@ -209,9 +135,9 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   button: {
-    margin: 4,
+    margin: 8,
   },
-  dialogContainer: {
+  container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -221,22 +147,6 @@ const styles = StyleSheet.create({
     width: '90%',
     maxWidth: 400,
     borderRadius: 3,
-  },
-  bottomSheetContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
-  bottomSheet: {
-    width: '100%',
-    maxWidth: 400,
-  },
-  bottomSheetHeader: {
-    width: '100%',
-    height: 64,
-  },
-  bottomSheetContent: {
-    padding: 16,
   },
   close: {
     alignSelf: 'flex-end',
