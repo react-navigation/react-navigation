@@ -1,7 +1,7 @@
-import getChildEventSubscriber from './getChildEventSubscriber';
 import getChildRouter from './getChildRouter';
 import getNavigationActionCreators from './routers/getNavigationActionCreators';
 import getChildrenNavigationCache from './getChildrenNavigationCache';
+import getEventManager from './getEventManager';
 
 const createParamGetter = (route) => (paramName, defaultValue) => {
   const params = route.params;
@@ -78,10 +78,7 @@ function getChildNavigation(navigation, childKey, getCurrentParentNavigation) {
     };
     return children[childKey];
   } else {
-    const childSubscriber = getChildEventSubscriber(
-      navigation.addListener,
-      childKey
-    );
+    const { addListener, emit } = getEventManager(childKey);
 
     children[childKey] = {
       ...actionHelpers,
@@ -115,9 +112,10 @@ function getChildNavigation(navigation, childKey, getCurrentParentNavigation) {
       dispatch: navigation.dispatch,
       getScreenProps: navigation.getScreenProps,
       dangerouslyGetParent: getCurrentParentNavigation,
-      addListener: childSubscriber.addListener,
-      emit: childSubscriber.emit,
+      addListener,
+      emit,
     };
+
     return children[childKey];
   }
 }

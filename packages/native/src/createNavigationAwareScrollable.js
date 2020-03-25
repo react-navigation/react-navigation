@@ -4,7 +4,7 @@ import { withNavigation } from '@react-navigation/core';
 
 export default function createNavigationAwareScrollable(Component) {
   const ComponentWithNavigationScrolling = withNavigation(
-    class extends React.PureComponent<any> {
+    class extends React.PureComponent {
       static displayName = `withNavigationScrolling(${
         Component.displayName || Component.name
       })`;
@@ -60,7 +60,7 @@ export default function createNavigationAwareScrollable(Component) {
     }
   );
 
-  class NavigationAwareScrollable extends React.PureComponent<any> {
+  class NavigationAwareScrollable extends React.PureComponent {
     static displayName = `NavigationAwareScrollable(${
       Component.displayName || Component.name
     })`;

@@ -8,25 +8,25 @@ export default function withNavigationFocus(Component) {
       Component.displayName || Component.name
     })`;
 
-    constructor(props) {
-      super(props);
+    state = {
+      isFocused: this.props.navigation.isFocused(),
+    };
+
+    componentDidMount() {
+      const { navigation } = this.props;
 
       this.subscriptions = [
-        props.navigation.addListener('didFocus', () =>
+        navigation.addListener('willFocus', () =>
           this.setState({ isFocused: true })
         ),
-        props.navigation.addListener('willBlur', () =>
+        navigation.addListener('willBlur', () =>
           this.setState({ isFocused: false })
         ),
       ];
-
-      this.state = {
-        isFocused: props.navigation ? props.navigation.isFocused() : false,
-      };
     }
 
     componentWillUnmount() {
-      this.subscriptions.forEach((sub) => sub.remove());
+      this.subscriptions?.forEach((sub) => sub.remove());
     }
 
     render() {

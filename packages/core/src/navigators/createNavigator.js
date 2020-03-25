@@ -1,6 +1,7 @@
-import React from 'react';
+import * as React from 'react';
 import invariant from '../utils/invariant';
 import ThemeContext from '../views/ThemeContext';
+import NavigationFocusEvents from '../views/NavigationFocusEvents';
 
 function createNavigator(NavigatorView, router, navigationConfig) {
   class Navigator extends React.Component {
@@ -78,13 +79,21 @@ function createNavigator(NavigatorView, router, navigationConfig) {
 
     render() {
       return (
-        <NavigatorView
-          {...this.props}
-          screenProps={this.state.screenProps}
-          navigation={this.props.navigation}
-          navigationConfig={navigationConfig}
-          descriptors={this.state.descriptors}
-        />
+        <React.Fragment>
+          <NavigationFocusEvents
+            navigation={this.props.navigation}
+            onEvent={(target, type, data) => {
+              this.state.descriptors[target]?.navigation.emit(type, data);
+            }}
+          />
+          <NavigatorView
+            {...this.props}
+            screenProps={this.state.screenProps}
+            navigation={this.props.navigation}
+            navigationConfig={navigationConfig}
+            descriptors={this.state.descriptors}
+          />
+        </React.Fragment>
       );
     }
   }
