@@ -177,7 +177,7 @@ export type MaterialTopTabBarOptions = Partial<
    */
   allowFontScaling?: boolean; 
   /**
-   * Whether label font should scale to respect Text Size accessibility settings.
+   * rendor indicator as a custom component
    */
   renderIndicator?:any 
 };
