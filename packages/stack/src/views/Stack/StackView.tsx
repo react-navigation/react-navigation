@@ -326,7 +326,7 @@ export default class StackView extends React.Component<Props, State> {
       });
     } else {
       // We need to clean up any state tracking the route and pop it immediately
-      this.setState(state => ({
+      this.setState((state) => ({
         routes: state.routes.filter((r) => r.key !== route.key),
         openingRouteKeys: state.openingRouteKeys.filter(
           (key) => key !== route.key
