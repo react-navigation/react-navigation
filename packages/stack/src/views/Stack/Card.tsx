@@ -481,7 +481,7 @@ export default class Card extends React.Component<Props> {
         <View pointerEvents="box-none" {...rest}>
           {overlayEnabled ? (
             <View
-              pointerEvents="none"
+              pointerEvents="box-none"
               style={StyleSheet.absoluteFill}
             >
               {overlay({ style: overlayStyle })}
