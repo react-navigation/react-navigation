@@ -1,4 +1,4 @@
-/* eslint-disable jest/no-jasmine-globals, import/no-commonjs */
+/* eslint-disable import/no-commonjs */
 
 const detox = require('detox');
 const config = require('../../package.json').detox;
