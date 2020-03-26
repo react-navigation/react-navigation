@@ -480,7 +480,7 @@ export default class Card extends React.Component<Props> {
       <CardAnimationContext.Provider value={animationContext}>
         <View pointerEvents="box-none" {...rest}>
           {overlayEnabled ? (
-            <View style={StyleSheet.absoluteFill}>
+            <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
               {overlay({ style: overlayStyle })}
             </View>
           ) : null}
