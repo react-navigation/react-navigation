@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/stack",
   "description": "Stack navigator component for iOS and Android with animated transitions and gestures",
-  "version": "5.2.6",
+  "version": "5.2.7",
   "keywords": [
     "react-native-component",
     "react-component",

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.7](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.6...@react-navigation/stack@5.2.7) (2020-03-26)
+
+
+### Bug Fixes
+
+* add pointerEvents=box-none to overlay View ([#7871](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/7871)) ([e097df8](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/e097df880adab984aae29f847003d2548cfbdce5))
+
+
+
+
+
 ## [5.2.6](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.5...@react-navigation/stack@5.2.6) (2020-03-23)
 
 **Note:** Version bump only for package @react-navigation/stack
