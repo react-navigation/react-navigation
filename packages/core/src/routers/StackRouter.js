@@ -536,18 +536,21 @@ export default (routeConfigs, stackConfig = {}) => {
 
         if (action.type === StackActions.POP && prune === false && key) {
           const index = state.routes.findIndex((r) => r.key === key);
-          const count = Math.max(index - (n == null ? 1 : n) + 1, 1);
-          const routes = state.routes
-            .slice(0, count)
-            .concat(state.routes.slice(index + 1));
 
-          if (routes.length) {
-            return {
-              ...state,
-              routes,
-              index: routes.length - 1,
-              isTransitioning: immediate !== true,
-            };
+          if (index > 0) {
+            const count = Math.max(index - (n ?? 1) + 1, 1);
+            const routes = state.routes
+              .slice(0, count)
+              .concat(state.routes.slice(index + 1));
+
+            if (routes.length) {
+              return {
+                ...state,
+                routes,
+                index: routes.length - 1,
+                isTransitioning: immediate !== true,
+              };
+            }
           }
         } else {
           let backRouteIndex = state.index;
