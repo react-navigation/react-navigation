@@ -1,6 +1,6 @@
 {
   "name": "react-navigation",
-  "version": "4.3.3",
+  "version": "4.3.4",
   "description": "Routing and navigation for your React Native apps",
   "main": "src/index.js",
   "types": "typescript/react-navigation.d.ts",
@@ -24,8 +24,8 @@
     "react-native": "*"
   },
   "dependencies": {
-    "@react-navigation/core": "^3.7.1",
-    "@react-navigation/native": "^3.7.7"
+    "@react-navigation/core": "^3.7.2",
+    "@react-navigation/native": "^3.7.8"
   },
   "devDependencies": {
     "@types/react": "^16.9.23",

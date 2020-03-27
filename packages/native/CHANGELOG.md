@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.8](https://github.com/react-navigation/react-navigation-native/compare/@react-navigation/native@3.7.7...@react-navigation/native@3.7.8) (2020-03-27)
+
+
+### Bug Fixes
+
+* rework focus and blur events to make them more reliable ([cd08338](https://github.com/react-navigation/react-navigation-native/commit/cd083381866506a192f1ec842ac169f2b4277ca5)), closes [#4867](https://github.com/react-navigation/react-navigation-native/issues/4867) [#6187](https://github.com/react-navigation/react-navigation-native/issues/6187) [#6451](https://github.com/react-navigation/react-navigation-native/issues/6451) [#7628](https://github.com/react-navigation/react-navigation-native/issues/7628) [#7749](https://github.com/react-navigation/react-navigation-native/issues/7749)
+
+
+
+
+
 ## [3.7.7](https://github.com/react-navigation/react-navigation-native/compare/@react-navigation/native@3.7.6...@react-navigation/native@3.7.7) (2020-03-22)
 
 **Note:** Version bump only for package @react-navigation/native
