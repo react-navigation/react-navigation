@@ -51,12 +51,24 @@ export default class NavigationEventManager extends React.Component {
       'willBlur',
       this._handleWillBlur
     );
+
+    this._didFocusSubscription = navigation.addListener(
+      'didFocus',
+      this._handleDidFocus
+    );
+
+    this._didBlurSubscription = navigation.addListener(
+      'didBlur',
+      this._handleDidBlur
+    );
   }
 
   componentWillUnmount() {
     this._actionSubscription?.remove();
     this._willFocusSubscription?.remove();
     this._willBlurSubscription?.remove();
+    this._didFocusSubscription?.remove();
+    this._didBlurSubscription?.remove();
   }
 
   /**
@@ -75,6 +87,16 @@ export default class NavigationEventManager extends React.Component {
   _willBlurSubscription;
 
   /**
+   * @type {{ remove(): void } | undefined}
+   */
+  _didFocusSubscription;
+
+  /**
+   * @type {{ remove(): void } | undefined}
+   */
+  _didBlurSubscription;
+
+  /**
    * @type {string | undefined}
    */
   _lastWillBlurKey;
@@ -83,6 +105,16 @@ export default class NavigationEventManager extends React.Component {
    * @type {string | undefined}
    */
   _lastWillFocusKey;
+
+  /**
+   * @type {string | undefined}
+   */
+  _lastDidBlurKey;
+
+  /**
+   * @type {string | undefined}
+   */
+  _lastDidFocusKey;
 
   /**
    * The 'action' event will fire when navigation state changes.
@@ -113,10 +145,10 @@ export default class NavigationEventManager extends React.Component {
     };
 
     if (previous?.key !== current.key) {
-      this._emitFocus(current.key, payload);
+      this._emitWillFocus(current.key, payload);
 
       if (previous?.key) {
-        this._emitBlur(previous.key, payload);
+        this._emitWillBlur(previous.key, payload);
       }
     }
 
@@ -125,11 +157,11 @@ export default class NavigationEventManager extends React.Component {
       state.isTransitioning === false
     ) {
       if (this._lastWillBlurKey) {
-        onEvent(this._lastWillBlurKey, 'didBlur', payload);
+        this._emitDidBlur(this._lastWillBlurKey, payload);
       }
 
       if (this._lastWillFocusKey) {
-        onEvent(this._lastWillFocusKey, 'didFocus', payload);
+        this._emitDidFocus(this._lastWillFocusKey, payload);
       }
     }
 
@@ -143,7 +175,7 @@ export default class NavigationEventManager extends React.Component {
     const { navigation } = this.props;
     const route = navigation.state.routes[navigation.state.index];
 
-    this._emitFocus(route.key, {
+    this._emitWillFocus(route.key, {
       context: `${route.key}:${action.type}_${context || 'Root'}`,
       state: route,
       lastState: lastState?.routes?.find((r) => r.key === route.key),
@@ -159,7 +191,7 @@ export default class NavigationEventManager extends React.Component {
     const { navigation } = this.props;
     const route = navigation.state.routes[navigation.state.index];
 
-    this._emitBlur(route.key, {
+    this._emitWillBlur(route.key, {
       context: `${route.key}:${action.type}_${context || 'Root'}`,
       state: route,
       lastState: lastState?.routes?.find((r) => r.key === route.key),
@@ -169,10 +201,48 @@ export default class NavigationEventManager extends React.Component {
   };
 
   /**
+   * @param {ParentPayload} payload
+   */
+  _handleDidFocus = ({ lastState, state, action, context, type }) => {
+    if (this._lastWillFocusKey) {
+      const route = state.routes.find((r) => r.key === this._lastWillFocusKey);
+
+      if (route) {
+        this._emitDidFocus(route.key, {
+          context: `${route.key}:${action.type}_${context || 'Root'}`,
+          state: route,
+          lastState: lastState?.routes?.find((r) => r.key === route.key),
+          action,
+          type,
+        });
+      }
+    }
+  };
+
+  /**
+   * @param {ParentPayload} payload
+   */
+  _handleDidBlur = ({ lastState, state, action, context, type }) => {
+    if (this._lastWillBlurKey) {
+      const route = state.routes.find((r) => r.key === this._lastWillBlurKey);
+
+      if (route) {
+        this._emitDidBlur(route.key, {
+          context: `${route.key}:${action.type}_${context || 'Root'}`,
+          state: route,
+          lastState: lastState?.routes?.find((r) => r.key === route.key),
+          action,
+          type,
+        });
+      }
+    }
+  };
+
+  /**
    * @param {string} target
    * @param {Payload} payload
    */
-  _emitFocus = (target, payload) => {
+  _emitWillFocus = (target, payload) => {
     if (this._lastWillBlurKey === target) {
       this._lastWillBlurKey = undefined;
     }
@@ -181,6 +251,7 @@ export default class NavigationEventManager extends React.Component {
       return;
     }
 
+    this._lastDidFocusKey = undefined;
     this._lastWillFocusKey = target;
 
     const { navigation, onEvent } = this.props;
@@ -188,7 +259,7 @@ export default class NavigationEventManager extends React.Component {
     onEvent(target, 'willFocus', payload);
 
     if (typeof navigation.state.isTransitioning !== 'boolean') {
-      onEvent(target, 'didFocus', payload);
+      this._emitDidFocus(target, payload);
     }
   };
 
@@ -196,7 +267,7 @@ export default class NavigationEventManager extends React.Component {
    * @param {string} target
    * @param {Payload} payload
    */
-  _emitBlur = (target, payload) => {
+  _emitWillBlur = (target, payload) => {
     if (this._lastWillFocusKey === target) {
       this._lastWillFocusKey = undefined;
     }
@@ -205,6 +276,7 @@ export default class NavigationEventManager extends React.Component {
       return;
     }
 
+    this._lastDidBlurKey = undefined;
     this._lastWillBlurKey = target;
 
     const { navigation, onEvent } = this.props;
@@ -212,8 +284,40 @@ export default class NavigationEventManager extends React.Component {
     onEvent(target, 'willBlur', payload);
 
     if (typeof navigation.state.isTransitioning !== 'boolean') {
-      onEvent(target, 'didBlur', payload);
+      this._emitDidBlur(target, payload);
     }
+  };
+
+  /**
+   * @param {string} target
+   * @param {Payload} payload
+   */
+  _emitDidFocus = (target, payload) => {
+    if (this._lastWillFocusKey !== target || this._lastDidFocusKey === target) {
+      return;
+    }
+
+    this._lastDidFocusKey = target;
+
+    const { onEvent } = this.props;
+
+    onEvent(target, 'didFocus', payload);
+  };
+
+  /**
+   * @param {string} target
+   * @param {Payload} payload
+   */
+  _emitDidBlur = (target, payload) => {
+    if (this._lastWillBlurKey !== target || this._lastDidBlurKey === target) {
+      return;
+    }
+
+    this._lastDidBlurKey = target;
+
+    const { onEvent } = this.props;
+
+    onEvent(target, 'didBlur', payload);
   };
 
   render() {

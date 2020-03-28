@@ -308,21 +308,21 @@ export default class StackView extends React.Component<Props, State> {
     return <HeaderContainer {...props} />;
   };
 
-  private handleTransitionComplete = ({ route }: { route: Route<string> }) => {
+  private handleTransitionComplete = () => {
     const { state, navigation } = this.props;
 
     if (state.isTransitioning) {
       navigation.dispatch(
         StackActions.completeTransition({
           key: navigation.state.key,
-          toChildKey: route.key,
+          toChildKey: state.routes[state.index].key,
         })
       );
     }
   };
 
   private handleOpenRoute = ({ route }: { route: Route<string> }) => {
-    this.handleTransitionComplete({ route });
+    this.handleTransitionComplete();
     this.setState((state) => ({
       routes: state.replacingRouteKeys.length
         ? state.routes.filter((r) => !state.replacingRouteKeys.includes(r.key))
@@ -347,13 +347,7 @@ export default class StackView extends React.Component<Props, State> {
       // @ts-ignore
       navigation.dispatch(StackActions.pop({ key: route.key, prune: false }));
     } else {
-      // While closing route we need to point to the previous one assuming that
-      // this previous one in routes array
-      const index = this.state.routes.findIndex((r) => r.key === route.key);
-
-      this.handleTransitionComplete({
-        route: this.state.routes[Math.max(index - 1, 0)],
-      });
+      this.handleTransitionComplete();
 
       // We need to clean up any state tracking the route and pop it immediately
       this.setState((state) => ({
