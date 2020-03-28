@@ -105,7 +105,7 @@ export default function getPathFromState(
     }
 
     // we don't add empty path strings to path
-    if (pattern !== '') {
+    if (pattern) {
       const config =
         currentOptions[route.name] !== undefined
           ? (currentOptions[route.name] as { stringify?: StringifyConfig })
