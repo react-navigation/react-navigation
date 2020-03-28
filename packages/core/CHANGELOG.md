@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.3](https://github.com/react-navigation/react-navigation-core/compare/@react-navigation/core@3.7.1...@react-navigation/core@3.7.3) (2020-03-28)
+
+
+### Bug Fixes
+
+* always emit didFocus/didBlur for root navigator ([ac98c0a](https://github.com/react-navigation/react-navigation-core/commit/ac98c0a668fe21200d0c6f62ae3043f92cc5aa7e))
+* don't handle prune if there's only one route ([d2433f0](https://github.com/react-navigation/react-navigation-core/commit/d2433f0ab8f9791df8169de4ddfdeed9bc699e3e))
+* emit didFocus and didBlur events based on parent's transition ([14a6538](https://github.com/react-navigation/react-navigation-core/commit/14a6538cc8e12c50d5d10722d75c9395a0a281ec))
+* rework focus and blur events to make them more reliable ([cd08338](https://github.com/react-navigation/react-navigation-core/commit/cd083381866506a192f1ec842ac169f2b4277ca5)), closes [#4867](https://github.com/react-navigation/react-navigation-core/issues/4867) [#6187](https://github.com/react-navigation/react-navigation-core/issues/6187) [#6451](https://github.com/react-navigation/react-navigation-core/issues/6451) [#7628](https://github.com/react-navigation/react-navigation-core/issues/7628) [#7749](https://github.com/react-navigation/react-navigation-core/issues/7749)
+
+
+
+
+
 ## [3.7.2](https://github.com/react-navigation/react-navigation-core/compare/@react-navigation/core@3.7.1...@react-navigation/core@3.7.2) (2020-03-27)
 
 

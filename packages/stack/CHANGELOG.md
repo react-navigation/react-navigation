@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.9](https://github.com/react-navigation/react-navigation-stack/compare/react-navigation-stack@2.3.7...react-navigation-stack@2.3.9) (2020-03-28)
+
+
+### Bug Fixes
+
+* emit didFocus and didBlur events based on parent's transition ([14a6538](https://github.com/react-navigation/react-navigation-stack/commit/14a6538cc8e12c50d5d10722d75c9395a0a281ec))
+* rework focus and blur events to make them more reliable ([cd08338](https://github.com/react-navigation/react-navigation-stack/commit/cd083381866506a192f1ec842ac169f2b4277ca5)), closes [#4867](https://github.com/react-navigation/react-navigation-stack/issues/4867) [#6187](https://github.com/react-navigation/react-navigation-stack/issues/6187) [#6451](https://github.com/react-navigation/react-navigation-stack/issues/6451) [#7628](https://github.com/react-navigation/react-navigation-stack/issues/7628) [#7749](https://github.com/react-navigation/react-navigation-stack/issues/7749)
+
+
+
+
+
 ## [2.3.8](https://github.com/react-navigation/react-navigation-stack/compare/react-navigation-stack@2.3.7...react-navigation-stack@2.3.8) (2020-03-27)
 
 
