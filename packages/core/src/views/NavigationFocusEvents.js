@@ -203,9 +203,13 @@ export default class NavigationEventManager extends React.Component {
   /**
    * @param {ParentPayload} payload
    */
-  _handleDidFocus = ({ lastState, state, action, context, type }) => {
+  _handleDidFocus = ({ lastState, action, context, type }) => {
+    const { navigation } = this.props;
+
     if (this._lastWillFocusKey) {
-      const route = state.routes.find((r) => r.key === this._lastWillFocusKey);
+      const route = navigation.state.routes.find(
+        (r) => r.key === this._lastWillFocusKey
+      );
 
       if (route) {
         this._emitDidFocus(route.key, {
@@ -222,9 +226,13 @@ export default class NavigationEventManager extends React.Component {
   /**
    * @param {ParentPayload} payload
    */
-  _handleDidBlur = ({ lastState, state, action, context, type }) => {
+  _handleDidBlur = ({ lastState, action, context, type }) => {
+    const { navigation } = this.props;
+
     if (this._lastWillBlurKey) {
-      const route = state.routes.find((r) => r.key === this._lastWillBlurKey);
+      const route = navigation.state.routes.find(
+        (r) => r.key === this._lastWillBlurKey
+      );
 
       if (route) {
         this._emitDidBlur(route.key, {
@@ -258,7 +266,11 @@ export default class NavigationEventManager extends React.Component {
 
     onEvent(target, 'willFocus', payload);
 
-    if (typeof navigation.state.isTransitioning !== 'boolean') {
+    if (
+      typeof navigation.state.isTransitioning !== 'boolean' ||
+      (navigation.state.isTransitioning !== true &&
+        !navigation.dangerouslyGetParent())
+    ) {
       this._emitDidFocus(target, payload);
     }
   };
@@ -283,7 +295,11 @@ export default class NavigationEventManager extends React.Component {
 
     onEvent(target, 'willBlur', payload);
 
-    if (typeof navigation.state.isTransitioning !== 'boolean') {
+    if (
+      typeof navigation.state.isTransitioning !== 'boolean' ||
+      (navigation.state.isTransitioning !== true &&
+        !navigation.dangerouslyGetParent())
+    ) {
       this._emitDidBlur(target, payload);
     }
   };
