@@ -608,7 +608,7 @@ export default class DrawerView extends React.PureComponent<Props> {
         onGestureEvent={this.handleGestureEvent}
         onHandlerStateChange={this.handleGestureStateChange}
         hitSlop={hitSlop}
-        enabled={drawerType !== 'permanent' && gestureEnabled}
+        enabled={drawerType !== 'permanent' && gestureEnabled && swipeEnabled}
         {...gestureHandlerProps}
       >
         <Animated.View
@@ -642,7 +642,7 @@ export default class DrawerView extends React.PureComponent<Props> {
             {// Disable overlay if sidebar is permanent
             drawerType === 'permanent' ? null : (
               <TapGestureHandler
-                enabled={swipeEnabled}
+                enabled={gestureEnabled}
                 onHandlerStateChange={this.handleTapStateChange}
               >
                 <Overlay progress={progress} style={overlayStyle} />
