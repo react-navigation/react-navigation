@@ -80,7 +80,7 @@ type Props = {
   onClose: () => void;
   onGestureRef?: (ref: PanGestureHandler | null) => void;
   gestureEnabled: boolean;
-  closeDrawerOnTap: boolean;
+  swipeEnabled: boolean;
   drawerPosition: 'left' | 'right';
   drawerType: 'front' | 'back' | 'slide' | 'permanent';
   keyboardDismissMode: 'none' | 'on-drag';
@@ -121,7 +121,7 @@ export default class DrawerView extends React.PureComponent<Props> {
     drawerPostion: I18nManager.isRTL ? 'left' : 'right',
     drawerType: 'front',
     gestureEnabled: shouldEnableGesture(),
-    closeDrawerOnTap: true,
+    swipeEnabled: true,
     swipeEdgeWidth: 32,
     swipeVelocityThreshold: 500,
     keyboardDismissMode: 'on-drag',
@@ -556,7 +556,7 @@ export default class DrawerView extends React.PureComponent<Props> {
     const {
       open,
       gestureEnabled,
-      closeDrawerOnTap,
+      swipeEnabled,
       drawerPosition,
       drawerType,
       swipeEdgeWidth,
@@ -642,7 +642,7 @@ export default class DrawerView extends React.PureComponent<Props> {
             {// Disable overlay if sidebar is permanent
             drawerType === 'permanent' ? null : (
               <TapGestureHandler
-                enabled={gestureEnabled || closeDrawerOnTap}
+                enabled={swipeEnabled}
                 onHandlerStateChange={this.handleTapStateChange}
               >
                 <Overlay progress={progress} style={overlayStyle} />

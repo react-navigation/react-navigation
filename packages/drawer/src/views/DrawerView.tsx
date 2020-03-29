@@ -200,7 +200,7 @@ export default function DrawerView({
   };
 
   const activeKey = state.routes[state.index].key;
-  const { gestureEnabled, closeDrawerOnTap } = descriptors[activeKey].options;
+  const { gestureEnabled, swipeEnabled } = descriptors[activeKey].options;
 
   return (
     <GestureHandlerWrapper style={styles.content}>
@@ -210,7 +210,7 @@ export default function DrawerView({
             <Drawer
               open={isDrawerOpen}
               gestureEnabled={gestureEnabled}
-              closeDrawerOnTap={closeDrawerOnTap}
+              swipeEnabled={swipeEnabled}
               onOpen={handleDrawerOpen}
               onClose={handleDrawerClose}
               onGestureRef={ref => {
