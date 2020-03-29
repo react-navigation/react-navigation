@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TextInput } from 'react-native';
+import { TextInput, Platform, Keyboard } from 'react-native';
 
 type Props = {
   enabled: boolean;
@@ -58,6 +58,10 @@ export default class KeyboardManager extends React.Component<Props> {
 
     if (input) {
       TextInput.State.blurTextInput(input);
+    }
+
+    if (Platform.OS === 'android') {
+      Keyboard.dismiss();
     }
 
     // Cleanup the ID on successful page change
