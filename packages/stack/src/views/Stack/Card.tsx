@@ -8,6 +8,7 @@ import {
   ViewStyle,
   Platform,
   InteractionManager,
+  AppState,
 } from 'react-native';
 import {
   PanGestureHandler,
@@ -89,6 +90,7 @@ export default class Card extends React.Component<Props> {
 
   componentDidMount() {
     this.animate({ closing: this.props.closing });
+    AppState.addEventListener('change', this.handleAppStateChange);
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -121,6 +123,7 @@ export default class Card extends React.Component<Props> {
 
   componentWillUnmount() {
     this.handleEndInteraction();
+    AppState.removeEventListener('change', this.handleAppStateChange);
   }
 
   private isClosing = new Animated.Value(FALSE);
@@ -190,6 +193,12 @@ export default class Card extends React.Component<Props> {
         }
       }
     });
+  };
+
+  handleAppStateChange = (appState: String) => {
+    if (appState === 'active') {
+      this.animate({ closing: this.props.closing });
+    }
   };
 
   private getAnimateToValue = ({
