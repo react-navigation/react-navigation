@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.9](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.8...@react-navigation/stack@5.2.9) (2020-03-30)
+
+
+### Bug Fixes
+
+* dismiss keyboard on screen change for android ([8432e5a](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/8432e5ab25f041af8538ea7fb35e97cfcf1f983e))
+* finish stack animation on CANCELLED event ([#7898](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/7898)) ([d649fbc](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/d649fbc6691871f0348076bce185d11a183c02cf)), closes [#7897](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/7897)
+* when comparing changed routes, only check keys ([9a8fea8](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/9a8fea8f2c1bdabfc5dd87e5c3ff4e7b97aef47d))
+
+
+
+
+
 ## [5.2.7](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.6...@react-navigation/stack@5.2.7) (2020-03-26)
 
 

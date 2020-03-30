@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.4.0](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.3.4...@react-navigation/drawer@5.4.0) (2020-03-30)
+
+
+### Bug Fixes
+
+* disable only swipe gesture on safari ([105da6a](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/105da6ab2fe69847b676c4d4117638212cda1f9a))
+
+
+### Features
+
+* add swipeEnabled option to disable swipe gesture in drawer ([#7834](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/7834)) ([ac7f972](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/ac7f972e922a82cd32d943356941d100b68bd8b0))
+
+
+
+
+
 ## [5.3.4](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.3.3...@react-navigation/drawer@5.3.4) (2020-03-23)
 
 **Note:** Version bump only for package @react-navigation/drawer
