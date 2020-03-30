@@ -30,7 +30,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "shortid": "^2.2.15"
+    "nanoid": "^3.0.2"
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.10.0",

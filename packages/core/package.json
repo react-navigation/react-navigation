@@ -32,15 +32,14 @@
     "@react-navigation/routers": "^5.2.0",
     "escape-string-regexp": "^2.0.0",
     "query-string": "^6.11.1",
+    "nanoid": "^3.0.2",
     "react-is": "^16.13.0",
-    "shortid": "^2.2.15",
     "use-subscription": "^1.4.0"
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.10.0",
     "@types/react": "^16.9.23",
     "@types/react-is": "^16.7.1",
-    "@types/shortid": "^0.0.29",
     "@types/use-subscription": "^1.0.0",
     "del-cli": "^3.0.0",
     "react": "~16.9.0",

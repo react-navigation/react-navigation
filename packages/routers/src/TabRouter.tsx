@@ -1,4 +1,4 @@
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import BaseRouter from './BaseRouter';
 import {
   NavigationState,
@@ -126,7 +126,7 @@ export default function TabRouter({
 
       const routes = routeNames.map((name) => ({
         name,
-        key: `${name}-${shortid()}`,
+        key: `${name}-${nanoid()}`,
         params: routeParamList[name],
       }));
 
@@ -135,7 +135,7 @@ export default function TabRouter({
       return {
         stale: false,
         type: 'tab',
-        key: `tab-${shortid()}`,
+        key: `tab-${nanoid()}`,
         index,
         routeNames,
         history,
@@ -161,7 +161,7 @@ export default function TabRouter({
           key:
             route && route.name === name && route.key
               ? route.key
-              : `${name}-${shortid()}`,
+              : `${name}-${nanoid()}`,
           params:
             routeParamList[name] !== undefined
               ? {
@@ -195,7 +195,7 @@ export default function TabRouter({
       return {
         stale: false,
         type: 'tab',
-        key: `tab-${shortid()}`,
+        key: `tab-${nanoid()}`,
         index,
         routeNames,
         history,
@@ -208,7 +208,7 @@ export default function TabRouter({
         (name) =>
           state.routes.find((r) => r.name === name) || {
             name,
-            key: `${name}-${shortid()}`,
+            key: `${name}-${nanoid()}`,
             params: routeParamList[name],
           }
       );

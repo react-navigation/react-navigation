@@ -1,4 +1,4 @@
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import BaseRouter from './BaseRouter';
 import {
   NavigationState,
@@ -113,12 +113,12 @@ export default function StackRouter(options: StackRouterOptions) {
       return {
         stale: false,
         type: 'stack',
-        key: `stack-${shortid()}`,
+        key: `stack-${nanoid()}`,
         index: 0,
         routeNames,
         routes: [
           {
-            key: `${initialRouteName}-${shortid()}`,
+            key: `${initialRouteName}-${nanoid()}`,
             name: initialRouteName,
             params: routeParamList[initialRouteName],
           },
@@ -139,7 +139,7 @@ export default function StackRouter(options: StackRouterOptions) {
           (route) =>
             ({
               ...route,
-              key: route.key || `${route.name}-${shortid()}`,
+              key: route.key || `${route.name}-${nanoid()}`,
               params:
                 routeParamList[route.name] !== undefined
                   ? {
@@ -157,7 +157,7 @@ export default function StackRouter(options: StackRouterOptions) {
             : routeNames[0];
 
         routes.push({
-          key: `${initialRouteName}-${shortid()}`,
+          key: `${initialRouteName}-${nanoid()}`,
           name: initialRouteName,
           params: routeParamList[initialRouteName],
         });
@@ -166,7 +166,7 @@ export default function StackRouter(options: StackRouterOptions) {
       return {
         stale: false,
         type: 'stack',
-        key: `stack-${shortid()}`,
+        key: `stack-${nanoid()}`,
         index: routes.length - 1,
         routeNames,
         routes,
@@ -186,7 +186,7 @@ export default function StackRouter(options: StackRouterOptions) {
             : routeNames[0];
 
         routes.push({
-          key: `${initialRouteName}-${shortid()}`,
+          key: `${initialRouteName}-${nanoid()}`,
           name: initialRouteName,
           params: routeParamList[initialRouteName],
         });
@@ -238,7 +238,7 @@ export default function StackRouter(options: StackRouterOptions) {
             routes: state.routes.map((route, i) =>
               i === index
                 ? {
-                    key: key !== undefined ? key : `${name}-${shortid()}`,
+                    key: key !== undefined ? key : `${name}-${nanoid()}`,
                     name,
                     params:
                       routeParamList[name] !== undefined
@@ -263,7 +263,7 @@ export default function StackRouter(options: StackRouterOptions) {
                 {
                   key:
                     action.payload.key === undefined
-                      ? `${action.payload.name}-${shortid()}`
+                      ? `${action.payload.name}-${nanoid()}`
                       : action.payload.key,
                   name: action.payload.name,
                   params:

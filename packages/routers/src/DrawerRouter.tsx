@@ -1,4 +1,4 @@
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import {
   PartialState,
   CommonNavigationAction,
@@ -115,7 +115,7 @@ export default function DrawerRouter(
         ...state,
         stale: false,
         type: 'drawer',
-        key: `drawer-${shortid()}`,
+        key: `drawer-${nanoid()}`,
       };
     },
 
@@ -136,7 +136,7 @@ export default function DrawerRouter(
       return {
         ...state,
         type: 'drawer',
-        key: `drawer-${shortid()}`,
+        key: `drawer-${nanoid()}`,
       };
     },
 
