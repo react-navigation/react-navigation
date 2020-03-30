@@ -29,7 +29,7 @@
     "@react-navigation/native": "^5.1.3",
     "@types/react": "^16.9.23",
     "react": "~16.9.0",
-    "typescript": "^3.7.5"
+    "typescript": "^3.8.3"
   },
   "peerDependencies": {
     "@react-navigation/native": "^5.0.5",
