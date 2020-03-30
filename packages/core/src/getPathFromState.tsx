@@ -158,6 +158,12 @@ export default function getPathFromState(
       if (route.state) {
         path += '/';
       } else if (params) {
+        for (let param in params) {
+          if (params[param] === 'undefined') {
+            // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+            delete params[param];
+          }
+        }
         const query = queryString.stringify(params);
 
         if (query) {
