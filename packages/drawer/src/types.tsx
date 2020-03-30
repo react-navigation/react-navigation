@@ -111,14 +111,18 @@ export type DrawerNavigationOptions = {
 
   /**
    * Whether you can use gestures to open or close the drawer.
+   * Setting this to `false` disables swipe gestures as well as tap on overlay to close.
+   * See `swipeEnabled` to disable only the swipe gesture.
    * Defaults to `true`
    */
   gestureEnabled?: boolean;
+
   /**
-   * Whether you can use swipe gestures to open or close the drawer
+   * Whether you can use swipe gestures to open or close the drawer.
    * Defaults to `true`
    */
   swipeEnabled?: boolean;
+
   /**
    * Whether this screen should be unmounted when navigating away from it.
    * Defaults to `false`.

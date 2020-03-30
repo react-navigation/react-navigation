@@ -101,7 +101,7 @@ type Props = {
  * Disables the pan gesture by default on Apple devices in the browser.
  * https://stackoverflow.com/a/9039885
  */
-function shouldEnableGesture(): boolean {
+function shouldEnableSwipeGesture(): boolean {
   if (
     Platform.OS === 'web' &&
     typeof navigator !== 'undefined' &&
@@ -116,12 +116,12 @@ function shouldEnableGesture(): boolean {
   return true;
 }
 
-export default class DrawerView extends React.PureComponent<Props> {
+export default class DrawerView extends React.Component<Props> {
   static defaultProps = {
     drawerPostion: I18nManager.isRTL ? 'left' : 'right',
     drawerType: 'front',
-    gestureEnabled: shouldEnableGesture(),
-    swipeEnabled: true,
+    gestureEnabled: true,
+    swipeEnabled: shouldEnableSwipeGesture(),
     swipeEdgeWidth: 32,
     swipeVelocityThreshold: 500,
     keyboardDismissMode: 'on-drag',
@@ -140,15 +140,10 @@ export default class DrawerView extends React.PureComponent<Props> {
       open,
       drawerPosition,
       drawerType,
-      gestureEnabled,
       swipeDistanceThreshold,
       swipeVelocityThreshold,
       hideStatusBar,
     } = this.props;
-
-    if (prevProps.gestureEnabled !== gestureEnabled) {
-      this.isGestureEnabled.setValue(gestureEnabled ? TRUE : FALSE);
-    }
 
     if (
       // If we're not in the middle of a transition, sync the drawer's open state
@@ -224,9 +219,6 @@ export default class DrawerView extends React.PureComponent<Props> {
 
   private isDrawerTypeFront = new Value<Binary>(
     this.props.drawerType === 'front' ? TRUE : FALSE
-  );
-  private isGestureEnabled = new Value(
-    this.props.gestureEnabled ? TRUE : FALSE
   );
 
   private isOpen = new Value<Binary>(this.props.open ? TRUE : FALSE);
