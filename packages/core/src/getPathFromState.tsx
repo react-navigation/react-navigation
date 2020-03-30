@@ -64,6 +64,8 @@ export default function getPathFromState(
     };
     let currentOptions = options;
     let pattern = route.name;
+    // we keep all the route names that appeared during going deeper in config in case the pattern is resolved to undefined
+    let nestedRouteNames = '';
 
     while (route.name in currentOptions) {
       if (typeof currentOptions[route.name] === 'string') {
@@ -77,11 +79,13 @@ export default function getPathFromState(
           }).screens
         ) {
           pattern = (currentOptions[route.name] as { path: string }).path;
+          nestedRouteNames = `${nestedRouteNames}/${route.name}`;
           break;
         } else {
           // if it is the end of state, we return pattern
           if (route.state === undefined) {
             pattern = (currentOptions[route.name] as { path: string }).path;
+            nestedRouteNames = `${nestedRouteNames}/${route.name}`;
             break;
           } else {
             index =
@@ -92,16 +96,23 @@ export default function getPathFromState(
             }).screens;
             // if there is config for next route name, we go deeper
             if (nextRoute.name in deeperConfig) {
+              nestedRouteNames = `${nestedRouteNames}/${route.name}`;
               route = nextRoute as Route<string> & { state?: State };
               currentOptions = deeperConfig;
             } else {
               // if not, there is no sense in going deeper in config
               pattern = (currentOptions[route.name] as { path: string }).path;
+              nestedRouteNames = `${nestedRouteNames}/${route.name}`;
               break;
             }
           }
         }
       }
+    }
+
+    if (pattern === undefined) {
+      // cut the first `/`
+      pattern = nestedRouteNames.substring(1);
     }
 
     // we don't add empty path strings to path
@@ -147,6 +158,12 @@ export default function getPathFromState(
       if (route.state) {
         path += '/';
       } else if (params) {
+        for (let param in params) {
+          if (params[param] === 'undefined') {
+            // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+            delete params[param];
+          }
+        }
         const query = queryString.stringify(params);
 
         if (query) {
