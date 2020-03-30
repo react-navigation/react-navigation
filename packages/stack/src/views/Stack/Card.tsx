@@ -246,11 +246,21 @@ export default class Card extends React.Component<Props> {
         this.handleStartInteraction();
         onGestureBegin?.();
         break;
-      case GestureState.CANCELLED:
+      case GestureState.CANCELLED: {
         this.isSwiping.setValue(FALSE);
         this.handleEndInteraction();
+
+        const velocity =
+          gestureDirection === 'vertical' ||
+          gestureDirection === 'vertical-inverted'
+            ? nativeEvent.velocityY
+            : nativeEvent.velocityX;
+
+        this.animate({ closing: this.props.closing, velocity });
+
         onGestureCanceled?.();
         break;
+      }
       case GestureState.END: {
         this.isSwiping.setValue(FALSE);
 
