@@ -1,6 +1,6 @@
 import { CommonActions, StackRouter, StackActions } from '..';
 
-jest.mock('nanoid', () => ({ nanoid: () => 'test' }));
+jest.mock('nanoid/non-secure', () => ({ nanoid: () => 'test' }));
 
 it('gets initial state from route names and params with initialRouteName', () => {
   const router = StackRouter({ initialRouteName: 'baz' });

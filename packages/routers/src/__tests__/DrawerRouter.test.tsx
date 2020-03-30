@@ -5,7 +5,7 @@ import {
   DrawerNavigationState,
 } from '..';
 
-jest.mock('nanoid', () => ({ nanoid: () => 'test' }));
+jest.mock('nanoid/non-secure', () => ({ nanoid: () => 'test' }));
 
 it('gets initial state from route names and params with initialRouteName', () => {
   const router = DrawerRouter({ initialRouteName: 'baz' });
