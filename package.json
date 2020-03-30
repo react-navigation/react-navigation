@@ -18,7 +18,7 @@
   "author": "Satyajit Sahoo <satyajit.happy@gmail.com> (https://github.com/satya164/), Michał Osadnik <micosa97@gmail.com> (https://github.com/osdnk/)",
   "scripts": {
     "lint": "eslint --ext '.js,.ts,.tsx' .",
-    "typescript": "tsc --noEmit",
+    "typescript": "tsc --noEmit --composite false",
     "test": "jest",
     "prerelease": "lerna run clean",
     "release": "lerna publish",
@@ -44,7 +44,7 @@
     "jest": "^25.1.0",
     "lerna": "^3.20.2",
     "prettier": "^2.0.2",
-    "typescript": "^3.7.5"
+    "typescript": "^3.8.3"
   },
   "resolutions": {
     "react": "~16.9.0",
