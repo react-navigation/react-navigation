@@ -1,4 +1,4 @@
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import { CommonNavigationAction, NavigationState, PartialState } from './types';
 
 /**
@@ -55,9 +55,7 @@ const BaseRouter = {
           return {
             ...nextState,
             routes: nextState.routes.map((route) =>
-              route.key
-                ? route
-                : { ...route, key: `${route.name}-${shortid()}` }
+              route.key ? route : { ...route, key: `${route.name}-${nanoid()}` }
             ),
           };
         }

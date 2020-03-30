@@ -1,5 +1,5 @@
 import * as React from 'react';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import { SingleNavigatorContext } from './EnsureSingleNavigator';
 
 /**
@@ -7,7 +7,7 @@ import { SingleNavigatorContext } from './EnsureSingleNavigator';
  * This is used to prevent multiple navigators under a single container or screen.
  */
 export default function useRegisterNavigator() {
-  const [key] = React.useState(() => shortid());
+  const [key] = React.useState(() => nanoid());
   const container = React.useContext(SingleNavigatorContext);
 
   if (container === undefined) {

@@ -1,7 +1,7 @@
 import BaseRouter from '../BaseRouter';
 import * as CommonActions from '../CommonActions';
 
-jest.mock('shortid', () => () => 'test');
+jest.mock('nanoid', () => ({ nanoid: () => 'test' }));
 
 const STATE = {
   stale: false as const,
