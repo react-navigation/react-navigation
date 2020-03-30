@@ -46,31 +46,63 @@ type State = {
 
 const GestureHandlerWrapper = GestureHandlerRootView ?? View;
 
+/**
+ * Compare two arrays with primitive values as the content.
+ * We need to make sure that both values and order match.
+ */
+const isArrayEqual = (a: any[], b: any[]) =>
+  a.length === b.length && a.every((it, index) => it === b[index]);
+
 export default class StackView extends React.Component<Props, State> {
   static getDerivedStateFromProps(
     props: Readonly<Props>,
     state: Readonly<State>
   ) {
     // If there was no change in routes, we don't need to compute anything
-    if (props.state.routes === state.previousRoutes && state.routes.length) {
-      if (props.descriptors !== state.previousDescriptors) {
-        const descriptors = state.routes.reduce<StackDescriptorMap>(
-          (acc, route) => {
-            acc[route.key] =
-              props.descriptors[route.key] || state.descriptors[route.key];
+    if (
+      (props.state.routes === state.previousRoutes ||
+        isArrayEqual(
+          props.state.routes.map((r) => r.key),
+          state.previousRoutes.map((r) => r.key)
+        )) &&
+      state.routes.length
+    ) {
+      let routes = state.routes;
+      let previousRoutes = state.previousRoutes;
+      let descriptors = props.descriptors;
+      let previousDescriptors = state.previousDescriptors;
 
+      if (props.descriptors !== state.previousDescriptors) {
+        descriptors = state.routes.reduce<StackDescriptorMap>((acc, route) => {
+          acc[route.key] =
+            props.descriptors[route.key] || state.descriptors[route.key];
+
+          return acc;
+        }, {});
+
+        previousDescriptors = props.descriptors;
+      }
+
+      if (props.state.routes !== state.previousRoutes) {
+        // if any route objects have changed, we should update them
+        const map = props.state.routes.reduce<Record<string, Route<string>>>(
+          (acc, route) => {
+            acc[route.key] = route;
             return acc;
           },
           {}
         );
 
-        return {
-          previousDescriptors: props.descriptors,
-          descriptors,
-        };
+        routes = state.routes.map((route) => map[route.key] || route);
+        previousRoutes = props.state.routes;
       }
 
-      return null;
+      return {
+        routes,
+        previousRoutes,
+        descriptors,
+        previousDescriptors,
+      };
     }
 
     // Here we determine which routes were added or removed to animate them
