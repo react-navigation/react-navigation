@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, ScrollView, View, Text } from 'react-native';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
 import {
   createStackNavigator,
   NavigationStackProp,
@@ -22,24 +23,36 @@ class FocusTag extends React.Component<NavigationStackScreenProps> {
   state = { mode: 'didBlur' };
 
   componentDidMount() {
-    this.props.navigation.addListener('willFocus', () => {
-      this.setMode('willFocus');
+    this._willFocusSub = this.props.navigation.addListener('willFocus', () => {
+      this._handleEvent('willFocus');
     });
 
-    this.props.navigation.addListener('willBlur', () => {
-      this.setMode('willBlur');
+    this._willBlurSub = this.props.navigation.addListener('willBlur', () => {
+      this._handleEvent('willBlur');
     });
 
-    this.props.navigation.addListener('didFocus', () => {
-      this.setMode('didFocus');
+    this._didFocusSub = this.props.navigation.addListener('didFocus', () => {
+      this._handleEvent('didFocus');
     });
 
-    this.props.navigation.addListener('didBlur', () => {
-      this.setMode('didBlur');
+    this._didBlurSub = this.props.navigation.addListener('didBlur', () => {
+      this._handleEvent('didBlur');
     });
   }
 
-  setMode = (mode: string) => {
+  componentWillUnmount() {
+    this._willFocusSub?.remove();
+    this._willBlurSub?.remove();
+    this._didFocusSub?.remove();
+    this._didBlurSub?.remove();
+  }
+
+  _willFocusSub: { remove: () => void } | undefined;
+  _willBlurSub: { remove: () => void } | undefined;
+  _didFocusSub: { remove: () => void } | undefined;
+  _didBlurSub: { remove: () => void } | undefined;
+
+  _handleEvent = (mode: string) => {
     this.setState({ mode });
   };
 
@@ -119,18 +132,19 @@ class SampleScreen extends React.Component<NavigationStackScreenProps> {
   }
 }
 
-const SimpleStack = createStackNavigator(
+const Stack = createStackNavigator(
   {
-    PageOne: {
-      screen: SampleScreen,
-    },
-    PageTwo: {
-      screen: SampleScreen,
-    },
+    PageOne: SampleScreen,
+    PageTwo: SampleScreen,
   },
   {
     initialRouteName: 'PageOne',
   }
 );
 
-export default SimpleStack;
+const Tabs = createBottomTabNavigator({
+  A: Stack,
+  B: Stack,
+});
+
+export default Tabs;

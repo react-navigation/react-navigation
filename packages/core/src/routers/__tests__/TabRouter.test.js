@@ -26,7 +26,6 @@ describe('TabRouter', () => {
         { key: 'Foo', routeName: 'Foo' },
         { key: 'Bar', routeName: 'Bar' },
       ],
-      isTransitioning: false,
     };
     expect(state).toEqual(expectedState);
     const state2 = router.getStateForAction(
@@ -39,7 +38,6 @@ describe('TabRouter', () => {
         { key: 'Foo', routeName: 'Foo' },
         { key: 'Bar', routeName: 'Bar' },
       ],
-      isTransitioning: false,
     };
     expect(state2).toEqual(expectedState2);
     expect(router.getComponentForState(expectedState)).toEqual(ScreenA);
@@ -65,7 +63,6 @@ describe('TabRouter', () => {
         { key: 'Foo', routeName: 'Foo' },
         { key: 'Bar', routeName: 'Bar' },
       ],
-      isTransitioning: false,
     };
     expect(state).toEqual(expectedState);
     const state2 = router.getStateForAction(
@@ -78,7 +75,6 @@ describe('TabRouter', () => {
         { key: 'Foo', routeName: 'Foo' },
         { key: 'Bar', routeName: 'Bar' },
       ],
-      isTransitioning: false,
     };
     expect(state2).toEqual(expectedState2);
     expect(router.getComponentForState(expectedState)).toEqual(ScreenA);
@@ -102,7 +98,6 @@ describe('TabRouter', () => {
         { key: 'Foo', routeName: 'Foo' },
         { key: 'Bar', routeName: 'Bar' },
       ],
-      isTransitioning: false,
     });
   });
 
@@ -118,7 +113,6 @@ describe('TabRouter', () => {
         { key: 'Foo', routeName: 'Foo' },
         { key: 'Bar', routeName: 'Bar', params: { name: 'Qux' } },
       ],
-      isTransitioning: false,
     });
   });
 
@@ -230,7 +224,7 @@ describe('TabRouter', () => {
     const state = router.getStateForAction(navAction);
     expect(state).toEqual({
       index: 1,
-      isTransitioning: false,
+
       routes: [
         {
           key: 'Foo',
@@ -238,7 +232,7 @@ describe('TabRouter', () => {
         },
         {
           index: 1,
-          isTransitioning: false,
+
           key: 'Baz',
           routeName: 'Baz',
           params: { foo: '42' },
@@ -281,14 +275,14 @@ describe('TabRouter', () => {
     let state = router.getStateForAction(navAction);
     expect(state).toEqual({
       index: 1,
-      isTransitioning: false,
+
       routes: [
         { key: 'Foo', routeName: 'Foo' },
         {
           index: 0,
           key: 'Baz',
           routeName: 'Baz',
-          isTransitioning: false,
+
           routes: [
             { key: 'Boo', routeName: 'Boo' },
             { key: 'Bar', routeName: 'Bar' },
@@ -308,7 +302,7 @@ describe('TabRouter', () => {
     );
     expect(state && state.routes[1]).toEqual({
       index: 0,
-      isTransitioning: false,
+
       key: 'Baz',
       routeName: 'Baz',
       routes: [
@@ -335,14 +329,14 @@ describe('TabRouter', () => {
     });
     expect(state).toEqual({
       index: 1,
-      isTransitioning: false,
+
       routes: [
         { key: 'Foo', routeName: 'Foo' },
         {
           index: 1,
           key: 'Baz',
           routeName: 'Baz',
-          isTransitioning: false,
+
           routes: [
             { key: 'Foo', routeName: 'Foo' },
             { key: 'Bar', routeName: 'Bar' },
@@ -357,14 +351,14 @@ describe('TabRouter', () => {
     );
     expect(state2).toEqual({
       index: 1,
-      isTransitioning: false,
+
       routes: [
         { key: 'Foo', routeName: 'Foo' },
         {
           index: 0,
           key: 'Baz',
           routeName: 'Baz',
-          isTransitioning: false,
+
           routes: [
             { key: 'Foo', routeName: 'Foo' },
             { key: 'Bar', routeName: 'Bar' },
@@ -403,19 +397,19 @@ describe('TabRouter', () => {
     const state = router.getStateForAction(INIT_ACTION);
     expect(state).toEqual({
       index: 0,
-      isTransitioning: false,
+
       routes: [
         {
           index: 0,
           key: 'Foo',
           routeName: 'Foo',
-          isTransitioning: false,
+
           routes: [
             {
               index: 0,
               key: 'Fee',
               routeName: 'Fee',
-              isTransitioning: false,
+
               routes: [
                 { key: 'Boo', routeName: 'Boo' },
                 { key: 'Baz', routeName: 'Baz' },
@@ -425,7 +419,7 @@ describe('TabRouter', () => {
               index: 0,
               key: 'Bar',
               routeName: 'Bar',
-              isTransitioning: false,
+
               routes: [
                 { key: 'Zoo', routeName: 'Zoo' },
                 { key: 'Zap', routeName: 'Zap' },
@@ -442,19 +436,19 @@ describe('TabRouter', () => {
     );
     expect(state2).toEqual({
       index: 0,
-      isTransitioning: false,
+
       routes: [
         {
           index: 1,
           key: 'Foo',
           routeName: 'Foo',
-          isTransitioning: false,
+
           routes: [
             {
               index: 0,
               key: 'Fee',
               routeName: 'Fee',
-              isTransitioning: false,
+
               routes: [
                 { key: 'Boo', routeName: 'Boo' },
                 { key: 'Baz', routeName: 'Baz' },
@@ -464,7 +458,7 @@ describe('TabRouter', () => {
               index: 1,
               key: 'Bar',
               routeName: 'Bar',
-              isTransitioning: false,
+
               routes: [
                 { key: 'Zoo', routeName: 'Zoo' },
                 { key: 'Zap', routeName: 'Zap' },
@@ -494,19 +488,19 @@ describe('TabRouter', () => {
     });
     expect(state4).toEqual({
       index: 0,
-      isTransitioning: false,
+
       routes: [
         {
           index: 1,
           key: 'Foo',
           routeName: 'Foo',
-          isTransitioning: false,
+
           routes: [
             {
               index: 0,
               key: 'Fee',
               routeName: 'Fee',
-              isTransitioning: false,
+
               routes: [
                 { key: 'Boo', routeName: 'Boo' },
                 { key: 'Baz', routeName: 'Baz' },
@@ -516,7 +510,7 @@ describe('TabRouter', () => {
               index: 1,
               key: 'Bar',
               routeName: 'Bar',
-              isTransitioning: false,
+
               routes: [
                 { key: 'Zoo', routeName: 'Zoo' },
                 { key: 'Zap', routeName: 'Zap' },
@@ -557,7 +551,7 @@ describe('TabRouter', () => {
     const state = router.getStateForAction({ type: NavigationActions.INIT });
     const expectedState = {
       index: 0,
-      isTransitioning: false,
+
       routes: [
         { key: 'Foo', routeName: 'Foo' },
         { key: 'Bar', routeName: 'Bar' },
@@ -567,7 +561,7 @@ describe('TabRouter', () => {
     const state2 = router.getStateForAction(expectedAction, state);
     const expectedState2 = {
       index: 1,
-      isTransitioning: false,
+
       routes: [
         { key: 'Foo', routeName: 'Foo', params: undefined },
         {
@@ -628,13 +622,13 @@ describe('TabRouter', () => {
 
     const state = {
       index: 0,
-      isTransitioning: false,
+
       routes: [
         {
           index: 1,
           key: 'Foo',
           routeName: 'Foo',
-          isTransitioning: false,
+
           routes: [
             { key: 'Boo', routeName: 'Boo' },
             { key: 'Baz', routeName: 'Baz' },
@@ -660,7 +654,7 @@ describe('TabRouter', () => {
 
     expect(state0).toEqual({
       index: 0,
-      isTransitioning: false,
+
       routes: [
         { key: 'a', routeName: 'a' },
         { key: 'b', routeName: 'b' },
@@ -676,7 +670,7 @@ describe('TabRouter', () => {
 
     expect(state1).toEqual({
       index: 1,
-      isTransitioning: false,
+
       routes: [
         { key: 'a', routeName: 'a' },
         { key: 'b', routeName: 'b', params },
@@ -765,13 +759,13 @@ describe('TabRouter', () => {
     const screenApreState = {
       index: 0,
       key: 'Foo',
-      isTransitioning: false,
+
       routeName: 'Foo',
       routes: [{ key: 'Bar', routeName: 'Bar' }],
     };
     const preState = {
       index: 0,
-      isTransitioning: false,
+
       routes: [screenApreState],
     };
 

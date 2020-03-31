@@ -41,7 +41,7 @@ import StackWithTranslucentHeader from './src/StackWithTranslucentHeader';
 import SwitchWithStacks from './src/SwitchWithStacks';
 import TabsInDrawer from './src/TabsInDrawer';
 import DragLimitedToModal from './src/DragLimitedToModal';
-import EventsStack from './src/EventsStack';
+import FocusEvents from './src/FocusEvents';
 import FullScreen from './src/FullScreen';
 import GestureInteraction from './src/GestureInteraction';
 import {
@@ -144,7 +144,7 @@ const ExampleInfo = {
     name: 'Drag limited to modal',
     screen: DragLimitedToModal,
   },
-  EventsStack: { name: 'Events Stack', screen: EventsStack },
+  EventsStack: { name: 'Focus Events', screen: FocusEvents },
   FullScreen: { name: 'Fullscreen Stack', screen: FullScreen },
   GestureInteraction: {
     name: 'Gesture interaction',
