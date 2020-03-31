@@ -138,7 +138,7 @@ export type BottomTabBarOptions = {
    */
   inactiveTintColor?: string;
   /**
-   * Background olor for the active tab.
+   * Background color for the active tab.
    */
   activeBackgroundColor?: string;
   /**
