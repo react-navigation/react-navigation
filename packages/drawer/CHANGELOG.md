@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.10](https://github.com/react-navigation/drawer/compare/react-navigation-drawer@2.4.9...react-navigation-drawer@2.4.10) (2020-03-31)
+
+
+### Bug Fixes
+
+* remove isTransitioning from SwitchRouter state ([3bec1c9](https://github.com/react-navigation/drawer/commit/3bec1c964a49136c0ead8e8ba8a8c66c556bbcba))
+
+
+
+
+
 ## [2.4.9](https://github.com/react-navigation/drawer/compare/react-navigation-drawer@2.4.7...react-navigation-drawer@2.4.9) (2020-03-28)
 
 **Note:** Version bump only for package react-navigation-drawer

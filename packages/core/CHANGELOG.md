@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.4](https://github.com/react-navigation/react-navigation-core/compare/@react-navigation/core@3.7.3...@react-navigation/core@3.7.4) (2020-03-31)
+
+
+### Bug Fixes
+
+* remove isTransitioning from SwitchRouter state ([3bec1c9](https://github.com/react-navigation/react-navigation-core/commit/3bec1c964a49136c0ead8e8ba8a8c66c556bbcba))
+
+
+
+
+
 ## [3.7.3](https://github.com/react-navigation/react-navigation-core/compare/@react-navigation/core@3.7.1...@react-navigation/core@3.7.3) (2020-03-28)
 
 
