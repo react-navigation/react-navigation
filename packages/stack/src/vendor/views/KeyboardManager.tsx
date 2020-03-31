@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TextInput } from 'react-native';
+import { TextInput, Platform, Keyboard } from 'react-native';
 
 type Props = {
   enabled: boolean;
@@ -56,7 +56,9 @@ export default class KeyboardManager extends React.Component<Props> {
 
     const input = this.previouslyFocusedTextInput;
 
-    if (input) {
+    if (Platform.OS === 'android') {
+      Keyboard.dismiss();
+    } else if (input) {
       TextInput.State.blurTextInput(input);
     }
 
