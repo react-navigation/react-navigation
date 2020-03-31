@@ -49,7 +49,7 @@
     "react-native-paper": "^3.1.1",
     "react-native-reanimated": "^1.2.0",
     "react-navigation": "^4.3.5",
-    "typescript": "~3.7.5"
+    "typescript": "~3.8.3"
   },
   "peerDependencies": {
     "react": "*",

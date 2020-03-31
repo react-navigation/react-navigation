@@ -34,6 +34,6 @@
     "react": "~16.9.0",
     "react-native": "~0.61.5",
     "react-test-renderer": "^16.9.2",
-    "typescript": "~3.7.5"
+    "typescript": "~3.8.3"
   }
 }

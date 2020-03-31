@@ -50,7 +50,7 @@
     "react-native-screens": "^2.3.0",
     "react-native-testing-library": "^1.12.0",
     "react-navigation": "^4.3.5",
-    "typescript": "~3.7.5"
+    "typescript": "~3.8.3"
   },
   "peerDependencies": {
     "react": "*",
