@@ -43,7 +43,7 @@ type Props = TransitionPreset & {
   ) => void;
   onTransitionEnd?: (props: { route: Route<string> }, closing: boolean) => void;
   onPageChangeStart?: () => void;
-  onPageChangeConfirm?: () => void;
+  onPageChangeConfirm?: (closing: Boolean) => void;
   onPageChangeCancel?: () => void;
   gestureEnabled?: boolean;
   gestureResponseDistance?: {
@@ -105,8 +105,8 @@ function CardContainer({
   transitionSpec,
 }: Props) {
   React.useEffect(() => {
-    onPageChangeConfirm?.();
-  }, [active, onPageChangeConfirm]);
+    onPageChangeConfirm?.(closing);
+  }, [active, closing, onPageChangeConfirm]);
 
   const handleOpen = () => {
     onTransitionEnd?.({ route: scene.route }, false);
@@ -120,7 +120,7 @@ function CardContainer({
 
   const handleTransitionStart = ({ closing }: { closing: boolean }) => {
     if (active && closing) {
-      onPageChangeConfirm?.();
+      onPageChangeConfirm?.(closing);
     } else {
       onPageChangeCancel?.();
     }

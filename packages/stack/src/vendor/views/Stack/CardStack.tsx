@@ -60,7 +60,7 @@ type Props = {
   ) => void;
   onTransitionEnd: (props: { route: Route<string> }, closing: boolean) => void;
   onPageChangeStart?: () => void;
-  onPageChangeConfirm?: () => void;
+  onPageChangeConfirm?: (closing: Boolean) => void;
   onPageChangeCancel?: () => void;
 };
 
