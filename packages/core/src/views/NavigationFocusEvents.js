@@ -61,6 +61,11 @@ export default class NavigationEventManager extends React.Component {
       'didBlur',
       this._handleDidBlur
     );
+
+    this._refocusSubscription = navigation.addListener(
+      'refocus',
+      this._handleRefocus
+    );
   }
 
   componentWillUnmount() {
@@ -69,6 +74,7 @@ export default class NavigationEventManager extends React.Component {
     this._willBlurSubscription?.remove();
     this._didFocusSubscription?.remove();
     this._didBlurSubscription?.remove();
+    this._refocusSubscription?.remove();
   }
 
   /**
@@ -95,6 +101,11 @@ export default class NavigationEventManager extends React.Component {
    * @type {{ remove(): void } | undefined}
    */
   _didBlurSubscription;
+
+  /**
+   * @type {{ remove(): void } | undefined}
+   */
+  _refocusSubscription;
 
   /**
    * @type {string | undefined}
@@ -244,6 +255,13 @@ export default class NavigationEventManager extends React.Component {
         });
       }
     }
+  };
+
+  _handleRefocus = () => {
+    const { onEvent, navigation } = this.props;
+    const route = navigation.state.routes[navigation.state.index];
+
+    onEvent(route.key, 'refocus');
   };
 
   /**
