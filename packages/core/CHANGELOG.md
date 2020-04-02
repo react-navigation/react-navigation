@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.5](https://github.com/react-navigation/react-navigation-core/compare/@react-navigation/core@3.7.4...@react-navigation/core@3.7.5) (2020-04-02)
+
+
+### Bug Fixes
+
+* emit refocus for child navigators ([66a4dbc](https://github.com/react-navigation/react-navigation-core/commit/66a4dbccd8e7b3cda51a1d9c7e9397dfc58d6b9e))
+
+
+
+
+
 ## [3.7.4](https://github.com/react-navigation/react-navigation-core/compare/@react-navigation/core@3.7.3...@react-navigation/core@3.7.4) (2020-03-31)
 
 

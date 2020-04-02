@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.7](https://github.com/react-navigation/react-navigation/compare/react-navigation@4.3.6...react-navigation@4.3.7) (2020-04-02)
+
+**Note:** Version bump only for package react-navigation
+
+
+
+
+
 ## [4.3.6](https://github.com/react-navigation/react-navigation/compare/react-navigation@4.3.5...react-navigation@4.3.6) (2020-03-31)
 
 **Note:** Version bump only for package react-navigation
