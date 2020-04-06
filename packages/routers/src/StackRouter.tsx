@@ -219,9 +219,10 @@ export default function StackRouter(options: StackRouterOptions) {
 
       switch (action.type) {
         case 'REPLACE': {
-          const index = action.source
-            ? state.routes.findIndex((r) => r.key === action.source)
-            : state.index;
+          const index =
+            action.target === state.key && action.source
+              ? state.routes.findIndex((r) => r.key === action.source)
+              : state.index;
 
           if (index === -1) {
             return null;
