@@ -2,8 +2,12 @@ import * as React from 'react';
 
 const UNINTIALIZED_STATE = {};
 
+/**
+ * This is definitely not compatible with concurrent mode, but we don't have a solution for sync state yet.
+ */
 export default function useSyncState<T>(initialState?: (() => T) | T) {
   const stateRef = React.useRef<T>(UNINTIALIZED_STATE as any);
+  const isSchedulingRef = React.useRef(false);
 
   if (stateRef.current === UNINTIALIZED_STATE) {
     stateRef.current =
@@ -11,7 +15,7 @@ export default function useSyncState<T>(initialState?: (() => T) | T) {
       typeof initialState === 'function' ? initialState() : initialState;
   }
 
-  const [state, setTrackingState] = React.useState(stateRef.current);
+  const [trackingState, setTrackingState] = React.useState(stateRef.current);
 
   const getState = React.useCallback(() => stateRef.current, []);
 
@@ -21,8 +25,35 @@ export default function useSyncState<T>(initialState?: (() => T) | T) {
     }
 
     stateRef.current = state;
-    setTrackingState(state);
+
+    if (!isSchedulingRef.current) {
+      setTrackingState(state);
+    }
   }, []);
 
-  return [state, getState, setState] as const;
+  const scheduleUpdate = React.useCallback((callback: () => void) => {
+    isSchedulingRef.current = true;
+
+    try {
+      callback();
+    } finally {
+      isSchedulingRef.current = false;
+    }
+  }, []);
+
+  const flushUpdates = React.useCallback(() => {
+    // Make sure that the tracking state is up-to-date.
+    // We call it unconditionally, but React should skip the update if state is unchanged.
+    setTrackingState(stateRef.current);
+  }, []);
+
+  // If we're rendering and the tracking state is out of date, update it immediately
+  // This will make sure that our updates are applied as early as possible.
+  if (trackingState !== stateRef.current) {
+    setTrackingState(stateRef.current);
+  }
+
+  const state = stateRef.current;
+
+  return [state, getState, setState, scheduleUpdate, flushUpdates] as const;
 }

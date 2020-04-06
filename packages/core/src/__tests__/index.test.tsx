@@ -626,7 +626,7 @@ it('updates route params with setParams applied to parent', () => {
   });
 });
 
-it('handles change in route names', () => {
+it('handles change in route names', async () => {
   const TestNavigator = (props: any): any => {
     useNavigationBuilder(MockRouter, props);
     return null;
@@ -635,7 +635,7 @@ it('handles change in route names', () => {
   const onStateChange = jest.fn();
 
   const root = render(
-    <BaseNavigationContainer onStateChange={onStateChange}>
+    <BaseNavigationContainer>
       <TestNavigator initialRouteName="bar">
         <Screen name="foo" component={jest.fn()} />
         <Screen name="bar" component={jest.fn()} />
