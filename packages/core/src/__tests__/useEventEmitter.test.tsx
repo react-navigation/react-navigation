@@ -97,6 +97,69 @@ it('fires focus and blur events in root navigator', () => {
   expect(fourthBlurCallback).toBeCalledTimes(0);
 });
 
+it('fires focus event after blur', () => {
+  const TestNavigator = React.forwardRef((props: any, ref: any): any => {
+    const { state, navigation, descriptors } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    React.useImperativeHandle(ref, () => navigation, [navigation]);
+
+    return state.routes.map((route) => descriptors[route.key].render());
+  });
+
+  const callback = jest.fn();
+
+  const Test = ({ route, navigation }: any) => {
+    React.useEffect(
+      () =>
+        navigation.addListener('focus', () => callback(route.name, 'focus')),
+      [navigation, route.name]
+    );
+
+    React.useEffect(
+      () => navigation.addListener('blur', () => callback(route.name, 'blur')),
+      [navigation, route.name]
+    );
+
+    return null;
+  };
+
+  const navigation = React.createRef<any>();
+
+  const element = (
+    <BaseNavigationContainer>
+      <TestNavigator ref={navigation}>
+        <Screen name="first" component={Test} />
+        <Screen name="second" component={Test} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(element);
+
+  expect(callback.mock.calls).toEqual([['first', 'focus']]);
+
+  act(() => navigation.current.navigate('second'));
+
+  expect(callback.mock.calls).toEqual([
+    ['first', 'focus'],
+    ['first', 'blur'],
+    ['second', 'focus'],
+  ]);
+
+  act(() => navigation.current.navigate('first'));
+
+  expect(callback.mock.calls).toEqual([
+    ['first', 'focus'],
+    ['first', 'blur'],
+    ['second', 'focus'],
+    ['second', 'blur'],
+    ['first', 'focus'],
+  ]);
+});
+
 it('fires focus and blur events in nested navigator', () => {
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
     const { state, navigation, descriptors } = useNavigationBuilder(

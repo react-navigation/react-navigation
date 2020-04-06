@@ -48,7 +48,7 @@ export default function useFocusEvents({ state, emitter }: Options) {
       emitter.emit({ type: 'focus', target: currentFocusedKey });
     }
 
-    // We should only dispatch events when the focused key changed and navigator is focused
+    // We should only emit events when the focused key changed and navigator is focused
     // When navigator is not focused, screens inside shouldn't receive focused status either
     if (
       lastFocusedKey === currentFocusedKey ||
@@ -62,7 +62,7 @@ export default function useFocusEvents({ state, emitter }: Options) {
       return;
     }
 
-    emitter.emit({ type: 'focus', target: currentFocusedKey });
     emitter.emit({ type: 'blur', target: lastFocusedKey });
+    emitter.emit({ type: 'focus', target: currentFocusedKey });
   }, [currentFocusedKey, emitter, navigation]);
 }
