@@ -57,7 +57,7 @@ export function push(routeName: string, params?: object, action?: never) {
   });
 }
 
-export function pop(n: number) {
+export function pop(n: number = 1) {
   return StackActions.pop(typeof n === 'number' ? { n } : n);
 }
 
