@@ -32,6 +32,7 @@ import {
 } from './types';
 import useStateGetters from './useStateGetters';
 import useOnGetState from './useOnGetState';
+import useScheduleUpdate from './useScheduleUpdate';
 
 // This is to make TypeScript compiler happy
 // eslint-disable-next-line babel/no-unused-expressions
@@ -308,16 +309,13 @@ export default function useNavigationBuilder<
   }
 
   if (
-    previousRouteRef.current &&
-    route &&
-    route.params &&
-    typeof route.params.screen === 'string' &&
-    route.params !== previousRouteRef.current.params
+    typeof route?.params?.screen === 'string' &&
+    route.params !== previousRouteRef.current?.params
   ) {
     // If the route was updated with new name and/or params, we should navigate there
     // The update should be limited to current navigator only, so we call the router manually
     const updatedState = router.getStateForAction(
-      state,
+      nextState,
       CommonActions.navigate(route.params.screen, route.params.params),
       {
         routeNames,
@@ -331,17 +329,17 @@ export default function useNavigationBuilder<
             routeNames,
             routeParamList,
           })
-        : state;
+        : nextState;
   }
 
   const shouldUpdate = state !== nextState;
 
-  React.useEffect(() => {
+  useScheduleUpdate(() => {
     if (shouldUpdate) {
-      // If the state needs to be updated, we'll schedule an update with React
+      // If the state needs to be updated, we'll schedule an update
       setState(nextState);
     }
-  }, [nextState, setState, shouldUpdate]);
+  });
 
   // The up-to-date state will come in next render, but we don't need to wait for it
   // We can't use the outdated state since the screens have changed, which will cause error due to mismatched config
