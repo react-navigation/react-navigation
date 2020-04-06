@@ -720,7 +720,7 @@ it('replaces focused screen with replace', () => {
   });
 });
 
-it('replaces source screen with replace', () => {
+it('replaces active screen with replace', () => {
   const router = StackRouter({});
   const options = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
@@ -754,8 +754,8 @@ it('replaces source screen with replace', () => {
     index: 1,
     routes: [
       { key: 'foo', name: 'foo' },
-      { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
       { key: 'qux-test', name: 'qux', params: { answer: 42 } },
+      { key: 'baz', name: 'baz' },
     ],
     routeNames: ['foo', 'bar', 'baz', 'qux'],
   });
@@ -785,6 +785,7 @@ it("doesn't handle replace if source key isn't present", () => {
       {
         ...StackActions.replace('qux', { answer: 42 }),
         source: 'magic',
+        target: 'root',
       },
       options
     )
