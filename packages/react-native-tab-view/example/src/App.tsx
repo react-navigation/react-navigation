@@ -224,6 +224,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#eceff1',
+    height: Platform.OS === 'web' ? '100vh' : undefined,
   },
   statusbar: {
     height: Platform.select({
