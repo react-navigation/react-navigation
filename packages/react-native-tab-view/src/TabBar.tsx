@@ -106,7 +106,7 @@ export default class TabBar<T extends Route> extends React.Component<
         !(
           layout.width &&
           navigationState.routes.every(
-            r => typeof tabWidths[r.key] === 'number'
+            (r) => typeof tabWidths[r.key] === 'number'
           )
         )
       ) {
@@ -395,7 +395,7 @@ export default class TabBar<T extends Route> extends React.Component<
                 },
               },
             ])}
-            ref={el => {
+            ref={(el) => {
               // @ts-ignore
               this.scrollView = el?.getNode();
             }}
@@ -404,7 +404,7 @@ export default class TabBar<T extends Route> extends React.Component<
               <TabBarItem
                 onLayout={
                   isWidthDynamic
-                    ? e => {
+                    ? (e) => {
                         this.measuredTabWidths[route.key] =
                           e.nativeEvent.layout.width;
 
@@ -412,7 +412,7 @@ export default class TabBar<T extends Route> extends React.Component<
                         // We avoid doing separate setState for each layout since it triggers multiple renders and slows down app
                         if (
                           routes.every(
-                            r =>
+                            (r) =>
                               typeof this.measuredTabWidths[r.key] === 'number'
                           )
                         ) {

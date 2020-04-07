@@ -79,7 +79,7 @@ export default class ExampleList extends React.Component<any, State> {
       require('../assets/album-art-6.jpg'),
       require('../assets/album-art-7.jpg'),
       require('../assets/album-art-8.jpg'),
-    ].map(image => Asset.fromModule(image).downloadAsync());
+    ].map((image) => Asset.fromModule(image).downloadAsync());
   }
 
   private persistNavigationState = async (currentIndex: number) => {

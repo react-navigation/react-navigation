@@ -7,7 +7,7 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const node_modules = path.resolve(__dirname, 'node_modules');
 const packageName = require('../package.json').name;
 
-module.exports = async function(env, argv) {
+module.exports = async function (env, argv) {
   const config = await createExpoWebpackConfigAsync(env, argv);
 
   config.module.rules.push({
@@ -18,7 +18,7 @@ module.exports = async function(env, argv) {
   });
 
   config.resolve.plugins = config.resolve.plugins.filter(
-    p => !(p instanceof ModuleScopePlugin)
+    (p) => !(p instanceof ModuleScopePlugin)
   );
 
   Object.assign(config.resolve.alias, {

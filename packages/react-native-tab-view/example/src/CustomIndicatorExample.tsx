@@ -77,12 +77,12 @@ export default class CustomIndicatorExample extends React.Component<{}, State> {
 
     const scale = Animated.interpolate(position, {
       inputRange,
-      outputRange: inputRange.map(x => (Math.trunc(x) === x ? 2 : 0.1)),
+      outputRange: inputRange.map((x) => (Math.trunc(x) === x ? 2 : 0.1)),
     });
 
     const opacity = Animated.interpolate(position, {
       inputRange,
-      outputRange: inputRange.map(x => {
+      outputRange: inputRange.map((x) => {
         const d = x - Math.trunc(x);
         return d === 0.49 || d === 0.51 ? 0 : 1;
       }),
@@ -90,7 +90,7 @@ export default class CustomIndicatorExample extends React.Component<{}, State> {
 
     const translateX = Animated.interpolate(position, {
       inputRange: inputRange,
-      outputRange: inputRange.map(x => {
+      outputRange: inputRange.map((x) => {
         const i = Math.round(x);
         return i * getTabWidth(i) * (I18nManager.isRTL ? -1 : 1);
       }),
@@ -98,7 +98,7 @@ export default class CustomIndicatorExample extends React.Component<{}, State> {
 
     const backgroundColor = Animated.interpolate(position, {
       inputRange,
-      outputRange: inputRange.map(x =>
+      outputRange: inputRange.map((x) =>
         Animated.color(...navigationState.routes[Math.round(x)].color)
       ),
     });
@@ -165,7 +165,7 @@ export default class CustomIndicatorExample extends React.Component<{}, State> {
         tabBarPosition="bottom"
         renderPager={
           Platform.OS === 'ios'
-            ? props => <ScrollPager {...props} />
+            ? (props) => <ScrollPager {...props} />
             : undefined
         }
         onIndexChange={this.handleIndexChange}

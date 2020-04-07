@@ -104,10 +104,12 @@ export default class SceneView<T extends Route> extends React.Component<
           style,
         ]}
       >
-        {// Only render the route only if it's either focused or layout is available
-        // When layout is not available, we must not render unfocused routes
-        // so that the focused route can fill the screen
-        focused || layout.width ? this.props.children({ loading }) : null}
+        {
+          // Only render the route only if it's either focused or layout is available
+          // When layout is not available, we must not render unfocused routes
+          // so that the focused route can fill the screen
+          focused || layout.width ? this.props.children({ loading }) : null
+        }
       </View>
     );
   }

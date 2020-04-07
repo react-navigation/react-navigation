@@ -66,7 +66,9 @@ export default class ScrollPager<T extends Route> extends React.Component<
   private jumpTo = (key: string) => {
     const { navigationState, keyboardDismissMode, onIndexChange } = this.props;
 
-    const index = navigationState.routes.findIndex(route => route.key === key);
+    const index = navigationState.routes.findIndex(
+      (route) => route.key === key
+    );
 
     if (navigationState.index === index) {
       this.scrollTo(index * this.props.layout.width);
@@ -157,7 +159,7 @@ export default class ScrollPager<T extends Route> extends React.Component<
       addListener: this.addListener,
       removeListener: this.removeListener,
       jumpTo: this.jumpTo,
-      render: children => (
+      render: (children) => (
         <Animated.ScrollView
           pagingEnabled
           directionalLockEnabled

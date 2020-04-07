@@ -37,17 +37,17 @@ const Scene = ({ route, position, layout, index, length }: Props) => {
     const { width } = layout;
 
     const inputRange = Array.from({ length }, (_, i) => i);
-    const translateOutputRange = inputRange.map(i => {
+    const translateOutputRange = inputRange.map((i) => {
       return (width / 2) * (index - i) * -1;
     });
-    const scaleOutputRange = inputRange.map(i => {
+    const scaleOutputRange = inputRange.map((i) => {
       if (index === i) {
         return 1;
       } else {
         return 0.7;
       }
     });
-    const opacityOutputRange = inputRange.map(i => {
+    const opacityOutputRange = inputRange.map((i) => {
       if (index === i) {
         return 1;
       } else {
@@ -89,7 +89,7 @@ const Scene = ({ route, position, layout, index, length }: Props) => {
 
 export default function CoverflowExample() {
   const [index, onIndexChange] = React.useState(2);
-  const [routes] = React.useState(Object.keys(ALBUMS).map(key => ({ key })));
+  const [routes] = React.useState(Object.keys(ALBUMS).map((key) => ({ key })));
 
   return (
     <TabView

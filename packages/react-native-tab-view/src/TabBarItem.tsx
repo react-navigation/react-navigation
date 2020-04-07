@@ -55,7 +55,7 @@ export default class TabBarItem<T extends Route> extends React.Component<
 
         return Animated.interpolate(position, {
           inputRange,
-          outputRange: inputRange.map(i => (i === tabIndex ? 1 : 0)),
+          outputRange: inputRange.map((i) => (i === tabIndex ? 1 : 0)),
         });
       } else {
         return 1;
