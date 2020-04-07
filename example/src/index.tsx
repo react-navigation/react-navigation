@@ -116,7 +116,7 @@ const THEME_PERSISTENCE_KEY = 'THEME_TYPE';
 Asset.loadAsync(StackAssets);
 
 export default function App() {
-  const containerRef = React.useRef<NavigationContainerRef>();
+  const containerRef = React.useRef<NavigationContainerRef>(null);
 
   // To test deep linking on, run the following in the Terminal:
   // Android: adb shell am start -a android.intent.action.VIEW -d "exp://127.0.0.1:19000/--/simple-stack"

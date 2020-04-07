@@ -631,15 +631,17 @@ export default class DrawerView extends React.Component<Props> {
             >
               {renderSceneContent({ progress })}
             </View>
-            {// Disable overlay if sidebar is permanent
-            drawerType === 'permanent' ? null : (
-              <TapGestureHandler
-                enabled={gestureEnabled}
-                onHandlerStateChange={this.handleTapStateChange}
-              >
-                <Overlay progress={progress} style={overlayStyle} />
-              </TapGestureHandler>
-            )}
+            {
+              // Disable overlay if sidebar is permanent
+              drawerType === 'permanent' ? null : (
+                <TapGestureHandler
+                  enabled={gestureEnabled}
+                  onHandlerStateChange={this.handleTapStateChange}
+                >
+                  <Overlay progress={progress} style={overlayStyle} />
+                </TapGestureHandler>
+              )
+            }
           </Animated.View>
           {drawerType === 'permanent' ? null : (
             <Animated.Code

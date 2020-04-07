@@ -32,7 +32,7 @@
     "@react-navigation/routers": "^5.2.1",
     "escape-string-regexp": "^2.0.0",
     "nanoid": "^3.0.2",
-    "query-string": "^6.11.1",
+    "query-string": "^6.12.0",
     "react-is": "^16.13.0",
     "use-subscription": "^1.4.0"
   },
@@ -44,7 +44,7 @@
     "del-cli": "^3.0.0",
     "react": "~16.9.0",
     "react-native-testing-library": "^1.12.0",
-    "react-test-renderer": "~16.9.0",
+    "react-test-renderer": "~16.13.1",
     "typescript": "^3.8.3"
   },
   "peerDependencies": {

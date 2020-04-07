@@ -103,7 +103,7 @@ const BaseNavigationContainer = React.forwardRef(
       independent,
       children,
     }: NavigationContainerProps,
-    ref: React.Ref<NavigationContainerRef>
+    ref?: React.Ref<NavigationContainerRef>
   ) {
     const parent = React.useContext(NavigationStateContext);
 
