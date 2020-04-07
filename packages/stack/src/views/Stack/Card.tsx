@@ -517,6 +517,7 @@ export default class Card extends React.Component<Props> {
                         : gestureDirection === 'vertical'
                         ? [styles.shadowVertical, styles.shadowTop]
                         : [styles.shadowVertical, styles.shadowBottom],
+                      { backgroundColor },
                       shadowStyle,
                     ]}
                     pointerEvents="none"
@@ -553,7 +554,6 @@ const styles = StyleSheet.create({
   },
   shadow: {
     position: 'absolute',
-    backgroundColor: '#fff',
     shadowRadius: 5,
     shadowColor: '#000',
     shadowOpacity: 0.3,
