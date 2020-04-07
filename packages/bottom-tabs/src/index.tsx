@@ -12,7 +12,7 @@ export { default as BottomTabBar } from './views/BottomTabBar';
 /**
  * Types
  */
-export {
+export type {
   BottomTabNavigationOptions,
   BottomTabNavigationProp,
   BottomTabBarProps,

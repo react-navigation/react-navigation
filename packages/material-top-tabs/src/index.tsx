@@ -12,7 +12,7 @@ export { default as MaterialTopTabBar } from './views/MaterialTopTabBar';
 /**
  * Types
  */
-export {
+export type {
   MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationProp,
   MaterialTopTabBarProps,
