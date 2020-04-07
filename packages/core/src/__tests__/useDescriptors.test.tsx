@@ -262,8 +262,10 @@ it('sets initial options with setOptions', () => {
   };
 
   const TestScreen = ({ navigation }: any): any => {
-    navigation.setOptions({
-      title: 'Hello world',
+    React.useEffect(() => {
+      navigation.setOptions({
+        title: 'Hello world',
+      });
     });
 
     return 'Test screen';
@@ -315,12 +317,12 @@ it('updates options with setOptions', () => {
   };
 
   const TestScreen = ({ navigation }: any): any => {
-    navigation.setOptions({
-      title: 'Hello world',
-      description: 'Something here',
-    });
-
     React.useEffect(() => {
+      navigation.setOptions({
+        title: 'Hello world',
+        description: 'Something here',
+      });
+
       const timer = setTimeout(() =>
         navigation.setOptions({
           title: 'Hello again',

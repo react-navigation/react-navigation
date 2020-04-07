@@ -26,7 +26,7 @@ type Props = NavigationContainerProps & {
  */
 const NavigationContainer = React.forwardRef(function NavigationContainer(
   { theme = DefaultTheme, ...rest }: Props,
-  ref: React.Ref<NavigationContainerRef>
+  ref?: React.Ref<NavigationContainerRef | null>
 ) {
   const refContainer = React.useRef<NavigationContainerRef>(null);
 
