@@ -4,7 +4,7 @@ import Animated from 'react-native-reanimated';
 import { Props } from './Pager';
 import { Route, Listener } from './types';
 
-const { event, divide, Value } = Animated;
+const { event, divide, onChange, cond, eq, round, call, Value } = Animated;
 
 type State = {
   initialOffset: { x: number; y: number };
@@ -136,6 +136,7 @@ export default class ScrollPager<T extends Route> extends React.Component<
       onSwipeStart,
       onSwipeEnd,
       overscroll,
+      onIndexChange,
       navigationState,
     } = this.props;
 
@@ -188,6 +189,16 @@ export default class ScrollPager<T extends Route> extends React.Component<
           ref={this.scrollViewRef}
         >
           {children}
+          <Animated.Code
+            exec={onChange(
+              this.relativePosition,
+              cond(eq(round(this.relativePosition), this.relativePosition), [
+                call([this.relativePosition], ([relativePosition]) =>
+                  onIndexChange(relativePosition)
+                ),
+              ])
+            )}
+          />
         </Animated.ScrollView>
       ),
     });
