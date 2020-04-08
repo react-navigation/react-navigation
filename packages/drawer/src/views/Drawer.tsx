@@ -623,9 +623,11 @@ export default class DrawerView extends React.Component<Props> {
             ]}
           >
             <View
-              accessibilityElementsHidden={isOpen}
+              accessibilityElementsHidden={isOpen && drawerType !== 'permanent'}
               importantForAccessibility={
-                isOpen ? 'no-hide-descendants' : 'auto'
+                isOpen && drawerType !== 'permanent'
+                  ? 'no-hide-descendants'
+                  : 'auto'
               }
               style={styles.content}
             >
@@ -656,7 +658,7 @@ export default class DrawerView extends React.Component<Props> {
             />
           )}
           <Animated.View
-            accessibilityViewIsModal={isOpen}
+            accessibilityViewIsModal={isOpen && drawerType !== 'permanent'}
             removeClippedSubviews={Platform.OS !== 'ios'}
             onLayout={this.handleDrawerLayout}
             style={[
