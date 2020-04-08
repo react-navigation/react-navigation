@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.4.1](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.4.0...@react-navigation/drawer@5.4.1) (2020-04-08)
+
+
+### Bug Fixes
+
+* don't hide content from accessibility with permanent drawer ([cb2f157](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/cb2f157a561a2ce3f073eb4ccb567532c77bd869)), closes [#7976](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/7976)
+* mark type exports for all packages ([b71de6c](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/b71de6cc799143f1d0e8a0cfcc34f0a2381f9840))
+
+
+
+
+
 # [5.4.0](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.3.4...@react-navigation/drawer@5.4.0) (2020-03-30)
 
 
