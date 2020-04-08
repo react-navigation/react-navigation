@@ -41,7 +41,7 @@ export type LinkingOptions = {
    */
   getStateFromPath?: typeof getStateFromPathDefault;
   /**
-   * Custom function to conver the state object to a valid URL (advanced).
+   * Custom function to convert the state object to a valid URL (advanced).
    */
   getPathFromState?: typeof getPathFromStateDefault;
 };
