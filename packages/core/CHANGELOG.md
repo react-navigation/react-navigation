@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.3.3](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.3.2...@react-navigation/core@5.3.3) (2020-04-08)
+
+
+### Bug Fixes
+
+* switch order of focus and blur events. closes [#7963](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/7963) ([ce3994c](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/ce3994c82c28669d5742017eb7627e9adf996933))
+* workaround warning about setState in another component in render ([d4fd906](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/d4fd906915cc20d6fb21508384c05a540d8644d8))
+
+
+
+
+
 ## [5.3.2](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.3.1...@react-navigation/core@5.3.2) (2020-03-30)
 
 

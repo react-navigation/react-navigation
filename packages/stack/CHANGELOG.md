@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.10](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.9...@react-navigation/stack@5.2.10) (2020-04-08)
+
+
+### Bug Fixes
+
+* make color of shadow element same as card color in stack ([f1a8bce](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/f1a8bceba5b736e9f59862a8ae819342209a46f2))
+* mark type exports for all packages ([b71de6c](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/b71de6cc799143f1d0e8a0cfcc34f0a2381f9840))
+
+
+
+
+
 ## [5.2.9](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.8...@react-navigation/stack@5.2.9) (2020-03-30)
 
 
