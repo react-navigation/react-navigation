@@ -1,7 +1,20 @@
 import * as React from 'react';
-import { useNavigation, useRoute } from '@react-navigation/core';
+import {
+  useNavigation,
+  useRoute,
+  EventArg,
+  NavigationProp,
+  ParamListBase,
+} from '@react-navigation/core';
 
-export default function useTabPress(callback: () => void) {
+interface CallbackArguments {
+  tabPressEvent: EventArg<'tabPress', true>;
+  currentNavigation: NavigationProp<ParamListBase>;
+}
+
+export default function useTabPress(
+  callback: (callbackArguments: CallbackArguments) => void | undefined
+) {
   const navigation = useNavigation();
   const route = useRoute();
 
@@ -23,10 +36,12 @@ export default function useTabPress(callback: () => void) {
       // in addition, there are multiple tab implementations
       // @ts-ignore
       'tabPress',
-      () => {
+      (tabPressEvent: EventArg<'tabPress', true>) => {
         // Run the operation in the next frame so we're sure all listeners have been run
         // This is necessary to know if preventDefault() has been called
-        requestAnimationFrame(callback);
+        requestAnimationFrame(() =>
+          callback({ tabPressEvent, currentNavigation: current })
+        );
       }
     );
 
