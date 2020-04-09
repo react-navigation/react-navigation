@@ -7,7 +7,11 @@ import {
   StyleSheet,
   ScrollViewProps,
 } from 'react-native';
-import { useScrollToTop, useTheme } from '@react-navigation/native';
+import {
+  useScrollToTop,
+  useTheme,
+  useTabPress,
+} from '@react-navigation/native';
 
 type Props = Partial<ScrollViewProps> & {
   date?: string;
@@ -26,6 +30,7 @@ export default function Article({
   const ref = React.useRef<ScrollView>(null);
 
   useScrollToTop(ref);
+  useTabPress(() => console.log('Article tab pressed !'));
 
   const { colors } = useTheme();
 

@@ -11,7 +11,7 @@ import {
   Platform,
   ScaledSize,
 } from 'react-native';
-import { useScrollToTop } from '@react-navigation/native';
+import { useScrollToTop, useTabPress } from '@react-navigation/native';
 
 const COVERS = [
   require('../../assets/album-art-01.jpg'),
@@ -56,6 +56,7 @@ export default function Albums(props: Partial<ScrollViewProps>) {
   const ref = React.useRef<ScrollView>(null);
 
   useScrollToTop(ref);
+  useTabPress(() => console.log('Albums tab pressed !'));
 
   const itemSize = dimensions.width / Math.floor(dimensions.width / 150);
 

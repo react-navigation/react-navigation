@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
-import { useScrollToTop, useTheme } from '@react-navigation/native';
+import {
+  useScrollToTop,
+  useTheme,
+  useTabPress,
+} from '@react-navigation/native';
 
 type Item = { name: string; number: number };
 
@@ -91,6 +95,7 @@ export default function Contacts() {
   const ref = React.useRef<FlatList<Item>>(null);
 
   useScrollToTop(ref);
+  useTabPress(() => console.log('Contacts tab pressed !'));
 
   const renderItem = ({ item }: { item: Item }) => <ContactItem item={item} />;
 

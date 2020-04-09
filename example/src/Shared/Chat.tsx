@@ -8,7 +8,11 @@ import {
   StyleSheet,
   ScrollViewProps,
 } from 'react-native';
-import { useScrollToTop, useTheme } from '@react-navigation/native';
+import {
+  useScrollToTop,
+  useTheme,
+  useTabPress,
+} from '@react-navigation/native';
 import Color from 'color';
 
 const MESSAGES = [
@@ -22,6 +26,7 @@ export default function Chat(props: Partial<ScrollViewProps>) {
   const ref = React.useRef<ScrollView>(null);
 
   useScrollToTop(ref);
+  useTabPress(() => console.log('Chats tab pressed !'));
 
   const { colors } = useTheme();
 
