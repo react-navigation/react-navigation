@@ -6,6 +6,7 @@ export { default as NavigationNativeContainer } from './NavigationNativeContaine
 export { default as useBackButton } from './useBackButton';
 export { default as useLinking } from './useLinking';
 export { default as useScrollToTop } from './useScrollToTop';
+export { default as useTabPress } from './useTabPress';
 
 export { default as DefaultTheme } from './theming/DefaultTheme';
 export { default as DarkTheme } from './theming/DarkTheme';
