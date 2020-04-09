@@ -6,6 +6,8 @@ import {
   TabRouter,
   TabRouterOptions,
   TabNavigationState,
+  TabActionHelpers,
+  ParamListBase,
 } from '@react-navigation/native';
 import BottomTabView from '../views/BottomTabView';
 import {
@@ -29,7 +31,8 @@ function BottomTabNavigator({
     TabNavigationState,
     TabRouterOptions,
     BottomTabNavigationOptions,
-    BottomTabNavigationEventMap
+    BottomTabNavigationEventMap,
+    TabActionHelpers<ParamListBase>
   >(TabRouter, {
     initialRouteName,
     backBehavior,

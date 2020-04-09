@@ -31,7 +31,8 @@ type Options<State extends NavigationState, Action extends NavigationAction> = {
 export default function useNavigationHelpers<
   State extends NavigationState,
   Action extends NavigationAction,
-  EventMap extends Record<string, any>
+  EventMap extends Record<string, any>,
+  SpecificNavigatorMethod
 >({ onAction, getState, emitter, router }: Options<State, Action>) {
   const parentNavigationHelpers = React.useContext(NavigationContext);
 
@@ -115,6 +116,7 @@ export default function useNavigationHelpers<
       dangerouslyGetParent: () => parentNavigationHelpers as any,
       dangerouslyGetState: getState,
     } as NavigationHelpers<ParamListBase, EventMap> &
-      (NavigationProp<ParamListBase, string, any, any, any> | undefined);
+      (NavigationProp<ParamListBase, string, any, any, any> | undefined) &
+      SpecificNavigatorMethod;
   }, [router, getState, parentNavigationHelpers, emitter.emit, onAction]);
 }

@@ -15,6 +15,7 @@ function SwitchNavigator(props: Props) {
     TabNavigationState,
     TabRouterOptions,
     {},
+    {},
     {}
   >(TabRouter, props);
 

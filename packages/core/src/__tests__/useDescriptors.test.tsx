@@ -23,6 +23,7 @@ it('sets options with options prop as an object', () => {
       NavigationState,
       any,
       { title?: string },
+      any,
       any
     >(MockRouter, props);
     const { render, options } = descriptors[state.routes[state.index].key];
@@ -68,6 +69,7 @@ it('sets options with options prop as a fuction', () => {
       NavigationState,
       any,
       { title?: string },
+      any,
       any
     >(MockRouter, props);
     const { render, options } = descriptors[state.routes[state.index].key];
@@ -114,6 +116,7 @@ it('sets options with screenOptions prop as an object', () => {
       NavigationState,
       any,
       { title?: string },
+      any,
       any
     >(MockRouter, props);
 
@@ -174,6 +177,7 @@ it('sets options with screenOptions prop as a fuction', () => {
       NavigationState,
       any,
       { title?: string },
+      any,
       any
     >(MockRouter, props);
 
@@ -249,6 +253,7 @@ it('sets initial options with setOptions', () => {
         title?: string;
         color?: string;
       },
+      any,
       any
     >(MockRouter, props);
     const { render, options } = descriptors[state.routes[state.index].key];
@@ -300,6 +305,7 @@ it('updates options with setOptions', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder<
       NavigationState,
+      any,
       any,
       any,
       any
@@ -379,6 +385,7 @@ it("returns correct value for canGoBack when it's not overridden", () => {
       NavigationState,
       any,
       { title?: string },
+      any,
       any
     >(MockRouter, props);
     const { render, options } = descriptors[state.routes[state.index].key];
@@ -441,6 +448,7 @@ it(`returns false for canGoBack when current router doesn't handle GO_BACK`, () 
       NavigationState,
       any,
       any,
+      any,
       any
     >(TestRouter, props);
 
@@ -492,6 +500,7 @@ it('returns true for canGoBack when current router handles GO_BACK', () => {
       NavigationState,
       any,
       { title?: string },
+      any,
       any
     >(ParentRouter, props);
     return descriptors[state.routes[state.index].key].render();
@@ -502,6 +511,7 @@ it('returns true for canGoBack when current router handles GO_BACK', () => {
       NavigationState,
       any,
       { title?: string },
+      any,
       any
     >(MockRouter, props);
 
@@ -559,6 +569,7 @@ it('returns true for canGoBack when parent router handles GO_BACK', () => {
       NavigationState,
       any,
       { title?: string },
+      any,
       any
     >(OverrodeRouter, props);
     return descriptors[state.routes[state.index].key].render();
@@ -569,6 +580,7 @@ it('returns true for canGoBack when parent router handles GO_BACK', () => {
       NavigationState,
       any,
       { title?: string },
+      any,
       any
     >(MockRouter, props);
 

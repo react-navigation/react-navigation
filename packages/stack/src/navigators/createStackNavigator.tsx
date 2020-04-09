@@ -36,7 +36,8 @@ function StackNavigator({
     StackNavigationState,
     StackRouterOptions,
     StackNavigationOptions,
-    StackNavigationEventMap
+    StackNavigationEventMap,
+    {}
   >(StackRouter, {
     initialRouteName,
     children,

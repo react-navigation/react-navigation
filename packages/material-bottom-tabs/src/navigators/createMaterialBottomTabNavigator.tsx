@@ -30,7 +30,8 @@ function MaterialBottomTabNavigator({
     TabNavigationState,
     TabRouterOptions,
     MaterialBottomTabNavigationOptions,
-    MaterialBottomTabNavigationEventMap
+    MaterialBottomTabNavigationEventMap,
+    {}
   >(TabRouter, {
     initialRouteName,
     backBehavior,

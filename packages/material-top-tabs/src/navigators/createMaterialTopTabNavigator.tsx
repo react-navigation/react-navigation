@@ -29,7 +29,8 @@ function MaterialTopTabNavigator({
     TabNavigationState,
     TabRouterOptions,
     MaterialTopTabNavigationOptions,
-    MaterialTopTabNavigationEventMap
+    MaterialTopTabNavigationEventMap,
+    {}
   >(TabRouter, {
     initialRouteName,
     backBehavior,

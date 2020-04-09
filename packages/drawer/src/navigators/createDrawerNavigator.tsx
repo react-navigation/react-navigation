@@ -6,6 +6,8 @@ import {
   DrawerNavigationState,
   DrawerRouterOptions,
   DrawerRouter,
+  DrawerActionHelpers,
+  ParamListBase,
 } from '@react-navigation/native';
 
 import DrawerView from '../views/DrawerView';
@@ -31,7 +33,8 @@ function DrawerNavigator({
     DrawerNavigationState,
     DrawerRouterOptions,
     DrawerNavigationOptions,
-    DrawerNavigationEventMap
+    DrawerNavigationEventMap,
+    DrawerActionHelpers<ParamListBase>
   >(DrawerRouter, {
     initialRouteName,
     openByDefault,

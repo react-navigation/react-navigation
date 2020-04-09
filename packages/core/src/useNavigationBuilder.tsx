@@ -166,7 +166,8 @@ export default function useNavigationBuilder<
   State extends NavigationState,
   RouterOptions extends DefaultRouterOptions,
   ScreenOptions extends object,
-  EventMap extends Record<string, any>
+  EventMap extends Record<string, any>,
+  SpecificNavigatorMethod
 >(
   createRouter: RouterFactory<State, any, RouterOptions>,
   options: DefaultNavigatorOptions<ScreenOptions> & RouterOptions
@@ -464,7 +465,12 @@ export default function useNavigationBuilder<
     setState,
   });
 
-  const navigation = useNavigationHelpers<State, NavigationAction, EventMap>({
+  const navigation = useNavigationHelpers<
+    State,
+    NavigationAction,
+    EventMap,
+    SpecificNavigatorMethod
+  >({
     onAction,
     getState,
     emitter,
