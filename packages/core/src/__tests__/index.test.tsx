@@ -737,6 +737,277 @@ it('navigates to nested child in a navigator', () => {
   );
 });
 
+it('navigates to nested child in a navigator with initial: false', () => {
+  const TestRouter: typeof MockRouter = (options) => {
+    const router = MockRouter(options);
+
+    return {
+      ...router,
+
+      getStateForAction(state, action, options) {
+        switch (action.type) {
+          case 'NAVIGATE': {
+            if (!options.routeNames.includes(action.payload.name as any)) {
+              return null;
+            }
+
+            const routes = [
+              ...state.routes,
+              {
+                key: String(MockRouterKey.current++),
+                name: action.payload.name,
+                params: action.payload.params,
+              },
+            ];
+
+            return {
+              ...state,
+              index: routes.length - 1,
+              routes,
+            };
+          }
+
+          default:
+            return router.getStateForAction(state, action, options);
+        }
+      },
+    } as typeof router;
+  };
+
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(TestRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestComponent = ({ route }: any): any =>
+    `[${route.name}, ${JSON.stringify(route.params)}]`;
+
+  const onStateChange = jest.fn();
+
+  const navigation = React.createRef<NavigationContainerRef>();
+
+  const first = render(
+    <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
+      <TestNavigator>
+        <Screen name="foo">
+          {() => (
+            <TestNavigator>
+              <Screen name="foo-a" component={TestComponent} />
+              <Screen name="foo-b" component={TestComponent} />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="bar">
+          {() => (
+            <TestNavigator initialRouteName="bar-a">
+              <Screen
+                name="bar-a"
+                component={TestComponent}
+                initialParams={{ lol: 'why' }}
+              />
+              <Screen
+                name="bar-b"
+                component={TestComponent}
+                initialParams={{ some: 'stuff' }}
+              />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(first).toMatchInlineSnapshot(`"[foo-a, undefined]"`);
+  expect(navigation.current?.getRootState()).toEqual({
+    index: 0,
+    key: '0',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      {
+        key: 'foo',
+        name: 'foo',
+        state: {
+          index: 0,
+          key: '1',
+          routeNames: ['foo-a', 'foo-b'],
+          routes: [
+            {
+              key: 'foo-a',
+              name: 'foo-a',
+            },
+            {
+              key: 'foo-b',
+              name: 'foo-b',
+            },
+          ],
+          stale: false,
+          type: 'test',
+        },
+      },
+      { key: 'bar', name: 'bar' },
+    ],
+    stale: false,
+    type: 'test',
+  });
+
+  act(
+    () =>
+      navigation.current &&
+      navigation.current.navigate('bar', {
+        screen: 'bar-b',
+        params: { test: 42 },
+      })
+  );
+
+  expect(first).toMatchInlineSnapshot(
+    `"[bar-b, {\\"some\\":\\"stuff\\",\\"test\\":42}]"`
+  );
+
+  expect(navigation.current?.getRootState()).toEqual({
+    index: 2,
+    key: '0',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+      {
+        key: '2',
+        name: 'bar',
+        params: { params: { test: 42 }, screen: 'bar-b' },
+        state: {
+          index: 1,
+          key: '3',
+          routeNames: ['bar-a', 'bar-b'],
+          routes: [
+            {
+              key: 'bar-a',
+              name: 'bar-a',
+              params: { lol: 'why' },
+            },
+            {
+              key: 'bar-b',
+              name: 'bar-b',
+              params: { some: 'stuff', test: 42 },
+            },
+          ],
+          stale: false,
+          type: 'test',
+        },
+      },
+    ],
+    stale: false,
+    type: 'test',
+  });
+
+  const second = render(
+    <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
+      <TestNavigator>
+        <Screen name="foo">
+          {() => (
+            <TestNavigator>
+              <Screen name="foo-a" component={TestComponent} />
+              <Screen name="foo-b" component={TestComponent} />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="bar">
+          {() => (
+            <TestNavigator initialRouteName="bar-a">
+              <Screen
+                name="bar-a"
+                component={TestComponent}
+                initialParams={{ lol: 'why' }}
+              />
+              <Screen
+                name="bar-b"
+                component={TestComponent}
+                initialParams={{ some: 'stuff' }}
+              />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(second).toMatchInlineSnapshot(`"[foo-a, undefined]"`);
+  expect(navigation.current?.getRootState()).toEqual({
+    index: 0,
+    key: '4',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      {
+        key: 'foo',
+        name: 'foo',
+        state: {
+          index: 0,
+          key: '5',
+          routeNames: ['foo-a', 'foo-b'],
+          routes: [
+            { key: 'foo-a', name: 'foo-a' },
+            { key: 'foo-b', name: 'foo-b' },
+          ],
+          stale: false,
+          type: 'test',
+        },
+      },
+      { key: 'bar', name: 'bar' },
+    ],
+    stale: false,
+    type: 'test',
+  });
+
+  act(
+    () =>
+      navigation.current &&
+      navigation.current.navigate('bar', {
+        screen: 'bar-b',
+        params: { test: 42 },
+        initial: false,
+      })
+  );
+
+  expect(second).toMatchInlineSnapshot(`"[bar-b, {\\"test\\":42}]"`);
+
+  expect(navigation.current?.getRootState()).toEqual({
+    index: 2,
+    key: '4',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+      {
+        key: '6',
+        name: 'bar',
+        params: { initial: false, params: { test: 42 }, screen: 'bar-b' },
+        state: {
+          index: 2,
+          key: '7',
+          routeNames: ['bar-a', 'bar-b'],
+          routes: [
+            {
+              key: 'bar-a',
+              name: 'bar-a',
+              params: { lol: 'why' },
+            },
+            {
+              key: 'bar-b',
+              name: 'bar-b',
+              params: { some: 'stuff' },
+            },
+            { key: '8', name: 'bar-b', params: { test: 42 } },
+          ],
+          stale: false,
+          type: 'test',
+        },
+      },
+    ],
+    stale: false,
+    type: 'test',
+  });
+});
+
 it('gives access to internal state', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
