@@ -3,6 +3,7 @@ import { PartialState, NavigationState } from '@react-navigation/routers';
 type NavigateParams = {
   screen?: string;
   params?: NavigateParams;
+  initial?: boolean;
 };
 
 type NavigateAction = {
@@ -35,6 +36,7 @@ export default function getActionFromState(
     }
 
     route = current.routes[current.routes.length - 1];
+    params.initial = current.routes.length === 1;
     params.screen = route.name;
 
     if (route.state) {
