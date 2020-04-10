@@ -415,7 +415,7 @@ export default class CardStack extends React.Component<Props, State> {
 
     // Screens is buggy on iOS and web, so we only enable it on Android
     // For modals, usually we want the screen underneath to be visible, so also disable it there
-    const isScreensEnabled = Platform.OS === 'android' && mode !== 'modal';
+    const isScreensEnabled = mode !== 'modal';
 
     return (
       <React.Fragment>
@@ -431,11 +431,13 @@ export default class CardStack extends React.Component<Props, State> {
 
             const isScreenActive = scene.progress.next
               ? scene.progress.next.interpolate({
-                  inputRange: [0, 1 - EPSILON, 1],
-                  outputRange: [1, 1, 0],
+                  inputRange: [0, 1 - EPSILON, 1, 2],
+                  outputRange: [1, 0, 0, 0],
                   extrapolate: 'clamp',
                 })
-              : 1;
+              : Platform.OS === 'android' || focused
+              ? 1
+              : 0;
 
             const {
               safeAreaInsets,
