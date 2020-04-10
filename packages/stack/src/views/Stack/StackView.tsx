@@ -292,9 +292,7 @@ export default class StackView extends React.Component<Props, State> {
         return false;
       }
 
-      return gestureEnabled !== undefined
-        ? gestureEnabled
-        : Platform.OS !== 'android';
+      return gestureEnabled !== false;
     }
 
     return false;
