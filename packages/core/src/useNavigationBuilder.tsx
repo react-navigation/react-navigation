@@ -43,6 +43,7 @@ type NavigatorRoute = {
   params?: {
     screen?: string;
     params?: object;
+    initial?: boolean;
   };
 };
 
@@ -176,10 +177,12 @@ export default function useNavigationBuilder<
     | NavigatorRoute
     | undefined;
 
-  const previousRouteRef = React.useRef(route);
+  const previousNestedParamsRef = React.useRef(
+    route?.params?.initial === false ? undefined : route?.params
+  );
 
   React.useEffect(() => {
-    previousRouteRef.current = route;
+    previousNestedParamsRef.current = route?.params;
   }, [route]);
 
   const { children, ...rest } = options;
@@ -219,7 +222,7 @@ export default function useNavigationBuilder<
     (acc, curr) => {
       const { initialParams } = screens[curr];
       const initialParamsFromParams =
-        route?.params && route.params.screen === curr
+        route?.params?.initial !== false && route?.params?.screen === curr
           ? route.params.params
           : undefined;
 
@@ -310,7 +313,7 @@ export default function useNavigationBuilder<
 
   if (
     typeof route?.params?.screen === 'string' &&
-    route.params !== previousRouteRef.current?.params
+    route.params !== previousNestedParamsRef.current
   ) {
     // If the route was updated with new name and/or params, we should navigate there
     // The update should be limited to current navigator only, so we call the router manually
