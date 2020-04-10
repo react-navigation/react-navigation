@@ -430,8 +430,8 @@ export default class CardStack extends React.Component<Props, State> {
 
             const isScreenActive = scene.progress.next
               ? scene.progress.next.interpolate({
-                  inputRange: [0, 1 - EPSILON, 1, 2],
-                  outputRange: [1, 0, 0, 0],
+                  inputRange: [0, 1 - EPSILON, 1],
+                  outputRange: [1, 1, 0],
                   extrapolate: 'clamp',
                 })
               : Platform.OS === 'android' || focused
