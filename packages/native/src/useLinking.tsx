@@ -224,14 +224,14 @@ export default function useLinking(
       let index = history.state?.index ?? 0;
 
       if (previousStateLength === stateLength) {
-        // If no new enrties were added to history in our navigation state, we want to replaceState
+        // If no new entries were added to history in our navigation state, we want to replaceState
         if (location.pathname + location.search !== path) {
           history.replaceState({ index }, '', path);
           previousHistoryIndexRef.current = index;
         }
       } else if (stateLength > previousStateLength) {
-        // If new enrties were added, pushState until we have same length
-        // This won't be accurate if multiple enrties were added at once, but that's the best we can do
+        // If new entries were added, pushState until we have same length
+        // This won't be accurate if multiple entries were added at once, but that's the best we can do
         for (let i = 0, l = stateLength - previousStateLength; i < l; i++) {
           index++;
           history.pushState({ index }, '', path);
@@ -239,13 +239,27 @@ export default function useLinking(
 
         previousHistoryIndexRef.current = index;
       } else if (previousStateLength > stateLength) {
-        const delta = previousStateLength - stateLength;
+        const delta = Math.min(
+          previousStateLength - stateLength,
+          // We need to keep at least one item in the history
+          // Otherwise we'll exit the page
+          previousHistoryIndexRef.current - 1
+        );
 
-        // We need to set this to ignore the `popstate` event
-        pendingIndexChangeRef.current = index - delta;
+        if (delta > 0) {
+          // We need to set this to ignore the `popstate` event
+          pendingIndexChangeRef.current = index - delta;
 
-        // If new enrties were removed, go back so that we have same length
-        history.go(-delta);
+          // If new entries were removed, go back so that we have same length
+          history.go(-delta);
+        } else {
+          // We're not going back in history, but the navigation state changed
+          // The URL probably also changed, so we need to re-sync the URL
+          if (location.pathname + location.search !== path) {
+            history.replaceState({ index }, '', path);
+            previousHistoryIndexRef.current = index;
+          }
+        }
       }
     });
 
