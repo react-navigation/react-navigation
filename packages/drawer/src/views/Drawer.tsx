@@ -14,7 +14,8 @@ import {
 import {
   PanGestureHandler,
   TapGestureHandler,
-  State,
+  State as GestureState,
+  TapGestureHandlerStateChangeEvent,
 } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import Overlay from './Overlay';
@@ -97,31 +98,12 @@ type Props = {
   gestureHandlerProps?: React.ComponentProps<typeof PanGestureHandler>;
 };
 
-/**
- * Disables the pan gesture by default on Apple devices in the browser.
- * https://stackoverflow.com/a/9039885
- */
-function shouldEnableSwipeGesture(): boolean {
-  if (
-    Platform.OS === 'web' &&
-    typeof navigator !== 'undefined' &&
-    typeof window !== 'undefined'
-  ) {
-    const isWebAppleDevice =
-      /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
-    return !isWebAppleDevice;
-  }
-
-  return true;
-}
-
 export default class DrawerView extends React.Component<Props> {
   static defaultProps = {
     drawerPostion: I18nManager.isRTL ? 'left' : 'right',
     drawerType: 'front',
     gestureEnabled: true,
-    swipeEnabled: shouldEnableSwipeGesture(),
+    swipeEnabled: Platform.OS !== 'web',
     swipeEdgeWidth: 32,
     swipeVelocityThreshold: 500,
     keyboardDismissMode: 'on-drag',
@@ -225,7 +207,7 @@ export default class DrawerView extends React.Component<Props> {
   private nextIsOpen = new Value<Binary | -1>(UNSET);
   private isSwiping = new Value<Binary>(FALSE);
 
-  private gestureState = new Value<number>(State.UNDETERMINED);
+  private gestureState = new Value<number>(GestureState.UNDETERMINED);
   private touchX = new Value<number>(0);
   private velocityX = new Value<number>(0);
   private gestureX = new Value<number>(0);
@@ -412,12 +394,12 @@ export default class DrawerView extends React.Component<Props> {
     onChange(
       this.gestureState,
       cond(
-        eq(this.gestureState, State.ACTIVE),
+        eq(this.gestureState, GestureState.ACTIVE),
         call([], this.handleStartInteraction)
       )
     ),
     cond(
-      eq(this.gestureState, State.ACTIVE),
+      eq(this.gestureState, GestureState.ACTIVE),
       [
         cond(this.isSwiping, NOOP, [
           // We weren't dragging before, set it to true
@@ -501,14 +483,28 @@ export default class DrawerView extends React.Component<Props> {
     },
   ]);
 
-  private handleTapStateChange = event([
-    {
-      nativeEvent: {
-        oldState: (s: Animated.Value<number>) =>
-          cond(eq(s, State.ACTIVE), set(this.manuallyTriggerSpring, TRUE)),
-      },
-    },
-  ]);
+  private handleTapStateChange =
+    Platform.OS === 'web'
+      ? // FIXME: Drawer doesn't close on Web with the same code that we use for native
+        ({ nativeEvent }: TapGestureHandlerStateChangeEvent) => {
+          if (
+            nativeEvent.state === GestureState.END &&
+            nativeEvent.oldState === GestureState.ACTIVE
+          ) {
+            this.toggleDrawer(false);
+          }
+        }
+      : event([
+          {
+            nativeEvent: {
+              oldState: (s: Animated.Value<number>) =>
+                cond(
+                  eq(s, GestureState.ACTIVE),
+                  set(this.manuallyTriggerSpring, TRUE)
+                ),
+            },
+          },
+        ]);
 
   private handleContainerLayout = (e: LayoutChangeEvent) =>
     this.containerWidth.setValue(e.nativeEvent.layout.width);
