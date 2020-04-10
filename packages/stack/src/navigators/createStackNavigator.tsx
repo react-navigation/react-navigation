@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Platform } from 'react-native';
 import {
   useNavigationBuilder,
   createNavigatorFactory,
@@ -26,6 +27,11 @@ function StackNavigator({
   screenOptions,
   ...rest
 }: Props) {
+  const defaultOptions = {
+    gestureEnabled: Platform.OS === 'ios',
+    animationEnabled: Platform.OS !== 'web',
+  };
+
   const { state, descriptors, navigation } = useNavigationBuilder<
     StackNavigationState,
     StackRouterOptions,
@@ -34,7 +40,16 @@ function StackNavigator({
   >(StackRouter, {
     initialRouteName,
     children,
-    screenOptions,
+    screenOptions:
+      typeof screenOptions === 'function'
+        ? (...args) => ({
+            ...defaultOptions,
+            ...screenOptions(...args),
+          })
+        : {
+            ...defaultOptions,
+            ...screenOptions,
+          },
   });
 
   React.useEffect(
