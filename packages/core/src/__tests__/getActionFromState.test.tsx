@@ -35,8 +35,10 @@ it('gets navigate action from state', () => {
             author: 'jane',
           },
           screen: 'qux',
+          initial: true,
         },
         screen: 'bar',
+        initial: true,
       },
     },
     type: 'NAVIGATE',
@@ -70,9 +72,11 @@ it('gets navigate action from state', () => {
     payload: {
       name: 'foo',
       params: {
+        initial: true,
         screen: 'bar',
         params: {
           screen: 'quz',
+          initial: false,
         },
       },
     },
