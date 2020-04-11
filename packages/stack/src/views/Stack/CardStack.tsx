@@ -75,6 +75,31 @@ type State = {
 
 const EPSILON = 0.01;
 
+// The web implementation in react-native-screens seems buggy.
+// The view doesn't become visible after coming back in some cases.
+// So we use our custom implementation.
+class WebScreen extends React.Component<
+  ViewProps & {
+    active: number;
+    children: React.ReactNode;
+  }
+> {
+  render() {
+    const { active, style, ...rest } = this.props;
+
+    return (
+      <View
+        // @ts-ignore
+        hidden={!active}
+        style={[style, { display: active ? 'flex' : 'none' }]}
+        {...rest}
+      />
+    );
+  }
+}
+
+const AnimatedWebScreen = Animated.createAnimatedComponent(WebScreen);
+
 const MaybeScreenContainer = ({
   enabled,
   ...rest
@@ -82,7 +107,7 @@ const MaybeScreenContainer = ({
   enabled: boolean;
   children: React.ReactNode;
 }) => {
-  if (enabled && screensEnabled()) {
+  if (enabled && Platform.OS !== 'web' && screensEnabled()) {
     return <ScreenContainer {...rest} />;
   }
 
@@ -98,6 +123,11 @@ const MaybeScreen = ({
   active: number | Animated.AnimatedInterpolation;
   children: React.ReactNode;
 }) => {
+  if (enabled && Platform.OS === 'web') {
+    // @ts-ignore
+    return <AnimatedWebScreen active={active} {...rest} />;
+  }
+
   if (enabled && screensEnabled()) {
     // @ts-ignore
     return <Screen active={active} {...rest} />;
@@ -415,7 +445,7 @@ export default class CardStack extends React.Component<Props, State> {
 
     // Screens is buggy on iOS and web, so we only enable it on Android
     // For modals, usually we want the screen underneath to be visible, so also disable it there
-    const isScreensEnabled = Platform.OS === 'android' && mode !== 'modal';
+    const isScreensEnabled = Platform.OS !== 'ios' && mode !== 'modal';
 
     return (
       <React.Fragment>
