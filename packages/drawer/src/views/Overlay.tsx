@@ -29,22 +29,24 @@ const Overlay = React.forwardRef(function Overlay(
     <Animated.View
       {...props}
       ref={ref}
-      style={[styles.overlay, animatedStyle, style]}
+      style={[styles.overlay, overlayStyle, animatedStyle, style]}
     />
   );
+});
+
+const overlayStyle = Platform.select<Record<string, string>>({
+  web: {
+    // Disable touch highlight on mobile Safari.
+    // WebkitTapHighlightColor must be used outside of StyleSheet.create because react-native-web will omit the property.
+    WebkitTapHighlightColor: 'transparent',
+  },
+  default: {},
 });
 
 const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    ...Platform.select({
-      web: {
-        // Disable touch highlight on mobile Safari.
-        WebkitTapHighlightColor: 'transparent',
-      },
-      default: {},
-    }),
   },
 });
 
