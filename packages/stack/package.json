@@ -61,11 +61,11 @@
     "typescript": "~3.8.3"
   },
   "peerDependencies": {
-    "@react-native-community/masked-view": "^0.1.1",
+    "@react-native-community/masked-view": ">=0.1.0",
     "react": "*",
     "react-native": "*",
     "react-native-gesture-handler": "^1.5.0",
-    "react-native-safe-area-context": "^0.6.0",
+    "react-native-safe-area-context": ">=0.6.0",
     "react-native-screens": ">=1.0.0 || >= 2.0.0-alpha.0 || >= 2.0.0-beta.0 || >= 2.0.0",
     "react-navigation": "^4.1.1"
   },
