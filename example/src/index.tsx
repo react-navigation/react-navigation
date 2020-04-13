@@ -50,6 +50,7 @@ import StackHeaderCustomization from './Screens/StackHeaderCustomization';
 import BottomTabs from './Screens/BottomTabs';
 import MaterialTopTabsScreen from './Screens/MaterialTopTabs';
 import MaterialBottomTabs from './Screens/MaterialBottomTabs';
+import NotFound from './Screens/NotFound';
 import DynamicTabs from './Screens/DynamicTabs';
 import AuthFlow from './Screens/AuthFlow';
 import CompatAPI from './Screens/CompatAPI';
@@ -104,6 +105,10 @@ const SCREENS = {
   CompatAPI: {
     title: 'Compat Layer',
     component: CompatAPI,
+  },
+  '*': {
+    title: 'Not Found',
+    component: NotFound,
   },
 };
 

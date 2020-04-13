@@ -256,7 +256,9 @@ function createConfigItem(
   parse?: ParseConfig
 ): RouteConfig {
   const match = new RegExp(
-    '^' + escape(pattern).replace(/:[a-z0-9]+/gi, '([^/]+)') + '/?'
+    pattern === '*'
+      ? '.*'
+      : '^' + escape(pattern).replace(/:[a-z0-9]+/gi, '([^/]+)') + '/?'
   );
 
   return {
