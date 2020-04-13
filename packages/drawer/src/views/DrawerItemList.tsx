@@ -53,6 +53,7 @@ export default function DrawerItemList({
         inactiveBackgroundColor={inactiveBackgroundColor}
         labelStyle={labelStyle}
         style={itemStyle}
+        href={route.name}
         onPress={() => {
           navigation.dispatch({
             ...(focused

@@ -21,6 +21,7 @@ const ANDROID_VERSION_LOLLIPOP = 21;
 type Props = React.ComponentProps<typeof TouchableWithoutFeedback> & {
   pressColor: string;
   borderless: boolean;
+  href?: string;
 };
 
 export default class TouchableItem extends React.Component<Props> {
@@ -56,7 +57,6 @@ export default class TouchableItem extends React.Component<Props> {
         </TouchableNativeFeedback>
       );
     }
-
     return (
       <TouchableOpacity {...this.props}>{this.props.children}</TouchableOpacity>
     );

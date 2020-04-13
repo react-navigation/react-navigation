@@ -5,6 +5,7 @@ import {
   StyleSheet,
   StyleProp,
   ViewStyle,
+  Platform,
   TextStyle,
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
@@ -12,6 +13,11 @@ import Color from 'color';
 import TouchableItem from './TouchableItem';
 
 type Props = {
+  /**
+   * The route to use when linking on web.
+   * This is currently only used for the aria popup and copy actions.
+   */
+  href: string;
   /**
    * The label text of the item.
    */
@@ -76,6 +82,7 @@ export default function DrawerItem(props: Props) {
     activeBackgroundColor = Color(activeTintColor).alpha(0.12).rgb().string(),
     inactiveBackgroundColor = 'transparent',
     style,
+    href,
     onPress,
     ...rest
   } = props;
@@ -100,7 +107,8 @@ export default function DrawerItem(props: Props) {
         style={[styles.wrapper, { borderRadius }]}
         accessibilityTraits={focused ? ['button', 'selected'] : 'button'}
         accessibilityComponentType="button"
-        accessibilityRole="button"
+        accessibilityRole={Platform.select({ default: 'button', web: 'link' })}
+        href={href}
         accessibilityStates={focused ? ['selected'] : []}
       >
         <React.Fragment>
