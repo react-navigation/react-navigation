@@ -193,6 +193,20 @@ type NavigationHelpersCommon<
    * Note that this method doesn't re-render screen when the result changes. So don't use it in `render`.
    */
   canGoBack(): boolean;
+
+  /**
+   * Returns the parent navigator, if any. Reason why the function is called
+   * dangerouslyGetParent is to warn developers against overusing it to eg. get parent
+   * of parent and other hard-to-follow patterns.
+   */
+  dangerouslyGetParent<T = NavigationProp<ParamListBase> | undefined>(): T;
+
+  /**
+   * Returns the navigator's state. Reason why the function is called
+   * dangerouslyGetState is to discourage developers to use internal navigation's state.
+   * Note that this method doesn't re-render screen when the result changes. So don't use it in `render`.
+   */
+  dangerouslyGetState(): State;
 } & PrivateValueStore<ParamList, keyof ParamList, {}>;
 
 export type NavigationHelpers<
@@ -254,20 +268,6 @@ export type NavigationProp<
    * @param options Options object for the route.
    */
   setOptions(options: Partial<ScreenOptions>): void;
-
-  /**
-   * Returns the parent navigator, if any. Reason why the function is called
-   * dangerouslyGetParent is to warn developers against overusing it to eg. get parent
-   * of parent and other hard-to-follow patterns.
-   */
-  dangerouslyGetParent<T = NavigationProp<ParamListBase> | undefined>(): T;
-
-  /**
-   * Returns the navigator's state. Reason why the function is called
-   * dangerouslyGetState is to discourage developers to use internal navigation's state.
-   * Note that this method doesn't re-render screen when the result changes. So don't use it in `render`.
-   */
-  dangerouslyGetState(): State;
 } & EventConsumer<EventMap & EventMapCore<State>> &
   PrivateValueStore<ParamList, RouteName, EventMap>;
 

@@ -14,6 +14,7 @@ import {
   NavigationRouteContext,
   CommonActions,
   useTheme,
+  useLinkBuilder,
 } from '@react-navigation/native';
 import { useSafeArea } from 'react-native-safe-area-context';
 
@@ -50,6 +51,7 @@ export default function BottomTabBar({
   tabStyle,
 }: Props) {
   const { colors } = useTheme();
+  const buildLink = useLinkBuilder({ navigation });
 
   const [dimensions, setDimensions] = React.useState(() => {
     const { height = 0, width = 0 } = Dimensions.get('window');
@@ -260,6 +262,7 @@ export default function BottomTabBar({
                   onPress={onPress}
                   onLongPress={onLongPress}
                   accessibilityLabel={accessibilityLabel}
+                  href={buildLink(route.name, route.params)}
                   testID={options.tabBarTestID}
                   allowFontScaling={allowFontScaling}
                   activeTintColor={activeTintColor}

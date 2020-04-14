@@ -112,6 +112,8 @@ export default function useNavigationHelpers<
           false
         );
       },
+      dangerouslyGetParent: () => parentNavigationHelpers as any,
+      dangerouslyGetState: getState,
     } as NavigationHelpers<ParamListBase, EventMap> &
       (NavigationProp<ParamListBase, string, any, any, any> | undefined);
   }, [router, getState, parentNavigationHelpers, emitter.emit, onAction]);
