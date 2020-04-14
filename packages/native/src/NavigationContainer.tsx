@@ -52,13 +52,7 @@ const NavigationContainer = React.forwardRef(function NavigationContainer(
 
   React.useImperativeHandle(ref, () => refContainer.current);
 
-  const linkingOptionsRef = React.useRef(linking);
-
-  React.useEffect(() => {
-    linkingOptionsRef.current = linking;
-  });
-
-  const linkingContext = React.useCallback(() => linkingOptionsRef.current, []);
+  const linkingContext = React.useMemo(() => ({ options: linking }), [linking]);
 
   if (!isReady) {
     // This is temporary until we have Suspense for data-fetching
