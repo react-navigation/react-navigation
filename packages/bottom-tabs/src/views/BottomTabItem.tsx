@@ -4,11 +4,13 @@ import {
   TouchableWithoutFeedback,
   Animated,
   StyleSheet,
+  Platform,
   StyleProp,
   ViewStyle,
   TextStyle,
+  GestureResponderEvent,
 } from 'react-native';
-import { Route, useTheme } from '@react-navigation/native';
+import { Link, Route, useTheme } from '@react-navigation/native';
 import Color from 'color';
 
 import TabBarIcon from './TabBarIcon';
@@ -38,6 +40,10 @@ type Props = {
     color: string;
   }) => React.ReactNode;
   /**
+   * URL to use for the link to the tab.
+   */
+  href?: string;
+  /**
    * The button for the tab. Uses a `TouchableWithoutFeedback` by default.
    */
   button?: (props: BottomTabBarButtonProps) => React.ReactNode;
@@ -50,13 +56,16 @@ type Props = {
    */
   testID?: string;
   /**
-   * Function to execute on press.
+   * Function to execute on press in React Native.
+   * On the web, this will use onClick.
    */
-  onPress: () => void;
+  onPress: (
+    e: React.MouseEvent<HTMLElement, MouseEvent> | GestureResponderEvent
+  ) => void;
   /**
    * Function to execute on long press.
    */
-  onLongPress: () => void;
+  onLongPress: (e: GestureResponderEvent) => void;
   /**
    * Whether the label should be aligned with the icon horizontally.
    */
@@ -104,11 +113,37 @@ export default function BottomTabBarItem({
   route,
   label,
   icon,
-  button = ({ children, style, ...rest }: BottomTabBarButtonProps) => (
-    <TouchableWithoutFeedback {...rest}>
-      <View style={style}>{children}</View>
-    </TouchableWithoutFeedback>
-  ),
+  href,
+  button = ({
+    children,
+    style,
+    onPress,
+    href,
+    ...rest
+  }: BottomTabBarButtonProps) => {
+    if (Platform.OS === 'web' && href) {
+      // React Native Web doesn't forward `onClick` if we use `TouchableWithoutFeedback`.
+      // We need to use `onClick` to be able to prevent default browser handling of links.
+      return (
+        <Link
+          {...rest}
+          // @ts-ignore
+          accessibilityRole="link"
+          onLink={onPress}
+          to={href}
+          style={[styles.button, style]}
+        >
+          {children}
+        </Link>
+      );
+    } else {
+      return (
+        <TouchableWithoutFeedback {...rest} onPress={onPress}>
+          <View style={style}>{children}</View>
+        </TouchableWithoutFeedback>
+      );
+    }
+  },
   accessibilityLabel,
   testID,
   onPress,
@@ -196,6 +231,7 @@ export default function BottomTabBarItem({
     : inactiveBackgroundColor;
 
   return button({
+    href,
     onPress,
     onLongPress,
     testID,
@@ -247,5 +283,8 @@ const styles = StyleSheet.create({
   labelBeside: {
     fontSize: 12,
     marginLeft: 20,
+  },
+  button: {
+    display: 'flex',
   },
 });

@@ -6,8 +6,10 @@ import {
   StyleProp,
   ViewStyle,
   TextStyle,
+  Platform,
+  TouchableWithoutFeedbackProps,
 } from 'react-native';
-import { useTheme } from '@react-navigation/native';
+import { Link, useTheme } from '@react-navigation/native';
 import Color from 'color';
 import TouchableItem from './TouchableItem';
 
@@ -26,6 +28,10 @@ type Props = {
     size: number;
     color: string;
   }) => React.ReactNode;
+  /**
+   * URL to use for the link to the tab.
+   */
+  href?: string;
   /**
    * Whether to highlight the drawer item as active.
    */
@@ -60,6 +66,42 @@ type Props = {
   style?: StyleProp<ViewStyle>;
 };
 
+const Touchable = ({
+  children,
+  style,
+  onPress,
+  href,
+  delayPressIn,
+  ...rest
+}: TouchableWithoutFeedbackProps & {
+  href?: string;
+  children: React.ReactNode;
+  onPress?: () => void;
+}) => {
+  if (Platform.OS === 'web' && href) {
+    // React Native Web doesn't forward `onClick` if we use `TouchableWithoutFeedback`.
+    // We need to use `onClick` to be able to prevent default browser handling of links.
+    return (
+      <Link
+        {...rest}
+        // @ts-ignore
+        accessibilityRole="link"
+        onLink={onPress}
+        to={href}
+        style={[styles.button, style]}
+      >
+        {children}
+      </Link>
+    );
+  } else {
+    return (
+      <TouchableItem {...rest} delayPressIn={delayPressIn} onPress={onPress}>
+        <View style={style}>{children}</View>
+      </TouchableItem>
+    );
+  }
+};
+
 /**
  * A component used to show an action item with an icon and a label in a navigation drawer.
  */
@@ -70,6 +112,7 @@ export default function DrawerItem(props: Props) {
     icon,
     label,
     labelStyle,
+    href,
     focused = false,
     activeTintColor = colors.primary,
     inactiveTintColor = Color(colors.text).alpha(0.68).rgb().string(),
@@ -94,7 +137,7 @@ export default function DrawerItem(props: Props) {
       {...rest}
       style={[styles.container, { borderRadius, backgroundColor }, style]}
     >
-      <TouchableItem
+      <Touchable
         delayPressIn={0}
         onPress={onPress}
         style={[styles.wrapper, { borderRadius }]}
@@ -102,6 +145,7 @@ export default function DrawerItem(props: Props) {
         accessibilityComponentType="button"
         accessibilityRole="button"
         accessibilityStates={focused ? ['selected'] : []}
+        href={href}
       >
         <React.Fragment>
           {iconNode}
@@ -129,7 +173,7 @@ export default function DrawerItem(props: Props) {
             )}
           </View>
         </React.Fragment>
-      </TouchableItem>
+      </Touchable>
     </View>
   );
 }
@@ -147,5 +191,8 @@ const styles = StyleSheet.create({
   },
   label: {
     marginRight: 32,
+  },
+  button: {
+    display: 'flex',
   },
 });

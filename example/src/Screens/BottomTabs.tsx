@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Platform } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import TouchableBounce from '../Shared/TouchableBounce';
@@ -28,7 +29,10 @@ export default function BottomTabsScreen() {
   return (
     <BottomTabs.Navigator
       screenOptions={{
-        tabBarButton: (props) => <TouchableBounce {...props} />,
+        tabBarButton:
+          Platform.OS === 'web'
+            ? undefined
+            : (props) => <TouchableBounce {...props} />,
       }}
     >
       <BottomTabs.Screen

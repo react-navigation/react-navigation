@@ -13,3 +13,4 @@ export { default as useTheme } from './theming/useTheme';
 export { default as Link } from './Link';
 export { default as useLinking } from './useLinking';
 export { default as useLinkTo } from './useLinkTo';
+export { default as useLinkBuilder } from './useLinkBuilder';

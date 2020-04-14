@@ -4,6 +4,7 @@ import {
   StyleProp,
   TextStyle,
   ViewStyle,
+  GestureResponderEvent,
 } from 'react-native';
 import {
   NavigationHelpers,
@@ -196,6 +197,13 @@ export type BottomTabBarProps = BottomTabBarOptions & {
   navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>;
 };
 
-export type BottomTabBarButtonProps = TouchableWithoutFeedbackProps & {
+export type BottomTabBarButtonProps = Omit<
+  TouchableWithoutFeedbackProps,
+  'onPress'
+> & {
+  href?: string;
   children: React.ReactNode;
+  onPress?: (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
+  ) => void;
 };

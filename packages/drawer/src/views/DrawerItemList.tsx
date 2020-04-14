@@ -3,6 +3,7 @@ import {
   CommonActions,
   DrawerActions,
   DrawerNavigationState,
+  useLinkBuilder,
 } from '@react-navigation/native';
 import DrawerItem from './DrawerItem';
 import {
@@ -31,6 +32,8 @@ export default function DrawerItemList({
   itemStyle,
   labelStyle,
 }: Props) {
+  const buildLink = useLinkBuilder({ navigation });
+
   return (state.routes.map((route, i) => {
     const focused = i === state.index;
     const { title, drawerLabel, drawerIcon } = descriptors[route.key].options;
@@ -53,6 +56,7 @@ export default function DrawerItemList({
         inactiveBackgroundColor={inactiveBackgroundColor}
         labelStyle={labelStyle}
         style={itemStyle}
+        href={buildLink(route.name, route.params)}
         onPress={() => {
           navigation.dispatch({
             ...(focused
