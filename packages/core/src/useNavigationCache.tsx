@@ -7,7 +7,6 @@ import {
   Router,
 } from '@react-navigation/routers';
 import { NavigationEventEmitter } from './useEventEmitter';
-import NavigationContext from './NavigationContext';
 
 import { NavigationHelpers, NavigationProp } from './types';
 
@@ -49,12 +48,10 @@ export default function useNavigationCache<
   // Cache object which holds navigation objects for each screen
   // We use `React.useMemo` instead of `React.useRef` coz we want to invalidate it when deps change
   // In reality, these deps will rarely change, if ever
-  const parentNavigation = React.useContext(NavigationContext);
-
   const cache = React.useMemo(
     () => ({ current: {} as NavigationCache<State, ScreenOptions> }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [getState, navigation, setOptions, router, emitter, parentNavigation]
+    [getState, navigation, setOptions, router, emitter]
   );
 
   const actions = {
@@ -99,8 +96,6 @@ export default function useNavigationCache<
           ...rest,
           ...helpers,
           ...emitter.create(route.key),
-          dangerouslyGetParent: () => parentNavigation as any,
-          dangerouslyGetState: getState,
           dispatch,
           setOptions: (options: object) =>
             setOptions((o) => ({
