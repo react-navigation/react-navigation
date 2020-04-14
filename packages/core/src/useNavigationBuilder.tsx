@@ -177,9 +177,7 @@ export default function useNavigationBuilder<
     | NavigatorRoute
     | undefined;
 
-  const previousNestedParamsRef = React.useRef(
-    route?.params?.initial === false ? undefined : route?.params
-  );
+  const previousNestedParamsRef = React.useRef(route?.params);
 
   React.useEffect(() => {
     previousNestedParamsRef.current = route?.params;
@@ -189,7 +187,9 @@ export default function useNavigationBuilder<
   const { current: router } = React.useRef<Router<State, any>>(
     createRouter({
       ...((rest as unknown) as RouterOptions),
-      ...(route?.params && typeof route.params.screen === 'string'
+      ...(route?.params &&
+      route.params.initial !== false &&
+      typeof route.params.screen === 'string'
         ? { initialRouteName: route.params.screen }
         : null),
     })
@@ -269,6 +269,8 @@ export default function useNavigationBuilder<
   >();
   const initializedStateRef = React.useRef<State>();
 
+  let isFirstStateInitialization = false;
+
   if (
     initializedStateRef.current === undefined ||
     currentState !== previousStateRef.current
@@ -277,16 +279,21 @@ export default function useNavigationBuilder<
     // We also need to re-initialize it if the state passed from parent was changed (maybe due to reset)
     // Otherwise assume that the state was provided as initial state
     // So we need to rehydrate it to make it usable
-    initializedStateRef.current =
-      currentState === undefined || !isStateValid(currentState)
-        ? router.getInitialState({
-            routeNames,
-            routeParamList,
-          })
-        : router.getRehydratedState(currentState as PartialState<State>, {
-            routeNames,
-            routeParamList,
-          });
+    if (currentState === undefined || !isStateValid(currentState)) {
+      isFirstStateInitialization = true;
+      initializedStateRef.current = router.getInitialState({
+        routeNames,
+        routeParamList,
+      });
+    } else {
+      initializedStateRef.current = router.getRehydratedState(
+        currentState as PartialState<State>,
+        {
+          routeNames,
+          routeParamList,
+        }
+      );
+    }
   }
 
   React.useEffect(() => {
@@ -313,7 +320,8 @@ export default function useNavigationBuilder<
 
   if (
     typeof route?.params?.screen === 'string' &&
-    route.params !== previousNestedParamsRef.current
+    (route.params !== previousNestedParamsRef.current ||
+      (route.params.initial === false && isFirstStateInitialization))
   ) {
     // If the route was updated with new name and/or params, we should navigate there
     // The update should be limited to current navigator only, so we call the router manually

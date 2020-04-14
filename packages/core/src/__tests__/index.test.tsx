@@ -1006,6 +1006,95 @@ it('navigates to nested child in a navigator with initial: false', () => {
     stale: false,
     type: 'test',
   });
+
+  const third = render(
+    <BaseNavigationContainer
+      ref={navigation}
+      initialState={{
+        index: 1,
+        routes: [
+          { name: 'foo' },
+          {
+            name: 'bar',
+            params: { initial: false, params: { test: 42 }, screen: 'bar-b' },
+            state: {
+              index: 1,
+              key: '7',
+              routes: [
+                {
+                  name: 'bar-a',
+                  params: { lol: 'why' },
+                },
+                {
+                  name: 'bar-b',
+                  params: { some: 'stuff' },
+                },
+              ],
+              type: 'test',
+            },
+          },
+        ],
+        type: 'test',
+      }}
+    >
+      <TestNavigator>
+        <Screen name="foo" component={TestComponent} />
+        <Screen name="bar">
+          {() => (
+            <TestNavigator initialRouteName="bar-a">
+              <Screen
+                name="bar-a"
+                component={TestComponent}
+                initialParams={{ lol: 'why' }}
+              />
+              <Screen
+                name="bar-b"
+                component={TestComponent}
+                initialParams={{ some: 'stuff' }}
+              />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(third).toMatchInlineSnapshot(`"[bar-b, {\\"some\\":\\"stuff\\"}]"`);
+
+  expect(navigation.current?.getRootState()).toEqual({
+    index: 1,
+    key: '11',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo-9', name: 'foo' },
+      {
+        key: 'bar-10',
+        name: 'bar',
+        params: { initial: false, params: { test: 42 }, screen: 'bar-b' },
+        state: {
+          index: 1,
+          key: '14',
+          routeNames: ['bar-a', 'bar-b'],
+          routes: [
+            {
+              key: 'bar-a-12',
+              name: 'bar-a',
+              params: { lol: 'why' },
+            },
+            {
+              key: 'bar-b-13',
+              name: 'bar-b',
+              params: { some: 'stuff' },
+            },
+          ],
+          stale: false,
+          type: 'test',
+        },
+      },
+    ],
+    stale: false,
+    type: 'test',
+  });
 });
 
 it('gives access to internal state', () => {
