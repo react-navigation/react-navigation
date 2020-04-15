@@ -89,11 +89,9 @@ export default function DrawerView({
   sceneContainerStyle,
 }: Props) {
   const [loaded, setLoaded] = React.useState([state.index]);
-  const [drawerWidth, setDrawerWidth] = React.useState(() => {
-    const { height = 0, width = 0 } = Dimensions.get('window');
-
-    return getDefaultDrawerWidth({ height, width });
-  });
+  const [dimensions, setDimensions] = React.useState(() =>
+    Dimensions.get('window')
+  );
 
   const drawerGestureRef = React.useRef<PanGestureHandler>(null);
 
@@ -141,13 +139,13 @@ export default function DrawerView({
   }, [handleDrawerClose, isDrawerOpen, navigation, state.key]);
 
   React.useEffect(() => {
-    const updateWidth = ({ window }: { window: ScaledSize }) => {
-      setDrawerWidth(getDefaultDrawerWidth(window));
+    const updateDimensions = ({ window }: { window: ScaledSize }) => {
+      setDimensions(window);
     };
 
-    Dimensions.addEventListener('change', updateWidth);
+    Dimensions.addEventListener('change', updateDimensions);
 
-    return () => Dimensions.removeEventListener('change', updateWidth);
+    return () => Dimensions.removeEventListener('change', updateDimensions);
   }, []);
 
   if (!loaded.includes(state.index)) {
@@ -225,7 +223,10 @@ export default function DrawerView({
                 sceneContainerStyle,
               ]}
               drawerStyle={[
-                { width: drawerWidth, backgroundColor: colors.card },
+                {
+                  width: getDefaultDrawerWidth(dimensions),
+                  backgroundColor: colors.card,
+                },
                 drawerType === 'permanent' &&
                   (drawerPosition === 'left'
                     ? {
@@ -247,6 +248,7 @@ export default function DrawerView({
               renderSceneContent={renderContent}
               keyboardDismissMode={keyboardDismissMode}
               drawerPostion={drawerPosition}
+              dimensions={dimensions}
             />
           </DrawerOpenContext.Provider>
         </DrawerGestureContext.Provider>

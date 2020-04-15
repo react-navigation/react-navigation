@@ -21,7 +21,9 @@ export type DrawerActionType =
       target?: string;
     };
 
-export type DrawerRouterOptions = TabRouterOptions;
+export type DrawerRouterOptions = TabRouterOptions & {
+  openByDefault?: boolean;
+};
 
 export type DrawerNavigationState = Omit<
   TabNavigationState,
@@ -95,10 +97,14 @@ const closeDrawer = (state: DrawerNavigationState): DrawerNavigationState => {
   };
 };
 
-export default function DrawerRouter(
-  options: DrawerRouterOptions
-): Router<DrawerNavigationState, DrawerActionType | CommonNavigationAction> {
-  const router = (TabRouter(options) as unknown) as Router<
+export default function DrawerRouter({
+  openByDefault,
+  ...rest
+}: DrawerRouterOptions): Router<
+  DrawerNavigationState,
+  DrawerActionType | CommonNavigationAction
+> {
+  const router = (TabRouter(rest) as unknown) as Router<
     DrawerNavigationState,
     TabActionType | CommonNavigationAction
   >;
@@ -109,7 +115,11 @@ export default function DrawerRouter(
     type: 'drawer',
 
     getInitialState({ routeNames, routeParamList }) {
-      const state = router.getInitialState({ routeNames, routeParamList });
+      let state = router.getInitialState({ routeNames, routeParamList });
+
+      if (openByDefault) {
+        state = openDrawer(state);
+      }
 
       return {
         ...state,
@@ -162,8 +172,14 @@ export default function DrawerRouter(
           return openDrawer(state);
 
         case 'GO_BACK':
-          if (isDrawerOpen(state)) {
-            return closeDrawer(state);
+          if (openByDefault) {
+            if (!isDrawerOpen(state)) {
+              return openDrawer(state);
+            }
+          } else {
+            if (isDrawerOpen(state)) {
+              return closeDrawer(state);
+            }
           }
 
           return router.getStateForAction(state, action, options);
