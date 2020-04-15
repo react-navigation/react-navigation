@@ -43,6 +43,7 @@ import {
 } from '@react-navigation/stack';
 
 import LinkingPrefixes from './LinkingPrefixes';
+import SettingsItem from './Shared/SettingsItem';
 import SimpleStack from './Screens/SimpleStack';
 import ModalPresentationStack from './Screens/ModalPresentationStack';
 import StackTransparent from './Screens/StackTransparent';
@@ -53,7 +54,7 @@ import MaterialBottomTabs from './Screens/MaterialBottomTabs';
 import DynamicTabs from './Screens/DynamicTabs';
 import AuthFlow from './Screens/AuthFlow';
 import CompatAPI from './Screens/CompatAPI';
-import SettingsItem from './Shared/SettingsItem';
+import MasterDetail from './Screens/MasterDetail';
 
 YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
 
@@ -96,6 +97,10 @@ const SCREENS = {
   DynamicTabs: {
     title: 'Dynamic Tabs',
     component: DynamicTabs,
+  },
+  MasterDetail: {
+    title: 'Master Detail',
+    component: MasterDetail,
   },
   AuthFlow: {
     title: 'Auth Flow',
@@ -214,7 +219,7 @@ export default function App() {
     return null;
   }
 
-  const isLargeScreen = dimensions.width > 900;
+  const isLargeScreen = dimensions.width > 834;
 
   return (
     <PaperProvider theme={paperTheme}>
