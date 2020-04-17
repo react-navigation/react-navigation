@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.4.0](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.3.0...@react-navigation/routers@5.4.0) (2020-04-17)
+
+
+### Features
+
+* add openByDefault option to drawer ([36689e2](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/36689e24c21b474692bb7ecd0b901c8afbbe9a20))
+
+
+
+
+
 # [5.3.0](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.2.1...@react-navigation/routers@5.3.0) (2020-04-08)
 
 

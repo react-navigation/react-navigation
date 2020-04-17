@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.11](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.10...@react-navigation/stack@5.2.11) (2020-04-17)
+
+
+### Bug Fixes
+
+* disable animation by default on web for stack ([dfdba8d](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/dfdba8d741abb4aa82235688d9f49e26305d2bca))
+* hide inactive screens for stack on web ([#8010](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/8010)) ([82edb25](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/82edb2581bab960f206fd67368a45ad384955c97))
+* ios presentation modal cuts the topOffset on the bottom ([#7943](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/7943)) ([6e51f59](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/6e51f596fa85796c2a3567222f51ff914c1f6c94)), closes [#7856](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/7856)
+
+
+
+
+
 ## [5.2.10](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.9...@react-navigation/stack@5.2.10) (2020-04-08)
 
 
