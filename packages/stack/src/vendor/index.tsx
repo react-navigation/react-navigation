@@ -43,11 +43,12 @@ export { default as useGestureHandlerRef } from './utils/useGestureHandlerRef';
 /**
  * Types
  */
-export {
+export type {
   NavigationStackState,
   StackNavigationProp as NavigationStackProp,
   StackNavigationOptions as NavigationStackOptions,
   StackNavigationConfig as NavigationStackConfig,
+  StackHeaderProps,
   StackHeaderLeftButtonProps,
   StackHeaderTitleProps,
   StackCardInterpolatedStyle,

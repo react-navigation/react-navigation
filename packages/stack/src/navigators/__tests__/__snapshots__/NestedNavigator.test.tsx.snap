@@ -115,7 +115,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                 pointerEvents="none"
                 style={
                   Object {
-                    "backgroundColor": "#fff",
+                    "backgroundColor": "rgb(242, 242, 242)",
                     "bottom": 0,
                     "left": 0,
                     "position": "absolute",
@@ -276,7 +276,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                                     pointerEvents="none"
                                     style={
                                       Object {
-                                        "backgroundColor": "#fff",
+                                        "backgroundColor": "rgb(242, 242, 242)",
                                         "bottom": 0,
                                         "left": 0,
                                         "position": "absolute",

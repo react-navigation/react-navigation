@@ -8,7 +8,7 @@ export { default as createStackNavigator } from './navigators/createStackNavigat
 /**
  * Types
  */
-export {
+export type {
   NavigationStackScreenComponent,
   NavigationStackScreenProps,
 } from './types';

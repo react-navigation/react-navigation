@@ -115,7 +115,7 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
                 pointerEvents="none"
                 style={
                   Object {
-                    "backgroundColor": "#fff",
+                    "backgroundColor": "rgb(242, 242, 242)",
                     "bottom": 0,
                     "left": 0,
                     "position": "absolute",
@@ -412,7 +412,7 @@ exports[`StackNavigator renders successfully 1`] = `
                 pointerEvents="none"
                 style={
                   Object {
-                    "backgroundColor": "#fff",
+                    "backgroundColor": "rgb(242, 242, 242)",
                     "bottom": 0,
                     "left": 0,
                     "position": "absolute",
