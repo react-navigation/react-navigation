@@ -164,7 +164,7 @@ export function forModalPresentationIOS({
       borderTopLeftRadius: borderRadius,
       borderTopRightRadius: borderRadius,
       marginTop: index === 0 ? 0 : statusBarHeight,
-      paddingBottom: topOffset,
+      paddingBottom: index === 0 ? 0 : topOffset,
       transform: [{ translateY }, { scale }],
     },
     overlayStyle: { opacity: overlayOpacity },
