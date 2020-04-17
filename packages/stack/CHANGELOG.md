@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.12](https://github.com/react-navigation/react-navigation-stack/compare/react-navigation-stack@2.3.11...react-navigation-stack@2.3.12) (2020-04-17)
+
+
+### Bug Fixes
+
+* stack peer warnings ([4c4e66f](https://github.com/react-navigation/react-navigation-stack/commit/4c4e66f05cd4d694f512f4cc38827f3fbf0f70de))
+
+
+
+
+
 ## [2.3.11](https://github.com/react-navigation/react-navigation-stack/compare/react-navigation-stack@2.3.10...react-navigation-stack@2.3.11) (2020-04-02)
 
 **Note:** Version bump only for package react-navigation-stack
