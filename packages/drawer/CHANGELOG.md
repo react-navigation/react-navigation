@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.5.0](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.4.1...@react-navigation/drawer@5.5.0) (2020-04-17)
+
+
+### Bug Fixes
+
+* fix drawer not closing on web ([e2bcf51](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/e2bcf5168c389833eaaeadb4b8794aaea4a66d17)), closes [#6759](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/6759)
+* webkit style error in overlay ([821343f](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/821343fed38577cfdc87a78f13f991d5760bf8f5))
+
+
+### Features
+
+* add openByDefault option to drawer ([36689e2](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/36689e24c21b474692bb7ecd0b901c8afbbe9a20))
+
+
+
+
+
 ## [5.4.1](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.4.0...@react-navigation/drawer@5.4.1) (2020-04-08)
 
 

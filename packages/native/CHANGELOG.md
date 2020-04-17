@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.6](https://github.com/react-navigation/react-navigation/tree/master/packages/native/compare/@react-navigation/native@5.1.5...@react-navigation/native@5.1.6) (2020-04-17)
+
+
+### Bug Fixes
+
+* handle in-page go back when there's no history ([6bdf6ae](https://github.com/react-navigation/react-navigation/tree/master/packages/native/commit/6bdf6ae4ed0f83ac1deb3172d9075a6a2adbbe11)), closes [#7852](https://github.com/react-navigation/react-navigation/tree/master/packages/native/issues/7852)
+
+
+
+
+
 ## [5.1.5](https://github.com/react-navigation/react-navigation/tree/master/packages/native/compare/@react-navigation/native@5.1.4...@react-navigation/native@5.1.5) (2020-04-08)
 
 **Note:** Version bump only for package @react-navigation/native

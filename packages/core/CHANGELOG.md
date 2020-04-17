@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.3.4](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.3.3...@react-navigation/core@5.3.4) (2020-04-17)
+
+
+### Bug Fixes
+
+* add initial option for navigating to nested navigators ([004c7d7](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/004c7d7ab1f80faf04b2a1836ec6b79a5419e45f))
+* add initial param for actions from deep link ([a3f7a5f](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/a3f7a5feba2e6aa2158aeaea6cde73ae1603173e))
+* handle initial: false for nested route after first initialization ([187aefe](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/187aefe9c400b499f920c212bf856414e25c5aaf))
+
+
+
+
+
 ## [5.3.3](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.3.2...@react-navigation/core@5.3.3) (2020-04-08)
 
 
