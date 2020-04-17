@@ -9,6 +9,7 @@ import {
   ScrollViewProps,
   Dimensions,
   Platform,
+  ScaledSize,
 } from 'react-native';
 import { useScrollToTop } from '@react-navigation/native';
 
@@ -40,15 +41,38 @@ const COVERS = [
 ];
 
 export default function Albums(props: Partial<ScrollViewProps>) {
+  const [dimensions, setDimensions] = React.useState(Dimensions.get('window'));
+
+  React.useEffect(() => {
+    const onDimensionsChange = ({ window }: { window: ScaledSize }) => {
+      setDimensions(window);
+    };
+
+    Dimensions.addEventListener('change', onDimensionsChange);
+
+    return () => Dimensions.removeEventListener('change', onDimensionsChange);
+  }, []);
+
   const ref = React.useRef<ScrollView>(null);
 
   useScrollToTop(ref);
 
+  const itemSize = dimensions.width / Math.floor(dimensions.width / 150);
+
   return (
     <ScrollView ref={ref} contentContainerStyle={styles.content} {...props}>
       {COVERS.map((source, i) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <View key={i} style={styles.item}>
+        <View
+          // eslint-disable-next-line react/no-array-index-key
+          key={i}
+          style={[
+            styles.item,
+            Platform.OS !== 'web' && {
+              height: itemSize,
+              width: itemSize,
+            },
+          ]}
+        >
           <Image source={source} style={styles.photo} />
         </View>
       ))}
@@ -75,10 +99,6 @@ const styles = StyleSheet.create({
       content: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-      },
-      item: {
-        height: Dimensions.get('window').width / 2,
-        width: '50%',
       },
     },
   }),

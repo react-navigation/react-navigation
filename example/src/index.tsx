@@ -219,7 +219,7 @@ export default function App() {
     return null;
   }
 
-  const isLargeScreen = dimensions.width > 834;
+  const isLargeScreen = dimensions.width >= 1024;
 
   return (
     <PaperProvider theme={paperTheme}>
