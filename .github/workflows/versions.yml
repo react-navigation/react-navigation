@@ -1,0 +1,27 @@
+name: Check versions
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  check-versions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: react-navigation/check-versions-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          packages: |
+            @react-navigation/bottom-tabs
+            @react-navigation/compat
+            @react-navigation/core
+            @react-navigation/drawer
+            @react-navigation/material-bottom-tabs
+            @react-navigation/material-top-tabs
+            @react-navigation/native
+            @react-navigation/routers
+            @react-navigation/stack
+            react-navigation-animated-switch
+            react-navigation-drawer
+            react-navigation-material-bottom-tabs
+            react-navigation-stack
+            react-navigation-tabs
