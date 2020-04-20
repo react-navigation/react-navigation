@@ -22,7 +22,7 @@ export { default as useIsDrawerOpen } from './utils/useIsDrawerOpen';
 /**
  * Types
  */
-export type {
+export {
   DrawerNavigationOptions,
   DrawerNavigationProp,
   DrawerContentOptions,
