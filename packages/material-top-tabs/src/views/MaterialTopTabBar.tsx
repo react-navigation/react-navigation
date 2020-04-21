@@ -18,6 +18,7 @@ export default function TabBarTop(props: MaterialTopTabBarProps) {
     allowFontScaling = true,
     showIcon = false,
     showLabel = true,
+    upperCaseLabel = true,
     pressColor = Color(activeTintColor).alpha(0.08).rgb().string(),
     iconStyle,
     labelStyle,
@@ -90,7 +91,7 @@ export default function TabBarTop(props: MaterialTopTabBarProps) {
               style={[styles.label, { color }, labelStyle]}
               allowFontScaling={allowFontScaling}
             >
-              {label}
+              {upperCaseLabel ? label.toUpperCase() : label}
             </Text>
           );
         }
@@ -108,7 +109,6 @@ const styles = StyleSheet.create({
   },
   label: {
     textAlign: 'center',
-    textTransform: 'uppercase',
     fontSize: 13,
     margin: 4,
     backgroundColor: 'transparent',

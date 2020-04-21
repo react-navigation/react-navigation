@@ -175,6 +175,10 @@ export type MaterialTopTabBarOptions = Partial<
    * Whether label font should scale to respect Text Size accessibility settings.
    */
   allowFontScaling?: boolean;
+  /**
+   * Whether to make label uppercase, default is true.
+   */
+  upperCaseLabel?: boolean;
 };
 
 export type MaterialTopTabBarProps = MaterialTopTabBarOptions &
