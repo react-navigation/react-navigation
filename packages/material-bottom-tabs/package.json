@@ -1,6 +1,6 @@
 {
   "name": "react-navigation-material-bottom-tabs",
-  "version": "2.2.10",
+  "version": "2.2.11",
   "description": "Material Bottom Tab Navigation component for React Navigation",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
@@ -48,7 +48,7 @@
     "react-native-gesture-handler": "^1.6.0",
     "react-native-paper": "^3.1.1",
     "react-native-reanimated": "^1.2.0",
-    "react-navigation": "^4.3.7",
+    "react-navigation": "^4.3.8",
     "typescript": "~3.8.3"
   },
   "peerDependencies": {

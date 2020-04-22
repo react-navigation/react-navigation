@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.8.12](https://github.com/react-navigation/tabs/compare/react-navigation-tabs@2.8.11...react-navigation-tabs@2.8.12) (2020-04-22)
+
+**Note:** Version bump only for package react-navigation-tabs
+
+
+
+
+
 ## [2.8.11](https://github.com/react-navigation/tabs/compare/react-navigation-tabs@2.8.10...react-navigation-tabs@2.8.11) (2020-04-02)
 
 **Note:** Version bump only for package react-navigation-tabs
