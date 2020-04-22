@@ -147,7 +147,7 @@ export default class StackView extends React.Component<Props, State> {
       // We only need to animate routes if the focused route changed
       // Animating previous routes won't be visible coz the focused route is on top of everything
 
-      if (!previousRoutes.find((r) => r.key === nextFocusedRoute.key)) {
+      if (!previousRoutes.some((r) => r.key === nextFocusedRoute.key)) {
         // A new route has come to the focus, we treat this as a push
         // A replace can also trigger this, the animation should look like push
 
@@ -166,7 +166,7 @@ export default class StackView extends React.Component<Props, State> {
             (key) => key !== nextFocusedRoute.key
           );
 
-          if (!routes.find((r) => r.key === previousFocusedRoute.key)) {
+          if (!routes.some((r) => r.key === previousFocusedRoute.key)) {
             // The previous focused route isn't present in state, we treat this as a replace
 
             openingRouteKeys = openingRouteKeys.filter(
@@ -206,7 +206,7 @@ export default class StackView extends React.Component<Props, State> {
             }
           }
         }
-      } else if (!routes.find((r) => r.key === previousFocusedRoute.key)) {
+      } else if (!routes.some((r) => r.key === previousFocusedRoute.key)) {
         // The previously focused route was removed, we treat this as a pop
 
         if (
@@ -328,24 +328,37 @@ export default class StackView extends React.Component<Props, State> {
   };
 
   private handleOpenRoute = ({ route }: { route: Route<string> }) => {
-    this.setState((state) => ({
-      routes: state.replacingRouteKeys.length
-        ? state.routes.filter((r) => !state.replacingRouteKeys.includes(r.key))
-        : state.routes,
-      openingRouteKeys: state.openingRouteKeys.filter(
-        (key) => key !== route.key
-      ),
-      closingRouteKeys: state.closingRouteKeys.filter(
-        (key) => key !== route.key
-      ),
-      replacingRouteKeys: [],
-    }));
+    const { state, navigation } = this.props;
+
+    if (
+      state.routeNames.includes(route.name) &&
+      !state.routes.some((r) => r.key === route.key)
+    ) {
+      // If route isn't present in current state, assume that a close animation was cancelled
+      // So we need to add this route back to the state
+      navigation.navigate(route);
+    } else {
+      this.setState((state) => ({
+        routes: state.replacingRouteKeys.length
+          ? state.routes.filter(
+              (r) => !state.replacingRouteKeys.includes(r.key)
+            )
+          : state.routes,
+        openingRouteKeys: state.openingRouteKeys.filter(
+          (key) => key !== route.key
+        ),
+        closingRouteKeys: state.closingRouteKeys.filter(
+          (key) => key !== route.key
+        ),
+        replacingRouteKeys: [],
+      }));
+    }
   };
 
   private handleCloseRoute = ({ route }: { route: Route<string> }) => {
     const { state, navigation } = this.props;
 
-    if (state.routes.find((r) => r.key === route.key)) {
+    if (state.routes.some((r) => r.key === route.key)) {
       // If a route exists in state, trigger a pop
       // This will happen in when the route was closed from the card component
       // e.g. When the close animation triggered from a gesture ends
