@@ -286,7 +286,7 @@ export default class Card extends React.Component<Props> {
             getInvertedMultiplier(gestureDirection) >
           distance / 2
             ? velocity !== 0 || translation !== 0
-            : false;
+            : this.props.closing;
 
         this.animate({ closing, velocity });
 
