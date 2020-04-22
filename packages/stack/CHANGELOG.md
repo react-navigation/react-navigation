@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.12](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.11...@react-navigation/stack@5.2.12) (2020-04-22)
+
+
+### Bug Fixes
+
+* animate card to existing closing state on gesture end ([78485ce](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/78485cea6939b9ffec76e0c4b410bc426ed93402)), closes [#7938](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/7938)
+
+
+
+
+
 ## [5.2.11](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.10...@react-navigation/stack@5.2.11) (2020-04-17)
 
 
