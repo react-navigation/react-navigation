@@ -1,18 +1,15 @@
 import * as React from 'react';
 import {
   Animated,
-  View,
   StyleSheet,
   LayoutChangeEvent,
   Dimensions,
   Platform,
-  ViewProps,
 } from 'react-native';
 import { EdgeInsets } from 'react-native-safe-area-context';
-// eslint-disable-next-line import/no-unresolved
-import { ScreenContainer, Screen, screensEnabled } from 'react-native-screens'; // Import with * as to prevent getters being called
 import { Route, StackNavigationState } from '@react-navigation/native';
 
+import { MaybeScreenContainer, MaybeScreen } from '../Screens';
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import CardContainer from './CardContainer';
@@ -74,67 +71,6 @@ type State = {
 };
 
 const EPSILON = 0.01;
-
-// The web implementation in react-native-screens seems buggy.
-// The view doesn't become visible after coming back in some cases.
-// So we use our custom implementation.
-class WebScreen extends React.Component<
-  ViewProps & {
-    active: number;
-    children: React.ReactNode;
-  }
-> {
-  render() {
-    const { active, style, ...rest } = this.props;
-
-    return (
-      <View
-        // @ts-ignore
-        hidden={!active}
-        style={[style, { display: active ? 'flex' : 'none' }]}
-        {...rest}
-      />
-    );
-  }
-}
-
-const AnimatedWebScreen = Animated.createAnimatedComponent(WebScreen);
-
-const MaybeScreenContainer = ({
-  enabled,
-  ...rest
-}: ViewProps & {
-  enabled: boolean;
-  children: React.ReactNode;
-}) => {
-  if (enabled && Platform.OS !== 'web' && screensEnabled()) {
-    return <ScreenContainer {...rest} />;
-  }
-
-  return <View {...rest} />;
-};
-
-const MaybeScreen = ({
-  enabled,
-  active,
-  ...rest
-}: ViewProps & {
-  enabled: boolean;
-  active: number | Animated.AnimatedInterpolation;
-  children: React.ReactNode;
-}) => {
-  if (enabled && Platform.OS === 'web') {
-    // @ts-ignore
-    return <AnimatedWebScreen active={active} {...rest} />;
-  }
-
-  if (enabled && screensEnabled()) {
-    // @ts-ignore
-    return <Screen active={active} {...rest} />;
-  }
-
-  return <View {...rest} />;
-};
 
 const FALLBACK_DESCRIPTOR = Object.freeze({ options: {} });
 
