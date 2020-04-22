@@ -36,7 +36,7 @@
   "homepage": "https://github.com/react-navigation/react-navigation-native#readme",
   "dependencies": {
     "hoist-non-react-statics": "^3.3.2",
-    "react-native-safe-area-view": "^0.14.8"
+    "react-native-safe-area-view": "^0.14.9"
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.10.0",
