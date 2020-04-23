@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import {
   createCompatNavigatorFactory,
@@ -11,25 +11,30 @@ import {
 } from '@react-navigation/stack';
 import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
+import NewsFeed from '../Shared/NewsFeed';
 
 type CompatStackParams = {
-  Article: { author: string };
-  Album: undefined;
+  Albums: undefined;
+  Nested: { author: string };
 };
 
-const ArticleScreen: CompatScreenType<StackNavigationProp<
-  CompatStackParams,
-  'Article'
+type NestedStackParams = {
+  Feed: undefined;
+  Article: { author: string };
+};
+
+const AlbumsScreen: CompatScreenType<StackNavigationProp<
+  CompatStackParams
 >> = ({ navigation }) => {
   return (
-    <React.Fragment>
+    <ScrollView>
       <View style={styles.buttons}>
         <Button
           mode="contained"
-          onPress={() => navigation.push('Album')}
+          onPress={() => navigation.push('Nested', { author: 'Babel fish' })}
           style={styles.button}
         >
-          Push album
+          Push nested
         </Button>
         <Button
           mode="outlined"
@@ -39,24 +44,20 @@ const ArticleScreen: CompatScreenType<StackNavigationProp<
           Go back
         </Button>
       </View>
-      <Article author={{ name: navigation.getParam('author') }} />
-    </React.Fragment>
+      <Albums scrollEnabled={false} />
+    </ScrollView>
   );
 };
 
-ArticleScreen.navigationOptions = ({ navigation }) => ({
-  title: `Article by ${navigation.getParam('author')}`,
-});
-
-const AlbumsScreen: CompatScreenType<StackNavigationProp<
-  CompatStackParams
->> = ({ navigation }) => {
+const FeedScreen: CompatScreenType<StackNavigationProp<NestedStackParams>> = ({
+  navigation,
+}) => {
   return (
-    <React.Fragment>
+    <ScrollView>
       <View style={styles.buttons}>
         <Button
           mode="contained"
-          onPress={() => navigation.push('Article', { author: 'Babel fish' })}
+          onPress={() => navigation.push('Article')}
           style={styles.button}
         >
           Push article
@@ -69,22 +70,69 @@ const AlbumsScreen: CompatScreenType<StackNavigationProp<
           Go back
         </Button>
       </View>
-      <Albums />
-    </React.Fragment>
+      <NewsFeed scrollEnabled={false} />
+    </ScrollView>
   );
 };
 
-const CompatStack = createCompatNavigatorFactory(createStackNavigator)<
+const ArticleScreen: CompatScreenType<StackNavigationProp<
+  NestedStackParams,
+  'Article'
+>> = ({ navigation }) => {
+  navigation.dangerouslyGetParent();
+  return (
+    <ScrollView>
+      <View style={styles.buttons}>
+        <Button
+          mode="contained"
+          onPress={() => navigation.push('Albums')}
+          style={styles.button}
+        >
+          Push albums
+        </Button>
+        <Button
+          mode="outlined"
+          onPress={() => navigation.goBack()}
+          style={styles.button}
+        >
+          Go back
+        </Button>
+      </View>
+      <Article
+        author={{ name: navigation.getParam('author') }}
+        scrollEnabled={false}
+      />
+    </ScrollView>
+  );
+};
+
+ArticleScreen.navigationOptions = ({ navigation }) => ({
+  title: `Article by ${navigation.getParam('author')}`,
+});
+
+const createCompatStackNavigator = createCompatNavigatorFactory(
+  createStackNavigator
+);
+
+const CompatStack = createCompatStackNavigator<
   StackNavigationProp<CompatStackParams>
 >(
   {
-    Article: {
-      screen: ArticleScreen,
+    Albums: AlbumsScreen,
+    Nested: {
+      screen: createCompatStackNavigator<
+        StackNavigationProp<NestedStackParams>
+      >(
+        {
+          Feed: FeedScreen,
+          Article: ArticleScreen,
+        },
+        { navigationOptions: { headerShown: false } }
+      ),
       params: {
         author: 'Gandalf',
       },
     },
-    Album: AlbumsScreen,
   },
   {
     mode: 'modal',
