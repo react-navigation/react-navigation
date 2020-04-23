@@ -7,6 +7,7 @@ import {
   NavigationProp,
   RouteProp,
   EventMapBase,
+  NavigationRouteContext,
 } from '@react-navigation/native';
 import CompatScreen from './CompatScreen';
 import ScreenPropsContext from './ScreenPropsContext';
@@ -67,6 +68,9 @@ export default function createCompatNavigatorFactory<
     const routeNames = order !== undefined ? order : Object.keys(routeConfig);
 
     function Navigator({ screenProps }: { screenProps?: unknown }) {
+      const parentRouteParams = React.useContext(NavigationRouteContext)
+        ?.params;
+
       const screens = React.useMemo(
         () =>
           routeNames.map((name) => {
@@ -135,7 +139,7 @@ export default function createCompatNavigatorFactory<
               <Pair.Screen
                 key={name}
                 name={name}
-                initialParams={initialParams}
+                initialParams={{ ...parentRouteParams, ...initialParams }}
                 options={screenOptions}
               >
                 {({ navigation, route }) => (
@@ -148,7 +152,7 @@ export default function createCompatNavigatorFactory<
               </Pair.Screen>
             );
           }),
-        [screenProps]
+        [parentRouteParams, screenProps]
       );
 
       return (
