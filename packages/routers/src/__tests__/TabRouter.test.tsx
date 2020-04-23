@@ -214,6 +214,161 @@ it("doesn't rehydrate state if it's not stale", () => {
   ).toBe(state);
 });
 
+it('restores correct history on rehydrating with backBehavior: order', () => {
+  const router = TabRouter({ backBehavior: 'order' });
+
+  const options = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+  };
+
+  expect(
+    router.getRehydratedState(
+      {
+        index: 2,
+        routes: [
+          { key: 'foo-0', name: 'foo' },
+          { key: 'bar-0', name: 'bar' },
+          { key: 'baz-0', name: 'baz' },
+          { key: 'qux-0', name: 'qux' },
+        ],
+      },
+      options
+    )
+  ).toEqual({
+    key: 'tab-test',
+    index: 2,
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routes: [
+      { key: 'foo-0', name: 'foo' },
+      { key: 'bar-0', name: 'bar' },
+      { key: 'baz-0', name: 'baz' },
+      { key: 'qux-0', name: 'qux' },
+    ],
+    history: [
+      { key: 'foo-0', type: 'route' },
+      { key: 'bar-0', type: 'route' },
+      { key: 'baz-0', type: 'route' },
+    ],
+    stale: false,
+    type: 'tab',
+  });
+});
+
+it('restores correct history on rehydrating with backBehavior: history', () => {
+  const router = TabRouter({ backBehavior: 'history' });
+
+  const options = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+  };
+
+  expect(
+    router.getRehydratedState(
+      {
+        index: 2,
+        routes: [
+          { key: 'foo-0', name: 'foo' },
+          { key: 'bar-0', name: 'bar' },
+          { key: 'baz-0', name: 'baz' },
+          { key: 'qux-0', name: 'qux' },
+        ],
+      },
+      options
+    )
+  ).toEqual({
+    key: 'tab-test',
+    index: 2,
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routes: [
+      { key: 'foo-0', name: 'foo' },
+      { key: 'bar-0', name: 'bar' },
+      { key: 'baz-0', name: 'baz' },
+      { key: 'qux-0', name: 'qux' },
+    ],
+    history: [{ key: 'baz-0', type: 'route' }],
+    stale: false,
+    type: 'tab',
+  });
+});
+
+it('restores correct history on rehydrating with backBehavior: initialRoute', () => {
+  const router = TabRouter({ backBehavior: 'initialRoute' });
+
+  const options = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+  };
+
+  expect(
+    router.getRehydratedState(
+      {
+        index: 2,
+        routes: [
+          { key: 'foo-0', name: 'foo' },
+          { key: 'bar-0', name: 'bar' },
+          { key: 'baz-0', name: 'baz' },
+          { key: 'qux-0', name: 'qux' },
+        ],
+      },
+      options
+    )
+  ).toEqual({
+    key: 'tab-test',
+    index: 2,
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routes: [
+      { key: 'foo-0', name: 'foo' },
+      { key: 'bar-0', name: 'bar' },
+      { key: 'baz-0', name: 'baz' },
+      { key: 'qux-0', name: 'qux' },
+    ],
+    history: [
+      { key: 'foo-0', type: 'route' },
+      { key: 'baz-0', type: 'route' },
+    ],
+    stale: false,
+    type: 'tab',
+  });
+});
+
+it('restores correct history on rehydrating with backBehavior: none', () => {
+  const router = TabRouter({ backBehavior: 'none' });
+
+  const options = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+  };
+
+  expect(
+    router.getRehydratedState(
+      {
+        index: 2,
+        routes: [
+          { key: 'foo-0', name: 'foo' },
+          { key: 'bar-0', name: 'bar' },
+          { key: 'baz-0', name: 'baz' },
+          { key: 'qux-0', name: 'qux' },
+        ],
+      },
+      options
+    )
+  ).toEqual({
+    key: 'tab-test',
+    index: 2,
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routes: [
+      { key: 'foo-0', name: 'foo' },
+      { key: 'bar-0', name: 'bar' },
+      { key: 'baz-0', name: 'baz' },
+      { key: 'qux-0', name: 'qux' },
+    ],
+    history: [{ key: 'baz-0', type: 'route' }],
+    stale: false,
+    type: 'tab',
+  });
+});
+
 it('gets state on route names change', () => {
   const router = TabRouter({});
 
@@ -251,6 +406,38 @@ it('gets state on route names change', () => {
       { key: 'fiz-test', name: 'fiz', params: { fruit: 'apple' } },
     ],
     history: [{ type: 'route', key: 'qux-test' }],
+    stale: false,
+    type: 'tab',
+  });
+
+  expect(
+    router.getStateForRouteNamesChange(
+      {
+        index: 0,
+        key: 'tab-test',
+        routeNames: ['bar', 'baz'],
+        routes: [
+          { key: 'bar-test', name: 'bar' },
+          { key: 'baz-test', name: 'baz', params: { answer: 42 } },
+        ],
+        history: [{ type: 'route', key: 'bar-test' }],
+        stale: false,
+        type: 'tab',
+      },
+      {
+        routeNames: ['foo', 'fiz'],
+        routeParamList: {},
+      }
+    )
+  ).toEqual({
+    index: 0,
+    key: 'tab-test',
+    routeNames: ['foo', 'fiz'],
+    routes: [
+      { key: 'foo-test', name: 'foo' },
+      { key: 'fiz-test', name: 'fiz' },
+    ],
+    history: [{ type: 'route', key: 'foo-test' }],
     stale: false,
     type: 'tab',
   });
