@@ -153,6 +153,10 @@ export default function DrawerRouter({
     getStateForRouteFocus(state, key) {
       const result = router.getStateForRouteFocus(state, key);
 
+      if (openByDefault) {
+        return openDrawer(result);
+      }
+
       return closeDrawer(result);
     },
 
