@@ -59,7 +59,8 @@ export const TabActions = {
 const getRouteHistory = (
   routes: Route<string>[],
   index: number,
-  backBehavior: BackBehavior
+  backBehavior: BackBehavior,
+  initialRouteIndex?: number
 ) => {
   const history = [{ type: TYPE_ROUTE, key: routes[index].key }];
 
@@ -70,7 +71,12 @@ const getRouteHistory = (
       }
       break;
     case 'initialRoute':
-      // The history always begin with the initial route (see changeIndex)
+      if (initialRouteIndex !== undefined) {
+        history.unshift({
+          type: TYPE_ROUTE,
+          key: routes[initialRouteIndex].key,
+        });
+      }
       break;
     case 'history':
       // The history will fill up on navigation
@@ -193,8 +199,18 @@ export default function TabRouter({
         routes.find((r) => r.key === it.key)
       );
 
+      const initialRouteIndex =
+        initialRouteName !== undefined && routeNames.includes(initialRouteName)
+          ? routeNames.indexOf(initialRouteName)
+          : 0;
+
       if (!history?.length) {
-        history = getRouteHistory(routes, index, backBehavior);
+        history = getRouteHistory(
+          routes,
+          index,
+          backBehavior,
+          initialRouteIndex
+        );
       }
 
       return {
