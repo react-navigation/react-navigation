@@ -163,7 +163,7 @@ export default function createCompatNavigatorFactory<
       );
     }
 
-    Navigator.navigationOtions = parentNavigationOptions;
+    Navigator.navigationOptions = parentNavigationOptions;
 
     return Navigator;
   };
