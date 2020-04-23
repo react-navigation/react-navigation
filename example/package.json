@@ -8,7 +8,8 @@
     "web": "expo start:web",
     "native": "react-native start",
     "android": "react-native run-android",
-    "ios": "react-native run-ios"
+    "ios": "react-native run-ios",
+    "test": "jest"
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.0",
@@ -32,10 +33,15 @@
   },
   "devDependencies": {
     "@expo/webpack-config": "^0.11.19",
+    "@types/jest-dev-server": "^4.2.0",
     "@types/react": "^16.9.23",
     "@types/react-native": "^0.60.22",
     "babel-preset-expo": "^8.1.0",
     "expo-cli": "^3.17.18",
+    "jest": "^25.2.7",
+    "jest-dev-server": "^4.4.0",
+    "playwright": "^0.14.0",
+    "serve": "^11.3.0",
     "typescript": "^3.8.3"
   }
 }
