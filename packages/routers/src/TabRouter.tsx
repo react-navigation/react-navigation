@@ -64,15 +64,13 @@ const getRouteHistory = (
   const history = [{ type: TYPE_ROUTE, key: routes[index].key }];
 
   switch (backBehavior) {
-    case 'initialRoute':
-      if (index !== 0) {
-        history.unshift({ type: TYPE_ROUTE, key: routes[0].key });
-      }
-      break;
     case 'order':
       for (let i = index; i > 0; i--) {
         history.unshift({ type: TYPE_ROUTE, key: routes[i - 1].key });
       }
+      break;
+    case 'initialRoute':
+      // The history always begin with the initial route (see changeIndex)
       break;
     case 'history':
       // The history will fill up on navigation
@@ -95,6 +93,13 @@ const changeIndex = (
     history = state.history
       .filter((it) => (it.type === 'route' ? it.key !== currentKey : false))
       .concat({ type: TYPE_ROUTE, key: currentKey });
+  } else if (backBehavior === 'initialRoute') {
+    const currentKey = state.routes[index].key;
+
+    history = [state.history[0]];
+    if (state.history[0].key !== currentKey) {
+      history.push({ type: TYPE_ROUTE, key: currentKey });
+    }
   } else {
     history = getRouteHistory(state.routes, index, backBehavior);
   }
