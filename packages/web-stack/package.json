@@ -1,0 +1,62 @@
+{
+  "name": "@react-navigation/webstack",
+  "description": "Stack navigator component for Web",
+  "version": "5.0.0",
+  "keywords": [
+    "react",
+    "react-native",
+    "react-component",
+    "react-navigation",
+    "web",
+    "stack"
+  ],
+  "license": "MIT",
+  "repository": "https://github.com/react-navigation/react-navigation/tree/master/packages/web-stack",
+  "bugs": {
+    "url": "https://github.com/react-navigation/react-navigation/issues"
+  },
+  "homepage": "https://reactnavigation.org/docs/web-stack-navigator.html",
+  "main": "lib/commonjs/index.js",
+  "react-native": "src/index.tsx",
+  "module": "lib/module/index.js",
+  "types": "lib/typescript/src/index.d.ts",
+  "files": [
+    "src",
+    "lib"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prepare": "bob build",
+    "clean": "del lib"
+  },
+  "devDependencies": {
+    "@react-native-community/bob": "^0.10.0",
+    "@react-navigation/native": "^5.1.6",
+    "@types/react": "^16.9.23",
+    "del-cli": "^3.0.0",
+    "react": "~16.9.0",
+    "react-dom": "~16.9.0",
+    "typescript": "^3.8.3"
+  },
+  "peerDependencies": {
+    "@react-navigation/native": "^5.0.5",
+    "react": "*"
+  },
+  "@react-native-community/bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
+    ]
+  }
+}

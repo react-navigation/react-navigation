@@ -44,6 +44,7 @@ import {
 
 import LinkingPrefixes from './LinkingPrefixes';
 import SettingsItem from './Shared/SettingsItem';
+import WebStack from './Screens/WebStack';
 import SimpleStack from './Screens/SimpleStack';
 import ModalPresentationStack from './Screens/ModalPresentationStack';
 import StackTransparent from './Screens/StackTransparent';
@@ -76,6 +77,11 @@ type RootStackParamList = {
 };
 
 const SCREENS = {
+  ...(Platform.OS === 'web'
+    ? {
+        WebStack: { title: 'Web Stack', component: WebStack },
+      }
+    : null),
   SimpleStack: { title: 'Simple Stack', component: SimpleStack },
   ModalPresentationStack: {
     title: 'Modal Presentation Stack',
