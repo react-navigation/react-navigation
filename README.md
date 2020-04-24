@@ -14,6 +14,30 @@ If you are looking for version 4, the code can be found in the [4.x branch](http
 
 Please read through our [contribution guide](CONTRIBUTING.md) a to get started!
 
+## Installation
+
+### Install the required packages in your React Native project:
+
+```npm install @react-navigation/native```
+<br/>or<br/> 
+```yarn add @react-navigation/native```
+
+### Installing dependencies into an Expo managed project
+
+In your project directory, run:
+
+```expo install react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context @react-native-community/masked-view```
+
+This will install versions of these libraries that are compatible.
+
+### Installing dependencies into a bare React Native project
+
+In your project directory, run:
+
+```npm install react-native-reanimated react-native-gesture-handler react-native-screens react-native-safe-area-context @react-native-community/masked-view```
+<br/>or<br/> 
+```yarn add react-native-reanimated react-native-gesture-handler react-native-screens react-native-safe-area-context @react-native-community/masked-view```
+
 ## Installing from a fork on GitHub
 
 Since we use a monorepo, it's not possible to install a package from the repository URL. If you need to install a forked version from Git, you can use [`gitpkg`](https://github.com/ramasilveyra/gitpkg).
