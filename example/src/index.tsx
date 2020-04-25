@@ -60,6 +60,9 @@ YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
 
 enableScreens();
 
+// @ts-ignore
+global.REACT_NAVIGATION_REDUX_DEVTOOLS_EXTENSION_INTEGRATION_ENABLED = true;
+
 type RootDrawerParamList = {
   Root: undefined;
   Another: undefined;

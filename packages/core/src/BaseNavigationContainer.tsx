@@ -21,6 +21,9 @@ import { NavigationContainerRef, NavigationContainerProps } from './types';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
 
+const DEVTOOLS_CONFIG_KEY =
+  'REACT_NAVIGATION_REDUX_DEVTOOLS_EXTENSION_INTEGRATION_ENABLED';
+
 const MISSING_CONTEXT_ERROR =
   "Couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'? See https://reactnavigation.org/docs/getting-started for setup instructions.";
 
@@ -143,7 +146,9 @@ const BaseNavigationContainer = React.forwardRef(
     );
 
     const { trackState, trackAction } = useDevTools({
-      enabled: false,
+      enabled:
+        // @ts-ignore
+        DEVTOOLS_CONFIG_KEY in global ? global[DEVTOOLS_CONFIG_KEY] : false,
       name: '@react-navigation',
       reset,
       state,
