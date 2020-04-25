@@ -5,6 +5,7 @@ import {
   PartialState,
   InitialState,
 } from '@react-navigation/routers';
+import punycode from 'punycode'
 
 type ParseConfig = Record<string, (value: string) => any>;
 
@@ -72,7 +73,7 @@ export default function getStateFromPath(
   let result: PartialState<NavigationState> | undefined;
   let current: PartialState<NavigationState> | undefined;
 
-  let remaining = path
+  let remaining = punycode.toUnicode(path)
     .replace(/[/]+/, '/') // Replace multiple slash (//) with single ones
     .replace(/^\//, '') // Remove extra leading slash
     .replace(/\?.*/, ''); // Remove query params which we will handle later
