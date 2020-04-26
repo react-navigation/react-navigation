@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import { TabNavigationState, useTheme } from '@react-navigation/native';
+import {
+  NavigationHelpersContext,
+  TabNavigationState,
+  useTheme,
+} from '@react-navigation/native';
 // eslint-disable-next-line import/no-unresolved
 import { ScreenContainer } from 'react-native-screens';
 
@@ -91,44 +95,46 @@ export default class BottomTabView extends React.Component<Props, State> {
   };
 
   render() {
-    const { state, descriptors, lazy } = this.props;
+    const { state, descriptors, navigation, lazy } = this.props;
     const { routes } = state;
     const { loaded } = this.state;
 
     return (
-      <SafeAreaProviderCompat>
-        <View style={styles.container}>
-          <ScreenContainer style={styles.pages}>
-            {routes.map((route, index) => {
-              const descriptor = descriptors[route.key];
-              const { unmountOnBlur } = descriptor.options;
-              const isFocused = state.index === index;
+      <NavigationHelpersContext.Provider value={navigation}>
+        <SafeAreaProviderCompat>
+          <View style={styles.container}>
+            <ScreenContainer style={styles.pages}>
+              {routes.map((route, index) => {
+                const descriptor = descriptors[route.key];
+                const { unmountOnBlur } = descriptor.options;
+                const isFocused = state.index === index;
 
-              if (unmountOnBlur && !isFocused) {
-                return null;
-              }
+                if (unmountOnBlur && !isFocused) {
+                  return null;
+                }
 
-              if (lazy && !loaded.includes(index) && !isFocused) {
-                // Don't render a screen if we've never navigated to it
-                return null;
-              }
+                if (lazy && !loaded.includes(index) && !isFocused) {
+                  // Don't render a screen if we've never navigated to it
+                  return null;
+                }
 
-              return (
-                <ResourceSavingScene
-                  key={route.key}
-                  style={StyleSheet.absoluteFill}
-                  isVisible={isFocused}
-                >
-                  <SceneContent isFocused={isFocused}>
-                    {descriptor.render()}
-                  </SceneContent>
-                </ResourceSavingScene>
-              );
-            })}
-          </ScreenContainer>
-          {this.renderTabBar()}
-        </View>
-      </SafeAreaProviderCompat>
+                return (
+                  <ResourceSavingScene
+                    key={route.key}
+                    style={StyleSheet.absoluteFill}
+                    isVisible={isFocused}
+                  >
+                    <SceneContent isFocused={isFocused}>
+                      {descriptor.render()}
+                    </SceneContent>
+                  </ResourceSavingScene>
+                );
+              })}
+            </ScreenContainer>
+            {this.renderTabBar()}
+          </View>
+        </SafeAreaProviderCompat>
+      </NavigationHelpersContext.Provider>
     );
   }
 }

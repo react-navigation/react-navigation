@@ -3,6 +3,7 @@ export * from '@react-navigation/routers';
 export { default as BaseNavigationContainer } from './BaseNavigationContainer';
 export { default as createNavigatorFactory } from './createNavigatorFactory';
 
+export { default as NavigationHelpersContext } from './NavigationHelpersContext';
 export { default as NavigationContext } from './NavigationContext';
 export { default as NavigationRouteContext } from './NavigationRouteContext';
 

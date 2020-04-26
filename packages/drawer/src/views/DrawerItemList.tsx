@@ -32,7 +32,7 @@ export default function DrawerItemList({
   itemStyle,
   labelStyle,
 }: Props) {
-  const buildLink = useLinkBuilder({ navigation });
+  const buildLink = useLinkBuilder();
 
   return (state.routes.map((route, i) => {
     const focused = i === state.index;
