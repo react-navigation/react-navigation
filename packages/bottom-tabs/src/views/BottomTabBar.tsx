@@ -51,7 +51,7 @@ export default function BottomTabBar({
   tabStyle,
 }: Props) {
   const { colors } = useTheme();
-  const buildLink = useLinkBuilder({ navigation });
+  const buildLink = useLinkBuilder();
 
   const [dimensions, setDimensions] = React.useState(() => {
     const { height = 0, width = 0 } = Dimensions.get('window');

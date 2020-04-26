@@ -16,6 +16,7 @@ import {
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
 import {
+  NavigationHelpersContext,
   DrawerNavigationState,
   DrawerActions,
   useTheme,
@@ -201,59 +202,61 @@ export default function DrawerView({
   const { gestureEnabled, swipeEnabled } = descriptors[activeKey].options;
 
   return (
-    <GestureHandlerWrapper style={styles.content}>
-      <SafeAreaProviderCompat>
-        <DrawerGestureContext.Provider value={drawerGestureRef}>
-          <DrawerOpenContext.Provider value={isDrawerOpen}>
-            <Drawer
-              open={isDrawerOpen}
-              gestureEnabled={gestureEnabled}
-              swipeEnabled={swipeEnabled}
-              onOpen={handleDrawerOpen}
-              onClose={handleDrawerClose}
-              onGestureRef={(ref) => {
-                // @ts-ignore
-                drawerGestureRef.current = ref;
-              }}
-              gestureHandlerProps={gestureHandlerProps}
-              drawerType={drawerType}
-              drawerPosition={drawerPosition}
-              sceneContainerStyle={[
-                { backgroundColor: colors.background },
-                sceneContainerStyle,
-              ]}
-              drawerStyle={[
-                {
-                  width: getDefaultDrawerWidth(dimensions),
-                  backgroundColor: colors.card,
-                },
-                drawerType === 'permanent' &&
-                  (drawerPosition === 'left'
-                    ? {
-                        borderRightColor: colors.border,
-                        borderRightWidth: StyleSheet.hairlineWidth,
-                      }
-                    : {
-                        borderLeftColor: colors.border,
-                        borderLeftWidth: StyleSheet.hairlineWidth,
-                      }),
-                drawerStyle,
-              ]}
-              overlayStyle={{ backgroundColor: overlayColor }}
-              swipeEdgeWidth={edgeWidth}
-              swipeDistanceThreshold={minSwipeDistance}
-              hideStatusBar={hideStatusBar}
-              statusBarAnimation={statusBarAnimation}
-              renderDrawerContent={renderNavigationView}
-              renderSceneContent={renderContent}
-              keyboardDismissMode={keyboardDismissMode}
-              drawerPostion={drawerPosition}
-              dimensions={dimensions}
-            />
-          </DrawerOpenContext.Provider>
-        </DrawerGestureContext.Provider>
-      </SafeAreaProviderCompat>
-    </GestureHandlerWrapper>
+    <NavigationHelpersContext.Provider value={navigation}>
+      <GestureHandlerWrapper style={styles.content}>
+        <SafeAreaProviderCompat>
+          <DrawerGestureContext.Provider value={drawerGestureRef}>
+            <DrawerOpenContext.Provider value={isDrawerOpen}>
+              <Drawer
+                open={isDrawerOpen}
+                gestureEnabled={gestureEnabled}
+                swipeEnabled={swipeEnabled}
+                onOpen={handleDrawerOpen}
+                onClose={handleDrawerClose}
+                onGestureRef={(ref) => {
+                  // @ts-ignore
+                  drawerGestureRef.current = ref;
+                }}
+                gestureHandlerProps={gestureHandlerProps}
+                drawerType={drawerType}
+                drawerPosition={drawerPosition}
+                sceneContainerStyle={[
+                  { backgroundColor: colors.background },
+                  sceneContainerStyle,
+                ]}
+                drawerStyle={[
+                  {
+                    width: getDefaultDrawerWidth(dimensions),
+                    backgroundColor: colors.card,
+                  },
+                  drawerType === 'permanent' &&
+                    (drawerPosition === 'left'
+                      ? {
+                          borderRightColor: colors.border,
+                          borderRightWidth: StyleSheet.hairlineWidth,
+                        }
+                      : {
+                          borderLeftColor: colors.border,
+                          borderLeftWidth: StyleSheet.hairlineWidth,
+                        }),
+                  drawerStyle,
+                ]}
+                overlayStyle={{ backgroundColor: overlayColor }}
+                swipeEdgeWidth={edgeWidth}
+                swipeDistanceThreshold={minSwipeDistance}
+                hideStatusBar={hideStatusBar}
+                statusBarAnimation={statusBarAnimation}
+                renderDrawerContent={renderNavigationView}
+                renderSceneContent={renderContent}
+                keyboardDismissMode={keyboardDismissMode}
+                drawerPostion={drawerPosition}
+                dimensions={dimensions}
+              />
+            </DrawerOpenContext.Provider>
+          </DrawerGestureContext.Provider>
+        </SafeAreaProviderCompat>
+      </GestureHandlerWrapper>
+    </NavigationHelpersContext.Provider>
   );
 }
 
