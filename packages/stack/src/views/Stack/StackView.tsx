@@ -3,6 +3,7 @@ import { View, Platform, StyleSheet } from 'react-native';
 import { SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
+  NavigationHelpersContext,
   StackActions,
   StackNavigationState,
   Route,
@@ -405,7 +406,6 @@ export default class StackView extends React.Component<Props, State> {
   render() {
     const {
       state,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       navigation,
       keyboardHandlingEnabled,
       mode = 'card',
@@ -423,38 +423,40 @@ export default class StackView extends React.Component<Props, State> {
       mode !== 'modal' && Platform.OS === 'ios' ? 'float' : 'screen';
 
     return (
-      <GestureHandlerWrapper style={styles.container}>
-        <SafeAreaProviderCompat>
-          <SafeAreaConsumer>
-            {(insets) => (
-              <KeyboardManager enabled={keyboardHandlingEnabled !== false}>
-                {(props) => (
-                  <CardStack
-                    mode={mode}
-                    insets={insets as EdgeInsets}
-                    getPreviousRoute={this.getPreviousRoute}
-                    getGesturesEnabled={this.getGesturesEnabled}
-                    routes={routes}
-                    openingRouteKeys={openingRouteKeys}
-                    closingRouteKeys={closingRouteKeys}
-                    onOpenRoute={this.handleOpenRoute}
-                    onCloseRoute={this.handleCloseRoute}
-                    onTransitionStart={this.handleTransitionStart}
-                    onTransitionEnd={this.handleTransitionEnd}
-                    renderHeader={this.renderHeader}
-                    renderScene={this.renderScene}
-                    headerMode={headerMode}
-                    state={state}
-                    descriptors={descriptors}
-                    {...rest}
-                    {...props}
-                  />
-                )}
-              </KeyboardManager>
-            )}
-          </SafeAreaConsumer>
-        </SafeAreaProviderCompat>
-      </GestureHandlerWrapper>
+      <NavigationHelpersContext.Provider value={navigation}>
+        <GestureHandlerWrapper style={styles.container}>
+          <SafeAreaProviderCompat>
+            <SafeAreaConsumer>
+              {(insets) => (
+                <KeyboardManager enabled={keyboardHandlingEnabled !== false}>
+                  {(props) => (
+                    <CardStack
+                      mode={mode}
+                      insets={insets as EdgeInsets}
+                      getPreviousRoute={this.getPreviousRoute}
+                      getGesturesEnabled={this.getGesturesEnabled}
+                      routes={routes}
+                      openingRouteKeys={openingRouteKeys}
+                      closingRouteKeys={closingRouteKeys}
+                      onOpenRoute={this.handleOpenRoute}
+                      onCloseRoute={this.handleCloseRoute}
+                      onTransitionStart={this.handleTransitionStart}
+                      onTransitionEnd={this.handleTransitionEnd}
+                      renderHeader={this.renderHeader}
+                      renderScene={this.renderScene}
+                      headerMode={headerMode}
+                      state={state}
+                      descriptors={descriptors}
+                      {...rest}
+                      {...props}
+                    />
+                  )}
+                </KeyboardManager>
+              )}
+            </SafeAreaConsumer>
+          </SafeAreaProviderCompat>
+        </GestureHandlerWrapper>
+      </NavigationHelpersContext.Provider>
     );
   }
 }

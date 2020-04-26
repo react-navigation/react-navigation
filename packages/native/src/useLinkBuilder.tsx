@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {
   NavigationHelpers,
+  NavigationHelpersContext,
   NavigationProp,
   ParamListBase,
-  EventMapBase,
   getPathFromState,
 } from '@react-navigation/core';
 import LinkingContext from './LinkingContext';
@@ -17,7 +17,7 @@ type MinimalState = {
   routes: { name: string; params?: object; state?: MinimalState }[];
 };
 
-const getRootState = (
+const getRootStateForNavigate = (
   navigation: NavigationObject,
   state: MinimalState
 ): MinimalState => {
@@ -26,7 +26,7 @@ const getRootState = (
   if (parent) {
     const parentState = parent.dangerouslyGetState();
 
-    return getRootState(parent, {
+    return getRootStateForNavigate(parent, {
       index: 0,
       routes: [
         {
@@ -43,24 +43,26 @@ const getRootState = (
 /**
  * Build destination link for a navigate action.
  * Useful for showing anchor tags on the web for buttons that perform navigation.
- *
- * @param options.navigation Navigation object for the navigator.
  */
-export default function useLinkBuilder({
-  navigation,
-}: {
-  navigation: NavigationHelpers<ParamListBase, EventMapBase>;
-}) {
+export default function useLinkBuilder() {
+  const navigation = React.useContext(NavigationHelpersContext);
   const linking = React.useContext(LinkingContext);
 
   const buildLink = React.useCallback(
     (name: string, params?: object) => {
       const { options } = linking;
 
-      const state = getRootState(navigation, {
-        index: 0,
-        routes: [{ name, params }],
-      });
+      // If we couldn't find a navigation object in context, we're at root
+      // So we'll construct a basic state object to use
+      const state = navigation
+        ? getRootStateForNavigate(navigation, {
+            index: 0,
+            routes: [{ name, params }],
+          })
+        : {
+            index: 0,
+            routes: [{ name, params }],
+          };
 
       const path = options?.getPathFromState
         ? options.getPathFromState(state, options?.config)

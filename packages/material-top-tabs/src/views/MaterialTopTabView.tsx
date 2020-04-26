@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { TabView, SceneRendererProps } from 'react-native-tab-view';
 import {
+  NavigationHelpersContext,
   TabNavigationState,
   TabActions,
   useTheme,
@@ -45,25 +46,27 @@ export default function MaterialTopTabView({
   };
 
   return (
-    <TabView
-      {...rest}
-      onIndexChange={(index) =>
-        navigation.dispatch({
-          ...TabActions.jumpTo(state.routes[index].name),
-          target: state.key,
-        })
-      }
-      renderScene={({ route }) => descriptors[route.key].render()}
-      navigationState={state}
-      renderTabBar={renderTabBar}
-      renderPager={pager}
-      renderLazyPlaceholder={lazyPlaceholder}
-      onSwipeStart={() => navigation.emit({ type: 'swipeStart' })}
-      onSwipeEnd={() => navigation.emit({ type: 'swipeEnd' })}
-      sceneContainerStyle={[
-        { backgroundColor: colors.background },
-        sceneContainerStyle,
-      ]}
-    />
+    <NavigationHelpersContext.Provider value={navigation}>
+      <TabView
+        {...rest}
+        onIndexChange={(index) =>
+          navigation.dispatch({
+            ...TabActions.jumpTo(state.routes[index].name),
+            target: state.key,
+          })
+        }
+        renderScene={({ route }) => descriptors[route.key].render()}
+        navigationState={state}
+        renderTabBar={renderTabBar}
+        renderPager={pager}
+        renderLazyPlaceholder={lazyPlaceholder}
+        onSwipeStart={() => navigation.emit({ type: 'swipeStart' })}
+        onSwipeEnd={() => navigation.emit({ type: 'swipeEnd' })}
+        sceneContainerStyle={[
+          { backgroundColor: colors.background },
+          sceneContainerStyle,
+        ]}
+      />
+    </NavigationHelpersContext.Provider>
   );
 }
