@@ -119,6 +119,7 @@ export default function BottomTabBarItem({
     style,
     onPress,
     href,
+    accessibilityRole,
     ...rest
   }: BottomTabBarButtonProps) => {
     if (Platform.OS === 'web' && href) {
@@ -127,18 +128,28 @@ export default function BottomTabBarItem({
       return (
         <Link
           {...rest}
-          // @ts-ignore
-          accessibilityRole="link"
-          onLink={onPress}
           to={href}
           style={[styles.button, style]}
+          onPress={(e: any) => {
+            if (
+              !(e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) && // ignore clicks with modifier keys
+              (e.button == null || e.button === 0) // ignore everything but left clicks
+            ) {
+              e.preventDefault();
+              onPress?.(e);
+            }
+          }}
         >
           {children}
         </Link>
       );
     } else {
       return (
-        <TouchableWithoutFeedback {...rest} onPress={onPress}>
+        <TouchableWithoutFeedback
+          {...rest}
+          accessibilityRole={accessibilityRole}
+          onPress={onPress}
+        >
           <View style={style}>{children}</View>
         </TouchableWithoutFeedback>
       );

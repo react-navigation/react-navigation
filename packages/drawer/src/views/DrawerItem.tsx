@@ -71,6 +71,7 @@ const Touchable = ({
   style,
   onPress,
   href,
+  accessibilityRole,
   delayPressIn,
   ...rest
 }: TouchableWithoutFeedbackProps & {
@@ -84,18 +85,29 @@ const Touchable = ({
     return (
       <Link
         {...rest}
-        // @ts-ignore
-        accessibilityRole="link"
-        onLink={onPress}
         to={href}
         style={[styles.button, style]}
+        onPress={(e: any) => {
+          if (
+            !(e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) && // ignore clicks with modifier keys
+            (e.button == null || e.button === 0) // ignore everything but left clicks
+          ) {
+            e.preventDefault();
+            onPress?.(e);
+          }
+        }}
       >
         {children}
       </Link>
     );
   } else {
     return (
-      <TouchableItem {...rest} delayPressIn={delayPressIn} onPress={onPress}>
+      <TouchableItem
+        {...rest}
+        accessibilityRole={accessibilityRole}
+        delayPressIn={delayPressIn}
+        onPress={onPress}
+      >
         <View style={style}>{children}</View>
       </TouchableItem>
     );
