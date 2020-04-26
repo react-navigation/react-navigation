@@ -5,12 +5,9 @@ import useLinkTo from './useLinkTo';
 type Props = {
   to: string;
   target?: string;
-  onLink?: (
-    e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
-  ) => void;
 } & (TextProps & { children: React.ReactNode });
 
-export default function Link({ to, children, onLink, ...rest }: Props) {
+export default function Link({ to, children, ...rest }: Props) {
   const linkTo = useLinkTo();
 
   const onPress = (
@@ -24,13 +21,13 @@ export default function Link({ to, children, onLink, ...rest }: Props) {
     let shouldHandle = false;
 
     if (Platform.OS !== 'web' || !event) {
-      shouldHandle = event ? !event.defaultPrevented : true;
+      shouldHandle = event ? !e.defaultPrevented : true;
     } else if (
-      !event.defaultPrevented && // onPress prevented default
+      !e.defaultPrevented && // onPress prevented default
       // @ts-ignore
-      !(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey) && // ignore clicks with modifier keys
+      !(e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) && // ignore clicks with modifier keys
       // @ts-ignore
-      (event.button == null || event.button === 0) && // ignore everything but left clicks
+      (e.button == null || e.button === 0) && // ignore everything but left clicks
       (rest.target == null || rest.target === '_self') // let browser handle "target=_blank" etc.
     ) {
       event.preventDefault();
@@ -38,11 +35,7 @@ export default function Link({ to, children, onLink, ...rest }: Props) {
     }
 
     if (shouldHandle) {
-      if (onLink) {
-        onLink(e);
-      } else {
-        linkTo(to);
-      }
+      linkTo(to);
     }
   };
 
