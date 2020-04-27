@@ -1,13 +1,27 @@
 import * as React from 'react';
 import { Text, TextProps, Platform, GestureResponderEvent } from 'react-native';
+import {
+  NavigationAction,
+  NavigationHelpersContext,
+} from '@react-navigation/core';
 import useLinkTo from './useLinkTo';
 
 type Props = {
   to: string;
+  action?: NavigationAction;
   target?: string;
 } & (TextProps & { children: React.ReactNode });
 
-export default function Link({ to, children, ...rest }: Props) {
+/**
+ * Component to render link to another screen using a path.
+ * Uses an anchor tag on the web.
+ *
+ * @param props.to Absolute path to screen (e.g. `/feeds/hot`).
+ * @param props.action Optional action to use for in-page navigation. By default, the path is parsed to an action based on linking config.
+ * @param props.children Child elements to render the content.
+ */
+export default function Link({ to, action, children, ...rest }: Props) {
+  const navigation = React.useContext(NavigationHelpersContext);
   const linkTo = useLinkTo();
 
   const onPress = (
@@ -35,7 +49,15 @@ export default function Link({ to, children, ...rest }: Props) {
     }
 
     if (shouldHandle) {
-      linkTo(to);
+      if (action) {
+        if (navigation) {
+          navigation.dispatch(action);
+        } else {
+          throw new Error("Couldn't find a navigation object.");
+        }
+      } else {
+        linkTo(to);
+      }
     }
   };
 

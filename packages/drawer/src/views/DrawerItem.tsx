@@ -31,7 +31,7 @@ type Props = {
   /**
    * URL to use for the link to the tab.
    */
-  href?: string;
+  to?: string;
   /**
    * Whether to highlight the drawer item as active.
    */
@@ -70,22 +70,22 @@ const Touchable = ({
   children,
   style,
   onPress,
-  href,
+  to,
   accessibilityRole,
   delayPressIn,
   ...rest
 }: TouchableWithoutFeedbackProps & {
-  href?: string;
+  to?: string;
   children: React.ReactNode;
   onPress?: () => void;
 }) => {
-  if (Platform.OS === 'web' && href) {
+  if (Platform.OS === 'web' && to) {
     // React Native Web doesn't forward `onClick` if we use `TouchableWithoutFeedback`.
     // We need to use `onClick` to be able to prevent default browser handling of links.
     return (
       <Link
         {...rest}
-        to={href}
+        to={to}
         style={[styles.button, style]}
         onPress={(e: any) => {
           if (
@@ -124,7 +124,7 @@ export default function DrawerItem(props: Props) {
     icon,
     label,
     labelStyle,
-    href,
+    to,
     focused = false,
     activeTintColor = colors.primary,
     inactiveTintColor = Color(colors.text).alpha(0.68).rgb().string(),
@@ -157,7 +157,7 @@ export default function DrawerItem(props: Props) {
         accessibilityComponentType="button"
         accessibilityRole="button"
         accessibilityStates={focused ? ['selected'] : []}
-        href={href}
+        to={to}
       >
         <React.Fragment>
           {iconNode}

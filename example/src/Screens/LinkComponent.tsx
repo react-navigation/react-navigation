@@ -3,6 +3,7 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { Button } from 'react-native-paper';
 import {
   Link,
+  StackActions,
   RouteProp,
   ParamListBase,
   useLinkTo,
@@ -45,6 +46,13 @@ const ArticleScreen = ({
           style={[styles.button, { padding: 8 }]}
         >
           Go to /link-component/Album
+        </Link>
+        <Link
+          to="/link-component/Album"
+          action={StackActions.replace('Album')}
+          style={[styles.button, { padding: 8 }]}
+        >
+          Replace with /link-component/Album
         </Link>
         <LinkButton
           to="/link-component/Album"
