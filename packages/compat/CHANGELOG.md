@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.10](https://github.com/react-navigation/react-navigation/tree/master/packages/compat/compare/@react-navigation/compat@5.1.9...@react-navigation/compat@5.1.10) (2020-04-27)
+
+
+### Bug Fixes
+
+* fix typo in navigationOptions ([8cbb201](https://github.com/react-navigation/react-navigation/tree/master/packages/compat/commit/8cbb201f1a7fb90e45a078df6bc42ce4771cc6a6))
+* spread parent params to children in compat navigator ([24febf6](https://github.com/react-navigation/react-navigation/tree/master/packages/compat/commit/24febf6ea99be2e5f22005fdd2a82136d647255c)), closes [#6785](https://github.com/react-navigation/react-navigation/tree/master/packages/compat/issues/6785)
+
+
+
+
+
 ## [5.1.9](https://github.com/react-navigation/react-navigation/tree/master/packages/compat/compare/@react-navigation/compat@5.1.8...@react-navigation/compat@5.1.9) (2020-04-17)
 
 **Note:** Version bump only for package @react-navigation/compat
