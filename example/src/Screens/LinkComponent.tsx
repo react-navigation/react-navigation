@@ -6,7 +6,7 @@ import {
   StackActions,
   RouteProp,
   ParamListBase,
-  useLinkTo,
+  useLinkProps,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -26,9 +26,9 @@ const LinkButton = ({
   to,
   ...rest
 }: React.ComponentProps<typeof Button> & { to: string }) => {
-  const linkTo = useLinkTo();
+  const props = useLinkProps({ to });
 
-  return <Button onPress={() => linkTo(to)} {...rest} />;
+  return <Button {...props} {...rest} />;
 };
 
 const ArticleScreen = ({
