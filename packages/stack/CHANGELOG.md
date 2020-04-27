@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.14](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.13...@react-navigation/stack@5.2.14) (2020-04-27)
+
+
+### Bug Fixes
+
+* don't add back the route being replaced ([a695cf9](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/a695cf9c058521ccb4a83eb206dc0da7ce100032))
+
+
+
+
+
 ## [5.2.12](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.11...@react-navigation/stack@5.2.12) (2020-04-22)
 
 

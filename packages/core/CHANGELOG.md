@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.3.5](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.3.4...@react-navigation/core@5.3.5) (2020-04-27)
+
+
+### Bug Fixes
+
+* add config to enable redux devtools integration ([c9c825b](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/c9c825bee61426635a28ee149eeeff3d628171cd))
+
+
+
+
+
 ## [5.3.4](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.3.3...@react-navigation/core@5.3.4) (2020-04-17)
 
 
