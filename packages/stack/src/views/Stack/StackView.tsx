@@ -331,6 +331,7 @@ export default class StackView extends React.Component<Props, State> {
     const { state, navigation } = this.props;
 
     if (
+      this.state.replacingRouteKeys.every((key) => key !== route.key) &&
       state.routeNames.includes(route.name) &&
       !state.routes.some((r) => r.key === route.key)
     ) {
