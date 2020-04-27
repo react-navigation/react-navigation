@@ -54,7 +54,7 @@ type ResultState = PartialState<NavigationState> & {
  * ```
  * @param path Path string to parse and convert, e.g. /foo/bar?count=42.
  * @param options Extra options to fine-tune how to parse the path.
- * @param _url Full URL that the path was parsed from, e.g. https://www.example.com/foo/bar?count=42.
+ * @param _url Full URL that the path was extracted from, e.g. https://www.example.com/foo/bar?count=42.
  */
 export default function getStateFromPath(
   path: string,
