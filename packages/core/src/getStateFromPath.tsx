@@ -48,15 +48,18 @@ type ResultState = PartialState<NavigationState> & {
  *       path: 'chat/:author/:id',
  *       parse: { id: Number }
  *     }
- *   }
+ *   },
+ *   'https://www.example.com/chat/jane/42'
  * )
  * ```
  * @param path Path string to parse and convert, e.g. /foo/bar?count=42.
  * @param options Extra options to fine-tune how to parse the path.
+ * @param _url Full URL that the path was parsed from, e.g. https://www.example.com/foo/bar?count=42.
  */
 export default function getStateFromPath(
   path: string,
-  options: Options = {}
+  options: Options = {},
+  _url?: string
 ): ResultState | undefined {
   if (path === '') {
     return undefined;

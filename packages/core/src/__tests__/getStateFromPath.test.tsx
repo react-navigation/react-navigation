@@ -88,6 +88,61 @@ it('converts path string to initial state with config', () => {
   );
 });
 
+it('converts path string to initial state with config and url', () => {
+  const path = '/foo/bar/sweet/apple/baz/jane?count=10&answer=42&valid=true';
+  const config = {
+    Foo: 'foo',
+    Bar: 'bar/:type/:fruit',
+    Baz: {
+      path: 'baz/:author',
+      parse: {
+        author: (author: string) =>
+          author.replace(/^\w/, (c) => c.toUpperCase()),
+        count: Number,
+        valid: Boolean,
+      },
+      stringify: {
+        author: (author: string) => author.toLowerCase(),
+      },
+    },
+  };
+  const url = `https://www.example.com${path}`;
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              params: { fruit: 'apple', type: 'sweet' },
+              state: {
+                routes: [
+                  {
+                    name: 'Baz',
+                    params: {
+                      author: 'Jane',
+                      count: 10,
+                      answer: '42',
+                      valid: true,
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config, url)).toEqual(state);
+  expect(
+    getStateFromPath(getPathFromState(state, config), config, url)
+  ).toEqual(state);
+});
+
 it('handles leading slash when converting', () => {
   expect(getStateFromPath('/foo/bar/?count=42')).toEqual({
     routes: [

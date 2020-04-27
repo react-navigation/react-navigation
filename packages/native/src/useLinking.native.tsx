@@ -61,8 +61,8 @@ export default function useLinking(
     const url = await Linking.getInitialURL();
     const path = url ? extractPathFromURL(url) : null;
 
-    if (path) {
-      return getStateFromPathRef.current(path, configRef.current);
+    if (path && url) {
+      return getStateFromPathRef.current(path, configRef.current, url);
     } else {
       return undefined;
     }
@@ -74,7 +74,7 @@ export default function useLinking(
       const navigation = ref.current;
 
       if (navigation && path) {
-        const state = getStateFromPathRef.current(path, configRef.current);
+        const state = getStateFromPathRef.current(path, configRef.current, url);
 
         if (state) {
           const action = getActionFromState(state);

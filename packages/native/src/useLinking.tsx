@@ -69,7 +69,11 @@ export default function useLinking(
     const path = location.pathname + location.search;
 
     if (path) {
-      return getStateFromPathRef.current(path, configRef.current);
+      return getStateFromPathRef.current(
+        path,
+        configRef.current,
+        location.href
+      );
     } else {
       return undefined;
     }
@@ -152,7 +156,8 @@ export default function useLinking(
 
         const state = getStateFromPathRef.current(
           location.pathname + location.search,
-          configRef.current
+          configRef.current,
+          location.href
         );
 
         pendingStateMultiUpdateRef.current = true;
