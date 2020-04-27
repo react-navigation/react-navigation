@@ -42,7 +42,7 @@ type Props = {
   /**
    * URL to use for the link to the tab.
    */
-  href?: string;
+  to?: string;
   /**
    * The button for the tab. Uses a `TouchableWithoutFeedback` by default.
    */
@@ -113,22 +113,22 @@ export default function BottomTabBarItem({
   route,
   label,
   icon,
-  href,
+  to,
   button = ({
     children,
     style,
     onPress,
-    href,
+    to,
     accessibilityRole,
     ...rest
   }: BottomTabBarButtonProps) => {
-    if (Platform.OS === 'web' && href) {
+    if (Platform.OS === 'web' && to) {
       // React Native Web doesn't forward `onClick` if we use `TouchableWithoutFeedback`.
       // We need to use `onClick` to be able to prevent default browser handling of links.
       return (
         <Link
           {...rest}
-          to={href}
+          to={to}
           style={[styles.button, style]}
           onPress={(e: any) => {
             if (
@@ -242,7 +242,7 @@ export default function BottomTabBarItem({
     : inactiveBackgroundColor;
 
   return button({
-    href,
+    to,
     onPress,
     onLongPress,
     testID,

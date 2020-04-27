@@ -56,7 +56,7 @@ export default function DrawerItemList({
         inactiveBackgroundColor={inactiveBackgroundColor}
         labelStyle={labelStyle}
         style={itemStyle}
-        href={buildLink(route.name, route.params)}
+        to={buildLink(route.name, route.params)}
         onPress={() => {
           navigation.dispatch({
             ...(focused
