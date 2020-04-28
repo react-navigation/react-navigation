@@ -115,70 +115,66 @@ export default function getPathFromState(
       pattern = nestedRouteNames.substring(1);
     }
 
-    // we don't add empty path strings to path
-    if (pattern !== '') {
-      const config =
-        currentOptions[route.name] !== undefined
-          ? (currentOptions[route.name] as { stringify?: StringifyConfig })
-              .stringify
-          : undefined;
-
-      const params = route.params
-        ? // Stringify all of the param values before we use them
-          Object.entries(route.params).reduce<{
-            [key: string]: string;
-          }>((acc, [key, value]) => {
-            acc[key] = config?.[key] ? config[key](value) : String(value);
-            return acc;
-          }, {})
+    const config =
+      currentOptions[route.name] !== undefined
+        ? (currentOptions[route.name] as { stringify?: StringifyConfig })
+            .stringify
         : undefined;
 
-      if (currentOptions[route.name] !== undefined) {
-        path += pattern
-          .split('/')
-          .map((p) => {
-            const name = p.replace(/^:/, '');
+    const params = route.params
+      ? // Stringify all of the param values before we use them
+        Object.entries(route.params).reduce<{
+          [key: string]: string;
+        }>((acc, [key, value]) => {
+          acc[key] = config?.[key] ? config[key](value) : String(value);
+          return acc;
+        }, {})
+      : undefined;
 
-            // If the path has a pattern for a param, put the param in the path
-            if (params && name in params && p.startsWith(':')) {
-              const value = params[name];
-              // Remove the used value from the params object since we'll use the rest for query string
-              // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-              delete params[name];
-              return encodeURIComponent(value);
-            }
+    if (currentOptions[route.name] !== undefined) {
+      path += pattern
+        .split('/')
+        .map((p) => {
+          const name = p.replace(/^:/, '');
 
-            return encodeURIComponent(p);
-          })
-          .join('/');
-      } else {
-        path += encodeURIComponent(route.name);
-      }
-
-      if (route.state) {
-        path += '/';
-      } else if (params) {
-        for (let param in params) {
-          if (params[param] === 'undefined') {
+          // If the path has a pattern for a param, put the param in the path
+          if (params && name in params && p.startsWith(':')) {
+            const value = params[name];
+            // Remove the used value from the params object since we'll use the rest for query string
             // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-            delete params[param];
+            delete params[name];
+            return encodeURIComponent(value);
           }
-        }
-        const query = queryString.stringify(params);
 
-        if (query) {
-          path += `?${query}`;
+          return encodeURIComponent(p);
+        })
+        .join('/');
+    } else {
+      path += encodeURIComponent(route.name);
+    }
+
+    if (route.state) {
+      path += '/';
+    } else if (params) {
+      for (let param in params) {
+        if (params[param] === 'undefined') {
+          // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+          delete params[param];
         }
+      }
+      const query = queryString.stringify(params);
+
+      if (query) {
+        path += `?${query}`;
       }
     }
 
     current = route.state;
   }
 
-  path =
-    path !== '/' && path.slice(path.length - 1) === '/'
-      ? path.slice(0, -1)
-      : path;
+  // Remove multiple as well as trailing slashes
+  path = path.replace(/\/+/, '/');
+  path = path.length > 1 ? path.replace(/\/$/, '') : path;
 
   return path;
 }
