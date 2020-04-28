@@ -57,9 +57,6 @@ export default function useLinkProps({ to, action }: Props) {
   return {
     href: to,
     accessibilityRole: 'link' as const,
-    ...Platform.select({
-      web: { onClick: onPress } as any,
-      default: { onPress },
-    }),
+    onPress,
   };
 }

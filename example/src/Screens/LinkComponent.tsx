@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, Platform } from 'react-native';
 import { Button } from 'react-native-paper';
 import {
   Link,
@@ -26,9 +26,18 @@ const LinkButton = ({
   to,
   ...rest
 }: React.ComponentProps<typeof Button> & { to: string }) => {
-  const props = useLinkProps({ to });
+  const { onPress, ...props } = useLinkProps({ to });
 
-  return <Button {...props} {...rest} />;
+  return (
+    <Button
+      {...props}
+      {...rest}
+      {...Platform.select({
+        web: { onClick: onPress } as any,
+        default: { onPress },
+      })}
+    />
+  );
 };
 
 const ArticleScreen = ({
