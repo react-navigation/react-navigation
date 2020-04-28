@@ -1,10 +1,8 @@
 import * as React from 'react';
 
-export default function useThenable<T>(
-  create: () => {
-    then(success: (result: T) => void, error?: (error: any) => void): void;
-  }
-) {
+type Thenable<T> = { then(cb: (result: T) => void): void };
+
+export default function useThenable<T>(create: () => Thenable<T>) {
   const [promise] = React.useState(create);
 
   // Check if our thenable is synchronous
@@ -24,20 +22,20 @@ export default function useThenable<T>(
   React.useEffect(() => {
     let cancelled = false;
 
-    if (!resolved) {
-      promise.then(
-        (result) => {
-          if (!cancelled) {
-            setState([true, result]);
-          }
-        },
-        (error) => {
-          if (!cancelled) {
-            console.error(error);
-            setState([true, undefined]);
-          }
+    const resolve = async () => {
+      let result;
+
+      try {
+        result = await promise;
+      } finally {
+        if (!cancelled) {
+          setState([true, result]);
         }
-      );
+      }
+    };
+
+    if (!resolved) {
+      resolve();
     }
 
     return () => {
