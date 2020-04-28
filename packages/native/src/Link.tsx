@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, TextProps, GestureResponderEvent } from 'react-native';
+import { Text, TextProps, GestureResponderEvent, Platform } from 'react-native';
 import { NavigationAction } from '@react-navigation/core';
 import useLinkProps from './useLinkProps';
 
@@ -28,16 +28,15 @@ export default function Link({ to, action, ...rest }: Props) {
       rest.onPress?.(e);
     }
 
-    if (props.onClick) {
-      props.onClick(e);
-    } else {
-      props.onPress(e);
-    }
+    props.onPress(e);
   };
 
   return React.createElement(Text, {
     ...props,
     ...rest,
-    ...(props.onClick ? { onClick: onPress } : { onPress }),
+    ...Platform.select({
+      web: { onClick: onPress } as any,
+      default: { onPress },
+    }),
   });
 }
