@@ -80,11 +80,18 @@ export default function useLinking(
       }
     }
 
+    const then = (callback: (state: ResultState | undefined) => void) =>
+      Promise.resolve(callback(value));
+
     // Make it a thenable to keep consistent with the native impl
-    return {
-      then: (callback: (state: ResultState | undefined) => void) =>
-        callback(value),
+    const thenable = {
+      then,
+      catch() {
+        return thenable;
+      },
     };
+
+    return thenable;
   }, []);
 
   const previousStateLengthRef = React.useRef<number | undefined>(undefined);
