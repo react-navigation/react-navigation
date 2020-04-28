@@ -677,7 +677,7 @@ it('accepts initialRouteName without config for it', () => {
   );
 });
 
-it('returns undefined if path is empty', () => {
+it('returns undefined if path is empty and no matching screen is present', () => {
   const config = {
     Foo: {
       screens: {
@@ -685,6 +685,112 @@ it('returns undefined if path is empty', () => {
         Bar: {
           screens: {
             Baz: 'baz',
+          },
+        },
+      },
+    },
+  };
+
+  const path = '';
+
+  expect(getStateFromPath(path, config)).toEqual(undefined);
+});
+
+it('returns matching screen if path is empty', () => {
+  const path = '';
+  const config = {
+    Foo: {
+      screens: {
+        Foe: 'foe',
+        Bar: {
+          screens: {
+            Qux: '',
+            Baz: 'baz',
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              state: {
+                routes: [{ name: 'Qux' }],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('returns matching screen with params if path is empty', () => {
+  const path = '?foo=42';
+  const config = {
+    Foo: {
+      screens: {
+        Foe: 'foe',
+        Bar: {
+          screens: {
+            Qux: {
+              path: '',
+              parse: { foo: Number },
+            },
+            Baz: 'baz',
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              state: {
+                routes: [{ name: 'Qux', params: { foo: 42 } }],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it("doesn't match nested screen if path is empty", () => {
+  const config = {
+    Foo: {
+      screens: {
+        Foe: 'foe',
+        Bar: {
+          path: 'bar',
+          screens: {
+            Qux: {
+              path: '',
+              parse: { foo: Number },
+            },
           },
         },
       },

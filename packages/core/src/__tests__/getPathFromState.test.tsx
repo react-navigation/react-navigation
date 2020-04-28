@@ -426,6 +426,49 @@ it('ignores empty string paths', () => {
   expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
 });
 
+it('keeps query params if path is empty', () => {
+  const path = '/?foo=42';
+  const config = {
+    Foo: {
+      screens: {
+        Foe: 'foe',
+        Bar: {
+          screens: {
+            Qux: {
+              path: '',
+              parse: { foo: Number },
+            },
+            Baz: 'baz',
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              state: {
+                routes: [{ name: 'Qux', params: { foo: 42 } }],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState(getStateFromPath(path, config), config)).toEqual(
+    path
+  );
+});
+
 it('cuts nested configs too', () => {
   const path = '/baz';
   const config = {
@@ -495,6 +538,8 @@ it('handles empty path at the end', () => {
 });
 
 it('returns "/" for empty path', () => {
+  const path = '/';
+
   const config = {
     Foo: {
       path: '',
@@ -519,7 +564,8 @@ it('returns "/" for empty path', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe('/');
+  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
 });
 
 it('parses no path specified', () => {
