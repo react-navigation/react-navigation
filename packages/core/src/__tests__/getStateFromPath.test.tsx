@@ -801,3 +801,186 @@ it("doesn't match nested screen if path is empty", () => {
 
   expect(getStateFromPath(path, config)).toEqual(undefined);
 });
+
+it('chooses more exhaustive pattern', () => {
+  const path = '/foo/5';
+
+  const config = {
+    Foe: {
+      path: '/',
+      initialRouteName: 'Foo',
+      screens: {
+        Foo: 'foo',
+        Bis: {
+          path: 'foo/:id',
+          parse: {
+            id: Number,
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foe',
+        state: {
+          index: 1,
+          routes: [
+            {
+              name: 'Foo',
+            },
+            {
+              name: 'Bis',
+              params: { id: 5 },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('handles same paths beginnings', () => {
+  const path = '/foos';
+
+  const config = {
+    Foe: {
+      path: '/',
+      initialRouteName: 'Foo',
+      screens: {
+        Foo: 'foo',
+        Bis: {
+          path: 'foos',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foe',
+        state: {
+          index: 1,
+          routes: [
+            {
+              name: 'Foo',
+            },
+            {
+              name: 'Bis',
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('handles same paths beginnings with params', () => {
+  const path = '/foos/5';
+
+  const config = {
+    Foe: {
+      path: '/',
+      initialRouteName: 'Foo',
+      screens: {
+        Foo: 'foo',
+        Bis: {
+          path: 'foos/:id',
+          parse: {
+            id: Number,
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foe',
+        state: {
+          index: 1,
+          routes: [
+            {
+              name: 'Foo',
+            },
+            {
+              name: 'Bis',
+              params: { id: 5 },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('handles not taking path with too many segments', () => {
+  const path = '/foos/5';
+
+  const config = {
+    Foe: {
+      path: '/',
+      initialRouteName: 'Foo',
+      screens: {
+        Foo: 'foo',
+        Bis: {
+          path: 'foos/:id',
+          parse: {
+            id: Number,
+          },
+        },
+        Bas: {
+          path: 'foos/:id/:nip',
+          parse: {
+            id: Number,
+            pwd: Number,
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foe',
+        state: {
+          index: 1,
+          routes: [
+            {
+              name: 'Foo',
+            },
+            {
+              name: 'Bis',
+              params: { id: 5 },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
