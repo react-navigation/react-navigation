@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { View, Platform, StyleSheet } from 'react-native';
 import { SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   NavigationHelpersContext,
   StackActions,
@@ -9,6 +8,7 @@ import {
   Route,
 } from '@react-navigation/native';
 
+import { GestureHandlerRootView } from '../GestureHandler';
 import CardStack from './CardStack';
 import KeyboardManager from '../KeyboardManager';
 import HeaderContainer, {

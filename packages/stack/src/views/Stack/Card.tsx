@@ -9,14 +9,14 @@ import {
   Platform,
   InteractionManager,
 } from 'react-native';
-import {
-  PanGestureHandler,
-  State as GestureState,
-  PanGestureHandlerGestureEvent,
-} from 'react-native-gesture-handler';
 import { EdgeInsets } from 'react-native-safe-area-context';
 import Color from 'color';
-import StackGestureRefContext from '../../utils/GestureHandlerRefContext';
+
+import {
+  PanGestureHandler,
+  GestureState,
+  PanGestureHandlerGestureEvent,
+} from '../GestureHandler';
 import CardAnimationContext from '../../utils/CardAnimationContext';
 import getDistanceForDirection from '../../utils/getDistanceForDirection';
 import getInvertedMultiplier from '../../utils/getInvertedMultiplier';
@@ -412,8 +412,6 @@ export default class Card extends React.Component<Props> {
     }
   }
 
-  private gestureRef = React.createRef<PanGestureHandler>();
-
   private contentRef = React.createRef<View>();
 
   render() {
@@ -499,7 +497,6 @@ export default class Card extends React.Component<Props> {
             pointerEvents="box-none"
           >
             <PanGestureHandler
-              ref={this.gestureRef}
               enabled={layout.width !== 0 && gestureEnabled}
               onGestureEvent={handleGestureEvent}
               onHandlerStateChange={this.handleGestureStateChange}
@@ -527,9 +524,7 @@ export default class Card extends React.Component<Props> {
                   ref={this.contentRef}
                   style={[styles.content, contentStyle]}
                 >
-                  <StackGestureRefContext.Provider value={this.gestureRef}>
-                    {children}
-                  </StackGestureRefContext.Provider>
+                  {children}
                 </View>
               </Animated.View>
             </PanGestureHandler>
