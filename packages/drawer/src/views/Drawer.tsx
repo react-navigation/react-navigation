@@ -10,13 +10,13 @@ import {
   StyleProp,
   View,
   InteractionManager,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 import {
   PanGestureHandler,
   TapGestureHandler,
   GestureState,
-  TapGestureHandlerStateChangeEvent,
 } from './GestureHandler';
 import Overlay from './Overlay';
 
@@ -510,28 +510,17 @@ export default class DrawerView extends React.Component<Props> {
     },
   ]);
 
-  private handleTapStateChange =
-    Platform.OS === 'web'
-      ? // FIXME: Drawer doesn't close on Web with the same code that we use for native
-        ({ nativeEvent }: TapGestureHandlerStateChangeEvent) => {
-          if (
-            nativeEvent.state === GestureState.END &&
-            nativeEvent.oldState === GestureState.ACTIVE
-          ) {
-            this.toggleDrawer(false);
-          }
-        }
-      : event([
-          {
-            nativeEvent: {
-              oldState: (s: Animated.Value<number>) =>
-                cond(
-                  eq(s, GestureState.ACTIVE),
-                  set(this.manuallyTriggerSpring, TRUE)
-                ),
-            },
-          },
-        ]);
+  private handleTapStateChange = event([
+    {
+      nativeEvent: {
+        oldState: (s: Animated.Value<number>) =>
+          cond(
+            eq(s, GestureState.ACTIVE),
+            set(this.manuallyTriggerSpring, TRUE)
+          ),
+      },
+    },
+  ]);
 
   private handleContainerLayout = (e: LayoutChangeEvent) =>
     this.containerWidth.setValue(e.nativeEvent.layout.width);
@@ -660,7 +649,15 @@ export default class DrawerView extends React.Component<Props> {
             </View>
             {
               // Disable overlay if sidebar is permanent
-              drawerType === 'permanent' ? null : (
+              drawerType === 'permanent' ? null : Platform.OS === 'web' ? (
+                <TouchableWithoutFeedback
+                  onPress={
+                    gestureEnabled ? () => this.toggleDrawer(false) : undefined
+                  }
+                >
+                  <Overlay progress={progress} style={overlayStyle} />
+                </TouchableWithoutFeedback>
+              ) : (
                 <TapGestureHandler
                   enabled={gestureEnabled}
                   onHandlerStateChange={this.handleTapStateChange}
