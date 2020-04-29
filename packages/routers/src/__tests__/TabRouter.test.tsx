@@ -882,6 +882,78 @@ it('handles back action with backBehavior: initialRoute', () => {
   ).toEqual(null);
 });
 
+it('handles back action with backBehavior: initialRoute and initialRouteName', () => {
+  const router = TabRouter({
+    backBehavior: 'initialRoute',
+    initialRouteName: 'baz',
+  });
+
+  const options = {
+    routeNames: ['bar', 'baz', 'qux'],
+    routeParamList: {},
+  };
+
+  let state = router.getInitialState(options);
+
+  expect(
+    router.getStateForAction(state, CommonActions.goBack(), options)
+  ).toEqual(null);
+
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('qux'),
+    options
+  ) as TabNavigationState;
+
+  expect(
+    router.getStateForAction(state, CommonActions.goBack(), options)
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    key: 'tab-test',
+    index: 1,
+    routeNames: ['bar', 'baz', 'qux'],
+    routes: [
+      { key: 'bar-test', name: 'bar' },
+      { key: 'baz-test', name: 'baz' },
+      { key: 'qux-test', name: 'qux' },
+    ],
+    history: [{ type: 'route', key: 'baz-test' }],
+  });
+
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('bar'),
+    options
+  ) as TabNavigationState;
+
+  expect(
+    router.getStateForAction(state, CommonActions.goBack(), options)
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    key: 'tab-test',
+    index: 1,
+    routeNames: ['bar', 'baz', 'qux'],
+    routes: [
+      { key: 'bar-test', name: 'bar' },
+      { key: 'baz-test', name: 'baz' },
+      { key: 'qux-test', name: 'qux' },
+    ],
+    history: [{ type: 'route', key: 'baz-test' }],
+  });
+
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('baz'),
+    options
+  ) as TabNavigationState;
+
+  expect(
+    router.getStateForAction(state, CommonActions.goBack(), options)
+  ).toEqual(null);
+});
+
 it('handles back action with backBehavior: none', () => {
   const router = TabRouter({ backBehavior: 'none' });
   const options = {
