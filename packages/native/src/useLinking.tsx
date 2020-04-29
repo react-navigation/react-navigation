@@ -10,6 +10,15 @@ import { LinkingOptions } from './types';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
+type HistoryState = { index: number };
+
+declare const history: {
+  state?: HistoryState;
+  go(delta: number): void;
+  pushState(state: HistoryState, title: string, url: string): void;
+  replaceState(state: HistoryState, title: string, url: string): void;
+};
+
 const getStateLength = (state: NavigationState) => {
   let length = 0;
 
