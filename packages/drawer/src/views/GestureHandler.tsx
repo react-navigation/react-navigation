@@ -28,7 +28,4 @@ export const GestureState = {
   END: 5,
 };
 
-export type {
-  PanGestureHandlerGestureEvent,
-  TapGestureHandlerStateChangeEvent,
-} from 'react-native-gesture-handler';
+export type { PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
