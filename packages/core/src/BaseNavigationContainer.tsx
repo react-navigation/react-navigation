@@ -219,6 +219,8 @@ const BaseNavigationContainer = React.forwardRef(
       dispatch,
       canGoBack,
       getRootState,
+      dangerouslyGetState: () => state,
+      dangerouslyGetParent: () => undefined,
     }));
 
     const builderContext = React.useMemo(
