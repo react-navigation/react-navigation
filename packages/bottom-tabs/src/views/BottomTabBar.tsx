@@ -35,23 +35,38 @@ export default function BottomTabBar({
   state,
   navigation,
   descriptors,
-  activeBackgroundColor,
-  activeTintColor,
-  adaptive = true,
-  allowFontScaling,
-  inactiveBackgroundColor,
-  inactiveTintColor,
-  keyboardHidesTabBar = false,
-  labelPosition,
-  labelStyle,
-  safeAreaInsets,
-  showIcon,
-  showLabel,
   style,
   tabStyle,
+  labelStyle,
+  ...DefaultTabBarOptions
 }: Props) {
+  const { index, routes } = state;
   const { colors } = useTheme();
   const buildLink = useLinkBuilder();
+
+  // support options.tabBarOptions
+  const {
+    style:screenStyle, 
+    tabStyle:screenTabStyle, 
+    labelStyle:screenLabelStyle,
+    ...screenTabBarOptions
+  } = descriptors[routes[index].key].options.tabBarOptions||{};
+  let {
+    activeBackgroundColor,
+    activeTintColor,
+    adaptive = true,
+    allowFontScaling,
+    inactiveBackgroundColor,
+    inactiveTintColor,
+    keyboardHidesTabBar = false,
+    labelPosition,
+    safeAreaInsets,
+    showIcon,
+    showLabel
+  } = {...DefaultTabBarOptions, ...screenTabBarOptions};
+  style = [style, screenStyle];
+  tabStyle = [tabStyle, screenTabStyle];
+  labelStyle = [labelStyle, screenLabelStyle];
 
   const [dimensions, setDimensions] = React.useState(() => {
     const { height = 0, width = 0 } = Dimensions.get('window');
@@ -67,7 +82,6 @@ export default function BottomTabBar({
 
   const [visible] = React.useState(() => new Animated.Value(1));
 
-  const { routes } = state;
 
   React.useEffect(() => {
     if (keyboardShown) {
@@ -175,6 +189,10 @@ export default function BottomTabBar({
     left: safeAreaInsets?.left ?? defaultInsets.left,
   };
 
+  // add insets.bottom to custom style.height
+  const {height, ...tabBarStyle} = StyleSheet.flatten(style);
+  const tabBarHeight = typeof height === 'number' ? height : DEFAULT_TABBAR_HEIGHT;
+
   return (
     <Animated.View
       style={[
@@ -200,11 +218,11 @@ export default function BottomTabBar({
             }
           : null,
         {
-          height: DEFAULT_TABBAR_HEIGHT + insets.bottom,
+          height: tabBarHeight + insets.bottom,
           paddingBottom: insets.bottom,
           paddingHorizontal: Math.max(insets.left, insets.right),
         },
-        style,
+        tabBarStyle,
       ]}
       pointerEvents={keyboardHidesTabBar && keyboardShown ? 'none' : 'auto'}
     >

@@ -96,6 +96,11 @@ export type BottomTabNavigationOptions = {
    * Defaults to `false`.
    */
   unmountOnBlur?: boolean;
+  
+  /**
+   * support screen reset Navigator.props.tabBarOptions
+   */
+  tabBarOptions?: BottomTabBarOptions;
 };
 
 export type BottomTabDescriptor = Descriptor<
