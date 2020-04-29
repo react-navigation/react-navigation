@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   ScrollView,
-  AsyncStorage,
   YellowBox,
   Platform,
   StatusBar,
@@ -42,6 +41,7 @@ import {
   HeaderStyleInterpolators,
 } from '@react-navigation/stack';
 
+import AsyncStorage from './AsyncStorage';
 import LinkingPrefixes from './LinkingPrefixes';
 import SettingsItem from './Shared/SettingsItem';
 import SimpleStack from './Screens/SimpleStack';
