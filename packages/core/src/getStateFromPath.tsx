@@ -1,4 +1,3 @@
-import escape from 'escape-string-regexp';
 import queryString from 'query-string';
 import {
   NavigationState,
@@ -21,7 +20,7 @@ type Options = {
 
 type RouteConfig = {
   screen: string;
-  match: RegExp | null;
+  match: string | null;
   pattern: string;
   routeNames: string[];
   parse: ParseConfig | undefined;
@@ -68,6 +67,12 @@ export default function getStateFromPath(
     )
   );
 
+  // sort configs so the most exhaustive is always first to be chosen
+  configs.sort(
+    (config1, config2) =>
+      config2.pattern.split('/').length - config1.pattern.split('/').length
+  );
+
   let remaining = path
     .replace(/[/]+/, '/') // Replace multiple slash (//) with single ones
     .replace(/^\//, '') // Remove extra leading slash
@@ -109,10 +114,27 @@ export default function getStateFromPath(
         continue;
       }
 
-      const match = remaining.match(config.match);
+      let didMatch = true;
+      const matchParts = config.match.split('/');
+      const remainingParts = remaining.split('/');
 
-      // If our regex matches, we need to extract params from the path
-      if (match) {
+      // we check if remaining path has enough segments to be handled with this pattern
+      if (config.pattern.split('/').length > remainingParts.length) {
+        continue;
+      }
+
+      // we keep info about the index of segment on which the params start
+      let paramsIndex = 0;
+      // the beginning of the remaining path should be the same as the part of config before params
+      for (paramsIndex; paramsIndex < matchParts.length; paramsIndex++) {
+        if (matchParts[paramsIndex] !== remainingParts[paramsIndex]) {
+          didMatch = false;
+          break;
+        }
+      }
+
+      // If the first part of the path matches, we need to extract params from the path
+      if (didMatch) {
         routeNames = [...config.routeNames];
 
         const paramPatterns = config.pattern
@@ -122,8 +144,7 @@ export default function getStateFromPath(
         if (paramPatterns.length) {
           params = paramPatterns.reduce<Record<string, any>>((acc, p, i) => {
             const key = p.replace(/^:/, '');
-            const value = match[i + 1]; // The param segments start from index 1 in the regex match result
-
+            const value = remainingParts[i + paramsIndex]; // The param segments start from the end of matched part
             acc[key] =
               config.parse && config.parse[key]
                 ? config.parse[key](value)
@@ -133,8 +154,16 @@ export default function getStateFromPath(
           }, {});
         }
 
-        // Remove the matched segment from the remaining path
-        remaining = remaining.replace(match[0], '');
+        // if pattern and remaining path have same amount of segments, there should be nothing left
+        if (config.pattern.split('/').length === remainingParts.length) {
+          remaining = '';
+        } else {
+          // For each segment of the pattern, remove one segment from remaining path
+          let i = config.pattern.split('/').length;
+          while (i--) {
+            remaining = remaining.substr(remaining.indexOf('/') + 1);
+          }
+        }
 
         break;
       }
@@ -238,11 +267,8 @@ function createConfigItem(
   pattern: string,
   parse?: ParseConfig
 ): RouteConfig {
-  const match = pattern
-    ? new RegExp(
-        '^' + escape(pattern).replace(/:[a-z0-9]+/gi, '([^/]+)') + '/?'
-      )
-    : null;
+  // part being matched ends on the first param
+  const match = pattern !== '' ? pattern.split('/:')[0] : null;
 
   return {
     screen,
