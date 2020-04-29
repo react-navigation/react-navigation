@@ -11,13 +11,13 @@ import {
   View,
   InteractionManager,
 } from 'react-native';
+import Animated from 'react-native-reanimated';
 import {
   PanGestureHandler,
   TapGestureHandler,
-  State as GestureState,
+  GestureState,
   TapGestureHandlerStateChangeEvent,
-} from 'react-native-gesture-handler';
-import Animated from 'react-native-reanimated';
+} from './GestureHandler';
 import Overlay from './Overlay';
 
 const {
@@ -79,7 +79,6 @@ type Props = {
   open: boolean;
   onOpen: () => void;
   onClose: () => void;
-  onGestureRef?: (ref: PanGestureHandler | null) => void;
   gestureEnabled: boolean;
   swipeEnabled: boolean;
   drawerPosition: 'left' | 'right';
@@ -579,7 +578,6 @@ export default class DrawerView extends React.Component<Props> {
       sceneContainerStyle,
       drawerStyle,
       overlayStyle,
-      onGestureRef,
       renderDrawerContent,
       renderSceneContent,
       gestureHandlerProps,
@@ -624,7 +622,6 @@ export default class DrawerView extends React.Component<Props> {
 
     return (
       <PanGestureHandler
-        ref={onGestureRef}
         activeOffsetX={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
         failOffsetY={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
         onGestureEvent={this.handleGestureEvent}

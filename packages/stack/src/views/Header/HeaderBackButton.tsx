@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import MaskedView from '../MaskedView';
-import TouchableItem from '../TouchableItem';
+import { TouchableItem } from '../TouchableItem';
 import { StackHeaderLeftButtonProps } from '../../types';
 
 type Props = StackHeaderLeftButtonProps;

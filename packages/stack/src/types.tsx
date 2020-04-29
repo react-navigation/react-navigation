@@ -276,7 +276,8 @@ export type StackNavigationOptions = StackHeaderOptions &
     cardStyle?: StyleProp<ViewStyle>;
     /**
      * Whether transition animation should be enabled the screen.
-     * If you set it to `false`, the screen won't animate when pushing or popping. Defaults to `true`.
+     * If you set it to `false`, the screen won't animate when pushing or popping.
+     * Defaults to `true` on Android and iOS, `false` on Web.
      */
     animationEnabled?: boolean;
     /**
@@ -286,10 +287,12 @@ export type StackNavigationOptions = StackHeaderOptions &
     animationTypeForReplace?: 'push' | 'pop';
     /**
      * Whether you can use gestures to dismiss this screen. Defaults to `true` on iOS, `false` on Android.
+     * Not supported on Web.
      */
     gestureEnabled?: boolean;
     /**
      * Object to override the distance of touch start from the edge of the screen to recognize gestures.
+     * Not supported on Web.
      */
     gestureResponseDistance?: {
       /**
@@ -302,8 +305,8 @@ export type StackNavigationOptions = StackHeaderOptions &
       horizontal?: number;
     };
     /**
-     * Number which determines the relevance of velocity for the gesture.
-     * Defaults to 0.3.
+     * Number which determines the relevance of velocity for the gesture. Defaults to 0.3.
+     * Not supported on Web.
      */
     gestureVelocityImpact?: number;
     /**

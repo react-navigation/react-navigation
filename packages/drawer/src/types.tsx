@@ -9,7 +9,7 @@ import {
   DrawerNavigationState,
   DrawerActionHelpers,
 } from '@react-navigation/native';
-import { PanGestureHandler } from 'react-native-gesture-handler';
+import type { PanGestureHandlerProperties } from 'react-native-gesture-handler';
 
 export type Scene = {
   route: Route<string>;
@@ -32,6 +32,7 @@ export type DrawerNavigationConfig<T = DrawerContentOptions> = {
   drawerType?: 'front' | 'back' | 'slide' | 'permanent';
   /**
    * How far from the edge of the screen the swipe gesture should activate.
+   * Not supported on Web.
    */
   edgeWidth?: number;
   /**
@@ -58,8 +59,9 @@ export type DrawerNavigationConfig<T = DrawerContentOptions> = {
   statusBarAnimation?: 'slide' | 'none' | 'fade';
   /**
    * Props to pass to the underlying pan gesture handler.
+   * Not supported on Web.
    */
-  gestureHandlerProps?: React.ComponentProps<typeof PanGestureHandler>;
+  gestureHandlerProps?: PanGestureHandlerProperties;
   /**
    * Whether the screens should render the first time they are accessed. Defaults to `true`.
    * Set it to `false` if you want to render all screens on initial render.
@@ -113,13 +115,15 @@ export type DrawerNavigationOptions = {
    * Whether you can use gestures to open or close the drawer.
    * Setting this to `false` disables swipe gestures as well as tap on overlay to close.
    * See `swipeEnabled` to disable only the swipe gesture.
-   * Defaults to `true`
+   * Defaults to `true`.
+   * Not supported on Web.
    */
   gestureEnabled?: boolean;
 
   /**
    * Whether you can use swipe gestures to open or close the drawer.
-   * Defaults to `true`
+   * Defaults to `true`.
+   * Not supported on Web.
    */
   swipeEnabled?: boolean;
 
