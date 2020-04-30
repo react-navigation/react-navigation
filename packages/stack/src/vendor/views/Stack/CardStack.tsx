@@ -520,6 +520,7 @@ export default class CardStack extends React.Component<Props, State> {
                   onHeaderHeightChange={this.handleHeaderLayout}
                   getPreviousRoute={getPreviousRoute}
                   getFocusedRoute={this.getFocusedRoute}
+                  mode={mode}
                   headerMode={headerMode}
                   headerShown={headerShown}
                   headerTransparent={headerTransparent}
@@ -565,7 +566,6 @@ export default class CardStack extends React.Component<Props, State> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    overflow: 'hidden',
   },
   floating: {
     position: 'absolute',

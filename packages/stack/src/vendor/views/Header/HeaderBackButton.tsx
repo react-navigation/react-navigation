@@ -9,7 +9,7 @@ import {
   LayoutChangeEvent,
 } from 'react-native';
 import MaskedView from '../MaskedView';
-import TouchableItem from '../TouchableItem';
+import { TouchableItem } from '../TouchableItem';
 import useTheme from '../../../utils/useTheme';
 import { StackHeaderLeftButtonProps } from '../../types';
 

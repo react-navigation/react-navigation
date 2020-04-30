@@ -9,14 +9,15 @@ import {
   Platform,
   InteractionManager,
 } from 'react-native';
-import {
-  PanGestureHandler,
-  State as GestureState,
-  PanGestureHandlerGestureEvent,
-} from 'react-native-gesture-handler';
 import { EdgeInsets } from 'react-native-safe-area-context';
 import Color from 'color';
-import StackGestureRefContext from '../../utils/GestureHandlerRefContext';
+
+import CardSheet from './CardSheet';
+import {
+  PanGestureHandler,
+  GestureState,
+  PanGestureHandlerGestureEvent,
+} from '../GestureHandler';
 import CardAnimationContext from '../../utils/CardAnimationContext';
 import getDistanceForDirection from '../../utils/getDistanceForDirection';
 import getInvertedMultiplier from '../../utils/getInvertedMultiplier';
@@ -36,6 +37,7 @@ type Props = ViewProps & {
   gesture: Animated.Value;
   layout: Layout;
   insets: EdgeInsets;
+  pageOverflowEnabled: boolean;
   gestureDirection: GestureDirection;
   onOpen: () => void;
   onClose: () => void;
@@ -412,8 +414,6 @@ export default class Card extends React.Component<Props> {
     }
   }
 
-  private gestureRef = React.createRef<PanGestureHandler>();
-
   private contentRef = React.createRef<View>();
 
   render() {
@@ -430,6 +430,7 @@ export default class Card extends React.Component<Props> {
       shadowEnabled,
       gestureEnabled,
       gestureDirection,
+      pageOverflowEnabled,
       children,
       containerStyle: customContainerStyle,
       contentStyle,
@@ -499,7 +500,6 @@ export default class Card extends React.Component<Props> {
             pointerEvents="box-none"
           >
             <PanGestureHandler
-              ref={this.gestureRef}
               enabled={layout.width !== 0 && gestureEnabled}
               onGestureEvent={handleGestureEvent}
               onHandlerStateChange={this.handleGestureStateChange}
@@ -523,14 +523,14 @@ export default class Card extends React.Component<Props> {
                     pointerEvents="none"
                   />
                 ) : null}
-                <View
+                <CardSheet
                   ref={this.contentRef}
-                  style={[styles.content, contentStyle]}
+                  enabled={pageOverflowEnabled}
+                  layout={layout}
+                  style={contentStyle}
                 >
-                  <StackGestureRefContext.Provider value={this.gestureRef}>
-                    {children}
-                  </StackGestureRefContext.Provider>
-                </View>
+                  {children}
+                </CardSheet>
               </Animated.View>
             </PanGestureHandler>
           </Animated.View>
@@ -543,10 +543,6 @@ export default class Card extends React.Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  content: {
-    flex: 1,
-    overflow: 'hidden',
   },
   overlay: {
     flex: 1,

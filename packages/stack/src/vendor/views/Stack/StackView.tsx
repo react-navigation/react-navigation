@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { View, Platform, StyleSheet } from 'react-native';
 import { SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   StackActions,
   NavigationState as StackNavigationState,
@@ -9,6 +8,7 @@ import {
   SceneView,
 } from 'react-navigation';
 
+import { GestureHandlerRootView } from '../GestureHandler';
 import CardStack from './CardStack';
 import KeyboardManager from '../KeyboardManager';
 import HeaderContainer, {
@@ -359,7 +359,10 @@ export default class StackView extends React.Component<Props, State> {
 
     this.handleTransitionComplete();
 
-    if (!state.routes.some((r) => r.key === route.key)) {
+    if (
+      this.state.replacingRouteKeys.every((key) => key !== route.key) &&
+      !state.routes.some((r) => r.key === route.key)
+    ) {
       // If route isn't present in current state, assume that a close animation was cancelled
       // So we need to add this route back to the state
       navigation.dispatch(NavigationActions.navigate(route));
@@ -446,41 +449,43 @@ export default class StackView extends React.Component<Props, State> {
     } = this.state;
 
     const headerMode =
-      mode !== 'modal' && Platform.OS === 'ios' ? 'float' : 'screen';
+      mode === 'card' && Platform.OS === 'ios' ? 'float' : 'screen';
 
     return (
-      <GestureHandlerWrapper style={styles.container}>
-        <SafeAreaProviderCompat>
-          <SafeAreaConsumer>
-            {(insets) => (
-              <KeyboardManager enabled={keyboardHandlingEnabled !== false}>
-                {(props) => (
-                  <CardStack
-                    mode={mode}
-                    insets={insets as EdgeInsets}
-                    getPreviousRoute={this.getPreviousRoute}
-                    getGesturesEnabled={this.getGesturesEnabled}
-                    routes={routes}
-                    openingRouteKeys={openingRouteKeys}
-                    closingRouteKeys={closingRouteKeys}
-                    onOpenRoute={this.handleOpenRoute}
-                    onCloseRoute={this.handleCloseRoute}
-                    onTransitionStart={this.handleTransitionStart}
-                    onTransitionEnd={this.handleTransitionEnd}
-                    renderHeader={this.renderHeader}
-                    renderScene={this.renderScene}
-                    headerMode={headerMode}
-                    state={state}
-                    descriptors={descriptors}
-                    {...rest}
-                    {...props}
-                  />
-                )}
-              </KeyboardManager>
-            )}
-          </SafeAreaConsumer>
-        </SafeAreaProviderCompat>
-      </GestureHandlerWrapper>
+      <>
+        <GestureHandlerWrapper style={styles.container}>
+          <SafeAreaProviderCompat>
+            <SafeAreaConsumer>
+              {(insets) => (
+                <KeyboardManager enabled={keyboardHandlingEnabled !== false}>
+                  {(props) => (
+                    <CardStack
+                      mode={mode}
+                      insets={insets as EdgeInsets}
+                      getPreviousRoute={this.getPreviousRoute}
+                      getGesturesEnabled={this.getGesturesEnabled}
+                      routes={routes}
+                      openingRouteKeys={openingRouteKeys}
+                      closingRouteKeys={closingRouteKeys}
+                      onOpenRoute={this.handleOpenRoute}
+                      onCloseRoute={this.handleCloseRoute}
+                      onTransitionStart={this.handleTransitionStart}
+                      onTransitionEnd={this.handleTransitionEnd}
+                      renderHeader={this.renderHeader}
+                      renderScene={this.renderScene}
+                      headerMode={headerMode}
+                      state={state}
+                      descriptors={descriptors}
+                      {...rest}
+                      {...props}
+                    />
+                  )}
+                </KeyboardManager>
+              )}
+            </SafeAreaConsumer>
+          </SafeAreaProviderCompat>
+        </GestureHandlerWrapper>
+      </>
     );
   }
 }
