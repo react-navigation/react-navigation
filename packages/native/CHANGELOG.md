@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0](https://github.com/react-navigation/react-navigation/tree/master/packages/native/compare/@react-navigation/native@5.1.7...@react-navigation/native@5.2.0) (2020-04-30)
+
+
+### Bug Fixes
+
+* add catch to thenable returned by getInitialState ([d6fa279](https://github.com/react-navigation/react-navigation/tree/master/packages/native/commit/d6fa279d9371c7a6403d10d209a2a64147891c63))
+* return onPress instead of onClick for useLinkProps ([ae5442e](https://github.com/react-navigation/react-navigation/tree/master/packages/native/commit/ae5442ebe812b91fa1f12164f27d1aeed918ab0e))
+
+
+### Features
+
+* add `useLinkBuilder` hook to build links ([2792f43](https://github.com/react-navigation/react-navigation/tree/master/packages/native/commit/2792f438fe45428fe193e3708fee7ad61966cbf4))
+* add a useLinkProps hook ([f2291d1](https://github.com/react-navigation/react-navigation/tree/master/packages/native/commit/f2291d110faa2aa8e10c9133c1c0c28d54af7917))
+* add action prop to Link ([942d2be](https://github.com/react-navigation/react-navigation/tree/master/packages/native/commit/942d2be2c72720469475ce12ec8df23825994dbf))
+* add Link component as useLinkTo hook for navigating to links ([2573b5b](https://github.com/react-navigation/react-navigation/tree/master/packages/native/commit/2573b5beaac1240434e52f3f57bb29da2f541c88))
+
+
+
+
+
 ## [5.1.7](https://github.com/react-navigation/react-navigation/tree/master/packages/native/compare/@react-navigation/native@5.1.6...@react-navigation/native@5.1.7) (2020-04-27)
 
 **Note:** Version bump only for package @react-navigation/native

@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.6.0](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.5.1...@react-navigation/drawer@5.6.0) (2020-04-30)
+
+
+### Bug Fixes
+
+* fix closing drawer on web with tap on overlay ([70be3f6](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/70be3f6d863c56211e2f90bdf743bd8526338248))
+* make sure the address bar hides when scrolling on web ([0a19e94](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/0a19e94b23a4d2b5f22d1d9deb0544f586f475ee))
+
+
+### Features
+
+* add `useLinkBuilder` hook to build links ([2792f43](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/2792f438fe45428fe193e3708fee7ad61966cbf4))
+* add action prop to Link ([942d2be](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/942d2be2c72720469475ce12ec8df23825994dbf))
+
+
+
+
+
 ## [5.5.1](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.5.0...@react-navigation/drawer@5.5.1) (2020-04-27)
 
 **Note:** Version bump only for package @react-navigation/drawer

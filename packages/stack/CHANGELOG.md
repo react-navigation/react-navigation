@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.15](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.14...@react-navigation/stack@5.2.15) (2020-04-30)
+
+
+### Bug Fixes
+
+* make sure the address bar hides when scrolling on web ([0a19e94](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/0a19e94b23a4d2b5f22d1d9deb0544f586f475ee))
+
+
+
+
+
 ## [5.2.14](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.13...@react-navigation/stack@5.2.14) (2020-04-27)
 
 
