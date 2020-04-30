@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.6](https://github.com/react-navigation/react-navigation-core/compare/@react-navigation/core@3.7.5...@react-navigation/core@3.7.6) (2020-04-30)
+
+
+### Bug Fixes
+
+* change old docUrl to new docUrl due v5 ([e09906a](https://github.com/react-navigation/react-navigation-core/commit/e09906a4235a0fca09140923ebe7af34b50b491a))
+
+
+
+
+
 ## [3.7.5](https://github.com/react-navigation/react-navigation-core/compare/@react-navigation/core@3.7.4...@react-navigation/core@3.7.5) (2020-04-02)
 
 
