@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, Platform } from 'react-native';
 import { Button } from 'react-native-paper';
 import { RouteProp, ParamListBase } from '@react-navigation/native';
 import {
@@ -16,6 +16,8 @@ type ModalStackParams = {
 };
 
 type ModalStackNavigation = StackNavigationProp<ModalStackParams>;
+
+const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
@@ -42,7 +44,10 @@ const ArticleScreen = ({
           Go back
         </Button>
       </View>
-      <Article author={{ name: route.params.author }} scrollEnabled={false} />
+      <Article
+        author={{ name: route.params.author }}
+        scrollEnabled={scrollEnabled}
+      />
     </ScrollView>
   );
 };
@@ -66,7 +71,7 @@ const AlbumsScreen = ({ navigation }: { navigation: ModalStackNavigation }) => {
           Go back
         </Button>
       </View>
-      <Albums scrollEnabled={false} />
+      <Albums scrollEnabled={scrollEnabled} />
     </ScrollView>
   );
 };
