@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, Platform, StyleSheet, ScrollView } from 'react-native';
 import { Button } from 'react-native-paper';
 import { RouteProp, ParamListBase } from '@react-navigation/native';
 import {
@@ -17,6 +17,8 @@ type SimpleStackParams = {
 };
 
 type SimpleStackNavigation = StackNavigationProp<SimpleStackParams>;
+
+const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
@@ -43,7 +45,10 @@ const ArticleScreen = ({
           Pop screen
         </Button>
       </View>
-      <Article author={{ name: route.params.author }} scrollEnabled={false} />
+      <Article
+        author={{ name: route.params.author }}
+        scrollEnabled={scrollEnabled}
+      />
     </ScrollView>
   );
 };
@@ -71,7 +76,7 @@ const NewsFeedScreen = ({
           Go back
         </Button>
       </View>
-      <NewsFeed scrollEnabled={false} />
+      <NewsFeed scrollEnabled={scrollEnabled} />
     </ScrollView>
   );
 };
@@ -99,7 +104,7 @@ const AlbumsScreen = ({
           Pop by 2
         </Button>
       </View>
-      <Albums scrollEnabled={false} />
+      <Albums scrollEnabled={scrollEnabled} />
     </ScrollView>
   );
 };

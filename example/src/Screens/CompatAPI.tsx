@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet, Platform } from 'react-native';
 import { Button } from 'react-native-paper';
 import {
   createCompatNavigatorFactory,
@@ -23,6 +23,8 @@ type NestedStackParams = {
   Article: { author: string };
 };
 
+const scrollEnabled = Platform.select({ web: true, default: false });
+
 const AlbumsScreen: CompatScreenType<StackNavigationProp<
   CompatStackParams
 >> = ({ navigation }) => {
@@ -44,7 +46,7 @@ const AlbumsScreen: CompatScreenType<StackNavigationProp<
           Go back
         </Button>
       </View>
-      <Albums scrollEnabled={false} />
+      <Albums scrollEnabled={scrollEnabled} />
     </ScrollView>
   );
 };
@@ -70,7 +72,7 @@ const FeedScreen: CompatScreenType<StackNavigationProp<NestedStackParams>> = ({
           Go back
         </Button>
       </View>
-      <NewsFeed scrollEnabled={false} />
+      <NewsFeed scrollEnabled={scrollEnabled} />
     </ScrollView>
   );
 };
@@ -100,7 +102,7 @@ const ArticleScreen: CompatScreenType<StackNavigationProp<
       </View>
       <Article
         author={{ name: navigation.getParam('author') }}
-        scrollEnabled={false}
+        scrollEnabled={scrollEnabled}
       />
     </ScrollView>
   );
