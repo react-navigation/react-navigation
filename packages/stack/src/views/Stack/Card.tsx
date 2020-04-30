@@ -12,6 +12,7 @@ import {
 import { EdgeInsets } from 'react-native-safe-area-context';
 import Color from 'color';
 
+import CardSheet from './CardSheet';
 import {
   PanGestureHandler,
   GestureState,
@@ -36,6 +37,7 @@ type Props = ViewProps & {
   gesture: Animated.Value;
   layout: Layout;
   insets: EdgeInsets;
+  pageOverflowEnabled: boolean;
   gestureDirection: GestureDirection;
   onOpen: () => void;
   onClose: () => void;
@@ -428,6 +430,7 @@ export default class Card extends React.Component<Props> {
       shadowEnabled,
       gestureEnabled,
       gestureDirection,
+      pageOverflowEnabled,
       children,
       containerStyle: customContainerStyle,
       contentStyle,
@@ -520,12 +523,14 @@ export default class Card extends React.Component<Props> {
                     pointerEvents="none"
                   />
                 ) : null}
-                <View
+                <CardSheet
                   ref={this.contentRef}
-                  style={[styles.content, contentStyle]}
+                  enabled={pageOverflowEnabled}
+                  layout={layout}
+                  style={contentStyle}
                 >
                   {children}
-                </View>
+                </CardSheet>
               </Animated.View>
             </PanGestureHandler>
           </Animated.View>
@@ -538,10 +543,6 @@ export default class Card extends React.Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  content: {
-    flex: 1,
-    overflow: 'hidden',
   },
   overlay: {
     flex: 1,
