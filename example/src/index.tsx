@@ -25,7 +25,6 @@ import {
 } from 'react-native-paper';
 import {
   InitialState,
-  NavigationContainerRef,
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
@@ -129,8 +128,6 @@ const THEME_PERSISTENCE_KEY = 'THEME_TYPE';
 Asset.loadAsync(StackAssets);
 
 export default function App() {
-  const containerRef = React.useRef<NavigationContainerRef>(null);
-
   const [theme, setTheme] = React.useState(DefaultTheme);
 
   const [isReady, setIsReady] = React.useState(false);
@@ -208,7 +205,6 @@ export default function App() {
         <StatusBar barStyle={theme.dark ? 'light-content' : 'dark-content'} />
       )}
       <NavigationContainer
-        ref={containerRef}
         initialState={initialState}
         onStateChange={(state) =>
           AsyncStorage.setItem(

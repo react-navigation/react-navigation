@@ -54,7 +54,7 @@ const NavigationContainer = React.forwardRef(function NavigationContainer(
 
   const linkingContext = React.useMemo(() => ({ options: linking }), [linking]);
 
-  if (!isReady) {
+  if (isLinkingEnabled && !isReady) {
     // This is temporary until we have Suspense for data-fetching
     // Then the fallback will be handled by a parent `Suspense` component
     return fallback as React.ReactElement;
