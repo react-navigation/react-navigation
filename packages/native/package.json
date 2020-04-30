@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/native",
   "description": "React Native integration for React Navigation",
-  "version": "5.2.0",
+  "version": "5.2.1",
   "keywords": [
     "react-native",
     "react-navigation",
