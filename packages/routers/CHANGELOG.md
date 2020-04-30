@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.4.2](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.4.1...@react-navigation/routers@5.4.2) (2020-04-30)
+
+
+### Bug Fixes
+
+* fix backBehavior with initialRoute ([#8110](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/issues/8110)) ([420f692](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/420f6926e111d32c2388c44ff0bee2b8ea238a57))
+
+
+
+
+
 ## [5.4.1](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.4.0...@react-navigation/routers@5.4.1) (2020-04-27)
 
 
