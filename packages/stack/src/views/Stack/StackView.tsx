@@ -420,7 +420,7 @@ export default class StackView extends React.Component<Props, State> {
     } = this.state;
 
     const headerMode =
-      mode !== 'modal' && Platform.OS === 'ios' ? 'float' : 'screen';
+      mode === 'card' && Platform.OS === 'ios' ? 'float' : 'screen';
 
     return (
       <NavigationHelpersContext.Provider value={navigation}>

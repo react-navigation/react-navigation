@@ -29,7 +29,7 @@ export default class ResourceSavingScene extends React.Component<Props> {
           styles.container,
           Platform.OS === 'web'
             ? { display: isVisible ? 'flex' : 'none' }
-            : null,
+            : { overflow: 'hidden' },
           style,
         ]}
         collapsable={false}
@@ -52,7 +52,6 @@ export default class ResourceSavingScene extends React.Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    overflow: 'hidden',
   },
   attached: {
     flex: 1,

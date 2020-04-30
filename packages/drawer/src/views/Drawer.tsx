@@ -731,6 +731,11 @@ const styles = StyleSheet.create({
   },
   main: {
     flex: 1,
-    overflow: 'hidden',
+    ...Platform.select({
+      // FIXME: We need to hide `overflowX` on Web so the translated content doesn't show offscreen.
+      // But adding `overflowX: 'hidden'` prevents content from collapsing the URL bar.
+      web: null,
+      default: { overflow: 'hidden' },
+    }),
   },
 });

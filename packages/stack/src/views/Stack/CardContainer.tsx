@@ -4,7 +4,13 @@ import { Route, useTheme } from '@react-navigation/native';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
 import HeaderHeightContext from '../../utils/HeaderHeightContext';
-import { Scene, Layout, StackHeaderMode, TransitionPreset } from '../../types';
+import {
+  Scene,
+  Layout,
+  StackHeaderMode,
+  StackCardMode,
+  TransitionPreset,
+} from '../../types';
 
 type Props = TransitionPreset & {
   index: number;
@@ -45,6 +51,7 @@ type Props = TransitionPreset & {
     horizontal?: number;
   };
   gestureVelocityImpact?: number;
+  mode: StackCardMode;
   headerMode: StackHeaderMode;
   headerShown?: boolean;
   headerTransparent?: boolean;
@@ -73,6 +80,7 @@ function CardContainer({
   gestureVelocityImpact,
   getPreviousRoute,
   getFocusedRoute,
+  mode,
   headerMode,
   headerShown,
   headerStyleInterpolator,
@@ -178,6 +186,7 @@ function CardContainer({
       accessibilityElementsHidden={!focused}
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
       pointerEvents={active ? 'box-none' : pointerEvents}
+      pageOverflowEnabled={headerMode === 'screen' && mode === 'card'}
       containerStyle={
         headerMode === 'float' && !headerTransparent && headerShown !== false
           ? { marginTop: headerHeight }
