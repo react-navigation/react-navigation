@@ -19,15 +19,21 @@ export default function useLinking(
   }: LinkingOptions
 ) {
   React.useEffect(() => {
-    if (isUsingLinking) {
+    if (enabled !== false && isUsingLinking) {
       throw new Error(
-        "Looks like you are using 'useLinking' in multiple components. This is likely an error since deep links should only be handled in one place to avoid conflicts." +
-          (Platform.OS === 'android'
-            ? "\n\nIf you're not using it in multiple components, ensure that you have set 'android:launchMode=singleTask' in the '<activity />' section of the 'AndroidManifest.xml' file to avoid launching multiple activities which run multiple instances of the root component."
-            : '')
+        [
+          'Looks like you have configured linking in multiple places. This is likely an error since deep links should only be handled in one place to avoid conflicts. Make sure that:',
+          "- You are not using both 'linking' prop and 'useLinking'",
+          "- You don't have 'useLinking' in multiple components",
+          Platform.OS === 'android'
+            ? "- You have set 'android:launchMode=singleTask' in the '<activity />' section of the 'AndroidManifest.xml' file to avoid launching multiple instances"
+            : '',
+        ]
+          .join('\n')
+          .trim()
       );
     } else {
-      isUsingLinking = true;
+      isUsingLinking = enabled !== false;
     }
 
     return () => {

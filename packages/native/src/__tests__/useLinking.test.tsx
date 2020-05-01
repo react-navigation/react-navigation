@@ -17,7 +17,7 @@ it('throws if multiple instances of useLinking are used', () => {
   let element;
 
   expect(() => (element = render(<Sample />))).toThrowError(
-    "Looks like you are using 'useLinking' in multiple components."
+    'Looks like you have configured linking in multiple places.'
   );
 
   // @ts-ignore
@@ -41,9 +41,7 @@ it('throws if multiple instances of useLinking are used', () => {
           <B />
         </>
       ))
-  ).toThrowError(
-    "Looks like you are using 'useLinking' in multiple components."
-  );
+  ).toThrowError('Looks like you have configured linking in multiple places.');
 
   // @ts-ignore
   element?.unmount();
@@ -57,5 +55,19 @@ it('throws if multiple instances of useLinking are used', () => {
 
   render(wrapper2).unmount();
 
-  expect(() => render(wrapper2)).not.toThrow();
+  expect(() => (element = render(wrapper2))).not.toThrow();
+
+  // @ts-ignore
+  element?.unmount();
+
+  function Sample3() {
+    useLinking(ref, options);
+    useLinking(ref, { ...options, enabled: false });
+    return null;
+  }
+
+  expect(() => (element = render(<Sample3 />))).not.toThrowError();
+
+  // @ts-ignore
+  element?.unmount();
 });
