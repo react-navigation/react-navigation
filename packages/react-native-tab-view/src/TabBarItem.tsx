@@ -15,7 +15,7 @@ import memoize from './memoize';
 // @ts-ignore
 const AnimatedInterpolate = Animated.interpolateNode || Animated.interpolate;
 
-type Props<T extends Route> = {
+export type Props<T extends Route> = {
   position: Animated.Node<number>;
   route: T;
   navigationState: NavigationState<T>;

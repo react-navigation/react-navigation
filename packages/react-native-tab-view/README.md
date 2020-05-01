@@ -527,6 +527,10 @@ Function which takes an object with the current route, focused status and color 
 />
 ```
 
+##### `renderTabBarItem`
+
+Function which takes a `TabBarItemProps` object and returns a custom React Element to be used as a tab button.
+
 ##### `renderIndicator`
 
 Function which takes an object with the current route and returns a custom React Element to be used as a tab indicator.

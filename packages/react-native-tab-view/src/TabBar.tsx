@@ -11,7 +11,7 @@ import {
   Platform,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
-import TabBarItem from './TabBarItem';
+import TabBarItem, { Props as TabBarItemProps } from './TabBarItem';
 import TabBarIndicator, { Props as IndicatorProps } from './TabBarIndicator';
 import memoize from './memoize';
 import {
@@ -49,6 +49,9 @@ export type Props<T extends Route> = SceneRendererProps & {
   ) => React.ReactNode;
   renderBadge?: (scene: Scene<T>) => React.ReactNode;
   renderIndicator: (props: IndicatorProps<T>) => React.ReactNode;
+  renderTabBarItem?: (
+    props: TabBarItemProps<T> & { key: string }
+  ) => React.ReactElement;
   onTabPress?: (scene: Scene<T> & Event) => void;
   onTabLongPress?: (scene: Scene<T>) => void;
   tabStyle?: StyleProp<ViewStyle>;
@@ -310,6 +313,7 @@ export default class TabBar<T extends Route> extends React.Component<
       renderBadge,
       renderIcon,
       renderLabel,
+      renderTabBarItem,
       activeColor,
       inactiveColor,
       pressColor,
@@ -400,45 +404,43 @@ export default class TabBar<T extends Route> extends React.Component<
               this.scrollView = el?.getNode();
             }}
           >
-            {routes.map((route: T) => (
-              <TabBarItem
-                onLayout={
-                  isWidthDynamic
-                    ? (e) => {
-                        this.measuredTabWidths[route.key] =
-                          e.nativeEvent.layout.width;
+            {routes.map((route: T) => {
+              const props: TabBarItemProps<T> & { key: string } = {
+                key: route.key,
+                position: position,
+                route: route,
+                navigationState: navigationState,
+                getAccessibilityLabel: getAccessibilityLabel,
+                getAccessible: getAccessible,
+                getLabelText: getLabelText,
+                getTestID: getTestID,
+                renderBadge: renderBadge,
+                renderIcon: renderIcon,
+                renderLabel: renderLabel,
+                activeColor: activeColor,
+                inactiveColor: inactiveColor,
+                pressColor: pressColor,
+                pressOpacity: pressOpacity,
+                onLayout: isWidthDynamic
+                  ? (e) => {
+                      this.measuredTabWidths[route.key] =
+                        e.nativeEvent.layout.width;
 
-                        // When we have measured widths for all of the tabs, we should updates the state
-                        // We avoid doing separate setState for each layout since it triggers multiple renders and slows down app
-                        if (
-                          routes.every(
-                            (r) =>
-                              typeof this.measuredTabWidths[r.key] === 'number'
-                          )
-                        ) {
-                          this.setState({
-                            tabWidths: { ...this.measuredTabWidths },
-                          });
-                        }
+                      // When we have measured widths for all of the tabs, we should updates the state
+                      // We avoid doing separate setState for each layout since it triggers multiple renders and slows down app
+                      if (
+                        routes.every(
+                          (r) =>
+                            typeof this.measuredTabWidths[r.key] === 'number'
+                        )
+                      ) {
+                        this.setState({
+                          tabWidths: { ...this.measuredTabWidths },
+                        });
                       }
-                    : undefined
-                }
-                key={route.key}
-                position={position}
-                route={route}
-                navigationState={navigationState}
-                getAccessibilityLabel={getAccessibilityLabel}
-                getAccessible={getAccessible}
-                getLabelText={getLabelText}
-                getTestID={getTestID}
-                renderBadge={renderBadge}
-                renderIcon={renderIcon}
-                renderLabel={renderLabel}
-                activeColor={activeColor}
-                inactiveColor={inactiveColor}
-                pressColor={pressColor}
-                pressOpacity={pressOpacity}
-                onPress={() => {
+                    }
+                  : undefined,
+                onPress: () => {
                   const event: Scene<T> & Event = {
                     route,
                     defaultPrevented: false,
@@ -454,12 +456,18 @@ export default class TabBar<T extends Route> extends React.Component<
                   }
 
                   this.props.jumpTo(route.key);
-                }}
-                onLongPress={() => onTabLongPress?.({ route })}
-                labelStyle={labelStyle}
-                style={tabStyle}
-              />
-            ))}
+                },
+                onLongPress: () => onTabLongPress?.({ route }),
+                labelStyle: labelStyle,
+                style: tabStyle,
+              };
+
+              return renderTabBarItem ? (
+                renderTabBarItem(props)
+              ) : (
+                <TabBarItem {...props} />
+              );
+            })}
           </Animated.ScrollView>
         </View>
       </Animated.View>
