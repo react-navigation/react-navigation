@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.2](https://github.com/react-navigation/react-navigation/tree/master/packages/native/compare/@react-navigation/native@5.2.1...@react-navigation/native@5.2.2) (2020-05-01)
+
+
+### Bug Fixes
+
+* don't throw when using 'useLinking'. fixes [#8171](https://github.com/react-navigation/react-navigation/tree/master/packages/native/issues/8171) ([10eca8b](https://github.com/react-navigation/react-navigation/tree/master/packages/native/commit/10eca8b92edbce6dbef8abaf189e4b59a29b3748))
+
+
+
+
+
 ## [5.2.1](https://github.com/react-navigation/react-navigation/tree/master/packages/native/compare/@react-navigation/native@5.2.0...@react-navigation/native@5.2.1) (2020-04-30)
 
 
