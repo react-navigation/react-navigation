@@ -50,12 +50,18 @@ export default function useLinking(
   }: LinkingOptions
 ) {
   React.useEffect(() => {
-    if (isUsingLinking) {
+    if (enabled !== false && isUsingLinking) {
       throw new Error(
-        "Looks like you are using 'useLinking' in multiple components. This is likely an error since URL integration should only be handled in one place to avoid conflicts. Also ensure that you set your android activity launchMode to single task in your AndroiManifest.xml file."
+        [
+          'Looks like you have configured linking in multiple places. This is likely an error since URL integration should only be handled in one place to avoid conflicts. Make sure that:',
+          "- You are not using both 'linking' prop and 'useLinking'",
+          "- You don't have 'useLinking' in multiple components",
+        ]
+          .join('\n')
+          .trim()
       );
     } else {
-      isUsingLinking = true;
+      isUsingLinking = enabled !== false;
     }
 
     return () => {
