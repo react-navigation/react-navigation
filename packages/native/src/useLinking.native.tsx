@@ -12,7 +12,7 @@ let isUsingLinking = false;
 export default function useLinking(
   ref: React.RefObject<NavigationContainerRef>,
   {
-    enabled,
+    enabled = true,
     prefixes,
     config,
     getStateFromPath = getStateFromPathDefault,
