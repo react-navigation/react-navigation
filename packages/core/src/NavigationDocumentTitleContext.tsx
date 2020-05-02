@@ -5,8 +5,7 @@ import * as React from 'react';
  */
 const NavigationDocumentTitleContainer = React.createContext<
   | {
-      setChildTitle: (newTitle: string | undefined) => void;
-      getChildTitle: () => string | undefined;
+      setChildTitle: (newTitle: string | undefined, key: string) => void;
     }
   | undefined
 >(undefined);

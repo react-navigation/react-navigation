@@ -6,7 +6,10 @@ let timeout: NodeJS.Timeout | number | undefined;
 
 let nonNavigationTitle: string | undefined;
 
-function debounceSetTitle(title: string | undefined) {
+let recentSetter: string | undefined;
+
+function debounceSetTitle(title: string | undefined, key: string) {
+  recentSetter = key;
   if (typeof timeout === 'number') {
     clearTimeout(timeout);
     timeout = undefined;
@@ -22,7 +25,8 @@ function debounceSetTitle(title: string | undefined) {
 }
 
 export default function useDocumentTitleContext(
-  options: SharedScreenNavigationOptions
+  options: SharedScreenNavigationOptions,
+  getKey: () => string | undefined
 ) {
   const isFocused = useIsFocused();
 
@@ -32,17 +36,17 @@ export default function useDocumentTitleContext(
 
   const newTitleContext = React.useMemo(
     () => ({
-      setChildTitle: (newTitle: string | undefined) => {
+      setChildTitle: (newTitle: string | undefined, childKey: string) => {
         childTitle.current = newTitle;
         const title = newTitle === undefined ? options.title : newTitle;
-        titleContext?.setChildTitle(title);
+        const newKey = newTitle === undefined ? (getKey() as string) : childKey;
+        titleContext?.setChildTitle(title, getKey() as string);
         if (titleContext === undefined) {
-          debounceSetTitle(title);
+          debounceSetTitle(title, newKey);
         }
       },
-      getChildTitle: () => childTitle.current,
     }),
-    [options.title, titleContext]
+    [getKey, options.title, titleContext]
   );
 
   React.useEffect(() => {
@@ -50,25 +54,22 @@ export default function useDocumentTitleContext(
       const title =
         childTitle.current === undefined ? options.title : childTitle.current;
       if (titleContext) {
-        titleContext.setChildTitle(title);
+        titleContext.setChildTitle(title, getKey() as string);
       } else {
-        newTitleContext.setChildTitle(title);
+        newTitleContext.setChildTitle(title, getKey() as string);
       }
       return () => {
-        // check if it's not set by another child already mounted
-        if (titleContext?.getChildTitle() === title) {
-          titleContext?.setChildTitle(undefined);
-        }
+        if (recentSetter === getKey()) {
+          titleContext?.setChildTitle(undefined, getKey() as string);
 
-        if (!titleContext) {
-          if (window?.document?.title === title) {
-            debounceSetTitle(undefined);
+          if (!titleContext) {
+            debounceSetTitle(undefined, getKey() as string);
           }
         }
       };
     }
     return () => null;
-  }, [isFocused, options.title, titleContext]);
+  }, [getKey, isFocused, newTitleContext, options.title, titleContext]);
 
   return newTitleContext;
 }

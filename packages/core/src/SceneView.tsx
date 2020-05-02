@@ -78,7 +78,7 @@ export default function SceneView<
     [getState, route.key, setState]
   );
 
-  const newTitleContext = useDocumentTitleContext(options);
+  const newTitleContext = useDocumentTitleContext(options, getKey);
 
   const context = React.useMemo(
     () => ({
