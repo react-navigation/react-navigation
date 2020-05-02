@@ -68,7 +68,14 @@
     "moduleNameMapper": {
       "@react-navigation/([^/]+)": "<rootDir>/packages/$1/src"
     },
-    "preset": "react-native"
+    "preset": "react-native",
+    "globals": {
+      "window": {
+        "document": {
+          "createElement": true
+        }
+      }
+    }
   },
   "prettier": {
     "tabWidth": 2,

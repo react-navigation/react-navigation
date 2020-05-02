@@ -4,16 +4,21 @@ import NavigationDocumentTitleContext from './NavigationDocumentTitleContext';
 
 let timeout: NodeJS.Timeout | number | undefined;
 
+let nonNavigationTitle: string | undefined;
+
 function debounceSetTitle(title: string | undefined) {
   if (typeof timeout === 'number') {
     clearTimeout(timeout);
     timeout = undefined;
   }
   timeout = setTimeout(() => {
-    if ('document' in window && document.createElement && title) {
-      document.title = title;
+    if ('document' in window && window.document.createElement) {
+      if (nonNavigationTitle === undefined) {
+        nonNavigationTitle = window.document.title;
+      }
+      window.document.title = title ? title : (nonNavigationTitle as string);
     }
-  }, 200);
+  }, 100);
 }
 
 export default function useDocumentTitleContext(
@@ -44,11 +49,21 @@ export default function useDocumentTitleContext(
     if (isFocused) {
       const title =
         childTitle.current === undefined ? options.title : childTitle.current;
-      titleContext?.setChildTitle(title);
+      if (titleContext) {
+        titleContext.setChildTitle(title);
+      } else {
+        newTitleContext.setChildTitle(title);
+      }
       return () => {
         // check if it's not set by another child already mounted
         if (titleContext?.getChildTitle() === title) {
           titleContext?.setChildTitle(undefined);
+        }
+
+        if (!titleContext) {
+          if (window?.document?.title === title) {
+            debounceSetTitle(undefined);
+          }
         }
       };
     }
