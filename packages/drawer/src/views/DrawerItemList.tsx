@@ -30,11 +30,11 @@ export default function DrawerItemList({
   inactiveBackgroundColor,
   itemStyle,
   labelStyle,
-  visibleRoutes
+  hiddenRoutes
 }: Props) {
-  if (!visibleRoutes) visibleRoutes = state.routeNames;
+  const hidden = hiddenRoutes ? hiddenRoutes : [];
   
-  return (state.routes.filter(route => visibleRoutes.includes(route.name)).map((route, i) => {
+  return (state.routes.filter(route => !hidden.includes(route.name)).map((route, i) => {
     const focused = i === state.index;
     const { title, drawerLabel, drawerIcon } = descriptors[route.key].options;
 
