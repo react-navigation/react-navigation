@@ -19,7 +19,8 @@ function debounceSetTitle(title: string | undefined, key: string) {
       if (nonNavigationTitle === undefined) {
         nonNavigationTitle = window.document.title;
       }
-      window.document.title = title ? title : (nonNavigationTitle as string);
+      window.document.title =
+        title !== undefined ? title : (nonNavigationTitle as string);
     }
   }, 100);
 }
