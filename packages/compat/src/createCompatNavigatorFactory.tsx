@@ -140,6 +140,7 @@ export default function createCompatNavigatorFactory<
                 key={name}
                 name={name}
                 initialParams={{ ...parentRouteParams, ...initialParams }}
+                // @ts-ignore
                 options={screenOptions}
               >
                 {({ navigation, route }) => (
