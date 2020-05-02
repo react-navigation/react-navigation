@@ -1,10 +1,7 @@
 import * as React from 'react';
-import { ParamListBase } from '@react-navigation/routers';
-import { NavigationProp } from './types';
-import { MutableRefObject, RefObject } from 'react';
 
 /**
- * TODO
+ * Context which holds data for proper setting title of document on web
  */
 const NavigationDocumentTitleContainer = React.createContext<
   | {

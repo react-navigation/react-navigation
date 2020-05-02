@@ -7,6 +7,7 @@ import {
 } from '@react-navigation/routers';
 import { NavigationStateContext } from './BaseNavigationContainer';
 import NavigationDocumentTitleContext from './NavigationDocumentTitleContext';
+import useDocumentTitleContext from './useTitleContext';
 import NavigationRouteContext from './NavigationRouteContext';
 import StaticContainer from './StaticContainer';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
@@ -16,7 +17,6 @@ import {
   EventMapBase,
   SharedScreenNavigationOptions,
 } from './types';
-import { useIsFocused } from './index';
 
 type Props<
   State extends NavigationState,
@@ -51,47 +51,6 @@ export default function SceneView<
 }: Props<State, ScreenOptions, EventMap>) {
   const navigatorKeyRef = React.useRef<string | undefined>();
 
-  const isFocused = useIsFocused();
-
-  const titleContext = React.useContext(NavigationDocumentTitleContext);
-
-  const childTitle = React.useRef<string | undefined>(undefined);
-
-  const newTitleContext = React.useMemo(
-    () => ({
-      setChildTitle: (newTitle: string | undefined) => {
-        console.log('setChildTitle', newTitle, ' in ', options.title);
-        childTitle.current = newTitle;
-        const title = newTitle === undefined ? options.title : newTitle;
-        titleContext?.setChildTitle(title);
-        if (titleContext === undefined) {
-          console.log('xxxx', title)
-          if ('document' in window && document.createElement) {
-            document.title = title
-          }
-        }
-      },
-      getChildTitle: () => childTitle.current,
-    }),
-    [options.title, titleContext]
-  );
-
-  React.useEffect(() => {
-    console.log(isFocused, options.title);
-    if (isFocused) {
-      const title =
-        childTitle.current === undefined ? options.title : childTitle.current;
-      titleContext?.setChildTitle(title);
-      return () => {
-        // check if it's not set by another child already mounted
-        if (titleContext?.getChildTitle() === title) {
-          titleContext?.setChildTitle(undefined);
-        }
-      };
-    }
-    return () => null;
-  }, [isFocused, options.title, titleContext]);
-
   const getKey = React.useCallback(() => navigatorKeyRef.current, []);
 
   const setKey = React.useCallback((key: string) => {
@@ -118,6 +77,8 @@ export default function SceneView<
     },
     [getState, route.key, setState]
   );
+
+  const newTitleContext = useDocumentTitleContext(options);
 
   const context = React.useMemo(
     () => ({

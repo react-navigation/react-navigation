@@ -10,6 +10,9 @@ import {
 } from '@react-navigation/routers';
 
 export type SharedScreenNavigationOptions = {
+  /**
+   * Title text.
+   */
   title?: string;
 };
 
