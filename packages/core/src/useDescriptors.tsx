@@ -19,7 +19,9 @@ import {
   RouteConfig,
   RouteProp,
   EventMapBase,
+  SharedScreenNavigationOptions,
 } from './types';
+import NavigationContext from './NavigationContext';
 
 type Options<
   State extends NavigationState,
@@ -103,7 +105,10 @@ export default function useDescriptors<
     ]
   );
 
-  const navigations = useNavigationCache<State, ScreenOptions>({
+  const navigations = useNavigationCache<
+    State,
+    ScreenOptions & SharedScreenNavigationOptions
+  >({
     state,
     getState,
     navigation,
@@ -116,43 +121,47 @@ export default function useDescriptors<
     (acc, route) => {
       const screen = screens[route.name];
       const navigation = navigations[route.key];
+      const routeOptions: ScreenOptions & SharedScreenNavigationOptions = {
+        // The default `screenOptions` passed to the navigator
+        ...(typeof screenOptions === 'object' || screenOptions == null
+          ? screenOptions
+          : screenOptions({
+              // @ts-ignore
+              route,
+              navigation,
+            })),
+        // The `options` prop passed to `Screen` elements
+        ...(typeof screen.options === 'object' || screen.options == null
+          ? screen.options
+          : screen.options({
+              // @ts-ignore
+              route,
+              // @ts-ignore
+              navigation,
+            })),
+        // The options set via `navigation.setOptions`
+        ...options[route.key],
+      };
 
       acc[route.key] = {
         navigation,
         render() {
           return (
             <NavigationBuilderContext.Provider key={route.key} value={context}>
-              <SceneView
-                navigation={navigation}
-                route={route}
-                screen={screen}
-                getState={getState}
-                setState={setState}
-              />
+              <NavigationContext.Provider value={navigation}>
+                <SceneView
+                  options={routeOptions}
+                  navigation={navigation}
+                  route={route}
+                  screen={screen}
+                  getState={getState}
+                  setState={setState}
+                />
+              </NavigationContext.Provider>
             </NavigationBuilderContext.Provider>
           );
         },
-        options: {
-          // The default `screenOptions` passed to the navigator
-          ...(typeof screenOptions === 'object' || screenOptions == null
-            ? screenOptions
-            : screenOptions({
-                // @ts-ignore
-                route,
-                navigation,
-              })),
-          // The `options` prop passed to `Screen` elements
-          ...(typeof screen.options === 'object' || screen.options == null
-            ? screen.options
-            : screen.options({
-                // @ts-ignore
-                route,
-                // @ts-ignore
-                navigation,
-              })),
-          // The options set via `navigation.setOptions`
-          ...options[route.key],
-        },
+        options: routeOptions,
       };
 
       return acc;

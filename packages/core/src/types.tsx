@@ -9,6 +9,10 @@ import {
   ParamListBase,
 } from '@react-navigation/routers';
 
+export type SharedScreenNavigationOptions = {
+  title?: string;
+};
+
 export type DefaultNavigatorOptions<
   ScreenOptions extends object
 > = DefaultRouterOptions & {
@@ -21,11 +25,11 @@ export type DefaultNavigatorOptions<
    * Default options for all screens under this navigator.
    */
   screenOptions?:
-    | ScreenOptions
+    | (ScreenOptions & SharedScreenNavigationOptions)
     | ((props: {
         route: RouteProp<ParamListBase, string>;
         navigation: any;
-      }) => ScreenOptions);
+      }) => ScreenOptions & SharedScreenNavigationOptions);
 };
 
 export type EventMapBase = Record<
@@ -372,11 +376,11 @@ export type RouteConfig<
    * Navigator options for this screen.
    */
   options?:
-    | ScreenOptions
+    | (ScreenOptions & SharedScreenNavigationOptions)
     | ((props: {
         route: RouteProp<ParamList, RouteName>;
         navigation: any;
-      }) => ScreenOptions);
+      }) => ScreenOptions & SharedScreenNavigationOptions);
 
   /**
    * Event listeners for this screen.
