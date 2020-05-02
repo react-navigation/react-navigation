@@ -1506,7 +1506,6 @@ it('set proper title', async () => {
     return null;
   };
 
-  // @ts-ignore
   window.document.title = '';
 
   const element = (
