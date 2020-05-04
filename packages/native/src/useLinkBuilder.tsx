@@ -52,14 +52,18 @@ export default function useLinkBuilder() {
     (name: string, params?: object) => {
       const { options } = linking;
 
-      // If we couldn't find a navigation object in context, we're at root
-      // So we'll construct a basic state object to use
+      if (options?.enabled === false) {
+        return undefined;
+      }
+
       const state = navigation
         ? getRootStateForNavigate(navigation, {
             index: 0,
             routes: [{ name, params }],
           })
-        : {
+        : // If we couldn't find a navigation object in context, we're at root
+          // So we'll construct a basic state object to use
+          {
             index: 0,
             routes: [{ name, params }],
           };
