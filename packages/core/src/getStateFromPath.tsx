@@ -20,7 +20,6 @@ type Options = {
 
 type RouteConfig = {
   screen: string;
-  match: string | null;
   pattern: string;
   routeNames: string[];
   parse: ParseConfig | undefined;
@@ -110,30 +109,47 @@ export default function getStateFromPath(
 
     // Go through all configs, and see if the next path segment matches our regex
     for (const config of configs) {
-      if (!config.match) {
+      if (config.pattern === '') {
         continue;
       }
-
-      let didMatch = true;
-      const matchParts = config.match.split('/');
-      const remainingParts = remaining.split('/');
 
       // we check if remaining path has enough segments to be handled with this pattern
-      if (config.pattern.split('/').length > remainingParts.length) {
+      if (config.pattern.split('/').length > remaining.split('/').length) {
         continue;
       }
 
-      // we keep info about the index of segment on which the params start
-      let paramsIndex = 0;
-      // the beginning of the remaining path should be the same as the part of config before params
-      for (paramsIndex; paramsIndex < matchParts.length; paramsIndex++) {
-        if (matchParts[paramsIndex] !== remainingParts[paramsIndex]) {
+      let patternParts = config.pattern.split('/');
+      let remainingParts = remaining.split('/', patternParts.length);
+
+      // array of indexes of params to remove from path
+      const paramIndexes = [] as number[];
+
+      // we extract params from the path
+      const remainingParams = [] as string[];
+      patternParts.forEach((p, index) => {
+        if (p.startsWith(':')) {
+          remainingParams.push(remainingParts[index]);
+          paramIndexes.push(index);
+        }
+      });
+
+      // filter the params from both arrays
+      remainingParts = remainingParts.filter(
+        (_, index) => !paramIndexes.includes(index)
+      );
+      patternParts = patternParts.filter(
+        (_, index) => !paramIndexes.includes(index)
+      );
+
+      let didMatch = true;
+      // the non-param part of the remaining path should be the same as the non-param part of the config
+      for (let i = 0; i < patternParts.length; i++) {
+        if (patternParts[i] !== remainingParts[i]) {
           didMatch = false;
           break;
         }
       }
 
-      // If the first part of the path matches, we need to extract params from the path
       if (didMatch) {
         routeNames = [...config.routeNames];
 
@@ -144,7 +160,7 @@ export default function getStateFromPath(
         if (paramPatterns.length) {
           params = paramPatterns.reduce<Record<string, any>>((acc, p, i) => {
             const key = p.replace(/^:/, '');
-            const value = remainingParts[i + paramsIndex]; // The param segments start from the end of matched part
+            const value = remainingParams[i];
             acc[key] =
               config.parse && config.parse[key]
                 ? config.parse[key](value)
@@ -155,7 +171,7 @@ export default function getStateFromPath(
         }
 
         // if pattern and remaining path have same amount of segments, there should be nothing left
-        if (config.pattern.split('/').length === remainingParts.length) {
+        if (config.pattern.split('/').length === remaining.split('/').length) {
           remaining = '';
         } else {
           // For each segment of the pattern, remove one segment from remaining path
@@ -267,12 +283,8 @@ function createConfigItem(
   pattern: string,
   parse?: ParseConfig
 ): RouteConfig {
-  // part being matched ends on the first param
-  const match = pattern !== '' ? pattern.split('/:')[0] : null;
-
   return {
     screen,
-    match,
     pattern,
     // The routeNames array is mutated, so copy it to keep the current state
     routeNames: [...routeNames],
