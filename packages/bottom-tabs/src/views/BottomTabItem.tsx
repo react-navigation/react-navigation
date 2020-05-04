@@ -103,6 +103,10 @@ type Props = {
    */
   labelStyle?: StyleProp<TextStyle>;
   /**
+   * Style object for the icon element.
+   */
+  iconStyle?: StyleProp<TextStyle>;
+  /**
    * Style object for the wrapper element.
    */
   style?: StyleProp<ViewStyle>;
@@ -168,6 +172,7 @@ export default function BottomTabBarItem({
   showIcon = true,
   allowFontScaling,
   labelStyle,
+  iconStyle,
   style,
 }: Props) {
   const { colors } = useTheme();
@@ -230,7 +235,10 @@ export default function BottomTabBarItem({
         activeTintColor={activeTintColor}
         inactiveTintColor={inactiveTintColor}
         renderIcon={icon}
-        style={horizontal ? styles.iconHorizontal : styles.iconVertical}
+        style={[
+          horizontal ? styles.iconHorizontal : styles.iconVertical,
+          iconStyle,
+        ]}
       />
     );
   };

@@ -163,6 +163,10 @@ export type BottomTabBarOptions = {
    */
   labelStyle?: StyleProp<TextStyle>;
   /**
+   * Style object for the tab icon.
+   */
+  iconStyle?: StyleProp<TextStyle>;
+  /**
    * Style object for the tab container.
    */
   tabStyle?: StyleProp<ViewStyle>;

@@ -44,6 +44,7 @@ export default function BottomTabBar({
   keyboardHidesTabBar = false,
   labelPosition,
   labelStyle,
+  iconStyle,
   safeAreaInsets,
   showIcon,
   showLabel,
@@ -275,6 +276,7 @@ export default function BottomTabBar({
                   showIcon={showIcon}
                   showLabel={showLabel}
                   labelStyle={labelStyle}
+                  iconStyle={iconStyle}
                   style={tabStyle}
                 />
               </NavigationRouteContext.Provider>
