@@ -984,3 +984,211 @@ it('handles not taking path with too many segments', () => {
     state
   );
 });
+
+it('handles differently ordered params v1', () => {
+  const path = '/foos/5/res/20';
+
+  const config = {
+    Foe: {
+      path: '/',
+      initialRouteName: 'Foo',
+      screens: {
+        Foo: 'foo',
+        Bis: {
+          path: 'foos/:id',
+          parse: {
+            id: Number,
+          },
+        },
+        Bas: {
+          path: 'foos/:id/res/:pwd',
+          parse: {
+            id: Number,
+            pwd: Number,
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foe',
+        state: {
+          index: 1,
+          routes: [
+            {
+              name: 'Foo',
+            },
+            {
+              name: 'Bas',
+              params: { id: 5, pwd: 20 },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('handles differently ordered params v2', () => {
+  const path = '/5/20/foos/res';
+
+  const config = {
+    Foe: {
+      path: '/',
+      initialRouteName: 'Foo',
+      screens: {
+        Foo: 'foo',
+        Bis: {
+          path: 'foos/:id',
+          parse: {
+            id: Number,
+          },
+        },
+        Bas: {
+          path: ':id/:pwd/foos/res',
+          parse: {
+            id: Number,
+            pwd: Number,
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foe',
+        state: {
+          index: 1,
+          routes: [
+            {
+              name: 'Foo',
+            },
+            {
+              name: 'Bas',
+              params: { id: 5, pwd: 20 },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('handles differently ordered params v3', () => {
+  const path = '/foos/5/20/res';
+
+  const config = {
+    Foe: {
+      path: '/',
+      initialRouteName: 'Foo',
+      screens: {
+        Foo: 'foo',
+        Bis: {
+          path: 'foos/:id',
+          parse: {
+            id: Number,
+          },
+        },
+        Bas: {
+          path: 'foos/:id/:pwd/res',
+          parse: {
+            id: Number,
+            pwd: Number,
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foe',
+        state: {
+          index: 1,
+          routes: [
+            {
+              name: 'Foo',
+            },
+            {
+              name: 'Bas',
+              params: { id: 5, pwd: 20 },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('handles differently ordered params v4', () => {
+  const path = '5/foos/res/20';
+
+  const config = {
+    Foe: {
+      path: '/',
+      initialRouteName: 'Foo',
+      screens: {
+        Foo: 'foo',
+        Bis: {
+          path: 'foos/:id',
+          parse: {
+            id: Number,
+          },
+        },
+        Bas: {
+          path: ':id/foos/res/:pwd',
+          parse: {
+            id: Number,
+            pwd: Number,
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foe',
+        state: {
+          index: 1,
+          routes: [
+            {
+              name: 'Foo',
+            },
+            {
+              name: 'Bas',
+              params: { id: 5, pwd: 20 },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
