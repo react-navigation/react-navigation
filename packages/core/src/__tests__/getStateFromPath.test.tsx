@@ -1192,3 +1192,588 @@ it('handles differently ordered params v4', () => {
     state
   );
 });
+
+it('handles simple optional params', () => {
+  const path = '/foos/5';
+
+  const config = {
+    Foe: {
+      path: '/',
+      initialRouteName: 'Foo',
+      screens: {
+        Foo: 'foo',
+        Bis: {
+          path: 'foo/:id',
+          parse: {
+            id: Number,
+          },
+        },
+        Bas: {
+          path: 'foos/:id/:nip?',
+          parse: {
+            id: Number,
+            nip: Number,
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foe',
+        state: {
+          index: 1,
+          routes: [
+            {
+              name: 'Foo',
+            },
+            {
+              name: 'Bas',
+              params: { id: 5 },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('handle 2 optional params at the end v1', () => {
+  const path = '/foos/5';
+
+  const config = {
+    Foe: {
+      path: '/',
+      initialRouteName: 'Foo',
+      screens: {
+        Foo: 'foo',
+        Bis: {
+          path: 'foo/:id',
+          parse: {
+            id: Number,
+          },
+        },
+        Bas: {
+          path: 'foos/:id/:nip?/:pwd?',
+          parse: {
+            id: Number,
+            nip: Number,
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foe',
+        state: {
+          index: 1,
+          routes: [
+            {
+              name: 'Foo',
+            },
+            {
+              name: 'Bas',
+              params: { id: 5 },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('handle 2 optional params at the end v2', () => {
+  const path = '/foos/5/10';
+
+  const config = {
+    Foe: {
+      path: '/',
+      initialRouteName: 'Foo',
+      screens: {
+        Foo: 'foo',
+        Bis: {
+          path: 'foo/:id',
+          parse: {
+            id: Number,
+          },
+        },
+        Bas: {
+          path: 'foos/:id/:nip?/:pwd?',
+          parse: {
+            id: Number,
+            nip: Number,
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foe',
+        state: {
+          index: 1,
+          routes: [
+            {
+              name: 'Foo',
+            },
+            {
+              name: 'Bas',
+              params: { id: 5, nip: 10 },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('handle 2 optional params at the end v3', () => {
+  const path = '/foos/5/10/15';
+
+  const config = {
+    Foe: {
+      path: '/',
+      initialRouteName: 'Foo',
+      screens: {
+        Foo: 'foo',
+        Bis: {
+          path: 'foo/:id',
+          parse: {
+            id: Number,
+          },
+        },
+        Bas: {
+          path: 'foos/:id/:nip?/:pwd?',
+          parse: {
+            id: Number,
+            nip: Number,
+            pwd: Number,
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foe',
+        state: {
+          index: 1,
+          routes: [
+            {
+              name: 'Foo',
+            },
+            {
+              name: 'Bas',
+              params: { id: 5, nip: 10, pwd: 15 },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('handle optional params in the middle v1', () => {
+  const path = '/foos/5/10';
+
+  const config = {
+    Foe: {
+      path: '/',
+      initialRouteName: 'Foo',
+      screens: {
+        Foo: 'foo',
+        Bis: {
+          path: 'foo/:id',
+          parse: {
+            id: Number,
+          },
+        },
+        Bas: {
+          path: 'foos/:id/:nip?/:pwd',
+          parse: {
+            id: Number,
+            nip: Number,
+            pwd: Number,
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foe',
+        state: {
+          index: 1,
+          routes: [
+            {
+              name: 'Foo',
+            },
+            {
+              name: 'Bas',
+              params: { id: 5, pwd: 10 },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('handle optional params in the middle v2', () => {
+  const path = '/foos/5/10/15';
+
+  const config = {
+    Foe: {
+      path: '/',
+      initialRouteName: 'Foo',
+      screens: {
+        Foo: 'foo',
+        Bis: {
+          path: 'foo/:id',
+          parse: {
+            id: Number,
+          },
+        },
+        Bas: {
+          path: 'foos/:id/:nip?/:pwd',
+          parse: {
+            id: Number,
+            nip: Number,
+            pwd: Number,
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foe',
+        state: {
+          index: 1,
+          routes: [
+            {
+              name: 'Foo',
+            },
+            {
+              name: 'Bas',
+              params: { id: 5, nip: 10, pwd: 15 },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('handle optional params in the middle v3', () => {
+  const path = '/foos/5/10/15';
+
+  const config = {
+    Foe: {
+      path: '/',
+      initialRouteName: 'Foo',
+      screens: {
+        Foo: 'foo',
+        Bis: {
+          path: 'foo/:id',
+          parse: {
+            id: Number,
+          },
+        },
+        Bas: {
+          path: 'foos/:id/:nip?/:pwd/:smh',
+          parse: {
+            id: Number,
+            nip: Number,
+            pwd: Number,
+            smh: Number,
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foe',
+        state: {
+          index: 1,
+          routes: [
+            {
+              name: 'Foo',
+            },
+            {
+              name: 'Bas',
+              params: { id: 5, pwd: 10, smh: 15 },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('handle optional params in the middle v4', () => {
+  const path = '/foos/5/10';
+
+  const config = {
+    Foe: {
+      path: '/',
+      initialRouteName: 'Foo',
+      screens: {
+        Foo: 'foo',
+        Bis: {
+          path: 'foo/:id',
+          parse: {
+            id: Number,
+          },
+        },
+        Bas: {
+          path: 'foos/:nip?/:pwd/:smh?/:id',
+          parse: {
+            id: Number,
+            nip: Number,
+            pwd: Number,
+            smh: Number,
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foe',
+        state: {
+          index: 1,
+          routes: [
+            {
+              name: 'Foo',
+            },
+            {
+              name: 'Bas',
+              params: { pwd: 5, id: 10 },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('handle optional params in the middle v5', () => {
+  const path = '/foos/5/10/15';
+
+  const config = {
+    Foe: {
+      path: '/',
+      initialRouteName: 'Foo',
+      screens: {
+        Foo: 'foo',
+        Bis: {
+          path: 'foo/:id',
+          parse: {
+            id: Number,
+          },
+        },
+        Bas: {
+          path: 'foos/:nip?/:pwd/:smh?/:id',
+          parse: {
+            id: Number,
+            nip: Number,
+            pwd: Number,
+            smh: Number,
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foe',
+        state: {
+          index: 1,
+          routes: [
+            {
+              name: 'Foo',
+            },
+            {
+              name: 'Bas',
+              params: { nip: 5, pwd: 10, id: 15 },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('handle optional params in the beginning v1', () => {
+  const path = '5/10/foos/15';
+
+  const config = {
+    Foe: {
+      path: '/',
+      initialRouteName: 'Foo',
+      screens: {
+        Foo: 'foo',
+        Bis: {
+          path: 'foo/:id',
+          parse: {
+            id: Number,
+          },
+        },
+        Bas: {
+          path: ':nip?/:pwd/foos/:smh?/:id',
+          parse: {
+            id: Number,
+            nip: Number,
+            pwd: Number,
+            smh: Number,
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foe',
+        state: {
+          index: 1,
+          routes: [
+            {
+              name: 'Foo',
+            },
+            {
+              name: 'Bas',
+              params: { nip: 5, pwd: 10, id: 15 },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('handle optional params in the beginning v2', () => {
+  const path = '5/10/foos/15';
+
+  const config = {
+    Foe: {
+      path: '/',
+      initialRouteName: 'Foo',
+      screens: {
+        Foo: 'foo',
+        Bis: {
+          path: 'foo/:id',
+          parse: {
+            id: Number,
+          },
+        },
+        Bas: {
+          path: ':nip?/:smh?/:pwd/foos/:id',
+          parse: {
+            id: Number,
+            nip: Number,
+            pwd: Number,
+            smh: Number,
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foe',
+        state: {
+          index: 1,
+          routes: [
+            {
+              name: 'Foo',
+            },
+            {
+              name: 'Bas',
+              params: { nip: 5, pwd: 10, id: 15 },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
