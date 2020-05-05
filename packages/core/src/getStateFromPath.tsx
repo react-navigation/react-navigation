@@ -1,3 +1,4 @@
+import escape from 'escape-string-regexp';
 import queryString from 'query-string';
 import {
   NavigationState,
@@ -20,6 +21,7 @@ type Options = {
 
 type RouteConfig = {
   screen: string;
+  match: RegExp | null;
   pattern: string;
   routeNames: string[];
   parse: ParseConfig | undefined;
@@ -100,6 +102,11 @@ export default function getStateFromPath(
     return undefined;
   }
 
+  // make sure there is a slash at the end
+  if (!remaining.endsWith('/')) {
+    remaining = remaining.concat('/');
+  }
+
   let result: PartialState<NavigationState> | undefined;
   let current: PartialState<NavigationState> | undefined;
 
@@ -109,48 +116,14 @@ export default function getStateFromPath(
 
     // Go through all configs, and see if the next path segment matches our regex
     for (const config of configs) {
-      if (config.pattern === '') {
+      if (!config.match) {
         continue;
       }
 
-      // we check if remaining path has enough segments to be handled with this pattern
-      if (config.pattern.split('/').length > remaining.split('/').length) {
-        continue;
-      }
+      const match = remaining.match(config.match);
 
-      let patternParts = config.pattern.split('/');
-      let remainingParts = remaining.split('/', patternParts.length);
-
-      // array of indexes of params to remove from path
-      const paramIndexes = [] as number[];
-
-      // we extract params from the path
-      const remainingParams = [] as string[];
-      patternParts.forEach((p, index) => {
-        if (p.startsWith(':')) {
-          remainingParams.push(remainingParts[index]);
-          paramIndexes.push(index);
-        }
-      });
-
-      // filter the params from both arrays
-      remainingParts = remainingParts.filter(
-        (_, index) => !paramIndexes.includes(index)
-      );
-      patternParts = patternParts.filter(
-        (_, index) => !paramIndexes.includes(index)
-      );
-
-      let didMatch = true;
-      // the non-param part of the remaining path should be the same as the non-param part of the config
-      for (let i = 0; i < patternParts.length; i++) {
-        if (patternParts[i] !== remainingParts[i]) {
-          didMatch = false;
-          break;
-        }
-      }
-
-      if (didMatch) {
+      // If our regex matches, we need to extract params from the path
+      if (match) {
         routeNames = [...config.routeNames];
 
         const paramPatterns = config.pattern
@@ -160,7 +133,8 @@ export default function getStateFromPath(
         if (paramPatterns.length) {
           params = paramPatterns.reduce<Record<string, any>>((acc, p, i) => {
             const key = p.replace(/^:/, '');
-            const value = remainingParams[i];
+            const value = match[(i + 1) * 2].replace(/\//, ''); // The param segments appear every second item starting from 2 in the regex match result
+
             acc[key] =
               config.parse && config.parse[key]
                 ? config.parse[key](value)
@@ -170,16 +144,8 @@ export default function getStateFromPath(
           }, {});
         }
 
-        // if pattern and remaining path have same amount of segments, there should be nothing left
-        if (config.pattern.split('/').length === remaining.split('/').length) {
-          remaining = '';
-        } else {
-          // For each segment of the pattern, remove one segment from remaining path
-          let i = config.pattern.split('/').length;
-          while (i--) {
-            remaining = remaining.substr(remaining.indexOf('/') + 1);
-          }
-        }
+        // Remove the matched segment from the remaining path
+        remaining = remaining.replace(match[1], '');
 
         break;
       }
@@ -283,8 +249,24 @@ function createConfigItem(
   pattern: string,
   parse?: ParseConfig
 ): RouteConfig {
+  const match = pattern
+    ? new RegExp(
+        `^(${pattern
+          .split('/')
+          .map((it) => {
+            if (it.startsWith(':')) {
+              return `(([^/]+\\/)${it.endsWith('?') ? '?' : ''})`;
+            }
+
+            return `${escape(it)}\\/`;
+          })
+          .join('')})(.*)`
+      )
+    : null;
+
   return {
     screen,
+    match,
     pattern,
     // The routeNames array is mutated, so copy it to keep the current state
     routeNames: [...routeNames],
