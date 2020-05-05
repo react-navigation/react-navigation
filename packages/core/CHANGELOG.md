@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.5.0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.4.0...@react-navigation/core@5.5.0) (2020-05-05)
+
+
+### Features
+
+* add support for optional params to linking ([#8196](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/8196)) ([fcd1cc6](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/fcd1cc64c151e4941f3f544a54b5048d853821f6))
+* support params anywhere in path segement ([#8184](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/8184)) ([3999fc2](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/3999fc28365c3a06a17d963c7be7fb7e897f99e0))
+
+
+
+
+
 # [5.4.0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.3.5...@react-navigation/core@5.4.0) (2020-04-30)
 
 

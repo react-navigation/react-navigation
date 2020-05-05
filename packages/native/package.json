@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/native",
   "description": "React Native integration for React Navigation",
-  "version": "5.2.3",
+  "version": "5.2.4",
   "keywords": [
     "react-native",
     "react-navigation",
@@ -31,7 +31,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/core": "^5.4.0"
+    "@react-navigation/core": "^5.5.0"
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.10.0",
