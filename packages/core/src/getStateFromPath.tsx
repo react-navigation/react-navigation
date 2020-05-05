@@ -75,7 +75,7 @@ export default function getStateFromPath(
   );
 
   let remaining = path
-    .replace(/[/]+/, '/') // Replace multiple slash (//) with single ones
+    .replace(/(\/){2,}/, '/') // Replace multiple slash (//) with single ones
     .replace(/^\//, '') // Remove extra leading slash
     .replace(/\?.*/, ''); // Remove query params which we will handle later
 
@@ -132,13 +132,15 @@ export default function getStateFromPath(
 
         if (paramPatterns.length) {
           params = paramPatterns.reduce<Record<string, any>>((acc, p, i) => {
-            const key = p.replace(/^:/, '');
+            const key = p.replace(/^:/, '').replace(/\?$/, '');
             const value = match[(i + 1) * 2].replace(/\//, ''); // The param segments appear every second item starting from 2 in the regex match result
 
-            acc[key] =
-              config.parse && config.parse[key]
-                ? config.parse[key](value)
-                : value;
+            if (value) {
+              acc[key] =
+                config.parse && config.parse[key]
+                  ? config.parse[key](value)
+                  : value;
+            }
 
             return acc;
           }, {});
