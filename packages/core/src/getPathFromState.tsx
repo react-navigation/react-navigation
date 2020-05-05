@@ -135,7 +135,7 @@ export default function getPathFromState(
       path += pattern
         .split('/')
         .map((p) => {
-          const name = p.replace(/^:/, '');
+          const name = p.replace(/^:/, '').replace(/\?$/, '');
 
           // If the path has a pattern for a param, put the param in the path
           if (params && name in params && p.startsWith(':')) {
@@ -144,8 +144,10 @@ export default function getPathFromState(
             // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
             delete params[name];
             return encodeURIComponent(value);
+          } else if (p.endsWith('?')) {
+            // optional params without value assigned in route.params should be ignored
+            return '';
           }
-
           return encodeURIComponent(p);
         })
         .join('/');
@@ -173,7 +175,7 @@ export default function getPathFromState(
   }
 
   // Remove multiple as well as trailing slashes
-  path = path.replace(/\/+/, '/');
+  path = path.replace(/\/+/g, '/');
   path = path.length > 1 ? path.replace(/\/$/, '') : path;
 
   return path;
