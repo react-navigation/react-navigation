@@ -75,11 +75,14 @@ export default function getStateFromPath(
   );
 
   let remaining = path
-    .replace(/(\/){2,}/, '/') // Replace multiple slash (//) with single ones
+    .replace(/\/+/g, '/') // Replace multiple slash (//) with single ones
     .replace(/^\//, '') // Remove extra leading slash
-    .replace(/\?.*/, ''); // Remove query params which we will handle later
+    .replace(/\?.*$/, ''); // Remove query params which we will handle later
 
-  if (remaining === '') {
+  // Make sure there is a trailing slash
+  remaining = remaining.endsWith('/') ? remaining : `${remaining}/`;
+
+  if (remaining === '/') {
     // We need to add special handling of empty path so navigation to empty path also works
     // When handling empty path, we should only look at the root level config
     const match = configs.find(
@@ -100,11 +103,6 @@ export default function getStateFromPath(
     }
 
     return undefined;
-  }
-
-  // make sure there is a slash at the end
-  if (!remaining.endsWith('/')) {
-    remaining = remaining.concat('/');
   }
 
   let result: PartialState<NavigationState> | undefined;
@@ -146,7 +144,6 @@ export default function getStateFromPath(
           }, {});
         }
 
-        // Remove the matched segment from the remaining path
         remaining = remaining.replace(match[1], '');
 
         break;
@@ -262,7 +259,7 @@ function createConfigItem(
 
             return `${escape(it)}\\/`;
           })
-          .join('')})(.*)`
+          .join('')})`
       )
     : null;
 

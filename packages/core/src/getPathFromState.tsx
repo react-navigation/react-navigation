@@ -175,7 +175,7 @@ export default function getPathFromState(
   }
 
   // Remove multiple as well as trailing slashes
-  path = path.replace(/(\/){2,}/, '/');
+  path = path.replace(/\/+/g, '/');
   path = path.length > 1 ? path.replace(/\/$/, '') : path;
 
   return path;
