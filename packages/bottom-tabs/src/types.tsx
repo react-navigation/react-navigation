@@ -13,6 +13,7 @@ import {
   Descriptor,
   TabNavigationState,
   TabActionHelpers,
+  RouteProp,
 } from '@react-navigation/native';
 
 export type BottomTabNavigationEventMap = {
@@ -44,6 +45,14 @@ export type BottomTabNavigationProp<
   BottomTabNavigationEventMap
 > &
   TabActionHelpers<ParamList>;
+
+export type BottomTabScreenProps<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = string
+> = {
+  navigation: BottomTabNavigationProp<ParamList, RouteName>;
+  route: RouteProp<ParamList, RouteName>;
+};
 
 export type BottomTabNavigationOptions = {
   /**

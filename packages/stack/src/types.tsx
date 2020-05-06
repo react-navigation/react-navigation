@@ -15,6 +15,7 @@ import {
   NavigationHelpers,
   StackNavigationState,
   StackActionHelpers,
+  RouteProp,
 } from '@react-navigation/native';
 
 export type StackNavigationEventMap = {
@@ -44,6 +45,14 @@ export type StackNavigationProp<
   StackNavigationEventMap
 > &
   StackActionHelpers<ParamList>;
+
+export type StackScreenProps<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = string
+> = {
+  navigation: StackNavigationProp<ParamList, RouteName>;
+  route: RouteProp<ParamList, RouteName>;
+};
 
 export type Layout = { width: number; height: number };
 

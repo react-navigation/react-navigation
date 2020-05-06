@@ -8,6 +8,7 @@ import {
   NavigationProp,
   TabNavigationState,
   TabActionHelpers,
+  RouteProp,
 } from '@react-navigation/native';
 
 export type MaterialTopTabNavigationEventMap = {
@@ -45,6 +46,14 @@ export type MaterialTopTabNavigationProp<
   MaterialTopTabNavigationEventMap
 > &
   TabActionHelpers<ParamList>;
+
+export type MaterialTopTabScreenProps<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = string
+> = {
+  navigation: MaterialTopTabNavigationProp<ParamList, RouteName>;
+  route: RouteProp<ParamList, RouteName>;
+};
 
 export type MaterialTopTabNavigationOptions = {
   /**
