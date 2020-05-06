@@ -307,6 +307,8 @@ export default class HeaderSegment extends React.Component<Props, State> {
         })
       : null;
 
+    const rightButton = right ? right({ tintColor: headerTintColor }) : null;
+
     return (
       <React.Fragment>
         <Animated.View
@@ -345,8 +347,17 @@ export default class HeaderSegment extends React.Component<Props, State> {
               pointerEvents="box-none"
               style={[
                 headerTitleAlign === 'left'
-                  ? { position: 'absolute', left: leftButton ? 72 : 16 }
-                  : { marginHorizontal: 18 },
+                  ? {
+                      position: 'absolute',
+                      left: leftButton ? 72 : 16,
+                      right: rightButton ? 72 : 16,
+                    }
+                  : {
+                      marginHorizontal:
+                        (headerBackTitleVisible !== false
+                          ? leftLabelLayout?.width || 0
+                          : 0) + (leftButton ? 32 : 16),
+                    },
                 titleStyle,
                 titleContainerStyle,
               ]}
@@ -359,7 +370,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
                 style: customTitleStyle,
               })}
             </Animated.View>
-            {right ? (
+            {rightButton ? (
               <Animated.View
                 pointerEvents="box-none"
                 style={[
@@ -369,7 +380,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
                   rightContainerStyle,
                 ]}
               >
-                {right({ tintColor: headerTintColor })}
+                {rightButton}
               </Animated.View>
             ) : null}
           </View>
