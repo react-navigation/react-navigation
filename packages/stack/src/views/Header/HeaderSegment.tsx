@@ -349,14 +349,14 @@ export default class HeaderSegment extends React.Component<Props, State> {
                 headerTitleAlign === 'left'
                   ? {
                       position: 'absolute',
-                      left: leftButton ? 72 : 16,
-                      right: rightButton ? 72 : 16,
+                      left: (leftButton ? 72 : 16) + insets.left,
+                      right: (rightButton ? 72 : 16) + insets.right,
                     }
                   : {
                       marginHorizontal:
-                        (headerBackTitleVisible !== false
-                          ? leftLabelLayout?.width || 0
-                          : 0) + (leftButton ? 32 : 16),
+                        (leftButton ? 32 : 16) +
+                        (leftLabelLayout?.width || 0) +
+                        Math.max(insets.left, insets.right),
                     },
                 titleStyle,
                 titleContainerStyle,
