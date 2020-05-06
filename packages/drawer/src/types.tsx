@@ -8,6 +8,7 @@ import {
   NavigationHelpers,
   DrawerNavigationState,
   DrawerActionHelpers,
+  RouteProp,
 } from '@react-navigation/native';
 import type { PanGestureHandlerProperties } from 'react-native-gesture-handler';
 
@@ -207,6 +208,14 @@ export type DrawerNavigationProp<
   DrawerNavigationEventMap
 > &
   DrawerActionHelpers<ParamList>;
+
+export type DrawerScreenProps<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = string
+> = {
+  navigation: DrawerNavigationProp<ParamList, RouteName>;
+  route: RouteProp<ParamList, RouteName>;
+};
 
 export type DrawerDescriptor = Descriptor<
   ParamListBase,
