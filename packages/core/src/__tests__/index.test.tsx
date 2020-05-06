@@ -379,6 +379,8 @@ it("doesn't update state if action wasn't handled", () => {
 });
 
 it('cleans up state when the navigator unmounts', () => {
+  jest.useFakeTimers();
+
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -425,6 +427,8 @@ it('cleans up state when the navigator unmounts', () => {
   root.update(
     <BaseNavigationContainer onStateChange={onStateChange} children={null} />
   );
+
+  act(() => jest.runAllTimers());
 
   expect(onStateChange).toBeCalledTimes(2);
   expect(onStateChange).lastCalledWith(undefined);
