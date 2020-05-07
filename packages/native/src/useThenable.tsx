@@ -1,8 +1,6 @@
 import * as React from 'react';
 
-type Thenable<T> = { then(cb: (result: T) => void): void };
-
-export default function useThenable<T>(create: () => Thenable<T>) {
+export default function useThenable<T>(create: () => PromiseLike<T>) {
   const [promise] = React.useState(create);
 
   // Check if our thenable is synchronous
