@@ -41,6 +41,7 @@ export default React.memo(function Header(props: StackHeaderProps) {
         : previous.route.name;
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const goBack = React.useCallback(
     debounce(() => {
       if (navigation.isFocused() && navigation.canGoBack()) {

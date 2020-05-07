@@ -9,6 +9,7 @@ import useNavigation from './useNavigation';
  */
 export default function useIsFocused(): boolean {
   const navigation = useNavigation();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const getCurrentValue = React.useCallback(navigation.isFocused, [navigation]);
   const subscribe = React.useCallback(
     (callback: (value: boolean) => void) => {
