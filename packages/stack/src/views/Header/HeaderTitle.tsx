@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Animated, StyleSheet, Platform } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
-type Props = React.ComponentProps<typeof Animated.Text> & {
+type Props = Omit<React.ComponentProps<typeof Animated.Text>, 'key'> & {
   tintColor?: string;
   children?: string;
 };

@@ -34,13 +34,13 @@
     "@react-navigation/core": "^5.5.0"
   },
   "devDependencies": {
-    "@react-native-community/bob": "^0.10.0",
-    "@types/react": "^16.9.23",
-    "@types/react-native": "^0.61.22",
+    "@react-native-community/bob": "^0.11.2",
+    "@types/react": "^16.9.34",
+    "@types/react-native": "^0.62.7",
     "del-cli": "^3.0.0",
     "react": "~16.9.0",
     "react-native": "~0.61.5",
-    "react-native-testing-library": "^1.12.0",
+    "react-native-testing-library": "^1.13.2",
     "typescript": "^3.8.3"
   },
   "peerDependencies": {

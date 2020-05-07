@@ -655,14 +655,14 @@ export default class DrawerView extends React.Component<Props> {
                     gestureEnabled ? () => this.toggleDrawer(false) : undefined
                   }
                 >
-                  <Overlay progress={progress} style={overlayStyle} />
+                  <Overlay progress={progress} style={overlayStyle as any} />
                 </TouchableWithoutFeedback>
               ) : (
                 <TapGestureHandler
                   enabled={gestureEnabled}
                   onHandlerStateChange={this.handleTapStateChange}
                 >
-                  <Overlay progress={progress} style={overlayStyle} />
+                  <Overlay progress={progress} style={overlayStyle as any} />
                 </TapGestureHandler>
               )
             }

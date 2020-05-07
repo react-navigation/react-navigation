@@ -30,20 +30,20 @@
   },
   "dependencies": {
     "@react-navigation/routers": "^5.4.2",
-    "escape-string-regexp": "^2.0.0",
-    "nanoid": "^3.0.2",
-    "query-string": "^6.12.0",
+    "escape-string-regexp": "^4.0.0",
+    "nanoid": "^3.1.5",
+    "query-string": "^6.12.1",
     "react-is": "^16.13.0",
     "use-subscription": "^1.4.0"
   },
   "devDependencies": {
-    "@react-native-community/bob": "^0.10.0",
-    "@types/react": "^16.9.23",
+    "@react-native-community/bob": "^0.11.2",
+    "@types/react": "^16.9.34",
     "@types/react-is": "^16.7.1",
     "@types/use-subscription": "^1.0.0",
     "del-cli": "^3.0.0",
     "react": "~16.9.0",
-    "react-native-testing-library": "^1.12.0",
+    "react-native-testing-library": "^1.13.2",
     "react-test-renderer": "~16.13.1",
     "typescript": "^3.8.3"
   },
