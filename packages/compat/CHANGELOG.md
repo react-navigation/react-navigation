@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.17](https://github.com/react-navigation/react-navigation/tree/master/packages/compat/compare/@react-navigation/compat@5.1.16...@react-navigation/compat@5.1.17) (2020-05-08)
+
+
+### Bug Fixes
+
+* fix building typescript definitions. closes [#8216](https://github.com/react-navigation/react-navigation/tree/master/packages/compat/issues/8216) ([47a1229](https://github.com/react-navigation/react-navigation/tree/master/packages/compat/commit/47a12298378747edd2d22e54dc1c8677f98c49b4))
+
+
+
+
+
 ## [5.1.16](https://github.com/react-navigation/react-navigation/tree/master/packages/compat/compare/@react-navigation/compat@5.1.15...@react-navigation/compat@5.1.16) (2020-05-08)
 
 **Note:** Version bump only for package @react-navigation/compat

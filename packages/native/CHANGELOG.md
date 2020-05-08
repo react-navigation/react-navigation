@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.6](https://github.com/react-navigation/react-navigation/tree/master/packages/native/compare/@react-navigation/native@5.2.5...@react-navigation/native@5.2.6) (2020-05-08)
+
+
+### Bug Fixes
+
+* fix building typescript definitions. closes [#8216](https://github.com/react-navigation/react-navigation/tree/master/packages/native/issues/8216) ([47a1229](https://github.com/react-navigation/react-navigation/tree/master/packages/native/commit/47a12298378747edd2d22e54dc1c8677f98c49b4))
+
+
+
+
+
 ## [5.2.5](https://github.com/react-navigation/react-navigation/tree/master/packages/native/compare/@react-navigation/native@5.2.4...@react-navigation/native@5.2.5) (2020-05-08)
 
 

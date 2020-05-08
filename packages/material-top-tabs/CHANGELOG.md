@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.1](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.2.0...@react-navigation/material-top-tabs@5.2.1) (2020-05-08)
+
+
+### Bug Fixes
+
+* fix building typescript definitions. closes [#8216](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/issues/8216) ([47a1229](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/commit/47a12298378747edd2d22e54dc1c8677f98c49b4))
+
+
+
+
+
 # [5.2.0](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.15...@react-navigation/material-top-tabs@5.2.0) (2020-05-08)
 
 

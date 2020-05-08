@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.7.1](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.7.0...@react-navigation/drawer@5.7.1) (2020-05-08)
+
+
+### Bug Fixes
+
+* fix building typescript definitions. closes [#8216](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/8216) ([47a1229](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/47a12298378747edd2d22e54dc1c8677f98c49b4))
+
+
+
+
+
 # [5.7.0](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.6.4...@react-navigation/drawer@5.7.0) (2020-05-08)
 
 
