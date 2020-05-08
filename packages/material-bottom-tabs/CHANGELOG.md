@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0](https://github.com/react-navigation/react-navigation/tree/master/packages/material-bottom-tabs/compare/@react-navigation/material-bottom-tabs@5.1.15...@react-navigation/material-bottom-tabs@5.2.0) (2020-05-08)
+
+
+### Features
+
+* add generic type aliases for screen props ([bea14aa](https://github.com/react-navigation/react-navigation/tree/master/packages/material-bottom-tabs/commit/bea14aa26fd5cbfebc7973733c5cf1f44fd323aa)), closes [#7971](https://github.com/react-navigation/react-navigation/tree/master/packages/material-bottom-tabs/issues/7971)
+* use links in bottom navigation tabs ([f384706](https://github.com/react-navigation/react-navigation/tree/master/packages/material-bottom-tabs/commit/f384706741f7e2422c284b65da10425f7af680c0))
+
+
+
+
+
 ## [5.1.15](https://github.com/react-navigation/react-navigation/tree/master/packages/material-bottom-tabs/compare/@react-navigation/material-bottom-tabs@5.1.14...@react-navigation/material-bottom-tabs@5.1.15) (2020-05-05)
 
 **Note:** Version bump only for package @react-navigation/material-bottom-tabs

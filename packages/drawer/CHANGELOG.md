@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.7.0](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.6.4...@react-navigation/drawer@5.7.0) (2020-05-08)
+
+
+### Features
+
+* add generic type aliases for screen props ([bea14aa](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/bea14aa26fd5cbfebc7973733c5cf1f44fd323aa)), closes [#7971](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/7971)
+
+
+
+
+
 ## [5.6.4](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.6.3...@react-navigation/drawer@5.6.4) (2020-05-05)
 
 **Note:** Version bump only for package @react-navigation/drawer
