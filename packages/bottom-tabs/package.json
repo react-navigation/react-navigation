@@ -15,6 +15,7 @@
   "repository": "https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs",
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
+  "source": "src/index.tsx",
   "module": "lib/module/index.js",
   "types": "lib/typescript/src/index.d.ts",
   "files": [
