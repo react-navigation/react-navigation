@@ -38,7 +38,7 @@
     "react-native-iphone-x-helper": "^1.2.1"
   },
   "devDependencies": {
-    "@react-native-community/bob": "^0.13.0",
+    "@react-native-community/bob": "^0.13.1",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/native": "^5.2.5",
     "@types/color": "^3.0.1",
