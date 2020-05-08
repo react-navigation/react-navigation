@@ -40,7 +40,7 @@
     "expo-cli": "^3.20.1",
     "jest": "^26.0.1",
     "jest-dev-server": "^4.4.0",
-    "playwright": "^1.0.1",
+    "playwright": "^0.14.0",
     "serve": "^11.3.0",
     "typescript": "^3.8.3"
   }
