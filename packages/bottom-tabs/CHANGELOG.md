@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.4.0](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.3.4...@react-navigation/bottom-tabs@5.4.0) (2020-05-08)
+
+
+### Features
+
+* add generic type aliases for screen props ([bea14aa](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/bea14aa26fd5cbfebc7973733c5cf1f44fd323aa)), closes [#7971](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/issues/7971)
+
+
+
+
+
 ## [5.3.4](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.3.3...@react-navigation/bottom-tabs@5.3.4) (2020-05-05)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

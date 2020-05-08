@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.19...@react-navigation/stack@5.3.0) (2020-05-08)
+
+
+### Bug Fixes
+
+* add proper margins to the header title ([f07cd13](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/f07cd135619d635e8841aa0df0b6e687636e7408))
+* include safe are insets in title's margins ([4d1e102](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/4d1e102f8c3ffab116d0195fbab3086f6345a077))
+
+
+### Features
+
+* add generic type aliases for screen props ([bea14aa](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/bea14aa26fd5cbfebc7973733c5cf1f44fd323aa)), closes [#7971](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/7971)
+
+
+
+
+
 ## [5.2.19](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.2.18...@react-navigation/stack@5.2.19) (2020-05-05)
 
 **Note:** Version bump only for package @react-navigation/stack

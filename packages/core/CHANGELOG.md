@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.5.1](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.5.0...@react-navigation/core@5.5.1) (2020-05-08)
+
+
+### Bug Fixes
+
+* avoid cleaning up state when a new navigator is mounted. fixes [#8195](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/8195) ([f6d0676](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/f6d06768d3c36d1f5beaffcb660f3c259209f2e7))
+
+
+
+
+
 # [5.5.0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.4.0...@react-navigation/core@5.5.0) (2020-05-05)
 
 
