@@ -30,13 +30,15 @@ module.exports = async function (env, argv) {
     '@expo/vector-icons': path.resolve(node_modules, '@expo/vector-icons'),
   });
 
-  fs.readdirSync(packages).forEach((name) => {
-    config.resolve.alias[`@react-navigation/${name}`] = path.resolve(
-      packages,
-      name,
-      'src'
-    );
-  });
+  fs.readdirSync(packages)
+    .filter((name) => !name.startsWith('.'))
+    .forEach((name) => {
+      config.resolve.alias[`@react-navigation/${name}`] = path.resolve(
+        packages,
+        name,
+        require(`../packages/${name}/package.json`).source
+      );
+    });
 
   return config;
 };
