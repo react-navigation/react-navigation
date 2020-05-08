@@ -3516,10 +3516,10 @@
   dependencies:
     "@types/node" ">= 8"
 
-"@react-native-community/bob@^0.13.0":
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/@react-native-community/bob/-/bob-0.13.0.tgz#c1cf2d8d69dd6f3ae1eb3e3a9b1906168450ab69"
-  integrity sha512-n6OYWNGZRwS2hHokg/LeF0pJlrwTa4upF27ZTyascA93Sveo6baBufUG1QYG4nZFMkY/fte2uMh/265I9+J7xQ==
+"@react-native-community/bob@^0.13.1":
+  version "0.13.1"
+  resolved "https://registry.yarnpkg.com/@react-native-community/bob/-/bob-0.13.1.tgz#188fb72a925751fa92bc5ed543c33ca8ceea9375"
+  integrity sha512-MTngPqrasri2B4y9cVvBCrBrwcwt36izS17n4q4Os+eSK10LXT1Rd7imd9r3lRfdVxF90Dgar91W+hbvJRAWLg==
   dependencies:
     "@babel/core" "^7.9.6"
     "@babel/plugin-proposal-class-properties" "^7.8.3"

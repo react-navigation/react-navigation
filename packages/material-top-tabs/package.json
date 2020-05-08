@@ -38,7 +38,7 @@
     "color": "^3.1.2"
   },
   "devDependencies": {
-    "@react-native-community/bob": "^0.13.0",
+    "@react-native-community/bob": "^0.13.1",
     "@react-navigation/native": "^5.2.5",
     "@types/react": "^16.9.34",
     "@types/react-native": "^0.62.7",
