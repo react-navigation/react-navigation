@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.5.2](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.5.1...@react-navigation/core@5.5.2) (2020-05-08)
+
+
+### Bug Fixes
+
+* fix building typescript definitions. closes [#8216](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/8216) ([47a1229](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/47a12298378747edd2d22e54dc1c8677f98c49b4))
+
+
+
+
+
 ## [5.5.1](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.5.0...@react-navigation/core@5.5.1) (2020-05-08)
 
 

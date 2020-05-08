@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.4.4](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.4.3...@react-navigation/routers@5.4.4) (2020-05-08)
+
+
+### Bug Fixes
+
+* fix building typescript definitions. closes [#8216](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/issues/8216) ([47a1229](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/47a12298378747edd2d22e54dc1c8677f98c49b4))
+
+
+
+
+
 ## [5.4.3](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.4.2...@react-navigation/routers@5.4.3) (2020-05-08)
 
 **Note:** Version bump only for package @react-navigation/routers
