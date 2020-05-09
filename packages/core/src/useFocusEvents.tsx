@@ -37,7 +37,7 @@ export default function useFocusEvents({ state, emitter }: Options) {
     [currentFocusedKey, emitter, navigation]
   );
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     const lastFocusedKey = lastFocusedKeyRef.current;
 
     lastFocusedKeyRef.current = currentFocusedKey;
