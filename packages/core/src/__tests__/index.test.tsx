@@ -1487,21 +1487,17 @@ it("doesn't throw if children is null", () => {
   expect(() => render(element).update(element)).not.toThrowError();
 });
 
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-it('set proper title', async () => {
+it('set proper title', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
     return descriptors[state.routes[state.index].key].render();
   };
 
-  let navigate: () => void = () => {};
+  let navigate: (to: string) => void = () => {};
 
-  const TestScreen = (to: string) => (props: any) => {
-    navigate = () =>
+  const TestScreen = (props: any) => {
+    navigate = (to: string) =>
       props.navigation.dispatch({ type: 'NAVIGATE', payload: { name: to } });
     return null;
   };
@@ -1514,23 +1510,23 @@ it('set proper title', async () => {
         <Screen
           name="foo"
           options={{ title: 'Screen' }}
-          component={TestScreen('bar')}
+          component={TestScreen}
         />
         <Screen
           name="bar"
           options={{ title: 'Screen2' }}
-          component={TestScreen('saz')}
+          component={TestScreen}
         />
-        <Screen name="saz" component={TestScreen('baz')} />
+        <Screen name="saz" component={TestScreen} />
         <Screen name="baz" options={{ title: 'Screen4' }}>
           {() => (
             <TestNavigator>
               <Screen
                 name="qux"
-                component={TestScreen('bux')}
+                component={TestScreen}
                 options={{ title: 'Screen3' }}
               />
-              <Screen name="bux" component={TestScreen('saz')} />
+              <Screen name="bux" component={TestScreen} />
             </TestNavigator>
           )}
         </Screen>
@@ -1540,21 +1536,15 @@ it('set proper title', async () => {
 
   render(element).update(element);
 
-  await sleep(200);
   expect(window.document.title).toEqual('Screen');
-  act(navigate);
-  await sleep(200);
+  act(() => navigate('bar'));
   expect(window.document.title).toEqual('Screen2');
-  act(navigate);
-  await sleep(200);
+  act(() => navigate('saz'));
   expect(window.document.title).toEqual('');
-  act(navigate);
-  await sleep(200);
+  act(() => navigate('baz'));
   expect(window.document.title).toEqual('Screen3');
-  act(navigate);
-  await sleep(200);
+  act(() => navigate('bux'));
   expect(window.document.title).toEqual('Screen4');
-  act(navigate);
-  await sleep(200);
+  act(() => navigate('saz'));
   expect(window.document.title).toEqual('');
 });

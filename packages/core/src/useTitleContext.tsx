@@ -2,27 +2,19 @@ import * as React from 'react';
 import { SharedScreenNavigationOptions, useIsFocused } from './index';
 import NavigationDocumentTitleContext from './NavigationDocumentTitleContext';
 
-let timeout: NodeJS.Timeout | number | undefined;
-
 let nonNavigationTitle: string | undefined;
 
 let recentSetter: string | undefined;
 
 function debounceSetTitle(title: string | undefined, key: string) {
   recentSetter = key;
-  if (typeof timeout === 'number') {
-    clearTimeout(timeout);
-    timeout = undefined;
-  }
-  timeout = setTimeout(() => {
-    if ('document' in window && window.document.createElement) {
-      if (nonNavigationTitle === undefined) {
-        nonNavigationTitle = window.document.title;
-      }
-      window.document.title =
-        title !== undefined ? title : (nonNavigationTitle as string);
+  if ('document' in window && window.document.createElement) {
+    if (nonNavigationTitle === undefined) {
+      nonNavigationTitle = window.document.title;
     }
-  }, 100);
+    window.document.title =
+      title !== undefined ? title : (nonNavigationTitle as string);
+  }
 }
 
 export default function useDocumentTitleContext(
