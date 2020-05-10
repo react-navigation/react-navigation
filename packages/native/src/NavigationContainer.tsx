@@ -22,7 +22,7 @@ type Props = NavigationContainerProps & {
  * Container component which holds the navigation state designed for React Native apps.
  * This should be rendered at the root wrapping the whole app.
  *
- * @param props.initialState Initial state object for the navigation tree. When deep link handling is enabled, this will be ignored if there's an incoming link.
+ * @param props.initialState Initial state object for the navigation tree. When deep link handling is enabled, this will override deep links when specified. Make sure that you don't specify an `initialState` when there's a deep link (`Linking.getInitialURL()`).
  * @param props.onStateChange Callback which is called with the latest navigation state when it changes.
  * @param props.theme Theme object for the navigators.
  * @param props.linking Options for deep linking. Deep link handling is enabled when this prop is provided, unless `linking.enabled` is `false`.
@@ -46,15 +46,13 @@ const NavigationContainer = React.forwardRef(function NavigationContainer(
     ...linking,
   });
 
-  const [isReady, initialState = rest.initialState] = useThenable(
-    getInitialState
-  );
+  const [isReady, initialState] = useThenable(getInitialState);
 
   React.useImperativeHandle(ref, () => refContainer.current);
 
   const linkingContext = React.useMemo(() => ({ options: linking }), [linking]);
 
-  if (isLinkingEnabled && !isReady) {
+  if (rest.initialState == null && isLinkingEnabled && !isReady) {
     // This is temporary until we have Suspense for data-fetching
     // Then the fallback will be handled by a parent `Suspense` component
     return fallback as React.ReactElement;
@@ -65,7 +63,9 @@ const NavigationContainer = React.forwardRef(function NavigationContainer(
       <ThemeProvider value={theme}>
         <BaseNavigationContainer
           {...rest}
-          initialState={initialState}
+          initialState={
+            rest.initialState == null ? initialState : rest.initialState
+          }
           ref={refContainer}
         />
       </ThemeProvider>
