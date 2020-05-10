@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.4.2](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.4.1...@react-navigation/bottom-tabs@5.4.2) (2020-05-10)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
 ## [5.4.1](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.4.0...@react-navigation/bottom-tabs@5.4.1) (2020-05-08)
 
 

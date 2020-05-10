@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0](https://github.com/react-navigation/react-navigation/tree/master/packages/native/compare/@react-navigation/native@5.2.6...@react-navigation/native@5.3.0) (2020-05-10)
+
+
+### Features
+
+* initialState should take priority over deep link ([039017b](https://github.com/react-navigation/react-navigation/tree/master/packages/native/commit/039017bc2af69120d2d10e8f2c8a62919c37eb65))
+
+
+
+
+
 ## [5.2.6](https://github.com/react-navigation/react-navigation/tree/master/packages/native/compare/@react-navigation/native@5.2.5...@react-navigation/native@5.2.6) (2020-05-08)
 
 
