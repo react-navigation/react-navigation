@@ -7,6 +7,7 @@ import {
   I18nManager,
   Dimensions,
   ScaledSize,
+  Linking,
 } from 'react-native';
 // eslint-disable-next-line import/no-unresolved
 import { enableScreens } from 'react-native-screens';
@@ -138,18 +139,18 @@ export default function App() {
   React.useEffect(() => {
     const restoreState = async () => {
       try {
-        let state;
+        const initialUrl = await Linking.getInitialURL();
 
-        if (Platform.OS !== 'web' && state === undefined) {
+        if (Platform.OS !== 'web' || initialUrl === null) {
           const savedState = await AsyncStorage.getItem(
             NAVIGATION_PERSISTENCE_KEY
           );
 
-          state = savedState ? JSON.parse(savedState) : undefined;
-        }
+          const state = savedState ? JSON.parse(savedState) : undefined;
 
-        if (state !== undefined) {
-          setInitialState(state);
+          if (state !== undefined) {
+            setInitialState(state);
+          }
         }
       } finally {
         try {
