@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.3.3](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.3.2...@react-navigation/stack@5.3.3) (2020-05-11)
+
+
+### Bug Fixes
+
+* fix ios transitionspec settle time ([#8028](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/8028)) ([dd7cff2](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/dd7cff201608365a80f1d50a006df3e0d18e94a1))
+
+
+
+
+
 ## [5.3.2](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.3.1...@react-navigation/stack@5.3.2) (2020-05-10)
 
 **Note:** Version bump only for package @react-navigation/stack
