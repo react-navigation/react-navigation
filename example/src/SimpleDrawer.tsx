@@ -106,7 +106,7 @@ const MyNavScreen = ({
                 title="Set unlocked"
               />
             ),
-            unlocked: (
+            'unlocked': (
               <Button
                 onPress={() =>
                   navigation.setParams({ drawerLockMode: 'locked-open' })

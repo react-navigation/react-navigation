@@ -43,6 +43,7 @@ const Header = React.memo(function Header(props: StackHeaderProps) {
         : previous.route.routeName;
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const goBack = React.useCallback(
     debounce(() => {
       navigation.dispatch(StackActions.pop({ key: scene.route.key }));
