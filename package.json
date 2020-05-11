@@ -13,7 +13,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/satya164/react-navigation.git"
+    "url": "git+https://github.com/react-navigation/react-navigation.git"
   },
   "author": "Satyajit Sahoo <satyajit.happy@gmail.com> (https://github.com/satya164/), Michał Osadnik <micosa97@gmail.com> (https://github.com/osdnk/)",
   "scripts": {
