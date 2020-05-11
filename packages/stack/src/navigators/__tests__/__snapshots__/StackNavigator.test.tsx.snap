@@ -13,7 +13,6 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
     style={
       Object {
         "flex": 1,
-        "overflow": "hidden",
       }
     }
   >
@@ -57,8 +56,8 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
                 "damping": 500,
                 "mass": 3,
                 "overshootClamping": true,
-                "restDisplacementThreshold": 0.01,
-                "restSpeedThreshold": 0.01,
+                "restDisplacementThreshold": 10,
+                "restSpeedThreshold": 10,
                 "stiffness": 1000,
               },
             },
@@ -68,8 +67,8 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
                 "damping": 500,
                 "mass": 3,
                 "overshootClamping": true,
-                "restDisplacementThreshold": 0.01,
-                "restSpeedThreshold": 0.01,
+                "restDisplacementThreshold": 10,
+                "restSpeedThreshold": 10,
                 "stiffness": 1000,
               },
             },
@@ -254,7 +253,7 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
             pointerEvents="box-none"
             style={
               Object {
-                "marginHorizontal": 18,
+                "marginHorizontal": 16,
                 "opacity": 1,
               }
             }
@@ -310,7 +309,6 @@ exports[`StackNavigator renders successfully 1`] = `
     style={
       Object {
         "flex": 1,
-        "overflow": "hidden",
       }
     }
   >
@@ -354,8 +352,8 @@ exports[`StackNavigator renders successfully 1`] = `
                 "damping": 500,
                 "mass": 3,
                 "overshootClamping": true,
-                "restDisplacementThreshold": 0.01,
-                "restSpeedThreshold": 0.01,
+                "restDisplacementThreshold": 10,
+                "restSpeedThreshold": 10,
                 "stiffness": 1000,
               },
             },
@@ -365,8 +363,8 @@ exports[`StackNavigator renders successfully 1`] = `
                 "damping": 500,
                 "mass": 3,
                 "overshootClamping": true,
-                "restDisplacementThreshold": 0.01,
-                "restSpeedThreshold": 0.01,
+                "restDisplacementThreshold": 10,
+                "restSpeedThreshold": 10,
                 "stiffness": 1000,
               },
             },
@@ -551,7 +549,7 @@ exports[`StackNavigator renders successfully 1`] = `
             pointerEvents="box-none"
             style={
               Object {
-                "marginHorizontal": 18,
+                "marginHorizontal": 16,
                 "opacity": 1,
               }
             }

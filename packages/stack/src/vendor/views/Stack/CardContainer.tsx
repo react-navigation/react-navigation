@@ -8,8 +8,8 @@ import {
   Route,
   Scene,
   Layout,
-  StackCardMode,
   StackHeaderMode,
+  StackCardMode,
   TransitionPreset,
 } from '../../types';
 
