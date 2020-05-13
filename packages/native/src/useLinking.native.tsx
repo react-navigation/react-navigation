@@ -71,7 +71,7 @@ export default function useLinking(
       return undefined;
     }
 
-    const url = await (Promise.race([
+    let url = await (Promise.race([
       Linking.getInitialURL(),
       new Promise((resolve) =>
         // Timeout in 150ms if `getInitialState` doesn't resolve
@@ -79,6 +79,10 @@ export default function useLinking(
         setTimeout(resolve, 150)
       ),
     ]) as Promise<string | null | undefined>);
+
+    // Expo versions <= 37 has a bug that sends "exps" instead of "https" when a universal link launches the app
+    // https://github.com/expo/expo/issues/6609
+    url = url?.replace(/^exps:\/\//, 'https://');
 
     const path = url ? extractPathFromURL(url) : null;
 
