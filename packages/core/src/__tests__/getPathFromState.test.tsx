@@ -122,7 +122,10 @@ it('handles state with config with nested screens', () => {
     Foo: {
       path: 'foo',
       screens: {
-        Foe: 'foe',
+        Foe: {
+          path: 'foe',
+          exact: true,
+        },
       },
     },
     Bar: 'bar/:type/:fruit',
@@ -188,7 +191,10 @@ it('handles state with config with nested screens and unused configs', () => {
     Foo: {
       path: 'foo',
       screens: {
-        Foe: 'foe',
+        Foe: {
+          path: 'foe',
+          exact: true,
+        },
       },
     },
     Baz: {
@@ -252,7 +258,6 @@ it('handles nested object with stringify in it', () => {
     },
     Bar: 'bar/:type/:fruit',
     Baz: {
-      path: 'baz',
       screens: {
         Bos: 'bos',
         Bis: {
@@ -322,7 +327,10 @@ it('handles nested object for second route depth', () => {
         Bar: {
           path: 'bar',
           screens: {
-            Baz: 'baz',
+            Baz: {
+              path: 'baz',
+              exact: true,
+            },
           },
         },
       },
@@ -370,7 +378,10 @@ it('handles nested object for second route depth and and path and stringify in r
             id: Number,
           },
           screens: {
-            Baz: 'baz',
+            Baz: {
+              path: 'baz',
+              exact: true,
+            },
           },
         },
       },
@@ -470,7 +481,7 @@ it('keeps query params if path is empty', () => {
 });
 
 it('cuts nested configs too', () => {
-  const path = '/baz';
+  const path = '/foo/baz';
   const config = {
     Foo: {
       path: 'foo',
@@ -478,7 +489,9 @@ it('cuts nested configs too', () => {
         Bar: '',
       },
     },
-    Baz: { path: 'baz' },
+    Baz: {
+      path: 'baz',
+    },
   };
 
   const state = {
@@ -504,7 +517,7 @@ it('cuts nested configs too', () => {
 });
 
 it('handles empty path at the end', () => {
-  const path = '/bar';
+  const path = '/foo/bar';
   const config = {
     Foo: {
       path: 'foo',
@@ -641,7 +654,6 @@ it('strips undefined query params', () => {
     },
     Bar: 'bar/:type/:fruit',
     Baz: {
-      path: 'baz',
       screens: {
         Bos: 'bos',
         Bis: {
@@ -714,7 +726,6 @@ it('handles stripping all query params', () => {
     },
     Bar: 'bar/:type/:fruit',
     Baz: {
-      path: 'baz',
       screens: {
         Bos: 'bos',
         Bis: {
@@ -753,9 +764,6 @@ it('handles stripping all query params', () => {
                           name: 'Bis',
                           params: {
                             author: 'Jane',
-                            count: undefined,
-                            answer: undefined,
-                            valid: undefined,
                           },
                         },
                       ],
