@@ -147,7 +147,10 @@ it('converts path string to initial state with config with nested screens', () =
     Foo: {
       path: 'foo',
       screens: {
-        Foe: 'foe',
+        Foe: {
+          path: 'foe',
+          exact: true,
+        },
       },
     },
     Bar: 'bar/:type/:fruit',
@@ -213,7 +216,10 @@ it('converts path string to initial state with config with nested screens and un
     Foo: {
       path: 'foo',
       screens: {
-        Foe: 'foe',
+        Foe: {
+          path: 'foe',
+          exact: true,
+        },
       },
     },
     Baz: {
@@ -268,16 +274,23 @@ it('handles nested object with unused configs and with parse in it', () => {
     Foo: {
       path: 'foo',
       screens: {
-        Foe: 'foe',
+        Foe: {
+          path: 'foe',
+          exact: true,
+        },
       },
     },
     Bar: 'bar/:type/:fruit',
     Baz: {
       path: 'baz',
       screens: {
-        Bos: 'bos',
+        Bos: {
+          path: 'bos',
+          exact: true,
+        },
         Bis: {
           path: 'bis/:author',
+          exact: true,
           stringify: {
             author: (author: string) =>
               author.replace(/^\w/, (c) => c.toLowerCase()),
@@ -348,11 +361,18 @@ it('handles parse in nested object for second route depth', () => {
     Foo: {
       path: 'foo',
       screens: {
-        Foe: 'foe',
+        Foe: {
+          path: 'foe',
+          exact: true,
+        },
         Bar: {
           path: 'bar',
+          exact: true,
           screens: {
-            Baz: 'baz',
+            Baz: {
+              path: 'baz',
+              exact: true,
+            },
           },
         },
       },
@@ -519,16 +539,23 @@ it('handles two initialRouteNames', () => {
     Foo: {
       path: 'foo',
       screens: {
-        Foe: 'foe',
+        Foe: {
+          path: 'foe',
+          exact: true,
+        },
       },
     },
     Bar: 'bar/:type/:fruit',
     Baz: {
       initialRouteName: 'Bos',
       screens: {
-        Bos: 'bos',
+        Bos: {
+          path: 'bos',
+          exact: true,
+        },
         Bis: {
           path: 'bis/:author',
+          exact: true,
           stringify: {
             author: (author: string) =>
               author.replace(/^\w/, (c) => c.toLowerCase()),
@@ -601,16 +628,23 @@ it('accepts initialRouteName without config for it', () => {
     Foo: {
       path: 'foo',
       screens: {
-        Foe: 'foe',
+        Foe: {
+          path: 'foe',
+          exact: true,
+        },
       },
     },
     Bar: 'bar/:type/:fruit',
     Baz: {
       initialRouteName: 'Bas',
       screens: {
-        Bos: 'bos',
+        Bos: {
+          path: 'bos',
+          exact: true,
+        },
         Bis: {
           path: 'bis/:author',
+          exact: true,
           stringify: {
             author: (author: string) =>
               author.replace(/^\w/, (c) => c.toLowerCase()),
@@ -1765,6 +1799,44 @@ it('handle optional params in the beginning v2', () => {
             {
               name: 'Bas',
               params: { nip: 5, pwd: 10, id: 15 },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('merges parent patterns if needed', () => {
+  const path = 'foo/42/baz/babel';
+
+  const config = {
+    Foo: {
+      path: 'foo/:bar',
+      parse: {
+        bar: Number,
+      },
+      screens: {
+        Baz: 'baz/:qux',
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        params: { bar: 42 },
+        state: {
+          routes: [
+            {
+              name: 'Baz',
+              params: { qux: 'babel' },
             },
           ],
         },
