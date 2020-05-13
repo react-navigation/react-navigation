@@ -9,15 +9,14 @@ type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 
 type StringifyConfig = Record<string, (value: any) => string>;
 
-type Options = {
-  [routeName: string]:
-    | string
-    | {
-        path?: string;
-        stringify?: StringifyConfig;
-        screens?: Options;
-      };
+type OptionsItem = {
+  path?: string;
+  exact?: boolean;
+  stringify?: StringifyConfig;
+  screens?: Options;
 };
+
+type Options = Record<string, string | OptionsItem>;
 
 /**
  * Utility to serialize a navigation state object to a path string.
@@ -53,83 +52,77 @@ export default function getPathFromState(
   if (state === undefined) {
     throw Error('NavigationState not passed');
   }
-  let path = '/';
 
+  // Create a normalized configs array which will be easier to use
+  const configs = createNormalizedConfigs(options);
+
+  let path = '/';
   let current: State | undefined = state;
+
+  const allParams: Record<string, any> = {};
 
   while (current) {
     let index = typeof current.index === 'number' ? current.index : 0;
     let route = current.routes[index] as Route<string> & {
       state?: State;
     };
-    let currentOptions = options;
-    let pattern = route.name;
-    // we keep all the route names that appeared during going deeper in config in case the pattern is resolved to undefined
-    let nestedRouteNames = '';
 
-    while (route.name in currentOptions) {
-      if (typeof currentOptions[route.name] === 'string') {
-        pattern = currentOptions[route.name] as string;
-        break;
-      } else if (typeof currentOptions[route.name] === 'object') {
-        // if there is no `screens` property, we return pattern
-        if (
-          !(currentOptions[route.name] as {
-            screens: Options;
-          }).screens
-        ) {
-          pattern = (currentOptions[route.name] as { path: string }).path;
-          nestedRouteNames = `${nestedRouteNames}/${route.name}`;
-          break;
+    let pattern: string | undefined;
+
+    let currentParams: Record<string, any> = { ...route.params };
+    let currentOptions = configs;
+
+    // Keep all the route names that appeared during going deeper in config in case the pattern is resolved to undefined
+    let nestedRouteNames = [];
+
+    let hasNext = true;
+
+    while (route.name in currentOptions && hasNext) {
+      pattern = currentOptions[route.name].pattern;
+
+      nestedRouteNames.push(route.name);
+
+      if (route.params) {
+        const stringify = currentOptions[route.name]?.stringify;
+
+        currentParams = Object.fromEntries(
+          Object.entries(route.params).map(([key, value]) => [
+            key,
+            stringify?.[key] ? stringify[key](value) : String(value),
+          ])
+        );
+
+        if (pattern) {
+          Object.assign(allParams, currentParams);
+        }
+      }
+
+      // If there is no `screens` property or no nested state, we return pattern
+      if (!currentOptions[route.name].screens || route.state === undefined) {
+        hasNext = false;
+      } else {
+        index =
+          typeof route.state.index === 'number'
+            ? route.state.index
+            : route.state.routes.length - 1;
+
+        const nextRoute = route.state.routes[index];
+        const nestedConfig = currentOptions[route.name].screens;
+
+        // if there is config for next route name, we go deeper
+        if (nestedConfig && nextRoute.name in nestedConfig) {
+          route = nextRoute as Route<string> & { state?: State };
+          currentOptions = nestedConfig;
         } else {
-          // if it is the end of state, we return pattern
-          if (route.state === undefined) {
-            pattern = (currentOptions[route.name] as { path: string }).path;
-            nestedRouteNames = `${nestedRouteNames}/${route.name}`;
-            break;
-          } else {
-            index =
-              typeof route.state.index === 'number' ? route.state.index : 0;
-            const nextRoute = route.state.routes[index];
-            const deeperConfig = (currentOptions[route.name] as {
-              screens: Options;
-            }).screens;
-            // if there is config for next route name, we go deeper
-            if (nextRoute.name in deeperConfig) {
-              nestedRouteNames = `${nestedRouteNames}/${route.name}`;
-              route = nextRoute as Route<string> & { state?: State };
-              currentOptions = deeperConfig;
-            } else {
-              // if not, there is no sense in going deeper in config
-              pattern = (currentOptions[route.name] as { path: string }).path;
-              nestedRouteNames = `${nestedRouteNames}/${route.name}`;
-              break;
-            }
-          }
+          // If not, there is no sense in going deeper in config
+          hasNext = false;
         }
       }
     }
 
     if (pattern === undefined) {
-      // cut the first `/`
-      pattern = nestedRouteNames.substring(1);
+      pattern = nestedRouteNames.join('/');
     }
-
-    const config =
-      currentOptions[route.name] !== undefined
-        ? (currentOptions[route.name] as { stringify?: StringifyConfig })
-            .stringify
-        : undefined;
-
-    const params = route.params
-      ? // Stringify all of the param values before we use them
-        Object.entries(route.params).reduce<{
-          [key: string]: string;
-        }>((acc, [key, value]) => {
-          acc[key] = config?.[key] ? config[key](value) : String(value);
-          return acc;
-        }, {})
-      : undefined;
 
     if (currentOptions[route.name] !== undefined) {
       path += pattern
@@ -138,16 +131,23 @@ export default function getPathFromState(
           const name = p.replace(/^:/, '').replace(/\?$/, '');
 
           // If the path has a pattern for a param, put the param in the path
-          if (params && name in params && p.startsWith(':')) {
-            const value = params[name];
+          if (p.startsWith(':')) {
+            const value = allParams[name];
+
             // Remove the used value from the params object since we'll use the rest for query string
-            // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-            delete params[name];
+            if (currentParams) {
+              // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+              delete currentParams[name];
+            }
+
+            if (value === undefined && p.endsWith('?')) {
+              // Optional params without value assigned in route.params should be ignored
+              return '';
+            }
+
             return encodeURIComponent(value);
-          } else if (p.endsWith('?')) {
-            // optional params without value assigned in route.params should be ignored
-            return '';
           }
+
           return encodeURIComponent(p);
         })
         .join('/');
@@ -157,14 +157,15 @@ export default function getPathFromState(
 
     if (route.state) {
       path += '/';
-    } else if (params) {
-      for (let param in params) {
-        if (params[param] === 'undefined') {
+    } else if (currentParams) {
+      for (let param in currentParams) {
+        if (currentParams[param] === 'undefined') {
           // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-          delete params[param];
+          delete currentParams[param];
         }
       }
-      const query = queryString.stringify(params);
+
+      const query = queryString.stringify(currentParams);
 
       if (query) {
         path += `?${query}`;
@@ -179,4 +180,60 @@ export default function getPathFromState(
   path = path.length > 1 ? path.replace(/\/$/, '') : path;
 
   return path;
+}
+
+type ConfigItem = {
+  pattern?: string;
+  stringify?: StringifyConfig;
+  screens?: Record<string, ConfigItem>;
+};
+
+function joinPaths(...paths: string[]): string {
+  return paths
+    .map((p) => p.split('/'))
+    .flat()
+    .filter(Boolean)
+    .join('/');
+}
+
+function createConfigItem(
+  config: OptionsItem | string,
+  parentPattern?: string
+): ConfigItem {
+  if (typeof config === 'string') {
+    // If a string is specified as the value of the key(e.g. Foo: '/path'), use it as the pattern
+    const pattern = parentPattern ? joinPaths(parentPattern, config) : config;
+
+    return { pattern };
+  }
+
+  // If an object is specified as the value (e.g. Foo: { ... }),
+  // It can have `path` property and `screens` prop which has nested configs
+  const pattern =
+    config.exact !== true && parentPattern && config.path
+      ? joinPaths(parentPattern, config.path)
+      : config.path;
+
+  const screens = config.screens
+    ? createNormalizedConfigs(config.screens, pattern)
+    : undefined;
+
+  return {
+    pattern,
+    stringify: config.stringify,
+    screens,
+  };
+}
+
+function createNormalizedConfigs(
+  options: Options,
+  pattern?: string
+): Record<string, ConfigItem> {
+  return Object.fromEntries(
+    Object.entries(options).map(([name, c]) => {
+      const result = createConfigItem(c, pattern);
+
+      return [name, result];
+    })
+  );
 }
