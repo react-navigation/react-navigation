@@ -199,6 +199,14 @@ const BaseNavigationContainer = React.forwardRef(
       return getStateForRoute('root');
     }, [getStateForRoute]);
 
+    const getCurrentRoute = React.useCallback(() => {
+      let state: NavigationState = getRootState() as NavigationState;
+      while (state.routes[state.index].state !== undefined) {
+        state = state.routes[state.index].state as NavigationState;
+      }
+      return state.routes[state.index];
+    }, [getRootState]);
+
     const emitter = useEventEmitter();
 
     React.useImperativeHandle(ref, () => ({
@@ -221,6 +229,7 @@ const BaseNavigationContainer = React.forwardRef(
       getRootState,
       dangerouslyGetState: () => state,
       dangerouslyGetParent: () => undefined,
+      getCurrentRoute,
     }));
 
     const builderContext = React.useMemo(

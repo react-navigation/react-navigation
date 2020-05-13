@@ -422,6 +422,8 @@ export type NavigationContainerRef = NavigationHelpers<ParamListBase> &
      * Get the rehydrated navigation state of the navigation tree.
      */
     getRootState(): NavigationState;
+    // TODO
+    getCurrentRoute(): Route<string>;
   };
 
 export type TypedNavigator<

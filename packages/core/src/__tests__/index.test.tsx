@@ -1486,3 +1486,38 @@ it("doesn't throw if children is null", () => {
 
   expect(() => render(element).update(element)).not.toThrowError();
 });
+
+it('handles getCurrentOptions', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const navigation = React.createRef<NavigationContainerRef>();
+
+  const second = (
+    <BaseNavigationContainer ref={navigation} onStateChange={jest.fn()}>
+      <TestNavigator>
+        <Screen name="bar" options={{ a: 'b' }}>
+          {() => (
+            <TestNavigator initialRouteName="bar-a">
+              <Screen
+                name="bar-a"
+                component={() => null}
+                options={{ sample: 'data' }}
+              />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(second).update(second);
+
+  expect(navigation.current?.getCurrentRoute()).toEqual({
+    key: 'bar-a',
+    name: 'bar-a',
+  });
+});
