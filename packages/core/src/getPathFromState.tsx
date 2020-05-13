@@ -54,12 +54,7 @@ export default function getPathFromState(
   }
 
   // Create a normalized configs array which will be easier to use
-  const configs: Record<string, ConfigItem> = Object.fromEntries(
-    Object.keys(options).map((screen) => [
-      screen,
-      createNormalizedConfig(options[screen]),
-    ])
-  );
+  const configs = createNormalizedConfigs(options);
 
   let path = '/';
   let current: State | undefined = state;
@@ -136,7 +131,7 @@ export default function getPathFromState(
           const name = p.replace(/^:/, '').replace(/\?$/, '');
 
           // If the path has a pattern for a param, put the param in the path
-          if (name in allParams && p.startsWith(':')) {
+          if (p.startsWith(':')) {
             const value = allParams[name];
 
             // Remove the used value from the params object since we'll use the rest for query string
@@ -145,10 +140,12 @@ export default function getPathFromState(
               delete currentParams[name];
             }
 
+            if (value === undefined && p.endsWith('?')) {
+              // Optional params without value assigned in route.params should be ignored
+              return '';
+            }
+
             return encodeURIComponent(value);
-          } else if (p.endsWith('?')) {
-            // Optional params without value assigned in route.params should be ignored
-            return '';
           }
 
           return encodeURIComponent(p);
@@ -199,7 +196,7 @@ function joinPaths(...paths: string[]): string {
     .join('/');
 }
 
-function createNormalizedConfig(
+function createConfigItem(
   config: OptionsItem | string,
   parentPattern?: string
 ): ConfigItem {
@@ -218,13 +215,7 @@ function createNormalizedConfig(
       : config.path;
 
   const screens = config.screens
-    ? Object.fromEntries(
-        Object.entries(config.screens).map(([name, c]) => {
-          const result = createNormalizedConfig(c, pattern);
-
-          return [name, result];
-        })
-      )
+    ? createNormalizedConfigs(config.screens, pattern)
     : undefined;
 
   return {
@@ -232,4 +223,17 @@ function createNormalizedConfig(
     stringify: config.stringify,
     screens,
   };
+}
+
+function createNormalizedConfigs(
+  options: Options,
+  pattern?: string
+): Record<string, ConfigItem> {
+  return Object.fromEntries(
+    Object.entries(options).map(([name, c]) => {
+      const result = createConfigItem(c, pattern);
+
+      return [name, result];
+    })
+  );
 }
