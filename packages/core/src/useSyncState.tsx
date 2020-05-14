@@ -8,6 +8,15 @@ const UNINTIALIZED_STATE = {};
 export default function useSyncState<T>(initialState?: (() => T) | T) {
   const stateRef = React.useRef<T>(UNINTIALIZED_STATE as any);
   const isSchedulingRef = React.useRef(false);
+  const isMountedRef = React.useRef(true);
+
+  React.useEffect(() => {
+    isMountedRef.current = true;
+
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   if (stateRef.current === UNINTIALIZED_STATE) {
     stateRef.current =
@@ -20,7 +29,7 @@ export default function useSyncState<T>(initialState?: (() => T) | T) {
   const getState = React.useCallback(() => stateRef.current, []);
 
   const setState = React.useCallback((state: T) => {
-    if (state === stateRef.current) {
+    if (state === stateRef.current || !isMountedRef.current) {
       return;
     }
 
@@ -42,6 +51,10 @@ export default function useSyncState<T>(initialState?: (() => T) | T) {
   }, []);
 
   const flushUpdates = React.useCallback(() => {
+    if (!isMountedRef.current) {
+      return;
+    }
+
     // Make sure that the tracking state is up-to-date.
     // We call it unconditionally, but React should skip the update if state is unchanged.
     setTrackingState(stateRef.current);
