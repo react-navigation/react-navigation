@@ -1849,3 +1849,37 @@ it('merges parent patterns if needed', () => {
     state
   );
 });
+
+it('ignores extra slashes in the pattern', () => {
+  const path = '/bar/42';
+  const config = {
+    Foo: {
+      screens: {
+        Bar: {
+          path: '/bar//:id/',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              params: { id: '42' },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});

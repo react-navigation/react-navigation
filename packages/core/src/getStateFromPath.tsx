@@ -309,6 +309,9 @@ function createConfigItem(
   path: string,
   parse?: ParseConfig
 ): RouteConfig {
+  // Normalize pattern to remove any leading, trailing slashes, duplicate slashes etc.
+  pattern = pattern.split('/').filter(Boolean).join('/');
+
   const regex = pattern
     ? new RegExp(
         `^(${pattern
