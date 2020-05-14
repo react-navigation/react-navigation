@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.6.0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.5.2...@react-navigation/core@5.6.0) (2020-05-14)
+
+
+### Bug Fixes
+
+* ignore extra slashes in the pattern ([3c47716](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/3c47716826d0dfa69dfa6112141c116723372ea1))
+* ignore state updates when we're not mounted ([0149e85](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/0149e85a95b90c6a9d487fa753ddbf5d01c03e3d)), closes [#8226](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/8226)
+
+
+### Features
+
+* merge path patterns for nested screens ([#8253](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/8253)) ([acc9646](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/acc9646426fee53558d686dfbe5fd0e35361d8c0))
+
+
+
+
+
 ## [5.5.2](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.5.1...@react-navigation/core@5.5.2) (2020-05-08)
 
 
