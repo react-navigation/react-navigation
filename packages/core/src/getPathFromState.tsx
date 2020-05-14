@@ -189,9 +189,8 @@ type ConfigItem = {
 };
 
 function joinPaths(...paths: string[]): string {
-  return paths
-    .map((p) => p.split('/'))
-    .flat()
+  return ([] as string[])
+    .concat(...paths.map((p) => p.split('/')))
     .filter(Boolean)
     .join('/');
 }

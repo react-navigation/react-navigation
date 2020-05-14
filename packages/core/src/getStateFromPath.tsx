@@ -64,9 +64,12 @@ export default function getStateFromPath(
   let initialRoutes: InitialRouteConfig[] = [];
 
   // Create a normalized configs array which will be easier to use
-  const configs = Object.keys(options)
-    .map((key) => createNormalizedConfigs(key, options, [], initialRoutes))
-    .flat()
+  const configs = ([] as RouteConfig[])
+    .concat(
+      ...Object.keys(options).map((key) =>
+        createNormalizedConfigs(key, options, [], initialRoutes)
+      )
+    )
     .sort(
       (a, b) =>
         // Sort configs so the most exhaustive is always first to be chosen
@@ -232,9 +235,8 @@ export default function getStateFromPath(
 }
 
 function joinPaths(...paths: string[]): string {
-  return paths
-    .map((p) => p.split('/'))
-    .flat()
+  return ([] as string[])
+    .concat(...paths.map((p) => p.split('/')))
     .filter(Boolean)
     .join('/');
 }
