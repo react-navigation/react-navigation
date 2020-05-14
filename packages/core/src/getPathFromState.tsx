@@ -219,7 +219,8 @@ function createConfigItem(
     : undefined;
 
   return {
-    pattern,
+    // Normalize pattern to remove any leading, trailing slashes, duplicate slashes etc.
+    pattern: pattern?.split('/').filter(Boolean).join('/'),
     stringify: config.stringify,
     screens,
   };
