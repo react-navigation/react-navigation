@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.6.1](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.6.0...@react-navigation/core@5.6.1) (2020-05-14)
+
+
+### Bug Fixes
+
+* don't use flat since it's not supported in node ([21b397f](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/21b397f0d6b96ec4875d3172f47533130bb08009))
+
+
+
+
+
 # [5.6.0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.5.2...@react-navigation/core@5.6.0) (2020-05-14)
 
 
