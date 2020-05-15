@@ -45,7 +45,7 @@
   "devDependencies": {
     "@react-native-community/bob": "^0.10.0",
     "@react-native-community/masked-view": "^0.1.7",
-    "@react-navigation/stack": "^5.3.3",
+    "@react-navigation/stack": "^5.3.6",
     "@types/color": "^3.0.1",
     "@types/react": "^16.9.23",
     "@types/react-native": "^0.61.22",
