@@ -355,7 +355,9 @@ export default class HeaderSegment extends React.Component<Props, State> {
                   : {
                       marginHorizontal:
                         (leftButton ? 32 : 16) +
-                        (leftLabelLayout?.width || 0) +
+                        (leftButton && headerBackTitleVisible !== false
+                          ? 40
+                          : 0) +
                         Math.max(insets.left, insets.right),
                     },
                 titleStyle,
