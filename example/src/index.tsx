@@ -239,6 +239,22 @@ export default function App() {
                 { Home: '' }
               ),
             },
+            Article: {
+              path: 'article/:author?',
+              parse: {
+                author: (author) =>
+                  author.charAt(0).toUpperCase() +
+                  author.slice(1).replace(/-/g, ' '),
+              },
+              stringify: {
+                author: (author: string) =>
+                  author.toLowerCase().replace(/\s/g, '-'),
+              },
+            },
+            Albums: 'music',
+            Chat: 'chat',
+            Contacts: 'people',
+            NewsFeed: 'feed',
           },
         }}
         fallback={<Text>Loading…</Text>}

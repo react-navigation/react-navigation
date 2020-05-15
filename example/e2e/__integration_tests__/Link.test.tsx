@@ -26,7 +26,7 @@ it('goes to the album page and goes back', async () => {
     ((await page.accessibility.snapshot()) as any)?.children?.find(
       (it: any) => it.role === 'heading'
     )?.name
-  ).toBe('Album');
+  ).toBe('Albums');
 
   await page.click('[aria-label="Article by Gandalf, back"]');
 

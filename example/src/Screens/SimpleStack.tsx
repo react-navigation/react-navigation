@@ -13,7 +13,7 @@ import NewsFeed from '../Shared/NewsFeed';
 type SimpleStackParams = {
   Article: { author: string };
   NewsFeed: undefined;
-  Album: undefined;
+  Albums: undefined;
 };
 
 type SimpleStackNavigation = StackNavigationProp<SimpleStackParams>;
@@ -63,7 +63,7 @@ const NewsFeedScreen = ({
       <View style={styles.buttons}>
         <Button
           mode="contained"
-          onPress={() => navigation.navigate('Album')}
+          onPress={() => navigation.navigate('Albums')}
           style={styles.button}
         >
           Navigate to album
@@ -136,9 +136,9 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
         options={{ title: 'Feed' }}
       />
       <SimpleStack.Screen
-        name="Album"
+        name="Albums"
         component={AlbumsScreen}
-        options={{ title: 'Album' }}
+        options={{ title: 'Albums' }}
       />
     </SimpleStack.Navigator>
   );
