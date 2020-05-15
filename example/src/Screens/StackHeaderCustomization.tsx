@@ -15,7 +15,7 @@ import Albums from '../Shared/Albums';
 
 type SimpleStackParams = {
   Article: { author: string };
-  Album: undefined;
+  Albums: undefined;
 };
 
 type SimpleStackNavigation = StackNavigationProp<SimpleStackParams>;
@@ -34,7 +34,7 @@ const ArticleScreen = ({
       <View style={styles.buttons}>
         <Button
           mode="contained"
-          onPress={() => navigation.push('Album')}
+          onPress={() => navigation.push('Albums')}
           style={styles.button}
         >
           Push album
@@ -131,10 +131,10 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
         initialParams={{ author: 'Gandalf' }}
       />
       <SimpleStack.Screen
-        name="Album"
+        name="Albums"
         component={AlbumsScreen}
         options={{
-          title: 'Album',
+          title: 'Albums',
           headerBackTitle: 'Back',
           headerTransparent: true,
           headerBackground: () => (

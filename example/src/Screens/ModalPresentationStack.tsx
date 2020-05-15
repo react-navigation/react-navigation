@@ -12,7 +12,7 @@ import Albums from '../Shared/Albums';
 
 type ModalStackParams = {
   Article: { author: string };
-  Album: undefined;
+  Albums: undefined;
 };
 
 type ModalStackNavigation = StackNavigationProp<ModalStackParams>;
@@ -31,7 +31,7 @@ const ArticleScreen = ({
       <View style={styles.buttons}>
         <Button
           mode="contained"
-          onPress={() => navigation.push('Album')}
+          onPress={() => navigation.push('Albums')}
           style={styles.button}
         >
           Push album
@@ -112,9 +112,9 @@ export default function SimpleStackScreen({ navigation, options }: Props) {
         initialParams={{ author: 'Gandalf' }}
       />
       <ModalPresentationStack.Screen
-        name="Album"
+        name="Albums"
         component={AlbumsScreen}
-        options={{ title: 'Album' }}
+        options={{ title: 'Albums' }}
       />
     </ModalPresentationStack.Navigator>
   );

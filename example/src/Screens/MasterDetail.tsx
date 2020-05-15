@@ -15,7 +15,7 @@ import NewsFeed from '../Shared/NewsFeed';
 type DrawerParams = {
   Article: undefined;
   NewsFeed: undefined;
-  Album: undefined;
+  Albums: undefined;
 };
 
 type DrawerNavigation = DrawerNavigationProp<DrawerParams>;
@@ -118,9 +118,9 @@ export default function DrawerScreen({ navigation, ...rest }: Props) {
         options={{ title: 'Feed' }}
       />
       <Drawer.Screen
-        name="Album"
+        name="Albums"
         component={AlbumsScreen}
-        options={{ title: 'Album' }}
+        options={{ title: 'Albums' }}
       />
     </Drawer.Navigator>
   );
