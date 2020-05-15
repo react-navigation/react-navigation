@@ -53,24 +53,24 @@ const ArticleScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Link
-          to="/link-component/Album"
+          to="/link-component/music"
           style={[styles.button, { padding: 8 }]}
         >
-          Go to /link-component/Album
+          Go to /link-component/music
         </Link>
         <Link
-          to="/link-component/Album"
+          to="/link-component/music"
           action={StackActions.replace('Albums')}
           style={[styles.button, { padding: 8 }]}
         >
-          Replace with /link-component/Album
+          Replace with /link-component/music
         </Link>
         <LinkButton
-          to="/link-component/Album"
+          to="/link-component/music"
           mode="contained"
           style={styles.button}
         >
-          Go to /link-component/Album
+          Go to /link-component/music
         </LinkButton>
         <Button
           mode="outlined"
@@ -97,17 +97,17 @@ const AlbumsScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Link
-          to="/link-component/Article?author=Babel"
+          to="/link-component/article/babel"
           style={[styles.button, { padding: 8 }]}
         >
-          Go to /link-component/Article
+          Go to /link-component/article
         </Link>
         <LinkButton
-          to="/link-component/Article?author=Babel"
+          to="/link-component/article/babel"
           mode="contained"
           style={styles.button}
         >
-          Go to /link-component/Article
+          Go to /link-component/article
         </LinkButton>
         <Button
           mode="outlined"
