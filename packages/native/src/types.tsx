@@ -39,7 +39,9 @@ export type LinkingOptions = {
    * }
    * ```
    */
-  config?: Parameters<typeof getStateFromPathDefault>[1];
+  config?:
+    | Parameters<typeof getStateFromPathDefault>[1]
+    | Parameters<typeof getPathFromStateDefault>[1];
   /**
    * Custom function to parse the URL to a valid navigation state (advanced).
    * Only applicable on Web.
