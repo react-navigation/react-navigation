@@ -462,3 +462,16 @@ export type TypedNavigator<
     _: RouteConfig<ParamList, RouteName, State, ScreenOptions, EventMap>
   ) => null;
 };
+
+export type PathConfig = {
+  [routeName: string]:
+    | string
+    | {
+        path?: string;
+        exact?: boolean;
+        parse?: Record<string, (value: string) => any>;
+        stringify?: Record<string, (value: any) => string>;
+        screens?: PathConfig;
+        initialRouteName?: string;
+      };
+};

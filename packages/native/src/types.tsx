@@ -1,6 +1,7 @@
 import {
   getStateFromPath as getStateFromPathDefault,
   getPathFromState as getPathFromStateDefault,
+  PathConfig,
 } from '@react-navigation/core';
 
 export type Theme = {
@@ -39,9 +40,7 @@ export type LinkingOptions = {
    * }
    * ```
    */
-  config?:
-    | Parameters<typeof getStateFromPathDefault>[1]
-    | Parameters<typeof getPathFromStateDefault>[1];
+  config?: PathConfig;
   /**
    * Custom function to parse the URL to a valid navigation state (advanced).
    * Only applicable on Web.

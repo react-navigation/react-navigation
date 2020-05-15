@@ -5,20 +5,9 @@ import {
   PartialState,
   InitialState,
 } from '@react-navigation/routers';
+import { PathConfig } from './types';
 
 type ParseConfig = Record<string, (value: string) => any>;
-
-type Options = {
-  [routeName: string]:
-    | string
-    | {
-        path?: string;
-        exact?: boolean;
-        parse?: ParseConfig;
-        screens?: Options;
-        initialRouteName?: string;
-      };
-};
 
 type RouteConfig = {
   screen: string;
@@ -59,7 +48,7 @@ type ResultState = PartialState<NavigationState> & {
  */
 export default function getStateFromPath(
   path: string,
-  options: Options = {}
+  options: PathConfig = {}
 ): ResultState | undefined {
   let initialRoutes: InitialRouteConfig[] = [];
 
@@ -243,7 +232,7 @@ function joinPaths(...paths: string[]): string {
 
 function createNormalizedConfigs(
   screen: string,
-  routeConfig: Options,
+  routeConfig: PathConfig,
   routeNames: string[] = [],
   initials: InitialRouteConfig[],
   parentPattern?: string
@@ -288,7 +277,7 @@ function createNormalizedConfigs(
       Object.keys(config.screens).forEach((nestedConfig) => {
         const result = createNormalizedConfigs(
           nestedConfig,
-          config.screens as Options,
+          config.screens as PathConfig,
           routeNames,
           initials,
           pattern

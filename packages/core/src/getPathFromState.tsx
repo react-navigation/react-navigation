@@ -4,19 +4,13 @@ import {
   PartialState,
   Route,
 } from '@react-navigation/routers';
+import { PathConfig } from './types';
 
 type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 
 type StringifyConfig = Record<string, (value: any) => string>;
 
-type OptionsItem = {
-  path?: string;
-  exact?: boolean;
-  stringify?: StringifyConfig;
-  screens?: Options;
-};
-
-type Options = Record<string, string | OptionsItem>;
+type OptionsItem = PathConfig[string];
 
 /**
  * Utility to serialize a navigation state object to a path string.
@@ -47,7 +41,7 @@ type Options = Record<string, string | OptionsItem>;
  */
 export default function getPathFromState(
   state?: State,
-  options: Options = {}
+  options: PathConfig = {}
 ): string {
   if (state === undefined) {
     throw Error('NavigationState not passed');
@@ -226,7 +220,7 @@ function createConfigItem(
 }
 
 function createNormalizedConfigs(
-  options: Options,
+  options: PathConfig,
   pattern?: string
 ): Record<string, ConfigItem> {
   return Object.fromEntries(
