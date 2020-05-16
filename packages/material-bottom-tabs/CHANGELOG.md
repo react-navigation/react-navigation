@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.5](https://github.com/react-navigation/react-navigation/tree/master/packages/material-bottom-tabs/compare/@react-navigation/material-bottom-tabs@5.2.4...@react-navigation/material-bottom-tabs@5.2.5) (2020-05-16)
+
+
+### Bug Fixes
+
+* center icons in material tab bar. fixes [#8248](https://github.com/react-navigation/react-navigation/tree/master/packages/material-bottom-tabs/issues/8248) ([51b4087](https://github.com/react-navigation/react-navigation/tree/master/packages/material-bottom-tabs/commit/51b40879bdb9cea5462a2291955513a88eb87340))
+
+
+
+
+
 ## [5.2.4](https://github.com/react-navigation/react-navigation/tree/master/packages/material-bottom-tabs/compare/@react-navigation/material-bottom-tabs@5.2.3...@react-navigation/material-bottom-tabs@5.2.4) (2020-05-14)
 
 **Note:** Version bump only for package @react-navigation/material-bottom-tabs

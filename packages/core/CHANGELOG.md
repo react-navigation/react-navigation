@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.7.0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.6.1...@react-navigation/core@5.7.0) (2020-05-16)
+
+
+### Bug Fixes
+
+* don't use Object.fromEntries ([51f4d11](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/51f4d11fdf4bd2bb06f8cd4094f051816590e62c))
+
+
+### Features
+
+* add a PathConfig type ([60cb3c9](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/60cb3c9ba76d7ef166c9fe8b55f23728975b5b6e))
+
+
+
+
+
 ## [5.6.1](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.6.0...@react-navigation/core@5.6.1) (2020-05-14)
 
 
