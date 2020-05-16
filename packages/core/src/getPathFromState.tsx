@@ -12,6 +12,12 @@ type StringifyConfig = Record<string, (value: any) => string>;
 
 type OptionsItem = PathConfig[string];
 
+type ConfigItem = {
+  pattern?: string;
+  stringify?: StringifyConfig;
+  screens?: Record<string, ConfigItem>;
+};
+
 /**
  * Utility to serialize a navigation state object to a path string.
  *
@@ -79,7 +85,7 @@ export default function getPathFromState(
       if (route.params) {
         const stringify = currentOptions[route.name]?.stringify;
 
-        currentParams = Object.fromEntries(
+        currentParams = fromEntries(
           Object.entries(route.params).map(([key, value]) => [
             key,
             stringify?.[key] ? stringify[key](value) : String(value),
@@ -176,23 +182,23 @@ export default function getPathFromState(
   return path;
 }
 
-type ConfigItem = {
-  pattern?: string;
-  stringify?: StringifyConfig;
-  screens?: Record<string, ConfigItem>;
-};
+// Object.fromEntries is not available in older iOS versions
+const fromEntries = <K extends string, V>(entries: (readonly [K, V])[]) =>
+  entries.reduce((acc, [k, v]) => {
+    acc[k] = v;
+    return acc;
+  }, {} as Record<K, V>);
 
-function joinPaths(...paths: string[]): string {
-  return ([] as string[])
+const joinPaths = (...paths: string[]): string =>
+  ([] as string[])
     .concat(...paths.map((p) => p.split('/')))
     .filter(Boolean)
     .join('/');
-}
 
-function createConfigItem(
+const createConfigItem = (
   config: OptionsItem | string,
   parentPattern?: string
-): ConfigItem {
+): ConfigItem => {
   if (typeof config === 'string') {
     // If a string is specified as the value of the key(e.g. Foo: '/path'), use it as the pattern
     const pattern = parentPattern ? joinPaths(parentPattern, config) : config;
@@ -217,17 +223,16 @@ function createConfigItem(
     stringify: config.stringify,
     screens,
   };
-}
+};
 
-function createNormalizedConfigs(
+const createNormalizedConfigs = (
   options: PathConfig,
   pattern?: string
-): Record<string, ConfigItem> {
-  return Object.fromEntries(
+): Record<string, ConfigItem> =>
+  fromEntries(
     Object.entries(options).map(([name, c]) => {
       const result = createConfigItem(c, pattern);
 
       return [name, result];
     })
   );
-}
