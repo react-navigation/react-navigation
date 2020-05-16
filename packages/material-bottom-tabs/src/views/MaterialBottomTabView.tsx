@@ -69,6 +69,7 @@ function MaterialBottomTabViewInner({
               borderless: _1,
               centered: _2,
               rippleColor: _3,
+              style,
               ...rest
             }) => {
               return (
@@ -86,6 +87,7 @@ function MaterialBottomTabViewInner({
                       onPress?.(e);
                     }
                   }}
+                  style={[styles.touchable, style]}
                 />
               );
             }
@@ -152,5 +154,9 @@ export default function MaterialBottomTabView(props: Props) {
 const styles = StyleSheet.create({
   icon: {
     backgroundColor: 'transparent',
+  },
+  touchable: {
+    display: 'flex',
+    justifyContent: 'center',
   },
 });
