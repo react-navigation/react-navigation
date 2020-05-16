@@ -6,7 +6,7 @@ beforeEach(async () => {
 
 it('loads the article page', async () => {
   expect(await page.evaluate(() => location.pathname + location.search)).toBe(
-    '/link-component/Article?author=Gandalf'
+    '/link-component/article/gandalf'
   );
   expect(
     ((await page.accessibility.snapshot()) as any)?.children?.find(
@@ -16,10 +16,10 @@ it('loads the article page', async () => {
 });
 
 it('goes to the album page and goes back', async () => {
-  await page.click('[href="/link-component/Album"]');
+  await page.click('[href="/link-component/music"]');
 
   expect(await page.evaluate(() => location.pathname + location.search)).toBe(
-    '/link-component/Album'
+    '/link-component/music'
   );
 
   expect(
@@ -33,7 +33,7 @@ it('goes to the album page and goes back', async () => {
   await page.waitForNavigation();
 
   expect(await page.evaluate(() => location.pathname + location.search)).toBe(
-    '/link-component/Article?author=Gandalf'
+    '/link-component/article/gandalf'
   );
 
   expect(
