@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.4.0](https://github.com/react-navigation/react-navigation/tree/master/packages/native/compare/@react-navigation/native@5.3.2...@react-navigation/native@5.4.0) (2020-05-16)
+
+
+### Bug Fixes
+
+* fix types for linking options ([d14f38b](https://github.com/react-navigation/react-navigation/tree/master/packages/native/commit/d14f38b80ad569d5828c1919cea426c659173924))
+
+
+### Features
+
+* add a PathConfig type ([60cb3c9](https://github.com/react-navigation/react-navigation/tree/master/packages/native/commit/60cb3c9ba76d7ef166c9fe8b55f23728975b5b6e))
+
+
+
+
+
 ## [5.3.2](https://github.com/react-navigation/react-navigation/tree/master/packages/native/compare/@react-navigation/native@5.3.1...@react-navigation/native@5.3.2) (2020-05-14)
 
 **Note:** Version bump only for package @react-navigation/native
