@@ -422,6 +422,10 @@ export type NavigationContainerRef = NavigationHelpers<ParamListBase> &
      * Get the rehydrated navigation state of the navigation tree.
      */
     getRootState(): NavigationState;
+    /**
+     * Get the currently focused navigation route.
+     */
+    getCurrentRoute(): Route<string> | undefined;
   };
 
 export type TypedNavigator<
