@@ -1487,16 +1487,18 @@ it("doesn't throw if children is null", () => {
   expect(() => render(element).update(element)).not.toThrowError();
 });
 
-it('handles getCurrentOptions', () => {
+it('returns currently focused route with getCurrentRoute', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
     return descriptors[state.routes[state.index].key].render();
   };
 
+  const TestScreen = () => null;
+
   const navigation = React.createRef<NavigationContainerRef>();
 
-  const second = (
+  const container = (
     <BaseNavigationContainer ref={navigation} onStateChange={jest.fn()}>
       <TestNavigator>
         <Screen name="bar" options={{ a: 'b' }}>
@@ -1504,17 +1506,18 @@ it('handles getCurrentOptions', () => {
             <TestNavigator initialRouteName="bar-a">
               <Screen
                 name="bar-a"
-                component={() => null}
+                component={TestScreen}
                 options={{ sample: 'data' }}
               />
             </TestNavigator>
           )}
         </Screen>
+        <Screen name="xux" component={TestScreen} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
 
-  render(second).update(second);
+  render(container).update(container);
 
   expect(navigation.current?.getCurrentRoute()).toEqual({
     key: 'bar-a',

@@ -200,7 +200,10 @@ const BaseNavigationContainer = React.forwardRef(
     }, [getStateForRoute]);
 
     const getCurrentRoute = React.useCallback(() => {
-      let state: NavigationState = getRootState() as NavigationState;
+      let state = getRootState();
+      if (state === undefined) {
+        return undefined;
+      }
       while (state.routes[state.index].state !== undefined) {
         state = state.routes[state.index].state as NavigationState;
       }
