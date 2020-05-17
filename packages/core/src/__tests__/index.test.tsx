@@ -1499,7 +1499,7 @@ it('returns currently focused route with getCurrentRoute', () => {
   const navigation = React.createRef<NavigationContainerRef>();
 
   const container = (
-    <BaseNavigationContainer ref={navigation} onStateChange={jest.fn()}>
+    <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
         <Screen name="bar" options={{ a: 'b' }}>
           {() => (
