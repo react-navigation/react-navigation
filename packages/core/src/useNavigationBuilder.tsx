@@ -31,6 +31,7 @@ import {
   EventMapBase,
 } from './types';
 import useStateGetters from './useStateGetters';
+import useOptionsGetters from './useOptionsGetters';
 import useOnGetState from './useOnGetState';
 import useScheduleUpdate from './useScheduleUpdate';
 
@@ -444,6 +445,10 @@ export default function useNavigationBuilder<
   } = useFocusedListeners();
 
   const { getStateForRoute, addStateGetter } = useStateGetters();
+  const { addOptionsGetter } = useOptionsGetters({
+    getState,
+    key: route?.key,
+  });
 
   const onAction = useOnAction({
     router,
@@ -493,6 +498,7 @@ export default function useNavigationBuilder<
     addActionListener,
     addFocusedListener,
     addStateGetter,
+    addOptionsGetter,
     router,
     emitter,
   });

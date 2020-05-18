@@ -47,6 +47,10 @@ type Options<
   addActionListener: (listener: ChildActionListener) => void;
   addFocusedListener: (listener: FocusedNavigationListener) => void;
   addStateGetter: (key: string, getter: NavigatorStateGetter) => void;
+  addOptionsGetter: (
+    key: string,
+    getter: () => object | undefined
+  ) => () => void;
   onRouteFocus: (key: string) => void;
   router: Router<State, NavigationAction>;
   emitter: NavigationEventEmitter;
@@ -75,6 +79,7 @@ export default function useDescriptors<
   addActionListener,
   addFocusedListener,
   addStateGetter,
+  addOptionsGetter,
   onRouteFocus,
   router,
   emitter,
@@ -91,6 +96,7 @@ export default function useDescriptors<
       addStateGetter,
       onRouteFocus,
       trackAction,
+      addOptionsGetter,
     }),
     [
       navigation,
@@ -100,6 +106,7 @@ export default function useDescriptors<
       onRouteFocus,
       addStateGetter,
       trackAction,
+      addOptionsGetter,
     ]
   );
 
@@ -117,6 +124,28 @@ export default function useDescriptors<
       const screen = screens[route.name];
       const navigation = navigations[route.key];
 
+      const routeOptions = {
+        // The default `screenOptions` passed to the navigator
+        ...(typeof screenOptions === 'object' || screenOptions == null
+          ? screenOptions
+          : screenOptions({
+              // @ts-ignore
+              route,
+              navigation,
+            })),
+        // The `options` prop passed to `Screen` elements
+        ...(typeof screen.options === 'object' || screen.options == null
+          ? screen.options
+          : screen.options({
+              // @ts-ignore
+              route,
+              // @ts-ignore
+              navigation,
+            })),
+        // The options set via `navigation.setOptions`
+        ...options[route.key],
+      };
+
       acc[route.key] = {
         navigation,
         render() {
@@ -128,31 +157,13 @@ export default function useDescriptors<
                 screen={screen}
                 getState={getState}
                 setState={setState}
+                options={routeOptions}
+                addOptionsGetter={addOptionsGetter}
               />
             </NavigationBuilderContext.Provider>
           );
         },
-        options: {
-          // The default `screenOptions` passed to the navigator
-          ...(typeof screenOptions === 'object' || screenOptions == null
-            ? screenOptions
-            : screenOptions({
-                // @ts-ignore
-                route,
-                navigation,
-              })),
-          // The `options` prop passed to `Screen` elements
-          ...(typeof screen.options === 'object' || screen.options == null
-            ? screen.options
-            : screen.options({
-                // @ts-ignore
-                route,
-                // @ts-ignore
-                navigation,
-              })),
-          // The options set via `navigation.setOptions`
-          ...options[route.key],
-        },
+        options: routeOptions,
       };
 
       return acc;

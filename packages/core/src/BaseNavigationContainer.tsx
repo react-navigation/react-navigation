@@ -13,6 +13,7 @@ import { ScheduleUpdateContext } from './useScheduleUpdate';
 import useFocusedListeners from './useFocusedListeners';
 import useDevTools from './useDevTools';
 import useStateGetters from './useStateGetters';
+import useOptionsGetters from './useOptionsGetters';
 import useEventEmitter from './useEventEmitter';
 import useSyncState from './useSyncState';
 import isSerializable from './isSerializable';
@@ -212,6 +213,10 @@ const BaseNavigationContainer = React.forwardRef(
 
     const emitter = useEventEmitter();
 
+    const { addOptionsGetter, getRootOptions } = useOptionsGetters({
+      getState: getRootState,
+    });
+
     React.useImperativeHandle(ref, () => ({
       ...(Object.keys(CommonActions) as (keyof typeof CommonActions)[]).reduce<
         any
@@ -233,15 +238,17 @@ const BaseNavigationContainer = React.forwardRef(
       dangerouslyGetState: () => state,
       dangerouslyGetParent: () => undefined,
       getCurrentRoute,
+      getCurrentOptions: getRootOptions,
     }));
 
     const builderContext = React.useMemo(
       () => ({
         addFocusedListener,
+        addOptionsGetter,
         addStateGetter,
         trackAction,
       }),
-      [addFocusedListener, trackAction, addStateGetter]
+      [addFocusedListener, addOptionsGetter, trackAction, addStateGetter]
     );
 
     const scheduleContext = React.useMemo(

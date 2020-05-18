@@ -426,6 +426,10 @@ export type NavigationContainerRef = NavigationHelpers<ParamListBase> &
      * Get the currently focused navigation route.
      */
     getCurrentRoute(): Route<string> | undefined;
+    /**
+     * Get the currently focused route's options.
+     */
+    getCurrentOptions(): object | undefined;
   };
 
 export type TypedNavigator<
