@@ -295,10 +295,7 @@ export default function useNavigationBuilder<
       );
     }
   }
-
-  React.useEffect(() => {
-    previousStateRef.current = currentState;
-  }, [currentState]);
+  previousStateRef.current = currentState;
 
   let state =
     // If the state isn't initialized, or stale, use the state we initialized instead
