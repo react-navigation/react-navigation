@@ -1570,7 +1570,7 @@ it("returns currently focused route's options with getCurrentOptions", () => {
   });
 });
 
-it("doesn't throw if while getting current options with no options defined", () => {
+it('does not throw if while getting current options with no options defined', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -1600,7 +1600,7 @@ it("doesn't throw if while getting current options with no options defined", () 
   expect(navigation.current?.getCurrentOptions()).toEqual({});
 });
 
-it("doesn't throw if while getting current options with empty container", () => {
+it('does not throw if while getting current options with empty container', () => {
   const navigation = React.createRef<NavigationContainerRef>();
 
   // @ts-ignore
