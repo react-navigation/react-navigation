@@ -11,7 +11,7 @@ export default function useOptionsGetters({
   getKey?: () => string | undefined;
   key?: string | undefined;
 }) {
-  const optionsGetters = React.useRef<
+  const optionsGettersFromScene = React.useRef<
     Record<string, (() => object | undefined) | undefined>
   >({});
 
@@ -33,9 +33,9 @@ export default function useOptionsGetters({
     if (getterFromNavigator) {
       return getterFromNavigator();
     }
-    const getter = optionsGetters.current[key];
+    const getter = optionsGettersFromScene.current[key];
     return getter === undefined ? undefined : getter();
-  }, [optionsGetters, getState]);
+  }, [optionsGettersFromScene, getState]);
 
   useEffect(() => {
     return parentAddOptionsGetter?.(key as string, getCurrentOptions, true);
@@ -45,7 +45,7 @@ export default function useOptionsGetters({
     (key: string, getter: () => object | undefined, fromNavigator: boolean) => {
       const getters = fromNavigator
         ? optionsGettersFromNavigator.current
-        : optionsGetters.current;
+        : optionsGettersFromScene.current;
 
       getters[key] = getter;
 
