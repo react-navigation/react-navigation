@@ -15,6 +15,10 @@ export default function useOptionsGetters({
     Record<string, (() => object | undefined) | undefined>
   >({});
 
+  const optionsGettersFromNavigator = React.useRef<
+    Record<string, (() => object | undefined) | undefined>
+  >({});
+
   const { addOptionsGetter: parentAddOptionsGetter } = React.useContext(
     NavigationBuilderContext
   );
@@ -25,36 +29,39 @@ export default function useOptionsGetters({
       return undefined;
     }
     const { key } = state.routes[state.index];
-    const value = optionsGetters.current[key];
-    return value === undefined ? undefined : value();
+    const getterFromNavigator = optionsGettersFromNavigator.current[key];
+    if (getterFromNavigator) {
+      return getterFromNavigator();
+    }
+    const getter = optionsGetters.current[key];
+    return getter === undefined ? undefined : getter();
   }, [optionsGetters, getState]);
 
   useEffect(() => {
-    return parentAddOptionsGetter?.(key as string, getCurrentOptions);
+    return parentAddOptionsGetter?.(key as string, getCurrentOptions, true);
   }, [getCurrentOptions, parentAddOptionsGetter, key]);
 
   const addOptionsGetter = React.useCallback(
-    (key: string, getter: () => object | undefined) => {
-      // if there's already registered getter by navigator
-      // we skip registering by route's screen
-      if (optionsGetters.current[key] !== undefined) {
-        return () => {};
-      }
-      optionsGetters.current[key] = getter;
+    (key: string, getter: () => object | undefined, fromNavigator: boolean) => {
+      const getters = fromNavigator
+        ? optionsGettersFromNavigator.current
+        : optionsGetters.current;
+
+      getters[key] = getter;
 
       return () => {
-        optionsGetters.current[key] = undefined;
+        getters[key] = undefined;
       };
     },
     []
   );
 
   const getRootOptions = React.useCallback(() => {
-    const key = Object.keys(optionsGetters.current)[0];
+    const key = Object.keys(optionsGettersFromNavigator.current)[0];
     if (key === undefined) {
       return undefined;
     }
-    return optionsGetters.current[key]!();
+    return optionsGettersFromNavigator.current[key]!();
   }, []);
 
   return {

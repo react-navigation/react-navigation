@@ -49,7 +49,8 @@ type Options<
   addStateGetter: (key: string, getter: NavigatorStateGetter) => void;
   addOptionsGetter: (
     key: string,
-    getter: () => object | undefined
+    getter: () => object | undefined,
+    fromNavigator: boolean
   ) => () => void;
   onRouteFocus: (key: string) => void;
   router: Router<State, NavigationAction>;

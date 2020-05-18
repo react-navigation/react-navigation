@@ -26,7 +26,8 @@ type Props<
   setState: (state: State) => void;
   addOptionsGetter: (
     key: string,
-    getter: () => object | undefined
+    getter: () => object | undefined,
+    fromNavigator: boolean
   ) => () => void;
   options: object;
 };
@@ -50,7 +51,7 @@ export default function SceneView<
 }: Props<State, ScreenOptions, EventMap>) {
   const navigatorKeyRef = React.useRef<string | undefined>();
   const getKey = React.useCallback(() => navigatorKeyRef.current, []);
-  React.useEffect(() => addOptionsGetter(route.key, () => options), [
+  React.useEffect(() => addOptionsGetter(route.key, () => options, false), [
     addOptionsGetter,
     route.key,
     options,

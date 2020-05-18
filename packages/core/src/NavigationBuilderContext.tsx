@@ -35,7 +35,8 @@ const NavigationBuilderContext = React.createContext<{
   addStateGetter?: (key: string, getter: NavigatorStateGetter) => void;
   addOptionsGetter?: (
     key: string,
-    getter: () => object | undefined
+    getter: () => object | undefined,
+    fromNavigator: boolean
   ) => () => void;
   trackAction: (action: NavigationAction) => void;
 }>({
