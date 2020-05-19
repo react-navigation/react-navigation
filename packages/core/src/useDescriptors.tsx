@@ -117,6 +117,28 @@ export default function useDescriptors<
       const screen = screens[route.name];
       const navigation = navigations[route.key];
 
+      const routeOptions = {
+        // The default `screenOptions` passed to the navigator
+        ...(typeof screenOptions === 'object' || screenOptions == null
+          ? screenOptions
+          : screenOptions({
+              // @ts-ignore
+              route,
+              navigation,
+            })),
+        // The `options` prop passed to `Screen` elements
+        ...(typeof screen.options === 'object' || screen.options == null
+          ? screen.options
+          : screen.options({
+              // @ts-ignore
+              route,
+              // @ts-ignore
+              navigation,
+            })),
+        // The options set via `navigation.setOptions`
+        ...options[route.key],
+      };
+
       acc[route.key] = {
         navigation,
         render() {
@@ -128,31 +150,12 @@ export default function useDescriptors<
                 screen={screen}
                 getState={getState}
                 setState={setState}
+                options={routeOptions}
               />
             </NavigationBuilderContext.Provider>
           );
         },
-        options: {
-          // The default `screenOptions` passed to the navigator
-          ...(typeof screenOptions === 'object' || screenOptions == null
-            ? screenOptions
-            : screenOptions({
-                // @ts-ignore
-                route,
-                navigation,
-              })),
-          // The `options` prop passed to `Screen` elements
-          ...(typeof screen.options === 'object' || screen.options == null
-            ? screen.options
-            : screen.options({
-                // @ts-ignore
-                route,
-                // @ts-ignore
-                navigation,
-              })),
-          // The options set via `navigation.setOptions`
-          ...options[route.key],
-        },
+        options: routeOptions,
       };
 
       return acc;
