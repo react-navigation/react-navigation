@@ -1528,3 +1528,90 @@ it('returns currently focused route with getCurrentRoute', () => {
     name: 'bar-a',
   });
 });
+
+it("returns currently focused route's options with getCurrentOptions", () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestScreen = () => null;
+
+  const navigation = React.createRef<NavigationContainerRef>();
+
+  const container = (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="bar" options={{ a: 'b' }}>
+          {() => (
+            <TestNavigator
+              initialRouteName="bar-a"
+              screenOptions={() => ({ sample2: 'data' })}
+            >
+              <Screen
+                name="bar-a"
+                component={TestScreen}
+                options={{ sample: 'data' }}
+              />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="xux" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(container).update(container);
+
+  expect(navigation.current?.getCurrentOptions()).toEqual({
+    sample: 'data',
+    sample2: 'data',
+  });
+});
+
+it('does not throw if while getting current options with no options defined', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestScreen = () => null;
+
+  const navigation = React.createRef<NavigationContainerRef>();
+
+  const container = (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="bar" options={{ a: 'b' }}>
+          {() => (
+            <TestNavigator initialRouteName="bar-a">
+              <Screen
+                name="bar-b"
+                component={TestScreen}
+                options={{ wrongKey: true }}
+              />
+              <Screen name="bar-a" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(container).update(container);
+
+  expect(navigation.current?.getCurrentOptions()).toEqual({});
+});
+
+it('does not throw if while getting current options with empty container', () => {
+  const navigation = React.createRef<NavigationContainerRef>();
+
+  // @ts-ignore
+  const container = <BaseNavigationContainer ref={navigation} />;
+
+  render(container).update(container);
+
+  expect(navigation.current?.getCurrentOptions()).toEqual(undefined);
+});

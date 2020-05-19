@@ -11,6 +11,7 @@ import NavigationRouteContext from './NavigationRouteContext';
 import StaticContainer from './StaticContainer';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
 import { NavigationProp, RouteConfig, EventMapBase } from './types';
+import useOptionsGetters from './useOptionsGetters';
 
 type Props<
   State extends NavigationState,
@@ -24,6 +25,7 @@ type Props<
   };
   getState: () => State;
   setState: (state: State) => void;
+  options: object;
 };
 
 /**
@@ -40,10 +42,23 @@ export default function SceneView<
   navigation,
   getState,
   setState,
+  options,
 }: Props<State, ScreenOptions, EventMap>) {
   const navigatorKeyRef = React.useRef<string | undefined>();
-
   const getKey = React.useCallback(() => navigatorKeyRef.current, []);
+
+  const optionsRef = React.useRef<object | undefined>(options);
+
+  React.useEffect(() => {
+    optionsRef.current = options;
+  }, [options]);
+
+  const getOptions = React.useCallback(() => optionsRef.current, []);
+
+  const { addOptionsGetter } = useOptionsGetters({
+    key: route.key,
+    getOptions,
+  });
 
   const setKey = React.useCallback((key: string) => {
     navigatorKeyRef.current = key;
@@ -77,8 +92,16 @@ export default function SceneView<
       setState: setCurrentState,
       getKey,
       setKey,
+      addOptionsGetter,
     }),
-    [getCurrentState, getKey, route.state, setCurrentState, setKey]
+    [
+      getCurrentState,
+      getKey,
+      route.state,
+      setCurrentState,
+      setKey,
+      addOptionsGetter,
+    ]
   );
 
   return (
