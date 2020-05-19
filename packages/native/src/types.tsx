@@ -53,5 +53,5 @@ export type LinkingOptions = {
 };
 
 export type ServerContainerRef = {
-  getCurrentOptions(): object | undefined;
+  getCurrentOptions(): Record<string, any> | undefined;
 };
