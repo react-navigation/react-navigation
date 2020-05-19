@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { ParamListBase } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Albums from '../Shared/Albums';
 import Contacts from '../Shared/Contacts';
@@ -12,7 +14,15 @@ type MaterialTopTabParams = {
 
 const MaterialTopTabs = createMaterialTopTabNavigator<MaterialTopTabParams>();
 
-export default function MaterialTopTabsScreen() {
+type Props = {
+  navigation: StackNavigationProp<ParamListBase>;
+};
+
+export default function MaterialTopTabsScreen({ navigation }: Props) {
+  navigation.setOptions({
+    cardStyle: { flex: 1 },
+  });
+
   return (
     <MaterialTopTabs.Navigator>
       <MaterialTopTabs.Screen
