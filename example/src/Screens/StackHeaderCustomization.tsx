@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { View, StyleSheet, ScrollView, Alert, Platform } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Alert,
+  Platform,
+  Text,
+} from 'react-native';
 import { Button, Appbar } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { RouteProp, ParamListBase } from '@react-navigation/native';
@@ -8,6 +15,8 @@ import {
   StackNavigationProp,
   HeaderBackground,
   useHeaderHeight,
+  Header,
+  StackHeaderProps,
 } from '@react-navigation/stack';
 import BlurView from '../Shared/BlurView';
 import Article from '../Shared/Article';
@@ -91,6 +100,20 @@ type Props = Partial<React.ComponentProps<typeof SimpleStack.Navigator>> & {
   navigation: StackNavigationProp<ParamListBase>;
 };
 
+function CustomHeader(props: StackHeaderProps) {
+  const { navigation } = props;
+  return (
+    <>
+      <Header {...props} />
+      <View style={{ opacity: navigation.isFocused() ? 1 : 0 }}>
+        <Text style={{ textAlign: 'center', backgroundColor: 'pink' }}>
+          Why hello there, pardner!
+        </Text>
+      </View>
+    </>
+  );
+}
+
 export default function SimpleStackScreen({ navigation, ...rest }: Props) {
   navigation.setOptions({
     headerShown: false,
@@ -103,6 +126,7 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
         component={ArticleScreen}
         options={({ route }) => ({
           title: `Article by ${route.params?.author}`,
+          header: CustomHeader,
           headerTintColor: '#fff',
           headerStyle: { backgroundColor: '#ff005d' },
           headerBackTitleVisible: false,
