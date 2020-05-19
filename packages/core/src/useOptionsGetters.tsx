@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useEffect } from 'react';
 import NavigationBuilderContext from './NavigationBuilderContext';
 import { NavigationState } from '@react-navigation/routers';
 
@@ -37,7 +36,7 @@ export default function useOptionsGetters({
     return getter === undefined ? undefined : getter();
   }, [optionsGettersFromScene, getState]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     return parentAddOptionsGetter?.(key as string, getCurrentOptions, true);
   }, [getCurrentOptions, parentAddOptionsGetter, key]);
 
