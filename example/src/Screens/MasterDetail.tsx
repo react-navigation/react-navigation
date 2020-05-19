@@ -1,12 +1,18 @@
 import * as React from 'react';
 import { Dimensions, ScaledSize } from 'react-native';
 import { Appbar } from 'react-native-paper';
-import { ParamListBase } from '@react-navigation/native';
+import {
+  useTheme,
+  useNavigation,
+  ParamListBase,
+} from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import {
   createDrawerNavigator,
   DrawerNavigationProp,
   DrawerContent,
+  DrawerContentComponentProps,
+  DrawerContentOptions,
 } from '@react-navigation/drawer';
 import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
@@ -43,10 +49,11 @@ const Header = ({
   onGoBack: () => void;
   title: string;
 }) => {
+  const { colors } = useTheme();
   const isLargeScreen = useIsLargeScreen();
 
   return (
-    <Appbar.Header>
+    <Appbar.Header style={{ backgroundColor: colors.card, elevation: 1 }}>
       {isLargeScreen ? null : <Appbar.BackAction onPress={onGoBack} />}
       <Appbar.Content title={title} />
     </Appbar.Header>
@@ -80,6 +87,23 @@ const AlbumsScreen = ({ navigation }: { navigation: DrawerNavigation }) => {
   );
 };
 
+const CustomDrawerContent = (
+  props: DrawerContentComponentProps<DrawerContentOptions>
+) => {
+  const { colors } = useTheme();
+  const navigation = useNavigation();
+
+  return (
+    <>
+      <Appbar.Header style={{ backgroundColor: colors.card, elevation: 1 }}>
+        <Appbar.Action icon="close" onPress={() => navigation.goBack()} />
+        <Appbar.Content title="Pages" />
+      </Appbar.Header>
+      <DrawerContent {...props} />
+    </>
+  );
+};
+
 const Drawer = createDrawerNavigator<DrawerParams>();
 
 type Props = Partial<React.ComponentProps<typeof Drawer.Navigator>> & {
@@ -100,15 +124,7 @@ export default function DrawerScreen({ navigation, ...rest }: Props) {
       drawerType={isLargeScreen ? 'permanent' : 'back'}
       drawerStyle={isLargeScreen ? null : { width: '100%' }}
       overlayColor="transparent"
-      drawerContent={(props) => (
-        <>
-          <Appbar.Header>
-            <Appbar.Action icon="close" onPress={() => navigation.goBack()} />
-            <Appbar.Content title="Pages" />
-          </Appbar.Header>
-          <DrawerContent {...props} />
-        </>
-      )}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
       {...rest}
     >
       <Drawer.Screen name="Article" component={ArticleScreen} />
