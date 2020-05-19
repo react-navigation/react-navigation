@@ -3516,10 +3516,10 @@
   dependencies:
     "@types/node" ">= 8"
 
-"@react-native-community/bob@^0.13.1":
-  version "0.13.1"
-  resolved "https://registry.yarnpkg.com/@react-native-community/bob/-/bob-0.13.1.tgz#188fb72a925751fa92bc5ed543c33ca8ceea9375"
-  integrity sha512-MTngPqrasri2B4y9cVvBCrBrwcwt36izS17n4q4Os+eSK10LXT1Rd7imd9r3lRfdVxF90Dgar91W+hbvJRAWLg==
+"@react-native-community/bob@^0.14.3":
+  version "0.14.3"
+  resolved "https://registry.yarnpkg.com/@react-native-community/bob/-/bob-0.14.3.tgz#0a8d615f936844d67543d0305e5a2f332fdee630"
+  integrity sha512-OfE+cpUj558x4NPLCSzfzdwgl+MbG+Tzuc/RXVnPAsO5aYkYQ0slThGPDK1qAIy7LnuSagcOYOQTU640B8WQqA==
   dependencies:
     "@babel/core" "^7.9.6"
     "@babel/plugin-proposal-class-properties" "^7.8.3"
@@ -3527,6 +3527,7 @@
     "@babel/preset-flow" "^7.9.0"
     "@babel/preset-react" "^7.9.4"
     "@babel/preset-typescript" "^7.9.0"
+    browserslist "^4.12.0"
     chalk "^4.0.0"
     cosmiconfig "^6.0.0"
     cross-spawn "^7.0.2"
@@ -5568,7 +5569,7 @@ browserslist@^4.0.0, browserslist@^4.8.3, browserslist@^4.9.1:
     node-releases "^1.1.53"
     pkg-up "^2.0.0"
 
-browserslist@^4.11.1:
+browserslist@^4.11.1, browserslist@^4.12.0:
   version "4.12.0"
   resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-4.12.0.tgz#06c6d5715a1ede6c51fc39ff67fd647f740b656d"
   integrity sha512-UH2GkcEDSI0k/lRkuDSzFl9ZZ87skSy9w2XAn1MsZnL+4c4rqbBd3e82UWHbYDpztABrPBhZsTEeuxVfHppqDg==
