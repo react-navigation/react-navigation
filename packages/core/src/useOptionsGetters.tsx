@@ -1,71 +1,70 @@
 import * as React from 'react';
-import NavigationBuilderContext from './NavigationBuilderContext';
+import { NavigationStateContext } from './BaseNavigationContainer';
 import { NavigationState } from '@react-navigation/routers';
 
 export default function useOptionsGetters({
-  getState,
   key,
+  getOptions,
+  getState,
 }: {
-  getState: () => NavigationState | undefined;
-  getKey?: () => string | undefined;
-  key?: string | undefined;
+  key?: string;
+  getOptions?: () => object | undefined;
+  getState?: () => NavigationState;
 }) {
-  const optionsGettersFromScene = React.useRef<
-    Record<string, (() => object | undefined) | undefined>
-  >({});
-
-  const optionsGettersFromNavigator = React.useRef<
-    Record<string, (() => object | undefined) | undefined>
+  const optionsGettersFromChild = React.useRef<
+    Record<string, (() => object | undefined | null) | undefined>
   >({});
 
   const { addOptionsGetter: parentAddOptionsGetter } = React.useContext(
-    NavigationBuilderContext
+    NavigationStateContext
   );
 
+  const getOptionsFromListener = React.useCallback(() => {
+    for (let key in optionsGettersFromChild.current) {
+      if (optionsGettersFromChild.current.hasOwnProperty(key)) {
+        const result = optionsGettersFromChild.current[key]?.();
+        // null means unfocused route
+        if (result !== null) {
+          return result;
+        }
+      }
+    }
+    return null;
+  }, []);
+
   const getCurrentOptions = React.useCallback(() => {
-    const state = getState();
-    if (state === undefined) {
-      return undefined;
+    if (getState) {
+      const state = getState();
+      if (state.routes[state.index].key !== key) {
+        // null means unfocused route
+        return null;
+      }
     }
-    const { key } = state.routes[state.index];
-    const getterFromNavigator = optionsGettersFromNavigator.current[key];
-    if (getterFromNavigator) {
-      return getterFromNavigator();
+
+    const optionsFromListener = getOptionsFromListener();
+    if (optionsFromListener !== null) {
+      return optionsFromListener;
     }
-    const getter = optionsGettersFromScene.current[key];
-    return getter === undefined ? undefined : getter();
-  }, [optionsGettersFromScene, getState]);
+    return getOptions?.() ?? undefined;
+  }, [getState, getOptionsFromListener, getOptions, key]);
 
   React.useEffect(() => {
-    return parentAddOptionsGetter?.(key as string, getCurrentOptions, true);
+    return parentAddOptionsGetter?.(key!, getCurrentOptions);
   }, [getCurrentOptions, parentAddOptionsGetter, key]);
 
   const addOptionsGetter = React.useCallback(
-    (key: string, getter: () => object | undefined, fromNavigator: boolean) => {
-      const getters = fromNavigator
-        ? optionsGettersFromNavigator.current
-        : optionsGettersFromScene.current;
-
-      getters[key] = getter;
+    (key: string, getter: () => object | undefined | null) => {
+      optionsGettersFromChild.current[key] = getter;
 
       return () => {
-        getters[key] = undefined;
+        optionsGettersFromChild.current[key] = undefined;
       };
     },
     []
   );
 
-  const getRootOptions = React.useCallback(() => {
-    const key = Object.keys(optionsGettersFromNavigator.current)[0];
-    if (key === undefined) {
-      return undefined;
-    }
-    return optionsGettersFromNavigator.current[key]!();
-  }, []);
-
   return {
     addOptionsGetter,
     getCurrentOptions,
-    getRootOptions,
   };
 }

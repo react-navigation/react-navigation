@@ -1587,6 +1587,11 @@ it('does not throw if while getting current options with no options defined', ()
         <Screen name="bar" options={{ a: 'b' }}>
           {() => (
             <TestNavigator initialRouteName="bar-a">
+              <Screen
+                name="bar-b"
+                component={TestScreen}
+                options={{ wrongKey: true }}
+              />
               <Screen name="bar-a" component={TestScreen} />
             </TestNavigator>
           )}

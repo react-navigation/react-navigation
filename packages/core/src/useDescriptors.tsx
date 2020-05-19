@@ -47,11 +47,6 @@ type Options<
   addActionListener: (listener: ChildActionListener) => void;
   addFocusedListener: (listener: FocusedNavigationListener) => void;
   addStateGetter: (key: string, getter: NavigatorStateGetter) => void;
-  addOptionsGetter: (
-    key: string,
-    getter: () => object | undefined,
-    fromNavigator: boolean
-  ) => () => void;
   onRouteFocus: (key: string) => void;
   router: Router<State, NavigationAction>;
   emitter: NavigationEventEmitter;
@@ -80,7 +75,6 @@ export default function useDescriptors<
   addActionListener,
   addFocusedListener,
   addStateGetter,
-  addOptionsGetter,
   onRouteFocus,
   router,
   emitter,
@@ -97,7 +91,6 @@ export default function useDescriptors<
       addStateGetter,
       onRouteFocus,
       trackAction,
-      addOptionsGetter,
     }),
     [
       navigation,
@@ -107,7 +100,6 @@ export default function useDescriptors<
       onRouteFocus,
       addStateGetter,
       trackAction,
-      addOptionsGetter,
     ]
   );
 
@@ -159,7 +151,6 @@ export default function useDescriptors<
                 getState={getState}
                 setState={setState}
                 options={routeOptions}
-                addOptionsGetter={addOptionsGetter}
               />
             </NavigationBuilderContext.Provider>
           );

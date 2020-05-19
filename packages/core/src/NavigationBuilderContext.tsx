@@ -33,11 +33,6 @@ const NavigationBuilderContext = React.createContext<{
   addFocusedListener?: (listener: FocusedNavigationListener) => void;
   onRouteFocus?: (key: string) => void;
   addStateGetter?: (key: string, getter: NavigatorStateGetter) => void;
-  addOptionsGetter?: (
-    key: string,
-    getter: () => object | undefined,
-    fromNavigator: boolean
-  ) => () => void;
   trackAction: (action: NavigationAction) => void;
 }>({
   trackAction: () => undefined,

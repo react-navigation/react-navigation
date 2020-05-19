@@ -40,6 +40,10 @@ export const NavigationStateContext = React.createContext<{
   setState: (
     state: NavigationState | PartialState<NavigationState> | undefined
   ) => void;
+  addOptionsGetter?: (
+    key: string,
+    getter: () => object | undefined | null
+  ) => void;
 }>({
   isDefault: true,
 
@@ -213,9 +217,7 @@ const BaseNavigationContainer = React.forwardRef(
 
     const emitter = useEventEmitter();
 
-    const { addOptionsGetter, getRootOptions } = useOptionsGetters({
-      getState: getRootState,
-    });
+    const { addOptionsGetter, getCurrentOptions } = useOptionsGetters({});
 
     React.useImperativeHandle(ref, () => ({
       ...(Object.keys(CommonActions) as (keyof typeof CommonActions)[]).reduce<
@@ -238,17 +240,16 @@ const BaseNavigationContainer = React.forwardRef(
       dangerouslyGetState: () => state,
       dangerouslyGetParent: () => undefined,
       getCurrentRoute,
-      getCurrentOptions: getRootOptions,
+      getCurrentOptions,
     }));
 
     const builderContext = React.useMemo(
       () => ({
         addFocusedListener,
-        addOptionsGetter,
         addStateGetter,
         trackAction,
       }),
-      [addFocusedListener, addOptionsGetter, trackAction, addStateGetter]
+      [addFocusedListener, trackAction, addStateGetter]
     );
 
     const scheduleContext = React.useMemo(
@@ -263,8 +264,9 @@ const BaseNavigationContainer = React.forwardRef(
         setState,
         getKey,
         setKey,
+        addOptionsGetter,
       }),
-      [getKey, getState, setKey, setState, state]
+      [getKey, getState, setKey, setState, state, addOptionsGetter]
     );
 
     React.useEffect(() => {
