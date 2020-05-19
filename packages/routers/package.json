@@ -34,7 +34,7 @@
     "nanoid": "^3.1.5"
   },
   "devDependencies": {
-    "@react-native-community/bob": "^0.13.1",
+    "@react-native-community/bob": "^0.14.3",
     "del-cli": "^3.0.0",
     "typescript": "^3.8.3"
   },
