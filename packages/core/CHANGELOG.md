@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.8.0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.7.0...@react-navigation/core@5.8.0) (2020-05-20)
+
+
+### Features
+
+* add getCurrentOptions ([#8277](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/8277)) ([d024ec6](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/d024ec6d74dffe481ce6fde732c729e20c1668f4))
+* add getCurrentRoute ([#8254](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/8254)) ([7b25c8e](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/7b25c8eb2e6f96128fd86b92615346ce55bedeca))
+
+
+
+
+
 # [5.7.0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.6.1...@react-navigation/core@5.7.0) (2020-05-16)
 
 
