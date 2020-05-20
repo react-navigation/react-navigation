@@ -11,7 +11,7 @@ import {
   NavigationAction,
   Route,
 } from '@react-navigation/routers';
-import { NavigationStateContext } from './BaseNavigationContainer';
+import NavigationStateContext from './NavigationStateContext';
 import NavigationRouteContext from './NavigationRouteContext';
 import Screen from './Screen';
 import useEventEmitter from './useEventEmitter';

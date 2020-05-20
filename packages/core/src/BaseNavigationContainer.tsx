@@ -19,47 +19,15 @@ import useSyncState from './useSyncState';
 import isSerializable from './isSerializable';
 
 import { NavigationContainerRef, NavigationContainerProps } from './types';
+import NavigationStateContext from './NavigationStateContext';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
 
 const DEVTOOLS_CONFIG_KEY =
   'REACT_NAVIGATION_REDUX_DEVTOOLS_EXTENSION_INTEGRATION_ENABLED';
 
-const MISSING_CONTEXT_ERROR =
-  "Couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'? See https://reactnavigation.org/docs/getting-started for setup instructions.";
-
 const NOT_INITIALIZED_ERROR =
   "The 'navigation' object hasn't been initialized yet. This might happen if you don't have a navigator mounted, or if the navigator hasn't finished mounting. See https://reactnavigation.org/docs/navigating-without-navigation-prop#handling-initialization for more details.";
-
-export const NavigationStateContext = React.createContext<{
-  isDefault?: true;
-  state?: NavigationState | PartialState<NavigationState>;
-  getKey: () => string | undefined;
-  setKey: (key: string) => void;
-  getState: () => NavigationState | PartialState<NavigationState> | undefined;
-  setState: (
-    state: NavigationState | PartialState<NavigationState> | undefined
-  ) => void;
-  addOptionsGetter?: (
-    key: string,
-    getter: () => object | undefined | null
-  ) => void;
-}>({
-  isDefault: true,
-
-  get getKey(): any {
-    throw new Error(MISSING_CONTEXT_ERROR);
-  },
-  get setKey(): any {
-    throw new Error(MISSING_CONTEXT_ERROR);
-  },
-  get getState(): any {
-    throw new Error(MISSING_CONTEXT_ERROR);
-  },
-  get setState(): any {
-    throw new Error(MISSING_CONTEXT_ERROR);
-  },
-});
 
 let hasWarnedForSerialization = false;
 
