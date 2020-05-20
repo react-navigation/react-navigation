@@ -58,12 +58,15 @@ export default class ScrollPager<T extends Route> extends React.Component<
     y: 0,
   };
 
+  private wasTouched: boolean = false;
+
   // InteractionHandle to handle tasks around animations
   private interactionHandle: number | null = null;
 
   private scrollViewRef = React.createRef<Animated.ScrollView>();
 
   private jumpTo = (key: string) => {
+    this.wasTouched = false;
     const { navigationState, keyboardDismissMode, onIndexChange } = this.props;
 
     const index = navigationState.routes.findIndex(
@@ -148,6 +151,7 @@ export default class ScrollPager<T extends Route> extends React.Component<
     };
 
     const handleSwipeEnd = () => {
+      this.wasTouched = true;
       onSwipeEnd?.();
       if (this.interactionHandle !== null) {
         InteractionManager.clearInteractionHandle(this.interactionHandle);
@@ -192,14 +196,17 @@ export default class ScrollPager<T extends Route> extends React.Component<
         >
           {children}
           <Animated.Code
-            exec={onChange(
-              this.relativePosition,
+            exec={onChange(this.relativePosition, [
               cond(eq(round(this.relativePosition), this.relativePosition), [
-                call([this.relativePosition], ([relativePosition]) =>
-                  onIndexChange(relativePosition)
-                ),
-              ])
-            )}
+                call([this.relativePosition], ([relativePosition]) => {
+                  if (this.wasTouched) {
+                    onIndexChange(relativePosition);
+                    this.wasTouched = false;
+                  }
+                }),
+              ]),
+              call([this.relativePosition], console.log),
+            ])}
           />
         </Animated.ScrollView>
       ),
