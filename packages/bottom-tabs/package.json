@@ -44,7 +44,7 @@
     "del-cli": "^3.0.0",
     "react": "~16.9.0",
     "react-native": "~0.61.5",
-    "react-native-safe-area-context": "^0.7.3",
+    "react-native-safe-area-context": "^1.0.0",
     "react-native-screens": "^2.7.0",
     "typescript": "^3.8.3"
   },

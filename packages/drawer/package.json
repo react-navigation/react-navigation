@@ -50,7 +50,7 @@
     "react-native": "~0.61.5",
     "react-native-gesture-handler": "^1.6.0",
     "react-native-reanimated": "^1.8.0",
-    "react-native-safe-area-context": "^0.7.3",
+    "react-native-safe-area-context": "^1.0.0",
     "react-native-screens": "^2.7.0",
     "typescript": "^3.8.3"
   },
