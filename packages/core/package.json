@@ -20,7 +20,8 @@
   "types": "lib/typescript/src/index.d.ts",
   "files": [
     "src",
-    "lib"
+    "lib",
+    "!**/__tests__"
   ],
   "publishConfig": {
     "access": "public"
