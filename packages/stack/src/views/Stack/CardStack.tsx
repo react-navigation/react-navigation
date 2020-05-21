@@ -299,7 +299,7 @@ export default class CardStack extends React.Component<Props, State> {
           props.insets,
           state.descriptors,
           layout,
-          {}
+          state.headerHeights
         ),
       };
     });
