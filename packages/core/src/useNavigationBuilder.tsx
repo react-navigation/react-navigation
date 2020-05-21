@@ -264,41 +264,36 @@ export default function useNavigationBuilder<
     getKey,
   } = React.useContext(NavigationStateContext);
 
-  const previousStateRef = React.useRef<
-    NavigationState | PartialState<NavigationState> | undefined
-  >();
-  const initializedStateRef = React.useRef<State>();
-
-  let isFirstStateInitialization = false;
-
-  if (
-    initializedStateRef.current === undefined ||
-    currentState !== previousStateRef.current
-  ) {
+  const [initializedState, isFirstStateInitialization] = React.useMemo(() => {
     // If the current state isn't initialized on first render, we initialize it
     // We also need to re-initialize it if the state passed from parent was changed (maybe due to reset)
     // Otherwise assume that the state was provided as initial state
     // So we need to rehydrate it to make it usable
     if (currentState === undefined || !isStateValid(currentState)) {
-      isFirstStateInitialization = true;
-      initializedStateRef.current = router.getInitialState({
-        routeNames,
-        routeParamList,
-      });
-    } else {
-      initializedStateRef.current = router.getRehydratedState(
-        currentState as PartialState<State>,
-        {
+      return [
+        router.getInitialState({
           routeNames,
           routeParamList,
-        }
-      );
+        }),
+        true,
+      ];
+    } else {
+      return [
+        router.getRehydratedState(currentState as PartialState<State>, {
+          routeNames,
+          routeParamList,
+        }),
+        false,
+      ];
     }
-  }
-
-  React.useEffect(() => {
-    previousStateRef.current = currentState;
-  }, [currentState]);
+    // We explicitly don't include routeNames/routeParamList in the dep list
+    // below. We want to avoid forcing a new state to be calculated in cases
+    // where routeConfigs change without affecting routeNames/routeParamList.
+    // Instead, we handle changes to these in the nextState code below. Note
+    // that some changes to routeConfigs are explicitly ignored, such as changes
+    // to initialParams
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentState, router, isStateValid]);
 
   let state =
     // If the state isn't initialized, or stale, use the state we initialized instead
@@ -306,7 +301,7 @@ export default function useNavigationBuilder<
     // So it'll be `undefined` or stale untill the first navigation event happens
     isStateInitialized(currentState)
       ? (currentState as State)
-      : (initializedStateRef.current as State);
+      : (initializedState as State);
 
   let nextState: State = state;
 
@@ -373,6 +368,12 @@ export default function useNavigationBuilder<
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // We initialize this ref here to avoid a new getState getting initialized
+  // whenever initializedState changes. We want getState to have access to the
+  // latest initializedState, but don't need it to change when that happens
+  const initializedStateRef = React.useRef<State>();
+  initializedStateRef.current = initializedState;
 
   const getState = React.useCallback((): State => {
     const currentState = getCurrentState();
