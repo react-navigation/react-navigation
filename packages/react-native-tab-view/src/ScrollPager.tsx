@@ -146,6 +146,7 @@ export default class ScrollPager<T extends Route> extends React.Component<
     } = this.props;
 
     const handleSwipeStart = () => {
+      this.wasTouched = false;
       onSwipeStart?.();
       this.interactionHandle = InteractionManager.createInteractionHandle();
     };
