@@ -5,9 +5,8 @@ import {
   NavigationState,
   Router,
 } from '@react-navigation/routers';
-import BaseNavigationContainer, {
-  NavigationStateContext,
-} from '../BaseNavigationContainer';
+import BaseNavigationContainer from '../BaseNavigationContainer';
+import NavigationStateContext from '../NavigationStateContext';
 import MockRouter, { MockActions } from './__fixtures__/MockRouter';
 import useNavigationBuilder from '../useNavigationBuilder';
 import Screen from '../Screen';

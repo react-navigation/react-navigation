@@ -5,7 +5,7 @@ import {
   NavigationState,
   PartialState,
 } from '@react-navigation/routers';
-import { NavigationStateContext } from './BaseNavigationContainer';
+import NavigationStateContext from './NavigationStateContext';
 import NavigationContext from './NavigationContext';
 import NavigationRouteContext from './NavigationRouteContext';
 import StaticContainer from './StaticContainer';

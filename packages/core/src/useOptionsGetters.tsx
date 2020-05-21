@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { NavigationStateContext } from './BaseNavigationContainer';
+import NavigationStateContext from './NavigationStateContext';
 import { NavigationState } from '@react-navigation/routers';
 
 export default function useOptionsGetters({
