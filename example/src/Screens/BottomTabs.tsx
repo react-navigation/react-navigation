@@ -1,7 +1,11 @@
 import * as React from 'react';
-import { Platform } from 'react-native';
+import { View, ScrollView, StyleSheet, Platform } from 'react-native';
+import { Button } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {
+  createBottomTabNavigator,
+  BottomTabNavigationProp,
+} from '@react-navigation/bottom-tabs';
 import TouchableBounce from '../Shared/TouchableBounce';
 import Albums from '../Shared/Albums';
 import Contacts from '../Shared/Contacts';
@@ -21,6 +25,36 @@ type BottomTabParams = {
   Albums: undefined;
   Contacts: undefined;
   Chat: undefined;
+};
+
+const scrollEnabled = Platform.select({ web: true, default: false });
+
+const AlbumsScreen = ({
+  navigation,
+}: {
+  navigation: BottomTabNavigationProp<BottomTabParams>;
+}) => {
+  return (
+    <ScrollView>
+      <View style={styles.buttons}>
+        <Button
+          mode="outlined"
+          onPress={() => navigation.setOptions({ tabBarVisible: false })}
+          style={styles.button}
+        >
+          Hide tab bar
+        </Button>
+        <Button
+          mode="outlined"
+          onPress={() => navigation.setOptions({ tabBarVisible: true })}
+          style={styles.button}
+        >
+          Show tab bar
+        </Button>
+      </View>
+      <Albums scrollEnabled={scrollEnabled} />
+    </ScrollView>
+  );
 };
 
 const BottomTabs = createBottomTabNavigator<BottomTabParams>();
@@ -62,7 +96,7 @@ export default function BottomTabsScreen() {
       />
       <BottomTabs.Screen
         name="Albums"
-        component={Albums}
+        component={AlbumsScreen}
         options={{
           title: 'Albums',
           tabBarIcon: getTabBarIcon('image-album'),
@@ -71,3 +105,13 @@ export default function BottomTabsScreen() {
     </BottomTabs.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  buttons: {
+    flexDirection: 'row',
+    padding: 8,
+  },
+  button: {
+    margin: 8,
+  },
+});
