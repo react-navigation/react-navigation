@@ -197,7 +197,8 @@ export default class ScrollPager<T extends Route> extends React.Component<
         >
           {children}
           <Animated.Code
-            exec={onChange(this.relativePosition, [
+            exec={onChange(
+              this.relativePosition,
               cond(eq(round(this.relativePosition), this.relativePosition), [
                 call([this.relativePosition], ([relativePosition]) => {
                   if (this.wasTouched) {
@@ -205,9 +206,8 @@ export default class ScrollPager<T extends Route> extends React.Component<
                     this.wasTouched = false;
                   }
                 }),
-              ]),
-              call([this.relativePosition], console.log),
-            ])}
+              ])
+            )}
           />
         </Animated.ScrollView>
       ),
