@@ -75,17 +75,8 @@ export default class BottomTabView extends React.Component<Props, State> {
       tabBarOptions,
       state,
       navigation,
+      descriptors,
     } = this.props;
-
-    const { descriptors } = this.props;
-    const route = state.routes[state.index];
-    const descriptor = descriptors[route.key];
-    const options = descriptor.options;
-
-    if (options.tabBarVisible === false) {
-      return null;
-    }
-
     return tabBar({
       ...tabBarOptions,
       state: state,

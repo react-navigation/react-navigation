@@ -53,51 +53,64 @@ export default function BottomTabBar({
   const { colors } = useTheme();
   const buildLink = useLinkBuilder();
 
-  const [dimensions, setDimensions] = React.useState(() => {
-    const { height = 0, width = 0 } = Dimensions.get('window');
+  const focusedRoute = state.routes[state.index];
+  const focusedDescriptor = descriptors[focusedRoute.key];
+  const focusedOptions = focusedDescriptor.options;
 
-    return { height, width };
-  });
-
-  const [layout, setLayout] = React.useState({
-    height: 0,
-    width: dimensions.width,
-  });
   const [keyboardShown, setKeyboardShown] = React.useState(false);
 
-  const [visible] = React.useState(() => new Animated.Value(1));
+  const tabBarHidden = focusedOptions.tabBarVisible === false;
+  const keyboardHidingTabBar = keyboardHidesTabBar && keyboardShown;
+  const shouldShowTabBar = !tabBarHidden && !keyboardHidingTabBar;
+  const prevShouldShowTabBarRef = React.useRef<boolean | undefined>();
 
-  const { routes } = state;
+  const [tabBarPartiallyHidden, setTabBarPartiallyHidden] = React.useState(
+    !shouldShowTabBar
+  );
+
+  const visibleRef = React.useRef<Animated.Value | undefined>();
+  if (!visibleRef.current) {
+    visibleRef.current = new Animated.Value(shouldShowTabBar ? 1 : 0);
+  }
+  const visible = visibleRef.current;
 
   React.useEffect(() => {
-    if (keyboardShown) {
-      Animated.timing(visible, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver,
-      }).start();
-    }
-  }, [keyboardShown, visible]);
-
-  React.useEffect(() => {
-    const handleOrientationChange = ({ window }: { window: ScaledSize }) => {
-      setDimensions(window);
-    };
-
-    const handleKeyboardShow = () => setKeyboardShown(true);
-
-    const handleKeyboardHide = () =>
+    const prevShouldShowTabBar = prevShouldShowTabBarRef.current;
+    if (shouldShowTabBar && prevShouldShowTabBar === false) {
       Animated.timing(visible, {
         toValue: 1,
         duration: 250,
         useNativeDriver,
       }).start(({ finished }) => {
         if (finished) {
-          setKeyboardShown(false);
+          setTabBarPartiallyHidden(false);
         }
       });
+    } else if (!shouldShowTabBar && prevShouldShowTabBar) {
+      setTabBarPartiallyHidden(true);
+      Animated.timing(visible, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver,
+      }).start();
+    }
+    prevShouldShowTabBarRef.current = shouldShowTabBar;
+  }, [shouldShowTabBar, visible]);
 
+  const [dimensions, setDimensions] = React.useState(() => {
+    const { height = 0, width = 0 } = Dimensions.get('window');
+
+    return { height, width };
+  });
+
+  React.useEffect(() => {
+    const handleOrientationChange = ({ window }: { window: ScaledSize }) => {
+      setDimensions(window);
+    };
     Dimensions.addEventListener('change', handleOrientationChange);
+
+    const handleKeyboardShow = () => setKeyboardShown(true);
+    const handleKeyboardHide = () => setKeyboardShown(false);
 
     if (Platform.OS === 'ios') {
       Keyboard.addListener('keyboardWillShow', handleKeyboardShow);
@@ -118,7 +131,12 @@ export default function BottomTabBar({
         Keyboard.removeListener('keyboardDidHide', handleKeyboardHide);
       }
     };
-  }, [visible]);
+  }, []);
+
+  const [layout, setLayout] = React.useState({
+    height: 0,
+    width: dimensions.width,
+  });
 
   const handleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
@@ -135,6 +153,7 @@ export default function BottomTabBar({
     });
   };
 
+  const { routes } = state;
   const shouldUseHorizontalLabels = () => {
     if (labelPosition) {
       return labelPosition === 'beside-icon';
@@ -175,6 +194,13 @@ export default function BottomTabBar({
     left: safeAreaInsets?.left ?? defaultInsets.left,
   };
 
+  // If we're only worried about hiding for the keyboard, we don't need to worry
+  // about the bottom inset. However if the tab bar is hidden regardless of
+  // keyboard status we should make sure we consider the bottom inset
+  const offsetHeight = tabBarHidden
+    ? layout.height + insets.bottom
+    : layout.height;
+
   return (
     <Animated.View
       style={[
@@ -183,22 +209,19 @@ export default function BottomTabBar({
           backgroundColor: colors.card,
           borderTopColor: colors.border,
         },
-        keyboardHidesTabBar
-          ? {
-              // When the keyboard is shown, slide down the tab bar
-              transform: [
-                {
-                  translateY: visible.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [layout.height, 0],
-                  }),
-                },
-              ],
-              // Absolutely position the tab bar so that the content is below it
-              // This is needed to avoid gap at bottom when the tab bar is hidden
-              position: keyboardShown ? 'absolute' : null,
-            }
-          : null,
+        {
+          transform: [
+            {
+              translateY: visible.interpolate({
+                inputRange: [0, 1],
+                outputRange: [offsetHeight, 0],
+              }),
+            },
+          ],
+          // Absolutely position the tab bar so that the content is below it
+          // This is needed to avoid gap at bottom when the tab bar is hidden
+          position: tabBarPartiallyHidden ? 'absolute' : null,
+        },
         {
           height: DEFAULT_TABBAR_HEIGHT + insets.bottom,
           paddingBottom: insets.bottom,
@@ -206,7 +229,7 @@ export default function BottomTabBar({
         },
         style,
       ]}
-      pointerEvents={keyboardHidesTabBar && keyboardShown ? 'none' : 'auto'}
+      pointerEvents={tabBarPartiallyHidden ? 'none' : 'auto'}
     >
       <View style={styles.content} onLayout={handleLayout}>
         {routes.map((route, index) => {
