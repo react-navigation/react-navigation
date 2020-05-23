@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.4.0](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.3.9...@react-navigation/stack@5.4.0) (2020-05-23)
+
+
+### Bug Fixes
+
+* allow HeaderBackground's subViews to be touchable ([#8314](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/8314)) ([021a911](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/021a9111d76b9b0d940c8829f7caebeb292fec2a))
+* don't ignore previous header heights on layout update ([6dd45fc](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/6dd45fcff98a0c222d120d6f76a37130de45b92f))
+
+
+### Features
+
+* update react-native-safe-area-context to 1.0.0 ([#8182](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/8182)) ([d62fbfe](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/d62fbfe255140f16b182e8b54b276a7c96f2aec6))
+
+
+
+
+
 ## [5.3.9](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.3.8...@react-navigation/stack@5.3.9) (2020-05-20)
 
 **Note:** Version bump only for package @react-navigation/stack
