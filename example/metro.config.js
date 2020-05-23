@@ -8,26 +8,25 @@ const blacklist = require('metro-config/src/defaults/blacklist');
 const root = path.resolve(__dirname, '..');
 const packages = path.resolve(root, 'packages');
 
+const workspaces = fs
+  // List all packages under `packages/`
+  .readdirSync(packages)
+  // Ignore hidden files such as .DS_Store
+  .filter((p) => !p.startsWith('.'))
+  .map((p) => path.join(packages, p));
+
 // Get the list of dependencies for all packages in the monorepo
 const modules = ['@expo/vector-icons']
   .concat(
-    ...fs
-      // List all packages under `packages/`
-      .readdirSync(packages)
-      // Ignore hidden files such as .DS_Store
-      .filter((p) => !p.startsWith('.'))
-      .map((p) => {
-        const pak = JSON.parse(
-          fs.readFileSync(path.join(packages, p, 'package.json'), 'utf8')
-        );
+    ...workspaces.map((it) => {
+      const pak = JSON.parse(
+        fs.readFileSync(path.join(it, 'package.json'), 'utf8')
+      );
 
-        // We need to collect list of deps that this package imports
-        // Collecting both dependencies are peerDependencies should do it
-        return Object.keys({
-          ...pak.dependencies,
-          ...pak.peerDependencies,
-        });
-      })
+      // We need to make sure that only one version is loaded for peerDependencies
+      // So we blacklist them at the root, and alias them to the versions in example's node_modules
+      return pak.peerDependencies ? Object.keys(pak.peerDependencies) : [];
+    })
   )
   .sort()
   .filter(
@@ -45,15 +44,16 @@ module.exports = {
   watchFolders: [root],
 
   resolver: {
-    // We need to blacklist `node_modules` of all our packages
-    // This will avoid Metro throwing duplicate module errors
+    // We need to blacklist the peerDependencies we've collected in packages' node_modules
     blacklistRE: blacklist(
-      fs
-        .readdirSync(packages)
-        .map((p) => path.join(packages, p))
-        .map(
-          (it) => new RegExp(`^${escape(path.join(it, 'node_modules'))}\\/.*$`)
+      [].concat(
+        ...workspaces.map((it) =>
+          modules.map(
+            (m) =>
+              new RegExp(`^${escape(path.join(it, 'node_modules', m))}\\/.*$`)
+          )
         )
+      )
     ),
 
     // When we import a package from the monorepo, metro won't be able to find their deps
