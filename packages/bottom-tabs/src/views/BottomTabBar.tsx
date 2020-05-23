@@ -57,44 +57,38 @@ export default function BottomTabBar({
   const focusedDescriptor = descriptors[focusedRoute.key];
   const focusedOptions = focusedDescriptor.options;
 
-  const [keyboardShown, setKeyboardShown] = React.useState(false);
+  const [isKeyboardShown, setIsKeyboardShown] = React.useState(false);
 
-  const tabBarHidden = focusedOptions.tabBarVisible === false;
-  const keyboardHidingTabBar = keyboardHidesTabBar && keyboardShown;
-  const shouldShowTabBar = !tabBarHidden && !keyboardHidingTabBar;
-  const prevShouldShowTabBarRef = React.useRef<boolean | undefined>();
+  const shouldShowTabBar =
+    focusedOptions.tabBarVisible !== false &&
+    !(keyboardHidesTabBar && isKeyboardShown);
 
-  const [tabBarPartiallyHidden, setTabBarPartiallyHidden] = React.useState(
-    !shouldShowTabBar
+  const [isTabBarHidden, setIsTabBarHidden] = React.useState(!shouldShowTabBar);
+
+  const [visible] = React.useState(
+    () => new Animated.Value(shouldShowTabBar ? 1 : 0)
   );
 
-  const visibleRef = React.useRef<Animated.Value | undefined>();
-  if (!visibleRef.current) {
-    visibleRef.current = new Animated.Value(shouldShowTabBar ? 1 : 0);
-  }
-  const visible = visibleRef.current;
-
   React.useEffect(() => {
-    const prevShouldShowTabBar = prevShouldShowTabBarRef.current;
-    if (shouldShowTabBar && prevShouldShowTabBar === false) {
+    if (shouldShowTabBar) {
       Animated.timing(visible, {
         toValue: 1,
         duration: 250,
         useNativeDriver,
       }).start(({ finished }) => {
         if (finished) {
-          setTabBarPartiallyHidden(false);
+          setIsTabBarHidden(false);
         }
       });
-    } else if (!shouldShowTabBar && prevShouldShowTabBar) {
-      setTabBarPartiallyHidden(true);
+    } else {
+      setIsTabBarHidden(true);
+
       Animated.timing(visible, {
         toValue: 0,
         duration: 200,
         useNativeDriver,
       }).start();
     }
-    prevShouldShowTabBarRef.current = shouldShowTabBar;
   }, [shouldShowTabBar, visible]);
 
   const [dimensions, setDimensions] = React.useState(() => {
@@ -107,10 +101,11 @@ export default function BottomTabBar({
     const handleOrientationChange = ({ window }: { window: ScaledSize }) => {
       setDimensions(window);
     };
+
     Dimensions.addEventListener('change', handleOrientationChange);
 
-    const handleKeyboardShow = () => setKeyboardShown(true);
-    const handleKeyboardHide = () => setKeyboardShown(false);
+    const handleKeyboardShow = () => setIsKeyboardShown(true);
+    const handleKeyboardHide = () => setIsKeyboardShown(false);
 
     if (Platform.OS === 'ios') {
       Keyboard.addListener('keyboardWillShow', handleKeyboardShow);
@@ -194,13 +189,6 @@ export default function BottomTabBar({
     left: safeAreaInsets?.left ?? defaultInsets.left,
   };
 
-  // If we're only worried about hiding for the keyboard, we don't need to worry
-  // about the bottom inset. However if the tab bar is hidden regardless of
-  // keyboard status we should make sure we consider the bottom inset
-  const offsetHeight = tabBarHidden
-    ? layout.height + insets.bottom
-    : layout.height;
-
   return (
     <Animated.View
       style={[
@@ -214,13 +202,13 @@ export default function BottomTabBar({
             {
               translateY: visible.interpolate({
                 inputRange: [0, 1],
-                outputRange: [offsetHeight, 0],
+                outputRange: [layout.height + insets.bottom, 0],
               }),
             },
           ],
           // Absolutely position the tab bar so that the content is below it
           // This is needed to avoid gap at bottom when the tab bar is hidden
-          position: tabBarPartiallyHidden ? 'absolute' : null,
+          position: isTabBarHidden ? 'absolute' : null,
         },
         {
           height: DEFAULT_TABBAR_HEIGHT + insets.bottom,
@@ -229,7 +217,7 @@ export default function BottomTabBar({
         },
         style,
       ]}
-      pointerEvents={tabBarPartiallyHidden ? 'none' : 'auto'}
+      pointerEvents={isTabBarHidden ? 'none' : 'auto'}
     >
       <View style={styles.content} onLayout={handleLayout}>
         {routes.map((route, index) => {
