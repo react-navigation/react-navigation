@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.8.0](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.7.7...@react-navigation/drawer@5.8.0) (2020-05-23)
+
+
+### Features
+
+* update react-native-safe-area-context to 1.0.0 ([#8182](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/8182)) ([d62fbfe](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/d62fbfe255140f16b182e8b54b276a7c96f2aec6))
+
+
+
+
+
 ## [5.7.7](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.7.6...@react-navigation/drawer@5.7.7) (2020-05-20)
 
 **Note:** Version bump only for package @react-navigation/drawer

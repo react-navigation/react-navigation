@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.4.7](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.4.6...@react-navigation/routers@5.4.7) (2020-05-23)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+
+
+
+
 ## [5.4.6](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.4.5...@react-navigation/routers@5.4.6) (2020-05-20)
 
 **Note:** Version bump only for package @react-navigation/routers

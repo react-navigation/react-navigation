@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/routers",
   "description": "Routers to help build custom navigators",
-  "version": "5.4.6",
+  "version": "5.4.7",
   "keywords": [
     "react",
     "react-native",

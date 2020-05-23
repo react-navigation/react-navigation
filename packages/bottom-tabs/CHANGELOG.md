@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.5.0](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.4.7...@react-navigation/bottom-tabs@5.5.0) (2020-05-23)
+
+
+### Features
+
+* animate changes to tabBarVisible in BottomTabBar ([#8286](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/issues/8286)) ([c1e46f8](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/c1e46f8e331e0054995aa476455af204d02d4170))
+* update react-native-safe-area-context to 1.0.0 ([#8182](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/issues/8182)) ([d62fbfe](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/d62fbfe255140f16b182e8b54b276a7c96f2aec6))
+
+
+
+
+
 ## [5.4.7](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.4.6...@react-navigation/bottom-tabs@5.4.7) (2020-05-20)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
