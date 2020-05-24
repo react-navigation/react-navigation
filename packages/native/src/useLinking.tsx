@@ -6,6 +6,7 @@ import {
   NavigationState,
   getActionFromState,
 } from '@react-navigation/core';
+import ServerContext from './ServerContext';
 import { LinkingOptions } from './types';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
@@ -84,11 +85,17 @@ export default function useLinking(
     getPathFromStateRef.current = getPathFromState;
   }, [config, enabled, getPathFromState, getStateFromPath]);
 
+  const server = React.useContext(ServerContext);
+
   const getInitialState = React.useCallback(() => {
     let value: ResultState | undefined;
 
     if (enabledRef.current) {
-      const path = location.pathname + location.search;
+      const location =
+        server?.location ??
+        (typeof window !== 'undefined' ? window.location : undefined);
+
+      const path = location ? location.pathname + location.search : undefined;
 
       if (path) {
         value = getStateFromPathRef.current(path, configRef.current);
@@ -106,6 +113,7 @@ export default function useLinking(
     };
 
     return thenable as PromiseLike<ResultState | undefined>;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const previousStateLengthRef = React.useRef<number | undefined>(undefined);
