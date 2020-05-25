@@ -41,6 +41,7 @@ export default React.forwardRef<View, Props>(function CardSheet(
 const styles = StyleSheet.create({
   page: {
     minHeight: '100%',
+    maxHeight: '100vh',
   },
   card: {
     flex: 1,
