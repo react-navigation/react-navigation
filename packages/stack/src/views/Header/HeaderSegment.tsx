@@ -313,7 +313,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
       <React.Fragment>
         <Animated.View
           pointerEvents="box-none"
-          style={[StyleSheet.absoluteFill, backgroundStyle, { zIndex: 0 }]}
+          style={[StyleSheet.absoluteFill, { zIndex: 0 }, backgroundStyle]}
         >
           {headerBackground ? (
             headerBackground({ style: safeStyles })
