@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 export type ServerContextType = {
-  location: {
+  location?: {
     pathname: string;
     search: string;
   };
