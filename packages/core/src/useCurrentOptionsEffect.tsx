@@ -14,8 +14,5 @@ export default function useCurrentOptionsEffect(
     }
   }, [listener, ref]);
 
-  React.useEffect(
-    () => ref.current?.addUpdateOptionsListener(listenerWrapper),
-    [listenerWrapper, ref]
-  );
+  React.useEffect(() => ref.current?.addUpdateOptionsListener(listenerWrapper));
 }

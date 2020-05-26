@@ -5,12 +5,10 @@ import Screen from '../Screen';
 import BaseNavigationContainer from '../BaseNavigationContainer';
 import useNavigationBuilder from '../useNavigationBuilder';
 import useNavigation from '../useNavigation';
-import useCurrentOptionsEffect from '../useCurrentOptionsEffect';
 import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
 import { NavigationContainerRef } from '../types';
 
 beforeEach(() => (MockRouterKey.current = 0));
-jest.useFakeTimers();
 
 it('initializes state for a navigator on navigation', () => {
   const TestNavigator = (props: any) => {
@@ -1531,7 +1529,6 @@ it('returns currently focused route with getCurrentRoute', () => {
   });
 });
 
-// eslint-disable-next-line jest/no-disabled-tests
 it("returns currently focused route's options with getCurrentOptions", () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
@@ -1539,14 +1536,7 @@ it("returns currently focused route's options with getCurrentOptions", () => {
     return descriptors[state.routes[state.index].key].render();
   };
 
-  let currentOptions;
-  const TestScreen = () => {
-    useCurrentOptionsEffect((options) => {
-      console.log(options)
-      currentOptions = options;
-    });
-    return null;
-  };
+  const TestScreen = () => null;
 
   const navigation = React.createRef<NavigationContainerRef>();
 
@@ -1578,8 +1568,6 @@ it("returns currently focused route's options with getCurrentOptions", () => {
     sample: 'data',
     sample2: 'data',
   });
-
-  expect(navigation.current?.getCurrentOptions()).toEqual(currentOptions);
 });
 
 it('does not throw if while getting current options with no options defined', () => {
