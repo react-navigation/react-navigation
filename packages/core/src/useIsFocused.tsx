@@ -12,14 +12,10 @@ export default function useIsFocused(): boolean {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const getCurrentValue = React.useCallback(navigation.isFocused, [navigation]);
   const subscribe = React.useCallback(
-    (callback: (value: boolean) => void) => {
-      const unsubscribeFocus = navigation.addListener('focus', () =>
-        callback(true)
-      );
+    (callback: () => void) => {
+      const unsubscribeFocus = navigation.addListener('focus', callback);
 
-      const unsubscribeBlur = navigation.addListener('blur', () =>
-        callback(false)
-      );
+      const unsubscribeBlur = navigation.addListener('blur', callback);
 
       return () => {
         unsubscribeFocus();
