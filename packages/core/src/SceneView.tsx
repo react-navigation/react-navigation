@@ -50,7 +50,6 @@ export default function SceneView<
   const getKey = React.useCallback(() => navigatorKeyRef.current, []);
 
   const optionsRef = React.useRef<object | undefined>(options);
-  onOptionsChange();
   React.useEffect(() => {
     optionsRef.current = options;
     onOptionsChange();

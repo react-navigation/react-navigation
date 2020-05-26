@@ -29,6 +29,9 @@ import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
+  NavigationContainerRef,
+  useCurrentRouteEffect,
+  useCurrentOptionsEffect,
 } from '@react-navigation/native';
 import {
   createDrawerNavigator,
@@ -168,6 +171,8 @@ export default function App() {
     restoreState();
   }, []);
 
+  const ref = React.useRef<NavigationContainerRef | null>(null);
+
   const paperTheme = React.useMemo(() => {
     const t = theme.dark ? PaperDarkTheme : PaperLightTheme;
 
@@ -194,6 +199,8 @@ export default function App() {
     return () => Dimensions.removeEventListener('change', onDimensionsChange);
   }, []);
 
+  useCurrentOptionsEffect(ref, console.log);
+
   if (!isReady) {
     return null;
   }
@@ -206,6 +213,7 @@ export default function App() {
         <StatusBar barStyle={theme.dark ? 'light-content' : 'dark-content'} />
       )}
       <NavigationContainer
+        ref={ref}
         initialState={initialState}
         onStateChange={(state) =>
           AsyncStorage.setItem(

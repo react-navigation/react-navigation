@@ -188,6 +188,16 @@ const BaseNavigationContainer = React.forwardRef(
 
     const { addOptionsGetter, getCurrentOptions } = useOptionsGetters({});
 
+    const updateListeners = React.useRef<(() => void | never)[]>([]);
+    const addListener = React.useCallback((listener: () => void) => {
+      console.log('adding');
+      updateListeners.current.push(listener);
+      return () => {
+        const index = updateListeners.current.indexOf(listener);
+        updateListeners.current.splice(index, 1);
+      };
+    }, []);
+
     React.useImperativeHandle(ref, () => ({
       ...(Object.keys(CommonActions) as (keyof typeof CommonActions)[]).reduce<
         any
@@ -210,6 +220,7 @@ const BaseNavigationContainer = React.forwardRef(
       dangerouslyGetParent: () => undefined,
       getCurrentRoute,
       getCurrentOptions,
+      addUpdateOptionsListener: addListener,
     }));
 
     const builderContext = React.useMemo(
@@ -226,23 +237,13 @@ const BaseNavigationContainer = React.forwardRef(
       [scheduleUpdate, flushUpdates]
     );
 
-    const updateListeners = React.useRef<(() => void | never)[]>([]);
     const globalContext = React.useMemo(
       () => ({
-        getCurrentRoute,
-        getCurrentOptions: getCurrentOptions as () => object | undefined,
         onOptionsChange: () => {
           updateListeners.current.forEach((listener) => listener());
         },
-        addListener: (listener: () => void) => {
-          updateListeners.current.push(listener);
-          return () => {
-            const index = updateListeners.current.indexOf(listener);
-            updateListeners.current.splice(index, 1);
-          };
-        },
       }),
-      [getCurrentOptions, getCurrentRoute]
+      []
     );
 
     const context = React.useMemo(

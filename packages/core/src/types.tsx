@@ -430,6 +430,7 @@ export type NavigationContainerRef = NavigationHelpers<ParamListBase> &
      * Get the currently focused route's options.
      */
     getCurrentOptions(): object | undefined;
+    addUpdateOptionsListener(listener: () => void): () => void;
   };
 
 export type TypedNavigator<

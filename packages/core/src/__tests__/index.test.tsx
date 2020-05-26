@@ -5,7 +5,7 @@ import Screen from '../Screen';
 import BaseNavigationContainer from '../BaseNavigationContainer';
 import useNavigationBuilder from '../useNavigationBuilder';
 import useNavigation from '../useNavigation';
-import useCurrentOptions from '../useCurrentOptions';
+import useCurrentOptionsEffect from '../useCurrentOptionsEffect';
 import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
 import { NavigationContainerRef } from '../types';
 
@@ -1532,7 +1532,7 @@ it('returns currently focused route with getCurrentRoute', () => {
 });
 
 // eslint-disable-next-line jest/no-disabled-tests
-it.skip("returns currently focused route's options with getCurrentOptions", () => {
+it("returns currently focused route's options with getCurrentOptions", () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -1541,8 +1541,10 @@ it.skip("returns currently focused route's options with getCurrentOptions", () =
 
   let currentOptions;
   const TestScreen = () => {
-    currentOptions = useCurrentOptions();
-    console.log(currentOptions);
+    useCurrentOptionsEffect((options) => {
+      console.log(options)
+      currentOptions = options;
+    });
     return null;
   };
 
