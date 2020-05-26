@@ -1,8 +1,8 @@
 import React from 'react';
 import {
   View,
+  Text,
   TouchableWithoutFeedback,
-  Animated,
   StyleSheet,
   Platform,
   StyleProp,
@@ -191,7 +191,7 @@ export default function BottomTabBarItem({
 
     if (typeof label === 'string') {
       return (
-        <Animated.Text
+        <Text
           numberOfLines={1}
           style={[
             styles.label,
@@ -202,7 +202,7 @@ export default function BottomTabBarItem({
           allowFontScaling={allowFontScaling}
         >
           {label}
-        </Animated.Text>
+        </Text>
       );
     }
 

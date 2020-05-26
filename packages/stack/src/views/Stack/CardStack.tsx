@@ -83,9 +83,10 @@ const getHeaderHeights = (
 ) => {
   return routes.reduce<Record<string, number>>((acc, curr) => {
     const { options = {} } = descriptors[curr.key] || {};
-    const { height = previous[curr.key] } = StyleSheet.flatten(
-      options.headerStyle || {}
-    );
+    const style: any = StyleSheet.flatten(options.headerStyle || {});
+
+    const height =
+      typeof style.height === 'number' ? style.height : previous[curr.key];
 
     const safeAreaInsets = {
       ...insets,
