@@ -33,6 +33,7 @@ import {
 import useStateGetters from './useStateGetters';
 import useOnGetState from './useOnGetState';
 import useScheduleUpdate from './useScheduleUpdate';
+import useCurrentRender from './useCurrentRender';
 
 // This is to make TypeScript compiler happy
 // eslint-disable-next-line babel/no-unused-expressions
@@ -496,6 +497,12 @@ export default function useNavigationBuilder<
     addStateGetter,
     router,
     emitter,
+  });
+
+  useCurrentRender({
+    state,
+    navigation,
+    descriptors,
   });
 
   return {
