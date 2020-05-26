@@ -46,7 +46,9 @@ type Props = ViewProps & {
   onGestureCanceled?: () => void;
   onGestureEnd?: () => void;
   children: React.ReactNode;
-  overlay: (props: { style: StyleProp<ViewStyle> }) => React.ReactNode;
+  overlay: (props: {
+    style: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+  }) => React.ReactNode;
   overlayEnabled: boolean;
   shadowEnabled: boolean;
   gestureEnabled: boolean;
@@ -83,7 +85,11 @@ export default class Card extends React.Component<Props> {
     shadowEnabled: true,
     gestureEnabled: true,
     gestureVelocityImpact: GESTURE_VELOCITY_IMPACT,
-    overlay: ({ style }: { style: StyleProp<ViewStyle> }) =>
+    overlay: ({
+      style,
+    }: {
+      style: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+    }) =>
       style ? (
         <Animated.View pointerEvents="none" style={[styles.overlay, style]} />
       ) : null,

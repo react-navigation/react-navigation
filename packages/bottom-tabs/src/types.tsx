@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  Animated,
   TouchableWithoutFeedbackProps,
   StyleProp,
   TextStyle,
@@ -197,7 +198,7 @@ export type BottomTabBarOptions = {
   /**
    * Style object for the tab bar container.
    */
-  style?: StyleProp<ViewStyle>;
+  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 };
 
 export type BottomTabBarProps = BottomTabBarOptions & {
