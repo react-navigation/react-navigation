@@ -51,3 +51,7 @@ export type LinkingOptions = {
    */
   getPathFromState?: typeof getPathFromStateDefault;
 };
+
+export type ServerContainerRef = {
+  getCurrentOptions(): object | undefined;
+};
