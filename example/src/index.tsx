@@ -11,10 +11,7 @@ import {
 } from 'react-native';
 // eslint-disable-next-line import/no-unresolved
 import { enableScreens } from 'react-native-screens';
-import RNRestart from 'react-native-restart';
-import { Updates } from 'expo';
-import { Asset } from 'expo-asset';
-import { MaterialIcons } from '@expo/vector-icons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {
   Provider as PaperProvider,
   DefaultTheme as PaperLightTheme,
@@ -36,11 +33,11 @@ import {
 } from '@react-navigation/drawer';
 import {
   createStackNavigator,
-  Assets as StackAssets,
   StackNavigationProp,
   HeaderStyleInterpolators,
 } from '@react-navigation/stack';
 
+import { restartApp } from './Restart';
 import AsyncStorage from './AsyncStorage';
 import LinkingPrefixes from './LinkingPrefixes';
 import SettingsItem from './Shared/SettingsItem';
@@ -126,12 +123,10 @@ const Stack = createStackNavigator<RootStackParamList>();
 const NAVIGATION_PERSISTENCE_KEY = 'NAVIGATION_STATE';
 const THEME_PERSISTENCE_KEY = 'THEME_TYPE';
 
-Asset.loadAsync(StackAssets);
-
 export default function App() {
   const [theme, setTheme] = React.useState(DefaultTheme);
 
-  const [isReady, setIsReady] = React.useState(false);
+  const [isReady, setIsReady] = React.useState(Platform.OS === 'web');
   const [initialState, setInitialState] = React.useState<
     InitialState | undefined
   >();
@@ -307,12 +302,7 @@ export default function App() {
                         value={I18nManager.isRTL}
                         onValueChange={() => {
                           I18nManager.forceRTL(!I18nManager.isRTL);
-                          // @ts-ignore
-                          if (global.Expo) {
-                            Updates.reloadFromCache();
-                          } else {
-                            RNRestart.Restart();
-                          }
+                          restartApp();
                         }}
                       />
                       <Divider />

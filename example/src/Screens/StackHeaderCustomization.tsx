@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet, ScrollView, Alert, Platform } from 'react-native';
 import { Button, Appbar } from 'react-native-paper';
-import { BlurView } from 'expo-blur';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { RouteProp, ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -10,6 +9,7 @@ import {
   HeaderBackground,
   useHeaderHeight,
 } from '@react-navigation/stack';
+import BlurView from '../Shared/BlurView';
 import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
 
