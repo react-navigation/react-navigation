@@ -12,6 +12,7 @@ import StaticContainer from './StaticContainer';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
 import { NavigationProp, RouteConfig, EventMapBase } from './types';
 import useOptionsGetters from './useOptionsGetters';
+import GlobalNavigationContext from './GlobalNavigationContext';
 
 type Props<
   State extends NavigationState,
@@ -45,13 +46,15 @@ export default function SceneView<
   options,
 }: Props<State, ScreenOptions, EventMap>) {
   const navigatorKeyRef = React.useRef<string | undefined>();
+  const { onOptionsChange } = React.useContext(GlobalNavigationContext);
   const getKey = React.useCallback(() => navigatorKeyRef.current, []);
 
   const optionsRef = React.useRef<object | undefined>(options);
-
+  onOptionsChange();
   React.useEffect(() => {
     optionsRef.current = options;
-  }, [options]);
+    onOptionsChange();
+  }, [options, onOptionsChange]);
 
   const getOptions = React.useCallback(() => optionsRef.current, []);
 

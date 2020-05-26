@@ -20,6 +20,7 @@ import isSerializable from './isSerializable';
 
 import { NavigationContainerRef, NavigationContainerProps } from './types';
 import NavigationStateContext from './NavigationStateContext';
+import GlobalNavigationContext from './GlobalNavigationContext';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
 
@@ -225,6 +226,25 @@ const BaseNavigationContainer = React.forwardRef(
       [scheduleUpdate, flushUpdates]
     );
 
+    const updateListeners = React.useRef<(() => void | never)[]>([]);
+    const globalContext = React.useMemo(
+      () => ({
+        getCurrentRoute,
+        getCurrentOptions: getCurrentOptions as () => object | undefined,
+        onOptionsChange: () => {
+          updateListeners.current.forEach((listener) => listener());
+        },
+        addListener: (listener: () => void) => {
+          updateListeners.current.push(listener);
+          return () => {
+            const index = updateListeners.current.indexOf(listener);
+            updateListeners.current.splice(index, 1);
+          };
+        },
+      }),
+      [getCurrentOptions, getCurrentRoute]
+    );
+
     const context = React.useMemo(
       () => ({
         state,
@@ -271,13 +291,15 @@ const BaseNavigationContainer = React.forwardRef(
     }, [onStateChange, trackState, getRootState, emitter, state]);
 
     return (
-      <ScheduleUpdateContext.Provider value={scheduleContext}>
-        <NavigationBuilderContext.Provider value={builderContext}>
-          <NavigationStateContext.Provider value={context}>
-            <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
-          </NavigationStateContext.Provider>
-        </NavigationBuilderContext.Provider>
-      </ScheduleUpdateContext.Provider>
+      <GlobalNavigationContext.Provider value={globalContext}>
+        <ScheduleUpdateContext.Provider value={scheduleContext}>
+          <NavigationBuilderContext.Provider value={builderContext}>
+            <NavigationStateContext.Provider value={context}>
+              <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
+            </NavigationStateContext.Provider>
+          </NavigationBuilderContext.Provider>
+        </ScheduleUpdateContext.Provider>
+      </GlobalNavigationContext.Provider>
     );
   }
 );
