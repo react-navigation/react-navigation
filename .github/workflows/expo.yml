@@ -29,10 +29,8 @@ jobs:
         id: yarn-cache
         uses: actions/cache@master
         with:
-          path: |
-            node_modules
-            */*/node_modules
-          key: ${{ runner.os }}-yarn-v1-${{ hashFiles('**/yarn.lock') }}
+          path: '**/node_modules'
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
