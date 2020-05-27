@@ -206,10 +206,6 @@ export default function BottomTabBarItem({
       );
     }
 
-    if (typeof label === 'string') {
-      return label;
-    }
-
     return label({ focused, color });
   };
 
