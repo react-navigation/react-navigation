@@ -22,13 +22,14 @@ jobs:
       - attach_project
       - restore_cache:
           keys:
-            - v2-dependencies-{{ checksum "yarn.lock" }}
-            - v2-dependencies-
+            - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - yarn-packages-v1-{{ .Branch }}-
+            - yarn-packages-v1-
       - run:
           name: Install project dependencies
           command: yarn install --frozen-lockfile
       - save_cache:
-          key: v2-dependencies-{{ checksum "yarn.lock" }}
+          key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths: ~/.cache/yarn
       - persist_to_workspace:
           root: .
