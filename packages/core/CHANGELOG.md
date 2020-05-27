@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.9.0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.8.2...@react-navigation/core@5.9.0) (2020-05-27)
+
+
+### Features
+
+* add ref to get current options in `ServerContainer` ([#8333](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/8333)) ([0b1a718](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/0b1a718756e208d84b20e45ca56004332308ad54))
+
+
+
+
+
 ## [5.8.2](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.8.1...@react-navigation/core@5.8.2) (2020-05-23)
 
 **Note:** Version bump only for package @react-navigation/core

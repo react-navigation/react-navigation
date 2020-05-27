@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.5.0](https://github.com/react-navigation/react-navigation/tree/master/packages/native/compare/@react-navigation/native@5.4.3...@react-navigation/native@5.5.0) (2020-05-27)
+
+
+### Bug Fixes
+
+* export types from /native ([af1722d](https://github.com/react-navigation/react-navigation/tree/master/packages/native/commit/af1722d1e915f3ec234df202f74c4b4c631472c7))
+
+
+### Features
+
+* add a `ServerContainer` component for SSR ([#8297](https://github.com/react-navigation/react-navigation/tree/master/packages/native/issues/8297)) ([68e750d](https://github.com/react-navigation/react-navigation/tree/master/packages/native/commit/68e750d5a6d198a2f5bdb86ba631de0a27732943))
+* add ref to get current options in `ServerContainer` ([#8333](https://github.com/react-navigation/react-navigation/tree/master/packages/native/issues/8333)) ([0b1a718](https://github.com/react-navigation/react-navigation/tree/master/packages/native/commit/0b1a718756e208d84b20e45ca56004332308ad54))
+
+
+
+
+
 ## [5.4.3](https://github.com/react-navigation/react-navigation/tree/master/packages/native/compare/@react-navigation/native@5.4.2...@react-navigation/native@5.4.3) (2020-05-23)
 
 **Note:** Version bump only for package @react-navigation/native

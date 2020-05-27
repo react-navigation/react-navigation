@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.4.1](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.4.0...@react-navigation/stack@5.4.1) (2020-05-27)
+
+
+### Bug Fixes
+
+* allow HeaderBackground's subViews to be touchable ([#8317](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/8317)) ([00c23f2](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/00c23f2c9ed22fa4d010ffb427f2b52e061d8df4))
+* fix type of style for various options ([9d822b9](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/9d822b95a6df797e2e63e481573e64ea7d0f9386))
+
+
+
+
+
 # [5.4.0](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.3.9...@react-navigation/stack@5.4.0) (2020-05-23)
 
 

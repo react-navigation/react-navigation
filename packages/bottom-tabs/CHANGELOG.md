@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.5.1](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.5.0...@react-navigation/bottom-tabs@5.5.1) (2020-05-27)
+
+
+### Bug Fixes
+
+* fix type of style for various options ([9d822b9](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/9d822b95a6df797e2e63e481573e64ea7d0f9386))
+
+
+
+
+
 # [5.5.0](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.4.7...@react-navigation/bottom-tabs@5.5.0) (2020-05-23)
 
 
