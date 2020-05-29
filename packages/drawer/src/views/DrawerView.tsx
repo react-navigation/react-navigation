@@ -238,7 +238,6 @@ export default function DrawerView({
               renderDrawerContent={renderNavigationView}
               renderSceneContent={renderContent}
               keyboardDismissMode={keyboardDismissMode}
-              drawerPostion={drawerPosition}
               dimensions={dimensions}
             />
           </DrawerOpenContext.Provider>
