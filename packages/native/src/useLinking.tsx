@@ -20,33 +20,9 @@ type HistoryRecord = {
 
 const createMemoryHistory = () => {
   let index = 0;
-
-  const items: HistoryRecord[] = [];
-
-  const getDelta = (count: number) => {
-    const times = window.history.state?.times ?? 1;
-
-    let delta = count - window.history.state?.times ?? 1;
-
-    if (count > times) {
-      let previous = window.history.state?.previous;
-
-      while (previous) {
-        delta -= previous.times ?? 1;
-        previous = previous.previous;
-      }
-    }
-
-    // We need to keep at least one item in the history
-    // Otherwise we'll exit the page
-    return Math.min(delta + 1, index - 1);
-  };
+  let items: HistoryRecord[] = [];
 
   return {
-    get latest() {
-      return index;
-    },
-
     get index(): number {
       return window.history.state?.index ?? 0;
     },
@@ -74,7 +50,8 @@ const createMemoryHistory = () => {
       state: NavigationState;
       times?: number;
     }) {
-      items.splice(index + 1);
+      items = items.slice(0, index + 1);
+
       items.push({ path, state, key });
       index = items.length - 1;
 
@@ -94,27 +71,62 @@ const createMemoryHistory = () => {
       key: string;
       state: NavigationState;
     }) {
-      items[index] = { path, state, key };
-      window.history.replaceState(
-        {
-          index,
-          times: window.history.state?.times ?? 1,
-          previous: window.history.state?.previous,
-        },
-        '',
-        path
-      );
+      if (index === items.length - 1) {
+        items[index] = { path, state, key };
+      } else {
+        items.push({ path, state, key });
+      }
+
+      if (items.length < index + 1) {
+        items.length = index + 1;
+      }
+
+      window.history.replaceState({ ...window.history.state, index }, '', path);
     },
 
     go(n: number) {
-      const delta = n < 0 ? getDelta(-n) : n;
+      let delta = n;
+
+      if (n < 0) {
+        const times = window.history.state?.times ?? 1;
+
+        delta += times - 1;
+
+        if (-n > times) {
+          let previous = window.history.state?.previous;
+
+          while (previous) {
+            delta += (previous.times ?? 1) - 1;
+            previous = previous.previous;
+          }
+        }
+
+        // We shouldn't go back more than the index
+        // Otherwise we'll exit the page
+        delta = Math.max(delta, -Math.max(index + 1, 1));
+      }
 
       if (delta === 0) {
         return;
       }
 
-      index -= delta;
-      window.history.go(-delta);
+      index += delta;
+      window.history.go(delta);
+    },
+
+    listen(listener: () => void) {
+      const onPopState = () => {
+        if (index === window.history.state?.index) {
+          // We're at correct index, this was likely triggered by history.go(n)
+          return;
+        }
+
+        listener();
+      };
+
+      window.addEventListener('popstate', onPopState);
+
+      return () => window.removeEventListener('popstate', onPopState);
     },
   };
 };
@@ -230,49 +242,33 @@ export default function useLinking(
   const previousStateLengthRef = React.useRef<number | undefined>(undefined);
 
   React.useEffect(() => {
-    const onPopState = () => {
+    return history.listen(() => {
       const navigation = ref.current;
 
       if (!navigation || !enabled) {
         return;
       }
 
-      const previousHistoryIndex = history.latest;
-      const historyIndex = history.index;
-      const state = navigation.getRootState();
-      const path = getPathFromStateRef.current(state, configRef.current);
-
-      const route = findFocusedRoute(state);
-
-      if (previousHistoryIndex === historyIndex) {
-        // Make sure that the path is up-to-date
-        history.replace({ path, key: route.key, state });
+      if (history.has(history.index)) {
+        navigation.resetRoot(history.get(history.index));
         return;
       }
 
-      if (history.has(historyIndex)) {
-        navigation.resetRoot(history.get(historyIndex));
-      } else {
-        const state = getStateFromPathRef.current(
-          location.pathname + location.search,
-          configRef.current
-        );
+      const state = getStateFromPathRef.current(
+        location.pathname + location.search,
+        configRef.current
+      );
 
-        if (state) {
-          const action = getActionFromState(state);
+      if (state) {
+        const action = getActionFromState(state);
 
-          if (action !== undefined) {
-            navigation.dispatch(action);
-          } else {
-            navigation.resetRoot(state);
-          }
+        if (action !== undefined) {
+          navigation.dispatch(action);
+        } else {
+          navigation.resetRoot(state);
         }
       }
-    };
-
-    window.addEventListener('popstate', onPopState);
-
-    return () => window.removeEventListener('popstate', onPopState);
+    });
   }, [enabled, ref]);
 
   React.useEffect(() => {
