@@ -237,6 +237,12 @@ const BaseNavigationContainer = React.forwardRef(
       [getKey, getState, setKey, setState, state, addOptionsGetter]
     );
 
+    const onStateChangeRef = React.useRef(onStateChange);
+
+    React.useEffect(() => {
+      onStateChangeRef.current = onStateChange;
+    });
+
     React.useEffect(() => {
       if (process.env.NODE_ENV !== 'production') {
         if (
@@ -263,12 +269,12 @@ const BaseNavigationContainer = React.forwardRef(
         trackState(getRootState);
       }
 
-      if (!isFirstMountRef.current && onStateChange) {
-        onStateChange(getRootState());
+      if (!isFirstMountRef.current && onStateChangeRef.current) {
+        onStateChangeRef.current(getRootState());
       }
 
       isFirstMountRef.current = false;
-    }, [onStateChange, trackState, getRootState, emitter, state]);
+    }, [trackState, getRootState, emitter, state]);
 
     return (
       <ScheduleUpdateContext.Provider value={scheduleContext}>
