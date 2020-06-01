@@ -4,6 +4,7 @@ import {
   getPathFromState as getPathFromStateDefault,
   NavigationContainerRef,
   NavigationState,
+  Route,
   getActionFromState,
 } from '@react-navigation/core';
 import ServerContext from './ServerContext';
@@ -11,13 +12,84 @@ import { LinkingOptions } from './types';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
-type HistoryState = { index: number };
+type HistoryRecord = {
+  key: string;
+  path: string;
+  state: NavigationState;
+};
 
-declare const history: {
-  state?: HistoryState;
-  go(delta: number): void;
-  pushState(state: HistoryState, title: string, url: string): void;
-  replaceState(state: HistoryState, title: string, url: string): void;
+const createMemoryHistory = () => {
+  let index = 0;
+
+  const items: HistoryRecord[] = [];
+
+  return {
+    get latest() {
+      return index;
+    },
+
+    get index(): number {
+      return window.history.state?.index ?? 0;
+    },
+
+    has(index: number) {
+      return items[index] !== undefined;
+    },
+
+    get(index: number) {
+      return items[index].state;
+    },
+
+    push(path: string, key: string, state: NavigationState) {
+      items.splice(index + 1);
+      items.push({ path, state, key });
+      index = items.length - 1;
+
+      window.history.pushState({ index }, '', path);
+    },
+
+    replace(path: string, key: string, state: NavigationState) {
+      items[index] = { path, state, key };
+      window.history.replaceState({ index }, '', path);
+    },
+
+    back(n: number) {
+      index -= n;
+      window.history.go(-n);
+    },
+
+    go(path: string, key: string) {
+      const nextIndex = items.findIndex(
+        (item) => item.path === path && item.key === key
+      );
+
+      if (nextIndex === -1) {
+        return false;
+      }
+
+      const delta = nextIndex - (window.history.state?.index ?? 0);
+
+      if (delta === 0) {
+        return true;
+      }
+
+      index = nextIndex;
+
+      window.history.go(delta);
+
+      return true;
+    },
+  };
+};
+
+const findFocusedRoute = (state: NavigationState): Route<string> => {
+  const route = state.routes[state.index];
+
+  if (route.state !== undefined) {
+    return findFocusedRoute(route.state as NavigationState);
+  }
+
+  return route;
 };
 
 const getStateLength = (state: NavigationState) => {
@@ -38,6 +110,8 @@ const getStateLength = (state: NavigationState) => {
 
   return length;
 };
+
+const history = createMemoryHistory();
 
 let isUsingLinking = false;
 
@@ -117,7 +191,6 @@ export default function useLinking(
   }, []);
 
   const previousStateLengthRef = React.useRef<number | undefined>(undefined);
-  const previousHistoryIndexRef = React.useRef(0);
 
   const pendingIndexChangeRef = React.useRef<number | undefined>();
   const pendingStateUpdateRef = React.useRef<boolean>(false);
@@ -140,26 +213,30 @@ export default function useLinking(
         return;
       }
 
-      const previousHistoryIndex = previousHistoryIndexRef.current;
-      const historyIndex = history.state?.index ?? 0;
-
-      previousHistoryIndexRef.current = historyIndex;
+      const previousHistoryIndex = history.latest;
+      const historyIndex = history.index;
 
       if (pendingIndexChangeRef.current === historyIndex) {
         pendingIndexChangeRef.current = undefined;
         return;
       }
 
+      if (history.has(historyIndex)) {
+        pendingStateUpdateRef.current = true;
+        navigation.resetRoot(history.get(historyIndex));
+        return;
+      }
+
       const state = navigation.getRootState();
       const path = getPathFromStateRef.current(state, configRef.current);
+      const route = findFocusedRoute(state);
 
       let canGoBack = true;
       let numberOfBacks = 0;
 
       if (previousHistoryIndex === historyIndex) {
         if (location.pathname + location.search !== path) {
-          pendingStateUpdateRef.current = true;
-          history.replaceState({ index: historyIndex }, '', path);
+          history.replace(path, route.key, state);
         }
       } else if (previousHistoryIndex > historyIndex) {
         numberOfBacks =
@@ -222,25 +299,21 @@ export default function useLinking(
       return;
     }
 
-    if (ref.current && previousStateLengthRef.current === undefined) {
-      previousStateLengthRef.current = getStateLength(
-        ref.current.getRootState()
-      );
-    }
+    if (ref.current) {
+      const state = ref.current.getRootState();
+      const path = getPathFromStateRef.current(state, configRef.current);
+      const route = findFocusedRoute(state);
 
-    if (ref.current && location.pathname + location.search === '/') {
-      history.replaceState(
-        { index: history.state?.index ?? 0 },
-        '',
-        getPathFromStateRef.current(
-          ref.current.getRootState(),
-          configRef.current
-        )
-      );
+      if (previousStateLengthRef.current === undefined) {
+        previousStateLengthRef.current = getStateLength(state);
+      }
+
+      history.replace(path, route.key, state);
     }
 
     const unsubscribe = ref.current?.addListener('state', () => {
       const navigation = ref.current;
+      const previousStateLength = previousStateLengthRef.current ?? 0;
 
       if (!navigation) {
         return;
@@ -248,9 +321,7 @@ export default function useLinking(
 
       const state = navigation.getRootState();
       const path = getPathFromStateRef.current(state, configRef.current);
-
-      const previousStateLength = previousStateLengthRef.current ?? 1;
-      const stateLength = getStateLength(state);
+      const route = findFocusedRoute(state);
 
       if (pendingStateMultiUpdateRef.current) {
         if (location.pathname + location.search === path) {
@@ -260,54 +331,43 @@ export default function useLinking(
         }
       }
 
+      const stateLength = getStateLength(state);
+
       previousStateLengthRef.current = stateLength;
 
-      if (
-        pendingStateUpdateRef.current &&
-        location.pathname + location.search === path
-      ) {
-        pendingStateUpdateRef.current = false;
+      const handled = history.go(path, route.key);
+
+      if (handled) {
         return;
       }
 
-      let index = history.state?.index ?? 0;
-
       if (previousStateLength === stateLength) {
         // If no new entries were added to history in our navigation state, we want to replaceState
-        if (location.pathname + location.search !== path) {
-          history.replaceState({ index }, '', path);
-          previousHistoryIndexRef.current = index;
-        }
+        history.replace(path, route.key, state);
       } else if (stateLength > previousStateLength) {
         // If new entries were added, pushState until we have same length
         // This won't be accurate if multiple entries were added at once, but that's the best we can do
         for (let i = 0, l = stateLength - previousStateLength; i < l; i++) {
-          index++;
-          history.pushState({ index }, '', path);
+          history.push(path, route.key, state);
         }
-
-        previousHistoryIndexRef.current = index;
       } else if (previousStateLength > stateLength) {
         const delta = Math.min(
           previousStateLength - stateLength,
           // We need to keep at least one item in the history
           // Otherwise we'll exit the page
-          previousHistoryIndexRef.current - 1
+          history.latest - 1
         );
 
         if (delta > 0) {
           // We need to set this to ignore the `popstate` event
-          pendingIndexChangeRef.current = index - delta;
+          pendingIndexChangeRef.current = history.index - delta;
 
           // If new entries were removed, go back so that we have same length
-          history.go(-delta);
+          history.back(delta);
         } else {
           // We're not going back in history, but the navigation state changed
-          // The URL probably also changed, so we need to re-sync the URL
-          if (location.pathname + location.search !== path) {
-            history.replaceState({ index }, '', path);
-            previousHistoryIndexRef.current = index;
-          }
+          // The URL probably also changed, so we need to re-sync the URL and state
+          history.replace(path, route.key, state);
         }
       }
     });
