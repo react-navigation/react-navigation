@@ -516,7 +516,7 @@ export default class DrawerView extends React.Component<Props> {
         oldState: (s: Animated.Value<number>) =>
           cond(
             eq(s, GestureState.ACTIVE),
-            set(this.manuallyTriggerSpring, TRUE)
+            call([], () => this.toggleDrawer(false))
           ),
       },
     },
