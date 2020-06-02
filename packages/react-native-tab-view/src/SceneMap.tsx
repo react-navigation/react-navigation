@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { SceneRendererProps } from './types';
 
 class SceneComponent<
   T extends { component: React.ComponentType<any> }
@@ -12,7 +13,7 @@ class SceneComponent<
 export default function SceneMap<T extends any>(scenes: {
   [key: string]: React.ComponentType<T>;
 }) {
-  return ({ route, jumpTo, position }: T) => (
+  return ({ route, jumpTo, position }: SceneRendererProps & { route: any }) => (
     <SceneComponent
       key={route.key}
       component={scenes[route.key]}
