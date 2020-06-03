@@ -84,6 +84,12 @@ const createMemoryHistory = () => {
       window.history.replaceState({ ...window.history.state, index }, '', path);
     },
 
+    /**
+     * `history.go(n)` is asynchronous, there are couple of things to keep in mind:
+     * - it won't do anything if we can't go `n` steps, the `popstate` event won't fire.
+     * - each `history.go(n)` call will trigger a separate `popstate` event with correct location.
+     * - the `popstate` event fires before the next frame after calling `history.go(n)`.
+     */
     go(n: number) {
       let delta = n;
 
@@ -111,7 +117,20 @@ const createMemoryHistory = () => {
       }
 
       index += delta;
-      window.history.go(delta);
+
+      return new Promise((resolve) => {
+        const done = () => {
+          window.removeEventListener('popstate', done);
+          resolve();
+        };
+
+        // Resolve the promise in the next frame
+        // If `popstate` hasn't fired by then, then it wasn't handled
+        requestAnimationFrame(() => requestAnimationFrame(done));
+
+        window.addEventListener('popstate', done);
+        window.history.go(delta);
+      });
     },
 
     listen(listener: () => void) {
