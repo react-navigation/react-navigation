@@ -135,7 +135,7 @@ export type StackHeaderOptions = {
   /**
    * Title string used by the back button on iOS, or `null` to disable label. Defaults to the previous scene's `headerTitle`.
    */
-  headerBackTitle?: string;
+  headerBackTitle?: string | null;
   /**
    * Style object for the back title.
    */
