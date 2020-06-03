@@ -35,7 +35,7 @@ export default class KeyboardManager extends React.Component<Props> {
 
     this.clearKeyboardTimeout();
 
-    // currentlyFocusedField => currentlyFocusedInput
+
     const input = TextInput.State.currentlyFocusedInput(); 
 
     // When a page change begins, blur the currently focused input
