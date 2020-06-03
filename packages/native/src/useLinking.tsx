@@ -39,7 +39,6 @@ const createMemoryHistory = () => {
       path,
       key,
       state,
-      times = 1,
     }: {
       path: string;
       key: string;
@@ -51,11 +50,7 @@ const createMemoryHistory = () => {
       items.push({ path, state, key });
       index = items.length - 1;
 
-      window.history.pushState(
-        { index, times, previous: window.history.state },
-        '',
-        path
-      );
+      window.history.pushState({ index }, '', path);
     },
 
     replace({
@@ -77,7 +72,7 @@ const createMemoryHistory = () => {
         items.length = index + 1;
       }
 
-      window.history.replaceState({ ...window.history.state, index }, '', path);
+      window.history.replaceState({ index }, '', path);
     },
 
     /**
@@ -87,32 +82,20 @@ const createMemoryHistory = () => {
      * - the `popstate` event fires before the next frame after calling `history.go(n)`.
      */
     go(n: number) {
-      let delta = n;
-
-      if (n < 0) {
-        const times = window.history.state?.times ?? 1;
-
-        delta += times - 1;
-
-        if (-n > times) {
-          let previous = window.history.state?.previous;
-
-          while (previous) {
-            delta += (previous.times ?? 1) - 1;
-            previous = previous.previous;
-          }
-        }
-
+      if (n > 0) {
+        // We shouldn't go forward more than available index
+        n = Math.min(n, items.length - 1);
+      } else if (n > 0) {
         // We shouldn't go back more than the index
         // Otherwise we'll exit the page
-        delta = Math.max(delta, -Math.max(index + 1, 1));
+        n = Math.max(n, -Math.max(index + 1, 1));
       }
 
-      if (delta === 0) {
+      if (n === 0) {
         return;
       }
 
-      index += delta;
+      index += n;
 
       return new Promise((resolve) => {
         const done = () => {
@@ -125,7 +108,7 @@ const createMemoryHistory = () => {
         requestAnimationFrame(() => requestAnimationFrame(done));
 
         window.addEventListener('popstate', done);
-        window.history.go(delta);
+        window.history.go(n);
       });
     },
 
@@ -347,17 +330,16 @@ export default function useLinking(
         // If no new entries were added to history in our navigation state, we want to replaceState
         history.replace({ path, key: route.key, state });
       } else if (stateLength > previousStateLength) {
-        // If new entries were added, pushState until we have same length
-        // This won't be accurate if multiple entries were added at once, but that's the best we can do
-        history.push({
-          path,
-          key: route.key,
-          state,
-          times: stateLength - previousStateLength,
-        });
+        // If new entries were added, pushState
+        history.push({ path, key: route.key, state });
       } else if (previousStateLength > stateLength) {
-        // If new entries were removed, go back so that we have same length
-        await history.go(stateLength - previousStateLength);
+        // If new entries were removed, go back
+        // Normally this should be handled with `findIndex`
+        // Otherwise we don't really know how many steps to go back
+        await history.go(-1);
+
+        // Fix up the path if incorrect
+        history.replace({ path, key: route.key, state });
       }
 
       handling = false;
