@@ -7,12 +7,14 @@ import {
   Route,
   getActionFromState,
 } from '@react-navigation/core';
+import { nanoid } from 'nanoid/non-secure';
 import ServerContext from './ServerContext';
 import { LinkingOptions } from './types';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
 type HistoryRecord = {
+  id: string;
   key: string;
   path: string;
   state: NavigationState;
@@ -22,9 +24,19 @@ const createMemoryHistory = () => {
   let index = 0;
   let items: HistoryRecord[] = [];
 
-  return {
+  const history = {
     get index(): number {
-      return window.history.state?.index ?? 0;
+      // We store an id in the state instead of an index
+      // Because index could get out of sync with in memory values if page reloads
+      const id = window.history.state?.id;
+
+      if (id) {
+        const index = items.findIndex((item) => item.id === id);
+
+        return index > -1 ? index : 0;
+      }
+
+      return 0;
     },
 
     get(index: number) {
@@ -45,12 +57,14 @@ const createMemoryHistory = () => {
       state: NavigationState;
       times?: number;
     }) {
+      const id = nanoid();
+
       items = items.slice(0, index + 1);
 
-      items.push({ path, state, key });
+      items.push({ path, state, key, id });
       index = items.length - 1;
 
-      window.history.pushState({ index }, '', path);
+      window.history.pushState({ id }, '', path);
     },
 
     replace({
@@ -62,17 +76,19 @@ const createMemoryHistory = () => {
       key: string;
       state: NavigationState;
     }) {
+      const id = window.history.state?.id ?? nanoid();
+
       if (index === items.length - 1) {
-        items[index] = { path, state, key };
+        items[index] = { path, state, key, id };
       } else {
-        items.push({ path, state, key });
+        items.push({ path, state, key, id });
       }
 
       if (items.length < index + 1) {
         items.length = index + 1;
       }
 
-      window.history.replaceState({ index }, '', path);
+      window.history.replaceState({ id }, '', path);
     },
 
     /**
@@ -114,7 +130,7 @@ const createMemoryHistory = () => {
 
     listen(listener: () => void) {
       const onPopState = () => {
-        if (index === window.history.state?.index) {
+        if (index === history.index) {
           // We're at correct index, this was likely triggered by history.go(n)
           return;
         }
@@ -127,6 +143,8 @@ const createMemoryHistory = () => {
       return () => window.removeEventListener('popstate', onPopState);
     },
   };
+
+  return history;
 };
 
 const findFocusedRoute = (state: NavigationState): Route<string> => {
