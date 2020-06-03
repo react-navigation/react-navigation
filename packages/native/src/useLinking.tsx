@@ -27,15 +27,11 @@ const createMemoryHistory = () => {
       return window.history.state?.index ?? 0;
     },
 
-    has(index: number) {
-      return items[index] !== undefined;
-    },
-
     get(index: number) {
-      return items[index].state;
+      return items[index]?.state;
     },
 
-    find({ path, key }: { path: string; key: string }) {
+    findIndex({ path, key }: { path: string; key: string }) {
       return items.findIndex((item) => item.path === path && item.key === key);
     },
 
@@ -268,8 +264,10 @@ export default function useLinking(
         return;
       }
 
-      if (history.has(history.index)) {
-        navigation.resetRoot(history.get(history.index));
+      const recordedState = history.get(history.index);
+
+      if (recordedState) {
+        navigation.resetRoot(recordedState);
         return;
       }
 
@@ -307,12 +305,26 @@ export default function useLinking(
       history.replace({ path, key: route.key, state });
     }
 
-    const unsubscribe = ref.current?.addListener('state', () => {
+    // Whether we're currently handling an event
+    let handling = false;
+
+    // Whether we have a new event waiting
+    // We only store a boolean instead of a queue because only the last one matters
+    let waiting = false;
+
+    const onStateChange = async () => {
       const navigation = ref.current;
 
-      if (!navigation) {
+      if (!navigation || !enabled) {
         return;
       }
+
+      // If we're currently handling a previous event, wait before handling this one
+      if (handling) {
+        waiting = true;
+      }
+
+      handling = true;
 
       const state = navigation.getRootState();
       const path = getPathFromStateRef.current(state, configRef.current);
@@ -323,11 +335,11 @@ export default function useLinking(
 
       previousStateLengthRef.current = stateLength;
 
-      const nextIndex = history.find({ path, key: route.key });
+      const nextIndex = history.findIndex({ path, key: route.key });
 
       if (nextIndex !== -1) {
         // If new entries were removed, go back so that we have same length
-        history.go(nextIndex - history.index);
+        await history.go(nextIndex - history.index);
         return;
       }
 
@@ -345,11 +357,19 @@ export default function useLinking(
         });
       } else if (previousStateLength > stateLength) {
         // If new entries were removed, go back so that we have same length
-        history.go(stateLength - previousStateLength);
+        await history.go(stateLength - previousStateLength);
       }
-    });
 
-    return unsubscribe;
+      handling = false;
+
+      // If we were previously waiting, handle the event now
+      if (waiting) {
+        waiting = false;
+        onStateChange();
+      }
+    };
+
+    return ref.current?.addListener('state', onStateChange);
   });
 
   return {
