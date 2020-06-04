@@ -327,8 +327,6 @@ export default function useLinking(
       const recordedState = history.get(history.index);
 
       if (recordedState) {
-        // This will re-render every screen, but we don't have an alternative
-        // Though this is probably fine on web, clicking back/forward loads a new page
         navigation.resetRoot(recordedState);
         return;
       }
