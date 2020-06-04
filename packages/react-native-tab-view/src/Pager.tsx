@@ -88,14 +88,7 @@ const {
   timing,
 } = Animated;
 
-export type PagerContextType = {
-  gestureHandlerRef: React.RefObject<PanGestureHandler>;
-  addGestureHandlerRef: (ref: React.RefObject<PanGestureHandler>) => void;
-};
-export const PagerContext = React.createContext<PagerContextType | undefined>(
-  undefined
-);
-export const PagerConsumer = PagerContext.Consumer;
+const PagerContext = React.createContext({});
 
 const TRUE = 1;
 const FALSE = 0;
@@ -246,15 +239,9 @@ export default class Pager<T extends Route> extends React.Component<
 
   static contextType = PagerContext;
 
-  // PanGestureHandler ref used for coordination with parent handlers
-  private gestureHandlerRef: React.RefObject<
-    PanGestureHandler
-  > = React.createRef();
-
   // Mechanism to add child PanGestureHandler refs in the case that this
   // Pager is a parent to child Pagers. Allows for coordination between handlers
   private providerVal = {
-    gestureHandlerRef: this.gestureHandlerRef,
     addGestureHandlerRef: (ref: React.RefObject<PanGestureHandler>) => {
       if (!this.state.childPanGestureHandlerRefs.includes(ref)) {
         this.setState((prevState: ComponentState) => ({
@@ -266,6 +253,11 @@ export default class Pager<T extends Route> extends React.Component<
       }
     },
   };
+
+  // PanGestureHandler ref used for coordination with parent handlers
+  private gestureHandlerRef: React.RefObject<
+    PanGestureHandler
+  > = React.createRef();
 
   // Clock used for tab transition animations
   private clock = new Clock();
