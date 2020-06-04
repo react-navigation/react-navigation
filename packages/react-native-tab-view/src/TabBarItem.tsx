@@ -12,6 +12,9 @@ import { Scene, Route, NavigationState } from './types';
 import Animated from 'react-native-reanimated';
 import memoize from './memoize';
 
+// @ts-ignore
+const AnimatedInterpolate = Animated.interpolateNode || Animated.interpolate;
+
 type Props<T extends Route> = {
   position: Animated.Node<number>;
   route: T;
@@ -53,7 +56,7 @@ export default class TabBarItem<T extends Route> extends React.Component<
       if (routes.length > 1) {
         const inputRange = routes.map((_, i) => i);
 
-        return Animated.interpolate(position, {
+        return AnimatedInterpolate(position, {
           inputRange,
           outputRange: inputRange.map((i) => (i === tabIndex ? 1 : 0)),
         });
@@ -67,7 +70,7 @@ export default class TabBarItem<T extends Route> extends React.Component<
     if (routes.length > 1) {
       const inputRange = routes.map((_: Route, i: number) => i);
 
-      return Animated.interpolate(position, {
+      return AnimatedInterpolate(position, {
         inputRange,
         outputRange: inputRange.map((i: number) => (i === tabIndex ? 0 : 1)),
       });

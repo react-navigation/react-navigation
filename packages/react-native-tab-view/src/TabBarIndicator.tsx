@@ -1,9 +1,15 @@
 import * as React from 'react';
 import { StyleSheet, I18nManager, StyleProp, ViewStyle } from 'react-native';
-import Animated, { Easing } from 'react-native-reanimated';
+import Animated, {
+  Easing as OldEasing,
+  // @ts-ignore
+  EasingNode,
+} from 'react-native-reanimated';
 
 import memoize from './memoize';
 import { Route, SceneRendererProps, NavigationState } from './types';
+
+const Easing = EasingNode || OldEasing;
 
 export type GetTabWidth = (index: number) => number;
 
@@ -14,7 +20,10 @@ export type Props<T extends Route> = SceneRendererProps & {
   getTabWidth: GetTabWidth;
 };
 
-const { interpolate, multiply, Extrapolate } = Animated;
+const { multiply, Extrapolate } = Animated;
+
+// @ts-ignore
+const interpolate = Animated.interpolateNode || Animated.interpolate;
 
 export default class TabBarIndicator<T extends Route> extends React.Component<
   Props<T>
