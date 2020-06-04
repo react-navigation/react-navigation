@@ -15,8 +15,6 @@ type ResultState = ReturnType<typeof getStateFromPathDefault>;
 type HistoryRecord = {
   // Unique identifier for this record to match it with window.history.state
   id: string;
-  // Key of the focused route
-  key: string;
   // Navigation state object for the history entry
   state: NavigationState;
   // Path of the history entry
@@ -26,6 +24,9 @@ type HistoryRecord = {
 const createMemoryHistory = () => {
   let index = 0;
   let items: HistoryRecord[] = [];
+
+  // Whether there's a `history.go(n)` pending
+  let pending = false;
 
   const history = {
     get index(): number {
@@ -46,49 +47,41 @@ const createMemoryHistory = () => {
       return items[index]?.state;
     },
 
-    findIndex({ path, key }: { path: string; key: string }) {
-      return items.findIndex((item) => item.path === path && item.key === key);
+    backIndex({ path }: { path: string }) {
+      // We need to find the index from the element before current to get closest path to go back to
+      for (let i = index - 1; i >= 0; i--) {
+        const item = items[i];
+
+        if (item.path === path) {
+          return i;
+        }
+      }
+
+      return -1;
     },
 
-    push({
-      path,
-      key,
-      state,
-    }: {
-      path: string;
-      key: string;
-      state: NavigationState;
-      times?: number;
-    }) {
+    push({ path, state }: { path: string; state: NavigationState }) {
       const id = nanoid();
 
       // When a new entry is pushed, all the existing entries after index will be inaccessible
       // So we remove any existing entries after the current index to clean them up
       items = items.slice(0, index + 1);
 
-      items.push({ path, state, key, id });
+      items.push({ path, state, id });
       index = items.length - 1;
 
       window.history.pushState({ id }, '', path);
     },
 
-    replace({
-      path,
-      key,
-      state,
-    }: {
-      path: string;
-      key: string;
-      state: NavigationState;
-    }) {
+    replace({ path, state }: { path: string; state: NavigationState }) {
       const id = window.history.state?.id ?? nanoid();
 
       if (items.length) {
-        items[index] = { path, state, key, id };
+        items[index] = { path, state, id };
       } else {
         // This is the first time any state modifications are done
         // So we need to push the entry as there's nothing to replace
-        items.push({ path, state, key, id });
+        items.push({ path, state, id });
       }
 
       window.history.replaceState({ id }, '', path);
@@ -115,7 +108,11 @@ const createMemoryHistory = () => {
       index += n;
 
       return new Promise((resolve) => {
+        pending = true;
+
         const done = () => {
+          pending = false;
+
           window.removeEventListener('popstate', done);
           resolve();
         };
@@ -131,8 +128,8 @@ const createMemoryHistory = () => {
 
     listen(listener: () => void) {
       const onPopState = () => {
-        if (index === history.index) {
-          // We're at correct index, this was likely triggered by history.go(n)
+        if (pending) {
+          // This was triggered by `history.go(n)`, we shouldn't call the listener
           return;
         }
 
@@ -148,39 +145,81 @@ const createMemoryHistory = () => {
   return history;
 };
 
-const getLengthAndBreadcrumb = (state: NavigationState) => {
-  // Length of the items in the history
-  let length = 0;
-
-  if (state.history) {
-    length = state.history.length;
-  } else {
-    length = state.index + 1;
+/**
+ * Find the matching navigation state that changed between 2 navigation states
+ * e.g.: a -> b -> c -> d and a -> b -> c -> e -> f, if history in b changed, b is the matching state
+ */
+const findMatchingState = <T extends NavigationState>(
+  a: T | undefined,
+  b: T | undefined
+): [T | undefined, T | undefined] => {
+  if (a === undefined || b === undefined || a.key !== b.key) {
+    return [undefined, undefined];
   }
 
-  const route = state.routes[state.index];
+  const aHistoryLength = a.history ? a.history.length : a.routes.length;
+  const bHistoryLength = b.history ? b.history.length : b.routes.length;
 
-  // Array representing the nested navigation structure
-  // Should contain route keys for each level
-  const breadcrumb = [route.key];
+  const aRoute = a.routes[a.index];
+  const bRoute = b.routes[b.index];
 
-  if (route.state) {
-    // If the focused route has history entries, we need to include them as well
-    const [l, b] = getLengthAndBreadcrumb(route.state as NavigationState);
+  const aChildState = aRoute.state as T | undefined;
+  const bChildState = bRoute.state as T | undefined;
 
-    length += l - 1;
-    breadcrumb.push(...b);
+  // Stop here if this is the state object that changed:
+  // - history length is different
+  // - focused routes are different
+  // - one of them doesn't have child state
+  // - child state keys are different
+  if (
+    aHistoryLength !== bHistoryLength ||
+    aRoute.key !== bRoute.key ||
+    aChildState === undefined ||
+    bChildState === undefined ||
+    aChildState.key !== bChildState.key
+  ) {
+    return [a, b];
   }
 
-  return [length, breadcrumb] as const;
+  return findMatchingState(aChildState, bChildState);
 };
 
 /**
- * Compare two arrays with primitive values as the content.
- * We need to make sure that both values and order match.
+ * Run async function in series as it's called.
+ * If multiple functions are called before series is complete, intermediate ones will be discarded.
  */
-const isArrayEqual = (a: any[], b: any[]) =>
-  a.length === b.length && a.every((it, index) => it === b[index]);
+const debounceSeries = (cb: () => Promise<void>) => {
+  // Whether we're currently handling a callback
+  let handling = false;
+
+  // Whether we have a new callback waiting
+  // We only store a boolean instead of a queue because only the last one matters
+  let waiting = false;
+
+  const callback = async () => {
+    try {
+      // If we're currently handling a previous event, wait before handling this one
+      if (handling) {
+        waiting = true;
+        return;
+      }
+
+      handling = true;
+
+      await cb();
+    } finally {
+      handling = false;
+
+      // If we were previously waiting, handle the event now
+      if (waiting) {
+        waiting = false;
+        callback();
+      }
+    }
+  };
+
+  return callback;
+};
 
 let isUsingLinking = false;
 
@@ -262,6 +301,7 @@ export default function useLinking(
   }, []);
 
   const previousStateRef = React.useRef<NavigationState | undefined>(undefined);
+  const pendingPopStatePathRef = React.useRef<string | undefined>(undefined);
 
   React.useEffect(() => {
     return history.listen(() => {
@@ -271,20 +311,23 @@ export default function useLinking(
         return;
       }
 
+      const path = location.pathname + location.search;
+
+      pendingPopStatePathRef.current = path;
+
       // When browser back/forward is clicked, we first need to check if state object for this index exists
       // If it does we'll reset to that state object
       // Otherwise, we'll handle it like a regular deep link
       const recordedState = history.get(history.index);
 
       if (recordedState) {
+        // This will re-render every screen, but we don't have an alternative
+        // Though this is probably fine on web, clicking back/forward loads a new page
         navigation.resetRoot(recordedState);
         return;
       }
 
-      const state = getStateFromPathRef.current(
-        location.pathname + location.search,
-        configRef.current
-      );
+      const state = getStateFromPathRef.current(path, configRef.current);
 
       if (state) {
         const action = getActionFromState(state);
@@ -294,6 +337,9 @@ export default function useLinking(
         } else {
           navigation.resetRoot(state);
         }
+      } else {
+        // if current path didn't return any state, we should revert to initial state
+        navigation.resetRoot(state);
       }
     });
   }, [enabled, history, ref]);
@@ -308,24 +354,13 @@ export default function useLinking(
       // This will allow the initial state to be in the history entry
       const state = ref.current.getRootState();
       const path = getPathFromStateRef.current(state, configRef.current);
-      const [, breadcrumb] = getLengthAndBreadcrumb(state);
 
       if (previousStateRef.current === undefined) {
         previousStateRef.current = state;
       }
 
-      history.replace({ path, key: breadcrumb[breadcrumb.length - 1], state });
+      history.replace({ path, state });
     }
-
-    // Whether we're currently handling an event
-    // We store this coz we don't want multiple state changes to be handled at one time
-    // This could happen since `history.go(n)` is asynchronous
-    // If `pushState` or `replaceState` were called before `history.go(n)` completes, it'll mess stuff up
-    let handling = false;
-
-    // Whether we have a new event waiting
-    // We only store a boolean instead of a queue because only the last one matters
-    let waiting = false;
 
     const onStateChange = async () => {
       const navigation = ref.current;
@@ -334,76 +369,76 @@ export default function useLinking(
         return;
       }
 
-      // If we're currently handling a previous event, wait before handling this one
-      if (handling) {
-        waiting = true;
-      }
-
-      handling = true;
-
       const previousState = previousStateRef.current;
       const state = navigation.getRootState();
 
-      const [previousStateLength = 0, previousBreadcrumb = []] = previousState
-        ? getLengthAndBreadcrumb(previousState)
-        : [];
-
-      const [stateLength, breadcrumb] = getLengthAndBreadcrumb(state);
+      const pendingPath = pendingPopStatePathRef.current;
+      const path = getPathFromStateRef.current(state, configRef.current);
 
       previousStateRef.current = state;
+      pendingPopStatePathRef.current = undefined;
 
-      const path = getPathFromStateRef.current(state, configRef.current);
-      const key = breadcrumb[breadcrumb.length - 1];
-
-      // If an entry for this path exists, we should go to that
-      // This will handle back/forward cases
-      const nextIndex = history.findIndex({ path, key });
-
-      if (nextIndex !== -1) {
-        // If new entries were removed, go back so that we have same length
-        await history.go(nextIndex - history.index);
-
-        // Update the path and state object to match the current one
-        history.replace({ path, key, state });
-
-        return;
-      }
-
-      // To determine the kind of change, we need to check if focused navigator is same or different navigator
-      // Checking history length alone will be unreliable between nested navigators, so we should only compare current navigator
-      // Last item in the breadcrumb will be the route key, so we strip it out before comparing
-      // This won't work if whole nested navigators were replaced conditionally, but the best we can do for now
-      const isSameNavigator = isArrayEqual(
-        previousBreadcrumb.slice(0, previousBreadcrumb.length - 1),
-        breadcrumb.slice(0, breadcrumb.length - 1)
+      // To detect the kind of state change, we need to:
+      // - Find the common focused navigation state in previous and current state
+      // - If only the route keys changed, compare history/routes.length to check if we go back/forward/replace
+      // - If no common focused navigation state found, it's a replace
+      const [previousFocusedState, focusedState] = findMatchingState(
+        previousState,
+        state
       );
 
-      if (isSameNavigator && previousStateLength === stateLength) {
-        // If no new entries were added to history in the same navigator, we want to replaceState
-        history.replace({ path, key, state });
-      } else if (isSameNavigator && previousStateLength > stateLength) {
-        // If new entries were removed, go back
-        // Normally this should be handled with `findIndex`
-        // Otherwise we don't really know how many steps to go back
-        await history.go(-1);
+      if (
+        previousFocusedState &&
+        focusedState &&
+        // We should only handle push/pop if path changed from what was in last `popstate`
+        // Otherwise it's likely a change triggered by `popstate`
+        path !== pendingPath
+      ) {
+        const historyDelta =
+          (focusedState.history
+            ? focusedState.history.length
+            : focusedState.routes.length) -
+          (previousFocusedState.history
+            ? previousFocusedState.history.length
+            : previousFocusedState.routes.length);
 
-        // Fix up the path if incorrect
-        history.replace({ path, key, state });
+        if (historyDelta > 0) {
+          // If history length is increased, we should pushState
+          // Note that path might not actually change here, for example, drawer open should pushState
+          history.push({ path, state });
+        } else if (historyDelta < 0) {
+          // If history length is decreased, i.e. entries were removed, we want to go back
+
+          const nextIndex = history.backIndex({ path });
+          const currentIndex = history.index;
+
+          if (nextIndex !== -1 && nextIndex < currentIndex) {
+            // An existing entry for this path exists and it's less than current index, go back to that
+            await history.go(nextIndex - currentIndex);
+          } else {
+            // We couldn't find an existing entry to go back to, so we'll go back by the delta
+            // This won't be correct if multiple routes were pushed in one go before
+            // Usually this shouldn't happen and this is a fallback for that
+            await history.go(historyDelta);
+          }
+
+          // Store the updated state as well as fix the path if incorrect
+          history.replace({ path, state });
+        } else {
+          // If history length is unchanged, we want to replaceState
+          history.replace({ path, state });
+        }
       } else {
-        // If change was not within same navigator, or history length increased, we should pushState
-        history.push({ path, key, state });
-      }
-
-      handling = false;
-
-      // If we were previously waiting, handle the event now
-      if (waiting) {
-        waiting = false;
-        onStateChange();
+        // If no common navigation state was found, assume it's a replace
+        // This would happen if the user did a reset/conditionally changed navigators
+        history.replace({ path, state });
       }
     };
 
-    return ref.current?.addListener('state', onStateChange);
+    // We debounce onStateChange coz we don't want multiple state changes to be handled at one time
+    // This could happen since `history.go(n)` is asynchronous
+    // If `pushState` or `replaceState` were called before `history.go(n)` completes, it'll mess stuff up
+    return ref.current?.addListener('state', debounceSeries(onStateChange));
   });
 
   return {
