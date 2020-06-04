@@ -186,21 +186,18 @@ const findMatchingState = <T extends NavigationState>(
 
 /**
  * Run async function in series as it's called.
- * If multiple functions are called before series is complete, intermediate ones will be discarded.
  */
-const debounceSeries = (cb: () => Promise<void>) => {
+const series = (cb: () => Promise<void>) => {
   // Whether we're currently handling a callback
   let handling = false;
-
-  // Whether we have a new callback waiting
-  // We only store a boolean instead of a queue because only the last one matters
-  let waiting = false;
+  let queue: (() => Promise<void>)[] = [];
 
   const callback = async () => {
     try {
-      // If we're currently handling a previous event, wait before handling this one
       if (handling) {
-        waiting = true;
+        // If we're currently handling a previous event, wait before handling this one
+        // Add the callback to the beginning of the queue
+        queue.unshift(callback);
         return;
       }
 
@@ -210,10 +207,11 @@ const debounceSeries = (cb: () => Promise<void>) => {
     } finally {
       handling = false;
 
-      // If we were previously waiting, handle the event now
-      if (waiting) {
-        waiting = false;
-        callback();
+      if (queue.length) {
+        // If we have queued items, handle the last one
+        const last = queue.pop();
+
+        last?.();
       }
     }
   };
@@ -438,7 +436,7 @@ export default function useLinking(
     // We debounce onStateChange coz we don't want multiple state changes to be handled at one time
     // This could happen since `history.go(n)` is asynchronous
     // If `pushState` or `replaceState` were called before `history.go(n)` completes, it'll mess stuff up
-    return ref.current?.addListener('state', debounceSeries(onStateChange));
+    return ref.current?.addListener('state', series(onStateChange));
   });
 
   return {
