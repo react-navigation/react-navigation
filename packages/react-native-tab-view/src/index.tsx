@@ -9,8 +9,11 @@ export type { Props as TabBarIndicatorProps } from './TabBarIndicator';
 
 export { default as SceneMap } from './SceneMap';
 export { default as ScrollPager } from './ScrollPager';
-export { default as Pager, PagerConsumer, PagerContext } from './Pager';
-
-export type { PagerContextType } from './Pager';
+export {
+  default as Pager,
+  PagerConsumer,
+  PagerContext,
+  PagerContextType,
+} from './Pager';
 
 export type { Route, NavigationState, SceneRendererProps } from './types';
