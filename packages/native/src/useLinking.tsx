@@ -31,7 +31,7 @@ const createMemoryHistory = () => {
   const history = {
     get index(): number {
       // We store an id in the state instead of an index
-      // Because index could get out of sync with in memory values if page reloads
+      // Index could get out of sync with in-memory values if page reloads
       const id = window.history.state?.id;
 
       if (id) {
@@ -70,6 +70,10 @@ const createMemoryHistory = () => {
       items.push({ path, state, id });
       index = items.length - 1;
 
+      // We pass empty string for title because it's ignored in all browsers except safari
+      // We don't store state object in history.state because:
+      // - browsers have limits on how big it can be, and we don't control the size
+      // - while not recommended, there could be non-serializable data in state
       window.history.pushState({ id }, '', path);
     },
 
@@ -91,11 +95,12 @@ const createMemoryHistory = () => {
     // - it won't do anything if we can't go `n` steps, the `popstate` event won't fire.
     // - each `history.go(n)` call will trigger a separate `popstate` event with correct location.
     // - the `popstate` event fires before the next frame after calling `history.go(n)`.
+    // This method differs from `history.go(n)` in the sense that it'll go back as many steps it can.
     go(n: number) {
       if (n > 0) {
         // We shouldn't go forward more than available index
         n = Math.min(n, items.length - 1);
-      } else if (n > 0) {
+      } else if (n < 0) {
         // We shouldn't go back more than the index
         // Otherwise we'll exit the page
         n = Math.max(n, -Math.max(index + 1, 1));
@@ -126,6 +131,9 @@ const createMemoryHistory = () => {
       });
     },
 
+    // The `popstate` event is triggered when history changes, except `pushState` and `replaceState`
+    // If we call `history.go(n)` ourselves, we don't want it to trigger the listener
+    // Here we normalize it so that only external changes (e.g. user pressing back/forward) trigger the listener
     listen(listener: () => void) {
       const onPopState = () => {
         if (pending) {
