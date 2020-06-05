@@ -1265,3 +1265,175 @@ it('replaces undefined query params', () => {
   expect(getPathFromState(state, config)).toBe(path);
   expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
 });
+
+it('matches wildcard patterns at root', () => {
+  const path = '/test/bar/42/whatever';
+  const config = {
+    404: '*',
+    Foo: {
+      screens: {
+        Bar: {
+          path: '/bar/:id/',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [{ name: '404' }],
+  };
+
+  expect(getPathFromState(state, config)).toBe('/404');
+  expect(getPathFromState(getStateFromPath(path, config), config)).toBe('/404');
+});
+
+it('matches wildcard patterns at nested level', () => {
+  const path = '/bar/42/whatever/baz/initt';
+  const config = {
+    Foo: {
+      screens: {
+        Bar: {
+          path: '/bar/:id/',
+          screens: {
+            404: '*',
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              params: { id: '42' },
+              state: {
+                routes: [{ name: '404' }],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe('/bar/42/404');
+  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(
+    '/bar/42/404'
+  );
+});
+
+it('matches wildcard patterns at nested level with exact', () => {
+  const path = '/whatever';
+  const config = {
+    Foo: {
+      screens: {
+        Bar: {
+          path: '/bar/:id/',
+          screens: {
+            404: {
+              path: '*',
+              exact: true,
+            },
+          },
+        },
+        Baz: {},
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              state: {
+                routes: [{ name: '404' }],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe('/404');
+  expect(getPathFromState(getStateFromPath(path, config), config)).toBe('/404');
+});
+
+it('tries to match wildcard patterns at the end', () => {
+  const path = '/bar/42/test';
+  const config = {
+    Foo: {
+      screens: {
+        Bar: {
+          path: '/bar/:id/',
+          screens: {
+            404: '*',
+            Test: 'test',
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              params: { id: '42' },
+              state: {
+                routes: [{ name: 'Test' }],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+});
+
+it('uses nearest parent wildcard match for unmatched paths', () => {
+  const path = '/bar/42/baz/test';
+  const config = {
+    Foo: {
+      screens: {
+        Bar: {
+          path: '/bar/:id/',
+          screens: {
+            Baz: 'baz',
+          },
+        },
+        404: '*',
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [{ name: '404' }],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe('/404');
+  expect(getPathFromState(getStateFromPath(path, config), config)).toBe('/404');
+});
