@@ -100,7 +100,7 @@ type Props = {
 
 export default class DrawerView extends React.Component<Props> {
   static defaultProps = {
-    drawerPostion: I18nManager.isRTL ? 'left' : 'right',
+    drawerPosition: I18nManager.isRTL ? 'left' : 'right',
     drawerType: 'front',
     gestureEnabled: true,
     swipeEnabled: Platform.OS !== 'web',
