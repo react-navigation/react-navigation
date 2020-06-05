@@ -53,9 +53,7 @@ type Props = TransitionPreset & {
   gestureVelocityImpact?: number;
   mode: StackCardMode;
   headerMode: StackHeaderMode;
-  headerShown?: boolean;
-  headerTransparent?: boolean;
-  isFloatHeaderAbsolute: boolean;
+  hasAbsoluteHeader: boolean;
   headerHeight: number;
   onHeaderHeightChange: (props: {
     route: Route<string>;
@@ -83,10 +81,8 @@ function CardContainer({
   getFocusedRoute,
   mode,
   headerMode,
-  headerShown,
   headerStyleInterpolator,
-  headerTransparent,
-  isFloatHeaderAbsolute,
+  hasAbsoluteHeader,
   headerHeight,
   onHeaderHeightChange,
   index,
@@ -189,11 +185,7 @@ function CardContainer({
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
       pointerEvents={active ? 'box-none' : pointerEvents}
       pageOverflowEnabled={headerMode === 'screen' && mode === 'card'}
-      containerStyle={
-        isFloatHeaderAbsolute && !headerTransparent && headerShown !== false
-          ? { marginTop: headerHeight }
-          : null
-      }
+      containerStyle={hasAbsoluteHeader ? { marginTop: headerHeight } : null}
       contentStyle={[{ backgroundColor: colors.background }, cardStyle]}
       style={StyleSheet.absoluteFill}
     >

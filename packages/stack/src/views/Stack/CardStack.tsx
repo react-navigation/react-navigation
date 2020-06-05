@@ -335,17 +335,20 @@ export default class CardStack extends React.Component<Props, State> {
     return state.routes[state.index];
   };
 
-  private getSomeFloatHeaderNeedsAbsolutePositioning = () => {
+  private doesFloatHeaderNeedAbsolutePositioning = () => {
     if (this.props.headerMode !== 'float') {
       return false;
     }
+
     return this.state.scenes.slice(-2).some((scene) => {
       const { descriptor } = scene;
       const options = descriptor ? descriptor.options : {};
       const { headerTransparent, headerShown } = options;
+
       if (headerTransparent || headerShown === false) {
         return true;
       }
+
       return false;
     });
   };
@@ -377,7 +380,8 @@ export default class CardStack extends React.Component<Props, State> {
     const focusedRoute = state.routes[state.index];
     const focusedDescriptor = descriptors[focusedRoute.key];
     const focusedOptions = focusedDescriptor ? focusedDescriptor.options : {};
-    const isFloatHeaderAbsolute = this.getSomeFloatHeaderNeedsAbsolutePositioning();
+
+    const isFloatHeaderAbsolute = this.doesFloatHeaderNeedAbsolutePositioning();
 
     let defaultTransitionPreset =
       mode === 'modal' ? ModalTransition : DefaultTransition;
@@ -401,27 +405,29 @@ export default class CardStack extends React.Component<Props, State> {
     const isScreensEnabled = Platform.OS !== 'ios' && mode !== 'modal';
 
     let floatingHeader;
+
     if (headerMode === 'float') {
-      const renderedHeader = renderHeader({
-        mode: 'float',
-        layout,
-        insets: { top, right, bottom, left },
-        scenes,
-        getPreviousRoute,
-        getFocusedRoute: this.getFocusedRoute,
-        onContentHeightChange: this.handleHeaderLayout,
-        gestureDirection:
-          focusedOptions.gestureDirection !== undefined
-            ? focusedOptions.gestureDirection
-            : defaultTransitionPreset.gestureDirection,
-        styleInterpolator:
-          focusedOptions.headerStyleInterpolator !== undefined
-            ? focusedOptions.headerStyleInterpolator
-            : defaultTransitionPreset.headerStyleInterpolator,
-        style: isFloatHeaderAbsolute ? styles.floating : undefined,
-      });
       floatingHeader = (
-        <React.Fragment key="floatingHeader">{renderedHeader}</React.Fragment>
+        <React.Fragment key="header">
+          {renderHeader({
+            mode: 'float',
+            layout,
+            insets: { top, right, bottom, left },
+            scenes,
+            getPreviousRoute,
+            getFocusedRoute: this.getFocusedRoute,
+            onContentHeightChange: this.handleHeaderLayout,
+            gestureDirection:
+              focusedOptions.gestureDirection !== undefined
+                ? focusedOptions.gestureDirection
+                : defaultTransitionPreset.gestureDirection,
+            styleInterpolator:
+              focusedOptions.headerStyleInterpolator !== undefined
+                ? focusedOptions.headerStyleInterpolator
+                : defaultTransitionPreset.headerStyleInterpolator,
+            style: isFloatHeaderAbsolute ? styles.floating : undefined,
+          })}
+        </React.Fragment>
       );
     }
 
@@ -564,9 +570,11 @@ export default class CardStack extends React.Component<Props, State> {
                   getFocusedRoute={this.getFocusedRoute}
                   mode={mode}
                   headerMode={headerMode}
-                  headerShown={headerShown}
-                  headerTransparent={headerTransparent}
-                  isFloatHeaderAbsolute={isFloatHeaderAbsolute}
+                  hasAbsoluteHeader={
+                    isFloatHeaderAbsolute &&
+                    headerShown !== false &&
+                    !headerTransparent
+                  }
                   renderHeader={renderHeader}
                   renderScene={renderScene}
                   onOpenRoute={onOpenRoute}
