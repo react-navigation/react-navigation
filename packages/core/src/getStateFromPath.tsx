@@ -59,11 +59,46 @@ export default function getStateFromPath(
         createNormalizedConfigs(key, options, [], initialRoutes)
       )
     )
-    .sort(
-      (a, b) =>
-        // Sort configs so the most exhaustive is always first to be chosen
-        b.pattern.split('/').length - a.pattern.split('/').length
-    );
+    .sort((a, b) => {
+      // Sort config so that:
+      // - the most exhaustive ones are always at the beginning
+      // - patterns with wildcard are always at the end
+
+      // If one of the patterns starts with the other, it's more exhaustive
+      // So move it up
+      if (a.pattern.startsWith(b.pattern)) {
+        return 1;
+      }
+
+      if (b.pattern.startsWith(a.pattern)) {
+        return 1;
+      }
+
+      const aParts = a.pattern.split('/');
+      const bParts = b.pattern.split('/');
+
+      const aWildcardIndex = aParts.indexOf('*');
+      const bWildcardIndex = bParts.indexOf('*');
+
+      // If only one of the patterns has a wildcard, move it down in the list
+      if (aWildcardIndex === -1 && bWildcardIndex !== -1) {
+        return -1;
+      }
+
+      if (aWildcardIndex !== -1 && bWildcardIndex === -1) {
+        return 1;
+      }
+
+      if (aWildcardIndex === bWildcardIndex) {
+        // If `b` has more `/`, it's more exhaustive
+        // So we move it up in the list
+        return bParts.length - aParts.length;
+      }
+
+      // If the wildcard appears later in the pattern (has higher index), it's more specific
+      // So we move it up in the list
+      return bWildcardIndex - aWildcardIndex;
+    });
 
   let remaining = path
     .replace(/\/+/g, '/') // Replace multiple slash (//) with single ones
@@ -311,7 +346,7 @@ const createConfigItem = (
               return `(([^/]+\\/)${it.endsWith('?') ? '?' : ''})`;
             }
 
-            return `${escape(it)}\\/`;
+            return `${it === '*' ? '.*' : escape(it)}\\/`;
           })
           .join('')})`
       )
