@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {
+  Animated,
   View,
   StyleSheet,
   ScrollView,
   Alert,
   Platform,
-  Text,
 } from 'react-native';
 import { Button, Appbar } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -101,15 +101,20 @@ type Props = Partial<React.ComponentProps<typeof SimpleStack.Navigator>> & {
 };
 
 function CustomHeader(props: StackHeaderProps) {
-  const { navigation } = props;
+  const { current, next } = props.scene.progress;
+
+  const progress = Animated.add(current, next || 0);
+  const opacity = progress.interpolate({
+    inputRange: [0, 1, 2],
+    outputRange: [0, 1, 0],
+  });
+
   return (
     <>
       <Header {...props} />
-      <View style={{ opacity: navigation.isFocused() ? 1 : 0 }}>
-        <Text style={{ textAlign: 'center', backgroundColor: 'pink' }}>
-          Why hello there, pardner!
-        </Text>
-      </View>
+      <Animated.Text style={[styles.banner, { opacity }]}>
+        Why hello there, pardner!
+      </Animated.Text>
     </>
   );
 }
@@ -183,5 +188,11 @@ const styles = StyleSheet.create({
   },
   button: {
     margin: 8,
+  },
+  banner: {
+    textAlign: 'center',
+    color: 'tomato',
+    backgroundColor: 'papayawhip',
+    padding: 4,
   },
 });
