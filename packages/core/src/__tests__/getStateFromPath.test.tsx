@@ -1883,3 +1883,150 @@ it('ignores extra slashes in the pattern', () => {
     state
   );
 });
+
+it('matches wildcard patterns at root', () => {
+  const path = '/test/bar/42/whatever';
+  const config = {
+    404: '*',
+    Foo: {
+      screens: {
+        Bar: {
+          path: '/bar/:id/',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [{ name: '404' }],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('matches wildcard patterns at nested level', () => {
+  const path = '/bar/42/whatever/baz/initt';
+  const config = {
+    Foo: {
+      screens: {
+        Bar: {
+          path: '/bar/:id/',
+          screens: {
+            404: '*',
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              params: { id: '42' },
+              state: {
+                routes: [{ name: '404' }],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('matches wildcard patterns at nested level with exact', () => {
+  const path = '/whatever';
+  const config = {
+    Foo: {
+      screens: {
+        Bar: {
+          path: '/bar/:id/',
+          screens: {
+            404: {
+              path: '*',
+              exact: true,
+            },
+          },
+        },
+        Baz: {},
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              state: {
+                routes: [{ name: '404' }],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('tries to match wildcard patterns at the end', () => {
+  const path = '/bar/42/test';
+  const config = {
+    Foo: {
+      screens: {
+        Bar: {
+          path: '/bar/:id/',
+          screens: {
+            404: '*',
+            Test: 'test',
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              params: { id: '42' },
+              state: {
+                routes: [{ name: 'Test' }],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});

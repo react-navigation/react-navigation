@@ -48,6 +48,7 @@ import StackHeaderCustomization from './Screens/StackHeaderCustomization';
 import BottomTabs from './Screens/BottomTabs';
 import MaterialTopTabsScreen from './Screens/MaterialTopTabs';
 import MaterialBottomTabs from './Screens/MaterialBottomTabs';
+import NotFound from './Screens/NotFound';
 import DynamicTabs from './Screens/DynamicTabs';
 import AuthFlow from './Screens/AuthFlow';
 import CompatAPI from './Screens/CompatAPI';
@@ -68,6 +69,7 @@ type RootDrawerParamList = {
 
 type RootStackParamList = {
   Home: undefined;
+  NotFound: undefined;
 } & {
   [P in keyof typeof SCREENS]: undefined;
 };
@@ -231,7 +233,10 @@ export default function App() {
 
                   return acc;
                 },
-                { Home: '' }
+                {
+                  Home: '',
+                  NotFound: '*',
+                }
               ),
             },
             Article: {
@@ -332,6 +337,11 @@ export default function App() {
                     </ScrollView>
                   )}
                 </Stack.Screen>
+                <Stack.Screen
+                  name="NotFound"
+                  component={NotFound}
+                  options={{ title: 'Oops!' }}
+                />
                 {(Object.keys(SCREENS) as (keyof typeof SCREENS)[]).map(
                   (name) => (
                     <Stack.Screen
