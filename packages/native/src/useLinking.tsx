@@ -165,6 +165,7 @@ const findMatchingState = <T extends NavigationState>(
     return [undefined, undefined];
   }
 
+  // Tab and drawer will have `history` property, but stack will have history in `routes`
   const aHistoryLength = a.history ? a.history.length : a.routes.length;
   const bHistoryLength = b.history ? b.history.length : b.routes.length;
 
