@@ -55,6 +55,7 @@ type Props = TransitionPreset & {
   headerMode: StackHeaderMode;
   headerShown?: boolean;
   headerTransparent?: boolean;
+  isFloatHeaderAbsolute: boolean;
   headerHeight: number;
   onHeaderHeightChange: (props: {
     route: Route<string>;
@@ -85,6 +86,7 @@ function CardContainer({
   headerShown,
   headerStyleInterpolator,
   headerTransparent,
+  isFloatHeaderAbsolute,
   headerHeight,
   onHeaderHeightChange,
   index,
@@ -188,7 +190,7 @@ function CardContainer({
       pointerEvents={active ? 'box-none' : pointerEvents}
       pageOverflowEnabled={headerMode === 'screen' && mode === 'card'}
       containerStyle={
-        headerMode === 'float' && !headerTransparent && headerShown !== false
+        isFloatHeaderAbsolute && !headerTransparent && headerShown !== false
           ? { marginTop: headerHeight }
           : null
       }
