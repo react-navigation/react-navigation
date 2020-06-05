@@ -152,7 +152,7 @@ type NavigationHelpersCommon<
    * @param [params] Params object for the route.
    */
   navigate<RouteName extends keyof ParamList>(
-    ...args: ParamList[RouteName] extends undefined | any
+    ...args: undefined extends ParamList[RouteName]
       ? [RouteName] | [RouteName, ParamList[RouteName]]
       : [RouteName, ParamList[RouteName]]
   ): void;
