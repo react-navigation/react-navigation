@@ -26,6 +26,7 @@ import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
+  PathConfig,
 } from '@react-navigation/native';
 import {
   createDrawerNavigator,
@@ -223,13 +224,36 @@ export default function App() {
             Root: {
               path: '',
               initialRouteName: 'Home',
-              screens: Object.keys(SCREENS).reduce<{ [key: string]: string }>(
+              screens: Object.keys(SCREENS).reduce<PathConfig>(
                 (acc, name) => {
                   // Convert screen names such as SimpleStack to kebab case (simple-stack)
-                  acc[name] = name
+                  const path = name
                     .replace(/([A-Z]+)/g, '-$1')
                     .replace(/^-/, '')
                     .toLowerCase();
+
+                  acc[name] = {
+                    path,
+                    screens: {
+                      Article: {
+                        path: 'article/:author?',
+                        parse: {
+                          author: (author) =>
+                            author.charAt(0).toUpperCase() +
+                            author.slice(1).replace(/-/g, ' '),
+                        },
+                        stringify: {
+                          author: (author: string) =>
+                            author.toLowerCase().replace(/\s/g, '-'),
+                        },
+                      },
+                      Albums: 'music',
+                      Chat: 'chat',
+                      Contacts: 'people',
+                      NewsFeed: 'feed',
+                      Dialog: 'dialog',
+                    },
+                  };
 
                   return acc;
                 },
@@ -239,22 +263,6 @@ export default function App() {
                 }
               ),
             },
-            Article: {
-              path: 'article/:author?',
-              parse: {
-                author: (author) =>
-                  author.charAt(0).toUpperCase() +
-                  author.slice(1).replace(/-/g, ' '),
-              },
-              stringify: {
-                author: (author: string) =>
-                  author.toLowerCase().replace(/\s/g, '-'),
-              },
-            },
-            Albums: 'music',
-            Chat: 'chat',
-            Contacts: 'people',
-            NewsFeed: 'feed',
           },
         }}
         fallback={<Text>Loading…</Text>}

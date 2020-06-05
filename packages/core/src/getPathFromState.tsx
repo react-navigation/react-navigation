@@ -164,6 +164,13 @@ export default function getPathFromState(
         .map((p) => {
           const name = getParamName(p);
 
+          // We don't know what to show for wildcard patterns
+          // Showing the route name seems ok, though whatever we show here will be incorrect
+          // Since the page doesn't actually exist
+          if (p === '*') {
+            return route.name;
+          }
+
           // If the path has a pattern for a param, put the param in the path
           if (p.startsWith(':')) {
             const value = allParams[name];
