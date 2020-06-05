@@ -2030,3 +2030,36 @@ it('tries to match wildcard patterns at the end', () => {
     state
   );
 });
+
+it('uses nearest parent wildcard match for unmatched paths', () => {
+  const path = '/bar/42/baz/test';
+  const config = {
+    Foo: {
+      screens: {
+        Bar: {
+          path: '/bar/:id/',
+          screens: {
+            Baz: 'baz',
+          },
+        },
+        404: '*',
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [{ name: '404' }],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
