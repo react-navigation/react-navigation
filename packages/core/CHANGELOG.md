@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.10.0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.9.0...@react-navigation/core@5.10.0) (2020-06-06)
+
+
+### Bug Fixes
+
+* catch missing params when they are required in navigate ([#8389](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/8389)) ([8774ca9](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/8774ca97e1da91e97677ecd816c85f66af296b93))
+* make sure the wildcard pattern catches nested unmatched routes ([c3bd349](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/c3bd349d77688011c9c55027edd66c6f39de2ade))
+* only use the query params for focused route in path ([2d66ef9](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/2d66ef93ec9923a452415c482c40e7c6b769917c))
+* prevent state change being emitted unnecessarily ([ab1f79c](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/ab1f79c096e94475a4da1acf1c850d04fb1bc4cf))
+
+
+### Features
+
+* add wildcard patterns for paths ([4fe72e3](https://github.com/react-navigation/react-navigation/tree/master/packages/core/commit/4fe72e3ce7bae9120d04e490401f3bad58ebdf5c)), closes [#8019](https://github.com/react-navigation/react-navigation/tree/master/packages/core/issues/8019)
+
+
+
+
+
 # [5.9.0](https://github.com/react-navigation/react-navigation/tree/master/packages/core/compare/@react-navigation/core@5.8.2...@react-navigation/core@5.9.0) (2020-05-27)
 
 

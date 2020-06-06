@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.4.2](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.4.1...@react-navigation/stack@5.4.2) (2020-06-06)
+
+
+### Bug Fixes
+
+* relatively position float Header if !headerTransparent ([#8285](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/8285)) ([78afbff](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/78afbffe976b14bb60666a2b1230127db0dc24f6))
+
+
+
+
+
 ## [5.4.1](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.4.0...@react-navigation/stack@5.4.1) (2020-05-27)
 
 
