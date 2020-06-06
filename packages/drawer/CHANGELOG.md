@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.8.2](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.8.1...@react-navigation/drawer@5.8.2) (2020-06-06)
+
+
+### Bug Fixes
+
+* typo on drawerPosition default props ([#8357](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/8357)) ([762cc44](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/762cc4457842182189eeac84aedbb88169452e1e))
+
+
+
+
+
 ## [5.8.1](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.8.0...@react-navigation/drawer@5.8.1) (2020-05-27)
 
 **Note:** Version bump only for package @react-navigation/drawer
