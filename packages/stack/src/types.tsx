@@ -133,7 +133,8 @@ export type StackHeaderOptions = {
    */
   headerBackAllowFontScaling?: boolean;
   /**
-   * Title string used by the back button on iOS, or `null` to disable label. Defaults to the previous scene's `headerTitle`.
+   * Title string used by the back button on iOS. Defaults to the previous scene's `headerTitle`.
+   * Use `headerBackTitleVisible: false` to hide it.
    */
   headerBackTitle?: string;
   /**
