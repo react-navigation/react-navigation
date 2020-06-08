@@ -425,7 +425,10 @@ export default class CardStack extends React.Component<Props, State> {
                     focusedOptions.headerStyleInterpolator !== undefined
                       ? focusedOptions.headerStyleInterpolator
                       : defaultTransitionPreset.headerStyleInterpolator,
-                  style: isFloatHeaderAbsolute ? styles.floating : undefined,
+                  style: [
+                    styles.floating,
+                    isFloatHeaderAbsolute && styles.absolute,
+                  ],
                 })}
               </React.Fragment>
             ) : null;
@@ -609,10 +612,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  floating: {
+  absolute: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
+  },
+  floating: {
+    zIndex: 1,
   },
 });
