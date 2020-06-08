@@ -10,6 +10,14 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
 >
   <View
     pointerEvents="box-none"
+    style={
+      Array [
+        Object {
+          "zIndex": 1,
+        },
+        false,
+      ]
+    }
   >
     <View
       accessibilityElementsHidden={false}
@@ -180,6 +188,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
           style={
             Object {
               "flex": 1,
+              "opacity": 1,
             }
           }
         >
@@ -268,106 +277,6 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                       }
                     >
                       <View
-                        pointerEvents="box-none"
-                      >
-                        <View
-                          accessibilityElementsHidden={false}
-                          importantForAccessibility="auto"
-                          onLayout={[Function]}
-                          pointerEvents="box-none"
-                          style={null}
-                        >
-                          <View
-                            pointerEvents="box-none"
-                            style={
-                              Object {
-                                "bottom": 0,
-                                "left": 0,
-                                "opacity": 1,
-                                "position": "absolute",
-                                "right": 0,
-                                "top": 0,
-                                "zIndex": 0,
-                              }
-                            }
-                          >
-                            <View
-                              style={
-                                Object {
-                                  "backgroundColor": "#fff",
-                                  "borderBottomColor": "#a7a7aa",
-                                  "flex": 1,
-                                  "shadowColor": "#a7a7aa",
-                                  "shadowOffset": Object {
-                                    "height": 0.5,
-                                    "width": 0,
-                                  },
-                                  "shadowOpacity": 0.85,
-                                  "shadowRadius": 0,
-                                }
-                              }
-                            />
-                          </View>
-                          <View
-                            pointerEvents="box-none"
-                            style={
-                              Object {
-                                "height": 44,
-                                "maxHeight": undefined,
-                                "minHeight": undefined,
-                                "opacity": undefined,
-                                "transform": undefined,
-                              }
-                            }
-                          >
-                            <View
-                              pointerEvents="none"
-                              style={
-                                Object {
-                                  "height": 0,
-                                }
-                              }
-                            />
-                            <View
-                              pointerEvents="box-none"
-                              style={
-                                Object {
-                                  "alignItems": "center",
-                                  "flex": 1,
-                                  "flexDirection": "row",
-                                  "justifyContent": "center",
-                                }
-                              }
-                            >
-                              <View
-                                pointerEvents="box-none"
-                                style={
-                                  Object {
-                                    "marginHorizontal": 16,
-                                    "opacity": 1,
-                                  }
-                                }
-                              >
-                                <Text
-                                  accessibilityRole="header"
-                                  numberOfLines={1}
-                                  onLayout={[Function]}
-                                  style={
-                                    Object {
-                                      "color": "rgba(0, 0, 0, 0.9)",
-                                      "fontSize": 17,
-                                      "fontWeight": "600",
-                                    }
-                                  }
-                                >
-                                  Home
-                                </Text>
-                              </View>
-                            </View>
-                          </View>
-                        </View>
-                      </View>
-                      <View
                         onLayout={[Function]}
                         style={
                           Object {
@@ -439,6 +348,8 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                               style={
                                 Object {
                                   "flex": 1,
+                                  "marginTop": 0,
+                                  "opacity": 1,
                                 }
                               }
                             >
@@ -527,6 +438,22 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                           </View>
                         </View>
                       </View>
+                      <View
+                        pointerEvents="box-none"
+                        style={
+                          Array [
+                            Object {
+                              "zIndex": 1,
+                            },
+                            Object {
+                              "left": 0,
+                              "position": "absolute",
+                              "right": 0,
+                              "top": 0,
+                            },
+                          ]
+                        }
+                      />
                     </View>
                   </View>
                 </View>

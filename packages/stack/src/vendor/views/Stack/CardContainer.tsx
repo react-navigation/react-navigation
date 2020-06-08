@@ -3,6 +3,7 @@ import { Animated, View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
 import HeaderHeightContext from '../../utils/HeaderHeightContext';
+import HeaderShownContext from '../../utils/HeaderShownContext';
 import useTheme from '../../../utils/useTheme';
 import {
   Route,
@@ -54,6 +55,7 @@ type Props = TransitionPreset & {
   gestureVelocityImpact?: number;
   mode: StackCardMode;
   headerMode: StackHeaderMode;
+  headerShown: boolean;
   hasAbsoluteHeader: boolean;
   headerHeight: number;
   onHeaderHeightChange: (props: {
@@ -82,6 +84,7 @@ function CardContainer({
   getFocusedRoute,
   mode,
   headerMode,
+  headerShown,
   headerStyleInterpolator,
   hasAbsoluteHeader,
   headerHeight,
@@ -159,6 +162,9 @@ function CardContainer({
     };
   }, [pointerEvents, scene.progress.next]);
 
+  const isParentHeaderShown = React.useContext(HeaderShownContext);
+  const isCurrentHeaderShown = headerMode !== 'none' && headerShown !== false;
+
   return (
     <Card
       index={index}
@@ -192,9 +198,13 @@ function CardContainer({
     >
       <View style={styles.container}>
         <View style={styles.scene}>
-          <HeaderHeightContext.Provider value={headerHeight}>
-            {renderScene({ route: scene.route })}
-          </HeaderHeightContext.Provider>
+          <HeaderShownContext.Provider
+            value={isParentHeaderShown || isCurrentHeaderShown}
+          >
+            <HeaderHeightContext.Provider value={headerHeight}>
+              {renderScene({ route: scene.route })}
+            </HeaderHeightContext.Provider>
+          </HeaderShownContext.Provider>
         </View>
         {headerMode === 'screen'
           ? renderHeader({

@@ -64,7 +64,7 @@ class ListScreen extends React.Component {
           flex: 1,
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#fff',
+          // backgroundColor: '#fff',
         }}
       >
         <Text>List Screen</Text>
@@ -96,7 +96,7 @@ class DetailsScreen extends React.Component<NavigationStackScreenProps> {
           flex: 1,
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#fff',
+          // backgroundColor: '#fff',
         }}
       >
         <Text>Details Screen</Text>
@@ -119,7 +119,7 @@ class HeaderlessScreen extends React.Component {
           flex: 1,
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#fff',
+          // backgroundColor: '#fff',
         }}
       >
         <Text>Headerless Screen</Text>

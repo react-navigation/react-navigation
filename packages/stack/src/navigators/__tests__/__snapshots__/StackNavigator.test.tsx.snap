@@ -10,6 +10,14 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
 >
   <View
     pointerEvents="box-none"
+    style={
+      Array [
+        Object {
+          "zIndex": 1,
+        },
+        false,
+      ]
+    }
   >
     <View
       accessibilityElementsHidden={false}
@@ -197,6 +205,7 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
           style={
             Object {
               "flex": 1,
+              "opacity": 1,
             }
           }
         >
@@ -298,6 +307,14 @@ exports[`StackNavigator renders successfully 1`] = `
 >
   <View
     pointerEvents="box-none"
+    style={
+      Array [
+        Object {
+          "zIndex": 1,
+        },
+        false,
+      ]
+    }
   >
     <View
       accessibilityElementsHidden={false}
@@ -469,6 +486,7 @@ exports[`StackNavigator renders successfully 1`] = `
           style={
             Object {
               "flex": 1,
+              "opacity": 1,
             }
           }
         >

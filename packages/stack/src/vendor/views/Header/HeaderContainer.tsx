@@ -10,6 +10,7 @@ import {
   forNoAnimation,
   forSlideRight,
 } from '../../TransitionConfigs/HeaderStyleInterpolators';
+import HeaderShownContext from '../../utils/HeaderShownContext';
 import {
   Route,
   Layout,
@@ -50,6 +51,7 @@ export default function HeaderContainer({
   style,
 }: Props) {
   const focusedRoute = getFocusedRoute();
+  const isParentHeaderShown = React.useContext(HeaderShownContext);
 
   return (
     <View pointerEvents="box-none" style={style}>
@@ -58,7 +60,16 @@ export default function HeaderContainer({
           return null;
         }
 
-        const { options } = scene.descriptor;
+        const {
+          header,
+          headerShown = isParentHeaderShown === false,
+          headerTransparent,
+        } = scene.descriptor.options || {};
+
+        if (!headerShown) {
+          return null;
+        }
+
         const isFocused = focusedRoute.key === scene.route.key;
         const previousRoute = getPreviousRoute({ route: scene.route });
 
@@ -81,13 +92,20 @@ export default function HeaderContainer({
         // This makes the header look like it's moving with the screen
         const previousScene = self[i - 1];
         const nextScene = self[i + 1];
+
+        const {
+          headerShown: previousHeaderShown = isParentHeaderShown === false,
+        } = previousScene?.descriptor.options || {};
+
+        const { headerShown: nextHeaderShown = isParentHeaderShown === false } =
+          nextScene?.descriptor.options || {};
+
         const isHeaderStatic =
-          (previousScene &&
-            previousScene.descriptor.options.headerShown === false &&
+          (previousHeaderShown === false &&
             // We still need to animate when coming back from next scene
             // A hacky way to check this is if the next scene exists
             !nextScene) ||
-          (nextScene && nextScene.descriptor.options.headerShown === false);
+          nextHeaderShown === false;
 
         const props = {
           mode,
@@ -133,18 +151,12 @@ export default function HeaderContainer({
                 style={
                   // Avoid positioning the focused header absolutely
                   // Otherwise accessibility tools don't seem to be able to find it
-                  (mode === 'float' && !isFocused) || options.headerTransparent
+                  (mode === 'float' && !isFocused) || headerTransparent
                     ? styles.header
                     : null
                 }
               >
-                {options.headerShown !== false ? (
-                  options.header !== undefined ? (
-                    options.header(props)
-                  ) : (
-                    <Header {...props} />
-                  )
-                ) : null}
+                {header !== undefined ? header(props) : <Header {...props} />}
               </View>
             </>
           </NavigationContext.Provider>
