@@ -330,13 +330,15 @@ export default class StackView extends React.Component<Props, State> {
 
   private handleOpenRoute = ({ route }: { route: Route<string> }) => {
     const { state, navigation } = this.props;
+    const { closingRouteKeys, replacingRouteKeys } = this.state;
 
     if (
-      this.state.replacingRouteKeys.every((key) => key !== route.key) &&
+      closingRouteKeys.some((key) => key === route.key) &&
+      replacingRouteKeys.every((key) => key !== route.key) &&
       state.routeNames.includes(route.name) &&
       !state.routes.some((r) => r.key === route.key)
     ) {
-      // If route isn't present in current state, assume that a close animation was cancelled
+      // If route isn't present in current state, but was closing, assume that a close animation was cancelled
       // So we need to add this route back to the state
       navigation.navigate(route);
     } else {
