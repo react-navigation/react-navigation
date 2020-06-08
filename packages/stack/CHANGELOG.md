@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.5.0](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.4.2...@react-navigation/stack@5.5.0) (2020-06-08)
+
+
+### Bug Fixes
+
+* fix blank screen with animationEnabled: false & headerShown: false ([9c06a92](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/9c06a92d092af150d653c3a2f7fdccd28090bb14)), closes [#8391](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/8391)
+* ignore onOpen from route that wasn't closing ([1f27e4b](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/1f27e4b1f659e59ad15ecbf44b4fb0a80cae302f)), closes [#8257](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/8257)
+* pass gestureRef to PanGestureHandlerNative ([#8394](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/8394)) ([c7e4bf9](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/c7e4bf94e664563892cbdafccc108ad519ccec50))
+
+
+### Features
+
+* automatically hide header in nested stacks ([e0e0f79](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/e0e0f79793be552e5532cd0afe9444000d21341e))
+
+
+
+
+
 ## [5.4.2](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.4.1...@react-navigation/stack@5.4.2) (2020-06-06)
 
 
