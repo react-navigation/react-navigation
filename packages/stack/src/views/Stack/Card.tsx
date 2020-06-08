@@ -493,6 +493,12 @@ export default class Card extends React.Component<Props> {
       ? Color(backgroundColor).alpha() === 0
       : false;
 
+    // This is a dummy style that doesn't actually change anything visually.
+    // Animated needs the animated value to be used somewhere, otherwise things don't update properly.
+    // If we disable animations and hide header, it could end up making the value unused.
+    // So we have this dummy style that will always be used regardless of what else changed.
+    const dummyStyle = { opacity: Animated.diffClamp(current, 1, 1) };
+
     return (
       <CardAnimationContext.Provider value={animationContext}>
         <View pointerEvents="box-none" {...rest}>
@@ -502,7 +508,12 @@ export default class Card extends React.Component<Props> {
             </View>
           ) : null}
           <Animated.View
-            style={[styles.container, containerStyle, customContainerStyle]}
+            style={[
+              styles.container,
+              dummyStyle,
+              containerStyle,
+              customContainerStyle,
+            ]}
             pointerEvents="box-none"
           >
             <PanGestureHandler
