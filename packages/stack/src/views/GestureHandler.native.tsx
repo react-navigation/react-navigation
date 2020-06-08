@@ -10,7 +10,7 @@ export function PanGestureHandler(props: PanGestureHandlerProperties) {
 
   return (
     <GestureHandlerRefContext.Provider value={gestureRef}>
-      <PanGestureHandlerNative {...props} />
+      <PanGestureHandlerNative {...props} ref={gestureRef} />
     </GestureHandlerRefContext.Provider>
   );
 }
