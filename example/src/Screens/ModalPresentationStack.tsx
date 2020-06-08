@@ -91,7 +91,6 @@ export default function SimpleStackScreen({ navigation, options }: Props) {
   return (
     <ModalPresentationStack.Navigator
       mode="modal"
-      headerMode="screen"
       screenOptions={({ route, navigation }) => ({
         ...TransitionPresets.ModalPresentationIOS,
         cardOverlayEnabled: true,

@@ -111,17 +111,17 @@ const AlbumsScreen = ({
 
 const SimpleStack = createStackNavigator<SimpleStackParams>();
 
-type Props = Partial<React.ComponentProps<typeof SimpleStack.Navigator>> & {
+type Props = {
   navigation: StackNavigationProp<ParamListBase>;
 };
 
-export default function SimpleStackScreen({ navigation, ...rest }: Props) {
+export default function SimpleStackScreen({ navigation }: Props) {
   navigation.setOptions({
     headerShown: false,
   });
 
   return (
-    <SimpleStack.Navigator {...rest}>
+    <SimpleStack.Navigator>
       <SimpleStack.Screen
         name="Article"
         component={ArticleScreen}

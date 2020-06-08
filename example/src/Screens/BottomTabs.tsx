@@ -71,13 +71,12 @@ export default function BottomTabsScreen() {
     >
       <BottomTabs.Screen
         name="Article"
+        component={SimpleStackScreen}
         options={{
           title: 'Article',
           tabBarIcon: getTabBarIcon('file-document-box'),
         }}
-      >
-        {(props) => <SimpleStackScreen {...props} headerMode="none" />}
-      </BottomTabs.Screen>
+      />
       <BottomTabs.Screen
         name="Chat"
         component={Chat}

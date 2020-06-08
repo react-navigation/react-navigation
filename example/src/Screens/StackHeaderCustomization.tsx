@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { Button, Appbar } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { RouteProp, ParamListBase } from '@react-navigation/native';
+import { useTheme, RouteProp, ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
   StackNavigationProp,
@@ -124,6 +124,8 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
     headerShown: false,
   });
 
+  const { colors, dark } = useTheme();
+
   return (
     <SimpleStack.Navigator {...rest}>
       <SimpleStack.Screen
@@ -167,9 +169,15 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
           headerBackTitle: 'Back',
           headerTransparent: true,
           headerBackground: () => (
-            <HeaderBackground style={{ backgroundColor: 'transparent' }}>
+            <HeaderBackground
+              style={{
+                backgroundColor: 'transparent',
+                borderBottomWidth: StyleSheet.hairlineWidth,
+                borderBottomColor: colors.border,
+              }}
+            >
               <BlurView
-                tint="light"
+                tint={dark ? 'dark' : 'light'}
                 intensity={75}
                 style={StyleSheet.absoluteFill}
               />

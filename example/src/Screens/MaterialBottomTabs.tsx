@@ -22,14 +22,13 @@ export default function MaterialBottomTabsScreen() {
     <MaterialBottomTabs.Navigator barStyle={styles.tabBar}>
       <MaterialBottomTabs.Screen
         name="Article"
+        component={SimpleStackScreen}
         options={{
           tabBarLabel: 'Article',
           tabBarIcon: 'file-document-box',
           tabBarColor: '#C9E7F8',
         }}
-      >
-        {(props) => <SimpleStackScreen {...props} headerMode="none" />}
-      </MaterialBottomTabs.Screen>
+      />
       <MaterialBottomTabs.Screen
         name="Chat"
         component={Chat}
