@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.5.1](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.5.0...@react-navigation/stack@5.5.1) (2020-06-08)
+
+
+### Bug Fixes
+
+* make sure the header is on top of the view ([1ae07af](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/1ae07af79660973f4342a5741a1a826bcc689832))
+
+
+
+
+
 # [5.5.0](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.4.2...@react-navigation/stack@5.5.0) (2020-06-08)
 
 
