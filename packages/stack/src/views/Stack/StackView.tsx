@@ -409,6 +409,9 @@ export default class StackView extends React.Component<Props, State> {
       navigation,
       keyboardHandlingEnabled,
       mode = 'card',
+      headerMode = mode === 'card' && Platform.OS === 'ios'
+        ? 'float'
+        : 'screen',
       ...rest
     } = this.props;
 
@@ -418,9 +421,6 @@ export default class StackView extends React.Component<Props, State> {
       openingRouteKeys,
       closingRouteKeys,
     } = this.state;
-
-    const headerMode =
-      mode === 'card' && Platform.OS === 'ios' ? 'float' : 'screen';
 
     return (
       <NavigationHelpersContext.Provider value={navigation}>
