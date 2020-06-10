@@ -181,7 +181,10 @@ export default function BottomTabBar({
   };
 
   const defaultInsets = useSafeArea();
-
+  
+  const {styleHeight ...restStyles} = styles;
+  const height = styleHeight || DEFAULT_TABBAR_HEIGHT
+        
   const insets = {
     top: safeAreaInsets?.top ?? defaultInsets.top,
     right: safeAreaInsets?.right ?? defaultInsets.right,
@@ -211,7 +214,7 @@ export default function BottomTabBar({
           position: isTabBarHidden ? 'absolute' : null,
         },
         {
-          height: DEFAULT_TABBAR_HEIGHT + insets.bottom,
+          height: height + insets.bottom,
           paddingBottom: insets.bottom,
           paddingHorizontal: Math.max(insets.left, insets.right),
         },
