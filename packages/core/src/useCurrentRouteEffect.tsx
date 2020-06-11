@@ -15,5 +15,8 @@ export default function useCurrentRouteEffect(
     }
   }, [listener, ref]);
 
-  React.useEffect(() => ref.current?.addUpdateOptionsListener(listenerWrapper));
+  React.useEffect(
+    () => ref.current?.addUpdateOptionsListener(listenerWrapper),
+    [ref.current, listenerWrapper]
+  );
 }
