@@ -190,7 +190,6 @@ const BaseNavigationContainer = React.forwardRef(
 
     const updateListeners = React.useRef<(() => void | never)[]>([]);
     const addListener = React.useCallback((listener: () => void) => {
-      console.log('adding');
       updateListeners.current.push(listener);
       return () => {
         const index = updateListeners.current.indexOf(listener);
