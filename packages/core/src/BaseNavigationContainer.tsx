@@ -11,7 +11,6 @@ import EnsureSingleNavigator from './EnsureSingleNavigator';
 import NavigationBuilderContext from './NavigationBuilderContext';
 import { ScheduleUpdateContext } from './useScheduleUpdate';
 import useFocusedListeners from './useFocusedListeners';
-import useDevTools from './useDevTools';
 import useStateGetters from './useStateGetters';
 import useOptionsGetters from './useOptionsGetters';
 import useEventEmitter from './useEventEmitter';
@@ -23,13 +22,25 @@ import NavigationStateContext from './NavigationStateContext';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
 
-const DEVTOOLS_CONFIG_KEY =
-  'REACT_NAVIGATION_REDUX_DEVTOOLS_EXTENSION_INTEGRATION_ENABLED';
-
 const NOT_INITIALIZED_ERROR =
   "The 'navigation' object hasn't been initialized yet. This might happen if you don't have a navigator mounted, or if the navigator hasn't finished mounting. See https://reactnavigation.org/docs/navigating-without-navigation-prop#handling-initialization for more details.";
 
 let hasWarnedForSerialization = false;
+
+/**
+ * Migration instructions for removal of devtools from core
+ */
+Object.defineProperty(
+  global,
+  'REACT_NAVIGATION_REDUX_DEVTOOLS_EXTENSION_INTEGRATION_ENABLED',
+  {
+    set(_) {
+      console.warn(
+        "Redux devtools extension integration can be enabled with the '@react-navigation/devtools' package. For more details, see https://reactnavigation.org/docs/devtools"
+      );
+    },
+  }
+);
 
 /**
  * Remove `key` and `routeNames` from the state objects recursively to get partial state.
@@ -100,7 +111,6 @@ const BaseNavigationContainer = React.forwardRef(
     );
 
     const isFirstMountRef = React.useRef<boolean>(true);
-    const skipTrackingRef = React.useRef<boolean>(false);
 
     const navigatorKeyRef = React.useRef<string | undefined>();
 
@@ -109,23 +119,6 @@ const BaseNavigationContainer = React.forwardRef(
     const setKey = React.useCallback((key: string) => {
       navigatorKeyRef.current = key;
     }, []);
-
-    const reset = React.useCallback(
-      (state: NavigationState) => {
-        skipTrackingRef.current = true;
-        setState(state);
-      },
-      [setState]
-    );
-
-    const { trackState, trackAction } = useDevTools({
-      enabled:
-        // @ts-ignore
-        DEVTOOLS_CONFIG_KEY in global ? global[DEVTOOLS_CONFIG_KEY] : false,
-      name: '@react-navigation',
-      reset,
-      state,
-    });
 
     const {
       listeners,
@@ -162,10 +155,9 @@ const BaseNavigationContainer = React.forwardRef(
 
     const resetRoot = React.useCallback(
       (state?: PartialState<NavigationState> | NavigationState) => {
-        trackAction('@@RESET_ROOT');
         setState(state);
       },
-      [setState, trackAction]
+      [setState]
     );
 
     const getRootState = React.useCallback(() => {
@@ -211,13 +203,20 @@ const BaseNavigationContainer = React.forwardRef(
       getCurrentOptions,
     }));
 
+    const onDispatchAction = React.useCallback(
+      (action: NavigationAction, noop: boolean) => {
+        emitter.emit({ type: '__unsafe_action__', data: { action, noop } });
+      },
+      [emitter]
+    );
+
     const builderContext = React.useMemo(
       () => ({
         addFocusedListener,
         addStateGetter,
-        trackAction,
+        onDispatchAction,
       }),
-      [addFocusedListener, trackAction, addStateGetter]
+      [addFocusedListener, addStateGetter, onDispatchAction]
     );
 
     const scheduleContext = React.useMemo(
@@ -258,23 +257,14 @@ const BaseNavigationContainer = React.forwardRef(
         }
       }
 
-      emitter.emit({
-        type: 'state',
-        data: { state },
-      });
-
-      if (skipTrackingRef.current) {
-        skipTrackingRef.current = false;
-      } else {
-        trackState(getRootState);
-      }
+      emitter.emit({ type: 'state', data: { state } });
 
       if (!isFirstMountRef.current && onStateChangeRef.current) {
         onStateChangeRef.current(getRootState());
       }
 
       isFirstMountRef.current = false;
-    }, [trackState, getRootState, emitter, state]);
+    }, [getRootState, emitter, state]);
 
     return (
       <ScheduleUpdateContext.Provider value={scheduleContext}>

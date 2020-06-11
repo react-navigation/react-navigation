@@ -32,10 +32,10 @@ const NavigationBuilderContext = React.createContext<{
   addActionListener?: (listener: ChildActionListener) => void;
   addFocusedListener?: (listener: FocusedNavigationListener) => void;
   onRouteFocus?: (key: string) => void;
+  onDispatchAction: (action: NavigationAction, noop: boolean) => void;
   addStateGetter?: (key: string, getter: NavigatorStateGetter) => void;
-  trackAction: (action: NavigationAction) => void;
 }>({
-  trackAction: () => undefined,
+  onDispatchAction: () => undefined,
 });
 
 export default NavigationBuilderContext;
