@@ -32,12 +32,12 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "nanoid": "^3.1.5"
+    "nanoid": "^3.1.9"
   },
   "devDependencies": {
-    "@react-native-community/bob": "^0.14.3",
-    "del-cli": "^3.0.0",
-    "typescript": "^3.8.3"
+    "@react-native-community/bob": "^0.15.1",
+    "del-cli": "^3.0.1",
+    "typescript": "^3.9.5"
   },
   "@react-native-community/bob": {
     "source": "src",
