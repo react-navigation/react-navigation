@@ -461,6 +461,10 @@ export type TypedNavigator<
             route: RouteProp<ParamList, keyof ParamList>;
             navigation: any;
           }) => ScreenOptions);
+      /**
+       * Configuration for screens
+       */
+      children: React.ReactNode;
     }
   >;
   /**

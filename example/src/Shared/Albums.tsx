@@ -81,10 +81,6 @@ export default function Albums(props: Partial<ScrollViewProps>) {
 }
 
 const styles = StyleSheet.create({
-  content: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
   ...Platform.select({
     web: {
       content: {

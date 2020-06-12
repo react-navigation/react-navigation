@@ -41,18 +41,18 @@
     "react-native-iphone-x-helper": "^1.2.1"
   },
   "devDependencies": {
-    "@react-native-community/bob": "^0.14.3",
+    "@react-native-community/bob": "^0.15.1",
     "@react-navigation/native": "^5.5.1",
-    "@types/react": "^16.9.34",
+    "@types/react": "^16.9.36",
     "@types/react-native": "^0.62.7",
-    "del-cli": "^3.0.0",
+    "del-cli": "^3.0.1",
     "react": "~16.9.0",
     "react-native": "~0.61.5",
     "react-native-gesture-handler": "^1.6.0",
     "react-native-reanimated": "^1.8.0",
     "react-native-safe-area-context": "^1.0.0",
     "react-native-screens": "^2.7.0",
-    "typescript": "^3.8.3"
+    "typescript": "^3.9.5"
   },
   "peerDependencies": {
     "@react-navigation/native": "^5.0.5",
