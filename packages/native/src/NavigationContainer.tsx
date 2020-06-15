@@ -10,6 +10,7 @@ import LinkingContext from './LinkingContext';
 import useThenable from './useThenable';
 import useLinking from './useLinking';
 import useBackButton from './useBackButton';
+import useDocumentTitle from './useDocumentTitle';
 import { Theme, LinkingOptions } from './types';
 
 type Props = NavigationContainerProps & {
@@ -39,6 +40,7 @@ const NavigationContainer = React.forwardRef(function NavigationContainer(
   const refContainer = React.useRef<NavigationContainerRef>(null);
 
   useBackButton(refContainer);
+  useDocumentTitle(refContainer);
 
   const { getInitialState } = useLinking(refContainer, {
     enabled: isLinkingEnabled,
