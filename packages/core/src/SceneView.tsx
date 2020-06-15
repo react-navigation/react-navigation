@@ -56,6 +56,7 @@ export default function SceneView<
   });
 
   const optionsChange = React.useCallback(() => {
+    optionsRef.current = options;
     if (!hasAnyChildListener) {
       onOptionsChange(options);
     }
