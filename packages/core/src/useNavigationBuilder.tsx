@@ -56,7 +56,7 @@ type NavigatorRoute = {
  */
 const getRouteConfigsFromChildren = <
   State extends NavigationState,
-  ScreenOptions extends object,
+  ScreenOptions extends {},
   EventMap extends EventMapBase
 >(
   children: React.ReactNode
@@ -160,7 +160,7 @@ const getRouteConfigsFromChildren = <
 export default function useNavigationBuilder<
   State extends NavigationState,
   RouterOptions extends DefaultRouterOptions,
-  ScreenOptions extends object,
+  ScreenOptions extends {},
   EventMap extends Record<string, any>
 >(
   createRouter: RouterFactory<State, any, RouterOptions>,

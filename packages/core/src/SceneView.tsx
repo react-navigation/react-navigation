@@ -15,7 +15,7 @@ import { NavigationProp, RouteConfig, EventMapBase } from './types';
 
 type Props<
   State extends NavigationState,
-  ScreenOptions extends object,
+  ScreenOptions extends {},
   EventMap extends EventMapBase
 > = {
   screen: RouteConfig<ParamListBase, string, State, ScreenOptions, EventMap>;
@@ -34,7 +34,7 @@ type Props<
  */
 export default function SceneView<
   State extends NavigationState,
-  ScreenOptions extends object,
+  ScreenOptions extends {},
   EventMap extends EventMapBase
 >({
   screen,

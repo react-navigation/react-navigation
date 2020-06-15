@@ -24,7 +24,7 @@ type Options<State extends NavigationState> = {
 
 type NavigationCache<
   State extends NavigationState,
-  ScreenOptions extends object
+  ScreenOptions extends {}
 > = {
   [key: string]: NavigationProp<ParamListBase, string, State, ScreenOptions>;
 };
@@ -36,7 +36,7 @@ type NavigationCache<
  */
 export default function useNavigationCache<
   State extends NavigationState,
-  ScreenOptions extends object
+  ScreenOptions extends {}
 >({
   state,
   getState,

@@ -8,7 +8,7 @@ export default function Screen<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList,
   State extends NavigationState,
-  ScreenOptions extends object,
+  ScreenOptions extends {},
   EventMap extends EventMapBase
 >(_: RouteConfig<ParamList, RouteName, State, ScreenOptions, EventMap>) {
   /* istanbul ignore next */

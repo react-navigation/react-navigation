@@ -12,7 +12,7 @@ import { TypedNavigator, EventMapBase } from './types';
  */
 export default function createNavigatorFactory<
   State extends NavigationState,
-  ScreenOptions extends object,
+  ScreenOptions extends {},
   EventMap extends EventMapBase,
   NavigatorComponent extends React.ComponentType<any>
 >(Navigator: NavigatorComponent) {
