@@ -10,6 +10,19 @@ Documentation can be found at [reactnavigation.org](https://reactnavigation.org/
 
 If you are looking for version 4, the code can be found in the [4.x branch](https://github.com/react-navigation/react-navigation/tree/4.x).
 
+## Package Versions
+
+| Name                                                                           |                                                                                            Latest Version                                                                                                |
+| ------------------------------------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| [@react-navigation/core](/packages/core)                                       |               [![badge](https://img.shields.io/npm/v/@react-navigation/core.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/core)                                     |
+| [@react-navigation/native](/packages/native)                                   |               [![badge](https://img.shields.io/npm/v/@react-navigation/native.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/native)                                 |
+| [@react-navigation/routers](/packages/routers)                                 |               [![badge](https://img.shields.io/npm/v/@react-navigation/routers.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/routers)                               |
+| [@react-navigation/stack](/packages/stack)                                     |               [![badge](https://img.shields.io/npm/v/@react-navigation/stack.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/stack)                                   |
+| [@react-navigation/drawer](/packages/drawer)                                   |               [![badge](https://img.shields.io/npm/v/@react-navigation/drawer.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/drawer)                                 |
+| [@react-navigation/material-top-tabs](/packages/material-top-tabs)             |               [![badge](https://img.shields.io/npm/v/@react-navigation/material-top-tabs.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/material-top-tabs)           |
+| [@react-navigation/material-bottom-tabs](/packages/material-bottom-tabs)       |               [![badge](https://img.shields.io/npm/v/@react-navigation/material-bottom-tabs.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/material-bottom-tabs)     |
+| [@react-navigation/bottom-tabs](/packages/bottom-tabs)                         |               [![badge](https://img.shields.io/npm/v/@react-navigation/bottom-tabs.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/bottom-tabs)                       |
+
 ## Contributing
 
 Please read through our [contribution guide](CONTRIBUTING.md) a to get started!
