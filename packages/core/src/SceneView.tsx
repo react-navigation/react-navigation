@@ -11,7 +11,7 @@ import EnsureSingleNavigator from './EnsureSingleNavigator';
 import { NavigationProp, RouteConfig, EventMapBase } from './types';
 import useOptionsGetters from './useOptionsGetters';
 import NavigationBuilderContext from './NavigationBuilderContext';
-import { useIsFocused } from './index';
+import { useFocusEffect } from './index';
 
 type Props<
   State extends NavigationState,
@@ -47,8 +47,6 @@ export default function SceneView<
   const navigatorKeyRef = React.useRef<string | undefined>();
   const { onOptionsChange } = React.useContext(NavigationBuilderContext);
   const getKey = React.useCallback(() => navigatorKeyRef.current, []);
-  const isFocused = useIsFocused();
-
   const optionsRef = React.useRef<object | undefined>(options);
   const getOptions = React.useCallback(() => optionsRef.current, []);
 
@@ -57,12 +55,13 @@ export default function SceneView<
     getOptions,
   });
 
-  React.useEffect(() => {
-    optionsRef.current = options;
-    if (isFocused && !hasAnyChildListener) {
+  const optionsChange = React.useCallback(() => {
+    if (!hasAnyChildListener) {
       onOptionsChange(options);
     }
-  }, [isFocused, onOptionsChange, options, hasAnyChildListener]);
+  }, [onOptionsChange, options, hasAnyChildListener]);
+
+  useFocusEffect(optionsChange);
 
   const setKey = React.useCallback((key: string) => {
     navigatorKeyRef.current = key;

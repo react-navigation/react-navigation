@@ -475,10 +475,6 @@ it('emits state events when options change', () => {
   });
 
   expect(listener.mock.calls[0][0].data.options).toEqual({
-    x: 1,
-  });
-
-  expect(listener.mock.calls[1][0].data.options).toEqual({
     y: 2,
   });
 
@@ -490,8 +486,7 @@ it('emits state events when options change', () => {
     ref.current?.navigate('baz');
   });
 
-  expect(listener2.mock.calls[0][0].data.options).toEqual({ y: 2 });
-  expect(listener2.mock.calls[1][0].data.options).toEqual({ g: 5 });
+  expect(listener2.mock.calls[0][0].data.options).toEqual({ g: 5 });
 });
 
 it('throws if there is no navigator rendered', () => {
