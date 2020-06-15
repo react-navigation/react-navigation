@@ -277,6 +277,10 @@ export default function App() {
           },
         }}
         fallback={<Text>Loading…</Text>}
+        documentTitle={{
+          format: (options, route) =>
+            `${options?.title ?? route?.name} - React Navigation Example`,
+        }}
       >
         <Drawer.Navigator drawerType={isLargeScreen ? 'permanent' : undefined}>
           <Drawer.Screen

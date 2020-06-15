@@ -2,6 +2,7 @@ import type {
   getStateFromPath as getStateFromPathDefault,
   getPathFromState as getPathFromStateDefault,
   PathConfigMap,
+  Route,
 } from '@react-navigation/core';
 
 export type Theme = {
@@ -50,6 +51,14 @@ export type LinkingOptions = {
    * Custom function to convert the state object to a valid URL (advanced).
    */
   getPathFromState?: typeof getPathFromStateDefault;
+};
+
+export type DocumentTitleOptions = {
+  enabled?: boolean;
+  format?: (
+    options: Record<string, any> | undefined,
+    route: Route<string> | undefined
+  ) => string;
 };
 
 export type ServerContainerRef = {
