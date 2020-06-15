@@ -20,4 +20,6 @@ export { default as getStateFromPath } from './getStateFromPath';
 export { default as getPathFromState } from './getPathFromState';
 export { default as getActionFromState } from './getActionFromState';
 
+export { default as getFocusedRouteNameFromRoute } from './getFocusedRouteNameFromRoute';
+
 export * from './types';

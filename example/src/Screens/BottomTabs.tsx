@@ -3,6 +3,11 @@ import { View, ScrollView, StyleSheet, Platform } from 'react-native';
 import { Button } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
+  getFocusedRouteNameFromRoute,
+  ParamListBase,
+} from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import {
   createBottomTabNavigator,
   BottomTabNavigationProp,
 } from '@react-navigation/bottom-tabs';
@@ -59,7 +64,18 @@ const AlbumsScreen = ({
 
 const BottomTabs = createBottomTabNavigator<BottomTabParams>();
 
-export default function BottomTabsScreen() {
+export default function BottomTabsScreen({
+  navigation,
+  route,
+}: StackScreenProps<ParamListBase, string>) {
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Article';
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      title: routeName,
+    });
+  }, [navigation, routeName]);
+
   return (
     <BottomTabs.Navigator
       screenOptions={{
