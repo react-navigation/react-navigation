@@ -430,6 +430,54 @@ it('emits state events when the state changes', () => {
   });
 });
 
+it('emits state events when options change', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return (
+      <React.Fragment>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </React.Fragment>
+    );
+  };
+
+  const ref = React.createRef<NavigationContainerRef>();
+
+  const element = (
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator>
+        <Screen name="foo" options={{ x: 1 }}>
+          {() => null}
+        </Screen>
+        <Screen name="bar" options={{ y: 2 }}>
+          {() => null}
+        </Screen>
+        <Screen name="baz">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const listener = jest.fn();
+
+  const el = render(element);
+  ref.current?.addListener('options', listener);
+  el.update(element);
+
+  act(() => {
+    ref.current?.navigate('bar');
+  });
+
+  expect(listener.mock.calls[0][0].data.options).toEqual({
+    y: 2,
+  });
+
+  act(() => {
+    ref.current?.navigate('baz');
+  });
+
+  expect(listener.mock.calls[1][0].data.options).toEqual({});
+});
+
 it('throws if there is no navigator rendered', () => {
   expect.assertions(1);
 

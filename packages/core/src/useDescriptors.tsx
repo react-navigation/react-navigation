@@ -80,7 +80,9 @@ export default function useDescriptors<
   emitter,
 }: Options<State, ScreenOptions, EventMap>) {
   const [options, setOptions] = React.useState<Record<string, object>>({});
-  const { trackAction } = React.useContext(NavigationBuilderContext);
+  const { trackAction, onOptionsChange } = React.useContext(
+    NavigationBuilderContext
+  );
 
   const context = React.useMemo(
     () => ({
@@ -91,6 +93,7 @@ export default function useDescriptors<
       addStateGetter,
       onRouteFocus,
       trackAction,
+      onOptionsChange,
     }),
     [
       navigation,
@@ -100,6 +103,7 @@ export default function useDescriptors<
       onRouteFocus,
       addStateGetter,
       trackAction,
+      onOptionsChange,
     ]
   );
 

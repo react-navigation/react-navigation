@@ -13,8 +13,6 @@ export { default as useRoute } from './useRoute';
 export { default as useFocusEffect } from './useFocusEffect';
 export { default as useIsFocused } from './useIsFocused';
 export { default as useNavigationState } from './useNavigationState';
-export { default as useCurrentRouteEffect } from './useCurrentRouteEffect';
-export { default as useCurrentOptionsEffect } from './useCurrentOptionsEffect';
 
 export { default as getStateFromPath } from './getStateFromPath';
 export { default as getPathFromState } from './getPathFromState';

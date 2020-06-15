@@ -37,6 +37,7 @@ export type EventMapCore<State extends NavigationState> = {
   focus: { data: undefined };
   blur: { data: undefined };
   state: { data: { state: State } };
+  options: { data: { options: object } };
 };
 
 export type EventArg<
@@ -411,7 +412,10 @@ export type RouteConfig<
 );
 
 export type NavigationContainerRef = NavigationHelpers<ParamListBase> &
-  EventConsumer<{ state: { data: { state: NavigationState } } }> & {
+  EventConsumer<{
+    state: { data: { state: NavigationState } };
+    options: { data: { options: object } };
+  }> & {
     /**
      * Reset the navigation state of the root navigator to the provided state.
      *
