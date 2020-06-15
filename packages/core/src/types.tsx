@@ -10,7 +10,7 @@ import {
 } from '@react-navigation/routers';
 
 export type DefaultNavigatorOptions<
-  ScreenOptions extends object
+  ScreenOptions extends {}
 > = DefaultRouterOptions & {
   /**
    * Children React Elements to extract the route configuration from.
@@ -37,7 +37,6 @@ export type EventMapCore<State extends NavigationState> = {
   focus: { data: undefined };
   blur: { data: undefined };
   state: { data: { state: State } };
-  options: { data: { options: object } };
 };
 
 export type EventArg<
@@ -251,7 +250,7 @@ export type NavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string,
   State extends NavigationState = NavigationState,
-  ScreenOptions extends object = {},
+  ScreenOptions extends {} = {},
   EventMap extends EventMapBase = {}
 > = NavigationHelpersCommon<ParamList, State> & {
   /**
@@ -322,7 +321,7 @@ export type Descriptor<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string,
   State extends NavigationState = NavigationState,
-  ScreenOptions extends object = {},
+  ScreenOptions extends {} = {},
   EventMap extends EventMapBase = {}
 > = {
   /**
@@ -361,7 +360,7 @@ export type RouteConfig<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList,
   State extends NavigationState,
-  ScreenOptions extends object,
+  ScreenOptions extends {},
   EventMap extends EventMapBase
 > = {
   /**
@@ -471,7 +470,7 @@ export type NavigationContainerRef = NavigationHelpers<ParamListBase> &
 export type TypedNavigator<
   ParamList extends ParamListBase,
   State extends NavigationState,
-  ScreenOptions extends object,
+  ScreenOptions extends {},
   EventMap extends EventMapBase,
   Navigator extends React.ComponentType<any>
 > = {
@@ -479,29 +478,14 @@ export type TypedNavigator<
    * Navigator component which manages the child screens.
    */
   Navigator: React.ComponentType<
-    Omit<
-      React.ComponentProps<Navigator>,
-      'initialRouteName' | 'screenOptions'
-    > & {
-      /**
-       * Name of the route to focus by on initial render.
-       * If not specified, usually the first route is used.
-       */
-      initialRouteName?: keyof ParamList;
-      /**
-       * Default options for all screens under this navigator.
-       */
-      screenOptions?:
-        | ScreenOptions
-        | ((props: {
-            route: RouteProp<ParamList, keyof ParamList>;
-            navigation: any;
-          }) => ScreenOptions);
-      /**
-       * Configuration for screens
-       */
-      children: React.ReactNode;
-    }
+    Omit<React.ComponentProps<Navigator>, keyof DefaultNavigatorOptions<any>> &
+      Omit<DefaultNavigatorOptions<ScreenOptions>, 'initialRouteName'> & {
+        /**
+         * Name of the route to focus by on initial render.
+         * If not specified, usually the first route is used.
+         */
+        initialRouteName?: keyof ParamList;
+      }
   >;
   /**
    * Component used for specifying route configuration.
