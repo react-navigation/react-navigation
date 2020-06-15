@@ -105,7 +105,7 @@ type Props = {
   /**
    * Style object for the icon element.
    */
-  iconStyle?: StyleProp<TextStyle>;
+  iconStyle?: StyleProp<ViewStyle>;
   /**
    * Style object for the wrapper element.
    */
