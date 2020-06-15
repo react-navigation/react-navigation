@@ -4,6 +4,7 @@ import { Route, useTheme } from '@react-navigation/native';
 import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
 import HeaderHeightContext from '../../utils/HeaderHeightContext';
+import HeaderShownContext from '../../utils/HeaderShownContext';
 import {
   Scene,
   Layout,
@@ -53,8 +54,8 @@ type Props = TransitionPreset & {
   gestureVelocityImpact?: number;
   mode: StackCardMode;
   headerMode: StackHeaderMode;
-  headerShown?: boolean;
-  headerTransparent?: boolean;
+  headerShown: boolean;
+  hasAbsoluteHeader: boolean;
   headerHeight: number;
   onHeaderHeightChange: (props: {
     route: Route<string>;
@@ -84,7 +85,7 @@ function CardContainer({
   headerMode,
   headerShown,
   headerStyleInterpolator,
-  headerTransparent,
+  hasAbsoluteHeader,
   headerHeight,
   onHeaderHeightChange,
   index,
@@ -160,6 +161,9 @@ function CardContainer({
     };
   }, [pointerEvents, scene.progress.next]);
 
+  const isParentHeaderShown = React.useContext(HeaderShownContext);
+  const isCurrentHeaderShown = headerMode !== 'none' && headerShown !== false;
+
   return (
     <Card
       index={index}
@@ -187,19 +191,19 @@ function CardContainer({
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
       pointerEvents={active ? 'box-none' : pointerEvents}
       pageOverflowEnabled={headerMode === 'screen' && mode === 'card'}
-      containerStyle={
-        headerMode === 'float' && !headerTransparent && headerShown !== false
-          ? { marginTop: headerHeight }
-          : null
-      }
+      containerStyle={hasAbsoluteHeader ? { marginTop: headerHeight } : null}
       contentStyle={[{ backgroundColor: colors.background }, cardStyle]}
       style={StyleSheet.absoluteFill}
     >
       <View style={styles.container}>
         <View style={styles.scene}>
-          <HeaderHeightContext.Provider value={headerHeight}>
-            {renderScene({ route: scene.route })}
-          </HeaderHeightContext.Provider>
+          <HeaderShownContext.Provider
+            value={isParentHeaderShown || isCurrentHeaderShown}
+          >
+            <HeaderHeightContext.Provider value={headerHeight}>
+              {renderScene({ route: scene.route })}
+            </HeaderHeightContext.Provider>
+          </HeaderShownContext.Provider>
         </View>
         {headerMode === 'screen'
           ? renderHeader({

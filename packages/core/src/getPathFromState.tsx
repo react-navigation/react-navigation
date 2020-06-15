@@ -18,6 +18,19 @@ type ConfigItem = {
   screens?: Record<string, ConfigItem>;
 };
 
+const getActiveRoute = (state: State): { name: string; params?: object } => {
+  const route =
+    typeof state.index === 'number'
+      ? state.routes[state.index]
+      : state.routes[state.routes.length - 1];
+
+  if (route.state) {
+    return getActiveRoute(route.state);
+  }
+
+  return route;
+};
+
 /**
  * Utility to serialize a navigation state object to a path string.
  *
@@ -69,7 +82,8 @@ export default function getPathFromState(
 
     let pattern: string | undefined;
 
-    let currentParams: Record<string, any> = { ...route.params };
+    let focusedParams: Record<string, any> | undefined;
+    let focusedRoute = getActiveRoute(state);
     let currentOptions = configs;
 
     // Keep all the route names that appeared during going deeper in config in case the pattern is resolved to undefined
@@ -85,7 +99,7 @@ export default function getPathFromState(
       if (route.params) {
         const stringify = currentOptions[route.name]?.stringify;
 
-        currentParams = fromEntries(
+        const currentParams = fromEntries(
           Object.entries(route.params).map(([key, value]) => [
             key,
             stringify?.[key] ? stringify[key](value) : String(value),
@@ -94,6 +108,26 @@ export default function getPathFromState(
 
         if (pattern) {
           Object.assign(allParams, currentParams);
+        }
+
+        if (focusedRoute === route) {
+          // If this is the focused route, keep the params for later use
+          // We save it here since it's been stringified already
+          focusedParams = { ...currentParams };
+
+          pattern
+            ?.split('/')
+            .filter((p) => p.startsWith(':'))
+            // eslint-disable-next-line no-loop-func
+            .forEach((p) => {
+              const name = getParamName(p);
+
+              // Remove the params present in the pattern since we'll only use the rest for query string
+              if (focusedParams) {
+                // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+                delete focusedParams[name];
+              }
+            });
         }
       }
 
@@ -128,17 +162,18 @@ export default function getPathFromState(
       path += pattern
         .split('/')
         .map((p) => {
-          const name = p.replace(/^:/, '').replace(/\?$/, '');
+          const name = getParamName(p);
+
+          // We don't know what to show for wildcard patterns
+          // Showing the route name seems ok, though whatever we show here will be incorrect
+          // Since the page doesn't actually exist
+          if (p === '*') {
+            return route.name;
+          }
 
           // If the path has a pattern for a param, put the param in the path
           if (p.startsWith(':')) {
             const value = allParams[name];
-
-            // Remove the used value from the params object since we'll use the rest for query string
-            if (currentParams) {
-              // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-              delete currentParams[name];
-            }
 
             if (value === undefined && p.endsWith('?')) {
               // Optional params without value assigned in route.params should be ignored
@@ -155,17 +190,21 @@ export default function getPathFromState(
       path += encodeURIComponent(route.name);
     }
 
+    if (!focusedParams) {
+      focusedParams = focusedRoute.params;
+    }
+
     if (route.state) {
       path += '/';
-    } else if (currentParams) {
-      for (let param in currentParams) {
-        if (currentParams[param] === 'undefined') {
+    } else if (focusedParams) {
+      for (let param in focusedParams) {
+        if (focusedParams[param] === 'undefined') {
           // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-          delete currentParams[param];
+          delete focusedParams[param];
         }
       }
 
-      const query = queryString.stringify(currentParams);
+      const query = queryString.stringify(focusedParams);
 
       if (query) {
         path += `?${query}`;
@@ -188,6 +227,9 @@ const fromEntries = <K extends string, V>(entries: (readonly [K, V])[]) =>
     acc[k] = v;
     return acc;
   }, {} as Record<K, V>);
+
+const getParamName = (pattern: string) =>
+  pattern.replace(/^:/, '').replace(/\?$/, '');
 
 const joinPaths = (...paths: string[]): string =>
   ([] as string[])

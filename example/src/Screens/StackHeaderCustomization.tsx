@@ -1,15 +1,24 @@
 import * as React from 'react';
-import { View, StyleSheet, ScrollView, Alert, Platform } from 'react-native';
+import {
+  Animated,
+  View,
+  StyleSheet,
+  ScrollView,
+  Alert,
+  Platform,
+} from 'react-native';
 import { Button, Appbar } from 'react-native-paper';
-import { BlurView } from 'expo-blur';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { RouteProp, ParamListBase } from '@react-navigation/native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useTheme, RouteProp, ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
   StackNavigationProp,
   HeaderBackground,
   useHeaderHeight,
+  Header,
+  StackHeaderProps,
 } from '@react-navigation/stack';
+import BlurView from '../Shared/BlurView';
 import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
 
@@ -91,10 +100,31 @@ type Props = Partial<React.ComponentProps<typeof SimpleStack.Navigator>> & {
   navigation: StackNavigationProp<ParamListBase>;
 };
 
+function CustomHeader(props: StackHeaderProps) {
+  const { current, next } = props.scene.progress;
+
+  const progress = Animated.add(current, next || 0);
+  const opacity = progress.interpolate({
+    inputRange: [0, 1, 2],
+    outputRange: [0, 1, 0],
+  });
+
+  return (
+    <>
+      <Header {...props} />
+      <Animated.Text style={[styles.banner, { opacity }]}>
+        Why hello there, pardner!
+      </Animated.Text>
+    </>
+  );
+}
+
 export default function SimpleStackScreen({ navigation, ...rest }: Props) {
   navigation.setOptions({
     headerShown: false,
   });
+
+  const { colors, dark } = useTheme();
 
   return (
     <SimpleStack.Navigator {...rest}>
@@ -103,6 +133,7 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
         component={ArticleScreen}
         options={({ route }) => ({
           title: `Article by ${route.params?.author}`,
+          header: CustomHeader,
           headerTintColor: '#fff',
           headerStyle: { backgroundColor: '#ff005d' },
           headerBackTitleVisible: false,
@@ -138,9 +169,15 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
           headerBackTitle: 'Back',
           headerTransparent: true,
           headerBackground: () => (
-            <HeaderBackground style={{ backgroundColor: 'transparent' }}>
+            <HeaderBackground
+              style={{
+                backgroundColor: 'transparent',
+                borderBottomWidth: StyleSheet.hairlineWidth,
+                borderBottomColor: colors.border,
+              }}
+            >
               <BlurView
-                tint="light"
+                tint={dark ? 'dark' : 'light'}
                 intensity={75}
                 style={StyleSheet.absoluteFill}
               />
@@ -159,5 +196,11 @@ const styles = StyleSheet.create({
   },
   button: {
     margin: 8,
+  },
+  banner: {
+    textAlign: 'center',
+    color: 'tomato',
+    backgroundColor: 'papayawhip',
+    padding: 4,
   },
 });

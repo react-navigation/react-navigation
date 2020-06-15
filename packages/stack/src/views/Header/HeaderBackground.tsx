@@ -1,8 +1,16 @@
 import * as React from 'react';
-import { Animated, StyleSheet, Platform, ViewProps } from 'react-native';
+import {
+  Animated,
+  StyleSheet,
+  Platform,
+  ViewProps,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
 type Props = ViewProps & {
+  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   children?: React.ReactNode;
 };
 

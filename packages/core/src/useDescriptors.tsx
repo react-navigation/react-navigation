@@ -82,7 +82,7 @@ export default function useDescriptors<
   emitter,
 }: Options<State, ScreenOptions, EventMap>) {
   const [options, setOptions] = React.useState<Record<string, object>>({});
-  const { trackAction, onOptionsChange } = React.useContext(
+  const { onDispatchAction, onOptionsChange } = React.useContext(
     NavigationBuilderContext
   );
 
@@ -94,17 +94,17 @@ export default function useDescriptors<
       addFocusedListener,
       addStateGetter,
       onRouteFocus,
-      trackAction,
+      onDispatchAction,
       onOptionsChange,
     }),
     [
-      navigation,
-      onAction,
       addActionListener,
       addFocusedListener,
-      onRouteFocus,
       addStateGetter,
-      trackAction,
+      navigation,
+      onAction,
+      onDispatchAction,
+      onRouteFocus,
       onOptionsChange,
     ]
   );
@@ -118,60 +118,57 @@ export default function useDescriptors<
     emitter,
   });
 
-  return state.routes.reduce(
-    (acc, route) => {
-      const screen = screens[route.name];
-      const navigation = navigations[route.key];
+  return state.routes.reduce<
+    Record<string, Descriptor<ParamListBase, string, State, ScreenOptions>>
+  >((acc, route) => {
+    const screen = screens[route.name];
+    const navigation = navigations[route.key];
 
-      const routeOptions = {
-        // The default `screenOptions` passed to the navigator
-        ...(typeof screenOptions === 'object' || screenOptions == null
-          ? screenOptions
-          : screenOptions({
-              // @ts-ignore
-              route,
-              navigation,
-            })),
-        // The `options` prop passed to `Screen` elements
-        ...(typeof screen.options === 'object' || screen.options == null
-          ? screen.options
-          : screen.options({
-              // @ts-ignore
-              route,
-              // @ts-ignore
-              navigation,
-            })),
-        // The options set via `navigation.setOptions`
-        ...options[route.key],
-      };
+    const routeOptions = {
+      // The default `screenOptions` passed to the navigator
+      ...(typeof screenOptions === 'object' || screenOptions == null
+        ? screenOptions
+        : screenOptions({
+            // @ts-ignore
+            route,
+            navigation,
+          })),
+      // The `options` prop passed to `Screen` elements
+      ...(typeof screen.options === 'object' || screen.options == null
+        ? screen.options
+        : screen.options({
+            // @ts-ignore
+            route,
+            // @ts-ignore
+            navigation,
+          })),
+      // The options set via `navigation.setOptions`
+      ...options[route.key],
+    };
 
-      acc[route.key] = {
-        navigation,
-        render() {
-          return (
-            <NavigationBuilderContext.Provider key={route.key} value={context}>
-              <NavigationContext.Provider value={navigation}>
-                <NavigationRouteContext.Provider value={route}>
-                  <SceneView
-                    navigation={navigation}
-                    route={route}
-                    screen={screen}
-                    getState={getState}
-                    setState={setState}
-                    options={routeOptions}
-                  />
-                </NavigationRouteContext.Provider>
-              </NavigationContext.Provider>
-            </NavigationBuilderContext.Provider>
-          );
-        },
-        options: routeOptions as ScreenOptions,
-      };
+    acc[route.key] = {
+      navigation,
+      render() {
+        return (
+          <NavigationBuilderContext.Provider key={route.key} value={context}>
+            <NavigationContext.Provider value={navigation}>
+              <NavigationRouteContext.Provider value={route}>
+                <SceneView
+                  navigation={navigation}
+                  route={route}
+                  screen={screen}
+                  getState={getState}
+                  setState={setState}
+                  options={routeOptions}
+                />
+              </NavigationRouteContext.Provider>
+            </NavigationContext.Provider>
+          </NavigationBuilderContext.Provider>
+        );
+      },
+      options: routeOptions as ScreenOptions,
+    };
 
-      return acc;
-    },
-    {} as {
-      [key: string]: Descriptor<ParamListBase, string, State, ScreenOptions>;
-    }
-  );
+    return acc;
+  }, {});
 }

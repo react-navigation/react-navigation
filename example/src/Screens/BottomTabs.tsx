@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { View, ScrollView, StyleSheet, Platform } from 'react-native';
 import { Button } from 'react-native-paper';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+  getFocusedRouteNameFromRoute,
+  ParamListBase,
+} from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import {
   createBottomTabNavigator,
   BottomTabNavigationProp,
@@ -59,7 +64,18 @@ const AlbumsScreen = ({
 
 const BottomTabs = createBottomTabNavigator<BottomTabParams>();
 
-export default function BottomTabsScreen() {
+export default function BottomTabsScreen({
+  navigation,
+  route,
+}: StackScreenProps<ParamListBase, string>) {
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Article';
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      title: routeName,
+    });
+  }, [navigation, routeName]);
+
   return (
     <BottomTabs.Navigator
       screenOptions={{
@@ -71,13 +87,12 @@ export default function BottomTabsScreen() {
     >
       <BottomTabs.Screen
         name="Article"
+        component={SimpleStackScreen}
         options={{
           title: 'Article',
           tabBarIcon: getTabBarIcon('file-document-box'),
         }}
-      >
-        {(props) => <SimpleStackScreen {...props} headerMode="none" />}
-      </BottomTabs.Screen>
+      />
       <BottomTabs.Screen
         name="Chat"
         component={Chat}

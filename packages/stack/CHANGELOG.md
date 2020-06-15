@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.5.1](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.5.0...@react-navigation/stack@5.5.1) (2020-06-08)
+
+
+### Bug Fixes
+
+* make sure the header is on top of the view ([1ae07af](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/1ae07af79660973f4342a5741a1a826bcc689832))
+
+
+
+
+
+# [5.5.0](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.4.2...@react-navigation/stack@5.5.0) (2020-06-08)
+
+
+### Bug Fixes
+
+* fix blank screen with animationEnabled: false & headerShown: false ([9c06a92](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/9c06a92d092af150d653c3a2f7fdccd28090bb14)), closes [#8391](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/8391)
+* ignore onOpen from route that wasn't closing ([1f27e4b](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/1f27e4b1f659e59ad15ecbf44b4fb0a80cae302f)), closes [#8257](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/8257)
+* pass gestureRef to PanGestureHandlerNative ([#8394](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/8394)) ([c7e4bf9](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/c7e4bf94e664563892cbdafccc108ad519ccec50))
+
+
+### Features
+
+* automatically hide header in nested stacks ([e0e0f79](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/e0e0f79793be552e5532cd0afe9444000d21341e))
+
+
+
+
+
+## [5.4.2](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.4.1...@react-navigation/stack@5.4.2) (2020-06-06)
+
+
+### Bug Fixes
+
+* relatively position float Header if !headerTransparent ([#8285](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/8285)) ([78afbff](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/78afbffe976b14bb60666a2b1230127db0dc24f6))
+
+
+
+
+
+## [5.4.1](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.4.0...@react-navigation/stack@5.4.1) (2020-05-27)
+
+
+### Bug Fixes
+
+* allow HeaderBackground's subViews to be touchable ([#8317](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/issues/8317)) ([00c23f2](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/00c23f2c9ed22fa4d010ffb427f2b52e061d8df4))
+* fix type of style for various options ([9d822b9](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/commit/9d822b95a6df797e2e63e481573e64ea7d0f9386))
+
+
+
+
+
 # [5.4.0](https://github.com/react-navigation/react-navigation/tree/master/packages/stack/compare/@react-navigation/stack@5.3.9...@react-navigation/stack@5.4.0) (2020-05-23)
 
 

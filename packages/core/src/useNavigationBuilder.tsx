@@ -33,6 +33,8 @@ import {
 import useStateGetters from './useStateGetters';
 import useOnGetState from './useOnGetState';
 import useScheduleUpdate from './useScheduleUpdate';
+import useCurrentRender from './useCurrentRender';
+import isArrayEqual from './isArrayEqual';
 
 // This is to make TypeScript compiler happy
 // eslint-disable-next-line babel/no-unused-expressions
@@ -46,13 +48,6 @@ type NavigatorRoute = {
     initial?: boolean;
   };
 };
-
-/**
- * Compare two arrays with primitive values as the content.
- * We need to make sure that both values and order match.
- */
-const isArrayEqual = (a: any[], b: any[]) =>
-  a.length === b.length && a.every((it, index) => it === b[index]);
 
 /**
  * Extract route config object from React children elements.
@@ -496,6 +491,12 @@ export default function useNavigationBuilder<
     addStateGetter,
     router,
     emitter,
+  });
+
+  useCurrentRender({
+    state,
+    navigation,
+    descriptors,
   });
 
   return {

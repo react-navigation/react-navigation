@@ -11,10 +11,7 @@ import {
 } from 'react-native';
 // eslint-disable-next-line import/no-unresolved
 import { enableScreens } from 'react-native-screens';
-import RNRestart from 'react-native-restart';
-import { Updates } from 'expo';
-import { Asset } from 'expo-asset';
-import { MaterialIcons } from '@expo/vector-icons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {
   Provider as PaperProvider,
   DefaultTheme as PaperLightTheme,
@@ -29,6 +26,8 @@ import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
+  PathConfig,
+  NavigationContainerRef,
 } from '@react-navigation/native';
 import {
   createDrawerNavigator,
@@ -36,11 +35,12 @@ import {
 } from '@react-navigation/drawer';
 import {
   createStackNavigator,
-  Assets as StackAssets,
   StackNavigationProp,
   HeaderStyleInterpolators,
 } from '@react-navigation/stack';
+import { useReduxDevToolsExtension } from '@react-navigation/devtools';
 
+import { restartApp } from './Restart';
 import AsyncStorage from './AsyncStorage';
 import LinkingPrefixes from './LinkingPrefixes';
 import SettingsItem from './Shared/SettingsItem';
@@ -51,6 +51,7 @@ import StackHeaderCustomization from './Screens/StackHeaderCustomization';
 import BottomTabs from './Screens/BottomTabs';
 import MaterialTopTabsScreen from './Screens/MaterialTopTabs';
 import MaterialBottomTabs from './Screens/MaterialBottomTabs';
+import NotFound from './Screens/NotFound';
 import DynamicTabs from './Screens/DynamicTabs';
 import AuthFlow from './Screens/AuthFlow';
 import CompatAPI from './Screens/CompatAPI';
@@ -61,9 +62,6 @@ YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
 
 enableScreens();
 
-// @ts-ignore
-global.REACT_NAVIGATION_REDUX_DEVTOOLS_EXTENSION_INTEGRATION_ENABLED = true;
-
 type RootDrawerParamList = {
   Root: undefined;
   Another: undefined;
@@ -71,6 +69,7 @@ type RootDrawerParamList = {
 
 type RootStackParamList = {
   Home: undefined;
+  NotFound: undefined;
 } & {
   [P in keyof typeof SCREENS]: undefined;
 };
@@ -126,12 +125,10 @@ const Stack = createStackNavigator<RootStackParamList>();
 const NAVIGATION_PERSISTENCE_KEY = 'NAVIGATION_STATE';
 const THEME_PERSISTENCE_KEY = 'THEME_TYPE';
 
-Asset.loadAsync(StackAssets);
-
 export default function App() {
   const [theme, setTheme] = React.useState(DefaultTheme);
 
-  const [isReady, setIsReady] = React.useState(false);
+  const [isReady, setIsReady] = React.useState(Platform.OS === 'web');
   const [initialState, setInitialState] = React.useState<
     InitialState | undefined
   >();
@@ -194,6 +191,10 @@ export default function App() {
     return () => Dimensions.removeEventListener('change', onDimensionsChange);
   }, []);
 
+  const navigationRef = React.useRef<NavigationContainerRef>(null);
+
+  useReduxDevToolsExtension(navigationRef);
+
   if (!isReady) {
     return null;
   }
@@ -206,6 +207,7 @@ export default function App() {
         <StatusBar barStyle={theme.dark ? 'light-content' : 'dark-content'} />
       )}
       <NavigationContainer
+        ref={navigationRef}
         initialState={initialState}
         onStateChange={(state) =>
           AsyncStorage.setItem(
@@ -226,35 +228,45 @@ export default function App() {
             Root: {
               path: '',
               initialRouteName: 'Home',
-              screens: Object.keys(SCREENS).reduce<{ [key: string]: string }>(
+              screens: Object.keys(SCREENS).reduce<PathConfig>(
                 (acc, name) => {
                   // Convert screen names such as SimpleStack to kebab case (simple-stack)
-                  acc[name] = name
+                  const path = name
                     .replace(/([A-Z]+)/g, '-$1')
                     .replace(/^-/, '')
                     .toLowerCase();
 
+                  acc[name] = {
+                    path,
+                    screens: {
+                      Article: {
+                        path: 'article/:author?',
+                        parse: {
+                          author: (author) =>
+                            author.charAt(0).toUpperCase() +
+                            author.slice(1).replace(/-/g, ' '),
+                        },
+                        stringify: {
+                          author: (author: string) =>
+                            author.toLowerCase().replace(/\s/g, '-'),
+                        },
+                      },
+                      Albums: 'music',
+                      Chat: 'chat',
+                      Contacts: 'people',
+                      NewsFeed: 'feed',
+                      Dialog: 'dialog',
+                    },
+                  };
+
                   return acc;
                 },
-                { Home: '' }
+                {
+                  Home: '',
+                  NotFound: '*',
+                }
               ),
             },
-            Article: {
-              path: 'article/:author?',
-              parse: {
-                author: (author) =>
-                  author.charAt(0).toUpperCase() +
-                  author.slice(1).replace(/-/g, ' '),
-              },
-              stringify: {
-                author: (author: string) =>
-                  author.toLowerCase().replace(/\s/g, '-'),
-              },
-            },
-            Albums: 'music',
-            Chat: 'chat',
-            Contacts: 'people',
-            NewsFeed: 'feed',
           },
         }}
         fallback={<Text>Loading…</Text>}
@@ -307,12 +319,7 @@ export default function App() {
                         value={I18nManager.isRTL}
                         onValueChange={() => {
                           I18nManager.forceRTL(!I18nManager.isRTL);
-                          // @ts-ignore
-                          if (global.Expo) {
-                            Updates.reloadFromCache();
-                          } else {
-                            RNRestart.Restart();
-                          }
+                          restartApp();
                         }}
                       />
                       <Divider />
@@ -342,6 +349,11 @@ export default function App() {
                     </ScrollView>
                   )}
                 </Stack.Screen>
+                <Stack.Screen
+                  name="NotFound"
+                  component={NotFound}
+                  options={{ title: 'Oops!' }}
+                />
                 {(Object.keys(SCREENS) as (keyof typeof SCREENS)[]).map(
                   (name) => (
                     <Stack.Screen

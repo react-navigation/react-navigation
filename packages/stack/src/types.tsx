@@ -119,7 +119,7 @@ export type StackHeaderOptions = {
    * This may lead to white space or overlap between `headerLeft` and `headerTitle` if a customized `headerLeft` is used.
    * It can be solved by adjusting `left` and `right` style in `headerTitleContainerStyle` and `marginHorizontal` in `headerTitleStyle`.
    */
-  headerTitleContainerStyle?: StyleProp<ViewStyle>;
+  headerTitleContainerStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   /**
    * Tint color for the header.
    */
@@ -133,7 +133,8 @@ export type StackHeaderOptions = {
    */
   headerBackAllowFontScaling?: boolean;
   /**
-   * Title string used by the back button on iOS, or `null` to disable label. Defaults to the previous scene's `headerTitle`.
+   * Title string used by the back button on iOS. Defaults to the previous scene's `headerTitle`.
+   * Use `headerBackTitleVisible: false` to hide it.
    */
   headerBackTitle?: string;
   /**
@@ -157,7 +158,7 @@ export type StackHeaderOptions = {
   /**
    * Style object for the container of the `headerLeft` component, for example to add padding.
    */
-  headerLeftContainerStyle?: StyleProp<ViewStyle>;
+  headerLeftContainerStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   /**
    * Function which returns a React Element to display on the right side of the header.
    */
@@ -165,7 +166,7 @@ export type StackHeaderOptions = {
   /**
    * Style object for the container of the `headerRight` component, for example to add padding.
    */
-  headerRightContainerStyle?: StyleProp<ViewStyle>;
+  headerRightContainerStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   /**
    * Function which returns a React Element to display custom image in header's back button.
    * It receives the `tintColor` in in the options object as an argument. object.
@@ -187,7 +188,7 @@ export type StackHeaderOptions = {
   /**
    * Style object for the header. You can specify a custom background color here, for example.
    */
-  headerStyle?: StyleProp<ViewStyle>;
+  headerStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   /**
    * Defaults to `false`. If `true`, the header will not have a background unless you explicitly provide it with `headerBackground`.
    * The header will also float over the screen so that it overlaps the content underneath.
@@ -380,7 +381,7 @@ export type StackHeaderLeftButtonProps = {
   /**
    * Style object for the label.
    */
-  labelStyle?: React.ComponentProps<typeof Animated.Text>['style'];
+  labelStyle?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
   /**
    * Whether label font should scale to respect Text Size accessibility settings.
    */

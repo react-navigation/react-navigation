@@ -2,6 +2,7 @@ import * as React from 'react';
 import { NavigationState } from '@react-navigation/routers';
 import NavigationBuilderContext from './NavigationBuilderContext';
 import NavigationRouteContext from './NavigationRouteContext';
+import isArrayEqual from './isArrayEqual';
 
 export default function useOnGetState({
   getStateForRoute,
@@ -16,13 +17,23 @@ export default function useOnGetState({
 
   const getRehydratedState = React.useCallback(() => {
     const state = getState();
-    return {
-      ...state,
-      routes: state.routes.map((route) => ({
-        ...route,
-        state: getStateForRoute(route.key),
-      })),
-    };
+
+    // Avoid returning new route objects if we don't need to
+    const routes = state.routes.map((route) => {
+      const childState = getStateForRoute(route.key);
+
+      if (route.state === childState) {
+        return route;
+      }
+
+      return { ...route, state: childState };
+    });
+
+    if (isArrayEqual(state.routes, routes)) {
+      return state;
+    }
+
+    return { ...state, routes };
   }, [getState, getStateForRoute]);
 
   React.useEffect(() => {
