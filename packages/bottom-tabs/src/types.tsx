@@ -119,7 +119,7 @@ export type BottomTabDescriptorMap = {
   [key: string]: BottomTabDescriptor;
 };
 
-export type BottomTabNavigationConfig = {
+export type BottomTabNavigationConfig<T = BottomTabBarOptions> = {
   /**
    * Whether the screens should render the first time they are accessed. Defaults to `true`.
    * Set it to `false` if you want to render all screens on initial render.
@@ -128,11 +128,11 @@ export type BottomTabNavigationConfig = {
   /**
    * Function that returns a React element to display as the tab bar.
    */
-  tabBar?: (props: BottomTabBarProps) => React.ReactNode;
+  tabBar?: (props: BottomTabBarProps<T>) => React.ReactNode;
   /**
    * Options for the tab bar which will be passed as props to the tab bar component.
    */
-  tabBarOptions?: BottomTabBarOptions;
+  tabBarOptions?: T;
 };
 
 export type BottomTabBarOptions = {
@@ -201,7 +201,7 @@ export type BottomTabBarOptions = {
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 };
 
-export type BottomTabBarProps = BottomTabBarOptions & {
+export type BottomTabBarProps<T = BottomTabBarOptions> = T & {
   state: TabNavigationState;
   descriptors: BottomTabDescriptorMap;
   navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>;
