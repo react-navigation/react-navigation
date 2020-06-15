@@ -50,19 +50,19 @@ export default function SceneView<
   const isFocused = useIsFocused();
 
   const optionsRef = React.useRef<object | undefined>(options);
-  React.useEffect(() => {
-    optionsRef.current = options;
-    if (isFocused) {
-      onOptionsChange(options);
-    }
-  }, [isFocused, onOptionsChange, options]);
-
   const getOptions = React.useCallback(() => optionsRef.current, []);
 
-  const { addOptionsGetter } = useOptionsGetters({
+  const { addOptionsGetter, hasAnyChildListener } = useOptionsGetters({
     key: route.key,
     getOptions,
   });
+
+  React.useEffect(() => {
+    optionsRef.current = options;
+    if (isFocused && !hasAnyChildListener) {
+      onOptionsChange(options);
+    }
+  }, [isFocused, onOptionsChange, options, hasAnyChildListener]);
 
   const setKey = React.useCallback((key: string) => {
     navigatorKeyRef.current = key;

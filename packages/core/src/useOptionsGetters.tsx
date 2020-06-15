@@ -11,6 +11,10 @@ export default function useOptionsGetters({
   getOptions?: () => object | undefined;
   getState?: () => NavigationState;
 }) {
+  let [
+    numberOfChildrenListeners,
+    setNumberOfChildrenListeners,
+  ] = React.useState(0);
   const optionsGettersFromChild = React.useRef<
     Record<string, (() => object | undefined | null) | undefined>
   >({});
@@ -55,16 +59,24 @@ export default function useOptionsGetters({
   const addOptionsGetter = React.useCallback(
     (key: string, getter: () => object | undefined | null) => {
       optionsGettersFromChild.current[key] = getter;
+      setNumberOfChildrenListeners((prev) => prev + 1);
 
       return () => {
+        setNumberOfChildrenListeners((prev) => prev - 1);
         optionsGettersFromChild.current[key] = undefined;
       };
     },
     []
   );
 
+  const hasAnyChildListener = React.useMemo(
+    () => numberOfChildrenListeners > 0,
+    [numberOfChildrenListeners]
+  );
+
   return {
     addOptionsGetter,
     getCurrentOptions,
+    hasAnyChildListener,
   };
 }

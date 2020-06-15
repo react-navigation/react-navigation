@@ -453,7 +453,13 @@ it('emits state events when options change', () => {
           {() => null}
         </Screen>
         <Screen name="baz" options={{ v: 3 }}>
-          {() => null}
+          {() => (
+            <TestNavigator>
+              <Screen name="foo" options={{ g: 5 }}>
+                {() => null}
+              </Screen>
+            </TestNavigator>
+          )}
         </Screen>
       </TestNavigator>
     </BaseNavigationContainer>
@@ -485,7 +491,7 @@ it('emits state events when options change', () => {
   });
 
   expect(listener2.mock.calls[0][0].data.options).toEqual({ y: 2 });
-  expect(listener2.mock.calls[1][0].data.options).toEqual({ v: 3 });
+  expect(listener2.mock.calls[1][0].data.options).toEqual({ g: 5 });
 });
 
 it('throws if there is no navigator rendered', () => {
