@@ -20,6 +20,8 @@ import {
   RouteProp,
   EventMapBase,
 } from './types';
+import NavigationContext from './NavigationContext';
+import NavigationRouteContext from './NavigationRouteContext';
 
 type Options<
   State extends NavigationState,
@@ -148,18 +150,22 @@ export default function useDescriptors<
         render() {
           return (
             <NavigationBuilderContext.Provider key={route.key} value={context}>
-              <SceneView
-                navigation={navigation}
-                route={route}
-                screen={screen}
-                getState={getState}
-                setState={setState}
-                options={routeOptions}
-              />
+              <NavigationContext.Provider value={navigation}>
+                <NavigationRouteContext.Provider value={route}>
+                  <SceneView
+                    navigation={navigation}
+                    route={route}
+                    screen={screen}
+                    getState={getState}
+                    setState={setState}
+                    options={routeOptions}
+                  />
+                </NavigationRouteContext.Provider>
+              </NavigationContext.Provider>
             </NavigationBuilderContext.Provider>
           );
         },
-        options: routeOptions,
+        options: routeOptions as ScreenOptions,
       };
 
       return acc;

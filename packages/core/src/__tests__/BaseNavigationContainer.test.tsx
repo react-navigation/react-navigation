@@ -452,30 +452,40 @@ it('emits state events when options change', () => {
         <Screen name="bar" options={{ y: 2 }}>
           {() => null}
         </Screen>
-        <Screen name="baz">{() => null}</Screen>
+        <Screen name="baz" options={{ v: 3 }}>
+          {() => null}
+        </Screen>
       </TestNavigator>
     </BaseNavigationContainer>
   );
 
   const listener = jest.fn();
 
-  const el = render(element);
+  render(element).update(element);
   ref.current?.addListener('options', listener);
-  el.update(element);
 
   act(() => {
     ref.current?.navigate('bar');
   });
 
   expect(listener.mock.calls[0][0].data.options).toEqual({
+    x: 1,
+  });
+
+  expect(listener.mock.calls[1][0].data.options).toEqual({
     y: 2,
   });
+
+  ref.current?.removeListener('options', listener);
+  const listener2 = jest.fn();
+  ref.current?.addListener('options', listener2);
 
   act(() => {
     ref.current?.navigate('baz');
   });
 
-  expect(listener.mock.calls[1][0].data.options).toEqual({});
+  expect(listener2.mock.calls[0][0].data.options).toEqual({ y: 2 });
+  expect(listener2.mock.calls[1][0].data.options).toEqual({ v: 3 });
 });
 
 it('throws if there is no navigator rendered', () => {
