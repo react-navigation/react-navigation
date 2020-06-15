@@ -187,15 +187,6 @@ const BaseNavigationContainer = React.forwardRef(
 
     const { addOptionsGetter, getCurrentOptions } = useOptionsGetters({});
 
-    const updateListeners = React.useRef<(() => void | never)[]>([]);
-    const addListener = React.useCallback((listener: () => void) => {
-      updateListeners.current.push(listener);
-      return () => {
-        const index = updateListeners.current.indexOf(listener);
-        updateListeners.current.splice(index, 1);
-      };
-    }, []);
-
     React.useImperativeHandle(ref, () => ({
       ...(Object.keys(CommonActions) as (keyof typeof CommonActions)[]).reduce<
         any
@@ -218,7 +209,6 @@ const BaseNavigationContainer = React.forwardRef(
       dangerouslyGetParent: () => undefined,
       getCurrentRoute,
       getCurrentOptions,
-      addUpdateOptionsListener: addListener,
     }));
 
     const onOptionsChange = React.useCallback(
