@@ -9,13 +9,15 @@ import DefaultTheme from './theming/DefaultTheme';
 import LinkingContext from './LinkingContext';
 import useThenable from './useThenable';
 import useLinking from './useLinking';
+import useDocumentTitle from './useDocumentTitle';
 import useBackButton from './useBackButton';
-import type { Theme, LinkingOptions } from './types';
+import type { Theme, LinkingOptions, DocumentTitleOptions } from './types';
 
 type Props = NavigationContainerProps & {
   theme?: Theme;
   linking?: LinkingOptions;
   fallback?: React.ReactNode;
+  documentTitle?: DocumentTitleOptions;
   onReady?: () => void;
 };
 
@@ -29,11 +31,19 @@ type Props = NavigationContainerProps & {
  * @param props.theme Theme object for the navigators.
  * @param props.linking Options for deep linking. Deep link handling is enabled when this prop is provided, unless `linking.enabled` is `false`.
  * @param props.fallback Fallback component to render until we have finished getting initial state when linking is enabled. Defaults to `null`.
+ * @param props.documentTitle Options to configure the document title on Web. Updating document title is handled by default unless `documentTitle.enabled` is `false`.
  * @param props.children Child elements to render the content.
  * @param props.ref Ref object which refers to the navigation object containing helper methods.
  */
 const NavigationContainer = React.forwardRef(function NavigationContainer(
-  { theme = DefaultTheme, linking, fallback = null, onReady, ...rest }: Props,
+  {
+    theme = DefaultTheme,
+    linking,
+    fallback = null,
+    documentTitle,
+    onReady,
+    ...rest
+  }: Props,
   ref?: React.Ref<NavigationContainerRef | null>
 ) {
   const isLinkingEnabled = linking ? linking.enabled !== false : false;
@@ -41,6 +51,7 @@ const NavigationContainer = React.forwardRef(function NavigationContainer(
   const refContainer = React.useRef<NavigationContainerRef>(null);
 
   useBackButton(refContainer);
+  useDocumentTitle(refContainer, documentTitle);
 
   const { getInitialState } = useLinking(refContainer, {
     enabled: isLinkingEnabled,
