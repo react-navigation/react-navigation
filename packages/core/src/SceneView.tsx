@@ -6,12 +6,12 @@ import {
   PartialState,
 } from '@react-navigation/routers';
 import NavigationStateContext from './NavigationStateContext';
-import NavigationContext from './NavigationContext';
-import NavigationRouteContext from './NavigationRouteContext';
 import StaticContainer from './StaticContainer';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
-import { NavigationProp, RouteConfig, EventMapBase } from './types';
 import useOptionsGetters from './useOptionsGetters';
+import NavigationBuilderContext from './NavigationBuilderContext';
+import useFocusEffect from './useFocusEffect';
+import { NavigationProp, RouteConfig, EventMapBase } from './types';
 
 type Props<
   State extends NavigationState,
@@ -45,20 +45,24 @@ export default function SceneView<
   options,
 }: Props<State, ScreenOptions, EventMap>) {
   const navigatorKeyRef = React.useRef<string | undefined>();
+  const { onOptionsChange } = React.useContext(NavigationBuilderContext);
   const getKey = React.useCallback(() => navigatorKeyRef.current, []);
-
   const optionsRef = React.useRef<object | undefined>(options);
-
-  React.useEffect(() => {
-    optionsRef.current = options;
-  }, [options]);
-
   const getOptions = React.useCallback(() => optionsRef.current, []);
 
-  const { addOptionsGetter } = useOptionsGetters({
+  const { addOptionsGetter, hasAnyChildListener } = useOptionsGetters({
     key: route.key,
     getOptions,
   });
+
+  const optionsChange = React.useCallback(() => {
+    optionsRef.current = options;
+    if (!hasAnyChildListener) {
+      onOptionsChange(options);
+    }
+  }, [onOptionsChange, options, hasAnyChildListener]);
+
+  useFocusEffect(optionsChange);
 
   const setKey = React.useCallback((key: string) => {
     navigatorKeyRef.current = key;
@@ -105,28 +109,24 @@ export default function SceneView<
   );
 
   return (
-    <NavigationContext.Provider value={navigation}>
-      <NavigationRouteContext.Provider value={route}>
-        <NavigationStateContext.Provider value={context}>
-          <EnsureSingleNavigator>
-            <StaticContainer
-              name={screen.name}
-              // @ts-ignore
-              render={screen.component || screen.children}
-              navigation={navigation}
-              route={route}
-            >
-              {'component' in screen && screen.component !== undefined ? (
-                // @ts-ignore
-                <screen.component navigation={navigation} route={route} />
-              ) : 'children' in screen && screen.children !== undefined ? (
-                // @ts-ignore
-                screen.children({ navigation, route })
-              ) : null}
-            </StaticContainer>
-          </EnsureSingleNavigator>
-        </NavigationStateContext.Provider>
-      </NavigationRouteContext.Provider>
-    </NavigationContext.Provider>
+    <NavigationStateContext.Provider value={context}>
+      <EnsureSingleNavigator>
+        <StaticContainer
+          name={screen.name}
+          // @ts-ignore
+          render={screen.component || screen.children}
+          navigation={navigation}
+          route={route}
+        >
+          {'component' in screen && screen.component !== undefined ? (
+            // @ts-ignore
+            <screen.component navigation={navigation} route={route} />
+          ) : 'children' in screen && screen.children !== undefined ? (
+            // @ts-ignore
+            screen.children({ navigation, route })
+          ) : null}
+        </StaticContainer>
+      </EnsureSingleNavigator>
+    </NavigationStateContext.Provider>
   );
 }

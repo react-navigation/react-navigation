@@ -34,8 +34,10 @@ const NavigationBuilderContext = React.createContext<{
   onRouteFocus?: (key: string) => void;
   onDispatchAction: (action: NavigationAction, noop: boolean) => void;
   addStateGetter?: (key: string, getter: NavigatorStateGetter) => void;
+  onOptionsChange: (options: object) => void;
 }>({
   onDispatchAction: () => undefined,
+  onOptionsChange: () => undefined,
 });
 
 export default NavigationBuilderContext;

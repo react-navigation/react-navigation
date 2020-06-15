@@ -293,7 +293,7 @@ export default function useNavigationBuilder<
   let state =
     // If the state isn't initialized, or stale, use the state we initialized instead
     // The state won't update until there's a change needed in the state we have initalized locally
-    // So it'll be `undefined` or stale untill the first navigation event happens
+    // So it'll be `undefined` or stale until the first navigation event happens
     isStateInitialized(currentState)
       ? (currentState as State)
       : (initializedState as State);
@@ -344,7 +344,7 @@ export default function useNavigationBuilder<
 
   // The up-to-date state will come in next render, but we don't need to wait for it
   // We can't use the outdated state since the screens have changed, which will cause error due to mismatched config
-  // So we override the state objec we return to use the latest state as soon as possible
+  // So we override the state object we return to use the latest state as soon as possible
   state = nextState;
 
   React.useEffect(() => {
