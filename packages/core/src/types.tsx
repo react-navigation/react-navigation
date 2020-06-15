@@ -410,8 +410,39 @@ export type RouteConfig<
     }
 );
 
+export type NavigationContainerEventMap = {
+  /**
+   * Event which fires when the navigation state changes.
+   */
+  state: {
+    data: {
+      /**
+       * The updated state object after the state change.
+       */
+      state: NavigationState;
+    };
+  };
+  /**
+   * Event which fires when an action is dispatched.
+   * Only intended for debugging purposes, don't use it for app logic.
+   * This event will be emitted before state changes have been applied.
+   */
+  __unsafe_action__: {
+    data: {
+      /**
+       * The action object which was dispatched.
+       */
+      action: NavigationAction;
+      /**
+       * Whether the action was a no-op, i.e. resulted any state changes.
+       */
+      noop: boolean;
+    };
+  };
+};
+
 export type NavigationContainerRef = NavigationHelpers<ParamListBase> &
-  EventConsumer<{ state: { data: { state: NavigationState } } }> & {
+  EventConsumer<NavigationContainerEventMap> & {
     /**
      * Reset the navigation state of the root navigator to the provided state.
      *

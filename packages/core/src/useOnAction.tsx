@@ -40,7 +40,7 @@ export default function useOnAction({
     onAction: onActionParent,
     onRouteFocus: onRouteFocusParent,
     addActionListener: addActionListenerParent,
-    trackAction,
+    onDispatchAction,
   } = React.useContext(NavigationBuilderContext);
 
   const routerConfigOptionsRef = React.useRef<RouterConfigOptions>(
@@ -81,7 +81,7 @@ export default function useOnAction({
       result = result === null && action.target === state.key ? state : result;
 
       if (result !== null) {
-        trackAction(action);
+        onDispatchAction(action, state === result);
 
         if (state !== result) {
           setState(result);
@@ -122,7 +122,7 @@ export default function useOnAction({
       getState,
       router,
       onActionParent,
-      trackAction,
+      onDispatchAction,
       onRouteFocusParent,
       setState,
       key,

@@ -11,7 +11,8 @@
       "@react-navigation/drawer",
       "@react-navigation/bottom-tabs",
       "@react-navigation/material-top-tabs",
-      "@react-navigation/material-bottom-tabs"
+      "@react-navigation/material-bottom-tabs",
+      "@react-navigation/devtools"
     ]
   },
   "env": { "browser": true, "node": true }
