@@ -210,13 +210,24 @@ const BaseNavigationContainer = React.forwardRef(
       [emitter]
     );
 
+    const onOptionsChange = React.useCallback(
+      (options) => {
+        emitter.emit({
+          type: 'options',
+          data: { options },
+        });
+      },
+      [emitter]
+    );
+
     const builderContext = React.useMemo(
       () => ({
         addFocusedListener,
         addStateGetter,
         onDispatchAction,
+        onOptionsChange,
       }),
-      [addFocusedListener, addStateGetter, onDispatchAction]
+      [addFocusedListener, addStateGetter, onDispatchAction, onOptionsChange]
     );
 
     const scheduleContext = React.useMemo(

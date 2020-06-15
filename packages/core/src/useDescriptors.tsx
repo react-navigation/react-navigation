@@ -20,6 +20,8 @@ import {
   RouteProp,
   EventMapBase,
 } from './types';
+import NavigationContext from './NavigationContext';
+import NavigationRouteContext from './NavigationRouteContext';
 
 type Options<
   State extends NavigationState,
@@ -80,7 +82,9 @@ export default function useDescriptors<
   emitter,
 }: Options<State, ScreenOptions, EventMap>) {
   const [options, setOptions] = React.useState<Record<string, object>>({});
-  const { onDispatchAction } = React.useContext(NavigationBuilderContext);
+  const { onDispatchAction, onOptionsChange } = React.useContext(
+    NavigationBuilderContext
+  );
 
   const context = React.useMemo(
     () => ({
@@ -91,6 +95,7 @@ export default function useDescriptors<
       addStateGetter,
       onRouteFocus,
       onDispatchAction,
+      onOptionsChange,
     }),
     [
       addActionListener,
@@ -100,6 +105,7 @@ export default function useDescriptors<
       onAction,
       onDispatchAction,
       onRouteFocus,
+      onOptionsChange,
     ]
   );
 
@@ -145,14 +151,18 @@ export default function useDescriptors<
       render() {
         return (
           <NavigationBuilderContext.Provider key={route.key} value={context}>
-            <SceneView
-              navigation={navigation}
-              route={route}
-              screen={screen}
-              getState={getState}
-              setState={setState}
-              options={routeOptions}
-            />
+            <NavigationContext.Provider value={navigation}>
+              <NavigationRouteContext.Provider value={route}>
+                <SceneView
+                  navigation={navigation}
+                  route={route}
+                  screen={screen}
+                  getState={getState}
+                  setState={setState}
+                  options={routeOptions}
+                />
+              </NavigationRouteContext.Provider>
+            </NavigationContext.Provider>
           </NavigationBuilderContext.Provider>
         );
       },
