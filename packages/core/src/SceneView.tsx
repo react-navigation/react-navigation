@@ -8,10 +8,10 @@ import {
 import NavigationStateContext from './NavigationStateContext';
 import StaticContainer from './StaticContainer';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
-import { NavigationProp, RouteConfig, EventMapBase } from './types';
 import useOptionsGetters from './useOptionsGetters';
 import NavigationBuilderContext from './NavigationBuilderContext';
-import { useFocusEffect } from './index';
+import useFocusEffect from './useFocusEffect';
+import { NavigationProp, RouteConfig, EventMapBase } from './types';
 
 type Props<
   State extends NavigationState,
