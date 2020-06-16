@@ -8,7 +8,7 @@
     "react-navigation"
   ],
   "license": "MIT",
-  "repository": "https://github.com/react-navigation/react-navigation/tree/master/packages/devtools",
+  "repository": "https://github.com/react-navigation/react-navigation/tree/main/packages/devtools",
   "bugs": {
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },

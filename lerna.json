@@ -8,7 +8,7 @@
   "version": "independent",
   "command": {
     "publish": {
-      "allowBranch": "master",
+      "allowBranch": "main",
       "conventionalCommits": true,
       "createRelease": "github",
       "message": "chore: publish",

@@ -7,7 +7,7 @@ jobs:
   check-versions:
     runs-on: ubuntu-latest
     steps:
-      - uses: react-navigation/check-versions-action@master
+      - uses: react-navigation/check-versions-action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           packages: |

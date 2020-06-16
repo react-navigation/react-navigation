@@ -13,7 +13,7 @@
     "drawer"
   ],
   "license": "MIT",
-  "repository": "https://github.com/react-navigation/react-navigation/tree/master/packages/drawer",
+  "repository": "https://github.com/react-navigation/react-navigation/tree/main/packages/drawer",
   "bugs": {
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },

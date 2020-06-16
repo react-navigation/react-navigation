@@ -3,18 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [5.8.2](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.8.1...@react-navigation/drawer@5.8.2) (2020-06-06)
+## [5.8.2](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.8.1...@react-navigation/drawer@5.8.2) (2020-06-06)
 
 
 ### Bug Fixes
 
-* typo on drawerPosition default props ([#8357](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/8357)) ([762cc44](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/762cc4457842182189eeac84aedbb88169452e1e))
+* typo on drawerPosition default props ([#8357](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/8357)) ([762cc44](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/762cc4457842182189eeac84aedbb88169452e1e))
 
 
 
 
 
-## [5.8.1](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.8.0...@react-navigation/drawer@5.8.1) (2020-05-27)
+## [5.8.1](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.8.0...@react-navigation/drawer@5.8.1) (2020-05-27)
 
 **Note:** Version bump only for package @react-navigation/drawer
 
@@ -22,26 +22,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.8.0](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.7.7...@react-navigation/drawer@5.8.0) (2020-05-23)
+# [5.8.0](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.7.7...@react-navigation/drawer@5.8.0) (2020-05-23)
 
 
 ### Features
 
-* update react-native-safe-area-context to 1.0.0 ([#8182](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/8182)) ([d62fbfe](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/d62fbfe255140f16b182e8b54b276a7c96f2aec6))
+* update react-native-safe-area-context to 1.0.0 ([#8182](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/8182)) ([d62fbfe](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/d62fbfe255140f16b182e8b54b276a7c96f2aec6))
 
 
 
 
 
-## [5.7.7](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.7.6...@react-navigation/drawer@5.7.7) (2020-05-20)
-
-**Note:** Version bump only for package @react-navigation/drawer
-
-
-
-
-
-## [5.7.6](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.7.5...@react-navigation/drawer@5.7.6) (2020-05-20)
+## [5.7.7](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.7.6...@react-navigation/drawer@5.7.7) (2020-05-20)
 
 **Note:** Version bump only for package @react-navigation/drawer
 
@@ -49,7 +41,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.7.5](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.7.4...@react-navigation/drawer@5.7.5) (2020-05-16)
+## [5.7.6](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.7.5...@react-navigation/drawer@5.7.6) (2020-05-20)
 
 **Note:** Version bump only for package @react-navigation/drawer
 
@@ -57,7 +49,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.7.4](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.7.3...@react-navigation/drawer@5.7.4) (2020-05-14)
+## [5.7.5](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.7.4...@react-navigation/drawer@5.7.5) (2020-05-16)
 
 **Note:** Version bump only for package @react-navigation/drawer
 
@@ -65,7 +57,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.7.3](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.7.2...@react-navigation/drawer@5.7.3) (2020-05-14)
+## [5.7.4](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.7.3...@react-navigation/drawer@5.7.4) (2020-05-14)
 
 **Note:** Version bump only for package @react-navigation/drawer
 
@@ -73,7 +65,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.7.2](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.7.1...@react-navigation/drawer@5.7.2) (2020-05-10)
+## [5.7.3](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.7.2...@react-navigation/drawer@5.7.3) (2020-05-14)
 
 **Note:** Version bump only for package @react-navigation/drawer
 
@@ -81,37 +73,37 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.7.1](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.7.0...@react-navigation/drawer@5.7.1) (2020-05-08)
+## [5.7.2](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.7.1...@react-navigation/drawer@5.7.2) (2020-05-10)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+## [5.7.1](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.7.0...@react-navigation/drawer@5.7.1) (2020-05-08)
 
 
 ### Bug Fixes
 
-* fix building typescript definitions. closes [#8216](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/8216) ([47a1229](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/47a12298378747edd2d22e54dc1c8677f98c49b4))
+* fix building typescript definitions. closes [#8216](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/8216) ([47a1229](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/47a12298378747edd2d22e54dc1c8677f98c49b4))
 
 
 
 
 
-# [5.7.0](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.6.4...@react-navigation/drawer@5.7.0) (2020-05-08)
+# [5.7.0](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.6.4...@react-navigation/drawer@5.7.0) (2020-05-08)
 
 
 ### Features
 
-* add generic type aliases for screen props ([bea14aa](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/bea14aa26fd5cbfebc7973733c5cf1f44fd323aa)), closes [#7971](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/7971)
+* add generic type aliases for screen props ([bea14aa](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/bea14aa26fd5cbfebc7973733c5cf1f44fd323aa)), closes [#7971](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/7971)
 
 
 
 
 
-## [5.6.4](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.6.3...@react-navigation/drawer@5.6.4) (2020-05-05)
-
-**Note:** Version bump only for package @react-navigation/drawer
-
-
-
-
-
-## [5.6.3](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.6.2...@react-navigation/drawer@5.6.3) (2020-05-01)
+## [5.6.4](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.6.3...@react-navigation/drawer@5.6.4) (2020-05-05)
 
 **Note:** Version bump only for package @react-navigation/drawer
 
@@ -119,7 +111,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.6.2](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.6.1...@react-navigation/drawer@5.6.2) (2020-05-01)
+## [5.6.3](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.6.2...@react-navigation/drawer@5.6.3) (2020-05-01)
 
 **Note:** Version bump only for package @react-navigation/drawer
 
@@ -127,7 +119,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.6.1](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.6.0...@react-navigation/drawer@5.6.1) (2020-04-30)
+## [5.6.2](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.6.1...@react-navigation/drawer@5.6.2) (2020-05-01)
 
 **Note:** Version bump only for package @react-navigation/drawer
 
@@ -135,25 +127,33 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.6.0](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.5.1...@react-navigation/drawer@5.6.0) (2020-04-30)
+## [5.6.1](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.6.0...@react-navigation/drawer@5.6.1) (2020-04-30)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+# [5.6.0](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.5.1...@react-navigation/drawer@5.6.0) (2020-04-30)
 
 
 ### Bug Fixes
 
-* fix closing drawer on web with tap on overlay ([70be3f6](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/70be3f6d863c56211e2f90bdf743bd8526338248))
-* make sure the address bar hides when scrolling on web ([0a19e94](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/0a19e94b23a4d2b5f22d1d9deb0544f586f475ee))
+* fix closing drawer on web with tap on overlay ([70be3f6](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/70be3f6d863c56211e2f90bdf743bd8526338248))
+* make sure the address bar hides when scrolling on web ([0a19e94](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/0a19e94b23a4d2b5f22d1d9deb0544f586f475ee))
 
 
 ### Features
 
-* add `useLinkBuilder` hook to build links ([2792f43](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/2792f438fe45428fe193e3708fee7ad61966cbf4))
-* add action prop to Link ([942d2be](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/942d2be2c72720469475ce12ec8df23825994dbf))
+* add `useLinkBuilder` hook to build links ([2792f43](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/2792f438fe45428fe193e3708fee7ad61966cbf4))
+* add action prop to Link ([942d2be](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/942d2be2c72720469475ce12ec8df23825994dbf))
 
 
 
 
 
-## [5.5.1](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.5.0...@react-navigation/drawer@5.5.1) (2020-04-27)
+## [5.5.1](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.5.0...@react-navigation/drawer@5.5.1) (2020-04-27)
 
 **Note:** Version bump only for package @react-navigation/drawer
 
@@ -161,60 +161,52 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.5.0](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.4.1...@react-navigation/drawer@5.5.0) (2020-04-17)
+# [5.5.0](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.4.1...@react-navigation/drawer@5.5.0) (2020-04-17)
 
 
 ### Bug Fixes
 
-* fix drawer not closing on web ([e2bcf51](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/e2bcf5168c389833eaaeadb4b8794aaea4a66d17)), closes [#6759](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/6759)
-* webkit style error in overlay ([821343f](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/821343fed38577cfdc87a78f13f991d5760bf8f5))
+* fix drawer not closing on web ([e2bcf51](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/e2bcf5168c389833eaaeadb4b8794aaea4a66d17)), closes [#6759](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/6759)
+* webkit style error in overlay ([821343f](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/821343fed38577cfdc87a78f13f991d5760bf8f5))
 
 
 ### Features
 
-* add openByDefault option to drawer ([36689e2](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/36689e24c21b474692bb7ecd0b901c8afbbe9a20))
+* add openByDefault option to drawer ([36689e2](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/36689e24c21b474692bb7ecd0b901c8afbbe9a20))
 
 
 
 
 
-## [5.4.1](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.4.0...@react-navigation/drawer@5.4.1) (2020-04-08)
-
-
-### Bug Fixes
-
-* don't hide content from accessibility with permanent drawer ([cb2f157](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/cb2f157a561a2ce3f073eb4ccb567532c77bd869)), closes [#7976](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/7976)
-* mark type exports for all packages ([b71de6c](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/b71de6cc799143f1d0e8a0cfcc34f0a2381f9840))
-
-
-
-
-
-# [5.4.0](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.3.4...@react-navigation/drawer@5.4.0) (2020-03-30)
+## [5.4.1](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.4.0...@react-navigation/drawer@5.4.1) (2020-04-08)
 
 
 ### Bug Fixes
 
-* disable only swipe gesture on safari ([105da6a](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/105da6ab2fe69847b676c4d4117638212cda1f9a))
+* don't hide content from accessibility with permanent drawer ([cb2f157](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/cb2f157a561a2ce3f073eb4ccb567532c77bd869)), closes [#7976](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/7976)
+* mark type exports for all packages ([b71de6c](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/b71de6cc799143f1d0e8a0cfcc34f0a2381f9840))
+
+
+
+
+
+# [5.4.0](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.3.4...@react-navigation/drawer@5.4.0) (2020-03-30)
+
+
+### Bug Fixes
+
+* disable only swipe gesture on safari ([105da6a](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/105da6ab2fe69847b676c4d4117638212cda1f9a))
 
 
 ### Features
 
-* add swipeEnabled option to disable swipe gesture in drawer ([#7834](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/7834)) ([ac7f972](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/ac7f972e922a82cd32d943356941d100b68bd8b0))
+* add swipeEnabled option to disable swipe gesture in drawer ([#7834](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/7834)) ([ac7f972](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/ac7f972e922a82cd32d943356941d100b68bd8b0))
 
 
 
 
 
-## [5.3.4](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.3.3...@react-navigation/drawer@5.3.4) (2020-03-23)
-
-**Note:** Version bump only for package @react-navigation/drawer
-
-
-
-
-
-## [5.3.3](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.3.2...@react-navigation/drawer@5.3.3) (2020-03-22)
+## [5.3.4](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.3.3...@react-navigation/drawer@5.3.4) (2020-03-23)
 
 **Note:** Version bump only for package @react-navigation/drawer
 
@@ -222,51 +214,29 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.3.2](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.3.1...@react-navigation/drawer@5.3.2) (2020-03-19)
+## [5.3.3](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.3.2...@react-navigation/drawer@5.3.3) (2020-03-22)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+## [5.3.2](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.3.1...@react-navigation/drawer@5.3.2) (2020-03-19)
 
 
 ### Bug Fixes
 
-* close drawer on pressing Esc on web ([5c4afc5](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/5c4afc5cb40c1206a9d8c40efe3cf947030da48e)), closes [#6745](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/6745)
-* don't use react-native-screens on web ([b1a65fc](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/b1a65fc73e8603ae2c06ef101a74df31e80bb9b2)), closes [#7485](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/7485)
-* fix permanent sidebar position ([#7830](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/7830)) ([3ea8eec](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/3ea8eec4324ea82f0ed427f4662e68e1115e60ab))
-* initialize height and width to zero if undefined ([3df65e2](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/3df65e28197db3bb8371059146546d57661c5ba3)), closes [#6789](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/6789)
+* close drawer on pressing Esc on web ([5c4afc5](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/5c4afc5cb40c1206a9d8c40efe3cf947030da48e)), closes [#6745](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/6745)
+* don't use react-native-screens on web ([b1a65fc](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/b1a65fc73e8603ae2c06ef101a74df31e80bb9b2)), closes [#7485](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/7485)
+* fix permanent sidebar position ([#7830](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/7830)) ([3ea8eec](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/3ea8eec4324ea82f0ed427f4662e68e1115e60ab))
+* initialize height and width to zero if undefined ([3df65e2](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/3df65e28197db3bb8371059146546d57661c5ba3)), closes [#6789](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/6789)
 
 
 
 
 
-## [5.3.1](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.3.0...@react-navigation/drawer@5.3.1) (2020-03-17)
-
-**Note:** Version bump only for package @react-navigation/drawer
-
-
-
-
-
-# [5.3.0](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.2.0...@react-navigation/drawer@5.3.0) (2020-03-17)
-
-
-### Features
-
-* add permanent drawer type ([#7818](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/7818)) ([6a5d0a0](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/6a5d0a035afae60d91aef78401ec8826295746fe))
-
-
-
-
-
-# [5.2.0](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.1.1...@react-navigation/drawer@5.2.0) (2020-03-16)
-
-
-### Features
-
-* make useIsDrawerOpen workable inside drawer content ([#7746](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/7746)) ([cb46d0b](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/cb46d0bca4e17e847fff46ac94276213ac9697bf))
-
-
-
-
-
-## [5.1.1](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.1.0...@react-navigation/drawer@5.1.1) (2020-03-03)
+## [5.3.1](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.3.0...@react-navigation/drawer@5.3.1) (2020-03-17)
 
 **Note:** Version bump only for package @react-navigation/drawer
 
@@ -274,18 +244,29 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.1.0](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.7...@react-navigation/drawer@5.1.0) (2020-02-26)
+# [5.3.0](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.2.0...@react-navigation/drawer@5.3.0) (2020-03-17)
 
 
 ### Features
 
-* add ability add listeners with listeners prop ([1624108](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/162410843c4f175ae107756de1c3af04d1d47aa7)), closes [#6756](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/6756)
+* add permanent drawer type ([#7818](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/7818)) ([6a5d0a0](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/6a5d0a035afae60d91aef78401ec8826295746fe))
 
 
 
 
 
-## [5.0.7](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.6...@react-navigation/drawer@5.0.7) (2020-02-21)
+# [5.2.0](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.1.1...@react-navigation/drawer@5.2.0) (2020-03-16)
+
+
+### Features
+
+* make useIsDrawerOpen workable inside drawer content ([#7746](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/7746)) ([cb46d0b](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/cb46d0bca4e17e847fff46ac94276213ac9697bf))
+
+
+
+
+
+## [5.1.1](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.1.0...@react-navigation/drawer@5.1.1) (2020-03-03)
 
 **Note:** Version bump only for package @react-navigation/drawer
 
@@ -293,26 +274,37 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.0.6](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.5...@react-navigation/drawer@5.0.6) (2020-02-19)
+# [5.1.0](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.0.7...@react-navigation/drawer@5.1.0) (2020-02-26)
+
+
+### Features
+
+* add ability add listeners with listeners prop ([1624108](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/162410843c4f175ae107756de1c3af04d1d47aa7)), closes [#6756](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/6756)
+
+
+
+
+
+## [5.0.7](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.0.6...@react-navigation/drawer@5.0.7) (2020-02-21)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+## [5.0.6](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.0.5...@react-navigation/drawer@5.0.6) (2020-02-19)
 
 
 ### Bug Fixes
 
-* delay showing drawer by one frame after layout ([e0c3298](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/e0c3298e64970dc01a61401cfbd7a623eb0fd735))
+* delay showing drawer by one frame after layout ([e0c3298](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/e0c3298e64970dc01a61401cfbd7a623eb0fd735))
 
 
 
 
 
-## [5.0.5](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.4...@react-navigation/drawer@5.0.5) (2020-02-14)
-
-**Note:** Version bump only for package @react-navigation/drawer
-
-
-
-
-
-## [5.0.4](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.3...@react-navigation/drawer@5.0.4) (2020-02-14)
+## [5.0.5](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.0.4...@react-navigation/drawer@5.0.5) (2020-02-14)
 
 **Note:** Version bump only for package @react-navigation/drawer
 
@@ -320,7 +312,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.0.3](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.2...@react-navigation/drawer@5.0.3) (2020-02-12)
+## [5.0.4](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.0.3...@react-navigation/drawer@5.0.4) (2020-02-14)
 
 **Note:** Version bump only for package @react-navigation/drawer
 
@@ -328,29 +320,37 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.0.2](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.1...@react-navigation/drawer@5.0.2) (2020-02-11)
+## [5.0.3](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.0.2...@react-navigation/drawer@5.0.3) (2020-02-12)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+## [5.0.2](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.0.1...@react-navigation/drawer@5.0.2) (2020-02-11)
 
 
 ### Bug Fixes
 
-* remove unnecessary borderless from drawer item ([031136f](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/031136f7c86eff3c9139d1baa243da9f19bc61d4)), closes [#6801](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/6801)
+* remove unnecessary borderless from drawer item ([031136f](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/031136f7c86eff3c9139d1baa243da9f19bc61d4)), closes [#6801](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/6801)
 
 
 
 
 
-## [5.0.1](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.47...@react-navigation/drawer@5.0.1) (2020-02-10)
+## [5.0.1](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.47...@react-navigation/drawer@5.0.1) (2020-02-10)
 
 
 ### Bug Fixes
 
-* prevent ripple from bleeding out of drawer item ([688d16d](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/commit/688d16de5d9f4c5116b92e3ebf3029b56a659d7a)), closes [#6801](https://github.com/react-navigation/react-navigation/tree/master/packages/drawer/issues/6801)
+* prevent ripple from bleeding out of drawer item ([688d16d](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/688d16de5d9f4c5116b92e3ebf3029b56a659d7a)), closes [#6801](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/6801)
 
 
 
 
 
-# [5.0.0-alpha.47](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.46...@react-navigation/drawer@5.0.0-alpha.47) (2020-02-04)
+# [5.0.0-alpha.47](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.46...@react-navigation/drawer@5.0.0-alpha.47) (2020-02-04)
 
 **Note:** Version bump only for package @react-navigation/drawer
 
@@ -358,18 +358,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.46](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.45...@react-navigation/drawer@5.0.0-alpha.46) (2020-02-04)
+# [5.0.0-alpha.46](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.45...@react-navigation/drawer@5.0.0-alpha.46) (2020-02-04)
 
 
 ### Features
 
-* disable pan gesture by default in the browser for Apple devices ([b277927](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/b2779279251b1f157ba825cc34e39046b44f00d8)), closes [#287](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/issues/287)
+* disable pan gesture by default in the browser for Apple devices ([b277927](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/b2779279251b1f157ba825cc34e39046b44f00d8)), closes [#287](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/287)
 
 
 
 
 
-# [5.0.0-alpha.45](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.44...@react-navigation/drawer@5.0.0-alpha.45) (2020-02-03)
+# [5.0.0-alpha.45](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.44...@react-navigation/drawer@5.0.0-alpha.45) (2020-02-03)
 
 **Note:** Version bump only for package @react-navigation/drawer
 
@@ -377,50 +377,50 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.44](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.41...@react-navigation/drawer@5.0.0-alpha.44) (2020-02-02)
+# [5.0.0-alpha.44](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.41...@react-navigation/drawer@5.0.0-alpha.44) (2020-02-02)
 
 
 ### Bug Fixes
 
-* add licenses ([0c159db](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
-* fix drawerType=back when drawer is on right ([9198597](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/9198597b7f0a34fbe3844ec86a8b82171036f8ed)), closes [#316](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/issues/316)
-* handle back button in drawer itself ([0e8fda3](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/0e8fda319685a34090cfe82da08084c156eb5783))
-* screens integration on Android ([#294](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/issues/294)) ([9bfb295](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/9bfb29562020c61b4d5c9bee278bcb1c7bdb8b67))
-* update screens for native stack ([5411816](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/54118161885738a6d20b062c7e6679f3bace8424))
-* wrap navigators in gesture handler root ([41a5e1a](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/41a5e1a385aa5180abc3992a4c67077c37b998b9))
+* add licenses ([0c159db](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
+* fix drawerType=back when drawer is on right ([9198597](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/9198597b7f0a34fbe3844ec86a8b82171036f8ed)), closes [#316](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/316)
+* handle back button in drawer itself ([0e8fda3](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/0e8fda319685a34090cfe82da08084c156eb5783))
+* screens integration on Android ([#294](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/294)) ([9bfb295](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/9bfb29562020c61b4d5c9bee278bcb1c7bdb8b67))
+* update screens for native stack ([5411816](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/54118161885738a6d20b062c7e6679f3bace8424))
+* wrap navigators in gesture handler root ([41a5e1a](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/41a5e1a385aa5180abc3992a4c67077c37b998b9))
 
 
 ### Features
 
-* add useIsDrawerOpen hook ([#299](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/issues/299)) ([ecd68af](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/ecd68afb46a4c56200748da5e5fb284fa5a839db))
-* integrate with history API on web ([5a3f835](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/5a3f8356b05bff7ed20893a5db6804612da3e568))
+* add useIsDrawerOpen hook ([#299](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/299)) ([ecd68af](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/ecd68afb46a4c56200748da5e5fb284fa5a839db))
+* integrate with history API on web ([5a3f835](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/5a3f8356b05bff7ed20893a5db6804612da3e568))
 
 
 
 
 
-# [5.0.0-alpha.42](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.41...@react-navigation/drawer@5.0.0-alpha.42) (2020-02-02)
+# [5.0.0-alpha.42](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.41...@react-navigation/drawer@5.0.0-alpha.42) (2020-02-02)
 
 
 ### Bug Fixes
 
-* add licenses ([0c159db](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
-* fix drawerType=back when drawer is on right ([9198597](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/9198597b7f0a34fbe3844ec86a8b82171036f8ed)), closes [#316](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/issues/316)
-* handle back button in drawer itself ([0e8fda3](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/0e8fda319685a34090cfe82da08084c156eb5783))
-* screens integration on Android ([#294](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/issues/294)) ([9bfb295](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/9bfb29562020c61b4d5c9bee278bcb1c7bdb8b67))
-* update screens for native stack ([5411816](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/54118161885738a6d20b062c7e6679f3bace8424))
+* add licenses ([0c159db](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
+* fix drawerType=back when drawer is on right ([9198597](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/9198597b7f0a34fbe3844ec86a8b82171036f8ed)), closes [#316](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/316)
+* handle back button in drawer itself ([0e8fda3](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/0e8fda319685a34090cfe82da08084c156eb5783))
+* screens integration on Android ([#294](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/294)) ([9bfb295](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/9bfb29562020c61b4d5c9bee278bcb1c7bdb8b67))
+* update screens for native stack ([5411816](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/54118161885738a6d20b062c7e6679f3bace8424))
 
 
 ### Features
 
-* add useIsDrawerOpen hook ([#299](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/issues/299)) ([ecd68af](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/ecd68afb46a4c56200748da5e5fb284fa5a839db))
-* integrate with history API on web ([5a3f835](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/5a3f8356b05bff7ed20893a5db6804612da3e568))
+* add useIsDrawerOpen hook ([#299](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/299)) ([ecd68af](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/ecd68afb46a4c56200748da5e5fb284fa5a839db))
+* integrate with history API on web ([5a3f835](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/5a3f8356b05bff7ed20893a5db6804612da3e568))
 
 
 
 
 
-# [5.0.0-alpha.41](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.40...@react-navigation/drawer@5.0.0-alpha.41) (2020-01-24)
+# [5.0.0-alpha.41](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.40...@react-navigation/drawer@5.0.0-alpha.41) (2020-01-24)
 
 **Note:** Version bump only for package @react-navigation/drawer
 
@@ -428,19 +428,19 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.40](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.39...@react-navigation/drawer@5.0.0-alpha.40) (2020-01-23)
+# [5.0.0-alpha.40](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.39...@react-navigation/drawer@5.0.0-alpha.40) (2020-01-23)
 
 
 ### Features
 
-* emit appear and dismiss events for native stack ([f1df4a0](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/f1df4a080877b3642e748a41a5ffc2da8c449a8c))
-* let the navigator specify if default can be prevented ([da67e13](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/da67e134d2157201360427d3c10da24f24cae7aa))
+* emit appear and dismiss events for native stack ([f1df4a0](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/f1df4a080877b3642e748a41a5ffc2da8c449a8c))
+* let the navigator specify if default can be prevented ([da67e13](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/da67e134d2157201360427d3c10da24f24cae7aa))
 
 
 
 
 
-# [5.0.0-alpha.39](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.38...@react-navigation/drawer@5.0.0-alpha.39) (2020-01-14)
+# [5.0.0-alpha.39](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.38...@react-navigation/drawer@5.0.0-alpha.39) (2020-01-14)
 
 **Note:** Version bump only for package @react-navigation/drawer
 
@@ -448,26 +448,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.38](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.37...@react-navigation/drawer@5.0.0-alpha.38) (2020-01-13)
+# [5.0.0-alpha.38](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.37...@react-navigation/drawer@5.0.0-alpha.38) (2020-01-13)
 
 
 ### Bug Fixes
 
-* make sure paths aren't aliased when building definitions ([65a5dac](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/commit/65a5dac2bf887f4ba081ab15bd4c9870bb15697f)), closes [#265](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/issues/265)
+* make sure paths aren't aliased when building definitions ([65a5dac](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/commit/65a5dac2bf887f4ba081ab15bd4c9870bb15697f)), closes [#265](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/issues/265)
 
 
 
 
 
-# [5.0.0-alpha.37](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.36...@react-navigation/drawer@5.0.0-alpha.37) (2020-01-13)
-
-**Note:** Version bump only for package @react-navigation/drawer
-
-
-
-
-
-# [5.0.0-alpha.36](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.34...@react-navigation/drawer@5.0.0-alpha.36) (2020-01-09)
+# [5.0.0-alpha.37](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.36...@react-navigation/drawer@5.0.0-alpha.37) (2020-01-13)
 
 **Note:** Version bump only for package @react-navigation/drawer
 
@@ -475,7 +467,15 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.35](https://github.com/react-navigation/navigation-ex/tree/master/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.34...@react-navigation/drawer@5.0.0-alpha.35) (2020-01-09)
+# [5.0.0-alpha.36](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.34...@react-navigation/drawer@5.0.0-alpha.36) (2020-01-09)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+# [5.0.0-alpha.35](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.0.0-alpha.34...@react-navigation/drawer@5.0.0-alpha.35) (2020-01-09)
 
 **Note:** Version bump only for package @react-navigation/drawer
 

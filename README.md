@@ -63,7 +63,7 @@ Remember to replace `<user>`, `<repo>` and `<name>` with right values.
 
 <!-- badges -->
 
-[build-badge]: https://img.shields.io/circleci/project/github/react-navigation/react-navigation/master.svg?style=flat-square
+[build-badge]: https://img.shields.io/circleci/project/github/react-navigation/react-navigation/main.svg?style=flat-square
 [build]: https://circleci.com/gh/react-navigation/react-navigation
 [coverage-badge]: https://img.shields.io/codecov/c/github/react-navigation/react-navigation.svg?style=flat-square
 [coverage]: https://codecov.io/github/react-navigation/react-navigation
