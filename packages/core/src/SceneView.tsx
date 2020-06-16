@@ -52,6 +52,7 @@ export default function SceneView<
 
   const { addOptionsGetter, hasAnyChildListener } = useOptionsGetters({
     key: route.key,
+    getState,
     getOptions,
   });
 
