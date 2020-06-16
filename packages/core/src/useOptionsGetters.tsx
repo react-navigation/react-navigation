@@ -16,7 +16,7 @@ export default function useOptionsGetters({
     setNumberOfChildrenListeners,
   ] = React.useState(0);
   const optionsGettersFromChild = React.useRef<
-    Record<string, (() => object | undefined | null) | undefined>
+    Record<string, () => object | undefined | null>
   >({});
 
   const { addOptionsGetter: parentAddOptionsGetter } = React.useContext(
@@ -63,7 +63,8 @@ export default function useOptionsGetters({
 
       return () => {
         setNumberOfChildrenListeners((prev) => prev - 1);
-        optionsGettersFromChild.current[key] = undefined;
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete optionsGettersFromChild.current[key];
       };
     },
     []
