@@ -13,7 +13,11 @@
     "tab"
   ],
   "license": "MIT",
-  "repository": "https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/react-navigation/react-navigation.git",
+    "directory": "packages/material-top-tabs"
+  },
   "bugs": {
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
