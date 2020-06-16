@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [5.2.10](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.2.9...@react-navigation/material-top-tabs@5.2.10) (2020-06-06)
+## [5.2.10](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.2.9...@react-navigation/material-top-tabs@5.2.10) (2020-06-06)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -11,7 +11,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.2.9](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.2.8...@react-navigation/material-top-tabs@5.2.9) (2020-05-27)
+## [5.2.9](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.2.8...@react-navigation/material-top-tabs@5.2.9) (2020-05-27)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -19,7 +19,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.2.8](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.2.7...@react-navigation/material-top-tabs@5.2.8) (2020-05-23)
+## [5.2.8](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.2.7...@react-navigation/material-top-tabs@5.2.8) (2020-05-23)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -27,7 +27,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.2.7](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.2.6...@react-navigation/material-top-tabs@5.2.7) (2020-05-20)
+## [5.2.7](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.2.6...@react-navigation/material-top-tabs@5.2.7) (2020-05-20)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -35,7 +35,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.2.6](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.2.5...@react-navigation/material-top-tabs@5.2.6) (2020-05-20)
+## [5.2.6](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.2.5...@react-navigation/material-top-tabs@5.2.6) (2020-05-20)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -43,7 +43,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.2.5](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.2.4...@react-navigation/material-top-tabs@5.2.5) (2020-05-16)
+## [5.2.5](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.2.4...@react-navigation/material-top-tabs@5.2.5) (2020-05-16)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -51,7 +51,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.2.4](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.2.3...@react-navigation/material-top-tabs@5.2.4) (2020-05-14)
+## [5.2.4](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.2.3...@react-navigation/material-top-tabs@5.2.4) (2020-05-14)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -59,7 +59,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.2.3](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.2.2...@react-navigation/material-top-tabs@5.2.3) (2020-05-14)
+## [5.2.3](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.2.2...@react-navigation/material-top-tabs@5.2.3) (2020-05-14)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -67,7 +67,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.2.2](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.2.1...@react-navigation/material-top-tabs@5.2.2) (2020-05-10)
+## [5.2.2](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.2.1...@react-navigation/material-top-tabs@5.2.2) (2020-05-10)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -75,37 +75,29 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.2.1](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.2.0...@react-navigation/material-top-tabs@5.2.1) (2020-05-08)
+## [5.2.1](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.2.0...@react-navigation/material-top-tabs@5.2.1) (2020-05-08)
 
 
 ### Bug Fixes
 
-* fix building typescript definitions. closes [#8216](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/issues/8216) ([47a1229](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/commit/47a12298378747edd2d22e54dc1c8677f98c49b4))
+* fix building typescript definitions. closes [#8216](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/issues/8216) ([47a1229](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/commit/47a12298378747edd2d22e54dc1c8677f98c49b4))
 
 
 
 
 
-# [5.2.0](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.15...@react-navigation/material-top-tabs@5.2.0) (2020-05-08)
+# [5.2.0](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.15...@react-navigation/material-top-tabs@5.2.0) (2020-05-08)
 
 
 ### Features
 
-* add generic type aliases for screen props ([bea14aa](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/commit/bea14aa26fd5cbfebc7973733c5cf1f44fd323aa)), closes [#7971](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/issues/7971)
+* add generic type aliases for screen props ([bea14aa](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/commit/bea14aa26fd5cbfebc7973733c5cf1f44fd323aa)), closes [#7971](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/issues/7971)
 
 
 
 
 
-## [5.1.15](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.14...@react-navigation/material-top-tabs@5.1.15) (2020-05-05)
-
-**Note:** Version bump only for package @react-navigation/material-top-tabs
-
-
-
-
-
-## [5.1.14](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.13...@react-navigation/material-top-tabs@5.1.14) (2020-05-01)
+## [5.1.15](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.14...@react-navigation/material-top-tabs@5.1.15) (2020-05-05)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -113,7 +105,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.1.13](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.12...@react-navigation/material-top-tabs@5.1.13) (2020-05-01)
+## [5.1.14](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.13...@react-navigation/material-top-tabs@5.1.14) (2020-05-01)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -121,7 +113,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.1.12](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.11...@react-navigation/material-top-tabs@5.1.12) (2020-04-30)
+## [5.1.13](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.12...@react-navigation/material-top-tabs@5.1.13) (2020-05-01)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -129,7 +121,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.1.11](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.10...@react-navigation/material-top-tabs@5.1.11) (2020-04-30)
+## [5.1.12](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.11...@react-navigation/material-top-tabs@5.1.12) (2020-04-30)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -137,7 +129,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.1.10](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.9...@react-navigation/material-top-tabs@5.1.10) (2020-04-27)
+## [5.1.11](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.10...@react-navigation/material-top-tabs@5.1.11) (2020-04-30)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -145,7 +137,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.1.9](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.8...@react-navigation/material-top-tabs@5.1.9) (2020-04-17)
+## [5.1.10](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.9...@react-navigation/material-top-tabs@5.1.10) (2020-04-27)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -153,26 +145,26 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.1.8](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.7...@react-navigation/material-top-tabs@5.1.8) (2020-04-08)
+## [5.1.9](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.8...@react-navigation/material-top-tabs@5.1.9) (2020-04-17)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+## [5.1.8](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.7...@react-navigation/material-top-tabs@5.1.8) (2020-04-08)
 
 
 ### Bug Fixes
 
-* mark type exports for all packages ([b71de6c](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/commit/b71de6cc799143f1d0e8a0cfcc34f0a2381f9840))
+* mark type exports for all packages ([b71de6c](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/commit/b71de6cc799143f1d0e8a0cfcc34f0a2381f9840))
 
 
 
 
 
-## [5.1.7](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.6...@react-navigation/material-top-tabs@5.1.7) (2020-03-30)
-
-**Note:** Version bump only for package @react-navigation/material-top-tabs
-
-
-
-
-
-## [5.1.6](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.5...@react-navigation/material-top-tabs@5.1.6) (2020-03-23)
+## [5.1.7](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.6...@react-navigation/material-top-tabs@5.1.7) (2020-03-30)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -180,7 +172,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.1.5](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.4...@react-navigation/material-top-tabs@5.1.5) (2020-03-22)
+## [5.1.6](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.5...@react-navigation/material-top-tabs@5.1.6) (2020-03-23)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -188,7 +180,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.1.4](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.3...@react-navigation/material-top-tabs@5.1.4) (2020-03-19)
+## [5.1.5](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.4...@react-navigation/material-top-tabs@5.1.5) (2020-03-22)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -196,7 +188,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.1.3](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.2...@react-navigation/material-top-tabs@5.1.3) (2020-03-17)
+## [5.1.4](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.3...@react-navigation/material-top-tabs@5.1.4) (2020-03-19)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -204,7 +196,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.1.2](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.1...@react-navigation/material-top-tabs@5.1.2) (2020-03-16)
+## [5.1.3](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.2...@react-navigation/material-top-tabs@5.1.3) (2020-03-17)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -212,7 +204,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.1.1](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.0...@react-navigation/material-top-tabs@5.1.1) (2020-03-03)
+## [5.1.2](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.1...@react-navigation/material-top-tabs@5.1.2) (2020-03-16)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -220,26 +212,26 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.1.0](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.7...@react-navigation/material-top-tabs@5.1.0) (2020-02-26)
+## [5.1.1](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.1.0...@react-navigation/material-top-tabs@5.1.1) (2020-03-03)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+# [5.1.0](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.7...@react-navigation/material-top-tabs@5.1.0) (2020-02-26)
 
 
 ### Features
 
-* add ability add listeners with listeners prop ([1624108](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/commit/162410843c4f175ae107756de1c3af04d1d47aa7)), closes [#6756](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/issues/6756)
+* add ability add listeners with listeners prop ([1624108](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/commit/162410843c4f175ae107756de1c3af04d1d47aa7)), closes [#6756](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/issues/6756)
 
 
 
 
 
-## [5.0.7](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.6...@react-navigation/material-top-tabs@5.0.7) (2020-02-21)
-
-**Note:** Version bump only for package @react-navigation/material-top-tabs
-
-
-
-
-
-## [5.0.6](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.5...@react-navigation/material-top-tabs@5.0.6) (2020-02-19)
+## [5.0.7](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.6...@react-navigation/material-top-tabs@5.0.7) (2020-02-21)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -247,7 +239,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.0.5](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.4...@react-navigation/material-top-tabs@5.0.5) (2020-02-14)
+## [5.0.6](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.5...@react-navigation/material-top-tabs@5.0.6) (2020-02-19)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -255,7 +247,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.0.4](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.3...@react-navigation/material-top-tabs@5.0.4) (2020-02-14)
+## [5.0.5](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.4...@react-navigation/material-top-tabs@5.0.5) (2020-02-14)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -263,7 +255,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.0.3](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.2...@react-navigation/material-top-tabs@5.0.3) (2020-02-12)
+## [5.0.4](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.3...@react-navigation/material-top-tabs@5.0.4) (2020-02-14)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -271,7 +263,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.0.2](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.1...@react-navigation/material-top-tabs@5.0.2) (2020-02-11)
+## [5.0.3](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.2...@react-navigation/material-top-tabs@5.0.3) (2020-02-12)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -279,7 +271,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.0.1](https://github.com/react-navigation/react-navigation/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.41...@react-navigation/material-top-tabs@5.0.1) (2020-02-10)
+## [5.0.2](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.1...@react-navigation/material-top-tabs@5.0.2) (2020-02-11)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -287,7 +279,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.41](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.40...@react-navigation/material-top-tabs@5.0.0-alpha.41) (2020-02-04)
+## [5.0.1](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.41...@react-navigation/material-top-tabs@5.0.1) (2020-02-10)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -295,7 +287,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.40](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.39...@react-navigation/material-top-tabs@5.0.0-alpha.40) (2020-02-04)
+# [5.0.0-alpha.41](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.40...@react-navigation/material-top-tabs@5.0.0-alpha.41) (2020-02-04)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -303,7 +295,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.39](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.38...@react-navigation/material-top-tabs@5.0.0-alpha.39) (2020-02-03)
+# [5.0.0-alpha.40](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.39...@react-navigation/material-top-tabs@5.0.0-alpha.40) (2020-02-04)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -311,30 +303,38 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.38](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.35...@react-navigation/material-top-tabs@5.0.0-alpha.38) (2020-02-02)
+# [5.0.0-alpha.39](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.38...@react-navigation/material-top-tabs@5.0.0-alpha.39) (2020-02-03)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+# [5.0.0-alpha.38](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.35...@react-navigation/material-top-tabs@5.0.0-alpha.38) (2020-02-02)
 
 
 ### Bug Fixes
 
-* add licenses ([0c159db](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
-* wrap navigators in gesture handler root ([41a5e1a](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/commit/41a5e1a385aa5180abc3992a4c67077c37b998b9))
+* add licenses ([0c159db](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
+* wrap navigators in gesture handler root ([41a5e1a](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/commit/41a5e1a385aa5180abc3992a4c67077c37b998b9))
 
 
 
 
 
-# [5.0.0-alpha.36](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.35...@react-navigation/material-top-tabs@5.0.0-alpha.36) (2020-02-02)
+# [5.0.0-alpha.36](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.35...@react-navigation/material-top-tabs@5.0.0-alpha.36) (2020-02-02)
 
 
 ### Bug Fixes
 
-* add licenses ([0c159db](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
+* add licenses ([0c159db](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
 
 
 
 
 
-# [5.0.0-alpha.35](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.34...@react-navigation/material-top-tabs@5.0.0-alpha.35) (2020-01-24)
+# [5.0.0-alpha.35](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.34...@react-navigation/material-top-tabs@5.0.0-alpha.35) (2020-01-24)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -342,18 +342,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.34](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.33...@react-navigation/material-top-tabs@5.0.0-alpha.34) (2020-01-23)
+# [5.0.0-alpha.34](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.33...@react-navigation/material-top-tabs@5.0.0-alpha.34) (2020-01-23)
 
 
 ### Features
 
-* let the navigator specify if default can be prevented ([da67e13](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/commit/da67e134d2157201360427d3c10da24f24cae7aa))
+* let the navigator specify if default can be prevented ([da67e13](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/commit/da67e134d2157201360427d3c10da24f24cae7aa))
 
 
 
 
 
-# [5.0.0-alpha.33](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.32...@react-navigation/material-top-tabs@5.0.0-alpha.33) (2020-01-14)
+# [5.0.0-alpha.33](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.32...@react-navigation/material-top-tabs@5.0.0-alpha.33) (2020-01-14)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -361,26 +361,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.32](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.31...@react-navigation/material-top-tabs@5.0.0-alpha.32) (2020-01-13)
+# [5.0.0-alpha.32](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.31...@react-navigation/material-top-tabs@5.0.0-alpha.32) (2020-01-13)
 
 
 ### Bug Fixes
 
-* make sure paths aren't aliased when building definitions ([65a5dac](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/commit/65a5dac2bf887f4ba081ab15bd4c9870bb15697f)), closes [#265](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/issues/265)
+* make sure paths aren't aliased when building definitions ([65a5dac](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/commit/65a5dac2bf887f4ba081ab15bd4c9870bb15697f)), closes [#265](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/issues/265)
 
 
 
 
 
-# [5.0.0-alpha.31](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.30...@react-navigation/material-top-tabs@5.0.0-alpha.31) (2020-01-13)
-
-**Note:** Version bump only for package @react-navigation/material-top-tabs
-
-
-
-
-
-# [5.0.0-alpha.30](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.29...@react-navigation/material-top-tabs@5.0.0-alpha.30) (2020-01-09)
+# [5.0.0-alpha.31](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.30...@react-navigation/material-top-tabs@5.0.0-alpha.31) (2020-01-13)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -388,7 +380,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.29](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.27...@react-navigation/material-top-tabs@5.0.0-alpha.29) (2020-01-09)
+# [5.0.0-alpha.30](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.29...@react-navigation/material-top-tabs@5.0.0-alpha.30) (2020-01-09)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 
@@ -396,7 +388,15 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.28](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.27...@react-navigation/material-top-tabs@5.0.0-alpha.28) (2020-01-09)
+# [5.0.0-alpha.29](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.27...@react-navigation/material-top-tabs@5.0.0-alpha.29) (2020-01-09)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+# [5.0.0-alpha.28](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs/compare/@react-navigation/material-top-tabs@5.0.0-alpha.27...@react-navigation/material-top-tabs@5.0.0-alpha.28) (2020-01-09)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
 

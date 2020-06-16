@@ -13,7 +13,7 @@
     "tab"
   ],
   "license": "MIT",
-  "repository": "https://github.com/react-navigation/react-navigation/tree/master/packages/material-bottom-tabs",
+  "repository": "https://github.com/react-navigation/react-navigation/tree/main/packages/material-bottom-tabs",
   "bugs": {
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },

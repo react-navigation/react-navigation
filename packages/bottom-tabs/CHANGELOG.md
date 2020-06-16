@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [5.5.2](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.5.1...@react-navigation/bottom-tabs@5.5.2) (2020-06-06)
+## [5.5.2](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.5.1...@react-navigation/bottom-tabs@5.5.2) (2020-06-06)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -11,38 +11,30 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.5.1](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.5.0...@react-navigation/bottom-tabs@5.5.1) (2020-05-27)
+## [5.5.1](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.5.0...@react-navigation/bottom-tabs@5.5.1) (2020-05-27)
 
 
 ### Bug Fixes
 
-* fix type of style for various options ([9d822b9](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/9d822b95a6df797e2e63e481573e64ea7d0f9386))
+* fix type of style for various options ([9d822b9](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/commit/9d822b95a6df797e2e63e481573e64ea7d0f9386))
 
 
 
 
 
-# [5.5.0](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.4.7...@react-navigation/bottom-tabs@5.5.0) (2020-05-23)
+# [5.5.0](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.4.7...@react-navigation/bottom-tabs@5.5.0) (2020-05-23)
 
 
 ### Features
 
-* animate changes to tabBarVisible in BottomTabBar ([#8286](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/issues/8286)) ([c1e46f8](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/c1e46f8e331e0054995aa476455af204d02d4170))
-* update react-native-safe-area-context to 1.0.0 ([#8182](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/issues/8182)) ([d62fbfe](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/d62fbfe255140f16b182e8b54b276a7c96f2aec6))
+* animate changes to tabBarVisible in BottomTabBar ([#8286](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/issues/8286)) ([c1e46f8](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/commit/c1e46f8e331e0054995aa476455af204d02d4170))
+* update react-native-safe-area-context to 1.0.0 ([#8182](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/issues/8182)) ([d62fbfe](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/commit/d62fbfe255140f16b182e8b54b276a7c96f2aec6))
 
 
 
 
 
-## [5.4.7](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.4.6...@react-navigation/bottom-tabs@5.4.7) (2020-05-20)
-
-**Note:** Version bump only for package @react-navigation/bottom-tabs
-
-
-
-
-
-## [5.4.6](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.4.5...@react-navigation/bottom-tabs@5.4.6) (2020-05-20)
+## [5.4.7](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.4.6...@react-navigation/bottom-tabs@5.4.7) (2020-05-20)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -50,7 +42,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.4.5](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.4.4...@react-navigation/bottom-tabs@5.4.5) (2020-05-16)
+## [5.4.6](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.4.5...@react-navigation/bottom-tabs@5.4.6) (2020-05-20)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -58,7 +50,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.4.4](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.4.3...@react-navigation/bottom-tabs@5.4.4) (2020-05-14)
+## [5.4.5](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.4.4...@react-navigation/bottom-tabs@5.4.5) (2020-05-16)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -66,7 +58,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.4.3](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.4.2...@react-navigation/bottom-tabs@5.4.3) (2020-05-14)
+## [5.4.4](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.4.3...@react-navigation/bottom-tabs@5.4.4) (2020-05-14)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -74,7 +66,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.4.2](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.4.1...@react-navigation/bottom-tabs@5.4.2) (2020-05-10)
+## [5.4.3](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.4.2...@react-navigation/bottom-tabs@5.4.3) (2020-05-14)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -82,37 +74,37 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.4.1](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.4.0...@react-navigation/bottom-tabs@5.4.1) (2020-05-08)
+## [5.4.2](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.4.1...@react-navigation/bottom-tabs@5.4.2) (2020-05-10)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+## [5.4.1](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.4.0...@react-navigation/bottom-tabs@5.4.1) (2020-05-08)
 
 
 ### Bug Fixes
 
-* fix building typescript definitions. closes [#8216](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/issues/8216) ([47a1229](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/47a12298378747edd2d22e54dc1c8677f98c49b4))
+* fix building typescript definitions. closes [#8216](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/issues/8216) ([47a1229](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/commit/47a12298378747edd2d22e54dc1c8677f98c49b4))
 
 
 
 
 
-# [5.4.0](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.3.4...@react-navigation/bottom-tabs@5.4.0) (2020-05-08)
+# [5.4.0](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.3.4...@react-navigation/bottom-tabs@5.4.0) (2020-05-08)
 
 
 ### Features
 
-* add generic type aliases for screen props ([bea14aa](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/bea14aa26fd5cbfebc7973733c5cf1f44fd323aa)), closes [#7971](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/issues/7971)
+* add generic type aliases for screen props ([bea14aa](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/commit/bea14aa26fd5cbfebc7973733c5cf1f44fd323aa)), closes [#7971](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/issues/7971)
 
 
 
 
 
-## [5.3.4](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.3.3...@react-navigation/bottom-tabs@5.3.4) (2020-05-05)
-
-**Note:** Version bump only for package @react-navigation/bottom-tabs
-
-
-
-
-
-## [5.3.3](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.3.2...@react-navigation/bottom-tabs@5.3.3) (2020-05-01)
+## [5.3.4](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.3.3...@react-navigation/bottom-tabs@5.3.4) (2020-05-05)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -120,7 +112,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.3.2](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.3.1...@react-navigation/bottom-tabs@5.3.2) (2020-05-01)
+## [5.3.3](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.3.2...@react-navigation/bottom-tabs@5.3.3) (2020-05-01)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -128,7 +120,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.3.1](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.3.0...@react-navigation/bottom-tabs@5.3.1) (2020-04-30)
+## [5.3.2](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.3.1...@react-navigation/bottom-tabs@5.3.2) (2020-05-01)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -136,27 +128,27 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.3.0](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.2.8...@react-navigation/bottom-tabs@5.3.0) (2020-04-30)
+## [5.3.1](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.3.0...@react-navigation/bottom-tabs@5.3.1) (2020-04-30)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [5.3.0](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.2.8...@react-navigation/bottom-tabs@5.3.0) (2020-04-30)
 
 
 ### Features
 
-* add `useLinkBuilder` hook to build links ([2792f43](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/2792f438fe45428fe193e3708fee7ad61966cbf4))
-* add action prop to Link ([942d2be](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/942d2be2c72720469475ce12ec8df23825994dbf))
+* add `useLinkBuilder` hook to build links ([2792f43](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/commit/2792f438fe45428fe193e3708fee7ad61966cbf4))
+* add action prop to Link ([942d2be](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/commit/942d2be2c72720469475ce12ec8df23825994dbf))
 
 
 
 
 
-## [5.2.8](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.2.7...@react-navigation/bottom-tabs@5.2.8) (2020-04-27)
-
-**Note:** Version bump only for package @react-navigation/bottom-tabs
-
-
-
-
-
-## [5.2.7](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.2.6...@react-navigation/bottom-tabs@5.2.7) (2020-04-17)
+## [5.2.8](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.2.7...@react-navigation/bottom-tabs@5.2.8) (2020-04-27)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -164,26 +156,26 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.2.6](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.2.5...@react-navigation/bottom-tabs@5.2.6) (2020-04-08)
+## [5.2.7](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.2.6...@react-navigation/bottom-tabs@5.2.7) (2020-04-17)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+## [5.2.6](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.2.5...@react-navigation/bottom-tabs@5.2.6) (2020-04-08)
 
 
 ### Bug Fixes
 
-* mark type exports for all packages ([b71de6c](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/b71de6cc799143f1d0e8a0cfcc34f0a2381f9840))
+* mark type exports for all packages ([b71de6c](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/commit/b71de6cc799143f1d0e8a0cfcc34f0a2381f9840))
 
 
 
 
 
-## [5.2.5](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.2.4...@react-navigation/bottom-tabs@5.2.5) (2020-03-30)
-
-**Note:** Version bump only for package @react-navigation/bottom-tabs
-
-
-
-
-
-## [5.2.4](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.2.3...@react-navigation/bottom-tabs@5.2.4) (2020-03-23)
+## [5.2.5](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.2.4...@react-navigation/bottom-tabs@5.2.5) (2020-03-30)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -191,7 +183,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.2.3](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.2.2...@react-navigation/bottom-tabs@5.2.3) (2020-03-22)
+## [5.2.4](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.2.3...@react-navigation/bottom-tabs@5.2.4) (2020-03-23)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -199,19 +191,27 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.2.2](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.2.1...@react-navigation/bottom-tabs@5.2.2) (2020-03-19)
+## [5.2.3](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.2.2...@react-navigation/bottom-tabs@5.2.3) (2020-03-22)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+## [5.2.2](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.2.1...@react-navigation/bottom-tabs@5.2.2) (2020-03-19)
 
 
 ### Bug Fixes
 
-* don't use react-native-screens on web ([b1a65fc](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/b1a65fc73e8603ae2c06ef101a74df31e80bb9b2)), closes [#7485](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/issues/7485)
-* initialize height and width to zero if undefined ([3df65e2](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/3df65e28197db3bb8371059146546d57661c5ba3)), closes [#6789](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/issues/6789)
+* don't use react-native-screens on web ([b1a65fc](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/commit/b1a65fc73e8603ae2c06ef101a74df31e80bb9b2)), closes [#7485](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/issues/7485)
+* initialize height and width to zero if undefined ([3df65e2](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/commit/3df65e28197db3bb8371059146546d57661c5ba3)), closes [#6789](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/issues/6789)
 
 
 
 
 
-## [5.2.1](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.2.0...@react-navigation/bottom-tabs@5.2.1) (2020-03-17)
+## [5.2.1](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.2.0...@react-navigation/bottom-tabs@5.2.1) (2020-03-17)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -219,18 +219,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.2.0](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.1.1...@react-navigation/bottom-tabs@5.2.0) (2020-03-16)
+# [5.2.0](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.1.1...@react-navigation/bottom-tabs@5.2.0) (2020-03-16)
 
 
 ### Features
 
-* add safeAreaInsets to bottom tabs ([82af7be](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/82af7bed7135e42e24693b48cf7f1c6f9f5a6981))
+* add safeAreaInsets to bottom tabs ([82af7be](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/commit/82af7bed7135e42e24693b48cf7f1c6f9f5a6981))
 
 
 
 
 
-## [5.1.1](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.1.0...@react-navigation/bottom-tabs@5.1.1) (2020-03-03)
+## [5.1.1](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.1.0...@react-navigation/bottom-tabs@5.1.1) (2020-03-03)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -238,26 +238,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.1.0](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.7...@react-navigation/bottom-tabs@5.1.0) (2020-02-26)
+# [5.1.0](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.7...@react-navigation/bottom-tabs@5.1.0) (2020-02-26)
 
 
 ### Features
 
-* add ability add listeners with listeners prop ([1624108](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/162410843c4f175ae107756de1c3af04d1d47aa7)), closes [#6756](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/issues/6756)
+* add ability add listeners with listeners prop ([1624108](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/commit/162410843c4f175ae107756de1c3af04d1d47aa7)), closes [#6756](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/issues/6756)
 
 
 
 
 
-## [5.0.7](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.6...@react-navigation/bottom-tabs@5.0.7) (2020-02-21)
-
-**Note:** Version bump only for package @react-navigation/bottom-tabs
-
-
-
-
-
-## [5.0.6](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.5...@react-navigation/bottom-tabs@5.0.6) (2020-02-19)
+## [5.0.7](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.6...@react-navigation/bottom-tabs@5.0.7) (2020-02-21)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -265,7 +257,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.0.5](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.4...@react-navigation/bottom-tabs@5.0.5) (2020-02-14)
+## [5.0.6](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.5...@react-navigation/bottom-tabs@5.0.6) (2020-02-19)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -273,7 +265,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.0.4](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.3...@react-navigation/bottom-tabs@5.0.4) (2020-02-14)
+## [5.0.5](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.4...@react-navigation/bottom-tabs@5.0.5) (2020-02-14)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -281,7 +273,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.0.3](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.2...@react-navigation/bottom-tabs@5.0.3) (2020-02-12)
+## [5.0.4](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.3...@react-navigation/bottom-tabs@5.0.4) (2020-02-14)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -289,27 +281,27 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.0.2](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.1...@react-navigation/bottom-tabs@5.0.2) (2020-02-11)
+## [5.0.3](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.2...@react-navigation/bottom-tabs@5.0.3) (2020-02-12)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+## [5.0.2](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.1...@react-navigation/bottom-tabs@5.0.2) (2020-02-11)
 
 
 ### Bug Fixes
 
-* initialize keyboard-hiding tabBar to visible=true ([#6740](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/issues/6740), [#6799](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/issues/6799)) ([0c59ef7](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/0c59ef7328c63108a2a2c04e927794d73cead63a))
-* provide route context to header and bottom tabs ([b6e7e08](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/commit/b6e7e08b9a05be6c04ed21e938b9580876239116))
+* initialize keyboard-hiding tabBar to visible=true ([#6740](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/issues/6740), [#6799](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/issues/6799)) ([0c59ef7](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/commit/0c59ef7328c63108a2a2c04e927794d73cead63a))
+* provide route context to header and bottom tabs ([b6e7e08](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/commit/b6e7e08b9a05be6c04ed21e938b9580876239116))
 
 
 
 
 
-## [5.0.1](https://github.com/react-navigation/react-navigation/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.45...@react-navigation/bottom-tabs@5.0.1) (2020-02-10)
-
-**Note:** Version bump only for package @react-navigation/bottom-tabs
-
-
-
-
-
-# [5.0.0-alpha.45](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.44...@react-navigation/bottom-tabs@5.0.0-alpha.45) (2020-02-04)
+## [5.0.1](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.45...@react-navigation/bottom-tabs@5.0.1) (2020-02-10)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -317,7 +309,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.44](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.43...@react-navigation/bottom-tabs@5.0.0-alpha.44) (2020-02-04)
+# [5.0.0-alpha.45](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.44...@react-navigation/bottom-tabs@5.0.0-alpha.45) (2020-02-04)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -325,7 +317,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.43](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.42...@react-navigation/bottom-tabs@5.0.0-alpha.43) (2020-02-03)
+# [5.0.0-alpha.44](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.43...@react-navigation/bottom-tabs@5.0.0-alpha.44) (2020-02-04)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -333,56 +325,64 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.42](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.39...@react-navigation/bottom-tabs@5.0.0-alpha.42) (2020-02-02)
+# [5.0.0-alpha.43](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.42...@react-navigation/bottom-tabs@5.0.0-alpha.43) (2020-02-03)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [5.0.0-alpha.42](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.39...@react-navigation/bottom-tabs@5.0.0-alpha.42) (2020-02-02)
 
 
 ### Bug Fixes
 
-* add licenses ([0c159db](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
+* add licenses ([0c159db](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
 
 
 
 
 
-# [5.0.0-alpha.40](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.39...@react-navigation/bottom-tabs@5.0.0-alpha.40) (2020-02-02)
-
-
-### Bug Fixes
-
-* add licenses ([0c159db](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
-
-
-
-
-
-# [5.0.0-alpha.39](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.38...@react-navigation/bottom-tabs@5.0.0-alpha.39) (2020-01-24)
+# [5.0.0-alpha.40](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.39...@react-navigation/bottom-tabs@5.0.0-alpha.40) (2020-02-02)
 
 
 ### Bug Fixes
 
-* use layout instead of dimensions for determining tab bar layout ([f1fe951](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/commit/f1fe951cf9d602e1b6d4932e3c6c77bbeaaec5c0))
+* add licenses ([0c159db](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
 
 
 
 
 
-# [5.0.0-alpha.38](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.37...@react-navigation/bottom-tabs@5.0.0-alpha.38) (2020-01-23)
+# [5.0.0-alpha.39](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.38...@react-navigation/bottom-tabs@5.0.0-alpha.39) (2020-01-24)
 
 
 ### Bug Fixes
 
-* don't use native driver on web ([0a982ee](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/commit/0a982ee6984b24c0ba053a30223e255f3835e050))
+* use layout instead of dimensions for determining tab bar layout ([f1fe951](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/commit/f1fe951cf9d602e1b6d4932e3c6c77bbeaaec5c0))
+
+
+
+
+
+# [5.0.0-alpha.38](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.37...@react-navigation/bottom-tabs@5.0.0-alpha.38) (2020-01-23)
+
+
+### Bug Fixes
+
+* don't use native driver on web ([0a982ee](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/commit/0a982ee6984b24c0ba053a30223e255f3835e050))
 
 
 ### Features
 
-* let the navigator specify if default can be prevented ([da67e13](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/commit/da67e134d2157201360427d3c10da24f24cae7aa))
+* let the navigator specify if default can be prevented ([da67e13](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/commit/da67e134d2157201360427d3c10da24f24cae7aa))
 
 
 
 
 
-# [5.0.0-alpha.37](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.36...@react-navigation/bottom-tabs@5.0.0-alpha.37) (2020-01-14)
+# [5.0.0-alpha.37](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.36...@react-navigation/bottom-tabs@5.0.0-alpha.37) (2020-01-14)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -390,26 +390,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.36](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.35...@react-navigation/bottom-tabs@5.0.0-alpha.36) (2020-01-13)
+# [5.0.0-alpha.36](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.35...@react-navigation/bottom-tabs@5.0.0-alpha.36) (2020-01-13)
 
 
 ### Bug Fixes
 
-* make sure paths aren't aliased when building definitions ([65a5dac](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/commit/65a5dac2bf887f4ba081ab15bd4c9870bb15697f)), closes [#265](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/issues/265)
+* make sure paths aren't aliased when building definitions ([65a5dac](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/commit/65a5dac2bf887f4ba081ab15bd4c9870bb15697f)), closes [#265](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/issues/265)
 
 
 
 
 
-# [5.0.0-alpha.35](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.34...@react-navigation/bottom-tabs@5.0.0-alpha.35) (2020-01-13)
-
-**Note:** Version bump only for package @react-navigation/bottom-tabs
-
-
-
-
-
-# [5.0.0-alpha.34](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.32...@react-navigation/bottom-tabs@5.0.0-alpha.34) (2020-01-09)
+# [5.0.0-alpha.35](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.34...@react-navigation/bottom-tabs@5.0.0-alpha.35) (2020-01-13)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -417,7 +409,15 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.33](https://github.com/react-navigation/navigation-ex/tree/master/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.32...@react-navigation/bottom-tabs@5.0.0-alpha.33) (2020-01-09)
+# [5.0.0-alpha.34](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.32...@react-navigation/bottom-tabs@5.0.0-alpha.34) (2020-01-09)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [5.0.0-alpha.33](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.0.0-alpha.32...@react-navigation/bottom-tabs@5.0.0-alpha.33) (2020-01-09)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 

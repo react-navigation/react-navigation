@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [5.4.7](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.4.6...@react-navigation/routers@5.4.7) (2020-05-23)
+## [5.4.7](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.4.6...@react-navigation/routers@5.4.7) (2020-05-23)
 
 **Note:** Version bump only for package @react-navigation/routers
 
@@ -11,7 +11,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.4.6](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.4.5...@react-navigation/routers@5.4.6) (2020-05-20)
+## [5.4.6](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.4.5...@react-navigation/routers@5.4.6) (2020-05-20)
 
 **Note:** Version bump only for package @react-navigation/routers
 
@@ -19,7 +19,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.4.5](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.4.4...@react-navigation/routers@5.4.5) (2020-05-20)
+## [5.4.5](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.4.4...@react-navigation/routers@5.4.5) (2020-05-20)
 
 **Note:** Version bump only for package @react-navigation/routers
 
@@ -27,18 +27,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.4.4](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.4.3...@react-navigation/routers@5.4.4) (2020-05-08)
+## [5.4.4](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.4.3...@react-navigation/routers@5.4.4) (2020-05-08)
 
 
 ### Bug Fixes
 
-* fix building typescript definitions. closes [#8216](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/issues/8216) ([47a1229](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/47a12298378747edd2d22e54dc1c8677f98c49b4))
+* fix building typescript definitions. closes [#8216](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/issues/8216) ([47a1229](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/commit/47a12298378747edd2d22e54dc1c8677f98c49b4))
 
 
 
 
 
-## [5.4.3](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.4.2...@react-navigation/routers@5.4.3) (2020-05-08)
+## [5.4.3](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.4.2...@react-navigation/routers@5.4.3) (2020-05-08)
 
 **Note:** Version bump only for package @react-navigation/routers
 
@@ -46,56 +46,56 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.4.2](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.4.1...@react-navigation/routers@5.4.2) (2020-04-30)
+## [5.4.2](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.4.1...@react-navigation/routers@5.4.2) (2020-04-30)
 
 
 ### Bug Fixes
 
-* fix backBehavior with initialRoute ([#8110](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/issues/8110)) ([420f692](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/420f6926e111d32c2388c44ff0bee2b8ea238a57))
+* fix backBehavior with initialRoute ([#8110](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/issues/8110)) ([420f692](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/commit/420f6926e111d32c2388c44ff0bee2b8ea238a57))
 
 
 
 
 
-## [5.4.1](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.4.0...@react-navigation/routers@5.4.1) (2020-04-27)
+## [5.4.1](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.4.0...@react-navigation/routers@5.4.1) (2020-04-27)
 
 
 ### Bug Fixes
 
-* fix behaviour of openByDefault in drawer when focus changes ([b172b51](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/b172b51f175a9f8044cb2a8e9d74a86480d8f11e))
+* fix behaviour of openByDefault in drawer when focus changes ([b172b51](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/commit/b172b51f175a9f8044cb2a8e9d74a86480d8f11e))
 
 
 
 
 
-# [5.4.0](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.3.0...@react-navigation/routers@5.4.0) (2020-04-17)
+# [5.4.0](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.3.0...@react-navigation/routers@5.4.0) (2020-04-17)
 
 
 ### Features
 
-* add openByDefault option to drawer ([36689e2](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/36689e24c21b474692bb7ecd0b901c8afbbe9a20))
+* add openByDefault option to drawer ([36689e2](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/commit/36689e24c21b474692bb7ecd0b901c8afbbe9a20))
 
 
 
 
 
-# [5.3.0](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.2.1...@react-navigation/routers@5.3.0) (2020-04-08)
+# [5.3.0](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.2.1...@react-navigation/routers@5.3.0) (2020-04-08)
 
 
 ### Bug Fixes
 
-* separate normal exports and type exports ([303f0b7](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/303f0b78a5ab717b2d606cd9c8a22f3dae051f0f))
+* separate normal exports and type exports ([303f0b7](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/commit/303f0b78a5ab717b2d606cd9c8a22f3dae051f0f))
 
 
 ### Features
 
-* make replace bubble up ([ba1f405](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/ba1f4051299ad86001592b8d3601c16fece159df))
+* make replace bubble up ([ba1f405](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/commit/ba1f4051299ad86001592b8d3601c16fece159df))
 
 
 
 
 
-## [5.2.1](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.2.0...@react-navigation/routers@5.2.1) (2020-03-30)
+## [5.2.1](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.2.0...@react-navigation/routers@5.2.1) (2020-03-30)
 
 **Note:** Version bump only for package @react-navigation/routers
 
@@ -103,75 +103,45 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.2.0](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.1.1...@react-navigation/routers@5.2.0) (2020-03-22)
+# [5.2.0](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.1.1...@react-navigation/routers@5.2.0) (2020-03-22)
 
 
 ### Features
 
-* add keys to routes missing keys during reset ([813a590](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/813a5903b5f44506b9097538ed85229e565b855e))
+* add keys to routes missing keys during reset ([813a590](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/commit/813a5903b5f44506b9097538ed85229e565b855e))
 
 
 
 
 
-## [5.1.1](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.1.0...@react-navigation/routers@5.1.1) (2020-03-16)
-
-
-### Bug Fixes
-
-* don't handle action if no routes are present ([660cac3](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/660cac3557bce8978812ce2750e961e7ada92d13))
-
-
-
-
-
-# [5.1.0](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.0.3...@react-navigation/routers@5.1.0) (2020-03-03)
+## [5.1.1](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.1.0...@react-navigation/routers@5.1.1) (2020-03-16)
 
 
 ### Bug Fixes
 
-* fix links for documentation ([5bb0f40](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/5bb0f405ceb5755d39a0b5b1f2e4ecee0da051bc))
+* don't handle action if no routes are present ([660cac3](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/commit/660cac3557bce8978812ce2750e961e7ada92d13))
+
+
+
+
+
+# [5.1.0](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.0.3...@react-navigation/routers@5.1.0) (2020-03-03)
+
+
+### Bug Fixes
+
+* fix links for documentation ([5bb0f40](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/commit/5bb0f405ceb5755d39a0b5b1f2e4ecee0da051bc))
 
 
 ### Features
 
-* make reset bubble up ([09f6808](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/09f6808d7d43c70b2c502151f9f20fad03972886))
+* make reset bubble up ([09f6808](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/commit/09f6808d7d43c70b2c502151f9f20fad03972886))
 
 
 
 
 
-## [5.0.3](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.0.2...@react-navigation/routers@5.0.3) (2020-02-26)
-
-**Note:** Version bump only for package @react-navigation/routers
-
-
-
-
-
-## [5.0.2](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.0.1...@react-navigation/routers@5.0.2) (2020-02-21)
-
-
-### Bug Fixes
-
-* tweak error message for navigate ([c8ea419](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/c8ea4199f4b19a58d5e409cfcc96e587fe354a9a))
-
-
-
-
-
-## [5.0.1](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.33...@react-navigation/routers@5.0.1) (2020-02-10)
-
-
-### Bug Fixes
-
-* merge initial params on replace ([80629bf](https://github.com/react-navigation/react-navigation/tree/master/packages/routers/commit/80629bf30baf8f17620e6d3127e00376182af074))
-
-
-
-
-
-# [5.0.0-alpha.33](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.32...@react-navigation/routers@5.0.0-alpha.33) (2020-02-04)
+## [5.0.3](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.0.2...@react-navigation/routers@5.0.3) (2020-02-26)
 
 **Note:** Version bump only for package @react-navigation/routers
 
@@ -179,7 +149,29 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.32](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.31...@react-navigation/routers@5.0.0-alpha.32) (2020-02-04)
+## [5.0.2](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.0.1...@react-navigation/routers@5.0.2) (2020-02-21)
+
+
+### Bug Fixes
+
+* tweak error message for navigate ([c8ea419](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/commit/c8ea4199f4b19a58d5e409cfcc96e587fe354a9a))
+
+
+
+
+
+## [5.0.1](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.33...@react-navigation/routers@5.0.1) (2020-02-10)
+
+
+### Bug Fixes
+
+* merge initial params on replace ([80629bf](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/commit/80629bf30baf8f17620e6d3127e00376182af074))
+
+
+
+
+
+# [5.0.0-alpha.33](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.32...@react-navigation/routers@5.0.0-alpha.33) (2020-02-04)
 
 **Note:** Version bump only for package @react-navigation/routers
 
@@ -187,7 +179,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.31](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.30...@react-navigation/routers@5.0.0-alpha.31) (2020-02-03)
+# [5.0.0-alpha.32](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.31...@react-navigation/routers@5.0.0-alpha.32) (2020-02-04)
 
 **Note:** Version bump only for package @react-navigation/routers
 
@@ -195,29 +187,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.30](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.27...@react-navigation/routers@5.0.0-alpha.30) (2020-02-02)
-
-
-### Bug Fixes
-
-* add licenses ([0c159db](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
-
-
-
-
-
-# [5.0.0-alpha.28](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.27...@react-navigation/routers@5.0.0-alpha.28) (2020-02-02)
-
-
-### Bug Fixes
-
-* add licenses ([0c159db](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
-
-
-
-
-
-# [5.0.0-alpha.27](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.26...@react-navigation/routers@5.0.0-alpha.27) (2020-01-24)
+# [5.0.0-alpha.31](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.30...@react-navigation/routers@5.0.0-alpha.31) (2020-02-03)
 
 **Note:** Version bump only for package @react-navigation/routers
 
@@ -225,18 +195,29 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.26](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.25...@react-navigation/routers@5.0.0-alpha.26) (2020-01-23)
+# [5.0.0-alpha.30](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.27...@react-navigation/routers@5.0.0-alpha.30) (2020-02-02)
 
 
 ### Bug Fixes
 
-* handle popping more than available screens in stack ([68ed8a7](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/commit/68ed8a725950f39228847ab10b3dd7f3ebd2e2dc))
+* add licenses ([0c159db](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
 
 
 
 
 
-# [5.0.0-alpha.25](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.24...@react-navigation/routers@5.0.0-alpha.25) (2020-01-14)
+# [5.0.0-alpha.28](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.27...@react-navigation/routers@5.0.0-alpha.28) (2020-02-02)
+
+
+### Bug Fixes
+
+* add licenses ([0c159db](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/commit/0c159db4c9bc85e83b5cfe6819ab2562669a4d8f))
+
+
+
+
+
+# [5.0.0-alpha.27](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.26...@react-navigation/routers@5.0.0-alpha.27) (2020-01-24)
 
 **Note:** Version bump only for package @react-navigation/routers
 
@@ -244,18 +225,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.24](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.23...@react-navigation/routers@5.0.0-alpha.24) (2020-01-13)
+# [5.0.0-alpha.26](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.25...@react-navigation/routers@5.0.0-alpha.26) (2020-01-23)
 
 
 ### Bug Fixes
 
-* make sure paths aren't aliased when building definitions ([65a5dac](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/commit/65a5dac2bf887f4ba081ab15bd4c9870bb15697f)), closes [#265](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/issues/265)
+* handle popping more than available screens in stack ([68ed8a7](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/commit/68ed8a725950f39228847ab10b3dd7f3ebd2e2dc))
 
 
 
 
 
-# [5.0.0-alpha.23](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.22...@react-navigation/routers@5.0.0-alpha.23) (2020-01-13)
+# [5.0.0-alpha.25](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.24...@react-navigation/routers@5.0.0-alpha.25) (2020-01-14)
 
 **Note:** Version bump only for package @react-navigation/routers
 
@@ -263,23 +244,42 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.0.0-alpha.22](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.20...@react-navigation/routers@5.0.0-alpha.22) (2020-01-09)
+# [5.0.0-alpha.24](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.23...@react-navigation/routers@5.0.0-alpha.24) (2020-01-13)
 
 
 ### Bug Fixes
 
-* change POP behaviour to remove elements from index only ([7a3d652](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/commit/7a3d652e847e173964a06cc9d859129ca0317861)), closes [#256](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/issues/256)
+* make sure paths aren't aliased when building definitions ([65a5dac](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/commit/65a5dac2bf887f4ba081ab15bd4c9870bb15697f)), closes [#265](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/issues/265)
 
 
 
 
 
-# [5.0.0-alpha.21](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.20...@react-navigation/routers@5.0.0-alpha.21) (2020-01-09)
+# [5.0.0-alpha.23](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.22...@react-navigation/routers@5.0.0-alpha.23) (2020-01-13)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+
+
+
+
+# [5.0.0-alpha.22](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.20...@react-navigation/routers@5.0.0-alpha.22) (2020-01-09)
 
 
 ### Bug Fixes
 
-* change POP behaviour to remove elements from index only ([7a3d652](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/commit/7a3d652e847e173964a06cc9d859129ca0317861)), closes [#256](https://github.com/react-navigation/navigation-ex/tree/master/packages/routers/issues/256)
+* change POP behaviour to remove elements from index only ([7a3d652](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/commit/7a3d652e847e173964a06cc9d859129ca0317861)), closes [#256](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/issues/256)
+
+
+
+
+
+# [5.0.0-alpha.21](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/compare/@react-navigation/routers@5.0.0-alpha.20...@react-navigation/routers@5.0.0-alpha.21) (2020-01-09)
+
+
+### Bug Fixes
+
+* change POP behaviour to remove elements from index only ([7a3d652](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/commit/7a3d652e847e173964a06cc9d859129ca0317861)), closes [#256](https://github.com/react-navigation/react-navigation/tree/main/packages/routers/issues/256)
 
 
 

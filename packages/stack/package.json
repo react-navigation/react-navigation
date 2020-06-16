@@ -12,7 +12,7 @@
     "stack"
   ],
   "license": "MIT",
-  "repository": "https://github.com/react-navigation/react-navigation/tree/master/packages/stack",
+  "repository": "https://github.com/react-navigation/react-navigation/tree/main/packages/stack",
   "bugs": {
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
