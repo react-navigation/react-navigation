@@ -8,42 +8,58 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.label.name == 'needs more info'
     steps:
-      - uses: actions/checkout@master
-      - uses: actions/github@v1.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/github-script@v2
         with:
-          args: comment "Hey! Thanks for opening the issue. Can you provide more information about the issue? Please fill the issue template when opening the issue without deleting any section. We need all the information we can to be able to help. Make sure to at least provide - Current behaviour, Expected behaviour, A way to [reproduce the issue with minimal code](https://stackoverflow.com/help/minimal-reproducible-example) (link to [snack.expo.io](https://snack.expo.io)) or a repo on GitHub, and the information about your environment (such as the platform of the device, exact versions of all the packages mentioned in the template etc.)."
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Hey! Thanks for opening the issue. Can you provide more information about the issue? Please fill the issue template when opening the issue without deleting any section. We need all the information we can to be able to help.\n\nMake sure to at least provide - Current behaviour, Expected behaviour, A way to [reproduce the issue with minimal code](https://stackoverflow.com/help/minimal-reproducible-example) (link to [snack.expo.io](https://snack.expo.io)) or a repo on GitHub, and the information about your environment (such as the platform of the device, exact versions of all the packages mentioned in the template etc.)."
+            })
 
   needs-repro:
     runs-on: ubuntu-latest
     if: github.event.label.name == 'needs repro'
     steps:
-      - uses: actions/checkout@master
-      - uses: actions/github@v1.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/github-script@v2
         with:
-          args: comment "Hey! Thanks for opening the issue. Can you provide a [minimal repro](https://stackoverflow.com/help/minimal-reproducible-example) which demonstrates the issue? Posting a snippet of your code in the issue is useful, but it's not usually straightforward to run. A repro will help us debug the issue faster. Please try to keep the repro as small as possible. The easiest way to provide a repro is on [snack.expo.io](https://snack.expo.io). If it's not possible to repro it on [snack.expo.io](https://snack.expo.io), then you can also provide the repro in a GitHub repository."
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Hey! Thanks for opening the issue. Can you provide a [minimal repro](https://stackoverflow.com/help/minimal-reproducible-example) which demonstrates the issue? Posting a snippet of your code in the issue is useful, but it's not usually straightforward to run. A repro will help us debug the issue faster. Please try to keep the repro as small as possible.\n\nThe easiest way to provide a repro is on [snack.expo.io](https://snack.expo.io). If it's not possible to repro it on [snack.expo.io](https://snack.expo.io), then please provide the repro in a GitHub repository."
+            })
 
   question:
     runs-on: ubuntu-latest
     if: github.event.label.name == 'question'
     steps:
-      - uses: actions/checkout@master
-      - uses: actions/github@v1.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/github-script@v2
         with:
-          args: comment "Hey! Thanks for opening the issue. The issue tracker is intended for only tracking bug reports. This helps us prioritize fixing bugs in the library. Seems you have a usage question. Please ask the question on [StackOverflow](https://stackoverflow.com/questions/tagged/react-navigation) instead using the `react-navigation` label. You can also chat with other community members on [Reactiflux Discord server](https://www.reactiflux.com/) in the `#react-navigation` channel."
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Hey! Thanks for opening the issue. The issue tracker is intended for only tracking bug reports. This helps us prioritize fixing bugs in the library. Seems you have a usage question or an issue unrelated to this library. Please ask the question on [StackOverflow](https://stackoverflow.com/questions/tagged/react-navigation) instead using the `react-navigation` label. You can also chat with other community members on [Reactiflux Discord server](https://www.reactiflux.com/) in the `#react-navigation` channel.\n\nIf you believe that this is actually a bug in the library, please open a new issue and fill the issue template with relevant information."
+            })
 
   feature-request:
     runs-on: ubuntu-latest
     if: github.event.label.name == 'feature-request'
     steps:
-      - uses: actions/checkout@master
-      - uses: actions/github@v1.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/github-script@v2
         with:
-          args: comment "Hey! Thanks for opening the issue. The issue tracker is intended for only tracking bug reports. Seems you have a feature request. Please post the feature request on [Canny](https://react-navigation.canny.io/feature-requests). This lets other users upvote your feature request and helps us prioritize the most requested features."
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Hey! Thanks for opening the issue. The issue tracker is intended for only tracking bug reports. Seems you have a feature request. Please post the feature request on [Canny](https://react-navigation.canny.io/feature-requests). This lets other users upvote your feature request and helps us prioritize the most requested features.\n\nYou can also open a detailed proposal in our [RFC repo](https://github.com/react-navigation/rfcs) for discussion."
+            })
