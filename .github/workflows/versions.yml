@@ -7,19 +7,30 @@ jobs:
   check-versions:
     runs-on: ubuntu-latest
     steps:
-      - uses: react-navigation/check-versions-action@v1
+      - uses: react-navigation/check-versions-action@v1.0.0
+        if: contains(github.event.issue.labels.*.name, 'version-4') != true
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          packages: |
+          required-packages: |
+            @react-navigation/native
+          optional-packages: |
             @react-navigation/bottom-tabs
             @react-navigation/compat
             @react-navigation/core
+            @react-navigation/devtools
             @react-navigation/drawer
             @react-navigation/material-bottom-tabs
             @react-navigation/material-top-tabs
-            @react-navigation/native
             @react-navigation/routers
             @react-navigation/stack
+
+      - uses: react-navigation/check-versions-action@v1.0.0
+        if: contains(github.event.issue.labels.*.name, 'version-4')
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          required-packages: |
+            react-navigation
+          optional-packages: |
             react-navigation-animated-switch
             react-navigation-drawer
             react-navigation-material-bottom-tabs
