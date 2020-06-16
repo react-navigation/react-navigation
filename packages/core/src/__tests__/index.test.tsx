@@ -1529,7 +1529,7 @@ it('returns currently focused route with getCurrentRoute', () => {
   });
 });
 
-it("returns currently focused route's options with getCurrentOptions", () => {
+it("returns focused screen's options with getCurrentOptions when focused screen is rendered", () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -1554,6 +1554,11 @@ it("returns currently focused route's options with getCurrentOptions", () => {
                 component={TestScreen}
                 options={{ sample: 'data' }}
               />
+              <Screen
+                name="bar-b"
+                component={TestScreen}
+                options={{ sample3: 'data' }}
+              />
             </TestNavigator>
           )}
         </Screen>
@@ -1567,6 +1572,66 @@ it("returns currently focused route's options with getCurrentOptions", () => {
   expect(navigation.current?.getCurrentOptions()).toEqual({
     sample: 'data',
     sample2: 'data',
+  });
+
+  act(() => navigation.current?.navigate('bar-b'));
+
+  expect(navigation.current?.getCurrentOptions()).toEqual({
+    sample2: 'data',
+    sample3: 'data',
+  });
+});
+
+it("returns focused screen's options with getCurrentOptions when all screens are rendered", () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return <>{state.routes.map((route) => descriptors[route.key].render())}</>;
+  };
+
+  const TestScreen = () => null;
+
+  const navigation = React.createRef<NavigationContainerRef>();
+
+  const container = (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="bar" options={{ a: 'b' }}>
+          {() => (
+            <TestNavigator
+              initialRouteName="bar-a"
+              screenOptions={() => ({ sample2: 'data' })}
+            >
+              <Screen
+                name="bar-a"
+                component={TestScreen}
+                options={{ sample: 'data' }}
+              />
+              <Screen
+                name="bar-b"
+                component={TestScreen}
+                options={{ sample3: 'data' }}
+              />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="xux" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(container).update(container);
+
+  expect(navigation.current?.getCurrentOptions()).toEqual({
+    sample: 'data',
+    sample2: 'data',
+  });
+
+  act(() => navigation.current?.navigate('bar-b'));
+
+  expect(navigation.current?.getCurrentOptions()).toEqual({
+    sample2: 'data',
+    sample3: 'data',
   });
 });
 
