@@ -239,10 +239,12 @@ export default function TabRouter({
           }
       );
 
-      const index = Math.max(
-        0,
-        routeNames.indexOf(state.routes[state.index].name)
-      );
+      const currentRouteName = state.routes[state.index].name;
+      const index = routeNames.includes(currentRouteName)
+        ? routeNames.indexOf(currentRouteName)
+        : initialRouteName && routeNames.includes(initialRouteName)
+        ? routeNames.indexOf(initialRouteName)
+        : 0;
 
       let history = state.history.filter((it) =>
         routes.find((r) => r.key === it.key)
