@@ -9,7 +9,11 @@
     "android"
   ],
   "license": "MIT",
-  "repository": "https://github.com/react-navigation/react-navigation/tree/main/packages/native",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/react-navigation/react-navigation.git",
+    "directory": "packages/native"
+  },
   "bugs": {
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
