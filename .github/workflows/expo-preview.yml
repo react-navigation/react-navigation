@@ -8,7 +8,7 @@ jobs:
     if: github.event.pull_request.head.repo.owner.login == 'react-navigation'
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Setup Node.js
         uses: actions/setup-node@v1
@@ -25,7 +25,7 @@ jobs:
 
       - name: Restore yarn cache
         id: yarn-cache
-        uses: actions/cache@master
+        uses: actions/cache@v2
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
@@ -43,8 +43,13 @@ jobs:
         run: echo "::set-output name=path::@react-navigation/react-navigation-example?release-channel=pr-${{ github.event.number }}"
 
       - name: Comment on PR
-        uses: unsplash/comment-on-pr@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/github-script@v2
         with:
-          msg: The Expo app for the example from this branch is ready!<br><br>[expo.io/${{ steps.expo.outputs.path }}](https://expo.io/${{ steps.expo.outputs.path }})<br><br><a href="https://exp.host/${{ steps.expo.outputs.path }}"><img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=exp://exp.host/${{ steps.expo.outputs.path }}" height="200px" width="200px"></a>.
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'The Expo app for the example from this branch is ready!\n\n[expo.io/${{ steps.expo.outputs.path }}](https://expo.io/${{ steps.expo.outputs.path }})\n\n<a href="https://exp.host/${{ steps.expo.outputs.path }}"><img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=exp://exp.host/${{ steps.expo.outputs.path }}" height="200px" width="200px"></a>'
+            })
