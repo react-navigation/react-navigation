@@ -1,13 +1,13 @@
-import * as React from 'react';
-import {
+import type * as React from 'react';
+import type {
   Animated,
   StyleProp,
   TextStyle,
   ViewStyle,
   LayoutChangeEvent,
 } from 'react-native';
-import { EdgeInsets } from 'react-native-safe-area-context';
-import {
+import type { EdgeInsets } from 'react-native-safe-area-context';
+import type {
   NavigationProp,
   ParamListBase,
   Descriptor,

@@ -14,7 +14,7 @@ import { Link, Route, useTheme } from '@react-navigation/native';
 import Color from 'color';
 
 import TabBarIcon from './TabBarIcon';
-import { BottomTabBarButtonProps } from '../types';
+import type { BottomTabBarButtonProps } from '../types';
 
 type Props = {
   /**

@@ -5,7 +5,7 @@ import {
   getStateFromPath as getStateFromPathDefault,
   NavigationContainerRef,
 } from '@react-navigation/core';
-import { LinkingOptions } from './types';
+import type { LinkingOptions } from './types';
 
 let isUsingLinking = false;
 

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { ParamListBase } from '@react-navigation/routers';
+import type { ParamListBase } from '@react-navigation/routers';
 import NavigationBuilderContext, {
   FocusedNavigationCallback,
   FocusedNavigationListener,
 } from './NavigationBuilderContext';
-import { NavigationHelpers } from './types';
+import type { NavigationHelpers } from './types';
 
 type Options = {
   navigation: NavigationHelpers<ParamListBase>;

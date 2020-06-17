@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render, act } from 'react-native-testing-library';
-import {
+import type {
   DefaultRouterOptions,
   NavigationState,
   Router,

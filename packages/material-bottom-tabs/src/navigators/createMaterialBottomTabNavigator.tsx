@@ -9,7 +9,7 @@ import {
 } from '@react-navigation/native';
 
 import MaterialBottomTabView from '../views/MaterialBottomTabView';
-import {
+import type {
   MaterialBottomTabNavigationConfig,
   MaterialBottomTabNavigationOptions,
   MaterialBottomTabNavigationEventMap,

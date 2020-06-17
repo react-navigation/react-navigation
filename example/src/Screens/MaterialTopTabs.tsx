@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { ParamListBase } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import type { ParamListBase } from '@react-navigation/native';
+import type { StackNavigationProp } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Albums from '../Shared/Albums';
 import Contacts from '../Shared/Contacts';

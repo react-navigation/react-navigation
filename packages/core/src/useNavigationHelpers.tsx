@@ -7,7 +7,7 @@ import {
   Router,
 } from '@react-navigation/routers';
 import NavigationContext from './NavigationContext';
-import { NavigationEventEmitter } from './useEventEmitter';
+import type { NavigationEventEmitter } from './useEventEmitter';
 import { NavigationHelpers, NavigationProp, PrivateValueStore } from './types';
 
 // This is to make TypeScript compiler happy

@@ -1,5 +1,5 @@
 import { Easing } from 'react-native';
-import { TransitionSpec } from '../types';
+import type { TransitionSpec } from '../types';
 
 /**
  * Exact values from UINavigationController's animation configuration.

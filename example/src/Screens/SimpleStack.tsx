@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, Platform, StyleSheet, ScrollView } from 'react-native';
 import { Button } from 'react-native-paper';
-import { RouteProp, ParamListBase } from '@react-navigation/native';
+import type { RouteProp, ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
   StackNavigationProp,

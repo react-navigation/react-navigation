@@ -1,6 +1,7 @@
-import { StyleProp, ViewStyle, TextStyle } from 'react-native';
-import Animated from 'react-native-reanimated';
-import {
+import type { StyleProp, ViewStyle, TextStyle } from 'react-native';
+import type Animated from 'react-native-reanimated';
+import type { PanGestureHandlerProperties } from 'react-native-gesture-handler';
+import type {
   Route,
   ParamListBase,
   NavigationProp,
@@ -10,7 +11,6 @@ import {
   DrawerActionHelpers,
   RouteProp,
 } from '@react-navigation/native';
-import type { PanGestureHandlerProperties } from 'react-native-gesture-handler';
 
 export type Scene = {
   route: Route<string>;

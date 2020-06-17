@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { ParamListBase } from '@react-navigation/routers';
+import type { ParamListBase } from '@react-navigation/routers';
 import NavigationRouteContext from './NavigationRouteContext';
-import { RouteProp } from './types';
+import type { RouteProp } from './types';
 
 /**
  * Hook to access the route prop of the parent screen anywhere.

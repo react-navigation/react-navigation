@@ -6,7 +6,7 @@ import {
   getFocusedRouteNameFromRoute,
   ParamListBase,
 } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
+import type { StackScreenProps } from '@react-navigation/stack';
 import {
   createBottomTabNavigator,
   BottomTabNavigationProp,

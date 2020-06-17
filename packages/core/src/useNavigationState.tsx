@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { NavigationState } from '@react-navigation/routers';
+import type { NavigationState } from '@react-navigation/routers';
 import useNavigation from './useNavigation';
 
 type Selector<T> = (state: NavigationState) => T;

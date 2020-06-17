@@ -23,14 +23,14 @@ import SafeAreaProviderCompat from './SafeAreaProviderCompat';
 import ResourceSavingScene from './ResourceSavingScene';
 import DrawerContent from './DrawerContent';
 import Drawer from './Drawer';
-import {
+import DrawerOpenContext from '../utils/DrawerOpenContext';
+import DrawerPositionContext from '../utils/DrawerPositionContext';
+import type {
   DrawerDescriptorMap,
   DrawerNavigationConfig,
   DrawerNavigationHelpers,
   DrawerContentComponentProps,
 } from '../types';
-import DrawerOpenContext from '../utils/DrawerOpenContext';
-import DrawerPositionContext from '../utils/DrawerPositionContext';
 
 type Props = DrawerNavigationConfig & {
   state: DrawerNavigationState;

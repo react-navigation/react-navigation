@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { NavigationContainerRef } from '@react-navigation/core';
 import { render } from 'react-native-testing-library';
+import type { NavigationContainerRef } from '@react-navigation/core';
 import useLinking from '../useLinking';
 
 it('throws if multiple instances of useLinking are used', () => {

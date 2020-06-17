@@ -1,4 +1,4 @@
-import * as CommonActions from './CommonActions';
+import type * as CommonActions from './CommonActions';
 
 export type CommonNavigationAction = CommonActions.Action;
 

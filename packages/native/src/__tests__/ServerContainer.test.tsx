@@ -9,7 +9,7 @@ import {
 import { renderToString } from 'react-dom/server';
 import NavigationContainer from '../NavigationContainer';
 import ServerContainer from '../ServerContainer';
-import { ServerContainerRef } from '../types';
+import type { ServerContainerRef } from '../types';
 
 // @ts-ignore
 global.window = global;

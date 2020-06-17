@@ -1,5 +1,9 @@
 import { nanoid } from 'nanoid/non-secure';
-import { CommonNavigationAction, NavigationState, PartialState } from './types';
+import type {
+  CommonNavigationAction,
+  NavigationState,
+  PartialState,
+} from './types';
 
 /**
  * Base router object that can be used when writing custom routers.

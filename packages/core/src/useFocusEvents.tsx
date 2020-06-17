@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { NavigationState } from '@react-navigation/routers';
+import type { NavigationState } from '@react-navigation/routers';
 import NavigationContext from './NavigationContext';
-import { NavigationEventEmitter } from './useEventEmitter';
+import type { NavigationEventEmitter } from './useEventEmitter';
 
 type Options = {
   state: NavigationState;

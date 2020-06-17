@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChildActionListener } from './NavigationBuilderContext';
+import type { ChildActionListener } from './NavigationBuilderContext';
 
 /**
  * Hook which lets child navigators add action listeners.

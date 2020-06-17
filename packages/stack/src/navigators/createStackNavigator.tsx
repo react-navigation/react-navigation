@@ -11,7 +11,7 @@ import {
   StackActions,
 } from '@react-navigation/native';
 import StackView from '../views/Stack/StackView';
-import {
+import type {
   StackNavigationConfig,
   StackNavigationOptions,
   StackNavigationEventMap,

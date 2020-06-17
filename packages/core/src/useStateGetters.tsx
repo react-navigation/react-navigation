@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { NavigatorStateGetter } from './NavigationBuilderContext';
+import type { NavigatorStateGetter } from './NavigationBuilderContext';
 
 /**
  * Hook which lets child navigators add getters to be called for obtaining rehydrated state.

@@ -6,12 +6,12 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
-import { EdgeInsets } from 'react-native-safe-area-context';
-import { Route, StackNavigationState } from '@react-navigation/native';
+import type { EdgeInsets } from 'react-native-safe-area-context';
+import type { Route, StackNavigationState } from '@react-navigation/native';
 
 import { MaybeScreenContainer, MaybeScreen } from '../Screens';
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
-import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
+import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import CardContainer from './CardContainer';
 import {
   DefaultTransition,
@@ -21,7 +21,7 @@ import { forNoAnimation as forNoAnimationHeader } from '../../TransitionConfigs/
 import { forNoAnimation as forNoAnimationCard } from '../../TransitionConfigs/CardStyleInterpolators';
 import HeaderShownContext from '../../utils/HeaderShownContext';
 import getDistanceForDirection from '../../utils/getDistanceForDirection';
-import {
+import type {
   Layout,
   StackHeaderMode,
   StackCardMode,

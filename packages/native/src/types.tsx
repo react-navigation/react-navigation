@@ -1,4 +1,4 @@
-import {
+import type {
   getStateFromPath as getStateFromPathDefault,
   getPathFromState as getPathFromStateDefault,
   PathConfig,

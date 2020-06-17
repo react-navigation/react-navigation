@@ -7,12 +7,12 @@ import {
   Platform,
   ViewStyle,
 } from 'react-native';
-import { EdgeInsets } from 'react-native-safe-area-context';
-import { Route } from '@react-navigation/native';
+import type { EdgeInsets } from 'react-native-safe-area-context';
+import type { Route } from '@react-navigation/native';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderBackground from './HeaderBackground';
 import memoize from '../../utils/memoize';
-import {
+import type {
   Layout,
   StackHeaderStyleInterpolator,
   StackHeaderLeftButtonProps,

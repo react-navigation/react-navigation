@@ -8,7 +8,7 @@ import {
 } from '@react-navigation/core';
 import { nanoid } from 'nanoid/non-secure';
 import ServerContext from './ServerContext';
-import { LinkingOptions } from './types';
+import type { LinkingOptions } from './types';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
 

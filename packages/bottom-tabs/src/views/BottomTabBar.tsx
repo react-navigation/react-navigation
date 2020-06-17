@@ -19,7 +19,7 @@ import {
 import { useSafeArea } from 'react-native-safe-area-context';
 
 import BottomTabItem from './BottomTabItem';
-import { BottomTabBarProps } from '../types';
+import type { BottomTabBarProps } from '../types';
 
 type Props = BottomTabBarProps & {
   activeTintColor?: string;

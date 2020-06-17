@@ -8,7 +8,7 @@ import {
   TabNavigationState,
 } from '@react-navigation/native';
 import MaterialTopTabView from '../views/MaterialTopTabView';
-import {
+import type {
   MaterialTopTabNavigationConfig,
   MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationEventMap,

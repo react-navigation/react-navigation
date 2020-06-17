@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import {
   forHorizontalIOS,
   forVerticalIOS,
@@ -14,8 +15,7 @@ import {
   FadeOutToBottomAndroidSpec,
   FadeInFromBottomAndroidSpec,
 } from './TransitionSpecs';
-import { TransitionPreset } from '../types';
-import { Platform } from 'react-native';
+import type { TransitionPreset } from '../types';
 
 const ANDROID_VERSION_PIE = 28;
 

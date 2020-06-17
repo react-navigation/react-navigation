@@ -4,7 +4,7 @@ import { TabBar } from 'react-native-tab-view';
 import { Route, useTheme } from '@react-navigation/native';
 import Color from 'color';
 
-import { MaterialTopTabBarProps } from '../types';
+import type { MaterialTopTabBarProps } from '../types';
 
 export default function TabBarTop(props: MaterialTopTabBarProps) {
   const { colors } = useTheme();

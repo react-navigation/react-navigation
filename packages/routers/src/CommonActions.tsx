@@ -1,4 +1,4 @@
-import { NavigationState, PartialState } from './types';
+import type { NavigationState, PartialState } from './types';
 
 export type Action =
   | {

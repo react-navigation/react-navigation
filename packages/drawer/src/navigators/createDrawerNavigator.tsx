@@ -9,7 +9,7 @@ import {
 } from '@react-navigation/native';
 
 import DrawerView from '../views/DrawerView';
-import {
+import type {
   DrawerNavigationOptions,
   DrawerNavigationConfig,
   DrawerNavigationEventMap,

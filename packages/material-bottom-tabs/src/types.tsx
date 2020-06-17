@@ -1,5 +1,5 @@
-import { BottomNavigation } from 'react-native-paper';
-import {
+import type { BottomNavigation } from 'react-native-paper';
+import type {
   ParamListBase,
   Descriptor,
   NavigationProp,

@@ -1,5 +1,9 @@
-import { ParamListBase, NavigationProp, Route } from '@react-navigation/native';
-import * as helpers from './helpers';
+import type {
+  ParamListBase,
+  NavigationProp,
+  Route,
+} from '@react-navigation/native';
+import type * as helpers from './helpers';
 
 export type CompatNavigationProp<
   NavigationPropType extends NavigationProp<ParamListBase>,

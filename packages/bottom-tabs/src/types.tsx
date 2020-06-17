@@ -1,5 +1,5 @@
-import * as React from 'react';
-import {
+import type * as React from 'react';
+import type {
   Animated,
   TouchableWithoutFeedbackProps,
   StyleProp,
@@ -7,7 +7,7 @@ import {
   ViewStyle,
   GestureResponderEvent,
 } from 'react-native';
-import {
+import type {
   NavigationHelpers,
   NavigationProp,
   ParamListBase,

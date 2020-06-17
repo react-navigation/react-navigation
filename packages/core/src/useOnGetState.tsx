@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { NavigationState } from '@react-navigation/routers';
+import type { NavigationState } from '@react-navigation/routers';
 import NavigationBuilderContext from './NavigationBuilderContext';
 import NavigationRouteContext from './NavigationRouteContext';
 import isArrayEqual from './isArrayEqual';

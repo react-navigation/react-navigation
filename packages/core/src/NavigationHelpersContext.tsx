@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { ParamListBase } from '@react-navigation/routers';
-import { NavigationHelpers } from './types';
+import type { ParamListBase } from '@react-navigation/routers';
+import type { NavigationHelpers } from './types';
 
 /**
  * Context which holds the navigation helpers of the parent navigator.

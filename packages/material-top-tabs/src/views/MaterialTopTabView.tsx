@@ -8,7 +8,7 @@ import {
 } from '@react-navigation/native';
 
 import MaterialTopTabBar from './MaterialTopTabBar';
-import {
+import type {
   MaterialTopTabDescriptorMap,
   MaterialTopTabNavigationConfig,
   MaterialTopTabNavigationHelpers,

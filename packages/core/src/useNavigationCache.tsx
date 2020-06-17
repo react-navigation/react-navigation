@@ -6,9 +6,9 @@ import {
   NavigationState,
   Router,
 } from '@react-navigation/routers';
-import { NavigationEventEmitter } from './useEventEmitter';
+import type { NavigationEventEmitter } from './useEventEmitter';
 
-import { NavigationHelpers, NavigationProp } from './types';
+import type { NavigationHelpers, NavigationProp } from './types';
 
 type Options<State extends NavigationState> = {
   state: State;

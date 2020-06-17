@@ -1,11 +1,11 @@
 import escape from 'escape-string-regexp';
 import queryString from 'query-string';
-import {
+import type {
   NavigationState,
   PartialState,
   InitialState,
 } from '@react-navigation/routers';
-import { PathConfig } from './types';
+import type { PathConfig } from './types';
 
 type ParseConfig = Record<string, (value: string) => any>;
 

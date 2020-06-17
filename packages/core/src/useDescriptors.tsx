@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {
+import type {
   NavigationAction,
   NavigationState,
   ParamListBase,
@@ -11,9 +11,9 @@ import NavigationBuilderContext, {
   FocusedNavigationListener,
   NavigatorStateGetter,
 } from './NavigationBuilderContext';
-import { NavigationEventEmitter } from './useEventEmitter';
+import type { NavigationEventEmitter } from './useEventEmitter';
 import useNavigationCache from './useNavigationCache';
-import {
+import type {
   Descriptor,
   NavigationHelpers,
   RouteConfig,

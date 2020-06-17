@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Animated, View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { Route, useTheme } from '@react-navigation/native';
-import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
+import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
 import HeaderHeightContext from '../../utils/HeaderHeightContext';
 import HeaderShownContext from '../../utils/HeaderShownContext';
-import {
+import type {
   Scene,
   Layout,
   StackHeaderMode,
