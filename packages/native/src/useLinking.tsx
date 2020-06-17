@@ -97,7 +97,7 @@ const createMemoryHistory = () => {
     // - the `popstate` event fires before the next frame after calling `history.go(n)`.
     // This method differs from `history.go(n)` in the sense that it'll go back as many steps it can.
     go(n: number) {
-      const { title } = document;
+      const { title } = window.document;
 
       if (n > 0) {
         // We shouldn't go forward more than available index
