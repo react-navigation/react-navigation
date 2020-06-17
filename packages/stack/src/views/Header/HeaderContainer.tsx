@@ -162,7 +162,7 @@ export default function HeaderContainer({
                     : null
                 }
               >
-                {header !== undefined ? header(props) : <Header {...props} />}
+                {header !== undefined ? React.createElement(header, props) : <Header {...props} />}
               </View>
             </NavigationRouteContext.Provider>
           </NavigationContext.Provider>
