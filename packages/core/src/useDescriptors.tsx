@@ -51,7 +51,7 @@ type Options<
   addStateGetter: (key: string, getter: NavigatorStateGetter) => void;
   onRouteFocus: (key: string) => void;
   router: Router<State, NavigationAction>;
-  emitter: NavigationEventEmitter;
+  emitter: NavigationEventEmitter<any>;
 };
 
 /**

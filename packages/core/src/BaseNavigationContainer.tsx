@@ -17,8 +17,11 @@ import useOptionsGetters from './useOptionsGetters';
 import useEventEmitter from './useEventEmitter';
 import useSyncState from './useSyncState';
 import isSerializable from './isSerializable';
-
-import type { NavigationContainerRef, NavigationContainerProps } from './types';
+import type {
+  NavigationContainerEventMap,
+  NavigationContainerRef,
+  NavigationContainerProps,
+} from './types';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
 
@@ -175,7 +178,7 @@ const BaseNavigationContainer = React.forwardRef(
       return state.routes[state.index];
     }, [getRootState]);
 
-    const emitter = useEventEmitter();
+    const emitter = useEventEmitter<NavigationContainerEventMap>();
 
     const { addOptionsGetter, getCurrentOptions } = useOptionsGetters({});
 

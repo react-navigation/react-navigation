@@ -20,7 +20,7 @@ type Options<State extends NavigationState, Action extends NavigationAction> = {
     visitedNavigators?: Set<string>
   ) => boolean;
   getState: () => State;
-  emitter: NavigationEventEmitter;
+  emitter: NavigationEventEmitter<any>;
   router: Router<State, Action>;
 };
 

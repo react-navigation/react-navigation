@@ -1,8 +1,10 @@
 import * as React from 'react';
 import type { EventEmitter, EventConsumer, EventArg } from './types';
 
-export type NavigationEventEmitter = EventEmitter<Record<string, any>> & {
-  create: (target: string) => EventConsumer<Record<string, any>>;
+export type NavigationEventEmitter<
+  T extends Record<string, any>
+> = EventEmitter<T> & {
+  create: (target: string) => EventConsumer<T>;
 };
 
 type Listeners = ((e: any) => void)[];
@@ -10,9 +12,9 @@ type Listeners = ((e: any) => void)[];
 /**
  * Hook to manage the event system used by the navigator to notify screens of various events.
  */
-export default function useEventEmitter(
+export default function useEventEmitter<T extends Record<string, any>>(
   listen?: (e: any) => void
-): NavigationEventEmitter {
+): NavigationEventEmitter<T> {
   const listenRef = React.useRef(listen);
 
   React.useEffect(() => {

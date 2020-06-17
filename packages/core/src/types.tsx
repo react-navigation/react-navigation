@@ -61,7 +61,7 @@ export type EventArg<
       preventDefault(): void;
     }
   : {}) &
-  (Data extends undefined ? {} : { readonly data: Data });
+  (undefined extends Data ? {} : { readonly data: Data });
 
 export type EventListenerCallback<
   EventMap extends EventMapBase,
@@ -107,7 +107,7 @@ export type EventEmitter<EventMap extends EventMapBase> = {
     } & (EventMap[EventName]['canPreventDefault'] extends true
       ? { canPreventDefault: true }
       : {}) &
-      (EventMap[EventName]['data'] extends undefined
+      (undefined extends EventMap[EventName]['data']
         ? {}
         : { data: EventMap[EventName]['data'] })
   ): EventArg<
@@ -275,7 +275,7 @@ export type RouteProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList
 > = Omit<Route<Extract<RouteName, string>>, 'params'> &
-  (ParamList[RouteName] extends undefined
+  (undefined extends ParamList[RouteName]
     ? {}
     : {
         /**
@@ -419,7 +419,7 @@ export type NavigationContainerEventMap = {
       /**
        * The updated state object after the state change.
        */
-      state: NavigationState;
+      state: NavigationState | PartialState<NavigationState> | undefined;
     };
   };
   /**

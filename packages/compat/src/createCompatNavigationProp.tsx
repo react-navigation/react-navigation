@@ -16,10 +16,6 @@ type EventName =
   | 'didBlur'
   | 'refocus';
 
-// const focusSubscriptions = new WeakMap<() => void, () => void>();
-// const blurSubscriptions = new WeakMap<() => void, () => void>();
-// const refocusSubscriptions = new WeakMap<() => void, () => void>();
-
 export default function createCompatNavigationProp<
   NavigationPropType extends NavigationProp<ParamListBase>,
   ParamList extends ParamListBase = NavigationPropType extends NavigationProp<

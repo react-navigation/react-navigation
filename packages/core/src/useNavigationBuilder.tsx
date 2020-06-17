@@ -29,6 +29,7 @@ import {
   RouteConfig,
   PrivateValueStore,
   EventMapBase,
+  EventMapCore,
 } from './types';
 import useStateGetters from './useStateGetters';
 import useOnGetState from './useOnGetState';
@@ -378,7 +379,7 @@ export default function useNavigationBuilder<
       : (initializedStateRef.current as State);
   }, [getCurrentState, isStateInitialized]);
 
-  const emitter = useEventEmitter((e) => {
+  const emitter = useEventEmitter<EventMapCore<State>>((e) => {
     let routeNames = [];
 
     let route: Route<string> | undefined;
