@@ -8,7 +8,7 @@ import {
 } from '@react-navigation/routers';
 import type { NavigationEventEmitter } from './useEventEmitter';
 
-import type { NavigationHelpers, NavigationProp } from './types';
+import type { EventMapBase, NavigationHelpers, NavigationProp } from './types';
 
 type Options<State extends NavigationState> = {
   state: State;
@@ -19,7 +19,7 @@ type Options<State extends NavigationState> = {
     cb: (options: Record<string, object>) => Record<string, object>
   ) => void;
   router: Router<State, NavigationAction>;
-  emitter: NavigationEventEmitter;
+  emitter: NavigationEventEmitter<EventMapBase>;
 };
 
 type NavigationCache<

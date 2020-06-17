@@ -51,7 +51,7 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
    * @param [params] Params object for the new route.
    */
   replace<RouteName extends keyof ParamList>(
-    ...args: ParamList[RouteName] extends undefined
+    ...args: undefined extends ParamList[RouteName]
       ? [RouteName] | [RouteName, ParamList[RouteName]]
       : [RouteName, ParamList[RouteName]]
   ): void;
@@ -63,7 +63,7 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
    * @param [params] Params object for the route.
    */
   push<RouteName extends keyof ParamList>(
-    ...args: ParamList[RouteName] extends undefined | any
+    ...args: undefined extends ParamList[RouteName]
       ? [RouteName] | [RouteName, ParamList[RouteName]]
       : [RouteName, ParamList[RouteName]]
   ): void;

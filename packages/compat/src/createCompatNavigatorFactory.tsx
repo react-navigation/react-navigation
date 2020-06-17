@@ -6,7 +6,6 @@ import {
   TypedNavigator,
   NavigationProp,
   RouteProp,
-  EventMapBase,
   NavigationRouteContext,
 } from '@react-navigation/native';
 import CompatScreen from './CompatScreen';
@@ -19,7 +18,7 @@ export default function createCompatNavigatorFactory<
     ParamListBase,
     NavigationState,
     {},
-    EventMapBase,
+    any,
     React.ComponentType<any>
   >
 >(createNavigator: CreateNavigator) {
@@ -116,7 +115,8 @@ export default function createCompatNavigatorFactory<
                 typeof screenNavigationOptions === 'function'
                   ? {
                       navigation: createCompatNavigationProp<
-                        NavigationPropType
+                        NavigationPropType,
+                        ParamList
                       >(navigation, route, {}),
                       navigationOptions: defaultNavigationOptions || {},
                       screenProps,

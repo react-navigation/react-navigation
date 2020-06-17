@@ -42,7 +42,7 @@ export type TabActionHelpers<ParamList extends ParamListBase> = {
    * @param [params] Params object for the route.
    */
   jumpTo<RouteName extends Extract<keyof ParamList, string>>(
-    ...args: ParamList[RouteName] extends undefined | any
+    ...args: undefined extends ParamList[RouteName]
       ? [RouteName] | [RouteName, ParamList[RouteName]]
       : [RouteName, ParamList[RouteName]]
   ): void;
