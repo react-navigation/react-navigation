@@ -1,10 +1,10 @@
 import * as React from 'react';
-import {
+import type {
   NavigationAction,
   NavigationState,
   ParamListBase,
 } from '@react-navigation/routers';
-import { NavigationHelpers } from './types';
+import type { NavigationHelpers } from './types';
 
 export type ChildActionListener = (
   action: NavigationAction,

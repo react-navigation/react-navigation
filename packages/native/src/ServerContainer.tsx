@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CurrentRenderContext } from '@react-navigation/core';
 import ServerContext, { ServerContextType } from './ServerContext';
-import { ServerContainerRef } from './types';
+import type { ServerContainerRef } from './types';
 
 type Props = ServerContextType & {
   children: React.ReactNode;

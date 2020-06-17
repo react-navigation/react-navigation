@@ -6,7 +6,7 @@ import {
   Route,
   ParamListBase,
 } from '@react-navigation/native';
-import { EdgeInsets } from 'react-native-safe-area-context';
+import type { EdgeInsets } from 'react-native-safe-area-context';
 
 import Header from './Header';
 import {
@@ -16,7 +16,7 @@ import {
   forSlideRight,
 } from '../../TransitionConfigs/HeaderStyleInterpolators';
 import HeaderShownContext from '../../utils/HeaderShownContext';
-import {
+import type {
   Layout,
   Scene,
   StackHeaderStyleInterpolator,

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render, act } from 'react-native-testing-library';
-import { Router, NavigationState } from '@react-navigation/routers';
+import type { Router, NavigationState } from '@react-navigation/routers';
 import useNavigationBuilder from '../useNavigationBuilder';
 import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';

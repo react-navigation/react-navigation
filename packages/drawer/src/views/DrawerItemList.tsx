@@ -6,7 +6,7 @@ import {
   useLinkBuilder,
 } from '@react-navigation/native';
 import DrawerItem from './DrawerItem';
-import {
+import type {
   DrawerNavigationHelpers,
   DrawerDescriptorMap,
   DrawerContentOptions,

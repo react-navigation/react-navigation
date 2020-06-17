@@ -6,7 +6,6 @@ import {
   useNavigation,
   ParamListBase,
 } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import {
   createDrawerNavigator,
   DrawerNavigationProp,
@@ -14,6 +13,7 @@ import {
   DrawerContentComponentProps,
   DrawerContentOptions,
 } from '@react-navigation/drawer';
+import type { StackNavigationProp } from '@react-navigation/stack';
 import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
 import NewsFeed from '../Shared/NewsFeed';

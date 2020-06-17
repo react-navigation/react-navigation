@@ -7,7 +7,7 @@ import {
   useNavigationState,
 } from '@react-navigation/native';
 import createCompatNavigationProp from './createCompatNavigationProp';
-import { CompatNavigationProp } from './types';
+import type { CompatNavigationProp } from './types';
 
 export default function useCompatNavigation<
   T extends NavigationProp<ParamListBase>

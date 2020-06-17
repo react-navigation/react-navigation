@@ -8,7 +8,7 @@ import {
   TabNavigationState,
 } from '@react-navigation/native';
 import BottomTabView from '../views/BottomTabView';
-import {
+import type {
   BottomTabNavigationConfig,
   BottomTabNavigationOptions,
   BottomTabNavigationEventMap,

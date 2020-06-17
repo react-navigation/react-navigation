@@ -10,7 +10,7 @@ import LinkingContext from './LinkingContext';
 import useThenable from './useThenable';
 import useLinking from './useLinking';
 import useBackButton from './useBackButton';
-import { Theme, LinkingOptions } from './types';
+import type { Theme, LinkingOptions } from './types';
 
 type Props = NavigationContainerProps & {
   theme?: Theme;

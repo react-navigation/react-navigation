@@ -15,7 +15,7 @@ import HeaderContainer, {
   Props as HeaderContainerProps,
 } from '../Header/HeaderContainer';
 import SafeAreaProviderCompat from '../SafeAreaProviderCompat';
-import {
+import type {
   StackNavigationHelpers,
   StackNavigationConfig,
   StackDescriptorMap,

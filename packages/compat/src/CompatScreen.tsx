@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {
+import type {
   NavigationProp,
   ParamListBase,
   RouteProp,

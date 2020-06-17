@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text, TextProps, GestureResponderEvent, Platform } from 'react-native';
-import { NavigationAction } from '@react-navigation/core';
+import type { NavigationAction } from '@react-navigation/core';
 import useLinkProps from './useLinkProps';
 
 type Props = {

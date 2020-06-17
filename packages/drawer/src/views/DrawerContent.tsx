@@ -1,7 +1,7 @@
 import * as React from 'react';
 import DrawerItemList from './DrawerItemList';
-import { DrawerContentComponentProps } from '../types';
 import DrawerContentScrollView from './DrawerContentScrollView';
+import type { DrawerContentComponentProps } from '../types';
 
 export default function DrawerContent(props: DrawerContentComponentProps) {
   return (

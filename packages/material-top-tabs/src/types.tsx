@@ -1,6 +1,10 @@
-import { StyleProp, ViewStyle, TextStyle } from 'react-native';
-import { TabBar, SceneRendererProps, TabView } from 'react-native-tab-view';
-import {
+import type { StyleProp, ViewStyle, TextStyle } from 'react-native';
+import type {
+  TabBar,
+  SceneRendererProps,
+  TabView,
+} from 'react-native-tab-view';
+import type {
   ParamListBase,
   Descriptor,
   NavigationHelpers,

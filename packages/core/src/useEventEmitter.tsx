@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { EventEmitter, EventConsumer, EventArg } from './types';
+import type { EventEmitter, EventConsumer, EventArg } from './types';
 
 export type NavigationEventEmitter = EventEmitter<Record<string, any>> & {
   create: (target: string) => EventConsumer<Record<string, any>>;

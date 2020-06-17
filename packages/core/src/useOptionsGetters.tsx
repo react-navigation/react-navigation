@@ -1,6 +1,6 @@
 import * as React from 'react';
 import NavigationStateContext from './NavigationStateContext';
-import { NavigationState } from '@react-navigation/routers';
+import type { NavigationState } from '@react-navigation/routers';
 
 export default function useOptionsGetters({
   key,

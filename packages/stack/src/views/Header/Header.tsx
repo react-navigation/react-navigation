@@ -4,7 +4,7 @@ import { StackActions } from '@react-navigation/native';
 import HeaderSegment from './HeaderSegment';
 import HeaderTitle from './HeaderTitle';
 import debounce from '../../utils/debounce';
-import { StackHeaderProps, StackHeaderTitleProps } from '../../types';
+import type { StackHeaderProps, StackHeaderTitleProps } from '../../types';
 
 export default React.memo(function Header(props: StackHeaderProps) {
   const {

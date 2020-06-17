@@ -9,6 +9,7 @@ import {
 } from '@react-navigation/routers';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
 import NavigationBuilderContext from './NavigationBuilderContext';
+import NavigationStateContext from './NavigationStateContext';
 import { ScheduleUpdateContext } from './useScheduleUpdate';
 import useFocusedListeners from './useFocusedListeners';
 import useStateGetters from './useStateGetters';
@@ -17,8 +18,7 @@ import useEventEmitter from './useEventEmitter';
 import useSyncState from './useSyncState';
 import isSerializable from './isSerializable';
 
-import { NavigationContainerRef, NavigationContainerProps } from './types';
-import NavigationStateContext from './NavigationStateContext';
+import type { NavigationContainerRef, NavigationContainerProps } from './types';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
 

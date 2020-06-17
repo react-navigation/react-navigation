@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FocusedNavigationListener } from './NavigationBuilderContext';
+import type { FocusedNavigationListener } from './NavigationBuilderContext';
 
 /**
  * Hook which lets child navigators add listeners to be called for focused navigators.

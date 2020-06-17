@@ -12,7 +12,7 @@ import {
   Link,
 } from '@react-navigation/native';
 
-import {
+import type {
   MaterialBottomTabDescriptorMap,
   MaterialBottomTabNavigationConfig,
   MaterialBottomTabNavigationHelpers,

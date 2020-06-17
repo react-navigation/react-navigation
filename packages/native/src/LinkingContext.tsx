@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { LinkingOptions } from './types';
+import type { LinkingOptions } from './types';
 
 const LinkingContext = React.createContext<{
   options: LinkingOptions | undefined;

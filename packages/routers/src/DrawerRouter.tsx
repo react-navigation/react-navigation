@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid/non-secure';
-import {
+import type {
   PartialState,
   CommonNavigationAction,
   Router,

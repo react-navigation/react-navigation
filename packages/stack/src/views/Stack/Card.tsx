@@ -9,7 +9,7 @@ import {
   Platform,
   InteractionManager,
 } from 'react-native';
-import { EdgeInsets } from 'react-native-safe-area-context';
+import type { EdgeInsets } from 'react-native-safe-area-context';
 import Color from 'color';
 
 import CardSheet from './CardSheet';
@@ -22,7 +22,7 @@ import CardAnimationContext from '../../utils/CardAnimationContext';
 import getDistanceForDirection from '../../utils/getDistanceForDirection';
 import getInvertedMultiplier from '../../utils/getInvertedMultiplier';
 import memoize from '../../utils/memoize';
-import {
+import type {
   TransitionSpec,
   StackCardStyleInterpolator,
   GestureDirection,

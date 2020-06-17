@@ -1,4 +1,4 @@
-import {
+import type {
   NavigationState,
   PartialState,
   ParamListBase,
@@ -6,7 +6,7 @@ import {
   RouteProp,
 } from '@react-navigation/native';
 import * as helpers from './helpers';
-import { CompatNavigationProp } from './types';
+import type { CompatNavigationProp } from './types';
 
 type EventName =
   | 'action'

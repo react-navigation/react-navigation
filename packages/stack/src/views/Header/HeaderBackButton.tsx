@@ -11,7 +11,7 @@ import {
 import { useTheme } from '@react-navigation/native';
 import MaskedView from '../MaskedView';
 import { TouchableItem } from '../TouchableItem';
-import { StackHeaderLeftButtonProps } from '../../types';
+import type { StackHeaderLeftButtonProps } from '../../types';
 
 type Props = StackHeaderLeftButtonProps;
 

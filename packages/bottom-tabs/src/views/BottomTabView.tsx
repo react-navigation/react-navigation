@@ -12,7 +12,7 @@ import { ScreenContainer } from 'react-native-screens';
 import SafeAreaProviderCompat from './SafeAreaProviderCompat';
 import ResourceSavingScene from './ResourceSavingScene';
 import BottomTabBar from './BottomTabBar';
-import {
+import type {
   BottomTabNavigationConfig,
   BottomTabDescriptorMap,
   BottomTabNavigationHelpers,

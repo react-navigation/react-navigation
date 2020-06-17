@@ -1,10 +1,10 @@
 import queryString from 'query-string';
-import {
+import type {
   NavigationState,
   PartialState,
   Route,
 } from '@react-navigation/routers';
-import { PathConfig } from './types';
+import type { PathConfig } from './types';
 
 type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 
