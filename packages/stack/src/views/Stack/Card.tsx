@@ -507,6 +507,7 @@ export default class Card extends React.Component<Props> {
               {overlay({ style: overlayStyle })}
             </View>
           ) : null}
+          {/* Make sure that this view isn't removed. If this view is removed, our style with animated value won't apply which will cause values to be incorrect */}
           <Animated.View
             style={[
               styles.container,
@@ -515,6 +516,7 @@ export default class Card extends React.Component<Props> {
               customContainerStyle,
             ]}
             pointerEvents="box-none"
+            collapsable={false}
           >
             <PanGestureHandler
               enabled={layout.width !== 0 && gestureEnabled}
