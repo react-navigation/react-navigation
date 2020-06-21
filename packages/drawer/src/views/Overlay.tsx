@@ -2,7 +2,16 @@ import * as React from 'react';
 import { Platform, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-const { interpolate, cond, greaterThan } = Animated;
+const {
+  interpolate: interpolateDeprecated,
+  // @ts-ignore
+  interpolateNode,
+  cond,
+  greaterThan,
+} = Animated;
+
+const interpolate: typeof interpolateDeprecated =
+  interpolateNode ?? interpolateDeprecated;
 
 const PROGRESS_EPSILON = 0.05;
 
