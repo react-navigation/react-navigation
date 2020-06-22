@@ -16,6 +16,7 @@ type Props = NavigationContainerProps & {
   theme?: Theme;
   linking?: LinkingOptions;
   fallback?: React.ReactNode;
+  onReady?: () => void;
 };
 
 /**
@@ -23,6 +24,7 @@ type Props = NavigationContainerProps & {
  * This should be rendered at the root wrapping the whole app.
  *
  * @param props.initialState Initial state object for the navigation tree. When deep link handling is enabled, this will override deep links when specified. Make sure that you don't specify an `initialState` when there's a deep link (`Linking.getInitialURL()`).
+ * @param props.onReady Callback which is called after the navigation tree mounts.
  * @param props.onStateChange Callback which is called with the latest navigation state when it changes.
  * @param props.theme Theme object for the navigators.
  * @param props.linking Options for deep linking. Deep link handling is enabled when this prop is provided, unless `linking.enabled` is `false`.
@@ -31,7 +33,7 @@ type Props = NavigationContainerProps & {
  * @param props.ref Ref object which refers to the navigation object containing helper methods.
  */
 const NavigationContainer = React.forwardRef(function NavigationContainer(
-  { theme = DefaultTheme, linking, fallback = null, ...rest }: Props,
+  { theme = DefaultTheme, linking, fallback = null, onReady, ...rest }: Props,
   ref?: React.Ref<NavigationContainerRef | null>
 ) {
   const isLinkingEnabled = linking ? linking.enabled !== false : false;
@@ -46,13 +48,27 @@ const NavigationContainer = React.forwardRef(function NavigationContainer(
     ...linking,
   });
 
-  const [isReady, initialState] = useThenable(getInitialState);
+  const [isResolved, initialState] = useThenable(getInitialState);
 
   React.useImperativeHandle(ref, () => refContainer.current);
 
   const linkingContext = React.useMemo(() => ({ options: linking }), [linking]);
 
-  if (rest.initialState == null && isLinkingEnabled && !isReady) {
+  const isReady = rest.initialState != null || !isLinkingEnabled || isResolved;
+
+  const onReadyRef = React.useRef(onReady);
+
+  React.useEffect(() => {
+    onReadyRef.current = onReady;
+  });
+
+  React.useEffect(() => {
+    if (isReady) {
+      onReadyRef.current?.();
+    }
+  }, [isReady]);
+
+  if (!isReady) {
     // This is temporary until we have Suspense for data-fetching
     // Then the fallback will be handled by a parent `Suspense` component
     return fallback as React.ReactElement;
