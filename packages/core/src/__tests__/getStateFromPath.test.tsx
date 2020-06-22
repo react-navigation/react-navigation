@@ -461,7 +461,51 @@ it('handles parse in nested object for second route depth and and path and parse
   );
 });
 
-it('handles initialRouteName', () => {
+it('handles initialRouteName at top level', () => {
+  const path = '/baz';
+  const config = {
+    initialRouteName: 'Boo',
+    screens: {
+      Foo: {
+        screens: {
+          Foe: 'foe',
+          Bar: {
+            screens: {
+              Baz: 'baz',
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    index: 1,
+    routes: [
+      { name: 'Boo' },
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              state: {
+                routes: [{ name: 'Baz' }],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('handles initialRouteName inside a screen', () => {
   const path = '/baz';
   const config = {
     screens: {

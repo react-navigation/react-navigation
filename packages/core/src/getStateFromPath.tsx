@@ -61,6 +61,13 @@ export default function getStateFromPath(
 
   if (typeof options.screens === 'object' && options.screens.path == null) {
     screens = options.screens;
+
+    if (options.initialRouteName) {
+      initialRoutes.push({
+        initialRouteName: options.initialRouteName,
+        connectedRoutes: Object.keys(screens),
+      });
+    }
   } else {
     warnMigratePathConfig();
     // @ts-ignore
