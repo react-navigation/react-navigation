@@ -165,10 +165,6 @@ export type BottomTabBarOptions = {
    */
   showLabel?: boolean;
   /**
-   * Whether the tab icon should be visible. Defaults to `true`.
-   */
-  showIcon?: boolean;
-  /**
    * Style object for the tab label.
    */
   labelStyle?: StyleProp<TextStyle>;
@@ -182,7 +178,7 @@ export type BottomTabBarOptions = {
   tabStyle?: StyleProp<ViewStyle>;
   /**
    * Whether the label is rendered below the icon or beside the icon.
-   * By default, in `vertical` orinetation, label is rendered below and in `horizontal` orientation, it's rendered beside.
+   * By default, in `vertical` orientation, label is rendered below and in `horizontal` orientation, it's rendered beside.
    */
   labelPosition?: LabelPosition;
   /**
