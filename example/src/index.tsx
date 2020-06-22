@@ -26,7 +26,7 @@ import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
-  PathConfig,
+  PathConfigMap,
   NavigationContainerRef,
 } from '@react-navigation/native';
 import {
@@ -225,47 +225,49 @@ export default function App() {
           // The first segment of the link is the the scheme + host (returned by `Linking.makeUrl`)
           prefixes: LinkingPrefixes,
           config: {
-            Root: {
-              path: '',
-              initialRouteName: 'Home',
-              screens: Object.keys(SCREENS).reduce<PathConfig>(
-                (acc, name) => {
-                  // Convert screen names such as SimpleStack to kebab case (simple-stack)
-                  const path = name
-                    .replace(/([A-Z]+)/g, '-$1')
-                    .replace(/^-/, '')
-                    .toLowerCase();
+            screens: {
+              Root: {
+                path: '',
+                initialRouteName: 'Home',
+                screens: Object.keys(SCREENS).reduce<PathConfigMap>(
+                  (acc, name) => {
+                    // Convert screen names such as SimpleStack to kebab case (simple-stack)
+                    const path = name
+                      .replace(/([A-Z]+)/g, '-$1')
+                      .replace(/^-/, '')
+                      .toLowerCase();
 
-                  acc[name] = {
-                    path,
-                    screens: {
-                      Article: {
-                        path: 'article/:author?',
-                        parse: {
-                          author: (author) =>
-                            author.charAt(0).toUpperCase() +
-                            author.slice(1).replace(/-/g, ' '),
+                    acc[name] = {
+                      path,
+                      screens: {
+                        Article: {
+                          path: 'article/:author?',
+                          parse: {
+                            author: (author) =>
+                              author.charAt(0).toUpperCase() +
+                              author.slice(1).replace(/-/g, ' '),
+                          },
+                          stringify: {
+                            author: (author: string) =>
+                              author.toLowerCase().replace(/\s/g, '-'),
+                          },
                         },
-                        stringify: {
-                          author: (author: string) =>
-                            author.toLowerCase().replace(/\s/g, '-'),
-                        },
+                        Albums: 'music',
+                        Chat: 'chat',
+                        Contacts: 'people',
+                        NewsFeed: 'feed',
+                        Dialog: 'dialog',
                       },
-                      Albums: 'music',
-                      Chat: 'chat',
-                      Contacts: 'people',
-                      NewsFeed: 'feed',
-                      Dialog: 'dialog',
-                    },
-                  };
+                    };
 
-                  return acc;
-                },
-                {
-                  Home: '',
-                  NotFound: '*',
-                }
-              ),
+                    return acc;
+                  },
+                  {
+                    Home: '',
+                    NotFound: '*',
+                  }
+                ),
+              },
             },
           },
         }}

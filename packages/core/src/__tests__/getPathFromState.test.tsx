@@ -37,19 +37,21 @@ it('converts state to path string', () => {
 it('converts state to path string with config', () => {
   const path = '/few/bar/sweet/apple/baz/jane?id=x10&valid=true';
   const config = {
-    Foo: 'few',
-    Bar: 'bar/:type/:fruit',
-    Baz: {
-      path: 'baz/:author',
-      parse: {
-        author: (author: string) =>
-          author.replace(/^\w/, (c) => c.toUpperCase()),
-        id: (id: string) => Number(id.replace(/^x/, '')),
-        valid: Boolean,
-      },
-      stringify: {
-        author: (author: string) => author.toLowerCase(),
-        id: (id: number) => `x${id}`,
+    screens: {
+      Foo: 'few',
+      Bar: 'bar/:type/:fruit',
+      Baz: {
+        path: 'baz/:author',
+        parse: {
+          author: (author: string) =>
+            author.replace(/^\w/, (c) => c.toUpperCase()),
+          id: (id: string) => Number(id.replace(/^x/, '')),
+          valid: Boolean,
+        },
+        stringify: {
+          author: (author: string) => author.toLowerCase(),
+          id: (id: number) => `x${id}`,
+        },
       },
     },
   };
@@ -120,25 +122,27 @@ it('handles state with config with nested screens', () => {
   const path =
     '/foo/foe/bar/sweet/apple/baz/jane?answer=42&count=10&valid=true';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: 'foe',
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: 'foe',
+        },
       },
-    },
-    Bar: 'bar/:type/:fruit',
-    Baz: {
-      path: 'baz/:author',
-      parse: {
-        author: (author: string) =>
-          author.replace(/^\w/, (c) => c.toUpperCase()),
-        count: Number,
-        valid: Boolean,
-      },
-      stringify: {
-        author: (author: string) => author.toLowerCase(),
-        id: (id: number) => `x${id}`,
-        unknown: (_: unknown) => 'x',
+      Bar: 'bar/:type/:fruit',
+      Baz: {
+        path: 'baz/:author',
+        parse: {
+          author: (author: string) =>
+            author.replace(/^\w/, (c) => c.toUpperCase()),
+          count: Number,
+          valid: Boolean,
+        },
+        stringify: {
+          author: (author: string) => author.toLowerCase(),
+          id: (id: number) => `x${id}`,
+          unknown: (_: unknown) => 'x',
+        },
       },
     },
   };
@@ -186,28 +190,30 @@ it('handles state with config with nested screens', () => {
 it('handles state with config with nested screens and exact', () => {
   const path = '/foe/bar/sweet/apple/baz/jane?answer=42&count=10&valid=true';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: {
-          path: 'foe',
-          exact: true,
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: {
+            path: 'foe',
+            exact: true,
+          },
         },
       },
-    },
-    Bar: 'bar/:type/:fruit',
-    Baz: {
-      path: 'baz/:author',
-      parse: {
-        author: (author: string) =>
-          author.replace(/^\w/, (c) => c.toUpperCase()),
-        count: Number,
-        valid: Boolean,
-      },
-      stringify: {
-        author: (author: string) => author.toLowerCase(),
-        id: (id: number) => `x${id}`,
-        unknown: (_: unknown) => 'x',
+      Bar: 'bar/:type/:fruit',
+      Baz: {
+        path: 'baz/:author',
+        parse: {
+          author: (author: string) =>
+            author.replace(/^\w/, (c) => c.toUpperCase()),
+          count: Number,
+          valid: Boolean,
+        },
+        stringify: {
+          author: (author: string) => author.toLowerCase(),
+          id: (id: number) => `x${id}`,
+          unknown: (_: unknown) => 'x',
+        },
       },
     },
   };
@@ -255,24 +261,26 @@ it('handles state with config with nested screens and exact', () => {
 it('handles state with config with nested screens and unused configs', () => {
   const path = '/foo/foe/baz/jane?answer=42&count=10&valid=true';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: 'foe',
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: 'foe',
+        },
       },
-    },
-    Baz: {
-      path: 'baz/:author',
-      parse: {
-        author: (author: string) =>
-          author.replace(/^\w/, (c) => c.toUpperCase()),
-        count: Number,
-        valid: Boolean,
-      },
-      stringify: {
-        author: (author: string) =>
-          author.replace(/^\w/, (c) => c.toLowerCase()),
-        unknown: (_: unknown) => 'x',
+      Baz: {
+        path: 'baz/:author',
+        parse: {
+          author: (author: string) =>
+            author.replace(/^\w/, (c) => c.toUpperCase()),
+          count: Number,
+          valid: Boolean,
+        },
+        stringify: {
+          author: (author: string) =>
+            author.replace(/^\w/, (c) => c.toLowerCase()),
+          unknown: (_: unknown) => 'x',
+        },
       },
     },
   };
@@ -312,27 +320,29 @@ it('handles state with config with nested screens and unused configs', () => {
 it('handles state with config with nested screens and unused configs with exact', () => {
   const path = '/foe/baz/jane?answer=42&count=10&valid=true';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: {
-          path: 'foe',
-          exact: true,
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: {
+            path: 'foe',
+            exact: true,
+          },
         },
       },
-    },
-    Baz: {
-      path: 'baz/:author',
-      parse: {
-        author: (author: string) =>
-          author.replace(/^\w/, (c) => c.toUpperCase()),
-        count: Number,
-        valid: Boolean,
-      },
-      stringify: {
-        author: (author: string) =>
-          author.replace(/^\w/, (c) => c.toLowerCase()),
-        unknown: (_: unknown) => 'x',
+      Baz: {
+        path: 'baz/:author',
+        parse: {
+          author: (author: string) =>
+            author.replace(/^\w/, (c) => c.toUpperCase()),
+          count: Number,
+          valid: Boolean,
+        },
+        stringify: {
+          author: (author: string) =>
+            author.replace(/^\w/, (c) => c.toLowerCase()),
+          unknown: (_: unknown) => 'x',
+        },
       },
     },
   };
@@ -372,29 +382,31 @@ it('handles state with config with nested screens and unused configs with exact'
 it('handles nested object with stringify in it', () => {
   const path = '/bar/sweet/apple/foo/bis/jane?answer=42&count=10&valid=true';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: {
-          path: 'foe',
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: {
+            path: 'foe',
+          },
         },
       },
-    },
-    Bar: 'bar/:type/:fruit',
-    Baz: {
-      screens: {
-        Bos: 'bos',
-        Bis: {
-          path: 'bis/:author',
-          stringify: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toLowerCase()),
-          },
-          parse: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toUpperCase()),
-            count: Number,
-            valid: Boolean,
+      Bar: 'bar/:type/:fruit',
+      Baz: {
+        screens: {
+          Bos: 'bos',
+          Bis: {
+            path: 'bis/:author',
+            stringify: {
+              author: (author: string) =>
+                author.replace(/^\w/, (c) => c.toLowerCase()),
+            },
+            parse: {
+              author: (author: string) =>
+                author.replace(/^\w/, (c) => c.toUpperCase()),
+              count: Number,
+              valid: Boolean,
+            },
           },
         },
       },
@@ -444,31 +456,33 @@ it('handles nested object with stringify in it', () => {
 it('handles nested object with stringify in it with exact', () => {
   const path = '/bar/sweet/apple/foo/bis/jane?answer=42&count=10&valid=true';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: {
-          path: 'foe',
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: {
+            path: 'foe',
+          },
         },
       },
-    },
-    Bar: 'bar/:type/:fruit',
-    Baz: {
-      path: 'baz',
-      screens: {
-        Bos: 'bos',
-        Bis: {
-          path: 'bis/:author',
-          exact: true,
-          stringify: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toLowerCase()),
-          },
-          parse: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toUpperCase()),
-            count: Number,
-            valid: Boolean,
+      Bar: 'bar/:type/:fruit',
+      Baz: {
+        path: 'baz',
+        screens: {
+          Bos: 'bos',
+          Bis: {
+            path: 'bis/:author',
+            exact: true,
+            stringify: {
+              author: (author: string) =>
+                author.replace(/^\w/, (c) => c.toLowerCase()),
+            },
+            parse: {
+              author: (author: string) =>
+                author.replace(/^\w/, (c) => c.toUpperCase()),
+              count: Number,
+              valid: Boolean,
+            },
           },
         },
       },
@@ -518,14 +532,16 @@ it('handles nested object with stringify in it with exact', () => {
 it('handles nested object for second route depth', () => {
   const path = '/foo/bar/baz';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: 'foe',
-        Bar: {
-          path: 'bar',
-          screens: {
-            Baz: 'baz',
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: 'foe',
+          Bar: {
+            path: 'bar',
+            screens: {
+              Baz: 'baz',
+            },
           },
         },
       },
@@ -557,16 +573,18 @@ it('handles nested object for second route depth', () => {
 it('handles nested object for second route depth with exact', () => {
   const path = '/baz';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: 'foe',
-        Bar: {
-          path: 'bar',
-          screens: {
-            Baz: {
-              path: 'baz',
-              exact: true,
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: 'foe',
+          Bar: {
+            path: 'bar',
+            screens: {
+              Baz: {
+                path: 'baz',
+                exact: true,
+              },
             },
           },
         },
@@ -599,20 +617,22 @@ it('handles nested object for second route depth with exact', () => {
 it('handles nested object for second route depth and path and stringify in roots', () => {
   const path = '/foo/dathomir/bar/42/baz';
   const config = {
-    Foo: {
-      path: 'foo/:planet',
-      stringify: {
-        id: (id: number) => `planet=${id}`,
-      },
-      screens: {
-        Foe: 'foe',
-        Bar: {
-          path: 'bar/:id',
-          parse: {
-            id: Number,
-          },
-          screens: {
-            Baz: 'baz',
+    screens: {
+      Foo: {
+        path: 'foo/:planet',
+        stringify: {
+          id: (id: number) => `planet=${id}`,
+        },
+        screens: {
+          Foe: 'foe',
+          Bar: {
+            path: 'bar/:id',
+            parse: {
+              id: Number,
+            },
+            screens: {
+              Baz: 'baz',
+            },
           },
         },
       },
@@ -645,25 +665,27 @@ it('handles nested object for second route depth and path and stringify in roots
 it('handles nested object for second route depth and path and stringify in roots with exact', () => {
   const path = '/baz';
   const config = {
-    Foo: {
-      path: 'foo/:id',
-      stringify: {
-        id: (id: number) => `id=${id}`,
-      },
-      screens: {
-        Foe: 'foe',
-        Bar: {
-          path: 'bar/:id',
-          stringify: {
-            id: (id: number) => `id=${id}`,
-          },
-          parse: {
-            id: Number,
-          },
-          screens: {
-            Baz: {
-              path: 'baz',
-              exact: true,
+    screens: {
+      Foo: {
+        path: 'foo/:id',
+        stringify: {
+          id: (id: number) => `id=${id}`,
+        },
+        screens: {
+          Foe: 'foe',
+          Bar: {
+            path: 'bar/:id',
+            stringify: {
+              id: (id: number) => `id=${id}`,
+            },
+            parse: {
+              id: Number,
+            },
+            screens: {
+              Baz: {
+                path: 'baz',
+                exact: true,
+              },
             },
           },
         },
@@ -696,13 +718,15 @@ it('handles nested object for second route depth and path and stringify in roots
 it('ignores empty string paths', () => {
   const path = '/bar';
   const config = {
-    Foo: {
-      path: '',
-      screens: {
-        Foe: 'foe',
+    screens: {
+      Foo: {
+        path: '',
+        screens: {
+          Foe: 'foe',
+        },
       },
+      Bar: 'bar',
     },
-    Bar: 'bar',
   };
 
   const state = {
@@ -723,16 +747,18 @@ it('ignores empty string paths', () => {
 it('keeps query params if path is empty', () => {
   const path = '/?foo=42';
   const config = {
-    Foo: {
-      screens: {
-        Foe: 'foe',
-        Bar: {
-          screens: {
-            Qux: {
-              path: '',
-              parse: { foo: Number },
+    screens: {
+      Foo: {
+        screens: {
+          Foe: 'foe',
+          Bar: {
+            screens: {
+              Qux: {
+                path: '',
+                parse: { foo: Number },
+              },
+              Baz: 'baz',
             },
-            Baz: 'baz',
           },
         },
       },
@@ -766,14 +792,16 @@ it('keeps query params if path is empty', () => {
 it('cuts nested configs too', () => {
   const path = '/foo/baz';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Bar: '',
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Bar: '',
+        },
       },
-    },
-    Baz: {
-      path: 'baz',
+      Baz: {
+        path: 'baz',
+      },
     },
   };
 
@@ -802,17 +830,19 @@ it('cuts nested configs too', () => {
 it('cuts nested configs too with exact', () => {
   const path = '/baz';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Bar: {
-          path: '',
-          exact: true,
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Bar: {
+            path: '',
+            exact: true,
+          },
         },
       },
-    },
-    Baz: {
-      path: 'baz',
+      Baz: {
+        path: 'baz',
+      },
     },
   };
 
@@ -841,13 +871,15 @@ it('cuts nested configs too with exact', () => {
 it('handles empty path at the end', () => {
   const path = '/foo/bar';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Bar: 'bar',
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Bar: 'bar',
+        },
       },
+      Baz: { path: '' },
     },
-    Baz: { path: '' },
   };
 
   const state = {
@@ -876,10 +908,12 @@ it('returns "/" for empty path', () => {
   const path = '/';
 
   const config = {
-    Foo: {
-      path: '',
-      screens: {
-        Bar: '',
+    screens: {
+      Foo: {
+        path: '',
+        screens: {
+          Bar: '',
+        },
       },
     },
   };
@@ -906,12 +940,14 @@ it('returns "/" for empty path', () => {
 it('parses no path specified', () => {
   const path = '/Foo/bar';
   const config = {
-    Foo: {
-      screens: {
-        Foe: {},
+    screens: {
+      Foo: {
+        screens: {
+          Foe: {},
+        },
       },
+      Bar: 'bar',
     },
-    Bar: 'bar',
   };
 
   const state = {
@@ -932,13 +968,15 @@ it('parses no path specified', () => {
 it('parses no path specified in nested config', () => {
   const path = '/Foo/Foe/bar';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: {},
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: {},
+        },
       },
+      Bar: 'bar',
     },
-    Bar: 'bar',
   };
 
   const state = {
@@ -966,29 +1004,31 @@ it('parses no path specified in nested config', () => {
 it('strips undefined query params', () => {
   const path = '/bar/sweet/apple/foo/bis/jane?count=10&valid=true';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: {
-          path: 'foe',
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: {
+            path: 'foe',
+          },
         },
       },
-    },
-    Bar: 'bar/:type/:fruit',
-    Baz: {
-      screens: {
-        Bos: 'bos',
-        Bis: {
-          path: 'bis/:author',
-          stringify: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toLowerCase()),
-          },
-          parse: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toUpperCase()),
-            count: Number,
-            valid: Boolean,
+      Bar: 'bar/:type/:fruit',
+      Baz: {
+        screens: {
+          Bos: 'bos',
+          Bis: {
+            path: 'bis/:author',
+            stringify: {
+              author: (author: string) =>
+                author.replace(/^\w/, (c) => c.toLowerCase()),
+            },
+            parse: {
+              author: (author: string) =>
+                author.replace(/^\w/, (c) => c.toUpperCase()),
+              count: Number,
+              valid: Boolean,
+            },
           },
         },
       },
@@ -1037,31 +1077,33 @@ it('strips undefined query params', () => {
 it('strips undefined query params with exact', () => {
   const path = '/bar/sweet/apple/foo/bis/jane?count=10&valid=true';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: {
-          path: 'foe',
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: {
+            path: 'foe',
+          },
         },
       },
-    },
-    Bar: 'bar/:type/:fruit',
-    Baz: {
-      path: 'baz',
-      screens: {
-        Bos: 'bos',
-        Bis: {
-          path: 'bis/:author',
-          exact: true,
-          stringify: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toLowerCase()),
-          },
-          parse: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toUpperCase()),
-            count: Number,
-            valid: Boolean,
+      Bar: 'bar/:type/:fruit',
+      Baz: {
+        path: 'baz',
+        screens: {
+          Bos: 'bos',
+          Bis: {
+            path: 'bis/:author',
+            exact: true,
+            stringify: {
+              author: (author: string) =>
+                author.replace(/^\w/, (c) => c.toLowerCase()),
+            },
+            parse: {
+              author: (author: string) =>
+                author.replace(/^\w/, (c) => c.toUpperCase()),
+              count: Number,
+              valid: Boolean,
+            },
           },
         },
       },
@@ -1110,29 +1152,31 @@ it('strips undefined query params with exact', () => {
 it('handles stripping all query params', () => {
   const path = '/bar/sweet/apple/foo/bis/jane';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: {
-          path: 'foe',
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: {
+            path: 'foe',
+          },
         },
       },
-    },
-    Bar: 'bar/:type/:fruit',
-    Baz: {
-      screens: {
-        Bos: 'bos',
-        Bis: {
-          path: 'bis/:author',
-          stringify: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toLowerCase()),
-          },
-          parse: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toUpperCase()),
-            count: Number,
-            valid: Boolean,
+      Bar: 'bar/:type/:fruit',
+      Baz: {
+        screens: {
+          Bos: 'bos',
+          Bis: {
+            path: 'bis/:author',
+            stringify: {
+              author: (author: string) =>
+                author.replace(/^\w/, (c) => c.toLowerCase()),
+            },
+            parse: {
+              author: (author: string) =>
+                author.replace(/^\w/, (c) => c.toUpperCase()),
+              count: Number,
+              valid: Boolean,
+            },
           },
         },
       },
@@ -1179,31 +1223,33 @@ it('handles stripping all query params', () => {
 it('handles stripping all query params with exact', () => {
   const path = '/bar/sweet/apple/foo/bis/jane';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: {
-          path: 'foe',
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: {
+            path: 'foe',
+          },
         },
       },
-    },
-    Bar: 'bar/:type/:fruit',
-    Baz: {
-      path: 'baz',
-      screens: {
-        Bos: 'bos',
-        Bis: {
-          path: 'bis/:author',
-          exact: true,
-          stringify: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toLowerCase()),
-          },
-          parse: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toUpperCase()),
-            count: Number,
-            valid: Boolean,
+      Bar: 'bar/:type/:fruit',
+      Baz: {
+        path: 'baz',
+        screens: {
+          Bos: 'bos',
+          Bis: {
+            path: 'bis/:author',
+            exact: true,
+            stringify: {
+              author: (author: string) =>
+                author.replace(/^\w/, (c) => c.toLowerCase()),
+            },
+            parse: {
+              author: (author: string) =>
+                author.replace(/^\w/, (c) => c.toUpperCase()),
+              count: Number,
+              valid: Boolean,
+            },
           },
         },
       },
@@ -1250,7 +1296,9 @@ it('handles stripping all query params with exact', () => {
 it('replaces undefined query params', () => {
   const path = '/bar/undefined/apple';
   const config = {
-    Bar: 'bar/:type/:fruit',
+    screens: {
+      Bar: 'bar/:type/:fruit',
+    },
   };
 
   const state = {
@@ -1269,11 +1317,13 @@ it('replaces undefined query params', () => {
 it('matches wildcard patterns at root', () => {
   const path = '/test/bar/42/whatever';
   const config = {
-    404: '*',
-    Foo: {
-      screens: {
-        Bar: {
-          path: '/bar/:id/',
+    screens: {
+      404: '*',
+      Foo: {
+        screens: {
+          Bar: {
+            path: '/bar/:id/',
+          },
         },
       },
     },
@@ -1290,12 +1340,14 @@ it('matches wildcard patterns at root', () => {
 it('matches wildcard patterns at nested level', () => {
   const path = '/bar/42/whatever/baz/initt';
   const config = {
-    Foo: {
-      screens: {
-        Bar: {
-          path: '/bar/:id/',
-          screens: {
-            404: '*',
+    screens: {
+      Foo: {
+        screens: {
+          Bar: {
+            path: '/bar/:id/',
+            screens: {
+              404: '*',
+            },
           },
         },
       },
@@ -1330,18 +1382,20 @@ it('matches wildcard patterns at nested level', () => {
 it('matches wildcard patterns at nested level with exact', () => {
   const path = '/whatever';
   const config = {
-    Foo: {
-      screens: {
-        Bar: {
-          path: '/bar/:id/',
-          screens: {
-            404: {
-              path: '*',
-              exact: true,
+    screens: {
+      Foo: {
+        screens: {
+          Bar: {
+            path: '/bar/:id/',
+            screens: {
+              404: {
+                path: '*',
+                exact: true,
+              },
             },
           },
+          Baz: {},
         },
-        Baz: {},
       },
     },
   };
@@ -1371,13 +1425,15 @@ it('matches wildcard patterns at nested level with exact', () => {
 it('tries to match wildcard patterns at the end', () => {
   const path = '/bar/42/test';
   const config = {
-    Foo: {
-      screens: {
-        Bar: {
-          path: '/bar/:id/',
-          screens: {
-            404: '*',
-            Test: 'test',
+    screens: {
+      Foo: {
+        screens: {
+          Bar: {
+            path: '/bar/:id/',
+            screens: {
+              404: '*',
+              Test: 'test',
+            },
           },
         },
       },
@@ -1410,15 +1466,17 @@ it('tries to match wildcard patterns at the end', () => {
 it('uses nearest parent wildcard match for unmatched paths', () => {
   const path = '/bar/42/baz/test';
   const config = {
-    Foo: {
-      screens: {
-        Bar: {
-          path: '/bar/:id/',
-          screens: {
-            Baz: 'baz',
+    screens: {
+      Foo: {
+        screens: {
+          Bar: {
+            path: '/bar/:id/',
+            screens: {
+              Baz: 'baz',
+            },
           },
+          404: '*',
         },
-        404: '*',
       },
     },
   };
@@ -1436,4 +1494,63 @@ it('uses nearest parent wildcard match for unmatched paths', () => {
 
   expect(getPathFromState(state, config)).toBe('/404');
   expect(getPathFromState(getStateFromPath(path, config), config)).toBe('/404');
+});
+
+it('supports legacy config', () => {
+  const path = '/few/bar/sweet/apple/baz/jane?id=x10&valid=true';
+  const config = {
+    Foo: 'few',
+    Bar: 'bar/:type/:fruit',
+    Baz: {
+      path: 'baz/:author',
+      parse: {
+        author: (author: string) =>
+          author.replace(/^\w/, (c) => c.toUpperCase()),
+        id: (id: string) => Number(id.replace(/^x/, '')),
+        valid: Boolean,
+      },
+      stringify: {
+        author: (author: string) => author.toLowerCase(),
+        id: (id: number) => `x${id}`,
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          index: 1,
+          routes: [
+            { name: 'boo' },
+            {
+              name: 'Bar',
+              params: { fruit: 'apple', type: 'sweet', avaliable: false },
+              state: {
+                routes: [
+                  {
+                    name: 'Baz',
+                    params: { author: 'Jane', valid: true, id: 10 },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  const spy = jest.spyOn(console, 'warn');
+
+  spy.mockImplementation(() => {});
+
+  // @ts-ignore
+  expect(getPathFromState(state, config)).toBe(path);
+  expect(spy.mock.calls[0][0]).toMatch(
+    'The shape of the configuration object for linking has changed'
+  );
+
+  spy.mockRestore();
 });

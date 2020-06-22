@@ -4,13 +4,14 @@ import type {
   PartialState,
   Route,
 } from '@react-navigation/routers';
-import type { PathConfig } from './types';
+import warnMigratePathConfig from './warnMigratePathConfig';
+import type { PathConfig, PathConfigMap } from './types';
+
+type Options = { screens: PathConfigMap };
 
 type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 
 type StringifyConfig = Record<string, (value: any) => string>;
-
-type OptionsItem = PathConfig[string];
 
 type ConfigItem = {
   pattern?: string;
@@ -46,9 +47,11 @@ const getActiveRoute = (state: State): { name: string; params?: object } => {
  *     ],
  *   },
  *   {
- *     Chat: {
- *       path: 'chat/:author/:id',
- *       stringify: { author: author => author.toLowerCase() }
+ *     screens: {
+ *       Chat: {
+ *         path: 'chat/:author/:id',
+ *         stringify: { author: author => author.toLowerCase() }
+ *       }
  *     }
  *   }
  * )
@@ -60,14 +63,22 @@ const getActiveRoute = (state: State): { name: string; params?: object } => {
  */
 export default function getPathFromState(
   state?: State,
-  options: PathConfig = {}
+  options: Options = { screens: {} }
 ): string {
   if (state === undefined) {
     throw Error('NavigationState not passed');
   }
 
-  // Create a normalized configs array which will be easier to use
-  const configs = createNormalizedConfigs(options);
+  // Create a normalized configs object which will be easier to use
+  let configs: Record<string, ConfigItem>;
+
+  if (typeof options.screens === 'object' && options.screens.path == null) {
+    configs = createNormalizedConfigs(options.screens);
+  } else {
+    warnMigratePathConfig();
+    // @ts-ignore
+    configs = createNormalizedConfigs(options);
+  }
 
   let path = '/';
   let current: State | undefined = state;
@@ -238,7 +249,7 @@ const joinPaths = (...paths: string[]): string =>
     .join('/');
 
 const createConfigItem = (
-  config: OptionsItem | string,
+  config: PathConfig | string,
   parentPattern?: string
 ): ConfigItem => {
   if (typeof config === 'string') {
@@ -268,7 +279,7 @@ const createConfigItem = (
 };
 
 const createNormalizedConfigs = (
-  options: PathConfig,
+  options: PathConfigMap,
   pattern?: string
 ): Record<string, ConfigItem> =>
   fromEntries(

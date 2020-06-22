@@ -37,18 +37,20 @@ it('converts path string to initial state', () => {
 it('converts path string to initial state with config', () => {
   const path = '/foo/bar/sweet/apple/baz/jane?count=10&answer=42&valid=true';
   const config = {
-    Foo: 'foo',
-    Bar: 'bar/:type/:fruit',
-    Baz: {
-      path: 'baz/:author',
-      parse: {
-        author: (author: string) =>
-          author.replace(/^\w/, (c) => c.toUpperCase()),
-        count: Number,
-        valid: Boolean,
-      },
-      stringify: {
-        author: (author: string) => author.toLowerCase(),
+    screens: {
+      Foo: 'foo',
+      Bar: 'bar/:type/:fruit',
+      Baz: {
+        path: 'baz/:author',
+        parse: {
+          author: (author: string) =>
+            author.replace(/^\w/, (c) => c.toUpperCase()),
+          count: Number,
+          valid: Boolean,
+        },
+        stringify: {
+          author: (author: string) => author.toLowerCase(),
+        },
       },
     },
   };
@@ -144,26 +146,28 @@ it('handles route without param', () => {
 it('converts path string to initial state with config with nested screens', () => {
   const path = '/foe/bar/sweet/apple/baz/jane?count=10&answer=42&valid=true';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: {
-          path: 'foe',
-          exact: true,
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: {
+            path: 'foe',
+            exact: true,
+          },
         },
       },
-    },
-    Bar: 'bar/:type/:fruit',
-    Baz: {
-      path: 'baz/:author',
-      parse: {
-        author: (author: string) =>
-          author.replace(/^\w/, (c) => c.toUpperCase()),
-        count: Number,
-        valid: Boolean,
-      },
-      stringify: {
-        author: (author: string) => author.toLowerCase(),
+      Bar: 'bar/:type/:fruit',
+      Baz: {
+        path: 'baz/:author',
+        parse: {
+          author: (author: string) =>
+            author.replace(/^\w/, (c) => c.toUpperCase()),
+          count: Number,
+          valid: Boolean,
+        },
+        stringify: {
+          author: (author: string) => author.toLowerCase(),
+        },
       },
     },
   };
@@ -213,23 +217,25 @@ it('converts path string to initial state with config with nested screens', () =
 it('converts path string to initial state with config with nested screens and unused parse functions', () => {
   const path = '/foe/baz/jane?count=10&answer=42&valid=true';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: {
-          path: 'foe',
-          exact: true,
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: {
+            path: 'foe',
+            exact: true,
+          },
         },
       },
-    },
-    Baz: {
-      path: 'baz/:author',
-      parse: {
-        author: (author: string) =>
-          author.replace(/^\w/, (c) => c.toUpperCase()),
-        count: Number,
-        valid: Boolean,
-        id: Boolean,
+      Baz: {
+        path: 'baz/:author',
+        parse: {
+          author: (author: string) =>
+            author.replace(/^\w/, (c) => c.toUpperCase()),
+          count: Number,
+          valid: Boolean,
+          id: Boolean,
+        },
       },
     },
   };
@@ -271,35 +277,37 @@ it('converts path string to initial state with config with nested screens and un
 it('handles nested object with unused configs and with parse in it', () => {
   const path = '/bar/sweet/apple/foe/bis/jane?count=10&answer=42&valid=true';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: {
-          path: 'foe',
-          exact: true,
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: {
+            path: 'foe',
+            exact: true,
+          },
         },
       },
-    },
-    Bar: 'bar/:type/:fruit',
-    Baz: {
-      path: 'baz',
-      screens: {
-        Bos: {
-          path: 'bos',
-          exact: true,
-        },
-        Bis: {
-          path: 'bis/:author',
-          exact: true,
-          stringify: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toLowerCase()),
+      Bar: 'bar/:type/:fruit',
+      Baz: {
+        path: 'baz',
+        screens: {
+          Bos: {
+            path: 'bos',
+            exact: true,
           },
-          parse: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toUpperCase()),
-            count: Number,
-            valid: Boolean,
+          Bis: {
+            path: 'bis/:author',
+            exact: true,
+            stringify: {
+              author: (author: string) =>
+                author.replace(/^\w/, (c) => c.toLowerCase()),
+            },
+            parse: {
+              author: (author: string) =>
+                author.replace(/^\w/, (c) => c.toUpperCase()),
+              count: Number,
+              valid: Boolean,
+            },
           },
         },
       },
@@ -358,20 +366,22 @@ it('handles nested object with unused configs and with parse in it', () => {
 it('handles parse in nested object for second route depth', () => {
   const path = '/baz';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: {
-          path: 'foe',
-          exact: true,
-        },
-        Bar: {
-          path: 'bar',
-          exact: true,
-          screens: {
-            Baz: {
-              path: 'baz',
-              exact: true,
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: {
+            path: 'foe',
+            exact: true,
+          },
+          Bar: {
+            path: 'bar',
+            exact: true,
+            screens: {
+              Baz: {
+                path: 'baz',
+                exact: true,
+              },
             },
           },
         },
@@ -406,19 +416,21 @@ it('handles parse in nested object for second route depth', () => {
 it('handles parse in nested object for second route depth and and path and parse in roots', () => {
   const path = '/baz';
   const config = {
-    Foo: {
-      path: 'foo/:id',
-      parse: {
-        id: Number,
-      },
-      stringify: {
-        id: (id: number) => `id=${id}`,
-      },
-      screens: {
-        Foe: 'foe',
-        Bar: {
-          screens: {
-            Baz: 'baz',
+    screens: {
+      Foo: {
+        path: 'foo/:id',
+        parse: {
+          id: Number,
+        },
+        stringify: {
+          id: (id: number) => `id=${id}`,
+        },
+        screens: {
+          Foe: 'foe',
+          Bar: {
+            screens: {
+              Baz: 'baz',
+            },
           },
         },
       },
@@ -452,13 +464,15 @@ it('handles parse in nested object for second route depth and and path and parse
 it('handles initialRouteName', () => {
   const path = '/baz';
   const config = {
-    Foo: {
-      initialRouteName: 'Foe',
-      screens: {
-        Foe: 'foe',
-        Bar: {
-          screens: {
-            Baz: 'baz',
+    screens: {
+      Foo: {
+        initialRouteName: 'Foe',
+        screens: {
+          Foe: 'foe',
+          Bar: {
+            screens: {
+              Baz: 'baz',
+            },
           },
         },
       },
@@ -496,15 +510,17 @@ it('handles initialRouteName', () => {
 it('handles initialRouteName included in path', () => {
   const path = '/baz';
   const config = {
-    Foo: {
-      initialRouteName: 'Foe',
-      screens: {
-        Foe: {
-          screens: {
-            Baz: 'baz',
+    screens: {
+      Foo: {
+        initialRouteName: 'Foe',
+        screens: {
+          Foe: {
+            screens: {
+              Baz: 'baz',
+            },
           },
+          Bar: 'bar',
         },
-        Bar: 'bar',
       },
     },
   };
@@ -536,35 +552,37 @@ it('handles initialRouteName included in path', () => {
 it('handles two initialRouteNames', () => {
   const path = '/bar/sweet/apple/foe/bis/jane?count=10&answer=42&valid=true';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: {
-          path: 'foe',
-          exact: true,
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: {
+            path: 'foe',
+            exact: true,
+          },
         },
       },
-    },
-    Bar: 'bar/:type/:fruit',
-    Baz: {
-      initialRouteName: 'Bos',
-      screens: {
-        Bos: {
-          path: 'bos',
-          exact: true,
-        },
-        Bis: {
-          path: 'bis/:author',
-          exact: true,
-          stringify: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toLowerCase()),
+      Bar: 'bar/:type/:fruit',
+      Baz: {
+        initialRouteName: 'Bos',
+        screens: {
+          Bos: {
+            path: 'bos',
+            exact: true,
           },
-          parse: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toUpperCase()),
-            count: Number,
-            valid: Boolean,
+          Bis: {
+            path: 'bis/:author',
+            exact: true,
+            stringify: {
+              author: (author: string) =>
+                author.replace(/^\w/, (c) => c.toLowerCase()),
+            },
+            parse: {
+              author: (author: string) =>
+                author.replace(/^\w/, (c) => c.toUpperCase()),
+              count: Number,
+              valid: Boolean,
+            },
           },
         },
       },
@@ -625,35 +643,37 @@ it('handles two initialRouteNames', () => {
 it('accepts initialRouteName without config for it', () => {
   const path = '/bar/sweet/apple/foe/bis/jane?count=10&answer=42&valid=true';
   const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: {
-          path: 'foe',
-          exact: true,
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: {
+            path: 'foe',
+            exact: true,
+          },
         },
       },
-    },
-    Bar: 'bar/:type/:fruit',
-    Baz: {
-      initialRouteName: 'Bas',
-      screens: {
-        Bos: {
-          path: 'bos',
-          exact: true,
-        },
-        Bis: {
-          path: 'bis/:author',
-          exact: true,
-          stringify: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toLowerCase()),
+      Bar: 'bar/:type/:fruit',
+      Baz: {
+        initialRouteName: 'Bas',
+        screens: {
+          Bos: {
+            path: 'bos',
+            exact: true,
           },
-          parse: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toUpperCase()),
-            count: Number,
-            valid: Boolean,
+          Bis: {
+            path: 'bis/:author',
+            exact: true,
+            stringify: {
+              author: (author: string) =>
+                author.replace(/^\w/, (c) => c.toLowerCase()),
+            },
+            parse: {
+              author: (author: string) =>
+                author.replace(/^\w/, (c) => c.toUpperCase()),
+              count: Number,
+              valid: Boolean,
+            },
           },
         },
       },
@@ -713,12 +733,14 @@ it('accepts initialRouteName without config for it', () => {
 
 it('returns undefined if path is empty and no matching screen is present', () => {
   const config = {
-    Foo: {
-      screens: {
-        Foe: 'foe',
-        Bar: {
-          screens: {
-            Baz: 'baz',
+    screens: {
+      Foo: {
+        screens: {
+          Foe: 'foe',
+          Bar: {
+            screens: {
+              Baz: 'baz',
+            },
           },
         },
       },
@@ -733,13 +755,15 @@ it('returns undefined if path is empty and no matching screen is present', () =>
 it('returns matching screen if path is empty', () => {
   const path = '';
   const config = {
-    Foo: {
-      screens: {
-        Foe: 'foe',
-        Bar: {
-          screens: {
-            Qux: '',
-            Baz: 'baz',
+    screens: {
+      Foo: {
+        screens: {
+          Foe: 'foe',
+          Bar: {
+            screens: {
+              Qux: '',
+              Baz: 'baz',
+            },
           },
         },
       },
@@ -773,16 +797,18 @@ it('returns matching screen if path is empty', () => {
 it('returns matching screen with params if path is empty', () => {
   const path = '?foo=42';
   const config = {
-    Foo: {
-      screens: {
-        Foe: 'foe',
-        Bar: {
-          screens: {
-            Qux: {
-              path: '',
-              parse: { foo: Number },
+    screens: {
+      Foo: {
+        screens: {
+          Foe: 'foe',
+          Bar: {
+            screens: {
+              Qux: {
+                path: '',
+                parse: { foo: Number },
+              },
+              Baz: 'baz',
             },
-            Baz: 'baz',
           },
         },
       },
@@ -815,15 +841,17 @@ it('returns matching screen with params if path is empty', () => {
 
 it("doesn't match nested screen if path is empty", () => {
   const config = {
-    Foo: {
-      screens: {
-        Foe: 'foe',
-        Bar: {
-          path: 'bar',
-          screens: {
-            Qux: {
-              path: '',
-              parse: { foo: Number },
+    screens: {
+      Foo: {
+        screens: {
+          Foe: 'foe',
+          Bar: {
+            path: 'bar',
+            screens: {
+              Qux: {
+                path: '',
+                parse: { foo: Number },
+              },
             },
           },
         },
@@ -840,15 +868,17 @@ it('chooses more exhaustive pattern', () => {
   const path = '/foo/5';
 
   const config = {
-    Foe: {
-      path: '/',
-      initialRouteName: 'Foo',
-      screens: {
-        Foo: 'foo',
-        Bis: {
-          path: 'foo/:id',
-          parse: {
-            id: Number,
+    screens: {
+      Foe: {
+        path: '/',
+        initialRouteName: 'Foo',
+        screens: {
+          Foo: 'foo',
+          Bis: {
+            path: 'foo/:id',
+            parse: {
+              id: Number,
+            },
           },
         },
       },
@@ -885,13 +915,15 @@ it('handles same paths beginnings', () => {
   const path = '/foos';
 
   const config = {
-    Foe: {
-      path: '/',
-      initialRouteName: 'Foo',
-      screens: {
-        Foo: 'foo',
-        Bis: {
-          path: 'foos',
+    screens: {
+      Foe: {
+        path: '/',
+        initialRouteName: 'Foo',
+        screens: {
+          Foo: 'foo',
+          Bis: {
+            path: 'foos',
+          },
         },
       },
     },
@@ -926,15 +958,17 @@ it('handles same paths beginnings with params', () => {
   const path = '/foos/5';
 
   const config = {
-    Foe: {
-      path: '/',
-      initialRouteName: 'Foo',
-      screens: {
-        Foo: 'foo',
-        Bis: {
-          path: 'foos/:id',
-          parse: {
-            id: Number,
+    screens: {
+      Foe: {
+        path: '/',
+        initialRouteName: 'Foo',
+        screens: {
+          Foo: 'foo',
+          Bis: {
+            path: 'foos/:id',
+            parse: {
+              id: Number,
+            },
           },
         },
       },
@@ -971,22 +1005,24 @@ it('handles not taking path with too many segments', () => {
   const path = '/foos/5';
 
   const config = {
-    Foe: {
-      path: '/',
-      initialRouteName: 'Foo',
-      screens: {
-        Foo: 'foo',
-        Bis: {
-          path: 'foos/:id',
-          parse: {
-            id: Number,
+    screens: {
+      Foe: {
+        path: '/',
+        initialRouteName: 'Foo',
+        screens: {
+          Foo: 'foo',
+          Bis: {
+            path: 'foos/:id',
+            parse: {
+              id: Number,
+            },
           },
-        },
-        Bas: {
-          path: 'foos/:id/:nip',
-          parse: {
-            id: Number,
-            pwd: Number,
+          Bas: {
+            path: 'foos/:id/:nip',
+            parse: {
+              id: Number,
+              pwd: Number,
+            },
           },
         },
       },
@@ -1023,22 +1059,24 @@ it('handles differently ordered params v1', () => {
   const path = '/foos/5/res/20';
 
   const config = {
-    Foe: {
-      path: '/',
-      initialRouteName: 'Foo',
-      screens: {
-        Foo: 'foo',
-        Bis: {
-          path: 'foos/:id',
-          parse: {
-            id: Number,
+    screens: {
+      Foe: {
+        path: '/',
+        initialRouteName: 'Foo',
+        screens: {
+          Foo: 'foo',
+          Bis: {
+            path: 'foos/:id',
+            parse: {
+              id: Number,
+            },
           },
-        },
-        Bas: {
-          path: 'foos/:id/res/:pwd',
-          parse: {
-            id: Number,
-            pwd: Number,
+          Bas: {
+            path: 'foos/:id/res/:pwd',
+            parse: {
+              id: Number,
+              pwd: Number,
+            },
           },
         },
       },
@@ -1075,22 +1113,24 @@ it('handles differently ordered params v2', () => {
   const path = '/5/20/foos/res';
 
   const config = {
-    Foe: {
-      path: '/',
-      initialRouteName: 'Foo',
-      screens: {
-        Foo: 'foo',
-        Bis: {
-          path: 'foos/:id',
-          parse: {
-            id: Number,
+    screens: {
+      Foe: {
+        path: '/',
+        initialRouteName: 'Foo',
+        screens: {
+          Foo: 'foo',
+          Bis: {
+            path: 'foos/:id',
+            parse: {
+              id: Number,
+            },
           },
-        },
-        Bas: {
-          path: ':id/:pwd/foos/res',
-          parse: {
-            id: Number,
-            pwd: Number,
+          Bas: {
+            path: ':id/:pwd/foos/res',
+            parse: {
+              id: Number,
+              pwd: Number,
+            },
           },
         },
       },
@@ -1127,22 +1167,24 @@ it('handles differently ordered params v3', () => {
   const path = '/foos/5/20/res';
 
   const config = {
-    Foe: {
-      path: '/',
-      initialRouteName: 'Foo',
-      screens: {
-        Foo: 'foo',
-        Bis: {
-          path: 'foos/:id',
-          parse: {
-            id: Number,
+    screens: {
+      Foe: {
+        path: '/',
+        initialRouteName: 'Foo',
+        screens: {
+          Foo: 'foo',
+          Bis: {
+            path: 'foos/:id',
+            parse: {
+              id: Number,
+            },
           },
-        },
-        Bas: {
-          path: 'foos/:id/:pwd/res',
-          parse: {
-            id: Number,
-            pwd: Number,
+          Bas: {
+            path: 'foos/:id/:pwd/res',
+            parse: {
+              id: Number,
+              pwd: Number,
+            },
           },
         },
       },
@@ -1179,22 +1221,24 @@ it('handles differently ordered params v4', () => {
   const path = '5/foos/res/20';
 
   const config = {
-    Foe: {
-      path: '/',
-      initialRouteName: 'Foo',
-      screens: {
-        Foo: 'foo',
-        Bis: {
-          path: 'foos/:id',
-          parse: {
-            id: Number,
+    screens: {
+      Foe: {
+        path: '/',
+        initialRouteName: 'Foo',
+        screens: {
+          Foo: 'foo',
+          Bis: {
+            path: 'foos/:id',
+            parse: {
+              id: Number,
+            },
           },
-        },
-        Bas: {
-          path: ':id/foos/res/:pwd',
-          parse: {
-            id: Number,
-            pwd: Number,
+          Bas: {
+            path: ':id/foos/res/:pwd',
+            parse: {
+              id: Number,
+              pwd: Number,
+            },
           },
         },
       },
@@ -1231,22 +1275,24 @@ it('handles simple optional params', () => {
   const path = '/foos/5';
 
   const config = {
-    Foe: {
-      path: '/',
-      initialRouteName: 'Foo',
-      screens: {
-        Foo: 'foo',
-        Bis: {
-          path: 'foo/:id',
-          parse: {
-            id: Number,
+    screens: {
+      Foe: {
+        path: '/',
+        initialRouteName: 'Foo',
+        screens: {
+          Foo: 'foo',
+          Bis: {
+            path: 'foo/:id',
+            parse: {
+              id: Number,
+            },
           },
-        },
-        Bas: {
-          path: 'foos/:id/:nip?',
-          parse: {
-            id: Number,
-            nip: Number,
+          Bas: {
+            path: 'foos/:id/:nip?',
+            parse: {
+              id: Number,
+              nip: Number,
+            },
           },
         },
       },
@@ -1283,22 +1329,24 @@ it('handle 2 optional params at the end v1', () => {
   const path = '/foos/5';
 
   const config = {
-    Foe: {
-      path: '/',
-      initialRouteName: 'Foo',
-      screens: {
-        Foo: 'foo',
-        Bis: {
-          path: 'foo/:id',
-          parse: {
-            id: Number,
+    screens: {
+      Foe: {
+        path: '/',
+        initialRouteName: 'Foo',
+        screens: {
+          Foo: 'foo',
+          Bis: {
+            path: 'foo/:id',
+            parse: {
+              id: Number,
+            },
           },
-        },
-        Bas: {
-          path: 'foos/:id/:nip?/:pwd?',
-          parse: {
-            id: Number,
-            nip: Number,
+          Bas: {
+            path: 'foos/:id/:nip?/:pwd?',
+            parse: {
+              id: Number,
+              nip: Number,
+            },
           },
         },
       },
@@ -1335,22 +1383,24 @@ it('handle 2 optional params at the end v2', () => {
   const path = '/foos/5/10';
 
   const config = {
-    Foe: {
-      path: '/',
-      initialRouteName: 'Foo',
-      screens: {
-        Foo: 'foo',
-        Bis: {
-          path: 'foo/:id',
-          parse: {
-            id: Number,
+    screens: {
+      Foe: {
+        path: '/',
+        initialRouteName: 'Foo',
+        screens: {
+          Foo: 'foo',
+          Bis: {
+            path: 'foo/:id',
+            parse: {
+              id: Number,
+            },
           },
-        },
-        Bas: {
-          path: 'foos/:id/:nip?/:pwd?',
-          parse: {
-            id: Number,
-            nip: Number,
+          Bas: {
+            path: 'foos/:id/:nip?/:pwd?',
+            parse: {
+              id: Number,
+              nip: Number,
+            },
           },
         },
       },
@@ -1387,23 +1437,25 @@ it('handle 2 optional params at the end v3', () => {
   const path = '/foos/5/10/15';
 
   const config = {
-    Foe: {
-      path: '/',
-      initialRouteName: 'Foo',
-      screens: {
-        Foo: 'foo',
-        Bis: {
-          path: 'foo/:id',
-          parse: {
-            id: Number,
+    screens: {
+      Foe: {
+        path: '/',
+        initialRouteName: 'Foo',
+        screens: {
+          Foo: 'foo',
+          Bis: {
+            path: 'foo/:id',
+            parse: {
+              id: Number,
+            },
           },
-        },
-        Bas: {
-          path: 'foos/:id/:nip?/:pwd?',
-          parse: {
-            id: Number,
-            nip: Number,
-            pwd: Number,
+          Bas: {
+            path: 'foos/:id/:nip?/:pwd?',
+            parse: {
+              id: Number,
+              nip: Number,
+              pwd: Number,
+            },
           },
         },
       },
@@ -1440,23 +1492,25 @@ it('handle optional params in the middle v1', () => {
   const path = '/foos/5/10';
 
   const config = {
-    Foe: {
-      path: '/',
-      initialRouteName: 'Foo',
-      screens: {
-        Foo: 'foo',
-        Bis: {
-          path: 'foo/:id',
-          parse: {
-            id: Number,
+    screens: {
+      Foe: {
+        path: '/',
+        initialRouteName: 'Foo',
+        screens: {
+          Foo: 'foo',
+          Bis: {
+            path: 'foo/:id',
+            parse: {
+              id: Number,
+            },
           },
-        },
-        Bas: {
-          path: 'foos/:id/:nip?/:pwd',
-          parse: {
-            id: Number,
-            nip: Number,
-            pwd: Number,
+          Bas: {
+            path: 'foos/:id/:nip?/:pwd',
+            parse: {
+              id: Number,
+              nip: Number,
+              pwd: Number,
+            },
           },
         },
       },
@@ -1493,23 +1547,25 @@ it('handle optional params in the middle v2', () => {
   const path = '/foos/5/10/15';
 
   const config = {
-    Foe: {
-      path: '/',
-      initialRouteName: 'Foo',
-      screens: {
-        Foo: 'foo',
-        Bis: {
-          path: 'foo/:id',
-          parse: {
-            id: Number,
+    screens: {
+      Foe: {
+        path: '/',
+        initialRouteName: 'Foo',
+        screens: {
+          Foo: 'foo',
+          Bis: {
+            path: 'foo/:id',
+            parse: {
+              id: Number,
+            },
           },
-        },
-        Bas: {
-          path: 'foos/:id/:nip?/:pwd',
-          parse: {
-            id: Number,
-            nip: Number,
-            pwd: Number,
+          Bas: {
+            path: 'foos/:id/:nip?/:pwd',
+            parse: {
+              id: Number,
+              nip: Number,
+              pwd: Number,
+            },
           },
         },
       },
@@ -1546,24 +1602,26 @@ it('handle optional params in the middle v3', () => {
   const path = '/foos/5/10/15';
 
   const config = {
-    Foe: {
-      path: '/',
-      initialRouteName: 'Foo',
-      screens: {
-        Foo: 'foo',
-        Bis: {
-          path: 'foo/:id',
-          parse: {
-            id: Number,
+    screens: {
+      Foe: {
+        path: '/',
+        initialRouteName: 'Foo',
+        screens: {
+          Foo: 'foo',
+          Bis: {
+            path: 'foo/:id',
+            parse: {
+              id: Number,
+            },
           },
-        },
-        Bas: {
-          path: 'foos/:id/:nip?/:pwd/:smh',
-          parse: {
-            id: Number,
-            nip: Number,
-            pwd: Number,
-            smh: Number,
+          Bas: {
+            path: 'foos/:id/:nip?/:pwd/:smh',
+            parse: {
+              id: Number,
+              nip: Number,
+              pwd: Number,
+              smh: Number,
+            },
           },
         },
       },
@@ -1600,24 +1658,26 @@ it('handle optional params in the middle v4', () => {
   const path = '/foos/5/10';
 
   const config = {
-    Foe: {
-      path: '/',
-      initialRouteName: 'Foo',
-      screens: {
-        Foo: 'foo',
-        Bis: {
-          path: 'foo/:id',
-          parse: {
-            id: Number,
+    screens: {
+      Foe: {
+        path: '/',
+        initialRouteName: 'Foo',
+        screens: {
+          Foo: 'foo',
+          Bis: {
+            path: 'foo/:id',
+            parse: {
+              id: Number,
+            },
           },
-        },
-        Bas: {
-          path: 'foos/:nip?/:pwd/:smh?/:id',
-          parse: {
-            id: Number,
-            nip: Number,
-            pwd: Number,
-            smh: Number,
+          Bas: {
+            path: 'foos/:nip?/:pwd/:smh?/:id',
+            parse: {
+              id: Number,
+              nip: Number,
+              pwd: Number,
+              smh: Number,
+            },
           },
         },
       },
@@ -1654,24 +1714,26 @@ it('handle optional params in the middle v5', () => {
   const path = '/foos/5/10/15';
 
   const config = {
-    Foe: {
-      path: '/',
-      initialRouteName: 'Foo',
-      screens: {
-        Foo: 'foo',
-        Bis: {
-          path: 'foo/:id',
-          parse: {
-            id: Number,
+    screens: {
+      Foe: {
+        path: '/',
+        initialRouteName: 'Foo',
+        screens: {
+          Foo: 'foo',
+          Bis: {
+            path: 'foo/:id',
+            parse: {
+              id: Number,
+            },
           },
-        },
-        Bas: {
-          path: 'foos/:nip?/:pwd/:smh?/:id',
-          parse: {
-            id: Number,
-            nip: Number,
-            pwd: Number,
-            smh: Number,
+          Bas: {
+            path: 'foos/:nip?/:pwd/:smh?/:id',
+            parse: {
+              id: Number,
+              nip: Number,
+              pwd: Number,
+              smh: Number,
+            },
           },
         },
       },
@@ -1708,24 +1770,26 @@ it('handle optional params in the beginning v1', () => {
   const path = '5/10/foos/15';
 
   const config = {
-    Foe: {
-      path: '/',
-      initialRouteName: 'Foo',
-      screens: {
-        Foo: 'foo',
-        Bis: {
-          path: 'foo/:id',
-          parse: {
-            id: Number,
+    screens: {
+      Foe: {
+        path: '/',
+        initialRouteName: 'Foo',
+        screens: {
+          Foo: 'foo',
+          Bis: {
+            path: 'foo/:id',
+            parse: {
+              id: Number,
+            },
           },
-        },
-        Bas: {
-          path: ':nip?/:pwd/foos/:smh?/:id',
-          parse: {
-            id: Number,
-            nip: Number,
-            pwd: Number,
-            smh: Number,
+          Bas: {
+            path: ':nip?/:pwd/foos/:smh?/:id',
+            parse: {
+              id: Number,
+              nip: Number,
+              pwd: Number,
+              smh: Number,
+            },
           },
         },
       },
@@ -1762,24 +1826,26 @@ it('handle optional params in the beginning v2', () => {
   const path = '5/10/foos/15';
 
   const config = {
-    Foe: {
-      path: '/',
-      initialRouteName: 'Foo',
-      screens: {
-        Foo: 'foo',
-        Bis: {
-          path: 'foo/:id',
-          parse: {
-            id: Number,
+    screens: {
+      Foe: {
+        path: '/',
+        initialRouteName: 'Foo',
+        screens: {
+          Foo: 'foo',
+          Bis: {
+            path: 'foo/:id',
+            parse: {
+              id: Number,
+            },
           },
-        },
-        Bas: {
-          path: ':nip?/:smh?/:pwd/foos/:id',
-          parse: {
-            id: Number,
-            nip: Number,
-            pwd: Number,
-            smh: Number,
+          Bas: {
+            path: ':nip?/:smh?/:pwd/foos/:id',
+            parse: {
+              id: Number,
+              nip: Number,
+              pwd: Number,
+              smh: Number,
+            },
           },
         },
       },
@@ -1816,13 +1882,15 @@ it('merges parent patterns if needed', () => {
   const path = 'foo/42/baz/babel';
 
   const config = {
-    Foo: {
-      path: 'foo/:bar',
-      parse: {
-        bar: Number,
-      },
-      screens: {
-        Baz: 'baz/:qux',
+    screens: {
+      Foo: {
+        path: 'foo/:bar',
+        parse: {
+          bar: Number,
+        },
+        screens: {
+          Baz: 'baz/:qux',
+        },
       },
     },
   };
@@ -1853,10 +1921,12 @@ it('merges parent patterns if needed', () => {
 it('ignores extra slashes in the pattern', () => {
   const path = '/bar/42';
   const config = {
-    Foo: {
-      screens: {
-        Bar: {
-          path: '/bar//:id/',
+    screens: {
+      Foo: {
+        screens: {
+          Bar: {
+            path: '/bar//:id/',
+          },
         },
       },
     },
@@ -1887,11 +1957,13 @@ it('ignores extra slashes in the pattern', () => {
 it('matches wildcard patterns at root', () => {
   const path = '/test/bar/42/whatever';
   const config = {
-    404: '*',
-    Foo: {
-      screens: {
-        Bar: {
-          path: '/bar/:id/',
+    screens: {
+      404: '*',
+      Foo: {
+        screens: {
+          Bar: {
+            path: '/bar/:id/',
+          },
         },
       },
     },
@@ -1910,12 +1982,14 @@ it('matches wildcard patterns at root', () => {
 it('matches wildcard patterns at nested level', () => {
   const path = '/bar/42/whatever/baz/initt';
   const config = {
-    Foo: {
-      screens: {
-        Bar: {
-          path: '/bar/:id/',
-          screens: {
-            404: '*',
+    screens: {
+      Foo: {
+        screens: {
+          Bar: {
+            path: '/bar/:id/',
+            screens: {
+              404: '*',
+            },
           },
         },
       },
@@ -1950,18 +2024,20 @@ it('matches wildcard patterns at nested level', () => {
 it('matches wildcard patterns at nested level with exact', () => {
   const path = '/whatever';
   const config = {
-    Foo: {
-      screens: {
-        Bar: {
-          path: '/bar/:id/',
-          screens: {
-            404: {
-              path: '*',
-              exact: true,
+    screens: {
+      Foo: {
+        screens: {
+          Bar: {
+            path: '/bar/:id/',
+            screens: {
+              404: {
+                path: '*',
+                exact: true,
+              },
             },
           },
+          Baz: {},
         },
-        Baz: {},
       },
     },
   };
@@ -1993,13 +2069,15 @@ it('matches wildcard patterns at nested level with exact', () => {
 it('tries to match wildcard patterns at the end', () => {
   const path = '/bar/42/test';
   const config = {
-    Foo: {
-      screens: {
-        Bar: {
-          path: '/bar/:id/',
-          screens: {
-            404: '*',
-            Test: 'test',
+    screens: {
+      Foo: {
+        screens: {
+          Bar: {
+            path: '/bar/:id/',
+            screens: {
+              404: '*',
+              Test: 'test',
+            },
           },
         },
       },
@@ -2034,15 +2112,17 @@ it('tries to match wildcard patterns at the end', () => {
 it('uses nearest parent wildcard match for unmatched paths', () => {
   const path = '/bar/42/baz/test';
   const config = {
-    Foo: {
-      screens: {
-        Bar: {
-          path: '/bar/:id/',
-          screens: {
-            Baz: 'baz',
+    screens: {
+      Foo: {
+        screens: {
+          Bar: {
+            path: '/bar/:id/',
+            screens: {
+              Baz: 'baz',
+            },
           },
+          404: '*',
         },
-        404: '*',
       },
     },
   };
@@ -2062,4 +2142,65 @@ it('uses nearest parent wildcard match for unmatched paths', () => {
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
     state
   );
+});
+
+it('supports legacy config', () => {
+  const path = '/foo/bar/sweet/apple/baz/jane?count=10&answer=42&valid=true';
+  const config = {
+    Foo: 'foo',
+    Bar: 'bar/:type/:fruit',
+    Baz: {
+      path: 'baz/:author',
+      parse: {
+        author: (author: string) =>
+          author.replace(/^\w/, (c) => c.toUpperCase()),
+        count: Number,
+        valid: Boolean,
+      },
+      stringify: {
+        author: (author: string) => author.toLowerCase(),
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              params: { fruit: 'apple', type: 'sweet' },
+              state: {
+                routes: [
+                  {
+                    name: 'Baz',
+                    params: {
+                      author: 'Jane',
+                      count: 10,
+                      answer: '42',
+                      valid: true,
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  const spy = jest.spyOn(console, 'warn');
+
+  spy.mockImplementation(() => {});
+
+  // @ts-ignore
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(spy.mock.calls[0][0]).toMatch(
+    'The shape of the configuration object for linking has changed'
+  );
+
+  spy.mockRestore();
 });

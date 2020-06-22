@@ -57,14 +57,16 @@ it('renders correct state with location', () => {
       linking={{
         prefixes: [],
         config: {
-          Home: {
-            initialRouteName: 'Profile',
-            screens: {
-              Settings: {
-                path: ':user/edit',
-              },
-              Updates: {
-                path: ':user/updates',
+          screens: {
+            Home: {
+              initialRouteName: 'Profile',
+              screens: {
+                Settings: {
+                  path: ':user/edit',
+                },
+                Updates: {
+                  path: ':user/updates',
+                },
               },
             },
           },

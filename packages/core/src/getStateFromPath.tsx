@@ -5,7 +5,10 @@ import type {
   PartialState,
   InitialState,
 } from '@react-navigation/routers';
-import type { PathConfig } from './types';
+import warnMigratePathConfig from './warnMigratePathConfig';
+import type { PathConfigMap } from './types';
+
+type Options = { initialRouteName?: string; screens: PathConfigMap };
 
 type ParseConfig = Record<string, (value: string) => any>;
 
@@ -36,9 +39,11 @@ type ResultState = PartialState<NavigationState> & {
  * getStateFromPath(
  *   '/chat/jane/42',
  *   {
- *     Chat: {
- *       path: 'chat/:author/:id',
- *       parse: { id: Number }
+ *     screens: {
+ *       Chat: {
+ *         path: 'chat/:author/:id',
+ *         parse: { id: Number }
+ *       }
  *     }
  *   }
  * )
@@ -48,15 +53,25 @@ type ResultState = PartialState<NavigationState> & {
  */
 export default function getStateFromPath(
   path: string,
-  options: PathConfig = {}
+  options: Options = { screens: {} }
 ): ResultState | undefined {
   let initialRoutes: InitialRouteConfig[] = [];
+
+  let screens: PathConfigMap;
+
+  if (typeof options.screens === 'object' && options.screens.path == null) {
+    screens = options.screens;
+  } else {
+    warnMigratePathConfig();
+    // @ts-ignore
+    screens = options;
+  }
 
   // Create a normalized configs array which will be easier to use
   const configs = ([] as RouteConfig[])
     .concat(
-      ...Object.keys(options).map((key) =>
-        createNormalizedConfigs(key, options, [], initialRoutes)
+      ...Object.keys(screens).map((key) =>
+        createNormalizedConfigs(key, screens, [], initialRoutes)
       )
     )
     .sort((a, b) => {
@@ -266,7 +281,7 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
 
 const createNormalizedConfigs = (
   screen: string,
-  routeConfig: PathConfig,
+  routeConfig: PathConfigMap,
   routeNames: string[] = [],
   initials: InitialRouteConfig[],
   parentPattern?: string
@@ -311,7 +326,7 @@ const createNormalizedConfigs = (
       Object.keys(config.screens).forEach((nestedConfig) => {
         const result = createNormalizedConfigs(
           nestedConfig,
-          config.screens as PathConfig,
+          config.screens as PathConfigMap,
           routeNames,
           initials,
           pattern
