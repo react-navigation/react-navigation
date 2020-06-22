@@ -43,6 +43,24 @@ module.exports = {
   get createNavigationFactory() {
     return require('./throwIfWrongVersion').default;
   },
+  get useNavigationBuilder() {
+    return require('./throwIfWrongVersion').default;
+  },
+  get useNavigation() {
+    return require('./throwIfWrongVersion').default;
+  },
+  get useRoute() {
+    return require('./throwIfWrongVersion').default;
+  },
+  get useFocusEffect() {
+    return require('./throwIfWrongVersion').default;
+  },
+  get useIsFocused() {
+    return require('./throwIfWrongVersion').default;
+  },
+  get useNavigationState() {
+    return require('./throwIfWrongVersion').default;
+  },
   get NavigationContainer() {
     return require('./throwIfWrongVersion').default;
   },
