@@ -1,5 +1,8 @@
+import type { NavigationState, PartialState } from '@react-navigation/routers';
 import getPathFromState from '../getPathFromState';
 import getStateFromPath from '../getStateFromPath';
+
+type State = PartialState<NavigationState>;
 
 it('converts state to path string', () => {
   const state = {
@@ -31,12 +34,75 @@ it('converts state to path string', () => {
   const path = '/foo/bar/baz%20qux?author=jane&valid=true';
 
   expect(getPathFromState(state)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path))).toBe(path);
+  expect(getPathFromState(getStateFromPath(path) as State)).toBe(path);
 });
 
 it('converts state to path string with config', () => {
   const path = '/few/bar/sweet/apple/baz/jane?id=x10&valid=true';
   const config = {
+    screens: {
+      Foo: {
+        path: 'few',
+        screens: {
+          Bar: {
+            path: 'bar/:type/:fruit',
+            screens: {
+              Baz: {
+                path: 'baz/:author',
+                parse: {
+                  author: (author: string) =>
+                    author.replace(/^\w/, (c) => c.toUpperCase()),
+                  id: (id: string) => Number(id.replace(/^x/, '')),
+                  valid: Boolean,
+                },
+                stringify: {
+                  author: (author: string) => author.toLowerCase(),
+                  id: (id: number) => `x${id}`,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          index: 1,
+          routes: [
+            { name: 'boo' },
+            {
+              name: 'Bar',
+              params: { fruit: 'apple', type: 'sweet', avaliable: false },
+              state: {
+                routes: [
+                  {
+                    name: 'Baz',
+                    params: { author: 'Jane', valid: true, id: 10 },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
+});
+
+it('converts state to path string with config (legacy)', () => {
+  const path = '/few/bar/sweet/apple/baz/jane?id=x10&valid=true';
+  const config = {
+    legacy: true,
     screens: {
       Foo: 'few',
       Bar: 'bar/:type/:fruit',
@@ -83,7 +149,9 @@ it('converts state to path string with config', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('handles route without param', () => {
@@ -100,7 +168,7 @@ it('handles route without param', () => {
   };
 
   expect(getPathFromState(state)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path))).toBe(path);
+  expect(getPathFromState(getStateFromPath(path) as State)).toBe(path);
 });
 
 it("doesn't add query param for empty params", () => {
@@ -115,13 +183,93 @@ it("doesn't add query param for empty params", () => {
   };
 
   expect(getPathFromState(state)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path))).toBe(path);
+  expect(getPathFromState(getStateFromPath(path) as State)).toBe(path);
 });
 
 it('handles state with config with nested screens', () => {
   const path =
     '/foo/foe/bar/sweet/apple/baz/jane?answer=42&count=10&valid=true';
   const config = {
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: {
+            path: 'foe',
+            screens: {
+              Bar: {
+                path: 'bar/:type/:fruit',
+                screens: {
+                  Baz: {
+                    path: 'baz/:author',
+                    parse: {
+                      author: (author: string) =>
+                        author.replace(/^\w/, (c) => c.toUpperCase()),
+                      count: Number,
+                      valid: Boolean,
+                    },
+                    stringify: {
+                      author: (author: string) => author.toLowerCase(),
+                      id: (id: number) => `x${id}`,
+                      unknown: (_: unknown) => 'x',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Foe',
+              state: {
+                routes: [
+                  {
+                    name: 'Bar',
+                    params: { fruit: 'apple', type: 'sweet' },
+                    state: {
+                      routes: [
+                        {
+                          name: 'Baz',
+                          params: {
+                            author: 'Jane',
+                            count: '10',
+                            answer: '42',
+                            valid: true,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
+});
+
+it('handles state with config with nested screens (legacy)', () => {
+  const path =
+    '/foo/foe/bar/sweet/apple/baz/jane?answer=42&count=10&valid=true';
+  const config = {
+    legacy: true,
     screens: {
       Foo: {
         path: 'foo',
@@ -184,7 +332,9 @@ it('handles state with config with nested screens', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('handles state with config with nested screens and exact', () => {
@@ -197,6 +347,86 @@ it('handles state with config with nested screens and exact', () => {
           Foe: {
             path: 'foe',
             exact: true,
+            screens: {
+              Bar: {
+                path: 'bar/:type/:fruit',
+                screens: {
+                  Baz: {
+                    path: 'baz/:author',
+                    parse: {
+                      author: (author: string) =>
+                        author.replace(/^\w/, (c) => c.toUpperCase()),
+                      count: Number,
+                      valid: Boolean,
+                    },
+                    stringify: {
+                      author: (author: string) => author.toLowerCase(),
+                      id: (id: number) => `x${id}`,
+                      unknown: (_: unknown) => 'x',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Foe',
+              state: {
+                routes: [
+                  {
+                    name: 'Bar',
+                    params: { fruit: 'apple', type: 'sweet' },
+                    state: {
+                      routes: [
+                        {
+                          name: 'Baz',
+                          params: {
+                            author: 'Jane',
+                            count: '10',
+                            answer: '42',
+                            valid: true,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
+});
+
+it('handles state with config with nested screens and exact (legacy)', () => {
+  const path = '/foe/bar/sweet/apple/baz/jane?answer=42&count=10&valid=true';
+  const config = {
+    legacy: true,
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: {
+            path: 'foe',
+            exact: true,
           },
         },
       },
@@ -255,12 +485,80 @@ it('handles state with config with nested screens and exact', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('handles state with config with nested screens and unused configs', () => {
   const path = '/foo/foe/baz/jane?answer=42&count=10&valid=true';
   const config = {
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: {
+            path: 'foe',
+            screens: {
+              Baz: {
+                path: 'baz/:author',
+                parse: {
+                  author: (author: string) =>
+                    author.replace(/^\w/, (c) => c.toUpperCase()),
+                  count: Number,
+                  valid: Boolean,
+                },
+                stringify: {
+                  author: (author: string) =>
+                    author.replace(/^\w/, (c) => c.toLowerCase()),
+                  unknown: (_: unknown) => 'x',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Foe',
+              state: {
+                routes: [
+                  {
+                    name: 'Baz',
+                    params: {
+                      author: 'Jane',
+                      count: 10,
+                      answer: '42',
+                      valid: true,
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
+});
+
+it('handles state with config with nested screens and unused configs (legacy)', () => {
+  const path = '/foo/foe/baz/jane?answer=42&count=10&valid=true';
+  const config = {
+    legacy: true,
     screens: {
       Foo: {
         path: 'foo',
@@ -314,12 +612,81 @@ it('handles state with config with nested screens and unused configs', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('handles state with config with nested screens and unused configs with exact', () => {
   const path = '/foe/baz/jane?answer=42&count=10&valid=true';
   const config = {
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: {
+            path: 'foe',
+            exact: true,
+            screens: {
+              Baz: {
+                path: 'baz/:author',
+                parse: {
+                  author: (author: string) =>
+                    author.replace(/^\w/, (c) => c.toUpperCase()),
+                  count: Number,
+                  valid: Boolean,
+                },
+                stringify: {
+                  author: (author: string) =>
+                    author.replace(/^\w/, (c) => c.toLowerCase()),
+                  unknown: (_: unknown) => 'x',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Foe',
+              state: {
+                routes: [
+                  {
+                    name: 'Baz',
+                    params: {
+                      author: 'Jane',
+                      count: 10,
+                      answer: '42',
+                      valid: true,
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
+});
+
+it('handles state with config with nested screens and unused configs with exact (legacy)', () => {
+  const path = '/foe/baz/jane?answer=42&count=10&valid=true';
+  const config = {
+    legacy: true,
     screens: {
       Foo: {
         path: 'foo',
@@ -376,12 +743,95 @@ it('handles state with config with nested screens and unused configs with exact'
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('handles nested object with stringify in it', () => {
   const path = '/bar/sweet/apple/foo/bis/jane?answer=42&count=10&valid=true';
   const config = {
+    screens: {
+      Bar: {
+        path: 'bar/:type/:fruit',
+        screens: {
+          Foo: {
+            path: 'foo',
+            screens: {
+              Foe: {
+                path: 'foe',
+              },
+              Baz: {
+                screens: {
+                  Bos: 'bos',
+                  Bis: {
+                    path: 'bis/:author',
+                    stringify: {
+                      author: (author: string) =>
+                        author.replace(/^\w/, (c) => c.toLowerCase()),
+                    },
+                    parse: {
+                      author: (author: string) =>
+                        author.replace(/^\w/, (c) => c.toUpperCase()),
+                      count: Number,
+                      valid: Boolean,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Bar',
+        params: { fruit: 'apple', type: 'sweet' },
+        state: {
+          routes: [
+            {
+              name: 'Foo',
+              state: {
+                routes: [
+                  {
+                    name: 'Baz',
+                    state: {
+                      routes: [
+                        {
+                          name: 'Bis',
+                          params: {
+                            author: 'Jane',
+                            count: 10,
+                            answer: '42',
+                            valid: true,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
+});
+
+it('handles nested object with stringify in it (legacy)', () => {
+  const path = '/bar/sweet/apple/foo/bis/jane?answer=42&count=10&valid=true';
+  const config = {
+    legacy: true,
     screens: {
       Foo: {
         path: 'foo',
@@ -450,12 +900,97 @@ it('handles nested object with stringify in it', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('handles nested object with stringify in it with exact', () => {
+  const path = '/bis/jane?answer=42&count=10&valid=true';
+  const config = {
+    screens: {
+      Bar: {
+        path: 'bar/:type/:fruit',
+        screens: {
+          Foo: {
+            path: 'foo',
+            screens: {
+              Foe: {
+                path: 'foe',
+              },
+              Baz: {
+                path: 'baz',
+                screens: {
+                  Bos: 'bos',
+                  Bis: {
+                    path: 'bis/:author',
+                    exact: true,
+                    stringify: {
+                      author: (author: string) =>
+                        author.replace(/^\w/, (c) => c.toLowerCase()),
+                    },
+                    parse: {
+                      author: (author: string) =>
+                        author.replace(/^\w/, (c) => c.toUpperCase()),
+                      count: Number,
+                      valid: Boolean,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Bar',
+        params: { fruit: 'apple', type: 'sweet' },
+        state: {
+          routes: [
+            {
+              name: 'Foo',
+              state: {
+                routes: [
+                  {
+                    name: 'Baz',
+                    state: {
+                      routes: [
+                        {
+                          name: 'Bis',
+                          params: {
+                            author: 'Jane',
+                            count: 10,
+                            answer: '42',
+                            valid: true,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
+});
+
+it('handles nested object with stringify in it with exact (legacy)', () => {
   const path = '/bar/sweet/apple/foo/bis/jane?answer=42&count=10&valid=true';
   const config = {
+    legacy: true,
     screens: {
       Foo: {
         path: 'foo',
@@ -526,7 +1061,9 @@ it('handles nested object with stringify in it with exact', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('handles nested object for second route depth', () => {
@@ -567,7 +1104,9 @@ it('handles nested object for second route depth', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('handles nested object for second route depth with exact', () => {
@@ -611,7 +1150,9 @@ it('handles nested object for second route depth with exact', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('handles nested object for second route depth and path and stringify in roots', () => {
@@ -659,7 +1200,9 @@ it('handles nested object for second route depth and path and stringify in roots
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('handles nested object for second route depth and path and stringify in roots with exact', () => {
@@ -712,7 +1255,9 @@ it('handles nested object for second route depth and path and stringify in roots
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('ignores empty string paths', () => {
@@ -741,7 +1286,9 @@ it('ignores empty string paths', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('keeps query params if path is empty', () => {
@@ -784,14 +1331,59 @@ it('keeps query params if path is empty', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toEqual(
-    path
-  );
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toEqual(path);
 });
 
 it('cuts nested configs too', () => {
   const path = '/foo/baz';
   const config = {
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Bar: {
+            path: '',
+            screens: {
+              Baz: {
+                path: 'baz',
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              state: {
+                routes: [{ name: 'Baz' }],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
+});
+
+it('cuts nested configs too (legacy)', () => {
+  const path = '/foo/baz';
+  const config = {
+    legacy: true,
     screens: {
       Foo: {
         path: 'foo',
@@ -824,7 +1416,9 @@ it('cuts nested configs too', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('cuts nested configs too with exact', () => {
@@ -837,11 +1431,13 @@ it('cuts nested configs too with exact', () => {
           Bar: {
             path: '',
             exact: true,
+            screens: {
+              Baz: {
+                path: 'baz',
+              },
+            },
           },
         },
-      },
-      Baz: {
-        path: 'baz',
       },
     },
   };
@@ -865,7 +1461,9 @@ it('cuts nested configs too with exact', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('handles empty path at the end', () => {
@@ -901,7 +1499,9 @@ it('handles empty path at the end', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('returns "/" for empty path', () => {
@@ -934,12 +1534,45 @@ it('returns "/" for empty path', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('parses no path specified', () => {
+  const path = '/bar';
+  const config = {
+    screens: {
+      Foo: {
+        screens: {
+          Foe: {},
+          Bar: 'bar',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [{ name: 'Bar' }],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
+});
+
+it('parses no path specified (legacy)', () => {
   const path = '/Foo/bar';
   const config = {
+    legacy: true,
     screens: {
       Foo: {
         screens: {
@@ -962,12 +1595,15 @@ it('parses no path specified', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('parses no path specified in nested config', () => {
   const path = '/Foo/Foe/bar';
   const config = {
+    legacy: true,
     screens: {
       Foo: {
         path: 'foo',
@@ -998,13 +1634,95 @@ it('parses no path specified in nested config', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('strips undefined query params', () => {
   const path = '/bar/sweet/apple/foo/bis/jane?count=10&valid=true';
   const config = {
     screens: {
+      Bar: {
+        path: 'bar/:type/:fruit',
+        screens: {
+          Foo: {
+            path: 'foo',
+            screens: {
+              Foe: {
+                path: 'foe',
+              },
+              Baz: {
+                screens: {
+                  Bos: 'bos',
+                  Bis: {
+                    path: 'bis/:author',
+                    stringify: {
+                      author: (author: string) =>
+                        author.replace(/^\w/, (c) => c.toLowerCase()),
+                    },
+                    parse: {
+                      author: (author: string) =>
+                        author.replace(/^\w/, (c) => c.toUpperCase()),
+                      count: Number,
+                      valid: Boolean,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Bar',
+        params: { fruit: 'apple', type: 'sweet' },
+        state: {
+          routes: [
+            {
+              name: 'Foo',
+              state: {
+                routes: [
+                  {
+                    name: 'Baz',
+                    state: {
+                      routes: [
+                        {
+                          name: 'Bis',
+                          params: {
+                            author: 'Jane',
+                            count: 10,
+                            valid: true,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
+});
+
+it('strips undefined query params (legacy)', () => {
+  const path = '/bar/sweet/apple/foo/bis/jane?count=10&valid=true';
+  const config = {
+    legacy: true,
+    screens: {
       Foo: {
         path: 'foo',
         screens: {
@@ -1071,12 +1789,95 @@ it('strips undefined query params', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('strips undefined query params with exact', () => {
+  const path = '/bis/jane?count=10&valid=true';
+  const config = {
+    screens: {
+      Bar: {
+        path: 'bar/:type/:fruit',
+        screens: {
+          Foo: {
+            path: 'foo',
+            screens: {
+              Foe: {
+                path: 'foe',
+              },
+              Baz: {
+                screens: {
+                  Bos: 'bos',
+                  Bis: {
+                    path: 'bis/:author',
+                    exact: true,
+                    stringify: {
+                      author: (author: string) =>
+                        author.replace(/^\w/, (c) => c.toLowerCase()),
+                    },
+                    parse: {
+                      author: (author: string) =>
+                        author.replace(/^\w/, (c) => c.toUpperCase()),
+                      count: Number,
+                      valid: Boolean,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Bar',
+        params: { fruit: 'apple', type: 'sweet' },
+        state: {
+          routes: [
+            {
+              name: 'Foo',
+              state: {
+                routes: [
+                  {
+                    name: 'Baz',
+                    state: {
+                      routes: [
+                        {
+                          name: 'Bis',
+                          params: {
+                            author: 'Jane',
+                            count: 10,
+                            valid: true,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
+});
+
+it('strips undefined query params with exact (legacy)', () => {
   const path = '/bar/sweet/apple/foo/bis/jane?count=10&valid=true';
   const config = {
+    legacy: true,
     screens: {
       Foo: {
         path: 'foo',
@@ -1146,13 +1947,93 @@ it('strips undefined query params with exact', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('handles stripping all query params', () => {
   const path = '/bar/sweet/apple/foo/bis/jane';
   const config = {
     screens: {
+      Bar: {
+        path: 'bar/:type/:fruit',
+        screens: {
+          Foo: {
+            path: 'foo',
+            screens: {
+              Foe: {
+                path: 'foe',
+              },
+              Baz: {
+                screens: {
+                  Bos: 'bos',
+                  Bis: {
+                    path: 'bis/:author',
+                    stringify: {
+                      author: (author: string) =>
+                        author.replace(/^\w/, (c) => c.toLowerCase()),
+                    },
+                    parse: {
+                      author: (author: string) =>
+                        author.replace(/^\w/, (c) => c.toUpperCase()),
+                      count: Number,
+                      valid: Boolean,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Bar',
+        params: { fruit: 'apple', type: 'sweet' },
+        state: {
+          routes: [
+            {
+              name: 'Foo',
+              state: {
+                routes: [
+                  {
+                    name: 'Baz',
+                    state: {
+                      routes: [
+                        {
+                          name: 'Bis',
+                          params: {
+                            author: 'Jane',
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
+});
+
+it('handles stripping all query params (legacy)', () => {
+  const path = '/bar/sweet/apple/foo/bis/jane';
+  const config = {
+    legacy: true,
+    screens: {
       Foo: {
         path: 'foo',
         screens: {
@@ -1217,12 +2098,94 @@ it('handles stripping all query params', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('handles stripping all query params with exact', () => {
+  const path = '/bis/jane';
+  const config = {
+    screens: {
+      Bar: {
+        path: 'bar/:type/:fruit',
+        screens: {
+          Foo: {
+            path: 'foo',
+            screens: {
+              Foe: {
+                path: 'foe',
+              },
+              Baz: {
+                path: 'baz',
+                screens: {
+                  Bos: 'bos',
+                  Bis: {
+                    path: 'bis/:author',
+                    exact: true,
+                    stringify: {
+                      author: (author: string) =>
+                        author.replace(/^\w/, (c) => c.toLowerCase()),
+                    },
+                    parse: {
+                      author: (author: string) =>
+                        author.replace(/^\w/, (c) => c.toUpperCase()),
+                      count: Number,
+                      valid: Boolean,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Bar',
+        params: { fruit: 'apple', type: 'sweet' },
+        state: {
+          routes: [
+            {
+              name: 'Foo',
+              state: {
+                routes: [
+                  {
+                    name: 'Baz',
+                    state: {
+                      routes: [
+                        {
+                          name: 'Bis',
+                          params: {
+                            author: 'Jane',
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState(state, config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
+});
+
+it('handles stripping all query params with exact (legacy)', () => {
   const path = '/bar/sweet/apple/foo/bis/jane';
   const config = {
+    legacy: true,
     screens: {
       Foo: {
         path: 'foo',
@@ -1290,7 +2253,9 @@ it('handles stripping all query params with exact', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('replaces undefined query params', () => {
@@ -1311,7 +2276,9 @@ it('replaces undefined query params', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('matches wildcard patterns at root', () => {
@@ -1334,7 +2301,9 @@ it('matches wildcard patterns at root', () => {
   };
 
   expect(getPathFromState(state, config)).toBe('/404');
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe('/404');
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe('/404');
 });
 
 it('matches wildcard patterns at nested level', () => {
@@ -1374,9 +2343,9 @@ it('matches wildcard patterns at nested level', () => {
   };
 
   expect(getPathFromState(state, config)).toBe('/bar/42/404');
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(
-    '/bar/42/404'
-  );
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe('/bar/42/404');
 });
 
 it('matches wildcard patterns at nested level with exact', () => {
@@ -1419,7 +2388,9 @@ it('matches wildcard patterns at nested level with exact', () => {
   };
 
   expect(getPathFromState(state, config)).toBe('/404');
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe('/404');
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe('/404');
 });
 
 it('tries to match wildcard patterns at the end', () => {
@@ -1460,7 +2431,9 @@ it('tries to match wildcard patterns at the end', () => {
   };
 
   expect(getPathFromState(state, config)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe(path);
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe(path);
 });
 
 it('uses nearest parent wildcard match for unmatched paths', () => {
@@ -1493,7 +2466,9 @@ it('uses nearest parent wildcard match for unmatched paths', () => {
   };
 
   expect(getPathFromState(state, config)).toBe('/404');
-  expect(getPathFromState(getStateFromPath(path, config), config)).toBe('/404');
+  expect(
+    getPathFromState(getStateFromPath(path, config) as State, config)
+  ).toBe('/404');
 });
 
 it('supports legacy config', () => {

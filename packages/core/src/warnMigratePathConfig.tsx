@@ -18,6 +18,7 @@ export default function warnMigratePathConfig() {
       '  }',
       'Do:',
       '  {',
+      '    legacy: true,',
       '    screens: {',
       "      Home: '',",
       "      Profile: 'profile',",

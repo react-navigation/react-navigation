@@ -8,7 +8,11 @@ import type {
 import warnMigratePathConfig from './warnMigratePathConfig';
 import type { PathConfigMap } from './types';
 
-type Options = { initialRouteName?: string; screens: PathConfigMap };
+type Options = {
+  initialRouteName?: string;
+  screens: PathConfigMap;
+  legacy?: boolean;
+};
 
 type ParseConfig = Record<string, (value: string) => any>;
 
@@ -53,14 +57,20 @@ type ResultState = PartialState<NavigationState> & {
  */
 export default function getStateFromPath(
   path: string,
-  options: Options = { screens: {} }
+  options?: Options
 ): ResultState | undefined {
   let initialRoutes: InitialRouteConfig[] = [];
 
-  let screens: PathConfigMap;
+  let screens: PathConfigMap | undefined;
+  let legacy = false;
 
-  if (typeof options.screens === 'object' && options.screens.path == null) {
+  if (
+    options !== undefined &&
+    typeof options.screens === 'object' &&
+    options.screens.path == null
+  ) {
     screens = options.screens;
+    legacy = options.legacy === true;
 
     if (options.initialRouteName) {
       initialRoutes.push({
@@ -68,17 +78,54 @@ export default function getStateFromPath(
         connectedRoutes: Object.keys(screens),
       });
     }
-  } else {
+  } else if (options !== undefined) {
     warnMigratePathConfig();
     // @ts-ignore
     screens = options;
+    legacy = true;
+  }
+
+  let remaining = path
+    .replace(/\/+/g, '/') // Replace multiple slash (//) with single ones
+    .replace(/^\//, '') // Remove extra leading slash
+    .replace(/\?.*$/, ''); // Remove query params which we will handle later
+
+  // Make sure there is a trailing slash
+  remaining = remaining.endsWith('/') ? remaining : `${remaining}/`;
+
+  if (screens === undefined) {
+    // When no config is specified, use the path segments as route names
+    const routes = remaining
+      .split('/')
+      .filter(Boolean)
+      .map((segment, i, self) => {
+        const name = decodeURIComponent(segment);
+
+        if (i === self.length - 1) {
+          return { name, params: parseQueryParams(path) };
+        }
+
+        return { name };
+      });
+
+    if (routes.length) {
+      return createNestedStateObject(routes, initialRoutes);
+    }
+
+    return undefined;
   }
 
   // Create a normalized configs array which will be easier to use
   const configs = ([] as RouteConfig[])
     .concat(
       ...Object.keys(screens).map((key) =>
-        createNormalizedConfigs(key, screens, [], initialRoutes)
+        createNormalizedConfigs(
+          legacy,
+          key,
+          screens as PathConfigMap,
+          [],
+          initialRoutes
+        )
       )
     )
     .sort((a, b) => {
@@ -121,14 +168,6 @@ export default function getStateFromPath(
       // So we move it up in the list
       return bWildcardIndex - aWildcardIndex;
     });
-
-  let remaining = path
-    .replace(/\/+/g, '/') // Replace multiple slash (//) with single ones
-    .replace(/^\//, '') // Remove extra leading slash
-    .replace(/\?.*$/, ''); // Remove query params which we will handle later
-
-  // Make sure there is a trailing slash
-  remaining = remaining.endsWith('/') ? remaining : `${remaining}/`;
 
   if (remaining === '/') {
     // We need to add special handling of empty path so navigation to empty path also works
@@ -183,44 +222,46 @@ export default function getStateFromPath(
     result = current;
   }
 
-  // In second pass, we divide the path into segments and match piece by piece
-  // This preserves the old behaviour, but we should remove it in next major
-  while (remaining) {
-    let { routeNames, allParams, remainingPath } = matchAgainstConfigs(
-      remaining,
-      configs
-    );
+  if (legacy) {
+    // In second pass, we divide the path into segments and match piece by piece
+    // This preserves the legacy behaviour, but we should remove it in next major
+    while (remaining) {
+      let { routeNames, allParams, remainingPath } = matchAgainstConfigs(
+        remaining,
+        configs
+      );
 
-    remaining = remainingPath;
+      remaining = remainingPath;
 
-    // If we hadn't matched any segments earlier, use the path as route name
-    if (routeNames === undefined) {
-      const segments = remaining.split('/');
+      // If we hadn't matched any segments earlier, use the path as route name
+      if (routeNames === undefined) {
+        const segments = remaining.split('/');
 
-      routeNames = [decodeURIComponent(segments[0])];
-      segments.shift();
-      remaining = segments.join('/');
-    }
-
-    const state = createNestedStateObject(
-      createRouteObjects(configs, routeNames, allParams),
-      initialRoutes
-    );
-
-    if (current) {
-      // The state should be nested inside the deepest route we parsed before
-      while (current?.routes[current.index || 0].state) {
-        current = current.routes[current.index || 0].state;
+        routeNames = [decodeURIComponent(segments[0])];
+        segments.shift();
+        remaining = segments.join('/');
       }
 
-      (current as PartialState<NavigationState>).routes[
-        current?.index || 0
-      ].state = state;
-    } else {
-      result = state;
-    }
+      const state = createNestedStateObject(
+        createRouteObjects(configs, routeNames, allParams),
+        initialRoutes
+      );
 
-    current = state;
+      if (current) {
+        // The state should be nested inside the deepest route we parsed before
+        while (current?.routes[current.index || 0].state) {
+          current = current.routes[current.index || 0].state;
+        }
+
+        (current as PartialState<NavigationState>).routes[
+          current?.index || 0
+        ].state = state;
+      } else {
+        result = state;
+      }
+
+      current = state;
+    }
   }
 
   if (current == null || result == null) {
@@ -287,6 +328,7 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
 };
 
 const createNormalizedConfigs = (
+  legacy: boolean,
   screen: string,
   routeConfig: PathConfigMap,
   routeNames: string[] = [],
@@ -311,10 +353,23 @@ const createNormalizedConfigs = (
     // it can have `path` property and
     // it could have `screens` prop which has nested configs
     if (typeof config.path === 'string') {
-      pattern =
-        config.exact !== true && parentPattern
-          ? joinPaths(parentPattern, config.path)
-          : config.path;
+      if (legacy) {
+        pattern =
+          config.exact !== true && parentPattern
+            ? joinPaths(parentPattern, config.path)
+            : config.path;
+      } else {
+        if (config.exact && config.path === undefined) {
+          throw new Error(
+            "A 'path' needs to be specified when specifying 'exact: true'. If you don't want this screen in the URL, specify it as empty string, e.g. 'path: ''."
+          );
+        }
+
+        pattern =
+          config.exact !== true
+            ? joinPaths(parentPattern || '', config.path || '')
+            : config.path || '';
+      }
 
       configs.push(
         createConfigItem(screen, routeNames, pattern, config.path, config.parse)
@@ -332,11 +387,12 @@ const createNormalizedConfigs = (
 
       Object.keys(config.screens).forEach((nestedConfig) => {
         const result = createNormalizedConfigs(
+          legacy,
           nestedConfig,
           config.screens as PathConfigMap,
           routeNames,
           initials,
-          pattern
+          pattern ?? parentPattern
         );
 
         configs.push(...result);

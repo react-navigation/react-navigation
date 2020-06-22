@@ -7,7 +7,7 @@ import type {
 import warnMigratePathConfig from './warnMigratePathConfig';
 import type { PathConfig, PathConfigMap } from './types';
 
-type Options = { screens: PathConfigMap };
+type Options = { legacy?: boolean; screens: PathConfigMap };
 
 type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 
@@ -62,22 +62,36 @@ const getActiveRoute = (state: State): { name: string; params?: object } => {
  * @returns Path representing the state, e.g. /foo/bar?count=42.
  */
 export default function getPathFromState(
-  state?: State,
-  options: Options = { screens: {} }
+  state: State,
+  options?: Options
 ): string {
-  if (state === undefined) {
-    throw Error('NavigationState not passed');
+  if (state == null) {
+    throw Error(
+      "Got 'undefined' for the navigation state. You must pass a valid state object."
+    );
   }
 
   // Create a normalized configs object which will be easier to use
   let configs: Record<string, ConfigItem>;
+  let legacy = false;
 
-  if (typeof options.screens === 'object' && options.screens.path == null) {
-    configs = createNormalizedConfigs(options.screens);
+  if (
+    options !== undefined &&
+    typeof options.screens === 'object' &&
+    options.screens.path == null
+  ) {
+    legacy = options.legacy === true;
+    configs = createNormalizedConfigs(legacy, options.screens);
   } else {
-    warnMigratePathConfig();
-    // @ts-ignore
-    configs = createNormalizedConfigs(options);
+    legacy = true;
+
+    if (options !== undefined) {
+      warnMigratePathConfig();
+      // @ts-ignore
+      configs = createNormalizedConfigs(legacy, options);
+    } else {
+      configs = {};
+    }
   }
 
   let path = '/';
@@ -249,6 +263,7 @@ const joinPaths = (...paths: string[]): string =>
     .join('/');
 
 const createConfigItem = (
+  legacy: boolean,
   config: PathConfig | string,
   parentPattern?: string
 ): ConfigItem => {
@@ -261,13 +276,28 @@ const createConfigItem = (
 
   // If an object is specified as the value (e.g. Foo: { ... }),
   // It can have `path` property and `screens` prop which has nested configs
-  const pattern =
-    config.exact !== true && parentPattern && config.path
-      ? joinPaths(parentPattern, config.path)
-      : config.path;
+  let pattern: string | undefined;
+
+  if (legacy) {
+    pattern =
+      config.exact !== true && parentPattern && config.path
+        ? joinPaths(parentPattern, config.path)
+        : config.path;
+  } else {
+    if (config.exact && config.path === undefined) {
+      throw new Error(
+        "A 'path' needs to be specified when specifying 'exact: true'. If you don't want this screen in the URL, specify it as empty string, e.g. 'path: ''."
+      );
+    }
+
+    pattern =
+      config.exact !== true
+        ? joinPaths(parentPattern || '', config.path || '')
+        : config.path || '';
+  }
 
   const screens = config.screens
-    ? createNormalizedConfigs(config.screens, pattern)
+    ? createNormalizedConfigs(legacy, config.screens, pattern)
     : undefined;
 
   return {
@@ -279,12 +309,13 @@ const createConfigItem = (
 };
 
 const createNormalizedConfigs = (
+  legacy: boolean,
   options: PathConfigMap,
   pattern?: string
 ): Record<string, ConfigItem> =>
   fromEntries(
     Object.entries(options).map(([name, c]) => {
-      const result = createConfigItem(c, pattern);
+      const result = createConfigItem(legacy, c, pattern);
 
       return [name, result];
     })

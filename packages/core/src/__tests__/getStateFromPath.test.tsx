@@ -38,6 +38,71 @@ it('converts path string to initial state with config', () => {
   const path = '/foo/bar/sweet/apple/baz/jane?count=10&answer=42&valid=true';
   const config = {
     screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Bar: {
+            path: 'bar/:type/:fruit',
+            screens: {
+              Baz: {
+                path: 'baz/:author',
+                parse: {
+                  author: (author: string) =>
+                    author.replace(/^\w/, (c) => c.toUpperCase()),
+                  count: Number,
+                  valid: Boolean,
+                },
+                stringify: {
+                  author: (author: string) => author.toLowerCase(),
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              params: { fruit: 'apple', type: 'sweet' },
+              state: {
+                routes: [
+                  {
+                    name: 'Baz',
+                    params: {
+                      author: 'Jane',
+                      count: 10,
+                      answer: '42',
+                      valid: true,
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('converts path string to initial state with config (legacy)', () => {
+  const path = '/foo/bar/sweet/apple/baz/jane?count=10&answer=42&valid=true';
+  const config = {
+    legacy: true,
+    screens: {
       Foo: 'foo',
       Bar: 'bar/:type/:fruit',
       Baz: {
@@ -153,6 +218,84 @@ it('converts path string to initial state with config with nested screens', () =
           Foe: {
             path: 'foe',
             exact: true,
+            screens: {
+              Bar: {
+                path: 'bar/:type/:fruit',
+                screens: {
+                  Baz: {
+                    path: 'baz/:author',
+                    parse: {
+                      author: (author: string) =>
+                        author.replace(/^\w/, (c) => c.toUpperCase()),
+                      count: Number,
+                      valid: Boolean,
+                    },
+                    stringify: {
+                      author: (author: string) => author.toLowerCase(),
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Foe',
+              state: {
+                routes: [
+                  {
+                    name: 'Bar',
+                    params: { fruit: 'apple', type: 'sweet' },
+                    state: {
+                      routes: [
+                        {
+                          name: 'Baz',
+                          params: {
+                            author: 'Jane',
+                            count: 10,
+                            answer: '42',
+                            valid: true,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('converts path string to initial state with config with nested screens (legacy)', () => {
+  const path = '/foe/bar/sweet/apple/baz/jane?count=10&answer=42&valid=true';
+  const config = {
+    legacy: true,
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: {
+            path: 'foe',
+            exact: true,
           },
         },
       },
@@ -224,6 +367,69 @@ it('converts path string to initial state with config with nested screens and un
           Foe: {
             path: 'foe',
             exact: true,
+            screens: {
+              Baz: {
+                path: 'baz/:author',
+                parse: {
+                  author: (author: string) =>
+                    author.replace(/^\w/, (c) => c.toUpperCase()),
+                  count: Number,
+                  valid: Boolean,
+                  id: Boolean,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Foe',
+              state: {
+                routes: [
+                  {
+                    name: 'Baz',
+                    params: {
+                      author: 'Jane',
+                      count: 10,
+                      answer: '42',
+                      valid: true,
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('converts path string to initial state with config with nested screens and unused parse functions (legacy)', () => {
+  const path = '/foe/baz/jane?count=10&answer=42&valid=true';
+  const config = {
+    legacy: true,
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: {
+            path: 'foe',
+            exact: true,
           },
         },
       },
@@ -277,6 +483,98 @@ it('converts path string to initial state with config with nested screens and un
 it('handles nested object with unused configs and with parse in it', () => {
   const path = '/bar/sweet/apple/foe/bis/jane?count=10&answer=42&valid=true';
   const config = {
+    screens: {
+      Bar: {
+        path: 'bar/:type/:fruit',
+        screens: {
+          Foo: {
+            screens: {
+              Foe: {
+                path: 'foe',
+                screens: {
+                  Baz: {
+                    screens: {
+                      Bos: {
+                        path: 'bos',
+                        exact: true,
+                      },
+                      Bis: {
+                        path: 'bis/:author',
+                        stringify: {
+                          author: (author: string) =>
+                            author.replace(/^\w/, (c) => c.toLowerCase()),
+                        },
+                        parse: {
+                          author: (author: string) =>
+                            author.replace(/^\w/, (c) => c.toUpperCase()),
+                          count: Number,
+                          valid: Boolean,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Bar',
+        params: { fruit: 'apple', type: 'sweet' },
+        state: {
+          routes: [
+            {
+              name: 'Foo',
+              state: {
+                routes: [
+                  {
+                    name: 'Foe',
+                    state: {
+                      routes: [
+                        {
+                          name: 'Baz',
+                          state: {
+                            routes: [
+                              {
+                                name: 'Bis',
+                                params: {
+                                  author: 'Jane',
+                                  count: 10,
+                                  answer: '42',
+                                  valid: true,
+                                },
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('handles nested object with unused configs and with parse in it (legacy)', () => {
+  const path = '/bar/sweet/apple/foe/bis/jane?count=10&answer=42&valid=true';
+  const config = {
+    legacy: true,
     screens: {
       Foo: {
         path: 'foo',
@@ -429,7 +727,10 @@ it('handles parse in nested object for second route depth and and path and parse
           Foe: 'foe',
           Bar: {
             screens: {
-              Baz: 'baz',
+              Baz: {
+                path: 'baz',
+                exact: true,
+              },
             },
           },
         },
@@ -597,6 +898,101 @@ it('handles two initialRouteNames', () => {
   const path = '/bar/sweet/apple/foe/bis/jane?count=10&answer=42&valid=true';
   const config = {
     screens: {
+      Bar: {
+        path: 'bar/:type/:fruit',
+        screens: {
+          Foo: {
+            screens: {
+              Foe: {
+                path: 'foe',
+                screens: {
+                  Baz: {
+                    initialRouteName: 'Bos',
+                    screens: {
+                      Bos: {
+                        path: 'bos',
+                        exact: true,
+                      },
+                      Bis: {
+                        path: 'bis/:author',
+                        stringify: {
+                          author: (author: string) =>
+                            author.replace(/^\w/, (c) => c.toLowerCase()),
+                        },
+                        parse: {
+                          author: (author: string) =>
+                            author.replace(/^\w/, (c) => c.toUpperCase()),
+                          count: Number,
+                          valid: Boolean,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Bar',
+        params: { fruit: 'apple', type: 'sweet' },
+        state: {
+          routes: [
+            {
+              name: 'Foo',
+              state: {
+                routes: [
+                  {
+                    name: 'Foe',
+                    state: {
+                      routes: [
+                        {
+                          name: 'Baz',
+                          state: {
+                            index: 1,
+                            routes: [
+                              { name: 'Bos' },
+                              {
+                                name: 'Bis',
+                                params: {
+                                  author: 'Jane',
+                                  count: 10,
+                                  answer: '42',
+                                  valid: true,
+                                },
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('handles two initialRouteNames (legacy)', () => {
+  const path = '/bar/sweet/apple/foe/bis/jane?count=10&answer=42&valid=true';
+  const config = {
+    legacy: true,
+    screens: {
       Foo: {
         path: 'foo',
         screens: {
@@ -687,6 +1083,101 @@ it('handles two initialRouteNames', () => {
 it('accepts initialRouteName without config for it', () => {
   const path = '/bar/sweet/apple/foe/bis/jane?count=10&answer=42&valid=true';
   const config = {
+    screens: {
+      Bar: {
+        path: 'bar/:type/:fruit',
+        screens: {
+          Foo: {
+            screens: {
+              Foe: {
+                path: 'foe',
+                screens: {
+                  Baz: {
+                    initialRouteName: 'Bas',
+                    screens: {
+                      Bos: {
+                        path: 'bos',
+                        exact: true,
+                      },
+                      Bis: {
+                        path: 'bis/:author',
+                        stringify: {
+                          author: (author: string) =>
+                            author.replace(/^\w/, (c) => c.toLowerCase()),
+                        },
+                        parse: {
+                          author: (author: string) =>
+                            author.replace(/^\w/, (c) => c.toUpperCase()),
+                          count: Number,
+                          valid: Boolean,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Bar',
+        params: { fruit: 'apple', type: 'sweet' },
+        state: {
+          routes: [
+            {
+              name: 'Foo',
+              state: {
+                routes: [
+                  {
+                    name: 'Foe',
+                    state: {
+                      routes: [
+                        {
+                          name: 'Baz',
+                          state: {
+                            index: 1,
+                            routes: [
+                              { name: 'Bas' },
+                              {
+                                name: 'Bis',
+                                params: {
+                                  author: 'Jane',
+                                  count: 10,
+                                  answer: '42',
+                                  valid: true,
+                                },
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('accepts initialRouteName without config for it (legacy)', () => {
+  const path = '/bar/sweet/apple/foe/bis/jane?count=10&answer=42&valid=true';
+  const config = {
+    legacy: true,
     screens: {
       Foo: {
         path: 'foo',
