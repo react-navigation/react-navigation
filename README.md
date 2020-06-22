@@ -26,7 +26,7 @@ If you are looking for version 4, the code can be found in the [4.x branch](http
 
 ## Contributing
 
-Please read through our [contribution guide](CONTRIBUTING.md) a to get started!
+Please read through our [contribution guide](CONTRIBUTING.md) to get started!
 
 ## Installing from a fork on GitHub
 
