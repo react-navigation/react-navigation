@@ -91,10 +91,6 @@ type Props = {
    */
   showLabel?: boolean;
   /**
-   * Whether to show the icon for the tab.
-   */
-  showIcon?: boolean;
-  /**
    * Whether to allow scaling the font for the label for accessibility purposes.
    */
   allowFontScaling?: boolean;
@@ -169,7 +165,6 @@ export default function BottomTabBarItem({
   activeBackgroundColor = 'transparent',
   inactiveBackgroundColor = 'transparent',
   showLabel = true,
-  showIcon = true,
   allowFontScaling,
   labelStyle,
   iconStyle,
@@ -201,7 +196,7 @@ export default function BottomTabBarItem({
           style={[
             styles.label,
             { color },
-            showIcon && horizontal ? styles.labelBeside : styles.labelBeneath,
+            horizontal ? styles.labelBeside : styles.labelBeneath,
             labelStyle,
           ]}
           allowFontScaling={allowFontScaling}
@@ -215,7 +210,7 @@ export default function BottomTabBarItem({
   };
 
   const renderIcon = ({ focused }: { focused: boolean }) => {
-    if (showIcon === false || icon === undefined) {
+    if (icon === undefined) {
       return null;
     }
 

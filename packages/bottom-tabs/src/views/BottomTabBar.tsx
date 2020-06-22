@@ -46,7 +46,6 @@ export default function BottomTabBar({
   labelStyle,
   iconStyle,
   safeAreaInsets,
-  showIcon,
   showLabel,
   style,
   tabStyle,
@@ -284,7 +283,6 @@ export default function BottomTabBar({
                   button={options.tabBarButton}
                   icon={options.tabBarIcon}
                   label={label}
-                  showIcon={showIcon}
                   showLabel={showLabel}
                   labelStyle={labelStyle}
                   iconStyle={iconStyle}
