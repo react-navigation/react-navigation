@@ -193,6 +193,12 @@ export default function getPathFromState(
           // Showing the route name seems ok, though whatever we show here will be incorrect
           // Since the page doesn't actually exist
           if (p === '*') {
+            if (legacy) {
+              throw new Error(
+                "Wildcard pattern ('*') is not supported when 'legacy: true' is specified."
+              );
+            }
+
             return route.name;
           }
 
@@ -286,7 +292,7 @@ const createConfigItem = (
   } else {
     if (config.exact && config.path === undefined) {
       throw new Error(
-        "A 'path' needs to be specified when specifying 'exact: true'. If you don't want this screen in the URL, specify it as empty string, e.g. 'path: ''."
+        "A 'path' needs to be specified when specifying 'exact: true'. If you don't want this screen in the URL, specify it as empty string, e.g. `path: ''`."
       );
     }
 

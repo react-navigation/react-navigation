@@ -200,30 +200,29 @@ export default function getStateFromPath(
   let result: PartialState<NavigationState> | undefined;
   let current: PartialState<NavigationState> | undefined;
 
-  // We try to match the paths in 2 passes
-  // In first pass, we match the whole path against the regex instead of segments
-  // This makes sure matches such as wildcard will catch any unmatched routes, even if nested
-  const { routeNames, allParams, remainingPath } = matchAgainstConfigs(
-    remaining,
-    configs.map((c) => ({
-      ...c,
-      // Add `$` to the regex to make sure it matches till end of the path and not just beginning
-      regex: c.regex ? new RegExp(c.regex.source + '$') : undefined,
-    }))
-  );
-
-  if (routeNames !== undefined) {
-    // This will always be empty if full path matched
-    remaining = remainingPath;
-    current = createNestedStateObject(
-      createRouteObjects(configs, routeNames, allParams),
-      initialRoutes
+  if (legacy === false) {
+    // If we're not in legacy mode,, we match the whole path against the regex instead of segments
+    // This makes sure matches such as wildcard will catch any unmatched routes, even if nested
+    const { routeNames, allParams, remainingPath } = matchAgainstConfigs(
+      remaining,
+      configs.map((c) => ({
+        ...c,
+        // Add `$` to the regex to make sure it matches till end of the path and not just beginning
+        regex: c.regex ? new RegExp(c.regex.source + '$') : undefined,
+      }))
     );
-    result = current;
-  }
 
-  if (legacy) {
-    // In second pass, we divide the path into segments and match piece by piece
+    if (routeNames !== undefined) {
+      // This will always be empty if full path matched
+      remaining = remainingPath;
+      current = createNestedStateObject(
+        createRouteObjects(configs, routeNames, allParams),
+        initialRoutes
+      );
+      result = current;
+    }
+  } else {
+    // In legacy mode, we divide the path into segments and match piece by piece
     // This preserves the legacy behaviour, but we should remove it in next major
     while (remaining) {
       let { routeNames, allParams, remainingPath } = matchAgainstConfigs(
@@ -345,7 +344,7 @@ const createNormalizedConfigs = (
     // If a string is specified as the value of the key(e.g. Foo: '/path'), use it as the pattern
     const pattern = parentPattern ? joinPaths(parentPattern, config) : config;
 
-    configs.push(createConfigItem(screen, routeNames, pattern, config));
+    configs.push(createConfigItem(legacy, screen, routeNames, pattern, config));
   } else if (typeof config === 'object') {
     let pattern: string | undefined;
 
@@ -361,7 +360,7 @@ const createNormalizedConfigs = (
       } else {
         if (config.exact && config.path === undefined) {
           throw new Error(
-            "A 'path' needs to be specified when specifying 'exact: true'. If you don't want this screen in the URL, specify it as empty string, e.g. 'path: ''."
+            "A 'path' needs to be specified when specifying 'exact: true'. If you don't want this screen in the URL, specify it as empty string, e.g. `path: ''`."
           );
         }
 
@@ -372,7 +371,14 @@ const createNormalizedConfigs = (
       }
 
       configs.push(
-        createConfigItem(screen, routeNames, pattern, config.path, config.parse)
+        createConfigItem(
+          legacy,
+          screen,
+          routeNames,
+          pattern,
+          config.path,
+          config.parse
+        )
       );
     }
 
@@ -406,6 +412,7 @@ const createNormalizedConfigs = (
 };
 
 const createConfigItem = (
+  legacy: boolean,
   screen: string,
   routeNames: string[],
   pattern: string,
@@ -420,6 +427,12 @@ const createConfigItem = (
         `^(${pattern
           .split('/')
           .map((it) => {
+            if (legacy && it === '*') {
+              throw new Error(
+                "Wildcard pattern ('*') is not supported when 'legacy: true' is specified."
+              );
+            }
+
             if (it.startsWith(':')) {
               return `(([^/]+\\/)${it.endsWith('?') ? '?' : ''})`;
             }

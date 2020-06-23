@@ -2471,6 +2471,40 @@ it('uses nearest parent wildcard match for unmatched paths', () => {
   ).toBe('/404');
 });
 
+it('throws if wildcard is specified with legacy config', () => {
+  const config = {
+    legacy: true,
+    screens: {
+      Foo: {
+        screens: {
+          Bar: {
+            path: '/bar/:id/',
+            screens: {
+              Baz: 'baz',
+            },
+          },
+          404: '*',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [{ name: '404' }],
+        },
+      },
+    ],
+  };
+
+  expect(() => getPathFromState(state, config)).toThrow(
+    "Wildcard pattern ('*') is not supported when 'legacy: true' is specified."
+  );
+});
+
 it('supports legacy config', () => {
   const path = '/few/bar/sweet/apple/baz/jane?id=x10&valid=true';
   const config = {
