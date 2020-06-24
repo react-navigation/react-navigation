@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.8.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.8.2...@react-navigation/drawer@5.8.3) (2020-06-24)
+
+
+### Bug Fixes
+
+* make sure we don't miss dimensions updates ([c65f9ef](https://github.com/react-navigation/react-navigation/commit/c65f9ef1a9be93b399e724a9731605e408aca80e))
+* use interpolateNode in drawer to support Reanimated 2 ([ea5affd](https://github.com/react-navigation/react-navigation/commit/ea5affd914d42595bbf39d8eb87fa531586a46d4))
+
+
+
+
+
 ## [5.8.2](https://github.com/react-navigation/react-navigation/tree/main/packages/drawer/compare/@react-navigation/drawer@5.8.1...@react-navigation/drawer@5.8.2) (2020-06-06)
 
 

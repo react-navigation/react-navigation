@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.11.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.10.0...@react-navigation/core@5.11.0) (2020-06-24)
+
+
+### Bug Fixes
+
+* fix getCurrentOptions for nested screens ([6730690](https://github.com/react-navigation/react-navigation/commit/67306905299314bda053e553ded228374e3e23c9))
+* fix getCurrentOptions for nested screens ([afc83ee](https://github.com/react-navigation/react-navigation/commit/afc83eedf8c308c958a08900e069948e3d8a6aa1))
+* more improvements to types ([d244488](https://github.com/react-navigation/react-navigation/commit/d2444887be227bbbdcfcb13a7f26a8ebb344043e))
+
+
+### Features
+
+* add devtools package ([#8436](https://github.com/react-navigation/react-navigation/issues/8436)) ([95b044e](https://github.com/react-navigation/react-navigation/commit/95b044ecf95939f40ced4da740a365140b3952b7))
+* add event for options on container ([#8334](https://github.com/react-navigation/react-navigation/issues/8334)) ([fe3f98e](https://github.com/react-navigation/react-navigation/commit/fe3f98eb9cdd986c32460b78520b4d3d2435c279))
+* add helper to get focused route name from nested state ([#8435](https://github.com/react-navigation/react-navigation/issues/8435)) ([f51f9c8](https://github.com/react-navigation/react-navigation/commit/f51f9c8493e079f73688adaf9dc43a2171c3e44a))
+* rework linking configuration to be more strict ([#8502](https://github.com/react-navigation/react-navigation/issues/8502)) ([a021cfb](https://github.com/react-navigation/react-navigation/commit/a021cfb8af4afd50f785f6ee9b51d361e25704ca))
+
+
+
+
+
 # [5.10.0](https://github.com/react-navigation/react-navigation/tree/main/packages/core/compare/@react-navigation/core@5.9.0...@react-navigation/core@5.10.0) (2020-06-06)
 
 

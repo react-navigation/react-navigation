@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.6.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.5.1...@react-navigation/stack@5.6.0) (2020-06-24)
+
+
+### Bug Fixes
+
+* don't use deprecated currentlyFocusedField ([#8365](https://github.com/react-navigation/react-navigation/issues/8365)) ([35d6b9e](https://github.com/react-navigation/react-navigation/commit/35d6b9e3a4a28a59b3b11a67acbf7753d41705ae))
+* fix screen disappearing on Android ([#8473](https://github.com/react-navigation/react-navigation/issues/8473)) ([962456b](https://github.com/react-navigation/react-navigation/commit/962456beb6ab0c8d5a075e4f268a22faf8b60dbb))
+* workaround keyboard dismissing on focus ([37bbbbe](https://github.com/react-navigation/react-navigation/commit/37bbbbe8690d39b02c39ab12a610f83001b25455)), closes [#8414](https://github.com/react-navigation/react-navigation/issues/8414) [#8478](https://github.com/react-navigation/react-navigation/issues/8478)
+
+
+### Features
+
+* show back button in nested stack ([a2d649f](https://github.com/react-navigation/react-navigation/commit/a2d649faf124ac99fd333d4360e8068bb73675a6))
+
+
+
+
+
 ## [5.5.1](https://github.com/react-navigation/react-navigation/tree/main/packages/stack/compare/@react-navigation/stack@5.5.0...@react-navigation/stack@5.5.1) (2020-06-08)
 
 

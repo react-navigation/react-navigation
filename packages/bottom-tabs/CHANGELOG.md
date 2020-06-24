@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.6.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.5.2...@react-navigation/bottom-tabs@5.6.0) (2020-06-24)
+
+
+### Bug Fixes
+
+* make sure we don't miss dimensions updates ([c65f9ef](https://github.com/react-navigation/react-navigation/commit/c65f9ef1a9be93b399e724a9731605e408aca80e))
+* remove broken showIcon option from bottom-tabs ([1612819](https://github.com/react-navigation/react-navigation/commit/16128199edd4de37f9c7353bdf803de8e2f201a2))
+
+
+### Features
+
+* add iconStyle prop to bottom tab bar options ([#8188](https://github.com/react-navigation/react-navigation/issues/8188)) ([4480d2f](https://github.com/react-navigation/react-navigation/commit/4480d2fe04c8da11b444ebe75ee618d380682312))
+
+
+
+
+
 ## [5.5.2](https://github.com/react-navigation/react-navigation/tree/main/packages/bottom-tabs/compare/@react-navigation/bottom-tabs@5.5.1...@react-navigation/bottom-tabs@5.5.2) (2020-06-06)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
