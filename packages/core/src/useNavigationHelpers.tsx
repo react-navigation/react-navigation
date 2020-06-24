@@ -7,6 +7,7 @@ import {
   Router,
 } from '@react-navigation/routers';
 import NavigationContext from './NavigationContext';
+import UnhandledActionContext from './UnhandledActionContext';
 import type { NavigationEventEmitter } from './useEventEmitter';
 import { NavigationHelpers, NavigationProp, PrivateValueStore } from './types';
 
@@ -33,6 +34,7 @@ export default function useNavigationHelpers<
   Action extends NavigationAction,
   EventMap extends Record<string, any>
 >({ onAction, getState, emitter, router }: Options<State, Action>) {
+  const onUnhandledAction = React.useContext(UnhandledActionContext);
   const parentNavigationHelpers = React.useContext(NavigationContext);
 
   return React.useMemo(() => {
@@ -41,40 +43,8 @@ export default function useNavigationHelpers<
 
       const handled = onAction(action);
 
-      if (!handled && process.env.NODE_ENV !== 'production') {
-        const payload: Record<string, any> | undefined = action.payload;
-
-        let message = `The action '${action.type}'${
-          payload ? ` with payload ${JSON.stringify(action.payload)}` : ''
-        } was not handled by any navigator.`;
-
-        switch (action.type) {
-          case 'NAVIGATE':
-          case 'PUSH':
-          case 'REPLACE':
-          case 'JUMP_TO':
-            if (payload?.name) {
-              message += `\n\nDo you have a screen named '${payload.name}'?\n\nIf you're trying to navigate to a screen in a nested navigator, see https://reactnavigation.org/docs/nesting-navigators#navigating-to-a-screen-in-a-nested-navigator.`;
-            } else {
-              message += `\n\nYou need to pass the name of the screen to navigate to.\n\nSee https://reactnavigation.org/docs/navigation-actions for usage.`;
-            }
-
-            break;
-          case 'GO_BACK':
-          case 'POP':
-          case 'POP_TO_TOP':
-            message += `\n\nIs there any screen to go back to?`;
-            break;
-          case 'OPEN_DRAWER':
-          case 'CLOSE_DRAWER':
-          case 'TOGGLE_DRAWER':
-            message += `\n\nIs your screen inside a Drawer navigator?`;
-            break;
-        }
-
-        message += `\n\nThis is a development-only warning and won't be shown in production.`;
-
-        console.error(message);
+      if (!handled) {
+        onUnhandledAction?.(action);
       }
     };
 
@@ -116,5 +86,12 @@ export default function useNavigationHelpers<
       dangerouslyGetState: getState,
     } as NavigationHelpers<ParamListBase, EventMap> &
       (NavigationProp<ParamListBase, string, any, any, any> | undefined);
-  }, [router, getState, parentNavigationHelpers, emitter.emit, onAction]);
+  }, [
+    emitter.emit,
+    getState,
+    onAction,
+    onUnhandledAction,
+    parentNavigationHelpers,
+    router,
+  ]);
 }
