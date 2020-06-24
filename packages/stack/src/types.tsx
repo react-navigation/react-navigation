@@ -1,10 +1,13 @@
-import {
+import type {
   NavigationRoute,
   NavigationParams,
   NavigationScreenConfig,
   SupportedThemes,
 } from 'react-navigation';
-import { StackNavigationProp, StackNavigationOptions } from './vendor/types';
+import type {
+  StackNavigationProp,
+  StackNavigationOptions,
+} from './vendor/types';
 
 export type NavigationStackScreenProps<
   Params = NavigationParams,

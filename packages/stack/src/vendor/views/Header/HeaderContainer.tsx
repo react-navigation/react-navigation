@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { NavigationContext } from 'react-navigation';
-import { EdgeInsets } from 'react-native-safe-area-context';
+import type { EdgeInsets } from 'react-native-safe-area-context';
 
 import Header from './Header';
 import {
@@ -11,9 +11,10 @@ import {
   forSlideRight,
 } from '../../TransitionConfigs/HeaderStyleInterpolators';
 import HeaderShownContext from '../../utils/HeaderShownContext';
-import {
-  Route,
+import PreviousSceneContext from '../../utils/PreviousSceneContext';
+import type {
   Layout,
+  Route,
   Scene,
   StackHeaderStyleInterpolator,
   StackNavigationProp,
@@ -25,9 +26,10 @@ export type Props = {
   layout: Layout;
   insets: EdgeInsets;
   scenes: (Scene<Route<string>> | undefined)[];
-  getPreviousRoute: (props: {
+  getPreviousScene: (props: {
     route: Route<string>;
-  }) => Route<string> | undefined;
+    index: number;
+  }) => Scene<Route<string>> | undefined;
   getFocusedRoute: () => Route<string>;
   onContentHeightChange?: (props: {
     route: Route<string>;
@@ -43,8 +45,8 @@ export default function HeaderContainer({
   scenes,
   layout,
   insets,
+  getPreviousScene,
   getFocusedRoute,
-  getPreviousRoute,
   onContentHeightChange,
   gestureDirection,
   styleInterpolator,
@@ -52,6 +54,7 @@ export default function HeaderContainer({
 }: Props) {
   const focusedRoute = getFocusedRoute();
   const isParentHeaderShown = React.useContext(HeaderShownContext);
+  const parentPreviousScene = React.useContext(PreviousSceneContext);
 
   return (
     <View pointerEvents="box-none" style={style}>
@@ -71,22 +74,11 @@ export default function HeaderContainer({
         }
 
         const isFocused = focusedRoute.key === scene.route.key;
-        const previousRoute = getPreviousRoute({ route: scene.route });
-
-        let previous;
-
-        if (previousRoute) {
-          // The previous scene will be shortly before the current scene in the array
-          // So loop back from current index to avoid looping over the full array
-          for (let j = i - 1; j >= 0; j--) {
-            const s = self[j];
-
-            if (s && s.route.key === previousRoute.key) {
-              previous = s;
-              break;
-            }
-          }
-        }
+        const previous =
+          getPreviousScene({
+            route: scene.route,
+            index: i,
+          }) ?? parentPreviousScene;
 
         // If the screen is next to a headerless screen, we need to make the header appear static
         // This makes the header look like it's moving with the screen

@@ -1,5 +1,5 @@
 import { Animated, I18nManager } from 'react-native';
-import {
+import type {
   StackHeaderInterpolationProps,
   StackHeaderInterpolatedStyle,
 } from '../types';

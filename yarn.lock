@@ -3202,10 +3202,10 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/masked-view/-/masked-view-0.1.7.tgz#a65ce0702f55cb67fd777995de6fc7b3e5781903"
   integrity sha512-9KbP7LTLFz9dx1heURJbO6nuVMdSjDez8znlrUzaB1nUwKVsTTwlKRuHxGUYIIkReLWrJQeCv9tidy+84z2eCw==
 
-"@react-navigation/stack@^5.5.1":
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-5.5.1.tgz#95efa28edbfd1323e5ad9f01f539d43ffad8decc"
-  integrity sha512-oU2FEm+Ba6jMd5VA2WnuNfCO2HlZmGhrEX9yjBCyFj7fFCG1SB7WJdKLhZShtx3KxG/qWKphICeTLlYvkHdSpQ==
+"@react-navigation/stack@^5.6.0":
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-5.6.0.tgz#c307559ab6ba380f977f7f74efbe861bcbbdcf4b"
+  integrity sha512-e5uU37qgi9cXqOac8P2oFAj+4ZY7dI2kt04jg5+psAYN0Coawk6oyowBpBy6FsMBHMQv/p8J97Hc6eUnTwgzQw==
   dependencies:
     color "^3.1.2"
     react-native-iphone-x-helper "^1.2.1"
@@ -16708,10 +16708,10 @@ typescript@3.7.3:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.3.tgz#b36840668a16458a7025b9eabfad11b66ab85c69"
   integrity sha512-Mcr/Qk7hXqFBXMN7p7Lusj1ktCBydylfQM/FZCk5glCNQJrCUKPkMHdo9R0MTFWsC/4kPFvDS0fDPvukfCkFsw==
 
-typescript@~3.8.3:
-  version "3.8.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.8.3.tgz#409eb8544ea0335711205869ec458ab109ee1061"
-  integrity sha512-MYlEfn5VrLNsgudQTVJeNaQFUAI7DkhnOjdpAp4T+ku1TfQClewlbSuTVHiA+8skNBgaf02TL/kLOvig4y3G8w==
+typescript@^3.9.5:
+  version "3.9.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.5.tgz#586f0dba300cde8be52dd1ac4f7e1009c1b13f36"
+  integrity sha512-hSAifV3k+i6lEoCJ2k6R2Z/rp/H3+8sdmcn5NrS3/3kE7+RyZXm9aqvxWqjEXHAd8b0pShatpcdMTvEdvAJltQ==
 
 ua-parser-js@^0.7.18, ua-parser-js@^0.7.19:
   version "0.7.21"

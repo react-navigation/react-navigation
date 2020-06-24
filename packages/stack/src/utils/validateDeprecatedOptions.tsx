@@ -1,5 +1,5 @@
-import { EdgeInsets } from 'react-native-safe-area-context';
-import { StackNavigationOptions } from '../vendor/types';
+import type { EdgeInsets } from 'react-native-safe-area-context';
+import type { StackNavigationOptions } from '../vendor/types';
 
 type Validation = {
   check: (o: Record<string, any>) => boolean;

@@ -1,5 +1,8 @@
-import { StyleProp, ViewStyle } from 'react-native';
-import { StackNavigationOptions, StackNavigationConfig } from '../vendor/types';
+import type { StyleProp, ViewStyle } from 'react-native';
+import type {
+  StackNavigationOptions,
+  StackNavigationConfig,
+} from '../vendor/types';
 
 type Validation = {
   message: string;

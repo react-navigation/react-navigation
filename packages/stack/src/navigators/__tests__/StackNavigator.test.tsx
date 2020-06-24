@@ -9,7 +9,7 @@ import createAppContainer, {
   _TESTING_ONLY_reset_container_count,
   // @ts-ignore
 } from '../../../../native/src/createAppContainer';
-import { StackNavigationProp } from '../../vendor/types';
+import type { StackNavigationProp } from '../../vendor/types';
 
 const NavigationTestUtils = {
   resetInternalState: _TESTING_ONLY_reset_container_count,

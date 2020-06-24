@@ -4,9 +4,10 @@ import { StackActions } from 'react-navigation';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 
 import HeaderSegment, { getDefaultHeaderHeight } from './HeaderSegment';
+
 import HeaderTitle from './HeaderTitle';
 import debounce from '../../utils/debounce';
-import { StackHeaderProps, StackHeaderTitleProps } from '../../types';
+import type { StackHeaderProps, StackHeaderTitleProps } from '../../types';
 
 const Header = React.memo(function Header(props: StackHeaderProps) {
   const {
@@ -46,7 +47,13 @@ const Header = React.memo(function Header(props: StackHeaderProps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const goBack = React.useCallback(
     debounce(() => {
-      navigation.dispatch(StackActions.pop({ key: scene.route.key }));
+      if (navigation.isFirstRouteInParent()) {
+        // If we're the first route, we're going back to a parent navigator
+        // So we can't specify a key here
+        navigation.dispatch(StackActions.pop());
+      } else {
+        navigation.dispatch(StackActions.pop({ key: scene.route.key }));
+      }
     }, 50),
     [navigation, scene.route.key]
   );

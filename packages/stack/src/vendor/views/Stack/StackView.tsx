@@ -15,7 +15,7 @@ import HeaderContainer, {
   Props as HeaderContainerProps,
 } from '../Header/HeaderContainer';
 import SafeAreaProviderCompat from '../SafeAreaProviderCompat';
-import {
+import type {
   Route,
   StackNavigationHelpers,
   StackNavigationConfig,
@@ -443,6 +443,8 @@ export default class StackView extends React.Component<Props, State> {
       headerMode = mode === 'card' && Platform.OS === 'ios'
         ? 'float'
         : 'screen',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      descriptors: _,
       ...rest
     } = this.props;
 

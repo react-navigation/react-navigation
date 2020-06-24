@@ -734,7 +734,9 @@ export namespace StackActions {
   export const REPLACE: 'Navigation/REPLACE';
   export const COMPLETE_TRANSITION: 'Navigation/COMPLETE_TRANSITION';
 
-  export function pop(options: NavigationPopActionPayload): NavigationPopAction;
+  export function pop(
+    options?: NavigationPopActionPayload
+  ): NavigationPopAction;
   export function popToTop(
     options?: NavigationPopToTopActionPayload
   ): NavigationPopToTopAction;
@@ -810,17 +812,15 @@ export interface NavigationDescriptor<
   getComponent: () => React.ComponentType;
 }
 
-export type NavigationView<
-  Options,
-  State,
-  ScreenProps = unknown
-> = React.ComponentType<
-  {
-    descriptors: { [key: string]: NavigationDescriptor };
-    navigationConfig: Options;
-    screenProps?: ScreenProps;
-  } & NavigationInjectedProps
->;
+export type NavigationView<Options, State, ScreenProps = unknown> =
+  | React.ComponentType<
+      {
+        descriptors: { [key: string]: NavigationDescriptor };
+        navigationConfig: Options;
+        screenProps?: ScreenProps;
+      } & NavigationInjectedProps
+    >
+  | React.ComponentType<any>;
 
 export type CreateNavigatorConfig<
   NavigatorConfig,

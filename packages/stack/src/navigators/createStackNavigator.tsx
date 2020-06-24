@@ -7,7 +7,7 @@ import {
   CreateNavigatorConfig,
 } from 'react-navigation';
 import StackView from '../views/StackView';
-import {
+import type {
   StackNavigationConfig,
   StackNavigationOptions,
   StackNavigationProp,

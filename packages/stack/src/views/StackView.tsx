@@ -2,7 +2,7 @@ import * as React from 'react';
 import validateDeprecatedOptions from '../utils/validateDeprecatedOptions';
 import validateDeprecatedConfig from '../utils/validateDeprecatedConfig';
 import StackViewBase from '../vendor/views/Stack/StackView';
-import {
+import type {
   StackNavigationHelpers,
   StackNavigationConfig,
   StackDescriptorMap,

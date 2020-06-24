@@ -4,6 +4,7 @@
     { "path": "../react-navigation" }
   ],
   "compilerOptions": {
-    "outDir": "./lib/typescript"
+    "outDir": "./lib/typescript",
+    "importsNotUsedAsValues": "error",
   }
 }

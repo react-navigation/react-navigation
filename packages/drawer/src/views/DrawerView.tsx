@@ -160,10 +160,6 @@ export default class DrawerView extends React.PureComponent<Props, State> {
         drawerOpenProgress={progress}
         navigation={this.props.navigation}
         descriptors={this.props.descriptors}
-        contentComponent={this.props.navigationConfig.contentComponent}
-        contentOptions={this.props.navigationConfig.contentOptions}
-        drawerPosition={this.props.navigationConfig.drawerPosition}
-        style={this.props.navigationConfig.style}
         {...this.props.navigationConfig}
       />
     );

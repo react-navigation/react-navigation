@@ -11,7 +11,7 @@ import {
 import MaskedView from '../MaskedView';
 import { TouchableItem } from '../TouchableItem';
 import useTheme from '../../../utils/useTheme';
-import { StackHeaderLeftButtonProps } from '../../types';
+import type { StackHeaderLeftButtonProps } from '../../types';
 
 type Props = StackHeaderLeftButtonProps;
 

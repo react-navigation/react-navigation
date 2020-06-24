@@ -6,12 +6,12 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
-import { EdgeInsets } from 'react-native-safe-area-context';
-import { NavigationState as StackNavigationState } from 'react-navigation';
+import type { EdgeInsets } from 'react-native-safe-area-context';
+import type { NavigationState as StackNavigationState } from 'react-navigation';
 
 import { MaybeScreenContainer, MaybeScreen } from '../Screens';
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
-import { Props as HeaderContainerProps } from '../Header/HeaderContainer';
+import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import CardContainer from './CardContainer';
 import {
   DefaultTransition,
@@ -21,11 +21,11 @@ import { forNoAnimation as forNoAnimationHeader } from '../../TransitionConfigs/
 import { forNoAnimation as forNoAnimationCard } from '../../TransitionConfigs/CardStyleInterpolators';
 import HeaderShownContext from '../../utils/HeaderShownContext';
 import getDistanceForDirection from '../../utils/getDistanceForDirection';
-import {
-  Route,
+import type {
   Layout,
   StackHeaderMode,
   StackCardMode,
+  Route,
   Scene,
   StackDescriptorMap,
   StackNavigationOptions,
@@ -244,7 +244,7 @@ export default class CardStack extends React.Component<Props, State> {
         if (
           oldScene &&
           scene.__memo.every((it, i) => {
-            // @ts-ignore
+            // @ts-expect-error: we haven't added __memo to the annotation to prevent usage elsewhere
             return oldScene.__memo[i] === it;
           })
         ) {
@@ -337,6 +337,33 @@ export default class CardStack extends React.Component<Props, State> {
     return state.routes[state.index];
   };
 
+  private getPreviousScene = ({
+    route,
+    index,
+  }: {
+    route: Route<string>;
+    index: number;
+  }) => {
+    const previousRoute = this.props.getPreviousRoute({ route });
+
+    let previous: Scene<Route<string>> | undefined;
+
+    if (previousRoute) {
+      // The previous scene will be shortly before the current scene in the array
+      // So loop back from current index to avoid looping over the full array
+      for (let j = index - 1; j >= 0; j--) {
+        const s = this.state.scenes[j];
+
+        if (s && s.route.key === previousRoute.key) {
+          previous = s;
+          break;
+        }
+      }
+    }
+
+    return previous;
+  };
+
   render() {
     const {
       mode,
@@ -347,7 +374,6 @@ export default class CardStack extends React.Component<Props, State> {
       closingRouteKeys,
       onOpenRoute,
       onCloseRoute,
-      getPreviousRoute,
       getGesturesEnabled,
       renderHeader,
       renderScene,
@@ -415,7 +441,7 @@ export default class CardStack extends React.Component<Props, State> {
                   layout,
                   insets: { top, right, bottom, left },
                   scenes,
-                  getPreviousRoute,
+                  getPreviousScene: this.getPreviousScene,
                   getFocusedRoute: this.getFocusedRoute,
                   onContentHeightChange: this.handleHeaderLayout,
                   gestureDirection:
@@ -521,25 +547,6 @@ export default class CardStack extends React.Component<Props, State> {
                     left: safeAreaInsetLeft = insets.left,
                   } = safeAreaInsets || {};
 
-                  const previousRoute = getPreviousRoute({
-                    route: scene.route,
-                  });
-
-                  let previousScene = scenes[index - 1];
-
-                  if (previousRoute) {
-                    // The previous scene will be shortly before the current scene in the array
-                    // So loop back from current index to avoid looping over the full array
-                    for (let j = index - 1; j >= 0; j--) {
-                      const s = scenes[j];
-
-                      if (s && s.route.key === previousRoute.key) {
-                        previousScene = s;
-                        break;
-                      }
-                    }
-                  }
-
                   const headerHeight =
                     headerMode !== 'none' && headerShown !== false
                       ? headerHeights[route.key]
@@ -561,7 +568,6 @@ export default class CardStack extends React.Component<Props, State> {
                         layout={layout}
                         gesture={gesture}
                         scene={scene}
-                        previousScene={previousScene}
                         safeAreaInsetTop={safeAreaInsetTop}
                         safeAreaInsetRight={safeAreaInsetRight}
                         safeAreaInsetBottom={safeAreaInsetBottom}
@@ -576,7 +582,7 @@ export default class CardStack extends React.Component<Props, State> {
                         gestureResponseDistance={gestureResponseDistance}
                         headerHeight={headerHeight}
                         onHeaderHeightChange={this.handleHeaderLayout}
-                        getPreviousRoute={getPreviousRoute}
+                        getPreviousScene={this.getPreviousScene}
                         getFocusedRoute={this.getFocusedRoute}
                         mode={mode}
                         headerMode={headerMode}

@@ -346,6 +346,7 @@ class MainScreen extends React.Component<any, State> {
                         if (route.screen || route.path || route.params) {
                           // @ts-ignore
                           const { path, params, screen } = route;
+                          // @ts-ignore
                           const { router } = screen;
                           const action =
                             path &&
@@ -386,6 +387,7 @@ class MainScreen extends React.Component<any, State> {
 
 const Navigation = createAppContainer(
   createStackNavigator(
+    // @ts-ignore
     {
       ...ExampleInfo,
       Index: {

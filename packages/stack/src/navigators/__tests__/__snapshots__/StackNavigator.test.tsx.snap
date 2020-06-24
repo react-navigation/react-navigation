@@ -154,6 +154,14 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
       }
     >
       <View
+        collapsable={false}
+        style={
+          Object {
+            "opacity": 1,
+          }
+        }
+      />
+      <View
         accessibilityElementsHidden={false}
         closing={false}
         gestureVelocityImpact={0.3}
@@ -205,7 +213,6 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
           style={
             Object {
               "flex": 1,
-              "opacity": 1,
             }
           }
         >
@@ -435,6 +442,14 @@ exports[`StackNavigator renders successfully 1`] = `
       }
     >
       <View
+        collapsable={false}
+        style={
+          Object {
+            "opacity": 1,
+          }
+        }
+      />
+      <View
         accessibilityElementsHidden={false}
         closing={false}
         gestureVelocityImpact={0.3}
@@ -486,7 +501,6 @@ exports[`StackNavigator renders successfully 1`] = `
           style={
             Object {
               "flex": 1,
-              "opacity": 1,
             }
           }
         >

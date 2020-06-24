@@ -91,8 +91,4 @@ const DrawerExample = createDrawerNavigator(
   }
 );
 
-DrawerExample.navigationOptions = {
-  headerShown: false,
-};
-
 export default DrawerExample;
