@@ -102,22 +102,19 @@ it('converts state to path string with config', () => {
 it('converts state to path string with config (legacy)', () => {
   const path = '/few/bar/sweet/apple/baz/jane?id=x10&valid=true';
   const config = {
-    legacy: true,
-    screens: {
-      Foo: 'few',
-      Bar: 'bar/:type/:fruit',
-      Baz: {
-        path: 'baz/:author',
-        parse: {
-          author: (author: string) =>
-            author.replace(/^\w/, (c) => c.toUpperCase()),
-          id: (id: string) => Number(id.replace(/^x/, '')),
-          valid: Boolean,
-        },
-        stringify: {
-          author: (author: string) => author.toLowerCase(),
-          id: (id: number) => `x${id}`,
-        },
+    Foo: 'few',
+    Bar: 'bar/:type/:fruit',
+    Baz: {
+      path: 'baz/:author',
+      parse: {
+        author: (author: string) =>
+          author.replace(/^\w/, (c) => c.toUpperCase()),
+        id: (id: string) => Number(id.replace(/^x/, '')),
+        valid: Boolean,
+      },
+      stringify: {
+        author: (author: string) => author.toLowerCase(),
+        id: (id: number) => `x${id}`,
       },
     },
   };
@@ -148,8 +145,10 @@ it('converts state to path string with config (legacy)', () => {
     ],
   };
 
+  // @ts-expect-error
   expect(getPathFromState(state, config)).toBe(path);
   expect(
+    // @ts-expect-error
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -269,28 +268,25 @@ it('handles state with config with nested screens (legacy)', () => {
   const path =
     '/foo/foe/bar/sweet/apple/baz/jane?answer=42&count=10&valid=true';
   const config = {
-    legacy: true,
-    screens: {
-      Foo: {
-        path: 'foo',
-        screens: {
-          Foe: 'foe',
-        },
+    Foo: {
+      path: 'foo',
+      screens: {
+        Foe: 'foe',
       },
-      Bar: 'bar/:type/:fruit',
-      Baz: {
-        path: 'baz/:author',
-        parse: {
-          author: (author: string) =>
-            author.replace(/^\w/, (c) => c.toUpperCase()),
-          count: Number,
-          valid: Boolean,
-        },
-        stringify: {
-          author: (author: string) => author.toLowerCase(),
-          id: (id: number) => `x${id}`,
-          unknown: (_: unknown) => 'x',
-        },
+    },
+    Bar: 'bar/:type/:fruit',
+    Baz: {
+      path: 'baz/:author',
+      parse: {
+        author: (author: string) =>
+          author.replace(/^\w/, (c) => c.toUpperCase()),
+        count: Number,
+        valid: Boolean,
+      },
+      stringify: {
+        author: (author: string) => author.toLowerCase(),
+        id: (id: number) => `x${id}`,
+        unknown: (_: unknown) => 'x',
       },
     },
   };
@@ -331,8 +327,10 @@ it('handles state with config with nested screens (legacy)', () => {
     ],
   };
 
+  // @ts-expect-error
   expect(getPathFromState(state, config)).toBe(path);
   expect(
+    // @ts-expect-error
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -419,31 +417,28 @@ it('handles state with config with nested screens and exact', () => {
 it('handles state with config with nested screens and exact (legacy)', () => {
   const path = '/foe/bar/sweet/apple/baz/jane?answer=42&count=10&valid=true';
   const config = {
-    legacy: true,
-    screens: {
-      Foo: {
-        path: 'foo',
-        screens: {
-          Foe: {
-            path: 'foe',
-            exact: true,
-          },
+    Foo: {
+      path: 'foo',
+      screens: {
+        Foe: {
+          path: 'foe',
+          exact: true,
         },
       },
-      Bar: 'bar/:type/:fruit',
-      Baz: {
-        path: 'baz/:author',
-        parse: {
-          author: (author: string) =>
-            author.replace(/^\w/, (c) => c.toUpperCase()),
-          count: Number,
-          valid: Boolean,
-        },
-        stringify: {
-          author: (author: string) => author.toLowerCase(),
-          id: (id: number) => `x${id}`,
-          unknown: (_: unknown) => 'x',
-        },
+    },
+    Bar: 'bar/:type/:fruit',
+    Baz: {
+      path: 'baz/:author',
+      parse: {
+        author: (author: string) =>
+          author.replace(/^\w/, (c) => c.toUpperCase()),
+        count: Number,
+        valid: Boolean,
+      },
+      stringify: {
+        author: (author: string) => author.toLowerCase(),
+        id: (id: number) => `x${id}`,
+        unknown: (_: unknown) => 'x',
       },
     },
   };
@@ -484,8 +479,10 @@ it('handles state with config with nested screens and exact (legacy)', () => {
     ],
   };
 
+  // @ts-expect-error
   expect(getPathFromState(state, config)).toBe(path);
   expect(
+    // @ts-expect-error
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -558,27 +555,24 @@ it('handles state with config with nested screens and unused configs', () => {
 it('handles state with config with nested screens and unused configs (legacy)', () => {
   const path = '/foo/foe/baz/jane?answer=42&count=10&valid=true';
   const config = {
-    legacy: true,
-    screens: {
-      Foo: {
-        path: 'foo',
-        screens: {
-          Foe: 'foe',
-        },
+    Foo: {
+      path: 'foo',
+      screens: {
+        Foe: 'foe',
       },
-      Baz: {
-        path: 'baz/:author',
-        parse: {
-          author: (author: string) =>
-            author.replace(/^\w/, (c) => c.toUpperCase()),
-          count: Number,
-          valid: Boolean,
-        },
-        stringify: {
-          author: (author: string) =>
-            author.replace(/^\w/, (c) => c.toLowerCase()),
-          unknown: (_: unknown) => 'x',
-        },
+    },
+    Baz: {
+      path: 'baz/:author',
+      parse: {
+        author: (author: string) =>
+          author.replace(/^\w/, (c) => c.toUpperCase()),
+        count: Number,
+        valid: Boolean,
+      },
+      stringify: {
+        author: (author: string) =>
+          author.replace(/^\w/, (c) => c.toLowerCase()),
+        unknown: (_: unknown) => 'x',
       },
     },
   };
@@ -611,8 +605,10 @@ it('handles state with config with nested screens and unused configs (legacy)', 
     ],
   };
 
+  // @ts-expect-error
   expect(getPathFromState(state, config)).toBe(path);
   expect(
+    // @ts-expect-error
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -686,30 +682,27 @@ it('handles state with config with nested screens and unused configs with exact'
 it('handles state with config with nested screens and unused configs with exact (legacy)', () => {
   const path = '/foe/baz/jane?answer=42&count=10&valid=true';
   const config = {
-    legacy: true,
-    screens: {
-      Foo: {
-        path: 'foo',
-        screens: {
-          Foe: {
-            path: 'foe',
-            exact: true,
-          },
+    Foo: {
+      path: 'foo',
+      screens: {
+        Foe: {
+          path: 'foe',
+          exact: true,
         },
       },
-      Baz: {
-        path: 'baz/:author',
-        parse: {
-          author: (author: string) =>
-            author.replace(/^\w/, (c) => c.toUpperCase()),
-          count: Number,
-          valid: Boolean,
-        },
-        stringify: {
-          author: (author: string) =>
-            author.replace(/^\w/, (c) => c.toLowerCase()),
-          unknown: (_: unknown) => 'x',
-        },
+    },
+    Baz: {
+      path: 'baz/:author',
+      parse: {
+        author: (author: string) =>
+          author.replace(/^\w/, (c) => c.toUpperCase()),
+        count: Number,
+        valid: Boolean,
+      },
+      stringify: {
+        author: (author: string) =>
+          author.replace(/^\w/, (c) => c.toLowerCase()),
+        unknown: (_: unknown) => 'x',
       },
     },
   };
@@ -742,8 +735,10 @@ it('handles state with config with nested screens and unused configs with exact 
     ],
   };
 
+  // @ts-expect-error
   expect(getPathFromState(state, config)).toBe(path);
   expect(
+    // @ts-expect-error
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -831,32 +826,29 @@ it('handles nested object with stringify in it', () => {
 it('handles nested object with stringify in it (legacy)', () => {
   const path = '/bar/sweet/apple/foo/bis/jane?answer=42&count=10&valid=true';
   const config = {
-    legacy: true,
-    screens: {
-      Foo: {
-        path: 'foo',
-        screens: {
-          Foe: {
-            path: 'foe',
-          },
+    Foo: {
+      path: 'foo',
+      screens: {
+        Foe: {
+          path: 'foe',
         },
       },
-      Bar: 'bar/:type/:fruit',
-      Baz: {
-        screens: {
-          Bos: 'bos',
-          Bis: {
-            path: 'bis/:author',
-            stringify: {
-              author: (author: string) =>
-                author.replace(/^\w/, (c) => c.toLowerCase()),
-            },
-            parse: {
-              author: (author: string) =>
-                author.replace(/^\w/, (c) => c.toUpperCase()),
-              count: Number,
-              valid: Boolean,
-            },
+    },
+    Bar: 'bar/:type/:fruit',
+    Baz: {
+      screens: {
+        Bos: 'bos',
+        Bis: {
+          path: 'bis/:author',
+          stringify: {
+            author: (author: string) =>
+              author.replace(/^\w/, (c) => c.toLowerCase()),
+          },
+          parse: {
+            author: (author: string) =>
+              author.replace(/^\w/, (c) => c.toUpperCase()),
+            count: Number,
+            valid: Boolean,
           },
         },
       },
@@ -899,8 +891,10 @@ it('handles nested object with stringify in it (legacy)', () => {
     ],
   };
 
+  // @ts-expect-error
   expect(getPathFromState(state, config)).toBe(path);
   expect(
+    // @ts-expect-error
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -990,34 +984,31 @@ it('handles nested object with stringify in it with exact', () => {
 it('handles nested object with stringify in it with exact (legacy)', () => {
   const path = '/bar/sweet/apple/foo/bis/jane?answer=42&count=10&valid=true';
   const config = {
-    legacy: true,
-    screens: {
-      Foo: {
-        path: 'foo',
-        screens: {
-          Foe: {
-            path: 'foe',
-          },
+    Foo: {
+      path: 'foo',
+      screens: {
+        Foe: {
+          path: 'foe',
         },
       },
-      Bar: 'bar/:type/:fruit',
-      Baz: {
-        path: 'baz',
-        screens: {
-          Bos: 'bos',
-          Bis: {
-            path: 'bis/:author',
-            exact: true,
-            stringify: {
-              author: (author: string) =>
-                author.replace(/^\w/, (c) => c.toLowerCase()),
-            },
-            parse: {
-              author: (author: string) =>
-                author.replace(/^\w/, (c) => c.toUpperCase()),
-              count: Number,
-              valid: Boolean,
-            },
+    },
+    Bar: 'bar/:type/:fruit',
+    Baz: {
+      path: 'baz',
+      screens: {
+        Bos: 'bos',
+        Bis: {
+          path: 'bis/:author',
+          exact: true,
+          stringify: {
+            author: (author: string) =>
+              author.replace(/^\w/, (c) => c.toLowerCase()),
+          },
+          parse: {
+            author: (author: string) =>
+              author.replace(/^\w/, (c) => c.toUpperCase()),
+            count: Number,
+            valid: Boolean,
           },
         },
       },
@@ -1060,8 +1051,10 @@ it('handles nested object with stringify in it with exact (legacy)', () => {
     ],
   };
 
+  // @ts-expect-error
   expect(getPathFromState(state, config)).toBe(path);
   expect(
+    // @ts-expect-error
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -1383,17 +1376,14 @@ it('cuts nested configs too', () => {
 it('cuts nested configs too (legacy)', () => {
   const path = '/foo/baz';
   const config = {
-    legacy: true,
-    screens: {
-      Foo: {
-        path: 'foo',
-        screens: {
-          Bar: '',
-        },
+    Foo: {
+      path: 'foo',
+      screens: {
+        Bar: '',
       },
-      Baz: {
-        path: 'baz',
-      },
+    },
+    Baz: {
+      path: 'baz',
     },
   };
 
@@ -1415,8 +1405,10 @@ it('cuts nested configs too (legacy)', () => {
     ],
   };
 
+  // @ts-expect-error
   expect(getPathFromState(state, config)).toBe(path);
   expect(
+    // @ts-expect-error
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -1572,15 +1564,12 @@ it('parses no path specified', () => {
 it('parses no path specified (legacy)', () => {
   const path = '/Foo/bar';
   const config = {
-    legacy: true,
-    screens: {
-      Foo: {
-        screens: {
-          Foe: {},
-        },
+    Foo: {
+      screens: {
+        Foe: {},
       },
-      Bar: 'bar',
     },
+    Bar: 'bar',
   };
 
   const state = {
@@ -1594,8 +1583,10 @@ it('parses no path specified (legacy)', () => {
     ],
   };
 
+  // @ts-expect-error
   expect(getPathFromState(state, config)).toBe(path);
   expect(
+    // @ts-expect-error
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -1603,16 +1594,13 @@ it('parses no path specified (legacy)', () => {
 it('parses no path specified in nested config', () => {
   const path = '/Foo/Foe/bar';
   const config = {
-    legacy: true,
-    screens: {
-      Foo: {
-        path: 'foo',
-        screens: {
-          Foe: {},
-        },
+    Foo: {
+      path: 'foo',
+      screens: {
+        Foe: {},
       },
-      Bar: 'bar',
     },
+    Bar: 'bar',
   };
 
   const state = {
@@ -1633,8 +1621,10 @@ it('parses no path specified in nested config', () => {
     ],
   };
 
+  // @ts-expect-error
   expect(getPathFromState(state, config)).toBe(path);
   expect(
+    // @ts-expect-error
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -1721,32 +1711,29 @@ it('strips undefined query params', () => {
 it('strips undefined query params (legacy)', () => {
   const path = '/bar/sweet/apple/foo/bis/jane?count=10&valid=true';
   const config = {
-    legacy: true,
-    screens: {
-      Foo: {
-        path: 'foo',
-        screens: {
-          Foe: {
-            path: 'foe',
-          },
+    Foo: {
+      path: 'foo',
+      screens: {
+        Foe: {
+          path: 'foe',
         },
       },
-      Bar: 'bar/:type/:fruit',
-      Baz: {
-        screens: {
-          Bos: 'bos',
-          Bis: {
-            path: 'bis/:author',
-            stringify: {
-              author: (author: string) =>
-                author.replace(/^\w/, (c) => c.toLowerCase()),
-            },
-            parse: {
-              author: (author: string) =>
-                author.replace(/^\w/, (c) => c.toUpperCase()),
-              count: Number,
-              valid: Boolean,
-            },
+    },
+    Bar: 'bar/:type/:fruit',
+    Baz: {
+      screens: {
+        Bos: 'bos',
+        Bis: {
+          path: 'bis/:author',
+          stringify: {
+            author: (author: string) =>
+              author.replace(/^\w/, (c) => c.toLowerCase()),
+          },
+          parse: {
+            author: (author: string) =>
+              author.replace(/^\w/, (c) => c.toUpperCase()),
+            count: Number,
+            valid: Boolean,
           },
         },
       },
@@ -1788,8 +1775,10 @@ it('strips undefined query params (legacy)', () => {
     ],
   };
 
+  // @ts-expect-error
   expect(getPathFromState(state, config)).toBe(path);
   expect(
+    // @ts-expect-error
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -1877,34 +1866,31 @@ it('strips undefined query params with exact', () => {
 it('strips undefined query params with exact (legacy)', () => {
   const path = '/bar/sweet/apple/foo/bis/jane?count=10&valid=true';
   const config = {
-    legacy: true,
-    screens: {
-      Foo: {
-        path: 'foo',
-        screens: {
-          Foe: {
-            path: 'foe',
-          },
+    Foo: {
+      path: 'foo',
+      screens: {
+        Foe: {
+          path: 'foe',
         },
       },
-      Bar: 'bar/:type/:fruit',
-      Baz: {
-        path: 'baz',
-        screens: {
-          Bos: 'bos',
-          Bis: {
-            path: 'bis/:author',
-            exact: true,
-            stringify: {
-              author: (author: string) =>
-                author.replace(/^\w/, (c) => c.toLowerCase()),
-            },
-            parse: {
-              author: (author: string) =>
-                author.replace(/^\w/, (c) => c.toUpperCase()),
-              count: Number,
-              valid: Boolean,
-            },
+    },
+    Bar: 'bar/:type/:fruit',
+    Baz: {
+      path: 'baz',
+      screens: {
+        Bos: 'bos',
+        Bis: {
+          path: 'bis/:author',
+          exact: true,
+          stringify: {
+            author: (author: string) =>
+              author.replace(/^\w/, (c) => c.toLowerCase()),
+          },
+          parse: {
+            author: (author: string) =>
+              author.replace(/^\w/, (c) => c.toUpperCase()),
+            count: Number,
+            valid: Boolean,
           },
         },
       },
@@ -1946,8 +1932,10 @@ it('strips undefined query params with exact (legacy)', () => {
     ],
   };
 
+  // @ts-expect-error
   expect(getPathFromState(state, config)).toBe(path);
   expect(
+    // @ts-expect-error
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -2032,32 +2020,29 @@ it('handles stripping all query params', () => {
 it('handles stripping all query params (legacy)', () => {
   const path = '/bar/sweet/apple/foo/bis/jane';
   const config = {
-    legacy: true,
-    screens: {
-      Foo: {
-        path: 'foo',
-        screens: {
-          Foe: {
-            path: 'foe',
-          },
+    Foo: {
+      path: 'foo',
+      screens: {
+        Foe: {
+          path: 'foe',
         },
       },
-      Bar: 'bar/:type/:fruit',
-      Baz: {
-        screens: {
-          Bos: 'bos',
-          Bis: {
-            path: 'bis/:author',
-            stringify: {
-              author: (author: string) =>
-                author.replace(/^\w/, (c) => c.toLowerCase()),
-            },
-            parse: {
-              author: (author: string) =>
-                author.replace(/^\w/, (c) => c.toUpperCase()),
-              count: Number,
-              valid: Boolean,
-            },
+    },
+    Bar: 'bar/:type/:fruit',
+    Baz: {
+      screens: {
+        Bos: 'bos',
+        Bis: {
+          path: 'bis/:author',
+          stringify: {
+            author: (author: string) =>
+              author.replace(/^\w/, (c) => c.toLowerCase()),
+          },
+          parse: {
+            author: (author: string) =>
+              author.replace(/^\w/, (c) => c.toUpperCase()),
+            count: Number,
+            valid: Boolean,
           },
         },
       },
@@ -2097,8 +2082,10 @@ it('handles stripping all query params (legacy)', () => {
     ],
   };
 
+  // @ts-expect-error
   expect(getPathFromState(state, config)).toBe(path);
   expect(
+    // @ts-expect-error
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -2185,34 +2172,31 @@ it('handles stripping all query params with exact', () => {
 it('handles stripping all query params with exact (legacy)', () => {
   const path = '/bar/sweet/apple/foo/bis/jane';
   const config = {
-    legacy: true,
-    screens: {
-      Foo: {
-        path: 'foo',
-        screens: {
-          Foe: {
-            path: 'foe',
-          },
+    Foo: {
+      path: 'foo',
+      screens: {
+        Foe: {
+          path: 'foe',
         },
       },
-      Bar: 'bar/:type/:fruit',
-      Baz: {
-        path: 'baz',
-        screens: {
-          Bos: 'bos',
-          Bis: {
-            path: 'bis/:author',
-            exact: true,
-            stringify: {
-              author: (author: string) =>
-                author.replace(/^\w/, (c) => c.toLowerCase()),
-            },
-            parse: {
-              author: (author: string) =>
-                author.replace(/^\w/, (c) => c.toUpperCase()),
-              count: Number,
-              valid: Boolean,
-            },
+    },
+    Bar: 'bar/:type/:fruit',
+    Baz: {
+      path: 'baz',
+      screens: {
+        Bos: 'bos',
+        Bis: {
+          path: 'bis/:author',
+          exact: true,
+          stringify: {
+            author: (author: string) =>
+              author.replace(/^\w/, (c) => c.toLowerCase()),
+          },
+          parse: {
+            author: (author: string) =>
+              author.replace(/^\w/, (c) => c.toUpperCase()),
+            count: Number,
+            valid: Boolean,
           },
         },
       },
@@ -2252,8 +2236,10 @@ it('handles stripping all query params with exact (legacy)', () => {
     ],
   };
 
+  // @ts-expect-error
   expect(getPathFromState(state, config)).toBe(path);
   expect(
+    // @ts-expect-error
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -2473,18 +2459,15 @@ it('uses nearest parent wildcard match for unmatched paths', () => {
 
 it('throws if wildcard is specified with legacy config', () => {
   const config = {
-    legacy: true,
-    screens: {
-      Foo: {
-        screens: {
-          Bar: {
-            path: '/bar/:id/',
-            screens: {
-              Baz: 'baz',
-            },
+    Foo: {
+      screens: {
+        Bar: {
+          path: '/bar/:id/',
+          screens: {
+            Baz: 'baz',
           },
-          404: '*',
         },
+        404: '*',
       },
     },
   };
@@ -2500,8 +2483,9 @@ it('throws if wildcard is specified with legacy config', () => {
     ],
   };
 
+  // @ts-expect-error
   expect(() => getPathFromState(state, config)).toThrow(
-    "Wildcard pattern ('*') is not supported when 'legacy: true' is specified."
+    "Please update your config to the new format to use wildcard pattern ('*')"
   );
 });
 
@@ -2551,15 +2535,49 @@ it('supports legacy config', () => {
     ],
   };
 
-  const spy = jest.spyOn(console, 'warn');
-
-  spy.mockImplementation(() => {});
-
-  // @ts-ignore
+  // @ts-expect-error
   expect(getPathFromState(state, config)).toBe(path);
-  expect(spy.mock.calls[0][0]).toMatch(
-    'The shape of the configuration object for linking has changed'
-  );
+});
 
-  spy.mockRestore();
+it("throws when using 'initialRouteName' or 'screens' with legacy config", () => {
+  expect(() =>
+    getPathFromState(
+      { routes: [] },
+      {
+        initialRouteName: 'foo',
+        // @ts-expect-error
+        Foo: 'foo',
+        Bar: 'bar/:type/:fruit',
+      }
+    )
+  ).toThrow('Found invalid keys in the configuration object.');
+
+  expect(() =>
+    getPathFromState(
+      { routes: [] },
+      {
+        screens: {
+          Test: 'test',
+        },
+        // @ts-expect-error
+        Foo: 'foo',
+        Bar: 'bar/:type/:fruit',
+      }
+    )
+  ).toThrow('Found invalid keys in the configuration object.');
+
+  expect(() =>
+    getPathFromState(
+      { routes: [] },
+      {
+        initialRouteName: 'foo',
+        screens: {
+          Test: 'test',
+        },
+        // @ts-expect-error
+        Foo: 'foo',
+        Bar: 'bar/:type/:fruit',
+      }
+    )
+  ).toThrow('Found invalid keys in the configuration object.');
 });

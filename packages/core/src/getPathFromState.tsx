@@ -4,10 +4,10 @@ import type {
   PartialState,
   Route,
 } from '@react-navigation/routers';
-import warnMigratePathConfig from './warnMigratePathConfig';
+import checkLegacyPathConfig from './checkLegacyPathConfig';
 import type { PathConfig, PathConfigMap } from './types';
 
-type Options = { legacy?: boolean; screens: PathConfigMap };
+type Options = { initialRouteName?: string; screens: PathConfigMap };
 
 type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 
@@ -71,28 +71,12 @@ export default function getPathFromState(
     );
   }
 
+  const [legacy, compatOptions] = checkLegacyPathConfig(options);
+
   // Create a normalized configs object which will be easier to use
-  let configs: Record<string, ConfigItem>;
-  let legacy = false;
-
-  if (
-    options !== undefined &&
-    typeof options.screens === 'object' &&
-    options.screens.path == null
-  ) {
-    legacy = options.legacy === true;
-    configs = createNormalizedConfigs(legacy, options.screens);
-  } else {
-    legacy = true;
-
-    if (options !== undefined) {
-      warnMigratePathConfig();
-      // @ts-ignore
-      configs = createNormalizedConfigs(legacy, options);
-    } else {
-      configs = {};
-    }
-  }
+  const configs: Record<string, ConfigItem> = compatOptions
+    ? createNormalizedConfigs(legacy, compatOptions.screens)
+    : {};
 
   let path = '/';
   let current: State | undefined = state;
@@ -195,7 +179,7 @@ export default function getPathFromState(
           if (p === '*') {
             if (legacy) {
               throw new Error(
-                "Wildcard pattern ('*') is not supported when 'legacy: true' is specified."
+                "Please update your config to the new format to use wildcard pattern ('*'). https://reactnavigation.org/docs/configuring-links/#updating-config"
               );
             }
 

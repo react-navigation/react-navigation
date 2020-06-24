@@ -5,13 +5,12 @@ import type {
   PartialState,
   InitialState,
 } from '@react-navigation/routers';
-import warnMigratePathConfig from './warnMigratePathConfig';
+import checkLegacyPathConfig from './checkLegacyPathConfig';
 import type { PathConfigMap } from './types';
 
 type Options = {
   initialRouteName?: string;
   screens: PathConfigMap;
-  legacy?: boolean;
 };
 
 type ParseConfig = Record<string, (value: string) => any>;
@@ -59,31 +58,18 @@ export default function getStateFromPath(
   path: string,
   options?: Options
 ): ResultState | undefined {
+  const [legacy, compatOptions] = checkLegacyPathConfig(options);
+
   let initialRoutes: InitialRouteConfig[] = [];
 
-  let screens: PathConfigMap | undefined;
-  let legacy = false;
-
-  if (
-    options !== undefined &&
-    typeof options.screens === 'object' &&
-    options.screens.path == null
-  ) {
-    screens = options.screens;
-    legacy = options.legacy === true;
-
-    if (options.initialRouteName) {
-      initialRoutes.push({
-        initialRouteName: options.initialRouteName,
-        connectedRoutes: Object.keys(screens),
-      });
-    }
-  } else if (options !== undefined) {
-    warnMigratePathConfig();
-    // @ts-ignore
-    screens = options;
-    legacy = true;
+  if (compatOptions?.initialRouteName) {
+    initialRoutes.push({
+      initialRouteName: compatOptions.initialRouteName,
+      connectedRoutes: Object.keys(compatOptions.screens),
+    });
   }
+
+  const screens = compatOptions?.screens;
 
   let remaining = path
     .replace(/\/+/g, '/') // Replace multiple slash (//) with single ones
@@ -429,7 +415,7 @@ const createConfigItem = (
           .map((it) => {
             if (legacy && it === '*') {
               throw new Error(
-                "Wildcard pattern ('*') is not supported when 'legacy: true' is specified."
+                "Please update your config to the new format to use wildcard pattern ('*'). https://reactnavigation.org/docs/configuring-links/#updating-config"
               );
             }
 

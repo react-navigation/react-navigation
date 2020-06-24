@@ -101,21 +101,18 @@ it('converts path string to initial state with config', () => {
 it('converts path string to initial state with config (legacy)', () => {
   const path = '/foo/bar/sweet/apple/baz/jane?count=10&answer=42&valid=true';
   const config = {
-    legacy: true,
-    screens: {
-      Foo: 'foo',
-      Bar: 'bar/:type/:fruit',
-      Baz: {
-        path: 'baz/:author',
-        parse: {
-          author: (author: string) =>
-            author.replace(/^\w/, (c) => c.toUpperCase()),
-          count: Number,
-          valid: Boolean,
-        },
-        stringify: {
-          author: (author: string) => author.toLowerCase(),
-        },
+    Foo: 'foo',
+    Bar: 'bar/:type/:fruit',
+    Baz: {
+      path: 'baz/:author',
+      parse: {
+        author: (author: string) =>
+          author.replace(/^\w/, (c) => c.toUpperCase()),
+        count: Number,
+        valid: Boolean,
+      },
+      stringify: {
+        author: (author: string) => author.toLowerCase(),
       },
     },
   };
@@ -149,7 +146,9 @@ it('converts path string to initial state with config (legacy)', () => {
     ],
   };
 
+  // @ts-expect-error
   expect(getStateFromPath(path, config)).toEqual(state);
+  // @ts-expect-error
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
     state
   );
@@ -288,29 +287,26 @@ it('converts path string to initial state with config with nested screens', () =
 it('converts path string to initial state with config with nested screens (legacy)', () => {
   const path = '/foe/bar/sweet/apple/baz/jane?count=10&answer=42&valid=true';
   const config = {
-    legacy: true,
-    screens: {
-      Foo: {
-        path: 'foo',
-        screens: {
-          Foe: {
-            path: 'foe',
-            exact: true,
-          },
+    Foo: {
+      path: 'foo',
+      screens: {
+        Foe: {
+          path: 'foe',
+          exact: true,
         },
       },
-      Bar: 'bar/:type/:fruit',
-      Baz: {
-        path: 'baz/:author',
-        parse: {
-          author: (author: string) =>
-            author.replace(/^\w/, (c) => c.toUpperCase()),
-          count: Number,
-          valid: Boolean,
-        },
-        stringify: {
-          author: (author: string) => author.toLowerCase(),
-        },
+    },
+    Bar: 'bar/:type/:fruit',
+    Baz: {
+      path: 'baz/:author',
+      parse: {
+        author: (author: string) =>
+          author.replace(/^\w/, (c) => c.toUpperCase()),
+        count: Number,
+        valid: Boolean,
+      },
+      stringify: {
+        author: (author: string) => author.toLowerCase(),
       },
     },
   };
@@ -351,7 +347,9 @@ it('converts path string to initial state with config with nested screens (legac
     ],
   };
 
+  // @ts-expect-error
   expect(getStateFromPath(path, config)).toEqual(state);
+  // @ts-expect-error
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
     state
   );
@@ -422,26 +420,23 @@ it('converts path string to initial state with config with nested screens and un
 it('converts path string to initial state with config with nested screens and unused parse functions (legacy)', () => {
   const path = '/foe/baz/jane?count=10&answer=42&valid=true';
   const config = {
-    legacy: true,
-    screens: {
-      Foo: {
-        path: 'foo',
-        screens: {
-          Foe: {
-            path: 'foe',
-            exact: true,
-          },
+    Foo: {
+      path: 'foo',
+      screens: {
+        Foe: {
+          path: 'foe',
+          exact: true,
         },
       },
-      Baz: {
-        path: 'baz/:author',
-        parse: {
-          author: (author: string) =>
-            author.replace(/^\w/, (c) => c.toUpperCase()),
-          count: Number,
-          valid: Boolean,
-          id: Boolean,
-        },
+    },
+    Baz: {
+      path: 'baz/:author',
+      parse: {
+        author: (author: string) =>
+          author.replace(/^\w/, (c) => c.toUpperCase()),
+        count: Number,
+        valid: Boolean,
+        id: Boolean,
       },
     },
   };
@@ -474,7 +469,9 @@ it('converts path string to initial state with config with nested screens and un
     ],
   };
 
+  // @ts-expect-error
   expect(getStateFromPath(path, config)).toEqual(state);
+  // @ts-expect-error
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
     state
   );
@@ -574,38 +571,35 @@ it('handles nested object with unused configs and with parse in it', () => {
 it('handles nested object with unused configs and with parse in it (legacy)', () => {
   const path = '/bar/sweet/apple/foe/bis/jane?count=10&answer=42&valid=true';
   const config = {
-    legacy: true,
-    screens: {
-      Foo: {
-        path: 'foo',
-        screens: {
-          Foe: {
-            path: 'foe',
-            exact: true,
-          },
+    Foo: {
+      path: 'foo',
+      screens: {
+        Foe: {
+          path: 'foe',
+          exact: true,
         },
       },
-      Bar: 'bar/:type/:fruit',
-      Baz: {
-        path: 'baz',
-        screens: {
-          Bos: {
-            path: 'bos',
-            exact: true,
+    },
+    Bar: 'bar/:type/:fruit',
+    Baz: {
+      path: 'baz',
+      screens: {
+        Bos: {
+          path: 'bos',
+          exact: true,
+        },
+        Bis: {
+          path: 'bis/:author',
+          exact: true,
+          stringify: {
+            author: (author: string) =>
+              author.replace(/^\w/, (c) => c.toLowerCase()),
           },
-          Bis: {
-            path: 'bis/:author',
-            exact: true,
-            stringify: {
-              author: (author: string) =>
-                author.replace(/^\w/, (c) => c.toLowerCase()),
-            },
-            parse: {
-              author: (author: string) =>
-                author.replace(/^\w/, (c) => c.toUpperCase()),
-              count: Number,
-              valid: Boolean,
-            },
+          parse: {
+            author: (author: string) =>
+              author.replace(/^\w/, (c) => c.toUpperCase()),
+            count: Number,
+            valid: Boolean,
           },
         },
       },
@@ -655,7 +649,9 @@ it('handles nested object with unused configs and with parse in it (legacy)', ()
     ],
   };
 
+  // @ts-expect-error
   expect(getStateFromPath(path, config)).toEqual(state);
+  // @ts-expect-error
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
     state
   );
@@ -991,38 +987,35 @@ it('handles two initialRouteNames', () => {
 it('handles two initialRouteNames (legacy)', () => {
   const path = '/bar/sweet/apple/foe/bis/jane?count=10&answer=42&valid=true';
   const config = {
-    legacy: true,
-    screens: {
-      Foo: {
-        path: 'foo',
-        screens: {
-          Foe: {
-            path: 'foe',
-            exact: true,
-          },
+    Foo: {
+      path: 'foo',
+      screens: {
+        Foe: {
+          path: 'foe',
+          exact: true,
         },
       },
-      Bar: 'bar/:type/:fruit',
-      Baz: {
-        initialRouteName: 'Bos',
-        screens: {
-          Bos: {
-            path: 'bos',
-            exact: true,
+    },
+    Bar: 'bar/:type/:fruit',
+    Baz: {
+      initialRouteName: 'Bos',
+      screens: {
+        Bos: {
+          path: 'bos',
+          exact: true,
+        },
+        Bis: {
+          path: 'bis/:author',
+          exact: true,
+          stringify: {
+            author: (author: string) =>
+              author.replace(/^\w/, (c) => c.toLowerCase()),
           },
-          Bis: {
-            path: 'bis/:author',
-            exact: true,
-            stringify: {
-              author: (author: string) =>
-                author.replace(/^\w/, (c) => c.toLowerCase()),
-            },
-            parse: {
-              author: (author: string) =>
-                author.replace(/^\w/, (c) => c.toUpperCase()),
-              count: Number,
-              valid: Boolean,
-            },
+          parse: {
+            author: (author: string) =>
+              author.replace(/^\w/, (c) => c.toUpperCase()),
+            count: Number,
+            valid: Boolean,
           },
         },
       },
@@ -1074,7 +1067,9 @@ it('handles two initialRouteNames (legacy)', () => {
     ],
   };
 
+  // @ts-expect-error
   expect(getStateFromPath(path, config)).toEqual(state);
+  // @ts-expect-error
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
     state
   );
@@ -1177,38 +1172,35 @@ it('accepts initialRouteName without config for it', () => {
 it('accepts initialRouteName without config for it (legacy)', () => {
   const path = '/bar/sweet/apple/foe/bis/jane?count=10&answer=42&valid=true';
   const config = {
-    legacy: true,
-    screens: {
-      Foo: {
-        path: 'foo',
-        screens: {
-          Foe: {
-            path: 'foe',
-            exact: true,
-          },
+    Foo: {
+      path: 'foo',
+      screens: {
+        Foe: {
+          path: 'foe',
+          exact: true,
         },
       },
-      Bar: 'bar/:type/:fruit',
-      Baz: {
-        initialRouteName: 'Bas',
-        screens: {
-          Bos: {
-            path: 'bos',
-            exact: true,
+    },
+    Bar: 'bar/:type/:fruit',
+    Baz: {
+      initialRouteName: 'Bas',
+      screens: {
+        Bos: {
+          path: 'bos',
+          exact: true,
+        },
+        Bis: {
+          path: 'bis/:author',
+          exact: true,
+          stringify: {
+            author: (author: string) =>
+              author.replace(/^\w/, (c) => c.toLowerCase()),
           },
-          Bis: {
-            path: 'bis/:author',
-            exact: true,
-            stringify: {
-              author: (author: string) =>
-                author.replace(/^\w/, (c) => c.toLowerCase()),
-            },
-            parse: {
-              author: (author: string) =>
-                author.replace(/^\w/, (c) => c.toUpperCase()),
-              count: Number,
-              valid: Boolean,
-            },
+          parse: {
+            author: (author: string) =>
+              author.replace(/^\w/, (c) => c.toUpperCase()),
+            count: Number,
+            valid: Boolean,
           },
         },
       },
@@ -1260,7 +1252,9 @@ it('accepts initialRouteName without config for it (legacy)', () => {
     ],
   };
 
+  // @ts-expect-error
   expect(getStateFromPath(path, config)).toEqual(state);
+  // @ts-expect-error
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
     state
   );
@@ -2682,24 +2676,22 @@ it('uses nearest parent wildcard match for unmatched paths', () => {
 it('throws if wildcard is specified with legacy config', () => {
   const path = '/bar/42/baz/test';
   const config = {
-    legacy: true,
-    screens: {
-      Foo: {
-        screens: {
-          Bar: {
-            path: '/bar/:id/',
-            screens: {
-              Baz: 'baz',
-            },
+    Foo: {
+      screens: {
+        Bar: {
+          path: '/bar/:id/',
+          screens: {
+            Baz: 'baz',
           },
-          404: '*',
         },
+        404: '*',
       },
     },
   };
 
+  // @ts-expect-error
   expect(() => getStateFromPath(path, config)).toThrow(
-    "Wildcard pattern ('*') is not supported when 'legacy: true' is specified."
+    "Please update your config to the new format to use wildcard pattern ('*')"
   );
 });
 
@@ -2751,15 +2743,40 @@ it('supports legacy config', () => {
     ],
   };
 
-  const spy = jest.spyOn(console, 'warn');
-
-  spy.mockImplementation(() => {});
-
-  // @ts-ignore
+  // @ts-expect-error
   expect(getStateFromPath(path, config)).toEqual(state);
-  expect(spy.mock.calls[0][0]).toMatch(
-    'The shape of the configuration object for linking has changed'
-  );
+});
 
-  spy.mockRestore();
+it("throws when using 'initialRouteName' or 'screens' with legacy config", () => {
+  expect(() =>
+    getStateFromPath('/whatever', {
+      initialRouteName: 'foo',
+      // @ts-expect-error
+      Foo: 'foo',
+      Bar: 'bar/:type/:fruit',
+    })
+  ).toThrow('Found invalid keys in the configuration object.');
+
+  expect(() =>
+    getStateFromPath('/whatever', {
+      screens: {
+        Test: 'test',
+      },
+      // @ts-expect-error
+      Foo: 'foo',
+      Bar: 'bar/:type/:fruit',
+    })
+  ).toThrow('Found invalid keys in the configuration object.');
+
+  expect(() =>
+    getStateFromPath('/whatever', {
+      initialRouteName: 'foo',
+      screens: {
+        Test: 'test',
+      },
+      // @ts-expect-error
+      Foo: 'foo',
+      Bar: 'bar/:type/:fruit',
+    })
+  ).toThrow('Found invalid keys in the configuration object.');
 });
