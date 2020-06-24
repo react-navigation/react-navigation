@@ -4,13 +4,14 @@ import type {
   PartialState,
   Route,
 } from '@react-navigation/routers';
-import type { PathConfig } from './types';
+import checkLegacyPathConfig from './checkLegacyPathConfig';
+import type { PathConfig, PathConfigMap } from './types';
+
+type Options = { initialRouteName?: string; screens: PathConfigMap };
 
 type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 
 type StringifyConfig = Record<string, (value: any) => string>;
-
-type OptionsItem = PathConfig[string];
 
 type ConfigItem = {
   pattern?: string;
@@ -46,9 +47,11 @@ const getActiveRoute = (state: State): { name: string; params?: object } => {
  *     ],
  *   },
  *   {
- *     Chat: {
- *       path: 'chat/:author/:id',
- *       stringify: { author: author => author.toLowerCase() }
+ *     screens: {
+ *       Chat: {
+ *         path: 'chat/:author/:id',
+ *         stringify: { author: author => author.toLowerCase() }
+ *       }
  *     }
  *   }
  * )
@@ -59,15 +62,21 @@ const getActiveRoute = (state: State): { name: string; params?: object } => {
  * @returns Path representing the state, e.g. /foo/bar?count=42.
  */
 export default function getPathFromState(
-  state?: State,
-  options: PathConfig = {}
+  state: State,
+  options?: Options
 ): string {
-  if (state === undefined) {
-    throw Error('NavigationState not passed');
+  if (state == null) {
+    throw Error(
+      "Got 'undefined' for the navigation state. You must pass a valid state object."
+    );
   }
 
-  // Create a normalized configs array which will be easier to use
-  const configs = createNormalizedConfigs(options);
+  const [legacy, compatOptions] = checkLegacyPathConfig(options);
+
+  // Create a normalized configs object which will be easier to use
+  const configs: Record<string, ConfigItem> = compatOptions
+    ? createNormalizedConfigs(legacy, compatOptions.screens)
+    : {};
 
   let path = '/';
   let current: State | undefined = state;
@@ -168,6 +177,12 @@ export default function getPathFromState(
           // Showing the route name seems ok, though whatever we show here will be incorrect
           // Since the page doesn't actually exist
           if (p === '*') {
+            if (legacy) {
+              throw new Error(
+                "Please update your config to the new format to use wildcard pattern ('*'). https://reactnavigation.org/docs/configuring-links/#updating-config"
+              );
+            }
+
             return route.name;
           }
 
@@ -238,7 +253,8 @@ const joinPaths = (...paths: string[]): string =>
     .join('/');
 
 const createConfigItem = (
-  config: OptionsItem | string,
+  legacy: boolean,
+  config: PathConfig | string,
   parentPattern?: string
 ): ConfigItem => {
   if (typeof config === 'string') {
@@ -250,13 +266,28 @@ const createConfigItem = (
 
   // If an object is specified as the value (e.g. Foo: { ... }),
   // It can have `path` property and `screens` prop which has nested configs
-  const pattern =
-    config.exact !== true && parentPattern && config.path
-      ? joinPaths(parentPattern, config.path)
-      : config.path;
+  let pattern: string | undefined;
+
+  if (legacy) {
+    pattern =
+      config.exact !== true && parentPattern && config.path
+        ? joinPaths(parentPattern, config.path)
+        : config.path;
+  } else {
+    if (config.exact && config.path === undefined) {
+      throw new Error(
+        "A 'path' needs to be specified when specifying 'exact: true'. If you don't want this screen in the URL, specify it as empty string, e.g. `path: ''`."
+      );
+    }
+
+    pattern =
+      config.exact !== true
+        ? joinPaths(parentPattern || '', config.path || '')
+        : config.path || '';
+  }
 
   const screens = config.screens
-    ? createNormalizedConfigs(config.screens, pattern)
+    ? createNormalizedConfigs(legacy, config.screens, pattern)
     : undefined;
 
   return {
@@ -268,12 +299,13 @@ const createConfigItem = (
 };
 
 const createNormalizedConfigs = (
-  options: PathConfig,
+  legacy: boolean,
+  options: PathConfigMap,
   pattern?: string
 ): Record<string, ConfigItem> =>
   fromEntries(
     Object.entries(options).map(([name, c]) => {
-      const result = createConfigItem(c, pattern);
+      const result = createConfigItem(legacy, c, pattern);
 
       return [name, result];
     })

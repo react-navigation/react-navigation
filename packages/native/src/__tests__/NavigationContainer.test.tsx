@@ -63,17 +63,19 @@ it('integrates with the history API', () => {
   const linking = {
     prefixes: [],
     config: {
-      Home: {
-        path: '',
-        initialRouteName: 'Feed',
-        screens: {
-          Profile: ':user',
-          Settings: 'edit',
-          Updates: 'updates',
-          Feed: 'feed',
+      screens: {
+        Home: {
+          path: '',
+          initialRouteName: 'Feed',
+          screens: {
+            Profile: ':user',
+            Settings: 'edit',
+            Updates: 'updates',
+            Feed: 'feed',
+          },
         },
+        Chat: 'chat',
       },
-      Chat: 'chat',
     },
   };
 
