@@ -5,6 +5,7 @@ import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
 import HeaderHeightContext from '../../utils/HeaderHeightContext';
 import HeaderShownContext from '../../utils/HeaderShownContext';
+import PreviousSceneContext from '../../utils/PreviousSceneContext';
 import type {
   Scene,
   Layout,
@@ -20,7 +21,6 @@ type Props = TransitionPreset & {
   closing: boolean;
   layout: Layout;
   gesture: Animated.Value;
-  previousScene?: Scene<Route<string>>;
   scene: Scene<Route<string>>;
   safeAreaInsetTop: number;
   safeAreaInsetRight: number;
@@ -30,9 +30,10 @@ type Props = TransitionPreset & {
   cardOverlayEnabled?: boolean;
   cardShadowEnabled?: boolean;
   cardStyle?: StyleProp<ViewStyle>;
-  getPreviousRoute: (props: {
+  getPreviousScene: (props: {
     route: Route<string>;
-  }) => Route<string> | undefined;
+    index: number;
+  }) => Scene<Route<string>> | undefined;
   getFocusedRoute: () => Route<string>;
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
   renderScene: (props: { route: Route<string> }) => React.ReactNode;
@@ -79,7 +80,7 @@ function CardContainer({
   gestureEnabled,
   gestureResponseDistance,
   gestureVelocityImpact,
-  getPreviousRoute,
+  getPreviousScene,
   getFocusedRoute,
   mode,
   headerMode,
@@ -97,7 +98,6 @@ function CardContainer({
   onPageChangeStart,
   onTransitionEnd,
   onTransitionStart,
-  previousScene,
   renderHeader,
   renderScene,
   safeAreaInsetBottom,
@@ -163,6 +163,7 @@ function CardContainer({
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);
   const isCurrentHeaderShown = headerMode !== 'none' && headerShown !== false;
+  const previousScene = getPreviousScene({ route: scene.route, index });
 
   return (
     <Card
@@ -197,13 +198,15 @@ function CardContainer({
     >
       <View style={styles.container}>
         <View style={styles.scene}>
-          <HeaderShownContext.Provider
-            value={isParentHeaderShown || isCurrentHeaderShown}
-          >
-            <HeaderHeightContext.Provider value={headerHeight}>
-              {renderScene({ route: scene.route })}
-            </HeaderHeightContext.Provider>
-          </HeaderShownContext.Provider>
+          <PreviousSceneContext.Provider value={previousScene}>
+            <HeaderShownContext.Provider
+              value={isParentHeaderShown || isCurrentHeaderShown}
+            >
+              <HeaderHeightContext.Provider value={headerHeight}>
+                {renderScene({ route: scene.route })}
+              </HeaderHeightContext.Provider>
+            </HeaderShownContext.Provider>
+          </PreviousSceneContext.Provider>
         </View>
         {headerMode === 'screen'
           ? renderHeader({
@@ -211,7 +214,7 @@ function CardContainer({
               layout,
               insets,
               scenes: [previousScene, scene],
-              getPreviousRoute,
+              getPreviousScene,
               getFocusedRoute,
               gestureDirection,
               styleInterpolator: headerStyleInterpolator,

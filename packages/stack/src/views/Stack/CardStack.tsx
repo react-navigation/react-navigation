@@ -336,6 +336,33 @@ export default class CardStack extends React.Component<Props, State> {
     return state.routes[state.index];
   };
 
+  private getPreviousScene = ({
+    route,
+    index,
+  }: {
+    route: Route<string>;
+    index: number;
+  }) => {
+    const previousRoute = this.props.getPreviousRoute({ route });
+
+    let previous: Scene<Route<string>> | undefined;
+
+    if (previousRoute) {
+      // The previous scene will be shortly before the current scene in the array
+      // So loop back from current index to avoid looping over the full array
+      for (let j = index - 1; j >= 0; j--) {
+        const s = this.state.scenes[j];
+
+        if (s && s.route.key === previousRoute.key) {
+          previous = s;
+          break;
+        }
+      }
+    }
+
+    return previous;
+  };
+
   render() {
     const {
       mode,
@@ -346,7 +373,6 @@ export default class CardStack extends React.Component<Props, State> {
       closingRouteKeys,
       onOpenRoute,
       onCloseRoute,
-      getPreviousRoute,
       getGesturesEnabled,
       renderHeader,
       renderScene,
@@ -414,7 +440,7 @@ export default class CardStack extends React.Component<Props, State> {
                   layout,
                   insets: { top, right, bottom, left },
                   scenes,
-                  getPreviousRoute,
+                  getPreviousScene: this.getPreviousScene,
                   getFocusedRoute: this.getFocusedRoute,
                   onContentHeightChange: this.handleHeaderLayout,
                   gestureDirection:
@@ -520,25 +546,6 @@ export default class CardStack extends React.Component<Props, State> {
                     left: safeAreaInsetLeft = insets.left,
                   } = safeAreaInsets || {};
 
-                  const previousRoute = getPreviousRoute({
-                    route: scene.route,
-                  });
-
-                  let previousScene = scenes[index - 1];
-
-                  if (previousRoute) {
-                    // The previous scene will be shortly before the current scene in the array
-                    // So loop back from current index to avoid looping over the full array
-                    for (let j = index - 1; j >= 0; j--) {
-                      const s = scenes[j];
-
-                      if (s && s.route.key === previousRoute.key) {
-                        previousScene = s;
-                        break;
-                      }
-                    }
-                  }
-
                   const headerHeight =
                     headerMode !== 'none' && headerShown !== false
                       ? headerHeights[route.key]
@@ -560,7 +567,6 @@ export default class CardStack extends React.Component<Props, State> {
                         layout={layout}
                         gesture={gesture}
                         scene={scene}
-                        previousScene={previousScene}
                         safeAreaInsetTop={safeAreaInsetTop}
                         safeAreaInsetRight={safeAreaInsetRight}
                         safeAreaInsetBottom={safeAreaInsetBottom}
@@ -575,7 +581,7 @@ export default class CardStack extends React.Component<Props, State> {
                         gestureResponseDistance={gestureResponseDistance}
                         headerHeight={headerHeight}
                         onHeaderHeightChange={this.handleHeaderLayout}
-                        getPreviousRoute={getPreviousRoute}
+                        getPreviousScene={this.getPreviousScene}
                         getFocusedRoute={this.getFocusedRoute}
                         mode={mode}
                         headerMode={headerMode}
