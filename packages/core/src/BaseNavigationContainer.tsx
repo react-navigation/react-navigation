@@ -61,7 +61,6 @@ const getPartialState = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { key, routeNames, ...partialState } = state;
 
-  // @ts-ignore
   return {
     ...partialState,
     stale: true,
@@ -190,7 +189,7 @@ const BaseNavigationContainer = React.forwardRef(
         acc[name] = (...args: any[]) =>
           dispatch(
             CommonActions[name](
-              // @ts-ignore
+              // @ts-expect-error: we can't know the type statically
               ...args
             )
           );

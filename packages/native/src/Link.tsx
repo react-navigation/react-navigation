@@ -7,6 +7,9 @@ type Props = {
   to: string;
   action?: NavigationAction;
   target?: string;
+  onPress?: (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
+  ) => void;
 } & (TextProps & { children: React.ReactNode });
 
 /**
@@ -24,7 +27,6 @@ export default function Link({ to, action, ...rest }: Props) {
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
   ) => {
     if ('onPress' in rest) {
-      // @ts-ignore
       rest.onPress?.(e);
     }
 

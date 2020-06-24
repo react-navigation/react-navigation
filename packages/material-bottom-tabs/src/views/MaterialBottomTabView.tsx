@@ -75,7 +75,7 @@ function MaterialBottomTabViewInner({
               return (
                 <Link
                   {...rest}
-                  // @ts-ignore
+                  // @ts-expect-error: to could be undefined, but it doesn't affect functionality
                   to={buildLink(route.name, route.params)}
                   accessibilityRole="link"
                   onPress={(e: any) => {

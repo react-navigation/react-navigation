@@ -22,7 +22,7 @@ export default function createCompatNavigatorFactory<
     React.ComponentType<any>
   >
 >(createNavigator: CreateNavigator) {
-  // @ts-ignore
+  // @ts-expect-error: isCompat may or may not exist
   if (createNavigator.isCompat) {
     throw new Error(
       `The navigator is already in compat mode. You don't need to wrap it in 'createCompatNavigatorFactory'.`
@@ -98,7 +98,7 @@ export default function createCompatNavigatorFactory<
                 state?: NavigationState | PartialState<NavigationState>;
               };
             }) => {
-              // @ts-ignore
+              // @ts-expect-error: navigationOptions may exists on the component, but TS is dumb
               const routeNavigationOptions = routeConfigItem.navigationOptions;
               const screenNavigationOptions = getScreenComponent()
                 .navigationOptions;

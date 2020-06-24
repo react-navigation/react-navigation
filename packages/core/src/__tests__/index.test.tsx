@@ -75,7 +75,7 @@ it("doesn't crash when initialState is null", () => {
   const TestScreen = () => null;
 
   const element = (
-    // @ts-ignore
+    // @ts-expect-error: we're explicitly passing null for state
     <BaseNavigationContainer initialState={null}>
       <TestNavigator>
         <Screen name="foo" component={TestScreen} />
@@ -1673,8 +1673,9 @@ it('does not throw if while getting current options with no options defined', ()
 it('does not throw if while getting current options with empty container', () => {
   const navigation = React.createRef<NavigationContainerRef>();
 
-  // @ts-ignore
-  const container = <BaseNavigationContainer ref={navigation} />;
+  const container = (
+    <BaseNavigationContainer ref={navigation} children={null} />
+  );
 
   render(container).update(container);
 

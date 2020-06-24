@@ -19,7 +19,7 @@ export default function withNavigationFocus<
   }): React.ReactElement => {
     const isFocused = useIsFocused();
 
-    // @ts-ignore
+    // @ts-expect-error: type checking HOC is hard
     return <Comp ref={onRef} isFocused={isFocused} {...rest} />;
   };
 

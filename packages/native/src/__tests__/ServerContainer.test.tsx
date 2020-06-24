@@ -11,7 +11,7 @@ import NavigationContainer from '../NavigationContainer';
 import ServerContainer from '../ServerContainer';
 import type { ServerContainerRef } from '../types';
 
-// @ts-ignore
+// @ts-expect-error: practically window is same as global, so we can ignore the error
 global.window = global;
 
 window.addEventListener = () => {};
@@ -80,7 +80,7 @@ it('renders correct state with location', () => {
     </NavigationContainer>
   );
 
-  // @ts-ignore
+  // @ts-expect-error: we don't care about adding all properties on location for the test
   window.location = { pathname: '/jane/edit', search: '' };
 
   const client = renderToString(element);

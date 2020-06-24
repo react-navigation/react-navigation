@@ -70,7 +70,7 @@ export default function createCompatNavigationProp<
             }
           };
 
-          // @ts-ignore
+          // @ts-expect-error: this event may not exist in this navigator
           unsubscribe = navigation.addListener('transitionEnd', listener);
           context.subscriptions.didFocus.set(callback, unsubscribe);
           break;
@@ -82,7 +82,7 @@ export default function createCompatNavigationProp<
             }
           };
 
-          // @ts-ignore
+          // @ts-expect-error: this event may not exist in this navigator
           unsubscribe = navigation.addListener('transitionEnd', listener);
           context.subscriptions.didBlur.set(callback, unsubscribe);
           break;
@@ -94,7 +94,7 @@ export default function createCompatNavigationProp<
             }
           };
 
-          // @ts-ignore
+          // @ts-expect-error: this event may not exist in this navigator
           unsubscribe = navigation.addListener('tabPress', listener);
           context.subscriptions.refocus.set(callback, unsubscribe);
           break;
@@ -102,7 +102,6 @@ export default function createCompatNavigationProp<
         case 'action':
           throw new Error("Listening to 'action' events is not supported.");
         default:
-          // @ts-ignore
           unsubscribe = navigation.addListener(type, callback);
       }
 
@@ -140,18 +139,17 @@ export default function createCompatNavigationProp<
         case 'action':
           throw new Error("Listening to 'action' events is not supported.");
         default:
-          // @ts-ignore
           navigation.removeListener(type, callback);
       }
     },
     state: {
       ...state,
-      // @ts-ignore
+      // @ts-expect-error
       routeName: state.name,
       get index() {
-        // @ts-ignore
+        // @ts-expect-error
         if (state.index !== undefined) {
-          // @ts-ignore
+          // @ts-expect-error
           return state.index;
         }
 
@@ -159,13 +157,13 @@ export default function createCompatNavigationProp<
           "Accessing child navigation state for a route is not safe and won't work correctly."
         );
 
-        // @ts-ignore
+        // @ts-expect-error
         return state.state ? state.state.index : undefined;
       },
       get routes() {
-        // @ts-ignore
+        // @ts-expect-error
         if (state.routes !== undefined) {
-          // @ts-ignore
+          // @ts-expect-error
           return state.routes;
         }
 
@@ -173,7 +171,7 @@ export default function createCompatNavigationProp<
           "Accessing child navigation state for a route is not safe and won't work correctly."
         );
 
-        // @ts-ignore
+        // @ts-expect-error
         return state.state ? state.state.routes : undefined;
       },
     },
@@ -181,7 +179,7 @@ export default function createCompatNavigationProp<
       paramName: T,
       defaultValue: ParamList[T]
     ): ParamList[T] {
-      // @ts-ignore
+      // @ts-expect-error
       const params = state.params;
 
       if (params && paramName in params) {
@@ -197,7 +195,7 @@ export default function createCompatNavigationProp<
 
       const { routes } = navigation.dangerouslyGetState();
 
-      // @ts-ignore
+      // @ts-expect-error
       return routes[0].key === state.key;
     },
     dangerouslyGetParent() {

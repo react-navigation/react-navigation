@@ -146,9 +146,9 @@ it('converts path string to initial state with config (legacy)', () => {
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getStateFromPath(path, config)).toEqual(state);
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
     state
   );
@@ -347,9 +347,9 @@ it('converts path string to initial state with config with nested screens (legac
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getStateFromPath(path, config)).toEqual(state);
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
     state
   );
@@ -469,9 +469,9 @@ it('converts path string to initial state with config with nested screens and un
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getStateFromPath(path, config)).toEqual(state);
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
     state
   );
@@ -649,9 +649,9 @@ it('handles nested object with unused configs and with parse in it (legacy)', ()
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getStateFromPath(path, config)).toEqual(state);
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
     state
   );
@@ -1067,9 +1067,9 @@ it('handles two initialRouteNames (legacy)', () => {
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getStateFromPath(path, config)).toEqual(state);
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
     state
   );
@@ -1252,9 +1252,9 @@ it('accepts initialRouteName without config for it (legacy)', () => {
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getStateFromPath(path, config)).toEqual(state);
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
     state
   );
@@ -2689,7 +2689,7 @@ it('throws if wildcard is specified with legacy config', () => {
     },
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(() => getStateFromPath(path, config)).toThrow(
     "Please update your config to the new format to use wildcard pattern ('*')"
   );
@@ -2743,7 +2743,7 @@ it('supports legacy config', () => {
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getStateFromPath(path, config)).toEqual(state);
 });
 
@@ -2751,7 +2751,7 @@ it("throws when using 'initialRouteName' or 'screens' with legacy config", () =>
   expect(() =>
     getStateFromPath('/whatever', {
       initialRouteName: 'foo',
-      // @ts-expect-error
+      // @ts-expect-error: legacy config
       Foo: 'foo',
       Bar: 'bar/:type/:fruit',
     })
@@ -2762,7 +2762,7 @@ it("throws when using 'initialRouteName' or 'screens' with legacy config", () =>
       screens: {
         Test: 'test',
       },
-      // @ts-expect-error
+      // @ts-expect-error: legacy config
       Foo: 'foo',
       Bar: 'bar/:type/:fruit',
     })
@@ -2774,7 +2774,7 @@ it("throws when using 'initialRouteName' or 'screens' with legacy config", () =>
       screens: {
         Test: 'test',
       },
-      // @ts-expect-error
+      // @ts-expect-error: legacy config
       Foo: 'foo',
       Bar: 'bar/:type/:fruit',
     })

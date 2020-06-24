@@ -22,7 +22,7 @@ export default function withNavigation<
   }): React.ReactElement => {
     const navigation = useCompatNavigation<T>();
 
-    // @ts-ignore
+    // @ts-expect-error: type checking HOC is hard
     return <Comp ref={onRef} navigation={navigation} {...rest} />;
   };
 

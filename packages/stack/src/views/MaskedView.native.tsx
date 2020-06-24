@@ -16,7 +16,6 @@ try {
 }
 
 const isMaskedViewAvailable =
-  // @ts-ignore
   UIManager.getViewManagerConfig('RNCMaskedView') != null;
 
 export default function MaskedView({ children, ...rest }: Props) {

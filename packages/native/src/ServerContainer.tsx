@@ -40,7 +40,7 @@ export default React.forwardRef(function ServerContainer(
     if (typeof ref === 'function') {
       ref(value);
     } else {
-      // @ts-ignore: the TS types are incorrect and say that ref.current is readonly
+      // @ts-expect-error: the TS types are incorrect and say that ref.current is readonly
       ref.current = value;
     }
   }
