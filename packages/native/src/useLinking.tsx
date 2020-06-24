@@ -44,7 +44,7 @@ const createMemoryHistory = () => {
     },
 
     get(index: number) {
-      return items[index]?.state;
+      return items[index];
     },
 
     backIndex({ path }: { path: string }) {
@@ -307,10 +307,13 @@ export default function useLinking(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const previousIndexRef = React.useRef<number | undefined>(undefined);
   const previousStateRef = React.useRef<NavigationState | undefined>(undefined);
   const pendingPopStatePathRef = React.useRef<string | undefined>(undefined);
 
   React.useEffect(() => {
+    previousIndexRef.current = history.index;
+
     return history.listen(() => {
       const navigation = ref.current;
 
@@ -319,22 +322,28 @@ export default function useLinking(
       }
 
       const path = location.pathname + location.search;
+      const index = history.index;
 
+      const previousIndex = previousIndexRef.current ?? 0;
+
+      previousIndexRef.current = index;
       pendingPopStatePathRef.current = path;
 
       // When browser back/forward is clicked, we first need to check if state object for this index exists
       // If it does we'll reset to that state object
       // Otherwise, we'll handle it like a regular deep link
-      const recordedState = history.get(history.index);
+      const record = history.get(index);
 
-      if (recordedState) {
-        navigation.resetRoot(recordedState);
+      if (record?.path === path && record?.state) {
+        navigation.resetRoot(record.state);
         return;
       }
 
       const state = getStateFromPathRef.current(path, configRef.current);
 
-      if (state) {
+      // We should only dispatch an action when going forward
+      // Otherwise the action will likely add items to history, which would mess things up
+      if (state && index > previousIndex) {
         const action = getActionFromState(state);
 
         if (action !== undefined) {
