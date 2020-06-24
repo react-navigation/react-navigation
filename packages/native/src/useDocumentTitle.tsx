@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { NavigationContainerRef } from '@react-navigation/core';
+import type { NavigationContainerRef } from '@react-navigation/core';
 
 /**
  * Set the document title for the active page
@@ -19,10 +19,12 @@ export default function useDocumentTitle(
       document.title = title;
     }
 
-    navigation?.addListener('options', (e) => {
-      document.title =
+    return navigation?.addListener('options', (e) => {
+      const title =
         // @ts-ignore
         e.data.options?.title ?? navigation?.getCurrentRoute()?.name;
+
+      document.title = title;
     });
   });
 }
