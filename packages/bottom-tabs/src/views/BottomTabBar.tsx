@@ -3,11 +3,8 @@ import {
   View,
   Animated,
   StyleSheet,
-  Keyboard,
   Platform,
   LayoutChangeEvent,
-  ScaledSize,
-  Dimensions,
 } from 'react-native';
 import {
   NavigationContext,
@@ -19,6 +16,8 @@ import {
 import { useSafeArea } from 'react-native-safe-area-context';
 
 import BottomTabItem from './BottomTabItem';
+import useWindowDimensions from '../utils/useWindowDimensions';
+import useIsKeyboardShown from '../utils/useIsKeyboardShown';
 import type { BottomTabBarProps } from '../types';
 
 type Props = BottomTabBarProps & {
@@ -57,7 +56,8 @@ export default function BottomTabBar({
   const focusedDescriptor = descriptors[focusedRoute.key];
   const focusedOptions = focusedDescriptor.options;
 
-  const [isKeyboardShown, setIsKeyboardShown] = React.useState(false);
+  const dimensions = useWindowDimensions();
+  const isKeyboardShown = useIsKeyboardShown();
 
   const shouldShowTabBar =
     focusedOptions.tabBarVisible !== false &&
@@ -90,43 +90,6 @@ export default function BottomTabBar({
       }).start();
     }
   }, [shouldShowTabBar, visible]);
-
-  const [dimensions, setDimensions] = React.useState(() => {
-    const { height = 0, width = 0 } = Dimensions.get('window');
-
-    return { height, width };
-  });
-
-  React.useEffect(() => {
-    const handleOrientationChange = ({ window }: { window: ScaledSize }) => {
-      setDimensions(window);
-    };
-
-    Dimensions.addEventListener('change', handleOrientationChange);
-
-    const handleKeyboardShow = () => setIsKeyboardShown(true);
-    const handleKeyboardHide = () => setIsKeyboardShown(false);
-
-    if (Platform.OS === 'ios') {
-      Keyboard.addListener('keyboardWillShow', handleKeyboardShow);
-      Keyboard.addListener('keyboardWillHide', handleKeyboardHide);
-    } else {
-      Keyboard.addListener('keyboardDidShow', handleKeyboardShow);
-      Keyboard.addListener('keyboardDidHide', handleKeyboardHide);
-    }
-
-    return () => {
-      Dimensions.removeEventListener('change', handleOrientationChange);
-
-      if (Platform.OS === 'ios') {
-        Keyboard.removeListener('keyboardWillShow', handleKeyboardShow);
-        Keyboard.removeListener('keyboardWillHide', handleKeyboardHide);
-      } else {
-        Keyboard.removeListener('keyboardDidShow', handleKeyboardShow);
-        Keyboard.removeListener('keyboardDidHide', handleKeyboardHide);
-      }
-    };
-  }, []);
 
   const [layout, setLayout] = React.useState({
     height: 0,

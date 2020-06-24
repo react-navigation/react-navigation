@@ -1,11 +1,9 @@
 import * as React from 'react';
 import {
   View,
-  Dimensions,
   StyleSheet,
   I18nManager,
   Platform,
-  ScaledSize,
   BackHandler,
   NativeEventSubscription,
 } from 'react-native';
@@ -25,6 +23,7 @@ import DrawerContent from './DrawerContent';
 import Drawer from './Drawer';
 import DrawerOpenContext from '../utils/DrawerOpenContext';
 import DrawerPositionContext from '../utils/DrawerPositionContext';
+import useWindowDimensions from '../utils/useWindowDimensions';
 import type {
   DrawerDescriptorMap,
   DrawerNavigationConfig,
@@ -86,9 +85,7 @@ export default function DrawerView({
   sceneContainerStyle,
 }: Props) {
   const [loaded, setLoaded] = React.useState([state.index]);
-  const [dimensions, setDimensions] = React.useState(() =>
-    Dimensions.get('window')
-  );
+  const dimensions = useWindowDimensions();
 
   const { colors } = useTheme();
 
@@ -132,16 +129,6 @@ export default function DrawerView({
 
     return () => subscription?.remove();
   }, [handleDrawerClose, isDrawerOpen, navigation, state.key]);
-
-  React.useEffect(() => {
-    const updateDimensions = ({ window }: { window: ScaledSize }) => {
-      setDimensions(window);
-    };
-
-    Dimensions.addEventListener('change', updateDimensions);
-
-    return () => Dimensions.removeEventListener('change', updateDimensions);
-  }, []);
 
   if (!loaded.includes(state.index)) {
     setLoaded([...loaded, state.index]);
