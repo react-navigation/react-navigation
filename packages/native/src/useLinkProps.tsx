@@ -30,11 +30,11 @@ export default function useLinkProps({ to, action }: Props) {
       shouldHandle = e ? !e.defaultPrevented : true;
     } else if (
       !e.defaultPrevented && // onPress prevented default
-      // @ts-ignore
+      // @ts-expect-error: these properties exist on web, but not in React Native
       !(e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) && // ignore clicks with modifier keys
-      // @ts-ignore
+      // @ts-expect-error: these properties exist on web, but not in React Native
       (e.button == null || e.button === 0) && // ignore everything but left clicks
-      // @ts-ignore
+      // @ts-expect-error: these properties exist on web, but not in React Native
       [undefined, null, '', 'self'].includes(e.currentTarget?.target) // let browser handle "target=_blank" etc.
     ) {
       e.preventDefault();

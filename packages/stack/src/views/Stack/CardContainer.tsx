@@ -145,8 +145,7 @@ function CardContainer({
   );
 
   React.useEffect(() => {
-    // `addListener` may not exist on web and older versions of React Native
-    // @ts-ignore
+    // @ts-expect-error: AnimatedInterpolation optionally has addListener, but the type defs don't think so
     const listener = scene.progress.next?.addListener?.(
       ({ value }: { value: number }) => {
         setPointerEvents(value <= EPSILON ? 'box-none' : 'none');
@@ -155,7 +154,7 @@ function CardContainer({
 
     return () => {
       if (listener) {
-        // @ts-ignore
+        // @ts-expect-error: AnimatedInterpolation optionally has removedListener, but the type defs don't think so
         scene.progress.next?.removeListener?.(listener);
       }
     };

@@ -6,13 +6,15 @@ import type { NavigatorStateGetter } from './NavigationBuilderContext';
  */
 
 export default function useStateGetters() {
-  const stateGetters = React.useRef<Record<string, NavigatorStateGetter>>({});
+  const stateGetters = React.useRef<
+    Record<string, NavigatorStateGetter | undefined>
+  >({});
 
   const getStateForRoute = React.useCallback(
-    (routeKey: string) =>
-      stateGetters.current[routeKey] === undefined
-        ? undefined
-        : stateGetters.current[routeKey](),
+    (routeKey: string) => {
+      const getter = stateGetters.current[routeKey];
+      return getter === undefined ? undefined : getter();
+    },
     [stateGetters]
   );
 
@@ -21,7 +23,6 @@ export default function useStateGetters() {
       stateGetters.current[key] = getter;
 
       return () => {
-        // @ts-ignore
         stateGetters.current[key] = undefined;
       };
     },

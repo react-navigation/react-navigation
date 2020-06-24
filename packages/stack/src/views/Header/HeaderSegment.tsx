@@ -62,7 +62,6 @@ export const getDefaultHeaderHeight = (
   let headerHeight;
 
   if (Platform.OS === 'ios') {
-    // @ts-ignore
     if (isLandscape && !Platform.isPad) {
       headerHeight = 32;
     } else {
@@ -208,7 +207,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
       borderTopStartRadius,
       borderTopWidth,
       borderWidth,
-      // @ts-ignore: web support for shadow
+      // @ts-expect-error: web support for shadow
       boxShadow,
       elevation,
       shadowColor,
@@ -250,7 +249,6 @@ export default class HeaderSegment extends React.Component<Props, State> {
       borderTopStartRadius,
       borderTopWidth,
       borderWidth,
-      // @ts-ignore
       boxShadow,
       elevation,
       shadowColor,
@@ -265,9 +263,9 @@ export default class HeaderSegment extends React.Component<Props, State> {
     // So we need to filter them out
     // Users can use `null` instead
     for (const styleProp in safeStyles) {
-      // @ts-ignore
+      // @ts-expect-error: typescript wrongly complains that styleProp cannot be used to index safeStyles
       if (safeStyles[styleProp] === undefined) {
-        // @ts-ignore
+        // @ts-expect-error
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete safeStyles[styleProp];
       }

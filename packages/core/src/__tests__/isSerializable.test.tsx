@@ -51,19 +51,17 @@ it('returns false for non-serializable object', () => {
 });
 
 it('returns false for circular references', () => {
-  const x = {
+  const x: any = {
     a: 1,
     b: { b1: 1 },
   };
 
-  // @ts-ignore
   x.b.b2 = x;
-  // @ts-ignore
   x.c = x.b;
 
   expect(isSerializable(x)).toBe(false);
 
-  const y = [
+  const y: any = [
     {
       label: 'home',
       children: [{ label: 'product' }],
@@ -71,19 +69,16 @@ it('returns false for circular references', () => {
     { label: 'about', extend: {} },
   ];
 
-  // @ts-ignore
   y[0].children[0].parent = y[0];
-  // @ts-ignore
   y[1].extend.home = y[0].children[0];
 
   expect(isSerializable(y)).toBe(false);
 
-  const z = {
+  const z: any = {
     name: 'sun',
     child: [{ name: 'flower' }],
   };
 
-  // @ts-ignore
   z.child[0].parent = z;
 
   expect(isSerializable(z)).toBe(false);

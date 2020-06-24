@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render } from 'react-native-testing-library';
+import { render, RenderAPI } from 'react-native-testing-library';
 import type { NavigationContainerRef } from '@react-navigation/core';
 import useLinking from '../useLinking';
 
@@ -14,13 +14,12 @@ it('throws if multiple instances of useLinking are used', () => {
     return null;
   }
 
-  let element;
+  let element: RenderAPI | undefined;
 
   expect(() => (element = render(<Sample />))).toThrowError(
     'Looks like you have configured linking in multiple places.'
   );
 
-  // @ts-ignore
   element?.unmount();
 
   function A() {
@@ -43,7 +42,6 @@ it('throws if multiple instances of useLinking are used', () => {
       ))
   ).toThrowError('Looks like you have configured linking in multiple places.');
 
-  // @ts-ignore
   element?.unmount();
 
   function Sample2() {
@@ -57,7 +55,6 @@ it('throws if multiple instances of useLinking are used', () => {
 
   expect(() => (element = render(wrapper2))).not.toThrow();
 
-  // @ts-ignore
   element?.unmount();
 
   function Sample3() {
@@ -68,6 +65,5 @@ it('throws if multiple instances of useLinking are used', () => {
 
   expect(() => (element = render(<Sample3 />))).not.toThrowError();
 
-  // @ts-ignore
   element?.unmount();
 });

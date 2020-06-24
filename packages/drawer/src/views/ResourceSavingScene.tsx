@@ -17,7 +17,7 @@ export default class ResourceSavingScene extends React.Component<Props> {
     if (screensEnabled?.() && Platform.OS !== 'web') {
       const { isVisible, ...rest } = this.props;
 
-      // @ts-ignore
+      // @ts-expect-error: stackPresentation is incorrectly marked as required
       return <Screen active={isVisible ? 1 : 0} {...rest} />;
     }
 

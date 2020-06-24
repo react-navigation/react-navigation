@@ -87,7 +87,6 @@ it('resets state to new state with RESET', () => {
 it('adds keys to routes missing keys during RESET', () => {
   const result = BaseRouter.getStateForAction(
     STATE,
-    // @ts-ignore
     CommonActions.reset({
       ...STATE,
       routes: [...STATE.routes, { name: 'qux' }],
@@ -123,7 +122,6 @@ it("doesn't handle RESET if routeNames don't match", () => {
     STATE,
     CommonActions.reset({
       ...STATE,
-      // @ts-ignore
       routeNames: ['ten'],
     })
   );

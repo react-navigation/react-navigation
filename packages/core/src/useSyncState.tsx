@@ -20,7 +20,7 @@ export default function useSyncState<T>(initialState?: (() => T) | T) {
 
   if (stateRef.current === UNINTIALIZED_STATE) {
     stateRef.current =
-      // @ts-ignore
+      // @ts-expect-error: initialState is a function, but TypeScript doesn't think so
       typeof initialState === 'function' ? initialState() : initialState;
   }
 

@@ -4,7 +4,7 @@ import Animated from 'react-native-reanimated';
 
 const {
   interpolate: interpolateDeprecated,
-  // @ts-ignore
+  // @ts-expect-error: this property is only present in Reanimated 2
   interpolateNode,
   cond,
   greaterThan,

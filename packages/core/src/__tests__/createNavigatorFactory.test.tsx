@@ -5,7 +5,7 @@ it('throws descriptive error if an argument is passed', () => {
 
   expect(() => createDummyNavigator()).not.toThrowError();
 
-  // @ts-ignore
+  // @ts-expect-error: we're explicitly passing invalid argument
   expect(() => createDummyNavigator({})).toThrowError(
     "Creating a navigator doesn't take an argument."
   );

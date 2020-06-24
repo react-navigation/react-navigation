@@ -64,7 +64,7 @@ export default function useScrollToTop(
     const unsubscribe = current.addListener(
       // We don't wanna import tab types here to avoid extra deps
       // in addition, there are multiple tab implementations
-      // @ts-ignore
+      // @ts-expect-error
       'tabPress',
       (e: EventArg<'tabPress', true>) => {
         // We should scroll to top only when the screen is focused

@@ -11,7 +11,7 @@ import { act, render } from 'react-native-testing-library';
 import NavigationContainer from '../NavigationContainer';
 import window from '../__mocks__/window';
 
-// @ts-ignore
+// @ts-expect-error: practically window is same as global, so we can ignore the error
 global.window = window;
 
 // We want to use the web version of useLinking

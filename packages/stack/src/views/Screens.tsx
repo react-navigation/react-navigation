@@ -23,7 +23,7 @@ class WebScreen extends React.Component<
 
     return (
       <View
-        // @ts-ignore
+        // @ts-expect-error: hidden exists on web, but not in React Native
         hidden={!active}
         style={[style, { display: active ? 'flex' : 'none' }]}
         {...rest}
@@ -54,16 +54,16 @@ export const MaybeScreen = ({
   ...rest
 }: ViewProps & {
   enabled: boolean;
-  active: number | Animated.AnimatedInterpolation;
+  active: 0 | 1 | Animated.AnimatedInterpolation;
   children: React.ReactNode;
 }) => {
   if (enabled && Platform.OS === 'web') {
-    // @ts-ignore
+    // @ts-expect-error: the Animated.createAnimatedComponent types don't work properly
     return <AnimatedWebScreen active={active} {...rest} />;
   }
 
   if (enabled && Screens && Screens.screensEnabled()) {
-    // @ts-ignore
+    // @ts-expect-error: stackPresentation is incorrectly marked as required
     return <Screens.Screen active={active} {...rest} />;
   }
 

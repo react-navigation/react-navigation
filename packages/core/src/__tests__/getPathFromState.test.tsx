@@ -145,10 +145,10 @@ it('converts state to path string with config (legacy)', () => {
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getPathFromState(state, config)).toBe(path);
   expect(
-    // @ts-expect-error
+    // @ts-expect-error: legacy config
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -327,10 +327,10 @@ it('handles state with config with nested screens (legacy)', () => {
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getPathFromState(state, config)).toBe(path);
   expect(
-    // @ts-expect-error
+    // @ts-expect-error: legacy config
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -479,10 +479,10 @@ it('handles state with config with nested screens and exact (legacy)', () => {
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getPathFromState(state, config)).toBe(path);
   expect(
-    // @ts-expect-error
+    // @ts-expect-error: legacy config
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -605,10 +605,10 @@ it('handles state with config with nested screens and unused configs (legacy)', 
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getPathFromState(state, config)).toBe(path);
   expect(
-    // @ts-expect-error
+    // @ts-expect-error: legacy config
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -735,10 +735,10 @@ it('handles state with config with nested screens and unused configs with exact 
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getPathFromState(state, config)).toBe(path);
   expect(
-    // @ts-expect-error
+    // @ts-expect-error: legacy config
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -891,10 +891,10 @@ it('handles nested object with stringify in it (legacy)', () => {
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getPathFromState(state, config)).toBe(path);
   expect(
-    // @ts-expect-error
+    // @ts-expect-error: legacy config
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -1051,10 +1051,10 @@ it('handles nested object with stringify in it with exact (legacy)', () => {
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getPathFromState(state, config)).toBe(path);
   expect(
-    // @ts-expect-error
+    // @ts-expect-error: legacy config
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -1405,10 +1405,10 @@ it('cuts nested configs too (legacy)', () => {
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getPathFromState(state, config)).toBe(path);
   expect(
-    // @ts-expect-error
+    // @ts-expect-error: legacy config
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -1583,10 +1583,10 @@ it('parses no path specified (legacy)', () => {
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getPathFromState(state, config)).toBe(path);
   expect(
-    // @ts-expect-error
+    // @ts-expect-error: legacy config
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -1621,10 +1621,10 @@ it('parses no path specified in nested config', () => {
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getPathFromState(state, config)).toBe(path);
   expect(
-    // @ts-expect-error
+    // @ts-expect-error: legacy config
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -1775,10 +1775,10 @@ it('strips undefined query params (legacy)', () => {
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getPathFromState(state, config)).toBe(path);
   expect(
-    // @ts-expect-error
+    // @ts-expect-error: legacy config
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -1932,10 +1932,10 @@ it('strips undefined query params with exact (legacy)', () => {
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getPathFromState(state, config)).toBe(path);
   expect(
-    // @ts-expect-error
+    // @ts-expect-error: legacy config
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -2082,10 +2082,10 @@ it('handles stripping all query params (legacy)', () => {
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getPathFromState(state, config)).toBe(path);
   expect(
-    // @ts-expect-error
+    // @ts-expect-error: legacy config
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -2236,10 +2236,10 @@ it('handles stripping all query params with exact (legacy)', () => {
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getPathFromState(state, config)).toBe(path);
   expect(
-    // @ts-expect-error
+    // @ts-expect-error: legacy config
     getPathFromState(getStateFromPath(path, config) as State, config)
   ).toBe(path);
 });
@@ -2483,7 +2483,7 @@ it('throws if wildcard is specified with legacy config', () => {
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(() => getPathFromState(state, config)).toThrow(
     "Please update your config to the new format to use wildcard pattern ('*')"
   );
@@ -2535,7 +2535,7 @@ it('supports legacy config', () => {
     ],
   };
 
-  // @ts-expect-error
+  // @ts-expect-error: legacy config
   expect(getPathFromState(state, config)).toBe(path);
 });
 
@@ -2545,7 +2545,7 @@ it("throws when using 'initialRouteName' or 'screens' with legacy config", () =>
       { routes: [] },
       {
         initialRouteName: 'foo',
-        // @ts-expect-error
+        // @ts-expect-error: legacy config
         Foo: 'foo',
         Bar: 'bar/:type/:fruit',
       }
@@ -2559,7 +2559,7 @@ it("throws when using 'initialRouteName' or 'screens' with legacy config", () =>
         screens: {
           Test: 'test',
         },
-        // @ts-expect-error
+        // @ts-expect-error: legacy config
         Foo: 'foo',
         Bar: 'bar/:type/:fruit',
       }
@@ -2574,7 +2574,7 @@ it("throws when using 'initialRouteName' or 'screens' with legacy config", () =>
         screens: {
           Test: 'test',
         },
-        // @ts-expect-error
+        // @ts-expect-error: legacy config
         Foo: 'foo',
         Bar: 'bar/:type/:fruit',
       }

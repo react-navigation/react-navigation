@@ -35,9 +35,9 @@ export default class KeyboardManager extends React.Component<Props> {
 
     this.clearKeyboardTimeout();
 
-    // @ts-ignore
+    // @ts-expect-error: currentlyFocusedInput is pretty new, so not in the type definitions
     const input = TextInput.State.currentlyFocusedInput
-      ? // @ts-ignore
+      ? // @ts-expect-error
         TextInput.State.currentlyFocusedInput()
       : TextInput.State.currentlyFocusedField();
 

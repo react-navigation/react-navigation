@@ -25,7 +25,7 @@ export default function NavigationEvents(props: Props) {
       propsRef.current.onWillBlur?.();
     });
 
-    // @ts-ignore
+    // @ts-expect-error: transitionEnd may not exist on this navigator
     const unsubTransitionEnd = navigation.addListener('transitionEnd', () => {
       if (navigation.isFocused()) {
         propsRef.current.onDidFocus?.();

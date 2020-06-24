@@ -28,7 +28,7 @@ export default function checkLegacyPathConfig(
   }
 
   if (legacy) {
-    // @ts-expect-error
+    // @ts-expect-error: we have incorrect type for config since we don't type legacy config
     return [legacy, { screens: config }];
   }
 

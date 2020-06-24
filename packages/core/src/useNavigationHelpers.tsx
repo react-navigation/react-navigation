@@ -55,7 +55,7 @@ export default function useNavigationHelpers<
 
     const helpers = Object.keys(actions).reduce<Record<string, () => void>>(
       (acc, name) => {
-        // @ts-ignore
+        // @ts-expect-error: name is a valid key, but TypeScript is dumb
         acc[name] = (...args: any) => dispatch(actions[name](...args));
         return acc;
       },

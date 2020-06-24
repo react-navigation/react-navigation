@@ -1,4 +1,11 @@
-import type { NavigationState, PartialState } from './types';
+import type { NavigationState, PartialState, Route } from './types';
+
+type ResetState =
+  | PartialState<NavigationState>
+  | NavigationState
+  | (Omit<NavigationState, 'routes'> & {
+      routes: Omit<Route<string>, 'key'>[];
+    });
 
 export type Action =
   | {
@@ -16,7 +23,7 @@ export type Action =
     }
   | {
       type: 'RESET';
-      payload: PartialState<NavigationState>;
+      payload: ResetState;
       source?: string;
       target?: string;
     }
@@ -53,7 +60,7 @@ export function navigate(...args: any): Action {
   }
 }
 
-export function reset(state: PartialState<NavigationState>): Action {
+export function reset(state: ResetState): Action {
   return { type: 'RESET', payload: state };
 }
 

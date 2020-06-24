@@ -114,16 +114,14 @@ export default function SceneView<
       <EnsureSingleNavigator>
         <StaticContainer
           name={screen.name}
-          // @ts-ignore
+          // @ts-expect-error: these properties exist on screen, but TS is confused
           render={screen.component || screen.children}
           navigation={navigation}
           route={route}
         >
           {'component' in screen && screen.component !== undefined ? (
-            // @ts-ignore
             <screen.component navigation={navigation} route={route} />
           ) : 'children' in screen && screen.children !== undefined ? (
-            // @ts-ignore
             screen.children({ navigation, route })
           ) : null}
         </StaticContainer>

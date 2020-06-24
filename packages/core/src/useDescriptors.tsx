@@ -128,20 +128,17 @@ export default function useDescriptors<
       // The default `screenOptions` passed to the navigator
       ...(typeof screenOptions === 'object' || screenOptions == null
         ? screenOptions
-        : // @ts-ignore: this is a function, but typescript doesn't think so
+        : // @ts-expect-error: this is a function, but typescript doesn't think so
           screenOptions({
-            // @ts-ignore
             route,
             navigation,
           })),
       // The `options` prop passed to `Screen` elements
       ...(typeof screen.options === 'object' || screen.options == null
         ? screen.options
-        : // @ts-ignore: this is a function, but typescript doesn't think so
+        : // @ts-expect-error: this is a function, but typescript doesn't think so
           screen.options({
-            // @ts-ignore
             route,
-            // @ts-ignore
             navigation,
           })),
       // The options set via `navigation.setOptions`
