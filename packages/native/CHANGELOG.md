@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.6.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@5.5.1...@react-navigation/native@5.6.0) (2020-06-24)
+
+
+### Bug Fixes
+
+* fix forward with history API. closes [#8409](https://github.com/react-navigation/react-navigation/issues/8409) ([d85d27c](https://github.com/react-navigation/react-navigation/commit/d85d27c43252630ea5c093fa6ad0d5a8c502b7c9))
+
+
+### Features
+
+* add an onReady callback to the container ([#8491](https://github.com/react-navigation/react-navigation/issues/8491)) ([8177c45](https://github.com/react-navigation/react-navigation/commit/8177c45d14ca6d1552574ad9ac740723f9cc8f5b))
+* rework linking configuration to be more strict ([#8502](https://github.com/react-navigation/react-navigation/issues/8502)) ([a021cfb](https://github.com/react-navigation/react-navigation/commit/a021cfb8af4afd50f785f6ee9b51d361e25704ca))
+
+
+
+
+
 ## [5.5.1](https://github.com/react-navigation/react-navigation/tree/main/packages/native/compare/@react-navigation/native@5.5.0...@react-navigation/native@5.5.1) (2020-06-06)
 
 **Note:** Version bump only for package @react-navigation/native
