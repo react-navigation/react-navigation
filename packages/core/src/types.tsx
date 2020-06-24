@@ -496,14 +496,14 @@ export type TypedNavigator<
 };
 
 export type PathConfig = {
-  [routeName: string]:
-    | string
-    | {
-        path?: string;
-        exact?: boolean;
-        parse?: Record<string, (value: string) => any>;
-        stringify?: Record<string, (value: any) => string>;
-        screens?: PathConfig;
-        initialRouteName?: string;
-      };
+  path?: string;
+  exact?: boolean;
+  parse?: Record<string, (value: string) => any>;
+  stringify?: Record<string, (value: any) => string>;
+  screens?: PathConfigMap;
+  initialRouteName?: string;
+};
+
+export type PathConfigMap = {
+  [routeName: string]: string | PathConfig;
 };
