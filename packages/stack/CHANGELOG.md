@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.8.2](https://github.com/react-navigation/react-navigation-stack/compare/react-navigation-stack@2.8.1...react-navigation-stack@2.8.2) (2020-06-25)
+
+
+### Bug Fixes
+
+* sync latest stack ([46b797d](https://github.com/react-navigation/react-navigation-stack/commit/46b797dd297f789e3c92ff6f5c4432fedc891767))
+
+
+
+
+
 ## [2.8.1](https://github.com/react-navigation/react-navigation-stack/compare/react-navigation-stack@2.8.0...react-navigation-stack@2.8.1) (2020-06-25)
 
 
