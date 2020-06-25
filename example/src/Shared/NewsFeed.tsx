@@ -18,7 +18,9 @@ import {
 } from 'react-native-paper';
 import Color from 'color';
 
-type Props = Partial<ScrollViewProps>;
+type Props = Partial<ScrollViewProps> & {
+  date?: number;
+};
 
 const Author = () => {
   return (
