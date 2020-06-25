@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.8.1](https://github.com/react-navigation/react-navigation-stack/compare/react-navigation-stack@2.8.0...react-navigation-stack@2.8.1) (2020-06-25)
+
+
+### Bug Fixes
+
+* pop with correct key from nested stack ([2e7f4a6](https://github.com/react-navigation/react-navigation-stack/commit/2e7f4a6d10a00930bd5c53ef6f4bf964c9638db5))
+
+
+
+
+
 # [2.8.0](https://github.com/react-navigation/react-navigation-stack/compare/react-navigation-stack@2.7.0...react-navigation-stack@2.8.0) (2020-06-25)
 
 
