@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.11.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.11.0...@react-navigation/core@5.11.1) (2020-06-25)
+
+
+### Bug Fixes
+
+* fix error with type definitions. closes [#8511](https://github.com/react-navigation/react-navigation/issues/8511) ([d1210a8](https://github.com/react-navigation/react-navigation/commit/d1210a861b37201827c333a5c012c4f0ebd9bb6a))
+
+
+
+
+
 # [5.11.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.10.0...@react-navigation/core@5.11.0) (2020-06-24)
 
 

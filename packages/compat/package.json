@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/compat",
   "description": "Compatibility layer to write navigator definitions in static configuration format",
-  "version": "5.1.27",
+  "version": "5.1.28",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.15.1",
-    "@react-navigation/native": "^5.6.0",
+    "@react-navigation/native": "^5.6.1",
     "@types/react": "^16.9.36",
     "react": "~16.9.0",
     "typescript": "^3.9.5"
