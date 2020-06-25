@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
-import { NavigationContext } from 'react-navigation';
+import {
+  NavigationContext,
+  NavigationRouteContext,
+  Route,
+  ParamListBase,
+} from '@react-navigation/native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 
 import Header from './Header';
@@ -14,7 +19,6 @@ import HeaderShownContext from '../../utils/HeaderShownContext';
 import PreviousSceneContext from '../../utils/PreviousSceneContext';
 import type {
   Layout,
-  Route,
   Scene,
   StackHeaderStyleInterpolator,
   StackNavigationProp,
@@ -101,7 +105,9 @@ export default function HeaderContainer({
           insets,
           scene,
           previous,
-          navigation: scene.descriptor.navigation as StackNavigationProp,
+          navigation: scene.descriptor.navigation as StackNavigationProp<
+            ParamListBase
+          >,
           styleInterpolator:
             mode === 'float'
               ? isHeaderStatic
@@ -120,7 +126,7 @@ export default function HeaderContainer({
             key={scene.route.key}
             value={scene.descriptor.navigation}
           >
-            <>
+            <NavigationRouteContext.Provider value={scene.route}>
               <View
                 onLayout={
                   onContentHeightChange
@@ -146,7 +152,7 @@ export default function HeaderContainer({
               >
                 {header !== undefined ? header(props) : <Header {...props} />}
               </View>
-            </>
+            </NavigationRouteContext.Provider>
           </NavigationContext.Provider>
         );
       })}
