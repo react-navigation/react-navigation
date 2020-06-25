@@ -61,7 +61,7 @@ export type EventArg<
       preventDefault(): void;
     }
   : {}) &
-  (undefined extends Data ? {} : { readonly data: Data });
+  (undefined extends Data ? { readonly data?: Data } : { readonly data: Data });
 
 export type EventListenerCallback<
   EventMap extends EventMapBase,
@@ -108,7 +108,7 @@ export type EventEmitter<EventMap extends EventMapBase> = {
       ? { canPreventDefault: true }
       : {}) &
       (undefined extends EventMap[EventName]['data']
-        ? {}
+        ? { data?: EventMap[EventName]['data'] }
         : { data: EventMap[EventName]['data'] })
   ): EventArg<
     EventName,
@@ -276,7 +276,12 @@ export type RouteProp<
   RouteName extends keyof ParamList
 > = Omit<Route<Extract<RouteName, string>>, 'params'> &
   (undefined extends ParamList[RouteName]
-    ? {}
+    ? {
+        /**
+         * Params for this route
+         */
+        params?: ParamList[RouteName];
+      }
     : {
         /**
          * Params for this route

@@ -1,38 +1,33 @@
 import * as React from 'react';
 import { View, Platform, StyleSheet, ScrollView } from 'react-native';
 import { Button } from 'react-native-paper';
-import type { RouteProp, ParamListBase } from '@react-navigation/native';
+import type { ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
-  StackNavigationProp,
+  StackScreenProps,
 } from '@react-navigation/stack';
 import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
 import NewsFeed from '../Shared/NewsFeed';
 
 type SimpleStackParams = {
-  Article: { author: string };
-  NewsFeed: undefined;
+  Article: { author: string } | undefined;
+  NewsFeed: { date: number };
   Albums: undefined;
 };
-
-type SimpleStackNavigation = StackNavigationProp<SimpleStackParams>;
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
   route,
-}: {
-  navigation: SimpleStackNavigation;
-  route: RouteProp<SimpleStackParams, 'Article'>;
-}) => {
+}: StackScreenProps<SimpleStackParams, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
         <Button
           mode="contained"
-          onPress={() => navigation.replace('NewsFeed')}
+          onPress={() => navigation.replace('NewsFeed', { date: Date.now() })}
           style={styles.button}
         >
           Replace with feed
@@ -46,7 +41,7 @@ const ArticleScreen = ({
         </Button>
       </View>
       <Article
-        author={{ name: route.params.author }}
+        author={{ name: route.params?.author ?? 'Unknown' }}
         scrollEnabled={scrollEnabled}
       />
     </ScrollView>
@@ -54,10 +49,9 @@ const ArticleScreen = ({
 };
 
 const NewsFeedScreen = ({
+  route,
   navigation,
-}: {
-  navigation: SimpleStackNavigation;
-}) => {
+}: StackScreenProps<SimpleStackParams, 'NewsFeed'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -76,16 +70,14 @@ const NewsFeedScreen = ({
           Go back
         </Button>
       </View>
-      <NewsFeed scrollEnabled={scrollEnabled} />
+      <NewsFeed scrollEnabled={scrollEnabled} date={route.params.date} />
     </ScrollView>
   );
 };
 
 const AlbumsScreen = ({
   navigation,
-}: {
-  navigation: SimpleStackNavigation;
-}) => {
+}: StackScreenProps<SimpleStackParams, 'Albums'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -111,11 +103,9 @@ const AlbumsScreen = ({
 
 const SimpleStack = createStackNavigator<SimpleStackParams>();
 
-type Props = {
-  navigation: StackNavigationProp<ParamListBase>;
-};
-
-export default function SimpleStackScreen({ navigation }: Props) {
+export default function SimpleStackScreen({
+  navigation,
+}: StackScreenProps<ParamListBase>) {
   navigation.setOptions({
     headerShown: false,
   });
@@ -126,7 +116,7 @@ export default function SimpleStackScreen({ navigation }: Props) {
         name="Article"
         component={ArticleScreen}
         options={({ route }) => ({
-          title: `Article by ${route.params.author}`,
+          title: `Article by ${route.params?.author ?? 'Unknown'}`,
         })}
         initialParams={{ author: 'Gandalf' }}
       />
