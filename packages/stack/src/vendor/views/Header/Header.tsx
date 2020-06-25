@@ -47,12 +47,14 @@ const Header = React.memo(function Header(props: StackHeaderProps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const goBack = React.useCallback(
     debounce(() => {
-      if (navigation.isFirstRouteInParent()) {
-        // If we're the first route, we're going back to a parent navigator
-        // So we can't specify a key here
-        navigation.dispatch(StackActions.pop());
-      } else {
-        navigation.dispatch(StackActions.pop({ key: scene.route.key }));
+      const key = navigation.isFirstRouteInParent()
+        ? // If we're the first route, we're going back to a parent navigator
+          // So we need to get the key of the route we're nested in
+          navigation.dangerouslyGetParent()?.state.key
+        : scene.route.key;
+
+      if (key !== undefined) {
+        navigation.dispatch(StackActions.pop({ key }));
       }
     }, 50),
     [navigation, scene.route.key]
