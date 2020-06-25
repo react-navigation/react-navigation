@@ -221,6 +221,7 @@ export default class TabBarItem<T extends Route> extends React.Component<
         accessibilityTraits={isFocused ? ['button', 'selected'] : 'button'}
         accessibilityComponentType="button"
         accessibilityRole="tab"
+        accessibilityState={{ selected: isFocused }}
         accessibilityStates={isFocused ? ['selected'] : []}
         pressColor={pressColor}
         pressOpacity={pressOpacity}
