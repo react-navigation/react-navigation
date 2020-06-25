@@ -32,7 +32,6 @@ export type Props = {
   scenes: (Scene<Route<string>> | undefined)[];
   getPreviousScene: (props: {
     route: Route<string>;
-    index: number;
   }) => Scene<Route<string>> | undefined;
   getFocusedRoute: () => Route<string>;
   onContentHeightChange?: (props: {
@@ -79,10 +78,7 @@ export default function HeaderContainer({
 
         const isFocused = focusedRoute.key === scene.route.key;
         const previous =
-          getPreviousScene({
-            route: scene.route,
-            index: i,
-          }) ?? parentPreviousScene;
+          getPreviousScene({ route: scene.route }) ?? parentPreviousScene;
 
         // If the screen is next to a headerless screen, we need to make the header appear static
         // This makes the header look like it's moving with the screen
