@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.8.0](https://github.com/react-navigation/react-navigation-native/compare/@react-navigation/native@3.7.13...@react-navigation/native@3.8.0) (2020-06-25)
+
+
+### Bug Fixes
+
+* improve error message when installing wrong version ([442ca3e](https://github.com/react-navigation/react-navigation-native/commit/442ca3e700c5805cdc5cd02c68f49042887a5054))
+
+
+### Features
+
+* sync latest stack and upgrade typescript ([454e05b](https://github.com/react-navigation/react-navigation-native/commit/454e05b02ec97f053b381fdc801df899d8c93cb6))
+
+
+
+
+
 ## [3.7.13](https://github.com/react-navigation/react-navigation-native/compare/@react-navigation/native@3.7.12...@react-navigation/native@3.7.13) (2020-04-30)
 
 **Note:** Version bump only for package @react-navigation/native

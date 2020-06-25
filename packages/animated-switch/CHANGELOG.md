@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/react-navigation/react-navigation/compare/react-navigation-animated-switch@0.5.12...react-navigation-animated-switch@0.6.0) (2020-06-25)
+
+
+### Features
+
+* sync latest stack and upgrade typescript ([454e05b](https://github.com/react-navigation/react-navigation/commit/454e05b02ec97f053b381fdc801df899d8c93cb6))
+
+
+
+
+
 ## [0.5.12](https://github.com/react-navigation/react-navigation/compare/react-navigation-animated-switch@0.5.11...react-navigation-animated-switch@0.5.12) (2020-04-30)
 
 **Note:** Version bump only for package react-navigation-animated-switch

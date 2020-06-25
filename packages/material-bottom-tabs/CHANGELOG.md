@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.3.0](https://github.com/react-navigation/react-navigation-material-bottom-tabs/compare/react-navigation-material-bottom-tabs@2.2.12...react-navigation-material-bottom-tabs@2.3.0) (2020-06-25)
+
+
+### Features
+
+* sync latest stack and upgrade typescript ([454e05b](https://github.com/react-navigation/react-navigation-material-bottom-tabs/commit/454e05b02ec97f053b381fdc801df899d8c93cb6))
+
+
+
+
+
 ## [2.2.12](https://github.com/react-navigation/react-navigation-material-bottom-tabs/compare/react-navigation-material-bottom-tabs@2.2.11...react-navigation-material-bottom-tabs@2.2.12) (2020-04-30)
 
 **Note:** Version bump only for package react-navigation-material-bottom-tabs

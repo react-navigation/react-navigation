@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.5.0](https://github.com/react-navigation/drawer/compare/react-navigation-drawer@2.4.13...react-navigation-drawer@2.5.0) (2020-06-25)
+
+
+### Features
+
+* sync latest stack and upgrade typescript ([454e05b](https://github.com/react-navigation/drawer/commit/454e05b02ec97f053b381fdc801df899d8c93cb6))
+
+
+
+
+
 ## [2.4.13](https://github.com/react-navigation/drawer/compare/react-navigation-drawer@2.4.12...react-navigation-drawer@2.4.13) (2020-04-30)
 
 **Note:** Version bump only for package react-navigation-drawer

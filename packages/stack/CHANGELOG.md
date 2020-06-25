@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.8.0](https://github.com/react-navigation/react-navigation-stack/compare/react-navigation-stack@2.7.0...react-navigation-stack@2.8.0) (2020-06-25)
+
+
+### Features
+
+* sync latest stack and upgrade typescript ([454e05b](https://github.com/react-navigation/react-navigation-stack/commit/454e05b02ec97f053b381fdc801df899d8c93cb6))
+
+
+
+
+
 # [2.7.0](https://github.com/react-navigation/react-navigation-stack/compare/react-navigation-stack@2.6.0...react-navigation-stack@2.7.0) (2020-06-08)
 
 
