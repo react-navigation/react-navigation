@@ -32,7 +32,6 @@ type Props = TransitionPreset & {
   cardStyle?: StyleProp<ViewStyle>;
   getPreviousScene: (props: {
     route: Route<string>;
-    index: number;
   }) => Scene<Route<string>> | undefined;
   getFocusedRoute: () => Route<string>;
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
@@ -162,7 +161,7 @@ function CardContainer({
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);
   const isCurrentHeaderShown = headerMode !== 'none' && headerShown !== false;
-  const previousScene = getPreviousScene({ route: scene.route, index });
+  const previousScene = getPreviousScene({ route: scene.route });
 
   return (
     <Card

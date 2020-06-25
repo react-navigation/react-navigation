@@ -336,31 +336,21 @@ export default class CardStack extends React.Component<Props, State> {
     return state.routes[state.index];
   };
 
-  private getPreviousScene = ({
-    route,
-    index,
-  }: {
-    route: Route<string>;
-    index: number;
-  }) => {
-    const previousRoute = this.props.getPreviousRoute({ route });
+  private getPreviousScene = ({ route }: { route: Route<string> }) => {
+    const { getPreviousRoute } = this.props;
+    const { scenes } = this.state;
 
-    let previous: Scene<Route<string>> | undefined;
+    const previousRoute = getPreviousRoute({ route });
 
     if (previousRoute) {
-      // The previous scene will be shortly before the current scene in the array
-      // So loop back from current index to avoid looping over the full array
-      for (let j = index - 1; j >= 0; j--) {
-        const s = this.state.scenes[j];
+      const previousScene = scenes.find(
+        (scene) => scene.route.key === previousRoute.key
+      );
 
-        if (s && s.route.key === previousRoute.key) {
-          previous = s;
-          break;
-        }
-      }
+      return previousScene;
     }
 
-    return previous;
+    return undefined;
   };
 
   render() {
