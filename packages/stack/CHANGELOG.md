@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.6.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.6.0...@react-navigation/stack@5.6.1) (2020-06-25)
+
+
+### Bug Fixes
+
+* fix showing back button with headerMode=screen. fixes [#8508](https://github.com/react-navigation/react-navigation/issues/8508) ([fc95d7a](https://github.com/react-navigation/react-navigation/commit/fc95d7a256846b6a4fa999fbbe3fed2051972b42))
+
+
+
+
+
 # [5.6.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.5.1...@react-navigation/stack@5.6.0) (2020-06-24)
 
 
