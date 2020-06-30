@@ -52,7 +52,7 @@ jobs:
       - attach_project
       - run:
           name: Run unit tests
-          command: yarn test --coverage
+          command: yarn test --maxWorkers=2 --coverage
       - run:
           name: Upload test coverage
           command: cat ./coverage/lcov.info | ./node_modules/.bin/codecov
