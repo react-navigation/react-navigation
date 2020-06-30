@@ -1,7 +1,9 @@
 {
   "extends": "satya164",
   "settings": {
-    "react": { "version": "16" },
+    "react": {
+      "version": "16"
+    },
     "import/core-modules": [
       "@react-navigation/core",
       "@react-navigation/native",
@@ -15,5 +17,11 @@
       "@react-navigation/devtools"
     ]
   },
-  "env": { "browser": true, "node": true }
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "rules": {
+    "react/no-unused-prop-types": "off"
+  }
 }

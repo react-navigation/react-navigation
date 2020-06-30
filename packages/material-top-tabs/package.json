@@ -54,6 +54,7 @@
     "react-native-gesture-handler": "^1.6.0",
     "react-native-reanimated": "^1.8.0",
     "react-native-tab-view": "^2.14.4",
+    "react-native-testing-library": "^2.1.0",
     "typescript": "^3.9.5"
   },
   "peerDependencies": {
