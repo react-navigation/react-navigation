@@ -44,6 +44,7 @@
     "@types/react": "^16.9.36",
     "@types/react-dom": "^16.9.8",
     "@types/react-native": "^0.62.7",
+    "babel-loader": "^8.1.0",
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-preset-expo": "^8.2.1",
     "cheerio": "^1.0.0-rc.3",
