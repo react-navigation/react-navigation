@@ -97,6 +97,7 @@ export default class Card extends React.Component<Props> {
 
   componentDidMount() {
     this.animate({ closing: this.props.closing });
+    this.isCurrentlyMounted = true;
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -115,8 +116,11 @@ export default class Card extends React.Component<Props> {
       this.inverted.setValue(getInvertedMultiplier(gestureDirection));
     }
 
+    const toValue = this.getAnimateToValue(this.props);
+
     if (
-      this.getAnimateToValue(this.props) !== this.getAnimateToValue(prevProps)
+      this.getAnimateToValue(prevProps) !== toValue ||
+      this.lastToValue !== toValue
     ) {
       // We need to trigger the animation when route was closed
       // Thr route might have been closed by a `POP` action or by a gesture
@@ -128,8 +132,11 @@ export default class Card extends React.Component<Props> {
   }
 
   componentWillUnmount() {
+    this.isCurrentlyMounted = false;
     this.handleEndInteraction();
   }
+
+  private isCurrentlyMounted = false;
 
   private isClosing = new Animated.Value(FALSE);
 
@@ -147,6 +154,8 @@ export default class Card extends React.Component<Props> {
   private interactionHandle: number | undefined;
 
   private pendingGestureCallback: number | undefined;
+
+  private lastToValue: number | undefined;
 
   private animate = ({
     closing,
@@ -167,6 +176,8 @@ export default class Card extends React.Component<Props> {
       ...this.props,
       closing,
     });
+
+    this.lastToValue = toValue;
 
     const spec = closing ? transitionSpec.close : transitionSpec.open;
 
@@ -195,6 +206,11 @@ export default class Card extends React.Component<Props> {
           onClose();
         } else {
           onOpen();
+        }
+
+        if (this.isCurrentlyMounted) {
+          // Make sure to re-open screen if it wasn't removed
+          this.forceUpdate();
         }
       }
     });
@@ -301,10 +317,13 @@ export default class Card extends React.Component<Props> {
         if (closing) {
           // We call onClose with a delay to make sure that the animation has already started
           // This will make sure that the state update caused by this doesn't affect start of animation
-          this.pendingGestureCallback = (setTimeout(
-            onClose,
-            32
-          ) as any) as number;
+          this.pendingGestureCallback = (setTimeout(() => {
+            onClose();
+
+            // Trigger an update after we dispatch the action to remove the screen
+            // This will make sure that we check if the screen didn't get removed so we can cancel the animation
+            this.forceUpdate();
+          }, 32) as any) as number;
         }
 
         onGestureEnd?.();

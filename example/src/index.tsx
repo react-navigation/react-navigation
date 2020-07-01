@@ -53,9 +53,10 @@ import MaterialTopTabsScreen from './Screens/MaterialTopTabs';
 import MaterialBottomTabs from './Screens/MaterialBottomTabs';
 import NotFound from './Screens/NotFound';
 import DynamicTabs from './Screens/DynamicTabs';
-import AuthFlow from './Screens/AuthFlow';
-import CompatAPI from './Screens/CompatAPI';
 import MasterDetail from './Screens/MasterDetail';
+import AuthFlow from './Screens/AuthFlow';
+import PreventRemove from './Screens/PreventRemove';
+import CompatAPI from './Screens/CompatAPI';
 import LinkComponent from './Screens/LinkComponent';
 
 YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
@@ -108,6 +109,10 @@ const SCREENS = {
   AuthFlow: {
     title: 'Auth Flow',
     component: AuthFlow,
+  },
+  PreventRemove: {
+    title: 'Prevent removing screen',
+    component: PreventRemove,
   },
   CompatAPI: {
     title: 'Compat Layer',
