@@ -15,6 +15,7 @@ export default function useKeyedChildListeners() {
     }
   >({
     getState: {},
+    beforeRemove: {},
   });
 
   const addKeyedListener = React.useCallback(
