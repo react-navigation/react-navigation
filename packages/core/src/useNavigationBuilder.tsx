@@ -30,7 +30,7 @@ import {
   EventMapBase,
   EventMapCore,
 } from './types';
-import useStateGetters from './useStateGetters';
+import useKeyedChildListeners from './useKeyedChildListeners';
 import useOnGetState from './useOnGetState';
 import useScheduleUpdate from './useScheduleUpdate';
 import useCurrentRender from './useCurrentRender';
@@ -431,7 +431,7 @@ export default function useNavigationBuilder<
 
   const { listeners: childListeners, addListener } = useChildListeners();
 
-  const { getStateForRoute, addStateGetter } = useStateGetters();
+  const { keyedListeners, addKeyedListener } = useKeyedChildListeners();
 
   const onAction = useOnAction({
     router,
@@ -466,7 +466,7 @@ export default function useNavigationBuilder<
 
   useOnGetState({
     getState,
-    getStateForRoute,
+    getStateListeners: keyedListeners.getState,
   });
 
   const descriptors = useDescriptors<State, ScreenOptions, EventMap>({
@@ -479,7 +479,7 @@ export default function useNavigationBuilder<
     setState,
     onRouteFocus,
     addListener,
-    addStateGetter,
+    addKeyedListener,
     router,
     emitter,
   });

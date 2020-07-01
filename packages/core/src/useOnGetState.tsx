@@ -1,17 +1,19 @@
 import * as React from 'react';
 import type { NavigationState } from '@react-navigation/routers';
-import NavigationBuilderContext from './NavigationBuilderContext';
+import NavigationBuilderContext, {
+  NavigatorStateGetter,
+} from './NavigationBuilderContext';
 import NavigationRouteContext from './NavigationRouteContext';
 import isArrayEqual from './isArrayEqual';
 
 export default function useOnGetState({
-  getStateForRoute,
   getState,
+  getStateListeners,
 }: {
-  getStateForRoute: (routeName: string) => NavigationState | undefined;
   getState: () => NavigationState;
+  getStateListeners: Record<string, NavigatorStateGetter | undefined>;
 }) {
-  const { addStateGetter } = React.useContext(NavigationBuilderContext);
+  const { addKeyedListener } = React.useContext(NavigationBuilderContext);
   const route = React.useContext(NavigationRouteContext);
   const key = route ? route.key : 'root';
 
@@ -20,7 +22,7 @@ export default function useOnGetState({
 
     // Avoid returning new route objects if we don't need to
     const routes = state.routes.map((route) => {
-      const childState = getStateForRoute(route.key);
+      const childState = getStateListeners[route.key]?.();
 
       if (route.state === childState) {
         return route;
@@ -34,9 +36,9 @@ export default function useOnGetState({
     }
 
     return { ...state, routes };
-  }, [getState, getStateForRoute]);
+  }, [getState, getStateListeners]);
 
   React.useEffect(() => {
-    return addStateGetter?.(key, getRehydratedState);
-  }, [addStateGetter, getRehydratedState, key]);
+    return addKeyedListener?.('getState', key, getRehydratedState);
+  }, [addKeyedListener, getRehydratedState, key]);
 }
