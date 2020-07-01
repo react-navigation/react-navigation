@@ -8,15 +8,21 @@ import type {
 } from '@react-navigation/routers';
 import NavigationBuilderContext, {
   ChildActionListener,
+  ChildBeforeRemoveListener,
 } from './NavigationBuilderContext';
+import useOnPreventRemove, { shouldPreventRemove } from './useOnPreventRemove';
+import type { NavigationEventEmitter } from './useEventEmitter';
+import type { EventMapCore } from './types';
 
 type Options = {
   router: Router<NavigationState, NavigationAction>;
   key?: string;
   getState: () => NavigationState;
   setState: (state: NavigationState | PartialState<NavigationState>) => void;
-  listeners: ChildActionListener[];
+  actionListeners: ChildActionListener[];
+  beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>;
   routerConfigOptions: RouterConfigOptions;
+  emitter: NavigationEventEmitter<EventMapCore<any>>;
 };
 
 /**
@@ -33,8 +39,10 @@ export default function useOnAction({
   getState,
   setState,
   key,
-  listeners,
+  actionListeners,
+  beforeRemoveListeners,
   routerConfigOptions,
+  emitter,
 }: Options) {
   const {
     onAction: onActionParent,
@@ -82,6 +90,25 @@ export default function useOnAction({
           onDispatchAction(action, state === result);
 
           if (state !== result) {
+            const nextRouteKeys = (result.routes as any[]).map(
+              (route: { key?: string }) => route.key
+            );
+
+            const removedRoutes = state.routes.filter(
+              (route) => !nextRouteKeys.includes(route.key)
+            );
+
+            const isPrevented = shouldPreventRemove(
+              emitter,
+              beforeRemoveListeners,
+              removedRoutes,
+              action
+            );
+
+            if (isPrevented) {
+              return true;
+            }
+
             setState(result);
           }
 
@@ -107,8 +134,8 @@ export default function useOnAction({
       }
 
       // If the action wasn't handled by current navigator or a parent navigator, let children handle it
-      for (let i = listeners.length - 1; i >= 0; i--) {
-        const listener = listeners[i];
+      for (let i = actionListeners.length - 1; i >= 0; i--) {
+        const listener = actionListeners[i];
 
         if (listener(action, visitedNavigators)) {
           return true;
@@ -118,16 +145,24 @@ export default function useOnAction({
       return false;
     },
     [
+      actionListeners,
+      beforeRemoveListeners,
+      emitter,
       getState,
-      router,
+      key,
       onActionParent,
       onDispatchAction,
       onRouteFocusParent,
+      router,
       setState,
-      key,
-      listeners,
     ]
   );
+
+  useOnPreventRemove({
+    getState,
+    emitter,
+    beforeRemoveListeners,
+  });
 
   React.useEffect(() => addListenerParent?.('action', onAction), [
     addListenerParent,

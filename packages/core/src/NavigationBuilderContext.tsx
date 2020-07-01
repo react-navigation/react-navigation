@@ -12,7 +12,8 @@ export type ListenerMap = {
 };
 
 export type KeyedListenerMap = {
-  getState: NavigatorStateGetter;
+  getState: GetStateListener;
+  beforeRemove: ChildBeforeRemoveListener;
 };
 
 export type AddListener = <T extends keyof ListenerMap>(
@@ -39,7 +40,9 @@ export type FocusedNavigationListener = <T>(
   callback: FocusedNavigationCallback<T>
 ) => { handled: boolean; result: T };
 
-export type NavigatorStateGetter = () => NavigationState;
+export type GetStateListener = () => NavigationState;
+
+export type ChildBeforeRemoveListener = (action: NavigationAction) => boolean;
 
 /**
  * Context which holds the required helpers needed to build nested navigators.

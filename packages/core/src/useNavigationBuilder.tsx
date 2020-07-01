@@ -438,11 +438,13 @@ export default function useNavigationBuilder<
     getState,
     setState,
     key: route?.key,
-    listeners: childListeners.action,
+    actionListeners: childListeners.action,
+    beforeRemoveListeners: keyedListeners.beforeRemove,
     routerConfigOptions: {
       routeNames,
       routeParamList,
     },
+    emitter,
   });
 
   const onRouteFocus = useOnRouteFocus({

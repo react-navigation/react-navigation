@@ -1,18 +1,20 @@
 import * as React from 'react';
 import type { NavigationState } from '@react-navigation/routers';
 import NavigationBuilderContext, {
-  NavigatorStateGetter,
+  GetStateListener,
 } from './NavigationBuilderContext';
 import NavigationRouteContext from './NavigationRouteContext';
 import isArrayEqual from './isArrayEqual';
 
+type Options = {
+  getState: () => NavigationState;
+  getStateListeners: Record<string, GetStateListener | undefined>;
+};
+
 export default function useOnGetState({
   getState,
   getStateListeners,
-}: {
-  getState: () => NavigationState;
-  getStateListeners: Record<string, NavigatorStateGetter | undefined>;
-}) {
+}: Options) {
   const { addKeyedListener } = React.useContext(NavigationBuilderContext);
   const route = React.useContext(NavigationRouteContext);
   const key = route ? route.key : 'root';
