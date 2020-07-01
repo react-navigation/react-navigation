@@ -66,38 +66,37 @@ export default function useOnAction({
 
       visitedNavigators.add(state.key);
 
-      if (typeof action.target === 'string' && action.target !== state.key) {
-        return false;
-      }
+      if (typeof action.target !== 'string' || action.target === state.key) {
+        let result = router.getStateForAction(
+          state,
+          action,
+          routerConfigOptionsRef.current
+        );
 
-      let result = router.getStateForAction(
-        state,
-        action,
-        routerConfigOptionsRef.current
-      );
+        // If a target is specified and set to current navigator, the action shouldn't bubble
+        // So instead of `null`, we use the state object for such cases to signal that action was handled
+        result =
+          result === null && action.target === state.key ? state : result;
 
-      // If a target is specified and set to current navigator, the action shouldn't bubble
-      // So instead of `null`, we use the state object for such cases to signal that action was handled
-      result = result === null && action.target === state.key ? state : result;
+        if (result !== null) {
+          onDispatchAction(action, state === result);
 
-      if (result !== null) {
-        onDispatchAction(action, state === result);
-
-        if (state !== result) {
-          setState(result);
-        }
-
-        if (onRouteFocusParent !== undefined) {
-          // Some actions such as `NAVIGATE` also want to bring the navigated route to focus in the whole tree
-          // This means we need to focus all of the parent navigators of this navigator as well
-          const shouldFocus = router.shouldActionChangeFocus(action);
-
-          if (shouldFocus && key !== undefined) {
-            onRouteFocusParent(key);
+          if (state !== result) {
+            setState(result);
           }
-        }
 
-        return true;
+          if (onRouteFocusParent !== undefined) {
+            // Some actions such as `NAVIGATE` also want to bring the navigated route to focus in the whole tree
+            // This means we need to focus all of the parent navigators of this navigator as well
+            const shouldFocus = router.shouldActionChangeFocus(action);
+
+            if (shouldFocus && key !== undefined) {
+              onRouteFocusParent(key);
+            }
+          }
+
+          return true;
+        }
       }
 
       if (onActionParent !== undefined) {

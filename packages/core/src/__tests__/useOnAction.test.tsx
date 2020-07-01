@@ -224,6 +224,147 @@ it("lets children handle the action if parent didn't", () => {
   });
 });
 
+it('action goes to correct navigator if target is specified', () => {
+  function CurrentTestRouter(options: DefaultRouterOptions) {
+    const CurrentMockRouter = MockRouter(options);
+    const TestRouter: Router<
+      NavigationState,
+      MockActions | { type: 'REVERSE' }
+    > = {
+      ...CurrentMockRouter,
+
+      shouldActionChangeFocus() {
+        return true;
+      },
+
+      getStateForAction(state, action, options) {
+        if (action.type === 'REVERSE') {
+          return {
+            ...state,
+            routes: state.routes.slice().reverse(),
+          };
+        }
+
+        return CurrentMockRouter.getStateForAction(state, action, options);
+      },
+    };
+    return TestRouter;
+  }
+
+  const ChildNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(
+      CurrentTestRouter,
+      props
+    );
+
+    return (
+      <React.Fragment>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </React.Fragment>
+    );
+  };
+
+  const ParentNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(
+      CurrentTestRouter,
+      props
+    );
+
+    return (
+      <React.Fragment>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </React.Fragment>
+    );
+  };
+
+  const TestScreen = (props: any) => {
+    React.useEffect(() => {
+      props.navigation.dispatch({ type: 'REVERSE', target: '0' });
+    }, [props.navigation]);
+
+    return null;
+  };
+
+  const initialState = {
+    stale: false,
+    type: 'test',
+    index: 1,
+    key: '0',
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [
+      {
+        key: 'baz',
+        name: 'baz',
+        state: {
+          stale: false,
+          type: 'test',
+          index: 0,
+          key: '1',
+          routeNames: ['qux', 'lex'],
+          routes: [
+            { key: 'lex', name: 'lex' },
+            { key: 'qux', name: 'qux' },
+          ],
+        },
+      },
+      { key: 'bar', name: 'bar' },
+      { key: 'foo', name: 'foo' },
+    ],
+  };
+
+  const onStateChange = jest.fn();
+
+  const element = (
+    <BaseNavigationContainer
+      initialState={initialState}
+      onStateChange={onStateChange}
+    >
+      <ParentNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar">{() => null}</Screen>
+        <Screen name="baz">
+          {() => (
+            <ChildNavigator>
+              <Screen name="qux">{() => null}</Screen>
+              <Screen name="lex" component={TestScreen} />
+            </ChildNavigator>
+          )}
+        </Screen>
+      </ParentNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(element).update(element);
+
+  expect(onStateChange).toBeCalledTimes(1);
+  expect(onStateChange).toBeCalledWith({
+    stale: false,
+    type: 'test',
+    index: 1,
+    key: '0',
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+      {
+        key: 'baz',
+        name: 'baz',
+        state: {
+          stale: false,
+          type: 'test',
+          index: 0,
+          key: '1',
+          routeNames: ['qux', 'lex'],
+          routes: [
+            { key: 'lex', name: 'lex' },
+            { key: 'qux', name: 'qux' },
+          ],
+        },
+      },
+    ],
+  });
+});
+
 it("action doesn't bubble if target is specified", () => {
   const CurrentParentRouter = MockRouter;
 
