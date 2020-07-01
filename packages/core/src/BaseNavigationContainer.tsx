@@ -12,7 +12,7 @@ import NavigationBuilderContext from './NavigationBuilderContext';
 import NavigationStateContext from './NavigationStateContext';
 import UnhandledActionContext from './UnhandledActionContext';
 import { ScheduleUpdateContext } from './useScheduleUpdate';
-import useFocusedListeners from './useFocusedListeners';
+import useChildListeners from './useChildListeners';
 import useStateGetters from './useStateGetters';
 import useOptionsGetters from './useOptionsGetters';
 import useEventEmitter from './useEventEmitter';
@@ -123,29 +123,26 @@ const BaseNavigationContainer = React.forwardRef(
       navigatorKeyRef.current = key;
     }, []);
 
-    const {
-      listeners,
-      addListener: addFocusedListener,
-    } = useFocusedListeners();
+    const { listeners, addListener } = useChildListeners();
 
     const { getStateForRoute, addStateGetter } = useStateGetters();
 
     const dispatch = (
       action: NavigationAction | ((state: NavigationState) => NavigationAction)
     ) => {
-      if (listeners[0] == null) {
+      if (listeners.focus[0] == null) {
         throw new Error(NOT_INITIALIZED_ERROR);
       }
 
-      listeners[0]((navigation) => navigation.dispatch(action));
+      listeners.focus[0]((navigation) => navigation.dispatch(action));
     };
 
     const canGoBack = () => {
-      if (listeners[0] == null) {
+      if (listeners.focus[0] == null) {
         return false;
       }
 
-      const { result, handled } = listeners[0]((navigation) =>
+      const { result, handled } = listeners.focus[0]((navigation) =>
         navigation.canGoBack()
       );
 
@@ -225,12 +222,12 @@ const BaseNavigationContainer = React.forwardRef(
 
     const builderContext = React.useMemo(
       () => ({
-        addFocusedListener,
+        addListener,
         addStateGetter,
         onDispatchAction,
         onOptionsChange,
       }),
-      [addFocusedListener, addStateGetter, onDispatchAction, onOptionsChange]
+      [addListener, addStateGetter, onDispatchAction, onOptionsChange]
     );
 
     const scheduleContext = React.useMemo(

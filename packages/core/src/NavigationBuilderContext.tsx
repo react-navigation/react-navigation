@@ -6,6 +6,16 @@ import type {
 } from '@react-navigation/routers';
 import type { NavigationHelpers } from './types';
 
+export type ListenerMap = {
+  action: ChildActionListener;
+  focus: FocusedNavigationListener;
+};
+
+export type AddListener = <T extends keyof ListenerMap>(
+  type: T,
+  listener: ListenerMap[T]
+) => void;
+
 export type ChildActionListener = (
   action: NavigationAction,
   visitedNavigators?: Set<string>
@@ -29,11 +39,10 @@ const NavigationBuilderContext = React.createContext<{
     action: NavigationAction,
     visitedNavigators?: Set<string>
   ) => boolean;
-  addActionListener?: (listener: ChildActionListener) => void;
-  addFocusedListener?: (listener: FocusedNavigationListener) => void;
+  addListener?: AddListener;
+  addStateGetter?: (key: string, getter: NavigatorStateGetter) => void;
   onRouteFocus?: (key: string) => void;
   onDispatchAction: (action: NavigationAction, noop: boolean) => void;
-  addStateGetter?: (key: string, getter: NavigatorStateGetter) => void;
   onOptionsChange: (options: object) => void;
 }>({
   onDispatchAction: () => undefined,
