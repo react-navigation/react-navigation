@@ -11,9 +11,19 @@ export type ListenerMap = {
   focus: FocusedNavigationListener;
 };
 
+export type KeyedListenerMap = {
+  getState: NavigatorStateGetter;
+};
+
 export type AddListener = <T extends keyof ListenerMap>(
   type: T,
   listener: ListenerMap[T]
+) => void;
+
+export type AddKeyedListener = <T extends keyof KeyedListenerMap>(
+  type: T,
+  key: string,
+  listener: KeyedListenerMap[T]
 ) => void;
 
 export type ChildActionListener = (
@@ -40,7 +50,7 @@ const NavigationBuilderContext = React.createContext<{
     visitedNavigators?: Set<string>
   ) => boolean;
   addListener?: AddListener;
-  addStateGetter?: (key: string, getter: NavigatorStateGetter) => void;
+  addKeyedListener?: AddKeyedListener;
   onRouteFocus?: (key: string) => void;
   onDispatchAction: (action: NavigationAction, noop: boolean) => void;
   onOptionsChange: (options: object) => void;

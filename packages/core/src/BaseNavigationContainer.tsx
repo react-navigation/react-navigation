@@ -13,7 +13,7 @@ import NavigationStateContext from './NavigationStateContext';
 import UnhandledActionContext from './UnhandledActionContext';
 import { ScheduleUpdateContext } from './useScheduleUpdate';
 import useChildListeners from './useChildListeners';
-import useStateGetters from './useStateGetters';
+import useKeyedChildListeners from './useKeyedChildListeners';
 import useOptionsGetters from './useOptionsGetters';
 import useEventEmitter from './useEventEmitter';
 import useSyncState from './useSyncState';
@@ -125,7 +125,7 @@ const BaseNavigationContainer = React.forwardRef(
 
     const { listeners, addListener } = useChildListeners();
 
-    const { getStateForRoute, addStateGetter } = useStateGetters();
+    const { keyedListeners, addKeyedListener } = useKeyedChildListeners();
 
     const dispatch = (
       action: NavigationAction | ((state: NavigationState) => NavigationAction)
@@ -161,8 +161,8 @@ const BaseNavigationContainer = React.forwardRef(
     );
 
     const getRootState = React.useCallback(() => {
-      return getStateForRoute('root');
-    }, [getStateForRoute]);
+      return keyedListeners.getState.root?.();
+    }, [keyedListeners.getState]);
 
     const getCurrentRoute = React.useCallback(() => {
       let state = getRootState();
@@ -223,11 +223,11 @@ const BaseNavigationContainer = React.forwardRef(
     const builderContext = React.useMemo(
       () => ({
         addListener,
-        addStateGetter,
+        addKeyedListener,
         onDispatchAction,
         onOptionsChange,
       }),
-      [addListener, addStateGetter, onDispatchAction, onOptionsChange]
+      [addListener, addKeyedListener, onDispatchAction, onOptionsChange]
     );
 
     const scheduleContext = React.useMemo(

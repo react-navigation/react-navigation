@@ -8,7 +8,7 @@ import type {
 import SceneView from './SceneView';
 import NavigationBuilderContext, {
   AddListener,
-  NavigatorStateGetter,
+  AddKeyedListener,
 } from './NavigationBuilderContext';
 import type { NavigationEventEmitter } from './useEventEmitter';
 import useNavigationCache from './useNavigationCache';
@@ -46,7 +46,7 @@ type Options<
   getState: () => State;
   setState: (state: State) => void;
   addListener: AddListener;
-  addStateGetter: (key: string, getter: NavigatorStateGetter) => void;
+  addKeyedListener: AddKeyedListener;
   onRouteFocus: (key: string) => void;
   router: Router<State, NavigationAction>;
   emitter: NavigationEventEmitter<any>;
@@ -73,7 +73,7 @@ export default function useDescriptors<
   getState,
   setState,
   addListener,
-  addStateGetter,
+  addKeyedListener,
   onRouteFocus,
   router,
   emitter,
@@ -88,7 +88,7 @@ export default function useDescriptors<
       navigation,
       onAction,
       addListener,
-      addStateGetter,
+      addKeyedListener,
       onRouteFocus,
       onDispatchAction,
       onOptionsChange,
@@ -97,7 +97,7 @@ export default function useDescriptors<
       navigation,
       onAction,
       addListener,
-      addStateGetter,
+      addKeyedListener,
       onRouteFocus,
       onDispatchAction,
       onOptionsChange,
