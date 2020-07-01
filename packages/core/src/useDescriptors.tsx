@@ -7,12 +7,13 @@ import type {
 } from '@react-navigation/routers';
 import SceneView from './SceneView';
 import NavigationBuilderContext, {
-  ChildActionListener,
-  FocusedNavigationListener,
+  AddListener,
   NavigatorStateGetter,
 } from './NavigationBuilderContext';
 import type { NavigationEventEmitter } from './useEventEmitter';
 import useNavigationCache from './useNavigationCache';
+import NavigationContext from './NavigationContext';
+import NavigationRouteContext from './NavigationRouteContext';
 import type {
   Descriptor,
   NavigationHelpers,
@@ -20,8 +21,6 @@ import type {
   RouteProp,
   EventMapBase,
 } from './types';
-import NavigationContext from './NavigationContext';
-import NavigationRouteContext from './NavigationRouteContext';
 
 type Options<
   State extends NavigationState,
@@ -46,8 +45,7 @@ type Options<
   ) => boolean;
   getState: () => State;
   setState: (state: State) => void;
-  addActionListener: (listener: ChildActionListener) => void;
-  addFocusedListener: (listener: FocusedNavigationListener) => void;
+  addListener: AddListener;
   addStateGetter: (key: string, getter: NavigatorStateGetter) => void;
   onRouteFocus: (key: string) => void;
   router: Router<State, NavigationAction>;
@@ -74,8 +72,7 @@ export default function useDescriptors<
   onAction,
   getState,
   setState,
-  addActionListener,
-  addFocusedListener,
+  addListener,
   addStateGetter,
   onRouteFocus,
   router,
@@ -90,21 +87,19 @@ export default function useDescriptors<
     () => ({
       navigation,
       onAction,
-      addActionListener,
-      addFocusedListener,
+      addListener,
       addStateGetter,
       onRouteFocus,
       onDispatchAction,
       onOptionsChange,
     }),
     [
-      addActionListener,
-      addFocusedListener,
-      addStateGetter,
       navigation,
       onAction,
-      onDispatchAction,
+      addListener,
+      addStateGetter,
       onRouteFocus,
+      onDispatchAction,
       onOptionsChange,
     ]
   );

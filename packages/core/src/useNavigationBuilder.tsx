@@ -21,8 +21,7 @@ import useNavigationHelpers from './useNavigationHelpers';
 import useOnAction from './useOnAction';
 import useFocusEvents from './useFocusEvents';
 import useOnRouteFocus from './useOnRouteFocus';
-import useChildActionListeners from './useChildActionListeners';
-import useFocusedListeners from './useFocusedListeners';
+import useChildListeners from './useChildListeners';
 import useFocusedListenersChildrenAdapter from './useFocusedListenersChildrenAdapter';
 import {
   DefaultNavigatorOptions,
@@ -430,15 +429,7 @@ export default function useNavigationBuilder<
     emitter.emit({ type: 'state', data: { state } });
   }, [emitter, state]);
 
-  const {
-    listeners: actionListeners,
-    addListener: addActionListener,
-  } = useChildActionListeners();
-
-  const {
-    listeners: focusedListeners,
-    addListener: addFocusedListener,
-  } = useFocusedListeners();
+  const { listeners: childListeners, addListener } = useChildListeners();
 
   const { getStateForRoute, addStateGetter } = useStateGetters();
 
@@ -447,7 +438,7 @@ export default function useNavigationBuilder<
     getState,
     setState,
     key: route?.key,
-    listeners: actionListeners,
+    listeners: childListeners.action,
     routerConfigOptions: {
       routeNames,
       routeParamList,
@@ -470,7 +461,7 @@ export default function useNavigationBuilder<
 
   useFocusedListenersChildrenAdapter({
     navigation,
-    focusedListeners,
+    focusedListeners: childListeners.focus,
   });
 
   useOnGetState({
@@ -487,8 +478,7 @@ export default function useNavigationBuilder<
     getState,
     setState,
     onRouteFocus,
-    addActionListener,
-    addFocusedListener,
+    addListener,
     addStateGetter,
     router,
     emitter,

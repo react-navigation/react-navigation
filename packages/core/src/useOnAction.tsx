@@ -39,7 +39,7 @@ export default function useOnAction({
   const {
     onAction: onActionParent,
     onRouteFocus: onRouteFocusParent,
-    addActionListener: addActionListenerParent,
+    addListener: addListenerParent,
     onDispatchAction,
   } = React.useContext(NavigationBuilderContext);
 
@@ -130,8 +130,8 @@ export default function useOnAction({
     ]
   );
 
-  React.useEffect(() => addActionListenerParent?.(onAction), [
-    addActionListenerParent,
+  React.useEffect(() => addListenerParent?.('action', onAction), [
+    addListenerParent,
     onAction,
   ]);
 
