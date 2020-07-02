@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { View, StyleSheet, ScrollView, Platform } from 'react-native';
 import { Button } from 'react-native-paper';
-import type { RouteProp, ParamListBase } from '@react-navigation/native';
+import type { ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
-  StackNavigationProp,
+  StackScreenProps,
+  StackNavigationOptions,
   TransitionPresets,
 } from '@react-navigation/stack';
 import Article from '../Shared/Article';
@@ -15,17 +16,12 @@ type ModalStackParams = {
   Albums: undefined;
 };
 
-type ModalStackNavigation = StackNavigationProp<ModalStackParams>;
-
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
   route,
-}: {
-  navigation: ModalStackNavigation;
-  route: RouteProp<ModalStackParams, 'Article'>;
-}) => {
+}: StackScreenProps<ModalStackParams, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -52,7 +48,7 @@ const ArticleScreen = ({
   );
 };
 
-const AlbumsScreen = ({ navigation }: { navigation: ModalStackNavigation }) => {
+const AlbumsScreen = ({ navigation }: StackScreenProps<ModalStackParams>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -78,15 +74,16 @@ const AlbumsScreen = ({ navigation }: { navigation: ModalStackNavigation }) => {
 
 const ModalPresentationStack = createStackNavigator<ModalStackParams>();
 
-type Props = {
-  options?: React.ComponentProps<typeof ModalPresentationStack.Navigator>;
-  navigation: StackNavigationProp<ParamListBase>;
+type Props = StackScreenProps<ParamListBase> & {
+  options?: StackNavigationOptions;
 };
 
 export default function SimpleStackScreen({ navigation, options }: Props) {
-  navigation.setOptions({
-    headerShown: false,
-  });
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }, [navigation]);
 
   return (
     <ModalPresentationStack.Navigator

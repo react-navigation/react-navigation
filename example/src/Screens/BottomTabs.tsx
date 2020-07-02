@@ -9,7 +9,7 @@ import {
 import type { StackScreenProps } from '@react-navigation/stack';
 import {
   createBottomTabNavigator,
-  BottomTabNavigationProp,
+  BottomTabScreenProps,
 } from '@react-navigation/bottom-tabs';
 import TouchableBounce from '../Shared/TouchableBounce';
 import Albums from '../Shared/Albums';
@@ -36,9 +36,7 @@ const scrollEnabled = Platform.select({ web: true, default: false });
 
 const AlbumsScreen = ({
   navigation,
-}: {
-  navigation: BottomTabNavigationProp<BottomTabParams>;
-}) => {
+}: BottomTabScreenProps<BottomTabParams>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>

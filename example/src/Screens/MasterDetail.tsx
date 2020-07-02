@@ -8,12 +8,12 @@ import {
 } from '@react-navigation/native';
 import {
   createDrawerNavigator,
-  DrawerNavigationProp,
+  DrawerScreenProps,
   DrawerContent,
   DrawerContentComponentProps,
   DrawerContentOptions,
 } from '@react-navigation/drawer';
-import type { StackNavigationProp } from '@react-navigation/stack';
+import type { StackScreenProps } from '@react-navigation/stack';
 import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
 import NewsFeed from '../Shared/NewsFeed';
@@ -23,8 +23,6 @@ type DrawerParams = {
   NewsFeed: undefined;
   Albums: undefined;
 };
-
-type DrawerNavigation = DrawerNavigationProp<DrawerParams>;
 
 const useIsLargeScreen = () => {
   const [dimensions, setDimensions] = React.useState(Dimensions.get('window'));
@@ -60,7 +58,9 @@ const Header = ({
   );
 };
 
-const ArticleScreen = ({ navigation }: { navigation: DrawerNavigation }) => {
+const ArticleScreen = ({
+  navigation,
+}: DrawerScreenProps<DrawerParams, 'Article'>) => {
   return (
     <>
       <Header title="Article" onGoBack={() => navigation.toggleDrawer()} />
@@ -69,7 +69,9 @@ const ArticleScreen = ({ navigation }: { navigation: DrawerNavigation }) => {
   );
 };
 
-const NewsFeedScreen = ({ navigation }: { navigation: DrawerNavigation }) => {
+const NewsFeedScreen = ({
+  navigation,
+}: DrawerScreenProps<DrawerParams, 'NewsFeed'>) => {
   return (
     <>
       <Header title="Feed" onGoBack={() => navigation.toggleDrawer()} />
@@ -78,7 +80,9 @@ const NewsFeedScreen = ({ navigation }: { navigation: DrawerNavigation }) => {
   );
 };
 
-const AlbumsScreen = ({ navigation }: { navigation: DrawerNavigation }) => {
+const AlbumsScreen = ({
+  navigation,
+}: DrawerScreenProps<DrawerParams, 'Albums'>) => {
   return (
     <>
       <Header title="Albums" onGoBack={() => navigation.toggleDrawer()} />
@@ -106,15 +110,16 @@ const CustomDrawerContent = (
 
 const Drawer = createDrawerNavigator<DrawerParams>();
 
-type Props = Partial<React.ComponentProps<typeof Drawer.Navigator>> & {
-  navigation: StackNavigationProp<ParamListBase>;
-};
+type Props = Partial<React.ComponentProps<typeof Drawer.Navigator>> &
+  StackScreenProps<ParamListBase>;
 
 export default function DrawerScreen({ navigation, ...rest }: Props) {
-  navigation.setOptions({
-    headerShown: false,
-    gestureEnabled: false,
-  });
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+      gestureEnabled: false,
+    });
+  }, [navigation]);
 
   const isLargeScreen = useIsLargeScreen();
 

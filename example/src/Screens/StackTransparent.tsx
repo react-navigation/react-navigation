@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { View, StyleSheet, ScrollView, Platform } from 'react-native';
 import { Button, Paragraph } from 'react-native-paper';
-import { RouteProp, ParamListBase, useTheme } from '@react-navigation/native';
+import { ParamListBase, useTheme } from '@react-navigation/native';
 import {
   createStackNavigator,
-  StackNavigationProp,
+  StackScreenProps,
 } from '@react-navigation/stack';
 import Article from '../Shared/Article';
 
@@ -13,17 +13,12 @@ type SimpleStackParams = {
   Dialog: undefined;
 };
 
-type SimpleStackNavigation = StackNavigationProp<SimpleStackParams>;
-
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
   route,
-}: {
-  navigation: SimpleStackNavigation;
-  route: RouteProp<SimpleStackParams, 'Article'>;
-}) => {
+}: StackScreenProps<SimpleStackParams, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -50,11 +45,7 @@ const ArticleScreen = ({
   );
 };
 
-const DialogScreen = ({
-  navigation,
-}: {
-  navigation: SimpleStackNavigation;
-}) => {
+const DialogScreen = ({ navigation }: StackScreenProps<SimpleStackParams>) => {
   const { colors } = useTheme();
 
   return (
@@ -81,14 +72,15 @@ const DialogScreen = ({
 
 const SimpleStack = createStackNavigator<SimpleStackParams>();
 
-type Props = Partial<React.ComponentProps<typeof SimpleStack.Navigator>> & {
-  navigation: StackNavigationProp<ParamListBase>;
-};
+type Props = Partial<React.ComponentProps<typeof SimpleStack.Navigator>> &
+  StackScreenProps<ParamListBase>;
 
 export default function SimpleStackScreen({ navigation, ...rest }: Props) {
-  navigation.setOptions({
-    headerShown: false,
-  });
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }, [navigation]);
 
   return (
     <SimpleStack.Navigator mode="modal" {...rest}>
