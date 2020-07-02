@@ -5,7 +5,7 @@ import { useTheme, ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
   HeaderBackButton,
-  StackNavigationProp,
+  StackScreenProps,
 } from '@react-navigation/stack';
 
 type AuthStackParams = {
@@ -81,10 +81,6 @@ const HomeScreen = () => {
 
 const SimpleStack = createStackNavigator<AuthStackParams>();
 
-type Props = {
-  navigation: StackNavigationProp<ParamListBase>;
-};
-
 type State = {
   isLoading: boolean;
   isSignout: boolean;
@@ -96,7 +92,9 @@ type Action =
   | { type: 'SIGN_IN'; token: string }
   | { type: 'SIGN_OUT' };
 
-export default function SimpleStackScreen({ navigation }: Props) {
+export default function SimpleStackScreen({
+  navigation,
+}: StackScreenProps<ParamListBase>) {
   const [state, dispatch] = React.useReducer<React.Reducer<State, Action>>(
     (prevState, action) => {
       switch (action.type) {
@@ -135,9 +133,11 @@ export default function SimpleStackScreen({ navigation }: Props) {
     return () => clearTimeout(timer);
   }, []);
 
-  navigation.setOptions({
-    headerShown: false,
-  });
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }, [navigation]);
 
   const authContext = React.useMemo(
     () => ({

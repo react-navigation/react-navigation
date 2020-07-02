@@ -106,9 +106,11 @@ const SimpleStack = createStackNavigator<SimpleStackParams>();
 export default function SimpleStackScreen({
   navigation,
 }: StackScreenProps<ParamListBase>) {
-  navigation.setOptions({
-    headerShown: false,
-  });
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }, [navigation]);
 
   return (
     <SimpleStack.Navigator>

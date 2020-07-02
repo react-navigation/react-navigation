@@ -8,6 +8,7 @@ import {
 import {
   createStackNavigator,
   StackNavigationProp,
+  StackScreenProps,
 } from '@react-navigation/stack';
 import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
@@ -143,12 +144,12 @@ const CompatStack = createCompatStackNavigator<
 
 export default function CompatStackScreen({
   navigation,
-}: {
-  navigation: StackNavigationProp<{}>;
-}) {
-  navigation.setOptions({
-    headerShown: false,
-  });
+}: StackScreenProps<{}>) {
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }, [navigation]);
 
   return <CompatStack />;
 }

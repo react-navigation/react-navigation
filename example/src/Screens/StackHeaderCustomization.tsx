@@ -9,10 +9,10 @@ import {
 } from 'react-native';
 import { Button, Appbar } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useTheme, RouteProp, ParamListBase } from '@react-navigation/native';
+import { useTheme, ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
-  StackNavigationProp,
+  StackScreenProps,
   HeaderBackground,
   useHeaderHeight,
   Header,
@@ -27,17 +27,12 @@ type SimpleStackParams = {
   Albums: undefined;
 };
 
-type SimpleStackNavigation = StackNavigationProp<SimpleStackParams>;
-
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
   route,
-}: {
-  navigation: SimpleStackNavigation;
-  route: RouteProp<SimpleStackParams, 'Article'>;
-}) => {
+}: StackScreenProps<SimpleStackParams, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -64,11 +59,7 @@ const ArticleScreen = ({
   );
 };
 
-const AlbumsScreen = ({
-  navigation,
-}: {
-  navigation: SimpleStackNavigation;
-}) => {
+const AlbumsScreen = ({ navigation }: StackScreenProps<SimpleStackParams>) => {
   const headerHeight = useHeaderHeight();
 
   return (
@@ -96,9 +87,8 @@ const AlbumsScreen = ({
 
 const SimpleStack = createStackNavigator<SimpleStackParams>();
 
-type Props = Partial<React.ComponentProps<typeof SimpleStack.Navigator>> & {
-  navigation: StackNavigationProp<ParamListBase>;
-};
+type Props = Partial<React.ComponentProps<typeof SimpleStack.Navigator>> &
+  StackScreenProps<ParamListBase>;
 
 function CustomHeader(props: StackHeaderProps) {
   const { current, next } = props.scene.progress;
@@ -120,9 +110,11 @@ function CustomHeader(props: StackHeaderProps) {
 }
 
 export default function SimpleStackScreen({ navigation, ...rest }: Props) {
-  navigation.setOptions({
-    headerShown: false,
-  });
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }, [navigation]);
 
   const { colors, dark } = useTheme();
 
