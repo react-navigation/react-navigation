@@ -180,7 +180,6 @@ type NavigationHelpersCommon<
    * Go back to the previous route in history.
    */
   goBack(): void;
-  
   /**
    * Drawer open function
    */
