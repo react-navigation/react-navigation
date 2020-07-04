@@ -180,6 +180,11 @@ type NavigationHelpersCommon<
    * Go back to the previous route in history.
    */
   goBack(): void;
+  
+  /**
+   * Drawer open function
+   */
+  openDrawer(): void;
 
   /**
    * Check if the screen is focused. The method returns `true` if focused, `false` otherwise.
