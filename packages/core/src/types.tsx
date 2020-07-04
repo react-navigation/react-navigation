@@ -181,9 +181,11 @@ type NavigationHelpersCommon<
    */
   goBack(): void;
   /**
-   * Drawer open function
+   * Drawer open and close function
    */
   openDrawer(): void;
+  closeDrawer(): void;
+  toggleDrawer(): void;
   /**
    * Check if the screen is focused. The method returns `true` if focused, `false` otherwise.
    * Note that this method doesn't re-render screen when the focus changes. So don't use it in `render`.
