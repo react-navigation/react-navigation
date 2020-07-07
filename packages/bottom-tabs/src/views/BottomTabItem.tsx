@@ -247,6 +247,7 @@ export default function BottomTabBarItem({
     testID,
     accessibilityLabel,
     accessibilityRole: 'button',
+    accessibilityState: { selected: focused },
     accessibilityStates: focused ? ['selected'] : [],
     style: [
       styles.tab,
