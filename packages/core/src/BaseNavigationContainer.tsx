@@ -44,6 +44,7 @@ try {
           "Redux devtools extension integration can be enabled with the '@react-navigation/devtools' package. For more details, see https://reactnavigation.org/docs/devtools"
         );
       },
+      configurable: true,
     }
   );
 } catch (e) {
