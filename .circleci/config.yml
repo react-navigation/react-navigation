@@ -55,7 +55,7 @@ jobs:
           command: yarn test --maxWorkers=2 --coverage
       - run:
           name: Upload test coverage
-          command: cat ./coverage/lcov.info | ./node_modules/.bin/codecov
+          command: yarn codecov
       - store_artifacts:
           path: coverage
           destination: coverage
