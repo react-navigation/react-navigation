@@ -63,12 +63,16 @@ export type BottomTabNavigationOptions = {
 
   /**
    * Title string of a tab displayed in the tab bar
-   * or a function that given { focused: boolean, color: string } returns a React.Node to display in tab bar.
+   * or a function that given { focused: boolean, color: string, orientation: 'horizontal' | 'vertical' } returns a React.Node to display in tab bar.
    * When undefined, scene title is used. To hide, see tabBarOptions.showLabel in the previous section.
    */
   tabBarLabel?:
     | string
-    | ((props: { focused: boolean; color: string }) => React.ReactNode);
+    | ((props: {
+        focused: boolean;
+        color: string;
+        orientation: 'horizontal' | 'vertical';
+      }) => React.ReactNode);
 
   /**
    * A function that given { focused: boolean, color: string } returns a React.Node to display in the tab bar.

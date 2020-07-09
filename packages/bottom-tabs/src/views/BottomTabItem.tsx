@@ -30,7 +30,11 @@ type Props = {
    */
   label:
     | string
-    | ((props: { focused: boolean; color: string }) => React.ReactNode);
+    | ((props: {
+        focused: boolean;
+        color: string;
+        orientation: 'horizontal' | 'vertical';
+      }) => React.ReactNode);
   /**
    * Icon to display for the tab.
    */
@@ -206,7 +210,11 @@ export default function BottomTabBarItem({
       );
     }
 
-    return label({ focused, color });
+    return label({
+      focused,
+      color,
+      orientation: horizontal ? 'horizontal' : 'vertical',
+    });
   };
 
   const renderIcon = ({ focused }: { focused: boolean }) => {
