@@ -214,8 +214,16 @@ const BaseNavigationContainer = React.forwardRef(
       [emitter]
     );
 
+    const lastEmittedOptionsRef = React.useRef<object | undefined>();
+
     const onOptionsChange = React.useCallback(
       (options) => {
+        if (lastEmittedOptionsRef.current === options) {
+          return;
+        }
+
+        lastEmittedOptionsRef.current = options;
+
         emitter.emit({
           type: 'options',
           data: { options },
