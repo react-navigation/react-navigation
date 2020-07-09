@@ -406,6 +406,40 @@ it('handles navigate action', () => {
         index: 1,
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+          {
+            key: 'qux-test',
+            name: 'qux',
+            params: { answer: 42 },
+          },
+        ],
+      },
+      CommonActions.navigate('qux'),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 2,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+      { key: 'qux-test', name: 'qux' },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
           { key: 'baz-0', name: 'baz' },
           { key: 'bar', name: 'bar' },
         ],
