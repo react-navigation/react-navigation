@@ -2,7 +2,7 @@ import type * as CommonActions from './CommonActions';
 
 export type CommonNavigationAction = CommonActions.Action;
 
-export type NavigationState = {
+export type NavigationState = Readonly<{
   /**
    * Unique key for the navigation state.
    */
@@ -35,26 +35,27 @@ export type NavigationState = {
    * Whether the navigation state has been rehydrated.
    */
   stale: false;
-};
+}>;
 
-export type InitialState = Partial<
-  Omit<NavigationState, 'stale' | 'routes'>
-> & {
-  routes: (Omit<Route<string>, 'key'> & { state?: InitialState })[];
-};
+export type InitialState = Readonly<
+  Partial<Omit<NavigationState, 'stale' | 'routes'>> & {
+    routes: (Omit<Route<string>, 'key'> & { state?: InitialState })[];
+  }
+>;
 
 export type PartialState<State extends NavigationState> = Partial<
   Omit<State, 'stale' | 'type' | 'key' | 'routes' | 'routeNames'>
-> & {
-  stale?: true;
-  type?: string;
-  routes: (Omit<Route<string>, 'key'> & {
-    key?: string;
-    state?: InitialState;
-  })[];
-};
+> &
+  Readonly<{
+    stale?: true;
+    type?: string;
+    routes: (Omit<Route<string>, 'key'> & {
+      key?: string;
+      state?: InitialState;
+    })[];
+  }>;
 
-export type Route<RouteName extends string> = {
+export type Route<RouteName extends string> = Readonly<{
   /**
    * Unique key for the route.
    */
@@ -67,11 +68,11 @@ export type Route<RouteName extends string> = {
    * Params for the route.
    */
   params?: object;
-};
+}>;
 
 export type ParamListBase = Record<string, object | undefined>;
 
-export type NavigationAction = {
+export type NavigationAction = Readonly<{
   /**
    * Type of the action (e.g. `NAVIGATE`)
    */
@@ -88,7 +89,7 @@ export type NavigationAction = {
    * Key of the navigator which should handle this action.
    */
   target?: string;
-};
+}>;
 
 export type ActionCreators<Action extends NavigationAction> = {
   [key: string]: (...args: any) => Action;

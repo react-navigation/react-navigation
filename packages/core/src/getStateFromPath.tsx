@@ -260,6 +260,7 @@ export default function getStateFromPath(
   );
 
   if (params) {
+    // @ts-expect-error: params should be treated as read-only, but we're creating the state here so it doesn't matter
     route.params = { ...route.params, ...params };
   }
 
