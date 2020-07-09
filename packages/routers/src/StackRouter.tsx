@@ -369,15 +369,12 @@ export default function StackRouter(options: StackRouterOptions) {
               index,
               routes: [
                 ...state.routes.slice(0, index),
-                action.payload.params !== undefined
-                  ? {
-                      ...state.routes[index],
-                      params: {
-                        ...state.routes[index].params,
-                        ...action.payload.params,
-                      },
-                    }
-                  : state.routes[index],
+                {
+                  ...state.routes[index],
+                  params: {
+                    ...action.payload.params,
+                  },
+                }
               ],
             };
           }
