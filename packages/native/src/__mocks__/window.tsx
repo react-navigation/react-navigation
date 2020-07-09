@@ -62,6 +62,7 @@ const removeEventListener = (type: 'popstate', listener: () => void) => {
 };
 
 export default {
+  document: { title: '' },
   location,
   history,
   addEventListener,
