@@ -62,7 +62,9 @@ export type EventArg<
       preventDefault(): void;
     }
   : {}) &
-  (undefined extends Data ? { readonly data?: Data } : { readonly data: Data });
+  (undefined extends Data
+    ? { readonly data?: Readonly<Data> }
+    : { readonly data: Readonly<Data> });
 
 export type EventListenerCallback<
   EventMap extends EventMapBase,
@@ -277,18 +279,18 @@ export type RouteProp<
   RouteName extends keyof ParamList
 > = Omit<Route<Extract<RouteName, string>>, 'params'> &
   (undefined extends ParamList[RouteName]
-    ? {
+    ? Readonly<{
         /**
          * Params for this route
          */
-        params?: ParamList[RouteName];
-      }
-    : {
+        params?: Readonly<ParamList[RouteName]>;
+      }>
+    : Readonly<{
         /**
          * Params for this route
          */
-        params: ParamList[RouteName];
-      });
+        params: Readonly<ParamList[RouteName]>;
+      }>);
 
 export type CompositeNavigationProp<
   A extends NavigationProp<ParamListBase, string, any, any>,
