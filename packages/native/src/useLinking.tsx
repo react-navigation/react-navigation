@@ -116,6 +116,19 @@ const createMemoryHistory = () => {
         pending = true;
 
         const done = () => {
+          // There seems to be a bug in Chrome regarding updating the title
+          // If we set a title just before calling `history.go`, the title gets lost
+          // However the value of `document.title` is still what we set it to
+          // It's just not displayed in the tab bar
+          // To update the tab bar, we need to reset the title to something else first (e.g. '')
+          // And set the title to what it was before so it gets applied
+          // It won't work without setting it to empty string coz otherwise title isn't changing
+          // Which means that the browser won't do anything after setting the title
+          const { title } = window.document;
+
+          window.document.title = '';
+          window.document.title = title;
+
           pending = false;
 
           window.removeEventListener('popstate', done);
