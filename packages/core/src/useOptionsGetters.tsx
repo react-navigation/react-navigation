@@ -1,56 +1,76 @@
 import * as React from 'react';
+import type { ParamListBase, NavigationState } from '@react-navigation/routers';
 import NavigationStateContext from './NavigationStateContext';
-import type { NavigationState } from '@react-navigation/routers';
+import NavigationBuilderContext from './NavigationBuilderContext';
+import type { NavigationProp } from './types';
+
+type Options = {
+  key?: string;
+  navigation?: NavigationProp<ParamListBase, string, NavigationState, object>;
+  options?: object | undefined;
+};
 
 export default function useOptionsGetters({
   key,
-  getOptions,
-  getState,
-}: {
-  key?: string;
-  getOptions?: () => object | undefined;
-  getState?: () => NavigationState;
-}) {
-  let [
-    numberOfChildrenListeners,
-    setNumberOfChildrenListeners,
-  ] = React.useState(0);
-  const optionsGettersFromChild = React.useRef<
+  options,
+  navigation,
+}: Options) {
+  const optionsRef = React.useRef<object | undefined>(options);
+  const optionsGettersFromChildRef = React.useRef<
     Record<string, () => object | undefined | null>
   >({});
 
+  const { onOptionsChange } = React.useContext(NavigationBuilderContext);
   const { addOptionsGetter: parentAddOptionsGetter } = React.useContext(
     NavigationStateContext
   );
 
+  const optionsChangeListener = React.useCallback(() => {
+    const isFocused = navigation?.isFocused() ?? true;
+    const hasChildren = Object.keys(optionsGettersFromChildRef.current).length;
+
+    if (isFocused && !hasChildren) {
+      onOptionsChange(optionsRef.current ?? {});
+    }
+  }, [navigation, onOptionsChange]);
+
+  React.useEffect(() => {
+    optionsRef.current = options;
+    optionsChangeListener();
+
+    return navigation?.addListener('focus', optionsChangeListener);
+  }, [navigation, options, optionsChangeListener]);
+
   const getOptionsFromListener = React.useCallback(() => {
-    for (let key in optionsGettersFromChild.current) {
-      if (optionsGettersFromChild.current.hasOwnProperty(key)) {
-        const result = optionsGettersFromChild.current[key]?.();
+    for (let key in optionsGettersFromChildRef.current) {
+      if (optionsGettersFromChildRef.current.hasOwnProperty(key)) {
+        const result = optionsGettersFromChildRef.current[key]?.();
+
         // null means unfocused route
         if (result !== null) {
           return result;
         }
       }
     }
+
     return null;
   }, []);
 
   const getCurrentOptions = React.useCallback(() => {
-    if (getState) {
-      const state = getState();
-      if (state.routes[state.index].key !== key) {
-        // null means unfocused route
-        return null;
-      }
+    const isFocused = navigation?.isFocused() ?? true;
+
+    if (!isFocused) {
+      return null;
     }
 
     const optionsFromListener = getOptionsFromListener();
+
     if (optionsFromListener !== null) {
       return optionsFromListener;
     }
-    return getOptions?.() ?? undefined;
-  }, [getState, getOptionsFromListener, getOptions, key]);
+
+    return optionsRef.current;
+  }, [navigation, getOptionsFromListener]);
 
   React.useEffect(() => {
     return parentAddOptionsGetter?.(key!, getCurrentOptions);
@@ -58,26 +78,20 @@ export default function useOptionsGetters({
 
   const addOptionsGetter = React.useCallback(
     (key: string, getter: () => object | undefined | null) => {
-      optionsGettersFromChild.current[key] = getter;
-      setNumberOfChildrenListeners((prev) => prev + 1);
+      optionsGettersFromChildRef.current[key] = getter;
+      optionsChangeListener();
 
       return () => {
-        setNumberOfChildrenListeners((prev) => prev - 1);
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-        delete optionsGettersFromChild.current[key];
+        delete optionsGettersFromChildRef.current[key];
+        optionsChangeListener();
       };
     },
-    []
-  );
-
-  const hasAnyChildListener = React.useMemo(
-    () => numberOfChildrenListeners > 0,
-    [numberOfChildrenListeners]
+    [optionsChangeListener]
   );
 
   return {
     addOptionsGetter,
     getCurrentOptions,
-    hasAnyChildListener,
   };
 }
