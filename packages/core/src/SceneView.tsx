@@ -9,8 +9,6 @@ import NavigationStateContext from './NavigationStateContext';
 import StaticContainer from './StaticContainer';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
 import useOptionsGetters from './useOptionsGetters';
-import NavigationBuilderContext from './NavigationBuilderContext';
-import useFocusEffect from './useFocusEffect';
 import type { NavigationProp, RouteConfig, EventMapBase } from './types';
 
 type Props<
@@ -45,25 +43,13 @@ export default function SceneView<
   options,
 }: Props<State, ScreenOptions, EventMap>) {
   const navigatorKeyRef = React.useRef<string | undefined>();
-  const { onOptionsChange } = React.useContext(NavigationBuilderContext);
   const getKey = React.useCallback(() => navigatorKeyRef.current, []);
-  const optionsRef = React.useRef<object | undefined>(options);
-  const getOptions = React.useCallback(() => optionsRef.current, []);
 
-  const { addOptionsGetter, hasAnyChildListener } = useOptionsGetters({
+  const { addOptionsGetter } = useOptionsGetters({
     key: route.key,
-    getState,
-    getOptions,
+    options,
+    navigation,
   });
-
-  const optionsChange = React.useCallback(() => {
-    optionsRef.current = options;
-    if (!hasAnyChildListener) {
-      onOptionsChange(options);
-    }
-  }, [onOptionsChange, options, hasAnyChildListener]);
-
-  useFocusEffect(optionsChange);
 
   const setKey = React.useCallback((key: string) => {
     navigatorKeyRef.current = key;
