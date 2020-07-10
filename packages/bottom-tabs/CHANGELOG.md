@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.7.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.6.1...@react-navigation/bottom-tabs@5.7.0) (2020-07-10)
+
+
+### Bug Fixes
+
+* fix bottom tab bar to match iOS defaults ([849e04a](https://github.com/react-navigation/react-navigation/commit/849e04ab6a541fffb490ffdfa9819608b88494f4))
+
+
+### Features
+
+* add support for badges to bottom tab bar ([96c7b68](https://github.com/react-navigation/react-navigation/commit/96c7b688ce773b3dd1f1cf7775367cd7080c94a2))
+
+
+
+
+
 ## [5.6.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.6.0...@react-navigation/bottom-tabs@5.6.1) (2020-06-25)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

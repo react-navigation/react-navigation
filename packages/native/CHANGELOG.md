@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.7.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@5.6.1...@react-navigation/native@5.7.0) (2020-07-10)
+
+
+### Bug Fixes
+
+* ensure correct document title after going back on Chrome ([8f5286e](https://github.com/react-navigation/react-navigation/commit/8f5286ef501d2e88cffbe4f7d8cdeb23a4af6cf1))
+* tweak border color to match iOS default ([c665c02](https://github.com/react-navigation/react-navigation/commit/c665c027a6531cf841690940a7e2cb4ea498ba03))
+
+
+### Features
+
+* add a hook to update document title ([13c9d1e](https://github.com/react-navigation/react-navigation/commit/13c9d1e281b4626199671bce11ba62d83767564f))
+* add support for badges to bottom tab bar ([96c7b68](https://github.com/react-navigation/react-navigation/commit/96c7b688ce773b3dd1f1cf7775367cd7080c94a2))
+
+
+
+
+
 ## [5.6.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@5.6.0...@react-navigation/native@5.6.1) (2020-06-25)
 
 **Note:** Version bump only for package @react-navigation/native

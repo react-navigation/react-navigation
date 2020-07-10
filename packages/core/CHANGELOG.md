@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.12.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.11.1...@react-navigation/core@5.12.0) (2020-07-10)
+
+
+### Bug Fixes
+
+* avoid error setting warning for devtools migration. closes [#8534](https://github.com/react-navigation/react-navigation/issues/8534) ([1801a13](https://github.com/react-navigation/react-navigation/commit/1801a13323eff149fb6bc4e3c3f12422b401f178))
+* fix bubbling actions to correct target when specified ([9671c76](https://github.com/react-navigation/react-navigation/commit/9671c76c5121aaa64a956e2ca696b2f1712cd6f4))
+* fix options event being emitted incorrectly ([#8559](https://github.com/react-navigation/react-navigation/issues/8559)) ([a255e35](https://github.com/react-navigation/react-navigation/commit/a255e350f9a54c6d8e410167c9c8661e70b23779))
+* improve the warning message for non-serializable values ([e63580e](https://github.com/react-navigation/react-navigation/commit/e63580edbef8e77239f3dbefc919d1a41723eff1))
+* mark some types as read-only ([7c3a0a0](https://github.com/react-navigation/react-navigation/commit/7c3a0a0f23629da0beb956ba5a9689ab965061ce))
+
+
+### Features
+
+* add a `beforeRemove` event ([6925e92](https://github.com/react-navigation/react-navigation/commit/6925e92dc3e9885e3f552ca5e5eb51ae1521e54e))
+* add a getComponent prop to lazily specify components ([f418029](https://github.com/react-navigation/react-navigation/commit/f4180295bf22e32c65f6a7ab7089523cb2de58fb))
+
+
+
+
+
 ## [5.11.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.11.0...@react-navigation/core@5.11.1) (2020-06-25)
 
 
