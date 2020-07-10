@@ -55,7 +55,7 @@ export type LinkingOptions = {
 
 export type DocumentTitleOptions = {
   enabled?: boolean;
-  format?: (
+  formatter?: (
     options: Record<string, any> | undefined,
     route: Route<string> | undefined
   ) => string;
