@@ -17,7 +17,7 @@ import useKeyedChildListeners from './useKeyedChildListeners';
 import useOptionsGetters from './useOptionsGetters';
 import useEventEmitter from './useEventEmitter';
 import useSyncState from './useSyncState';
-import isSerializable from './isSerializable';
+import checkSerializable from './checkSerializable';
 import type {
   NavigationContainerEventMap,
   NavigationContainerRef,
@@ -29,7 +29,7 @@ type State = NavigationState | PartialState<NavigationState> | undefined;
 const NOT_INITIALIZED_ERROR =
   "The 'navigation' object hasn't been initialized yet. This might happen if you don't have a navigator mounted, or if the navigator hasn't finished mounting. See https://reactnavigation.org/docs/navigating-without-navigation-prop#handling-initialization for more details.";
 
-let hasWarnedForSerialization = false;
+const serializableWarnings: string[] = [];
 
 try {
   /**
@@ -267,16 +267,55 @@ const BaseNavigationContainer = React.forwardRef(
 
     React.useEffect(() => {
       if (process.env.NODE_ENV !== 'production') {
-        if (
-          state !== undefined &&
-          !isSerializable(state) &&
-          !hasWarnedForSerialization
-        ) {
-          hasWarnedForSerialization = true;
+        if (state !== undefined) {
+          const result = checkSerializable(state);
 
-          console.warn(
-            "Non-serializable values were found in the navigation state, which can break usage such as persisting and restoring state. This might happen if you passed non-serializable values such as function, class instances etc. in params. If you need to use components with callbacks in your options, you can use 'navigation.setOptions' instead. See https://reactnavigation.org/docs/troubleshooting#i-get-the-warning-non-serializable-values-were-found-in-the-navigation-state for more details."
-          );
+          if (!result.serializable) {
+            const { location, reason } = result;
+
+            let path = '';
+            let pointer: Record<any, any> = state;
+            let params = false;
+
+            for (let i = 0; i < location.length; i++) {
+              const curr = location[i];
+              const prev = location[i - 1];
+
+              pointer = pointer[curr];
+
+              if (!params && curr === 'state') {
+                continue;
+              } else if (!params && curr === 'routes') {
+                if (path) {
+                  path += ' > ';
+                }
+              } else if (
+                !params &&
+                typeof curr === 'number' &&
+                prev === 'routes'
+              ) {
+                path += pointer?.name;
+              } else if (!params) {
+                path += ` > ${curr}`;
+                params = true;
+              } else {
+                if (typeof curr === 'number' || /^[0-9]+$/.test(curr)) {
+                  path += `[${curr}]`;
+                } else if (/^[a-z$_]+$/i.test(curr)) {
+                  path += `.${curr}`;
+                } else {
+                  path += `[${JSON.stringify(curr)}]`;
+                }
+              }
+            }
+
+            const message = `Non-serializable values were found in the navigation state. Check:\n\n${path} (${reason})\n\nThis can break usage such as persisting and restoring state. This might happen if you passed non-serializable values such as function, class instances etc. in params. If you need to use components with callbacks in your options, you can use 'navigation.setOptions' instead. See https://reactnavigation.org/docs/troubleshooting#i-get-the-warning-non-serializable-values-were-found-in-the-navigation-state for more details.`;
+
+            if (!serializableWarnings.includes(message)) {
+              serializableWarnings.push(message);
+              console.warn(message);
+            }
+          }
         }
       }
 

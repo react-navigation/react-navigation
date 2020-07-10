@@ -1,8 +1,8 @@
-import isSerializable from '../isSerializable';
+import checkSerializable from '../checkSerializable';
 
 it('returns true for serializable object', () => {
   expect(
-    isSerializable({
+    checkSerializable({
       index: 0,
       key: '7',
       routeNames: ['foo', 'bar'],
@@ -22,12 +22,12 @@ it('returns true for serializable object', () => {
         },
       ],
     })
-  ).toBe(true);
+  ).toEqual({ serializable: true });
 });
 
 it('returns false for non-serializable object', () => {
   expect(
-    isSerializable({
+    checkSerializable({
       index: 0,
       key: '7',
       routeNames: ['foo', 'bar'],
@@ -47,7 +47,38 @@ it('returns false for non-serializable object', () => {
         },
       ],
     })
-  ).toBe(false);
+  ).toEqual({
+    serializable: false,
+    location: ['routes', 0, 'state', 'routes', 0, 'params'],
+    reason: 'Function',
+  });
+
+  expect(
+    checkSerializable({
+      index: 0,
+      key: '7',
+      routeNames: ['foo', 'bar'],
+      routes: [
+        {
+          key: 'foo',
+          name: 'foo',
+          state: {
+            index: 0,
+            key: '8',
+            routeNames: ['qux', 'lex'],
+            routes: [
+              { key: 'qux', name: 'qux', params: { foo: Symbol('test') } },
+              { key: 'lex', name: 'lex' },
+            ],
+          },
+        },
+      ],
+    })
+  ).toEqual({
+    serializable: false,
+    location: ['routes', 0, 'state', 'routes', 0, 'params', 'foo'],
+    reason: 'Symbol(test)',
+  });
 });
 
 it('returns false for circular references', () => {
@@ -59,7 +90,11 @@ it('returns false for circular references', () => {
   x.b.b2 = x;
   x.c = x.b;
 
-  expect(isSerializable(x)).toBe(false);
+  expect(checkSerializable(x)).toEqual({
+    serializable: false,
+    location: ['b', 'b2'],
+    reason: 'Circular reference',
+  });
 
   const y: any = [
     {
@@ -72,7 +107,11 @@ it('returns false for circular references', () => {
   y[0].children[0].parent = y[0];
   y[1].extend.home = y[0].children[0];
 
-  expect(isSerializable(y)).toBe(false);
+  expect(checkSerializable(y)).toEqual({
+    serializable: false,
+    location: [0, 'children', 0, 'parent'],
+    reason: 'Circular reference',
+  });
 
   const z: any = {
     name: 'sun',
@@ -81,14 +120,18 @@ it('returns false for circular references', () => {
 
   z.child[0].parent = z;
 
-  expect(isSerializable(z)).toBe(false);
+  expect(checkSerializable(z)).toEqual({
+    serializable: false,
+    location: ['child', 0, 'parent'],
+    reason: 'Circular reference',
+  });
 });
 
 it("doesn't fail if same object used multiple times", () => {
   const o = { foo: 'bar' };
 
   expect(
-    isSerializable({
+    checkSerializable({
       baz: 'bax',
       first: o,
       second: o,
@@ -96,5 +139,5 @@ it("doesn't fail if same object used multiple times", () => {
         b: o,
       },
     })
-  ).toBe(true);
+  ).toEqual({ serializable: true });
 });
