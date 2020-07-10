@@ -278,7 +278,7 @@ export default function App() {
         }}
         fallback={<Text>Loading…</Text>}
         documentTitle={{
-          format: (options, route) =>
+          formatter: (options, route) =>
             `${options?.title ?? route?.name} - React Navigation Example`,
         }}
       >

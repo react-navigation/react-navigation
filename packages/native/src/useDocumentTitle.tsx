@@ -9,7 +9,7 @@ export default function useDocumentTitle(
   ref: React.RefObject<NavigationContainerRef>,
   {
     enabled = true,
-    format = (options, route) => options?.title ?? route?.name,
+    formatter = (options, route) => options?.title ?? route?.name,
   }: DocumentTitleOptions = {}
 ) {
   React.useEffect(() => {
@@ -20,7 +20,7 @@ export default function useDocumentTitle(
     const navigation = ref.current;
 
     if (navigation) {
-      const title = format(
+      const title = formatter(
         navigation.getCurrentOptions(),
         navigation.getCurrentRoute()
       );
@@ -29,7 +29,7 @@ export default function useDocumentTitle(
     }
 
     return navigation?.addListener('options', (e) => {
-      const title = format(e.data.options, navigation?.getCurrentRoute());
+      const title = formatter(e.data.options, navigation?.getCurrentRoute());
 
       document.title = title;
     });
