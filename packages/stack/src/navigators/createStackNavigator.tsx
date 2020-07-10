@@ -29,7 +29,7 @@ function StackNavigator({
 }: Props) {
   const defaultOptions = {
     gestureEnabled: Platform.OS === 'ios',
-    animationEnabled: Platform.OS !== 'web',
+    animationEnabled: Platform.OS !== 'web' && Platform.OS !== 'windows',
   };
 
   const { state, descriptors, navigation } = useNavigationBuilder<
