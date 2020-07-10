@@ -13,6 +13,7 @@ export type Theme = {
     card: string;
     text: string;
     border: string;
+    notification: string;
   };
 };
 

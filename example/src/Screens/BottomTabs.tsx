@@ -97,6 +97,7 @@ export default function BottomTabsScreen({
         options={{
           tabBarLabel: 'Chat',
           tabBarIcon: getTabBarIcon('message-reply'),
+          tabBarBadge: 2,
         }}
       />
       <BottomTabs.Screen

@@ -245,6 +245,7 @@ export default function BottomTabBar({
                   inactiveBackgroundColor={inactiveBackgroundColor}
                   button={options.tabBarButton}
                   icon={options.tabBarIcon}
+                  badge={options.tabBarBadge}
                   label={label}
                   showLabel={showLabel}
                   labelStyle={labelStyle}
