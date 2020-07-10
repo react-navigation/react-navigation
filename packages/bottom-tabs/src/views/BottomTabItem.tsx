@@ -40,6 +40,10 @@ type Props = {
     color: string;
   }) => React.ReactNode;
   /**
+   * Text to show in a badge on the tab icon.
+   */
+  badge?: number | string;
+  /**
    * URL to use for the link to the tab.
    */
   to?: string;
@@ -113,6 +117,7 @@ export default function BottomTabBarItem({
   route,
   label,
   icon,
+  badge,
   to,
   button = ({
     children,
@@ -220,16 +225,14 @@ export default function BottomTabBarItem({
     return (
       <TabBarIcon
         route={route}
-        size={horizontal ? 17 : 24}
+        horizontal={horizontal}
+        badge={badge}
         activeOpacity={activeOpacity}
         inactiveOpacity={inactiveOpacity}
         activeTintColor={activeTintColor}
         inactiveTintColor={inactiveTintColor}
         renderIcon={icon}
-        style={[
-          horizontal ? styles.iconHorizontal : styles.iconVertical,
-          iconStyle,
-        ]}
+        style={iconStyle}
       />
     );
   };
@@ -275,12 +278,6 @@ const styles = StyleSheet.create({
   tabLandscape: {
     justifyContent: 'center',
     flexDirection: 'row',
-  },
-  iconVertical: {
-    flex: 1,
-  },
-  iconHorizontal: {
-    height: '100%',
   },
   label: {
     textAlign: 'center',
