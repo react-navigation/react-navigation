@@ -25,7 +25,7 @@ type Props = BottomTabBarProps & {
   inactiveTintColor?: string;
 };
 
-const DEFAULT_TABBAR_HEIGHT = 50;
+const DEFAULT_TABBAR_HEIGHT = 49;
 const DEFAULT_MAX_TAB_ITEM_WIDTH = 125;
 
 const useNativeDriver = Platform.OS !== 'web';
@@ -152,6 +152,8 @@ export default function BottomTabBar({
     left: safeAreaInsets?.left ?? defaultInsets.left,
   };
 
+  const paddingBottom = Math.max(insets.bottom - 4, 0);
+
   return (
     <Animated.View
       style={[
@@ -165,7 +167,7 @@ export default function BottomTabBar({
             {
               translateY: visible.interpolate({
                 inputRange: [0, 1],
-                outputRange: [layout.height + insets.bottom, 0],
+                outputRange: [layout.height + paddingBottom, 0],
               }),
             },
           ],
@@ -174,8 +176,8 @@ export default function BottomTabBar({
           position: isTabBarHidden ? 'absolute' : null,
         },
         {
-          height: DEFAULT_TABBAR_HEIGHT + insets.bottom,
-          paddingBottom: insets.bottom,
+          height: DEFAULT_TABBAR_HEIGHT + paddingBottom,
+          paddingBottom,
           paddingHorizontal: Math.max(insets.left, insets.right),
         },
         style,
