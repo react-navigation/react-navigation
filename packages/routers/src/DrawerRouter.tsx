@@ -159,6 +159,15 @@ export default function DrawerRouter({
 
       return closeDrawer(result);
     },
+      
+    getStateForRouteNamesChange(state, options) {
+      // intercept the tab handler to preserve the
+      // drawer history item if it exists
+      const tabState = router.getStateForRouteNamesChange(state, options);
+      if (state.history.some(it => it.type === "drawer"))
+        tabState.history.push({ type: "drawer" })
+      return tabState;
+    },
 
     getStateForAction(state, action, options) {
       switch (action.type) {
