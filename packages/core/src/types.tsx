@@ -406,6 +406,16 @@ export type RouteConfig<
        * React component to render for this screen.
        */
       component: React.ComponentType<any>;
+      getComponent?: never;
+      children?: never;
+    }
+  | {
+      /**
+       * Lazily get a React component to render for this screen.
+       */
+      getComponent: () => React.ComponentType<any>;
+      component?: never;
+      children?: never;
     }
   | {
       /**
@@ -415,6 +425,8 @@ export type RouteConfig<
         route: RouteProp<ParamList, RouteName>;
         navigation: any;
       }) => React.ReactNode;
+      component?: never;
+      getComponent?: never;
     }
 );
 

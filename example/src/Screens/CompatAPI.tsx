@@ -127,8 +127,8 @@ const CompatStack = createCompatStackNavigator<
         StackNavigationProp<NestedStackParams>
       >(
         {
-          Feed: FeedScreen,
-          Article: ArticleScreen,
+          Feed: { getScreen: () => FeedScreen },
+          Article: { getScreen: () => ArticleScreen },
         },
         { navigationOptions: { headerShown: false } }
       ),

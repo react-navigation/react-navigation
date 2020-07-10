@@ -1403,6 +1403,7 @@ it('throws if both children and component are passed', () => {
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
+        {/* @ts-ignore */}
         <Screen name="foo" component={jest.fn()}>
           {jest.fn()}
         </Screen>
@@ -1412,6 +1413,48 @@ it('throws if both children and component are passed', () => {
 
   expect(() => render(element).update(element)).toThrowError(
     "Got both 'component' and 'children' props for the screen 'foo'. You must pass only one of them."
+  );
+});
+
+it('throws if both children and getComponent are passed', () => {
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const element = (
+    <BaseNavigationContainer>
+      <TestNavigator>
+        {/* @ts-ignore */}
+        <Screen name="foo" getComponent={jest.fn()}>
+          {jest.fn()}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(() => render(element).update(element)).toThrowError(
+    "Got both 'getComponent' and 'children' props for the screen 'foo'. You must pass only one of them."
+  );
+});
+
+it('throws if both component and getComponent are passed', () => {
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const element = (
+    <BaseNavigationContainer>
+      <TestNavigator>
+        {/* @ts-ignore */}
+        <Screen name="foo" component={jest.fn()} getComponent={jest.fn()} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(() => render(element).update(element)).toThrowError(
+    "Got both 'component' and 'getComponent' props for the screen 'foo'. You must pass only one of them."
   );
 });
 
@@ -1430,7 +1473,7 @@ it('throws descriptive error for undefined screen component', () => {
   );
 
   expect(() => render(element).update(element)).toThrowError(
-    "Couldn't find a 'component' or 'children' prop for the screen 'foo'"
+    "Couldn't find a 'component', 'getComponent' or 'children' prop for the screen 'foo'"
   );
 });
 
@@ -1450,6 +1493,25 @@ it('throws descriptive error for invalid screen component', () => {
 
   expect(() => render(element).update(element)).toThrowError(
     "Got an invalid value for 'component' prop for the screen 'foo'. It must be a valid React Component."
+  );
+});
+
+it('throws descriptive error for invalid getComponent prop', () => {
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const element = (
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Screen name="foo" getComponent={{} as any} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(() => render(element).update(element)).toThrowError(
+    "Got an invalid value for 'getComponent' prop for the screen 'foo'. It must be a function returning a React Component."
   );
 });
 
