@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.7.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.6.2...@react-navigation/stack@5.7.0) (2020-07-10)
+
+
+### Features
+
+* add a `beforeRemove` event ([6925e92](https://github.com/react-navigation/react-navigation/commit/6925e92dc3e9885e3f552ca5e5eb51ae1521e54e))
+
+
+
+
+
 ## [5.6.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.6.1...@react-navigation/stack@5.6.2) (2020-06-25)
 
 **Note:** Version bump only for package @react-navigation/stack

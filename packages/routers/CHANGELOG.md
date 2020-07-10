@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.4.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@5.4.8...@react-navigation/routers@5.4.9) (2020-07-10)
+
+
+### Bug Fixes
+
+* mark some types as read-only ([7c3a0a0](https://github.com/react-navigation/react-navigation/commit/7c3a0a0f23629da0beb956ba5a9689ab965061ce))
+* only remove non-existed routes from tab history. closes [#8567](https://github.com/react-navigation/react-navigation/issues/8567) ([374b081](https://github.com/react-navigation/react-navigation/commit/374b081b1c4b2e590259a050430eb1fcdbad3557))
+
+
+
+
+
 ## [5.4.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@5.4.7...@react-navigation/routers@5.4.8) (2020-06-24)
 
 
