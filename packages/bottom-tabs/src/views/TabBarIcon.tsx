@@ -29,7 +29,7 @@ export default function TabBarIcon({
   renderIcon,
   style,
 }: Props) {
-  const size = horizontal ? 17 : 24;
+  const size = 25;
 
   // We render the icon twice at the same position on top of each other:
   // active and inactive one, so we can fade between them.
@@ -84,6 +84,7 @@ const styles = StyleSheet.create({
   },
   iconHorizontal: {
     height: '100%',
+    marginTop: 3,
   },
   badge: {
     position: 'absolute',
@@ -93,6 +94,6 @@ const styles = StyleSheet.create({
     top: 3,
   },
   badgeHorizontal: {
-    bottom: '50%',
+    top: 7,
   },
 });

@@ -284,12 +284,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   labelBeneath: {
-    fontSize: 11,
-    marginBottom: 1.5,
+    fontSize: 10,
   },
   labelBeside: {
-    fontSize: 12,
+    fontSize: 13,
     marginLeft: 20,
+    marginTop: 3,
   },
   button: {
     display: 'flex',
