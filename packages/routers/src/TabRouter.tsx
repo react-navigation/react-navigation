@@ -244,8 +244,9 @@ export default function TabRouter({
         routeNames.indexOf(state.routes[state.index].name)
       );
 
-      let history = state.history.filter((it) =>
-        routes.find((r) => r.key === it.key)
+      let history = state.history.filter(
+        // Type will always be 'route' for tabs, but could be different in a router extending this (e.g. drawer)
+        (it) => it.type !== 'route' || routes.find((r) => r.key === it.key)
       );
 
       if (!history.length) {
