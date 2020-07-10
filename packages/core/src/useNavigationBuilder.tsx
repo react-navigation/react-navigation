@@ -102,7 +102,7 @@ const getRouteConfigsFromChildren = <
 
   if (process.env.NODE_ENV !== 'production') {
     configs.forEach((config) => {
-      const { name, children, component } = config as any;
+      const { name, children, component, getComponent } = config;
 
       if (typeof name !== 'string' || !name) {
         throw new Error(
@@ -112,10 +112,26 @@ const getRouteConfigsFromChildren = <
         );
       }
 
-      if (children != null || component !== undefined) {
+      if (
+        children != null ||
+        component !== undefined ||
+        getComponent !== undefined
+      ) {
         if (children != null && component !== undefined) {
           throw new Error(
             `Got both 'component' and 'children' props for the screen '${name}'. You must pass only one of them.`
+          );
+        }
+
+        if (children != null && getComponent !== undefined) {
+          throw new Error(
+            `Got both 'getComponent' and 'children' props for the screen '${name}'. You must pass only one of them.`
+          );
+        }
+
+        if (component !== undefined && getComponent !== undefined) {
+          throw new Error(
+            `Got both 'component' and 'getComponent' props for the screen '${name}'. You must pass only one of them.`
           );
         }
 
@@ -131,6 +147,12 @@ const getRouteConfigsFromChildren = <
           );
         }
 
+        if (getComponent !== undefined && typeof getComponent !== 'function') {
+          throw new Error(
+            `Got an invalid value for 'getComponent' prop for the screen '${name}'. It must be a function returning a React Component.`
+          );
+        }
+
         if (typeof component === 'function' && component.name === 'component') {
           // Inline anonymous functions passed in the `component` prop will have the name of the prop
           // It's relatively safe to assume that it's not a component since it should also have PascalCase name
@@ -141,7 +163,7 @@ const getRouteConfigsFromChildren = <
         }
       } else {
         throw new Error(
-          `Couldn't find a 'component' or 'children' prop for the screen '${name}'. This can happen if you passed 'undefined'. You likely forgot to export your component from the file it's defined in, or mixed up default import and named import when importing.`
+          `Couldn't find a 'component', 'getComponent' or 'children' prop for the screen '${name}'. This can happen if you passed 'undefined'. You likely forgot to export your component from the file it's defined in, or mixed up default import and named import when importing.`
         );
       }
     });

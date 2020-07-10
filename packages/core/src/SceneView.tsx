@@ -95,19 +95,22 @@ export default function SceneView<
     ]
   );
 
+  const ScreenComponent = screen.getComponent
+    ? screen.getComponent()
+    : screen.component;
+
   return (
     <NavigationStateContext.Provider value={context}>
       <EnsureSingleNavigator>
         <StaticContainer
           name={screen.name}
-          // @ts-expect-error: these properties exist on screen, but TS is confused
-          render={screen.component || screen.children}
+          render={ScreenComponent || screen.children}
           navigation={navigation}
           route={route}
         >
-          {'component' in screen && screen.component !== undefined ? (
-            <screen.component navigation={navigation} route={route} />
-          ) : 'children' in screen && screen.children !== undefined ? (
+          {ScreenComponent !== undefined ? (
+            <ScreenComponent navigation={navigation} route={route} />
+          ) : screen.children !== undefined ? (
             screen.children({ navigation, route })
           ) : null}
         </StaticContainer>

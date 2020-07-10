@@ -362,7 +362,7 @@ export default function App() {
                     <Stack.Screen
                       key={name}
                       name={name}
-                      component={SCREENS[name].component}
+                      getComponent={() => SCREENS[name].component}
                       options={{ title: SCREENS[name].title }}
                     />
                   )

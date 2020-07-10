@@ -142,13 +142,7 @@ export default function createCompatNavigatorFactory<
                 initialParams={{ ...parentRouteParams, ...initialParams }}
                 options={screenOptions}
               >
-                {({ navigation, route }) => (
-                  <CompatScreen
-                    navigation={navigation}
-                    route={route}
-                    component={getScreenComponent()}
-                  />
-                )}
+                {() => <CompatScreen getComponent={getScreenComponent} />}
               </Pair.Screen>
             );
           }),

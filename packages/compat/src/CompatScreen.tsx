@@ -1,25 +1,17 @@
 import * as React from 'react';
-import type {
-  NavigationProp,
-  ParamListBase,
-  RouteProp,
-} from '@react-navigation/native';
 import ScreenPropsContext from './ScreenPropsContext';
 import useCompatNavigation from './useCompatNavigation';
 
-type Props<ParamList extends ParamListBase> = {
-  navigation: NavigationProp<ParamList>;
-  route: RouteProp<ParamList, string>;
-  component: React.ComponentType<any>;
+type Props = {
+  getComponent: () => React.ComponentType<any>;
 };
 
-function ScreenComponent<ParamList extends ParamListBase>(
-  props: Props<ParamList>
-) {
+function CompatScreen({ getComponent }: Props) {
   const navigation = useCompatNavigation();
   const screenProps = React.useContext(ScreenPropsContext);
+  const ScreenComponent = getComponent();
 
-  return <props.component navigation={navigation} screenProps={screenProps} />;
+  return <ScreenComponent navigation={navigation} screenProps={screenProps} />;
 }
 
-export default React.memo(ScreenComponent);
+export default React.memo(CompatScreen);
