@@ -71,7 +71,7 @@ export type BottomTabNavigationOptions = {
     | ((props: {
         focused: boolean;
         color: string;
-        orientation: 'horizontal' | 'vertical';
+        position: LabelPosition;
       }) => React.ReactNode);
 
   /**
