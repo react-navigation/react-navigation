@@ -30,16 +30,33 @@ export default function Badge({
   ...rest
 }: Props) {
   const [opacity] = React.useState(() => new Animated.Value(visible ? 1 : 0));
+  const [rendered, setRendered] = React.useState(visible ? true : false);
 
   const theme = useTheme();
 
   React.useEffect(() => {
+    if (!rendered) {
+      return;
+    }
+
     Animated.timing(opacity, {
       toValue: visible ? 1 : 0,
       duration: 150,
       useNativeDriver: true,
-    }).start();
-  }, [opacity, visible]);
+    }).start(({ finished }) => {
+      if (finished && !visible) {
+        setRendered(false);
+      }
+    });
+  }, [opacity, rendered, visible]);
+
+  if (visible && !rendered) {
+    setRendered(true);
+  }
+
+  if (!visible && !rendered) {
+    return null;
+  }
 
   // @ts-expect-error: backgroundColor definitely exists
   const { backgroundColor = theme.colors.notification, ...restStyle } =
@@ -55,6 +72,14 @@ export default function Badge({
       style={[
         {
           opacity,
+          transform: [
+            {
+              scale: opacity.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0.5, 1],
+              }),
+            },
+          ],
           backgroundColor,
           color: textColor,
           fontSize,
