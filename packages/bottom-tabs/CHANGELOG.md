@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.7.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.7.0...@react-navigation/bottom-tabs@5.7.1) (2020-07-14)
+
+
+### Bug Fixes
+
+* don't render badge on bottom tabs if not visible. closes [#8577](https://github.com/react-navigation/react-navigation/issues/8577) ([2f74541](https://github.com/react-navigation/react-navigation/commit/2f74541811bac4d36e89c159cd1f4b267063e7f9))
+
+
+
+
+
 # [5.7.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.6.1...@react-navigation/bottom-tabs@5.7.0) (2020-07-10)
 
 
