@@ -621,9 +621,11 @@ export default class Pager<T extends Route> extends React.Component<
               this.interactionHandle = InteractionManager.createInteractionHandle();
 
               if (keyboardDismissMode === 'auto') {
+                // @ts-ignore: the method is only available in newer React Native
                 const input = TextInput.State.currentlyFocusedInput
-                	? TextInput.State.currentlyFocusedInput()
-                	: TextInput.State.currentlyFocusedField();
+                  ? // @ts-ignore
+                    TextInput.State.currentlyFocusedInput()
+                  : TextInput.State.currentlyFocusedField();
 
                 // When a gesture begins, blur the currently focused input
                 TextInput.State.blurTextInput(input);
