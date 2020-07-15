@@ -67,13 +67,12 @@ type State = {
   tabWidths: { [key: string]: number };
 };
 
-type MabyeAnimFrame = number | null;
+const scheduleInNextFrame = (cb: () => void) => {
+  let frame = requestAnimationFrame(() => {
+    frame = requestAnimationFrame(cb);
+  });
 
-const cancelAnimFrame = (id: MabyeAnimFrame) => {
-  if (id !== null) {
-    cancelAnimationFrame(id);
-  }
-  return null;
+  return () => cancelAnimationFrame(frame);
 };
 
 export default class TabBar<T extends Route> extends React.Component<
@@ -131,11 +130,8 @@ export default class TabBar<T extends Route> extends React.Component<
   }
 
   componentWillUnmount() {
-    this.cancelAnimFrames();
+    this.cancelNextFrameCb?.();
   }
-
-  private animFrame1: MabyeAnimFrame = null;
-  private animFrame2: MabyeAnimFrame = null;
 
   // to store the layout.width of each tab
   // when all onLayout's are fired, this would be set in state
@@ -145,10 +141,7 @@ export default class TabBar<T extends Route> extends React.Component<
 
   private scrollView: ScrollView | undefined;
 
-  private cancelAnimFrames = () => {
-    this.animFrame1 = cancelAnimFrame(this.animFrame1);
-    this.animFrame2 = cancelAnimFrame(this.animFrame2);
-  };
+  private cancelNextFrameCb: (() => void) | undefined = undefined;
 
   private getFlattenedTabWidth = (style: StyleProp<ViewStyle>) => {
     const tabStyle = StyleSheet.flatten(style);
@@ -298,19 +291,16 @@ export default class TabBar<T extends Route> extends React.Component<
     // If we don't delay this state update, the UI gets stuck in weird state
     // Maybe an issue in Reanimated?
     // https://github.com/react-native-community/react-native-tab-view/issues/877
-    // Once the above issue is resolved with the nested anim frames this becomes a lot simpler.
-    // Cancel all pending animations here, since we're going to start 2 new ones shortly.
-    this.cancelAnimFrames();
-    this.animFrame1 = requestAnimationFrame(() => {
-      this.animFrame2 = requestAnimationFrame(() => {
-        this.setState({
-          layout: {
-            height,
-            width,
-          },
-        });
-      });
-    });
+    // Cancel any pending callbacks, since we're scheduling a new one
+    this.cancelNextFrameCb?.();
+    this.cancelNextFrameCb = scheduleInNextFrame(() =>
+      this.setState({
+        layout: {
+          height,
+          width,
+        },
+      })
+    );
   };
 
   private getTranslateX = memoize(
