@@ -222,6 +222,7 @@ export default class TabBarItem<T extends Route> extends React.Component<
         accessibilityComponentType="button"
         accessibilityRole="tab"
         accessibilityState={{ selected: isFocused }}
+        // @ts-ignore: this is to support older React Native versions
         accessibilityStates={isFocused ? ['selected'] : []}
         pressColor={pressColor}
         pressOpacity={pressOpacity}

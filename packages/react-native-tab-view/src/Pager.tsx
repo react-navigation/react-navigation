@@ -621,7 +621,7 @@ export default class Pager<T extends Route> extends React.Component<
               this.interactionHandle = InteractionManager.createInteractionHandle();
 
               if (keyboardDismissMode === 'auto') {
-                // @ts-ignore: the method is only available in newer React Native
+                // @ts-ignore: the method is only available in newer React Native, but types aren't up-to-date
                 const input = TextInput.State.currentlyFocusedInput
                   ? // @ts-ignore
                     TextInput.State.currentlyFocusedInput()

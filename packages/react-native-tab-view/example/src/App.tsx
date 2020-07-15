@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  AsyncStorage,
   Platform,
   ScrollView,
   StatusBar,
@@ -17,6 +16,7 @@ import { Asset } from 'expo-asset';
 import { useKeepAwake } from 'expo-keep-awake';
 import Constants from 'expo-constants';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-community/async-storage';
 import ScrollableTabBarExample from './ScrollableTabBarExample';
 import AutoWidthTabBarExample from './AutoWidthTabBarExample';
 import TabBarIconExample from './TabBarIconExample';
