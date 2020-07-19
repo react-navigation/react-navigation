@@ -13,6 +13,7 @@ export default React.createContext<{
   setState: (
     state: NavigationState | PartialState<NavigationState> | undefined
   ) => void;
+  getIsInitial: () => boolean;
   addOptionsGetter?: (
     key: string,
     getter: () => object | undefined | null
@@ -30,6 +31,9 @@ export default React.createContext<{
     throw new Error(MISSING_CONTEXT_ERROR);
   },
   get setState(): any {
+    throw new Error(MISSING_CONTEXT_ERROR);
+  },
+  get getIsInitial(): any {
     throw new Error(MISSING_CONTEXT_ERROR);
   },
 });

@@ -76,6 +76,14 @@ export default function SceneView<
     [getState, route.key, setState]
   );
 
+  const isInitialRef = React.useRef(true);
+
+  React.useEffect(() => {
+    isInitialRef.current = false;
+  });
+
+  const getIsInitial = React.useCallback(() => isInitialRef.current, []);
+
   const context = React.useMemo(
     () => ({
       state: route.state,
@@ -83,14 +91,16 @@ export default function SceneView<
       setState: setCurrentState,
       getKey,
       setKey,
+      getIsInitial,
       addOptionsGetter,
     }),
     [
-      getCurrentState,
-      getKey,
       route.state,
+      getCurrentState,
       setCurrentState,
+      getKey,
       setKey,
+      getIsInitial,
       addOptionsGetter,
     ]
   );

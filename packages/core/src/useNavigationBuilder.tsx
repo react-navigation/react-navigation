@@ -279,6 +279,7 @@ export default function useNavigationBuilder<
     setState,
     setKey,
     getKey,
+    getIsInitial,
   } = React.useContext(NavigationStateContext);
 
   const [initializedState, isFirstStateInitialization] = React.useMemo(() => {
@@ -371,6 +372,13 @@ export default function useNavigationBuilder<
 
   React.useEffect(() => {
     setKey(navigatorKey);
+
+    if (!getIsInitial()) {
+      // If it's not initial render, we need to update the state
+      // This will make sure that our container gets notifier of state changes due to new mounts
+      // This is necessary for proper screen tracking, URL updates etc.
+      setState(nextState);
+    }
 
     return () => {
       // We need to clean up state for this navigator on unmount

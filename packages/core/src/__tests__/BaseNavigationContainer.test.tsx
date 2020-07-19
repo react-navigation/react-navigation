@@ -366,6 +366,7 @@ it('handles getRootState', () => {
     type: 'test',
   });
 });
+
 it('emits state events when the state changes', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
@@ -401,6 +402,7 @@ it('emits state events when the state changes', () => {
     ref.current?.navigate('bar');
   });
 
+  expect(listener).toBeCalledTimes(1);
   expect(listener.mock.calls[0][0].data.state).toEqual({
     type: 'test',
     stale: false,
@@ -418,6 +420,7 @@ it('emits state events when the state changes', () => {
     ref.current?.navigate('baz', { answer: 42 });
   });
 
+  expect(listener).toBeCalledTimes(2);
   expect(listener.mock.calls[1][0].data.state).toEqual({
     type: 'test',
     stale: false,
@@ -430,6 +433,97 @@ it('emits state events when the state changes', () => {
       { key: 'baz', name: 'baz', params: { answer: 42 } },
     ],
   });
+});
+
+it('emits state events when new navigator mounts', () => {
+  jest.useFakeTimers();
+
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return (
+      <React.Fragment>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </React.Fragment>
+    );
+  };
+
+  const ref = React.createRef<NavigationContainerRef>();
+
+  const NestedNavigator = () => {
+    const [isRendered, setIsRendered] = React.useState(false);
+
+    React.useEffect(() => {
+      setTimeout(() => setIsRendered(true), 100);
+    }, []);
+
+    if (!isRendered) {
+      return null;
+    }
+
+    return (
+      <TestNavigator>
+        <Screen name="baz">{() => null}</Screen>
+        <Screen name="bax">{() => null}</Screen>
+      </TestNavigator>
+    );
+  };
+
+  const onStateChange = jest.fn();
+
+  const element = (
+    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar" component={NestedNavigator} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(element).update(element);
+
+  const listener = jest.fn();
+
+  ref.current?.addListener('state', listener);
+
+  expect(listener).not.toHaveBeenCalled();
+  expect(onStateChange).not.toHaveBeenCalled();
+
+  act(() => {
+    jest.runAllTimers();
+  });
+
+  const resultState = {
+    stale: false,
+    type: 'test',
+    index: 0,
+    key: '10',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      {
+        key: 'bar',
+        name: 'bar',
+        state: {
+          stale: false,
+          type: 'test',
+          index: 0,
+          key: '11',
+          routeNames: ['baz', 'bax'],
+          routes: [
+            { key: 'baz', name: 'baz' },
+            { key: 'bax', name: 'bax' },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(listener).toBeCalledTimes(1);
+  expect(listener.mock.calls[0][0].data.state).toEqual(resultState);
+
+  expect(onStateChange).toBeCalledTimes(1);
+  expect(onStateChange).lastCalledWith(resultState);
 });
 
 it('emits option events when options change with tab router', () => {
