@@ -247,6 +247,10 @@ const BaseNavigationContainer = React.forwardRef(
       [scheduleUpdate, flushUpdates]
     );
 
+    const isInitialRef = React.useRef(true);
+
+    const getIsInitial = React.useCallback(() => isInitialRef.current, []);
+
     const context = React.useMemo(
       () => ({
         state,
@@ -254,14 +258,24 @@ const BaseNavigationContainer = React.forwardRef(
         setState,
         getKey,
         setKey,
+        getIsInitial,
         addOptionsGetter,
       }),
-      [getKey, getState, setKey, setState, state, addOptionsGetter]
+      [
+        state,
+        getState,
+        setState,
+        getKey,
+        setKey,
+        getIsInitial,
+        addOptionsGetter,
+      ]
     );
 
     const onStateChangeRef = React.useRef(onStateChange);
 
     React.useEffect(() => {
+      isInitialRef.current = false;
       onStateChangeRef.current = onStateChange;
     });
 

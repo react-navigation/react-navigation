@@ -147,6 +147,10 @@ export default function SimpleStackScreen({
     []
   );
 
+  if (state.isLoading) {
+    return <SplashScreen />;
+  }
+
   return (
     <AuthContext.Provider value={authContext}>
       <SimpleStack.Navigator
@@ -156,13 +160,7 @@ export default function SimpleStackScreen({
           ),
         }}
       >
-        {state.isLoading ? (
-          <SimpleStack.Screen
-            name="Splash"
-            component={SplashScreen}
-            options={{ title: 'Auth Flow' }}
-          />
-        ) : state.userToken === undefined ? (
+        {state.userToken === undefined ? (
           <SimpleStack.Screen
             name="SignIn"
             options={{
