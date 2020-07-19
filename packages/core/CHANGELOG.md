@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.12.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.12.0...@react-navigation/core@5.12.1) (2020-07-19)
+
+
+### Bug Fixes
+
+* make sure new state events are emitted when new navigators mount ([af8b274](https://github.com/react-navigation/react-navigation/commit/af8b27414c8628570d946003f4fdff3341cb8954))
+
+
+
+
+
 # [5.12.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.11.1...@react-navigation/core@5.12.0) (2020-07-10)
 
 
