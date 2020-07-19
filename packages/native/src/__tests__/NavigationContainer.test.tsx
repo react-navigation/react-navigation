@@ -99,6 +99,8 @@ it('integrates with the history API', () => {
     </NavigationContainer>
   );
 
+  jest.runAllTimers();
+
   expect(window.location.pathname).toBe('/feed');
 
   act(() => navigation.current?.navigate('Profile', { user: 'jane' }));
