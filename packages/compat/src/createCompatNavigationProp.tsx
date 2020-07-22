@@ -143,9 +143,12 @@ export default function createCompatNavigationProp<
       }
     },
     state: {
-      ...state,
+      // @ts-expect-error: these properties may actually exist
+      key: state.key,
       // @ts-expect-error
       routeName: state.name,
+      // @ts-expect-error
+      params: state.params ?? {},
       get index() {
         // @ts-expect-error
         if (state.index !== undefined) {
@@ -154,11 +157,11 @@ export default function createCompatNavigationProp<
         }
 
         console.warn(
-          "Accessing child navigation state for a route is not safe and won't work correctly."
+          "Looks like you are using 'navigation.state.index' in your code. Accessing child navigation state for a route is not safe and won't work correctly. You should refactor it not to access the 'index' property in the child navigation state."
         );
 
         // @ts-expect-error
-        return state.state ? state.state.index : undefined;
+        return state.state?.index;
       },
       get routes() {
         // @ts-expect-error
@@ -168,11 +171,11 @@ export default function createCompatNavigationProp<
         }
 
         console.warn(
-          "Accessing child navigation state for a route is not safe and won't work correctly."
+          "Looks like you are using 'navigation.state.routes' in your code. Accessing child navigation state for a route is not safe and won't work correctly. You should refactor it not to access the 'routes' property in the child navigation state."
         );
 
         // @ts-expect-error
-        return state.state ? state.state.routes : undefined;
+        return state.state?.routes;
       },
     },
     getParam<T extends keyof ParamList>(

@@ -82,7 +82,6 @@ const ArticleScreen: CompatScreenType<StackNavigationProp<
   NestedStackParams,
   'Article'
 >> = ({ navigation }) => {
-  navigation.dangerouslyGetParent();
   return (
     <ScrollView>
       <View style={styles.buttons}>
