@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/compat@5.2.1...@react-navigation/compat@5.2.2) (2020-07-22)
+
+
+### Bug Fixes
+
+* fix false warning due to change in Object.assign in metro preset ([240a706](https://github.com/react-navigation/react-navigation/commit/240a706a56220b63d603a52407a738c2872349dd)), closes [#8584](https://github.com/react-navigation/react-navigation/issues/8584)
+
+
+
+
+
 ## [5.2.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/compat@5.2.0...@react-navigation/compat@5.2.1) (2020-07-19)
 
 **Note:** Version bump only for package @react-navigation/compat
