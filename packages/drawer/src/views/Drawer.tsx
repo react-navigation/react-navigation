@@ -69,7 +69,10 @@ const SPRING_CONFIG = {
   restSpeedThreshold: 0.01,
 };
 
+const ANIMATED_ZERO = new Animated.Value(0);
 const ANIMATED_ONE = new Animated.Value(1);
+
+const PROGRESS_EPSILON = 0.05;
 
 type Binary = 0 | 1;
 
@@ -103,7 +106,10 @@ export default class DrawerView extends React.Component<Props> {
     drawerPosition: I18nManager.isRTL ? 'left' : 'right',
     drawerType: 'front',
     gestureEnabled: true,
-    swipeEnabled: Platform.OS !== 'web',
+    swipeEnabled:
+      Platform.OS !== 'web' &&
+      Platform.OS !== 'windows' &&
+      Platform.OS !== 'macos',
     swipeEdgeWidth: 32,
     swipeVelocityThreshold: 500,
     keyboardDismissMode: 'on-drag',
@@ -489,7 +495,9 @@ export default class DrawerView extends React.Component<Props> {
     // Check if the drawer width is available to avoid division by zero
     eq(this.drawerWidth, 0),
     0,
-    abs(divide(this.translateX, this.drawerWidth))
+    Platform.OS === 'windows' || Platform.OS === 'macos'
+      ? max(PROGRESS_EPSILON, abs(divide(this.translateX, this.drawerWidth)))
+      : abs(divide(this.translateX, this.drawerWidth))
   );
 
   private handleGestureEvent = event([
@@ -577,19 +585,19 @@ export default class DrawerView extends React.Component<Props> {
 
     const contentTranslateX =
       drawerType === 'front' || drawerType === 'permanent'
-        ? 0
+        ? ANIMATED_ZERO
         : this.translateX;
 
     const drawerTranslateX =
       drawerType === 'permanent'
-        ? 0
+        ? ANIMATED_ZERO
         : drawerType === 'back'
         ? I18nManager.isRTL
           ? multiply(
               sub(this.containerWidth, this.drawerWidth),
               isRight ? 1 : -1
             )
-          : 0
+          : ANIMATED_ZERO
         : this.translateX;
 
     const offset =
@@ -649,7 +657,9 @@ export default class DrawerView extends React.Component<Props> {
             </View>
             {
               // Disable overlay if sidebar is permanent
-              drawerType === 'permanent' ? null : Platform.OS === 'web' ? (
+              drawerType === 'permanent' ? null : Platform.OS === 'web' ||
+                Platform.OS === 'windows' ||
+                Platform.OS === 'macos' ? (
                 <TouchableWithoutFeedback
                   onPress={
                     gestureEnabled ? () => this.toggleDrawer(false) : undefined

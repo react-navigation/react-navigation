@@ -2,5 +2,5 @@ export {
   PanGestureHandler,
   GestureHandlerRootView,
   GestureState,
-} from './CompatGestureHandler';
+} from './GestureHandlerCompat';
 export type { PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
