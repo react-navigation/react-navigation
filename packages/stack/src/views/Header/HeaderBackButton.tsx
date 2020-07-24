@@ -30,7 +30,7 @@ export default function HeaderBackButton({
   titleLayout,
   truncatedLabel = 'Back',
   accessibilityLabel = label && label !== 'Back' ? `${label}, back` : 'Go back',
-  style
+  style,
 }: Props) {
   const { dark, colors } = useTheme();
 
