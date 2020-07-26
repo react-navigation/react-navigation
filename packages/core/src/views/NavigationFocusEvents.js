@@ -284,7 +284,7 @@ export default class NavigationEventManager extends React.Component {
 
     onEvent(target, 'willFocus', {
       ...payload,
-      type: 'willFocus'
+      type: 'willFocus',
     });
 
     if (
@@ -316,7 +316,7 @@ export default class NavigationEventManager extends React.Component {
 
     onEvent(target, 'willBlur', {
       ...payload,
-      type: 'willBlur'
+      type: 'willBlur',
     });
 
     if (
@@ -343,7 +343,7 @@ export default class NavigationEventManager extends React.Component {
 
     onEvent(target, 'didFocus', {
       ...payload,
-      type: 'didFocus'
+      type: 'didFocus',
     });
   };
 
@@ -362,7 +362,7 @@ export default class NavigationEventManager extends React.Component {
 
     onEvent(target, 'didBlur', {
       ...payload,
-      type: 'didBlur'
+      type: 'didBlur',
     });
   };
 
