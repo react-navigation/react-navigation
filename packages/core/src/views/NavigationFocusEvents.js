@@ -282,7 +282,10 @@ export default class NavigationEventManager extends React.Component {
 
     const { navigation, onEvent } = this.props;
 
-    onEvent(target, 'willFocus', payload);
+    onEvent(target, 'willFocus', {
+      ...payload,
+      type: 'willFocus'
+    });
 
     if (
       typeof navigation.state.isTransitioning !== 'boolean' ||
@@ -311,7 +314,10 @@ export default class NavigationEventManager extends React.Component {
 
     const { navigation, onEvent } = this.props;
 
-    onEvent(target, 'willBlur', payload);
+    onEvent(target, 'willBlur', {
+      ...payload,
+      type: 'willBlur'
+    });
 
     if (
       typeof navigation.state.isTransitioning !== 'boolean' ||
@@ -335,7 +341,10 @@ export default class NavigationEventManager extends React.Component {
 
     const { onEvent } = this.props;
 
-    onEvent(target, 'didFocus', payload);
+    onEvent(target, 'didFocus', {
+      ...payload,
+      type: 'didFocus'
+    });
   };
 
   /**
@@ -351,7 +360,10 @@ export default class NavigationEventManager extends React.Component {
 
     const { onEvent } = this.props;
 
-    onEvent(target, 'didBlur', payload);
+    onEvent(target, 'didBlur', {
+      ...payload,
+      type: 'didBlur'
+    });
   };
 
   render() {
