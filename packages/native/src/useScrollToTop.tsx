@@ -14,6 +14,8 @@ type ScrollableWrapper =
   | { getNode(): ScrollableView }
   | ScrollableView;
 
+const defaultScrollOptions = { y: 0, animated: true };
+
 function getScrollableNode(ref: React.RefObject<ScrollableWrapper>) {
   if (ref.current == null) {
     return null;
@@ -43,7 +45,8 @@ function getScrollableNode(ref: React.RefObject<ScrollableWrapper>) {
 }
 
 export default function useScrollToTop(
-  ref: React.RefObject<ScrollableWrapper>
+  ref: React.RefObject<ScrollableWrapper>,
+  options?: ScrollOptions
 ) {
   const navigation = useNavigation();
   const route = useRoute();
@@ -80,16 +83,20 @@ export default function useScrollToTop(
         // This is necessary to know if preventDefault() has been called
         requestAnimationFrame(() => {
           const scrollable = getScrollableNode(ref) as ScrollableWrapper;
+          const actualOptions = { ...defaultScrollOptions, ...options };
 
           if (isFocused && isFirst && scrollable && !e.defaultPrevented) {
-            if ('scrollToTop' in scrollable) {
+            if ('scrollToTop' in scrollable && !options) {
               scrollable.scrollToTop();
             } else if ('scrollTo' in scrollable) {
-              scrollable.scrollTo({ y: 0, animated: true });
+              scrollable.scrollTo(actualOptions);
             } else if ('scrollToOffset' in scrollable) {
-              scrollable.scrollToOffset({ offset: 0, animated: true });
+              scrollable.scrollToOffset({
+                offset: actualOptions.y,
+                animated: actualOptions.animated,
+              });
             } else if ('scrollResponderScrollTo' in scrollable) {
-              scrollable.scrollResponderScrollTo({ y: 0, animated: true });
+              scrollable.scrollResponderScrollTo(actualOptions);
             }
           }
         });
