@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.7.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.7.2...@react-navigation/bottom-tabs@5.7.3) (2020-07-28)
+
+
+### Bug Fixes
+
+* add accessibilityState property ([#8548](https://github.com/react-navigation/react-navigation/issues/8548)) ([ce4eb7e](https://github.com/react-navigation/react-navigation/commit/ce4eb7e9273a25e4433eb82e255a58ba3bf4d632))
+* pass label position flag to label rendering in BottomTabBar ([#8557](https://github.com/react-navigation/react-navigation/issues/8557)) ([baea77e](https://github.com/react-navigation/react-navigation/commit/baea77e3325f0d7e5ce331ad61979a9362dd01fa))
+
+
+
+
+
 ## [5.7.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.7.1...@react-navigation/bottom-tabs@5.7.2) (2020-07-19)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

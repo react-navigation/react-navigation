@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.8.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.8.6...@react-navigation/drawer@5.8.7) (2020-07-28)
+
+
+### Bug Fixes
+
+* add accessibilityState property ([#8548](https://github.com/react-navigation/react-navigation/issues/8548)) ([ce4eb7e](https://github.com/react-navigation/react-navigation/commit/ce4eb7e9273a25e4433eb82e255a58ba3bf4d632))
+
+
+
+
+
 ## [5.8.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.8.5...@react-navigation/drawer@5.8.6) (2020-07-19)
 
 **Note:** Version bump only for package @react-navigation/drawer
