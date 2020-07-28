@@ -62,6 +62,14 @@ export default function BottomTabBar({
   const shouldShowTabBar =
     focusedOptions.tabBarVisible !== false &&
     !(keyboardHidesTabBar && isKeyboardShown);
+  const tabBarShowAnimationDuration =
+    typeof focusedOptions.tabBarShowAnimationDuration === 'undefined'
+      ? 250
+      : focusedOptions.tabBarShowAnimationDuration;
+  const tabBarHideAnimationDuration =
+    typeof focusedOptions.tabBarHideAnimationDuration === 'undefined'
+      ? 200
+      : focusedOptions.tabBarHideAnimationDuration;
 
   const [isTabBarHidden, setIsTabBarHidden] = React.useState(!shouldShowTabBar);
 
@@ -73,7 +81,7 @@ export default function BottomTabBar({
     if (shouldShowTabBar) {
       Animated.timing(visible, {
         toValue: 1,
-        duration: 250,
+        duration: tabBarShowAnimationDuration,
         useNativeDriver,
       }).start(({ finished }) => {
         if (finished) {
@@ -85,11 +93,16 @@ export default function BottomTabBar({
 
       Animated.timing(visible, {
         toValue: 0,
-        duration: 200,
+        duration: tabBarHideAnimationDuration,
         useNativeDriver,
       }).start();
     }
-  }, [shouldShowTabBar, visible]);
+  }, [
+    shouldShowTabBar,
+    visible,
+    tabBarShowAnimationDuration,
+    tabBarHideAnimationDuration,
+  ]);
 
   const [layout, setLayout] = React.useState({
     height: 0,

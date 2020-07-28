@@ -105,6 +105,16 @@ export type BottomTabNavigationOptions = {
   tabBarVisible?: boolean;
 
   /**
+   * Milliseconds that it should take for the animation of a hidden tab bar to become visible.
+   */
+  tabBarShowAnimationDuration?: number;
+
+  /**
+   * Milliseconds that it should take for the animation of a visible tab bar to become hidden.
+   */
+  tabBarHideAnimationDuration?: number;
+
+  /**
    * Function which returns a React element to render as the tab bar button.
    * Renders `TouchableWithoutFeedback` by default.
    */
