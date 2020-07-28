@@ -150,7 +150,7 @@ it('gets rehydrated state from partial state', () => {
       options
     )
   ).toEqual({
-    index: 2,
+    index: 0,
     key: 'drawer-test',
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
@@ -158,7 +158,7 @@ it('gets rehydrated state from partial state', () => {
       { key: 'baz-test', name: 'baz', params: { answer: 42 } },
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
-    history: [{ type: 'route', key: 'qux-test' }],
+    history: [{ type: 'route', key: 'bar-test' }],
     stale: false,
     type: 'drawer',
   });
@@ -178,7 +178,7 @@ it('gets rehydrated state from partial state', () => {
       options
     )
   ).toEqual({
-    index: 1,
+    index: 0,
     key: 'drawer-test',
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
