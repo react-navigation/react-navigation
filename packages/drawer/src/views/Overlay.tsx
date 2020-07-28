@@ -25,7 +25,14 @@ const Overlay = React.forwardRef(function Overlay(
 ) {
   const animatedStyle = {
     opacity: interpolate(progress, {
-      inputRange: [PROGRESS_EPSILON, 1],
+      // Default input range is [PROGRESS_EPSILON, 1]
+      // On Windows, the output value is 1 when input value is out of range for some reason
+      // The default value 0 will be interpolated to 1 in this case, which is not what we want.
+      // Therefore changing input range on Windows to [0,1] instead.
+      inputRange:
+        Platform.OS === 'windows' || Platform.OS === 'macos'
+          ? [0, 1]
+          : [PROGRESS_EPSILON, 1],
       outputRange: [0, 1],
     }),
     // We don't want the user to be able to press through the overlay when drawer is open

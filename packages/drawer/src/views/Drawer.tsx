@@ -72,8 +72,6 @@ const SPRING_CONFIG = {
 const ANIMATED_ZERO = new Animated.Value(0);
 const ANIMATED_ONE = new Animated.Value(1);
 
-const PROGRESS_EPSILON = 0.05;
-
 type Binary = 0 | 1;
 
 type Renderer = (props: { progress: Animated.Node<number> }) => React.ReactNode;
@@ -495,9 +493,7 @@ export default class DrawerView extends React.Component<Props> {
     // Check if the drawer width is available to avoid division by zero
     eq(this.drawerWidth, 0),
     0,
-    Platform.OS === 'windows' || Platform.OS === 'macos'
-      ? max(PROGRESS_EPSILON, abs(divide(this.translateX, this.drawerWidth)))
-      : abs(divide(this.translateX, this.drawerWidth))
+    abs(divide(this.translateX, this.drawerWidth))
   );
 
   private handleGestureEvent = event([

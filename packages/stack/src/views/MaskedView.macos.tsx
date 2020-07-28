@@ -1,3 +1,1 @@
-import StubbedMaskedView from './MaskedView';
-
-export default StubbedMaskedView;
+export { default } from './MaskedViewStub';
