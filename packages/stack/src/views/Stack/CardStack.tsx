@@ -60,6 +60,9 @@ type Props = {
   onPageChangeStart?: () => void;
   onPageChangeConfirm?: () => void;
   onPageChangeCancel?: () => void;
+  onGestureStart?: (props: { route: Route<string> }) => void;
+  onGestureEnd?: (props: { route: Route<string> }) => void;
+  onGestureCancel?: (props: { route: Route<string> }) => void;
 };
 
 type State = {
@@ -372,6 +375,9 @@ export default class CardStack extends React.Component<Props, State> {
       onPageChangeStart,
       onPageChangeConfirm,
       onPageChangeCancel,
+      onGestureStart,
+      onGestureEnd,
+      onGestureCancel,
     } = this.props;
 
     const { scenes, layout, gestures, headerHeights } = this.state;
@@ -568,6 +574,9 @@ export default class CardStack extends React.Component<Props, State> {
                         onPageChangeStart={onPageChangeStart}
                         onPageChangeConfirm={onPageChangeConfirm}
                         onPageChangeCancel={onPageChangeCancel}
+                        onGestureStart={onGestureStart}
+                        onGestureCancel={onGestureCancel}
+                        onGestureEnd={onGestureEnd}
                         gestureResponseDistance={gestureResponseDistance}
                         headerHeight={headerHeight}
                         onHeaderHeightChange={this.handleHeaderLayout}
