@@ -200,28 +200,24 @@ export default function TabRouter({
         routes.length - 1
       );
 
-      let history = state.history?.filter((it) =>
-        routes.find((r) => r.key === it.key)
-      );
+      const history =
+        state.history?.filter((it) => routes.find((r) => r.key === it.key)) ??
+        [];
 
-      if (!history?.length) {
-        history = getRouteHistory(
-          routes,
+      return changeIndex(
+        {
+          stale: false,
+          type: 'tab',
+          key: `tab-${nanoid()}`,
           index,
-          backBehavior,
-          initialRouteName
-        );
-      }
-
-      return {
-        stale: false,
-        type: 'tab',
-        key: `tab-${nanoid()}`,
+          routeNames,
+          history,
+          routes,
+        },
         index,
-        routeNames,
-        history,
-        routes,
-      };
+        backBehavior,
+        initialRouteName
+      );
     },
 
     getStateForRouteNamesChange(state, { routeNames, routeParamList }) {
