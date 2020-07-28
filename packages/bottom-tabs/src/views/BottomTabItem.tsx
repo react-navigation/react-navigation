@@ -14,7 +14,7 @@ import { Link, Route, useTheme } from '@react-navigation/native';
 import Color from 'color';
 
 import TabBarIcon from './TabBarIcon';
-import type { BottomTabBarButtonProps } from '../types';
+import type { BottomTabBarButtonProps, LabelPosition } from '../types';
 
 type Props = {
   /**
@@ -30,7 +30,11 @@ type Props = {
    */
   label:
     | string
-    | ((props: { focused: boolean; color: string }) => React.ReactNode);
+    | ((props: {
+        focused: boolean;
+        color: string;
+        position: LabelPosition;
+      }) => React.ReactNode);
   /**
    * Icon to display for the tab.
    */
@@ -211,7 +215,11 @@ export default function BottomTabBarItem({
       );
     }
 
-    return label({ focused, color });
+    return label({
+      focused,
+      color,
+      position: horizontal ? 'beside-icon' : 'below-icon',
+    });
   };
 
   const renderIcon = ({ focused }: { focused: boolean }) => {
