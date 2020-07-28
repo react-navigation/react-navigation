@@ -139,8 +139,11 @@ it('gets rehydrated state from partial state', () => {
   expect(
     router.getRehydratedState(
       {
-        index: 4,
-        routes: [],
+        index: 1,
+        routes: [
+          { key: 'bar-0', name: 'bar' },
+          { key: 'qux-2', name: 'qux' },
+        ],
       },
       options
     )
@@ -149,11 +152,33 @@ it('gets rehydrated state from partial state', () => {
     key: 'tab-test',
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
+      { key: 'bar-0', name: 'bar' },
+      { key: 'baz-test', name: 'baz', params: { answer: 42 } },
+      { key: 'qux-2', name: 'qux', params: { name: 'Jane' } },
+    ],
+    history: [{ type: 'route', key: 'qux-2' }],
+    stale: false,
+    type: 'tab',
+  });
+
+  expect(
+    router.getRehydratedState(
+      {
+        index: 4,
+        routes: [],
+      },
+      options
+    )
+  ).toEqual({
+    index: 0,
+    key: 'tab-test',
+    routeNames: ['bar', 'baz', 'qux'],
+    routes: [
       { key: 'bar-test', name: 'bar' },
       { key: 'baz-test', name: 'baz', params: { answer: 42 } },
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
-    history: [{ type: 'route', key: 'qux-test' }],
+    history: [{ type: 'route', key: 'bar-test' }],
     stale: false,
     type: 'tab',
   });
@@ -172,7 +197,7 @@ it('gets rehydrated state from partial state', () => {
       options
     )
   ).toEqual({
-    index: 1,
+    index: 0,
     key: 'tab-test',
     routeNames: ['bar', 'baz', 'qux'],
     routes: [

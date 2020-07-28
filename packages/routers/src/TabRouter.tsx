@@ -196,12 +196,7 @@ export default function TabRouter({
       });
 
       const index = Math.min(
-        Math.max(
-          typeof state.index === 'number'
-            ? state.index
-            : routeNames.indexOf(state.routes[0].name),
-          0
-        ),
+        Math.max(routeNames.indexOf(state.routes[state?.index ?? 0]?.name), 0),
         routes.length - 1
       );
 
