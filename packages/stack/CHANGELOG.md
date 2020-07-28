@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.8.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.7.1...@react-navigation/stack@5.8.0) (2020-07-28)
+
+
+### Features
+
+* allow style overrides for HeaderBackButton ([#8626](https://github.com/react-navigation/react-navigation/issues/8626)) ([486c3de](https://github.com/react-navigation/react-navigation/commit/486c3defd27592bf4170af4962a1c66f4710b17a))
+* emit gesture navigation events from stack view ([#8524](https://github.com/react-navigation/react-navigation/issues/8524)) ([15f9b95](https://github.com/react-navigation/react-navigation/commit/15f9b9573e52666f88b0f917396496b03218f160))
+
+
+
+
+
 ## [5.7.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.7.0...@react-navigation/stack@5.7.1) (2020-07-19)
 
 **Note:** Version bump only for package @react-navigation/stack

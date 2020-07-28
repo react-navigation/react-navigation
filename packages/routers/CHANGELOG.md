@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.4.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@5.4.9...@react-navigation/routers@5.4.10) (2020-07-28)
+
+
+### Bug Fixes
+
+* make sure history is correct after rehydration ([b70e3fe](https://github.com/react-navigation/react-navigation/commit/b70e3fe61852502322b2cb46c5934800462b0267))
+* make sure index is correct when rehydrating state for tabs ([#8638](https://github.com/react-navigation/react-navigation/issues/8638)) ([1aa8219](https://github.com/react-navigation/react-navigation/commit/1aa8219021f6c231a3e150fc9bea73f12542f85c))
+
+
+
+
+
 ## [5.4.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@5.4.8...@react-navigation/routers@5.4.9) (2020-07-10)
 
 
