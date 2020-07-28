@@ -156,6 +156,7 @@ export default function DrawerItem(props: Props) {
         accessibilityTraits={focused ? ['button', 'selected'] : 'button'}
         accessibilityComponentType="button"
         accessibilityRole="button"
+        accessibilityState={{ selected: focused }}
         accessibilityStates={focused ? ['selected'] : []}
         to={to}
       >
