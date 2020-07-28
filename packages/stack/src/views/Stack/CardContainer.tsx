@@ -46,6 +46,9 @@ type Props = TransitionPreset & {
   onPageChangeStart?: () => void;
   onPageChangeConfirm?: () => void;
   onPageChangeCancel?: () => void;
+  onGestureStart?: (props: { route: Route<string> }) => void;
+  onGestureEnd?: (props: { route: Route<string> }) => void;
+  onGestureCancel?: (props: { route: Route<string> }) => void;
   gestureEnabled?: boolean;
   gestureResponseDistance?: {
     vertical?: number;
@@ -95,6 +98,9 @@ function CardContainer({
   onPageChangeCancel,
   onPageChangeConfirm,
   onPageChangeStart,
+  onGestureCancel,
+  onGestureEnd,
+  onGestureStart,
   onTransitionEnd,
   onTransitionStart,
   renderHeader,
@@ -118,6 +124,20 @@ function CardContainer({
   const handleClose = () => {
     onTransitionEnd?.({ route: scene.route }, true);
     onCloseRoute({ route: scene.route });
+  };
+
+  const handleGestureBegin = () => {
+    onPageChangeStart?.();
+    onGestureStart?.({ route: scene.route });
+  };
+
+  const handleGestureCanceled = () => {
+    onPageChangeCancel?.();
+    onGestureCancel?.({ route: scene.route });
+  };
+
+  const handleGestureEnd = () => {
+    onGestureEnd?.({ route: scene.route });
   };
 
   const handleTransitionStart = ({ closing }: { closing: boolean }) => {
@@ -179,8 +199,9 @@ function CardContainer({
       overlayEnabled={cardOverlayEnabled}
       shadowEnabled={cardShadowEnabled}
       onTransitionStart={handleTransitionStart}
-      onGestureBegin={onPageChangeStart}
-      onGestureCanceled={onPageChangeCancel}
+      onGestureBegin={handleGestureBegin}
+      onGestureCanceled={handleGestureCanceled}
+      onGestureEnd={handleGestureEnd}
       gestureEnabled={gestureEnabled}
       gestureResponseDistance={gestureResponseDistance}
       gestureVelocityImpact={gestureVelocityImpact}
