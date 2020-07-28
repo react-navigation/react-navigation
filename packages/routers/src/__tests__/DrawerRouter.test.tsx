@@ -187,8 +187,8 @@ it('gets rehydrated state from partial state', () => {
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
     history: [
-      { type: 'route', key: 'bar-test' },
       { type: 'route', key: 'qux-test' },
+      { type: 'route', key: 'bar-test' },
       { type: 'drawer' },
     ],
     stale: false,
