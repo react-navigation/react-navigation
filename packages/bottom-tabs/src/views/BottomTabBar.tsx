@@ -165,7 +165,10 @@ export default function BottomTabBar({
     left: safeAreaInsets?.left ?? defaultInsets.left,
   };
 
-  const paddingBottom = Math.max(insets.bottom - 4, 0);
+  const paddingBottom = Math.max(
+    insets.bottom - Platform.select({ ios: 4, default: 0 }),
+    0
+  );
 
   return (
     <Animated.View
