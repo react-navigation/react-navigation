@@ -62,14 +62,15 @@ export default function BottomTabBar({
   const shouldShowTabBar =
     focusedOptions.tabBarVisible !== false &&
     !(keyboardHidesTabBar && isKeyboardShown);
-  const tabBarShowAnimationDuration =
-    typeof focusedOptions.tabBarShowAnimationDuration === 'undefined'
-      ? 250
-      : focusedOptions.tabBarShowAnimationDuration;
-  const tabBarHideAnimationDuration =
-    typeof focusedOptions.tabBarHideAnimationDuration === 'undefined'
-      ? 200
-      : focusedOptions.tabBarHideAnimationDuration;
+
+  const visibilityAnimationConfigRef = React.useRef(
+    focusedOptions.tabBarVisibilityAnimationConfig
+  );
+
+  React.useEffect(() => {
+    visibilityAnimationConfigRef.current =
+      focusedOptions.tabBarVisibilityAnimationConfig;
+  });
 
   const [isTabBarHidden, setIsTabBarHidden] = React.useState(!shouldShowTabBar);
 
@@ -78,11 +79,19 @@ export default function BottomTabBar({
   );
 
   React.useEffect(() => {
+    const visibilityAnimationConfig = visibilityAnimationConfigRef.current;
+
     if (shouldShowTabBar) {
-      Animated.timing(visible, {
+      const animation =
+        visibilityAnimationConfig?.show?.animation === 'spring'
+          ? Animated.spring
+          : Animated.timing;
+
+      animation(visible, {
         toValue: 1,
-        duration: tabBarShowAnimationDuration,
         useNativeDriver,
+        duration: 250,
+        ...visibilityAnimationConfig?.show?.config,
       }).start(({ finished }) => {
         if (finished) {
           setIsTabBarHidden(false);
@@ -91,18 +100,19 @@ export default function BottomTabBar({
     } else {
       setIsTabBarHidden(true);
 
-      Animated.timing(visible, {
+      const animation =
+        visibilityAnimationConfig?.hide?.animation === 'spring'
+          ? Animated.spring
+          : Animated.timing;
+
+      animation(visible, {
         toValue: 0,
-        duration: tabBarHideAnimationDuration,
         useNativeDriver,
+        duration: 200,
+        ...visibilityAnimationConfig?.hide?.config,
       }).start();
     }
-  }, [
-    shouldShowTabBar,
-    visible,
-    tabBarShowAnimationDuration,
-    tabBarHideAnimationDuration,
-  ]);
+  }, [visible, shouldShowTabBar]);
 
   const [layout, setLayout] = React.useState({
     height: 0,
