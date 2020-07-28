@@ -406,6 +406,10 @@ export type StackHeaderLeftButtonProps = {
    * Accessibility label for the button for screen readers.
    */
   accessibilityLabel?: string;
+  /**
+   * Style object for the button.
+   */
+  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 };
 
 export type StackHeaderTitleProps = {

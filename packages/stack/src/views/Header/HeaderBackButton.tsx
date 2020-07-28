@@ -30,6 +30,7 @@ export default function HeaderBackButton({
   titleLayout,
   truncatedLabel = 'Back',
   accessibilityLabel = label && label !== 'Back' ? `${label}, back` : 'Go back',
+  style,
 }: Props) {
   const { dark, colors } = useTheme();
 
@@ -160,7 +161,7 @@ export default function HeaderBackButton({
       delayPressIn={0}
       onPress={disabled ? undefined : handlePress}
       pressColor={pressColorAndroid}
-      style={[styles.container, disabled && styles.disabled]}
+      style={[styles.container, disabled && styles.disabled, style]}
       hitSlop={Platform.select({
         ios: undefined,
         default: { top: 16, right: 16, bottom: 16, left: 16 },
