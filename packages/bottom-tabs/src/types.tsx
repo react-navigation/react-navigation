@@ -55,6 +55,26 @@ export type BottomTabScreenProps<
   route: RouteProp<ParamList, RouteName>;
 };
 
+export type TimingKeyboardAnimationConfig = {
+  animation: 'timing';
+  config?: Omit<
+    Partial<Animated.TimingAnimationConfig>,
+    'toValue' | 'useNativeDriver'
+  >;
+};
+
+export type SpringKeyboardAnimationConfig = {
+  animation: 'spring';
+  config?: Omit<
+    Partial<Animated.SpringAnimationConfig>,
+    'toValue' | 'useNativeDriver'
+  >;
+};
+
+export type TabBarVisibilityAnimationConfig =
+  | TimingKeyboardAnimationConfig
+  | SpringKeyboardAnimationConfig;
+
 export type BottomTabNavigationOptions = {
   /**
    * Title text for the screen.
@@ -105,14 +125,12 @@ export type BottomTabNavigationOptions = {
   tabBarVisible?: boolean;
 
   /**
-   * Milliseconds that it should take for the animation of a hidden tab bar to become visible.
+   * Animation config for showing and hiding the tab bar.
    */
-  tabBarShowAnimationDuration?: number;
-
-  /**
-   * Milliseconds that it should take for the animation of a visible tab bar to become hidden.
-   */
-  tabBarHideAnimationDuration?: number;
+  tabBarVisibilityAnimationConfig?: {
+    show?: TabBarVisibilityAnimationConfig;
+    hide?: TabBarVisibilityAnimationConfig;
+  };
 
   /**
    * Function which returns a React element to render as the tab bar button.
