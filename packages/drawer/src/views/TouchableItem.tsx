@@ -1,11 +1,9 @@
 /**
- * TouchableItem renders a touchable that looks native on both iOS and Android.
+ * TouchableItem provides an abstraction on top of TouchableNativeFeedback and
+ * TouchableOpacity to handle platform differences.
  *
- * It provides an abstraction on top of TouchableNativeFeedback and
- * TouchableOpacity.
- *
- * On iOS you can pass the props of TouchableOpacity, on Android pass the props
- * of TouchableNativeFeedback.
+ * On Android, you can pass the props of TouchableNativeFeedback.
+ * On other platforms, you can pass the props of TouchableOpacity.
  */
 import * as React from 'react';
 import {
@@ -13,52 +11,53 @@ import {
   TouchableNativeFeedback,
   TouchableOpacity,
   View,
-  TouchableWithoutFeedback,
+  ViewProps,
 } from 'react-native';
+
+export type Props = ViewProps & {
+  pressColor?: string;
+  disabled?: boolean;
+  borderless?: boolean;
+  delayPressIn?: number;
+  onPress?: () => void;
+  children: React.ReactNode;
+};
 
 const ANDROID_VERSION_LOLLIPOP = 21;
 
-type Props = React.ComponentProps<typeof TouchableWithoutFeedback> & {
-  pressColor: string;
-  borderless: boolean;
-};
-
-export default class TouchableItem extends React.Component<Props> {
-  static defaultProps = {
-    borderless: false,
-    pressColor: 'rgba(0, 0, 0, .32)',
-  };
-
-  render() {
-    /*
-     * TouchableNativeFeedback.Ripple causes a crash on old Android versions,
-     * therefore only enable it on Android Lollipop and above.
-     *
-     * All touchables on Android should have the ripple effect according to
-     * platform design guidelines.
-     * We need to pass the background prop to specify a borderless ripple effect.
-     */
-    if (
-      Platform.OS === 'android' &&
-      Platform.Version >= ANDROID_VERSION_LOLLIPOP
-    ) {
-      const { style, ...rest } = this.props;
-      return (
-        <TouchableNativeFeedback
-          {...rest}
-          style={null}
-          background={TouchableNativeFeedback.Ripple(
-            this.props.pressColor,
-            this.props.borderless
-          )}
-        >
-          <View style={style}>{React.Children.only(this.props.children)}</View>
-        </TouchableNativeFeedback>
-      );
-    }
-
+export default function TouchableItem({
+  borderless = false,
+  pressColor = 'rgba(0, 0, 0, .32)',
+  style,
+  children,
+  ...rest
+}: Props) {
+  /*
+   * TouchableNativeFeedback.Ripple causes a crash on old Android versions,
+   * therefore only enable it on Android Lollipop and above.
+   *
+   * All touchables on Android should have the ripple effect according to
+   * platform design guidelines.
+   * We need to pass the background prop to specify a borderless ripple effect.
+   */
+  if (
+    Platform.OS === 'android' &&
+    Platform.Version >= ANDROID_VERSION_LOLLIPOP
+  ) {
     return (
-      <TouchableOpacity {...this.props}>{this.props.children}</TouchableOpacity>
+      <TouchableNativeFeedback
+        {...rest}
+        useForeground={TouchableNativeFeedback.canUseNativeForeground()}
+        background={TouchableNativeFeedback.Ripple(pressColor, borderless)}
+      >
+        <View style={style}>{React.Children.only(children)}</View>
+      </TouchableNativeFeedback>
+    );
+  } else {
+    return (
+      <TouchableOpacity style={style} {...rest}>
+        {children}
+      </TouchableOpacity>
     );
   }
 }
