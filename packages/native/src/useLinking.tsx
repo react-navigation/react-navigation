@@ -25,8 +25,19 @@ const createMemoryHistory = () => {
   let index = 0;
   let items: HistoryRecord[] = [];
 
-  // Whether there's a `history.go(n)` pending
-  let pending = false;
+  // Pending callbacks for `history.go(n)`
+  // We might modify the callback stored if it was interrupted, so we have a ref to identify it
+  const pending: { ref: unknown; cb: (interrupted?: boolean) => void }[] = [];
+
+  const interrupt = () => {
+    // If another history operation was performed we need to interrupt existing ones
+    // This makes sure that calls such as `history.replace` after `history.go` don't happen
+    // Since otherwise it won't be correct if something else has changed
+    pending.forEach((it) => {
+      const cb = it.cb;
+      it.cb = () => cb(true);
+    });
+  };
 
   const history = {
     get index(): number {
@@ -61,6 +72,8 @@ const createMemoryHistory = () => {
     },
 
     push({ path, state }: { path: string; state: NavigationState }) {
+      interrupt();
+
       const id = nanoid();
 
       // When a new entry is pushed, all the existing entries after index will be inaccessible
@@ -78,6 +91,8 @@ const createMemoryHistory = () => {
     },
 
     replace({ path, state }: { path: string; state: NavigationState }) {
+      interrupt();
+
       const id = window.history.state?.id ?? nanoid();
 
       if (items.length) {
@@ -97,6 +112,8 @@ const createMemoryHistory = () => {
     // - the `popstate` event fires before the next frame after calling `history.go(n)`.
     // This method differs from `history.go(n)` in the sense that it'll go back as many steps it can.
     go(n: number) {
+      interrupt();
+
       if (n > 0) {
         // We shouldn't go forward more than available index
         n = Math.min(n, items.length - 1);
@@ -112,10 +129,20 @@ const createMemoryHistory = () => {
 
       index += n;
 
-      return new Promise((resolve) => {
-        pending = true;
+      // When we call `history.go`, `popstate` will fire when there's history to go back to
+      // So we need to somehow handle following cases:
+      // - There's history to go back, `history.go` is called, and `popstate` fires
+      // - `history.go` is called multiple times, we need to resolve on respective `popstate`
+      // - No history to go back, but `history.go` was called, browser has no API to detect it
+      return new Promise((resolve, reject) => {
+        const done = (interrupted?: boolean) => {
+          clearTimeout(timer);
 
-        const done = () => {
+          if (interrupted) {
+            reject(new Error('History was changed during navigation.'));
+            return;
+          }
+
           // There seems to be a bug in Chrome regarding updating the title
           // If we set a title just before calling `history.go`, the title gets lost
           // However the value of `document.title` is still what we set it to
@@ -129,17 +156,33 @@ const createMemoryHistory = () => {
           window.document.title = '';
           window.document.title = title;
 
-          pending = false;
-
-          window.removeEventListener('popstate', done);
           resolve();
         };
 
-        // Resolve the promise in the next frame
-        // If `popstate` hasn't fired by then, then it wasn't handled
-        requestAnimationFrame(() => requestAnimationFrame(done));
+        pending.push({ ref: done, cb: done });
 
-        window.addEventListener('popstate', done);
+        // If navigation didn't happen within 100ms, assume that it won't happen
+        // This may not be accurate, but hopefully it won't take so much time
+        // In Chrome, navigation seems to happen instantly in next microtask
+        // But on Firefox, it seems to take much longer, around 50ms from our testing
+        // We're using a hacky timeout since there doesn't seem to be way to know for sure
+        const timer = setTimeout(() => {
+          const index = pending.findIndex((it) => it.ref === done);
+
+          if (index > -1) {
+            pending[index].cb();
+            pending.splice(index, 1);
+          }
+        }, 100);
+
+        const onPopState = () => {
+          const last = pending.pop();
+
+          window.removeEventListener('popstate', onPopState);
+          last?.cb();
+        };
+
+        window.addEventListener('popstate', onPopState);
         window.history.go(n);
       });
     },
@@ -149,7 +192,7 @@ const createMemoryHistory = () => {
     // Here we normalize it so that only external changes (e.g. user pressing back/forward) trigger the listener
     listen(listener: () => void) {
       const onPopState = () => {
-        if (pending) {
+        if (pending.length) {
           // This was triggered by `history.go(n)`, we shouldn't call the listener
           return;
         }
@@ -439,18 +482,22 @@ export default function useLinking(
           const nextIndex = history.backIndex({ path });
           const currentIndex = history.index;
 
-          if (nextIndex !== -1 && nextIndex < currentIndex) {
-            // An existing entry for this path exists and it's less than current index, go back to that
-            await history.go(nextIndex - currentIndex);
-          } else {
-            // We couldn't find an existing entry to go back to, so we'll go back by the delta
-            // This won't be correct if multiple routes were pushed in one go before
-            // Usually this shouldn't happen and this is a fallback for that
-            await history.go(historyDelta);
-          }
+          try {
+            if (nextIndex !== -1 && nextIndex < currentIndex) {
+              // An existing entry for this path exists and it's less than current index, go back to that
+              await history.go(nextIndex - currentIndex);
+            } else {
+              // We couldn't find an existing entry to go back to, so we'll go back by the delta
+              // This won't be correct if multiple routes were pushed in one go before
+              // Usually this shouldn't happen and this is a fallback for that
+              await history.go(historyDelta);
+            }
 
-          // Store the updated state as well as fix the path if incorrect
-          history.replace({ path, state });
+            // Store the updated state as well as fix the path if incorrect
+            history.replace({ path, state });
+          } catch (e) {
+            // The navigation was interrupted
+          }
         } else {
           // If history length is unchanged, we want to replaceState
           history.replace({ path, state });
