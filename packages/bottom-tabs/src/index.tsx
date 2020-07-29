@@ -18,4 +18,5 @@ export type {
   BottomTabScreenProps,
   BottomTabBarProps,
   BottomTabBarOptions,
+  BottomTabBarButtonProps,
 } from './types';
