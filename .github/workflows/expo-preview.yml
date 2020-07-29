@@ -55,7 +55,7 @@ jobs:
               repo: context.repo.repo,
             });
 
-            if (comments.some(comment => comment.body === body)) {
+            if (comments.data.some(comment => comment.body === body)) {
               return;
             }
 
