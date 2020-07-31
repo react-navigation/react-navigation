@@ -12,6 +12,12 @@ module.exports = async function (env, argv) {
 
   config.context = path.resolve(__dirname, '..');
 
+  config.resolveLoader = {
+    modules: [
+      path.resolve(node_modules, '@expo/webpack-config', 'node_modules'),
+    ],
+  };
+
   config.module.rules.push({
     test: /\.(js|ts|tsx)$/,
     include: /(packages|example)\/.+/,
