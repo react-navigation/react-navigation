@@ -63,3 +63,18 @@ jobs:
               repo: context.repo.repo,
               body: "Hey! Thanks for opening the issue. The issue tracker is intended for only tracking bug reports. Seems you have a feature request. Please post the feature request on [Canny](https://react-navigation.canny.io/feature-requests). This lets other users upvote your feature request and helps us prioritize the most requested features.\n\nYou can also open a detailed proposal in our [RFC repo](https://github.com/react-navigation/rfcs) for discussion."
             })
+
+  feature-request:
+    runs-on: ubuntu-latest
+    if: github.event.label.name == 'library:react-native-screens'
+    steps:
+      - uses: actions/github-script@v2
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Hey! Thanks for opening the issue. The issue tracker is intended for only tracking bug reports in React Navigation. Seems you have an issue connected with `native-stack` navigator or `react-native-screens` library. Please post your issue in [this repo](https://github.com/software-mansion/react-native-screens) then."
+            })
