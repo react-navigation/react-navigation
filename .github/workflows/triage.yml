@@ -63,3 +63,63 @@ jobs:
               repo: context.repo.repo,
               body: "Hey! Thanks for opening the issue. The issue tracker is intended for only tracking bug reports. Seems you have a feature request. Please post the feature request on [Canny](https://react-navigation.canny.io/feature-requests). This lets other users upvote your feature request and helps us prioritize the most requested features.\n\nYou can also open a detailed proposal in our [RFC repo](https://github.com/react-navigation/rfcs) for discussion."
             })
+
+  react-native-screens:
+    runs-on: ubuntu-latest
+    if: github.event.label.name == 'library:react-native-screens'
+    steps:
+      - uses: actions/github-script@v2
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Hey! Thanks for opening the issue. The issue tracker is intended for only tracking bug reports in React Navigation. Seems you have an issue related to `native-stack` navigator or `react-native-screens` library. Please post your issue in [this repo](https://github.com/software-mansion/react-native-screens) so that it's notified to the maintainers of that library."
+            })
+
+  react-native-reanimated:
+    runs-on: ubuntu-latest
+    if: github.event.label.name == 'library:react-native-reanimated'
+    steps:
+      - uses: actions/github-script@v2
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Hey! Thanks for opening the issue. The issue tracker is intended for only tracking bug reports in React Navigation. Seems you have an issue related to `react-native-reanimated` library. Please post your issue in [this repo](https://github.com/software-mansion/react-native-reanimated) so that it's notified to the maintainers of that library."
+            })
+
+  react-native-gesture-handler:
+    runs-on: ubuntu-latest
+    if: github.event.label.name == 'library:react-native-gesture-handler'
+    steps:
+      - uses: actions/github-script@v2
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Hey! Thanks for opening the issue. The issue tracker is intended for only tracking bug reports in React Navigation. Seems you have an issue related to `react-native-gesture-handler` library. Please post your issue in [this repo](https://github.com/software-mansion/react-native-gesture-handler) so that it's notified to the maintainers of that library."
+            })
+
+  react-native-safe-area-context:
+    runs-on: ubuntu-latest
+    if: github.event.label.name == 'library:react-native-safe-area-context'
+    steps:
+      - uses: actions/github-script@v2
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Hey! Thanks for opening the issue. The issue tracker is intended for only tracking bug reports in React Navigation. Seems you have an issue related to `react-native-safe-area-context` library. Please post your issue in [this repo](https://github.com/th3rdwave/react-native-safe-area-context) so that it's notified to the maintainers of that library."
+            })
