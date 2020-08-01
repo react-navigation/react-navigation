@@ -13,7 +13,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { useSafeArea } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { BottomTabBarProps } from '../types';
 import useIsKeyboardShown from '../utils/useIsKeyboardShown';
 import useWindowDimensions from '../utils/useWindowDimensions';
@@ -165,7 +165,7 @@ export default function BottomTabBar({
     }
   };
 
-  const defaultInsets = useSafeArea();
+  const defaultInsets = useSafeAreaInsets();
 
   const insets = {
     top: safeAreaInsets?.top ?? defaultInsets.top,
