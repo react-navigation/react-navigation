@@ -1,24 +1,23 @@
-import React from 'react';
 import {
-  View,
-  Animated,
-  StyleSheet,
-  Platform,
-  LayoutChangeEvent,
-} from 'react-native';
-import {
+  CommonActions,
   NavigationContext,
   NavigationRouteContext,
-  CommonActions,
-  useTheme,
   useLinkBuilder,
+  useTheme,
 } from '@react-navigation/native';
+import React from 'react';
+import {
+  Animated,
+  LayoutChangeEvent,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
-
-import BottomTabItem from './BottomTabItem';
-import useWindowDimensions from '../utils/useWindowDimensions';
-import useIsKeyboardShown from '../utils/useIsKeyboardShown';
 import type { BottomTabBarProps } from '../types';
+import useIsKeyboardShown from '../utils/useIsKeyboardShown';
+import useWindowDimensions from '../utils/useWindowDimensions';
+import BottomTabItem from './BottomTabItem';
 
 type Props = BottomTabBarProps & {
   activeTintColor?: string;
