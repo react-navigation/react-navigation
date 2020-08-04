@@ -39,7 +39,6 @@ export default class BorderlessButton extends React.Component<Props> {
     const { children, style, enabled, ...rest } = this.props;
 
     return (
-      // @ts-expect-error: the Animated.createAnimatedComponent types don't work properly
       <AnimatedBaseButton
         {...rest}
         onActiveStateChange={this.handleActiveStateChange}

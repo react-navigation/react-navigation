@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { act, render } from 'react-native-testing-library';
+import { act, render } from '@testing-library/react-native';
 import {
   Router,
   DefaultRouterOptions,

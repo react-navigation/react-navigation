@@ -9,7 +9,6 @@ import {
   ScaledSize,
   Linking,
 } from 'react-native';
-// eslint-disable-next-line import/no-unresolved
 import { enableScreens } from 'react-native-screens';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {

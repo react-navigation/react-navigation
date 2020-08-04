@@ -41,18 +41,18 @@
     "clean": "del lib"
   },
   "devDependencies": {
-    "@react-native-community/bob": "^0.15.1",
+    "@react-native-community/bob": "^0.16.2",
     "@react-navigation/native": "^5.7.2",
-    "@types/react": "^16.9.36",
-    "@types/react-native": "^0.62.7",
+    "@testing-library/react-native": "^7.0.1",
+    "@types/react": "^16.9.44",
+    "@types/react-native": "^0.63.4",
     "@types/react-native-vector-icons": "^6.4.5",
     "del-cli": "^3.0.1",
     "react": "~16.9.0",
     "react-native": "~0.62.2",
-    "react-native-paper": "^3.10.1",
-    "react-native-testing-library": "^2.1.0",
-    "react-native-vector-icons": "^6.6.0",
-    "typescript": "^3.9.5"
+    "react-native-paper": "^4.0.1",
+    "react-native-vector-icons": "^7.0.0",
+    "typescript": "^3.9.7"
   },
   "peerDependencies": {
     "@react-navigation/native": "^5.0.5",

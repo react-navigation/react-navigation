@@ -124,7 +124,7 @@ export type StackHeaderOptions = {
   /**
    * Style object for the title component.
    */
-  headerTitleStyle?: React.ComponentProps<typeof Animated.Text>['style'];
+  headerTitleStyle?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
   /**
    * Style object for the container of the `headerTitle` component, for example to add padding.
    * By default, `headerTitleContainerStyle` is with an absolute position style and offsets both `left` and `right`.
@@ -285,7 +285,9 @@ export type StackNavigationOptions = StackHeaderOptions &
     /**
      * Function that returns a React Element to display as a overlay for the card.
      */
-    cardOverlay?: (props: { style: StyleProp<ViewStyle> }) => React.ReactNode;
+    cardOverlay?: (props: {
+      style: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+    }) => React.ReactNode;
     /**
      * Style object for the card in stack.
      * You can provide a custom background color to use instead of the default background here.
@@ -421,7 +423,7 @@ export type StackHeaderLeftButtonProps = {
   /**
    * Style object for the button.
    */
-  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+  style?: StyleProp<ViewStyle>;
 };
 
 export type StackHeaderTitleProps = {
@@ -444,7 +446,7 @@ export type StackHeaderTitleProps = {
   /**
    * Style object for the title element.
    */
-  style?: React.ComponentProps<typeof Animated.Text>['style'];
+  style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
 };
 
 export type TransitionSpec =

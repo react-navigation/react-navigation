@@ -6,7 +6,6 @@ import {
   TabNavigationState,
   useTheme,
 } from '@react-navigation/native';
-// eslint-disable-next-line import/no-unresolved
 import { ScreenContainer } from 'react-native-screens';
 
 import SafeAreaProviderCompat from './SafeAreaProviderCompat';

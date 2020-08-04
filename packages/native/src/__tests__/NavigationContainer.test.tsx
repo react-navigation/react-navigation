@@ -7,7 +7,7 @@ import {
   NavigationHelpersContext,
   NavigationContainerRef,
 } from '@react-navigation/core';
-import { act, render } from 'react-native-testing-library';
+import { act, render } from '@testing-library/react-native';
 import NavigationContainer from '../NavigationContainer';
 import window from '../__mocks__/window';
 

@@ -223,7 +223,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
       warnIfHeaderStylesDefined(unsafeStyles);
     }
 
-    const safeStyles = {
+    const safeStyles: ViewStyle = {
       backgroundColor,
       borderBottomColor,
       borderBottomEndRadius,
@@ -249,6 +249,7 @@ export default class HeaderSegment extends React.Component<Props, State> {
       borderTopStartRadius,
       borderTopWidth,
       borderWidth,
+      // @ts-expect-error: boxShadow is only for Web
       boxShadow,
       elevation,
       shadowColor,

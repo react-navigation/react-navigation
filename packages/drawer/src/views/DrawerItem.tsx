@@ -157,6 +157,7 @@ export default function DrawerItem(props: Props) {
         accessibilityComponentType="button"
         accessibilityRole="button"
         accessibilityState={{ selected: focused }}
+        // @ts-expect-error: keep for compatibility with older React Native versions
         accessibilityStates={focused ? ['selected'] : []}
         to={to}
       >

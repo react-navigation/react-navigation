@@ -26,7 +26,9 @@ type Props = TransitionPreset & {
   safeAreaInsetRight: number;
   safeAreaInsetBottom: number;
   safeAreaInsetLeft: number;
-  cardOverlay?: (props: { style: StyleProp<ViewStyle> }) => React.ReactNode;
+  cardOverlay?: (props: {
+    style: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+  }) => React.ReactNode;
   cardOverlayEnabled?: boolean;
   cardShadowEnabled?: boolean;
   cardStyle?: StyleProp<ViewStyle>;
