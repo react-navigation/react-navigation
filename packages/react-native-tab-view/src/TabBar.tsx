@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   StyleSheet,
   View,
-  ScrollView,
   StyleProp,
   ViewStyle,
   TextStyle,
@@ -139,7 +138,7 @@ export default class TabBar<T extends Route> extends React.Component<
 
   private scrollAmount = new Animated.Value(0);
 
-  private scrollView: ScrollView | undefined;
+  private scrollViewRef = React.createRef<Animated.ScrollView>();
 
   private cancelNextFrameCb: (() => void) | undefined = undefined;
 
@@ -270,11 +269,18 @@ export default class TabBar<T extends Route> extends React.Component<
 
   private resetScroll = (index: number) => {
     if (this.props.scrollEnabled) {
-      this.scrollView &&
-        this.scrollView.scrollTo({
-          x: this.getScrollAmount(this.props, this.state, index),
-          animated: true,
-        });
+      // getNode() is not necessary in newer versions of React Native
+      const scrollView =
+        // @ts-ignore
+        typeof this.scrollViewRef.current?.scrollTo === 'function'
+          ? this.scrollViewRef.current
+          : this.scrollViewRef.current?.getNode();
+
+      // @ts-ignore
+      scrollView?.scrollTo({
+        x: this.getScrollAmount(this.props, this.state, index),
+        animated: true,
+      });
     }
   };
 
@@ -413,10 +419,7 @@ export default class TabBar<T extends Route> extends React.Component<
                 },
               },
             ])}
-            ref={(el) => {
-              // @ts-ignore
-              this.scrollView = el?.getNode();
-            }}
+            ref={this.scrollViewRef}
           >
             {routes.map((route: T) => {
               const props: TabBarItemProps<T> & { key: string } = {

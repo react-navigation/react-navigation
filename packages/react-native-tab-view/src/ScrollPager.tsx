@@ -85,7 +85,15 @@ export default class ScrollPager<T extends Route> extends React.Component<
 
   private scrollTo = (x: number, animated = true) => {
     if (this.scrollViewRef.current) {
-      this.scrollViewRef.current.getNode().scrollTo({
+      // getNode() is not necessary in newer versions of React Native
+      const scrollView =
+        // @ts-ignore
+        typeof this.scrollViewRef.current?.scrollTo === 'function'
+          ? this.scrollViewRef.current
+          : this.scrollViewRef.current?.getNode();
+
+      // @ts-ignore
+      scrollView?.scrollTo({
         x,
         animated: animated,
       });
