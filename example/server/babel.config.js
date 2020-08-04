@@ -18,14 +18,8 @@ const alias = Object.fromEntries(
 );
 
 module.exports = {
-  presets: [
-    '@babel/preset-env',
-    '@babel/preset-flow',
-    '@babel/preset-typescript',
-    '@babel/preset-react',
-  ],
+  presets: ['module:metro-react-native-babel-preset'],
   plugins: [
-    '@babel/plugin-proposal-class-properties',
     [
       'module-resolver',
       {
