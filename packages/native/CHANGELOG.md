@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.7.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@5.7.2...@react-navigation/native@5.7.3) (2020-08-04)
+
+
+### Bug Fixes
+
+* make sure we don't exit the page when going back ([2a48b91](https://github.com/react-navigation/react-navigation/commit/2a48b917ecaf5b9adcfb5e31fb5bc787d114af23))
+* wait longer for history.go and handle interruptions ([b1f1377](https://github.com/react-navigation/react-navigation/commit/b1f13774295465942aafa1b0ff611b9eebccbd77))
+
+
+
+
+
 ## [5.7.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@5.7.1...@react-navigation/native@5.7.2) (2020-07-28)
 
 **Note:** Version bump only for package @react-navigation/native
