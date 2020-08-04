@@ -16,7 +16,7 @@ import {
 
 export type Props = ViewProps & {
   pressColor?: string;
-  disabled?: boolean;
+  disabled?: boolean | null;
   borderless?: boolean;
   delayPressIn?: number;
   onPress?: () => void;

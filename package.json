@@ -25,19 +25,19 @@
     "example": "yarn --cwd example"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^8.3.4",
-    "@types/jest": "^26.0.0",
-    "babel-jest": "^26.0.1",
-    "codecov": "^3.7.0",
-    "commitlint": "^8.3.5",
-    "eslint": "^7.2.0",
+    "@commitlint/config-conventional": "^9.1.1",
+    "@types/jest": "^26.0.8",
+    "babel-jest": "^26.2.2",
+    "codecov": "^3.7.2",
+    "commitlint": "^9.1.0",
+    "eslint": "^7.6.0",
     "eslint-config-satya164": "^3.1.7",
     "husky": "^4.2.5",
-    "jest": "^26.0.1",
+    "jest": "^26.2.2",
     "lerna": "^3.22.1",
-    "metro-react-native-babel-preset": "^0.59.0",
+    "metro-react-native-babel-preset": "^0.61.0",
     "prettier": "^2.0.5",
-    "typescript": "^3.9.5"
+    "typescript": "^3.9.7"
   },
   "resolutions": {
     "react": "~16.9.0",

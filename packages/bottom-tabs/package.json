@@ -40,18 +40,18 @@
     "react-native-iphone-x-helper": "^1.2.1"
   },
   "devDependencies": {
-    "@react-native-community/bob": "^0.15.1",
+    "@react-native-community/bob": "^0.16.2",
     "@react-navigation/native": "^5.7.2",
+    "@testing-library/react-native": "^7.0.1",
     "@types/color": "^3.0.1",
-    "@types/react": "^16.9.36",
-    "@types/react-native": "^0.62.7",
+    "@types/react": "^16.9.44",
+    "@types/react-native": "^0.63.4",
     "del-cli": "^3.0.1",
     "react": "~16.9.0",
     "react-native": "~0.62.2",
-    "react-native-safe-area-context": "~3.0.0",
-    "react-native-screens": "^2.7.0",
-    "react-native-testing-library": "^2.1.0",
-    "typescript": "^3.9.5"
+    "react-native-safe-area-context": "~3.1.1",
+    "react-native-screens": "^2.9.0",
+    "typescript": "^3.9.7"
   },
   "peerDependencies": {
     "@react-navigation/native": "^5.0.5",

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render, act } from 'react-native-testing-library';
+import { render, act } from '@testing-library/react-native';
 import useEventEmitter from '../useEventEmitter';
 import useNavigationCache from '../useNavigationCache';
 import useNavigationBuilder from '../useNavigationBuilder';

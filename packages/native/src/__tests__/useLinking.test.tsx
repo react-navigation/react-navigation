@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render, RenderAPI } from 'react-native-testing-library';
+import { render, RenderAPI } from '@testing-library/react-native';
 import type { NavigationContainerRef } from '@react-navigation/core';
 import useLinking from '../useLinking';
 

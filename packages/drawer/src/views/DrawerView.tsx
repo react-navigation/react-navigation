@@ -7,7 +7,6 @@ import {
   BackHandler,
   NativeEventSubscription,
 } from 'react-native';
-// eslint-disable-next-line import/no-unresolved
 import { ScreenContainer } from 'react-native-screens';
 import {
   NavigationHelpersContext,
