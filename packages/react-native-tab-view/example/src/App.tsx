@@ -168,6 +168,7 @@ export default class ExampleList extends React.Component<any, State> {
     return (
       <View style={styles.container}>
         <StatusBar
+          translucent
           barStyle={Platform.OS === 'ios' ? statusBarStyle : 'light-content'}
         />
         <KeepAwake />

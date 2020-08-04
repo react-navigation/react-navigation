@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.0",
-    "@react-native-community/async-storage": "^1.11.0",
-    "expo": "^38.0.0",
+    "@react-native-community/async-storage": "~1.11.0",
+    "expo": "^38.0.9",
     "expo-asset": "~8.1.7",
     "expo-constants": "~9.1.1",
     "expo-keep-awake": "~8.2.1",
@@ -25,12 +25,12 @@
     "scheduler": "^0.19.1"
   },
   "devDependencies": {
-    "@types/react": "~16.9.41",
-    "@types/react-native": "~0.63.1",
+    "@types/react": "~16.9.44",
+    "@types/react-native": "~0.63.4",
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-preset-expo": "^8.2.3",
-    "expo-cli": "^3.22.3",
-    "typescript": "~3.9.5"
+    "expo-cli": "^3.23.1",
+    "typescript": "~3.9.7"
   },
   "resolutions": {
     "@babel/runtime": "^7.9.0"
