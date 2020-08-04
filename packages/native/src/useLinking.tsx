@@ -118,9 +118,9 @@ const createMemoryHistory = () => {
         // We shouldn't go forward more than available index
         n = Math.min(n, items.length - 1);
       } else if (n < 0) {
-        // We shouldn't go back more than the index
+        // We shouldn't go back more than the 0 index
         // Otherwise we'll exit the page
-        n = Math.max(n, -Math.max(index + 1, 1));
+        n = index + n < 0 ? -index : n;
       }
 
       if (n === 0) {
