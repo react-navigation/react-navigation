@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.9.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.8.7...@react-navigation/drawer@5.9.0) (2020-08-04)
+
+
+### Bug Fixes
+
+* fix TouchableItem opacity on press on iOS ([40e2dba](https://github.com/react-navigation/react-navigation/commit/40e2dbaecffc43df41b7951f152bbcb4b7104bb1))
+
+
+### Features
+
+* add Windows and macOS support ([#8570](https://github.com/react-navigation/react-navigation/issues/8570)) ([8468c46](https://github.com/react-navigation/react-navigation/commit/8468c46cab01fe3bf0cf8a0ab978d16f4e78aca0))
+
+
+
+
+
 ## [5.8.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.8.6...@react-navigation/drawer@5.8.7) (2020-07-28)
 
 

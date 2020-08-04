@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.8.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.7.3...@react-navigation/bottom-tabs@5.8.0) (2020-08-04)
+
+
+### Bug Fixes
+
+* only offset bottom tab on iOS. fixes [#8642](https://github.com/react-navigation/react-navigation/issues/8642) ([d979dfd](https://github.com/react-navigation/react-navigation/commit/d979dfd634c3969342803f7d988ff3439b4fe9e5))
+
+
+### Features
+
+* allow full configuration of tab bar hide animation ([0b62730](https://github.com/react-navigation/react-navigation/commit/0b627304aa9fbb48de7a674ff8dfbbc495f5efe6))
+* expose `BottomTabBarButtonProps` type ([#8649](https://github.com/react-navigation/react-navigation/issues/8649)) ([a35ac81](https://github.com/react-navigation/react-navigation/commit/a35ac813b6b0816cef93b54792f2164f9b82d55e))
+* user can specify how long tab hide animation should take ([#8587](https://github.com/react-navigation/react-navigation/issues/8587)) ([b0cafb3](https://github.com/react-navigation/react-navigation/commit/b0cafb3c4928df32bb9f866649ad0fbf1ad53d95))
+
+
+
+
+
 ## [5.7.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.7.2...@react-navigation/bottom-tabs@5.7.3) (2020-07-28)
 
 
