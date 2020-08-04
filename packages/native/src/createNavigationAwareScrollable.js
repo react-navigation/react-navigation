@@ -95,8 +95,10 @@ export default function createNavigationAwareScrollable(Component) {
     };
 
     scrollWithoutAnimationTo = (...args) => {
-      console.warn('`scrollWithoutAnimationTo` is deprecated. Use `scrollTo` instead');
-      return this._innerRef.getNode().scrollTo({...args, animated: false});
+      console.warn(
+        '`scrollWithoutAnimationTo` is deprecated. Use `scrollTo` instead'
+      );
+      return this._innerRef.getNode().scrollTo({ ...args, animated: false });
     };
 
     flashScrollIndicators = (...args) => {
