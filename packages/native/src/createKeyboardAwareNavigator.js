@@ -9,8 +9,8 @@ export default (Navigator, navigatorConfig) =>
 
     _handleGestureBegin = () => {
       this._previouslyFocusedTextInput = TextInput.State.currentlyFocusedInput
-      ? TextInput.State.currentlyFocusedInput()
-      : TextInput.State.currentlyFocusedField();
+        ? TextInput.State.currentlyFocusedInput()
+        : TextInput.State.currentlyFocusedField();
       if (this._previouslyFocusedTextInput) {
         TextInput.State.blurTextInput(this._previouslyFocusedTextInput);
       }
@@ -35,8 +35,8 @@ export default (Navigator, navigatorConfig) =>
       // should revisit this after 2.0 release.
       if (transitionProps.index !== prevTransitionProps.index) {
         const currentField = TextInput.State.currentlyFocusedInput
-        ? TextInput.State.currentlyFocusedInput()
-        : TextInput.State.currentlyFocusedField();
+          ? TextInput.State.currentlyFocusedInput()
+          : TextInput.State.currentlyFocusedField();
         if (currentField) {
           TextInput.State.blurTextInput(currentField);
         }
