@@ -14,6 +14,14 @@ describe('StateUtils', () => {
       key: 'a',
       routeName,
     });
+  });
+
+  it('returns null when getting an unknown route', () => {
+    const state = {
+      index: 0,
+      routes: [{ key: 'a', routeName }],
+      isTransitioning: false,
+    };
     expect(NavigationStateUtils.get(state, 'b')).toBe(null);
   });
 
@@ -28,7 +36,15 @@ describe('StateUtils', () => {
     };
     expect(NavigationStateUtils.indexOf(state, 'a')).toBe(0);
     expect(NavigationStateUtils.indexOf(state, 'b')).toBe(1);
-    expect(NavigationStateUtils.indexOf(state, 'c')).toBe(-1);
+  });
+
+  it('returns -1 when getting an unknown route index', () => {
+    const state = {
+      index: 1,
+      routes: [{ key: 'a', routeName }],
+      isTransitioning: false,
+    };
+    expect(NavigationStateUtils.indexOf(state, 'b')).toBe(-1);
   });
 
   it('has a route', () => {
@@ -150,6 +166,18 @@ describe('StateUtils', () => {
     );
   });
 
+  it('jumps to the current key', () => {
+    const state = {
+      index: 0,
+      routes: [
+        { key: 'a', routeName },
+        { key: 'b', routeName },
+      ],
+      isTransitioning: false,
+    };
+    expect(NavigationStateUtils.jumpTo(state, 'a')).toBe(state);
+  });
+
   it('jumps to new key', () => {
     const state = {
       index: 0,
@@ -167,7 +195,6 @@ describe('StateUtils', () => {
       ],
       isTransitioning: false,
     };
-    expect(NavigationStateUtils.jumpTo(state, 'a')).toBe(state);
     expect(NavigationStateUtils.jumpTo(state, 'b')).toEqual(newState);
   });
 
@@ -203,7 +230,18 @@ describe('StateUtils', () => {
       isTransitioning: false,
     };
     expect(NavigationStateUtils.back(state)).toEqual(newState);
-    expect(NavigationStateUtils.back(newState)).toBe(newState);
+  });
+
+  it('does not move backwards when the active route is the first', () => {
+    const state = {
+      index: 0,
+      routes: [
+        { key: 'a', routeName },
+        { key: 'b', routeName },
+      ],
+      isTransitioning: false,
+    };
+    expect(NavigationStateUtils.back(state)).toBe(state);
   });
 
   it('move forwards', () => {
@@ -224,7 +262,18 @@ describe('StateUtils', () => {
       isTransitioning: false,
     };
     expect(NavigationStateUtils.forward(state)).toEqual(newState);
-    expect(NavigationStateUtils.forward(newState)).toBe(newState);
+  });
+
+  it('does not move forward when active route is already the top-most', () => {
+    const state = {
+      index: 1,
+      routes: [
+        { key: 'a', routeName },
+        { key: 'b', routeName },
+      ],
+      isTransitioning: false,
+    };
+    expect(NavigationStateUtils.forward(state)).toEqual(state);
   });
 
   // Replace
@@ -310,7 +359,17 @@ describe('StateUtils', () => {
         { key: 'y', routeName },
       ])
     ).toEqual(newState);
+  });
 
+  it('throws when attempting to set empty state', () => {
+    const state = {
+      index: 0,
+      routes: [
+        { key: 'a', routeName },
+        { key: 'b', routeName },
+      ],
+      isTransitioning: false,
+    };
     expect(() => {
       NavigationStateUtils.reset(state, []);
     }).toThrow('invalid routes to replace');
@@ -344,6 +403,27 @@ describe('StateUtils', () => {
       )
     ).toEqual(newState);
 
+    expect(() => {
+      NavigationStateUtils.reset(
+        state,
+        [
+          { key: 'x', routeName },
+          { key: 'y', routeName },
+        ],
+        100
+      );
+    }).toThrow('invalid index 100 to reset');
+  });
+
+  it('throws when attempting to set an out of range route index', () => {
+    const state = {
+      index: 0,
+      routes: [
+        { key: 'a', routeName },
+        { key: 'b', routeName },
+      ],
+      isTransitioning: false,
+    };
     expect(() => {
       NavigationStateUtils.reset(
         state,
