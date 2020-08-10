@@ -21,6 +21,7 @@ export default function HeaderTitle({ tintColor, style, ...rest }: Props) {
   return (
     <Animated.Text
       accessibilityRole="header"
+      aria-level="1"
       numberOfLines={1}
       {...rest}
       style={[
