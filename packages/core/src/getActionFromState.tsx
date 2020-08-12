@@ -1,10 +1,8 @@
-import type { PartialState, NavigationState } from '@react-navigation/routers';
-
-type NavigateParams = {
-  screen?: string;
-  params?: NavigateParams;
-  initial?: boolean;
-};
+import type {
+  PartialState,
+  NavigationState,
+  NavigateParams,
+} from '@react-navigation/routers';
 
 type NavigateAction = {
   type: 'NAVIGATE';

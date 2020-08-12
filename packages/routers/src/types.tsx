@@ -2,6 +2,12 @@ import type * as CommonActions from './CommonActions';
 
 export type CommonNavigationAction = CommonActions.Action;
 
+export type NavigateParams = {
+  screen?: string;
+  params?: NavigateParams;
+  initial?: boolean;
+};
+
 export type NavigationState = Readonly<{
   /**
    * Unique key for the navigation state.

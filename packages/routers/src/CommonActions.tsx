@@ -1,4 +1,9 @@
-import type { NavigationState, PartialState, Route } from './types';
+import type {
+  NavigationState,
+  NavigateParams,
+  PartialState,
+  Route,
+} from './types';
 
 type ResetState =
   | PartialState<NavigationState>
@@ -16,8 +21,8 @@ export type Action =
   | {
       type: 'NAVIGATE';
       payload:
-        | { key: string; name?: undefined; params?: object }
-        | { name: string; key?: string; params?: object };
+        | { key: string; name?: undefined; params?: NavigateParams }
+        | { name: string; key?: string; params?: NavigateParams };
       source?: string;
       target?: string;
     }
@@ -40,10 +45,10 @@ export function goBack(): Action {
 
 export function navigate(
   route:
-    | { key: string; params?: object }
-    | { name: string; key?: string; params?: object }
+    | { key: string; params?: NavigateParams }
+    | { name: string; key?: string; params?: NavigateParams }
 ): Action;
-export function navigate(name: string, params?: object): Action;
+export function navigate(name: string, params?: NavigateParams): Action;
 export function navigate(...args: any): Action {
   if (typeof args[0] === 'string') {
     return { type: 'NAVIGATE', payload: { name: args[0], params: args[1] } };
