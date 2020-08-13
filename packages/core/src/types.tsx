@@ -505,6 +505,11 @@ export type TypedNavigator<
          * If not specified, usually the first route is used.
          */
         initialRouteName?: keyof ParamList;
+    
+        /**
+        * A string to identify the component during testing
+        */
+        testID: string;
       }
   >;
   /**
