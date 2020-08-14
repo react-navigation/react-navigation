@@ -37,6 +37,8 @@ jobs:
       - name: Publish Expo app
         working-directory: ./example
         run: expo publish --release-channel=pr-${{ github.event.number }}
+        env:
+          EXPO_USE_DEV_SERVER: true
 
       - name: Get expo link
         id: expo
