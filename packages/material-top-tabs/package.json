@@ -53,7 +53,7 @@
     "react": "~16.9.0",
     "react-native": "~0.62.2",
     "react-native-gesture-handler": "^1.7.0",
-    "react-native-reanimated": "^1.10.1",
+    "react-native-reanimated": "1.9.0",
     "react-native-tab-view": "^2.15.1",
     "typescript": "^3.9.7"
   },
