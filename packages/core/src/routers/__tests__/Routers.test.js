@@ -114,6 +114,51 @@ Object.keys(ROUTERS).forEach((routerName) => {
       );
       expect(state0.routes[state0.index].params.foo).toEqual(42);
     });
+
+    it('merges existing params when set params on existing state', () => {
+      const Screen = () => <div />;
+
+      const router = Router({
+        Foo: {
+          screen: Screen,
+          params: { a: 1 },
+        },
+      });
+      const key = 'Foo';
+      const state = router.getStateForAction({
+        type: NavigationActions.INIT,
+        key,
+      });
+
+      expect(state).toMatchObject({
+        index: 0,
+        routes: [{ key, params: { a: 1 } }],
+      });
+
+      const newState = router.getStateForAction(
+        NavigationActions.setParams({ key, params: { b: 2 } }),
+        state
+      );
+
+      expect(newState.routes[newState.index].params).toEqual({ a: 1, b: 2 });
+    });
+
+    it('merges params when setting params during init', () => {
+      const Screen = () => <div />;
+
+      const router = Router({
+        Foo: {
+          screen: Screen,
+          params: { a: 1 },
+        },
+      });
+
+      const newState = router.getStateForAction(
+        NavigationActions.setParams({ key: 'Foo', params: { b: 2 } })
+      );
+
+      expect(newState.routes[newState.index].params).toEqual({ a: 1, b: 2 });
+    });
   });
 });
 
