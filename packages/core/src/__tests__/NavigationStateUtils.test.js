@@ -93,10 +93,22 @@ describe('StateUtils', () => {
     expect(NavigationStateUtils.pop(state)).toEqual(newState);
   });
 
-  it('does not pop route if not applicable', () => {
+  it('does not pop route if not applicable with single route config', () => {
     const state = {
       index: 0,
       routes: [{ key: 'a', routeName }],
+      isTransitioning: false,
+    };
+    expect(NavigationStateUtils.pop(state)).toBe(state);
+  });
+
+  it('does not pop route if not applicable with multiple route config', () => {
+    const state = {
+      index: 0,
+      routes: [
+        { key: 'a', routeName },
+        { key: 'b', routeName },
+      ],
       isTransitioning: false,
     };
     expect(NavigationStateUtils.pop(state)).toBe(state);
