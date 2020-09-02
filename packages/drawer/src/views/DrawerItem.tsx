@@ -205,6 +205,7 @@ const styles = StyleSheet.create({
   },
   label: {
     marginRight: 32,
+    flex: 1,
   },
   button: {
     display: 'flex',
