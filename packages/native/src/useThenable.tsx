@@ -34,6 +34,10 @@ export default function useThenable<T>(create: () => PromiseLike<T>) {
 
     if (!resolved) {
       resolve();
+    } else {
+      if (!cancelled) {
+        setState([true, value]);
+      }
     }
 
     return () => {
