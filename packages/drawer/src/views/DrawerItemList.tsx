@@ -31,6 +31,7 @@ export default function DrawerItemList({
   inactiveBackgroundColor,
   itemStyle,
   labelStyle,
+  onItemPress,
 }: Props) {
   const buildLink = useLinkBuilder();
 
@@ -58,12 +59,19 @@ export default function DrawerItemList({
         style={itemStyle}
         to={buildLink(route.name, route.params)}
         onPress={() => {
-          navigation.dispatch({
-            ...(focused
-              ? DrawerActions.closeDrawer()
-              : CommonActions.navigate(route.name)),
-            target: state.key,
-          });
+          let handled = false;
+          if (onItemPress) {
+            handled = onItemPress(route);
+          }
+
+          if (!handled) {
+            navigation.dispatch({
+              ...(focused
+                ? DrawerActions.closeDrawer()
+                : CommonActions.navigate(route.name)),
+              target: state.key,
+            });
+          }
         }}
       />
     );
