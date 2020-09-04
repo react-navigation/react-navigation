@@ -42,7 +42,8 @@ export const MaybeScreenContainer = ({
   children: React.ReactNode;
 }) => {
   if (enabled && Platform.OS !== 'web' && Screens?.screensEnabled()) {
-    return <Screens.ScreenContainer {...rest} />;
+    // @ts-ignore
+    return <Screens.ScreenContainer enabled={enabled} {...rest} />;
   }
 
   return <View {...rest} />;
@@ -62,7 +63,7 @@ export const MaybeScreen = ({
   }
 
   if (enabled && Screens?.screensEnabled()) {
-    // @ts-expect-error: stackPresentation is incorrectly marked as required
+    // @ts-expect-error: stackPresentation is incorrectly marked as required and enabled is a new prop
     return <Screens.Screen enabled={enabled} active={active} {...rest} />;
   }
 

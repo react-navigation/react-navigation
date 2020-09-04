@@ -99,6 +99,7 @@ export default class BottomTabView extends React.Component<Props, State> {
       <NavigationHelpersContext.Provider value={navigation}>
         <SafeAreaProviderCompat>
           <View style={styles.container}>
+            {/* @ts-ignore */}
             <ScreenContainer enabled={screensEnabled} style={styles.pages}>
               {routes.map((route, index) => {
                 const descriptor = descriptors[route.key];

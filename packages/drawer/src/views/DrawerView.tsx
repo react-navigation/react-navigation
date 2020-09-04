@@ -150,6 +150,7 @@ export default function DrawerView({
 
   const renderContent = () => {
     return (
+      // @ts-ignore
       <ScreenContainer enabled={screensEnabled} style={styles.content}>
         {state.routes.map((route, index) => {
           const descriptor = descriptors[route.key];
