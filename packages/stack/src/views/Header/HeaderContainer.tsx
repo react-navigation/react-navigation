@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { Animated, View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import {
   NavigationContext,
   NavigationRouteContext,
@@ -9,6 +9,7 @@ import {
 import type { EdgeInsets } from 'react-native-safe-area-context';
 
 import Header from './Header';
+import { getDefaultHeaderHeight } from './HeaderSegment';
 import {
   forSlideLeft,
   forSlideUp,
@@ -59,8 +60,15 @@ export default function HeaderContainer({
   const isParentHeaderShown = React.useContext(HeaderShownContext);
   const parentPreviousScene = React.useContext(PreviousSceneContext);
 
+  const [headerHeightAnim] = React.useState(
+    () => new Animated.Value(getDefaultHeaderHeight(layout, insets.top))
+  );
+
   return (
-    <View pointerEvents="box-none" style={style}>
+    <Animated.View
+      pointerEvents="box-none"
+      style={[style, mode === 'float' && { height: headerHeightAnim }]}
+    >
       {scenes.slice(-3).map((scene, i, self) => {
         if ((mode === 'screen' && i !== self.length - 1) || !scene) {
           return null;
@@ -130,11 +138,17 @@ export default function HeaderContainer({
               <View
                 onLayout={
                   onContentHeightChange
-                    ? (e) =>
+                    ? (e) => {
+                        const { height } = e.nativeEvent.layout;
+
+                        // If we don't set the header height, the header buttons won't be touchable on Android
+                        // when headerMode='float' and headerTransparent: true
+                        headerHeightAnim.setValue(height);
                         onContentHeightChange({
                           route: scene.route,
-                          height: e.nativeEvent.layout.height,
-                        })
+                          height,
+                        });
+                      }
                     : undefined
                 }
                 pointerEvents={isFocused ? 'box-none' : 'none'}
@@ -156,7 +170,7 @@ export default function HeaderContainer({
           </NavigationContext.Provider>
         );
       })}
-    </View>
+    </Animated.View>
   );
 }
 
