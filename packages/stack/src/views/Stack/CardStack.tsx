@@ -4,7 +4,6 @@ import {
   StyleSheet,
   LayoutChangeEvent,
   Dimensions,
-  Platform,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import type { Route, StackNavigationState } from '@react-navigation/native';
@@ -63,6 +62,7 @@ type Props = {
   onGestureStart?: (props: { route: Route<string> }) => void;
   onGestureEnd?: (props: { route: Route<string> }) => void;
   onGestureCancel?: (props: { route: Route<string> }) => void;
+  screensEnabled?: boolean;
 };
 
 type State = {
@@ -378,6 +378,8 @@ export default class CardStack extends React.Component<Props, State> {
       onGestureStart,
       onGestureEnd,
       onGestureCancel,
+      // For modals, usually we want the screen underneath to be visible, so disable it there by default
+      screensEnabled = mode !== 'modal',
     } = this.props;
 
     const { scenes, layout, gestures, headerHeights } = this.state;
@@ -402,10 +404,6 @@ export default class CardStack extends React.Component<Props, State> {
       bottom = insets.bottom,
       left = insets.left,
     } = focusedOptions.safeAreaInsets || {};
-
-    // Screens is buggy on iOS and web, so we only enable it on Android
-    // For modals, usually we want the screen underneath to be visible, so also disable it there
-    const isScreensEnabled = Platform.OS !== 'ios' && mode !== 'modal';
 
     return (
       <HeaderShownContext.Consumer>
@@ -459,7 +457,7 @@ export default class CardStack extends React.Component<Props, State> {
             <React.Fragment>
               {isFloatHeaderAbsolute ? null : floatingHeader}
               <MaybeScreenContainer
-                enabled={isScreensEnabled}
+                enabled={screensEnabled}
                 style={styles.container}
                 onLayout={this.handleLayout}
               >
@@ -551,7 +549,7 @@ export default class CardStack extends React.Component<Props, State> {
                     <MaybeScreen
                       key={route.key}
                       style={StyleSheet.absoluteFill}
-                      enabled={isScreensEnabled}
+                      enabled={screensEnabled}
                       active={isScreenActive}
                       pointerEvents="box-none"
                     >

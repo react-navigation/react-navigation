@@ -41,7 +41,7 @@ export const MaybeScreenContainer = ({
   enabled: boolean;
   children: React.ReactNode;
 }) => {
-  if (enabled && Platform.OS !== 'web' && Screens && Screens.screensEnabled()) {
+  if (enabled && Platform.OS !== 'web' && Screens?.screensEnabled()) {
     return <Screens.ScreenContainer {...rest} />;
   }
 
@@ -61,9 +61,9 @@ export const MaybeScreen = ({
     return <AnimatedWebScreen active={active} {...rest} />;
   }
 
-  if (enabled && Screens && Screens.screensEnabled()) {
+  if (enabled && Screens?.screensEnabled()) {
     // @ts-expect-error: stackPresentation is incorrectly marked as required
-    return <Screens.Screen active={active} {...rest} />;
+    return <Screens.Screen enabled={enabled} active={active} {...rest} />;
   }
 
   return <View {...rest} />;

@@ -5,6 +5,7 @@ import { Screen, screensEnabled } from 'react-native-screens';
 type Props = {
   isVisible: boolean;
   children: React.ReactNode;
+  enabled: boolean;
   style?: any;
 };
 
