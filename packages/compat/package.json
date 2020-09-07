@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
-  "homepage": "https://reactnavigation.org/docs/compatibility.html",
+  "homepage": "https://reactnavigation.org/docs/compatibility/",
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "source": "src/index.tsx",
