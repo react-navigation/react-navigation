@@ -6,6 +6,7 @@ type Props = {
   isVisible: boolean;
   children: React.ReactNode;
   style?: any;
+  enabled: boolean;
 };
 
 const FAR_FAR_AWAY = 30000; // this should be big enough to move the whole view out of its container
@@ -13,7 +14,7 @@ const FAR_FAR_AWAY = 30000; // this should be big enough to move the whole view 
 export default class ResourceSavingScene extends React.Component<Props> {
   render() {
     // react-native-screens is buggy on web
-    if (screensEnabled?.() && Platform.OS !== 'web') {
+    if (screensEnabled?.() && this.props.enabled && Platform.OS !== 'web') {
       const { isVisible, ...rest } = this.props;
 
       // @ts-ignore

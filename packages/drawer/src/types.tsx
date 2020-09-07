@@ -69,6 +69,7 @@ export type NavigationDrawerConfig = {
   drawerBackgroundColor?: ThemedColor;
   overlayColor?: ThemedColor;
   screenContainerStyle?: StyleProp<ViewStyle>;
+  screensEnabled: boolean;
 };
 
 export type NavigationDrawerRouterConfig = {

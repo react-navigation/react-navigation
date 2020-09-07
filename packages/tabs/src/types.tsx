@@ -149,6 +149,7 @@ export type BottomTabBarProps = BottomTabBarOptions & {
   isLandscape: boolean;
   jumpTo: (key: string) => void;
   screenProps: unknown;
+  screensEnabled: boolean;
 };
 
 export type MaterialTabBarOptions = {
