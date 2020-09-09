@@ -1,4 +1,5 @@
 import getNavigation from '../getNavigation';
+import * as NavigationActions from '../NavigationActions';
 
 it('getNavigation provides default action helpers', () => {
   const router = {
@@ -22,12 +23,11 @@ it('getNavigation provides default action helpers', () => {
   topNav.navigate('GreatRoute');
 
   expect(dispatch.mock.calls.length).toBe(1);
-  expect(dispatch.mock.calls[0][0].type).toBe('Navigation/NAVIGATE');
+  expect(dispatch.mock.calls[0][0].type).toBe(NavigationActions.NAVIGATE);
   expect(dispatch.mock.calls[0][0].routeName).toBe('GreatRoute');
 });
 
-// eslint-disable-next-line jest/no-disabled-tests
-it.skip('getNavigation provides router action helpers', () => {
+it('getNavigation provides router action helpers', () => {
   const router = {
     getActionCreators: () => ({
       foo: (bar) => ({ type: 'FooBarAction', bar }),
@@ -39,7 +39,8 @@ it.skip('getNavigation provides router action helpers', () => {
 
   const dispatch = jest.fn();
 
-  const topNav = getNavigation(
+  let topNav;
+  topNav = getNavigation(
     router,
     {},
     dispatch,
