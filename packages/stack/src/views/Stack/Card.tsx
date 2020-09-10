@@ -14,7 +14,7 @@ import Color from 'color';
 
 import CardSheet from './CardSheet';
 import {
-  PanGestureHandler,
+  PanGestureHandler,n
   GestureState,
   PanGestureHandlerGestureEvent,
 } from '../GestureHandler';
@@ -234,8 +234,9 @@ export default class Card extends React.Component<Props> {
 
   private setPointerEventsEnabled = (enabled: boolean) => {
     const pointerEvents = enabled ? 'box-none' : 'none';
-
-    this.contentRef.current?.setNativeProps({ pointerEvents });
+    
+    this.contentRef.current?.setNativeProps && 
+      this.contentRef.current?.setNativeProps({ pointerEvents });
   };
 
   private handleStartInteraction = () => {
