@@ -46,7 +46,7 @@ const getDefaultDrawerWidth = ({
   /*
    * Default drawer width is screen width - header height
    * with a max width of 280 on mobile and 320 on tablet
-   * https://material.io/guidelines/patterns/navigation-drawer.html
+   * https://material.io/components/navigation-drawer
    */
   const smallerAxisSize = Math.min(height, width);
   const isLandscape = width > height;

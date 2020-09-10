@@ -21,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
-  "homepage": "https://reactnavigation.org/docs/drawer-navigator.html",
+  "homepage": "https://reactnavigation.org/docs/drawer-navigator/",
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "source": "src/index.tsx",
