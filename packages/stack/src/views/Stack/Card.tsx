@@ -14,7 +14,7 @@ import Color from 'color';
 
 import CardSheet from './CardSheet';
 import {
-  PanGestureHandler,n
+  PanGestureHandler,
   GestureState,
   PanGestureHandlerGestureEvent,
 } from '../GestureHandler';
