@@ -93,6 +93,7 @@ const StateUtils = {
    */
   jumpTo(state, key) {
     const index = StateUtils.indexOf(state, key);
+    invariant(index !== -1, 'attempt to jump to unknown key "%s"', key);
     return StateUtils.jumpToIndex(state, index);
   },
 
