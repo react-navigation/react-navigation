@@ -64,6 +64,10 @@ type Props = {
    * Style object for the wrapper element.
    */
   style?: StyleProp<ViewStyle>;
+  /**
+   * Color of the touchable effect created on press.
+   */
+  pressColor?: string;
 };
 
 const Touchable = ({
@@ -132,6 +136,7 @@ export default function DrawerItem(props: Props) {
     inactiveBackgroundColor = 'transparent',
     style,
     onPress,
+    pressColor,
     ...rest
   } = props;
 
@@ -160,6 +165,7 @@ export default function DrawerItem(props: Props) {
         // @ts-expect-error: keep for compatibility with older React Native versions
         accessibilityStates={focused ? ['selected'] : []}
         to={to}
+        pressColor={pressColor}
       >
         <React.Fragment>
           {iconNode}
