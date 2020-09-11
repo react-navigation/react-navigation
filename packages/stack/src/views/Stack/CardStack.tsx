@@ -63,6 +63,7 @@ type Props = {
   onGestureEnd?: (props: { route: Route<string> }) => void;
   onGestureCancel?: (props: { route: Route<string> }) => void;
   screensEnabled?: boolean;
+  activeLimit?: number;
 };
 
 type State = {
@@ -380,6 +381,7 @@ export default class CardStack extends React.Component<Props, State> {
       onGestureCancel,
       // For modals, usually we want the screen underneath to be visible, so disable it there by default
       screensEnabled = mode !== 'modal',
+      activeLimit = mode === 'modal' ? 2 : 1,
     } = this.props;
 
     const { scenes, layout, gestures, headerHeights } = this.state;
@@ -458,7 +460,7 @@ export default class CardStack extends React.Component<Props, State> {
               {isFloatHeaderAbsolute ? null : floatingHeader}
               <MaybeScreenContainer
                 enabled={screensEnabled}
-                activeLimit={1}
+                activeLimit={activeLimit}
                 style={styles.container}
                 onLayout={this.handleLayout}
               >
@@ -467,13 +469,33 @@ export default class CardStack extends React.Component<Props, State> {
                   const gesture = gestures[route.key];
                   const scene = scenes[index];
 
-                  const isScreenActive = scene.progress.next
-                    ? scene.progress.next.interpolate({
+                  // For the screens that shouldn't be active, this const will point to one of the screens
+                  // which `progress.current` will have `inputRange` value of 1, because it will not be transitioning,
+                  // so the output will have the expected 0 value.
+                  // For the screen that should be active only during the transition, the `progress.current`
+                  // will follow the transition's values during it will have:
+                  // value of 1 during the transition and:
+                  // a) for going forward expected value of 0 after the transition due to output range,
+                  // b) value of 1 for going back (the const will turn to `undefined` then after dismiss of the scene)
+                  // For the rest of the screens, which should be active because of being in the range of `activeLimit`,
+                  // the const will be undefined due to the too big value passed to the`scenes` so it will have expected value of 1
+                  const sceneForActivity = scenes[index + activeLimit];
+
+                  const isScreenActive = sceneForActivity
+                    ? sceneForActivity.progress.current.interpolate({
                         inputRange: [0, 1 - EPSILON, 1],
                         outputRange: [1, 1, 0],
                         extrapolate: 'clamp',
                       })
                     : 1;
+
+                  const isTransitioning = scene.progress.current
+                    ? scene.progress.current.interpolate({
+                        inputRange: [0, EPSILON, 1 - EPSILON, 1],
+                        outputRange: [0, 1, 1, 0],
+                        extrapolate: 'clamp',
+                      })
+                    : 0;
 
                   const {
                     safeAreaInsets,
@@ -551,7 +573,9 @@ export default class CardStack extends React.Component<Props, State> {
                       key={route.key}
                       style={StyleSheet.absoluteFill}
                       enabled={screensEnabled}
+                      isTransitioning={isTransitioning}
                       active={isScreenActive}
+                      isTop={index === routes.length - 1}
                       pointerEvents="box-none"
                     >
                       <CardContainer

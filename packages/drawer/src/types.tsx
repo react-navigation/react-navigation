@@ -86,6 +86,10 @@ export type DrawerNavigationConfig<T = DrawerContentOptions> = {
    * You can pass a custom background color for a drawer or a custom width here.
    */
   drawerStyle?: StyleProp<ViewStyle>;
+  /**
+   * If `false`, `react-native-screens` will be disabled for this navigator.
+   * Defaults to `true`.
+   */
   screensEnabled?: boolean;
 };
 

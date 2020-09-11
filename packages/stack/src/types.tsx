@@ -349,7 +349,16 @@ export type StackNavigationOptions = StackHeaderOptions &
 export type StackNavigationConfig = {
   mode?: StackCardMode;
   headerMode?: StackHeaderMode;
+  /**
+   * If `false`, `react-native-screens` will be disabled for this navigator.
+   * Defaults to `true`.
+   */
   screensEnabled?: boolean;
+  /**
+   * Number of screens to be rendered when not transitioning.
+   * Defaults to `1` for normal navigation and `2` for `mode="modal"`.
+   */
+  activeLimit?: number;
   /**
    * If `false`, the keyboard will NOT automatically dismiss when navigating to a new screen.
    * Defaults to `true`.

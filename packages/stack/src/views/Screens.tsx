@@ -40,15 +40,15 @@ export const MaybeScreenContainer = ({
   ...rest
 }: ViewProps & {
   enabled: boolean;
-  activeLimit?: number;
+  activeLimit: number;
   children: React.ReactNode;
 }) => {
   if (enabled && Platform.OS !== 'web' && Screens?.screensEnabled()) {
-    // @ts-ignore
     return (
+      // @ts-ignore
       <Screens.ScreenContainer
-        activeLimit={activeLimit}
         enabled={enabled}
+        activeLimit={activeLimit}
         {...rest}
       />
     );
@@ -60,10 +60,14 @@ export const MaybeScreenContainer = ({
 export const MaybeScreen = ({
   enabled,
   active,
+  transitioning,
+  isTop,
   ...rest
 }: ViewProps & {
   enabled: boolean;
   active: 0 | 1 | Animated.AnimatedInterpolation;
+  transitioning: 0 | Animated.AnimatedInterpolation;
+  isTop: boolean;
   children: React.ReactNode;
 }) => {
   if (enabled && Platform.OS === 'web') {
@@ -71,8 +75,16 @@ export const MaybeScreen = ({
   }
 
   if (enabled && Screens?.screensEnabled()) {
-    // @ts-expect-error: stackPresentation is incorrectly marked as required and enabled is a new prop
-    return <Screens.Screen enabled={enabled} active={active} {...rest} />;
+    return (
+      // @ts-expect-error: stackPresentation is incorrectly marked as required
+      <Screens.Screen
+        isTransitioning={transitioning}
+        isTop={isTop}
+        enabled={enabled}
+        active={active}
+        {...rest}
+      />
+    );
   }
 
   return <View {...rest} />;

@@ -170,6 +170,10 @@ export type BottomTabNavigationConfig<T = BottomTabBarOptions> = {
    * Options for the tab bar which will be passed as props to the tab bar component.
    */
   tabBarOptions?: T;
+  /**
+   * If `false`, `react-native-screens` will be disabled for this navigator.
+   * Defaults to `true`.
+   */
   screensEnabled?: boolean;
 };
 
