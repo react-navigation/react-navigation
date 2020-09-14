@@ -66,7 +66,7 @@ export const MaybeScreen = ({
 }: ViewProps & {
   enabled: boolean;
   active: 0 | 1 | Animated.AnimatedInterpolation;
-  transitioning: 0 | Animated.AnimatedInterpolation;
+  transitioning: Animated.AnimatedInterpolation;
   isTop: boolean;
   children: React.ReactNode;
 }) => {
@@ -78,7 +78,7 @@ export const MaybeScreen = ({
     return (
       // @ts-expect-error: stackPresentation is incorrectly marked as required
       <Screens.Screen
-        isTransitioning={transitioning}
+        transitioning={transitioning}
         isTop={isTop}
         enabled={enabled}
         active={active}

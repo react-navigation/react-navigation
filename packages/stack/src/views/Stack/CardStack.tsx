@@ -489,13 +489,11 @@ export default class CardStack extends React.Component<Props, State> {
                       })
                     : 1;
 
-                  const isTransitioning = scene.progress.current
-                    ? scene.progress.current.interpolate({
-                        inputRange: [0, EPSILON, 1 - EPSILON, 1],
-                        outputRange: [0, 1, 1, 0],
-                        extrapolate: 'clamp',
-                      })
-                    : 0;
+                  const transitioning = scene.progress.current.interpolate({
+                    inputRange: [0, EPSILON, 1 - EPSILON, 1],
+                    outputRange: [0, 1, 1, 0],
+                    extrapolate: 'clamp',
+                  });
 
                   const {
                     safeAreaInsets,
@@ -573,9 +571,9 @@ export default class CardStack extends React.Component<Props, State> {
                       key={route.key}
                       style={StyleSheet.absoluteFill}
                       enabled={screensEnabled}
-                      isTransitioning={isTransitioning}
+                      transitioning={transitioning}
                       active={isScreenActive}
-                      isTop={index === routes.length - 1}
+                      isTop={index === self.length - 1}
                       pointerEvents="box-none"
                     >
                       <CardContainer

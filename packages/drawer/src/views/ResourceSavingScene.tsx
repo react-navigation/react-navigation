@@ -18,7 +18,7 @@ export default class ResourceSavingScene extends React.Component<Props> {
       const { isVisible, ...rest } = this.props;
 
       // @ts-expect-error: stackPresentation is incorrectly marked as required
-      return <Screen active={isVisible ? 1 : 0} {...rest} />;
+      return <Screen active={isVisible ? 1 : 0} isTop={isVisible} {...rest} />;
     }
 
     const { isVisible, children, style, ...rest } = this.props;
