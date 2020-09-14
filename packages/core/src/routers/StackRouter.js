@@ -404,17 +404,18 @@ export default (routeConfigs, stackConfig = {}) => {
           return state;
         }
 
-        // If we're already at the top, then we return the state with a new
-        // identity so that the action is handled by this router.
-        if (state.index > 0) {
-          return {
-            ...state,
-            isTransitioning: action.immediate !== true,
-            index: 0,
-            routes: [state.routes[0]],
-          };
+        // If we're already at the top, then we return the state so that the
+        // action is handled by this router.
+        if (state.index === 0) {
+          return state;
         }
-        return state;
+
+        return {
+          ...state,
+          isTransitioning: action.immediate !== true,
+          index: 0,
+          routes: [state.routes[0]],
+        };
       }
 
       // Handle replace action
