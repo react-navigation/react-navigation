@@ -82,29 +82,6 @@ export default (routeConfigs, config = {}) => {
   }
 
   function getNextState(action, prevState, possibleNextState) {
-    function updateNextStateHistory(prevState, nextState) {
-      if (
-        backBehavior !== 'history' ||
-        (prevState && nextState && nextState.index === prevState.index)
-      ) {
-        return nextState;
-      }
-      let nextRouteKeyHistory = prevState ? prevState.routeKeyHistory : [];
-      if (action.type === NavigationActions.NAVIGATE) {
-        nextRouteKeyHistory = [...nextRouteKeyHistory]; // copy
-        const keyToAdd = nextState.routes[nextState.index].key;
-        nextRouteKeyHistory = nextRouteKeyHistory.filter((k) => k !== keyToAdd); // dedup
-        nextRouteKeyHistory.push(keyToAdd);
-      } else if (action.type === NavigationActions.BACK) {
-        nextRouteKeyHistory = [...nextRouteKeyHistory]; // copy
-        nextRouteKeyHistory.pop();
-      }
-      return {
-        ...nextState,
-        routeKeyHistory: nextRouteKeyHistory,
-      };
-    }
-
     let nextState = possibleNextState;
     if (
       prevState &&
@@ -120,7 +97,27 @@ export default (routeConfigs, config = {}) => {
         routes: nextRoutes,
       };
     }
-    return updateNextStateHistory(prevState, nextState);
+
+    if (
+      backBehavior !== 'history' ||
+      (prevState && nextState && nextState.index === prevState.index)
+    ) {
+      return nextState;
+    }
+    let nextRouteKeyHistory = prevState ? prevState.routeKeyHistory : [];
+    if (action.type === NavigationActions.NAVIGATE) {
+      nextRouteKeyHistory = [...nextRouteKeyHistory]; // copy
+      const keyToAdd = nextState.routes[nextState.index].key;
+      nextRouteKeyHistory = nextRouteKeyHistory.filter((k) => k !== keyToAdd); // dedup
+      nextRouteKeyHistory.push(keyToAdd);
+    } else if (action.type === NavigationActions.BACK) {
+      nextRouteKeyHistory = [...nextRouteKeyHistory]; // copy
+      nextRouteKeyHistory.pop();
+    }
+    return {
+      ...nextState,
+      routeKeyHistory: nextRouteKeyHistory,
+    };
   }
 
   function getInitialState() {
