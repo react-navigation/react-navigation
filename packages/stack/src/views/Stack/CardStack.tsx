@@ -460,7 +460,6 @@ export default class CardStack extends React.Component<Props, State> {
               {isFloatHeaderAbsolute ? null : floatingHeader}
               <MaybeScreenContainer
                 enabled={screensEnabled}
-                activeLimit={activeLimit}
                 style={styles.container}
                 onLayout={this.handleLayout}
               >

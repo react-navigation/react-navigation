@@ -36,21 +36,15 @@ const AnimatedWebScreen = Animated.createAnimatedComponent(WebScreen);
 
 export const MaybeScreenContainer = ({
   enabled,
-  activeLimit,
   ...rest
 }: ViewProps & {
   enabled: boolean;
-  activeLimit: number;
   children: React.ReactNode;
 }) => {
   if (enabled && Platform.OS !== 'web' && Screens?.screensEnabled()) {
     return (
       // @ts-ignore
-      <Screens.ScreenContainer
-        enabled={enabled}
-        activeLimit={activeLimit}
-        {...rest}
-      />
+      <Screens.ScreenContainer enabled={enabled} {...rest} />
     );
   }
 
