@@ -379,8 +379,7 @@ export default class CardStack extends React.Component<Props, State> {
       onGestureStart,
       onGestureEnd,
       onGestureCancel,
-      // For modals, usually we want the screen underneath to be visible, so disable it there by default
-      screensEnabled = mode !== 'modal',
+      screensEnabled = true,
       activeLimit = mode === 'modal' ? 2 : 1,
     } = this.props;
 
