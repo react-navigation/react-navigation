@@ -23,6 +23,8 @@ export { default as useIsDrawerOpen } from './utils/useIsDrawerOpen';
  * Types
  */
 export type {
+  DrawerNavigationConfig,
+   DrawerNavigationEventMap,
   DrawerNavigationOptions,
   DrawerNavigationProp,
   DrawerScreenProps,
