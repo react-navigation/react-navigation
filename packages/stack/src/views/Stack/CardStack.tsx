@@ -420,7 +420,7 @@ export default class CardStack extends React.Component<Props, State> {
                     headerShown = isParentHeaderShown === false,
                   } = options;
 
-                  if (headerTransparent || headerShown === false) {
+                  if (!headerTransparent || headerShown === false) {
                     return true;
                   }
 
