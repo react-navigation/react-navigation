@@ -106,7 +106,7 @@ export type BottomTabNavigationOptions = {
   /**
    * Text to show in a badge on the tab icon.
    */
-  tabBarBadge?: number | string;
+  tabBarBadge?: number | string | boolean;
 
   /**
    * Accessibility label for the tab button. This is read by the screen reader when the user taps the tab.
