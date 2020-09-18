@@ -30,7 +30,7 @@ export default function useWindowDimensions() {
 
     Dimensions.addEventListener('change', onChange);
 
-    return () => Dimensions.addEventListener('change', onChange);
+    return () => Dimensions.removeEventListener('change', onChange);
   }, []);
 
   return dimensions;
