@@ -14,6 +14,7 @@ export type Theme = {
     text: string;
     border: string;
     notification: string;
+    notificationText?: string;
   };
 };
 
