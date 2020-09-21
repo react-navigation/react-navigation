@@ -19,7 +19,7 @@ export default (routeConfigs, config = {}) => {
   const getCustomActionCreators =
     config.getCustomActionCreators || defaultActionCreators;
 
-  const initialRouteParams = config.initialRouteParams;
+  const { initialRouteParams } = config;
   const initialRouteName = config.initialRouteName || order[0];
   const backBehavior = config.backBehavior || 'none';
   const resetOnBlur = config.hasOwnProperty('resetOnBlur')
@@ -59,7 +59,7 @@ export default (routeConfigs, config = {}) => {
 
   function resetChildRoute(routeName) {
     let initialParams =
-      routeName === initialRouteName ? initialRouteParams : undefined;
+      routeName === initialRouteName ? initialRouteParams : null;
     // note(brentvatne): merging initialRouteParams *on top* of default params
     // on the route seems incorrect but it's consistent with existing behavior
     // in stackrouter
@@ -71,13 +71,13 @@ export default (routeConfigs, config = {}) => {
         ...childRouter.getStateForAction(childAction),
         key: routeName,
         routeName,
-        params,
+        ...(params ? { params } : {}),
       };
     }
     return {
       key: routeName,
       routeName,
-      params,
+      ...(params ? { params } : {}),
     };
   }
 
