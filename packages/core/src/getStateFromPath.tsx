@@ -122,7 +122,7 @@ export default function getStateFromPath(
       // If one of the patterns starts with the other, it's more exhaustive
       // So move it up
       if (a.pattern.startsWith(b.pattern)) {
-        return 1;
+        return -1;
       }
 
       if (b.pattern.startsWith(a.pattern)) {
