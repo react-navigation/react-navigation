@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.9.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.9.0...@react-navigation/stack@5.9.1) (2020-09-22)
+
+
+### Bug Fixes
+
+* add aria-level to HeaderTitle ([2d1da7e](https://github.com/react-navigation/react-navigation/commit/2d1da7ef2ffdb25f74e19e81b7e685fbb487f0c5))
+
+
+
+
+
 # [5.9.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.8.0...@react-navigation/stack@5.9.0) (2020-08-04)
 
 
