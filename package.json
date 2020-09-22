@@ -25,23 +25,23 @@
     "example": "yarn --cwd example"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^9.1.1",
-    "@types/jest": "^26.0.8",
-    "babel-jest": "^26.2.2",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@types/jest": "^26.0.14",
+    "babel-jest": "^26.3.0",
     "codecov": "^3.7.2",
-    "commitlint": "^9.1.0",
-    "eslint": "^7.6.0",
-    "eslint-config-satya164": "^3.1.7",
-    "husky": "^4.2.5",
-    "jest": "^26.2.2",
+    "commitlint": "^11.0.0",
+    "eslint": "^7.9.0",
+    "eslint-config-satya164": "^3.1.8",
+    "husky": "^4.3.0",
+    "jest": "^26.4.2",
     "lerna": "^3.22.1",
-    "metro-react-native-babel-preset": "^0.61.0",
-    "prettier": "^2.0.5",
-    "typescript": "^3.9.7"
+    "metro-react-native-babel-preset": "^0.63.0",
+    "prettier": "^2.1.2",
+    "typescript": "^4.0.3"
   },
   "resolutions": {
-    "react": "~16.9.0",
-    "react-native": "~0.62.2"
+    "react": "~16.13.1",
+    "react-native": "~0.63.2"
   },
   "husky": {
     "hooks": {

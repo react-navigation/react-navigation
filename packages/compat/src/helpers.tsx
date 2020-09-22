@@ -12,7 +12,9 @@ export function navigate(
   params?: object,
   action?: never
 ): NavigateActionType;
+// eslint-disable-next-line no-redeclare
 export function navigate(options: NavigateActionPayload): NavigateActionType;
+// eslint-disable-next-line no-redeclare
 export function navigate(
   options: string | NavigateActionPayload,
   params?: object,

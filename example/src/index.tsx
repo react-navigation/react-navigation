@@ -67,13 +67,6 @@ type RootDrawerParamList = {
   Another: undefined;
 };
 
-type RootStackParamList = {
-  Home: undefined;
-  NotFound: undefined;
-} & {
-  [P in keyof typeof SCREENS]: undefined;
-};
-
 const SCREENS = {
   SimpleStack: { title: 'Simple Stack', component: SimpleStack },
   ModalPresentationStack: {
@@ -121,6 +114,13 @@ const SCREENS = {
     title: '<Link />',
     component: LinkComponent,
   },
+};
+
+type RootStackParamList = {
+  Home: undefined;
+  NotFound: undefined;
+} & {
+  [P in keyof typeof SCREENS]: undefined;
 };
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();

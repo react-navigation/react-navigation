@@ -1,8 +1,6 @@
 const path = require('path');
 const fs = require('fs');
 const createExpoWebpackConfigAsync = require('@expo/webpack-config');
-// eslint-disable-next-line import/no-extraneous-dependencies
-const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 
 const node_modules = path.resolve(__dirname, '..', 'node_modules');
 const packages = path.resolve(__dirname, '..', 'packages');
@@ -18,10 +16,6 @@ module.exports = async function (env, argv) {
     exclude: /node_modules/,
     use: 'babel-loader',
   });
-
-  config.resolve.plugins = config.resolve.plugins.filter(
-    (p) => !(p instanceof ModuleScopePlugin)
-  );
 
   Object.assign(config.resolve.alias, {
     'react': path.resolve(node_modules, 'react'),

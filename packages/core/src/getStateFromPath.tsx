@@ -570,10 +570,7 @@ const createRouteObjects = (
             const value = allParams![p];
 
             if (value) {
-              acc[key] =
-                config.parse && config.parse[key]
-                  ? config.parse[key](value)
-                  : value;
+              acc[key] = config.parse?.[key] ? config.parse[key](value) : value;
             }
 
             return acc;

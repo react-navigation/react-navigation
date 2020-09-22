@@ -43,7 +43,9 @@ export function navigate(
     | { key: string; params?: object }
     | { name: string; key?: string; params?: object }
 ): Action;
+// eslint-disable-next-line no-redeclare
 export function navigate(name: string, params?: object): Action;
+// eslint-disable-next-line no-redeclare
 export function navigate(...args: any): Action {
   if (typeof args[0] === 'string') {
     return { type: 'NAVIGATE', payload: { name: args[0], params: args[1] } };
