@@ -215,7 +215,7 @@ describe('StateUtils', () => {
         isTransitioning: false,
       };
       expect(() => NavigationStateUtils.jumpTo(state, 'c')).toThrow(
-        'invalid index -1 to jump to'
+        'attempt to jump to unknown key "c"'
       );
     });
   });
