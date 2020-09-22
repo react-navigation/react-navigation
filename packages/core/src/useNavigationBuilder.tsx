@@ -95,7 +95,7 @@ const getRouteConfigsFromChildren = <
     throw new Error(
       `A navigator can only contain 'Screen' components as its direct children (found '${
         // @ts-expect-error: child can be any type and we're accessing it safely, but TS doesn't understand it
-        child.type && child.type.name ? child.type.name : String(child)
+        child.type?.name ? child.type.name : String(child)
       }')`
     );
   }, []);

@@ -69,7 +69,7 @@ export default function useEventEmitter<T extends Record<string, any>>(
       // Copy the current list of callbacks in case they are mutated during execution
       const callbacks =
         target !== undefined
-          ? items[target] && items[target].slice()
+          ? items[target]?.slice()
           : ([] as Listeners)
               .concat(...Object.keys(items).map((t) => items[t]))
               .filter((cb, i, self) => self.lastIndexOf(cb) === i);

@@ -44,14 +44,14 @@
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.16.2",
-    "@testing-library/react-native": "^7.0.1",
-    "@types/react": "^16.9.44",
+    "@testing-library/react-native": "^7.0.2",
+    "@types/react": "^16.9.49",
     "@types/react-is": "^16.7.1",
     "@types/use-subscription": "^1.0.0",
     "del-cli": "^3.0.1",
-    "react": "~16.9.0",
+    "react": "~16.13.1",
     "react-test-renderer": "~16.13.1",
-    "typescript": "^3.9.7"
+    "typescript": "^4.0.3"
   },
   "peerDependencies": {
     "react": "*"
