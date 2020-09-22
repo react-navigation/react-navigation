@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.9.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.9.0...@react-navigation/drawer@5.9.1) (2020-09-22)
+
+
+### Bug Fixes
+
+* add flex: 1 to DrawerItem style ([#8701](https://github.com/react-navigation/react-navigation/issues/8701)) ([1c4bd68](https://github.com/react-navigation/react-navigation/commit/1c4bd6813bc6f5151fd2d99a0245331ff5631c38)), closes [/github.com/react-navigation/react-navigation/blob/main/packages/drawer/src/views/DrawerItem.tsx#L167](https://github.com//github.com/react-navigation/react-navigation/blob/main/packages/drawer/src/views/DrawerItem.tsx/issues/L167)
+* cleanly removing event listeners in useWindowDimensions ([#8866](https://github.com/react-navigation/react-navigation/issues/8866)) ([dcbfe52](https://github.com/react-navigation/react-navigation/commit/dcbfe52667d14b0dbed6a353675d02189f7f7b5b))
+
+
+
+
+
 # [5.9.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.8.7...@react-navigation/drawer@5.9.0) (2020-08-04)
 
 

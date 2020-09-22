@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.9.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.8.0...@react-navigation/bottom-tabs@5.9.0) (2020-09-22)
+
+
+### Bug Fixes
+
+* cleanly removing event listeners in useWindowDimensions ([#8866](https://github.com/react-navigation/react-navigation/issues/8866)) ([dcbfe52](https://github.com/react-navigation/react-navigation/commit/dcbfe52667d14b0dbed6a353675d02189f7f7b5b))
+* fix border showing on hidden tab bar. closes [#8869](https://github.com/react-navigation/react-navigation/issues/8869) ([9b03c8e](https://github.com/react-navigation/react-navigation/commit/9b03c8e3a4e1552f9abaa2732a64e2136821e38d))
+
+
+### Features
+
+* add compact size for bottom tabs ([#8728](https://github.com/react-navigation/react-navigation/issues/8728)) ([a6179b7](https://github.com/react-navigation/react-navigation/commit/a6179b75adba2282a9c12751bb8db3751c39d8e4))
+
+
+
+
+
 # [5.8.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.7.3...@react-navigation/bottom-tabs@5.8.0) (2020-08-04)
 
 

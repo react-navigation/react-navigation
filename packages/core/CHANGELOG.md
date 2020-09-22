@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.12.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.12.3...@react-navigation/core@5.12.4) (2020-09-22)
+
+
+### Bug Fixes
+
+* typo in logic of getStateFromPath ([#8868](https://github.com/react-navigation/react-navigation/issues/8868)) ([97c215d](https://github.com/react-navigation/react-navigation/commit/97c215d2f2ea9f6bbade7503348827c5b6dc4186))
+
+
+
+
+
 ## [5.12.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.12.2...@react-navigation/core@5.12.3) (2020-08-04)
 
 **Note:** Version bump only for package @react-navigation/core
