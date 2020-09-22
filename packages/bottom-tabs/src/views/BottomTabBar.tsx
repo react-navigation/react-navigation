@@ -26,6 +26,7 @@ type Props = BottomTabBarProps & {
 };
 
 const DEFAULT_TABBAR_HEIGHT = 49;
+const COMPACT_TABBAR_HEIGHT = 32;
 const DEFAULT_MAX_TAB_ITEM_WIDTH = 125;
 
 const useNativeDriver = Platform.OS !== 'web';
@@ -119,6 +120,8 @@ export default function BottomTabBar({
     width: dimensions.width,
   });
 
+  const isLandscape = () => dimensions.width > dimensions.height;
+
   const handleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
 
@@ -160,9 +163,7 @@ export default function BottomTabBar({
 
       return routes.length * maxTabItemWidth <= layout.width;
     } else {
-      const isLandscape = dimensions.width > dimensions.height;
-
-      return isLandscape;
+      return isLandscape();
     }
   };
 
@@ -179,6 +180,18 @@ export default function BottomTabBar({
     insets.bottom - Platform.select({ ios: 4, default: 0 }),
     0
   );
+
+  const getDefaultTabBarHeight = () => {
+    if (
+      Platform.OS === 'ios' &&
+      !Platform.isPad &&
+      isLandscape() &&
+      shouldUseHorizontalLabels()
+    ) {
+      return COMPACT_TABBAR_HEIGHT;
+    }
+    return DEFAULT_TABBAR_HEIGHT;
+  };
 
   return (
     <Animated.View
@@ -205,7 +218,7 @@ export default function BottomTabBar({
           position: isTabBarHidden ? 'absolute' : (null as any),
         },
         {
-          height: DEFAULT_TABBAR_HEIGHT + paddingBottom,
+          height: getDefaultTabBarHeight() + paddingBottom,
           paddingBottom,
           paddingHorizontal: Math.max(insets.left, insets.right),
         },
