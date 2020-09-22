@@ -714,26 +714,22 @@ it('navigates to nested child in a navigator', () => {
 
   expect(element).toMatchInlineSnapshot(`"[foo-a, undefined]"`);
 
-  act(
-    () =>
-      navigation.current &&
-      navigation.current.navigate('bar', {
-        screen: 'bar-b',
-        params: { test: 42 },
-      })
+  act(() =>
+    navigation.current?.navigate('bar', {
+      screen: 'bar-b',
+      params: { test: 42 },
+    })
   );
 
   expect(element).toMatchInlineSnapshot(
     `"[bar-b, {\\"some\\":\\"stuff\\",\\"test\\":42}]"`
   );
 
-  act(
-    () =>
-      navigation.current &&
-      navigation.current.navigate('bar', {
-        screen: 'bar-a',
-        params: { whoa: 'test' },
-      })
+  act(() =>
+    navigation.current?.navigate('bar', {
+      screen: 'bar-a',
+      params: { whoa: 'test' },
+    })
   );
 
   expect(element).toMatchInlineSnapshot(
@@ -855,13 +851,11 @@ it('navigates to nested child in a navigator with initial: false', () => {
     type: 'test',
   });
 
-  act(
-    () =>
-      navigation.current &&
-      navigation.current.navigate('bar', {
-        screen: 'bar-b',
-        params: { test: 42 },
-      })
+  act(() =>
+    navigation.current?.navigate('bar', {
+      screen: 'bar-b',
+      params: { test: 42 },
+    })
   );
 
   expect(first).toMatchInlineSnapshot(
@@ -962,14 +956,12 @@ it('navigates to nested child in a navigator with initial: false', () => {
     type: 'test',
   });
 
-  act(
-    () =>
-      navigation.current &&
-      navigation.current.navigate('bar', {
-        screen: 'bar-b',
-        params: { test: 42 },
-        initial: false,
-      })
+  act(() =>
+    navigation.current?.navigate('bar', {
+      screen: 'bar-b',
+      params: { test: 42 },
+      initial: false,
+    })
   );
 
   expect(second).toMatchInlineSnapshot(`"[bar-b, {\\"test\\":42}]"`);
