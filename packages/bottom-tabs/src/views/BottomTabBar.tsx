@@ -193,7 +193,10 @@ export default function BottomTabBar({
             {
               translateY: visible.interpolate({
                 inputRange: [0, 1],
-                outputRange: [layout.height + paddingBottom, 0],
+                outputRange: [
+                  layout.height + paddingBottom + StyleSheet.hairlineWidth,
+                  0,
+                ],
               }),
             },
           ],
