@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import SimpleTabs from './SimpleTabs';

@@ -1,6 +1,6 @@
 /* eslint react/display-name:0 */
 
-import React from 'react';
+import * as React from 'react';
 import SwitchRouter from '../SwitchRouter';
 import StackRouter from '../StackRouter';
 import * as NavigationActions from '../../NavigationActions';

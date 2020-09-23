@@ -314,8 +314,10 @@ export default class HeaderSegment extends React.Component<Props, State> {
           style={[StyleSheet.absoluteFill, { zIndex: 0 }, backgroundStyle]}
         >
           {headerBackground ? (
+            // @ts-ignore
             headerBackground({ style: safeStyles })
           ) : headerTransparent ? null : (
+            // @ts-ignore
             <HeaderBackground style={safeStyles} />
           )}
         </Animated.View>

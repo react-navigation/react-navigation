@@ -812,6 +812,7 @@ export interface NavigationDescriptor<
   getComponent: () => React.ComponentType;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export type NavigationView<Options, State, ScreenProps = unknown> =
   | React.ComponentType<
       {
@@ -897,11 +898,13 @@ export function withNavigation<
   }
 >;
 
+// eslint-disable-next-line no-redeclare
 export function withNavigation<P extends NavigationInjectedProps>(
   Component: React.ComponentType<P>
 ): React.ComponentType<Omit<P, keyof NavigationInjectedProps>>;
 
 // For backwards compatibility
+// eslint-disable-next-line no-redeclare
 export function withNavigation<T = {}, P = NavigationParams>(
   Component: React.ComponentType<T & NavigationInjectedProps<P>>
 ): React.ComponentType<
@@ -929,11 +932,13 @@ export function withNavigationFocus<
   }
 >;
 
+// eslint-disable-next-line no-redeclare
 export function withNavigationFocus<P extends NavigationFocusInjectedProps>(
   Component: React.ComponentType<P>
 ): React.ComponentType<Omit<P, keyof NavigationFocusInjectedProps>>;
 
 // For backwards compatibility
+// eslint-disable-next-line no-redeclare
 export function withNavigationFocus<T = {}, P = NavigationParams>(
   Component: React.ComponentType<T & NavigationFocusInjectedProps<P>>
 ): React.ComponentType<

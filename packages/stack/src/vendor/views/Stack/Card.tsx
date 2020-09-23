@@ -508,9 +508,10 @@ export default class Card extends React.Component<Props> {
       : undefined;
 
     const { backgroundColor } = StyleSheet.flatten(contentStyle || {});
-    const isTransparent = backgroundColor
-      ? Color(backgroundColor).alpha() === 0
-      : false;
+    const isTransparent =
+      typeof backgroundColor === 'string'
+        ? Color(backgroundColor).alpha() === 0
+        : false;
 
     return (
       <CardAnimationContext.Provider value={animationContext}>

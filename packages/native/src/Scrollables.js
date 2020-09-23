@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {
   ScrollView,
   Platform,
@@ -6,7 +6,6 @@ import {
   SectionList,
   RefreshControl,
 } from 'react-native';
-// eslint-disable-next-line import/named
 import { ScrollView as GHScrollView } from 'react-native-gesture-handler';
 import createNavigationAwareScrollable from './createNavigationAwareScrollable';
 import invariant from './utils/invariant';

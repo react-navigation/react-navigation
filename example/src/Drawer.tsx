@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { ScrollView, StyleProp, TextStyle } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import {

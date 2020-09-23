@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import SceneView from '../SceneView';
 
 export default class SwitchView extends React.Component {

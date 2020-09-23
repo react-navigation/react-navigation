@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Button, ScrollView } from 'react-native';
 import { Themed, SafeAreaView } from 'react-navigation';
 import {

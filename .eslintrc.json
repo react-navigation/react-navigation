@@ -14,5 +14,8 @@
       "react-native-screens"
     ]
   },
-  "env": { "browser": true, "node": true }
+  "env": { "browser": true, "node": true },
+  "rules": {
+    "import/named": "off"
+  }
 }

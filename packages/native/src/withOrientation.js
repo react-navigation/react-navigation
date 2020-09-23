@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Dimensions } from 'react-native';
 import hoistNonReactStatic from 'hoist-non-react-statics';
 

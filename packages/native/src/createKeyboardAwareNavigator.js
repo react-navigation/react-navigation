@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { TextInput } from 'react-native';
 
 export default (Navigator, navigatorConfig) =>
