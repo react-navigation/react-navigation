@@ -94,6 +94,7 @@ const BaseNavigationContainer = React.forwardRef(
     {
       initialState,
       onStateChange,
+      onUnhandledNavigationAction,
       independent,
       children,
     }: NavigationContainerProps,
@@ -343,6 +344,10 @@ const BaseNavigationContainer = React.forwardRef(
     }, [getRootState, emitter, state]);
 
     const onUnhandledAction = React.useCallback((action: NavigationAction) => {
+      if (onUnhandledNavigationAction) {
+        onUnhandledNavigationAction(action);
+      }
+
       if (process.env.NODE_ENV === 'production') {
         return;
       }
