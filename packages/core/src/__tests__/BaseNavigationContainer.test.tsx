@@ -722,7 +722,7 @@ it("throws if the ref hasn't finished initializing", () => {
   render(element);
 });
 
-it("invokes the unhandled action listener with the unhandled action", () => {
+it('invokes the unhandled action listener with the unhandled action', () => {
   const ref = React.createRef<NavigationContainerRef>();
   const fn = jest.fn();
 
@@ -741,19 +741,19 @@ it("invokes the unhandled action listener with the unhandled action", () => {
   render(
     <BaseNavigationContainer ref={ref} onUnhandledNavigationAction={fn}>
       <TestNavigator>
-        <Screen name="foo" component={TestScreen}/>
-        <Screen name="bar" component={TestScreen}/>
+        <Screen name="foo" component={TestScreen} />
+        <Screen name="bar" component={TestScreen} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
 
-  act(() => ref.current!.navigate("bar"))n
-  act(() => ref.current!.navigate("baz"))
+  act(() => ref.current!.navigate('bar'));
+  act(() => ref.current!.navigate('baz'));
 
   expect(fn).toHaveBeenCalledWith({
-    "payload": {
-      "name": "baz",
+    payload: {
+      name: 'baz',
     },
-    "type": "NAVIGATE",
+    type: 'NAVIGATE',
   });
 });
