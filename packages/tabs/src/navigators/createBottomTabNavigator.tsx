@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  View,
-  StyleSheet,
-  AccessibilityRole,
-  AccessibilityStates,
-} from 'react-native';
+import { View, StyleSheet, AccessibilityRole } from 'react-native';
 import { NavigationRoute } from 'react-navigation';
 
 import { ScreenContainer } from 'react-native-screens';
@@ -35,7 +30,7 @@ type Props = NavigationViewProps &
     getAccessibilityStates: (props: {
       route: NavigationRoute;
       focused: boolean;
-    }) => AccessibilityStates[];
+    }) => string[];
     navigation: NavigationTabProp;
     descriptors: SceneDescriptorMap;
     screenProps?: unknown;
@@ -49,11 +44,8 @@ class TabNavigationView extends React.PureComponent<Props, State> {
   static defaultProps = {
     lazy: true,
     getAccessibilityRole: (): AccessibilityRole => 'button',
-    getAccessibilityStates: ({
-      focused,
-    }: {
-      focused: boolean;
-    }): AccessibilityStates[] => (focused ? ['selected'] : []),
+    getAccessibilityStates: ({ focused }: { focused: boolean }) =>
+      focused ? ['selected'] : [],
   };
 
   static getDerivedStateFromProps(nextProps: Props, prevState: State) {

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { View } from 'react-native';
 import renderer from 'react-test-renderer';
 import withOrientation, { isOrientationLandscape } from '../withOrientation';

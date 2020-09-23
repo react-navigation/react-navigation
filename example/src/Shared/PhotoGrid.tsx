@@ -23,13 +23,13 @@ class NavigationAwareScrollViewBase extends React.Component<{
   componentDidMount() {
     this.subscription = this.props.navigation.addListener('refocus', () => {
       if (this.props.navigation.isFocused()) {
-        this.root.current && this.root.current.scrollTo({ x: 0, y: 0 });
+        this.root.current?.scrollTo({ x: 0, y: 0 });
       }
     });
   }
 
   componentWillUnmount() {
-    this.subscription && this.subscription.remove();
+    this.subscription?.remove();
   }
 
   setNativeProps(props: ScrollViewProperties) {

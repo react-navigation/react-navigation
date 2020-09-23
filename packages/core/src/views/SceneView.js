@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import NavigationContext from './NavigationContext';
 
 export default class SceneView extends React.PureComponent {

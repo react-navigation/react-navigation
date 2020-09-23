@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   AccessibilityRole,
-  AccessibilityStates,
+  AccessibilityState,
   StyleProp,
   TextStyle,
   ViewStyle,
@@ -106,7 +106,8 @@ export type ButtonComponentProps = {
   testID?: string;
   accessibilityLabel?: string;
   accessibilityRole?: AccessibilityRole;
-  accessibilityStates?: AccessibilityStates[];
+  accessibilityState?: AccessibilityState;
+  accessibilityStates?: string[];
   style?: StyleProp<ViewStyle>;
 };
 
@@ -123,7 +124,7 @@ export type BottomTabBarProps = BottomTabBarOptions & {
   getAccessibilityStates: (props: {
     route: NavigationRoute;
     focused: boolean;
-  }) => AccessibilityStates[];
+  }) => string[];
   getButtonComponent: (props: {
     route: NavigationRoute;
   }) => React.ComponentType<ButtonComponentProps> | undefined;

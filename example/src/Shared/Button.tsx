@@ -1,6 +1,5 @@
-import React from 'react';
+import * as React from 'react';
 import {
-  AccessibilityStates,
   Platform,
   StyleSheet,
   Text,
@@ -88,11 +87,9 @@ export default class Button extends React.Component<ButtonProps> {
         buttonStyles.push({ backgroundColor: color });
       }
     }
-    const accessibilityStates: AccessibilityStates[] = [];
     if (disabled) {
       buttonStyles.push(styles.buttonDisabled);
       textStyles.push(styles.textDisabled);
-      accessibilityStates.push('disabled');
     }
     const formattedTitle =
       Platform.OS === 'android' ? title.toUpperCase() : title;
@@ -100,7 +97,7 @@ export default class Button extends React.Component<ButtonProps> {
       <TouchableOpacity
         accessibilityLabel={accessibilityLabel}
         accessibilityRole="button"
-        accessibilityStates={accessibilityStates}
+        accessibilityState={{ disabled }}
         testID={testID}
         disabled={disabled}
         onPress={onPress}

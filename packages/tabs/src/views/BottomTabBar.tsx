@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {
   Animated,
   TouchableWithoutFeedback,
@@ -62,6 +62,7 @@ class TouchableWithoutFeedbackWrapper extends React.Component<
       testID,
       accessibilityLabel,
       accessibilityRole,
+      accessibilityState,
       accessibilityStates,
       ...rest
     } = this.props;
@@ -74,6 +75,8 @@ class TouchableWithoutFeedbackWrapper extends React.Component<
         hitSlop={{ left: 15, right: 15, top: 0, bottom: 5 }}
         accessibilityLabel={accessibilityLabel}
         accessibilityRole={accessibilityRole}
+        accessibilityState={accessibilityState}
+        // @ts-expect-error: support older RN versions
         accessibilityStates={accessibilityStates}
       >
         <View {...rest} />
@@ -170,6 +173,7 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
       const { animation, config } = this._getKeyboardAnimationConfigByType(
         'show'
       );
+      // @ts-expect-error
       Animated[animation](this.state.visible, {
         toValue: 0,
         ...config,
@@ -181,6 +185,7 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
     const { animation, config } = this._getKeyboardAnimationConfigByType(
       'hide'
     );
+    // @ts-expect-error
     Animated[animation](this.state.visible, {
       toValue: 1,
       ...config,

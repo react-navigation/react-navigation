@@ -1,6 +1,6 @@
 /* eslint-disable react/sort-comp */
 
-import React from 'react';
+import * as React from 'react';
 import { NavigationActions, getNavigation, NavigationProvider } from '../index';
 
 export default function createNavigationContainer(Component) {

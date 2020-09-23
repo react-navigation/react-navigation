@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Text, View } from 'react-native';
 import { Themed } from 'react-navigation';
 import {

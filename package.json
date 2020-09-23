@@ -25,28 +25,28 @@
     "example": "yarn --cwd example"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/plugin-proposal-optional-chaining": "^7.8.3",
-    "@babel/preset-env": "^7.8.7",
-    "@babel/preset-react": "^7.8.3",
-    "@babel/preset-typescript": "^7.8.3",
-    "@babel/runtime": "^7.8.7",
-    "@commitlint/config-conventional": "^8.3.4",
-    "@types/jest": "^25.1.4",
-    "babel-jest": "^25.2.3",
-    "commitlint": "^8.3.5",
-    "core-js": "^3.6.4",
-    "eslint": "^7.0.0",
-    "eslint-config-satya164": "^3.1.7",
-    "husky": "^4.2.1",
-    "jest": "^25.1.0",
-    "lerna": "^3.20.2",
-    "prettier": "^2.0.5",
-     "typescript": "^3.9.5"
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/plugin-proposal-optional-chaining": "^7.11.0",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/preset-react": "^7.10.4",
+    "@babel/preset-typescript": "^7.10.4",
+    "@babel/runtime": "^7.11.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@types/jest": "^26.0.8",
+    "babel-jest": "^26.2.2",
+    "commitlint": "^11.0.0",
+    "core-js": "^3.6.5",
+    "eslint": "^7.6.0",
+    "eslint-config-satya164": "^3.1.8",
+    "husky": "^4.2.5",
+    "jest": "^26.2.2",
+    "lerna": "^3.22.1",
+    "prettier": "^2.1.2",
+    "typescript": "^4.0.3"
   },
   "resolutions": {
-    "react": "~16.9.0",
-    "react-native": "~0.61.5"
+    "react": "~16.13.1",
+    "react-native": "~0.63.2"
   },
   "husky": {
     "hooks": {
