@@ -100,6 +100,7 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
           >
             <Text
               accessibilityRole="header"
+              aria-level="1"
               numberOfLines={1}
               onLayout={[Function]}
               style={
@@ -169,6 +170,7 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
         onClose={[Function]}
         onGestureBegin={[Function]}
         onGestureCanceled={[Function]}
+        onGestureEnd={[Function]}
         onOpen={[Function]}
         onTransitionStart={[Function]}
         pointerEvents="box-none"
@@ -404,6 +406,7 @@ exports[`StackNavigator renders successfully 1`] = `
           >
             <Text
               accessibilityRole="header"
+              aria-level="1"
               numberOfLines={1}
               onLayout={[Function]}
               style={
@@ -457,6 +460,7 @@ exports[`StackNavigator renders successfully 1`] = `
         onClose={[Function]}
         onGestureBegin={[Function]}
         onGestureCanceled={[Function]}
+        onGestureEnd={[Function]}
         onOpen={[Function]}
         onTransitionStart={[Function]}
         pointerEvents="box-none"

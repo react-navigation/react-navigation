@@ -41,6 +41,18 @@ export type StackNavigationEventMap = {
    * Event which fires when a transition animation ends.
    */
   transitionEnd: { data: { closing: boolean } };
+  /**
+   * Event which fires when navigation gesture starts.
+   */
+  gestureStart: { data: undefined };
+  /**
+   * Event which fires when navigation gesture is completed.
+   */
+  gestureEnd: { data: undefined };
+  /**
+   * Event which fires when navigation gesture is canceled.
+   */
+  gestureCancel: { data: undefined };
 };
 
 export type StackNavigationHelpers = NavigationProp<NavigationStackState>;
@@ -125,7 +137,7 @@ export type StackHeaderOptions = {
   /**
    * Style object for the title component.
    */
-  headerTitleStyle?: React.ComponentProps<typeof Animated.Text>['style'];
+  headerTitleStyle?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
   /**
    * Style object for the container of the `headerTitle` component, for example to add padding.
    * By default, `headerTitleContainerStyle` is with an absolute position style and offsets both `left` and `right`.
@@ -426,6 +438,10 @@ export type StackHeaderLeftButtonProps = {
    * Accessibility label for the button for screen readers.
    */
   accessibilityLabel?: string;
+  /**
+   * Style object for the button.
+   */
+  style?: StyleProp<ViewStyle>;
 };
 
 export type StackHeaderTitleProps = {
@@ -448,7 +464,7 @@ export type StackHeaderTitleProps = {
   /**
    * Style object for the title element.
    */
-  style?: React.ComponentProps<typeof Animated.Text>['style'];
+  style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
 };
 
 export type TransitionSpec =

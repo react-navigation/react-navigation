@@ -99,6 +99,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
           >
             <Text
               accessibilityRole="header"
+              aria-level="1"
               numberOfLines={1}
               onLayout={[Function]}
               style={
@@ -152,6 +153,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
         onClose={[Function]}
         onGestureBegin={[Function]}
         onGestureCanceled={[Function]}
+        onGestureEnd={[Function]}
         onOpen={[Function]}
         onTransitionStart={[Function]}
         pointerEvents="box-none"
@@ -319,6 +321,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                             onClose={[Function]}
                             onGestureBegin={[Function]}
                             onGestureCanceled={[Function]}
+                            onGestureEnd={[Function]}
                             onOpen={[Function]}
                             onTransitionStart={[Function]}
                             pointerEvents="box-none"

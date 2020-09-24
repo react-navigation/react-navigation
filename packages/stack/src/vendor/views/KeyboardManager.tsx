@@ -17,7 +17,7 @@ export default class KeyboardManager extends React.Component<Props> {
 
   // Numeric id of the previously focused text input
   // When a gesture didn't change the tab, we can restore the focused input with this
-  private previouslyFocusedTextInput: any = null;
+  private previouslyFocusedTextInput: any | null = null;
   private startTimestamp: number = 0;
   private keyboardTimeout: any;
 

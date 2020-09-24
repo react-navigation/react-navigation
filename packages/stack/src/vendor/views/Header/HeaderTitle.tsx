@@ -1,10 +1,18 @@
 import * as React from 'react';
-import { Animated, StyleSheet, Platform } from 'react-native';
+import {
+  Animated,
+  StyleSheet,
+  Platform,
+  TextProps,
+  StyleProp,
+  TextStyle,
+} from 'react-native';
 import useTheme from '../../../utils/useTheme';
 
-type Props = Omit<React.ComponentProps<typeof Animated.Text>, 'key'> & {
+type Props = Omit<TextProps, 'style'> & {
   tintColor?: string;
   children?: string;
+  style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
 };
 
 export default function HeaderTitle({ tintColor, style, ...rest }: Props) {
@@ -13,6 +21,7 @@ export default function HeaderTitle({ tintColor, style, ...rest }: Props) {
   return (
     <Animated.Text
       accessibilityRole="header"
+      aria-level="1"
       numberOfLines={1}
       {...rest}
       style={[

@@ -433,6 +433,18 @@ export default class StackView extends React.Component<Props, State> {
     descriptor?.options.onTransitionEnd?.({ closing });
   };
 
+  private handleGestureStart = () => {
+    // Do nothing
+  };
+
+  private handleGestureEnd = () => {
+    // Do nothing
+  };
+
+  private handleGestureCancel = () => {
+    // Do nothing
+  };
+
   render() {
     const {
       state,
@@ -480,6 +492,9 @@ export default class StackView extends React.Component<Props, State> {
                       headerMode={headerMode}
                       state={state}
                       descriptors={descriptors}
+                      onGestureStart={this.handleGestureStart}
+                      onGestureEnd={this.handleGestureEnd}
+                      onGestureCancel={this.handleGestureCancel}
                       {...rest}
                       {...props}
                     />
