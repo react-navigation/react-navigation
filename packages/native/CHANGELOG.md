@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.1](https://github.com/react-navigation/react-navigation-native/compare/@react-navigation/native@3.8.0...@react-navigation/native@3.8.1) (2020-09-24)
+
+
+### Bug Fixes
+
+* don't use deprecated currentlyFocusedField ([#8684](https://github.com/react-navigation/react-navigation-native/issues/8684)) ([06a69f1](https://github.com/react-navigation/react-navigation-native/commit/06a69f1bfd81fe06b784ff4e6da290fee0c6467d)), closes [#8457](https://github.com/react-navigation/react-navigation-native/issues/8457)
+
+
+
+
+
 # [3.8.0](https://github.com/react-navigation/react-navigation-native/compare/@react-navigation/native@3.7.13...@react-navigation/native@3.8.0) (2020-06-25)
 
 
