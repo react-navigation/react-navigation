@@ -158,7 +158,7 @@ describe('SwitchRouter', () => {
     expect(getSubState(1).routeName).toEqual('A');
 
     // The back action should not switch to B. It should stay on A
-    back({ key: null });
+    back(null);
     expect(getSubState(1).routeName).toEqual('A');
   });
 
