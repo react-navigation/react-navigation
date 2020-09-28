@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.7.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@5.7.4...@react-navigation/native@5.7.5) (2020-09-28)
+
+
+### Bug Fixes
+
+* check for correct resolved value in useThenable. fixes [#8798](https://github.com/react-navigation/react-navigation/issues/8798) ([cc8f1f4](https://github.com/react-navigation/react-navigation/commit/cc8f1f4205373f605fc457b40666305b3e117772))
+
+
+
+
+
 ## [5.7.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@5.7.3...@react-navigation/native@5.7.4) (2020-09-22)
 
 **Note:** Version bump only for package @react-navigation/native
