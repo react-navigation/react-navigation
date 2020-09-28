@@ -3,19 +3,15 @@ import * as React from 'react';
 export default function useThenable<T>(create: () => PromiseLike<T>) {
   const [promise] = React.useState(create);
 
-  // Check if our thenable is synchronous
-  let resolved = false;
-  let value: T | undefined;
+  let initialState: [boolean, T | undefined] = [false, undefined];
 
+  // Check if our thenable is synchronous
   promise.then((result) => {
-    resolved = true;
-    value = result;
+    initialState = [true, result];
   });
 
-  const [state, setState] = React.useState<[boolean, T | undefined]>([
-    resolved,
-    value,
-  ]);
+  const [state, setState] = React.useState(initialState);
+  const [resolved] = state;
 
   React.useEffect(() => {
     let cancelled = false;
