@@ -5,6 +5,13 @@ import NavigationContext from '../NavigationContext';
 
 const createPropListener = () => jest.fn();
 
+const EVENT_TO_PROP_NAME = {
+  willFocus: 'onWillFocus',
+  didFocus: 'onDidFocus',
+  willBlur: 'onWillBlur',
+  didBlur: 'onDidBlur',
+};
+
 // An easy way to create the 4 listeners prop
 const createEventListenersProp = () => ({
   onWillFocus: createPropListener(),
@@ -120,6 +127,39 @@ describe('NavigationEvents', () => {
     checkPropListenerIsCalled('didFocus', 'onDidFocus');
     checkPropListenerIsCalled('willBlur', 'onWillBlur');
     checkPropListenerIsCalled('didBlur', 'onDidBlur');
+  });
+
+  it('wires props listeners to latest navigation updates', () => {
+    const {
+      navigation,
+      NavigationListenersAPI,
+    } = createTestNavigationAndHelpers();
+    const {
+      navigation: nextNavigation,
+      NavigationListenersAPI: nextNavigationListenersAPI,
+    } = createTestNavigationAndHelpers();
+
+    const eventListenerProps = createEventListenersProp();
+    const component = renderer.create(
+      <NavigationEvents navigation={navigation} {...eventListenerProps} />
+    );
+
+    Object.entries(EVENT_TO_PROP_NAME).forEach(([eventName, propName]) => {
+      expect(eventListenerProps[propName]).toHaveBeenCalledTimes(0);
+      NavigationListenersAPI.call(eventName);
+      expect(eventListenerProps[propName]).toHaveBeenCalledTimes(1);
+    });
+
+    component.update(
+      <NavigationEvents navigation={nextNavigation} {...eventListenerProps} />
+    );
+
+    Object.entries(EVENT_TO_PROP_NAME).forEach(([eventName, propName]) => {
+      NavigationListenersAPI.call(eventName);
+      expect(eventListenerProps[propName]).toHaveBeenCalledTimes(1);
+      nextNavigationListenersAPI.call(eventName);
+      expect(eventListenerProps[propName]).toHaveBeenCalledTimes(2);
+    });
   });
 
   it('wire latest props listener to navigation listeners on updates (support closure/arrow functions update)', () => {
