@@ -423,13 +423,16 @@ export default function useLinking(
       // We need to record the current metadata on the first render if they aren't set
       // This will allow the initial state to be in the history entry
       const state = ref.current.getRootState();
-      const path = getPathFromStateRef.current(state, configRef.current);
 
-      if (previousStateRef.current === undefined) {
-        previousStateRef.current = state;
+      if (state) {
+        const path = getPathFromStateRef.current(state, configRef.current);
+
+        if (previousStateRef.current === undefined) {
+          previousStateRef.current = state;
+        }
+
+        history.replace({ path, state });
       }
-
-      history.replace({ path, state });
     }
 
     const onStateChange = async () => {
