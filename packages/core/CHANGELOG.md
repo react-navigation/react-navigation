@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.8](https://github.com/react-navigation/react-navigation-core/compare/@react-navigation/core@3.7.7...@react-navigation/core@3.7.8) (2020-10-02)
+
+
+### Bug Fixes
+
+* NavigationEvents subscribe events on new nav state ([#8920](https://github.com/react-navigation/react-navigation-core/issues/8920)) ([6390aac](https://github.com/react-navigation/react-navigation-core/commit/6390aacd07fd647d925dfec842a766c8aad5272f))
+
+
+
+
+
 ## [3.7.7](https://github.com/react-navigation/react-navigation-core/compare/@react-navigation/core@3.7.6...@react-navigation/core@3.7.7) (2020-09-24)
 
 **Note:** Version bump only for package @react-navigation/core

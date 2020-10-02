@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.2](https://github.com/react-navigation/react-navigation-native/compare/@react-navigation/native@3.8.1...@react-navigation/native@3.8.2) (2020-10-02)
+
+**Note:** Version bump only for package @react-navigation/native
+
+
+
+
+
 ## [3.8.1](https://github.com/react-navigation/react-navigation-native/compare/@react-navigation/native@3.8.0...@react-navigation/native@3.8.1) (2020-09-24)
 
 
