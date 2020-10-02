@@ -240,7 +240,7 @@ export type NavigationContainerProps = {
   /**
    * Callback which is called when an action is not handled.
    */
-  onUnhandledNavigationAction?: (action: NavigationAction) => void;
+  onUnhandledAction?: (action: NavigationAction) => void;
   /**
    * Whether this navigation container should be independent of parent containers.
    * If this is not set to `true`, this container cannot be nested inside another container.

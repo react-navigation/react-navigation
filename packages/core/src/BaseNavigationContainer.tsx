@@ -94,7 +94,7 @@ const BaseNavigationContainer = React.forwardRef(
     {
       initialState,
       onStateChange,
-      onUnhandledNavigationAction,
+      onUnhandledAction,
       independent,
       children,
     }: NavigationContainerProps,
@@ -343,11 +343,7 @@ const BaseNavigationContainer = React.forwardRef(
       isFirstMountRef.current = false;
     }, [getRootState, emitter, state]);
 
-    const onUnhandledAction = React.useCallback((action: NavigationAction) => {
-      if (onUnhandledNavigationAction) {
-        onUnhandledNavigationAction(action);
-      }
-
+    const defaultOnUnhandledAction = React.useCallback((action: NavigationAction) => {
       if (process.env.NODE_ENV === 'production') {
         return;
       }
@@ -391,7 +387,7 @@ const BaseNavigationContainer = React.forwardRef(
       <ScheduleUpdateContext.Provider value={scheduleContext}>
         <NavigationBuilderContext.Provider value={builderContext}>
           <NavigationStateContext.Provider value={context}>
-            <UnhandledActionContext.Provider value={onUnhandledAction}>
+            <UnhandledActionContext.Provider value={onUnhandledAction ?? defaultOnUnhandledAction}>
               <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
             </UnhandledActionContext.Provider>
           </NavigationStateContext.Provider>

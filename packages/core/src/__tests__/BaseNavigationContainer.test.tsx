@@ -739,7 +739,7 @@ it('invokes the unhandled action listener with the unhandled action', () => {
   const TestScreen = () => <></>;
 
   render(
-    <BaseNavigationContainer ref={ref} onUnhandledNavigationAction={fn}>
+    <BaseNavigationContainer ref={ref} onUnhandledAction={fn}>
       <TestNavigator>
         <Screen name="foo" component={TestScreen} />
         <Screen name="bar" component={TestScreen} />
