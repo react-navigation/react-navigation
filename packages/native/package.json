@@ -43,9 +43,9 @@
   "devDependencies": {
     "@react-native-community/bob": "^0.16.2",
     "@testing-library/react-native": "^7.0.2",
-    "@types/react": "^16.9.49",
+    "@types/react": "^16.9.51",
     "@types/react-dom": "^16.9.8",
-    "@types/react-native": "^0.63.20",
+    "@types/react-native": "^0.63.25",
     "del-cli": "^3.0.1",
     "react": "~16.13.1",
     "react-dom": "^16.13.1",
