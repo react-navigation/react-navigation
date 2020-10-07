@@ -69,7 +69,7 @@ Next, we need to link these libraries. The steps depends on your React Native ve
   react-native link react-native-gesture-handler
   ```
 
-**IMPORTANT:** There are additional steps required for `react-native-gesture-handler` on Android after linking (for all React Native versions). Check the [this guide](https://kmagiera.github.io/react-native-gesture-handler/docs/getting-started.html) to complete the installation.
+**IMPORTANT:** There are additional steps required for `react-native-gesture-handler` on Android after linking (for all React Native versions). Check the [this guide](https://docs.swmansion.com/react-native-gesture-handler/docs/) to complete the installation.
 
 We're done! Now you can build and run the app on your device/simulator.
 
