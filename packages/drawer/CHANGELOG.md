@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.9.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.9.2...@react-navigation/drawer@5.9.3) (2020-10-07)
+
+
+### Bug Fixes
+
+* use route keys instead of index for lazy load ([c49dab3](https://github.com/react-navigation/react-navigation/commit/c49dab31b2c63a1735f0ed0a1936ecf7bbcd8b13))
+
+
+
+
+
 ## [5.9.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.9.1...@react-navigation/drawer@5.9.2) (2020-09-28)
 
 **Note:** Version bump only for package @react-navigation/drawer
