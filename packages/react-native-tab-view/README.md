@@ -7,7 +7,7 @@
 A cross-platform Tab View component for React Native.
 
 - [Run the example app to see it in action](https://expo.io/@satya164/react-native-tab-view-demos).
-- Checkout the [example/](https://github.com/react-native-community/react-native-tab-view/tree/master/example) folder for source code.
+- Checkout the [example/](https://github.com/satya164/react-native-tab-view/tree/main/example) folder for source code.
 
 ## Features
 
@@ -20,7 +20,7 @@ A cross-platform Tab View component for React Native.
 
 ## Demo
 
-<a href="https://raw.githubusercontent.com/satya164/react-native-tab-view/master/demo/demo.mp4"><img src="https://raw.githubusercontent.com/satya164/react-native-tab-view/master/demo/demo.gif" width="360"></a>
+<a href="https://raw.githubusercontent.com/satya164/react-native-tab-view/main/demo/demo.mp4"><img src="https://raw.githubusercontent.com/satya164/react-native-tab-view/main/demo/demo.gif" width="360"></a>
 
 ## Installation
 
@@ -50,7 +50,7 @@ Next, we need to link these libraries. The steps depends on your React Native ve
 
 - **React Native 0.60 and higher**
 
-  On newer versions of React Native, [linking is automatic](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md).
+  On newer versions of React Native, [linking is automatic](https://github.com/react-native-community/cli/blob/main/docs/autolinking.md).
 
   To complete the linking on iOS, make sure you have [Cocoapods](https://cocoapods.org/) installed. Then run:
 
@@ -297,7 +297,7 @@ import { TabView, ScrollPager } from 'react-native-tab-view';
 ```
 
 Also, you can use `ViewPager`-based pager with [`React Native Tab View ViewPager Adapter
-`](https://github.com/software-mansion/react-native-tab-view-viewpager-adapter). 
+`](https://github.com/software-mansion/react-native-tab-view-viewpager-adapter).
 
 ```js
 import { TabView } from 'react-native-tab-view';
@@ -621,7 +621,7 @@ Custom pager which can we used inside `renderPager` prop. It is based on ScrollV
 It accepts the same set of props as default pager extended with one addition:
 
 ##### ovescroll
-When `true`, the scroll view bounces when it reaches the end of the content. The default value is `false`. 
+When `true`, the scroll view bounces when it reaches the end of the content. The default value is `false`.
 
 
 ## Using with other libraries
@@ -630,7 +630,7 @@ When `true`, the scroll view bounces when it reaches the end of the content. The
 
 If you want to integrate the tab view with React Navigation's navigation system, e.g. want to be able to navigate to a tab using `navigation.navigate` etc, you can use the following official integrations:
 
-- [@react-navigation/material-top-tabs](https://github.com/react-navigation/navigation-ex/tree/master/packages/material-top-tabs) for React Navigation 5
+- [@react-navigation/material-top-tabs](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs) for React Navigation 5
 - [react-navigation-tabs](https://github.com/react-navigation/react-navigation-tabs) for React Navigation 4
 
 Note that some functionalities are not available with the React Navigation 4 integration because of the limitations in React Navigation. For example, it's possible to dynamically change the rendered tabs.
@@ -816,8 +816,8 @@ Remember to add tests for your change if possible.
 
 <!-- badges -->
 
-[build-badge]: https://img.shields.io/circleci/project/github/react-native-community/react-native-tab-view/master.svg?style=flat-square
-[build]: https://circleci.com/gh/react-native-community/react-native-tab-view
+[build-badge]: https://img.shields.io/circleci/project/github/satya164/react-native-tab-view/main.svg?style=flat-square
+[build]: https://circleci.com/gh/satya164/react-native-tab-view
 [version-badge]: https://img.shields.io/npm/v/react-native-tab-view.svg?style=flat-square
 [package]: https://www.npmjs.com/package/react-native-tab-view
 [license-badge]: https://img.shields.io/npm/l/react-native-tab-view.svg?style=flat-square

@@ -296,7 +296,7 @@ export default class TabBar<T extends Route> extends React.Component<
 
     // If we don't delay this state update, the UI gets stuck in weird state
     // Maybe an issue in Reanimated?
-    // https://github.com/react-native-community/react-native-tab-view/issues/877
+    // https://github.com/satya164/react-native-tab-view/issues/877
     // Cancel any pending callbacks, since we're scheduling a new one
     this.cancelNextFrameCb?.();
     this.cancelNextFrameCb = scheduleInNextFrame(() =>

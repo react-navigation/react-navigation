@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "React Native Tab View Demos",
-    "description": "Demonstrates the various capabilities of react-native-tab-view: https://github.com/react-native-community/react-native-tab-view",
+    "description": "Demonstrates the various capabilities of react-native-tab-view: https://github.com/satya164/react-native-tab-view",
     "slug": "react-native-tab-view-demos",
     "privacy": "public",
     "version": "1.0.0",
