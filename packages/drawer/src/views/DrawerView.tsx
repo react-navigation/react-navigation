@@ -83,7 +83,7 @@ export default function DrawerView({
   minSwipeDistance,
   sceneContainerStyle,
 }: Props) {
-  const [loaded, setLoaded] = React.useState([state.index]);
+  const [loaded, setLoaded] = React.useState([state.routes[state.index].key]);
   const dimensions = useWindowDimensions();
 
   const { colors } = useTheme();
@@ -129,8 +129,10 @@ export default function DrawerView({
     return () => subscription?.remove();
   }, [handleDrawerClose, isDrawerOpen, navigation, state.key]);
 
-  if (!loaded.includes(state.index)) {
-    setLoaded([...loaded, state.index]);
+  const focusedRouteKey = state.routes[state.index].key;
+
+  if (!loaded.includes(focusedRouteKey)) {
+    setLoaded([...loaded, focusedRouteKey]);
   }
 
   const renderNavigationView = ({ progress }: any) => {
@@ -159,7 +161,7 @@ export default function DrawerView({
             return null;
           }
 
-          if (lazy && !loaded.includes(index) && !isFocused) {
+          if (lazy && !loaded.includes(route.key) && !isFocused) {
             // Don't render a screen if we've never navigated to it
             return null;
           }
