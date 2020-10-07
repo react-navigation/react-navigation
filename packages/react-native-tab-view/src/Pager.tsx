@@ -133,6 +133,8 @@ export default class Pager<T extends Route> extends React.Component<
   };
 
   componentDidMount() {
+    this.mounted = true;
+
     // Register this PanGestureHandler with the parent (if parent exists)
     // in order to coordinate gestures between handlers.
     if (this.context && this.context.addGestureHandlerRef) {
@@ -232,10 +234,14 @@ export default class Pager<T extends Route> extends React.Component<
   }
 
   componentWillUnmount() {
+    this.mounted = false;
+
     if (this.interactionHandle !== null) {
       InteractionManager.clearInteractionHandle(this.interactionHandle);
     }
   }
+
+  mounted = false;
 
   static contextType = PagerContext;
 
@@ -243,7 +249,10 @@ export default class Pager<T extends Route> extends React.Component<
   // Pager is a parent to child Pagers. Allows for coordination between handlers
   private providerVal = {
     addGestureHandlerRef: (ref: React.RefObject<PanGestureHandler>) => {
-      if (!this.state.childPanGestureHandlerRefs.includes(ref)) {
+      if (
+        !this.state.childPanGestureHandlerRefs.includes(ref) &&
+        this.mounted
+      ) {
         this.setState((prevState: ComponentState) => ({
           childPanGestureHandlerRefs: [
             ...prevState.childPanGestureHandlerRefs,
@@ -531,7 +540,7 @@ export default class Pager<T extends Route> extends React.Component<
   );
 
   private toggleEnabled = () => {
-    if (this.state.enabled)
+    if (this.state.enabled && this.mounted)
       this.setState({ enabled: false }, () => {
         this.setState({ enabled: true });
       });
@@ -577,7 +586,9 @@ export default class Pager<T extends Route> extends React.Component<
           // Force componentDidUpdate to fire, whether user does a setState or not
           // This allows us to detect when the user drops the update and revert back
           // It's necessary to make sure that the state stays in sync
-          this.forceUpdate();
+          if (this.mounted) {
+            this.forceUpdate();
+          }
         }
       })
     ),
