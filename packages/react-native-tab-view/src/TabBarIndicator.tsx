@@ -15,7 +15,7 @@ export type GetTabWidth = (index: number) => number;
 
 export type Props<T extends Route> = SceneRendererProps & {
   navigationState: NavigationState<T>;
-  width: string;
+  width: string | number;
   style?: StyleProp<ViewStyle>;
   getTabWidth: GetTabWidth;
 };
