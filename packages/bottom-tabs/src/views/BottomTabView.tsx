@@ -25,7 +25,7 @@ type Props = BottomTabNavigationConfig & {
 };
 
 type State = {
-  loaded: number[];
+  loaded: string[];
 };
 
 function SceneContent({
@@ -54,18 +54,18 @@ export default class BottomTabView extends React.Component<Props, State> {
   };
 
   static getDerivedStateFromProps(nextProps: Props, prevState: State) {
-    const { index } = nextProps.state;
+    const focusedRouteKey = nextProps.state.routes[nextProps.state.index].key;
 
     return {
       // Set the current tab to be loaded if it was not loaded before
-      loaded: prevState.loaded.includes(index)
+      loaded: prevState.loaded.includes(focusedRouteKey)
         ? prevState.loaded
-        : [...prevState.loaded, index],
+        : [...prevState.loaded, focusedRouteKey],
     };
   }
 
-  state = {
-    loaded: [this.props.state.index],
+  state: State = {
+    loaded: [this.props.state.routes[this.props.state.index].key],
   };
 
   private renderTabBar = () => {
@@ -103,7 +103,7 @@ export default class BottomTabView extends React.Component<Props, State> {
                   return null;
                 }
 
-                if (lazy && !loaded.includes(index) && !isFocused) {
+                if (lazy && !loaded.includes(route.key) && !isFocused) {
                   // Don't render a screen if we've never navigated to it
                   return null;
                 }
