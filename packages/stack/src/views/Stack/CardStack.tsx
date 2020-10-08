@@ -4,11 +4,16 @@ import {
   StyleSheet,
   LayoutChangeEvent,
   Dimensions,
+  Platform,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import type { Route, StackNavigationState } from '@react-navigation/native';
 
-import { MaybeScreenContainer, MaybeScreen } from '../Screens';
+import {
+  MaybeScreenContainer,
+  MaybeScreen,
+  shouldUseNewImplementation,
+} from '../Screens';
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import CardContainer from './CardContainer';
@@ -379,7 +384,9 @@ export default class CardStack extends React.Component<Props, State> {
       onGestureStart,
       onGestureEnd,
       onGestureCancel,
-      screensEnabled = true,
+      screensEnabled = shouldUseNewImplementation
+        ? true
+        : Platform.OS !== 'ios' && mode !== 'modal',
       activeLimit = mode === 'modal' ? 2 : 1,
     } = this.props;
 
@@ -467,31 +474,45 @@ export default class CardStack extends React.Component<Props, State> {
                   const gesture = gestures[route.key];
                   const scene = scenes[index];
 
-                  // For the screens that shouldn't be active, this const will point to one of the screens
-                  // which `progress.current` will have `inputRange` value of 1, because it will not be transitioning,
-                  // so the output will have the expected 0 value.
-                  // For the screen that should be active only during the transition, the `progress.current`
-                  // will follow the transition's values during it will have:
-                  // value of 1 during the transition and:
-                  // a) for going forward expected value of 0 after the transition due to output range,
-                  // b) value of 1 for going back (the const will turn to `undefined` then after dismiss of the scene)
-                  // For the rest of the screens, which should be active because of being in the range of `activeLimit`,
-                  // the const will be undefined due to the too big value passed to the`scenes` so it will have expected value of 1
-                  const sceneForActivity = scenes[index + activeLimit];
+                  // For the screens that shouldn't be active, the value is 0
+                  // For those that should be active, but are not the top screen, the value is 1
+                  // For those on top of the stack and with interaction enabled, the value is 2
+                  // For the old implementation, it stays the same it was
+                  let isScreenActive:
+                    | Animated.AnimatedInterpolation
+                    | 2
+                    | 1
+                    | 0 = 1;
 
-                  const isScreenActive = sceneForActivity
-                    ? sceneForActivity.progress.current.interpolate({
-                        inputRange: [0, 1 - EPSILON, 1],
-                        outputRange: [1, 1, 0],
-                        extrapolate: 'clamp',
-                      })
-                    : 1;
-
-                  const transitioning = scene.progress.current.interpolate({
-                    inputRange: [0, EPSILON, 1 - EPSILON, 1],
-                    outputRange: [0, 1, 1, 0],
-                    extrapolate: 'clamp',
-                  });
+                  if (shouldUseNewImplementation) {
+                    if (index < self.length - activeLimit - 1) {
+                      // screen should be inactive because it is too deep in the stack
+                      isScreenActive = 0;
+                    } else {
+                      const sceneForActivity = scenes[self.length - 1];
+                      const outputValue =
+                        index === self.length - 1
+                          ? 2 // the screen is on top after the transition
+                          : index >= self.length - activeLimit
+                          ? 1 // the screen should stay active after the transition, it is not on top but is in activeLimit
+                          : 0; // the screen should be active only during the transition, it is at the edge of activeLimit
+                      isScreenActive = sceneForActivity
+                        ? sceneForActivity.progress.current.interpolate({
+                            inputRange: [0, 1 - EPSILON, 1],
+                            outputRange: [1, 1, outputValue],
+                            extrapolate: 'clamp',
+                          })
+                        : 1;
+                    }
+                  } else {
+                    isScreenActive = scene.progress.next
+                      ? scene.progress.next.interpolate({
+                          inputRange: [0, 1 - EPSILON, 1],
+                          outputRange: [1, 1, 0],
+                          extrapolate: 'clamp',
+                        })
+                      : 1;
+                  }
 
                   const {
                     safeAreaInsets,
@@ -569,9 +590,7 @@ export default class CardStack extends React.Component<Props, State> {
                       key={route.key}
                       style={StyleSheet.absoluteFill}
                       enabled={screensEnabled}
-                      transitioning={transitioning}
                       active={isScreenActive}
-                      isTop={index === self.length - 1}
                       pointerEvents="box-none"
                     >
                       <CardContainer

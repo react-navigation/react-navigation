@@ -34,6 +34,9 @@ class WebScreen extends React.Component<
 
 const AnimatedWebScreen = Animated.createAnimatedComponent(WebScreen);
 
+// @ts-ignore
+export const shouldUseNewImplementation = Screens?.shouldUseNewImplementation;
+
 export const MaybeScreenContainer = ({
   enabled,
   ...rest
@@ -54,14 +57,10 @@ export const MaybeScreenContainer = ({
 export const MaybeScreen = ({
   enabled,
   active,
-  transitioning,
-  isTop,
   ...rest
 }: ViewProps & {
   enabled: boolean;
-  active: 0 | 1 | Animated.AnimatedInterpolation;
-  transitioning: Animated.AnimatedInterpolation;
-  isTop: boolean;
+  active: 0 | 1 | 2 | Animated.AnimatedInterpolation;
   children: React.ReactNode;
 }) => {
   if (enabled && Platform.OS === 'web') {
@@ -71,13 +70,7 @@ export const MaybeScreen = ({
   if (enabled && Screens?.screensEnabled()) {
     return (
       // @ts-expect-error: stackPresentation is incorrectly marked as required
-      <Screens.Screen
-        transitioning={transitioning}
-        isTop={isTop}
-        enabled={enabled}
-        active={active}
-        {...rest}
-      />
+      <Screens.Screen enabled={enabled} active={active} {...rest} />
     );
   }
 
