@@ -256,10 +256,35 @@ export default function StackRouter(options: StackRouterOptions) {
 
         case 'PUSH':
           if (state.routeNames.includes(action.payload.name)) {
-            return {
-              ...state,
-              index: state.index + 1,
-              routes: [
+            const route =
+              action.payload.name && action.payload.key
+                ? state.routes.find(
+                    (route) =>
+                      route.name === action.payload.name &&
+                      route.key === action.payload.key
+                  )
+                : undefined;
+
+            let routes: Route<string>[];
+
+            if (route) {
+              routes = state.routes.filter((r) => r.key !== route.key);
+              routes.push(
+                action.payload.params
+                  ? {
+                      ...route,
+                      params:
+                        action.payload.params !== undefined
+                          ? {
+                              ...route.params,
+                              ...action.payload.params,
+                            }
+                          : route.params,
+                    }
+                  : route
+              );
+            } else {
+              routes = [
                 ...state.routes,
                 {
                   key:
@@ -275,7 +300,13 @@ export default function StackRouter(options: StackRouterOptions) {
                         }
                       : action.payload.params,
                 },
-              ],
+              ];
+            }
+
+            return {
+              ...state,
+              index: routes.length - 1,
+              routes,
             };
           }
 
