@@ -848,7 +848,7 @@ it('handles push action', () => {
     stale: false,
     type: 'stack',
     key: 'root',
-    index: 3,
+    index: 1,
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'bar', name: 'bar' },
@@ -873,7 +873,7 @@ it('handles push action', () => {
     stale: false,
     type: 'stack',
     key: 'root',
-    index: 3,
+    index: 1,
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'bar', name: 'bar' },
@@ -895,6 +895,73 @@ it('handles push action', () => {
       options
     )
   ).toBe(null);
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'bar-3', name: 'bar' },
+          { key: 'bar-4', name: 'bar', params: { foo: 21 } },
+          { key: 'baz-5', name: 'baz' },
+        ],
+      },
+      {
+        type: 'PUSH',
+        payload: { name: 'bar', key: 'bar-4', params: { bar: 29 } },
+      },
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 2,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'bar-3', name: 'bar' },
+      { key: 'baz-5', name: 'baz' },
+      { key: 'bar-4', name: 'bar', params: { foo: 21, bar: 29 } },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'bar-3', name: 'bar' },
+          { key: 'bar-4', name: 'bar' },
+          { key: 'baz-5', name: 'baz' },
+        ],
+      },
+      {
+        type: 'PUSH',
+        payload: { name: 'bar', key: 'bar-6', params: { bar: 29 } },
+      },
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 3,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'bar-3', name: 'bar' },
+      { key: 'bar-4', name: 'bar' },
+      { key: 'baz-5', name: 'baz' },
+      { key: 'bar-6', name: 'bar', params: { bar: 29 } },
+    ],
+  });
 });
 
 it('changes index on focus change', () => {
