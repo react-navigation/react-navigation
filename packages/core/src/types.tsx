@@ -238,6 +238,10 @@ export type NavigationContainerProps = {
    */
   onStateChange?: (state: NavigationState | undefined) => void;
   /**
+   * Callback which is called when an action is not handled.
+   */
+  onUnhandledAction?: (action: NavigationAction) => void;
+  /**
    * Whether this navigation container should be independent of parent containers.
    * If this is not set to `true`, this container cannot be nested inside another container.
    * Setting it to `true` disconnects any children navigators from parent container.

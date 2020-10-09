@@ -721,3 +721,39 @@ it("throws if the ref hasn't finished initializing", () => {
 
   render(element);
 });
+
+it('invokes the unhandled action listener with the unhandled action', () => {
+  const ref = React.createRef<NavigationContainerRef>();
+  const fn = jest.fn();
+
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return (
+      <React.Fragment>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </React.Fragment>
+    );
+  };
+
+  const TestScreen = () => <></>;
+
+  render(
+    <BaseNavigationContainer ref={ref} onUnhandledAction={fn}>
+      <TestNavigator>
+        <Screen name="foo" component={TestScreen} />
+        <Screen name="bar" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  act(() => ref.current!.navigate('bar'));
+  act(() => ref.current!.navigate('baz'));
+
+  expect(fn).toHaveBeenCalledWith({
+    payload: {
+      name: 'baz',
+    },
+    type: 'NAVIGATE',
+  });
+});
