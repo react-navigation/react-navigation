@@ -35,7 +35,7 @@ class WebScreen extends React.Component<
 const AnimatedWebScreen = Animated.createAnimatedComponent(WebScreen);
 
 // @ts-ignore
-export const shouldUseNewImplementation = Screens?.shouldUseNewImplementation;
+export const shouldUseActivityState = Screens?.shouldUseActivityState;
 
 export const MaybeScreenContainer = ({
   enabled,

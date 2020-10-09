@@ -12,7 +12,7 @@ import type { Route, StackNavigationState } from '@react-navigation/native';
 import {
   MaybeScreenContainer,
   MaybeScreen,
-  shouldUseNewImplementation,
+  shouldUseActivityState,
 } from '../Screens';
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
@@ -384,7 +384,7 @@ export default class CardStack extends React.Component<Props, State> {
       onGestureStart,
       onGestureEnd,
       onGestureCancel,
-      screensEnabled = shouldUseNewImplementation
+      screensEnabled = shouldUseActivityState
         ? true
         : Platform.OS !== 'ios' && mode !== 'modal',
       activeLimit = mode === 'modal' ? 2 : 1,
@@ -484,7 +484,7 @@ export default class CardStack extends React.Component<Props, State> {
                     | 1
                     | 0 = 1;
 
-                  if (shouldUseNewImplementation) {
+                  if (shouldUseActivityState) {
                     if (index < self.length - activeLimit - 1) {
                       // screen should be inactive because it is too deep in the stack
                       isScreenActive = 0;
