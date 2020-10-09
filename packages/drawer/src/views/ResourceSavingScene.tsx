@@ -3,6 +3,7 @@ import { Platform, StyleSheet, View } from 'react-native';
 import {
   Screen,
   screensEnabled,
+  // @ts-ignore
   shouldUseActivityState,
 } from 'react-native-screens';
 
@@ -24,6 +25,7 @@ export default class ResourceSavingScene extends React.Component<Props> {
       return (
         // @ts-expect-error: stackPresentation is incorrectly marked as required
         <Screen
+          // @ts-expect-error: old active prop didn't have "2" value possible
           active={isVisible ? (shouldUseActivityState ? 2 : 1) : 0}
           {...rest}
         />
