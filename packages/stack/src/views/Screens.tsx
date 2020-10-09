@@ -68,10 +68,17 @@ export const MaybeScreen = ({
   }
 
   if (enabled && Screens?.screensEnabled()) {
-    return (
-      // @ts-expect-error: stackPresentation is incorrectly marked as required
-      <Screens.Screen enabled={enabled} active={active} {...rest} />
-    );
+    if (shouldUseActivityState) {
+      return (
+        // @ts-expect-error: there was an `active` prop and no `activityState` in older version and stackPresentation was required
+        <Screens.Screen enabled={enabled} activityState={active} {...rest} />
+      );
+    } else {
+      return (
+        // @ts-expect-error: there was an `active` prop and no `activityState` in older version and stackPresentation was required
+        <Screens.Screen enabled={enabled} active={active} {...rest} />
+      );
+    }
   }
 
   return <View {...rest} />;
