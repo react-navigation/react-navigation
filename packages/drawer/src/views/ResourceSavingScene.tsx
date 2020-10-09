@@ -23,9 +23,8 @@ export default class ResourceSavingScene extends React.Component<Props> {
       const { isVisible, ...rest } = this.props;
 
       return (
-        // @ts-expect-error: stackPresentation is incorrectly marked as required
         <Screen
-          // @ts-expect-error: old active prop didn't have "2" value possible
+          // @ts-expect-error: old active prop didn't have "2" value possible and stackPresentation was required
           active={isVisible ? (shouldUseActivityState ? 2 : 1) : 0}
           {...rest}
         />
