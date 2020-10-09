@@ -94,6 +94,7 @@ const BaseNavigationContainer = React.forwardRef(
     {
       initialState,
       onStateChange,
+      onUnhandledAction,
       independent,
       children,
     }: NavigationContainerProps,
@@ -342,51 +343,56 @@ const BaseNavigationContainer = React.forwardRef(
       isFirstMountRef.current = false;
     }, [getRootState, emitter, state]);
 
-    const onUnhandledAction = React.useCallback((action: NavigationAction) => {
-      if (process.env.NODE_ENV === 'production') {
-        return;
-      }
+    const defaultOnUnhandledAction = React.useCallback(
+      (action: NavigationAction) => {
+        if (process.env.NODE_ENV === 'production') {
+          return;
+        }
 
-      const payload: Record<string, any> | undefined = action.payload;
+        const payload: Record<string, any> | undefined = action.payload;
 
-      let message = `The action '${action.type}'${
-        payload ? ` with payload ${JSON.stringify(action.payload)}` : ''
-      } was not handled by any navigator.`;
+        let message = `The action '${action.type}'${
+          payload ? ` with payload ${JSON.stringify(action.payload)}` : ''
+        } was not handled by any navigator.`;
 
-      switch (action.type) {
-        case 'NAVIGATE':
-        case 'PUSH':
-        case 'REPLACE':
-        case 'JUMP_TO':
-          if (payload?.name) {
-            message += `\n\nDo you have a screen named '${payload.name}'?\n\nIf you're trying to navigate to a screen in a nested navigator, see https://reactnavigation.org/docs/nesting-navigators#navigating-to-a-screen-in-a-nested-navigator.`;
-          } else {
-            message += `\n\nYou need to pass the name of the screen to navigate to.\n\nSee https://reactnavigation.org/docs/navigation-actions for usage.`;
-          }
+        switch (action.type) {
+          case 'NAVIGATE':
+          case 'PUSH':
+          case 'REPLACE':
+          case 'JUMP_TO':
+            if (payload?.name) {
+              message += `\n\nDo you have a screen named '${payload.name}'?\n\nIf you're trying to navigate to a screen in a nested navigator, see https://reactnavigation.org/docs/nesting-navigators#navigating-to-a-screen-in-a-nested-navigator.`;
+            } else {
+              message += `\n\nYou need to pass the name of the screen to navigate to.\n\nSee https://reactnavigation.org/docs/navigation-actions for usage.`;
+            }
 
-          break;
-        case 'GO_BACK':
-        case 'POP':
-        case 'POP_TO_TOP':
-          message += `\n\nIs there any screen to go back to?`;
-          break;
-        case 'OPEN_DRAWER':
-        case 'CLOSE_DRAWER':
-        case 'TOGGLE_DRAWER':
-          message += `\n\nIs your screen inside a Drawer navigator?`;
-          break;
-      }
+            break;
+          case 'GO_BACK':
+          case 'POP':
+          case 'POP_TO_TOP':
+            message += `\n\nIs there any screen to go back to?`;
+            break;
+          case 'OPEN_DRAWER':
+          case 'CLOSE_DRAWER':
+          case 'TOGGLE_DRAWER':
+            message += `\n\nIs your screen inside a Drawer navigator?`;
+            break;
+        }
 
-      message += `\n\nThis is a development-only warning and won't be shown in production.`;
+        message += `\n\nThis is a development-only warning and won't be shown in production.`;
 
-      console.error(message);
-    }, []);
+        console.error(message);
+      },
+      []
+    );
 
     return (
       <ScheduleUpdateContext.Provider value={scheduleContext}>
         <NavigationBuilderContext.Provider value={builderContext}>
           <NavigationStateContext.Provider value={context}>
-            <UnhandledActionContext.Provider value={onUnhandledAction}>
+            <UnhandledActionContext.Provider
+              value={onUnhandledAction ?? defaultOnUnhandledAction}
+            >
               <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
             </UnhandledActionContext.Provider>
           </NavigationStateContext.Provider>
