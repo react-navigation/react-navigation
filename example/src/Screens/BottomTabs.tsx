@@ -76,6 +76,9 @@ export default function BottomTabsScreen({
 
   return (
     <BottomTabs.Navigator
+      sceneContainerStyle={{
+        backgroundColor: 'lightblue',
+      }}
       screenOptions={{
         tabBarButton:
           Platform.OS === 'web'

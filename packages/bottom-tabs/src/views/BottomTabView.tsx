@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 
 import {
   NavigationHelpersContext,
@@ -22,6 +22,7 @@ type Props = BottomTabNavigationConfig & {
   state: TabNavigationState;
   navigation: BottomTabNavigationHelpers;
   descriptors: BottomTabDescriptorMap;
+  sceneContainerStyle?: StyleProp<ViewStyle>;
 };
 
 type State = {
@@ -31,9 +32,11 @@ type State = {
 function SceneContent({
   isFocused,
   children,
+  sceneContainerStyle,
 }: {
   isFocused: boolean;
   children: React.ReactNode;
+  sceneContainerStyle?: StyleProp<ViewStyle>;
 }) {
   const { colors } = useTheme();
 
@@ -41,7 +44,11 @@ function SceneContent({
     <View
       accessibilityElementsHidden={!isFocused}
       importantForAccessibility={isFocused ? 'auto' : 'no-hide-descendants'}
-      style={[styles.content, { backgroundColor: colors.background }]}
+      style={[
+        styles.content,
+        { backgroundColor: colors.background },
+        sceneContainerStyle,
+      ]}
     >
       {children}
     </View>
@@ -51,6 +58,7 @@ function SceneContent({
 export default class BottomTabView extends React.Component<Props, State> {
   static defaultProps = {
     lazy: true,
+    sceneContainerStyle: {},
   };
 
   static getDerivedStateFromProps(nextProps: Props, prevState: State) {
@@ -85,7 +93,13 @@ export default class BottomTabView extends React.Component<Props, State> {
   };
 
   render() {
-    const { state, descriptors, navigation, lazy } = this.props;
+    const {
+      state,
+      descriptors,
+      navigation,
+      lazy,
+      sceneContainerStyle,
+    } = this.props;
     const { routes } = state;
     const { loaded } = this.state;
 
@@ -114,7 +128,10 @@ export default class BottomTabView extends React.Component<Props, State> {
                     style={StyleSheet.absoluteFill}
                     isVisible={isFocused}
                   >
-                    <SceneContent isFocused={isFocused}>
+                    <SceneContent
+                      isFocused={isFocused}
+                      sceneContainerStyle={sceneContainerStyle}
+                    >
                       {descriptor.render()}
                     </SceneContent>
                   </ResourceSavingScene>
