@@ -320,11 +320,11 @@ export type StackNavigationOptions = StackHeaderOptions &
      */
     gestureResponseDistance?: {
       /**
-       * Distance for horizontal direction. Defaults to 25.
+       * Distance for vertical direction. Defaults to 135.
        */
       vertical?: number;
       /**
-       * Distance for vertical direction. Defaults to 135.
+       * Distance for horizontal direction. Defaults to 25.
        */
       horizontal?: number;
     };
