@@ -322,11 +322,11 @@ export type StackNavigationOptions = StackHeaderOptions &
       /**
        * Distance for horizontal direction. Defaults to 25.
        */
-      vertical?: number;
+      horizontal?: number;
       /**
        * Distance for vertical direction. Defaults to 135.
        */
-      horizontal?: number;
+      vertical?: number;
     };
     /**
      * Number which determines the relevance of velocity for the gesture. Defaults to 0.3.
