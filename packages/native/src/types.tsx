@@ -29,14 +29,12 @@ export type LinkingOptions = {
    * Only applicable on Android and iOS.
    *
    * @example
-   *  {
    *    prefixes: [
    *      "https://example.com", // Exact
-   *      /^[^.s]+.example.com/g // Match with all subdomain and scheme,
-   *    ],
-   *  }
+   *      "https://*.example.com" // Match with any subdomain
+   *    ]
    */
-  prefixes: (string | RegExp)[];
+  prefixes: string[];
   /**
    * Config to fine-tune how to parse the path.
    *

@@ -58,8 +58,9 @@ export default function useLinking(
 
   const extractPathFromURL = React.useCallback((url: string) => {
     for (const prefix of prefixesRef.current) {
-      if (checkIsPrefixMatch(url, prefix)) {
-        return url.replace(prefix, '');
+      const prefixRegex = new RegExp(`^${prefix.replace(/\*/g, '[^/]+')}`);
+      if (url.match(prefixRegex)) {
+        return url.replace(prefixRegex, '');
       }
     }
 
@@ -121,19 +122,4 @@ export default function useLinking(
   return {
     getInitialState,
   };
-}
-
-function checkIsPrefixMatch(
-  url: string,
-  prefix: string | RegExp
-): string | RegExp | false {
-  if (typeof prefix === 'string') {
-    if (url.startsWith(prefix)) {
-      return prefix;
-    }
-  } else if (url.match(prefix)) {
-    return prefix;
-  }
-
-  return false;
 }
