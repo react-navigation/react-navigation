@@ -131,7 +131,7 @@ function checkIsPrefixMatch(
     if (url.startsWith(prefix)) {
       return prefix;
     }
-  } else if (prefix.test(url)) {
+  } else if (url.match(prefix)) {
     return prefix;
   }
 
