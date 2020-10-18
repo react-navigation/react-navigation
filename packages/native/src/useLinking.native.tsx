@@ -59,7 +59,7 @@ export default function useLinking(
   const extractPathFromURL = React.useCallback((url: string) => {
     for (const prefix of prefixesRef.current) {
       const prefixRegex = new RegExp(`^${prefix.replace(/\*/g, '[^/]+')}`);
-      if (url.match(prefixRegex)) {
+      if (prefixRegex.test(url)) {
         return url.replace(prefixRegex, '');
       }
     }
