@@ -506,6 +506,20 @@ export type TypedNavigator<
   ) => null;
 };
 
+export type NestedNavigateParams<State extends NavigationState> =
+  | {
+      screen?: string;
+      params?: object;
+      initial?: boolean;
+      state?: never;
+    }
+  | {
+      screen?: never;
+      params?: never;
+      initial?: never;
+      state?: PartialState<State> | State;
+    };
+
 export type PathConfig = {
   path?: string;
   exact?: boolean;
