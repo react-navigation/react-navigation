@@ -27,6 +27,12 @@ export type LinkingOptions = {
    * The prefixes are stripped from the URL before parsing them.
    * Usually they are the `scheme` + `host` (e.g. `myapp://chat?user=jane`)
    * Only applicable on Android and iOS.
+   *
+   * @example
+   *    prefixes: [
+   *      "https://example.com", // Exact
+   *      "https://*.example.com" // Match with any subdomain
+   *    ]
    */
   prefixes: string[];
   /**

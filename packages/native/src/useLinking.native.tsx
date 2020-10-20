@@ -6,6 +6,7 @@ import {
   NavigationContainerRef,
 } from '@react-navigation/core';
 import type { LinkingOptions } from './types';
+import escapeStringRegexp from 'escape-string-regexp';
 
 let isUsingLinking = false;
 
@@ -58,8 +59,16 @@ export default function useLinking(
 
   const extractPathFromURL = React.useCallback((url: string) => {
     for (const prefix of prefixesRef.current) {
-      if (url.startsWith(prefix)) {
-        return url.replace(prefix, '');
+      const protocol = prefix.match(/^[^:]+:\/\//)?.[0] ?? '';
+      const host = prefix.replace(protocol, '');
+      const prefixRegex = new RegExp(
+        `^${escapeStringRegexp(protocol)}${host
+          .split('.')
+          .map((it) => (it === '*' ? '[^/]+' : escapeStringRegexp(it)))
+          .join('\\.')}`
+      );
+      if (prefixRegex.test(url)) {
+        return url.replace(prefixRegex, '');
       }
     }
 
