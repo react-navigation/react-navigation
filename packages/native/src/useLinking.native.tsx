@@ -60,10 +60,7 @@ export default function useLinking(
   const extractPathFromURL = React.useCallback((url: string) => {
     for (const prefix of prefixesRef.current) {
       /**
-       * https is default schema, as mentioned in android documentation
-       * User can add prefixes like this `example.com`
-       */
-      const protocol = prefix.match(/^[^:]+:\/\//)?.[0] || 'https://';
+      const protocol = prefix.match(/^[^:]+:\/\//)?.[0] ?? '';
       const host = prefix.replace(protocol, '');
       const prefixRegex = new RegExp(
         `^${escapeStringRegexp(protocol)}${host
