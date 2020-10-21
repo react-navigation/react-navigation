@@ -61,8 +61,12 @@ export default function useLinking(
     for (const prefix of prefixesRef.current) {
       const protocol = prefix.match(/^[^:]+:\/\//)?.[0] ?? '';
       const host = prefix.replace(protocol, '');
+      const schema = protocol
+        ? escapeStringRegexp(protocol)
+        : '(http|https)://';
+
       const prefixRegex = new RegExp(
-        `^${escapeStringRegexp(protocol)}${host
+        `^${schema}${host
           .split('.')
           .map((it) => (it === '*' ? '[^/]+' : escapeStringRegexp(it)))
           .join('\\.')}`
