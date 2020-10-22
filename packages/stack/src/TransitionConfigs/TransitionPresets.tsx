@@ -18,6 +18,7 @@ import {
 import type { TransitionPreset } from '../types';
 
 const ANDROID_VERSION_PIE = 28;
+const ANDROID_VERSION_10 = 29;
 
 /**
  * Standard iOS navigation transition.
@@ -102,10 +103,13 @@ export const ScaleFromCenterAndroid: TransitionPreset = {
  */
 export const DefaultTransition = Platform.select({
   ios: SlideFromRightIOS,
-  default:
-    Platform.OS === 'android' && Platform.Version >= ANDROID_VERSION_PIE
+  android:
+    Platform.Version >= ANDROID_VERSION_10
+      ? ScaleFromCenterAndroid
+      : Platform.Version >= ANDROID_VERSION_PIE
       ? RevealFromBottomAndroid
       : FadeFromBottomAndroid,
+  default: ScaleFromCenterAndroid,
 });
 
 /**

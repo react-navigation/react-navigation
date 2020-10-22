@@ -289,8 +289,8 @@ export function forScaleFromCenterAndroid({
   );
 
   const opacity = progress.interpolate({
-    inputRange: [0, 0.8, 1, 1.2, 2],
-    outputRange: [0, 0.5, 1, 0.33, 0],
+    inputRange: [0, 0.75, 0.875, 1, 1.0825, 1.2075, 2],
+    outputRange: [0, 0, 1, 1, 1, 1, 0],
   });
 
   const scale = conditional(
