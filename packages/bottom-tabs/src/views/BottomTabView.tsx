@@ -22,7 +22,6 @@ type Props = BottomTabNavigationConfig & {
   state: TabNavigationState;
   navigation: BottomTabNavigationHelpers;
   descriptors: BottomTabDescriptorMap;
-  sceneContainerStyle?: StyleProp<ViewStyle>;
 };
 
 type State = {
@@ -32,11 +31,11 @@ type State = {
 function SceneContent({
   isFocused,
   children,
-  sceneContainerStyle,
+  style,
 }: {
   isFocused: boolean;
   children: React.ReactNode;
-  sceneContainerStyle?: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
 }) {
   const { colors } = useTheme();
 
@@ -47,7 +46,7 @@ function SceneContent({
       style={[
         styles.content,
         { backgroundColor: colors.background },
-        sceneContainerStyle,
+        style,
       ]}
     >
       {children}
@@ -58,7 +57,6 @@ function SceneContent({
 export default class BottomTabView extends React.Component<Props, State> {
   static defaultProps = {
     lazy: true,
-    sceneContainerStyle: {},
   };
 
   static getDerivedStateFromProps(nextProps: Props, prevState: State) {
@@ -130,7 +128,7 @@ export default class BottomTabView extends React.Component<Props, State> {
                   >
                     <SceneContent
                       isFocused={isFocused}
-                      sceneContainerStyle={sceneContainerStyle}
+                      style={sceneContainerStyle}
                     >
                       {descriptor.render()}
                     </SceneContent>
