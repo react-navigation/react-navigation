@@ -11,6 +11,7 @@ import type { EdgeInsets } from 'react-native-safe-area-context';
 import type { Route } from '@react-navigation/native';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderBackground from './HeaderBackground';
+import HeaderShownContext from '../../utils/HeaderShownContext';
 import memoize from '../../utils/memoize';
 import type {
   Layout,
@@ -79,6 +80,8 @@ export default function HeaderSegment(props: Props) {
   const [titleLayout, setTitleLayout] = React.useState<Layout | undefined>(
     undefined
   );
+
+  const isParentHeaderShown = React.useContext(HeaderShownContext);
 
   const handleTitleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
@@ -167,7 +170,7 @@ export default function HeaderSegment(props: Props) {
     headerRightContainerStyle: rightContainerStyle,
     headerTitleContainerStyle: titleContainerStyle,
     headerStyle: customHeaderStyle,
-    headerStatusBarHeight = insets.top,
+    headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
     styleInterpolator,
   } = props;
 
