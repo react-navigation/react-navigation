@@ -391,6 +391,7 @@ export default class CardStack extends React.Component<Props, State> {
     const focusedRoute = state.routes[state.index];
     const focusedDescriptor = descriptors[focusedRoute.key];
     const focusedOptions = focusedDescriptor ? focusedDescriptor.options : {};
+    const focusedHeaderHeight = headerHeights[focusedRoute.key];
 
     let defaultTransitionPreset =
       mode === 'modal' ? ModalTransition : DefaultTransition;
@@ -450,7 +451,14 @@ export default class CardStack extends React.Component<Props, State> {
               focusedOptions.headerStyleInterpolator !== undefined
                 ? focusedOptions.headerStyleInterpolator
                 : defaultTransitionPreset.headerStyleInterpolator,
-            style: [styles.floating, isFloatHeaderAbsolute && styles.absolute],
+            style: [
+              styles.floating,
+              isFloatHeaderAbsolute && [
+                // Without this, the header buttons won't be touchable on Android when headerTransparent: true
+                { height: focusedHeaderHeight },
+                styles.absolute,
+              ],
+            ],
           })}
         </React.Fragment>
       ) : null;
