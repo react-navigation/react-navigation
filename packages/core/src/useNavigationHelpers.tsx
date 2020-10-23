@@ -31,6 +31,7 @@ type Options<State extends NavigationState, Action extends NavigationAction> = {
  */
 export default function useNavigationHelpers<
   State extends NavigationState,
+  ActionHelpers extends Record<string, () => void>,
   Action extends NavigationAction,
   EventMap extends Record<string, any>
 >({ onAction, getState, emitter, router }: Options<State, Action>) {
@@ -85,7 +86,8 @@ export default function useNavigationHelpers<
       dangerouslyGetParent: () => parentNavigationHelpers as any,
       dangerouslyGetState: getState,
     } as NavigationHelpers<ParamListBase, EventMap> &
-      (NavigationProp<ParamListBase, string, any, any, any> | undefined);
+      (NavigationProp<ParamListBase, string, any, any, any> | undefined) &
+      ActionHelpers;
   }, [
     emitter.emit,
     getState,

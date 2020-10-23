@@ -33,7 +33,8 @@ export type LabelPosition = 'beside-icon' | 'below-icon';
 export type BottomTabNavigationHelpers = NavigationHelpers<
   ParamListBase,
   BottomTabNavigationEventMap
->;
+> &
+  TabActionHelpers<ParamListBase>;
 
 export type BottomTabNavigationProp<
   ParamList extends ParamListBase,

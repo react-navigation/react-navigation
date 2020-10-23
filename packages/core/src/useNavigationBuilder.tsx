@@ -182,6 +182,7 @@ const getRouteConfigsFromChildren = <
 export default function useNavigationBuilder<
   State extends NavigationState,
   RouterOptions extends DefaultRouterOptions,
+  ActionHelpers extends Record<string, () => void>,
   ScreenOptions extends {},
   EventMap extends Record<string, any>
 >(
@@ -484,7 +485,12 @@ export default function useNavigationBuilder<
     setState,
   });
 
-  const navigation = useNavigationHelpers<State, NavigationAction, EventMap>({
+  const navigation = useNavigationHelpers<
+    State,
+    ActionHelpers,
+    NavigationAction,
+    EventMap
+  >({
     onAction,
     getState,
     emitter,

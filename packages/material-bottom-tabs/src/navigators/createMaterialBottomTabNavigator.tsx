@@ -6,6 +6,7 @@ import {
   TabRouter,
   TabRouterOptions,
   TabNavigationState,
+  TabActionHelpers,
   ParamListBase,
 } from '@react-navigation/native';
 
@@ -30,6 +31,7 @@ function MaterialBottomTabNavigator({
   const { state, descriptors, navigation } = useNavigationBuilder<
     TabNavigationState<ParamListBase>,
     TabRouterOptions,
+    TabActionHelpers<ParamListBase>,
     MaterialBottomTabNavigationOptions,
     MaterialBottomTabNavigationEventMap
   >(TabRouter, {

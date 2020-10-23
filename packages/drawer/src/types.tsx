@@ -201,7 +201,8 @@ export type DrawerNavigationEventMap = {
 export type DrawerNavigationHelpers = NavigationHelpers<
   ParamListBase,
   DrawerNavigationEventMap
->;
+> &
+  DrawerActionHelpers<ParamListBase>;
 
 export type DrawerNavigationProp<
   ParamList extends ParamListBase,

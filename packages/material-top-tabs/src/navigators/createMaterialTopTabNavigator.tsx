@@ -6,6 +6,7 @@ import {
   TabRouter,
   TabRouterOptions,
   TabNavigationState,
+  TabActionHelpers,
   ParamListBase,
 } from '@react-navigation/native';
 import MaterialTopTabView from '../views/MaterialTopTabView';
@@ -29,6 +30,7 @@ function MaterialTopTabNavigator({
   const { state, descriptors, navigation } = useNavigationBuilder<
     TabNavigationState<ParamListBase>,
     TabRouterOptions,
+    TabActionHelpers<ParamListBase>,
     MaterialTopTabNavigationOptions,
     MaterialTopTabNavigationEventMap
   >(TabRouter, {
