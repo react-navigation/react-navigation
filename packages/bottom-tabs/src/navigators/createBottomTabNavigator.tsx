@@ -23,6 +23,7 @@ function BottomTabNavigator({
   backBehavior,
   children,
   screenOptions,
+  sceneContainerStyle,
   ...rest
 }: Props) {
   const { state, descriptors, navigation } = useNavigationBuilder<
@@ -43,6 +44,7 @@ function BottomTabNavigator({
       state={state}
       navigation={navigation}
       descriptors={descriptors}
+      sceneContainerStyle={sceneContainerStyle}
     />
   );
 }

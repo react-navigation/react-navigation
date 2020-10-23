@@ -170,6 +170,10 @@ export type BottomTabNavigationConfig<T = BottomTabBarOptions> = {
    * Options for the tab bar which will be passed as props to the tab bar component.
    */
   tabBarOptions?: T;
+  /**
+   * Style object for the component wrapping the screen content.
+   */
+  sceneContainerStyle?: StyleProp<ViewStyle>;
 };
 
 export type BottomTabBarOptions = {
