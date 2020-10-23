@@ -387,9 +387,9 @@ export default class CardStack extends React.Component<Props, State> {
       onGestureStart,
       onGestureEnd,
       onGestureCancel,
-      detachInactiveScreens = shouldUseActivityState
-        ? Platform.OS !== 'ios'
-        : Platform.OS !== 'ios' && mode !== 'modal',
+      detachInactiveScreens = Platform.OS === 'ios'
+        ? false // Disable `react-native-screens` on iOS by default since it's buggy
+        : shouldUseActivityState || mode !== 'modal', // Enable on new versions of screens or for non modals on older versions
     } = this.props;
 
     const { scenes, layout, gestures, headerHeights } = this.state;
