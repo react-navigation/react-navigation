@@ -36,7 +36,9 @@ export type StackActionType =
 
 export type StackRouterOptions = DefaultRouterOptions;
 
-export type StackNavigationState = NavigationState & {
+export type StackNavigationState<
+  ParamList extends ParamListBase
+> = NavigationState<ParamList> & {
   /**
    * Type of the router, in this case, it's stack.
    */
@@ -96,7 +98,7 @@ export const StackActions = {
 
 export default function StackRouter(options: StackRouterOptions) {
   const router: Router<
-    StackNavigationState,
+    StackNavigationState<ParamListBase>,
     CommonNavigationAction | StackActionType
   > = {
     ...BaseRouter,

@@ -9,6 +9,7 @@ import {
   useTheme,
   useLinkBuilder,
   Link,
+  ParamListBase,
 } from '@react-navigation/native';
 
 import type {
@@ -18,7 +19,7 @@ import type {
 } from '../types';
 
 type Props = MaterialBottomTabNavigationConfig & {
-  state: TabNavigationState;
+  state: TabNavigationState<ParamListBase>;
   navigation: MaterialBottomTabNavigationHelpers;
   descriptors: MaterialBottomTabDescriptorMap;
 };

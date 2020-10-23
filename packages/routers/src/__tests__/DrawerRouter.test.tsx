@@ -3,6 +3,7 @@ import {
   DrawerRouter,
   DrawerActions,
   DrawerNavigationState,
+  ParamListBase,
 } from '..';
 
 jest.mock('nanoid/non-secure', () => ({ nanoid: () => 'test' }));
@@ -199,7 +200,7 @@ it('gets rehydrated state from partial state', () => {
 it("doesn't rehydrate state if it's not stale", () => {
   const router = DrawerRouter({});
 
-  const state: DrawerNavigationState = {
+  const state: DrawerNavigationState<ParamListBase> = {
     index: 0,
     key: 'drawer-test',
     routeNames: ['bar', 'baz', 'qux'],
@@ -340,7 +341,7 @@ it('handles open drawer action', () => {
     history: [{ type: 'route', key: 'bar' }, { type: 'drawer' }],
   });
 
-  const state: DrawerNavigationState = {
+  const state: DrawerNavigationState<ParamListBase> = {
     stale: false as const,
     type: 'drawer' as const,
     key: 'root',
@@ -395,7 +396,7 @@ it('handles close drawer action', () => {
     history: [{ type: 'route', key: 'bar' }],
   });
 
-  const state: DrawerNavigationState = {
+  const state: DrawerNavigationState<ParamListBase> = {
     stale: false as const,
     type: 'drawer' as const,
     key: 'root',
@@ -487,7 +488,7 @@ it('handles toggle drawer action', () => {
 it('updates history on focus change', () => {
   const router = DrawerRouter({ backBehavior: 'history' });
 
-  const state: DrawerNavigationState = {
+  const state: DrawerNavigationState<ParamListBase> = {
     index: 0,
     key: 'drawer-test',
     routeNames: ['baz', 'bar'],

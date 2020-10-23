@@ -52,7 +52,7 @@ export type StackNavigationProp<
 > = NavigationProp<
   ParamList,
   RouteName,
-  StackNavigationState,
+  StackNavigationState<ParamList>,
   StackNavigationOptions,
   StackNavigationEventMap
 > &
@@ -250,7 +250,7 @@ export type StackHeaderProps = {
 export type StackDescriptor = Descriptor<
   ParamListBase,
   string,
-  StackNavigationState,
+  StackNavigationState<ParamListBase>,
   StackNavigationOptions
 >;
 

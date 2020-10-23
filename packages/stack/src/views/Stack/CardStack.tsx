@@ -7,7 +7,11 @@ import {
   Platform,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
-import type { Route, StackNavigationState } from '@react-navigation/native';
+import type {
+  ParamListBase,
+  Route,
+  StackNavigationState,
+} from '@react-navigation/native';
 
 import { MaybeScreenContainer, MaybeScreen } from '../Screens';
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
@@ -37,7 +41,7 @@ type GestureValues = {
 type Props = {
   mode: StackCardMode;
   insets: EdgeInsets;
-  state: StackNavigationState;
+  state: StackNavigationState<ParamListBase>;
   descriptors: StackDescriptorMap;
   routes: Route<string>[];
   openingRouteKeys: string[];

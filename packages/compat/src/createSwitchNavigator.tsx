@@ -5,6 +5,7 @@ import {
   TabRouter,
   TabRouterOptions,
   TabNavigationState,
+  ParamListBase,
 } from '@react-navigation/native';
 import createCompatNavigatorFactory from './createCompatNavigatorFactory';
 
@@ -12,7 +13,7 @@ type Props = DefaultNavigatorOptions<{}> & TabRouterOptions;
 
 function SwitchNavigator(props: Props) {
   const { state, descriptors } = useNavigationBuilder<
-    TabNavigationState,
+    TabNavigationState<ParamListBase>,
     TabRouterOptions,
     {},
     {}
@@ -22,7 +23,10 @@ function SwitchNavigator(props: Props) {
 }
 
 export default createCompatNavigatorFactory(
-  createNavigatorFactory<TabNavigationState, {}, {}, typeof SwitchNavigator>(
-    SwitchNavigator
-  )
+  createNavigatorFactory<
+    TabNavigationState<ParamListBase>,
+    {},
+    {},
+    typeof SwitchNavigator
+  >(SwitchNavigator)
 );
