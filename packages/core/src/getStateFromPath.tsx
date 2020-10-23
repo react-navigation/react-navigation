@@ -1,5 +1,5 @@
 import escape from 'escape-string-regexp';
-import queryString from 'query-string';
+import * as queryString from 'query-string';
 import type {
   NavigationState,
   PartialState,
