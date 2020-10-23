@@ -113,10 +113,7 @@ export default function SimpleStackScreen({
   }, [navigation]);
 
   return (
-    <SimpleStack.Navigator
-      headerMode="float"
-      screenOptions={{ headerTransparent: true }}
-    >
+    <SimpleStack.Navigator>
       <SimpleStack.Screen
         name="Article"
         component={ArticleScreen}
