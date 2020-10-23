@@ -171,10 +171,11 @@ export type BottomTabNavigationConfig<T = BottomTabBarOptions> = {
    */
   tabBarOptions?: T;
   /**
-   * If `false`, `react-native-screens` will be disabled for this navigator.
+   * Whether inactive screens should be detached from the view hierarchy to save memory.
+   * Make sure to call `enableScreens` from `react-native-screens` to make it work.
    * Defaults to `true`.
    */
-  screensEnabled?: boolean;
+  detachInactiveScreens?: boolean;
 };
 
 export type BottomTabBarOptions = {
