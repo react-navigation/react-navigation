@@ -9,7 +9,6 @@ import {
 import type { EdgeInsets } from 'react-native-safe-area-context';
 
 import Header from './Header';
-import { getDefaultHeaderHeight } from './HeaderSegment';
 import {
   forSlideLeft,
   forSlideUp,
@@ -60,18 +59,8 @@ export default function HeaderContainer({
   const isParentHeaderShown = React.useContext(HeaderShownContext);
   const parentPreviousScene = React.useContext(PreviousSceneContext);
 
-  const [headerHeightAnim] = React.useState(
-    () =>
-      new Animated.Value(
-        getDefaultHeaderHeight(layout, isParentHeaderShown ? 0 : insets.top)
-      )
-  );
-
   return (
-    <Animated.View
-      pointerEvents="box-none"
-      style={[style, mode === 'float' && { height: headerHeightAnim }]}
-    >
+    <Animated.View pointerEvents="box-none" style={style}>
       {scenes.slice(-3).map((scene, i, self) => {
         if ((mode === 'screen' && i !== self.length - 1) || !scene) {
           return null;
@@ -144,9 +133,6 @@ export default function HeaderContainer({
                     ? (e) => {
                         const { height } = e.nativeEvent.layout;
 
-                        // If we don't set the header height, the header buttons won't be touchable on Android
-                        // when headerMode='float' and headerTransparent: true
-                        headerHeightAnim.setValue(height);
                         onContentHeightChange({
                           route: scene.route,
                           height,
