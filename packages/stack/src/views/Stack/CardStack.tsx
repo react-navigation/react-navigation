@@ -13,7 +13,11 @@ import type {
   StackNavigationState,
 } from '@react-navigation/native';
 
-import { MaybeScreenContainer, MaybeScreen } from '../Screens';
+import {
+  MaybeScreenContainer,
+  MaybeScreen,
+  shouldUseActivityState,
+} from '../Screens';
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import CardContainer from './CardContainer';
@@ -67,6 +71,7 @@ type Props = {
   onGestureStart?: (props: { route: Route<string> }) => void;
   onGestureEnd?: (props: { route: Route<string> }) => void;
   onGestureCancel?: (props: { route: Route<string> }) => void;
+  detachInactiveScreens?: boolean;
 };
 
 type State = {
@@ -79,6 +84,10 @@ type State = {
 };
 
 const EPSILON = 0.01;
+
+const STATE_INACTIVE = 0;
+const STATE_TRANSITIONING_OR_BELOW_TOP = 1;
+const STATE_ON_TOP = 2;
 
 const FALLBACK_DESCRIPTOR = Object.freeze({ options: {} });
 
@@ -388,6 +397,9 @@ export default class CardStack extends React.Component<Props, State> {
       onGestureStart,
       onGestureEnd,
       onGestureCancel,
+      detachInactiveScreens = Platform.OS === 'ios'
+        ? false // Disable `react-native-screens` on iOS by default since it's buggy
+        : shouldUseActivityState || mode !== 'modal', // Enable on new versions of screens or for non modals on older versions
     } = this.props;
 
     const { scenes, layout, gestures, headerHeights } = this.state;
@@ -414,9 +426,22 @@ export default class CardStack extends React.Component<Props, State> {
       left = insets.left,
     } = focusedOptions.safeAreaInsets || {};
 
-    // Screens is buggy on iOS and web, so we only enable it on Android
-    // For modals, usually we want the screen underneath to be visible, so also disable it there
-    const isScreensEnabled = Platform.OS !== 'ios' && mode !== 'modal';
+    let activeScreensLimit = 1;
+
+    for (let i = scenes.length - 1; i >= 0; i--) {
+      const {
+        // By default, we don't want to detach the previous screen of the active one for modals
+        detachPreviousScreen = mode === 'modal'
+          ? i !== scenes.length - 1
+          : true,
+      } = scenes[i].descriptor.options;
+
+      if (detachPreviousScreen === false) {
+        activeScreensLimit++;
+      } else {
+        break;
+      }
+    }
 
     const isFloatHeaderAbsolute =
       headerMode === 'float'
@@ -471,7 +496,7 @@ export default class CardStack extends React.Component<Props, State> {
       <React.Fragment>
         {isFloatHeaderAbsolute ? null : floatingHeader}
         <MaybeScreenContainer
-          enabled={isScreensEnabled}
+          enabled={detachInactiveScreens}
           style={styles.container}
           onLayout={this.handleLayout}
         >
@@ -480,13 +505,41 @@ export default class CardStack extends React.Component<Props, State> {
             const gesture = gestures[route.key];
             const scene = scenes[index];
 
-            const isScreenActive = scene.progress.next
-              ? scene.progress.next.interpolate({
-                  inputRange: [0, 1 - EPSILON, 1],
-                  outputRange: [1, 1, 0],
-                  extrapolate: 'clamp',
-                })
-              : 1;
+            // For the screens that shouldn't be active, the value is 0
+            // For those that should be active, but are not the top screen, the value is 1
+            // For those on top of the stack and with interaction enabled, the value is 2
+            // For the old implementation, it stays the same it was
+            let isScreenActive: Animated.AnimatedInterpolation | 2 | 1 | 0 = 1;
+
+            if (shouldUseActivityState) {
+              if (index < self.length - activeScreensLimit - 1) {
+                // screen should be inactive because it is too deep in the stack
+                isScreenActive = STATE_INACTIVE;
+              } else {
+                const sceneForActivity = scenes[self.length - 1];
+                const outputValue =
+                  index === self.length - 1
+                    ? STATE_ON_TOP // the screen is on top after the transition
+                    : index >= self.length - activeScreensLimit
+                    ? STATE_TRANSITIONING_OR_BELOW_TOP // the screen should stay active after the transition, it is not on top but is in activeLimit
+                    : STATE_INACTIVE; // the screen should be active only during the transition, it is at the edge of activeLimit
+                isScreenActive = sceneForActivity
+                  ? sceneForActivity.progress.current.interpolate({
+                      inputRange: [0, 1 - EPSILON, 1],
+                      outputRange: [1, 1, outputValue],
+                      extrapolate: 'clamp',
+                    })
+                  : STATE_TRANSITIONING_OR_BELOW_TOP;
+              }
+            } else {
+              isScreenActive = scene.progress.next
+                ? scene.progress.next.interpolate({
+                    inputRange: [0, 1 - EPSILON, 1],
+                    outputRange: [1, 1, 0],
+                    extrapolate: 'clamp',
+                  })
+                : 1;
+            }
 
             const {
               safeAreaInsets,
@@ -563,7 +616,7 @@ export default class CardStack extends React.Component<Props, State> {
               <MaybeScreen
                 key={route.key}
                 style={StyleSheet.absoluteFill}
-                enabled={isScreensEnabled}
+                enabled={detachInactiveScreens}
                 active={isScreenActive}
                 pointerEvents="box-none"
               >

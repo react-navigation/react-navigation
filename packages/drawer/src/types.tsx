@@ -86,6 +86,12 @@ export type DrawerNavigationConfig<T = DrawerContentOptions> = {
    * You can pass a custom background color for a drawer or a custom width here.
    */
   drawerStyle?: StyleProp<ViewStyle>;
+  /**
+   * Whether inactive screens should be detached from the view hierarchy to save memory.
+   * Make sure to call `enableScreens` from `react-native-screens` to make it work.
+   * Defaults to `true`.
+   */
+  detachInactiveScreens?: boolean;
 };
 
 export type DrawerNavigationOptions = {

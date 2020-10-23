@@ -171,6 +171,12 @@ export type BottomTabNavigationConfig<T = BottomTabBarOptions> = {
    */
   tabBarOptions?: T;
   /**
+   * Whether inactive screens should be detached from the view hierarchy to save memory.
+   * Make sure to call `enableScreens` from `react-native-screens` to make it work.
+   * Defaults to `true`.
+   */
+  detachInactiveScreens?: boolean;
+  /**
    * Style object for the component wrapping the screen content.
    */
   sceneContainerStyle?: StyleProp<ViewStyle>;
