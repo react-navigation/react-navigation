@@ -51,6 +51,7 @@ function SceneContent({
 export default class BottomTabView extends React.Component<Props, State> {
   static defaultProps = {
     lazy: true,
+    detachInactiveScreens: true,
   };
 
   static getDerivedStateFromProps(nextProps: Props, prevState: State) {
@@ -90,7 +91,7 @@ export default class BottomTabView extends React.Component<Props, State> {
       descriptors,
       navigation,
       lazy,
-      screensEnabled = true,
+      detachInactiveScreens = true,
     } = this.props;
     const { routes } = state;
     const { loaded } = this.state;
@@ -99,8 +100,11 @@ export default class BottomTabView extends React.Component<Props, State> {
       <NavigationHelpersContext.Provider value={navigation}>
         <SafeAreaProviderCompat>
           <View style={styles.container}>
-            {/* @ts-ignore */}
-            <ScreenContainer enabled={screensEnabled} style={styles.pages}>
+            <ScreenContainer
+              // @ts-ignore
+              enabled={detachInactiveScreens}
+              style={styles.pages}
+            >
               {routes.map((route, index) => {
                 const descriptor = descriptors[route.key];
                 const { unmountOnBlur } = descriptor.options;
@@ -120,7 +124,7 @@ export default class BottomTabView extends React.Component<Props, State> {
                     key={route.key}
                     style={StyleSheet.absoluteFill}
                     isVisible={isFocused}
-                    enabled={screensEnabled}
+                    enabled={detachInactiveScreens}
                   >
                     <SceneContent isFocused={isFocused}>
                       {descriptor.render()}

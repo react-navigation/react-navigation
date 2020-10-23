@@ -82,7 +82,7 @@ export default function DrawerView({
   gestureHandlerProps,
   minSwipeDistance,
   sceneContainerStyle,
-  screensEnabled = true,
+  detachInactiveScreens = true,
 }: Props) {
   const [loaded, setLoaded] = React.useState([state.index]);
   const dimensions = useWindowDimensions();
@@ -151,7 +151,7 @@ export default function DrawerView({
   const renderContent = () => {
     return (
       // @ts-ignore
-      <ScreenContainer enabled={screensEnabled} style={styles.content}>
+      <ScreenContainer enabled={detachInactiveScreens} style={styles.content}>
         {state.routes.map((route, index) => {
           const descriptor = descriptors[route.key];
           const { unmountOnBlur } = descriptor.options;
@@ -171,7 +171,7 @@ export default function DrawerView({
               key={route.key}
               style={[StyleSheet.absoluteFill, { opacity: isFocused ? 1 : 0 }]}
               isVisible={isFocused}
-              enabled={screensEnabled}
+              enabled={detachInactiveScreens}
             >
               {descriptor.render()}
             </ResourceSavingScene>
