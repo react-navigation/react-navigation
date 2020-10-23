@@ -10,6 +10,7 @@ import {
   StackNavigationState,
   StackActions,
   ParamListBase,
+  StackActionHelpers,
 } from '@react-navigation/native';
 import StackView from '../views/Stack/StackView';
 import type {
@@ -39,6 +40,7 @@ function StackNavigator({
   const { state, descriptors, navigation } = useNavigationBuilder<
     StackNavigationState<ParamListBase>,
     StackRouterOptions,
+    StackActionHelpers<ParamListBase>,
     StackNavigationOptions,
     StackNavigationEventMap
   >(StackRouter, {

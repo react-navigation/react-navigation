@@ -37,7 +37,8 @@ export type MaterialTopTabNavigationEventMap = {
 export type MaterialTopTabNavigationHelpers = NavigationHelpers<
   ParamListBase,
   MaterialTopTabNavigationEventMap
->;
+> &
+  TabActionHelpers<ParamListBase>;
 
 export type MaterialTopTabNavigationProp<
   ParamList extends ParamListBase,

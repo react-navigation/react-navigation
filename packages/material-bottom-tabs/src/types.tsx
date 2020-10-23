@@ -19,7 +19,8 @@ export type MaterialBottomTabNavigationEventMap = {
 export type MaterialBottomTabNavigationHelpers = NavigationHelpers<
   ParamListBase,
   MaterialBottomTabNavigationEventMap
->;
+> &
+  TabActionHelpers<ParamListBase>;
 
 export type MaterialBottomTabNavigationProp<
   ParamList extends ParamListBase,

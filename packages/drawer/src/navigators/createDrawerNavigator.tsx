@@ -6,6 +6,7 @@ import {
   DrawerNavigationState,
   DrawerRouterOptions,
   DrawerRouter,
+  DrawerActionHelpers,
   ParamListBase,
 } from '@react-navigation/native';
 
@@ -31,6 +32,7 @@ function DrawerNavigator({
   const { state, descriptors, navigation } = useNavigationBuilder<
     DrawerNavigationState<ParamListBase>,
     DrawerRouterOptions,
+    DrawerActionHelpers<ParamListBase>,
     DrawerNavigationOptions,
     DrawerNavigationEventMap
   >(DrawerRouter, {
