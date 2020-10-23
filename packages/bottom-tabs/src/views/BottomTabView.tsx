@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 
 import {
   NavigationHelpersContext,
@@ -31,9 +31,11 @@ type State = {
 function SceneContent({
   isFocused,
   children,
+  style,
 }: {
   isFocused: boolean;
   children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
 }) {
   const { colors } = useTheme();
 
@@ -41,7 +43,7 @@ function SceneContent({
     <View
       accessibilityElementsHidden={!isFocused}
       importantForAccessibility={isFocused ? 'auto' : 'no-hide-descendants'}
-      style={[styles.content, { backgroundColor: colors.background }]}
+      style={[styles.content, { backgroundColor: colors.background }, style]}
     >
       {children}
     </View>
@@ -85,7 +87,13 @@ export default class BottomTabView extends React.Component<Props, State> {
   };
 
   render() {
-    const { state, descriptors, navigation, lazy } = this.props;
+    const {
+      state,
+      descriptors,
+      navigation,
+      lazy,
+      sceneContainerStyle,
+    } = this.props;
     const { routes } = state;
     const { loaded } = this.state;
 
@@ -114,7 +122,10 @@ export default class BottomTabView extends React.Component<Props, State> {
                     style={StyleSheet.absoluteFill}
                     isVisible={isFocused}
                   >
-                    <SceneContent isFocused={isFocused}>
+                    <SceneContent
+                      isFocused={isFocused}
+                      style={sceneContainerStyle}
+                    >
                       {descriptor.render()}
                     </SceneContent>
                   </ResourceSavingScene>
