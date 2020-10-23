@@ -2,7 +2,16 @@ import type * as CommonActions from './CommonActions';
 
 export type CommonNavigationAction = CommonActions.Action;
 
-export type NavigationState = Readonly<{
+type NavigationRoute<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList
+> = Route<Extract<RouteName, string>, ParamList[RouteName]> & {
+  state?: NavigationState | PartialState<NavigationState>;
+};
+
+export type NavigationState<
+  ParamList extends ParamListBase = ParamListBase
+> = Readonly<{
   /**
    * Unique key for the navigation state.
    */
@@ -14,7 +23,7 @@ export type NavigationState = Readonly<{
   /**
    * List of valid route names as defined in the screen components.
    */
-  routeNames: string[];
+  routeNames: Extract<keyof ParamList, string>[];
   /**
    * Alternative entries for history.
    */
@@ -22,9 +31,7 @@ export type NavigationState = Readonly<{
   /**
    * List of rendered routes.
    */
-  routes: (Route<string> & {
-    state?: NavigationState | PartialState<NavigationState>;
-  })[];
+  routes: NavigationRoute<ParamList, keyof ParamList>[];
   /**
    * Custom type for the state, whether it's for tab, stack, drawer etc.
    * During rehydration, the state will be discarded if type doesn't match with router type.
@@ -55,7 +62,10 @@ export type PartialState<State extends NavigationState> = Partial<
     })[];
   }>;
 
-export type Route<RouteName extends string> = Readonly<{
+export type Route<
+  RouteName extends string,
+  Params extends object | undefined = object | undefined
+> = Readonly<{
   /**
    * Unique key for the route.
    */
@@ -64,11 +74,20 @@ export type Route<RouteName extends string> = Readonly<{
    * User-provided name for the route.
    */
   name: RouteName;
-  /**
-   * Params for the route.
-   */
-  params?: object;
-}>;
+}> &
+  (undefined extends Params
+    ? Readonly<{
+        /**
+         * Params for this route
+         */
+        params?: Readonly<Params>;
+      }>
+    : Readonly<{
+        /**
+         * Params for this route
+         */
+        params: Readonly<Params>;
+      }>);
 
 export type ParamListBase = Record<string, object | undefined>;
 

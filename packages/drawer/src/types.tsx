@@ -136,7 +136,7 @@ export type DrawerNavigationOptions = {
 };
 
 export type DrawerContentComponentProps<T = DrawerContentOptions> = T & {
-  state: DrawerNavigationState;
+  state: DrawerNavigationState<ParamListBase>;
   navigation: DrawerNavigationHelpers;
   descriptors: DrawerDescriptorMap;
   /**
@@ -203,7 +203,7 @@ export type DrawerNavigationProp<
 > = NavigationProp<
   ParamList,
   RouteName,
-  DrawerNavigationState,
+  DrawerNavigationState<ParamList>,
   DrawerNavigationOptions,
   DrawerNavigationEventMap
 > &
@@ -220,7 +220,7 @@ export type DrawerScreenProps<
 export type DrawerDescriptor = Descriptor<
   ParamListBase,
   string,
-  DrawerNavigationState,
+  DrawerNavigationState<ParamListBase>,
   DrawerNavigationOptions
 >;
 

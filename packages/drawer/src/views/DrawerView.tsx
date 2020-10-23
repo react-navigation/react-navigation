@@ -13,6 +13,7 @@ import {
   DrawerNavigationState,
   DrawerActions,
   useTheme,
+  ParamListBase,
 } from '@react-navigation/native';
 
 import { GestureHandlerRootView } from './GestureHandler';
@@ -31,7 +32,7 @@ import type {
 } from '../types';
 
 type Props = DrawerNavigationConfig & {
-  state: DrawerNavigationState;
+  state: DrawerNavigationState<ParamListBase>;
   navigation: DrawerNavigationHelpers;
   descriptors: DrawerDescriptorMap;
 };

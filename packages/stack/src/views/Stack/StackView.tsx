@@ -6,6 +6,7 @@ import {
   StackActions,
   StackNavigationState,
   Route,
+  ParamListBase,
 } from '@react-navigation/native';
 
 import { GestureHandlerRootView } from '../GestureHandler';
@@ -23,7 +24,7 @@ import type {
 import HeaderShownContext from '../../utils/HeaderShownContext';
 
 type Props = StackNavigationConfig & {
-  state: StackNavigationState;
+  state: StackNavigationState<ParamListBase>;
   navigation: StackNavigationHelpers;
   descriptors: StackDescriptorMap;
 };
