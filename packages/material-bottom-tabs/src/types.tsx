@@ -27,7 +27,7 @@ export type MaterialBottomTabNavigationProp<
 > = NavigationProp<
   ParamList,
   RouteName,
-  TabNavigationState,
+  TabNavigationState<ParamList>,
   MaterialBottomTabNavigationOptions,
   MaterialBottomTabNavigationEventMap
 > &
@@ -84,7 +84,7 @@ export type MaterialBottomTabNavigationOptions = {
 export type MaterialBottomTabDescriptor = Descriptor<
   ParamListBase,
   string,
-  TabNavigationState,
+  TabNavigationState<ParamListBase>,
   MaterialBottomTabNavigationOptions
 >;
 

@@ -25,8 +25,8 @@ export type DrawerRouterOptions = TabRouterOptions & {
   openByDefault?: boolean;
 };
 
-export type DrawerNavigationState = Omit<
-  TabNavigationState,
+export type DrawerNavigationState<ParamList extends ParamListBase> = Omit<
+  TabNavigationState<ParamList>,
   'type' | 'history'
 > & {
   /**
@@ -72,10 +72,14 @@ export const DrawerActions = {
 };
 
 const isDrawerOpen = (
-  state: DrawerNavigationState | PartialState<DrawerNavigationState>
+  state:
+    | DrawerNavigationState<ParamListBase>
+    | PartialState<DrawerNavigationState<ParamListBase>>
 ) => Boolean(state.history?.find((it) => it.type === 'drawer'));
 
-const openDrawer = (state: DrawerNavigationState): DrawerNavigationState => {
+const openDrawer = (
+  state: DrawerNavigationState<ParamListBase>
+): DrawerNavigationState<ParamListBase> => {
   if (isDrawerOpen(state)) {
     return state;
   }
@@ -86,7 +90,9 @@ const openDrawer = (state: DrawerNavigationState): DrawerNavigationState => {
   };
 };
 
-const closeDrawer = (state: DrawerNavigationState): DrawerNavigationState => {
+const closeDrawer = (
+  state: DrawerNavigationState<ParamListBase>
+): DrawerNavigationState<ParamListBase> => {
   if (!isDrawerOpen(state)) {
     return state;
   }
@@ -101,11 +107,11 @@ export default function DrawerRouter({
   openByDefault,
   ...rest
 }: DrawerRouterOptions): Router<
-  DrawerNavigationState,
+  DrawerNavigationState<ParamListBase>,
   DrawerActionType | CommonNavigationAction
 > {
   const router = (TabRouter(rest) as unknown) as Router<
-    DrawerNavigationState,
+    DrawerNavigationState<ParamListBase>,
     TabActionType | CommonNavigationAction
   >;
 

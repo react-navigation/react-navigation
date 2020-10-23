@@ -41,7 +41,7 @@ export type BottomTabNavigationProp<
 > = NavigationProp<
   ParamList,
   RouteName,
-  TabNavigationState,
+  TabNavigationState<ParamList>,
   BottomTabNavigationOptions,
   BottomTabNavigationEventMap
 > &
@@ -148,7 +148,7 @@ export type BottomTabNavigationOptions = {
 export type BottomTabDescriptor = Descriptor<
   ParamListBase,
   string,
-  TabNavigationState,
+  TabNavigationState<ParamListBase>,
   BottomTabNavigationOptions
 >;
 
@@ -244,7 +244,7 @@ export type BottomTabBarOptions = {
 };
 
 export type BottomTabBarProps<T = BottomTabBarOptions> = T & {
-  state: TabNavigationState;
+  state: TabNavigationState<ParamListBase>;
   descriptors: BottomTabDescriptorMap;
   navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>;
 };

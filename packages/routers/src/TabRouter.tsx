@@ -23,7 +23,10 @@ export type TabRouterOptions = DefaultRouterOptions & {
   backBehavior?: BackBehavior;
 };
 
-export type TabNavigationState = Omit<NavigationState, 'history'> & {
+export type TabNavigationState<ParamList extends ParamListBase> = Omit<
+  NavigationState<ParamList>,
+  'history'
+> & {
   /**
    * Type of the router, in this case, it's tab.
    */
@@ -93,7 +96,7 @@ const getRouteHistory = (
 };
 
 const changeIndex = (
-  state: TabNavigationState,
+  state: TabNavigationState<ParamListBase>,
   index: number,
   backBehavior: BackBehavior,
   initialRouteName: string | undefined
@@ -127,7 +130,7 @@ export default function TabRouter({
   backBehavior = 'history',
 }: TabRouterOptions) {
   const router: Router<
-    TabNavigationState,
+    TabNavigationState<ParamListBase>,
     TabActionType | CommonNavigationAction
   > = {
     ...BaseRouter,
@@ -172,9 +175,9 @@ export default function TabRouter({
       }
 
       const routes = routeNames.map((name) => {
-        const route = (state as PartialState<TabNavigationState>).routes.find(
-          (r) => r.name === name
-        );
+        const route = (state as PartialState<
+          TabNavigationState<ParamListBase>
+        >).routes.find((r) => r.name === name);
 
         return {
           ...route,

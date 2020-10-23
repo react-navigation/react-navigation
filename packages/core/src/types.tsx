@@ -256,7 +256,7 @@ export type NavigationContainerProps = {
 export type NavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string,
-  State extends NavigationState = NavigationState,
+  State extends NavigationState = NavigationState<ParamList>,
   ScreenOptions extends {} = {},
   EventMap extends EventMapBase = {}
 > = NavigationHelpersCommon<ParamList, State> & {
@@ -281,20 +281,7 @@ export type NavigationProp<
 export type RouteProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList
-> = Omit<Route<Extract<RouteName, string>>, 'params'> &
-  (undefined extends ParamList[RouteName]
-    ? Readonly<{
-        /**
-         * Params for this route
-         */
-        params?: Readonly<ParamList[RouteName]>;
-      }>
-    : Readonly<{
-        /**
-         * Params for this route
-         */
-        params: Readonly<ParamList[RouteName]>;
-      }>);
+> = Route<Extract<RouteName, string>, ParamList[RouteName]>;
 
 export type CompositeNavigationProp<
   A extends NavigationProp<ParamListBase, string, any, any>,

@@ -3,6 +3,7 @@ import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 
 import {
   NavigationHelpersContext,
+  ParamListBase,
   TabNavigationState,
   useTheme,
 } from '@react-navigation/native';
@@ -19,7 +20,7 @@ import type {
 } from '../types';
 
 type Props = BottomTabNavigationConfig & {
-  state: TabNavigationState;
+  state: TabNavigationState<ParamListBase>;
   navigation: BottomTabNavigationHelpers;
   descriptors: BottomTabDescriptorMap;
 };

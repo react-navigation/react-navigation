@@ -45,7 +45,7 @@ export type MaterialTopTabNavigationProp<
 > = NavigationProp<
   ParamList,
   RouteName,
-  TabNavigationState,
+  TabNavigationState<ParamList>,
   MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationEventMap
 > &
@@ -94,7 +94,7 @@ export type MaterialTopTabNavigationOptions = {
 export type MaterialTopTabDescriptor = Descriptor<
   ParamListBase,
   string,
-  TabNavigationState,
+  TabNavigationState<ParamListBase>,
   MaterialTopTabNavigationOptions
 >;
 
@@ -192,7 +192,7 @@ export type MaterialTopTabBarOptions = Partial<
 
 export type MaterialTopTabBarProps = MaterialTopTabBarOptions &
   SceneRendererProps & {
-    state: TabNavigationState;
+    state: TabNavigationState<ParamListBase>;
     navigation: NavigationHelpers<
       ParamListBase,
       MaterialTopTabNavigationEventMap

@@ -4,6 +4,7 @@ import {
   NavigationHelpersContext,
   TabNavigationState,
   TabActions,
+  ParamListBase,
   useTheme,
 } from '@react-navigation/native';
 
@@ -16,7 +17,7 @@ import type {
 } from '../types';
 
 type Props = MaterialTopTabNavigationConfig & {
-  state: TabNavigationState;
+  state: TabNavigationState<ParamListBase>;
   navigation: MaterialTopTabNavigationHelpers;
   descriptors: MaterialTopTabDescriptorMap;
   tabBarPosition?: 'top' | 'bottom';
