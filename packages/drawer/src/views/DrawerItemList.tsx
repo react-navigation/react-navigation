@@ -3,6 +3,7 @@ import {
   CommonActions,
   DrawerActions,
   DrawerNavigationState,
+  ParamListBase,
   useLinkBuilder,
 } from '@react-navigation/native';
 import DrawerItem from './DrawerItem';
@@ -13,7 +14,7 @@ import type {
 } from '../types';
 
 type Props = Omit<DrawerContentOptions, 'contentContainerStyle' | 'style'> & {
-  state: DrawerNavigationState;
+  state: DrawerNavigationState<ParamListBase>;
   navigation: DrawerNavigationHelpers;
   descriptors: DrawerDescriptorMap;
 };

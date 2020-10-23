@@ -79,6 +79,15 @@ const GESTURE_RESPONSE_DISTANCE_VERTICAL = 135;
 
 const useNativeDriver = Platform.OS !== 'web';
 
+const hasOpacityStyle = (style: any) => {
+  if (style) {
+    const flattenedStyle = StyleSheet.flatten(style);
+    return flattenedStyle.opacity != null;
+  }
+
+  return false;
+};
+
 export default class Card extends React.Component<Props> {
   static defaultProps = {
     overlayEnabled: Platform.OS !== 'ios',
@@ -533,6 +542,7 @@ export default class Card extends React.Component<Props> {
             </View>
           ) : null}
           <Animated.View
+            needsOffscreenAlphaCompositing={hasOpacityStyle(containerStyle)}
             style={[styles.container, containerStyle, customContainerStyle]}
             pointerEvents="box-none"
           >

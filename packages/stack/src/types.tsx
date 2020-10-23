@@ -52,7 +52,7 @@ export type StackNavigationProp<
 > = NavigationProp<
   ParamList,
   RouteName,
-  StackNavigationState,
+  StackNavigationState<ParamList>,
   StackNavigationOptions,
   StackNavigationEventMap
 > &
@@ -250,7 +250,7 @@ export type StackHeaderProps = {
 export type StackDescriptor = Descriptor<
   ParamListBase,
   string,
-  StackNavigationState,
+  StackNavigationState<ParamListBase>,
   StackNavigationOptions
 >;
 
@@ -320,11 +320,11 @@ export type StackNavigationOptions = StackHeaderOptions &
      */
     gestureResponseDistance?: {
       /**
-       * Distance for horizontal direction. Defaults to 25.
+       * Distance for vertical direction. Defaults to 135.
        */
       vertical?: number;
       /**
-       * Distance for vertical direction. Defaults to 135.
+       * Distance for horizontal direction. Defaults to 25.
        */
       horizontal?: number;
     };

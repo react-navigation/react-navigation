@@ -9,6 +9,7 @@ import {
   StackRouterOptions,
   StackNavigationState,
   StackActions,
+  ParamListBase,
 } from '@react-navigation/native';
 import StackView from '../views/Stack/StackView';
 import type {
@@ -36,7 +37,7 @@ function StackNavigator({
   };
 
   const { state, descriptors, navigation } = useNavigationBuilder<
-    StackNavigationState,
+    StackNavigationState<ParamListBase>,
     StackRouterOptions,
     StackNavigationOptions,
     StackNavigationEventMap
@@ -57,8 +58,7 @@ function StackNavigator({
 
   React.useEffect(
     () =>
-      navigation.addListener &&
-      navigation.addListener('tabPress', (e) => {
+      navigation.addListener?.('tabPress', (e) => {
         const isFocused = navigation.isFocused();
 
         // Run the operation in the next frame so we're sure all listeners have been run
@@ -92,7 +92,7 @@ function StackNavigator({
 }
 
 export default createNavigatorFactory<
-  StackNavigationState,
+  StackNavigationState<ParamListBase>,
   StackNavigationOptions,
   StackNavigationEventMap,
   typeof StackNavigator

@@ -238,6 +238,10 @@ export type NavigationContainerProps = {
    */
   onStateChange?: (state: NavigationState | undefined) => void;
   /**
+   * Callback which is called when an action is not handled.
+   */
+  onUnhandledAction?: (action: NavigationAction) => void;
+  /**
    * Whether this navigation container should be independent of parent containers.
    * If this is not set to `true`, this container cannot be nested inside another container.
    * Setting it to `true` disconnects any children navigators from parent container.
@@ -252,7 +256,7 @@ export type NavigationContainerProps = {
 export type NavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string,
-  State extends NavigationState = NavigationState,
+  State extends NavigationState = NavigationState<ParamList>,
   ScreenOptions extends {} = {},
   EventMap extends EventMapBase = {}
 > = NavigationHelpersCommon<ParamList, State> & {
@@ -277,20 +281,7 @@ export type NavigationProp<
 export type RouteProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList
-> = Omit<Route<Extract<RouteName, string>>, 'params'> &
-  (undefined extends ParamList[RouteName]
-    ? Readonly<{
-        /**
-         * Params for this route
-         */
-        params?: Readonly<ParamList[RouteName]>;
-      }>
-    : Readonly<{
-        /**
-         * Params for this route
-         */
-        params: Readonly<ParamList[RouteName]>;
-      }>);
+> = Route<Extract<RouteName, string>, ParamList[RouteName]>;
 
 export type CompositeNavigationProp<
   A extends NavigationProp<ParamListBase, string, any, any>,

@@ -1,5 +1,5 @@
 import escape from 'escape-string-regexp';
-import queryString from 'query-string';
+import * as queryString from 'query-string';
 import type {
   NavigationState,
   PartialState,
@@ -122,7 +122,7 @@ export default function getStateFromPath(
       // If one of the patterns starts with the other, it's more exhaustive
       // So move it up
       if (a.pattern.startsWith(b.pattern)) {
-        return 1;
+        return -1;
       }
 
       if (b.pattern.startsWith(a.pattern)) {
@@ -570,10 +570,7 @@ const createRouteObjects = (
             const value = allParams![p];
 
             if (value) {
-              acc[key] =
-                config.parse && config.parse[key]
-                  ? config.parse[key](value)
-                  : value;
+              acc[key] = config.parse?.[key] ? config.parse[key](value) : value;
             }
 
             return acc;

@@ -6,6 +6,7 @@ import {
   TabRouter,
   TabRouterOptions,
   TabNavigationState,
+  ParamListBase,
 } from '@react-navigation/native';
 import BottomTabView from '../views/BottomTabView';
 import type {
@@ -23,10 +24,11 @@ function BottomTabNavigator({
   backBehavior,
   children,
   screenOptions,
+  sceneContainerStyle,
   ...rest
 }: Props) {
   const { state, descriptors, navigation } = useNavigationBuilder<
-    TabNavigationState,
+    TabNavigationState<ParamListBase>,
     TabRouterOptions,
     BottomTabNavigationOptions,
     BottomTabNavigationEventMap
@@ -43,12 +45,13 @@ function BottomTabNavigator({
       state={state}
       navigation={navigation}
       descriptors={descriptors}
+      sceneContainerStyle={sceneContainerStyle}
     />
   );
 }
 
 export default createNavigatorFactory<
-  TabNavigationState,
+  TabNavigationState<ParamListBase>,
   BottomTabNavigationOptions,
   BottomTabNavigationEventMap,
   typeof BottomTabNavigator

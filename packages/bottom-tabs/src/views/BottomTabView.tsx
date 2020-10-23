@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 
 import {
   NavigationHelpersContext,
+  ParamListBase,
   TabNavigationState,
   useTheme,
 } from '@react-navigation/native';
@@ -19,21 +20,23 @@ import type {
 } from '../types';
 
 type Props = BottomTabNavigationConfig & {
-  state: TabNavigationState;
+  state: TabNavigationState<ParamListBase>;
   navigation: BottomTabNavigationHelpers;
   descriptors: BottomTabDescriptorMap;
 };
 
 type State = {
-  loaded: number[];
+  loaded: string[];
 };
 
 function SceneContent({
   isFocused,
   children,
+  style,
 }: {
   isFocused: boolean;
   children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
 }) {
   const { colors } = useTheme();
 
@@ -41,7 +44,7 @@ function SceneContent({
     <View
       accessibilityElementsHidden={!isFocused}
       importantForAccessibility={isFocused ? 'auto' : 'no-hide-descendants'}
-      style={[styles.content, { backgroundColor: colors.background }]}
+      style={[styles.content, { backgroundColor: colors.background }, style]}
     >
       {children}
     </View>
@@ -51,22 +54,21 @@ function SceneContent({
 export default class BottomTabView extends React.Component<Props, State> {
   static defaultProps = {
     lazy: true,
-    detachInactiveScreens: true,
   };
 
   static getDerivedStateFromProps(nextProps: Props, prevState: State) {
-    const { index } = nextProps.state;
+    const focusedRouteKey = nextProps.state.routes[nextProps.state.index].key;
 
     return {
       // Set the current tab to be loaded if it was not loaded before
-      loaded: prevState.loaded.includes(index)
+      loaded: prevState.loaded.includes(focusedRouteKey)
         ? prevState.loaded
-        : [...prevState.loaded, index],
+        : [...prevState.loaded, focusedRouteKey],
     };
   }
 
-  state = {
-    loaded: [this.props.state.index],
+  state: State = {
+    loaded: [this.props.state.routes[this.props.state.index].key],
   };
 
   private renderTabBar = () => {
@@ -92,6 +94,7 @@ export default class BottomTabView extends React.Component<Props, State> {
       navigation,
       lazy,
       detachInactiveScreens = true,
+      sceneContainerStyle,
     } = this.props;
     const { routes } = state;
     const { loaded } = this.state;
@@ -114,7 +117,7 @@ export default class BottomTabView extends React.Component<Props, State> {
                   return null;
                 }
 
-                if (lazy && !loaded.includes(index) && !isFocused) {
+                if (lazy && !loaded.includes(route.key) && !isFocused) {
                   // Don't render a screen if we've never navigated to it
                   return null;
                 }
@@ -126,7 +129,10 @@ export default class BottomTabView extends React.Component<Props, State> {
                     isVisible={isFocused}
                     enabled={detachInactiveScreens}
                   >
-                    <SceneContent isFocused={isFocused}>
+                    <SceneContent
+                      isFocused={isFocused}
+                      style={sceneContainerStyle}
+                    >
                       {descriptor.render()}
                     </SceneContent>
                   </ResourceSavingScene>
