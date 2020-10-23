@@ -344,6 +344,13 @@ export type StackNavigationOptions = StackHeaderOptions &
       bottom?: number;
       left?: number;
     };
+    /**
+     * Whether to detach the previous screen from the view hierarchy to save memory.
+     * Set it to `false` if you need the previous screen to be seen through the active screen.
+     * Only applicable if `detachInactiveScreens` isn't set to `false`.
+     * Defaults to `false` for the last screen when mode='modal', otherwise `true`.
+     */
+    detachPreviousScreen?: boolean;
   };
 
 export type StackNavigationConfig = {
@@ -354,6 +361,12 @@ export type StackNavigationConfig = {
    * Defaults to `true`.
    */
   keyboardHandlingEnabled?: boolean;
+  /**
+   * Whether inactive screens should be detached from the view hierarchy to save memory.
+   * Make sure to call `enableScreens` from `react-native-screens` to make it work.
+   * Defaults to `true`.
+   */
+  detachInactiveScreens?: boolean;
 };
 
 export type StackHeaderLeftButtonProps = {

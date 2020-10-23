@@ -34,6 +34,9 @@ class WebScreen extends React.Component<
 
 const AnimatedWebScreen = Animated.createAnimatedComponent(WebScreen);
 
+// @ts-ignore
+export const shouldUseActivityState = Screens?.shouldUseActivityState;
+
 export const MaybeScreenContainer = ({
   enabled,
   ...rest
@@ -41,8 +44,11 @@ export const MaybeScreenContainer = ({
   enabled: boolean;
   children: React.ReactNode;
 }) => {
-  if (enabled && Platform.OS !== 'web' && Screens && Screens.screensEnabled()) {
-    return <Screens.ScreenContainer {...rest} />;
+  if (enabled && Platform.OS !== 'web' && Screens?.screensEnabled()) {
+    return (
+      // @ts-ignore
+      <Screens.ScreenContainer enabled={enabled} {...rest} />
+    );
   }
 
   return <View {...rest} />;
@@ -54,16 +60,25 @@ export const MaybeScreen = ({
   ...rest
 }: ViewProps & {
   enabled: boolean;
-  active: 0 | 1 | Animated.AnimatedInterpolation;
+  active: 0 | 1 | 2 | Animated.AnimatedInterpolation;
   children: React.ReactNode;
 }) => {
   if (enabled && Platform.OS === 'web') {
     return <AnimatedWebScreen active={active} {...rest} />;
   }
 
-  if (enabled && Screens && Screens.screensEnabled()) {
-    // @ts-expect-error: stackPresentation is incorrectly marked as required
-    return <Screens.Screen active={active} {...rest} />;
+  if (enabled && Screens?.screensEnabled()) {
+    if (shouldUseActivityState) {
+      return (
+        // @ts-expect-error: there was an `active` prop and no `activityState` in older version and stackPresentation was required
+        <Screens.Screen enabled={enabled} activityState={active} {...rest} />
+      );
+    } else {
+      return (
+        // @ts-expect-error: there was an `active` prop and no `activityState` in older version and stackPresentation was required
+        <Screens.Screen enabled={enabled} active={active} {...rest} />
+      );
+    }
   }
 
   return <View {...rest} />;

@@ -93,6 +93,7 @@ export default class BottomTabView extends React.Component<Props, State> {
       descriptors,
       navigation,
       lazy,
+      detachInactiveScreens = true,
       sceneContainerStyle,
     } = this.props;
     const { routes } = state;
@@ -102,7 +103,11 @@ export default class BottomTabView extends React.Component<Props, State> {
       <NavigationHelpersContext.Provider value={navigation}>
         <SafeAreaProviderCompat>
           <View style={styles.container}>
-            <ScreenContainer style={styles.pages}>
+            <ScreenContainer
+              // @ts-ignore
+              enabled={detachInactiveScreens}
+              style={styles.pages}
+            >
               {routes.map((route, index) => {
                 const descriptor = descriptors[route.key];
                 const { unmountOnBlur } = descriptor.options;
@@ -122,6 +127,7 @@ export default class BottomTabView extends React.Component<Props, State> {
                     key={route.key}
                     style={StyleSheet.absoluteFill}
                     isVisible={isFocused}
+                    enabled={detachInactiveScreens}
                   >
                     <SceneContent
                       isFocused={isFocused}
