@@ -20,6 +20,7 @@ import type {
   StackNavigationConfig,
   StackDescriptorMap,
 } from '../../types';
+import HeaderShownContext from '../../utils/HeaderShownContext';
 
 type Props = StackNavigationConfig & {
   state: StackNavigationState;
@@ -455,29 +456,34 @@ export default class StackView extends React.Component<Props, State> {
               {(insets) => (
                 <KeyboardManager enabled={keyboardHandlingEnabled !== false}>
                   {(props) => (
-                    <CardStack
-                      mode={mode}
-                      insets={insets as EdgeInsets}
-                      getPreviousRoute={this.getPreviousRoute}
-                      getGesturesEnabled={this.getGesturesEnabled}
-                      routes={routes}
-                      openingRouteKeys={openingRouteKeys}
-                      closingRouteKeys={closingRouteKeys}
-                      onOpenRoute={this.handleOpenRoute}
-                      onCloseRoute={this.handleCloseRoute}
-                      onTransitionStart={this.handleTransitionStart}
-                      onTransitionEnd={this.handleTransitionEnd}
-                      renderHeader={this.renderHeader}
-                      renderScene={this.renderScene}
-                      headerMode={headerMode}
-                      state={state}
-                      descriptors={descriptors}
-                      onGestureStart={this.handleGestureStart}
-                      onGestureEnd={this.handleGestureEnd}
-                      onGestureCancel={this.handleGestureCancel}
-                      {...rest}
-                      {...props}
-                    />
+                    <HeaderShownContext.Consumer>
+                      {(isParentHeaderShown) => (
+                        <CardStack
+                          mode={mode}
+                          insets={insets as EdgeInsets}
+                          isParentHeaderShown={isParentHeaderShown}
+                          getPreviousRoute={this.getPreviousRoute}
+                          getGesturesEnabled={this.getGesturesEnabled}
+                          routes={routes}
+                          openingRouteKeys={openingRouteKeys}
+                          closingRouteKeys={closingRouteKeys}
+                          onOpenRoute={this.handleOpenRoute}
+                          onCloseRoute={this.handleCloseRoute}
+                          onTransitionStart={this.handleTransitionStart}
+                          onTransitionEnd={this.handleTransitionEnd}
+                          renderHeader={this.renderHeader}
+                          renderScene={this.renderScene}
+                          headerMode={headerMode}
+                          state={state}
+                          descriptors={descriptors}
+                          onGestureStart={this.handleGestureStart}
+                          onGestureEnd={this.handleGestureEnd}
+                          onGestureCancel={this.handleGestureCancel}
+                          {...rest}
+                          {...props}
+                        />
+                      )}
+                    </HeaderShownContext.Consumer>
                   )}
                 </KeyboardManager>
               )}
