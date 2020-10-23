@@ -32,11 +32,6 @@ type Props = StackHeaderOptions & {
   styleInterpolator: StackHeaderStyleInterpolator;
 };
 
-type State = {
-  titleLayout?: Layout;
-  leftLabelLayout?: Layout;
-};
-
 const warnIfHeaderStylesDefined = (styles: Record<string, any>) => {
   Object.keys(styles).forEach((styleProp) => {
     const value = styles[styleProp];
@@ -76,30 +71,33 @@ export const getDefaultHeaderHeight = (
   return headerHeight + statusBarHeight;
 };
 
-export default class HeaderSegment extends React.Component<Props, State> {
-  state: State = {};
+export default function HeaderSegment(props: Props) {
+  const [leftLabelLayout, setLeftLabelLayout] = React.useState<
+    Layout | undefined
+  >(undefined);
 
-  private handleTitleLayout = (e: LayoutChangeEvent) => {
+  const [titleLayout, setTitleLayout] = React.useState<Layout | undefined>(
+    undefined
+  );
+
+  const handleTitleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
 
-    this.setState(({ titleLayout }) => {
+    setTitleLayout((titleLayout) => {
       if (
         titleLayout &&
         height === titleLayout.height &&
         width === titleLayout.width
       ) {
-        return null;
+        return titleLayout;
       }
 
-      return {
-        titleLayout: { height, width },
-      };
+      return { height, width };
     });
   };
 
-  private handleLeftLabelLayout = (e: LayoutChangeEvent) => {
+  const handleLeftLabelLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
-    const { leftLabelLayout } = this.state;
 
     if (
       leftLabelLayout &&
@@ -109,10 +107,10 @@ export default class HeaderSegment extends React.Component<Props, State> {
       return;
     }
 
-    this.setState({ leftLabelLayout: { height, width } });
+    setLeftLabelLayout({ height, width });
   };
 
-  private getInterpolatedStyle = memoize(
+  const getInterpolatedStyle = memoize(
     (
       styleInterpolator: StackHeaderStyleInterpolator,
       layout: Layout,
@@ -137,258 +135,251 @@ export default class HeaderSegment extends React.Component<Props, State> {
       })
   );
 
-  render() {
-    const {
-      scene,
-      layout,
-      insets,
-      title: currentTitle,
-      leftLabel: previousTitle,
-      onGoBack,
-      headerTitle,
-      headerTitleAlign = Platform.select({
-        ios: 'center',
-        default: 'left',
-      }),
-      headerLeft: left = onGoBack
-        ? (props: StackHeaderLeftButtonProps) => <HeaderBackButton {...props} />
-        : undefined,
-      headerTransparent,
-      headerTintColor,
-      headerBackground,
-      headerRight: right,
-      headerBackImage: backImage,
-      headerBackTitle: leftLabel,
-      headerBackTitleVisible,
-      headerTruncatedBackTitle: truncatedLabel,
-      headerPressColorAndroid: pressColorAndroid,
-      headerBackAllowFontScaling: backAllowFontScaling,
-      headerTitleAllowFontScaling: titleAllowFontScaling,
-      headerTitleStyle: customTitleStyle,
-      headerBackTitleStyle: customLeftLabelStyle,
-      headerLeftContainerStyle: leftContainerStyle,
-      headerRightContainerStyle: rightContainerStyle,
-      headerTitleContainerStyle: titleContainerStyle,
-      headerStyle: customHeaderStyle,
-      headerStatusBarHeight = insets.top,
-      styleInterpolator,
-    } = this.props;
+  const {
+    scene,
+    layout,
+    insets,
+    title: currentTitle,
+    leftLabel: previousTitle,
+    onGoBack,
+    headerTitle,
+    headerTitleAlign = Platform.select({
+      ios: 'center',
+      default: 'left',
+    }),
+    headerLeft: left = onGoBack
+      ? (props: StackHeaderLeftButtonProps) => <HeaderBackButton {...props} />
+      : undefined,
+    headerTransparent,
+    headerTintColor,
+    headerBackground,
+    headerRight: right,
+    headerBackImage: backImage,
+    headerBackTitle: leftLabel,
+    headerBackTitleVisible,
+    headerTruncatedBackTitle: truncatedLabel,
+    headerPressColorAndroid: pressColorAndroid,
+    headerBackAllowFontScaling: backAllowFontScaling,
+    headerTitleAllowFontScaling: titleAllowFontScaling,
+    headerTitleStyle: customTitleStyle,
+    headerBackTitleStyle: customLeftLabelStyle,
+    headerLeftContainerStyle: leftContainerStyle,
+    headerRightContainerStyle: rightContainerStyle,
+    headerTitleContainerStyle: titleContainerStyle,
+    headerStyle: customHeaderStyle,
+    headerStatusBarHeight = insets.top,
+    styleInterpolator,
+  } = props;
 
-    const { leftLabelLayout, titleLayout } = this.state;
+  const defaultHeight = getDefaultHeaderHeight(layout, headerStatusBarHeight);
 
-    const defaultHeight = getDefaultHeaderHeight(layout, headerStatusBarHeight);
+  const {
+    height = defaultHeight,
+    minHeight,
+    maxHeight,
+    backgroundColor,
+    borderBottomColor,
+    borderBottomEndRadius,
+    borderBottomLeftRadius,
+    borderBottomRightRadius,
+    borderBottomStartRadius,
+    borderBottomWidth,
+    borderColor,
+    borderEndColor,
+    borderEndWidth,
+    borderLeftColor,
+    borderLeftWidth,
+    borderRadius,
+    borderRightColor,
+    borderRightWidth,
+    borderStartColor,
+    borderStartWidth,
+    borderStyle,
+    borderTopColor,
+    borderTopEndRadius,
+    borderTopLeftRadius,
+    borderTopRightRadius,
+    borderTopStartRadius,
+    borderTopWidth,
+    borderWidth,
+    // @ts-expect-error: web support for shadow
+    boxShadow,
+    elevation,
+    shadowColor,
+    shadowOffset,
+    shadowOpacity,
+    shadowRadius,
+    opacity,
+    transform,
+    ...unsafeStyles
+  } = StyleSheet.flatten(customHeaderStyle || {}) as ViewStyle;
 
-    const {
-      height = defaultHeight,
-      minHeight,
-      maxHeight,
-      backgroundColor,
-      borderBottomColor,
-      borderBottomEndRadius,
-      borderBottomLeftRadius,
-      borderBottomRightRadius,
-      borderBottomStartRadius,
-      borderBottomWidth,
-      borderColor,
-      borderEndColor,
-      borderEndWidth,
-      borderLeftColor,
-      borderLeftWidth,
-      borderRadius,
-      borderRightColor,
-      borderRightWidth,
-      borderStartColor,
-      borderStartWidth,
-      borderStyle,
-      borderTopColor,
-      borderTopEndRadius,
-      borderTopLeftRadius,
-      borderTopRightRadius,
-      borderTopStartRadius,
-      borderTopWidth,
-      borderWidth,
-      // @ts-expect-error: web support for shadow
-      boxShadow,
-      elevation,
-      shadowColor,
-      shadowOffset,
-      shadowOpacity,
-      shadowRadius,
-      opacity,
-      transform,
-      ...unsafeStyles
-    } = StyleSheet.flatten(customHeaderStyle || {}) as ViewStyle;
+  if (process.env.NODE_ENV !== 'production') {
+    warnIfHeaderStylesDefined(unsafeStyles);
+  }
 
-    if (process.env.NODE_ENV !== 'production') {
-      warnIfHeaderStylesDefined(unsafeStyles);
+  const safeStyles: ViewStyle = {
+    backgroundColor,
+    borderBottomColor,
+    borderBottomEndRadius,
+    borderBottomLeftRadius,
+    borderBottomRightRadius,
+    borderBottomStartRadius,
+    borderBottomWidth,
+    borderColor,
+    borderEndColor,
+    borderEndWidth,
+    borderLeftColor,
+    borderLeftWidth,
+    borderRadius,
+    borderRightColor,
+    borderRightWidth,
+    borderStartColor,
+    borderStartWidth,
+    borderStyle,
+    borderTopColor,
+    borderTopEndRadius,
+    borderTopLeftRadius,
+    borderTopRightRadius,
+    borderTopStartRadius,
+    borderTopWidth,
+    borderWidth,
+    // @ts-expect-error: boxShadow is only for Web
+    boxShadow,
+    elevation,
+    shadowColor,
+    shadowOffset,
+    shadowOpacity,
+    shadowRadius,
+    opacity,
+    transform,
+  };
+
+  // Setting a property to undefined triggers default style
+  // So we need to filter them out
+  // Users can use `null` instead
+  for (const styleProp in safeStyles) {
+    // @ts-expect-error: typescript wrongly complains that styleProp cannot be used to index safeStyles
+    if (safeStyles[styleProp] === undefined) {
+      // @ts-expect-error
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+      delete safeStyles[styleProp];
     }
+  }
 
-    const safeStyles: ViewStyle = {
-      backgroundColor,
-      borderBottomColor,
-      borderBottomEndRadius,
-      borderBottomLeftRadius,
-      borderBottomRightRadius,
-      borderBottomStartRadius,
-      borderBottomWidth,
-      borderColor,
-      borderEndColor,
-      borderEndWidth,
-      borderLeftColor,
-      borderLeftWidth,
-      borderRadius,
-      borderRightColor,
-      borderRightWidth,
-      borderStartColor,
-      borderStartWidth,
-      borderStyle,
-      borderTopColor,
-      borderTopEndRadius,
-      borderTopLeftRadius,
-      borderTopRightRadius,
-      borderTopStartRadius,
-      borderTopWidth,
-      borderWidth,
-      // @ts-expect-error: boxShadow is only for Web
-      boxShadow,
-      elevation,
-      shadowColor,
-      shadowOffset,
-      shadowOpacity,
-      shadowRadius,
-      opacity,
-      transform,
-    };
+  const {
+    titleStyle,
+    leftButtonStyle,
+    leftLabelStyle,
+    rightButtonStyle,
+    backgroundStyle,
+  } = getInterpolatedStyle(
+    styleInterpolator,
+    layout,
+    scene.progress.current,
+    scene.progress.next,
+    titleLayout,
+    previousTitle ? leftLabelLayout : undefined,
+    typeof height === 'number' ? height : defaultHeight
+  );
 
-    // Setting a property to undefined triggers default style
-    // So we need to filter them out
-    // Users can use `null` instead
-    for (const styleProp in safeStyles) {
-      // @ts-expect-error: typescript wrongly complains that styleProp cannot be used to index safeStyles
-      if (safeStyles[styleProp] === undefined) {
-        // @ts-expect-error
-        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-        delete safeStyles[styleProp];
-      }
-    }
+  const leftButton = left
+    ? left({
+        backImage,
+        pressColorAndroid,
+        allowFontScaling: backAllowFontScaling,
+        onPress: onGoBack,
+        labelVisible: headerBackTitleVisible,
+        label: leftLabel !== undefined ? leftLabel : previousTitle,
+        truncatedLabel,
+        labelStyle: [leftLabelStyle, customLeftLabelStyle],
+        onLabelLayout: handleLeftLabelLayout,
+        screenLayout: layout,
+        titleLayout,
+        tintColor: headerTintColor,
+        canGoBack: Boolean(onGoBack),
+      })
+    : null;
 
-    const {
-      titleStyle,
-      leftButtonStyle,
-      leftLabelStyle,
-      rightButtonStyle,
-      backgroundStyle,
-    } = this.getInterpolatedStyle(
-      styleInterpolator,
-      layout,
-      scene.progress.current,
-      scene.progress.next,
-      titleLayout,
-      previousTitle ? leftLabelLayout : undefined,
-      typeof height === 'number' ? height : defaultHeight
-    );
+  const rightButton = right ? right({ tintColor: headerTintColor }) : null;
 
-    const leftButton = left
-      ? left({
-          backImage,
-          pressColorAndroid,
-          allowFontScaling: backAllowFontScaling,
-          onPress: onGoBack,
-          labelVisible: headerBackTitleVisible,
-          label: leftLabel !== undefined ? leftLabel : previousTitle,
-          truncatedLabel,
-          labelStyle: [leftLabelStyle, customLeftLabelStyle],
-          onLabelLayout: this.handleLeftLabelLayout,
-          screenLayout: layout,
-          titleLayout,
-          tintColor: headerTintColor,
-          canGoBack: Boolean(onGoBack),
-        })
-      : null;
-
-    const rightButton = right ? right({ tintColor: headerTintColor }) : null;
-
-    return (
-      <React.Fragment>
-        <Animated.View
-          pointerEvents="box-none"
-          style={[StyleSheet.absoluteFill, { zIndex: 0 }, backgroundStyle]}
-        >
-          {headerBackground ? (
-            headerBackground({ style: safeStyles })
-          ) : headerTransparent ? null : (
-            <HeaderBackground style={safeStyles} />
-          )}
-        </Animated.View>
-        <Animated.View
-          pointerEvents="box-none"
-          style={[{ height, minHeight, maxHeight, opacity, transform }]}
-        >
-          <View
-            pointerEvents="none"
-            style={{ height: headerStatusBarHeight }}
-          />
-          <View pointerEvents="box-none" style={styles.content}>
-            {leftButton ? (
-              <Animated.View
-                pointerEvents="box-none"
-                style={[
-                  styles.left,
-                  { left: insets.left },
-                  leftButtonStyle,
-                  leftContainerStyle,
-                ]}
-              >
-                {leftButton}
-              </Animated.View>
-            ) : null}
+  return (
+    <React.Fragment>
+      <Animated.View
+        pointerEvents="box-none"
+        style={[StyleSheet.absoluteFill, { zIndex: 0 }, backgroundStyle]}
+      >
+        {headerBackground ? (
+          headerBackground({ style: safeStyles })
+        ) : headerTransparent ? null : (
+          <HeaderBackground style={safeStyles} />
+        )}
+      </Animated.View>
+      <Animated.View
+        pointerEvents="box-none"
+        style={[{ height, minHeight, maxHeight, opacity, transform }]}
+      >
+        <View pointerEvents="none" style={{ height: headerStatusBarHeight }} />
+        <View pointerEvents="box-none" style={styles.content}>
+          {leftButton ? (
             <Animated.View
               pointerEvents="box-none"
               style={[
-                headerTitleAlign === 'left'
-                  ? {
-                      position: 'absolute',
-                      left: (leftButton ? 72 : 16) + insets.left,
-                      right: (rightButton ? 72 : 16) + insets.right,
-                    }
-                  : {
-                      marginHorizontal:
-                        (leftButton ? 32 : 16) +
-                        (leftButton && headerBackTitleVisible !== false
-                          ? 40
-                          : 0) +
-                        Math.max(insets.left, insets.right),
-                    },
-                titleStyle,
-                titleContainerStyle,
+                styles.left,
+                { left: insets.left },
+                leftButtonStyle,
+                leftContainerStyle,
               ]}
             >
-              {headerTitle({
-                children: currentTitle,
-                onLayout: this.handleTitleLayout,
-                allowFontScaling: titleAllowFontScaling,
-                tintColor: headerTintColor,
-                style: customTitleStyle,
-              })}
+              {leftButton}
             </Animated.View>
-            {rightButton ? (
-              <Animated.View
-                pointerEvents="box-none"
-                style={[
-                  styles.right,
-                  { right: insets.right },
-                  rightButtonStyle,
-                  rightContainerStyle,
-                ]}
-              >
-                {rightButton}
-              </Animated.View>
-            ) : null}
-          </View>
-        </Animated.View>
-      </React.Fragment>
-    );
-  }
+          ) : null}
+          <Animated.View
+            pointerEvents="box-none"
+            style={[
+              headerTitleAlign === 'left'
+                ? {
+                    position: 'absolute',
+                    left: (leftButton ? 72 : 16) + insets.left,
+                    right: (rightButton ? 72 : 16) + insets.right,
+                  }
+                : {
+                    marginHorizontal:
+                      (leftButton ? 32 : 16) +
+                      (leftButton && headerBackTitleVisible !== false
+                        ? 40
+                        : 0) +
+                      Math.max(insets.left, insets.right),
+                  },
+              titleStyle,
+              titleContainerStyle,
+            ]}
+          >
+            {headerTitle({
+              children: currentTitle,
+              onLayout: handleTitleLayout,
+              allowFontScaling: titleAllowFontScaling,
+              tintColor: headerTintColor,
+              style: customTitleStyle,
+            })}
+          </Animated.View>
+          {rightButton ? (
+            <Animated.View
+              pointerEvents="box-none"
+              style={[
+                styles.right,
+                { right: insets.right },
+                rightButtonStyle,
+                rightContainerStyle,
+              ]}
+            >
+              {rightButton}
+            </Animated.View>
+          ) : null}
+        </View>
+      </Animated.View>
+    </React.Fragment>
+  );
 }
 
 const styles = StyleSheet.create({
