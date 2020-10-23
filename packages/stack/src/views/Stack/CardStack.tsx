@@ -81,6 +81,10 @@ type State = {
 
 const EPSILON = 0.01;
 
+const STATE_INACTIVE = 0;
+const STATE_TRANSITIONING_OR_BELOW_TOP = 1;
+const STATE_ON_TOP = 2;
+
 const FALLBACK_DESCRIPTOR = Object.freeze({ options: {} });
 
 const getHeaderHeights = (
@@ -384,7 +388,7 @@ export default class CardStack extends React.Component<Props, State> {
       onGestureEnd,
       onGestureCancel,
       detachInactiveScreens = shouldUseActivityState
-        ? true
+        ? Platform.OS !== 'ios'
         : Platform.OS !== 'ios' && mode !== 'modal',
     } = this.props;
 
@@ -502,22 +506,22 @@ export default class CardStack extends React.Component<Props, State> {
                   if (shouldUseActivityState) {
                     if (index < self.length - activeScreensLimit - 1) {
                       // screen should be inactive because it is too deep in the stack
-                      isScreenActive = 0;
+                      isScreenActive = STATE_INACTIVE;
                     } else {
                       const sceneForActivity = scenes[self.length - 1];
                       const outputValue =
                         index === self.length - 1
-                          ? 2 // the screen is on top after the transition
+                          ? STATE_ON_TOP // the screen is on top after the transition
                           : index >= self.length - activeScreensLimit
-                          ? 1 // the screen should stay active after the transition, it is not on top but is in activeLimit
-                          : 0; // the screen should be active only during the transition, it is at the edge of activeLimit
+                          ? STATE_TRANSITIONING_OR_BELOW_TOP // the screen should stay active after the transition, it is not on top but is in activeLimit
+                          : STATE_INACTIVE; // the screen should be active only during the transition, it is at the edge of activeLimit
                       isScreenActive = sceneForActivity
                         ? sceneForActivity.progress.current.interpolate({
                             inputRange: [0, 1 - EPSILON, 1],
                             outputRange: [1, 1, outputValue],
                             extrapolate: 'clamp',
                           })
-                        : 1;
+                        : STATE_TRANSITIONING_OR_BELOW_TOP;
                     }
                   } else {
                     isScreenActive = scene.progress.next
