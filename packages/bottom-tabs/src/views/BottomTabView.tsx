@@ -43,11 +43,7 @@ function SceneContent({
     <View
       accessibilityElementsHidden={!isFocused}
       importantForAccessibility={isFocused ? 'auto' : 'no-hide-descendants'}
-      style={[
-        styles.content,
-        { backgroundColor: colors.background },
-        style,
-      ]}
+      style={[styles.content, { backgroundColor: colors.background }, style]}
     >
       {children}
     </View>
