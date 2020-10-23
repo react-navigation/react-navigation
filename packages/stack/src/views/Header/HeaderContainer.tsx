@@ -61,7 +61,10 @@ export default function HeaderContainer({
   const parentPreviousScene = React.useContext(PreviousSceneContext);
 
   const [headerHeightAnim] = React.useState(
-    () => new Animated.Value(getDefaultHeaderHeight(layout, insets.top))
+    () =>
+      new Animated.Value(
+        getDefaultHeaderHeight(layout, isParentHeaderShown ? 0 : insets.top)
+      )
   );
 
   return (
