@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.13.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.12.5...@react-navigation/core@5.13.0) (2020-10-24)
+
+
+### Bug Fixes
+
+* fix imports from query-string. closes [#8971](https://github.com/react-navigation/react-navigation/issues/8971) ([#8976](https://github.com/react-navigation/react-navigation/issues/8976)) ([261a33a](https://github.com/react-navigation/react-navigation/commit/261a33a0d03150c87b06f01aeace4926b1c03eb6))
+
+
+### Features
+
+* add an unhandled action listener ([#8895](https://github.com/react-navigation/react-navigation/issues/8895)) ([80ff5a9](https://github.com/react-navigation/react-navigation/commit/80ff5a9c543a44fa2fd7ba7fda0598f1b0d52a64))
+* allow deep linking to reset state ([#8973](https://github.com/react-navigation/react-navigation/issues/8973)) ([7f3b27a](https://github.com/react-navigation/react-navigation/commit/7f3b27a9ec8edd9604ac19774baa1f60963ccdc9)), closes [#8952](https://github.com/react-navigation/react-navigation/issues/8952)
+* improve types for navigation state ([#8980](https://github.com/react-navigation/react-navigation/issues/8980)) ([7dc2f58](https://github.com/react-navigation/react-navigation/commit/7dc2f5832e371473f3263c01ab39824eb9e2057d))
+* update helper types to have navigator specific methods ([f51086e](https://github.com/react-navigation/react-navigation/commit/f51086edea42f2382dac8c6914aac8574132114b))
+
+
+
+
+
 ## [5.12.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.12.4...@react-navigation/core@5.12.5) (2020-10-07)
 
 **Note:** Version bump only for package @react-navigation/core

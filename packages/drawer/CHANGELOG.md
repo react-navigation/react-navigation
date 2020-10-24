@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.10.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.9.3...@react-navigation/drawer@5.10.0) (2020-10-24)
+
+
+### Features
+
+* add optional screens per navigator ([#8805](https://github.com/react-navigation/react-navigation/issues/8805)) ([7196889](https://github.com/react-navigation/react-navigation/commit/7196889bf1218eb6a736d9475e33a909c2248c3b))
+* improve types for navigation state ([#8980](https://github.com/react-navigation/react-navigation/issues/8980)) ([7dc2f58](https://github.com/react-navigation/react-navigation/commit/7dc2f5832e371473f3263c01ab39824eb9e2057d))
+* update helper types to have navigator specific methods ([f51086e](https://github.com/react-navigation/react-navigation/commit/f51086edea42f2382dac8c6914aac8574132114b))
+
+
+
+
+
 ## [5.9.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.9.2...@react-navigation/drawer@5.9.3) (2020-10-07)
 
 
