@@ -19,7 +19,11 @@ type EventName =
 export default function createCompatNavigationProp<
   NavigationPropType extends NavigationProp<ParamListBase>,
   ParamList extends ParamListBase = NavigationPropType extends NavigationProp<
-    infer P
+    infer P,
+    any,
+    any,
+    any,
+    any
   >
     ? P
     : ParamListBase

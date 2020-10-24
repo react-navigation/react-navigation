@@ -8,7 +8,11 @@ import type * as helpers from './helpers';
 export type CompatNavigationProp<
   NavigationPropType extends NavigationProp<ParamListBase>,
   ParamList extends ParamListBase = NavigationPropType extends NavigationProp<
-    infer P
+    infer P,
+    any,
+    any,
+    any,
+    any
   >
     ? P
     : ParamListBase,
@@ -67,7 +71,11 @@ export type CompatScreenType<
 export type CompatRouteConfig<
   NavigationPropType extends NavigationProp<ParamListBase>,
   ParamList extends ParamListBase = NavigationPropType extends NavigationProp<
-    infer P
+    infer P,
+    any,
+    any,
+    any,
+    any
   >
     ? P
     : ParamListBase
