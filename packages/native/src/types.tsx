@@ -50,6 +50,20 @@ export type LinkingOptions = {
    */
   config?: { initialRouteName?: string; screens: PathConfigMap };
   /**
+   * Custom function to get the initial URL used for linking.
+   * Uses `Linking.getInitialURL()` by default.
+   * Not supported on the web.
+   */
+  getInitialURL?: () => Promise<string | null | undefined>;
+  /**
+   * Custom function to get subscribe to URL updates.
+   * Uses `Linking.addEventListener('url', callback)` by default.
+   * Not supported on the web.
+   */
+  subscribe?: (
+    listener: (url: string) => void
+  ) => undefined | void | (() => void);
+  /**
    * Custom function to parse the URL to a valid navigation state (advanced).
    * Only applicable on Web.
    */

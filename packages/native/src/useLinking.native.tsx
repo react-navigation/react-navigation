@@ -16,6 +16,22 @@ export default function useLinking(
     enabled = true,
     prefixes,
     config,
+    getInitialURL = () =>
+      Promise.race([
+        Linking.getInitialURL(),
+        new Promise<undefined>((resolve) =>
+          // Timeout in 150ms if `getInitialState` doesn't resolve
+          // Workaround for https://github.com/facebook/react-native/issues/25675
+          setTimeout(resolve, 150)
+        ),
+      ]),
+    subscribe = (listener) => {
+      const callback = ({ url }: { url: string }) => listener(url);
+
+      Linking.addEventListener('url', callback);
+
+      return () => Linking.removeEventListener('url', callback);
+    },
     getStateFromPath = getStateFromPathDefault,
   }: LinkingOptions
 ) {
@@ -48,14 +64,16 @@ export default function useLinking(
   const enabledRef = React.useRef(enabled);
   const prefixesRef = React.useRef(prefixes);
   const configRef = React.useRef(config);
+  const getInitialURLRef = React.useRef(getInitialURL);
   const getStateFromPathRef = React.useRef(getStateFromPath);
 
   React.useEffect(() => {
     enabledRef.current = enabled;
     prefixesRef.current = prefixes;
     configRef.current = config;
+    getInitialURLRef.current = getInitialURL;
     getStateFromPathRef.current = getStateFromPath;
-  }, [config, enabled, getStateFromPath, prefixes]);
+  }, [config, enabled, prefixes, getInitialURL, getStateFromPath]);
 
   const extractPathFromURL = React.useCallback((url: string) => {
     for (const prefix of prefixesRef.current) {
@@ -80,15 +98,7 @@ export default function useLinking(
       return undefined;
     }
 
-    const url = await (Promise.race([
-      Linking.getInitialURL(),
-      new Promise((resolve) =>
-        // Timeout in 150ms if `getInitialState` doesn't resolve
-        // Workaround for https://github.com/facebook/react-native/issues/25675
-        setTimeout(resolve, 150)
-      ),
-    ]) as Promise<string | null | undefined>);
-
+    const url = await getInitialURLRef.current();
     const path = url ? extractPathFromURL(url) : null;
 
     if (path) {
@@ -99,7 +109,7 @@ export default function useLinking(
   }, [extractPathFromURL]);
 
   React.useEffect(() => {
-    const listener = ({ url }: { url: string }) => {
+    const listener = (url: string) => {
       if (!enabled) {
         return;
       }
@@ -122,10 +132,8 @@ export default function useLinking(
       }
     };
 
-    Linking.addEventListener('url', listener);
-
-    return () => Linking.removeEventListener('url', listener);
-  }, [enabled, extractPathFromURL, ref]);
+    return subscribe(listener);
+  }, [enabled, ref, subscribe, extractPathFromURL]);
 
   return {
     getInitialState,
