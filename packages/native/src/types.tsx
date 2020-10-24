@@ -29,16 +29,21 @@ export type LinkingOptions = {
    * Only applicable on Android and iOS.
    *
    * @example
+   * ```js
+   * {
    *    prefixes: [
-   *      "https://example.com", // Exact
-   *      "https://*.example.com" // Match with any subdomain
+   *      "myapp://", // App-specific scheme
+   *      "https://example.com", // Prefix for universal links
+   *      "https://*.example.com" // Prefix which matches any subdomain
    *    ]
+   * }
+   * ```
    */
   prefixes: string[];
   /**
    * Config to fine-tune how to parse the path.
    *
-   * Example:
+   * @example
    * ```js
    * {
    *   Chat: {
@@ -52,13 +57,33 @@ export type LinkingOptions = {
   /**
    * Custom function to get the initial URL used for linking.
    * Uses `Linking.getInitialURL()` by default.
-   * Not supported on the web.
+   * Not supported on Web.
+   *
+   * @example
+   * ```js
+   * {
+   *    getInitialURL () => Linking.getInitialURL(),
+   * }
+   * ```
    */
   getInitialURL?: () => Promise<string | null | undefined>;
   /**
    * Custom function to get subscribe to URL updates.
    * Uses `Linking.addEventListener('url', callback)` by default.
-   * Not supported on the web.
+   * Not supported on Web.
+   *
+   * @example
+   * ```js
+   * {
+   *    subscribe: (listener) => {
+   *      const onReceiveURL = ({ url }) => listener(url);
+   *
+   *      Linking.addEventListener('url', onReceiveURL);
+   *
+   *      return () => Linking.removeEventListener('url', onReceiveURL);
+   *   }
+   * }
+   * ```
    */
   subscribe?: (
     listener: (url: string) => void
