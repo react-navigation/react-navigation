@@ -35,7 +35,7 @@ const getActiveRoute = (state: State): { name: string; params?: object } => {
 /**
  * Utility to serialize a navigation state object to a path string.
  *
- * Example:
+ * @example
  * ```js
  * getPathFromState(
  *   {

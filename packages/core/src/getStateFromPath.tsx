@@ -37,7 +37,7 @@ type ResultState = PartialState<NavigationState> & {
  * Utility to parse a path string to initial state object accepted by the container.
  * This is useful for deep linking when we need to handle the incoming URL.
  *
- * Example:
+ * @example
  * ```js
  * getStateFromPath(
  *   '/chat/jane/42',
