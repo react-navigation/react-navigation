@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.8.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@5.7.6...@react-navigation/native@5.8.0) (2020-10-24)
+
+
+### Features
+
+* add `getInitialURL` and `subscribe` options to linking config ([748e92f](https://github.com/react-navigation/react-navigation/commit/748e92f120b9ff73c6b1e14515f60c76701081db))
+* allow deep linking to reset state ([#8973](https://github.com/react-navigation/react-navigation/issues/8973)) ([7f3b27a](https://github.com/react-navigation/react-navigation/commit/7f3b27a9ec8edd9604ac19774baa1f60963ccdc9)), closes [#8952](https://github.com/react-navigation/react-navigation/issues/8952)
+* support wildcard string prefixes ([#8942](https://github.com/react-navigation/react-navigation/issues/8942)) ([23ab350](https://github.com/react-navigation/react-navigation/commit/23ab3504921b7e741a48d66c6a953905206df4b7)), closes [#8941](https://github.com/react-navigation/react-navigation/issues/8941)
+
+
+
+
+
 ## [5.7.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@5.7.5...@react-navigation/native@5.7.6) (2020-10-07)
 
 

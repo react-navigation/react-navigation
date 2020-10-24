@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.10.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.9.3...@react-navigation/stack@5.10.0) (2020-10-24)
+
+
+### Bug Fixes
+
+* add missing check for parent header when calculating height ([da91cec](https://github.com/react-navigation/react-navigation/commit/da91cec941e7dec352ba1910901904d769c9f3a3))
+* don't set statusbar height on nested header by default ([38e17aa](https://github.com/react-navigation/react-navigation/commit/38e17aae939974b47fe5c77d8670b9a4544250f2))
+* fix header buttons not pressable when headerTransparent=true & headerMode=float ([#8804](https://github.com/react-navigation/react-navigation/issues/8804)) ([d6cac67](https://github.com/react-navigation/react-navigation/commit/d6cac6713a51e4de320fc1c7ece72a2b92241574)), closes [#8731](https://github.com/react-navigation/react-navigation/issues/8731)
+* set needsOffscreenAlphaCompositing and update default android animation ([8ee0dda](https://github.com/react-navigation/react-navigation/commit/8ee0dda155b4cde43be1e58170e44823b54e7d4f)), closes [#8696](https://github.com/react-navigation/react-navigation/issues/8696)
+
+
+### Features
+
+* add optional screens per navigator ([#8805](https://github.com/react-navigation/react-navigation/issues/8805)) ([7196889](https://github.com/react-navigation/react-navigation/commit/7196889bf1218eb6a736d9475e33a909c2248c3b))
+* improve types for navigation state ([#8980](https://github.com/react-navigation/react-navigation/issues/8980)) ([7dc2f58](https://github.com/react-navigation/react-navigation/commit/7dc2f5832e371473f3263c01ab39824eb9e2057d))
+* update helper types to have navigator specific methods ([f51086e](https://github.com/react-navigation/react-navigation/commit/f51086edea42f2382dac8c6914aac8574132114b))
+
+
+
+
+
 ## [5.9.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.9.2...@react-navigation/stack@5.9.3) (2020-10-07)
 
 **Note:** Version bump only for package @react-navigation/stack
