@@ -65,11 +65,11 @@ export type LinkingOptions = {
   ) => undefined | void | (() => void);
   /**
    * Custom function to parse the URL to a valid navigation state (advanced).
-   * Only applicable on Web.
    */
   getStateFromPath?: typeof getStateFromPathDefault;
   /**
    * Custom function to convert the state object to a valid URL (advanced).
+   * Only applicable on Web.
    */
   getPathFromState?: typeof getPathFromStateDefault;
 };
