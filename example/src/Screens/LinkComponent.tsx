@@ -25,18 +25,9 @@ const LinkButton = ({
   to,
   ...rest
 }: React.ComponentProps<typeof Button> & { to: string }) => {
-  const { onPress, ...props } = useLinkProps({ to });
+  const props = useLinkProps({ to });
 
-  return (
-    <Button
-      {...props}
-      {...rest}
-      {...Platform.select({
-        web: { onClick: onPress } as any,
-        default: { onPress },
-      })}
-    />
-  );
+  return <Button {...props} {...rest} />;
 };
 
 const ArticleScreen = ({

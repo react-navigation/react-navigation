@@ -22,7 +22,7 @@ export default function useLinkProps({ to, action }: Props) {
   const linkTo = useLinkTo();
 
   const onPress = (
-    e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
+    e?: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
   ) => {
     let shouldHandle = false;
 
