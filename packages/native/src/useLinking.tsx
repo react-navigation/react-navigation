@@ -400,7 +400,7 @@ export default function useLinking(
       // We should only dispatch an action when going forward
       // Otherwise the action will likely add items to history, which would mess things up
       if (state && index > previousIndex) {
-        const action = getActionFromState(state);
+        const action = getActionFromState(state, configRef.current);
 
         if (action !== undefined) {
           navigation.dispatch(action);

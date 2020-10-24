@@ -1093,6 +1093,194 @@ it('navigates to nested child in a navigator with initial: false', () => {
   });
 });
 
+it('resets state of a nested child in a navigator', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestComponent = ({ route }: any): any =>
+    `[${route.name}, ${JSON.stringify(route.params)}]`;
+
+  const onStateChange = jest.fn();
+
+  const navigation = React.createRef<NavigationContainerRef>();
+
+  const first = render(
+    <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
+      <TestNavigator>
+        <Screen name="foo">
+          {() => (
+            <TestNavigator>
+              <Screen name="foo-a" component={TestComponent} />
+              <Screen name="foo-b" component={TestComponent} />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="bar">
+          {() => (
+            <TestNavigator initialRouteName="bar-a">
+              <Screen name="bar-a" component={TestComponent} />
+              <Screen
+                name="bar-b"
+                component={TestComponent}
+                initialParams={{ some: 'stuff' }}
+              />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(first).toMatchInlineSnapshot(`"[foo-a, undefined]"`);
+
+  expect(navigation.current?.getRootState()).toEqual({
+    index: 0,
+    key: '0',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      {
+        key: 'foo',
+        name: 'foo',
+        state: {
+          index: 0,
+          key: '1',
+          routeNames: ['foo-a', 'foo-b'],
+          routes: [
+            {
+              key: 'foo-a',
+              name: 'foo-a',
+            },
+            {
+              key: 'foo-b',
+              name: 'foo-b',
+            },
+          ],
+          stale: false,
+          type: 'test',
+        },
+      },
+      { key: 'bar', name: 'bar' },
+    ],
+    stale: false,
+    type: 'test',
+  });
+
+  act(() =>
+    navigation.current?.navigate('bar', {
+      state: {
+        routes: [{ name: 'bar-a' }, { name: 'bar-b' }],
+      },
+    })
+  );
+
+  expect(first).toMatchInlineSnapshot(`"[bar-a, undefined]"`);
+
+  expect(navigation.current?.getRootState()).toEqual({
+    index: 1,
+    key: '0',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      {
+        key: 'bar',
+        name: 'bar',
+        params: {
+          state: {
+            routes: [{ name: 'bar-a' }, { name: 'bar-b' }],
+          },
+        },
+        state: {
+          index: 0,
+          key: '4',
+          routeNames: ['bar-a', 'bar-b'],
+          routes: [
+            {
+              key: 'bar-a-2',
+              name: 'bar-a',
+            },
+            {
+              key: 'bar-b-3',
+              name: 'bar-b',
+              params: { some: 'stuff' },
+            },
+          ],
+          stale: false,
+          type: 'test',
+        },
+      },
+    ],
+    stale: false,
+    type: 'test',
+  });
+
+  act(() =>
+    navigation.current?.navigate('bar', {
+      state: {
+        index: 2,
+        routes: [
+          { key: '37', name: 'bar-b' },
+          { name: 'bar-b' },
+          { name: 'bar-a', params: { test: 18 } },
+        ],
+      },
+    })
+  );
+
+  expect(first).toMatchInlineSnapshot(`"[bar-a, {\\"test\\":18}]"`);
+
+  expect(navigation.current?.getRootState()).toEqual({
+    index: 1,
+    key: '0',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      {
+        key: 'bar',
+        name: 'bar',
+        params: {
+          state: {
+            index: 2,
+            routes: [
+              { key: '37', name: 'bar-b' },
+              { name: 'bar-b' },
+              { name: 'bar-a', params: { test: 18 } },
+            ],
+          },
+        },
+        state: {
+          index: 2,
+          key: '7',
+          routeNames: ['bar-a', 'bar-b'],
+          routes: [
+            {
+              key: '37',
+              name: 'bar-b',
+              params: { some: 'stuff' },
+            },
+            {
+              key: 'bar-b-5',
+              name: 'bar-b',
+              params: { some: 'stuff' },
+            },
+            {
+              key: 'bar-a-6',
+              name: 'bar-a',
+              params: { test: 18 },
+            },
+          ],
+          stale: false,
+          type: 'test',
+        },
+      },
+    ],
+    stale: false,
+    type: 'test',
+  });
+});
+
 it('gives access to internal state', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);

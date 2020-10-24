@@ -111,7 +111,7 @@ export default function useLinking(
         const state = getStateFromPathRef.current(path, configRef.current);
 
         if (state) {
-          const action = getActionFromState(state);
+          const action = getActionFromState(state, configRef.current);
 
           if (action !== undefined) {
             navigation.dispatch(action);

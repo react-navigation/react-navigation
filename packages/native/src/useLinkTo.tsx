@@ -37,7 +37,7 @@ export default function useLinkTo() {
           root = current;
         }
 
-        const action = getActionFromState(state);
+        const action = getActionFromState(state, options?.config);
 
         if (action !== undefined) {
           root.dispatch(action);
