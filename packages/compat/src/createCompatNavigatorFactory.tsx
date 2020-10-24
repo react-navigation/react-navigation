@@ -32,7 +32,11 @@ export default function createCompatNavigatorFactory<
   const createCompatNavigator = <
     NavigationPropType extends NavigationProp<any, any, any, any, any>,
     ParamList extends ParamListBase = NavigationPropType extends NavigationProp<
-      infer P
+      infer P,
+      any,
+      any,
+      any,
+      any
     >
       ? P
       : ParamListBase,
