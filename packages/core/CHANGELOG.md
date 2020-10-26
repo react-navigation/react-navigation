@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.9](https://github.com/react-navigation/react-navigation-core/compare/@react-navigation/core@3.7.8...@react-navigation/core@3.7.9) (2020-10-26)
+
+**Note:** Version bump only for package @react-navigation/core
+
+
+
+
+
 ## [3.7.8](https://github.com/react-navigation/react-navigation-core/compare/@react-navigation/core@3.7.7...@react-navigation/core@3.7.8) (2020-10-02)
 
 

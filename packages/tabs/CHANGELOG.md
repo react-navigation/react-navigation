@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.10.0](https://github.com/react-navigation/tabs/compare/react-navigation-tabs@2.9.2...react-navigation-tabs@2.10.0) (2020-10-26)
+
+
+### Bug Fixes
+
+* use react-native-iphone-x-helper in bottom-tabs navigator ([ebe70f5](https://github.com/react-navigation/tabs/commit/ebe70f51fbb8d892be9c44b0c226947684c24338))
+
+
+### Features
+
+* add detachInactiveScreens prop for bottom tabs and drawer ([#8816](https://github.com/react-navigation/tabs/issues/8816)) ([707bea3](https://github.com/react-navigation/tabs/commit/707bea3cba1aa1f7b1eb5884dd1d129dcc2bbdc2))
+
+
+
+
+
 ## [2.9.2](https://github.com/react-navigation/tabs/compare/react-navigation-tabs@2.9.1...react-navigation-tabs@2.9.2) (2020-10-02)
 
 **Note:** Version bump only for package react-navigation-tabs

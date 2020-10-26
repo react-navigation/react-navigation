@@ -1,6 +1,6 @@
 {
   "name": "@react-navigation/native",
-  "version": "3.8.2",
+  "version": "3.8.3",
   "description": "React Native support for React Navigation",
   "main": "lib/commonjs/index.js",
   "react-native": "lib/module/index.js",
@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.16.2",
-    "@react-navigation/core": "^3.7.8",
+    "@react-navigation/core": "^3.7.9",
     "@types/react-test-renderer": "^16.9.3",
     "del-cli": "^3.0.1",
     "react": "~16.13.1",

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.6.0](https://github.com/react-navigation/drawer/compare/react-navigation-drawer@2.5.2...react-navigation-drawer@2.6.0) (2020-10-26)
+
+
+### Features
+
+* add detachInactiveScreens prop for bottom tabs and drawer ([#8816](https://github.com/react-navigation/drawer/issues/8816)) ([707bea3](https://github.com/react-navigation/drawer/commit/707bea3cba1aa1f7b1eb5884dd1d129dcc2bbdc2))
+
+
+
+
+
 ## [2.5.2](https://github.com/react-navigation/drawer/compare/react-navigation-drawer@2.5.1...react-navigation-drawer@2.5.2) (2020-10-02)
 
 **Note:** Version bump only for package react-navigation-drawer
