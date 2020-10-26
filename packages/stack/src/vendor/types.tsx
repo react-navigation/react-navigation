@@ -56,6 +56,7 @@ export type StackNavigationEventMap = {
 };
 
 export type StackNavigationHelpers = NavigationProp<NavigationStackState>;
+
 export type StackNavigationProp<
   State = NavigationRoute,
   Params = NavigationParams
@@ -336,11 +337,11 @@ export type StackNavigationOptions = StackHeaderOptions &
      */
     gestureResponseDistance?: {
       /**
-       * Distance for horizontal direction. Defaults to 25.
+       * Distance for vertical direction. Defaults to 135.
        */
       vertical?: number;
       /**
-       * Distance for vertical direction. Defaults to 135.
+       * Distance for horizontal direction. Defaults to 25.
        */
       horizontal?: number;
     };
@@ -360,6 +361,13 @@ export type StackNavigationOptions = StackHeaderOptions &
       bottom?: number;
       left?: number;
     };
+    /**
+     * Whether to detach the previous screen from the view hierarchy to save memory.
+     * Set it to `false` if you need the previous screen to be seen through the active screen.
+     * Only applicable if `detachInactiveScreens` isn't set to `false`.
+     * Defaults to `false` for the last screen when mode='modal', otherwise `true`.
+     */
+    detachPreviousScreen?: boolean;
     onTransitionStart?: (props: TransitionCallbackProps) => void;
     onTransitionEnd?: (props: TransitionCallbackProps) => void;
   };
@@ -372,6 +380,12 @@ export type StackNavigationConfig = {
    * Defaults to `true`.
    */
   keyboardHandlingEnabled?: boolean;
+  /**
+   * Whether inactive screens should be detached from the view hierarchy to save memory.
+   * Make sure to call `enableScreens` from `react-native-screens` to make it work.
+   * Defaults to `true` on Android, `false` on iOS.
+   */
+  detachInactiveScreens?: boolean;
 };
 
 export type StackHeaderLeftButtonProps = {

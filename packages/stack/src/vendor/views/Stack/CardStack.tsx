@@ -9,7 +9,11 @@ import {
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import type { NavigationState as StackNavigationState } from 'react-navigation';
 
-import { MaybeScreenContainer, MaybeScreen } from '../Screens';
+import {
+  MaybeScreenContainer,
+  MaybeScreen,
+  shouldUseActivityState,
+} from '../Screens';
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import CardContainer from './CardContainer';
@@ -19,7 +23,6 @@ import {
 } from '../../TransitionConfigs/TransitionPresets';
 import { forNoAnimation as forNoAnimationHeader } from '../../TransitionConfigs/HeaderStyleInterpolators';
 import { forNoAnimation as forNoAnimationCard } from '../../TransitionConfigs/CardStyleInterpolators';
-import HeaderShownContext from '../../utils/HeaderShownContext';
 import getDistanceForDirection from '../../utils/getDistanceForDirection';
 import type {
   Layout,
@@ -53,6 +56,7 @@ type Props = {
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
   renderScene: (props: { route: Route<string> }) => React.ReactNode;
   headerMode: StackHeaderMode;
+  isParentHeaderShown: boolean;
   onTransitionStart: (
     props: { route: Route<string> },
     closing: boolean
@@ -64,6 +68,7 @@ type Props = {
   onGestureStart?: (props: { route: Route<string> }) => void;
   onGestureEnd?: (props: { route: Route<string> }) => void;
   onGestureCancel?: (props: { route: Route<string> }) => void;
+  detachInactiveScreens?: boolean;
 };
 
 type State = {
@@ -77,11 +82,16 @@ type State = {
 
 const EPSILON = 0.01;
 
+const STATE_INACTIVE = 0;
+const STATE_TRANSITIONING_OR_BELOW_TOP = 1;
+const STATE_ON_TOP = 2;
+
 const FALLBACK_DESCRIPTOR = Object.freeze({ options: {} });
 
 const getHeaderHeights = (
   routes: Route<string>[],
   insets: EdgeInsets,
+  isParentHeaderShown: boolean,
   descriptors: StackDescriptorMap,
   layout: Layout,
   previous: Record<string, number>
@@ -98,7 +108,9 @@ const getHeaderHeights = (
       ...options.safeAreaInsets,
     };
 
-    const { headerStatusBarHeight = safeAreaInsets.top } = options;
+    const {
+      headerStatusBarHeight = isParentHeaderShown ? 0 : safeAreaInsets.top,
+    } = options;
 
     acc[curr.key] =
       typeof height === 'number'
@@ -261,6 +273,7 @@ export default class CardStack extends React.Component<Props, State> {
       headerHeights: getHeaderHeights(
         props.routes,
         props.insets,
+        props.isParentHeaderShown,
         state.descriptors,
         state.layout,
         state.headerHeights
@@ -303,6 +316,7 @@ export default class CardStack extends React.Component<Props, State> {
         headerHeights: getHeaderHeights(
           props.routes,
           props.insets,
+          props.isParentHeaderShown,
           state.descriptors,
           layout,
           state.headerHeights
@@ -371,6 +385,7 @@ export default class CardStack extends React.Component<Props, State> {
       renderHeader,
       renderScene,
       headerMode,
+      isParentHeaderShown,
       onTransitionStart,
       onTransitionEnd,
       onPageChangeStart,
@@ -379,6 +394,9 @@ export default class CardStack extends React.Component<Props, State> {
       onGestureStart,
       onGestureEnd,
       onGestureCancel,
+      detachInactiveScreens = Platform.OS === 'ios'
+        ? false // Disable `react-native-screens` on iOS by default since it's buggy
+        : shouldUseActivityState || mode !== 'modal', // Enable on new versions of screens or for non modals on older versions
     } = this.props;
 
     const { scenes, layout, gestures, headerHeights } = this.state;
@@ -386,6 +404,7 @@ export default class CardStack extends React.Component<Props, State> {
     const focusedRoute = state.routes[state.index];
     const focusedDescriptor = descriptors[focusedRoute.key];
     const focusedOptions = focusedDescriptor ? focusedDescriptor.options : {};
+    const focusedHeaderHeight = headerHeights[focusedRoute.key];
 
     let defaultTransitionPreset =
       mode === 'modal' ? ModalTransition : DefaultTransition;
@@ -404,212 +423,250 @@ export default class CardStack extends React.Component<Props, State> {
       left = insets.left,
     } = focusedOptions.safeAreaInsets || {};
 
-    // Screens is buggy on iOS and web, so we only enable it on Android
-    // For modals, usually we want the screen underneath to be visible, so also disable it there
-    const isScreensEnabled = Platform.OS !== 'ios' && mode !== 'modal';
+    let activeScreensLimit = 1;
+
+    for (let i = scenes.length - 1; i >= 0; i--) {
+      const {
+        // By default, we don't want to detach the previous screen of the active one for modals
+        detachPreviousScreen = mode === 'modal'
+          ? i !== scenes.length - 1
+          : true,
+      } = scenes[i].descriptor.options;
+
+      if (detachPreviousScreen === false) {
+        activeScreensLimit++;
+      } else {
+        break;
+      }
+    }
+
+    const isFloatHeaderAbsolute =
+      headerMode === 'float'
+        ? this.state.scenes.slice(-2).some((scene) => {
+            const { descriptor } = scene;
+            const options = descriptor ? descriptor.options : {};
+            const {
+              headerTransparent,
+              headerShown = isParentHeaderShown === false,
+            } = options;
+
+            if (headerTransparent || headerShown === false) {
+              return true;
+            }
+
+            return false;
+          })
+        : false;
+
+    const floatingHeader =
+      headerMode === 'float' ? (
+        <React.Fragment key="header">
+          {renderHeader({
+            mode: 'float',
+            layout,
+            insets: { top, right, bottom, left },
+            scenes,
+            getPreviousScene: this.getPreviousScene,
+            getFocusedRoute: this.getFocusedRoute,
+            onContentHeightChange: this.handleHeaderLayout,
+            gestureDirection:
+              focusedOptions.gestureDirection !== undefined
+                ? focusedOptions.gestureDirection
+                : defaultTransitionPreset.gestureDirection,
+            styleInterpolator:
+              focusedOptions.headerStyleInterpolator !== undefined
+                ? focusedOptions.headerStyleInterpolator
+                : defaultTransitionPreset.headerStyleInterpolator,
+            style: [
+              styles.floating,
+              isFloatHeaderAbsolute && [
+                // Without this, the header buttons won't be touchable on Android when headerTransparent: true
+                { height: focusedHeaderHeight },
+                styles.absolute,
+              ],
+            ],
+          })}
+        </React.Fragment>
+      ) : null;
 
     return (
-      <HeaderShownContext.Consumer>
-        {(isParentHeaderShown) => {
-          const isFloatHeaderAbsolute =
-            headerMode === 'float'
-              ? this.state.scenes.slice(-2).some((scene) => {
-                  const { descriptor } = scene;
-                  const options = descriptor ? descriptor.options : {};
-                  const {
-                    headerTransparent,
-                    headerShown = isParentHeaderShown === false,
-                  } = options;
+      <React.Fragment>
+        {isFloatHeaderAbsolute ? null : floatingHeader}
+        <MaybeScreenContainer
+          enabled={detachInactiveScreens}
+          style={styles.container}
+          onLayout={this.handleLayout}
+        >
+          {routes.map((route, index, self) => {
+            const focused = focusedRoute.key === route.key;
+            const gesture = gestures[route.key];
+            const scene = scenes[index];
 
-                  if (headerTransparent || headerShown === false) {
-                    return true;
-                  }
+            // For the screens that shouldn't be active, the value is 0
+            // For those that should be active, but are not the top screen, the value is 1
+            // For those on top of the stack and with interaction enabled, the value is 2
+            // For the old implementation, it stays the same it was
+            let isScreenActive: Animated.AnimatedInterpolation | 2 | 1 | 0 = 1;
 
-                  return false;
-                })
-              : false;
+            if (shouldUseActivityState) {
+              if (index < self.length - activeScreensLimit - 1) {
+                // screen should be inactive because it is too deep in the stack
+                isScreenActive = STATE_INACTIVE;
+              } else {
+                const sceneForActivity = scenes[self.length - 1];
+                const outputValue =
+                  index === self.length - 1
+                    ? STATE_ON_TOP // the screen is on top after the transition
+                    : index >= self.length - activeScreensLimit
+                    ? STATE_TRANSITIONING_OR_BELOW_TOP // the screen should stay active after the transition, it is not on top but is in activeLimit
+                    : STATE_INACTIVE; // the screen should be active only during the transition, it is at the edge of activeLimit
+                isScreenActive = sceneForActivity
+                  ? sceneForActivity.progress.current.interpolate({
+                      inputRange: [0, 1 - EPSILON, 1],
+                      outputRange: [1, 1, outputValue],
+                      extrapolate: 'clamp',
+                    })
+                  : STATE_TRANSITIONING_OR_BELOW_TOP;
+              }
+            } else {
+              isScreenActive = scene.progress.next
+                ? scene.progress.next.interpolate({
+                    inputRange: [0, 1 - EPSILON, 1],
+                    outputRange: [1, 1, 0],
+                    extrapolate: 'clamp',
+                  })
+                : 1;
+            }
 
-          const floatingHeader =
-            headerMode === 'float' ? (
-              <React.Fragment key="header">
-                {renderHeader({
-                  mode: 'float',
-                  layout,
-                  insets: { top, right, bottom, left },
-                  scenes,
-                  getPreviousScene: this.getPreviousScene,
-                  getFocusedRoute: this.getFocusedRoute,
-                  onContentHeightChange: this.handleHeaderLayout,
-                  gestureDirection:
-                    focusedOptions.gestureDirection !== undefined
-                      ? focusedOptions.gestureDirection
-                      : defaultTransitionPreset.gestureDirection,
-                  styleInterpolator:
-                    focusedOptions.headerStyleInterpolator !== undefined
-                      ? focusedOptions.headerStyleInterpolator
-                      : defaultTransitionPreset.headerStyleInterpolator,
-                  style: [
-                    styles.floating,
-                    isFloatHeaderAbsolute && styles.absolute,
-                  ],
-                })}
-              </React.Fragment>
-            ) : null;
+            const {
+              safeAreaInsets,
+              headerShown = isParentHeaderShown === false,
+              headerTransparent,
+              cardShadowEnabled,
+              cardOverlayEnabled,
+              cardOverlay,
+              cardStyle,
+              animationEnabled,
+              gestureResponseDistance,
+              gestureVelocityImpact,
+              gestureDirection = defaultTransitionPreset.gestureDirection,
+              transitionSpec = defaultTransitionPreset.transitionSpec,
+              cardStyleInterpolator = animationEnabled === false
+                ? forNoAnimationCard
+                : defaultTransitionPreset.cardStyleInterpolator,
+              headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
+            } = scene.descriptor
+              ? scene.descriptor.options
+              : ({} as StackNavigationOptions);
 
-          return (
-            <React.Fragment>
-              {isFloatHeaderAbsolute ? null : floatingHeader}
-              <MaybeScreenContainer
-                enabled={isScreensEnabled}
-                style={styles.container}
-                onLayout={this.handleLayout}
+            let transitionConfig = {
+              gestureDirection,
+              transitionSpec,
+              cardStyleInterpolator,
+              headerStyleInterpolator,
+            };
+
+            // When a screen is not the last, it should use next screen's transition config
+            // Many transitions also animate the previous screen, so using 2 different transitions doesn't look right
+            // For example combining a slide and a modal transition would look wrong otherwise
+            // With this approach, combining different transition styles in the same navigator mostly looks right
+            // This will still be broken when 2 transitions have different idle state (e.g. modal presentation),
+            // but majority of the transitions look alright
+            if (index !== self.length - 1) {
+              const nextScene = scenes[index + 1];
+
+              if (nextScene) {
+                const {
+                  animationEnabled,
+                  gestureDirection = defaultTransitionPreset.gestureDirection,
+                  transitionSpec = defaultTransitionPreset.transitionSpec,
+                  cardStyleInterpolator = animationEnabled === false
+                    ? forNoAnimationCard
+                    : defaultTransitionPreset.cardStyleInterpolator,
+                  headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
+                } = nextScene.descriptor
+                  ? nextScene.descriptor.options
+                  : ({} as StackNavigationOptions);
+
+                transitionConfig = {
+                  gestureDirection,
+                  transitionSpec,
+                  cardStyleInterpolator,
+                  headerStyleInterpolator,
+                };
+              }
+            }
+
+            const {
+              top: safeAreaInsetTop = insets.top,
+              right: safeAreaInsetRight = insets.right,
+              bottom: safeAreaInsetBottom = insets.bottom,
+              left: safeAreaInsetLeft = insets.left,
+            } = safeAreaInsets || {};
+
+            const headerHeight =
+              headerMode !== 'none' && headerShown !== false
+                ? headerHeights[route.key]
+                : 0;
+
+            return (
+              <MaybeScreen
+                key={route.key}
+                style={StyleSheet.absoluteFill}
+                enabled={detachInactiveScreens}
+                active={isScreenActive}
+                pointerEvents="box-none"
               >
-                {routes.map((route, index, self) => {
-                  const focused = focusedRoute.key === route.key;
-                  const gesture = gestures[route.key];
-                  const scene = scenes[index];
-
-                  const isScreenActive = scene.progress.next
-                    ? scene.progress.next.interpolate({
-                        inputRange: [0, 1 - EPSILON, 1],
-                        outputRange: [1, 1, 0],
-                        extrapolate: 'clamp',
-                      })
-                    : 1;
-
-                  const {
-                    safeAreaInsets,
-                    headerShown = isParentHeaderShown === false,
-                    headerTransparent,
-                    cardShadowEnabled,
-                    cardOverlayEnabled,
-                    cardOverlay,
-                    cardStyle,
-                    animationEnabled,
-                    gestureResponseDistance,
-                    gestureVelocityImpact,
-                    gestureDirection = defaultTransitionPreset.gestureDirection,
-                    transitionSpec = defaultTransitionPreset.transitionSpec,
-                    cardStyleInterpolator = animationEnabled === false
-                      ? forNoAnimationCard
-                      : defaultTransitionPreset.cardStyleInterpolator,
-                    headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
-                  } = scene.descriptor
-                    ? scene.descriptor.options
-                    : ({} as StackNavigationOptions);
-
-                  let transitionConfig = {
-                    gestureDirection,
-                    transitionSpec,
-                    cardStyleInterpolator,
-                    headerStyleInterpolator,
-                  };
-
-                  // When a screen is not the last, it should use next screen's transition config
-                  // Many transitions also animate the previous screen, so using 2 different transitions doesn't look right
-                  // For example combining a slide and a modal transition would look wrong otherwise
-                  // With this approach, combining different transition styles in the same navigator mostly looks right
-                  // This will still be broken when 2 transitions have different idle state (e.g. modal presentation),
-                  // but majority of the transitions look alright
-                  if (index !== self.length - 1) {
-                    const nextScene = scenes[index + 1];
-
-                    if (nextScene) {
-                      const {
-                        animationEnabled,
-                        gestureDirection = defaultTransitionPreset.gestureDirection,
-                        transitionSpec = defaultTransitionPreset.transitionSpec,
-                        cardStyleInterpolator = animationEnabled === false
-                          ? forNoAnimationCard
-                          : defaultTransitionPreset.cardStyleInterpolator,
-                        headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
-                      } = nextScene.descriptor
-                        ? nextScene.descriptor.options
-                        : ({} as StackNavigationOptions);
-
-                      transitionConfig = {
-                        gestureDirection,
-                        transitionSpec,
-                        cardStyleInterpolator,
-                        headerStyleInterpolator,
-                      };
-                    }
+                <CardContainer
+                  index={index}
+                  active={index === self.length - 1}
+                  focused={focused}
+                  closing={closingRouteKeys.includes(route.key)}
+                  layout={layout}
+                  gesture={gesture}
+                  scene={scene}
+                  safeAreaInsetTop={safeAreaInsetTop}
+                  safeAreaInsetRight={safeAreaInsetRight}
+                  safeAreaInsetBottom={safeAreaInsetBottom}
+                  safeAreaInsetLeft={safeAreaInsetLeft}
+                  cardOverlay={cardOverlay}
+                  cardOverlayEnabled={cardOverlayEnabled}
+                  cardShadowEnabled={cardShadowEnabled}
+                  cardStyle={cardStyle}
+                  onPageChangeStart={onPageChangeStart}
+                  onPageChangeConfirm={onPageChangeConfirm}
+                  onPageChangeCancel={onPageChangeCancel}
+                  onGestureStart={onGestureStart}
+                  onGestureCancel={onGestureCancel}
+                  onGestureEnd={onGestureEnd}
+                  gestureResponseDistance={gestureResponseDistance}
+                  headerHeight={headerHeight}
+                  isParentHeaderShown={isParentHeaderShown}
+                  onHeaderHeightChange={this.handleHeaderLayout}
+                  getPreviousScene={this.getPreviousScene}
+                  getFocusedRoute={this.getFocusedRoute}
+                  mode={mode}
+                  headerMode={headerMode}
+                  headerShown={headerShown}
+                  hasAbsoluteHeader={
+                    isFloatHeaderAbsolute && !headerTransparent
                   }
-
-                  const {
-                    top: safeAreaInsetTop = insets.top,
-                    right: safeAreaInsetRight = insets.right,
-                    bottom: safeAreaInsetBottom = insets.bottom,
-                    left: safeAreaInsetLeft = insets.left,
-                  } = safeAreaInsets || {};
-
-                  const headerHeight =
-                    headerMode !== 'none' && headerShown !== false
-                      ? headerHeights[route.key]
-                      : 0;
-
-                  return (
-                    <MaybeScreen
-                      key={route.key}
-                      style={StyleSheet.absoluteFill}
-                      enabled={isScreensEnabled}
-                      active={isScreenActive}
-                      pointerEvents="box-none"
-                    >
-                      <CardContainer
-                        index={index}
-                        active={index === self.length - 1}
-                        focused={focused}
-                        closing={closingRouteKeys.includes(route.key)}
-                        layout={layout}
-                        gesture={gesture}
-                        scene={scene}
-                        safeAreaInsetTop={safeAreaInsetTop}
-                        safeAreaInsetRight={safeAreaInsetRight}
-                        safeAreaInsetBottom={safeAreaInsetBottom}
-                        safeAreaInsetLeft={safeAreaInsetLeft}
-                        cardOverlay={cardOverlay}
-                        cardOverlayEnabled={cardOverlayEnabled}
-                        cardShadowEnabled={cardShadowEnabled}
-                        cardStyle={cardStyle}
-                        onPageChangeStart={onPageChangeStart}
-                        onPageChangeConfirm={onPageChangeConfirm}
-                        onPageChangeCancel={onPageChangeCancel}
-                        onGestureStart={onGestureStart}
-                        onGestureCancel={onGestureCancel}
-                        onGestureEnd={onGestureEnd}
-                        gestureResponseDistance={gestureResponseDistance}
-                        headerHeight={headerHeight}
-                        onHeaderHeightChange={this.handleHeaderLayout}
-                        getPreviousScene={this.getPreviousScene}
-                        getFocusedRoute={this.getFocusedRoute}
-                        mode={mode}
-                        headerMode={headerMode}
-                        headerShown={headerShown}
-                        hasAbsoluteHeader={
-                          isFloatHeaderAbsolute && !headerTransparent
-                        }
-                        renderHeader={renderHeader}
-                        renderScene={renderScene}
-                        onOpenRoute={onOpenRoute}
-                        onCloseRoute={onCloseRoute}
-                        onTransitionStart={onTransitionStart}
-                        onTransitionEnd={onTransitionEnd}
-                        gestureEnabled={
-                          index !== 0 && getGesturesEnabled({ route })
-                        }
-                        gestureVelocityImpact={gestureVelocityImpact}
-                        {...transitionConfig}
-                      />
-                    </MaybeScreen>
-                  );
-                })}
-              </MaybeScreenContainer>
-              {isFloatHeaderAbsolute ? floatingHeader : null}
-            </React.Fragment>
-          );
-        }}
-      </HeaderShownContext.Consumer>
+                  renderHeader={renderHeader}
+                  renderScene={renderScene}
+                  onOpenRoute={onOpenRoute}
+                  onCloseRoute={onCloseRoute}
+                  onTransitionStart={onTransitionStart}
+                  onTransitionEnd={onTransitionEnd}
+                  gestureEnabled={index !== 0 && getGesturesEnabled({ route })}
+                  gestureVelocityImpact={gestureVelocityImpact}
+                  {...transitionConfig}
+                />
+              </MaybeScreen>
+            );
+          })}
+        </MaybeScreenContainer>
+        {isFloatHeaderAbsolute ? floatingHeader : null}
+      </React.Fragment>
     );
   }
 }

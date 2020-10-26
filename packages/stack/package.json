@@ -13,8 +13,8 @@
   "scripts": {
     "prepare": "bob build",
     "clean": "del lib",
-    "sync": "bash scripts/sync-stack.sh",
-    "patch": "diff -Naur ../../node_modules/@react-navigation/stack/src src/vendor > scripts/stack.patch; printf ''"
+    "patch:apply": "bash scripts/sync-stack.sh",
+    "patch:create": "diff -Naur ../../node_modules/@react-navigation/stack/src src/vendor > scripts/stack.patch; printf ''"
   },
   "sideEffects": false,
   "publishConfig": {
@@ -45,7 +45,7 @@
   "devDependencies": {
     "@react-native-community/bob": "^0.16.2",
     "@react-native-community/masked-view": "0.1.10",
-    "@react-navigation/stack": "^5.9.0",
+    "@react-navigation/stack": "^5.10.0",
     "@types/color": "^3.0.1",
     "@types/react": "^16.9.44",
     "@types/react-native": "^0.63.4",

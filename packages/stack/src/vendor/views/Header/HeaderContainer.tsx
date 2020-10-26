@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { Animated, View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { NavigationContext } from 'react-navigation';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 
@@ -56,7 +56,7 @@ export default function HeaderContainer({
   const parentPreviousScene = React.useContext(PreviousSceneContext);
 
   return (
-    <View pointerEvents="box-none" style={style}>
+    <Animated.View pointerEvents="box-none" style={style}>
       {scenes.slice(-3).map((scene, i, self) => {
         if ((mode === 'screen' && i !== self.length - 1) || !scene) {
           return null;
@@ -124,11 +124,14 @@ export default function HeaderContainer({
               <View
                 onLayout={
                   onContentHeightChange
-                    ? (e) =>
+                    ? (e) => {
+                        const { height } = e.nativeEvent.layout;
+
                         onContentHeightChange({
                           route: scene.route,
-                          height: e.nativeEvent.layout.height,
-                        })
+                          height,
+                        });
+                      }
                     : undefined
                 }
                 pointerEvents={isFocused ? 'box-none' : 'none'}
@@ -150,7 +153,7 @@ export default function HeaderContainer({
           </NavigationContext.Provider>
         );
       })}
-    </View>
+    </Animated.View>
   );
 }
 

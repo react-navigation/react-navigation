@@ -11,12 +11,9 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
   <View
     pointerEvents="box-none"
     style={
-      Array [
-        Object {
-          "zIndex": 1,
-        },
-        false,
-      ]
+      Object {
+        "zIndex": 1,
+      }
     }
   >
     <View
@@ -194,6 +191,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
         }
       >
         <View
+          needsOffscreenAlphaCompositing={false}
           pointerEvents="box-none"
           style={
             Object {
@@ -362,6 +360,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                             }
                           >
                             <View
+                              needsOffscreenAlphaCompositing={false}
                               pointerEvents="box-none"
                               style={
                                 Object {
@@ -458,17 +457,14 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                       <View
                         pointerEvents="box-none"
                         style={
-                          Array [
-                            Object {
-                              "zIndex": 1,
-                            },
-                            Object {
-                              "left": 0,
-                              "position": "absolute",
-                              "right": 0,
-                              "top": 0,
-                            },
-                          ]
+                          Object {
+                            "height": 44,
+                            "left": 0,
+                            "position": "absolute",
+                            "right": 0,
+                            "top": 0,
+                            "zIndex": 1,
+                          }
                         }
                       />
                     </View>

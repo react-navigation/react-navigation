@@ -67,6 +67,7 @@ type Props = TransitionPreset & {
     route: Route<string>;
     height: number;
   }) => void;
+  isParentHeaderShown: boolean;
 };
 
 const EPSILON = 0.1;
@@ -94,6 +95,7 @@ function CardContainer({
   hasAbsoluteHeader,
   headerHeight,
   onHeaderHeightChange,
+  isParentHeaderShown,
   index,
   layout,
   onCloseRoute,
@@ -182,7 +184,6 @@ function CardContainer({
     };
   }, [pointerEvents, scene.progress.next]);
 
-  const isParentHeaderShown = React.useContext(HeaderShownContext);
   const isCurrentHeaderShown = headerMode !== 'none' && headerShown !== false;
   const previousScene = getPreviousScene({ route: scene.route });
 

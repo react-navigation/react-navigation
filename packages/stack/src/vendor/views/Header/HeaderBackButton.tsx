@@ -8,9 +8,9 @@ import {
   StyleSheet,
   LayoutChangeEvent,
 } from 'react-native';
-import useTheme from '../../../utils/useTheme';
 import MaskedView from '../MaskedView';
 import TouchableItem from '../TouchableItem';
+import useTheme from '../../../utils/useTheme';
 import type { StackHeaderLeftButtonProps } from '../../types';
 
 type Props = StackHeaderLeftButtonProps;
