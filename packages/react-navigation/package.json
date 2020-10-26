@@ -28,8 +28,8 @@
     "@react-navigation/native": "^3.8.2"
   },
   "devDependencies": {
-    "@types/react": "^16.9.44",
-    "@types/react-native": "^0.63.4",
+    "@types/react": "^16.9.53",
+    "@types/react-native": "^0.63.30",
     "@types/react-test-renderer": "^16.9.3",
     "react": "~16.13.1",
     "react-native": "~0.63.2",

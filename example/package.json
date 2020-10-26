@@ -8,7 +8,7 @@
     "ios": "expo start --ios"
   },
   "dependencies": {
-    "@babel/runtime": "^7.11.0",
+    "@babel/runtime": "^7.12.1",
     "@expo/vector-icons": "^10.0.0",
     "@react-native-community/masked-view": "0.1.10",
     "expo": "^39.0.0",
@@ -20,17 +20,17 @@
     "react": "~16.13.1",
     "react-native": "~0.63.2",
     "react-native-gesture-handler": "~1.7.0",
-    "react-native-iphone-x-helper": "^1.2.1",
+    "react-native-iphone-x-helper": "^1.3.0",
     "react-native-maps": "0.27.1",
     "react-native-paper": "^4.0.1",
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "3.1.4",
     "react-native-screens": "~2.10.1",
     "react-native-webview": "10.7.0",
-    "react-navigation-header-buttons": "^3.0.5"
+    "react-navigation-header-buttons": "^6.0.0"
   },
   "devDependencies": {
     "babel-plugin-module-resolver": "^4.0.0",
-    "expo-cli": "^3.27.8"
+    "expo-cli": "^3.28.2"
   }
 }

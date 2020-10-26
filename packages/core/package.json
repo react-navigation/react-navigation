@@ -37,7 +37,7 @@
   "dependencies": {
     "hoist-non-react-statics": "^3.3.2",
     "path-to-regexp": "^1.8.0",
-    "query-string": "^6.13.1",
+    "query-string": "^6.13.6",
     "react-is": "^16.13.0"
   },
   "devDependencies": {
