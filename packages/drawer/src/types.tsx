@@ -69,7 +69,7 @@ export type NavigationDrawerConfig = {
   drawerBackgroundColor?: ThemedColor;
   overlayColor?: ThemedColor;
   screenContainerStyle?: StyleProp<ViewStyle>;
-  detachInactiveScreens: boolean;
+  detachInactiveScreens?: boolean;
 };
 
 export type NavigationDrawerRouterConfig = {
