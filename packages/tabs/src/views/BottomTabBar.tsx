@@ -8,7 +8,10 @@ import {
   Platform,
   LayoutChangeEvent,
 } from 'react-native';
-import SafeAreaView from 'react-native-safe-area-view';
+import {
+  getStatusBarHeight,
+  getBottomSpace,
+} from 'react-native-iphone-x-helper';
 import { ThemeColors, ThemeContext, NavigationRoute } from 'react-navigation';
 
 import CrossFadeIcon from './CrossFadeIcon';
@@ -29,6 +32,9 @@ type State = {
 const majorVersion = parseInt(Platform.Version as string, 10);
 const isIos = Platform.OS === 'ios';
 const isIOS11 = majorVersion >= 11 && isIos;
+
+const DEFAULT_HEIGHT = 49;
+const COMPACT_HEIGHT = 29;
 
 const DEFAULT_MAX_TAB_ITEM_WIDTH = 125;
 const DEFAULT_KEYBOARD_ANIMATION_CONFIG: KeyboardHidesTabBarAnimationConfig = {
@@ -103,9 +109,7 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
     showIcon: true,
     allowFontScaling: true,
     adaptive: isIOS11,
-    safeAreaInset: { bottom: 'always', top: 'never' } as React.ComponentProps<
-      typeof SafeAreaView
-    >['forceInset'],
+    safeAreaInset: { bottom: 'always', top: 'never' } as const,
   };
 
   // eslint-disable-next-line react/sort-comp
@@ -394,6 +398,7 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
       keyboardHidesTabBar,
       onTabPress,
       onTabLongPress,
+      isLandscape,
       safeAreaInset,
       style,
       tabStyle,
@@ -436,13 +441,42 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
       marginVertical,
     };
 
+    const statusBarHeight = getStatusBarHeight(true);
+    const horizontalInset = isLandscape ? statusBarHeight : 0;
+    const insets = {
+      bottom:
+        typeof safeAreaInset?.bottom === 'number'
+          ? safeAreaInset.bottom
+          : safeAreaInset?.bottom === 'never'
+          ? 0
+          : getBottomSpace(),
+      left:
+        typeof safeAreaInset?.left === 'number'
+          ? safeAreaInset.left
+          : safeAreaInset?.left === 'never'
+          ? 0
+          : horizontalInset,
+      right:
+        typeof safeAreaInset?.right === 'number'
+          ? safeAreaInset.right
+          : safeAreaInset?.right === 'never'
+          ? 0
+          : horizontalInset,
+    };
+
     const tabBarStyle = [
+      {
+        height:
+          // @ts-ignore: isPad exists in runtime but not available in type defs
+          (this._shouldUseHorizontalLabels() && !Platform.isPad
+            ? COMPACT_HEIGHT
+            : DEFAULT_HEIGHT) + insets.bottom,
+        paddingBottom: insets.bottom,
+        paddingLeft: insets.left,
+        paddingRight: insets.right,
+      },
       styles.tabBar,
       isDark ? styles.tabBarDark : styles.tabBarLight,
-      // @ts-ignore
-      this._shouldUseHorizontalLabels() && !Platform.isPad
-        ? styles.tabBarCompact
-        : styles.tabBarRegular,
       innerStyle,
     ];
 
@@ -473,7 +507,7 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
         }
         onLayout={this._handleLayout}
       >
-        <SafeAreaView style={tabBarStyle} forceInset={safeAreaInset}>
+        <View style={tabBarStyle}>
           {routes.map((route, index) => {
             const focused = index === navigation.state.index;
             const scene = { route, focused };
@@ -524,14 +558,11 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
               </ButtonComponent>
             );
           })}
-        </SafeAreaView>
+        </View>
       </Animated.View>
     );
   }
 }
-
-const DEFAULT_HEIGHT = 49;
-const COMPACT_HEIGHT = 29;
 
 const styles = StyleSheet.create({
   tabBar: {
@@ -548,12 +579,6 @@ const styles = StyleSheet.create({
   },
   container: {
     elevation: 8,
-  },
-  tabBarCompact: {
-    height: COMPACT_HEIGHT,
-  },
-  tabBarRegular: {
-    height: DEFAULT_HEIGHT,
   },
   tab: {
     flex: 1,
