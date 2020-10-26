@@ -20,7 +20,7 @@ type Config = {
   lazy?: boolean;
   tabBarComponent?: React.ComponentType<any>;
   tabBarOptions?: BottomTabBarOptions;
-  screensEnabled?: boolean;
+  detachInactiveScreens?: boolean;
 };
 
 type Props = NavigationViewProps &
@@ -132,14 +132,19 @@ class TabNavigationView extends React.PureComponent<Props, State> {
   };
 
   render() {
-    const { navigation, renderScene, lazy, screensEnabled = true } = this.props;
+    const {
+      navigation,
+      renderScene,
+      lazy,
+      detachInactiveScreens = true,
+    } = this.props;
     const { routes } = navigation.state;
     const { loaded } = this.state;
 
     return (
       <View style={styles.container}>
         {/* @ts-ignore */}
-        <ScreenContainer enabled={screensEnabled} style={styles.pages}>
+        <ScreenContainer enabled={detachInactiveScreens} style={styles.pages}>
           {routes.map((route, index) => {
             if (lazy && !loaded.includes(index)) {
               // Don't render a screen if we've never navigated to it
@@ -153,7 +158,7 @@ class TabNavigationView extends React.PureComponent<Props, State> {
                 key={route.key}
                 style={StyleSheet.absoluteFill}
                 isVisible={isFocused}
-                enabled={screensEnabled}
+                enabled={detachInactiveScreens}
               >
                 {renderScene({ route })}
               </ResourceSavingScene>

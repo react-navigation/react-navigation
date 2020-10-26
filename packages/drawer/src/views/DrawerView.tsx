@@ -49,7 +49,7 @@ type Props = {
     contentOptions?: object;
   };
   screenProps: unknown;
-  screensEnabled: boolean;
+  detachInactiveScreens: boolean;
 };
 
 type State = {
@@ -167,7 +167,7 @@ export default class DrawerView extends React.PureComponent<Props, State> {
   };
 
   private renderContent = () => {
-    let { lazy, navigation, screensEnabled = true } = this.props;
+    let { lazy, navigation, detachInactiveScreens = true } = this.props;
     let { loaded } = this.state;
     let { routes } = navigation.state;
 
@@ -185,7 +185,7 @@ export default class DrawerView extends React.PureComponent<Props, State> {
     } else {
       return (
         // @ts-ignore
-        <ScreenContainer enabled={screensEnabled} style={styles.content}>
+        <ScreenContainer enabled={detachInactiveScreens} style={styles.content}>
           {routes.map((route, index) => {
             if (lazy && !loaded.includes(index)) {
               // Don't render a screen if we've never navigated to it
@@ -203,7 +203,7 @@ export default class DrawerView extends React.PureComponent<Props, State> {
                   { opacity: isFocused ? 1 : 0 },
                 ]}
                 isVisible={isFocused}
-                enabled={screensEnabled}
+                enabled={detachInactiveScreens}
               >
                 <SceneView
                   navigation={descriptor.navigation}
