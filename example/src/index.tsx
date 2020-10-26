@@ -1,13 +1,13 @@
 import * as React from 'react';
 import {
   ScrollView,
-  YellowBox,
   Platform,
   StatusBar,
   I18nManager,
   Dimensions,
   ScaledSize,
   Linking,
+  LogBox,
 } from 'react-native';
 import { enableScreens } from 'react-native-screens';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -38,9 +38,9 @@ import {
   HeaderStyleInterpolators,
 } from '@react-navigation/stack';
 import { useReduxDevToolsExtension } from '@react-navigation/devtools';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { restartApp } from './Restart';
-import AsyncStorage from './AsyncStorage';
 import LinkingPrefixes from './LinkingPrefixes';
 import SettingsItem from './Shared/SettingsItem';
 import SimpleStack from './Screens/SimpleStack';
@@ -58,7 +58,9 @@ import PreventRemove from './Screens/PreventRemove';
 import CompatAPI from './Screens/CompatAPI';
 import LinkComponent from './Screens/LinkComponent';
 
-YellowBox.ignoreWarnings(['Require cycle:', 'Warning: Async Storage']);
+if (Platform.OS !== 'web') {
+  LogBox.ignoreLogs(['Require cycle:']);
+}
 
 enableScreens();
 
