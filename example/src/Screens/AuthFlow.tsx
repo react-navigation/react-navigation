@@ -31,9 +31,11 @@ const AuthContext = React.createContext<{
 });
 
 const SplashScreen = () => {
+  const { colors } = useTheme();
+
   return (
     <View style={styles.content}>
-      <ActivityIndicator />
+      <ActivityIndicator color={colors.primary} />
     </View>
   );
 };
