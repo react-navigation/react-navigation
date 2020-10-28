@@ -423,6 +423,7 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
       marginRight,
       marginHorizontal,
       marginVertical,
+      height,
       ...innerStyle
     } = StyleSheet.flatten(style || {});
 
@@ -467,10 +468,14 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
     const tabBarStyle = [
       {
         height:
-          // @ts-ignore: isPad exists in runtime but not available in type defs
-          (this._shouldUseHorizontalLabels() && !Platform.isPad
-            ? COMPACT_HEIGHT
-            : DEFAULT_HEIGHT) + insets.bottom,
+          height != null
+            ? typeof height === 'number'
+              ? height + insets.bottom
+              : height
+            : // @ts-ignore: isPad exists in runtime but not available in type defs
+              (this._shouldUseHorizontalLabels() && !Platform.isPad
+                ? COMPACT_HEIGHT
+                : DEFAULT_HEIGHT) + insets.bottom,
         paddingBottom: insets.bottom,
         paddingLeft: insets.left,
         paddingRight: insets.right,
