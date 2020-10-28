@@ -10,8 +10,9 @@ import type {
 } from '@react-navigation/routers';
 
 export type DefaultNavigatorOptions<
-  ScreenOptions extends {}
-> = DefaultRouterOptions & {
+  ScreenOptions extends {},
+  ParamList extends ParamListBase = ParamListBase
+> = DefaultRouterOptions<Extract<keyof ParamList, string>> & {
   /**
    * Children React Elements to extract the route configuration from.
    * Only `Screen` components are supported as children.
@@ -23,7 +24,7 @@ export type DefaultNavigatorOptions<
   screenOptions?:
     | ScreenOptions
     | ((props: {
-        route: RouteProp<ParamListBase, string>;
+        route: RouteProp<ParamList, keyof ParamList>;
         navigation: any;
       }) => ScreenOptions);
 };
@@ -489,14 +490,11 @@ export type TypedNavigator<
    * Navigator component which manages the child screens.
    */
   Navigator: React.ComponentType<
-    Omit<React.ComponentProps<Navigator>, keyof DefaultNavigatorOptions<any>> &
-      Omit<DefaultNavigatorOptions<ScreenOptions>, 'initialRouteName'> & {
-        /**
-         * Name of the route to focus by on initial render.
-         * If not specified, usually the first route is used.
-         */
-        initialRouteName?: keyof ParamList;
-      }
+    Omit<
+      React.ComponentProps<Navigator>,
+      keyof DefaultNavigatorOptions<any, any>
+    > &
+      DefaultNavigatorOptions<ScreenOptions, ParamList>
   >;
   /**
    * Component used for specifying route configuration.

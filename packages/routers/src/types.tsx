@@ -116,12 +116,12 @@ export type ActionCreators<Action extends NavigationAction> = {
   [key: string]: (...args: any) => Action;
 };
 
-export type DefaultRouterOptions = {
+export type DefaultRouterOptions<RouteName extends string = string> = {
   /**
    * Name of the route to focus by on initial render.
    * If not specified, usually the first route is used.
    */
-  initialRouteName?: string;
+  initialRouteName?: RouteName;
 };
 
 export type RouterFactory<
