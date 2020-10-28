@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.13.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.13.0...@react-navigation/core@5.13.1) (2020-10-28)
+
+
+### Bug Fixes
+
+* improve types for route prop in screenOptions ([d26bcc0](https://github.com/react-navigation/react-navigation/commit/d26bcc057ef31f8950f909adf83e263171a42d74))
+
+
+
+
+
 # [5.13.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.12.5...@react-navigation/core@5.13.0) (2020-10-24)
 
 
