@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.10.1](https://github.com/react-navigation/tabs/compare/react-navigation-tabs@2.10.0...react-navigation-tabs@2.10.1) (2020-10-28)
+
+
+### Bug Fixes
+
+* add bottom insets to custom height for bottom tabs ([ffe3bdd](https://github.com/react-navigation/tabs/commit/ffe3bddcb27ecb3d663b13b433263d18f792ad4d))
+
+
+
+
+
 # [2.10.0](https://github.com/react-navigation/tabs/compare/react-navigation-tabs@2.9.2...react-navigation-tabs@2.10.0) (2020-10-26)
 
 
