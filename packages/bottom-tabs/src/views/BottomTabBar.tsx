@@ -260,13 +260,6 @@ export default function BottomTabBar({
               ? options.title
               : route.name;
 
-          const accessibilityLabel =
-            options.tabBarAccessibilityLabel !== undefined
-              ? options.tabBarAccessibilityLabel
-              : typeof label === 'string'
-              ? `${label}, tab, ${index + 1} of ${routes.length}`
-              : undefined;
-
           return (
             <NavigationContext.Provider
               key={route.key}
@@ -279,7 +272,7 @@ export default function BottomTabBar({
                   horizontal={shouldUseHorizontalLabels()}
                   onPress={onPress}
                   onLongPress={onLongPress}
-                  accessibilityLabel={accessibilityLabel}
+                  accessibilityLabel={options.tabBarAccessibilityLabel}
                   to={buildLink(route.name, route.params)}
                   testID={options.tabBarTestID}
                   allowFontScaling={allowFontScaling}
