@@ -3,6 +3,7 @@ import type {
   PartialRoute,
   NavigationState,
   PartialState,
+  CommonActions,
 } from '@react-navigation/routers';
 import type { PathConfig, PathConfigMap, NestedNavigateParams } from './types';
 
@@ -24,14 +25,34 @@ type NavigateAction<State extends NavigationState> = {
 export default function getActionFromState(
   state: PartialState<NavigationState>,
   options?: Options
-): NavigateAction<NavigationState> | undefined {
+): NavigateAction<NavigationState> | CommonActions.Action | undefined {
   // Create a normalized configs object which will be easier to use
   const normalizedConfig = options ? createNormalizedConfigItem(options) : {};
 
-  let payload;
-  let current: PartialState<NavigationState> | undefined = state;
-  let config: ConfigItem | undefined = normalizedConfig;
-  let params: NestedNavigateParams<NavigationState> = {};
+  if (state.routes.length === 0) {
+    return undefined;
+  }
+
+  if (
+    !(
+      state.routes.length === 1 ||
+      (state.routes.length === 2 &&
+        state.routes[0].name === normalizedConfig?.initialRouteName)
+    )
+  ) {
+    return {
+      type: 'RESET',
+      payload: state,
+    };
+  }
+
+  const route = state.routes[state.index ?? state.routes.length - 1];
+
+  let current: PartialState<NavigationState> | undefined = route?.state;
+  let config: ConfigItem | undefined = normalizedConfig?.screens?.[route?.name];
+  let params: NestedNavigateParams<NavigationState> = { ...route.params };
+
+  let payload = route ? { name: route.name, params } : undefined;
 
   while (current) {
     if (current.routes.length === 0) {
@@ -70,13 +91,6 @@ export default function getActionFromState(
 
     current = route.state;
     config = config?.screens?.[route.name];
-
-    if (!payload) {
-      payload = {
-        name: route.name,
-        params,
-      };
-    }
   }
 
   if (!payload) {
