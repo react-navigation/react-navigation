@@ -74,6 +74,10 @@ type Props = {
    */
   labelStyle?: StyleProp<TextStyle>;
   /**
+   * Style object for the label wrapper View.
+   */
+  labelContainerStyle?: StyleProp<ViewStyle>;
+  /**
    * Style object for the wrapper element.
    */
   style?: StyleProp<ViewStyle>;
@@ -142,6 +146,7 @@ export default function DrawerItem(props: Props) {
   const {
     icon,
     label,
+    labelContainerStyle,
     labelStyle,
     to,
     focused = false,
@@ -186,6 +191,7 @@ export default function DrawerItem(props: Props) {
             style={[
               styles.label,
               { marginLeft: iconNode ? 32 : 0, marginVertical: 5 },
+              labelContainerStyle,
             ]}
           >
             {typeof label === 'string' ? (

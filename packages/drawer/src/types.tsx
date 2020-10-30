@@ -126,6 +126,11 @@ export type DrawerNavigationOptions = HeaderOptions & {
   drawerLabelStyle?: StyleProp<TextStyle>;
 
   /**
+   * Style object to apply to the `View` wrapper which renders a label.
+   */
+  drawerLabelContainerStyle?: StyleProp<ViewStyle>;
+
+  /**
    * Style object for the content section.
    */
   drawerContentContainerStyle?: StyleProp<ViewStyle>;
