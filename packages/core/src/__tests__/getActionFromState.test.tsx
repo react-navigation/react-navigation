@@ -64,6 +64,139 @@ it('gets navigate action from state for top-level screen', () => {
   });
 });
 
+it('gets navigate action from state for top-level screen with 2 screens', () => {
+  const state = {
+    routes: [
+      {
+        name: 'foo',
+        params: { answer: 42 },
+      },
+      {
+        name: 'bar',
+        params: { author: 'jane' },
+      },
+    ],
+  };
+
+  expect(getActionFromState(state)).toEqual({
+    payload: {
+      routes: [
+        {
+          name: 'foo',
+          params: { answer: 42 },
+        },
+        {
+          name: 'bar',
+          params: { author: 'jane' },
+        },
+      ],
+    },
+    type: 'RESET',
+  });
+});
+
+it('gets navigate action from state for top-level screen with 2 screens with config', () => {
+  const state = {
+    routes: [
+      {
+        name: 'foo',
+        params: { answer: 42 },
+      },
+      {
+        name: 'bar',
+        params: { author: 'jane' },
+      },
+    ],
+  };
+
+  const config = {
+    initialRouteName: 'foo',
+    screens: {
+      bar: 'bar',
+    },
+  };
+
+  expect(getActionFromState(state, config)).toEqual({
+    payload: {
+      name: 'bar',
+      params: { author: 'jane' },
+    },
+    type: 'NAVIGATE',
+  });
+});
+
+it('gets navigate action from state for top-level screen with more than 2 screens with config', () => {
+  const state = {
+    routes: [
+      {
+        name: 'foo',
+        params: { answer: 42 },
+      },
+      {
+        name: 'bar',
+        params: { author: 'jane' },
+      },
+      { name: 'baz' },
+    ],
+  };
+
+  const config = {
+    initialRouteName: 'foo',
+    screens: {
+      bar: 'bar',
+    },
+  };
+
+  expect(getActionFromState(state, config)).toEqual({
+    payload: {
+      routes: [
+        {
+          name: 'foo',
+          params: { answer: 42 },
+        },
+        {
+          name: 'bar',
+          params: { author: 'jane' },
+        },
+        { name: 'baz' },
+      ],
+    },
+    type: 'RESET',
+  });
+});
+
+it('gets navigate action from state for top-level screen with more than 2 screens with config with lower index', () => {
+  const state = {
+    index: 1,
+    routes: [
+      {
+        name: 'foo',
+        params: { answer: 42 },
+      },
+      {
+        name: 'bar',
+        params: { author: 'jane' },
+      },
+      { name: 'baz' },
+    ],
+  };
+
+  const config = {
+    initialRouteName: 'foo',
+    screens: {
+      bar: 'bar',
+    },
+  };
+
+  expect(getActionFromState(state, config)).toEqual({
+    payload: {
+      name: 'bar',
+      params: { author: 'jane' },
+    },
+    type: 'NAVIGATE',
+  });
+});
+
 it('gets navigate action from state with 2 screens', () => {
   const state = {
     routes: [
@@ -106,6 +239,51 @@ it('gets navigate action from state with 2 screens', () => {
               },
               { name: 'quz' },
             ],
+          },
+        },
+      },
+    },
+    type: 'NAVIGATE',
+  });
+});
+
+it('gets navigate action from state with 2 screens with lower index', () => {
+  const state = {
+    routes: [
+      {
+        name: 'foo',
+        state: {
+          routes: [
+            {
+              name: 'bar',
+              state: {
+                index: 0,
+                routes: [
+                  {
+                    name: 'qux',
+                    params: { author: 'jane' },
+                  },
+                  { name: 'quz' },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getActionFromState(state)).toEqual({
+    payload: {
+      name: 'foo',
+      params: {
+        screen: 'bar',
+        initial: true,
+        params: {
+          screen: 'qux',
+          initial: true,
+          params: {
+            author: 'jane',
           },
         },
       },
@@ -494,6 +672,65 @@ it('gets navigate action from state with more than 2 screens and with config', (
               { name: 'quz' },
               { name: 'qua' },
             ],
+          },
+        },
+      },
+    },
+    type: 'NAVIGATE',
+  });
+});
+
+it('gets navigate action from state with more than 2 screens with lower index', () => {
+  const state = {
+    routes: [
+      {
+        name: 'foo',
+        state: {
+          routes: [
+            {
+              name: 'bar',
+              state: {
+                index: 1,
+                routes: [
+                  { name: 'quu' },
+                  {
+                    name: 'qux',
+                    params: { author: 'jane' },
+                  },
+                  { name: 'quz' },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  const config = {
+    screens: {
+      foo: {
+        initialRouteName: 'bar',
+        screens: {
+          bar: {
+            initialRouteName: 'quu',
+          },
+        },
+      },
+    },
+  };
+
+  expect(getActionFromState(state, config)).toEqual({
+    payload: {
+      name: 'foo',
+      params: {
+        screen: 'bar',
+        initial: true,
+        params: {
+          screen: 'qux',
+          initial: false,
+          params: {
+            author: 'jane',
           },
         },
       },
