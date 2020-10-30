@@ -4,7 +4,6 @@ import {
   StyleSheet,
   LayoutChangeEvent,
   Dimensions,
-  Platform,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import type { NavigationState as StackNavigationState } from 'react-navigation';
@@ -394,9 +393,8 @@ export default class CardStack extends React.Component<Props, State> {
       onGestureStart,
       onGestureEnd,
       onGestureCancel,
-      detachInactiveScreens = Platform.OS === 'ios'
-        ? false // Disable `react-native-screens` on iOS by default since it's buggy
-        : shouldUseActivityState || mode !== 'modal', // Enable on new versions of screens or for non modals on older versions
+      // Enable on new versions of screens or for non modals on older versions
+      detachInactiveScreens = shouldUseActivityState || mode !== 'modal',
     } = this.props;
 
     const { scenes, layout, gestures, headerHeights } = this.state;
