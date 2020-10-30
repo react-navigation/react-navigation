@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.10.0](https://github.com/react-navigation/react-navigation-stack/compare/react-navigation-stack@2.9.0...react-navigation-stack@2.10.0) (2020-10-30)
+
+
+### Features
+
+* enable react-native-screens in Stack by default on iOS ([8411e6f](https://github.com/react-navigation/react-navigation-stack/commit/8411e6f764b86341e747cb7ca1ff4a775b4a827a))
+
+
+
+
+
 # [2.9.0](https://github.com/react-navigation/react-navigation-stack/compare/react-navigation-stack@2.8.4...react-navigation-stack@2.9.0) (2020-10-26)
 
 
