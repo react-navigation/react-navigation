@@ -29,15 +29,18 @@ export default function getActionFromState(
   // Create a normalized configs object which will be easier to use
   const normalizedConfig = options ? createNormalizedConfigItem(options) : {};
 
-  if (state.routes.length === 0) {
+  const routes =
+    state.index != null ? state.routes.slice(0, state.index + 1) : state.routes;
+
+  if (routes.length === 0) {
     return undefined;
   }
 
   if (
     !(
-      state.routes.length === 1 ||
-      (state.routes.length === 2 &&
-        state.routes[0].name === normalizedConfig?.initialRouteName)
+      routes.length === 1 ||
+      (routes.length === 2 &&
+        routes[0].name === normalizedConfig?.initialRouteName)
     )
   ) {
     return {
@@ -59,17 +62,22 @@ export default function getActionFromState(
       return undefined;
     }
 
-    const route: Route<string> | PartialRoute<Route<string>> =
-      current.routes[current.routes.length - 1];
+    const routes =
+      current.index != null
+        ? current.routes.slice(0, current.index + 1)
+        : current.routes;
 
-    if (current.routes.length === 1) {
+    const route: Route<string> | PartialRoute<Route<string>> =
+      routes[routes.length - 1];
+
+    if (routes.length === 1) {
       params.initial = true;
       params.screen = route.name;
       params.state = undefined; // Explicitly set to override existing value when merging params
     } else if (
-      current.routes.length === 2 &&
-      current.routes[0].key === undefined &&
-      current.routes[0].name === config?.initialRouteName
+      routes.length === 2 &&
+      routes[0].key === undefined &&
+      routes[0].name === config?.initialRouteName
     ) {
       params.initial = false;
       params.screen = route.name;
