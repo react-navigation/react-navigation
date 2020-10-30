@@ -45,6 +45,25 @@ it('gets navigate action from state', () => {
   });
 });
 
+it('gets navigate action from state for top-level screen', () => {
+  const state = {
+    routes: [
+      {
+        name: 'foo',
+        params: { answer: 42 },
+      },
+    ],
+  };
+
+  expect(getActionFromState(state)).toEqual({
+    payload: {
+      name: 'foo',
+      params: { answer: 42 },
+    },
+    type: 'NAVIGATE',
+  });
+});
+
 it('gets navigate action from state with 2 screens', () => {
   const state = {
     routes: [
@@ -200,6 +219,37 @@ it('gets navigate action from state with config', () => {
         screen: 'bar',
         initial: true,
       },
+    },
+    type: 'NAVIGATE',
+  });
+});
+
+it('gets navigate action from state for top-level screen with config', () => {
+  const state = {
+    routes: [
+      {
+        name: 'foo',
+        params: { answer: 42 },
+      },
+    ],
+  };
+
+  const config = {
+    screens: {
+      initialRouteName: 'bar',
+      foo: {
+        path: 'some-path/:answer',
+        parse: {
+          answer: Number,
+        },
+      },
+    },
+  };
+
+  expect(getActionFromState(state, config)).toEqual({
+    payload: {
+      name: 'foo',
+      params: { answer: 42 },
     },
     type: 'NAVIGATE',
   });
