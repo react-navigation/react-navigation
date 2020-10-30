@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.13.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.13.1...@react-navigation/core@5.13.2) (2020-10-30)
+
+
+### Bug Fixes
+
+* fix params from for the root screen when creating action ([e8515f9](https://github.com/react-navigation/react-navigation/commit/e8515f9cd94a912c107a407dea3d953c4172393f)), closes [#9006](https://github.com/react-navigation/react-navigation/issues/9006)
+* trim routes if an index is specified in state ([fb7ac96](https://github.com/react-navigation/react-navigation/commit/fb7ac960c8e1ffca200ecb12696ce5531a139e50))
+
+
+
+
+
 ## [5.13.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.13.0...@react-navigation/core@5.13.1) (2020-10-28)
 
 
