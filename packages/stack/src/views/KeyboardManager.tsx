@@ -58,10 +58,12 @@ export default class KeyboardManager extends React.Component<Props> {
 
     const input = this.previouslyFocusedTextInput;
 
-    if (Platform.OS === 'android') {
-      Keyboard.dismiss();
-    } else if (input) {
-      TextInput.State.blurTextInput(input);
+    if (input) {
+      if (Platform.OS === 'android') {
+        Keyboard.dismiss();
+      } else {
+        TextInput.State.blurTextInput(input);
+      }
     }
 
     // Cleanup the ID on successful page change
