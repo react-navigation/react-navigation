@@ -91,32 +91,28 @@ it('runs effect on resurfaced from background', () => {
     return null;
   };
 
-  const EmptyScreen = () => null;
-
   const navigation = createRef<NavigationContainerRef>();
   const Tab = createTabNavigator();
 
   render(
     <NavigationContainer ref={navigation}>
-      <Tab.Navigator initialRouteName="First">
-        <Tab.Screen name="First" component={EmptyScreen} />
-        <Tab.Screen name="Second" component={TestScreen} />
-        <Tab.Screen name="Third" component={EmptyScreen} />
+      <Tab.Navigator initialRouteName="Main">
+        <Tab.Screen name="Main" component={TestScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
 
-  expect(effect).not.toBeCalled();
-
-  capturedChangeCallback('active');
-
   expect(effect).toBeCalledTimes(1);
 
-  capturedChangeCallback('background');
+  act(() => capturedChangeCallback('active'));
 
-  expect(effect).toBeCalledTimes(1);
+  expect(effect).toBeCalledTimes(2);
 
-  capturedChangeCallback('inactive');
+  act(() => capturedChangeCallback('background'));
 
-  expect(effect).toBeCalledTimes(1);
+  expect(effect).toBeCalledTimes(2);
+
+  act(() => capturedChangeCallback('inactive'));
+
+  expect(effect).toBeCalledTimes(2);
 });
