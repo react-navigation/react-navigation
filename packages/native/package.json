@@ -50,10 +50,12 @@
     "del-cli": "^3.0.1",
     "react": "~16.13.1",
     "react-dom": "^16.13.1",
+    "react-native": "~0.63.2",
     "typescript": "^4.0.3"
   },
   "peerDependencies": {
-    "react": "*"
+    "react": "*",
+    "react-native": "*"
   },
   "@react-native-community/bob": {
     "source": "src",
