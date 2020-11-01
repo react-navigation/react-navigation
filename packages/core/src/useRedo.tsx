@@ -8,7 +8,7 @@ type EffectCallback = () => undefined | void | (() => void);
  * Hook to run an effect when resurfaced from either background or a different view.
  * This can be used to perform side-effects such as refetching data.
  *
- * @param callback Memoized callback containing the effect, should optionally return a cleanup function.
+ * @param callback callback containing the effect.
  */
 export default function useRedo(effect: EffectCallback) {
   const memoizedEffect = useCallback(() => {
