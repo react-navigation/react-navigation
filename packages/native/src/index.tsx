@@ -15,6 +15,7 @@ export { default as useLinking } from './useLinking';
 export { default as useLinkTo } from './useLinkTo';
 export { default as useLinkProps } from './useLinkProps';
 export { default as useLinkBuilder } from './useLinkBuilder';
+export { default as useRedo } from './useRedo';
 
 export { default as ServerContainer } from './ServerContainer';
 

@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
-import useFocusEffect from './useFocusEffect';
+import { useFocusEffect } from '@react-navigation/core';
 
 type EffectCallback = () => undefined | void | (() => void);
 
