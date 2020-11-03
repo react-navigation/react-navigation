@@ -353,11 +353,24 @@ export default function useNavigationBuilder<
     } else if (
       typeof route.params.screen === 'string' &&
       ((route.params.initial === false && isFirstStateInitialization) ||
-        route.params.screen !== previousParams?.screen ||
-        route.params.params !== previousParams?.params)
+        route.params !== previousParams)
     ) {
+      // FIXME: Since params are merged, `route.params.params` might contain params from an older route
+      // So we need to make sure to reuse it only if:
+      // - The screen is the same, so navigation happened with same params
+      // - Params have actually changed
+      // - It's the first navigation during initialization
+      const params = (
+        route.params.screen === nextState.routes[nextState.index].name
+          ? route.params.screen === previousParams?.screen
+          : route.params.params !== previousParams?.params ||
+            (route.params.initial === false && isFirstStateInitialization)
+      )
+        ? route.params.params
+        : undefined;
+
       // If the route was updated with new screen name and/or params, we should navigate there
-      action = CommonActions.navigate(route.params.screen, route.params.params);
+      action = CommonActions.navigate(route.params.screen, params);
     }
 
     // The update should be limited to current navigator only, so we call the router manually

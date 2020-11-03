@@ -735,6 +735,20 @@ it('navigates to nested child in a navigator', () => {
   expect(element).toMatchInlineSnapshot(
     `"[bar-a, {\\"lol\\":\\"why\\",\\"whoa\\":\\"test\\"}]"`
   );
+
+  act(() => navigation.current?.navigate('bar', { screen: 'bar-b' }));
+
+  act(() => navigation.current?.goBack());
+
+  expect(element).toMatchInlineSnapshot(
+    `"[bar-a, {\\"lol\\":\\"why\\",\\"whoa\\":\\"test\\"}]"`
+  );
+
+  act(() => navigation.current?.navigate('bar', { screen: 'bar-b' }));
+
+  expect(element).toMatchInlineSnapshot(
+    `"[bar-b, {\\"some\\":\\"stuff\\",\\"test\\":42}]"`
+  );
 });
 
 it('navigates to nested child in a navigator with initial: false', () => {

@@ -132,6 +132,17 @@ export default function MockRouter(options: DefaultRouterOptions) {
           };
         }
 
+        case 'GO_BACK': {
+          if (state.index === 0) {
+            return null;
+          }
+
+          return {
+            ...state,
+            index: state.index - 1,
+          };
+        }
+
         default:
           return BaseRouter.getStateForAction(state, action);
       }
