@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.13.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.13.3...@react-navigation/core@5.13.4) (2020-11-03)
+
+
+### Bug Fixes
+
+* fix nested navigation not working the first time ([ebc7f9e](https://github.com/react-navigation/react-navigation/commit/ebc7f9ea75bbf6e3b6303027cfa023d7c97342ff))
+
+
+
+
+
 ## [5.13.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.13.2...@react-navigation/core@5.13.3) (2020-11-03)
 
 
