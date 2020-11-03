@@ -162,6 +162,7 @@ export default function HeaderSegment(props: Props) {
     headerBackTitleVisible,
     headerTruncatedBackTitle: truncatedLabel,
     headerPressColorAndroid: pressColorAndroid,
+    headerBackAccessibilityLabel: backAccessibilityLabel,
     headerBackAllowFontScaling: backAllowFontScaling,
     headerTitleAllowFontScaling: titleAllowFontScaling,
     headerTitleStyle: customTitleStyle,
@@ -290,6 +291,7 @@ export default function HeaderSegment(props: Props) {
     ? left({
         backImage,
         pressColorAndroid,
+        accessibilityLabel: backAccessibilityLabel,
         allowFontScaling: backAllowFontScaling,
         onPress: onGoBack,
         labelVisible: headerBackTitleVisible,
