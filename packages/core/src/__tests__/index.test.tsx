@@ -747,7 +747,7 @@ it('navigates to nested child in a navigator', () => {
   act(() => navigation.current?.navigate('bar', { screen: 'bar-b' }));
 
   expect(element).toMatchInlineSnapshot(
-    `"[bar-b, {\\"some\\":\\"stuff\\",\\"test\\":42}]"`
+    `"[bar-b, {\\"some\\":\\"stuff\\",\\"test\\":42,\\"whoa\\":\\"test\\"}]"`
   );
 });
 
