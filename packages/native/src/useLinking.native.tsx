@@ -121,6 +121,19 @@ export default function useLinking(
         const state = getStateFromPathRef.current(path, configRef.current);
 
         if (state) {
+          // Make sure that the routes in the state exist in the root navigator
+          // Otherwise there's an error in the linking configuration
+          const rootState = navigation.getRootState();
+
+          if (
+            state.routes.some((r) => !rootState?.routeNames.includes(r.name))
+          ) {
+            console.warn(
+              "The navigation state parsed from the URL contains routes not present in the root navigator. This usually means that the linking configuration doesn't match the navigation structure. See https://reactnavigation.org/docs/configuring-links for more details on how to specify a linking configuration."
+            );
+            return;
+          }
+
           const action = getActionFromState(state, configRef.current);
 
           if (action !== undefined) {
