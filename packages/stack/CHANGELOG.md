@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.12.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.11.1...@react-navigation/stack@5.12.0) (2020-11-03)
+
+
+### Features
+
+* add a headerBackAccessibilityLabel option in stack ([c326c10](https://github.com/react-navigation/react-navigation/commit/c326c106f9a2492ff45bdc8da9bfbc404e48786a)), closes [#9016](https://github.com/react-navigation/react-navigation/issues/9016)
+
+
+
+
+
 ## [5.11.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.11.0...@react-navigation/stack@5.11.1) (2020-10-30)
 
 **Note:** Version bump only for package @react-navigation/stack
