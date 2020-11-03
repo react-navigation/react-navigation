@@ -146,6 +146,10 @@ export type StackHeaderOptions = {
    */
   headerBackAllowFontScaling?: boolean;
   /**
+   * Accessibility label for the header back button.
+   */
+  headerBackAccessibilityLabel?: string;
+  /**
    * Title string used by the back button on iOS. Defaults to the previous scene's `headerTitle`.
    * Use `headerBackTitleVisible: false` to hide it.
    */
