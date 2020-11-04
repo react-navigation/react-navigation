@@ -1,11 +1,12 @@
 import type {
   Route,
   PartialRoute,
+  ParamListBase,
   NavigationState,
   PartialState,
   CommonActions,
 } from '@react-navigation/routers';
-import type { PathConfig, PathConfigMap, NestedNavigateParams } from './types';
+import type { PathConfig, PathConfigMap, NavigatorScreenParams } from './types';
 
 type ConfigItem = {
   initialRouteName?: string;
@@ -18,7 +19,7 @@ type NavigateAction<State extends NavigationState> = {
   type: 'NAVIGATE';
   payload: {
     name: string;
-    params?: NestedNavigateParams<State>;
+    params?: NavigatorScreenParams<State>;
   };
 };
 
@@ -55,7 +56,10 @@ export default function getActionFromState(
 
   let current: PartialState<NavigationState> | undefined = route?.state;
   let config: ConfigItem | undefined = normalizedConfig?.screens?.[route?.name];
-  let params: NestedNavigateParams<NavigationState> = { ...route.params };
+  let params = { ...route.params } as NavigatorScreenParams<
+    ParamListBase,
+    NavigationState
+  >;
 
   let payload = route ? { name: route.name, params } : undefined;
 
@@ -98,7 +102,10 @@ export default function getActionFromState(
 
     if (route.state) {
       params.params = { ...route.params };
-      params = params.params;
+      params = params.params as NavigatorScreenParams<
+        ParamListBase,
+        NavigationState
+      >;
     } else {
       params.params = route.params;
     }

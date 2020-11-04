@@ -34,7 +34,7 @@ import {
   PrivateValueStore,
   EventMapBase,
   EventMapCore,
-  NestedNavigateParams,
+  NavigatorScreenParams,
 } from './types';
 
 // This is to make TypeScript compiler happy
@@ -43,7 +43,7 @@ PrivateValueStore;
 
 type NavigatorRoute<State extends NavigationState> = {
   key: string;
-  params?: NestedNavigateParams<State>;
+  params?: NavigatorScreenParams<ParamListBase, State>;
 };
 
 /**

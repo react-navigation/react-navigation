@@ -504,19 +504,31 @@ export type TypedNavigator<
   ) => null;
 };
 
-export type NestedNavigateParams<State extends NavigationState> =
-  | {
-      screen?: string;
-      params?: object;
-      initial?: boolean;
-      state?: never;
-    }
+export type NavigatorScreenParams<
+  ParamList,
+  State extends NavigationState = NavigationState
+> =
   | {
       screen?: never;
       params?: never;
       initial?: never;
-      state?: PartialState<State> | State;
-    };
+      state: PartialState<State> | State | undefined;
+    }
+  | {
+      [RouteName in keyof ParamList]: undefined extends ParamList[RouteName]
+        ? {
+            screen: RouteName;
+            params?: ParamList[RouteName];
+            initial?: boolean;
+            state?: never;
+          }
+        : {
+            screen: RouteName;
+            params: ParamList[RouteName];
+            initial?: boolean;
+            state?: never;
+          };
+    }[keyof ParamList];
 
 export type PathConfig = {
   path?: string;
