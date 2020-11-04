@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/devtools",
   "description": "Developer tools for React Navigation",
-  "version": "5.1.12",
+  "version": "5.1.13",
   "keywords": [
     "react",
     "react-native",
@@ -36,7 +36,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/core": "^5.13.4",
+    "@react-navigation/core": "^5.13.5",
     "deep-equal": "^2.0.4"
   },
   "devDependencies": {
