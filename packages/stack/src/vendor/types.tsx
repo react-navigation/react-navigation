@@ -159,6 +159,10 @@ export type StackHeaderOptions = {
    */
   headerBackAllowFontScaling?: boolean;
   /**
+   * Accessibility label for the header back button.
+   */
+  headerBackAccessibilityLabel?: string;
+  /**
    * Title string used by the back button on iOS. Defaults to the previous scene's `headerTitle`.
    * Use `headerBackTitleVisible: false` to hide it.
    */
@@ -383,7 +387,7 @@ export type StackNavigationConfig = {
   /**
    * Whether inactive screens should be detached from the view hierarchy to save memory.
    * Make sure to call `enableScreens` from `react-native-screens` to make it work.
-   * Defaults to `true` on Android, `false` on iOS.
+   * Defaults to `true` on Android, depends on the version of `react-native-screens` on iOS.
    */
   detachInactiveScreens?: boolean;
 };
