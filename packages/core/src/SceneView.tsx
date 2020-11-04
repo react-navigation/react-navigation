@@ -18,9 +18,8 @@ type Props<
 > = {
   screen: RouteConfig<ParamListBase, string, State, ScreenOptions, EventMap>;
   navigation: NavigationProp<ParamListBase, string, State, ScreenOptions>;
-  route: Route<string> & {
-    state?: NavigationState | PartialState<NavigationState>;
-  };
+  route: Route<string>;
+  routeState: NavigationState | PartialState<NavigationState> | undefined;
   getState: () => State;
   setState: (state: State) => void;
   options: object;
@@ -38,6 +37,7 @@ export default function SceneView<
   screen,
   route,
   navigation,
+  routeState,
   getState,
   setState,
   options,
@@ -86,7 +86,7 @@ export default function SceneView<
 
   const context = React.useMemo(
     () => ({
-      state: route.state,
+      state: routeState,
       getState: getCurrentState,
       setState: setCurrentState,
       getKey,
@@ -95,7 +95,7 @@ export default function SceneView<
       addOptionsGetter,
     }),
     [
-      route.state,
+      routeState,
       getCurrentState,
       setCurrentState,
       getKey,

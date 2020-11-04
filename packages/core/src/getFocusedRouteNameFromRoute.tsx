@@ -3,11 +3,17 @@ import type {
   PartialState,
   NavigationState,
 } from '@react-navigation/routers';
+import { SUPPRESS_STATE_ACCESS_WARNING } from './useRouteCache';
 
 export default function getFocusedRouteNameFromRoute(
   route: Partial<Route<string>> & { state?: PartialState<NavigationState> }
 ): string | undefined {
+  SUPPRESS_STATE_ACCESS_WARNING.value = true;
+
   const state = route.state;
+
+  SUPPRESS_STATE_ACCESS_WARNING.value = false;
+
   const params = route.params as { screen?: unknown } | undefined;
 
   const routeName = state
