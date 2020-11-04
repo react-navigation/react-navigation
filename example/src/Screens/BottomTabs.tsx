@@ -5,6 +5,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {
   getFocusedRouteNameFromRoute,
   ParamListBase,
+  NavigatorScreenParams,
 } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import {
@@ -15,7 +16,7 @@ import TouchableBounce from '../Shared/TouchableBounce';
 import Albums from '../Shared/Albums';
 import Contacts from '../Shared/Contacts';
 import Chat from '../Shared/Chat';
-import SimpleStackScreen from './SimpleStack';
+import SimpleStackScreen, { SimpleStackParams } from './SimpleStack';
 
 const getTabBarIcon = (name: string) => ({
   color,
@@ -26,7 +27,7 @@ const getTabBarIcon = (name: string) => ({
 }) => <MaterialCommunityIcons name={name} color={color} size={size} />;
 
 type BottomTabParams = {
-  Article: undefined;
+  Article: NavigatorScreenParams<SimpleStackParams>;
   Albums: undefined;
   Contacts: undefined;
   Chat: undefined;

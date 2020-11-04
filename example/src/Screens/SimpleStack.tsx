@@ -10,7 +10,7 @@ import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
 import NewsFeed from '../Shared/NewsFeed';
 
-type SimpleStackParams = {
+export type SimpleStackParams = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Albums: undefined;
