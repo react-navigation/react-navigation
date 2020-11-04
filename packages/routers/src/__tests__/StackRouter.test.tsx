@@ -1074,3 +1074,115 @@ it('merges params on navigate to an existing screen', () => {
     ],
   });
 });
+
+it("doesn't merge params on navigate to an existing screen if merge: false", () => {
+  const router = StackRouter({});
+  const options = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {
+      baz: { foo: 12 },
+    },
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar', params: { answer: 42 } },
+          { key: 'qux', name: 'qux' },
+        ],
+      },
+      {
+        type: 'NAVIGATE',
+        payload: {
+          name: 'bar',
+          merge: false,
+        },
+      },
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar', params: { answer: 42 } },
+        ],
+      },
+      {
+        type: 'NAVIGATE',
+        payload: {
+          name: 'bar',
+          params: { fruit: 'orange' },
+          merge: false,
+        },
+      },
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz', params: { test: 99 } },
+          { key: 'bar', name: 'bar', params: { answer: 42 } },
+        ],
+      },
+      {
+        type: 'NAVIGATE',
+        payload: {
+          name: 'baz',
+          params: { color: 'black' },
+          merge: false,
+        },
+      },
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 0,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [{ key: 'baz', name: 'baz', params: { foo: 12, color: 'black' } }],
+  });
+});

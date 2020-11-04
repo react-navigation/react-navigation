@@ -397,19 +397,34 @@ export default function StackRouter(options: StackRouterOptions) {
               );
             }
 
+            const route = state.routes[index];
+
+            let params;
+
+            if (action.payload.merge === false) {
+              params =
+                routeParamList[route.name] !== undefined
+                  ? {
+                      ...routeParamList[route.name],
+                      ...action.payload.params,
+                    }
+                  : action.payload.params;
+            } else {
+              params = action.payload.params
+                ? {
+                    ...route.params,
+                    ...action.payload.params,
+                  }
+                : route.params;
+            }
+
             return {
               ...state,
               index,
               routes: [
                 ...state.routes.slice(0, index),
-                action.payload.params !== undefined
-                  ? {
-                      ...state.routes[index],
-                      params: {
-                        ...state.routes[index].params,
-                        ...action.payload.params,
-                      },
-                    }
+                params !== route.params
+                  ? { ...route, params }
                   : state.routes[index],
               ],
             };
