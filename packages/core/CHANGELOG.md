@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.13.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.13.4...@react-navigation/core@5.13.5) (2020-11-04)
+
+
+### Bug Fixes
+
+* don't use use-subscription to avoid peer dep related errors ([66f3a4a](https://github.com/react-navigation/react-navigation/commit/66f3a4a0bb39475434668bc94fb1750dbe618ee0)), closes [/github.com/react-navigation/react-navigation/issues/9021#issuecomment-721679760](https://github.com//github.com/react-navigation/react-navigation/issues/9021/issues/issuecomment-721679760)
+* use useDebugValue in more places ([b20f2d1](https://github.com/react-navigation/react-navigation/commit/b20f2d1f7ccb82db70df9cddf5746557912daa99))
+
+
+
+
+
 ## [5.13.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.13.3...@react-navigation/core@5.13.4) (2020-11-03)
 
 
