@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.8.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@5.8.5...@react-navigation/native@5.8.6) (2020-11-04)
+
+
+### Bug Fixes
+
+* ignore any errors from deep linking ([4c2379c](https://github.com/react-navigation/react-navigation/commit/4c2379cec1e661aa132002fd1c50909ea64cb983))
+
+
+
+
+
 ## [5.8.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@5.8.4...@react-navigation/native@5.8.5) (2020-11-04)
 
 **Note:** Version bump only for package @react-navigation/native
