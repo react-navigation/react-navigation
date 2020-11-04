@@ -16,8 +16,8 @@ export type Action =
   | {
       type: 'NAVIGATE';
       payload:
-        | { key: string; name?: undefined; params?: object }
-        | { name: string; key?: string; params?: object };
+        | { key: string; name?: undefined; params?: object; merge?: boolean }
+        | { name: string; key?: string; params?: object; merge?: boolean };
       source?: string;
       target?: string;
     }

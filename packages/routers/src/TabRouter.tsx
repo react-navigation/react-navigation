@@ -271,7 +271,7 @@ export default function TabRouter({
       return changeIndex(state, index, backBehavior, initialRouteName);
     },
 
-    getStateForAction(state, action) {
+    getStateForAction(state, action, { routeParamList }) {
       switch (action.type) {
         case 'JUMP_TO':
         case 'NAVIGATE': {
@@ -296,17 +296,37 @@ export default function TabRouter({
               ...state,
               routes:
                 action.payload.params !== undefined
-                  ? state.routes.map((route, i) =>
-                      i === index
-                        ? {
-                            ...route,
-                            params: {
+                  ? state.routes.map((route, i) => {
+                      if (i !== index) {
+                        return route;
+                      }
+
+                      let params;
+
+                      if (
+                        action.type === 'NAVIGATE' &&
+                        action.payload.merge === false
+                      ) {
+                        params =
+                          routeParamList[route.name] !== undefined
+                            ? {
+                                ...routeParamList[route.name],
+                                ...action.payload.params,
+                              }
+                            : action.payload.params;
+                      } else {
+                        params = action.payload.params
+                          ? {
                               ...route.params,
                               ...action.payload.params,
-                            },
-                          }
-                        : route
-                    )
+                            }
+                          : route.params;
+                      }
+
+                      return params !== route.params
+                        ? { ...route, params }
+                        : route;
+                    })
                   : state.routes,
             },
             index,
