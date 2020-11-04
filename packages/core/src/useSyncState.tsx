@@ -68,5 +68,7 @@ export default function useSyncState<T>(initialState?: (() => T) | T) {
 
   const state = stateRef.current;
 
+  React.useDebugValue(state);
+
   return [state, getState, setState, scheduleUpdate, flushUpdates] as const;
 }
