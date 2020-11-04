@@ -12,6 +12,7 @@ import NavigationBuilderContext, {
 } from './NavigationBuilderContext';
 import type { NavigationEventEmitter } from './useEventEmitter';
 import useNavigationCache from './useNavigationCache';
+import useRouteCache from './useRouteCache';
 import NavigationContext from './NavigationContext';
 import NavigationRouteContext from './NavigationRouteContext';
 import type {
@@ -113,9 +114,11 @@ export default function useDescriptors<
     emitter,
   });
 
-  return state.routes.reduce<
+  const routes = useRouteCache(state.routes);
+
+  return routes.reduce<
     Record<string, Descriptor<ParamListBase, string, State, ScreenOptions>>
-  >((acc, route) => {
+  >((acc, route, i) => {
     const screen = screens[route.name];
     const navigation = navigations[route.key];
 
@@ -151,6 +154,7 @@ export default function useDescriptors<
                   navigation={navigation}
                   route={route}
                   screen={screen}
+                  routeState={state.routes[i].state}
                   getState={getState}
                   setState={setState}
                   options={routeOptions}
