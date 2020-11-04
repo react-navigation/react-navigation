@@ -137,7 +137,15 @@ export default function useLinking(
           const action = getActionFromState(state, configRef.current);
 
           if (action !== undefined) {
-            navigation.dispatch(action);
+            try {
+              navigation.dispatch(action);
+            } catch (e) {
+              // Ignore any errors from deep linking.
+              // This could happen in case of malformed links, navigation object not being initialized etc.
+              console.warn(
+                `An error occurred when trying to handle the link '${path}': ${e.message}`
+              );
+            }
           } else {
             navigation.resetRoot(state);
           }
