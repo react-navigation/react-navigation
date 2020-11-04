@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.12.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.12.2...@react-navigation/stack@5.12.3) (2020-11-04)
+
+
+### Bug Fixes
+
+* android textinput gets blurred after navigating back ([1169ed0](https://github.com/react-navigation/react-navigation/commit/1169ed0946df609cb7e5c52c4bdda0aa91b5737f))
+* disable react-native-screens on iOS for older versions ([ce7d20e](https://github.com/react-navigation/react-navigation/commit/ce7d20e3366415b07a537e01ee0b17ce7e72cad6))
+
+
+
+
+
 ## [5.12.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.12.1...@react-navigation/stack@5.12.2) (2020-11-04)
 
 **Note:** Version bump only for package @react-navigation/stack

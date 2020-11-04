@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.6.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@5.5.1...@react-navigation/routers@5.6.0) (2020-11-04)
+
+
+### Features
+
+* add a merge option to navigate to control merging params ([9beca3a](https://github.com/react-navigation/react-navigation/commit/9beca3a8027c6e2135dbef2abb8eede6b0b4bc44))
+
+
+
+
+
 ## [5.5.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@5.5.0...@react-navigation/routers@5.5.1) (2020-10-28)
 
 

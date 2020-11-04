@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.10.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.10.5...@react-navigation/bottom-tabs@5.10.6) (2020-11-04)
+
+
+### Bug Fixes
+
+* disable react-native-screens on iOS for older versions ([ce7d20e](https://github.com/react-navigation/react-navigation/commit/ce7d20e3366415b07a537e01ee0b17ce7e72cad6))
+
+
+
+
+
 ## [5.10.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.10.4...@react-navigation/bottom-tabs@5.10.5) (2020-11-04)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

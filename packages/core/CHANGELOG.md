@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.14.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.13.5...@react-navigation/core@5.14.0) (2020-11-04)
+
+
+### Bug Fixes
+
+* always respect key in the route object when generating action ([cb2e744](https://github.com/react-navigation/react-navigation/commit/cb2e744dcebf7f71ddaa5462d393a6dbfd971fcd))
+
+
+### Features
+
+* add a NavigatorScreenParams type. closes [#6931](https://github.com/react-navigation/react-navigation/issues/6931) ([e3e58c2](https://github.com/react-navigation/react-navigation/commit/e3e58c2d890e7fab75d78371e349aea55a402fcd))
+* add warning on accessing the state object on route prop ([ec7b02a](https://github.com/react-navigation/react-navigation/commit/ec7b02af2ca835122b9000799e2366d7009da6e3))
+
+
+
+
+
 ## [5.13.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.13.4...@react-navigation/core@5.13.5) (2020-11-04)
 
 
