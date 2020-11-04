@@ -38,9 +38,11 @@ export default function getActionFromState(
 
   if (
     !(
-      routes.length === 1 ||
+      (routes.length === 1 && routes[0].key === undefined) ||
       (routes.length === 2 &&
-        routes[0].name === normalizedConfig?.initialRouteName)
+        routes[0].key === undefined &&
+        routes[0].name === normalizedConfig?.initialRouteName &&
+        routes[1].key === undefined)
     )
   ) {
     return {
@@ -70,22 +72,26 @@ export default function getActionFromState(
     const route: Route<string> | PartialRoute<Route<string>> =
       routes[routes.length - 1];
 
-    if (routes.length === 1) {
+    // Explicitly set to override existing value when merging params
+    Object.assign(params, {
+      initial: undefined,
+      screen: undefined,
+      params: undefined,
+      state: undefined,
+    });
+
+    if (routes.length === 1 && routes[0].key === undefined) {
       params.initial = true;
       params.screen = route.name;
-      params.state = undefined; // Explicitly set to override existing value when merging params
     } else if (
       routes.length === 2 &&
       routes[0].key === undefined &&
-      routes[0].name === config?.initialRouteName
+      routes[0].name === config?.initialRouteName &&
+      routes[1].key === undefined
     ) {
       params.initial = false;
       params.screen = route.name;
-      params.state = undefined;
     } else {
-      params.initial = undefined;
-      params.screen = undefined;
-      params.params = undefined;
       params.state = current;
       break;
     }

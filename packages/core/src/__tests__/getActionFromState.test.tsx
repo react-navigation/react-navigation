@@ -64,7 +64,58 @@ it('gets navigate action from state for top-level screen', () => {
   });
 });
 
-it('gets navigate action from state for top-level screen with 2 screens', () => {
+it('gets reset action from state with 1 route with key at root', () => {
+  const state = {
+    routes: [
+      {
+        name: 'foo',
+        key: 'test',
+        state: {
+          routes: [
+            {
+              name: 'bar',
+              state: {
+                routes: [
+                  {
+                    key: 'test',
+                    name: 'qux',
+                    params: { author: 'jane' },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getActionFromState(state)).toEqual({
+    payload: {
+      routes: [
+        {
+          key: 'test',
+          name: 'foo',
+          state: {
+            routes: [
+              {
+                name: 'bar',
+                state: {
+                  routes: [
+                    { key: 'test', name: 'qux', params: { author: 'jane' } },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+    type: 'RESET',
+  });
+});
+
+it('gets reset action from state for top-level screen with 2 screens', () => {
   const state = {
     routes: [
       {
@@ -95,37 +146,7 @@ it('gets navigate action from state for top-level screen with 2 screens', () => 
   });
 });
 
-it('gets navigate action from state for top-level screen with 2 screens with config', () => {
-  const state = {
-    routes: [
-      {
-        name: 'foo',
-        params: { answer: 42 },
-      },
-      {
-        name: 'bar',
-        params: { author: 'jane' },
-      },
-    ],
-  };
-
-  const config = {
-    initialRouteName: 'foo',
-    screens: {
-      bar: 'bar',
-    },
-  };
-
-  expect(getActionFromState(state, config)).toEqual({
-    payload: {
-      name: 'bar',
-      params: { author: 'jane' },
-    },
-    type: 'NAVIGATE',
-  });
-});
-
-it('gets navigate action from state for top-level screen with more than 2 screens with config', () => {
+it('gets reset action from state for top-level screen with more than 2 screens with config', () => {
   const state = {
     routes: [
       {
@@ -162,6 +183,76 @@ it('gets navigate action from state for top-level screen with more than 2 screen
       ],
     },
     type: 'RESET',
+  });
+});
+
+it('gets reset action from state for top-level screen with 2 screens with config', () => {
+  const state = {
+    routes: [
+      {
+        name: 'foo',
+        params: { answer: 42 },
+      },
+      {
+        name: 'bar',
+        key: 'test',
+        params: { author: 'jane' },
+      },
+    ],
+  };
+
+  const config = {
+    initialRouteName: 'foo',
+    screens: {
+      bar: 'bar',
+    },
+  };
+
+  expect(getActionFromState(state, config)).toEqual({
+    payload: {
+      routes: [
+        {
+          name: 'foo',
+          params: { answer: 42 },
+        },
+        {
+          name: 'bar',
+          key: 'test',
+          params: { author: 'jane' },
+        },
+      ],
+    },
+    type: 'RESET',
+  });
+});
+
+it('gets navigate action from state for top-level screen with 2 screens with config', () => {
+  const state = {
+    routes: [
+      {
+        name: 'foo',
+        params: { answer: 42 },
+      },
+      {
+        name: 'bar',
+        params: { author: 'jane' },
+      },
+    ],
+  };
+
+  const config = {
+    initialRouteName: 'foo',
+    screens: {
+      bar: 'bar',
+    },
+  };
+
+  expect(getActionFromState(state, config)).toEqual({
+    payload: {
+      name: 'bar',
+      params: { author: 'jane' },
+    },
+    type: 'NAVIGATE',
   });
 });
 
@@ -550,7 +641,7 @@ it('gets navigate action from state with 2 screens without initial route and wit
   });
 });
 
-it('gets navigate action from state with 2 screens including route with key and with config', () => {
+it('gets navigate action from state with 2 screens including route with key on initial route and with config', () => {
   const state = {
     routes: [
       {
@@ -606,6 +697,75 @@ it('gets navigate action from state with 2 screens including route with key and 
                 },
               },
               { name: 'quz' },
+            ],
+          },
+        },
+      },
+    },
+    type: 'NAVIGATE',
+  });
+});
+
+it('gets navigate action from state with 2 screens including route with key on 2nd route and with config', () => {
+  const state = {
+    routes: [
+      {
+        name: 'foo',
+        state: {
+          routes: [
+            {
+              name: 'bar',
+              state: {
+                routes: [
+                  {
+                    name: 'qux',
+                    params: { author: 'jane' },
+                  },
+                  {
+                    key: 'test',
+                    name: 'quz',
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  const config = {
+    screens: {
+      foo: {
+        initialRouteName: 'bar',
+        screens: {
+          bar: {
+            initialRouteName: 'qux',
+          },
+        },
+      },
+    },
+  };
+
+  expect(getActionFromState(state, config)).toEqual({
+    payload: {
+      name: 'foo',
+      params: {
+        initial: true,
+        screen: 'bar',
+        params: {
+          state: {
+            routes: [
+              {
+                name: 'qux',
+                params: {
+                  author: 'jane',
+                },
+              },
+              {
+                key: 'test',
+                name: 'quz',
+              },
             ],
           },
         },
@@ -743,7 +903,7 @@ it("doesn't return action if no routes are provided'", () => {
   expect(getActionFromState({ routes: [] })).toBe(undefined);
 });
 
-it('gets reset action from state', () => {
+it('gets undefined action from state', () => {
   const state = {
     routes: [
       {
