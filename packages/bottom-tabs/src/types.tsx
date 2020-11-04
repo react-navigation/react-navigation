@@ -174,7 +174,7 @@ export type BottomTabNavigationConfig<T = BottomTabBarOptions> = {
   /**
    * Whether inactive screens should be detached from the view hierarchy to save memory.
    * Make sure to call `enableScreens` from `react-native-screens` to make it work.
-   * Defaults to `true`.
+   * Defaults to `true` on Android.
    */
   detachInactiveScreens?: boolean;
   /**
