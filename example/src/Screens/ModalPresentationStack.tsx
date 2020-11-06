@@ -93,7 +93,9 @@ export default function SimpleStackScreen({ navigation, options }: Props) {
         cardOverlayEnabled: true,
         gestureEnabled: true,
         headerStatusBarHeight:
-          navigation.dangerouslyGetState().routes.indexOf(route) > 0
+          navigation
+            .dangerouslyGetState()
+            .routes.findIndex((r: any) => r.key === route.key) > 0
             ? 0
             : undefined,
       })}
