@@ -15,7 +15,6 @@ import {
   Provider as PaperProvider,
   DefaultTheme as PaperLightTheme,
   DarkTheme as PaperDarkTheme,
-  Appbar,
   List,
   Divider,
   Text,
@@ -28,10 +27,7 @@ import {
   PathConfigMap,
   NavigationContainerRef,
 } from '@react-navigation/native';
-import {
-  createDrawerNavigator,
-  DrawerScreenProps,
-} from '@react-navigation/drawer';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import {
   createStackNavigator,
   StackScreenProps,
@@ -65,8 +61,7 @@ if (Platform.OS !== 'web') {
 enableScreens();
 
 type RootDrawerParamList = {
-  Root: undefined;
-  Another: undefined;
+  Examples: undefined;
 };
 
 const SCREENS = {
@@ -231,50 +226,49 @@ export default function App() {
           // The first segment of the link is the the scheme + host (returned by `Linking.makeUrl`)
           prefixes: LinkingPrefixes,
           config: {
-            screens: {
-              Root: {
-                path: '',
-                initialRouteName: 'Home',
-                screens: Object.keys(SCREENS).reduce<PathConfigMap>(
-                  (acc, name) => {
-                    // Convert screen names such as SimpleStack to kebab case (simple-stack)
-                    const path = name
-                      .replace(/([A-Z]+)/g, '-$1')
-                      .replace(/^-/, '')
-                      .toLowerCase();
+            initialRouteName: 'Home',
+            screens: Object.keys(SCREENS).reduce<PathConfigMap>(
+              (acc, name) => {
+                // Convert screen names such as SimpleStack to kebab case (simple-stack)
+                const path = name
+                  .replace(/([A-Z]+)/g, '-$1')
+                  .replace(/^-/, '')
+                  .toLowerCase();
 
-                    acc[name] = {
-                      path,
-                      screens: {
-                        Article: {
-                          path: 'article/:author?',
-                          parse: {
-                            author: (author) =>
-                              author.charAt(0).toUpperCase() +
-                              author.slice(1).replace(/-/g, ' '),
-                          },
-                          stringify: {
-                            author: (author: string) =>
-                              author.toLowerCase().replace(/\s/g, '-'),
-                          },
-                        },
-                        Albums: 'music',
-                        Chat: 'chat',
-                        Contacts: 'people',
-                        NewsFeed: 'feed',
-                        Dialog: 'dialog',
+                acc[name] = {
+                  path,
+                  screens: {
+                    Article: {
+                      path: 'article/:author?',
+                      parse: {
+                        author: (author) =>
+                          author.charAt(0).toUpperCase() +
+                          author.slice(1).replace(/-/g, ' '),
                       },
-                    };
-
-                    return acc;
+                      stringify: {
+                        author: (author: string) =>
+                          author.toLowerCase().replace(/\s/g, '-'),
+                      },
+                    },
+                    Albums: 'music',
+                    Chat: 'chat',
+                    Contacts: 'people',
+                    NewsFeed: 'feed',
+                    Dialog: 'dialog',
                   },
-                  {
-                    Home: '',
-                    NotFound: '*',
-                  }
-                ),
+                };
+
+                return acc;
               },
-            },
+              {
+                Home: {
+                  screens: {
+                    Examples: '',
+                  },
+                },
+                NotFound: '*',
+              }
+            ),
           },
         }}
         fallback={<Text>Loading…</Text>}
@@ -283,35 +277,29 @@ export default function App() {
             `${options?.title ?? route?.name} - React Navigation Example`,
         }}
       >
-        <Drawer.Navigator drawerType={isLargeScreen ? 'permanent' : undefined}>
-          <Drawer.Screen
-            name="Root"
+        <Stack.Navigator
+          screenOptions={{
+            headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
+          }}
+        >
+          <Stack.Screen
+            name="Home"
             options={{
-              title: 'Examples',
-              drawerIcon: ({ size, color }) => (
-                <MaterialIcons size={size} color={color} name="folder" />
-              ),
+              headerShown: false,
             }}
           >
-            {({ navigation }: DrawerScreenProps<RootDrawerParamList>) => (
-              <Stack.Navigator
-                screenOptions={{
-                  headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
-                }}
+            {() => (
+              <Drawer.Navigator
+                drawerType={isLargeScreen ? 'permanent' : undefined}
               >
-                <Stack.Screen
-                  name="Home"
+                <Drawer.Screen
+                  name="Examples"
                   options={{
                     title: 'Examples',
-                    headerLeft: isLargeScreen
-                      ? undefined
-                      : () => (
-                          <Appbar.Action
-                            color={theme.colors.text}
-                            icon="menu"
-                            onPress={() => navigation.toggleDrawer()}
-                          />
-                        ),
+                    headerShown: true,
+                    drawerIcon: ({ size, color }) => (
+                      <MaterialIcons size={size} color={color} name="folder" />
+                    ),
                   }}
                 >
                   {({ navigation }: StackScreenProps<RootStackParamList>) => (
@@ -352,26 +340,24 @@ export default function App() {
                       )}
                     </ScrollView>
                   )}
-                </Stack.Screen>
-                <Stack.Screen
-                  name="NotFound"
-                  component={NotFound}
-                  options={{ title: 'Oops!' }}
-                />
-                {(Object.keys(SCREENS) as (keyof typeof SCREENS)[]).map(
-                  (name) => (
-                    <Stack.Screen
-                      key={name}
-                      name={name}
-                      getComponent={() => SCREENS[name].component}
-                      options={{ title: SCREENS[name].title }}
-                    />
-                  )
-                )}
-              </Stack.Navigator>
+                </Drawer.Screen>
+              </Drawer.Navigator>
             )}
-          </Drawer.Screen>
-        </Drawer.Navigator>
+          </Stack.Screen>
+          <Stack.Screen
+            name="NotFound"
+            component={NotFound}
+            options={{ title: 'Oops!' }}
+          />
+          {(Object.keys(SCREENS) as (keyof typeof SCREENS)[]).map((name) => (
+            <Stack.Screen
+              key={name}
+              name={name}
+              getComponent={() => SCREENS[name].component}
+              options={{ title: SCREENS[name].title }}
+            />
+          ))}
+        </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
   );
