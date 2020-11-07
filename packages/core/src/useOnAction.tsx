@@ -90,18 +90,11 @@ export default function useOnAction({
           onDispatchAction(action, state === result);
 
           if (state !== result) {
-            const nextRouteKeys = (result.routes as any[]).map(
-              (route: { key?: string }) => route.key
-            );
-
-            const removedRoutes = state.routes.filter(
-              (route) => !nextRouteKeys.includes(route.key)
-            );
-
             const isPrevented = shouldPreventRemove(
               emitter,
               beforeRemoveListeners,
-              removedRoutes,
+              state.routes,
+              result.routes,
               action
             );
 

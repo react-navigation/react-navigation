@@ -1178,3 +1178,149 @@ it("prevents removing by multiple screens with 'beforeRemove' event", () => {
     type: 'stack',
   });
 });
+
+it("prevents removing a child screen with 'beforeRemove' event with 'resetRoot'", () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(StackRouter, props);
+
+    return (
+      <React.Fragment>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </React.Fragment>
+    );
+  };
+
+  const onBeforeRemove = jest.fn();
+
+  let shouldPrevent = true;
+  let shouldContinue = false;
+
+  const TestScreen = (props: any) => {
+    React.useEffect(
+      () =>
+        props.navigation.addListener('beforeRemove', (e: any) => {
+          onBeforeRemove();
+
+          if (shouldPrevent) {
+            e.preventDefault();
+
+            if (shouldContinue) {
+              props.navigation.dispatch(e.data.action);
+            }
+          }
+        }),
+      [props.navigation]
+    );
+
+    return null;
+  };
+
+  const onStateChange = jest.fn();
+
+  const ref = React.createRef<NavigationContainerRef>();
+
+  const element = (
+    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar">{() => null}</Screen>
+        <Screen name="baz">
+          {() => (
+            <TestNavigator>
+              <Screen name="qux" component={TestScreen} />
+              <Screen name="lex">{() => null}</Screen>
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(element);
+
+  act(() => ref.current?.navigate('baz'));
+
+  expect(onStateChange).toBeCalledTimes(1);
+  expect(onStateChange).toBeCalledWith({
+    index: 1,
+    key: 'stack-2',
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [
+      { key: 'foo-3', name: 'foo' },
+      {
+        key: 'baz-4',
+        name: 'baz',
+        state: {
+          index: 0,
+          key: 'stack-6',
+          routeNames: ['qux', 'lex'],
+          routes: [{ key: 'qux-7', name: 'qux' }],
+          stale: false,
+          type: 'stack',
+        },
+      },
+    ],
+    stale: false,
+    type: 'stack',
+  });
+
+  act(() =>
+    ref.current?.resetRoot({
+      index: 0,
+      key: 'stack-2',
+      routeNames: ['foo', 'bar', 'baz'],
+      routes: [{ key: 'foo-3', name: 'foo' }],
+      stale: false,
+      type: 'stack',
+    })
+  );
+
+  expect(onStateChange).toBeCalledTimes(1);
+  expect(onBeforeRemove).toBeCalledTimes(1);
+
+  expect(ref.current?.getRootState()).toEqual({
+    index: 1,
+    key: 'stack-2',
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [
+      { key: 'foo-3', name: 'foo' },
+      {
+        key: 'baz-4',
+        name: 'baz',
+        state: {
+          index: 0,
+          key: 'stack-6',
+          routeNames: ['qux', 'lex'],
+          routes: [{ key: 'qux-7', name: 'qux' }],
+          stale: false,
+          type: 'stack',
+        },
+      },
+    ],
+    stale: false,
+    type: 'stack',
+  });
+
+  shouldPrevent = false;
+
+  act(() =>
+    ref.current?.resetRoot({
+      index: 0,
+      key: 'stack-2',
+      routeNames: ['foo', 'bar', 'baz'],
+      routes: [{ key: 'foo-3', name: 'foo' }],
+      stale: false,
+      type: 'stack',
+    })
+  );
+
+  expect(onStateChange).toBeCalledTimes(2);
+  expect(onStateChange).toBeCalledWith({
+    index: 0,
+    key: 'stack-2',
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [{ key: 'foo-3', name: 'foo' }],
+    stale: false,
+    type: 'stack',
+  });
+});

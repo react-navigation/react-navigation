@@ -1,7 +1,6 @@
 import * as React from 'react';
 import type {
   NavigationState,
-  Route,
   NavigationAction,
 } from '@react-navigation/routers';
 import NavigationBuilderContext, {
@@ -22,11 +21,16 @@ const VISITED_ROUTE_KEYS = Symbol('VISITED_ROUTE_KEYS');
 export const shouldPreventRemove = (
   emitter: NavigationEventEmitter<EventMapCore<any>>,
   beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>,
-  routes: Route<string>[],
+  currentRoutes: { key: string }[],
+  nextRoutes: { key?: string | undefined }[],
   action: NavigationAction
 ) => {
+  const nextRouteKeys = nextRoutes.map((route) => route.key);
+
   // Call these in reverse order so last screens handle the event first
-  const reversedRoutes = [...routes].reverse();
+  const removedRoutes = currentRoutes
+    .filter((route) => !nextRouteKeys.includes(route.key))
+    .reverse();
 
   const visitedRouteKeys: Set<string> =
     // @ts-expect-error: add this property to mark that we've already emitted this action
@@ -37,7 +41,7 @@ export const shouldPreventRemove = (
     [VISITED_ROUTE_KEYS]: visitedRouteKeys,
   };
 
-  for (const route of reversedRoutes) {
+  for (const route of removedRoutes) {
     if (visitedRouteKeys.has(route.key)) {
       // Skip if we've already emitted this action for this screen
       continue;
@@ -85,6 +89,7 @@ export default function useOnPreventRemove({
           emitter,
           beforeRemoveListeners,
           state.routes,
+          [],
           action
         );
       });

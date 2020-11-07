@@ -147,7 +147,6 @@ export default function createCompatNavigationProp<
       }
     },
     state: {
-      // @ts-expect-error: these properties may actually exist
       key: state.key,
       // @ts-expect-error
       routeName: state.name,
@@ -202,7 +201,6 @@ export default function createCompatNavigationProp<
 
       const { routes } = navigation.dangerouslyGetState();
 
-      // @ts-expect-error
       return routes[0].key === state.key;
     },
     dangerouslyGetParent() {

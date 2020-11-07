@@ -23,7 +23,7 @@ export type Action =
     }
   | {
       type: 'RESET';
-      payload: ResetState;
+      payload: ResetState | undefined;
       source?: string;
       target?: string;
     }
@@ -62,7 +62,7 @@ export function navigate(...args: any): Action {
   }
 }
 
-export function reset(state: ResetState): Action {
+export function reset(state: ResetState | undefined): Action {
   return { type: 'RESET', payload: state };
 }
 

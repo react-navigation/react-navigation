@@ -77,18 +77,28 @@ const InputScreen = ({
 
         e.preventDefault();
 
-        Alert.alert(
-          'Discard changes?',
-          'You have unsaved changes. Are you sure to discard them and leave the screen?',
-          [
-            { text: "Don't leave", style: 'cancel', onPress: () => {} },
-            {
-              text: 'Discard',
-              style: 'destructive',
-              onPress: () => navigation.dispatch(action),
-            },
-          ]
-        );
+        if (Platform.OS === 'web') {
+          const discard = confirm(
+            'You have unsaved changes. Discard them and leave the screen?'
+          );
+
+          if (discard) {
+            navigation.dispatch(action);
+          }
+        } else {
+          Alert.alert(
+            'Discard changes?',
+            'You have unsaved changes. Discard them and leave the screen?',
+            [
+              { text: "Don't leave", style: 'cancel', onPress: () => {} },
+              {
+                text: 'Discard',
+                style: 'destructive',
+                onPress: () => navigation.dispatch(action),
+              },
+            ]
+          );
+        }
       }),
     [hasUnsavedChanges, navigation]
   );
