@@ -93,7 +93,7 @@ const getRouteConfigsFromChildren = <
       `A navigator can only contain 'Screen' components as its direct children (found '${
         // @ts-expect-error: child can be any type and we're accessing it safely, but TS doesn't understand it
         child.type?.name ? child.type.name : String(child)
-      }')`
+      }'). To render this component in the navigator, pass it in the 'component' prop to 'Screen'.`
     );
   }, []);
 
