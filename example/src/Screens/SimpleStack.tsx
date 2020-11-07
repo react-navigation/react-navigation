@@ -4,6 +4,7 @@ import { Button } from 'react-native-paper';
 import type { ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
+  StackNavigationOptions,
   StackScreenProps,
 } from '@react-navigation/stack';
 import Article from '../Shared/Article';
@@ -105,7 +106,10 @@ const SimpleStack = createStackNavigator<SimpleStackParams>();
 
 export default function SimpleStackScreen({
   navigation,
-}: StackScreenProps<ParamListBase>) {
+  screenOptions,
+}: StackScreenProps<ParamListBase> & {
+  screenOptions?: StackNavigationOptions;
+}) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -113,7 +117,7 @@ export default function SimpleStackScreen({
   }, [navigation]);
 
   return (
-    <SimpleStack.Navigator>
+    <SimpleStack.Navigator screenOptions={screenOptions}>
       <SimpleStack.Screen
         name="Article"
         component={ArticleScreen}

@@ -447,10 +447,7 @@ export default class CardStack extends React.Component<Props, State> {
         ? this.state.scenes.slice(-2).some((scene) => {
             const { descriptor } = scene;
             const options = descriptor ? descriptor.options : {};
-            const {
-              headerTransparent,
-              headerShown = isParentHeaderShown === false,
-            } = options;
+            const { headerTransparent, headerShown = true } = options;
 
             if (headerTransparent || headerShown === false) {
               return true;
@@ -542,7 +539,7 @@ export default class CardStack extends React.Component<Props, State> {
 
             const {
               safeAreaInsets,
-              headerShown = isParentHeaderShown === false,
+              headerShown = true,
               headerTransparent,
               cardShadowEnabled,
               cardOverlayEnabled,
