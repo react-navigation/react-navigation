@@ -160,9 +160,20 @@ const BaseNavigationContainer = React.forwardRef(
 
     const resetRoot = React.useCallback(
       (state?: PartialState<NavigationState> | NavigationState) => {
-        setState(state);
+        const target = state?.key ?? keyedListeners.getState.root?.().key;
+
+        if (target == null) {
+          throw new Error(NOT_INITIALIZED_ERROR);
+        }
+
+        listeners.focus[0]((navigation) =>
+          navigation.dispatch({
+            ...CommonActions.reset(state),
+            target,
+          })
+        );
       },
-      [setState]
+      [keyedListeners.getState, listeners.focus]
     );
 
     const getRootState = React.useCallback(() => {
