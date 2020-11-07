@@ -19,6 +19,7 @@ import {
 import { GestureHandlerRootView } from './GestureHandler';
 import SafeAreaProviderCompat from './SafeAreaProviderCompat';
 import ResourceSavingScene from './ResourceSavingScene';
+import Header from './Header';
 import DrawerContent from './DrawerContent';
 import Drawer from './Drawer';
 import DrawerOpenContext from '../utils/DrawerOpenContext';
@@ -30,6 +31,7 @@ import type {
   DrawerNavigationConfig,
   DrawerNavigationHelpers,
   DrawerContentComponentProps,
+  DrawerHeaderProps,
 } from '../types';
 
 type Props = DrawerNavigationConfig & {
@@ -170,6 +172,11 @@ export default function DrawerView({
             return null;
           }
 
+          const {
+            header = (props: DrawerHeaderProps) => <Header {...props} />,
+            headerShown,
+          } = descriptor.options;
+
           return (
             <ResourceSavingScene
               key={route.key}
@@ -177,6 +184,12 @@ export default function DrawerView({
               isVisible={isFocused}
               enabled={detachInactiveScreens}
             >
+              {headerShown
+                ? header({
+                    layout: dimensions,
+                    scene: { route, descriptor },
+                  })
+                : null}
               {descriptor.render()}
             </ResourceSavingScene>
           );
