@@ -18,6 +18,8 @@ export type Scene = {
   color?: string;
 };
 
+export type Layout = { width: number; height: number };
+
 export type DrawerNavigationConfig<T = DrawerContentOptions> = {
   /**
    * Position of the drawer on the screen. Defaults to `left`.
@@ -94,11 +96,94 @@ export type DrawerNavigationConfig<T = DrawerContentOptions> = {
   detachInactiveScreens?: boolean;
 };
 
-export type DrawerNavigationOptions = {
+export type DrawerHeaderOptions = {
+  /**
+   * String or a function that returns a React Element to be used by the header.
+   * Defaults to scene `title`.
+   * It receives `allowFontScaling`, `tintColor`, `style` and `children` in the options object as an argument.
+   * The title string is passed in `children`.
+   */
+  headerTitle?:
+    | string
+    | ((props: {
+        /**
+         * Whether title font should scale to respect Text Size accessibility settings.
+         */
+        allowFontScaling?: boolean;
+        /**
+         * Tint color for the header.
+         */
+        tintColor?: string;
+        /**
+         * Content of the title element. Usually the title string.
+         */
+        children?: string;
+        /**
+         * Style object for the title element.
+         */
+        style?: StyleProp<TextStyle>;
+      }) => React.ReactNode);
+  /**
+   * How to align the the header title.
+   * Defaults to `center` on iOS and `left` on Android.
+   */
+  headerTitleAlign?: 'left' | 'center';
+  /**
+   * Style object for the title component.
+   */
+  headerTitleStyle?: StyleProp<TextStyle>;
+  /**
+   * Whether header title font should scale to respect Text Size accessibility settings. Defaults to `false`.
+   */
+  headerTitleAllowFontScaling?: boolean;
+  /**
+   * Function which returns a React Element to display on the left side of the header.
+   */
+  headerLeft?: (props: { tintColor?: string }) => React.ReactNode;
+  /**
+   * Accessibility label for the header left button.
+   */
+  headerLeftAccessibilityLabel?: string;
+  /**
+   * Function which returns a React Element to display on the right side of the header.
+   */
+  headerRight?: (props: { tintColor?: string }) => React.ReactNode;
+  /**
+   * Color for material ripple (Android >= 5.0 only).
+   */
+  headerPressColorAndroid?: string;
+  /**
+   * Tint color for the header.
+   */
+  headerTintColor?: string;
+  /**
+   * Style object for the header. You can specify a custom background color here, for example.
+   */
+  headerStyle?: StyleProp<ViewStyle>;
+  /**
+   * Extra padding to add at the top of header to account for translucent status bar.
+   * By default, it uses the top value from the safe area insets of the device.
+   * Pass 0 or a custom value to disable the default behaviour, and customize the height.
+   */
+  headerStatusBarHeight?: number;
+};
+
+export type DrawerNavigationOptions = DrawerHeaderOptions & {
   /**
    * Title text for the screen.
    */
   title?: string;
+
+  /**
+   * Function that given `HeaderProps` returns a React Element to display as a header.
+   */
+  header?: (props: DrawerHeaderProps) => React.ReactNode;
+
+  /**
+   * Whether to show the header. The header is not shown by default.
+   * Setting this to `true` shows the header.
+   */
+  headerShown?: boolean;
 
   /**
    * Title string of a screen displayed in the drawer
@@ -185,6 +270,20 @@ export type DrawerContentOptions = {
    * Style object for the wrapper view.
    */
   style?: StyleProp<ViewStyle>;
+};
+
+export type DrawerHeaderProps = {
+  /**
+   * Layout of the screen.
+   */
+  layout: Layout;
+  /**
+   * Object representing the current scene, such as the route object and descriptor.
+   */
+  scene: {
+    route: Route<string>;
+    descriptor: DrawerDescriptor;
+  };
 };
 
 export type DrawerNavigationEventMap = {
