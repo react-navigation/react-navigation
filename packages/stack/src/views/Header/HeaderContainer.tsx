@@ -15,7 +15,6 @@ import {
   forNoAnimation,
   forSlideRight,
 } from '../../TransitionConfigs/HeaderStyleInterpolators';
-import HeaderShownContext from '../../utils/HeaderShownContext';
 import PreviousSceneContext from '../../utils/PreviousSceneContext';
 import type {
   Layout,
@@ -56,7 +55,6 @@ export default function HeaderContainer({
   style,
 }: Props) {
   const focusedRoute = getFocusedRoute();
-  const isParentHeaderShown = React.useContext(HeaderShownContext);
   const parentPreviousScene = React.useContext(PreviousSceneContext);
 
   return (
@@ -66,11 +64,8 @@ export default function HeaderContainer({
           return null;
         }
 
-        const {
-          header,
-          headerShown = isParentHeaderShown === false,
-          headerTransparent,
-        } = scene.descriptor.options || {};
+        const { header, headerShown = true, headerTransparent } =
+          scene.descriptor.options || {};
 
         if (!headerShown) {
           return null;
@@ -85,11 +80,10 @@ export default function HeaderContainer({
         const previousScene = self[i - 1];
         const nextScene = self[i + 1];
 
-        const {
-          headerShown: previousHeaderShown = isParentHeaderShown === false,
-        } = previousScene?.descriptor.options || {};
+        const { headerShown: previousHeaderShown = true } =
+          previousScene?.descriptor.options || {};
 
-        const { headerShown: nextHeaderShown = isParentHeaderShown === false } =
+        const { headerShown: nextHeaderShown = true } =
           nextScene?.descriptor.options || {};
 
         const isHeaderStatic =
