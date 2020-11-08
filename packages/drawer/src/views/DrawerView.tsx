@@ -24,6 +24,7 @@ import Drawer from './Drawer';
 import DrawerOpenContext from '../utils/DrawerOpenContext';
 import DrawerPositionContext from '../utils/DrawerPositionContext';
 import useWindowDimensions from '../utils/useWindowDimensions';
+import getIsDrawerOpenFromState from '../utils/getIsDrawerOpenFromState';
 import type {
   DrawerDescriptorMap,
   DrawerNavigationConfig,
@@ -90,7 +91,7 @@ export default function DrawerView({
 
   const { colors } = useTheme();
 
-  const isDrawerOpen = state.history.some((it) => it.type === 'drawer');
+  const isDrawerOpen = getIsDrawerOpenFromState(state);
 
   const handleDrawerOpen = React.useCallback(() => {
     navigation.dispatch({
