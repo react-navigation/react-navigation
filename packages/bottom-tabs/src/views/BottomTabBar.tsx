@@ -5,20 +5,25 @@ import {
   StyleSheet,
   Platform,
   LayoutChangeEvent,
+  StyleProp,
+  ViewStyle,
 } from 'react-native';
 import {
   NavigationContext,
   NavigationRouteContext,
+  TabNavigationState,
+  ParamListBase,
   CommonActions,
   useTheme,
   useLinkBuilder,
 } from '@react-navigation/native';
-import { useSafeArea } from 'react-native-safe-area-context';
+import { useSafeArea, EdgeInsets } from 'react-native-safe-area-context';
 
 import BottomTabItem from './BottomTabItem';
+import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
 import useWindowDimensions from '../utils/useWindowDimensions';
 import useIsKeyboardShown from '../utils/useIsKeyboardShown';
-import type { BottomTabBarProps } from '../types';
+import type { BottomTabBarProps, LabelPosition } from '../types';
 
 type Props = BottomTabBarProps & {
   activeTintColor?: string;
@@ -31,13 +36,93 @@ const DEFAULT_MAX_TAB_ITEM_WIDTH = 125;
 
 const useNativeDriver = Platform.OS !== 'web';
 
+type Options = {
+  state: TabNavigationState<ParamListBase>;
+  layout: { height: number; width: number };
+  dimensions: { height: number; width: number };
+  tabStyle: StyleProp<ViewStyle>;
+  labelPosition: LabelPosition | undefined;
+  adaptive: boolean | undefined;
+};
+
+const shouldUseHorizontalLabels = ({
+  state,
+  layout,
+  dimensions,
+  adaptive = true,
+  labelPosition,
+  tabStyle,
+}: Options) => {
+  if (labelPosition) {
+    return labelPosition === 'beside-icon';
+  }
+
+  if (!adaptive) {
+    return false;
+  }
+
+  if (layout.width >= 768) {
+    // Screen size matches a tablet
+    let maxTabItemWidth = DEFAULT_MAX_TAB_ITEM_WIDTH;
+
+    const flattenedStyle = StyleSheet.flatten(tabStyle);
+
+    if (flattenedStyle) {
+      if (typeof flattenedStyle.width === 'number') {
+        maxTabItemWidth = flattenedStyle.width;
+      } else if (typeof flattenedStyle.maxWidth === 'number') {
+        maxTabItemWidth = flattenedStyle.maxWidth;
+      }
+    }
+
+    return state.routes.length * maxTabItemWidth <= layout.width;
+  } else {
+    return dimensions.width > dimensions.height;
+  }
+};
+
+const getPaddingBottom = (insets: EdgeInsets) =>
+  Math.max(insets.bottom - Platform.select({ ios: 4, default: 0 }), 0);
+
+export const getTabBarHeight = ({
+  dimensions,
+  insets,
+  style,
+  ...rest
+}: Options & {
+  insets: EdgeInsets;
+  style: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+}) => {
+  // @ts-ignore
+  const customHeight = StyleSheet.flatten(style)?.height;
+
+  if (typeof customHeight === 'number') {
+    return customHeight;
+  }
+
+  const isLandscape = dimensions.width > dimensions.height;
+  const horizontalLabels = shouldUseHorizontalLabels({ dimensions, ...rest });
+  const paddingBottom = getPaddingBottom(insets);
+
+  if (
+    Platform.OS === 'ios' &&
+    !Platform.isPad &&
+    isLandscape &&
+    horizontalLabels
+  ) {
+    return COMPACT_TABBAR_HEIGHT + paddingBottom;
+  }
+
+  return DEFAULT_TABBAR_HEIGHT + paddingBottom;
+};
+
 export default function BottomTabBar({
   state,
   navigation,
   descriptors,
   activeBackgroundColor,
   activeTintColor,
-  adaptive = true,
+  adaptive,
   allowFontScaling,
   inactiveBackgroundColor,
   inactiveTintColor,
@@ -59,6 +144,8 @@ export default function BottomTabBar({
 
   const dimensions = useWindowDimensions();
   const isKeyboardShown = useIsKeyboardShown();
+
+  const onHeightChange = React.useContext(BottomTabBarHeightCallbackContext);
 
   const shouldShowTabBar =
     focusedOptions.tabBarVisible !== false &&
@@ -120,10 +207,18 @@ export default function BottomTabBar({
     width: dimensions.width,
   });
 
-  const isLandscape = () => dimensions.width > dimensions.height;
-
   const handleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
+
+    const topBorderWidth =
+      // @ts-ignore
+      StyleSheet.flatten([styles.tabBar, style])?.borderTopWidth;
+
+    onHeightChange?.(
+      height +
+        paddingBottom +
+        (typeof topBorderWidth === 'number' ? topBorderWidth : 0)
+    );
 
     setLayout((layout) => {
       if (height === layout.height && width === layout.width) {
@@ -138,34 +233,6 @@ export default function BottomTabBar({
   };
 
   const { routes } = state;
-  const shouldUseHorizontalLabels = () => {
-    if (labelPosition) {
-      return labelPosition === 'beside-icon';
-    }
-
-    if (!adaptive) {
-      return false;
-    }
-
-    if (layout.width >= 768) {
-      // Screen size matches a tablet
-      let maxTabItemWidth = DEFAULT_MAX_TAB_ITEM_WIDTH;
-
-      const flattenedStyle = StyleSheet.flatten(tabStyle);
-
-      if (flattenedStyle) {
-        if (typeof flattenedStyle.width === 'number') {
-          maxTabItemWidth = flattenedStyle.width;
-        } else if (typeof flattenedStyle.maxWidth === 'number') {
-          maxTabItemWidth = flattenedStyle.maxWidth;
-        }
-      }
-
-      return routes.length * maxTabItemWidth <= layout.width;
-    } else {
-      return isLandscape();
-    }
-  };
 
   const defaultInsets = useSafeArea();
 
@@ -176,22 +243,26 @@ export default function BottomTabBar({
     left: safeAreaInsets?.left ?? defaultInsets.left,
   };
 
-  const paddingBottom = Math.max(
-    insets.bottom - Platform.select({ ios: 4, default: 0 }),
-    0
-  );
+  const paddingBottom = getPaddingBottom(insets);
+  const tabBarHeight = getTabBarHeight({
+    state,
+    insets,
+    dimensions,
+    layout,
+    adaptive,
+    labelPosition,
+    tabStyle,
+    style,
+  });
 
-  const getDefaultTabBarHeight = () => {
-    if (
-      Platform.OS === 'ios' &&
-      !Platform.isPad &&
-      isLandscape() &&
-      shouldUseHorizontalLabels()
-    ) {
-      return COMPACT_TABBAR_HEIGHT;
-    }
-    return DEFAULT_TABBAR_HEIGHT;
-  };
+  const hasHorizontalLabels = shouldUseHorizontalLabels({
+    state,
+    dimensions,
+    layout,
+    adaptive,
+    labelPosition,
+    tabStyle,
+  });
 
   return (
     <Animated.View
@@ -218,7 +289,7 @@ export default function BottomTabBar({
           position: isTabBarHidden ? 'absolute' : (null as any),
         },
         {
-          height: getDefaultTabBarHeight() + paddingBottom,
+          height: tabBarHeight,
           paddingBottom,
           paddingHorizontal: Math.max(insets.left, insets.right),
         },
@@ -276,7 +347,7 @@ export default function BottomTabBar({
                 <BottomTabItem
                   route={route}
                   focused={focused}
-                  horizontal={shouldUseHorizontalLabels()}
+                  horizontal={hasHorizontalLabels}
                   onPress={onPress}
                   onLongPress={onLongPress}
                   accessibilityLabel={accessibilityLabel}
