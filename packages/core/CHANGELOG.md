@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.14.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.14.0...@react-navigation/core@5.14.1) (2020-11-08)
+
+
+### Bug Fixes
+
+* tweak error message when navigator has non-screen children ([360b0e9](https://github.com/react-navigation/react-navigation/commit/360b0e995835990c55b75898757ebdd120d52446))
+
+
+
+
+
 # [5.14.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.13.5...@react-navigation/core@5.14.0) (2020-11-04)
 
 
