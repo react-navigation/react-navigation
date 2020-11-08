@@ -239,6 +239,10 @@ export default function getPathFromState(
 // Object.fromEntries is not available in older iOS versions
 const fromEntries = <K extends string, V>(entries: (readonly [K, V])[]) =>
   entries.reduce((acc, [k, v]) => {
+    if (acc.hasOwnProperty(k)) {
+      throw new Error(`A value for key '${k}' already exists in the object.`);
+    }
+
     acc[k] = v;
     return acc;
   }, {} as Record<K, V>);
