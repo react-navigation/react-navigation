@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.12.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.12.3...@react-navigation/stack@5.12.4) (2020-11-08)
+
+
+### Bug Fixes
+
+* don't hide child header automatically in stack ([8f0efc8](https://github.com/react-navigation/react-navigation/commit/8f0efc8db534297a95ea8a2bcb6d2e387c1fea53))
+
+
+
+
+
 ## [5.12.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.12.2...@react-navigation/stack@5.12.3) (2020-11-04)
 
 
