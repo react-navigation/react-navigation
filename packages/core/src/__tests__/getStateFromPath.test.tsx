@@ -2673,6 +2673,47 @@ it('uses nearest parent wildcard match for unmatched paths', () => {
   );
 });
 
+it('throws if two screens map to the same pattern', () => {
+  const path = '/bar/42/baz/test';
+
+  expect(() =>
+    getStateFromPath(path, {
+      screens: {
+        Foo: {
+          screens: {
+            Bar: {
+              path: '/bar/:id/',
+              screens: {
+                Baz: 'baz',
+              },
+            },
+            Bax: '/bar/:id/baz',
+          },
+        },
+      },
+    })
+  ).toThrow(
+    "Found conflicting screens with the same pattern. The pattern 'bar/:id/baz' resolves to both 'Foo > Bax' and 'Foo > Bar > Baz'. Patterns must be unique and cannot resolve to more than one screen."
+  );
+
+  expect(() =>
+    getStateFromPath(path, {
+      screens: {
+        Foo: {
+          screens: {
+            Bar: {
+              path: '/bar/:id/',
+              screens: {
+                Baz: '',
+              },
+            },
+          },
+        },
+      },
+    })
+  ).not.toThrow();
+});
+
 it('throws if wildcard is specified with legacy config', () => {
   const path = '/bar/42/baz/test';
   const config = {

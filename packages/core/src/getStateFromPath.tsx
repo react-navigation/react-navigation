@@ -119,6 +119,12 @@ export default function getStateFromPath(
       // - the most exhaustive ones are always at the beginning
       // - patterns with wildcard are always at the end
 
+      // If 2 patterns are same, move the one with less route names up
+      // This is an error state, so it's only useful for consistent error messages
+      if (a.pattern === b.pattern) {
+        return b.routeNames.join('>').localeCompare(a.routeNames.join('>'));
+      }
+
       // If one of the patterns starts with the other, it's more exhaustive
       // So move it up
       if (a.pattern.startsWith(b.pattern)) {
@@ -154,6 +160,35 @@ export default function getStateFromPath(
       // So we move it up in the list
       return bWildcardIndex - aWildcardIndex;
     });
+
+  // Check for duplicate patterns in the config
+  configs.reduce<Record<string, RouteConfig>>((acc, config) => {
+    if (acc[config.pattern]) {
+      const a = acc[config.pattern].routeNames;
+      const b = config.routeNames;
+
+      // It's not a problem if the path string omitted from a inner most screen
+      // For example, it's ok if a path resolves to `A > B > C` or `A > B`
+      const intersects =
+        a.length > b.length
+          ? b.every((it, i) => a[i] === it)
+          : a.every((it, i) => b[i] === it);
+
+      if (!intersects) {
+        throw new Error(
+          `Found conflicting screens with the same pattern. The pattern '${
+            config.pattern
+          }' resolves to both '${a.join(' > ')}' and '${b.join(
+            ' > '
+          )}'. Patterns must be unique and cannot resolve to more than one screen.`
+        );
+      }
+    }
+
+    return Object.assign(acc, {
+      [config.pattern]: config,
+    });
+  }, {});
 
   if (remaining === '/') {
     // We need to add special handling of empty path so navigation to empty path also works
