@@ -12,7 +12,7 @@ import {
 // The provider component for safe area initializes asynchornously
 // Until the insets are available, there'll be blank screen
 // To avoid the blank screen, we specify some initial values
-const initialSafeAreaInsets = {
+export const initialSafeAreaInsets = {
   // Approximate values which are good enough for most cases
   top: getStatusBarHeight(true),
   bottom: getBottomSpace(),

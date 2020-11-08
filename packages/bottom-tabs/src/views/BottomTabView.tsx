@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 
 import {
   NavigationHelpersContext,
@@ -9,9 +15,13 @@ import {
 } from '@react-navigation/native';
 import { ScreenContainer } from 'react-native-screens';
 
-import SafeAreaProviderCompat from './SafeAreaProviderCompat';
+import SafeAreaProviderCompat, {
+  initialSafeAreaInsets,
+} from './SafeAreaProviderCompat';
 import ResourceSavingScene from './ResourceSavingScene';
-import BottomTabBar from './BottomTabBar';
+import BottomTabBar, { getTabBarHeight } from './BottomTabBar';
+import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
+import BottomTabBarHeightContext from '../utils/BottomTabBarHeightContext';
 import type {
   BottomTabNavigationConfig,
   BottomTabDescriptorMap,
@@ -27,6 +37,7 @@ type Props = BottomTabNavigationConfig & {
 
 type State = {
   loaded: string[];
+  tabBarHeight: number;
 };
 
 function SceneContent({
@@ -67,9 +78,28 @@ export default class BottomTabView extends React.Component<Props, State> {
     };
   }
 
-  state: State = {
-    loaded: [this.props.state.routes[this.props.state.index].key],
-  };
+  constructor(props: Props) {
+    super(props);
+
+    const { state, tabBarOptions } = this.props;
+
+    const dimensions = Dimensions.get('window');
+    const tabBarHeight = getTabBarHeight({
+      state,
+      dimensions,
+      layout: { width: dimensions.width, height: 0 },
+      insets: initialSafeAreaInsets,
+      adaptive: tabBarOptions?.adaptive,
+      labelPosition: tabBarOptions?.labelPosition,
+      tabStyle: tabBarOptions?.tabStyle,
+      style: tabBarOptions?.style,
+    });
+
+    this.state = {
+      loaded: [state.routes[state.index].key],
+      tabBarHeight: tabBarHeight,
+    };
+  }
 
   private renderTabBar = () => {
     const {
@@ -87,6 +117,16 @@ export default class BottomTabView extends React.Component<Props, State> {
     });
   };
 
+  private handleTabBarHeightChange = (height: number) => {
+    this.setState((state) => {
+      if (state.tabBarHeight !== height) {
+        return { tabBarHeight: height };
+      }
+
+      return null;
+    });
+  };
+
   render() {
     const {
       state,
@@ -97,7 +137,7 @@ export default class BottomTabView extends React.Component<Props, State> {
       sceneContainerStyle,
     } = this.props;
     const { routes } = state;
-    const { loaded } = this.state;
+    const { loaded, tabBarHeight } = this.state;
 
     return (
       <NavigationHelpersContext.Provider value={navigation}>
@@ -133,13 +173,19 @@ export default class BottomTabView extends React.Component<Props, State> {
                       isFocused={isFocused}
                       style={sceneContainerStyle}
                     >
-                      {descriptor.render()}
+                      <BottomTabBarHeightContext.Provider value={tabBarHeight}>
+                        {descriptor.render()}
+                      </BottomTabBarHeightContext.Provider>
                     </SceneContent>
                   </ResourceSavingScene>
                 );
               })}
             </ScreenContainer>
-            {this.renderTabBar()}
+            <BottomTabBarHeightCallbackContext.Provider
+              value={this.handleTabBarHeightChange}
+            >
+              {this.renderTabBar()}
+            </BottomTabBarHeightCallbackContext.Provider>
           </View>
         </SafeAreaProviderCompat>
       </NavigationHelpersContext.Provider>
