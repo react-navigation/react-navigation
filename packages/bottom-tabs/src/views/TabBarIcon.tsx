@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 import type { Route } from '@react-navigation/native';
 import Badge from './Badge';
 
@@ -7,6 +13,7 @@ type Props = {
   route: Route<string>;
   horizontal: boolean;
   badge?: string | number;
+  badgeStyle?: StyleProp<TextStyle>;
   activeOpacity: number;
   inactiveOpacity: number;
   activeTintColor: string;
@@ -22,6 +29,7 @@ type Props = {
 export default function TabBarIcon({
   horizontal,
   badge,
+  badgeStyle,
   activeOpacity,
   inactiveOpacity,
   activeTintColor,
@@ -56,6 +64,7 @@ export default function TabBarIcon({
         style={[
           styles.badge,
           horizontal ? styles.badgeHorizontal : styles.badgeVertical,
+          badgeStyle,
         ]}
         size={(size * 3) / 4}
       >

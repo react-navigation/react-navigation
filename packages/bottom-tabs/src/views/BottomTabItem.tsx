@@ -48,6 +48,10 @@ type Props = {
    */
   badge?: number | string;
   /**
+   * Custom style for the badge.
+   */
+  badgeStyle?: StyleProp<TextStyle>;
+  /**
    * URL to use for the link to the tab.
    */
   to?: string;
@@ -122,6 +126,7 @@ export default function BottomTabBarItem({
   label,
   icon,
   badge,
+  badgeStyle,
   to,
   button = ({
     children,
@@ -235,6 +240,7 @@ export default function BottomTabBarItem({
         route={route}
         horizontal={horizontal}
         badge={badge}
+        badgeStyle={badgeStyle}
         activeOpacity={activeOpacity}
         inactiveOpacity={inactiveOpacity}
         activeTintColor={activeTintColor}
