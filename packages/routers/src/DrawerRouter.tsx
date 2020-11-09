@@ -75,7 +75,7 @@ const isDrawerOpen = (
   state:
     | DrawerNavigationState<ParamListBase>
     | PartialState<DrawerNavigationState<ParamListBase>>
-) => Boolean(state.history?.find((it) => it.type === 'drawer'));
+) => Boolean(state.history?.some((it) => it.type === 'drawer'));
 
 const openDrawer = (
   state: DrawerNavigationState<ParamListBase>
