@@ -296,7 +296,6 @@ export default function App() {
                   name="Examples"
                   options={{
                     title: 'Examples',
-                    headerShown: true,
                     drawerIcon: ({ size, color }) => (
                       <MaterialIcons size={size} color={color} name="folder" />
                     ),
