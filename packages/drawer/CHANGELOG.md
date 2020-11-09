@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.11.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.10.7...@react-navigation/drawer@5.11.0) (2020-11-09)
+
+
+### Bug Fixes
+
+* try fixing drawer blink on Android ([5217245](https://github.com/react-navigation/react-navigation/commit/52172453dfb71822c2fb0f5947d00bac4a840d07))
+
+
+### Features
+
+* add a getIsDrawerOpenFromState utility to drawer ([5bd682f](https://github.com/react-navigation/react-navigation/commit/5bd682f0bf6b28a95fb3e7fc9e1974057a877cb0))
+* add option to show a header in drawer navigator screens ([dbe961b](https://github.com/react-navigation/react-navigation/commit/dbe961ba5bb243e8da4d889c3c7dd6ed1de287c4))
+
+
+
+
+
 ## [5.10.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.10.6...@react-navigation/drawer@5.10.7) (2020-11-08)
 
 **Note:** Version bump only for package @react-navigation/drawer

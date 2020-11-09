@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.14.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.14.1...@react-navigation/core@5.14.2) (2020-11-09)
+
+
+### Bug Fixes
+
+* throw if the same pattern resolves to multiple screens ([48b2e77](https://github.com/react-navigation/react-navigation/commit/48b2e777307908e8b3fcb49d8555b610dc0e38f2))
+
+
+
+
+
 ## [5.14.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.14.0...@react-navigation/core@5.14.1) (2020-11-08)
 
 
