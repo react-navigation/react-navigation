@@ -10,6 +10,8 @@ import {
 import { ScreenContainer } from 'react-native-screens';
 import {
   NavigationHelpersContext,
+  NavigationContext,
+  NavigationRouteContext,
   DrawerNavigationState,
   DrawerActions,
   useTheme,
@@ -184,12 +186,16 @@ export default function DrawerView({
               isVisible={isFocused}
               enabled={detachInactiveScreens}
             >
-              {headerShown
-                ? header({
-                    layout: dimensions,
-                    scene: { route, descriptor },
-                  })
-                : null}
+              {headerShown ? (
+                <NavigationContext.Provider value={descriptor.navigation}>
+                  <NavigationRouteContext.Provider value={route}>
+                    {header({
+                      layout: dimensions,
+                      scene: { route, descriptor },
+                    })}
+                  </NavigationRouteContext.Provider>
+                </NavigationContext.Provider>
+              ) : null}
               {descriptor.render()}
             </ResourceSavingScene>
           );
