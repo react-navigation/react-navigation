@@ -57,8 +57,9 @@ const DIRECTION_LEFT = 1;
 const DIRECTION_RIGHT = -1;
 
 const SWIPE_DISTANCE_THRESHOLD_DEFAULT = 60;
-
 const SWIPE_DISTANCE_MINIMUM = 5;
+
+const DEFAULT_DRAWER_WIDTH = '80%';
 
 const SPRING_CONFIG = {
   stiffness: 1000,
@@ -202,7 +203,8 @@ export default class DrawerView extends React.Component<Props> {
 
   private getDrawerWidth = (): number => {
     const { drawerStyle, dimensions } = this.props;
-    const { width } = StyleSheet.flatten(drawerStyle);
+    const { width = DEFAULT_DRAWER_WIDTH } =
+      StyleSheet.flatten(drawerStyle) || {};
 
     if (typeof width === 'string' && width.endsWith('%')) {
       // Try to calculate width if a percentage is given
@@ -246,7 +248,7 @@ export default class DrawerView extends React.Component<Props> {
   private containerWidth = new Value<number>(this.props.dimensions.width);
   private drawerWidth = new Value<number>(this.initialDrawerWidth);
   private drawerOpacity = new Value<number>(
-    this.initialDrawerWidth || this.props.drawerType === 'permanent' ? 1 : 0
+    this.props.drawerType === 'permanent' ? 1 : 0
   );
   private drawerPosition = new Value<number>(
     this.props.drawerPosition === 'right' ? DIRECTION_RIGHT : DIRECTION_LEFT
@@ -730,7 +732,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     bottom: 0,
-    width: '80%',
+    width: DEFAULT_DRAWER_WIDTH,
   },
   content: {
     flex: 1,
