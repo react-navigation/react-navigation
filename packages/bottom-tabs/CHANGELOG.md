@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.11.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.10.7...@react-navigation/bottom-tabs@5.11.0) (2020-11-09)
+
+
+### Features
+
+* add a hook to get bottom tab bar height ([e08c91f](https://github.com/react-navigation/react-navigation/commit/e08c91ff0a3df13dc6e6096a3e95f60722e6946b)), closes [#8037](https://github.com/react-navigation/react-navigation/issues/8037) [#8536](https://github.com/react-navigation/react-navigation/issues/8536)
+* add a tabBarBadgeStyle option to customize the badge ([6ac4d40](https://github.com/react-navigation/react-navigation/commit/6ac4d40140189a29d857c4d1203bced6929f7baf))
+
+
+
+
+
 ## [5.10.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.10.6...@react-navigation/bottom-tabs@5.10.7) (2020-11-08)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@5.1.15...@react-navigation/devtools@5.1.16) (2020-11-09)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+
+
+
+
 ## [5.1.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@5.1.14...@react-navigation/devtools@5.1.15) (2020-11-08)
 
 **Note:** Version bump only for package @react-navigation/devtools
