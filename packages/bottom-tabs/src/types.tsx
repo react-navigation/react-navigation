@@ -110,6 +110,12 @@ export type BottomTabNavigationOptions = {
   tabBarBadge?: number | string;
 
   /**
+   * Custom style for the tab bar badge.
+   * You can specify a background color or text color here.
+   */
+  tabBarBadgeStyle?: StyleProp<TextStyle>;
+
+  /**
    * Accessibility label for the tab button. This is read by the screen reader when the user taps the tab.
    * It's recommended to set this if you don't have a label for the tab.
    */
