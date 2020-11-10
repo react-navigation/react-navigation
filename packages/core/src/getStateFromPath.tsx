@@ -33,6 +33,11 @@ type ResultState = PartialState<NavigationState> & {
   state?: ResultState;
 };
 
+type ParsedRoute = {
+  name: string;
+  params?: Record<string, any> | undefined;
+};
+
 /**
  * Utility to parse a path string to initial state object accepted by the container.
  * This is useful for deep linking when we need to handle the incoming URL.
@@ -224,7 +229,7 @@ export default function getStateFromPath(
   if (legacy === false) {
     // If we're not in legacy mode,, we match the whole path against the regex instead of segments
     // This makes sure matches such as wildcard will catch any unmatched routes, even if nested
-    const { routeNames, allParams, remainingPath } = matchAgainstConfigs(
+    const { routes, remainingPath } = matchAgainstConfigs(
       remaining,
       configs.map((c) => ({
         ...c,
@@ -233,39 +238,30 @@ export default function getStateFromPath(
       }))
     );
 
-    if (routeNames !== undefined) {
+    if (routes !== undefined) {
       // This will always be empty if full path matched
+      current = createNestedStateObject(routes, initialRoutes);
       remaining = remainingPath;
-      current = createNestedStateObject(
-        createRouteObjects(configs, routeNames, allParams),
-        initialRoutes
-      );
       result = current;
     }
   } else {
     // In legacy mode, we divide the path into segments and match piece by piece
     // This preserves the legacy behaviour, but we should remove it in next major
     while (remaining) {
-      let { routeNames, allParams, remainingPath } = matchAgainstConfigs(
-        remaining,
-        configs
-      );
+      let { routes, remainingPath } = matchAgainstConfigs(remaining, configs);
 
       remaining = remainingPath;
 
       // If we hadn't matched any segments earlier, use the path as route name
-      if (routeNames === undefined) {
+      if (routes === undefined) {
         const segments = remaining.split('/');
 
-        routeNames = [decodeURIComponent(segments[0])];
+        routes = [{ name: decodeURIComponent(segments[0]) }];
         segments.shift();
         remaining = segments.join('/');
       }
 
-      const state = createNestedStateObject(
-        createRouteObjects(configs, routeNames, allParams),
-        initialRoutes
-      );
+      const state = createNestedStateObject(routes, initialRoutes);
 
       if (current) {
         // The state should be nested inside the deepest route we parsed before
@@ -309,8 +305,7 @@ const joinPaths = (...paths: string[]): string =>
     .join('/');
 
 const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
-  let routeNames: string[] | undefined;
-  let allParams: Record<string, any> | undefined;
+  let routes: ParsedRoute[] | undefined;
   let remainingPath = remaining;
 
   // Go through all configs, and see if the next path segment matches our regex
@@ -323,21 +318,40 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
 
     // If our regex matches, we need to extract params from the path
     if (match) {
-      routeNames = [...config.routeNames];
+      const matchedParams = config.pattern
+        ?.split('/')
+        .filter((p) => p.startsWith(':'))
+        .reduce<Record<string, any>>(
+          (acc, p, i) =>
+            Object.assign(acc, {
+              // The param segments appear every second item starting from 2 in the regex match result
+              [p]: match![(i + 1) * 2].replace(/\//, ''),
+            }),
+          {}
+        );
 
-      const paramPatterns = config.pattern
-        .split('/')
-        .filter((p) => p.startsWith(':'));
+      routes = config.routeNames.map((name) => {
+        const config = configs.find((c) => c.screen === name);
+        const params = config?.path
+          ?.split('/')
+          .filter((p) => p.startsWith(':'))
+          .reduce<Record<string, any>>((acc, p) => {
+            const value = matchedParams[p];
 
-      if (paramPatterns.length) {
-        allParams = paramPatterns.reduce<Record<string, any>>((acc, p, i) => {
-          const value = match![(i + 1) * 2].replace(/\//, ''); // The param segments appear every second item starting from 2 in the regex match result
+            if (value) {
+              const key = p.replace(/^:/, '').replace(/\?$/, '');
+              acc[key] = config.parse?.[key] ? config.parse[key](value) : value;
+            }
 
-          acc[p] = value;
+            return acc;
+          }, {});
 
-          return acc;
-        }, {});
-      }
+        if (params && Object.keys(params).length) {
+          return { name, params };
+        }
+
+        return { name };
+      });
 
       remainingPath = remainingPath.replace(match[1], '');
 
@@ -345,7 +359,7 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
     }
   }
 
-  return { routeNames, allParams, remainingPath };
+  return { routes, remainingPath };
 };
 
 const createNormalizedConfigs = (
@@ -508,57 +522,48 @@ const findInitialRoute = (
 // it is the end of state and if there is initialRoute for this level
 const createStateObject = (
   initialRoute: string | undefined,
-  routeName: string,
-  params: Record<string, any> | undefined,
+  route: ParsedRoute,
   isEmpty: boolean
 ): InitialState => {
   if (isEmpty) {
     if (initialRoute) {
       return {
         index: 1,
-        routes: [{ name: initialRoute }, { name: routeName as string, params }],
+        routes: [{ name: initialRoute }, route],
       };
     } else {
       return {
-        routes: [{ name: routeName as string, params }],
+        routes: [route],
       };
     }
   } else {
     if (initialRoute) {
       return {
         index: 1,
-        routes: [
-          { name: initialRoute },
-          { name: routeName as string, params, state: { routes: [] } },
-        ],
+        routes: [{ name: initialRoute }, { ...route, state: { routes: [] } }],
       };
     } else {
       return {
-        routes: [{ name: routeName as string, params, state: { routes: [] } }],
+        routes: [{ ...route, state: { routes: [] } }],
       };
     }
   }
 };
 
 const createNestedStateObject = (
-  routes: { name: string; params?: object }[],
+  routes: ParsedRoute[],
   initialRoutes: InitialRouteConfig[]
 ) => {
   let state: InitialState;
-  let route = routes.shift() as { name: string; params?: object };
+  let route = routes.shift() as ParsedRoute;
   let initialRoute = findInitialRoute(route.name, initialRoutes);
 
-  state = createStateObject(
-    initialRoute,
-    route.name,
-    route.params,
-    routes.length === 0
-  );
+  state = createStateObject(initialRoute, route, routes.length === 0);
 
   if (routes.length > 0) {
     let nestedState = state;
 
-    while ((route = routes.shift() as { name: string; params?: object })) {
+    while ((route = routes.shift() as ParsedRoute)) {
       initialRoute = findInitialRoute(route.name, initialRoutes);
 
       const nestedStateIndex =
@@ -566,8 +571,7 @@ const createNestedStateObject = (
 
       nestedState.routes[nestedStateIndex].state = createStateObject(
         initialRoute,
-        route.name,
-        route.params,
+        route,
         routes.length === 0
       );
 
@@ -580,46 +584,6 @@ const createNestedStateObject = (
 
   return state;
 };
-
-const createRouteObjects = (
-  configs: RouteConfig[],
-  routeNames: string[],
-  allParams?: Record<string, any>
-) =>
-  routeNames.map((name) => {
-    const config = configs.find((c) => c.screen === name);
-
-    let params: object | undefined;
-
-    if (allParams && config?.path) {
-      const pattern = config.path;
-
-      if (pattern) {
-        const paramPatterns = pattern
-          .split('/')
-          .filter((p) => p.startsWith(':'));
-
-        if (paramPatterns.length) {
-          params = paramPatterns.reduce<Record<string, any>>((acc, p) => {
-            const key = p.replace(/^:/, '').replace(/\?$/, '');
-            const value = allParams![p];
-
-            if (value) {
-              acc[key] = config.parse?.[key] ? config.parse[key](value) : value;
-            }
-
-            return acc;
-          }, {});
-        }
-      }
-    }
-
-    if (params && Object.keys(params).length) {
-      return { name, params };
-    }
-
-    return { name };
-  });
 
 const findFocusedRoute = (state: InitialState) => {
   let current: InitialState | undefined = state;
