@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.12.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.12.5...@react-navigation/stack@5.12.6) (2020-11-10)
+
+
+### Bug Fixes
+
+* make sure inactive screen don't increase scroll area on web ([da35085](https://github.com/react-navigation/react-navigation/commit/da35085f1e3440f26eea800c892c88aec64d072f))
+
+
+
+
+
 ## [5.12.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.12.4...@react-navigation/stack@5.12.5) (2020-11-09)
 
 **Note:** Version bump only for package @react-navigation/stack

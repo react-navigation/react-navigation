@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.14.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.14.2...@react-navigation/core@5.14.3) (2020-11-10)
+
+
+### Bug Fixes
+
+* improve the error message for incorrect screen configuration ([8f764d8](https://github.com/react-navigation/react-navigation/commit/8f764d8b0809604716d5d92ea33cc1beee02e804))
+
+
+
+
+
 ## [5.14.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.14.1...@react-navigation/core@5.14.2) (2020-11-09)
 
 

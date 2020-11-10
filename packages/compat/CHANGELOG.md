@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.3.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/compat@5.3.8...@react-navigation/compat@5.3.9) (2020-11-10)
+
+**Note:** Version bump only for package @react-navigation/compat
+
+
+
+
+
 ## [5.3.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/compat@5.3.7...@react-navigation/compat@5.3.8) (2020-11-09)
 
 **Note:** Version bump only for package @react-navigation/compat
