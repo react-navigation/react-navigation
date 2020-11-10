@@ -216,7 +216,14 @@ function CardContainer({
       pageOverflowEnabled={headerMode === 'screen' && mode === 'card'}
       containerStyle={hasAbsoluteHeader ? { marginTop: headerHeight } : null}
       contentStyle={[{ backgroundColor: colors.background }, cardStyle]}
-      style={StyleSheet.absoluteFill}
+      style={[
+        {
+          // This is necessary to avoid unfocused larger pages increasing scroll area
+          // The issue can be seen on the web when a smaller screen is pushed over a larger one
+          overflow: active ? undefined : 'hidden',
+        },
+        StyleSheet.absoluteFill,
+      ]}
     >
       <View style={styles.container}>
         <View style={styles.scene}>
