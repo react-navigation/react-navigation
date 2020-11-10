@@ -1462,6 +1462,51 @@ it('throws when Screen is not the direct children', () => {
   );
 });
 
+it('throws when undefined component is a direct children', () => {
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const Undefined = undefined;
+
+  const spy = jest.spyOn(console, 'error').mockImplementation();
+  const element = (
+    <BaseNavigationContainer>
+      <TestNavigator>
+        {/* @ts-ignore */}
+        <Undefined name="foo" component={jest.fn()} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  spy.mockRestore();
+
+  expect(() => render(element).update(element)).toThrowError(
+    "A navigator can only contain 'Screen' components as its direct children (found 'undefined' for the screen 'foo')"
+  );
+});
+
+it('throws when a tag is a direct children', () => {
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const element = (
+    <BaseNavigationContainer>
+      <TestNavigator>
+        {/* @ts-ignore */}
+        <screen name="foo" component={jest.fn()} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(() => render(element).update(element)).toThrowError(
+    "A navigator can only contain 'Screen' components as its direct children (found 'screen' for the screen 'foo')"
+  );
+});
+
 it('throws when a React Element is not the direct children', () => {
   const TestNavigator = (props: any) => {
     useNavigationBuilder(MockRouter, props);
