@@ -401,7 +401,17 @@ export default function StackRouter(options: StackRouterOptions) {
 
             let params;
 
-            if (action.payload.merge === false) {
+            if (action.payload.merge) {
+              params =
+                action.payload.params !== undefined ||
+                routeParamList[route.name] !== undefined
+                  ? {
+                      ...routeParamList[route.name],
+                      ...route.params,
+                      ...action.payload.params,
+                    }
+                  : route.params;
+            } else {
               params =
                 routeParamList[route.name] !== undefined
                   ? {
@@ -409,13 +419,6 @@ export default function StackRouter(options: StackRouterOptions) {
                       ...action.payload.params,
                     }
                   : action.payload.params;
-            } else {
-              params = action.payload.params
-                ? {
-                    ...route.params,
-                    ...action.payload.params,
-                  }
-                : route.params;
             }
 
             return {

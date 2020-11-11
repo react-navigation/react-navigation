@@ -353,7 +353,7 @@ export default function useNavigationBuilder<
     if (
       typeof route.params.state === 'object' &&
       route.params.state != null &&
-      route.params.state !== previousParams?.state
+      route.params !== previousParams
     ) {
       // If the route was updated with new state, we should reset to it
       action = CommonActions.reset(route.params.state);
@@ -362,7 +362,6 @@ export default function useNavigationBuilder<
       ((route.params.initial === false && isFirstStateInitialization) ||
         route.params !== previousParams)
     ) {
-      // FIXME: Since params are merged, `route.params.params` might contain params from an older route
       // If the route was updated with new screen name and/or params, we should navigate there
       action = CommonActions.navigate(route.params.screen, route.params.params);
     }

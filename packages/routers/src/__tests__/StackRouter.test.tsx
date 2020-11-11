@@ -1010,11 +1010,13 @@ it('changes index on focus change', () => {
   expect(router.getStateForRouteFocus(state, 'qux-0')).toEqual(state);
 });
 
-it('merges params on navigate to an existing screen', () => {
+it("doesn't merge params on navigate to an existing screen", () => {
   const router = StackRouter({});
   const options = {
     routeNames: ['baz', 'bar', 'qux'],
-    routeParamList: {},
+    routeParamList: {
+      bar: { color: 'test' },
+    },
   };
 
   expect(
@@ -1042,7 +1044,7 @@ it('merges params on navigate to an existing screen', () => {
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
-      { key: 'bar', name: 'bar', params: { answer: 42 } },
+      { key: 'bar', name: 'bar', params: { color: 'test' } },
     ],
   });
 
@@ -1070,16 +1072,17 @@ it('merges params on navigate to an existing screen', () => {
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
-      { key: 'bar', name: 'bar', params: { answer: 42, fruit: 'orange' } },
+      { key: 'bar', name: 'bar', params: { color: 'test', fruit: 'orange' } },
     ],
   });
 });
 
-it("doesn't merge params on navigate to an existing screen if merge: false", () => {
+it('merges params on navigate to an existing screen if merge: true', () => {
   const router = StackRouter({});
   const options = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {
+      bar: { color: 'test' },
       baz: { foo: 12 },
     },
   };
@@ -1098,13 +1101,11 @@ it("doesn't merge params on navigate to an existing screen if merge: false", () 
           { key: 'qux', name: 'qux' },
         ],
       },
-      {
-        type: 'NAVIGATE',
-        payload: {
-          name: 'bar',
-          merge: false,
-        },
-      },
+
+      CommonActions.navigate({
+        name: 'bar',
+        merge: true,
+      }),
       options
     )
   ).toEqual({
@@ -1115,7 +1116,7 @@ it("doesn't merge params on navigate to an existing screen if merge: false", () 
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
-      { key: 'bar', name: 'bar' },
+      { key: 'bar', name: 'bar', params: { color: 'test', answer: 42 } },
     ],
   });
 
@@ -1132,14 +1133,11 @@ it("doesn't merge params on navigate to an existing screen if merge: false", () 
           { key: 'bar', name: 'bar', params: { answer: 42 } },
         ],
       },
-      {
-        type: 'NAVIGATE',
-        payload: {
-          name: 'bar',
-          params: { fruit: 'orange' },
-          merge: false,
-        },
-      },
+      CommonActions.navigate({
+        name: 'bar',
+        params: { fruit: 'orange' },
+        merge: true,
+      }),
       options
     )
   ).toEqual({
@@ -1150,7 +1148,11 @@ it("doesn't merge params on navigate to an existing screen if merge: false", () 
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
-      { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
+      {
+        key: 'bar',
+        name: 'bar',
+        params: { color: 'test', fruit: 'orange', answer: 42 },
+      },
     ],
   });
 
@@ -1167,14 +1169,11 @@ it("doesn't merge params on navigate to an existing screen if merge: false", () 
           { key: 'bar', name: 'bar', params: { answer: 42 } },
         ],
       },
-      {
-        type: 'NAVIGATE',
-        payload: {
-          name: 'baz',
-          params: { color: 'black' },
-          merge: false,
-        },
-      },
+      CommonActions.navigate({
+        name: 'baz',
+        params: { color: 'black' },
+        merge: true,
+      }),
       options
     )
   ).toEqual({
@@ -1183,6 +1182,12 @@ it("doesn't merge params on navigate to an existing screen if merge: false", () 
     key: 'root',
     index: 0,
     routeNames: ['baz', 'bar', 'qux'],
-    routes: [{ key: 'baz', name: 'baz', params: { foo: 12, color: 'black' } }],
+    routes: [
+      {
+        key: 'baz',
+        name: 'baz',
+        params: { foo: 12, test: 99, color: 'black' },
+      },
+    ],
   });
 });

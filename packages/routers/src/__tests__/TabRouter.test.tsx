@@ -1108,11 +1108,13 @@ it('updates route key history on focus change', () => {
   ]);
 });
 
-it('merges params on navigate to an existing screen', () => {
+it("doesn't merge params on navigate to an existing screen", () => {
   const router = TabRouter({});
   const options = {
     routeNames: ['baz', 'bar', 'qux'],
-    routeParamList: {},
+    routeParamList: {
+      qux: { color: 'indigo' },
+    },
   };
 
   expect(
@@ -1141,93 +1143,7 @@ it('merges params on navigate to an existing screen', () => {
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
-      { key: 'bar', name: 'bar', params: { answer: 42 } },
-      { key: 'qux', name: 'qux' },
-    ],
-    history: [
-      { type: 'route', key: 'baz' },
-      { type: 'route', key: 'bar' },
-    ],
-  });
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'tab',
-        key: 'root',
-        index: 1,
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          { key: 'baz', name: 'baz' },
-          { key: 'bar', name: 'bar', params: { answer: 42 } },
-          { key: 'qux', name: 'qux' },
-        ],
-        history: [{ type: 'route', key: 'baz' }],
-      },
-      CommonActions.navigate('bar', { fruit: 'orange' }),
-      options
-    )
-  ).toEqual({
-    stale: false,
-    type: 'tab',
-    key: 'root',
-    index: 1,
-    routeNames: ['baz', 'bar', 'qux'],
-    routes: [
-      { key: 'baz', name: 'baz' },
-      { key: 'bar', name: 'bar', params: { answer: 42, fruit: 'orange' } },
-      { key: 'qux', name: 'qux' },
-    ],
-    history: [
-      { type: 'route', key: 'baz' },
-      { type: 'route', key: 'bar' },
-    ],
-  });
-});
-
-it("doesn't merge params on navigate to an existing screen if merge: false", () => {
-  const router = TabRouter({});
-  const options = {
-    routeNames: ['baz', 'bar', 'qux'],
-    routeParamList: {
-      qux: { color: 'indigo' },
-    },
-  };
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'tab',
-        key: 'root',
-        index: 1,
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          { key: 'baz', name: 'baz' },
-          { key: 'bar', name: 'bar', params: { answer: 42 } },
-          { key: 'qux', name: 'qux' },
-        ],
-        history: [{ type: 'route', key: 'baz' }],
-      },
-      {
-        type: 'NAVIGATE',
-        payload: {
-          name: 'bar',
-          merge: false,
-        },
-      },
-      options
-    )
-  ).toEqual({
-    stale: false,
-    type: 'tab',
-    key: 'root',
-    index: 1,
-    routeNames: ['baz', 'bar', 'qux'],
-    routes: [
-      { key: 'baz', name: 'baz' },
-      { key: 'bar', name: 'bar', params: { answer: 42 } },
+      { key: 'bar', name: 'bar' },
       { key: 'qux', name: 'qux' },
     ],
     history: [
@@ -1251,14 +1167,7 @@ it("doesn't merge params on navigate to an existing screen if merge: false", () 
         ],
         history: [{ type: 'route', key: 'baz' }],
       },
-      {
-        type: 'NAVIGATE',
-        payload: {
-          name: 'bar',
-          params: { fruit: 'orange' },
-          merge: false,
-        },
-      },
+      CommonActions.navigate('bar', { fruit: 'orange' }),
       options
     )
   ).toEqual({
@@ -1293,14 +1202,7 @@ it("doesn't merge params on navigate to an existing screen if merge: false", () 
         ],
         history: [{ type: 'route', key: 'baz' }],
       },
-      {
-        type: 'NAVIGATE',
-        payload: {
-          name: 'qux',
-          params: { test: 12 },
-          merge: false,
-        },
-      },
+      CommonActions.navigate('qux', { test: 12 }),
       options
     )
   ).toEqual({
@@ -1321,7 +1223,7 @@ it("doesn't merge params on navigate to an existing screen if merge: false", () 
   });
 });
 
-it('merges params on jump to an existing screen', () => {
+it('merges params on navigate to an existing screen if merge: true', () => {
   const router = TabRouter({});
   const options = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1343,7 +1245,10 @@ it('merges params on jump to an existing screen', () => {
         ],
         history: [{ type: 'route', key: 'baz' }],
       },
-      TabActions.jumpTo('bar'),
+      CommonActions.navigate({
+        name: 'bar',
+        merge: true,
+      }),
       options
     )
   ).toEqual({
@@ -1378,7 +1283,11 @@ it('merges params on jump to an existing screen', () => {
         ],
         history: [{ type: 'route', key: 'baz' }],
       },
-      TabActions.jumpTo('bar', { fruit: 'orange' }),
+      CommonActions.navigate({
+        name: 'bar',
+        params: { fruit: 'orange' },
+        merge: true,
+      }),
       options
     )
   ).toEqual({
@@ -1390,6 +1299,84 @@ it('merges params on jump to an existing screen', () => {
     routes: [
       { key: 'baz', name: 'baz' },
       { key: 'bar', name: 'bar', params: { answer: 42, fruit: 'orange' } },
+      { key: 'qux', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'baz' },
+      { type: 'route', key: 'bar' },
+    ],
+  });
+});
+
+it("doesn't merge params on jump to an existing screen", () => {
+  const router = TabRouter({});
+  const options = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar', params: { answer: 42 } },
+          { key: 'qux', name: 'qux' },
+        ],
+        history: [{ type: 'route', key: 'baz' }],
+      },
+      TabActions.jumpTo('bar'),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+      { key: 'qux', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'baz' },
+      { type: 'route', key: 'bar' },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar', params: { answer: 42 } },
+          { key: 'qux', name: 'qux' },
+        ],
+        history: [{ type: 'route', key: 'baz' }],
+      },
+      TabActions.jumpTo('bar', { fruit: 'orange' }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
       { key: 'qux', name: 'qux' },
     ],
     history: [
