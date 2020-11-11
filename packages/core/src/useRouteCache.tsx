@@ -13,7 +13,7 @@ type RouteCache = Map<Route<string>, RouteProp<ParamListBase, string>>;
  * So we need a way to suppress the warning for those use cases.
  * This is fine since they are internal utilities and this is not public API.
  */
-export const SUPPRESS_STATE_ACCESS_WARNING = { value: false };
+export const CHILD_STATE = Symbol('CHILD_STATE');
 
 /**
  * Hook to cache route props for each screen in the navigator.
@@ -37,18 +37,11 @@ export default function useRouteCache<State extends NavigationState>(
       // If a cached route object already exists, reuse it
       acc.set(route, previous);
     } else {
-      const proxy = { ...route };
+      const { state, ...proxy } = route;
 
-      Object.defineProperty(proxy, 'state', {
-        get() {
-          if (!SUPPRESS_STATE_ACCESS_WARNING.value) {
-            console.warn(
-              "Accessing the 'state' property of the 'route' object is not supported. If you want to get the focused route name, use the 'getFocusedRouteNameFromRoute' helper instead: https://reactnavigation.org/docs/screen-options-resolution/#setting-parent-screen-options-based-on-child-navigators-state"
-            );
-          }
-
-          return route.state;
-        },
+      Object.defineProperty(proxy, CHILD_STATE, {
+        enumerable: false,
+        value: state,
       });
 
       acc.set(route, proxy);

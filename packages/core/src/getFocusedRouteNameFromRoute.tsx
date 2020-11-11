@@ -1,19 +1,11 @@
-import type {
-  Route,
-  PartialState,
-  NavigationState,
-} from '@react-navigation/routers';
-import { SUPPRESS_STATE_ACCESS_WARNING } from './useRouteCache';
+import type { Route } from '@react-navigation/routers';
+import { CHILD_STATE } from './useRouteCache';
 
 export default function getFocusedRouteNameFromRoute(
-  route: Partial<Route<string>> & { state?: PartialState<NavigationState> }
+  route: Partial<Route<string>>
 ): string | undefined {
-  SUPPRESS_STATE_ACCESS_WARNING.value = true;
-
-  const state = route.state;
-
-  SUPPRESS_STATE_ACCESS_WARNING.value = false;
-
+  // @ts-expect-error: this isn't in type definitions coz we want this private
+  const state = route[CHILD_STATE] ?? route.state;
   const params = route.params as { screen?: unknown } | undefined;
 
   const routeName = state
