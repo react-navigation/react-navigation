@@ -5,7 +5,6 @@ import type {
   PartialState,
   InitialState,
 } from '@react-navigation/routers';
-import checkLegacyPathConfig from './checkLegacyPathConfig';
 import type { PathConfigMap } from './types';
 
 type Options = {
@@ -63,18 +62,16 @@ export default function getStateFromPath(
   path: string,
   options?: Options
 ): ResultState | undefined {
-  const [legacy, compatOptions] = checkLegacyPathConfig(options);
-
   let initialRoutes: InitialRouteConfig[] = [];
 
-  if (compatOptions?.initialRouteName) {
+  if (options?.initialRouteName) {
     initialRoutes.push({
-      initialRouteName: compatOptions.initialRouteName,
-      connectedRoutes: Object.keys(compatOptions.screens),
+      initialRouteName: options.initialRouteName,
+      connectedRoutes: Object.keys(options.screens),
     });
   }
 
-  const screens = compatOptions?.screens;
+  const screens = options?.screens;
 
   let remaining = path
     .replace(/\/+/g, '/') // Replace multiple slash (//) with single ones
@@ -111,7 +108,6 @@ export default function getStateFromPath(
     .concat(
       ...Object.keys(screens).map((key) =>
         createNormalizedConfigs(
-          legacy,
           key,
           screens as PathConfigMap,
           [],
@@ -226,58 +222,22 @@ export default function getStateFromPath(
   let result: PartialState<NavigationState> | undefined;
   let current: PartialState<NavigationState> | undefined;
 
-  if (legacy === false) {
-    // If we're not in legacy mode,, we match the whole path against the regex instead of segments
-    // This makes sure matches such as wildcard will catch any unmatched routes, even if nested
-    const { routes, remainingPath } = matchAgainstConfigs(
-      remaining,
-      configs.map((c) => ({
-        ...c,
-        // Add `$` to the regex to make sure it matches till end of the path and not just beginning
-        regex: c.regex ? new RegExp(c.regex.source + '$') : undefined,
-      }))
-    );
+  // We match the whole path against the regex instead of segments
+  // This makes sure matches such as wildcard will catch any unmatched routes, even if nested
+  const { routes, remainingPath } = matchAgainstConfigs(
+    remaining,
+    configs.map((c) => ({
+      ...c,
+      // Add `$` to the regex to make sure it matches till end of the path and not just beginning
+      regex: c.regex ? new RegExp(c.regex.source + '$') : undefined,
+    }))
+  );
 
-    if (routes !== undefined) {
-      // This will always be empty if full path matched
-      current = createNestedStateObject(routes, initialRoutes);
-      remaining = remainingPath;
-      result = current;
-    }
-  } else {
-    // In legacy mode, we divide the path into segments and match piece by piece
-    // This preserves the legacy behaviour, but we should remove it in next major
-    while (remaining) {
-      let { routes, remainingPath } = matchAgainstConfigs(remaining, configs);
-
-      remaining = remainingPath;
-
-      // If we hadn't matched any segments earlier, use the path as route name
-      if (routes === undefined) {
-        const segments = remaining.split('/');
-
-        routes = [{ name: decodeURIComponent(segments[0]) }];
-        segments.shift();
-        remaining = segments.join('/');
-      }
-
-      const state = createNestedStateObject(routes, initialRoutes);
-
-      if (current) {
-        // The state should be nested inside the deepest route we parsed before
-        while (current?.routes[current.index || 0].state) {
-          current = current.routes[current.index || 0].state;
-        }
-
-        (current as PartialState<NavigationState>).routes[
-          current?.index || 0
-        ].state = state;
-      } else {
-        result = state;
-      }
-
-      current = state;
-    }
+  if (routes !== undefined) {
+    // This will always be empty if full path matched
+    current = createNestedStateObject(routes, initialRoutes);
+    remaining = remainingPath;
+    result = current;
   }
 
   if (current == null || result == null) {
@@ -363,7 +323,6 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
 };
 
 const createNormalizedConfigs = (
-  legacy: boolean,
   screen: string,
   routeConfig: PathConfigMap,
   routeNames: string[] = [],
@@ -380,7 +339,7 @@ const createNormalizedConfigs = (
     // If a string is specified as the value of the key(e.g. Foo: '/path'), use it as the pattern
     const pattern = parentPattern ? joinPaths(parentPattern, config) : config;
 
-    configs.push(createConfigItem(legacy, screen, routeNames, pattern, config));
+    configs.push(createConfigItem(screen, routeNames, pattern, config));
   } else if (typeof config === 'object') {
     let pattern: string | undefined;
 
@@ -388,33 +347,19 @@ const createNormalizedConfigs = (
     // it can have `path` property and
     // it could have `screens` prop which has nested configs
     if (typeof config.path === 'string') {
-      if (legacy) {
-        pattern =
-          config.exact !== true && parentPattern
-            ? joinPaths(parentPattern, config.path)
-            : config.path;
-      } else {
-        if (config.exact && config.path === undefined) {
-          throw new Error(
-            "A 'path' needs to be specified when specifying 'exact: true'. If you don't want this screen in the URL, specify it as empty string, e.g. `path: ''`."
-          );
-        }
-
-        pattern =
-          config.exact !== true
-            ? joinPaths(parentPattern || '', config.path || '')
-            : config.path || '';
+      if (config.exact && config.path === undefined) {
+        throw new Error(
+          "A 'path' needs to be specified when specifying 'exact: true'. If you don't want this screen in the URL, specify it as empty string, e.g. `path: ''`."
+        );
       }
 
+      pattern =
+        config.exact !== true
+          ? joinPaths(parentPattern || '', config.path || '')
+          : config.path || '';
+
       configs.push(
-        createConfigItem(
-          legacy,
-          screen,
-          routeNames,
-          pattern,
-          config.path,
-          config.parse
-        )
+        createConfigItem(screen, routeNames, pattern, config.path, config.parse)
       );
     }
 
@@ -429,7 +374,6 @@ const createNormalizedConfigs = (
 
       Object.keys(config.screens).forEach((nestedConfig) => {
         const result = createNormalizedConfigs(
-          legacy,
           nestedConfig,
           config.screens as PathConfigMap,
           routeNames,
@@ -448,7 +392,6 @@ const createNormalizedConfigs = (
 };
 
 const createConfigItem = (
-  legacy: boolean,
   screen: string,
   routeNames: string[],
   pattern: string,
@@ -463,12 +406,6 @@ const createConfigItem = (
         `^(${pattern
           .split('/')
           .map((it) => {
-            if (legacy && it === '*') {
-              throw new Error(
-                "Please update your config to the new format to use wildcard pattern ('*'). https://reactnavigation.org/docs/configuring-links/#updating-config"
-              );
-            }
-
             if (it.startsWith(':')) {
               return `(([^/]+\\/)${it.endsWith('?') ? '?' : ''})`;
             }
