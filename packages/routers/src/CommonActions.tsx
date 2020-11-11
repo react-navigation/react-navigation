@@ -39,9 +39,9 @@ export function goBack(): Action {
 }
 
 export function navigate(
-  route:
-    | { key: string; params?: object }
-    | { name: string; key?: string; params?: object }
+  options:
+    | { key: string; params?: object; merge?: boolean }
+    | { name: string; key?: string; params?: object; merge?: boolean }
 ): Action;
 // eslint-disable-next-line no-redeclare
 export function navigate(name: string, params?: object): Action;

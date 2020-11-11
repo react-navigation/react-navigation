@@ -294,40 +294,35 @@ export default function TabRouter({
           return changeIndex(
             {
               ...state,
-              routes:
-                action.payload.params !== undefined
-                  ? state.routes.map((route, i) => {
-                      if (i !== index) {
-                        return route;
-                      }
+              routes: state.routes.map((route, i) => {
+                if (i !== index) {
+                  return route;
+                }
 
-                      let params;
+                let params;
 
-                      if (
-                        action.type === 'NAVIGATE' &&
-                        action.payload.merge === false
-                      ) {
-                        params =
-                          routeParamList[route.name] !== undefined
-                            ? {
-                                ...routeParamList[route.name],
-                                ...action.payload.params,
-                              }
-                            : action.payload.params;
-                      } else {
-                        params = action.payload.params
-                          ? {
-                              ...route.params,
-                              ...action.payload.params,
-                            }
-                          : route.params;
-                      }
+                if (action.type === 'NAVIGATE' && action.payload.merge) {
+                  params =
+                    action.payload.params !== undefined ||
+                    routeParamList[route.name] !== undefined
+                      ? {
+                          ...routeParamList[route.name],
+                          ...route.params,
+                          ...action.payload.params,
+                        }
+                      : route.params;
+                } else {
+                  params =
+                    routeParamList[route.name] !== undefined
+                      ? {
+                          ...routeParamList[route.name],
+                          ...action.payload.params,
+                        }
+                      : action.payload.params;
+                }
 
-                      return params !== route.params
-                        ? { ...route, params }
-                        : route;
-                    })
-                  : state.routes,
+                return params !== route.params ? { ...route, params } : route;
+              }),
             },
             index,
             backBehavior,
