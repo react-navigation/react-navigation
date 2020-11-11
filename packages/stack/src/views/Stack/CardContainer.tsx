@@ -183,7 +183,6 @@ function CardContainer({
     };
   }, [pointerEvents, scene.progress.next]);
 
-  const isCurrentHeaderShown = headerMode !== 'none' && headerShown !== false;
   const previousScene = getPreviousScene({ route: scene.route });
 
   return (
@@ -213,7 +212,7 @@ function CardContainer({
       accessibilityElementsHidden={!focused}
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
       pointerEvents={active ? 'box-none' : pointerEvents}
-      pageOverflowEnabled={headerMode === 'screen' && mode === 'card'}
+      pageOverflowEnabled={headerMode !== 'float' && mode === 'card'}
       containerStyle={hasAbsoluteHeader ? { marginTop: headerHeight } : null}
       contentStyle={[{ backgroundColor: colors.background }, cardStyle]}
       style={[
@@ -229,7 +228,7 @@ function CardContainer({
         <View style={styles.scene}>
           <PreviousSceneContext.Provider value={previousScene}>
             <HeaderShownContext.Provider
-              value={isParentHeaderShown || isCurrentHeaderShown}
+              value={isParentHeaderShown || headerShown !== false}
             >
               <HeaderHeightContext.Provider value={headerHeight}>
                 {renderScene({ route: scene.route })}
@@ -237,7 +236,7 @@ function CardContainer({
             </HeaderShownContext.Provider>
           </PreviousSceneContext.Provider>
         </View>
-        {headerMode === 'screen'
+        {headerMode !== 'float'
           ? renderHeader({
               mode: 'screen',
               layout,
