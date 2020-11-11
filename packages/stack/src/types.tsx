@@ -105,7 +105,7 @@ export type Scene<T> = {
   };
 };
 
-export type StackHeaderMode = 'float' | 'screen' | 'none';
+export type StackHeaderMode = 'float' | 'screen';
 
 export type StackCardMode = 'card' | 'modal';
 

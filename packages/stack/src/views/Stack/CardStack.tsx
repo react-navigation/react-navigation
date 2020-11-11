@@ -411,7 +411,7 @@ export default class CardStack extends React.Component<Props, State> {
     let defaultTransitionPreset =
       mode === 'modal' ? ModalTransition : DefaultTransition;
 
-    if (headerMode === 'screen') {
+    if (headerMode !== 'float') {
       defaultTransitionPreset = {
         ...defaultTransitionPreset,
         headerStyleInterpolator: forNoAnimationHeader,
@@ -604,9 +604,7 @@ export default class CardStack extends React.Component<Props, State> {
             } = safeAreaInsets || {};
 
             const headerHeight =
-              headerMode !== 'none' && headerShown !== false
-                ? headerHeights[route.key]
-                : 0;
+              headerShown !== false ? headerHeights[route.key] : 0;
 
             return (
               <MaybeScreen
