@@ -116,6 +116,6 @@ export const DefaultTransition = Platform.select({
  * Default modal transition for the current platform.
  */
 export const ModalTransition = Platform.select({
-  ios: ModalSlideFromBottomIOS,
+  ios: ModalPresentationIOS,
   default: DefaultTransition,
 });

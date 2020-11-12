@@ -90,7 +90,6 @@ const hasOpacityStyle = (style: any) => {
 
 export default class Card extends React.Component<Props> {
   static defaultProps = {
-    overlayEnabled: Platform.OS !== 'ios',
     shadowEnabled: true,
     gestureEnabled: true,
     gestureVelocityImpact: GESTURE_VELOCITY_IMPACT,

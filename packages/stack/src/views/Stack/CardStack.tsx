@@ -4,6 +4,7 @@ import {
   StyleSheet,
   LayoutChangeEvent,
   Dimensions,
+  Platform,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import type {
@@ -542,7 +543,7 @@ export default class CardStack extends React.Component<Props, State> {
               headerShown = true,
               headerTransparent,
               cardShadowEnabled,
-              cardOverlayEnabled,
+              cardOverlayEnabled = Platform.OS !== 'ios' || mode === 'modal',
               cardOverlay,
               cardStyle,
               animationEnabled,

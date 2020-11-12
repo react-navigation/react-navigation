@@ -1,20 +1,21 @@
 import * as React from 'react';
-import { StackActions } from '@react-navigation/native';
+import { StackActions, useNavigationState } from '@react-navigation/native';
 
 import HeaderSegment from './HeaderSegment';
 import HeaderTitle from './HeaderTitle';
+import HeaderShownContext from '../../utils/HeaderShownContext';
+import ModalPresentationContext from '../../utils/ModalPresentationContext';
 import debounce from '../../utils/debounce';
 import type { StackHeaderProps, StackHeaderTitleProps } from '../../types';
 
-export default React.memo(function Header(props: StackHeaderProps) {
-  const {
-    scene,
-    previous,
-    layout,
-    insets,
-    navigation,
-    styleInterpolator,
-  } = props;
+export default React.memo(function Header({
+  scene,
+  previous,
+  layout,
+  insets,
+  navigation,
+  styleInterpolator,
+}: StackHeaderProps) {
   const { options } = scene.descriptor;
   const title =
     typeof options.headerTitle !== 'function' &&
@@ -54,6 +55,15 @@ export default React.memo(function Header(props: StackHeaderProps) {
     [navigation, scene.route.key]
   );
 
+  const isModal = React.useContext(ModalPresentationContext);
+  const isParentHeaderShown = React.useContext(HeaderShownContext);
+  const isFirstRouteInParent = useNavigationState(
+    (state) => state.routes[0].key === scene.route.key
+  );
+
+  const statusBarHeight =
+    (isModal && !isFirstRouteInParent) || isParentHeaderShown ? 0 : insets.top;
+
   return (
     <HeaderSegment
       {...options}
@@ -67,6 +77,7 @@ export default React.memo(function Header(props: StackHeaderProps) {
           ? (props: StackHeaderTitleProps) => <HeaderTitle {...props} />
           : options.headerTitle
       }
+      headerStatusBarHeight={statusBarHeight}
       onGoBack={previous ? goBack : undefined}
       styleInterpolator={styleInterpolator}
     />
