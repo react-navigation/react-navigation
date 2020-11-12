@@ -335,6 +335,11 @@ export type Descriptor<
   options: ScreenOptions;
 
   /**
+   * Route object for the screen
+   */
+  route: RouteProp<ParamList, RouteName>;
+
+  /**
    * Navigation object for the screen
    */
   navigation: NavigationProp<
