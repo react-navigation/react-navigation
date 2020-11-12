@@ -80,7 +80,7 @@ export default function DrawerView({
   drawerPosition = I18nManager.isRTL ? 'right' : 'left',
   keyboardDismissMode = 'on-drag',
   overlayColor = 'rgba(0, 0, 0, 0.5)',
-  drawerType = 'front',
+  drawerType = Platform.select({ ios: 'slide', default: 'front' }),
   hideStatusBar = false,
   statusBarAnimation = 'slide',
   drawerContentOptions,
