@@ -21,6 +21,7 @@ import type {
   Scene,
   StackHeaderStyleInterpolator,
   StackNavigationProp,
+  StackHeaderProps,
   GestureDirection,
 } from '../../types';
 
@@ -28,10 +29,8 @@ export type Props = {
   mode: 'float' | 'screen';
   layout: Layout;
   insets: EdgeInsets;
-  scenes: (Scene<Route<string>> | undefined)[];
-  getPreviousScene: (props: {
-    route: Route<string>;
-  }) => Scene<Route<string>> | undefined;
+  scenes: (Scene | undefined)[];
+  getPreviousScene: (props: { route: Route<string> }) => Scene | undefined;
   getFocusedRoute: () => Route<string>;
   onContentHeightChange?: (props: {
     route: Route<string>;
@@ -71,34 +70,42 @@ export default function HeaderContainer({
           return null;
         }
 
-        const isFocused = focusedRoute.key === scene.route.key;
-        const previous =
-          getPreviousScene({ route: scene.route }) ?? parentPreviousScene;
+        const isFocused = focusedRoute.key === scene.descriptor.route.key;
+        const previousScene =
+          getPreviousScene({ route: scene.descriptor.route }) ??
+          parentPreviousScene;
 
         // If the screen is next to a headerless screen, we need to make the header appear static
         // This makes the header look like it's moving with the screen
-        const previousScene = self[i - 1];
-        const nextScene = self[i + 1];
+        const previousDescriptor = self[i - 1]?.descriptor;
+        const nextDescriptor = self[i + 1]?.descriptor;
 
         const { headerShown: previousHeaderShown = true } =
-          previousScene?.descriptor.options || {};
+          previousDescriptor?.options || {};
 
         const { headerShown: nextHeaderShown = true } =
-          nextScene?.descriptor.options || {};
+          nextDescriptor?.options || {};
 
         const isHeaderStatic =
           (previousHeaderShown === false &&
             // We still need to animate when coming back from next scene
             // A hacky way to check this is if the next scene exists
-            !nextScene) ||
+            !nextDescriptor) ||
           nextHeaderShown === false;
 
-        const props = {
-          mode,
+        const props: StackHeaderProps = {
           layout,
           insets,
-          scene,
-          previous,
+          previous: previousScene
+            ? {
+                progress: previousScene.progress,
+                options: previousScene.descriptor.options,
+                route: previousScene.descriptor.route,
+              }
+            : undefined,
+          progress: scene.progress,
+          options: scene.descriptor.options,
+          route: scene.descriptor.route,
           navigation: scene.descriptor.navigation as StackNavigationProp<
             ParamListBase
           >,
@@ -117,10 +124,10 @@ export default function HeaderContainer({
 
         return (
           <NavigationContext.Provider
-            key={scene.route.key}
+            key={scene.descriptor.route.key}
             value={scene.descriptor.navigation}
           >
-            <NavigationRouteContext.Provider value={scene.route}>
+            <NavigationRouteContext.Provider value={scene.descriptor.route}>
               <View
                 onLayout={
                   onContentHeightChange
@@ -128,7 +135,7 @@ export default function HeaderContainer({
                         const { height } = e.nativeEvent.layout;
 
                         onContentHeightChange({
-                          route: scene.route,
+                          route: scene.descriptor.route,
                           height,
                         });
                       }

@@ -75,34 +75,32 @@ export type GestureDirection =
   | 'vertical'
   | 'vertical-inverted';
 
-export type Scene<T> = {
+export type Scene = {
   /**
-   * Current route object,
-   */
-  route: T;
-  /**
-   * Descriptor object for the route containing options and navigation object.
+   * Descriptor object for the screen.
    */
   descriptor: StackDescriptor;
   /**
    * Animated nodes representing the progress of the animation.
    */
-  progress: {
-    /**
-     * Progress value of the current screen.
-     */
-    current: Animated.AnimatedInterpolation;
-    /**
-     * Progress value for the screen after this one in the stack.
-     * This can be `undefined` in case the screen animating is the last one.
-     */
-    next?: Animated.AnimatedInterpolation;
-    /**
-     * Progress value for the screen before this one in the stack.
-     * This can be `undefined` in case the screen animating is the first one.
-     */
-    previous?: Animated.AnimatedInterpolation;
-  };
+  progress: SceneProgress;
+};
+
+export type SceneProgress = {
+  /**
+   * Progress value of the current screen.
+   */
+  current: Animated.AnimatedInterpolation;
+  /**
+   * Progress value for the screen after this one in the stack.
+   * This can be `undefined` in case the screen animating is the last one.
+   */
+  next?: Animated.AnimatedInterpolation;
+  /**
+   * Progress value for the screen before this one in the stack.
+   * This can be `undefined` in case the screen animating is the first one.
+   */
+  previous?: Animated.AnimatedInterpolation;
 };
 
 export type StackHeaderMode = 'float' | 'screen';
@@ -222,11 +220,6 @@ export type StackHeaderOptions = {
 
 export type StackHeaderProps = {
   /**
-   * Mode of the header: `float` renders a single floating header across all screens,
-   * `screen` renders separate headers for each screen.
-   */
-  mode: 'float' | 'screen';
-  /**
    * Layout of the screen.
    */
   layout: Layout;
@@ -235,13 +228,34 @@ export type StackHeaderProps = {
    */
   insets: EdgeInsets;
   /**
-   * Object representing the current scene, such as the route object and animation progress.
-   */
-  scene: Scene<Route<string>>;
-  /**
    * Object representing the previous scene.
    */
-  previous?: Scene<Route<string>>;
+  previous?: {
+    /**
+     * Options for the previous screen.
+     */
+    options: StackNavigationOptions;
+    /**
+     * Route object for the current screen.
+     */
+    route: Route<string>;
+    /**
+     * Animated nodes representing the progress of the animation of the previous screen.
+     */
+    progress: SceneProgress;
+  };
+  /**
+   * Animated nodes representing the progress of the animation.
+   */
+  progress: SceneProgress;
+  /**
+   * Options for the current screen.
+   */
+  options: StackNavigationOptions;
+  /**
+   * Route object for the current screen.
+   */
+  route: Route<string>;
   /**
    * Navigation prop for the header.
    */

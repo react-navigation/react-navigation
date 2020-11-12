@@ -9,21 +9,22 @@ import debounce from '../../utils/debounce';
 import type { StackHeaderProps, StackHeaderTitleProps } from '../../types';
 
 export default React.memo(function Header({
-  scene,
   previous,
   layout,
   insets,
+  progress,
+  options,
+  route,
   navigation,
   styleInterpolator,
 }: StackHeaderProps) {
-  const { options } = scene.descriptor;
   const title =
     typeof options.headerTitle !== 'function' &&
     options.headerTitle !== undefined
       ? options.headerTitle
       : options.title !== undefined
       ? options.title
-      : scene.route.name;
+      : route.name;
 
   let leftLabel;
 
@@ -32,7 +33,7 @@ export default React.memo(function Header({
   if (options.headerBackTitle !== undefined) {
     leftLabel = options.headerBackTitle;
   } else if (previous) {
-    const o = previous.descriptor.options;
+    const o = previous.options;
 
     leftLabel =
       typeof o.headerTitle !== 'function' && o.headerTitle !== undefined
@@ -48,17 +49,17 @@ export default React.memo(function Header({
       if (navigation.isFocused() && navigation.canGoBack()) {
         navigation.dispatch({
           ...StackActions.pop(),
-          source: scene.route.key,
+          source: route.key,
         });
       }
     }, 50),
-    [navigation, scene.route.key]
+    [navigation, route.key]
   );
 
   const isModal = React.useContext(ModalPresentationContext);
   const isParentHeaderShown = React.useContext(HeaderShownContext);
   const isFirstRouteInParent = useNavigationState(
-    (state) => state.routes[0].key === scene.route.key
+    (state) => state.routes[0].key === route.key
   );
 
   const statusBarHeight =
@@ -67,9 +68,9 @@ export default React.memo(function Header({
   return (
     <HeaderSegment
       {...options}
+      progress={progress}
       insets={insets}
       layout={layout}
-      scene={scene}
       title={title}
       leftLabel={leftLabel}
       headerTitle={

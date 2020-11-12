@@ -28,7 +28,12 @@ export const getDefaultHeaderHeight = (
   return headerHeight + statusBarHeight;
 };
 
-export default function HeaderSegment({ scene, layout }: DrawerHeaderProps) {
+export default function HeaderSegment({
+  route,
+  navigation,
+  options,
+  layout,
+}: DrawerHeaderProps) {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
 
@@ -48,14 +53,14 @@ export default function HeaderSegment({ scene, layout }: DrawerHeaderProps) {
     headerPressColorAndroid,
     headerStyle,
     headerStatusBarHeight = insets.top,
-  } = scene.descriptor.options;
+  } = options;
 
   const currentTitle =
     typeof headerTitle !== 'function' && headerTitle !== undefined
       ? headerTitle
       : title !== undefined
       ? title
-      : scene.route.name;
+      : route.name;
 
   const defaultHeight = getDefaultHeaderHeight(layout, headerStatusBarHeight);
 
@@ -69,9 +74,7 @@ export default function HeaderSegment({ scene, layout }: DrawerHeaderProps) {
       accessibilityLabel={headerLeftAccessibilityLabel}
       accessibilityTraits="button"
       delayPressIn={0}
-      onPress={() =>
-        scene.descriptor.navigation.dispatch(DrawerActions.toggleDrawer())
-      }
+      onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
       style={styles.touchable}
       pressColor={headerPressColorAndroid}
       hitSlop={Platform.select({

@@ -34,6 +34,7 @@ import type {
   DrawerNavigationHelpers,
   DrawerContentComponentProps,
   DrawerHeaderProps,
+  DrawerNavigationProp,
 } from '../types';
 
 type Props = DrawerNavigationConfig & {
@@ -191,7 +192,11 @@ export default function DrawerView({
                   <NavigationRouteContext.Provider value={route}>
                     {header({
                       layout: dimensions,
-                      scene: { route, descriptor },
+                      route: descriptor.route,
+                      navigation: descriptor.navigation as DrawerNavigationProp<
+                        ParamListBase
+                      >,
+                      options: descriptor.options,
                     })}
                   </NavigationRouteContext.Provider>
                 </NavigationContext.Provider>
