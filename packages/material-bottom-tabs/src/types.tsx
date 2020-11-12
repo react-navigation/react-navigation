@@ -83,15 +83,15 @@ export type MaterialBottomTabNavigationOptions = {
 };
 
 export type MaterialBottomTabDescriptor = Descriptor<
-  ParamListBase,
-  string,
-  TabNavigationState<ParamListBase>,
-  MaterialBottomTabNavigationOptions
+  MaterialBottomTabNavigationOptions,
+  MaterialBottomTabNavigationProp<ParamListBase>,
+  RouteProp<ParamListBase, string>
 >;
 
-export type MaterialBottomTabDescriptorMap = {
-  [key: string]: MaterialBottomTabDescriptor;
-};
+export type MaterialBottomTabDescriptorMap = Record<
+  string,
+  MaterialBottomTabDescriptor
+>;
 
 export type MaterialBottomTabNavigationConfig = Partial<
   Omit<

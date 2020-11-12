@@ -93,15 +93,15 @@ export type MaterialTopTabNavigationOptions = {
 };
 
 export type MaterialTopTabDescriptor = Descriptor<
-  ParamListBase,
-  string,
-  TabNavigationState<ParamListBase>,
-  MaterialTopTabNavigationOptions
+  MaterialTopTabNavigationOptions,
+  MaterialTopTabNavigationProp<ParamListBase>,
+  RouteProp<ParamListBase, string>
 >;
 
-export type MaterialTopTabDescriptorMap = {
-  [key: string]: MaterialTopTabDescriptor;
-};
+export type MaterialTopTabDescriptorMap = Record<
+  string,
+  MaterialTopTabDescriptor
+>;
 
 export type MaterialTopTabNavigationConfig = Partial<
   Omit<

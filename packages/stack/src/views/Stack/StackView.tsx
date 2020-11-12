@@ -16,12 +16,12 @@ import HeaderContainer, {
   Props as HeaderContainerProps,
 } from '../Header/HeaderContainer';
 import SafeAreaProviderCompat from '../SafeAreaProviderCompat';
+import HeaderShownContext from '../../utils/HeaderShownContext';
 import type {
   StackNavigationHelpers,
   StackNavigationConfig,
   StackDescriptorMap,
 } from '../../types';
-import HeaderShownContext from '../../utils/HeaderShownContext';
 
 type Props = StackNavigationConfig & {
   state: StackNavigationState<ParamListBase>;

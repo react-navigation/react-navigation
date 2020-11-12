@@ -21,6 +21,7 @@ import type {
   RouteConfig,
   RouteProp,
   EventMapBase,
+  NavigationProp,
 } from './types';
 
 type Options<
@@ -50,7 +51,7 @@ type Options<
   addKeyedListener: AddKeyedListener;
   onRouteFocus: (key: string) => void;
   router: Router<State, NavigationAction>;
-  emitter: NavigationEventEmitter<any>;
+  emitter: NavigationEventEmitter<EventMap>;
 };
 
 /**
@@ -63,6 +64,7 @@ type Options<
  */
 export default function useDescriptors<
   State extends NavigationState,
+  ActionHelpers extends Record<string, () => void>,
   ScreenOptions extends {},
   EventMap extends EventMapBase
 >({
@@ -105,7 +107,7 @@ export default function useDescriptors<
     ]
   );
 
-  const navigations = useNavigationCache<State, ScreenOptions>({
+  const navigations = useNavigationCache<State, ScreenOptions, EventMap>({
     state,
     getState,
     navigation,
@@ -117,7 +119,15 @@ export default function useDescriptors<
   const routes = useRouteCache(state.routes);
 
   return routes.reduce<
-    Record<string, Descriptor<ParamListBase, string, State, ScreenOptions>>
+    Record<
+      string,
+      Descriptor<
+        ScreenOptions,
+        NavigationProp<ParamListBase, string, State, ScreenOptions, EventMap> &
+          ActionHelpers,
+        RouteProp<ParamListBase, string>
+      >
+    >
   >((acc, route, i) => {
     const screen = screens[route.name];
     const navigation = navigations[route.key];
@@ -145,6 +155,7 @@ export default function useDescriptors<
 
     acc[route.key] = {
       route,
+      // @ts-expect-error: it's missing action helpers, fix later
       navigation,
       render() {
         return (
