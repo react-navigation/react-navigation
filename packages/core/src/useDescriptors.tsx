@@ -144,6 +144,7 @@ export default function useDescriptors<
     };
 
     acc[route.key] = {
+      route,
       navigation,
       render() {
         return (
