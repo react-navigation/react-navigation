@@ -291,16 +291,7 @@ export type DrawerHeaderProps = {
   navigation: DrawerNavigationProp<ParamListBase>;
 };
 
-export type DrawerNavigationEventMap = {
-  /**
-   * Event which fires when the drawer opens.
-   */
-  drawerOpen: { data: undefined };
-  /**
-   * Event which fires when the drawer closes.
-   */
-  drawerClose: { data: undefined };
-};
+export type DrawerNavigationEventMap = {};
 
 export type DrawerNavigationHelpers = NavigationHelpers<
   ParamListBase,

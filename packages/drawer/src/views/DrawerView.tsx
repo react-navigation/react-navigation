@@ -113,14 +113,6 @@ export default function DrawerView({
   }, [navigation, state.key]);
 
   React.useEffect(() => {
-    if (isDrawerOpen) {
-      navigation.emit({ type: 'drawerOpen' });
-    } else {
-      navigation.emit({ type: 'drawerClose' });
-    }
-  }, [isDrawerOpen, navigation]);
-
-  React.useEffect(() => {
     let subscription: NativeEventSubscription | undefined;
 
     if (isDrawerOpen) {
