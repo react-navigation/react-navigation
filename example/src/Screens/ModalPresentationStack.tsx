@@ -6,7 +6,6 @@ import {
   createStackNavigator,
   StackScreenProps,
   StackNavigationOptions,
-  TransitionPresets,
 } from '@react-navigation/stack';
 import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
@@ -88,17 +87,17 @@ export default function SimpleStackScreen({ navigation, options }: Props) {
   return (
     <ModalPresentationStack.Navigator
       mode="modal"
-      screenOptions={({ route, navigation }) => ({
-        ...TransitionPresets.ModalPresentationIOS,
-        cardOverlayEnabled: true,
-        gestureEnabled: true,
-        headerStatusBarHeight:
-          navigation
-            .dangerouslyGetState()
-            .routes.findIndex((r: any) => r.key === route.key) > 0
-            ? 0
-            : undefined,
-      })}
+      // screenOptions={({ route, navigation }) => ({
+      //   ...TransitionPresets.ModalPresentationIOS,
+      //   cardOverlayEnabled: true,
+      //   gestureEnabled: true,
+      //   headerStatusBarHeight:
+      //     navigation
+      //       .dangerouslyGetState()
+      //       .routes.findIndex((r: any) => r.key === route.key) > 0
+      //       ? 0
+      //       : undefined,
+      // })}
       {...options}
     >
       <ModalPresentationStack.Screen

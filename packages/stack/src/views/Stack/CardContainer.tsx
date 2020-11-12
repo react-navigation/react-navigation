@@ -3,9 +3,11 @@ import { Animated, View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { Route, useTheme } from '@react-navigation/native';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
+import { forModalPresentationIOS } from '../../TransitionConfigs/CardStyleInterpolators';
 import HeaderHeightContext from '../../utils/HeaderHeightContext';
 import HeaderShownContext from '../../utils/HeaderShownContext';
 import PreviousSceneContext from '../../utils/PreviousSceneContext';
+import ModalPresentationContext from '../../utils/ModalPresentationContext';
 import type {
   Scene,
   Layout,
@@ -29,7 +31,7 @@ type Props = TransitionPreset & {
   cardOverlay?: (props: {
     style: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   }) => React.ReactNode;
-  cardOverlayEnabled?: boolean;
+  cardOverlayEnabled: boolean;
   cardShadowEnabled?: boolean;
   cardStyle?: StyleProp<ViewStyle>;
   getPreviousScene: (props: {
@@ -184,6 +186,7 @@ function CardContainer({
   }, [pointerEvents, scene.progress.next]);
 
   const previousScene = getPreviousScene({ route: scene.route });
+  const isModalPresentation = cardStyleInterpolator === forModalPresentationIOS;
 
   return (
     <Card
@@ -236,8 +239,9 @@ function CardContainer({
             </HeaderShownContext.Provider>
           </PreviousSceneContext.Provider>
         </View>
-        {headerMode !== 'float'
-          ? renderHeader({
+        {headerMode !== 'float' ? (
+          <ModalPresentationContext.Provider value={isModalPresentation}>
+            {renderHeader({
               mode: 'screen',
               layout,
               insets,
@@ -247,8 +251,9 @@ function CardContainer({
               gestureDirection,
               styleInterpolator: headerStyleInterpolator,
               onContentHeightChange: onHeaderHeightChange,
-            })
-          : null}
+            })}
+          </ModalPresentationContext.Provider>
+        ) : null}
       </View>
     </Card>
   );

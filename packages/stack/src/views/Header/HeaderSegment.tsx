@@ -11,7 +11,6 @@ import type { EdgeInsets } from 'react-native-safe-area-context';
 import type { Route } from '@react-navigation/native';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderBackground from './HeaderBackground';
-import HeaderShownContext from '../../utils/HeaderShownContext';
 import memoize from '../../utils/memoize';
 import type {
   Layout,
@@ -22,8 +21,12 @@ import type {
   Scene,
 } from '../../types';
 
-type Props = StackHeaderOptions & {
+type Props = Omit<
+  StackHeaderOptions,
+  'headerTitle' | 'headerStatusBarHeight'
+> & {
   headerTitle: (props: StackHeaderTitleProps) => React.ReactNode;
+  headerStatusBarHeight: number;
   layout: Layout;
   insets: EdgeInsets;
   onGoBack?: () => void;
@@ -80,8 +83,6 @@ export default function HeaderSegment(props: Props) {
   const [titleLayout, setTitleLayout] = React.useState<Layout | undefined>(
     undefined
   );
-
-  const isParentHeaderShown = React.useContext(HeaderShownContext);
 
   const handleTitleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
@@ -171,7 +172,7 @@ export default function HeaderSegment(props: Props) {
     headerRightContainerStyle: rightContainerStyle,
     headerTitleContainerStyle: titleContainerStyle,
     headerStyle: customHeaderStyle,
-    headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
+    headerStatusBarHeight,
     styleInterpolator,
   } = props;
 
