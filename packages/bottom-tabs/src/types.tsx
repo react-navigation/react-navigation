@@ -153,15 +153,12 @@ export type BottomTabNavigationOptions = {
 };
 
 export type BottomTabDescriptor = Descriptor<
-  ParamListBase,
-  string,
-  TabNavigationState<ParamListBase>,
-  BottomTabNavigationOptions
+  BottomTabNavigationOptions,
+  BottomTabNavigationProp<ParamListBase>,
+  RouteProp<ParamListBase, string>
 >;
 
-export type BottomTabDescriptorMap = {
-  [key: string]: BottomTabDescriptor;
-};
+export type BottomTabDescriptorMap = Record<string, BottomTabDescriptor>;
 
 export type BottomTabNavigationConfig<T = BottomTabBarOptions> = {
   /**

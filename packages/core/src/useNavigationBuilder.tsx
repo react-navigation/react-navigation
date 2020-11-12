@@ -533,7 +533,12 @@ export default function useNavigationBuilder<
     getStateListeners: keyedListeners.getState,
   });
 
-  const descriptors = useDescriptors<State, ScreenOptions, EventMap>({
+  const descriptors = useDescriptors<
+    State,
+    ActionHelpers,
+    ScreenOptions,
+    EventMap
+  >({
     state,
     screens,
     navigation,
@@ -545,6 +550,7 @@ export default function useNavigationBuilder<
     addListener,
     addKeyedListener,
     router,
+    // @ts-expect-error: this should have both core and custom events, but too much work right now
     emitter,
   });
 

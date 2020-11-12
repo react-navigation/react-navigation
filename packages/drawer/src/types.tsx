@@ -284,7 +284,7 @@ export type DrawerHeaderProps = {
   /**
    * Route object for the current screen.
    */
-  route: Route<string>;
+  route: RouteProp<ParamListBase, string>;
   /**
    * Navigation prop for the header.
    */
@@ -329,12 +329,9 @@ export type DrawerScreenProps<
 };
 
 export type DrawerDescriptor = Descriptor<
-  ParamListBase,
-  string,
-  DrawerNavigationState<ParamListBase>,
-  DrawerNavigationOptions
+  DrawerNavigationOptions,
+  DrawerNavigationProp<ParamListBase>,
+  RouteProp<ParamListBase, string>
 >;
 
-export type DrawerDescriptorMap = {
-  [key: string]: DrawerDescriptor;
-};
+export type DrawerDescriptorMap = Record<string, DrawerDescriptor>;

@@ -318,11 +318,9 @@ export type CompositeNavigationProp<
   >;
 
 export type Descriptor<
-  ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string,
-  State extends NavigationState = NavigationState,
-  ScreenOptions extends {} = {},
-  EventMap extends EventMapBase = {}
+  ScreenOptions extends {},
+  Navigation extends NavigationProp<any, any, any, any, any>,
+  Route extends RouteProp<any, any>
 > = {
   /**
    * Render the component associated with this route.
@@ -337,18 +335,12 @@ export type Descriptor<
   /**
    * Route object for the screen
    */
-  route: RouteProp<ParamList, RouteName>;
+  route: Route;
 
   /**
    * Navigation object for the screen
    */
-  navigation: NavigationProp<
-    ParamList,
-    RouteName,
-    State,
-    ScreenOptions,
-    EventMap
-  >;
+  navigation: Navigation;
 };
 
 export type ScreenListeners<

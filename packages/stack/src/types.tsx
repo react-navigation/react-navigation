@@ -238,7 +238,7 @@ export type StackHeaderProps = {
     /**
      * Route object for the current screen.
      */
-    route: Route<string>;
+    route: RouteProp<ParamListBase, string>;
     /**
      * Animated nodes representing the progress of the animation of the previous screen.
      */
@@ -267,15 +267,12 @@ export type StackHeaderProps = {
 };
 
 export type StackDescriptor = Descriptor<
-  ParamListBase,
-  string,
-  StackNavigationState<ParamListBase>,
-  StackNavigationOptions
+  StackNavigationOptions,
+  StackNavigationProp<ParamListBase>,
+  RouteProp<ParamListBase, string>
 >;
 
-export type StackDescriptorMap = {
-  [key: string]: StackDescriptor;
-};
+export type StackDescriptorMap = Record<string, StackDescriptor>;
 
 export type StackNavigationOptions = StackHeaderOptions &
   Partial<TransitionPreset> & {
