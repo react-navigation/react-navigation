@@ -9,11 +9,11 @@ import HeaderShownContext from '../../utils/HeaderShownContext';
 import PreviousSceneContext from '../../utils/PreviousSceneContext';
 import ModalPresentationContext from '../../utils/ModalPresentationContext';
 import type {
-  Scene,
   Layout,
   StackHeaderMode,
   StackCardMode,
   TransitionPreset,
+  Scene,
 } from '../../types';
 
 type Props = TransitionPreset & {
@@ -23,7 +23,7 @@ type Props = TransitionPreset & {
   closing: boolean;
   layout: Layout;
   gesture: Animated.Value;
-  scene: Scene<Route<string>>;
+  scene: Scene;
   safeAreaInsetTop: number;
   safeAreaInsetRight: number;
   safeAreaInsetBottom: number;
@@ -34,9 +34,7 @@ type Props = TransitionPreset & {
   cardOverlayEnabled: boolean;
   cardShadowEnabled?: boolean;
   cardStyle?: StyleProp<ViewStyle>;
-  getPreviousScene: (props: {
-    route: Route<string>;
-  }) => Scene<Route<string>> | undefined;
+  getPreviousScene: (props: { route: Route<string> }) => Scene | undefined;
   getFocusedRoute: () => Route<string>;
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
   renderScene: (props: { route: Route<string> }) => React.ReactNode;
@@ -123,27 +121,27 @@ function CardContainer({
   }, [active, onPageChangeConfirm]);
 
   const handleOpen = () => {
-    onTransitionEnd?.({ route: scene.route }, false);
-    onOpenRoute({ route: scene.route });
+    onTransitionEnd?.({ route: scene.descriptor.route }, false);
+    onOpenRoute({ route: scene.descriptor.route });
   };
 
   const handleClose = () => {
-    onTransitionEnd?.({ route: scene.route }, true);
-    onCloseRoute({ route: scene.route });
+    onTransitionEnd?.({ route: scene.descriptor.route }, true);
+    onCloseRoute({ route: scene.descriptor.route });
   };
 
   const handleGestureBegin = () => {
     onPageChangeStart?.();
-    onGestureStart?.({ route: scene.route });
+    onGestureStart?.({ route: scene.descriptor.route });
   };
 
   const handleGestureCanceled = () => {
     onPageChangeCancel?.();
-    onGestureCancel?.({ route: scene.route });
+    onGestureCancel?.({ route: scene.descriptor.route });
   };
 
   const handleGestureEnd = () => {
-    onGestureEnd?.({ route: scene.route });
+    onGestureEnd?.({ route: scene.descriptor.route });
   };
 
   const handleTransitionStart = ({ closing }: { closing: boolean }) => {
@@ -153,7 +151,7 @@ function CardContainer({
       onPageChangeCancel?.();
     }
 
-    onTransitionStart?.({ route: scene.route }, closing);
+    onTransitionStart?.({ route: scene.descriptor.route }, closing);
   };
 
   const insets = {
@@ -185,7 +183,7 @@ function CardContainer({
     };
   }, [pointerEvents, scene.progress.next]);
 
-  const previousScene = getPreviousScene({ route: scene.route });
+  const previousScene = getPreviousScene({ route: scene.descriptor.route });
   const isModalPresentation = cardStyleInterpolator === forModalPresentationIOS;
 
   return (
@@ -234,7 +232,7 @@ function CardContainer({
               value={isParentHeaderShown || headerShown !== false}
             >
               <HeaderHeightContext.Provider value={headerHeight}>
-                {renderScene({ route: scene.route })}
+                {renderScene({ route: scene.descriptor.route })}
               </HeaderHeightContext.Provider>
             </HeaderShownContext.Provider>
           </PreviousSceneContext.Provider>

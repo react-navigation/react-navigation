@@ -278,12 +278,17 @@ export type DrawerHeaderProps = {
    */
   layout: Layout;
   /**
-   * Object representing the current scene, such as the route object and descriptor.
+   * Options for the current screen.
    */
-  scene: {
-    route: Route<string>;
-    descriptor: DrawerDescriptor;
-  };
+  options: DrawerNavigationOptions;
+  /**
+   * Route object for the current screen.
+   */
+  route: Route<string>;
+  /**
+   * Navigation prop for the header.
+   */
+  navigation: DrawerNavigationProp<ParamListBase>;
 };
 
 export type DrawerNavigationEventMap = {

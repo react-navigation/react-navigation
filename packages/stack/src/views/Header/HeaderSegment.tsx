@@ -8,7 +8,6 @@ import {
   ViewStyle,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
-import type { Route } from '@react-navigation/native';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderBackground from './HeaderBackground';
 import memoize from '../../utils/memoize';
@@ -18,7 +17,7 @@ import type {
   StackHeaderLeftButtonProps,
   StackHeaderTitleProps,
   StackHeaderOptions,
-  Scene,
+  SceneProgress,
 } from '../../types';
 
 type Props = Omit<
@@ -32,7 +31,7 @@ type Props = Omit<
   onGoBack?: () => void;
   title?: string;
   leftLabel?: string;
-  scene: Scene<Route<string>>;
+  progress: SceneProgress;
   styleInterpolator: StackHeaderStyleInterpolator;
 };
 
@@ -140,7 +139,7 @@ export default function HeaderSegment(props: Props) {
   );
 
   const {
-    scene,
+    progress,
     layout,
     insets,
     title: currentTitle,
@@ -281,8 +280,8 @@ export default function HeaderSegment(props: Props) {
   } = getInterpolatedStyle(
     styleInterpolator,
     layout,
-    scene.progress.current,
-    scene.progress.next,
+    progress.current,
+    progress.next,
     titleLayout,
     previousTitle ? leftLabelLayout : undefined,
     typeof height === 'number' ? height : defaultHeight

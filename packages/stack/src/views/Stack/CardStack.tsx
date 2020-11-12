@@ -32,10 +32,10 @@ import type {
   Layout,
   StackHeaderMode,
   StackCardMode,
-  Scene,
   StackDescriptorMap,
   StackNavigationOptions,
   StackDescriptor,
+  Scene,
 } from '../../types';
 
 type GestureValues = {
@@ -77,7 +77,7 @@ type Props = {
 type State = {
   routes: Route<string>[];
   descriptors: StackDescriptorMap;
-  scenes: Scene<Route<string>>[];
+  scenes: Scene[];
   gestures: GestureValues;
   layout: Layout;
   headerHeights: Record<string, number>;
@@ -248,7 +248,6 @@ export default class CardStack extends React.Component<Props, State> {
               : undefined,
           },
           __memo: [
-            route,
             state.layout,
             descriptor,
             nextDescriptor,
@@ -365,7 +364,7 @@ export default class CardStack extends React.Component<Props, State> {
 
     if (previousRoute) {
       const previousScene = scenes.find(
-        (scene) => scene.route.key === previousRoute.key
+        (scene) => scene.descriptor.route.key === previousRoute.key
       );
 
       return previousScene;
