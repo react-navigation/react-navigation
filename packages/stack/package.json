@@ -61,7 +61,6 @@
     "typescript": "^4.0.3"
   },
   "peerDependencies": {
-    "@react-native-masked-view/masked-view": ">= 0.2.0",
     "@react-navigation/native": "^5.0.5",
     "react": "*",
     "react-native": "*",
