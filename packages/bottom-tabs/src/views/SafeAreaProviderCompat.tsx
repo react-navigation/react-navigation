@@ -1,35 +1,29 @@
 import * as React from 'react';
+import { Platform } from 'react-native';
 import {
   SafeAreaProvider,
-  SafeAreaConsumer,
-  initialWindowSafeAreaInsets,
+  SafeAreaInsetsContext,
+  initialWindowMetrics,
 } from 'react-native-safe-area-context';
-import {
-  getStatusBarHeight,
-  getBottomSpace,
-} from 'react-native-iphone-x-helper';
-
-// The provider component for safe area initializes asynchornously
-// Until the insets are available, there'll be blank screen
-// To avoid the blank screen, we specify some initial values
-export const initialSafeAreaInsets = {
-  // Approximate values which are good enough for most cases
-  top: getStatusBarHeight(true),
-  bottom: getBottomSpace(),
-  right: 0,
-  left: 0,
-  // If we are on a newer version of the library, we can get the correct window insets
-  // The component might not be filling the window, but this is good enough for most cases
-  ...initialWindowSafeAreaInsets,
-};
 
 type Props = {
   children: React.ReactNode;
 };
 
+// To support SSR on web, we need to have empty insets for initial values
+// Otherwise there can be mismatch between SSR and client output
+// We also need to specify empty values to support tests environments
+const initialMetrics =
+  Platform.OS === 'web' || initialWindowMetrics == null
+    ? {
+        frame: { x: 0, y: 0, width: 0, height: 0 },
+        insets: { top: 0, left: 0, right: 0, bottom: 0 },
+      }
+    : initialWindowMetrics;
+
 export default function SafeAreaProviderCompat({ children }: Props) {
   return (
-    <SafeAreaConsumer>
+    <SafeAreaInsetsContext.Consumer>
       {(insets) => {
         if (insets) {
           // If we already have insets, don't wrap the stack in another safe area provider
@@ -39,11 +33,11 @@ export default function SafeAreaProviderCompat({ children }: Props) {
         }
 
         return (
-          <SafeAreaProvider initialSafeAreaInsets={initialSafeAreaInsets}>
+          <SafeAreaProvider initialMetrics={initialMetrics}>
             {children}
           </SafeAreaProvider>
         );
       }}
-    </SafeAreaConsumer>
+    </SafeAreaInsetsContext.Consumer>
   );
 }

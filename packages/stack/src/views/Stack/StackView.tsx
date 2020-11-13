@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { View, Platform, StyleSheet } from 'react-native';
-import { SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
+import {
+  SafeAreaInsetsContext,
+  EdgeInsets,
+} from 'react-native-safe-area-context';
 import {
   NavigationHelpersContext,
   StackActions,
@@ -453,7 +456,7 @@ export default class StackView extends React.Component<Props, State> {
       <NavigationHelpersContext.Provider value={navigation}>
         <GestureHandlerWrapper style={styles.container}>
           <SafeAreaProviderCompat>
-            <SafeAreaConsumer>
+            <SafeAreaInsetsContext.Consumer>
               {(insets) => (
                 <KeyboardManager enabled={keyboardHandlingEnabled !== false}>
                   {(props) => (
@@ -488,7 +491,7 @@ export default class StackView extends React.Component<Props, State> {
                   )}
                 </KeyboardManager>
               )}
-            </SafeAreaConsumer>
+            </SafeAreaInsetsContext.Consumer>
           </SafeAreaProviderCompat>
         </GestureHandlerWrapper>
       </NavigationHelpersContext.Provider>

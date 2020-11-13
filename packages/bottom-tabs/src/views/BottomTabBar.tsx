@@ -17,7 +17,7 @@ import {
   useTheme,
   useLinkBuilder,
 } from '@react-navigation/native';
-import { useSafeArea, EdgeInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets, EdgeInsets } from 'react-native-safe-area-context';
 
 import BottomTabItem from './BottomTabItem';
 import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
@@ -232,7 +232,7 @@ export default function BottomTabBar({
 
   const { routes } = state;
 
-  const defaultInsets = useSafeArea();
+  const defaultInsets = useSafeAreaInsets();
 
   const insets = {
     top: safeAreaInsets?.top ?? defaultInsets.top,
