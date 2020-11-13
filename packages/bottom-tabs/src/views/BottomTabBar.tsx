@@ -17,17 +17,16 @@ import {
   useTheme,
   useLinkBuilder,
 } from '@react-navigation/native';
-import { useSafeAreaInsets, EdgeInsets } from 'react-native-safe-area-context';
+import type { EdgeInsets } from 'react-native-safe-area-context';
 
 import BottomTabItem from './BottomTabItem';
 import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
 import useWindowDimensions from '../utils/useWindowDimensions';
 import useIsKeyboardShown from '../utils/useIsKeyboardShown';
-import type { BottomTabBarProps, LabelPosition } from '../types';
+import type { BottomTabBarProps, BottomTabDescriptorMap } from '../types';
 
 type Props = BottomTabBarProps & {
-  activeTintColor?: string;
-  inactiveTintColor?: string;
+  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 };
 
 const DEFAULT_TABBAR_HEIGHT = 49;
@@ -38,44 +37,47 @@ const useNativeDriver = Platform.OS !== 'web';
 
 type Options = {
   state: TabNavigationState<ParamListBase>;
+  descriptors: BottomTabDescriptorMap;
   layout: { height: number; width: number };
   dimensions: { height: number; width: number };
-  tabStyle: StyleProp<ViewStyle>;
-  labelPosition: LabelPosition | undefined;
-  adaptive: boolean | undefined;
 };
 
 const shouldUseHorizontalLabels = ({
   state,
+  descriptors,
   layout,
   dimensions,
-  adaptive = true,
-  labelPosition,
-  tabStyle,
 }: Options) => {
-  if (labelPosition) {
-    return labelPosition === 'beside-icon';
+  const { tabBarLabelPosition, tabBarAdaptive = true } = descriptors[
+    state.routes[state.index].key
+  ].options;
+
+  if (tabBarLabelPosition) {
+    return tabBarLabelPosition === 'beside-icon';
   }
 
-  if (!adaptive) {
+  if (!tabBarAdaptive) {
     return false;
   }
 
   if (layout.width >= 768) {
     // Screen size matches a tablet
-    let maxTabItemWidth = DEFAULT_MAX_TAB_ITEM_WIDTH;
+    const maxTabWidth = state.routes.reduce((acc, route) => {
+      const { tabBarItemStyle } = descriptors[route.key].options;
+      const flattenedStyle = StyleSheet.flatten(tabBarItemStyle);
 
-    const flattenedStyle = StyleSheet.flatten(tabStyle);
-
-    if (flattenedStyle) {
-      if (typeof flattenedStyle.width === 'number') {
-        maxTabItemWidth = flattenedStyle.width;
-      } else if (typeof flattenedStyle.maxWidth === 'number') {
-        maxTabItemWidth = flattenedStyle.maxWidth;
+      if (flattenedStyle) {
+        if (typeof flattenedStyle.width === 'number') {
+          return acc + flattenedStyle.width;
+        } else if (typeof flattenedStyle.maxWidth === 'number') {
+          return acc + flattenedStyle.maxWidth;
+        }
       }
-    }
 
-    return state.routes.length * maxTabItemWidth <= layout.width;
+      return acc + DEFAULT_MAX_TAB_ITEM_WIDTH;
+    }, 0);
+
+    return maxTabWidth <= layout.width;
   } else {
     return dimensions.width > dimensions.height;
   }
@@ -85,13 +87,15 @@ const getPaddingBottom = (insets: EdgeInsets) =>
   Math.max(insets.bottom - Platform.select({ ios: 4, default: 0 }), 0);
 
 export const getTabBarHeight = ({
+  state,
+  descriptors,
   dimensions,
   insets,
   style,
   ...rest
 }: Options & {
   insets: EdgeInsets;
-  style: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+  style: Animated.WithAnimatedValue<StyleProp<ViewStyle>> | undefined;
 }) => {
   // @ts-ignore
   const customHeight = StyleSheet.flatten(style)?.height;
@@ -101,7 +105,12 @@ export const getTabBarHeight = ({
   }
 
   const isLandscape = dimensions.width > dimensions.height;
-  const horizontalLabels = shouldUseHorizontalLabels({ dimensions, ...rest });
+  const horizontalLabels = shouldUseHorizontalLabels({
+    state,
+    descriptors,
+    dimensions,
+    ...rest,
+  });
   const paddingBottom = getPaddingBottom(insets);
 
   if (
@@ -120,20 +129,8 @@ export default function BottomTabBar({
   state,
   navigation,
   descriptors,
-  activeBackgroundColor,
-  activeTintColor,
-  adaptive,
-  allowFontScaling,
-  inactiveBackgroundColor,
-  inactiveTintColor,
-  keyboardHidesTabBar = false,
-  labelPosition,
-  labelStyle,
-  iconStyle,
-  safeAreaInsets,
-  showLabel,
+  insets,
   style,
-  tabStyle,
 }: Props) {
   const { colors } = useTheme();
   const buildLink = useLinkBuilder();
@@ -142,20 +139,26 @@ export default function BottomTabBar({
   const focusedDescriptor = descriptors[focusedRoute.key];
   const focusedOptions = focusedDescriptor.options;
 
+  const {
+    tabBarShowLabel,
+    tabBarHideOnKeyboard = false,
+    tabBarVisibilityAnimationConfig,
+    tabBarStyle,
+  } = focusedOptions;
+
   const dimensions = useWindowDimensions();
   const isKeyboardShown = useIsKeyboardShown();
 
   const onHeightChange = React.useContext(BottomTabBarHeightCallbackContext);
 
-  const shouldShowTabBar = !(keyboardHidesTabBar && isKeyboardShown);
+  const shouldShowTabBar = !(tabBarHideOnKeyboard && isKeyboardShown);
 
   const visibilityAnimationConfigRef = React.useRef(
-    focusedOptions.tabBarVisibilityAnimationConfig
+    tabBarVisibilityAnimationConfig
   );
 
   React.useEffect(() => {
-    visibilityAnimationConfigRef.current =
-      focusedOptions.tabBarVisibilityAnimationConfig;
+    visibilityAnimationConfigRef.current = tabBarVisibilityAnimationConfig;
   });
 
   const [isTabBarHidden, setIsTabBarHidden] = React.useState(!shouldShowTabBar);
@@ -210,7 +213,7 @@ export default function BottomTabBar({
 
     const topBorderWidth =
       // @ts-ignore
-      StyleSheet.flatten([styles.tabBar, style])?.borderTopWidth;
+      StyleSheet.flatten([styles.tabBar, tabBarStyle])?.borderTopWidth;
 
     onHeightChange?.(
       height +
@@ -232,34 +235,21 @@ export default function BottomTabBar({
 
   const { routes } = state;
 
-  const defaultInsets = useSafeAreaInsets();
-
-  const insets = {
-    top: safeAreaInsets?.top ?? defaultInsets.top,
-    right: safeAreaInsets?.right ?? defaultInsets.right,
-    bottom: safeAreaInsets?.bottom ?? defaultInsets.bottom,
-    left: safeAreaInsets?.left ?? defaultInsets.left,
-  };
-
   const paddingBottom = getPaddingBottom(insets);
   const tabBarHeight = getTabBarHeight({
     state,
+    descriptors,
     insets,
     dimensions,
     layout,
-    adaptive,
-    labelPosition,
-    tabStyle,
-    style,
+    style: [tabBarStyle, style],
   });
 
   const hasHorizontalLabels = shouldUseHorizontalLabels({
     state,
+    descriptors,
     dimensions,
     layout,
-    adaptive,
-    labelPosition,
-    tabStyle,
   });
 
   return (
@@ -291,7 +281,7 @@ export default function BottomTabBar({
           paddingBottom,
           paddingHorizontal: Math.max(insets.left, insets.right),
         },
-        style,
+        tabBarStyle,
       ]}
       pointerEvents={isTabBarHidden ? 'none' : 'auto'}
     >
@@ -351,20 +341,22 @@ export default function BottomTabBar({
                   accessibilityLabel={accessibilityLabel}
                   to={buildLink(route.name, route.params)}
                   testID={options.tabBarTestID}
-                  allowFontScaling={allowFontScaling}
-                  activeTintColor={activeTintColor}
-                  inactiveTintColor={inactiveTintColor}
-                  activeBackgroundColor={activeBackgroundColor}
-                  inactiveBackgroundColor={inactiveBackgroundColor}
+                  allowFontScaling={options.tabBarAllowFontScaling}
+                  activeTintColor={options.tabBarActiveTintColor}
+                  inactiveTintColor={options.tabBarInactiveTintColor}
+                  activeBackgroundColor={options.tabBarActiveBackgroundColor}
+                  inactiveBackgroundColor={
+                    options.tabBarInactiveBackgroundColor
+                  }
                   button={options.tabBarButton}
                   icon={options.tabBarIcon}
                   badge={options.tabBarBadge}
                   badgeStyle={options.tabBarBadgeStyle}
                   label={label}
-                  showLabel={showLabel}
-                  labelStyle={labelStyle}
-                  iconStyle={iconStyle}
-                  style={tabStyle}
+                  showLabel={tabBarShowLabel}
+                  labelStyle={options.tabBarLabelStyle}
+                  iconStyle={options.tabBarIconStyle}
+                  style={options.tabBarItemStyle}
                 />
               </NavigationRouteContext.Provider>
             </NavigationContext.Provider>
