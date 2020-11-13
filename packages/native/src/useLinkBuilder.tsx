@@ -21,10 +21,10 @@ const getRootStateForNavigate = (
   navigation: NavigationObject,
   state: MinimalState
 ): MinimalState => {
-  const parent = navigation.dangerouslyGetParent();
+  const parent = navigation.getParent();
 
   if (parent) {
-    const parentState = parent.dangerouslyGetState();
+    const parentState = parent.getState();
 
     return getRootStateForNavigate(parent, {
       index: 0,

@@ -85,21 +85,7 @@ export default function SimpleStackScreen({ navigation, options }: Props) {
   }, [navigation]);
 
   return (
-    <ModalPresentationStack.Navigator
-      mode="modal"
-      // screenOptions={({ route, navigation }) => ({
-      //   ...TransitionPresets.ModalPresentationIOS,
-      //   cardOverlayEnabled: true,
-      //   gestureEnabled: true,
-      //   headerStatusBarHeight:
-      //     navigation
-      //       .dangerouslyGetState()
-      //       .routes.findIndex((r: any) => r.key === route.key) > 0
-      //       ? 0
-      //       : undefined,
-      // })}
-      {...options}
-    >
+    <ModalPresentationStack.Navigator mode="modal" {...options}>
       <ModalPresentationStack.Screen
         name="Article"
         component={ArticleScreen}
