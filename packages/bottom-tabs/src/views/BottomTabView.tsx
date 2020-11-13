@@ -14,10 +14,9 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import { ScreenContainer } from 'react-native-screens';
+import { initialWindowMetrics } from 'react-native-safe-area-context';
 
-import SafeAreaProviderCompat, {
-  initialSafeAreaInsets,
-} from './SafeAreaProviderCompat';
+import SafeAreaProviderCompat from './SafeAreaProviderCompat';
 import ResourceSavingScene from './ResourceSavingScene';
 import BottomTabBar, { getTabBarHeight } from './BottomTabBar';
 import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
@@ -88,7 +87,12 @@ export default class BottomTabView extends React.Component<Props, State> {
       state,
       dimensions,
       layout: { width: dimensions.width, height: 0 },
-      insets: initialSafeAreaInsets,
+      insets: initialWindowMetrics?.insets ?? {
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      },
       adaptive: tabBarOptions?.adaptive,
       labelPosition: tabBarOptions?.labelPosition,
       tabStyle: tabBarOptions?.tabStyle,
