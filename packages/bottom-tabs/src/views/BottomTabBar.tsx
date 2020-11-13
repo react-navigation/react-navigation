@@ -147,9 +147,7 @@ export default function BottomTabBar({
 
   const onHeightChange = React.useContext(BottomTabBarHeightCallbackContext);
 
-  const shouldShowTabBar =
-    focusedOptions.tabBarVisible !== false &&
-    !(keyboardHidesTabBar && isKeyboardShown);
+  const shouldShowTabBar = !(keyboardHidesTabBar && isKeyboardShown);
 
   const visibilityAnimationConfigRef = React.useRef(
     focusedOptions.tabBarVisibilityAnimationConfig

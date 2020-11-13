@@ -127,11 +127,6 @@ export type BottomTabNavigationOptions = {
   tabBarTestID?: string;
 
   /**
-   * Boolean indicating whether the tab bar is visible when this screen is active.
-   */
-  tabBarVisible?: boolean;
-
-  /**
    * Animation config for showing and hiding the tab bar.
    */
   tabBarVisibilityAnimationConfig?: {
