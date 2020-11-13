@@ -33,7 +33,7 @@ export default function useLinkTo() {
         let current;
 
         // Traverse up to get the root navigation
-        while ((current = root.dangerouslyGetParent())) {
+        while ((current = root.getParent())) {
           root = current;
         }
 

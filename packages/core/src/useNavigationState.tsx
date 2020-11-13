@@ -14,9 +14,7 @@ export default function useNavigationState<T>(selector: Selector<T>): T {
 
   // We don't care about the state value, we run the selector again at the end
   // The state is only to make sure that there's a re-render when we have a new value
-  const [, setResult] = React.useState(() =>
-    selector(navigation.dangerouslyGetState())
-  );
+  const [, setResult] = React.useState(() => selector(navigation.getState()));
 
   // We store the selector in a ref to avoid re-subscribing listeners every render
   const selectorRef = React.useRef(selector);
@@ -33,5 +31,5 @@ export default function useNavigationState<T>(selector: Selector<T>): T {
     return unsubscribe;
   }, [navigation]);
 
-  return selector(navigation.dangerouslyGetState());
+  return selector(navigation.getState());
 }

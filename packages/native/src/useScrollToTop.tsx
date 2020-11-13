@@ -53,8 +53,8 @@ export default function useScrollToTop(
 
     // The screen might be inside another navigator such as stack nested in tabs
     // We need to find the closest tab navigator and add the listener there
-    while (current && current.dangerouslyGetState().type !== 'tab') {
-      current = current.dangerouslyGetParent();
+    while (current && current.getState().type !== 'tab') {
+      current = current.getParent();
     }
 
     if (!current) {
@@ -74,7 +74,7 @@ export default function useScrollToTop(
         // So we should scroll to top only when we are on first screen
         const isFirst =
           navigation === current ||
-          navigation.dangerouslyGetState().routes[0].key === route.key;
+          navigation.getState().routes[0].key === route.key;
 
         // Run the operation in the next frame so we're sure all listeners have been run
         // This is necessary to know if preventDefault() has been called
