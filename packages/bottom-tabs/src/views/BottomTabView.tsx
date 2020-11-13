@@ -14,7 +14,10 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import { ScreenContainer } from 'react-native-screens';
-import { initialWindowMetrics } from 'react-native-safe-area-context';
+import {
+  initialWindowMetrics,
+  SafeAreaInsetsContext,
+} from 'react-native-safe-area-context';
 
 import SafeAreaProviderCompat from './SafeAreaProviderCompat';
 import ResourceSavingScene from './ResourceSavingScene';
@@ -80,11 +83,12 @@ export default class BottomTabView extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    const { state, tabBarOptions } = this.props;
+    const { state, descriptors } = this.props;
 
     const dimensions = Dimensions.get('window');
     const tabBarHeight = getTabBarHeight({
       state,
+      descriptors,
       dimensions,
       layout: { width: dimensions.width, height: 0 },
       insets: initialWindowMetrics?.insets ?? {
@@ -92,11 +96,9 @@ export default class BottomTabView extends React.Component<Props, State> {
         left: 0,
         right: 0,
         bottom: 0,
+        ...props.safeAreaInsets,
       },
-      adaptive: tabBarOptions?.adaptive,
-      labelPosition: tabBarOptions?.labelPosition,
-      tabStyle: tabBarOptions?.tabStyle,
-      style: tabBarOptions?.style,
+      style: descriptors[state.routes[state.index].key].options.tabBarStyle,
     });
 
     this.state = {
@@ -108,17 +110,29 @@ export default class BottomTabView extends React.Component<Props, State> {
   private renderTabBar = () => {
     const {
       tabBar = (props: BottomTabBarProps) => <BottomTabBar {...props} />,
-      tabBarOptions,
       state,
       navigation,
       descriptors,
+      safeAreaInsets,
     } = this.props;
-    return tabBar({
-      ...tabBarOptions,
-      state: state,
-      descriptors: descriptors,
-      navigation: navigation,
-    });
+
+    return (
+      <SafeAreaInsetsContext.Consumer>
+        {(insets) =>
+          tabBar({
+            state: state,
+            descriptors: descriptors,
+            navigation: navigation,
+            insets: {
+              top: safeAreaInsets?.top ?? insets?.top ?? 0,
+              right: safeAreaInsets?.right ?? insets?.right ?? 0,
+              bottom: safeAreaInsets?.bottom ?? insets?.bottom ?? 0,
+              left: safeAreaInsets?.left ?? insets?.left ?? 0,
+            },
+          })
+        }
+      </SafeAreaInsetsContext.Consumer>
+    );
   };
 
   private handleTabBarHeightChange = (height: number) => {
