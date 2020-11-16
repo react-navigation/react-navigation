@@ -40,7 +40,7 @@ import { restartApp } from './Restart';
 import LinkingPrefixes from './LinkingPrefixes';
 import SettingsItem from './Shared/SettingsItem';
 import SimpleStack from './Screens/SimpleStack';
-import ModalPresentationStack from './Screens/ModalPresentationStack';
+import ModalStack from './Screens/ModalStack';
 import StackTransparent from './Screens/StackTransparent';
 import StackHeaderCustomization from './Screens/StackHeaderCustomization';
 import BottomTabs from './Screens/BottomTabs';
@@ -66,9 +66,9 @@ type RootDrawerParamList = {
 
 const SCREENS = {
   SimpleStack: { title: 'Simple Stack', component: SimpleStack },
-  ModalPresentationStack: {
-    title: 'Modal Presentation Stack',
-    component: ModalPresentationStack,
+  ModalStack: {
+    title: 'Modal Stack',
+    component: ModalStack,
   },
   StackTransparent: {
     title: 'Transparent Stack',

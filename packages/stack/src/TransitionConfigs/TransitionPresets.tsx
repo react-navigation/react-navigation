@@ -2,10 +2,11 @@ import { Platform } from 'react-native';
 import {
   forHorizontalIOS,
   forVerticalIOS,
+  forModalPresentationIOS,
   forScaleFromCenterAndroid,
   forRevealFromBottomAndroid,
   forFadeFromBottomAndroid,
-  forModalPresentationIOS,
+  forBottomSheetAndroid,
 } from './CardStyleInterpolators';
 import { forFade } from './HeaderStyleInterpolators';
 import {
@@ -14,6 +15,8 @@ import {
   RevealFromBottomAndroidSpec,
   FadeOutToBottomAndroidSpec,
   FadeInFromBottomAndroidSpec,
+  BottomSheetSlideInSpec,
+  BottomSheetSlideOutSpec,
 } from './TransitionSpecs';
 import type { TransitionPreset } from '../types';
 
@@ -99,6 +102,19 @@ export const ScaleFromCenterAndroid: TransitionPreset = {
 };
 
 /**
+ * Standard bottom sheet slide transition for Android 10.
+ */
+export const BottomSheetAndroid: TransitionPreset = {
+  gestureDirection: 'vertical',
+  transitionSpec: {
+    open: BottomSheetSlideInSpec,
+    close: BottomSheetSlideOutSpec,
+  },
+  cardStyleInterpolator: forBottomSheetAndroid,
+  headerStyleInterpolator: forFade,
+};
+
+/**
  * Default navigation transition for the current platform.
  */
 export const DefaultTransition = Platform.select({
@@ -117,5 +133,5 @@ export const DefaultTransition = Platform.select({
  */
 export const ModalTransition = Platform.select({
   ios: ModalPresentationIOS,
-  default: DefaultTransition,
+  default: BottomSheetAndroid,
 });

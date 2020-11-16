@@ -82,10 +82,7 @@ export function forVerticalIOS({
 
   return {
     cardStyle: {
-      transform: [
-        // Translation for the animation of the current card
-        { translateY },
-      ],
+      transform: [{ translateY }],
     },
   };
 }
@@ -195,6 +192,7 @@ export function forFadeFromBottomAndroid({
     current.progress.interpolate({
       inputRange: [0, 0.5, 0.9, 1],
       outputRange: [0, 0.25, 0.7, 1],
+      extrapolate: 'clamp',
     })
   );
 
@@ -266,7 +264,7 @@ export function forRevealFromBottomAndroid({
 }
 
 /**
- * Standard Android-style reveal from the bottom for Android Q.
+ * Standard Android-style zoom for Android 10.
  */
 export function forScaleFromCenterAndroid({
   current,
@@ -307,10 +305,53 @@ export function forScaleFromCenterAndroid({
   );
 
   return {
-    containerStyle: {
+    cardStyle: {
       opacity,
       transform: [{ scale }],
     },
+  };
+}
+
+/**
+ * Standard bottom sheet slide in from the bottom for Android.
+ */
+export function forBottomSheetAndroid({
+  current,
+  inverted,
+  layouts: { screen },
+  closing,
+}: StackCardInterpolationProps): StackCardInterpolatedStyle {
+  const translateY = multiply(
+    current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [screen.height * 0.8, 0],
+      extrapolate: 'clamp',
+    }),
+    inverted
+  );
+
+  const opacity = conditional(
+    closing,
+    current.progress,
+    current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    })
+  );
+
+  const overlayOpacity = current.progress.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 0.3],
+    extrapolate: 'clamp',
+  });
+
+  return {
+    cardStyle: {
+      opacity,
+      transform: [{ translateY }],
+    },
+    overlayStyle: { opacity: overlayOpacity },
   };
 }
 

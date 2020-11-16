@@ -541,7 +541,6 @@ export default class Card extends React.Component<Props> {
             </View>
           ) : null}
           <Animated.View
-            needsOffscreenAlphaCompositing={hasOpacityStyle(containerStyle)}
             style={[styles.container, containerStyle, customContainerStyle]}
             pointerEvents="box-none"
           >
@@ -551,7 +550,10 @@ export default class Card extends React.Component<Props> {
               onHandlerStateChange={this.handleGestureStateChange}
               {...this.gestureActivationCriteria()}
             >
-              <Animated.View style={[styles.container, cardStyle]}>
+              <Animated.View
+                needsOffscreenAlphaCompositing={hasOpacityStyle(cardStyle)}
+                style={[styles.container, cardStyle]}
+              >
                 {shadowEnabled && shadowStyle && !isTransparent ? (
                   <Animated.View
                     style={[
