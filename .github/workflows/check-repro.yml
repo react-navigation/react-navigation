@@ -36,7 +36,7 @@ jobs:
                 name: 'needs repro',
               })
             } catch (error) {
-              if (!/Label does not exist/.test(e.message)) {
+              if (!/Label does not exist/.test(error.message)) {
                 throw error
               }
             }
