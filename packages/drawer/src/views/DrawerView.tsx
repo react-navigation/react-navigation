@@ -176,7 +176,7 @@ export default function DrawerView({
 
           const {
             header = (props: DrawerHeaderProps) => <Header {...props} />,
-            headerShown = true,
+            headerShown = false,
           } = descriptor.options;
 
           return (
