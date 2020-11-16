@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.11.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.11.2...@react-navigation/drawer@5.11.3) (2020-11-16)
+
+
+### Bug Fixes
+
+* hide drawer's header by default ([794339e](https://github.com/react-navigation/react-navigation/commit/794339eeed7c0d3b0e8b1752e494fbb4608ddfad))
+
+
+
+
+
 ## [5.11.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.11.1...@react-navigation/drawer@5.11.2) (2020-11-10)
 
 **Note:** Version bump only for package @react-navigation/drawer
