@@ -5,7 +5,6 @@ import type { ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
   StackScreenProps,
-  StackNavigationOptions,
 } from '@react-navigation/stack';
 import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
@@ -71,13 +70,11 @@ const AlbumsScreen = ({ navigation }: StackScreenProps<ModalStackParams>) => {
   );
 };
 
-const ModalPresentationStack = createStackNavigator<ModalStackParams>();
+const ModalStack = createStackNavigator<ModalStackParams>();
 
-type Props = StackScreenProps<ParamListBase> & {
-  options?: StackNavigationOptions;
-};
+type Props = StackScreenProps<ParamListBase>;
 
-export default function SimpleStackScreen({ navigation, options }: Props) {
+export default function ModalStackScreen({ navigation }: Props) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -85,8 +82,8 @@ export default function SimpleStackScreen({ navigation, options }: Props) {
   }, [navigation]);
 
   return (
-    <ModalPresentationStack.Navigator mode="modal" {...options}>
-      <ModalPresentationStack.Screen
+    <ModalStack.Navigator mode="modal">
+      <ModalStack.Screen
         name="Article"
         component={ArticleScreen}
         options={({ route }) => ({
@@ -94,12 +91,12 @@ export default function SimpleStackScreen({ navigation, options }: Props) {
         })}
         initialParams={{ author: 'Gandalf' }}
       />
-      <ModalPresentationStack.Screen
+      <ModalStack.Screen
         name="Albums"
         component={AlbumsScreen}
         options={{ title: 'Albums' }}
       />
-    </ModalPresentationStack.Navigator>
+    </ModalStack.Navigator>
   );
 }
 
