@@ -51,7 +51,6 @@ import DynamicTabs from './Screens/DynamicTabs';
 import MasterDetail from './Screens/MasterDetail';
 import AuthFlow from './Screens/AuthFlow';
 import PreventRemove from './Screens/PreventRemove';
-import CompatAPI from './Screens/CompatAPI';
 import LinkComponent from './Screens/LinkComponent';
 
 if (Platform.OS !== 'web') {
@@ -102,10 +101,6 @@ const SCREENS = {
   PreventRemove: {
     title: 'Prevent removing screen',
     component: PreventRemove,
-  },
-  CompatAPI: {
-    title: 'Compat Layer',
-    component: CompatAPI,
   },
   LinkComponent: {
     title: '<Link />',
