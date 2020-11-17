@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
-import { Screen, screensEnabled } from 'react-native-screens';
+import {
+  Screen,
+  screensEnabled,
+  // @ts-ignore
+  shouldUseActivityState,
+} from 'react-native-screens';
 
 type Props = {
   isVisible: boolean;
@@ -17,8 +22,17 @@ export default class ResourceSavingScene extends React.Component<Props> {
     if (screensEnabled?.() && this.props.enabled && Platform.OS !== 'web') {
       const { isVisible, ...rest } = this.props;
 
-      // @ts-ignore
-      return <Screen active={isVisible ? 1 : 0} {...rest} />;
+      if (shouldUseActivityState) {
+        return (
+          // @ts-expect-error: there was an `active` prop and no `activityState` in older version and stackPresentation was required
+          <Screen activityState={isVisible ? 2 : 0} {...rest} />
+        );
+      } else {
+        return (
+          // @ts-expect-error: there was an `active` prop and no `activityState` in older version and stackPresentation was required
+          <Screen active={isVisible ? 1 : 0} {...rest} />
+        );
+      }
     }
 
     const { isVisible, children, style, ...rest } = this.props;
