@@ -29,14 +29,6 @@ function StackNavigator({
   screenOptions,
   ...rest
 }: Props) {
-  const defaultOptions = {
-    gestureEnabled: Platform.OS === 'ios',
-    animationEnabled:
-      Platform.OS !== 'web' &&
-      Platform.OS !== 'windows' &&
-      Platform.OS !== 'macos',
-  };
-
   const { state, descriptors, navigation } = useNavigationBuilder<
     StackNavigationState<ParamListBase>,
     StackRouterOptions,
@@ -46,16 +38,14 @@ function StackNavigator({
   >(StackRouter, {
     initialRouteName,
     children,
-    screenOptions:
-      typeof screenOptions === 'function'
-        ? (...args) => ({
-            ...defaultOptions,
-            ...screenOptions(...args),
-          })
-        : {
-            ...defaultOptions,
-            ...screenOptions,
-          },
+    screenOptions,
+    defaultScreenOptions: {
+      gestureEnabled: Platform.OS === 'ios',
+      animationEnabled:
+        Platform.OS !== 'web' &&
+        Platform.OS !== 'windows' &&
+        Platform.OS !== 'macos',
+    },
   });
 
   React.useEffect(

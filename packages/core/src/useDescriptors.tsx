@@ -41,6 +41,13 @@ type Options<
         route: RouteProp<ParamListBase, string>;
         navigation: any;
       }) => ScreenOptions);
+  defaultScreenOptions?:
+    | ScreenOptions
+    | ((props: {
+        route: RouteProp<ParamListBase, string>;
+        navigation: any;
+        options: ScreenOptions;
+      }) => ScreenOptions);
   onAction: (
     action: NavigationAction,
     visitedNavigators?: Set<string>
@@ -72,6 +79,7 @@ export default function useDescriptors<
   screens,
   navigation,
   screenOptions,
+  defaultScreenOptions,
   onAction,
   getState,
   setState,
@@ -132,7 +140,7 @@ export default function useDescriptors<
     const screen = screens[route.name];
     const navigation = navigations[route.key];
 
-    const routeOptions = {
+    const customOptions = {
       // The default `screenOptions` passed to the navigator
       ...(typeof screenOptions === 'object' || screenOptions == null
         ? screenOptions
@@ -153,6 +161,19 @@ export default function useDescriptors<
       ...options[route.key],
     };
 
+    const mergedOptions =
+      typeof defaultScreenOptions === 'function'
+        ? {
+            // @ts-expect-error: ts gives incorrect error here
+            ...defaultScreenOptions({
+              route,
+              navigation,
+              options: customOptions,
+            }),
+            ...customOptions,
+          }
+        : customOptions;
+
     acc[route.key] = {
       route,
       // @ts-expect-error: it's missing action helpers, fix later
@@ -169,14 +190,14 @@ export default function useDescriptors<
                   routeState={state.routes[i].state}
                   getState={getState}
                   setState={setState}
-                  options={routeOptions}
+                  options={mergedOptions}
                 />
               </NavigationRouteContext.Provider>
             </NavigationContext.Provider>
           </NavigationBuilderContext.Provider>
         );
       },
-      options: routeOptions as ScreenOptions,
+      options: mergedOptions as ScreenOptions,
     };
 
     return acc;
