@@ -89,7 +89,7 @@ type Props = {
   swipeEdgeWidth: number;
   swipeDistanceThreshold?: number;
   swipeVelocityThreshold: number;
-  hideStatusBar: boolean;
+  hideStatusBarOnOpen: boolean;
   statusBarAnimation: 'slide' | 'none' | 'fade';
   overlayStyle?: StyleProp<ViewStyle>;
   drawerStyle?: StyleProp<ViewStyle>;
@@ -129,7 +129,7 @@ export default class DrawerView extends React.Component<Props> {
       drawerType,
       swipeDistanceThreshold,
       swipeVelocityThreshold,
-      hideStatusBar,
+      hideStatusBarOnOpen: hideStatusBar,
     } = this.props;
 
     if (
@@ -554,7 +554,10 @@ export default class DrawerView extends React.Component<Props> {
   };
 
   private toggleStatusBar = (hidden: boolean) => {
-    const { hideStatusBar, statusBarAnimation } = this.props;
+    const {
+      hideStatusBarOnOpen: hideStatusBar,
+      statusBarAnimation,
+    } = this.props;
 
     if (hideStatusBar && this.isStatusBarHidden !== hidden) {
       this.isStatusBarHidden = hidden;

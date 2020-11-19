@@ -11,7 +11,6 @@ import {
   DrawerScreenProps,
   DrawerContent,
   DrawerContentComponentProps,
-  DrawerContentOptions,
 } from '@react-navigation/drawer';
 import type { StackScreenProps } from '@react-navigation/stack';
 import Article from '../Shared/Article';
@@ -91,9 +90,7 @@ const AlbumsScreen = ({
   );
 };
 
-const CustomDrawerContent = (
-  props: DrawerContentComponentProps<DrawerContentOptions>
-) => {
+const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const { colors } = useTheme();
   const navigation = useNavigation();
 
@@ -126,10 +123,14 @@ export default function DrawerScreen({ navigation, ...rest }: Props) {
   return (
     <Drawer.Navigator
       openByDefault
-      drawerType={isLargeScreen ? 'permanent' : 'back'}
-      drawerStyle={isLargeScreen ? null : { width: '100%' }}
-      overlayColor="transparent"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
+      screenOptions={{
+        headerShown: false,
+        drawerType: isLargeScreen ? 'permanent' : 'back',
+        drawerStyle: isLargeScreen ? null : { width: '100%' },
+        drawerContentContainerStyle: { paddingTop: 4 },
+        overlayColor: 'transparent',
+      }}
       {...rest}
     >
       <Drawer.Screen name="Article" component={ArticleScreen} />

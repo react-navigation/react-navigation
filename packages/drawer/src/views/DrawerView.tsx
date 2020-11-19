@@ -77,21 +77,26 @@ export default function DrawerView({
   drawerContent = (props: DrawerContentComponentProps) => (
     <DrawerContent {...props} />
   ),
-  drawerPosition = I18nManager.isRTL ? 'right' : 'left',
-  keyboardDismissMode = 'on-drag',
-  overlayColor = 'rgba(0, 0, 0, 0.5)',
-  drawerType = Platform.select({ ios: 'slide', default: 'front' }),
-  hideStatusBar = false,
-  statusBarAnimation = 'slide',
-  drawerContentOptions,
-  drawerStyle,
-  edgeWidth,
-  gestureHandlerProps,
-  minSwipeDistance,
-  sceneContainerStyle,
   detachInactiveScreens = true,
 }: Props) {
-  const [loaded, setLoaded] = React.useState([state.routes[state.index].key]);
+  const activeKey = state.routes[state.index].key;
+  const {
+    drawerHideStatusBarOnOpen = false,
+    drawerPosition = I18nManager.isRTL ? 'right' : 'left',
+    drawerStatusBarAnimation = 'slide',
+    drawerStyle,
+    drawerType = Platform.select({ ios: 'slide', default: 'front' }),
+    gestureEnabled,
+    gestureHandlerProps,
+    keyboardDismissMode = 'on-drag',
+    overlayColor = 'rgba(0, 0, 0, 0.5)',
+    sceneContainerStyle,
+    swipeEdgeWidth,
+    swipeEnabled,
+    swipeMinDistance,
+  } = descriptors[activeKey].options;
+
+  const [loaded, setLoaded] = React.useState([activeKey]);
   const dimensions = useWindowDimensions();
 
   const { colors } = useTheme();
@@ -139,7 +144,6 @@ export default function DrawerView({
     return (
       <DrawerPositionContext.Provider value={drawerPosition}>
         {drawerContent({
-          ...drawerContentOptions,
           progress: progress,
           state: state,
           navigation: navigation,
@@ -201,9 +205,6 @@ export default function DrawerView({
     );
   };
 
-  const activeKey = state.routes[state.index].key;
-  const { gestureEnabled, swipeEnabled } = descriptors[activeKey].options;
-
   return (
     <NavigationHelpersContext.Provider value={navigation}>
       <GestureHandlerWrapper style={styles.content}>
@@ -240,10 +241,10 @@ export default function DrawerView({
                 drawerStyle,
               ]}
               overlayStyle={{ backgroundColor: overlayColor }}
-              swipeEdgeWidth={edgeWidth}
-              swipeDistanceThreshold={minSwipeDistance}
-              hideStatusBar={hideStatusBar}
-              statusBarAnimation={statusBarAnimation}
+              swipeEdgeWidth={swipeEdgeWidth}
+              swipeDistanceThreshold={swipeMinDistance}
+              hideStatusBarOnOpen={drawerHideStatusBarOnOpen}
+              statusBarAnimation={drawerStatusBarAnimation}
               renderDrawerContent={renderNavigationView}
               renderSceneContent={renderContent}
               keyboardDismissMode={keyboardDismissMode}
