@@ -285,7 +285,9 @@ export default function App() {
           >
             {() => (
               <Drawer.Navigator
-                drawerType={isLargeScreen ? 'permanent' : undefined}
+                screenOptions={{
+                  drawerType: isLargeScreen ? 'permanent' : undefined,
+                }}
               >
                 <Drawer.Screen
                   name="Examples"
