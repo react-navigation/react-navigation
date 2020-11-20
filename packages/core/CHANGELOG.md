@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.14.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.14.3...@react-navigation/core@5.14.4) (2020-11-20)
+
+
+### Bug Fixes
+
+* fix incorrect state change events in independent nested container ([95b2599](https://github.com/react-navigation/react-navigation/commit/95b2599877f5ceedf753e399e0586bb4af54cb87)), closes [#9080](https://github.com/react-navigation/react-navigation/issues/9080)
+
+
+
+
+
 ## [5.14.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.14.2...@react-navigation/core@5.14.3) (2020-11-10)
 
 

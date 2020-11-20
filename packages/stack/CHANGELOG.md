@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.12.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.12.6...@react-navigation/stack@5.12.7) (2020-11-20)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
 ## [5.12.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.12.5...@react-navigation/stack@5.12.6) (2020-11-10)
 
 
