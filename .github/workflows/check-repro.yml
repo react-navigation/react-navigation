@@ -17,7 +17,7 @@ jobs:
               ? context.payload.comment.body
               : context.payload.issue.body
 
-            if (!/https?:\/\/((github\.com\/[^/]+\/[^/]+)|(snack\.expo\.io\/.+))/gm.test(body)) {
+            if (!/https?:\/\/((github\.com\/[^/]+\/[^/]+\/?[\s\n]+)|(snack\.expo\.io\/.+))/gm.test(body)) {
               return
             }
 
