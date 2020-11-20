@@ -8,9 +8,11 @@ import {
   NavigationAction,
 } from '@react-navigation/routers';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
+import UnhandledActionContext from './UnhandledActionContext';
 import NavigationBuilderContext from './NavigationBuilderContext';
 import NavigationStateContext from './NavigationStateContext';
-import UnhandledActionContext from './UnhandledActionContext';
+import NavigationRouteContext from './NavigationRouteContext';
+import NavigationContext from './NavigationContext';
 import { ScheduleUpdateContext } from './useScheduleUpdate';
 import useChildListeners from './useChildListeners';
 import useKeyedChildListeners from './useKeyedChildListeners';
@@ -397,7 +399,7 @@ const BaseNavigationContainer = React.forwardRef(
       []
     );
 
-    return (
+    let element = (
       <ScheduleUpdateContext.Provider value={scheduleContext}>
         <NavigationBuilderContext.Provider value={builderContext}>
           <NavigationStateContext.Provider value={context}>
@@ -410,6 +412,19 @@ const BaseNavigationContainer = React.forwardRef(
         </NavigationBuilderContext.Provider>
       </ScheduleUpdateContext.Provider>
     );
+
+    if (independent) {
+      // We need to clear any existing contexts for nested independent container to work correctly
+      element = (
+        <NavigationRouteContext.Provider value={undefined}>
+          <NavigationContext.Provider value={undefined}>
+            {element}
+          </NavigationContext.Provider>
+        </NavigationRouteContext.Provider>
+      );
+    }
+
+    return element;
   }
 );
 
