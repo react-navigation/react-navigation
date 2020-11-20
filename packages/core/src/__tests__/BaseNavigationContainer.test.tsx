@@ -757,3 +757,67 @@ it('invokes the unhandled action listener with the unhandled action', () => {
     type: 'NAVIGATE',
   });
 });
+
+it('works with state change events in independent nested container', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return (
+      <React.Fragment>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </React.Fragment>
+    );
+  };
+
+  const ref = React.createRef<NavigationContainerRef>();
+
+  const onStateChange = jest.fn();
+
+  render(
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Screen name="foo">
+          {() => (
+            <BaseNavigationContainer
+              independent
+              ref={ref}
+              onStateChange={onStateChange}
+            >
+              <TestNavigator>
+                <Screen name="qux">{() => null}</Screen>
+                <Screen name="lex">{() => null}</Screen>
+              </TestNavigator>
+            </BaseNavigationContainer>
+          )}
+        </Screen>
+        <Screen name="bar">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  act(() => ref.current?.navigate('lex'));
+
+  expect(onStateChange).toBeCalledWith({
+    index: 1,
+    key: '15',
+    routeNames: ['qux', 'lex'],
+    routes: [
+      { key: 'qux', name: 'qux' },
+      { key: 'lex', name: 'lex' },
+    ],
+    stale: false,
+    type: 'test',
+  });
+
+  expect(ref.current?.getRootState()).toEqual({
+    index: 1,
+    key: '15',
+    routeNames: ['qux', 'lex'],
+    routes: [
+      { key: 'qux', name: 'qux' },
+      { key: 'lex', name: 'lex' },
+    ],
+    stale: false,
+    type: 'test',
+  });
+});
