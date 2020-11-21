@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.12.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.12.7...@react-navigation/stack@5.12.8) (2020-11-21)
+
+
+### Bug Fixes
+
+* force dismiss keyboard if there was no gesture ([3e069b7](https://github.com/react-navigation/react-navigation/commit/3e069b718d60f5381957f2d3838ee04ee9384779)), closes [#9078](https://github.com/react-navigation/react-navigation/issues/9078)
+
+
+
+
+
 ## [5.12.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.12.6...@react-navigation/stack@5.12.7) (2020-11-20)
 
 **Note:** Version bump only for package @react-navigation/stack
