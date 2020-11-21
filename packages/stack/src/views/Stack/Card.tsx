@@ -41,7 +41,7 @@ type Props = ViewProps & {
   gestureDirection: GestureDirection;
   onOpen: () => void;
   onClose: () => void;
-  onTransitionStart?: (props: { closing: boolean }) => void;
+  onTransition?: (props: { closing: boolean; gesture: boolean }) => void;
   onGestureBegin?: () => void;
   onGestureCanceled?: () => void;
   onGestureEnd?: () => void;
@@ -177,7 +177,7 @@ export default class Card extends React.Component<Props> {
       transitionSpec,
       onOpen,
       onClose,
-      onTransitionStart,
+      onTransition,
     } = this.props;
 
     const toValue = this.getAnimateToValue({
@@ -197,7 +197,7 @@ export default class Card extends React.Component<Props> {
 
     clearTimeout(this.pendingGestureCallback);
 
-    onTransitionStart?.({ closing });
+    onTransition?.({ closing, gesture: velocity !== undefined });
     animation(gesture, {
       ...spec.config,
       velocity,

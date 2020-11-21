@@ -1,14 +1,16 @@
 import * as React from 'react';
-import { TextInput, Platform, Keyboard } from 'react-native';
+import { TextInput, Keyboard, HostComponent } from 'react-native';
 
 type Props = {
   enabled: boolean;
   children: (props: {
     onPageChangeStart: () => void;
-    onPageChangeConfirm: () => void;
+    onPageChangeConfirm: (force: boolean) => void;
     onPageChangeCancel: () => void;
   }) => React.ReactNode;
 };
+
+type InputRef = React.ElementRef<HostComponent<unknown>> | undefined;
 
 export default class KeyboardManager extends React.Component<Props> {
   componentWillUnmount() {
@@ -17,7 +19,7 @@ export default class KeyboardManager extends React.Component<Props> {
 
   // Numeric id of the previously focused text input
   // When a gesture didn't change the tab, we can restore the focused input with this
-  private previouslyFocusedTextInput: any | null = null;
+  private previouslyFocusedTextInput: InputRef = undefined;
   private startTimestamp: number = 0;
   private keyboardTimeout: any;
 
@@ -35,7 +37,8 @@ export default class KeyboardManager extends React.Component<Props> {
 
     this.clearKeyboardTimeout();
 
-    const input: any = TextInput.State.currentlyFocusedInput
+    // @ts-expect-error: blurTextInput accepts both number and ref, but types say only ref
+    const input: InputRef = TextInput.State.currentlyFocusedInput
       ? TextInput.State.currentlyFocusedInput()
       : TextInput.State.currentlyFocusedField();
 
@@ -49,25 +52,30 @@ export default class KeyboardManager extends React.Component<Props> {
     this.startTimestamp = Date.now();
   };
 
-  private handlePageChangeConfirm = () => {
+  private handlePageChangeConfirm = (force: boolean) => {
     if (!this.props.enabled) {
       return;
     }
 
     this.clearKeyboardTimeout();
 
-    const input = this.previouslyFocusedTextInput;
+    if (force) {
+      // Always dismiss input, even if we don't have a ref to it
+      // We might not have the ref if onPageChangeStart was never called
+      // This can happen if page change was not from a gesture
+      Keyboard.dismiss();
+    } else {
+      const input = this.previouslyFocusedTextInput;
 
-    if (input) {
-      if (Platform.OS === 'android') {
-        Keyboard.dismiss();
-      } else {
+      if (input) {
+        // Dismiss the keyboard only if an input was a focused before
+        // This makes sure we don't dismiss input on going back and focusing an input
         TextInput.State.blurTextInput(input);
       }
     }
 
     // Cleanup the ID on successful page change
-    this.previouslyFocusedTextInput = null;
+    this.previouslyFocusedTextInput = undefined;
   };
 
   private handlePageChangeCancel = () => {
@@ -91,11 +99,11 @@ export default class KeyboardManager extends React.Component<Props> {
       if (Date.now() - this.startTimestamp < 100) {
         this.keyboardTimeout = setTimeout(() => {
           TextInput.State.focusTextInput(input);
-          this.previouslyFocusedTextInput = null;
+          this.previouslyFocusedTextInput = undefined;
         }, 100);
       } else {
         TextInput.State.focusTextInput(input);
-        this.previouslyFocusedTextInput = null;
+        this.previouslyFocusedTextInput = undefined;
       }
     }
   };
