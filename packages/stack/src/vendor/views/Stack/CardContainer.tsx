@@ -47,7 +47,7 @@ type Props = TransitionPreset & {
   ) => void;
   onTransitionEnd?: (props: { route: Route<string> }, closing: boolean) => void;
   onPageChangeStart?: () => void;
-  onPageChangeConfirm?: () => void;
+  onPageChangeConfirm?: (force: boolean) => void;
   onPageChangeCancel?: () => void;
   onGestureStart?: (props: { route: Route<string> }) => void;
   onGestureEnd?: (props: { route: Route<string> }) => void;
@@ -117,42 +117,58 @@ function CardContainer({
   scene,
   transitionSpec,
 }: Props) {
-  React.useEffect(() => {
-    onPageChangeConfirm?.();
-  }, [active, onPageChangeConfirm]);
-
   const handleOpen = () => {
-    onTransitionEnd?.({ route: scene.route }, false);
-    onOpenRoute({ route: scene.route });
+    const { route } = scene;
+
+    onTransitionEnd?.({ route }, false);
+    onOpenRoute({ route });
   };
 
   const handleClose = () => {
-    onTransitionEnd?.({ route: scene.route }, true);
-    onCloseRoute({ route: scene.route });
+    const { route } = scene;
+
+    onTransitionEnd?.({ route }, true);
+    onCloseRoute({ route });
   };
 
   const handleGestureBegin = () => {
+    const { route } = scene;
+
     onPageChangeStart?.();
-    onGestureStart?.({ route: scene.route });
+    onGestureStart?.({ route });
   };
 
   const handleGestureCanceled = () => {
+    const { route } = scene;
+
     onPageChangeCancel?.();
-    onGestureCancel?.({ route: scene.route });
+    onGestureCancel?.({ route });
   };
 
   const handleGestureEnd = () => {
-    onGestureEnd?.({ route: scene.route });
+    const { route } = scene;
+
+    onGestureEnd?.({ route });
   };
 
-  const handleTransitionStart = ({ closing }: { closing: boolean }) => {
-    if (active && closing) {
-      onPageChangeConfirm?.();
+  const handleTransition = ({
+    closing,
+    gesture,
+  }: {
+    closing: boolean;
+    gesture: boolean;
+  }) => {
+    const { route } = scene;
+
+    if (!gesture) {
+      onPageChangeConfirm?.(true);
+    } else if (active && closing) {
+      onPageChangeConfirm?.(false);
     } else {
       onPageChangeCancel?.();
     }
 
-    onTransitionStart?.({ route: scene.route }, closing);
+    onTransitionStart?.({ route }, closing);
   };
 
   const insets = {
@@ -202,7 +218,7 @@ function CardContainer({
       overlay={cardOverlay}
       overlayEnabled={cardOverlayEnabled}
       shadowEnabled={cardShadowEnabled}
-      onTransitionStart={handleTransitionStart}
+      onTransition={handleTransition}
       onGestureBegin={handleGestureBegin}
       onGestureCanceled={handleGestureCanceled}
       onGestureEnd={handleGestureEnd}

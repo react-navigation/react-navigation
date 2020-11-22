@@ -169,7 +169,7 @@ exports[`StackNavigator applies correct values when headerRight is present 1`] =
         onGestureCanceled={[Function]}
         onGestureEnd={[Function]}
         onOpen={[Function]}
-        onTransitionStart={[Function]}
+        onTransition={[Function]}
         pointerEvents="box-none"
         style={
           Array [
@@ -462,7 +462,7 @@ exports[`StackNavigator renders successfully 1`] = `
         onGestureCanceled={[Function]}
         onGestureEnd={[Function]}
         onOpen={[Function]}
-        onTransitionStart={[Function]}
+        onTransition={[Function]}
         pointerEvents="box-none"
         style={
           Array [

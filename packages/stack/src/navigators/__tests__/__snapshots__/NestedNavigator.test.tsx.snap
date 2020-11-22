@@ -152,7 +152,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
         onGestureCanceled={[Function]}
         onGestureEnd={[Function]}
         onOpen={[Function]}
-        onTransitionStart={[Function]}
+        onTransition={[Function]}
         pointerEvents="box-none"
         style={
           Array [
@@ -432,7 +432,7 @@ exports[`Nested navigators renders succesfully as direct child 1`] = `
                             onGestureCanceled={[Function]}
                             onGestureEnd={[Function]}
                             onOpen={[Function]}
-                            onTransitionStart={[Function]}
+                            onTransition={[Function]}
                             pointerEvents="box-none"
                             style={
                               Array [
