@@ -11,7 +11,7 @@ jobs:
           script: |
             // Get a list of all issues created by the PR opener
             // See: https://octokit.github.io/rest.js/#pagination
-            const creator = context.payload.sender.login
+            const creator = context.payload.sender.login;
             const opts = github.issues.listForRepo.endpoint.merge({
               ...context.issue,
               creator,
