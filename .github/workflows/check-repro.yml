@@ -13,7 +13,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const user = context.sender.login;
+            const user = context.payload.sender.login;
             const body = context.payload.comment
               ? context.payload.comment.body
               : context.payload.issue.body;
