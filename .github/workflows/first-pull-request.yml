@@ -16,17 +16,17 @@ jobs:
               ...context.issue,
               creator,
               state: 'all'
-            })
+            });
 
-            const issues = await github.paginate(opts)
+            const issues = await github.paginate(opts);
 
             for (const issue of issues) {
               if (issue.number === context.issue.number) {
-                continue
+                continue;
               }
 
               if (issue.pull_request) {
-                return // Creator is already a contributor.
+                return ;// Creator is already a contributor.
               }
             }
 
@@ -42,4 +42,4 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: "Hey ${creator}! Thanks for opening the pull request. If you haven't already, make sure to read our [contribution guidelines](https://github.com/react-navigation/react-navigation/blob/main/CONTRIBUTING.md)."
-            })
+            });

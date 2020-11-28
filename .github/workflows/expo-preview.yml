@@ -45,7 +45,7 @@ jobs:
         run: echo "::set-output name=path::@react-navigation/react-navigation-example?release-channel=pr-${{ github.event.number }}"
 
       - name: Comment on PR
-        uses: actions/github-script@v2
+        uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
