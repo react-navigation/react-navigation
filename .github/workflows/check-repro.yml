@@ -13,12 +13,18 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const user = context.sender.login;
             const body = context.payload.comment
               ? context.payload.comment.body
-              : context.payload.issue.body
+              : context.payload.issue.body;
 
-            if (!/https?:\/\/((github\.com\/[^/]+\/[^/]+\/?[\s\n]+)|(snack\.expo\.io\/.+))/gm.test(body)) {
-              return
+            const regex = new RegExp(
+              `https?:\\/\\/((github\\.com\\/${user}\\/[^/]+\\/?[\\s\\n]+)|(snack\\.expo\\.io\\/.+))`,
+              'gm'
+            );
+
+            if (!regex.test(body)) {
+              return;
             }
 
             await github.issues.addLabels({
@@ -26,7 +32,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               labels: ['repro provided'],
-            })
+            });
 
             try {
               await github.issues.removeLabel({
@@ -34,9 +40,9 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 name: 'needs repro',
-              })
+              });
             } catch (error) {
               if (!/Label does not exist/.test(error.message)) {
-                throw error
+                throw error;
               }
             }
