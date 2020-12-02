@@ -28,7 +28,10 @@ it('gets initial state from route names and params with initialRouteName', () =>
       { key: 'baz-test', name: 'baz', params: { answer: 42 } },
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
-    history: [{ type: 'route', key: 'baz-test' }],
+    history: [
+      { type: 'route', key: 'bar-test' },
+      { type: 'route', key: 'baz-test' },
+    ],
     stale: false,
     type: 'tab',
   });
@@ -111,7 +114,10 @@ it('gets rehydrated state from partial state', () => {
       { key: 'baz-0', name: 'baz', params: { answer: 42 } },
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
-    history: [{ type: 'route', key: 'baz-0' }],
+    history: [
+      { type: 'route', key: 'bar-test' },
+      { type: 'route', key: 'baz-0' },
+    ],
     stale: false,
     type: 'tab',
   });
@@ -137,7 +143,10 @@ it('gets rehydrated state from partial state', () => {
       { key: 'baz-1', name: 'baz', params: { answer: 42 } },
       { key: 'qux-2', name: 'qux', params: { name: 'Jane' } },
     ],
-    history: [{ type: 'route', key: 'qux-2' }],
+    history: [
+      { type: 'route', key: 'bar-0' },
+      { type: 'route', key: 'qux-2' },
+    ],
     stale: false,
     type: 'tab',
   });
@@ -162,7 +171,10 @@ it('gets rehydrated state from partial state', () => {
       { key: 'baz-test', name: 'baz', params: { answer: 42 } },
       { key: 'qux-2', name: 'qux', params: { name: 'Jane' } },
     ],
-    history: [{ type: 'route', key: 'qux-2' }],
+    history: [
+      { type: 'route', key: 'bar-0' },
+      { type: 'route', key: 'qux-2' },
+    ],
     stale: false,
     type: 'tab',
   });
@@ -211,10 +223,7 @@ it('gets rehydrated state from partial state', () => {
       { key: 'baz-test', name: 'baz', params: { answer: 42 } },
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
-    history: [
-      { type: 'route', key: 'qux-test' },
-      { type: 'route', key: 'bar-test' },
-    ],
+    history: [{ type: 'route', key: 'bar-test' }],
     stale: false,
     type: 'tab',
   });
@@ -637,7 +646,10 @@ it('handles navigate action', () => {
       { key: 'baz-1', name: 'baz' },
       { key: 'bar-1', name: 'bar', params: { answer: 42 } },
     ],
-    history: [{ type: 'route', key: 'bar-1' }],
+    history: [
+      { type: 'route', key: 'baz-1' },
+      { type: 'route', key: 'bar-1' },
+    ],
   });
 
   expect(
@@ -667,10 +679,7 @@ it('handles navigate action', () => {
       { key: 'baz', name: 'baz', params: { answer: 42 } },
       { key: 'bar', name: 'bar' },
     ],
-    history: [
-      { type: 'route', key: 'bar' },
-      { type: 'route', key: 'baz' },
-    ],
+    history: [{ type: 'route', key: 'baz' }],
   });
 
   expect(

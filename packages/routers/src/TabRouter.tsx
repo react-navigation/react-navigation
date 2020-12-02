@@ -140,7 +140,7 @@ const changeIndex = (
 
 export default function TabRouter({
   initialRouteName,
-  backBehavior = 'history',
+  backBehavior = 'firstRoute',
 }: TabRouterOptions) {
   const router: Router<
     TabNavigationState<ParamListBase>,
