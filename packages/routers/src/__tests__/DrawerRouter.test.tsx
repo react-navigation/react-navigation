@@ -28,7 +28,10 @@ it('gets initial state from route names and params with initialRouteName', () =>
       { key: 'baz-test', name: 'baz', params: { answer: 42 } },
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
-    history: [{ type: 'route', key: 'baz-test' }],
+    history: [
+      { type: 'route', key: 'bar-test' },
+      { type: 'route', key: 'baz-test' },
+    ],
     stale: false,
     type: 'drawer',
   });
@@ -111,7 +114,10 @@ it('gets rehydrated state from partial state', () => {
       { key: 'baz-0', name: 'baz', params: { answer: 42 } },
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
-    history: [{ type: 'route', key: 'baz-0' }],
+    history: [
+      { type: 'route', key: 'bar-test' },
+      { type: 'route', key: 'baz-0' },
+    ],
     stale: false,
     type: 'drawer',
   });
@@ -137,7 +143,10 @@ it('gets rehydrated state from partial state', () => {
       { key: 'baz-1', name: 'baz', params: { answer: 42 } },
       { key: 'qux-2', name: 'qux', params: { name: 'Jane' } },
     ],
-    history: [{ type: 'route', key: 'qux-2' }],
+    history: [
+      { type: 'route', key: 'bar-0' },
+      { type: 'route', key: 'qux-2' },
+    ],
     stale: false,
     type: 'drawer',
   });
@@ -187,11 +196,7 @@ it('gets rehydrated state from partial state', () => {
       { key: 'baz-test', name: 'baz', params: { answer: 42 } },
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
-    history: [
-      { type: 'route', key: 'qux-test' },
-      { type: 'route', key: 'bar-test' },
-      { type: 'drawer' },
-    ],
+    history: [{ type: 'route', key: 'bar-test' }, { type: 'drawer' }],
     stale: false,
     type: 'drawer',
   });
@@ -256,10 +261,7 @@ it('handles navigate action', () => {
       { key: 'baz', name: 'baz', params: { answer: 42 } },
       { key: 'bar', name: 'bar' },
     ],
-    history: [
-      { type: 'route', key: 'bar' },
-      { type: 'route', key: 'baz' },
-    ],
+    history: [{ type: 'route', key: 'baz' }],
   });
 });
 
@@ -297,10 +299,7 @@ it('handles navigate action with open drawer', () => {
       { key: 'baz', name: 'baz', params: { answer: 42 } },
       { key: 'bar', name: 'bar' },
     ],
-    history: [
-      { type: 'route', key: 'bar' },
-      { type: 'route', key: 'baz' },
-    ],
+    history: [{ type: 'route', key: 'baz' }],
   });
 });
 

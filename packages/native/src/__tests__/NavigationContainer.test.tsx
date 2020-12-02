@@ -147,5 +147,7 @@ it('integrates with the history API', () => {
 
   act(() => navigation.current?.navigate('Home'));
 
+  jest.runAllTimers();
+
   expect(window.location.pathname).toBe('/edit');
 });
