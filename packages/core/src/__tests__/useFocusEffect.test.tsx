@@ -239,3 +239,135 @@ it('runs cleanup when component is unmounted', () => {
   expect(focusEffect).toBeCalledTimes(1);
   expect(focusEffectCleanup).toBeCalledTimes(1);
 });
+
+it('prints error when a dependency array is passed', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const Test = () => {
+    // @ts-ignore
+    useFocusEffect(() => {}, []);
+
+    return null;
+  };
+
+  const App = () => (
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Screen name="test" component={Test} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const spy = jest.spyOn(console, 'error').mockImplementation();
+
+  render(<App />);
+
+  expect(spy.mock.calls[0][0]).toMatch(
+    "You passed a second argument to 'useFocusEffect', but it only accepts one argument."
+  );
+
+  spy.mockRestore();
+});
+
+it('prints error when the effect returns a value', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const Test = () => {
+    // @ts-ignore
+    useFocusEffect(() => 42);
+
+    return null;
+  };
+
+  const App = () => (
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Screen name="test" component={Test} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const spy = jest.spyOn(console, 'error').mockImplementation();
+
+  render(<App />);
+
+  expect(spy.mock.calls[0][0]).toMatch(
+    "An effect function must not return anything besides a function, which is used for clean-up. You returned '42'."
+  );
+
+  spy.mockRestore();
+});
+
+it('prints error when the effect returns null', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const Test = () => {
+    // @ts-ignore
+    useFocusEffect(() => null);
+
+    return null;
+  };
+
+  const App = () => (
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Screen name="test" component={Test} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const spy = jest.spyOn(console, 'error').mockImplementation();
+
+  render(<App />);
+
+  expect(spy.mock.calls[0][0]).toMatch(
+    "An effect function must not return anything besides a function, which is used for clean-up. You returned 'null'. If your effect does not require clean-up, return 'undefined' (or nothing)."
+  );
+
+  spy.mockRestore();
+});
+
+it('prints error when the effect is an async function', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const Test = () => {
+    // @ts-ignore
+    useFocusEffect(async () => {});
+
+    return null;
+  };
+
+  const App = () => (
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Screen name="test" component={Test} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const spy = jest.spyOn(console, 'error').mockImplementation();
+
+  render(<App />);
+
+  expect(spy.mock.calls[0][0]).toMatch(
+    "An effect function must not return anything besides a function, which is used for clean-up.\n\nIt looks like you wrote 'useFocusEffect(async () => ...)' or returned a Promise."
+  );
+
+  spy.mockRestore();
+});

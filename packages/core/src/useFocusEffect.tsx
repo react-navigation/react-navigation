@@ -13,6 +13,20 @@ type EffectCallback = () => undefined | void | (() => void);
 export default function useFocusEffect(effect: EffectCallback) {
   const navigation = useNavigation();
 
+  if (arguments[1] !== undefined) {
+    const message =
+      "You passed a second argument to 'useFocusEffect', but it only accepts one argument. " +
+      "If you want to pass a dependency array, you can use 'React.useCallback':\n\n" +
+      'useFocusEffect(\n' +
+      '  React.useCallback(() => {\n' +
+      '    // Your code here\n' +
+      '  }, [depA, depB])\n' +
+      ');\n\n' +
+      'See usage guide: https://reactnavigation.org/docs/use-focus-effect';
+
+    console.error(message);
+  }
+
   React.useEffect(() => {
     let isFocused = false;
     let cleanup: undefined | void | (() => void);
@@ -45,10 +59,10 @@ export default function useFocusEffect(effect: EffectCallback) {
             '    }\n\n' +
             '    fetchData();\n' +
             '  }, [someId])\n' +
-            '};\n\n' +
+            ');\n\n' +
             'See usage guide: https://reactnavigation.org/docs/use-focus-effect';
         } else {
-          message += ` You returned: '${JSON.stringify(destroy)}'`;
+          message += ` You returned '${JSON.stringify(destroy)}'.`;
         }
 
         console.error(message);
