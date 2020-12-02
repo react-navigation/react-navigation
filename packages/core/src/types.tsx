@@ -210,9 +210,7 @@ type NavigationHelpersCommon<
   canGoBack(): boolean;
 
   /**
-   * Returns the parent navigator, if any. Reason why the function is called
-   * getParent is to warn developers against overusing it to eg. get parent
-   * of parent and other hard-to-follow patterns.
+   * Returns the navigation prop from the parent navigator,
    */
   getParent<T = NavigationProp<ParamListBase> | undefined>(): T;
 
