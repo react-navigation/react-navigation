@@ -323,8 +323,11 @@ it('restores correct history on rehydrating with backBehavior: history', () => {
   });
 });
 
-it('restores correct history on rehydrating with backBehavior: initialRoute', () => {
-  const router = TabRouter({ backBehavior: 'initialRoute' });
+it('restores correct history on rehydrating with backBehavior: firstRoute', () => {
+  const router = TabRouter({
+    backBehavior: 'firstRoute',
+    initialRouteName: 'bar',
+  });
 
   const options = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
@@ -356,6 +359,49 @@ it('restores correct history on rehydrating with backBehavior: initialRoute', ()
     ],
     history: [
       { key: 'foo-0', type: 'route' },
+      { key: 'baz-0', type: 'route' },
+    ],
+    stale: false,
+    type: 'tab',
+  });
+});
+
+it('restores correct history on rehydrating with backBehavior: initialRoute', () => {
+  const router = TabRouter({
+    backBehavior: 'initialRoute',
+    initialRouteName: 'bar',
+  });
+
+  const options = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+  };
+
+  expect(
+    router.getRehydratedState(
+      {
+        index: 2,
+        routes: [
+          { key: 'foo-0', name: 'foo' },
+          { key: 'bar-0', name: 'bar' },
+          { key: 'baz-0', name: 'baz' },
+          { key: 'qux-0', name: 'qux' },
+        ],
+      },
+      options
+    )
+  ).toEqual({
+    key: 'tab-test',
+    index: 2,
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routes: [
+      { key: 'foo-0', name: 'foo' },
+      { key: 'bar-0', name: 'bar' },
+      { key: 'baz-0', name: 'baz' },
+      { key: 'qux-0', name: 'qux' },
+    ],
+    history: [
+      { key: 'bar-0', type: 'route' },
       { key: 'baz-0', type: 'route' },
     ],
     stale: false,
