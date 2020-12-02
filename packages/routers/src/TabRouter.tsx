@@ -17,7 +17,12 @@ export type TabActionType = {
   target?: string;
 };
 
-export type BackBehavior = 'initialRoute' | 'order' | 'history' | 'none';
+export type BackBehavior =
+  | 'initialRoute'
+  | 'firstRoute'
+  | 'history'
+  | 'order'
+  | 'none';
 
 export type TabRouterOptions = DefaultRouterOptions & {
   backBehavior?: BackBehavior;
@@ -74,13 +79,21 @@ const getRouteHistory = (
         history.unshift({ type: TYPE_ROUTE, key: routes[i - 1].key });
       }
       break;
+    case 'firstRoute':
+      if (index !== 0) {
+        history.unshift({
+          type: TYPE_ROUTE,
+          key: routes[0].key,
+        });
+      }
+      break;
     case 'initialRoute':
       initialRouteIndex = routes.findIndex(
         (route) => route.name === initialRouteName
       );
       initialRouteIndex = initialRouteIndex === -1 ? 0 : initialRouteIndex;
 
-      if (initialRouteIndex !== index) {
+      if (index !== initialRouteIndex) {
         history.unshift({
           type: TYPE_ROUTE,
           key: routes[initialRouteIndex].key,
