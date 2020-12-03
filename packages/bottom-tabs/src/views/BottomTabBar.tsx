@@ -17,11 +17,10 @@ import {
   useTheme,
   useLinkBuilder,
 } from '@react-navigation/native';
-import type { EdgeInsets } from 'react-native-safe-area-context';
+import { EdgeInsets, useSafeAreaFrame } from 'react-native-safe-area-context';
 
 import BottomTabItem from './BottomTabItem';
 import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
-import useWindowDimensions from '../utils/useWindowDimensions';
 import useIsKeyboardShown from '../utils/useIsKeyboardShown';
 import type { BottomTabBarProps, BottomTabDescriptorMap } from '../types';
 
@@ -146,7 +145,7 @@ export default function BottomTabBar({
     tabBarStyle,
   } = focusedOptions;
 
-  const dimensions = useWindowDimensions();
+  const dimensions = useSafeAreaFrame();
   const isKeyboardShown = useIsKeyboardShown();
 
   const onHeightChange = React.useContext(BottomTabBarHeightCallbackContext);

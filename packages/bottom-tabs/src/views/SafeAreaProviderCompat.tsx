@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Platform } from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 import {
   SafeAreaProvider,
   SafeAreaInsetsContext,
@@ -10,13 +10,15 @@ type Props = {
   children: React.ReactNode;
 };
 
+const frame = Dimensions.get('window');
+
 // To support SSR on web, we need to have empty insets for initial values
 // Otherwise there can be mismatch between SSR and client output
 // We also need to specify empty values to support tests environments
-const initialMetrics =
+export const initialMetrics =
   Platform.OS === 'web' || initialWindowMetrics == null
     ? {
-        frame: { x: 0, y: 0, width: 0, height: 0 },
+        frame: { x: 0, y: 0, width: frame.width, height: frame.height },
         insets: { top: 0, left: 0, right: 0, bottom: 0 },
       }
     : initialWindowMetrics;

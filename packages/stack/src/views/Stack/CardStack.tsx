@@ -3,7 +3,6 @@ import {
   Animated,
   StyleSheet,
   LayoutChangeEvent,
-  Dimensions,
   Platform,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
@@ -18,6 +17,7 @@ import {
   MaybeScreen,
   shouldUseActivityState,
 } from '../Screens';
+import { initialMetrics } from '../SafeAreaProviderCompat';
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import CardContainer from './CardContainer';
@@ -286,13 +286,11 @@ export default class CardStack extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    const { height = 0, width = 0 } = Dimensions.get('window');
-
     this.state = {
       routes: [],
       scenes: [],
       gestures: {},
-      layout: { height, width },
+      layout: initialMetrics.frame,
       descriptors: this.props.descriptors,
       // Used when card's header is null and mode is float to make transition
       // between screens with headers and those without headers smooth.

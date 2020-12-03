@@ -1,25 +1,17 @@
 import * as React from 'react';
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  StyleProp,
-  ViewStyle,
-} from 'react-native';
-
+import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { ScreenContainer } from 'react-native-screens';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import {
   NavigationHelpersContext,
   ParamListBase,
   TabNavigationState,
   useTheme,
 } from '@react-navigation/native';
-import { ScreenContainer } from 'react-native-screens';
-import {
-  initialWindowMetrics,
-  SafeAreaInsetsContext,
-} from 'react-native-safe-area-context';
 
-import SafeAreaProviderCompat from './SafeAreaProviderCompat';
+import SafeAreaProviderCompat, {
+  initialMetrics,
+} from './SafeAreaProviderCompat';
 import ResourceSavingScene from './ResourceSavingScene';
 import BottomTabBar, { getTabBarHeight } from './BottomTabBar';
 import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
@@ -85,17 +77,14 @@ export default class BottomTabView extends React.Component<Props, State> {
 
     const { state, descriptors } = this.props;
 
-    const dimensions = Dimensions.get('window');
+    const dimensions = initialMetrics.frame;
     const tabBarHeight = getTabBarHeight({
       state,
       descriptors,
       dimensions,
       layout: { width: dimensions.width, height: 0 },
-      insets: initialWindowMetrics?.insets ?? {
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
+      insets: {
+        ...initialMetrics.insets,
         ...props.safeAreaInsets,
       },
       style: descriptors[state.routes[state.index].key].options.tabBarStyle,
