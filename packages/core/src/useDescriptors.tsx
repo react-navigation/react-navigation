@@ -161,18 +161,17 @@ export default function useDescriptors<
       ...options[route.key],
     };
 
-    const mergedOptions =
-      typeof defaultScreenOptions === 'function'
-        ? {
-            // @ts-expect-error: ts gives incorrect error here
-            ...defaultScreenOptions({
-              route,
-              navigation,
-              options: customOptions,
-            }),
-            ...customOptions,
-          }
-        : customOptions;
+    const mergedOptions = {
+      ...(typeof defaultScreenOptions === 'function'
+        ? // @ts-expect-error: ts gives incorrect error here
+          defaultScreenOptions({
+            route,
+            navigation,
+            options: customOptions,
+          })
+        : defaultScreenOptions),
+      ...customOptions,
+    };
 
     acc[route.key] = {
       route,
