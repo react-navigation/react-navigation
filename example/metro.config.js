@@ -8,12 +8,15 @@ const blacklist = require('metro-config/src/defaults/blacklist');
 const root = path.resolve(__dirname, '..');
 const packages = path.resolve(root, 'packages');
 
+// List all packages under `packages/`
 const workspaces = fs
-  // List all packages under `packages/`
   .readdirSync(packages)
-  // Ignore hidden files such as .DS_Store
-  .filter((p) => !p.startsWith('.'))
-  .map((p) => path.join(packages, p));
+  .map((p) => path.join(packages, p))
+  .filter(
+    (p) =>
+      fs.statSync(p).isDirectory() &&
+      fs.existsSync(path.join(p, 'package.json'))
+  );
 
 // Get the list of dependencies for all packages in the monorepo
 const modules = ['@expo/vector-icons']
