@@ -168,8 +168,8 @@ type NavigationHelpersCommon<
    */
   navigate<RouteName extends keyof ParamList>(
     ...args: undefined extends ParamList[RouteName]
-      ? [RouteName] | [RouteName, ParamList[RouteName]]
-      : [RouteName, ParamList[RouteName]]
+      ? [screen: RouteName] | [screen: RouteName, params: ParamList[RouteName]]
+      : [screen: RouteName, params: ParamList[RouteName]]
   ): void;
 
   /**
@@ -178,7 +178,7 @@ type NavigationHelpersCommon<
    * @param route Object with `key` or `name` for the route to navigate to, and a `params` object.
    */
   navigate<RouteName extends keyof ParamList>(
-    route:
+    options:
       | { key: string; params?: ParamList[RouteName] }
       | { name: RouteName; key?: string; params: ParamList[RouteName] }
   ): void;

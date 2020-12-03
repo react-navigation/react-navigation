@@ -134,7 +134,7 @@ const createMemoryHistory = () => {
       // - There's history to go back, `history.go` is called, and `popstate` fires
       // - `history.go` is called multiple times, we need to resolve on respective `popstate`
       // - No history to go back, but `history.go` was called, browser has no API to detect it
-      return new Promise((resolve, reject) => {
+      return new Promise<void>((resolve, reject) => {
         const done = (interrupted?: boolean) => {
           clearTimeout(timer);
 

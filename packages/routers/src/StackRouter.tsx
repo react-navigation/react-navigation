@@ -54,8 +54,8 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
    */
   replace<RouteName extends keyof ParamList>(
     ...args: undefined extends ParamList[RouteName]
-      ? [RouteName] | [RouteName, ParamList[RouteName]]
-      : [RouteName, ParamList[RouteName]]
+      ? [screen: RouteName] | [screen: RouteName, params: ParamList[RouteName]]
+      : [screen: RouteName, params: ParamList[RouteName]]
   ): void;
 
   /**
@@ -66,8 +66,8 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
    */
   push<RouteName extends keyof ParamList>(
     ...args: undefined extends ParamList[RouteName]
-      ? [RouteName] | [RouteName, ParamList[RouteName]]
-      : [RouteName, ParamList[RouteName]]
+      ? [screen: RouteName] | [screen: RouteName, params: ParamList[RouteName]]
+      : [screen: RouteName, params: ParamList[RouteName]]
   ): void;
 
   /**

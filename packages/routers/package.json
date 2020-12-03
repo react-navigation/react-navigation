@@ -42,7 +42,7 @@
   "devDependencies": {
     "@react-native-community/bob": "^0.16.2",
     "del-cli": "^3.0.1",
-    "typescript": "^4.0.3"
+    "typescript": "^4.1.2"
   },
   "@react-native-community/bob": {
     "source": "src",
