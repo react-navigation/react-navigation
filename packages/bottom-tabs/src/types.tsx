@@ -84,6 +84,12 @@ export type BottomTabNavigationOptions = {
   title?: string;
 
   /**
+   * Whether this screens should render the first time it's accessed. Defaults to `true`.
+   * Set it to `false` if you want to render the screen on initial render.
+   */
+  lazy?: boolean;
+
+  /**
    * Title string of a tab displayed in the tab bar
    * or a function that given { focused: boolean, color: string, position: 'below-icon' | 'beside-icon' } returns a React.Node to display in tab bar.
    * When undefined, scene title is used. To hide, see tabBarOptions.showLabel in the previous section.
@@ -224,11 +230,6 @@ export type BottomTabDescriptor = Descriptor<
 export type BottomTabDescriptorMap = Record<string, BottomTabDescriptor>;
 
 export type BottomTabNavigationConfig = {
-  /**
-   * Whether the screens should render the first time they are accessed. Defaults to `true`.
-   * Set it to `false` if you want to render all screens on initial render.
-   */
-  lazy?: boolean;
   /**
    * Function that returns a React element to display as the tab bar.
    */
