@@ -57,10 +57,6 @@ function SceneContent({
 }
 
 export default class BottomTabView extends React.Component<Props, State> {
-  static defaultProps = {
-    lazy: true,
-  };
-
   static getDerivedStateFromProps(nextProps: Props, prevState: State) {
     const focusedRouteKey = nextProps.state.routes[nextProps.state.index].key;
 
@@ -139,7 +135,6 @@ export default class BottomTabView extends React.Component<Props, State> {
       state,
       descriptors,
       navigation,
-      lazy,
       detachInactiveScreens = true,
       sceneContainerStyle,
     } = this.props;
@@ -157,7 +152,7 @@ export default class BottomTabView extends React.Component<Props, State> {
             >
               {routes.map((route, index) => {
                 const descriptor = descriptors[route.key];
-                const { unmountOnBlur } = descriptor.options;
+                const { lazy = true, unmountOnBlur } = descriptor.options;
                 const isFocused = state.index === index;
 
                 if (unmountOnBlur && !isFocused) {
@@ -165,7 +160,7 @@ export default class BottomTabView extends React.Component<Props, State> {
                 }
 
                 if (lazy && !loaded.includes(route.key) && !isFocused) {
-                  // Don't render a screen if we've never navigated to it
+                  // Don't render a lazy screen if we've never navigated to it
                   return null;
                 }
 

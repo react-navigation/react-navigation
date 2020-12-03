@@ -22,11 +22,6 @@ export type Layout = { width: number; height: number };
 
 export type DrawerNavigationConfig = {
   /**
-   * Whether the screens should render the first time they are accessed. Defaults to `true`.
-   * Set it to `false` if you want to render all screens on initial render.
-   */
-  lazy?: boolean;
-  /**
    * Function that returns React element to render as the content of the drawer, for example, navigation items.
    * Defaults to `DrawerContent`.
    */
@@ -116,6 +111,12 @@ export type DrawerNavigationOptions = DrawerHeaderOptions & {
    * Title text for the screen.
    */
   title?: string;
+
+  /**
+   * Whether this screens should render the first time it's accessed. Defaults to `true`.
+   * Set it to `false` if you want to render the screen on initial render.
+   */
+  lazy?: boolean;
 
   /**
    * Function that given `HeaderProps` returns a React Element to display as a header.

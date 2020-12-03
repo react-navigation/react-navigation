@@ -70,7 +70,6 @@ function DrawerViewBase({
   state,
   navigation,
   descriptors,
-  lazy = true,
   drawerContent = (props: DrawerContentComponentProps) => (
     <DrawerContent {...props} />
   ),
@@ -156,7 +155,7 @@ function DrawerViewBase({
       <ScreenContainer enabled={detachInactiveScreens} style={styles.content}>
         {state.routes.map((route, index) => {
           const descriptor = descriptors[route.key];
-          const { unmountOnBlur } = descriptor.options;
+          const { lazy = true, unmountOnBlur } = descriptor.options;
           const isFocused = state.index === index;
 
           if (unmountOnBlur && !isFocused) {
@@ -164,7 +163,7 @@ function DrawerViewBase({
           }
 
           if (lazy && !loaded.includes(route.key) && !isFocused) {
-            // Don't render a screen if we've never navigated to it
+            // Don't render a lazy screen if we've never navigated to it
             return null;
           }
 
