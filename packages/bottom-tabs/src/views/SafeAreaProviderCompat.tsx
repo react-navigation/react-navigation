@@ -10,7 +10,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-const frame = Dimensions.get('window');
+const { width = 0, height = 0 } = Dimensions.get('window');
 
 // To support SSR on web, we need to have empty insets for initial values
 // Otherwise there can be mismatch between SSR and client output
@@ -18,7 +18,7 @@ const frame = Dimensions.get('window');
 export const initialMetrics =
   Platform.OS === 'web' || initialWindowMetrics == null
     ? {
-        frame: { x: 0, y: 0, width: frame.width, height: frame.height },
+        frame: { x: 0, y: 0, width, height },
         insets: { top: 0, left: 0, right: 0, bottom: 0 },
       }
     : initialWindowMetrics;
