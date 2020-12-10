@@ -9,13 +9,9 @@ const Dummy: any = ({ children }: { children: React.ReactNode }) => (
   <>{children}</>
 );
 
-export const PanGestureHandler = Dummy as React.ComponentType<
-  PanGestureHandlerProperties
->;
+export const PanGestureHandler = Dummy as React.ComponentType<PanGestureHandlerProperties>;
 
-export const TapGestureHandler = Dummy as React.ComponentType<
-  TapGestureHandlerProperties
->;
+export const TapGestureHandler = Dummy as React.ComponentType<TapGestureHandlerProperties>;
 
 export const GestureHandlerRootView = View;
 

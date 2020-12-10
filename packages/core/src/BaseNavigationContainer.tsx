@@ -198,9 +198,9 @@ const BaseNavigationContainer = React.forwardRef(
     const { addOptionsGetter, getCurrentOptions } = useOptionsGetters({});
 
     React.useImperativeHandle(ref, () => ({
-      ...(Object.keys(CommonActions) as (keyof typeof CommonActions)[]).reduce<
-        any
-      >((acc, name) => {
+      ...(Object.keys(
+        CommonActions
+      ) as (keyof typeof CommonActions)[]).reduce<any>((acc, name) => {
         acc[name] = (...args: any[]) =>
           dispatch(
             CommonActions[name](

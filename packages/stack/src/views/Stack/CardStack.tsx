@@ -396,7 +396,7 @@ export default class CardStack extends React.Component<Props, State> {
       onGestureCancel,
       // Enable on new versions of `react-native-screens`
       // On older versions of `react-native-screens`, there's an issue with screens not being responsive to user interaction.
-      detachInactiveScreens = shouldUseActivityState,
+      detachInactiveScreens = shouldUseActivityState ?? false,
     } = this.props;
 
     const { scenes, layout, gestures, headerHeights } = this.state;

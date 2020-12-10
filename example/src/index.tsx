@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  AsyncStorage,
   ScrollView,
   Platform,
   StatusBar,
@@ -7,6 +8,7 @@ import {
   Dimensions,
   ScaledSize,
   Linking,
+  // @ts-expect-error: we need to use older version of types for now
   LogBox,
 } from 'react-native';
 import { enableScreens } from 'react-native-screens';
@@ -34,7 +36,6 @@ import {
   HeaderStyleInterpolators,
 } from '@react-navigation/stack';
 import { useReduxDevToolsExtension } from '@react-navigation/devtools';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { restartApp } from './Restart';
 import LinkingPrefixes from './LinkingPrefixes';

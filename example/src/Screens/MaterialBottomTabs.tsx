@@ -14,9 +14,7 @@ type MaterialBottomTabParams = {
   Chat: undefined;
 };
 
-const MaterialBottomTabs = createMaterialBottomTabNavigator<
-  MaterialBottomTabParams
->();
+const MaterialBottomTabs = createMaterialBottomTabNavigator<MaterialBottomTabParams>();
 
 export default function MaterialBottomTabsScreen() {
   return (

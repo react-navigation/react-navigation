@@ -154,9 +154,7 @@ export default function HeaderBackButton({
       disabled={disabled}
       accessible
       accessibilityRole="button"
-      accessibilityComponentType="button"
       accessibilityLabel={accessibilityLabel}
-      accessibilityTraits="button"
       testID="header-back"
       delayPressIn={0}
       onPress={disabled ? undefined : handlePress}

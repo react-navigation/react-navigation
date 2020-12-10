@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Animated, Platform } from 'react-native';
-import { BaseButton } from 'react-native-gesture-handler';
+import { BaseButton, BaseButtonProperties } from 'react-native-gesture-handler';
 
 const AnimatedBaseButton = Animated.createAnimatedComponent(BaseButton);
 
-type Props = React.ComponentProps<typeof BaseButton> & {
+type Props = BaseButtonProperties & {
   activeOpacity: number;
 };
 
@@ -38,6 +38,7 @@ export default class TouchableItem extends React.Component<Props> {
     const { children, style, enabled, ...rest } = this.props;
 
     return (
+      // @ts-expect-error: error seems like false positive
       <AnimatedBaseButton
         {...rest}
         onActiveStateChange={this.handleActiveStateChange}

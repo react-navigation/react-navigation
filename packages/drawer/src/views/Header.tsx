@@ -70,9 +70,7 @@ export default function HeaderSegment({
     <TouchableItem
       accessible
       accessibilityRole="button"
-      accessibilityComponentType="button"
       accessibilityLabel={headerLeftAccessibilityLabel}
-      accessibilityTraits="button"
       delayPressIn={0}
       onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
       style={styles.touchable}
