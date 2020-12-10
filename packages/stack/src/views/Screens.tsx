@@ -9,32 +9,6 @@ try {
   // Ignore
 }
 
-// The web implementation in react-native-screens seems buggy.
-// The view doesn't become visible after coming back in some cases.
-// So we use our custom implementation.
-class WebScreen extends React.Component<
-  ViewProps & {
-    active: number;
-    children: React.ReactNode;
-  }
-> {
-  render() {
-    const { active, style, ...rest } = this.props;
-
-    return (
-      <View
-        // @ts-expect-error: hidden exists on web, but not in React Native
-        hidden={!active}
-        style={[style, { display: active ? 'flex' : 'none' }]}
-        {...rest}
-      />
-    );
-  }
-}
-
-const AnimatedWebScreen = Animated.createAnimatedComponent(WebScreen);
-
-// @ts-ignore
 export const shouldUseActivityState = Screens?.shouldUseActivityState;
 
 export const MaybeScreenContainer = ({
@@ -60,24 +34,16 @@ export const MaybeScreen = ({
   ...rest
 }: ViewProps & {
   enabled: boolean;
-  active: 0 | 1 | 2 | Animated.AnimatedInterpolation;
+  active: 0 | 1 | Animated.AnimatedInterpolation;
   children: React.ReactNode;
 }) => {
-  if (enabled && Platform.OS === 'web') {
-    return <AnimatedWebScreen active={active} {...rest} />;
-  }
-
   if (enabled && Screens?.screensEnabled()) {
     if (shouldUseActivityState) {
       return (
-        // @ts-expect-error: there was an `active` prop and no `activityState` in older version and stackPresentation was required
         <Screens.Screen enabled={enabled} activityState={active} {...rest} />
       );
     } else {
-      return (
-        // @ts-expect-error: there was an `active` prop and no `activityState` in older version and stackPresentation was required
-        <Screens.Screen enabled={enabled} active={active} {...rest} />
-      );
+      return <Screens.Screen enabled={enabled} active={active} {...rest} />;
     }
   }
 

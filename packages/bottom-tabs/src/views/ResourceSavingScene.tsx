@@ -23,15 +23,9 @@ export default class ResourceSavingScene extends React.Component<Props> {
       const { isVisible, ...rest } = this.props;
 
       if (shouldUseActivityState) {
-        return (
-          // @ts-expect-error: there was an `active` prop and no `activityState` in older version and stackPresentation was required
-          <Screen activityState={isVisible ? 2 : 0} {...rest} />
-        );
+        return <Screen activityState={isVisible ? 2 : 0} {...rest} />;
       } else {
-        return (
-          // @ts-expect-error: there was an `active` prop and no `activityState` in older version and stackPresentation was required
-          <Screen active={isVisible ? 1 : 0} {...rest} />
-        );
+        return <Screen active={isVisible ? 1 : 0} {...rest} />;
       }
     }
 

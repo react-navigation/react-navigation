@@ -153,12 +153,8 @@ export default function DrawerItem(props: Props) {
         delayPressIn={0}
         onPress={onPress}
         style={[styles.wrapper, { borderRadius }]}
-        accessibilityTraits={focused ? ['button', 'selected'] : 'button'}
-        accessibilityComponentType="button"
         accessibilityRole="button"
         accessibilityState={{ selected: focused }}
-        // @ts-expect-error: keep for compatibility with older React Native versions
-        accessibilityStates={focused ? ['selected'] : []}
         to={to}
       >
         <React.Fragment>

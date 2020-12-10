@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Platform } from 'react-native';
+import { Text, StyleSheet, Platform } from 'react-native';
 import { BottomNavigation, DefaultTheme, DarkTheme } from 'react-native-paper';
 import {
   NavigationHelpersContext,
@@ -28,44 +28,51 @@ type Scene = { route: { key: string } };
 
 // Optionally require vector-icons referenced from react-native-paper:
 // https://github.com/callstack/react-native-paper/blob/4b26429c49053eaa4c3e0fae208639e01093fa87/src/components/MaterialCommunityIcon.tsx#L14
-let MaterialCommunityIcons: any;
+let MaterialCommunityIcons: React.ComponentType<
+  React.ComponentProps<
+    typeof import('react-native-vector-icons/MaterialCommunityIcons').default
+  >
+>;
 
 try {
   // Optionally require vector-icons
   MaterialCommunityIcons = require('react-native-vector-icons/MaterialCommunityIcons')
     .default;
 } catch (e) {
-  // @ts-expect-error
-  if (global.__expo?.Icon?.MaterialCommunityIcons) {
-    // Snack doesn't properly bundle vector icons from sub-path
-    // Use icons from the __expo global if available
-    // @ts-expect-error
-    MaterialCommunityIcons = global.__expo.Icon.MaterialCommunityIcons;
-  } else {
-    let isErrorLogged = false;
+  let isErrorLogged = false;
 
-    // Fallback component for icons
-    MaterialCommunityIcons = () => {
-      if (!isErrorLogged) {
-        if (
-          !/(Cannot find module|Module not found|Cannot resolve module)/.test(
-            e.message
-          )
-        ) {
-          console.error(e);
-        }
-
-        console.warn(
-          `Tried to use the icon '${name}' in a component from '@react-navigation/material-bottom-tabs', but 'react-native-vector-icons' could not be loaded.`,
-          `To remove this warning, try installing 'react-native-vector-icons' or use another method.`
-        );
-
-        isErrorLogged = true;
+  // Fallback component for icons
+  MaterialCommunityIcons = ({
+    name,
+    color,
+    size,
+    selectionColor: _0,
+    onLayout: _1,
+    ...rest
+  }) => {
+    if (!isErrorLogged) {
+      if (
+        !/(Cannot find module|Module not found|Cannot resolve module)/.test(
+          e.message
+        )
+      ) {
+        console.error(e);
       }
 
-      return null;
-    };
-  }
+      console.warn(
+        `Tried to use the icon '${name}' in a component from '@react-navigation/material-bottom-tabs', but 'react-native-vector-icons/MaterialCommunityIcons' could not be loaded.`,
+        `To remove this warning, try installing 'react-native-vector-icons' or use another method to specify icon: https://reactnavigation.org/docs/material-bottom-tab-navigator/#tabbaricon.`
+      );
+
+      isErrorLogged = true;
+    }
+
+    return (
+      <Text {...rest} style={[styles.icon, { color, fontSize: size }]}>
+        □
+      </Text>
+    );
+  };
 }
 
 function MaterialBottomTabViewInner({

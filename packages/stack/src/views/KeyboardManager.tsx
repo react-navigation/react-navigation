@@ -38,12 +38,10 @@ export default class KeyboardManager extends React.Component<Props> {
     this.clearKeyboardTimeout();
 
     // @ts-expect-error: blurTextInput accepts both number and ref, but types say only ref
-    const input: InputRef = TextInput.State.currentlyFocusedInput
-      ? TextInput.State.currentlyFocusedInput()
-      : TextInput.State.currentlyFocusedField();
+    const input: InputRef = TextInput.State.currentlyFocusedField();
 
     // When a page change begins, blur the currently focused input
-    TextInput.State.blurTextInput(input);
+    input?.blur();
 
     // Store the id of this input so we can refocus it if change was cancelled
     this.previouslyFocusedTextInput = input;
@@ -67,11 +65,9 @@ export default class KeyboardManager extends React.Component<Props> {
     } else {
       const input = this.previouslyFocusedTextInput;
 
-      if (input) {
-        // Dismiss the keyboard only if an input was a focused before
-        // This makes sure we don't dismiss input on going back and focusing an input
-        TextInput.State.blurTextInput(input);
-      }
+      // Dismiss the keyboard only if an input was a focused before
+      // This makes sure we don't dismiss input on going back and focusing an input
+      input?.blur();
     }
 
     // Cleanup the ID on successful page change
@@ -98,11 +94,11 @@ export default class KeyboardManager extends React.Component<Props> {
       // Subtracting timestamps makes us sure the delay is executed only when needed.
       if (Date.now() - this.startTimestamp < 100) {
         this.keyboardTimeout = setTimeout(() => {
-          TextInput.State.focusTextInput(input);
+          input?.focus();
           this.previouslyFocusedTextInput = undefined;
         }, 100);
       } else {
-        TextInput.State.focusTextInput(input);
+        input?.focus();
         this.previouslyFocusedTextInput = undefined;
       }
     }

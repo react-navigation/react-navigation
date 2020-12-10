@@ -185,9 +185,7 @@ function DrawerViewBase({
                     {header({
                       layout: dimensions,
                       route: descriptor.route,
-                      navigation: descriptor.navigation as DrawerNavigationProp<
-                        ParamListBase
-                      >,
+                      navigation: descriptor.navigation as DrawerNavigationProp<ParamListBase>,
                       options: descriptor.options,
                     })}
                   </NavigationRouteContext.Provider>
