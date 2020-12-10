@@ -112,7 +112,7 @@ export default class DrawerView extends React.Component<Props> {
     swipeEdgeWidth: 32,
     swipeVelocityThreshold: 500,
     keyboardDismissMode: 'on-drag',
-    hideStatusBar: false,
+    hideStatusBarOnOpen: false,
     statusBarAnimation: 'slide',
   };
 
