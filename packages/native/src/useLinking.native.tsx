@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Linking, Platform } from 'react-native';
 import {
-  getActionFromState,
+  getActionFromState as getActionFromStateDefault,
   getStateFromPath as getStateFromPathDefault,
   NavigationContainerRef,
 } from '@react-navigation/core';
-import type { LinkingOptions } from './types';
 import escapeStringRegexp from 'escape-string-regexp';
+import type { LinkingOptions } from './types';
 
 let isUsingLinking = false;
 
@@ -33,6 +33,7 @@ export default function useLinking(
       return () => Linking.removeEventListener('url', callback);
     },
     getStateFromPath = getStateFromPathDefault,
+    getActionFromState = getActionFromStateDefault,
   }: LinkingOptions
 ) {
   React.useEffect(() => {
@@ -66,6 +67,7 @@ export default function useLinking(
   const configRef = React.useRef(config);
   const getInitialURLRef = React.useRef(getInitialURL);
   const getStateFromPathRef = React.useRef(getStateFromPath);
+  const getActionFromStateRef = React.useRef(getActionFromState);
 
   React.useEffect(() => {
     enabledRef.current = enabled;
@@ -73,7 +75,8 @@ export default function useLinking(
     configRef.current = config;
     getInitialURLRef.current = getInitialURL;
     getStateFromPathRef.current = getStateFromPath;
-  }, [config, enabled, prefixes, getInitialURL, getStateFromPath]);
+    getActionFromStateRef.current = getActionFromState;
+  });
 
   const extractPathFromURL = React.useCallback((url: string) => {
     for (const prefix of prefixesRef.current) {
@@ -134,7 +137,10 @@ export default function useLinking(
             return;
           }
 
-          const action = getActionFromState(state, configRef.current);
+          const action = getActionFromStateRef.current(
+            state,
+            configRef.current
+          );
 
           if (action !== undefined) {
             try {

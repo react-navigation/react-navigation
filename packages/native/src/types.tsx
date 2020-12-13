@@ -1,6 +1,7 @@
 import type {
   getStateFromPath as getStateFromPathDefault,
   getPathFromState as getPathFromStateDefault,
+  getActionFromState as getActionFromStateDefault,
   PathConfigMap,
   Route,
 } from '@react-navigation/core';
@@ -90,11 +91,18 @@ export type LinkingOptions = {
   ) => undefined | void | (() => void);
   /**
    * Custom function to parse the URL to a valid navigation state (advanced).
+   * This state object will be passed as `initialState` for initial URL,
+   * and converted to an action object to `dispatch` for subsequent URLs.
    */
   getStateFromPath?: typeof getStateFromPathDefault;
   /**
+   * Custom function to convert the state object to an action to dispatch (advanced).
+   * By default, the state is converted to a `NAVIGATE` action.
+   */
+  getActionFromState?: typeof getActionFromStateDefault;
+  /**
    * Custom function to convert the state object to a valid URL (advanced).
-   * Only applicable on Web.
+   * Used for creating links for navigation, primarily useful on Web.
    */
   getPathFromState?: typeof getPathFromStateDefault;
 };

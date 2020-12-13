@@ -2,9 +2,9 @@ import * as React from 'react';
 import {
   getStateFromPath as getStateFromPathDefault,
   getPathFromState as getPathFromStateDefault,
+  getActionFromState as getActionFromStateDefault,
   NavigationContainerRef,
   NavigationState,
-  getActionFromState,
 } from '@react-navigation/core';
 import { nanoid } from 'nanoid/non-secure';
 import ServerContext from './ServerContext';
@@ -134,7 +134,7 @@ const createMemoryHistory = () => {
       // - There's history to go back, `history.go` is called, and `popstate` fires
       // - `history.go` is called multiple times, we need to resolve on respective `popstate`
       // - No history to go back, but `history.go` was called, browser has no API to detect it
-      return new Promise((resolve, reject) => {
+      return new Promise<void>((resolve, reject) => {
         const done = (interrupted?: boolean) => {
           clearTimeout(timer);
 
@@ -293,6 +293,7 @@ export default function useLinking(
     config,
     getStateFromPath = getStateFromPathDefault,
     getPathFromState = getPathFromStateDefault,
+    getActionFromState = getActionFromStateDefault,
   }: LinkingOptions
 ) {
   React.useEffect(() => {
@@ -323,14 +324,16 @@ export default function useLinking(
   const enabledRef = React.useRef(enabled);
   const configRef = React.useRef(config);
   const getStateFromPathRef = React.useRef(getStateFromPath);
+  const getActionFromStateRef = React.useRef(getActionFromState);
   const getPathFromStateRef = React.useRef(getPathFromState);
 
   React.useEffect(() => {
     enabledRef.current = enabled;
     configRef.current = config;
     getStateFromPathRef.current = getStateFromPath;
+    getActionFromStateRef.current = getActionFromState;
     getPathFromStateRef.current = getPathFromState;
-  }, [config, enabled, getPathFromState, getStateFromPath]);
+  });
 
   const server = React.useContext(ServerContext);
 
@@ -412,7 +415,10 @@ export default function useLinking(
         }
 
         if (index > previousIndex) {
-          const action = getActionFromState(state, configRef.current);
+          const action = getActionFromStateRef.current(
+            state,
+            configRef.current
+          );
 
           if (action !== undefined) {
             try {
