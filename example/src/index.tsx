@@ -43,6 +43,7 @@ import SimpleStack from './Screens/SimpleStack';
 import ModalPresentationStack from './Screens/ModalPresentationStack';
 import StackTransparent from './Screens/StackTransparent';
 import StackHeaderCustomization from './Screens/StackHeaderCustomization';
+import StackHeaderCustomizationOptions from './Screens/StackHeaderCustomizationOptions';
 import BottomTabs from './Screens/BottomTabs';
 import MaterialTopTabsScreen from './Screens/MaterialTopTabs';
 import MaterialBottomTabs from './Screens/MaterialBottomTabs';
@@ -77,6 +78,10 @@ const SCREENS = {
   StackHeaderCustomization: {
     title: 'Header Customization in Stack',
     component: StackHeaderCustomization,
+  },
+  StackHeaderCustomizationOptions: {
+    title: 'Header Customization with custom header options',
+    component: StackHeaderCustomizationOptions,
   },
   BottomTabs: { title: 'Bottom Tabs', component: BottomTabs },
   MaterialTopTabs: {
