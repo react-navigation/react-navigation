@@ -92,7 +92,6 @@ type Props = Partial<React.ComponentProps<typeof SimpleStack.Navigator>> &
 
 function CustomHeader(props: StackHeaderProps) {
   const { current, next } = props.scene.progress;
-
   const progress = Animated.add(current, next || 0);
   const opacity = progress.interpolate({
     inputRange: [0, 1, 2],
