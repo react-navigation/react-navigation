@@ -5,11 +5,12 @@ import type { ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
   StackScreenProps,
-  useHeaderHeight,
   StackHeaderProps,
 } from '@react-navigation/stack';
 import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 type SimpleStackParams = {
   Article: { author: string };
@@ -49,10 +50,8 @@ const ArticleScreen = ({
 };
 
 const AlbumsScreen = ({ navigation }: StackScreenProps<SimpleStackParams>) => {
-  const headerHeight = useHeaderHeight();
-
   return (
-    <ScrollView contentContainerStyle={{ paddingTop: headerHeight }}>
+    <ScrollView>
       <View style={styles.buttons}>
         <Button
           mode="contained"
@@ -74,20 +73,44 @@ const AlbumsScreen = ({ navigation }: StackScreenProps<SimpleStackParams>) => {
   );
 };
 
+interface HeaderButton {
+  label: string;
+  onPress(): void;
+}
 interface HeaderOptions {
   subtitle?: string;
+  right?: HeaderButton;
 }
 
 const SimpleStack = createStackNavigator<SimpleStackParams, HeaderOptions>();
 
 function CustomHeader(props: StackHeaderProps<HeaderOptions>) {
-  const { title, subtitle } = props.scene.descriptor.options;
+  const { navigation, scene } = props;
+  const { title, subtitle, right } = scene.descriptor.options;
 
   return (
-    <View>
-      <Text>{title}</Text>
-      <Text>{subtitle}</Text>
-    </View>
+    <SafeAreaView edges={['top']} style={styles.header}>
+      <View style={styles.headerContent}>
+        {navigation.canGoBack() ? (
+          <View style={[styles.headerButton, styles.headerButtonLeft]}>
+            <TouchableOpacity onPress={navigation.goBack}>
+              <Text style={styles.headerButtonLabel}>Back</Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
+        <View>
+          <Text style={styles.headerTitle}>{title}</Text>
+          <Text style={styles.headerSubtitle}>{subtitle}</Text>
+        </View>
+        {right ? (
+          <View style={[styles.headerButton, styles.headerButtonRight]}>
+            <TouchableOpacity onPress={right.onPress}>
+              <Text style={styles.headerButtonLabel}>{right.label}</Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -104,14 +127,19 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
   return (
     <SimpleStack.Navigator
       {...rest}
+      headerMode="screen"
       screenOptions={{ header: (props) => <CustomHeader {...props} /> }}
     >
       <SimpleStack.Screen
         name="Article"
         component={ArticleScreen}
-        options={({ route }) => ({
+        options={({ route, navigation }) => ({
           title: 'Article',
           subtitle: route.params.author,
+          right: {
+            label: 'Push album',
+            onPress: () => navigation.push('Albums'),
+          },
         })}
         initialParams={{ author: 'Gandalf' }}
       />
@@ -120,6 +148,7 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
         component={AlbumsScreen}
         options={{
           title: 'Albums',
+          subtitle: 'Explore all albums',
         }}
       />
     </SimpleStack.Navigator>
@@ -133,5 +162,37 @@ const styles = StyleSheet.create({
   },
   button: {
     margin: 8,
+  },
+  header: {
+    backgroundColor: '#ff005d',
+  },
+  headerContent: {
+    padding: 8,
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
+  },
+  headerSubtitle: {
+    color: '#fff',
+    textAlign: 'center',
+  },
+  headerButton: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    padding: 8,
+  },
+  headerButtonLeft: {
+    left: 8,
+  },
+  headerButtonRight: {
+    right: 8,
+  },
+  headerButtonLabel: {
+    color: '#fff',
   },
 });
