@@ -60,6 +60,32 @@ it('gets initial state from route names and params without initialRouteName', ()
   });
 });
 
+it('gets initial state from route names and params with openByDefault', () => {
+  const router = DrawerRouter({ openByDefault: true });
+
+  expect(
+    router.getInitialState({
+      routeNames: ['bar', 'baz', 'qux'],
+      routeParamList: {
+        baz: { answer: 42 },
+        qux: { name: 'Jane' },
+      },
+    })
+  ).toEqual({
+    index: 0,
+    key: 'drawer-test',
+    routeNames: ['bar', 'baz', 'qux'],
+    routes: [
+      { key: 'bar-test', name: 'bar' },
+      { key: 'baz-test', name: 'baz', params: { answer: 42 } },
+      { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
+    ],
+    history: [{ type: 'route', key: 'bar-test' }, { type: 'drawer' }],
+    stale: false,
+    type: 'drawer',
+  });
+});
+
 it('gets rehydrated state from partial state', () => {
   const router = DrawerRouter({});
 
@@ -220,6 +246,75 @@ it("doesn't rehydrate state if it's not stale", () => {
       routeParamList: {},
     })
   ).toBe(state);
+});
+
+it('respects openByDefault when rehydrating', () => {
+  const router = DrawerRouter({ openByDefault: true });
+
+  const options = {
+    routeNames: ['bar', 'baz', 'qux'],
+    routeParamList: {
+      baz: { answer: 42 },
+      qux: { name: 'Jane' },
+    },
+  };
+
+  expect(
+    router.getRehydratedState(
+      {
+        index: 0,
+        key: 'drawer-test',
+        routeNames: ['bar', 'baz', 'qux'],
+        routes: [
+          { key: 'bar-test', name: 'bar' },
+          { key: 'baz-test', name: 'baz', params: { answer: 42 } },
+          { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
+        ],
+      },
+      options
+    )
+  ).toEqual({
+    index: 0,
+    key: 'drawer-test',
+    routeNames: ['bar', 'baz', 'qux'],
+    routes: [
+      { key: 'bar-test', name: 'bar' },
+      { key: 'baz-test', name: 'baz', params: { answer: 42 } },
+      { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
+    ],
+    history: [{ key: 'bar-test', type: 'route' }, { type: 'drawer' }],
+    stale: false,
+    type: 'drawer',
+  });
+
+  expect(
+    router.getRehydratedState(
+      {
+        index: 0,
+        key: 'drawer-test',
+        routeNames: ['bar', 'baz', 'qux'],
+        routes: [
+          { key: 'bar-test', name: 'bar' },
+          { key: 'baz-test', name: 'baz', params: { answer: 42 } },
+          { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
+        ],
+        history: [{ type: 'route', key: 'bar-test' }],
+      },
+      options
+    )
+  ).toEqual({
+    index: 0,
+    key: 'drawer-test',
+    routeNames: ['bar', 'baz', 'qux'],
+    routes: [
+      { key: 'bar-test', name: 'bar' },
+      { key: 'baz-test', name: 'baz', params: { answer: 42 } },
+      { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
+    ],
+    history: [{ type: 'route', key: 'bar-test' }],
+    stale: false,
+    type: 'drawer',
+  });
 });
 
 it('handles navigate action', () => {
