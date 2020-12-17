@@ -42,19 +42,19 @@
     "react-is": "^16.13.0"
   },
   "devDependencies": {
-    "@react-native-community/bob": "^0.16.2",
     "@testing-library/react-native": "^7.1.0",
     "@types/react": "^16.9.53",
     "@types/react-is": "^16.7.1",
     "del-cli": "^3.0.1",
     "react": "~16.13.1",
+    "react-native-builder-bob": "^0.17.0",
     "react-test-renderer": "~16.13.1",
     "typescript": "^4.0.3"
   },
   "peerDependencies": {
     "react": "*"
   },
-  "@react-native-community/bob": {
+  "react-native-builder-bob": {
     "source": "src",
     "output": "lib",
     "targets": [
