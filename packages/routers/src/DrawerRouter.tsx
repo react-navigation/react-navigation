@@ -145,7 +145,7 @@ export default function DrawerRouter({
         routeParamList,
       });
 
-      if (isDrawerOpen(partialState)) {
+      if (partialState.history ? isDrawerOpen(partialState) : openByDefault) {
         state = openDrawer(state);
       }
 
