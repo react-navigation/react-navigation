@@ -28,11 +28,9 @@ type Scene = { route: { key: string } };
 
 // Optionally require vector-icons referenced from react-native-paper:
 // https://github.com/callstack/react-native-paper/blob/4b26429c49053eaa4c3e0fae208639e01093fa87/src/components/MaterialCommunityIcon.tsx#L14
-let MaterialCommunityIcons: React.ComponentType<
-  React.ComponentProps<
-    typeof import('react-native-vector-icons/MaterialCommunityIcons').default
-  >
->;
+let MaterialCommunityIcons: React.ComponentType<React.ComponentProps<
+  typeof import('react-native-vector-icons/MaterialCommunityIcons').default
+>>;
 
 try {
   // Optionally require vector-icons
