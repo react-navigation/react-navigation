@@ -61,7 +61,7 @@ const NavigationContainer = React.forwardRef(function NavigationContainer(
 
   const [isResolved, initialState] = useThenable(getInitialState);
 
-  React.useImperativeHandle(ref, () => refContainer.current);
+  React.useImperativeHandle(ref, () => refContainer.current, [ref]);
 
   const linkingContext = React.useMemo(() => ({ options: linking }), [linking]);
 

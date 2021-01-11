@@ -219,7 +219,7 @@ const BaseNavigationContainer = React.forwardRef(
       dangerouslyGetParent: () => undefined,
       getCurrentRoute,
       getCurrentOptions,
-    }));
+    }), [ref]);
 
     const onDispatchAction = React.useCallback(
       (action: NavigationAction, noop: boolean) => {
