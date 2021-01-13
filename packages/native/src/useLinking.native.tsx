@@ -8,6 +8,8 @@ import {
 import type { LinkingOptions } from './types';
 import escapeStringRegexp from 'escape-string-regexp';
 
+type ResultState = ReturnType<typeof getStateFromPathDefault>;
+
 let isUsingLinking = false;
 
 export default function useLinking(
@@ -93,19 +95,39 @@ export default function useLinking(
     return undefined;
   }, []);
 
-  const getInitialState = React.useCallback(async () => {
-    if (!enabledRef.current) {
-      return undefined;
+  const getInitialState = React.useCallback(() => {
+    let state: ResultState | undefined;
+
+    if (enabledRef.current) {
+      const url = getInitialURLRef.current();
+
+      if (url != null && typeof url !== 'string') {
+        return url.then((url) => {
+          const path = url ? extractPathFromURL(url) : null;
+
+          return path
+            ? getStateFromPathRef.current(path, configRef.current)
+            : undefined;
+        });
+      }
+
+      const path = url ? extractPathFromURL(url) : null;
+
+      state = path
+        ? getStateFromPathRef.current(path, configRef.current)
+        : undefined;
     }
 
-    const url = await getInitialURLRef.current();
-    const path = url ? extractPathFromURL(url) : null;
+    const thenable = {
+      then(onfulfilled?: (state: ResultState | undefined) => void) {
+        return Promise.resolve(onfulfilled ? onfulfilled(state) : state);
+      },
+      catch() {
+        return thenable;
+      },
+    };
 
-    if (path) {
-      return getStateFromPathRef.current(path, configRef.current);
-    } else {
-      return undefined;
-    }
+    return thenable as PromiseLike<ResultState | undefined>;
   }, [extractPathFromURL]);
 
   React.useEffect(() => {
