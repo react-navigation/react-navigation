@@ -66,7 +66,11 @@ export type LinkingOptions = {
    * }
    * ```
    */
-  getInitialURL?: () => Promise<string | null | undefined>;
+  getInitialURL?: () =>
+    | string
+    | null
+    | undefined
+    | Promise<string | null | undefined>;
   /**
    * Custom function to get subscribe to URL updates.
    * Uses `Linking.addEventListener('url', callback)` by default.
