@@ -4,6 +4,7 @@ import {
   StyleSheet,
   LayoutChangeEvent,
   Dimensions,
+  Platform,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import type {
@@ -398,7 +399,7 @@ export default class CardStack extends React.Component<Props, State> {
       onGestureCancel,
       // Enable on new versions of `react-native-screens`
       // On older versions of `react-native-screens`, there's an issue with screens not being responsive to user interaction.
-      detachInactiveScreens = shouldUseActivityState,
+      detachInactiveScreens = Platform.OS === 'web' || shouldUseActivityState,
     } = this.props;
 
     const { scenes, layout, gestures, headerHeights } = this.state;
