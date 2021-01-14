@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.13.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.12.8...@react-navigation/stack@5.13.0) (2021-01-14)
+
+
+### Bug Fixes
+
+* enable detachInactiveScreens by default on web for better a11y ([dd87fa4](https://github.com/react-navigation/react-navigation/commit/dd87fa49a43ad8db105a62418243339e4150fadf))
+
+
+### Features
+
+* export TransitionPreset for custom TransitionPresets ([#9173](https://github.com/react-navigation/react-navigation/issues/9173)) ([9633c4d](https://github.com/react-navigation/react-navigation/commit/9633c4d35fe2f9cb4f37a7629872e436a4528238))
+
+
+
+
+
 ## [5.12.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.12.7...@react-navigation/stack@5.12.8) (2020-11-21)
 
 

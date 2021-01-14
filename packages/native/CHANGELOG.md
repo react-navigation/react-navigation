@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.9.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@5.8.10...@react-navigation/native@5.9.0) (2021-01-14)
+
+
+### Bug Fixes
+
+* support sync getInitialURL in native useLinking ([b26b907](https://github.com/react-navigation/react-navigation/commit/b26b90706fe0a0d914d4a868df1310d2dc3a7623))
+
+
+### Features
+
+* expose getActionForState in linking ([c9a5d45](https://github.com/react-navigation/react-navigation/commit/c9a5d4532406c6bfdac0c675a3fe4db5430e9a55))
+
+
+
+
+
 ## [5.8.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@5.8.9...@react-navigation/native@5.8.10) (2020-11-20)
 
 **Note:** Version bump only for package @react-navigation/native

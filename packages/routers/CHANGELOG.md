@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.7.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@5.6.2...@react-navigation/routers@5.7.0) (2021-01-14)
+
+
+### Bug Fixes
+
+* consider openByDefault prop when rehydrating drawer state ([#9099](https://github.com/react-navigation/react-navigation/issues/9099)) ([2ad61a6](https://github.com/react-navigation/react-navigation/commit/2ad61a67357242fc4663ecad62ab311facbaf1be))
+
+
+### Features
+
+* add a new backBehavior: firstRoute for TabRouter ([3c87419](https://github.com/react-navigation/react-navigation/commit/3c874191ffbd24b953ded5b62f606c4cc47e5651))
+* add a way to specify an unique ID for screens ([b19f76b](https://github.com/react-navigation/react-navigation/commit/b19f76bfffe623759e67d925bfd067c753a453bf))
+
+
+
+
+
 ## [5.6.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@5.6.1...@react-navigation/routers@5.6.2) (2020-11-09)
 
 **Note:** Version bump only for package @react-navigation/routers

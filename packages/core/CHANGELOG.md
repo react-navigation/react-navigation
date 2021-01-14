@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.15.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.14.4...@react-navigation/core@5.15.0) (2021-01-14)
+
+
+### Bug Fixes
+
+* print an error when passing a second argument to useFocusEffect ([2317633](https://github.com/react-navigation/react-navigation/commit/23176336528f98924d19f321d41cb70f13300edd))
+
+
+### Features
+
+* add a way to specify an unique ID for screens ([b19f76b](https://github.com/react-navigation/react-navigation/commit/b19f76bfffe623759e67d925bfd067c753a453bf))
+
+
+
+
+
 ## [5.14.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.14.3...@react-navigation/core@5.14.4) (2020-11-20)
 
 

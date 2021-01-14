@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.11.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.11.4...@react-navigation/drawer@5.11.5) (2021-01-14)
+
+
+### Bug Fixes
+
+* enable detachInactiveScreens by default on web for better a11y ([dd87fa4](https://github.com/react-navigation/react-navigation/commit/dd87fa49a43ad8db105a62418243339e4150fadf))
+
+
+
+
+
 ## [5.11.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.11.3...@react-navigation/drawer@5.11.4) (2020-11-20)
 
 **Note:** Version bump only for package @react-navigation/drawer

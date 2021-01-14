@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.3.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@5.3.10...@react-navigation/material-bottom-tabs@5.3.11) (2021-01-14)
+
+
+### Bug Fixes
+
+* handle fallback for MaterialCommunityIcons better ([26074a2](https://github.com/react-navigation/react-navigation/commit/26074a28f768ba01743e2ca3b3cb9873a04c9d9c))
+
+
+
+
+
 ## [5.3.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@5.3.9...@react-navigation/material-bottom-tabs@5.3.10) (2020-11-20)
 
 **Note:** Version bump only for package @react-navigation/material-bottom-tabs
