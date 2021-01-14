@@ -61,5 +61,5 @@ export type {
   StackHeaderInterpolatedStyle,
   StackHeaderInterpolationProps,
   StackHeaderStyleInterpolator,
-  TransitionPreset
+  TransitionPreset,
 } from './types';
