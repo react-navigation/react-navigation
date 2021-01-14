@@ -9,6 +9,7 @@ import {
   Linking,
   LogBox,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { enableScreens } from 'react-native-screens';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {
@@ -306,38 +307,42 @@ export default function App() {
                     <ScrollView
                       style={{ backgroundColor: theme.colors.background }}
                     >
-                      <SettingsItem
-                        label="Right to left"
-                        value={I18nManager.isRTL}
-                        onValueChange={() => {
-                          I18nManager.forceRTL(!I18nManager.isRTL);
-                          restartApp();
-                        }}
-                      />
-                      <Divider />
-                      <SettingsItem
-                        label="Dark theme"
-                        value={theme.dark}
-                        onValueChange={() => {
-                          AsyncStorage.setItem(
-                            THEME_PERSISTENCE_KEY,
-                            theme.dark ? 'light' : 'dark'
-                          );
+                      <SafeAreaView edges={['right', 'bottom', 'left']}>
+                        <SettingsItem
+                          label="Right to left"
+                          value={I18nManager.isRTL}
+                          onValueChange={() => {
+                            I18nManager.forceRTL(!I18nManager.isRTL);
+                            restartApp();
+                          }}
+                        />
+                        <Divider />
+                        <SettingsItem
+                          label="Dark theme"
+                          value={theme.dark}
+                          onValueChange={() => {
+                            AsyncStorage.setItem(
+                              THEME_PERSISTENCE_KEY,
+                              theme.dark ? 'light' : 'dark'
+                            );
 
-                          setTheme((t) => (t.dark ? DefaultTheme : DarkTheme));
-                        }}
-                      />
-                      <Divider />
-                      {(Object.keys(SCREENS) as (keyof typeof SCREENS)[]).map(
-                        (name) => (
-                          <List.Item
-                            key={name}
-                            testID={name}
-                            title={SCREENS[name].title}
-                            onPress={() => navigation.navigate(name)}
-                          />
-                        )
-                      )}
+                            setTheme((t) =>
+                              t.dark ? DefaultTheme : DarkTheme
+                            );
+                          }}
+                        />
+                        <Divider />
+                        {(Object.keys(SCREENS) as (keyof typeof SCREENS)[]).map(
+                          (name) => (
+                            <List.Item
+                              key={name}
+                              testID={name}
+                              title={SCREENS[name].title}
+                              onPress={() => navigation.navigate(name)}
+                            />
+                          )
+                        )}
+                      </SafeAreaView>
                     </ScrollView>
                   )}
                 </Drawer.Screen>
