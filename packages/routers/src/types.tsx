@@ -132,6 +132,11 @@ export type RouterFactory<
 export type RouterConfigOptions = {
   routeNames: string[];
   routeParamList: ParamListBase;
+  routeGetIdList: Record<
+    string,
+    | ((options: { params?: Record<string, any> }) => string | undefined)
+    | undefined
+  >;
 };
 
 export type Router<

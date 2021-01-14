@@ -4,6 +4,7 @@ import {
   DrawerActions,
   DrawerNavigationState,
   ParamListBase,
+  RouterConfigOptions,
 } from '..';
 
 jest.mock('nanoid/non-secure', () => ({ nanoid: () => 'test' }));
@@ -18,6 +19,7 @@ it('gets initial state from route names and params with initialRouteName', () =>
         baz: { answer: 42 },
         qux: { name: 'Jane' },
       },
+      routeGetIdList: {},
     })
   ).toEqual({
     index: 1,
@@ -44,6 +46,7 @@ it('gets initial state from route names and params without initialRouteName', ()
         baz: { answer: 42 },
         qux: { name: 'Jane' },
       },
+      routeGetIdList: {},
     })
   ).toEqual({
     index: 0,
@@ -70,6 +73,7 @@ it('gets initial state from route names and params with openByDefault', () => {
         baz: { answer: 42 },
         qux: { name: 'Jane' },
       },
+      routeGetIdList: {},
     })
   ).toEqual({
     index: 0,
@@ -89,12 +93,13 @@ it('gets initial state from route names and params with openByDefault', () => {
 it('gets rehydrated state from partial state', () => {
   const router = DrawerRouter({});
 
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
     routeParamList: {
       baz: { answer: 42 },
       qux: { name: 'Jane' },
     },
+    routeGetIdList: {},
   };
 
   expect(
@@ -244,6 +249,7 @@ it("doesn't rehydrate state if it's not stale", () => {
     router.getRehydratedState(state, {
       routeNames: [],
       routeParamList: {},
+      routeGetIdList: {},
     })
   ).toBe(state);
 });
@@ -251,12 +257,13 @@ it("doesn't rehydrate state if it's not stale", () => {
 it('respects openByDefault when rehydrating', () => {
   const router = DrawerRouter({ openByDefault: true });
 
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
     routeParamList: {
       baz: { answer: 42 },
       qux: { name: 'Jane' },
     },
+    routeGetIdList: {},
   };
 
   expect(
@@ -319,9 +326,10 @@ it('respects openByDefault when rehydrating', () => {
 
 it('handles navigate action', () => {
   const router = DrawerRouter({});
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar'],
     routeParamList: {},
+    routeGetIdList: {},
   };
 
   expect(
@@ -360,9 +368,10 @@ it('handles navigate action', () => {
 
 it('handles navigate action with open drawer', () => {
   const router = DrawerRouter({});
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar'],
     routeParamList: {},
+    routeGetIdList: {},
   };
 
   expect(
@@ -401,9 +410,10 @@ it('handles navigate action with open drawer', () => {
 
 it('handles open drawer action', () => {
   const router = DrawerRouter({});
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar'],
     routeParamList: {},
+    routeGetIdList: {},
   };
 
   expect(
@@ -456,9 +466,10 @@ it('handles open drawer action', () => {
 
 it('handles close drawer action', () => {
   const router = DrawerRouter({});
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar'],
     routeParamList: {},
+    routeGetIdList: {},
   };
 
   expect(
@@ -514,9 +525,10 @@ it('handles close drawer action', () => {
 
 it('handles toggle drawer action', () => {
   const router = DrawerRouter({});
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar'],
     routeParamList: {},
+    routeGetIdList: {},
   };
 
   expect(

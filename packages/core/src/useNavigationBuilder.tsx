@@ -7,6 +7,7 @@ import {
   ParamListBase,
   Router,
   RouterFactory,
+  RouterConfigOptions,
   PartialState,
   NavigationAction,
   Route,
@@ -257,6 +258,15 @@ export default function useNavigationBuilder<
     },
     {}
   );
+  const routeGetIdList = routeNames.reduce<
+    RouterConfigOptions['routeGetIdList']
+  >(
+    (acc, curr) =>
+      Object.assign(acc, {
+        [curr]: screens[curr].getId,
+      }),
+    {}
+  );
 
   if (!routeNames.length) {
     throw new Error(
@@ -297,6 +307,7 @@ export default function useNavigationBuilder<
         router.getInitialState({
           routeNames,
           routeParamList,
+          routeGetIdList,
         }),
         true,
       ];
@@ -307,6 +318,7 @@ export default function useNavigationBuilder<
           {
             routeNames,
             routeParamList,
+            routeGetIdList,
           }
         ),
         false,
@@ -336,6 +348,7 @@ export default function useNavigationBuilder<
     nextState = router.getStateForRouteNamesChange(state, {
       routeNames,
       routeParamList,
+      routeGetIdList,
     });
   }
 
@@ -372,6 +385,7 @@ export default function useNavigationBuilder<
       ? router.getStateForAction(nextState, action, {
           routeNames,
           routeParamList,
+          routeGetIdList,
         })
       : null;
 
@@ -380,6 +394,7 @@ export default function useNavigationBuilder<
         ? router.getRehydratedState(updatedState, {
             routeNames,
             routeParamList,
+            routeGetIdList,
           })
         : nextState;
   }
@@ -501,6 +516,7 @@ export default function useNavigationBuilder<
     routerConfigOptions: {
       routeNames,
       routeParamList,
+      routeGetIdList,
     },
     emitter,
   });

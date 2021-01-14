@@ -389,6 +389,14 @@ export type RouteConfig<
       }) => ScreenListeners<State, EventMap>);
 
   /**
+   * Function to return an unique ID for this screen.
+   * Receives an object with the route params.
+   * For a given screen name, there will always be only one screen corresponding to an ID.
+   * If `undefined` is returned, it acts same as no `getId` being specified.
+   */
+  getId?: ({ params }: { params: ParamList[RouteName] }) => string | undefined;
+
+  /**
    * Initial params object for the route.
    */
   initialParams?: Partial<ParamList[RouteName]>;

@@ -78,6 +78,7 @@ export default function useNavigationHelpers<
           router.getStateForAction(state, CommonActions.goBack() as Action, {
             routeNames: state.routeNames,
             routeParamList: {},
+            routeGetIdList: {},
           }) !== null ||
           parentNavigationHelpers?.canGoBack() ||
           false
