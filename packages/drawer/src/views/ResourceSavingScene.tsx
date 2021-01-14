@@ -16,45 +16,62 @@ type Props = {
 
 const FAR_FAR_AWAY = 30000; // this should be big enough to move the whole view out of its container
 
-export default class ResourceSavingScene extends React.Component<Props> {
-  render() {
-    // react-native-screens is buggy on web
-    if (screensEnabled?.() && Platform.OS !== 'web') {
-      const { isVisible, ...rest } = this.props;
-
-      if (shouldUseActivityState) {
-        return <Screen activityState={isVisible ? 2 : 0} {...rest} />;
-      } else {
-        return <Screen active={isVisible ? 1 : 0} {...rest} />;
-      }
-    }
-
-    const { isVisible, children, style, ...rest } = this.props;
-
-    return (
-      <View
-        style={[
-          styles.container,
-          Platform.OS === 'web'
-            ? { display: isVisible ? 'flex' : 'none' }
-            : { overflow: 'hidden' },
-          style,
-        ]}
-        collapsable={false}
-        removeClippedSubviews={
-          // On iOS, set removeClippedSubviews to true only when not focused
-          // This is an workaround for a bug where the clipped view never re-appears
-          Platform.OS === 'ios' ? !isVisible : true
-        }
-        pointerEvents={isVisible ? 'auto' : 'none'}
-        {...rest}
-      >
-        <View style={isVisible ? styles.attached : styles.detached}>
+export default function ResourceSavingScene({
+  isVisible,
+  children,
+  style,
+  ...rest
+}: Props) {
+  // react-native-screens is buggy on web
+  if (screensEnabled?.() && Platform.OS !== 'web') {
+    if (shouldUseActivityState) {
+      return (
+        <Screen activityState={isVisible ? 2 : 0} style={style} {...rest}>
           {children}
-        </View>
-      </View>
-    );
+        </Screen>
+      );
+    } else {
+      return (
+        <Screen active={isVisible ? 1 : 0} style={style} {...rest}>
+          {children}
+        </Screen>
+      );
+    }
   }
+
+  return (
+    <View
+      // @ts-expect-error: hidden exists on web, but not in React Native
+      hidden={!isVisible}
+      style={[
+        styles.container,
+        Platform.OS === 'web'
+          ? { display: isVisible ? 'flex' : 'none' }
+          : { overflow: 'hidden' },
+        style,
+      ]}
+      collapsable={false}
+      removeClippedSubviews={
+        // On iOS, set removeClippedSubviews to true only when not focused
+        // This is an workaround for a bug where the clipped view never re-appears
+        Platform.OS === 'ios' ? !isVisible : true
+      }
+      pointerEvents={isVisible ? 'auto' : 'none'}
+      {...rest}
+    >
+      <View
+        style={
+          Platform.OS === 'web'
+            ? null
+            : isVisible
+            ? styles.attached
+            : styles.detached
+        }
+      >
+        {children}
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
