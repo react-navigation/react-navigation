@@ -18,7 +18,7 @@ export type StackActionType =
     }
   | {
       type: 'PUSH';
-      payload: { name: string; key?: string | undefined; params?: object };
+      payload: { name: string; params?: object };
       source?: string;
       target?: string;
     }
@@ -258,41 +258,34 @@ export default function StackRouter(options: StackRouterOptions) {
 
         case 'PUSH':
           if (state.routeNames.includes(action.payload.name)) {
-            const route =
-              action.payload.name && action.payload.key
-                ? state.routes.find(
-                    (route) =>
-                      route.name === action.payload.name &&
-                      route.key === action.payload.key
-                  )
-                : undefined;
+            const getId = options.routeGetIdList[action.payload.name];
+            const id = getId?.({ params: action.payload.params });
+
+            const route = id
+              ? state.routes.find(
+                  (route) => id === getId?.({ params: route.params })
+                )
+              : undefined;
 
             let routes: Route<string>[];
 
             if (route) {
               routes = state.routes.filter((r) => r.key !== route.key);
-              routes.push(
-                action.payload.params
-                  ? {
-                      ...route,
-                      params:
-                        action.payload.params !== undefined
-                          ? {
-                              ...route.params,
-                              ...action.payload.params,
-                            }
-                          : route.params,
-                    }
-                  : route
-              );
+              routes.push({
+                ...route,
+                params:
+                  routeParamList[action.payload.name] !== undefined
+                    ? {
+                        ...routeParamList[action.payload.name],
+                        ...action.payload.params,
+                      }
+                    : action.payload.params,
+              });
             } else {
               routes = [
                 ...state.routes,
                 {
-                  key:
-                    action.payload.key === undefined
-                      ? `${action.payload.name}-${nanoid()}`
-                      : action.payload.key,
+                  key: `${action.payload.name}-${nanoid()}`,
                   name: action.payload.name,
                   params:
                     routeParamList[action.payload.name] !== undefined
@@ -355,7 +348,19 @@ export default function StackRouter(options: StackRouterOptions) {
             // If the route already exists, navigate to that
             let index = -1;
 
-            if (
+            const getId =
+              // `getId` and `key` can't be used together
+              action.payload.key === undefined &&
+              action.payload.name !== undefined
+                ? options.routeGetIdList[action.payload.name]
+                : undefined;
+            const id = getId?.({ params: action.payload.params });
+
+            if (id) {
+              index = state.routes.findIndex(
+                (route) => id === getId?.({ params: route.params })
+              );
+            } else if (
               (state.routes[state.index].name === action.payload.name &&
                 action.payload.key === undefined) ||
               state.routes[state.index].key === action.payload.key
@@ -383,18 +388,27 @@ export default function StackRouter(options: StackRouterOptions) {
             }
 
             if (index === -1 && action.payload.name !== undefined) {
-              return router.getStateForAction(
-                state,
+              const routes = [
+                ...state.routes,
                 {
-                  type: 'PUSH',
-                  payload: {
-                    key: action.payload.key,
-                    name: action.payload.name,
-                    params: action.payload.params,
-                  },
+                  key:
+                    action.payload.key ?? `${action.payload.name}-${nanoid()}`,
+                  name: action.payload.name,
+                  params:
+                    routeParamList[action.payload.name] !== undefined
+                      ? {
+                          ...routeParamList[action.payload.name],
+                          ...action.payload.params,
+                        }
+                      : action.payload.params,
                 },
-                options
-              );
+              ];
+
+              return {
+                ...state,
+                routes,
+                index: routes.length - 1,
+              };
             }
 
             const route = state.routes[index];
