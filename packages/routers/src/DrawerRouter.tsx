@@ -120,8 +120,12 @@ export default function DrawerRouter({
 
     type: 'drawer',
 
-    getInitialState({ routeNames, routeParamList }) {
-      let state = router.getInitialState({ routeNames, routeParamList });
+    getInitialState({ routeNames, routeParamList, routeGetIdList }) {
+      let state = router.getInitialState({
+        routeNames,
+        routeParamList,
+        routeGetIdList,
+      });
 
       if (openByDefault) {
         state = openDrawer(state);
@@ -135,7 +139,10 @@ export default function DrawerRouter({
       };
     },
 
-    getRehydratedState(partialState, { routeNames, routeParamList }) {
+    getRehydratedState(
+      partialState,
+      { routeNames, routeParamList, routeGetIdList }
+    ) {
       if (partialState.stale === false) {
         return partialState;
       }
@@ -143,6 +150,7 @@ export default function DrawerRouter({
       let state = router.getRehydratedState(partialState, {
         routeNames,
         routeParamList,
+        routeGetIdList,
       });
 
       if (isDrawerOpen(partialState)) {

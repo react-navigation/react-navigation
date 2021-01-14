@@ -4,6 +4,7 @@ import {
   TabActions,
   TabNavigationState,
   ParamListBase,
+  RouterConfigOptions,
 } from '..';
 
 jest.mock('nanoid/non-secure', () => ({ nanoid: () => 'test' }));
@@ -18,6 +19,7 @@ it('gets initial state from route names and params with initialRouteName', () =>
         baz: { answer: 42 },
         qux: { name: 'Jane' },
       },
+      routeGetIdList: {},
     })
   ).toEqual({
     index: 1,
@@ -47,6 +49,7 @@ it('gets initial state from route names and params without initialRouteName', ()
         baz: { answer: 42 },
         qux: { name: 'Jane' },
       },
+      routeGetIdList: {},
     })
   ).toEqual({
     index: 0,
@@ -66,12 +69,13 @@ it('gets initial state from route names and params without initialRouteName', ()
 it('gets rehydrated state from partial state', () => {
   const router = TabRouter({});
 
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
     routeParamList: {
       baz: { answer: 42 },
       qux: { name: 'Jane' },
     },
+    routeGetIdList: {},
   };
 
   expect(
@@ -250,6 +254,7 @@ it("doesn't rehydrate state if it's not stale", () => {
     router.getRehydratedState(state, {
       routeNames: [],
       routeParamList: {},
+      routeGetIdList: {},
     })
   ).toBe(state);
 });
@@ -257,9 +262,10 @@ it("doesn't rehydrate state if it's not stale", () => {
 it('restores correct history on rehydrating with backBehavior: order', () => {
   const router = TabRouter({ backBehavior: 'order' });
 
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
     routeParamList: {},
+    routeGetIdList: {},
   };
 
   expect(
@@ -298,9 +304,10 @@ it('restores correct history on rehydrating with backBehavior: order', () => {
 it('restores correct history on rehydrating with backBehavior: history', () => {
   const router = TabRouter({ backBehavior: 'history' });
 
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
     routeParamList: {},
+    routeGetIdList: {},
   };
 
   expect(
@@ -338,9 +345,10 @@ it('restores correct history on rehydrating with backBehavior: firstRoute', () =
     initialRouteName: 'bar',
   });
 
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
     routeParamList: {},
+    routeGetIdList: {},
   };
 
   expect(
@@ -381,9 +389,10 @@ it('restores correct history on rehydrating with backBehavior: initialRoute', ()
     initialRouteName: 'bar',
   });
 
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
     routeParamList: {},
+    routeGetIdList: {},
   };
 
   expect(
@@ -421,9 +430,10 @@ it('restores correct history on rehydrating with backBehavior: initialRoute', ()
 it('restores correct history on rehydrating with backBehavior: none', () => {
   const router = TabRouter({ backBehavior: 'none' });
 
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
     routeParamList: {},
+    routeGetIdList: {},
   };
 
   expect(
@@ -479,6 +489,7 @@ it('gets state on route names change', () => {
           qux: { name: 'John' },
           fiz: { fruit: 'apple' },
         },
+        routeGetIdList: {},
       }
     )
   ).toEqual({
@@ -513,6 +524,7 @@ it('gets state on route names change', () => {
       {
         routeNames: ['foo', 'fiz'],
         routeParamList: {},
+        routeGetIdList: {},
       }
     )
   ).toEqual({
@@ -553,6 +565,7 @@ it('preserves focused route on route names change', () => {
           qux: { name: 'John' },
           fiz: { fruit: 'apple' },
         },
+        routeGetIdList: {},
       }
     )
   ).toEqual({
@@ -595,6 +608,7 @@ it('falls back to first route if route is removed on route names change', () => 
           qux: { name: 'John' },
           fiz: { fruit: 'apple' },
         },
+        routeGetIdList: {},
       }
     )
   ).toEqual({
@@ -614,9 +628,10 @@ it('falls back to first route if route is removed on route names change', () => 
 
 it('handles navigate action', () => {
   const router = TabRouter({});
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz'],
     routeParamList: {},
+    routeGetIdList: {},
   };
 
   expect(
@@ -704,9 +719,10 @@ it('handles navigate action', () => {
 
 it('handles jump to action', () => {
   const router = TabRouter({});
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz'],
     routeParamList: {},
+    routeGetIdList: {},
   };
 
   expect(
@@ -745,9 +761,10 @@ it('handles jump to action', () => {
 
 it('handles back action with backBehavior: history', () => {
   const router = TabRouter({ backBehavior: 'history' });
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
     routeParamList: {},
+    routeGetIdList: {},
   };
 
   let state = router.getInitialState(options);
@@ -831,9 +848,10 @@ it('handles back action with backBehavior: history', () => {
 
 it('handles back action with backBehavior: order', () => {
   const router = TabRouter({ backBehavior: 'order' });
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
     routeParamList: {},
+    routeGetIdList: {},
   };
 
   let state = router.getInitialState(options);
@@ -902,9 +920,10 @@ it('handles back action with backBehavior: order', () => {
 
 it('handles back action with backBehavior: initialRoute', () => {
   const router = TabRouter({ backBehavior: 'initialRoute' });
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
     routeParamList: {},
+    routeGetIdList: {},
   };
 
   let state = router.getInitialState(options);
@@ -974,9 +993,10 @@ it('handles back action with backBehavior: initialRoute and initialRouteName', (
     initialRouteName: 'baz',
   });
 
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
     routeParamList: {},
+    routeGetIdList: {},
   };
 
   let state = router.getInitialState(options);
@@ -1042,9 +1062,10 @@ it('handles back action with backBehavior: initialRoute and initialRouteName', (
 
 it('handles back action with backBehavior: none', () => {
   const router = TabRouter({ backBehavior: 'none' });
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
     routeParamList: {},
+    routeGetIdList: {},
   };
 
   let state = router.getInitialState(options);
@@ -1062,9 +1083,10 @@ it('handles back action with backBehavior: none', () => {
 
 it('updates route key history on navigate and jump to', () => {
   const router = TabRouter({ backBehavior: 'history' });
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
     routeParamList: {},
+    routeGetIdList: {},
   };
 
   let state: TabNavigationState<ParamListBase> = {
@@ -1165,11 +1187,12 @@ it('updates route key history on focus change', () => {
 
 it("doesn't merge params on navigate to an existing screen", () => {
   const router = TabRouter({});
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {
       qux: { color: 'indigo' },
     },
+    routeGetIdList: {},
   };
 
   expect(
@@ -1280,9 +1303,10 @@ it("doesn't merge params on navigate to an existing screen", () => {
 
 it('merges params on navigate to an existing screen if merge: true', () => {
   const router = TabRouter({});
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
+    routeGetIdList: {},
   };
 
   expect(
@@ -1365,9 +1389,10 @@ it('merges params on navigate to an existing screen if merge: true', () => {
 
 it("doesn't merge params on jump to an existing screen", () => {
   const router = TabRouter({});
-  const options = {
+  const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
+    routeGetIdList: {},
   };
 
   expect(
