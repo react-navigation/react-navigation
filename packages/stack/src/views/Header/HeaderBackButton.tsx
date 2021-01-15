@@ -30,6 +30,7 @@ export default function HeaderBackButton({
   titleLayout,
   truncatedLabel = 'Back',
   accessibilityLabel = label && label !== 'Back' ? `${label}, back` : 'Go back',
+  testID,
   style,
 }: Props) {
   const { dark, colors } = useTheme();
@@ -155,7 +156,7 @@ export default function HeaderBackButton({
       accessible
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
-      testID="header-back"
+      testID={testID}
       delayPressIn={0}
       onPress={disabled ? undefined : handlePress}
       pressColor={pressColorAndroid}
