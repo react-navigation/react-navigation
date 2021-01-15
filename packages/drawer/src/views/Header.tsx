@@ -111,22 +111,19 @@ export default function HeaderSegment({
     >
       <View pointerEvents="none" style={{ height: headerStatusBarHeight }} />
       <View pointerEvents="box-none" style={styles.content}>
-        {leftButton ? (
-          <View
-            pointerEvents="box-none"
-            style={[styles.left, { left: insets.left }]}
-          >
-            {leftButton}
-          </View>
-        ) : null}
+        <View
+          pointerEvents="box-none"
+          style={[styles.left, { marginLeft: insets.left }]}
+        >
+          {leftButton}
+        </View>
         <View
           pointerEvents="box-none"
           style={[
             headerTitleAlign === 'left'
               ? {
-                  position: 'absolute',
-                  left: (leftButton ? 72 : 16) + insets.left,
-                  right: (rightButton ? 72 : 16) + insets.right,
+                  marginLeft: (leftButton ? 72 : 16) + insets.left,
+                  marginRight: (rightButton ? 72 : 16) + insets.right,
                 }
               : {
                   marginHorizontal:
@@ -159,14 +156,12 @@ export default function HeaderSegment({
             </Text>
           )}
         </View>
-        {rightButton ? (
-          <View
-            pointerEvents="box-none"
-            style={[styles.right, { right: insets.right }]}
-          >
-            {rightButton}
-          </View>
-        ) : null}
+        <View
+          pointerEvents="box-none"
+          style={[styles.right, { marginRight: insets.right }]}
+        >
+          {rightButton}
+        </View>
       </View>
     </View>
   );
@@ -223,18 +218,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 11,
   },
   left: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    bottom: 0,
+    flexGrow: 1,
+    flexBasis: 0,
     justifyContent: 'center',
     alignItems: 'flex-start',
   },
   right: {
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    bottom: 0,
+    flexGrow: 1,
+    flexBasis: 0,
     justifyContent: 'center',
     alignItems: 'flex-end',
   },
