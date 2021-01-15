@@ -328,27 +328,24 @@ export default function HeaderSegment(props: Props) {
       >
         <View pointerEvents="none" style={{ height: headerStatusBarHeight }} />
         <View pointerEvents="box-none" style={styles.content}>
-          {leftButton ? (
-            <Animated.View
-              pointerEvents="box-none"
-              style={[
-                styles.left,
-                { left: insets.left },
-                leftButtonStyle,
-                leftContainerStyle,
-              ]}
-            >
-              {leftButton}
-            </Animated.View>
-          ) : null}
+          <Animated.View
+            pointerEvents="box-none"
+            style={[
+              styles.left,
+              { marginLeft: insets.left },
+              leftButtonStyle,
+              leftContainerStyle,
+            ]}
+          >
+            {leftButton}
+          </Animated.View>
           <Animated.View
             pointerEvents="box-none"
             style={[
               headerTitleAlign === 'left'
                 ? {
-                    position: 'absolute',
-                    left: (leftButton ? 72 : 16) + insets.left,
-                    right: (rightButton ? 72 : 16) + insets.right,
+                    marginLeft: (leftButton ? 72 : 16) + insets.left,
+                    marginRight: (rightButton ? 72 : 16) + insets.right,
                   }
                 : {
                     marginHorizontal:
@@ -370,19 +367,17 @@ export default function HeaderSegment(props: Props) {
               style: customTitleStyle,
             })}
           </Animated.View>
-          {rightButton ? (
-            <Animated.View
-              pointerEvents="box-none"
-              style={[
-                styles.right,
-                { right: insets.right },
-                rightButtonStyle,
-                rightContainerStyle,
-              ]}
-            >
-              {rightButton}
-            </Animated.View>
-          ) : null}
+          <Animated.View
+            pointerEvents="box-none"
+            style={[
+              styles.right,
+              { marginRight: insets.right },
+              rightButtonStyle,
+              rightContainerStyle,
+            ]}
+          >
+            {rightButton}
+          </Animated.View>
         </View>
       </Animated.View>
     </React.Fragment>
@@ -397,18 +392,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   left: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    bottom: 0,
+    flexGrow: 1,
+    flexBasis: 0,
     justifyContent: 'center',
     alignItems: 'flex-start',
   },
   right: {
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    bottom: 0,
+    flexGrow: 1,
+    flexBasis: 0,
     justifyContent: 'center',
     alignItems: 'flex-end',
   },
