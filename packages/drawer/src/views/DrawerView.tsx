@@ -25,9 +25,9 @@ import ResourceSavingScene from './ResourceSavingScene';
 import Header from './Header';
 import DrawerContent from './DrawerContent';
 import Drawer from './Drawer';
-import DrawerOpenContext from '../utils/DrawerOpenContext';
+import DrawerStatusContext from '../utils/DrawerStatusContext';
 import DrawerPositionContext from '../utils/DrawerPositionContext';
-import getIsDrawerOpenFromState from '../utils/getIsDrawerOpenFromState';
+import getDrawerStatusFromState from '../utils/getDrawerStatusFromState';
 import type {
   DrawerDescriptorMap,
   DrawerNavigationConfig,
@@ -97,7 +97,7 @@ function DrawerViewBase({
 
   const { colors } = useTheme();
 
-  const isDrawerOpen = getIsDrawerOpenFromState(state);
+  const drawerStatus = getDrawerStatusFromState(state);
 
   const handleDrawerOpen = React.useCallback(() => {
     navigation.dispatch({
@@ -116,7 +116,7 @@ function DrawerViewBase({
   React.useEffect(() => {
     let subscription: NativeEventSubscription | undefined;
 
-    if (isDrawerOpen) {
+    if (drawerStatus === 'open') {
       // We only add the subscription when drawer opens
       // This way we can make sure that the subscription is added as late as possible
       // This will make sure that our handler will run first when back button is pressed
@@ -128,7 +128,7 @@ function DrawerViewBase({
     }
 
     return () => subscription?.remove();
-  }, [handleDrawerClose, isDrawerOpen, navigation, state.key]);
+  }, [handleDrawerClose, drawerStatus, navigation, state.key]);
 
   const focusedRouteKey = state.routes[state.index].key;
 
@@ -200,9 +200,9 @@ function DrawerViewBase({
   };
 
   return (
-    <DrawerOpenContext.Provider value={isDrawerOpen}>
+    <DrawerStatusContext.Provider value={drawerStatus}>
       <Drawer
-        open={isDrawerOpen}
+        open={drawerStatus !== 'closed'}
         gestureEnabled={gestureEnabled}
         swipeEnabled={swipeEnabled}
         onOpen={handleDrawerOpen}
@@ -241,7 +241,7 @@ function DrawerViewBase({
         keyboardDismissMode={keyboardDismissMode}
         dimensions={dimensions}
       />
-    </DrawerOpenContext.Provider>
+    </DrawerStatusContext.Provider>
   );
 }
 

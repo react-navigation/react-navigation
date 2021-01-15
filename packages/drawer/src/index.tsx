@@ -17,8 +17,8 @@ export { default as DrawerContentScrollView } from './views/DrawerContentScrollV
  */
 export { default as DrawerGestureContext } from './utils/DrawerGestureContext';
 
-export { default as getIsDrawerOpenFromState } from './utils/getIsDrawerOpenFromState';
-export { default as useIsDrawerOpen } from './utils/useIsDrawerOpen';
+export { default as getDrawerStatusFromState } from './utils/getDrawerStatusFromState';
+export { default as useDrawerStatus } from './utils/useDrawerStatus';
 
 /**
  * Types
