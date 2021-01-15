@@ -148,6 +148,10 @@ export type StackHeaderOptions = {
    */
   headerBackAccessibilityLabel?: string;
   /**
+   * ID to locate this back button in tests.
+   */
+  headerBackTestID?: string;
+  /**
    * Title string used by the back button on iOS. Defaults to the previous scene's `headerTitle`.
    * Use `headerBackTitleVisible: false` to hide it.
    */
@@ -449,6 +453,10 @@ export type StackHeaderLeftButtonProps = {
    * Accessibility label for the button for screen readers.
    */
   accessibilityLabel?: string;
+  /**
+   * ID to locate this button in tests.
+   */
+  testID?: string;
   /**
    * Style object for the button.
    */
