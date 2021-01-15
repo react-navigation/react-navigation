@@ -36,7 +36,10 @@ export type DrawerNavigationState<ParamList extends ParamListBase> = Omit<
   /**
    * List of previously visited route keys and drawer open status.
    */
-  history: ({ type: 'route'; key: string } | { type: 'drawer' })[];
+  history: (
+    | { type: 'route'; key: string }
+    | { type: 'drawer'; status: 'open' }
+  )[];
 };
 
 export type DrawerActionHelpers<
@@ -86,7 +89,7 @@ const openDrawer = (
 
   return {
     ...state,
-    history: [...state.history, { type: 'drawer' }],
+    history: [...state.history, { type: 'drawer', status: 'open' }],
   };
 };
 
