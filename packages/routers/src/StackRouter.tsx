@@ -396,6 +396,9 @@ export default function StackRouter(options: StackRouterOptions) {
             }
 
             if (index === -1 && action.payload.name !== undefined) {
+              if (!state.routeNames.includes(action.payload.name)) {
+                return null;
+              }
               const routes = [
                 ...state.routes,
                 {
