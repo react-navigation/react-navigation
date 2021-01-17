@@ -440,6 +440,55 @@ it('handles navigate action', () => {
   });
 });
 
+it("doesn't navigate to nonexistent screen", () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
+      },
+      CommonActions.navigate('far', { answer: 42 }),
+      options
+    )
+  ).toBe(null);
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
+      },
+      CommonActions.navigate({
+        name: 'far',
+        key: 'test',
+        params: { answer: 42 },
+      }),
+      options
+    )
+  ).toBe(null);
+});
+
 it('ensures unique ID for navigate', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
@@ -1040,6 +1089,58 @@ it('handles push action', () => {
         routes: [{ key: 'bar', name: 'bar' }],
       },
       StackActions.push('unknown'),
+      options
+    )
+  ).toBe(null);
+});
+
+it("doesn't push nonexistent screen", () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
+      },
+      StackActions.push('far', { answer: 42 }),
+      options
+    )
+  ).toBe(null);
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
+      },
+      {
+        type: 'PUSH',
+        payload: {
+          name: 'far',
+          key: 'test',
+          params: { answer: 42 },
+        },
+      },
       options
     )
   ).toBe(null);
