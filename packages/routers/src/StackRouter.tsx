@@ -341,10 +341,13 @@ export default function StackRouter(options: StackRouterOptions) {
 
         case 'NAVIGATE':
           if (
-            action.payload.key ||
-            (action.payload.name &&
-              state.routeNames.includes(action.payload.name))
+            action.payload.name !== undefined &&
+            !state.routeNames.includes(action.payload.name)
           ) {
+            return null;
+          }
+
+          if (action.payload.key || action.payload.name) {
             // If the route already exists, navigate to that
             let index = -1;
 

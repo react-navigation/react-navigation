@@ -717,6 +717,57 @@ it('handles navigate action', () => {
   ).toBe(null);
 });
 
+it("doesn't navigate to nonexistent screen", () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
+        history: [{ type: 'route', key: 'bar' }],
+      },
+      CommonActions.navigate('foo', { answer: 42 }),
+      options
+    )
+  ).toBe(null);
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
+        history: [{ type: 'route', key: 'bar' }],
+      },
+      CommonActions.navigate({
+        name: 'foo',
+        key: 'test',
+        params: { answer: 42 },
+      }),
+      options
+    )
+  ).toBe(null);
+});
+
 it('handles jump to action', () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
@@ -757,6 +808,34 @@ it('handles jump to action', () => {
       { type: 'route', key: 'bar' },
     ],
   });
+});
+
+it("doesn't jump to nonexistent screen", () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
+        history: [{ type: 'route', key: 'bar' }],
+      },
+      TabActions.jumpTo('foo', { answer: 42 }),
+      options
+    )
+  ).toBe(null);
 });
 
 it('handles back action with backBehavior: history', () => {
