@@ -39,32 +39,35 @@ export default function ResourceSavingScene({
     }
   }
 
-  return (
-    <View
-      // @ts-expect-error: hidden exists on web, but not in React Native
-      hidden={!isVisible}
-      style={[
-        styles.container,
-        Platform.OS === 'web' ? { display: isVisible ? 'flex' : 'none' } : null,
-        style,
-      ]}
-      collapsable={false}
-      removeClippedSubviews={
-        // On iOS, set removeClippedSubviews to true only when not focused
-        // This is an workaround for a bug where the clipped view never re-appears
-        Platform.OS === 'ios' ? !isVisible : true
-      }
-      pointerEvents={isVisible ? 'auto' : 'none'}
-      {...rest}
-    >
+  if (Platform.OS === 'web') {
+    return (
       <View
-        style={
-          Platform.OS === 'web'
-            ? null
-            : isVisible
-            ? styles.attached
-            : styles.detached
+        // @ts-expect-error: hidden exists on web, but not in React Native
+        hidden={!isVisible}
+        style={[
+          { display: isVisible ? 'flex' : 'none' },
+          styles.container,
+          style,
+        ]}
+        pointerEvents={isVisible ? 'auto' : 'none'}
+        {...rest}
+      >
+        {children}
+      </View>
+    );
+  }
+
+  return (
+    <View style={[styles.container, style]}>
+      <View
+        collapsable={false}
+        removeClippedSubviews={
+          // On iOS, set removeClippedSubviews to true only when not focused
+          // This is an workaround for a bug where the clipped view never re-appears
+          Platform.OS === 'ios' ? !isVisible : true
         }
+        pointerEvents={isVisible ? 'auto' : 'none'}
+        style={isVisible ? styles.attached : styles.detached}
       >
         {children}
       </View>
