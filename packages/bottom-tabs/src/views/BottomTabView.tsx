@@ -142,51 +142,49 @@ export default class BottomTabView extends React.Component<Props, State> {
     return (
       <NavigationHelpersContext.Provider value={navigation}>
         <SafeAreaProviderCompat>
-          <View style={styles.container}>
-            <ScreenContainer
-              // @ts-ignore
-              enabled={detachInactiveScreens}
-              style={styles.pages}
-            >
-              {routes.map((route, index) => {
-                const descriptor = descriptors[route.key];
-                const { unmountOnBlur } = descriptor.options;
-                const isFocused = state.index === index;
+          <ScreenContainer
+            // @ts-ignore
+            enabled={detachInactiveScreens}
+            style={styles.container}
+          >
+            {routes.map((route, index) => {
+              const descriptor = descriptors[route.key];
+              const { unmountOnBlur } = descriptor.options;
+              const isFocused = state.index === index;
 
-                if (unmountOnBlur && !isFocused) {
-                  return null;
-                }
+              if (unmountOnBlur && !isFocused) {
+                return null;
+              }
 
-                if (lazy && !loaded.includes(route.key) && !isFocused) {
-                  // Don't render a screen if we've never navigated to it
-                  return null;
-                }
+              if (lazy && !loaded.includes(route.key) && !isFocused) {
+                // Don't render a screen if we've never navigated to it
+                return null;
+              }
 
-                return (
-                  <ResourceSavingScene
-                    key={route.key}
-                    style={StyleSheet.absoluteFill}
-                    isVisible={isFocused}
-                    enabled={detachInactiveScreens}
+              return (
+                <ResourceSavingScene
+                  key={route.key}
+                  style={StyleSheet.absoluteFill}
+                  isVisible={isFocused}
+                  enabled={detachInactiveScreens}
+                >
+                  <SceneContent
+                    isFocused={isFocused}
+                    style={sceneContainerStyle}
                   >
-                    <SceneContent
-                      isFocused={isFocused}
-                      style={sceneContainerStyle}
-                    >
-                      <BottomTabBarHeightContext.Provider value={tabBarHeight}>
-                        {descriptor.render()}
-                      </BottomTabBarHeightContext.Provider>
-                    </SceneContent>
-                  </ResourceSavingScene>
-                );
-              })}
-            </ScreenContainer>
-            <BottomTabBarHeightCallbackContext.Provider
-              value={this.handleTabBarHeightChange}
-            >
-              {this.renderTabBar()}
-            </BottomTabBarHeightCallbackContext.Provider>
-          </View>
+                    <BottomTabBarHeightContext.Provider value={tabBarHeight}>
+                      {descriptor.render()}
+                    </BottomTabBarHeightContext.Provider>
+                  </SceneContent>
+                </ResourceSavingScene>
+              );
+            })}
+          </ScreenContainer>
+          <BottomTabBarHeightCallbackContext.Provider
+            value={this.handleTabBarHeightChange}
+          >
+            {this.renderTabBar()}
+          </BottomTabBarHeightCallbackContext.Provider>
         </SafeAreaProviderCompat>
       </NavigationHelpersContext.Provider>
     );
@@ -197,9 +195,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     overflow: 'hidden',
-  },
-  pages: {
-    flex: 1,
   },
   content: {
     flex: 1,
