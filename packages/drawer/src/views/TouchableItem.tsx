@@ -11,15 +11,14 @@ import {
   TouchableNativeFeedback,
   TouchableOpacity,
   View,
-  ViewProps,
+  TouchableWithoutFeedbackProps,
 } from 'react-native';
 
-export type Props = ViewProps & {
+export type Props = TouchableWithoutFeedbackProps & {
   pressColor?: string;
+  pressOpacity?: string;
   disabled?: boolean | null;
   borderless?: boolean;
-  delayPressIn?: number;
-  onPress?: () => void;
   children: React.ReactNode;
 };
 

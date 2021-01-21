@@ -5,14 +5,14 @@ import { BaseButton, BaseButtonProperties } from 'react-native-gesture-handler';
 const AnimatedBaseButton = Animated.createAnimatedComponent(BaseButton);
 
 type Props = BaseButtonProperties & {
-  activeOpacity: number;
+  pressOpacity: number;
 };
 
 const useNativeDriver = Platform.OS !== 'web';
 
 export default class TouchableItem extends React.Component<Props> {
   static defaultProps = {
-    activeOpacity: 0.3,
+    pressOpacity: 0.3,
     borderless: true,
     enabled: true,
   };
@@ -27,7 +27,7 @@ export default class TouchableItem extends React.Component<Props> {
       overshootClamping: true,
       restDisplacementThreshold: 0.01,
       restSpeedThreshold: 0.01,
-      toValue: active ? this.props.activeOpacity : 1,
+      toValue: active ? this.props.pressOpacity : 1,
       useNativeDriver,
     }).start();
 
