@@ -7,7 +7,6 @@ import {
   ViewStyle,
   TextStyle,
   Platform,
-  TouchableWithoutFeedbackProps,
 } from 'react-native';
 import { Link, useTheme } from '@react-navigation/native';
 import Color from 'color';
@@ -57,6 +56,20 @@ type Props = {
    */
   inactiveBackgroundColor?: string;
   /**
+   * Color of the touchable effect on press.
+   * Only supported on Android.
+   *
+   * @platform android
+   */
+  pressColor?: string;
+  /**
+   * Opacity of the touchable effect on press.
+   * Only supported on iOS.
+   *
+   * @platform ios
+   */
+  pressOpacity?: string;
+  /**
    * Style object for the label element.
    */
   labelStyle?: StyleProp<TextStyle>;
@@ -74,7 +87,7 @@ const Touchable = ({
   accessibilityRole,
   delayPressIn,
   ...rest
-}: TouchableWithoutFeedbackProps & {
+}: React.ComponentProps<typeof TouchableItem> & {
   to?: string;
   children: React.ReactNode;
   onPress?: () => void;
@@ -132,6 +145,8 @@ export default function DrawerItem(props: Props) {
     inactiveBackgroundColor = 'transparent',
     style,
     onPress,
+    pressColor,
+    pressOpacity,
     ...rest
   } = props;
 
@@ -155,6 +170,8 @@ export default function DrawerItem(props: Props) {
         style={[styles.wrapper, { borderRadius }]}
         accessibilityRole="button"
         accessibilityState={{ selected: focused }}
+        pressColor={pressColor}
+        pressOpacity={pressOpacity}
         to={to}
       >
         <React.Fragment>

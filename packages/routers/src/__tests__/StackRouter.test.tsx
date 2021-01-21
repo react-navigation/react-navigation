@@ -1119,31 +1119,6 @@ it("doesn't push nonexistent screen", () => {
       options
     )
   ).toBe(null);
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'stack',
-        key: 'root',
-        index: 1,
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          { key: 'baz', name: 'baz' },
-          { key: 'bar', name: 'bar' },
-        ],
-      },
-      {
-        type: 'PUSH',
-        payload: {
-          name: 'far',
-          key: 'test',
-          params: { answer: 42 },
-        },
-      },
-      options
-    )
-  ).toBe(null);
 });
 
 it('ensures unique ID for push', () => {
