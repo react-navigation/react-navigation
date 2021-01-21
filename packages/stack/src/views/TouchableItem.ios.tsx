@@ -5,7 +5,7 @@ import { BaseButton } from 'react-native-gesture-handler';
 const AnimatedBaseButton = Animated.createAnimatedComponent(BaseButton);
 
 type Props = React.ComponentProps<typeof BaseButton> & {
-  activeOpacity: number;
+  pressOpacity: number;
 };
 
 const useNativeDriver = Platform.OS !== 'web';
@@ -27,7 +27,7 @@ export default class TouchableItem extends React.Component<Props> {
       overshootClamping: true,
       restDisplacementThreshold: 0.01,
       restSpeedThreshold: 0.01,
-      toValue: active ? this.props.activeOpacity : 1,
+      toValue: active ? this.props.pressOpacity : 1,
       useNativeDriver,
     }).start();
 

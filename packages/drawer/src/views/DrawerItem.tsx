@@ -57,6 +57,20 @@ type Props = {
    */
   inactiveBackgroundColor?: string;
   /**
+   * Color of the touchable effect on press.
+   * Only supported on Android.
+   *
+   * @platform android
+   */
+  pressColor?: string;
+  /**
+   * Opacity of the touchable effect on press.
+   * Only supported on iOS.
+   *
+   * @platform ios
+   */
+  pressOpacity?: string;
+  /**
    * Style object for the label element.
    */
   labelStyle?: StyleProp<TextStyle>;
@@ -132,6 +146,8 @@ export default function DrawerItem(props: Props) {
     inactiveBackgroundColor = 'transparent',
     style,
     onPress,
+    pressColor,
+    pressOpacity,
     ...rest
   } = props;
 
@@ -159,6 +175,8 @@ export default function DrawerItem(props: Props) {
         accessibilityState={{ selected: focused }}
         // @ts-expect-error: keep for compatibility with older React Native versions
         accessibilityStates={focused ? ['selected'] : []}
+        pressColor={pressColor}
+        pressOpacity={pressOpacity}
         to={to}
       >
         <React.Fragment>
