@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.7.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@5.7.0...@react-navigation/routers@5.7.1) (2021-01-21)
+
+
+### Bug Fixes
+
+* fix StackRouter incorrectly handling invalid route if key is present ([d3a9639](https://github.com/react-navigation/react-navigation/commit/d3a9639060631b06551daf0eac191ec1a442e298))
+
+
+
+
+
 # [5.7.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@5.6.2...@react-navigation/routers@5.7.0) (2021-01-14)
 
 

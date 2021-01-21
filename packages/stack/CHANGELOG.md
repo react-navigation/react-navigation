@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.14.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.13.0...@react-navigation/stack@5.14.0) (2021-01-21)
+
+
+### Features
+
+* add pressColor and pressOpacity props to drawerItem ([#8834](https://github.com/react-navigation/react-navigation/issues/8834)) ([bae4019](https://github.com/react-navigation/react-navigation/commit/bae4019995062c682f0213c121b7927ab8006c1e))
+
+
+
+
+
 # [5.13.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.12.8...@react-navigation/stack@5.13.0) (2021-01-14)
 
 

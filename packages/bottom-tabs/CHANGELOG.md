@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.11.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.3...@react-navigation/bottom-tabs@5.11.4) (2021-01-21)
+
+
+### Bug Fixes
+
+* fix drawer and bottom tabs not being visible on web. closes [#9225](https://github.com/react-navigation/react-navigation/issues/9225) ([d88cbcb](https://github.com/react-navigation/react-navigation/commit/d88cbcb52d46de26edaa9ce6bfb06badb1b1de64))
+
+
+
+
+
 ## [5.11.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.2...@react-navigation/bottom-tabs@5.11.3) (2021-01-14)
 
 

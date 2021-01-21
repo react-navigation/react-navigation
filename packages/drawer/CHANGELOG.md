@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.12.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.11.5...@react-navigation/drawer@5.12.0) (2021-01-21)
+
+
+### Bug Fixes
+
+* fix drawer and bottom tabs not being visible on web. closes [#9225](https://github.com/react-navigation/react-navigation/issues/9225) ([d88cbcb](https://github.com/react-navigation/react-navigation/commit/d88cbcb52d46de26edaa9ce6bfb06badb1b1de64))
+
+
+### Features
+
+* add pressColor and pressOpacity props to drawerItem ([#8834](https://github.com/react-navigation/react-navigation/issues/8834)) ([bae4019](https://github.com/react-navigation/react-navigation/commit/bae4019995062c682f0213c121b7927ab8006c1e))
+
+
+
+
+
 ## [5.11.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.11.4...@react-navigation/drawer@5.11.5) (2021-01-14)
 
 

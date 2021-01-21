@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.15.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.15.0...@react-navigation/core@5.15.1) (2021-01-21)
+
+**Note:** Version bump only for package @react-navigation/core
+
+
+
+
+
 # [5.15.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.14.4...@react-navigation/core@5.15.0) (2021-01-14)
 
 
