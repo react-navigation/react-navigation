@@ -58,7 +58,7 @@ export default function ResourceSavingScene({
   }
 
   return (
-    <View style={[styles.container, style]}>
+    <View style={[styles.container, style]} pointerEvents="box-none">
       <View
         collapsable={false}
         removeClippedSubviews={
