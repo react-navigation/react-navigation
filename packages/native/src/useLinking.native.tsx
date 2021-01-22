@@ -5,8 +5,8 @@ import {
   getStateFromPath as getStateFromPathDefault,
   NavigationContainerRef,
 } from '@react-navigation/core';
+import extractPathFromURL from './extractPathFromURL';
 import type { LinkingOptions } from './types';
-import escapeStringRegexp from 'escape-string-regexp';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
@@ -77,24 +77,6 @@ export default function useLinking(
     getStateFromPathRef.current = getStateFromPath;
   }, [config, enabled, prefixes, getInitialURL, getStateFromPath]);
 
-  const extractPathFromURL = React.useCallback((url: string) => {
-    for (const prefix of prefixesRef.current) {
-      const protocol = prefix.match(/^[^:]+:\/\//)?.[0] ?? '';
-      const host = prefix.replace(protocol, '');
-      const prefixRegex = new RegExp(
-        `^${escapeStringRegexp(protocol)}${host
-          .split('.')
-          .map((it) => (it === '*' ? '[^/]+' : escapeStringRegexp(it)))
-          .join('\\.')}`
-      );
-      if (prefixRegex.test(url)) {
-        return url.replace(prefixRegex, '');
-      }
-    }
-
-    return undefined;
-  }, []);
-
   const getInitialState = React.useCallback(() => {
     let state: ResultState | undefined;
 
@@ -103,7 +85,9 @@ export default function useLinking(
 
       if (url != null && typeof url !== 'string') {
         return url.then((url) => {
-          const path = url ? extractPathFromURL(url) : null;
+          const path = url
+            ? extractPathFromURL(prefixesRef.current, url)
+            : null;
 
           return path
             ? getStateFromPathRef.current(path, configRef.current)
@@ -111,7 +95,7 @@ export default function useLinking(
         });
       }
 
-      const path = url ? extractPathFromURL(url) : null;
+      const path = url ? extractPathFromURL(prefixesRef.current, url) : null;
 
       state = path
         ? getStateFromPathRef.current(path, configRef.current)
@@ -128,7 +112,7 @@ export default function useLinking(
     };
 
     return thenable as PromiseLike<ResultState | undefined>;
-  }, [extractPathFromURL]);
+  }, []);
 
   React.useEffect(() => {
     const listener = (url: string) => {
@@ -136,7 +120,7 @@ export default function useLinking(
         return;
       }
 
-      const path = extractPathFromURL(url);
+      const path = extractPathFromURL(prefixesRef.current, url);
       const navigation = ref.current;
 
       if (navigation && path) {
@@ -176,7 +160,7 @@ export default function useLinking(
     };
 
     return subscribe(listener);
-  }, [enabled, ref, subscribe, extractPathFromURL]);
+  }, [enabled, ref, subscribe]);
 
   return {
     getInitialState,
