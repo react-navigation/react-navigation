@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.12.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.12.0...@react-navigation/drawer@5.12.1) (2021-01-22)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
 # [5.12.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.11.5...@react-navigation/drawer@5.12.0) (2021-01-21)
 
 
