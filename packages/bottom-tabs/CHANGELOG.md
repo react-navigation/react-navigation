@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.11.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.5...@react-navigation/bottom-tabs@5.11.6) (2021-01-22)
+
+
+### Bug Fixes
+
+* fix pointerEvents in ResourceSavingScene ([60fe0db](https://github.com/react-navigation/react-navigation/commit/60fe0dbb0ae443fdb21016d368c919b933cb64e7)), closes [#9241](https://github.com/react-navigation/react-navigation/issues/9241) [#9242](https://github.com/react-navigation/react-navigation/issues/9242)
+
+
+
+
+
 ## [5.11.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.4...@react-navigation/bottom-tabs@5.11.5) (2021-01-22)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.12.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.12.1...@react-navigation/drawer@5.12.2) (2021-01-22)
+
+
+### Bug Fixes
+
+* fix pointerEvents in ResourceSavingScene ([60fe0db](https://github.com/react-navigation/react-navigation/commit/60fe0dbb0ae443fdb21016d368c919b933cb64e7)), closes [#9241](https://github.com/react-navigation/react-navigation/issues/9241) [#9242](https://github.com/react-navigation/react-navigation/issues/9242)
+
+
+
+
+
 ## [5.12.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.12.0...@react-navigation/drawer@5.12.1) (2021-01-22)
 
 **Note:** Version bump only for package @react-navigation/drawer
