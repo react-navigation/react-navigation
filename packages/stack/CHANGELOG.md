@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.14.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.14.1...@react-navigation/stack@5.14.2) (2021-01-25)
+
+
+### Bug Fixes
+
+* fix transparent modal on web ([38d6808](https://github.com/react-navigation/react-navigation/commit/38d680833e31e62736da19f79328aec553ced814))
+
+
+
+
+
 ## [5.14.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.14.0...@react-navigation/stack@5.14.1) (2021-01-22)
 
 **Note:** Version bump only for package @react-navigation/stack
