@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.11.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.6...@react-navigation/bottom-tabs@5.11.7) (2021-01-25)
+
+
+### Bug Fixes
+
+* fix drawer screen content not being interactable on Android ([87b5147](https://github.com/react-navigation/react-navigation/commit/87b51476d0bce8f2dae793416c2976da30a1a5f7))
+
+
+
+
+
 ## [5.11.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.5...@react-navigation/bottom-tabs@5.11.6) (2021-01-22)
 
 
