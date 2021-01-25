@@ -58,7 +58,11 @@ export default function ResourceSavingScene({
   }
 
   return (
-    <View style={[styles.container, style]} pointerEvents="box-none">
+    <View
+      style={[styles.container, style]}
+      // box-none doesn't seem to work properly on Android
+      pointerEvents={isVisible ? 'auto' : 'none'}
+    >
       <View
         collapsable={false}
         removeClippedSubviews={
