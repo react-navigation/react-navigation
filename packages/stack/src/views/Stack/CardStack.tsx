@@ -507,7 +507,7 @@ export default class CardStack extends React.Component<Props, State> {
             // For the old implementation, it stays the same it was
             let isScreenActive: Animated.AnimatedInterpolation | 2 | 1 | 0 = 1;
 
-            if (shouldUseActivityState) {
+            if (shouldUseActivityState || Platform.OS === 'web') {
               if (index < self.length - activeScreensLimit - 1) {
                 // screen should be inactive because it is too deep in the stack
                 isScreenActive = STATE_INACTIVE;
