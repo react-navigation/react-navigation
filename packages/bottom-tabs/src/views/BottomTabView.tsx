@@ -8,11 +8,9 @@ import {
   TabNavigationState,
   useTheme,
 } from '@react-navigation/native';
+import { SafeAreaProviderCompat } from '@react-navigation/elements';
 
-import SafeAreaProviderCompat, {
-  initialMetrics,
-} from './SafeAreaProviderCompat';
-import ResourceSavingScene from './ResourceSavingScene';
+import ScreenFallback from './ScreenFallback';
 import BottomTabBar, { getTabBarHeight } from './BottomTabBar';
 import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
 import BottomTabBarHeightContext from '../utils/BottomTabBarHeightContext';
@@ -73,14 +71,14 @@ export default class BottomTabView extends React.Component<Props, State> {
 
     const { state, descriptors } = this.props;
 
-    const dimensions = initialMetrics.frame;
+    const dimensions = SafeAreaProviderCompat.initialMetrics.frame;
     const tabBarHeight = getTabBarHeight({
       state,
       descriptors,
       dimensions,
       layout: { width: dimensions.width, height: 0 },
       insets: {
-        ...initialMetrics.insets,
+        ...SafeAreaProviderCompat.initialMetrics.insets,
         ...props.safeAreaInsets,
       },
       style: descriptors[state.routes[state.index].key].options.tabBarStyle,
@@ -164,10 +162,10 @@ export default class BottomTabView extends React.Component<Props, State> {
               }
 
               return (
-                <ResourceSavingScene
+                <ScreenFallback
                   key={route.key}
                   style={StyleSheet.absoluteFill}
-                  isVisible={isFocused}
+                  visible={isFocused}
                   enabled={detachInactiveScreens}
                 >
                   <SceneContent
@@ -178,7 +176,7 @@ export default class BottomTabView extends React.Component<Props, State> {
                       {descriptor.render()}
                     </BottomTabBarHeightContext.Provider>
                   </SceneContent>
-                </ResourceSavingScene>
+                </ScreenFallback>
               );
             })}
           </ScreenContainer>

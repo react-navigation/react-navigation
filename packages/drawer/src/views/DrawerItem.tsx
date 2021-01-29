@@ -8,9 +8,9 @@ import {
   TextStyle,
   Platform,
 } from 'react-native';
+import { PlatformPressable } from '@react-navigation/elements';
 import { Link, useTheme } from '@react-navigation/native';
 import Color from 'color';
-import TouchableItem from './TouchableItem';
 
 type Props = {
   /**
@@ -68,7 +68,7 @@ type Props = {
    *
    * @platform ios
    */
-  pressOpacity?: string;
+  pressOpacity?: number;
   /**
    * Style object for the label element.
    */
@@ -87,7 +87,7 @@ const Touchable = ({
   accessibilityRole,
   delayPressIn,
   ...rest
-}: React.ComponentProps<typeof TouchableItem> & {
+}: React.ComponentProps<typeof PlatformPressable> & {
   to?: string;
   children: React.ReactNode;
   onPress?: () => void;
@@ -115,14 +115,14 @@ const Touchable = ({
     );
   } else {
     return (
-      <TouchableItem
+      <PlatformPressable
         {...rest}
         accessibilityRole={accessibilityRole}
         delayPressIn={delayPressIn}
         onPress={onPress}
       >
         <View style={style}>{children}</View>
-      </TouchableItem>
+      </PlatformPressable>
     );
   }
 };

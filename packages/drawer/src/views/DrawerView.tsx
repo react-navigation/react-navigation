@@ -18,10 +18,10 @@ import {
   useTheme,
   ParamListBase,
 } from '@react-navigation/native';
+import { SafeAreaProviderCompat } from '@react-navigation/elements';
 
 import { GestureHandlerRootView } from './GestureHandler';
-import SafeAreaProviderCompat from './SafeAreaProviderCompat';
-import ResourceSavingScene from './ResourceSavingScene';
+import ScreenFallback from './ScreenFallback';
 import Header from './Header';
 import DrawerContent from './DrawerContent';
 import Drawer from './Drawer';
@@ -173,10 +173,10 @@ function DrawerViewBase({
           } = descriptor.options;
 
           return (
-            <ResourceSavingScene
+            <ScreenFallback
               key={route.key}
               style={[StyleSheet.absoluteFill, { opacity: isFocused ? 1 : 0 }]}
-              isVisible={isFocused}
+              visible={isFocused}
               enabled={detachInactiveScreens}
             >
               {headerShown ? (
@@ -192,7 +192,7 @@ function DrawerViewBase({
                 </NavigationContext.Provider>
               ) : null}
               {descriptor.render()}
-            </ResourceSavingScene>
+            </ScreenFallback>
           );
         })}
       </ScreenContainer>
