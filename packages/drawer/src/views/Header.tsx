@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Text, View, Image, StyleSheet, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { PlatformPressable } from '@react-navigation/elements';
 import { DrawerActions, useTheme } from '@react-navigation/native';
-import TouchableItem from './TouchableItem';
 import type { Layout, DrawerHeaderProps } from '../types';
 
 export const getDefaultHeaderHeight = (
@@ -67,7 +67,7 @@ export default function HeaderSegment({
   const leftButton = headerLeft ? (
     headerLeft({ tintColor: headerTintColor })
   ) : (
-    <TouchableItem
+    <PlatformPressable
       accessible
       accessibilityRole="button"
       accessibilityLabel={headerLeftAccessibilityLabel}
@@ -89,7 +89,7 @@ export default function HeaderSegment({
         source={require('./assets/toggle-drawer-icon.png')}
         fadeDuration={0}
       />
-    </TouchableItem>
+    </PlatformPressable>
   );
   const rightButton = headerRight
     ? headerRight({ tintColor: headerTintColor })

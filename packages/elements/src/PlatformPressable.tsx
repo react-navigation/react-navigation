@@ -1,33 +1,33 @@
-/**
- * TouchableItem provides an abstraction on top of TouchableNativeFeedback and
- * TouchableOpacity to handle platform differences.
- *
- * On Android, you can pass the props of TouchableNativeFeedback.
- * On other platforms, you can pass the props of TouchableOpacity.
- */
 import * as React from 'react';
 import {
   Platform,
   TouchableNativeFeedback,
   TouchableOpacity,
   View,
-  ViewProps,
+  TouchableWithoutFeedbackProps,
 } from 'react-native';
 
-export type Props = ViewProps & {
+export type Props = TouchableWithoutFeedbackProps & {
   pressColor?: string;
-  disabled?: boolean;
+  pressOpacity?: number;
+  disabled?: boolean | null;
   borderless?: boolean;
-  delayPressIn?: number;
-  onPress?: () => void;
   children: React.ReactNode;
 };
 
 const ANDROID_VERSION_LOLLIPOP = 21;
 
-export default function TouchableItem({
+/**
+ * PlatformPressable provides an abstraction on top of TouchableNativeFeedback and
+ * TouchableOpacity to handle platform differences.
+ *
+ * On Android, you can pass the props of TouchableNativeFeedback.
+ * On other platforms, you can pass the props of TouchableOpacity.
+ */
+export default function PlatformPressable({
   borderless = false,
   pressColor = 'rgba(0, 0, 0, .32)',
+  pressOpacity,
   style,
   children,
   ...rest
@@ -55,7 +55,7 @@ export default function TouchableItem({
     );
   } else {
     return (
-      <TouchableOpacity style={style} {...rest}>
+      <TouchableOpacity style={style} activeOpacity={pressOpacity} {...rest}>
         {children}
       </TouchableOpacity>
     );

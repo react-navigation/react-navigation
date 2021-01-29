@@ -11,6 +11,7 @@ import {
   Route,
   ParamListBase,
 } from '@react-navigation/native';
+import { SafeAreaProviderCompat } from '@react-navigation/elements';
 
 import { GestureHandlerRootView } from '../GestureHandler';
 import CardStack from './CardStack';
@@ -18,7 +19,6 @@ import KeyboardManager from '../KeyboardManager';
 import HeaderContainer, {
   Props as HeaderContainerProps,
 } from '../Header/HeaderContainer';
-import SafeAreaProviderCompat from '../SafeAreaProviderCompat';
 import HeaderShownContext from '../../utils/HeaderShownContext';
 import type {
   StackNavigationHelpers,

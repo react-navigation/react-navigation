@@ -8,9 +8,9 @@ import {
   StyleSheet,
   LayoutChangeEvent,
 } from 'react-native';
+import { PlatformPressable } from '@react-navigation/elements';
 import { useTheme } from '@react-navigation/native';
 import MaskedView from '../MaskedView';
-import TouchableItem from '../TouchableItem';
 import type { StackHeaderLeftButtonProps } from '../../types';
 
 type Props = StackHeaderLeftButtonProps;
@@ -151,7 +151,7 @@ export default function HeaderBackButton({
   const handlePress = () => onPress && requestAnimationFrame(onPress);
 
   return (
-    <TouchableItem
+    <PlatformPressable
       disabled={disabled}
       accessible
       accessibilityRole="button"
@@ -171,7 +171,7 @@ export default function HeaderBackButton({
         {renderBackImage()}
         {renderLabel()}
       </React.Fragment>
-    </TouchableItem>
+    </PlatformPressable>
   );
 }
 

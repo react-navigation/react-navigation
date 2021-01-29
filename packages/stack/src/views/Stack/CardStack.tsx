@@ -11,13 +11,13 @@ import type {
   Route,
   StackNavigationState,
 } from '@react-navigation/native';
+import { SafeAreaProviderCompat } from '@react-navigation/elements';
 
 import {
   MaybeScreenContainer,
   MaybeScreen,
   shouldUseActivityState,
 } from '../Screens';
-import { initialMetrics } from '../SafeAreaProviderCompat';
 import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import CardContainer from './CardContainer';
@@ -290,7 +290,7 @@ export default class CardStack extends React.Component<Props, State> {
       routes: [],
       scenes: [],
       gestures: {},
-      layout: initialMetrics.frame,
+      layout: SafeAreaProviderCompat.initialMetrics.frame,
       descriptors: this.props.descriptors,
       // Used when card's header is null and mode is float to make transition
       // between screens with headers and those without headers smooth.

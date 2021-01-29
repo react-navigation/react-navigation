@@ -15,7 +15,7 @@ const { width = 0, height = 0 } = Dimensions.get('window');
 // To support SSR on web, we need to have empty insets for initial values
 // Otherwise there can be mismatch between SSR and client output
 // We also need to specify empty values to support tests environments
-export const initialMetrics =
+const initialMetrics =
   Platform.OS === 'web' || initialWindowMetrics == null
     ? {
         frame: { x: 0, y: 0, width, height },
@@ -43,3 +43,5 @@ export default function SafeAreaProviderCompat({ children }: Props) {
     </SafeAreaInsetsContext.Consumer>
   );
 }
+
+SafeAreaProviderCompat.initialMetrics = initialMetrics;
