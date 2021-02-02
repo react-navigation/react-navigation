@@ -232,19 +232,16 @@ export default function BottomTabBarItem({
       return null;
     }
 
-    const activeOpacity = focused ? 1 : 0;
-    const inactiveOpacity = focused ? 0 : 1;
+    const activityTintColor = focused ? activeTintColor : inactiveTintColor;
 
     return (
       <TabBarIcon
         route={route}
+        focused={focused}
         horizontal={horizontal}
         badge={badge}
         badgeStyle={badgeStyle}
-        activeOpacity={activeOpacity}
-        inactiveOpacity={inactiveOpacity}
-        activeTintColor={activeTintColor}
-        inactiveTintColor={inactiveTintColor}
+        activityTintColor={activityTintColor}
         renderIcon={icon}
         style={iconStyle}
       />

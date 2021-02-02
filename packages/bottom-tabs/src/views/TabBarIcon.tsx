@@ -14,10 +14,8 @@ type Props = {
   horizontal: boolean;
   badge?: string | number;
   badgeStyle?: StyleProp<TextStyle>;
-  activeOpacity: number;
-  inactiveOpacity: number;
-  activeTintColor: string;
-  inactiveTintColor: string;
+  focused: boolean;
+  activityTintColor: string;
   renderIcon: (props: {
     focused: boolean;
     color: string;
@@ -30,11 +28,9 @@ export default function TabBarIcon({
   horizontal,
   badge,
   badgeStyle,
-  activeOpacity,
-  inactiveOpacity,
-  activeTintColor,
-  inactiveTintColor,
   renderIcon,
+  activityTintColor,
+  focused,
   style,
 }: Props) {
   const size = 25;
@@ -45,18 +41,11 @@ export default function TabBarIcon({
     <View
       style={[horizontal ? styles.iconHorizontal : styles.iconVertical, style]}
     >
-      <View style={[styles.icon, { opacity: activeOpacity }]}>
+      <View style={styles.icon}>
         {renderIcon({
-          focused: true,
+          focused,
           size,
-          color: activeTintColor,
-        })}
-      </View>
-      <View style={[styles.icon, { opacity: inactiveOpacity }]}>
-        {renderIcon({
-          focused: false,
-          size,
-          color: inactiveTintColor,
+          color: activityTintColor,
         })}
       </View>
       <Badge
