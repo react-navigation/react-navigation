@@ -1,14 +1,21 @@
 import * as React from 'react';
-import { Text, View, Image, StyleSheet, Platform } from 'react-native';
+import { Text, View, StyleSheet, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { PlatformPressable } from '@react-navigation/elements';
-import { DrawerActions, useTheme } from '@react-navigation/native';
-import type { Layout, DrawerHeaderProps } from '../types';
+import { useTheme } from '@react-navigation/native';
+import HeaderShownContext from './HeaderShownContext';
+import HeaderHeightContext from './HeaderHeightContext';
+import type { HeaderOptions } from './types';
 
-export const getDefaultHeaderHeight = (
-  layout: Layout,
-  statusBarHeight: number
-): number => {
+type Layout = { width: number; height: number };
+
+type Props = HeaderOptions & {
+  /**
+   * Layout of the screen.
+   */
+  layout: Layout;
+};
+
+const getDefaultHeight = (layout: Layout, statusBarHeight: number): number => {
   const isLandscape = layout.width > layout.height;
 
   let headerHeight;
@@ -28,17 +35,14 @@ export const getDefaultHeaderHeight = (
   return headerHeight + statusBarHeight;
 };
 
-export default function HeaderSegment({
-  route,
-  navigation,
-  options,
-  layout,
-}: DrawerHeaderProps) {
+export default function Header(props: Props) {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
 
+  const isParentHeaderShown = React.useContext(HeaderShownContext);
+
   const {
-    title,
+    layout,
     headerTitle,
     headerTitleAlign = Platform.select({
       ios: 'center',
@@ -47,52 +51,34 @@ export default function HeaderSegment({
     headerLeft,
     headerLeftAccessibilityLabel,
     headerRight,
+    headerRightAccessibilityLabel,
+    headerPressColor,
+    headerPressOpacity,
     headerTitleAllowFontScaling,
     headerTitleStyle,
     headerTintColor,
-    headerPressColorAndroid,
     headerStyle,
-    headerStatusBarHeight = insets.top,
-  } = options;
+    headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
+  } = props;
 
-  const currentTitle =
-    typeof headerTitle !== 'function' && headerTitle !== undefined
-      ? headerTitle
-      : title !== undefined
-      ? title
-      : route.name;
+  const defaultHeight = getDefaultHeight(layout, headerStatusBarHeight);
 
-  const defaultHeight = getDefaultHeaderHeight(layout, headerStatusBarHeight);
+  const leftButton = headerLeft
+    ? headerLeft({
+        tintColor: headerTintColor,
+        pressColor: headerPressColor,
+        pressOpacity: headerPressOpacity,
+        accessibilityLabel: headerLeftAccessibilityLabel,
+      })
+    : null;
 
-  const leftButton = headerLeft ? (
-    headerLeft({ tintColor: headerTintColor })
-  ) : (
-    <PlatformPressable
-      accessible
-      accessibilityRole="button"
-      accessibilityLabel={headerLeftAccessibilityLabel}
-      delayPressIn={0}
-      onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
-      style={styles.touchable}
-      pressColor={headerPressColorAndroid}
-      hitSlop={Platform.select({
-        ios: undefined,
-        default: { top: 16, right: 16, bottom: 16, left: 16 },
-      })}
-      borderless
-    >
-      <Image
-        style={[
-          styles.icon,
-          headerTintColor ? { tintColor: headerTintColor } : null,
-        ]}
-        source={require('./assets/toggle-drawer-icon.png')}
-        fadeDuration={0}
-      />
-    </PlatformPressable>
-  );
   const rightButton = headerRight
-    ? headerRight({ tintColor: headerTintColor })
+    ? headerRight({
+        tintColor: headerTintColor,
+        pressColor: headerPressColor,
+        pressOpacity: headerPressOpacity,
+        accessibilityLabel: headerRightAccessibilityLabel,
+      })
     : null;
 
   return (
@@ -134,7 +120,6 @@ export default function HeaderSegment({
         >
           {typeof headerTitle === 'function' ? (
             headerTitle({
-              children: currentTitle,
               allowFontScaling: headerTitleAllowFontScaling,
               tintColor: headerTintColor,
               style: headerTitleStyle,
@@ -152,7 +137,7 @@ export default function HeaderSegment({
                 headerTitleStyle,
               ]}
             >
-              {currentTitle}
+              {headerTitle}
             </Text>
           )}
         </View>
@@ -166,6 +151,10 @@ export default function HeaderSegment({
     </View>
   );
 }
+
+Header.getDefaultHeight = getDefaultHeight;
+Header.ShownContext = HeaderShownContext;
+Header.HeightContext = HeaderHeightContext;
 
 const styles = StyleSheet.create({
   container: {
@@ -208,15 +197,6 @@ const styles = StyleSheet.create({
       fontWeight: '500',
     },
   }),
-  icon: {
-    height: 24,
-    width: 24,
-    margin: 3,
-    resizeMode: 'contain',
-  },
-  touchable: {
-    marginHorizontal: 11,
-  },
   left: {
     flexGrow: 1,
     flexBasis: 0,

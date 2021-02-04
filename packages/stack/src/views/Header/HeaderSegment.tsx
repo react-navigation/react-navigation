@@ -8,6 +8,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
+import { Header as BaseHeader } from '@react-navigation/elements';
 import HeaderBackButton from './HeaderBackButton';
 import HeaderBackground from './HeaderBackground';
 import memoize from '../../utils/memoize';
@@ -49,29 +50,6 @@ const warnIfHeaderStylesDefined = (styles: Record<string, any>) => {
       );
     }
   });
-};
-
-export const getDefaultHeaderHeight = (
-  layout: Layout,
-  statusBarHeight: number
-): number => {
-  const isLandscape = layout.width > layout.height;
-
-  let headerHeight;
-
-  if (Platform.OS === 'ios') {
-    if (isLandscape && !Platform.isPad) {
-      headerHeight = 32;
-    } else {
-      headerHeight = 44;
-    }
-  } else if (Platform.OS === 'android') {
-    headerHeight = 56;
-  } else {
-    headerHeight = 64;
-  }
-
-  return headerHeight + statusBarHeight;
 };
 
 export default function HeaderSegment(props: Props) {
@@ -176,7 +154,10 @@ export default function HeaderSegment(props: Props) {
     styleInterpolator,
   } = props;
 
-  const defaultHeight = getDefaultHeaderHeight(layout, headerStatusBarHeight);
+  const defaultHeight = BaseHeader.getDefaultHeight(
+    layout,
+    headerStatusBarHeight
+  );
 
   const {
     height = defaultHeight,

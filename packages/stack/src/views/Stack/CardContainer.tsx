@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { Animated, View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { Route, useTheme } from '@react-navigation/native';
+import { Header as BaseHeader } from '@react-navigation/elements';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
 import { forModalPresentationIOS } from '../../TransitionConfigs/CardStyleInterpolators';
-import HeaderHeightContext from '../../utils/HeaderHeightContext';
-import HeaderShownContext from '../../utils/HeaderShownContext';
 import PreviousSceneContext from '../../utils/PreviousSceneContext';
 import ModalPresentationContext from '../../utils/ModalPresentationContext';
 import type {
@@ -244,13 +243,13 @@ function CardContainer({
       <View style={styles.container}>
         <View style={styles.scene}>
           <PreviousSceneContext.Provider value={previousScene}>
-            <HeaderShownContext.Provider
+            <BaseHeader.ShownContext.Provider
               value={isParentHeaderShown || headerShown !== false}
             >
-              <HeaderHeightContext.Provider value={headerHeight}>
+              <BaseHeader.HeightContext.Provider value={headerHeight}>
                 {renderScene({ route: scene.descriptor.route })}
-              </HeaderHeightContext.Provider>
-            </HeaderShownContext.Provider>
+              </BaseHeader.HeightContext.Provider>
+            </BaseHeader.ShownContext.Provider>
           </PreviousSceneContext.Provider>
         </View>
         {headerMode !== 'float' ? (

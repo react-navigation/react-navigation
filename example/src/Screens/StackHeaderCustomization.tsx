@@ -14,10 +14,10 @@ import {
   createStackNavigator,
   StackScreenProps,
   HeaderBackground,
-  useHeaderHeight,
   Header,
   StackHeaderProps,
 } from '@react-navigation/stack';
+import { useHeaderHeight } from '@react-navigation/elements';
 import BlurView from '../Shared/BlurView';
 import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
