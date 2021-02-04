@@ -38,11 +38,9 @@ export {
  * Utilities
  */
 export { default as CardAnimationContext } from './utils/CardAnimationContext';
-export { default as HeaderHeightContext } from './utils/HeaderHeightContext';
 export { default as GestureHandlerRefContext } from './utils/GestureHandlerRefContext';
 
 export { default as useCardAnimation } from './utils/useCardAnimation';
-export { default as useHeaderHeight } from './utils/useHeaderHeight';
 export { default as useGestureHandlerRef } from './utils/useGestureHandlerRef';
 
 /**

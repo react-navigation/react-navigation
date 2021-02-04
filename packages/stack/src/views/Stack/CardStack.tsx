@@ -11,14 +11,16 @@ import type {
   Route,
   StackNavigationState,
 } from '@react-navigation/native';
-import { SafeAreaProviderCompat } from '@react-navigation/elements';
+import {
+  Header as BaseHeader,
+  SafeAreaProviderCompat,
+} from '@react-navigation/elements';
 
 import {
   MaybeScreenContainer,
   MaybeScreen,
   shouldUseActivityState,
 } from '../Screens';
-import { getDefaultHeaderHeight } from '../Header/HeaderSegment';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import CardContainer from './CardContainer';
 import {
@@ -118,7 +120,7 @@ const getHeaderHeights = (
     acc[curr.key] =
       typeof height === 'number'
         ? height
-        : getDefaultHeaderHeight(layout, headerStatusBarHeight);
+        : BaseHeader.getDefaultHeight(layout, headerStatusBarHeight);
 
     return acc;
   }, {});

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { StackActions, useNavigationState } from '@react-navigation/native';
+import { Header as BaseHeader } from '@react-navigation/elements';
 
 import HeaderSegment from './HeaderSegment';
 import HeaderTitle from './HeaderTitle';
-import HeaderShownContext from '../../utils/HeaderShownContext';
 import ModalPresentationContext from '../../utils/ModalPresentationContext';
 import debounce from '../../utils/debounce';
 import type { StackHeaderProps, StackHeaderTitleProps } from '../../types';
@@ -57,7 +57,7 @@ export default React.memo(function Header({
   );
 
   const isModal = React.useContext(ModalPresentationContext);
-  const isParentHeaderShown = React.useContext(HeaderShownContext);
+  const isParentHeaderShown = React.useContext(BaseHeader.ShownContext);
   const isFirstRouteInParent = useNavigationState(
     (state) => state.routes[0].key === route.key
   );
