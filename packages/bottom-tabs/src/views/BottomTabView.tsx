@@ -27,11 +27,6 @@ type Props = BottomTabNavigationConfig & {
   descriptors: BottomTabDescriptorMap;
 };
 
-type State = {
-  loaded: string[];
-  tabBarHeight: number;
-};
-
 function SceneContent({
   isFocused,
   children,
@@ -54,25 +49,27 @@ function SceneContent({
   );
 }
 
-export default class BottomTabView extends React.Component<Props, State> {
-  static getDerivedStateFromProps(nextProps: Props, prevState: State) {
-    const focusedRouteKey = nextProps.state.routes[nextProps.state.index].key;
+export default function BottomTabView(props: Props) {
+  const {
+    tabBar = (props: BottomTabBarProps) => <BottomTabBar {...props} />,
+    state,
+    navigation,
+    descriptors,
+    safeAreaInsets,
+    detachInactiveScreens = true,
+    sceneContainerStyle,
+  } = props;
 
-    return {
-      // Set the current tab to be loaded if it was not loaded before
-      loaded: prevState.loaded.includes(focusedRouteKey)
-        ? prevState.loaded
-        : [...prevState.loaded, focusedRouteKey],
-    };
+  const focusedRouteKey = state.routes[state.index].key;
+  const [loaded, setLoaded] = React.useState([focusedRouteKey]);
+
+  if (!loaded.includes(focusedRouteKey)) {
+    setLoaded([...loaded, focusedRouteKey]);
   }
 
-  constructor(props: Props) {
-    super(props);
-
-    const { state, descriptors } = this.props;
-
-    const dimensions = SafeAreaProviderCompat.initialMetrics.frame;
-    const tabBarHeight = getTabBarHeight({
+  const dimensions = SafeAreaProviderCompat.initialMetrics.frame;
+  const [tabBarHeight, setTabBarHeight] = React.useState(() =>
+    getTabBarHeight({
       state,
       descriptors,
       dimensions,
@@ -82,23 +79,10 @@ export default class BottomTabView extends React.Component<Props, State> {
         ...props.safeAreaInsets,
       },
       style: descriptors[state.routes[state.index].key].options.tabBarStyle,
-    });
+    })
+  );
 
-    this.state = {
-      loaded: [state.routes[state.index].key],
-      tabBarHeight: tabBarHeight,
-    };
-  }
-
-  private renderTabBar = () => {
-    const {
-      tabBar = (props: BottomTabBarProps) => <BottomTabBar {...props} />,
-      state,
-      navigation,
-      descriptors,
-      safeAreaInsets,
-    } = this.props;
-
+  const renderTabBar = () => {
     return (
       <SafeAreaInsetsContext.Consumer>
         {(insets) =>
@@ -118,77 +102,52 @@ export default class BottomTabView extends React.Component<Props, State> {
     );
   };
 
-  private handleTabBarHeightChange = (height: number) => {
-    this.setState((state) => {
-      if (state.tabBarHeight !== height) {
-        return { tabBarHeight: height };
-      }
+  const { routes } = state;
 
-      return null;
-    });
-  };
+  return (
+    <NavigationHelpersContext.Provider value={navigation}>
+      <SafeAreaProviderCompat>
+        <ScreenContainer
+          // @ts-ignore
+          enabled={detachInactiveScreens}
+          style={styles.container}
+        >
+          {routes.map((route, index) => {
+            const descriptor = descriptors[route.key];
+            const { lazy = true, unmountOnBlur } = descriptor.options;
+            const isFocused = state.index === index;
 
-  render() {
-    const {
-      state,
-      descriptors,
-      navigation,
-      detachInactiveScreens = true,
-      sceneContainerStyle,
-    } = this.props;
-    const { routes } = state;
-    const { loaded, tabBarHeight } = this.state;
+            if (unmountOnBlur && !isFocused) {
+              return null;
+            }
 
-    return (
-      <NavigationHelpersContext.Provider value={navigation}>
-        <SafeAreaProviderCompat>
-          <ScreenContainer
-            // @ts-ignore
-            enabled={detachInactiveScreens}
-            style={styles.container}
-          >
-            {routes.map((route, index) => {
-              const descriptor = descriptors[route.key];
-              const { lazy = true, unmountOnBlur } = descriptor.options;
-              const isFocused = state.index === index;
+            if (lazy && !loaded.includes(route.key) && !isFocused) {
+              // Don't render a lazy screen if we've never navigated to it
+              return null;
+            }
 
-              if (unmountOnBlur && !isFocused) {
-                return null;
-              }
-
-              if (lazy && !loaded.includes(route.key) && !isFocused) {
-                // Don't render a lazy screen if we've never navigated to it
-                return null;
-              }
-
-              return (
-                <ScreenFallback
-                  key={route.key}
-                  style={StyleSheet.absoluteFill}
-                  visible={isFocused}
-                  enabled={detachInactiveScreens}
-                >
-                  <SceneContent
-                    isFocused={isFocused}
-                    style={sceneContainerStyle}
-                  >
-                    <BottomTabBarHeightContext.Provider value={tabBarHeight}>
-                      {descriptor.render()}
-                    </BottomTabBarHeightContext.Provider>
-                  </SceneContent>
-                </ScreenFallback>
-              );
-            })}
-          </ScreenContainer>
-          <BottomTabBarHeightCallbackContext.Provider
-            value={this.handleTabBarHeightChange}
-          >
-            {this.renderTabBar()}
-          </BottomTabBarHeightCallbackContext.Provider>
-        </SafeAreaProviderCompat>
-      </NavigationHelpersContext.Provider>
-    );
-  }
+            return (
+              <ScreenFallback
+                key={route.key}
+                style={StyleSheet.absoluteFill}
+                visible={isFocused}
+                enabled={detachInactiveScreens}
+              >
+                <SceneContent isFocused={isFocused} style={sceneContainerStyle}>
+                  <BottomTabBarHeightContext.Provider value={tabBarHeight}>
+                    {descriptor.render()}
+                  </BottomTabBarHeightContext.Provider>
+                </SceneContent>
+              </ScreenFallback>
+            );
+          })}
+        </ScreenContainer>
+        <BottomTabBarHeightCallbackContext.Provider value={setTabBarHeight}>
+          {renderTabBar()}
+        </BottomTabBarHeightCallbackContext.Provider>
+      </SafeAreaProviderCompat>
+    </NavigationHelpersContext.Provider>
+  );
 }
 
 const styles = StyleSheet.create({
