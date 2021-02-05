@@ -78,7 +78,7 @@ function DrawerViewBase({
   ),
   detachInactiveScreens = true,
 }: Props) {
-  const activeKey = state.routes[state.index].key;
+  const focusedRouteKey = state.routes[state.index].key;
   const {
     drawerHideStatusBarOnOpen = false,
     drawerPosition = I18nManager.isRTL ? 'right' : 'left',
@@ -93,9 +93,13 @@ function DrawerViewBase({
     swipeEdgeWidth,
     swipeEnabled,
     swipeMinDistance,
-  } = descriptors[activeKey].options;
+  } = descriptors[focusedRouteKey].options;
 
-  const [loaded, setLoaded] = React.useState([activeKey]);
+  const [loaded, setLoaded] = React.useState([focusedRouteKey]);
+
+  if (!loaded.includes(focusedRouteKey)) {
+    setLoaded([...loaded, focusedRouteKey]);
+  }
 
   const dimensions = useSafeAreaFrame();
   const insets = useSafeAreaInsets();
@@ -134,12 +138,6 @@ function DrawerViewBase({
 
     return () => subscription?.remove();
   }, [handleDrawerClose, drawerStatus, navigation, state.key]);
-
-  const focusedRouteKey = state.routes[state.index].key;
-
-  if (!loaded.includes(focusedRouteKey)) {
-    setLoaded([...loaded, focusedRouteKey]);
-  }
 
   const renderDrawerContent = ({ progress }: any) => {
     return (
