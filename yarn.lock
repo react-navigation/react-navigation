@@ -3400,7 +3400,7 @@
     sudo-prompt "^9.0.0"
     wcwidth "^1.0.1"
 
-"@react-native-masked-view/masked-view@0.2.0", "@react-native-masked-view/masked-view@^0.2.0":
+"@react-native-masked-view/masked-view@0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@react-native-masked-view/masked-view/-/masked-view-0.2.0.tgz#3309ada28dafd7ac1fead4eb99286acd43180b2a"
   integrity sha512-OXYHN8lRvqLHPM2qB4wagcV1thCzR/PmFaJPOIsq+KU7PBmB0CY5DaC5WCPbyzGP8X9ehVmmK/yWlew3GJIgnQ==

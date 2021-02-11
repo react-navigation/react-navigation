@@ -1,11 +1,15 @@
 import * as React from 'react';
 import { Animated, View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { Route, useTheme } from '@react-navigation/native';
-import { Header as BaseHeader } from '@react-navigation/elements';
+import {
+  HeaderShownContext,
+  HeaderHeightContext,
+  HeaderBackContext,
+  getHeaderTitle,
+} from '@react-navigation/elements';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
 import { forModalPresentationIOS } from '../../TransitionConfigs/CardStyleInterpolators';
-import PreviousSceneContext from '../../utils/PreviousSceneContext';
 import ModalPresentationContext from '../../utils/ModalPresentationContext';
 import type {
   Layout,
@@ -198,8 +202,21 @@ function CardContainer({
     };
   }, [pointerEvents, scene.progress.next]);
 
-  const previousScene = getPreviousScene({ route: scene.descriptor.route });
   const isModalPresentation = cardStyleInterpolator === forModalPresentationIOS;
+  const previousScene = getPreviousScene({ route: scene.descriptor.route });
+
+  let backTitle: string | undefined;
+
+  if (previousScene) {
+    const { options, route } = previousScene.descriptor;
+
+    backTitle = getHeaderTitle(options, route.name);
+  }
+
+  const headerBack = React.useMemo(
+    () => (backTitle !== undefined ? { title: backTitle } : undefined),
+    [backTitle]
+  );
 
   return (
     <Card
@@ -242,15 +259,15 @@ function CardContainer({
     >
       <View style={styles.container}>
         <View style={styles.scene}>
-          <PreviousSceneContext.Provider value={previousScene}>
-            <BaseHeader.ShownContext.Provider
+          <HeaderBackContext.Provider value={headerBack}>
+            <HeaderShownContext.Provider
               value={isParentHeaderShown || headerShown !== false}
             >
-              <BaseHeader.HeightContext.Provider value={headerHeight}>
+              <HeaderHeightContext.Provider value={headerHeight}>
                 {renderScene({ route: scene.descriptor.route })}
-              </BaseHeader.HeightContext.Provider>
-            </BaseHeader.ShownContext.Provider>
-          </PreviousSceneContext.Provider>
+              </HeaderHeightContext.Provider>
+            </HeaderShownContext.Provider>
+          </HeaderBackContext.Provider>
         </View>
         {headerMode !== 'float' ? (
           <ModalPresentationContext.Provider value={isModalPresentation}>

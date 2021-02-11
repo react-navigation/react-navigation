@@ -12,8 +12,8 @@ import {
   ParamListBase,
 } from '@react-navigation/native';
 import {
-  Header as BaseHeader,
   SafeAreaProviderCompat,
+  HeaderShownContext,
 } from '@react-navigation/elements';
 
 import { GestureHandlerRootView } from '../GestureHandler';
@@ -462,7 +462,7 @@ export default class StackView extends React.Component<Props, State> {
               {(insets) => (
                 <KeyboardManager enabled={keyboardHandlingEnabled !== false}>
                   {(props) => (
-                    <BaseHeader.ShownContext.Consumer>
+                    <HeaderShownContext.Consumer>
                       {(isParentHeaderShown) => (
                         <CardStack
                           mode={mode}
@@ -489,7 +489,7 @@ export default class StackView extends React.Component<Props, State> {
                           {...props}
                         />
                       )}
-                    </BaseHeader.ShownContext.Consumer>
+                    </HeaderShownContext.Consumer>
                   )}
                 </KeyboardManager>
               )}

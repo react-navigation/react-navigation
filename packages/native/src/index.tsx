@@ -17,6 +17,4 @@ export { default as useLinkBuilder } from './useLinkBuilder';
 
 export { default as ServerContainer } from './ServerContainer';
 
-export { default as getNamedContext } from './getNamedContext';
-
 export * from './types';

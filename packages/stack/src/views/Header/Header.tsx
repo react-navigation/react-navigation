@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { StackActions, useNavigationState } from '@react-navigation/native';
-import { Header as BaseHeader } from '@react-navigation/elements';
+import { getHeaderTitle, HeaderShownContext } from '@react-navigation/elements';
 
 import HeaderSegment from './HeaderSegment';
-import HeaderTitle from './HeaderTitle';
 import ModalPresentationContext from '../../utils/ModalPresentationContext';
 import debounce from '../../utils/debounce';
-import type { StackHeaderProps, StackHeaderTitleProps } from '../../types';
+import type { StackHeaderProps } from '../../types';
 
 export default React.memo(function Header({
-  previous,
+  back,
   layout,
   insets,
   progress,
@@ -18,29 +17,14 @@ export default React.memo(function Header({
   navigation,
   styleInterpolator,
 }: StackHeaderProps) {
-  const title =
-    typeof options.headerTitle !== 'function' &&
-    options.headerTitle !== undefined
-      ? options.headerTitle
-      : options.title !== undefined
-      ? options.title
-      : route.name;
-
-  let leftLabel;
+  let previousTitle;
 
   // The label for the left back button shows the title of the previous screen
   // If a custom label is specified, we use it, otherwise use previous screen's title
   if (options.headerBackTitle !== undefined) {
-    leftLabel = options.headerBackTitle;
-  } else if (previous) {
-    const o = previous.options;
-
-    leftLabel =
-      typeof o.headerTitle !== 'function' && o.headerTitle !== undefined
-        ? o.headerTitle
-        : o.title !== undefined
-        ? o.title
-        : previous.route.name;
+    previousTitle = options.headerBackTitle;
+  } else if (back) {
+    previousTitle = back.title;
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -57,7 +41,7 @@ export default React.memo(function Header({
   );
 
   const isModal = React.useContext(ModalPresentationContext);
-  const isParentHeaderShown = React.useContext(BaseHeader.ShownContext);
+  const isParentHeaderShown = React.useContext(HeaderShownContext);
   const isFirstRouteInParent = useNavigationState(
     (state) => state.routes[0].key === route.key
   );
@@ -68,18 +52,17 @@ export default React.memo(function Header({
   return (
     <HeaderSegment
       {...options}
+      title={getHeaderTitle(options, route.name)}
       progress={progress}
       insets={insets}
       layout={layout}
-      title={title}
-      leftLabel={leftLabel}
-      headerTitle={
-        typeof options.headerTitle !== 'function'
-          ? (props: StackHeaderTitleProps) => <HeaderTitle {...props} />
-          : options.headerTitle
+      headerBackTitle={
+        options.headerBackTitle !== undefined
+          ? options.headerBackTitle
+          : previousTitle
       }
       headerStatusBarHeight={statusBarHeight}
-      onGoBack={previous ? goBack : undefined}
+      onGoBack={back ? goBack : undefined}
       styleInterpolator={styleInterpolator}
     />
   );

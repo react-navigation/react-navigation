@@ -17,6 +17,9 @@ import type {
   RouteProp,
 } from '@react-navigation/native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
+import type { HeaderOptions } from '@react-navigation/elements';
+
+export type Layout = { width: number; height: number };
 
 export type BottomTabNavigationEventMap = {
   /**
@@ -77,7 +80,7 @@ export type TabBarVisibilityAnimationConfig =
   | TimingKeyboardAnimationConfig
   | SpringKeyboardAnimationConfig;
 
-export type BottomTabNavigationOptions = {
+export type BottomTabNavigationOptions = HeaderOptions & {
   /**
    * Title text for the screen.
    */
@@ -88,6 +91,17 @@ export type BottomTabNavigationOptions = {
    * Set it to `false` if you want to render the screen on initial render.
    */
   lazy?: boolean;
+
+  /**
+   * Function that given returns a React Element to display as a header.
+   */
+  header?: (props: BottomTabHeaderProps) => React.ReactNode;
+
+  /**
+   * Whether to show the header. Setting this to `false` hides the header.
+   * Defaults to `true`.
+   */
+  headerShown?: boolean;
 
   /**
    * Title string of a tab displayed in the tab bar
@@ -254,6 +268,25 @@ export type BottomTabNavigationConfig = {
    * Style object for the component wrapping the screen content.
    */
   sceneContainerStyle?: StyleProp<ViewStyle>;
+};
+
+export type BottomTabHeaderProps = {
+  /**
+   * Layout of the screen.
+   */
+  layout: Layout;
+  /**
+   * Options for the current screen.
+   */
+  options: BottomTabNavigationOptions;
+  /**
+   * Route object for the current screen.
+   */
+  route: RouteProp<ParamListBase, string>;
+  /**
+   * Navigation prop for the header.
+   */
+  navigation: BottomTabNavigationProp<ParamListBase>;
 };
 
 export type BottomTabBarProps = {

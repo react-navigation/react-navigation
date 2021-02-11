@@ -8,7 +8,12 @@ import {
   TabNavigationState,
   useTheme,
 } from '@react-navigation/native';
-import { SafeAreaProviderCompat } from '@react-navigation/elements';
+import {
+  Header,
+  Screen,
+  SafeAreaProviderCompat,
+  getHeaderTitle,
+} from '@react-navigation/elements';
 
 import ScreenFallback from './ScreenFallback';
 import BottomTabBar, { getTabBarHeight } from './BottomTabBar';
@@ -19,6 +24,8 @@ import type {
   BottomTabDescriptorMap,
   BottomTabNavigationHelpers,
   BottomTabBarProps,
+  BottomTabHeaderProps,
+  BottomTabNavigationProp,
 } from '../types';
 
 type Props = BottomTabNavigationConfig & {
@@ -126,6 +133,16 @@ export default function BottomTabView(props: Props) {
               return null;
             }
 
+            const {
+              header = ({ layout, options }: BottomTabHeaderProps) => (
+                <Header
+                  {...options}
+                  layout={layout}
+                  title={getHeaderTitle(options, route.name)}
+                />
+              ),
+            } = descriptor.options;
+
             return (
               <ScreenFallback
                 key={route.key}
@@ -135,7 +152,22 @@ export default function BottomTabView(props: Props) {
               >
                 <SceneContent isFocused={isFocused} style={sceneContainerStyle}>
                   <BottomTabBarHeightContext.Provider value={tabBarHeight}>
-                    {descriptor.render()}
+                    <Screen
+                      route={descriptor.route}
+                      navigation={descriptor.navigation}
+                      headerShown={descriptor.options.headerShown}
+                      headerStatusBarHeight={
+                        descriptor.options.headerStatusBarHeight
+                      }
+                      header={header({
+                        layout: dimensions,
+                        route: descriptor.route,
+                        navigation: descriptor.navigation as BottomTabNavigationProp<ParamListBase>,
+                        options: descriptor.options,
+                      })}
+                    >
+                      {descriptor.render()}
+                    </Screen>
                   </BottomTabBarHeightContext.Provider>
                 </SceneContent>
               </ScreenFallback>

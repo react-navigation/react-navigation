@@ -11,9 +11,7 @@ import {
 import { PlatformPressable } from '@react-navigation/elements';
 import { useTheme } from '@react-navigation/native';
 import MaskedView from '../MaskedView';
-import type { StackHeaderLeftButtonProps } from '../../types';
-
-type Props = StackHeaderLeftButtonProps;
+import type { HeaderBackButtonProps } from '../types';
 
 export default function HeaderBackButton({
   disabled,
@@ -32,7 +30,7 @@ export default function HeaderBackButton({
   accessibilityLabel = label && label !== 'Back' ? `${label}, back` : 'Go back',
   testID,
   style,
-}: Props) {
+}: HeaderBackButtonProps) {
   const { dark, colors } = useTheme();
 
   const [initialLabelWidth, setInitialLabelWidth] = React.useState<

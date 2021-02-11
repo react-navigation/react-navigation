@@ -48,13 +48,13 @@ export type DrawerNavigationOptions = HeaderOptions & {
   lazy?: boolean;
 
   /**
-   * Function that given `HeaderProps` returns a React Element to display as a header.
+   * Function that returns a React Element to display as a header.
    */
   header?: (props: DrawerHeaderProps) => React.ReactNode;
 
   /**
-   * Whether to show the header. The header is not shown by default.
-   * Setting this to `true` shows the header.
+   * Whether to show the header. Setting this to `false` hides the header.
+   * Defaults to `true`.
    */
   headerShown?: boolean;
 
