@@ -23,7 +23,7 @@ export default function MaterialBottomTabsScreen() {
         name="Article"
         options={{
           tabBarLabel: 'Article',
-          tabBarIcon: 'file-document-box',
+          tabBarIcon: 'file-document',
           tabBarColor: '#C9E7F8',
         }}
       >
