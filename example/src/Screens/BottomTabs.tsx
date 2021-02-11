@@ -62,7 +62,7 @@ export default function BottomTabsScreen({
         component={SimpleStackScreen}
         options={{
           title: 'Article',
-          tabBarIcon: getTabBarIcon('file-document-box'),
+          tabBarIcon: getTabBarIcon('file-document'),
         }}
       />
       <BottomTabs.Screen
