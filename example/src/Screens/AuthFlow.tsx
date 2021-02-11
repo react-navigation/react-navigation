@@ -4,9 +4,9 @@ import { Title, Button } from 'react-native-paper';
 import { useTheme, ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
-  HeaderBackButton,
   StackScreenProps,
 } from '@react-navigation/stack';
+import { HeaderBackButton } from '@react-navigation/elements';
 
 type AuthStackParams = {
   Splash: undefined;

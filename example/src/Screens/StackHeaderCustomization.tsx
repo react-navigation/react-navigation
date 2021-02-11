@@ -13,11 +13,10 @@ import { useTheme, ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
   StackScreenProps,
-  HeaderBackground,
   Header,
   StackHeaderProps,
 } from '@react-navigation/stack';
-import { useHeaderHeight } from '@react-navigation/elements';
+import { HeaderBackground, useHeaderHeight } from '@react-navigation/elements';
 import BlurView from '../Shared/BlurView';
 import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
@@ -117,6 +116,7 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
   }, [navigation]);
 
   const { colors, dark } = useTheme();
+  const [headerTitleCentered, setHeaderTitleCentered] = React.useState(true);
 
   return (
     <SimpleStack.Navigator {...rest}>
@@ -129,7 +129,7 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
           headerTintColor: '#fff',
           headerStyle: { backgroundColor: '#ff005d' },
           headerBackTitleVisible: false,
-          headerTitleAlign: 'center',
+          headerTitleAlign: headerTitleCentered ? 'center' : 'left',
           headerBackImage: ({ tintColor }) => (
             <MaterialCommunityIcons
               name="arrow-left-circle-outline"
@@ -142,12 +142,13 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
             <Appbar.Action
               color={tintColor}
               icon="dots-horizontal-circle-outline"
-              onPress={() =>
+              onPress={() => {
+                setHeaderTitleCentered((centered) => !centered);
                 Alert.alert(
                   'Never gonna give you up!',
                   'Never gonna let you down! Never gonna run around and desert you!'
-                )
-              }
+                );
+              }}
             />
           ),
         })}

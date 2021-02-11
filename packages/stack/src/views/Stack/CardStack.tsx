@@ -12,7 +12,7 @@ import type {
   StackNavigationState,
 } from '@react-navigation/native';
 import {
-  Header as BaseHeader,
+  getDefaultHeaderHeight,
   SafeAreaProviderCompat,
 } from '@react-navigation/elements';
 
@@ -120,7 +120,7 @@ const getHeaderHeights = (
     acc[curr.key] =
       typeof height === 'number'
         ? height
-        : BaseHeader.getDefaultHeight(layout, headerStatusBarHeight);
+        : getDefaultHeaderHeight(layout, headerStatusBarHeight);
 
     return acc;
   }, {});

@@ -1,4 +1,4 @@
-import { getNamedContext } from '@react-navigation/native';
+import getNamedContext from '../getNamedContext';
 
 const HeaderShownContext = getNamedContext('HeaderShownContext', false);
 

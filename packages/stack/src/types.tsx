@@ -1,11 +1,5 @@
 import type * as React from 'react';
-import type {
-  Animated,
-  StyleProp,
-  TextStyle,
-  ViewStyle,
-  LayoutChangeEvent,
-} from 'react-native';
+import type { Animated, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import type {
   NavigationProp,
@@ -17,6 +11,10 @@ import type {
   StackActionHelpers,
   RouteProp,
 } from '@react-navigation/native';
+import type {
+  HeaderBackButton,
+  HeaderOptions,
+} from '@react-navigation/elements';
 
 export type StackNavigationEventMap = {
   /**
@@ -107,38 +105,7 @@ export type StackHeaderMode = 'float' | 'screen';
 
 export type StackCardMode = 'card' | 'modal';
 
-export type StackHeaderOptions = {
-  /**
-   * String or a function that returns a React Element to be used by the header.
-   * Defaults to scene `title`.
-   * It receives `allowFontScaling`, `onLayout`, `style` and `children` in the options object as an argument.
-   * The title string is passed in `children`.
-   */
-  headerTitle?: string | ((props: StackHeaderTitleProps) => React.ReactNode);
-  /**
-   * How to align the the header title.
-   * Defaults to `center` on iOS and `left` on Android.
-   */
-  headerTitleAlign?: 'left' | 'center';
-  /**
-   * Style object for the title component.
-   */
-  headerTitleStyle?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
-  /**
-   * Style object for the container of the `headerTitle` component, for example to add padding.
-   * By default, `headerTitleContainerStyle` is with an absolute position style and offsets both `left` and `right`.
-   * This may lead to white space or overlap between `headerLeft` and `headerTitle` if a customized `headerLeft` is used.
-   * It can be solved by adjusting `left` and `right` style in `headerTitleContainerStyle` and `marginHorizontal` in `headerTitleStyle`.
-   */
-  headerTitleContainerStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
-  /**
-   * Tint color for the header.
-   */
-  headerTintColor?: string;
-  /**
-   * Whether header title font should scale to respect Text Size accessibility settings. Defaults to `false`.
-   */
-  headerTitleAllowFontScaling?: boolean;
+export type StackHeaderOptions = HeaderOptions & {
   /**
    * Whether back button title font should scale to respect Text Size accessibility settings. Defaults to `false`.
    */
@@ -170,56 +137,11 @@ export type StackHeaderOptions = {
    */
   headerTruncatedBackTitle?: string;
   /**
-   * Function which returns a React Element to display on the left side of the header.
-   * It receives a number of arguments when rendered (`onPress`, `label`, `labelStyle` and more.
-   */
-  headerLeft?: (props: StackHeaderLeftButtonProps) => React.ReactNode;
-  /**
-   * Style object for the container of the `headerLeft` component, for example to add padding.
-   */
-  headerLeftContainerStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
-  /**
-   * Function which returns a React Element to display on the right side of the header.
-   */
-  headerRight?: (props: { tintColor?: string }) => React.ReactNode;
-  /**
-   * Style object for the container of the `headerRight` component, for example to add padding.
-   */
-  headerRightContainerStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
-  /**
    * Function which returns a React Element to display custom image in header's back button.
    * It receives the `tintColor` in in the options object as an argument. object.
    * Defaults to Image component with a the default back icon image for the platform (a chevron on iOS and an arrow on Android).
    */
-  headerBackImage?: StackHeaderLeftButtonProps['backImage'];
-  /**
-   * Color for material ripple (Android >= 5.0 only).
-   */
-  headerPressColorAndroid?: string;
-  /**
-   * Function which returns a React Element to render as the background of the header.
-   * This is useful for using backgrounds such as an image or a gradient.
-   * You can use this with `headerTransparent` to render a blur view, for example, to create a translucent header.
-   */
-  headerBackground?: (props: {
-    style: StyleProp<ViewStyle>;
-  }) => React.ReactNode;
-  /**
-   * Style object for the header. You can specify a custom background color here, for example.
-   */
-  headerStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
-  /**
-   * Defaults to `false`. If `true`, the header will not have a background unless you explicitly provide it with `headerBackground`.
-   * The header will also float over the screen so that it overlaps the content underneath.
-   * This is useful if you want to render a semi-transparent header or a blurred background.
-   */
-  headerTransparent?: boolean;
-  /**
-   * Extra padding to add at the top of header to account for translucent status bar.
-   * By default, it uses the top value from the safe area insets of the device.
-   * Pass 0 or a custom value to disable the default behaviour, and customize the height.
-   */
-  headerStatusBarHeight?: number;
+  headerBackImage?: React.ComponentProps<typeof HeaderBackButton>['backImage'];
 };
 
 export type StackHeaderProps = {
@@ -232,21 +154,13 @@ export type StackHeaderProps = {
    */
   insets: EdgeInsets;
   /**
-   * Object representing the previous scene.
+   * Options for the back button.
    */
-  previous?: {
+  back?: {
     /**
-     * Options for the previous screen.
+     * Title of the previous screen.
      */
-    options: StackNavigationOptions;
-    /**
-     * Route object for the current screen.
-     */
-    route: RouteProp<ParamListBase, string>;
-    /**
-     * Animated nodes representing the progress of the animation of the previous screen.
-     */
-    progress: SceneProgress;
+    title: string;
   };
   /**
    * Animated nodes representing the progress of the animation.
@@ -387,103 +301,6 @@ export type StackNavigationConfig = {
    * Defaults to `true` on Android, depends on the version of `react-native-screens` on iOS.
    */
   detachInactiveScreens?: boolean;
-};
-
-export type StackHeaderLeftButtonProps = {
-  /**
-   * Whether the button is disabled.
-   */
-  disabled?: boolean;
-  /**
-   * Callback to call when the button is pressed.
-   * By default, this triggers `goBack`.
-   */
-  onPress?: () => void;
-  /**
-   * Color for material ripple (Android >= 5.0 only).
-   */
-  pressColorAndroid?: string;
-  /**
-   * Function which returns a React Element to display custom image in header's back button.
-   */
-  backImage?: (props: { tintColor: string }) => React.ReactNode;
-  /**
-   * Tint color for the header.
-   */
-  tintColor?: string;
-  /**
-   * Label text for the button. Usually the title of the previous screen.
-   * By default, this is only shown on iOS.
-   */
-  label?: string;
-  /**
-   * Label text to show when there isn't enough space for the full label.
-   */
-  truncatedLabel?: string;
-  /**
-   * Whether the label text is visible.
-   * Defaults to `true` on iOS and `false` on Android.
-   */
-  labelVisible?: boolean;
-  /**
-   * Style object for the label.
-   */
-  labelStyle?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
-  /**
-   * Whether label font should scale to respect Text Size accessibility settings.
-   */
-  allowFontScaling?: boolean;
-  /**
-   * Callback to trigger when the size of the label changes.
-   */
-  onLabelLayout?: (e: LayoutChangeEvent) => void;
-  /**
-   * Layout of the screen.
-   */
-  screenLayout?: Layout;
-  /**
-   * Layout of the title element in the header.
-   */
-  titleLayout?: Layout;
-  /**
-   * Whether it's possible to navigate back in stack.
-   */
-  canGoBack?: boolean;
-  /**
-   * Accessibility label for the button for screen readers.
-   */
-  accessibilityLabel?: string;
-  /**
-   * ID to locate this button in tests.
-   */
-  testID?: string;
-  /**
-   * Style object for the button.
-   */
-  style?: StyleProp<ViewStyle>;
-};
-
-export type StackHeaderTitleProps = {
-  /**
-   * Callback to trigger when the size of the title element changes.
-   */
-  onLayout: (e: LayoutChangeEvent) => void;
-  /**
-   * Whether title font should scale to respect Text Size accessibility settings.
-   */
-  allowFontScaling?: boolean;
-  /**
-   * Tint color for the header.
-   */
-  tintColor?: string;
-  /**
-   * Content of the title element. Usually the title string.
-   */
-  children?: string;
-  /**
-   * Style object for the title element.
-   */
-  style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
 };
 
 export type TransitionSpec =

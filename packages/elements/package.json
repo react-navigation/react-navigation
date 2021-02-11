@@ -38,6 +38,7 @@
     "clean": "del lib"
   },
   "devDependencies": {
+    "@react-native-masked-view/masked-view": "^0.2.0",
     "@testing-library/react-native": "^7.1.0",
     "@types/react": "^16.9.53",
     "@types/react-native": "~0.62.0",

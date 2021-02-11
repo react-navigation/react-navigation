@@ -8,6 +8,7 @@ import {
 } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { HeaderBackButton } from '@react-navigation/elements';
 import TouchableBounce from '../Shared/TouchableBounce';
 import Albums from '../Shared/Albums';
 import Contacts from '../Shared/Contacts';
@@ -39,6 +40,7 @@ export default function BottomTabsScreen({
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
+      headerShown: false,
       title: routeName,
     });
   }, [navigation, routeName]);
@@ -46,6 +48,9 @@ export default function BottomTabsScreen({
   return (
     <BottomTabs.Navigator
       screenOptions={{
+        headerLeft: (props) => (
+          <HeaderBackButton {...props} onPress={navigation.goBack} />
+        ),
         tabBarButton:
           Platform.OS === 'web'
             ? undefined
@@ -54,18 +59,12 @@ export default function BottomTabsScreen({
     >
       <BottomTabs.Screen
         name="Article"
+        component={SimpleStackScreen}
         options={{
           title: 'Article',
           tabBarIcon: getTabBarIcon('file-document-box'),
         }}
-      >
-        {(props) => (
-          <SimpleStackScreen
-            {...props}
-            screenOptions={{ headerShown: false }}
-          />
-        )}
-      </BottomTabs.Screen>
+      />
       <BottomTabs.Screen
         name="Chat"
         component={Chat}

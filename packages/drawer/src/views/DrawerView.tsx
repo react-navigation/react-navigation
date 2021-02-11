@@ -8,20 +8,20 @@ import {
   NativeEventSubscription,
 } from 'react-native';
 import { ScreenContainer } from 'react-native-screens';
-import {
-  useSafeAreaFrame,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { useSafeAreaFrame } from 'react-native-safe-area-context';
 import {
   NavigationHelpersContext,
-  NavigationContext,
-  NavigationRouteContext,
   DrawerNavigationState,
   DrawerActions,
   useTheme,
   ParamListBase,
 } from '@react-navigation/native';
-import { Header, SafeAreaProviderCompat } from '@react-navigation/elements';
+import {
+  Header,
+  Screen,
+  SafeAreaProviderCompat,
+  getHeaderTitle,
+} from '@react-navigation/elements';
 
 import { GestureHandlerRootView } from './GestureHandler';
 import ScreenFallback from './ScreenFallback';
@@ -102,7 +102,6 @@ function DrawerViewBase({
   }
 
   const dimensions = useSafeAreaFrame();
-  const insets = useSafeAreaInsets();
 
   const { colors } = useTheme();
 
@@ -152,12 +151,6 @@ function DrawerViewBase({
     );
   };
 
-  const [headerHeights, setHeaderHeights] = React.useState<
-    Record<string, number>
-  >({});
-
-  const isParentHeaderShown = React.useContext(Header.ShownContext);
-
   const renderSceneContent = () => {
     return (
       // @ts-ignore
@@ -181,27 +174,14 @@ function DrawerViewBase({
               <Header
                 {...options}
                 layout={layout}
-                headerTitle={
-                  options.headerTitle !== undefined
-                    ? options.headerTitle
-                    : options.title !== undefined
-                    ? options.title
-                    : route.name
-                }
+                title={getHeaderTitle(options, route.name)}
                 headerLeft={
                   options.headerLeft ??
                   ((props) => <DrawerToggleButton {...props} />)
                 }
               />
             ),
-            headerShown = true,
-            headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
           } = descriptor.options;
-
-          const headerHeight = headerShown
-            ? headerHeights[route.key] ??
-              Header.getDefaultHeight(dimensions, headerStatusBarHeight)
-            : 0;
 
           return (
             <ScreenFallback
@@ -210,39 +190,20 @@ function DrawerViewBase({
               visible={isFocused}
               enabled={detachInactiveScreens}
             >
-              {headerShown ? (
-                <NavigationContext.Provider value={descriptor.navigation}>
-                  <NavigationRouteContext.Provider value={route}>
-                    <View
-                      onLayout={(e) => {
-                        const { height } = e.nativeEvent.layout;
-
-                        setHeaderHeights((heights) => {
-                          if (heights[route.key] === height) {
-                            return heights;
-                          }
-
-                          return { ...heights, [route.key]: height };
-                        });
-                      }}
-                    >
-                      {header({
-                        layout: dimensions,
-                        route: descriptor.route,
-                        navigation: descriptor.navigation as DrawerNavigationProp<ParamListBase>,
-                        options: descriptor.options,
-                      })}
-                    </View>
-                  </NavigationRouteContext.Provider>
-                </NavigationContext.Provider>
-              ) : null}
-              <Header.ShownContext.Provider
-                value={isParentHeaderShown || headerShown !== false}
+              <Screen
+                route={descriptor.route}
+                navigation={descriptor.navigation}
+                headerShown={descriptor.options.headerShown}
+                headerStatusBarHeight={descriptor.options.headerStatusBarHeight}
+                header={header({
+                  layout: dimensions,
+                  route: descriptor.route,
+                  navigation: descriptor.navigation as DrawerNavigationProp<ParamListBase>,
+                  options: descriptor.options,
+                })}
               >
-                <Header.HeightContext.Provider value={headerHeight}>
-                  {descriptor.render()}
-                </Header.HeightContext.Provider>
-              </Header.ShownContext.Provider>
+                {descriptor.render()}
+              </Screen>
             </ScreenFallback>
           );
         })}
