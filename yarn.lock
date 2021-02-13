@@ -3405,6 +3405,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-masked-view/masked-view/-/masked-view-0.2.0.tgz#3309ada28dafd7ac1fead4eb99286acd43180b2a"
   integrity sha512-OXYHN8lRvqLHPM2qB4wagcV1thCzR/PmFaJPOIsq+KU7PBmB0CY5DaC5WCPbyzGP8X9ehVmmK/yWlew3GJIgnQ==
 
+"@react-native-masked-view/masked-view@^0.2.0":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@react-native-masked-view/masked-view/-/masked-view-0.2.1.tgz#35fec941ebcac7f94d837fc0aa27ad91ffcc0a5c"
+  integrity sha512-NY856RX98v8q6RFW+8cUq/QAzsvg5H4vAW0/Jk//XE7Fspmvd1qR15y9GZAUACPkwHg+8taEPiozn/wY5OyMYA==
+
 "@segment/loosely-validate-event@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@segment/loosely-validate-event/-/loosely-validate-event-2.0.0.tgz#87dfc979e5b4e7b82c5f1d8b722dfd5d77644681"
