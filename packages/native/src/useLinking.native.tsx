@@ -30,9 +30,18 @@ export default function useLinking(
     subscribe = (listener) => {
       const callback = ({ url }: { url: string }) => listener(url);
 
-      Linking.addEventListener('url', callback);
+      const subscription = Linking.addEventListener('url', callback) as
+        | { remove(): void }
+        | undefined;
 
-      return () => Linking.removeEventListener('url', callback);
+      return () => {
+        // https://github.com/facebook/react-native/commit/6d1aca806cee86ad76de771ed3a1cc62982ebcd7
+        if (subscription?.remove) {
+          subscription.remove();
+        } else {
+          Linking.removeEventListener('url', callback);
+        }
+      };
     },
     getStateFromPath = getStateFromPathDefault,
     getActionFromState = getActionFromStateDefault,
