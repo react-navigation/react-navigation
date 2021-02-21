@@ -263,7 +263,9 @@ export default function StackRouter(options: StackRouterOptions) {
 
             const route = id
               ? state.routes.find(
-                  (route) => id === getId?.({ params: route.params })
+                  (route) =>
+                    route.name === action.payload.name &&
+                    id === getId?.({ params: route.params })
                 )
               : undefined;
 
@@ -361,7 +363,9 @@ export default function StackRouter(options: StackRouterOptions) {
 
             if (id) {
               index = state.routes.findIndex(
-                (route) => id === getId?.({ params: route.params })
+                (route) =>
+                  route.name === action.payload.name &&
+                  id === getId?.({ params: route.params })
               );
             } else if (
               (state.routes[state.index].name === action.payload.name &&
