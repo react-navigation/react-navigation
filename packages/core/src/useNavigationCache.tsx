@@ -78,16 +78,15 @@ export default function useNavigationCache<
       const { emit, ...rest } = navigation;
 
       const dispatch = (
-        action: NavigationAction | ((state: State) => NavigationAction)
+        thunk:
+          | NavigationAction
+          | ((state: State) => NavigationAction | null | undefined)
       ) => {
-        const payload =
-          typeof action === 'function' ? action(getState()) : action;
+        const action = typeof thunk === 'function' ? thunk(getState()) : thunk;
 
-        navigation.dispatch(
-          typeof payload === 'object' && payload != null
-            ? { source: route.key, ...payload }
-            : payload
-        );
+        if (action != null) {
+          navigation.dispatch({ source: route.key, ...action });
+        }
       };
 
       const helpers = Object.keys(actions).reduce<Record<string, () => void>>(
