@@ -4,6 +4,7 @@ import {
   StyleSheet,
   LayoutChangeEvent,
   Dimensions,
+  Platform,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import type { NavigationState as StackNavigationState } from 'react-navigation';
@@ -395,7 +396,7 @@ export default class CardStack extends React.Component<Props, State> {
       onGestureCancel,
       // Enable on new versions of `react-native-screens`
       // On older versions of `react-native-screens`, there's an issue with screens not being responsive to user interaction.
-      detachInactiveScreens = shouldUseActivityState,
+      detachInactiveScreens = Platform.OS === 'web' || shouldUseActivityState,
     } = this.props;
 
     const { scenes, layout, gestures, headerHeights } = this.state;
@@ -504,7 +505,7 @@ export default class CardStack extends React.Component<Props, State> {
             // For the old implementation, it stays the same it was
             let isScreenActive: Animated.AnimatedInterpolation | 2 | 1 | 0 = 1;
 
-            if (shouldUseActivityState) {
+            if (shouldUseActivityState || Platform.OS === 'web') {
               if (index < self.length - activeScreensLimit - 1) {
                 // screen should be inactive because it is too deep in the stack
                 isScreenActive = STATE_INACTIVE;
