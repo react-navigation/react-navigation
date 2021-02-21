@@ -1,21 +1,15 @@
 import * as React from 'react';
-import {
-  Platform,
-  TouchableNativeFeedback,
-  TouchableOpacity,
-  View,
-  TouchableWithoutFeedbackProps,
-} from 'react-native';
+import { Platform, Pressable, PressableProps } from 'react-native';
 
-export type Props = TouchableWithoutFeedbackProps & {
+export type Props = PressableProps & {
   pressColor?: string;
   pressOpacity?: number;
-  disabled?: boolean | null;
-  borderless?: boolean;
   children: React.ReactNode;
 };
 
 const ANDROID_VERSION_LOLLIPOP = 21;
+const ANDROID_SUPPORTS_RIPPLE =
+  Platform.OS === 'android' && Platform.Version >= ANDROID_VERSION_LOLLIPOP;
 
 /**
  * PlatformPressable provides an abstraction on top of TouchableNativeFeedback and
@@ -25,39 +19,24 @@ const ANDROID_VERSION_LOLLIPOP = 21;
  * On other platforms, you can pass the props of TouchableOpacity.
  */
 export default function PlatformPressable({
-  borderless = false,
+  android_ripple,
   pressColor = 'rgba(0, 0, 0, .32)',
   pressOpacity,
   style,
-  children,
   ...rest
 }: Props) {
-  /*
-   * TouchableNativeFeedback.Ripple causes a crash on old Android versions,
-   * therefore only enable it on Android Lollipop and above.
-   *
-   * All touchables on Android should have the ripple effect according to
-   * platform design guidelines.
-   * We need to pass the background prop to specify a borderless ripple effect.
-   */
-  if (
-    Platform.OS === 'android' &&
-    Platform.Version >= ANDROID_VERSION_LOLLIPOP
-  ) {
-    return (
-      <TouchableNativeFeedback
-        {...rest}
-        useForeground={TouchableNativeFeedback.canUseNativeForeground()}
-        background={TouchableNativeFeedback.Ripple(pressColor, borderless)}
-      >
-        <View style={style}>{React.Children.only(children)}</View>
-      </TouchableNativeFeedback>
-    );
-  } else {
-    return (
-      <TouchableOpacity style={style} activeOpacity={pressOpacity} {...rest}>
-        {children}
-      </TouchableOpacity>
-    );
-  }
+  return (
+    <Pressable
+      android_ripple={
+        ANDROID_SUPPORTS_RIPPLE
+          ? { color: pressColor, ...android_ripple }
+          : undefined
+      }
+      style={({ pressed }) => [
+        { opacity: pressed && !ANDROID_SUPPORTS_RIPPLE ? pressOpacity : 1 },
+        typeof style === 'function' ? style({ pressed }) : style,
+      ]}
+      {...rest}
+    />
+  );
 }

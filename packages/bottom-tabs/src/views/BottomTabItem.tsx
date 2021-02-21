@@ -1,8 +1,7 @@
 import React from 'react';
 import {
-  View,
   Text,
-  TouchableWithoutFeedback,
+  Pressable,
   StyleSheet,
   Platform,
   StyleProp,
@@ -159,13 +158,14 @@ export default function BottomTabBarItem({
       );
     } else {
       return (
-        <TouchableWithoutFeedback
+        <Pressable
           {...rest}
           accessibilityRole={accessibilityRole}
           onPress={onPress}
+          style={style}
         >
-          <View style={style}>{children}</View>
-        </TouchableWithoutFeedback>
+          {children}
+        </Pressable>
       );
     }
   },

@@ -23,14 +23,13 @@ export default function DrawerToggleButton({ tintColor, ...rest }: Props) {
       {...rest}
       accessible
       accessibilityRole="button"
-      delayPressIn={0}
+      android_ripple={{ borderless: true }}
       onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
       style={styles.touchable}
       hitSlop={Platform.select({
         ios: undefined,
         default: { top: 16, right: 16, bottom: 16, left: 16 },
       })}
-      borderless
     >
       <Image
         style={[styles.icon, tintColor ? { tintColor } : null]}
