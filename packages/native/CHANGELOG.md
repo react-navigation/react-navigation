@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.4](https://github.com/react-navigation/react-navigation-native/compare/@react-navigation/native@3.8.3...@react-navigation/native@3.8.4) (2021-02-21)
+
+
+### Bug Fixes
+
+* address breaking change in react-native for Linking ([fb1e8d4](https://github.com/react-navigation/react-navigation-native/commit/fb1e8d4a077cece663633408d279459df66033a4))
+
+
+
+
+
 ## [3.8.3](https://github.com/react-navigation/react-navigation-native/compare/@react-navigation/native@3.8.2...@react-navigation/native@3.8.3) (2020-10-26)
 
 **Note:** Version bump only for package @react-navigation/native

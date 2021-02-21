@@ -1,6 +1,6 @@
 {
   "name": "react-navigation-stack",
-  "version": "2.10.2",
+  "version": "2.10.3",
   "description": "Stack navigator component for React Navigation",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
@@ -56,7 +56,7 @@
     "react-native-gesture-handler": "~1.7.0",
     "react-native-safe-area-context": "3.1.4",
     "react-native-screens": "~2.10.1",
-    "react-navigation": "^4.4.3",
+    "react-navigation": "^4.4.4",
     "react-test-renderer": "~16.13.1",
     "typescript": "^4.0.3"
   },

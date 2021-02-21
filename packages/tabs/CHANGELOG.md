@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.11.0](https://github.com/react-navigation/tabs/compare/react-navigation-tabs@2.10.1...react-navigation-tabs@2.11.0) (2021-02-21)
+
+
+### Features
+
+* add activityState to other navigators ([5c7f892](https://github.com/react-navigation/tabs/commit/5c7f892d77298f5c89534fa78a1a6a59c7f35a60))
+
+
+
+
+
 ## [2.10.1](https://github.com/react-navigation/tabs/compare/react-navigation-tabs@2.10.0...react-navigation-tabs@2.10.1) (2020-10-28)
 
 
