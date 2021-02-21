@@ -20,6 +20,7 @@ import useOptionsGetters from './useOptionsGetters';
 import useEventEmitter from './useEventEmitter';
 import useSyncState from './useSyncState';
 import checkSerializable from './checkSerializable';
+import checkDuplicateRouteNames from './checkDuplicateRouteNames';
 import type {
   NavigationContainerEventMap,
   NavigationContainerRef,
@@ -32,6 +33,7 @@ const NOT_INITIALIZED_ERROR =
   "The 'navigation' object hasn't been initialized yet. This might happen if you don't have a navigator mounted, or if the navigator hasn't finished mounting. See https://reactnavigation.org/docs/navigating-without-navigation-prop#handling-initialization for more details.";
 
 const serializableWarnings: string[] = [];
+const duplicateNameWarnings: string[] = [];
 
 try {
   /**
@@ -294,15 +296,17 @@ const BaseNavigationContainer = React.forwardRef(
     });
 
     React.useEffect(() => {
-      if (process.env.NODE_ENV !== 'production') {
-        if (state !== undefined) {
-          const result = checkSerializable(state);
+      const hydratedState = getRootState();
 
-          if (!result.serializable) {
-            const { location, reason } = result;
+      if (process.env.NODE_ENV !== 'production') {
+        if (hydratedState !== undefined) {
+          const serializableResult = checkSerializable(hydratedState);
+
+          if (!serializableResult.serializable) {
+            const { location, reason } = serializableResult;
 
             let path = '';
-            let pointer: Record<any, any> = state;
+            let pointer: Record<any, any> = hydratedState;
             let params = false;
 
             for (let i = 0; i < location.length; i++) {
@@ -344,13 +348,28 @@ const BaseNavigationContainer = React.forwardRef(
               console.warn(message);
             }
           }
+
+          const duplicateRouteNamesResult = checkDuplicateRouteNames(
+            hydratedState
+          );
+
+          if (duplicateRouteNamesResult.length) {
+            const message = `Found screens with the same name in multiple navigators. Check:\n${duplicateRouteNamesResult.map(
+              ([_, locations]) => `\n${locations.join(', ')}`
+            )}\n\nThis can cause confusing behavior during navigation. Consider using unique names for each screen instead.`;
+
+            if (!duplicateNameWarnings.includes(message)) {
+              duplicateNameWarnings.push(message);
+              console.warn(message);
+            }
+          }
         }
       }
 
       emitter.emit({ type: 'state', data: { state } });
 
       if (!isFirstMountRef.current && onStateChangeRef.current) {
-        onStateChangeRef.current(getRootState());
+        onStateChangeRef.current(hydratedState);
       }
 
       isFirstMountRef.current = false;
