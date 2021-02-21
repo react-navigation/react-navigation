@@ -214,7 +214,7 @@ export default function createNavigationContainer(Component) {
         }
       }
       _statefulContainerCount++;
-      Linking.addEventListener('url', this._handleOpenURL);
+      this._linkingSub = Linking.addEventListener('url', this._handleOpenURL);
 
       // Pull out anything that can impact state
       let parsedUrl = null;
@@ -331,7 +331,14 @@ export default function createNavigationContainer(Component) {
 
     componentWillUnmount() {
       this._isMounted = false;
-      Linking.removeEventListener('url', this._handleOpenURL);
+
+      // https://github.com/facebook/react-native/commit/6d1aca806cee86ad76de771ed3a1cc62982ebcd7
+      if (this._linkingSub?.remove) {
+        this._linkingSub?.remove();
+      } else {
+        Linking.removeEventListener('url', this._handleOpenURL);
+      }
+
       this.subs && this.subs.remove();
 
       if (this._isStateful()) {
