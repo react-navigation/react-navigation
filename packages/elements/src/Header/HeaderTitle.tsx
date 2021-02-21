@@ -19,7 +19,6 @@ export default function HeaderTitle({ tintColor, style, ...rest }: Props) {
   const { colors } = useTheme();
 
   return (
-    // @ts-expect-error: animated components seem to have incorrect type
     <Animated.Text
       accessibilityRole="header"
       aria-level="1"

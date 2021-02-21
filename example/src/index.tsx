@@ -8,7 +8,6 @@ import {
   Dimensions,
   ScaledSize,
   Linking,
-  // @ts-expect-error: we need to use older version of types for now
   LogBox,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
