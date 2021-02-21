@@ -61,7 +61,6 @@ export const MaybeScreen = ({
   children: React.ReactNode;
 }) => {
   if (enabled && Platform.OS === 'web') {
-    // @ts-expect-error: the animated component has incorrect type for style prop
     return <AnimatedWebScreen active={active} {...rest} />;
   }
 

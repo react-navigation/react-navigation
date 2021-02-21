@@ -50,7 +50,7 @@
     "@testing-library/react-native": "^7.1.0",
     "@types/color": "^3.0.1",
     "@types/react": "^16.9.53",
-    "@types/react-native": "~0.62.0",
+    "@types/react-native": "~0.63.50",
     "del-cli": "^3.0.1",
     "react": "~16.13.1",
     "react-native": "~0.63.2",
