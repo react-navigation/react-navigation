@@ -24,6 +24,7 @@ module.exports = {
       'module-resolver',
       {
         root: ['..'],
+        extensions: ['.tsx', '.ts', '.js', '.json'],
         alias: {
           'react-native': 'react-native-web',
           ...alias,
