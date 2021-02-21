@@ -10,7 +10,7 @@ import {
   StyleProp,
   View,
   InteractionManager,
-  TouchableWithoutFeedback,
+  Pressable,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 import {
@@ -661,13 +661,13 @@ export default class DrawerView extends React.Component<Props> {
               drawerType === 'permanent' ? null : Platform.OS === 'web' ||
                 Platform.OS === 'windows' ||
                 Platform.OS === 'macos' ? (
-                <TouchableWithoutFeedback
+                <Pressable
                   onPress={
                     gestureEnabled ? () => this.toggleDrawer(false) : undefined
                   }
                 >
                   <Overlay progress={progress} style={overlayStyle as any} />
-                </TouchableWithoutFeedback>
+                </Pressable>
               ) : (
                 <TapGestureHandler
                   enabled={gestureEnabled}

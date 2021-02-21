@@ -79,15 +79,17 @@ type Props = {
   style?: StyleProp<ViewStyle>;
 };
 
-const Touchable = ({
+const LinkPressable = ({
   children,
   style,
   onPress,
+  onLongPress,
   to,
   accessibilityRole,
-  delayPressIn,
   ...rest
-}: React.ComponentProps<typeof PlatformPressable> & {
+}: Omit<React.ComponentProps<typeof PlatformPressable>, 'style'> & {
+  style: StyleProp<ViewStyle>;
+} & {
   to?: string;
   children: React.ReactNode;
   onPress?: () => void;
@@ -109,6 +111,7 @@ const Touchable = ({
             onPress?.(e);
           }
         }}
+        onLongPress={onLongPress ?? undefined}
       >
         {children}
       </Link>
@@ -118,7 +121,6 @@ const Touchable = ({
       <PlatformPressable
         {...rest}
         accessibilityRole={accessibilityRole}
-        delayPressIn={delayPressIn}
         onPress={onPress}
       >
         <View style={style}>{children}</View>
@@ -164,8 +166,7 @@ export default function DrawerItem(props: Props) {
       {...rest}
       style={[styles.container, { borderRadius, backgroundColor }, style]}
     >
-      <Touchable
-        delayPressIn={0}
+      <LinkPressable
         onPress={onPress}
         style={[styles.wrapper, { borderRadius }]}
         accessibilityRole="button"
@@ -200,7 +201,7 @@ export default function DrawerItem(props: Props) {
             )}
           </View>
         </React.Fragment>
-      </Touchable>
+      </LinkPressable>
     </View>
   );
 }

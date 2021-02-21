@@ -155,15 +155,14 @@ export default function HeaderBackButton({
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       testID={testID}
-      delayPressIn={0}
       onPress={disabled ? undefined : handlePress}
       pressColor={pressColorAndroid}
+      android_ripple={{ borderless: true }}
       style={[styles.container, disabled && styles.disabled, style]}
       hitSlop={Platform.select({
         ios: undefined,
         default: { top: 16, right: 16, bottom: 16, left: 16 },
       })}
-      borderless
     >
       <React.Fragment>
         {renderBackImage()}
