@@ -600,14 +600,14 @@ it('returns true for canGoBack when parent router handles GO_BACK', () => {
   const root = (
     <BaseNavigationContainer>
       <TestNavigator>
-        <Screen name="baz">
+        <Screen name="foo">
           {() => (
             <TestNavigator>
-              <Screen name="qux" component={TestScreen} />
+              <Screen name="bar" component={TestScreen} />
             </TestNavigator>
           )}
         </Screen>
-        <Screen name="qux">
+        <Screen name="baz">
           {() => (
             <OverrodeNavigator>
               <Screen name="qux">{() => null}</Screen>
