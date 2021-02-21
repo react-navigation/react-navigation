@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.7.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@5.7.1...@react-navigation/routers@5.7.2) (2021-02-21)
+
+
+### Bug Fixes
+
+* fix getId being called for incorrect routes. closes [#9343](https://github.com/react-navigation/react-navigation/issues/9343) ([3728390](https://github.com/react-navigation/react-navigation/commit/3728390b60814ba414bd15cc5b7e5b51baa1f026))
+
+
+
+
+
 ## [5.7.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@5.7.0...@react-navigation/routers@5.7.1) (2021-01-21)
 
 

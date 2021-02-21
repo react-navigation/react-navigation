@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.9.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@5.9.2...@react-navigation/native@5.9.3) (2021-02-21)
+
+
+### Bug Fixes
+
+* address breaking change in react-native for Linking ([a8342aa](https://github.com/react-navigation/react-navigation/commit/a8342aaf3d1ba8fb29faa91c7b63ed25f11745e5))
+
+
+
+
+
 ## [5.9.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@5.9.1...@react-navigation/native@5.9.2) (2021-01-22)
 
 
