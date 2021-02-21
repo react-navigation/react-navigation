@@ -141,10 +141,10 @@ it('handle dispatching with ref', () => {
         state: {
           index: 0,
           key: '4',
-          routeNames: ['qux', 'lex'],
+          routeNames: ['qux2', 'lex2'],
           routes: [
-            { key: 'qux', name: 'qux' },
-            { key: 'lex', name: 'lex' },
+            { key: 'qux2', name: 'qux2' },
+            { key: 'lex2', name: 'lex2' },
           ],
         },
       },
@@ -163,8 +163,8 @@ it('handle dispatching with ref', () => {
         <Screen name="foo2">
           {() => (
             <ChildNavigator>
-              <Screen name="qux">{() => null}</Screen>
-              <Screen name="lex">{() => null}</Screen>
+              <Screen name="qux1">{() => null}</Screen>
+              <Screen name="lex1">{() => null}</Screen>
             </ChildNavigator>
           )}
         </Screen>
@@ -172,8 +172,8 @@ it('handle dispatching with ref', () => {
         <Screen name="baz">
           {() => (
             <ChildNavigator>
-              <Screen name="qux">{() => null}</Screen>
-              <Screen name="lex">{() => null}</Screen>
+              <Screen name="qux2">{() => null}</Screen>
+              <Screen name="lex2">{() => null}</Screen>
             </ChildNavigator>
           )}
         </Screen>
@@ -203,10 +203,10 @@ it('handle dispatching with ref', () => {
           type: 'test',
           index: 0,
           key: '1',
-          routeNames: ['qux', 'lex'],
+          routeNames: ['qux2', 'lex2'],
           routes: [
-            { key: 'lex', name: 'lex' },
-            { key: 'qux', name: 'qux' },
+            { key: 'lex2', name: 'lex2' },
+            { key: 'qux2', name: 'qux2' },
           ],
         },
       },
@@ -237,8 +237,8 @@ it('handle resetting state with ref', () => {
         <Screen name="foo2">
           {() => (
             <TestNavigator>
-              <Screen name="qux">{() => null}</Screen>
-              <Screen name="lex">{() => null}</Screen>
+              <Screen name="qux1">{() => null}</Screen>
+              <Screen name="lex1">{() => null}</Screen>
             </TestNavigator>
           )}
         </Screen>
@@ -246,8 +246,8 @@ it('handle resetting state with ref', () => {
         <Screen name="baz">
           {() => (
             <TestNavigator>
-              <Screen name="qux">{() => null}</Screen>
-              <Screen name="lex">{() => null}</Screen>
+              <Screen name="qux2">{() => null}</Screen>
+              <Screen name="lex2">{() => null}</Screen>
             </TestNavigator>
           )}
         </Screen>
@@ -266,10 +266,10 @@ it('handle resetting state with ref', () => {
         state: {
           index: 0,
           key: '4',
-          routeNames: ['qux', 'lex'],
+          routeNames: ['qux2', 'lex2'],
           routes: [
-            { key: 'qux', name: 'qux' },
-            { key: 'lex', name: 'lex' },
+            { key: 'qux2', name: 'qux2' },
+            { key: 'lex2', name: 'lex2' },
           ],
         },
       },
@@ -293,10 +293,10 @@ it('handle resetting state with ref', () => {
         state: {
           index: 0,
           key: '6',
-          routeNames: ['qux', 'lex'],
+          routeNames: ['qux2', 'lex2'],
           routes: [
-            { key: 'qux', name: 'qux' },
-            { key: 'lex', name: 'lex' },
+            { key: 'qux2', name: 'qux2' },
+            { key: 'lex2', name: 'lex2' },
           ],
           stale: false,
           type: 'test',

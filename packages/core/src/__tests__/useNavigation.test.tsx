@@ -91,7 +91,7 @@ it("gets navigation's parent's parent from context", () => {
         <Screen name="foo">
           {() => (
             <TestNavigator>
-              <Screen name="foo">
+              <Screen name="bar">
                 {() => (
                   <TestNavigator>
                     <Screen name="quo" component={Test} />
