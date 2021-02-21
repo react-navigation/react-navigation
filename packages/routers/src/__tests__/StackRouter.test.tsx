@@ -616,6 +616,48 @@ it('ensures unique ID for navigate', () => {
   });
 });
 
+it('ensure unique ID is only per route name for navigate', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {
+      baz: ({ params }) => params?.foo,
+      bar: ({ params }) => params?.foo,
+      qux: ({ params }) => params?.test,
+    },
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'qux-test', name: 'qux', params: { test: 'a' } },
+          { key: 'baz-test', name: 'baz', params: { foo: 'a' } },
+        ],
+      },
+      CommonActions.navigate('bar', { foo: 'a' }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 2,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'qux-test', name: 'qux', params: { test: 'a' } },
+      { key: 'baz-test', name: 'baz', params: { foo: 'a' } },
+      { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
+    ],
+  });
+});
+
 it('handles go back action', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
@@ -1303,6 +1345,48 @@ it('ensures unique ID for push', () => {
       { key: 'bar-4', name: 'bar' },
       { key: 'baz-5', name: 'baz' },
       { key: 'bar-6', name: 'bar', params: { bar: 29 } },
+    ],
+  });
+});
+
+it('ensure unique ID is only per route name for push', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {
+      baz: ({ params }) => params?.foo,
+      bar: ({ params }) => params?.foo,
+      qux: ({ params }) => params?.test,
+    },
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'qux-test', name: 'qux', params: { test: 'a' } },
+          { key: 'baz-test', name: 'baz', params: { foo: 'a' } },
+        ],
+      },
+      StackActions.push('bar', { foo: 'a' }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 2,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'qux-test', name: 'qux', params: { test: 'a' } },
+      { key: 'baz-test', name: 'baz', params: { foo: 'a' } },
+      { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
     ],
   });
 });
