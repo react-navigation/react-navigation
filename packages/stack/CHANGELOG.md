@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.10.4](https://github.com/react-navigation/react-navigation-stack/compare/react-navigation-stack@2.10.3...react-navigation-stack@2.10.4) (2021-03-01)
+
+
+### Bug Fixes
+
+* correctly call onTransitionEnd on transition end ([1072213](https://github.com/react-navigation/react-navigation-stack/commit/10722139c840ca76a53998363f243bd8488999cd)), closes [#9376](https://github.com/react-navigation/react-navigation-stack/issues/9376)
+
+
+
+
+
 ## [2.10.3](https://github.com/react-navigation/react-navigation-stack/compare/react-navigation-stack@2.10.2...react-navigation-stack@2.10.3) (2021-02-21)
 
 **Note:** Version bump only for package react-navigation-stack
