@@ -431,7 +431,7 @@ export default class StackView extends React.Component<Props, State> {
     const descriptor =
       descriptors[route.key] || this.state.descriptors[route.key];
 
-    descriptor?.options.onTransitionStart?.({ closing });
+    descriptor?.options.onTransitionEnd?.({ closing });
   };
 
   private handleGestureStart = () => {
