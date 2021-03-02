@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "jsx": "react-native",
+    "target": "esnext",
+    "lib": [
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node"
+  }
+}
