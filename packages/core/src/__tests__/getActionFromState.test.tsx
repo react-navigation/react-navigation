@@ -15,6 +15,7 @@ it('gets navigate action from state', () => {
                   {
                     name: 'qux',
                     params: { author: 'jane' },
+                    path: '/foo/bar',
                   },
                 ],
               },
@@ -35,6 +36,7 @@ it('gets navigate action from state', () => {
             author: 'jane',
           },
           screen: 'qux',
+          path: '/foo/bar',
           initial: true,
         },
         screen: 'bar',
@@ -51,6 +53,7 @@ it('gets navigate action from state for top-level screen', () => {
       {
         name: 'foo',
         params: { answer: 42 },
+        path: '/foo/bar',
       },
     ],
   };
@@ -59,6 +62,7 @@ it('gets navigate action from state for top-level screen', () => {
     payload: {
       name: 'foo',
       params: { answer: 42 },
+      path: '/foo/bar',
     },
     type: 'NAVIGATE',
   });
@@ -80,6 +84,7 @@ it('gets reset action from state with 1 route with key at root', () => {
                     key: 'test',
                     name: 'qux',
                     params: { author: 'jane' },
+                    path: '/foo/bar',
                   },
                 ],
               },
@@ -102,7 +107,12 @@ it('gets reset action from state with 1 route with key at root', () => {
                 name: 'bar',
                 state: {
                   routes: [
-                    { key: 'test', name: 'qux', params: { author: 'jane' } },
+                    {
+                      key: 'test',
+                      name: 'qux',
+                      params: { author: 'jane' },
+                      path: '/foo/bar',
+                    },
                   ],
                 },
               },
@@ -125,6 +135,7 @@ it('gets reset action from state for top-level screen with 2 screens', () => {
       {
         name: 'bar',
         params: { author: 'jane' },
+        path: '/foo/bar',
       },
     ],
   };
@@ -139,6 +150,7 @@ it('gets reset action from state for top-level screen with 2 screens', () => {
         {
           name: 'bar',
           params: { author: 'jane' },
+          path: '/foo/bar',
         },
       ],
     },
@@ -197,6 +209,7 @@ it('gets reset action from state for top-level screen with 2 screens with config
         name: 'bar',
         key: 'test',
         params: { author: 'jane' },
+        path: '/foo/bar',
       },
     ],
   };
@@ -219,6 +232,7 @@ it('gets reset action from state for top-level screen with 2 screens with config
           name: 'bar',
           key: 'test',
           params: { author: 'jane' },
+          path: '/foo/bar',
         },
       ],
     },
@@ -236,6 +250,7 @@ it('gets navigate action from state for top-level screen with 2 screens with con
       {
         name: 'bar',
         params: { author: 'jane' },
+        path: '/foo/bar',
       },
     ],
   };
@@ -251,6 +266,7 @@ it('gets navigate action from state for top-level screen with 2 screens with con
     payload: {
       name: 'bar',
       params: { author: 'jane' },
+      path: '/foo/bar',
     },
     type: 'NAVIGATE',
   });
@@ -267,6 +283,7 @@ it('gets navigate action from state for top-level screen with more than 2 screen
       {
         name: 'bar',
         params: { author: 'jane' },
+        path: '/foo/bar',
       },
       { name: 'baz' },
     ],
@@ -283,6 +300,7 @@ it('gets navigate action from state for top-level screen with more than 2 screen
     payload: {
       name: 'bar',
       params: { author: 'jane' },
+      path: '/foo/bar',
     },
     type: 'NAVIGATE',
   });
@@ -303,7 +321,7 @@ it('gets navigate action from state with 2 screens', () => {
                     name: 'qux',
                     params: { author: 'jane' },
                   },
-                  { name: 'quz' },
+                  { name: 'quz', path: '/foo/bar' },
                 ],
               },
             },
@@ -328,7 +346,7 @@ it('gets navigate action from state with 2 screens', () => {
                   author: 'jane',
                 },
               },
-              { name: 'quz' },
+              { name: 'quz', path: '/foo/bar' },
             ],
           },
         },
@@ -353,6 +371,7 @@ it('gets navigate action from state with 2 screens with lower index', () => {
                   {
                     name: 'qux',
                     params: { author: 'jane' },
+                    path: '/foo/bar',
                   },
                   { name: 'quz' },
                 ],
@@ -376,6 +395,7 @@ it('gets navigate action from state with 2 screens with lower index', () => {
           params: {
             author: 'jane',
           },
+          path: '/foo/bar',
         },
       },
     },
@@ -450,6 +470,7 @@ it('gets navigate action from state with config', () => {
                   {
                     name: 'qux',
                     params: { author: 'jane' },
+                    path: '/foo/bar',
                   },
                 ],
               },
@@ -483,6 +504,7 @@ it('gets navigate action from state with config', () => {
             author: 'jane',
           },
           screen: 'qux',
+          path: '/foo/bar',
           initial: true,
         },
         screen: 'bar',
@@ -499,6 +521,7 @@ it('gets navigate action from state for top-level screen with config', () => {
       {
         name: 'foo',
         params: { answer: 42 },
+        path: '/foo/bar',
       },
     ],
   };
@@ -519,6 +542,7 @@ it('gets navigate action from state for top-level screen with config', () => {
     payload: {
       name: 'foo',
       params: { answer: 42 },
+      path: '/foo/bar',
     },
     type: 'NAVIGATE',
   });
@@ -539,7 +563,7 @@ it('gets navigate action from state with 2 screens including initial route and w
                     name: 'qux',
                     params: { author: 'jane' },
                   },
-                  { name: 'quz' },
+                  { name: 'quz', path: '/foo/bar' },
                 ],
               },
             },
@@ -571,6 +595,7 @@ it('gets navigate action from state with 2 screens including initial route and w
         params: {
           screen: 'quz',
           initial: false,
+          path: '/foo/bar',
         },
       },
     },
@@ -593,7 +618,7 @@ it('gets navigate action from state with 2 screens without initial route and wit
                     name: 'qux',
                     params: { author: 'jane' },
                   },
-                  { name: 'quz' },
+                  { name: 'quz', path: '/foo/bar' },
                 ],
               },
             },
@@ -631,7 +656,7 @@ it('gets navigate action from state with 2 screens without initial route and wit
                   author: 'jane',
                 },
               },
-              { name: 'quz' },
+              { name: 'quz', path: '/foo/bar' },
             ],
           },
         },
@@ -856,6 +881,7 @@ it('gets navigate action from state with more than 2 screens with lower index', 
                   {
                     name: 'qux',
                     params: { author: 'jane' },
+                    path: '/foo/bar',
                   },
                   { name: 'quz' },
                 ],
@@ -889,6 +915,7 @@ it('gets navigate action from state with more than 2 screens with lower index', 
         params: {
           screen: 'qux',
           initial: false,
+          path: '/foo/bar',
           params: {
             author: 'jane',
           },

@@ -21,6 +21,7 @@ import useEventEmitter from './useEventEmitter';
 import useSyncState from './useSyncState';
 import checkSerializable from './checkSerializable';
 import checkDuplicateRouteNames from './checkDuplicateRouteNames';
+import findFocusedRoute from './findFocusedRoute';
 import type {
   NavigationContainerEventMap,
   NavigationContainerRef,
@@ -185,14 +186,15 @@ const BaseNavigationContainer = React.forwardRef(
     }, [keyedListeners.getState]);
 
     const getCurrentRoute = React.useCallback(() => {
-      let state = getRootState();
-      if (state === undefined) {
+      const state = getRootState();
+
+      if (state == null) {
         return undefined;
       }
-      while (state.routes[state.index].state !== undefined) {
-        state = state.routes[state.index].state as NavigationState;
-      }
-      return state.routes[state.index];
+
+      const route = findFocusedRoute(state);
+
+      return route as Route<string> | undefined;
     }, [getRootState]);
 
     const emitter = useEventEmitter<NavigationContainerEventMap>();

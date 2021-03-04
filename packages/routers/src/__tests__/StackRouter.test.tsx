@@ -1299,6 +1299,159 @@ it('ensure unique ID is only per route name for push', () => {
   });
 });
 
+it('adds path on navigate if provided', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar', params: { answer: 42 } },
+          { key: 'qux', name: 'qux' },
+        ],
+      },
+
+      CommonActions.navigate({
+        name: 'bar',
+        path: '/foo/bar',
+      }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar', path: '/foo/bar' },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar', params: { answer: 42 }, path: '/foo/bar' },
+        ],
+      },
+      CommonActions.navigate({
+        name: 'bar',
+        params: { fruit: 'orange' },
+        path: '/foo/baz',
+      }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      {
+        key: 'bar',
+        name: 'bar',
+        params: { fruit: 'orange' },
+        path: '/foo/baz',
+      },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 0,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [{ key: 'bar', name: 'bar', params: { answer: 42 } }],
+      },
+      CommonActions.navigate({
+        name: 'baz',
+        path: '/foo/bar',
+      }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'bar', name: 'bar', params: { answer: 42 } },
+      {
+        key: 'baz-test',
+        name: 'baz',
+        path: '/foo/bar',
+      },
+    ],
+  });
+});
+
+it("doesn't remove existing path on navigate if not provided", () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar', path: '/foo/bar' },
+          { key: 'qux', name: 'qux' },
+        ],
+      },
+
+      CommonActions.navigate({
+        name: 'bar',
+        params: { answer: 42 },
+      }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar', params: { answer: 42 }, path: '/foo/bar' },
+    ],
+  });
+});
+
 it("doesn't merge params on navigate to an existing screen", () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {

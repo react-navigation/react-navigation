@@ -376,7 +376,11 @@ export default function useNavigationBuilder<
         route.params !== previousParams)
     ) {
       // If the route was updated with new screen name and/or params, we should navigate there
-      action = CommonActions.navigate(route.params.screen, route.params.params);
+      action = CommonActions.navigate({
+        name: route.params.screen,
+        params: route.params.params,
+        path: route.params.path,
+      });
     }
 
     // The update should be limited to current navigator only, so we call the router manually

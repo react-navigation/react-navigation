@@ -5,6 +5,7 @@ import {
   NavigationContainerRef,
   NavigationState,
   getActionFromState,
+  findFocusedRoute,
 } from '@react-navigation/core';
 import { nanoid } from 'nanoid/non-secure';
 import ServerContext from './ServerContext';
@@ -447,7 +448,9 @@ export default function useLinking(
       const state = ref.current.getRootState();
 
       if (state) {
-        const path = getPathFromStateRef.current(state, configRef.current);
+        const route = findFocusedRoute(state);
+        const path =
+          route?.path ?? getPathFromStateRef.current(state, configRef.current);
 
         if (previousStateRef.current === undefined) {
           previousStateRef.current = state;
@@ -468,7 +471,9 @@ export default function useLinking(
       const state = navigation.getRootState();
 
       const pendingPath = pendingPopStatePathRef.current;
-      const path = getPathFromStateRef.current(state, configRef.current);
+      const route = findFocusedRoute(state);
+      const path =
+        route?.path ?? getPathFromStateRef.current(state, configRef.current);
 
       previousStateRef.current = state;
       pendingPopStatePathRef.current = undefined;
