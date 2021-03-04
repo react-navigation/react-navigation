@@ -8,8 +8,8 @@ import {
   StyleSheet,
   LayoutChangeEvent,
 } from 'react-native';
-import { PlatformPressable } from '@react-navigation/elements';
 import { useTheme } from '@react-navigation/native';
+import PlatformPressable from '../PlatformPressable';
 import MaskedView from '../MaskedView';
 import type { HeaderBackButtonProps } from '../types';
 
