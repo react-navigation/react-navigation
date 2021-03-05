@@ -21,4 +21,8 @@ beforeEach(async () => {
   await page.goto('http://localhost:3579');
 });
 
+afterEach(async () => {
+  await context.close();
+});
+
 export { browser, context, page };

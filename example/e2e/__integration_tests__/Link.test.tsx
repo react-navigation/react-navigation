@@ -8,6 +8,7 @@ it('loads the article page', async () => {
   expect(await page.evaluate(() => location.pathname + location.search)).toBe(
     '/link-component/article/gandalf'
   );
+
   expect(
     ((await page.accessibility.snapshot()) as any)?.children?.find(
       (it: any) => it.role === 'heading'
