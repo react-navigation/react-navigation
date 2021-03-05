@@ -109,7 +109,7 @@ const BaseNavigationContainer = React.forwardRef(
 
     if (!parent.isDefault && !independent) {
       throw new Error(
-        "Looks like you have nested a 'NavigationContainer' inside another. Normally you need only one container at the root of the app, so this was probably an error. If this was intentional, pass 'independent={true}' explicitely. Note that this will make the child navigators disconnected from the parent and you won't be able to navigate between them."
+        "Looks like you have nested a 'NavigationContainer' inside another. Normally you need only one container at the root of the app, so this was probably an error. If this was intentional, pass 'independent={true}' explicitly. Note that this will make the child navigators disconnected from the parent and you won't be able to navigate between them."
       );
     }
 
@@ -356,8 +356,8 @@ const BaseNavigationContainer = React.forwardRef(
           );
 
           if (duplicateRouteNamesResult.length) {
-            const message = `Found screens with the same name in multiple navigators. Check:\n${duplicateRouteNamesResult.map(
-              ([_, locations]) => `\n${locations.join(', ')}`
+            const message = `Found screens with the same name nested inside one another. Check:\n${duplicateRouteNamesResult.map(
+              (locations) => `\n${locations.join(', ')}`
             )}\n\nThis can cause confusing behavior during navigation. Consider using unique names for each screen instead.`;
 
             if (!duplicateNameWarnings.includes(message)) {

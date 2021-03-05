@@ -831,3 +831,85 @@ it('works with state change events in independent nested container', () => {
     type: 'test',
   });
 });
+
+it('warns for duplicate route names nested inside each other', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return (
+      <React.Fragment>
+        {descriptors[state.routes[state.index].key].render()}
+      </React.Fragment>
+    );
+  };
+
+  const TestScreen = () => <></>;
+
+  const spy = jest.spyOn(console, 'warn').mockImplementation();
+
+  render(
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Screen name="foo">
+          {() => (
+            <TestNavigator>
+              <Screen name="foo" component={TestScreen} />
+              <Screen name="baz" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="bar" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(spy.mock.calls[0][0]).toMatch(
+    'Found screens with the same name nested inside one another.'
+  );
+
+  render(
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Screen name="qux">
+          {() => (
+            <TestNavigator>
+              <Screen name="foo">
+                {() => (
+                  <TestNavigator>
+                    <Screen name="foo" component={TestScreen} />
+                    <Screen name="baz" component={TestScreen} />
+                  </TestNavigator>
+                )}
+              </Screen>
+              <Screen name="bar" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(spy.mock.calls[1][0]).toMatch(
+    'Found screens with the same name nested inside one another.'
+  );
+
+  render(
+    <BaseNavigationContainer>
+      <TestNavigator initialRouteName="bar">
+        <Screen name="foo" component={TestScreen} />
+        <Screen name="bar">
+          {() => (
+            <TestNavigator>
+              <Screen name="foo" component={TestScreen} />
+              <Screen name="baz" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(spy).toHaveBeenCalledTimes(2);
+
+  spy.mockRestore();
+});
