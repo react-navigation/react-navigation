@@ -141,10 +141,10 @@ const BaseNavigationContainer = React.forwardRef(
       action: NavigationAction | ((state: NavigationState) => NavigationAction)
     ) => {
       if (listeners.focus[0] == null) {
-        throw new Error(NOT_INITIALIZED_ERROR);
+        console.error(NOT_INITIALIZED_ERROR);
+      } else {
+        listeners.focus[0]((navigation) => navigation.dispatch(action));
       }
-
-      listeners.focus[0]((navigation) => navigation.dispatch(action));
     };
 
     const canGoBack = () => {
@@ -168,15 +168,15 @@ const BaseNavigationContainer = React.forwardRef(
         const target = state?.key ?? keyedListeners.getState.root?.().key;
 
         if (target == null) {
-          throw new Error(NOT_INITIALIZED_ERROR);
+          console.error(NOT_INITIALIZED_ERROR);
+        } else {
+          listeners.focus[0]((navigation) =>
+            navigation.dispatch({
+              ...CommonActions.reset(state),
+              target,
+            })
+          );
         }
-
-        listeners.focus[0]((navigation) =>
-          navigation.dispatch({
-            ...CommonActions.reset(state),
-            target,
-          })
-        );
       },
       [keyedListeners.getState, listeners.focus]
     );

@@ -683,11 +683,15 @@ it('throws if there is no navigator rendered', () => {
 
   render(element);
 
-  act(() => {
-    expect(() => ref.current?.dispatch({ type: 'WHATEVER' })).toThrow(
-      "The 'navigation' object hasn't been initialized yet."
-    );
-  });
+  const spy = jest.spyOn(console, 'error').mockImplementation();
+
+  ref.current?.dispatch({ type: 'WHATEVER' });
+
+  expect(spy.mock.calls[0][0]).toMatch(
+    "The 'navigation' object hasn't been initialized yet."
+  );
+
+  spy.mockRestore();
 });
 
 it("throws if the ref hasn't finished initializing", () => {
@@ -703,9 +707,15 @@ it("throws if the ref hasn't finished initializing", () => {
 
   const TestScreen = () => {
     React.useEffect(() => {
-      expect(() => ref.current?.dispatch({ type: 'WHATEVER' })).toThrow(
+      const spy = jest.spyOn(console, 'error').mockImplementation();
+
+      ref.current?.dispatch({ type: 'WHATEVER' });
+
+      expect(spy.mock.calls[0][0]).toMatch(
         "The 'navigation' object hasn't been initialized yet."
       );
+
+      spy.mockRestore();
     }, []);
 
     return null;
