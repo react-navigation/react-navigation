@@ -20,6 +20,7 @@ type NavigateAction<State extends NavigationState> = {
   payload: {
     name: string;
     params?: NavigatorScreenParams<State>;
+    path?: string;
   };
 };
 
@@ -61,7 +62,9 @@ export default function getActionFromState(
     NavigationState
   >;
 
-  let payload = route ? { name: route.name, params } : undefined;
+  let payload = route
+    ? { name: route.name, path: route.path, params }
+    : undefined;
 
   while (current) {
     if (current.routes.length === 0) {
@@ -107,6 +110,7 @@ export default function getActionFromState(
         NavigationState
       >;
     } else {
+      params.path = route.path;
       params.params = route.params;
     }
 

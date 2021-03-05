@@ -211,7 +211,7 @@ export default function getPathFromState(
         }
       }
 
-      const query = queryString.stringify(focusedParams);
+      const query = queryString.stringify(focusedParams, { sort: false });
 
       if (query) {
         path += `?${query}`;

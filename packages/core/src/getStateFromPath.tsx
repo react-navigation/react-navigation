@@ -5,6 +5,7 @@ import type {
   PartialState,
   InitialState,
 } from '@react-navigation/routers';
+import findFocusedRoute from './findFocusedRoute';
 import type { PathConfigMap } from './types';
 
 type Options = {
@@ -34,6 +35,7 @@ type ResultState = PartialState<NavigationState> & {
 
 type ParsedRoute = {
   name: string;
+  path?: string;
   params?: Record<string, any> | undefined;
 };
 
@@ -86,18 +88,13 @@ export default function getStateFromPath(
     const routes = remaining
       .split('/')
       .filter(Boolean)
-      .map((segment, i, self) => {
+      .map((segment) => {
         const name = decodeURIComponent(segment);
-
-        if (i === self.length - 1) {
-          return { name, params: parseQueryParams(path) };
-        }
-
         return { name };
       });
 
     if (routes.length) {
-      return createNestedStateObject(routes, initialRoutes);
+      return createNestedStateObject(path, routes, initialRoutes);
     }
 
     return undefined;
@@ -205,14 +202,10 @@ export default function getStateFromPath(
 
     if (match) {
       return createNestedStateObject(
-        match.routeNames.map((name, i, self) => {
-          if (i === self.length - 1) {
-            return { name, params: parseQueryParams(path, match.parse) };
-          }
-
-          return { name };
-        }),
-        initialRoutes
+        path,
+        match.routeNames.map((name) => ({ name })),
+        initialRoutes,
+        configs
       );
     }
 
@@ -235,24 +228,13 @@ export default function getStateFromPath(
 
   if (routes !== undefined) {
     // This will always be empty if full path matched
-    current = createNestedStateObject(routes, initialRoutes);
+    current = createNestedStateObject(path, routes, initialRoutes, configs);
     remaining = remainingPath;
     result = current;
   }
 
   if (current == null || result == null) {
     return undefined;
-  }
-
-  const route = findFocusedRoute(current);
-  const params = parseQueryParams(
-    path,
-    findParseConfigForRoute(route.name, configs)
-  );
-
-  if (params) {
-    // @ts-expect-error: params should be treated as read-only, but we're creating the state here so it doesn't matter
-    route.params = { ...route.params, ...params };
   }
 
   return result;
@@ -488,8 +470,10 @@ const createStateObject = (
 };
 
 const createNestedStateObject = (
+  path: string,
   routes: ParsedRoute[],
-  initialRoutes: InitialRouteConfig[]
+  initialRoutes: InitialRouteConfig[],
+  flatConfig?: RouteConfig[]
 ) => {
   let state: InitialState;
   let route = routes.shift() as ParsedRoute;
@@ -519,22 +503,19 @@ const createNestedStateObject = (
     }
   }
 
-  return state;
-};
+  route = findFocusedRoute(state) as ParsedRoute;
+  route.path = path;
 
-const findFocusedRoute = (state: InitialState) => {
-  let current: InitialState | undefined = state;
+  const params = parseQueryParams(
+    path,
+    flatConfig ? findParseConfigForRoute(route.name, flatConfig) : undefined
+  );
 
-  while (current?.routes[current.index || 0].state) {
-    // The query params apply to the deepest route
-    current = current.routes[current.index || 0].state;
+  if (params) {
+    route.params = { ...route.params, ...params };
   }
 
-  const route = (current as PartialState<NavigationState>).routes[
-    current?.index || 0
-  ];
-
-  return route;
+  return state;
 };
 
 const parseQueryParams = (

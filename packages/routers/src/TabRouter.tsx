@@ -334,7 +334,14 @@ export default function TabRouter({
                       : action.payload.params;
                 }
 
-                return params !== route.params ? { ...route, params } : route;
+                const path =
+                  action.type === 'NAVIGATE' && action.payload.path != null
+                    ? action.payload.path
+                    : route.path;
+
+                return params !== route.params || path !== route.path
+                  ? { ...route, path, params }
+                  : route;
               }),
             },
             index,

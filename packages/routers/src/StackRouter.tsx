@@ -401,6 +401,7 @@ export default function StackRouter(options: StackRouterOptions) {
                   key:
                     action.payload.key ?? `${action.payload.name}-${nanoid()}`,
                   name: action.payload.name,
+                  path: action.payload.path,
                   params:
                     routeParamList[action.payload.name] !== undefined
                       ? {
@@ -447,8 +448,13 @@ export default function StackRouter(options: StackRouterOptions) {
               index,
               routes: [
                 ...state.routes.slice(0, index),
-                params !== route.params
-                  ? { ...route, params }
+                params !== route.params ||
+                (action.payload.path && action.payload.path !== route.path)
+                  ? {
+                      ...route,
+                      path: action.payload.path ?? route.path,
+                      params,
+                    }
                   : state.routes[index],
               ],
             };
