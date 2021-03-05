@@ -525,6 +525,7 @@ export type NavigatorScreenParams<
       screen?: never;
       params?: never;
       initial?: never;
+      path?: string;
       state: PartialState<State> | State | undefined;
     }
   | {
@@ -533,12 +534,14 @@ export type NavigatorScreenParams<
             screen: RouteName;
             params?: ParamList[RouteName];
             initial?: boolean;
+            path?: string;
             state?: never;
           }
         : {
             screen: RouteName;
             params: ParamList[RouteName];
             initial?: boolean;
+            path?: string;
             state?: never;
           };
     }[keyof ParamList];

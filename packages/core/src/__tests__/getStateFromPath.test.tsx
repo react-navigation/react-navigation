@@ -1,5 +1,15 @@
+import type { InitialState } from '@react-navigation/routers';
+import produce from 'immer';
 import getStateFromPath from '../getStateFromPath';
 import getPathFromState from '../getPathFromState';
+import findFocusedRoute from '../findFocusedRoute';
+
+const changePath = <T extends InitialState>(state: T, path: string): T =>
+  produce(state, (draftState) => {
+    const route = findFocusedRoute(draftState);
+    // @ts-expect-error: immer won't mutate this
+    route.path = path;
+  });
 
 it('returns undefined for invalid path', () => {
   expect(getStateFromPath('//')).toBe(undefined);
@@ -20,6 +30,7 @@ it('converts path string to initial state', () => {
                   {
                     name: 'baz qux',
                     params: { author: 'jane & co', valid: 'true' },
+                    path,
                   },
                 ],
               },
@@ -31,7 +42,9 @@ it('converts path string to initial state', () => {
   };
 
   expect(getStateFromPath(path)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state))).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state))).toEqual(
+    changePath(state, '/foo/bar/baz%20qux?author=jane%20%26%20co&valid=true')
+  );
 });
 
 it('converts path string to initial state with config', () => {
@@ -82,6 +95,7 @@ it('converts path string to initial state with config', () => {
                       answer: '42',
                       valid: true,
                     },
+                    path,
                   },
                 ],
               },
@@ -99,7 +113,9 @@ it('converts path string to initial state with config', () => {
 });
 
 it('handles leading slash when converting', () => {
-  expect(getStateFromPath('/foo/bar/?count=42')).toEqual({
+  const path = '/foo/bar/?count=42';
+
+  expect(getStateFromPath(path)).toEqual({
     routes: [
       {
         name: 'foo',
@@ -108,6 +124,7 @@ it('handles leading slash when converting', () => {
             {
               name: 'bar',
               params: { count: '42' },
+              path,
             },
           ],
         },
@@ -117,7 +134,9 @@ it('handles leading slash when converting', () => {
 });
 
 it('handles ending slash when converting', () => {
-  expect(getStateFromPath('foo/bar/?count=42')).toEqual({
+  const path = 'foo/bar/?count=42';
+
+  expect(getStateFromPath(path)).toEqual({
     routes: [
       {
         name: 'foo',
@@ -126,6 +145,7 @@ it('handles ending slash when converting', () => {
             {
               name: 'bar',
               params: { count: '42' },
+              path,
             },
           ],
         },
@@ -141,14 +161,16 @@ it('handles route without param', () => {
       {
         name: 'foo',
         state: {
-          routes: [{ name: 'bar' }],
+          routes: [{ name: 'bar', path }],
         },
       },
     ],
   };
 
   expect(getStateFromPath(path)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state))).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state))).toEqual(
+    changePath(state, '/foo/bar')
+  );
 });
 
 it('converts path string to initial state with config with nested screens', () => {
@@ -209,6 +231,7 @@ it('converts path string to initial state with config with nested screens', () =
                             answer: '42',
                             valid: true,
                           },
+                          path,
                         },
                       ],
                     },
@@ -274,6 +297,7 @@ it('converts path string to initial state with config with nested screens and un
                       answer: '42',
                       valid: true,
                     },
+                    path,
                   },
                 ],
               },
@@ -286,7 +310,7 @@ it('converts path string to initial state with config with nested screens and un
 
   expect(getStateFromPath(path, config)).toEqual(state);
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
+    changePath(state, '/foe/baz/Jane?count=10&answer=42&valid=true')
   );
 });
 
@@ -359,6 +383,7 @@ it('handles nested object with unused configs and with parse in it', () => {
                                   answer: '42',
                                   valid: true,
                                 },
+                                path,
                               },
                             ],
                           },
@@ -416,7 +441,7 @@ it('handles parse in nested object for second route depth', () => {
             {
               name: 'Bar',
               state: {
-                routes: [{ name: 'Baz' }],
+                routes: [{ name: 'Baz', path }],
               },
             },
           ],
@@ -467,7 +492,7 @@ it('handles parse in nested object for second route depth and and path and parse
             {
               name: 'Bar',
               state: {
-                routes: [{ name: 'Baz' }],
+                routes: [{ name: 'Baz', path }],
               },
             },
           ],
@@ -511,7 +536,7 @@ it('handles initialRouteName at top level', () => {
             {
               name: 'Bar',
               state: {
-                routes: [{ name: 'Baz' }],
+                routes: [{ name: 'Baz', path }],
               },
             },
           ],
@@ -557,7 +582,7 @@ it('handles initialRouteName inside a screen', () => {
             {
               name: 'Bar',
               state: {
-                routes: [{ name: 'Baz' }],
+                routes: [{ name: 'Baz', path }],
               },
             },
           ],
@@ -599,7 +624,7 @@ it('handles initialRouteName included in path', () => {
             {
               name: 'Foe',
               state: {
-                routes: [{ name: 'Baz' }],
+                routes: [{ name: 'Baz', path }],
               },
             },
           ],
@@ -615,7 +640,7 @@ it('handles initialRouteName included in path', () => {
 });
 
 it('handles two initialRouteNames', () => {
-  const path = '/bar/sweet/apple/foe/bis/jane?count=10&answer=42&valid=true';
+  const path = '/bar/sweet/apple/foe/bis/jane?answer=42&count=10&valid=true';
   const config = {
     screens: {
       Bar: {
@@ -681,11 +706,12 @@ it('handles two initialRouteNames', () => {
                               {
                                 name: 'Bis',
                                 params: {
+                                  answer: '42',
                                   author: 'Jane',
                                   count: 10,
-                                  answer: '42',
                                   valid: true,
                                 },
+                                path,
                               },
                             ],
                           },
@@ -709,7 +735,7 @@ it('handles two initialRouteNames', () => {
 });
 
 it('accepts initialRouteName without config for it', () => {
-  const path = '/bar/sweet/apple/foe/bis/jane?count=10&answer=42&valid=true';
+  const path = '/bar/sweet/apple/foe/bis/jane?answer=42&count=10&valid=true';
   const config = {
     screens: {
       Bar: {
@@ -775,11 +801,12 @@ it('accepts initialRouteName without config for it', () => {
                               {
                                 name: 'Bis',
                                 params: {
+                                  answer: '42',
                                   author: 'Jane',
                                   count: 10,
-                                  answer: '42',
                                   valid: true,
                                 },
+                                path,
                               },
                             ],
                           },
@@ -850,7 +877,7 @@ it('returns matching screen if path is empty', () => {
             {
               name: 'Bar',
               state: {
-                routes: [{ name: 'Qux' }],
+                routes: [{ name: 'Qux', path }],
               },
             },
           ],
@@ -861,7 +888,7 @@ it('returns matching screen if path is empty', () => {
 
   expect(getStateFromPath(path, config)).toEqual(state);
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
+    changePath(state, '/')
   );
 });
 
@@ -895,7 +922,7 @@ it('returns matching screen with params if path is empty', () => {
             {
               name: 'Bar',
               state: {
-                routes: [{ name: 'Qux', params: { foo: 42 } }],
+                routes: [{ name: 'Qux', params: { foo: 42 }, path }],
               },
             },
           ],
@@ -906,7 +933,7 @@ it('returns matching screen with params if path is empty', () => {
 
   expect(getStateFromPath(path, config)).toEqual(state);
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
+    changePath(state, '/?foo=42')
   );
 });
 
@@ -969,6 +996,7 @@ it('chooses more exhaustive pattern', () => {
             {
               name: 'Bis',
               params: { id: 5 },
+              path,
             },
           ],
         },
@@ -1012,6 +1040,7 @@ it('handles same paths beginnings', () => {
             },
             {
               name: 'Bis',
+              path,
             },
           ],
         },
@@ -1059,6 +1088,7 @@ it('handles same paths beginnings with params', () => {
             {
               name: 'Bis',
               params: { id: 5 },
+              path,
             },
           ],
         },
@@ -1113,6 +1143,7 @@ it('handles not taking path with too many segments', () => {
             {
               name: 'Bis',
               params: { id: 5 },
+              path,
             },
           ],
         },
@@ -1167,6 +1198,7 @@ it('handles differently ordered params v1', () => {
             {
               name: 'Bas',
               params: { id: 5, pwd: 20 },
+              path,
             },
           ],
         },
@@ -1221,6 +1253,7 @@ it('handles differently ordered params v2', () => {
             {
               name: 'Bas',
               params: { id: 5, pwd: 20 },
+              path,
             },
           ],
         },
@@ -1275,6 +1308,7 @@ it('handles differently ordered params v3', () => {
             {
               name: 'Bas',
               params: { id: 5, pwd: 20 },
+              path,
             },
           ],
         },
@@ -1329,6 +1363,7 @@ it('handles differently ordered params v4', () => {
             {
               name: 'Bas',
               params: { id: 5, pwd: 20 },
+              path,
             },
           ],
         },
@@ -1338,7 +1373,7 @@ it('handles differently ordered params v4', () => {
 
   expect(getStateFromPath(path, config)).toEqual(state);
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
+    changePath(state, '/5/foos/res/20')
   );
 });
 
@@ -1383,6 +1418,7 @@ it('handles simple optional params', () => {
             {
               name: 'Bas',
               params: { id: 5 },
+              path,
             },
           ],
         },
@@ -1437,6 +1473,7 @@ it('handle 2 optional params at the end v1', () => {
             {
               name: 'Bas',
               params: { id: 5 },
+              path,
             },
           ],
         },
@@ -1491,6 +1528,7 @@ it('handle 2 optional params at the end v2', () => {
             {
               name: 'Bas',
               params: { id: 5, nip: 10 },
+              path,
             },
           ],
         },
@@ -1546,6 +1584,7 @@ it('handle 2 optional params at the end v3', () => {
             {
               name: 'Bas',
               params: { id: 5, nip: 10, pwd: 15 },
+              path,
             },
           ],
         },
@@ -1601,6 +1640,7 @@ it('handle optional params in the middle v1', () => {
             {
               name: 'Bas',
               params: { id: 5, pwd: 10 },
+              path,
             },
           ],
         },
@@ -1656,6 +1696,7 @@ it('handle optional params in the middle v2', () => {
             {
               name: 'Bas',
               params: { id: 5, nip: 10, pwd: 15 },
+              path,
             },
           ],
         },
@@ -1712,6 +1753,7 @@ it('handle optional params in the middle v3', () => {
             {
               name: 'Bas',
               params: { id: 5, pwd: 10, smh: 15 },
+              path,
             },
           ],
         },
@@ -1768,6 +1810,7 @@ it('handle optional params in the middle v4', () => {
             {
               name: 'Bas',
               params: { pwd: 5, id: 10 },
+              path,
             },
           ],
         },
@@ -1824,6 +1867,7 @@ it('handle optional params in the middle v5', () => {
             {
               name: 'Bas',
               params: { nip: 5, pwd: 10, id: 15 },
+              path,
             },
           ],
         },
@@ -1880,6 +1924,7 @@ it('handle optional params in the beginning v1', () => {
             {
               name: 'Bas',
               params: { nip: 5, pwd: 10, id: 15 },
+              path,
             },
           ],
         },
@@ -1889,7 +1934,7 @@ it('handle optional params in the beginning v1', () => {
 
   expect(getStateFromPath(path, config)).toEqual(state);
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
+    changePath(state, '/5/10/foos/15')
   );
 });
 
@@ -1936,6 +1981,7 @@ it('handle optional params in the beginning v2', () => {
             {
               name: 'Bas',
               params: { nip: 5, pwd: 10, id: 15 },
+              path,
             },
           ],
         },
@@ -1945,7 +1991,7 @@ it('handle optional params in the beginning v2', () => {
 
   expect(getStateFromPath(path, config)).toEqual(state);
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
+    changePath(state, '/5/10/foos/15')
   );
 });
 
@@ -1976,6 +2022,7 @@ it('merges parent patterns if needed', () => {
             {
               name: 'Baz',
               params: { qux: 'babel' },
+              path,
             },
           ],
         },
@@ -1985,7 +2032,7 @@ it('merges parent patterns if needed', () => {
 
   expect(getStateFromPath(path, config)).toEqual(state);
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
+    changePath(state, '/foo/42/baz/babel')
   );
 });
 
@@ -2012,6 +2059,7 @@ it('ignores extra slashes in the pattern', () => {
             {
               name: 'Bar',
               params: { id: '42' },
+              path,
             },
           ],
         },
@@ -2041,12 +2089,12 @@ it('matches wildcard patterns at root', () => {
   };
 
   const state = {
-    routes: [{ name: '404' }],
+    routes: [{ name: '404', path }],
   };
 
   expect(getStateFromPath(path, config)).toEqual(state);
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
+    changePath(state, '/404')
   );
 });
 
@@ -2077,7 +2125,7 @@ it('matches wildcard patterns at nested level', () => {
               name: 'Bar',
               params: { id: '42' },
               state: {
-                routes: [{ name: '404' }],
+                routes: [{ name: '404', path }],
               },
             },
           ],
@@ -2088,7 +2136,7 @@ it('matches wildcard patterns at nested level', () => {
 
   expect(getStateFromPath(path, config)).toEqual(state);
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
+    changePath(state, '/bar/42/404')
   );
 });
 
@@ -2122,7 +2170,7 @@ it('matches wildcard patterns at nested level with exact', () => {
             {
               name: 'Bar',
               state: {
-                routes: [{ name: '404' }],
+                routes: [{ name: '404', path }],
               },
             },
           ],
@@ -2133,7 +2181,7 @@ it('matches wildcard patterns at nested level with exact', () => {
 
   expect(getStateFromPath(path, config)).toEqual(state);
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
+    changePath(state, '/404')
   );
 });
 
@@ -2165,7 +2213,7 @@ it('tries to match wildcard patterns at the end', () => {
               name: 'Bar',
               params: { id: '42' },
               state: {
-                routes: [{ name: 'Test' }],
+                routes: [{ name: 'Test', path }],
               },
             },
           ],
@@ -2203,7 +2251,7 @@ it('uses nearest parent wildcard match for unmatched paths', () => {
       {
         name: 'Foo',
         state: {
-          routes: [{ name: '404' }],
+          routes: [{ name: '404', path }],
         },
       },
     ],
@@ -2211,7 +2259,7 @@ it('uses nearest parent wildcard match for unmatched paths', () => {
 
   expect(getStateFromPath(path, config)).toEqual(state);
   expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
+    changePath(state, '/404')
   );
 });
 

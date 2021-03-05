@@ -1264,6 +1264,145 @@ it('updates route key history on focus change', () => {
   ]);
 });
 
+it('adds path on navigate if provided', () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+          { key: 'qux', name: 'qux' },
+        ],
+        history: [{ type: 'route', key: 'baz' }],
+      },
+      CommonActions.navigate({
+        name: 'bar',
+        path: '/foo/bar',
+      }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar', path: '/foo/bar' },
+      { key: 'qux', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'baz' },
+      { type: 'route', key: 'bar' },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          {
+            key: 'bar',
+            name: 'bar',
+            path: '/foo/bar',
+          },
+          { key: 'qux', name: 'qux' },
+        ],
+        history: [{ type: 'route', key: 'baz' }],
+      },
+      CommonActions.navigate({
+        name: 'bar',
+        params: { fruit: 'orange' },
+        path: '/foo/baz',
+      }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      {
+        key: 'bar',
+        name: 'bar',
+        params: { fruit: 'orange' },
+        path: '/foo/baz',
+      },
+      { key: 'qux', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'baz' },
+      { type: 'route', key: 'bar' },
+    ],
+  });
+});
+
+it("doesn't remove existing path on navigate if not provided", () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar', path: '/foo/bar' },
+          { key: 'qux', name: 'qux' },
+        ],
+        history: [{ type: 'route', key: 'baz' }],
+      },
+      CommonActions.navigate({ name: 'bar' }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar', path: '/foo/bar' },
+      { key: 'qux', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'baz' },
+      { type: 'route', key: 'bar' },
+    ],
+  });
+});
+
 it("doesn't merge params on navigate to an existing screen", () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {

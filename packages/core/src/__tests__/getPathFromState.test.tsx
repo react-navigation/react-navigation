@@ -82,7 +82,11 @@ it('converts state to path string with config', () => {
                 routes: [
                   {
                     name: 'Baz',
-                    params: { author: 'Jane', valid: true, id: 10 },
+                    params: {
+                      author: 'Jane',
+                      id: 10,
+                      valid: true,
+                    },
                   },
                 ],
               },
@@ -186,9 +190,9 @@ it('handles state with config with nested screens', () => {
                         {
                           name: 'Baz',
                           params: {
+                            answer: '42',
                             author: 'Jane',
                             count: '10',
-                            answer: '42',
                             valid: true,
                           },
                         },
@@ -265,9 +269,9 @@ it('handles state with config with nested screens and exact', () => {
                         {
                           name: 'Baz',
                           params: {
+                            answer: '42',
                             author: 'Jane',
                             count: '10',
-                            answer: '42',
                             valid: true,
                           },
                         },
@@ -333,9 +337,9 @@ it('handles state with config with nested screens and unused configs', () => {
                   {
                     name: 'Baz',
                     params: {
+                      answer: '42',
                       author: 'Jane',
                       count: 10,
-                      answer: '42',
                       valid: true,
                     },
                   },
@@ -399,9 +403,9 @@ it('handles state with config with nested screens and unused configs with exact'
                   {
                     name: 'Baz',
                     params: {
+                      answer: '42',
                       author: 'Jane',
                       count: 10,
-                      answer: '42',
                       valid: true,
                     },
                   },
@@ -476,9 +480,9 @@ it('handles nested object with stringify in it', () => {
                         {
                           name: 'Bis',
                           params: {
+                            answer: '42',
                             author: 'Jane',
                             count: 10,
-                            answer: '42',
                             valid: true,
                           },
                         },
@@ -558,9 +562,9 @@ it('handles nested object with stringify in it with exact', () => {
                         {
                           name: 'Bis',
                           params: {
+                            answer: '42',
                             author: 'Jane',
                             count: 10,
-                            answer: '42',
                             valid: true,
                           },
                         },
