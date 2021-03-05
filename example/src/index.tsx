@@ -136,7 +136,7 @@ export default function App() {
         const initialUrl = await Linking.getInitialURL();
 
         if (Platform.OS !== 'web' || initialUrl === null) {
-          const savedState = await AsyncStorage.getItem(
+          const savedState = await AsyncStorage?.getItem(
             NAVIGATION_PERSISTENCE_KEY
           );
 
@@ -148,7 +148,7 @@ export default function App() {
         }
       } finally {
         try {
-          const themeName = await AsyncStorage.getItem(THEME_PERSISTENCE_KEY);
+          const themeName = await AsyncStorage?.getItem(THEME_PERSISTENCE_KEY);
 
           setTheme(themeName === 'dark' ? DarkTheme : DefaultTheme);
         } catch (e) {
@@ -207,7 +207,7 @@ export default function App() {
         ref={navigationRef}
         initialState={initialState}
         onStateChange={(state) =>
-          AsyncStorage.setItem(
+          AsyncStorage?.setItem(
             NAVIGATION_PERSISTENCE_KEY,
             JSON.stringify(state)
           )
@@ -317,7 +317,7 @@ export default function App() {
                           label="Dark theme"
                           value={theme.dark}
                           onValueChange={() => {
-                            AsyncStorage.setItem(
+                            AsyncStorage?.setItem(
                               THEME_PERSISTENCE_KEY,
                               theme.dark ? 'light' : 'dark'
                             );
