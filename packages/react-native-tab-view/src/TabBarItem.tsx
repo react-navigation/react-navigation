@@ -159,8 +159,8 @@ export default class TabBarItem<T extends Route> extends React.Component<
                   style={[
                     styles.label,
                     icon ? { marginTop: 0 } : null,
-                    { color },
                     labelStyle,
+                    { color },
                   ]}
                 >
                   {labelText}
