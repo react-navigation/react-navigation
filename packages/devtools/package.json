@@ -41,13 +41,13 @@
     "deep-equal": "^2.0.5"
   },
   "devDependencies": {
-    "@testing-library/react-native": "^7.1.0",
+    "@testing-library/react-native": "^7.2.0",
     "@types/deep-equal": "^1.0.1",
     "@types/react": "^16.9.53",
     "del-cli": "^3.0.1",
     "react": "~16.13.1",
-    "react-native-builder-bob": "^0.17.1",
-    "typescript": "^4.1.3"
+    "react-native-builder-bob": "^0.18.1",
+    "typescript": "^4.2.3"
   },
   "peerDependencies": {
     "react": "*"
