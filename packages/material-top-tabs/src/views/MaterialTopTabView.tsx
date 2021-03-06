@@ -60,6 +60,7 @@ export default function MaterialTopTabView({
         renderTabBar={renderTabBar}
         renderPager={pager}
         renderLazyPlaceholder={lazyPlaceholder}
+        lazy={({ route }) => descriptors[route.key].options.lazy === true}
         onSwipeStart={() => navigation.emit({ type: 'swipeStart' })}
         onSwipeEnd={() => navigation.emit({ type: 'swipeEnd' })}
         sceneContainerStyle={[
