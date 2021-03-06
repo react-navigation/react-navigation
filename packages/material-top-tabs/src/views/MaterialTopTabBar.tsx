@@ -6,35 +6,39 @@ import Color from 'color';
 
 import type { MaterialTopTabBarProps } from '../types';
 
-export default function TabBarTop(props: MaterialTopTabBarProps) {
+export default function TabBarTop({
+  state,
+  navigation,
+  descriptors,
+  ...rest
+}: MaterialTopTabBarProps) {
   const { colors } = useTheme();
 
-  const {
-    state,
-    navigation,
-    descriptors,
-    activeTintColor = colors.text,
-    inactiveTintColor = Color(activeTintColor).alpha(0.5).rgb().string(),
-    allowFontScaling = true,
-    showIcon = false,
-    showLabel = true,
-    pressColor = Color(activeTintColor).alpha(0.08).rgb().string(),
-    iconStyle,
-    labelStyle,
-    indicatorStyle,
-    style,
-    ...rest
-  } = props;
+  const focusedOptions = descriptors[state.routes[state.index].key].options;
+
+  const activeColor = focusedOptions.tabBarActiveTintColor ?? colors.text;
+  const inactiveColor =
+    focusedOptions.tabBarInactiveTintColor ??
+    Color(activeColor).alpha(0.5).rgb().string();
 
   return (
     <TabBar
       {...rest}
       navigationState={state}
-      activeColor={activeTintColor}
-      inactiveColor={inactiveTintColor}
-      indicatorStyle={[{ backgroundColor: colors.primary }, indicatorStyle]}
-      style={[{ backgroundColor: colors.card }, style]}
-      pressColor={pressColor}
+      scrollEnabled={focusedOptions.tabBarScrollEnabled}
+      bounces={focusedOptions.tabBarBounces}
+      activeColor={activeColor}
+      inactiveColor={inactiveColor}
+      pressColor={focusedOptions.tabBarPressColor}
+      pressOpacity={focusedOptions.tabBarPressOpacity}
+      tabStyle={focusedOptions.tabBarItemStyle}
+      indicatorStyle={[
+        { backgroundColor: colors.primary },
+        focusedOptions.tabBarIndicatorStyle,
+      ]}
+      indicatorContainerStyle={focusedOptions.tabBarIndicatorContainerStyle}
+      contentContainerStyle={focusedOptions.tabBarContentContainerStyle}
+      style={[{ backgroundColor: colors.card }, focusedOptions.tabBarStyle]}
       getAccessibilityLabel={({ route }) =>
         descriptors[route.key].options.tabBarAccessibilityLabel
       }
@@ -57,26 +61,29 @@ export default function TabBarTop(props: MaterialTopTabBarProps) {
         })
       }
       renderIcon={({ route, focused, color }) => {
-        if (showIcon === false) {
+        const { options } = descriptors[route.key];
+
+        if (options.tabBarShowIcon === false) {
           return null;
         }
-
-        const { options } = descriptors[route.key];
 
         if (options.tabBarIcon !== undefined) {
           const icon = options.tabBarIcon({ focused, color });
 
-          return <View style={[styles.icon, iconStyle]}>{icon}</View>;
+          return (
+            <View style={[styles.icon, options.tabBarIconStyle]}>{icon}</View>
+          );
         }
 
         return null;
       }}
       renderLabel={({ route, focused, color }) => {
-        if (showLabel === false) {
+        const { options } = descriptors[route.key];
+
+        if (options.tabBarShowLabel === false) {
           return null;
         }
 
-        const { options } = descriptors[route.key];
         const label =
           options.tabBarLabel !== undefined
             ? options.tabBarLabel
@@ -87,8 +94,8 @@ export default function TabBarTop(props: MaterialTopTabBarProps) {
         if (typeof label === 'string') {
           return (
             <Text
-              style={[styles.label, { color }, labelStyle]}
-              allowFontScaling={allowFontScaling}
+              style={[styles.label, { color }, options.tabBarLabelStyle]}
+              allowFontScaling={options.tabBarAllowFontScaling}
             >
               {label}
             </Text>
