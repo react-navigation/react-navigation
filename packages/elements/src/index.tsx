@@ -9,6 +9,7 @@ export { default as useHeaderHeight } from './Header/useHeaderHeight';
 export { default as getDefaultHeaderHeight } from './Header/getDefaultHeaderHeight';
 export { default as getHeaderTitle } from './Header/getHeaderTitle';
 
+export { default as MissingIcon } from './MissingIcon';
 export { default as PlatformPressable } from './PlatformPressable';
 export { default as ResourceSavingScene } from './ResourceSavingScene';
 export { default as SafeAreaProviderCompat } from './SafeAreaProviderCompat';

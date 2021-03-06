@@ -37,7 +37,7 @@ type Props = {
   /**
    * Icon to display for the tab.
    */
-  icon?: (props: {
+  icon: (props: {
     focused: boolean;
     size: number;
     color: string;

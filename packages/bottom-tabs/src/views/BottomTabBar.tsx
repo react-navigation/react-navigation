@@ -17,6 +17,7 @@ import {
   useTheme,
   useLinkBuilder,
 } from '@react-navigation/native';
+import { MissingIcon } from '@react-navigation/elements';
 import { EdgeInsets, useSafeAreaFrame } from 'react-native-safe-area-context';
 
 import BottomTabItem from './BottomTabItem';
@@ -348,7 +349,12 @@ export default function BottomTabBar({
                     options.tabBarInactiveBackgroundColor
                   }
                   button={options.tabBarButton}
-                  icon={options.tabBarIcon}
+                  icon={
+                    options.tabBarIcon ??
+                    (({ color, size }) => (
+                      <MissingIcon color={color} size={size} />
+                    ))
+                  }
                   badge={options.tabBarBadge}
                   badgeStyle={options.tabBarBadgeStyle}
                   label={label}
