@@ -317,9 +317,26 @@ Position of the tab bar in the tab view. Possible values are `'top'` and `'botto
 
 ##### `lazy`
 
-Boolean indicating whether to lazily render the scenes. By default all scenes are rendered to provide a smoother swipe experience. But you might want to defer the rendering of unfocused scenes until the user sees them. To enable lazy rendering, set `lazy` to `true`.
+Function which takes an object with the current route and returns a boolean to indicate whether to lazily render the scenes.
 
-When you enable `lazy`, the unfocused screens will usually take some time to render when they come into focus. You can use the `renderLazyPlaceholder` prop to customize what the user sees during this short period.
+By default all scenes are rendered to provide a smoother swipe experience. But you might want to defer the rendering of unfocused scenes until the user sees them. To enable lazy rendering for a particular scene, return `true` from `getLazy` for that `route`:
+
+```js
+<TabView
+  lazy={({ route }) => route.name === 'Albums'}
+  ...
+/>
+```
+
+When you enable lazy rendering for a screen, it will usually take some time to render when it comes into focus. You can use the `renderLazyPlaceholder` prop to customize what the user sees during this short period.
+
+You can also pass a boolean to enable lazy for all of the scenes:
+
+```js
+<TabView
+  lazy
+/>
+```
 
 ##### `lazyPreloadDistance`
 
@@ -580,7 +597,7 @@ Opacity for pressed tab (iOS and Android < 5.0 only).
 
 ##### `scrollEnabled`
 
-Boolean indicating whether to enable scrollable tabs.
+Boolean indicating whether to make the tab bar scrollable.
 
 If you set `scrollEnabled` to `true`, you should also specify a `width` in `tabStyle` to improve the initial render.
 
