@@ -1,9 +1,5 @@
 import type { StyleProp, ViewStyle, TextStyle } from 'react-native';
-import type {
-  TabBar,
-  SceneRendererProps,
-  TabView,
-} from 'react-native-tab-view';
+import type { SceneRendererProps, TabView } from 'react-native-tab-view';
 import type {
   ParamListBase,
   Descriptor,
@@ -69,7 +65,8 @@ export type MaterialTopTabNavigationOptions = {
   /**
    * Title string of a tab displayed in the tab bar
    * or a function that given { focused: boolean, color: string } returns a React.Node, to display in tab bar.
-   * When undefined, scene title is used. To hide, see tabBarOptions.showLabel in the previous section.
+   *
+   * When undefined, scene title is used. Use `tabBarShowLabel` to hide the label.
    */
   tabBarLabel?:
     | string
@@ -90,6 +87,88 @@ export type MaterialTopTabNavigationOptions = {
    * ID to locate this tab button in tests.
    */
   tabBarTestID?: string;
+
+  /**
+   * Color for the icon and label in the active tab.
+   */
+  tabBarActiveTintColor?: string;
+
+  /**
+   * Color for the icon and label in the inactive tabs.
+   */
+  tabBarInactiveTintColor?: string;
+
+  /**
+   * Color for material ripple (Android >= 5.0 only).
+   */
+  tabBarPressColor?: string;
+
+  /**
+   * Opacity for pressed tab (iOS and Android < 5.0 only).
+   */
+  tabBarPressOpacity?: number;
+
+  /**
+   * Whether the tab label should be visible. Defaults to `true`.
+   */
+  tabBarShowLabel?: boolean;
+
+  /**
+   * Whether the tab icon should be visible. Defaults to `false`.
+   */
+  tabBarShowIcon?: boolean;
+
+  /**
+   * Whether label font should scale to respect Text Size accessibility settings.
+   */
+  tabBarAllowFontScaling?: boolean;
+
+  /**
+   * Boolean indicating whether the tab bar bounces when overscrolling.
+   */
+  tabBarBounces?: boolean;
+
+  /**
+   * Boolean indicating whether to make the tab bar scrollable.
+   *
+   * If you set this to `true`, you should also specify a width in `tabBarItemStyle` to improve the performance of initial render.
+   */
+  tabBarScrollEnabled?: boolean;
+
+  /**
+   * Style object for the tab icon container.
+   */
+  tabBarIconStyle?: StyleProp<ViewStyle>;
+
+  /**
+   * Style object for the tab label.
+   */
+  tabBarLabelStyle?: StyleProp<TextStyle>;
+
+  /**
+   * Style object for the individual tab items.
+   */
+  tabBarItemStyle?: StyleProp<ViewStyle>;
+
+  /**
+   * Style object for the tab bar indicator.
+   */
+  tabBarIndicatorStyle?: StyleProp<ViewStyle>;
+
+  /**
+   * Style object for the view containing the tab bar indicator.
+   */
+  tabBarIndicatorContainerStyle?: StyleProp<ViewStyle>;
+
+  /**
+   * Style object for the view containing the tab items.
+   */
+  tabBarContentContainerStyle?: StyleProp<ViewStyle>;
+
+  /**
+   * Style object for the the tab bar.
+   */
+  tabBarStyle?: StyleProp<ViewStyle>;
 };
 
 export type MaterialTopTabDescriptor = Descriptor<
@@ -136,67 +215,16 @@ export type MaterialTopTabNavigationConfig = Partial<
    */
   tabBar?: (props: MaterialTopTabBarProps) => React.ReactNode;
   /**
-   * Options for the tab bar which will be passed as props to the tab bar component.
-   */
-  tabBarOptions?: MaterialTopTabBarOptions;
-  /**
    * Position of the tab bar. Defaults to `top`.
    */
   tabBarPosition?: 'top' | 'bottom';
 };
 
-export type MaterialTopTabBarOptions = Partial<
-  Omit<
-    React.ComponentProps<typeof TabBar>,
-    | 'navigationState'
-    | 'activeColor'
-    | 'inactiveColor'
-    | 'renderLabel'
-    | 'renderIcon'
-    | 'getLabelText'
-    | 'getAccessibilityLabel'
-    | 'getTestID'
-    | 'onTabPress'
-    | 'onTabLongPress'
-    | keyof SceneRendererProps
-  >
-> & {
-  /**
-   * Color for the icon and label in the active tab.
-   */
-  activeTintColor?: string;
-  /**
-   * Color for the icon and label in the inactive tabs.
-   */
-  inactiveTintColor?: string;
-  /**
-   * Style object for the tab icon container.
-   */
-  iconStyle?: StyleProp<ViewStyle>;
-  /**
-   * Style object for the tab label.
-   */
-  labelStyle?: StyleProp<TextStyle>;
-  /**
-   * Whether the tab label should be visible. Defaults to `true`.
-   */
-  showLabel?: boolean;
-  /**
-   * Whether the tab icon should be visible. Defaults to `false`.
-   */
-  showIcon?: boolean;
-  /**
-   * Whether label font should scale to respect Text Size accessibility settings.
-   */
-  allowFontScaling?: boolean;
+export type MaterialTopTabBarProps = SceneRendererProps & {
+  state: TabNavigationState<ParamListBase>;
+  navigation: NavigationHelpers<
+    ParamListBase,
+    MaterialTopTabNavigationEventMap
+  >;
+  descriptors: MaterialTopTabDescriptorMap;
 };
-
-export type MaterialTopTabBarProps = MaterialTopTabBarOptions &
-  SceneRendererProps & {
-    state: TabNavigationState<ParamListBase>;
-    navigation: NavigationHelpers<
-      ParamListBase,
-      MaterialTopTabNavigationEventMap
-    >;
-    descriptors: MaterialTopTabDescriptorMap;
-  };

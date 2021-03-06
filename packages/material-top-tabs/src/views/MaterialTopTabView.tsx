@@ -27,7 +27,6 @@ export default function MaterialTopTabView({
   pager,
   lazyPlaceholder,
   tabBar = (props: MaterialTopTabBarProps) => <MaterialTopTabBar {...props} />,
-  tabBarOptions,
   state,
   navigation,
   descriptors,
@@ -38,7 +37,6 @@ export default function MaterialTopTabView({
 
   const renderTabBar = (props: SceneRendererProps) => {
     return tabBar({
-      ...tabBarOptions,
       ...props,
       state: state,
       navigation: navigation,

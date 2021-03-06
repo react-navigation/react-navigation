@@ -17,5 +17,4 @@ export type {
   MaterialTopTabNavigationProp,
   MaterialTopTabScreenProps,
   MaterialTopTabBarProps,
-  MaterialTopTabBarOptions,
 } from './types';
