@@ -5,6 +5,7 @@ import {
   TabNavigationState,
   TabActions,
   ParamListBase,
+  Route,
   useTheme,
 } from '@react-navigation/native';
 
@@ -46,7 +47,7 @@ export default function MaterialTopTabView({
 
   return (
     <NavigationHelpersContext.Provider value={navigation}>
-      <TabView
+      <TabView<Route<string>>
         {...rest}
         onIndexChange={(index) =>
           navigation.dispatch({

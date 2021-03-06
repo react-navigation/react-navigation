@@ -41,8 +41,8 @@
   },
   "devDependencies": {
     "del-cli": "^3.0.1",
-    "react-native-builder-bob": "^0.17.1",
-    "typescript": "^4.1.3"
+    "react-native-builder-bob": "^0.18.1",
+    "typescript": "^4.2.3"
   },
   "react-native-builder-bob": {
     "source": "src",

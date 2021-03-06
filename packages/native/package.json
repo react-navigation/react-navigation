@@ -43,16 +43,16 @@
     "nanoid": "^3.1.20"
   },
   "devDependencies": {
-    "@testing-library/react-native": "^7.1.0",
+    "@testing-library/react-native": "^7.2.0",
     "@types/react": "^16.9.53",
     "@types/react-dom": "^16.9.8",
-    "@types/react-native": "~0.63.50",
+    "@types/react-native": "~0.63.51",
     "del-cli": "^3.0.1",
     "react": "~16.13.1",
     "react-dom": "^16.13.1",
     "react-native": "~0.63.2",
-    "react-native-builder-bob": "^0.17.1",
-    "typescript": "^4.1.3"
+    "react-native-builder-bob": "^0.18.1",
+    "typescript": "^4.2.3"
   },
   "peerDependencies": {
     "react": "*",
