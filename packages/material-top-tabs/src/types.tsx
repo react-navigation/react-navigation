@@ -63,6 +63,11 @@ export type MaterialTopTabNavigationOptions = {
   title?: string;
 
   /**
+   * Whether this screens should render the first time it's accessed. Defaults to `false`.
+   */
+  lazy?: boolean;
+
+  /**
    * Title string of a tab displayed in the tab bar
    * or a function that given { focused: boolean, color: string } returns a React.Node, to display in tab bar.
    *
@@ -193,6 +198,7 @@ export type MaterialTopTabNavigationConfig = Partial<
     | 'renderTabBar'
     | 'renderPager'
     | 'renderLazyPlaceholder'
+    | 'lazy'
   >
 > & {
   /**
