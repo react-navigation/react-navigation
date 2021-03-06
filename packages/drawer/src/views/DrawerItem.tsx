@@ -33,6 +33,10 @@ type Props = {
    */
   to?: string;
   /**
+   * Target attribute of the anchor tag on the web.
+   */
+  target?: string;
+  /**
    * Whether to highlight the drawer item as active.
    */
   focused?: boolean;
@@ -85,11 +89,13 @@ const Touchable = ({
   style,
   onPress,
   to,
+  target,
   accessibilityRole,
   delayPressIn,
   ...rest
 }: TouchableWithoutFeedbackProps & {
   to?: string;
+  target?: string;
   children: React.ReactNode;
   onPress?: () => void;
 }) => {
@@ -100,6 +106,7 @@ const Touchable = ({
       <Link
         {...rest}
         to={to}
+        target={target}
         style={[styles.button, style]}
         onPress={(e: any) => {
           if (
@@ -139,6 +146,7 @@ export default function DrawerItem(props: Props) {
     label,
     labelStyle,
     to,
+    target,
     focused = false,
     activeTintColor = colors.primary,
     inactiveTintColor = Color(colors.text).alpha(0.68).rgb().string(),
@@ -178,6 +186,7 @@ export default function DrawerItem(props: Props) {
         pressColor={pressColor}
         pressOpacity={pressOpacity}
         to={to}
+        target={target}
       >
         <React.Fragment>
           {iconNode}
