@@ -1,5 +1,17 @@
 {
   "extends": "../tsconfig",
+  "references": [
+    { "path": "../packages/bottom-tabs" },
+    { "path": "../packages/core" },
+    { "path": "../packages/devtools" },
+    { "path": "../packages/drawer" },
+    { "path": "../packages/elements" },
+    { "path": "../packages/material-bottom-tabs" },
+    { "path": "../packages/material-top-tabs" },
+    { "path": "../packages/native" },
+    { "path": "../packages/routers" },
+    { "path": "../packages/stack" },
+  ],
   "compilerOptions": {
     // Avoid expo-cli auto-generating a tsconfig
   }
