@@ -14,7 +14,7 @@ import Contacts from './Shared/Contacts';
 
 type Route = {
   key: string;
-  icon: string;
+  icon: React.ComponentProps<typeof Ionicons>['name'];
 };
 
 type State = NavigationState<Route>;
@@ -25,11 +25,11 @@ export default class TabBarIconExample extends React.Component<{}, State> {
   static backgroundColor = '#e91e63';
   static appbarElevation = 0;
 
-  state = {
+  state: State = {
     index: 0,
     routes: [
       { key: 'chat', icon: 'md-chatbubbles' },
-      { key: 'contacts', icon: 'md-contact' },
+      { key: 'contacts', icon: 'md-people' },
       { key: 'article', icon: 'md-list' },
     ],
   };

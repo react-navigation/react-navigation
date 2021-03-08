@@ -1,12 +1,17 @@
 import * as React from 'react';
-import { View, Text, TouchableWithoutFeedback, StyleSheet } from 'react-native';
+import {
+  Animated,
+  View,
+  Text,
+  TouchableWithoutFeedback,
+  StyleSheet,
+} from 'react-native';
 import {
   TabView,
   SceneMap,
   NavigationState,
   SceneRendererProps,
 } from 'react-native-tab-view';
-import Animated from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import Albums from './Shared/Albums';
 import Article from './Shared/Article';
@@ -16,7 +21,7 @@ import Contacts from './Shared/Contacts';
 type Route = {
   key: string;
   title: string;
-  icon: string;
+  icon: React.ComponentProps<typeof Ionicons>['name'];
 };
 
 type State = NavigationState<Route>;
@@ -29,13 +34,13 @@ export default class CustomTabBarExample extends React.Component<{}, State> {
   static appbarElevation = 4;
   static statusBarStyle = 'dark-content' as 'dark-content';
 
-  state = {
+  state: State = {
     index: 0,
     routes: [
       { key: 'contacts', title: 'Contacts', icon: 'ios-people' },
       { key: 'albums', title: 'Albums', icon: 'ios-albums' },
-      { key: 'article', title: 'Article', icon: 'ios-paper' },
-      { key: 'chat', title: 'Chat', icon: 'ios-chatboxes' },
+      { key: 'article', title: 'Article', icon: 'ios-document' },
+      { key: 'chat', title: 'Chat', icon: 'ios-chatbubble' },
     ],
   };
 
@@ -49,15 +54,15 @@ export default class CustomTabBarExample extends React.Component<{}, State> {
     position,
   }: {
     navigationState: State;
-    position: Animated.Node<number>;
+    position: Animated.AnimatedInterpolation;
   }) => ({ route, index }: { route: Route; index: number }) => {
     const inputRange = navigationState.routes.map((_, i) => i);
 
-    const activeOpacity = Animated.interpolate(position, {
+    const activeOpacity = position.interpolate({
       inputRange,
       outputRange: inputRange.map((i: number) => (i === index ? 1 : 0)),
     });
-    const inactiveOpacity = Animated.interpolate(position, {
+    const inactiveOpacity = position.interpolate({
       inputRange,
       outputRange: inputRange.map((i: number) => (i === index ? 0 : 1)),
     });

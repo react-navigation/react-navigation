@@ -6,24 +6,18 @@ import {
   ViewStyle,
   LayoutChangeEvent,
 } from 'react-native';
-import {
-  PanGestureHandler,
-  GestureHandlerRootView,
-} from 'react-native-gesture-handler';
-import Animated from 'react-native-reanimated';
 import TabBar, { Props as TabBarProps } from './TabBar';
 import SceneView from './SceneView';
+import Pager from './Pager';
 import {
   Layout,
   NavigationState,
   Route,
   SceneRendererProps,
-  PagerCommonProps,
+  PagerProps,
 } from './types';
-import Pager, { Props as ChildProps } from './Pager';
 
-export type Props<T extends Route> = PagerCommonProps & {
-  position?: Animated.Value<number>;
+export type Props<T extends Route> = PagerProps & {
   onIndexChange: (index: number) => void;
   navigationState: NavigationState<T>;
   renderScene: (
@@ -41,18 +35,13 @@ export type Props<T extends Route> = PagerCommonProps & {
   initialLayout?: { width?: number; height?: number };
   lazy: ((props: { route: T }) => boolean) | boolean;
   lazyPreloadDistance: number;
-  removeClippedSubviews?: boolean;
   sceneContainerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
-  gestureHandlerProps: React.ComponentProps<typeof PanGestureHandler>;
-  renderPager: (props: ChildProps<T>) => React.ReactNode;
 };
 
 type State = {
   layout: Layout;
 };
-
-const GestureHandlerWrapper = GestureHandlerRootView ?? View;
 
 export default class TabView<T extends Route> extends React.Component<
   Props<T>,
@@ -69,10 +58,6 @@ export default class TabView<T extends Route> extends React.Component<
     lazy: false,
     lazyPreloadDistance: 0,
     removeClippedSubviews: false,
-    springConfig: {},
-    timingConfig: {},
-    gestureHandlerProps: {},
-    renderPager: (props: ChildProps<any>) => <Pager {...props} />,
   };
 
   state = {
@@ -105,56 +90,34 @@ export default class TabView<T extends Route> extends React.Component<
 
   render() {
     const {
-      position: positionListener,
       onSwipeStart,
       onSwipeEnd,
       navigationState,
       lazy,
       lazyPreloadDistance,
-      removeClippedSubviews,
       keyboardDismissMode,
       swipeEnabled,
-      swipeVelocityImpact,
-      timingConfig,
-      springConfig,
       tabBarPosition,
       renderTabBar,
       renderScene,
       renderLazyPlaceholder,
       sceneContainerStyle,
       style,
-      gestureHandlerProps,
-      springVelocityScale,
-      renderPager,
     } = this.props;
     const { layout } = this.state;
 
     return (
-      <GestureHandlerWrapper
-        onLayout={this.handleLayout}
-        style={[styles.pager, style]}
-      >
-        {renderPager({
-          navigationState,
-          layout,
-          keyboardDismissMode,
-          swipeEnabled,
-          swipeVelocityImpact,
-          timingConfig,
-          springConfig,
-          onSwipeStart,
-          onSwipeEnd,
-          onIndexChange: this.jumpToIndex,
-          springVelocityScale,
-          removeClippedSubviews,
-          gestureHandlerProps,
-          children: ({
-            position,
-            render,
-            addListener,
-            removeListener,
-            jumpTo,
-          }) => {
+      <View onLayout={this.handleLayout} style={[styles.pager, style]}>
+        <Pager
+          layout={layout}
+          navigationState={navigationState}
+          keyboardDismissMode={keyboardDismissMode}
+          swipeEnabled={swipeEnabled}
+          onSwipeStart={onSwipeStart}
+          onSwipeEnd={onSwipeEnd}
+          onIndexChange={this.jumpToIndex}
+        >
+          {({ position, render, addEnterListener, jumpTo }) => {
             // All of the props here must not change between re-renders
             // This is crucial to optimizing the routes with PureComponent
             const sceneRendererProps = {
@@ -165,11 +128,6 @@ export default class TabView<T extends Route> extends React.Component<
 
             return (
               <React.Fragment>
-                {positionListener ? (
-                  <Animated.Code
-                    exec={Animated.set(positionListener, position)}
-                  />
-                ) : null}
                 {tabBarPosition === 'top' &&
                   renderTabBar({
                     ...sceneRendererProps,
@@ -180,8 +138,7 @@ export default class TabView<T extends Route> extends React.Component<
                     return (
                       <SceneView
                         {...sceneRendererProps}
-                        addListener={addListener}
-                        removeListener={removeListener}
+                        addEnterListener={addEnterListener}
                         key={route.key}
                         index={i}
                         lazy={
@@ -210,9 +167,9 @@ export default class TabView<T extends Route> extends React.Component<
                   })}
               </React.Fragment>
             );
-          },
-        })}
-      </GestureHandlerWrapper>
+          }}
+        </Pager>
+      </View>
     );
   }
 }

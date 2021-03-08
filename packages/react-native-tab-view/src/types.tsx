@@ -1,4 +1,5 @@
-import Animated from 'react-native-reanimated';
+import type { Animated } from 'react-native';
+import type { ViewPagerProps } from 'react-native-pager-view';
 
 export type Route = {
   key: string;
@@ -32,30 +33,26 @@ export type Listener = (value: number) => void;
 
 export type SceneRendererProps = {
   layout: Layout;
-  position: Animated.Node<number>;
+  position: Animated.AnimatedInterpolation;
   jumpTo: (key: string) => void;
 };
 
 export type EventEmitterProps = {
-  addListener: (type: 'enter', listener: Listener) => void;
-  removeListener: (type: 'enter', listener: Listener) => void;
+  addEnterListener: (listener: Listener) => () => void;
 };
 
-export type PagerCommonProps = {
-  keyboardDismissMode: 'none' | 'on-drag' | 'auto';
-  swipeEnabled: boolean;
-  swipeVelocityImpact?: number;
+export type PagerProps = Omit<
+  ViewPagerProps,
+  | 'initialPage'
+  | 'scrollEnabled'
+  | 'onPageScroll'
+  | 'onPageSelected'
+  | 'onPageScrollStateChanged'
+  | 'keyboardDismissMode'
+  | 'children'
+> & {
+  keyboardDismissMode?: 'none' | 'on-drag' | 'auto';
+  swipeEnabled?: boolean;
   onSwipeStart?: () => void;
   onSwipeEnd?: () => void;
-  springVelocityScale?: number;
-  springConfig: {
-    damping?: number;
-    mass?: number;
-    stiffness?: number;
-    restSpeedThreshold?: number;
-    restDisplacementThreshold?: number;
-  };
-  timingConfig: {
-    duration?: number;
-  };
 };

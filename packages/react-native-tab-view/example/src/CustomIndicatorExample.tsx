@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, I18nManager, Platform } from 'react-native';
+import { Animated, View, Text, StyleSheet, I18nManager } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
   TabView,
@@ -7,17 +7,14 @@ import {
   SceneMap,
   NavigationState,
   SceneRendererProps,
-  ScrollPager,
 } from 'react-native-tab-view';
-import Animated from 'react-native-reanimated';
 import Albums from './Shared/Albums';
 import Article from './Shared/Article';
 import Contacts from './Shared/Contacts';
 
 type Route = {
   key: string;
-  icon: string;
-  color: [number, number, number];
+  icon: React.ComponentProps<typeof Ionicons>['name'];
 };
 
 type State = NavigationState<Route>;
@@ -33,18 +30,15 @@ export default class CustomIndicatorExample extends React.Component<{}, State> {
     routes: [
       {
         key: 'article',
-        icon: 'ios-paper',
-        color: [244, 67, 54],
+        icon: 'ios-document',
       },
       {
         key: 'contacts',
         icon: 'ios-people',
-        color: [0, 132, 255],
       },
       {
         key: 'albums',
         icon: 'ios-albums',
-        color: [76, 175, 80],
       },
     ],
   };
@@ -75,12 +69,12 @@ export default class CustomIndicatorExample extends React.Component<{}, State> {
       2,
     ];
 
-    const scale = Animated.interpolate(position, {
+    const scale = position.interpolate({
       inputRange,
       outputRange: inputRange.map((x) => (Math.trunc(x) === x ? 2 : 0.1)),
     });
 
-    const opacity = Animated.interpolate(position, {
+    const opacity = position.interpolate({
       inputRange,
       outputRange: inputRange.map((x) => {
         const d = x - Math.trunc(x);
@@ -88,19 +82,12 @@ export default class CustomIndicatorExample extends React.Component<{}, State> {
       }),
     });
 
-    const translateX = Animated.interpolate(position, {
+    const translateX = position.interpolate({
       inputRange: inputRange,
       outputRange: inputRange.map((x) => {
         const i = Math.round(x);
         return i * getTabWidth(i) * (I18nManager.isRTL ? -1 : 1);
       }),
-    });
-
-    const backgroundColor = Animated.interpolate(position, {
-      inputRange,
-      outputRange: inputRange.map((x) =>
-        Animated.color(...navigationState.routes[Math.round(x)].color)
-      ),
     });
 
     return (
@@ -114,10 +101,7 @@ export default class CustomIndicatorExample extends React.Component<{}, State> {
         ]}
       >
         <Animated.View
-          style={[
-            styles.indicator,
-            { opacity, backgroundColor, transform: [{ scale }] } as any,
-          ]}
+          style={[styles.indicator, { opacity, transform: [{ scale }] } as any]}
         />
       </Animated.View>
     );
@@ -163,11 +147,6 @@ export default class CustomIndicatorExample extends React.Component<{}, State> {
         renderScene={this.renderScene}
         renderTabBar={this.renderTabBar}
         tabBarPosition="bottom"
-        renderPager={
-          Platform.OS === 'ios'
-            ? (props) => <ScrollPager {...props} />
-            : undefined
-        }
         onIndexChange={this.handleIndexChange}
       />
     );
@@ -189,6 +168,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   indicator: {
+    backgroundColor: 'rgb(0, 132, 255)',
     width: 48,
     height: 48,
     borderRadius: 24,

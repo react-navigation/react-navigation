@@ -1,15 +1,14 @@
 import * as React from 'react';
-import { StyleSheet, I18nManager, StyleProp, ViewStyle } from 'react-native';
-import Animated, {
-  Easing as OldEasing,
-  // @ts-ignore
-  EasingNode,
-} from 'react-native-reanimated';
+import {
+  Animated,
+  Easing,
+  StyleSheet,
+  I18nManager,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 
-import memoize from './memoize';
 import { Route, SceneRendererProps, NavigationState } from './types';
-
-const Easing = EasingNode || OldEasing;
 
 export type GetTabWidth = (index: number) => number;
 
@@ -19,11 +18,6 @@ export type Props<T extends Route> = SceneRendererProps & {
   style?: StyleProp<ViewStyle>;
   getTabWidth: GetTabWidth;
 };
-
-const { multiply, Extrapolate } = Animated;
-
-// @ts-ignore
-const interpolate = Animated.interpolateNode || Animated.interpolate;
 
 export default class TabBarIndicator<T extends Route> extends React.Component<
   Props<T>
@@ -49,9 +43,10 @@ export default class TabBarIndicator<T extends Route> extends React.Component<
       this.isIndicatorShown = true;
 
       Animated.timing(this.opacity, {
-        duration: 150,
         toValue: 1,
+        duration: 150,
         easing: Easing.in(Easing.linear),
+        useNativeDriver: true,
       }).start();
     }
   };
@@ -60,46 +55,27 @@ export default class TabBarIndicator<T extends Route> extends React.Component<
 
   private opacity = new Animated.Value(this.props.width === 'auto' ? 0 : 1);
 
-  private getTranslateX = memoize(
-    (
-      position: Animated.Node<number>,
-      routes: Route[],
-      getTabWidth: GetTabWidth
-    ) => {
-      const inputRange = routes.map((_, i) => i);
+  private getTranslateX = (
+    position: Animated.AnimatedInterpolation,
+    routes: Route[],
+    getTabWidth: GetTabWidth
+  ) => {
+    const inputRange = routes.map((_, i) => i);
 
-      // every index contains widths at all previous indices
-      const outputRange = routes.reduce<number[]>((acc, _, i) => {
-        if (i === 0) return [0];
-        return [...acc, acc[i - 1] + getTabWidth(i - 1)];
-      }, []);
+    // every index contains widths at all previous indices
+    const outputRange = routes.reduce<number[]>((acc, _, i) => {
+      if (i === 0) return [0];
+      return [...acc, acc[i - 1] + getTabWidth(i - 1)];
+    }, []);
 
-      const translateX = interpolate(position, {
-        inputRange,
-        outputRange,
-        extrapolate: Extrapolate.CLAMP,
-      });
+    const translateX = position.interpolate({
+      inputRange,
+      outputRange,
+      extrapolate: 'clamp',
+    });
 
-      return multiply(translateX, I18nManager.isRTL ? -1 : 1);
-    }
-  );
-
-  private getWidth = memoize(
-    (
-      position: Animated.Node<number>,
-      routes: Route[],
-      getTabWidth: GetTabWidth
-    ) => {
-      const inputRange = routes.map((_, i) => i);
-      const outputRange = inputRange.map(getTabWidth);
-
-      return interpolate(position, {
-        inputRange,
-        outputRange,
-        extrapolate: Extrapolate.CLAMP,
-      });
-    }
-  );
+    return Animated.multiply(translateX, I18nManager.isRTL ? -1 : 1);
+  };
 
   render() {
     const {
@@ -112,26 +88,47 @@ export default class TabBarIndicator<T extends Route> extends React.Component<
     } = this.props;
     const { routes } = navigationState;
 
-    const translateX =
-      routes.length > 1 ? this.getTranslateX(position, routes, getTabWidth) : 0;
+    const transform = [];
 
-    const indicatorWidth =
-      width === 'auto'
-        ? routes.length > 1
-          ? this.getWidth(position, routes, getTabWidth)
-          : getTabWidth(0)
-        : width;
+    if (layout.width) {
+      const translateX =
+        routes.length > 1
+          ? this.getTranslateX(position, routes, getTabWidth)
+          : 0;
+
+      transform.push({ translateX });
+    }
+
+    if (width === 'auto') {
+      const inputRange = routes.map((_, i) => i);
+      const outputRange = inputRange.map(getTabWidth);
+
+      transform.push(
+        {
+          scaleX:
+            routes.length > 1
+              ? position.interpolate({
+                  inputRange,
+                  outputRange,
+                  extrapolate: 'clamp',
+                })
+              : outputRange[0],
+        },
+        { translateX: 0.5 }
+      );
+    }
 
     return (
       <Animated.View
         style={[
           styles.indicator,
+          { width: width === 'auto' ? 1 : width },
           // If layout is not available, use `left` property for positioning the indicator
           // This avoids rendering delay until we are able to calculate translateX
-          { width: indicatorWidth },
           layout.width
-            ? { transform: [{ translateX }] as any }
+            ? { left: 0 }
             : { left: `${(100 / routes.length) * navigationState.index}%` },
+          { transform },
           width === 'auto' ? { opacity: this.opacity } : null,
           style,
         ]}

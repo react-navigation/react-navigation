@@ -1,7 +1,9 @@
 import * as React from 'react';
 import {
+  Animated,
   StyleSheet,
   View,
+  ScrollView,
   StyleProp,
   ViewStyle,
   TextStyle,
@@ -9,10 +11,8 @@ import {
   I18nManager,
   Platform,
 } from 'react-native';
-import Animated from 'react-native-reanimated';
 import TabBarItem, { Props as TabBarItemProps } from './TabBarItem';
 import TabBarIndicator, { Props as IndicatorProps } from './TabBarIndicator';
-import memoize from './memoize';
 import {
   Route,
   Scene,
@@ -64,14 +64,6 @@ export type Props<T extends Route> = SceneRendererProps & {
 type State = {
   layout: Layout;
   tabWidths: { [key: string]: number };
-};
-
-const scheduleInNextFrame = (cb: () => void) => {
-  let frame = requestAnimationFrame(() => {
-    frame = requestAnimationFrame(cb);
-  });
-
-  return () => cancelAnimationFrame(frame);
 };
 
 export default class TabBar<T extends Route> extends React.Component<
@@ -128,19 +120,13 @@ export default class TabBar<T extends Route> extends React.Component<
     }
   }
 
-  componentWillUnmount() {
-    this.cancelNextFrameCb?.();
-  }
-
   // to store the layout.width of each tab
   // when all onLayout's are fired, this would be set in state
   private measuredTabWidths: { [key: string]: number } = {};
 
   private scrollAmount = new Animated.Value(0);
 
-  private scrollViewRef = React.createRef<Animated.ScrollView>();
-
-  private cancelNextFrameCb: (() => void) | undefined = undefined;
+  private scrollViewRef = React.createRef<ScrollView>();
 
   private getFlattenedTabWidth = (style: StyleProp<ViewStyle>) => {
     const tabStyle = StyleSheet.flatten(style);
@@ -178,24 +164,6 @@ export default class TabBar<T extends Route> extends React.Component<
 
     return layout.width / routes.length;
   };
-
-  private getMemoizedTabWidthGettter = memoize(
-    (
-      layout: Layout,
-      routes: Route[],
-      scrollEnabled: boolean | undefined,
-      tabWidths: { [key: string]: number },
-      flattenedWidth: string | number | undefined
-    ) => (i: number) =>
-      this.getComputedTabWidth(
-        i,
-        layout,
-        routes,
-        scrollEnabled,
-        tabWidths,
-        flattenedWidth
-      )
-  );
 
   private getMaxScrollDistance = (tabBarWidth: number, layoutWidth: number) =>
     tabBarWidth - layoutWidth;
@@ -269,15 +237,7 @@ export default class TabBar<T extends Route> extends React.Component<
 
   private resetScroll = (index: number) => {
     if (this.props.scrollEnabled) {
-      // getNode() is not necessary in newer versions of React Native
-      const scrollView =
-        // @ts-ignore
-        typeof this.scrollViewRef.current?.scrollTo === 'function'
-          ? this.scrollViewRef.current
-          : this.scrollViewRef.current?.getNode();
-
-      // @ts-ignore
-      scrollView?.scrollTo({
+      this.scrollViewRef.current?.scrollTo({
         x: this.getScrollAmount(this.props, this.state, index),
         animated: true,
       });
@@ -294,30 +254,24 @@ export default class TabBar<T extends Route> extends React.Component<
       return;
     }
 
-    // If we don't delay this state update, the UI gets stuck in weird state
-    // Maybe an issue in Reanimated?
-    // https://github.com/satya164/react-native-tab-view/issues/877
-    // Cancel any pending callbacks, since we're scheduling a new one
-    this.cancelNextFrameCb?.();
-    this.cancelNextFrameCb = scheduleInNextFrame(() =>
-      this.setState({
-        layout: {
-          height,
-          width,
-        },
-      })
-    );
+    this.setState({
+      layout: {
+        height,
+        width,
+      },
+    });
   };
 
-  private getTranslateX = memoize(
-    (scrollAmount: Animated.Node<number>, maxScrollDistance: number) =>
-      Animated.multiply(
-        Platform.OS === 'android' && I18nManager.isRTL
-          ? Animated.sub(maxScrollDistance, scrollAmount)
-          : scrollAmount,
-        I18nManager.isRTL ? 1 : -1
-      )
-  );
+  private getTranslateX = (
+    scrollAmount: Animated.Value,
+    maxScrollDistance: number
+  ) =>
+    Animated.multiply(
+      Platform.OS === 'android' && I18nManager.isRTL
+        ? Animated.add(maxScrollDistance, Animated.multiply(scrollAmount, -1))
+        : scrollAmount,
+      I18nManager.isRTL ? 1 : -1
+    );
 
   render() {
     const {
@@ -383,13 +337,15 @@ export default class TabBar<T extends Route> extends React.Component<
             jumpTo,
             width: isWidthDynamic ? 'auto' : `${100 / routes.length}%`,
             style: indicatorStyle,
-            getTabWidth: this.getMemoizedTabWidthGettter(
-              layout,
-              routes,
-              scrollEnabled,
-              tabWidths,
-              this.getFlattenedTabWidth(tabStyle)
-            ),
+            getTabWidth: (i: number) =>
+              this.getComputedTabWidth(
+                i,
+                layout,
+                routes,
+                scrollEnabled,
+                tabWidths,
+                this.getFlattenedTabWidth(tabStyle)
+              ),
           })}
         </Animated.View>
         <View style={styles.scroll}>
@@ -412,13 +368,16 @@ export default class TabBar<T extends Route> extends React.Component<
               contentContainerStyle,
             ]}
             scrollEventThrottle={16}
-            onScroll={Animated.event([
-              {
-                nativeEvent: {
-                  contentOffset: { x: this.scrollAmount },
+            onScroll={Animated.event(
+              [
+                {
+                  nativeEvent: {
+                    contentOffset: { x: this.scrollAmount },
+                  },
                 },
-              },
-            ])}
+              ],
+              { useNativeDriver: true }
+            )}
             ref={this.scrollViewRef}
           >
             {routes.map((route: T) => {

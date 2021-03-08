@@ -3,7 +3,6 @@ import {
   Platform,
   ScrollView,
   StatusBar,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -11,10 +10,10 @@ import {
   YellowBox,
   I18nManager,
 } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { registerRootComponent } from 'expo';
 import { Asset } from 'expo-asset';
 import { useKeepAwake } from 'expo-keep-awake';
-import Constants from 'expo-constants';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-community/async-storage';
 import ScrollableTabBarExample from './ScrollableTabBarExample';
@@ -166,24 +165,24 @@ export default class ExampleList extends React.Component<any, State> {
       Platform.OS === 'ios' ? StyleSheet.hairlineWidth : 0;
 
     return (
-      <View style={styles.container}>
+      <SafeAreaProvider>
         <StatusBar
           translucent
           barStyle={Platform.OS === 'ios' ? statusBarStyle : 'light-content'}
         />
         <KeepAwake />
-        <View
-          style={[
-            styles.appbar,
-            backgroundColor ? { backgroundColor } : null,
-            appbarElevation
-              ? { elevation: appbarElevation, borderBottomWidth }
-              : null,
-          ]}
-        >
-          <View style={styles.statusbar} />
-          <SafeAreaView>
-            <View style={styles.content}>
+        <View style={styles.container}>
+          <SafeAreaView
+            edges={['top']}
+            style={[
+              styles.appbar,
+              backgroundColor ? { backgroundColor } : null,
+              appbarElevation
+                ? { elevation: appbarElevation, borderBottomWidth }
+                : null,
+            ]}
+          >
+            <View style={styles.appbarContent}>
               {index > -1 ? (
                 <TouchableOpacity
                   style={styles.button}
@@ -210,13 +209,19 @@ export default class ExampleList extends React.Component<any, State> {
               {index > -1 ? <View style={styles.button} /> : null}
             </View>
           </SafeAreaView>
+          <SafeAreaView edges={['bottom']} style={styles.safearea}>
+            <View style={styles.content}>
+              {index === -1 ? (
+                <ScrollView>
+                  {EXAMPLE_COMPONENTS.map(this.renderItem)}
+                </ScrollView>
+              ) : ExampleComponent ? (
+                <ExampleComponent />
+              ) : null}
+            </View>
+          </SafeAreaView>
         </View>
-        {index === -1 ? (
-          <ScrollView>{EXAMPLE_COMPONENTS.map(this.renderItem)}</ScrollView>
-        ) : ExampleComponent ? (
-          <ExampleComponent />
-        ) : null}
-      </View>
+      </SafeAreaProvider>
     );
   }
 }
@@ -224,19 +229,12 @@ export default class ExampleList extends React.Component<any, State> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eceff1',
     height: Platform.OS === 'web' ? '100vh' : undefined,
-  },
-  statusbar: {
-    height: Platform.select({
-      android: Constants.statusBarHeight,
-      ios: Platform.Version < 11 ? Constants.statusBarHeight : 0,
-    }),
   },
   appbar: {
     borderBottomColor: 'rgba(0, 0, 0, 0.1)',
   },
-  content: {
+  appbarContent: {
     flexDirection: 'row',
     alignItems: 'center',
     height: 56,
@@ -263,6 +261,14 @@ const styles = StyleSheet.create({
   item: {
     fontSize: 16,
     color: '#333',
+  },
+  safearea: {
+    flex: 1,
+    backgroundColor: '#000',
+  },
+  content: {
+    flex: 1,
+    backgroundColor: '#eceff1',
   },
 });
 

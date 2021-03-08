@@ -7,7 +7,7 @@
     "version": "1.0.0",
     "primaryColor": "#2196f3",
     "icon": "assets/icon.png",
-    "loading": {
+    "splash": {
       "icon": "assets/icon.png",
       "hideExponentText": false
     },

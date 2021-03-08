@@ -4,7 +4,7 @@
 [![Version][version-badge]][package]
 [![MIT License][license-badge]][license]
 
-A cross-platform Tab View component for React Native.
+A cross-platform Tab View component for React Native. Implemented using [`react-native-pager-view`](https://github.com/callstack/react-native-view-pager) on Android & iOS, and [PanResponder](https://reactnative.dev/docs/panresponder) on Web.
 
 - [Run the example app to see it in action](https://expo.io/@satya164/react-native-tab-view-demos).
 - Checkout the [example/](https://github.com/satya164/react-native-tab-view/tree/main/example) folder for source code.
@@ -30,46 +30,19 @@ Open a Terminal in the project root and run:
 yarn add react-native-tab-view
 ```
 
-Now we need to install [`react-native-gesture-handler`](https://github.com/kmagiera/react-native-gesture-handler) and [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated).
+Now we need to install [`react-native-pager-view`](https://github.com/callstack/react-native-viewpager).
 
 If you are using Expo, to ensure that you get the compatible versions of the libraries, run:
 
 ```sh
-expo install react-native-gesture-handler react-native-reanimated
+expo install react-native-pager-view
 ```
 
 If you are not using Expo, run the following:
 
 ```sh
-yarn add react-native-reanimated react-native-gesture-handler
+yarn add react-native-pager-view
 ```
-
-If you are using Expo, you are done. Otherwise, continue to the next steps.
-
-Next, we need to link these libraries. The steps depends on your React Native version:
-
-- **React Native 0.60 and higher**
-
-  On newer versions of React Native, [linking is automatic](https://github.com/react-native-community/cli/blob/main/docs/autolinking.md).
-
-  To complete the linking on iOS, make sure you have [Cocoapods](https://cocoapods.org/) installed. Then run:
-
-  ```sh
-  cd ios
-  pod install
-  cd ..
-  ```
-
-- **React Native 0.59 and lower**
-
-  If you're on an older React Native version, you need to manually link the dependencies. To do that, run:
-
-  ```sh
-  react-native link react-native-reanimated
-  react-native link react-native-gesture-handler
-  ```
-
-**IMPORTANT:** There are additional steps required for `react-native-gesture-handler` on Android after linking (for all React Native versions). Check the [this guide](https://docs.swmansion.com/react-native-gesture-handler/docs/) to complete the installation.
 
 We're done! Now you can build and run the app on your device/simulator.
 
@@ -77,20 +50,20 @@ We're done! Now you can build and run the app on your device/simulator.
 
 ```js
 import * as React from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, useWindowDimensions } from 'react-native';
 import { TabView, SceneMap } from 'react-native-tab-view';
 
 const FirstRoute = () => (
-  <View style={[styles.scene, { backgroundColor: '#ff4081' }]} />
+  <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
 );
 
 const SecondRoute = () => (
-  <View style={[styles.scene, { backgroundColor: '#673ab7' }]} />
+  <View style={{ flex: 1, backgroundColor: '#673ab7' }} />
 );
 
-const initialLayout = { width: Dimensions.get('window').width };
-
 export default function TabViewExample() {
+  const layout = useWindowDimensions();
+
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: 'first', title: 'First' },
@@ -107,16 +80,10 @@ export default function TabViewExample() {
       navigationState={{ index, routes }}
       renderScene={renderScene}
       onIndexChange={setIndex}
-      initialLayout={initialLayout}
+      initialLayout={{ width: layout.width }}
     />
   );
 }
-
-const styles = StyleSheet.create({
-  scene: {
-    flex: 1,
-  },
-});
 ```
 
 [Try this example on Snack](https://snack.expo.io/@satya164/react-native-tab-view-quick-start)
@@ -147,7 +114,7 @@ Basic usage look like this:
 />
 ```
 
-#### Props
+#### TabView Props
 
 ##### `navigationState` (`required`)
 
@@ -281,36 +248,6 @@ If this is not specified, the default tab bar is rendered. You pass this props t
 />
 ```
 
-##### `renderPager`
-
-Callback which returns a custom React Element to use as pager.
-
-E.g. you can import `ScrollPager` from `react-native-tab-view`. It might deliver slightly better experience on iOS.
-
-```js
-import { TabView, ScrollPager } from 'react-native-tab-view';
-// ...
-<TabView
-  renderPager={props => <ScrollPager { ...props }/>}
-  // ...
-/>
-```
-
-Also, you can use `ViewPager`-based pager with [`React Native Tab View ViewPager Adapter
-`](https://github.com/software-mansion/react-native-tab-view-viewpager-adapter).
-
-```js
-import { TabView } from 'react-native-tab-view';
-import ViewPagerAdapter from 'react-native-tab-view-viewpager-adapter';
-// ...
-<TabView
-  renderPager={props => (
-    <ViewPagerAdapter {...props} transition="curl" showPageIndicator />
-  )}
-  // ...
-/>
-```
-
 ##### `tabBarPosition`
 
 Position of the tab bar in the tab view. Possible values are `'top'` and `'bottom'`. Defaults to `'top'`.
@@ -368,10 +305,6 @@ String indicating whether the keyboard gets dismissed in response to a drag gest
 
 Boolean indicating whether to enable swipe gestures. Swipe gestures are enabled by default. Passing `false` will disable swipe gestures, but the user can still switch tabs by pressing the tab bar.
 
-##### `swipeVelocityImpact`
-
-Determines how relevant is a velocity while calculating next position while swiping. Defaults to `0.2`.
-
 ##### `onSwipeStart`
 
 Callback which is called when the swipe gesture starts, i.e. the user touches the screen and moves it.
@@ -379,26 +312,6 @@ Callback which is called when the swipe gesture starts, i.e. the user touches th
 ##### `onSwipeEnd`
 
 Callback which is called when the swipe gesture ends, i.e. the user lifts their finger from the screen after the swipe gesture.
-
-##### `timingConfig`
-
-Configuration object for the timing animation which occurs when tapping on tabs. Supported properties are:
-
-- `duration` (`number`)
-
-##### `springConfig`
-
-Configuration object for the spring animation which occurs after swiping. Supported properties are:
-
-- `damping` (`number`)
-- `mass` (`number`)
-- `stiffness` (`number`)
-- `restSpeedThreshold` (`number`)
-- `restDisplacementThreshold` (`number`)
-
-##### `springVelocityScale`
-
-Number for determining how meaningful is gesture velocity for calculating initial velocity of spring animation. Defaults to `0`.
 
 ##### `initialLayout`
 
@@ -411,21 +324,6 @@ Object containing the initial height and width of the screens. Passing this will
 />
 ```
 
-##### `position`
-
-Animated value to listen to the position updates. The passed position value will be kept in sync with the current position of the tabs. It's useful for accessing the animated value outside the tab view.
-
-```js
-const [position] = useState(() => new Animated.Value(0));
-
-return (
-  <TabView
-    position={position}
-    ...
-  />
-);
-```
-
 ##### `sceneContainerStyle`
 
 Style to apply to the view wrapping each screen. You can pass this to override some default styles such as overflow clipping:
@@ -433,20 +331,6 @@ Style to apply to the view wrapping each screen. You can pass this to override s
 ##### `style`
 
 Style to apply to the tab view container.
-
-##### `gestureHandlerProps`
-
-An object with props to be passed to underlying [`PanGestureHandler`](https://kmagiera.github.io/react-native-gesture-handler/docs/handler-pan.html#properties). For example:
-
-```js
-<TabView
-  gestureHandlerProps={{
-    maxPointers: 1,
-    waitFor: [someRef]
-  }}
-  ...
-/>
-```
 
 ### `TabBar`
 
@@ -474,7 +358,7 @@ return (
 );
 ```
 
-#### Props
+#### TabBar Props
 
 ##### `getLabelText`
 
@@ -631,76 +515,16 @@ Style to apply to the inner container for tabs.
 
 Style to apply to the tab bar container.
 
-### `ScrollPager`
-Custom pager which can we used inside `renderPager` prop. It is based on ScrollView and might bring a slightly better experience on iOS.
-
-#### Props
-It accepts the same set of props as default pager extended with one addition:
-
-##### ovescroll
-When `true`, the scroll view bounces when it reaches the end of the content. The default value is `false`.
-
-
 ## Using with other libraries
 
 ### [React Navigation](https://github.com/react-navigation/react-navigation)
 
 If you want to integrate the tab view with React Navigation's navigation system, e.g. want to be able to navigate to a tab using `navigation.navigate` etc, you can use the following official integrations:
 
-- [@react-navigation/material-top-tabs](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs) for React Navigation 5
+- [@react-navigation/material-top-tabs](https://github.com/react-navigation/react-navigation/tree/main/packages/material-top-tabs) for React Navigation 5 & 6
 - [react-navigation-tabs](https://github.com/react-navigation/react-navigation-tabs) for React Navigation 4
 
 Note that some functionalities are not available with the React Navigation 4 integration because of the limitations in React Navigation. For example, it's possible to dynamically change the rendered tabs.
-
-### [React Native Navigation (Wix)](https://github.com/wix/react-native-navigation)
-
-If you use React Native Navigation by Wix on Android, you need to wrap all your screens that uses `react-native-tab-view` with `gestureHandlerRootHOC` from `react-native-gesture-handler`. Refer [`react-native-gesture-handler`'s docs](https://kmagiera.github.io/react-native-gesture-handler/docs/getting-started.html#with-wix-react-native-navigation-https-githubcom-wix-react-native-navigation) for more details.
-
-### [Mobx](https://mobx.js.org/)
-
-Normally we recommend to use React's local state to manage the navigation state for the tabs. But if you need to use Mobx to manage the navigation state, there is a gotcha you need to be aware of.
-
-Mobx relies on data being accessed in `render` to work properly. However, we don't use the `index` value inside `render` in the library, so Mobx fails to track any changes to the `index`. You might see that the tabs don't change on pressing on the tab bar if you have a state like this:
-
-```js
-@observable navigationState = {
-  index: 0,
-  routes: [
-    { key: 'music', title: 'Music' },
-    { key: 'albums', title: 'Albums' },
-  ],
-};
-```
-
-To workaround this, we need to make sure that `index` is accessed in `render`. We can refactor our state to something like this for it to work:
-
-```js
-@observer
-class MyComponent extends React.Component {
-  @observable index = 0;
-
-  @observable routes = [
-    { key: 'music', title: 'Music' },
-    { key: 'albums', title: 'Albums' },
-  ];
-
-  @action handleIndexChange = index => {
-    this.index = index;
-  };
-
-  render() {
-    return (
-      <TabView
-        navigationState={{ index: this.index, routes: this.routes }}
-        renderScene={({ route }) => {
-          /* ... */
-        }}
-        onIndexChange={this.handleIndexChange}
-      />
-    );
-  }
-}
-```
 
 ## Optimization Tips
 

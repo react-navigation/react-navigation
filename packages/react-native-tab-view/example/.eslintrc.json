@@ -3,9 +3,7 @@
 
   "settings": {
     "import/core-modules": [
-      "react-native-tab-view",
-      "react-native-gesture-handler",
-      "react-native-reanimated"
+      "react-native-tab-view"
     ]
   }
 }

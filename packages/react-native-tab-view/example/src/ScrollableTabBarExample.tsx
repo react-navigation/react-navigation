@@ -64,6 +64,7 @@ export default class ScrollableTabBarExample extends React.Component<
   render() {
     return (
       <TabView
+        lazy
         navigationState={this.state}
         renderScene={this.renderScene}
         renderTabBar={this.renderTabBar}

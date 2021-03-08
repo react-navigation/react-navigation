@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
 
 type Item = { name: string; number: number };
 

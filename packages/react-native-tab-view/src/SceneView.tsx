@@ -47,7 +47,7 @@ export default class SceneView<T extends Route> extends React.Component<
   componentDidMount() {
     if (this.props.lazy) {
       // If lazy mode is enabled, listen to when we enter screens
-      this.props.addListener('enter', this.handleEnter);
+      this.unsubscribe = this.props.addEnterListener(this.handleEnter);
     } else if (this.state.loading) {
       // If lazy mode is not enabled, render the scene with a delay if not loaded already
       // This improves the initial startup time as the scene is no longer blocking
@@ -62,23 +62,32 @@ export default class SceneView<T extends Route> extends React.Component<
     ) {
       // We only need the listener if the tab hasn't loaded yet and lazy is enabled
       if (this.props.lazy && this.state.loading) {
-        this.props.addListener('enter', this.handleEnter);
+        this.unsubscribe?.();
+        this.unsubscribe = this.props.addEnterListener(this.handleEnter);
       } else {
-        this.props.removeListener('enter', this.handleEnter);
+        this.unsubscribe?.();
       }
     }
   }
 
   componentWillUnmount() {
-    this.props.removeListener('enter', this.handleEnter);
+    this.unsubscribe?.();
   }
+
+  private unsubscribe: (() => void) | null = null;
 
   private handleEnter = (value: number) => {
     const { index } = this.props;
 
     // If we're entering the current route, we need to load it
-    if (value === index && this.state.loading) {
-      this.setState({ loading: false });
+    if (value === index) {
+      this.setState((prevState) => {
+        if (prevState.loading) {
+          return { loading: false };
+        }
+
+        return null;
+      });
     }
   };
 

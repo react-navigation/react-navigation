@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import {
+  Animated,
   View,
   Image,
   Text,
@@ -9,7 +10,6 @@ import {
   ImageRequireSource,
 } from 'react-native';
 import { TabView, SceneRendererProps } from 'react-native-tab-view';
-import Animated from 'react-native-reanimated';
 
 type Route = {
   key: string;
@@ -55,20 +55,20 @@ const Scene = ({ route, position, layout, index, length }: Props) => {
       }
     });
 
-    const translateX = Animated.interpolate(position, {
+    const translateX = position.interpolate({
       inputRange,
       outputRange: translateOutputRange,
-      extrapolate: Animated.Extrapolate.CLAMP,
+      extrapolate: 'clamp',
     });
-    const scale = Animated.interpolate(position, {
+    const scale = position.interpolate({
       inputRange,
       outputRange: scaleOutputRange,
-      extrapolate: Animated.Extrapolate.CLAMP,
+      extrapolate: 'clamp',
     });
-    const opacity = Animated.interpolate(position, {
+    const opacity = position.interpolate({
       inputRange,
       outputRange: opacityOutputRange,
-      extrapolate: Animated.Extrapolate.CLAMP,
+      extrapolate: 'clamp',
     });
 
     return {
@@ -95,6 +95,7 @@ export default function CoverflowExample() {
     <TabView
       style={styles.container}
       sceneContainerStyle={styles.scene}
+      offscreenPageLimit={3}
       navigationState={{
         index,
         routes,
