@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.11.2...@react-navigation/drawer@6.0.0-next.0) (2021-03-09)
+
+
+### Bug Fixes
+
+* add missing helper types in descriptors ([21a1154](https://github.com/react-navigation/react-navigation/commit/21a11543bf41c4559c2570d5accc0bbb3b67eb8d))
+* drop usage of Dimensions in favor of metrics from safe-area-context ([12b893d](https://github.com/react-navigation/react-navigation/commit/12b893d7ca8cdb726b973972797658ac9c7d17d7))
+* enable detachInactiveScreens by default on web for better a11y ([4954d6a](https://github.com/react-navigation/react-navigation/commit/4954d6aae3cdbb5855d44ff17d80d16b81fb224e))
+* fix drawer and bottom tabs not being visible on web. closes [#9225](https://github.com/react-navigation/react-navigation/issues/9225) ([b735de1](https://github.com/react-navigation/react-navigation/commit/b735de153ca650240625dba6d8b5c8d16b913bac))
+* fix drawer screen content not being interactable on Android ([865d8b3](https://github.com/react-navigation/react-navigation/commit/865d8b3e51e117a01243966c160b7cd147d236ac))
+* fix initial metrics on server ([69d333f](https://github.com/react-navigation/react-navigation/commit/69d333f6c23e0c37eaf4d3f8b413e8f96d6827f8))
+* fix pointerEvents in ResourceSavingScene ([af53dd6](https://github.com/react-navigation/react-navigation/commit/af53dd6548630124f831446e0eee468da5d9bf5e)), closes [#9241](https://github.com/react-navigation/react-navigation/issues/9241) [#9242](https://github.com/react-navigation/react-navigation/issues/9242)
+* fix typo for default prop in drawer ([b376e9c](https://github.com/react-navigation/react-navigation/commit/b376e9c5ed7097cea25c957d1de75f84cc9ea9f0))
+
+
+### Code Refactoring
+
+* don't use a boolean for drawer status ([cda6397](https://github.com/react-navigation/react-navigation/commit/cda6397b8989c552824eca4175577527c9d72f93))
+* don't use absolute position for header ([79a85a4](https://github.com/react-navigation/react-navigation/commit/79a85a431ce0859ae35a13858b23c3919795e560))
+* don't use deprecated APIs from react-native-safe-area-context ([ddf27bf](https://github.com/react-navigation/react-navigation/commit/ddf27bf41a2efc5d1573aad0f8fe6c27a98c32b3))
+* drop drawerOpen and drawerClose events ([5648e1a](https://github.com/react-navigation/react-navigation/commit/5648e1a7b355068d105a2da79861d0add4717ff4))
+* move drawerContentOptions to options ([15e5678](https://github.com/react-navigation/react-navigation/commit/15e5678037bc6656d891724b4262cb542d6aad0d))
+* simplify props for stack and drawer headers ([4cad132](https://github.com/react-navigation/react-navigation/commit/4cad132c2c3daa6370a6916977f1f1db0036d4e4))
+
+
+### Features
+
+* add pressColor and pressOpacity props to drawerItem ([#8834](https://github.com/react-navigation/react-navigation/issues/8834)) ([52dbe4b](https://github.com/react-navigation/react-navigation/commit/52dbe4bd6663430745b07ea379d44d4d4f2944a0))
+* initial implementation of @react-navigation/elements ([07ba7a9](https://github.com/react-navigation/react-navigation/commit/07ba7a96870efdb8acf99eb82ba0b1d3eac90bab))
+* move lazy to options for bottom-tabs and drawer ([068a9a4](https://github.com/react-navigation/react-navigation/commit/068a9a456c31a08104097f2a8434c66c30a5be99))
+
+
+### BREAKING CHANGES
+
+* Drawer status is now a union ('open', 'closed') instead of a boolean. This will let us implement more types of status in future.
+
+Following this the following exports have been renamed as well:
+- getIsDrawerOpenFromState -> getDrawerStatusFromState
+- useIsDrawerOpen -> useDrawerStatus
+* We now use flexbox for header elements which could break some existing style code which relied on absolute positioning.
+* The lazy prop now can be configured per screen instead of for the whole navigator. To keep previous behavior, you can specify it in screenOptions
+* This commit moves options from `drawerContentOptions` to regular `options` in order to reduce confusion between the two, as well as to make it more flexible to configure the drawer on a per screen basis.
+* We now require newer versions of safe area context library.
+* drawer's status can be queried through the isDrawerOpen hook. no need for the events
+* Previously, the stack header accepted scene and previous scene which contained things such as descriptor, navigation prop, progress etc. The commit simplifies them to pass `route`, `navigation`, `options` and `progress` directly to the header. Similaryly, the `previous` argument now contains `options`, `route` and `progress`.
+
+
+
+
+
 ## [5.11.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.11.1...@react-navigation/drawer@5.11.2) (2020-11-10)
 
 **Note:** Version bump only for package @react-navigation/drawer

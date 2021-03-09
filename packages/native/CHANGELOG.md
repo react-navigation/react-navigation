@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@5.8.9...@react-navigation/native@6.0.0-next.0) (2021-03-09)
+
+
+### Bug Fixes
+
+* address breaking change in react-native for Linking ([61c6bb0](https://github.com/react-navigation/react-navigation/commit/61c6bb01b9e3aacaf93ecc7398b6c45834a2216d))
+* default to backBehavior: firstRoute for TabRouter ([8bdc6c6](https://github.com/react-navigation/react-navigation/commit/8bdc6c6b9bc957a00a01eec2fcf6f971998c9380))
+* drop dangerously prefix from getState and getParent ([227f133](https://github.com/react-navigation/react-navigation/commit/227f133536af85dc5ff85eeb269b76ed80cd3f05))
+* normalize prefix when parsing. fixes [#9081](https://github.com/react-navigation/react-navigation/issues/9081) ([fd034fe](https://github.com/react-navigation/react-navigation/commit/fd034fea35cd0ae23dac979d90d8fc8598dadcc3))
+* support sync getInitialURL in native useLinking ([52dd4e7](https://github.com/react-navigation/react-navigation/commit/52dd4e7ac92e3e176ac9f106e646ff6e300f3412))
+
+
+### Features
+
+* associate path with the route it opens when deep linking ([#9384](https://github.com/react-navigation/react-navigation/issues/9384)) ([86e64fd](https://github.com/react-navigation/react-navigation/commit/86e64fdcd81a57cf3f3bdab4c9035b52984e7009)), closes [#9102](https://github.com/react-navigation/react-navigation/issues/9102)
+* stop exporting useLinking hook ([5a9a1ed](https://github.com/react-navigation/react-navigation/commit/5a9a1edae7366d26af3494de341d9503a011974a))
+
+
+### BREAKING CHANGES
+
+* Returning to first route after pressing back seems more common in apps. This commit changes the default for tab and drawer navigators to follow this common practice. To preserve previous behavior, you can pass backBehavior=history to tab and drawer navigators.
+* we have added linking prop for the same use case which is easier to use. so no need to export useLinking anymore.
+
+
+
+
+
 ## [5.8.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@5.8.8...@react-navigation/native@5.8.9) (2020-11-10)
 
 **Note:** Version bump only for package @react-navigation/native
