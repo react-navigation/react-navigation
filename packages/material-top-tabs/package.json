@@ -59,10 +59,10 @@
     "typescript": "^4.2.3"
   },
   "peerDependencies": {
-    "@react-navigation/native": "^5.0.5",
+    "@react-navigation/native": "^6.0.0",
     "react": "*",
     "react-native": "*",
-    "react-native-pager-view": ">= 1.0.0",
+    "react-native-pager-view": ">= 4.0.0",
     "react-native-tab-view": ">= 3.0.0"
   },
   "react-native-builder-bob": {
