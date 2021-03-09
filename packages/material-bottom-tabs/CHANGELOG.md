@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@5.3.9...@react-navigation/material-bottom-tabs@6.0.0-next.0) (2021-03-09)
+
+
+### Bug Fixes
+
+* add missing helper types in descriptors ([21a1154](https://github.com/react-navigation/react-navigation/commit/21a11543bf41c4559c2570d5accc0bbb3b67eb8d))
+
+
+
+
+
 ## [5.3.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@5.3.8...@react-navigation/material-bottom-tabs@5.3.9) (2020-11-10)
 
 **Note:** Version bump only for package @react-navigation/material-bottom-tabs

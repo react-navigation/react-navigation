@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@5.3.9...@react-navigation/material-top-tabs@6.0.0-next.0) (2021-03-09)
+
+
+### Bug Fixes
+
+* add missing helper types in descriptors ([21a1154](https://github.com/react-navigation/react-navigation/commit/21a11543bf41c4559c2570d5accc0bbb3b67eb8d))
+
+
+### Features
+
+* move lazy to options for material-top-tabs ([cfd1c9b](https://github.com/react-navigation/react-navigation/commit/cfd1c9b6efb528c7737fb68766873f9c564196d7))
+* upgrade to latest react-native-tab-view using ViewPager ([2261001](https://github.com/react-navigation/react-navigation/commit/22610014b3b1e649b368a63fd021362235ee585d))
+
+
+### BREAKING CHANGES
+
+* The lazy prop now can be configured per screen instead of for the whole navigator. To keep previous behavior, you can specify it in screenOptions
+
+
+
+
+
 ## [5.3.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@5.3.8...@react-navigation/material-top-tabs@5.3.9) (2020-11-10)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

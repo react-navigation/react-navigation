@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.1...@react-navigation/bottom-tabs@6.0.0-next.0) (2021-03-09)
+
+
+### Bug Fixes
+
+* add missing helper types in descriptors ([21a1154](https://github.com/react-navigation/react-navigation/commit/21a11543bf41c4559c2570d5accc0bbb3b67eb8d))
+* drop usage of Dimensions in favor of metrics from safe-area-context ([12b893d](https://github.com/react-navigation/react-navigation/commit/12b893d7ca8cdb726b973972797658ac9c7d17d7))
+* enable detachInactiveScreens by default on web for better a11y ([4954d6a](https://github.com/react-navigation/react-navigation/commit/4954d6aae3cdbb5855d44ff17d80d16b81fb224e))
+* fix drawer and bottom tabs not being visible on web. closes [#9225](https://github.com/react-navigation/react-navigation/issues/9225) ([b735de1](https://github.com/react-navigation/react-navigation/commit/b735de153ca650240625dba6d8b5c8d16b913bac))
+* fix drawer screen content not being interactable on Android ([865d8b3](https://github.com/react-navigation/react-navigation/commit/865d8b3e51e117a01243966c160b7cd147d236ac))
+* fix initial metrics on server ([69d333f](https://github.com/react-navigation/react-navigation/commit/69d333f6c23e0c37eaf4d3f8b413e8f96d6827f8))
+* fix pointerEvents in ResourceSavingScene ([af53dd6](https://github.com/react-navigation/react-navigation/commit/af53dd6548630124f831446e0eee468da5d9bf5e)), closes [#9241](https://github.com/react-navigation/react-navigation/issues/9241) [#9242](https://github.com/react-navigation/react-navigation/issues/9242)
+* show a missing icon symbol instead of empty area in bottom tab bar ([2bc4882](https://github.com/react-navigation/react-navigation/commit/2bc4882692be9f02d781639892e1f98b891811c4))
+
+
+### Code Refactoring
+
+* don't use deprecated APIs from react-native-safe-area-context ([ddf27bf](https://github.com/react-navigation/react-navigation/commit/ddf27bf41a2efc5d1573aad0f8fe6c27a98c32b3))
+* drop support for tabBarVisible option ([a97a43a](https://github.com/react-navigation/react-navigation/commit/a97a43aa1d2a615074ade93f1addebcee1dbfb65))
+* move `tabBarOptions` to `options` for bottom tabs ([f7ff1ad](https://github.com/react-navigation/react-navigation/commit/f7ff1adee7654b2d624dee4ae8844be217f23026))
+
+
+### Features
+
+* initial implementation of @react-navigation/elements ([07ba7a9](https://github.com/react-navigation/react-navigation/commit/07ba7a96870efdb8acf99eb82ba0b1d3eac90bab))
+* move lazy to options for bottom-tabs and drawer ([068a9a4](https://github.com/react-navigation/react-navigation/commit/068a9a456c31a08104097f2a8434c66c30a5be99))
+
+
+### BREAKING CHANGES
+
+* The lazy prop now can be configured per screen instead of for the whole navigator. To keep previous behavior, you can specify it in screenOptions
+* This commit moves options from `tabBarOptions` to regular `options` in order to reduce confusion between the two, as well as to make it more flexible to configure the tab bar based on a per screen basis.
+* We now require newer versions of safe area context library.
+* We need to add support for specifying style for tab bar in options to support the use cases which need this.
+
+
+
+
+
 ## [5.11.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.0...@react-navigation/bottom-tabs@5.11.1) (2020-11-10)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
