@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/elements",
   "description": "UI Components for React Navigation",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "keywords": [
     "react-native",
     "react-navigation",
