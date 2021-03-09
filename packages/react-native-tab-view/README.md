@@ -287,12 +287,6 @@ This view is usually only shown for a split second. Keep it lightweight.
 
 By default, this renders `null`.
 
-##### `removeClippedSubviews`
-
-Boolean indicating whether to remove invisible views (such as unfocused screens) from the native view hierarchy to improve memory usage. Defaults to `false`.
-
-**Note**: Don't enable this on iOS where this is buggy and views don't re-appear.
-
 ##### `keyboardDismissMode`
 
 String indicating whether the keyboard gets dismissed in response to a drag gesture. Possible values are:
@@ -631,10 +625,6 @@ Nesting the `TabView` inside a vertical `ScrollView` will disable the optimizati
 ### Use `lazy` and `renderLazyPlaceholder` props to render routes as needed
 
 The `lazy` option is disabled by default to provide a smoother tab switching experience, but you can enable it and provide a placeholder component for a better lazy loading experience. Enabling `lazy` can improve initial load performance by rendering routes only when they come into view. Refer the [prop reference](#lazy) for more details.
-
-### Use `removeClippedSubviews` to improve memory usage
-
-On Android, enabling `removeClippedSubviews` can improve memory usage. This option can also affect rendering performance negatively, so it is disabled by default. So make sure to test it when enabling it. Refer the [prop reference](#removeclippedsubviews) for more details.
 
 ## Contributing
 
