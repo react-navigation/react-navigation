@@ -25,7 +25,6 @@ type Props = MaterialTopTabNavigationConfig & {
 };
 
 export default function MaterialTopTabView({
-  pager,
   lazyPlaceholder,
   tabBar = (props: MaterialTopTabBarProps) => <MaterialTopTabBar {...props} />,
   state,
@@ -58,7 +57,6 @@ export default function MaterialTopTabView({
         renderScene={({ route }) => descriptors[route.key].render()}
         navigationState={state}
         renderTabBar={renderTabBar}
-        renderPager={pager}
         renderLazyPlaceholder={lazyPlaceholder}
         lazy={({ route }) => descriptors[route.key].options.lazy === true}
         onSwipeStart={() => navigation.emit({ type: 'swipeStart' })}

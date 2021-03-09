@@ -196,16 +196,10 @@ export type MaterialTopTabNavigationConfig = Partial<
     | 'onSwipeEnd'
     | 'renderScene'
     | 'renderTabBar'
-    | 'renderPager'
     | 'renderLazyPlaceholder'
     | 'lazy'
   >
 > & {
-  /**
-   * Function that returns a React element to use as the pager.
-   * The pager handles swipe gestures and page switching.
-   */
-  pager?: React.ComponentProps<typeof TabView>['renderPager'];
   /**
    * Function that returns a React element to render for routes that haven't been rendered yet.
    * Receives an object containing the route as the prop.

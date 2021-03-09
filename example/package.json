@@ -27,11 +27,12 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.0.tar.gz",
     "react-native-appearance": "~0.3.3",
     "react-native-gesture-handler": "~1.8.0",
+    "react-native-pager-view": "^4.2.4",
     "react-native-paper": "^4.7.2",
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "3.1.9",
     "react-native-screens": "~2.15.0",
-    "react-native-tab-view": "^2.16.0",
+    "react-native-tab-view": "^3.0.0",
     "react-native-vector-icons": "^8.1.0",
     "react-native-web": "~0.15.0"
   },

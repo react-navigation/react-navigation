@@ -7,7 +7,20 @@ import {
   MaterialTopTabScreenProps,
 } from '../index';
 
-it('renders a material bottom tab navigator with screens', async () => {
+jest.mock('react-native-pager-view', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+
+  return class ViewPager extends React.Component<React.PropsWithChildren<{}>> {
+    setPage() {}
+
+    render() {
+      return <View>{this.props.children}</View>;
+    }
+  };
+});
+
+it('renders a material top tab navigator with screens', async () => {
   const Test = ({
     route,
     navigation,
