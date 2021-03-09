@@ -19256,6 +19256,11 @@ walker@^1.0.7, walker@~1.0.5:
   dependencies:
     makeerror "1.0.x"
 
+warn-once@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/warn-once/-/warn-once-0.0.1.tgz#71eda54c88f240c4461e5c7a84cac2263caf3a4e"
+  integrity sha512-Sh/kR0dQ9Tlr70E2zuR8mZ0yxmN9kGMNfvlwWWRi7frSox2uRC7U659Le8jBIqvjykSbvo9JX9ttsqw4vZPLmA==
+
 watchpack-chokidar2@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/watchpack-chokidar2/-/watchpack-chokidar2-2.0.1.tgz#38500072ee6ece66f3769936950ea1771be1c957"

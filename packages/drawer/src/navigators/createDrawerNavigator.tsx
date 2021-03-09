@@ -9,7 +9,7 @@ import {
   DrawerActionHelpers,
   ParamListBase,
 } from '@react-navigation/native';
-
+import warnOnce from 'warn-once';
 import DrawerView from '../views/DrawerView';
 import type {
   DrawerNavigationOptions,
@@ -27,8 +27,46 @@ function DrawerNavigator({
   backBehavior,
   children,
   screenOptions,
+  // @ts-expect-error: lazy is deprecated
+  lazy,
+  // @ts-expect-error: drawerContentOptions is deprecated
+  drawerContentOptions,
   ...rest
 }: Props) {
+  let defaultScreenOptions: DrawerNavigationOptions = {};
+
+  if (drawerContentOptions) {
+    Object.assign(defaultScreenOptions, {
+      drawerPosition: drawerContentOptions.drawerPosition,
+      drawerType: drawerContentOptions.drawerType,
+      swipeEdgeWidth: drawerContentOptions.edgeWidth,
+      drawerHideStatusBarOnOpen: drawerContentOptions.hideStatusBar,
+      keyboardDismissMode: drawerContentOptions.keyboardDismissMode,
+      swipeMinDistance: drawerContentOptions.minSwipeDistance,
+      overlayColor: drawerContentOptions.overlayColor,
+      drawerStatusBarAnimation: drawerContentOptions.statusBarAnimation,
+      gestureHandlerProps: drawerContentOptions.gestureHandlerProps,
+    });
+
+    warnOnce(
+      drawerContentOptions,
+      `Drawer Navigator: 'drawerContentOptions' is deprecated. Migrate the options to 'screenOptions' instead.\n\nPlace the following in 'screenOptions' in your code to keep current behavior:\n\n${JSON.stringify(
+        defaultScreenOptions,
+        null,
+        2
+      )}\n\nSee https://reactnavigation.org/docs/6.x/drawer-navigator#options for more details.`
+    );
+  }
+
+  if (typeof lazy === 'boolean') {
+    defaultScreenOptions.lazy = lazy;
+
+    warnOnce(
+      true,
+      `Drawer Navigator: 'lazy' in props is deprecated. Move it to 'screenOptions' instead.`
+    );
+  }
+
   const { state, descriptors, navigation } = useNavigationBuilder<
     DrawerNavigationState<ParamListBase>,
     DrawerRouterOptions,
@@ -41,6 +79,7 @@ function DrawerNavigator({
     backBehavior,
     children,
     screenOptions,
+    defaultScreenOptions,
   });
 
   return (

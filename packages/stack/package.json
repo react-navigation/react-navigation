@@ -43,7 +43,8 @@
   "dependencies": {
     "@react-navigation/elements": "^1.0.0",
     "color": "^3.1.3",
-    "react-native-iphone-x-helper": "^1.3.0"
+    "react-native-iphone-x-helper": "^1.3.0",
+    "warn-once": "^0.0.1"
   },
   "devDependencies": {
     "@react-navigation/native": "^5.8.9",

@@ -12,6 +12,7 @@ import {
   ParamListBase,
   StackActionHelpers,
 } from '@react-navigation/native';
+import warnOnce from 'warn-once';
 import StackView from '../views/Stack/StackView';
 import type {
   StackNavigationConfig,
@@ -29,6 +30,14 @@ function StackNavigator({
   screenOptions,
   ...rest
 }: Props) {
+  // @ts-expect-error: headerMode='none' is deprecated
+  const isHeaderModeNone = rest.headerMode === 'none';
+
+  warnOnce(
+    isHeaderModeNone,
+    `Stack Navigator: 'headerMode="none"' is deprecated. Use 'headerShown: false' in 'screenOptions' instead.`
+  );
+
   const { state, descriptors, navigation } = useNavigationBuilder<
     StackNavigationState<ParamListBase>,
     StackRouterOptions,
@@ -40,6 +49,7 @@ function StackNavigator({
     children,
     screenOptions,
     defaultScreenOptions: {
+      headerShown: !isHeaderModeNone,
       gestureEnabled: Platform.OS === 'ios',
       animationEnabled:
         Platform.OS !== 'web' &&
