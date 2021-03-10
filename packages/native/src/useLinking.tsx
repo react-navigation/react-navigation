@@ -46,9 +46,13 @@ const createMemoryHistory = () => {
       const id = window.history.state?.id;
 
       if (id) {
-        const index = items.findIndex((item) => item.id === id);
+        let currentIndex = items.findIndex((item) => item.id === id);
+        if (currentIndex < 0) {
+          currentIndex = 0;
+        }
 
-        return index > -1 ? index : 0;
+        index = currentIndex;
+        return currentIndex;
       }
 
       return 0;
