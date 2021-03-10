@@ -46,8 +46,13 @@ export default React.memo(function Header({
     (state) => state.routes[0].key === route.key
   );
 
+
   const statusBarHeight =
-    (isModal && !isFirstRouteInParent) || isParentHeaderShown ? 0 : insets.top;
+    options.headerStatusBarHeight !== undefined
+    ? options.headerStatusBarHeight
+    : ((isModal && !isFirstRouteInParent) || isParentHeaderShown
+      ? 0
+      : insets.top);
 
   return (
     <HeaderSegment
