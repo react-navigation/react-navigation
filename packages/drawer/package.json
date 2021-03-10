@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/drawer",
   "description": "Drawer navigator component with animated transitions and gesturess",
-  "version": "6.0.0-next.0",
+  "version": "6.0.0-next.1",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -42,12 +42,12 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/elements": "^1.0.0-next.0",
+    "@react-navigation/elements": "^1.0.0-next.1",
     "color": "^3.1.3",
     "warn-once": "^0.0.1"
   },
   "devDependencies": {
-    "@react-navigation/native": "^6.0.0-next.0",
+    "@react-navigation/native": "^6.0.0-next.1",
     "@testing-library/react-native": "^7.2.0",
     "@types/react": "^16.9.53",
     "@types/react-native": "~0.63.51",

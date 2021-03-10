@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0...@react-navigation/drawer@6.0.0-next.1) (2021-03-10)
+
+
+### Bug Fixes
+
+* fix peer dep versions ([72f90b5](https://github.com/react-navigation/react-navigation/commit/72f90b50d27eda1315bb750beca8a36f26dafe17))
+
+
+
+
+
 # [6.0.0-next.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.11.2...@react-navigation/drawer@6.0.0-next.0) (2021-03-09)
 
 
