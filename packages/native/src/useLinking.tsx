@@ -51,6 +51,9 @@ const createMemoryHistory = () => {
           currentIndex = 0;
         }
 
+        // Fix createMemoryHistory.index variable's value, because it will go out of sync, when navigating
+        // with the browser. The 'popstate' event not sets the createMemoryHistory.index variable, but
+        // calls this function, so the corrrect value can be set.
         index = currentIndex;
         return currentIndex;
       }
