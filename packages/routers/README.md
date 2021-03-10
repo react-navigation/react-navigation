@@ -14,4 +14,4 @@ yarn add @react-navigation/routers
 
 ## Usage
 
-Documentation can be found on the [React Navigation website](https://reactnavigation.org/docs/custom-routers/).
+Documentation can be found on the [React Navigation website](https://reactnavigation.org/docs/6.x/custom-routers/).
