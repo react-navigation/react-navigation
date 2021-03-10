@@ -37,8 +37,7 @@ export default class KeyboardManager extends React.Component<Props> {
 
     this.clearKeyboardTimeout();
 
-    // @ts-expect-error: blurTextInput accepts both number and ref, but types say only ref
-    const input: InputRef = TextInput.State.currentlyFocusedField();
+    const input: InputRef = TextInput.State.currentlyFocusedInput();
 
     // When a page change begins, blur the currently focused input
     input?.blur();
