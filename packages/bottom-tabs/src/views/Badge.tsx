@@ -30,7 +30,7 @@ export default function Badge({
   ...rest
 }: Props) {
   const [opacity] = React.useState(() => new Animated.Value(visible ? 1 : 0));
-  const [rendered, setRendered] = React.useState(visible ? true : false);
+  const [rendered, setRendered] = React.useState(visible);
 
   const theme = useTheme();
 
@@ -50,12 +50,12 @@ export default function Badge({
     });
   }, [opacity, rendered, visible]);
 
-  if (visible && !rendered) {
-    setRendered(true);
-  }
-
-  if (!visible && !rendered) {
-    return null;
+  if (!rendered) {
+    if (visible) {
+      setRendered(true);
+    } else {
+      return null;
+    }
   }
 
   // @ts-expect-error: backgroundColor definitely exists
