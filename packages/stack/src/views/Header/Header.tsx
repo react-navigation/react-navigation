@@ -46,7 +46,6 @@ export default React.memo(function Header({
     (state) => state.routes[0].key === route.key
   );
 
-
   const statusBarHeight =
     options.headerStatusBarHeight !== undefined
       ? options.headerStatusBarHeight
