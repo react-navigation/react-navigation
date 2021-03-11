@@ -49,10 +49,10 @@ export default React.memo(function Header({
 
   const statusBarHeight =
     options.headerStatusBarHeight !== undefined
-    ? options.headerStatusBarHeight
-    : ((isModal && !isFirstRouteInParent) || isParentHeaderShown
+      ? options.headerStatusBarHeight
+      : (isModal && !isFirstRouteInParent) || isParentHeaderShown
       ? 0
-      : insets.top);
+      : insets.top;
 
   return (
     <HeaderSegment
