@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.1...@react-navigation/drawer@6.0.0-next.2) (2021-03-12)
+
+
+### Features
+
+* export drawer button ([2c8401d](https://github.com/react-navigation/react-navigation/commit/2c8401d5cb347d37c96e5b30f8ad05c17fd22ea4))
+
+
+
+
+
 # [6.0.0-next.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0...@react-navigation/drawer@6.0.0-next.1) (2021-03-10)
 
 

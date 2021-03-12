@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.2...@react-navigation/stack@6.0.0-next.3) (2021-03-12)
+
+
+### Features
+
+* export drawer button ([2c8401d](https://github.com/react-navigation/react-navigation/commit/2c8401d5cb347d37c96e5b30f8ad05c17fd22ea4))
+* return nearest parent header height for useHeaderHeight ([24b3f73](https://github.com/react-navigation/react-navigation/commit/24b3f739da4b8af8dca77d92c72cfdaa762e564a))
+
+
+
+
+
 # [6.0.0-next.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.1...@react-navigation/stack@6.0.0-next.2) (2021-03-11)
 
 
