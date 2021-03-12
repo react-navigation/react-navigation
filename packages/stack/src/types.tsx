@@ -1,6 +1,5 @@
 import type * as React from 'react';
 import type { Animated, StyleProp, TextStyle, ViewStyle } from 'react-native';
-import type { EdgeInsets } from 'react-native-safe-area-context';
 import type {
   NavigationProp,
   ParamListBase,
@@ -150,10 +149,6 @@ export type StackHeaderProps = {
    */
   layout: Layout;
   /**
-   * Safe area insets to use in the header, e.g. to apply extra spacing for statusbar and notch.
-   */
-  insets: EdgeInsets;
-  /**
    * Options for the back button.
    */
   back?: {
@@ -267,17 +262,6 @@ export type StackNavigationOptions = StackHeaderOptions &
      * Not supported on Web.
      */
     gestureVelocityImpact?: number;
-    /**
-     * Safe area insets for the screen. This is used to avoid elements like notch and status bar.
-     * By default, the device's safe area insets are automatically detected. You can override the behavior with this option.
-     * For example, to remove the extra spacing for status bar, pass `safeAreaInsets: { top: 0 }`.
-     */
-    safeAreaInsets?: {
-      top?: number;
-      right?: number;
-      bottom?: number;
-      left?: number;
-    };
     /**
      * Whether to detach the previous screen from the view hierarchy to save memory.
      * Set it to `false` if you need the previous screen to be seen through the active screen.

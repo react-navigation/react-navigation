@@ -7,7 +7,6 @@ import {
   ParamListBase,
 } from '@react-navigation/native';
 import { HeaderBackContext, getHeaderTitle } from '@react-navigation/elements';
-import type { EdgeInsets } from 'react-native-safe-area-context';
 
 import Header from './Header';
 import {
@@ -28,7 +27,6 @@ import type {
 export type Props = {
   mode: 'float' | 'screen';
   layout: Layout;
-  insets: EdgeInsets;
   scenes: (Scene | undefined)[];
   getPreviousScene: (props: { route: Route<string> }) => Scene | undefined;
   getFocusedRoute: () => Route<string>;
@@ -45,7 +43,6 @@ export default function HeaderContainer({
   mode,
   scenes,
   layout,
-  insets,
   getPreviousScene,
   getFocusedRoute,
   onContentHeightChange,
@@ -105,7 +102,6 @@ export default function HeaderContainer({
 
         const props: StackHeaderProps = {
           layout,
-          insets,
           back: headerBack,
           progress: scene.progress,
           options: scene.descriptor.options,
