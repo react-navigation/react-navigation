@@ -160,6 +160,10 @@ export function forModalPresentationIOS({
       overflow: 'hidden',
       borderTopLeftRadius: borderRadius,
       borderTopRightRadius: borderRadius,
+      // We don't need these for the animation
+      // But different border radius for corners improves animation perf
+      borderBottomLeftRadius: isIphoneX() ? borderRadius : 0,
+      borderBottomRightRadius: isIphoneX() ? borderRadius : 0,
       marginTop: index === 0 ? 0 : statusBarHeight,
       marginBottom: index === 0 ? 0 : topOffset,
       transform: [{ translateY }, { scale }],
