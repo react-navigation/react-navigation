@@ -108,13 +108,8 @@ const getHeaderHeights = (
     const height =
       typeof style.height === 'number' ? style.height : previous[curr.key];
 
-    const safeAreaInsets = {
-      ...insets,
-      ...options.safeAreaInsets,
-    };
-
     const {
-      headerStatusBarHeight = isParentHeaderShown ? 0 : safeAreaInsets.top,
+      headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
     } = options;
 
     acc[curr.key] =
@@ -420,13 +415,6 @@ export default class CardStack extends React.Component<Props, State> {
       };
     }
 
-    const {
-      top = insets.top,
-      right = insets.right,
-      bottom = insets.bottom,
-      left = insets.left,
-    } = focusedOptions.safeAreaInsets || {};
-
     let activeScreensLimit = 1;
 
     for (let i = scenes.length - 1; i >= 0; i--) {
@@ -465,7 +453,6 @@ export default class CardStack extends React.Component<Props, State> {
           {renderHeader({
             mode: 'float',
             layout,
-            insets: { top, right, bottom, left },
             scenes,
             getPreviousScene: this.getPreviousScene,
             getFocusedRoute: this.getFocusedRoute,
@@ -540,7 +527,6 @@ export default class CardStack extends React.Component<Props, State> {
             }
 
             const {
-              safeAreaInsets,
               headerShown = true,
               headerTransparent,
               cardShadowEnabled,
@@ -598,12 +584,10 @@ export default class CardStack extends React.Component<Props, State> {
               }
             }
 
-            const {
-              top: safeAreaInsetTop = insets.top,
-              right: safeAreaInsetRight = insets.right,
-              bottom: safeAreaInsetBottom = insets.bottom,
-              left: safeAreaInsetLeft = insets.left,
-            } = safeAreaInsets || {};
+            const safeAreaInsetTop = insets.top;
+            const safeAreaInsetRight = insets.right;
+            const safeAreaInsetBottom = insets.bottom;
+            const safeAreaInsetLeft = insets.left;
 
             const headerHeight =
               headerShown !== false ? headerHeights[route.key] : 0;

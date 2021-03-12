@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StackActions, useNavigationState } from '@react-navigation/native';
 import { getHeaderTitle, HeaderShownContext } from '@react-navigation/elements';
 
@@ -10,13 +11,14 @@ import type { StackHeaderProps } from '../../types';
 export default React.memo(function Header({
   back,
   layout,
-  insets,
   progress,
   options,
   route,
   navigation,
   styleInterpolator,
 }: StackHeaderProps) {
+  const insets = useSafeAreaInsets();
+
   let previousTitle;
 
   // The label for the left back button shows the title of the previous screen

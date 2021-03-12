@@ -274,7 +274,6 @@ function CardContainer({
             {renderHeader({
               mode: 'screen',
               layout,
-              insets,
               scenes: [previousScene, scene],
               getPreviousScene,
               getFocusedRoute,
