@@ -119,6 +119,8 @@ function CardContainer({
   scene,
   transitionSpec,
 }: Props) {
+  const parentHeaderHeight = React.useContext(HeaderHeightContext);
+
   const handleOpen = () => {
     const { route } = scene.descriptor;
 
@@ -263,7 +265,9 @@ function CardContainer({
             <HeaderShownContext.Provider
               value={isParentHeaderShown || headerShown !== false}
             >
-              <HeaderHeightContext.Provider value={headerHeight}>
+              <HeaderHeightContext.Provider
+                value={headerShown ? headerHeight : parentHeaderHeight}
+              >
                 {renderScene({ route: scene.descriptor.route })}
               </HeaderHeightContext.Provider>
             </HeaderShownContext.Provider>
