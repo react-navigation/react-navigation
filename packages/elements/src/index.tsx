@@ -11,7 +11,7 @@ export { default as getHeaderTitle } from './Header/getHeaderTitle';
 
 export { default as MissingIcon } from './MissingIcon';
 export { default as PlatformPressable } from './PlatformPressable';
-export { default as ResourceSavingScene } from './ResourceSavingScene';
+export { default as ResourceSavingView } from './ResourceSavingView';
 export { default as SafeAreaProviderCompat } from './SafeAreaProviderCompat';
 export { default as Screen } from './Screen';
 

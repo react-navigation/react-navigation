@@ -6,7 +6,7 @@ import {
   // @ts-ignore
   shouldUseActivityState,
 } from 'react-native-screens';
-import { ResourceSavingScene } from '@react-navigation/elements';
+import { ResourceSavingView } from '@react-navigation/elements';
 
 type Props = {
   visible: boolean;
@@ -34,8 +34,8 @@ export default function ScreenFallback({ visible, children, ...rest }: Props) {
   }
 
   return (
-    <ResourceSavingScene visible={visible} {...rest}>
+    <ResourceSavingView visible={visible} {...rest}>
       {children}
-    </ResourceSavingScene>
+    </ResourceSavingView>
   );
 }
