@@ -30,6 +30,7 @@ export default function Screen(props: Props) {
   const insets = useSafeAreaInsets();
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);
+  const parentHeaderHeight = React.useContext(HeaderHeightContext);
 
   const {
     header,
@@ -50,7 +51,9 @@ export default function Screen(props: Props) {
         <HeaderShownContext.Provider
           value={isParentHeaderShown || headerShown !== false}
         >
-          <HeaderHeightContext.Provider value={headerShown ? headerHeight : 0}>
+          <HeaderHeightContext.Provider
+            value={headerShown ? headerHeight : parentHeaderHeight}
+          >
             {children}
           </HeaderHeightContext.Provider>
         </HeaderShownContext.Provider>
