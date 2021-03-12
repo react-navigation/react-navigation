@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.3...@react-navigation/stack@6.0.0-next.4) (2021-03-12)
+
+
+### Bug Fixes
+
+* add special statusbar handling to modal presentation ([a204edd](https://github.com/react-navigation/react-navigation/commit/a204edd012060f0816eddee7a093183aa379d049))
+
+
+
+
+
 # [6.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.2...@react-navigation/stack@6.0.0-next.3) (2021-03-12)
 
 
