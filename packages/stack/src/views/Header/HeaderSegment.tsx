@@ -111,6 +111,10 @@ export default function HeaderSegment(props: Props) {
     headerBackTestID,
     headerBackAllowFontScaling,
     headerBackTitleStyle,
+    headerTitleContainerStyle,
+    headerLeftContainerStyle,
+    headerRightContainerStyle,
+    headerBackgroundContainerStyle,
     headerStyle: customHeaderStyle,
     headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
     styleInterpolator,
@@ -172,10 +176,13 @@ export default function HeaderSegment(props: Props) {
       layout={layout}
       headerTitle={headerTitle}
       headerLeft={headerLeft}
-      headerTitleContainerStyle={titleStyle}
-      headerLeftContainerStyle={leftButtonStyle}
-      headerRightContainerStyle={rightButtonStyle}
-      headerBackgroundContainerStyle={backgroundStyle}
+      headerTitleContainerStyle={[titleStyle, headerTitleContainerStyle]}
+      headerLeftContainerStyle={[leftButtonStyle, headerLeftContainerStyle]}
+      headerRightContainerStyle={[rightButtonStyle, headerRightContainerStyle]}
+      headerBackgroundContainerStyle={[
+        backgroundStyle,
+        headerBackgroundContainerStyle,
+      ]}
       headerStyle={customHeaderStyle}
       headerStatusBarHeight={headerStatusBarHeight}
       {...rest}
