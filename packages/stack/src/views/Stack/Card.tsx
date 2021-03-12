@@ -18,6 +18,8 @@ import {
   GestureState,
   PanGestureHandlerGestureEvent,
 } from '../GestureHandler';
+import ModalStatusBarManager from '../ModalStatusBarManager';
+import { forModalPresentationIOS } from '../../TransitionConfigs/CardStyleInterpolators';
 import CardAnimationContext from '../../utils/CardAnimationContext';
 import getDistanceForDirection from '../../utils/getDistanceForDirection';
 import getInvertedMultiplier from '../../utils/getInvertedMultiplier';
@@ -523,6 +525,15 @@ export default class Card extends React.Component<Props> {
 
     return (
       <CardAnimationContext.Provider value={animationContext}>
+        {index === 0 &&
+        next &&
+        styleInterpolator === forModalPresentationIOS ? (
+          <ModalStatusBarManager
+            layout={layout}
+            insets={insets}
+            style={cardStyle}
+          />
+        ) : null}
         <Animated.View
           style={{
             // This is a dummy style that doesn't actually change anything visually.
