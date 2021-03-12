@@ -50,7 +50,7 @@
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-preset-expo": "8.3.0",
     "cheerio": "^1.0.0-rc.3",
-    "expo-cli": "^4.2.1",
+    "expo-cli": "^4.3.0",
     "jest": "^26.6.3",
     "jest-dev-server": "^4.4.0",
     "mock-require-assets": "^0.0.1",
