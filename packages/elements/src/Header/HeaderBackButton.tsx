@@ -22,7 +22,8 @@ export default function HeaderBackButton({
   labelVisible = Platform.OS === 'ios',
   onLabelLayout,
   onPress,
-  pressColorAndroid: customPressColorAndroid,
+  pressColor,
+  pressOpacity,
   screenLayout,
   tintColor: customTintColor,
   titleLayout,
@@ -31,7 +32,7 @@ export default function HeaderBackButton({
   testID,
   style,
 }: HeaderBackButtonProps) {
-  const { dark, colors } = useTheme();
+  const { colors } = useTheme();
 
   const [initialLabelWidth, setInitialLabelWidth] = React.useState<
     undefined | number
@@ -44,13 +45,6 @@ export default function HeaderBackButton({
           ios: colors.primary,
           default: colors.text,
         });
-
-  const pressColorAndroid =
-    customPressColorAndroid !== undefined
-      ? customPressColorAndroid
-      : dark
-      ? 'rgba(255, 255, 255, .32)'
-      : 'rgba(0, 0, 0, .32)';
 
   const handleLabelLayout = (e: LayoutChangeEvent) => {
     onLabelLayout?.(e);
@@ -156,7 +150,8 @@ export default function HeaderBackButton({
       accessibilityLabel={accessibilityLabel}
       testID={testID}
       onPress={disabled ? undefined : handlePress}
-      pressColor={pressColorAndroid}
+      pressColor={pressColor}
+      pressOpacity={pressOpacity}
       android_ripple={{ borderless: true }}
       style={[styles.container, disabled && styles.disabled, style]}
       hitSlop={Platform.select({

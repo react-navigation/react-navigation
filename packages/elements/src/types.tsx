@@ -127,13 +127,16 @@ export type HeaderBackButtonProps = {
   disabled?: boolean;
   /**
    * Callback to call when the button is pressed.
-   * By default, this triggers `goBack`.
    */
   onPress?: () => void;
   /**
    * Color for material ripple (Android >= 5.0 only).
    */
-  pressColorAndroid?: string;
+  pressColor?: string;
+  /**
+   * Opacity when the button is pressed, used when ripple is not supported.
+   */
+  pressOpacity?: number;
   /**
    * Function which returns a React Element to display custom image in header's back button.
    */

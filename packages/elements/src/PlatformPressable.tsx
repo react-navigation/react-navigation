@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Platform, Pressable, PressableProps } from 'react-native';
+import { useTheme } from '@react-navigation/native';
 
 export type Props = PressableProps & {
   pressColor?: string;
@@ -12,24 +13,30 @@ const ANDROID_SUPPORTS_RIPPLE =
   Platform.OS === 'android' && Platform.Version >= ANDROID_VERSION_LOLLIPOP;
 
 /**
- * PlatformPressable provides an abstraction on top of TouchableNativeFeedback and
- * TouchableOpacity to handle platform differences.
- *
- * On Android, you can pass the props of TouchableNativeFeedback.
- * On other platforms, you can pass the props of TouchableOpacity.
+ * PlatformPressable provides an abstraction on top of Pressable to handle platform differences.
  */
 export default function PlatformPressable({
   android_ripple,
-  pressColor = 'rgba(0, 0, 0, .32)',
+  pressColor,
   pressOpacity,
   style,
   ...rest
 }: Props) {
+  const { dark } = useTheme();
+
   return (
     <Pressable
       android_ripple={
         ANDROID_SUPPORTS_RIPPLE
-          ? { color: pressColor, ...android_ripple }
+          ? {
+              color:
+                pressColor !== undefined
+                  ? pressColor
+                  : dark
+                  ? 'rgba(255, 255, 255, .32)'
+                  : 'rgba(0, 0, 0, .32)',
+              ...android_ripple,
+            }
           : undefined
       }
       style={({ pressed }) => [
