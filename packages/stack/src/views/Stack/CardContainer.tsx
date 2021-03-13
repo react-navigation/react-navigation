@@ -27,6 +27,7 @@ type Props = TransitionPreset & {
   layout: Layout;
   gesture: Animated.Value;
   scene: Scene;
+  headerDarkContent: boolean | undefined;
   safeAreaInsetTop: number;
   safeAreaInsetRight: number;
   safeAreaInsetBottom: number;
@@ -91,6 +92,7 @@ function CardContainer({
   getPreviousScene,
   getFocusedRoute,
   mode,
+  headerDarkContent,
   headerMode,
   headerShown,
   headerStyleInterpolator,
@@ -248,6 +250,7 @@ function CardContainer({
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
       pointerEvents={active ? 'box-none' : pointerEvents}
       pageOverflowEnabled={headerMode !== 'float' && mode === 'card'}
+      headerDarkContent={headerDarkContent}
       containerStyle={hasAbsoluteHeader ? { marginTop: headerHeight } : null}
       contentStyle={[{ backgroundColor: colors.background }, cardStyle]}
       style={[

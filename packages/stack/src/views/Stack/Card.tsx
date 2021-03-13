@@ -39,6 +39,7 @@ type Props = ViewProps & {
   gesture: Animated.Value;
   layout: Layout;
   insets: EdgeInsets;
+  headerDarkContent: boolean | undefined;
   pageOverflowEnabled: boolean;
   gestureDirection: GestureDirection;
   onOpen: () => void;
@@ -466,6 +467,7 @@ export default class Card extends React.Component<Props> {
       gestureEnabled,
       gestureDirection,
       pageOverflowEnabled,
+      headerDarkContent,
       children,
       containerStyle: customContainerStyle,
       contentStyle,
@@ -525,15 +527,21 @@ export default class Card extends React.Component<Props> {
 
     return (
       <CardAnimationContext.Provider value={animationContext}>
-        {index === 0 &&
-        next &&
-        styleInterpolator === forModalPresentationIOS ? (
-          <ModalStatusBarManager
-            layout={layout}
-            insets={insets}
-            style={cardStyle}
-          />
-        ) : null}
+        {
+          // StatusBar messes with translucent status bar on Android
+          // So we should only enable it on iOS
+          Platform.OS === 'ios' &&
+          index === 0 &&
+          next &&
+          styleInterpolator === forModalPresentationIOS ? (
+            <ModalStatusBarManager
+              dark={headerDarkContent}
+              layout={layout}
+              insets={insets}
+              style={cardStyle}
+            />
+          ) : null
+        }
         <Animated.View
           style={{
             // This is a dummy style that doesn't actually change anything visually.

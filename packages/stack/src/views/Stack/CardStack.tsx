@@ -39,6 +39,7 @@ import type {
   StackDescriptor,
   Scene,
 } from '../../types';
+import Color from 'color';
 
 type GestureValues = {
   [key: string]: Animated.Value;
@@ -529,6 +530,8 @@ export default class CardStack extends React.Component<Props, State> {
             const {
               headerShown = true,
               headerTransparent,
+              headerStyle,
+              headerTintColor,
               cardShadowEnabled,
               cardOverlayEnabled = Platform.OS !== 'ios' || mode === 'modal',
               cardOverlay,
@@ -592,6 +595,19 @@ export default class CardStack extends React.Component<Props, State> {
             const headerHeight =
               headerShown !== false ? headerHeights[route.key] : 0;
 
+            const { backgroundColor: headerBackgroundColor } =
+              StyleSheet.flatten(headerStyle) || {};
+
+            let headerDarkContent: boolean | undefined;
+
+            if (headerShown) {
+              if (headerTintColor) {
+                headerDarkContent = Color(headerTintColor).isDark();
+              } else if (typeof headerBackgroundColor === 'string') {
+                headerDarkContent = !Color(headerBackgroundColor).isDark();
+              }
+            }
+
             return (
               <MaybeScreen
                 key={route.key}
@@ -631,6 +647,7 @@ export default class CardStack extends React.Component<Props, State> {
                   mode={mode}
                   headerMode={headerMode}
                   headerShown={headerShown}
+                  headerDarkContent={headerDarkContent}
                   hasAbsoluteHeader={
                     isFloatHeaderAbsolute && !headerTransparent
                   }
