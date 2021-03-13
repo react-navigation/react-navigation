@@ -531,6 +531,7 @@ export default class Card extends React.Component<Props> {
           // StatusBar messes with translucent status bar on Android
           // So we should only enable it on iOS
           Platform.OS === 'ios' &&
+          overlayEnabled &&
           index === 0 &&
           next &&
           styleInterpolator === forModalPresentationIOS ? (
