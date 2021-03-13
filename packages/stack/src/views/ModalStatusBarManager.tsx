@@ -5,18 +5,24 @@ import type { EdgeInsets } from 'react-native-safe-area-context';
 import type { Layout } from '../types';
 
 type Props = {
+  dark: boolean | undefined;
   layout: Layout;
   insets: EdgeInsets;
   style: any;
 };
 
 export default function ModalStatusBarManager({
+  dark,
   layout,
   insets,
   style,
 }: Props) {
-  const { dark } = useTheme();
-  const [isDark, setIsDark] = React.useState(true);
+  const { dark: darkTheme } = useTheme();
+  const [overlapping, setOverlapping] = React.useState(true);
+
+  const enabled = layout.width && layout.height > layout.width;
+  const scale = 1 - 20 / layout.width;
+  const offset = (insets.top - 34) * scale;
 
   const flattenedStyle = StyleSheet.flatten(style);
   const translateY = flattenedStyle?.transform?.find(
@@ -24,28 +30,29 @@ export default function ModalStatusBarManager({
   )?.translateY;
 
   React.useEffect(() => {
-    const isLandscape = layout.width > layout.height;
-    const scale = 1 - 20 / layout.width;
-
-    if (dark || isLandscape || !layout.width) {
+    if (!enabled) {
       return;
     }
 
     const listener = ({ value }: { value: number }) => {
-      const isOverlappingStatusBar = value / scale < insets.top / 3;
-      setIsDark(isOverlappingStatusBar);
+      setOverlapping(value < offset);
     };
 
     const sub = translateY?.addListener(listener);
 
     return () => translateY?.removeListener(sub);
-  }, [dark, insets.top, layout.height, layout.width, translateY]);
+  }, [enabled, offset, translateY]);
 
-  if (dark) {
+  if (!enabled) {
     return null;
   }
 
+  const darkContent = dark ?? !darkTheme;
+
   return (
-    <StatusBar animated barStyle={isDark ? 'dark-content' : 'light-content'} />
+    <StatusBar
+      animated
+      barStyle={overlapping && darkContent ? 'dark-content' : 'light-content'}
+    />
   );
 }
