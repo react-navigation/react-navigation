@@ -410,7 +410,7 @@ export type RouteConfig<
       /**
        * React component to render for this screen.
        */
-      component: React.ComponentType<any>;
+      component: React.ComponentType<{ navigation: any, route: RouteProp<ParamList, RouteName> }>;
       getComponent?: never;
       children?: never;
     }
@@ -418,7 +418,7 @@ export type RouteConfig<
       /**
        * Lazily get a React component to render for this screen.
        */
-      getComponent: () => React.ComponentType<any>;
+      getComponent: () => React.ComponentType<{ navigation: any, route: RouteProp<ParamList, RouteName> }>;
       component?: never;
       children?: never;
     }
