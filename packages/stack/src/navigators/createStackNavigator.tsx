@@ -32,7 +32,7 @@ function StackNavigator({
   ...rest
 }: Props) {
   // @ts-expect-error: headerMode='none' is deprecated
-  const headerMode = rest.headerMode as StackHeaderMode | 'none';
+  const headerMode = rest.headerMode as StackHeaderMode | 'none' | undefined;
 
   warnOnce(
     headerMode === 'none',
@@ -40,7 +40,7 @@ function StackNavigator({
   );
 
   warnOnce(
-    headerMode !== 'none',
+    headerMode && headerMode !== 'none',
     `Stack Navigator: 'headerMode' is moved to 'options'. Moved it to 'screenOptions' to keep current behavior.`
   );
 
@@ -54,12 +54,14 @@ function StackNavigator({
     initialRouteName,
     children,
     screenOptions,
-    defaultScreenOptions: {
-      headerShown: headerMode !== 'none',
+    defaultScreenOptions: ({ options }) => ({
+      headerShown: headerMode ? headerMode !== 'none' : true,
       headerMode:
-        headerMode !== 'none'
+        headerMode && headerMode !== 'none'
           ? headerMode
-          : rest.mode !== 'modal' && Platform.OS === 'ios'
+          : rest.mode !== 'modal' &&
+            Platform.OS === 'ios' &&
+            options.header === undefined
           ? 'float'
           : 'screen',
       gestureEnabled: Platform.OS === 'ios',
@@ -67,7 +69,7 @@ function StackNavigator({
         Platform.OS !== 'web' &&
         Platform.OS !== 'windows' &&
         Platform.OS !== 'macos',
-    },
+    }),
   });
 
   React.useEffect(

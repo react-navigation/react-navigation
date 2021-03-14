@@ -86,8 +86,7 @@ const AlbumsScreen = ({ navigation }: StackScreenProps<SimpleStackParams>) => {
 
 const SimpleStack = createStackNavigator<SimpleStackParams>();
 
-type Props = Partial<React.ComponentProps<typeof SimpleStack.Navigator>> &
-  StackScreenProps<ParamListBase>;
+type Props = StackScreenProps<ParamListBase>;
 
 function CustomHeader(props: StackHeaderProps) {
   const { current, next } = props.progress;
@@ -108,7 +107,7 @@ function CustomHeader(props: StackHeaderProps) {
   );
 }
 
-export default function SimpleStackScreen({ navigation, ...rest }: Props) {
+export default function HeaderCustomizationScreen({ navigation }: Props) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -119,13 +118,13 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
   const [headerTitleCentered, setHeaderTitleCentered] = React.useState(true);
 
   return (
-    <SimpleStack.Navigator {...rest}>
+    <SimpleStack.Navigator screenOptions={{ headerMode: 'float' }}>
       <SimpleStack.Screen
         name="Article"
         component={ArticleScreen}
         options={({ route }) => ({
           title: `Article by ${route.params?.author}`,
-          header: CustomHeader,
+          header: (props) => <CustomHeader {...props} />,
           headerTintColor: '#fff',
           headerStyle: { backgroundColor: '#ff005d' },
           headerBackTitleVisible: false,
