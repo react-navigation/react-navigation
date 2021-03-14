@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.4...@react-navigation/stack@6.0.0-next.5) (2021-03-14)
+
+
+### Bug Fixes
+
+* consider header colors when managing statusbar ([3ad2bcb](https://github.com/react-navigation/react-navigation/commit/3ad2bcbaf85996ce0d5e1e961081978a32448899))
+* consider header colors when managing statusbar ([faee245](https://github.com/react-navigation/react-navigation/commit/faee245d2ec8c59f9e9033d96ae21c5e60d95ba6))
+
+
+### Code Refactoring
+
+* move headerMode to options ([aacc1b5](https://github.com/react-navigation/react-navigation/commit/aacc1b525d86f0e0b1bad8016fd85e82024f16e9))
+
+
+### BREAKING CHANGES
+
+* headerMode is now moved to options instead of props
+
+
+
+
+
 # [6.0.0-next.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.3...@react-navigation/stack@6.0.0-next.4) (2021-03-12)
 
 
