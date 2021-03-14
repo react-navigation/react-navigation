@@ -18,6 +18,7 @@ import type {
   StackNavigationConfig,
   StackNavigationOptions,
   StackNavigationEventMap,
+  StackHeaderMode,
 } from '../types';
 
 type Props = DefaultNavigatorOptions<StackNavigationOptions> &
@@ -31,11 +32,16 @@ function StackNavigator({
   ...rest
 }: Props) {
   // @ts-expect-error: headerMode='none' is deprecated
-  const isHeaderModeNone = rest.headerMode === 'none';
+  const headerMode = rest.headerMode as StackHeaderMode | 'none';
 
   warnOnce(
-    isHeaderModeNone,
+    headerMode === 'none',
     `Stack Navigator: 'headerMode="none"' is deprecated. Use 'headerShown: false' in 'screenOptions' instead.`
+  );
+
+  warnOnce(
+    headerMode !== 'none',
+    `Stack Navigator: 'headerMode' is moved to 'options'. Moved it to 'screenOptions' to keep current behavior.`
   );
 
   const { state, descriptors, navigation } = useNavigationBuilder<
@@ -49,7 +55,13 @@ function StackNavigator({
     children,
     screenOptions,
     defaultScreenOptions: {
-      headerShown: !isHeaderModeNone,
+      headerShown: headerMode !== 'none',
+      headerMode:
+        headerMode !== 'none'
+          ? headerMode
+          : rest.mode !== 'modal' && Platform.OS === 'ios'
+          ? 'float'
+          : 'screen',
       gestureEnabled: Platform.OS === 'ios',
       animationEnabled:
         Platform.OS !== 'web' &&

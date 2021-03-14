@@ -42,6 +42,7 @@ import LinkingPrefixes from './LinkingPrefixes';
 import SettingsItem from './Shared/SettingsItem';
 import SimpleStack from './Screens/SimpleStack';
 import ModalStack from './Screens/ModalStack';
+import MixedHeaderMode from './Screens/MixedHeaderMode';
 import StackTransparent from './Screens/StackTransparent';
 import StackHeaderCustomization from './Screens/StackHeaderCustomization';
 import BottomTabs from './Screens/BottomTabs';
@@ -69,6 +70,10 @@ const SCREENS = {
   ModalStack: {
     title: 'Modal Stack',
     component: ModalStack,
+  },
+  MixedHeaderMode: {
+    title: 'Float + Screen Header Stack',
+    component: MixedHeaderMode,
   },
   StackTransparent: {
     title: 'Transparent Stack',

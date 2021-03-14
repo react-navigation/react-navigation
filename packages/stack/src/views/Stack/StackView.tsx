@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Platform, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import {
   SafeAreaInsetsContext,
   EdgeInsets,
@@ -439,9 +439,6 @@ export default class StackView extends React.Component<Props, State> {
       navigation,
       keyboardHandlingEnabled,
       mode = 'card',
-      headerMode = mode === 'card' && Platform.OS === 'ios'
-        ? 'float'
-        : 'screen',
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       descriptors: _,
       ...rest
@@ -479,7 +476,6 @@ export default class StackView extends React.Component<Props, State> {
                           onTransitionEnd={this.handleTransitionEnd}
                           renderHeader={this.renderHeader}
                           renderScene={this.renderScene}
-                          headerMode={headerMode}
                           state={state}
                           descriptors={descriptors}
                           onGestureStart={this.handleGestureStart}

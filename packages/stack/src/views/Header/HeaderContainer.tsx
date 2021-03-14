@@ -21,7 +21,6 @@ import type {
   StackHeaderStyleInterpolator,
   StackNavigationProp,
   StackHeaderProps,
-  GestureDirection,
 } from '../../types';
 
 export type Props = {
@@ -35,7 +34,6 @@ export type Props = {
     height: number;
   }) => void;
   styleInterpolator: StackHeaderStyleInterpolator;
-  gestureDirection: GestureDirection;
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 };
 
@@ -46,7 +44,6 @@ export default function HeaderContainer({
   getPreviousScene,
   getFocusedRoute,
   onContentHeightChange,
-  gestureDirection,
   styleInterpolator,
   style,
 }: Props) {
@@ -60,10 +57,10 @@ export default function HeaderContainer({
           return null;
         }
 
-        const { header, headerShown = true, headerTransparent } =
+        const { header, headerMode, headerShown = true, headerTransparent } =
           scene.descriptor.options || {};
 
-        if (!headerShown) {
+        if (headerMode !== mode || !headerShown) {
           return null;
         }
 
@@ -87,18 +84,24 @@ export default function HeaderContainer({
         const previousDescriptor = self[i - 1]?.descriptor;
         const nextDescriptor = self[i + 1]?.descriptor;
 
-        const { headerShown: previousHeaderShown = true } =
-          previousDescriptor?.options || {};
+        const {
+          headerShown: previousHeaderShown = true,
+          headerMode: previousHeaderMode,
+        } = previousDescriptor?.options || {};
 
-        const { headerShown: nextHeaderShown = true } =
-          nextDescriptor?.options || {};
+        const {
+          headerShown: nextHeaderShown = true,
+          headerMode: nextHeaderMode,
+          gestureDirection: nextGestureDirection,
+        } = nextDescriptor?.options || {};
 
         const isHeaderStatic =
-          (previousHeaderShown === false &&
+          ((previousHeaderShown === false || previousHeaderMode === 'screen') &&
             // We still need to animate when coming back from next scene
             // A hacky way to check this is if the next scene exists
             !nextDescriptor) ||
-          nextHeaderShown === false;
+          nextHeaderShown === false ||
+          nextHeaderMode === 'screen';
 
         const props: StackHeaderProps = {
           layout,
@@ -111,10 +114,10 @@ export default function HeaderContainer({
           styleInterpolator:
             mode === 'float'
               ? isHeaderStatic
-                ? gestureDirection === 'vertical' ||
-                  gestureDirection === 'vertical-inverted'
+                ? nextGestureDirection === 'vertical' ||
+                  nextGestureDirection === 'vertical-inverted'
                   ? forSlideUp
-                  : gestureDirection === 'horizontal-inverted'
+                  : nextGestureDirection === 'horizontal-inverted'
                   ? forSlideRight
                   : forSlideLeft
                 : styleInterpolator
