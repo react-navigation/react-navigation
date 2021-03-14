@@ -64,7 +64,7 @@ type Props = TransitionPreset & {
   mode: StackCardMode;
   headerMode: StackHeaderMode;
   headerShown: boolean;
-  hasAbsoluteHeader: boolean;
+  hasAbsoluteFloatHeader: boolean;
   headerHeight: number;
   onHeaderHeightChange: (props: {
     route: Route<string>;
@@ -96,7 +96,7 @@ function CardContainer({
   headerMode,
   headerShown,
   headerStyleInterpolator,
-  hasAbsoluteHeader,
+  hasAbsoluteFloatHeader,
   headerHeight,
   onHeaderHeightChange,
   isParentHeaderShown,
@@ -251,7 +251,11 @@ function CardContainer({
       pointerEvents={active ? 'box-none' : pointerEvents}
       pageOverflowEnabled={headerMode !== 'float' && mode === 'card'}
       headerDarkContent={headerDarkContent}
-      containerStyle={hasAbsoluteHeader ? { marginTop: headerHeight } : null}
+      containerStyle={
+        hasAbsoluteFloatHeader && headerMode !== 'screen'
+          ? { marginTop: headerHeight }
+          : null
+      }
       contentStyle={[{ backgroundColor: colors.background }, cardStyle]}
       style={[
         {
@@ -284,7 +288,6 @@ function CardContainer({
               scenes: [previousScene, scene],
               getPreviousScene,
               getFocusedRoute,
-              gestureDirection,
               styleInterpolator: headerStyleInterpolator,
               onContentHeightChange: onHeaderHeightChange,
             })}

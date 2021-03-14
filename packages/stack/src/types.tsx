@@ -198,7 +198,12 @@ export type StackNavigationOptions = StackHeaderOptions &
      */
     header?: (props: StackHeaderProps) => React.ReactNode;
     /**
-     * Whether to show the header. The header is shown by default unless `headerMode` was set to `none`.
+     * Whether the header floats above the screen or part of the screen.
+     * Defaults to `float` on iOS for non-modals, and `screen` for the rest.
+     */
+    headerMode?: StackHeaderMode;
+    /**
+     * Whether to show the header. The header is shown by default.
      * Setting this to `false` hides the header.
      */
     headerShown?: boolean;
@@ -273,7 +278,6 @@ export type StackNavigationOptions = StackHeaderOptions &
 
 export type StackNavigationConfig = {
   mode?: StackCardMode;
-  headerMode?: StackHeaderMode;
   /**
    * If `false`, the keyboard will NOT automatically dismiss when navigating to a new screen.
    * Defaults to `true`.

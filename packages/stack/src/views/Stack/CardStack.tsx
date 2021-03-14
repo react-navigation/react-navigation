@@ -6,6 +6,7 @@ import {
   Platform,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
+import Color from 'color';
 import type {
   ParamListBase,
   Route,
@@ -27,19 +28,16 @@ import {
   DefaultTransition,
   ModalTransition,
 } from '../../TransitionConfigs/TransitionPresets';
-import { forNoAnimation as forNoAnimationHeader } from '../../TransitionConfigs/HeaderStyleInterpolators';
 import { forNoAnimation as forNoAnimationCard } from '../../TransitionConfigs/CardStyleInterpolators';
 import getDistanceForDirection from '../../utils/getDistanceForDirection';
 import type {
   Layout,
-  StackHeaderMode,
   StackCardMode,
   StackDescriptorMap,
   StackNavigationOptions,
   StackDescriptor,
   Scene,
 } from '../../types';
-import Color from 'color';
 
 type GestureValues = {
   [key: string]: Animated.Value;
@@ -61,7 +59,6 @@ type Props = {
   getGesturesEnabled: (props: { route: Route<string> }) => boolean;
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
   renderScene: (props: { route: Route<string> }) => React.ReactNode;
-  headerMode: StackHeaderMode;
   isParentHeaderShown: boolean;
   onTransitionStart: (
     props: { route: Route<string> },
@@ -382,7 +379,6 @@ export default class CardStack extends React.Component<Props, State> {
       getGesturesEnabled,
       renderHeader,
       renderScene,
-      headerMode,
       isParentHeaderShown,
       onTransitionStart,
       onTransitionEnd,
@@ -409,13 +405,6 @@ export default class CardStack extends React.Component<Props, State> {
     let defaultTransitionPreset =
       mode === 'modal' ? ModalTransition : DefaultTransition;
 
-    if (headerMode !== 'float') {
-      defaultTransitionPreset = {
-        ...defaultTransitionPreset,
-        headerStyleInterpolator: forNoAnimationHeader,
-      };
-    }
-
     let activeScreensLimit = 1;
 
     for (let i = scenes.length - 1; i >= 0; i--) {
@@ -433,50 +422,49 @@ export default class CardStack extends React.Component<Props, State> {
       }
     }
 
-    const isFloatHeaderAbsolute =
-      headerMode === 'float'
-        ? this.state.scenes.slice(-2).some((scene) => {
-            const { descriptor } = scene;
-            const options = descriptor ? descriptor.options : {};
-            const { headerTransparent, headerShown = true } = options;
+    const isFloatHeaderAbsolute = this.state.scenes.slice(-2).some((scene) => {
+      const options = scene.descriptor.options ?? {};
+      const {
+        headerMode = 'screen',
+        headerTransparent,
+        headerShown = true,
+      } = options;
 
-            if (headerTransparent || headerShown === false) {
-              return true;
-            }
+      if (
+        headerTransparent ||
+        headerShown === false ||
+        headerMode === 'screen'
+      ) {
+        return true;
+      }
 
-            return false;
-          })
-        : false;
+      return false;
+    });
 
-    const floatingHeader =
-      headerMode === 'float' ? (
-        <React.Fragment key="header">
-          {renderHeader({
-            mode: 'float',
-            layout,
-            scenes,
-            getPreviousScene: this.getPreviousScene,
-            getFocusedRoute: this.getFocusedRoute,
-            onContentHeightChange: this.handleHeaderLayout,
-            gestureDirection:
-              focusedOptions.gestureDirection !== undefined
-                ? focusedOptions.gestureDirection
-                : defaultTransitionPreset.gestureDirection,
-            styleInterpolator:
-              focusedOptions.headerStyleInterpolator !== undefined
-                ? focusedOptions.headerStyleInterpolator
-                : defaultTransitionPreset.headerStyleInterpolator,
-            style: [
-              styles.floating,
-              isFloatHeaderAbsolute && [
-                // Without this, the header buttons won't be touchable on Android when headerTransparent: true
-                { height: focusedHeaderHeight },
-                styles.absolute,
-              ],
+    const floatingHeader = (
+      <React.Fragment key="header">
+        {renderHeader({
+          mode: 'float',
+          layout,
+          scenes,
+          getPreviousScene: this.getPreviousScene,
+          getFocusedRoute: this.getFocusedRoute,
+          onContentHeightChange: this.handleHeaderLayout,
+          styleInterpolator:
+            focusedOptions.headerStyleInterpolator !== undefined
+              ? focusedOptions.headerStyleInterpolator
+              : defaultTransitionPreset.headerStyleInterpolator,
+          style: [
+            styles.floating,
+            isFloatHeaderAbsolute && [
+              // Without this, the header buttons won't be touchable on Android when headerTransparent: true
+              { height: focusedHeaderHeight },
+              styles.absolute,
             ],
-          })}
-        </React.Fragment>
-      ) : null;
+          ],
+        })}
+      </React.Fragment>
+    );
 
     return (
       <React.Fragment>
@@ -529,6 +517,7 @@ export default class CardStack extends React.Component<Props, State> {
 
             const {
               headerShown = true,
+              headerMode = 'screen',
               headerTransparent,
               headerStyle,
               headerTintColor,
@@ -648,7 +637,7 @@ export default class CardStack extends React.Component<Props, State> {
                   headerMode={headerMode}
                   headerShown={headerShown}
                   headerDarkContent={headerDarkContent}
-                  hasAbsoluteHeader={
+                  hasAbsoluteFloatHeader={
                     isFloatHeaderAbsolute && !headerTransparent
                   }
                   renderHeader={renderHeader}
