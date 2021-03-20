@@ -1,10 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@react-navigation/*": ["./packages/*/src"]
-    },
-    "composite": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,
@@ -24,6 +19,5 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "esnext"
-  },
-  "exclude": ["packages/flipper-plugin-react-navigation"]
+  }
 }

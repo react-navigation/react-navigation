@@ -37,7 +37,10 @@ import {
   HeaderStyleInterpolators,
   StackNavigationProp,
 } from '@react-navigation/stack';
-import { useReduxDevToolsExtension } from '@react-navigation/devtools';
+import {
+  useReduxDevToolsExtension,
+  useFlipper,
+} from '@react-navigation/devtools';
 
 import { restartApp } from './Restart';
 import SettingsItem from './Shared/SettingsItem';
@@ -209,6 +212,7 @@ export default function App() {
   const navigationRef = useNavigationContainerRef();
 
   useReduxDevToolsExtension(navigationRef);
+  useFlipper(navigationRef);
 
   if (!isReady) {
     return null;

@@ -1,6 +1,9 @@
 import * as React from 'react';
 import {
   BaseNavigationContainer,
+  getPathFromState,
+  getStateFromPath,
+  getActionFromState,
   NavigationContainerProps,
   NavigationContainerRef,
   ParamListBase,
@@ -60,6 +63,27 @@ function NavigationContainerInner(
     enabled: isLinkingEnabled,
     prefixes: [],
     ...linking,
+  });
+
+  // Add additional linking related info to the ref
+  // This will be used by the devtools
+  React.useEffect(() => {
+    if (refContainer.current) {
+      Object.defineProperty(refContainer.current, '__linking', {
+        get() {
+          return {
+            ...linking,
+            enabled: isLinkingEnabled,
+            prefixes: linking?.prefixes ?? [],
+            getStateFromPath: linking?.getStateFromPath ?? getStateFromPath,
+            getPathFromState: linking?.getPathFromState ?? getPathFromState,
+            getActionFromState:
+              linking?.getActionFromState ?? getActionFromState,
+          };
+        },
+        enumerable: false,
+      });
+    }
   });
 
   const [isResolved, initialState] = useThenable(getInitialState);

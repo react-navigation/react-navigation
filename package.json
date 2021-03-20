@@ -5,6 +5,11 @@
     "packages": [
       "packages/*",
       "example"
+    ],
+    "nohoist": [
+      "flipper-plugin-react-navigation/flipper",
+      "flipper-plugin-react-navigation/flipper-pkg",
+      "flipper-plugin-react-navigation/flipper-pkg/**"
     ]
   },
   "publishConfig": {
