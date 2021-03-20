@@ -36,20 +36,23 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/core": "^6.0.0-next.8",
-    "deep-equal": "^2.0.5"
+    "deep-equal": "^2.0.5",
+    "nanoid": "^3.1.22"
   },
   "devDependencies": {
+    "@react-navigation/core": "^6.0.0-next.8",
     "@testing-library/react-native": "^7.2.0",
     "@types/deep-equal": "^1.0.1",
     "@types/react": "^16.9.53",
     "del-cli": "^3.0.1",
     "react": "~16.13.1",
     "react-native-builder-bob": "^0.18.1",
+    "react-native-flipper": "^0.80.0",
     "typescript": "^4.2.3"
   },
   "peerDependencies": {
-    "react": "*"
+    "react": "*",
+    "react-native-flipper": "*"
   },
   "react-native-builder-bob": {
     "source": "src",

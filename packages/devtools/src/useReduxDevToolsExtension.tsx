@@ -1,10 +1,6 @@
 import * as React from 'react';
-import type {
-  NavigationContainerRef,
-  NavigationState,
-  NavigationAction,
-} from '@react-navigation/core';
-import deepEqual from 'deep-equal';
+import type { NavigationContainerRef } from '@react-navigation/core';
+import useDevToolsBase from './useDevToolsBase';
 
 type DevToolsConnection = {
   init(value: any): void;
@@ -35,8 +31,22 @@ export default function useReduxDevToolsExtension(
     });
   }
 
-  const lastStateRef = React.useRef<NavigationState | undefined>();
-  const lastActionRef = React.useRef<NavigationAction | undefined>();
+  const { resetRoot } = useDevToolsBase(ref, (...args) => {
+    const devTools = devToolsRef.current;
+
+    if (!devTools) {
+      return;
+    }
+
+    switch (args[0]) {
+      case 'init':
+        devTools.init(args[1]);
+        break;
+      case 'action':
+        devTools.send(args[1], args[2]);
+        break;
+    }
+  });
 
   React.useEffect(
     () =>
@@ -44,66 +54,9 @@ export default function useReduxDevToolsExtension(
         if (message.type === 'DISPATCH' && message.state) {
           const state = JSON.parse(message.state);
 
-          lastStateRef.current = state;
-          ref.current?.resetRoot(state);
+          resetRoot(state);
         }
       }),
-    [ref]
+    [resetRoot]
   );
-
-  React.useEffect(() => {
-    const devTools = devToolsRef.current;
-    const navigation = ref.current;
-
-    if (!navigation || !devTools) {
-      return;
-    }
-
-    if (lastStateRef.current === undefined) {
-      const state = navigation.getRootState();
-
-      devTools.init(state);
-      lastStateRef.current = state;
-    }
-
-    const unsubscribeAction = navigation.addListener(
-      '__unsafe_action__',
-      (e) => {
-        const action = e.data.action;
-
-        if (e.data.noop) {
-          // Even if the state didn't change, it's useful to show the action
-          devTools.send(action, lastStateRef.current);
-        } else {
-          lastActionRef.current = action;
-        }
-      }
-    );
-
-    const unsubscribeState = navigation.addListener('state', (e) => {
-      // Don't show the action in dev tools if the state is what we sent to reset earlier
-      if (lastStateRef.current === e.data.state) {
-        return;
-      }
-
-      const lastState = lastStateRef.current;
-      const state = navigation.getRootState();
-      const action = lastActionRef.current;
-
-      lastActionRef.current = undefined;
-      lastStateRef.current = state;
-
-      // If we don't have an action and the state didn't change, then it's probably extraneous
-      if (action === undefined && deepEqual(state, lastState)) {
-        return;
-      }
-
-      devTools.send(action ?? '@@UNKNOWN', state);
-    });
-
-    return () => {
-      unsubscribeAction();
-      unsubscribeState();
-    };
-  });
 }

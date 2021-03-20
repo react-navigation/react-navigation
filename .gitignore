@@ -21,6 +21,7 @@ web-report/
 
 xcuserdata
 generated
+dist
 lib
 build
 
