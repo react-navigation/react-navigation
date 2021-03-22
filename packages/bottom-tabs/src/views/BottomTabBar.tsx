@@ -285,7 +285,11 @@ export default function BottomTabBar({
       ]}
       pointerEvents={isTabBarHidden ? 'none' : 'auto'}
     >
-      <View style={styles.content} onLayout={handleLayout}>
+      <View
+        accessibilityRole="tablist"
+        style={styles.content}
+        onLayout={handleLayout}
+      >
         {routes.map((route, index) => {
           const focused = index === state.index;
           const { options } = descriptors[route.key];
@@ -322,7 +326,7 @@ export default function BottomTabBar({
           const accessibilityLabel =
             options.tabBarAccessibilityLabel !== undefined
               ? options.tabBarAccessibilityLabel
-              : typeof label === 'string'
+              : typeof label === 'string' && Platform.OS === 'ios'
               ? `${label}, tab, ${index + 1} of ${routes.length}`
               : undefined;
 
