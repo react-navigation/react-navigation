@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
@@ -12,16 +12,19 @@ import {
   ParamListBase,
 } from '@react-navigation/native';
 
+import Background from './Background';
 import HeaderShownContext from './Header/HeaderShownContext';
 import HeaderHeightContext from './Header/HeaderHeightContext';
 import getDefaultHeaderHeight from './Header/getDefaultHeaderHeight';
 
 type Props = {
+  focused: boolean;
   navigation: NavigationProp<ParamListBase>;
   route: RouteProp<ParamListBase, string>;
   header: React.ReactNode;
   headerShown?: boolean;
   headerStatusBarHeight?: number;
+  style?: StyleProp<ViewStyle>;
   children: React.ReactNode;
 };
 
@@ -33,12 +36,14 @@ export default function Screen(props: Props) {
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
 
   const {
+    focused,
     header,
     headerShown = true,
     headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
-    children,
     navigation,
     route,
+    children,
+    style,
   } = props;
 
   const [headerHeight, setHeaderHeight] = React.useState(() =>
@@ -46,7 +51,11 @@ export default function Screen(props: Props) {
   );
 
   return (
-    <View style={styles.container}>
+    <Background
+      accessibilityElementsHidden={!focused}
+      importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
+      style={[styles.container, style]}
+    >
       <View style={styles.content}>
         <HeaderShownContext.Provider
           value={isParentHeaderShown || headerShown !== false}
@@ -73,7 +82,7 @@ export default function Screen(props: Props) {
           </NavigationRouteContext.Provider>
         </NavigationContext.Provider>
       ) : null}
-    </View>
+    </Background>
   );
 }
 

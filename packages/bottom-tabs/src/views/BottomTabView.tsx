@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { ScreenContainer } from 'react-native-screens';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import {
   NavigationHelpersContext,
   ParamListBase,
   TabNavigationState,
-  useTheme,
 } from '@react-navigation/native';
 import {
   Header,
@@ -33,28 +32,6 @@ type Props = BottomTabNavigationConfig & {
   navigation: BottomTabNavigationHelpers;
   descriptors: BottomTabDescriptorMap;
 };
-
-function SceneContent({
-  isFocused,
-  children,
-  style,
-}: {
-  isFocused: boolean;
-  children: React.ReactNode;
-  style?: StyleProp<ViewStyle>;
-}) {
-  const { colors } = useTheme();
-
-  return (
-    <View
-      accessibilityElementsHidden={!isFocused}
-      importantForAccessibility={isFocused ? 'auto' : 'no-hide-descendants'}
-      style={[styles.content, { backgroundColor: colors.background }, style]}
-    >
-      {children}
-    </View>
-  );
-}
 
 export default function BottomTabView(props: Props) {
   const {
@@ -150,26 +127,26 @@ export default function BottomTabView(props: Props) {
                 visible={isFocused}
                 enabled={detachInactiveScreens}
               >
-                <SceneContent isFocused={isFocused} style={sceneContainerStyle}>
-                  <BottomTabBarHeightContext.Provider value={tabBarHeight}>
-                    <Screen
-                      route={descriptor.route}
-                      navigation={descriptor.navigation}
-                      headerShown={descriptor.options.headerShown}
-                      headerStatusBarHeight={
-                        descriptor.options.headerStatusBarHeight
-                      }
-                      header={header({
-                        layout: dimensions,
-                        route: descriptor.route,
-                        navigation: descriptor.navigation as BottomTabNavigationProp<ParamListBase>,
-                        options: descriptor.options,
-                      })}
-                    >
-                      {descriptor.render()}
-                    </Screen>
-                  </BottomTabBarHeightContext.Provider>
-                </SceneContent>
+                <BottomTabBarHeightContext.Provider value={tabBarHeight}>
+                  <Screen
+                    focused={isFocused}
+                    route={descriptor.route}
+                    navigation={descriptor.navigation}
+                    headerShown={descriptor.options.headerShown}
+                    headerStatusBarHeight={
+                      descriptor.options.headerStatusBarHeight
+                    }
+                    header={header({
+                      layout: dimensions,
+                      route: descriptor.route,
+                      navigation: descriptor.navigation as BottomTabNavigationProp<ParamListBase>,
+                      options: descriptor.options,
+                    })}
+                    style={sceneContainerStyle}
+                  >
+                    {descriptor.render()}
+                  </Screen>
+                </BottomTabBarHeightContext.Provider>
               </ScreenFallback>
             );
           })}
@@ -186,8 +163,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     overflow: 'hidden',
-  },
-  content: {
-    flex: 1,
   },
 });
