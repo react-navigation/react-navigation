@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.2...@react-navigation/elements@1.0.0-next.3) (2021-03-22)
+
+
+### Features
+
+* add a Background component ([cbaabc1](https://github.com/react-navigation/react-navigation/commit/cbaabc1288e780698e499a00b9ca06ab9746a0da))
+
+
+
+
+
 # [1.0.0-next.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.1...@react-navigation/elements@1.0.0-next.2) (2021-03-12)
 
 
