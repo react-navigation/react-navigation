@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.2...@react-navigation/bottom-tabs@6.0.0-next.3) (2021-03-22)
+
+
+### Bug Fixes
+
+* use tab role on Android for accessibility ([de805a3](https://github.com/react-navigation/react-navigation/commit/de805a3ebf35db81cb7b7bcbf5cfd4a03e69c567))
+
+
+### Features
+
+* add a Background component ([cbaabc1](https://github.com/react-navigation/react-navigation/commit/cbaabc1288e780698e499a00b9ca06ab9746a0da))
+
+
+
+
+
 # [6.0.0-next.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.1...@react-navigation/bottom-tabs@6.0.0-next.2) (2021-03-12)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
