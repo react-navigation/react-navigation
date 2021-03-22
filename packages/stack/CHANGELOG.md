@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.6...@react-navigation/stack@6.0.0-next.7) (2021-03-22)
+
+
+### Code Refactoring
+
+* make gestureResponseDistance a number ([48851c9](https://github.com/react-navigation/react-navigation/commit/48851c9ebdcf1b835bbcb673adeb88e56b989443))
+
+
+### BREAKING CHANGES
+
+* now we need to pass a number instead of an object
+
+
+
+
+
 # [6.0.0-next.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.5...@react-navigation/stack@6.0.0-next.6) (2021-03-14)
 
 **Note:** Version bump only for package @react-navigation/stack
