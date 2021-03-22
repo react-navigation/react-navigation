@@ -249,19 +249,10 @@ export type StackNavigationOptions = StackHeaderOptions &
      */
     gestureEnabled?: boolean;
     /**
-     * Object to override the distance of touch start from the edge of the screen to recognize gestures.
+     * Distance of touch start from the edge of the screen to recognize gestures.
      * Not supported on Web.
      */
-    gestureResponseDistance?: {
-      /**
-       * Distance for vertical direction. Defaults to 135.
-       */
-      vertical?: number;
-      /**
-       * Distance for horizontal direction. Defaults to 25.
-       */
-      horizontal?: number;
-    };
+    gestureResponseDistance?: number;
     /**
      * Number which determines the relevance of velocity for the gesture. Defaults to 0.3.
      * Not supported on Web.

@@ -56,10 +56,7 @@ type Props = TransitionPreset & {
   onGestureEnd?: (props: { route: Route<string> }) => void;
   onGestureCancel?: (props: { route: Route<string> }) => void;
   gestureEnabled?: boolean;
-  gestureResponseDistance?: {
-    vertical?: number;
-    horizontal?: number;
-  };
+  gestureResponseDistance?: number;
   gestureVelocityImpact?: number;
   mode: StackCardMode;
   headerMode: StackHeaderMode;
