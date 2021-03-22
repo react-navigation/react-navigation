@@ -89,7 +89,6 @@ function DrawerViewBase({
     gestureHandlerProps,
     keyboardDismissMode = 'on-drag',
     overlayColor = 'rgba(0, 0, 0, 0.5)',
-    sceneContainerStyle,
     swipeEdgeWidth,
     swipeEnabled,
     swipeMinDistance,
@@ -181,6 +180,7 @@ function DrawerViewBase({
                 }
               />
             ),
+            sceneContainerStyle,
           } = descriptor.options;
 
           return (
@@ -191,6 +191,7 @@ function DrawerViewBase({
               enabled={detachInactiveScreens}
             >
               <Screen
+                focused={isFocused}
                 route={descriptor.route}
                 navigation={descriptor.navigation}
                 headerShown={descriptor.options.headerShown}
@@ -201,6 +202,7 @@ function DrawerViewBase({
                   navigation: descriptor.navigation as DrawerNavigationProp<ParamListBase>,
                   options: descriptor.options,
                 })}
+                style={sceneContainerStyle}
               >
                 {descriptor.render()}
               </Screen>
@@ -222,10 +224,6 @@ function DrawerViewBase({
         gestureHandlerProps={gestureHandlerProps}
         drawerType={drawerType}
         drawerPosition={drawerPosition}
-        sceneContainerStyle={[
-          { backgroundColor: colors.background },
-          sceneContainerStyle,
-        ]}
         drawerStyle={[
           {
             width: getDefaultDrawerWidth(dimensions),

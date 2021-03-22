@@ -14,6 +14,7 @@ export { default as PlatformPressable } from './PlatformPressable';
 export { default as ResourceSavingView } from './ResourceSavingView';
 export { default as SafeAreaProviderCompat } from './SafeAreaProviderCompat';
 export { default as Screen } from './Screen';
+export { default as Background } from './Background';
 
 export const Assets = [
   // eslint-disable-next-line import/no-commonjs

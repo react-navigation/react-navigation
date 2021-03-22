@@ -93,7 +93,6 @@ type Props = {
   statusBarAnimation: 'slide' | 'none' | 'fade';
   overlayStyle?: StyleProp<ViewStyle>;
   drawerStyle?: StyleProp<ViewStyle>;
-  sceneContainerStyle?: StyleProp<ViewStyle>;
   renderDrawerContent: Renderer;
   renderSceneContent: Renderer;
   gestureHandlerProps?: React.ComponentProps<typeof PanGestureHandler>;
@@ -573,7 +572,6 @@ export default class DrawerView extends React.Component<Props> {
       drawerPosition,
       drawerType,
       swipeEdgeWidth,
-      sceneContainerStyle,
       drawerStyle,
       overlayStyle,
       renderDrawerContent,
@@ -642,7 +640,6 @@ export default class DrawerView extends React.Component<Props> {
             style={[
               styles.content,
               { transform: [{ translateX: contentTranslateX }] },
-              sceneContainerStyle as any,
             ]}
           >
             <View

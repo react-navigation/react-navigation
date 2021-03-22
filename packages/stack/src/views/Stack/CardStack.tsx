@@ -15,6 +15,7 @@ import type {
 import {
   getDefaultHeaderHeight,
   SafeAreaProviderCompat,
+  Background,
 } from '@react-navigation/elements';
 
 import {
@@ -467,7 +468,7 @@ export default class CardStack extends React.Component<Props, State> {
     );
 
     return (
-      <React.Fragment>
+      <Background>
         {isFloatHeaderAbsolute ? null : floatingHeader}
         <MaybeScreenContainer
           enabled={detachInactiveScreens}
@@ -655,7 +656,7 @@ export default class CardStack extends React.Component<Props, State> {
           })}
         </MaybeScreenContainer>
         {isFloatHeaderAbsolute ? floatingHeader : null}
-      </React.Fragment>
+      </Background>
     );
   }
 }
