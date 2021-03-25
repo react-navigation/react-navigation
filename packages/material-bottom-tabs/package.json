@@ -1,0 +1,79 @@
+{
+  "name": "@react-navigation/material-bottom-tabs",
+  "description": "Integration for bottom navigation component from react-native-paper",
+  "version": "6.0.0-next.1",
+  "keywords": [
+    "react-native-component",
+    "react-component",
+    "react-native",
+    "react-navigation",
+    "ios",
+    "android",
+    "material",
+    "tab"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/react-navigation/react-navigation.git",
+    "directory": "packages/material-bottom-tabs"
+  },
+  "bugs": {
+    "url": "https://github.com/react-navigation/react-navigation/issues"
+  },
+  "homepage": "https://reactnavigation.org/docs/material-bottom-tab-navigator/",
+  "main": "lib/commonjs/index.js",
+  "react-native": "src/index.tsx",
+  "source": "src/index.tsx",
+  "module": "lib/module/index.js",
+  "types": "lib/typescript/src/index.d.ts",
+  "files": [
+    "src",
+    "lib",
+    "!**/__tests__"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "tag": "alpha"
+  },
+  "scripts": {
+    "prepare": "bob build",
+    "clean": "del lib"
+  },
+  "devDependencies": {
+    "@react-navigation/native": "^6.0.0-next.1",
+    "@testing-library/react-native": "^7.2.0",
+    "@types/react": "^16.9.53",
+    "@types/react-native": "~0.63.51",
+    "@types/react-native-vector-icons": "^6.4.6",
+    "del-cli": "^3.0.1",
+    "react": "~16.13.1",
+    "react-native": "~0.63.2",
+    "react-native-builder-bob": "^0.18.1",
+    "react-native-paper": "^4.7.2",
+    "react-native-vector-icons": "^8.1.0",
+    "typescript": "^4.2.3"
+  },
+  "peerDependencies": {
+    "@react-navigation/native": "^6.0.0",
+    "react": "*",
+    "react-native": "*",
+    "react-native-paper": ">= 3.0.0",
+    "react-native-vector-icons": ">= 6.0.0"
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
+    ]
+  }
+}

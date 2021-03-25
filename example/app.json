@@ -1,0 +1,34 @@
+{
+  "name": "ReactNavigationExample",
+  "displayName": "React Navigation Example",
+  "expo": {
+    "name": "React Navigation",
+    "owner": "react-navigation",
+    "slug": "react-navigation-example",
+    "description": "Demonstrates the functionality and various capabilities of React Navigation.",
+    "privacy": "public",
+    "version": "1.0.0",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "scheme": "rne",
+    "entryPoint": "App.tsx"
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "name": "@react-navigation/stack",
+  "description": "Stack navigator component for iOS and Android with animated transitions and gestures",
+  "version": "6.0.0-next.8",
+  "keywords": [
+    "react-native-component",
+    "react-component",
+    "react-native",
+    "react-navigation",
+    "ios",
+    "android",
+    "stack"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/react-navigation/react-navigation.git",
+    "directory": "packages/stack"
+  },
+  "bugs": {
+    "url": "https://github.com/react-navigation/react-navigation/issues"
+  },
+  "homepage": "https://reactnavigation.org/docs/stack-navigator/",
+  "main": "lib/commonjs/index.js",
+  "react-native": "src/index.tsx",
+  "source": "src/index.tsx",
+  "module": "lib/module/index.js",
+  "types": "lib/typescript/src/index.d.ts",
+  "files": [
+    "src",
+    "lib",
+    "!**/__tests__"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "tag": "alpha"
+  },
+  "scripts": {
+    "prepare": "bob build",
+    "clean": "del lib"
+  },
+  "dependencies": {
+    "@react-navigation/elements": "^1.0.0-next.3",
+    "color": "^3.1.3",
+    "react-native-iphone-x-helper": "^1.3.0",
+    "warn-once": "^0.0.1"
+  },
+  "devDependencies": {
+    "@react-navigation/native": "^6.0.0-next.1",
+    "@testing-library/react-native": "^7.2.0",
+    "@types/color": "^3.0.1",
+    "@types/react": "^16.9.53",
+    "@types/react-native": "~0.63.51",
+    "del-cli": "^3.0.1",
+    "react": "~16.13.1",
+    "react-native": "~0.63.2",
+    "react-native-builder-bob": "^0.18.1",
+    "react-native-gesture-handler": "~1.8.0",
+    "react-native-safe-area-context": "3.1.9",
+    "react-native-screens": "~2.15.0",
+    "typescript": "^4.2.3"
+  },
+  "peerDependencies": {
+    "@react-navigation/native": "^6.0.0",
+    "react": "*",
+    "react-native": "*",
+    "react-native-gesture-handler": ">= 1.0.0",
+    "react-native-safe-area-context": ">= 3.0.0",
+    "react-native-screens": ">= 2.15.0"
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
+    ]
+  }
+}

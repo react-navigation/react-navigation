@@ -1,0 +1,109 @@
+version: 2.1
+
+executors:
+  default:
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/project
+    environment:
+      YARN_CACHE_FOLDER: "~/.cache/yarn"
+
+  playwright:
+    docker:
+    - image: mcr.microsoft.com/playwright:bionic
+      environment:
+        NODE_ENV: development
+
+commands:
+  attach_project:
+    steps:
+      - attach_workspace:
+          at: ~/project
+
+jobs:
+  install-dependencies:
+    executor: default
+    steps:
+      - checkout
+      - attach_project
+      - restore_cache:
+          keys:
+            - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - yarn-packages-v1-{{ .Branch }}-
+            - yarn-packages-v1-
+      - run:
+          name: Install project dependencies
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths: ~/.cache/yarn
+      - persist_to_workspace:
+          root: .
+          paths: .
+
+  lint-and-typecheck:
+    executor: default
+    steps:
+      - attach_project
+      - run:
+          name: Lint files
+          command: yarn lint
+      - run:
+          name: Typecheck files
+          command: yarn typescript
+
+  unit-tests:
+    executor: default
+    steps:
+      - attach_project
+      - run:
+          name: Run unit tests
+          command: yarn test --maxWorkers=2 --coverage
+      - run:
+          name: Upload test coverage
+          command: yarn codecov
+      - store_artifacts:
+          path: coverage
+          destination: coverage
+
+  integration-tests:
+    executor: playwright
+    steps:
+      - attach_project
+      - run:
+          name: Build example for web
+          command: yarn example expo build:web --no-pwa
+      - run:
+          name: Run integration tests
+          command: yarn example test --maxWorkers=2
+
+  build-packages:
+    executor: default
+    steps:
+      - attach_project
+      - run:
+          name: Build packages in the monorepo
+          command: yarn lerna run prepare
+      - run:
+          name: Verify built type definitions are correct
+          command: yarn typescript
+      - run:
+          name: Verify paths for types
+          command: node scripts/check-types-path.js
+
+workflows:
+  build-and-test:
+    jobs:
+      - install-dependencies
+      - lint-and-typecheck:
+          requires:
+            - install-dependencies
+      - unit-tests:
+          requires:
+            - install-dependencies
+      - integration-tests:
+          requires:
+            - install-dependencies
+      - build-packages:
+          requires:
+            - install-dependencies

@@ -1,0 +1,75 @@
+{
+  "name": "@react-navigation/native",
+  "description": "React Native integration for React Navigation",
+  "version": "6.0.0-next.1",
+  "keywords": [
+    "react-native",
+    "react-navigation",
+    "ios",
+    "android"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/react-navigation/react-navigation.git",
+    "directory": "packages/native"
+  },
+  "bugs": {
+    "url": "https://github.com/react-navigation/react-navigation/issues"
+  },
+  "homepage": "https://reactnavigation.org",
+  "main": "lib/commonjs/index.js",
+  "react-native": "src/index.tsx",
+  "source": "src/index.tsx",
+  "module": "lib/module/index.js",
+  "types": "lib/typescript/src/index.d.ts",
+  "files": [
+    "src",
+    "lib",
+    "!**/__tests__"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "tag": "alpha"
+  },
+  "scripts": {
+    "prepare": "bob build",
+    "clean": "del lib"
+  },
+  "dependencies": {
+    "@react-navigation/core": "^6.0.0-next.1",
+    "escape-string-regexp": "^4.0.0",
+    "nanoid": "^3.1.20"
+  },
+  "devDependencies": {
+    "@testing-library/react-native": "^7.2.0",
+    "@types/react": "^16.9.53",
+    "@types/react-dom": "^16.9.8",
+    "@types/react-native": "~0.63.51",
+    "del-cli": "^3.0.1",
+    "react": "~16.13.1",
+    "react-dom": "^16.13.1",
+    "react-native": "~0.63.2",
+    "react-native-builder-bob": "^0.18.1",
+    "typescript": "^4.2.3"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
+    ]
+  }
+}
