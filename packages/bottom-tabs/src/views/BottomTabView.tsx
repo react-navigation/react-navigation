@@ -98,7 +98,15 @@ export default function BottomTabView(props: Props) {
         >
           {routes.map((route, index) => {
             const descriptor = descriptors[route.key];
-            const { lazy = true, unmountOnBlur } = descriptor.options;
+            const {
+              lazy = true,
+              unmountOnBlur,
+              statusBarAnimation,
+              statusBarColor,
+              statusBarHidden,
+              statusBarStyle,
+              statusBarTranslucent,
+            } = descriptor.options;
             const isFocused = state.index === index;
 
             if (unmountOnBlur && !isFocused) {
@@ -126,6 +134,11 @@ export default function BottomTabView(props: Props) {
                 style={StyleSheet.absoluteFill}
                 visible={isFocused}
                 enabled={detachInactiveScreens}
+                statusBarAnimation={statusBarAnimation}
+                statusBarColor={statusBarColor}
+                statusBarHidden={statusBarHidden}
+                statusBarStyle={statusBarStyle}
+                statusBarTranslucent={statusBarTranslucent}
               >
                 <BottomTabBarHeightContext.Provider value={tabBarHeight}>
                   <Screen

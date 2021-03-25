@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Animated, View, Platform, ViewProps } from 'react-native';
 
+import type { NativeScreenTraitsProps } from '@react-navigation/elements';
+
 let Screens: typeof import('react-native-screens') | undefined;
 
 try {
@@ -55,11 +57,12 @@ export const MaybeScreen = ({
   enabled,
   active,
   ...rest
-}: ViewProps & {
-  enabled: boolean;
-  active: 0 | 1 | Animated.AnimatedInterpolation;
-  children: React.ReactNode;
-}) => {
+}: ViewProps &
+  NativeScreenTraitsProps & {
+    enabled: boolean;
+    active: 0 | 1 | Animated.AnimatedInterpolation;
+    children: React.ReactNode;
+  }) => {
   if (enabled && Platform.OS === 'web') {
     return <AnimatedWebScreen active={active} {...rest} />;
   }

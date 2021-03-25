@@ -6,9 +6,12 @@ import {
   // @ts-ignore
   shouldUseActivityState,
 } from 'react-native-screens';
-import { ResourceSavingView } from '@react-navigation/elements';
+import {
+  ResourceSavingView,
+  NativeScreenTraitsProps,
+} from '@react-navigation/elements';
 
-type Props = {
+type Props = NativeScreenTraitsProps & {
   visible: boolean;
   children: React.ReactNode;
   enabled: boolean;

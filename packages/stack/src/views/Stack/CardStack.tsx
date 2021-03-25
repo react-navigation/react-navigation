@@ -535,6 +535,11 @@ export default class CardStack extends React.Component<Props, State> {
                 ? forNoAnimationCard
                 : defaultTransitionPreset.cardStyleInterpolator,
               headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
+              statusBarAnimation,
+              statusBarColor,
+              statusBarHidden,
+              statusBarStyle,
+              statusBarTranslucent,
             } = scene.descriptor
               ? scene.descriptor.options
               : ({} as StackNavigationOptions);
@@ -605,6 +610,11 @@ export default class CardStack extends React.Component<Props, State> {
                 enabled={detachInactiveScreens}
                 active={isScreenActive}
                 pointerEvents="box-none"
+                statusBarAnimation={statusBarAnimation}
+                statusBarColor={statusBarColor}
+                statusBarHidden={statusBarHidden}
+                statusBarStyle={statusBarStyle}
+                statusBarTranslucent={statusBarTranslucent}
               >
                 <CardContainer
                   index={index}

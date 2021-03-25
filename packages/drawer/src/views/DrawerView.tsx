@@ -156,7 +156,15 @@ function DrawerViewBase({
       <ScreenContainer enabled={detachInactiveScreens} style={styles.content}>
         {state.routes.map((route, index) => {
           const descriptor = descriptors[route.key];
-          const { lazy = true, unmountOnBlur } = descriptor.options;
+          const {
+            lazy = true,
+            unmountOnBlur,
+            statusBarAnimation,
+            statusBarColor,
+            statusBarHidden,
+            statusBarStyle,
+            statusBarTranslucent,
+          } = descriptor.options;
           const isFocused = state.index === index;
 
           if (unmountOnBlur && !isFocused) {
@@ -189,6 +197,11 @@ function DrawerViewBase({
               style={[StyleSheet.absoluteFill, { opacity: isFocused ? 1 : 0 }]}
               visible={isFocused}
               enabled={detachInactiveScreens}
+              statusBarAnimation={statusBarAnimation}
+              statusBarColor={statusBarColor}
+              statusBarHidden={statusBarHidden}
+              statusBarStyle={statusBarStyle}
+              statusBarTranslucent={statusBarTranslucent}
             >
               <Screen
                 focused={isFocused}

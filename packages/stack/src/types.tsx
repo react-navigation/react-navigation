@@ -13,6 +13,7 @@ import type {
 import type {
   HeaderBackButton,
   HeaderOptions,
+  NativeScreenTraitsProps,
 } from '@react-navigation/elements';
 
 export type StackNavigationEventMap = {
@@ -188,6 +189,7 @@ export type StackDescriptor = Descriptor<
 export type StackDescriptorMap = Record<string, StackDescriptor>;
 
 export type StackNavigationOptions = StackHeaderOptions &
+  NativeScreenTraitsProps &
   Partial<TransitionPreset> & {
     /**
      * String that can be displayed in the header as a fallback for `headerTitle`.
