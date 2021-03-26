@@ -10,7 +10,9 @@ type Selector<P extends ParamListBase, T> = (state: NavigationState<P>) => T;
  *
  * @param selector Selector function to get a value from the state.
  */
-export default function useNavigationState<P extends ParamListBase, T>(selector: Selector<P, T>): T {
+export default function useNavigationState<P extends ParamListBase, T>(
+  selector: Selector<P, T>
+): T {
   const navigation = useNavigation<NavigationProp<P>>();
 
   // We don't care about the state value, we run the selector again at the end
