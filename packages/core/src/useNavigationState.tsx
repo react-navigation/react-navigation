@@ -1,16 +1,21 @@
 import * as React from 'react';
-import type { NavigationState } from '@react-navigation/routers';
+import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import useNavigation from './useNavigation';
+import type { NavigationProp } from './types';
 
-type Selector<T> = (state: NavigationState) => T;
+type Selector<ParamList extends ParamListBase, T> = (
+  state: NavigationState<ParamList>
+) => T;
 
 /**
  * Hook to get a value from the current navigation state using a selector.
  *
  * @param selector Selector function to get a value from the state.
  */
-export default function useNavigationState<T>(selector: Selector<T>): T {
-  const navigation = useNavigation();
+export default function useNavigationState<ParamList extends ParamListBase, T>(
+  selector: Selector<ParamList, T>
+): T {
+  const navigation = useNavigation<NavigationProp<ParamList>>();
 
   // We don't care about the state value, we run the selector again at the end
   // The state is only to make sure that there's a re-render when we have a new value
