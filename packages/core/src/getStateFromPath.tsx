@@ -26,7 +26,7 @@ type RouteConfig = {
 
 type InitialRouteConfig = {
   initialRouteName: string;
-  connectedRoutes: string[];
+  parentScreens: string[];
 };
 
 type ResultState = PartialState<NavigationState> & {
@@ -69,7 +69,7 @@ export default function getStateFromPath(
   if (options?.initialRouteName) {
     initialRoutes.push({
       initialRouteName: options.initialRouteName,
-      connectedRoutes: Object.keys(options.screens),
+      parentScreens: [],
     });
   }
 
@@ -108,7 +108,8 @@ export default function getStateFromPath(
           key,
           screens as PathConfigMap,
           [],
-          initialRoutes
+          initialRoutes,
+          []
         )
       )
     )
@@ -309,11 +310,14 @@ const createNormalizedConfigs = (
   routeConfig: PathConfigMap,
   routeNames: string[] = [],
   initials: InitialRouteConfig[],
+  parentScreens: string[],
   parentPattern?: string
 ): RouteConfig[] => {
   const configs: RouteConfig[] = [];
 
   routeNames.push(screen);
+
+  parentScreens.push(screen);
 
   const config = routeConfig[screen];
 
@@ -350,7 +354,7 @@ const createNormalizedConfigs = (
       if (config.initialRouteName) {
         initials.push({
           initialRouteName: config.initialRouteName,
-          connectedRoutes: Object.keys(config.screens),
+          parentScreens,
         });
       }
 
@@ -360,6 +364,7 @@ const createNormalizedConfigs = (
           config.screens as PathConfigMap,
           routeNames,
           initials,
+          [...parentScreens],
           pattern ?? parentPattern
         );
 
@@ -425,13 +430,23 @@ const findParseConfigForRoute = (
 // Try to find an initial route connected with the one passed
 const findInitialRoute = (
   routeName: string,
+  parentScreens: string[],
   initialRoutes: InitialRouteConfig[]
 ): string | undefined => {
   for (const config of initialRoutes) {
-    if (config.connectedRoutes.includes(routeName)) {
-      return config.initialRouteName === routeName
-        ? undefined
-        : config.initialRouteName;
+    if (parentScreens.length === config.parentScreens.length) {
+      let sameParents = true;
+      for (let i = 0; i < parentScreens.length; i++) {
+        if (parentScreens[i].localeCompare(config.parentScreens[i]) !== 0) {
+          sameParents = false;
+          break;
+        }
+      }
+      if (sameParents) {
+        return routeName !== config.initialRouteName
+          ? config.initialRouteName
+          : undefined;
+      }
     }
   }
   return undefined;
@@ -477,7 +492,11 @@ const createNestedStateObject = (
 ) => {
   let state: InitialState;
   let route = routes.shift() as ParsedRoute;
-  let initialRoute = findInitialRoute(route.name, initialRoutes);
+  const parentScreens: string[] = [];
+
+  let initialRoute = findInitialRoute(route.name, parentScreens, initialRoutes);
+
+  parentScreens.push(route.name);
 
   state = createStateObject(initialRoute, route, routes.length === 0);
 
@@ -485,7 +504,7 @@ const createNestedStateObject = (
     let nestedState = state;
 
     while ((route = routes.shift() as ParsedRoute)) {
-      initialRoute = findInitialRoute(route.name, initialRoutes);
+      initialRoute = findInitialRoute(route.name, parentScreens, initialRoutes);
 
       const nestedStateIndex =
         nestedState.index || nestedState.routes.length - 1;
@@ -500,6 +519,8 @@ const createNestedStateObject = (
         nestedState = nestedState.routes[nestedStateIndex]
           .state as InitialState;
       }
+
+      parentScreens.push(route.name);
     }
   }
 
