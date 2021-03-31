@@ -1,6 +1,8 @@
 import type { StyleProp, ViewStyle, TextStyle } from 'react-native';
-import type Animated from 'react-native-reanimated';
-import type { PanGestureHandlerProperties } from 'react-native-gesture-handler';
+import type {
+  PanGestureHandler,
+  PanGestureHandlerProperties,
+} from 'react-native-gesture-handler';
 import type {
   Route,
   ParamListBase,
@@ -33,6 +35,14 @@ export type DrawerNavigationConfig = {
    * Defaults to `true`.
    */
   detachInactiveScreens?: boolean;
+  /**
+   * Whether to use the legacy implementation based on Reanimated 1.
+   * The new implementation based on Reanimated 2 will perform better,
+   * but you need additional configuration and need to use Hermes with Flipper to debug.
+   *
+   * Defaults to `false` if Reanimated 2 is configured in the project, otherwise `true`.
+   */
+  useLegacyImplementation?: boolean;
 };
 
 export type DrawerNavigationOptions = HeaderOptions & {
@@ -207,11 +217,6 @@ export type DrawerContentComponentProps = {
   state: DrawerNavigationState<ParamListBase>;
   navigation: DrawerNavigationHelpers;
   descriptors: DrawerDescriptorMap;
-  /**
-   * Animated node which represents the current progress of the drawer's open state.
-   * `0` is closed, `1` is open.
-   */
-  progress: Animated.Node<number>;
 };
 
 export type DrawerHeaderProps = {
@@ -268,3 +273,24 @@ export type DrawerDescriptor = Descriptor<
 >;
 
 export type DrawerDescriptorMap = Record<string, DrawerDescriptor>;
+
+export type DrawerProps = {
+  dimensions: { width: number; height: number };
+  drawerPosition: 'left' | 'right';
+  drawerStyle?: StyleProp<ViewStyle>;
+  drawerType: 'front' | 'back' | 'slide' | 'permanent';
+  gestureHandlerProps?: React.ComponentProps<typeof PanGestureHandler>;
+  hideStatusBarOnOpen: boolean;
+  keyboardDismissMode: 'none' | 'on-drag';
+  onClose: () => void;
+  onOpen: () => void;
+  open: boolean;
+  overlayStyle?: StyleProp<ViewStyle>;
+  renderDrawerContent: () => React.ReactNode;
+  renderSceneContent: () => React.ReactNode;
+  statusBarAnimation: 'slide' | 'none' | 'fade';
+  swipeDistanceThreshold: number;
+  swipeEdgeWidth: number;
+  swipeEnabled: boolean;
+  swipeVelocityThreshold: number;
+};
