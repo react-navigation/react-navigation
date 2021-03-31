@@ -1,13 +1,11 @@
 import * as React from 'react';
 import {
   StyleSheet,
-  ViewStyle,
   LayoutChangeEvent,
   I18nManager,
   Platform,
   Keyboard,
   StatusBar,
-  StyleProp,
   View,
   InteractionManager,
   Pressable,
@@ -17,8 +15,10 @@ import {
   PanGestureHandler,
   TapGestureHandler,
   GestureState,
-} from './GestureHandler';
+} from '../GestureHandler';
 import Overlay from './Overlay';
+import DrawerProgressContext from '../../utils/DrawerProgressContext';
+import type { DrawerProps } from '../../types';
 
 const {
   Clock,
@@ -56,7 +56,6 @@ const UNSET = -1;
 const DIRECTION_LEFT = 1;
 const DIRECTION_RIGHT = -1;
 
-const SWIPE_DISTANCE_THRESHOLD_DEFAULT = 60;
 const SWIPE_DISTANCE_MINIMUM = 5;
 
 const DEFAULT_DRAWER_WIDTH = '80%';
@@ -75,47 +74,8 @@ const ANIMATED_ONE = new Animated.Value(1);
 
 type Binary = 0 | 1;
 
-type Renderer = (props: { progress: Animated.Node<number> }) => React.ReactNode;
-
-type Props = {
-  open: boolean;
-  onOpen: () => void;
-  onClose: () => void;
-  gestureEnabled: boolean;
-  swipeEnabled: boolean;
-  drawerPosition: 'left' | 'right';
-  drawerType: 'front' | 'back' | 'slide' | 'permanent';
-  keyboardDismissMode: 'none' | 'on-drag';
-  swipeEdgeWidth: number;
-  swipeDistanceThreshold?: number;
-  swipeVelocityThreshold: number;
-  hideStatusBarOnOpen: boolean;
-  statusBarAnimation: 'slide' | 'none' | 'fade';
-  overlayStyle?: StyleProp<ViewStyle>;
-  drawerStyle?: StyleProp<ViewStyle>;
-  renderDrawerContent: Renderer;
-  renderSceneContent: Renderer;
-  gestureHandlerProps?: React.ComponentProps<typeof PanGestureHandler>;
-  dimensions: { width: number; height: number };
-};
-
-export default class DrawerView extends React.Component<Props> {
-  static defaultProps = {
-    drawerPosition: I18nManager.isRTL ? 'left' : 'right',
-    drawerType: 'front',
-    gestureEnabled: true,
-    swipeEnabled:
-      Platform.OS !== 'web' &&
-      Platform.OS !== 'windows' &&
-      Platform.OS !== 'macos',
-    swipeEdgeWidth: 32,
-    swipeVelocityThreshold: 500,
-    keyboardDismissMode: 'on-drag',
-    hideStatusBarOnOpen: false,
-    statusBarAnimation: 'slide',
-  };
-
-  componentDidUpdate(prevProps: Props) {
+export default class DrawerView extends React.Component<DrawerProps> {
+  componentDidUpdate(prevProps: DrawerProps) {
     const {
       open,
       drawerPosition,
@@ -150,11 +110,7 @@ export default class DrawerView extends React.Component<Props> {
     }
 
     if (prevProps.swipeDistanceThreshold !== swipeDistanceThreshold) {
-      this.swipeDistanceThreshold.setValue(
-        swipeDistanceThreshold !== undefined
-          ? swipeDistanceThreshold
-          : SWIPE_DISTANCE_THRESHOLD_DEFAULT
-      );
+      this.swipeDistanceThreshold.setValue(swipeDistanceThreshold);
     }
 
     if (prevProps.swipeVelocityThreshold !== swipeVelocityThreshold) {
@@ -283,9 +239,7 @@ export default class DrawerView extends React.Component<Props> {
   );
 
   private swipeDistanceThreshold = new Value<number>(
-    this.props.swipeDistanceThreshold !== undefined
-      ? this.props.swipeDistanceThreshold
-      : SWIPE_DISTANCE_THRESHOLD_DEFAULT
+    this.props.swipeDistanceThreshold
   );
   private swipeVelocityThreshold = new Value<number>(
     this.props.swipeVelocityThreshold
@@ -547,7 +501,6 @@ export default class DrawerView extends React.Component<Props> {
   render() {
     const {
       open,
-      gestureEnabled,
       swipeEnabled,
       drawerPosition,
       drawerType,
@@ -597,108 +550,109 @@ export default class DrawerView extends React.Component<Props> {
     const progress = drawerType === 'permanent' ? ANIMATED_ONE : this.progress;
 
     return (
-      <PanGestureHandler
-        activeOffsetX={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
-        failOffsetY={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
-        onGestureEvent={this.handleGestureEvent}
-        onHandlerStateChange={this.handleGestureStateChange}
-        hitSlop={hitSlop}
-        enabled={drawerType !== 'permanent' && gestureEnabled && swipeEnabled}
-        {...gestureHandlerProps}
-      >
-        <Animated.View
-          onLayout={this.handleContainerLayout}
-          style={[
-            styles.main,
-            {
-              flexDirection:
-                drawerType === 'permanent' && !isRight ? 'row-reverse' : 'row',
-            },
-          ]}
+      <DrawerProgressContext.Provider value={progress}>
+        <PanGestureHandler
+          activeOffsetX={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
+          failOffsetY={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
+          onGestureEvent={this.handleGestureEvent}
+          onHandlerStateChange={this.handleGestureStateChange}
+          hitSlop={hitSlop}
+          enabled={drawerType !== 'permanent' && swipeEnabled}
+          {...gestureHandlerProps}
         >
           <Animated.View
+            onLayout={this.handleContainerLayout}
             style={[
-              styles.content,
-              { transform: [{ translateX: contentTranslateX }] },
-            ]}
-          >
-            <View
-              accessibilityElementsHidden={isOpen && drawerType !== 'permanent'}
-              importantForAccessibility={
-                isOpen && drawerType !== 'permanent'
-                  ? 'no-hide-descendants'
-                  : 'auto'
-              }
-              style={styles.content}
-            >
-              {renderSceneContent({ progress })}
-            </View>
-            {
-              // Disable overlay if sidebar is permanent
-              drawerType === 'permanent' ? null : Platform.OS === 'web' ||
-                Platform.OS === 'windows' ||
-                Platform.OS === 'macos' ? (
-                <Pressable
-                  onPress={
-                    gestureEnabled ? () => this.toggleDrawer(false) : undefined
-                  }
-                >
-                  <Overlay progress={progress} style={overlayStyle as any} />
-                </Pressable>
-              ) : (
-                <TapGestureHandler
-                  enabled={gestureEnabled}
-                  onHandlerStateChange={this.handleTapStateChange}
-                >
-                  <Overlay progress={progress} style={overlayStyle as any} />
-                </TapGestureHandler>
-              )
-            }
-          </Animated.View>
-          <Animated.Code
-            // This is needed to make sure that container width updates with `setValue`
-            // Without this, it won't update when not used in styles
-            exec={this.containerWidth}
-          />
-          {drawerType === 'permanent' ? null : (
-            <Animated.Code
-              exec={block([
-                onChange(this.manuallyTriggerSpring, [
-                  cond(eq(this.manuallyTriggerSpring, TRUE), [
-                    set(this.nextIsOpen, FALSE),
-                    call([], () => (this.currentOpenValue = false)),
-                  ]),
-                ]),
-              ])}
-            />
-          )}
-          <Animated.View
-            accessibilityViewIsModal={isOpen && drawerType !== 'permanent'}
-            removeClippedSubviews={Platform.OS !== 'ios'}
-            onLayout={this.handleDrawerLayout}
-            style={[
-              styles.container,
+              styles.main,
               {
-                transform: [{ translateX: drawerTranslateX }],
-                opacity: this.drawerOpacity,
+                flexDirection:
+                  drawerType === 'permanent' && !isRight
+                    ? 'row-reverse'
+                    : 'row',
               },
-              drawerType === 'permanent'
-                ? // Without this, the `left`/`right` values don't get reset
-                  isRight
-                  ? { right: 0 }
-                  : { left: 0 }
-                : [
-                    styles.nonPermanent,
-                    isRight ? { right: offset } : { left: offset },
-                    { zIndex: drawerType === 'back' ? -1 : 0 },
-                  ],
-              drawerStyle as any,
             ]}
           >
-            {renderDrawerContent({ progress })}
+            <Animated.View
+              style={[
+                styles.content,
+                { transform: [{ translateX: contentTranslateX }] },
+              ]}
+            >
+              <View
+                accessibilityElementsHidden={
+                  isOpen && drawerType !== 'permanent'
+                }
+                importantForAccessibility={
+                  isOpen && drawerType !== 'permanent'
+                    ? 'no-hide-descendants'
+                    : 'auto'
+                }
+                style={styles.content}
+              >
+                {renderSceneContent()}
+              </View>
+              {
+                // Disable overlay if sidebar is permanent
+                drawerType === 'permanent' ? null : Platform.OS === 'web' ||
+                  Platform.OS === 'windows' ||
+                  Platform.OS === 'macos' ? (
+                  <Pressable onPress={() => this.toggleDrawer(false)}>
+                    <Overlay progress={progress} style={overlayStyle as any} />
+                  </Pressable>
+                ) : (
+                  <TapGestureHandler
+                    onHandlerStateChange={this.handleTapStateChange}
+                  >
+                    <Overlay progress={progress} style={overlayStyle as any} />
+                  </TapGestureHandler>
+                )
+              }
+            </Animated.View>
+            <Animated.Code
+              // This is needed to make sure that container width updates with `setValue`
+              // Without this, it won't update when not used in styles
+              exec={this.containerWidth}
+            />
+            {drawerType === 'permanent' ? null : (
+              <Animated.Code
+                exec={block([
+                  onChange(this.manuallyTriggerSpring, [
+                    cond(eq(this.manuallyTriggerSpring, TRUE), [
+                      set(this.nextIsOpen, FALSE),
+                      call([], () => (this.currentOpenValue = false)),
+                    ]),
+                  ]),
+                ])}
+              />
+            )}
+            <Animated.View
+              accessibilityViewIsModal={isOpen && drawerType !== 'permanent'}
+              removeClippedSubviews={Platform.OS !== 'ios'}
+              onLayout={this.handleDrawerLayout}
+              style={[
+                styles.container,
+                {
+                  transform: [{ translateX: drawerTranslateX }],
+                  opacity: this.drawerOpacity,
+                },
+                drawerType === 'permanent'
+                  ? // Without this, the `left`/`right` values don't get reset
+                    isRight
+                    ? { right: 0 }
+                    : { left: 0 }
+                  : [
+                      styles.nonPermanent,
+                      isRight ? { right: offset } : { left: offset },
+                      { zIndex: drawerType === 'back' ? -1 : 0 },
+                    ],
+                drawerStyle as any,
+              ]}
+            >
+              {renderDrawerContent()}
+            </Animated.View>
           </Animated.View>
-        </Animated.View>
-      </PanGestureHandler>
+        </PanGestureHandler>
+      </DrawerProgressContext.Provider>
     );
   }
 }
