@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, StyleSheet, AccessibilityRole } from 'react-native';
 import { NavigationRoute } from 'react-navigation';
 
-import { ScreenContainer } from 'react-native-screens';
+import { ScreenContainer, screensEnabled } from 'react-native-screens';
 
 import createTabNavigator, {
   NavigationViewProps,
@@ -141,10 +141,12 @@ class TabNavigationView extends React.PureComponent<Props, State> {
     const { routes } = navigation.state;
     const { loaded } = this.state;
 
+    const enabled = screensEnabled?.() && detachInactiveScreens;
+
     return (
       <View style={styles.container}>
         {/* @ts-ignore */}
-        <ScreenContainer enabled={detachInactiveScreens} style={styles.pages}>
+        <ScreenContainer enabled={enabled} style={styles.pages}>
           {routes.map((route, index) => {
             if (lazy && !loaded.includes(index)) {
               // Don't render a screen if we've never navigated to it
