@@ -6,7 +6,7 @@ import {
   ThemeContext,
   NavigationScreenProp,
 } from 'react-navigation';
-import { ScreenContainer } from 'react-native-screens';
+import { ScreenContainer, screensEnabled } from 'react-native-screens';
 
 import * as DrawerActions from '../routers/DrawerActions';
 import DrawerSidebar from './DrawerSidebar';
@@ -183,9 +183,11 @@ export default class DrawerView extends React.PureComponent<Props, State> {
         />
       );
     } else {
+      const enabled = screensEnabled?.() && detachInactiveScreens;
+
       return (
         // @ts-ignore
-        <ScreenContainer enabled={detachInactiveScreens} style={styles.content}>
+        <ScreenContainer enabled={enabled} style={styles.content}>
           {routes.map((route, index) => {
             if (lazy && !loaded.includes(index)) {
               // Don't render a screen if we've never navigated to it
