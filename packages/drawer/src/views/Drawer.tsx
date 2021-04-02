@@ -115,12 +115,6 @@ export default class DrawerView extends React.Component<Props> {
     statusBarAnimation: 'slide',
   };
 
-  componentDidMount() {
-    if (Platform.OS === 'web') {
-      document?.body?.addEventListener?.('keyup', this.handleEscape);
-    }
-  }
-
   componentDidUpdate(prevProps: Props) {
     const {
       open,
@@ -171,21 +165,7 @@ export default class DrawerView extends React.Component<Props> {
   componentWillUnmount() {
     this.toggleStatusBar(false);
     this.handleEndInteraction();
-
-    if (Platform.OS === 'web') {
-      document?.body?.removeEventListener?.('keyup', this.handleEscape);
-    }
   }
-
-  private handleEscape = (e: KeyboardEvent) => {
-    const { open, onClose } = this.props;
-
-    if (e.key === 'Escape') {
-      if (open) {
-        onClose();
-      }
-    }
-  };
 
   private handleEndInteraction = () => {
     if (this.interactionHandle !== undefined) {

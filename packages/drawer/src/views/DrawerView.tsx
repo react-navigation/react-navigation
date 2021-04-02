@@ -123,18 +123,45 @@ function DrawerViewBase({
   React.useEffect(() => {
     let subscription: NativeEventSubscription | undefined;
 
-    if (drawerStatus === 'open') {
-      // We only add the subscription when drawer opens
-      // This way we can make sure that the subscription is added as late as possible
-      // This will make sure that our handler will run first when back button is pressed
-      subscription = BackHandler.addEventListener('hardwareBackPress', () => {
-        handleDrawerClose();
+    const handleClose = () => {
+      // We shouldn't handle the back button if the parent screen isn't focused
+      // This will avoid the drawer overriding event listeners from a focused screen
+      if (!navigation.isFocused()) {
+        return false;
+      }
 
-        return true;
-      });
+      handleDrawerClose();
+
+      return true;
+    };
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleClose();
+      }
+    };
+
+    if (drawerStatus === 'open') {
+      // We only add the listeners when drawer opens
+      // This way we can make sure that the listener is added as late as possible
+      // This will make sure that our handler will run first when back button is pressed
+      subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        handleClose
+      );
+
+      if (Platform.OS === 'web') {
+        document?.body?.addEventListener?.('keyup', handleEscape);
+      }
     }
 
-    return () => subscription?.remove();
+    return () => {
+      subscription?.remove();
+
+      if (Platform.OS === 'web') {
+        document?.body?.removeEventListener?.('keyup', handleEscape);
+      }
+    };
   }, [handleDrawerClose, drawerStatus, navigation, state.key]);
 
   const renderDrawerContent = ({ progress }: any) => {
