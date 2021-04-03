@@ -111,10 +111,13 @@ function MaterialBottomTabViewInner({
           ? ({
               onPress,
               route,
-              accessibilityRole: _0,
-              borderless: _1,
-              centered: _2,
-              rippleColor: _3,
+              /* eslint-disable @typescript-eslint/no-unused-vars */
+              accessibilityRole,
+              accessibilityState,
+              borderless,
+              centered,
+              rippleColor,
+              /* eslint-enable @typescript-eslint/no-unused-vars */
               style,
               ...rest
             }) => {

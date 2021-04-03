@@ -86,6 +86,7 @@ const Touchable = ({
   onPress,
   to,
   accessibilityRole,
+  accessibilityState,
   delayPressIn,
   ...rest
 }: TouchableWithoutFeedbackProps & {
@@ -119,6 +120,7 @@ const Touchable = ({
       <TouchableItem
         {...rest}
         accessibilityRole={accessibilityRole}
+        accessibilityState={accessibilityState}
         delayPressIn={delayPressIn}
         onPress={onPress}
       >
