@@ -5,7 +5,6 @@ import {
   I18nManager,
   Platform,
   BackHandler,
-  NativeEventSubscription,
 } from 'react-native';
 import { ScreenContainer } from 'react-native-screens';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
@@ -121,7 +120,9 @@ function DrawerViewBase({
   }, [navigation, state.key]);
 
   React.useEffect(() => {
-    let subscription: NativeEventSubscription | undefined;
+    if (drawerStatus !== 'open' || drawerType === 'permanent') {
+      return;
+    }
 
     const handleClose = () => {
       // We shouldn't handle the back button if the parent screen isn't focused
@@ -141,28 +142,26 @@ function DrawerViewBase({
       }
     };
 
-    if (drawerStatus === 'open') {
-      // We only add the listeners when drawer opens
-      // This way we can make sure that the listener is added as late as possible
-      // This will make sure that our handler will run first when back button is pressed
-      subscription = BackHandler.addEventListener(
-        'hardwareBackPress',
-        handleClose
-      );
+    // We only add the listeners when drawer opens
+    // This way we can make sure that the listener is added as late as possible
+    // This will make sure that our handler will run first when back button is pressed
+    const subscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleClose
+    );
 
-      if (Platform.OS === 'web') {
-        document?.body?.addEventListener?.('keyup', handleEscape);
-      }
+    if (Platform.OS === 'web') {
+      document?.body?.addEventListener?.('keyup', handleEscape);
     }
 
     return () => {
-      subscription?.remove();
+      subscription.remove();
 
       if (Platform.OS === 'web') {
         document?.body?.removeEventListener?.('keyup', handleEscape);
       }
     };
-  }, [handleDrawerClose, drawerStatus, navigation, state.key]);
+  }, [drawerStatus, drawerType, handleDrawerClose, navigation]);
 
   const renderDrawerContent = ({ progress }: any) => {
     return (
