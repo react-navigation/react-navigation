@@ -6,7 +6,7 @@ import {
   Platform,
   BackHandler,
 } from 'react-native';
-import { ScreenContainer } from 'react-native-screens';
+import { ScreenContainer, screensEnabled } from 'react-native-screens';
 import {
   NavigationHelpersContext,
   NavigationContext,
@@ -175,9 +175,11 @@ export default function DrawerView({
   };
 
   const renderContent = () => {
+    const isScreensEnabled = screensEnabled?.() && detachInactiveScreens;
+
     return (
       // @ts-ignore
-      <ScreenContainer enabled={detachInactiveScreens} style={styles.content}>
+      <ScreenContainer enabled={isScreensEnabled} style={styles.content}>
         {state.routes.map((route, index) => {
           const descriptor = descriptors[route.key];
           const { unmountOnBlur } = descriptor.options;
@@ -202,7 +204,7 @@ export default function DrawerView({
               key={route.key}
               style={[StyleSheet.absoluteFill, { opacity: isFocused ? 1 : 0 }]}
               isVisible={isFocused}
-              enabled={detachInactiveScreens}
+              enabled={isScreensEnabled}
             >
               {headerShown ? (
                 <NavigationContext.Provider value={descriptor.navigation}>

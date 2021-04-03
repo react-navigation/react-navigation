@@ -12,6 +12,7 @@ import type {
   Route,
   StackNavigationState,
 } from '@react-navigation/native';
+import { screensEnabled } from 'react-native-screens';
 
 import {
   MaybeScreenContainer,
@@ -489,11 +490,13 @@ export default class CardStack extends React.Component<Props, State> {
         </React.Fragment>
       ) : null;
 
+    const isScreensEnabled = screensEnabled?.() && detachInactiveScreens;
+
     return (
       <React.Fragment>
         {isFloatHeaderAbsolute ? null : floatingHeader}
         <MaybeScreenContainer
-          enabled={detachInactiveScreens}
+          enabled={isScreensEnabled}
           style={styles.container}
           onLayout={this.handleLayout}
         >
@@ -613,7 +616,7 @@ export default class CardStack extends React.Component<Props, State> {
               <MaybeScreen
                 key={route.key}
                 style={StyleSheet.absoluteFill}
-                enabled={detachInactiveScreens}
+                enabled={isScreensEnabled}
                 active={isScreenActive}
                 pointerEvents="box-none"
               >
