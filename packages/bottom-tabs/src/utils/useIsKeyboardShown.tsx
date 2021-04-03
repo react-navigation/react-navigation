@@ -9,6 +9,7 @@ export default function useIsKeyboardShown() {
     const handleKeyboardHide = () => setIsKeyboardShown(false);
 
     let subscriptions: EmitterSubscription[];
+
     if (Platform.OS === 'ios') {
       subscriptions = [
         Keyboard.addListener('keyboardWillShow', handleKeyboardShow),
