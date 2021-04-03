@@ -5,7 +5,6 @@ import {
   I18nManager,
   Platform,
   BackHandler,
-  NativeEventSubscription,
 } from 'react-native';
 import { ScreenContainer } from 'react-native-screens';
 import {
@@ -112,15 +111,9 @@ export default function DrawerView({
   }, [navigation, state.key]);
 
   React.useEffect(() => {
-    if (isDrawerOpen) {
-      navigation.emit({ type: 'drawerOpen' });
-    } else {
-      navigation.emit({ type: 'drawerClose' });
+    if (!isDrawerOpen || drawerType === 'permanent') {
+      return;
     }
-  }, [isDrawerOpen, navigation]);
-
-  React.useEffect(() => {
-    let subscription: NativeEventSubscription | undefined;
 
     const handleClose = () => {
       // We shouldn't handle the back button if the parent screen isn't focused
@@ -140,28 +133,26 @@ export default function DrawerView({
       }
     };
 
-    if (isDrawerOpen) {
-      // We only add the listeners when drawer opens
-      // This way we can make sure that the listener is added as late as possible
-      // This will make sure that our handler will run first when back button is pressed
-      subscription = BackHandler.addEventListener(
-        'hardwareBackPress',
-        handleClose
-      );
+    // We only add the listeners when drawer opens
+    // This way we can make sure that the listener is added as late as possible
+    // This will make sure that our handler will run first when back button is pressed
+    const subscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleClose
+    );
 
-      if (Platform.OS === 'web') {
-        document?.body?.addEventListener?.('keyup', handleEscape);
-      }
+    if (Platform.OS === 'web') {
+      document?.body?.addEventListener?.('keyup', handleEscape);
     }
 
     return () => {
-      subscription?.remove();
+      subscription.remove();
 
       if (Platform.OS === 'web') {
         document?.body?.removeEventListener?.('keyup', handleEscape);
       }
     };
-  }, [handleDrawerClose, isDrawerOpen, navigation]);
+  }, [drawerType, handleDrawerClose, isDrawerOpen, navigation]);
 
   const focusedRouteKey = state.routes[state.index].key;
 
