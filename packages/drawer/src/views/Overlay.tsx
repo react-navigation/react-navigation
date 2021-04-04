@@ -4,13 +4,12 @@ import Animated from 'react-native-reanimated';
 
 const {
   interpolate: interpolateDeprecated,
-  // @ts-expect-error: this property is only present in Reanimated 2
   interpolateNode,
   cond,
   greaterThan,
 } = Animated;
 
-const interpolate: typeof interpolateDeprecated =
+const interpolate: typeof interpolateNode =
   interpolateNode ?? interpolateDeprecated;
 
 const PROGRESS_EPSILON = 0.05;

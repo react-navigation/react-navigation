@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  AsyncStorage,
   ScrollView,
   Platform,
   StatusBar,
@@ -21,6 +20,8 @@ import {
   Divider,
   Text,
 } from 'react-native-paper';
+import { createURL } from 'expo-linking';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   InitialState,
   NavigationContainer,
@@ -38,7 +39,6 @@ import {
 import { useReduxDevToolsExtension } from '@react-navigation/devtools';
 
 import { restartApp } from './Restart';
-import LinkingPrefixes from './LinkingPrefixes';
 import SettingsItem from './Shared/SettingsItem';
 import SimpleStack from './Screens/SimpleStack';
 import ModalStack from './Screens/ModalStack';
@@ -225,7 +225,7 @@ export default function App() {
           // Android (bare): adb shell am start -a android.intent.action.VIEW -d "rne://127.0.0.1:19000/--/simple-stack"
           // iOS (bare): xcrun simctl openurl booted rne://127.0.0.1:19000/--/simple-stack
           // The first segment of the link is the the scheme + host (returned by `Linking.makeUrl`)
-          prefixes: LinkingPrefixes,
+          prefixes: [createURL('/')],
           config: {
             initialRouteName: 'Home',
             screens: Object.keys(SCREENS).reduce<PathConfigMap>(
