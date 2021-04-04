@@ -4,6 +4,7 @@
     "paths": {
       "react-native-tab-view": ["./src/index"]
     },
+    "composite": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,
