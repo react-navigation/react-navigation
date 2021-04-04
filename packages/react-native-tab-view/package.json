@@ -3,7 +3,7 @@
   "version": "3.0.0",
   "description": "Tab view component for React Native",
   "main": "lib/commonjs/index.js",
-  "react-native": "lib/module/index.js",
+  "react-native": "src/index.tsx",
   "module": "lib/module/index.js",
   "types": "lib/typescript/src/index.d.ts",
   "files": [
