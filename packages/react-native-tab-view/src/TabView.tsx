@@ -6,7 +6,7 @@ import {
   ViewStyle,
   LayoutChangeEvent,
 } from 'react-native';
-import TabBar, { Props as TabBarProps } from './TabBar';
+import TabBar from './TabBar';
 import SceneView from './SceneView';
 import Pager from './Pager';
 import {
@@ -20,158 +20,123 @@ import {
 export type Props<T extends Route> = PagerProps & {
   onIndexChange: (index: number) => void;
   navigationState: NavigationState<T>;
-  renderScene: (
-    props: SceneRendererProps & {
-      route: T;
-    }
+  renderScene: (props: SceneRendererProps & { route: T }) => React.ReactNode;
+  renderLazyPlaceholder?: (props: { route: T }) => React.ReactNode;
+  renderTabBar?: (
+    props: SceneRendererProps & { navigationState: NavigationState<T> }
   ) => React.ReactNode;
-  renderLazyPlaceholder: (props: { route: T }) => React.ReactNode;
-  renderTabBar: (
-    props: SceneRendererProps & {
-      navigationState: NavigationState<T>;
-    }
-  ) => React.ReactNode;
-  tabBarPosition: 'top' | 'bottom';
-  initialLayout?: { width?: number; height?: number };
-  lazy: ((props: { route: T }) => boolean) | boolean;
-  lazyPreloadDistance: number;
+  tabBarPosition?: 'top' | 'bottom';
+  initialLayout?: Partial<Layout>;
+  lazy?: ((props: { route: T }) => boolean) | boolean;
+  lazyPreloadDistance?: number;
   sceneContainerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
 };
 
-type State = {
-  layout: Layout;
-};
+export default function TabView<T extends Route>({
+  onIndexChange,
+  navigationState,
+  renderScene,
+  initialLayout,
+  keyboardDismissMode = 'auto',
+  lazy = false,
+  lazyPreloadDistance = 0,
+  onSwipeStart,
+  onSwipeEnd,
+  renderLazyPlaceholder = () => null,
+  renderTabBar = (props) => <TabBar {...props} />,
+  sceneContainerStyle,
+  style,
+  swipeEnabled = true,
+  tabBarPosition = 'top',
+}: Props<T>) {
+  const [layout, setLayout] = React.useState({
+    width: 0,
+    height: 0,
+    ...initialLayout,
+  });
 
-export default class TabView<T extends Route> extends React.Component<
-  Props<T>,
-  State
-> {
-  static defaultProps = {
-    tabBarPosition: 'top',
-    renderTabBar: <P extends Route>(props: TabBarProps<P>) => (
-      <TabBar {...props} />
-    ),
-    renderLazyPlaceholder: () => null,
-    keyboardDismissMode: 'auto',
-    swipeEnabled: true,
-    lazy: false,
-    lazyPreloadDistance: 0,
-    removeClippedSubviews: false,
-  };
-
-  state = {
-    layout: { width: 0, height: 0, ...this.props.initialLayout },
-  };
-
-  private jumpToIndex = (index: number) => {
-    if (index !== this.props.navigationState.index) {
-      this.props.onIndexChange(index);
+  const jumpToIndex = (index: number) => {
+    if (index !== navigationState.index) {
+      onIndexChange(index);
     }
   };
 
-  private handleLayout = (e: LayoutChangeEvent) => {
+  const handleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
 
-    if (
-      this.state.layout.width === width &&
-      this.state.layout.height === height
-    ) {
-      return;
-    }
+    setLayout((prevLayout) => {
+      if (prevLayout.width === width && prevLayout.height === height) {
+        return prevLayout;
+      }
 
-    this.setState({
-      layout: {
-        height,
-        width,
-      },
+      return { height, width };
     });
   };
 
-  render() {
-    const {
-      onSwipeStart,
-      onSwipeEnd,
-      navigationState,
-      lazy,
-      lazyPreloadDistance,
-      keyboardDismissMode,
-      swipeEnabled,
-      tabBarPosition,
-      renderTabBar,
-      renderScene,
-      renderLazyPlaceholder,
-      sceneContainerStyle,
-      style,
-    } = this.props;
-    const { layout } = this.state;
+  return (
+    <View onLayout={handleLayout} style={[styles.pager, style]}>
+      <Pager
+        layout={layout}
+        navigationState={navigationState}
+        keyboardDismissMode={keyboardDismissMode}
+        swipeEnabled={swipeEnabled}
+        onSwipeStart={onSwipeStart}
+        onSwipeEnd={onSwipeEnd}
+        onIndexChange={jumpToIndex}
+      >
+        {({ position, render, addEnterListener, jumpTo }) => {
+          // All of the props here must not change between re-renders
+          // This is crucial to optimizing the routes with PureComponent
+          const sceneRendererProps = {
+            position,
+            layout,
+            jumpTo,
+          };
 
-    return (
-      <View onLayout={this.handleLayout} style={[styles.pager, style]}>
-        <Pager
-          layout={layout}
-          navigationState={navigationState}
-          keyboardDismissMode={keyboardDismissMode}
-          swipeEnabled={swipeEnabled}
-          onSwipeStart={onSwipeStart}
-          onSwipeEnd={onSwipeEnd}
-          onIndexChange={this.jumpToIndex}
-        >
-          {({ position, render, addEnterListener, jumpTo }) => {
-            // All of the props here must not change between re-renders
-            // This is crucial to optimizing the routes with PureComponent
-            const sceneRendererProps = {
-              position,
-              layout,
-              jumpTo,
-            };
-
-            return (
-              <React.Fragment>
-                {tabBarPosition === 'top' &&
-                  renderTabBar({
-                    ...sceneRendererProps,
-                    navigationState,
-                  })}
-                {render(
-                  navigationState.routes.map((route, i) => {
-                    return (
-                      <SceneView
-                        {...sceneRendererProps}
-                        addEnterListener={addEnterListener}
-                        key={route.key}
-                        index={i}
-                        lazy={
-                          typeof lazy === 'function' ? lazy({ route }) : lazy
-                        }
-                        lazyPreloadDistance={lazyPreloadDistance}
-                        navigationState={navigationState}
-                        style={sceneContainerStyle}
-                      >
-                        {({ loading }) =>
-                          loading
-                            ? renderLazyPlaceholder({ route })
-                            : renderScene({
-                                ...sceneRendererProps,
-                                route,
-                              })
-                        }
-                      </SceneView>
-                    );
-                  })
-                )}
-                {tabBarPosition === 'bottom' &&
-                  renderTabBar({
-                    ...sceneRendererProps,
-                    navigationState,
-                  })}
-              </React.Fragment>
-            );
-          }}
-        </Pager>
-      </View>
-    );
-  }
+          return (
+            <React.Fragment>
+              {tabBarPosition === 'top' &&
+                renderTabBar({
+                  ...sceneRendererProps,
+                  navigationState,
+                })}
+              {render(
+                navigationState.routes.map((route, i) => {
+                  return (
+                    <SceneView
+                      {...sceneRendererProps}
+                      addEnterListener={addEnterListener}
+                      key={route.key}
+                      index={i}
+                      lazy={typeof lazy === 'function' ? lazy({ route }) : lazy}
+                      lazyPreloadDistance={lazyPreloadDistance}
+                      navigationState={navigationState}
+                      style={sceneContainerStyle}
+                    >
+                      {({ loading }) =>
+                        loading
+                          ? renderLazyPlaceholder({ route })
+                          : renderScene({
+                              ...sceneRendererProps,
+                              route,
+                            })
+                      }
+                    </SceneView>
+                  );
+                })
+              )}
+              {tabBarPosition === 'bottom' &&
+                renderTabBar({
+                  ...sceneRendererProps,
+                  navigationState,
+                })}
+            </React.Fragment>
+          );
+        }}
+      </Pager>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
