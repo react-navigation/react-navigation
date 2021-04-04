@@ -40,7 +40,11 @@ export type DrawerNavigationConfig = {
    * The new implementation based on Reanimated 2 will perform better,
    * but you need additional configuration and need to use Hermes with Flipper to debug.
    *
-   * Defaults to `false` if Reanimated 2 is configured in the project, otherwise `true`.
+   * This defaults to `true` in following cases:
+   * - Reanimated 2 is not configured
+   * - App is connected to Chrome debugger (Reanimated 2 cannot be used with Chrome debugger)
+   *
+   * Otherwise, it defaults to `false`
    */
   useLegacyImplementation?: boolean;
 };
