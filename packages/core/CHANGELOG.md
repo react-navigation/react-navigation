@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.15.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.15.2...@react-navigation/core@5.15.3) (2021-04-04)
+
+
+### Bug Fixes
+
+* properly resolve initialRouteNames ([976178d](https://github.com/react-navigation/react-navigation/commit/976178d0986a90697931ab9cc2c297eb7938e28b))
+
+
+
+
+
 ## [5.15.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.15.1...@react-navigation/core@5.15.2) (2021-02-21)
 
 **Note:** Version bump only for package @react-navigation/core

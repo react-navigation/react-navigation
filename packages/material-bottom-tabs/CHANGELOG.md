@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.3.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@5.3.14...@react-navigation/material-bottom-tabs@5.3.15) (2021-04-04)
+
+
+### Bug Fixes
+
+* don't pass accessibilityState to link. closes [#9418](https://github.com/react-navigation/react-navigation/issues/9418) ([699ea0c](https://github.com/react-navigation/react-navigation/commit/699ea0cc5052f190acc7ce8bc0328bb052d7cf26))
+
+
+
+
+
 ## [5.3.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@5.3.13...@react-navigation/material-bottom-tabs@5.3.14) (2021-02-21)
 
 **Note:** Version bump only for package @react-navigation/material-bottom-tabs

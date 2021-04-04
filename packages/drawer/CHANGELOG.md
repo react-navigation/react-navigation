@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.12.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.12.4...@react-navigation/drawer@5.12.5) (2021-04-04)
+
+
+### Bug Fixes
+
+* check for screens enabled in ScreenContainer ([493956e](https://github.com/react-navigation/react-navigation/commit/493956ef717a03bd8c3533a2949434e83718c5e4))
+* don't handle back button with permanent drawer ([a63f9da](https://github.com/react-navigation/react-navigation/commit/a63f9da8c1efe5d34567517ac2653608c6bbdeba))
+* don't pass accessibilityState to link. closes [#9418](https://github.com/react-navigation/react-navigation/issues/9418) ([699ea0c](https://github.com/react-navigation/react-navigation/commit/699ea0cc5052f190acc7ce8bc0328bb052d7cf26))
+* only handle back button in drawer when focused ([cceaa67](https://github.com/react-navigation/react-navigation/commit/cceaa6780d588b2a2ffa3a2039f65f9e60a33bf9))
+
+
+
+
+
 ## [5.12.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@5.12.3...@react-navigation/drawer@5.12.4) (2021-02-21)
 
 **Note:** Version bump only for package @react-navigation/drawer
