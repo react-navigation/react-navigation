@@ -1,6 +1,6 @@
 {
   "name": "react-native-tab-view",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Tab view component for React Native",
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
