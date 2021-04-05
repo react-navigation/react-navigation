@@ -24,7 +24,7 @@ export type MaterialBottomTabNavigationHelpers = NavigationHelpers<
 
 export type MaterialBottomTabNavigationProp<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = keyof ParamList
+  RouteName extends keyof ParamList = string
 > = NavigationProp<
   ParamList,
   RouteName,
@@ -36,7 +36,7 @@ export type MaterialBottomTabNavigationProp<
 
 export type MaterialBottomTabScreenProps<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = keyof ParamList
+  RouteName extends keyof ParamList = string
 > = {
   navigation: MaterialBottomTabNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
