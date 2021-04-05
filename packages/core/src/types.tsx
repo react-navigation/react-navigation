@@ -264,7 +264,7 @@ export type NavigationContainerProps = {
 
 export type NavigationProp<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string,
+  RouteName extends keyof ParamList = keyof ParamList,
   State extends NavigationState = NavigationState<ParamList>,
   ScreenOptions extends {} = {},
   EventMap extends EventMapBase = {}
@@ -380,13 +380,7 @@ export type RouteConfig<
     | ScreenOptions
     | ((props: {
         route: RouteProp<ParamList, RouteName>;
-        navigation: NavigationProp<
-          ParamList,
-          RouteName,
-          State,
-          ScreenOptions,
-          EventMap
-        >;
+        navigation: any;
       }) => ScreenOptions);
 
   /**
@@ -396,13 +390,7 @@ export type RouteConfig<
     | ScreenListeners<State, EventMap>
     | ((props: {
         route: RouteProp<ParamList, RouteName>;
-        navigation: NavigationProp<
-          ParamList,
-          RouteName,
-          State,
-          ScreenOptions,
-          EventMap
-        >;
+        navigation: any;
       }) => ScreenListeners<State, EventMap>);
 
   /**
@@ -422,16 +410,7 @@ export type RouteConfig<
       /**
        * React component to render for this screen.
        */
-      component: React.ComponentType<{
-        route: RouteProp<ParamList, RouteName>;
-        navigation: NavigationProp<
-          ParamList,
-          RouteName,
-          State,
-          ScreenOptions,
-          EventMap
-        >;
-      }>;
+      component: React.ComponentType<any>;
       getComponent?: never;
       children?: never;
     }
@@ -439,16 +418,7 @@ export type RouteConfig<
       /**
        * Lazily get a React component to render for this screen.
        */
-      getComponent: () => React.ComponentType<{
-        route: RouteProp<ParamList, RouteName>;
-        navigation: NavigationProp<
-          ParamList,
-          RouteName,
-          State,
-          ScreenOptions,
-          EventMap
-        >;
-      }>;
+      getComponent: () => React.ComponentType<any>;
       component?: never;
       children?: never;
     }
@@ -458,13 +428,7 @@ export type RouteConfig<
        */
       children: (props: {
         route: RouteProp<ParamList, RouteName>;
-        navigation: NavigationProp<
-          ParamList,
-          RouteName,
-          State,
-          ScreenOptions,
-          EventMap
-        >;
+        navigation: any;
       }) => React.ReactNode;
       component?: never;
       getComponent?: never;

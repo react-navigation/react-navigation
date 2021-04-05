@@ -243,7 +243,7 @@ export type DrawerNavigationHelpers = NavigationHelpers<
 
 export type DrawerNavigationProp<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
+  RouteName extends keyof ParamList = keyof ParamList
 > = NavigationProp<
   ParamList,
   RouteName,
@@ -255,7 +255,7 @@ export type DrawerNavigationProp<
 
 export type DrawerScreenProps<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
+  RouteName extends keyof ParamList = keyof ParamList
 > = {
   navigation: DrawerNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
