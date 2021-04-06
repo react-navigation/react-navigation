@@ -1,14 +1,14 @@
-require_relative '../node_modules/react-native/scripts/react_native_pods'
-require_relative '../node_modules/react-native-unimodules/cocoapods.rb'
-require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+require_relative '../../node_modules/react-native/scripts/react_native_pods'
+require_relative '../../node_modules/react-native-unimodules/cocoapods.rb'
+require_relative '../../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 platform :ios, '11.0'
 
 target 'ReactNavigation' do
-  use_unimodules!
+  use_unimodules!({ modules_paths: ['../../node_modules'] })
   config = use_native_modules!
 
-  use_react_native!(:path => config["reactNativePath"])
+  use_react_native!(:path => config[:reactNativePath])
 
   # Uncomment the code below to enable Flipper.
   #
