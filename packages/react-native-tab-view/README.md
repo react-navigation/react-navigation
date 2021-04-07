@@ -61,6 +61,11 @@ const SecondRoute = () => (
   <View style={{ flex: 1, backgroundColor: '#673ab7' }} />
 );
 
+const renderScene = SceneMap({
+  first: FirstRoute,
+  second: SecondRoute,
+});
+
 export default function TabViewExample() {
   const layout = useWindowDimensions();
 
@@ -69,11 +74,6 @@ export default function TabViewExample() {
     { key: 'first', title: 'First' },
     { key: 'second', title: 'Second' },
   ]);
-
-  const renderScene = SceneMap({
-    first: FirstRoute,
-    second: SecondRoute,
-  });
 
   return (
     <TabView
