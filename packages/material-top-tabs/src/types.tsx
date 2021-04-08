@@ -1,5 +1,5 @@
 import type { StyleProp, ViewStyle, TextStyle } from 'react-native';
-import type { SceneRendererProps, TabView } from 'react-native-tab-view';
+import type { SceneRendererProps, TabViewProps } from 'react-native-tab-view';
 import type {
   ParamListBase,
   Descriptor,
@@ -66,6 +66,16 @@ export type MaterialTopTabNavigationOptions = {
    * Whether this screens should render the first time it's accessed. Defaults to `false`.
    */
   lazy?: boolean;
+
+  /**
+   * Function that returns a React element to render if this screen hasn't been rendered yet.
+   * The `lazy` option also needs to be enabled for this to work.
+   *
+   * This view is usually only shown for a split second. Keep it lightweight.
+   *
+   * By default, this renders null.
+   */
+  lazyPlaceholder?: () => React.ReactNode;
 
   /**
    * Title string of a tab displayed in the tab bar
@@ -187,37 +197,21 @@ export type MaterialTopTabDescriptorMap = Record<
   MaterialTopTabDescriptor
 >;
 
-export type MaterialTopTabNavigationConfig = Partial<
-  Omit<
-    React.ComponentProps<typeof TabView>,
-    | 'navigationState'
-    | 'onIndexChange'
-    | 'onSwipeStart'
-    | 'onSwipeEnd'
-    | 'renderScene'
-    | 'renderTabBar'
-    | 'renderLazyPlaceholder'
-    | 'lazy'
-  >
+export type MaterialTopTabNavigationConfig = Omit<
+  TabViewProps<Route<string>>,
+  | 'navigationState'
+  | 'onIndexChange'
+  | 'onSwipeStart'
+  | 'onSwipeEnd'
+  | 'renderScene'
+  | 'renderTabBar'
+  | 'renderLazyPlaceholder'
+  | 'lazy'
 > & {
-  /**
-   * Function that returns a React element to render for routes that haven't been rendered yet.
-   * Receives an object containing the route as the prop.
-   * The lazy prop also needs to be enabled.
-   *
-   * This view is usually only shown for a split second. Keep it lightweight.
-   *
-   * By default, this renders null.
-   */
-  lazyPlaceholder?: (props: { route: Route<string> }) => React.ReactNode;
   /**
    * Function that returns a React element to display as the tab bar.
    */
   tabBar?: (props: MaterialTopTabBarProps) => React.ReactNode;
-  /**
-   * Position of the tab bar. Defaults to `top`.
-   */
-  tabBarPosition?: 'top' | 'bottom';
 };
 
 export type MaterialTopTabBarProps = SceneRendererProps & {
