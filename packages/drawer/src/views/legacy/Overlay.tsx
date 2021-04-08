@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Platform, StyleSheet } from 'react-native';
+import { Pressable, Platform, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 const {
@@ -16,10 +16,11 @@ const PROGRESS_EPSILON = 0.05;
 
 type Props = React.ComponentProps<typeof Animated.View> & {
   progress: Animated.Node<number>;
+  onPress: () => void;
 };
 
 const Overlay = React.forwardRef(function Overlay(
-  { progress, style, ...props }: Props,
+  { progress, onPress, style, ...props }: Props,
   ref: React.Ref<Animated.View>
 ) {
   const animatedStyle = {
@@ -45,7 +46,9 @@ const Overlay = React.forwardRef(function Overlay(
       {...props}
       ref={ref}
       style={[styles.overlay, overlayStyle, animatedStyle, style]}
-    />
+    >
+      <Pressable onPress={onPress} style={styles.pressable} />
+    </Animated.View>
   );
 });
 
@@ -62,6 +65,9 @@ const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  pressable: {
+    flex: 1,
   },
 });
 
