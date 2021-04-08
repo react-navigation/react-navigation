@@ -8,14 +8,9 @@ import {
   StatusBar,
   View,
   InteractionManager,
-  Pressable,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
-import {
-  PanGestureHandler,
-  TapGestureHandler,
-  GestureState,
-} from '../GestureHandler';
+import { PanGestureHandler, GestureState } from '../GestureHandler';
 import Overlay from './Overlay';
 import DrawerProgressContext from '../../utils/DrawerProgressContext';
 import type { DrawerProps } from '../../types';
@@ -449,18 +444,6 @@ export default class DrawerView extends React.Component<DrawerProps> {
     },
   ]);
 
-  private handleTapStateChange = event([
-    {
-      nativeEvent: {
-        oldState: (s: Animated.Value<number>) =>
-          cond(
-            eq(s, GestureState.ACTIVE),
-            set(this.manuallyTriggerSpring, TRUE)
-          ),
-      },
-    },
-  ]);
-
   private handleContainerLayout = (e: LayoutChangeEvent) =>
     this.containerWidth.setValue(e.nativeEvent.layout.width);
 
@@ -593,18 +576,12 @@ export default class DrawerView extends React.Component<DrawerProps> {
               </View>
               {
                 // Disable overlay if sidebar is permanent
-                drawerType === 'permanent' ? null : Platform.OS === 'web' ||
-                  Platform.OS === 'windows' ||
-                  Platform.OS === 'macos' ? (
-                  <Pressable onPress={() => this.toggleDrawer(false)}>
-                    <Overlay progress={progress} style={overlayStyle as any} />
-                  </Pressable>
-                ) : (
-                  <TapGestureHandler
-                    onHandlerStateChange={this.handleTapStateChange}
-                  >
-                    <Overlay progress={progress} style={overlayStyle as any} />
-                  </TapGestureHandler>
+                drawerType === 'permanent' ? null : (
+                  <Overlay
+                    progress={progress}
+                    onPress={() => this.toggleDrawer(false)}
+                    style={overlayStyle as any}
+                  />
                 )
               }
             </Animated.View>
