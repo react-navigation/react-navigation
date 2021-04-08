@@ -1,5 +1,5 @@
 import type { Animated } from 'react-native';
-import type { ViewPagerProps } from 'react-native-pager-view';
+import type { PagerViewProps } from 'react-native-pager-view';
 
 export type Route = {
   key: string;
@@ -42,7 +42,7 @@ export type EventEmitterProps = {
 };
 
 export type PagerProps = Omit<
-  ViewPagerProps,
+  PagerViewProps,
   | 'initialPage'
   | 'scrollEnabled'
   | 'onPageScroll'
