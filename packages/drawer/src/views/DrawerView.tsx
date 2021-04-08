@@ -159,6 +159,7 @@ function DrawerViewBase({
           const {
             lazy = true,
             unmountOnBlur,
+            screenOrientation,
             statusBarAnimation,
             statusBarColor,
             statusBarHidden,
@@ -197,6 +198,7 @@ function DrawerViewBase({
               style={[StyleSheet.absoluteFill, { opacity: isFocused ? 1 : 0 }]}
               visible={isFocused}
               enabled={detachInactiveScreens}
+              screenOrientation={screenOrientation}
               statusBarAnimation={statusBarAnimation}
               statusBarColor={statusBarColor}
               statusBarHidden={statusBarHidden}
