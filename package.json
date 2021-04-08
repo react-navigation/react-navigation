@@ -8,8 +8,7 @@
     ]
   },
   "publishConfig": {
-    "access": "public",
-    "tag": "alpha"
+    "access": "public"
   },
   "license": "MIT",
   "repository": {

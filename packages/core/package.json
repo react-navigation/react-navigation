@@ -28,8 +28,7 @@
     "!**/__tests__"
   ],
   "publishConfig": {
-    "access": "public",
-    "tag": "alpha"
+    "access": "public"
   },
   "scripts": {
     "prepare": "bob build",
