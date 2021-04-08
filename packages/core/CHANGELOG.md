@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.1...@react-navigation/core@6.0.0-next.2) (2021-04-08)
+
+
+### Bug Fixes
+
+* properly resolve initialRouteNames ([c38906a](https://github.com/react-navigation/react-navigation/commit/c38906a7a09b997f37ce56734ea823c75ea744db))
+
+
+### Features
+
+* improve useNavigationState typing ([#9464](https://github.com/react-navigation/react-navigation/issues/9464)) ([84020a0](https://github.com/react-navigation/react-navigation/commit/84020a0b27ebae50d3037438a51d95eb31b02424))
+
+
+
+
+
 # [6.0.0-next.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0...@react-navigation/core@6.0.0-next.1) (2021-03-10)
 
 **Note:** Version bump only for package @react-navigation/core

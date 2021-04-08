@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.3...@react-navigation/bottom-tabs@6.0.0-next.4) (2021-04-08)
+
+
+### Bug Fixes
+
+* remove calls to removed Keyboard.removeListener in useIsKeyboardShown ([#9457](https://github.com/react-navigation/react-navigation/issues/9457)) ([d87857e](https://github.com/react-navigation/react-navigation/commit/d87857e5d93c19ebee2fd84eb4910e36001ec2a3))
+
+
+
+
+
 # [6.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.2...@react-navigation/bottom-tabs@6.0.0-next.3) (2021-03-22)
 
 
