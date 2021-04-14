@@ -31,7 +31,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Hey! Thanks for opening the issue. Can you provide a [minimal repro](https://stackoverflow.com/help/minimal-reproducible-example) which demonstrates the issue? Posting a snippet of your code in the issue is useful, but it's not usually straightforward to run. A repro will help us debug the issue faster. Please try to keep the repro as small as possible.\n\nThe easiest way to provide a repro is on [snack.expo.io](https://snack.expo.io). If it's not possible to repro it on [snack.expo.io](https://snack.expo.io), then please provide the repro in a GitHub repository."
+              body: "Hey! Thanks for opening the issue. Can you provide a [minimal repro](https://stackoverflow.com/help/minimal-reproducible-example) which demonstrates the issue? Posting a snippet of your code in the issue is useful, but it's not usually straightforward to run. A repro will help us debug the issue faster. Please try to keep the repro as small as possible and make sure that we can run it without additional setup.\n\nThe easiest way to provide a repro is on [snack.expo.io](https://snack.expo.io). If it's not possible to repro it on [snack.expo.io](https://snack.expo.io), then please provide the repro in a GitHub repository."
             })
 
   question:
