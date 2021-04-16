@@ -296,8 +296,9 @@ export default function BottomTabBar({
         style,
       ]}
       pointerEvents={isTabBarHidden ? 'none' : 'auto'}
+      onLayout={handleLayout}
     >
-      <View style={styles.content} onLayout={handleLayout}>
+      <View style={styles.content}>
         {routes.map((route, index) => {
           const focused = index === state.index;
           const { options } = descriptors[route.key];
