@@ -65,7 +65,7 @@ export type PartialState<State extends NavigationState> = Partial<
 
 export type Route<
   RouteName extends string,
-  Params extends object | undefined = object | undefined
+  Params extends {[title: string]: string} | undefined = {} | undefined
 > = Readonly<{
   /**
    * Unique key for the route.
