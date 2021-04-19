@@ -12,13 +12,13 @@ jobs:
             // Get a list of all issues created by the PR opener
             // See: https://octokit.github.io/rest.js/#pagination
             const creator = context.payload.sender.login;
-            const opts = github.issues.listForRepo.endpoint.merge({
+            const options = github.issues.listForRepo.endpoint.merge({
               ...context.issue,
               creator,
               state: 'all'
             });
 
-            const issues = await github.paginate(opts);
+            const issues = await github.paginate(options);
 
             for (const issue of issues) {
               if (issue.number === context.issue.number) {
@@ -26,7 +26,7 @@ jobs:
               }
 
               if (issue.pull_request) {
-                return ;// Creator is already a contributor.
+                return; // Creator is already a contributor.
               }
             }
 
@@ -41,5 +41,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Hey ${creator}! Thanks for opening the pull request. If you haven't already, make sure to read our [contribution guidelines](https://github.com/react-navigation/react-navigation/blob/main/CONTRIBUTING.md)."
+              body: `Hey ${creator}! Thanks for opening your first pull request in this repo. If you haven't already, make sure to read our [contribution guidelines](https://github.com/react-navigation/react-navigation/blob/main/CONTRIBUTING.md).`
             });
