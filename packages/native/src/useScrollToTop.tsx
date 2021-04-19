@@ -53,7 +53,7 @@ export default function useScrollToTop(
     let currentNavigator = navigation;
 
     // The screen might be inside another navigator such as stack nested in tabs
-    // The screen might be in multiple tab bars as a top tab bar and a bottom tab bar and we want both events to work
+    // The screen might be in multiple tab bars (as a top tab bar and a bottom tab bar and we want both events to work)
     // We need to find the closest tab navigators and add the listener there
     while (currentNavigator) {
       if(currentNavigator.getState().type === 'tab') {
