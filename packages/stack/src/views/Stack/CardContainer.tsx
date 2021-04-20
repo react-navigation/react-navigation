@@ -187,7 +187,7 @@ function CardContainer({
     'box-none'
   );
 
-  React.useEffect(() => {    
+  React.useEffect(() => {
     const listener = scene.progress.next?.addListener?.(
       ({ value }: { value: number }) => {
         setPointerEvents(value <= EPSILON ? 'box-none' : 'none');
