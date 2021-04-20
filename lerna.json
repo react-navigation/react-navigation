@@ -11,6 +11,7 @@
       "allowBranch": "main",
       "conventionalCommits": true,
       "createRelease": "github",
+      "distTag": "next",
       "message": "chore: publish",
       "ignoreChanges": [
         "**/__fixtures__/**",

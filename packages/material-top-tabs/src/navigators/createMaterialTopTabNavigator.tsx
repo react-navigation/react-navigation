@@ -26,9 +26,7 @@ function MaterialTopTabNavigator({
   backBehavior,
   children,
   screenOptions,
-  // @ts-expect-error: lazy is deprecated
   lazy,
-  // @ts-expect-error: tabBarOptions is deprecated
   tabBarOptions,
   ...rest
 }: Props) {

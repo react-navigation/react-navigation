@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Keyboard, Platform } from 'react-native';
+import { Keyboard, Platform, EmitterSubscription } from 'react-native';
 
 export default function useIsKeyboardShown() {
   const [isKeyboardShown, setIsKeyboardShown] = React.useState(false);
@@ -8,22 +8,22 @@ export default function useIsKeyboardShown() {
     const handleKeyboardShow = () => setIsKeyboardShown(true);
     const handleKeyboardHide = () => setIsKeyboardShown(false);
 
+    let subscriptions: EmitterSubscription[];
+
     if (Platform.OS === 'ios') {
-      Keyboard.addListener('keyboardWillShow', handleKeyboardShow);
-      Keyboard.addListener('keyboardWillHide', handleKeyboardHide);
+      subscriptions = [
+        Keyboard.addListener('keyboardWillShow', handleKeyboardShow),
+        Keyboard.addListener('keyboardWillHide', handleKeyboardHide),
+      ];
     } else {
-      Keyboard.addListener('keyboardDidShow', handleKeyboardShow);
-      Keyboard.addListener('keyboardDidHide', handleKeyboardHide);
+      subscriptions = [
+        Keyboard.addListener('keyboardDidShow', handleKeyboardShow),
+        Keyboard.addListener('keyboardDidHide', handleKeyboardHide),
+      ];
     }
 
     return () => {
-      if (Platform.OS === 'ios') {
-        Keyboard.removeListener('keyboardWillShow', handleKeyboardShow);
-        Keyboard.removeListener('keyboardWillHide', handleKeyboardHide);
-      } else {
-        Keyboard.removeListener('keyboardDidShow', handleKeyboardShow);
-        Keyboard.removeListener('keyboardDidHide', handleKeyboardHide);
-      }
+      subscriptions.forEach((s) => s.remove());
     };
   }, []);
 

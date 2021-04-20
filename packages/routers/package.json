@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/routers",
   "description": "Routers to help build custom navigators",
-  "version": "6.0.0-next.1",
+  "version": "6.0.0-next.2",
   "keywords": [
     "react",
     "react-native",
@@ -29,15 +29,14 @@
   ],
   "sideEffects": false,
   "publishConfig": {
-    "access": "public",
-    "tag": "alpha"
+    "access": "public"
   },
   "scripts": {
     "prepare": "bob build",
     "clean": "del lib"
   },
   "dependencies": {
-    "nanoid": "^3.1.20"
+    "nanoid": "^3.1.22"
   },
   "devDependencies": {
     "del-cli": "^3.0.1",

@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.3...@react-navigation/drawer@6.0.0-next.4) (2021-04-08)
+
+
+### Bug Fixes
+
+* don't handle back button with permanent drawer ([b893968](https://github.com/react-navigation/react-navigation/commit/b89396888f46ba79af3cfd84be55fba79d8387d2))
+* fix drawer overlay on web ([3241190](https://github.com/react-navigation/react-navigation/commit/3241190b19946c1cd0a744fb09a19d79ba683d74))
+* only handle back button in drawer when focused ([5ae0bad](https://github.com/react-navigation/react-navigation/commit/5ae0badc44b576d464f8841822a911b18a698403))
+
+
+
+
+
 # [6.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.2...@react-navigation/drawer@6.0.0-next.3) (2021-03-22)
 
 

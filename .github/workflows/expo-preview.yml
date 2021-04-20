@@ -18,9 +18,7 @@ jobs:
       - name: Setup Expo
         uses: expo/expo-github-action@v5
         with:
-          expo-version: 3.x
-          expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
-          expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
+          expo-token: ${{ secrets.EXPO_TOKEN }}
           expo-cache: true
 
       - name: Restore yarn cache
@@ -36,7 +34,7 @@ jobs:
 
       - name: Publish Expo app
         working-directory: ./example
-        run: expo publish --release-channel=pr-${{ github.event.number }}
+        run: yarn expo publish --release-channel=pr-${{ github.event.number }}
         env:
           EXPO_USE_DEV_SERVER: true
 

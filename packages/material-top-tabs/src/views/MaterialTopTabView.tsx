@@ -21,11 +21,9 @@ type Props = MaterialTopTabNavigationConfig & {
   state: TabNavigationState<ParamListBase>;
   navigation: MaterialTopTabNavigationHelpers;
   descriptors: MaterialTopTabDescriptorMap;
-  tabBarPosition?: 'top' | 'bottom';
 };
 
 export default function MaterialTopTabView({
-  lazyPlaceholder,
   tabBar = (props: MaterialTopTabBarProps) => <MaterialTopTabBar {...props} />,
   state,
   navigation,
@@ -57,7 +55,9 @@ export default function MaterialTopTabView({
         renderScene={({ route }) => descriptors[route.key].render()}
         navigationState={state}
         renderTabBar={renderTabBar}
-        renderLazyPlaceholder={lazyPlaceholder}
+        renderLazyPlaceholder={({ route }) =>
+          descriptors[route.key].options.lazyPlaceholder?.() ?? null
+        }
         lazy={({ route }) => descriptors[route.key].options.lazy === true}
         onSwipeStart={() => navigation.emit({ type: 'swipeStart' })}
         onSwipeEnd={() => navigation.emit({ type: 'swipeEnd' })}

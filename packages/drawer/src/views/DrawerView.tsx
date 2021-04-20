@@ -5,10 +5,10 @@ import {
   I18nManager,
   Platform,
   BackHandler,
-  NativeEventSubscription,
 } from 'react-native';
 import { ScreenContainer } from 'react-native-screens';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
+import Animated from 'react-native-reanimated';
 import {
   NavigationHelpersContext,
   DrawerNavigationState,
@@ -27,7 +27,6 @@ import { GestureHandlerRootView } from './GestureHandler';
 import ScreenFallback from './ScreenFallback';
 import DrawerToggleButton from './DrawerToggleButton';
 import DrawerContent from './DrawerContent';
-import Drawer from './Drawer';
 import DrawerStatusContext from '../utils/DrawerStatusContext';
 import DrawerPositionContext from '../utils/DrawerPositionContext';
 import getDrawerStatusFromState from '../utils/getDrawerStatusFromState';
@@ -38,6 +37,7 @@ import type {
   DrawerContentComponentProps,
   DrawerHeaderProps,
   DrawerNavigationProp,
+  DrawerProps,
 } from '../types';
 
 type Props = DrawerNavigationConfig & {
@@ -77,7 +77,17 @@ function DrawerViewBase({
     <DrawerContent {...props} />
   ),
   detachInactiveScreens = true,
+  // Running in chrome debugger
+  // @ts-expect-error
+  useLegacyImplementation = !global.nativeCallSyncHook ||
+    // Reanimated 2 is not configured
+    // @ts-expect-error: the type definitions are incomplete
+    !Animated.isConfigured?.(),
 }: Props) {
+  const Drawer: React.ComponentType<DrawerProps> = useLegacyImplementation
+    ? require('./legacy/Drawer').default
+    : require('./modern/Drawer').default;
+
   const focusedRouteKey = state.routes[state.index].key;
   const {
     drawerHideStatusBarOnOpen = false,
@@ -85,13 +95,14 @@ function DrawerViewBase({
     drawerStatusBarAnimation = 'slide',
     drawerStyle,
     drawerType = Platform.select({ ios: 'slide', default: 'front' }),
-    gestureEnabled,
     gestureHandlerProps,
     keyboardDismissMode = 'on-drag',
     overlayColor = 'rgba(0, 0, 0, 0.5)',
-    swipeEdgeWidth,
-    swipeEnabled,
-    swipeMinDistance,
+    swipeEdgeWidth = 32,
+    swipeEnabled = Platform.OS !== 'web' &&
+      Platform.OS !== 'windows' &&
+      Platform.OS !== 'macos',
+    swipeMinDistance = 60,
   } = descriptors[focusedRouteKey].options;
 
   const [loaded, setLoaded] = React.useState([focusedRouteKey]);
@@ -121,7 +132,9 @@ function DrawerViewBase({
   }, [navigation, state.key]);
 
   React.useEffect(() => {
-    let subscription: NativeEventSubscription | undefined;
+    if (drawerStatus !== 'open' || drawerType === 'permanent') {
+      return;
+    }
 
     const handleClose = () => {
       // We shouldn't handle the back button if the parent screen isn't focused
@@ -141,34 +154,31 @@ function DrawerViewBase({
       }
     };
 
-    if (drawerStatus === 'open') {
-      // We only add the listeners when drawer opens
-      // This way we can make sure that the listener is added as late as possible
-      // This will make sure that our handler will run first when back button is pressed
-      subscription = BackHandler.addEventListener(
-        'hardwareBackPress',
-        handleClose
-      );
+    // We only add the listeners when drawer opens
+    // This way we can make sure that the listener is added as late as possible
+    // This will make sure that our handler will run first when back button is pressed
+    const subscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleClose
+    );
 
-      if (Platform.OS === 'web') {
-        document?.body?.addEventListener?.('keyup', handleEscape);
-      }
+    if (Platform.OS === 'web') {
+      document?.body?.addEventListener?.('keyup', handleEscape);
     }
 
     return () => {
-      subscription?.remove();
+      subscription.remove();
 
       if (Platform.OS === 'web') {
         document?.body?.removeEventListener?.('keyup', handleEscape);
       }
     };
-  }, [handleDrawerClose, drawerStatus, navigation, state.key]);
+  }, [drawerStatus, drawerType, handleDrawerClose, navigation]);
 
-  const renderDrawerContent = ({ progress }: any) => {
+  const renderDrawerContent = () => {
     return (
       <DrawerPositionContext.Provider value={drawerPosition}>
         {drawerContent({
-          progress: progress,
           state: state,
           navigation: navigation,
           descriptors: descriptors,
@@ -244,11 +254,16 @@ function DrawerViewBase({
     <DrawerStatusContext.Provider value={drawerStatus}>
       <Drawer
         open={drawerStatus !== 'closed'}
-        gestureEnabled={gestureEnabled}
-        swipeEnabled={swipeEnabled}
         onOpen={handleDrawerOpen}
         onClose={handleDrawerClose}
         gestureHandlerProps={gestureHandlerProps}
+        swipeEnabled={swipeEnabled}
+        swipeEdgeWidth={swipeEdgeWidth}
+        swipeVelocityThreshold={500}
+        swipeDistanceThreshold={swipeMinDistance}
+        hideStatusBarOnOpen={drawerHideStatusBarOnOpen}
+        statusBarAnimation={drawerStatusBarAnimation}
+        keyboardDismissMode={keyboardDismissMode}
         drawerType={drawerType}
         drawerPosition={drawerPosition}
         drawerStyle={[
@@ -269,13 +284,8 @@ function DrawerViewBase({
           drawerStyle,
         ]}
         overlayStyle={{ backgroundColor: overlayColor }}
-        swipeEdgeWidth={swipeEdgeWidth}
-        swipeDistanceThreshold={swipeMinDistance}
-        hideStatusBarOnOpen={drawerHideStatusBarOnOpen}
-        statusBarAnimation={drawerStatusBarAnimation}
         renderDrawerContent={renderDrawerContent}
         renderSceneContent={renderSceneContent}
-        keyboardDismissMode={keyboardDismissMode}
         dimensions={dimensions}
       />
     </DrawerStatusContext.Provider>

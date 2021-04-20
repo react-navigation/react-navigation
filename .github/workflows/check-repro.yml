@@ -23,26 +23,54 @@ jobs:
               'gm'
             );
 
-            if (!regex.test(body)) {
-              return;
-            }
-
-            await github.issues.addLabels({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: ['repro provided'],
-            });
-
-            try {
-              await github.issues.removeLabel({
+            if (regex.test(body)) {
+              await github.issues.addLabels({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                name: 'needs repro',
+                labels: ['repro provided'],
               });
-            } catch (error) {
-              if (!/Label does not exist/.test(error.message)) {
-                throw error;
+
+              try {
+                await github.issues.removeLabel({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: 'needs repro',
+                });
+              } catch (error) {
+                if (!/Label does not exist/.test(error.message)) {
+                  throw error;
+                }
               }
+            } else {
+              if (context.eventName !== 'issues') {
+                return;
+              }
+
+              const body = "Hey! Thanks for opening the issue. The issue doesn't seem to contain a link to a repro (a [snack.expo.io](https://snack.expo.io) link or link to a GitHub repo under your username).\n\nCan you provide a [minimal repro](https://stackoverflow.com/help/minimal-reproducible-example) which demonstrates the issue? A repro will help us debug the issue faster. Please try to keep the repro as small as possible and make sure that we can run it without additional setup.";
+
+              const comments = await github.issues.listComments({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+              });
+
+              if (comments.data.some(comment => comment.body === body)) {
+                return;
+              }
+
+              await github.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body,
+              });
+
+              await github.issues.addLabels({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels: ['needs repro'],
+              });
             }
