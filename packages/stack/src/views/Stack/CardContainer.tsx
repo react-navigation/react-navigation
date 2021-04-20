@@ -187,8 +187,7 @@ function CardContainer({
     'box-none'
   );
 
-  React.useEffect(() => {
-    // @ts-expect-error: AnimatedInterpolation optionally has addListener, but the type defs don't think so
+  React.useEffect(() => {    
     const listener = scene.progress.next?.addListener?.(
       ({ value }: { value: number }) => {
         setPointerEvents(value <= EPSILON ? 'box-none' : 'none');
@@ -197,7 +196,6 @@ function CardContainer({
 
     return () => {
       if (listener) {
-        // @ts-expect-error: AnimatedInterpolation optionally has removedListener, but the type defs don't think so
         scene.progress.next?.removeListener?.(listener);
       }
     };

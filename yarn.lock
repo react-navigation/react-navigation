@@ -4541,10 +4541,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-native@~0.63.51":
-  version "0.63.51"
-  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.63.51.tgz#2fc45ab934801770cdbbcdc6ae5cd85c0e2a2a02"
-  integrity sha512-lpJdBF7T/nZigbequu7p4NptZmTUKq8R7vRADkk00H8DR5igspL10B1F58MvNTu8o/TyqzPISyWoRARqaIy+mw==
+"@types/react-native@~0.64.4":
+  version "0.64.4"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.64.4.tgz#9f11bef7dd5520801884829c73b19d75aa42e73c"
+  integrity sha512-VqnlmadGkD5usREvnuyVpWDS1W8f6cCz6MP5fZdgONsaZ9/Ijfb9Iq9MZ5O3bnW1OyJixDX9HtSp3COsFSLD8Q==
   dependencies:
     "@types/react" "*"
 
