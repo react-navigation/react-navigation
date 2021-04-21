@@ -25,7 +25,7 @@ export type DefaultNavigatorOptions<
     | ScreenOptions
     | ((props: {
         route: RouteProp<ParamList, keyof ParamList>;
-        navigation: any;
+        navigation: NavigationProp<ParamList, keyof ParamList>;
       }) => ScreenOptions);
   /**
    * Default options specified by the navigator.
@@ -35,7 +35,7 @@ export type DefaultNavigatorOptions<
     | ScreenOptions
     | ((props: {
         route: RouteProp<ParamList, keyof ParamList>;
-        navigation: any;
+        navigation: NavigationProp<ParamList, keyof ParamList>;
         options: ScreenOptions;
       }) => ScreenOptions);
 };
@@ -380,7 +380,7 @@ export type RouteConfig<
     | ScreenOptions
     | ((props: {
         route: RouteProp<ParamList, RouteName>;
-        navigation: any;
+        navigation: NavigationProp<ParamList, RouteName>;
       }) => ScreenOptions);
 
   /**
@@ -390,7 +390,7 @@ export type RouteConfig<
     | ScreenListeners<State, EventMap>
     | ((props: {
         route: RouteProp<ParamList, RouteName>;
-        navigation: any;
+        navigation: NavigationProp<ParamList, RouteName>;
       }) => ScreenListeners<State, EventMap>);
 
   /**
@@ -428,7 +428,7 @@ export type RouteConfig<
        */
       children: (props: {
         route: RouteProp<ParamList, RouteName>;
-        navigation: any;
+        navigation: NavigationProp<ParamList, RouteName>;
       }) => React.ReactNode;
       component?: never;
       getComponent?: never;
