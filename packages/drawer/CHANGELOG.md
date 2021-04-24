@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.7.1](https://github.com/react-navigation/drawer/compare/react-navigation-drawer@2.7.0...react-navigation-drawer@2.7.1) (2021-04-24)
+
+
+### Bug Fixes
+
+* check for screens enabled in ScreenContainer ([6e832cb](https://github.com/react-navigation/drawer/commit/6e832cb4ac5e6568e3bc9c846e1fbd739a3c3d84))
+
+
+
+
+
 # [2.7.0](https://github.com/react-navigation/drawer/compare/react-navigation-drawer@2.6.0...react-navigation-drawer@2.7.0) (2021-02-21)
 
 
