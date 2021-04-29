@@ -17,4 +17,5 @@ export { default as useLinkBuilder } from './useLinkBuilder';
 
 export { default as ServerContainer } from './ServerContainer';
 
+export { default as LinkingContext } from './LinkingContext';
 export * from './types';
