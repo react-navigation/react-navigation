@@ -4,6 +4,7 @@ import {
   getActionFromState,
   getStateFromPath as getStateFromPathDefault,
   NavigationContainerRef,
+  ParamListBase,
 } from '@react-navigation/core';
 import extractPathFromURL from './extractPathFromURL';
 import type { LinkingOptions } from './types';
@@ -13,7 +14,7 @@ type ResultState = ReturnType<typeof getStateFromPathDefault>;
 let isUsingLinking = false;
 
 export default function useLinking(
-  ref: React.RefObject<NavigationContainerRef>,
+  ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
   {
     enabled = true,
     prefixes,

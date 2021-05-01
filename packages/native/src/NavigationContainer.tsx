@@ -3,6 +3,7 @@ import {
   BaseNavigationContainer,
   NavigationContainerProps,
   NavigationContainerRef,
+  ParamListBase,
 } from '@react-navigation/core';
 import ThemeProvider from './theming/ThemeProvider';
 import DefaultTheme from './theming/DefaultTheme';
@@ -44,11 +45,13 @@ const NavigationContainer = React.forwardRef(function NavigationContainer(
     onReady,
     ...rest
   }: Props,
-  ref?: React.Ref<NavigationContainerRef | null>
+  ref?: React.Ref<NavigationContainerRef<ParamListBase> | null>
 ) {
   const isLinkingEnabled = linking ? linking.enabled !== false : false;
 
-  const refContainer = React.useRef<NavigationContainerRef>(null);
+  const refContainer = React.useRef<NavigationContainerRef<ParamListBase>>(
+    null
+  );
 
   useBackButton(refContainer);
   useDocumentTitle(refContainer, documentTitle);

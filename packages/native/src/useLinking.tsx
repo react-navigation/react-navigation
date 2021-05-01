@@ -6,6 +6,7 @@ import {
   NavigationState,
   getActionFromState,
   findFocusedRoute,
+  ParamListBase,
 } from '@react-navigation/core';
 import { nanoid } from 'nanoid/non-secure';
 import ServerContext from './ServerContext';
@@ -288,7 +289,7 @@ const series = (cb: () => Promise<void>) => {
 let isUsingLinking = false;
 
 export default function useLinking(
-  ref: React.RefObject<NavigationContainerRef>,
+  ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
   {
     enabled = true,
     config,

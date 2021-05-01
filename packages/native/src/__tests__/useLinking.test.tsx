@@ -1,10 +1,13 @@
 import * as React from 'react';
 import { render, RenderAPI } from '@testing-library/react-native';
-import type { NavigationContainerRef } from '@react-navigation/core';
+import {
+  createNavigationContainerRef,
+  ParamListBase,
+} from '@react-navigation/core';
 import useLinking from '../useLinking';
 
 it('throws if multiple instances of useLinking are used', () => {
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const options = { prefixes: [] };
 

@@ -28,7 +28,7 @@ import {
   DefaultTheme,
   DarkTheme,
   PathConfigMap,
-  NavigationContainerRef,
+  useNavigationContainerRef,
 } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import {
@@ -193,7 +193,7 @@ export default function App() {
     return () => Dimensions.removeEventListener('change', onDimensionsChange);
   }, []);
 
-  const navigationRef = React.useRef<NavigationContainerRef>(null);
+  const navigationRef = useNavigationContainerRef<RootStackParamList>();
 
   useReduxDevToolsExtension(navigationRef);
 

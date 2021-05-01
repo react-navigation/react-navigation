@@ -3,16 +3,17 @@ import { act, render } from '@testing-library/react-native';
 import {
   DefaultRouterOptions,
   NavigationState,
+  ParamListBase,
   Router,
   StackRouter,
   TabRouter,
 } from '@react-navigation/routers';
 import BaseNavigationContainer from '../BaseNavigationContainer';
 import NavigationStateContext from '../NavigationStateContext';
+import createNavigationContainerRef from '../createNavigationContainerRef';
 import MockRouter, { MockActions } from './__fixtures__/MockRouter';
 import useNavigationBuilder from '../useNavigationBuilder';
 import Screen from '../Screen';
-import type { NavigationContainerRef } from '../types';
 
 it('throws when getState is accessed without a container', () => {
   expect.assertions(1);
@@ -128,7 +129,7 @@ it('handle dispatching with ref', () => {
     );
   };
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const onStateChange = jest.fn();
 
@@ -226,7 +227,7 @@ it('handle resetting state with ref', () => {
     );
   };
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const onStateChange = jest.fn();
 
@@ -316,7 +317,7 @@ it('handles getRootState', () => {
     return descriptors[state.routes[state.index].key].render();
   };
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const element = (
     <BaseNavigationContainer ref={ref}>
@@ -378,7 +379,7 @@ it('emits state events when the state changes', () => {
     );
   };
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const element = (
     <BaseNavigationContainer ref={ref}>
@@ -448,7 +449,7 @@ it('emits state events when new navigator mounts', () => {
     );
   };
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const NestedNavigator = () => {
     const [isRendered, setIsRendered] = React.useState(false);
@@ -537,7 +538,7 @@ it('emits option events when options change with tab router', () => {
     );
   };
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const element = (
     <BaseNavigationContainer ref={ref}>
@@ -611,7 +612,7 @@ it('emits option events when options change with stack router', () => {
     );
   };
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const element = (
     <BaseNavigationContainer ref={ref}>
@@ -677,7 +678,7 @@ it('emits option events when options change with stack router', () => {
 it('throws if there is no navigator rendered', () => {
   expect.assertions(1);
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const element = <BaseNavigationContainer ref={ref} children={null} />;
 
@@ -697,7 +698,7 @@ it('throws if there is no navigator rendered', () => {
 it("throws if the ref hasn't finished initializing", () => {
   expect.assertions(1);
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
@@ -733,7 +734,7 @@ it("throws if the ref hasn't finished initializing", () => {
 });
 
 it('invokes the unhandled action listener with the unhandled action', () => {
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
   const fn = jest.fn();
 
   const TestNavigator = (props: any) => {
@@ -779,7 +780,7 @@ it('works with state change events in independent nested container', () => {
     );
   };
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const onStateChange = jest.fn();
 
