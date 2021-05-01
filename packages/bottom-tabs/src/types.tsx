@@ -42,7 +42,7 @@ export type BottomTabNavigationHelpers = NavigationHelpers<
 
 export type BottomTabNavigationProp<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
+  RouteName extends keyof ParamList = keyof ParamList
 > = NavigationProp<
   ParamList,
   RouteName,
@@ -54,7 +54,7 @@ export type BottomTabNavigationProp<
 
 export type BottomTabScreenProps<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
+  RouteName extends keyof ParamList = keyof ParamList
 > = {
   navigation: BottomTabNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
@@ -239,7 +239,7 @@ export type BottomTabNavigationOptions = HeaderOptions & {
 export type BottomTabDescriptor = Descriptor<
   BottomTabNavigationOptions,
   BottomTabNavigationProp<ParamListBase>,
-  RouteProp<ParamListBase, string>
+  RouteProp<ParamListBase>
 >;
 
 export type BottomTabDescriptorMap = Record<string, BottomTabDescriptor>;
@@ -283,7 +283,7 @@ export type BottomTabHeaderProps = {
   /**
    * Route object for the current screen.
    */
-  route: RouteProp<ParamListBase, string>;
+  route: RouteProp<ParamListBase>;
   /**
    * Navigation prop for the header.
    */

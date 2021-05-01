@@ -6,7 +6,7 @@ import type {
 } from '@react-navigation/routers';
 import type { RouteProp } from './types';
 
-type RouteCache = Map<Route<string>, RouteProp<ParamListBase, string>>;
+type RouteCache = Map<Route<string>, RouteProp<ParamListBase>>;
 
 /**
  * Utilites such as `getFocusedRouteNameFromRoute` need to access state.

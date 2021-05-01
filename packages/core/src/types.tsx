@@ -9,10 +9,12 @@ import type {
   ParamListBase,
 } from '@react-navigation/routers';
 
+type Keyof<T extends {}> = Extract<keyof T, string>;
+
 export type DefaultNavigatorOptions<
   ScreenOptions extends {},
   ParamList extends ParamListBase = ParamListBase
-> = DefaultRouterOptions<Extract<keyof ParamList, string>> & {
+> = DefaultRouterOptions<Keyof<ParamList>> & {
   /**
    * Children React Elements to extract the route configuration from.
    * Only `Screen` components are supported as children.
@@ -24,7 +26,7 @@ export type DefaultNavigatorOptions<
   screenOptions?:
     | ScreenOptions
     | ((props: {
-        route: RouteProp<ParamList, keyof ParamList>;
+        route: RouteProp<ParamList>;
         navigation: any;
       }) => ScreenOptions);
   /**
@@ -34,7 +36,7 @@ export type DefaultNavigatorOptions<
   defaultScreenOptions?:
     | ScreenOptions
     | ((props: {
-        route: RouteProp<ParamList, keyof ParamList>;
+        route: RouteProp<ParamList>;
         navigation: any;
         options: ScreenOptions;
       }) => ScreenOptions);
@@ -96,11 +98,11 @@ export type EventConsumer<EventMap extends EventMapBase> = {
    * @param type Type of the event (e.g. `focus`, `blur`)
    * @param callback Callback listener which is executed upon receiving the event.
    */
-  addListener<EventName extends Extract<keyof EventMap, string>>(
+  addListener<EventName extends Keyof<EventMap>>(
     type: EventName,
     callback: EventListenerCallback<EventMap, EventName>
   ): () => void;
-  removeListener<EventName extends Extract<keyof EventMap, string>>(
+  removeListener<EventName extends Keyof<EventMap>>(
     type: EventName,
     callback: EventListenerCallback<EventMap, EventName>
   ): void;
@@ -115,7 +117,7 @@ export type EventEmitter<EventMap extends EventMapBase> = {
    * @param [options.target] Key of the target route which should receive the event.
    * If not specified, all routes receive the event.
    */
-  emit<EventName extends Extract<keyof EventMap, string>>(
+  emit<EventName extends Keyof<EventMap>>(
     options: {
       type: EventName;
       target?: string;
@@ -264,7 +266,7 @@ export type NavigationContainerProps = {
 
 export type NavigationProp<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string,
+  RouteName extends keyof ParamList = Keyof<ParamList>,
   State extends NavigationState = NavigationState<ParamList>,
   ScreenOptions extends {} = {},
   EventMap extends EventMapBase = {}
@@ -289,7 +291,7 @@ export type NavigationProp<
 
 export type RouteProp<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList
+  RouteName extends keyof ParamList = Keyof<ParamList>
 > = Route<Extract<RouteName, string>, ParamList[RouteName]>;
 
 export type CompositeNavigationProp<

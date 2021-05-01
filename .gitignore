@@ -33,3 +33,5 @@ npm-debug.*
 *.key
 *.mobileprovision
 *.orig.*
+
+*.iml
