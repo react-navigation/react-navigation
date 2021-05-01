@@ -485,7 +485,9 @@ export type NavigationContainerEventMap = {
   };
 };
 
-export type NavigationContainerRef = NavigationHelpers<ParamListBase> &
+export type NavigationContainerRef<
+  ParamList extends ParamListBase
+> = NavigationHelpers<ParamList> &
   EventConsumer<NavigationContainerEventMap> & {
     /**
      * Reset the navigation state of the root navigator to the provided state.
@@ -505,7 +507,17 @@ export type NavigationContainerRef = NavigationHelpers<ParamListBase> &
      * Get the currently focused route's options.
      */
     getCurrentOptions(): object | undefined;
+    /**
+     * Whether the navigation container is ready to handle actions.
+     */
+    isReady(): boolean;
   };
+
+export type NavigationContainerRefWithCurrent<
+  ParamList extends ParamListBase
+> = NavigationContainerRef<ParamList> & {
+  current: NavigationContainerRef<ParamList> | null;
+};
 
 export type TypedNavigator<
   ParamList extends ParamListBase,
