@@ -126,6 +126,8 @@ export default function useDescriptors<
 
   const routes = useRouteCache(state.routes);
 
+  console.log(routes);
+
   return routes.reduce<
     Record<
       string,
