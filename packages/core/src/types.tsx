@@ -327,6 +327,19 @@ export type CompositeNavigationProp<
     A extends NavigationProp<any, any, any, any, infer E> ? E : {}
   >;
 
+export type CompositeScreenProps<
+  A extends {
+    navigation: NavigationProp<ParamListBase, string, any, any>;
+    route: RouteProp<ParamListBase>;
+  },
+  B extends {
+    navigation: NavigationHelpersCommon<ParamListBase, any>;
+  }
+> = {
+  navigation: CompositeNavigationProp<A['navigation'], B['navigation']>;
+  route: A['route'];
+};
+
 export type Descriptor<
   ScreenOptions extends {},
   Navigation extends NavigationProp<any, any, any, any, any>,
