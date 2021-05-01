@@ -38,13 +38,13 @@ type Options<
   screenOptions?:
     | ScreenOptions
     | ((props: {
-        route: RouteProp<ParamListBase, string>;
+        route: RouteProp<ParamListBase>;
         navigation: any;
       }) => ScreenOptions);
   defaultScreenOptions?:
     | ScreenOptions
     | ((props: {
-        route: RouteProp<ParamListBase, string>;
+        route: RouteProp<ParamListBase>;
         navigation: any;
         options: ScreenOptions;
       }) => ScreenOptions);
@@ -133,7 +133,7 @@ export default function useDescriptors<
         ScreenOptions,
         NavigationProp<ParamListBase, string, State, ScreenOptions, EventMap> &
           ActionHelpers,
-        RouteProp<ParamListBase, string>
+        RouteProp<ParamListBase>
       >
     >
   >((acc, route, i) => {

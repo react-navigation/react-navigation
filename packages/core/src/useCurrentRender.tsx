@@ -13,11 +13,7 @@ type Options = {
   navigation: NavigationHelpers<ParamListBase>;
   descriptors: Record<
     string,
-    Descriptor<
-      object,
-      NavigationProp<ParamListBase>,
-      RouteProp<ParamListBase, string>
-    >
+    Descriptor<object, NavigationProp<ParamListBase>, RouteProp<ParamListBase>>
   >;
 };
 

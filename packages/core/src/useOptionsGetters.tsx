@@ -1,12 +1,12 @@
 import * as React from 'react';
-import type { ParamListBase, NavigationState } from '@react-navigation/routers';
+import type { ParamListBase } from '@react-navigation/routers';
 import NavigationStateContext from './NavigationStateContext';
 import NavigationBuilderContext from './NavigationBuilderContext';
 import type { NavigationProp } from './types';
 
 type Options = {
   key?: string;
-  navigation?: NavigationProp<ParamListBase, string, NavigationState, object>;
+  navigation?: NavigationProp<ParamListBase>;
   options?: object | undefined;
 };
 

@@ -33,8 +33,8 @@ import {
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import {
   createStackNavigator,
-  StackScreenProps,
   HeaderStyleInterpolators,
+  StackNavigationProp,
 } from '@react-navigation/stack';
 import { useReduxDevToolsExtension } from '@react-navigation/devtools';
 
@@ -304,7 +304,11 @@ export default function App() {
                     ),
                   }}
                 >
-                  {({ navigation }: StackScreenProps<RootStackParamList>) => (
+                  {({
+                    navigation,
+                  }: {
+                    navigation: StackNavigationProp<RootStackParamList>;
+                  }) => (
                     <ScrollView
                       style={{ backgroundColor: theme.colors.background }}
                     >

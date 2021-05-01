@@ -20,7 +20,7 @@ import getDefaultHeaderHeight from './Header/getDefaultHeaderHeight';
 type Props = {
   focused: boolean;
   navigation: NavigationProp<ParamListBase>;
-  route: RouteProp<ParamListBase, string>;
+  route: RouteProp<ParamListBase>;
   header: React.ReactNode;
   headerShown?: boolean;
   headerStatusBarHeight?: number;
