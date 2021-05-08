@@ -102,7 +102,7 @@ export type SceneProgress = {
 
 export type StackHeaderMode = 'float' | 'screen';
 
-export type StackCardMode = 'card' | 'modal';
+export type StackPresentationMode = 'card' | 'modal';
 
 export type StackHeaderOptions = HeaderOptions & {
   /**
@@ -239,6 +239,14 @@ export type StackNavigationOptions = StackHeaderOptions &
      */
     animationEnabled?: boolean;
     /**
+     * Whether this screen should be presented as a modal or a regular card.
+     * If you haven't customized the animations, the animation will be:
+     * - If set to 'modal' - modal animation on iOS and Android
+     * - If set to 'card' - horizontal slide animation on iOS, OS-default animation on Android
+     * Defaults to 'card'
+     */
+    animationPresentation?: 'card' | 'modal';
+    /**
      * The type of animation to use when this screen replaces another screen. Defaults to `push`.
      * When `pop` is used, the `pop` animation is applied to the screen being replaced.
      */
@@ -268,7 +276,6 @@ export type StackNavigationOptions = StackHeaderOptions &
   };
 
 export type StackNavigationConfig = {
-  mode?: StackCardMode;
   /**
    * If `false`, the keyboard will NOT automatically dismiss when navigating to a new screen.
    * Defaults to `true`.

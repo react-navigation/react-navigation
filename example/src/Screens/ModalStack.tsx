@@ -82,7 +82,7 @@ export default function ModalStackScreen({ navigation }: Props) {
   }, [navigation]);
 
   return (
-    <ModalStack.Navigator mode="modal">
+    <ModalStack.Navigator screenOptions={{ animationPresentation: 'modal' }}>
       <ModalStack.Screen
         name="Article"
         component={ArticleScreen}

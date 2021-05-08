@@ -8,7 +8,7 @@ import {
 } from '@react-navigation/stack';
 import Article from '../Shared/Article';
 
-type SimpleStackParams = {
+type TransparentStackParams = {
   Article: { author: string };
   Dialog: undefined;
 };
@@ -18,7 +18,7 @@ const scrollEnabled = Platform.select({ web: true, default: false });
 const ArticleScreen = ({
   navigation,
   route,
-}: StackScreenProps<SimpleStackParams, 'Article'>) => {
+}: StackScreenProps<TransparentStackParams, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -45,7 +45,9 @@ const ArticleScreen = ({
   );
 };
 
-const DialogScreen = ({ navigation }: StackScreenProps<SimpleStackParams>) => {
+const DialogScreen = ({
+  navigation,
+}: StackScreenProps<TransparentStackParams>) => {
   const { colors } = useTheme();
 
   return (
@@ -70,12 +72,11 @@ const DialogScreen = ({ navigation }: StackScreenProps<SimpleStackParams>) => {
   );
 };
 
-const SimpleStack = createStackNavigator<SimpleStackParams>();
+const TransparentStack = createStackNavigator<TransparentStackParams>();
 
-type Props = Partial<React.ComponentProps<typeof SimpleStack.Navigator>> &
-  StackScreenProps<ParamListBase>;
+type Props = StackScreenProps<ParamListBase>;
 
-export default function SimpleStackScreen({ navigation, ...rest }: Props) {
+export default function TransparentStackScreen({ navigation }: Props) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -83,13 +84,15 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
   }, [navigation]);
 
   return (
-    <SimpleStack.Navigator mode="modal" {...rest}>
-      <SimpleStack.Screen
+    <TransparentStack.Navigator
+      screenOptions={{ animationPresentation: 'modal' }}
+    >
+      <TransparentStack.Screen
         name="Article"
         component={ArticleScreen}
         initialParams={{ author: 'Gandalf' }}
       />
-      <SimpleStack.Screen
+      <TransparentStack.Screen
         name="Dialog"
         component={DialogScreen}
         options={{
@@ -122,7 +125,7 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
           }),
         }}
       />
-    </SimpleStack.Navigator>
+    </TransparentStack.Navigator>
   );
 }
 

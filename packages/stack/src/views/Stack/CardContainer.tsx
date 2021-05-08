@@ -14,7 +14,7 @@ import ModalPresentationContext from '../../utils/ModalPresentationContext';
 import type {
   Layout,
   StackHeaderMode,
-  StackCardMode,
+  StackPresentationMode,
   TransitionPreset,
   Scene,
 } from '../../types';
@@ -58,7 +58,7 @@ type Props = TransitionPreset & {
   gestureEnabled?: boolean;
   gestureResponseDistance?: number;
   gestureVelocityImpact?: number;
-  mode: StackCardMode;
+  animationPresentation?: StackPresentationMode;
   headerMode: StackHeaderMode;
   headerShown: boolean;
   hasAbsoluteFloatHeader: boolean;
@@ -88,7 +88,7 @@ function CardContainer({
   gestureVelocityImpact,
   getPreviousScene,
   getFocusedRoute,
-  mode,
+  animationPresentation,
   headerDarkContent,
   headerMode,
   headerShown,
@@ -246,7 +246,9 @@ function CardContainer({
       accessibilityElementsHidden={!focused}
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
       pointerEvents={active ? 'box-none' : pointerEvents}
-      pageOverflowEnabled={headerMode !== 'float' && mode === 'card'}
+      pageOverflowEnabled={
+        headerMode !== 'float' && animationPresentation !== 'modal'
+      }
       headerDarkContent={headerDarkContent}
       containerStyle={
         hasAbsoluteFloatHeader && headerMode !== 'screen'

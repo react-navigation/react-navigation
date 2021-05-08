@@ -438,7 +438,6 @@ export default class StackView extends React.Component<Props, State> {
       state,
       navigation,
       keyboardHandlingEnabled,
-      mode = 'card',
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       descriptors: _,
       ...rest
@@ -462,7 +461,6 @@ export default class StackView extends React.Component<Props, State> {
                     <HeaderShownContext.Consumer>
                       {(isParentHeaderShown) => (
                         <CardStack
-                          mode={mode}
                           insets={insets as EdgeInsets}
                           isParentHeaderShown={isParentHeaderShown}
                           getPreviousRoute={this.getPreviousRoute}
