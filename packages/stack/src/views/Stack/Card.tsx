@@ -29,10 +29,12 @@ import type {
   StackCardStyleInterpolator,
   GestureDirection,
   Layout,
+  StackCardInterpolationProps,
 } from '../../types';
 
 type Props = ViewProps & {
-  index: number;
+  // index: number;
+  interpolationIndex: number;
   closing: boolean;
   next?: Animated.AnimatedInterpolation;
   current: Animated.AnimatedInterpolation;
@@ -344,38 +346,14 @@ export default class Card extends React.Component<Props> {
   private getInterpolatedStyle = memoize(
     (
       styleInterpolator: StackCardStyleInterpolator,
-      index: number,
-      current: Animated.AnimatedInterpolation,
-      next: Animated.AnimatedInterpolation | undefined,
-      layout: Layout,
-      insetTop: number,
-      insetRight: number,
-      insetBottom: number,
-      insetLeft: number
-    ) =>
-      styleInterpolator({
-        index,
-        current: { progress: current },
-        next: next && { progress: next },
-        closing: this.isClosing,
-        swiping: this.isSwiping,
-        inverted: this.inverted,
-        layouts: {
-          screen: layout,
-        },
-        insets: {
-          top: insetTop,
-          right: insetRight,
-          bottom: insetBottom,
-          left: insetLeft,
-        },
-      })
+      animation: StackCardInterpolationProps
+    ) => styleInterpolator(animation)
   );
 
   // Keep track of the animation context when deps changes.
-  private getCardAnimationContext = memoize(
+  private getCardAnimation = memoize(
     (
-      index: number,
+      interpolationIndex: number,
       current: Animated.AnimatedInterpolation,
       next: Animated.AnimatedInterpolation | undefined,
       layout: Layout,
@@ -384,7 +362,7 @@ export default class Card extends React.Component<Props> {
       insetBottom: number,
       insetLeft: number
     ) => ({
-      index,
+      index: interpolationIndex,
       current: { progress: current },
       next: next && { progress: next },
       closing: this.isClosing,
@@ -450,7 +428,8 @@ export default class Card extends React.Component<Props> {
   render() {
     const {
       styleInterpolator,
-      index,
+      // index,
+      interpolationIndex,
       current,
       gesture,
       next,
@@ -469,9 +448,8 @@ export default class Card extends React.Component<Props> {
       ...rest
     } = this.props;
 
-    const interpolatedStyle = this.getInterpolatedStyle(
-      styleInterpolator,
-      index,
+    const interpolationProps = this.getCardAnimation(
+      interpolationIndex,
       current,
       next,
       layout,
@@ -481,15 +459,9 @@ export default class Card extends React.Component<Props> {
       insets.left
     );
 
-    const animationContext = this.getCardAnimationContext(
-      index,
-      current,
-      next,
-      layout,
-      insets.top,
-      insets.right,
-      insets.bottom,
-      insets.left
+    const interpolatedStyle = this.getInterpolatedStyle(
+      styleInterpolator,
+      interpolationProps
     );
 
     const {
@@ -521,13 +493,13 @@ export default class Card extends React.Component<Props> {
         : false;
 
     return (
-      <CardAnimationContext.Provider value={animationContext}>
+      <CardAnimationContext.Provider value={interpolationProps}>
         {
           // StatusBar messes with translucent status bar on Android
           // So we should only enable it on iOS
           Platform.OS === 'ios' &&
           overlayEnabled &&
-          index === 0 &&
+          interpolationIndex === 0 &&
           next &&
           styleInterpolator === forModalPresentationIOS ? (
             <ModalStatusBarManager
