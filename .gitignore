@@ -26,6 +26,7 @@ build
 
 npm-debug.*
 
+*.tsbuildinfo
 *.log
 *.jks
 *.p8

@@ -20,7 +20,7 @@ import type {
 } from '../../types';
 
 type Props = TransitionPreset & {
-  index: number;
+  interpolationIndex: number;
   active: boolean;
   focused: boolean;
   closing: boolean;
@@ -97,7 +97,7 @@ function CardContainer({
   headerHeight,
   onHeaderHeightChange,
   isParentHeaderShown,
-  index,
+  interpolationIndex,
   layout,
   onCloseRoute,
   onOpenRoute,
@@ -221,7 +221,7 @@ function CardContainer({
 
   return (
     <Card
-      index={index}
+      interpolationIndex={interpolationIndex}
       gestureDirection={gestureDirection}
       layout={layout}
       insets={insets}
@@ -278,7 +278,9 @@ function CardContainer({
           </HeaderBackContext.Provider>
         </View>
         {headerMode !== 'float' ? (
-          <ModalPresentationContext.Provider value={isModalPresentation}>
+          <ModalPresentationContext.Provider
+            value={isModalPresentation && interpolationIndex !== 0}
+          >
             {renderHeader({
               mode: 'screen',
               layout,

@@ -42,6 +42,7 @@ import { restartApp } from './Restart';
 import SettingsItem from './Shared/SettingsItem';
 import SimpleStack from './Screens/SimpleStack';
 import ModalStack from './Screens/ModalStack';
+import MixedStack from './Screens/MixedStack';
 import MixedHeaderMode from './Screens/MixedHeaderMode';
 import StackTransparent from './Screens/StackTransparent';
 import StackHeaderCustomization from './Screens/StackHeaderCustomization';
@@ -70,6 +71,10 @@ const SCREENS = {
   ModalStack: {
     title: 'Modal Stack',
     component: ModalStack,
+  },
+  MixedStack: {
+    title: 'Regular + Modal Stack',
+    component: MixedStack,
   },
   MixedHeaderMode: {
     title: 'Float + Screen Header Stack',

@@ -319,7 +319,7 @@ export type StackCardInterpolationProps = {
     progress: Animated.AnimatedInterpolation;
   };
   /**
-   * The index of the card in the stack.
+   * The index of the card with this interpolation in the stack.
    */
   index: number;
   /**
