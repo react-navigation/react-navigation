@@ -111,7 +111,6 @@ export default function MixedStackScreen({ navigation }: Props) {
         component={ArticleScreen}
         options={({ route }) => ({
           title: `Article by ${route.params.author}`,
-          headerMode: 'screen',
         })}
         initialParams={{ author: 'Gandalf' }}
       />
@@ -120,7 +119,6 @@ export default function MixedStackScreen({ navigation }: Props) {
         component={AlbumsScreen}
         options={{
           title: 'Albums',
-          headerMode: 'screen',
           ...TransitionPresets.ModalPresentationIOS,
         }}
       />
