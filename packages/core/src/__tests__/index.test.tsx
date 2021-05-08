@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { render, act } from '@testing-library/react-native';
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
+import Group from '../Group';
 import Screen from '../Screen';
 import BaseNavigationContainer from '../BaseNavigationContainer';
 import useNavigationBuilder from '../useNavigationBuilder';
@@ -227,6 +228,53 @@ it('initializes state for nested screens in React.Fragment', () => {
           <Screen name="bar" component={jest.fn()} />
           <Screen name="baz" component={jest.fn()} />
         </React.Fragment>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(element).update(element);
+
+  expect(onStateChange).toBeCalledTimes(1);
+  expect(onStateChange).toBeCalledWith({
+    stale: false,
+    type: 'test',
+    index: 0,
+    key: '0',
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+      { key: 'baz', name: 'baz' },
+    ],
+  });
+});
+
+it('initializes state for nested screens in Group', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestScreen = (props: any) => {
+    React.useEffect(() => {
+      props.navigation.dispatch({ type: 'UPDATE' });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    return null;
+  };
+
+  const onStateChange = jest.fn();
+
+  const element = (
+    <BaseNavigationContainer onStateChange={onStateChange}>
+      <TestNavigator>
+        <Screen name="foo" component={TestScreen} />
+        <Group>
+          <Screen name="bar" component={jest.fn()} />
+          <Screen name="baz" component={jest.fn()} />
+        </Group>
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -1450,7 +1498,7 @@ it('throws when Screen is not the direct children', () => {
   );
 
   expect(() => render(element).update(element)).toThrowError(
-    "A navigator can only contain 'Screen' components as its direct children (found 'Bar')"
+    "A navigator can only contain 'Screen', 'Group' or 'React.Fragment' as its direct children (found 'Bar')"
   );
 });
 
@@ -1475,7 +1523,7 @@ it('throws when undefined component is a direct children', () => {
   spy.mockRestore();
 
   expect(() => render(element).update(element)).toThrowError(
-    "A navigator can only contain 'Screen' components as its direct children (found 'undefined' for the screen 'foo')"
+    "A navigator can only contain 'Screen', 'Group' or 'React.Fragment' as its direct children (found 'undefined' for the screen 'foo')"
   );
 });
 
@@ -1495,7 +1543,7 @@ it('throws when a tag is a direct children', () => {
   );
 
   expect(() => render(element).update(element)).toThrowError(
-    "A navigator can only contain 'Screen' components as its direct children (found 'screen' for the screen 'foo')"
+    "A navigator can only contain 'Screen', 'Group' or 'React.Fragment' as its direct children (found 'screen' for the screen 'foo')"
   );
 });
 
@@ -1515,7 +1563,7 @@ it('throws when a React Element is not the direct children', () => {
   );
 
   expect(() => render(element).update(element)).toThrowError(
-    "A navigator can only contain 'Screen' components as its direct children (found 'Hello world')"
+    "A navigator can only contain 'Screen', 'Group' or 'React.Fragment' as its direct children (found 'Hello world')"
   );
 });
 
@@ -1838,19 +1886,16 @@ it("returns focused screen's options with getCurrentOptions when focused screen 
       <TestNavigator>
         <Screen name="bar" options={{ a: 'b' }}>
           {() => (
-            <TestNavigator
-              initialRouteName="bar-a"
-              screenOptions={() => ({ sample2: 'data' })}
-            >
+            <TestNavigator initialRouteName="bar-a">
               <Screen
                 name="bar-a"
                 component={TestScreen}
-                options={{ sample: 'data' }}
+                options={{ sample: '1' }}
               />
               <Screen
                 name="bar-b"
                 component={TestScreen}
-                options={{ sample3: 'data' }}
+                options={{ sample2: '2' }}
               />
             </TestNavigator>
           )}
@@ -1863,15 +1908,122 @@ it("returns focused screen's options with getCurrentOptions when focused screen 
   render(container).update(container);
 
   expect(navigation.getCurrentOptions()).toEqual({
-    sample: 'data',
-    sample2: 'data',
+    sample: '1',
   });
 
   act(() => navigation.navigate('bar-b'));
 
   expect(navigation.getCurrentOptions()).toEqual({
-    sample2: 'data',
-    sample3: 'data',
+    sample2: '2',
+  });
+});
+
+it("returns focused screen's options with getCurrentOptions when focused screen is rendered when using screenOptions", () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestScreen = () => null;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const container = (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="bar" options={{ a: 'b' }}>
+          {() => (
+            <TestNavigator
+              initialRouteName="bar-a"
+              screenOptions={() => ({ sample2: '2' })}
+            >
+              <Screen
+                name="bar-a"
+                component={TestScreen}
+                options={{ sample: '1' }}
+              />
+              <Screen
+                name="bar-b"
+                component={TestScreen}
+                options={{ sample3: '3' }}
+              />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="xux" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(container).update(container);
+
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample: '1',
+    sample2: '2',
+  });
+
+  act(() => navigation.navigate('bar-b'));
+
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample2: '2',
+    sample3: '3',
+  });
+});
+
+it("returns focused screen's options with getCurrentOptions when focused screen is rendered when using Group", () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestScreen = () => null;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const container = (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="bar" options={{ a: 'b' }}>
+          {() => (
+            <TestNavigator
+              initialRouteName="bar-a"
+              screenOptions={() => ({ sample2: '2' })}
+            >
+              <Screen
+                name="bar-a"
+                component={TestScreen}
+                options={{ sample: '1' }}
+              />
+              <Group screenOptions={{ sample4: '4' }}>
+                <Screen
+                  name="bar-b"
+                  component={TestScreen}
+                  options={{ sample3: '3' }}
+                />
+              </Group>
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="xux" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(container).update(container);
+
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample: '1',
+    sample2: '2',
+  });
+
+  act(() => navigation.navigate('bar-b'));
+
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample2: '2',
+    sample3: '3',
+    sample4: '4',
   });
 });
 
@@ -1891,19 +2043,16 @@ it("returns focused screen's options with getCurrentOptions when all screens are
       <TestNavigator>
         <Screen name="bar" options={{ a: 'b' }}>
           {() => (
-            <TestNavigator
-              initialRouteName="bar-a"
-              screenOptions={() => ({ sample2: 'data' })}
-            >
+            <TestNavigator initialRouteName="bar-a">
               <Screen
                 name="bar-a"
                 component={TestScreen}
-                options={{ sample: 'data' }}
+                options={{ sample: '1' }}
               />
               <Screen
                 name="bar-b"
                 component={TestScreen}
-                options={{ sample3: 'data' }}
+                options={{ sample2: '2' }}
               />
             </TestNavigator>
           )}
@@ -1916,15 +2065,122 @@ it("returns focused screen's options with getCurrentOptions when all screens are
   render(container).update(container);
 
   expect(navigation.getCurrentOptions()).toEqual({
-    sample: 'data',
-    sample2: 'data',
+    sample: '1',
   });
 
   act(() => navigation.navigate('bar-b'));
 
   expect(navigation.getCurrentOptions()).toEqual({
-    sample2: 'data',
-    sample3: 'data',
+    sample2: '2',
+  });
+});
+
+it("returns focused screen's options with getCurrentOptions when all screens are rendered with screenOptions", () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return <>{state.routes.map((route) => descriptors[route.key].render())}</>;
+  };
+
+  const TestScreen = () => null;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const container = (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="bar" options={{ a: 'b' }}>
+          {() => (
+            <TestNavigator
+              initialRouteName="bar-a"
+              screenOptions={() => ({ sample2: '2' })}
+            >
+              <Screen
+                name="bar-a"
+                component={TestScreen}
+                options={{ sample: '1' }}
+              />
+              <Screen
+                name="bar-b"
+                component={TestScreen}
+                options={{ sample3: '3' }}
+              />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="xux" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(container).update(container);
+
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample: '1',
+    sample2: '2',
+  });
+
+  act(() => navigation.navigate('bar-b'));
+
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample2: '2',
+    sample3: '3',
+  });
+});
+
+it("returns focused screen's options with getCurrentOptions when all screens are rendered with Group", () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return <>{state.routes.map((route) => descriptors[route.key].render())}</>;
+  };
+
+  const TestScreen = () => null;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const container = (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="bar" options={{ a: 'b' }}>
+          {() => (
+            <TestNavigator
+              initialRouteName="bar-a"
+              screenOptions={() => ({ sample2: '2' })}
+            >
+              <Screen
+                name="bar-a"
+                component={TestScreen}
+                options={{ sample: '1' }}
+              />
+              <Group screenOptions={{ sample4: '4' }}>
+                <Screen
+                  name="bar-b"
+                  component={TestScreen}
+                  options={{ sample3: '3' }}
+                />
+              </Group>
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="xux" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(container).update(container);
+
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample: '1',
+    sample2: '2',
+  });
+
+  act(() => navigation.navigate('bar-b'));
+
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample2: '2',
+    sample3: '3',
+    sample4: '4',
   });
 });
 
