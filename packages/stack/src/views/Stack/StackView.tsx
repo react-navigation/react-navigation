@@ -288,24 +288,6 @@ export default class StackView extends React.Component<Props, State> {
     descriptors: {},
   };
 
-  private getGesturesEnabled = ({ route }: { route: Route<string> }) => {
-    const descriptor = this.state.descriptors[route.key];
-
-    if (descriptor) {
-      const { gestureEnabled, animationEnabled } = descriptor.options;
-
-      if (animationEnabled === false) {
-        // When animation is disabled, also disable gestures
-        // The gesture to dismiss a route will look weird when not animated
-        return false;
-      }
-
-      return gestureEnabled !== false;
-    }
-
-    return false;
-  };
-
   private getPreviousRoute = ({ route }: { route: Route<string> }) => {
     const { closingRouteKeys, replacingRouteKeys } = this.state;
     const routes = this.state.routes.filter(
@@ -464,7 +446,6 @@ export default class StackView extends React.Component<Props, State> {
                           insets={insets as EdgeInsets}
                           isParentHeaderShown={isParentHeaderShown}
                           getPreviousRoute={this.getPreviousRoute}
-                          getGesturesEnabled={this.getGesturesEnabled}
                           routes={routes}
                           openingRouteKeys={openingRouteKeys}
                           closingRouteKeys={closingRouteKeys}

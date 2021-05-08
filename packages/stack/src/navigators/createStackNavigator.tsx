@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Platform } from 'react-native';
 import {
   useNavigationBuilder,
   createNavigatorFactory,
@@ -54,21 +53,9 @@ function StackNavigator({
     initialRouteName,
     children,
     screenOptions,
-    defaultScreenOptions: ({ options }) => ({
+    defaultScreenOptions: () => ({
       headerShown: headerMode ? headerMode !== 'none' : true,
-      headerMode:
-        headerMode && headerMode !== 'none'
-          ? headerMode
-          : options.animationPresentation !== 'modal' &&
-            Platform.OS === 'ios' &&
-            options.header === undefined
-          ? 'float'
-          : 'screen',
-      gestureEnabled: Platform.OS === 'ios',
-      animationEnabled:
-        Platform.OS !== 'web' &&
-        Platform.OS !== 'windows' &&
-        Platform.OS !== 'macos',
+      headerMode: headerMode && headerMode !== 'none' ? headerMode : undefined,
     }),
   });
 

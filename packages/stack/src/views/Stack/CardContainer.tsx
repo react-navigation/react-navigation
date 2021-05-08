@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { Animated, View, StyleSheet } from 'react-native';
 import { Route, useTheme } from '@react-navigation/native';
 import {
   HeaderShownContext,
@@ -11,15 +11,9 @@ import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
 import { forModalPresentationIOS } from '../../TransitionConfigs/CardStyleInterpolators';
 import ModalPresentationContext from '../../utils/ModalPresentationContext';
-import type {
-  Layout,
-  StackHeaderMode,
-  StackPresentationMode,
-  TransitionPreset,
-  Scene,
-} from '../../types';
+import type { Layout, Scene } from '../../types';
 
-type Props = TransitionPreset & {
+type Props = {
   interpolationIndex: number;
   active: boolean;
   focused: boolean;
@@ -32,12 +26,6 @@ type Props = TransitionPreset & {
   safeAreaInsetRight: number;
   safeAreaInsetBottom: number;
   safeAreaInsetLeft: number;
-  cardOverlay?: (props: {
-    style: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
-  }) => React.ReactNode;
-  cardOverlayEnabled: boolean;
-  cardShadowEnabled?: boolean;
-  cardStyle?: StyleProp<ViewStyle>;
   getPreviousScene: (props: { route: Route<string> }) => Scene | undefined;
   getFocusedRoute: () => Route<string>;
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
@@ -55,12 +43,6 @@ type Props = TransitionPreset & {
   onGestureStart?: (props: { route: Route<string> }) => void;
   onGestureEnd?: (props: { route: Route<string> }) => void;
   onGestureCancel?: (props: { route: Route<string> }) => void;
-  gestureEnabled?: boolean;
-  gestureResponseDistance?: number;
-  gestureVelocityImpact?: number;
-  animationPresentation?: StackPresentationMode;
-  headerMode: StackHeaderMode;
-  headerShown: boolean;
   hasAbsoluteFloatHeader: boolean;
   headerHeight: number;
   onHeaderHeightChange: (props: {
@@ -74,25 +56,12 @@ const EPSILON = 0.1;
 
 function CardContainer({
   active,
-  cardOverlay,
-  cardOverlayEnabled,
-  cardShadowEnabled,
-  cardStyle,
-  cardStyleInterpolator,
   closing,
   gesture,
   focused,
-  gestureDirection,
-  gestureEnabled,
-  gestureResponseDistance,
-  gestureVelocityImpact,
   getPreviousScene,
   getFocusedRoute,
-  animationPresentation,
   headerDarkContent,
-  headerMode,
-  headerShown,
-  headerStyleInterpolator,
   hasAbsoluteFloatHeader,
   headerHeight,
   onHeaderHeightChange,
@@ -116,7 +85,6 @@ function CardContainer({
   safeAreaInsetRight,
   safeAreaInsetTop,
   scene,
-  transitionSpec,
 }: Props) {
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
 
@@ -202,6 +170,22 @@ function CardContainer({
       }
     };
   }, [pointerEvents, scene.progress.next]);
+
+  const {
+    animationPresentation,
+    cardOverlay,
+    cardOverlayEnabled,
+    cardShadowEnabled,
+    cardStyle,
+    cardStyleInterpolator,
+    gestureDirection,
+    gestureEnabled,
+    gestureResponseDistance,
+    gestureVelocityImpact,
+    headerMode,
+    headerShown,
+    transitionSpec,
+  } = scene.descriptor.options;
 
   const isModalPresentation = cardStyleInterpolator === forModalPresentationIOS;
   const previousScene = getPreviousScene({ route: scene.descriptor.route });
@@ -289,7 +273,6 @@ function CardContainer({
               scenes: [previousScene, scene],
               getPreviousScene,
               getFocusedRoute,
-              styleInterpolator: headerStyleInterpolator,
               onContentHeightChange: onHeaderHeightChange,
             })}
           </ModalPresentationContext.Provider>

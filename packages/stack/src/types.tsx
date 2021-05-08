@@ -72,11 +72,21 @@ export type GestureDirection =
   | 'vertical'
   | 'vertical-inverted';
 
+type SceneOptionsDefaults = TransitionPreset & {
+  animationEnabled: boolean;
+  gestureEnabled: boolean;
+  cardOverlayEnabled: boolean;
+  headerMode: StackHeaderMode;
+};
+
 export type Scene = {
   /**
    * Descriptor object for the screen.
    */
-  descriptor: StackDescriptor;
+  descriptor: Omit<StackDescriptor, 'options'> & {
+    options: Omit<StackDescriptor['options'], keyof SceneOptionsDefaults> &
+      SceneOptionsDefaults;
+  };
   /**
    * Animated nodes representing the progress of the animation.
    */
