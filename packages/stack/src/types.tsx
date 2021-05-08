@@ -228,8 +228,12 @@ export type StackNavigationOptions = StackHeaderOptions &
      *
      * You can also specify `{ backgroundColor: 'transparent' }` to make the previous screen visible underneath.
      * This is useful to implement things like modal dialogs.
-     * If you use [`react-native-screens`](https://github.com/kmagiera/react-native-screens), you should also specify `mode: 'modal'`
-     * in the stack view config when using a transparent background so previous screens aren't detached.
+     *
+     * You should also specify `detachPreviousScreen: false` in options when using a transparent background
+     * so that the previous screen isn't detached and stays below the current screen.
+     *
+     * You might also need to change the animation of the screen using `cardStyleInterpolator`
+     * so that the previous screen isn't transformed or invisible.
      */
     cardStyle?: StyleProp<ViewStyle>;
     /**
@@ -240,10 +244,12 @@ export type StackNavigationOptions = StackHeaderOptions &
     animationEnabled?: boolean;
     /**
      * Whether this screen should be presented as a modal or a regular card.
-     * If you haven't customized the animations, the animation will be:
-     * - If set to 'modal' - modal animation on iOS and Android
-     * - If set to 'card' - horizontal slide animation on iOS, OS-default animation on Android
-     * Defaults to 'card'
+     *
+     * If you haven't customized the animations separately, the animation will change based on the value:
+     * - 'modal' - modal animation on iOS and Android. It'll also default `headerMode` to `screen`.
+     * - 'card' - horizontal slide animation on iOS, OS-default animation on Android.
+     *
+     * Defaults to 'card'.
      */
     animationPresentation?: 'card' | 'modal';
     /**
@@ -270,7 +276,7 @@ export type StackNavigationOptions = StackHeaderOptions &
      * Whether to detach the previous screen from the view hierarchy to save memory.
      * Set it to `false` if you need the previous screen to be seen through the active screen.
      * Only applicable if `detachInactiveScreens` isn't set to `false`.
-     * Defaults to `false` for the last screen when mode='modal', otherwise `true`.
+     * Defaults to `false` for the last screen for modals, otherwise `true`.
      */
     detachPreviousScreen?: boolean;
   };
