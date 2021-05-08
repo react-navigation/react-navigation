@@ -59,7 +59,7 @@ function StackNavigator({
       headerMode:
         headerMode && headerMode !== 'none'
           ? headerMode
-          : rest.mode !== 'modal' &&
+          : options.animationPresentation !== 'modal' &&
             Platform.OS === 'ios' &&
             options.header === undefined
           ? 'float'
