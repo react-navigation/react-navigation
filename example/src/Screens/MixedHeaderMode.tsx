@@ -117,24 +117,29 @@ export default function SimpleStackScreen({
   return (
     <SimpleStack.Navigator
       screenOptions={{
-        ...TransitionPresets.SlideFromRightIOS,
-        headerMode: 'float',
         headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
       }}
     >
-      <SimpleStack.Screen
-        name="Article"
-        component={ArticleScreen}
-        options={({ route }) => ({
-          title: `Article by ${route.params?.author ?? 'Unknown'}`,
-        })}
-        initialParams={{ author: 'Gandalf' }}
-      />
-      <SimpleStack.Screen
-        name="NewsFeed"
-        component={NewsFeedScreen}
-        options={{ title: 'Feed' }}
-      />
+      <SimpleStack.Group
+        screenOptions={{
+          ...TransitionPresets.SlideFromRightIOS,
+          headerMode: 'float',
+        }}
+      >
+        <SimpleStack.Screen
+          name="Article"
+          component={ArticleScreen}
+          options={({ route }) => ({
+            title: `Article by ${route.params?.author ?? 'Unknown'}`,
+          })}
+          initialParams={{ author: 'Gandalf' }}
+        />
+        <SimpleStack.Screen
+          name="NewsFeed"
+          component={NewsFeedScreen}
+          options={{ title: 'Feed' }}
+        />
+      </SimpleStack.Group>
       <SimpleStack.Screen
         name="Albums"
         component={AlbumsScreen}

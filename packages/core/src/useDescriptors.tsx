@@ -24,6 +24,22 @@ import type {
   NavigationProp,
 } from './types';
 
+export type ScreenConfigWithParent<
+  State extends NavigationState,
+  ScreenOptions extends {},
+  EventMap extends EventMapBase
+> = [
+  (ScreenOptionsOrCallback<ScreenOptions> | undefined)[] | undefined,
+  RouteConfig<ParamListBase, string, State, ScreenOptions, EventMap>
+];
+
+type ScreenOptionsOrCallback<ScreenOptions extends {}> =
+  | ScreenOptions
+  | ((props: {
+      route: RouteProp<ParamListBase, string>;
+      navigation: any;
+    }) => ScreenOptions);
+
 type Options<
   State extends NavigationState,
   ScreenOptions extends {},
@@ -32,15 +48,10 @@ type Options<
   state: State;
   screens: Record<
     string,
-    RouteConfig<ParamListBase, string, State, ScreenOptions, EventMap>
+    ScreenConfigWithParent<State, ScreenOptions, EventMap>
   >;
   navigation: NavigationHelpers<ParamListBase>;
-  screenOptions?:
-    | ScreenOptions
-    | ((props: {
-        route: RouteProp<ParamListBase>;
-        navigation: any;
-      }) => ScreenOptions);
+  screenOptions?: ScreenOptionsOrCallback<ScreenOptions>;
   defaultScreenOptions?:
     | ScreenOptions
     | ((props: {
@@ -137,29 +148,31 @@ export default function useDescriptors<
       >
     >
   >((acc, route, i) => {
-    const screen = screens[route.name];
+    const config = screens[route.name];
+    const screen = config[1];
     const navigation = navigations[route.key];
 
-    const customOptions = {
+    const optionsList = [
       // The default `screenOptions` passed to the navigator
-      ...(typeof screenOptions === 'object' || screenOptions == null
-        ? screenOptions
-        : // @ts-expect-error: this is a function, but typescript doesn't think so
-          screenOptions({
-            route,
-            navigation,
-          })),
-      // The `options` prop passed to `Screen` elements
-      ...(typeof screen.options === 'object' || screen.options == null
-        ? screen.options
-        : // @ts-expect-error: this is a function, but typescript doesn't think so
-          screen.options({
-            route,
-            navigation,
-          })),
+      screenOptions,
+      // The `screenOptions` props passed to `Group` elements
+      ...((config[0]
+        ? config[0].filter(Boolean)
+        : []) as ScreenOptionsOrCallback<ScreenOptions>[]),
+      // The `options` prop passed to `Screen` elements,
+      screen.options,
       // The options set via `navigation.setOptions`
-      ...options[route.key],
-    };
+      options[route.key],
+    ];
+
+    const customOptions = optionsList.reduce<ScreenOptions>(
+      (acc, curr) =>
+        Object.assign(
+          acc,
+          typeof curr !== 'function' ? curr : curr({ route, navigation })
+        ),
+      {} as ScreenOptions
+    );
 
     const mergedOptions = {
       ...(typeof defaultScreenOptions === 'function'

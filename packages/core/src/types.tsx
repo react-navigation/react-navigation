@@ -17,7 +17,7 @@ export type DefaultNavigatorOptions<
 > = DefaultRouterOptions<Keyof<ParamList>> & {
   /**
    * Children React Elements to extract the route configuration from.
-   * Only `Screen` components are supported as children.
+   * Only `Screen`, `Group` and `React.Fragment` are supported as children.
    */
   children: React.ReactNode;
   /**
@@ -376,6 +376,38 @@ export type ScreenListeners<
   }
 >;
 
+export type RouteConfigComponent<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList
+> =
+  | {
+      /**
+       * React component to render for this screen.
+       */
+      component: React.ComponentType<any>;
+      getComponent?: never;
+      children?: never;
+    }
+  | {
+      /**
+       * Lazily get a React component to render for this screen.
+       */
+      getComponent: () => React.ComponentType<any>;
+      component?: never;
+      children?: never;
+    }
+  | {
+      /**
+       * Render callback to render content of this screen.
+       */
+      children: (props: {
+        route: RouteProp<ParamList, RouteName>;
+        navigation: any;
+      }) => React.ReactNode;
+      component?: never;
+      getComponent?: never;
+    };
+
 export type RouteConfig<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList,
@@ -420,35 +452,27 @@ export type RouteConfig<
    * Initial params object for the route.
    */
   initialParams?: Partial<ParamList[RouteName]>;
-} & (
-  | {
-      /**
-       * React component to render for this screen.
-       */
-      component: React.ComponentType<any>;
-      getComponent?: never;
-      children?: never;
-    }
-  | {
-      /**
-       * Lazily get a React component to render for this screen.
-       */
-      getComponent: () => React.ComponentType<any>;
-      component?: never;
-      children?: never;
-    }
-  | {
-      /**
-       * Render callback to render content of this screen.
-       */
-      children: (props: {
-        route: RouteProp<ParamList, RouteName>;
+} & RouteConfigComponent<ParamList, RouteName>;
+
+export type RouteGroupConfig<
+  ParamList extends ParamListBase,
+  ScreenOptions extends {}
+> = {
+  /**
+   * Navigator options for this screen.
+   */
+  screenOptions?:
+    | ScreenOptions
+    | ((props: {
+        route: RouteProp<ParamList, keyof ParamList>;
         navigation: any;
-      }) => React.ReactNode;
-      component?: never;
-      getComponent?: never;
-    }
-);
+      }) => ScreenOptions);
+  /**
+   * Children React Elements to extract the route configuration from.
+   * Only `Screen`, `Group` and `React.Fragment` are supported as children.
+   */
+  children: React.ReactNode;
+};
 
 export type NavigationContainerEventMap = {
   /**
@@ -536,6 +560,10 @@ export type TypedNavigator<
     > &
       DefaultNavigatorOptions<ScreenOptions, ParamList>
   >;
+  /**
+   * Component used for grouping multiple route configuration.
+   */
+  Group: React.ComponentType<RouteGroupConfig<ParamList, ScreenOptions>>;
   /**
    * Component used for specifying route configuration.
    */

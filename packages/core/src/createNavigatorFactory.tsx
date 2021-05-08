@@ -1,5 +1,6 @@
 import type * as React from 'react';
 import type { ParamListBase, NavigationState } from '@react-navigation/routers';
+import Group from './Group';
 import Screen from './Screen';
 import type { TypedNavigator, EventMapBase } from './types';
 
@@ -31,6 +32,7 @@ export default function createNavigatorFactory<
 
     return {
       Navigator,
+      Group,
       Screen,
     };
   };
