@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.13...@react-navigation/stack@6.0.0-next.14) (2021-05-09)
+
+
+### Bug Fixes
+
+* fix modal animation not being set properly ([08e74af](https://github.com/react-navigation/react-navigation/commit/08e74af54529582dcbc8d91e77bfed70f006f00d))
+
+
+
+
+
 # [6.0.0-next.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.12...@react-navigation/stack@6.0.0-next.13) (2021-05-09)
 
 **Note:** Version bump only for package @react-navigation/stack
