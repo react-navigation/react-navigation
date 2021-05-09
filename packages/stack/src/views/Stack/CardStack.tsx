@@ -18,11 +18,7 @@ import {
   Background,
 } from '@react-navigation/elements';
 
-import {
-  MaybeScreenContainer,
-  MaybeScreen,
-  shouldUseActivityState,
-} from '../Screens';
+import { MaybeScreenContainer, MaybeScreen } from '../Screens';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import CardContainer from './CardContainer';
 import {
@@ -467,9 +463,7 @@ export default class CardStack extends React.Component<Props, State> {
       onGestureCancel,
       // Enable on new versions of `react-native-screens`
       // On older versions of `react-native-screens`, there's an issue with screens not being responsive to user interaction.
-      detachInactiveScreens = Platform.OS === 'web'
-        ? true
-        : shouldUseActivityState ?? false,
+      detachInactiveScreens = true,
     } = this.props;
 
     const { scenes, layout, gestures, headerHeights } = this.state;
@@ -551,34 +545,24 @@ export default class CardStack extends React.Component<Props, State> {
             // For the old implementation, it stays the same it was
             let isScreenActive: Animated.AnimatedInterpolation | 2 | 1 | 0 = 1;
 
-            if (shouldUseActivityState || Platform.OS === 'web') {
-              if (index < self.length - activeScreensLimit - 1) {
-                // screen should be inactive because it is too deep in the stack
-                isScreenActive = STATE_INACTIVE;
-              } else {
-                const sceneForActivity = scenes[self.length - 1];
-                const outputValue =
-                  index === self.length - 1
-                    ? STATE_ON_TOP // the screen is on top after the transition
-                    : index >= self.length - activeScreensLimit
-                    ? STATE_TRANSITIONING_OR_BELOW_TOP // the screen should stay active after the transition, it is not on top but is in activeLimit
-                    : STATE_INACTIVE; // the screen should be active only during the transition, it is at the edge of activeLimit
-                isScreenActive = sceneForActivity
-                  ? sceneForActivity.progress.current.interpolate({
-                      inputRange: [0, 1 - EPSILON, 1],
-                      outputRange: [1, 1, outputValue],
-                      extrapolate: 'clamp',
-                    })
-                  : STATE_TRANSITIONING_OR_BELOW_TOP;
-              }
+            if (index < self.length - activeScreensLimit - 1) {
+              // screen should be inactive because it is too deep in the stack
+              isScreenActive = STATE_INACTIVE;
             } else {
-              isScreenActive = scene.progress.next
-                ? scene.progress.next.interpolate({
+              const sceneForActivity = scenes[self.length - 1];
+              const outputValue =
+                index === self.length - 1
+                  ? STATE_ON_TOP // the screen is on top after the transition
+                  : index >= self.length - activeScreensLimit
+                  ? STATE_TRANSITIONING_OR_BELOW_TOP // the screen should stay active after the transition, it is not on top but is in activeLimit
+                  : STATE_INACTIVE; // the screen should be active only during the transition, it is at the edge of activeLimit
+              isScreenActive = sceneForActivity
+                ? sceneForActivity.progress.current.interpolate({
                     inputRange: [0, 1 - EPSILON, 1],
-                    outputRange: [1, 1, 0],
+                    outputRange: [1, 1, outputValue],
                     extrapolate: 'clamp',
                   })
-                : 1;
+                : STATE_TRANSITIONING_OR_BELOW_TOP;
             }
 
             const {
