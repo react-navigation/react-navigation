@@ -40,7 +40,9 @@ export default function BottomTabView(props: Props) {
     navigation,
     descriptors,
     safeAreaInsets,
-    detachInactiveScreens = Platform.OS !== 'windows',
+    detachInactiveScreens = Platform.OS === 'web' ||
+      Platform.OS === 'android' ||
+      Platform.OS === 'ios',
     sceneContainerStyle,
   } = props;
 
