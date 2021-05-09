@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.6...@react-navigation/bottom-tabs@6.0.0-next.7) (2021-05-09)
+
+
+### Bug Fixes
+
+* enable screens only on supported platforms ([#9494](https://github.com/react-navigation/react-navigation/issues/9494)) ([8da4c58](https://github.com/react-navigation/react-navigation/commit/8da4c58065607d44e9dc1ad8943e09537598dcd7))
+* make sure disabling react-native-screens works ([a369ba3](https://github.com/react-navigation/react-navigation/commit/a369ba36451ddc2bb5b247e61b725bce1e3fb5e5))
+
+
+
+
+
 # [6.0.0-next.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.5...@react-navigation/bottom-tabs@6.0.0-next.6) (2021-05-01)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

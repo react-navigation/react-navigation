@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.3...@react-navigation/core@6.0.0-next.4) (2021-05-09)
+
+
+### Features
+
+* add a new component to group multiple screens with common options ([1a6aebe](https://github.com/react-navigation/react-navigation/commit/1a6aebefcb77ea708687475c55742407d69808ce))
+* add ability to specify root param list ([b28bfdd](https://github.com/react-navigation/react-navigation/commit/b28bfddc17cbf3996fac04a34b2a7085ecf88be5))
+
+
+
+
+
 # [6.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.2...@react-navigation/core@6.0.0-next.3) (2021-05-01)
 
 
