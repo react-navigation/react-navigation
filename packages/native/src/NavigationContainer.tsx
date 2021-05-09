@@ -14,9 +14,9 @@ import useDocumentTitle from './useDocumentTitle';
 import useBackButton from './useBackButton';
 import type { Theme, LinkingOptions, DocumentTitleOptions } from './types';
 
-type Props = NavigationContainerProps & {
+type Props<ParamList extends {}> = NavigationContainerProps & {
   theme?: Theme;
-  linking?: LinkingOptions;
+  linking?: LinkingOptions<ParamList>;
   fallback?: React.ReactNode;
   documentTitle?: DocumentTitleOptions;
   onReady?: () => void;
@@ -36,7 +36,7 @@ type Props = NavigationContainerProps & {
  * @param props.children Child elements to render the content.
  * @param props.ref Ref object which refers to the navigation object containing helper methods.
  */
-const NavigationContainer = React.forwardRef(function NavigationContainer(
+function NavigationContainerInner(
   {
     theme = DefaultTheme,
     linking,
@@ -44,7 +44,7 @@ const NavigationContainer = React.forwardRef(function NavigationContainer(
     documentTitle,
     onReady,
     ...rest
-  }: Props,
+  }: Props<ParamListBase>,
   ref?: React.Ref<NavigationContainerRef<ParamListBase> | null>
 ) {
   const isLinkingEnabled = linking ? linking.enabled !== false : false;
@@ -101,6 +101,14 @@ const NavigationContainer = React.forwardRef(function NavigationContainer(
       </ThemeProvider>
     </LinkingContext.Provider>
   );
-});
+}
+
+const NavigationContainer = React.forwardRef(NavigationContainerInner) as <
+  RootParamList extends {} = ReactNavigation.RootParamList
+>(
+  props: Props<RootParamList> & {
+    ref?: React.Ref<NavigationContainerRef<RootParamList>>;
+  }
+) => React.ReactElement;
 
 export default NavigationContainer;

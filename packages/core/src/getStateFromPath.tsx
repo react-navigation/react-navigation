@@ -8,9 +8,9 @@ import type {
 import findFocusedRoute from './findFocusedRoute';
 import type { PathConfigMap } from './types';
 
-type Options = {
+type Options<ParamList extends {}> = {
   initialRouteName?: string;
-  screens: PathConfigMap;
+  screens: PathConfigMap<ParamList>;
 };
 
 type ParseConfig = Record<string, (value: string) => any>;
@@ -60,9 +60,9 @@ type ParsedRoute = {
  * @param path Path string to parse and convert, e.g. /foo/bar?count=42.
  * @param options Extra options to fine-tune how to parse the path.
  */
-export default function getStateFromPath(
+export default function getStateFromPath<ParamList extends {}>(
   path: string,
-  options?: Options
+  options?: Options<ParamList>
 ): ResultState | undefined {
   let initialRoutes: InitialRouteConfig[] = [];
 
@@ -106,7 +106,7 @@ export default function getStateFromPath(
       ...Object.keys(screens).map((key) =>
         createNormalizedConfigs(
           key,
-          screens as PathConfigMap,
+          screens as PathConfigMap<object>,
           [],
           initialRoutes,
           []
@@ -307,7 +307,7 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
 
 const createNormalizedConfigs = (
   screen: string,
-  routeConfig: PathConfigMap,
+  routeConfig: PathConfigMap<object>,
   routeNames: string[] = [],
   initials: InitialRouteConfig[],
   parentScreens: string[],
@@ -319,6 +319,7 @@ const createNormalizedConfigs = (
 
   parentScreens.push(screen);
 
+  // @ts-expect-error: we can't strongly typecheck this for now
   const config = routeConfig[screen];
 
   if (typeof config === 'string') {
@@ -345,7 +346,13 @@ const createNormalizedConfigs = (
           : config.path || '';
 
       configs.push(
-        createConfigItem(screen, routeNames, pattern, config.path, config.parse)
+        createConfigItem(
+          screen,
+          routeNames,
+          pattern!,
+          config.path,
+          config.parse
+        )
       );
     }
 
@@ -361,7 +368,7 @@ const createNormalizedConfigs = (
       Object.keys(config.screens).forEach((nestedConfig) => {
         const result = createNormalizedConfigs(
           nestedConfig,
-          config.screens as PathConfigMap,
+          config.screens as PathConfigMap<object>,
           routeNames,
           initials,
           [...parentScreens],

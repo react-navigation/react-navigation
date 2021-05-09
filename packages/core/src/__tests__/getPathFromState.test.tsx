@@ -33,8 +33,10 @@ it('converts state to path string', () => {
 
   const path = '/foo/bar/baz%20qux?author=jane&valid=true';
 
-  expect(getPathFromState(state)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path) as State)).toBe(path);
+  expect(getPathFromState<object>(state)).toBe(path);
+  expect(
+    getPathFromState<object>(getStateFromPath<object>(path) as State)
+  ).toBe(path);
 });
 
 it('converts state to path string with config', () => {
@@ -97,9 +99,12 @@ it('converts state to path string with config', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -116,8 +121,10 @@ it('handles route without param', () => {
     ],
   };
 
-  expect(getPathFromState(state)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path) as State)).toBe(path);
+  expect(getPathFromState<object>(state)).toBe(path);
+  expect(
+    getPathFromState<object>(getStateFromPath<object>(path) as State)
+  ).toBe(path);
 });
 
 it("doesn't add query param for empty params", () => {
@@ -131,8 +138,10 @@ it("doesn't add query param for empty params", () => {
     ],
   };
 
-  expect(getPathFromState(state)).toBe(path);
-  expect(getPathFromState(getStateFromPath(path) as State)).toBe(path);
+  expect(getPathFromState<object>(state)).toBe(path);
+  expect(
+    getPathFromState<object>(getStateFromPath<object>(path) as State)
+  ).toBe(path);
 });
 
 it('handles state with config with nested screens', () => {
@@ -208,9 +217,12 @@ it('handles state with config with nested screens', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -287,9 +299,12 @@ it('handles state with config with nested screens and exact', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -352,9 +367,12 @@ it('handles state with config with nested screens and unused configs', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -418,9 +436,12 @@ it('handles state with config with nested screens and unused configs with exact'
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -498,9 +519,12 @@ it('handles nested object with stringify in it', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -580,9 +604,12 @@ it('handles nested object with stringify in it with exact', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -623,9 +650,12 @@ it('handles nested object for second route depth', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -669,9 +699,12 @@ it('handles nested object for second route depth with exact', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -719,9 +752,12 @@ it('handles nested object for second route depth and path and stringify in roots
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -774,9 +810,12 @@ it('handles nested object for second route depth and path and stringify in roots
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -805,9 +844,12 @@ it('ignores empty string paths', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -850,9 +892,12 @@ it('keeps query params if path is empty', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toEqual(path);
 });
 
@@ -894,9 +939,12 @@ it('cuts nested configs too', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -939,9 +987,12 @@ it('cuts nested configs too with exact', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -977,9 +1028,12 @@ it('handles empty path at the end', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -1012,9 +1066,12 @@ it('returns "/" for empty path', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -1042,9 +1099,12 @@ it('parses no path specified', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -1121,9 +1181,12 @@ it('strips undefined query params', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -1201,9 +1264,12 @@ it('strips undefined query params with exact', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -1278,9 +1344,12 @@ it('handles stripping all query params', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -1357,9 +1426,12 @@ it('handles stripping all query params with exact', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -1380,9 +1452,12 @@ it('replaces undefined query params', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -1405,9 +1480,12 @@ it('matches wildcard patterns at root', () => {
     routes: [{ name: '404' }],
   };
 
-  expect(getPathFromState(state, config)).toBe('/404');
+  expect(getPathFromState<object>(state, config)).toBe('/404');
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe('/404');
 });
 
@@ -1447,9 +1525,12 @@ it('matches wildcard patterns at nested level', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe('/bar/42/404');
+  expect(getPathFromState<object>(state, config)).toBe('/bar/42/404');
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe('/bar/42/404');
 });
 
@@ -1492,9 +1573,12 @@ it('matches wildcard patterns at nested level with exact', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe('/404');
+  expect(getPathFromState<object>(state, config)).toBe('/404');
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe('/404');
 });
 
@@ -1535,9 +1619,12 @@ it('tries to match wildcard patterns at the end', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe(path);
+  expect(getPathFromState<object>(state, config)).toBe(path);
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe(path);
 });
 
@@ -1570,8 +1657,11 @@ it('uses nearest parent wildcard match for unmatched paths', () => {
     ],
   };
 
-  expect(getPathFromState(state, config)).toBe('/404');
+  expect(getPathFromState<object>(state, config)).toBe('/404');
   expect(
-    getPathFromState(getStateFromPath(path, config) as State, config)
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
   ).toBe('/404');
 });
