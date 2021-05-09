@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { StyleSheet, Platform } from 'react-native';
-import { ScreenContainer } from 'react-native-screens';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import {
   NavigationHelpersContext,
@@ -13,8 +12,7 @@ import {
   SafeAreaProviderCompat,
   getHeaderTitle,
 } from '@react-navigation/elements';
-
-import ScreenFallback from './ScreenFallback';
+import { MaybeScreenContainer, MaybeScreen } from './ScreenFallback';
 import BottomTabBar, { getTabBarHeight } from './BottomTabBar';
 import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
 import BottomTabBarHeightContext from '../utils/BottomTabBarHeightContext';
@@ -93,8 +91,7 @@ export default function BottomTabView(props: Props) {
   return (
     <NavigationHelpersContext.Provider value={navigation}>
       <SafeAreaProviderCompat>
-        <ScreenContainer
-          // @ts-ignore
+        <MaybeScreenContainer
           enabled={detachInactiveScreens}
           style={styles.container}
         >
@@ -123,7 +120,7 @@ export default function BottomTabView(props: Props) {
             } = descriptor.options;
 
             return (
-              <ScreenFallback
+              <MaybeScreen
                 key={route.key}
                 style={StyleSheet.absoluteFill}
                 visible={isFocused}
@@ -149,10 +146,10 @@ export default function BottomTabView(props: Props) {
                     {descriptor.render()}
                   </Screen>
                 </BottomTabBarHeightContext.Provider>
-              </ScreenFallback>
+              </MaybeScreen>
             );
           })}
-        </ScreenContainer>
+        </MaybeScreenContainer>
         <BottomTabBarHeightCallbackContext.Provider value={setTabBarHeight}>
           {renderTabBar()}
         </BottomTabBarHeightCallbackContext.Provider>

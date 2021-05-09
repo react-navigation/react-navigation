@@ -6,7 +6,6 @@ import {
   Platform,
   BackHandler,
 } from 'react-native';
-import { ScreenContainer } from 'react-native-screens';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
 import {
@@ -22,9 +21,8 @@ import {
   SafeAreaProviderCompat,
   getHeaderTitle,
 } from '@react-navigation/elements';
-
+import { MaybeScreenContainer, MaybeScreen } from './ScreenFallback';
 import { GestureHandlerRootView } from './GestureHandler';
-import ScreenFallback from './ScreenFallback';
 import DrawerToggleButton from './DrawerToggleButton';
 import DrawerContent from './DrawerContent';
 import DrawerStatusContext from '../utils/DrawerStatusContext';
@@ -191,8 +189,10 @@ function DrawerViewBase({
 
   const renderSceneContent = () => {
     return (
-      // @ts-ignore
-      <ScreenContainer enabled={detachInactiveScreens} style={styles.content}>
+      <MaybeScreenContainer
+        enabled={detachInactiveScreens}
+        style={styles.content}
+      >
         {state.routes.map((route, index) => {
           const descriptor = descriptors[route.key];
           const { lazy = true, unmountOnBlur } = descriptor.options;
@@ -223,7 +223,7 @@ function DrawerViewBase({
           } = descriptor.options;
 
           return (
-            <ScreenFallback
+            <MaybeScreen
               key={route.key}
               style={[StyleSheet.absoluteFill, { opacity: isFocused ? 1 : 0 }]}
               visible={isFocused}
@@ -245,10 +245,10 @@ function DrawerViewBase({
               >
                 {descriptor.render()}
               </Screen>
-            </ScreenFallback>
+            </MaybeScreen>
           );
         })}
-      </ScreenContainer>
+      </MaybeScreenContainer>
     );
   };
 

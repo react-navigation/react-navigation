@@ -61,7 +61,7 @@ if (Platform.OS !== 'web') {
   LogBox.ignoreLogs(['Require cycle:']);
 }
 
-enableScreens(false);
+enableScreens();
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace

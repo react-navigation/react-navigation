@@ -1,6 +1,5 @@
 import * as React from 'react';
-import type { StyleProp, ViewStyle } from 'react-native';
-import { Screen, screensEnabled } from 'react-native-screens';
+import { StyleProp, View, ViewProps, ViewStyle } from 'react-native';
 import { ResourceSavingView } from '@react-navigation/elements';
 
 type Props = {
@@ -10,12 +9,34 @@ type Props = {
   style?: StyleProp<ViewStyle>;
 };
 
-export default function ScreenFallback({ visible, children, ...rest }: Props) {
-  if (screensEnabled?.()) {
+let Screens: typeof import('react-native-screens') | undefined;
+
+try {
+  Screens = require('react-native-screens');
+} catch (e) {
+  // Ignore
+}
+
+export const MaybeScreenContainer = ({
+  enabled,
+  ...rest
+}: ViewProps & {
+  enabled: boolean;
+  children: React.ReactNode;
+}) => {
+  if (Screens?.screensEnabled?.()) {
+    return <Screens.ScreenContainer enabled={enabled} {...rest} />;
+  }
+
+  return <View {...rest} />;
+};
+
+export function MaybeScreen({ visible, children, ...rest }: Props) {
+  if (Screens?.screensEnabled?.()) {
     return (
-      <Screen activityState={visible ? 2 : 0} {...rest}>
+      <Screens.Screen activityState={visible ? 2 : 0} {...rest}>
         {children}
-      </Screen>
+      </Screens.Screen>
     );
   }
 
