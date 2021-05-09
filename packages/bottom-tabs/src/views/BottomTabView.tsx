@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { ScreenContainer } from 'react-native-screens';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import {
@@ -40,7 +40,9 @@ export default function BottomTabView(props: Props) {
     navigation,
     descriptors,
     safeAreaInsets,
-    detachInactiveScreens = true,
+    detachInactiveScreens = Platform.OS === 'web' ||
+      Platform.OS === 'android' ||
+      Platform.OS === 'ios',
     sceneContainerStyle,
   } = props;
 
