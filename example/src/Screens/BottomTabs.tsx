@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Platform } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   getFocusedRouteNameFromRoute,
@@ -9,7 +8,6 @@ import {
 import type { StackScreenProps } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HeaderBackButton } from '@react-navigation/elements';
-import TouchableBounce from '../Shared/TouchableBounce';
 import Albums from '../Shared/Albums';
 import Contacts from '../Shared/Contacts';
 import Chat from '../Shared/Chat';
@@ -51,10 +49,6 @@ export default function BottomTabsScreen({
         headerLeft: (props) => (
           <HeaderBackButton {...props} onPress={navigation.goBack} />
         ),
-        tabBarButton:
-          Platform.OS === 'web'
-            ? undefined
-            : (props) => <TouchableBounce {...props} />,
       }}
     >
       <BottomTabs.Screen
