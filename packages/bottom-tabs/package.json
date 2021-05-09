@@ -45,7 +45,7 @@
     "@testing-library/react-native": "^7.2.0",
     "@types/color": "^3.0.1",
     "@types/react": "^16.9.53",
-    "@types/react-native": "~0.63.51",
+    "@types/react-native": "~0.64.4",
     "del-cli": "^3.0.1",
     "react": "~16.13.1",
     "react-native": "~0.63.4",
