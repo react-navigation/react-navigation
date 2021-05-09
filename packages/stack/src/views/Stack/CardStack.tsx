@@ -214,10 +214,19 @@ export default class CardStack extends React.Component<Props, State> {
           props.descriptors[previousRoute?.key] ||
           state.descriptors[previousRoute?.key];
 
-        const { options } = descriptor;
+        // When a screen is not the last, it should use next screen's transition config
+        // Many transitions also animate the previous screen, so using 2 different transitions doesn't look right
+        // For example combining a slide and a modal transition would look wrong otherwise
+        // With this approach, combining different transition styles in the same navigator mostly looks right
+        // This will still be broken when 2 transitions have different idle state (e.g. modal presentation),
+        // but majority of the transitions look alright
+        const optionsForTransitionConfig =
+          index !== self.length - 1 && nextDescriptor
+            ? nextDescriptor.options
+            : descriptor.options;
 
         let defaultTransitionPreset =
-          options.animationPresentation === 'modal'
+          optionsForTransitionConfig.animationPresentation === 'modal'
             ? ModalTransition
             : DefaultTransition;
 
@@ -225,9 +234,7 @@ export default class CardStack extends React.Component<Props, State> {
           animationEnabled = Platform.OS !== 'web' &&
             Platform.OS !== 'windows' &&
             Platform.OS !== 'macos',
-          gestureEnabled = Platform.OS === 'ios' &&
-            animationEnabled &&
-            index !== 0,
+          gestureEnabled = Platform.OS === 'ios' && animationEnabled,
           gestureDirection = defaultTransitionPreset.gestureDirection,
           transitionSpec = defaultTransitionPreset.transitionSpec,
           cardStyleInterpolator = animationEnabled === false
@@ -236,52 +243,14 @@ export default class CardStack extends React.Component<Props, State> {
           headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
           cardOverlayEnabled = Platform.OS !== 'ios' ||
             cardStyleInterpolator === forModalPresentationIOS,
-        } = options;
-
-        let transitionConfig = {
-          gestureDirection,
-          transitionSpec,
-          cardStyleInterpolator,
-          headerStyleInterpolator,
-          cardOverlayEnabled,
-        };
-
-        // When a screen is not the last, it should use next screen's transition config
-        // Many transitions also animate the previous screen, so using 2 different transitions doesn't look right
-        // For example combining a slide and a modal transition would look wrong otherwise
-        // With this approach, combining different transition styles in the same navigator mostly looks right
-        // This will still be broken when 2 transitions have different idle state (e.g. modal presentation),
-        // but majority of the transitions look alright
-        if (index !== self.length - 1) {
-          if (nextDescriptor) {
-            const {
-              animationEnabled,
-              gestureDirection = defaultTransitionPreset.gestureDirection,
-              transitionSpec = defaultTransitionPreset.transitionSpec,
-              cardStyleInterpolator = animationEnabled === false
-                ? forNoAnimationCard
-                : defaultTransitionPreset.cardStyleInterpolator,
-              headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
-              cardOverlayEnabled = descriptor.options.cardOverlayEnabled ??
-                cardStyleInterpolator === forModalPresentationIOS,
-            } = nextDescriptor.options;
-
-            transitionConfig = {
-              gestureDirection,
-              transitionSpec,
-              cardStyleInterpolator,
-              headerStyleInterpolator,
-              cardOverlayEnabled,
-            };
-          }
-        }
+        } = optionsForTransitionConfig;
 
         const headerMode: StackHeaderMode =
-          options.headerMode ??
-          (options.animationPresentation !== 'modal' &&
-          transitionConfig.cardStyleInterpolator !== forModalPresentationIOS &&
+          descriptor.options.headerMode ??
+          (optionsForTransitionConfig.animationPresentation !== 'modal' &&
+          cardStyleInterpolator !== forModalPresentationIOS &&
           Platform.OS === 'ios' &&
-          options.header === undefined
+          descriptor.options.header === undefined
             ? 'float'
             : 'screen');
 
@@ -290,10 +259,14 @@ export default class CardStack extends React.Component<Props, State> {
           descriptor: {
             ...descriptor,
             options: {
-              ...options,
-              ...transitionConfig,
+              ...descriptor.options,
               animationEnabled,
+              cardOverlayEnabled,
+              cardStyleInterpolator,
+              gestureDirection,
               gestureEnabled,
+              headerStyleInterpolator,
+              transitionSpec,
               headerMode,
             },
           },
