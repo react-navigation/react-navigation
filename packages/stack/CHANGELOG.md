@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.10...@react-navigation/stack@6.0.0-next.11) (2021-05-09)
+
+
+### Bug Fixes
+
+* enable screens only on supported platforms ([#9494](https://github.com/react-navigation/react-navigation/issues/9494)) ([8da4c58](https://github.com/react-navigation/react-navigation/commit/8da4c58065607d44e9dc1ad8943e09537598dcd7))
+* make sure disabling react-native-screens works ([a369ba3](https://github.com/react-navigation/react-navigation/commit/a369ba36451ddc2bb5b247e61b725bce1e3fb5e5))
+
+
+### Code Refactoring
+
+* drop mode prop in favor of animationPresentation option ([9ac709e](https://github.com/react-navigation/react-navigation/commit/9ac709ea1e5a63c3a48abfa334ff6a6925095a72))
+
+
+### Features
+
+* automatically set headerMode if it's modal presentation style ([4bb0b43](https://github.com/react-navigation/react-navigation/commit/4bb0b43f1a0f27c96843415de6eaa37edebfb561))
+* support mixing regular and modal presentation in same stack ([60fa3b9](https://github.com/react-navigation/react-navigation/commit/60fa3b9be976a73a5b04b632b4b37672674c956b))
+
+
+### BREAKING CHANGES
+
+* This drops the mode prop on the navigator in favor of a per-screen option animationPresentation
+
+
+
+
+
 # [6.0.0-next.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.9...@react-navigation/stack@6.0.0-next.10) (2021-05-01)
 
 **Note:** Version bump only for package @react-navigation/stack

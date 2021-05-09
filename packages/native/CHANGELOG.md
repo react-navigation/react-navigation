@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.3...@react-navigation/native@6.0.0-next.4) (2021-05-09)
+
+
+### Features
+
+* add ability to specify root param list ([b28bfdd](https://github.com/react-navigation/react-navigation/commit/b28bfddc17cbf3996fac04a34b2a7085ecf88be5))
+* support navigate-like object in Link ([1478659](https://github.com/react-navigation/react-navigation/commit/14786594c004d8176570f1a4ab013b57b3180665))
+
+
+
+
+
 # [6.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.2...@react-navigation/native@6.0.0-next.3) (2021-05-01)
 
 

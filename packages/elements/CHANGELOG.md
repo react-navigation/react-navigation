@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-next.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.5...@react-navigation/elements@1.0.0-next.6) (2021-05-09)
+
+
+### Bug Fixes
+
+* animate pressable opacity ([459fd27](https://github.com/react-navigation/react-navigation/commit/459fd270503075343b71ad446efdc2517eedcf21))
+
+
+
+
+
 # [1.0.0-next.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.4...@react-navigation/elements@1.0.0-next.5) (2021-05-01)
 
 **Note:** Version bump only for package @react-navigation/elements
