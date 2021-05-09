@@ -30,8 +30,16 @@ function StackNavigator({
   screenOptions,
   ...rest
 }: Props) {
+  // @ts-expect-error: mode is deprecated
+  const mode = rest.mode as 'card' | 'modal' | undefined;
+
   // @ts-expect-error: headerMode='none' is deprecated
   const headerMode = rest.headerMode as StackHeaderMode | 'none' | undefined;
+
+  warnOnce(
+    mode != null,
+    `Stack Navigator: 'mode="${mode}"' is deprecated. Use 'animationPresentation: "${mode}"' in 'screenOptions' instead.`
+  );
 
   warnOnce(
     headerMode === 'none',
@@ -39,7 +47,7 @@ function StackNavigator({
   );
 
   warnOnce(
-    headerMode && headerMode !== 'none',
+    headerMode != null && headerMode !== 'none',
     `Stack Navigator: 'headerMode' is moved to 'options'. Moved it to 'screenOptions' to keep current behavior.`
   );
 
@@ -54,6 +62,7 @@ function StackNavigator({
     children,
     screenOptions,
     defaultScreenOptions: () => ({
+      animationPresentation: mode,
       headerShown: headerMode ? headerMode !== 'none' : true,
       headerMode: headerMode && headerMode !== 'none' ? headerMode : undefined,
     }),
