@@ -226,7 +226,7 @@ export type NavigationNavigator<
   Options,
   NavigationPropType
 > = React.ComponentType<NavigationNavigatorProps<Options>> & {
-  router: NavigationRouter<Options>;
+  router: NavigationRouter<NavigationState, Options>;
   navigationOptions?: NavigationScreenConfig<Options, NavigationPropType>;
 };
 
