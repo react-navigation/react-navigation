@@ -9,7 +9,6 @@ import {
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
 import {
-  NavigationHelpersContext,
   DrawerNavigationState,
   DrawerActions,
   useTheme,
@@ -296,13 +295,11 @@ function DrawerViewBase({
 
 export default function DrawerView({ navigation, ...rest }: Props) {
   return (
-    <NavigationHelpersContext.Provider value={navigation}>
-      <SafeAreaProviderCompat>
-        <GestureHandlerWrapper style={styles.content}>
-          <DrawerViewBase navigation={navigation} {...rest} />
-        </GestureHandlerWrapper>
-      </SafeAreaProviderCompat>
-    </NavigationHelpersContext.Provider>
+    <SafeAreaProviderCompat>
+      <GestureHandlerWrapper style={styles.content}>
+        <DrawerViewBase navigation={navigation} {...rest} />
+      </GestureHandlerWrapper>
+    </SafeAreaProviderCompat>
   );
 }
 

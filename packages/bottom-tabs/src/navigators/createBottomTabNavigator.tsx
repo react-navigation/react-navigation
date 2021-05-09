@@ -70,7 +70,12 @@ function BottomTabNavigator({
     );
   }
 
-  const { state, descriptors, navigation } = useNavigationBuilder<
+  const {
+    state,
+    descriptors,
+    navigation,
+    NavigationContent,
+  } = useNavigationBuilder<
     TabNavigationState<ParamListBase>,
     TabRouterOptions,
     TabActionHelpers<ParamListBase>,
@@ -85,13 +90,15 @@ function BottomTabNavigator({
   });
 
   return (
-    <BottomTabView
-      {...rest}
-      state={state}
-      navigation={navigation}
-      descriptors={descriptors}
-      sceneContainerStyle={sceneContainerStyle}
-    />
+    <NavigationContent>
+      <BottomTabView
+        {...rest}
+        state={state}
+        navigation={navigation}
+        descriptors={descriptors}
+        sceneContainerStyle={sceneContainerStyle}
+      />
+    </NavigationContent>
   );
 }
 

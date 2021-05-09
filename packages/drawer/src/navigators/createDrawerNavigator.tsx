@@ -67,7 +67,12 @@ function DrawerNavigator({
     );
   }
 
-  const { state, descriptors, navigation } = useNavigationBuilder<
+  const {
+    state,
+    descriptors,
+    navigation,
+    NavigationContent,
+  } = useNavigationBuilder<
     DrawerNavigationState<ParamListBase>,
     DrawerRouterOptions,
     DrawerActionHelpers<ParamListBase>,
@@ -83,12 +88,14 @@ function DrawerNavigator({
   });
 
   return (
-    <DrawerView
-      {...rest}
-      state={state}
-      descriptors={descriptors}
-      navigation={navigation}
-    />
+    <NavigationContent>
+      <DrawerView
+        {...rest}
+        state={state}
+        descriptors={descriptors}
+        navigation={navigation}
+      />
+    </NavigationContent>
   );
 }
 

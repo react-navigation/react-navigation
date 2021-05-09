@@ -5,7 +5,6 @@ import {
   EdgeInsets,
 } from 'react-native-safe-area-context';
 import {
-  NavigationHelpersContext,
   StackActions,
   StackNavigationState,
   Route,
@@ -418,7 +417,6 @@ export default class StackView extends React.Component<Props, State> {
   render() {
     const {
       state,
-      navigation,
       keyboardHandlingEnabled,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       descriptors: _,
@@ -433,45 +431,43 @@ export default class StackView extends React.Component<Props, State> {
     } = this.state;
 
     return (
-      <NavigationHelpersContext.Provider value={navigation}>
-        <GestureHandlerWrapper style={styles.container}>
-          <SafeAreaProviderCompat>
-            <SafeAreaInsetsContext.Consumer>
-              {(insets) => (
-                <KeyboardManager enabled={keyboardHandlingEnabled !== false}>
-                  {(props) => (
-                    <HeaderShownContext.Consumer>
-                      {(isParentHeaderShown) => (
-                        <CardStack
-                          insets={insets as EdgeInsets}
-                          isParentHeaderShown={isParentHeaderShown}
-                          getPreviousRoute={this.getPreviousRoute}
-                          routes={routes}
-                          openingRouteKeys={openingRouteKeys}
-                          closingRouteKeys={closingRouteKeys}
-                          onOpenRoute={this.handleOpenRoute}
-                          onCloseRoute={this.handleCloseRoute}
-                          onTransitionStart={this.handleTransitionStart}
-                          onTransitionEnd={this.handleTransitionEnd}
-                          renderHeader={this.renderHeader}
-                          renderScene={this.renderScene}
-                          state={state}
-                          descriptors={descriptors}
-                          onGestureStart={this.handleGestureStart}
-                          onGestureEnd={this.handleGestureEnd}
-                          onGestureCancel={this.handleGestureCancel}
-                          {...rest}
-                          {...props}
-                        />
-                      )}
-                    </HeaderShownContext.Consumer>
-                  )}
-                </KeyboardManager>
-              )}
-            </SafeAreaInsetsContext.Consumer>
-          </SafeAreaProviderCompat>
-        </GestureHandlerWrapper>
-      </NavigationHelpersContext.Provider>
+      <GestureHandlerWrapper style={styles.container}>
+        <SafeAreaProviderCompat>
+          <SafeAreaInsetsContext.Consumer>
+            {(insets) => (
+              <KeyboardManager enabled={keyboardHandlingEnabled !== false}>
+                {(props) => (
+                  <HeaderShownContext.Consumer>
+                    {(isParentHeaderShown) => (
+                      <CardStack
+                        insets={insets as EdgeInsets}
+                        isParentHeaderShown={isParentHeaderShown}
+                        getPreviousRoute={this.getPreviousRoute}
+                        routes={routes}
+                        openingRouteKeys={openingRouteKeys}
+                        closingRouteKeys={closingRouteKeys}
+                        onOpenRoute={this.handleOpenRoute}
+                        onCloseRoute={this.handleCloseRoute}
+                        onTransitionStart={this.handleTransitionStart}
+                        onTransitionEnd={this.handleTransitionEnd}
+                        renderHeader={this.renderHeader}
+                        renderScene={this.renderScene}
+                        state={state}
+                        descriptors={descriptors}
+                        onGestureStart={this.handleGestureStart}
+                        onGestureEnd={this.handleGestureEnd}
+                        onGestureCancel={this.handleGestureCancel}
+                        {...rest}
+                        {...props}
+                      />
+                    )}
+                  </HeaderShownContext.Consumer>
+                )}
+              </KeyboardManager>
+            )}
+          </SafeAreaInsetsContext.Consumer>
+        </SafeAreaProviderCompat>
+      </GestureHandlerWrapper>
     );
   }
 }
