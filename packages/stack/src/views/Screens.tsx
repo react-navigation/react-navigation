@@ -17,10 +17,7 @@ export const MaybeScreenContainer = ({
   children: React.ReactNode;
 }) => {
   if (Screens != null) {
-    return (
-      // @ts-ignore
-      <Screens.ScreenContainer enabled={enabled} {...rest} />
-    );
+    return <Screens.ScreenContainer enabled={enabled} {...rest} />;
   }
 
   return <View {...rest} />;
