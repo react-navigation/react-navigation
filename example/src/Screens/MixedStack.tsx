@@ -5,7 +5,6 @@ import type { ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
   StackScreenProps,
-  TransitionPresets,
 } from '@react-navigation/stack';
 import Article from '../Shared/Article';
 import Albums from '../Shared/Albums';
@@ -119,7 +118,7 @@ export default function MixedStackScreen({ navigation }: Props) {
         component={AlbumsScreen}
         options={{
           title: 'Albums',
-          ...TransitionPresets.ModalPresentationIOS,
+          animationPresentation: 'modal',
         }}
       />
     </MixedStack.Navigator>
