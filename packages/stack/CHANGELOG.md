@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.14.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.14.4...@react-navigation/stack@5.14.5) (2021-05-09)
+
+
+### Bug Fixes
+
+* pressOpacity for ios Touchable ([9fb4202](https://github.com/react-navigation/react-navigation/commit/9fb420259758405efa819bf6d01636f46f7f5033))
+
+
+
+
+
 ## [5.14.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.14.3...@react-navigation/stack@5.14.4) (2021-04-04)
 
 
