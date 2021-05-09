@@ -24,7 +24,8 @@ const scrollEnabled = Platform.select({ web: true, default: false });
 const LinkButton = ({
   to,
   ...rest
-}: React.ComponentProps<typeof Button> & { to: string }) => {
+}: React.ComponentProps<typeof Button> &
+  Parameters<typeof useLinkProps>[0]) => {
   const props = useLinkProps({ to });
 
   return <Button {...props} {...rest} />;
@@ -56,6 +57,13 @@ const ArticleScreen = ({
           style={styles.button}
         >
           Go to /link-component/music
+        </LinkButton>
+        <LinkButton
+          to={{ screen: 'Home' }}
+          mode="contained"
+          style={styles.button}
+        >
+          Go to /
         </LinkButton>
         <Button
           mode="outlined"

@@ -2,9 +2,10 @@ import * as React from 'react';
 import { Text, TextProps, GestureResponderEvent, Platform } from 'react-native';
 import type { NavigationAction } from '@react-navigation/core';
 import useLinkProps from './useLinkProps';
+import type { To } from './useLinkTo';
 
 type Props = {
-  to: string;
+  to: To;
   action?: NavigationAction;
   target?: string;
   onPress?: (

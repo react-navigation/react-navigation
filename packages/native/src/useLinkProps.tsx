@@ -4,10 +4,10 @@ import {
   NavigationAction,
   NavigationHelpersContext,
 } from '@react-navigation/core';
-import useLinkTo from './useLinkTo';
+import useLinkTo, { To } from './useLinkTo';
 
 type Props = {
-  to: string;
+  to: To;
   action?: NavigationAction;
 };
 
@@ -49,14 +49,6 @@ export default function useLinkProps({ to, action }: Props) {
           throw new Error("Couldn't find a navigation object.");
         }
       } else {
-        if (typeof to !== 'string') {
-          throw new Error(
-            `To 'to' option is invalid (found '${String(
-              to
-            )}'. It must be a valid string for navigation.`
-          );
-        }
-
         linkTo(to);
       }
     }
