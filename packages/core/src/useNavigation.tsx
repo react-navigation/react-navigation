@@ -8,9 +8,7 @@ import type { NavigationProp } from './types';
  * @returns Navigation prop of the parent screen.
  */
 export default function useNavigation<
-  T extends
-    | NavigationProp<{}>
-    | NavigationProp<any> = NavigationProp<ReactNavigation.RootParamList>
+  T = NavigationProp<ReactNavigation.RootParamList>
 >(): T {
   const navigation = React.useContext(NavigationContext);
 
@@ -20,5 +18,6 @@ export default function useNavigation<
     );
   }
 
-  return navigation as T;
+  // FIXME: Figure out a better way to do this
+  return (navigation as unknown) as T;
 }
