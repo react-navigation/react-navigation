@@ -76,7 +76,9 @@ function DrawerViewBase({
   drawerContent = (props: DrawerContentComponentProps) => (
     <DrawerContent {...props} />
   ),
-  detachInactiveScreens = Platform.OS !== 'windows',
+  detachInactiveScreens = Platform.OS === 'web' ||
+    Platform.OS === 'android' ||
+    Platform.OS === 'ios',
   // Running in chrome debugger
   // @ts-expect-error
   useLegacyImplementation = !global.nativeCallSyncHook ||
