@@ -1,5 +1,4 @@
 import * as React from 'react';
-import type { ParamListBase } from '@react-navigation/routers';
 import NavigationContext from './NavigationContext';
 import type { NavigationProp } from './types';
 
@@ -9,7 +8,7 @@ import type { NavigationProp } from './types';
  * @returns Navigation prop of the parent screen.
  */
 export default function useNavigation<
-  T extends NavigationProp<ParamListBase>
+  T extends NavigationProp<any> = NavigationProp<ReactNavigation.RootParamList>
 >(): T {
   const navigation = React.useContext(NavigationContext);
 

@@ -5,15 +5,16 @@ import {
   DefaultRouterOptions,
   NavigationState,
   StackRouter,
+  ParamListBase,
 } from '@react-navigation/routers';
 import useNavigationBuilder from '../useNavigationBuilder';
 import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
+import createNavigationContainerRef from '../createNavigationContainerRef';
 import MockRouter, {
   MockActions,
   MockRouterKey,
 } from './__fixtures__/MockRouter';
-import type { NavigationContainerRef } from '../types';
 
 jest.mock('nanoid/non-secure', () => {
   const m = { nanoid: () => String(++m.__key), __key: 0 };
@@ -571,7 +572,7 @@ it("prevents removing a screen with 'beforeRemove' event", () => {
 
   const onStateChange = jest.fn();
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const element = (
     <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
@@ -706,7 +707,7 @@ it("prevents removing a child screen with 'beforeRemove' event", () => {
 
   const onStateChange = jest.fn();
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const element = (
     <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
@@ -867,7 +868,7 @@ it("prevents removing a grand child screen with 'beforeRemove' event", () => {
 
   const onStateChange = jest.fn();
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const element = (
     <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
@@ -1065,7 +1066,7 @@ it("prevents removing by multiple screens with 'beforeRemove' event", () => {
 
   const onStateChange = jest.fn();
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const element = (
     <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
@@ -1217,7 +1218,7 @@ it("prevents removing a child screen with 'beforeRemove' event with 'resetRoot'"
 
   const onStateChange = jest.fn();
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const element = (
     <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>

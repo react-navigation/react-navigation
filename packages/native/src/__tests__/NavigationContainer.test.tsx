@@ -5,7 +5,8 @@ import {
   StackRouter,
   TabRouter,
   NavigationHelpersContext,
-  NavigationContainerRef,
+  createNavigationContainerRef,
+  ParamListBase,
 } from '@react-navigation/core';
 import { act, render } from '@testing-library/react-native';
 import NavigationContainer from '../NavigationContainer';
@@ -79,7 +80,7 @@ it('integrates with the history API', () => {
     },
   };
 
-  const navigation = React.createRef<NavigationContainerRef>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   render(
     <NavigationContainer ref={navigation} linking={linking}>

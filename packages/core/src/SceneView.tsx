@@ -9,14 +9,10 @@ import NavigationStateContext from './NavigationStateContext';
 import StaticContainer from './StaticContainer';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
 import useOptionsGetters from './useOptionsGetters';
-import type { NavigationProp, RouteConfig, EventMapBase } from './types';
+import type { NavigationProp, RouteConfigComponent } from './types';
 
-type Props<
-  State extends NavigationState,
-  ScreenOptions extends {},
-  EventMap extends EventMapBase
-> = {
-  screen: RouteConfig<ParamListBase, string, State, ScreenOptions, EventMap>;
+type Props<State extends NavigationState, ScreenOptions extends {}> = {
+  screen: RouteConfigComponent<ParamListBase, string> & { name: string };
   navigation: NavigationProp<ParamListBase, string, State, ScreenOptions>;
   route: Route<string>;
   routeState: NavigationState | PartialState<NavigationState> | undefined;
@@ -31,8 +27,7 @@ type Props<
  */
 export default function SceneView<
   State extends NavigationState,
-  ScreenOptions extends {},
-  EventMap extends EventMapBase
+  ScreenOptions extends {}
 >({
   screen,
   route,
@@ -41,7 +36,7 @@ export default function SceneView<
   getState,
   setState,
   options,
-}: Props<State, ScreenOptions, EventMap>) {
+}: Props<State, ScreenOptions>) {
   const navigatorKeyRef = React.useRef<string | undefined>();
   const getKey = React.useCallback(() => navigatorKeyRef.current, []);
 

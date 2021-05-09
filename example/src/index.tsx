@@ -28,13 +28,14 @@ import {
   DefaultTheme,
   DarkTheme,
   PathConfigMap,
-  NavigationContainerRef,
+  useNavigationContainerRef,
+  NavigatorScreenParams,
 } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import {
   createStackNavigator,
-  StackScreenProps,
   HeaderStyleInterpolators,
+  StackNavigationProp,
 } from '@react-navigation/stack';
 import { useReduxDevToolsExtension } from '@react-navigation/devtools';
 
@@ -42,6 +43,7 @@ import { restartApp } from './Restart';
 import SettingsItem from './Shared/SettingsItem';
 import SimpleStack from './Screens/SimpleStack';
 import ModalStack from './Screens/ModalStack';
+import MixedStack from './Screens/MixedStack';
 import MixedHeaderMode from './Screens/MixedHeaderMode';
 import StackTransparent from './Screens/StackTransparent';
 import StackHeaderCustomization from './Screens/StackHeaderCustomization';
@@ -61,6 +63,13 @@ if (Platform.OS !== 'web') {
 
 enableScreens();
 
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace ReactNavigation {
+    interface RootParamList extends RootStackParamList {}
+  }
+}
+
 type RootDrawerParamList = {
   Examples: undefined;
 };
@@ -70,6 +79,10 @@ const SCREENS = {
   ModalStack: {
     title: 'Modal Stack',
     component: ModalStack,
+  },
+  MixedStack: {
+    title: 'Regular + Modal Stack',
+    component: MixedStack,
   },
   MixedHeaderMode: {
     title: 'Float + Screen Header Stack',
@@ -115,7 +128,7 @@ const SCREENS = {
 };
 
 type RootStackParamList = {
-  Home: undefined;
+  Home: NavigatorScreenParams<RootDrawerParamList>;
   NotFound: undefined;
 } & {
   [P in keyof typeof SCREENS]: undefined;
@@ -193,7 +206,7 @@ export default function App() {
     return () => Dimensions.removeEventListener('change', onDimensionsChange);
   }, []);
 
-  const navigationRef = React.useRef<NavigationContainerRef>(null);
+  const navigationRef = useNavigationContainerRef<RootStackParamList>();
 
   useReduxDevToolsExtension(navigationRef);
 
@@ -228,7 +241,9 @@ export default function App() {
           prefixes: [createURL('/')],
           config: {
             initialRouteName: 'Home',
-            screens: Object.keys(SCREENS).reduce<PathConfigMap>(
+            screens: Object.keys(SCREENS).reduce<
+              PathConfigMap<RootStackParamList>
+            >(
               (acc, name) => {
                 // Convert screen names such as SimpleStack to kebab case (simple-stack)
                 const path = name
@@ -236,13 +251,15 @@ export default function App() {
                   .replace(/^-/, '')
                   .toLowerCase();
 
+                // @ts-expect-error: these types aren't accurate
+                // But we aren't too concerned for now
                 acc[name] = {
                   path,
                   screens: {
                     Article: {
                       path: 'article/:author?',
                       parse: {
-                        author: (author) =>
+                        author: (author: string) =>
                           author.charAt(0).toUpperCase() +
                           author.slice(1).replace(/-/g, ' '),
                       },
@@ -304,7 +321,11 @@ export default function App() {
                     ),
                   }}
                 >
-                  {({ navigation }: StackScreenProps<RootStackParamList>) => (
+                  {({
+                    navigation,
+                  }: {
+                    navigation: StackNavigationProp<RootStackParamList>;
+                  }) => (
                     <ScrollView
                       style={{ backgroundColor: theme.colors.background }}
                     >

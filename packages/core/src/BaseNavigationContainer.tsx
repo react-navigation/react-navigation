@@ -6,6 +6,7 @@ import {
   InitialState,
   PartialState,
   NavigationAction,
+  ParamListBase,
 } from '@react-navigation/routers';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
 import UnhandledActionContext from './UnhandledActionContext';
@@ -22,6 +23,7 @@ import useSyncState from './useSyncState';
 import checkSerializable from './checkSerializable';
 import checkDuplicateRouteNames from './checkDuplicateRouteNames';
 import findFocusedRoute from './findFocusedRoute';
+import { NOT_INITIALIZED_ERROR } from './createNavigationContainerRef';
 import type {
   NavigationContainerEventMap,
   NavigationContainerRef,
@@ -29,9 +31,6 @@ import type {
 } from './types';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
-
-const NOT_INITIALIZED_ERROR =
-  "The 'navigation' object hasn't been initialized yet. This might happen if you don't have a navigator mounted, or if the navigator hasn't finished mounting. See https://reactnavigation.org/docs/navigating-without-navigation-prop#handling-initialization for more details.";
 
 const serializableWarnings: string[] = [];
 const duplicateNameWarnings: string[] = [];
@@ -103,7 +102,7 @@ const BaseNavigationContainer = React.forwardRef(
       independent,
       children,
     }: NavigationContainerProps,
-    ref?: React.Ref<NavigationContainerRef>
+    ref?: React.Ref<NavigationContainerRef<ParamListBase>>
   ) {
     const parent = React.useContext(NavigationStateContext);
 
@@ -202,16 +201,10 @@ const BaseNavigationContainer = React.forwardRef(
     const { addOptionsGetter, getCurrentOptions } = useOptionsGetters({});
 
     React.useImperativeHandle(ref, () => ({
-      ...(Object.keys(
-        CommonActions
-      ) as (keyof typeof CommonActions)[]).reduce<any>((acc, name) => {
+      ...Object.keys(CommonActions).reduce<any>((acc, name) => {
         acc[name] = (...args: any[]) =>
-          dispatch(
-            CommonActions[name](
-              // @ts-expect-error: we can't know the type statically
-              ...args
-            )
-          );
+          // @ts-expect-error: this is ok
+          dispatch(CommonActions[name](...args));
         return acc;
       }, {}),
       ...emitter.create('root'),
@@ -223,6 +216,7 @@ const BaseNavigationContainer = React.forwardRef(
       getParent: () => undefined,
       getCurrentRoute,
       getCurrentOptions,
+      isReady: () => listeners.focus[0] != null,
     }));
 
     const onDispatchAction = React.useCallback(

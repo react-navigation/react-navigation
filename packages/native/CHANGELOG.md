@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.2...@react-navigation/native@6.0.0-next.3) (2021-05-01)
+
+
+### Features
+
+* add helper and hook for container ref ([0ecd112](https://github.com/react-navigation/react-navigation/commit/0ecd112ec9786a26261ada3d33ef44dc1ec84da0))
+
+
+
+
+
 # [6.0.0-next.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.1...@react-navigation/native@6.0.0-next.2) (2021-04-08)
 
 **Note:** Version bump only for package @react-navigation/native

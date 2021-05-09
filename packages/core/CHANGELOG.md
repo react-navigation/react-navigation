@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.2...@react-navigation/core@6.0.0-next.3) (2021-05-01)
+
+
+### Features
+
+* add a CompositeScreenProps type ([def7c03](https://github.com/react-navigation/react-navigation/commit/def7c03d7d7b42cf322f4e277f8f76858717654e))
+* add helper and hook for container ref ([0ecd112](https://github.com/react-navigation/react-navigation/commit/0ecd112ec9786a26261ada3d33ef44dc1ec84da0))
+
+
+
+
+
 # [6.0.0-next.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.1...@react-navigation/core@6.0.0-next.2) (2021-04-08)
 
 

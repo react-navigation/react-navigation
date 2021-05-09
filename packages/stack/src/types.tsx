@@ -46,7 +46,7 @@ export type StackNavigationHelpers = NavigationHelpers<
 
 export type StackNavigationProp<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
+  RouteName extends keyof ParamList = keyof ParamList
 > = NavigationProp<
   ParamList,
   RouteName,
@@ -58,7 +58,7 @@ export type StackNavigationProp<
 
 export type StackScreenProps<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
+  RouteName extends keyof ParamList = keyof ParamList
 > = {
   navigation: StackNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
@@ -72,11 +72,21 @@ export type GestureDirection =
   | 'vertical'
   | 'vertical-inverted';
 
+type SceneOptionsDefaults = TransitionPreset & {
+  animationEnabled: boolean;
+  gestureEnabled: boolean;
+  cardOverlayEnabled: boolean;
+  headerMode: StackHeaderMode;
+};
+
 export type Scene = {
   /**
    * Descriptor object for the screen.
    */
-  descriptor: StackDescriptor;
+  descriptor: Omit<StackDescriptor, 'options'> & {
+    options: Omit<StackDescriptor['options'], keyof SceneOptionsDefaults> &
+      SceneOptionsDefaults;
+  };
   /**
    * Animated nodes representing the progress of the animation.
    */
@@ -102,7 +112,7 @@ export type SceneProgress = {
 
 export type StackHeaderMode = 'float' | 'screen';
 
-export type StackCardMode = 'card' | 'modal';
+export type StackPresentationMode = 'card' | 'modal';
 
 export type StackHeaderOptions = HeaderOptions & {
   /**
@@ -182,7 +192,7 @@ export type StackHeaderProps = {
 export type StackDescriptor = Descriptor<
   StackNavigationOptions,
   StackNavigationProp<ParamListBase>,
-  RouteProp<ParamListBase, string>
+  RouteProp<ParamListBase>
 >;
 
 export type StackDescriptorMap = Record<string, StackDescriptor>;
@@ -228,8 +238,12 @@ export type StackNavigationOptions = StackHeaderOptions &
      *
      * You can also specify `{ backgroundColor: 'transparent' }` to make the previous screen visible underneath.
      * This is useful to implement things like modal dialogs.
-     * If you use [`react-native-screens`](https://github.com/kmagiera/react-native-screens), you should also specify `mode: 'modal'`
-     * in the stack view config when using a transparent background so previous screens aren't detached.
+     *
+     * You should also specify `detachPreviousScreen: false` in options when using a transparent background
+     * so that the previous screen isn't detached and stays below the current screen.
+     *
+     * You might also need to change the animation of the screen using `cardStyleInterpolator`
+     * so that the previous screen isn't transformed or invisible.
      */
     cardStyle?: StyleProp<ViewStyle>;
     /**
@@ -238,6 +252,16 @@ export type StackNavigationOptions = StackHeaderOptions &
      * Defaults to `true` on Android and iOS, `false` on Web.
      */
     animationEnabled?: boolean;
+    /**
+     * Whether this screen should be presented as a modal or a regular card.
+     *
+     * If you haven't customized the animations separately, the animation will change based on the value:
+     * - 'modal' - modal animation on iOS and Android. It'll also default `headerMode` to `screen`.
+     * - 'card' - horizontal slide animation on iOS, OS-default animation on Android.
+     *
+     * Defaults to 'card'.
+     */
+    animationPresentation?: 'card' | 'modal';
     /**
      * The type of animation to use when this screen replaces another screen. Defaults to `push`.
      * When `pop` is used, the `pop` animation is applied to the screen being replaced.
@@ -262,13 +286,12 @@ export type StackNavigationOptions = StackHeaderOptions &
      * Whether to detach the previous screen from the view hierarchy to save memory.
      * Set it to `false` if you need the previous screen to be seen through the active screen.
      * Only applicable if `detachInactiveScreens` isn't set to `false`.
-     * Defaults to `false` for the last screen when mode='modal', otherwise `true`.
+     * Defaults to `false` for the last screen for modals, otherwise `true`.
      */
     detachPreviousScreen?: boolean;
   };
 
 export type StackNavigationConfig = {
-  mode?: StackCardMode;
   /**
    * If `false`, the keyboard will NOT automatically dismiss when navigating to a new screen.
    * Defaults to `true`.
@@ -319,7 +342,7 @@ export type StackCardInterpolationProps = {
     progress: Animated.AnimatedInterpolation;
   };
   /**
-   * The index of the card in the stack.
+   * The index of the card with this interpolation in the stack.
    */
   index: number;
   /**

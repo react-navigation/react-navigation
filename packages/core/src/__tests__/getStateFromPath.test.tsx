@@ -12,7 +12,7 @@ const changePath = <T extends InitialState>(state: T, path: string): T =>
   });
 
 it('returns undefined for invalid path', () => {
-  expect(getStateFromPath('//')).toBe(undefined);
+  expect(getStateFromPath<object>('//')).toBe(undefined);
 });
 
 it('converts path string to initial state', () => {
@@ -41,8 +41,8 @@ it('converts path string to initial state', () => {
     ],
   };
 
-  expect(getStateFromPath(path)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state))).toEqual(
+  expect(getStateFromPath<object>(path)).toEqual(state);
+  expect(getStateFromPath<object>(getPathFromState<object>(state))).toEqual(
     changePath(state, '/foo/bar/baz%20qux?author=jane%20%26%20co&valid=true')
   );
 });
@@ -106,16 +106,16 @@ it('converts path string to initial state with config', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles leading slash when converting', () => {
   const path = '/foo/bar/?count=42';
 
-  expect(getStateFromPath(path)).toEqual({
+  expect(getStateFromPath<object>(path)).toEqual({
     routes: [
       {
         name: 'foo',
@@ -136,7 +136,7 @@ it('handles leading slash when converting', () => {
 it('handles ending slash when converting', () => {
   const path = 'foo/bar/?count=42';
 
-  expect(getStateFromPath(path)).toEqual({
+  expect(getStateFromPath<object>(path)).toEqual({
     routes: [
       {
         name: 'foo',
@@ -167,8 +167,8 @@ it('handles route without param', () => {
     ],
   };
 
-  expect(getStateFromPath(path)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state))).toEqual(
+  expect(getStateFromPath<object>(path)).toEqual(state);
+  expect(getStateFromPath<object>(getPathFromState<object>(state))).toEqual(
     changePath(state, '/foo/bar')
   );
 });
@@ -245,10 +245,10 @@ it('converts path string to initial state with config with nested screens', () =
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('converts path string to initial state with config with nested screens and unused parse functions', () => {
@@ -308,10 +308,10 @@ it('converts path string to initial state with config with nested screens and un
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    changePath(state, '/foe/baz/Jane?count=10&answer=42&valid=true')
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/foe/baz/Jane?count=10&answer=42&valid=true'));
 });
 
 it('handles nested object with unused configs and with parse in it', () => {
@@ -400,10 +400,10 @@ it('handles nested object with unused configs and with parse in it', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles parse in nested object for second route depth', () => {
@@ -450,10 +450,10 @@ it('handles parse in nested object for second route depth', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles parse in nested object for second route depth and and path and parse in roots', () => {
@@ -501,10 +501,10 @@ it('handles parse in nested object for second route depth and and path and parse
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles initialRouteName at top level', () => {
@@ -545,10 +545,10 @@ it('handles initialRouteName at top level', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles initialRouteName inside a screen', () => {
@@ -591,10 +591,10 @@ it('handles initialRouteName inside a screen', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles initialRouteName included in path', () => {
@@ -633,10 +633,10 @@ it('handles initialRouteName included in path', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles two initialRouteNames', () => {
@@ -728,10 +728,10 @@ it('handles two initialRouteNames', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('accepts initialRouteName without config for it', () => {
@@ -823,10 +823,10 @@ it('accepts initialRouteName without config for it', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('returns undefined if path is empty and no matching screen is present', () => {
@@ -847,7 +847,7 @@ it('returns undefined if path is empty and no matching screen is present', () =>
 
   const path = '';
 
-  expect(getStateFromPath(path, config)).toEqual(undefined);
+  expect(getStateFromPath<object>(path, config)).toEqual(undefined);
 });
 
 it('returns matching screen if path is empty', () => {
@@ -886,10 +886,10 @@ it('returns matching screen if path is empty', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    changePath(state, '/')
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/'));
 });
 
 it('returns matching screen with params if path is empty', () => {
@@ -931,10 +931,10 @@ it('returns matching screen with params if path is empty', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    changePath(state, '/?foo=42')
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/?foo=42'));
 });
 
 it("doesn't match nested screen if path is empty", () => {
@@ -959,7 +959,7 @@ it("doesn't match nested screen if path is empty", () => {
 
   const path = '';
 
-  expect(getStateFromPath(path, config)).toEqual(undefined);
+  expect(getStateFromPath<object>(path, config)).toEqual(undefined);
 });
 
 it('chooses more exhaustive pattern', () => {
@@ -1004,10 +1004,10 @@ it('chooses more exhaustive pattern', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles same paths beginnings', () => {
@@ -1048,10 +1048,10 @@ it('handles same paths beginnings', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles same paths beginnings with params', () => {
@@ -1096,10 +1096,10 @@ it('handles same paths beginnings with params', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles not taking path with too many segments', () => {
@@ -1151,10 +1151,10 @@ it('handles not taking path with too many segments', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles differently ordered params v1', () => {
@@ -1206,10 +1206,10 @@ it('handles differently ordered params v1', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles differently ordered params v2', () => {
@@ -1261,10 +1261,10 @@ it('handles differently ordered params v2', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles differently ordered params v3', () => {
@@ -1316,10 +1316,10 @@ it('handles differently ordered params v3', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles differently ordered params v4', () => {
@@ -1371,10 +1371,10 @@ it('handles differently ordered params v4', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    changePath(state, '/5/foos/res/20')
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/5/foos/res/20'));
 });
 
 it('handles simple optional params', () => {
@@ -1426,10 +1426,10 @@ it('handles simple optional params', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handle 2 optional params at the end v1', () => {
@@ -1481,10 +1481,10 @@ it('handle 2 optional params at the end v1', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handle 2 optional params at the end v2', () => {
@@ -1536,10 +1536,10 @@ it('handle 2 optional params at the end v2', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handle 2 optional params at the end v3', () => {
@@ -1592,10 +1592,10 @@ it('handle 2 optional params at the end v3', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handle optional params in the middle v1', () => {
@@ -1648,10 +1648,10 @@ it('handle optional params in the middle v1', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handle optional params in the middle v2', () => {
@@ -1704,10 +1704,10 @@ it('handle optional params in the middle v2', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handle optional params in the middle v3', () => {
@@ -1761,10 +1761,10 @@ it('handle optional params in the middle v3', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handle optional params in the middle v4', () => {
@@ -1818,10 +1818,10 @@ it('handle optional params in the middle v4', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handle optional params in the middle v5', () => {
@@ -1875,10 +1875,10 @@ it('handle optional params in the middle v5', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handle optional params in the beginning v1', () => {
@@ -1932,10 +1932,10 @@ it('handle optional params in the beginning v1', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    changePath(state, '/5/10/foos/15')
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/5/10/foos/15'));
 });
 
 it('handle optional params in the beginning v2', () => {
@@ -1989,10 +1989,10 @@ it('handle optional params in the beginning v2', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    changePath(state, '/5/10/foos/15')
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/5/10/foos/15'));
 });
 
 it('merges parent patterns if needed', () => {
@@ -2030,10 +2030,10 @@ it('merges parent patterns if needed', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    changePath(state, '/foo/42/baz/babel')
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/foo/42/baz/babel'));
 });
 
 it('ignores extra slashes in the pattern', () => {
@@ -2067,10 +2067,10 @@ it('ignores extra slashes in the pattern', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('matches wildcard patterns at root', () => {
@@ -2092,10 +2092,10 @@ it('matches wildcard patterns at root', () => {
     routes: [{ name: '404', path }],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    changePath(state, '/404')
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/404'));
 });
 
 it('matches wildcard patterns at nested level', () => {
@@ -2134,10 +2134,10 @@ it('matches wildcard patterns at nested level', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    changePath(state, '/bar/42/404')
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/bar/42/404'));
 });
 
 it('matches wildcard patterns at nested level with exact', () => {
@@ -2179,10 +2179,10 @@ it('matches wildcard patterns at nested level with exact', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    changePath(state, '/404')
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/404'));
 });
 
 it('tries to match wildcard patterns at the end', () => {
@@ -2222,10 +2222,10 @@ it('tries to match wildcard patterns at the end', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('uses nearest parent wildcard match for unmatched paths', () => {
@@ -2257,17 +2257,17 @@ it('uses nearest parent wildcard match for unmatched paths', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    changePath(state, '/404')
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/404'));
 });
 
 it('throws if two screens map to the same pattern', () => {
   const path = '/bar/42/baz/test';
 
   expect(() =>
-    getStateFromPath(path, {
+    getStateFromPath<object>(path, {
       screens: {
         Foo: {
           screens: {
@@ -2287,7 +2287,7 @@ it('throws if two screens map to the same pattern', () => {
   );
 
   expect(() =>
-    getStateFromPath(path, {
+    getStateFromPath<object>(path, {
       screens: {
         Foo: {
           screens: {
@@ -2354,10 +2354,10 @@ it('correctly applies initialRouteName for config with similar route names', () 
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('correctly applies initialRouteName for config with similar route names v2', () => {
@@ -2414,8 +2414,8 @@ it('correctly applies initialRouteName for config with similar route names v2', 
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });

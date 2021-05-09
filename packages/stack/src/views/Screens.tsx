@@ -9,8 +9,6 @@ try {
   // Ignore
 }
 
-export const shouldUseActivityState = Screens?.shouldUseActivityState;
-
 // So we use our custom implementation to handle a11y better
 class WebScreen extends React.Component<
   ViewProps & {
@@ -65,13 +63,9 @@ export const MaybeScreen = ({
   }
 
   if (enabled && Screens?.screensEnabled()) {
-    if (shouldUseActivityState) {
-      return (
-        <Screens.Screen enabled={enabled} activityState={active} {...rest} />
-      );
-    } else {
-      return <Screens.Screen enabled={enabled} active={active} {...rest} />;
-    }
+    return (
+      <Screens.Screen enabled={enabled} activityState={active} {...rest} />
+    );
   }
 
   return <View {...rest} />;

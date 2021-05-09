@@ -284,12 +284,9 @@ export default function BottomTabBar({
         tabBarStyle,
       ]}
       pointerEvents={isTabBarHidden ? 'none' : 'auto'}
+      onLayout={handleLayout}
     >
-      <View
-        accessibilityRole="tablist"
-        style={styles.content}
-        onLayout={handleLayout}
-      >
+      <View accessibilityRole="tablist" style={styles.content}>
         {routes.map((route, index) => {
           const focused = index === state.index;
           const { options } = descriptors[route.key];

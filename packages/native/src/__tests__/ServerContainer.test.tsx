@@ -5,6 +5,7 @@ import {
   StackRouter,
   TabRouter,
   NavigationHelpersContext,
+  NavigatorScreenParams,
 } from '@react-navigation/core';
 import { renderToString } from 'react-dom/server';
 import NavigationContainer from '../NavigationContainer';
@@ -36,24 +37,37 @@ it('renders correct state with location', () => {
     );
   });
 
-  const Stack = createStackNavigator();
+  type StackAParamList = {
+    Home: NavigatorScreenParams<StackBParamList>;
+    Chat: undefined;
+  };
+
+  type StackBParamList = {
+    Profile: undefined;
+    Settings: undefined;
+    Feed: undefined;
+    Updates: undefined;
+  };
+
+  const StackA = createStackNavigator<StackAParamList>();
+  const StackB = createStackNavigator<StackBParamList>();
 
   const TestScreen = ({ route }: any): any =>
     `${route.name} ${JSON.stringify(route.params)}`;
 
   const NestedStack = () => {
     return (
-      <Stack.Navigator initialRouteName="Feed">
-        <Stack.Screen name="Profile" component={TestScreen} />
-        <Stack.Screen name="Settings" component={TestScreen} />
-        <Stack.Screen name="Feed" component={TestScreen} />
-        <Stack.Screen name="Updates" component={TestScreen} />
-      </Stack.Navigator>
+      <StackB.Navigator initialRouteName="Feed">
+        <StackB.Screen name="Profile" component={TestScreen} />
+        <StackB.Screen name="Settings" component={TestScreen} />
+        <StackB.Screen name="Feed" component={TestScreen} />
+        <StackB.Screen name="Updates" component={TestScreen} />
+      </StackB.Navigator>
     );
   };
 
   const element = (
-    <NavigationContainer
+    <NavigationContainer<StackAParamList>
       linking={{
         prefixes: [],
         config: {
@@ -73,10 +87,10 @@ it('renders correct state with location', () => {
         },
       }}
     >
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={NestedStack} />
-        <Stack.Screen name="Chat" component={TestScreen} />
-      </Stack.Navigator>
+      <StackA.Navigator>
+        <StackA.Screen name="Home" component={NestedStack} />
+        <StackA.Screen name="Chat" component={TestScreen} />
+      </StackA.Navigator>
     </NavigationContainer>
   );
 

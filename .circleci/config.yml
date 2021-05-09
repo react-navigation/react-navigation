@@ -3,7 +3,7 @@ version: 2.1
 executors:
   default:
     docker:
-      - image: circleci/node:10
+      - image: circleci/node:14
     working_directory: ~/project
     environment:
       YARN_CACHE_FOLDER: "~/.cache/yarn"
@@ -36,10 +36,12 @@ jobs:
           command: yarn install --frozen-lockfile
       - save_cache:
           key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
-          paths: ~/.cache/yarn
+          paths:
+            - ~/.cache/yarn
       - persist_to_workspace:
           root: .
-          paths: .
+          paths:
+            - .
 
   lint-and-typecheck:
     executor: default

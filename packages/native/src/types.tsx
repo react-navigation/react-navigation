@@ -17,7 +17,7 @@ export type Theme = {
   };
 };
 
-export type LinkingOptions = {
+export type LinkingOptions<ParamList extends {}> = {
   /**
    * Whether deep link handling should be enabled.
    * Defaults to true.
@@ -53,7 +53,10 @@ export type LinkingOptions = {
    * }
    * ```
    */
-  config?: { initialRouteName?: string; screens: PathConfigMap };
+  config?: {
+    initialRouteName?: keyof ParamList;
+    screens: PathConfigMap<ParamList>;
+  };
   /**
    * Custom function to get the initial URL used for linking.
    * Uses `Linking.getInitialURL()` by default.
