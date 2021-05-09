@@ -4,7 +4,6 @@ import {
   createNavigatorFactory,
   StackRouter,
   TabRouter,
-  NavigationHelpersContext,
   NavigatorScreenParams,
 } from '@react-navigation/core';
 import { renderToString } from 'react-dom/server';
@@ -23,17 +22,17 @@ jest.mock('../useLinking', () => require('../useLinking.tsx').default);
 
 it('renders correct state with location', () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
-    const { navigation, state, descriptors } = useNavigationBuilder(
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
       props
     );
 
     return (
-      <NavigationHelpersContext.Provider value={navigation}>
+      <NavigationContent>
         {state.routes.map((route) => (
           <div key={route.key}>{descriptors[route.key].render()}</div>
         ))}
-      </NavigationHelpersContext.Provider>
+      </NavigationContent>
     );
   });
 
@@ -116,17 +115,17 @@ it('renders correct state with location', () => {
 
 it('gets the current options', () => {
   const createTabNavigator = createNavigatorFactory((props: any) => {
-    const { navigation, state, descriptors } = useNavigationBuilder(
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
       TabRouter,
       props
     );
 
     return (
-      <NavigationHelpersContext.Provider value={navigation}>
+      <NavigationContent>
         {state.routes.map((route) => (
           <div key={route.key}>{descriptors[route.key].render()}</div>
         ))}
-      </NavigationHelpersContext.Provider>
+      </NavigationContent>
     );
   });
 

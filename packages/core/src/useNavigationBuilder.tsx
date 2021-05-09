@@ -14,6 +14,7 @@ import {
 } from '@react-navigation/routers';
 import NavigationStateContext from './NavigationStateContext';
 import NavigationRouteContext from './NavigationRouteContext';
+import NavigationHelpersContext from './NavigationHelpersContext';
 import Group from './Group';
 import Screen from './Screen';
 import useEventEmitter from './useEventEmitter';
@@ -29,6 +30,7 @@ import useKeyedChildListeners from './useKeyedChildListeners';
 import useOnGetState from './useOnGetState';
 import useScheduleUpdate from './useScheduleUpdate';
 import useCurrentRender from './useCurrentRender';
+import useComponent from './useComponent';
 import isArrayEqual from './isArrayEqual';
 import {
   DefaultNavigatorOptions,
@@ -586,9 +588,14 @@ export default function useNavigationBuilder<
     descriptors,
   });
 
+  const NavigationContent = useComponent(NavigationHelpersContext.Provider, {
+    value: navigation,
+  });
+
   return {
     state,
     navigation,
     descriptors,
+    NavigationContent,
   };
 }

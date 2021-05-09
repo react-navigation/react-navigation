@@ -4,7 +4,6 @@ import {
   createNavigatorFactory,
   StackRouter,
   TabRouter,
-  NavigationHelpersContext,
   createNavigationContainerRef,
   ParamListBase,
 } from '@react-navigation/core';
@@ -22,36 +21,36 @@ it('integrates with the history API', () => {
   jest.useFakeTimers();
 
   const createStackNavigator = createNavigatorFactory((props: any) => {
-    const { navigation, state, descriptors } = useNavigationBuilder(
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
       props
     );
 
     return (
-      <NavigationHelpersContext.Provider value={navigation}>
+      <NavigationContent>
         {state.routes.map((route, i) => (
           <div key={route.key} aria-current={state.index === i || undefined}>
             {descriptors[route.key].render()}
           </div>
         ))}
-      </NavigationHelpersContext.Provider>
+      </NavigationContent>
     );
   });
 
   const createTabNavigator = createNavigatorFactory((props: any) => {
-    const { navigation, state, descriptors } = useNavigationBuilder(
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
       TabRouter,
       props
     );
 
     return (
-      <NavigationHelpersContext.Provider value={navigation}>
+      <NavigationContent>
         {state.routes.map((route, i) => (
           <div key={route.key} aria-current={state.index === i || undefined}>
             {descriptors[route.key].render()}
           </div>
         ))}
-      </NavigationHelpersContext.Provider>
+      </NavigationContent>
     );
   });
 

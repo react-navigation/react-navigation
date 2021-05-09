@@ -28,7 +28,12 @@ function MaterialBottomTabNavigator({
   screenOptions,
   ...rest
 }: Props) {
-  const { state, descriptors, navigation } = useNavigationBuilder<
+  const {
+    state,
+    descriptors,
+    navigation,
+    NavigationContent,
+  } = useNavigationBuilder<
     TabNavigationState<ParamListBase>,
     TabRouterOptions,
     TabActionHelpers<ParamListBase>,
@@ -42,12 +47,14 @@ function MaterialBottomTabNavigator({
   });
 
   return (
-    <MaterialBottomTabView
-      {...rest}
-      state={state}
-      navigation={navigation}
-      descriptors={descriptors}
-    />
+    <NavigationContent>
+      <MaterialBottomTabView
+        {...rest}
+        state={state}
+        navigation={navigation}
+        descriptors={descriptors}
+      />
+    </NavigationContent>
   );
 }
 

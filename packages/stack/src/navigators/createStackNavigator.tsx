@@ -51,7 +51,12 @@ function StackNavigator({
     `Stack Navigator: 'headerMode' is moved to 'options'. Moved it to 'screenOptions' to keep current behavior.`
   );
 
-  const { state, descriptors, navigation } = useNavigationBuilder<
+  const {
+    state,
+    descriptors,
+    navigation,
+    NavigationContent,
+  } = useNavigationBuilder<
     StackNavigationState<ParamListBase>,
     StackRouterOptions,
     StackActionHelpers<ParamListBase>,
@@ -94,12 +99,14 @@ function StackNavigator({
   );
 
   return (
-    <StackView
-      {...rest}
-      state={state}
-      descriptors={descriptors}
-      navigation={navigation}
-    />
+    <NavigationContent>
+      <StackView
+        {...rest}
+        state={state}
+        descriptors={descriptors}
+        navigation={navigation}
+      />
+    </NavigationContent>
   );
 }
 

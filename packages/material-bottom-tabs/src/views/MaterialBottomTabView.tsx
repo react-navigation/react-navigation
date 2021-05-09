@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Text, StyleSheet, Platform } from 'react-native';
 import { BottomNavigation, DefaultTheme, DarkTheme } from 'react-native-paper';
 import {
-  NavigationHelpersContext,
   Route,
   TabNavigationState,
   TabActions,
@@ -75,7 +74,7 @@ try {
   };
 }
 
-function MaterialBottomTabViewInner({
+export default function MaterialBottomTabView({
   state,
   navigation,
   descriptors,
@@ -189,14 +188,6 @@ function MaterialBottomTabViewInner({
         }
       }}
     />
-  );
-}
-
-export default function MaterialBottomTabView(props: Props) {
-  return (
-    <NavigationHelpersContext.Provider value={props.navigation}>
-      <MaterialBottomTabViewInner {...props} />
-    </NavigationHelpersContext.Provider>
   );
 }
 

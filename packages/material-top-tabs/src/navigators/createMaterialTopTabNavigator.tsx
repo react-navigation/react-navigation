@@ -71,7 +71,12 @@ function MaterialTopTabNavigator({
     );
   }
 
-  const { state, descriptors, navigation } = useNavigationBuilder<
+  const {
+    state,
+    descriptors,
+    navigation,
+    NavigationContent,
+  } = useNavigationBuilder<
     TabNavigationState<ParamListBase>,
     TabRouterOptions,
     TabActionHelpers<ParamListBase>,
@@ -85,12 +90,14 @@ function MaterialTopTabNavigator({
   });
 
   return (
-    <MaterialTopTabView
-      {...rest}
-      state={state}
-      navigation={navigation}
-      descriptors={descriptors}
-    />
+    <NavigationContent>
+      <MaterialTopTabView
+        {...rest}
+        state={state}
+        navigation={navigation}
+        descriptors={descriptors}
+      />
+    </NavigationContent>
   );
 }
 
