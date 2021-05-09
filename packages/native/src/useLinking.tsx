@@ -295,7 +295,7 @@ export default function useLinking(
     config,
     getStateFromPath = getStateFromPathDefault,
     getPathFromState = getPathFromStateDefault,
-  }: LinkingOptions
+  }: LinkingOptions<ParamListBase>
 ) {
   React.useEffect(() => {
     if (enabled !== false && isUsingLinking) {

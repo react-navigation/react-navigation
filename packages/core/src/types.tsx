@@ -9,6 +9,14 @@ import type {
   ParamListBase,
 } from '@react-navigation/routers';
 
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace ReactNavigation {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface RootParamList {}
+  }
+}
+
 type Keyof<T extends {}> = Extract<keyof T, string>;
 
 export type DefaultNavigatorOptions<
@@ -265,7 +273,7 @@ export type NavigationContainerProps = {
 };
 
 export type NavigationProp<
-  ParamList extends ParamListBase,
+  ParamList extends {},
   RouteName extends keyof ParamList = Keyof<ParamList>,
   State extends NavigationState = NavigationState<ParamList>,
   ScreenOptions extends {} = {},
@@ -510,7 +518,7 @@ export type NavigationContainerEventMap = {
 };
 
 export type NavigationContainerRef<
-  ParamList extends ParamListBase
+  ParamList extends {}
 > = NavigationHelpers<ParamList> &
   EventConsumer<NavigationContainerEventMap> & {
     /**
@@ -538,7 +546,7 @@ export type NavigationContainerRef<
   };
 
 export type NavigationContainerRefWithCurrent<
-  ParamList extends ParamListBase
+  ParamList extends {}
 > = NavigationContainerRef<ParamList> & {
   current: NavigationContainerRef<ParamList> | null;
 };
@@ -601,15 +609,20 @@ export type NavigatorScreenParams<
           };
     }[keyof ParamList];
 
-export type PathConfig = {
+export type PathConfig<ParamList extends {}> = {
   path?: string;
   exact?: boolean;
   parse?: Record<string, (value: string) => any>;
   stringify?: Record<string, (value: any) => string>;
-  screens?: PathConfigMap;
-  initialRouteName?: string;
+  screens?: PathConfigMap<ParamList>;
+  initialRouteName?: keyof ParamList;
 };
 
-export type PathConfigMap = {
-  [routeName: string]: string | PathConfig;
+export type PathConfigMap<ParamList extends {}> = {
+  [RouteName in keyof ParamList]?: ParamList[RouteName] extends NavigatorScreenParams<
+    infer T,
+    any
+  >
+    ? string | PathConfig<T>
+    : string | Omit<PathConfig<{}>, 'screens' | 'initialRouteName'>;
 };

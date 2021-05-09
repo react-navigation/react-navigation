@@ -29,6 +29,7 @@ import {
   DarkTheme,
   PathConfigMap,
   useNavigationContainerRef,
+  NavigatorScreenParams,
 } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import {
@@ -61,6 +62,13 @@ if (Platform.OS !== 'web') {
 }
 
 enableScreens();
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace ReactNavigation {
+    interface RootParamList extends RootStackParamList {}
+  }
+}
 
 type RootDrawerParamList = {
   Examples: undefined;
@@ -120,7 +128,7 @@ const SCREENS = {
 };
 
 type RootStackParamList = {
-  Home: undefined;
+  Home: NavigatorScreenParams<RootDrawerParamList>;
   NotFound: undefined;
 } & {
   [P in keyof typeof SCREENS]: undefined;
@@ -233,7 +241,9 @@ export default function App() {
           prefixes: [createURL('/')],
           config: {
             initialRouteName: 'Home',
-            screens: Object.keys(SCREENS).reduce<PathConfigMap>(
+            screens: Object.keys(SCREENS).reduce<
+              PathConfigMap<RootStackParamList>
+            >(
               (acc, name) => {
                 // Convert screen names such as SimpleStack to kebab case (simple-stack)
                 const path = name
@@ -241,13 +251,15 @@ export default function App() {
                   .replace(/^-/, '')
                   .toLowerCase();
 
+                // @ts-expect-error: these types aren't accurate
+                // But we aren't too concerned for now
                 acc[name] = {
                   path,
                   screens: {
                     Article: {
                       path: 'article/:author?',
                       parse: {
-                        author: (author) =>
+                        author: (author: string) =>
                           author.charAt(0).toUpperCase() +
                           author.slice(1).replace(/-/g, ' '),
                       },
