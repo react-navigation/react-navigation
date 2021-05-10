@@ -118,7 +118,7 @@ export default function MixedStackScreen({ navigation }: Props) {
         component={AlbumsScreen}
         options={{
           title: 'Albums',
-          animationPresentation: 'modal',
+          presentation: 'modal',
         }}
       />
     </MixedStack.Navigator>

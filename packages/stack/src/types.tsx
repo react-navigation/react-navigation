@@ -247,21 +247,24 @@ export type StackNavigationOptions = StackHeaderOptions &
      */
     cardStyle?: StyleProp<ViewStyle>;
     /**
+     * Whether this screen should be presented as a modal or a regular card.
+     *
+     * Specifying this will configure several options:
+     * - `card`: Use the default OS animations for iOS and Android screen transitions.
+     * - `modal`: Use Modal animations. This changes a few things:
+     *   - Sets `headerMode` to `screen` for the screen unless specified otherwise.
+     *   - Changes the screen animation to match the platform behavior for modals.
+     *   - Adjusts the `detachPreviousScreen` option so that the previous screen stays rendered.
+     *
+     * Defaults to 'card'.
+     */
+    presentation?: 'card' | 'modal';
+    /**
      * Whether transition animation should be enabled the screen.
      * If you set it to `false`, the screen won't animate when pushing or popping.
      * Defaults to `true` on Android and iOS, `false` on Web.
      */
     animationEnabled?: boolean;
-    /**
-     * Whether this screen should be presented as a modal or a regular card.
-     *
-     * If you haven't customized the animations separately, the animation will change based on the value:
-     * - 'modal' - modal animation on iOS and Android. It'll also default `headerMode` to `screen`.
-     * - 'card' - horizontal slide animation on iOS, OS-default animation on Android.
-     *
-     * Defaults to 'card'.
-     */
-    animationPresentation?: 'card' | 'modal';
     /**
      * The type of animation to use when this screen replaces another screen. Defaults to `push`.
      * When `pop` is used, the `pop` animation is applied to the screen being replaced.

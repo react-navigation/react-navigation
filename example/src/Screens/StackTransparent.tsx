@@ -84,9 +84,7 @@ export default function TransparentStackScreen({ navigation }: Props) {
   }, [navigation]);
 
   return (
-    <TransparentStack.Navigator
-      screenOptions={{ animationPresentation: 'modal' }}
-    >
+    <TransparentStack.Navigator screenOptions={{ presentation: 'modal' }}>
       <TransparentStack.Screen
         name="Article"
         component={ArticleScreen}

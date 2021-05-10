@@ -122,8 +122,8 @@ const getDistanceFromOptions = (
   descriptor?: StackDescriptor
 ) => {
   const {
-    animationPresentation,
-    gestureDirection = animationPresentation === 'modal'
+    presentation,
+    gestureDirection = presentation === 'modal'
       ? ModalTransition.gestureDirection
       : DefaultTransition.gestureDirection,
   } = (descriptor?.options || {}) as StackNavigationOptions;
@@ -226,7 +226,7 @@ export default class CardStack extends React.Component<Props, State> {
             : descriptor.options;
 
         let defaultTransitionPreset =
-          optionsForTransitionConfig.animationPresentation === 'modal'
+          optionsForTransitionConfig.presentation === 'modal'
             ? ModalTransition
             : DefaultTransition;
 
@@ -247,8 +247,10 @@ export default class CardStack extends React.Component<Props, State> {
 
         const headerMode: StackHeaderMode =
           descriptor.options.headerMode ??
-          (optionsForTransitionConfig.animationPresentation !== 'modal' &&
-          cardStyleInterpolator !== forModalPresentationIOS &&
+          (!(
+            optionsForTransitionConfig.presentation === 'modal' ||
+            cardStyleInterpolator === forModalPresentationIOS
+          ) &&
           Platform.OS === 'ios' &&
           descriptor.options.header === undefined
             ? 'float'
@@ -465,7 +467,7 @@ export default class CardStack extends React.Component<Props, State> {
       const { options } = scenes[i].descriptor;
       const {
         // By default, we don't want to detach the previous screen of the active one for modals
-        detachPreviousScreen = options.animationPresentation === 'modal' ||
+        detachPreviousScreen = options.presentation === 'modal' ||
         options.cardStyleInterpolator === forModalPresentationIOS
           ? i !== scenes.length - 1
           : true,

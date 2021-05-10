@@ -38,7 +38,7 @@ function StackNavigator({
 
   warnOnce(
     mode != null,
-    `Stack Navigator: 'mode="${mode}"' is deprecated. Use 'animationPresentation: "${mode}"' in 'screenOptions' instead.`
+    `Stack Navigator: 'mode="${mode}"' is deprecated. Use 'presentation: "${mode}"' in 'screenOptions' instead.`
   );
 
   warnOnce(
@@ -67,7 +67,7 @@ function StackNavigator({
     children,
     screenOptions,
     defaultScreenOptions: () => ({
-      animationPresentation: mode,
+      presentation: mode,
       headerShown: headerMode ? headerMode !== 'none' : true,
       headerMode: headerMode && headerMode !== 'none' ? headerMode : undefined,
     }),
