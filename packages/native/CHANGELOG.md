@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.6...@react-navigation/native@6.0.0-next.7) (2021-05-10)
+
+
+### Features
+
+* return a NavigationContent component from useNavigationBuilder ([1179d56](https://github.com/react-navigation/react-navigation/commit/1179d56c5008270753feef41acdc1dbd2191efcf))
+
+
+
+
+
 # [6.0.0-next.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.5...@react-navigation/native@6.0.0-next.6) (2021-05-09)
 
 **Note:** Version bump only for package @react-navigation/native
