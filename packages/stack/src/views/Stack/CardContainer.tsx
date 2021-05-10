@@ -170,7 +170,7 @@ function CardContainer({
   }, [pointerEvents, scene.progress.next]);
 
   const {
-    animationPresentation,
+    presentation,
     cardOverlay,
     cardOverlayEnabled,
     cardShadowEnabled,
@@ -228,9 +228,7 @@ function CardContainer({
       accessibilityElementsHidden={!focused}
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
       pointerEvents={active ? 'box-none' : pointerEvents}
-      pageOverflowEnabled={
-        headerMode !== 'float' && animationPresentation !== 'modal'
-      }
+      pageOverflowEnabled={headerMode !== 'float' && presentation !== 'modal'}
       headerDarkContent={headerDarkContent}
       containerStyle={
         hasAbsoluteFloatHeader && headerMode !== 'screen'
