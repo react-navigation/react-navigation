@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { ScrollView, StyleSheet, ScrollViewProps } from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  ScrollViewProps,
+  I18nManager,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import DrawerPositionContext from '../utils/DrawerPositionContext';
 
@@ -16,14 +21,18 @@ export default function DrawerContentScrollView({
   const drawerPosition = React.useContext(DrawerPositionContext);
   const insets = useSafeAreaInsets();
 
+  const isRight = I18nManager.isRTL
+    ? drawerPosition === 'left'
+    : drawerPosition === 'right';
+
   return (
     <ScrollView
       {...rest}
       contentContainerStyle={[
         {
           paddingTop: insets.top + 4,
-          paddingLeft: drawerPosition === 'left' ? insets.left : 0,
-          paddingRight: drawerPosition === 'right' ? insets.right : 0,
+          paddingStart: !isRight ? insets.left : 0,
+          paddingEnd: isRight ? insets.right : 0,
         },
         contentContainerStyle,
       ]}
