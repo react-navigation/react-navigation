@@ -230,6 +230,15 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   tabBarStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 
   /**
+   * Component to use as background for the tab bar.
+   * You could render an image, a gradient, blur view etc.
+   *
+   * When using `BlurView`, make sure to set `position: 'absolute'` in `tabBarStyle` as well.
+   * You'd also need to use `useBottomTabBarHeight()` to add a bottom padding to your content.
+   */
+  tabBarBackground?: () => React.ReactNode;
+
+  /**
    * Whether this screen should be unmounted when navigating away from it.
    * Defaults to `false`.
    */

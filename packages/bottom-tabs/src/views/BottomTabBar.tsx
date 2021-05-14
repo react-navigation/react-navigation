@@ -144,6 +144,7 @@ export default function BottomTabBar({
     tabBarHideOnKeyboard = false,
     tabBarVisibilityAnimationConfig,
     tabBarStyle,
+    tabBarBackground,
   } = focusedOptions;
 
   const dimensions = useSafeAreaFrame();
@@ -244,12 +245,15 @@ export default function BottomTabBar({
     layout,
   });
 
+  const tabBarBackgroundElement = tabBarBackground?.();
+
   return (
     <Animated.View
       style={[
         styles.tabBar,
         {
-          backgroundColor: colors.card,
+          backgroundColor:
+            tabBarBackgroundElement != null ? 'transparent' : colors.card,
           borderTopColor: colors.border,
         },
         {
@@ -278,6 +282,9 @@ export default function BottomTabBar({
       pointerEvents={isTabBarHidden ? 'none' : 'auto'}
       onLayout={handleLayout}
     >
+      <View pointerEvents="none" style={StyleSheet.absoluteFill}>
+        {tabBarBackgroundElement}
+      </View>
       <View accessibilityRole="tablist" style={styles.content}>
         {routes.map((route, index) => {
           const focused = index === state.index;
