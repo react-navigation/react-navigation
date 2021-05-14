@@ -1,12 +1,17 @@
 import * as React from 'react';
+import { ScrollView, StyleSheet } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { BlurView } from 'expo-blur';
 import {
   getFocusedRouteNameFromRoute,
   ParamListBase,
   NavigatorScreenParams,
 } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {
+  createBottomTabNavigator,
+  useBottomTabBarHeight,
+} from '@react-navigation/bottom-tabs';
 import { HeaderBackButton } from '@react-navigation/elements';
 import Albums from '../Shared/Albums';
 import Contacts from '../Shared/Contacts';
@@ -26,6 +31,16 @@ type BottomTabParams = {
   TabAlbums: undefined;
   TabContacts: undefined;
   TabChat: undefined;
+};
+
+const AlbumsScreen = () => {
+  const tabBarHeight = useBottomTabBarHeight();
+
+  return (
+    <ScrollView contentContainerStyle={{ paddingBottom: tabBarHeight }}>
+      <Albums scrollEnabled={false} />
+    </ScrollView>
+  );
 };
 
 const BottomTabs = createBottomTabNavigator<BottomTabParams>();
@@ -78,10 +93,18 @@ export default function BottomTabsScreen({
       />
       <BottomTabs.Screen
         name="TabAlbums"
-        component={Albums}
+        component={AlbumsScreen}
         options={{
           title: 'Albums',
           tabBarIcon: getTabBarIcon('image-album'),
+          tabBarStyle: { position: 'absolute' },
+          tabBarBackground: () => (
+            <BlurView
+              tint="light"
+              intensity={100}
+              style={StyleSheet.absoluteFill}
+            />
+          ),
         }}
       />
     </BottomTabs.Navigator>
