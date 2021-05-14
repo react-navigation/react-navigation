@@ -2,7 +2,6 @@ export * from '@react-navigation/core';
 
 export { default as NavigationContainer } from './NavigationContainer';
 
-export { default as useBackButton } from './useBackButton';
 export { default as useScrollToTop } from './useScrollToTop';
 
 export { default as DefaultTheme } from './theming/DefaultTheme';
