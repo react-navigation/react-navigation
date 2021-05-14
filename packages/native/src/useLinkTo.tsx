@@ -21,12 +21,14 @@ export type To<
           params: ParamList[RouteName];
         });
 
-export default function useLinkTo() {
+export default function useLinkTo<
+  ParamList extends ReactNavigation.RootParamList
+>() {
   const navigation = React.useContext(NavigationContext);
   const linking = React.useContext(LinkingContext);
 
   const linkTo = React.useCallback(
-    (to: To) => {
+    (to: To<ParamList>) => {
       if (navigation === undefined) {
         throw new Error(
           "Couldn't find a navigation object. Is your component inside a screen in a navigator?"
@@ -42,6 +44,7 @@ export default function useLinkTo() {
       }
 
       if (typeof to !== 'string') {
+        // @ts-expect-error: This is fine
         root.navigate(to.screen, to.params);
         return;
       }
