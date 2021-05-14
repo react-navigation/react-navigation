@@ -214,7 +214,7 @@ export default function Header(props: Props) {
             style={[
               styles.left,
               headerTitleAlign === 'center' && styles.expand,
-              { marginLeft: insets.left },
+              { marginStart: insets.left },
               leftContainerStyle,
             ]}
           >
@@ -236,7 +236,7 @@ export default function Header(props: Props) {
             style={[
               styles.right,
               styles.expand,
-              { marginRight: insets.right },
+              { marginEnd: insets.right },
               rightContainerStyle,
             ]}
           >
