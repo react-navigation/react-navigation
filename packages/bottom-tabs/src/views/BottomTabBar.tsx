@@ -211,15 +211,7 @@ export default function BottomTabBar({
   const handleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
 
-    const topBorderWidth =
-      // @ts-ignore
-      StyleSheet.flatten([styles.tabBar, tabBarStyle])?.borderTopWidth;
-
-    onHeightChange?.(
-      height +
-        paddingBottom +
-        (typeof topBorderWidth === 'number' ? topBorderWidth : 0)
-    );
+    onHeightChange?.(height);
 
     setLayout((layout) => {
       if (height === layout.height && width === layout.width) {
