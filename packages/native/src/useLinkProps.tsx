@@ -6,8 +6,8 @@ import {
 } from '@react-navigation/core';
 import useLinkTo, { To } from './useLinkTo';
 
-type Props = {
-  to: To;
+type Props<ParamList extends ReactNavigation.RootParamList> = {
+  to: To<ParamList>;
   action?: NavigationAction;
 };
 
@@ -17,9 +17,11 @@ type Props = {
  * @param props.to Absolute path to screen (e.g. `/feeds/hot`).
  * @param props.action Optional action to use for in-page navigation. By default, the path is parsed to an action based on linking config.
  */
-export default function useLinkProps({ to, action }: Props) {
+export default function useLinkProps<
+  ParamList extends ReactNavigation.RootParamList
+>({ to, action }: Props<ParamList>) {
   const navigation = React.useContext(NavigationHelpersContext);
-  const linkTo = useLinkTo();
+  const linkTo = useLinkTo<ParamList>();
 
   const onPress = (
     e?: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
