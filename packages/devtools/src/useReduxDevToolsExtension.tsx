@@ -3,7 +3,6 @@ import type {
   NavigationContainerRef,
   NavigationState,
   NavigationAction,
-  ParamListBase,
 } from '@react-navigation/core';
 import deepEqual from 'deep-equal';
 
@@ -23,7 +22,7 @@ type DevToolsExtension = {
 declare const __REDUX_DEVTOOLS_EXTENSION__: DevToolsExtension | undefined;
 
 export default function useReduxDevToolsExtension(
-  ref: React.RefObject<NavigationContainerRef<ParamListBase>>
+  ref: React.RefObject<NavigationContainerRef<any>>
 ) {
   const devToolsRef = React.useRef<DevToolsConnection>();
 

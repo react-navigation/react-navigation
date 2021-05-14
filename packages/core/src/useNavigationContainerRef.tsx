@@ -1,10 +1,9 @@
 import * as React from 'react';
-import type { ParamListBase } from '@react-navigation/routers';
 import createNavigationContainerRef from './createNavigationContainerRef';
 import type { NavigationContainerRefWithCurrent } from './types';
 
 export default function useNavigationContainerRef<
-  ParamList extends ParamListBase
+  ParamList extends {} = ReactNavigation.RootParamList
 >(): NavigationContainerRefWithCurrent<ParamList> {
   const navigation = React.useRef<NavigationContainerRefWithCurrent<ParamList> | null>(
     null
