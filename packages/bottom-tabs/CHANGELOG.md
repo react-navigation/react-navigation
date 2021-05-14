@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.11.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.10...@react-navigation/bottom-tabs@5.11.11) (2021-05-14)
+
+
+### Bug Fixes
+
+* fix tab bar height including extra bottom inset. closes [#9573](https://github.com/react-navigation/react-navigation/issues/9573) ([c99d127](https://github.com/react-navigation/react-navigation/commit/c99d127a89f422f8cb691ea2f3827ee163df6d9f))
+
+
+
+
+
 ## [5.11.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.9...@react-navigation/bottom-tabs@5.11.10) (2021-04-16)
 
 
