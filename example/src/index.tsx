@@ -206,7 +206,7 @@ export default function App() {
     return () => Dimensions.removeEventListener('change', onDimensionsChange);
   }, []);
 
-  const navigationRef = useNavigationContainerRef<RootStackParamList>();
+  const navigationRef = useNavigationContainerRef();
 
   useReduxDevToolsExtension(navigationRef);
 
