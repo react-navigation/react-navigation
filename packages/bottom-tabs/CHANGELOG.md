@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.10...@react-navigation/bottom-tabs@6.0.0-next.11) (2021-05-16)
+
+
+### Bug Fixes
+
+* fix tab bar height including extra bottom inset ([7c722d2](https://github.com/react-navigation/react-navigation/commit/7c722d2028e914e8f143b9385ebf5e1c00131a01))
+
+
+### Features
+
+* add a tabBarBackground option to bottom tabs ([2f282f1](https://github.com/react-navigation/react-navigation/commit/2f282f107053a65b69f80edb5d9c858cfa569aa2))
+
+
+
+
+
 # [6.0.0-next.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.9...@react-navigation/bottom-tabs@6.0.0-next.10) (2021-05-10)
 
 
