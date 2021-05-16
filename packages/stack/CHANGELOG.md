@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.16...@react-navigation/stack@6.0.0-next.17) (2021-05-16)
+
+
+### Bug Fixes
+
+* don't allow overriding gestureEnabled on first screen ([9f00d60](https://github.com/react-navigation/react-navigation/commit/9f00d60bdb7d6f02996f4fa7dfc09b890ebe22f9))
+* fix broken animation on first screen ([e5238f6](https://github.com/react-navigation/react-navigation/commit/e5238f608472319165e5570f41144be5549e0df1))
+
+
+
+
+
 # [6.0.0-next.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.15...@react-navigation/stack@6.0.0-next.16) (2021-05-16)
 
 
