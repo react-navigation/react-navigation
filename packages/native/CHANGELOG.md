@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.7...@react-navigation/native@6.0.0-next.8) (2021-05-16)
+
+
+### Bug Fixes
+
+* add ability to pass generic params to Link ([9c30c42](https://github.com/react-navigation/react-navigation/commit/9c30c42c0bddbc90c58b79a8be6d57e57a131e77))
+
+
+
+
+
 # [6.0.0-next.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.6...@react-navigation/native@6.0.0-next.7) (2021-05-10)
 
 

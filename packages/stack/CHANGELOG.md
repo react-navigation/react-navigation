@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.15...@react-navigation/stack@6.0.0-next.16) (2021-05-16)
+
+
+### Bug Fixes
+
+* don't enable animation & gestures for first screen ([6ebe082](https://github.com/react-navigation/react-navigation/commit/6ebe0824df3df4973190428a14286aab0d14d3c1))
+* make stack screens accessible on web without screens ([22b7c3f](https://github.com/react-navigation/react-navigation/commit/22b7c3f6c18a73fc55b0289b91b8d3a96f5be29c))
+* move keyboardHandlingEnabled to screen options ([82900cc](https://github.com/react-navigation/react-navigation/commit/82900cceffa3e338b7b93e831f9ba6cbb3784815))
+
+
+
+
+
 # [6.0.0-next.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.14...@react-navigation/stack@6.0.0-next.15) (2021-05-10)
 
 

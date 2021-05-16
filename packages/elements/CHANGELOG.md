@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-next.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.9...@react-navigation/elements@1.0.0-next.10) (2021-05-16)
+
+
+### Bug Fixes
+
+* fix drawer content padding in RTL ([ea8ea20](https://github.com/react-navigation/react-navigation/commit/ea8ea20127d979d8c8ddbddf56de1bdfdf0243f9))
+
+
+
+
+
 # [1.0.0-next.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.8...@react-navigation/elements@1.0.0-next.9) (2021-05-10)
 
 **Note:** Version bump only for package @react-navigation/elements

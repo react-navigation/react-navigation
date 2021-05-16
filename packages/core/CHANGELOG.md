@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.7...@react-navigation/core@6.0.0-next.8) (2021-05-16)
+
+
+### Bug Fixes
+
+* fix type error when passing unannotated navigation ref ([dc4ffc0](https://github.com/react-navigation/react-navigation/commit/dc4ffc0171b4535fe1b6e839b9d54350121bcf55))
+
+
+
+
+
 # [6.0.0-next.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.6...@react-navigation/core@6.0.0-next.7) (2021-05-10)
 
 
