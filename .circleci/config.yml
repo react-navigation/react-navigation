@@ -10,7 +10,7 @@ executors:
 
   playwright:
     docker:
-    - image: mcr.microsoft.com/playwright:bionic
+    - image: mcr.microsoft.com/playwright:focal
       environment:
         NODE_ENV: development
 
