@@ -382,6 +382,7 @@ export default class Card extends React.Component<Props> {
 
   private gestureActivationCriteria() {
     const { layout, gestureDirection, gestureResponseDistance } = this.props;
+    const enableTrackpadTwoFingerGesture = true;
 
     const distance =
       gestureResponseDistance !== undefined
@@ -396,12 +397,14 @@ export default class Card extends React.Component<Props> {
         maxDeltaX: 15,
         minOffsetY: 5,
         hitSlop: { bottom: -layout.height + distance },
+        enableTrackpadTwoFingerGesture,
       };
     } else if (gestureDirection === 'vertical-inverted') {
       return {
         maxDeltaX: 15,
         minOffsetY: -5,
         hitSlop: { top: -layout.height + distance },
+        enableTrackpadTwoFingerGesture,
       };
     } else {
       const hitSlop = -layout.width + distance;
@@ -412,12 +415,14 @@ export default class Card extends React.Component<Props> {
           minOffsetX: 5,
           maxDeltaY: 20,
           hitSlop: { right: hitSlop },
+          enableTrackpadTwoFingerGesture,
         };
       } else {
         return {
           minOffsetX: -5,
           maxDeltaY: 20,
           hitSlop: { left: hitSlop },
+          enableTrackpadTwoFingerGesture,
         };
       }
     }
