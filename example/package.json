@@ -59,7 +59,7 @@
     "mock-require-assets": "^0.0.1",
     "node-fetch": "^2.6.1",
     "nodemon": "^2.0.6",
-    "playwright": "^1.10.0",
+    "playwright": "^1.11.0",
     "serve": "^11.3.0",
     "typescript": "~4.2.3"
   }
