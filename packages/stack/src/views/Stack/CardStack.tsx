@@ -228,8 +228,7 @@ export default class CardStack extends React.Component<Props, State> {
             : DefaultTransition;
 
         const {
-          animationEnabled = index !== 0 &&
-            Platform.OS !== 'web' &&
+          animationEnabled = Platform.OS !== 'web' &&
             Platform.OS !== 'windows' &&
             Platform.OS !== 'macos',
           gestureEnabled = index !== 0 &&
