@@ -17,7 +17,6 @@ import {
 
 import { GestureHandlerRootView } from '../GestureHandler';
 import CardStack from './CardStack';
-import KeyboardManager from '../KeyboardManager';
 import HeaderContainer, {
   Props as HeaderContainerProps,
 } from '../Header/HeaderContainer';
@@ -417,7 +416,6 @@ export default class StackView extends React.Component<Props, State> {
   render() {
     const {
       state,
-      keyboardHandlingEnabled,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       descriptors: _,
       ...rest
@@ -435,35 +433,30 @@ export default class StackView extends React.Component<Props, State> {
         <SafeAreaProviderCompat>
           <SafeAreaInsetsContext.Consumer>
             {(insets) => (
-              <KeyboardManager enabled={keyboardHandlingEnabled !== false}>
-                {(props) => (
-                  <HeaderShownContext.Consumer>
-                    {(isParentHeaderShown) => (
-                      <CardStack
-                        insets={insets as EdgeInsets}
-                        isParentHeaderShown={isParentHeaderShown}
-                        getPreviousRoute={this.getPreviousRoute}
-                        routes={routes}
-                        openingRouteKeys={openingRouteKeys}
-                        closingRouteKeys={closingRouteKeys}
-                        onOpenRoute={this.handleOpenRoute}
-                        onCloseRoute={this.handleCloseRoute}
-                        onTransitionStart={this.handleTransitionStart}
-                        onTransitionEnd={this.handleTransitionEnd}
-                        renderHeader={this.renderHeader}
-                        renderScene={this.renderScene}
-                        state={state}
-                        descriptors={descriptors}
-                        onGestureStart={this.handleGestureStart}
-                        onGestureEnd={this.handleGestureEnd}
-                        onGestureCancel={this.handleGestureCancel}
-                        {...rest}
-                        {...props}
-                      />
-                    )}
-                  </HeaderShownContext.Consumer>
+              <HeaderShownContext.Consumer>
+                {(isParentHeaderShown) => (
+                  <CardStack
+                    insets={insets as EdgeInsets}
+                    isParentHeaderShown={isParentHeaderShown}
+                    getPreviousRoute={this.getPreviousRoute}
+                    routes={routes}
+                    openingRouteKeys={openingRouteKeys}
+                    closingRouteKeys={closingRouteKeys}
+                    onOpenRoute={this.handleOpenRoute}
+                    onCloseRoute={this.handleCloseRoute}
+                    onTransitionStart={this.handleTransitionStart}
+                    onTransitionEnd={this.handleTransitionEnd}
+                    renderHeader={this.renderHeader}
+                    renderScene={this.renderScene}
+                    state={state}
+                    descriptors={descriptors}
+                    onGestureStart={this.handleGestureStart}
+                    onGestureEnd={this.handleGestureEnd}
+                    onGestureCancel={this.handleGestureCancel}
+                    {...rest}
+                  />
                 )}
-              </KeyboardManager>
+              </HeaderShownContext.Consumer>
             )}
           </SafeAreaInsetsContext.Consumer>
         </SafeAreaProviderCompat>

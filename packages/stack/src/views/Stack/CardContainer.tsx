@@ -11,6 +11,7 @@ import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
 import { forModalPresentationIOS } from '../../TransitionConfigs/CardStyleInterpolators';
 import ModalPresentationContext from '../../utils/ModalPresentationContext';
+import useKeyboardManager from '../../utils/useKeyboardManager';
 import type { Layout, Scene } from '../../types';
 
 type Props = {
@@ -37,9 +38,6 @@ type Props = {
     closing: boolean
   ) => void;
   onTransitionEnd?: (props: { route: Route<string> }, closing: boolean) => void;
-  onPageChangeStart?: () => void;
-  onPageChangeConfirm?: (force: boolean) => void;
-  onPageChangeCancel?: () => void;
   onGestureStart?: (props: { route: Route<string> }) => void;
   onGestureEnd?: (props: { route: Route<string> }) => void;
   onGestureCancel?: (props: { route: Route<string> }) => void;
@@ -70,9 +68,6 @@ function CardContainer({
   layout,
   onCloseRoute,
   onOpenRoute,
-  onPageChangeCancel,
-  onPageChangeConfirm,
-  onPageChangeStart,
   onGestureCancel,
   onGestureEnd,
   onGestureStart,
@@ -87,6 +82,20 @@ function CardContainer({
   scene,
 }: Props) {
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
+
+  const {
+    onPageChangeStart,
+    onPageChangeCancel,
+    onPageChangeConfirm,
+  } = useKeyboardManager(
+    React.useCallback(() => {
+      const { options, navigation } = scene.descriptor;
+
+      return (
+        navigation.isFocused() && options.keyboardHandlingEnabled !== false
+      );
+    }, [scene.descriptor])
+  );
 
   const handleOpen = () => {
     const { route } = scene.descriptor;

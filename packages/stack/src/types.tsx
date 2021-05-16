@@ -292,18 +292,19 @@ export type StackNavigationOptions = StackHeaderOptions &
      * Defaults to `false` for the last screen for modals, otherwise `true`.
      */
     detachPreviousScreen?: boolean;
+    /**
+     * If `false`, the keyboard will NOT automatically dismiss when navigating to a new screen from this screen.
+     * Defaults to `true`.
+     */
+    keyboardHandlingEnabled?: boolean;
   };
 
 export type StackNavigationConfig = {
   /**
-   * If `false`, the keyboard will NOT automatically dismiss when navigating to a new screen.
-   * Defaults to `true`.
-   */
-  keyboardHandlingEnabled?: boolean;
-  /**
    * Whether inactive screens should be detached from the view hierarchy to save memory.
-   * Make sure to call `enableScreens` from `react-native-screens` to make it work.
-   * Defaults to `true` on Android, depends on the version of `react-native-screens` on iOS.
+   * This will have no effect if you disable `react-native-screens`.
+   *
+   * Defaults to `true`.
    */
   detachInactiveScreens?: boolean;
 };
@@ -335,7 +336,7 @@ export type StackCardInterpolationProps = {
     progress: Animated.AnimatedInterpolation;
   };
   /**
-   * Values for the current screen the screen after this one in the stack.
+   * Values for the screen after this one in the stack.
    * This can be `undefined` in case the screen animating is the last one.
    */
   next?: {
@@ -414,7 +415,7 @@ export type StackHeaderInterpolationProps = {
     progress: Animated.AnimatedInterpolation;
   };
   /**
-   * Values for the current screen the screen after this one in the stack.
+   * Values for the screen after this one in the stack.
    * This can be `undefined` in case the screen animating is the last one.
    */
   next?: {
