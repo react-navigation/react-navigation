@@ -15,6 +15,7 @@ import useKeyboardManager from '../../utils/useKeyboardManager';
 import type { Layout, Scene } from '../../types';
 
 type Props = {
+  index: number;
   interpolationIndex: number;
   active: boolean;
   focused: boolean;
@@ -53,6 +54,7 @@ type Props = {
 const EPSILON = 0.1;
 
 function CardContainer({
+  index,
   active,
   closing,
   gesture,
@@ -231,7 +233,7 @@ function CardContainer({
       onGestureBegin={handleGestureBegin}
       onGestureCanceled={handleGestureCanceled}
       onGestureEnd={handleGestureEnd}
-      gestureEnabled={gestureEnabled}
+      gestureEnabled={index === 0 ? false : gestureEnabled}
       gestureResponseDistance={gestureResponseDistance}
       gestureVelocityImpact={gestureVelocityImpact}
       transitionSpec={transitionSpec}

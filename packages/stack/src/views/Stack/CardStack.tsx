@@ -231,9 +231,7 @@ export default class CardStack extends React.Component<Props, State> {
           animationEnabled = Platform.OS !== 'web' &&
             Platform.OS !== 'windows' &&
             Platform.OS !== 'macos',
-          gestureEnabled = index !== 0 &&
-            Platform.OS === 'ios' &&
-            animationEnabled,
+          gestureEnabled = Platform.OS === 'ios' && animationEnabled,
           gestureDirection = defaultTransitionPreset.gestureDirection,
           transitionSpec = defaultTransitionPreset.transitionSpec,
           cardStyleInterpolator = animationEnabled === false
@@ -588,6 +586,7 @@ export default class CardStack extends React.Component<Props, State> {
                 pointerEvents="box-none"
               >
                 <CardContainer
+                  index={index}
                   interpolationIndex={interpolationIndex}
                   active={index === self.length - 1}
                   focused={focused}
