@@ -63,9 +63,6 @@ type Props = {
     closing: boolean
   ) => void;
   onTransitionEnd: (props: { route: Route<string> }, closing: boolean) => void;
-  onPageChangeStart?: () => void;
-  onPageChangeConfirm?: (force: boolean) => void;
-  onPageChangeCancel?: () => void;
   onGestureStart?: (props: { route: Route<string> }) => void;
   onGestureEnd?: (props: { route: Route<string> }) => void;
   onGestureCancel?: (props: { route: Route<string> }) => void;
@@ -430,9 +427,6 @@ export default class CardStack extends React.Component<Props, State> {
       isParentHeaderShown,
       onTransitionStart,
       onTransitionEnd,
-      onPageChangeStart,
-      onPageChangeConfirm,
-      onPageChangeCancel,
       onGestureStart,
       onGestureEnd,
       onGestureCancel,
@@ -603,9 +597,6 @@ export default class CardStack extends React.Component<Props, State> {
                   safeAreaInsetRight={safeAreaInsetRight}
                   safeAreaInsetBottom={safeAreaInsetBottom}
                   safeAreaInsetLeft={safeAreaInsetLeft}
-                  onPageChangeStart={onPageChangeStart}
-                  onPageChangeConfirm={onPageChangeConfirm}
-                  onPageChangeCancel={onPageChangeCancel}
                   onGestureStart={onGestureStart}
                   onGestureCancel={onGestureCancel}
                   onGestureEnd={onGestureEnd}
