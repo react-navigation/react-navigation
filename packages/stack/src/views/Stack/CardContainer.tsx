@@ -180,6 +180,8 @@ function CardContainer({
 
   const {
     presentation,
+    detachPreviousScreen,
+    animationEnabled,
     cardOverlay,
     cardOverlayEnabled,
     cardShadowEnabled,
@@ -250,6 +252,15 @@ function CardContainer({
           // This is necessary to avoid unfocused larger pages increasing scroll area
           // The issue can be seen on the web when a smaller screen is pushed over a larger one
           overflow: active ? undefined : 'hidden',
+          display:
+            // Hide unfocused screens when animation isn't enabled
+            // This is also necessary for a11y on web
+            animationEnabled === false &&
+            detachPreviousScreen !== false &&
+            presentation !== 'modal' &&
+            !focused
+              ? 'none'
+              : 'flex',
         },
         StyleSheet.absoluteFill,
       ]}
