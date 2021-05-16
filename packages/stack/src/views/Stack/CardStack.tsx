@@ -228,10 +228,13 @@ export default class CardStack extends React.Component<Props, State> {
             : DefaultTransition;
 
         const {
-          animationEnabled = Platform.OS !== 'web' &&
+          animationEnabled = index !== 0 &&
+            Platform.OS !== 'web' &&
             Platform.OS !== 'windows' &&
             Platform.OS !== 'macos',
-          gestureEnabled = Platform.OS === 'ios' && animationEnabled,
+          gestureEnabled = index !== 0 &&
+            Platform.OS === 'ios' &&
+            animationEnabled,
           gestureDirection = defaultTransitionPreset.gestureDirection,
           transitionSpec = defaultTransitionPreset.transitionSpec,
           cardStyleInterpolator = animationEnabled === false
