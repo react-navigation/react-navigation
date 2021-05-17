@@ -31,7 +31,6 @@ const {
   cond,
   divide,
   eq,
-  event,
   greaterThan,
   lessThan,
   max,
@@ -426,23 +425,15 @@ export default class DrawerView extends React.Component<DrawerProps> {
     abs(divide(this.translateX, this.drawerWidth))
   );
 
-  private handleGestureEvent = event([
-    {
-      nativeEvent: {
-        x: this.touchX,
-        translationX: this.gestureX,
-        velocityX: this.velocityX,
-      },
-    },
-  ]);
+  private handleGestureEvent = ({ nativeEvent }) => {
+    this.touchX.setValue(nativeEvent.x);
+    this.gestureX.setValue(nativeEvent.translationX);
+    this.velocityX.setValue(nativeEvent.velocityX);
+  }
 
-  private handleGestureStateChange = event([
-    {
-      nativeEvent: {
-        state: (s: Animated.Value<number>) => set(this.gestureState, s),
-      },
-    },
-  ]);
+  private handleGestureStateChange = ({ nativeEvent }) => {
+    this.gestureState.setValue(nativeEvent.state);
+  }
 
   private handleContainerLayout = (e: LayoutChangeEvent) =>
     this.containerWidth.setValue(e.nativeEvent.layout.width);
