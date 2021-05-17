@@ -429,11 +429,11 @@ export default class DrawerView extends React.Component<DrawerProps> {
     this.touchX.setValue(nativeEvent.x);
     this.gestureX.setValue(nativeEvent.translationX);
     this.velocityX.setValue(nativeEvent.velocityX);
-  }
+  };
 
   private handleGestureStateChange = ({ nativeEvent }) => {
     this.gestureState.setValue(nativeEvent.state);
-  }
+  };
 
   private handleContainerLayout = (e: LayoutChangeEvent) =>
     this.containerWidth.setValue(e.nativeEvent.layout.width);
