@@ -10,7 +10,11 @@ import {
   InteractionManager,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { PanGestureHandler, GestureState, PanGestureHandlerGestureEvent } from '../GestureHandler';
+import {
+  PanGestureHandler,
+  GestureState,
+  PanGestureHandlerGestureEvent
+} from '../GestureHandler';
 import Overlay from './Overlay';
 import DrawerProgressContext from '../../utils/DrawerProgressContext';
 import type { DrawerProps } from '../../types';
@@ -425,7 +429,9 @@ export default class DrawerView extends React.Component<DrawerProps> {
     abs(divide(this.translateX, this.drawerWidth))
   );
 
-  private handleGestureEvent = ({ nativeEvent }: PanGestureHandlerGestureEvent) => {
+  private handleGestureEvent = (e: PanGestureHandlerGestureEvent) => {
+    const nativeEvent = e.nativeEvent;
+
     this.touchX.setValue(nativeEvent.x);
     this.gestureX.setValue(nativeEvent.translationX);
     this.velocityX.setValue(nativeEvent.velocityX);
