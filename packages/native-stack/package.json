@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "@react-navigation/native": "^6.0.0-next.8",
+    "@testing-library/react-native": "^7.2.0",
     "@types/react": "^16.9.53",
     "@types/react-native": "~0.64.4",
     "react": "~16.13.1",
