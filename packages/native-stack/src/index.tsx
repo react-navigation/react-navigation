@@ -10,4 +10,4 @@ export type {
   NativeStackNavigationOptions,
   NativeStackNavigationProp,
   NativeStackScreenProps,
-} from 'react-native-screens/native-stack';
+} from './types';
