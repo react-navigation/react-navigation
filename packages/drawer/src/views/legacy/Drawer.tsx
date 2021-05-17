@@ -13,7 +13,7 @@ import Animated from 'react-native-reanimated';
 import {
   PanGestureHandler,
   GestureState,
-  PanGestureHandlerGestureEvent
+  PanGestureHandlerGestureEvent,
 } from '../GestureHandler';
 import Overlay from './Overlay';
 import DrawerProgressContext from '../../utils/DrawerProgressContext';
