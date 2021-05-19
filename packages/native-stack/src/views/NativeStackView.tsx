@@ -1,12 +1,5 @@
 import * as React from 'react';
-import {
-  Platform,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewProps,
-  ViewStyle,
-} from 'react-native';
+import { Platform, StyleSheet, View, ViewProps } from 'react-native';
 // @ts-ignore Getting private component
 import AppContainer from 'react-native/Libraries/ReactNative/AppContainer';
 import {
@@ -17,77 +10,102 @@ import {
   Route,
 } from '@react-navigation/native';
 import {
-  Screen as ScreenComponent,
-  ScreenProps,
+  Screen,
   ScreenStack,
   StackPresentationTypes,
 } from 'react-native-screens';
-
+import warnOnce from 'warn-once';
+import HeaderConfig from './HeaderConfig';
 import type {
   NativeStackDescriptorMap,
   NativeStackNavigationHelpers,
   NativeStackNavigationOptions,
 } from '../types';
-import HeaderConfig from './HeaderConfig';
 
-const Screen = (ScreenComponent as unknown) as React.ComponentType<ScreenProps>;
 const isAndroid = Platform.OS === 'android';
 
-let didWarn = isAndroid;
+type ContainerProps = ViewProps & { stackPresentation: StackPresentationTypes };
 
-let Container = View;
+let Container = (View as unknown) as React.ComponentType<ContainerProps>;
 
-if (__DEV__) {
-  const DebugContainer = (
-    props: ViewProps & { stackPresentation: StackPresentationTypes }
-  ) => {
+if (process.env.NODE_ENV !== 'production') {
+  const DebugContainer = (props: ContainerProps) => {
     const { stackPresentation, ...rest } = props;
+
     if (Platform.OS === 'ios' && stackPresentation !== 'push') {
+      // This is necessary for LogBox
       return (
         <AppContainer>
           <View {...rest} />
         </AppContainer>
       );
     }
+
     return <View {...rest} />;
   };
-  // @ts-ignore Wrong props
+
   Container = DebugContainer;
 }
 
-const maybeRenderNestedStack = (
-  options: NativeStackNavigationOptions,
-  route: Route<string>,
-  renderScene: () => JSX.Element,
-  stackPresentation: StackPresentationTypes,
-  isHeaderInModal: boolean,
-  viewStyles: StyleProp<ViewStyle>
-): JSX.Element => {
+const MaybeNestedStack = ({
+  options,
+  route,
+  presentation,
+  children,
+}: {
+  options: NativeStackNavigationOptions;
+  route: Route<string>;
+  presentation: Exclude<StackPresentationTypes, 'push'> | 'card';
+  children: React.ReactNode;
+}) => {
+  const { colors } = useTheme();
+  const { headerShown = true, contentStyle } = options;
+
+  const isHeaderInModal = isAndroid
+    ? false
+    : presentation !== 'card' && headerShown === true;
+
+  const headerShownPreviousRef = React.useRef(headerShown);
+
+  React.useEffect(() => {
+    warnOnce(
+      !isAndroid &&
+        presentation !== 'card' &&
+        headerShownPreviousRef.current !== headerShown,
+      `Dynamically changing 'headerShown' in modals will result in remounting the screen and losing all local state. See options for the screen '${route.name}'.`
+    );
+
+    headerShownPreviousRef.current = headerShown;
+  }, [headerShown, presentation, route.name]);
+
+  const content = (
+    <Container
+      style={[
+        styles.container,
+        presentation !== 'transparentModal' &&
+          presentation !== 'containedTransparentModal' && {
+            backgroundColor: colors.background,
+          },
+        contentStyle,
+      ]}
+      stackPresentation={presentation === 'card' ? 'push' : presentation}
+    >
+      {children}
+    </Container>
+  );
+
   if (isHeaderInModal) {
     return (
       <ScreenStack style={styles.container}>
         <Screen enabled style={StyleSheet.absoluteFill}>
           <HeaderConfig {...options} route={route} />
-          <Container
-            style={viewStyles}
-            // @ts-ignore Wrong props passed to View
-            stackPresentation={stackPresentation}
-          >
-            {renderScene()}
-          </Container>
+          {content}
         </Screen>
       </ScreenStack>
     );
   }
-  return (
-    <Container
-      style={viewStyles}
-      // @ts-ignore Wrong props passed to View
-      stackPresentation={stackPresentation}
-    >
-      {renderScene()}
-    </Container>
-  );
+
+  return content;
 };
 
 type Props = {
@@ -102,64 +120,45 @@ export default function NativeStackView({
   descriptors,
 }: Props): JSX.Element {
   const { key, routes } = state;
-  const { colors } = useTheme();
 
   return (
     <ScreenStack style={styles.container}>
       {routes.map((route, index) => {
         const { options, render: renderScene } = descriptors[route.key];
         const {
-          contentStyle,
           gestureEnabled,
           headerShown,
-          replaceAnimation = 'pop',
-          stackAnimation,
+          animationTypeForReplace = 'pop',
+          animation,
         } = options;
 
-        let { stackPresentation = 'push' } = options;
+        let { presentation = 'card' } = options;
 
         if (index === 0) {
-          // first screen should always be treated as `push`, it resolves problems with no header animation
-          // for navigator with first screen as `modal` and the next as `push`
-          stackPresentation = 'push';
+          // first screen should always be treated as `card`, it resolves problems with no header animation
+          // for navigator with first screen as `modal` and the next as `card`
+          presentation = 'card';
         }
 
-        const viewStyles = [
-          styles.container,
-          stackPresentation !== 'transparentModal' &&
-            stackPresentation !== 'containedTransparentModal' && {
-              backgroundColor: colors.background,
-            },
-          contentStyle,
-        ];
-
-        if (
-          !didWarn &&
-          stackPresentation !== 'push' &&
-          headerShown !== undefined
-        ) {
-          didWarn = true;
-          console.warn(
-            'Be aware that changing the visibility of header in modal on iOS will result in resetting the state of the screen.'
-          );
-        }
-
-        const isHeaderInModal = isAndroid
-          ? false
-          : stackPresentation !== 'push' && headerShown === true;
         const isHeaderInPush = isAndroid
           ? headerShown
-          : stackPresentation === 'push' && headerShown !== false;
+          : presentation === 'card' && headerShown !== false;
 
         return (
           <Screen
             key={route.key}
             enabled
             style={StyleSheet.absoluteFill}
-            gestureEnabled={isAndroid ? false : gestureEnabled}
-            replaceAnimation={replaceAnimation}
-            stackPresentation={stackPresentation}
-            stackAnimation={stackAnimation}
+            gestureEnabled={
+              isAndroid
+                ? // This prop enables handling of system back gestures on Android
+                  // Since we handle them in JS side, we disable this
+                  false
+                : gestureEnabled
+            }
+            replaceAnimation={animationTypeForReplace}
+            stackPresentation={presentation === 'card' ? 'push' : presentation}
+            stackAnimation={animation}
             onWillAppear={() => {
               navigation.emit({
                 type: 'transitionStart',
@@ -176,10 +175,6 @@ export default function NativeStackView({
             }}
             onAppear={() => {
               navigation.emit({
-                type: 'appear',
-                target: route.key,
-              });
-              navigation.emit({
                 type: 'transitionEnd',
                 data: { closing: false },
                 target: route.key,
@@ -193,11 +188,6 @@ export default function NativeStackView({
               });
             }}
             onDismissed={() => {
-              navigation.emit({
-                type: 'dismiss',
-                target: route.key,
-              });
-
               navigation.dispatch({
                 ...StackActions.pop(),
                 source: route.key,
@@ -210,14 +200,13 @@ export default function NativeStackView({
               route={route}
               headerShown={isHeaderInPush}
             />
-            {maybeRenderNestedStack(
-              options,
-              route,
-              renderScene,
-              stackPresentation,
-              isHeaderInModal,
-              viewStyles
-            )}
+            <MaybeNestedStack
+              options={options}
+              route={route}
+              presentation={presentation}
+            >
+              {renderScene()}
+            </MaybeNestedStack>
           </Screen>
         );
       })}

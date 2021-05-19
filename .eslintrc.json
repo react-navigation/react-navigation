@@ -9,6 +9,7 @@
       "@react-navigation/native",
       "@react-navigation/routers",
       "@react-navigation/stack",
+      "@react-navigation/native-stack",
       "@react-navigation/drawer",
       "@react-navigation/bottom-tabs",
       "@react-navigation/material-top-tabs",
