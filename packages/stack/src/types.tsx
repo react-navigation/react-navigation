@@ -128,19 +128,21 @@ export type StackHeaderOptions = HeaderOptions & {
    */
   headerBackTestID?: string;
   /**
-   * Title string used by the back button on iOS. Defaults to the previous scene's `headerTitle`.
+   * Title string used by the back button on iOS.
+   * Defaults to the previous scene's title, or "Back" if there's not enough space.
    * Use `headerBackTitleVisible: false` to hide it.
    */
   headerBackTitle?: string;
   /**
+   * Whether the back button title should be visible or not.
+   *
+   * Defaults to `true` on iOS, `false on Android.
+   */
+  headerBackTitleVisible?: boolean;
+  /**
    * Style object for the back title.
    */
   headerBackTitleStyle?: StyleProp<TextStyle>;
-  /**
-   * A reasonable default is supplied for whether the back button title should be visible or not.
-   * But if you want to override that you can use `true` or `false` in this option.
-   */
-  headerBackTitleVisible?: boolean;
   /**
    * Title string used by the back button when `headerBackTitle` doesn't fit on the screen. `"Back"` by default.
    */

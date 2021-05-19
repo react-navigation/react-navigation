@@ -11,33 +11,13 @@ import {
   useNavigationBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
+import NativeStackView from '../views/NativeStackView';
 
-import {
-  NativeStackView,
+import type {
   NativeStackNavigationOptions,
-} from 'react-native-screens/native-stack';
-
-// We want it to be an empty object beacuse navigator does not have any additional config
-export type NativeStackNavigationConfig = {};
-
-export type NativeStackNavigationEventMap = {
-  /**
-   * Event which fires when the screen appears.
-   */
-  appear: { data: undefined };
-  /**
-   * Event which fires when the current screen is dismissed by hardware back (on Android) or dismiss gesture (swipe back or down).
-   */
-  dismiss: { data: undefined };
-  /**
-   * Event which fires when a transition animation starts.
-   */
-  transitionStart: { data: { closing: boolean } };
-  /**
-   * Event which fires when a transition animation ends.
-   */
-  transitionEnd: { data: { closing: boolean } };
-};
+  NativeStackNavigationEventMap,
+  NativeStackNavigationConfig,
+} from '../types';
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<NativeStackNavigationOptions> &
   StackRouterOptions &

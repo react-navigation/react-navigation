@@ -1,5 +1,5 @@
-# `@react-navigation/material-bottom-tabs`
+# `@react-navigation/native-stack`
 
-React Navigation integration for [native-stack](https://github.com/software-mansion/react-native-screens/tree/master/native-stack) component from [`react-native-screens`](https://github.com/software-mansion/react-native-screens).
+Stack navigator for React Native using native primitives for navigation. Uses [`react-native-screens`](https://github.com/kmagiera/react-native-screens) under the hood.
 
-Installation instructions and documentation can be found on the [React Navigation website](https://reactnavigation.org/docs/6.x/native-stack-navigator/).
+Installation instructions and documentation can be found on the [React Navigation website](https://reactnavigation.org/docs/native-stack-navigator.html).

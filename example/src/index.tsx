@@ -44,6 +44,7 @@ import {
 
 import { restartApp } from './Restart';
 import SettingsItem from './Shared/SettingsItem';
+import NativeStack from './Screens/NativeStack';
 import SimpleStack from './Screens/SimpleStack';
 import ModalStack from './Screens/ModalStack';
 import MixedStack from './Screens/MixedStack';
@@ -78,6 +79,7 @@ type RootDrawerParamList = {
 };
 
 const SCREENS = {
+  NativeStack: { title: 'Native Stack', component: NativeStack },
   SimpleStack: { title: 'Simple Stack', component: SimpleStack },
   ModalStack: {
     title: 'Modal Stack',

@@ -9,6 +9,7 @@
     { "path": "../packages/material-bottom-tabs" },
     { "path": "../packages/material-top-tabs" },
     { "path": "../packages/native" },
+    { "path": "../packages/native-stack" },
     { "path": "../packages/routers" },
     { "path": "../packages/stack" },
   ],

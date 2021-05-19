@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/native-stack",
-  "description": "Integration for native stack component from react-native-screens",
-  "version": "6.0.0",
+  "description": "Native stack navigator using react-native-screens",
+  "version": "6.0.0-next.0",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -39,6 +39,9 @@
   "scripts": {
     "prepare": "bob build",
     "clean": "del lib"
+  },
+  "dependencies": {
+    "warn-once": "^0.1.0"
   },
   "devDependencies": {
     "@react-navigation/native": "^6.0.0-next.8",
