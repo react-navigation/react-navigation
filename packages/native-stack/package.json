@@ -1,0 +1,74 @@
+{
+  "name": "@react-navigation/native-stack",
+  "description": "Integration for native stack component from react-native-screens",
+  "version": "6.0.0",
+  "keywords": [
+    "react-native-component",
+    "react-component",
+    "react-native",
+    "react-navigation",
+    "ios",
+    "android",
+    "native",
+    "stack"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/react-navigation/react-navigation.git",
+    "directory": "packages/native-stack"
+  },
+  "bugs": {
+    "url": "https://github.com/software-mansion/react-native-screens/issues"
+  },
+  "homepage": "https://github.com/software-mansion/react-native-screens#readme",
+  "main": "lib/commonjs/index.js",
+  "react-native": "src/index.tsx",
+  "source": "src/index.tsx",
+  "module": "lib/module/index.js",
+  "types": "lib/typescript/src/index.d.ts",
+  "files": [
+    "src",
+    "lib",
+    "!**/__tests__"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prepare": "bob build",
+    "clean": "del lib"
+  },
+  "devDependencies": {
+    "@react-navigation/native": "^6.0.0-next.8",
+    "@testing-library/react-native": "^7.2.0",
+    "@types/react": "^16.9.53",
+    "@types/react-native": "~0.64.4",
+    "react": "~16.13.1",
+    "react-native": "~0.63.4",
+    "react-native-builder-bob": "^0.18.1",
+    "react-native-screens": "^3.0.0",
+    "typescript": "^4.2.3"
+  },
+  "peerDependencies": {
+    "@react-navigation/native": "^6.0.0",
+    "react": "*",
+    "react-native": "*",
+    "react-native-screens": ">= 3.0.0"
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
+    ]
+  }
+}
