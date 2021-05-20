@@ -29,17 +29,29 @@ jobs:
                 return; // Creator is already a contributor.
               }
             }
+            
+            const body = `Hey ${creator}! Thanks for opening your first pull request in this repo. If you haven't already, make sure to read our [contribution guidelines](https://github.com/react-navigation/react-navigation/blob/main/CONTRIBUTING.md).`;
+
+            const comments = await github.issues.listComments({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+              
+            if (comments.data.some(comment => comment.body === body)) {
+              return;
+            }
+
+            await github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body
+            });
 
             await github.issues.addLabels({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               labels: ['first pull request'],
-            });
-
-            await github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `Hey ${creator}! Thanks for opening your first pull request in this repo. If you haven't already, make sure to read our [contribution guidelines](https://github.com/react-navigation/react-navigation/blob/main/CONTRIBUTING.md).`
             });
