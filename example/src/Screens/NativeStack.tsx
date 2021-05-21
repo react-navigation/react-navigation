@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View, Platform, StyleSheet, ScrollView } from 'react-native';
 import { Button } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { ParamListBase } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
@@ -85,8 +86,14 @@ const NewsFeedScreen = ({
 const AlbumsScreen = ({
   navigation,
 }: NativeStackScreenProps<NativeStackParams, 'Albums'>) => {
+  const insets = useSafeAreaInsets();
+
   return (
-    <ScrollView contentContainerStyle={{ paddingTop: 44 + 12 }}>
+    <ScrollView
+      contentContainerStyle={{
+        paddingTop: 56 + (Platform.OS === 'ios' ? 0 : insets.top),
+      }}
+    >
       <View style={styles.buttons}>
         <Button
           mode="contained"
