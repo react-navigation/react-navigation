@@ -23,7 +23,7 @@ type Props = DefaultNavigatorOptions<DrawerNavigationOptions> &
 
 function DrawerNavigator({
   initialRouteName,
-  openByDefault,
+  defaultStatus,
   backBehavior,
   children,
   screenOptions,
@@ -80,7 +80,7 @@ function DrawerNavigator({
     DrawerNavigationEventMap
   >(DrawerRouter, {
     initialRouteName,
-    openByDefault,
+    defaultStatus,
     backBehavior,
     children,
     screenOptions,
