@@ -221,9 +221,11 @@ export default function App() {
 
   return (
     <PaperProvider theme={paperTheme}>
-      {Platform.OS === 'ios' && (
-        <StatusBar barStyle={theme.dark ? 'light-content' : 'dark-content'} />
-      )}
+      <StatusBar
+        translucent
+        barStyle={theme.dark ? 'light-content' : 'dark-content'}
+        backgroundColor="rgba(0, 0, 0, 0.24)"
+      />
       <NavigationContainer
         ref={navigationRef}
         initialState={initialState}
