@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { View, Platform, StyleSheet, ScrollView } from 'react-native';
-import { Button } from 'react-native-paper';
+import { View, Platform, StyleSheet, ScrollView, Alert } from 'react-native';
+import { Appbar, Button } from 'react-native-paper';
 import type { ParamListBase } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
@@ -31,13 +31,6 @@ const ArticleScreen = ({
           style={styles.button}
         >
           Push feed
-        </Button>
-        <Button
-          mode="contained"
-          onPress={() => navigation.replace('NewsFeed', { date: Date.now() })}
-          style={styles.button}
-        >
-          Replace with feed
         </Button>
         <Button
           mode="outlined"
@@ -86,7 +79,7 @@ const AlbumsScreen = ({
   navigation,
 }: NativeStackScreenProps<NativeStackParams, 'Albums'>) => {
   return (
-    <ScrollView contentContainerStyle={{ paddingTop: 44 + 12 }}>
+    <ScrollView>
       <View style={styles.buttons}>
         <Button
           mode="contained"
@@ -122,6 +115,13 @@ export default function NativeStackScreen({
     });
   }, [navigation]);
 
+  const onPress = () => {
+    Alert.alert(
+      'Never gonna give you up!',
+      'Never gonna let you down! Never gonna run around and desert you!'
+    );
+  };
+
   return (
     <NativeStack.Navigator>
       <NativeStack.Screen
@@ -129,25 +129,44 @@ export default function NativeStackScreen({
         component={ArticleScreen}
         options={({ route }) => ({
           title: `Article by ${route.params?.author ?? 'Unknown'}`,
-          headerLargeTitle: true,
-          headerLargeTitleShadowVisible: false,
+          headerTitle: ({ tintColor }) => (
+            <Appbar.Action
+              color={tintColor}
+              icon="signal-5g"
+              onPress={onPress}
+            />
+          ),
+          headerRight: ({ tintColor }) => (
+            <Appbar.Action
+              color={tintColor}
+              icon="bookmark"
+              onPress={onPress}
+            />
+          ),
         })}
         initialParams={{ author: 'Gandalf' }}
       />
       <NativeStack.Screen
         name="NewsFeed"
         component={NewsFeedScreen}
-        options={{ title: 'Feed' }}
+        options={{
+          title: 'Feed',
+          headerLeft: ({ tintColor }) => (
+            <Appbar.Action color={tintColor} icon="spa" onPress={onPress} />
+          ),
+        }}
       />
       <NativeStack.Screen
         name="Albums"
         component={AlbumsScreen}
         options={{
           title: 'Albums',
-          presentation: 'modal',
-          headerShadowVisible: true,
-          headerTranslucent: true,
-          headerBlurEffect: 'light',
+          headerTintColor: 'tomato',
+          headerStyle: { backgroundColor: 'papayawhip' },
+          headerBackVisible: true,
+          headerLeft: ({ tintColor }) => (
+            <Appbar.Action color={tintColor} icon="music" onPress={onPress} />
+          ),
         }}
       />
     </NativeStack.Navigator>

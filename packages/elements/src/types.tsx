@@ -12,6 +12,7 @@ export type HeaderOptions = {
   /**
    * String or a function that returns a React Element to be used by the header.
    * Defaults to scene `title`.
+   *
    * It receives `allowFontScaling`, `tintColor`, `style` and `children` in the options object as an argument.
    * The title string is passed in `children`.
    */
