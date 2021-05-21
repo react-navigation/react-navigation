@@ -10,7 +10,6 @@ import {
   LogBox,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { enableScreens } from 'react-native-screens';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {
   Provider as PaperProvider,
@@ -64,8 +63,6 @@ import LinkComponent from './Screens/LinkComponent';
 if (Platform.OS !== 'web') {
   LogBox.ignoreLogs(['Require cycle:']);
 }
-
-enableScreens();
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace

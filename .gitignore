@@ -4,6 +4,7 @@
 .idea
 .expo
 .gradle
+.classpath
 .project
 .settings
 .history
