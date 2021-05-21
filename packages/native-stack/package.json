@@ -41,6 +41,7 @@
     "clean": "del lib"
   },
   "dependencies": {
+    "@react-navigation/elements": "^1.0.0-next.10",
     "warn-once": "^0.1.0"
   },
   "devDependencies": {
@@ -58,7 +59,8 @@
     "@react-navigation/native": "^6.0.0",
     "react": "*",
     "react-native": "*",
-    "react-native-screens": ">= 3.0.0"
+    "react-native-screens": ">= 3.0.0",
+    "react-native-safe-area-context": ">= 3.0.0"
   },
   "react-native-builder-bob": {
     "source": "src",
