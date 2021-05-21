@@ -46,10 +46,10 @@ type Props = ViewProps & {
   gestureDirection: GestureDirection;
   onOpen: () => void;
   onClose: () => void;
-  onTransition?: (props: { closing: boolean; gesture: boolean }) => void;
-  onGestureBegin?: () => void;
-  onGestureCanceled?: () => void;
-  onGestureEnd?: () => void;
+  onTransition: (props: { closing: boolean; gesture: boolean }) => void;
+  onGestureBegin: () => void;
+  onGestureCanceled: () => void;
+  onGestureEnd: () => void;
   children: React.ReactNode;
   overlay: (props: {
     style: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;

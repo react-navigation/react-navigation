@@ -1,10 +1,18 @@
 import * as React from 'react';
-import { View, StyleSheet, ScrollView, Platform } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Platform,
+  Pressable,
+  Animated,
+} from 'react-native';
 import { Button, Paragraph } from 'react-native-paper';
 import { ParamListBase, useTheme } from '@react-navigation/native';
 import {
   createStackNavigator,
   StackScreenProps,
+  useCardAnimation,
 } from '@react-navigation/stack';
 import Article from '../Shared/Article';
 
@@ -49,10 +57,28 @@ const DialogScreen = ({
   navigation,
 }: StackScreenProps<TransparentStackParams>) => {
   const { colors } = useTheme();
+  const { current } = useCardAnimation();
 
   return (
     <View style={styles.container}>
-      <View style={[styles.dialog, { backgroundColor: colors.card }]}>
+      <Pressable style={styles.backdrop} onPress={() => navigation.goBack()} />
+      <Animated.View
+        style={[
+          styles.dialog,
+          {
+            backgroundColor: colors.card,
+            transform: [
+              {
+                scale: current.progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0.9, 1],
+                  extrapolate: 'clamp',
+                }),
+              },
+            ],
+          },
+        ]}
+      >
         <Paragraph>
           Mise en place is a French term that literally means “put in place.” It
           also refers to a way cooks in professional kitchens and restaurants
@@ -67,7 +93,7 @@ const DialogScreen = ({
         <Button style={styles.close} compact onPress={navigation.goBack}>
           Okay
         </Button>
-      </View>
+      </Animated.View>
     </View>
   );
 };
@@ -84,7 +110,7 @@ export default function TransparentStackScreen({ navigation }: Props) {
   }, [navigation]);
 
   return (
-    <TransparentStack.Navigator screenOptions={{ presentation: 'modal' }}>
+    <TransparentStack.Navigator>
       <TransparentStack.Screen
         name="Article"
         component={ArticleScreen}
@@ -95,32 +121,7 @@ export default function TransparentStackScreen({ navigation }: Props) {
         component={DialogScreen}
         options={{
           headerShown: false,
-          cardStyle: { backgroundColor: 'transparent' },
-          cardOverlayEnabled: true,
-          cardStyleInterpolator: ({ current: { progress } }) => ({
-            cardStyle: {
-              opacity: progress.interpolate({
-                inputRange: [0, 0.5, 0.9, 1],
-                outputRange: [0, 0.25, 0.7, 1],
-              }),
-              transform: [
-                {
-                  scale: progress.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0.9, 1],
-                    extrapolate: 'clamp',
-                  }),
-                },
-              ],
-            },
-            overlayStyle: {
-              opacity: progress.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0, 0.5],
-                extrapolate: 'clamp',
-              }),
-            },
-          }),
+          presentation: 'transparentModal',
         }}
       />
     </TransparentStack.Navigator>
@@ -145,6 +146,10 @@ const styles = StyleSheet.create({
     width: '90%',
     maxWidth: 400,
     borderRadius: 3,
+  },
+  backdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
   close: {
     alignSelf: 'flex-end',

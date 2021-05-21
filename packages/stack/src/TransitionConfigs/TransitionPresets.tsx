@@ -7,6 +7,7 @@ import {
   forRevealFromBottomAndroid,
   forFadeFromBottomAndroid,
   forBottomSheetAndroid,
+  forFadeFromCenter as forFadeCard,
 } from './CardStyleInterpolators';
 import { forFade } from './HeaderStyleInterpolators';
 import {
@@ -111,6 +112,19 @@ export const BottomSheetAndroid: TransitionPreset = {
     close: BottomSheetSlideOutSpec,
   },
   cardStyleInterpolator: forBottomSheetAndroid,
+  headerStyleInterpolator: forFade,
+};
+
+/**
+ * Fade transition for transparent modals.
+ */
+export const ModalFadeTransition: TransitionPreset = {
+  gestureDirection: 'vertical',
+  transitionSpec: {
+    open: BottomSheetSlideInSpec,
+    close: BottomSheetSlideOutSpec,
+  },
+  cardStyleInterpolator: forFadeCard,
   headerStyleInterpolator: forFade,
 };
 

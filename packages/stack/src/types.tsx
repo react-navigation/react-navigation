@@ -256,11 +256,16 @@ export type StackNavigationOptions = StackHeaderOptions &
      * - `modal`: Use Modal animations. This changes a few things:
      *   - Sets `headerMode` to `screen` for the screen unless specified otherwise.
      *   - Changes the screen animation to match the platform behavior for modals.
+     * - `transparentModal`: Similar to `modal`. This changes following things:
+     *   - Sets `headerMode` to `screen` for the screen unless specified otherwise.
+     *   - Sets background color of the screen to transparent, so previous screen is visible
      *   - Adjusts the `detachPreviousScreen` option so that the previous screen stays rendered.
+     *   - Prevents the previous screen from animating from its last position.
+     *   - Changes the screen animation to a vertical slide animation.
      *
      * Defaults to 'card'.
      */
-    presentation?: 'card' | 'modal';
+    presentation?: 'card' | 'modal' | 'transparentModal';
     /**
      * Whether transition animation should be enabled the screen.
      * If you set it to `false`, the screen won't animate when pushing or popping.

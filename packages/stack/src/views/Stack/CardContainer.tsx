@@ -34,14 +34,14 @@ type Props = {
   renderScene: (props: { route: Route<string> }) => React.ReactNode;
   onOpenRoute: (props: { route: Route<string> }) => void;
   onCloseRoute: (props: { route: Route<string> }) => void;
-  onTransitionStart?: (
+  onTransitionStart: (
     props: { route: Route<string> },
     closing: boolean
   ) => void;
-  onTransitionEnd?: (props: { route: Route<string> }, closing: boolean) => void;
-  onGestureStart?: (props: { route: Route<string> }) => void;
-  onGestureEnd?: (props: { route: Route<string> }) => void;
-  onGestureCancel?: (props: { route: Route<string> }) => void;
+  onTransitionEnd: (props: { route: Route<string> }, closing: boolean) => void;
+  onGestureStart: (props: { route: Route<string> }) => void;
+  onGestureEnd: (props: { route: Route<string> }) => void;
+  onGestureCancel: (props: { route: Route<string> }) => void;
   hasAbsoluteFloatHeader: boolean;
   headerHeight: number;
   onHeaderHeightChange: (props: {
@@ -49,6 +49,8 @@ type Props = {
     height: number;
   }) => void;
   isParentHeaderShown: boolean;
+  isNextScreenTransparent: boolean;
+  detachCurrentScreen: boolean;
 };
 
 const EPSILON = 0.1;
@@ -66,6 +68,8 @@ function CardContainer({
   headerHeight,
   onHeaderHeightChange,
   isParentHeaderShown,
+  isNextScreenTransparent,
+  detachCurrentScreen,
   interpolationIndex,
   layout,
   onCloseRoute,
@@ -102,35 +106,35 @@ function CardContainer({
   const handleOpen = () => {
     const { route } = scene.descriptor;
 
-    onTransitionEnd?.({ route }, false);
+    onTransitionEnd({ route }, false);
     onOpenRoute({ route });
   };
 
   const handleClose = () => {
     const { route } = scene.descriptor;
 
-    onTransitionEnd?.({ route }, true);
+    onTransitionEnd({ route }, true);
     onCloseRoute({ route });
   };
 
   const handleGestureBegin = () => {
     const { route } = scene.descriptor;
 
-    onPageChangeStart?.();
-    onGestureStart?.({ route });
+    onPageChangeStart();
+    onGestureStart({ route });
   };
 
   const handleGestureCanceled = () => {
     const { route } = scene.descriptor;
 
-    onPageChangeCancel?.();
-    onGestureCancel?.({ route });
+    onPageChangeCancel();
+    onGestureCancel({ route });
   };
 
   const handleGestureEnd = () => {
     const { route } = scene.descriptor;
 
-    onGestureEnd?.({ route });
+    onGestureEnd({ route });
   };
 
   const handleTransition = ({
@@ -182,7 +186,6 @@ function CardContainer({
 
   const {
     presentation,
-    detachPreviousScreen,
     animationEnabled,
     cardOverlay,
     cardOverlayEnabled,
@@ -222,7 +225,7 @@ function CardContainer({
       insets={insets}
       gesture={gesture}
       current={scene.progress.current}
-      next={scene.progress.next}
+      next={isNextScreenTransparent ? undefined : scene.progress.next}
       closing={closing}
       onOpen={handleOpen}
       onClose={handleClose}
@@ -248,7 +251,15 @@ function CardContainer({
           ? { marginTop: headerHeight }
           : null
       }
-      contentStyle={[{ backgroundColor: colors.background }, cardStyle]}
+      contentStyle={[
+        {
+          backgroundColor:
+            presentation === 'transparentModal'
+              ? 'transparent'
+              : colors.background,
+        },
+        cardStyle,
+      ]}
       style={[
         {
           // This is necessary to avoid unfocused larger pages increasing scroll area
@@ -258,8 +269,8 @@ function CardContainer({
             // Hide unfocused screens when animation isn't enabled
             // This is also necessary for a11y on web
             animationEnabled === false &&
-            detachPreviousScreen !== false &&
-            presentation !== 'modal' &&
+            isNextScreenTransparent === false &&
+            detachCurrentScreen !== false &&
             !focused
               ? 'none'
               : 'flex',
