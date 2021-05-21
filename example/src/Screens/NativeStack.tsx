@@ -122,7 +122,7 @@ export default function NativeStackScreen({
   }, [navigation]);
 
   return (
-    <NativeStack.Navigator screenOptions={{ headerTopInsetEnabled: false }}>
+    <NativeStack.Navigator>
       <NativeStack.Screen
         name="Article"
         component={ArticleScreen}

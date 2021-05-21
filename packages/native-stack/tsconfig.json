@@ -3,7 +3,8 @@
   "references": [
     { "path": "../core" },
     { "path": "../routers" },
-    { "path": "../native" }
+    { "path": "../native" },
+    { "path": "../elements" }
   ],
   "compilerOptions": {
     "outDir": "./lib/typescript"

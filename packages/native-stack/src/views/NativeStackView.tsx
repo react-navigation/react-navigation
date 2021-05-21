@@ -9,11 +9,13 @@ import {
   useTheme,
   Route,
 } from '@react-navigation/native';
+import { SafeAreaProviderCompat } from '@react-navigation/elements';
 import {
   Screen,
   ScreenStack,
   StackPresentationTypes,
 } from 'react-native-screens';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import warnOnce from 'warn-once';
 import HeaderConfig from './HeaderConfig';
 import type {
@@ -114,16 +116,12 @@ type Props = {
   descriptors: NativeStackDescriptorMap;
 };
 
-export default function NativeStackView({
-  state,
-  navigation,
-  descriptors,
-}: Props): JSX.Element {
-  const { key, routes } = state;
+function NativeStackViewInner({ state, navigation, descriptors }: Props) {
+  const insets = useSafeAreaInsets();
 
   return (
     <ScreenStack style={styles.container}>
-      {routes.map((route, index) => {
+      {state.routes.map((route, index) => {
         const { options, render: renderScene } = descriptors[route.key];
         const {
           gestureEnabled,
@@ -191,7 +189,7 @@ export default function NativeStackView({
               navigation.dispatch({
                 ...StackActions.pop(),
                 source: route.key,
-                target: key,
+                target: state.key,
               });
             }}
           >
@@ -199,6 +197,9 @@ export default function NativeStackView({
               {...options}
               route={route}
               headerShown={isHeaderInPush}
+              headerTopInsetEnabled={
+                options.headerTopInsetEnabled ?? insets.top !== 0
+              }
             />
             <MaybeNestedStack
               options={options}
@@ -211,6 +212,14 @@ export default function NativeStackView({
         );
       })}
     </ScreenStack>
+  );
+}
+
+export default function NativeStackView(props: Props) {
+  return (
+    <SafeAreaProviderCompat>
+      <NativeStackViewInner {...props} />
+    </SafeAreaProviderCompat>
   );
 }
 
