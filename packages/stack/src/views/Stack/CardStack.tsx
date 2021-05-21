@@ -24,6 +24,7 @@ import CardContainer from './CardContainer';
 import {
   DefaultTransition,
   ModalTransition,
+  ModalFadeTransition,
 } from '../../TransitionConfigs/TransitionPresets';
 import {
   forModalPresentationIOS,
@@ -63,9 +64,9 @@ type Props = {
     closing: boolean
   ) => void;
   onTransitionEnd: (props: { route: Route<string> }, closing: boolean) => void;
-  onGestureStart?: (props: { route: Route<string> }) => void;
-  onGestureEnd?: (props: { route: Route<string> }) => void;
-  onGestureCancel?: (props: { route: Route<string> }) => void;
+  onGestureStart: (props: { route: Route<string> }) => void;
+  onGestureEnd: (props: { route: Route<string> }) => void;
+  onGestureCancel: (props: { route: Route<string> }) => void;
   detachInactiveScreens?: boolean;
 };
 
@@ -225,6 +226,8 @@ export default class CardStack extends React.Component<Props, State> {
         let defaultTransitionPreset =
           optionsForTransitionConfig.presentation === 'modal'
             ? ModalTransition
+            : optionsForTransitionConfig.presentation === 'transparentModal'
+            ? ModalFadeTransition
             : DefaultTransition;
 
         const {
@@ -238,7 +241,8 @@ export default class CardStack extends React.Component<Props, State> {
             ? forNoAnimationCard
             : defaultTransitionPreset.cardStyleInterpolator,
           headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
-          cardOverlayEnabled = Platform.OS !== 'ios' ||
+          cardOverlayEnabled = (Platform.OS !== 'ios' &&
+            optionsForTransitionConfig.presentation !== 'transparentModal') ||
             cardStyleInterpolator === forModalPresentationIOS,
         } = optionsForTransitionConfig;
 
@@ -246,6 +250,7 @@ export default class CardStack extends React.Component<Props, State> {
           descriptor.options.headerMode ??
           (!(
             optionsForTransitionConfig.presentation === 'modal' ||
+            optionsForTransitionConfig.presentation === 'transparentModal' ||
             cardStyleInterpolator === forModalPresentationIOS
           ) &&
           Platform.OS === 'ios' &&
@@ -461,7 +466,7 @@ export default class CardStack extends React.Component<Props, State> {
       const { options } = scenes[i].descriptor;
       const {
         // By default, we don't want to detach the previous screen of the active one for modals
-        detachPreviousScreen = options.presentation === 'modal' ||
+        detachPreviousScreen = options.presentation === 'transparentModal' ||
         options.cardStyleInterpolator === forModalPresentationIOS
           ? i !== scenes.length - 1
           : true,
@@ -577,6 +582,14 @@ export default class CardStack extends React.Component<Props, State> {
               interpolationIndex++;
             }
 
+            const isNextScreenTransparent =
+              scenes[index + 1]?.descriptor.options.presentation ===
+              'transparentModal';
+
+            const detachCurrentScreen =
+              scenes[index + 1]?.descriptor.options.detachPreviousScreen !==
+              false;
+
             return (
               <MaybeScreen
                 key={route.key}
@@ -616,6 +629,8 @@ export default class CardStack extends React.Component<Props, State> {
                   onCloseRoute={onCloseRoute}
                   onTransitionStart={onTransitionStart}
                   onTransitionEnd={onTransitionEnd}
+                  isNextScreenTransparent={isNextScreenTransparent}
+                  detachCurrentScreen={detachCurrentScreen}
                 />
               </MaybeScreen>
             );
