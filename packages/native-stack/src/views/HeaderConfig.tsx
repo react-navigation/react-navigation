@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, I18nManager, Platform } from 'react-native';
+import { StyleSheet, I18nManager, Platform, View } from 'react-native';
 import {
   ScreenStackHeaderBackButtonImage,
   ScreenStackHeaderCenterView,
@@ -10,6 +10,7 @@ import {
   SearchBar,
 } from 'react-native-screens';
 import { Route, useTheme } from '@react-navigation/native';
+import { HeaderTitle } from '@react-navigation/elements';
 import type { NativeStackNavigationOptions } from '../types';
 import { processFonts } from './FontProcessor';
 
@@ -22,7 +23,6 @@ export default function HeaderConfig({
   headerBackTitle,
   headerBackTitleStyle,
   headerBackTitleVisible = true,
-  headerCenter,
   headerBackVisible,
   headerShadowVisible,
   headerLargeStyle,
@@ -48,7 +48,12 @@ export default function HeaderConfig({
   title,
 }: Props): JSX.Element {
   const { colors } = useTheme();
-  const tintColor = headerTintColor ?? colors.primary;
+  const tintColor =
+    headerTintColor != null
+      ? headerTintColor
+      : Platform.OS === 'ios'
+      ? colors.primary
+      : colors.text;
 
   const headerBackTitleStyleFlattened =
     StyleSheet.flatten(headerBackTitleStyle) || {};
@@ -68,9 +73,14 @@ export default function HeaderConfig({
     headerTitleStyleFlattened.fontFamily,
   ]);
 
+  const titleText = title !== undefined ? title : route.name;
+
   const headerLeftElement = headerLeft?.({ tintColor });
   const headerRightElement = headerRight?.({ tintColor });
-  const headerCenterElement = headerCenter?.({ tintColor });
+  const headerTitleElement =
+    typeof headerTitle === 'function'
+      ? headerTitle({ tintColor, children: titleText })
+      : null;
 
   if (Platform.OS === 'ios' && headerSearchBar != null && SearchBar == null) {
     throw new Error(
@@ -78,9 +88,18 @@ export default function HeaderConfig({
     );
   }
 
+  /**
+   * We need to set this in if:
+   * - Back button should stay visible when `headerLeft` is specified
+   * - If `headerTitle` for Android is specified, so we only need to remove the title and keep the back button
+   */
+  const backButtonInCustomView = headerBackVisible
+    ? headerLeftElement != null
+    : Platform.OS === 'android' && headerTitleElement != null;
+
   return (
     <ScreenStackHeaderConfig
-      backButtonInCustomView={headerLeftElement != null && !headerBackVisible}
+      backButtonInCustomView={backButtonInCustomView}
       backgroundColor={
         headerStyleFlattened.backgroundColor ??
         (headerTranslucent ? 'transparent' : colors.card)
@@ -105,13 +124,7 @@ export default function HeaderConfig({
       statusBarAnimation={statusBarAnimation}
       statusBarHidden={statusBarHidden}
       statusBarStyle={statusBarStyle}
-      title={
-        headerTitle !== undefined
-          ? headerTitle
-          : title !== undefined
-          ? title
-          : route.name
-      }
+      title={typeof headerTitle === 'string' ? headerTitle : titleText}
       titleColor={
         headerTitleStyleFlattened.color ?? headerTintColor ?? colors.text
       }
@@ -124,26 +137,45 @@ export default function HeaderConfig({
         headerTranslucent === true
       }
     >
-      {headerRightElement != null ? (
-        <ScreenStackHeaderRightView>
-          {headerRightElement}
-        </ScreenStackHeaderRightView>
-      ) : null}
+      {Platform.OS === 'ios' ? (
+        <>
+          {headerLeftElement != null ? (
+            <ScreenStackHeaderLeftView>
+              {headerLeftElement}
+            </ScreenStackHeaderLeftView>
+          ) : null}
+          {headerTitleElement != null ? (
+            <ScreenStackHeaderCenterView>
+              {headerTitleElement}
+            </ScreenStackHeaderCenterView>
+          ) : null}
+        </>
+      ) : (
+        <>
+          {headerLeftElement != null || typeof headerTitle === 'function' ? (
+            <ScreenStackHeaderLeftView>
+              <View style={styles.row}>
+                {headerLeftElement}
+                {typeof headerTitle === 'function' ? (
+                  headerTitleElement
+                ) : (
+                  <HeaderTitle tintColor={tintColor}>{titleText}</HeaderTitle>
+                )}
+              </View>
+            </ScreenStackHeaderLeftView>
+          ) : null}
+        </>
+      )}
       {headerBackImageSource !== undefined ? (
         <ScreenStackHeaderBackButtonImage
           key="backImage"
           source={headerBackImageSource}
         />
       ) : null}
-      {headerLeftElement != null ? (
-        <ScreenStackHeaderLeftView>
-          {headerLeftElement}
-        </ScreenStackHeaderLeftView>
-      ) : null}
-      {headerCenterElement != null ? (
-        <ScreenStackHeaderCenterView>
-          {headerCenterElement}
-        </ScreenStackHeaderCenterView>
+      {headerRightElement != null ? (
+        <ScreenStackHeaderRightView>
+          {headerRightElement}
+        </ScreenStackHeaderRightView>
       ) : null}
       {Platform.OS === 'ios' && headerSearchBar != null ? (
         <ScreenStackHeaderSearchBarView>
@@ -153,3 +185,10 @@ export default function HeaderConfig({
     </ScreenStackHeaderConfig>
   );
 }
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+});

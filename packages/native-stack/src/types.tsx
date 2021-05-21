@@ -62,6 +62,9 @@ export type NativeStackNavigationOptions = {
   title?: string;
   /**
    * Whether the back button is visible in the header.
+   * You can use it to show a back button alongside `headerLeft` if you have specified it.
+   *
+   * This will have no effect on the first screen in the stack.
    */
   headerBackVisible?: boolean;
   /**
@@ -150,20 +153,6 @@ export type NativeStackNavigationOptions = {
     color?: string;
   }>;
   /**
-   * Function which returns a React Element to display on the left side of the header.
-   * This is shown alongside the back button. See `headerBackVisible` to hide the back button.
-   */
-  headerLeft?: (props: { tintColor?: string }) => React.ReactNode;
-  /**
-   * Function which returns a React Element to display on the right side of the header.
-   */
-  headerRight?: (props: { tintColor?: string }) => React.ReactNode;
-  /**
-   * Function which returns a React Element to display in the center of the header.
-   * This replaces the header title on iOS.
-   */
-  headerCenter?: (props: { tintColor?: string }) => React.ReactNode;
-  /**
    * Whether to show the header. The header is shown by default.
    * Setting this to `false` hides the header.
    */
@@ -198,9 +187,33 @@ export type NativeStackNavigationOptions = {
    */
   headerTintColor?: string;
   /**
-   * String to display in the header as title. Defaults to scene `title`.
+   * Function which returns a React Element to display on the left side of the header.
+   * This replaces the back button. See `headerBackVisible` to show the back button along side left element.
    */
-  headerTitle?: string;
+  headerLeft?: (props: { tintColor?: string }) => React.ReactNode;
+  /**
+   * Function which returns a React Element to display on the right side of the header.
+   */
+  headerRight?: (props: { tintColor?: string }) => React.ReactNode;
+  /**
+   * String or a function that returns a React Element to be used by the header.
+   * Defaults to scene `title`.
+   *
+   * It receives `tintColor` and`children` in the options object as an argument.
+   * The title string is passed in `children`.
+   */
+  headerTitle?:
+    | string
+    | ((props: {
+        /**
+         * The title text of the header.
+         */
+        children: string;
+        /**
+         * Tint color for the header.
+         */
+        tintColor?: string;
+      }) => React.ReactNode);
   /**
    * Style object for header title. Supported properties:
    * - fontFamily

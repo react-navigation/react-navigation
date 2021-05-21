@@ -50,6 +50,7 @@ import MixedStack from './Screens/MixedStack';
 import MixedHeaderMode from './Screens/MixedHeaderMode';
 import StackTransparent from './Screens/StackTransparent';
 import StackHeaderCustomization from './Screens/StackHeaderCustomization';
+import NativeStackHeaderCustomization from './Screens/NativeStackHeaderCustomization';
 import BottomTabs from './Screens/BottomTabs';
 import MaterialTopTabsScreen from './Screens/MaterialTopTabs';
 import MaterialBottomTabs from './Screens/MaterialBottomTabs';
@@ -97,6 +98,10 @@ const SCREENS = {
   StackHeaderCustomization: {
     title: 'Header Customization in Stack',
     component: StackHeaderCustomization,
+  },
+  NativeStackHeaderCustomization: {
+    title: 'Header Customization in Native Stack',
+    component: NativeStackHeaderCustomization,
   },
   BottomTabs: { title: 'Bottom Tabs', component: BottomTabs },
   MaterialTopTabs: {
