@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/core",
   "description": "Core utilities for building navigators",
-  "version": "6.0.0-next.8",
+  "version": "6.0.0-next.9",
   "keywords": [
     "react",
     "react-native",
@@ -35,7 +35,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/routers": "^6.0.0-next.2",
+    "@react-navigation/routers": "^6.0.0-next.3",
     "escape-string-regexp": "^4.0.0",
     "nanoid": "^3.1.22",
     "query-string": "^7.0.0",

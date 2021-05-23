@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.17...@react-navigation/stack@6.0.0-next.18) (2021-05-23)
+
+
+### Features
+
+* add 'transparentModal' presentation to JS stack ([3d14740](https://github.com/react-navigation/react-navigation/commit/3d147401e8ca98ec2d51d5e11c09cd1271d448d1))
+* enable ipad trackpad two finger back gesture ([4ec6acd](https://github.com/react-navigation/react-navigation/commit/4ec6acdf97ba1b34f25b22af5262798a36b9020a))
+
+
+
+
+
 # [6.0.0-next.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.16...@react-navigation/stack@6.0.0-next.17) (2021-05-16)
 
 

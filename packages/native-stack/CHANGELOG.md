@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@5.0.5...@react-navigation/native-stack@6.0.0-next.1) (2021-05-23)
+
+
+### Bug Fixes
+
+* automatically set top inset on Android in native stack ([2cb44a5](https://github.com/react-navigation/react-navigation/commit/2cb44a566315cc29243227f4289e42ee02e0aa42))
+
+
+### Features
+
+* add native-stack to repo ([#9596](https://github.com/react-navigation/react-navigation/issues/9596)) ([a55d6a8](https://github.com/react-navigation/react-navigation/commit/a55d6a8d796fa2b9f46cfcaf71f05c6d87738072))
+
+
+
+
+
 ## [5.0.5](https://github.com/react-navigation/react-navigation/tree/master/packages/native-stack/compare/@react-navigation/native-stack@5.0.4...@react-navigation/native-stack@5.0.5) (2020-02-14)
 
 **Note:** Version bump only for package @react-navigation/native-stack
