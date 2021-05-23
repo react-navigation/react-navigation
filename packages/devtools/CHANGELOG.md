@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.8...@react-navigation/devtools@6.0.0-next.9) (2021-05-23)
+
+
+### Features
+
+* initial implementation of a flipper plugin ([d6f6f5f](https://github.com/react-navigation/react-navigation/commit/d6f6f5f94db85bd9166a5a97889c37690846d519))
+
+
+
+
+
 # [6.0.0-next.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.7...@react-navigation/devtools@6.0.0-next.8) (2021-05-16)
 
 
