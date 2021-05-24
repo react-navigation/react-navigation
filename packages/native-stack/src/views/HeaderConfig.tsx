@@ -11,6 +11,7 @@ import {
 } from 'react-native-screens';
 import { Route, useTheme } from '@react-navigation/native';
 import { HeaderTitle } from '@react-navigation/elements';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { NativeStackNavigationOptions } from '../types';
 import { processFonts } from './FontProcessor';
 
@@ -37,7 +38,6 @@ export default function HeaderConfig({
   headerTintColor,
   headerTitle,
   headerTitleStyle,
-  headerTopInsetEnabled = true,
   headerTranslucent,
   route,
   orientation,
@@ -47,6 +47,7 @@ export default function HeaderConfig({
   statusBarStyle,
   title,
 }: Props): JSX.Element {
+  const insets = useSafeAreaInsets();
   const { colors } = useTheme();
   const tintColor =
     headerTintColor != null
@@ -131,7 +132,7 @@ export default function HeaderConfig({
       titleFontFamily={titleFontFamily}
       titleFontSize={headerTitleStyleFlattened.fontSize}
       titleFontWeight={headerTitleStyleFlattened.fontWeight}
-      topInsetEnabled={headerTopInsetEnabled}
+      topInsetEnabled={insets.top !== 0}
       translucent={
         // This defaults to `true`, so we can't pass `undefined`
         headerTranslucent === true

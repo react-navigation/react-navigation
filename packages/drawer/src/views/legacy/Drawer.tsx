@@ -523,7 +523,7 @@ export default class DrawerView extends React.Component<DrawerProps> {
         : multiply(this.drawerWidth, -1);
 
     // FIXME: Currently hitSlop is broken when on Android when drawer is on right
-    // https://github.com/kmagiera/react-native-gesture-handler/issues/569
+    // https://github.com/software-mansion/react-native-gesture-handler/issues/569
     const hitSlop = isRight
       ? // Extend hitSlop to the side of the screen when drawer is closed
         // This lets the user drag the drawer from the side of the screen

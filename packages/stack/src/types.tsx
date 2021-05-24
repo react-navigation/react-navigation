@@ -129,7 +129,7 @@ export type StackHeaderOptions = HeaderOptions & {
   headerBackTestID?: string;
   /**
    * Title string used by the back button on iOS.
-   * Defaults to the previous scene's title, or "Back" if there's not enough space.
+   * Defaults to the previous screen's title, or "Back" if there's not enough space.
    * Use `headerBackTitleVisible: false` to hide it.
    */
   headerBackTitle?: string;
