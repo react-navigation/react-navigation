@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.18...@react-navigation/stack@6.0.0-next.19) (2021-05-24)
+
+
+### Bug Fixes
+
+* make transparent modal work with modal presentation ([c90bff0](https://github.com/react-navigation/react-navigation/commit/c90bff08d54d1c7151737a43d4f73abe7d364366))
+
+
+
+
+
 # [6.0.0-next.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.17...@react-navigation/stack@6.0.0-next.18) (2021-05-23)
 
 
