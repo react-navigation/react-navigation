@@ -11,7 +11,7 @@ export type Layout = { width: number; height: number };
 export type HeaderOptions = {
   /**
    * String or a function that returns a React Element to be used by the header.
-   * Defaults to scene `title`.
+   * Defaults to screen `title` or route name.
    *
    * It receives `allowFontScaling`, `tintColor`, `style` and `children` in the options object as an argument.
    * The title string is passed in `children`.

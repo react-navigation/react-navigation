@@ -15,7 +15,6 @@ import {
   ScreenStack,
   StackPresentationTypes,
 } from 'react-native-screens';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import warnOnce from 'warn-once';
 import HeaderConfig from './HeaderConfig';
 import type {
@@ -117,8 +116,6 @@ type Props = {
 };
 
 function NativeStackViewInner({ state, navigation, descriptors }: Props) {
-  const insets = useSafeAreaInsets();
-
   return (
     <ScreenStack style={styles.container}>
       {state.routes.map((route, index) => {
@@ -197,9 +194,6 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
               {...options}
               route={route}
               headerShown={isHeaderInPush}
-              headerTopInsetEnabled={
-                options.headerTopInsetEnabled ?? insets.top !== 0
-              }
             />
             <MaybeNestedStack
               options={options}

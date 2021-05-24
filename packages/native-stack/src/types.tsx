@@ -94,10 +94,10 @@ export type NativeStackNavigationOptions = {
    *
    * @platform ios
    */
-  headerBackTitleStyle?: {
+  headerBackTitleStyle?: StyleProp<{
     fontFamily?: string;
     fontSize?: number;
-  };
+  }>;
   /**
    * Image to display in the header as the icon in the back button.
    * Defaults to back icon image for the platform
@@ -197,10 +197,12 @@ export type NativeStackNavigationOptions = {
   headerRight?: (props: { tintColor?: string }) => React.ReactNode;
   /**
    * String or a function that returns a React Element to be used by the header.
-   * Defaults to scene `title`.
+   * Defaults to screen `title` or route name.
    *
-   * It receives `tintColor` and`children` in the options object as an argument.
+   * When a function is passed, it receives `tintColor` and`children` in the options object as an argument.
    * The title string is passed in `children`.
+   *
+   * Note that if you render a custom element by passing a function, animations for the title won't work.
    */
   headerTitle?:
     | string
@@ -228,16 +230,6 @@ export type NativeStackNavigationOptions = {
     color?: string;
   }>;
   /**
-   * Whether there should be additional top inset to account for translucent status bar.
-   * If you don't have a translucent status bar, you can disable this by passing `false`
-   *
-   * Only supported on Android. Insets are always applied on iOS because the
-   * header cannot be opaque.
-   *
-   * @platform android
-   */
-  headerTopInsetEnabled?: boolean;
-  /**
    * Options to render a native search bar on iOS.
    *
    * @platform ios
@@ -245,7 +237,7 @@ export type NativeStackNavigationOptions = {
   headerSearchBar?: SearchBarProps;
   /**
    * Sets the status bar animation (similar to the `StatusBar` component).
-   * Requires setting `View controller-based status bar appearance -> YES` in your Info.plist file.
+   * Requires setting `View controller-based status bar appearance -> YES` (or removing the config) in your `Info.plist` file.
    *
    * Only supported on iOS.
    *
@@ -263,7 +255,7 @@ export type NativeStackNavigationOptions = {
   statusBarHidden?: boolean;
   /**
    * Sets the status bar color (similar to the `StatusBar` component).
-   * Requires setting `View controller-based status bar appearance -> YES` in your Info.plist file.
+   * Requires setting `View controller-based status bar appearance -> YES` (or removing the config) in your `Info.plist` file.
    *
    * Only supported on iOS.
    *
