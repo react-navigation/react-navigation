@@ -15,9 +15,11 @@ import {
   useCardAnimation,
 } from '@react-navigation/stack';
 import Article from '../Shared/Article';
+import NewsFeed from '../Shared/NewsFeed';
 
 type TransparentStackParams = {
   Article: { author: string };
+  NewsFeed: undefined;
   Dialog: undefined;
 };
 
@@ -38,6 +40,13 @@ const ArticleScreen = ({
           Show Dialog
         </Button>
         <Button
+          mode="contained"
+          onPress={() => navigation.push('NewsFeed')}
+          style={styles.button}
+        >
+          Push NewsFeed
+        </Button>
+        <Button
           mode="outlined"
           onPress={() => navigation.goBack()}
           style={styles.button}
@@ -49,6 +58,32 @@ const ArticleScreen = ({
         author={{ name: route.params.author }}
         scrollEnabled={scrollEnabled}
       />
+    </ScrollView>
+  );
+};
+
+const NewsFeedScreen = ({
+  navigation,
+}: StackScreenProps<TransparentStackParams, 'NewsFeed'>) => {
+  return (
+    <ScrollView>
+      <View style={styles.buttons}>
+        <Button
+          mode="contained"
+          onPress={() => navigation.push('Dialog')}
+          style={styles.button}
+        >
+          Show Dialog
+        </Button>
+        <Button
+          mode="outlined"
+          onPress={() => navigation.goBack()}
+          style={styles.button}
+        >
+          Go back
+        </Button>
+      </View>
+      <NewsFeed scrollEnabled={scrollEnabled} />
     </ScrollView>
   );
 };
@@ -117,6 +152,11 @@ export default function TransparentStackScreen({ navigation }: Props) {
         initialParams={{ author: 'Gandalf' }}
       />
       <TransparentStack.Screen
+        name="NewsFeed"
+        component={NewsFeedScreen}
+        options={{ presentation: 'modal' }}
+      />
+      <TransparentStack.Screen
         name="Dialog"
         component={DialogScreen}
         options={{
@@ -131,6 +171,7 @@ export default function TransparentStackScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     padding: 8,
   },
   button: {

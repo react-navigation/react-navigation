@@ -219,7 +219,9 @@ export default class CardStack extends React.Component<Props, State> {
         // This will still be broken when 2 transitions have different idle state (e.g. modal presentation),
         // but majority of the transitions look alright
         const optionsForTransitionConfig =
-          index !== self.length - 1 && nextDescriptor
+          index !== self.length - 1 &&
+          nextDescriptor &&
+          nextDescriptor.options.presentation !== 'transparentModal'
             ? nextDescriptor.options
             : descriptor.options;
 
@@ -251,6 +253,8 @@ export default class CardStack extends React.Component<Props, State> {
           (!(
             optionsForTransitionConfig.presentation === 'modal' ||
             optionsForTransitionConfig.presentation === 'transparentModal' ||
+            nextDescriptor?.options.presentation === 'modal' ||
+            nextDescriptor?.options.presentation === 'transparentModal' ||
             cardStyleInterpolator === forModalPresentationIOS
           ) &&
           Platform.OS === 'ios' &&
@@ -280,13 +284,15 @@ export default class CardStack extends React.Component<Props, State> {
               state.layout,
               descriptor
             ),
-            next: nextGesture
-              ? getProgressFromGesture(
-                  nextGesture,
-                  state.layout,
-                  nextDescriptor
-                )
-              : undefined,
+            next:
+              nextGesture &&
+              nextDescriptor.options.presentation !== 'transparentModal'
+                ? getProgressFromGesture(
+                    nextGesture,
+                    state.layout,
+                    nextDescriptor
+                  )
+                : undefined,
             previous: previousGesture
               ? getProgressFromGesture(
                   previousGesture,
@@ -466,9 +472,13 @@ export default class CardStack extends React.Component<Props, State> {
       const { options } = scenes[i].descriptor;
       const {
         // By default, we don't want to detach the previous screen of the active one for modals
-        detachPreviousScreen = options.presentation === 'transparentModal' ||
-        options.cardStyleInterpolator === forModalPresentationIOS
-          ? i !== scenes.length - 1
+        detachPreviousScreen = options.presentation === 'transparentModal'
+          ? false
+          : options.cardStyleInterpolator === forModalPresentationIOS
+          ? i !==
+            scenes
+              .map((scene) => scene.descriptor.options.cardStyleInterpolator)
+              .lastIndexOf(forModalPresentationIOS)
           : true,
       } = options;
 

@@ -225,7 +225,7 @@ function CardContainer({
       insets={insets}
       gesture={gesture}
       current={scene.progress.current}
-      next={isNextScreenTransparent ? undefined : scene.progress.next}
+      next={scene.progress.next}
       closing={closing}
       onOpen={handleOpen}
       onClose={handleClose}
