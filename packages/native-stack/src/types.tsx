@@ -322,7 +322,12 @@ export type NativeStackNavigationOptions = {
   orientation?: ScreenStackHeaderConfigProps['screenOrientation'];
 };
 
-export type NativeStackNavigatorProps = DefaultNavigatorOptions<NativeStackNavigationOptions> &
+export type NativeStackNavigatorProps = DefaultNavigatorOptions<
+  ParamListBase,
+  StackNavigationState<ParamListBase>,
+  NativeStackNavigationOptions,
+  NativeStackNavigationEventMap
+> &
   StackRouterOptions &
   NativeStackNavigationConfig;
 

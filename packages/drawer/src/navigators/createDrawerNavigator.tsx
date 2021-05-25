@@ -17,7 +17,12 @@ import type {
   DrawerNavigationEventMap,
 } from '../types';
 
-type Props = DefaultNavigatorOptions<DrawerNavigationOptions> &
+type Props = DefaultNavigatorOptions<
+  ParamListBase,
+  DrawerNavigationState<ParamListBase>,
+  DrawerNavigationOptions,
+  DrawerNavigationEventMap
+> &
   DrawerRouterOptions &
   DrawerNavigationConfig;
 
@@ -26,6 +31,7 @@ function DrawerNavigator({
   defaultStatus,
   backBehavior,
   children,
+  screenListeners,
   screenOptions,
   // @ts-expect-error: lazy is deprecated
   lazy,
@@ -83,6 +89,7 @@ function DrawerNavigator({
     defaultStatus,
     backBehavior,
     children,
+    screenListeners,
     screenOptions,
     defaultScreenOptions,
   });

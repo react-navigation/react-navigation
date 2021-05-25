@@ -202,7 +202,13 @@ export default function useNavigationBuilder<
   EventMap extends Record<string, any>
 >(
   createRouter: RouterFactory<State, any, RouterOptions>,
-  options: DefaultNavigatorOptions<ScreenOptions> & RouterOptions
+  options: DefaultNavigatorOptions<
+    ParamListBase,
+    State,
+    ScreenOptions,
+    EventMap
+  > &
+    RouterOptions
 ) {
   const navigatorKey = useRegisterNavigator();
 
@@ -210,7 +216,7 @@ export default function useNavigationBuilder<
     | NavigatorRoute<State>
     | undefined;
 
-  const { children, ...rest } = options;
+  const { children, screenListeners, ...rest } = options;
   const { current: router } = React.useRef<Router<State, any>>(
     createRouter({
       ...((rest as unknown) as RouterOptions),
@@ -487,8 +493,14 @@ export default function useNavigationBuilder<
 
     const listeners = ([] as (((e: any) => void) | undefined)[])
       .concat(
-        ...routeNames.map((name) => {
-          const { listeners } = screens[name][1];
+        // Get an array of listeners for all screens + common listeners on navigator
+        ...[
+          screenListeners,
+          ...routeNames.map((name) => {
+            const { listeners } = screens[name][1];
+            return listeners;
+          }),
+        ].map((listeners) => {
           const map =
             typeof listeners === 'function'
               ? listeners({ route: route as any, navigation })
@@ -501,6 +513,8 @@ export default function useNavigationBuilder<
             : undefined;
         })
       )
+      // We don't want same listener to be called multiple times for same event
+      // So we remove any duplicate functions from the array
       .filter((cb, i, self) => cb && self.lastIndexOf(cb) === i);
 
     listeners.forEach((listener) => listener?.(e));

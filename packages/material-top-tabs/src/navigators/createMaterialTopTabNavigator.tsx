@@ -17,7 +17,12 @@ import type {
   MaterialTopTabNavigationEventMap,
 } from '../types';
 
-type Props = DefaultNavigatorOptions<MaterialTopTabNavigationOptions> &
+type Props = DefaultNavigatorOptions<
+  ParamListBase,
+  TabNavigationState<ParamListBase>,
+  MaterialTopTabNavigationOptions,
+  MaterialTopTabNavigationEventMap
+> &
   TabRouterOptions &
   MaterialTopTabNavigationConfig;
 
@@ -25,6 +30,7 @@ function MaterialTopTabNavigator({
   initialRouteName,
   backBehavior,
   children,
+  screenListeners,
   screenOptions,
   lazy,
   tabBarOptions,
@@ -86,6 +92,7 @@ function MaterialTopTabNavigator({
     initialRouteName,
     backBehavior,
     children,
+    screenListeners,
     screenOptions,
   });
 

@@ -20,13 +20,19 @@ import type {
   StackHeaderMode,
 } from '../types';
 
-type Props = DefaultNavigatorOptions<StackNavigationOptions> &
+type Props = DefaultNavigatorOptions<
+  ParamListBase,
+  StackNavigationState<ParamListBase>,
+  StackNavigationOptions,
+  StackNavigationEventMap
+> &
   StackRouterOptions &
   StackNavigationConfig;
 
 function StackNavigator({
   initialRouteName,
   children,
+  screenListeners,
   screenOptions,
   ...rest
 }: Props) {
@@ -65,6 +71,7 @@ function StackNavigator({
   >(StackRouter, {
     initialRouteName,
     children,
+    screenListeners,
     screenOptions,
     defaultScreenOptions: () => ({
       presentation: mode,
