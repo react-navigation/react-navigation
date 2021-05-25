@@ -1,12 +1,28 @@
 import * as React from 'react';
-import { addPlugin, Flipper } from 'react-native-flipper';
 import type { NavigationContainerRef } from '@react-navigation/core';
+import type { Flipper } from 'react-native-flipper';
 import { nanoid } from 'nanoid/non-secure';
 import useDevToolsBase from './useDevToolsBase';
+
+let FlipperModule: typeof import('react-native-flipper') | undefined;
+
+try {
+  FlipperModule = require('react-native-flipper');
+} catch (e) {
+  // Do nothing
+}
 
 export default function useFlipper(
   ref: React.RefObject<NavigationContainerRef<any>>
 ) {
+  if (FlipperModule == null) {
+    throw new Error(
+      "Please install the 'react-native-flipper' package in your project to use Flipper integration for React Navigation."
+    );
+  }
+
+  const { addPlugin } = FlipperModule;
+
   const connectionRef = React.useRef<Flipper.FlipperConnection>();
 
   const { resetRoot } = useDevToolsBase(ref, (...args) => {
@@ -91,5 +107,5 @@ export default function useFlipper(
         return false;
       },
     });
-  }, [ref, resetRoot]);
+  }, [addPlugin, ref, resetRoot]);
 }
