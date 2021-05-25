@@ -1,6 +1,5 @@
 import {
   createNavigatorFactory,
-  DefaultNavigatorOptions,
   EventArg,
   StackActions,
   StackActionHelpers,
@@ -16,16 +15,13 @@ import NativeStackView from '../views/NativeStackView';
 import type {
   NativeStackNavigationOptions,
   NativeStackNavigationEventMap,
-  NativeStackNavigationConfig,
+  NativeStackNavigatorProps,
 } from '../types';
-
-export type NativeStackNavigatorProps = DefaultNavigatorOptions<NativeStackNavigationOptions> &
-  StackRouterOptions &
-  NativeStackNavigationConfig;
 
 function NativeStackNavigator({
   initialRouteName,
   children,
+  screenListeners,
   screenOptions,
   ...rest
 }: NativeStackNavigatorProps) {
@@ -38,6 +34,7 @@ function NativeStackNavigator({
   >(StackRouter, {
     initialRouteName,
     children,
+    screenListeners,
     screenOptions,
   });
 

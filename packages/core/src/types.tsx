@@ -20,14 +20,25 @@ declare global {
 type Keyof<T extends {}> = Extract<keyof T, string>;
 
 export type DefaultNavigatorOptions<
+  ParamList extends ParamListBase,
+  State extends NavigationState,
   ScreenOptions extends {},
-  ParamList extends ParamListBase = ParamListBase
+  EventMap extends EventMapBase
 > = DefaultRouterOptions<Keyof<ParamList>> & {
   /**
    * Children React Elements to extract the route configuration from.
    * Only `Screen`, `Group` and `React.Fragment` are supported as children.
    */
   children: React.ReactNode;
+  /**
+   * Event listeners for all the screens in the navigator.
+   */
+  screenListeners?:
+    | ScreenListeners<State, EventMap>
+    | ((props: {
+        route: RouteProp<ParamList>;
+        navigation: any;
+      }) => ScreenListeners<State, EventMap>);
   /**
    * Default options for all screens under this navigator.
    */
@@ -564,9 +575,9 @@ export type TypedNavigator<
   Navigator: React.ComponentType<
     Omit<
       React.ComponentProps<Navigator>,
-      keyof DefaultNavigatorOptions<any, any>
+      keyof DefaultNavigatorOptions<any, any, any, any>
     > &
-      DefaultNavigatorOptions<ScreenOptions, ParamList>
+      DefaultNavigatorOptions<ParamList, State, ScreenOptions, EventMap>
   >;
   /**
    * Component used for grouping multiple route configuration.

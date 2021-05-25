@@ -17,7 +17,12 @@ import type {
   BottomTabNavigationEventMap,
 } from '../types';
 
-type Props = DefaultNavigatorOptions<BottomTabNavigationOptions> &
+type Props = DefaultNavigatorOptions<
+  ParamListBase,
+  TabNavigationState<ParamListBase>,
+  BottomTabNavigationOptions,
+  BottomTabNavigationEventMap
+> &
   TabRouterOptions &
   BottomTabNavigationConfig;
 
@@ -25,6 +30,7 @@ function BottomTabNavigator({
   initialRouteName,
   backBehavior,
   children,
+  screenListeners,
   screenOptions,
   sceneContainerStyle,
   // @ts-expect-error: lazy is deprecated
@@ -85,6 +91,7 @@ function BottomTabNavigator({
     initialRouteName,
     backBehavior,
     children,
+    screenListeners,
     screenOptions,
     defaultScreenOptions,
   });
