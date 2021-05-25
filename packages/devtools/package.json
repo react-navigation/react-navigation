@@ -51,8 +51,7 @@
     "typescript": "^4.2.3"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-native-flipper": "*"
+    "react": "*"
   },
   "react-native-builder-bob": {
     "source": "src",
