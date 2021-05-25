@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.9...@react-navigation/devtools@6.0.0-next.10) (2021-05-25)
+
+
+### Bug Fixes
+
+* make react-native-flipper optional in devtools ([a5520d7](https://github.com/react-navigation/react-navigation/commit/a5520d7ef1f0980aa869ba2bdf92194d3e3a6b96))
+
+
+
+
+
 # [6.0.0-next.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.8...@react-navigation/devtools@6.0.0-next.9) (2021-05-23)
 
 
