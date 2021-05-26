@@ -1,5 +1,5 @@
-import fetch from 'node-fetch';
 import cheerio from 'cheerio';
+import fetch from 'node-fetch';
 
 const server = 'http://localhost:3275';
 

@@ -1,27 +1,28 @@
+import { SafeAreaProviderCompat } from '@react-navigation/elements';
+import {
+  ParamListBase,
+  Route,
+  StackActions,
+  StackNavigationState,
+  useTheme,
+} from '@react-navigation/native';
 import * as React from 'react';
 import { Platform, StyleSheet, View, ViewProps } from 'react-native';
 // @ts-ignore Getting private component
 import AppContainer from 'react-native/Libraries/ReactNative/AppContainer';
-import {
-  ParamListBase,
-  StackActions,
-  StackNavigationState,
-  useTheme,
-  Route,
-} from '@react-navigation/native';
-import { SafeAreaProviderCompat } from '@react-navigation/elements';
 import {
   Screen,
   ScreenStack,
   StackPresentationTypes,
 } from 'react-native-screens';
 import warnOnce from 'warn-once';
-import HeaderConfig from './HeaderConfig';
+
 import type {
   NativeStackDescriptorMap,
   NativeStackNavigationHelpers,
   NativeStackNavigationOptions,
 } from '../types';
+import HeaderConfig from './HeaderConfig';
 
 const isAndroid = Platform.OS === 'android';
 

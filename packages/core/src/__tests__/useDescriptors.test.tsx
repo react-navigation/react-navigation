@@ -1,13 +1,14 @@
-import * as React from 'react';
-import { render, act } from '@testing-library/react-native';
 import type {
   DefaultRouterOptions,
   NavigationState,
   Router,
 } from '@react-navigation/routers';
-import useNavigationBuilder from '../useNavigationBuilder';
+import { act, render } from '@testing-library/react-native';
+import * as React from 'react';
+
 import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
+import useNavigationBuilder from '../useNavigationBuilder';
 import MockRouter, {
   MockActions,
   MockRouterKey,

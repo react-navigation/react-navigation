@@ -1,19 +1,19 @@
-import type * as React from 'react';
-import type { Animated, StyleProp, TextStyle, ViewStyle } from 'react-native';
-import type {
-  NavigationProp,
-  ParamListBase,
-  Descriptor,
-  Route,
-  NavigationHelpers,
-  StackNavigationState,
-  StackActionHelpers,
-  RouteProp,
-} from '@react-navigation/native';
 import type {
   HeaderBackButton,
   HeaderOptions,
 } from '@react-navigation/elements';
+import type {
+  Descriptor,
+  NavigationHelpers,
+  NavigationProp,
+  ParamListBase,
+  Route,
+  RouteProp,
+  StackActionHelpers,
+  StackNavigationState,
+} from '@react-navigation/native';
+import type * as React from 'react';
+import type { Animated, StyleProp, TextStyle, ViewStyle } from 'react-native';
 
 export type StackNavigationEventMap = {
   /**

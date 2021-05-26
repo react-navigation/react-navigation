@@ -1,15 +1,16 @@
-import * as React from 'react';
 import {
-  useNavigationBuilder,
+  createNavigationContainerRef,
   createNavigatorFactory,
+  ParamListBase,
   StackRouter,
   TabRouter,
-  createNavigationContainerRef,
-  ParamListBase,
+  useNavigationBuilder,
 } from '@react-navigation/core';
 import { act, render } from '@testing-library/react-native';
-import NavigationContainer from '../NavigationContainer';
+import * as React from 'react';
+
 import window from '../__mocks__/window';
+import NavigationContainer from '../NavigationContainer';
 
 // @ts-expect-error: practically window is same as global, so we can ignore the error
 global.window = window;

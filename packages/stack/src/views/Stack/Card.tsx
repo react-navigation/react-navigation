@@ -1,36 +1,36 @@
+import Color from 'color';
 import * as React from 'react';
 import {
   Animated,
-  View,
-  StyleSheet,
-  ViewProps,
-  StyleProp,
-  ViewStyle,
-  Platform,
   InteractionManager,
+  Platform,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewProps,
+  ViewStyle,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
-import Color from 'color';
 
-import CardSheet from './CardSheet';
-import {
-  PanGestureHandler,
-  GestureState,
-  PanGestureHandlerGestureEvent,
-} from '../GestureHandler';
-import ModalStatusBarManager from '../ModalStatusBarManager';
 import { forModalPresentationIOS } from '../../TransitionConfigs/CardStyleInterpolators';
+import type {
+  GestureDirection,
+  Layout,
+  StackCardInterpolationProps,
+  StackCardStyleInterpolator,
+  TransitionSpec,
+} from '../../types';
 import CardAnimationContext from '../../utils/CardAnimationContext';
 import getDistanceForDirection from '../../utils/getDistanceForDirection';
 import getInvertedMultiplier from '../../utils/getInvertedMultiplier';
 import memoize from '../../utils/memoize';
-import type {
-  TransitionSpec,
-  StackCardStyleInterpolator,
-  GestureDirection,
-  Layout,
-  StackCardInterpolationProps,
-} from '../../types';
+import {
+  GestureState,
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+} from '../GestureHandler';
+import ModalStatusBarManager from '../ModalStatusBarManager';
+import CardSheet from './CardSheet';
 
 type Props = ViewProps & {
   // index: number;

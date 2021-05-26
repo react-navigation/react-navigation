@@ -1,8 +1,8 @@
 import {
   CommonActions,
-  StackRouter,
-  StackActions,
   RouterConfigOptions,
+  StackActions,
+  StackRouter,
 } from '..';
 
 jest.mock('nanoid/non-secure', () => ({ nanoid: () => 'test' }));

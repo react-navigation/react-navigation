@@ -1,15 +1,15 @@
-import type { ImageSourcePropType, StyleProp, ViewStyle } from 'react-native';
 import type {
   DefaultNavigatorOptions,
   Descriptor,
   NavigationHelpers,
   NavigationProp,
   ParamListBase,
+  RouteProp,
+  StackActionHelpers,
   StackNavigationState,
   StackRouterOptions,
-  StackActionHelpers,
-  RouteProp,
 } from '@react-navigation/native';
+import type { ImageSourcePropType, StyleProp, ViewStyle } from 'react-native';
 import type {
   ScreenProps,
   ScreenStackHeaderConfigProps,

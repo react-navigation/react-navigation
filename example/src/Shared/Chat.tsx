@@ -1,15 +1,15 @@
-import * as React from 'react';
-import {
-  View,
-  Image,
-  Text,
-  TextInput,
-  ScrollView,
-  StyleSheet,
-  ScrollViewProps,
-} from 'react-native';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
 import Color from 'color';
+import * as React from 'react';
+import {
+  Image,
+  ScrollView,
+  ScrollViewProps,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 
 const MESSAGES = [
   'okay',

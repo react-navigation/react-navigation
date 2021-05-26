@@ -1,7 +1,8 @@
-import * as React from 'react';
 import { CompassOutlined } from '@ant-design/icons';
-import { DetailSidebar, VirtualList, styled } from 'flipper';
+import { DetailSidebar, styled, VirtualList } from 'flipper';
 import { theme } from 'flipper-plugin';
+import * as React from 'react';
+
 import { Sidebar } from './Sidebar';
 import type { StoreType } from './types';
 

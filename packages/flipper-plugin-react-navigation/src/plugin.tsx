@@ -1,4 +1,5 @@
-import { PluginClient, createState } from 'flipper-plugin';
+import { createState, PluginClient } from 'flipper-plugin';
+
 import type { Log, NavigationState } from './types';
 
 type Events = {

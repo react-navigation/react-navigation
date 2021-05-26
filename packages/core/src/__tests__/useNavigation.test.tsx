@@ -1,9 +1,10 @@
-import * as React from 'react';
 import { render } from '@testing-library/react-native';
-import useNavigationBuilder from '../useNavigationBuilder';
-import useNavigation from '../useNavigation';
+import * as React from 'react';
+
 import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
+import useNavigation from '../useNavigation';
+import useNavigationBuilder from '../useNavigationBuilder';
 import MockRouter from './__fixtures__/MockRouter';
 
 it('gets navigation prop from context', () => {

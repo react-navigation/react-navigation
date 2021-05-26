@@ -1,6 +1,6 @@
+import { useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import { View, ViewProps } from 'react-native';
-import { useTheme } from '@react-navigation/native';
 
 type Props = ViewProps & {
   children: React.ReactNode;

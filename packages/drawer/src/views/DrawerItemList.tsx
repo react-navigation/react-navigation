@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   CommonActions,
   DrawerActions,
@@ -6,8 +5,10 @@ import {
   ParamListBase,
   useLinkBuilder,
 } from '@react-navigation/native';
+import * as React from 'react';
+
+import type { DrawerDescriptorMap, DrawerNavigationHelpers } from '../types';
 import DrawerItem from './DrawerItem';
-import type { DrawerNavigationHelpers, DrawerDescriptorMap } from '../types';
 
 type Props = {
   state: DrawerNavigationState<ParamListBase>;

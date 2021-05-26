@@ -3,32 +3,25 @@ import * as CommonActions from './CommonActions';
 export { CommonActions };
 
 export { default as BaseRouter } from './BaseRouter';
-
-export { default as StackRouter, StackActions } from './StackRouter';
-
-export type {
-  StackActionHelpers,
-  StackActionType,
-  StackRouterOptions,
-  StackNavigationState,
-} from './StackRouter';
-
-export { default as TabRouter, TabActions } from './TabRouter';
-
-export type {
-  TabActionHelpers,
-  TabActionType,
-  TabRouterOptions,
-  TabNavigationState,
-} from './TabRouter';
-
-export { default as DrawerRouter, DrawerActions } from './DrawerRouter';
-
 export type {
   DrawerActionHelpers,
   DrawerActionType,
-  DrawerRouterOptions,
   DrawerNavigationState,
+  DrawerRouterOptions,
 } from './DrawerRouter';
-
+export { DrawerActions, default as DrawerRouter } from './DrawerRouter';
+export type {
+  StackActionHelpers,
+  StackActionType,
+  StackNavigationState,
+  StackRouterOptions,
+} from './StackRouter';
+export { StackActions, default as StackRouter } from './StackRouter';
+export type {
+  TabActionHelpers,
+  TabActionType,
+  TabNavigationState,
+  TabRouterOptions,
+} from './TabRouter';
+export { TabActions, default as TabRouter } from './TabRouter';
 export * from './types';

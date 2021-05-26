@@ -1,65 +1,69 @@
-import * as React from 'react';
-import {
-  ScrollView,
-  Platform,
-  StatusBar,
-  I18nManager,
-  Dimensions,
-  ScaledSize,
-  Linking,
-  LogBox,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {
-  Provider as PaperProvider,
-  DefaultTheme as PaperLightTheme,
-  DarkTheme as PaperDarkTheme,
-  List,
-  Divider,
-  Text,
-} from 'react-native-paper';
-import { createURL } from 'expo-linking';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
+  useFlipper,
+  useReduxDevToolsExtension,
+} from '@react-navigation/devtools';
+import {
+  createDrawerNavigator,
+  DrawerScreenProps,
+} from '@react-navigation/drawer';
+import {
+  CompositeScreenProps,
+  DarkTheme,
+  DefaultTheme,
   InitialState,
   NavigationContainer,
-  DefaultTheme,
-  DarkTheme,
+  NavigatorScreenParams,
   PathConfigMap,
   useNavigationContainerRef,
-  NavigatorScreenParams,
 } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import {
   createStackNavigator,
   HeaderStyleInterpolators,
-  StackNavigationProp,
+  StackScreenProps,
 } from '@react-navigation/stack';
+import { createURL } from 'expo-linking';
+import * as React from 'react';
 import {
-  useReduxDevToolsExtension,
-  useFlipper,
-} from '@react-navigation/devtools';
+  Dimensions,
+  I18nManager,
+  Linking,
+  LogBox,
+  Platform,
+  ScaledSize,
+  ScrollView,
+  StatusBar,
+} from 'react-native';
+import {
+  DarkTheme as PaperDarkTheme,
+  DefaultTheme as PaperLightTheme,
+  Divider,
+  List,
+  Provider as PaperProvider,
+  Text,
+} from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import { restartApp } from './Restart';
-import SettingsItem from './Shared/SettingsItem';
-import NativeStack from './Screens/NativeStack';
-import SimpleStack from './Screens/SimpleStack';
-import ModalStack from './Screens/ModalStack';
-import MixedStack from './Screens/MixedStack';
-import MixedHeaderMode from './Screens/MixedHeaderMode';
-import StackTransparent from './Screens/StackTransparent';
-import StackHeaderCustomization from './Screens/StackHeaderCustomization';
-import NativeStackHeaderCustomization from './Screens/NativeStackHeaderCustomization';
-import BottomTabs from './Screens/BottomTabs';
-import MaterialTopTabsScreen from './Screens/MaterialTopTabs';
-import MaterialBottomTabs from './Screens/MaterialBottomTabs';
-import NotFound from './Screens/NotFound';
-import DynamicTabs from './Screens/DynamicTabs';
-import MasterDetail from './Screens/MasterDetail';
 import AuthFlow from './Screens/AuthFlow';
-import PreventRemove from './Screens/PreventRemove';
+import BottomTabs from './Screens/BottomTabs';
+import DynamicTabs from './Screens/DynamicTabs';
 import LinkComponent from './Screens/LinkComponent';
+import MasterDetail from './Screens/MasterDetail';
+import MaterialBottomTabs from './Screens/MaterialBottomTabs';
+import MaterialTopTabsScreen from './Screens/MaterialTopTabs';
+import MixedHeaderMode from './Screens/MixedHeaderMode';
+import MixedStack from './Screens/MixedStack';
+import ModalStack from './Screens/ModalStack';
+import NativeStack from './Screens/NativeStack';
+import NativeStackHeaderCustomization from './Screens/NativeStackHeaderCustomization';
+import NotFound from './Screens/NotFound';
+import PreventRemove from './Screens/PreventRemove';
+import SimpleStack from './Screens/SimpleStack';
+import StackHeaderCustomization from './Screens/StackHeaderCustomization';
+import StackTransparent from './Screens/StackTransparent';
+import SettingsItem from './Shared/SettingsItem';
 
 if (Platform.OS !== 'web') {
   LogBox.ignoreLogs(['Require cycle:']);
@@ -333,9 +337,10 @@ export default function App() {
                 >
                   {({
                     navigation,
-                  }: {
-                    navigation: StackNavigationProp<RootStackParamList>;
-                  }) => (
+                  }: CompositeScreenProps<
+                    DrawerScreenProps<RootDrawerParamList, 'Examples'>,
+                    StackScreenProps<RootStackParamList>
+                  >) => (
                     <ScrollView
                       style={{ backgroundColor: theme.colors.background }}
                     >

@@ -1,6 +1,7 @@
-import * as React from 'react';
 import { styled } from 'flipper';
 import { theme } from 'flipper-plugin';
+import * as React from 'react';
+
 import type { PartialRoute } from './types';
 
 type Props = {

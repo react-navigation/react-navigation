@@ -1,5 +1,8 @@
+import { HeaderTitle } from '@react-navigation/elements';
+import { Route, useTheme } from '@react-navigation/native';
 import * as React from 'react';
-import { StyleSheet, I18nManager, Platform, View } from 'react-native';
+import { I18nManager, Platform, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   ScreenStackHeaderBackButtonImage,
   ScreenStackHeaderCenterView,
@@ -9,9 +12,7 @@ import {
   ScreenStackHeaderSearchBarView,
   SearchBar,
 } from 'react-native-screens';
-import { Route, useTheme } from '@react-navigation/native';
-import { HeaderTitle } from '@react-navigation/elements';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import type { NativeStackNavigationOptions } from '../types';
 import { processFonts } from './FontProcessor';
 

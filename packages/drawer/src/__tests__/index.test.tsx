@@ -1,7 +1,8 @@
-import * as React from 'react';
-import { View, Text, Button } from 'react-native';
-import { render, fireEvent } from '@testing-library/react-native';
 import { NavigationContainer, ParamListBase } from '@react-navigation/native';
+import { fireEvent, render } from '@testing-library/react-native';
+import * as React from 'react';
+import { Button, Text, View } from 'react-native';
+
 import { createDrawerNavigator, DrawerScreenProps } from '../index';
 
 it('renders a drawer navigator with screens', async () => {

@@ -1,10 +1,11 @@
-import escape from 'escape-string-regexp';
-import * as queryString from 'query-string';
 import type {
+  InitialState,
   NavigationState,
   PartialState,
-  InitialState,
 } from '@react-navigation/routers';
+import escape from 'escape-string-regexp';
+import * as queryString from 'query-string';
+
 import findFocusedRoute from './findFocusedRoute';
 import type { PathConfigMap } from './types';
 

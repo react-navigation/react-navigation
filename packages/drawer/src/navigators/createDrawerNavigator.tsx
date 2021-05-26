@@ -1,21 +1,22 @@
-import * as React from 'react';
 import {
   createNavigatorFactory,
-  useNavigationBuilder,
   DefaultNavigatorOptions,
-  DrawerNavigationState,
-  DrawerRouterOptions,
-  DrawerRouter,
   DrawerActionHelpers,
+  DrawerNavigationState,
+  DrawerRouter,
+  DrawerRouterOptions,
   ParamListBase,
+  useNavigationBuilder,
 } from '@react-navigation/native';
+import * as React from 'react';
 import warnOnce from 'warn-once';
-import DrawerView from '../views/DrawerView';
+
 import type {
-  DrawerNavigationOptions,
   DrawerNavigationConfig,
   DrawerNavigationEventMap,
+  DrawerNavigationOptions,
 } from '../types';
+import DrawerView from '../views/DrawerView';
 
 type Props = DefaultNavigatorOptions<
   ParamListBase,

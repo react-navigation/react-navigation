@@ -1,18 +1,19 @@
-import * as React from 'react';
-import { Animated, View, StyleSheet } from 'react-native';
-import { Route, useTheme } from '@react-navigation/native';
 import {
-  HeaderShownContext,
-  HeaderHeightContext,
-  HeaderBackContext,
   getHeaderTitle,
+  HeaderBackContext,
+  HeaderHeightContext,
+  HeaderShownContext,
 } from '@react-navigation/elements';
-import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
-import Card from './Card';
+import { Route, useTheme } from '@react-navigation/native';
+import * as React from 'react';
+import { Animated, StyleSheet, View } from 'react-native';
+
 import { forModalPresentationIOS } from '../../TransitionConfigs/CardStyleInterpolators';
+import type { Layout, Scene } from '../../types';
 import ModalPresentationContext from '../../utils/ModalPresentationContext';
 import useKeyboardManager from '../../utils/useKeyboardManager';
-import type { Layout, Scene } from '../../types';
+import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
+import Card from './Card';
 
 type Props = {
   index: number;

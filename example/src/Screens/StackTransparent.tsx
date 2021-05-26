@@ -1,19 +1,20 @@
-import * as React from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Platform,
-  Pressable,
-  Animated,
-} from 'react-native';
-import { Button, Paragraph } from 'react-native-paper';
 import { ParamListBase, useTheme } from '@react-navigation/native';
 import {
   createStackNavigator,
   StackScreenProps,
   useCardAnimation,
 } from '@react-navigation/stack';
+import * as React from 'react';
+import {
+  Animated,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { Button, Paragraph } from 'react-native-paper';
+
 import Article from '../Shared/Article';
 import NewsFeed from '../Shared/NewsFeed';
 

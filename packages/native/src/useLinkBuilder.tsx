@@ -1,11 +1,12 @@
-import * as React from 'react';
 import {
+  getPathFromState,
   NavigationHelpers,
   NavigationHelpersContext,
   NavigationProp,
   ParamListBase,
-  getPathFromState,
 } from '@react-navigation/core';
+import * as React from 'react';
+
 import LinkingContext from './LinkingContext';
 
 type NavigationObject =

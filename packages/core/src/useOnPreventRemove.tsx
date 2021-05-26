@@ -1,14 +1,15 @@
-import * as React from 'react';
 import type {
-  NavigationState,
   NavigationAction,
+  NavigationState,
 } from '@react-navigation/routers';
+import * as React from 'react';
+
 import NavigationBuilderContext, {
   ChildBeforeRemoveListener,
 } from './NavigationBuilderContext';
 import NavigationRouteContext from './NavigationRouteContext';
-import type { NavigationEventEmitter } from './useEventEmitter';
 import type { EventMapCore } from './types';
+import type { NavigationEventEmitter } from './useEventEmitter';
 
 type Options = {
   getState: () => NavigationState;

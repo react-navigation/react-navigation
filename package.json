@@ -37,6 +37,7 @@
     "commitlint": "^12.1.1",
     "eslint": "^7.23.0",
     "eslint-config-satya164": "^3.1.10",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
     "husky": "^4.3.6",
     "jest": "^26.6.3",
     "lerna": "^4.0.0",

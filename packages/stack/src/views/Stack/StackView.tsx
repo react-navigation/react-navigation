@@ -1,30 +1,30 @@
-import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
 import {
-  SafeAreaInsetsContext,
-  EdgeInsets,
-} from 'react-native-safe-area-context';
+  HeaderShownContext,
+  SafeAreaProviderCompat,
+} from '@react-navigation/elements';
 import {
+  ParamListBase,
+  Route,
   StackActions,
   StackNavigationState,
-  Route,
-  ParamListBase,
 } from '@react-navigation/native';
+import * as React from 'react';
+import { StyleSheet, View } from 'react-native';
 import {
-  SafeAreaProviderCompat,
-  HeaderShownContext,
-} from '@react-navigation/elements';
+  EdgeInsets,
+  SafeAreaInsetsContext,
+} from 'react-native-safe-area-context';
 
+import type {
+  StackDescriptorMap,
+  StackNavigationConfig,
+  StackNavigationHelpers,
+} from '../../types';
 import { GestureHandlerRootView } from '../GestureHandler';
-import CardStack from './CardStack';
 import HeaderContainer, {
   Props as HeaderContainerProps,
 } from '../Header/HeaderContainer';
-import type {
-  StackNavigationHelpers,
-  StackNavigationConfig,
-  StackDescriptorMap,
-} from '../../types';
+import CardStack from './CardStack';
 
 type Props = StackNavigationConfig & {
   state: StackNavigationState<ParamListBase>;

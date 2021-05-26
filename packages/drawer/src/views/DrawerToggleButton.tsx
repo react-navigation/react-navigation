@@ -1,11 +1,12 @@
-import * as React from 'react';
-import { Image, Platform, StyleSheet } from 'react-native';
 import { PlatformPressable } from '@react-navigation/elements';
 import {
-  useNavigation,
   DrawerActions,
   ParamListBase,
+  useNavigation,
 } from '@react-navigation/native';
+import * as React from 'react';
+import { Image, Platform, StyleSheet } from 'react-native';
+
 import type { DrawerNavigationProp } from '../types';
 
 type Props = {

@@ -1,21 +1,22 @@
-import * as React from 'react';
 import {
   BaseNavigationContainer,
+  getActionFromState,
   getPathFromState,
   getStateFromPath,
-  getActionFromState,
   NavigationContainerProps,
   NavigationContainerRef,
   ParamListBase,
 } from '@react-navigation/core';
-import ThemeProvider from './theming/ThemeProvider';
-import DefaultTheme from './theming/DefaultTheme';
+import * as React from 'react';
+
 import LinkingContext from './LinkingContext';
-import useThenable from './useThenable';
-import useLinking from './useLinking';
-import useDocumentTitle from './useDocumentTitle';
+import DefaultTheme from './theming/DefaultTheme';
+import ThemeProvider from './theming/ThemeProvider';
+import type { DocumentTitleOptions, LinkingOptions, Theme } from './types';
 import useBackButton from './useBackButton';
-import type { Theme, LinkingOptions, DocumentTitleOptions } from './types';
+import useDocumentTitle from './useDocumentTitle';
+import useLinking from './useLinking';
+import useThenable from './useThenable';
 
 type Props<ParamList extends {}> = NavigationContainerProps & {
   theme?: Theme;

@@ -1,12 +1,13 @@
-import * as React from 'react';
-import { render, act } from '@testing-library/react-native';
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
+import { act, render } from '@testing-library/react-native';
+import * as React from 'react';
+
+import BaseNavigationContainer from '../BaseNavigationContainer';
+import createNavigationContainerRef from '../createNavigationContainerRef';
 import Group from '../Group';
 import Screen from '../Screen';
-import BaseNavigationContainer from '../BaseNavigationContainer';
-import useNavigationBuilder from '../useNavigationBuilder';
-import createNavigationContainerRef from '../createNavigationContainerRef';
 import useNavigation from '../useNavigation';
+import useNavigationBuilder from '../useNavigationBuilder';
 import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
 
 beforeEach(() => (MockRouterKey.current = 0));

@@ -1,21 +1,21 @@
-import * as React from 'react';
 import {
-  useNavigationBuilder,
   createNavigatorFactory,
   DefaultNavigatorOptions,
+  ParamListBase,
+  TabActionHelpers,
+  TabNavigationState,
   TabRouter,
   TabRouterOptions,
-  TabNavigationState,
-  TabActionHelpers,
-  ParamListBase,
+  useNavigationBuilder,
 } from '@react-navigation/native';
+import * as React from 'react';
 
-import MaterialBottomTabView from '../views/MaterialBottomTabView';
 import type {
   MaterialBottomTabNavigationConfig,
-  MaterialBottomTabNavigationOptions,
   MaterialBottomTabNavigationEventMap,
+  MaterialBottomTabNavigationOptions,
 } from '../types';
+import MaterialBottomTabView from '../views/MaterialBottomTabView';
 
 type Props = DefaultNavigatorOptions<
   ParamListBase,
