@@ -4,8 +4,8 @@ import type { Route } from '@react-navigation/routers';
 /**
  * Context which holds the route prop for a screen.
  */
-const NavigationContext = React.createContext<Route<string> | undefined>(
+const NavigationRouteContext = React.createContext<Route<string> | undefined>(
   undefined
 );
 
-export default NavigationContext;
+export default NavigationRouteContext;
