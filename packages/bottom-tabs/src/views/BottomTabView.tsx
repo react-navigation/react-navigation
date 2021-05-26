@@ -1,28 +1,29 @@
-import * as React from 'react';
-import { StyleSheet, Platform } from 'react-native';
-import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
+import {
+  getHeaderTitle,
+  Header,
+  SafeAreaProviderCompat,
+  Screen,
+} from '@react-navigation/elements';
 import type {
   ParamListBase,
   TabNavigationState,
 } from '@react-navigation/native';
-import {
-  Header,
-  Screen,
-  SafeAreaProviderCompat,
-  getHeaderTitle,
-} from '@react-navigation/elements';
-import { MaybeScreenContainer, MaybeScreen } from './ScreenFallback';
-import BottomTabBar, { getTabBarHeight } from './BottomTabBar';
-import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
-import BottomTabBarHeightContext from '../utils/BottomTabBarHeightContext';
+import * as React from 'react';
+import { Platform, StyleSheet } from 'react-native';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
+
 import type {
-  BottomTabNavigationConfig,
-  BottomTabDescriptorMap,
-  BottomTabNavigationHelpers,
   BottomTabBarProps,
+  BottomTabDescriptorMap,
   BottomTabHeaderProps,
+  BottomTabNavigationConfig,
+  BottomTabNavigationHelpers,
   BottomTabNavigationProp,
 } from '../types';
+import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
+import BottomTabBarHeightContext from '../utils/BottomTabBarHeightContext';
+import BottomTabBar, { getTabBarHeight } from './BottomTabBar';
+import { MaybeScreen, MaybeScreenContainer } from './ScreenFallback';
 
 type Props = BottomTabNavigationConfig & {
   state: TabNavigationState<ParamListBase>;

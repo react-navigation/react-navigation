@@ -1,9 +1,10 @@
-import * as queryString from 'query-string';
 import type {
   NavigationState,
   PartialState,
   Route,
 } from '@react-navigation/routers';
+import * as queryString from 'query-string';
+
 import fromEntries from './fromEntries';
 import type { PathConfig, PathConfigMap } from './types';
 

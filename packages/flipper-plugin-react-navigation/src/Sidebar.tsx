@@ -1,5 +1,6 @@
-import * as React from 'react';
 import { Layout, ManagedDataInspector } from 'flipper';
+import * as React from 'react';
+
 import { Title4 } from './Typography';
 
 export function Sidebar({

@@ -1,13 +1,14 @@
-import * as React from 'react';
-import { View, Platform, StyleSheet, ScrollView, Alert } from 'react-native';
-import { Appbar, Button } from 'react-native-paper';
 import type { ParamListBase } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import Article from '../Shared/Article';
+import * as React from 'react';
+import { Alert, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Appbar, Button } from 'react-native-paper';
+
 import Albums from '../Shared/Albums';
+import Article from '../Shared/Article';
 import NewsFeed from '../Shared/NewsFeed';
 
 export type NativeStackParams = {

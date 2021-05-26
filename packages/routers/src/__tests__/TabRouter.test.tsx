@@ -1,10 +1,10 @@
 import {
   CommonActions,
-  TabRouter,
-  TabActions,
-  TabNavigationState,
   ParamListBase,
   RouterConfigOptions,
+  TabActions,
+  TabNavigationState,
+  TabRouter,
 } from '..';
 
 jest.mock('nanoid/non-secure', () => ({ nanoid: () => 'test' }));

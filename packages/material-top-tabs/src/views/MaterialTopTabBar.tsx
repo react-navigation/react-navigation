@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { TabBar } from 'react-native-tab-view';
 import { Route, useTheme } from '@react-navigation/native';
 import Color from 'color';
+import * as React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { TabBar } from 'react-native-tab-view';
 
 import type { MaterialTopTabBarProps } from '../types';
 

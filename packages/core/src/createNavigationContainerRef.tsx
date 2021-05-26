@@ -1,4 +1,5 @@
 import { CommonActions } from '@react-navigation/routers';
+
 import type { NavigationContainerRefWithCurrent } from './types';
 
 export const NOT_INITIALIZED_ERROR =

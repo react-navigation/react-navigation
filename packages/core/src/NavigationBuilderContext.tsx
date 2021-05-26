@@ -1,9 +1,10 @@
-import * as React from 'react';
 import type {
   NavigationAction,
   NavigationState,
   ParamListBase,
 } from '@react-navigation/routers';
+import * as React from 'react';
+
 import type { NavigationHelpers } from './types';
 
 export type ListenerMap = {

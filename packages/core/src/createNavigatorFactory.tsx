@@ -1,8 +1,9 @@
+import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import type * as React from 'react';
-import type { ParamListBase, NavigationState } from '@react-navigation/routers';
+
 import Group from './Group';
 import Screen from './Screen';
-import type { TypedNavigator, EventMapBase } from './types';
+import type { EventMapBase, TypedNavigator } from './types';
 
 /**
  * Higher order component to create a `Navigator` and `Screen` pair.

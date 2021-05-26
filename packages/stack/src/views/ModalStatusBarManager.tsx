@@ -1,7 +1,8 @@
+import { useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import { StatusBar, StyleSheet } from 'react-native';
-import { useTheme } from '@react-navigation/native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
+
 import type { Layout } from '../types';
 
 type Props = {

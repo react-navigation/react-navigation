@@ -1,6 +1,7 @@
 import { usePlugin, useValue } from 'flipper-plugin';
-import type { StoreType } from './types';
+
 import { plugin } from './plugin';
+import type { StoreType } from './types';
 
 export function useStore(): StoreType {
   const instance = usePlugin(plugin);

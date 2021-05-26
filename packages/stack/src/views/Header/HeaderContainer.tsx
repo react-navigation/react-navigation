@@ -1,27 +1,27 @@
-import * as React from 'react';
-import { Animated, View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { getHeaderTitle, HeaderBackContext } from '@react-navigation/elements';
 import {
   NavigationContext,
   NavigationRouteContext,
-  Route,
   ParamListBase,
+  Route,
 } from '@react-navigation/native';
-import { HeaderBackContext, getHeaderTitle } from '@react-navigation/elements';
+import * as React from 'react';
+import { Animated, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
-import Header from './Header';
 import {
-  forSlideLeft,
-  forSlideUp,
   forNoAnimation,
+  forSlideLeft,
   forSlideRight,
+  forSlideUp,
 } from '../../TransitionConfigs/HeaderStyleInterpolators';
 import type {
   Layout,
   Scene,
-  StackNavigationProp,
-  StackHeaderProps,
   StackHeaderMode,
+  StackHeaderProps,
+  StackNavigationProp,
 } from '../../types';
+import Header from './Header';
 
 export type Props = {
   mode: StackHeaderMode;

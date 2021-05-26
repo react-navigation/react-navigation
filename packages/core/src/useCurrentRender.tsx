@@ -1,5 +1,6 @@
-import * as React from 'react';
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
+import * as React from 'react';
+
 import CurrentRenderContext from './CurrentRenderContext';
 import type {
   Descriptor,

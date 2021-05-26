@@ -1,11 +1,12 @@
-import * as React from 'react';
+import type {
+  getActionFromState,
+  getStateFromPath,
+} from '@react-navigation/core';
+import { Input } from 'antd';
 import { DetailSidebar, styled } from 'flipper';
 import { theme } from 'flipper-plugin';
-import { Input } from 'antd';
-import type {
-  getStateFromPath,
-  getActionFromState,
-} from '@react-navigation/core';
+import * as React from 'react';
+
 import { RouteMap } from './RouteMap';
 import { Sidebar } from './Sidebar';
 import type { StoreType } from './types';

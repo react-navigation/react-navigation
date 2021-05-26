@@ -1,9 +1,10 @@
+import type { NavigationState, Router } from '@react-navigation/routers';
+import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
-import { render, act } from '@testing-library/react-native';
-import type { Router, NavigationState } from '@react-navigation/routers';
-import useNavigationBuilder from '../useNavigationBuilder';
+
 import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
+import useNavigationBuilder from '../useNavigationBuilder';
 import MockRouter from './__fixtures__/MockRouter';
 
 it('fires focus and blur events in root navigator', () => {

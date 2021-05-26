@@ -1,10 +1,11 @@
-import * as React from 'react';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import type { ParamListBase } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import * as React from 'react';
+
 import Albums from '../Shared/Albums';
-import Contacts from '../Shared/Contacts';
 import Chat from '../Shared/Chat';
+import Contacts from '../Shared/Contacts';
 
 type MaterialTopTabParams = {
   Albums: undefined;

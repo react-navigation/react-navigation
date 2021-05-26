@@ -1,4 +1,5 @@
 import type { ParamListBase } from '@react-navigation/routers';
+
 import type { RouteGroupConfig } from './types';
 
 /**

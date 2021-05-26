@@ -1,4 +1,5 @@
 import { Platform } from 'react-native';
+
 import type { Layout } from '../types';
 
 export default function getDefaultHeaderHeight(

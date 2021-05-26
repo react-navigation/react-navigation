@@ -1,10 +1,11 @@
-import * as React from 'react';
-import { Platform, GestureResponderEvent } from 'react-native';
 import {
   NavigationAction,
   NavigationContainerRefContext,
   NavigationHelpersContext,
 } from '@react-navigation/core';
+import * as React from 'react';
+import { GestureResponderEvent, Platform } from 'react-native';
+
 import useLinkTo, { To } from './useLinkTo';
 
 type Props<ParamList extends ReactNavigation.RootParamList> = {

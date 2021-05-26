@@ -1,12 +1,13 @@
-import * as React from 'react';
 import {
-  useNavigationBuilder,
   createNavigatorFactory,
+  NavigatorScreenParams,
   StackRouter,
   TabRouter,
-  NavigatorScreenParams,
+  useNavigationBuilder,
 } from '@react-navigation/core';
+import * as React from 'react';
 import { renderToString } from 'react-dom/server';
+
 import NavigationContainer from '../NavigationContainer';
 import ServerContainer from '../ServerContainer';
 import type { ServerContainerRef } from '../types';

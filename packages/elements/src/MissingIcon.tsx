@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, TextStyle, StyleProp, StyleSheet } from 'react-native';
+import { StyleProp, StyleSheet, Text, TextStyle } from 'react-native';
 
 type Props = {
   color?: string;

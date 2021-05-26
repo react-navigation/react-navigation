@@ -1,25 +1,26 @@
-import * as React from 'react';
 import {
-  Animated,
-  StyleSheet,
-  ViewStyle,
-  LayoutChangeEvent,
-} from 'react-native';
-import type { EdgeInsets } from 'react-native-safe-area-context';
-import {
+  getDefaultHeaderHeight,
   Header,
   HeaderBackButton,
   HeaderShownContext,
   HeaderTitle,
-  getDefaultHeaderHeight,
 } from '@react-navigation/elements';
-import memoize from '../../utils/memoize';
+import * as React from 'react';
+import {
+  Animated,
+  LayoutChangeEvent,
+  StyleSheet,
+  ViewStyle,
+} from 'react-native';
+import type { EdgeInsets } from 'react-native-safe-area-context';
+
 import type {
   Layout,
-  StackHeaderStyleInterpolator,
   SceneProgress,
   StackHeaderOptions,
+  StackHeaderStyleInterpolator,
 } from '../../types';
+import memoize from '../../utils/memoize';
 
 type Props = StackHeaderOptions & {
   layout: Layout;

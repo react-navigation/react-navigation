@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type Animated from 'react-native-reanimated';
+
 import DrawerProgressContext from './DrawerProgressContext';
 
 export default function useDrawerProgress():

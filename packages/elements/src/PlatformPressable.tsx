@@ -1,3 +1,4 @@
+import { useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
@@ -9,7 +10,6 @@ import {
   StyleProp,
   ViewStyle,
 } from 'react-native';
-import { useTheme } from '@react-navigation/native';
 
 export type Props = Omit<PressableProps, 'style'> & {
   pressColor?: string;

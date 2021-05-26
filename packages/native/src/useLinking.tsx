@@ -1,14 +1,15 @@
-import * as React from 'react';
 import {
-  getStateFromPath as getStateFromPathDefault,
-  getPathFromState as getPathFromStateDefault,
+  findFocusedRoute,
   getActionFromState as getActionFromStateDefault,
+  getPathFromState as getPathFromStateDefault,
+  getStateFromPath as getStateFromPathDefault,
   NavigationContainerRef,
   NavigationState,
-  findFocusedRoute,
   ParamListBase,
 } from '@react-navigation/core';
 import { nanoid } from 'nanoid/non-secure';
+import * as React from 'react';
+
 import ServerContext from './ServerContext';
 import type { LinkingOptions } from './types';
 

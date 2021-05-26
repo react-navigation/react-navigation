@@ -1,10 +1,10 @@
-import * as React from 'react';
 import type {
+  NavigationAction,
   NavigationContainerRef,
   NavigationState,
-  NavigationAction,
 } from '@react-navigation/core';
 import deepEqual from 'deep-equal';
+import * as React from 'react';
 
 export default function useDevToolsBase(
   ref: React.RefObject<NavigationContainerRef<any>>,

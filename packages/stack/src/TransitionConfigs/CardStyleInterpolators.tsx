@@ -1,10 +1,11 @@
 import { Animated } from 'react-native';
 import { isIphoneX } from 'react-native-iphone-x-helper';
-import conditional from '../utils/conditional';
+
 import type {
-  StackCardInterpolationProps,
   StackCardInterpolatedStyle,
+  StackCardInterpolationProps,
 } from '../types';
+import conditional from '../utils/conditional';
 
 const { add, multiply } = Animated;
 

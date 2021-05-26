@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
+import * as React from 'react';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 
 type Item = { name: string; number: number };
 

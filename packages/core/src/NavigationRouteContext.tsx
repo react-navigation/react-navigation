@@ -1,5 +1,5 @@
-import * as React from 'react';
 import type { Route } from '@react-navigation/routers';
+import * as React from 'react';
 
 /**
  * Context which holds the route prop for a screen.

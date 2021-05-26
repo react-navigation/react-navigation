@@ -1,19 +1,20 @@
 import * as React from 'react';
 import {
-  StyleSheet,
-  LayoutChangeEvent,
   I18nManager,
-  Platform,
-  Keyboard,
-  StatusBar,
-  View,
   InteractionManager,
+  Keyboard,
+  LayoutChangeEvent,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { PanGestureHandler, GestureState } from '../GestureHandler';
-import Overlay from './Overlay';
-import DrawerProgressContext from '../../utils/DrawerProgressContext';
+
 import type { DrawerProps } from '../../types';
+import DrawerProgressContext from '../../utils/DrawerProgressContext';
+import { GestureState, PanGestureHandler } from '../GestureHandler';
+import Overlay from './Overlay';
 
 const {
   Clock,

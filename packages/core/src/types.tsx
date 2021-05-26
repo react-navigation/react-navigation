@@ -1,13 +1,13 @@
-import type * as React from 'react';
 import type {
   DefaultRouterOptions,
-  NavigationState,
-  NavigationAction,
   InitialState,
+  NavigationAction,
+  NavigationState,
+  ParamListBase,
   PartialState,
   Route,
-  ParamListBase,
 } from '@react-navigation/routers';
+import type * as React from 'react';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace

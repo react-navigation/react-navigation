@@ -1,7 +1,8 @@
-import * as React from 'react';
 import type { NavigationContainerRef } from '@react-navigation/core';
-import type { Flipper } from 'react-native-flipper';
 import { nanoid } from 'nanoid/non-secure';
+import * as React from 'react';
+import type { Flipper } from 'react-native-flipper';
+
 import useDevToolsBase from './useDevToolsBase';
 
 let FlipperModule: typeof import('react-native-flipper') | undefined;

@@ -1,10 +1,11 @@
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import type { NavigatorScreenParams } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
-import type { NavigatorScreenParams } from '@react-navigation/native';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+
 import Albums from '../Shared/Albums';
-import Contacts from '../Shared/Contacts';
 import Chat from '../Shared/Chat';
+import Contacts from '../Shared/Contacts';
 import SimpleStackScreen, { SimpleStackParams } from './SimpleStack';
 
 type MaterialBottomTabParams = {

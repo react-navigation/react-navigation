@@ -1,9 +1,10 @@
-import * as React from 'react';
 import {
-  NavigationContainerRefContext,
-  getStateFromPath,
   getActionFromState,
+  getStateFromPath,
+  NavigationContainerRefContext,
 } from '@react-navigation/core';
+import * as React from 'react';
+
 import LinkingContext from './LinkingContext';
 
 export type To<

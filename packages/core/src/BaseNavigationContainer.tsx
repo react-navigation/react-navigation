@@ -1,35 +1,36 @@
-import * as React from 'react';
 import {
   CommonActions,
-  Route,
-  NavigationState,
   InitialState,
-  PartialState,
   NavigationAction,
+  NavigationState,
   ParamListBase,
+  PartialState,
+  Route,
 } from '@react-navigation/routers';
-import EnsureSingleNavigator from './EnsureSingleNavigator';
-import UnhandledActionContext from './UnhandledActionContext';
-import NavigationBuilderContext from './NavigationBuilderContext';
-import NavigationStateContext from './NavigationStateContext';
-import NavigationRouteContext from './NavigationRouteContext';
-import NavigationContext from './NavigationContext';
-import { ScheduleUpdateContext } from './useScheduleUpdate';
-import useChildListeners from './useChildListeners';
-import useKeyedChildListeners from './useKeyedChildListeners';
-import useOptionsGetters from './useOptionsGetters';
-import useEventEmitter from './useEventEmitter';
-import useSyncState from './useSyncState';
-import checkSerializable from './checkSerializable';
+import * as React from 'react';
+
 import checkDuplicateRouteNames from './checkDuplicateRouteNames';
-import findFocusedRoute from './findFocusedRoute';
+import checkSerializable from './checkSerializable';
 import { NOT_INITIALIZED_ERROR } from './createNavigationContainerRef';
+import EnsureSingleNavigator from './EnsureSingleNavigator';
+import findFocusedRoute from './findFocusedRoute';
+import NavigationBuilderContext from './NavigationBuilderContext';
+import NavigationContainerRefContext from './NavigationContainerRefContext';
+import NavigationContext from './NavigationContext';
+import NavigationRouteContext from './NavigationRouteContext';
+import NavigationStateContext from './NavigationStateContext';
 import type {
   NavigationContainerEventMap,
-  NavigationContainerRef,
   NavigationContainerProps,
+  NavigationContainerRef,
 } from './types';
-import NavigationContainerRefContext from './NavigationContainerRefContext';
+import UnhandledActionContext from './UnhandledActionContext';
+import useChildListeners from './useChildListeners';
+import useEventEmitter from './useEventEmitter';
+import useKeyedChildListeners from './useKeyedChildListeners';
+import useOptionsGetters from './useOptionsGetters';
+import { ScheduleUpdateContext } from './useScheduleUpdate';
+import useSyncState from './useSyncState';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
 

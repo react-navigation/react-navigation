@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import createNavigationContainerRef from './createNavigationContainerRef';
 import type { NavigationContainerRefWithCurrent } from './types';
 

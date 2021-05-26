@@ -1,12 +1,12 @@
+import { getHeaderTitle, HeaderShownContext } from '@react-navigation/elements';
+import { StackActions, useNavigationState } from '@react-navigation/native';
 import * as React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { StackActions, useNavigationState } from '@react-navigation/native';
-import { getHeaderTitle, HeaderShownContext } from '@react-navigation/elements';
 
-import HeaderSegment from './HeaderSegment';
-import ModalPresentationContext from '../../utils/ModalPresentationContext';
-import debounce from '../../utils/debounce';
 import type { StackHeaderProps } from '../../types';
+import debounce from '../../utils/debounce';
+import ModalPresentationContext from '../../utils/ModalPresentationContext';
+import HeaderSegment from './HeaderSegment';
 
 export default React.memo(function Header({
   back,

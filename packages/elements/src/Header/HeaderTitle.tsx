@@ -1,13 +1,13 @@
+import { useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
-  StyleSheet,
   Platform,
-  TextProps,
   StyleProp,
+  StyleSheet,
+  TextProps,
   TextStyle,
 } from 'react-native';
-import { useTheme } from '@react-navigation/native';
 
 type Props = Omit<TextProps, 'style'> & {
   tintColor?: string;

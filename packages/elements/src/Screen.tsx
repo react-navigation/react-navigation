@@ -1,21 +1,21 @@
+import {
+  NavigationContext,
+  NavigationProp,
+  NavigationRouteContext,
+  ParamListBase,
+  RouteProp,
+} from '@react-navigation/native';
 import * as React from 'react';
-import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import {
-  NavigationContext,
-  NavigationRouteContext,
-  NavigationProp,
-  RouteProp,
-  ParamListBase,
-} from '@react-navigation/native';
 
 import Background from './Background';
-import HeaderShownContext from './Header/HeaderShownContext';
-import HeaderHeightContext from './Header/HeaderHeightContext';
 import getDefaultHeaderHeight from './Header/getDefaultHeaderHeight';
+import HeaderHeightContext from './Header/HeaderHeightContext';
+import HeaderShownContext from './Header/HeaderShownContext';
 
 type Props = {
   focused: boolean;

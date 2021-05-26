@@ -1,7 +1,7 @@
 import type {
-  getStateFromPath as getStateFromPathDefault,
-  getPathFromState as getPathFromStateDefault,
   getActionFromState as getActionFromStateDefault,
+  getPathFromState as getPathFromStateDefault,
+  getStateFromPath as getStateFromPathDefault,
   PathConfigMap,
   Route,
 } from '@react-navigation/core';

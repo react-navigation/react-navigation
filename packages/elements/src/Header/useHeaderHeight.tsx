@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import HeaderHeightContext from './HeaderHeightContext';
 
 export default function useHeaderHeight() {

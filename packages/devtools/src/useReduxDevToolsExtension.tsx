@@ -1,5 +1,6 @@
-import * as React from 'react';
 import type { NavigationContainerRef } from '@react-navigation/core';
+import * as React from 'react';
+
 import useDevToolsBase from './useDevToolsBase';
 
 type DevToolsConnection = {
