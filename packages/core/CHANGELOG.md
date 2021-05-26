@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.9...@react-navigation/core@6.0.0-next.10) (2021-05-26)
+
+
+### Features
+
+* add screenListeners prop on navigators similar to screenOptions ([cde44a5](https://github.com/react-navigation/react-navigation/commit/cde44a5785444a121aa08f94af9f8fe4fc89910a))
+* expose container ref in useNavigation ([1d40279](https://github.com/react-navigation/react-navigation/commit/1d40279db18ab2aed12517ed3ca6af6d509477d2))
+
+
+
+
+
 # [6.0.0-next.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.8...@react-navigation/core@6.0.0-next.9) (2021-05-23)
 
 **Note:** Version bump only for package @react-navigation/core
