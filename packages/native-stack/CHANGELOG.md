@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.0.0-next.2...@react-navigation/native-stack@6.0.0-next.3) (2021-05-26)
+
+
+### Features
+
+* add screenListeners prop on navigators similar to screenOptions ([cde44a5](https://github.com/react-navigation/react-navigation/commit/cde44a5785444a121aa08f94af9f8fe4fc89910a))
+
+
+
+
+
 # [6.0.0-next.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.0.0-next.1...@react-navigation/native-stack@6.0.0-next.2) (2021-05-25)
 
 **Note:** Version bump only for package @react-navigation/native-stack
