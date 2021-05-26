@@ -29,6 +29,7 @@ import type {
   NavigationContainerRef,
   NavigationContainerProps,
 } from './types';
+import NavigationContainerRefContext from './NavigationContainerRefContext';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
 
@@ -136,17 +137,22 @@ const BaseNavigationContainer = React.forwardRef(
 
     const { keyedListeners, addKeyedListener } = useKeyedChildListeners();
 
-    const dispatch = (
-      action: NavigationAction | ((state: NavigationState) => NavigationAction)
-    ) => {
-      if (listeners.focus[0] == null) {
-        console.error(NOT_INITIALIZED_ERROR);
-      } else {
-        listeners.focus[0]((navigation) => navigation.dispatch(action));
-      }
-    };
+    const dispatch = React.useCallback(
+      (
+        action:
+          | NavigationAction
+          | ((state: NavigationState) => NavigationAction)
+      ) => {
+        if (listeners.focus[0] == null) {
+          console.error(NOT_INITIALIZED_ERROR);
+        } else {
+          listeners.focus[0]((navigation) => navigation.dispatch(action));
+        }
+      },
+      [listeners.focus]
+    );
 
-    const canGoBack = () => {
+    const canGoBack = React.useCallback(() => {
       if (listeners.focus[0] == null) {
         return false;
       }
@@ -160,7 +166,7 @@ const BaseNavigationContainer = React.forwardRef(
       } else {
         return false;
       }
-    };
+    }, [listeners.focus]);
 
     const resetRoot = React.useCallback(
       (state?: PartialState<NavigationState> | NavigationState) => {
@@ -200,24 +206,38 @@ const BaseNavigationContainer = React.forwardRef(
 
     const { addOptionsGetter, getCurrentOptions } = useOptionsGetters({});
 
-    React.useImperativeHandle(ref, () => ({
-      ...Object.keys(CommonActions).reduce<any>((acc, name) => {
-        acc[name] = (...args: any[]) =>
-          // @ts-expect-error: this is ok
-          dispatch(CommonActions[name](...args));
-        return acc;
-      }, {}),
-      ...emitter.create('root'),
-      resetRoot,
-      dispatch,
-      canGoBack,
-      getRootState,
-      getState: () => state,
-      getParent: () => undefined,
-      getCurrentRoute,
-      getCurrentOptions,
-      isReady: () => listeners.focus[0] != null,
-    }));
+    const navigation: NavigationContainerRef<ParamListBase> = React.useMemo(
+      () => ({
+        ...Object.keys(CommonActions).reduce<any>((acc, name) => {
+          acc[name] = (...args: any[]) =>
+            // @ts-expect-error: this is ok
+            dispatch(CommonActions[name](...args));
+          return acc;
+        }, {}),
+        ...emitter.create('root'),
+        resetRoot,
+        dispatch,
+        canGoBack,
+        getRootState,
+        getState: () => stateRef.current,
+        getParent: () => undefined,
+        getCurrentRoute,
+        getCurrentOptions,
+        isReady: () => listeners.focus[0] != null,
+      }),
+      [
+        canGoBack,
+        dispatch,
+        emitter,
+        getCurrentOptions,
+        getCurrentRoute,
+        getRootState,
+        listeners.focus,
+        resetRoot,
+      ]
+    );
+
+    React.useImperativeHandle(ref, () => navigation, [navigation]);
 
     const onDispatchAction = React.useCallback(
       (action: NavigationAction, noop: boolean) => {
@@ -285,10 +305,12 @@ const BaseNavigationContainer = React.forwardRef(
     );
 
     const onStateChangeRef = React.useRef(onStateChange);
+    const stateRef = React.useRef(state);
 
     React.useEffect(() => {
       isInitialRef.current = false;
       onStateChangeRef.current = onStateChange;
+      stateRef.current = state;
     });
 
     React.useEffect(() => {
@@ -415,17 +437,19 @@ const BaseNavigationContainer = React.forwardRef(
     );
 
     let element = (
-      <ScheduleUpdateContext.Provider value={scheduleContext}>
-        <NavigationBuilderContext.Provider value={builderContext}>
-          <NavigationStateContext.Provider value={context}>
-            <UnhandledActionContext.Provider
-              value={onUnhandledAction ?? defaultOnUnhandledAction}
-            >
-              <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
-            </UnhandledActionContext.Provider>
-          </NavigationStateContext.Provider>
-        </NavigationBuilderContext.Provider>
-      </ScheduleUpdateContext.Provider>
+      <NavigationContainerRefContext.Provider value={navigation}>
+        <ScheduleUpdateContext.Provider value={scheduleContext}>
+          <NavigationBuilderContext.Provider value={builderContext}>
+            <NavigationStateContext.Provider value={context}>
+              <UnhandledActionContext.Provider
+                value={onUnhandledAction ?? defaultOnUnhandledAction}
+              >
+                <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
+              </UnhandledActionContext.Provider>
+            </NavigationStateContext.Provider>
+          </NavigationBuilderContext.Provider>
+        </ScheduleUpdateContext.Provider>
+      </NavigationContainerRefContext.Provider>
     );
 
     if (independent) {

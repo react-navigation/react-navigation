@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Platform, GestureResponderEvent } from 'react-native';
 import {
   NavigationAction,
+  NavigationContainerRefContext,
   NavigationHelpersContext,
 } from '@react-navigation/core';
 import useLinkTo, { To } from './useLinkTo';
@@ -20,6 +21,7 @@ type Props<ParamList extends ReactNavigation.RootParamList> = {
 export default function useLinkProps<
   ParamList extends ReactNavigation.RootParamList
 >({ to, action }: Props<ParamList>) {
+  const root = React.useContext(NavigationContainerRefContext);
   const navigation = React.useContext(NavigationHelpersContext);
   const linkTo = useLinkTo<ParamList>();
 
@@ -47,8 +49,12 @@ export default function useLinkProps<
       if (action) {
         if (navigation) {
           navigation.dispatch(action);
+        } else if (root) {
+          root.dispatch(action);
         } else {
-          throw new Error("Couldn't find a navigation object.");
+          throw new Error(
+            "Couldn't find a navigation object. Is your component inside NavigationContainer?"
+          );
         }
       } else {
         linkTo(to);
