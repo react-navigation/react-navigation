@@ -22,7 +22,7 @@ export type DrawerActionType =
     };
 
 export type DrawerRouterOptions = TabRouterOptions & {
-  openByDefault?: boolean;
+  defaultStatus?: 'open' | 'closed';
 };
 
 export type DrawerNavigationState<ParamList extends ParamListBase> = Omit<
@@ -107,7 +107,7 @@ const closeDrawer = (
 };
 
 export default function DrawerRouter({
-  openByDefault,
+  defaultStatus,
   ...rest
 }: DrawerRouterOptions): Router<
   DrawerNavigationState<ParamListBase>,
@@ -130,7 +130,7 @@ export default function DrawerRouter({
         routeGetIdList,
       });
 
-      if (openByDefault) {
+      if (defaultStatus === 'open') {
         state = openDrawer(state);
       }
 
@@ -170,7 +170,7 @@ export default function DrawerRouter({
     getStateForRouteFocus(state, key) {
       const result = router.getStateForRouteFocus(state, key);
 
-      if (openByDefault) {
+      if (defaultStatus === 'open') {
         return openDrawer(result);
       }
 
@@ -193,7 +193,7 @@ export default function DrawerRouter({
           return openDrawer(state);
 
         case 'GO_BACK':
-          if (openByDefault) {
+          if (defaultStatus === 'open') {
             if (!isDrawerOpen(state)) {
               return openDrawer(state);
             }

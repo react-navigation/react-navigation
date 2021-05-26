@@ -144,6 +144,7 @@ export default function BottomTabBar({
     tabBarHideOnKeyboard = false,
     tabBarVisibilityAnimationConfig,
     tabBarStyle,
+    tabBarBackground,
   } = focusedOptions;
 
   const dimensions = useSafeAreaFrame();
@@ -211,15 +212,7 @@ export default function BottomTabBar({
   const handleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
 
-    const topBorderWidth =
-      // @ts-ignore
-      StyleSheet.flatten([styles.tabBar, tabBarStyle])?.borderTopWidth;
-
-    onHeightChange?.(
-      height +
-        paddingBottom +
-        (typeof topBorderWidth === 'number' ? topBorderWidth : 0)
-    );
+    onHeightChange?.(height);
 
     setLayout((layout) => {
       if (height === layout.height && width === layout.width) {
@@ -252,12 +245,15 @@ export default function BottomTabBar({
     layout,
   });
 
+  const tabBarBackgroundElement = tabBarBackground?.();
+
   return (
     <Animated.View
       style={[
         styles.tabBar,
         {
-          backgroundColor: colors.card,
+          backgroundColor:
+            tabBarBackgroundElement != null ? 'transparent' : colors.card,
           borderTopColor: colors.border,
         },
         {
@@ -284,12 +280,12 @@ export default function BottomTabBar({
         tabBarStyle,
       ]}
       pointerEvents={isTabBarHidden ? 'none' : 'auto'}
+      onLayout={handleLayout}
     >
-      <View
-        accessibilityRole="tablist"
-        style={styles.content}
-        onLayout={handleLayout}
-      >
+      <View pointerEvents="none" style={StyleSheet.absoluteFill}>
+        {tabBarBackgroundElement}
+      </View>
+      <View accessibilityRole="tablist" style={styles.content}>
         {routes.map((route, index) => {
           const focused = index === state.index;
           const { options } = descriptors[route.key];

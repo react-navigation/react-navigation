@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.0.0-next.8...@react-navigation/material-bottom-tabs@6.0.0-next.9) (2021-05-23)
+
+**Note:** Version bump only for package @react-navigation/material-bottom-tabs
+
+
+
+
+
+# [6.0.0-next.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.0.0-next.7...@react-navigation/material-bottom-tabs@6.0.0-next.8) (2021-05-16)
+
+**Note:** Version bump only for package @react-navigation/material-bottom-tabs
+
+
+
+
+
+# [6.0.0-next.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.0.0-next.6...@react-navigation/material-bottom-tabs@6.0.0-next.7) (2021-05-10)
+
+
+### Features
+
+* return a NavigationContent component from useNavigationBuilder ([1179d56](https://github.com/react-navigation/react-navigation/commit/1179d56c5008270753feef41acdc1dbd2191efcf))
+
+
+
+
+
+# [6.0.0-next.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.0.0-next.5...@react-navigation/material-bottom-tabs@6.0.0-next.6) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/material-bottom-tabs
+
+
+
+
+
+# [6.0.0-next.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.0.0-next.4...@react-navigation/material-bottom-tabs@6.0.0-next.5) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/material-bottom-tabs
+
+
+
+
+
+# [6.0.0-next.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.0.0-next.3...@react-navigation/material-bottom-tabs@6.0.0-next.4) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/material-bottom-tabs
+
+
+
+
+
+# [6.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.0.0-next.2...@react-navigation/material-bottom-tabs@6.0.0-next.3) (2021-05-01)
+
+**Note:** Version bump only for package @react-navigation/material-bottom-tabs
+
+
+
+
+
+# [6.0.0-next.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.0.0-next.1...@react-navigation/material-bottom-tabs@6.0.0-next.2) (2021-04-08)
+
+**Note:** Version bump only for package @react-navigation/material-bottom-tabs
+
+
+
+
+
 # [6.0.0-next.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.0.0...@react-navigation/material-bottom-tabs@6.0.0-next.1) (2021-03-10)
 
 

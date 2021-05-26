@@ -2,10 +2,11 @@ import * as React from 'react';
 import {
   getStateFromPath as getStateFromPathDefault,
   getPathFromState as getPathFromStateDefault,
+  getActionFromState as getActionFromStateDefault,
   NavigationContainerRef,
   NavigationState,
-  getActionFromState,
   findFocusedRoute,
+  ParamListBase,
 } from '@react-navigation/core';
 import { nanoid } from 'nanoid/non-secure';
 import ServerContext from './ServerContext';
@@ -288,13 +289,14 @@ const series = (cb: () => Promise<void>) => {
 let isUsingLinking = false;
 
 export default function useLinking(
-  ref: React.RefObject<NavigationContainerRef>,
+  ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
   {
     enabled = true,
     config,
     getStateFromPath = getStateFromPathDefault,
     getPathFromState = getPathFromStateDefault,
-  }: LinkingOptions
+    getActionFromState = getActionFromStateDefault,
+  }: LinkingOptions<ParamListBase>
 ) {
   React.useEffect(() => {
     if (enabled !== false && isUsingLinking) {
@@ -325,13 +327,15 @@ export default function useLinking(
   const configRef = React.useRef(config);
   const getStateFromPathRef = React.useRef(getStateFromPath);
   const getPathFromStateRef = React.useRef(getPathFromState);
+  const getActionFromStateRef = React.useRef(getActionFromState);
 
   React.useEffect(() => {
     enabledRef.current = enabled;
     configRef.current = config;
     getStateFromPathRef.current = getStateFromPath;
     getPathFromStateRef.current = getPathFromState;
-  }, [config, enabled, getPathFromState, getStateFromPath]);
+    getActionFromStateRef.current = getActionFromState;
+  });
 
   const server = React.useContext(ServerContext);
 
@@ -412,7 +416,10 @@ export default function useLinking(
         }
 
         if (index > previousIndex) {
-          const action = getActionFromState(state, configRef.current);
+          const action = getActionFromStateRef.current(
+            state,
+            configRef.current
+          );
 
           if (action !== undefined) {
             try {

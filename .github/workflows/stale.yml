@@ -1,0 +1,21 @@
+name: Close stale issues and PRs
+on:
+  schedule:
+    - cron: '30 1 * * *'
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v3
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          days-before-stale: 30
+          days-before-close: 7
+          any-of-labels: 'needs more info,needs repro,needs response'
+          exempt-issue-labels: 'repro provided,keep open'
+          exempt-pr-labels: 'keep open'
+          stale-issue-label: 'stale'
+          stale-pr-label: 'stale'
+          stale-issue-message: 'Hello 👋, this issue has been open for more than a month without a repro or any activity. If the issue is still present in the latest version, please provide a repro or leave a comment within 7 days to keep it open, otherwise it will be closed automatically. If you found a solution or workaround for the issue, please comment here for others to find. If this issue is critical for you, please consider sending a pull request to fix it.'
+          stale-pr-message: 'Hello 👋, this pull request has been open for more than a month with no activity on it. If you think this is still necessary with the latest version, please comment and ping a maintainer to get this reviewed, otherwise it will be closed automatically in 7 days.'

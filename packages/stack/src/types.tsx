@@ -47,7 +47,7 @@ export type StackNavigationHelpers = NavigationHelpers<
 
 export type StackNavigationProp<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
+  RouteName extends keyof ParamList = keyof ParamList
 > = NavigationProp<
   ParamList,
   RouteName,
@@ -59,7 +59,7 @@ export type StackNavigationProp<
 
 export type StackScreenProps<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
+  RouteName extends keyof ParamList = keyof ParamList
 > = {
   navigation: StackNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
@@ -73,11 +73,21 @@ export type GestureDirection =
   | 'vertical'
   | 'vertical-inverted';
 
+type SceneOptionsDefaults = TransitionPreset & {
+  animationEnabled: boolean;
+  gestureEnabled: boolean;
+  cardOverlayEnabled: boolean;
+  headerMode: StackHeaderMode;
+};
+
 export type Scene = {
   /**
    * Descriptor object for the screen.
    */
-  descriptor: StackDescriptor;
+  descriptor: Omit<StackDescriptor, 'options'> & {
+    options: Omit<StackDescriptor['options'], keyof SceneOptionsDefaults> &
+      SceneOptionsDefaults;
+  };
   /**
    * Animated nodes representing the progress of the animation.
    */
@@ -103,7 +113,7 @@ export type SceneProgress = {
 
 export type StackHeaderMode = 'float' | 'screen';
 
-export type StackCardMode = 'card' | 'modal';
+export type StackPresentationMode = 'card' | 'modal';
 
 export type StackHeaderOptions = HeaderOptions & {
   /**
@@ -119,19 +129,21 @@ export type StackHeaderOptions = HeaderOptions & {
    */
   headerBackTestID?: string;
   /**
-   * Title string used by the back button on iOS. Defaults to the previous scene's `headerTitle`.
+   * Title string used by the back button on iOS.
+   * Defaults to the previous screen's title, or "Back" if there's not enough space.
    * Use `headerBackTitleVisible: false` to hide it.
    */
   headerBackTitle?: string;
   /**
+   * Whether the back button title should be visible or not.
+   *
+   * Defaults to `true` on iOS, `false on Android.
+   */
+  headerBackTitleVisible?: boolean;
+  /**
    * Style object for the back title.
    */
   headerBackTitleStyle?: StyleProp<TextStyle>;
-  /**
-   * A reasonable default is supplied for whether the back button title should be visible or not.
-   * But if you want to override that you can use `true` or `false` in this option.
-   */
-  headerBackTitleVisible?: boolean;
   /**
    * Title string used by the back button when `headerBackTitle` doesn't fit on the screen. `"Back"` by default.
    */
@@ -183,7 +195,7 @@ export type StackHeaderProps = {
 export type StackDescriptor = Descriptor<
   StackNavigationOptions,
   StackNavigationProp<ParamListBase>,
-  RouteProp<ParamListBase, string>
+  RouteProp<ParamListBase>
 >;
 
 export type StackDescriptorMap = Record<string, StackDescriptor>;
@@ -230,10 +242,32 @@ export type StackNavigationOptions = StackHeaderOptions &
      *
      * You can also specify `{ backgroundColor: 'transparent' }` to make the previous screen visible underneath.
      * This is useful to implement things like modal dialogs.
-     * If you use [`react-native-screens`](https://github.com/kmagiera/react-native-screens), you should also specify `mode: 'modal'`
-     * in the stack view config when using a transparent background so previous screens aren't detached.
+     *
+     * You should also specify `detachPreviousScreen: false` in options when using a transparent background
+     * so that the previous screen isn't detached and stays below the current screen.
+     *
+     * You might also need to change the animation of the screen using `cardStyleInterpolator`
+     * so that the previous screen isn't transformed or invisible.
      */
     cardStyle?: StyleProp<ViewStyle>;
+    /**
+     * Whether this screen should be presented as a modal or a regular card.
+     *
+     * Specifying this will configure several options:
+     * - `card`: Use the default OS animations for iOS and Android screen transitions.
+     * - `modal`: Use Modal animations. This changes a few things:
+     *   - Sets `headerMode` to `screen` for the screen unless specified otherwise.
+     *   - Changes the screen animation to match the platform behavior for modals.
+     * - `transparentModal`: Similar to `modal`. This changes following things:
+     *   - Sets `headerMode` to `screen` for the screen unless specified otherwise.
+     *   - Sets background color of the screen to transparent, so previous screen is visible
+     *   - Adjusts the `detachPreviousScreen` option so that the previous screen stays rendered.
+     *   - Prevents the previous screen from animating from its last position.
+     *   - Changes the screen animation to a vertical slide animation.
+     *
+     * Defaults to 'card'.
+     */
+    presentation?: 'card' | 'modal' | 'transparentModal';
     /**
      * Whether transition animation should be enabled the screen.
      * If you set it to `false`, the screen won't animate when pushing or popping.
@@ -264,22 +298,22 @@ export type StackNavigationOptions = StackHeaderOptions &
      * Whether to detach the previous screen from the view hierarchy to save memory.
      * Set it to `false` if you need the previous screen to be seen through the active screen.
      * Only applicable if `detachInactiveScreens` isn't set to `false`.
-     * Defaults to `false` for the last screen when mode='modal', otherwise `true`.
+     * Defaults to `false` for the last screen for modals, otherwise `true`.
      */
     detachPreviousScreen?: boolean;
+    /**
+     * If `false`, the keyboard will NOT automatically dismiss when navigating to a new screen from this screen.
+     * Defaults to `true`.
+     */
+    keyboardHandlingEnabled?: boolean;
   };
 
 export type StackNavigationConfig = {
-  mode?: StackCardMode;
-  /**
-   * If `false`, the keyboard will NOT automatically dismiss when navigating to a new screen.
-   * Defaults to `true`.
-   */
-  keyboardHandlingEnabled?: boolean;
   /**
    * Whether inactive screens should be detached from the view hierarchy to save memory.
-   * Make sure to call `enableScreens` from `react-native-screens` to make it work.
-   * Defaults to `true` on Android, depends on the version of `react-native-screens` on iOS.
+   * This will have no effect if you disable `react-native-screens`.
+   *
+   * Defaults to `true`.
    */
   detachInactiveScreens?: boolean;
 };
@@ -311,7 +345,7 @@ export type StackCardInterpolationProps = {
     progress: Animated.AnimatedInterpolation;
   };
   /**
-   * Values for the current screen the screen after this one in the stack.
+   * Values for the screen after this one in the stack.
    * This can be `undefined` in case the screen animating is the last one.
    */
   next?: {
@@ -321,7 +355,7 @@ export type StackCardInterpolationProps = {
     progress: Animated.AnimatedInterpolation;
   };
   /**
-   * The index of the card in the stack.
+   * The index of the card with this interpolation in the stack.
    */
   index: number;
   /**
@@ -390,7 +424,7 @@ export type StackHeaderInterpolationProps = {
     progress: Animated.AnimatedInterpolation;
   };
   /**
-   * Values for the current screen the screen after this one in the stack.
+   * Values for the screen after this one in the stack.
    * This can be `undefined` in case the screen animating is the last one.
    */
   next?: {

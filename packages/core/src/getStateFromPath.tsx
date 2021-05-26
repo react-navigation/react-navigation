@@ -8,9 +8,9 @@ import type {
 import findFocusedRoute from './findFocusedRoute';
 import type { PathConfigMap } from './types';
 
-type Options = {
+type Options<ParamList extends {}> = {
   initialRouteName?: string;
-  screens: PathConfigMap;
+  screens: PathConfigMap<ParamList>;
 };
 
 type ParseConfig = Record<string, (value: string) => any>;
@@ -26,7 +26,7 @@ type RouteConfig = {
 
 type InitialRouteConfig = {
   initialRouteName: string;
-  connectedRoutes: string[];
+  parentScreens: string[];
 };
 
 type ResultState = PartialState<NavigationState> & {
@@ -60,16 +60,16 @@ type ParsedRoute = {
  * @param path Path string to parse and convert, e.g. /foo/bar?count=42.
  * @param options Extra options to fine-tune how to parse the path.
  */
-export default function getStateFromPath(
+export default function getStateFromPath<ParamList extends {}>(
   path: string,
-  options?: Options
+  options?: Options<ParamList>
 ): ResultState | undefined {
   let initialRoutes: InitialRouteConfig[] = [];
 
   if (options?.initialRouteName) {
     initialRoutes.push({
       initialRouteName: options.initialRouteName,
-      connectedRoutes: Object.keys(options.screens),
+      parentScreens: [],
     });
   }
 
@@ -106,9 +106,10 @@ export default function getStateFromPath(
       ...Object.keys(screens).map((key) =>
         createNormalizedConfigs(
           key,
-          screens as PathConfigMap,
+          screens as PathConfigMap<object>,
           [],
-          initialRoutes
+          initialRoutes,
+          []
         )
       )
     )
@@ -306,15 +307,19 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
 
 const createNormalizedConfigs = (
   screen: string,
-  routeConfig: PathConfigMap,
+  routeConfig: PathConfigMap<object>,
   routeNames: string[] = [],
   initials: InitialRouteConfig[],
+  parentScreens: string[],
   parentPattern?: string
 ): RouteConfig[] => {
   const configs: RouteConfig[] = [];
 
   routeNames.push(screen);
 
+  parentScreens.push(screen);
+
+  // @ts-expect-error: we can't strongly typecheck this for now
   const config = routeConfig[screen];
 
   if (typeof config === 'string') {
@@ -341,7 +346,13 @@ const createNormalizedConfigs = (
           : config.path || '';
 
       configs.push(
-        createConfigItem(screen, routeNames, pattern, config.path, config.parse)
+        createConfigItem(
+          screen,
+          routeNames,
+          pattern!,
+          config.path,
+          config.parse
+        )
       );
     }
 
@@ -350,16 +361,17 @@ const createNormalizedConfigs = (
       if (config.initialRouteName) {
         initials.push({
           initialRouteName: config.initialRouteName,
-          connectedRoutes: Object.keys(config.screens),
+          parentScreens,
         });
       }
 
       Object.keys(config.screens).forEach((nestedConfig) => {
         const result = createNormalizedConfigs(
           nestedConfig,
-          config.screens as PathConfigMap,
+          config.screens as PathConfigMap<object>,
           routeNames,
           initials,
+          [...parentScreens],
           pattern ?? parentPattern
         );
 
@@ -425,13 +437,23 @@ const findParseConfigForRoute = (
 // Try to find an initial route connected with the one passed
 const findInitialRoute = (
   routeName: string,
+  parentScreens: string[],
   initialRoutes: InitialRouteConfig[]
 ): string | undefined => {
   for (const config of initialRoutes) {
-    if (config.connectedRoutes.includes(routeName)) {
-      return config.initialRouteName === routeName
-        ? undefined
-        : config.initialRouteName;
+    if (parentScreens.length === config.parentScreens.length) {
+      let sameParents = true;
+      for (let i = 0; i < parentScreens.length; i++) {
+        if (parentScreens[i].localeCompare(config.parentScreens[i]) !== 0) {
+          sameParents = false;
+          break;
+        }
+      }
+      if (sameParents) {
+        return routeName !== config.initialRouteName
+          ? config.initialRouteName
+          : undefined;
+      }
     }
   }
   return undefined;
@@ -477,7 +499,11 @@ const createNestedStateObject = (
 ) => {
   let state: InitialState;
   let route = routes.shift() as ParsedRoute;
-  let initialRoute = findInitialRoute(route.name, initialRoutes);
+  const parentScreens: string[] = [];
+
+  let initialRoute = findInitialRoute(route.name, parentScreens, initialRoutes);
+
+  parentScreens.push(route.name);
 
   state = createStateObject(initialRoute, route, routes.length === 0);
 
@@ -485,7 +511,7 @@ const createNestedStateObject = (
     let nestedState = state;
 
     while ((route = routes.shift() as ParsedRoute)) {
-      initialRoute = findInitialRoute(route.name, initialRoutes);
+      initialRoute = findInitialRoute(route.name, parentScreens, initialRoutes);
 
       const nestedStateIndex =
         nestedState.index || nestedState.routes.length - 1;
@@ -500,6 +526,8 @@ const createNestedStateObject = (
         nestedState = nestedState.routes[nestedStateIndex]
           .state as InitialState;
       }
+
+      parentScreens.push(route.name);
     }
   }
 

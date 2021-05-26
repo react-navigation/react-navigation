@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/elements",
   "description": "UI Components for React Navigation",
-  "version": "1.0.0-next.3",
+  "version": "1.0.0-next.12",
   "keywords": [
     "react-native",
     "react-navigation",
@@ -30,22 +30,21 @@
   ],
   "sideEffects": false,
   "publishConfig": {
-    "access": "public",
-    "tag": "alpha"
+    "access": "public"
   },
   "scripts": {
     "prepare": "bob build",
     "clean": "del lib"
   },
   "devDependencies": {
-    "@react-native-masked-view/masked-view": "^0.2.2",
-    "@react-navigation/native": "^6.0.0-next.1",
+    "@react-native-masked-view/masked-view": "^0.2.3",
+    "@react-navigation/native": "^6.0.0-next.9",
     "@testing-library/react-native": "^7.2.0",
     "@types/react": "^16.9.53",
-    "@types/react-native": "~0.63.51",
+    "@types/react-native": "~0.64.4",
     "del-cli": "^3.0.1",
     "react": "~16.13.1",
-    "react-native": "~0.63.2",
+    "react-native": "~0.63.4",
     "react-native-builder-bob": "^0.18.1",
     "typescript": "^4.2.3"
   },

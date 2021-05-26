@@ -17,7 +17,12 @@ import type {
   MaterialTopTabNavigationEventMap,
 } from '../types';
 
-type Props = DefaultNavigatorOptions<MaterialTopTabNavigationOptions> &
+type Props = DefaultNavigatorOptions<
+  ParamListBase,
+  TabNavigationState<ParamListBase>,
+  MaterialTopTabNavigationOptions,
+  MaterialTopTabNavigationEventMap
+> &
   TabRouterOptions &
   MaterialTopTabNavigationConfig;
 
@@ -25,10 +30,9 @@ function MaterialTopTabNavigator({
   initialRouteName,
   backBehavior,
   children,
+  screenListeners,
   screenOptions,
-  // @ts-expect-error: lazy is deprecated
   lazy,
-  // @ts-expect-error: tabBarOptions is deprecated
   tabBarOptions,
   ...rest
 }: Props) {
@@ -73,7 +77,12 @@ function MaterialTopTabNavigator({
     );
   }
 
-  const { state, descriptors, navigation } = useNavigationBuilder<
+  const {
+    state,
+    descriptors,
+    navigation,
+    NavigationContent,
+  } = useNavigationBuilder<
     TabNavigationState<ParamListBase>,
     TabRouterOptions,
     TabActionHelpers<ParamListBase>,
@@ -83,16 +92,19 @@ function MaterialTopTabNavigator({
     initialRouteName,
     backBehavior,
     children,
+    screenListeners,
     screenOptions,
   });
 
   return (
-    <MaterialTopTabView
-      {...rest}
-      state={state}
-      navigation={navigation}
-      descriptors={descriptors}
-    />
+    <NavigationContent>
+      <MaterialTopTabView
+        {...rest}
+        state={state}
+        navigation={navigation}
+        descriptors={descriptors}
+      />
+    </NavigationContent>
   );
 }
 

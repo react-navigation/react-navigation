@@ -3,6 +3,84 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-next.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.11...@react-navigation/elements@1.0.0-next.12) (2021-05-25)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+
+
+
+
+# [1.0.0-next.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.10...@react-navigation/elements@1.0.0-next.11) (2021-05-23)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+
+
+
+
+# [1.0.0-next.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.9...@react-navigation/elements@1.0.0-next.10) (2021-05-16)
+
+
+### Bug Fixes
+
+* fix drawer content padding in RTL ([ea8ea20](https://github.com/react-navigation/react-navigation/commit/ea8ea20127d979d8c8ddbddf56de1bdfdf0243f9))
+
+
+
+
+
+# [1.0.0-next.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.8...@react-navigation/elements@1.0.0-next.9) (2021-05-10)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+
+
+
+
+# [1.0.0-next.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.7...@react-navigation/elements@1.0.0-next.8) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+
+
+
+
+# [1.0.0-next.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.6...@react-navigation/elements@1.0.0-next.7) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+
+
+
+
+# [1.0.0-next.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.5...@react-navigation/elements@1.0.0-next.6) (2021-05-09)
+
+
+### Bug Fixes
+
+* animate pressable opacity ([459fd27](https://github.com/react-navigation/react-navigation/commit/459fd270503075343b71ad446efdc2517eedcf21))
+
+
+
+
+
+# [1.0.0-next.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.4...@react-navigation/elements@1.0.0-next.5) (2021-05-01)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+
+
+
+
+# [1.0.0-next.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.3...@react-navigation/elements@1.0.0-next.4) (2021-04-08)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+
+
+
+
 # [1.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.2...@react-navigation/elements@1.0.0-next.3) (2021-03-22)
 
 

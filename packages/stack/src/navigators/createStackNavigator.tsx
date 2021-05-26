@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Platform } from 'react-native';
 import {
   useNavigationBuilder,
   createNavigatorFactory,
@@ -21,18 +20,32 @@ import type {
   StackHeaderMode,
 } from '../types';
 
-type Props = DefaultNavigatorOptions<StackNavigationOptions> &
+type Props = DefaultNavigatorOptions<
+  ParamListBase,
+  StackNavigationState<ParamListBase>,
+  StackNavigationOptions,
+  StackNavigationEventMap
+> &
   StackRouterOptions &
   StackNavigationConfig;
 
 function StackNavigator({
   initialRouteName,
   children,
+  screenListeners,
   screenOptions,
   ...rest
 }: Props) {
+  // @ts-expect-error: mode is deprecated
+  const mode = rest.mode as 'card' | 'modal' | undefined;
+
   // @ts-expect-error: headerMode='none' is deprecated
   const headerMode = rest.headerMode as StackHeaderMode | 'none' | undefined;
+
+  warnOnce(
+    mode != null,
+    `Stack Navigator: 'mode="${mode}"' is deprecated. Use 'presentation: "${mode}"' in 'screenOptions' instead.`
+  );
 
   warnOnce(
     headerMode === 'none',
@@ -40,11 +53,16 @@ function StackNavigator({
   );
 
   warnOnce(
-    headerMode && headerMode !== 'none',
+    headerMode != null && headerMode !== 'none',
     `Stack Navigator: 'headerMode' is moved to 'options'. Moved it to 'screenOptions' to keep current behavior.`
   );
 
-  const { state, descriptors, navigation } = useNavigationBuilder<
+  const {
+    state,
+    descriptors,
+    navigation,
+    NavigationContent,
+  } = useNavigationBuilder<
     StackNavigationState<ParamListBase>,
     StackRouterOptions,
     StackActionHelpers<ParamListBase>,
@@ -53,22 +71,12 @@ function StackNavigator({
   >(StackRouter, {
     initialRouteName,
     children,
+    screenListeners,
     screenOptions,
-    defaultScreenOptions: ({ options }) => ({
+    defaultScreenOptions: () => ({
+      presentation: mode,
       headerShown: headerMode ? headerMode !== 'none' : true,
-      headerMode:
-        headerMode && headerMode !== 'none'
-          ? headerMode
-          : rest.mode !== 'modal' &&
-            Platform.OS === 'ios' &&
-            options.header === undefined
-          ? 'float'
-          : 'screen',
-      gestureEnabled: Platform.OS === 'ios',
-      animationEnabled:
-        Platform.OS !== 'web' &&
-        Platform.OS !== 'windows' &&
-        Platform.OS !== 'macos',
+      headerMode: headerMode && headerMode !== 'none' ? headerMode : undefined,
     }),
   });
 
@@ -98,12 +106,14 @@ function StackNavigator({
   );
 
   return (
-    <StackView
-      {...rest}
-      state={state}
-      descriptors={descriptors}
-      navigation={navigation}
-    />
+    <NavigationContent>
+      <StackView
+        {...rest}
+        state={state}
+        descriptors={descriptors}
+        navigation={navigation}
+      />
+    </NavigationContent>
   );
 }
 

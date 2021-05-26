@@ -3,6 +3,98 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.11...@react-navigation/drawer@6.0.0-next.12) (2021-05-25)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+# [6.0.0-next.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.10...@react-navigation/drawer@6.0.0-next.11) (2021-05-23)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+# [6.0.0-next.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.9...@react-navigation/drawer@6.0.0-next.10) (2021-05-16)
+
+
+### Bug Fixes
+
+* fix drawer content padding in RTL ([ea8ea20](https://github.com/react-navigation/react-navigation/commit/ea8ea20127d979d8c8ddbddf56de1bdfdf0243f9))
+
+
+
+
+
+# [6.0.0-next.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.8...@react-navigation/drawer@6.0.0-next.9) (2021-05-10)
+
+
+### Bug Fixes
+
+* add a deprecation warning for mode prop in stack ([a6e4981](https://github.com/react-navigation/react-navigation/commit/a6e498170f59648190fa5513e273ca523e56c5d5))
+
+
+### Features
+
+* return a NavigationContent component from useNavigationBuilder ([1179d56](https://github.com/react-navigation/react-navigation/commit/1179d56c5008270753feef41acdc1dbd2191efcf))
+
+
+
+
+
+# [6.0.0-next.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.7...@react-navigation/drawer@6.0.0-next.8) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+# [6.0.0-next.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.6...@react-navigation/drawer@6.0.0-next.7) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+# [6.0.0-next.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.5...@react-navigation/drawer@6.0.0-next.6) (2021-05-09)
+
+
+### Bug Fixes
+
+* enable screens only on supported platforms ([#9494](https://github.com/react-navigation/react-navigation/issues/9494)) ([8da4c58](https://github.com/react-navigation/react-navigation/commit/8da4c58065607d44e9dc1ad8943e09537598dcd7))
+* make sure disabling react-native-screens works ([a369ba3](https://github.com/react-navigation/react-navigation/commit/a369ba36451ddc2bb5b247e61b725bce1e3fb5e5))
+
+
+
+
+
+# [6.0.0-next.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.4...@react-navigation/drawer@6.0.0-next.5) (2021-05-01)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+# [6.0.0-next.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.3...@react-navigation/drawer@6.0.0-next.4) (2021-04-08)
+
+
+### Bug Fixes
+
+* don't handle back button with permanent drawer ([b893968](https://github.com/react-navigation/react-navigation/commit/b89396888f46ba79af3cfd84be55fba79d8387d2))
+* fix drawer overlay on web ([3241190](https://github.com/react-navigation/react-navigation/commit/3241190b19946c1cd0a744fb09a19d79ba683d74))
+* only handle back button in drawer when focused ([5ae0bad](https://github.com/react-navigation/react-navigation/commit/5ae0badc44b576d464f8841822a911b18a698403))
+
+
+
+
+
 # [6.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.2...@react-navigation/drawer@6.0.0-next.3) (2021-03-22)
 
 

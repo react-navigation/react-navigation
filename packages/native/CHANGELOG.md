@@ -3,6 +3,86 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.8...@react-navigation/native@6.0.0-next.9) (2021-05-23)
+
+
+### Features
+
+* initial implementation of a flipper plugin ([d6f6f5f](https://github.com/react-navigation/react-navigation/commit/d6f6f5f94db85bd9166a5a97889c37690846d519))
+
+
+
+
+
+# [6.0.0-next.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.7...@react-navigation/native@6.0.0-next.8) (2021-05-16)
+
+
+### Bug Fixes
+
+* add ability to pass generic params to Link ([9c30c42](https://github.com/react-navigation/react-navigation/commit/9c30c42c0bddbc90c58b79a8be6d57e57a131e77))
+
+
+
+
+
+# [6.0.0-next.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.6...@react-navigation/native@6.0.0-next.7) (2021-05-10)
+
+
+### Features
+
+* return a NavigationContent component from useNavigationBuilder ([1179d56](https://github.com/react-navigation/react-navigation/commit/1179d56c5008270753feef41acdc1dbd2191efcf))
+
+
+
+
+
+# [6.0.0-next.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.5...@react-navigation/native@6.0.0-next.6) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/native
+
+
+
+
+
+# [6.0.0-next.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.4...@react-navigation/native@6.0.0-next.5) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/native
+
+
+
+
+
+# [6.0.0-next.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.3...@react-navigation/native@6.0.0-next.4) (2021-05-09)
+
+
+### Features
+
+* add ability to specify root param list ([b28bfdd](https://github.com/react-navigation/react-navigation/commit/b28bfddc17cbf3996fac04a34b2a7085ecf88be5))
+* support navigate-like object in Link ([1478659](https://github.com/react-navigation/react-navigation/commit/14786594c004d8176570f1a4ab013b57b3180665))
+
+
+
+
+
+# [6.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.2...@react-navigation/native@6.0.0-next.3) (2021-05-01)
+
+
+### Features
+
+* add helper and hook for container ref ([0ecd112](https://github.com/react-navigation/react-navigation/commit/0ecd112ec9786a26261ada3d33ef44dc1ec84da0))
+
+
+
+
+
+# [6.0.0-next.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.1...@react-navigation/native@6.0.0-next.2) (2021-04-08)
+
+**Note:** Version bump only for package @react-navigation/native
+
+
+
+
+
 # [6.0.0-next.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0...@react-navigation/native@6.0.0-next.1) (2021-03-10)
 
 **Note:** Version bump only for package @react-navigation/native

@@ -17,7 +17,12 @@ import type {
   MaterialBottomTabNavigationEventMap,
 } from '../types';
 
-type Props = DefaultNavigatorOptions<MaterialBottomTabNavigationOptions> &
+type Props = DefaultNavigatorOptions<
+  ParamListBase,
+  TabNavigationState<ParamListBase>,
+  MaterialBottomTabNavigationOptions,
+  MaterialBottomTabNavigationEventMap
+> &
   TabRouterOptions &
   MaterialBottomTabNavigationConfig;
 
@@ -25,10 +30,16 @@ function MaterialBottomTabNavigator({
   initialRouteName,
   backBehavior,
   children,
+  screenListeners,
   screenOptions,
   ...rest
 }: Props) {
-  const { state, descriptors, navigation } = useNavigationBuilder<
+  const {
+    state,
+    descriptors,
+    navigation,
+    NavigationContent,
+  } = useNavigationBuilder<
     TabNavigationState<ParamListBase>,
     TabRouterOptions,
     TabActionHelpers<ParamListBase>,
@@ -38,16 +49,19 @@ function MaterialBottomTabNavigator({
     initialRouteName,
     backBehavior,
     children,
+    screenListeners,
     screenOptions,
   });
 
   return (
-    <MaterialBottomTabView
-      {...rest}
-      state={state}
-      navigation={navigation}
-      descriptors={descriptors}
-    />
+    <NavigationContent>
+      <MaterialBottomTabView
+        {...rest}
+        state={state}
+        navigation={navigation}
+        descriptors={descriptors}
+      />
+    </NavigationContent>
   );
 }
 

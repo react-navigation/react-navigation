@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  AsyncStorage,
   ScrollView,
   Platform,
   StatusBar,
@@ -11,7 +10,6 @@ import {
   LogBox,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { enableScreens } from 'react-native-screens';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {
   Provider as PaperProvider,
@@ -21,30 +19,38 @@ import {
   Divider,
   Text,
 } from 'react-native-paper';
+import { createURL } from 'expo-linking';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   InitialState,
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
   PathConfigMap,
-  NavigationContainerRef,
+  useNavigationContainerRef,
+  NavigatorScreenParams,
 } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import {
   createStackNavigator,
-  StackScreenProps,
   HeaderStyleInterpolators,
+  StackNavigationProp,
 } from '@react-navigation/stack';
-import { useReduxDevToolsExtension } from '@react-navigation/devtools';
+import {
+  useReduxDevToolsExtension,
+  useFlipper,
+} from '@react-navigation/devtools';
 
 import { restartApp } from './Restart';
-import LinkingPrefixes from './LinkingPrefixes';
 import SettingsItem from './Shared/SettingsItem';
+import NativeStack from './Screens/NativeStack';
 import SimpleStack from './Screens/SimpleStack';
 import ModalStack from './Screens/ModalStack';
+import MixedStack from './Screens/MixedStack';
 import MixedHeaderMode from './Screens/MixedHeaderMode';
 import StackTransparent from './Screens/StackTransparent';
 import StackHeaderCustomization from './Screens/StackHeaderCustomization';
+import NativeStackHeaderCustomization from './Screens/NativeStackHeaderCustomization';
 import BottomTabs from './Screens/BottomTabs';
 import MaterialTopTabsScreen from './Screens/MaterialTopTabs';
 import MaterialBottomTabs from './Screens/MaterialBottomTabs';
@@ -59,17 +65,27 @@ if (Platform.OS !== 'web') {
   LogBox.ignoreLogs(['Require cycle:']);
 }
 
-enableScreens();
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace ReactNavigation {
+    interface RootParamList extends RootStackParamList {}
+  }
+}
 
 type RootDrawerParamList = {
   Examples: undefined;
 };
 
 const SCREENS = {
+  NativeStack: { title: 'Native Stack', component: NativeStack },
   SimpleStack: { title: 'Simple Stack', component: SimpleStack },
   ModalStack: {
     title: 'Modal Stack',
     component: ModalStack,
+  },
+  MixedStack: {
+    title: 'Regular + Modal Stack',
+    component: MixedStack,
   },
   MixedHeaderMode: {
     title: 'Float + Screen Header Stack',
@@ -82,6 +98,10 @@ const SCREENS = {
   StackHeaderCustomization: {
     title: 'Header Customization in Stack',
     component: StackHeaderCustomization,
+  },
+  NativeStackHeaderCustomization: {
+    title: 'Header Customization in Native Stack',
+    component: NativeStackHeaderCustomization,
   },
   BottomTabs: { title: 'Bottom Tabs', component: BottomTabs },
   MaterialTopTabs: {
@@ -115,7 +135,7 @@ const SCREENS = {
 };
 
 type RootStackParamList = {
-  Home: undefined;
+  Home: NavigatorScreenParams<RootDrawerParamList>;
   NotFound: undefined;
 } & {
   [P in keyof typeof SCREENS]: undefined;
@@ -193,9 +213,10 @@ export default function App() {
     return () => Dimensions.removeEventListener('change', onDimensionsChange);
   }, []);
 
-  const navigationRef = React.useRef<NavigationContainerRef>(null);
+  const navigationRef = useNavigationContainerRef();
 
   useReduxDevToolsExtension(navigationRef);
+  useFlipper(navigationRef);
 
   if (!isReady) {
     return null;
@@ -205,9 +226,11 @@ export default function App() {
 
   return (
     <PaperProvider theme={paperTheme}>
-      {Platform.OS === 'ios' && (
-        <StatusBar barStyle={theme.dark ? 'light-content' : 'dark-content'} />
-      )}
+      <StatusBar
+        translucent
+        barStyle={theme.dark ? 'light-content' : 'dark-content'}
+        backgroundColor="rgba(0, 0, 0, 0.24)"
+      />
       <NavigationContainer
         ref={navigationRef}
         initialState={initialState}
@@ -225,10 +248,12 @@ export default function App() {
           // Android (bare): adb shell am start -a android.intent.action.VIEW -d "rne://127.0.0.1:19000/--/simple-stack"
           // iOS (bare): xcrun simctl openurl booted rne://127.0.0.1:19000/--/simple-stack
           // The first segment of the link is the the scheme + host (returned by `Linking.makeUrl`)
-          prefixes: LinkingPrefixes,
+          prefixes: [createURL('/')],
           config: {
             initialRouteName: 'Home',
-            screens: Object.keys(SCREENS).reduce<PathConfigMap>(
+            screens: Object.keys(SCREENS).reduce<
+              PathConfigMap<RootStackParamList>
+            >(
               (acc, name) => {
                 // Convert screen names such as SimpleStack to kebab case (simple-stack)
                 const path = name
@@ -236,13 +261,15 @@ export default function App() {
                   .replace(/^-/, '')
                   .toLowerCase();
 
+                // @ts-expect-error: these types aren't accurate
+                // But we aren't too concerned for now
                 acc[name] = {
                   path,
                   screens: {
                     Article: {
                       path: 'article/:author?',
                       parse: {
-                        author: (author) =>
+                        author: (author: string) =>
                           author.charAt(0).toUpperCase() +
                           author.slice(1).replace(/-/g, ' '),
                       },
@@ -304,7 +331,11 @@ export default function App() {
                     ),
                   }}
                 >
-                  {({ navigation }: StackScreenProps<RootStackParamList>) => (
+                  {({
+                    navigation,
+                  }: {
+                    navigation: StackNavigationProp<RootStackParamList>;
+                  }) => (
                     <ScrollView
                       style={{ backgroundColor: theme.colors.background }}
                     >

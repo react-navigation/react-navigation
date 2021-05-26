@@ -3,6 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.9...@react-navigation/devtools@6.0.0-next.10) (2021-05-25)
+
+
+### Bug Fixes
+
+* make react-native-flipper optional in devtools ([a5520d7](https://github.com/react-navigation/react-navigation/commit/a5520d7ef1f0980aa869ba2bdf92194d3e3a6b96))
+
+
+
+
+
+# [6.0.0-next.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.8...@react-navigation/devtools@6.0.0-next.9) (2021-05-23)
+
+
+### Features
+
+* initial implementation of a flipper plugin ([d6f6f5f](https://github.com/react-navigation/react-navigation/commit/d6f6f5f94db85bd9166a5a97889c37690846d519))
+
+
+
+
+
+# [6.0.0-next.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.7...@react-navigation/devtools@6.0.0-next.8) (2021-05-16)
+
+
+### Bug Fixes
+
+* fix type error when passing unannotated navigation ref ([dc4ffc0](https://github.com/react-navigation/react-navigation/commit/dc4ffc0171b4535fe1b6e839b9d54350121bcf55))
+
+
+
+
+
+# [6.0.0-next.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.6...@react-navigation/devtools@6.0.0-next.7) (2021-05-10)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+
+
+
+
+# [6.0.0-next.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.5...@react-navigation/devtools@6.0.0-next.6) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+
+
+
+
+# [6.0.0-next.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.4...@react-navigation/devtools@6.0.0-next.5) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+
+
+
+
+# [6.0.0-next.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.3...@react-navigation/devtools@6.0.0-next.4) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+
+
+
+
+# [6.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.2...@react-navigation/devtools@6.0.0-next.3) (2021-05-01)
+
+
+### Features
+
+* add helper and hook for container ref ([0ecd112](https://github.com/react-navigation/react-navigation/commit/0ecd112ec9786a26261ada3d33ef44dc1ec84da0))
+
+
+
+
+
+# [6.0.0-next.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.1...@react-navigation/devtools@6.0.0-next.2) (2021-04-08)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+
+
+
+
 # [6.0.0-next.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0...@react-navigation/devtools@6.0.0-next.1) (2021-03-10)
 
 **Note:** Version bump only for package @react-navigation/devtools

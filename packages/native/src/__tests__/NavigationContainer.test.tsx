@@ -4,8 +4,8 @@ import {
   createNavigatorFactory,
   StackRouter,
   TabRouter,
-  NavigationHelpersContext,
-  NavigationContainerRef,
+  createNavigationContainerRef,
+  ParamListBase,
 } from '@react-navigation/core';
 import { act, render } from '@testing-library/react-native';
 import NavigationContainer from '../NavigationContainer';
@@ -21,36 +21,36 @@ it('integrates with the history API', () => {
   jest.useFakeTimers();
 
   const createStackNavigator = createNavigatorFactory((props: any) => {
-    const { navigation, state, descriptors } = useNavigationBuilder(
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
       props
     );
 
     return (
-      <NavigationHelpersContext.Provider value={navigation}>
+      <NavigationContent>
         {state.routes.map((route, i) => (
           <div key={route.key} aria-current={state.index === i || undefined}>
             {descriptors[route.key].render()}
           </div>
         ))}
-      </NavigationHelpersContext.Provider>
+      </NavigationContent>
     );
   });
 
   const createTabNavigator = createNavigatorFactory((props: any) => {
-    const { navigation, state, descriptors } = useNavigationBuilder(
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
       TabRouter,
       props
     );
 
     return (
-      <NavigationHelpersContext.Provider value={navigation}>
+      <NavigationContent>
         {state.routes.map((route, i) => (
           <div key={route.key} aria-current={state.index === i || undefined}>
             {descriptors[route.key].render()}
           </div>
         ))}
-      </NavigationHelpersContext.Provider>
+      </NavigationContent>
     );
   });
 
@@ -79,7 +79,7 @@ it('integrates with the history API', () => {
     },
   };
 
-  const navigation = React.createRef<NavigationContainerRef>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   render(
     <NavigationContainer ref={navigation} linking={linking}>

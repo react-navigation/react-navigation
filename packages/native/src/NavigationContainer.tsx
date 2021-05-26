@@ -1,8 +1,12 @@
 import * as React from 'react';
 import {
   BaseNavigationContainer,
+  getPathFromState,
+  getStateFromPath,
+  getActionFromState,
   NavigationContainerProps,
   NavigationContainerRef,
+  ParamListBase,
 } from '@react-navigation/core';
 import ThemeProvider from './theming/ThemeProvider';
 import DefaultTheme from './theming/DefaultTheme';
@@ -13,9 +17,9 @@ import useDocumentTitle from './useDocumentTitle';
 import useBackButton from './useBackButton';
 import type { Theme, LinkingOptions, DocumentTitleOptions } from './types';
 
-type Props = NavigationContainerProps & {
+type Props<ParamList extends {}> = NavigationContainerProps & {
   theme?: Theme;
-  linking?: LinkingOptions;
+  linking?: LinkingOptions<ParamList>;
   fallback?: React.ReactNode;
   documentTitle?: DocumentTitleOptions;
   onReady?: () => void;
@@ -35,7 +39,7 @@ type Props = NavigationContainerProps & {
  * @param props.children Child elements to render the content.
  * @param props.ref Ref object which refers to the navigation object containing helper methods.
  */
-const NavigationContainer = React.forwardRef(function NavigationContainer(
+function NavigationContainerInner(
   {
     theme = DefaultTheme,
     linking,
@@ -43,12 +47,14 @@ const NavigationContainer = React.forwardRef(function NavigationContainer(
     documentTitle,
     onReady,
     ...rest
-  }: Props,
-  ref?: React.Ref<NavigationContainerRef | null>
+  }: Props<ParamListBase>,
+  ref?: React.Ref<NavigationContainerRef<ParamListBase> | null>
 ) {
   const isLinkingEnabled = linking ? linking.enabled !== false : false;
 
-  const refContainer = React.useRef<NavigationContainerRef>(null);
+  const refContainer = React.useRef<NavigationContainerRef<ParamListBase>>(
+    null
+  );
 
   useBackButton(refContainer);
   useDocumentTitle(refContainer, documentTitle);
@@ -57,6 +63,27 @@ const NavigationContainer = React.forwardRef(function NavigationContainer(
     enabled: isLinkingEnabled,
     prefixes: [],
     ...linking,
+  });
+
+  // Add additional linking related info to the ref
+  // This will be used by the devtools
+  React.useEffect(() => {
+    if (refContainer.current) {
+      Object.defineProperty(refContainer.current, '__linking', {
+        get() {
+          return {
+            ...linking,
+            enabled: isLinkingEnabled,
+            prefixes: linking?.prefixes ?? [],
+            getStateFromPath: linking?.getStateFromPath ?? getStateFromPath,
+            getPathFromState: linking?.getPathFromState ?? getPathFromState,
+            getActionFromState:
+              linking?.getActionFromState ?? getActionFromState,
+          };
+        },
+        enumerable: false,
+      });
+    }
   });
 
   const [isResolved, initialState] = useThenable(getInitialState);
@@ -98,6 +125,14 @@ const NavigationContainer = React.forwardRef(function NavigationContainer(
       </ThemeProvider>
     </LinkingContext.Provider>
   );
-});
+}
+
+const NavigationContainer = React.forwardRef(NavigationContainerInner) as <
+  RootParamList extends {} = ReactNavigation.RootParamList
+>(
+  props: Props<RootParamList> & {
+    ref?: React.Ref<NavigationContainerRef<RootParamList>>;
+  }
+) => React.ReactElement;
 
 export default NavigationContainer;

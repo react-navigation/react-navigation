@@ -18,6 +18,9 @@ export { default as DrawerToggleButton } from './views/DrawerToggleButton';
  */
 export { default as DrawerGestureContext } from './utils/DrawerGestureContext';
 
+export { default as DrawerProgressContext } from './utils/DrawerProgressContext';
+export { default as useDrawerProgress } from './utils/useDrawerProgress';
+
 export { default as getDrawerStatusFromState } from './utils/getDrawerStatusFromState';
 export { default as useDrawerStatus } from './utils/useDrawerStatus';
 

@@ -4,10 +4,10 @@ import {
   NavigationAction,
   NavigationHelpersContext,
 } from '@react-navigation/core';
-import useLinkTo from './useLinkTo';
+import useLinkTo, { To } from './useLinkTo';
 
-type Props = {
-  to: string;
+type Props<ParamList extends ReactNavigation.RootParamList> = {
+  to: To<ParamList>;
   action?: NavigationAction;
 };
 
@@ -17,9 +17,11 @@ type Props = {
  * @param props.to Absolute path to screen (e.g. `/feeds/hot`).
  * @param props.action Optional action to use for in-page navigation. By default, the path is parsed to an action based on linking config.
  */
-export default function useLinkProps({ to, action }: Props) {
+export default function useLinkProps<
+  ParamList extends ReactNavigation.RootParamList
+>({ to, action }: Props<ParamList>) {
   const navigation = React.useContext(NavigationHelpersContext);
-  const linkTo = useLinkTo();
+  const linkTo = useLinkTo<ParamList>();
 
   const onPress = (
     e?: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
@@ -49,14 +51,6 @@ export default function useLinkProps({ to, action }: Props) {
           throw new Error("Couldn't find a navigation object.");
         }
       } else {
-        if (typeof to !== 'string') {
-          throw new Error(
-            `To 'to' option is invalid (found '${String(
-              to
-            )}'. It must be a valid string for navigation.`
-          );
-        }
-
         linkTo(to);
       }
     }

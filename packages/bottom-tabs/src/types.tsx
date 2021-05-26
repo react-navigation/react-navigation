@@ -45,7 +45,7 @@ export type BottomTabNavigationHelpers = NavigationHelpers<
 
 export type BottomTabNavigationProp<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
+  RouteName extends keyof ParamList = keyof ParamList
 > = NavigationProp<
   ParamList,
   RouteName,
@@ -57,7 +57,7 @@ export type BottomTabNavigationProp<
 
 export type BottomTabScreenProps<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
+  RouteName extends keyof ParamList = keyof ParamList
 > = {
   navigation: BottomTabNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
@@ -234,6 +234,15 @@ export type BottomTabNavigationOptions = HeaderOptions &
     tabBarStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 
     /**
+     * Component to use as background for the tab bar.
+     * You could render an image, a gradient, blur view etc.
+     *
+     * When using `BlurView`, make sure to set `position: 'absolute'` in `tabBarStyle` as well.
+     * You'd also need to use `useBottomTabBarHeight()` to add a bottom padding to your content.
+     */
+    tabBarBackground?: () => React.ReactNode;
+
+    /**
      * Whether this screen should be unmounted when navigating away from it.
      * Defaults to `false`.
      */
@@ -243,7 +252,7 @@ export type BottomTabNavigationOptions = HeaderOptions &
 export type BottomTabDescriptor = Descriptor<
   BottomTabNavigationOptions,
   BottomTabNavigationProp<ParamListBase>,
-  RouteProp<ParamListBase, string>
+  RouteProp<ParamListBase>
 >;
 
 export type BottomTabDescriptorMap = Record<string, BottomTabDescriptor>;
@@ -287,7 +296,7 @@ export type BottomTabHeaderProps = {
   /**
    * Route object for the current screen.
    */
-  route: RouteProp<ParamListBase, string>;
+  route: RouteProp<ParamListBase>;
   /**
    * Navigation prop for the header.
    */

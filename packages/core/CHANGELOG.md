@@ -3,6 +3,98 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.8...@react-navigation/core@6.0.0-next.9) (2021-05-23)
+
+**Note:** Version bump only for package @react-navigation/core
+
+
+
+
+
+# [6.0.0-next.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.7...@react-navigation/core@6.0.0-next.8) (2021-05-16)
+
+
+### Bug Fixes
+
+* fix type error when passing unannotated navigation ref ([dc4ffc0](https://github.com/react-navigation/react-navigation/commit/dc4ffc0171b4535fe1b6e839b9d54350121bcf55))
+
+
+
+
+
+# [6.0.0-next.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.6...@react-navigation/core@6.0.0-next.7) (2021-05-10)
+
+
+### Features
+
+* return a NavigationContent component from useNavigationBuilder ([1179d56](https://github.com/react-navigation/react-navigation/commit/1179d56c5008270753feef41acdc1dbd2191efcf))
+
+
+
+
+
+# [6.0.0-next.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.5...@react-navigation/core@6.0.0-next.6) (2021-05-09)
+
+
+### Bug Fixes
+
+* fix type annotations for useNavigation (again) ([929c3e3](https://github.com/react-navigation/react-navigation/commit/929c3e3a3b3eb32d197ef1f887dc4cbdce48eaff))
+
+
+
+
+
+# [6.0.0-next.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.4...@react-navigation/core@6.0.0-next.5) (2021-05-09)
+
+
+### Bug Fixes
+
+* fix type annotations for useNavigation ([7da45e1](https://github.com/react-navigation/react-navigation/commit/7da45e1e8951ff46e09db4ebc2c88085c67ab8e9))
+
+
+
+
+
+# [6.0.0-next.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.3...@react-navigation/core@6.0.0-next.4) (2021-05-09)
+
+
+### Features
+
+* add a new component to group multiple screens with common options ([1a6aebe](https://github.com/react-navigation/react-navigation/commit/1a6aebefcb77ea708687475c55742407d69808ce))
+* add ability to specify root param list ([b28bfdd](https://github.com/react-navigation/react-navigation/commit/b28bfddc17cbf3996fac04a34b2a7085ecf88be5))
+
+
+
+
+
+# [6.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.2...@react-navigation/core@6.0.0-next.3) (2021-05-01)
+
+
+### Features
+
+* add a CompositeScreenProps type ([def7c03](https://github.com/react-navigation/react-navigation/commit/def7c03d7d7b42cf322f4e277f8f76858717654e))
+* add helper and hook for container ref ([0ecd112](https://github.com/react-navigation/react-navigation/commit/0ecd112ec9786a26261ada3d33ef44dc1ec84da0))
+
+
+
+
+
+# [6.0.0-next.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.1...@react-navigation/core@6.0.0-next.2) (2021-04-08)
+
+
+### Bug Fixes
+
+* properly resolve initialRouteNames ([c38906a](https://github.com/react-navigation/react-navigation/commit/c38906a7a09b997f37ce56734ea823c75ea744db))
+
+
+### Features
+
+* improve useNavigationState typing ([#9464](https://github.com/react-navigation/react-navigation/issues/9464)) ([84020a0](https://github.com/react-navigation/react-navigation/commit/84020a0b27ebae50d3037438a51d95eb31b02424))
+
+
+
+
+
 # [6.0.0-next.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0...@react-navigation/core@6.0.0-next.1) (2021-03-10)
 
 **Note:** Version bump only for package @react-navigation/core

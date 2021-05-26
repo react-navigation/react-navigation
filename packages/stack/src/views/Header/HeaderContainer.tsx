@@ -18,13 +18,13 @@ import {
 import type {
   Layout,
   Scene,
-  StackHeaderStyleInterpolator,
   StackNavigationProp,
   StackHeaderProps,
+  StackHeaderMode,
 } from '../../types';
 
 export type Props = {
-  mode: 'float' | 'screen';
+  mode: StackHeaderMode;
   layout: Layout;
   scenes: (Scene | undefined)[];
   getPreviousScene: (props: { route: Route<string> }) => Scene | undefined;
@@ -33,7 +33,6 @@ export type Props = {
     route: Route<string>;
     height: number;
   }) => void;
-  styleInterpolator: StackHeaderStyleInterpolator;
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 };
 
@@ -44,7 +43,6 @@ export default function HeaderContainer({
   getPreviousScene,
   getFocusedRoute,
   onContentHeightChange,
-  styleInterpolator,
   style,
 }: Props) {
   const focusedRoute = getFocusedRoute();
@@ -57,8 +55,13 @@ export default function HeaderContainer({
           return null;
         }
 
-        const { header, headerMode, headerShown = true, headerTransparent } =
-          scene.descriptor.options || {};
+        const {
+          header,
+          headerMode,
+          headerShown = true,
+          headerTransparent,
+          headerStyleInterpolator,
+        } = scene.descriptor.options;
 
         if (headerMode !== mode || !headerShown) {
           return null;
@@ -120,7 +123,7 @@ export default function HeaderContainer({
                   : nextGestureDirection === 'horizontal-inverted'
                   ? forSlideRight
                   : forSlideLeft
-                : styleInterpolator
+                : headerStyleInterpolator
               : forNoAnimation,
         };
 

@@ -5,12 +5,10 @@ import {
   I18nManager,
   Platform,
   BackHandler,
-  NativeEventSubscription,
 } from 'react-native';
-import { ScreenContainer } from 'react-native-screens';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
+import Animated from 'react-native-reanimated';
 import {
-  NavigationHelpersContext,
   DrawerNavigationState,
   DrawerActions,
   useTheme,
@@ -22,12 +20,10 @@ import {
   SafeAreaProviderCompat,
   getHeaderTitle,
 } from '@react-navigation/elements';
-
+import { MaybeScreenContainer, MaybeScreen } from './ScreenFallback';
 import { GestureHandlerRootView } from './GestureHandler';
-import ScreenFallback from './ScreenFallback';
 import DrawerToggleButton from './DrawerToggleButton';
 import DrawerContent from './DrawerContent';
-import Drawer from './Drawer';
 import DrawerStatusContext from '../utils/DrawerStatusContext';
 import DrawerPositionContext from '../utils/DrawerPositionContext';
 import getDrawerStatusFromState from '../utils/getDrawerStatusFromState';
@@ -38,6 +34,7 @@ import type {
   DrawerContentComponentProps,
   DrawerHeaderProps,
   DrawerNavigationProp,
+  DrawerProps,
 } from '../types';
 
 type Props = DrawerNavigationConfig & {
@@ -76,8 +73,20 @@ function DrawerViewBase({
   drawerContent = (props: DrawerContentComponentProps) => (
     <DrawerContent {...props} />
   ),
-  detachInactiveScreens = true,
+  detachInactiveScreens = Platform.OS === 'web' ||
+    Platform.OS === 'android' ||
+    Platform.OS === 'ios',
+  // Running in chrome debugger
+  // @ts-expect-error
+  useLegacyImplementation = !global.nativeCallSyncHook ||
+    // Reanimated 2 is not configured
+    // @ts-expect-error: the type definitions are incomplete
+    !Animated.isConfigured?.(),
 }: Props) {
+  const Drawer: React.ComponentType<DrawerProps> = useLegacyImplementation
+    ? require('./legacy/Drawer').default
+    : require('./modern/Drawer').default;
+
   const focusedRouteKey = state.routes[state.index].key;
   const {
     drawerHideStatusBarOnOpen = false,
@@ -85,13 +94,14 @@ function DrawerViewBase({
     drawerStatusBarAnimation = 'slide',
     drawerStyle,
     drawerType = Platform.select({ ios: 'slide', default: 'front' }),
-    gestureEnabled,
     gestureHandlerProps,
     keyboardDismissMode = 'on-drag',
     overlayColor = 'rgba(0, 0, 0, 0.5)',
-    swipeEdgeWidth,
-    swipeEnabled,
-    swipeMinDistance,
+    swipeEdgeWidth = 32,
+    swipeEnabled = Platform.OS !== 'web' &&
+      Platform.OS !== 'windows' &&
+      Platform.OS !== 'macos',
+    swipeMinDistance = 60,
   } = descriptors[focusedRouteKey].options;
 
   const [loaded, setLoaded] = React.useState([focusedRouteKey]);
@@ -121,27 +131,53 @@ function DrawerViewBase({
   }, [navigation, state.key]);
 
   React.useEffect(() => {
-    let subscription: NativeEventSubscription | undefined;
-
-    if (drawerStatus === 'open') {
-      // We only add the subscription when drawer opens
-      // This way we can make sure that the subscription is added as late as possible
-      // This will make sure that our handler will run first when back button is pressed
-      subscription = BackHandler.addEventListener('hardwareBackPress', () => {
-        handleDrawerClose();
-
-        return true;
-      });
+    if (drawerStatus !== 'open' || drawerType === 'permanent') {
+      return;
     }
 
-    return () => subscription?.remove();
-  }, [handleDrawerClose, drawerStatus, navigation, state.key]);
+    const handleClose = () => {
+      // We shouldn't handle the back button if the parent screen isn't focused
+      // This will avoid the drawer overriding event listeners from a focused screen
+      if (!navigation.isFocused()) {
+        return false;
+      }
 
-  const renderDrawerContent = ({ progress }: any) => {
+      handleDrawerClose();
+
+      return true;
+    };
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleClose();
+      }
+    };
+
+    // We only add the listeners when drawer opens
+    // This way we can make sure that the listener is added as late as possible
+    // This will make sure that our handler will run first when back button is pressed
+    const subscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleClose
+    );
+
+    if (Platform.OS === 'web') {
+      document?.body?.addEventListener?.('keyup', handleEscape);
+    }
+
+    return () => {
+      subscription.remove();
+
+      if (Platform.OS === 'web') {
+        document?.body?.removeEventListener?.('keyup', handleEscape);
+      }
+    };
+  }, [drawerStatus, drawerType, handleDrawerClose, navigation]);
+
+  const renderDrawerContent = () => {
     return (
       <DrawerPositionContext.Provider value={drawerPosition}>
         {drawerContent({
-          progress: progress,
           state: state,
           navigation: navigation,
           descriptors: descriptors,
@@ -152,8 +188,10 @@ function DrawerViewBase({
 
   const renderSceneContent = () => {
     return (
-      // @ts-ignore
-      <ScreenContainer enabled={detachInactiveScreens} style={styles.content}>
+      <MaybeScreenContainer
+        enabled={detachInactiveScreens}
+        style={styles.content}
+      >
         {state.routes.map((route, index) => {
           const descriptor = descriptors[route.key];
           const {
@@ -193,7 +231,7 @@ function DrawerViewBase({
           } = descriptor.options;
 
           return (
-            <ScreenFallback
+            <MaybeScreen
               key={route.key}
               style={[StyleSheet.absoluteFill, { opacity: isFocused ? 1 : 0 }]}
               visible={isFocused}
@@ -221,10 +259,10 @@ function DrawerViewBase({
               >
                 {descriptor.render()}
               </Screen>
-            </ScreenFallback>
+            </MaybeScreen>
           );
         })}
-      </ScreenContainer>
+      </MaybeScreenContainer>
     );
   };
 
@@ -232,11 +270,16 @@ function DrawerViewBase({
     <DrawerStatusContext.Provider value={drawerStatus}>
       <Drawer
         open={drawerStatus !== 'closed'}
-        gestureEnabled={gestureEnabled}
-        swipeEnabled={swipeEnabled}
         onOpen={handleDrawerOpen}
         onClose={handleDrawerClose}
         gestureHandlerProps={gestureHandlerProps}
+        swipeEnabled={swipeEnabled}
+        swipeEdgeWidth={swipeEdgeWidth}
+        swipeVelocityThreshold={500}
+        swipeDistanceThreshold={swipeMinDistance}
+        hideStatusBarOnOpen={drawerHideStatusBarOnOpen}
+        statusBarAnimation={drawerStatusBarAnimation}
+        keyboardDismissMode={keyboardDismissMode}
         drawerType={drawerType}
         drawerPosition={drawerPosition}
         drawerStyle={[
@@ -257,13 +300,8 @@ function DrawerViewBase({
           drawerStyle,
         ]}
         overlayStyle={{ backgroundColor: overlayColor }}
-        swipeEdgeWidth={swipeEdgeWidth}
-        swipeDistanceThreshold={swipeMinDistance}
-        hideStatusBarOnOpen={drawerHideStatusBarOnOpen}
-        statusBarAnimation={drawerStatusBarAnimation}
         renderDrawerContent={renderDrawerContent}
         renderSceneContent={renderSceneContent}
-        keyboardDismissMode={keyboardDismissMode}
         dimensions={dimensions}
       />
     </DrawerStatusContext.Provider>
@@ -272,13 +310,11 @@ function DrawerViewBase({
 
 export default function DrawerView({ navigation, ...rest }: Props) {
   return (
-    <NavigationHelpersContext.Provider value={navigation}>
-      <SafeAreaProviderCompat>
-        <GestureHandlerWrapper style={styles.content}>
-          <DrawerViewBase navigation={navigation} {...rest} />
-        </GestureHandlerWrapper>
-      </SafeAreaProviderCompat>
-    </NavigationHelpersContext.Provider>
+    <SafeAreaProviderCompat>
+      <GestureHandlerWrapper style={styles.content}>
+        <DrawerViewBase navigation={navigation} {...rest} />
+      </GestureHandlerWrapper>
+    </SafeAreaProviderCompat>
   );
 }
 

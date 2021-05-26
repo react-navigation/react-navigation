@@ -3,6 +3,149 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.19...@react-navigation/stack@6.0.0-next.20) (2021-05-25)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0-next.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.18...@react-navigation/stack@6.0.0-next.19) (2021-05-24)
+
+
+### Bug Fixes
+
+* make transparent modal work with modal presentation ([c90bff0](https://github.com/react-navigation/react-navigation/commit/c90bff08d54d1c7151737a43d4f73abe7d364366))
+
+
+
+
+
+# [6.0.0-next.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.17...@react-navigation/stack@6.0.0-next.18) (2021-05-23)
+
+
+### Features
+
+* add 'transparentModal' presentation to JS stack ([3d14740](https://github.com/react-navigation/react-navigation/commit/3d147401e8ca98ec2d51d5e11c09cd1271d448d1))
+* enable ipad trackpad two finger back gesture ([4ec6acd](https://github.com/react-navigation/react-navigation/commit/4ec6acdf97ba1b34f25b22af5262798a36b9020a))
+
+
+
+
+
+# [6.0.0-next.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.16...@react-navigation/stack@6.0.0-next.17) (2021-05-16)
+
+
+### Bug Fixes
+
+* don't allow overriding gestureEnabled on first screen ([9f00d60](https://github.com/react-navigation/react-navigation/commit/9f00d60bdb7d6f02996f4fa7dfc09b890ebe22f9))
+* fix broken animation on first screen ([e5238f6](https://github.com/react-navigation/react-navigation/commit/e5238f608472319165e5570f41144be5549e0df1))
+
+
+
+
+
+# [6.0.0-next.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.15...@react-navigation/stack@6.0.0-next.16) (2021-05-16)
+
+
+### Bug Fixes
+
+* don't enable animation & gestures for first screen ([6ebe082](https://github.com/react-navigation/react-navigation/commit/6ebe0824df3df4973190428a14286aab0d14d3c1))
+* make stack screens accessible on web without screens ([22b7c3f](https://github.com/react-navigation/react-navigation/commit/22b7c3f6c18a73fc55b0289b91b8d3a96f5be29c))
+* move keyboardHandlingEnabled to screen options ([82900cc](https://github.com/react-navigation/react-navigation/commit/82900cceffa3e338b7b93e831f9ba6cbb3784815))
+
+
+
+
+
+# [6.0.0-next.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.14...@react-navigation/stack@6.0.0-next.15) (2021-05-10)
+
+
+### Bug Fixes
+
+* add a deprecation warning for mode prop in stack ([a6e4981](https://github.com/react-navigation/react-navigation/commit/a6e498170f59648190fa5513e273ca523e56c5d5))
+
+
+### Features
+
+* return a NavigationContent component from useNavigationBuilder ([1179d56](https://github.com/react-navigation/react-navigation/commit/1179d56c5008270753feef41acdc1dbd2191efcf))
+
+
+
+
+
+# [6.0.0-next.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.13...@react-navigation/stack@6.0.0-next.14) (2021-05-09)
+
+
+### Bug Fixes
+
+* fix modal animation not being set properly ([08e74af](https://github.com/react-navigation/react-navigation/commit/08e74af54529582dcbc8d91e77bfed70f006f00d))
+
+
+
+
+
+# [6.0.0-next.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.12...@react-navigation/stack@6.0.0-next.13) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0-next.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.11...@react-navigation/stack@6.0.0-next.12) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0-next.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.10...@react-navigation/stack@6.0.0-next.11) (2021-05-09)
+
+
+### Bug Fixes
+
+* enable screens only on supported platforms ([#9494](https://github.com/react-navigation/react-navigation/issues/9494)) ([8da4c58](https://github.com/react-navigation/react-navigation/commit/8da4c58065607d44e9dc1ad8943e09537598dcd7))
+* make sure disabling react-native-screens works ([a369ba3](https://github.com/react-navigation/react-navigation/commit/a369ba36451ddc2bb5b247e61b725bce1e3fb5e5))
+
+
+### Code Refactoring
+
+* drop mode prop in favor of animationPresentation option ([9ac709e](https://github.com/react-navigation/react-navigation/commit/9ac709ea1e5a63c3a48abfa334ff6a6925095a72))
+
+
+### Features
+
+* automatically set headerMode if it's modal presentation style ([4bb0b43](https://github.com/react-navigation/react-navigation/commit/4bb0b43f1a0f27c96843415de6eaa37edebfb561))
+* support mixing regular and modal presentation in same stack ([60fa3b9](https://github.com/react-navigation/react-navigation/commit/60fa3b9be976a73a5b04b632b4b37672674c956b))
+
+
+### BREAKING CHANGES
+
+* This drops the mode prop on the navigator in favor of a per-screen option animationPresentation
+
+
+
+
+
+# [6.0.0-next.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.9...@react-navigation/stack@6.0.0-next.10) (2021-05-01)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0-next.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.8...@react-navigation/stack@6.0.0-next.9) (2021-04-08)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
 # [6.0.0-next.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.7...@react-navigation/stack@6.0.0-next.8) (2021-03-22)
 
 

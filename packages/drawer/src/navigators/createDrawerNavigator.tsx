@@ -17,15 +17,21 @@ import type {
   DrawerNavigationEventMap,
 } from '../types';
 
-type Props = DefaultNavigatorOptions<DrawerNavigationOptions> &
+type Props = DefaultNavigatorOptions<
+  ParamListBase,
+  DrawerNavigationState<ParamListBase>,
+  DrawerNavigationOptions,
+  DrawerNavigationEventMap
+> &
   DrawerRouterOptions &
   DrawerNavigationConfig;
 
 function DrawerNavigator({
   initialRouteName,
-  openByDefault,
+  defaultStatus,
   backBehavior,
   children,
+  screenListeners,
   screenOptions,
   // @ts-expect-error: lazy is deprecated
   lazy,
@@ -67,7 +73,12 @@ function DrawerNavigator({
     );
   }
 
-  const { state, descriptors, navigation } = useNavigationBuilder<
+  const {
+    state,
+    descriptors,
+    navigation,
+    NavigationContent,
+  } = useNavigationBuilder<
     DrawerNavigationState<ParamListBase>,
     DrawerRouterOptions,
     DrawerActionHelpers<ParamListBase>,
@@ -75,20 +86,23 @@ function DrawerNavigator({
     DrawerNavigationEventMap
   >(DrawerRouter, {
     initialRouteName,
-    openByDefault,
+    defaultStatus,
     backBehavior,
     children,
+    screenListeners,
     screenOptions,
     defaultScreenOptions,
   });
 
   return (
-    <DrawerView
-      {...rest}
-      state={state}
-      descriptors={descriptors}
-      navigation={navigation}
-    />
+    <NavigationContent>
+      <DrawerView
+        {...rest}
+        state={state}
+        descriptors={descriptors}
+        navigation={navigation}
+      />
+    </NavigationContent>
   );
 }
 

@@ -14,10 +14,12 @@ import {
 } from '@react-navigation/routers';
 import NavigationStateContext from './NavigationStateContext';
 import NavigationRouteContext from './NavigationRouteContext';
+import NavigationHelpersContext from './NavigationHelpersContext';
+import Group from './Group';
 import Screen from './Screen';
 import useEventEmitter from './useEventEmitter';
 import useRegisterNavigator from './useRegisterNavigator';
-import useDescriptors from './useDescriptors';
+import useDescriptors, { ScreenConfigWithParent } from './useDescriptors';
 import useNavigationHelpers from './useNavigationHelpers';
 import useOnAction from './useOnAction';
 import useFocusEvents from './useFocusEvents';
@@ -28,6 +30,7 @@ import useKeyedChildListeners from './useKeyedChildListeners';
 import useOnGetState from './useOnGetState';
 import useScheduleUpdate from './useScheduleUpdate';
 import useCurrentRender from './useCurrentRender';
+import useComponent from './useComponent';
 import isArrayEqual from './isArrayEqual';
 import {
   DefaultNavigatorOptions,
@@ -57,33 +60,40 @@ const getRouteConfigsFromChildren = <
   ScreenOptions extends {},
   EventMap extends EventMapBase
 >(
-  children: React.ReactNode
+  children: React.ReactNode,
+  options?: ScreenConfigWithParent<State, ScreenOptions, EventMap>[0]
 ) => {
   const configs = React.Children.toArray(children).reduce<
-    RouteConfig<ParamListBase, string, State, ScreenOptions, EventMap>[]
+    ScreenConfigWithParent<State, ScreenOptions, EventMap>[]
   >((acc, child) => {
     if (React.isValidElement(child)) {
       if (child.type === Screen) {
         // We can only extract the config from `Screen` elements
         // If something else was rendered, it's probably a bug
-        acc.push(
+        acc.push([
+          options,
           child.props as RouteConfig<
             ParamListBase,
             string,
             State,
             ScreenOptions,
             EventMap
-          >
-        );
+          >,
+        ]);
         return acc;
       }
 
-      if (child.type === React.Fragment) {
-        // When we encounter a fragment, we need to dive into its children to extract the configs
+      if (child.type === React.Fragment || child.type === Group) {
+        // When we encounter a fragment or group, we need to dive into its children to extract the configs
         // This is handy to conditionally define a group of screens
         acc.push(
           ...getRouteConfigsFromChildren<State, ScreenOptions, EventMap>(
-            child.props.children
+            child.props.children,
+            child.type !== Group
+              ? options
+              : options != null
+              ? [...options, child.props.screenOptions]
+              : [child.props.screenOptions]
           )
         );
         return acc;
@@ -91,7 +101,7 @@ const getRouteConfigsFromChildren = <
     }
 
     throw new Error(
-      `A navigator can only contain 'Screen' components as its direct children (found ${
+      `A navigator can only contain 'Screen', 'Group' or 'React.Fragment' as its direct children (found ${
         React.isValidElement(child)
           ? `'${
               typeof child.type === 'string' ? child.type : child.type?.name
@@ -107,7 +117,7 @@ const getRouteConfigsFromChildren = <
 
   if (process.env.NODE_ENV !== 'production') {
     configs.forEach((config) => {
-      const { name, children, component, getComponent } = config;
+      const { name, children, component, getComponent } = config[1];
 
       if (typeof name !== 'string' || !name) {
         throw new Error(
@@ -192,7 +202,13 @@ export default function useNavigationBuilder<
   EventMap extends Record<string, any>
 >(
   createRouter: RouterFactory<State, any, RouterOptions>,
-  options: DefaultNavigatorOptions<ScreenOptions> & RouterOptions
+  options: DefaultNavigatorOptions<
+    ParamListBase,
+    State,
+    ScreenOptions,
+    EventMap
+  > &
+    RouterOptions
 ) {
   const navigatorKey = useRegisterNavigator();
 
@@ -200,7 +216,7 @@ export default function useNavigationBuilder<
     | NavigatorRoute<State>
     | undefined;
 
-  const { children, ...rest } = options;
+  const { children, screenListeners, ...rest } = options;
   const { current: router } = React.useRef<Router<State, any>>(
     createRouter({
       ...((rest as unknown) as RouterOptions),
@@ -220,25 +236,22 @@ export default function useNavigationBuilder<
   >(children);
 
   const screens = routeConfigs.reduce<
-    Record<
-      string,
-      RouteConfig<ParamListBase, string, State, ScreenOptions, EventMap>
-    >
+    Record<string, ScreenConfigWithParent<State, ScreenOptions, EventMap>>
   >((acc, config) => {
-    if (config.name in acc) {
+    if (config[1].name in acc) {
       throw new Error(
-        `A navigator cannot contain multiple 'Screen' components with the same name (found duplicate screen named '${config.name}')`
+        `A navigator cannot contain multiple 'Screen' components with the same name (found duplicate screen named '${config[1].name}')`
       );
     }
 
-    acc[config.name] = config;
+    acc[config[1].name] = config;
     return acc;
   }, {});
 
-  const routeNames = routeConfigs.map((config) => config.name);
+  const routeNames = routeConfigs.map((config) => config[1].name);
   const routeParamList = routeNames.reduce<Record<string, object | undefined>>(
     (acc, curr) => {
-      const { initialParams } = screens[curr];
+      const { initialParams } = screens[curr][1];
       const initialParamsFromParams =
         route?.params?.state == null &&
         route?.params?.initial !== false &&
@@ -263,7 +276,7 @@ export default function useNavigationBuilder<
   >(
     (acc, curr) =>
       Object.assign(acc, {
-        [curr]: screens[curr].getId,
+        [curr]: screens[curr][1].getId,
       }),
     {}
   );
@@ -480,8 +493,14 @@ export default function useNavigationBuilder<
 
     const listeners = ([] as (((e: any) => void) | undefined)[])
       .concat(
-        ...routeNames.map((name) => {
-          const { listeners } = screens[name];
+        // Get an array of listeners for all screens + common listeners on navigator
+        ...[
+          screenListeners,
+          ...routeNames.map((name) => {
+            const { listeners } = screens[name][1];
+            return listeners;
+          }),
+        ].map((listeners) => {
           const map =
             typeof listeners === 'function'
               ? listeners({ route: route as any, navigation })
@@ -494,6 +513,8 @@ export default function useNavigationBuilder<
             : undefined;
         })
       )
+      // We don't want same listener to be called multiple times for same event
+      // So we remove any duplicate functions from the array
       .filter((cb, i, self) => cb && self.lastIndexOf(cb) === i);
 
     listeners.forEach((listener) => listener?.(e));
@@ -581,9 +602,14 @@ export default function useNavigationBuilder<
     descriptors,
   });
 
+  const NavigationContent = useComponent(NavigationHelpersContext.Provider, {
+    value: navigation,
+  });
+
   return {
     state,
     navigation,
     descriptors,
+    NavigationContent,
   };
 }
