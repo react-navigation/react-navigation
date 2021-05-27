@@ -555,7 +555,7 @@ export default class CardStack extends React.Component<Props, State> {
               headerTransparent,
               headerStyle,
               headerTintColor,
-              screenOrientation,
+              orientation,
               statusBarAnimation,
               statusBarColor,
               statusBarHidden,
@@ -613,7 +613,7 @@ export default class CardStack extends React.Component<Props, State> {
                 enabled={detachInactiveScreens}
                 active={isScreenActive}
                 pointerEvents="box-none"
-                screenOrientation={screenOrientation}
+                orientation={orientation}
                 statusBarAnimation={statusBarAnimation}
                 statusBarColor={statusBarColor}
                 statusBarHidden={statusBarHidden}

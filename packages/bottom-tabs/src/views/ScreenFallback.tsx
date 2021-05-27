@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { StyleProp, View, ViewProps, ViewStyle } from 'react-native';
-import {
-  ResourceSavingView,
-  NativeScreenTraitsProps,
-} from '@react-navigation/elements';
+import { ResourceSavingView } from '@react-navigation/elements';
+import type { NativeScreenTraitsProps } from '../types';
 
 type Props = NativeScreenTraitsProps & {
   visible: boolean;

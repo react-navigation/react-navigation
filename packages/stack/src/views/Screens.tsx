@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Animated, View, ViewProps } from 'react-native';
-
-import type { NativeScreenTraitsProps } from '@react-navigation/elements';
+import type { NativeScreenTraitsProps } from '../types';
 
 let Screens: typeof import('react-native-screens') | undefined;
 

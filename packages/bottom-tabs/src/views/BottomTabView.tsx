@@ -98,7 +98,7 @@ export default function BottomTabView(props: Props) {
           const {
             lazy = true,
             unmountOnBlur,
-            screenOrientation,
+            orientation,
             statusBarAnimation,
             statusBarColor,
             statusBarHidden,
@@ -132,7 +132,7 @@ export default function BottomTabView(props: Props) {
               style={StyleSheet.absoluteFill}
               visible={isFocused}
               enabled={detachInactiveScreens}
-              screenOrientation={screenOrientation}
+              orientation={orientation}
               statusBarAnimation={statusBarAnimation}
               statusBarColor={statusBarColor}
               statusBarHidden={statusBarHidden}
