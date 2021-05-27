@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/native-stack",
   "description": "Native stack navigator using react-native-screens",
-  "version": "6.0.0-next.3",
+  "version": "6.0.0-next.4",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -41,11 +41,11 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/elements": "^1.0.0-next.13",
+    "@react-navigation/elements": "^1.0.0-next.14",
     "warn-once": "^0.1.0"
   },
   "devDependencies": {
-    "@react-navigation/native": "^6.0.0-next.10",
+    "@react-navigation/native": "^6.0.0-next.11",
     "@testing-library/react-native": "^7.2.0",
     "@types/react": "^16.9.53",
     "@types/react-native": "~0.64.4",
