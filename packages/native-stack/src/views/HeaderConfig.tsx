@@ -42,7 +42,7 @@ export default function HeaderConfig({
   headerTranslucent,
   route,
   orientation,
-  headerSearchBar,
+  headerSearchBarOptions,
   statusBarAnimation,
   statusBarHidden,
   statusBarStyle,
@@ -84,7 +84,11 @@ export default function HeaderConfig({
       ? headerTitle({ tintColor, children: titleText })
       : null;
 
-  if (Platform.OS === 'ios' && headerSearchBar != null && SearchBar == null) {
+  if (
+    Platform.OS === 'ios' &&
+    headerSearchBarOptions != null &&
+    SearchBar == null
+  ) {
     throw new Error(
       `The current version of 'react-native-screens' doesn't support SearchBar in the header. Please update to the latest version to use this option.`
     );
@@ -179,9 +183,9 @@ export default function HeaderConfig({
           {headerRightElement}
         </ScreenStackHeaderRightView>
       ) : null}
-      {Platform.OS === 'ios' && headerSearchBar != null ? (
+      {Platform.OS === 'ios' && headerSearchBarOptions != null ? (
         <ScreenStackHeaderSearchBarView>
-          <SearchBar {...headerSearchBar} />
+          <SearchBar {...headerSearchBarOptions} />
         </ScreenStackHeaderSearchBarView>
       ) : null}
     </ScreenStackHeaderConfig>

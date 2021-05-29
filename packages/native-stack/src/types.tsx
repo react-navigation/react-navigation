@@ -234,7 +234,7 @@ export type NativeStackNavigationOptions = {
    *
    * @platform ios
    */
-  headerSearchBar?: SearchBarProps;
+  headerSearchBarOptions?: SearchBarProps;
   /**
    * Sets the status bar animation (similar to the `StatusBar` component).
    * Requires setting `View controller-based status bar appearance -> YES` (or removing the config) in your `Info.plist` file.
