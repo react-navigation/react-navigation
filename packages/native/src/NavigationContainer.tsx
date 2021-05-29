@@ -18,6 +18,15 @@ import useDocumentTitle from './useDocumentTitle';
 import useLinking from './useLinking';
 import useThenable from './useThenable';
 
+declare global {
+  var REACT_NAVIGATION_DEVTOOLS: WeakMap<
+    NavigationContainerRef<any>,
+    { readonly linking: LinkingOptions<any> }
+  >;
+}
+
+global.REACT_NAVIGATION_DEVTOOLS = new WeakMap();
+
 type Props<ParamList extends {}> = NavigationContainerProps & {
   theme?: Theme;
   linking?: LinkingOptions<ParamList>;
@@ -70,8 +79,8 @@ function NavigationContainerInner(
   // This will be used by the devtools
   React.useEffect(() => {
     if (refContainer.current) {
-      Object.defineProperty(refContainer.current, '__linking', {
-        get() {
+      REACT_NAVIGATION_DEVTOOLS.set(refContainer.current, {
+        get linking() {
           return {
             ...linking,
             enabled: isLinkingEnabled,
@@ -82,7 +91,6 @@ function NavigationContainerInner(
               linking?.getActionFromState ?? getActionFromState,
           };
         },
-        enumerable: false,
       });
     }
   });
