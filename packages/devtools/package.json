@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/devtools",
   "description": "Developer tools for React Navigation",
-  "version": "6.0.0-next.13",
+  "version": "6.0.0-next.14",
   "keywords": [
     "react",
     "react-native",
@@ -40,7 +40,7 @@
     "nanoid": "^3.1.22"
   },
   "devDependencies": {
-    "@react-navigation/core": "^6.0.0-next.12",
+    "@react-navigation/core": "^6.0.0-next.13",
     "@testing-library/react-native": "^7.2.0",
     "@types/deep-equal": "^1.0.1",
     "@types/react": "^16.9.53",

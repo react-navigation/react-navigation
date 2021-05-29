@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.23...@react-navigation/stack@6.0.0-next.24) (2021-05-29)
+
+
+### Bug Fixes
+
+* remove card shadow from default animation ([70f4fe2](https://github.com/react-navigation/react-navigation/commit/70f4fe2ffaa219a2a72e0ae25b7d5d007948c2a4)), closes [#9569](https://github.com/react-navigation/react-navigation/issues/9569)
+
+
+
+
+
 # [6.0.0-next.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.22...@react-navigation/stack@6.0.0-next.23) (2021-05-29)
 
 **Note:** Version bump only for package @react-navigation/stack

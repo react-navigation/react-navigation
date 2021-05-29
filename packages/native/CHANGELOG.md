@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.12...@react-navigation/native@6.0.0-next.13) (2021-05-29)
+
+
+### Bug Fixes
+
+* validate property names in linking config ([324ea71](https://github.com/react-navigation/react-navigation/commit/324ea7181db6b743f512854be267cc9d65975b6f))
+
+
+
+
+
 # [6.0.0-next.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.11...@react-navigation/native@6.0.0-next.12) (2021-05-29)
 
 
