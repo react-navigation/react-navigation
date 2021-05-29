@@ -8,6 +8,7 @@ import * as queryString from 'query-string';
 
 import findFocusedRoute from './findFocusedRoute';
 import type { PathConfigMap } from './types';
+import validatePathConfig from './validatePathConfig';
 
 type Options<ParamList extends {}> = {
   initialRouteName?: string;
@@ -65,6 +66,10 @@ export default function getStateFromPath<ParamList extends {}>(
   path: string,
   options?: Options<ParamList>
 ): ResultState | undefined {
+  if (options) {
+    validatePathConfig(options);
+  }
+
   let initialRoutes: InitialRouteConfig[] = [];
 
   if (options?.initialRouteName) {

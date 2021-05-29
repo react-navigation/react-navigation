@@ -6,6 +6,7 @@ import {
   NavigationContainerProps,
   NavigationContainerRef,
   ParamListBase,
+  validatePathConfig,
 } from '@react-navigation/core';
 import * as React from 'react';
 
@@ -61,6 +62,10 @@ function NavigationContainerInner(
   ref?: React.Ref<NavigationContainerRef<ParamListBase> | null>
 ) {
   const isLinkingEnabled = linking ? linking.enabled !== false : false;
+
+  if (linking?.config) {
+    validatePathConfig(linking.config);
+  }
 
   const refContainer = React.useRef<NavigationContainerRef<ParamListBase>>(
     null
