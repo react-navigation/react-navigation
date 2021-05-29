@@ -25,9 +25,7 @@
     "watch": "flipper-pkg bundle --watch",
     "test": "jest --no-watchman"
   },
-  "dependencies": {
-    "shortid": "^2.2.16"
-  },
+  "dependencies": {},
   "peerDependencies": {
     "antd": "*",
     "flipper": "*",
