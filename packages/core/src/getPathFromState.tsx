@@ -7,6 +7,7 @@ import * as queryString from 'query-string';
 
 import fromEntries from './fromEntries';
 import type { PathConfig, PathConfigMap } from './types';
+import validatePathConfig from './validatePathConfig';
 
 type Options<ParamList> = {
   initialRouteName?: string;
@@ -73,6 +74,10 @@ export default function getPathFromState<ParamList extends {}>(
     throw Error(
       "Got 'undefined' for the navigation state. You must pass a valid state object."
     );
+  }
+
+  if (options) {
+    validatePathConfig(options);
   }
 
   // Create a normalized configs object which will be easier to use
