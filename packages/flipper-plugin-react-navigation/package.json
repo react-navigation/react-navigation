@@ -2,17 +2,22 @@
   "$schema": "https://fbflipper.com/schemas/plugin-package/v2.json",
   "name": "flipper-plugin-react-navigation",
   "description": "Developer tools for React Navigation",
-  "id": "react-navigation",
   "version": "1.1.3",
-  "pluginType": "client",
   "main": "dist/bundle.js",
-  "flipperBundlerEntry": "src/index.tsx",
   "license": "MIT",
   "keywords": [
     "flipper-plugin"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/react-navigation/react-navigation.git",
+    "directory": "packages/flipper-plugin-react-navigation"
+  },
+  "id": "react-navigation",
+  "pluginType": "client",
   "icon": "directions",
   "title": "React Navigation",
+  "flipperBundlerEntry": "src/index.tsx",
   "scripts": {
     "lint": "flipper-pkg lint",
     "prepack": "flipper-pkg lint && flipper-pkg bundle",
