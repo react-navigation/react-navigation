@@ -82,8 +82,10 @@ export default function useFlipper(
         });
 
         on('linking.invoke', ({ method, args = [] }) => {
-          // @ts-expect-error: __linking isn't publicly exposed
-          const linking = ref.current?.__linking;
+          const linking: any = ref.current
+            ? // @ts-ignore: this might not exist
+              global.REACT_NAVIGATION_DEVTOOLS?.get(ref.current)?.linking
+            : null;
 
           switch (method) {
             case 'getStateFromPath':

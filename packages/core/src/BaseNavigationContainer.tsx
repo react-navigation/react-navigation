@@ -37,25 +37,6 @@ type State = NavigationState | PartialState<NavigationState> | undefined;
 const serializableWarnings: string[] = [];
 const duplicateNameWarnings: string[] = [];
 
-try {
-  /**
-   * Migration instructions for removal of devtools from core
-   */
-  Object.defineProperty(
-    global,
-    'REACT_NAVIGATION_REDUX_DEVTOOLS_EXTENSION_INTEGRATION_ENABLED',
-    {
-      set(_) {
-        console.warn(
-          "Redux devtools extension integration can be enabled with the '@react-navigation/devtools' package. For more details, see https://reactnavigation.org/docs/devtools"
-        );
-      },
-    }
-  );
-} catch (e) {
-  // Ignore
-}
-
 /**
  * Remove `key` and `routeNames` from the state objects recursively to get partial state.
  *
