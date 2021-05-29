@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.11...@react-navigation/native@6.0.0-next.12) (2021-05-29)
+
+
+### Bug Fixes
+
+* try to fix [#9631](https://github.com/react-navigation/react-navigation/issues/9631) ([b4d7b0e](https://github.com/react-navigation/react-navigation/commit/b4d7b0ee86c09419a18357867a0a25bb90d960c0))
+
+
+
+
+
 # [6.0.0-next.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.10...@react-navigation/native@6.0.0-next.11) (2021-05-27)
 
 **Note:** Version bump only for package @react-navigation/native
