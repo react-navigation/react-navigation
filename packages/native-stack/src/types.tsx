@@ -345,10 +345,12 @@ export type NativeStackNavigationOptions = {
   /**
    * Sets the status bar animation (similar to the `StatusBar` component).
    * Requires setting `View controller-based status bar appearance -> YES` (or removing the config) in your `Info.plist` file.
+   * On Android, requires `react-native-screens` version >=3.3.0.
    */
   statusBarAnimation?: StatusBarAnimationTypes;
   /**
    * Sets the status bar color (similar to the `StatusBar` component). Defaults to initial status bar color.
+   * Requires `react-native-screens` version >=3.3.0.
    *
    * @platform android
    */
@@ -356,15 +358,19 @@ export type NativeStackNavigationOptions = {
   /**
    * Whether the status bar should be hidden on this screen.
    * Requires setting `View controller-based status bar appearance -> YES` in your Info.plist file.
+   * On Android, requires `react-native-screens` version >=3.3.0.
    */
   statusBarHidden?: boolean;
   /**
    * Sets the status bar color (similar to the `StatusBar` component).
    * Requires setting `View controller-based status bar appearance -> YES` (or removing the config) in your `Info.plist` file.
+   * On Android, requires `react-native-screens` version >=3.3.0.
    */
   statusBarStyle?: StatusBarStyleTypes;
   /**
    * Sets the translucency of the status bar. Defaults to `false`.
+   * Requires `react-native-screens` version >=3.3.0.
+   *
    * @platform android
    */
   statusBarTranslucent?: boolean;

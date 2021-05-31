@@ -72,25 +72,25 @@ export type NativeScreenTraitsProps = {
     | 'landscape_left'
     | 'landscape_right';
   /**
-   * Sets the status bar animation (similar to the `StatusBar` component). Requires enabling (or deleting) `View controller-based status bar appearance` in your Info.plist file and having `react-native-screens` enabled.
+   * Sets the status bar animation (similar to the `StatusBar` component). Requires enabling (or deleting) `View controller-based status bar appearance` in your Info.plist file and having `react-native-screens` enabled. On Android, requires `react-native-screens` version >=3.3.0.
    */
   statusBarAnimation?: 'none' | 'fade' | 'slide';
   /**
-   * Sets the status bar color (similar to the `StatusBar` component). It requires having `react-native-screens` enabled.
+   * Sets the status bar color (similar to the `StatusBar` component). Requires enabled `react-native-screens` version >=3.3.0.
    *
    * @platform android
    */
   statusBarColor?: string;
   /**
-   * Whether the status bar should be hidden on this screen. Requires enabling (or deleting) `View controller-based status bar appearance` in your Info.plist file and having `react-native-screens` enabled.
+   * Whether the status bar should be hidden on this screen. Requires enabling (or deleting) `View controller-based status bar appearance` in your Info.plist file and having `react-native-screens` enabled. On Android, requires `react-native-screens` version >=3.3.0.
    */
   statusBarHidden?: boolean;
   /**
-   *  Sets the status bar color (similar to the `StatusBar` component). Requires enabling (or deleting) `View controller-based status bar appearance` in your Info.plist file and having `react-native-screens` enabled.
+   * Sets the status bar color (similar to the `StatusBar` component). Requires enabling (or deleting) `View controller-based status bar appearance` in your Info.plist file and having `react-native-screens` enabled. On Android, requires `react-native-screens` version >=3.3.0.
    */
   statusBarStyle?: 'inverted' | 'auto' | 'light' | 'dark';
   /**
-   * Sets the translucency of the status bar. Defaults to true. It requires having `react-native-screens` enabled.
+   * Sets the translucency of the status bar. Defaults to true. Requires enabled `react-native-screens` version >=3.3.0.
    *
    * @platform android
    */
