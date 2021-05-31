@@ -7,14 +7,9 @@ const alias = Object.fromEntries(
   fs
     .readdirSync(packages)
     .filter((name) => !name.startsWith('.'))
-    .map((name) => [
-      `@react-navigation/${name}`,
-      path.resolve(
-        packages,
-        name,
-        require(`../../packages/${name}/package.json`).source
-      ),
-    ])
+    .map((name) => [name, require(`../../packages/${name}/package.json`)])
+    .filter(([, pak]) => pak.source != null)
+    .map(([name, pak]) => [pak.name, path.resolve(packages, name, pak.source)])
 );
 
 module.exports = {
