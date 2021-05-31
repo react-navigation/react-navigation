@@ -468,7 +468,7 @@ DEPENDENCIES:
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - RNGestureHandler (from `../../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../../node_modules/react-native-reanimated`)
-  - RNScreens (from `../node_modules/react-native-screens`)
+  - RNScreens (from `../../node_modules/react-native-screens`)
   - RNVectorIcons (from `../../node_modules/react-native-vector-icons`)
   - UMAppLoader (from `../../node_modules/unimodules-app-loader/ios`)
   - UMBarCodeScannerInterface (from `../../node_modules/unimodules-barcode-scanner-interface/ios`)
@@ -592,7 +592,7 @@ EXTERNAL SOURCES:
   RNReanimated:
     :path: "../../node_modules/react-native-reanimated"
   RNScreens:
-    :path: "../node_modules/react-native-screens"
+    :path: "../../node_modules/react-native-screens"
   RNVectorIcons:
     :path: "../../node_modules/react-native-vector-icons"
   UMAppLoader:
