@@ -302,12 +302,12 @@ export function forScaleFromCenterAndroid({
     closing,
     current.progress.interpolate({
       inputRange: [0, 1],
-      outputRange: [0.9, 1],
+      outputRange: [0.925, 1],
       extrapolate: 'clamp',
     }),
     progress.interpolate({
       inputRange: [0, 1, 2],
-      outputRange: [0.85, 1, 1.1],
+      outputRange: [0.85, 1, 1.075],
     })
   );
 
