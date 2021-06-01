@@ -1,10 +1,10 @@
 import {
   BaseRouter,
-  Router,
   CommonNavigationAction,
+  DefaultRouterOptions,
   NavigationState,
   Route,
-  DefaultRouterOptions,
+  Router,
 } from '@react-navigation/routers';
 
 export type MockActions = CommonNavigationAction | { type: 'NOOP' | 'UPDATE' };

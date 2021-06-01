@@ -1,24 +1,25 @@
-import * as React from 'react';
 import {
-  useNavigationBuilder,
   createNavigatorFactory,
   DefaultNavigatorOptions,
   EventArg,
-  StackRouter,
-  StackRouterOptions,
-  StackNavigationState,
-  StackActions,
   ParamListBase,
   StackActionHelpers,
+  StackActions,
+  StackNavigationState,
+  StackRouter,
+  StackRouterOptions,
+  useNavigationBuilder,
 } from '@react-navigation/native';
+import * as React from 'react';
 import warnOnce from 'warn-once';
-import StackView from '../views/Stack/StackView';
+
 import type {
-  StackNavigationConfig,
-  StackNavigationOptions,
-  StackNavigationEventMap,
   StackHeaderMode,
+  StackNavigationConfig,
+  StackNavigationEventMap,
+  StackNavigationOptions,
 } from '../types';
+import StackView from '../views/Stack/StackView';
 
 type Props = DefaultNavigatorOptions<
   ParamListBase,

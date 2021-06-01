@@ -1,14 +1,15 @@
-import * as React from 'react';
-import { View, Platform, StyleSheet, ScrollView } from 'react-native';
-import { Button } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { ParamListBase } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import Article from '../Shared/Article';
+import * as React from 'react';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Button } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import Albums from '../Shared/Albums';
+import Article from '../Shared/Article';
 import NewsFeed from '../Shared/NewsFeed';
 
 export type NativeStackParams = {

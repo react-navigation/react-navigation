@@ -1,9 +1,9 @@
 import type {
   Animated,
-  StyleProp,
-  ViewStyle,
-  TextStyle,
   LayoutChangeEvent,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
 } from 'react-native';
 
 export type Layout = { width: number; height: number };

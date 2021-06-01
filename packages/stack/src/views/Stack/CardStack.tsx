@@ -1,36 +1,32 @@
-import * as React from 'react';
 import {
-  Animated,
-  StyleSheet,
-  LayoutChangeEvent,
-  Platform,
-} from 'react-native';
-import type { EdgeInsets } from 'react-native-safe-area-context';
-import Color from 'color';
+  Background,
+  getDefaultHeaderHeight,
+  SafeAreaProviderCompat,
+} from '@react-navigation/elements';
 import type {
   ParamListBase,
   Route,
   StackNavigationState,
 } from '@react-navigation/native';
+import Color from 'color';
+import * as React from 'react';
 import {
-  getDefaultHeaderHeight,
-  SafeAreaProviderCompat,
-  Background,
-} from '@react-navigation/elements';
+  Animated,
+  LayoutChangeEvent,
+  Platform,
+  StyleSheet,
+} from 'react-native';
+import type { EdgeInsets } from 'react-native-safe-area-context';
 
-import { MaybeScreenContainer, MaybeScreen } from '../Screens';
-import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
-import CardContainer from './CardContainer';
-import {
-  DefaultTransition,
-  ModalTransition,
-  ModalFadeTransition,
-} from '../../TransitionConfigs/TransitionPresets';
 import {
   forModalPresentationIOS,
   forNoAnimation as forNoAnimationCard,
 } from '../../TransitionConfigs/CardStyleInterpolators';
-import getDistanceForDirection from '../../utils/getDistanceForDirection';
+import {
+  DefaultTransition,
+  ModalFadeTransition,
+  ModalTransition,
+} from '../../TransitionConfigs/TransitionPresets';
 import type {
   Layout,
   Scene,
@@ -39,6 +35,10 @@ import type {
   StackHeaderMode,
   StackNavigationOptions,
 } from '../../types';
+import getDistanceForDirection from '../../utils/getDistanceForDirection';
+import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
+import { MaybeScreen, MaybeScreenContainer } from '../Screens';
+import CardContainer from './CardContainer';
 
 type GestureValues = {
   [key: string]: Animated.Value;

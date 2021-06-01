@@ -1,5 +1,6 @@
-import type { ParamListBase, NavigationState } from '@react-navigation/routers';
-import type { RouteConfig, EventMapBase } from './types';
+import type { NavigationState, ParamListBase } from '@react-navigation/routers';
+
+import type { EventMapBase, RouteConfig } from './types';
 
 /**
  * Empty component used for specifying route configuration.

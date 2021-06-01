@@ -1,22 +1,22 @@
 import {
   createNavigatorFactory,
   EventArg,
-  StackActions,
+  ParamListBase,
   StackActionHelpers,
+  StackActions,
   StackNavigationState,
   StackRouter,
   StackRouterOptions,
-  ParamListBase,
   useNavigationBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
-import NativeStackView from '../views/NativeStackView';
 
 import type {
-  NativeStackNavigationOptions,
   NativeStackNavigationEventMap,
+  NativeStackNavigationOptions,
   NativeStackNavigatorProps,
 } from '../types';
+import NativeStackView from '../views/NativeStackView';
 
 function NativeStackNavigator({
   initialRouteName,

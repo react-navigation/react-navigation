@@ -1,21 +1,32 @@
-import * as React from 'react';
 import {
   BaseNavigationContainer,
+  getActionFromState,
   getPathFromState,
   getStateFromPath,
-  getActionFromState,
   NavigationContainerProps,
   NavigationContainerRef,
   ParamListBase,
+  validatePathConfig,
 } from '@react-navigation/core';
-import ThemeProvider from './theming/ThemeProvider';
-import DefaultTheme from './theming/DefaultTheme';
+import * as React from 'react';
+
 import LinkingContext from './LinkingContext';
-import useThenable from './useThenable';
-import useLinking from './useLinking';
-import useDocumentTitle from './useDocumentTitle';
+import DefaultTheme from './theming/DefaultTheme';
+import ThemeProvider from './theming/ThemeProvider';
+import type { DocumentTitleOptions, LinkingOptions, Theme } from './types';
 import useBackButton from './useBackButton';
-import type { Theme, LinkingOptions, DocumentTitleOptions } from './types';
+import useDocumentTitle from './useDocumentTitle';
+import useLinking from './useLinking';
+import useThenable from './useThenable';
+
+declare global {
+  var REACT_NAVIGATION_DEVTOOLS: WeakMap<
+    NavigationContainerRef<any>,
+    { readonly linking: LinkingOptions<any> }
+  >;
+}
+
+global.REACT_NAVIGATION_DEVTOOLS = new WeakMap();
 
 type Props<ParamList extends {}> = NavigationContainerProps & {
   theme?: Theme;
@@ -52,6 +63,10 @@ function NavigationContainerInner(
 ) {
   const isLinkingEnabled = linking ? linking.enabled !== false : false;
 
+  if (linking?.config) {
+    validatePathConfig(linking.config);
+  }
+
   const refContainer = React.useRef<NavigationContainerRef<ParamListBase>>(
     null
   );
@@ -69,8 +84,8 @@ function NavigationContainerInner(
   // This will be used by the devtools
   React.useEffect(() => {
     if (refContainer.current) {
-      Object.defineProperty(refContainer.current, '__linking', {
-        get() {
+      REACT_NAVIGATION_DEVTOOLS.set(refContainer.current, {
+        get linking() {
           return {
             ...linking,
             enabled: isLinkingEnabled,
@@ -81,7 +96,6 @@ function NavigationContainerInner(
               linking?.getActionFromState ?? getActionFromState,
           };
         },
-        enumerable: false,
       });
     }
   });

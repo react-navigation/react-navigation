@@ -1,4 +1,15 @@
 import type {
+  DefaultNavigatorOptions,
+  Descriptor,
+  NavigationHelpers,
+  NavigationProp,
+  ParamListBase,
+  RouteProp,
+  StackActionHelpers,
+  StackNavigationState,
+  StackRouterOptions,
+} from '@react-navigation/native';
+import type {
   ImageSourcePropType,
   NativeSyntheticEvent,
   StyleProp,
@@ -6,17 +17,6 @@ import type {
   TextInputFocusEventData,
   ViewStyle,
 } from 'react-native';
-import type {
-  DefaultNavigatorOptions,
-  Descriptor,
-  NavigationHelpers,
-  NavigationProp,
-  ParamListBase,
-  StackNavigationState,
-  StackRouterOptions,
-  StackActionHelpers,
-  RouteProp,
-} from '@react-navigation/native';
 
 export type PresentationTypes =
   | 'card'
@@ -341,7 +341,7 @@ export type NativeStackNavigationOptions = {
    *
    * @platform ios
    */
-  headerSearchBar?: SearchBarProps;
+  headerSearchBarOptions?: SearchBarProps;
   /**
    * Sets the status bar animation (similar to the `StatusBar` component).
    * Requires setting `View controller-based status bar appearance -> YES` (or removing the config) in your `Info.plist` file.

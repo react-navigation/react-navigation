@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.0.0-next.12...@react-navigation/material-bottom-tabs@6.0.0-next.13) (2021-05-29)
+
+**Note:** Version bump only for package @react-navigation/material-bottom-tabs
+
+
+
+
+
+# [6.0.0-next.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.0.0-next.11...@react-navigation/material-bottom-tabs@6.0.0-next.12) (2021-05-29)
+
+**Note:** Version bump only for package @react-navigation/material-bottom-tabs
+
+
+
+
+
+# [6.0.0-next.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.0.0-next.10...@react-navigation/material-bottom-tabs@6.0.0-next.11) (2021-05-27)
+
+
+### Bug Fixes
+
+* use safe area context in material bottom tabs ([80cdc88](https://github.com/react-navigation/react-navigation/commit/80cdc88588584cfab0c122a77fecde1610229961))
+
+
+
+
+
+# [6.0.0-next.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.0.0-next.9...@react-navigation/material-bottom-tabs@6.0.0-next.10) (2021-05-26)
+
+
+### Features
+
+* add screenListeners prop on navigators similar to screenOptions ([cde44a5](https://github.com/react-navigation/react-navigation/commit/cde44a5785444a121aa08f94af9f8fe4fc89910a))
+
+
+
+
+
 # [6.0.0-next.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.0.0-next.8...@react-navigation/material-bottom-tabs@6.0.0-next.9) (2021-05-23)
 
 **Note:** Version bump only for package @react-navigation/material-bottom-tabs

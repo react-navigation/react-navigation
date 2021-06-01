@@ -1,8 +1,9 @@
-import * as React from 'react';
 import type {
   NavigationContainerRef,
   ParamListBase,
 } from '@react-navigation/core';
+import * as React from 'react';
+
 import type { DocumentTitleOptions } from './types';
 
 /**

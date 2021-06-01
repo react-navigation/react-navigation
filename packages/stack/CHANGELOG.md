@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.23...@react-navigation/stack@6.0.0-next.24) (2021-05-29)
+
+
+### Bug Fixes
+
+* remove card shadow from default animation ([70f4fe2](https://github.com/react-navigation/react-navigation/commit/70f4fe2ffaa219a2a72e0ae25b7d5d007948c2a4)), closes [#9569](https://github.com/react-navigation/react-navigation/issues/9569)
+
+
+
+
+
+# [6.0.0-next.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.22...@react-navigation/stack@6.0.0-next.23) (2021-05-29)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0-next.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.21...@react-navigation/stack@6.0.0-next.22) (2021-05-27)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0-next.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.20...@react-navigation/stack@6.0.0-next.21) (2021-05-26)
+
+
+### Features
+
+* add screenListeners prop on navigators similar to screenOptions ([cde44a5](https://github.com/react-navigation/react-navigation/commit/cde44a5785444a121aa08f94af9f8fe4fc89910a))
+
+
+
+
+
 # [6.0.0-next.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.19...@react-navigation/stack@6.0.0-next.20) (2021-05-25)
 
 **Note:** Version bump only for package @react-navigation/stack

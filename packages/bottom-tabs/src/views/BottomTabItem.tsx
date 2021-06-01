@@ -1,19 +1,19 @@
-import React from 'react';
-import {
-  Text,
-  Pressable,
-  StyleSheet,
-  Platform,
-  StyleProp,
-  ViewStyle,
-  TextStyle,
-  GestureResponderEvent,
-} from 'react-native';
 import { Link, Route, useTheme } from '@react-navigation/native';
 import Color from 'color';
+import React from 'react';
+import {
+  GestureResponderEvent,
+  Platform,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 
-import TabBarIcon from './TabBarIcon';
 import type { BottomTabBarButtonProps, LabelPosition } from '../types';
+import TabBarIcon from './TabBarIcon';
 
 type Props = {
   /**

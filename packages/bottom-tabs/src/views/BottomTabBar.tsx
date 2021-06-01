@@ -1,29 +1,29 @@
-import React from 'react';
+import { MissingIcon } from '@react-navigation/elements';
 import {
-  View,
-  Animated,
-  StyleSheet,
-  Platform,
-  LayoutChangeEvent,
-  StyleProp,
-  ViewStyle,
-} from 'react-native';
-import {
+  CommonActions,
   NavigationContext,
   NavigationRouteContext,
-  TabNavigationState,
   ParamListBase,
-  CommonActions,
-  useTheme,
+  TabNavigationState,
   useLinkBuilder,
+  useTheme,
 } from '@react-navigation/native';
-import { MissingIcon } from '@react-navigation/elements';
+import React from 'react';
+import {
+  Animated,
+  LayoutChangeEvent,
+  Platform,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 import { EdgeInsets, useSafeAreaFrame } from 'react-native-safe-area-context';
 
-import BottomTabItem from './BottomTabItem';
+import type { BottomTabBarProps, BottomTabDescriptorMap } from '../types';
 import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
 import useIsKeyboardShown from '../utils/useIsKeyboardShown';
-import type { BottomTabBarProps, BottomTabDescriptorMap } from '../types';
+import BottomTabItem from './BottomTabItem';
 
 type Props = BottomTabBarProps & {
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;

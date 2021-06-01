@@ -1,10 +1,11 @@
-import * as React from 'react';
+import { Tabs } from 'antd';
 import { styled } from 'flipper';
 import { theme } from 'flipper-plugin';
-import { Tabs } from 'antd';
-import { useStore } from './useStore';
-import { Logs } from './Logs';
+import * as React from 'react';
+
 import { LinkingTester } from './LinkingTester';
+import { Logs } from './Logs';
+import { useStore } from './useStore';
 
 const { TabPane } = Tabs;
 

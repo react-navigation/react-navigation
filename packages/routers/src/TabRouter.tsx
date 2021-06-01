@@ -1,13 +1,14 @@
 import { nanoid } from 'nanoid/non-secure';
+
 import BaseRouter from './BaseRouter';
 import type {
-  NavigationState,
-  PartialState,
   CommonNavigationAction,
-  Router,
   DefaultRouterOptions,
-  Route,
+  NavigationState,
   ParamListBase,
+  PartialState,
+  Route,
+  Router,
 } from './types';
 
 export type TabActionType = {

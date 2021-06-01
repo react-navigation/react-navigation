@@ -1,5 +1,6 @@
-import * as React from 'react';
 import type { ParamListBase } from '@react-navigation/routers';
+import * as React from 'react';
+
 import NavigationRouteContext from './NavigationRouteContext';
 import type { RouteProp } from './types';
 

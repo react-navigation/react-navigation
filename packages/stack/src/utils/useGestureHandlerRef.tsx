@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import StackGestureRefContext from './GestureHandlerRefContext';
 
 export default function useGestureHandlerRef() {

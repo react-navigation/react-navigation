@@ -1,5 +1,6 @@
 import * as React from 'react';
-import type { EventEmitter, EventConsumer, EventArg } from './types';
+
+import type { EventArg, EventConsumer, EventEmitter } from './types';
 
 export type NavigationEventEmitter<
   T extends Record<string, any>

@@ -1,21 +1,22 @@
-import * as React from 'react';
-import warnOnce from 'warn-once';
 import {
-  useNavigationBuilder,
   createNavigatorFactory,
   DefaultNavigatorOptions,
+  ParamListBase,
+  TabActionHelpers,
+  TabNavigationState,
   TabRouter,
   TabRouterOptions,
-  TabNavigationState,
-  TabActionHelpers,
-  ParamListBase,
+  useNavigationBuilder,
 } from '@react-navigation/native';
-import MaterialTopTabView from '../views/MaterialTopTabView';
+import * as React from 'react';
+import warnOnce from 'warn-once';
+
 import type {
   MaterialTopTabNavigationConfig,
-  MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationEventMap,
+  MaterialTopTabNavigationOptions,
 } from '../types';
+import MaterialTopTabView from '../views/MaterialTopTabView';
 
 type Props = DefaultNavigatorOptions<
   ParamListBase,

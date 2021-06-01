@@ -1,11 +1,12 @@
-import * as React from 'react';
-import { Linking, Platform } from 'react-native';
 import {
-  getStateFromPath as getStateFromPathDefault,
   getActionFromState as getActionFromStateDefault,
+  getStateFromPath as getStateFromPathDefault,
   NavigationContainerRef,
   ParamListBase,
 } from '@react-navigation/core';
+import * as React from 'react';
+import { Linking, Platform } from 'react-native';
+
 import extractPathFromURL from './extractPathFromURL';
 import type { LinkingOptions } from './types';
 

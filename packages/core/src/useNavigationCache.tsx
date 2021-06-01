@@ -1,14 +1,14 @@
-import * as React from 'react';
 import {
   CommonActions,
   NavigationAction,
-  ParamListBase,
   NavigationState,
+  ParamListBase,
   Router,
 } from '@react-navigation/routers';
-import type { NavigationEventEmitter } from './useEventEmitter';
+import * as React from 'react';
 
 import type { NavigationHelpers, NavigationProp } from './types';
+import type { NavigationEventEmitter } from './useEventEmitter';
 
 type Options<
   State extends NavigationState,

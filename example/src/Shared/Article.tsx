@@ -1,14 +1,14 @@
+import { useScrollToTop, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
-  View,
-  Text,
   Image,
   ScrollView,
-  StyleSheet,
   ScrollViewProps,
+  StyleSheet,
+  Text,
   TextProps,
+  View,
 } from 'react-native';
-import { useScrollToTop, useTheme } from '@react-navigation/native';
 
 type Props = Partial<ScrollViewProps> & {
   date?: string;

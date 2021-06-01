@@ -1,5 +1,8 @@
+import { HeaderTitle } from '@react-navigation/elements';
+import { Route, useTheme } from '@react-navigation/native';
 import * as React from 'react';
-import { StyleSheet, I18nManager, Platform, View } from 'react-native';
+import { I18nManager, Platform, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   ScreenStackHeaderBackButtonImage,
   ScreenStackHeaderCenterView,
@@ -9,9 +12,7 @@ import {
   ScreenStackHeaderSearchBarView,
   SearchBar,
 } from 'react-native-screens';
-import { Route, useTheme } from '@react-navigation/native';
-import { HeaderTitle } from '@react-navigation/elements';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import type { NativeStackNavigationOptions } from '../types';
 import { processFonts } from './FontProcessor';
 
@@ -41,7 +42,7 @@ export default function HeaderConfig({
   headerTranslucent,
   route,
   orientation,
-  headerSearchBar,
+  headerSearchBarOptions,
   statusBarAnimation,
   statusBarHidden,
   statusBarStyle,
@@ -83,7 +84,11 @@ export default function HeaderConfig({
       ? headerTitle({ tintColor, children: titleText })
       : null;
 
-  if (Platform.OS === 'ios' && headerSearchBar != null && SearchBar == null) {
+  if (
+    Platform.OS === 'ios' &&
+    headerSearchBarOptions != null &&
+    SearchBar == null
+  ) {
     throw new Error(
       `The current version of 'react-native-screens' doesn't support SearchBar in the header. Please update to the latest version to use this option.`
     );
@@ -179,9 +184,9 @@ export default function HeaderConfig({
           {headerRightElement}
         </ScreenStackHeaderRightView>
       ) : null}
-      {Platform.OS === 'ios' && headerSearchBar != null ? (
+      {Platform.OS === 'ios' && headerSearchBarOptions != null ? (
         <ScreenStackHeaderSearchBarView>
-          <SearchBar {...headerSearchBar} />
+          <SearchBar {...headerSearchBarOptions} />
         </ScreenStackHeaderSearchBarView>
       ) : null}
     </ScreenStackHeaderConfig>

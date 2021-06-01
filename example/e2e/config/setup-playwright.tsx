@@ -1,6 +1,6 @@
 /* eslint-env jest */
 
-import { chromium, Browser, BrowserContext, Page } from 'playwright';
+import { Browser, BrowserContext, chromium, Page } from 'playwright';
 
 let browser: Browser;
 let context: BrowserContext;

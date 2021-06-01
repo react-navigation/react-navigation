@@ -1,23 +1,23 @@
-import type * as React from 'react';
+import type { HeaderOptions } from '@react-navigation/elements';
 import type {
-  Animated,
-  TouchableWithoutFeedbackProps,
-  StyleProp,
-  TextStyle,
-  ViewStyle,
-  GestureResponderEvent,
-} from 'react-native';
-import type {
+  Descriptor,
   NavigationHelpers,
   NavigationProp,
   ParamListBase,
-  Descriptor,
-  TabNavigationState,
-  TabActionHelpers,
   RouteProp,
+  TabActionHelpers,
+  TabNavigationState,
 } from '@react-navigation/native';
+import type * as React from 'react';
+import type {
+  Animated,
+  GestureResponderEvent,
+  StyleProp,
+  TextStyle,
+  TouchableWithoutFeedbackProps,
+  ViewStyle,
+} from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
-import type { HeaderOptions } from '@react-navigation/elements';
 
 export type Layout = { width: number; height: number };
 

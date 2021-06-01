@@ -3,6 +3,7 @@ import {
   PanGestureHandler as PanGestureHandlerNative,
   PanGestureHandlerProperties,
 } from 'react-native-gesture-handler';
+
 import DrawerGestureContext from '../utils/DrawerGestureContext';
 
 export function PanGestureHandler(props: PanGestureHandlerProperties) {
@@ -17,7 +18,7 @@ export function PanGestureHandler(props: PanGestureHandlerProperties) {
 
 export {
   GestureHandlerRootView,
-  TapGestureHandler,
   State as GestureState,
   PanGestureHandlerGestureEvent,
+  TapGestureHandler,
 } from 'react-native-gesture-handler';

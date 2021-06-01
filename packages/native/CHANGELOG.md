@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.12...@react-navigation/native@6.0.0-next.13) (2021-05-29)
+
+
+### Bug Fixes
+
+* validate property names in linking config ([324ea71](https://github.com/react-navigation/react-navigation/commit/324ea7181db6b743f512854be267cc9d65975b6f))
+
+
+
+
+
+# [6.0.0-next.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.11...@react-navigation/native@6.0.0-next.12) (2021-05-29)
+
+
+### Bug Fixes
+
+* try to fix [#9631](https://github.com/react-navigation/react-navigation/issues/9631) ([b4d7b0e](https://github.com/react-navigation/react-navigation/commit/b4d7b0ee86c09419a18357867a0a25bb90d960c0))
+
+
+
+
+
+# [6.0.0-next.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.10...@react-navigation/native@6.0.0-next.11) (2021-05-27)
+
+**Note:** Version bump only for package @react-navigation/native
+
+
+
+
+
+# [6.0.0-next.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.9...@react-navigation/native@6.0.0-next.10) (2021-05-26)
+
+
+### Features
+
+* expose container ref in useNavigation ([1d40279](https://github.com/react-navigation/react-navigation/commit/1d40279db18ab2aed12517ed3ca6af6d509477d2))
+
+
+
+
+
 # [6.0.0-next.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.8...@react-navigation/native@6.0.0-next.9) (2021-05-23)
 
 

@@ -1,5 +1,6 @@
 {
   "extends": "satya164",
+  "plugins": ["simple-import-sort"],
   "settings": {
     "react": {
       "version": "16"
@@ -23,6 +24,7 @@
     "node": true
   },
   "rules": {
-    "react/no-unused-prop-types": "off"
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error"
   }
 }

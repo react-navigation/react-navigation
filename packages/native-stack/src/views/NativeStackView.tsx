@@ -1,52 +1,29 @@
-import * as React from 'react';
-import { Platform, StyleSheet, View, ViewProps } from 'react-native';
-// @ts-ignore Getting private component
-import AppContainer from 'react-native/Libraries/ReactNative/AppContainer';
+import { SafeAreaProviderCompat } from '@react-navigation/elements';
 import {
   ParamListBase,
+  Route,
   StackActions,
   StackNavigationState,
   useTheme,
-  Route,
 } from '@react-navigation/native';
-import { SafeAreaProviderCompat } from '@react-navigation/elements';
+import * as React from 'react';
+import { Platform, StyleSheet } from 'react-native';
 import {
   Screen,
   ScreenStack,
   StackPresentationTypes,
 } from 'react-native-screens';
 import warnOnce from 'warn-once';
-import HeaderConfig from './HeaderConfig';
+
 import type {
   NativeStackDescriptorMap,
   NativeStackNavigationHelpers,
   NativeStackNavigationOptions,
 } from '../types';
+import DebugContainer from './DebugContainer';
+import HeaderConfig from './HeaderConfig';
 
 const isAndroid = Platform.OS === 'android';
-
-type ContainerProps = ViewProps & { stackPresentation: StackPresentationTypes };
-
-let Container = (View as unknown) as React.ComponentType<ContainerProps>;
-
-if (process.env.NODE_ENV !== 'production') {
-  const DebugContainer = (props: ContainerProps) => {
-    const { stackPresentation, ...rest } = props;
-
-    if (Platform.OS === 'ios' && stackPresentation !== 'push') {
-      // This is necessary for LogBox
-      return (
-        <AppContainer>
-          <View {...rest} />
-        </AppContainer>
-      );
-    }
-
-    return <View {...rest} />;
-  };
-
-  Container = DebugContainer;
-}
 
 const MaybeNestedStack = ({
   options,
@@ -80,7 +57,7 @@ const MaybeNestedStack = ({
   }, [headerShown, presentation, route.name]);
 
   const content = (
-    <Container
+    <DebugContainer
       style={[
         styles.container,
         presentation !== 'transparentModal' &&
@@ -92,7 +69,7 @@ const MaybeNestedStack = ({
       stackPresentation={presentation === 'card' ? 'push' : presentation}
     >
       {children}
-    </Container>
+    </DebugContainer>
   );
 
   if (isHeaderInModal) {

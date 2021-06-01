@@ -1,41 +1,42 @@
+import {
+  getHeaderTitle,
+  Header,
+  SafeAreaProviderCompat,
+  Screen,
+} from '@react-navigation/elements';
+import {
+  DrawerActions,
+  DrawerNavigationState,
+  ParamListBase,
+  useTheme,
+} from '@react-navigation/native';
 import * as React from 'react';
 import {
-  View,
-  StyleSheet,
+  BackHandler,
   I18nManager,
   Platform,
-  BackHandler,
+  StyleSheet,
+  View,
 } from 'react-native';
-import { useSafeAreaFrame } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
-import {
-  DrawerNavigationState,
-  DrawerActions,
-  useTheme,
-  ParamListBase,
-} from '@react-navigation/native';
-import {
-  Header,
-  Screen,
-  SafeAreaProviderCompat,
-  getHeaderTitle,
-} from '@react-navigation/elements';
-import { MaybeScreenContainer, MaybeScreen } from './ScreenFallback';
-import { GestureHandlerRootView } from './GestureHandler';
-import DrawerToggleButton from './DrawerToggleButton';
-import DrawerContent from './DrawerContent';
-import DrawerStatusContext from '../utils/DrawerStatusContext';
-import DrawerPositionContext from '../utils/DrawerPositionContext';
-import getDrawerStatusFromState from '../utils/getDrawerStatusFromState';
+import { useSafeAreaFrame } from 'react-native-safe-area-context';
+
 import type {
+  DrawerContentComponentProps,
   DrawerDescriptorMap,
+  DrawerHeaderProps,
   DrawerNavigationConfig,
   DrawerNavigationHelpers,
-  DrawerContentComponentProps,
-  DrawerHeaderProps,
   DrawerNavigationProp,
   DrawerProps,
 } from '../types';
+import DrawerPositionContext from '../utils/DrawerPositionContext';
+import DrawerStatusContext from '../utils/DrawerStatusContext';
+import getDrawerStatusFromState from '../utils/getDrawerStatusFromState';
+import DrawerContent from './DrawerContent';
+import DrawerToggleButton from './DrawerToggleButton';
+import { GestureHandlerRootView } from './GestureHandler';
+import { MaybeScreen, MaybeScreenContainer } from './ScreenFallback';
 
 type Props = DrawerNavigationConfig & {
   state: DrawerNavigationState<ParamListBase>;

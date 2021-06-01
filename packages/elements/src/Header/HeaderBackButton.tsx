@@ -1,16 +1,17 @@
+import { useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
   I18nManager,
   Image,
-  View,
+  LayoutChangeEvent,
   Platform,
   StyleSheet,
-  LayoutChangeEvent,
+  View,
 } from 'react-native';
-import { useTheme } from '@react-navigation/native';
-import PlatformPressable from '../PlatformPressable';
+
 import MaskedView from '../MaskedView';
+import PlatformPressable from '../PlatformPressable';
 import type { HeaderBackButtonProps } from '../types';
 
 export default function HeaderBackButton({

@@ -1,4 +1,5 @@
 import { I18nManager } from 'react-native';
+
 import type { GestureDirection } from '../types';
 
 export default function getInvertedMultiplier(

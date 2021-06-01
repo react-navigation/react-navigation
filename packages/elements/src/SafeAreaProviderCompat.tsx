@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Dimensions, Platform } from 'react-native';
 import {
-  SafeAreaProvider,
-  SafeAreaInsetsContext,
   initialWindowMetrics,
+  SafeAreaInsetsContext,
+  SafeAreaProvider,
 } from 'react-native-safe-area-context';
 
 type Props = {

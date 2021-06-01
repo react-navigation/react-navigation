@@ -1,7 +1,7 @@
+import type { StackScreenProps } from '@react-navigation/stack';
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native-paper';
-import type { StackScreenProps } from '@react-navigation/stack';
 
 const NotFoundScreen = ({
   route,

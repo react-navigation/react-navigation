@@ -1,12 +1,13 @@
 import { nanoid } from 'nanoid/non-secure';
+
 import BaseRouter from './BaseRouter';
 import type {
-  NavigationState,
   CommonNavigationAction,
-  Router,
   DefaultRouterOptions,
-  Route,
+  NavigationState,
   ParamListBase,
+  Route,
+  Router,
 } from './types';
 
 export type StackActionType =

@@ -1,21 +1,22 @@
-import * as React from 'react';
-import warnOnce from 'warn-once';
 import {
-  useNavigationBuilder,
   createNavigatorFactory,
   DefaultNavigatorOptions,
+  ParamListBase,
+  TabActionHelpers,
+  TabNavigationState,
   TabRouter,
   TabRouterOptions,
-  TabNavigationState,
-  TabActionHelpers,
-  ParamListBase,
+  useNavigationBuilder,
 } from '@react-navigation/native';
-import BottomTabView from '../views/BottomTabView';
+import * as React from 'react';
+import warnOnce from 'warn-once';
+
 import type {
   BottomTabNavigationConfig,
-  BottomTabNavigationOptions,
   BottomTabNavigationEventMap,
+  BottomTabNavigationOptions,
 } from '../types';
+import BottomTabView from '../views/BottomTabView';
 
 type Props = DefaultNavigatorOptions<
   ParamListBase,

@@ -1,19 +1,19 @@
-import type { StyleProp, ViewStyle, TextStyle } from 'react-native';
+import type { HeaderOptions } from '@react-navigation/elements';
+import type {
+  Descriptor,
+  DrawerActionHelpers,
+  DrawerNavigationState,
+  NavigationHelpers,
+  NavigationProp,
+  ParamListBase,
+  Route,
+  RouteProp,
+} from '@react-navigation/native';
+import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 import type {
   PanGestureHandler,
   PanGestureHandlerProperties,
 } from 'react-native-gesture-handler';
-import type {
-  Route,
-  ParamListBase,
-  NavigationProp,
-  Descriptor,
-  NavigationHelpers,
-  DrawerNavigationState,
-  DrawerActionHelpers,
-  RouteProp,
-} from '@react-navigation/native';
-import type { HeaderOptions } from '@react-navigation/elements';
 
 export type Scene = {
   route: Route<string>;

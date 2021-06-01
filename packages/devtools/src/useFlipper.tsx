@@ -1,7 +1,8 @@
-import * as React from 'react';
 import type { NavigationContainerRef } from '@react-navigation/core';
-import type { Flipper } from 'react-native-flipper';
 import { nanoid } from 'nanoid/non-secure';
+import * as React from 'react';
+import type { Flipper } from 'react-native-flipper';
+
 import useDevToolsBase from './useDevToolsBase';
 
 let FlipperModule: typeof import('react-native-flipper') | undefined;
@@ -81,8 +82,10 @@ export default function useFlipper(
         });
 
         on('linking.invoke', ({ method, args = [] }) => {
-          // @ts-expect-error: __linking isn't publicly exposed
-          const linking = ref.current?.__linking;
+          const linking: any = ref.current
+            ? // @ts-ignore: this might not exist
+              global.REACT_NAVIGATION_DEVTOOLS?.get(ref.current)?.linking
+            : null;
 
           switch (method) {
             case 'getStateFromPath':

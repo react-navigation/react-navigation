@@ -1,14 +1,15 @@
 import * as React from 'react';
-import { Animated, View, StyleSheet, Platform, ViewStyle } from 'react-native';
+import { Animated, Platform, StyleSheet, View, ViewStyle } from 'react-native';
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import HeaderTitle from './HeaderTitle';
+
+import type { HeaderOptions, Layout } from '../types';
+import getDefaultHeaderHeight from './getDefaultHeaderHeight';
 import HeaderBackground from './HeaderBackground';
 import HeaderShownContext from './HeaderShownContext';
-import getDefaultHeaderHeight from './getDefaultHeaderHeight';
-import type { HeaderOptions, Layout } from '../types';
+import HeaderTitle from './HeaderTitle';
 
 type Props = HeaderOptions & {
   /**

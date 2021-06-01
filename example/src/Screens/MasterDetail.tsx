@@ -1,20 +1,21 @@
+import {
+  createDrawerNavigator,
+  DrawerContent,
+  DrawerContentComponentProps,
+  DrawerScreenProps,
+} from '@react-navigation/drawer';
+import {
+  ParamListBase,
+  useNavigation,
+  useTheme,
+} from '@react-navigation/native';
+import type { StackScreenProps } from '@react-navigation/stack';
 import * as React from 'react';
 import { Dimensions, ScaledSize } from 'react-native';
 import { Appbar } from 'react-native-paper';
-import {
-  useTheme,
-  useNavigation,
-  ParamListBase,
-} from '@react-navigation/native';
-import {
-  createDrawerNavigator,
-  DrawerScreenProps,
-  DrawerContent,
-  DrawerContentComponentProps,
-} from '@react-navigation/drawer';
-import type { StackScreenProps } from '@react-navigation/stack';
-import Article from '../Shared/Article';
+
 import Albums from '../Shared/Albums';
+import Article from '../Shared/Article';
 import NewsFeed from '../Shared/NewsFeed';
 
 type DrawerParams = {

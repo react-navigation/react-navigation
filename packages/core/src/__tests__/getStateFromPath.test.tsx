@@ -1,8 +1,9 @@
 import type { InitialState } from '@react-navigation/routers';
 import produce from 'immer';
-import getStateFromPath from '../getStateFromPath';
-import getPathFromState from '../getPathFromState';
+
 import findFocusedRoute from '../findFocusedRoute';
+import getPathFromState from '../getPathFromState';
+import getStateFromPath from '../getStateFromPath';
 
 const changePath = <T extends InitialState>(state: T, path: string): T =>
   produce(state, (draftState) => {
@@ -2418,4 +2419,58 @@ it('correctly applies initialRouteName for config with similar route names v2', 
   expect(
     getStateFromPath<object>(getPathFromState<object>(state, config), config)
   ).toEqual(state);
+});
+
+it('throws when invalid properties are specified in the config', () => {
+  expect(() =>
+    getStateFromPath<object>('', {
+      Foo: 'foo',
+      Bar: {
+        path: 'bar',
+      },
+    } as any)
+  ).toThrowErrorMatchingInlineSnapshot(`
+    "Found invalid properties in the configuration:
+    - Foo
+    - Bar
+
+    Did you forget to specify them under a 'screens' property?
+
+    You can only specify the following properties:
+    - initialRouteName
+    - screens
+
+    See https://reactnavigation.org/docs/configuring-links for more details on how to specify a linking configuration."
+  `);
+
+  expect(() =>
+    getStateFromPath<object>('', {
+      screens: {
+        Foo: 'foo',
+        Bar: {
+          path: 'bar',
+        },
+        Baz: {
+          Qux: {
+            path: 'qux',
+          },
+        },
+      },
+    } as any)
+  ).toThrowErrorMatchingInlineSnapshot(`
+    "Found invalid properties in the configuration:
+    - Qux
+
+    Did you forget to specify them under a 'screens' property?
+
+    You can only specify the following properties:
+    - initialRouteName
+    - screens
+    - path
+    - exact
+    - stringify
+    - parse
+
+    See https://reactnavigation.org/docs/configuring-links for more details on how to specify a linking configuration."
+  `);
 });
