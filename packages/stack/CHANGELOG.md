@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.25](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.24...@react-navigation/stack@6.0.0-next.25) (2021-06-01)
+
+
+### Bug Fixes
+
+* tweak android q animation ([7d74bd7](https://github.com/react-navigation/react-navigation/commit/7d74bd73a7333f0b1373a05c9f06e981556feed2))
+
+
+
+
+
 # [6.0.0-next.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.23...@react-navigation/stack@6.0.0-next.24) (2021-05-29)
 
 
