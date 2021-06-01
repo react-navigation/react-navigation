@@ -53,7 +53,7 @@ export default function PlatformPressable({
   };
 
   const handlePressIn = (e: GestureResponderEvent) => {
-    animateTo(pressOpacity, 150);
+    animateTo(pressOpacity, 0);
     onPressIn?.(e);
   };
 
