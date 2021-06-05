@@ -58,28 +58,25 @@ function StackNavigator({
     `Stack Navigator: 'headerMode' is moved to 'options'. Moved it to 'screenOptions' to keep current behavior.`
   );
 
-  const {
-    state,
-    descriptors,
-    navigation,
-    NavigationContent,
-  } = useNavigationBuilder<
-    StackNavigationState<ParamListBase>,
-    StackRouterOptions,
-    StackActionHelpers<ParamListBase>,
-    StackNavigationOptions,
-    StackNavigationEventMap
-  >(StackRouter, {
-    initialRouteName,
-    children,
-    screenListeners,
-    screenOptions,
-    defaultScreenOptions: () => ({
-      presentation: mode,
-      headerShown: headerMode ? headerMode !== 'none' : true,
-      headerMode: headerMode && headerMode !== 'none' ? headerMode : undefined,
-    }),
-  });
+  const { state, descriptors, navigation, NavigationContent } =
+    useNavigationBuilder<
+      StackNavigationState<ParamListBase>,
+      StackRouterOptions,
+      StackActionHelpers<ParamListBase>,
+      StackNavigationOptions,
+      StackNavigationEventMap
+    >(StackRouter, {
+      initialRouteName,
+      children,
+      screenListeners,
+      screenOptions,
+      defaultScreenOptions: () => ({
+        presentation: mode,
+        headerShown: headerMode ? headerMode !== 'none' : true,
+        headerMode:
+          headerMode && headerMode !== 'none' ? headerMode : undefined,
+      }),
+    });
 
   React.useEffect(
     () =>

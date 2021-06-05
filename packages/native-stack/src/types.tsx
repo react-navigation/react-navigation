@@ -243,7 +243,7 @@ export type NativeStackNavigationOptions = {
    *
    * @platform ios
    */
-  statusBarAnimation?: ScreenStackHeaderConfigProps['statusBarAnimation'];
+  statusBarAnimation?: ScreenProps['statusBarAnimation'];
   /**
    * Whether the status bar should be hidden on this screen.
    * Requires setting `View controller-based status bar appearance -> YES` in your Info.plist file.
@@ -261,7 +261,7 @@ export type NativeStackNavigationOptions = {
    *
    * @platform ios
    */
-  statusBarStyle?: ScreenStackHeaderConfigProps['statusBarStyle'];
+  statusBarStyle?: ScreenProps['statusBarStyle'];
   /**
    * Style object for the scene content.
    */
@@ -319,7 +319,7 @@ export type NativeStackNavigationOptions = {
    * - "landscape_left": landscape-left orientation is permitted.
    * - "landscape_right": landscape-right orientation is permitted.
    */
-  orientation?: ScreenStackHeaderConfigProps['screenOrientation'];
+  orientation?: ScreenProps['screenOrientation'];
 };
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<

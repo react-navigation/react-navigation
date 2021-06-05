@@ -40,8 +40,8 @@ export default function useFocusedListenersChildrenAdapter({
     [focusedListeners, navigation]
   );
 
-  React.useEffect(() => addListener?.('focus', listener), [
-    addListener,
-    listener,
-  ]);
+  React.useEffect(
+    () => addListener?.('focus', listener),
+    [addListener, listener]
+  );
 }

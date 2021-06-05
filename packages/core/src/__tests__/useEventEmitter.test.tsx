@@ -31,19 +31,21 @@ it('fires focus and blur events in root navigator', () => {
   const fourthFocusCallback = jest.fn();
   const fourthBlurCallback = jest.fn();
 
-  const createComponent = (focusCallback: any, blurCallback: any) => ({
-    navigation,
-  }: any) => {
-    React.useEffect(() => navigation.addListener('focus', focusCallback), [
-      navigation,
-    ]);
+  const createComponent =
+    (focusCallback: any, blurCallback: any) =>
+    ({ navigation }: any) => {
+      React.useEffect(
+        () => navigation.addListener('focus', focusCallback),
+        [navigation]
+      );
 
-    React.useEffect(() => navigation.addListener('blur', blurCallback), [
-      navigation,
-    ]);
+      React.useEffect(
+        () => navigation.addListener('blur', blurCallback),
+        [navigation]
+      );
 
-    return null;
-  };
+      return null;
+    };
 
   const navigation = React.createRef<any>();
 
@@ -185,19 +187,21 @@ it('fires focus and blur events in nested navigator', () => {
   const fourthFocusCallback = jest.fn();
   const fourthBlurCallback = jest.fn();
 
-  const createComponent = (focusCallback: any, blurCallback: any) => ({
-    navigation,
-  }: any) => {
-    React.useEffect(() => navigation.addListener('focus', focusCallback), [
-      navigation,
-    ]);
+  const createComponent =
+    (focusCallback: any, blurCallback: any) =>
+    ({ navigation }: any) => {
+      React.useEffect(
+        () => navigation.addListener('focus', focusCallback),
+        [navigation]
+      );
 
-    React.useEffect(() => navigation.addListener('blur', blurCallback), [
-      navigation,
-    ]);
+      React.useEffect(
+        () => navigation.addListener('blur', blurCallback),
+        [navigation]
+      );
 
-    return null;
-  };
+      return null;
+    };
 
   const parent = React.createRef<any>();
   const child = React.createRef<any>();
@@ -392,9 +396,10 @@ it('fires blur event when a route is removed with a delay', async () => {
   const First = () => null;
 
   const Second = ({ navigation }: any) => {
-    React.useEffect(() => navigation.addListener('blur', blurCallback), [
-      navigation,
-    ]);
+    React.useEffect(
+      () => navigation.addListener('blur', blurCallback),
+      [navigation]
+    );
 
     return null;
   };
@@ -447,13 +452,16 @@ it('fires custom events added with addListener', () => {
   const secondCallback = jest.fn();
   const thirdCallback = jest.fn();
 
-  const createComponent = (callback: any) => ({ navigation }: any) => {
-    React.useEffect(() => navigation.addListener(eventName, callback), [
-      navigation,
-    ]);
+  const createComponent =
+    (callback: any) =>
+    ({ navigation }: any) => {
+      React.useEffect(
+        () => navigation.addListener(eventName, callback),
+        [navigation]
+      );
 
-    return null;
-  };
+      return null;
+    };
 
   const ref = React.createRef<any>();
 
@@ -526,9 +534,10 @@ it("doesn't call same listener multiple times with addListener", () => {
   const callback = jest.fn();
 
   const Test = ({ navigation }: any) => {
-    React.useEffect(() => navigation.addListener(eventName, callback), [
-      navigation,
-    ]);
+    React.useEffect(
+      () => navigation.addListener(eventName, callback),
+      [navigation]
+    );
 
     return null;
   };
@@ -802,9 +811,10 @@ it('has option to prevent default', () => {
   };
 
   const Test = ({ navigation }: any) => {
-    React.useEffect(() => navigation.addListener(eventName, callback), [
-      navigation,
-    ]);
+    React.useEffect(
+      () => navigation.addListener(eventName, callback),
+      [navigation]
+    );
 
     return null;
   };

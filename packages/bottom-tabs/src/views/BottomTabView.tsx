@@ -137,7 +137,8 @@ export default function BottomTabView(props: Props) {
                   header={header({
                     layout: dimensions,
                     route: descriptor.route,
-                    navigation: descriptor.navigation as BottomTabNavigationProp<ParamListBase>,
+                    navigation:
+                      descriptor.navigation as BottomTabNavigationProp<ParamListBase>,
                     options: descriptor.options,
                   })}
                   style={sceneContainerStyle}

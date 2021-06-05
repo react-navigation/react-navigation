@@ -220,7 +220,7 @@ export default function useNavigationBuilder<
   const { children, screenListeners, ...rest } = options;
   const { current: router } = React.useRef<Router<State, any>>(
     createRouter({
-      ...((rest as unknown) as RouterOptions),
+      ...(rest as unknown as RouterOptions),
       ...(route?.params &&
       route.params.state == null &&
       route.params.initial !== false &&
@@ -230,11 +230,8 @@ export default function useNavigationBuilder<
     })
   );
 
-  const routeConfigs = getRouteConfigsFromChildren<
-    State,
-    ScreenOptions,
-    EventMap
-  >(children);
+  const routeConfigs =
+    getRouteConfigsFromChildren<State, ScreenOptions, EventMap>(children);
 
   const screens = routeConfigs.reduce<
     Record<string, ScreenConfigWithParent<State, ScreenOptions, EventMap>>

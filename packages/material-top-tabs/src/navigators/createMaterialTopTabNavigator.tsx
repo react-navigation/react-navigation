@@ -78,24 +78,20 @@ function MaterialTopTabNavigator({
     );
   }
 
-  const {
-    state,
-    descriptors,
-    navigation,
-    NavigationContent,
-  } = useNavigationBuilder<
-    TabNavigationState<ParamListBase>,
-    TabRouterOptions,
-    TabActionHelpers<ParamListBase>,
-    MaterialTopTabNavigationOptions,
-    MaterialTopTabNavigationEventMap
-  >(TabRouter, {
-    initialRouteName,
-    backBehavior,
-    children,
-    screenListeners,
-    screenOptions,
-  });
+  const { state, descriptors, navigation, NavigationContent } =
+    useNavigationBuilder<
+      TabNavigationState<ParamListBase>,
+      TabRouterOptions,
+      TabActionHelpers<ParamListBase>,
+      MaterialTopTabNavigationOptions,
+      MaterialTopTabNavigationEventMap
+    >(TabRouter, {
+      initialRouteName,
+      backBehavior,
+      children,
+      screenListeners,
+      screenOptions,
+    });
 
   return (
     <NavigationContent>

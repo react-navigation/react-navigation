@@ -6,13 +6,14 @@ type Props = {
 
 const MULTIPLE_NAVIGATOR_ERROR = `Another navigator is already registered for this container. You likely have multiple navigators under a single "NavigationContainer" or "Screen". Make sure each navigator is under a separate "Screen" container. See https://reactnavigation.org/docs/nesting-navigators for a guide on nesting.`;
 
-export const SingleNavigatorContext = React.createContext<
-  | {
-      register(key: string): void;
-      unregister(key: string): void;
-    }
-  | undefined
->(undefined);
+export const SingleNavigatorContext =
+  React.createContext<
+    | {
+        register(key: string): void;
+        unregister(key: string): void;
+      }
+    | undefined
+  >(undefined);
 
 /**
  * Component which ensures that there's only one navigator nested under it.

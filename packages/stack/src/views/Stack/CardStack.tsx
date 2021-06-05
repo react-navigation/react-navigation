@@ -102,9 +102,8 @@ const getHeaderHeights = (
     const height =
       typeof style.height === 'number' ? style.height : previous[curr.key];
 
-    const {
-      headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
-    } = options;
+    const { headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top } =
+      options;
 
     acc[curr.key] =
       typeof height === 'number'

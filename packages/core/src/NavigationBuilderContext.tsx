@@ -39,7 +39,10 @@ export type FocusedNavigationCallback<T> = (
 
 export type FocusedNavigationListener = <T>(
   callback: FocusedNavigationCallback<T>
-) => { handled: boolean; result: T };
+) => {
+  handled: boolean;
+  result: T;
+};
 
 export type GetStateListener = () => NavigationState;
 

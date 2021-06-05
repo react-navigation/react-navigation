@@ -46,8 +46,8 @@
   "devDependencies": {
     "@react-navigation/native": "^6.0.0-next.13",
     "@testing-library/react-native": "^7.2.0",
-    "@types/react": "^16.9.53",
-    "@types/react-native": "~0.64.4",
+    "@types/react": "^17.0.9",
+    "@types/react-native": "~0.64.9",
     "@types/react-native-vector-icons": "^6.4.6",
     "del-cli": "^3.0.1",
     "react": "~16.13.1",
@@ -56,7 +56,7 @@
     "react-native-paper": "^4.9.1",
     "react-native-safe-area-context": "~3.2.0",
     "react-native-vector-icons": "^8.1.0",
-    "typescript": "^4.2.3"
+    "typescript": "^4.3.2"
   },
   "peerDependencies": {
     "@react-navigation/native": "^6.0.0",

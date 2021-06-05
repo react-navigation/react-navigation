@@ -39,19 +39,19 @@
   "dependencies": {
     "@react-navigation/core": "^6.0.0-next.13",
     "escape-string-regexp": "^4.0.0",
-    "nanoid": "^3.1.22"
+    "nanoid": "^3.1.23"
   },
   "devDependencies": {
     "@testing-library/react-native": "^7.2.0",
-    "@types/react": "^16.9.53",
-    "@types/react-dom": "^16.9.8",
-    "@types/react-native": "~0.64.4",
+    "@types/react": "^17.0.9",
+    "@types/react-dom": "^17.0.6",
+    "@types/react-native": "~0.64.9",
     "del-cli": "^3.0.1",
     "react": "~16.13.1",
     "react-dom": "^16.13.1",
     "react-native": "~0.63.4",
     "react-native-builder-bob": "^0.18.1",
-    "typescript": "^4.2.3"
+    "typescript": "^4.3.2"
   },
   "peerDependencies": {
     "react": "*",

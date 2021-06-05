@@ -74,26 +74,22 @@ function DrawerNavigator({
     );
   }
 
-  const {
-    state,
-    descriptors,
-    navigation,
-    NavigationContent,
-  } = useNavigationBuilder<
-    DrawerNavigationState<ParamListBase>,
-    DrawerRouterOptions,
-    DrawerActionHelpers<ParamListBase>,
-    DrawerNavigationOptions,
-    DrawerNavigationEventMap
-  >(DrawerRouter, {
-    initialRouteName,
-    defaultStatus,
-    backBehavior,
-    children,
-    screenListeners,
-    screenOptions,
-    defaultScreenOptions,
-  });
+  const { state, descriptors, navigation, NavigationContent } =
+    useNavigationBuilder<
+      DrawerNavigationState<ParamListBase>,
+      DrawerRouterOptions,
+      DrawerActionHelpers<ParamListBase>,
+      DrawerNavigationOptions,
+      DrawerNavigationEventMap
+    >(DrawerRouter, {
+      initialRouteName,
+      defaultStatus,
+      backBehavior,
+      children,
+      screenListeners,
+      screenOptions,
+      defaultScreenOptions,
+    });
 
   return (
     <NavigationContent>

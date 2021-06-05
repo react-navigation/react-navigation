@@ -23,15 +23,15 @@ PODS:
     - UMImageLoaderInterface
   - EXKeepAwake (9.1.2):
     - UMCore
-  - EXPermissions (12.0.0):
+  - EXPermissions (12.0.1):
     - UMCore
     - UMPermissionsInterface
-  - EXSplashScreen (0.10.0):
+  - EXSplashScreen (0.10.2):
     - React-Core
     - UMCore
   - EXStructuredHeaders (1.0.1):
     - UMCore
-  - EXUpdates (0.5.4):
+  - EXUpdates (0.5.5):
     - EXStructuredHeaders
     - React-Core
     - UMCore
@@ -271,9 +271,9 @@ PODS:
     - React
   - react-native-flipper (0.80.0):
     - React-Core
-  - react-native-safe-area-context (3.2.0):
+  - react-native-pager-view (5.1.10):
     - React-Core
-  - react-native-viewpager (5.0.12):
+  - react-native-safe-area-context (3.2.0):
     - React-Core
   - React-RCTActionSheet (0.63.4):
     - React-Core/RCTActionSheetHeaders (= 0.63.4)
@@ -335,13 +335,13 @@ PODS:
     - React-Core (= 0.63.4)
     - React-cxxreact (= 0.63.4)
     - React-jsi (= 0.63.4)
-  - RNCAsyncStorage (1.15.1):
+  - RNCAsyncStorage (1.15.5):
     - React-Core
   - RNCMaskedView (0.2.4):
     - React-Core
   - RNGestureHandler (1.10.3):
     - React-Core
-  - RNReanimated (2.1.0):
+  - RNReanimated (2.2.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -370,8 +370,9 @@ PODS:
     - React-RCTVibration
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.0.0):
+  - RNScreens (3.3.0):
     - React-Core
+    - React-RCTImage
   - RNVectorIcons (8.1.0):
     - React-Core
   - UMAppLoader (2.1.0)
@@ -451,8 +452,8 @@ DEPENDENCIES:
   - React-jsinspector (from `../../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-appearance (from `../../node_modules/react-native-appearance`)
   - react-native-flipper (from `../../node_modules/react-native-flipper`)
+  - react-native-pager-view (from `../../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../../node_modules/react-native-safe-area-context`)
-  - react-native-viewpager (from `../node_modules/react-native-pager-view`)
   - React-RCTActionSheet (from `../../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../../node_modules/react-native/Libraries/Blob`)
@@ -464,7 +465,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/turbomodule/core (from `../../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../../node_modules/@react-native-async-storage/async-storage`)"
-  - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
+  - "RNCMaskedView (from `../../node_modules/@react-native-masked-view/masked-view`)"
   - RNGestureHandler (from `../../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../../node_modules/react-native-reanimated`)
   - RNScreens (from `../../node_modules/react-native-screens`)
@@ -558,10 +559,10 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/react-native-appearance"
   react-native-flipper:
     :path: "../../node_modules/react-native-flipper"
+  react-native-pager-view:
+    :path: "../../node_modules/react-native-pager-view"
   react-native-safe-area-context:
     :path: "../../node_modules/react-native-safe-area-context"
-  react-native-viewpager:
-    :path: "../node_modules/react-native-pager-view"
   React-RCTActionSheet:
     :path: "../../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -585,7 +586,7 @@ EXTERNAL SOURCES:
   RNCAsyncStorage:
     :path: "../../node_modules/@react-native-async-storage/async-storage"
   RNCMaskedView:
-    :path: "../node_modules/@react-native-masked-view/masked-view"
+    :path: "../../node_modules/@react-native-masked-view/masked-view"
   RNGestureHandler:
     :path: "../../node_modules/react-native-gesture-handler"
   RNReanimated:
@@ -635,10 +636,10 @@ SPEC CHECKSUMS:
   EXFont: d6fb79f9863120f0d0b26b0c2d1453bc9511e9df
   EXImageLoader: da941c9399e01ec28f2d5b270bdd21f2c8ca596c
   EXKeepAwake: d4e4a3ed8c1c4fd940dd62fc5a8be2a190371fd4
-  EXPermissions: 67ff17d3c12ea06066492dde4242f8047658fd62
-  EXSplashScreen: 9d79ea338b7bb2ee94df51723870bac70b408d44
+  EXPermissions: 8f8c1c05580c4e02d4ee2c8dd74bfe173ff6a723
+  EXSplashScreen: a9baaf4fa866003884c90ba049f18760d6a8ce39
   EXStructuredHeaders: be834496a4d9fd0069cd12ec1cc57b31c6d3b256
-  EXUpdates: e191b83e00d3e7ebfd7db3986806ceca09b7b322
+  EXUpdates: efe0e8c514dcff06a8fd0b63be6019a6365fb9c7
   FBLazyVector: 3bb422f41b18121b71783a905c10e58606f7dc3e
   FBReactNativeSpec: f2c97f2529dd79c083355182cc158c9f98f4bd6e
   Flipper: d3da1aa199aad94455ae725e9f3aa43f3ec17021
@@ -664,8 +665,8 @@ SPEC CHECKSUMS:
   React-jsinspector: 58aef7155bc9a9683f5b60b35eccea8722a4f53a
   react-native-appearance: 0f0e5fc2fcef70e03d48c8fe6b00b9158c2ba8aa
   react-native-flipper: 5a9d5959364fca6a8a9658d941343774cb197857
+  react-native-pager-view: 967d50ce0f1b72e434a2d9f3b739ddbf7d5bbf83
   react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
-  react-native-viewpager: 98a850d1c7ac6263122d82618a77062a5f427073
   React-RCTActionSheet: 89a0ca9f4a06c1f93c26067af074ccdce0f40336
   React-RCTAnimation: 1bde3ecc0c104c55df246eda516e0deb03c4e49b
   React-RCTBlob: a97d378b527740cc667e03ebfa183a75231ab0f0
@@ -676,11 +677,11 @@ SPEC CHECKSUMS:
   React-RCTText: 5c51df3f08cb9dedc6e790161195d12bac06101c
   React-RCTVibration: ae4f914cfe8de7d4de95ae1ea6cc8f6315d73d9d
   ReactCommon: 73d79c7039f473b76db6ff7c6b159c478acbbb3b
-  RNCAsyncStorage: 08719e311ab90492c2dafd6d6fb7ffb396493638
+  RNCAsyncStorage: 56a3355a10b5d660c48c6e37325ac85ebfd09885
   RNCMaskedView: fc29d354a40316a990e8fb46391f08aea829c3aa
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
-  RNReanimated: 70f662b5232dd5d19ccff581e919a54ea73df51c
-  RNScreens: e8e8dd0588b5da0ab57dcca76ab9b2d8987757e0
+  RNReanimated: d9da990fc90123f4ffbfdda93d00fc15174863a8
+  RNScreens: bf59f17fbf001f1025243eeed5f19419d3c11ef2
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   UMAppLoader: fe2708bb0ac5cd70052bc207d06aa3b7e72b9e97
   UMBarCodeScannerInterface: 79f92bea5f7af39b381a4c82298105ceb537408a

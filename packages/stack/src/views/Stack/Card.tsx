@@ -174,13 +174,8 @@ export default class Card extends React.Component<Props> {
     closing: boolean;
     velocity?: number;
   }) => {
-    const {
-      gesture,
-      transitionSpec,
-      onOpen,
-      onClose,
-      onTransition,
-    } = this.props;
+    const { gesture, transitionSpec, onOpen, onClose, onTransition } =
+      this.props;
 
     const toValue = this.getAnimateToValue({
       ...this.props,
@@ -327,13 +322,13 @@ export default class Card extends React.Component<Props> {
         if (closing) {
           // We call onClose with a delay to make sure that the animation has already started
           // This will make sure that the state update caused by this doesn't affect start of animation
-          this.pendingGestureCallback = (setTimeout(() => {
+          this.pendingGestureCallback = setTimeout(() => {
             onClose();
 
             // Trigger an update after we dispatch the action to remove the screen
             // This will make sure that we check if the screen didn't get removed so we can cancel the animation
             this.forceUpdate();
-          }, 32) as any) as number;
+          }, 32) as any as number;
         }
 
         onGestureEnd?.();
@@ -469,12 +464,8 @@ export default class Card extends React.Component<Props> {
       interpolationProps
     );
 
-    const {
-      containerStyle,
-      cardStyle,
-      overlayStyle,
-      shadowStyle,
-    } = interpolatedStyle;
+    const { containerStyle, cardStyle, overlayStyle, shadowStyle } =
+      interpolatedStyle;
 
     const handleGestureEvent = gestureEnabled
       ? Animated.event(

@@ -9,9 +9,8 @@ export default function DrawerContent({
   state,
   ...rest
 }: DrawerContentComponentProps) {
-  const { drawerContentStyle, drawerContentContainerStyle } = descriptors[
-    state.routes[state.index].key
-  ].options;
+  const { drawerContentStyle, drawerContentContainerStyle } =
+    descriptors[state.routes[state.index].key].options;
 
   return (
     <DrawerContentScrollView

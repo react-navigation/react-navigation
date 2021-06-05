@@ -102,6 +102,10 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
           headerShown,
           animationTypeForReplace = 'pop',
           animation,
+          orientation,
+          statusBarAnimation,
+          statusBarHidden,
+          statusBarStyle,
         } = options;
 
         let { presentation = 'card' } = options;
@@ -131,6 +135,10 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
             replaceAnimation={animationTypeForReplace}
             stackPresentation={presentation === 'card' ? 'push' : presentation}
             stackAnimation={animation}
+            screenOrientation={orientation}
+            statusBarAnimation={statusBarAnimation}
+            statusBarHidden={statusBarHidden}
+            statusBarStyle={statusBarStyle}
             onWillAppear={() => {
               navigation.emit({
                 type: 'transitionStart',

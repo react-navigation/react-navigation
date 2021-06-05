@@ -25,5 +25,5 @@
     "strict": true,
     "target": "esnext"
   },
-  "exclude": ["packages/flipper-plugin-react-navigation"]
+  "exclude": ["packages/*/lib", "packages/flipper-plugin-react-navigation"]
 }

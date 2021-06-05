@@ -189,9 +189,9 @@ export default function TabRouter({
       }
 
       const routes = routeNames.map((name) => {
-        const route = (state as PartialState<
-          TabNavigationState<ParamListBase>
-        >).routes.find((r) => r.name === name);
+        const route = (
+          state as PartialState<TabNavigationState<ParamListBase>>
+        ).routes.find((r) => r.name === name);
 
         return {
           ...route,

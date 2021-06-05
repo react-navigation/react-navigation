@@ -41,11 +41,7 @@ export default function HeaderConfig({
   headerTitleStyle,
   headerTranslucent,
   route,
-  orientation,
   headerSearchBarOptions,
-  statusBarAnimation,
-  statusBarHidden,
-  statusBarStyle,
   title,
 }: Props): JSX.Element {
   const insets = useSafeAreaInsets();
@@ -65,15 +61,12 @@ export default function HeaderConfig({
   const headerStyleFlattened = StyleSheet.flatten(headerStyle) || {};
   const headerLargeStyleFlattened = StyleSheet.flatten(headerLargeStyle) || {};
 
-  const [
-    backTitleFontFamily,
-    largeTitleFontFamily,
-    titleFontFamily,
-  ] = processFonts([
-    headerBackTitleStyleFlattened.fontFamily,
-    headerLargeTitleStyleFlattened.fontFamily,
-    headerTitleStyleFlattened.fontFamily,
-  ]);
+  const [backTitleFontFamily, largeTitleFontFamily, titleFontFamily] =
+    processFonts([
+      headerBackTitleStyleFlattened.fontFamily,
+      headerLargeTitleStyleFlattened.fontFamily,
+      headerTitleStyleFlattened.fontFamily,
+    ]);
 
   const titleText = title !== undefined ? title : route.name;
 
@@ -126,10 +119,6 @@ export default function HeaderConfig({
       largeTitleFontSize={headerLargeTitleStyleFlattened.fontSize}
       largeTitleFontWeight={headerLargeTitleStyleFlattened.fontWeight}
       largeTitleHideShadow={headerLargeTitleShadowVisible === false}
-      screenOrientation={orientation}
-      statusBarAnimation={statusBarAnimation}
-      statusBarHidden={statusBarHidden}
-      statusBarStyle={statusBarStyle}
       title={typeof headerTitle === 'string' ? headerTitle : titleText}
       titleColor={
         headerTitleStyleFlattened.color ?? headerTintColor ?? colors.text
