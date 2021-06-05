@@ -48,9 +48,8 @@ const shouldUseHorizontalLabels = ({
   layout,
   dimensions,
 }: Options) => {
-  const { tabBarLabelPosition, tabBarAdaptive = true } = descriptors[
-    state.routes[state.index].key
-  ].options;
+  const { tabBarLabelPosition, tabBarAdaptive = true } =
+    descriptors[state.routes[state.index].key].options;
 
   if (tabBarLabelPosition) {
     return tabBarLabelPosition === 'beside-icon';

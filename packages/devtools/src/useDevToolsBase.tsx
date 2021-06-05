@@ -28,7 +28,7 @@ export default function useDevToolsBase(
   });
 
   React.useEffect(() => {
-    let timer: number;
+    let timer: any;
     let unsubscribeAction: (() => void) | undefined;
     let unsubscribeState: (() => void) | undefined;
 

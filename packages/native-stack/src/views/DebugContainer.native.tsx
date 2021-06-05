@@ -9,7 +9,7 @@ type ContainerProps = ViewProps & {
   children: React.ReactNode;
 };
 
-let Container = (View as unknown) as React.ComponentType<ContainerProps>;
+let Container = View as unknown as React.ComponentType<ContainerProps>;
 
 if (process.env.NODE_ENV !== 'production') {
   const DebugContainer = (props: ContainerProps) => {

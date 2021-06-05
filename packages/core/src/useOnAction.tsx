@@ -52,9 +52,8 @@ export default function useOnAction({
     onDispatchAction,
   } = React.useContext(NavigationBuilderContext);
 
-  const routerConfigOptionsRef = React.useRef<RouterConfigOptions>(
-    routerConfigOptions
-  );
+  const routerConfigOptionsRef =
+    React.useRef<RouterConfigOptions>(routerConfigOptions);
 
   React.useEffect(() => {
     routerConfigOptionsRef.current = routerConfigOptions;
@@ -158,10 +157,10 @@ export default function useOnAction({
     beforeRemoveListeners,
   });
 
-  React.useEffect(() => addListenerParent?.('action', onAction), [
-    addListenerParent,
-    onAction,
-  ]);
+  React.useEffect(
+    () => addListenerParent?.('action', onAction),
+    [addListenerParent, onAction]
+  );
 
   return onAction;
 }

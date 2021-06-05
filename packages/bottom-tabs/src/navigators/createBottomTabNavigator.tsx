@@ -77,25 +77,21 @@ function BottomTabNavigator({
     );
   }
 
-  const {
-    state,
-    descriptors,
-    navigation,
-    NavigationContent,
-  } = useNavigationBuilder<
-    TabNavigationState<ParamListBase>,
-    TabRouterOptions,
-    TabActionHelpers<ParamListBase>,
-    BottomTabNavigationOptions,
-    BottomTabNavigationEventMap
-  >(TabRouter, {
-    initialRouteName,
-    backBehavior,
-    children,
-    screenListeners,
-    screenOptions,
-    defaultScreenOptions,
-  });
+  const { state, descriptors, navigation, NavigationContent } =
+    useNavigationBuilder<
+      TabNavigationState<ParamListBase>,
+      TabRouterOptions,
+      TabActionHelpers<ParamListBase>,
+      BottomTabNavigationOptions,
+      BottomTabNavigationEventMap
+    >(TabRouter, {
+      initialRouteName,
+      backBehavior,
+      children,
+      screenListeners,
+      screenOptions,
+      defaultScreenOptions,
+    });
 
   return (
     <NavigationContent>

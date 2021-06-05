@@ -19,6 +19,7 @@ window.addEventListener = () => {};
 window.removeEventListener = () => {};
 
 // We want to use the web version of useLinking
+// eslint-disable-next-line import/extensions
 jest.mock('../useLinking', () => require('../useLinking.tsx').default);
 
 it('renders correct state with location', () => {

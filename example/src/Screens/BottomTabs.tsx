@@ -19,13 +19,10 @@ import Chat from '../Shared/Chat';
 import Contacts from '../Shared/Contacts';
 import SimpleStackScreen, { SimpleStackParams } from './SimpleStack';
 
-const getTabBarIcon = (name: string) => ({
-  color,
-  size,
-}: {
-  color: string;
-  size: number;
-}) => <MaterialCommunityIcons name={name} color={color} size={size} />;
+const getTabBarIcon =
+  (name: string) =>
+  ({ color, size }: { color: string; size: number }) =>
+    <MaterialCommunityIcons name={name} color={color} size={size} />;
 
 type BottomTabParams = {
   TabStack: NavigatorScreenParams<SimpleStackParams>;

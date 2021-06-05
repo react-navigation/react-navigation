@@ -90,19 +90,16 @@ function CardContainer({
 }: Props) {
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
 
-  const {
-    onPageChangeStart,
-    onPageChangeCancel,
-    onPageChangeConfirm,
-  } = useKeyboardManager(
-    React.useCallback(() => {
-      const { options, navigation } = scene.descriptor;
+  const { onPageChangeStart, onPageChangeCancel, onPageChangeConfirm } =
+    useKeyboardManager(
+      React.useCallback(() => {
+        const { options, navigation } = scene.descriptor;
 
-      return (
-        navigation.isFocused() && options.keyboardHandlingEnabled !== false
-      );
-    }, [scene.descriptor])
-  );
+        return (
+          navigation.isFocused() && options.keyboardHandlingEnabled !== false
+        );
+      }, [scene.descriptor])
+    );
 
   const handleOpen = () => {
     const { route } = scene.descriptor;
@@ -167,9 +164,8 @@ function CardContainer({
 
   const { colors } = useTheme();
 
-  const [pointerEvents, setPointerEvents] = React.useState<'box-none' | 'none'>(
-    'box-none'
-  );
+  const [pointerEvents, setPointerEvents] =
+    React.useState<'box-none' | 'none'>('box-none');
 
   React.useEffect(() => {
     const listener = scene.progress.next?.addListener?.(

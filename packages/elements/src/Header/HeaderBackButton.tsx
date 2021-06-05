@@ -35,9 +35,8 @@ export default function HeaderBackButton({
 }: HeaderBackButtonProps) {
   const { colors } = useTheme();
 
-  const [initialLabelWidth, setInitialLabelWidth] = React.useState<
-    undefined | number
-  >(undefined);
+  const [initialLabelWidth, setInitialLabelWidth] =
+    React.useState<undefined | number>(undefined);
 
   const tintColor =
     customTintColor !== undefined

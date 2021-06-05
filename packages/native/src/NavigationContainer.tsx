@@ -67,9 +67,8 @@ function NavigationContainerInner(
     validatePathConfig(linking.config);
   }
 
-  const refContainer = React.useRef<NavigationContainerRef<ParamListBase>>(
-    null
-  );
+  const refContainer =
+    React.useRef<NavigationContainerRef<ParamListBase>>(null);
 
   useBackButton(refContainer);
   useDocumentTitle(refContainer, documentTitle);

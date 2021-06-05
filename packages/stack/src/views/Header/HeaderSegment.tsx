@@ -34,13 +34,11 @@ type Props = StackHeaderOptions & {
 export default function HeaderSegment(props: Props) {
   const isParentHeaderShown = React.useContext(HeaderShownContext);
 
-  const [leftLabelLayout, setLeftLabelLayout] = React.useState<
-    Layout | undefined
-  >(undefined);
+  const [leftLabelLayout, setLeftLabelLayout] =
+    React.useState<Layout | undefined>(undefined);
 
-  const [titleLayout, setTitleLayout] = React.useState<Layout | undefined>(
-    undefined
-  );
+  const [titleLayout, setTitleLayout] =
+    React.useState<Layout | undefined>(undefined);
 
   const handleTitleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;

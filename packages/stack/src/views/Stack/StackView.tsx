@@ -421,12 +421,8 @@ export default class StackView extends React.Component<Props, State> {
       ...rest
     } = this.props;
 
-    const {
-      routes,
-      descriptors,
-      openingRouteKeys,
-      closingRouteKeys,
-    } = this.state;
+    const { routes, descriptors, openingRouteKeys, closingRouteKeys } =
+      this.state;
 
     return (
       <GestureHandlerWrapper style={styles.container}>

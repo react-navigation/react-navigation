@@ -528,39 +528,37 @@ export type NavigationContainerEventMap = {
   };
 };
 
-export type NavigationContainerRef<
-  ParamList extends {}
-> = NavigationHelpers<ParamList> &
-  EventConsumer<NavigationContainerEventMap> & {
-    /**
-     * Reset the navigation state of the root navigator to the provided state.
-     *
-     * @param state Navigation state object.
-     */
-    resetRoot(state?: PartialState<NavigationState> | NavigationState): void;
-    /**
-     * Get the rehydrated navigation state of the navigation tree.
-     */
-    getRootState(): NavigationState;
-    /**
-     * Get the currently focused navigation route.
-     */
-    getCurrentRoute(): Route<string> | undefined;
-    /**
-     * Get the currently focused route's options.
-     */
-    getCurrentOptions(): object | undefined;
-    /**
-     * Whether the navigation container is ready to handle actions.
-     */
-    isReady(): boolean;
-  };
+export type NavigationContainerRef<ParamList extends {}> =
+  NavigationHelpers<ParamList> &
+    EventConsumer<NavigationContainerEventMap> & {
+      /**
+       * Reset the navigation state of the root navigator to the provided state.
+       *
+       * @param state Navigation state object.
+       */
+      resetRoot(state?: PartialState<NavigationState> | NavigationState): void;
+      /**
+       * Get the rehydrated navigation state of the navigation tree.
+       */
+      getRootState(): NavigationState;
+      /**
+       * Get the currently focused navigation route.
+       */
+      getCurrentRoute(): Route<string> | undefined;
+      /**
+       * Get the currently focused route's options.
+       */
+      getCurrentOptions(): object | undefined;
+      /**
+       * Whether the navigation container is ready to handle actions.
+       */
+      isReady(): boolean;
+    };
 
-export type NavigationContainerRefWithCurrent<
-  ParamList extends {}
-> = NavigationContainerRef<ParamList> & {
-  current: NavigationContainerRef<ParamList> | null;
-};
+export type NavigationContainerRefWithCurrent<ParamList extends {}> =
+  NavigationContainerRef<ParamList> & {
+    current: NavigationContainerRef<ParamList> | null;
+  };
 
 export type TypedNavigator<
   ParamList extends ParamListBase,
