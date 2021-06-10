@@ -30,6 +30,7 @@ export type Log = {
   id: string;
   action: NavigationAction;
   state: NavigationState | undefined;
+  stack: string | undefined;
 };
 
 export type StoreType = {

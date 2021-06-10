@@ -26,25 +26,26 @@ export default function useFlipper(
 
   const connectionRef = React.useRef<Flipper.FlipperConnection>();
 
-  const { resetRoot } = useDevToolsBase(ref, (...args) => {
+  const { resetRoot } = useDevToolsBase(ref, (result) => {
     const connection = connectionRef.current;
 
     if (!connection) {
       return;
     }
 
-    switch (args[0]) {
+    switch (result.type) {
       case 'init':
         connection.send('init', {
           id: nanoid(),
-          state: args[1],
+          state: result.state,
         });
         break;
       case 'action':
         connection.send('action', {
           id: nanoid(),
-          action: args[1],
-          state: args[2],
+          action: result.action,
+          state: result.state,
+          stack: result.stack,
         });
         break;
     }
