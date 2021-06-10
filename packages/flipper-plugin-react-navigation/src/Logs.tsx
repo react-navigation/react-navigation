@@ -45,7 +45,11 @@ export function Logs({ active, logs, index, resetTo }: Props) {
       {active ? (
         <DetailSidebar>
           {selectedItem && (
-            <Sidebar action={selectedItem.action} state={selectedItem.state} />
+            <Sidebar
+              action={selectedItem.action}
+              state={selectedItem.state}
+              stack={selectedItem.stack}
+            />
           )}
         </DetailSidebar>
       ) : null}

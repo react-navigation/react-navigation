@@ -7,6 +7,7 @@ import {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
+import NavigationBuilderContext from './NavigationBuilderContext';
 import type { NavigationHelpers, NavigationProp } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
 
@@ -51,6 +52,8 @@ export default function useNavigationCache<
   router,
   emitter,
 }: Options<State, EventMap>) {
+  const { stackRef } = React.useContext(NavigationBuilderContext);
+
   // Cache object which holds navigation objects for each screen
   // We use `React.useMemo` instead of `React.useRef` coz we want to invalidate it when deps change
   // In reality, these deps will rarely change, if ever
@@ -70,6 +73,10 @@ export default function useNavigationCache<
   >((acc, route) => {
     const previous = cache.current[route.key];
 
+    type Thunk =
+      | NavigationAction
+      | ((state: State) => NavigationAction | null | undefined);
+
     if (previous) {
       // If a cached navigation object already exists, reuse it
       acc[route.key] = previous;
@@ -77,11 +84,7 @@ export default function useNavigationCache<
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { emit, ...rest } = navigation;
 
-      const dispatch = (
-        thunk:
-          | NavigationAction
-          | ((state: State) => NavigationAction | null | undefined)
-      ) => {
+      const dispatch = (thunk: Thunk) => {
         const action = typeof thunk === 'function' ? thunk(getState()) : thunk;
 
         if (action != null) {
@@ -89,10 +92,36 @@ export default function useNavigationCache<
         }
       };
 
+      const withStack = (callback: () => void) => {
+        let isStackSet = false;
+
+        try {
+          if (
+            process.env.NODE_ENV !== 'production' &&
+            stackRef &&
+            !stackRef.current
+          ) {
+            // Capture the stack trace for devtools
+            stackRef.current = new Error().stack;
+            isStackSet = true;
+          }
+
+          callback();
+        } finally {
+          if (isStackSet && stackRef) {
+            stackRef.current = undefined;
+          }
+        }
+      };
+
       const helpers = Object.keys(actions).reduce<Record<string, () => void>>(
         (acc, name) => {
-          // @ts-expect-error: name is a valid key, but TypeScript is dumb
-          acc[name] = (...args: any) => dispatch(actions[name](...args));
+          acc[name] = (...args: any) =>
+            withStack(() =>
+              // @ts-expect-error: name is a valid key, but TypeScript is dumb
+              dispatch(actions[name](...args))
+            );
+
           return acc;
         },
         {}
@@ -103,7 +132,7 @@ export default function useNavigationCache<
         ...helpers,
         // FIXME: too much work to fix the types for now
         ...(emitter.create(route.key) as any),
-        dispatch,
+        dispatch: (thunk: Thunk) => withStack(() => dispatch(thunk)),
         setOptions: (options: object) =>
           setOptions((o) => ({
             ...o,

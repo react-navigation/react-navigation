@@ -60,10 +60,7 @@ type Options<
         navigation: any;
         options: ScreenOptions;
       }) => ScreenOptions);
-  onAction: (
-    action: NavigationAction,
-    visitedNavigators?: Set<string>
-  ) => boolean;
+  onAction: (action: NavigationAction) => boolean;
   getState: () => State;
   setState: (state: State) => void;
   addListener: AddListener;
@@ -102,7 +99,7 @@ export default function useDescriptors<
   emitter,
 }: Options<State, ScreenOptions, EventMap>) {
   const [options, setOptions] = React.useState<Record<string, object>>({});
-  const { onDispatchAction, onOptionsChange } = React.useContext(
+  const { onDispatchAction, onOptionsChange, stackRef } = React.useContext(
     NavigationBuilderContext
   );
 
@@ -115,6 +112,7 @@ export default function useDescriptors<
       onRouteFocus,
       onDispatchAction,
       onOptionsChange,
+      stackRef,
     }),
     [
       navigation,
@@ -124,6 +122,7 @@ export default function useDescriptors<
       onRouteFocus,
       onDispatchAction,
       onOptionsChange,
+      stackRef,
     ]
   );
 

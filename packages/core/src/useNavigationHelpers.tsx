@@ -17,10 +17,7 @@ import type { NavigationEventEmitter } from './useEventEmitter';
 PrivateValueStore;
 
 type Options<State extends NavigationState, Action extends NavigationAction> = {
-  onAction: (
-    action: NavigationAction,
-    visitedNavigators?: Set<string>
-  ) => boolean;
+  onAction: (action: NavigationAction) => boolean;
   getState: () => State;
   emitter: NavigationEventEmitter<any>;
   router: Router<State, Action>;
