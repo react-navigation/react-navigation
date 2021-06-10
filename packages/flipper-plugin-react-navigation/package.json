@@ -2,7 +2,7 @@
   "$schema": "https://fbflipper.com/schemas/plugin-package/v2.json",
   "name": "flipper-plugin-react-navigation",
   "description": "Developer tools for React Navigation",
-  "version": "1.1.4",
+  "version": "1.2.0",
   "main": "dist/bundle.js",
   "license": "MIT",
   "keywords": [
@@ -34,7 +34,7 @@
     "@ant-design/icons": "^4.6.2",
     "@babel/preset-react": "^7.12.13",
     "@babel/preset-typescript": "^7.13.0",
-    "@react-navigation/core": "^6.0.0-next.13",
+    "@react-navigation/core": "^6.0.0-next.14",
     "@types/react": "^17.0.9",
     "@types/react-dom": "^17.0.6",
     "antd": "^4.16.1",
