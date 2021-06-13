@@ -1,6 +1,6 @@
-import { page } from '../config/setup-playwright';
+import { expect, it } from './baseFixture';
 
-it('loads the example app', async () => {
+it('loads the example app', async ({ page }) => {
   const snapshot = await page.accessibility.snapshot();
 
   expect(
