@@ -26,5 +26,11 @@
   "rules": {
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error"
-  }
+  },
+  "overrides": [{
+    "files":["example/e2e/tests/*.ts"],
+    "rules": {
+      "jest/*": 0
+    }
+  }]
 }

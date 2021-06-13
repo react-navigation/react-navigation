@@ -11,7 +11,7 @@
     "ios": "react-native run-ios",
     "preios": "pod-install",
     "server": "nodemon -e '.js,.ts,.tsx' --exec \"babel-node -i '/node_modules[/\\](?react-native)/' -x '.web.tsx,.web.ts,.web.js,.tsx,.ts,.js' --config-file ./server/babel.config.js server\"",
-    "test": "jest"
+    "test:e2e": "playwright test --config=e2e/playwright.config.ts"
   },
   "dependencies": {
     "@expo/vector-icons": "^12.0.5",
@@ -45,6 +45,7 @@
     "@babel/core": "^7.14.3",
     "@babel/node": "^7.14.2",
     "@expo/webpack-config": "~0.12.76",
+    "@playwright/test": "^1.12.2",
     "@types/cheerio": "^0.22.29",
     "@types/jest-dev-server": "^4.2.0",
     "@types/koa": "^2.13.3",
@@ -63,7 +64,6 @@
     "mock-require-assets": "^0.0.1",
     "node-fetch": "^2.6.1",
     "nodemon": "^2.0.6",
-    "playwright": "^1.11.1",
     "pod-install": "^0.1.23",
     "react-native-flipper": "~0.80.0",
     "react-test-renderer": "~16.13.1",

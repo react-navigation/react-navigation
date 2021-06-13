@@ -75,9 +75,13 @@ jobs:
       - run:
           name: Build example for web
           command: yarn example expo build:web --no-pwa
+      # Yarn does not execute the postinstall scripts if the package is in the cache
+      - run:
+          name: Install browsers
+          command: yarn playwright install
       - run:
           name: Run integration tests
-          command: yarn example test --maxWorkers=2
+          command: yarn example test:e2e
 
   build-packages:
     executor: default
