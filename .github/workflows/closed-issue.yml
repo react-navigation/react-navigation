@@ -1,0 +1,31 @@
+name: Comment on closed issue
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  closed-issue:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.issue.state == 'closed' }}
+    steps:
+      - uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+              const body = "Hey! This issue is closed and isn't watched by the core team. You are welcome to discuss the issue with others in this thread, but if you think this issue is still valid and needs to be tracked, please open a new issue with a repro.";
+              const comments = await github.issues.listComments({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+              });
+
+              if (comments.data.some(comment => comment.body === body)) {
+                return;
+              }
+
+              await github.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body,
+              });
