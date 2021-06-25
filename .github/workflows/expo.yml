@@ -19,10 +19,9 @@ jobs:
           node-version: 14.x
 
       - name: Setup Expo
-        uses: expo/expo-github-action@v5
+        uses: expo/expo-github-action@v6
         with:
-          expo-token: ${{ secrets.EXPO_TOKEN }}
-          expo-cache: true
+          token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Restore yarn cache
         id: yarn-cache
