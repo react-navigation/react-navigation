@@ -173,6 +173,7 @@ function MaterialBottomTabViewInner({
           ? options.title
           : (route as Route<string>).name;
       }}
+      getIsVisibleInTabBar={({ route }: Scene) => descriptors[route.key].options.isVisibleInTabBar}
       getColor={({ route }) => descriptors[route.key].options.tabBarColor}
       getBadge={({ route }) => descriptors[route.key].options.tabBarBadge}
       getAccessibilityLabel={({ route }) =>

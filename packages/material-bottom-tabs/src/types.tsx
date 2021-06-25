@@ -80,6 +80,11 @@ export type MaterialBottomTabNavigationOptions = {
    * ID to locate this tab button in tests.
    */
   tabBarTestID?: string;
+
+  /**
+   * Whether to show the tab.
+   */
+  isVisibleInTabBar?: boolean;
 };
 
 export type MaterialBottomTabDescriptor = Descriptor<
