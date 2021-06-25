@@ -117,9 +117,15 @@ type Props = {
    * Style object for the wrapper element.
    */
   style?: StyleProp<ViewStyle>;
+
+  /**
+   * Whether the tab is displayed.
+   */
+  isVisible?: boolean;
 };
 
 export default function BottomTabBarItem({
+  isVisible,
   focused,
   route,
   label,
@@ -135,6 +141,7 @@ export default function BottomTabBarItem({
     accessibilityRole,
     ...rest
   }: BottomTabBarButtonProps) => {
+    if (isVisible === false) return null;
     if (Platform.OS === 'web' && to) {
       // React Native Web doesn't forward `onClick` if we use `TouchableWithoutFeedback`.
       // We need to use `onClick` to be able to prevent default browser handling of links.

@@ -332,6 +332,7 @@ export default function BottomTabBar({
             >
               <NavigationRouteContext.Provider value={route}>
                 <BottomTabItem
+                  isVisible={options.isVisibleInTabBar}
                   route={route}
                   focused={focused}
                   horizontal={hasHorizontalLabels}
