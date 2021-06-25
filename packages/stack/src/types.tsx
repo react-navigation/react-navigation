@@ -13,7 +13,8 @@ import type {
   StackNavigationState,
 } from '@react-navigation/native';
 import type * as React from 'react';
-import type { Animated, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
+import type * as Animated from 'react-native-reanimated';
 
 export type StackNavigationEventMap = {
   /**
