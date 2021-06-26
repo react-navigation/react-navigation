@@ -74,6 +74,7 @@ function NavigationContainerInner(
   useDocumentTitle(refContainer, documentTitle);
 
   const { getInitialState } = useLinking(refContainer, {
+    independent: rest.independent,
     enabled: isLinkingEnabled,
     prefixes: [],
     ...linking,

@@ -12,11 +12,16 @@ import type { LinkingOptions } from './types';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
+type Options = LinkingOptions<ParamListBase> & {
+  independent?: boolean;
+};
+
 let isUsingLinking = false;
 
 export default function useLinking(
   ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
   {
+    independent,
     enabled = true,
     prefixes,
     config,
@@ -47,9 +52,13 @@ export default function useLinking(
     },
     getStateFromPath = getStateFromPathDefault,
     getActionFromState = getActionFromStateDefault,
-  }: LinkingOptions<ParamListBase>
+  }: Options
 ) {
   React.useEffect(() => {
+    if (independent) {
+      return undefined;
+    }
+
     if (enabled !== false && isUsingLinking) {
       throw new Error(
         [

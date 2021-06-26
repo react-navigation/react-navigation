@@ -289,17 +289,26 @@ const series = (cb: () => Promise<void>) => {
 
 let isUsingLinking = false;
 
+type Options = LinkingOptions<ParamListBase> & {
+  independent?: boolean;
+};
+
 export default function useLinking(
   ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
   {
+    independent,
     enabled = true,
     config,
     getStateFromPath = getStateFromPathDefault,
     getPathFromState = getPathFromStateDefault,
     getActionFromState = getActionFromStateDefault,
-  }: LinkingOptions<ParamListBase>
+  }: Options
 ) {
   React.useEffect(() => {
+    if (independent) {
+      return undefined;
+    }
+
     if (enabled !== false && isUsingLinking) {
       throw new Error(
         [
