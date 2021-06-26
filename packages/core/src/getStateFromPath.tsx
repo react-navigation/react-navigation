@@ -144,20 +144,25 @@ export default function getStateFromPath<ParamList extends {}>(
       const bParts = b.pattern.split('/');
 
       for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+        // if b is longer, b get higher priority
         if (aParts[i] == null) {
           return 1;
         }
+        // if a is longer, a get higher priority
         if (bParts[i] == null) {
           return -1;
         }
         const aWildCard = aParts[i] === '*' || aParts[i].startsWith(':');
         const bWildCard = bParts[i] === '*' || bParts[i].startsWith(':');
+        // if both are wildcard we compare next component
         if (aWildCard && bWildCard) {
           continue;
         }
+        // if only a is wild card, b get higher priority
         if (aWildCard) {
           return 1;
         }
+        // if only b is wild card, a get higher priority
         if (bWildCard) {
           return -1;
         }
