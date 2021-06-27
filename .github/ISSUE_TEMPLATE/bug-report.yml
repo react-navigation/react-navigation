@@ -1,0 +1,86 @@
+name: React Navigation 5
+description: Report an issue with React Navigation 5
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    attributes:
+      label: Description
+      description: |
+        What code are you running and what is happening? What do you expect to happen?
+
+        Include a screenshot or video if it's an UI related issue.
+      placeholder: Description of the issue
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Reproduction
+      description: |
+        You must provide a way to reproduce the problem. If you don't provide a repro, the issue will be closed automatically after a specific period.
+
+        - Either re-create the bug on [Snack](https://snack.expo.io) or link to a GitHub repository with code that reproduces the bug.
+        - Explain how to run the example app and any steps that we need to take to reproduce the issue from the example app.
+        - Keep the repro code as simple as possible, with the minimum amount of code required to repro the issue.
+        - Before reporting an issue, make sure you are on latest version of the package.
+        - If you are having an issue with your machine or build tools, the issue belongs on another repository as that is outside of the scope of React Navigation.
+      placeholder: Link to repro
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: Platform
+      description: |
+        What are the platforms where you see the issue?
+      options:
+        - label: Android
+        - label: iOS
+        - label: Web
+        - label: Windows
+        - label: MacOS
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: Packages
+      description: |
+        Which packages are affected by the issue?
+      options:
+        - label: '@react-navigation/bottom-tabs'
+        - label: '@react-navigation/drawer'
+        - label: '@react-navigation/material-bottom-tabs'
+        - label: '@react-navigation/material-top-tabs'
+        - label: '@react-navigation/stack'
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Environment
+      description: |
+        What are the exact versions of packages that you are using?
+
+        When filling the table below, remove the packages that you're not using.
+      value: |
+        | package                                | version |
+        | -------------------------------------- | ------- |
+        | @react-navigation/native               |
+        | @react-navigation/bottom-tabs          |
+        | @react-navigation/drawer               |
+        | @react-navigation/material-bottom-tabs |
+        | @react-navigation/material-top-tabs    |
+        | @react-navigation/stack                |
+        | react-native-safe-area-context         |
+        | react-native-screens                   |
+        | react-native-gesture-handler           |
+        | react-native-reanimated                |
+        | react-native-tab-view                  |
+        | react-native-pager-view                |
+        | react-native                           |
+        | expo                                   |
+        | node                                   |
+        | npm or yarn                            |
+    validations:
+      required: true
