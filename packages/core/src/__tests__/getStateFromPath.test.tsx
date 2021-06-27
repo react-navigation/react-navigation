@@ -2196,7 +2196,7 @@ it('tries to match wildcard patterns at the end', () => {
             path: '/bar/:id/',
             screens: {
               404: '*',
-              matches: ':params',
+              UserProfile: ':userSlug',
               Test: 'test',
             },
           },
