@@ -1,0 +1,44 @@
+name: Check for labels
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  check-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const body = context.payload.issue.body;
+
+            const packages = Array.from(
+              body.matchAll(/- \[x\] @react-navigation\/([\S]+)/gim)
+            )
+              .map((match) => match[1])
+              .filter((name) =>
+                [
+                  'bottom-tabs',
+                  'drawer',
+                  'material-bottom-tabs',
+                  'material-top-tabs',
+                  'stack',
+                ].includes(name)
+              )
+              .map((name) => `package:${name}`);
+
+            const platforms = Array.from(
+              body.matchAll(/- \[x\] (Android|iOS|Web|Windows|MacOS)/gim)
+            ).map((matches) => `platform:${matches[1].toLowerCase()}`);
+
+            const labels = [...packages, ...platforms];
+
+            if (labels.length) {
+              await github.issues.addLabels({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels,
+              });
+            }
