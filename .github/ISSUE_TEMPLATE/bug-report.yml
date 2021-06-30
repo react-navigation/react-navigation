@@ -6,14 +6,27 @@ body:
     attributes:
       value: |
         Thanks for taking the time to fill out this bug report!
+
+        If this is not a bug report, please use other relevant channels:
+
+        - [Post a feature request on Canny](https://react-navigation.canny.io/feature-requests)
+        - [Ask questions on StackOverflow using the react-navigation label](https://stackoverflow.com/questions/tagged/react-navigation)
+        - [Chat with others in the #help-react-native channel on Discord](https://www.reactiflux.com/)
+
   - type: textarea
     attributes:
-      label: Description
+      label: Current behavior
       description: |
-        What code are you running and what is happening? What do you expect to happen?
-
-        Include a screenshot or video if it's an UI related issue.
-      placeholder: Description of the issue
+        What code are you running and what is happening? Include a screenshot or video if it's an UI related issue.
+      placeholder: Current behavior
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected behavior
+      description: |
+        What do you expect to happen instead?
+      placeholder: Expected behavior
     validations:
       required: true
   - type: input
