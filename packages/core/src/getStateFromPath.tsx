@@ -146,24 +146,41 @@ export default function getStateFromPath<ParamList extends {}>(
       const aWildcardIndex = aParts.indexOf('*');
       const bWildcardIndex = bParts.indexOf('*');
 
+      const aNamedPathParamIndex = aParts.findIndex(elem => elem.startsWith(':'));
+      const bNamedPathParamIndex = bParts.findIndex(elem => elem.startsWith(':'));
+
+      const aPathParamIndex =
+        aWildcardIndex !== -1 && aNamedPathParamIndex !== -1
+          ? // If we have both * and : in the path, get index for the first to appear
+            Math.min(aWildcardIndex, aNamedPathParamIndex)
+          : // Else, get index for either of them
+          aWildcardIndex !== -1
+          ? aWildcardIndex
+          : aNamedPathParamIndex;
+      const bPathParamIndex =
+        bWildcardIndex !== -1 && bNamedPathParamIndex !== -1
+          ? // If we have both * and : in the path, get index for the first to appear
+            Math.min(bWildcardIndex, bNamedPathParamIndex)
+          : // Else, get index for either of them
+          bWildcardIndex !== -1
+          ? bWildcardIndex
+          : bNamedPathParamIndex;
+
       // If only one of the patterns has a wildcard, move it down in the list
-      if (aWildcardIndex === -1 && bWildcardIndex !== -1) {
+      if (aPathParamIndex === -1 && bPathParamIndex !== -1) {
         return -1;
       }
-
-      if (aWildcardIndex !== -1 && bWildcardIndex === -1) {
+      if (aPathParamIndex !== -1 && bPathParamIndex === -1) {
         return 1;
       }
-
-      if (aWildcardIndex === bWildcardIndex) {
+      if (aPathParamIndex === bPathParamIndex) {
         // If `b` has more `/`, it's more exhaustive
         // So we move it up in the list
         return bParts.length - aParts.length;
       }
-
       // If the wildcard appears later in the pattern (has higher index), it's more specific
       // So we move it up in the list
-      return bWildcardIndex - aWildcardIndex;
+      return bPathParamIndex - aPathParamIndex;
     });
 
   // Check for duplicate patterns in the config
