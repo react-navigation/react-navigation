@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.13...@react-navigation/native@6.0.0-next.15) (2021-07-01)
+
+
+### Bug Fixes
+
+* disable duplicate linking check for independent containers ([20b8ebd](https://github.com/react-navigation/react-navigation/commit/20b8ebd40547d93ccf626fcd9dad327fe1807b52))
+
+
+
+
+
 # [6.0.0-next.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.13...@react-navigation/native@6.0.0-next.14) (2021-06-10)
 
 **Note:** Version bump only for package @react-navigation/native

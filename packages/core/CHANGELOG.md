@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.13...@react-navigation/core@6.0.0-next.15) (2021-07-01)
+
+
+### Bug Fixes
+
+* fix typechecking in linking config ([b1134c8](https://github.com/react-navigation/react-navigation/commit/b1134c8a34f96be2817cb780c4bd23b2025b4c35))
+
+
+### Features
+
+* show stack trace in the flipper plugin ([97772af](https://github.com/react-navigation/react-navigation/commit/97772affa3c8f26489f0bdbfb6872ef4377b8ed1))
+
+
+
+
+
 # [6.0.0-next.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.13...@react-navigation/core@6.0.0-next.14) (2021-06-10)
 
 
