@@ -13,7 +13,11 @@ import Animated from 'react-native-reanimated';
 
 import type { DrawerProps } from '../../types';
 import DrawerProgressContext from '../../utils/DrawerProgressContext';
-import { GestureState, PanGestureHandler, PanGestureHandlerGestureEvent, } from '../GestureHandler';
+import {
+  GestureState,
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+} from '../GestureHandler';
 import Overlay from './Overlay';
 
 const {
