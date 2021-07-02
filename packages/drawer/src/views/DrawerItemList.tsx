@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   CommonActions,
   DrawerActions,
@@ -6,8 +5,10 @@ import {
   ParamListBase,
   useLinkBuilder,
 } from '@react-navigation/native';
+import * as React from 'react';
+
+import type { DrawerDescriptorMap, DrawerNavigationHelpers } from '../types';
 import DrawerItem from './DrawerItem';
-import type { DrawerNavigationHelpers, DrawerDescriptorMap } from '../types';
 
 type Props = {
   state: DrawerNavigationState<ParamListBase>;
@@ -25,7 +26,7 @@ export default function DrawerItemList({
 }: Props) {
   const buildLink = useLinkBuilder();
 
-  return (state.routes.map((route, i) => {
+  return state.routes.map((route, i) => {
     const focused = i === state.index;
     const {
       title,
@@ -68,5 +69,5 @@ export default function DrawerItemList({
         }}
       />
     );
-  }) as React.ReactNode) as React.ReactElement;
+  }) as React.ReactNode as React.ReactElement;
 }

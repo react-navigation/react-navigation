@@ -1,32 +1,39 @@
-import * as React from 'react';
 import {
-  useNavigationBuilder,
   createNavigatorFactory,
   DefaultNavigatorOptions,
   EventArg,
-  StackRouter,
-  StackRouterOptions,
-  StackNavigationState,
-  StackActions,
   ParamListBase,
   StackActionHelpers,
+  StackActions,
+  StackNavigationState,
+  StackRouter,
+  StackRouterOptions,
+  useNavigationBuilder,
 } from '@react-navigation/native';
+import * as React from 'react';
 import warnOnce from 'warn-once';
-import StackView from '../views/Stack/StackView';
-import type {
-  StackNavigationConfig,
-  StackNavigationOptions,
-  StackNavigationEventMap,
-  StackHeaderMode,
-} from '../types';
 
-type Props = DefaultNavigatorOptions<StackNavigationOptions> &
+import type {
+  StackHeaderMode,
+  StackNavigationConfig,
+  StackNavigationEventMap,
+  StackNavigationOptions,
+} from '../types';
+import StackView from '../views/Stack/StackView';
+
+type Props = DefaultNavigatorOptions<
+  ParamListBase,
+  StackNavigationState<ParamListBase>,
+  StackNavigationOptions,
+  StackNavigationEventMap
+> &
   StackRouterOptions &
   StackNavigationConfig;
 
 function StackNavigator({
   initialRouteName,
   children,
+  screenListeners,
   screenOptions,
   ...rest
 }: Props) {
@@ -51,27 +58,25 @@ function StackNavigator({
     `Stack Navigator: 'headerMode' is moved to 'options'. Moved it to 'screenOptions' to keep current behavior.`
   );
 
-  const {
-    state,
-    descriptors,
-    navigation,
-    NavigationContent,
-  } = useNavigationBuilder<
-    StackNavigationState<ParamListBase>,
-    StackRouterOptions,
-    StackActionHelpers<ParamListBase>,
-    StackNavigationOptions,
-    StackNavigationEventMap
-  >(StackRouter, {
-    initialRouteName,
-    children,
-    screenOptions,
-    defaultScreenOptions: () => ({
-      presentation: mode,
-      headerShown: headerMode ? headerMode !== 'none' : true,
-      headerMode: headerMode && headerMode !== 'none' ? headerMode : undefined,
-    }),
-  });
+  const { state, descriptors, navigation, NavigationContent } =
+    useNavigationBuilder<
+      StackNavigationState<ParamListBase>,
+      StackRouterOptions,
+      StackActionHelpers<ParamListBase>,
+      StackNavigationOptions,
+      StackNavigationEventMap
+    >(StackRouter, {
+      initialRouteName,
+      children,
+      screenListeners,
+      screenOptions,
+      defaultScreenOptions: () => ({
+        presentation: mode,
+        headerShown: headerMode ? headerMode !== 'none' : true,
+        headerMode:
+          headerMode && headerMode !== 'none' ? headerMode : undefined,
+      }),
+    });
 
   React.useEffect(
     () =>

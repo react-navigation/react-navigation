@@ -1,13 +1,13 @@
-import type { BottomNavigation } from 'react-native-paper';
 import type {
-  ParamListBase,
   Descriptor,
-  NavigationProp,
   NavigationHelpers,
-  TabNavigationState,
-  TabActionHelpers,
+  NavigationProp,
+  ParamListBase,
   RouteProp,
+  TabActionHelpers,
+  TabNavigationState,
 } from '@react-navigation/native';
+import type { BottomNavigation } from 'react-native-paper';
 
 export type MaterialBottomTabNavigationEventMap = {
   /**

@@ -1,9 +1,10 @@
-import * as React from 'react';
 import {
-  getStateFromPath,
   getActionFromState,
-  NavigationContext,
+  getStateFromPath,
+  NavigationContainerRefContext,
 } from '@react-navigation/core';
+import * as React from 'react';
+
 import LinkingContext from './LinkingContext';
 
 export type To<
@@ -24,23 +25,15 @@ export type To<
 export default function useLinkTo<
   ParamList extends ReactNavigation.RootParamList
 >() {
-  const navigation = React.useContext(NavigationContext);
+  const navigation = React.useContext(NavigationContainerRefContext);
   const linking = React.useContext(LinkingContext);
 
   const linkTo = React.useCallback(
     (to: To<ParamList>) => {
       if (navigation === undefined) {
         throw new Error(
-          "Couldn't find a navigation object. Is your component inside a screen in a navigator?"
+          "Couldn't find a navigation object. Is your component inside NavigationContainer?"
         );
-      }
-
-      let root = navigation;
-      let current;
-
-      // Traverse up to get the root navigation
-      while ((current = root.getParent())) {
-        root = current;
       }
 
       if (typeof to !== 'string') {
@@ -63,9 +56,9 @@ export default function useLinkTo<
         const action = getActionFromState(state, options?.config);
 
         if (action !== undefined) {
-          root.dispatch(action);
+          navigation.dispatch(action);
         } else {
-          root.reset(state);
+          navigation.reset(state);
         }
       } else {
         throw new Error('Failed to parse the path to a navigation state.');

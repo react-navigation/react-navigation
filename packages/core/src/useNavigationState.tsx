@@ -1,7 +1,8 @@
-import * as React from 'react';
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
-import useNavigation from './useNavigation';
+import * as React from 'react';
+
 import type { NavigationProp } from './types';
+import useNavigation from './useNavigation';
 
 type Selector<ParamList extends ParamListBase, T> = (
   state: NavigationState<ParamList>

@@ -1,11 +1,12 @@
 import * as React from 'react';
 import {
-  ScrollView,
-  StyleSheet,
-  ScrollViewProps,
   I18nManager,
+  ScrollView,
+  ScrollViewProps,
+  StyleSheet,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import DrawerPositionContext from '../utils/DrawerPositionContext';
 
 type Props = ScrollViewProps & {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pressable, Platform, StyleSheet } from 'react-native';
+import { Platform, Pressable, StyleSheet } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 
 const PROGRESS_EPSILON = 0.05;

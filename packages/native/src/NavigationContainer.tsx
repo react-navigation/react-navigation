@@ -1,18 +1,32 @@
-import * as React from 'react';
 import {
   BaseNavigationContainer,
+  getActionFromState,
+  getPathFromState,
+  getStateFromPath,
   NavigationContainerProps,
   NavigationContainerRef,
   ParamListBase,
+  validatePathConfig,
 } from '@react-navigation/core';
-import ThemeProvider from './theming/ThemeProvider';
-import DefaultTheme from './theming/DefaultTheme';
+import * as React from 'react';
+
 import LinkingContext from './LinkingContext';
-import useThenable from './useThenable';
-import useLinking from './useLinking';
-import useDocumentTitle from './useDocumentTitle';
+import DefaultTheme from './theming/DefaultTheme';
+import ThemeProvider from './theming/ThemeProvider';
+import type { DocumentTitleOptions, LinkingOptions, Theme } from './types';
 import useBackButton from './useBackButton';
-import type { Theme, LinkingOptions, DocumentTitleOptions } from './types';
+import useDocumentTitle from './useDocumentTitle';
+import useLinking from './useLinking';
+import useThenable from './useThenable';
+
+declare global {
+  var REACT_NAVIGATION_DEVTOOLS: WeakMap<
+    NavigationContainerRef<any>,
+    { readonly linking: LinkingOptions<any> }
+  >;
+}
+
+global.REACT_NAVIGATION_DEVTOOLS = new WeakMap();
 
 type Props<ParamList extends {}> = NavigationContainerProps & {
   theme?: Theme;
@@ -49,17 +63,41 @@ function NavigationContainerInner(
 ) {
   const isLinkingEnabled = linking ? linking.enabled !== false : false;
 
-  const refContainer = React.useRef<NavigationContainerRef<ParamListBase>>(
-    null
-  );
+  if (linking?.config) {
+    validatePathConfig(linking.config);
+  }
+
+  const refContainer =
+    React.useRef<NavigationContainerRef<ParamListBase>>(null);
 
   useBackButton(refContainer);
   useDocumentTitle(refContainer, documentTitle);
 
   const { getInitialState } = useLinking(refContainer, {
+    independent: rest.independent,
     enabled: isLinkingEnabled,
     prefixes: [],
     ...linking,
+  });
+
+  // Add additional linking related info to the ref
+  // This will be used by the devtools
+  React.useEffect(() => {
+    if (refContainer.current) {
+      REACT_NAVIGATION_DEVTOOLS.set(refContainer.current, {
+        get linking() {
+          return {
+            ...linking,
+            enabled: isLinkingEnabled,
+            prefixes: linking?.prefixes ?? [],
+            getStateFromPath: linking?.getStateFromPath ?? getStateFromPath,
+            getPathFromState: linking?.getPathFromState ?? getPathFromState,
+            getActionFromState:
+              linking?.getActionFromState ?? getActionFromState,
+          };
+        },
+      });
+    }
   });
 
   const [isResolved, initialState] = useThenable(getInitialState);

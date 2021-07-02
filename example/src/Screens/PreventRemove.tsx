@@ -1,23 +1,24 @@
-import * as React from 'react';
 import {
-  Alert,
-  View,
-  TextInput,
-  ScrollView,
-  StyleSheet,
-  Platform,
-} from 'react-native';
-import { Button } from 'react-native-paper';
-import {
-  useTheme,
   CommonActions,
-  ParamListBase,
   NavigationAction,
+  ParamListBase,
+  useTheme,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
   StackScreenProps,
 } from '@react-navigation/stack';
+import * as React from 'react';
+import {
+  Alert,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
+import { Button } from 'react-native-paper';
+
 import Article from '../Shared/Article';
 
 type PreventRemoveParams = {

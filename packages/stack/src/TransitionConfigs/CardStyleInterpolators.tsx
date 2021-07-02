@@ -1,10 +1,11 @@
 import { Animated } from 'react-native';
 import { isIphoneX } from 'react-native-iphone-x-helper';
-import conditional from '../utils/conditional';
+
 import type {
-  StackCardInterpolationProps,
   StackCardInterpolatedStyle,
+  StackCardInterpolationProps,
 } from '../types';
+import conditional from '../utils/conditional';
 
 const { add, multiply } = Animated;
 
@@ -301,12 +302,12 @@ export function forScaleFromCenterAndroid({
     closing,
     current.progress.interpolate({
       inputRange: [0, 1],
-      outputRange: [0.9, 1],
+      outputRange: [0.925, 1],
       extrapolate: 'clamp',
     }),
     progress.interpolate({
       inputRange: [0, 1, 2],
-      outputRange: [0.85, 1, 1.1],
+      outputRange: [0.85, 1, 1.075],
     })
   );
 
@@ -358,6 +359,29 @@ export function forBottomSheetAndroid({
       transform: [{ translateY }],
     },
     overlayStyle: { opacity: overlayOpacity },
+  };
+}
+
+/**
+ * Simple fade animation for dialogs
+ */
+export function forFadeFromCenter({
+  current: { progress },
+}: StackCardInterpolationProps): StackCardInterpolatedStyle {
+  return {
+    cardStyle: {
+      opacity: progress.interpolate({
+        inputRange: [0, 0.5, 0.9, 1],
+        outputRange: [0, 0.25, 0.7, 1],
+      }),
+    },
+    overlayStyle: {
+      opacity: progress.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0, 0.5],
+        extrapolate: 'clamp',
+      }),
+    },
   };
 }
 

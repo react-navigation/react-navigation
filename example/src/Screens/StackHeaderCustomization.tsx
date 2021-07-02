@@ -1,25 +1,26 @@
-import * as React from 'react';
-import {
-  Animated,
-  View,
-  StyleSheet,
-  ScrollView,
-  Alert,
-  Platform,
-} from 'react-native';
-import { Button, Appbar } from 'react-native-paper';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useTheme, ParamListBase } from '@react-navigation/native';
+import { HeaderBackground, useHeaderHeight } from '@react-navigation/elements';
+import { ParamListBase, useTheme } from '@react-navigation/native';
 import {
   createStackNavigator,
-  StackScreenProps,
   Header,
   StackHeaderProps,
+  StackScreenProps,
 } from '@react-navigation/stack';
-import { HeaderBackground, useHeaderHeight } from '@react-navigation/elements';
-import BlurView from '../Shared/BlurView';
-import Article from '../Shared/Article';
+import * as React from 'react';
+import {
+  Alert,
+  Animated,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { Appbar, Button } from 'react-native-paper';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import Albums from '../Shared/Albums';
+import Article from '../Shared/Article';
+import BlurView from '../Shared/BlurView';
 
 type SimpleStackParams = {
   Article: { author: string };

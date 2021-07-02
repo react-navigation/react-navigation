@@ -1,23 +1,29 @@
-import * as React from 'react';
-import warnOnce from 'warn-once';
 import {
-  useNavigationBuilder,
   createNavigatorFactory,
   DefaultNavigatorOptions,
+  ParamListBase,
+  TabActionHelpers,
+  TabNavigationState,
   TabRouter,
   TabRouterOptions,
-  TabNavigationState,
-  TabActionHelpers,
-  ParamListBase,
+  useNavigationBuilder,
 } from '@react-navigation/native';
-import MaterialTopTabView from '../views/MaterialTopTabView';
+import * as React from 'react';
+import warnOnce from 'warn-once';
+
 import type {
   MaterialTopTabNavigationConfig,
-  MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationEventMap,
+  MaterialTopTabNavigationOptions,
 } from '../types';
+import MaterialTopTabView from '../views/MaterialTopTabView';
 
-type Props = DefaultNavigatorOptions<MaterialTopTabNavigationOptions> &
+type Props = DefaultNavigatorOptions<
+  ParamListBase,
+  TabNavigationState<ParamListBase>,
+  MaterialTopTabNavigationOptions,
+  MaterialTopTabNavigationEventMap
+> &
   TabRouterOptions &
   MaterialTopTabNavigationConfig;
 
@@ -25,6 +31,7 @@ function MaterialTopTabNavigator({
   initialRouteName,
   backBehavior,
   children,
+  screenListeners,
   screenOptions,
   lazy,
   tabBarOptions,
@@ -71,23 +78,20 @@ function MaterialTopTabNavigator({
     );
   }
 
-  const {
-    state,
-    descriptors,
-    navigation,
-    NavigationContent,
-  } = useNavigationBuilder<
-    TabNavigationState<ParamListBase>,
-    TabRouterOptions,
-    TabActionHelpers<ParamListBase>,
-    MaterialTopTabNavigationOptions,
-    MaterialTopTabNavigationEventMap
-  >(TabRouter, {
-    initialRouteName,
-    backBehavior,
-    children,
-    screenOptions,
-  });
+  const { state, descriptors, navigation, NavigationContent } =
+    useNavigationBuilder<
+      TabNavigationState<ParamListBase>,
+      TabRouterOptions,
+      TabActionHelpers<ParamListBase>,
+      MaterialTopTabNavigationOptions,
+      MaterialTopTabNavigationEventMap
+    >(TabRouter, {
+      initialRouteName,
+      backBehavior,
+      children,
+      screenListeners,
+      screenOptions,
+    });
 
   return (
     <NavigationContent>

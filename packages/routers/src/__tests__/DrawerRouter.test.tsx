@@ -1,8 +1,8 @@
 import {
   CommonActions,
-  DrawerRouter,
   DrawerActions,
   DrawerNavigationState,
+  DrawerRouter,
   ParamListBase,
   RouterConfigOptions,
 } from '..';

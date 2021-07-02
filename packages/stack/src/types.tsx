@@ -1,19 +1,19 @@
-import type * as React from 'react';
-import type { Animated, StyleProp, TextStyle, ViewStyle } from 'react-native';
-import type {
-  NavigationProp,
-  ParamListBase,
-  Descriptor,
-  Route,
-  NavigationHelpers,
-  StackNavigationState,
-  StackActionHelpers,
-  RouteProp,
-} from '@react-navigation/native';
 import type {
   HeaderBackButton,
   HeaderOptions,
 } from '@react-navigation/elements';
+import type {
+  Descriptor,
+  NavigationHelpers,
+  NavigationProp,
+  ParamListBase,
+  Route,
+  RouteProp,
+  StackActionHelpers,
+  StackNavigationState,
+} from '@react-navigation/native';
+import type * as React from 'react';
+import type { Animated, StyleProp, TextStyle, ViewStyle } from 'react-native';
 
 export type StackNavigationEventMap = {
   /**
@@ -128,19 +128,21 @@ export type StackHeaderOptions = HeaderOptions & {
    */
   headerBackTestID?: string;
   /**
-   * Title string used by the back button on iOS. Defaults to the previous scene's `headerTitle`.
+   * Title string used by the back button on iOS.
+   * Defaults to the previous screen's title, or "Back" if there's not enough space.
    * Use `headerBackTitleVisible: false` to hide it.
    */
   headerBackTitle?: string;
   /**
+   * Whether the back button title should be visible or not.
+   *
+   * Defaults to `true` on iOS, `false on Android.
+   */
+  headerBackTitleVisible?: boolean;
+  /**
    * Style object for the back title.
    */
   headerBackTitleStyle?: StyleProp<TextStyle>;
-  /**
-   * A reasonable default is supplied for whether the back button title should be visible or not.
-   * But if you want to override that you can use `true` or `false` in this option.
-   */
-  headerBackTitleVisible?: boolean;
   /**
    * Title string used by the back button when `headerBackTitle` doesn't fit on the screen. `"Back"` by default.
    */
@@ -254,11 +256,16 @@ export type StackNavigationOptions = StackHeaderOptions &
      * - `modal`: Use Modal animations. This changes a few things:
      *   - Sets `headerMode` to `screen` for the screen unless specified otherwise.
      *   - Changes the screen animation to match the platform behavior for modals.
+     * - `transparentModal`: Similar to `modal`. This changes following things:
+     *   - Sets `headerMode` to `screen` for the screen unless specified otherwise.
+     *   - Sets background color of the screen to transparent, so previous screen is visible
      *   - Adjusts the `detachPreviousScreen` option so that the previous screen stays rendered.
+     *   - Prevents the previous screen from animating from its last position.
+     *   - Changes the screen animation to a vertical slide animation.
      *
      * Defaults to 'card'.
      */
-    presentation?: 'card' | 'modal';
+    presentation?: 'card' | 'modal' | 'transparentModal';
     /**
      * Whether transition animation should be enabled the screen.
      * If you set it to `false`, the screen won't animate when pushing or popping.

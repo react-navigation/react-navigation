@@ -1,30 +1,28 @@
-import * as React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { BlurView } from 'expo-blur';
-import {
-  getFocusedRouteNameFromRoute,
-  ParamListBase,
-  NavigatorScreenParams,
-} from '@react-navigation/native';
-import type { StackScreenProps } from '@react-navigation/stack';
 import {
   createBottomTabNavigator,
   useBottomTabBarHeight,
 } from '@react-navigation/bottom-tabs';
 import { HeaderBackButton } from '@react-navigation/elements';
+import {
+  getFocusedRouteNameFromRoute,
+  NavigatorScreenParams,
+  ParamListBase,
+} from '@react-navigation/native';
+import type { StackScreenProps } from '@react-navigation/stack';
+import { BlurView } from 'expo-blur';
+import * as React from 'react';
+import { ScrollView, StyleSheet } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import Albums from '../Shared/Albums';
-import Contacts from '../Shared/Contacts';
 import Chat from '../Shared/Chat';
+import Contacts from '../Shared/Contacts';
 import SimpleStackScreen, { SimpleStackParams } from './SimpleStack';
 
-const getTabBarIcon = (name: string) => ({
-  color,
-  size,
-}: {
-  color: string;
-  size: number;
-}) => <MaterialCommunityIcons name={name} color={color} size={size} />;
+const getTabBarIcon =
+  (name: string) =>
+  ({ color, size }: { color: string; size: number }) =>
+    <MaterialCommunityIcons name={name} color={color} size={size} />;
 
 type BottomTabParams = {
   TabStack: NavigatorScreenParams<SimpleStackParams>;

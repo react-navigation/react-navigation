@@ -1,17 +1,17 @@
 /* eslint-disable import/no-commonjs */
 
+import { useScrollToTop } from '@react-navigation/native';
 import * as React from 'react';
 import {
-  View,
-  Image,
-  ScrollView,
-  StyleSheet,
-  ScrollViewProps,
   Dimensions,
+  Image,
   Platform,
   ScaledSize,
+  ScrollView,
+  ScrollViewProps,
+  StyleSheet,
+  View,
 } from 'react-native';
-import { useScrollToTop } from '@react-navigation/native';
 
 const COVERS = [
   require('../../assets/album-art-01.jpg'),

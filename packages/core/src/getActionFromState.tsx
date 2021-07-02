@@ -1,12 +1,13 @@
 import type {
-  Route,
-  PartialRoute,
-  ParamListBase,
-  NavigationState,
-  PartialState,
   CommonActions,
+  NavigationState,
+  ParamListBase,
+  PartialRoute,
+  PartialState,
+  Route,
 } from '@react-navigation/routers';
-import type { PathConfig, PathConfigMap, NavigatorScreenParams } from './types';
+
+import type { NavigatorScreenParams, PathConfig, PathConfigMap } from './types';
 
 type ConfigItem = {
   initialRouteName?: string;

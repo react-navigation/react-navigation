@@ -1,15 +1,15 @@
-import type { StyleProp, ViewStyle, TextStyle } from 'react-native';
-import type { SceneRendererProps, TabViewProps } from 'react-native-tab-view';
 import type {
-  ParamListBase,
   Descriptor,
   NavigationHelpers,
-  Route,
   NavigationProp,
-  TabNavigationState,
-  TabActionHelpers,
+  ParamListBase,
+  Route,
   RouteProp,
+  TabActionHelpers,
+  TabNavigationState,
 } from '@react-navigation/native';
+import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
+import type { SceneRendererProps, TabViewProps } from 'react-native-tab-view';
 
 export type MaterialTopTabNavigationEventMap = {
   /**

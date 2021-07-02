@@ -1,13 +1,14 @@
 import { nanoid } from 'nanoid/non-secure';
+
 import BaseRouter from './BaseRouter';
 import type {
-  NavigationState,
-  PartialState,
   CommonNavigationAction,
-  Router,
   DefaultRouterOptions,
-  Route,
+  NavigationState,
   ParamListBase,
+  PartialState,
+  Route,
+  Router,
 } from './types';
 
 export type TabActionType = {
@@ -188,9 +189,9 @@ export default function TabRouter({
       }
 
       const routes = routeNames.map((name) => {
-        const route = (state as PartialState<
-          TabNavigationState<ParamListBase>
-        >).routes.find((r) => r.name === name);
+        const route = (
+          state as PartialState<TabNavigationState<ParamListBase>>
+        ).routes.find((r) => r.name === name);
 
         return {
           ...route,

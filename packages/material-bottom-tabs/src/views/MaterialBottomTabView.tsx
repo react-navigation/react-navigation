@@ -1,15 +1,17 @@
-import * as React from 'react';
-import { Text, StyleSheet, Platform } from 'react-native';
-import { BottomNavigation, DefaultTheme, DarkTheme } from 'react-native-paper';
+import { SafeAreaProviderCompat } from '@react-navigation/elements';
 import {
-  Route,
-  TabNavigationState,
-  TabActions,
-  useTheme,
-  useLinkBuilder,
   Link,
   ParamListBase,
+  Route,
+  TabActions,
+  TabNavigationState,
+  useLinkBuilder,
+  useTheme,
 } from '@react-navigation/native';
+import * as React from 'react';
+import { Platform, StyleSheet, Text } from 'react-native';
+import { BottomNavigation, DarkTheme, DefaultTheme } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type {
   MaterialBottomTabDescriptorMap,
@@ -35,8 +37,8 @@ let MaterialCommunityIcons: React.ComponentType<
 
 try {
   // Optionally require vector-icons
-  MaterialCommunityIcons = require('react-native-vector-icons/MaterialCommunityIcons')
-    .default;
+  MaterialCommunityIcons =
+    require('react-native-vector-icons/MaterialCommunityIcons').default;
 } catch (e) {
   let isErrorLogged = false;
 
@@ -74,12 +76,13 @@ try {
   };
 }
 
-export default function MaterialBottomTabView({
+function MaterialBottomTabViewInner({
   state,
   navigation,
   descriptors,
   ...rest
 }: Props) {
+  const insets = useSafeAreaInsets();
   const { dark, colors } = useTheme();
   const buildLink = useLinkBuilder();
 
@@ -187,7 +190,16 @@ export default function MaterialBottomTabView({
           preventDefault();
         }
       }}
+      safeAreaInsets={insets}
     />
+  );
+}
+
+export default function MaterialBottomTabView(props: Props) {
+  return (
+    <SafeAreaProviderCompat>
+      <MaterialBottomTabViewInner {...props} />
+    </SafeAreaProviderCompat>
   );
 }
 

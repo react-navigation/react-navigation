@@ -3,6 +3,102 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.27](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.25...@react-navigation/stack@6.0.0-next.27) (2021-07-01)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0-next.26](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.25...@react-navigation/stack@6.0.0-next.26) (2021-06-10)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0-next.25](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.24...@react-navigation/stack@6.0.0-next.25) (2021-06-01)
+
+
+### Bug Fixes
+
+* tweak android q animation ([7d74bd7](https://github.com/react-navigation/react-navigation/commit/7d74bd73a7333f0b1373a05c9f06e981556feed2))
+
+
+
+
+
+# [6.0.0-next.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.23...@react-navigation/stack@6.0.0-next.24) (2021-05-29)
+
+
+### Bug Fixes
+
+* remove card shadow from default animation ([70f4fe2](https://github.com/react-navigation/react-navigation/commit/70f4fe2ffaa219a2a72e0ae25b7d5d007948c2a4)), closes [#9569](https://github.com/react-navigation/react-navigation/issues/9569)
+
+
+
+
+
+# [6.0.0-next.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.22...@react-navigation/stack@6.0.0-next.23) (2021-05-29)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0-next.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.21...@react-navigation/stack@6.0.0-next.22) (2021-05-27)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0-next.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.20...@react-navigation/stack@6.0.0-next.21) (2021-05-26)
+
+
+### Features
+
+* add screenListeners prop on navigators similar to screenOptions ([cde44a5](https://github.com/react-navigation/react-navigation/commit/cde44a5785444a121aa08f94af9f8fe4fc89910a))
+
+
+
+
+
+# [6.0.0-next.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.19...@react-navigation/stack@6.0.0-next.20) (2021-05-25)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0-next.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.18...@react-navigation/stack@6.0.0-next.19) (2021-05-24)
+
+
+### Bug Fixes
+
+* make transparent modal work with modal presentation ([c90bff0](https://github.com/react-navigation/react-navigation/commit/c90bff08d54d1c7151737a43d4f73abe7d364366))
+
+
+
+
+
+# [6.0.0-next.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.17...@react-navigation/stack@6.0.0-next.18) (2021-05-23)
+
+
+### Features
+
+* add 'transparentModal' presentation to JS stack ([3d14740](https://github.com/react-navigation/react-navigation/commit/3d147401e8ca98ec2d51d5e11c09cd1271d448d1))
+* enable ipad trackpad two finger back gesture ([4ec6acd](https://github.com/react-navigation/react-navigation/commit/4ec6acdf97ba1b34f25b22af5262798a36b9020a))
+
+
+
+
+
 # [6.0.0-next.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.16...@react-navigation/stack@6.0.0-next.17) (2021-05-16)
 
 

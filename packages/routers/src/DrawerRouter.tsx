@@ -1,17 +1,18 @@
 import { nanoid } from 'nanoid/non-secure';
-import type {
-  PartialState,
-  CommonNavigationAction,
-  Router,
-  ParamListBase,
-} from './types';
+
 import TabRouter, {
+  TabActionHelpers,
   TabActions,
   TabActionType,
-  TabRouterOptions,
   TabNavigationState,
-  TabActionHelpers,
+  TabRouterOptions,
 } from './TabRouter';
+import type {
+  CommonNavigationAction,
+  ParamListBase,
+  PartialState,
+  Router,
+} from './types';
 
 export type DrawerActionType =
   | TabActionType
@@ -22,7 +23,7 @@ export type DrawerActionType =
     };
 
 export type DrawerRouterOptions = TabRouterOptions & {
-  openByDefault?: boolean;
+  defaultStatus?: 'open' | 'closed';
 };
 
 export type DrawerNavigationState<ParamList extends ParamListBase> = Omit<
@@ -42,24 +43,23 @@ export type DrawerNavigationState<ParamList extends ParamListBase> = Omit<
   )[];
 };
 
-export type DrawerActionHelpers<
-  ParamList extends ParamListBase
-> = TabActionHelpers<ParamList> & {
-  /**
-   * Open the drawer sidebar.
-   */
-  openDrawer(): void;
+export type DrawerActionHelpers<ParamList extends ParamListBase> =
+  TabActionHelpers<ParamList> & {
+    /**
+     * Open the drawer sidebar.
+     */
+    openDrawer(): void;
 
-  /**
-   * Close the drawer sidebar.
-   */
-  closeDrawer(): void;
+    /**
+     * Close the drawer sidebar.
+     */
+    closeDrawer(): void;
 
-  /**
-   * Open the drawer sidebar if closed, or close if opened.
-   */
-  toggleDrawer(): void;
-};
+    /**
+     * Open the drawer sidebar if closed, or close if opened.
+     */
+    toggleDrawer(): void;
+  };
 
 export const DrawerActions = {
   ...TabActions,
@@ -107,13 +107,13 @@ const closeDrawer = (
 };
 
 export default function DrawerRouter({
-  openByDefault,
+  defaultStatus,
   ...rest
 }: DrawerRouterOptions): Router<
   DrawerNavigationState<ParamListBase>,
   DrawerActionType | CommonNavigationAction
 > {
-  const router = (TabRouter(rest) as unknown) as Router<
+  const router = TabRouter(rest) as unknown as Router<
     DrawerNavigationState<ParamListBase>,
     TabActionType | CommonNavigationAction
   >;
@@ -130,7 +130,7 @@ export default function DrawerRouter({
         routeGetIdList,
       });
 
-      if (openByDefault) {
+      if (defaultStatus === 'open') {
         state = openDrawer(state);
       }
 
@@ -170,7 +170,7 @@ export default function DrawerRouter({
     getStateForRouteFocus(state, key) {
       const result = router.getStateForRouteFocus(state, key);
 
-      if (openByDefault) {
+      if (defaultStatus === 'open') {
         return openDrawer(result);
       }
 
@@ -193,7 +193,7 @@ export default function DrawerRouter({
           return openDrawer(state);
 
         case 'GO_BACK':
-          if (openByDefault) {
+          if (defaultStatus === 'open') {
             if (!isDrawerOpen(state)) {
               return openDrawer(state);
             }

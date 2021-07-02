@@ -1,5 +1,5 @@
+import { EventArg, useNavigation, useRoute } from '@react-navigation/core';
 import * as React from 'react';
-import { useNavigation, useRoute, EventArg } from '@react-navigation/core';
 
 type ScrollOptions = { y?: number; animated?: boolean };
 

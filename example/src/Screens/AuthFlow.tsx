@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { View, TextInput, ActivityIndicator, StyleSheet } from 'react-native';
-import { Title, Button } from 'react-native-paper';
-import { useTheme, ParamListBase } from '@react-navigation/native';
+import { HeaderBackButton } from '@react-navigation/elements';
+import { ParamListBase, useTheme } from '@react-navigation/native';
 import {
   createStackNavigator,
   StackScreenProps,
 } from '@react-navigation/stack';
-import { HeaderBackButton } from '@react-navigation/elements';
+import * as React from 'react';
+import { ActivityIndicator, StyleSheet, TextInput, View } from 'react-native';
+import { Button, Title } from 'react-native-paper';
 
 type AuthStackParams = {
   Splash: undefined;

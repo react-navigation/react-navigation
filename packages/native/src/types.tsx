@@ -1,6 +1,7 @@
 import type {
-  getStateFromPath as getStateFromPathDefault,
+  getActionFromState as getActionFromStateDefault,
   getPathFromState as getPathFromStateDefault,
+  getStateFromPath as getStateFromPathDefault,
   PathConfigMap,
   Route,
 } from '@react-navigation/core';
@@ -104,6 +105,10 @@ export type LinkingOptions<ParamList extends {}> = {
    * Only applicable on Web.
    */
   getPathFromState?: typeof getPathFromStateDefault;
+  /**
+   * Custom function to convert the state object to a valid action (advanced).
+   */
+  getActionFromState?: typeof getActionFromStateDefault;
 };
 
 export type DocumentTitleOptions = {

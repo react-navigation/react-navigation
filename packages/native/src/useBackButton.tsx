@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { BackHandler } from 'react-native';
 import type {
   NavigationContainerRef,
   ParamListBase,
 } from '@react-navigation/core';
+import * as React from 'react';
+import { BackHandler } from 'react-native';
 
 export default function useBackButton(
   ref: React.RefObject<NavigationContainerRef<ParamListBase>>

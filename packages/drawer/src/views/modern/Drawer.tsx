@@ -21,6 +21,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+
 import type { DrawerProps } from '../../types';
 import DrawerProgressContext from '../../utils/DrawerProgressContext';
 import Overlay from './Overlay';
@@ -133,7 +134,7 @@ export default function Drawer({
   };
 
   // FIXME: Currently hitSlop is broken when on Android when drawer is on right
-  // https://github.com/kmagiera/react-native-gesture-handler/issues/569
+  // https://github.com/software-mansion/react-native-gesture-handler/issues/569
   const hitSlop = isRight
     ? // Extend hitSlop to the side of the screen when drawer is closed
       // This lets the user drag the drawer from the side of the screen

@@ -1,21 +1,27 @@
-import * as React from 'react';
-import { Linking, Platform } from 'react-native';
 import {
-  getActionFromState,
+  getActionFromState as getActionFromStateDefault,
   getStateFromPath as getStateFromPathDefault,
   NavigationContainerRef,
   ParamListBase,
 } from '@react-navigation/core';
+import * as React from 'react';
+import { Linking, Platform } from 'react-native';
+
 import extractPathFromURL from './extractPathFromURL';
 import type { LinkingOptions } from './types';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
+
+type Options = LinkingOptions<ParamListBase> & {
+  independent?: boolean;
+};
 
 let isUsingLinking = false;
 
 export default function useLinking(
   ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
   {
+    independent,
     enabled = true,
     prefixes,
     config,
@@ -45,9 +51,14 @@ export default function useLinking(
       };
     },
     getStateFromPath = getStateFromPathDefault,
-  }: LinkingOptions<ParamListBase>
+    getActionFromState = getActionFromStateDefault,
+  }: Options
 ) {
   React.useEffect(() => {
+    if (independent) {
+      return undefined;
+    }
+
     if (enabled !== false && isUsingLinking) {
       throw new Error(
         [
@@ -78,6 +89,7 @@ export default function useLinking(
   const configRef = React.useRef(config);
   const getInitialURLRef = React.useRef(getInitialURL);
   const getStateFromPathRef = React.useRef(getStateFromPath);
+  const getActionFromStateRef = React.useRef(getActionFromState);
 
   React.useEffect(() => {
     enabledRef.current = enabled;
@@ -85,7 +97,8 @@ export default function useLinking(
     configRef.current = config;
     getInitialURLRef.current = getInitialURL;
     getStateFromPathRef.current = getStateFromPath;
-  }, [config, enabled, prefixes, getInitialURL, getStateFromPath]);
+    getActionFromStateRef.current = getActionFromState;
+  });
 
   const getInitialState = React.useCallback(() => {
     let state: ResultState | undefined;
@@ -150,7 +163,10 @@ export default function useLinking(
             return;
           }
 
-          const action = getActionFromState(state, configRef.current);
+          const action = getActionFromStateRef.current(
+            state,
+            configRef.current
+          );
 
           if (action !== undefined) {
             try {

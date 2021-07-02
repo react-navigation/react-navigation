@@ -1,58 +1,41 @@
-import * as React from 'react';
 import {
   CommonActions,
-  Route,
-  NavigationState,
   InitialState,
-  PartialState,
   NavigationAction,
+  NavigationState,
   ParamListBase,
+  PartialState,
+  Route,
 } from '@react-navigation/routers';
-import EnsureSingleNavigator from './EnsureSingleNavigator';
-import UnhandledActionContext from './UnhandledActionContext';
-import NavigationBuilderContext from './NavigationBuilderContext';
-import NavigationStateContext from './NavigationStateContext';
-import NavigationRouteContext from './NavigationRouteContext';
-import NavigationContext from './NavigationContext';
-import { ScheduleUpdateContext } from './useScheduleUpdate';
-import useChildListeners from './useChildListeners';
-import useKeyedChildListeners from './useKeyedChildListeners';
-import useOptionsGetters from './useOptionsGetters';
-import useEventEmitter from './useEventEmitter';
-import useSyncState from './useSyncState';
-import checkSerializable from './checkSerializable';
+import * as React from 'react';
+
 import checkDuplicateRouteNames from './checkDuplicateRouteNames';
-import findFocusedRoute from './findFocusedRoute';
+import checkSerializable from './checkSerializable';
 import { NOT_INITIALIZED_ERROR } from './createNavigationContainerRef';
+import EnsureSingleNavigator from './EnsureSingleNavigator';
+import findFocusedRoute from './findFocusedRoute';
+import NavigationBuilderContext from './NavigationBuilderContext';
+import NavigationContainerRefContext from './NavigationContainerRefContext';
+import NavigationContext from './NavigationContext';
+import NavigationRouteContext from './NavigationRouteContext';
+import NavigationStateContext from './NavigationStateContext';
 import type {
   NavigationContainerEventMap,
-  NavigationContainerRef,
   NavigationContainerProps,
+  NavigationContainerRef,
 } from './types';
+import UnhandledActionContext from './UnhandledActionContext';
+import useChildListeners from './useChildListeners';
+import useEventEmitter from './useEventEmitter';
+import useKeyedChildListeners from './useKeyedChildListeners';
+import useOptionsGetters from './useOptionsGetters';
+import { ScheduleUpdateContext } from './useScheduleUpdate';
+import useSyncState from './useSyncState';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
 
 const serializableWarnings: string[] = [];
 const duplicateNameWarnings: string[] = [];
-
-try {
-  /**
-   * Migration instructions for removal of devtools from core
-   */
-  Object.defineProperty(
-    global,
-    'REACT_NAVIGATION_REDUX_DEVTOOLS_EXTENSION_INTEGRATION_ENABLED',
-    {
-      set(_) {
-        console.warn(
-          "Redux devtools extension integration can be enabled with the '@react-navigation/devtools' package. For more details, see https://reactnavigation.org/docs/devtools"
-        );
-      },
-    }
-  );
-} catch (e) {
-  // Ignore
-}
 
 /**
  * Remove `key` and `routeNames` from the state objects recursively to get partial state.
@@ -112,15 +95,10 @@ const BaseNavigationContainer = React.forwardRef(
       );
     }
 
-    const [
-      state,
-      getState,
-      setState,
-      scheduleUpdate,
-      flushUpdates,
-    ] = useSyncState<State>(() =>
-      getPartialState(initialState == null ? undefined : initialState)
-    );
+    const [state, getState, setState, scheduleUpdate, flushUpdates] =
+      useSyncState<State>(() =>
+        getPartialState(initialState == null ? undefined : initialState)
+      );
 
     const isFirstMountRef = React.useRef<boolean>(true);
 
@@ -136,17 +114,22 @@ const BaseNavigationContainer = React.forwardRef(
 
     const { keyedListeners, addKeyedListener } = useKeyedChildListeners();
 
-    const dispatch = (
-      action: NavigationAction | ((state: NavigationState) => NavigationAction)
-    ) => {
-      if (listeners.focus[0] == null) {
-        console.error(NOT_INITIALIZED_ERROR);
-      } else {
-        listeners.focus[0]((navigation) => navigation.dispatch(action));
-      }
-    };
+    const dispatch = React.useCallback(
+      (
+        action:
+          | NavigationAction
+          | ((state: NavigationState) => NavigationAction)
+      ) => {
+        if (listeners.focus[0] == null) {
+          console.error(NOT_INITIALIZED_ERROR);
+        } else {
+          listeners.focus[0]((navigation) => navigation.dispatch(action));
+        }
+      },
+      [listeners.focus]
+    );
 
-    const canGoBack = () => {
+    const canGoBack = React.useCallback(() => {
       if (listeners.focus[0] == null) {
         return false;
       }
@@ -160,7 +143,7 @@ const BaseNavigationContainer = React.forwardRef(
       } else {
         return false;
       }
-    };
+    }, [listeners.focus]);
 
     const resetRoot = React.useCallback(
       (state?: PartialState<NavigationState> | NavigationState) => {
@@ -200,28 +183,45 @@ const BaseNavigationContainer = React.forwardRef(
 
     const { addOptionsGetter, getCurrentOptions } = useOptionsGetters({});
 
-    React.useImperativeHandle(ref, () => ({
-      ...Object.keys(CommonActions).reduce<any>((acc, name) => {
-        acc[name] = (...args: any[]) =>
-          // @ts-expect-error: this is ok
-          dispatch(CommonActions[name](...args));
-        return acc;
-      }, {}),
-      ...emitter.create('root'),
-      resetRoot,
-      dispatch,
-      canGoBack,
-      getRootState,
-      getState: () => state,
-      getParent: () => undefined,
-      getCurrentRoute,
-      getCurrentOptions,
-      isReady: () => listeners.focus[0] != null,
-    }));
+    const navigation: NavigationContainerRef<ParamListBase> = React.useMemo(
+      () => ({
+        ...Object.keys(CommonActions).reduce<any>((acc, name) => {
+          acc[name] = (...args: any[]) =>
+            // @ts-expect-error: this is ok
+            dispatch(CommonActions[name](...args));
+          return acc;
+        }, {}),
+        ...emitter.create('root'),
+        resetRoot,
+        dispatch,
+        canGoBack,
+        getRootState,
+        getState: () => stateRef.current,
+        getParent: () => undefined,
+        getCurrentRoute,
+        getCurrentOptions,
+        isReady: () => listeners.focus[0] != null,
+      }),
+      [
+        canGoBack,
+        dispatch,
+        emitter,
+        getCurrentOptions,
+        getCurrentRoute,
+        getRootState,
+        listeners.focus,
+        resetRoot,
+      ]
+    );
+
+    React.useImperativeHandle(ref, () => navigation, [navigation]);
 
     const onDispatchAction = React.useCallback(
       (action: NavigationAction, noop: boolean) => {
-        emitter.emit({ type: '__unsafe_action__', data: { action, noop } });
+        emitter.emit({
+          type: '__unsafe_action__',
+          data: { action, noop, stack: stackRef.current },
+        });
       },
       [emitter]
     );
@@ -244,12 +244,15 @@ const BaseNavigationContainer = React.forwardRef(
       [emitter]
     );
 
+    const stackRef = React.useRef<string | undefined>();
+
     const builderContext = React.useMemo(
       () => ({
         addListener,
         addKeyedListener,
         onDispatchAction,
         onOptionsChange,
+        stackRef,
       }),
       [addListener, addKeyedListener, onDispatchAction, onOptionsChange]
     );
@@ -285,10 +288,12 @@ const BaseNavigationContainer = React.forwardRef(
     );
 
     const onStateChangeRef = React.useRef(onStateChange);
+    const stateRef = React.useRef(state);
 
     React.useEffect(() => {
       isInitialRef.current = false;
       onStateChangeRef.current = onStateChange;
+      stateRef.current = state;
     });
 
     React.useEffect(() => {
@@ -345,9 +350,8 @@ const BaseNavigationContainer = React.forwardRef(
             }
           }
 
-          const duplicateRouteNamesResult = checkDuplicateRouteNames(
-            hydratedState
-          );
+          const duplicateRouteNamesResult =
+            checkDuplicateRouteNames(hydratedState);
 
           if (duplicateRouteNamesResult.length) {
             const message = `Found screens with the same name nested inside one another. Check:\n${duplicateRouteNamesResult.map(
@@ -415,17 +419,19 @@ const BaseNavigationContainer = React.forwardRef(
     );
 
     let element = (
-      <ScheduleUpdateContext.Provider value={scheduleContext}>
-        <NavigationBuilderContext.Provider value={builderContext}>
-          <NavigationStateContext.Provider value={context}>
-            <UnhandledActionContext.Provider
-              value={onUnhandledAction ?? defaultOnUnhandledAction}
-            >
-              <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
-            </UnhandledActionContext.Provider>
-          </NavigationStateContext.Provider>
-        </NavigationBuilderContext.Provider>
-      </ScheduleUpdateContext.Provider>
+      <NavigationContainerRefContext.Provider value={navigation}>
+        <ScheduleUpdateContext.Provider value={scheduleContext}>
+          <NavigationBuilderContext.Provider value={builderContext}>
+            <NavigationStateContext.Provider value={context}>
+              <UnhandledActionContext.Provider
+                value={onUnhandledAction ?? defaultOnUnhandledAction}
+              >
+                <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
+              </UnhandledActionContext.Provider>
+            </NavigationStateContext.Provider>
+          </NavigationBuilderContext.Provider>
+        </ScheduleUpdateContext.Provider>
+      </NavigationContainerRefContext.Provider>
     );
 
     if (independent) {

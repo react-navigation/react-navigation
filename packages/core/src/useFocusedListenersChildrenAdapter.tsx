@@ -1,5 +1,6 @@
-import * as React from 'react';
 import type { ParamListBase } from '@react-navigation/routers';
+import * as React from 'react';
+
 import NavigationBuilderContext, {
   FocusedNavigationCallback,
   FocusedNavigationListener,
@@ -39,8 +40,8 @@ export default function useFocusedListenersChildrenAdapter({
     [focusedListeners, navigation]
   );
 
-  React.useEffect(() => addListener?.('focus', listener), [
-    addListener,
-    listener,
-  ]);
+  React.useEffect(
+    () => addListener?.('focus', listener),
+    [addListener, listener]
+  );
 }

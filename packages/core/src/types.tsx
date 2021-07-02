@@ -1,13 +1,13 @@
-import type * as React from 'react';
 import type {
   DefaultRouterOptions,
-  NavigationState,
-  NavigationAction,
   InitialState,
+  NavigationAction,
+  NavigationState,
+  ParamListBase,
   PartialState,
   Route,
-  ParamListBase,
 } from '@react-navigation/routers';
+import type * as React from 'react';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -20,14 +20,25 @@ declare global {
 type Keyof<T extends {}> = Extract<keyof T, string>;
 
 export type DefaultNavigatorOptions<
+  ParamList extends ParamListBase,
+  State extends NavigationState,
   ScreenOptions extends {},
-  ParamList extends ParamListBase = ParamListBase
+  EventMap extends EventMapBase
 > = DefaultRouterOptions<Keyof<ParamList>> & {
   /**
    * Children React Elements to extract the route configuration from.
    * Only `Screen`, `Group` and `React.Fragment` are supported as children.
    */
   children: React.ReactNode;
+  /**
+   * Event listeners for all the screens in the navigator.
+   */
+  screenListeners?:
+    | ScreenListeners<State, EventMap>
+    | ((props: {
+        route: RouteProp<ParamList>;
+        navigation: any;
+      }) => ScreenListeners<State, EventMap>);
   /**
    * Default options for all screens under this navigator.
    */
@@ -513,43 +524,45 @@ export type NavigationContainerEventMap = {
        * Whether the action was a no-op, i.e. resulted any state changes.
        */
       noop: boolean;
+      /**
+       * Stack trace of the action, this will only be available during development.
+       */
+      stack: string | undefined;
     };
   };
 };
 
-export type NavigationContainerRef<
-  ParamList extends {}
-> = NavigationHelpers<ParamList> &
-  EventConsumer<NavigationContainerEventMap> & {
-    /**
-     * Reset the navigation state of the root navigator to the provided state.
-     *
-     * @param state Navigation state object.
-     */
-    resetRoot(state?: PartialState<NavigationState> | NavigationState): void;
-    /**
-     * Get the rehydrated navigation state of the navigation tree.
-     */
-    getRootState(): NavigationState;
-    /**
-     * Get the currently focused navigation route.
-     */
-    getCurrentRoute(): Route<string> | undefined;
-    /**
-     * Get the currently focused route's options.
-     */
-    getCurrentOptions(): object | undefined;
-    /**
-     * Whether the navigation container is ready to handle actions.
-     */
-    isReady(): boolean;
-  };
+export type NavigationContainerRef<ParamList extends {}> =
+  NavigationHelpers<ParamList> &
+    EventConsumer<NavigationContainerEventMap> & {
+      /**
+       * Reset the navigation state of the root navigator to the provided state.
+       *
+       * @param state Navigation state object.
+       */
+      resetRoot(state?: PartialState<NavigationState> | NavigationState): void;
+      /**
+       * Get the rehydrated navigation state of the navigation tree.
+       */
+      getRootState(): NavigationState;
+      /**
+       * Get the currently focused navigation route.
+       */
+      getCurrentRoute(): Route<string> | undefined;
+      /**
+       * Get the currently focused route's options.
+       */
+      getCurrentOptions(): object | undefined;
+      /**
+       * Whether the navigation container is ready to handle actions.
+       */
+      isReady(): boolean;
+    };
 
-export type NavigationContainerRefWithCurrent<
-  ParamList extends {}
-> = NavigationContainerRef<ParamList> & {
-  current: NavigationContainerRef<ParamList> | null;
-};
+export type NavigationContainerRefWithCurrent<ParamList extends {}> =
+  NavigationContainerRef<ParamList> & {
+    current: NavigationContainerRef<ParamList> | null;
+  };
 
 export type TypedNavigator<
   ParamList extends ParamListBase,
@@ -564,9 +577,9 @@ export type TypedNavigator<
   Navigator: React.ComponentType<
     Omit<
       React.ComponentProps<Navigator>,
-      keyof DefaultNavigatorOptions<any, any>
+      keyof DefaultNavigatorOptions<any, any, any, any>
     > &
-      DefaultNavigatorOptions<ScreenOptions, ParamList>
+      DefaultNavigatorOptions<ParamList, State, ScreenOptions, EventMap>
   >;
   /**
    * Component used for grouping multiple route configuration.
@@ -619,10 +632,9 @@ export type PathConfig<ParamList extends {}> = {
 };
 
 export type PathConfigMap<ParamList extends {}> = {
-  [RouteName in keyof ParamList]?: ParamList[RouteName] extends NavigatorScreenParams<
-    infer T,
-    any
-  >
+  [RouteName in keyof ParamList]?: NonNullable<
+    ParamList[RouteName]
+  > extends NavigatorScreenParams<infer T, any>
     ? string | PathConfig<T>
     : string | Omit<PathConfig<{}>, 'screens' | 'initialRouteName'>;
 };

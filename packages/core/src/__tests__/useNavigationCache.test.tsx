@@ -1,10 +1,11 @@
+import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
-import { render, act } from '@testing-library/react-native';
-import useEventEmitter from '../useEventEmitter';
-import useNavigationCache from '../useNavigationCache';
-import useNavigationBuilder from '../useNavigationBuilder';
+
 import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
+import useEventEmitter from '../useEventEmitter';
+import useNavigationBuilder from '../useNavigationBuilder';
+import useNavigationCache from '../useNavigationCache';
 import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
 
 beforeEach(() => (MockRouterKey.current = 0));

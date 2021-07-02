@@ -1,5 +1,5 @@
-import getInvertedMultiplier from './getInvertedMultiplier';
 import type { GestureDirection, Layout } from '../types';
+import getInvertedMultiplier from './getInvertedMultiplier';
 
 export default function getDistanceForDirection(
   layout: Layout,

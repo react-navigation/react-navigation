@@ -1,0 +1,47 @@
+{
+  "$schema": "https://fbflipper.com/schemas/plugin-package/v2.json",
+  "name": "flipper-plugin-react-navigation",
+  "description": "Developer tools for React Navigation",
+  "version": "1.3.0",
+  "main": "dist/bundle.js",
+  "license": "MIT",
+  "keywords": [
+    "flipper-plugin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/react-navigation/react-navigation.git",
+    "directory": "packages/flipper-plugin-react-navigation"
+  },
+  "id": "react-navigation",
+  "pluginType": "client",
+  "icon": "directions",
+  "title": "React Navigation",
+  "flipperBundlerEntry": "src/index.tsx",
+  "scripts": {
+    "lint": "flipper-pkg lint",
+    "prepack": "flipper-pkg lint && flipper-pkg bundle",
+    "build": "flipper-pkg bundle",
+    "watch": "flipper-pkg bundle --watch",
+    "test": "jest --no-watchman"
+  },
+  "peerDependencies": {
+    "antd": "*",
+    "flipper": "*",
+    "flipper-plugin": "*"
+  },
+  "devDependencies": {
+    "@ant-design/icons": "^4.6.2",
+    "@babel/preset-react": "^7.12.13",
+    "@babel/preset-typescript": "^7.13.0",
+    "@react-navigation/core": "^6.0.0-next.15",
+    "@types/react": "^17.0.9",
+    "@types/react-dom": "^17.0.6",
+    "antd": "^4.16.1",
+    "flipper": "^0.92.0",
+    "flipper-pkg": "^0.92.0",
+    "flipper-plugin": "^0.92.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  }
+}

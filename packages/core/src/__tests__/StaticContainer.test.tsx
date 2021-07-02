@@ -1,5 +1,6 @@
-import * as React from 'react';
 import { render } from '@testing-library/react-native';
+import * as React from 'react';
+
 import StaticContainer from '../StaticContainer';
 
 it("doesn't update element if no props changed", () => {

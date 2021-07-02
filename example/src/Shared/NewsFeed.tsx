@@ -1,22 +1,22 @@
+import { useScrollToTop, useTheme } from '@react-navigation/native';
+import Color from 'color';
 import * as React from 'react';
 import {
-  View,
-  TextInput,
   Image,
   ScrollView,
-  StyleSheet,
   ScrollViewProps,
+  StyleSheet,
+  TextInput,
+  View,
 } from 'react-native';
-import { useScrollToTop, useTheme } from '@react-navigation/native';
 import {
-  Card,
-  Text,
   Avatar,
-  Subheading,
-  IconButton,
+  Card,
   Divider,
+  IconButton,
+  Subheading,
+  Text,
 } from 'react-native-paper';
-import Color from 'color';
 
 type Props = Partial<ScrollViewProps> & {
   date?: number;

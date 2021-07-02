@@ -1,10 +1,11 @@
-import * as React from 'react';
 import type { NavigationState } from '@react-navigation/routers';
+import * as React from 'react';
+
+import isArrayEqual from './isArrayEqual';
 import NavigationBuilderContext, {
   GetStateListener,
 } from './NavigationBuilderContext';
 import NavigationRouteContext from './NavigationRouteContext';
-import isArrayEqual from './isArrayEqual';
 
 type Options = {
   getState: () => NavigationState;

@@ -1,31 +1,38 @@
-import * as React from 'react';
 import {
   createNavigatorFactory,
-  useNavigationBuilder,
   DefaultNavigatorOptions,
-  DrawerNavigationState,
-  DrawerRouterOptions,
-  DrawerRouter,
   DrawerActionHelpers,
+  DrawerNavigationState,
+  DrawerRouter,
+  DrawerRouterOptions,
   ParamListBase,
+  useNavigationBuilder,
 } from '@react-navigation/native';
+import * as React from 'react';
 import warnOnce from 'warn-once';
-import DrawerView from '../views/DrawerView';
+
 import type {
-  DrawerNavigationOptions,
   DrawerNavigationConfig,
   DrawerNavigationEventMap,
+  DrawerNavigationOptions,
 } from '../types';
+import DrawerView from '../views/DrawerView';
 
-type Props = DefaultNavigatorOptions<DrawerNavigationOptions> &
+type Props = DefaultNavigatorOptions<
+  ParamListBase,
+  DrawerNavigationState<ParamListBase>,
+  DrawerNavigationOptions,
+  DrawerNavigationEventMap
+> &
   DrawerRouterOptions &
   DrawerNavigationConfig;
 
 function DrawerNavigator({
   initialRouteName,
-  openByDefault,
+  defaultStatus,
   backBehavior,
   children,
+  screenListeners,
   screenOptions,
   // @ts-expect-error: lazy is deprecated
   lazy,
@@ -67,25 +74,22 @@ function DrawerNavigator({
     );
   }
 
-  const {
-    state,
-    descriptors,
-    navigation,
-    NavigationContent,
-  } = useNavigationBuilder<
-    DrawerNavigationState<ParamListBase>,
-    DrawerRouterOptions,
-    DrawerActionHelpers<ParamListBase>,
-    DrawerNavigationOptions,
-    DrawerNavigationEventMap
-  >(DrawerRouter, {
-    initialRouteName,
-    openByDefault,
-    backBehavior,
-    children,
-    screenOptions,
-    defaultScreenOptions,
-  });
+  const { state, descriptors, navigation, NavigationContent } =
+    useNavigationBuilder<
+      DrawerNavigationState<ParamListBase>,
+      DrawerRouterOptions,
+      DrawerActionHelpers<ParamListBase>,
+      DrawerNavigationOptions,
+      DrawerNavigationEventMap
+    >(DrawerRouter, {
+      initialRouteName,
+      defaultStatus,
+      backBehavior,
+      children,
+      screenListeners,
+      screenOptions,
+      defaultScreenOptions,
+    });
 
   return (
     <NavigationContent>

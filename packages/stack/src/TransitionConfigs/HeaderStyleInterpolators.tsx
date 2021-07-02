@@ -1,7 +1,8 @@
 import { Animated, I18nManager } from 'react-native';
+
 import type {
-  StackHeaderInterpolationProps,
   StackHeaderInterpolatedStyle,
+  StackHeaderInterpolationProps,
 } from '../types';
 
 const { add } = Animated;

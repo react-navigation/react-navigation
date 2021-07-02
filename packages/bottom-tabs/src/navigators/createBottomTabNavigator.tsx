@@ -1,23 +1,29 @@
-import * as React from 'react';
-import warnOnce from 'warn-once';
 import {
-  useNavigationBuilder,
   createNavigatorFactory,
   DefaultNavigatorOptions,
+  ParamListBase,
+  TabActionHelpers,
+  TabNavigationState,
   TabRouter,
   TabRouterOptions,
-  TabNavigationState,
-  TabActionHelpers,
-  ParamListBase,
+  useNavigationBuilder,
 } from '@react-navigation/native';
-import BottomTabView from '../views/BottomTabView';
+import * as React from 'react';
+import warnOnce from 'warn-once';
+
 import type {
   BottomTabNavigationConfig,
-  BottomTabNavigationOptions,
   BottomTabNavigationEventMap,
+  BottomTabNavigationOptions,
 } from '../types';
+import BottomTabView from '../views/BottomTabView';
 
-type Props = DefaultNavigatorOptions<BottomTabNavigationOptions> &
+type Props = DefaultNavigatorOptions<
+  ParamListBase,
+  TabNavigationState<ParamListBase>,
+  BottomTabNavigationOptions,
+  BottomTabNavigationEventMap
+> &
   TabRouterOptions &
   BottomTabNavigationConfig;
 
@@ -25,6 +31,7 @@ function BottomTabNavigator({
   initialRouteName,
   backBehavior,
   children,
+  screenListeners,
   screenOptions,
   sceneContainerStyle,
   // @ts-expect-error: lazy is deprecated
@@ -70,24 +77,21 @@ function BottomTabNavigator({
     );
   }
 
-  const {
-    state,
-    descriptors,
-    navigation,
-    NavigationContent,
-  } = useNavigationBuilder<
-    TabNavigationState<ParamListBase>,
-    TabRouterOptions,
-    TabActionHelpers<ParamListBase>,
-    BottomTabNavigationOptions,
-    BottomTabNavigationEventMap
-  >(TabRouter, {
-    initialRouteName,
-    backBehavior,
-    children,
-    screenOptions,
-    defaultScreenOptions,
-  });
+  const { state, descriptors, navigation, NavigationContent } =
+    useNavigationBuilder<
+      TabNavigationState<ParamListBase>,
+      TabRouterOptions,
+      TabActionHelpers<ParamListBase>,
+      BottomTabNavigationOptions,
+      BottomTabNavigationEventMap
+    >(TabRouter, {
+      initialRouteName,
+      backBehavior,
+      children,
+      screenListeners,
+      screenOptions,
+      defaultScreenOptions,
+    });
 
   return (
     <NavigationContent>

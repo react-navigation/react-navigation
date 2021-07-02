@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, ViewProps, StyleSheet } from 'react-native';
+import { StyleSheet, View, ViewProps } from 'react-native';
 
 type Props = ViewProps & {
   enabled: boolean;

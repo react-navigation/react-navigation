@@ -1,23 +1,24 @@
 import * as React from 'react';
 import {
-  StyleSheet,
-  LayoutChangeEvent,
   I18nManager,
-  Platform,
-  Keyboard,
-  StatusBar,
-  View,
   InteractionManager,
+  Keyboard,
+  LayoutChangeEvent,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
-import {
-  PanGestureHandler,
-  GestureState,
-  PanGestureHandlerGestureEvent,
+
+import type { DrawerProps } from '../../types';
+import DrawerProgressContext from '../../utils/DrawerProgressContext';
+import { 
+  GestureState, 
+  PanGestureHandler, 
+  PanGestureHandlerGestureEvent
 } from '../GestureHandler';
 import Overlay from './Overlay';
-import DrawerProgressContext from '../../utils/DrawerProgressContext';
-import type { DrawerProps } from '../../types';
 
 const {
   Clock,
@@ -467,10 +468,8 @@ export default class DrawerView extends React.Component<DrawerProps> {
   };
 
   private toggleStatusBar = (hidden: boolean) => {
-    const {
-      hideStatusBarOnOpen: hideStatusBar,
-      statusBarAnimation,
-    } = this.props;
+    const { hideStatusBarOnOpen: hideStatusBar, statusBarAnimation } =
+      this.props;
 
     if (hideStatusBar && this.isStatusBarHidden !== hidden) {
       this.isStatusBarHidden = hidden;
@@ -520,7 +519,7 @@ export default class DrawerView extends React.Component<DrawerProps> {
         : multiply(this.drawerWidth, -1);
 
     // FIXME: Currently hitSlop is broken when on Android when drawer is on right
-    // https://github.com/kmagiera/react-native-gesture-handler/issues/569
+    // https://github.com/software-mansion/react-native-gesture-handler/issues/569
     const hitSlop = isRight
       ? // Extend hitSlop to the side of the screen when drawer is closed
         // This lets the user drag the drawer from the side of the screen

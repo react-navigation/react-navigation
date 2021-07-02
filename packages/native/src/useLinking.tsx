@@ -1,14 +1,15 @@
-import * as React from 'react';
 import {
-  getStateFromPath as getStateFromPathDefault,
+  findFocusedRoute,
+  getActionFromState as getActionFromStateDefault,
   getPathFromState as getPathFromStateDefault,
+  getStateFromPath as getStateFromPathDefault,
   NavigationContainerRef,
   NavigationState,
-  getActionFromState,
-  findFocusedRoute,
   ParamListBase,
 } from '@react-navigation/core';
 import { nanoid } from 'nanoid/non-secure';
+import * as React from 'react';
+
 import ServerContext from './ServerContext';
 import type { LinkingOptions } from './types';
 
@@ -288,16 +289,26 @@ const series = (cb: () => Promise<void>) => {
 
 let isUsingLinking = false;
 
+type Options = LinkingOptions<ParamListBase> & {
+  independent?: boolean;
+};
+
 export default function useLinking(
   ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
   {
+    independent,
     enabled = true,
     config,
     getStateFromPath = getStateFromPathDefault,
     getPathFromState = getPathFromStateDefault,
-  }: LinkingOptions<ParamListBase>
+    getActionFromState = getActionFromStateDefault,
+  }: Options
 ) {
   React.useEffect(() => {
+    if (independent) {
+      return undefined;
+    }
+
     if (enabled !== false && isUsingLinking) {
       throw new Error(
         [
@@ -326,13 +337,15 @@ export default function useLinking(
   const configRef = React.useRef(config);
   const getStateFromPathRef = React.useRef(getStateFromPath);
   const getPathFromStateRef = React.useRef(getPathFromState);
+  const getActionFromStateRef = React.useRef(getActionFromState);
 
   React.useEffect(() => {
     enabledRef.current = enabled;
     configRef.current = config;
     getStateFromPathRef.current = getStateFromPath;
     getPathFromStateRef.current = getPathFromState;
-  }, [config, enabled, getPathFromState, getStateFromPath]);
+    getActionFromStateRef.current = getActionFromState;
+  });
 
   const server = React.useContext(ServerContext);
 
@@ -413,7 +426,10 @@ export default function useLinking(
         }
 
         if (index > previousIndex) {
-          const action = getActionFromState(state, configRef.current);
+          const action = getActionFromStateRef.current(
+            state,
+            configRef.current
+          );
 
           if (action !== undefined) {
             try {

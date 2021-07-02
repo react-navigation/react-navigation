@@ -1,45 +1,46 @@
-import * as React from 'react';
-import { isValidElementType } from 'react-is';
 import {
   CommonActions,
   DefaultRouterOptions,
+  NavigationAction,
   NavigationState,
   ParamListBase,
-  Router,
-  RouterFactory,
-  RouterConfigOptions,
   PartialState,
-  NavigationAction,
   Route,
+  Router,
+  RouterConfigOptions,
+  RouterFactory,
 } from '@react-navigation/routers';
-import NavigationStateContext from './NavigationStateContext';
-import NavigationRouteContext from './NavigationRouteContext';
-import NavigationHelpersContext from './NavigationHelpersContext';
+import * as React from 'react';
+import { isValidElementType } from 'react-is';
+
 import Group from './Group';
-import Screen from './Screen';
-import useEventEmitter from './useEventEmitter';
-import useRegisterNavigator from './useRegisterNavigator';
-import useDescriptors, { ScreenConfigWithParent } from './useDescriptors';
-import useNavigationHelpers from './useNavigationHelpers';
-import useOnAction from './useOnAction';
-import useFocusEvents from './useFocusEvents';
-import useOnRouteFocus from './useOnRouteFocus';
-import useChildListeners from './useChildListeners';
-import useFocusedListenersChildrenAdapter from './useFocusedListenersChildrenAdapter';
-import useKeyedChildListeners from './useKeyedChildListeners';
-import useOnGetState from './useOnGetState';
-import useScheduleUpdate from './useScheduleUpdate';
-import useCurrentRender from './useCurrentRender';
-import useComponent from './useComponent';
 import isArrayEqual from './isArrayEqual';
+import NavigationHelpersContext from './NavigationHelpersContext';
+import NavigationRouteContext from './NavigationRouteContext';
+import NavigationStateContext from './NavigationStateContext';
+import Screen from './Screen';
 import {
   DefaultNavigatorOptions,
-  RouteConfig,
-  PrivateValueStore,
   EventMapBase,
   EventMapCore,
   NavigatorScreenParams,
+  PrivateValueStore,
+  RouteConfig,
 } from './types';
+import useChildListeners from './useChildListeners';
+import useComponent from './useComponent';
+import useCurrentRender from './useCurrentRender';
+import useDescriptors, { ScreenConfigWithParent } from './useDescriptors';
+import useEventEmitter from './useEventEmitter';
+import useFocusedListenersChildrenAdapter from './useFocusedListenersChildrenAdapter';
+import useFocusEvents from './useFocusEvents';
+import useKeyedChildListeners from './useKeyedChildListeners';
+import useNavigationHelpers from './useNavigationHelpers';
+import useOnAction from './useOnAction';
+import useOnGetState from './useOnGetState';
+import useOnRouteFocus from './useOnRouteFocus';
+import useRegisterNavigator from './useRegisterNavigator';
+import useScheduleUpdate from './useScheduleUpdate';
 
 // This is to make TypeScript compiler happy
 // eslint-disable-next-line babel/no-unused-expressions
@@ -202,7 +203,13 @@ export default function useNavigationBuilder<
   EventMap extends Record<string, any>
 >(
   createRouter: RouterFactory<State, any, RouterOptions>,
-  options: DefaultNavigatorOptions<ScreenOptions> & RouterOptions
+  options: DefaultNavigatorOptions<
+    ParamListBase,
+    State,
+    ScreenOptions,
+    EventMap
+  > &
+    RouterOptions
 ) {
   const navigatorKey = useRegisterNavigator();
 
@@ -210,10 +217,10 @@ export default function useNavigationBuilder<
     | NavigatorRoute<State>
     | undefined;
 
-  const { children, ...rest } = options;
+  const { children, screenListeners, ...rest } = options;
   const { current: router } = React.useRef<Router<State, any>>(
     createRouter({
-      ...((rest as unknown) as RouterOptions),
+      ...(rest as unknown as RouterOptions),
       ...(route?.params &&
       route.params.state == null &&
       route.params.initial !== false &&
@@ -223,11 +230,8 @@ export default function useNavigationBuilder<
     })
   );
 
-  const routeConfigs = getRouteConfigsFromChildren<
-    State,
-    ScreenOptions,
-    EventMap
-  >(children);
+  const routeConfigs =
+    getRouteConfigsFromChildren<State, ScreenOptions, EventMap>(children);
 
   const screens = routeConfigs.reduce<
     Record<string, ScreenConfigWithParent<State, ScreenOptions, EventMap>>
@@ -487,8 +491,14 @@ export default function useNavigationBuilder<
 
     const listeners = ([] as (((e: any) => void) | undefined)[])
       .concat(
-        ...routeNames.map((name) => {
-          const { listeners } = screens[name][1];
+        // Get an array of listeners for all screens + common listeners on navigator
+        ...[
+          screenListeners,
+          ...routeNames.map((name) => {
+            const { listeners } = screens[name][1];
+            return listeners;
+          }),
+        ].map((listeners) => {
           const map =
             typeof listeners === 'function'
               ? listeners({ route: route as any, navigation })
@@ -501,6 +511,8 @@ export default function useNavigationBuilder<
             : undefined;
         })
       )
+      // We don't want same listener to be called multiple times for same event
+      // So we remove any duplicate functions from the array
       .filter((cb, i, self) => cb && self.lastIndexOf(cb) === i);
 
     listeners.forEach((listener) => listener?.(e));

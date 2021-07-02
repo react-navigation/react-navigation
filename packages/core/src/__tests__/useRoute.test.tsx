@@ -1,11 +1,12 @@
-import * as React from 'react';
 import { render } from '@testing-library/react-native';
-import useNavigationBuilder from '../useNavigationBuilder';
-import useRoute from '../useRoute';
+import * as React from 'react';
+
 import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
-import MockRouter from './__fixtures__/MockRouter';
 import type { RouteProp } from '../types';
+import useNavigationBuilder from '../useNavigationBuilder';
+import useRoute from '../useRoute';
+import MockRouter from './__fixtures__/MockRouter';
 
 it('gets route prop from context', () => {
   expect.assertions(1);

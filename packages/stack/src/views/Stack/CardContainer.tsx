@@ -1,18 +1,19 @@
-import * as React from 'react';
-import { Animated, View, StyleSheet } from 'react-native';
-import { Route, useTheme } from '@react-navigation/native';
 import {
-  HeaderShownContext,
-  HeaderHeightContext,
-  HeaderBackContext,
   getHeaderTitle,
+  HeaderBackContext,
+  HeaderHeightContext,
+  HeaderShownContext,
 } from '@react-navigation/elements';
-import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
-import Card from './Card';
+import { Route, useTheme } from '@react-navigation/native';
+import * as React from 'react';
+import { Animated, StyleSheet, View } from 'react-native';
+
 import { forModalPresentationIOS } from '../../TransitionConfigs/CardStyleInterpolators';
+import type { Layout, Scene } from '../../types';
 import ModalPresentationContext from '../../utils/ModalPresentationContext';
 import useKeyboardManager from '../../utils/useKeyboardManager';
-import type { Layout, Scene } from '../../types';
+import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
+import Card from './Card';
 
 type Props = {
   index: number;
@@ -34,14 +35,14 @@ type Props = {
   renderScene: (props: { route: Route<string> }) => React.ReactNode;
   onOpenRoute: (props: { route: Route<string> }) => void;
   onCloseRoute: (props: { route: Route<string> }) => void;
-  onTransitionStart?: (
+  onTransitionStart: (
     props: { route: Route<string> },
     closing: boolean
   ) => void;
-  onTransitionEnd?: (props: { route: Route<string> }, closing: boolean) => void;
-  onGestureStart?: (props: { route: Route<string> }) => void;
-  onGestureEnd?: (props: { route: Route<string> }) => void;
-  onGestureCancel?: (props: { route: Route<string> }) => void;
+  onTransitionEnd: (props: { route: Route<string> }, closing: boolean) => void;
+  onGestureStart: (props: { route: Route<string> }) => void;
+  onGestureEnd: (props: { route: Route<string> }) => void;
+  onGestureCancel: (props: { route: Route<string> }) => void;
   hasAbsoluteFloatHeader: boolean;
   headerHeight: number;
   onHeaderHeightChange: (props: {
@@ -49,6 +50,8 @@ type Props = {
     height: number;
   }) => void;
   isParentHeaderShown: boolean;
+  isNextScreenTransparent: boolean;
+  detachCurrentScreen: boolean;
 };
 
 const EPSILON = 0.1;
@@ -66,6 +69,8 @@ function CardContainer({
   headerHeight,
   onHeaderHeightChange,
   isParentHeaderShown,
+  isNextScreenTransparent,
+  detachCurrentScreen,
   interpolationIndex,
   layout,
   onCloseRoute,
@@ -85,52 +90,49 @@ function CardContainer({
 }: Props) {
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
 
-  const {
-    onPageChangeStart,
-    onPageChangeCancel,
-    onPageChangeConfirm,
-  } = useKeyboardManager(
-    React.useCallback(() => {
-      const { options, navigation } = scene.descriptor;
+  const { onPageChangeStart, onPageChangeCancel, onPageChangeConfirm } =
+    useKeyboardManager(
+      React.useCallback(() => {
+        const { options, navigation } = scene.descriptor;
 
-      return (
-        navigation.isFocused() && options.keyboardHandlingEnabled !== false
-      );
-    }, [scene.descriptor])
-  );
+        return (
+          navigation.isFocused() && options.keyboardHandlingEnabled !== false
+        );
+      }, [scene.descriptor])
+    );
 
   const handleOpen = () => {
     const { route } = scene.descriptor;
 
-    onTransitionEnd?.({ route }, false);
+    onTransitionEnd({ route }, false);
     onOpenRoute({ route });
   };
 
   const handleClose = () => {
     const { route } = scene.descriptor;
 
-    onTransitionEnd?.({ route }, true);
+    onTransitionEnd({ route }, true);
     onCloseRoute({ route });
   };
 
   const handleGestureBegin = () => {
     const { route } = scene.descriptor;
 
-    onPageChangeStart?.();
-    onGestureStart?.({ route });
+    onPageChangeStart();
+    onGestureStart({ route });
   };
 
   const handleGestureCanceled = () => {
     const { route } = scene.descriptor;
 
-    onPageChangeCancel?.();
-    onGestureCancel?.({ route });
+    onPageChangeCancel();
+    onGestureCancel({ route });
   };
 
   const handleGestureEnd = () => {
     const { route } = scene.descriptor;
 
-    onGestureEnd?.({ route });
+    onGestureEnd({ route });
   };
 
   const handleTransition = ({
@@ -162,9 +164,8 @@ function CardContainer({
 
   const { colors } = useTheme();
 
-  const [pointerEvents, setPointerEvents] = React.useState<'box-none' | 'none'>(
-    'box-none'
-  );
+  const [pointerEvents, setPointerEvents] =
+    React.useState<'box-none' | 'none'>('box-none');
 
   React.useEffect(() => {
     const listener = scene.progress.next?.addListener?.(
@@ -182,7 +183,6 @@ function CardContainer({
 
   const {
     presentation,
-    detachPreviousScreen,
     animationEnabled,
     cardOverlay,
     cardOverlayEnabled,
@@ -248,7 +248,15 @@ function CardContainer({
           ? { marginTop: headerHeight }
           : null
       }
-      contentStyle={[{ backgroundColor: colors.background }, cardStyle]}
+      contentStyle={[
+        {
+          backgroundColor:
+            presentation === 'transparentModal'
+              ? 'transparent'
+              : colors.background,
+        },
+        cardStyle,
+      ]}
       style={[
         {
           // This is necessary to avoid unfocused larger pages increasing scroll area
@@ -258,8 +266,8 @@ function CardContainer({
             // Hide unfocused screens when animation isn't enabled
             // This is also necessary for a11y on web
             animationEnabled === false &&
-            detachPreviousScreen !== false &&
-            presentation !== 'modal' &&
+            isNextScreenTransparent === false &&
+            detachCurrentScreen !== false &&
             !focused
               ? 'none'
               : 'flex',

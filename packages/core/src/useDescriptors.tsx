@@ -1,28 +1,29 @@
-import * as React from 'react';
 import type {
   NavigationAction,
   NavigationState,
   ParamListBase,
   Router,
 } from '@react-navigation/routers';
-import SceneView from './SceneView';
+import * as React from 'react';
+
 import NavigationBuilderContext, {
-  AddListener,
   AddKeyedListener,
+  AddListener,
 } from './NavigationBuilderContext';
+import NavigationContext from './NavigationContext';
+import NavigationRouteContext from './NavigationRouteContext';
+import SceneView from './SceneView';
+import type {
+  Descriptor,
+  EventMapBase,
+  NavigationHelpers,
+  NavigationProp,
+  RouteConfig,
+  RouteProp,
+} from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
 import useNavigationCache from './useNavigationCache';
 import useRouteCache from './useRouteCache';
-import NavigationContext from './NavigationContext';
-import NavigationRouteContext from './NavigationRouteContext';
-import type {
-  Descriptor,
-  NavigationHelpers,
-  RouteConfig,
-  RouteProp,
-  EventMapBase,
-  NavigationProp,
-} from './types';
 
 export type ScreenConfigWithParent<
   State extends NavigationState,
@@ -59,10 +60,7 @@ type Options<
         navigation: any;
         options: ScreenOptions;
       }) => ScreenOptions);
-  onAction: (
-    action: NavigationAction,
-    visitedNavigators?: Set<string>
-  ) => boolean;
+  onAction: (action: NavigationAction) => boolean;
   getState: () => State;
   setState: (state: State) => void;
   addListener: AddListener;
@@ -101,7 +99,7 @@ export default function useDescriptors<
   emitter,
 }: Options<State, ScreenOptions, EventMap>) {
   const [options, setOptions] = React.useState<Record<string, object>>({});
-  const { onDispatchAction, onOptionsChange } = React.useContext(
+  const { onDispatchAction, onOptionsChange, stackRef } = React.useContext(
     NavigationBuilderContext
   );
 
@@ -114,6 +112,7 @@ export default function useDescriptors<
       onRouteFocus,
       onDispatchAction,
       onOptionsChange,
+      stackRef,
     }),
     [
       navigation,
@@ -123,6 +122,7 @@ export default function useDescriptors<
       onRouteFocus,
       onDispatchAction,
       onOptionsChange,
+      stackRef,
     ]
   );
 

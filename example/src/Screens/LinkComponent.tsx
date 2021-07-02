@@ -1,18 +1,19 @@
-import * as React from 'react';
-import { View, StyleSheet, ScrollView, Platform } from 'react-native';
-import { Button } from 'react-native-paper';
 import {
   Link,
-  StackActions,
   ParamListBase,
+  StackActions,
   useLinkProps,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
   StackScreenProps,
 } from '@react-navigation/stack';
-import Article from '../Shared/Article';
+import * as React from 'react';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Button } from 'react-native-paper';
+
 import Albums from '../Shared/Albums';
+import Article from '../Shared/Article';
 
 type SimpleStackParams = {
   Article: { author: string };
