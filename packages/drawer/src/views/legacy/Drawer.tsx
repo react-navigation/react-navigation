@@ -16,7 +16,7 @@ import DrawerProgressContext from '../../utils/DrawerProgressContext';
 import { 
   GestureState, 
   PanGestureHandler, 
-  PanGestureHandlerGestureEvent
+  PanGestureHandlerGestureEvent,
 } from '../GestureHandler';
 import Overlay from './Overlay';
 
