@@ -184,6 +184,8 @@ export default class Card extends React.Component<Props> {
 
     this.lastToValue = toValue;
 
+    this.isClosing.setValue(closing ? TRUE : FALSE);
+
     const spec = closing ? transitionSpec.close : transitionSpec.open;
 
     const animation =
