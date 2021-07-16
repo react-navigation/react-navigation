@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.15...@react-navigation/core@6.0.0-next.16) (2021-07-16)
+
+
+### Bug Fixes
+
+* prevent navigation state updates after state cleanup ([#9688](https://github.com/react-navigation/react-navigation/issues/9688)) ([16f0e11](https://github.com/react-navigation/react-navigation/commit/16f0e11822b14aa5b1ba4b288fb38fcf15088419))
+* sort wildcard and :params  ([#9672](https://github.com/react-navigation/react-navigation/issues/9672)) ([4135d09](https://github.com/react-navigation/react-navigation/commit/4135d09c6f14030257b2da47658e102b083c7727))
+
+
+
+
+
 # [6.0.0-next.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.13...@react-navigation/core@6.0.0-next.15) (2021-07-01)
 
 

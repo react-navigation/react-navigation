@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.28](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.27...@react-navigation/stack@6.0.0-next.28) (2021-07-16)
+
+
+### Bug Fixes
+
+* update isClosing in stack card ([#9738](https://github.com/react-navigation/react-navigation/issues/9738)) ([ee12690](https://github.com/react-navigation/react-navigation/commit/ee12690a823694fa19a3216f97676870f2999719))
+
+
+
+
+
 # [6.0.0-next.27](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.25...@react-navigation/stack@6.0.0-next.27) (2021-07-01)
 
 **Note:** Version bump only for package @react-navigation/stack
