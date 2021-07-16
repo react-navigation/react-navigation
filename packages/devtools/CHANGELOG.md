@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.16...@react-navigation/devtools@6.0.0-next.17) (2021-07-16)
+
+
+### Bug Fixes
+
+* fix devtools not sending new events if an error occured ([c333f40](https://github.com/react-navigation/react-navigation/commit/c333f4086ea04c879fdd46ccc206d3faf84fabca))
+
+
+
+
+
 # [6.0.0-next.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.14...@react-navigation/devtools@6.0.0-next.16) (2021-07-01)
 
 
