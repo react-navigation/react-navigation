@@ -299,11 +299,31 @@ export default function useNavigationBuilder<
   const {
     state: currentState,
     getState: getCurrentState,
-    setState,
+    setState: setCurrentState,
     setKey,
     getKey,
     getIsInitial,
   } = React.useContext(NavigationStateContext);
+
+  const stateCleanedUp = React.useRef(false);
+
+  const cleanUpState = React.useCallback(() => {
+    setCurrentState(undefined);
+    stateCleanedUp.current = true;
+  }, [setCurrentState]);
+
+  const setState = React.useCallback(
+    (state: NavigationState | PartialState<NavigationState> | undefined) => {
+      if (stateCleanedUp.current) {
+        // State might have been already cleaned up due to unmount
+        // We do not want to expose API allowing to override this
+        // This would lead to old data preservation on main navigator unmount
+        return;
+      }
+      setCurrentState(state);
+    },
+    [setCurrentState]
+  );
 
   const [initializedState, isFirstStateInitialization] = React.useMemo(() => {
     // If the current state isn't initialized on first render, we initialize it
@@ -444,7 +464,7 @@ export default function useNavigationBuilder<
       // Otherwise, our cleanup step will cleanup state for the other navigator and re-initialize it
       setTimeout(() => {
         if (getCurrentState() !== undefined && getKey() === navigatorKey) {
-          setState(undefined);
+          cleanUpState();
         }
       }, 0);
     };
