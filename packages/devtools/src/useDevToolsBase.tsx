@@ -103,15 +103,20 @@ export default function useDevToolsBase(
 
   const send = React.useCallback((data: ActionData) => {
     // We need to make sure that our callbacks executed in the same order
-    pendingPromiseRef.current = pendingPromiseRef.current.then(async () => {
-      if (data.stack) {
-        const stack = await symbolicate(data.stack);
+    // So we add check if the last promise is settled before sending the next one
+    pendingPromiseRef.current = pendingPromiseRef.current
+      .catch(() => {
+        // Ignore any errors from the last promise
+      })
+      .then(async () => {
+        if (data.stack) {
+          const stack = await symbolicate(data.stack);
 
-        callbackRef.current({ ...data, stack });
-      } else {
-        callbackRef.current(data);
-      }
-    });
+          callbackRef.current({ ...data, stack });
+        } else {
+          callbackRef.current(data);
+        }
+      });
   }, []);
 
   React.useEffect(() => {
