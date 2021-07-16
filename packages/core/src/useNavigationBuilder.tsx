@@ -250,21 +250,7 @@ export default function useNavigationBuilder<
   const routeParamList = routeNames.reduce<Record<string, object | undefined>>(
     (acc, curr) => {
       const { initialParams } = screens[curr][1];
-      const initialParamsFromParams =
-        route?.params?.state == null &&
-        route?.params?.initial !== false &&
-        route?.params?.screen === curr
-          ? route.params.params
-          : undefined;
-
-      acc[curr] =
-        initialParams !== undefined || initialParamsFromParams !== undefined
-          ? {
-              ...initialParams,
-              ...initialParamsFromParams,
-            }
-          : undefined;
-
+      acc[curr] = initialParams;
       return acc;
     },
     {}
@@ -326,6 +312,28 @@ export default function useNavigationBuilder<
   );
 
   const [initializedState, isFirstStateInitialization] = React.useMemo(() => {
+    const initialRouteParamList = routeNames.reduce<
+      Record<string, object | undefined>
+    >((acc, curr) => {
+      const { initialParams } = screens[curr][1];
+      const initialParamsFromParams =
+        route?.params?.state == null &&
+        route?.params?.initial !== false &&
+        route?.params?.screen === curr
+          ? route.params.params
+          : undefined;
+
+      acc[curr] =
+        initialParams !== undefined || initialParamsFromParams !== undefined
+          ? {
+              ...initialParams,
+              ...initialParamsFromParams,
+            }
+          : undefined;
+
+      return acc;
+    }, {});
+
     // If the current state isn't initialized on first render, we initialize it
     // We also need to re-initialize it if the state passed from parent was changed (maybe due to reset)
     // Otherwise assume that the state was provided as initial state
@@ -337,7 +345,7 @@ export default function useNavigationBuilder<
       return [
         router.getInitialState({
           routeNames,
-          routeParamList,
+          routeParamList: initialRouteParamList,
           routeGetIdList,
         }),
         true,
@@ -348,16 +356,15 @@ export default function useNavigationBuilder<
           route?.params?.state ?? (currentState as PartialState<State>),
           {
             routeNames,
-            routeParamList,
+            routeParamList: initialRouteParamList,
             routeGetIdList,
           }
         ),
         false,
       ];
     }
-    // We explicitly don't include routeNames/routeParamList in the dep list
-    // below. We want to avoid forcing a new state to be calculated in cases
-    // where routeConfigs change without affecting routeNames/routeParamList.
+    // We explicitly don't include routeNames, route.params etc. in the dep list
+    // below. We want to avoid forcing a new state to be calculated in those cases
     // Instead, we handle changes to these in the nextState code below. Note
     // that some changes to routeConfigs are explicitly ignored, such as changes
     // to initialParams
