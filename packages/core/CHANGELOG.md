@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.16...@react-navigation/core@6.0.0-next.17) (2021-07-16)
+
+
+### Bug Fixes
+
+* use nested params for initial state only ([577d79e](https://github.com/react-navigation/react-navigation/commit/577d79e98c6d6f1c78e0f3232225b2b6b331340b))
+
+
+
+
+
 # [6.0.0-next.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.15...@react-navigation/core@6.0.0-next.16) (2021-07-16)
 
 
