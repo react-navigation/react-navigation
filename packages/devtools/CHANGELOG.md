@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-next.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.18...@react-navigation/devtools@6.0.0-next.19) (2021-07-19)
+
+
+### Bug Fixes
+
+* ignore errors from symbolication in devtools ([f666059](https://github.com/react-navigation/react-navigation/commit/f666059d80e7888e50071b888e6f9a4afd00a71e))
+
+
+
+
+
 # [6.0.0-next.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.17...@react-navigation/devtools@6.0.0-next.18) (2021-07-16)
 
 **Note:** Version bump only for package @react-navigation/devtools
