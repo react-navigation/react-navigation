@@ -75,7 +75,7 @@ export default function useDevToolsBase(
       })
       .filter(Boolean) as StackFrame[];
 
-    const urlMatch = frames[0].file?.match(/^https?:\/\/.+(:\d+)?\//);
+    const urlMatch = frames[0]?.file?.match(/^https?:\/\/.+(:\d+)?\//);
 
     if (!urlMatch) {
       return stack;
@@ -110,7 +110,13 @@ export default function useDevToolsBase(
       })
       .then(async () => {
         if (data.stack) {
-          const stack = await symbolicate(data.stack);
+          let stack: string | undefined;
+
+          try {
+            stack = await symbolicate(data.stack);
+          } catch (err) {
+            // Ignore errors from symbolicate
+          }
 
           callbackRef.current({ ...data, stack });
         } else {
