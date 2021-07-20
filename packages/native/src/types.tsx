@@ -27,7 +27,8 @@ export type LinkingOptions<ParamList extends {}> = {
   /**
    * The prefixes are stripped from the URL before parsing them.
    * Usually they are the `scheme` + `host` (e.g. `myapp://chat?user=jane`)
-   * Only applicable on Android and iOS.
+   *
+   * This is not supported on Web.
    *
    * @example
    * ```js
@@ -41,6 +42,24 @@ export type LinkingOptions<ParamList extends {}> = {
    * ```
    */
   prefixes: string[];
+  /**
+   * Optional function which takes an incoming URL returns a boolean
+   * indicating whether React Navigation should handle it.
+   *
+   * This can be used to disable deep linking for specific URLs.
+   * e.g. URLs used for authentication, and not for deep linking to screens.
+   *
+   * This is not supported on Web.
+   *
+   * @example
+   * ```js
+   * {
+   *   // Filter out URLs used by expo-auth-session
+   *   filter: (url) => !url.includes('+expo-auth-session')
+   * }
+   * ```
+   */
+  filter?: (url: string) => boolean;
   /**
    * Config to fine-tune how to parse the path.
    *
@@ -61,7 +80,8 @@ export type LinkingOptions<ParamList extends {}> = {
   /**
    * Custom function to get the initial URL used for linking.
    * Uses `Linking.getInitialURL()` by default.
-   * Not supported on Web.
+   *
+   * This is not supported on Web.
    *
    * @example
    * ```js
@@ -78,7 +98,8 @@ export type LinkingOptions<ParamList extends {}> = {
   /**
    * Custom function to get subscribe to URL updates.
    * Uses `Linking.addEventListener('url', callback)` by default.
-   * Not supported on Web.
+   *
+   * This is not supported on Web.
    *
    * @example
    * ```js
