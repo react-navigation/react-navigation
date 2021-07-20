@@ -35,7 +35,7 @@ body:
       description: |
         You must provide a way to reproduce the problem. If you don't provide a repro, the issue will be closed automatically after a specific period.
 
-        - Either re-create the bug on [Snack](https://snack.expo.io) or link to a GitHub repository with code that reproduces the bug.
+        - Either re-create the bug on [Snack](https://snack.expo.dev) or link to a GitHub repository with code that reproduces the bug.
         - Explain how to run the example app and any steps that we need to take to reproduce the issue from the example app.
         - Keep the repro code as simple as possible, with the minimum amount of code required to repro the issue.
         - Before reporting an issue, make sure you are on latest version of the package.

@@ -48,7 +48,7 @@ jobs:
                 return;
               }
 
-              const body = "Hey! Thanks for opening the issue. The issue doesn't seem to contain a link to a repro (a [snack.expo.io](https://snack.expo.io) link or link to a GitHub repo under your username).\n\nCan you provide a [minimal repro](https://stackoverflow.com/help/minimal-reproducible-example) which demonstrates the issue? A repro will help us debug the issue faster. Please try to keep the repro as small as possible and make sure that we can run it without additional setup.";
+              const body = "Hey! Thanks for opening the issue. The issue doesn't seem to contain a link to a repro (a [snack.expo.dev](https://snack.expo.dev) link or link to a GitHub repo under your username).\n\nCan you provide a [minimal repro](https://stackoverflow.com/help/minimal-reproducible-example) which demonstrates the issue? A repro will help us debug the issue faster. Please try to keep the repro as small as possible and make sure that we can run it without additional setup.";
 
               const comments = await github.issues.listComments({
                 issue_number: context.issue.number,
