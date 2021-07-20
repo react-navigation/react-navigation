@@ -16,7 +16,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Hey! Thanks for opening the issue. Can you provide more information about the issue? Please fill the issue template when opening the issue without deleting any section. We need all the information we can to be able to help.\n\nMake sure to at least provide - Current behaviour, Expected behaviour, A way to [reproduce the issue with minimal code](https://stackoverflow.com/help/minimal-reproducible-example) (link to [snack.expo.io](https://snack.expo.io)) or a repo on GitHub, and the information about your environment (such as the platform of the device, exact versions of all the packages mentioned in the template etc.). In addition, if you can provide a video or GIF demonstrating the issue, it will also be very helpful."
+              body: "Hey! Thanks for opening the issue. Can you provide more information about the issue? Please fill the issue template when opening the issue without deleting any section. We need all the information we can to be able to help.\n\nMake sure to at least provide - Current behaviour, Expected behaviour, A way to [reproduce the issue with minimal code](https://stackoverflow.com/help/minimal-reproducible-example) (link to [snack.expo.dev](https://snack.expo.dev)) or a repo on GitHub, and the information about your environment (such as the platform of the device, exact versions of all the packages mentioned in the template etc.). In addition, if you can provide a video or GIF demonstrating the issue, it will also be very helpful."
             })
 
   needs-repro:
@@ -31,7 +31,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Hey! Thanks for opening the issue. Can you provide a [minimal repro](https://stackoverflow.com/help/minimal-reproducible-example) which demonstrates the issue? Posting a snippet of your code in the issue is useful, but it's not usually straightforward to run. A repro will help us debug the issue faster. Please try to keep the repro as small as possible and make sure that we can run it without additional setup.\n\nThe easiest way to provide a repro is on [snack.expo.io](https://snack.expo.io). If it's not possible to repro it on [snack.expo.io](https://snack.expo.io), then please provide the repro in a GitHub repository."
+              body: "Hey! Thanks for opening the issue. Can you provide a [minimal repro](https://stackoverflow.com/help/minimal-reproducible-example) which demonstrates the issue? Posting a snippet of your code in the issue is useful, but it's not usually straightforward to run. A repro will help us debug the issue faster. Please try to keep the repro as small as possible and make sure that we can run it without additional setup.\n\nThe easiest way to provide a repro is on [snack.expo.dev](https://snack.expo.dev). If it's not possible to repro it on [snack.expo.dev](https://snack.expo.dev), then please provide the repro in a GitHub repository."
             })
 
   question:
