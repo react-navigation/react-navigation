@@ -19,7 +19,7 @@ jobs:
               : context.payload.issue.body;
 
             const regex = new RegExp(
-              `https?:\\/\\/((github\\.com\\/${user}\\/[^/]+\\/?[\\s\\n]+)|(snack\\.expo\\.io\\/.+))`,
+              `https?:\\/\\/((github\\.com\\/${user}\\/[^/]+\\/?[\\s\\n]+)|(snack\\.expo\\.dev\\/.+))`,
               'gm'
             );
 
