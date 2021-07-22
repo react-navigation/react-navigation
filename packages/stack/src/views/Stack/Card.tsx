@@ -136,7 +136,13 @@ export default class Card extends React.Component<Props> {
       // When route was closed due to a gesture, the animation would've happened already
       // It's still important to trigger the animation so that `onClose` is called
       // If `onClose` is not called, cleanup step won't be performed for gestures
-      this.animate({ closing });
+      if (closing) {
+        setTimeout(() => {
+          this.animate({ closing });
+        });
+      } else {
+        this.animate({ closing });
+      }
     }
   }
 

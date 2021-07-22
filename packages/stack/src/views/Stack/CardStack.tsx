@@ -517,10 +517,11 @@ export default class CardStack extends React.Component<Props, State> {
                 isScreenActive = STATE_INACTIVE;
               } else {
                 const sceneForActivity = scenes[self.length - 1];
+                const closingRoutes = closingRouteKeys.length;
                 const outputValue =
                   index === self.length - 1
                     ? STATE_ON_TOP // the screen is on top after the transition
-                    : index >= self.length - activeScreensLimit
+                    : index >= self.length - activeScreensLimit - closingRoutes
                     ? STATE_TRANSITIONING_OR_BELOW_TOP // the screen should stay active after the transition, it is not on top but is in activeLimit
                     : STATE_INACTIVE; // the screen should be active only during the transition, it is at the edge of activeLimit
                 isScreenActive = sceneForActivity
