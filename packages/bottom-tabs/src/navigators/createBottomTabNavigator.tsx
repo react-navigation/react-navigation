@@ -54,8 +54,13 @@ function BottomTabNavigator({
       tabBarLabelStyle: tabBarOptions.labelStyle,
       tabBarIconStyle: tabBarOptions.iconStyle,
       tabBarItemStyle: tabBarOptions.tabStyle,
-      tabBarLabelPosition: tabBarOptions.labelPosition,
-      tabBarAdaptive: tabBarOptions.adaptive,
+      tabBarLabelPosition:
+        tabBarOptions.labelPosition ??
+        (tabBarOptions.adaptive === false ? 'below-icon' : undefined),
+      tabBarStyle: [
+        { display: tabBarOptions.tabBarVisible ? 'none' : 'flex' },
+        defaultScreenOptions.tabBarStyle,
+      ],
     });
 
     warnOnce(
