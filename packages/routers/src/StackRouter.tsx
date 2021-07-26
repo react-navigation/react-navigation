@@ -434,13 +434,7 @@ export default function StackRouter(options: StackRouterOptions) {
                     }
                   : route.params;
             } else {
-              params =
-                routeParamList[route.name] !== undefined
-                  ? {
-                      ...routeParamList[route.name],
-                      ...action.payload.params,
-                    }
-                  : action.payload.params;
+              params = action.payload.params;
             }
 
             return {
