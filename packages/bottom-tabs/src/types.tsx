@@ -87,23 +87,6 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   title?: string;
 
   /**
-   * Whether this screens should render the first time it's accessed. Defaults to `true`.
-   * Set it to `false` if you want to render the screen on initial render.
-   */
-  lazy?: boolean;
-
-  /**
-   * Function that given returns a React Element to display as a header.
-   */
-  header?: (props: BottomTabHeaderProps) => React.ReactNode;
-
-  /**
-   * Whether to show the header. Setting this to `false` hides the header.
-   * Defaults to `true`.
-   */
-  headerShown?: boolean;
-
-  /**
    * Title string of a tab displayed in the tab bar
    * or a function that given { focused: boolean, color: string, position: 'below-icon' | 'beside-icon' } returns a React.Node to display in tab bar.
    *
@@ -118,6 +101,31 @@ export type BottomTabNavigationOptions = HeaderOptions & {
       }) => React.ReactNode);
 
   /**
+   * Whether the tab label should be visible. Defaults to `true`.
+   */
+  tabBarShowLabel?: boolean;
+
+  /**
+   * Whether the label is shown below the icon or beside the icon.
+   *
+   * - `below-icon`: the label is shown below the icon (typical for iPhones)
+   * - `beside-icon` the label is shown next to the icon (typical for iPad)
+   *
+   * By default, the position is chosen automatically based on device width.
+   */
+  tabBarLabelPosition?: LabelPosition;
+
+  /**
+   * Style object for the tab label.
+   */
+  tabBarLabelStyle?: StyleProp<TextStyle>;
+
+  /**
+   * Whether label font should scale to respect Text Size accessibility settings.
+   */
+  tabBarAllowFontScaling?: boolean;
+
+  /**
    * A function that given { focused: boolean, color: string } returns a React.Node to display in the tab bar.
    */
   tabBarIcon?: (props: {
@@ -125,6 +133,11 @@ export type BottomTabNavigationOptions = HeaderOptions & {
     color: string;
     size: number;
   }) => React.ReactNode;
+
+  /**
+   * Style object for the tab icon.
+   */
+  tabBarIconStyle?: StyleProp<TextStyle>;
 
   /**
    * Text to show in a badge on the tab icon.
@@ -149,16 +162,8 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   tabBarTestID?: string;
 
   /**
-   * Animation config for showing and hiding the tab bar.
-   */
-  tabBarVisibilityAnimationConfig?: {
-    show?: TabBarVisibilityAnimationConfig;
-    hide?: TabBarVisibilityAnimationConfig;
-  };
-
-  /**
    * Function which returns a React element to render as the tab bar button.
-   * Renders `TouchableWithoutFeedback` by default.
+   * Renders `Pressable` by default.
    */
   tabBarButton?: (props: BottomTabBarButtonProps) => React.ReactNode;
 
@@ -178,29 +183,9 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   tabBarActiveBackgroundColor?: string;
 
   /**
-   * background color for the inactive tabs.
+   * Background color for the inactive tabs.
    */
   tabBarInactiveBackgroundColor?: string;
-
-  /**
-   * Whether label font should scale to respect Text Size accessibility settings.
-   */
-  tabBarAllowFontScaling?: boolean;
-
-  /**
-   * Whether the tab label should be visible. Defaults to `true`.
-   */
-  tabBarShowLabel?: boolean;
-
-  /**
-   * Style object for the tab label.
-   */
-  tabBarLabelStyle?: StyleProp<TextStyle>;
-
-  /**
-   * Style object for the tab icon.
-   */
-  tabBarIconStyle?: StyleProp<TextStyle>;
 
   /**
    * Style object for the tab item container.
@@ -208,21 +193,17 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   tabBarItemStyle?: StyleProp<ViewStyle>;
 
   /**
-   * Whether the label is rendered below the icon or beside the icon.
-   * By default, the position is chosen automatically based on device width.
-   * In `below-icon` orientation (typical for iPhones), the label is rendered below and in `beside-icon` orientation, it's rendered beside (typical for iPad).
-   */
-  tabBarLabelPosition?: LabelPosition;
-
-  /**
-   * Whether the label position should adapt to the orientation.
-   */
-  tabBarAdaptive?: boolean;
-
-  /**
    * Whether the tab bar gets hidden when the keyboard is shown. Defaults to `false`.
    */
   tabBarHideOnKeyboard?: boolean;
+
+  /**
+   * Animation config for showing and hiding the tab bar when the keyboard is shown/hidden.
+   */
+  tabBarVisibilityAnimationConfig?: {
+    show?: TabBarVisibilityAnimationConfig;
+    hide?: TabBarVisibilityAnimationConfig;
+  };
 
   /**
    * Style object for the tab bar container.
@@ -230,13 +211,30 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   tabBarStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 
   /**
-   * Component to use as background for the tab bar.
+   * Function which returns a React Element to use as background for the tab bar.
    * You could render an image, a gradient, blur view etc.
    *
    * When using `BlurView`, make sure to set `position: 'absolute'` in `tabBarStyle` as well.
    * You'd also need to use `useBottomTabBarHeight()` to add a bottom padding to your content.
    */
   tabBarBackground?: () => React.ReactNode;
+
+  /**
+   * Whether this screens should render the first time it's accessed. Defaults to `true`.
+   * Set it to `false` if you want to render the screen on initial render.
+   */
+  lazy?: boolean;
+
+  /**
+   * Function that given returns a React Element to display as a header.
+   */
+  header?: (props: BottomTabHeaderProps) => React.ReactNode;
+
+  /**
+   * Whether to show the header. Setting this to `false` hides the header.
+   * Defaults to `true`.
+   */
+  headerShown?: boolean;
 
   /**
    * Whether this screen should be unmounted when navigating away from it.
