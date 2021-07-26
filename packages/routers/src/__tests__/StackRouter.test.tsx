@@ -1487,7 +1487,7 @@ it("doesn't merge params on navigate to an existing screen", () => {
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
-      { key: 'bar', name: 'bar', params: { color: 'test' } },
+      { key: 'bar', name: 'bar' },
     ],
   });
 
@@ -1515,7 +1515,7 @@ it("doesn't merge params on navigate to an existing screen", () => {
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
-      { key: 'bar', name: 'bar', params: { color: 'test', fruit: 'orange' } },
+      { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
     ],
   });
 });
