@@ -63,6 +63,15 @@ function BottomTabNavigator({
       ],
     });
 
+    (
+      Object.keys(defaultScreenOptions) as (keyof BottomTabNavigationOptions)[]
+    ).forEach((key) => {
+      if (defaultScreenOptions[key] === undefined) {
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete defaultScreenOptions[key];
+      }
+    });
+
     warnOnce(
       tabBarOptions,
       `Bottom Tab Navigator: 'tabBarOptions' is deprecated. Migrate the options to 'screenOptions' instead.\n\nPlace the following in 'screenOptions' in your code to keep current behavior:\n\n${JSON.stringify(
@@ -78,7 +87,7 @@ function BottomTabNavigator({
 
     warnOnce(
       true,
-      `Bottom Tab Navigator: 'lazy' in props is deprecated. Move it to 'screenOptions' instead.`
+      `Bottom Tab Navigator: 'lazy' in props is deprecated. Move it to 'screenOptions' instead.\n\nSee https://reactnavigation.org/docs/6.x/bottom-tab-navigator/#lazy for more details.`
     );
   }
 

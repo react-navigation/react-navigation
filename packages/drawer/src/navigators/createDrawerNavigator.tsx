@@ -55,6 +55,15 @@ function DrawerNavigator({
       gestureHandlerProps: drawerContentOptions.gestureHandlerProps,
     });
 
+    (
+      Object.keys(defaultScreenOptions) as (keyof DrawerNavigationOptions)[]
+    ).forEach((key) => {
+      if (defaultScreenOptions[key] === undefined) {
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete defaultScreenOptions[key];
+      }
+    });
+
     warnOnce(
       drawerContentOptions,
       `Drawer Navigator: 'drawerContentOptions' is deprecated. Migrate the options to 'screenOptions' instead.\n\nPlace the following in 'screenOptions' in your code to keep current behavior:\n\n${JSON.stringify(
@@ -70,7 +79,7 @@ function DrawerNavigator({
 
     warnOnce(
       true,
-      `Drawer Navigator: 'lazy' in props is deprecated. Move it to 'screenOptions' instead.`
+      `Drawer Navigator: 'lazy' in props is deprecated. Move it to 'screenOptions' instead.\n\nSee https://reactnavigation.org/docs/6.x/drawer-navigator/#lazy for more details.`
     );
   }
 

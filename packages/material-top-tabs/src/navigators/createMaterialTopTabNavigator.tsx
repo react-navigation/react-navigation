@@ -59,6 +59,17 @@ function MaterialTopTabNavigator({
       tabBarStyle: tabBarOptions.style,
     });
 
+    (
+      Object.keys(
+        defaultScreenOptions
+      ) as (keyof MaterialTopTabNavigationOptions)[]
+    ).forEach((key) => {
+      if (defaultScreenOptions[key] === undefined) {
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete defaultScreenOptions[key];
+      }
+    });
+
     warnOnce(
       tabBarOptions,
       `Material Top Tab Navigator: 'tabBarOptions' is deprecated. Migrate the options to 'screenOptions' instead.\n\nPlace the following in 'screenOptions' in your code to keep current behavior:\n\n${JSON.stringify(
@@ -74,7 +85,7 @@ function MaterialTopTabNavigator({
 
     warnOnce(
       true,
-      `Material Top Tab Navigator: 'lazy' in props is deprecated. Move it to 'screenOptions' instead.`
+      `Material Top Tab Navigator: 'lazy' in props is deprecated. Move it to 'screenOptions' instead.\n\nSee https://reactnavigation.org/docs/6.x/material-top-tab-navigator#lazy for more details.`
     );
   }
 
