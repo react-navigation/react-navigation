@@ -83,7 +83,7 @@ export default function useNavigationHelpers<
         );
       },
       getParent: () => parentNavigationHelpers as any,
-      getState: getState,
+      getState,
     } as NavigationHelpers<ParamListBase, EventMap> &
       (NavigationProp<ParamListBase, string, any, any, any> | undefined) &
       ActionHelpers;
