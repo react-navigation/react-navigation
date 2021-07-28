@@ -33,7 +33,10 @@ function MaterialTopTabNavigator({
   children,
   screenListeners,
   screenOptions,
+  swipeEnabled,
   lazy,
+  lazyPlaceholder,
+  lazyPreloadDistance,
   tabBarOptions,
   ...rest
 }: Props) {
@@ -53,6 +56,8 @@ function MaterialTopTabNavigator({
       tabBarIconStyle: tabBarOptions.iconStyle,
       tabBarLabelStyle: tabBarOptions.labelStyle,
       tabBarItemStyle: tabBarOptions.tabStyle,
+      tabBarBadge: tabBarOptions.renderBadge,
+      tabBarIndicator: tabBarOptions.renderIndicator,
       tabBarIndicatorStyle: tabBarOptions.indicatorStyle,
       tabBarIndicatorContainerStyle: tabBarOptions.indicatorContainerStyle,
       tabBarContentContainerStyle: tabBarOptions.contentContainerStyle,
@@ -80,14 +85,24 @@ function MaterialTopTabNavigator({
     );
   }
 
-  if (typeof lazy === 'boolean') {
-    defaultScreenOptions.lazy = lazy;
+  const deprecatedProps = {
+    swipeEnabled,
+    lazy,
+    lazyPlaceholder,
+    lazyPreloadDistance,
+  } as const;
 
-    warnOnce(
-      true,
-      `Material Top Tab Navigator: 'lazy' in props is deprecated. Move it to 'screenOptions' instead.\n\nSee https://reactnavigation.org/docs/6.x/material-top-tab-navigator#lazy for more details.`
-    );
-  }
+  Object.entries(deprecatedProps).forEach(([propName, propValue]) => {
+    if (propValue !== undefined) {
+      // @ts-expect-error: Object.entries doesn't return strict types
+      defaultScreenOptions[propName] = propValue;
+
+      warnOnce(
+        true,
+        `Material Top Tab Navigator: '${propName}' in props is deprecated. Move it to 'screenOptions' instead.\n\nSee https://reactnavigation.org/docs/6.x/material-top-tab-navigator#${propName.toLowerCase()} for more details.`
+      );
+    }
+  });
 
   const { state, descriptors, navigation, NavigationContent } =
     useNavigationBuilder<
