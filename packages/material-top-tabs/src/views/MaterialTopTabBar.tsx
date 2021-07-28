@@ -1,8 +1,13 @@
-import { Route, useTheme } from '@react-navigation/native';
+import {
+  ParamListBase,
+  Route,
+  TabNavigationState,
+  useTheme,
+} from '@react-navigation/native';
 import Color from 'color';
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { TabBar } from 'react-native-tab-view';
+import { TabBar, TabBarIndicator } from 'react-native-tab-view';
 
 import type { MaterialTopTabBarProps } from '../types';
 
@@ -103,6 +108,21 @@ export default function TabBarTop({
         }
 
         return label({ focused, color });
+      }}
+      renderBadge={({ route }) => {
+        const { tabBarBadge } = descriptors[route.key].options;
+
+        return tabBarBadge?.() ?? null;
+      }}
+      renderIndicator={({ navigationState: state, ...rest }) => {
+        return focusedOptions.tabBarIndicator ? (
+          focusedOptions.tabBarIndicator({
+            state: state as TabNavigationState<ParamListBase>,
+            ...rest,
+          })
+        ) : (
+          <TabBarIndicator navigationState={state} {...rest} />
+        );
       }}
     />
   );
