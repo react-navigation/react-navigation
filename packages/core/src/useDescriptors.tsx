@@ -186,6 +186,17 @@ export default function useDescriptors<
       ...customOptions,
     };
 
+    const clearOptions = () =>
+      setOptions((o) => {
+        if (route.key in o) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { [route.key]: _, ...rest } = o;
+          return rest;
+        }
+
+        return o;
+      });
+
     acc[route.key] = {
       route,
       // @ts-expect-error: it's missing action helpers, fix later
@@ -203,6 +214,7 @@ export default function useDescriptors<
                   getState={getState}
                   setState={setState}
                   options={mergedOptions}
+                  clearOptions={clearOptions}
                 />
               </NavigationRouteContext.Provider>
             </NavigationContext.Provider>
