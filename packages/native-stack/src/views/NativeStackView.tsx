@@ -93,6 +93,24 @@ type Props = {
 };
 
 function NativeStackViewInner({ state, navigation, descriptors }: Props) {
+  const [nextDismissedKey, setNextDismissedKey] =
+    React.useState<string | null>(null);
+
+  const dismissedRouteName = nextDismissedKey
+    ? state.routes.find((route) => route.key === nextDismissedKey)?.name
+    : null;
+
+  React.useEffect(() => {
+    if (dismissedRouteName) {
+      const message =
+        `The screen '${dismissedRouteName}' was removed natively but didn't get removed from JS state. ` +
+        `This can happen if the action was prevented in a 'beforeRemove' listener, which is not fully supported in native-stack.\n\n` +
+        `Consider using 'gestureEnabled: false' to prevent back gesture and use a custom back button with 'headerLeft' option to override the native behavior.`;
+
+      console.error(message);
+    }
+  }, [dismissedRouteName]);
+
   return (
     <ScreenStack style={styles.container}>
       {state.routes.map((route, index) => {
@@ -173,6 +191,8 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
                 source: route.key,
                 target: state.key,
               });
+
+              setNextDismissedKey(route.key);
             }}
           >
             <HeaderConfig

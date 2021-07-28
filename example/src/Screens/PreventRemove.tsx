@@ -1,6 +1,5 @@
 import {
   CommonActions,
-  NavigationAction,
   ParamListBase,
   useTheme,
 } from '@react-navigation/native';
@@ -69,10 +68,7 @@ const InputScreen = ({
   React.useEffect(
     () =>
       navigation.addListener('beforeRemove', (e) => {
-        const action: NavigationAction & { payload?: { confirmed?: boolean } } =
-          e.data.action;
-
-        if (!hasUnsavedChanges || action.payload?.confirmed) {
+        if (!hasUnsavedChanges) {
           return;
         }
 
@@ -84,7 +80,7 @@ const InputScreen = ({
           );
 
           if (discard) {
-            navigation.dispatch(action);
+            navigation.dispatch(e.data.action);
           }
         } else {
           Alert.alert(
@@ -95,7 +91,7 @@ const InputScreen = ({
               {
                 text: 'Discard',
                 style: 'destructive',
-                onPress: () => navigation.dispatch(action),
+                onPress: () => navigation.dispatch(e.data.action),
               },
             ]
           );
