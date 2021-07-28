@@ -19,6 +19,7 @@ import HeaderShownContext from './Header/HeaderShownContext';
 
 type Props = {
   focused: boolean;
+  modal?: boolean;
   navigation: NavigationProp<ParamListBase>;
   route: RouteProp<ParamListBase>;
   header: React.ReactNode;
@@ -37,6 +38,7 @@ export default function Screen(props: Props) {
 
   const {
     focused,
+    modal = false,
     header,
     headerShown = true,
     headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
@@ -47,7 +49,7 @@ export default function Screen(props: Props) {
   } = props;
 
   const [headerHeight, setHeaderHeight] = React.useState(() =>
-    getDefaultHeaderHeight(dimensions, headerStatusBarHeight)
+    getDefaultHeaderHeight(dimensions, modal, headerStatusBarHeight)
   );
 
   return (

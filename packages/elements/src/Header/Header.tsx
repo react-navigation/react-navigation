@@ -13,6 +13,10 @@ import HeaderTitle from './HeaderTitle';
 
 type Props = HeaderOptions & {
   /**
+   * Whether the header is in a modal
+   */
+  modal?: boolean;
+  /**
    * Layout of the screen.
    */
   layout?: Layout;
@@ -46,6 +50,7 @@ export default function Header(props: Props) {
 
   const {
     layout = frame,
+    modal = false,
     title,
     headerTitle: customTitle,
     headerTitleAlign = Platform.select({
@@ -69,7 +74,11 @@ export default function Header(props: Props) {
     headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
   } = props;
 
-  const defaultHeight = getDefaultHeaderHeight(layout, headerStatusBarHeight);
+  const defaultHeight = getDefaultHeaderHeight(
+    layout,
+    modal,
+    headerStatusBarHeight
+  );
 
   const {
     height = defaultHeight,
