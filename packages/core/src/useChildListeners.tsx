@@ -8,23 +8,24 @@ import type { ListenerMap } from './NavigationBuilderContext';
 export default function useChildListeners() {
   const { current: listeners } = React.useRef<
     {
-      [K in keyof ListenerMap]: ListenerMap[K][];
+      [K in keyof ListenerMap]: Record<string, ListenerMap[K]>;
     }
   >({
-    action: [],
-    focus: [],
+    action: {},
+    focus: {},
   });
 
   const addListener = React.useCallback(
-    <T extends keyof ListenerMap>(type: T, listener: ListenerMap[T]) => {
-      // @ts-expect-error: listener should be correct type according to `type`
-      listeners[type].push(listener);
+    <T extends keyof ListenerMap>(
+      type: T,
+      key: string,
+      listener: ListenerMap[T]
+    ) => {
+      listeners[type][key] = listener;
 
       return () => {
-        // @ts-expect-error: listener should be correct type according to `type`
-        const index = listeners[type].indexOf(listener);
-
-        listeners[type].splice(index, 1);
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete listeners[type][key];
       };
     },
     [listeners]

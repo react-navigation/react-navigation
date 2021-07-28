@@ -19,6 +19,7 @@ export type KeyedListenerMap = {
 
 export type AddListener = <T extends keyof ListenerMap>(
   type: T,
+  key: string,
   listener: ListenerMap[T]
 ) => void;
 

@@ -20,7 +20,7 @@ type Options = {
   key?: string;
   getState: () => NavigationState;
   setState: (state: NavigationState | PartialState<NavigationState>) => void;
-  actionListeners: ChildActionListener[];
+  actionListeners: Record<string, ChildActionListener>;
   beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>;
   routerConfigOptions: RouterConfigOptions;
   emitter: NavigationEventEmitter<EventMapCore<any>>;
@@ -126,11 +126,21 @@ export default function useOnAction({
         }
       }
 
-      // If the action wasn't handled by current navigator or a parent navigator, let children handle it
-      for (let i = actionListeners.length - 1; i >= 0; i--) {
-        const listener = actionListeners[i];
+      // Use current child first
+      const currentChildKey = state.routes[state.index].key;
+      if (actionListeners[currentChildKey]?.(action, visitedNavigators)) {
+        return true;
+      }
+      const actionListenerEntries = Object.entries(actionListeners);
 
-        if (listener(action, visitedNavigators)) {
+      // If the action wasn't handled by current navigator or a parent navigator, let children handle it
+      for (let i = actionListenerEntries.length - 1; i >= 0; i--) {
+        const [k, listener] = actionListenerEntries[i];
+        if (k === currentChildKey) {
+          // Skipping here as it is already checked.
+          continue;
+        }
+        if (listener?.(action, visitedNavigators)) {
           return true;
         }
       }
@@ -158,8 +168,8 @@ export default function useOnAction({
   });
 
   React.useEffect(
-    () => addListenerParent?.('action', onAction),
-    [addListenerParent, onAction]
+    () => addListenerParent?.('action', key ?? 'root', onAction),
+    [key, addListenerParent, onAction]
   );
 
   return onAction;

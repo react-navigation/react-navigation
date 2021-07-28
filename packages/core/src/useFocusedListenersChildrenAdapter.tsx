@@ -8,14 +8,16 @@ import NavigationBuilderContext, {
 import type { NavigationHelpers } from './types';
 
 type Options = {
+  key?: string;
   navigation: NavigationHelpers<ParamListBase>;
-  focusedListeners: FocusedNavigationListener[];
+  focusedListeners: Record<string, FocusedNavigationListener>;
 };
 
 /**
  * Hook for passing focus callback to children
  */
 export default function useFocusedListenersChildrenAdapter({
+  key,
   navigation,
   focusedListeners,
 }: Options) {
@@ -24,7 +26,7 @@ export default function useFocusedListenersChildrenAdapter({
   const listener = React.useCallback(
     (callback: FocusedNavigationCallback<any>) => {
       if (navigation.isFocused()) {
-        for (const listener of focusedListeners) {
+        for (const listener of Object.values(focusedListeners)) {
           const { handled, result } = listener(callback);
 
           if (handled) {
@@ -41,7 +43,7 @@ export default function useFocusedListenersChildrenAdapter({
   );
 
   React.useEffect(
-    () => addListener?.('focus', listener),
-    [addListener, listener]
+    () => addListener?.('focus', key ?? 'root', listener),
+    [addListener, listener, key]
   );
 }

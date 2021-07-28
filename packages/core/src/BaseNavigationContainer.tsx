@@ -120,23 +120,23 @@ const BaseNavigationContainer = React.forwardRef(
           | NavigationAction
           | ((state: NavigationState) => NavigationAction)
       ) => {
-        if (listeners.focus[0] == null) {
+        const focus = Object.values(listeners.focus)[0];
+        if (focus == null) {
           console.error(NOT_INITIALIZED_ERROR);
         } else {
-          listeners.focus[0]((navigation) => navigation.dispatch(action));
+          focus((navigation) => navigation.dispatch(action));
         }
       },
       [listeners.focus]
     );
 
     const canGoBack = React.useCallback(() => {
-      if (listeners.focus[0] == null) {
+      const focus = Object.values(listeners.focus)[0];
+      if (focus == null) {
         return false;
       }
 
-      const { result, handled } = listeners.focus[0]((navigation) =>
-        navigation.canGoBack()
-      );
+      const { result, handled } = focus((navigation) => navigation.canGoBack());
 
       if (handled) {
         return result;
@@ -152,7 +152,7 @@ const BaseNavigationContainer = React.forwardRef(
         if (target == null) {
           console.error(NOT_INITIALIZED_ERROR);
         } else {
-          listeners.focus[0]((navigation) =>
+          Object.values(listeners.focus)[0]((navigation) =>
             navigation.dispatch({
               ...CommonActions.reset(state),
               target,
@@ -200,7 +200,7 @@ const BaseNavigationContainer = React.forwardRef(
         getParent: () => undefined,
         getCurrentRoute,
         getCurrentOptions,
-        isReady: () => listeners.focus[0] != null,
+        isReady: () => Object.values(listeners.focus)[0] != null,
       }),
       [
         canGoBack,
