@@ -34,6 +34,8 @@ function DrawerNavigator({
   children,
   screenListeners,
   screenOptions,
+  // @ts-expect-error: openByDefault is deprecated
+  openByDefault,
   // @ts-expect-error: lazy is deprecated
   lazy,
   // @ts-expect-error: drawerContentOptions is deprecated
@@ -83,6 +85,13 @@ function DrawerNavigator({
     );
   }
 
+  if (typeof openByDefault === 'boolean') {
+    warnOnce(
+      true,
+      `Drawer Navigator: 'openByDefault' is deprecated. Use 'defaultStatus' and set it to 'open' or 'closed' instead.\n\nSee https://reactnavigation.org/docs/6.x/drawer-navigator/#defaultstatus for more details.`
+    );
+  }
+
   const { state, descriptors, navigation, NavigationContent } =
     useNavigationBuilder<
       DrawerNavigationState<ParamListBase>,
@@ -92,7 +101,12 @@ function DrawerNavigator({
       DrawerNavigationEventMap
     >(DrawerRouter, {
       initialRouteName,
-      defaultStatus,
+      defaultStatus:
+        defaultStatus !== undefined
+          ? defaultStatus
+          : openByDefault
+          ? 'open'
+          : 'closed',
       backBehavior,
       children,
       screenListeners,
