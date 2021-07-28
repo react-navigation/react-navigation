@@ -41,6 +41,8 @@ export default function MaterialTopTabView({
     });
   };
 
+  const focusedOptions = descriptors[state.routes[state.index].key].options;
+
   return (
     <TabView<Route<string>>
       {...rest}
@@ -57,6 +59,8 @@ export default function MaterialTopTabView({
         descriptors[route.key].options.lazyPlaceholder?.() ?? null
       }
       lazy={({ route }) => descriptors[route.key].options.lazy === true}
+      lazyPreloadDistance={focusedOptions.lazyPreloadDistance}
+      swipeEnabled={focusedOptions.swipeEnabled}
       onSwipeStart={() => navigation.emit({ type: 'swipeStart' })}
       onSwipeEnd={() => navigation.emit({ type: 'swipeEnd' })}
       sceneContainerStyle={[
