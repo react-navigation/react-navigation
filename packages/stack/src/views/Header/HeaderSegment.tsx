@@ -26,6 +26,7 @@ type Props = StackHeaderOptions & {
   layout: Layout;
   title: string;
   insets: EdgeInsets;
+  modal: boolean;
   onGoBack?: () => void;
   progress: SceneProgress;
   styleInterpolator: StackHeaderStyleInterpolator;
@@ -99,6 +100,7 @@ export default function HeaderSegment(props: Props) {
     progress,
     insets,
     layout,
+    modal,
     onGoBack,
     headerTitle: title,
     headerLeft: left,
@@ -120,7 +122,11 @@ export default function HeaderSegment(props: Props) {
     ...rest
   } = props;
 
-  const defaultHeight = getDefaultHeaderHeight(layout, headerStatusBarHeight);
+  const defaultHeight = getDefaultHeaderHeight(
+    layout,
+    modal,
+    headerStatusBarHeight
+  );
 
   const { height = defaultHeight } = StyleSheet.flatten(
     customHeaderStyle || {}
@@ -172,6 +178,7 @@ export default function HeaderSegment(props: Props) {
 
   return (
     <Header
+      modal={modal}
       layout={layout}
       headerTitle={headerTitle}
       headerLeft={headerLeft}

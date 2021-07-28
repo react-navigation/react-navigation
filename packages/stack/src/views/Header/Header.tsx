@@ -62,6 +62,7 @@ export default React.memo(function Header({
       progress={progress}
       insets={insets}
       layout={layout}
+      modal={isModal}
       headerBackTitle={
         options.headerBackTitle !== undefined
           ? options.headerBackTitle

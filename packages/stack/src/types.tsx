@@ -81,6 +81,10 @@ type SceneOptionsDefaults = TransitionPreset & {
 
 export type Scene = {
   /**
+   * Route object for the current screen.
+   */
+  route: Route<string>;
+  /**
    * Descriptor object for the screen.
    */
   descriptor: Omit<StackDescriptor, 'options'> & {

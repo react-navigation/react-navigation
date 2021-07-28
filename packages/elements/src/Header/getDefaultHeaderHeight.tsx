@@ -4,17 +4,30 @@ import type { Layout } from '../types';
 
 export default function getDefaultHeaderHeight(
   layout: Layout,
+  modal: boolean,
   statusBarHeight: number
 ): number {
-  const isLandscape = layout.width > layout.height;
-
   let headerHeight;
 
+  const isLandscape = layout.width > layout.height;
+
   if (Platform.OS === 'ios') {
-    if (isLandscape && !Platform.isPad) {
-      headerHeight = 32;
+    if (Platform.isPad) {
+      if (modal) {
+        headerHeight = 56;
+      } else {
+        headerHeight = 50;
+      }
     } else {
-      headerHeight = 44;
+      if (isLandscape) {
+        headerHeight = 32;
+      } else {
+        if (modal) {
+          headerHeight = 56;
+        } else {
+          headerHeight = 44;
+        }
+      }
     }
   } else if (Platform.OS === 'android') {
     headerHeight = 56;
