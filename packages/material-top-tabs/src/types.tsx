@@ -8,8 +8,13 @@ import type {
   TabActionHelpers,
   TabNavigationState,
 } from '@react-navigation/native';
+import type React from 'react';
 import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
-import type { SceneRendererProps, TabViewProps } from 'react-native-tab-view';
+import type {
+  SceneRendererProps,
+  TabBar,
+  TabViewProps,
+} from 'react-native-tab-view';
 
 export type MaterialTopTabNavigationEventMap = {
   /**
@@ -93,6 +98,31 @@ export type MaterialTopTabNavigationOptions = {
   tabBarIcon?: (props: { focused: boolean; color: string }) => React.ReactNode;
 
   /**
+   * Function that returns a React element to use as a badge for the tab.
+   */
+  tabBarBadge?: () => React.ReactNode;
+
+  /**
+   * Function that returns a React element as the tab bar indicator.
+   */
+  tabBarIndicator?: (
+    props: Omit<
+      Parameters<React.ComponentProps<typeof TabBar>['renderIndicator']>[0],
+      'navigationState'
+    > & { state: TabNavigationState<ParamListBase> }
+  ) => React.ReactNode;
+
+  /**
+   * Style object for the tab bar indicator.
+   */
+  tabBarIndicatorStyle?: StyleProp<ViewStyle>;
+
+  /**
+   * Style object for the view containing the tab bar indicator.
+   */
+  tabBarIndicatorContainerStyle?: StyleProp<ViewStyle>;
+
+  /**
    * Accessibility label for the tab button. This is read by the screen reader when the user taps the tab.
    * It's recommended to set this if you don't have a label for the tab.
    */
@@ -164,16 +194,6 @@ export type MaterialTopTabNavigationOptions = {
    * Style object for the individual tab items.
    */
   tabBarItemStyle?: StyleProp<ViewStyle>;
-
-  /**
-   * Style object for the tab bar indicator.
-   */
-  tabBarIndicatorStyle?: StyleProp<ViewStyle>;
-
-  /**
-   * Style object for the view containing the tab bar indicator.
-   */
-  tabBarIndicatorContainerStyle?: StyleProp<ViewStyle>;
 
   /**
    * Style object for the view containing the tab items.
