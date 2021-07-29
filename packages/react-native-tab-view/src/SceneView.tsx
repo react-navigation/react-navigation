@@ -51,7 +51,10 @@ export default class SceneView<T extends Route> extends React.Component<
     } else if (this.state.loading) {
       // If lazy mode is not enabled, render the scene with a delay if not loaded already
       // This improves the initial startup time as the scene is no longer blocking
-      setTimeout(() => this.setState({ loading: false }), 0);
+      this.timerHandler = setTimeout(
+        () => this.setState({ loading: false }),
+        0
+      );
     }
   }
 
@@ -72,7 +75,14 @@ export default class SceneView<T extends Route> extends React.Component<
 
   componentWillUnmount() {
     this.unsubscribe?.();
+
+    if (this.timerHandler) {
+      clearTimeout(this.timerHandler);
+      this.timerHandler = undefined;
+    }
   }
+
+  private timerHandler: NodeJS.Timeout | undefined;
 
   private unsubscribe: (() => void) | null = null;
 
