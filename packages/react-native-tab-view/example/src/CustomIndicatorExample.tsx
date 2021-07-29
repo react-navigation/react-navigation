@@ -56,17 +56,7 @@ export default class CustomIndicatorExample extends React.Component<{}, State> {
   ) => {
     const { position, navigationState, getTabWidth } = props;
     const inputRange = [
-      0,
-      0.48,
-      0.49,
-      0.51,
-      0.52,
-      1,
-      1.48,
-      1.49,
-      1.51,
-      1.52,
-      2,
+      0, 0.48, 0.49, 0.51, 0.52, 1, 1.48, 1.49, 1.51, 1.52, 2,
     ];
 
     const scale = position.interpolate({

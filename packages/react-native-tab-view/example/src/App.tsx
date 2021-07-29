@@ -36,7 +36,7 @@ type ExampleComponentType = React.ComponentType<{}> & {
   appbarElevation?: number;
 };
 
-I18nManager.forceRTL(true);
+I18nManager.forceRTL(false);
 
 const PERSISTENCE_KEY = 'index_persistence';
 

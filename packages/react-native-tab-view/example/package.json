@@ -10,25 +10,25 @@
     "web": "expo start:web"
   },
   "dependencies": {
-    "@expo/vector-icons": "^12.0.4",
-    "@react-native-async-storage/async-storage": "^1.15.1",
-    "expo": "^41.0.0-beta.2",
-    "expo-asset": "~8.3.1",
-    "expo-constants": "~10.1.1",
-    "expo-keep-awake": "~9.1.1",
+    "@expo/vector-icons": "^12.0.0",
+    "@react-native-async-storage/async-storage": "~1.15.0",
+    "expo": "^42.0.0",
+    "expo-asset": "~8.3.3",
+    "expo-constants": "~11.0.1",
+    "expo-keep-awake": "~9.2.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-41.0.0.tar.gz",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
     "react-native-pager-view": "^5.0.12",
     "react-native-safe-area-context": "3.2.0",
-    "react-native-web": "~0.15.5"
+    "react-native-web": "~0.17.1"
   },
   "devDependencies": {
-    "@types/react": "~16.9.35",
-    "@types/react-native": "~0.63.2",
+    "@types/react": "~17.0.15",
+    "@types/react-native": "~0.64.12",
     "babel-plugin-module-resolver": "^4.0.0",
-    "babel-preset-expo": "8.3.0",
-    "expo-cli": "^4.3.4",
-    "typescript": "~4.2.3"
+    "babel-preset-expo": "^8.4.1",
+    "expo-cli": "^4.9.0",
+    "typescript": "^4.3.5"
   }
 }

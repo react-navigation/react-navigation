@@ -78,14 +78,8 @@ export default class TabBarIndicator<T extends Route> extends React.Component<
   };
 
   render() {
-    const {
-      position,
-      navigationState,
-      getTabWidth,
-      width,
-      style,
-      layout,
-    } = this.props;
+    const { position, navigationState, getTabWidth, width, style, layout } =
+      this.props;
     const { routes } = navigationState;
 
     const transform = [];
