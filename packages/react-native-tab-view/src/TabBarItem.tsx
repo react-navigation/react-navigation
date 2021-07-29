@@ -246,6 +246,7 @@ const styles = StyleSheet.create({
   label: {
     margin: 4,
     backgroundColor: 'transparent',
+    textTransform: 'uppercase',
   },
   icon: {
     margin: 2,
