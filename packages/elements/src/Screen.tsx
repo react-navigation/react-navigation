@@ -63,7 +63,7 @@ export default function Screen(props: Props) {
           value={isParentHeaderShown || headerShown !== false}
         >
           <HeaderHeightContext.Provider
-            value={headerShown ? headerHeight : parentHeaderHeight}
+            value={headerShown ? headerHeight : parentHeaderHeight ?? 0}
           >
             {children}
           </HeaderHeightContext.Provider>

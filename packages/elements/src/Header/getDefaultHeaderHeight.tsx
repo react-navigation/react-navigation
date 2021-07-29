@@ -4,7 +4,7 @@ import type { Layout } from '../types';
 
 export default function getDefaultHeaderHeight(
   layout: Layout,
-  modal: boolean,
+  modalPresentation: boolean,
   statusBarHeight: number
 ): number {
   let headerHeight;
@@ -13,7 +13,7 @@ export default function getDefaultHeaderHeight(
 
   if (Platform.OS === 'ios') {
     if (Platform.isPad) {
-      if (modal) {
+      if (modalPresentation) {
         headerHeight = 56;
       } else {
         headerHeight = 50;
@@ -22,7 +22,7 @@ export default function getDefaultHeaderHeight(
       if (isLandscape) {
         headerHeight = 32;
       } else {
-        if (modal) {
+        if (modalPresentation) {
           headerHeight = 56;
         } else {
           headerHeight = 44;
