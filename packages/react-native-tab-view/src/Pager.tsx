@@ -117,6 +117,7 @@ export default function Pager<T extends Route>({
     }
 
     if (layout.width && currentIndexRef.current !== index) {
+      currentIndexRef.current = index;
       jumpToIndex(index);
     }
   }, [jumpToIndex, keyboardDismissMode, layout.width, index]);
