@@ -4,7 +4,7 @@
 [![Version][version-badge]][package]
 [![MIT License][license-badge]][license]
 
-A cross-platform Tab View component for React Native. Implemented using [`react-native-pager-view`](https://github.com/callstack/react-native-viewpager) on Android & iOS, and [PanResponder](https://reactnative.dev/docs/panresponder) on Web.
+A cross-platform Tab View component for React Native. Implemented using [`react-native-pager-view`](https://github.com/callstack/react-native-viewpager) on Android & iOS, and [PanResponder](https://reactnative.dev/docs/panresponder) on Web, macOS, and Windows.
 
 - [Run the example app to see it in action](https://expo.io/@satya164/react-native-tab-view-demos).
 - Checkout the [example/](https://github.com/satya164/react-native-tab-view/tree/main/example) folder for source code.
@@ -30,7 +30,7 @@ Open a Terminal in the project root and run:
 yarn add react-native-tab-view
 ```
 
-Now we need to install [`react-native-pager-view`](https://github.com/callstack/react-native-viewpager).
+Now we need to install [`react-native-pager-view`](https://github.com/callstack/react-native-viewpager) if you plan to support iOS and Android.
 
 If you are using Expo, to ensure that you get the compatible versions of the libraries, run:
 

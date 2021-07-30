@@ -32,7 +32,7 @@ type Props<T extends Route> = PagerProps & {
   ) => React.ReactElement;
 };
 
-export default function Pager<T extends Route>({
+export default function PagerViewAdapter<T extends Route>({
   keyboardDismissMode = 'auto',
   swipeEnabled = true,
   navigationState,

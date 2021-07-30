@@ -230,7 +230,7 @@ export default class TabBarItem<T extends Route> extends React.Component<
         onLayout={onLayout}
         onPress={onPress}
         onLongPress={onLongPress}
-        style={tabContainerStyle}
+        style={[styles.pressable, tabContainerStyle]}
       >
         <View pointerEvents="none" style={[styles.item, tabStyle]}>
           {icon}
@@ -262,5 +262,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: 0,
+  },
+  pressable: {
+    // The label is not pressable on Windows
+    // Adding backgroundColor: 'transparent' seems to fix it
+    backgroundColor: 'transparent',
   },
 });
