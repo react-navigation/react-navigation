@@ -22,6 +22,16 @@ A cross-platform Tab View component for React Native. Implemented using [`react-
 
 <a href="https://raw.githubusercontent.com/satya164/react-native-tab-view/main/demo/demo.mp4"><img src="https://raw.githubusercontent.com/satya164/react-native-tab-view/main/demo/demo.gif" width="360"></a>
 
+
+## React Native Compatibility
+
+To use this library you need to ensure you are using the correct version of React Native. If you are using a version of React Native that is lower than `0.63` you will need to upgrade that before attempting to use this library.
+
+| `react-native-tab-view` version | Required React Native Version |
+| ------------------------------- | ----------------------------- |
+| `2.x.x`                         | `< 0.63`                      |
+| `3.x.x`                         | `>= 0.63`                     |
+
 ## Installation
 
 Open a Terminal in the project root and run:
