@@ -86,15 +86,15 @@ export default class TabBarItem<T extends Route> extends React.Component<
       route,
       position,
       navigationState,
-      renderLabel: renderLabelPassed,
+      renderLabel: renderLabelCustom,
       renderIcon,
       renderBadge,
       getLabelText,
       getTestID,
       getAccessibilityLabel,
       getAccessible,
-      activeColor = DEFAULT_ACTIVE_COLOR,
-      inactiveColor = DEFAULT_INACTIVE_COLOR,
+      activeColor: activeColorCustom,
+      inactiveColor: inactiveColorCustom,
       pressColor,
       pressOpacity,
       labelStyle,
@@ -106,6 +106,21 @@ export default class TabBarItem<T extends Route> extends React.Component<
 
     const tabIndex = navigationState.routes.indexOf(route);
     const isFocused = navigationState.index === tabIndex;
+
+    const labelColorFromStyle = StyleSheet.flatten(labelStyle || {}).color;
+
+    const activeColor =
+      activeColorCustom !== undefined
+        ? activeColorCustom
+        : typeof labelColorFromStyle === 'string'
+        ? labelColorFromStyle
+        : DEFAULT_ACTIVE_COLOR;
+    const inactiveColor =
+      inactiveColorCustom !== undefined
+        ? inactiveColorCustom
+        : typeof labelColorFromStyle === 'string'
+        ? labelColorFromStyle
+        : DEFAULT_INACTIVE_COLOR;
 
     const activeOpacity = this.getActiveOpacity(
       position,
@@ -150,8 +165,8 @@ export default class TabBarItem<T extends Route> extends React.Component<
     }
 
     const renderLabel =
-      renderLabelPassed !== undefined
-        ? renderLabelPassed
+      renderLabelCustom !== undefined
+        ? renderLabelCustom
         : ({ route, color }: { route: T; color: string }) => {
             const labelText = getLabelText({ route });
 
