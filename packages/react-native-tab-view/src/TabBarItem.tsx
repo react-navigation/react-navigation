@@ -9,7 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import PlatformPressable from './PlatformPressable';
-import { Scene, Route, NavigationState } from './types';
+import type { Scene, Route, NavigationState } from './types';
 
 export type Props<T extends Route> = {
   position: Animated.AnimatedInterpolation;

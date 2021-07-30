@@ -9,7 +9,7 @@ import {
 import TabBar from './TabBar';
 import SceneView from './SceneView';
 import Pager from './Pager';
-import {
+import type {
   Layout,
   NavigationState,
   Route,

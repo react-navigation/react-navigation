@@ -4,7 +4,7 @@ import ViewPager, {
   PageScrollStateChangedNativeEvent,
 } from 'react-native-pager-view';
 import useAnimatedValue from './useAnimatedValue';
-import {
+import type {
   NavigationState,
   Route,
   Listener,

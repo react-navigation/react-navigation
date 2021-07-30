@@ -9,7 +9,7 @@ import {
   Platform,
 } from 'react-native';
 
-import { Route, SceneRendererProps, NavigationState } from './types';
+import type { Route, SceneRendererProps, NavigationState } from './types';
 
 export type GetTabWidth = (index: number) => number;
 

@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 import useAnimatedValue from './useAnimatedValue';
-import {
+import type {
   NavigationState,
   Route,
   Layout,
@@ -48,7 +48,7 @@ const DefaultTransitionSpec = {
   overshootClamping: true,
 };
 
-export default function Pager<T extends Route>({
+export default function PanResponderAdapter<T extends Route>({
   layout,
   keyboardDismissMode = 'auto',
   swipeEnabled = true,

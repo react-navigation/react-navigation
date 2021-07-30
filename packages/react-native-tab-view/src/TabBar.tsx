@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import TabBarItem, { Props as TabBarItemProps } from './TabBarItem';
 import TabBarIndicator, { Props as IndicatorProps } from './TabBarIndicator';
-import {
+import type {
   Route,
   Scene,
   SceneRendererProps,
