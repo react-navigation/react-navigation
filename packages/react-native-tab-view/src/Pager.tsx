@@ -139,11 +139,13 @@ export default function Pager<T extends Route>({
       return false;
     }
 
+    const isRtl = I18nManager.isRTL;
+    const diffX = isRtl ? -gestureState.dx : gestureState.dx;
+
     return (
       isMovingHorizontally(event, gestureState) &&
-      ((gestureState.dx >= DEAD_ZONE && currentIndexRef.current > 0) ||
-        (gestureState.dx <= -DEAD_ZONE &&
-          currentIndexRef.current < routes.length - 1))
+      ((diffX >= DEAD_ZONE && currentIndexRef.current > 0) ||
+        (diffX <= -DEAD_ZONE && currentIndexRef.current < routes.length - 1))
     );
   };
 
@@ -163,18 +165,20 @@ export default function Pager<T extends Route>({
     _: GestureResponderEvent,
     gestureState: PanResponderGestureState
   ) => {
+    const isRtl = I18nManager.isRTL;
+    const diffX = isRtl ? -gestureState.dx : gestureState.dx;
     if (
       // swiping left
-      (gestureState.dx > 0 && index <= 0) ||
+      (diffX > 0 && index <= 0) ||
       // swiping right
-      (gestureState.dx < 0 && index >= routes.length - 1)
+      (diffX < 0 && index >= routes.length - 1)
     ) {
       return;
     }
 
     if (layout.width) {
       // @ts-expect-error: _offset is private, but docs use it as well
-      const position = (panX._offset + gestureState.dx) / -layout.width;
+      const position = (panX._offset + diffX) / -layout.width;
       const next =
         position > index ? Math.ceil(position) : Math.floor(position);
 
@@ -183,13 +187,15 @@ export default function Pager<T extends Route>({
       }
     }
 
-    panX.setValue(gestureState.dx);
+    panX.setValue(diffX);
   };
 
   const finishGesture = (
     _: GestureResponderEvent,
     gestureState: PanResponderGestureState
   ) => {
+    const isRtl = I18nManager.isRTL;
+
     panX.flattenOffset();
 
     onSwipeEnd?.();
@@ -211,7 +217,9 @@ export default function Pager<T extends Route>({
         Math.min(
           Math.max(
             0,
-            currentIndex - gestureState.dx / Math.abs(gestureState.dx)
+            isRtl
+              ? currentIndex + gestureState.dx / Math.abs(gestureState.dx)
+              : currentIndex - gestureState.dx / Math.abs(gestureState.dx)
           ),
           routes.length - 1
         )
