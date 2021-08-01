@@ -9,7 +9,12 @@ import type {
   StackNavigationState,
   StackRouterOptions,
 } from '@react-navigation/native';
-import type { ImageSourcePropType, StyleProp, ViewStyle } from 'react-native';
+import type {
+  ImageSourcePropType,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 import type {
   ScreenProps,
   ScreenStackHeaderConfigProps,
@@ -65,6 +70,10 @@ export type NativeStackNavigationOptions = {
    * You can use it to show a back button alongside `headerLeft` if you have specified it.
    *
    * This will have no effect on the first screen in the stack.
+   *
+   * Only supported on iOS.
+   *
+   * @platform ios
    */
   headerBackVisible?: boolean;
   /**
@@ -133,6 +142,10 @@ export type NativeStackNavigationOptions = {
   headerLargeTitle?: boolean;
   /**
    * Whether drop shadow of header is visible when a large title is shown.
+   *
+   * Only supported on iOS.
+   *
+   * @platform ios
    */
   headerLargeTitleShadowVisible?: boolean;
   /**
@@ -223,12 +236,11 @@ export type NativeStackNavigationOptions = {
    * - fontWeight
    * - color
    */
-  headerTitleStyle?: StyleProp<{
-    fontFamily?: string;
-    fontSize?: number;
-    fontWeight?: string;
-    color?: string;
-  }>;
+  headerTitleStyle?: StyleProp<
+    Pick<TextStyle, 'fontFamily' | 'fontSize' | 'fontWeight'> & {
+      color?: string;
+    }
+  >;
   /**
    * Options to render a native search bar on iOS.
    *
@@ -279,6 +291,8 @@ export type NativeStackNavigationOptions = {
    * Supported values:
    * - "push": the new screen will perform push animation.
    * - "pop": the new screen will perform pop animation.
+   *
+   * Only supported on iOS and Android.
    */
   animationTypeForReplace?: ScreenProps['replaceAnimation'];
   /**
@@ -291,6 +305,8 @@ export type NativeStackNavigationOptions = {
    * - "slide_from_right": slide in the new screen from right (Android only, uses default animation on iOS)
    * - "slide_from_left": slide in the new screen from left (Android only, uses default animation on iOS)
    * - "none": don't animate the screen
+   *
+   * Only supported on iOS and Android.
    */
   animation?: ScreenProps['stackAnimation'];
   /**
@@ -304,6 +320,8 @@ export type NativeStackNavigationOptions = {
    * - "containedTransparentModal": will use "UIModalPresentationOverCurrentContext" modal style on iOS and will fallback to "transparentModal" on Android.
    * - "fullScreenModal": will use "UIModalPresentationFullScreen" modal style on iOS and will fallback to "modal" on Android.
    * - "formSheet": will use "UIModalPresentationFormSheet" modal style on iOS and will fallback to "modal" on Android.
+   *
+   * Only supported on iOS and Android.
    */
   presentation?: Exclude<ScreenProps['stackPresentation'], 'push'> | 'card';
   /**
@@ -318,6 +336,8 @@ export type NativeStackNavigationOptions = {
    * - "landscape": landscape orientations are permitted.
    * - "landscape_left": landscape-left orientation is permitted.
    * - "landscape_right": landscape-right orientation is permitted.
+   *
+   * Only supported on iOS and Android.
    */
   orientation?: ScreenProps['screenOrientation'];
 };
