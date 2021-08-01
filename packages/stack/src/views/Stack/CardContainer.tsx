@@ -282,7 +282,7 @@ function CardContainer({
               value={isParentHeaderShown || headerShown !== false}
             >
               <HeaderHeightContext.Provider
-                value={headerShown ? headerHeight : parentHeaderHeight}
+                value={headerShown ? headerHeight : parentHeaderHeight ?? 0}
               >
                 {renderScene({ route: scene.descriptor.route })}
               </HeaderHeightContext.Provider>
