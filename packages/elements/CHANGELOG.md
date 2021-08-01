@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.21...@react-navigation/elements@1.0.0) (2021-08-01)
+
+
+### Bug Fixes
+
+* match native iOS header height in stack ([51b636d](https://github.com/react-navigation/react-navigation/commit/51b636d7268fc05a8a9aca9e6aad0161674f238e))
+
+
+### Features
+
+* basic web implementation for native stack ([de84458](https://github.com/react-navigation/react-navigation/commit/de8445896021da4865089ba44e95afffbcee0919))
+* expose header height in native-stack ([#9774](https://github.com/react-navigation/react-navigation/issues/9774)) ([20abccd](https://github.com/react-navigation/react-navigation/commit/20abccda0d5074f61b2beb555b881a2087d27bb0))
+
+
+
+
+
 # [1.0.0-next.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.20...@react-navigation/elements@1.0.0-next.21) (2021-07-16)
 
 **Note:** Version bump only for package @react-navigation/elements

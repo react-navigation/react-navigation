@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.17...@react-navigation/core@6.0.0) (2021-08-01)
+
+
+### Bug Fixes
+
+* clear options set from a screen when it unmounts. closes [#9756](https://github.com/react-navigation/react-navigation/issues/9756) ([d2d7f8d](https://github.com/react-navigation/react-navigation/commit/d2d7f8d95e84e8d45b6807f59afcf4d0e64c3828))
+
+
+
+
+
 # [6.0.0-next.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.16...@react-navigation/core@6.0.0-next.17) (2021-07-16)
 
 

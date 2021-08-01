@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.21...@react-navigation/drawer@6.0.0) (2021-08-01)
+
+
+### Bug Fixes
+
+* add deprecation warning for openByDefault ([9506ad1](https://github.com/react-navigation/react-navigation/commit/9506ad1f001b3ed295a36c6744ed17459fa193e4))
+
+
+
+
+
 # [6.0.0-next.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.20...@react-navigation/drawer@6.0.0-next.21) (2021-07-16)
 
 **Note:** Version bump only for package @react-navigation/drawer

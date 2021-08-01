@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.0-next.18...@react-navigation/material-top-tabs@6.0.0) (2021-08-01)
+
+
+### Features
+
+* add tabBarBadge and tabBarIndicator options for material top tabs ([fdb3ede](https://github.com/react-navigation/react-navigation/commit/fdb3ede3e0eb1e43c4be30c810663880e2f5467c))
+* move some props to screenOptions in material top tabs ([5bfc396](https://github.com/react-navigation/react-navigation/commit/5bfc39668bb5dce8bd872e5ff87f4b3fd683cf62))
+
+
+
+
+
 # [6.0.0-next.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.0-next.17...@react-navigation/material-top-tabs@6.0.0-next.18) (2021-07-16)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.17...@react-navigation/native@6.0.0) (2021-08-01)
+
+
+### Features
+
+* add a way to filter out deep links from being handled ([c322b05](https://github.com/react-navigation/react-navigation/commit/c322b0501c6a9941a033471aed9e5b486b3ace7e))
+
+
+
+
+
 # [6.0.0-next.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.16...@react-navigation/native@6.0.0-next.17) (2021-07-16)
 
 **Note:** Version bump only for package @react-navigation/native
