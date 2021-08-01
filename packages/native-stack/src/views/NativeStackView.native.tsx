@@ -1,5 +1,6 @@
 import {
   getDefaultHeaderHeight,
+  getHeaderTitle,
   HeaderHeightContext,
   HeaderShownContext,
   SafeAreaProviderCompat,
@@ -47,11 +48,11 @@ const MaybeNestedStack = ({
   children: React.ReactNode;
 }) => {
   const { colors } = useTheme();
-  const { headerShown = true, contentStyle } = options;
+  const { header, headerShown = true, contentStyle } = options;
 
   const isHeaderInModal = isAndroid
     ? false
-    : presentation !== 'card' && headerShown === true;
+    : presentation !== 'card' && headerShown === true && header === undefined;
 
   const headerShownPreviousRef = React.useRef(headerShown);
 
@@ -120,6 +121,7 @@ const MaybeNestedStack = ({
 type SceneViewProps = {
   index: number;
   descriptor: NativeStackDescriptor;
+  previousDescriptor?: NativeStackDescriptor;
   onWillDisappear: () => void;
   onAppear: () => void;
   onDisappear: () => void;
@@ -128,15 +130,17 @@ type SceneViewProps = {
 
 const SceneView = ({
   descriptor,
+  previousDescriptor,
   index,
   onWillDisappear,
   onAppear,
   onDisappear,
   onDismissed,
 }: SceneViewProps) => {
-  const { route, options, render } = descriptor;
+  const { route, navigation, options, render } = descriptor;
   const {
     gestureEnabled,
+    header,
     headerShown,
     animationTypeForReplace = 'pop',
     animation,
@@ -199,11 +203,28 @@ const SceneView = ({
             isHeaderInPush !== false ? headerHeight : parentHeaderHeight ?? 0
           }
         >
-          <HeaderConfig
-            {...options}
-            route={route}
-            headerShown={isHeaderInPush}
-          />
+          {header !== undefined && headerShown !== false ? (
+            // TODO: expose custom header height
+            header({
+              back: previousDescriptor
+                ? {
+                    title: getHeaderTitle(
+                      previousDescriptor.options,
+                      previousDescriptor.route.name
+                    ),
+                  }
+                : undefined,
+              options,
+              route,
+              navigation,
+            })
+          ) : (
+            <HeaderConfig
+              {...options}
+              route={route}
+              headerShown={isHeaderInPush}
+            />
+          )}
           <MaybeNestedStack
             options={options}
             route={route}
@@ -244,43 +265,52 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
 
   return (
     <ScreenStack style={styles.container}>
-      {state.routes.map((route, index) => (
-        <SceneView
-          key={route.key}
-          index={index}
-          descriptor={descriptors[route.key]}
-          onWillDisappear={() => {
-            navigation.emit({
-              type: 'transitionStart',
-              data: { closing: true },
-              target: route.key,
-            });
-          }}
-          onAppear={() => {
-            navigation.emit({
-              type: 'transitionEnd',
-              data: { closing: false },
-              target: route.key,
-            });
-          }}
-          onDisappear={() => {
-            navigation.emit({
-              type: 'transitionEnd',
-              data: { closing: true },
-              target: route.key,
-            });
-          }}
-          onDismissed={() => {
-            navigation.dispatch({
-              ...StackActions.pop(),
-              source: route.key,
-              target: state.key,
-            });
+      {state.routes.map((route, index) => {
+        const descriptor = descriptors[route.key];
+        const previousKey = state.routes[index - 1]?.key;
+        const previousDescriptor = previousKey
+          ? descriptors[previousKey]
+          : undefined;
 
-            setNextDismissedKey(route.key);
-          }}
-        />
-      ))}
+        return (
+          <SceneView
+            key={route.key}
+            index={index}
+            descriptor={descriptor}
+            previousDescriptor={previousDescriptor}
+            onWillDisappear={() => {
+              navigation.emit({
+                type: 'transitionStart',
+                data: { closing: true },
+                target: route.key,
+              });
+            }}
+            onAppear={() => {
+              navigation.emit({
+                type: 'transitionEnd',
+                data: { closing: false },
+                target: route.key,
+              });
+            }}
+            onDisappear={() => {
+              navigation.emit({
+                type: 'transitionEnd',
+                data: { closing: true },
+                target: route.key,
+              });
+            }}
+            onDismissed={() => {
+              navigation.dispatch({
+                ...StackActions.pop(),
+                source: route.key,
+                target: state.key,
+              });
+
+              setNextDismissedKey(route.key);
+            }}
+          />
+        );
+      })}
     </ScreenStack>
   );
 }
