@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.29...@react-navigation/stack@6.0.0) (2021-08-01)
+
+
+### Bug Fixes
+
+* match native iOS header height in stack ([51b636d](https://github.com/react-navigation/react-navigation/commit/51b636d7268fc05a8a9aca9e6aad0161674f238e))
+* remove dep on react-native-iphonex-helper ([8a95fb5](https://github.com/react-navigation/react-navigation/commit/8a95fb588bd1f8a72fc4ef4e847f06e103ed55fe))
+
+
+### Features
+
+* expose header height in native-stack ([#9774](https://github.com/react-navigation/react-navigation/issues/9774)) ([20abccd](https://github.com/react-navigation/react-navigation/commit/20abccda0d5074f61b2beb555b881a2087d27bb0))
+
+
+
+
+
 # [6.0.0-next.29](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.28...@react-navigation/stack@6.0.0-next.29) (2021-07-16)
 
 **Note:** Version bump only for package @react-navigation/stack

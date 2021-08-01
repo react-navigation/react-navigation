@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.0.0-next.11...@react-navigation/native-stack@6.0.0) (2021-08-01)
+
+
+### Bug Fixes
+
+* show error when beforeRemove is used to prevent action in naive stack ([6d518a4](https://github.com/react-navigation/react-navigation/commit/6d518a46b89496f4a3bfd2da24245fe344f97290))
+
+
+### Features
+
+* add custom header option to native-stack ([1a39632](https://github.com/react-navigation/react-navigation/commit/1a3963265648e6f0672a2f49f3d647f9acfa6597))
+* basic web implementation for native stack ([de84458](https://github.com/react-navigation/react-navigation/commit/de8445896021da4865089ba44e95afffbcee0919))
+* expose header height in native-stack ([#9774](https://github.com/react-navigation/react-navigation/issues/9774)) ([20abccd](https://github.com/react-navigation/react-navigation/commit/20abccda0d5074f61b2beb555b881a2087d27bb0))
+
+
+
+
+
 # [6.0.0-next.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.0.0-next.10...@react-navigation/native-stack@6.0.0-next.11) (2021-07-16)
 
 **Note:** Version bump only for package @react-navigation/native-stack
