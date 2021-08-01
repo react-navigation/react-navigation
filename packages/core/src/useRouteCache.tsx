@@ -43,7 +43,7 @@ export default function useRouteCache<State extends NavigationState>(
         get() {
           if (!SUPPRESS_STATE_ACCESS_WARNING.value) {
             console.warn(
-              "Accessing the 'state' property of the 'route' object is not supported. If you want to get the focused route name, use the 'getFocusedRouteNameFromRoute' helper instead: https://reactnavigation.org/docs/screen-options-resolution/#setting-parent-screen-options-based-on-child-navigators-state"
+              "Accessing the 'state' property of the 'route' object is not supported. If you want to get the focused route name, use the 'getFocusedRouteNameFromRoute' helper instead: https://reactnavigation.org/docs/5.x/screen-options-resolution/#setting-parent-screen-options-based-on-child-navigators-state"
             );
           }
 

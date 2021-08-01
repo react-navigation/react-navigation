@@ -11,6 +11,7 @@
       "allowBranch": "5.x",
       "conventionalCommits": true,
       "createRelease": "github",
+      "distTag": "5.x",
       "message": "chore: publish",
       "ignoreChanges": [
         "**/__fixtures__/**",

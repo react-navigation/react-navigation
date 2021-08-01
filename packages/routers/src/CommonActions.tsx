@@ -54,7 +54,7 @@ export function navigate(...args: any): Action {
 
     if (!payload.hasOwnProperty('key') && !payload.hasOwnProperty('name')) {
       throw new Error(
-        'You need to specify name or key when calling navigate with an object as the argument. See https://reactnavigation.org/docs/navigation-actions#navigate for usage.'
+        'You need to specify name or key when calling navigate with an object as the argument. See https://reactnavigation.org/docs/5.x/navigation-actions#navigate for usage.'
       );
     }
 

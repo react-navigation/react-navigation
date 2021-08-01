@@ -14,7 +14,9 @@ import {
 } from '@react-navigation/routers';
 import NavigationStateContext from './NavigationStateContext';
 import NavigationRouteContext from './NavigationRouteContext';
+import NavigationHelpersContext from './NavigationHelpersContext';
 import Screen from './Screen';
+import useComponent from './useComponent';
 import useEventEmitter from './useEventEmitter';
 import useRegisterNavigator from './useRegisterNavigator';
 import useDescriptors from './useDescriptors';
@@ -571,9 +573,14 @@ export default function useNavigationBuilder<
     descriptors,
   });
 
+  const NavigationContent = useComponent(NavigationHelpersContext.Provider, {
+    value: navigation,
+  });
+
   return {
     state,
     navigation,
     descriptors,
+    NavigationContent,
   };
 }

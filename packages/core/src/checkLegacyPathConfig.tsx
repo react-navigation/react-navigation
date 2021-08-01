@@ -22,7 +22,7 @@ export default function checkLegacyPathConfig(
         config.hasOwnProperty('initialRouteName'))
     ) {
       throw new Error(
-        'Found invalid keys in the configuration object. See https://reactnavigation.org/docs/configuring-links/ for more details on the shape of the configuration object.'
+        'Found invalid keys in the configuration object. See https://reactnavigation.org/docs/5.x/configuring-links/ for more details on the shape of the configuration object.'
       );
     }
   }

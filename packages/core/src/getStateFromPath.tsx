@@ -470,7 +470,7 @@ const createConfigItem = (
           .map((it) => {
             if (legacy && it === '*') {
               throw new Error(
-                "Please update your config to the new format to use wildcard pattern ('*'). https://reactnavigation.org/docs/configuring-links/#updating-config"
+                "Please update your config to the new format to use wildcard pattern ('*'). https://reactnavigation.org/docs/5.x/configuring-links/#updating-config"
               );
             }
 
