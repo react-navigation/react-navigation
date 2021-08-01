@@ -32,9 +32,14 @@ export default function NativeStackView({ state, descriptors }: Props) {
         {state.routes.map((route, i) => {
           const isFocused = state.index === i;
           const canGoBack = i !== 0;
+          const previousKey = state.routes[i - 1]?.key;
+          const previousDescriptor = previousKey
+            ? descriptors[previousKey]
+            : undefined;
           const { options, navigation, render } = descriptors[route.key];
 
           const {
+            header,
             headerShown,
             headerTintColor,
             headerBackImageSource,
@@ -56,57 +61,76 @@ export default function NativeStackView({ state, descriptors }: Props) {
               navigation={navigation}
               headerShown={headerShown}
               header={
-                <Header
-                  title={getHeaderTitle(options, route.name)}
-                  headerTintColor={headerTintColor}
-                  headerLeft={
-                    typeof headerLeft === 'function'
-                      ? ({ tintColor }) => headerLeft({ tintColor })
-                      : headerLeft === undefined && canGoBack
-                      ? ({ tintColor }) => (
-                          <HeaderBackButton
-                            tintColor={tintColor}
-                            backImage={
-                              headerBackImageSource !== undefined
-                                ? () => (
-                                    <Image
-                                      source={headerBackImageSource}
-                                      style={[styles.backImage, { tintColor }]}
-                                    />
-                                  )
-                                : undefined
-                            }
-                            onPress={navigation.goBack}
-                            canGoBack={canGoBack}
-                          />
-                        )
-                      : headerLeft
-                  }
-                  headerRight={
-                    typeof headerRight === 'function'
-                      ? ({ tintColor }) => headerRight({ tintColor })
-                      : headerRight
-                  }
-                  headerTitle={
-                    typeof headerTitle === 'function'
-                      ? ({ children, tintColor }) =>
-                          headerTitle({ children, tintColor })
-                      : headerTitle
-                  }
-                  headerTitleStyle={headerTitleStyle}
-                  headerStyle={[
-                    headerTranslucent
+                header !== undefined ? (
+                  header({
+                    back: previousDescriptor
                       ? {
-                          position: 'absolute',
-                          backgroundColor: 'transparent',
+                          title: getHeaderTitle(
+                            previousDescriptor.options,
+                            previousDescriptor.route.name
+                          ),
                         }
-                      : null,
-                    headerStyle,
-                    headerShadowVisible === false
-                      ? { shadowOpacity: 0, borderBottomWidth: 0 }
-                      : null,
-                  ]}
-                />
+                      : undefined,
+                    options,
+                    route,
+                    navigation,
+                  })
+                ) : (
+                  <Header
+                    title={getHeaderTitle(options, route.name)}
+                    headerTintColor={headerTintColor}
+                    headerLeft={
+                      typeof headerLeft === 'function'
+                        ? ({ tintColor }) => headerLeft({ tintColor })
+                        : headerLeft === undefined && canGoBack
+                        ? ({ tintColor }) => (
+                            <HeaderBackButton
+                              tintColor={tintColor}
+                              backImage={
+                                headerBackImageSource !== undefined
+                                  ? () => (
+                                      <Image
+                                        source={headerBackImageSource}
+                                        style={[
+                                          styles.backImage,
+                                          { tintColor },
+                                        ]}
+                                      />
+                                    )
+                                  : undefined
+                              }
+                              onPress={navigation.goBack}
+                              canGoBack={canGoBack}
+                            />
+                          )
+                        : headerLeft
+                    }
+                    headerRight={
+                      typeof headerRight === 'function'
+                        ? ({ tintColor }) => headerRight({ tintColor })
+                        : headerRight
+                    }
+                    headerTitle={
+                      typeof headerTitle === 'function'
+                        ? ({ children, tintColor }) =>
+                            headerTitle({ children, tintColor })
+                        : headerTitle
+                    }
+                    headerTitleStyle={headerTitleStyle}
+                    headerStyle={[
+                      headerTranslucent
+                        ? {
+                            position: 'absolute',
+                            backgroundColor: 'transparent',
+                          }
+                        : null,
+                      headerStyle,
+                      headerShadowVisible === false
+                        ? { shadowOpacity: 0, borderBottomWidth: 0 }
+                        : null,
+                    ]}
+                  />
+                )
               }
               style={[
                 StyleSheet.absoluteFill,

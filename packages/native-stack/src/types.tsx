@@ -4,6 +4,7 @@ import type {
   NavigationHelpers,
   NavigationProp,
   ParamListBase,
+  Route,
   RouteProp,
   StackActionHelpers,
   StackNavigationState,
@@ -60,11 +61,39 @@ export type NativeStackNavigationHelpers = NavigationHelpers<
 // We want it to be an empty object because navigator does not have any additional props
 export type NativeStackNavigationConfig = {};
 
+export type NativeStackHeaderProps = {
+  /**
+   * Options for the back button.
+   */
+  back?: {
+    /**
+     * Title of the previous screen.
+     */
+    title: string;
+  };
+  /**
+   * Options for the current screen.
+   */
+  options: NativeStackNavigationOptions;
+  /**
+   * Route object for the current screen.
+   */
+  route: Route<string>;
+  /**
+   * Navigation prop for the header.
+   */
+  navigation: NativeStackNavigationProp<ParamListBase>;
+};
+
 export type NativeStackNavigationOptions = {
   /**
    * String that can be displayed in the header as a fallback for `headerTitle`.
    */
   title?: string;
+  /**
+   * Function that given `HeaderProps` returns a React Element to display as a header.
+   */
+  header?: (props: NativeStackHeaderProps) => React.ReactNode;
   /**
    * Whether the back button is visible in the header.
    * You can use it to show a back button alongside `headerLeft` if you have specified it.
