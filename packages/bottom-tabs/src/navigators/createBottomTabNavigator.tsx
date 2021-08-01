@@ -78,7 +78,7 @@ function BottomTabNavigator({
         defaultScreenOptions,
         null,
         2
-      )}\n\nSee https://reactnavigation.org/docs/6.x/bottom-tab-navigator#options for more details.`
+      )}\n\nSee https://reactnavigation.org/docs/bottom-tab-navigator#options for more details.`
     );
   }
 
@@ -87,7 +87,7 @@ function BottomTabNavigator({
 
     warnOnce(
       true,
-      `Bottom Tab Navigator: 'lazy' in props is deprecated. Move it to 'screenOptions' instead.\n\nSee https://reactnavigation.org/docs/6.x/bottom-tab-navigator/#lazy for more details.`
+      `Bottom Tab Navigator: 'lazy' in props is deprecated. Move it to 'screenOptions' instead.\n\nSee https://reactnavigation.org/docs/bottom-tab-navigator/#lazy for more details.`
     );
   }
 

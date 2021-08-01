@@ -86,7 +86,7 @@ function MaterialTopTabNavigator({
         defaultScreenOptions,
         null,
         2
-      )}\n\nSee https://reactnavigation.org/docs/6.x/material-top-tab-navigator#options for more details.`
+      )}\n\nSee https://reactnavigation.org/docs/material-top-tab-navigator#options for more details.`
     );
   }
 
@@ -104,7 +104,7 @@ function MaterialTopTabNavigator({
 
       warnOnce(
         true,
-        `Material Top Tab Navigator: '${propName}' in props is deprecated. Move it to 'screenOptions' instead.\n\nSee https://reactnavigation.org/docs/6.x/material-top-tab-navigator#${propName.toLowerCase()} for more details.`
+        `Material Top Tab Navigator: '${propName}' in props is deprecated. Move it to 'screenOptions' instead.\n\nSee https://reactnavigation.org/docs/material-top-tab-navigator#${propName.toLowerCase()} for more details.`
       );
     }
   });

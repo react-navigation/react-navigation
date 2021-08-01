@@ -72,7 +72,7 @@ function DrawerNavigator({
         defaultScreenOptions,
         null,
         2
-      )}\n\nSee https://reactnavigation.org/docs/6.x/drawer-navigator#options for more details.`
+      )}\n\nSee https://reactnavigation.org/docs/drawer-navigator#options for more details.`
     );
   }
 
@@ -81,14 +81,14 @@ function DrawerNavigator({
 
     warnOnce(
       true,
-      `Drawer Navigator: 'lazy' in props is deprecated. Move it to 'screenOptions' instead.\n\nSee https://reactnavigation.org/docs/6.x/drawer-navigator/#lazy for more details.`
+      `Drawer Navigator: 'lazy' in props is deprecated. Move it to 'screenOptions' instead.\n\nSee https://reactnavigation.org/docs/drawer-navigator/#lazy for more details.`
     );
   }
 
   if (typeof openByDefault === 'boolean') {
     warnOnce(
       true,
-      `Drawer Navigator: 'openByDefault' is deprecated. Use 'defaultStatus' and set it to 'open' or 'closed' instead.\n\nSee https://reactnavigation.org/docs/6.x/drawer-navigator/#defaultstatus for more details.`
+      `Drawer Navigator: 'openByDefault' is deprecated. Use 'defaultStatus' and set it to 'open' or 'closed' instead.\n\nSee https://reactnavigation.org/docs/drawer-navigator/#defaultstatus for more details.`
     );
   }
 
