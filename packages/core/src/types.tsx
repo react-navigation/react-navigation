@@ -71,6 +71,7 @@ export type EventMapCore<State extends NavigationState> = {
   blur: { data: undefined };
   state: { data: { state: State } };
   beforeRemove: { data: { action: NavigationAction }; canPreventDefault: true };
+  tabPress: { data: undefined };
 };
 
 export type EventArg<
