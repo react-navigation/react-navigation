@@ -200,8 +200,13 @@ type NavigationHelpersCommon<
    */
   navigate<RouteName extends keyof ParamList>(
     options:
-      | { key: string; params?: ParamList[RouteName] }
-      | { name: RouteName; key?: string; params: ParamList[RouteName] }
+      | { key: string; params?: ParamList[RouteName]; merge?: boolean }
+      | {
+          name: RouteName;
+          key?: string;
+          params: ParamList[RouteName];
+          merge?: boolean;
+        }
   ): void;
 
   /**
