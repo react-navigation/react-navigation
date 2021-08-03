@@ -326,7 +326,13 @@ export default function TabRouter({
                         }
                       : route.params;
                 } else {
-                  params = action.payload.params;
+                  params =
+                    routeParamList[route.name] !== undefined
+                      ? {
+                          ...routeParamList[route.name],
+                          ...action.payload.params,
+                        }
+                      : action.payload.params;
                 }
 
                 const path =
