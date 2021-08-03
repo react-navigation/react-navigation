@@ -1,7 +1,7 @@
 import {
+  CommonActions,
   ParamListBase,
   Route,
-  TabActions,
   TabNavigationState,
   useTheme,
 } from '@react-navigation/native';
@@ -48,7 +48,10 @@ export default function MaterialTopTabView({
       {...rest}
       onIndexChange={(index) =>
         navigation.dispatch({
-          ...TabActions.jumpTo(state.routes[index].name),
+          ...CommonActions.navigate({
+            name: state.routes[index].name,
+            merge: true,
+          }),
           target: state.key,
         })
       }
