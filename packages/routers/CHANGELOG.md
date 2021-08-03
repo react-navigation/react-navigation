@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@6.0.0...@react-navigation/routers@6.0.1) (2021-08-03)
+
+
+### Reverts
+
+* Revert "fix: don't merge initial params when merge !== true" ([8086772](https://github.com/react-navigation/react-navigation/commit/80867722c5891b786e8c47f18135419b7cb915b3))
+
+
+
+
+
 # [6.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@6.0.0-next.6...@react-navigation/routers@6.0.0) (2021-08-01)
 
 

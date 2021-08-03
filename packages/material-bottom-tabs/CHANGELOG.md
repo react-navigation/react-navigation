@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.0.0...@react-navigation/material-bottom-tabs@6.0.1) (2021-08-03)
+
+
+### Bug Fixes
+
+* preserve params when switching tabs. fixes [#9782](https://github.com/react-navigation/react-navigation/issues/9782) ([98fa233](https://github.com/react-navigation/react-navigation/commit/98fa2330146457045c01af820c6d8e8cb955f9d1))
+
+
+
+
+
 # [6.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.0.0-next.18...@react-navigation/material-bottom-tabs@6.0.0) (2021-08-01)
 
 **Note:** Version bump only for package @react-navigation/material-bottom-tabs
