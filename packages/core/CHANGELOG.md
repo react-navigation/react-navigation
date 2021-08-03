@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0...@react-navigation/core@6.0.1) (2021-08-03)
+
+
+### Bug Fixes
+
+* add merge to the navigate types ([#9777](https://github.com/react-navigation/react-navigation/issues/9777)) ([be8532c](https://github.com/react-navigation/react-navigation/commit/be8532c0867bdb0cff4b29c0892bdfe85c33e8e3))
+
+
+
+
+
 # [6.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.17...@react-navigation/core@6.0.0) (2021-08-01)
 
 
