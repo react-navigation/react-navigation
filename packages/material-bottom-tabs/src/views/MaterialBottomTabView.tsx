@@ -1,9 +1,9 @@
 import { SafeAreaProviderCompat } from '@react-navigation/elements';
 import {
+  CommonActions,
   Link,
   ParamListBase,
   Route,
-  TabActions,
   TabNavigationState,
   useLinkBuilder,
   useTheme,
@@ -106,7 +106,10 @@ function MaterialBottomTabViewInner({
       navigationState={state}
       onIndexChange={(index: number) =>
         navigation.dispatch({
-          ...TabActions.jumpTo(state.routes[index].name),
+          ...CommonActions.navigate({
+            name: state.routes[index].name,
+            merge: true,
+          }),
           target: state.key,
         })
       }
