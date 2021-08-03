@@ -1510,7 +1510,7 @@ it("doesn't merge params on navigate to an existing screen", () => {
     routes: [
       { key: 'baz', name: 'baz' },
       { key: 'bar', name: 'bar' },
-      { key: 'qux', name: 'qux', params: { test: 12 } },
+      { key: 'qux', name: 'qux', params: { color: 'indigo', test: 12 } },
     ],
     history: [
       { type: 'route', key: 'baz' },
