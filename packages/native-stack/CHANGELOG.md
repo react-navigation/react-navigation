@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.0.1...@react-navigation/native-stack@6.0.2) (2021-08-05)
+
+
+### Bug Fixes
+
+* fix incorrect name for headerTransparent ([1da575e](https://github.com/react-navigation/react-navigation/commit/1da575e0e74c9510d6a57d473500cf84668c3824))
+
+
+
+
+
 ## [6.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.0.0...@react-navigation/native-stack@6.0.1) (2021-08-03)
 
 **Note:** Version bump only for package @react-navigation/native-stack
