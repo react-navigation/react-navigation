@@ -1,7 +1,7 @@
 blank_issues_enabled: false
 contact_links:
   - name: Troubleshooting
-    url: https://reactnavigation.org/docs/troubleshooting.html
+    url: https://reactnavigation.org/docs/troubleshooting
     about: Read how to troubleshoot and fix common issues and mistakes.
   - name: Documentation
     url: https://reactnavigation.org
@@ -9,12 +9,12 @@ contact_links:
   - name: Feature requests
     url: https://react-navigation.canny.io/feature-requests
     about: Post a feature request on Canny.
+  - name: Discussions
+    url: https://github.com/react-navigation/react-navigation/discussions
+    about: Discuss questions, ideas etc. and share resources related to the library.
   - name: StackOverflow
     url: https://stackoverflow.com/questions/tagged/react-navigation
     about: Ask and answer questions using the react-navigation label.
   - name: Reactiflux
     url: https://www.reactiflux.com/
     about: Chat with other community members in the help-react-native channel.
-  - name: Write an RFC
-    url: https://github.com/react-navigation/rfcs
-    about: Write a RFC if you have ideas for how to implement a feature request.
