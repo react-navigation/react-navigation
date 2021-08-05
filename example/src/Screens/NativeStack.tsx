@@ -154,7 +154,7 @@ export default function NativeStackScreen({
           title: 'Albums',
           presentation: 'modal',
           headerShadowVisible: true,
-          headerTranslucent: true,
+          headerTransparent: true,
           headerBlurEffect: 'light',
         }}
       />
