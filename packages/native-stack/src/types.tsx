@@ -215,9 +215,10 @@ export type NativeStackNavigationOptions = {
    * Setting this to `true` makes the header absolutely positioned,
    * and changes the background color to `transparent` unless specified in `headerStyle`.
    */
-  headerTranslucent?: boolean;
+  headerTransparent?: boolean;
   /**
    * Blur effect for the translucent header.
+   * The `headerTransparent` option needs to be set to `true` for this to work.
    *
    * Only supported on iOS.
    *

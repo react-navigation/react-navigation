@@ -49,7 +49,7 @@ export default function NativeStackView({ state, descriptors }: Props) {
             headerTitleStyle,
             headerStyle,
             headerShadowVisible,
-            headerTranslucent,
+            headerTransparent,
             contentStyle,
           } = options;
 
@@ -118,7 +118,7 @@ export default function NativeStackView({ state, descriptors }: Props) {
                     }
                     headerTitleStyle={headerTitleStyle}
                     headerStyle={[
-                      headerTranslucent
+                      headerTransparent
                         ? {
                             position: 'absolute',
                             backgroundColor: 'transparent',

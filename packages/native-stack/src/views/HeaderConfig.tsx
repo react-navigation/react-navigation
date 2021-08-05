@@ -39,7 +39,7 @@ export default function HeaderConfig({
   headerTintColor,
   headerTitle,
   headerTitleStyle,
-  headerTranslucent,
+  headerTransparent,
   route,
   headerSearchBarOptions,
   title,
@@ -101,7 +101,7 @@ export default function HeaderConfig({
       backButtonInCustomView={backButtonInCustomView}
       backgroundColor={
         headerStyleFlattened.backgroundColor ??
-        (headerTranslucent ? 'transparent' : colors.card)
+        (headerTransparent ? 'transparent' : colors.card)
       }
       backTitle={headerBackTitleVisible ? headerBackTitle : ' '}
       backTitleFontFamily={backTitleFontFamily}
@@ -129,7 +129,7 @@ export default function HeaderConfig({
       topInsetEnabled={insets.top !== 0}
       translucent={
         // This defaults to `true`, so we can't pass `undefined`
-        headerTranslucent === true
+        headerTransparent === true
       }
     >
       {Platform.OS === 'ios' ? (
