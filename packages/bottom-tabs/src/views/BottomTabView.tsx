@@ -121,7 +121,7 @@ export default function BottomTabView(props: Props) {
           return (
             <MaybeScreen
               key={route.key}
-              style={StyleSheet.absoluteFill}
+              style={[StyleSheet.absoluteFill, { zIndex: isFocused ? 0 : -1 }]}
               visible={isFocused}
               enabled={detachInactiveScreens}
             >
