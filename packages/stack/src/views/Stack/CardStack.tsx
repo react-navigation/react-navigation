@@ -30,6 +30,7 @@ import {
 import type {
   Layout,
   Scene,
+  StackCardStyleInterpolator,
   StackDescriptor,
   StackDescriptorMap,
   StackHeaderMode,
@@ -107,6 +108,24 @@ const getInterpolationIndex = (scenes: Scene[], index: number) => {
   return interpolationIndex;
 };
 
+const getIsModalPresentation = (
+  cardStyleInterpolator: StackCardStyleInterpolator
+) => {
+  return (
+    cardStyleInterpolator === forModalPresentationIOS ||
+    // Handle custom modal presentation interpolators as well
+    cardStyleInterpolator.name === 'forModalPresentationIOS'
+  );
+};
+
+const getIsModal = (scene: Scene, interpolationIndex: number) => {
+  const { cardStyleInterpolator } = scene.descriptor.options;
+  const isModalPresentation = getIsModalPresentation(cardStyleInterpolator);
+  const isModal = isModalPresentation && interpolationIndex !== 0;
+
+  return isModal;
+};
+
 const getHeaderHeights = (
   scenes: Scene[],
   insets: EdgeInsets,
@@ -117,7 +136,6 @@ const getHeaderHeights = (
   return scenes.reduce<Record<string, number>>((acc, curr, index) => {
     const {
       headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
-      cardStyleInterpolator,
       headerStyle,
     } = curr.descriptor.options;
 
@@ -129,9 +147,7 @@ const getHeaderHeights = (
         : previous[curr.route.key];
 
     const interpolationIndex = getInterpolationIndex(scenes, index);
-    const isModalPresentation =
-      cardStyleInterpolator === forModalPresentationIOS;
-    const isModal = isModalPresentation && interpolationIndex !== 0;
+    const isModal = getIsModal(curr, interpolationIndex);
 
     acc[curr.route.key] =
       typeof height === 'number'
@@ -269,7 +285,7 @@ export default class CardStack extends React.Component<Props, State> {
         headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
         cardOverlayEnabled = (Platform.OS !== 'ios' &&
           optionsForTransitionConfig.presentation !== 'transparentModal') ||
-          cardStyleInterpolator === forModalPresentationIOS,
+          getIsModalPresentation(cardStyleInterpolator),
       } = optionsForTransitionConfig;
 
       const headerMode: StackHeaderMode =
@@ -279,7 +295,7 @@ export default class CardStack extends React.Component<Props, State> {
           optionsForTransitionConfig.presentation === 'transparentModal' ||
           nextDescriptor?.options.presentation === 'modal' ||
           nextDescriptor?.options.presentation === 'transparentModal' ||
-          cardStyleInterpolator === forModalPresentationIOS
+          getIsModalPresentation(cardStyleInterpolator)
         ) &&
         Platform.OS === 'ios' &&
         descriptor.options.header === undefined
@@ -500,7 +516,7 @@ export default class CardStack extends React.Component<Props, State> {
         // By default, we don't want to detach the previous screen of the active one for modals
         detachPreviousScreen = options.presentation === 'transparentModal'
           ? false
-          : options.cardStyleInterpolator === forModalPresentationIOS
+          : getIsModalPresentation(options.cardStyleInterpolator)
           ? i !==
             scenes
               .map((scene) => scene.descriptor.options.cardStyleInterpolator)
@@ -605,6 +621,7 @@ export default class CardStack extends React.Component<Props, State> {
 
             // Start from current card and count backwards the number of cards with same interpolation
             const interpolationIndex = getInterpolationIndex(scenes, index);
+            const isModal = getIsModal(scene, interpolationIndex);
 
             const isNextScreenTransparent =
               scenes[index + 1]?.descriptor.options.presentation ===
@@ -625,6 +642,7 @@ export default class CardStack extends React.Component<Props, State> {
                 <CardContainer
                   index={index}
                   interpolationIndex={interpolationIndex}
+                  modal={isModal}
                   active={index === self.length - 1}
                   focused={focused}
                   closing={closingRouteKeys.includes(route.key)}

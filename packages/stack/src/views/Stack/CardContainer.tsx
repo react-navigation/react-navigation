@@ -8,7 +8,6 @@ import { Route, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 
-import { forModalPresentationIOS } from '../../TransitionConfigs/CardStyleInterpolators';
 import type { Layout, Scene } from '../../types';
 import ModalPresentationContext from '../../utils/ModalPresentationContext';
 import useKeyboardManager from '../../utils/useKeyboardManager';
@@ -16,11 +15,12 @@ import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
 
 type Props = {
-  index: number;
   interpolationIndex: number;
+  index: number;
   active: boolean;
   focused: boolean;
   closing: boolean;
+  modal: boolean;
   layout: Layout;
   gesture: Animated.Value;
   scene: Scene;
@@ -57,11 +57,13 @@ type Props = {
 const EPSILON = 0.1;
 
 function CardContainer({
+  interpolationIndex,
   index,
   active,
   closing,
   gesture,
   focused,
+  modal,
   getPreviousScene,
   getFocusedRoute,
   headerDarkContent,
@@ -71,7 +73,6 @@ function CardContainer({
   isParentHeaderShown,
   isNextScreenTransparent,
   detachCurrentScreen,
-  interpolationIndex,
   layout,
   onCloseRoute,
   onOpenRoute,
@@ -198,7 +199,6 @@ function CardContainer({
     transitionSpec,
   } = scene.descriptor.options;
 
-  const isModalPresentation = cardStyleInterpolator === forModalPresentationIOS;
   const previousScene = getPreviousScene({ route: scene.descriptor.route });
 
   let backTitle: string | undefined;
@@ -216,6 +216,7 @@ function CardContainer({
 
   return (
     <Card
+      modal={modal}
       interpolationIndex={interpolationIndex}
       gestureDirection={gestureDirection}
       layout={layout}
@@ -290,9 +291,7 @@ function CardContainer({
           </HeaderBackContext.Provider>
         </View>
         {headerMode !== 'float' ? (
-          <ModalPresentationContext.Provider
-            value={isModalPresentation && interpolationIndex !== 0}
-          >
+          <ModalPresentationContext.Provider value={modal}>
             {renderHeader({
               mode: 'screen',
               layout,
