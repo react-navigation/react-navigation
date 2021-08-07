@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.1...@react-navigation/drawer@6.1.0) (2021-08-07)
+
+
+### Bug Fixes
+
+* blink while switching screens ([#9705](https://github.com/react-navigation/react-navigation/issues/9705)) ([99735e1](https://github.com/react-navigation/react-navigation/commit/99735e1b730a2f308ba00dcaef54d5ec14769a3d))
+
+
+### Features
+
+* use forwardRef with DrawerContentScrollView ([#9695](https://github.com/react-navigation/react-navigation/issues/9695)) ([ebb5f24](https://github.com/react-navigation/react-navigation/commit/ebb5f246645246b445b1fd22d8ae8fe87d3d7c52)), closes [#9350](https://github.com/react-navigation/react-navigation/issues/9350)
+
+
+
+
+
 ## [6.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0...@react-navigation/drawer@6.0.1) (2021-08-03)
 
 

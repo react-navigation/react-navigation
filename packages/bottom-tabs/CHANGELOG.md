@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.1...@react-navigation/bottom-tabs@6.0.2) (2021-08-07)
+
+
+### Bug Fixes
+
+* avoid blink when switching tab screens ([40dcbcf](https://github.com/react-navigation/react-navigation/commit/40dcbcf2fa48d5367d3121ef9f0ad6c1dd5933c6))
+
+
+
+
+
 ## [6.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0...@react-navigation/bottom-tabs@6.0.1) (2021-08-03)
 
 

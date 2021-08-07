@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.1...@react-navigation/native@6.0.2) (2021-08-07)
+
+
+### Bug Fixes
+
+* fix crash in useLinkTo when passing an object ([#9800](https://github.com/react-navigation/react-navigation/issues/9800)) ([dfd0cc7](https://github.com/react-navigation/react-navigation/commit/dfd0cc78fe4531ba7c957f826bc556829e231735))
+
+
+
+
+
 ## [6.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0...@react-navigation/native@6.0.1) (2021-08-03)
 
 **Note:** Version bump only for package @react-navigation/native
