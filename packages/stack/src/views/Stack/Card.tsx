@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 
-import { forModalPresentationIOS } from '../../TransitionConfigs/CardStyleInterpolators';
 import type {
   GestureDirection,
   Layout,
@@ -33,8 +32,8 @@ import ModalStatusBarManager from '../ModalStatusBarManager';
 import CardSheet from './CardSheet';
 
 type Props = ViewProps & {
-  // index: number;
   interpolationIndex: number;
+  modal: boolean;
   closing: boolean;
   next?: Animated.AnimatedInterpolation;
   current: Animated.AnimatedInterpolation;
@@ -430,8 +429,8 @@ export default class Card extends React.Component<Props> {
   render() {
     const {
       styleInterpolator,
-      // index,
       interpolationIndex,
+      modal,
       current,
       gesture,
       next,
@@ -495,11 +494,7 @@ export default class Card extends React.Component<Props> {
         {
           // StatusBar messes with translucent status bar on Android
           // So we should only enable it on iOS
-          Platform.OS === 'ios' &&
-          overlayEnabled &&
-          interpolationIndex === 0 &&
-          next &&
-          styleInterpolator === forModalPresentationIOS ? (
+          Platform.OS === 'ios' && modal && overlayEnabled && next ? (
             <ModalStatusBarManager
               dark={headerDarkContent}
               layout={layout}
