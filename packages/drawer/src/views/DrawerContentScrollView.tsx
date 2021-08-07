@@ -13,12 +13,10 @@ type Props = ScrollViewProps & {
   children: React.ReactNode;
 };
 
-export default function DrawerContentScrollView({
-  contentContainerStyle,
-  style,
-  children,
-  ...rest
-}: Props) {
+function DrawerContentScrollView(
+  { contentContainerStyle, style, children, ...rest }: Props,
+  ref?: React.Ref<ScrollView>
+) {
   const drawerPosition = React.useContext(DrawerPositionContext);
   const insets = useSafeAreaInsets();
 
@@ -29,6 +27,7 @@ export default function DrawerContentScrollView({
   return (
     <ScrollView
       {...rest}
+      ref={ref}
       contentContainerStyle={[
         {
           paddingTop: insets.top + 4,
@@ -43,6 +42,8 @@ export default function DrawerContentScrollView({
     </ScrollView>
   );
 }
+
+export default React.forwardRef(DrawerContentScrollView);
 
 const styles = StyleSheet.create({
   container: {
