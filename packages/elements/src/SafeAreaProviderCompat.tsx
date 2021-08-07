@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { Dimensions, Platform, StyleProp, View, ViewStyle } from 'react-native';
+import {
+  Dimensions,
+  Platform,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {
   initialWindowMetrics,
   SafeAreaInsetsContext,
@@ -32,11 +39,7 @@ export default function SafeAreaProviderCompat({ children, style }: Props) {
           // If we already have insets, don't wrap the stack in another safe area provider
           // This avoids an issue with updates at the cost of potentially incorrect values
           // https://github.com/react-navigation/react-navigation/issues/174
-          return style == null ? (
-            children
-          ) : (
-            <View style={style}>{children}</View>
-          );
+          return <View style={[styles.container, style]}>{children}</View>;
         }
 
         return (
@@ -50,3 +53,9 @@ export default function SafeAreaProviderCompat({ children, style }: Props) {
 }
 
 SafeAreaProviderCompat.initialMetrics = initialMetrics;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
