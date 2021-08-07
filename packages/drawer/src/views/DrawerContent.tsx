@@ -1,21 +1,20 @@
 import * as React from 'react';
-import type { ScrollView } from 'react-native';
 
 import type { DrawerContentComponentProps } from '../types';
 import DrawerContentScrollView from './DrawerContentScrollView';
 import DrawerItemList from './DrawerItemList';
 
-function DrawerContent(
-  { descriptors, state, ...rest }: DrawerContentComponentProps,
-  ref?: React.Ref<ScrollView>
-) {
+export default function DrawerContent({
+  descriptors,
+  state,
+  ...rest
+}: DrawerContentComponentProps) {
   const { drawerContentStyle, drawerContentContainerStyle } =
     descriptors[state.routes[state.index].key].options;
 
   return (
     <DrawerContentScrollView
       {...rest}
-      ref={ref}
       contentContainerStyle={drawerContentContainerStyle}
       style={drawerContentStyle}
     >
@@ -23,5 +22,3 @@ function DrawerContent(
     </DrawerContentScrollView>
   );
 }
-
-export default React.forwardRef(DrawerContent);
