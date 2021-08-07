@@ -5,7 +5,7 @@ import type { DrawerContentComponentProps } from '../types';
 import DrawerContentScrollView from './DrawerContentScrollView';
 import DrawerItemList from './DrawerItemList';
 
-export default React.forwardRef(function DrawerContent(
+function DrawerContent(
   { descriptors, state, ...rest }: DrawerContentComponentProps,
   ref?: React.Ref<ScrollView>
 ) {
@@ -22,4 +22,6 @@ export default React.forwardRef(function DrawerContent(
       <DrawerItemList descriptors={descriptors} state={state} {...rest} />
     </DrawerContentScrollView>
   );
-});
+}
+
+export default React.forwardRef(DrawerContent);

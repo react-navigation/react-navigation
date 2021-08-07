@@ -13,7 +13,7 @@ type Props = ScrollViewProps & {
   children: React.ReactNode;
 };
 
-export default React.forwardRef(function DrawerContentScrollView(
+function DrawerContentScrollView(
   { contentContainerStyle, style, children, ...rest }: Props,
   ref?: React.Ref<ScrollView>
 ) {
@@ -41,7 +41,9 @@ export default React.forwardRef(function DrawerContentScrollView(
       {children}
     </ScrollView>
   );
-});
+}
+
+export default React.forwardRef(DrawerContentScrollView);
 
 const styles = StyleSheet.create({
   container: {
