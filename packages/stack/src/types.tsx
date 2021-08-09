@@ -1,5 +1,6 @@
 import type {
   HeaderBackButton,
+  HeaderBackButtonProps,
   HeaderOptions,
   HeaderTitleProps,
 } from '@react-navigation/elements';
@@ -14,13 +15,7 @@ import type {
   StackNavigationState,
 } from '@react-navigation/native';
 import type * as React from 'react';
-import type {
-  Animated,
-  StyleProp,
-  TextStyle,
-  ViewProps,
-  ViewStyle,
-} from 'react-native';
+import type { Animated, StyleProp, TextStyle, ViewStyle } from 'react-native';
 
 export type StackNavigationEventMap = {
   /**
@@ -125,17 +120,22 @@ export type StackHeaderMode = 'float' | 'screen';
 
 export type StackPresentationMode = 'card' | 'modal';
 
-export type StackHeaderOptions = Omit<HeaderOptions, 'headerTitle'> & {
-  headerTitle?:
-    | string
-    | ((
-        props: HeaderTitleProps & {
-          /**
-           * Callback to trigger when the size of the title element changes.
-           */
-          onLayout?: ViewProps['onLayout'];
-        }
-      ) => React.ReactNode);
+export type StackHeaderOptions = Omit<
+  HeaderOptions,
+  'headerLeft' | 'headerTitle'
+> & {
+  /**
+   * String or a function that returns a React Element to be used by the header.
+   * Defaults to screen `title` or route name.
+   *
+   * It receives `allowFontScaling`, `tintColor`, `style` and `children` in the options object as an argument.
+   * The title string is passed in `children`.
+   */
+  headerTitle?: string | ((props: HeaderTitleProps) => React.ReactNode);
+  /**
+   * Function which returns a React Element to display on the left side of the header.
+   */
+  headerLeft?: (props: HeaderBackButtonProps) => React.ReactNode;
   /**
    * Whether back button title font should scale to respect Text Size accessibility settings. Defaults to `false`.
    */

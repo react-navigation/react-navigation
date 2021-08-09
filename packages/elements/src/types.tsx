@@ -8,25 +8,6 @@ import type {
 
 export type Layout = { width: number; height: number };
 
-export type HeaderTitleProps = {
-  /**
-   * The title text of the header.
-   */
-  children: string;
-  /**
-   * Whether title font should scale to respect Text Size accessibility settings.
-   */
-  allowFontScaling?: boolean;
-  /**
-   * Tint color for the header.
-   */
-  tintColor?: string;
-  /**
-   * Style object for the title element.
-   */
-  style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
-};
-
 export type HeaderOptions = {
   /**
    * String or a function that returns a React Element to be used by the header.
@@ -119,6 +100,29 @@ export type HeaderOptions = {
    * Pass 0 or a custom value to disable the default behaviour, and customize the height.
    */
   headerStatusBarHeight?: number;
+};
+
+export type HeaderTitleProps = {
+  /**
+   * The title text of the header.
+   */
+  children: string;
+  /**
+   * Whether title font should scale to respect Text Size accessibility settings.
+   */
+  allowFontScaling?: boolean;
+  /**
+   * Tint color for the header.
+   */
+  tintColor?: string;
+  /**
+   * Callback to trigger when the size of the title element changes.
+   */
+  onLayout?: (e: LayoutChangeEvent) => void;
+  /**
+   * Style object for the title element.
+   */
+  style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
 };
 
 export type HeaderBackButtonProps = {
