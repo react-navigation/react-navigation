@@ -41,7 +41,12 @@ export type HeaderOptions = {
     tintColor?: string;
     pressColor?: string;
     pressOpacity?: number;
+    labelVisible?: boolean;
   }) => React.ReactNode;
+  /**
+   * Whether a label is visible in the left button. Used to add extra padding.
+   */
+  headerLeftLabelVisible?: boolean;
   /**
    * Style object for the container of the `headerLeft` element`.
    */

@@ -32,7 +32,7 @@ const warnIfHeaderStylesDefined = (styles: Record<string, any>) => {
 
     if (styleProp === 'position' && value === 'absolute') {
       console.warn(
-        "position: 'absolute' is not supported on headerStyle. If you would like to render content under the header, use the 'headerTransparent' navigationOption."
+        "position: 'absolute' is not supported on headerStyle. If you would like to render content under the header, use the 'headerTransparent' option."
       );
     } else if (value !== undefined) {
       console.warn(
@@ -58,6 +58,7 @@ export default function Header(props: Props) {
       default: 'left',
     }),
     headerLeft,
+    headerLeftLabelVisible,
     headerTransparent,
     headerTintColor,
     headerBackground,
@@ -179,6 +180,7 @@ export default function Header(props: Props) {
         tintColor: headerTintColor,
         pressColor: headerPressColor,
         pressOpacity: headerPressOpacity,
+        labelVisible: headerLeftLabelVisible,
       })
     : null;
 
@@ -232,7 +234,28 @@ export default function Header(props: Props) {
           </Animated.View>
           <Animated.View
             pointerEvents="box-none"
-            style={[{ marginHorizontal: 16 }, titleContainerStyle]}
+            style={[
+              styles.title,
+              {
+                // Avoid the title from going offscreen or overlapping buttons
+                maxWidth:
+                  headerTitleAlign === 'center'
+                    ? layout.width -
+                      ((leftButton
+                        ? headerLeftLabelVisible !== false
+                          ? 80
+                          : 32
+                        : 16) +
+                        Math.max(insets.left, insets.right)) *
+                        2
+                    : layout.width -
+                      ((leftButton ? 72 : 16) +
+                        (rightButton ? 72 : 16) +
+                        insets.left -
+                        insets.right),
+              },
+              titleContainerStyle,
+            ]}
           >
             {headerTitle({
               children: title,
@@ -262,7 +285,10 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'stretch',
+  },
+  title: {
+    marginHorizontal: 16,
     justifyContent: 'center',
   },
   left: {
