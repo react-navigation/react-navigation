@@ -2,6 +2,7 @@ import {
   getDefaultHeaderHeight,
   Header,
   HeaderBackButton,
+  HeaderBackButtonProps,
   HeaderShownContext,
   HeaderTitle,
 } from '@react-navigation/elements';
@@ -103,7 +104,9 @@ export default function HeaderSegment(props: Props) {
     modal,
     onGoBack,
     headerTitle: title,
-    headerLeft: left,
+    headerLeft: left = onGoBack
+      ? (props: HeaderBackButtonProps) => <HeaderBackButton {...props} />
+      : undefined,
     headerBackImage,
     headerBackTitle,
     headerBackTitleVisible,
@@ -149,26 +152,23 @@ export default function HeaderSegment(props: Props) {
   );
 
   const headerLeft: StackHeaderOptions['headerLeft'] = left
-    ? left
-    : onGoBack
-    ? (props) => (
-        <HeaderBackButton
-          {...props}
-          backImage={headerBackImage}
-          accessibilityLabel={headerBackAccessibilityLabel}
-          testID={headerBackTestID}
-          allowFontScaling={headerBackAllowFontScaling}
-          onPress={onGoBack}
-          labelVisible={headerBackTitleVisible}
-          label={headerBackTitle}
-          truncatedLabel={headerTruncatedBackTitle}
-          labelStyle={[leftLabelStyle, headerBackTitleStyle]}
-          onLabelLayout={handleLeftLabelLayout}
-          screenLayout={layout}
-          titleLayout={titleLayout}
-          canGoBack={Boolean(onGoBack)}
-        />
-      )
+    ? (props) =>
+        left({
+          ...props,
+          backImage: headerBackImage,
+          accessibilityLabel: headerBackAccessibilityLabel,
+          testID: headerBackTestID,
+          allowFontScaling: headerBackAllowFontScaling,
+          onPress: onGoBack,
+          labelVisible: headerBackTitleVisible,
+          label: headerBackTitle,
+          truncatedLabel: headerTruncatedBackTitle,
+          labelStyle: [leftLabelStyle, headerBackTitleStyle],
+          onLabelLayout: handleLeftLabelLayout,
+          screenLayout: layout,
+          titleLayout,
+          canGoBack: Boolean(onGoBack),
+        })
     : undefined;
 
   const headerTitle: StackHeaderOptions['headerTitle'] =
