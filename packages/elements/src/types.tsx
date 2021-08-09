@@ -8,6 +8,25 @@ import type {
 
 export type Layout = { width: number; height: number };
 
+export type HeaderTitleProps = {
+  /**
+   * The title text of the header.
+   */
+  children: string;
+  /**
+   * Whether title font should scale to respect Text Size accessibility settings.
+   */
+  allowFontScaling?: boolean;
+  /**
+   * Tint color for the header.
+   */
+  tintColor?: string;
+  /**
+   * Style object for the title element.
+   */
+  style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
+};
+
 export type HeaderOptions = {
   /**
    * String or a function that returns a React Element to be used by the header.
@@ -16,26 +35,7 @@ export type HeaderOptions = {
    * It receives `allowFontScaling`, `tintColor`, `style` and `children` in the options object as an argument.
    * The title string is passed in `children`.
    */
-  headerTitle?:
-    | string
-    | ((props: {
-        /**
-         * The title text of the header.
-         */
-        children: string;
-        /**
-         * Whether title font should scale to respect Text Size accessibility settings.
-         */
-        allowFontScaling?: boolean;
-        /**
-         * Tint color for the header.
-         */
-        tintColor?: string;
-        /**
-         * Style object for the title element.
-         */
-        style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
-      }) => React.ReactNode);
+  headerTitle?: string | ((props: HeaderTitleProps) => React.ReactNode);
   /**
    * How to align the the header title.
    * Defaults to `center` on iOS and `left` on Android.
