@@ -20,7 +20,7 @@ export default function HeaderBackButton({
   backImage,
   label,
   labelStyle,
-  labelVisible = Platform.OS === 'ios',
+  labelVisible,
   onLabelLayout,
   onPress,
   pressColor,
@@ -171,6 +171,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flexDirection: 'row',
+    minWidth: StyleSheet.hairlineWidth, // Avoid collapsing when title is long
     ...Platform.select({
       ios: null,
       default: {

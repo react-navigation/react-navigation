@@ -10,6 +10,7 @@ import * as React from 'react';
 import {
   Animated,
   LayoutChangeEvent,
+  Platform,
   StyleSheet,
   ViewStyle,
 } from 'react-native';
@@ -109,7 +110,7 @@ export default function HeaderSegment(props: Props) {
       : undefined,
     headerBackImage,
     headerBackTitle,
-    headerBackTitleVisible,
+    headerBackTitleVisible = Platform.OS === 'ios',
     headerTruncatedBackTitle,
     headerBackAccessibilityLabel,
     headerBackTestID,
@@ -160,7 +161,6 @@ export default function HeaderSegment(props: Props) {
           testID: headerBackTestID,
           allowFontScaling: headerBackAllowFontScaling,
           onPress: onGoBack,
-          labelVisible: headerBackTitleVisible,
           label: headerBackTitle,
           truncatedLabel: headerTruncatedBackTitle,
           labelStyle: [leftLabelStyle, headerBackTitleStyle],
@@ -182,6 +182,7 @@ export default function HeaderSegment(props: Props) {
       layout={layout}
       headerTitle={headerTitle}
       headerLeft={headerLeft}
+      headerLeftLabelVisible={headerBackTitleVisible}
       headerTitleContainerStyle={[titleStyle, headerTitleContainerStyle]}
       headerLeftContainerStyle={[leftButtonStyle, headerLeftContainerStyle]}
       headerRightContainerStyle={[rightButtonStyle, headerRightContainerStyle]}
