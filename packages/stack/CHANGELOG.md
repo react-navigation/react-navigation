@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.3...@react-navigation/stack@6.0.4) (2021-08-09)
+
+
+### Bug Fixes
+
+* avoid overflowing long titles ([bacdbbd](https://github.com/react-navigation/react-navigation/commit/bacdbbdd7c5df73b84aa1ed8c0329c9525d0fdba))
+* pass all props to custom headerLeft ([#9806](https://github.com/react-navigation/react-navigation/issues/9806)) ([22799fc](https://github.com/react-navigation/react-navigation/commit/22799fc96ee689cad97ee051c24816f86ac912d1)), closes [#9805](https://github.com/react-navigation/react-navigation/issues/9805)
+* pass onlayout to headerTitle ([#9808](https://github.com/react-navigation/react-navigation/issues/9808)) ([a79ce57](https://github.com/react-navigation/react-navigation/commit/a79ce57aa7f9be3a47a09728e920c0d4a805f5aa))
+
+
+
+
+
 ## [6.0.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.2...@react-navigation/stack@6.0.3) (2021-08-09)
 
 
