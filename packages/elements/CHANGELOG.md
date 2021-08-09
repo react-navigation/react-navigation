@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.2...@react-navigation/elements@1.0.3) (2021-08-09)
+
+
+### Bug Fixes
+
+* avoid overflowing long titles ([bacdbbd](https://github.com/react-navigation/react-navigation/commit/bacdbbdd7c5df73b84aa1ed8c0329c9525d0fdba))
+* pass onlayout to headerTitle ([#9808](https://github.com/react-navigation/react-navigation/issues/9808)) ([a79ce57](https://github.com/react-navigation/react-navigation/commit/a79ce57aa7f9be3a47a09728e920c0d4a805f5aa))
+
+
+
+
+
 ## [1.0.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.1...@react-navigation/elements@1.0.2) (2021-08-07)
 
 **Note:** Version bump only for package @react-navigation/elements
