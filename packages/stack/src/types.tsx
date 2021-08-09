@@ -1,6 +1,7 @@
 import type {
   HeaderBackButton,
   HeaderOptions,
+  HeaderTitleProps,
 } from '@react-navigation/elements';
 import type {
   Descriptor,
@@ -13,7 +14,13 @@ import type {
   StackNavigationState,
 } from '@react-navigation/native';
 import type * as React from 'react';
-import type { Animated, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import type {
+  Animated,
+  StyleProp,
+  TextStyle,
+  ViewProps,
+  ViewStyle,
+} from 'react-native';
 
 export type StackNavigationEventMap = {
   /**
@@ -118,7 +125,17 @@ export type StackHeaderMode = 'float' | 'screen';
 
 export type StackPresentationMode = 'card' | 'modal';
 
-export type StackHeaderOptions = HeaderOptions & {
+export type StackHeaderOptions = Omit<HeaderOptions, 'headerTitle'> & {
+  headerTitle?:
+    | string
+    | ((
+        props: HeaderTitleProps & {
+          /**
+           * Callback to trigger when the size of the title element changes.
+           */
+          onLayout?: ViewProps['onLayout'];
+        }
+      ) => React.ReactNode);
   /**
    * Whether back button title font should scale to respect Text Size accessibility settings. Defaults to `false`.
    */
