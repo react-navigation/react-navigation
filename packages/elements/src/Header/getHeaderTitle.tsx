@@ -1,7 +1,7 @@
-import type { HeaderOptions } from '../types';
+import type { StackHeaderOptions } from '@react-navigation/stack/src/types';
 
 export default function getHeaderTitle(
-  options: { title?: string; headerTitle?: HeaderOptions['headerTitle'] },
+  options: { title?: string; headerTitle?: StackHeaderOptions['headerTitle'] },
   fallback: string
 ): string {
   return typeof options.headerTitle === 'string'

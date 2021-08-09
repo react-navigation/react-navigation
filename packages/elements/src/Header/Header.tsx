@@ -191,11 +191,7 @@ export default function Header(props: Props) {
     : null;
 
   const headerTitle =
-    typeof customTitle !== 'function'
-      ? (props: React.ComponentProps<typeof HeaderTitle>) => (
-          <HeaderTitle {...props} />
-        )
-      : customTitle;
+    typeof customTitle === 'function' ? customTitle : HeaderTitle;
 
   return (
     <React.Fragment>

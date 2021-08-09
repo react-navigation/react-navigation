@@ -2,8 +2,10 @@ import {
   getDefaultHeaderHeight,
   Header,
   HeaderBackButton,
+  HeaderOptions,
   HeaderShownContext,
   HeaderTitle,
+  HeaderTitleProps,
 } from '@react-navigation/elements';
 import * as React from 'react';
 import {
@@ -171,10 +173,14 @@ export default function HeaderSegment(props: Props) {
       )
     : undefined;
 
-  const headerTitle: StackHeaderOptions['headerTitle'] =
-    typeof title !== 'function'
-      ? (props) => <HeaderTitle {...props} onLayout={handleTitleLayout} />
-      : title;
+  const headerTitle: HeaderOptions['headerTitle'] =
+    typeof title === 'function'
+      ? (props: HeaderTitleProps) => {
+          return title({ ...props, onLayout: handleTitleLayout });
+        }
+      : (props: HeaderTitleProps) => (
+          <HeaderTitle {...props} onLayout={handleTitleLayout} />
+        );
 
   return (
     <Header
