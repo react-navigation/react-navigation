@@ -1,5 +1,5 @@
-name: React Navigation 5
-description: Report an issue with React Navigation 5
+name: React Navigation 6
+description: Report an issue with React Navigation 6
 labels: [bug]
 body:
   - type: markdown
@@ -67,6 +67,7 @@ body:
         - label: '@react-navigation/material-bottom-tabs'
         - label: '@react-navigation/material-top-tabs'
         - label: '@react-navigation/stack'
+        - label: '@react-navigation/native-stack'
     validations:
       required: true
   - type: textarea
@@ -75,7 +76,7 @@ body:
       description: |
         What are the exact versions of packages that you are using?
 
-        When filling the table below, remove the packages that you're not using.
+        When filling the table below, **please remove the packages** that you're not using.
       value: |
         | package                                | version |
         | -------------------------------------- | ------- |
@@ -85,6 +86,7 @@ body:
         | @react-navigation/material-bottom-tabs |
         | @react-navigation/material-top-tabs    |
         | @react-navigation/stack                |
+        | @react-navigation/native-stack         |
         | react-native-safe-area-context         |
         | react-native-screens                   |
         | react-native-gesture-handler           |
