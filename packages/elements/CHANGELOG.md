@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.3...@react-navigation/elements@1.0.4) (2021-08-11)
+
+
+### Bug Fixes
+
+* fix headerTransparent not working outside stack navigator ([42c43ff](https://github.com/react-navigation/react-navigation/commit/42c43ff7617112afd223ecb323be622666c79096))
+
+
+
+
+
 ## [1.0.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.2...@react-navigation/elements@1.0.3) (2021-08-09)
 
 
