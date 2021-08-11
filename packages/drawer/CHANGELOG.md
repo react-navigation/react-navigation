@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.1.2...@react-navigation/drawer@6.1.3) (2021-08-11)
+
+
+### Bug Fixes
+
+* use correct tint and background color from drawer items ([f8fddac](https://github.com/react-navigation/react-navigation/commit/f8fddac79d0f95aa4ece6b1c7645619f5497a112))
+
+
+
+
+
 ## [6.1.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.1.1...@react-navigation/drawer@6.1.2) (2021-08-11)
 
 
