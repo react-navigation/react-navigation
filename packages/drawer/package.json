@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/drawer",
   "description": "Drawer navigator component with animated transitions and gesturess",
-  "version": "6.1.2",
+  "version": "6.1.3",
   "keywords": [
     "react-native-component",
     "react-component",
