@@ -9,8 +9,11 @@ export default function DrawerContent({
   state,
   ...rest
 }: DrawerContentComponentProps) {
-  const { drawerContentStyle, drawerContentContainerStyle } =
-    descriptors[state.routes[state.index].key].options;
+  const focusedRoute = state.routes[state.index];
+  const focusedDescriptor = descriptors[focusedRoute.key];
+  const focusedOptions = focusedDescriptor.options;
+
+  const { drawerContentStyle, drawerContentContainerStyle } = focusedOptions;
 
   return (
     <DrawerContentScrollView

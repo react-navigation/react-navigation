@@ -26,16 +26,23 @@ export default function DrawerItemList({
 }: Props) {
   const buildLink = useLinkBuilder();
 
+  const focusedRoute = state.routes[state.index];
+  const focusedDescriptor = descriptors[focusedRoute.key];
+  const focusedOptions = focusedDescriptor.options;
+
+  const {
+    drawerActiveTintColor,
+    drawerInactiveTintColor,
+    drawerActiveBackgroundColor,
+    drawerInactiveBackgroundColor,
+  } = focusedOptions;
+
   return state.routes.map((route, i) => {
     const focused = i === state.index;
     const {
       title,
       drawerLabel,
       drawerIcon,
-      drawerActiveTintColor,
-      drawerInactiveTintColor,
-      drawerActiveBackgroundColor,
-      drawerInactiveBackgroundColor,
       drawerLabelStyle,
       drawerItemStyle,
     } = descriptors[route.key].options;
