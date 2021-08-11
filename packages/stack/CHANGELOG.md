@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.4...@react-navigation/stack@6.0.5) (2021-08-11)
+
+
+### Bug Fixes
+
+* show deprecation warning for 'keyboardHandlingEnabled' prop ([8c89c45](https://github.com/react-navigation/react-navigation/commit/8c89c45be45396024271bb5be33760e3c06a09be))
+
+
+
+
+
 ## [6.0.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.3...@react-navigation/stack@6.0.4) (2021-08-09)
 
 
