@@ -131,6 +131,7 @@ export default function BottomTabView(props: Props) {
                   route={descriptor.route}
                   navigation={descriptor.navigation}
                   headerShown={descriptor.options.headerShown}
+                  headerTransparent={descriptor.options.headerTransparent}
                   headerStatusBarHeight={
                     descriptor.options.headerStatusBarHeight
                   }
