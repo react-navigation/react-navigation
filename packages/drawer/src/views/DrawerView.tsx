@@ -234,6 +234,7 @@ function DrawerViewBase({
                 route={descriptor.route}
                 navigation={descriptor.navigation}
                 headerShown={descriptor.options.headerShown}
+                headerTransparent={descriptor.options.headerTransparent}
                 headerStatusBarHeight={descriptor.options.headerStatusBarHeight}
                 header={header({
                   layout: dimensions,

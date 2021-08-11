@@ -145,6 +145,10 @@ export default function BottomTabBar({
     tabBarVisibilityAnimationConfig,
     tabBarStyle,
     tabBarBackground,
+    tabBarActiveTintColor,
+    tabBarInactiveTintColor,
+    tabBarActiveBackgroundColor,
+    tabBarInactiveBackgroundColor,
   } = focusedOptions;
 
   const dimensions = useSafeAreaFrame();
@@ -342,12 +346,10 @@ export default function BottomTabBar({
                   to={buildLink(route.name, route.params)}
                   testID={options.tabBarTestID}
                   allowFontScaling={options.tabBarAllowFontScaling}
-                  activeTintColor={options.tabBarActiveTintColor}
-                  inactiveTintColor={options.tabBarInactiveTintColor}
-                  activeBackgroundColor={options.tabBarActiveBackgroundColor}
-                  inactiveBackgroundColor={
-                    options.tabBarInactiveBackgroundColor
-                  }
+                  activeTintColor={tabBarActiveTintColor}
+                  inactiveTintColor={tabBarInactiveTintColor}
+                  activeBackgroundColor={tabBarActiveBackgroundColor}
+                  inactiveBackgroundColor={tabBarInactiveBackgroundColor}
                   button={options.tabBarButton}
                   icon={
                     options.tabBarIcon ??

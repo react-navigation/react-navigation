@@ -25,6 +25,7 @@ type Props = {
   header: React.ReactNode;
   headerShown?: boolean;
   headerStatusBarHeight?: number;
+  headerTransparent?: boolean;
   style?: StyleProp<ViewStyle>;
   children: React.ReactNode;
 };
@@ -41,6 +42,7 @@ export default function Screen(props: Props) {
     modal = false,
     header,
     headerShown = true,
+    headerTransparent,
     headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
     navigation,
     route,
@@ -78,6 +80,7 @@ export default function Screen(props: Props) {
 
                 setHeaderHeight(height);
               }}
+              style={headerTransparent ? styles.absolute : null}
             >
               {header}
             </View>
@@ -96,5 +99,11 @@ const styles = StyleSheet.create({
   // This is necessary to avoid applying 'column-reverse' to screen content
   content: {
     flex: 1,
+  },
+  absolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
   },
 });

@@ -60,6 +60,7 @@ export default function NativeStackView({ state, descriptors }: Props) {
               route={route}
               navigation={navigation}
               headerShown={headerShown}
+              headerTransparent={headerTransparent}
               header={
                 header !== undefined ? (
                   header({

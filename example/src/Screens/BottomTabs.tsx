@@ -2,16 +2,17 @@ import {
   createBottomTabNavigator,
   useBottomTabBarHeight,
 } from '@react-navigation/bottom-tabs';
-import { HeaderBackButton } from '@react-navigation/elements';
+import { HeaderBackButton, useHeaderHeight } from '@react-navigation/elements';
 import {
   getFocusedRouteNameFromRoute,
   NavigatorScreenParams,
   ParamListBase,
+  useIsFocused,
 } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { BlurView } from 'expo-blur';
 import * as React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StatusBar, StyleSheet } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Albums from '../Shared/Albums';
@@ -32,12 +33,22 @@ type BottomTabParams = {
 };
 
 const AlbumsScreen = () => {
+  const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
+  const isFocused = useIsFocused();
 
   return (
-    <ScrollView contentContainerStyle={{ paddingBottom: tabBarHeight }}>
-      <Albums scrollEnabled={false} />
-    </ScrollView>
+    <>
+      {isFocused && <StatusBar barStyle="light-content" />}
+      <ScrollView
+        contentContainerStyle={{
+          paddingTop: headerHeight,
+          paddingBottom: tabBarHeight,
+        }}
+      >
+        <Albums scrollEnabled={false} />
+      </ScrollView>
+    </>
   );
 };
 
@@ -94,11 +105,25 @@ export default function BottomTabsScreen({
         component={AlbumsScreen}
         options={{
           title: 'Albums',
+          headerTintColor: '#fff',
+          headerTransparent: true,
+          headerBackground: () => (
+            <BlurView
+              tint="dark"
+              intensity={100}
+              style={StyleSheet.absoluteFill}
+            />
+          ),
           tabBarIcon: getTabBarIcon('image-album'),
-          tabBarStyle: { position: 'absolute' },
+          tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.5)',
+          tabBarActiveTintColor: '#fff',
+          tabBarStyle: {
+            position: 'absolute',
+            borderTopColor: 'rgba(0, 0, 0, .2)',
+          },
           tabBarBackground: () => (
             <BlurView
-              tint="light"
+              tint="dark"
               intensity={100}
               style={StyleSheet.absoluteFill}
             />
