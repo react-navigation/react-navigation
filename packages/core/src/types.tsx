@@ -27,6 +27,17 @@ export type DefaultNavigatorOptions<
         route: RouteProp<ParamList, keyof ParamList>;
         navigation: any;
       }) => ScreenOptions);
+  /**
+   * Default options specified by the navigator.
+   * It receives the custom options in the arguments if a function is specified.
+   */
+  defaultScreenOptions?:
+    | ScreenOptions
+    | ((props: {
+        route: RouteProp<ParamList, keyof ParamList>;
+        navigation: any;
+        options: ScreenOptions;
+      }) => ScreenOptions);
 };
 
 export type EventMapBase = Record<

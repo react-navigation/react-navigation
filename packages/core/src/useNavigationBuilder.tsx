@@ -557,6 +557,7 @@ export default function useNavigationBuilder<
     screens,
     navigation,
     screenOptions: options.screenOptions,
+    defaultScreenOptions: options.defaultScreenOptions,
     onAction,
     getState,
     setState,
