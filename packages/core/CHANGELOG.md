@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.16.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.15.5...@react-navigation/core@5.16.0) (2021-08-15)
+
+
+### Features
+
+* backport defaultScreenOptions from 6.x to make upgrading easier ([8ef1b86](https://github.com/react-navigation/react-navigation/commit/8ef1b86971aaeeaee9cf318fa82ed0c0b7525042))
+
+
+
+
+
 ## [5.15.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.15.3...@react-navigation/core@5.15.5) (2021-08-01)
 
 **Note:** Version bump only for package @react-navigation/core
