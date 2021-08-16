@@ -124,6 +124,21 @@ jobs:
               body: "Hey! Thanks for opening the issue. Seems that this issue is related to `react-native-safe-area-context` library which is a dependency of React Navigation. Can you also post your issue in [this repo](https://github.com/th3rdwave/react-native-safe-area-context) so that it's notified to the maintainers of that library? This will help us fix the issue faster since it's upto the maintainers of that library to investigate it."
             })
 
+  react-native-pager-view:
+    runs-on: ubuntu-latest
+    if: github.event.label.name == 'library:react-native-pager-view'
+    steps:
+      - uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Hey! Thanks for opening the issue. Seems that this issue is related to `react-native-pager-view` library which is a dependency of Material Top Tabs. Can you also post your issue in [this repo](https://github.com/callstack/react-native-pager-view) so that it's notified to the maintainers of that library? This will help us fix the issue faster since it's upto the maintainers of that library to investigate it."
+            })
+
   react-native-paper:
     runs-on: ubuntu-latest
     if: github.event.label.name == 'library:react-native-paper'
@@ -136,5 +151,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Hey! Thanks for opening the issue. Seems that this issue is in `react-native-paper` library which is a dependency of Material Bottom Navigation. Can you also post your issue in [this repo](https://github.com/callstack/react-native-paper) so that it's notified to the maintainers of that library? This will help us fix the issue faster since it's upto the maintainers of that library to investigate it."
+              body: "Hey! Thanks for opening the issue. Seems that this issue is in `react-native-paper` library which is a dependency of Material Bottom Tabs. Can you also post your issue in [this repo](https://github.com/callstack/react-native-paper) so that it's notified to the maintainers of that library? This will help us fix the issue faster since it's upto the maintainers of that library to investigate it."
             })
