@@ -326,7 +326,7 @@ export default class CardStack extends React.Component<Props, State> {
           ),
           next:
             nextGesture &&
-            nextDescriptor.options.presentation !== 'transparentModal'
+            nextDescriptor?.options.presentation !== 'transparentModal'
               ? getProgressFromGesture(
                   nextGesture,
                   state.layout,
