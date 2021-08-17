@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.16.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.16.0...@react-navigation/core@5.16.1) (2021-08-17)
+
+
+### Bug Fixes
+
+* backport getState and getParent APIs for compatibility ([bc9c046](https://github.com/react-navigation/react-navigation/commit/bc9c046bd29e5272bced8f77348918653283d22e))
+
+
+
+
+
 # [5.16.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.15.5...@react-navigation/core@5.16.0) (2021-08-15)
 
 
