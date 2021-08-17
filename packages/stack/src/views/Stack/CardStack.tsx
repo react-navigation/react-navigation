@@ -60,6 +60,7 @@ type Props = {
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
   renderScene: (props: { route: Route<string> }) => React.ReactNode;
   isParentHeaderShown: boolean;
+  isParentModal: boolean;
   onTransitionStart: (
     props: { route: Route<string> },
     closing: boolean
@@ -118,7 +119,15 @@ const getIsModalPresentation = (
   );
 };
 
-const getIsModal = (scene: Scene, interpolationIndex: number) => {
+const getIsModal = (
+  scene: Scene,
+  interpolationIndex: number,
+  isParentModal: boolean
+) => {
+  if (isParentModal) {
+    return true;
+  }
+
   const { cardStyleInterpolator } = scene.descriptor.options;
   const isModalPresentation = getIsModalPresentation(cardStyleInterpolator);
   const isModal = isModalPresentation && interpolationIndex !== 0;
@@ -130,6 +139,7 @@ const getHeaderHeights = (
   scenes: Scene[],
   insets: EdgeInsets,
   isParentHeaderShown: boolean,
+  isParentModal: boolean,
   layout: Layout,
   previous: Record<string, number>
 ) => {
@@ -147,7 +157,7 @@ const getHeaderHeights = (
         : previous[curr.route.key];
 
     const interpolationIndex = getInterpolationIndex(scenes, index);
-    const isModal = getIsModal(curr, interpolationIndex);
+    const isModal = getIsModal(curr, interpolationIndex, isParentModal);
 
     acc[curr.route.key] =
       typeof height === 'number'
@@ -374,6 +384,7 @@ export default class CardStack extends React.Component<Props, State> {
         scenes,
         props.insets,
         props.isParentHeaderShown,
+        props.isParentModal,
         state.layout,
         state.headerHeights
       ),
@@ -414,6 +425,7 @@ export default class CardStack extends React.Component<Props, State> {
           state.scenes,
           props.insets,
           props.isParentHeaderShown,
+          props.isParentModal,
           layout,
           state.headerHeights
         ),
@@ -478,6 +490,7 @@ export default class CardStack extends React.Component<Props, State> {
       renderHeader,
       renderScene,
       isParentHeaderShown,
+      isParentModal,
       onTransitionStart,
       onTransitionEnd,
       onGestureStart,
@@ -621,7 +634,11 @@ export default class CardStack extends React.Component<Props, State> {
 
             // Start from current card and count backwards the number of cards with same interpolation
             const interpolationIndex = getInterpolationIndex(scenes, index);
-            const isModal = getIsModal(scene, interpolationIndex);
+            const isModal = getIsModal(
+              scene,
+              interpolationIndex,
+              isParentModal
+            );
 
             const isNextScreenTransparent =
               scenes[index + 1]?.descriptor.options.presentation ===

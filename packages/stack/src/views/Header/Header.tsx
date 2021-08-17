@@ -1,5 +1,5 @@
 import { getHeaderTitle, HeaderShownContext } from '@react-navigation/elements';
-import { StackActions, useNavigationState } from '@react-navigation/native';
+import { StackActions } from '@react-navigation/native';
 import * as React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -44,14 +44,11 @@ export default React.memo(function Header({
 
   const isModal = React.useContext(ModalPresentationContext);
   const isParentHeaderShown = React.useContext(HeaderShownContext);
-  const isFirstRouteInParent = useNavigationState(
-    (state) => state.routes[0].key === route.key
-  );
 
   const statusBarHeight =
     options.headerStatusBarHeight !== undefined
       ? options.headerStatusBarHeight
-      : (isModal && !isFirstRouteInParent) || isParentHeaderShown
+      : isModal || isParentHeaderShown
       ? 0
       : insets.top;
 
@@ -60,7 +57,6 @@ export default React.memo(function Header({
       {...options}
       title={getHeaderTitle(options, route.name)}
       progress={progress}
-      insets={insets}
       layout={layout}
       modal={isModal}
       headerBackTitle={

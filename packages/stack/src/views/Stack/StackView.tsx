@@ -20,6 +20,7 @@ import type {
   StackNavigationConfig,
   StackNavigationHelpers,
 } from '../../types';
+import ModalPresentationContext from '../../utils/ModalPresentationContext';
 import { GestureHandlerRootView } from '../GestureHandler';
 import HeaderContainer, {
   Props as HeaderContainerProps,
@@ -429,30 +430,35 @@ export default class StackView extends React.Component<Props, State> {
         <SafeAreaProviderCompat>
           <SafeAreaInsetsContext.Consumer>
             {(insets) => (
-              <HeaderShownContext.Consumer>
-                {(isParentHeaderShown) => (
-                  <CardStack
-                    insets={insets as EdgeInsets}
-                    isParentHeaderShown={isParentHeaderShown}
-                    getPreviousRoute={this.getPreviousRoute}
-                    routes={routes}
-                    openingRouteKeys={openingRouteKeys}
-                    closingRouteKeys={closingRouteKeys}
-                    onOpenRoute={this.handleOpenRoute}
-                    onCloseRoute={this.handleCloseRoute}
-                    onTransitionStart={this.handleTransitionStart}
-                    onTransitionEnd={this.handleTransitionEnd}
-                    renderHeader={this.renderHeader}
-                    renderScene={this.renderScene}
-                    state={state}
-                    descriptors={descriptors}
-                    onGestureStart={this.handleGestureStart}
-                    onGestureEnd={this.handleGestureEnd}
-                    onGestureCancel={this.handleGestureCancel}
-                    {...rest}
-                  />
+              <ModalPresentationContext.Consumer>
+                {(isParentModal) => (
+                  <HeaderShownContext.Consumer>
+                    {(isParentHeaderShown) => (
+                      <CardStack
+                        insets={insets as EdgeInsets}
+                        isParentHeaderShown={isParentHeaderShown}
+                        isParentModal={isParentModal}
+                        getPreviousRoute={this.getPreviousRoute}
+                        routes={routes}
+                        openingRouteKeys={openingRouteKeys}
+                        closingRouteKeys={closingRouteKeys}
+                        onOpenRoute={this.handleOpenRoute}
+                        onCloseRoute={this.handleCloseRoute}
+                        onTransitionStart={this.handleTransitionStart}
+                        onTransitionEnd={this.handleTransitionEnd}
+                        renderHeader={this.renderHeader}
+                        renderScene={this.renderScene}
+                        state={state}
+                        descriptors={descriptors}
+                        onGestureStart={this.handleGestureStart}
+                        onGestureEnd={this.handleGestureEnd}
+                        onGestureCancel={this.handleGestureCancel}
+                        {...rest}
+                      />
+                    )}
+                  </HeaderShownContext.Consumer>
                 )}
-              </HeaderShownContext.Consumer>
+              </ModalPresentationContext.Consumer>
             )}
           </SafeAreaInsetsContext.Consumer>
         </SafeAreaProviderCompat>
