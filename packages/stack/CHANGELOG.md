@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.6...@react-navigation/stack@6.0.7) (2021-08-17)
+
+
+### Bug Fixes
+
+* add check when accessing next descriptor ([#9824](https://github.com/react-navigation/react-navigation/issues/9824)) ([5bcf79c](https://github.com/react-navigation/react-navigation/commit/5bcf79c722e62403d8398874fd0b2b673f840aa3))
+* don't try to parse header tint color if not a string ([ece03d7](https://github.com/react-navigation/react-navigation/commit/ece03d7177731d8eabcc082f34b674776dffc4ce)), closes [#9822](https://github.com/react-navigation/react-navigation/issues/9822)
+* fix status bar handling with modal presentation ([651d8e5](https://github.com/react-navigation/react-navigation/commit/651d8e5726d9abab2e4572bd0fad550e926cc9b4))
+* handle statusbar height for stack nested in modal. closes [#9790](https://github.com/react-navigation/react-navigation/issues/9790) ([f54cafb](https://github.com/react-navigation/react-navigation/commit/f54cafbb3333763ec86e4b2cab46cbb2ae99b627))
+
+
+
+
+
 ## [6.0.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.5...@react-navigation/stack@6.0.6) (2021-08-11)
 
 **Note:** Version bump only for package @react-navigation/stack

@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/material-bottom-tabs",
   "description": "Integration for bottom navigation component from react-native-paper",
-  "version": "6.0.4",
+  "version": "6.0.5",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -41,7 +41,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/elements": "^1.0.4"
+    "@react-navigation/elements": "^1.1.0"
   },
   "devDependencies": {
     "@react-navigation/native": "^6.0.2",
