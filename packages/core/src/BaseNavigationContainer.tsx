@@ -215,6 +215,8 @@ const BaseNavigationContainer = React.forwardRef(
       dispatch,
       canGoBack,
       getRootState,
+      getState: () => state,
+      getParent: () => undefined,
       dangerouslyGetState: () => state,
       dangerouslyGetParent: () => undefined,
       getCurrentRoute,
