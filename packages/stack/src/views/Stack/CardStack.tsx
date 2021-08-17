@@ -625,7 +625,7 @@ export default class CardStack extends React.Component<Props, State> {
             let headerDarkContent: boolean | undefined;
 
             if (headerShown) {
-              if (headerTintColor) {
+              if (typeof headerTintColor === 'string') {
                 headerDarkContent = Color(headerTintColor).isDark();
               } else if (typeof headerBackgroundColor === 'string') {
                 headerDarkContent = !Color(headerBackgroundColor).isDark();
