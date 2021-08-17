@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.4...@react-navigation/elements@1.1.0) (2021-08-17)
+
+
+### Features
+
+* **elements:** add style to SafeAreaProviderCompat props ([#9793](https://github.com/react-navigation/react-navigation/issues/9793)) ([f73aa55](https://github.com/react-navigation/react-navigation/commit/f73aa55fb2b7e7ca65d5f66269a43281f7ce0680))
+
+
+
+
+
 ## [1.0.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.3...@react-navigation/elements@1.0.4) (2021-08-11)
 
 
