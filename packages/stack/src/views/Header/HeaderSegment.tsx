@@ -3,7 +3,6 @@ import {
   Header,
   HeaderBackButton,
   HeaderBackButtonProps,
-  HeaderShownContext,
   HeaderTitle,
 } from '@react-navigation/elements';
 import * as React from 'react';
@@ -14,7 +13,6 @@ import {
   StyleSheet,
   ViewStyle,
 } from 'react-native';
-import type { EdgeInsets } from 'react-native-safe-area-context';
 
 import type {
   Layout,
@@ -24,10 +22,10 @@ import type {
 } from '../../types';
 import memoize from '../../utils/memoize';
 
-type Props = StackHeaderOptions & {
+type Props = Omit<StackHeaderOptions, 'headerStatusBarHeight'> & {
+  headerStatusBarHeight: number;
   layout: Layout;
   title: string;
-  insets: EdgeInsets;
   modal: boolean;
   onGoBack?: () => void;
   progress: SceneProgress;
@@ -35,8 +33,6 @@ type Props = StackHeaderOptions & {
 };
 
 export default function HeaderSegment(props: Props) {
-  const isParentHeaderShown = React.useContext(HeaderShownContext);
-
   const [leftLabelLayout, setLeftLabelLayout] =
     React.useState<Layout | undefined>(undefined);
 
@@ -100,7 +96,6 @@ export default function HeaderSegment(props: Props) {
 
   const {
     progress,
-    insets,
     layout,
     modal,
     onGoBack,
@@ -121,7 +116,7 @@ export default function HeaderSegment(props: Props) {
     headerRightContainerStyle,
     headerBackgroundContainerStyle,
     headerStyle: customHeaderStyle,
-    headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
+    headerStatusBarHeight,
     styleInterpolator,
     ...rest
   } = props;

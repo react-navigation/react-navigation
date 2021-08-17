@@ -277,31 +277,31 @@ function CardContainer({
       ]}
     >
       <View style={styles.container}>
-        <View style={styles.scene}>
-          <HeaderBackContext.Provider value={headerBack}>
-            <HeaderShownContext.Provider
-              value={isParentHeaderShown || headerShown !== false}
-            >
-              <HeaderHeightContext.Provider
-                value={headerShown ? headerHeight : parentHeaderHeight ?? 0}
+        <ModalPresentationContext.Provider value={modal}>
+          <View style={styles.scene}>
+            <HeaderBackContext.Provider value={headerBack}>
+              <HeaderShownContext.Provider
+                value={isParentHeaderShown || headerShown !== false}
               >
-                {renderScene({ route: scene.descriptor.route })}
-              </HeaderHeightContext.Provider>
-            </HeaderShownContext.Provider>
-          </HeaderBackContext.Provider>
-        </View>
-        {headerMode !== 'float' ? (
-          <ModalPresentationContext.Provider value={modal}>
-            {renderHeader({
-              mode: 'screen',
-              layout,
-              scenes: [previousScene, scene],
-              getPreviousScene,
-              getFocusedRoute,
-              onContentHeightChange: onHeaderHeightChange,
-            })}
-          </ModalPresentationContext.Provider>
-        ) : null}
+                <HeaderHeightContext.Provider
+                  value={headerShown ? headerHeight : parentHeaderHeight ?? 0}
+                >
+                  {renderScene({ route: scene.descriptor.route })}
+                </HeaderHeightContext.Provider>
+              </HeaderShownContext.Provider>
+            </HeaderBackContext.Provider>
+          </View>
+          {headerMode !== 'float'
+            ? renderHeader({
+                mode: 'screen',
+                layout,
+                scenes: [previousScene, scene],
+                getPreviousScene,
+                getFocusedRoute,
+                onContentHeightChange: onHeaderHeightChange,
+              })
+            : null}
+        </ModalPresentationContext.Provider>
       </View>
     </Card>
   );
