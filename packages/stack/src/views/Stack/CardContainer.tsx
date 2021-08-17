@@ -216,7 +216,6 @@ function CardContainer({
 
   return (
     <Card
-      modal={modal}
       interpolationIndex={interpolationIndex}
       gestureDirection={gestureDirection}
       layout={layout}

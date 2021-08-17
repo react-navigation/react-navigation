@@ -30,7 +30,6 @@ import {
 import type {
   Layout,
   Scene,
-  StackCardStyleInterpolator,
   StackDescriptor,
   StackDescriptorMap,
   StackHeaderMode,
@@ -39,6 +38,7 @@ import type {
 import getDistanceForDirection from '../../utils/getDistanceForDirection';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import { MaybeScreen, MaybeScreenContainer } from '../Screens';
+import { getIsModalPresentation } from './Card';
 import CardContainer from './CardContainer';
 
 type GestureValues = {
@@ -107,16 +107,6 @@ const getInterpolationIndex = (scenes: Scene[], index: number) => {
   }
 
   return interpolationIndex;
-};
-
-const getIsModalPresentation = (
-  cardStyleInterpolator: StackCardStyleInterpolator
-) => {
-  return (
-    cardStyleInterpolator === forModalPresentationIOS ||
-    // Handle custom modal presentation interpolators as well
-    cardStyleInterpolator.name === 'forModalPresentationIOS'
-  );
 };
 
 const getIsModal = (
