@@ -138,7 +138,9 @@ export default function NativeStackView({ state, descriptors }: Props) {
                 { display: isFocused ? 'flex' : 'none' },
               ]}
             >
-              <View style={contentStyle}>{render()}</View>
+              <View style={[styles.contentContainer, contentStyle]}>
+                {render()}
+              </View>
             </Screen>
           );
         })}
@@ -149,6 +151,9 @@ export default function NativeStackView({ state, descriptors }: Props) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  contentContainer: {
     flex: 1,
   },
   backImage: {
