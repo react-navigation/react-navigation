@@ -38,6 +38,7 @@ export default function HeaderConfig({
   headerBlurEffect,
   headerTintColor,
   headerTitle,
+  headerTitleAlign,
   headerTitleStyle,
   headerTransparent,
   route,
@@ -151,21 +152,29 @@ export default function HeaderConfig({
             <ScreenStackHeaderLeftView>
               <View style={styles.row}>
                 {headerLeftElement}
-                {typeof headerTitle === 'function' ? (
-                  headerTitleElement
-                ) : (
-                  <HeaderTitle tintColor={tintColor}>{titleText}</HeaderTitle>
-                )}
+                {headerTitleAlign !== 'center' ? (
+                  typeof headerTitle === 'function' ? (
+                    headerTitleElement
+                  ) : (
+                    <HeaderTitle tintColor={tintColor}>{titleText}</HeaderTitle>
+                  )
+                ) : null}
               </View>
             </ScreenStackHeaderLeftView>
+          ) : null}
+          {headerTitleAlign === 'center' ? (
+            <ScreenStackHeaderCenterView>
+              {typeof headerTitle === 'function' ? (
+                headerTitleElement
+              ) : (
+                <HeaderTitle tintColor={tintColor}>{titleText}</HeaderTitle>
+              )}
+            </ScreenStackHeaderCenterView>
           ) : null}
         </>
       )}
       {headerBackImageSource !== undefined ? (
-        <ScreenStackHeaderBackButtonImage
-          key="backImage"
-          source={headerBackImageSource}
-        />
+        <ScreenStackHeaderBackButtonImage source={headerBackImageSource} />
       ) : null}
       {headerRightElement != null ? (
         <ScreenStackHeaderRightView>
