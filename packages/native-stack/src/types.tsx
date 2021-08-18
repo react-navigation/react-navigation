@@ -260,6 +260,13 @@ export type NativeStackNavigationOptions = {
         tintColor?: string;
       }) => React.ReactNode);
   /**
+   * How to align the the header title.
+   * Defaults to `left` on platforms other than iOS.
+   *
+   * Not supported on iOS. It's always `center` on iOS and cannot be changed.
+   */
+  headerTitleAlign?: 'left' | 'center';
+  /**
    * Style object for header title. Supported properties:
    * - fontFamily
    * - fontSize

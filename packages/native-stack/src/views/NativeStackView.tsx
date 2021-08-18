@@ -46,6 +46,7 @@ export default function NativeStackView({ state, descriptors }: Props) {
             headerLeft,
             headerRight,
             headerTitle,
+            headerTitleAlign,
             headerTitleStyle,
             headerStyle,
             headerShadowVisible,
@@ -117,6 +118,7 @@ export default function NativeStackView({ state, descriptors }: Props) {
                             headerTitle({ children, tintColor })
                         : headerTitle
                     }
+                    headerTitleAlign={headerTitleAlign}
                     headerTitleStyle={headerTitleStyle}
                     headerStyle={[
                       headerTransparent
