@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.0.6...@react-navigation/native-stack@6.1.0) (2021-08-18)
+
+
+### Bug Fixes
+
+* content container in native web stack should fill parent ([#9832](https://github.com/react-navigation/react-navigation/issues/9832)) ([ec0d113](https://github.com/react-navigation/react-navigation/commit/ec0d113eb25c39ef9defb6c7215640f44e3569ae))
+
+
+### Features
+
+* add headerTitleAlign prop in native stack. closes [#9829](https://github.com/react-navigation/react-navigation/issues/9829) ([fe692c2](https://github.com/react-navigation/react-navigation/commit/fe692c2f564f4fc72c18c19b8e5830ab69bcd58c))
+
+
+
+
+
 ## [6.0.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.0.5...@react-navigation/native-stack@6.0.6) (2021-08-17)
 
 **Note:** Version bump only for package @react-navigation/native-stack
