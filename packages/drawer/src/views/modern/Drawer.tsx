@@ -260,24 +260,29 @@ export default function Drawer({
   });
 
   const drawerAnimatedStyle = useAnimatedStyle(() => {
+    if (drawerType === 'permanent') {
+      return {};
+    }
+
     return {
       transform: [
         {
-          translateX:
-            drawerType === 'permanent' || drawerType === 'back'
-              ? 0
-              : translateX.value,
+          translateX: drawerType === 'back' ? 0 : translateX.value,
         },
       ],
     };
   });
 
   const contentAnimatedStyle = useAnimatedStyle(() => {
+    if (drawerType === 'permanent') {
+      return {};
+    }
+
     return {
       transform: [
         {
           translateX:
-            drawerType === 'permanent' || drawerType === 'front'
+            drawerType === 'front'
               ? 0
               : drawerPosition === 'left'
               ? drawerWidth + translateX.value

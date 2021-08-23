@@ -498,14 +498,10 @@ export default class DrawerView extends React.Component<DrawerProps> {
     const isRight = drawerPosition === 'right';
 
     const contentTranslateX =
-      drawerType === 'front' || drawerType === 'permanent'
-        ? ANIMATED_ZERO
-        : this.translateX;
+      drawerType === 'front' ? ANIMATED_ZERO : this.translateX;
 
     const drawerTranslateX =
-      drawerType === 'permanent'
-        ? ANIMATED_ZERO
-        : drawerType === 'back'
+      drawerType === 'back'
         ? I18nManager.isRTL
           ? multiply(
               sub(this.containerWidth, this.drawerWidth),
@@ -557,7 +553,9 @@ export default class DrawerView extends React.Component<DrawerProps> {
             <Animated.View
               style={[
                 styles.content,
-                { transform: [{ translateX: contentTranslateX }] },
+                drawerType !== 'permanent'
+                  ? { transform: [{ translateX: contentTranslateX }] }
+                  : undefined,
               ]}
             >
               <View
@@ -607,10 +605,12 @@ export default class DrawerView extends React.Component<DrawerProps> {
               onLayout={this.handleDrawerLayout}
               style={[
                 styles.container,
-                {
-                  transform: [{ translateX: drawerTranslateX }],
-                  opacity: this.drawerOpacity,
-                },
+                drawerType === 'permanent'
+                  ? { opacity: 1 }
+                  : {
+                      transform: [{ translateX: drawerTranslateX }],
+                      opacity: this.drawerOpacity,
+                    },
                 drawerType === 'permanent'
                   ? // Without this, the `left`/`right` values don't get reset
                     isRight
