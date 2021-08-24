@@ -605,13 +605,12 @@ export default class DrawerView extends React.Component<DrawerProps> {
               onLayout={this.handleDrawerLayout}
               style={[
                 styles.container,
-                {
-                  transform:
-                    drawerType === 'permanent'
-                      ? []
-                      : [{ translateX: drawerTranslateX }],
-                  opacity: this.drawerOpacity,
-                },
+                drawerType === 'permanent'
+                  ? { opacity: 1 }
+                  : {
+                      transform: [{ translateX: drawerTranslateX }],
+                      opacity: this.drawerOpacity,
+                    },
                 drawerType === 'permanent'
                   ? // Without this, the `left`/`right` values don't get reset
                     isRight
