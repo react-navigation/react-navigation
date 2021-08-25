@@ -206,6 +206,8 @@ export default function BottomTabBar({
         ...visibilityAnimationConfig?.hide?.config,
       }).start();
     }
+
+    return () => visible.stopAnimation();
   }, [visible, shouldShowTabBar]);
 
   const [layout, setLayout] = React.useState({

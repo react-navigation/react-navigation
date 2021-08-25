@@ -48,6 +48,8 @@ export default function Badge({
         setRendered(false);
       }
     });
+
+    return () => opacity.stopAnimation();
   }, [opacity, rendered, visible]);
 
   if (visible && !rendered) {
