@@ -7,12 +7,11 @@ import {
   getFocusedRouteNameFromRoute,
   NavigatorScreenParams,
   ParamListBase,
-  useIsFocused,
 } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { BlurView } from 'expo-blur';
 import * as React from 'react';
-import { ScrollView, StatusBar, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Albums from '../Shared/Albums';
@@ -35,20 +34,16 @@ type BottomTabParams = {
 const AlbumsScreen = () => {
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
-  const isFocused = useIsFocused();
 
   return (
-    <>
-      {isFocused && <StatusBar barStyle="light-content" />}
-      <ScrollView
-        contentContainerStyle={{
-          paddingTop: headerHeight,
-          paddingBottom: tabBarHeight,
-        }}
-      >
-        <Albums scrollEnabled={false} />
-      </ScrollView>
-    </>
+    <ScrollView
+      contentContainerStyle={{
+        paddingTop: headerHeight,
+        paddingBottom: tabBarHeight,
+      }}
+    >
+      <Albums scrollEnabled={false} />
+    </ScrollView>
   );
 };
 
@@ -128,6 +123,7 @@ export default function BottomTabsScreen({
               style={StyleSheet.absoluteFill}
             />
           ),
+          statusBarStyle: 'light',
         }}
       />
     </BottomTabs.Navigator>
