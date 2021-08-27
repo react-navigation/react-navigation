@@ -16,10 +16,9 @@ jobs:
           node-version: 14.x
 
       - name: Setup Expo
-        uses: expo/expo-github-action@v5
+        uses: expo/expo-github-action@v6
         with:
-          expo-token: ${{ secrets.EXPO_TOKEN }}
-          expo-cache: true
+          token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Restore yarn cache
         id: yarn-cache
@@ -47,7 +46,7 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const body = 'The Expo app for the example from this branch is ready!\n\n[expo.io/${{ steps.expo.outputs.path }}](https://expo.io/${{ steps.expo.outputs.path }})\n\n<a href="https://exp.host/${{ steps.expo.outputs.path }}"><img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=exp://exp.host/${{ steps.expo.outputs.path }}" height="200px" width="200px"></a>';
+            const body = 'The Expo app for the example from this branch is ready!\n\n[expo.dev/${{ steps.expo.outputs.path }}](https://expo.dev/${{ steps.expo.outputs.path }})\n\n<a href="https://exp.host/${{ steps.expo.outputs.path }}"><img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=exp://exp.host/${{ steps.expo.outputs.path }}" height="200px" width="200px"></a>';
 
             const comments = await github.issues.listComments({
               issue_number: context.issue.number,

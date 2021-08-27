@@ -3,6 +3,74 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0...@react-navigation/devtools@6.0.1) (2021-08-03)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+
+
+
+
+# [6.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.19...@react-navigation/devtools@6.0.0) (2021-08-01)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+
+
+
+
+# [6.0.0-next.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.18...@react-navigation/devtools@6.0.0-next.19) (2021-07-19)
+
+
+### Bug Fixes
+
+* ignore errors from symbolication in devtools ([f666059](https://github.com/react-navigation/react-navigation/commit/f666059d80e7888e50071b888e6f9a4afd00a71e))
+
+
+
+
+
+# [6.0.0-next.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.17...@react-navigation/devtools@6.0.0-next.18) (2021-07-16)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+
+
+
+
+# [6.0.0-next.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.16...@react-navigation/devtools@6.0.0-next.17) (2021-07-16)
+
+
+### Bug Fixes
+
+* fix devtools not sending new events if an error occured ([c333f40](https://github.com/react-navigation/react-navigation/commit/c333f4086ea04c879fdd46ccc206d3faf84fabca))
+
+
+
+
+
+# [6.0.0-next.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.14...@react-navigation/devtools@6.0.0-next.16) (2021-07-01)
+
+
+### Features
+
+* show stack trace in the flipper plugin ([97772af](https://github.com/react-navigation/react-navigation/commit/97772affa3c8f26489f0bdbfb6872ef4377b8ed1))
+
+
+
+
+
+# [6.0.0-next.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.14...@react-navigation/devtools@6.0.0-next.15) (2021-06-10)
+
+
+### Features
+
+* show stack trace in the flipper plugin ([97772af](https://github.com/react-navigation/react-navigation/commit/97772affa3c8f26489f0bdbfb6872ef4377b8ed1))
+
+
+
+
+
 # [6.0.0-next.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.0-next.13...@react-navigation/devtools@6.0.0-next.14) (2021-05-29)
 
 **Note:** Version bump only for package @react-navigation/devtools

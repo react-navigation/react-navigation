@@ -471,10 +471,8 @@ export default class DrawerView extends React.Component<DrawerProps> {
   };
 
   private toggleStatusBar = (hidden: boolean) => {
-    const {
-      hideStatusBarOnOpen: hideStatusBar,
-      statusBarAnimation,
-    } = this.props;
+    const { hideStatusBarOnOpen: hideStatusBar, statusBarAnimation } =
+      this.props;
 
     if (hideStatusBar && this.isStatusBarHidden !== hidden) {
       this.isStatusBarHidden = hidden;

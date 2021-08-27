@@ -8,7 +8,6 @@ import { Route, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 
-import { forModalPresentationIOS } from '../../TransitionConfigs/CardStyleInterpolators';
 import type { Layout, Scene } from '../../types';
 import ModalPresentationContext from '../../utils/ModalPresentationContext';
 import useKeyboardManager from '../../utils/useKeyboardManager';
@@ -16,11 +15,12 @@ import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import Card from './Card';
 
 type Props = {
-  index: number;
   interpolationIndex: number;
+  index: number;
   active: boolean;
   focused: boolean;
   closing: boolean;
+  modal: boolean;
   layout: Layout;
   gesture: Animated.Value;
   scene: Scene;
@@ -57,11 +57,13 @@ type Props = {
 const EPSILON = 0.1;
 
 function CardContainer({
+  interpolationIndex,
   index,
   active,
   closing,
   gesture,
   focused,
+  modal,
   getPreviousScene,
   getFocusedRoute,
   headerDarkContent,
@@ -71,7 +73,6 @@ function CardContainer({
   isParentHeaderShown,
   isNextScreenTransparent,
   detachCurrentScreen,
-  interpolationIndex,
   layout,
   onCloseRoute,
   onOpenRoute,
@@ -90,19 +91,16 @@ function CardContainer({
 }: Props) {
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
 
-  const {
-    onPageChangeStart,
-    onPageChangeCancel,
-    onPageChangeConfirm,
-  } = useKeyboardManager(
-    React.useCallback(() => {
-      const { options, navigation } = scene.descriptor;
+  const { onPageChangeStart, onPageChangeCancel, onPageChangeConfirm } =
+    useKeyboardManager(
+      React.useCallback(() => {
+        const { options, navigation } = scene.descriptor;
 
-      return (
-        navigation.isFocused() && options.keyboardHandlingEnabled !== false
-      );
-    }, [scene.descriptor])
-  );
+        return (
+          navigation.isFocused() && options.keyboardHandlingEnabled !== false
+        );
+      }, [scene.descriptor])
+    );
 
   const handleOpen = () => {
     const { route } = scene.descriptor;
@@ -167,9 +165,8 @@ function CardContainer({
 
   const { colors } = useTheme();
 
-  const [pointerEvents, setPointerEvents] = React.useState<'box-none' | 'none'>(
-    'box-none'
-  );
+  const [pointerEvents, setPointerEvents] =
+    React.useState<'box-none' | 'none'>('box-none');
 
   React.useEffect(() => {
     const listener = scene.progress.next?.addListener?.(
@@ -202,7 +199,6 @@ function CardContainer({
     transitionSpec,
   } = scene.descriptor.options;
 
-  const isModalPresentation = cardStyleInterpolator === forModalPresentationIOS;
   const previousScene = getPreviousScene({ route: scene.descriptor.route });
 
   let backTitle: string | undefined;
@@ -280,33 +276,31 @@ function CardContainer({
       ]}
     >
       <View style={styles.container}>
-        <View style={styles.scene}>
-          <HeaderBackContext.Provider value={headerBack}>
-            <HeaderShownContext.Provider
-              value={isParentHeaderShown || headerShown !== false}
-            >
-              <HeaderHeightContext.Provider
-                value={headerShown ? headerHeight : parentHeaderHeight}
+        <ModalPresentationContext.Provider value={modal}>
+          <View style={styles.scene}>
+            <HeaderBackContext.Provider value={headerBack}>
+              <HeaderShownContext.Provider
+                value={isParentHeaderShown || headerShown !== false}
               >
-                {renderScene({ route: scene.descriptor.route })}
-              </HeaderHeightContext.Provider>
-            </HeaderShownContext.Provider>
-          </HeaderBackContext.Provider>
-        </View>
-        {headerMode !== 'float' ? (
-          <ModalPresentationContext.Provider
-            value={isModalPresentation && interpolationIndex !== 0}
-          >
-            {renderHeader({
-              mode: 'screen',
-              layout,
-              scenes: [previousScene, scene],
-              getPreviousScene,
-              getFocusedRoute,
-              onContentHeightChange: onHeaderHeightChange,
-            })}
-          </ModalPresentationContext.Provider>
-        ) : null}
+                <HeaderHeightContext.Provider
+                  value={headerShown ? headerHeight : parentHeaderHeight ?? 0}
+                >
+                  {renderScene({ route: scene.descriptor.route })}
+                </HeaderHeightContext.Provider>
+              </HeaderShownContext.Provider>
+            </HeaderBackContext.Provider>
+          </View>
+          {headerMode !== 'float'
+            ? renderHeader({
+                mode: 'screen',
+                layout,
+                scenes: [previousScene, scene],
+                getPreviousScene,
+                getFocusedRoute,
+                onContentHeightChange: onHeaderHeightChange,
+              })
+            : null}
+        </ModalPresentationContext.Provider>
       </View>
     </Card>
   );

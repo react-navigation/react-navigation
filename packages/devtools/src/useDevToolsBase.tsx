@@ -6,20 +6,42 @@ import type {
 import deepEqual from 'deep-equal';
 import * as React from 'react';
 
+type StackFrame = {
+  lineNumber: number | null;
+  column: number | null;
+  file: string | null;
+  methodName: string;
+};
+
+type StackFrameResult = StackFrame & {
+  collapse: boolean;
+};
+
+type StackResult = {
+  stack: StackFrameResult[];
+};
+
+type InitData = {
+  type: 'init';
+  state: NavigationState | undefined;
+};
+
+type ActionData = {
+  type: 'action';
+  action: NavigationAction;
+  state: NavigationState | undefined;
+  stack: string | undefined;
+};
+
 export default function useDevToolsBase(
   ref: React.RefObject<NavigationContainerRef<any>>,
-  callback: (
-    ...args:
-      | [type: 'init', state: NavigationState | undefined]
-      | [
-          type: 'action',
-          action: NavigationAction,
-          state: NavigationState | undefined
-        ]
-  ) => void
+  callback: (result: InitData | ActionData) => void
 ) {
   const lastStateRef = React.useRef<NavigationState | undefined>();
-  const lastActionRef = React.useRef<NavigationAction | undefined>();
+  const lastActionRef =
+    React.useRef<
+      { action: NavigationAction; stack: string | undefined } | undefined
+    >();
   const callbackRef = React.useRef(callback);
   const lastResetRef = React.useRef<NavigationState | undefined>(undefined);
 
@@ -27,8 +49,84 @@ export default function useDevToolsBase(
     callbackRef.current = callback;
   });
 
+  const symbolicate = async (stack: string | undefined) => {
+    if (stack == null) {
+      return undefined;
+    }
+
+    const frames = stack
+      .split('\n')
+      .slice(2)
+      .map((line): StackFrame | null => {
+        const partMatch = line.match(/^((.+)@)?(.+):(\d+):(\d+)$/);
+
+        if (!partMatch) {
+          return null;
+        }
+
+        const [, , methodName, file, lineNumber, column] = partMatch;
+
+        return {
+          methodName,
+          file,
+          lineNumber: Number(lineNumber),
+          column: Number(column),
+        };
+      })
+      .filter(Boolean) as StackFrame[];
+
+    const urlMatch = frames[0]?.file?.match(/^https?:\/\/.+(:\d+)?\//);
+
+    if (!urlMatch) {
+      return stack;
+    }
+
+    try {
+      const result: StackResult = await fetch(`${urlMatch[0]}symbolicate`, {
+        method: 'POST',
+        body: JSON.stringify({ stack: frames }),
+      }).then((res) => res.json());
+
+      return result.stack
+        .filter((it) => !it.collapse)
+        .map(
+          ({ methodName, file, lineNumber, column }) =>
+            `${methodName}@${file}:${lineNumber}:${column}`
+        )
+        .join('\n');
+    } catch (err) {
+      return stack;
+    }
+  };
+
+  const pendingPromiseRef = React.useRef<Promise<void>>(Promise.resolve());
+
+  const send = React.useCallback((data: ActionData) => {
+    // We need to make sure that our callbacks executed in the same order
+    // So we add check if the last promise is settled before sending the next one
+    pendingPromiseRef.current = pendingPromiseRef.current
+      .catch(() => {
+        // Ignore any errors from the last promise
+      })
+      .then(async () => {
+        if (data.stack) {
+          let stack: string | undefined;
+
+          try {
+            stack = await symbolicate(data.stack);
+          } catch (err) {
+            // Ignore errors from symbolicate
+          }
+
+          callbackRef.current({ ...data, stack });
+        } else {
+          callbackRef.current(data);
+        }
+      });
+  }, []);
+
   React.useEffect(() => {
-    let timer: number;
+    let timer: any;
     let unsubscribeAction: (() => void) | undefined;
     let unsubscribeState: (() => void) | undefined;
 
@@ -43,7 +141,7 @@ export default function useDevToolsBase(
               const state = ref.current.getRootState();
 
               lastStateRef.current = state;
-              callbackRef.current('init', state);
+              callbackRef.current({ type: 'init', state });
             }
           }, 100);
         });
@@ -56,9 +154,14 @@ export default function useDevToolsBase(
 
         if (e.data.noop) {
           // Even if the state didn't change, it's useful to show the action
-          callbackRef.current('action', action, lastStateRef.current);
+          send({
+            type: 'action',
+            action,
+            state: lastStateRef.current,
+            stack: e.data.stack,
+          });
         } else {
-          lastActionRef.current = action;
+          lastActionRef.current = e.data;
         }
       });
 
@@ -74,17 +177,22 @@ export default function useDevToolsBase(
 
         const state = navigation.getRootState();
         const lastState = lastStateRef.current;
-        const action = lastActionRef.current;
+        const lastChange = lastActionRef.current;
 
         lastActionRef.current = undefined;
         lastStateRef.current = state;
 
         // If we don't have an action and the state didn't change, then it's probably extraneous
-        if (action === undefined && deepEqual(state, lastState)) {
+        if (lastChange === undefined && deepEqual(state, lastState)) {
           return;
         }
 
-        callbackRef.current('action', action ?? { type: '@@UNKNOWN' }, state);
+        send({
+          type: 'action',
+          action: lastChange ? lastChange.action : { type: '@@UNKNOWN' },
+          state,
+          stack: lastChange?.stack,
+        });
       });
     };
 
@@ -95,7 +203,7 @@ export default function useDevToolsBase(
       unsubscribeState?.();
       clearTimeout(timer);
     };
-  }, [ref]);
+  }, [ref, send]);
 
   const resetRoot = React.useCallback(
     (state: NavigationState) => {

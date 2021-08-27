@@ -34,6 +34,8 @@ function DrawerNavigator({
   children,
   screenListeners,
   screenOptions,
+  // @ts-expect-error: openByDefault is deprecated
+  openByDefault,
   // @ts-expect-error: lazy is deprecated
   lazy,
   // @ts-expect-error: drawerContentOptions is deprecated
@@ -55,13 +57,22 @@ function DrawerNavigator({
       gestureHandlerProps: drawerContentOptions.gestureHandlerProps,
     });
 
+    (
+      Object.keys(defaultScreenOptions) as (keyof DrawerNavigationOptions)[]
+    ).forEach((key) => {
+      if (defaultScreenOptions[key] === undefined) {
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete defaultScreenOptions[key];
+      }
+    });
+
     warnOnce(
       drawerContentOptions,
       `Drawer Navigator: 'drawerContentOptions' is deprecated. Migrate the options to 'screenOptions' instead.\n\nPlace the following in 'screenOptions' in your code to keep current behavior:\n\n${JSON.stringify(
         defaultScreenOptions,
         null,
         2
-      )}\n\nSee https://reactnavigation.org/docs/6.x/drawer-navigator#options for more details.`
+      )}\n\nSee https://reactnavigation.org/docs/drawer-navigator#options for more details.`
     );
   }
 
@@ -70,30 +81,38 @@ function DrawerNavigator({
 
     warnOnce(
       true,
-      `Drawer Navigator: 'lazy' in props is deprecated. Move it to 'screenOptions' instead.`
+      `Drawer Navigator: 'lazy' in props is deprecated. Move it to 'screenOptions' instead.\n\nSee https://reactnavigation.org/docs/drawer-navigator/#lazy for more details.`
     );
   }
 
-  const {
-    state,
-    descriptors,
-    navigation,
-    NavigationContent,
-  } = useNavigationBuilder<
-    DrawerNavigationState<ParamListBase>,
-    DrawerRouterOptions,
-    DrawerActionHelpers<ParamListBase>,
-    DrawerNavigationOptions,
-    DrawerNavigationEventMap
-  >(DrawerRouter, {
-    initialRouteName,
-    defaultStatus,
-    backBehavior,
-    children,
-    screenListeners,
-    screenOptions,
-    defaultScreenOptions,
-  });
+  if (typeof openByDefault === 'boolean') {
+    warnOnce(
+      true,
+      `Drawer Navigator: 'openByDefault' is deprecated. Use 'defaultStatus' and set it to 'open' or 'closed' instead.\n\nSee https://reactnavigation.org/docs/drawer-navigator/#defaultstatus for more details.`
+    );
+  }
+
+  const { state, descriptors, navigation, NavigationContent } =
+    useNavigationBuilder<
+      DrawerNavigationState<ParamListBase>,
+      DrawerRouterOptions,
+      DrawerActionHelpers<ParamListBase>,
+      DrawerNavigationOptions,
+      DrawerNavigationEventMap
+    >(DrawerRouter, {
+      initialRouteName,
+      defaultStatus:
+        defaultStatus !== undefined
+          ? defaultStatus
+          : openByDefault
+          ? 'open'
+          : 'closed',
+      backBehavior,
+      children,
+      screenListeners,
+      screenOptions,
+      defaultScreenOptions,
+    });
 
   return (
     <NavigationContent>

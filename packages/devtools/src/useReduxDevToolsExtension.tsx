@@ -32,19 +32,19 @@ export default function useReduxDevToolsExtension(
     });
   }
 
-  const { resetRoot } = useDevToolsBase(ref, (...args) => {
+  const { resetRoot } = useDevToolsBase(ref, (result) => {
     const devTools = devToolsRef.current;
 
     if (!devTools) {
       return;
     }
 
-    switch (args[0]) {
+    switch (result.type) {
       case 'init':
-        devTools.init(args[1]);
+        devTools.init(result.state);
         break;
       case 'action':
-        devTools.send(args[1], args[2]);
+        devTools.send(result.action, result.state);
         break;
     }
   });

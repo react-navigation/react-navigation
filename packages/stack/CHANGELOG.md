@@ -3,6 +3,142 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.6...@react-navigation/stack@6.0.7) (2021-08-17)
+
+
+### Bug Fixes
+
+* add check when accessing next descriptor ([#9824](https://github.com/react-navigation/react-navigation/issues/9824)) ([5bcf79c](https://github.com/react-navigation/react-navigation/commit/5bcf79c722e62403d8398874fd0b2b673f840aa3))
+* don't try to parse header tint color if not a string ([ece03d7](https://github.com/react-navigation/react-navigation/commit/ece03d7177731d8eabcc082f34b674776dffc4ce)), closes [#9822](https://github.com/react-navigation/react-navigation/issues/9822)
+* fix status bar handling with modal presentation ([651d8e5](https://github.com/react-navigation/react-navigation/commit/651d8e5726d9abab2e4572bd0fad550e926cc9b4))
+* handle statusbar height for stack nested in modal. closes [#9790](https://github.com/react-navigation/react-navigation/issues/9790) ([f54cafb](https://github.com/react-navigation/react-navigation/commit/f54cafbb3333763ec86e4b2cab46cbb2ae99b627))
+
+
+
+
+
+## [6.0.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.5...@react-navigation/stack@6.0.6) (2021-08-11)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+## [6.0.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.4...@react-navigation/stack@6.0.5) (2021-08-11)
+
+
+### Bug Fixes
+
+* show deprecation warning for 'keyboardHandlingEnabled' prop ([8c89c45](https://github.com/react-navigation/react-navigation/commit/8c89c45be45396024271bb5be33760e3c06a09be))
+
+
+
+
+
+## [6.0.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.3...@react-navigation/stack@6.0.4) (2021-08-09)
+
+
+### Bug Fixes
+
+* avoid overflowing long titles ([bacdbbd](https://github.com/react-navigation/react-navigation/commit/bacdbbdd7c5df73b84aa1ed8c0329c9525d0fdba))
+* pass all props to custom headerLeft ([#9806](https://github.com/react-navigation/react-navigation/issues/9806)) ([22799fc](https://github.com/react-navigation/react-navigation/commit/22799fc96ee689cad97ee051c24816f86ac912d1)), closes [#9805](https://github.com/react-navigation/react-navigation/issues/9805)
+* pass onlayout to headerTitle ([#9808](https://github.com/react-navigation/react-navigation/issues/9808)) ([a79ce57](https://github.com/react-navigation/react-navigation/commit/a79ce57aa7f9be3a47a09728e920c0d4a805f5aa))
+
+
+
+
+
+## [6.0.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.2...@react-navigation/stack@6.0.3) (2021-08-09)
+
+
+### Bug Fixes
+
+* consider all next headers instead of immediate next ([4d8a7ee](https://github.com/react-navigation/react-navigation/commit/4d8a7ee7e422c9d0eeb7aa0557eb288ef62b1f30)), closes [#9797](https://github.com/react-navigation/react-navigation/issues/9797)
+
+
+
+
+
+## [6.0.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.1...@react-navigation/stack@6.0.2) (2021-08-07)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+## [6.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0...@react-navigation/stack@6.0.1) (2021-08-03)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.29...@react-navigation/stack@6.0.0) (2021-08-01)
+
+
+### Bug Fixes
+
+* match native iOS header height in stack ([51b636d](https://github.com/react-navigation/react-navigation/commit/51b636d7268fc05a8a9aca9e6aad0161674f238e))
+* remove dep on react-native-iphonex-helper ([8a95fb5](https://github.com/react-navigation/react-navigation/commit/8a95fb588bd1f8a72fc4ef4e847f06e103ed55fe))
+
+
+### Features
+
+* expose header height in native-stack ([#9774](https://github.com/react-navigation/react-navigation/issues/9774)) ([20abccd](https://github.com/react-navigation/react-navigation/commit/20abccda0d5074f61b2beb555b881a2087d27bb0))
+
+
+
+
+
+# [6.0.0-next.29](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.28...@react-navigation/stack@6.0.0-next.29) (2021-07-16)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0-next.28](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.27...@react-navigation/stack@6.0.0-next.28) (2021-07-16)
+
+
+### Bug Fixes
+
+* update isClosing in stack card ([#9738](https://github.com/react-navigation/react-navigation/issues/9738)) ([ee12690](https://github.com/react-navigation/react-navigation/commit/ee12690a823694fa19a3216f97676870f2999719))
+
+
+
+
+
+# [6.0.0-next.27](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.25...@react-navigation/stack@6.0.0-next.27) (2021-07-01)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0-next.26](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.25...@react-navigation/stack@6.0.0-next.26) (2021-06-10)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0-next.25](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.24...@react-navigation/stack@6.0.0-next.25) (2021-06-01)
+
+
+### Bug Fixes
+
+* tweak android q animation ([7d74bd7](https://github.com/react-navigation/react-navigation/commit/7d74bd73a7333f0b1373a05c9f06e981556feed2))
+
+
+
+
+
 # [6.0.0-next.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.23...@react-navigation/stack@6.0.0-next.24) (2021-05-29)
 
 

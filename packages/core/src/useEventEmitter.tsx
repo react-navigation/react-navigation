@@ -2,11 +2,10 @@ import * as React from 'react';
 
 import type { EventArg, EventConsumer, EventEmitter } from './types';
 
-export type NavigationEventEmitter<
-  T extends Record<string, any>
-> = EventEmitter<T> & {
-  create: (target: string) => EventConsumer<T>;
-};
+export type NavigationEventEmitter<T extends Record<string, any>> =
+  EventEmitter<T> & {
+    create: (target: string) => EventConsumer<T>;
+  };
 
 type Listeners = ((e: any) => void)[];
 

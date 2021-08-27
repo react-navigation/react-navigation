@@ -33,7 +33,15 @@ function MaterialTopTabNavigator({
   children,
   screenListeners,
   screenOptions,
+  // @ts-expect-error: swipeEnabled is deprecated
+  swipeEnabled,
+  // @ts-expect-error: lazy is deprecated
   lazy,
+  // @ts-expect-error: lazyPlaceholder is deprecated
+  lazyPlaceholder,
+  // @ts-expect-error: lazyPreloadDistance is deprecated
+  lazyPreloadDistance,
+  // @ts-expect-error: tabBarOptions is deprecated
   tabBarOptions,
   ...rest
 }: Props) {
@@ -53,10 +61,23 @@ function MaterialTopTabNavigator({
       tabBarIconStyle: tabBarOptions.iconStyle,
       tabBarLabelStyle: tabBarOptions.labelStyle,
       tabBarItemStyle: tabBarOptions.tabStyle,
+      tabBarBadge: tabBarOptions.renderBadge,
+      tabBarIndicator: tabBarOptions.renderIndicator,
       tabBarIndicatorStyle: tabBarOptions.indicatorStyle,
       tabBarIndicatorContainerStyle: tabBarOptions.indicatorContainerStyle,
       tabBarContentContainerStyle: tabBarOptions.contentContainerStyle,
       tabBarStyle: tabBarOptions.style,
+    });
+
+    (
+      Object.keys(
+        defaultScreenOptions
+      ) as (keyof MaterialTopTabNavigationOptions)[]
+    ).forEach((key) => {
+      if (defaultScreenOptions[key] === undefined) {
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete defaultScreenOptions[key];
+      }
     });
 
     warnOnce(
@@ -65,37 +86,44 @@ function MaterialTopTabNavigator({
         defaultScreenOptions,
         null,
         2
-      )}\n\nSee https://reactnavigation.org/docs/6.x/material-top-tab-navigator#options for more details.`
+      )}\n\nSee https://reactnavigation.org/docs/material-top-tab-navigator#options for more details.`
     );
   }
 
-  if (typeof lazy === 'boolean') {
-    defaultScreenOptions.lazy = lazy;
+  const deprecatedProps = {
+    swipeEnabled,
+    lazy,
+    lazyPlaceholder,
+    lazyPreloadDistance,
+  } as const;
 
-    warnOnce(
-      true,
-      `Material Top Tab Navigator: 'lazy' in props is deprecated. Move it to 'screenOptions' instead.`
-    );
-  }
+  Object.entries(deprecatedProps).forEach(([propName, propValue]) => {
+    if (propValue !== undefined) {
+      // @ts-expect-error: Object.entries doesn't return strict types
+      defaultScreenOptions[propName] = propValue;
 
-  const {
-    state,
-    descriptors,
-    navigation,
-    NavigationContent,
-  } = useNavigationBuilder<
-    TabNavigationState<ParamListBase>,
-    TabRouterOptions,
-    TabActionHelpers<ParamListBase>,
-    MaterialTopTabNavigationOptions,
-    MaterialTopTabNavigationEventMap
-  >(TabRouter, {
-    initialRouteName,
-    backBehavior,
-    children,
-    screenListeners,
-    screenOptions,
+      warnOnce(
+        true,
+        `Material Top Tab Navigator: '${propName}' in props is deprecated. Move it to 'screenOptions' instead.\n\nSee https://reactnavigation.org/docs/material-top-tab-navigator#${propName.toLowerCase()} for more details.`
+      );
+    }
   });
+
+  const { state, descriptors, navigation, NavigationContent } =
+    useNavigationBuilder<
+      TabNavigationState<ParamListBase>,
+      TabRouterOptions,
+      TabActionHelpers<ParamListBase>,
+      MaterialTopTabNavigationOptions,
+      MaterialTopTabNavigationEventMap
+    >(TabRouter, {
+      initialRouteName,
+      backBehavior,
+      children,
+      screenListeners,
+      screenOptions,
+      defaultScreenOptions,
+    });
 
   return (
     <NavigationContent>

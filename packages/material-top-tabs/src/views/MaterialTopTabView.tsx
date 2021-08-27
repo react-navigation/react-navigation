@@ -1,7 +1,7 @@
 import {
+  CommonActions,
   ParamListBase,
   Route,
-  TabActions,
   TabNavigationState,
   useTheme,
 } from '@react-navigation/native';
@@ -41,12 +41,17 @@ export default function MaterialTopTabView({
     });
   };
 
+  const focusedOptions = descriptors[state.routes[state.index].key].options;
+
   return (
     <TabView<Route<string>>
       {...rest}
       onIndexChange={(index) =>
         navigation.dispatch({
-          ...TabActions.jumpTo(state.routes[index].name),
+          ...CommonActions.navigate({
+            name: state.routes[index].name,
+            merge: true,
+          }),
           target: state.key,
         })
       }
@@ -57,6 +62,8 @@ export default function MaterialTopTabView({
         descriptors[route.key].options.lazyPlaceholder?.() ?? null
       }
       lazy={({ route }) => descriptors[route.key].options.lazy === true}
+      lazyPreloadDistance={focusedOptions.lazyPreloadDistance}
+      swipeEnabled={focusedOptions.swipeEnabled}
       onSwipeStart={() => navigation.emit({ type: 'swipeStart' })}
       onSwipeEnd={() => navigation.emit({ type: 'swipeEnd' })}
       sceneContainerStyle={[

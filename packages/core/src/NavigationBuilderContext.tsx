@@ -39,7 +39,10 @@ export type FocusedNavigationCallback<T> = (
 
 export type FocusedNavigationListener = <T>(
   callback: FocusedNavigationCallback<T>
-) => { handled: boolean; result: T };
+) => {
+  handled: boolean;
+  result: T;
+};
 
 export type GetStateListener = () => NavigationState;
 
@@ -58,6 +61,7 @@ const NavigationBuilderContext = React.createContext<{
   onRouteFocus?: (key: string) => void;
   onDispatchAction: (action: NavigationAction, noop: boolean) => void;
   onOptionsChange: (options: object) => void;
+  stackRef?: React.MutableRefObject<string | undefined>;
 }>({
   onDispatchAction: () => undefined,
   onOptionsChange: () => undefined,

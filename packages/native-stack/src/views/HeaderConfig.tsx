@@ -38,14 +38,11 @@ export default function HeaderConfig({
   headerBlurEffect,
   headerTintColor,
   headerTitle,
+  headerTitleAlign,
   headerTitleStyle,
-  headerTranslucent,
+  headerTransparent,
   route,
-  orientation,
   headerSearchBarOptions,
-  statusBarAnimation,
-  statusBarHidden,
-  statusBarStyle,
   title,
 }: Props): JSX.Element {
   const insets = useSafeAreaInsets();
@@ -65,15 +62,12 @@ export default function HeaderConfig({
   const headerStyleFlattened = StyleSheet.flatten(headerStyle) || {};
   const headerLargeStyleFlattened = StyleSheet.flatten(headerLargeStyle) || {};
 
-  const [
-    backTitleFontFamily,
-    largeTitleFontFamily,
-    titleFontFamily,
-  ] = processFonts([
-    headerBackTitleStyleFlattened.fontFamily,
-    headerLargeTitleStyleFlattened.fontFamily,
-    headerTitleStyleFlattened.fontFamily,
-  ]);
+  const [backTitleFontFamily, largeTitleFontFamily, titleFontFamily] =
+    processFonts([
+      headerBackTitleStyleFlattened.fontFamily,
+      headerLargeTitleStyleFlattened.fontFamily,
+      headerTitleStyleFlattened.fontFamily,
+    ]);
 
   const titleText = title !== undefined ? title : route.name;
 
@@ -108,7 +102,7 @@ export default function HeaderConfig({
       backButtonInCustomView={backButtonInCustomView}
       backgroundColor={
         headerStyleFlattened.backgroundColor ??
-        (headerTranslucent ? 'transparent' : colors.card)
+        (headerTransparent ? 'transparent' : colors.card)
       }
       backTitle={headerBackTitleVisible ? headerBackTitle : ' '}
       backTitleFontFamily={backTitleFontFamily}
@@ -126,11 +120,6 @@ export default function HeaderConfig({
       largeTitleFontSize={headerLargeTitleStyleFlattened.fontSize}
       largeTitleFontWeight={headerLargeTitleStyleFlattened.fontWeight}
       largeTitleHideShadow={headerLargeTitleShadowVisible === false}
-      // @ts-ignore Renamed from screenOrientation to orientation
-      screenOrientation={orientation}
-      statusBarAnimation={statusBarAnimation}
-      statusBarHidden={statusBarHidden}
-      statusBarStyle={statusBarStyle}
       title={typeof headerTitle === 'string' ? headerTitle : titleText}
       titleColor={
         headerTitleStyleFlattened.color ?? headerTintColor ?? colors.text
@@ -141,7 +130,7 @@ export default function HeaderConfig({
       topInsetEnabled={insets.top !== 0}
       translucent={
         // This defaults to `true`, so we can't pass `undefined`
-        headerTranslucent === true
+        headerTransparent === true
       }
     >
       {Platform.OS === 'ios' ? (
@@ -163,21 +152,29 @@ export default function HeaderConfig({
             <ScreenStackHeaderLeftView>
               <View style={styles.row}>
                 {headerLeftElement}
-                {typeof headerTitle === 'function' ? (
-                  headerTitleElement
-                ) : (
-                  <HeaderTitle tintColor={tintColor}>{titleText}</HeaderTitle>
-                )}
+                {headerTitleAlign !== 'center' ? (
+                  typeof headerTitle === 'function' ? (
+                    headerTitleElement
+                  ) : (
+                    <HeaderTitle tintColor={tintColor}>{titleText}</HeaderTitle>
+                  )
+                ) : null}
               </View>
             </ScreenStackHeaderLeftView>
+          ) : null}
+          {headerTitleAlign === 'center' ? (
+            <ScreenStackHeaderCenterView>
+              {typeof headerTitle === 'function' ? (
+                headerTitleElement
+              ) : (
+                <HeaderTitle tintColor={tintColor}>{titleText}</HeaderTitle>
+              )}
+            </ScreenStackHeaderCenterView>
           ) : null}
         </>
       )}
       {headerBackImageSource !== undefined ? (
-        <ScreenStackHeaderBackButtonImage
-          key="backImage"
-          source={headerBackImageSource}
-        />
+        <ScreenStackHeaderBackButtonImage source={headerBackImageSource} />
       ) : null}
       {headerRightElement != null ? (
         <ScreenStackHeaderRightView>

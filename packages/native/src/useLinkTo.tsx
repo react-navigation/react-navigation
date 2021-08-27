@@ -38,7 +38,7 @@ export default function useLinkTo<
 
       if (typeof to !== 'string') {
         // @ts-expect-error: This is fine
-        root.navigate(to.screen, to.params);
+        navigation.navigate(to.screen, to.params);
         return;
       }
 

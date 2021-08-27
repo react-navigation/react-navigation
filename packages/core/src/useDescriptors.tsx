@@ -60,10 +60,7 @@ type Options<
         navigation: any;
         options: ScreenOptions;
       }) => ScreenOptions);
-  onAction: (
-    action: NavigationAction,
-    visitedNavigators?: Set<string>
-  ) => boolean;
+  onAction: (action: NavigationAction) => boolean;
   getState: () => State;
   setState: (state: State) => void;
   addListener: AddListener;
@@ -102,7 +99,7 @@ export default function useDescriptors<
   emitter,
 }: Options<State, ScreenOptions, EventMap>) {
   const [options, setOptions] = React.useState<Record<string, object>>({});
-  const { onDispatchAction, onOptionsChange } = React.useContext(
+  const { onDispatchAction, onOptionsChange, stackRef } = React.useContext(
     NavigationBuilderContext
   );
 
@@ -115,6 +112,7 @@ export default function useDescriptors<
       onRouteFocus,
       onDispatchAction,
       onOptionsChange,
+      stackRef,
     }),
     [
       navigation,
@@ -124,6 +122,7 @@ export default function useDescriptors<
       onRouteFocus,
       onDispatchAction,
       onOptionsChange,
+      stackRef,
     ]
   );
 
@@ -187,6 +186,17 @@ export default function useDescriptors<
       ...customOptions,
     };
 
+    const clearOptions = () =>
+      setOptions((o) => {
+        if (route.key in o) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { [route.key]: _, ...rest } = o;
+          return rest;
+        }
+
+        return o;
+      });
+
     acc[route.key] = {
       route,
       // @ts-expect-error: it's missing action helpers, fix later
@@ -204,6 +214,7 @@ export default function useDescriptors<
                   getState={getState}
                   setState={setState}
                   options={mergedOptions}
+                  clearOptions={clearOptions}
                 />
               </NavigationRouteContext.Provider>
             </NavigationContext.Provider>

@@ -143,27 +143,31 @@ export default function getStateFromPath<ParamList extends {}>(
       const aParts = a.pattern.split('/');
       const bParts = b.pattern.split('/');
 
-      const aWildcardIndex = aParts.indexOf('*');
-      const bWildcardIndex = bParts.indexOf('*');
-
-      // If only one of the patterns has a wildcard, move it down in the list
-      if (aWildcardIndex === -1 && bWildcardIndex !== -1) {
-        return -1;
+      for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+        // if b is longer, b get higher priority
+        if (aParts[i] == null) {
+          return 1;
+        }
+        // if a is longer, a get higher priority
+        if (bParts[i] == null) {
+          return -1;
+        }
+        const aWildCard = aParts[i] === '*' || aParts[i].startsWith(':');
+        const bWildCard = bParts[i] === '*' || bParts[i].startsWith(':');
+        // if both are wildcard we compare next component
+        if (aWildCard && bWildCard) {
+          continue;
+        }
+        // if only a is wild card, b get higher priority
+        if (aWildCard) {
+          return 1;
+        }
+        // if only b is wild card, a get higher priority
+        if (bWildCard) {
+          return -1;
+        }
       }
-
-      if (aWildcardIndex !== -1 && bWildcardIndex === -1) {
-        return 1;
-      }
-
-      if (aWildcardIndex === bWildcardIndex) {
-        // If `b` has more `/`, it's more exhaustive
-        // So we move it up in the list
-        return bParts.length - aParts.length;
-      }
-
-      // If the wildcard appears later in the pattern (has higher index), it's more specific
-      // So we move it up in the list
-      return bWildcardIndex - aWildcardIndex;
+      return bParts.length - aParts.length;
     });
 
   // Check for duplicate patterns in the config

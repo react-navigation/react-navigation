@@ -95,15 +95,10 @@ const BaseNavigationContainer = React.forwardRef(
       );
     }
 
-    const [
-      state,
-      getState,
-      setState,
-      scheduleUpdate,
-      flushUpdates,
-    ] = useSyncState<State>(() =>
-      getPartialState(initialState == null ? undefined : initialState)
-    );
+    const [state, getState, setState, scheduleUpdate, flushUpdates] =
+      useSyncState<State>(() =>
+        getPartialState(initialState == null ? undefined : initialState)
+      );
 
     const isFirstMountRef = React.useRef<boolean>(true);
 
@@ -223,7 +218,10 @@ const BaseNavigationContainer = React.forwardRef(
 
     const onDispatchAction = React.useCallback(
       (action: NavigationAction, noop: boolean) => {
-        emitter.emit({ type: '__unsafe_action__', data: { action, noop } });
+        emitter.emit({
+          type: '__unsafe_action__',
+          data: { action, noop, stack: stackRef.current },
+        });
       },
       [emitter]
     );
@@ -246,12 +244,15 @@ const BaseNavigationContainer = React.forwardRef(
       [emitter]
     );
 
+    const stackRef = React.useRef<string | undefined>();
+
     const builderContext = React.useMemo(
       () => ({
         addListener,
         addKeyedListener,
         onDispatchAction,
         onOptionsChange,
+        stackRef,
       }),
       [addListener, addKeyedListener, onDispatchAction, onOptionsChange]
     );
@@ -349,9 +350,8 @@ const BaseNavigationContainer = React.forwardRef(
             }
           }
 
-          const duplicateRouteNamesResult = checkDuplicateRouteNames(
-            hydratedState
-          );
+          const duplicateRouteNamesResult =
+            checkDuplicateRouteNames(hydratedState);
 
           if (duplicateRouteNamesResult.length) {
             const message = `Found screens with the same name nested inside one another. Check:\n${duplicateRouteNamesResult.map(

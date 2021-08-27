@@ -16,6 +16,7 @@ import NavigationContainer from '../NavigationContainer';
 global.window = window;
 
 // We want to use the web version of useLinking
+// eslint-disable-next-line import/extensions
 jest.mock('../useLinking', () => require('../useLinking.tsx').default);
 
 it('integrates with the history API', () => {

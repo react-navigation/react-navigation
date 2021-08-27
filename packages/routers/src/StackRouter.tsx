@@ -37,14 +37,13 @@ export type StackActionType =
 
 export type StackRouterOptions = DefaultRouterOptions;
 
-export type StackNavigationState<
-  ParamList extends ParamListBase
-> = NavigationState<ParamList> & {
-  /**
-   * Type of the router, in this case, it's stack.
-   */
-  type: 'stack';
-};
+export type StackNavigationState<ParamList extends ParamListBase> =
+  NavigationState<ParamList> & {
+    /**
+     * Type of the router, in this case, it's stack.
+     */
+    type: 'stack';
+  };
 
 export type StackActionHelpers<ParamList extends ParamListBase> = {
   /**

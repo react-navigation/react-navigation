@@ -3,6 +3,122 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.1.3...@react-navigation/drawer@6.1.4) (2021-08-17)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+## [6.1.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.1.2...@react-navigation/drawer@6.1.3) (2021-08-11)
+
+
+### Bug Fixes
+
+* use correct tint and background color from drawer items ([f8fddac](https://github.com/react-navigation/react-navigation/commit/f8fddac79d0f95aa4ece6b1c7645619f5497a112))
+
+
+
+
+
+## [6.1.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.1.1...@react-navigation/drawer@6.1.2) (2021-08-11)
+
+
+### Bug Fixes
+
+* fix headerTransparent not working outside stack navigator ([42c43ff](https://github.com/react-navigation/react-navigation/commit/42c43ff7617112afd223ecb323be622666c79096))
+
+
+
+
+
+## [6.1.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.1.0...@react-navigation/drawer@6.1.1) (2021-08-09)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+# [6.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.1...@react-navigation/drawer@6.1.0) (2021-08-07)
+
+
+### Bug Fixes
+
+* blink while switching screens ([#9705](https://github.com/react-navigation/react-navigation/issues/9705)) ([99735e1](https://github.com/react-navigation/react-navigation/commit/99735e1b730a2f308ba00dcaef54d5ec14769a3d))
+
+
+### Features
+
+* use forwardRef with DrawerContentScrollView ([#9695](https://github.com/react-navigation/react-navigation/issues/9695)) ([ebb5f24](https://github.com/react-navigation/react-navigation/commit/ebb5f246645246b445b1fd22d8ae8fe87d3d7c52)), closes [#9350](https://github.com/react-navigation/react-navigation/issues/9350)
+
+
+
+
+
+## [6.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0...@react-navigation/drawer@6.0.1) (2021-08-03)
+
+
+### Bug Fixes
+
+* preserve params when switching tabs. fixes [#9782](https://github.com/react-navigation/react-navigation/issues/9782) ([98fa233](https://github.com/react-navigation/react-navigation/commit/98fa2330146457045c01af820c6d8e8cb955f9d1))
+
+
+
+
+
+# [6.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.21...@react-navigation/drawer@6.0.0) (2021-08-01)
+
+
+### Bug Fixes
+
+* add deprecation warning for openByDefault ([9506ad1](https://github.com/react-navigation/react-navigation/commit/9506ad1f001b3ed295a36c6744ed17459fa193e4))
+
+
+
+
+
+# [6.0.0-next.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.20...@react-navigation/drawer@6.0.0-next.21) (2021-07-16)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+# [6.0.0-next.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.19...@react-navigation/drawer@6.0.0-next.20) (2021-07-16)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+# [6.0.0-next.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.17...@react-navigation/drawer@6.0.0-next.19) (2021-07-01)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+# [6.0.0-next.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.17...@react-navigation/drawer@6.0.0-next.18) (2021-06-10)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+# [6.0.0-next.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.16...@react-navigation/drawer@6.0.0-next.17) (2021-06-01)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
 # [6.0.0-next.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.0.0-next.15...@react-navigation/drawer@6.0.0-next.16) (2021-05-29)
 
 **Note:** Version bump only for package @react-navigation/drawer

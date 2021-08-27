@@ -38,6 +38,7 @@ import type {
 import getDistanceForDirection from '../../utils/getDistanceForDirection';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import { MaybeScreen, MaybeScreenContainer } from '../Screens';
+import { getIsModalPresentation } from './Card';
 import CardContainer from './CardContainer';
 
 type GestureValues = {
@@ -59,6 +60,7 @@ type Props = {
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
   renderScene: (props: { route: Route<string> }) => React.ReactNode;
   isParentHeaderShown: boolean;
+  isParentModal: boolean;
   onTransitionStart: (
     props: { route: Route<string> },
     closing: boolean
@@ -87,29 +89,70 @@ const STATE_ON_TOP = 2;
 
 const FALLBACK_DESCRIPTOR = Object.freeze({ options: {} });
 
+const getInterpolationIndex = (scenes: Scene[], index: number) => {
+  const { cardStyleInterpolator } = scenes[index].descriptor.options;
+
+  // Start from current card and count backwards the number of cards with same interpolation
+  let interpolationIndex = 0;
+
+  for (let i = index - 1; i >= 0; i--) {
+    const cardStyleInterpolatorCurrent =
+      scenes[i]?.descriptor.options.cardStyleInterpolator;
+
+    if (cardStyleInterpolatorCurrent !== cardStyleInterpolator) {
+      break;
+    }
+
+    interpolationIndex++;
+  }
+
+  return interpolationIndex;
+};
+
+const getIsModal = (
+  scene: Scene,
+  interpolationIndex: number,
+  isParentModal: boolean
+) => {
+  if (isParentModal) {
+    return true;
+  }
+
+  const { cardStyleInterpolator } = scene.descriptor.options;
+  const isModalPresentation = getIsModalPresentation(cardStyleInterpolator);
+  const isModal = isModalPresentation && interpolationIndex !== 0;
+
+  return isModal;
+};
+
 const getHeaderHeights = (
-  routes: Route<string>[],
+  scenes: Scene[],
   insets: EdgeInsets,
   isParentHeaderShown: boolean,
-  descriptors: StackDescriptorMap,
+  isParentModal: boolean,
   layout: Layout,
   previous: Record<string, number>
 ) => {
-  return routes.reduce<Record<string, number>>((acc, curr) => {
-    const { options = {} } = descriptors[curr.key] || {};
-    const style: any = StyleSheet.flatten(options.headerStyle || {});
-
-    const height =
-      typeof style.height === 'number' ? style.height : previous[curr.key];
-
+  return scenes.reduce<Record<string, number>>((acc, curr, index) => {
     const {
       headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
-    } = options;
+      headerStyle,
+    } = curr.descriptor.options;
 
-    acc[curr.key] =
+    const style = StyleSheet.flatten(headerStyle || {});
+
+    const height =
+      typeof style.height === 'number'
+        ? style.height
+        : previous[curr.route.key];
+
+    const interpolationIndex = getInterpolationIndex(scenes, index);
+    const isModal = getIsModal(curr, interpolationIndex, isParentModal);
+
+    acc[curr.route.key] =
       typeof height === 'number'
         ? height
-        : getDefaultHeaderHeight(layout, headerStatusBarHeight);
+        : getDefaultHeaderHeight(layout, isModal, headerStatusBarHeight);
 
     return acc;
   }, {});
@@ -185,152 +228,153 @@ export default class CardStack extends React.Component<Props, State> {
       return acc;
     }, {});
 
-    return {
-      routes: props.routes,
-      scenes: props.routes.map((route, index, self) => {
-        const previousRoute = self[index - 1];
-        const nextRoute = self[index + 1];
+    const scenes = props.routes.map((route, index, self) => {
+      const previousRoute = self[index - 1];
+      const nextRoute = self[index + 1];
 
-        const oldScene = state.scenes[index];
+      const oldScene = state.scenes[index];
 
-        const currentGesture = gestures[route.key];
-        const previousGesture = previousRoute
-          ? gestures[previousRoute.key]
-          : undefined;
-        const nextGesture = nextRoute ? gestures[nextRoute.key] : undefined;
+      const currentGesture = gestures[route.key];
+      const previousGesture = previousRoute
+        ? gestures[previousRoute.key]
+        : undefined;
+      const nextGesture = nextRoute ? gestures[nextRoute.key] : undefined;
 
-        const descriptor =
-          props.descriptors[route.key] ||
-          state.descriptors[route.key] ||
-          (oldScene ? oldScene.descriptor : FALLBACK_DESCRIPTOR);
+      const descriptor =
+        props.descriptors[route.key] ||
+        state.descriptors[route.key] ||
+        (oldScene ? oldScene.descriptor : FALLBACK_DESCRIPTOR);
 
-        const nextDescriptor =
-          props.descriptors[nextRoute?.key] ||
-          state.descriptors[nextRoute?.key];
+      const nextDescriptor =
+        props.descriptors[nextRoute?.key] || state.descriptors[nextRoute?.key];
 
-        const previousDescriptor =
-          props.descriptors[previousRoute?.key] ||
-          state.descriptors[previousRoute?.key];
+      const previousDescriptor =
+        props.descriptors[previousRoute?.key] ||
+        state.descriptors[previousRoute?.key];
 
-        // When a screen is not the last, it should use next screen's transition config
-        // Many transitions also animate the previous screen, so using 2 different transitions doesn't look right
-        // For example combining a slide and a modal transition would look wrong otherwise
-        // With this approach, combining different transition styles in the same navigator mostly looks right
-        // This will still be broken when 2 transitions have different idle state (e.g. modal presentation),
-        // but majority of the transitions look alright
-        const optionsForTransitionConfig =
-          index !== self.length - 1 &&
-          nextDescriptor &&
-          nextDescriptor.options.presentation !== 'transparentModal'
-            ? nextDescriptor.options
-            : descriptor.options;
+      // When a screen is not the last, it should use next screen's transition config
+      // Many transitions also animate the previous screen, so using 2 different transitions doesn't look right
+      // For example combining a slide and a modal transition would look wrong otherwise
+      // With this approach, combining different transition styles in the same navigator mostly looks right
+      // This will still be broken when 2 transitions have different idle state (e.g. modal presentation),
+      // but majority of the transitions look alright
+      const optionsForTransitionConfig =
+        index !== self.length - 1 &&
+        nextDescriptor &&
+        nextDescriptor.options.presentation !== 'transparentModal'
+          ? nextDescriptor.options
+          : descriptor.options;
 
-        let defaultTransitionPreset =
-          optionsForTransitionConfig.presentation === 'modal'
-            ? ModalTransition
-            : optionsForTransitionConfig.presentation === 'transparentModal'
-            ? ModalFadeTransition
-            : DefaultTransition;
+      let defaultTransitionPreset =
+        optionsForTransitionConfig.presentation === 'modal'
+          ? ModalTransition
+          : optionsForTransitionConfig.presentation === 'transparentModal'
+          ? ModalFadeTransition
+          : DefaultTransition;
 
-        const {
-          animationEnabled = Platform.OS !== 'web' &&
-            Platform.OS !== 'windows' &&
-            Platform.OS !== 'macos',
-          gestureEnabled = Platform.OS === 'ios' && animationEnabled,
-          gestureDirection = defaultTransitionPreset.gestureDirection,
-          transitionSpec = defaultTransitionPreset.transitionSpec,
-          cardStyleInterpolator = animationEnabled === false
-            ? forNoAnimationCard
-            : defaultTransitionPreset.cardStyleInterpolator,
-          headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
-          cardOverlayEnabled = (Platform.OS !== 'ios' &&
-            optionsForTransitionConfig.presentation !== 'transparentModal') ||
-            cardStyleInterpolator === forModalPresentationIOS,
-        } = optionsForTransitionConfig;
+      const {
+        animationEnabled = Platform.OS !== 'web' &&
+          Platform.OS !== 'windows' &&
+          Platform.OS !== 'macos',
+        gestureEnabled = Platform.OS === 'ios' && animationEnabled,
+        gestureDirection = defaultTransitionPreset.gestureDirection,
+        transitionSpec = defaultTransitionPreset.transitionSpec,
+        cardStyleInterpolator = animationEnabled === false
+          ? forNoAnimationCard
+          : defaultTransitionPreset.cardStyleInterpolator,
+        headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
+        cardOverlayEnabled = (Platform.OS !== 'ios' &&
+          optionsForTransitionConfig.presentation !== 'transparentModal') ||
+          getIsModalPresentation(cardStyleInterpolator),
+      } = optionsForTransitionConfig;
 
-        const headerMode: StackHeaderMode =
-          descriptor.options.headerMode ??
-          (!(
-            optionsForTransitionConfig.presentation === 'modal' ||
-            optionsForTransitionConfig.presentation === 'transparentModal' ||
-            nextDescriptor?.options.presentation === 'modal' ||
-            nextDescriptor?.options.presentation === 'transparentModal' ||
-            cardStyleInterpolator === forModalPresentationIOS
-          ) &&
-          Platform.OS === 'ios' &&
-          descriptor.options.header === undefined
-            ? 'float'
-            : 'screen');
+      const headerMode: StackHeaderMode =
+        descriptor.options.headerMode ??
+        (!(
+          optionsForTransitionConfig.presentation === 'modal' ||
+          optionsForTransitionConfig.presentation === 'transparentModal' ||
+          nextDescriptor?.options.presentation === 'modal' ||
+          nextDescriptor?.options.presentation === 'transparentModal' ||
+          getIsModalPresentation(cardStyleInterpolator)
+        ) &&
+        Platform.OS === 'ios' &&
+        descriptor.options.header === undefined
+          ? 'float'
+          : 'screen');
 
-        const scene = {
-          route,
-          descriptor: {
-            ...descriptor,
-            options: {
-              ...descriptor.options,
-              animationEnabled,
-              cardOverlayEnabled,
-              cardStyleInterpolator,
-              gestureDirection,
-              gestureEnabled,
-              headerStyleInterpolator,
-              transitionSpec,
-              headerMode,
-            },
+      const scene = {
+        route,
+        descriptor: {
+          ...descriptor,
+          options: {
+            ...descriptor.options,
+            animationEnabled,
+            cardOverlayEnabled,
+            cardStyleInterpolator,
+            gestureDirection,
+            gestureEnabled,
+            headerStyleInterpolator,
+            transitionSpec,
+            headerMode,
           },
-          progress: {
-            current: getProgressFromGesture(
-              currentGesture,
-              state.layout,
-              descriptor
-            ),
-            next:
-              nextGesture &&
-              nextDescriptor.options.presentation !== 'transparentModal'
-                ? getProgressFromGesture(
-                    nextGesture,
-                    state.layout,
-                    nextDescriptor
-                  )
-                : undefined,
-            previous: previousGesture
+        },
+        progress: {
+          current: getProgressFromGesture(
+            currentGesture,
+            state.layout,
+            descriptor
+          ),
+          next:
+            nextGesture &&
+            nextDescriptor?.options.presentation !== 'transparentModal'
               ? getProgressFromGesture(
-                  previousGesture,
+                  nextGesture,
                   state.layout,
-                  previousDescriptor
+                  nextDescriptor
                 )
               : undefined,
-          },
-          __memo: [
-            state.layout,
-            descriptor,
-            nextDescriptor,
-            previousDescriptor,
-            currentGesture,
-            nextGesture,
-            previousGesture,
-          ],
-        };
+          previous: previousGesture
+            ? getProgressFromGesture(
+                previousGesture,
+                state.layout,
+                previousDescriptor
+              )
+            : undefined,
+        },
+        __memo: [
+          state.layout,
+          descriptor,
+          nextDescriptor,
+          previousDescriptor,
+          currentGesture,
+          nextGesture,
+          previousGesture,
+        ],
+      };
 
-        if (
-          oldScene &&
-          scene.__memo.every((it, i) => {
-            // @ts-expect-error: we haven't added __memo to the annotation to prevent usage elsewhere
-            return oldScene.__memo[i] === it;
-          })
-        ) {
-          return oldScene;
-        }
+      if (
+        oldScene &&
+        scene.__memo.every((it, i) => {
+          // @ts-expect-error: we haven't added __memo to the annotation to prevent usage elsewhere
+          return oldScene.__memo[i] === it;
+        })
+      ) {
+        return oldScene;
+      }
 
-        return scene;
-      }),
+      return scene;
+    });
+
+    return {
+      routes: props.routes,
+      scenes,
       gestures,
       descriptors: props.descriptors,
       headerHeights: getHeaderHeights(
-        props.routes,
+        scenes,
         props.insets,
         props.isParentHeaderShown,
-        state.descriptors,
+        props.isParentModal,
         state.layout,
         state.headerHeights
       ),
@@ -368,10 +412,10 @@ export default class CardStack extends React.Component<Props, State> {
       return {
         layout,
         headerHeights: getHeaderHeights(
-          props.routes,
+          state.scenes,
           props.insets,
           props.isParentHeaderShown,
-          state.descriptors,
+          props.isParentModal,
           layout,
           state.headerHeights
         ),
@@ -436,6 +480,7 @@ export default class CardStack extends React.Component<Props, State> {
       renderHeader,
       renderScene,
       isParentHeaderShown,
+      isParentModal,
       onTransitionStart,
       onTransitionEnd,
       onGestureStart,
@@ -474,7 +519,7 @@ export default class CardStack extends React.Component<Props, State> {
         // By default, we don't want to detach the previous screen of the active one for modals
         detachPreviousScreen = options.presentation === 'transparentModal'
           ? false
-          : options.cardStyleInterpolator === forModalPresentationIOS
+          : getIsModalPresentation(options.cardStyleInterpolator)
           ? i !==
             scenes
               .map((scene) => scene.descriptor.options.cardStyleInterpolator)
@@ -550,7 +595,6 @@ export default class CardStack extends React.Component<Props, State> {
             }
 
             const {
-              cardStyleInterpolator,
               headerShown = true,
               headerTransparent,
               headerStyle,
@@ -577,7 +621,7 @@ export default class CardStack extends React.Component<Props, State> {
             let headerDarkContent: boolean | undefined;
 
             if (headerShown) {
-              if (headerTintColor) {
+              if (typeof headerTintColor === 'string') {
                 headerDarkContent = Color(headerTintColor).isDark();
               } else if (typeof headerBackgroundColor === 'string') {
                 headerDarkContent = !Color(headerBackgroundColor).isDark();
@@ -585,18 +629,12 @@ export default class CardStack extends React.Component<Props, State> {
             }
 
             // Start from current card and count backwards the number of cards with same interpolation
-            let interpolationIndex = 0;
-
-            for (let i = index - 1; i >= 0; i--) {
-              const cardStyleInterpolatorCurrent =
-                scenes[i]?.descriptor.options.cardStyleInterpolator;
-
-              if (cardStyleInterpolatorCurrent !== cardStyleInterpolator) {
-                break;
-              }
-
-              interpolationIndex++;
-            }
+            const interpolationIndex = getInterpolationIndex(scenes, index);
+            const isModal = getIsModal(
+              scene,
+              interpolationIndex,
+              isParentModal
+            );
 
             const isNextScreenTransparent =
               scenes[index + 1]?.descriptor.options.presentation ===
@@ -623,6 +661,7 @@ export default class CardStack extends React.Component<Props, State> {
                 <CardContainer
                   index={index}
                   interpolationIndex={interpolationIndex}
+                  modal={isModal}
                   active={index === self.length - 1}
                   focused={focused}
                   closing={closingRouteKeys.includes(route.key)}

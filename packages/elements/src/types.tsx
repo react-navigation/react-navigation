@@ -16,26 +16,7 @@ export type HeaderOptions = {
    * It receives `allowFontScaling`, `tintColor`, `style` and `children` in the options object as an argument.
    * The title string is passed in `children`.
    */
-  headerTitle?:
-    | string
-    | ((props: {
-        /**
-         * The title text of the header.
-         */
-        children: string;
-        /**
-         * Whether title font should scale to respect Text Size accessibility settings.
-         */
-        allowFontScaling?: boolean;
-        /**
-         * Tint color for the header.
-         */
-        tintColor?: string;
-        /**
-         * Style object for the title element.
-         */
-        style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
-      }) => React.ReactNode);
+  headerTitle?: string | ((props: HeaderTitleProps) => React.ReactNode);
   /**
    * How to align the the header title.
    * Defaults to `center` on iOS and `left` on Android.
@@ -60,7 +41,12 @@ export type HeaderOptions = {
     tintColor?: string;
     pressColor?: string;
     pressOpacity?: number;
+    labelVisible?: boolean;
   }) => React.ReactNode;
+  /**
+   * Whether a label is visible in the left button. Used to add extra padding.
+   */
+  headerLeftLabelVisible?: boolean;
   /**
    * Style object for the container of the `headerLeft` element`.
    */
@@ -119,6 +105,29 @@ export type HeaderOptions = {
    * Pass 0 or a custom value to disable the default behaviour, and customize the height.
    */
   headerStatusBarHeight?: number;
+};
+
+export type HeaderTitleProps = {
+  /**
+   * The title text of the header.
+   */
+  children: string;
+  /**
+   * Whether title font should scale to respect Text Size accessibility settings.
+   */
+  allowFontScaling?: boolean;
+  /**
+   * Tint color for the header.
+   */
+  tintColor?: string;
+  /**
+   * Callback to trigger when the size of the title element changes.
+   */
+  onLayout?: (e: LayoutChangeEvent) => void;
+  /**
+   * Style object for the title element.
+   */
+  style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
 };
 
 export type HeaderBackButtonProps = {

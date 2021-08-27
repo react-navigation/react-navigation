@@ -200,8 +200,13 @@ type NavigationHelpersCommon<
    */
   navigate<RouteName extends keyof ParamList>(
     options:
-      | { key: string; params?: ParamList[RouteName] }
-      | { name: RouteName; key?: string; params: ParamList[RouteName] }
+      | { key: string; params?: ParamList[RouteName]; merge?: boolean }
+      | {
+          name: RouteName;
+          key?: string;
+          params: ParamList[RouteName];
+          merge?: boolean;
+        }
   ): void;
 
   /**
@@ -524,43 +529,45 @@ export type NavigationContainerEventMap = {
        * Whether the action was a no-op, i.e. resulted any state changes.
        */
       noop: boolean;
+      /**
+       * Stack trace of the action, this will only be available during development.
+       */
+      stack: string | undefined;
     };
   };
 };
 
-export type NavigationContainerRef<
-  ParamList extends {}
-> = NavigationHelpers<ParamList> &
-  EventConsumer<NavigationContainerEventMap> & {
-    /**
-     * Reset the navigation state of the root navigator to the provided state.
-     *
-     * @param state Navigation state object.
-     */
-    resetRoot(state?: PartialState<NavigationState> | NavigationState): void;
-    /**
-     * Get the rehydrated navigation state of the navigation tree.
-     */
-    getRootState(): NavigationState;
-    /**
-     * Get the currently focused navigation route.
-     */
-    getCurrentRoute(): Route<string> | undefined;
-    /**
-     * Get the currently focused route's options.
-     */
-    getCurrentOptions(): object | undefined;
-    /**
-     * Whether the navigation container is ready to handle actions.
-     */
-    isReady(): boolean;
-  };
+export type NavigationContainerRef<ParamList extends {}> =
+  NavigationHelpers<ParamList> &
+    EventConsumer<NavigationContainerEventMap> & {
+      /**
+       * Reset the navigation state of the root navigator to the provided state.
+       *
+       * @param state Navigation state object.
+       */
+      resetRoot(state?: PartialState<NavigationState> | NavigationState): void;
+      /**
+       * Get the rehydrated navigation state of the navigation tree.
+       */
+      getRootState(): NavigationState;
+      /**
+       * Get the currently focused navigation route.
+       */
+      getCurrentRoute(): Route<string> | undefined;
+      /**
+       * Get the currently focused route's options.
+       */
+      getCurrentOptions(): object | undefined;
+      /**
+       * Whether the navigation container is ready to handle actions.
+       */
+      isReady(): boolean;
+    };
 
-export type NavigationContainerRefWithCurrent<
-  ParamList extends {}
-> = NavigationContainerRef<ParamList> & {
-  current: NavigationContainerRef<ParamList> | null;
-};
+export type NavigationContainerRefWithCurrent<ParamList extends {}> =
+  NavigationContainerRef<ParamList> & {
+    current: NavigationContainerRef<ParamList> | null;
+  };
 
 export type TypedNavigator<
   ParamList extends ParamListBase,
@@ -630,10 +637,9 @@ export type PathConfig<ParamList extends {}> = {
 };
 
 export type PathConfigMap<ParamList extends {}> = {
-  [RouteName in keyof ParamList]?: ParamList[RouteName] extends NavigatorScreenParams<
-    infer T,
-    any
-  >
+  [RouteName in keyof ParamList]?: NonNullable<
+    ParamList[RouteName]
+  > extends NavigatorScreenParams<infer T, any>
     ? string | PathConfig<T>
     : string | Omit<PathConfig<{}>, 'screens' | 'initialRouteName'>;
 };

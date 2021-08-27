@@ -234,7 +234,7 @@ function DrawerViewBase({
           return (
             <MaybeScreen
               key={route.key}
-              style={[StyleSheet.absoluteFill, { opacity: isFocused ? 1 : 0 }]}
+              style={[StyleSheet.absoluteFill, { zIndex: isFocused ? 0 : -1 }]}
               visible={isFocused}
               enabled={detachInactiveScreens}
               orientation={orientation}
@@ -249,11 +249,13 @@ function DrawerViewBase({
                 route={descriptor.route}
                 navigation={descriptor.navigation}
                 headerShown={descriptor.options.headerShown}
+                headerTransparent={descriptor.options.headerTransparent}
                 headerStatusBarHeight={descriptor.options.headerStatusBarHeight}
                 header={header({
                   layout: dimensions,
                   route: descriptor.route,
-                  navigation: descriptor.navigation as DrawerNavigationProp<ParamListBase>,
+                  navigation:
+                    descriptor.navigation as DrawerNavigationProp<ParamListBase>,
                   options: descriptor.options,
                 })}
                 style={sceneContainerStyle}

@@ -92,19 +92,26 @@ export default function HeaderContainer({
           headerMode: previousHeaderMode,
         } = previousDescriptor?.options || {};
 
-        const {
-          headerShown: nextHeaderShown = true,
-          headerMode: nextHeaderMode,
-          gestureDirection: nextGestureDirection,
-        } = nextDescriptor?.options || {};
+        // If any of the next screens don't have a header or header is part of the screen
+        // Then we need to move this header offscreen so that it doesn't cover it
+        const nextHeaderlessScene = self.slice(i + 1).find((scene) => {
+          const {
+            headerShown: currentHeaderShown = true,
+            headerMode: currentHeaderMode,
+          } = scene?.descriptor.options || {};
+
+          return currentHeaderShown === false || currentHeaderMode === 'screen';
+        });
+
+        const { gestureDirection: nextHeaderlessGestureDirection } =
+          nextHeaderlessScene?.descriptor.options || {};
 
         const isHeaderStatic =
           ((previousHeaderShown === false || previousHeaderMode === 'screen') &&
             // We still need to animate when coming back from next scene
             // A hacky way to check this is if the next scene exists
             !nextDescriptor) ||
-          nextHeaderShown === false ||
-          nextHeaderMode === 'screen';
+          nextHeaderlessScene;
 
         const props: StackHeaderProps = {
           layout,
@@ -117,10 +124,10 @@ export default function HeaderContainer({
           styleInterpolator:
             mode === 'float'
               ? isHeaderStatic
-                ? nextGestureDirection === 'vertical' ||
-                  nextGestureDirection === 'vertical-inverted'
+                ? nextHeaderlessGestureDirection === 'vertical' ||
+                  nextHeaderlessGestureDirection === 'vertical-inverted'
                   ? forSlideUp
-                  : nextGestureDirection === 'horizontal-inverted'
+                  : nextHeaderlessGestureDirection === 'horizontal-inverted'
                   ? forSlideRight
                   : forSlideLeft
                 : headerStyleInterpolator

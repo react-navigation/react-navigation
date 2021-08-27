@@ -43,24 +43,23 @@ export type DrawerNavigationState<ParamList extends ParamListBase> = Omit<
   )[];
 };
 
-export type DrawerActionHelpers<
-  ParamList extends ParamListBase
-> = TabActionHelpers<ParamList> & {
-  /**
-   * Open the drawer sidebar.
-   */
-  openDrawer(): void;
+export type DrawerActionHelpers<ParamList extends ParamListBase> =
+  TabActionHelpers<ParamList> & {
+    /**
+     * Open the drawer sidebar.
+     */
+    openDrawer(): void;
 
-  /**
-   * Close the drawer sidebar.
-   */
-  closeDrawer(): void;
+    /**
+     * Close the drawer sidebar.
+     */
+    closeDrawer(): void;
 
-  /**
-   * Open the drawer sidebar if closed, or close if opened.
-   */
-  toggleDrawer(): void;
-};
+    /**
+     * Open the drawer sidebar if closed, or close if opened.
+     */
+    toggleDrawer(): void;
+  };
 
 export const DrawerActions = {
   ...TabActions,
@@ -114,7 +113,7 @@ export default function DrawerRouter({
   DrawerNavigationState<ParamListBase>,
   DrawerActionType | CommonNavigationAction
 > {
-  const router = (TabRouter(rest) as unknown) as Router<
+  const router = TabRouter(rest) as unknown as Router<
     DrawerNavigationState<ParamListBase>,
     TabActionType | CommonNavigationAction
   >;

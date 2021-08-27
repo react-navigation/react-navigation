@@ -21,7 +21,6 @@ export default function ModalStatusBarManager({
   const { dark: darkTheme } = useTheme();
   const [overlapping, setOverlapping] = React.useState(true);
 
-  const enabled = layout.width && layout.height > layout.width;
   const scale = 1 - 20 / layout.width;
   const offset = (insets.top - 34) * scale;
 
@@ -31,10 +30,6 @@ export default function ModalStatusBarManager({
   )?.translateY;
 
   React.useEffect(() => {
-    if (!enabled) {
-      return;
-    }
-
     const listener = ({ value }: { value: number }) => {
       setOverlapping(value < offset);
     };
@@ -42,11 +37,7 @@ export default function ModalStatusBarManager({
     const sub = translateY?.addListener(listener);
 
     return () => translateY?.removeListener(sub);
-  }, [enabled, offset, translateY]);
-
-  if (!enabled) {
-    return null;
-  }
+  }, [offset, translateY]);
 
   const darkContent = dark ?? !darkTheme;
 

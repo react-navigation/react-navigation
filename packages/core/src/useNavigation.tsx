@@ -22,5 +22,5 @@ export default function useNavigation<
   }
 
   // FIXME: Figure out a better way to do this
-  return ((navigation ?? root) as unknown) as T;
+  return (navigation ?? root) as unknown as T;
 }

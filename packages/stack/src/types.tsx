@@ -1,6 +1,8 @@
 import type {
   HeaderBackButton,
+  HeaderBackButtonProps,
   HeaderOptions,
+  HeaderTitleProps,
 } from '@react-navigation/elements';
 import type {
   Descriptor,
@@ -81,6 +83,10 @@ type SceneOptionsDefaults = TransitionPreset & {
 
 export type Scene = {
   /**
+   * Route object for the current screen.
+   */
+  route: Route<string>;
+  /**
    * Descriptor object for the screen.
    */
   descriptor: Omit<StackDescriptor, 'options'> & {
@@ -114,7 +120,22 @@ export type StackHeaderMode = 'float' | 'screen';
 
 export type StackPresentationMode = 'card' | 'modal';
 
-export type StackHeaderOptions = HeaderOptions & {
+export type StackHeaderOptions = Omit<
+  HeaderOptions,
+  'headerLeft' | 'headerTitle'
+> & {
+  /**
+   * String or a function that returns a React Element to be used by the header.
+   * Defaults to screen `title` or route name.
+   *
+   * It receives `allowFontScaling`, `tintColor`, `style` and `children` in the options object as an argument.
+   * The title string is passed in `children`.
+   */
+  headerTitle?: string | ((props: HeaderTitleProps) => React.ReactNode);
+  /**
+   * Function which returns a React Element to display on the left side of the header.
+   */
+  headerLeft?: (props: HeaderBackButtonProps) => React.ReactNode;
   /**
    * Whether back button title font should scale to respect Text Size accessibility settings. Defaults to `false`.
    */

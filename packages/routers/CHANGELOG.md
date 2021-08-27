@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@6.0.0...@react-navigation/routers@6.0.1) (2021-08-03)
+
+
+### Reverts
+
+* Revert "fix: don't merge initial params when merge !== true" ([8086772](https://github.com/react-navigation/react-navigation/commit/80867722c5891b786e8c47f18135419b7cb915b3))
+
+
+
+
+
+# [6.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@6.0.0-next.6...@react-navigation/routers@6.0.0) (2021-08-01)
+
+
+### Bug Fixes
+
+* don't merge initial params when merge !== true ([54b215b](https://github.com/react-navigation/react-navigation/commit/54b215b9d3192d11c4c28bd469dd217d90d6c5c5))
+
+
+
+
+
+# [6.0.0-next.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@6.0.0-next.4...@react-navigation/routers@6.0.0-next.6) (2021-07-01)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+
+
+
+
+# [6.0.0-next.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@6.0.0-next.4...@react-navigation/routers@6.0.0-next.5) (2021-06-10)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+
+
+
+
 # [6.0.0-next.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@6.0.0-next.3...@react-navigation/routers@6.0.0-next.4) (2021-05-27)
 
 **Note:** Version bump only for package @react-navigation/routers

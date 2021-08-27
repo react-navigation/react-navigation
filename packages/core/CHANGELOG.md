@@ -3,6 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0...@react-navigation/core@6.0.1) (2021-08-03)
+
+
+### Bug Fixes
+
+* add merge to the navigate types ([#9777](https://github.com/react-navigation/react-navigation/issues/9777)) ([be8532c](https://github.com/react-navigation/react-navigation/commit/be8532c0867bdb0cff4b29c0892bdfe85c33e8e3))
+
+
+
+
+
+# [6.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.17...@react-navigation/core@6.0.0) (2021-08-01)
+
+
+### Bug Fixes
+
+* clear options set from a screen when it unmounts. closes [#9756](https://github.com/react-navigation/react-navigation/issues/9756) ([d2d7f8d](https://github.com/react-navigation/react-navigation/commit/d2d7f8d95e84e8d45b6807f59afcf4d0e64c3828))
+
+
+
+
+
+# [6.0.0-next.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.16...@react-navigation/core@6.0.0-next.17) (2021-07-16)
+
+
+### Bug Fixes
+
+* use nested params for initial state only ([577d79e](https://github.com/react-navigation/react-navigation/commit/577d79e98c6d6f1c78e0f3232225b2b6b331340b))
+
+
+
+
+
+# [6.0.0-next.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.15...@react-navigation/core@6.0.0-next.16) (2021-07-16)
+
+
+### Bug Fixes
+
+* prevent navigation state updates after state cleanup ([#9688](https://github.com/react-navigation/react-navigation/issues/9688)) ([16f0e11](https://github.com/react-navigation/react-navigation/commit/16f0e11822b14aa5b1ba4b288fb38fcf15088419))
+* sort wildcard and :params  ([#9672](https://github.com/react-navigation/react-navigation/issues/9672)) ([4135d09](https://github.com/react-navigation/react-navigation/commit/4135d09c6f14030257b2da47658e102b083c7727))
+
+
+
+
+
+# [6.0.0-next.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.13...@react-navigation/core@6.0.0-next.15) (2021-07-01)
+
+
+### Bug Fixes
+
+* fix typechecking in linking config ([b1134c8](https://github.com/react-navigation/react-navigation/commit/b1134c8a34f96be2817cb780c4bd23b2025b4c35))
+
+
+### Features
+
+* show stack trace in the flipper plugin ([97772af](https://github.com/react-navigation/react-navigation/commit/97772affa3c8f26489f0bdbfb6872ef4377b8ed1))
+
+
+
+
+
+# [6.0.0-next.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.13...@react-navigation/core@6.0.0-next.14) (2021-06-10)
+
+
+### Features
+
+* show stack trace in the flipper plugin ([97772af](https://github.com/react-navigation/react-navigation/commit/97772affa3c8f26489f0bdbfb6872ef4377b8ed1))
+
+
+
+
+
 # [6.0.0-next.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.12...@react-navigation/core@6.0.0-next.13) (2021-05-29)
 
 

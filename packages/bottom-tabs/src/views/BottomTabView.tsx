@@ -130,7 +130,7 @@ export default function BottomTabView(props: Props) {
           return (
             <MaybeScreen
               key={route.key}
-              style={StyleSheet.absoluteFill}
+              style={[StyleSheet.absoluteFill, { zIndex: isFocused ? 0 : -1 }]}
               visible={isFocused}
               enabled={detachInactiveScreens}
               orientation={orientation}
@@ -146,13 +146,15 @@ export default function BottomTabView(props: Props) {
                   route={descriptor.route}
                   navigation={descriptor.navigation}
                   headerShown={descriptor.options.headerShown}
+                  headerTransparent={descriptor.options.headerTransparent}
                   headerStatusBarHeight={
                     descriptor.options.headerStatusBarHeight
                   }
                   header={header({
                     layout: dimensions,
                     route: descriptor.route,
-                    navigation: descriptor.navigation as BottomTabNavigationProp<ParamListBase>,
+                    navigation:
+                      descriptor.navigation as BottomTabNavigationProp<ParamListBase>,
                     options: descriptor.options,
                   })}
                   style={sceneContainerStyle}

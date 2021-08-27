@@ -3,6 +3,116 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.4...@react-navigation/elements@1.1.0) (2021-08-17)
+
+
+### Features
+
+* **elements:** add style to SafeAreaProviderCompat props ([#9793](https://github.com/react-navigation/react-navigation/issues/9793)) ([f73aa55](https://github.com/react-navigation/react-navigation/commit/f73aa55fb2b7e7ca65d5f66269a43281f7ce0680))
+
+
+
+
+
+## [1.0.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.3...@react-navigation/elements@1.0.4) (2021-08-11)
+
+
+### Bug Fixes
+
+* fix headerTransparent not working outside stack navigator ([42c43ff](https://github.com/react-navigation/react-navigation/commit/42c43ff7617112afd223ecb323be622666c79096))
+
+
+
+
+
+## [1.0.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.2...@react-navigation/elements@1.0.3) (2021-08-09)
+
+
+### Bug Fixes
+
+* avoid overflowing long titles ([bacdbbd](https://github.com/react-navigation/react-navigation/commit/bacdbbdd7c5df73b84aa1ed8c0329c9525d0fdba))
+* pass onlayout to headerTitle ([#9808](https://github.com/react-navigation/react-navigation/issues/9808)) ([a79ce57](https://github.com/react-navigation/react-navigation/commit/a79ce57aa7f9be3a47a09728e920c0d4a805f5aa))
+
+
+
+
+
+## [1.0.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.1...@react-navigation/elements@1.0.2) (2021-08-07)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+
+
+
+
+## [1.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0...@react-navigation/elements@1.0.1) (2021-08-03)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+
+
+
+
+# [1.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.21...@react-navigation/elements@1.0.0) (2021-08-01)
+
+
+### Bug Fixes
+
+* match native iOS header height in stack ([51b636d](https://github.com/react-navigation/react-navigation/commit/51b636d7268fc05a8a9aca9e6aad0161674f238e))
+
+
+### Features
+
+* basic web implementation for native stack ([de84458](https://github.com/react-navigation/react-navigation/commit/de8445896021da4865089ba44e95afffbcee0919))
+* expose header height in native-stack ([#9774](https://github.com/react-navigation/react-navigation/issues/9774)) ([20abccd](https://github.com/react-navigation/react-navigation/commit/20abccda0d5074f61b2beb555b881a2087d27bb0))
+
+
+
+
+
+# [1.0.0-next.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.20...@react-navigation/elements@1.0.0-next.21) (2021-07-16)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+
+
+
+
+# [1.0.0-next.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.19...@react-navigation/elements@1.0.0-next.20) (2021-07-16)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+
+
+
+
+# [1.0.0-next.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.17...@react-navigation/elements@1.0.0-next.19) (2021-07-01)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+
+
+
+
+# [1.0.0-next.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.17...@react-navigation/elements@1.0.0-next.18) (2021-06-10)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+
+
+
+
+# [1.0.0-next.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.16...@react-navigation/elements@1.0.0-next.17) (2021-06-01)
+
+
+### Bug Fixes
+
+* tweak opacity animation for PlatformPressable ([b46c433](https://github.com/react-navigation/react-navigation/commit/b46c433f1e012fc3215ec32ac787c7c018963505))
+
+
+
+
+
 # [1.0.0-next.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.0-next.15...@react-navigation/elements@1.0.0-next.16) (2021-05-29)
 
 **Note:** Version bump only for package @react-navigation/elements

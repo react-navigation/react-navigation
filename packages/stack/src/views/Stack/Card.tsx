@@ -33,7 +33,6 @@ import ModalStatusBarManager from '../ModalStatusBarManager';
 import CardSheet from './CardSheet';
 
 type Props = ViewProps & {
-  // index: number;
   interpolationIndex: number;
   closing: boolean;
   next?: Animated.AnimatedInterpolation;
@@ -174,13 +173,8 @@ export default class Card extends React.Component<Props> {
     closing: boolean;
     velocity?: number;
   }) => {
-    const {
-      gesture,
-      transitionSpec,
-      onOpen,
-      onClose,
-      onTransition,
-    } = this.props;
+    const { gesture, transitionSpec, onOpen, onClose, onTransition } =
+      this.props;
 
     const toValue = this.getAnimateToValue({
       ...this.props,
@@ -188,6 +182,8 @@ export default class Card extends React.Component<Props> {
     });
 
     this.lastToValue = toValue;
+
+    this.isClosing.setValue(closing ? TRUE : FALSE);
 
     const spec = closing ? transitionSpec.close : transitionSpec.open;
 
@@ -327,13 +323,13 @@ export default class Card extends React.Component<Props> {
         if (closing) {
           // We call onClose with a delay to make sure that the animation has already started
           // This will make sure that the state update caused by this doesn't affect start of animation
-          this.pendingGestureCallback = (setTimeout(() => {
+          this.pendingGestureCallback = setTimeout(() => {
             onClose();
 
             // Trigger an update after we dispatch the action to remove the screen
             // This will make sure that we check if the screen didn't get removed so we can cancel the animation
             this.forceUpdate();
-          }, 32) as any) as number;
+          }, 32) as any as number;
         }
 
         onGestureEnd?.();
@@ -433,7 +429,6 @@ export default class Card extends React.Component<Props> {
   render() {
     const {
       styleInterpolator,
-      // index,
       interpolationIndex,
       current,
       gesture,
@@ -469,12 +464,8 @@ export default class Card extends React.Component<Props> {
       interpolationProps
     );
 
-    const {
-      containerStyle,
-      cardStyle,
-      overlayStyle,
-      shadowStyle,
-    } = interpolatedStyle;
+    const { containerStyle, cardStyle, overlayStyle, shadowStyle } =
+      interpolatedStyle;
 
     const handleGestureEvent = gestureEnabled
       ? Animated.event(
@@ -504,9 +495,8 @@ export default class Card extends React.Component<Props> {
           // So we should only enable it on iOS
           Platform.OS === 'ios' &&
           overlayEnabled &&
-          interpolationIndex === 0 &&
           next &&
-          styleInterpolator === forModalPresentationIOS ? (
+          getIsModalPresentation(styleInterpolator) ? (
             <ModalStatusBarManager
               dark={headerDarkContent}
               layout={layout}
@@ -579,6 +569,16 @@ export default class Card extends React.Component<Props> {
     );
   }
 }
+
+export const getIsModalPresentation = (
+  cardStyleInterpolator: StackCardStyleInterpolator
+) => {
+  return (
+    cardStyleInterpolator === forModalPresentationIOS ||
+    // Handle custom modal presentation interpolators as well
+    cardStyleInterpolator.name === 'forModalPresentationIOS'
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -4,6 +4,7 @@ import type {
   NavigationHelpers,
   NavigationProp,
   ParamListBase,
+  Route,
   RouteProp,
   StackActionHelpers,
   StackNavigationState,
@@ -15,6 +16,7 @@ import type {
   StyleProp,
   TargetedEvent,
   TextInputFocusEventData,
+  TextStyle,
   ViewStyle,
 } from 'react-native';
 
@@ -162,16 +164,48 @@ export type NativeStackNavigationHelpers = NavigationHelpers<
 // We want it to be an empty object because navigator does not have any additional props
 export type NativeStackNavigationConfig = {};
 
+export type NativeStackHeaderProps = {
+  /**
+   * Options for the back button.
+   */
+  back?: {
+    /**
+     * Title of the previous screen.
+     */
+    title: string;
+  };
+  /**
+   * Options for the current screen.
+   */
+  options: NativeStackNavigationOptions;
+  /**
+   * Route object for the current screen.
+   */
+  route: Route<string>;
+  /**
+   * Navigation prop for the header.
+   */
+  navigation: NativeStackNavigationProp<ParamListBase>;
+};
+
 export type NativeStackNavigationOptions = {
   /**
    * String that can be displayed in the header as a fallback for `headerTitle`.
    */
   title?: string;
   /**
+   * Function that given `HeaderProps` returns a React Element to display as a header.
+   */
+  header?: (props: NativeStackHeaderProps) => React.ReactNode;
+  /**
    * Whether the back button is visible in the header.
    * You can use it to show a back button alongside `headerLeft` if you have specified it.
    *
    * This will have no effect on the first screen in the stack.
+   *
+   * Only supported on iOS.
+   *
+   * @platform ios
    */
   headerBackVisible?: boolean;
   /**
@@ -240,6 +274,10 @@ export type NativeStackNavigationOptions = {
   headerLargeTitle?: boolean;
   /**
    * Whether drop shadow of header is visible when a large title is shown.
+   *
+   * Only supported on iOS.
+   *
+   * @platform ios
    */
   headerLargeTitleShadowVisible?: boolean;
   /**
@@ -280,9 +318,10 @@ export type NativeStackNavigationOptions = {
    * Setting this to `true` makes the header absolutely positioned,
    * and changes the background color to `transparent` unless specified in `headerStyle`.
    */
-  headerTranslucent?: boolean;
+  headerTransparent?: boolean;
   /**
    * Blur effect for the translucent header.
+   * The `headerTransparent` option needs to be set to `true` for this to work.
    *
    * Only supported on iOS.
    *
@@ -324,18 +363,24 @@ export type NativeStackNavigationOptions = {
         tintColor?: string;
       }) => React.ReactNode);
   /**
+   * How to align the the header title.
+   * Defaults to `left` on platforms other than iOS.
+   *
+   * Not supported on iOS. It's always `center` on iOS and cannot be changed.
+   */
+  headerTitleAlign?: 'left' | 'center';
+  /**
    * Style object for header title. Supported properties:
    * - fontFamily
    * - fontSize
    * - fontWeight
    * - color
    */
-  headerTitleStyle?: StyleProp<{
-    fontFamily?: string;
-    fontSize?: number;
-    fontWeight?: string;
-    color?: string;
-  }>;
+  headerTitleStyle?: StyleProp<
+    Pick<TextStyle, 'fontFamily' | 'fontSize' | 'fontWeight'> & {
+      color?: string;
+    }
+  >;
   /**
    * Options to render a native search bar on iOS.
    *
@@ -391,6 +436,8 @@ export type NativeStackNavigationOptions = {
    * Supported values:
    * - "push": the new screen will perform push animation.
    * - "pop": the new screen will perform pop animation.
+   *
+   * Only supported on iOS and Android.
    */
   animationTypeForReplace?: ReplaceTypes;
   /**
@@ -403,6 +450,8 @@ export type NativeStackNavigationOptions = {
    * - "slide_from_right": slide in the new screen from right (Android only, uses default animation on iOS)
    * - "slide_from_left": slide in the new screen from left (Android only, uses default animation on iOS)
    * - "none": don't animate the screen
+   *
+   * Only supported on iOS and Android.
    */
   animation?: AnimationTypes;
   /**
@@ -416,6 +465,8 @@ export type NativeStackNavigationOptions = {
    * - "containedTransparentModal": will use "UIModalPresentationOverCurrentContext" modal style on iOS and will fallback to "transparentModal" on Android.
    * - "fullScreenModal": will use "UIModalPresentationFullScreen" modal style on iOS and will fallback to "modal" on Android.
    * - "formSheet": will use "UIModalPresentationFormSheet" modal style on iOS and will fallback to "modal" on Android.
+   *
+   * Only supported on iOS and Android.
    */
   presentation?: PresentationTypes;
   /**
@@ -430,6 +481,8 @@ export type NativeStackNavigationOptions = {
    * - "landscape": landscape orientations are permitted.
    * - "landscape_left": landscape-left orientation is permitted.
    * - "landscape_right": landscape-right orientation is permitted.
+   *
+   * Only supported on iOS and Android.
    */
   orientation?: OrientationTypes;
 };

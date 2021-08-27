@@ -48,16 +48,16 @@ const shouldUseHorizontalLabels = ({
   layout,
   dimensions,
 }: Options) => {
-  const { tabBarLabelPosition, tabBarAdaptive = true } = descriptors[
-    state.routes[state.index].key
-  ].options;
+  const { tabBarLabelPosition } =
+    descriptors[state.routes[state.index].key].options;
 
   if (tabBarLabelPosition) {
-    return tabBarLabelPosition === 'beside-icon';
-  }
-
-  if (!tabBarAdaptive) {
-    return false;
+    switch (tabBarLabelPosition) {
+      case 'beside-icon':
+        return true;
+      case 'below-icon':
+        return false;
+    }
   }
 
   if (layout.width >= 768) {
@@ -145,6 +145,10 @@ export default function BottomTabBar({
     tabBarVisibilityAnimationConfig,
     tabBarStyle,
     tabBarBackground,
+    tabBarActiveTintColor,
+    tabBarInactiveTintColor,
+    tabBarActiveBackgroundColor,
+    tabBarInactiveBackgroundColor,
   } = focusedOptions;
 
   const dimensions = useSafeAreaFrame();
@@ -299,7 +303,7 @@ export default function BottomTabBar({
 
             if (!focused && !event.defaultPrevented) {
               navigation.dispatch({
-                ...CommonActions.navigate(route.name),
+                ...CommonActions.navigate({ name: route.name, merge: true }),
                 target: state.key,
               });
             }
@@ -342,12 +346,10 @@ export default function BottomTabBar({
                   to={buildLink(route.name, route.params)}
                   testID={options.tabBarTestID}
                   allowFontScaling={options.tabBarAllowFontScaling}
-                  activeTintColor={options.tabBarActiveTintColor}
-                  inactiveTintColor={options.tabBarInactiveTintColor}
-                  activeBackgroundColor={options.tabBarActiveBackgroundColor}
-                  inactiveBackgroundColor={
-                    options.tabBarInactiveBackgroundColor
-                  }
+                  activeTintColor={tabBarActiveTintColor}
+                  inactiveTintColor={tabBarInactiveTintColor}
+                  activeBackgroundColor={tabBarActiveBackgroundColor}
+                  inactiveBackgroundColor={tabBarInactiveBackgroundColor}
                   button={options.tabBarButton}
                   icon={
                     options.tabBarIcon ??
