@@ -112,12 +112,14 @@ function CardContainer({
 
   const handleClose = () => {
     const { route } = scene.descriptor;
-    const previousRoute = getPreviousScene({ route: scene.descriptor.route })?.route;
+    const previousRoute = getPreviousScene({
+      route: scene.descriptor.route,
+    })?.route;
 
     /*fix for https://github.com/react-navigation/react-navigation/issues/9870
       We trigger transition events only on the incoming (current) screen
       */
-    if(previousRoute){
+    if (previousRoute) {
       onTransitionEnd({ route: previousRoute }, false);
     }
 
@@ -152,7 +154,9 @@ function CardContainer({
     gesture: boolean;
   }) => {
     const { route } = scene.descriptor;
-    const previousRoute = getPreviousScene({ route: scene.descriptor.route })?.route;
+    const previousRoute = getPreviousScene({
+      route: scene.descriptor.route,
+    })?.route;
 
     if (!gesture) {
       onPageChangeConfirm?.(true);
@@ -161,20 +165,19 @@ function CardContainer({
     } else {
       onPageChangeCancel?.();
     }
-      /*fix for https://github.com/react-navigation/react-navigation/issues/9870
+    /*fix for https://github.com/react-navigation/react-navigation/issues/9870
        We trigger transition events only on the incoming (current) screen
        */
-      if(previousRoute && closing){
-        //route is closing send to the previous route for navigation.goBack() / navigation.pop / navigation.popToTop()
-        onTransitionStart?.({ route: previousRoute }, !closing);
-      }else{
-        //send to route for navigation.navigate  / navigation.push  / navigation.replace 
-        // Run the operation in the next frame so that the target (new route) is available in useEventEmitter::emit.
-        requestAnimationFrame(() => {
-          onTransitionStart?.({ route }, closing);
-        });
-      }
-    
+    if (previousRoute && closing) {
+      //route is closing send to the previous route for navigation.goBack() / navigation.pop / navigation.popToTop()
+      onTransitionStart?.({ route: previousRoute }, !closing);
+    } else {
+      //send to route for navigation.navigate  / navigation.push  / navigation.replace
+      // Run the operation in the next frame so that the target (new route) is available in useEventEmitter::emit.
+      requestAnimationFrame(() => {
+        onTransitionStart?.({ route }, closing);
+      });
+    }
   };
 
   const insets = {
