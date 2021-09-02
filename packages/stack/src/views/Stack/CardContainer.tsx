@@ -104,15 +104,23 @@ function CardContainer({
 
   const handleOpen = () => {
     const { route } = scene.descriptor;
-
-    onTransitionEnd({ route }, false);
+    requestAnimationFrame(() => {
+      onTransitionEnd({ route }, false);
+    });
     onOpenRoute({ route });
   };
 
   const handleClose = () => {
     const { route } = scene.descriptor;
+    const previousRoute = getPreviousScene({ route: scene.descriptor.route })?.route;
 
-    onTransitionEnd({ route }, true);
+    /*fix for https://github.com/react-navigation/react-navigation/issues/9870
+      We trigger transition events only on the incoming (current) screen
+      */
+    if(previousRoute){
+      onTransitionEnd({ route: previousRoute }, false);
+    }
+
     onCloseRoute({ route });
   };
 
@@ -144,6 +152,7 @@ function CardContainer({
     gesture: boolean;
   }) => {
     const { route } = scene.descriptor;
+    const previousRoute = getPreviousScene({ route: scene.descriptor.route })?.route;
 
     if (!gesture) {
       onPageChangeConfirm?.(true);
@@ -152,8 +161,20 @@ function CardContainer({
     } else {
       onPageChangeCancel?.();
     }
-
-    onTransitionStart?.({ route }, closing);
+      /*fix for https://github.com/react-navigation/react-navigation/issues/9870
+       We trigger transition events only on the incoming (current) screen
+       */
+      if(previousRoute && closing){
+        //route is closing send to the previous route for navigation.goBack() / navigation.pop / navigation.popToTop()
+        onTransitionStart?.({ route: previousRoute }, !closing);
+      }else{
+        //send to route for navigation.navigate  / navigation.push  / navigation.replace 
+        // Run the operation in the next frame so that the target (new route) is available in useEventEmitter::emit.
+        requestAnimationFrame(() => {
+          onTransitionStart?.({ route }, closing);
+        });
+      }
+    
   };
 
   const insets = {
