@@ -70,6 +70,8 @@ export default function HeaderConfig({
     ]);
 
   const titleText = title !== undefined ? title : route.name;
+  const titleColor =
+    headerTitleStyleFlattened.color ?? headerTintColor ?? colors.text;
 
   const headerLeftElement = headerLeft?.({ tintColor });
   const headerRightElement = headerRight?.({ tintColor });
@@ -121,9 +123,7 @@ export default function HeaderConfig({
       largeTitleFontWeight={headerLargeTitleStyleFlattened.fontWeight}
       largeTitleHideShadow={headerLargeTitleShadowVisible === false}
       title={typeof headerTitle === 'string' ? headerTitle : titleText}
-      titleColor={
-        headerTitleStyleFlattened.color ?? headerTintColor ?? colors.text
-      }
+      titleColor={titleColor}
       titleFontFamily={titleFontFamily}
       titleFontSize={headerTitleStyleFlattened.fontSize}
       titleFontWeight={headerTitleStyleFlattened.fontWeight}
@@ -156,7 +156,9 @@ export default function HeaderConfig({
                   typeof headerTitle === 'function' ? (
                     headerTitleElement
                   ) : (
-                    <HeaderTitle tintColor={tintColor}>{titleText}</HeaderTitle>
+                    <HeaderTitle tintColor={tintColor} style={headerTitleStyle}>
+                      {titleText}
+                    </HeaderTitle>
                   )
                 ) : null}
               </View>
@@ -167,7 +169,9 @@ export default function HeaderConfig({
               {typeof headerTitle === 'function' ? (
                 headerTitleElement
               ) : (
-                <HeaderTitle tintColor={tintColor}>{titleText}</HeaderTitle>
+                <HeaderTitle tintColor={tintColor} style={headerTitleStyle}>
+                  {titleText}
+                </HeaderTitle>
               )}
             </ScreenStackHeaderCenterView>
           ) : null}

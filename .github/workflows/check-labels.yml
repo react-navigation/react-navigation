@@ -24,6 +24,7 @@ jobs:
                   'material-bottom-tabs',
                   'material-top-tabs',
                   'stack',
+                  'native-stack',
                 ].includes(name)
               )
               .map((name) => `package:${name}`);
