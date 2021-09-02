@@ -13,7 +13,7 @@ export default function useRegisterNavigator() {
 
   if (container === undefined) {
     throw new Error(
-      "Couldn't register the navigator. Have you wrapped your app with 'NavigationContainer'?"
+      "Couldn't register the navigator. Have you wrapped your app with 'NavigationContainer'?\n\nThis can also happen if there are multiple copies of '@react-navigation' packages installed."
     );
   }
 
