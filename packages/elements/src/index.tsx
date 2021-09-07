@@ -1,4 +1,5 @@
 export { default as Background } from './Background';
+export { default as useAnimatedTabbarVisible } from './BottomTab/useAnimatedTabbarVisible';
 export { default as getDefaultHeaderHeight } from './Header/getDefaultHeaderHeight';
 export { default as getHeaderTitle } from './Header/getHeaderTitle';
 export { default as Header } from './Header/Header';

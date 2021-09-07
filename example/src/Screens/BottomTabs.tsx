@@ -18,6 +18,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Albums from '../Shared/Albums';
 import Chat from '../Shared/Chat';
 import Contacts from '../Shared/Contacts';
+import HideShowTabbar from '../Shared/HideShowTabbar';
 import SimpleStackScreen, { SimpleStackParams } from './SimpleStack';
 
 const getTabBarIcon =
@@ -30,6 +31,7 @@ type BottomTabParams = {
   TabAlbums: undefined;
   TabContacts: undefined;
   TabChat: undefined;
+  HideShowTabbar: undefined;
 };
 
 const AlbumsScreen = () => {
@@ -128,6 +130,14 @@ export default function BottomTabsScreen({
               style={StyleSheet.absoluteFill}
             />
           ),
+        }}
+      />
+      <BottomTabs.Screen
+        name="HideShowTabbar"
+        component={HideShowTabbar}
+        options={{
+          title: 'Hide/Show',
+          tabBarIcon: getTabBarIcon('tab'),
         }}
       />
     </BottomTabs.Navigator>
