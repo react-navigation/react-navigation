@@ -144,6 +144,7 @@ export default function BottomTabBar({
     tabBarHideOnKeyboard = false,
     tabBarVisibilityAnimationConfig,
     tabBarStyle,
+    tabBarInnerContainerStyle,
     tabBarBackground,
     tabBarActiveTintColor,
     tabBarInactiveTintColor,
@@ -253,6 +254,11 @@ export default function BottomTabBar({
 
   const tabBarBackgroundElement = tabBarBackground?.();
 
+  const innerContainerStyles = StyleSheet.flatten([
+    styles.content,
+    tabBarInnerContainerStyle,
+  ]) as StyleProp<ViewStyle>;
+
   return (
     <Animated.View
       style={[
@@ -291,7 +297,7 @@ export default function BottomTabBar({
       <View pointerEvents="none" style={StyleSheet.absoluteFill}>
         {tabBarBackgroundElement}
       </View>
-      <View accessibilityRole="tablist" style={styles.content}>
+      <View accessibilityRole="tablist" style={innerContainerStyles}>
         {routes.map((route, index) => {
           const focused = index === state.index;
           const { options } = descriptors[route.key];
