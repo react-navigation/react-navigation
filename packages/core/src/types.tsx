@@ -178,6 +178,7 @@ type NavigationHelpersCommon<
    * @param action Action object or update function.
    */
   dispatch(
+    this: void,
     action: NavigationAction | ((state: State) => NavigationAction)
   ): void;
 
@@ -188,6 +189,7 @@ type NavigationHelpersCommon<
    * @param [params] Params object for the route.
    */
   navigate<RouteName extends keyof ParamList>(
+    this: void,
     ...args: undefined extends ParamList[RouteName]
       ? [screen: RouteName] | [screen: RouteName, params: ParamList[RouteName]]
       : [screen: RouteName, params: ParamList[RouteName]]
@@ -199,6 +201,7 @@ type NavigationHelpersCommon<
    * @param route Object with `key` or `name` for the route to navigate to, and a `params` object.
    */
   navigate<RouteName extends keyof ParamList>(
+    this: void,
     options:
       | { key: string; params?: ParamList[RouteName]; merge?: boolean }
       | {
@@ -214,12 +217,12 @@ type NavigationHelpersCommon<
    *
    * @param state Navigation state object.
    */
-  reset(state: PartialState<State> | State): void;
+  reset(this: void, state: PartialState<State> | State): void;
 
   /**
    * Go back to the previous route in history.
    */
-  goBack(): void;
+  goBack(this: void): void;
 
   /**
    * Check if the screen is focused. The method returns `true` if focused, `false` otherwise.
@@ -227,24 +230,24 @@ type NavigationHelpersCommon<
    * To get notified of focus changes, use `addListener('focus', cb)` and `addListener('blur', cb)`.
    * To conditionally render content based on focus state, use the `useIsFocused` hook.
    */
-  isFocused(): boolean;
+  isFocused(this: void): boolean;
 
   /**
    * Check if dispatching back action will be handled by navigation.
    * Note that this method doesn't re-render screen when the result changes. So don't use it in `render`.
    */
-  canGoBack(): boolean;
+  canGoBack(this: void): boolean;
 
   /**
    * Returns the navigation prop from the parent navigator,
    */
-  getParent<T = NavigationProp<ParamListBase> | undefined>(): T;
+  getParent<T = NavigationProp<ParamListBase> | undefined>(this: void): T;
 
   /**
    * Returns the navigator's state.
    * Note that this method doesn't re-render screen when the result changes. So don't use it in `render`.
    */
-  getState(): State;
+  getState(this: void): State;
 } & PrivateValueStore<ParamList, keyof ParamList, {}>;
 
 export type NavigationHelpers<
@@ -301,7 +304,7 @@ export type NavigationProp<
    *
    * @param params Params object for the current route.
    */
-  setParams(params: Partial<ParamList[RouteName]>): void;
+  setParams(this: void, params: Partial<ParamList[RouteName]>): void;
 
   /**
    * Update the options for the route.
@@ -309,7 +312,7 @@ export type NavigationProp<
    *
    * @param options Options object for the route.
    */
-  setOptions(options: Partial<ScreenOptions>): void;
+  setOptions(this: void, options: Partial<ScreenOptions>): void;
 } & EventConsumer<EventMap & EventMapCore<State>> &
   PrivateValueStore<ParamList, RouteName, EventMap>;
 
