@@ -106,7 +106,7 @@ const MaybeNestedStack = ({
         <Screen enabled style={StyleSheet.absoluteFill}>
           <HeaderShownContext.Provider value>
             <HeaderHeightContext.Provider value={headerHeight}>
-              <HeaderConfig {...options} route={route} />
+              <HeaderConfig {...options} route={route} canGoBack isInModal />
               {content}
             </HeaderHeightContext.Provider>
           </HeaderShownContext.Provider>
@@ -223,6 +223,8 @@ const SceneView = ({
               {...options}
               route={route}
               headerShown={isHeaderInPush}
+              canGoBack={index !== 0}
+              isInModal={false}
             />
           )}
           <MaybeNestedStack
