@@ -24,6 +24,7 @@ import { processFonts } from './FontProcessor';
 
 type Props = NativeStackNavigationOptions & {
   route: Route<string>;
+  canGoBack: boolean;
 };
 
 export default function HeaderConfig({
@@ -47,9 +48,10 @@ export default function HeaderConfig({
   headerTitleAlign,
   headerTitleStyle,
   headerTransparent,
-  route,
   headerSearchBarOptions,
+  route,
   title,
+  canGoBack,
 }: Props): JSX.Element {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
@@ -91,7 +93,11 @@ export default function HeaderConfig({
     headerTitleStyleSupported.fontWeight = titleFontWeight;
   }
 
-  const headerLeftElement = headerLeft?.({ tintColor });
+  const headerLeftElement = headerLeft?.({
+    tintColor,
+    label: headerBackTitle,
+    canGoBack,
+  });
   const headerRightElement = headerRight?.({ tintColor });
   const headerTitleElement =
     typeof headerTitle === 'function'
