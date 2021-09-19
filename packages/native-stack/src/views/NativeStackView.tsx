@@ -52,6 +52,7 @@ export default function NativeStackView({ state, descriptors }: Props) {
             headerShadowVisible,
             headerTransparent,
             contentStyle,
+            headerBackTitle,
           } = options;
 
           return (
@@ -83,7 +84,12 @@ export default function NativeStackView({ state, descriptors }: Props) {
                     headerTintColor={headerTintColor}
                     headerLeft={
                       typeof headerLeft === 'function'
-                        ? ({ tintColor }) => headerLeft({ tintColor })
+                        ? ({ tintColor }) =>
+                            headerLeft({
+                              tintColor,
+                              canGoBack,
+                              label: headerBackTitle,
+                            })
                         : headerLeft === undefined && canGoBack
                         ? ({ tintColor }) => (
                             <HeaderBackButton
