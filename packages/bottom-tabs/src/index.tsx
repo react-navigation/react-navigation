@@ -21,6 +21,7 @@ export { default as useBottomTabBarHeight } from './utils/useBottomTabBarHeight'
 export type {
   BottomTabBarButtonProps,
   BottomTabBarProps,
+  BottomTabHeaderProps,
   BottomTabNavigationOptions,
   BottomTabNavigationProp,
   BottomTabScreenProps,

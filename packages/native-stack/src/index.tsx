@@ -7,6 +7,7 @@ export { default as createNativeStackNavigator } from './navigators/createNative
  * Types
  */
 export type {
+  NativeStackHeaderProps,
   NativeStackNavigationOptions,
   NativeStackNavigationProp,
   NativeStackScreenProps,
