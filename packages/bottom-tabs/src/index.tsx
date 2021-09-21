@@ -24,4 +24,5 @@ export type {
   BottomTabNavigationOptions,
   BottomTabNavigationProp,
   BottomTabScreenProps,
+  BottomTabHeaderProps,
 } from './types';
