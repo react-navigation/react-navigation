@@ -2,6 +2,7 @@ import fetch from 'node-fetch';
 import shell from 'shelljs';
 import checkAndGetInstaller from '../utils/checkAndGetInstaller';
 import installPeersDependencies from '../utils/installPeersDependencies';
+import addReactNativeGestureHandlerImport from '../utils/addReactNativeGestureHandlerImport';
 import getLogger from '../utils/logger';
 
 const logger = getLogger();
@@ -94,6 +95,16 @@ const installPackage = async (pack: string): Promise<any> => {
    * Install dependencies
    */
   installPeersDependencies(metaData, installer);
+
+  /**
+   * Add `import ${quote}react-native-gesture-handler${quote}` to index.(ts|js)
+   */
+  if (
+    metaData.peerDependencies?.hasOwnProperty('react-native-gesture-handler')
+  ) {
+    logger.log('Package have react-native-gesture-handler as peer dependency!');
+    addReactNativeGestureHandlerImport(rootDirectory);
+  }
 };
 
 export default installPackage;
