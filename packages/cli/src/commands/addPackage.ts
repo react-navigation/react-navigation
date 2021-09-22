@@ -1,4 +1,5 @@
 import fetch from 'node-fetch';
+import shell from 'shelljs';
 import checkAndGetInstaller from '../utils/checkAndGetInstaller';
 import getLogger from '../utils/logger';
 
@@ -41,6 +42,51 @@ const installPackage = async (pack: string): Promise<any> => {
 
   logger.verbose(`Installer: ${installer}\nrootDirectory: ${rootDirectory}`);
   logger.debug({ installer, getInstallerState, rootDirectory });
-};
 
+  /**
+   * No installer
+   */
+  if (!installer) {
+    if (!getInstallerState.isPackageJsonFound) {
+      throw new Error(
+        'No root project was found! No package.json was found. Make sure your project already have one.'
+      );
+    }
+
+    if (!getInstallerState.isNpmInstalled) {
+      throw new Error(
+        'Npm not installed. Make sure you have a working node installation and npm! And try again!'
+      );
+    }
+  }
+
+  /**
+   * Install package
+   */
+  function install(command: string) {
+    logger.log(command);
+    shell.exec(command);
+  }
+
+  shell.cd(rootDirectory);
+
+  let versionStr = '';
+  if (installer !== 'expo') {
+    versionStr = version ? `@${version.replace(/ /g, '')}` : '';
+  }
+
+  if (['expo', 'yarn'].includes(installer)) {
+    // expo and yarn
+    install(
+      `npx ${installer} add @react-navigation/${packName}${versionStr}${
+        installer === 'yarn' ? ` --save` : ''
+      }`
+    );
+  } else {
+    // npm
+    install(
+      `${installer} install @react-navigation/${packName}${versionStr} --save`
+    );
+  }
+};
 export default installPackage;
