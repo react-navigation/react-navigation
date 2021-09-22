@@ -23,10 +23,11 @@ export interface ICheckState {
  * traverse upward till finding the root directory through the package.json file
  */
 function checkAndGetInstaller(dir: string): ICheckAndGetInstallerReturn {
+  const userPickedInstaller = process.env.installer || null;
   let precDir: string = '';
 
   const result: ICheckAndGetInstallerReturn = {
-    installer: null,
+    installer: userPickedInstaller || null,
     state: {
       isPackageJsonFound: false,
       isExpoFound: false,
@@ -53,19 +54,19 @@ function checkAndGetInstaller(dir: string): ICheckAndGetInstallerReturn {
         // ---- expo is a dependency -----
         if (isExpoADependency(packageJsonText)) {
           result.state.isExpoFound = true;
-          result.installer = 'expo';
+          result.installer = userPickedInstaller || 'expo';
           return result;
         }
         // ---- yarn lock -----
         if (fs.existsSync(path.resolve(dir, 'yarn.lock'))) {
           result.state.isYarnPackageLockFound = true;
-          result.installer = 'yarn';
+          result.installer = userPickedInstaller || 'yarn';
           return result;
         }
         // ---- npm lock -----
         if (fs.existsSync(path.resolve(dir, 'package.lock'))) {
           result.state.isNpmPackageLockFound = true;
-          result.installer = 'npm';
+          result.installer = userPickedInstaller || 'npm';
           return result;
         }
 
@@ -81,9 +82,9 @@ function checkAndGetInstaller(dir: string): ICheckAndGetInstallerReturn {
         }
 
         if (result.state.isYarnInstalled) {
-          result.installer = 'yarn';
+          result.installer = userPickedInstaller || 'yarn';
         } else if (result.state.isNpmInstalled) {
-          result.installer = 'npm';
+          result.installer = userPickedInstaller || 'npm';
         }
 
         return result;
