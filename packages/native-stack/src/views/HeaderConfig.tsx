@@ -1,7 +1,13 @@
 import { HeaderTitle } from '@react-navigation/elements';
 import { Route, useTheme } from '@react-navigation/native';
 import * as React from 'react';
-import { I18nManager, Platform, StyleSheet, View } from 'react-native';
+import {
+  I18nManager,
+  Platform,
+  StyleSheet,
+  TextStyle,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   ScreenStackHeaderBackButtonImage,
@@ -48,11 +54,7 @@ export default function HeaderConfig({
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
   const tintColor =
-    headerTintColor != null
-      ? headerTintColor
-      : Platform.OS === 'ios'
-      ? colors.primary
-      : colors.text;
+    headerTintColor ?? Platform.OS === 'ios' ? colors.primary : colors.text;
 
   const headerBackTitleStyleFlattened =
     StyleSheet.flatten(headerBackTitleStyle) || {};
@@ -72,6 +74,22 @@ export default function HeaderConfig({
   const titleText = title !== undefined ? title : route.name;
   const titleColor =
     headerTitleStyleFlattened.color ?? headerTintColor ?? colors.text;
+  const titleFontSize = headerTitleStyleFlattened.fontSize;
+  const titleFontWeight = headerTitleStyleFlattened.fontWeight;
+
+  const headerTitleStyleSupported: TextStyle = { color: titleColor };
+
+  if (headerTitleStyleFlattened.fontFamily != null) {
+    headerTitleStyleSupported.fontFamily = headerTitleStyleFlattened.fontFamily;
+  }
+
+  if (titleFontSize != null) {
+    headerTitleStyleSupported.fontSize = titleFontSize;
+  }
+
+  if (titleFontWeight != null) {
+    headerTitleStyleSupported.fontWeight = titleFontWeight;
+  }
 
   const headerLeftElement = headerLeft?.({ tintColor });
   const headerRightElement = headerRight?.({ tintColor });
@@ -125,8 +143,8 @@ export default function HeaderConfig({
       title={typeof headerTitle === 'string' ? headerTitle : titleText}
       titleColor={titleColor}
       titleFontFamily={titleFontFamily}
-      titleFontSize={headerTitleStyleFlattened.fontSize}
-      titleFontWeight={headerTitleStyleFlattened.fontWeight}
+      titleFontSize={titleFontSize}
+      titleFontWeight={titleFontWeight}
       topInsetEnabled={insets.top !== 0}
       translucent={
         // This defaults to `true`, so we can't pass `undefined`
@@ -156,7 +174,10 @@ export default function HeaderConfig({
                   typeof headerTitle === 'function' ? (
                     headerTitleElement
                   ) : (
-                    <HeaderTitle tintColor={tintColor} style={headerTitleStyle}>
+                    <HeaderTitle
+                      tintColor={tintColor}
+                      style={headerTitleStyleSupported}
+                    >
                       {titleText}
                     </HeaderTitle>
                   )
@@ -169,7 +190,10 @@ export default function HeaderConfig({
               {typeof headerTitle === 'function' ? (
                 headerTitleElement
               ) : (
-                <HeaderTitle tintColor={tintColor} style={headerTitleStyle}>
+                <HeaderTitle
+                  tintColor={tintColor}
+                  style={headerTitleStyleSupported}
+                >
                   {titleText}
                 </HeaderTitle>
               )}
