@@ -16,7 +16,7 @@ type Options = LinkingOptions<ParamListBase> & {
   independent?: boolean;
 };
 
-let isUsingLinking = false;
+let linkingHandlers: Symbol[] = [];
 
 export default function useLinking(
   ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
@@ -56,16 +56,20 @@ export default function useLinking(
   }: Options
 ) {
   React.useEffect(() => {
+    if (process.env.NODE_ENV === 'production') {
+      return undefined;
+    }
+
     if (independent) {
       return undefined;
     }
 
-    if (enabled !== false && isUsingLinking) {
-      throw new Error(
+    if (enabled !== false && linkingHandlers.length) {
+      console.error(
         [
           'Looks like you have configured linking in multiple places. This is likely an error since deep links should only be handled in one place to avoid conflicts. Make sure that:',
-          "- You are not using both 'linking' prop and 'useLinking'",
-          "- You don't have 'useLinking' in multiple components",
+          "- You don't have multiple NavigationContainers in the app each with 'linking' enabled",
+          '- Only a single instance of the root component is rendered',
           Platform.OS === 'android'
             ? "- You have set 'android:launchMode=singleTask' in the '<activity />' section of the 'AndroidManifest.xml' file to avoid launching multiple instances"
             : '',
@@ -73,14 +77,22 @@ export default function useLinking(
           .join('\n')
           .trim()
       );
-    } else {
-      isUsingLinking = enabled !== false;
+    }
+
+    const handler = Symbol();
+
+    if (enabled !== false) {
+      linkingHandlers.push(handler);
     }
 
     return () => {
-      isUsingLinking = false;
+      const index = linkingHandlers.indexOf(handler);
+
+      if (index > -1) {
+        linkingHandlers.splice(index, 1);
+      }
     };
-  });
+  }, [enabled, independent]);
 
   // We store these options in ref to avoid re-creating getInitialState and re-subscribing listeners
   // This lets user avoid wrapping the items in `React.useCallback` or `React.useMemo`
