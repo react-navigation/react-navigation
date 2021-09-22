@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
 import shell from 'shelljs';
 import checkAndGetInstaller from '../utils/checkAndGetInstaller';
+import installPeersDependencies from '../utils/installPeersDependencies';
 import getLogger from '../utils/logger';
 
 const logger = getLogger();
@@ -63,10 +64,10 @@ const installPackage = async (pack: string): Promise<any> => {
   /**
    * Install package
    */
-  function install(command: string) {
+  const install = (command: string): void => {
     logger.log(command);
     shell.exec(command);
-  }
+  };
 
   shell.cd(rootDirectory);
 
@@ -88,5 +89,11 @@ const installPackage = async (pack: string): Promise<any> => {
       `${installer} install @react-navigation/${packName}${versionStr} --save`
     );
   }
+
+  /**
+   * Install dependencies
+   */
+  installPeersDependencies(metaData, installer);
 };
+
 export default installPackage;
