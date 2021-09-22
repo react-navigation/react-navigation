@@ -1,59 +1,18 @@
-import program  from 'commander';
-import fs from 'fs';
-import {execSync} from 'child_process';
-import path from 'path';
-import fetch from 'node-fetch';
+import program from 'commander';
+import installPackage from '@Commands/addPackage';
+import getLogger from '@Utils/logger';
 
-import checkForExpo from './checkforExpo';
-import checkForPackageLock from './checkForPackageLock';
+const logger = getLogger();
 
-var installer : string ='yarn';
-
-// check for npm
-installer = checkForPackageLock(process.cwd(), installer);
-
-// check for yarn
-installer = checkForExpo(installer);
-
-// install peer dependencies
-const installPeers= content =>{
-     let packages = Object.keys(content.peerDependencies).map(function(key) {
-        return `${key}`
-    })
-    let extractedPackages= '';
-    packages.map(pack => 
-        (pack==='react' || pack==='react-native')
-        ? extractedPackages+= ''
-        : extractedPackages+=`${pack} `);
-
-    (installer==='npm' || installer==='expo')
-    ? console.log(`${installer} i ${extractedPackages}`)
-    : console.log(`${installer} add ${extractedPackages}`);
-    
-}
-
-// fetch metadata of pacakge
-const addPackage = async (pack): Promise<any> => {
-console.log("Installing peer dependencies")
-try{
-
-    let response = await fetch(`https://registry.npmjs.org/@react-navigation/${pack}/latest`);
-    let getPackage = await response.json();
-    installPeers(getPackage);
-}catch(e){
-    console.log("Please enter a valid React-Navigation Package");
-}
-}
+/**
+ * CLI setup
+ */
+program.version('1.0.0').description('CLI To Setup React-Navigation');
 
 program
-	.version('1.0.0')
-	.description('CLI To Setup React-Navigation')
-
-program
-	.command('add <package>')
-	.alias('a')
-	.description('install your required package')
-	.action(addPackage)
-
+  .command('add <package>')
+  .alias('a')
+  .description('install your required package')
+  .action(installPackage);
 
 program.parse(process.argv);
