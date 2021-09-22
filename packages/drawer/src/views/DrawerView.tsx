@@ -83,6 +83,7 @@ function DrawerViewBase({
     // Reanimated 2 is not configured
     // @ts-expect-error: the type definitions are incomplete
     !Animated.isConfigured?.(),
+  enableBackHandler = true,
 }: Props) {
   const Drawer: React.ComponentType<DrawerProps> = useLegacyImplementation
     ? require('./legacy/Drawer').default
@@ -157,23 +158,28 @@ function DrawerViewBase({
     // We only add the listeners when drawer opens
     // This way we can make sure that the listener is added as late as possible
     // This will make sure that our handler will run first when back button is pressed
-    const subscription = BackHandler.addEventListener(
-      'hardwareBackPress',
-      handleClose
-    );
+    const subscription = enableBackHandler
+      ? BackHandler.addEventListener('hardwareBackPress', handleClose)
+      : undefined;
 
     if (Platform.OS === 'web') {
       document?.body?.addEventListener?.('keyup', handleEscape);
     }
 
     return () => {
-      subscription.remove();
+      subscription?.remove();
 
       if (Platform.OS === 'web') {
         document?.body?.removeEventListener?.('keyup', handleEscape);
       }
     };
-  }, [drawerStatus, drawerType, handleDrawerClose, navigation]);
+  }, [
+    drawerStatus,
+    drawerType,
+    handleDrawerClose,
+    navigation,
+    enableBackHandler,
+  ]);
 
   const renderDrawerContent = () => {
     return (

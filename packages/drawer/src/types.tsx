@@ -47,6 +47,14 @@ export type DrawerNavigationConfig = {
    * Otherwise, it defaults to `false`
    */
   useLegacyImplementation?: boolean;
+  /**
+   * Whether Drawer should control the hardware back button behaviour.
+   * Currently, Drawer will toggle between open and closed state. This flag enables the Stack navigator to handle the back button
+   * behaviour for Nested Drawer navigator.
+   *
+   * Defaults to `true`
+   */
+  enableBackHandler?: boolean;
 };
 
 export type DrawerNavigationOptions = HeaderOptions & {
