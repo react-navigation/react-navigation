@@ -78,6 +78,8 @@ const Row = styled.button<{ selected: boolean; faded: boolean }>((props) => ({
   'border': 0,
   'boxShadow': `inset 0 -1px 0 0 ${theme.dividerColor}`,
   'width': '100%',
+  'cursor': 'pointer',
+
   '&:hover': {
     backgroundColor: props.selected
       ? theme.primaryColor
