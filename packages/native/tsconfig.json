@@ -5,6 +5,7 @@
     { "path": "../routers" }
   ],
   "compilerOptions": {
-    "outDir": "./lib/typescript"
+    "outDir": "./lib/typescript",
+    "useUnknownInCatchVariables": false,
   }
 }
