@@ -1,7 +1,7 @@
 import { EventArg, useNavigation, useRoute } from '@react-navigation/core';
 import * as React from 'react';
 
-type ScrollOptions = { y?: number; animated?: boolean };
+type ScrollOptions = { x?: number; y?: number; animated?: boolean };
 
 type ScrollableView =
   | { scrollToTop(): void }
@@ -85,7 +85,7 @@ export default function useScrollToTop(
             if ('scrollToTop' in scrollable) {
               scrollable.scrollToTop();
             } else if ('scrollTo' in scrollable) {
-              scrollable.scrollTo({ y: 0, animated: true });
+              scrollable.scrollTo({ x: 0, y: 0, animated: true });
             } else if ('scrollToOffset' in scrollable) {
               scrollable.scrollToOffset({ offset: 0, animated: true });
             } else if ('scrollResponderScrollTo' in scrollable) {
