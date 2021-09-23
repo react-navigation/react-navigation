@@ -1,6 +1,5 @@
 import { CompassOutlined } from '@ant-design/icons';
-import { DetailSidebar, styled, VirtualList } from 'flipper';
-import { theme } from 'flipper-plugin';
+import { DataList, DetailSidebar, styled, theme } from 'flipper-plugin';
 import * as React from 'react';
 
 import { Sidebar } from './Sidebar';
@@ -19,10 +18,10 @@ export function Logs({ active, logs, index, resetTo }: Props) {
 
   return logs.length ? (
     <>
-      <VirtualList
-        data={logs}
-        rowHeight={51}
-        renderRow={({ id, action }, i) => (
+      <DataList
+        style={{ height: '100%' }}
+        items={logs}
+        onRenderItem={({ id, action }, _, i) => (
           <Row
             key={id}
             selected={selectedItem?.id === id}
@@ -79,8 +78,6 @@ const Row = styled.button<{ selected: boolean; faded: boolean }>((props) => ({
   'border': 0,
   'boxShadow': `inset 0 -1px 0 0 ${theme.dividerColor}`,
   'width': '100%',
-  'cursor': 'pointer',
-
   '&:hover': {
     backgroundColor: props.selected
       ? theme.primaryColor
