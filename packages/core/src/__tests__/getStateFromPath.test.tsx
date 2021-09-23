@@ -2821,3 +2821,117 @@ it("throws when using 'initialRouteName' or 'screens' with legacy config", () =>
     })
   ).toThrow('Found invalid keys in the configuration object.');
 });
+
+it('correctly applies initialRouteName for config with similar route names', () => {
+  const path = '/weekly-earnings';
+
+  const config = {
+    screens: {
+      RootTabs: {
+        screens: {
+          HomeTab: {
+            screens: {
+              Home: '',
+              WeeklyEarnings: 'weekly-earnings',
+              EventDetails: 'event-details/:eventId',
+            },
+          },
+          EarningsTab: {
+            initialRouteName: 'Earnings',
+            path: 'earnings',
+            screens: {
+              Earnings: '',
+              WeeklyEarnings: 'weekly-earnings',
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'RootTabs',
+        state: {
+          routes: [
+            {
+              name: 'HomeTab',
+              state: {
+                routes: [
+                  {
+                    name: 'WeeklyEarnings',
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});
+
+it('correctly applies initialRouteName for config with similar route names v2', () => {
+  const path = '/earnings/weekly-earnings';
+
+  const config = {
+    screens: {
+      RootTabs: {
+        screens: {
+          HomeTab: {
+            initialRouteName: 'Home',
+            screens: {
+              Home: '',
+              WeeklyEarnings: 'weekly-earnings',
+            },
+          },
+          EarningsTab: {
+            initialRouteName: 'Earnings',
+            path: 'earnings',
+            screens: {
+              Earnings: '',
+              WeeklyEarnings: 'weekly-earnings',
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'RootTabs',
+        state: {
+          routes: [
+            {
+              name: 'EarningsTab',
+              state: {
+                index: 1,
+                routes: [
+                  {
+                    name: 'Earnings',
+                  },
+                  {
+                    name: 'WeeklyEarnings',
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
+    state
+  );
+});

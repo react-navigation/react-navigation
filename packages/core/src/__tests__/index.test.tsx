@@ -550,7 +550,7 @@ it('updates route params with setParams applied to parent', () => {
   let setParams: (params: object) => void = () => undefined;
 
   const FooScreen = (props: any) => {
-    const parent = props.navigation.dangerouslyGetParent();
+    const parent = props.navigation.getParent();
     if (parent) {
       setParams = parent.setParams;
     }
@@ -1306,7 +1306,7 @@ it('gives access to internal state', () => {
 
   const Test = () => {
     const navigation = useNavigation();
-    state = navigation.dangerouslyGetState();
+    state = navigation.getState();
     return null;
   };
 

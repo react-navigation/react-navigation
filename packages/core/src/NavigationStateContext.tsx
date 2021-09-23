@@ -2,7 +2,7 @@ import * as React from 'react';
 import type { NavigationState, PartialState } from '@react-navigation/routers';
 
 const MISSING_CONTEXT_ERROR =
-  "Couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'? See https://reactnavigation.org/docs/getting-started for setup instructions.";
+  "Couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'? See https://reactnavigation.org/docs/5.x/getting-started for setup instructions.";
 
 export default React.createContext<{
   isDefault?: true;

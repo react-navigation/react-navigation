@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/drawer",
   "description": "Drawer navigator component with animated transitions and gesturess",
-  "version": "5.12.4",
+  "version": "5.12.9",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -21,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
-  "homepage": "https://reactnavigation.org/docs/drawer-navigator/",
+  "homepage": "https://reactnavigation.org/docs/5.x/drawer-navigator/",
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "source": "src/index.tsx",
@@ -45,7 +45,7 @@
     "react-native-iphone-x-helper": "^1.3.0"
   },
   "devDependencies": {
-    "@react-navigation/native": "^5.9.3",
+    "@react-navigation/native": "^5.9.8",
     "@testing-library/react-native": "^7.1.0",
     "@types/react": "^16.9.53",
     "@types/react-native": "^0.63.30",

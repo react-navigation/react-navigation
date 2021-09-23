@@ -40,10 +40,14 @@ type Options<
         route: RouteProp<ParamListBase, string>;
         navigation: any;
       }) => ScreenOptions);
-  onAction: (
-    action: NavigationAction,
-    visitedNavigators?: Set<string>
-  ) => boolean;
+  defaultScreenOptions?:
+    | ScreenOptions
+    | ((props: {
+        route: RouteProp<ParamListBase, string>;
+        navigation: any;
+        options: ScreenOptions;
+      }) => ScreenOptions);
+  onAction: (action: NavigationAction) => boolean;
   getState: () => State;
   setState: (state: State) => void;
   addListener: AddListener;
@@ -70,6 +74,7 @@ export default function useDescriptors<
   screens,
   navigation,
   screenOptions,
+  defaultScreenOptions,
   onAction,
   getState,
   setState,
@@ -143,6 +148,29 @@ export default function useDescriptors<
       ...options[route.key],
     };
 
+    const mergedOptions = {
+      ...(typeof defaultScreenOptions === 'function'
+        ? // @ts-expect-error: ts gives incorrect error here
+          defaultScreenOptions({
+            route,
+            navigation,
+            options: routeOptions,
+          })
+        : defaultScreenOptions),
+      ...routeOptions,
+    };
+
+    const clearOptions = () =>
+      setOptions((o) => {
+        if (route.key in o) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { [route.key]: _, ...rest } = o;
+          return rest;
+        }
+
+        return o;
+      });
+
     acc[route.key] = {
       navigation,
       render() {
@@ -157,14 +185,15 @@ export default function useDescriptors<
                   routeState={state.routes[i].state}
                   getState={getState}
                   setState={setState}
-                  options={routeOptions}
+                  options={mergedOptions}
+                  clearOptions={clearOptions}
                 />
               </NavigationRouteContext.Provider>
             </NavigationContext.Provider>
           </NavigationBuilderContext.Provider>
         );
       },
-      options: routeOptions as ScreenOptions,
+      options: mergedOptions as ScreenOptions,
     };
 
     return acc;

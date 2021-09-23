@@ -44,7 +44,7 @@ it("gets navigation's parent from context", () => {
   const Test = () => {
     const navigation = useNavigation();
 
-    expect(navigation.dangerouslyGetParent()).toBeDefined();
+    expect(navigation.getParent()).toBeDefined();
 
     return null;
   };
@@ -75,7 +75,7 @@ it("gets navigation's parent's parent from context", () => {
 
   const Test = () => {
     const navigation = useNavigation();
-    const parent = navigation.dangerouslyGetParent();
+    const parent = navigation.getParent();
 
     expect(parent).toBeDefined();
     if (parent !== undefined) {

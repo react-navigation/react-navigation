@@ -2,4 +2,4 @@
 
 React Native integration for React Navigation.
 
-Installation instructions and documentation can be found on the [React Navigation website](https://reactnavigation.org/docs/getting-started/).
+Installation instructions and documentation can be found on the [React Navigation website](https://reactnavigation.org/docs/5.x/getting-started/).

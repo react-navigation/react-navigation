@@ -22,7 +22,7 @@ export default function useFocusEffect(effect: EffectCallback) {
       '    // Your code here\n' +
       '  }, [depA, depB])\n' +
       ');\n\n' +
-      'See usage guide: https://reactnavigation.org/docs/use-focus-effect';
+      'See usage guide: https://reactnavigation.org/docs/5.x/use-focus-effect';
 
     console.error(message);
   }
@@ -60,7 +60,7 @@ export default function useFocusEffect(effect: EffectCallback) {
             '    fetchData();\n' +
             '  }, [someId])\n' +
             ');\n\n' +
-            'See usage guide: https://reactnavigation.org/docs/use-focus-effect';
+            'See usage guide: https://reactnavigation.org/docs/5.x/use-focus-effect';
         } else {
           message += ` You returned '${JSON.stringify(destroy)}'.`;
         }

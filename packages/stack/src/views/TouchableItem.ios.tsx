@@ -12,7 +12,7 @@ const useNativeDriver = Platform.OS !== 'web';
 
 export default class TouchableItem extends React.Component<Props> {
   static defaultProps = {
-    activeOpacity: 0.3,
+    pressOpacity: 0.3,
     borderless: true,
     enabled: true,
   };

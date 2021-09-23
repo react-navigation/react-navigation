@@ -58,7 +58,7 @@ try {
 
       console.warn(
         `Tried to use the icon '${name}' in a component from '@react-navigation/material-bottom-tabs', but 'react-native-vector-icons/MaterialCommunityIcons' could not be loaded.`,
-        `To remove this warning, try installing 'react-native-vector-icons' or use another method to specify icon: https://reactnavigation.org/docs/material-bottom-tab-navigator/#tabbaricon.`
+        `To remove this warning, try installing 'react-native-vector-icons' or use another method to specify icon: https://reactnavigation.org/docs/5.x/material-bottom-tab-navigator/#tabbaricon.`
       );
 
       isErrorLogged = true;
@@ -111,10 +111,13 @@ function MaterialBottomTabViewInner({
           ? ({
               onPress,
               route,
-              accessibilityRole: _0,
-              borderless: _1,
-              centered: _2,
-              rippleColor: _3,
+              /* eslint-disable @typescript-eslint/no-unused-vars */
+              accessibilityRole,
+              accessibilityState,
+              borderless,
+              centered,
+              rippleColor,
+              /* eslint-enable @typescript-eslint/no-unused-vars */
               style,
               ...rest
             }) => {

@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.16.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.16.0...@react-navigation/core@5.16.1) (2021-08-17)
+
+
+### Bug Fixes
+
+* backport getState and getParent APIs for compatibility ([bc9c046](https://github.com/react-navigation/react-navigation/commit/bc9c046bd29e5272bced8f77348918653283d22e))
+
+
+
+
+
+# [5.16.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.15.5...@react-navigation/core@5.16.0) (2021-08-15)
+
+
+### Features
+
+* backport defaultScreenOptions from 6.x to make upgrading easier ([8ef1b86](https://github.com/react-navigation/react-navigation/commit/8ef1b86971aaeeaee9cf318fa82ed0c0b7525042))
+
+
+
+
+
+## [5.15.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.15.3...@react-navigation/core@5.15.5) (2021-08-01)
+
+**Note:** Version bump only for package @react-navigation/core
+
+
+
+
+
+## [5.15.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.15.3...@react-navigation/core@5.15.4) (2021-08-01)
+
+**Note:** Version bump only for package @react-navigation/core
+
+
+
+
+
+## [5.15.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.15.2...@react-navigation/core@5.15.3) (2021-04-04)
+
+
+### Bug Fixes
+
+* properly resolve initialRouteNames ([976178d](https://github.com/react-navigation/react-navigation/commit/976178d0986a90697931ab9cc2c297eb7938e28b))
+
+
+
+
+
 ## [5.15.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.15.1...@react-navigation/core@5.15.2) (2021-02-21)
 
 **Note:** Version bump only for package @react-navigation/core

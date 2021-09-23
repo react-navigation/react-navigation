@@ -134,6 +134,7 @@ export default function BottomTabBarItem({
     onPress,
     to,
     accessibilityRole,
+    accessibilityState,
     ...rest
   }: BottomTabBarButtonProps) => {
     if (Platform.OS === 'web' && to) {
@@ -162,6 +163,7 @@ export default function BottomTabBarItem({
         <TouchableWithoutFeedback
           {...rest}
           accessibilityRole={accessibilityRole}
+          accessibilityState={accessibilityState}
           onPress={onPress}
         >
           <View style={style}>{children}</View>

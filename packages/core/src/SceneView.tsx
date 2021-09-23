@@ -23,6 +23,7 @@ type Props<
   getState: () => State;
   setState: (state: State) => void;
   options: object;
+  clearOptions: () => void;
 };
 
 /**
@@ -41,6 +42,7 @@ export default function SceneView<
   getState,
   setState,
   options,
+  clearOptions,
 }: Props<State, ScreenOptions, EventMap>) {
   const navigatorKeyRef = React.useRef<string | undefined>();
   const getKey = React.useCallback(() => navigatorKeyRef.current, []);
@@ -81,6 +83,12 @@ export default function SceneView<
   React.useEffect(() => {
     isInitialRef.current = false;
   });
+
+  // Clear options set by this screen when it is unmounted
+  React.useEffect(() => {
+    return clearOptions;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const getIsInitial = React.useCallback(() => isInitialRef.current, []);
 

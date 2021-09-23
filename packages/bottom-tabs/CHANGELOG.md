@@ -3,6 +3,72 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.11.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.14...@react-navigation/bottom-tabs@5.11.15) (2021-08-17)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+## [5.11.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.13...@react-navigation/bottom-tabs@5.11.14) (2021-08-15)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+## [5.11.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.11...@react-navigation/bottom-tabs@5.11.13) (2021-08-01)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+## [5.11.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.11...@react-navigation/bottom-tabs@5.11.12) (2021-08-01)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+## [5.11.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.10...@react-navigation/bottom-tabs@5.11.11) (2021-05-14)
+
+
+### Bug Fixes
+
+* fix tab bar height including extra bottom inset. closes [#9573](https://github.com/react-navigation/react-navigation/issues/9573) ([c99d127](https://github.com/react-navigation/react-navigation/commit/c99d127a89f422f8cb691ea2f3827ee163df6d9f))
+
+
+
+
+
+## [5.11.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.9...@react-navigation/bottom-tabs@5.11.10) (2021-04-16)
+
+
+### Bug Fixes
+
+* update tab bar height correctly. fixes [#9296](https://github.com/react-navigation/react-navigation/issues/9296) ([12398ce](https://github.com/react-navigation/react-navigation/commit/12398ce98c28a1b5710a144e6138b91031bffa91))
+
+
+
+
+
+## [5.11.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.8...@react-navigation/bottom-tabs@5.11.9) (2021-04-04)
+
+
+### Bug Fixes
+
+* check for screens enabled in ScreenContainer ([493956e](https://github.com/react-navigation/react-navigation/commit/493956ef717a03bd8c3533a2949434e83718c5e4))
+* don't pass accessibilityState to link. closes [#9418](https://github.com/react-navigation/react-navigation/issues/9418) ([699ea0c](https://github.com/react-navigation/react-navigation/commit/699ea0cc5052f190acc7ce8bc0328bb052d7cf26))
+
+
+
+
+
 ## [5.11.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.7...@react-navigation/bottom-tabs@5.11.8) (2021-02-21)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

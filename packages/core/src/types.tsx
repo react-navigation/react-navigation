@@ -27,6 +27,17 @@ export type DefaultNavigatorOptions<
         route: RouteProp<ParamList, keyof ParamList>;
         navigation: any;
       }) => ScreenOptions);
+  /**
+   * Default options specified by the navigator.
+   * It receives the custom options in the arguments if a function is specified.
+   */
+  defaultScreenOptions?:
+    | ScreenOptions
+    | ((props: {
+        route: RouteProp<ParamList, keyof ParamList>;
+        navigation: any;
+        options: ScreenOptions;
+      }) => ScreenOptions);
 };
 
 export type EventMapBase = Record<
@@ -200,15 +211,27 @@ type NavigationHelpersCommon<
 
   /**
    * Returns the parent navigator, if any. Reason why the function is called
-   * dangerouslyGetParent is to warn developers against overusing it to eg. get parent
    * of parent and other hard-to-follow patterns.
+   */
+  getParent<T = NavigationProp<ParamListBase> | undefined>(): T;
+
+  /**
+   * Returns the navigator's state. Reason why the function is called
+   * Note that this method doesn't re-render screen when the result changes. So don't use it in `render`.
+   */
+  getState(): State;
+
+  /**
+   * An alias to getParent().
+   *
+   * @deprecated
    */
   dangerouslyGetParent<T = NavigationProp<ParamListBase> | undefined>(): T;
 
   /**
-   * Returns the navigator's state. Reason why the function is called
-   * dangerouslyGetState is to discourage developers to use internal navigation's state.
-   * Note that this method doesn't re-render screen when the result changes. So don't use it in `render`.
+   * An alias to getState().
+   *
+   * @deprecated
    */
   dangerouslyGetState(): State;
 } & PrivateValueStore<ParamList, keyof ParamList, {}>;

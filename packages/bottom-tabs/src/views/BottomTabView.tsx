@@ -13,7 +13,7 @@ import {
   TabNavigationState,
   useTheme,
 } from '@react-navigation/native';
-import { ScreenContainer } from 'react-native-screens';
+import { ScreenContainer, screensEnabled } from 'react-native-screens';
 
 import SafeAreaProviderCompat, {
   initialSafeAreaInsets,
@@ -138,13 +138,14 @@ export default class BottomTabView extends React.Component<Props, State> {
     } = this.props;
     const { routes } = state;
     const { loaded, tabBarHeight } = this.state;
+    const isScreensEnabled = screensEnabled?.() && detachInactiveScreens;
 
     return (
       <NavigationHelpersContext.Provider value={navigation}>
         <SafeAreaProviderCompat>
           <ScreenContainer
             // @ts-ignore
-            enabled={detachInactiveScreens}
+            enabled={isScreensEnabled}
             style={styles.container}
           >
             {routes.map((route, index) => {
@@ -166,7 +167,7 @@ export default class BottomTabView extends React.Component<Props, State> {
                   key={route.key}
                   style={StyleSheet.absoluteFill}
                   isVisible={isFocused}
-                  enabled={detachInactiveScreens}
+                  enabled={isScreensEnabled}
                 >
                   <SceneContent
                     isFocused={isFocused}

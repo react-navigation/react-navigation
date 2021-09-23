@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/compat",
   "description": "Compatibility layer to write navigator definitions in static configuration format",
-  "version": "5.3.14",
+  "version": "5.3.20",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
-  "homepage": "https://reactnavigation.org/docs/compatibility/",
+  "homepage": "https://reactnavigation.org/docs/5.x/compatibility/",
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "source": "src/index.tsx",
@@ -31,7 +31,7 @@
     "clean": "del lib"
   },
   "devDependencies": {
-    "@react-navigation/native": "^5.9.3",
+    "@react-navigation/native": "^5.9.8",
     "@types/react": "^16.9.53",
     "react": "~16.13.1",
     "react-native-builder-bob": "^0.17.0",

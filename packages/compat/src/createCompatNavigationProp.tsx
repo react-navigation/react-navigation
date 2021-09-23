@@ -199,17 +199,25 @@ export default function createCompatNavigationProp<
         return isFirstRouteInParent;
       }
 
-      const { routes } = navigation.dangerouslyGetState();
+      const { routes } =
+        'getState' in navigation
+          ? navigation.getState()
+          : navigation.dangerouslyGetState();
 
       return routes[0].key === state.key;
     },
     dangerouslyGetParent() {
-      const parent = navigation.dangerouslyGetParent();
+      const parent =
+        'getParent' in navigation
+          ? navigation.getParent()
+          : navigation.dangerouslyGetParent();
 
       if (parent) {
         return createCompatNavigationProp(
           parent,
-          navigation.dangerouslyGetState(),
+          'getState' in navigation
+            ? navigation.getState()
+            : navigation.dangerouslyGetState(),
           context.parent
         );
       }

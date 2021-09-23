@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/routers",
   "description": "Routers to help build custom navigators",
-  "version": "5.7.2",
+  "version": "5.7.4",
   "keywords": [
     "react",
     "react-native",
@@ -16,7 +16,7 @@
   "bugs": {
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
-  "homepage": "https://reactnavigation.org/docs/custom-routers/",
+  "homepage": "https://reactnavigation.org/docs/5.x/custom-routers/",
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "source": "src/index.tsx",

@@ -5,9 +5,8 @@ import {
   I18nManager,
   Platform,
   BackHandler,
-  NativeEventSubscription,
 } from 'react-native';
-import { ScreenContainer } from 'react-native-screens';
+import { ScreenContainer, screensEnabled } from 'react-native-screens';
 import {
   NavigationHelpersContext,
   NavigationContext,
@@ -112,29 +111,48 @@ export default function DrawerView({
   }, [navigation, state.key]);
 
   React.useEffect(() => {
-    if (isDrawerOpen) {
-      navigation.emit({ type: 'drawerOpen' });
-    } else {
-      navigation.emit({ type: 'drawerClose' });
-    }
-  }, [isDrawerOpen, navigation]);
-
-  React.useEffect(() => {
-    let subscription: NativeEventSubscription | undefined;
-
-    if (isDrawerOpen) {
-      // We only add the subscription when drawer opens
-      // This way we can make sure that the subscription is added as late as possible
-      // This will make sure that our handler will run first when back button is pressed
-      subscription = BackHandler.addEventListener('hardwareBackPress', () => {
-        handleDrawerClose();
-
-        return true;
-      });
+    if (!isDrawerOpen || drawerType === 'permanent') {
+      return;
     }
 
-    return () => subscription?.remove();
-  }, [handleDrawerClose, isDrawerOpen, navigation, state.key]);
+    const handleClose = () => {
+      // We shouldn't handle the back button if the parent screen isn't focused
+      // This will avoid the drawer overriding event listeners from a focused screen
+      if (!navigation.isFocused()) {
+        return false;
+      }
+
+      handleDrawerClose();
+
+      return true;
+    };
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleClose();
+      }
+    };
+
+    // We only add the listeners when drawer opens
+    // This way we can make sure that the listener is added as late as possible
+    // This will make sure that our handler will run first when back button is pressed
+    const subscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleClose
+    );
+
+    if (Platform.OS === 'web') {
+      document?.body?.addEventListener?.('keyup', handleEscape);
+    }
+
+    return () => {
+      subscription.remove();
+
+      if (Platform.OS === 'web') {
+        document?.body?.removeEventListener?.('keyup', handleEscape);
+      }
+    };
+  }, [drawerType, handleDrawerClose, isDrawerOpen, navigation]);
 
   const focusedRouteKey = state.routes[state.index].key;
 
@@ -157,9 +175,11 @@ export default function DrawerView({
   };
 
   const renderContent = () => {
+    const isScreensEnabled = screensEnabled?.() && detachInactiveScreens;
+
     return (
       // @ts-ignore
-      <ScreenContainer enabled={detachInactiveScreens} style={styles.content}>
+      <ScreenContainer enabled={isScreensEnabled} style={styles.content}>
         {state.routes.map((route, index) => {
           const descriptor = descriptors[route.key];
           const { unmountOnBlur } = descriptor.options;
@@ -184,7 +204,7 @@ export default function DrawerView({
               key={route.key}
               style={[StyleSheet.absoluteFill, { opacity: isFocused ? 1 : 0 }]}
               isVisible={isFocused}
-              enabled={detachInactiveScreens}
+              enabled={isScreensEnabled}
             >
               {headerShown ? (
                 <NavigationContext.Provider value={descriptor.navigation}>

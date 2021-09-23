@@ -25,7 +25,7 @@ export default function createNavigatorFactory<
   > {
     if (arguments[0] !== undefined) {
       throw new Error(
-        "Creating a navigator doesn't take an argument. Maybe you are trying to use React Navigation 4 API with React Navigation 5? See https://reactnavigation.org/docs/upgrading-from-4.x for migration guide."
+        "Creating a navigator doesn't take an argument. Maybe you are trying to use React Navigation 4 API with React Navigation 5? See https://reactnavigation.org/docs/5.x/upgrading-from-4.x for migration guide."
       );
     }
 

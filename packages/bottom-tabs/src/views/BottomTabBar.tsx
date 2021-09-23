@@ -210,15 +210,7 @@ export default function BottomTabBar({
   const handleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
 
-    const topBorderWidth =
-      // @ts-ignore
-      StyleSheet.flatten([styles.tabBar, style])?.borderTopWidth;
-
-    onHeightChange?.(
-      height +
-        paddingBottom +
-        (typeof topBorderWidth === 'number' ? topBorderWidth : 0)
-    );
+    onHeightChange?.(height);
 
     setLayout((layout) => {
       if (height === layout.height && width === layout.width) {
@@ -296,8 +288,9 @@ export default function BottomTabBar({
         style,
       ]}
       pointerEvents={isTabBarHidden ? 'none' : 'auto'}
+      onLayout={handleLayout}
     >
-      <View style={styles.content} onLayout={handleLayout}>
+      <View style={styles.content}>
         {routes.map((route, index) => {
           const focused = index === state.index;
           const { options } = descriptors[route.key];

@@ -29,7 +29,7 @@ import type {
 type State = NavigationState | PartialState<NavigationState> | undefined;
 
 const NOT_INITIALIZED_ERROR =
-  "The 'navigation' object hasn't been initialized yet. This might happen if you don't have a navigator mounted, or if the navigator hasn't finished mounting. See https://reactnavigation.org/docs/navigating-without-navigation-prop#handling-initialization for more details.";
+  "The 'navigation' object hasn't been initialized yet. This might happen if you don't have a navigator mounted, or if the navigator hasn't finished mounting. See https://reactnavigation.org/docs/5.x/navigating-without-navigation-prop#handling-initialization for more details.";
 
 const serializableWarnings: string[] = [];
 
@@ -43,7 +43,7 @@ try {
     {
       set(_) {
         console.warn(
-          "Redux devtools extension integration can be enabled with the '@react-navigation/devtools' package. For more details, see https://reactnavigation.org/docs/devtools"
+          "Redux devtools extension integration can be enabled with the '@react-navigation/devtools' package. For more details, see https://reactnavigation.org/docs/5.x/devtools"
         );
       },
     }
@@ -215,6 +215,8 @@ const BaseNavigationContainer = React.forwardRef(
       dispatch,
       canGoBack,
       getRootState,
+      getState: () => state,
+      getParent: () => undefined,
       dangerouslyGetState: () => state,
       dangerouslyGetParent: () => undefined,
       getCurrentRoute,
@@ -337,7 +339,7 @@ const BaseNavigationContainer = React.forwardRef(
               }
             }
 
-            const message = `Non-serializable values were found in the navigation state. Check:\n\n${path} (${reason})\n\nThis can break usage such as persisting and restoring state. This might happen if you passed non-serializable values such as function, class instances etc. in params. If you need to use components with callbacks in your options, you can use 'navigation.setOptions' instead. See https://reactnavigation.org/docs/troubleshooting#i-get-the-warning-non-serializable-values-were-found-in-the-navigation-state for more details.`;
+            const message = `Non-serializable values were found in the navigation state. Check:\n\n${path} (${reason})\n\nThis can break usage such as persisting and restoring state. This might happen if you passed non-serializable values such as function, class instances etc. in params. If you need to use components with callbacks in your options, you can use 'navigation.setOptions' instead. See https://reactnavigation.org/docs/5.x/troubleshooting#i-get-the-warning-non-serializable-values-were-found-in-the-navigation-state for more details.`;
 
             if (!serializableWarnings.includes(message)) {
               serializableWarnings.push(message);
@@ -374,9 +376,9 @@ const BaseNavigationContainer = React.forwardRef(
           case 'REPLACE':
           case 'JUMP_TO':
             if (payload?.name) {
-              message += `\n\nDo you have a screen named '${payload.name}'?\n\nIf you're trying to navigate to a screen in a nested navigator, see https://reactnavigation.org/docs/nesting-navigators#navigating-to-a-screen-in-a-nested-navigator.`;
+              message += `\n\nDo you have a screen named '${payload.name}'?\n\nIf you're trying to navigate to a screen in a nested navigator, see https://reactnavigation.org/docs/5.x/nesting-navigators#navigating-to-a-screen-in-a-nested-navigator.`;
             } else {
-              message += `\n\nYou need to pass the name of the screen to navigate to.\n\nSee https://reactnavigation.org/docs/navigation-actions for usage.`;
+              message += `\n\nYou need to pass the name of the screen to navigate to.\n\nSee https://reactnavigation.org/docs/5.x/navigation-actions for usage.`;
             }
 
             break;

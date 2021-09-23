@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.14.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.14.8...@react-navigation/stack@5.14.9) (2021-08-17)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+## [5.14.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.14.7...@react-navigation/stack@5.14.8) (2021-08-15)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+## [5.14.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.14.5...@react-navigation/stack@5.14.7) (2021-08-01)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+## [5.14.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.14.5...@react-navigation/stack@5.14.6) (2021-08-01)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+## [5.14.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.14.4...@react-navigation/stack@5.14.5) (2021-05-09)
+
+
+### Bug Fixes
+
+* pressOpacity for ios Touchable ([9fb4202](https://github.com/react-navigation/react-navigation/commit/9fb420259758405efa819bf6d01636f46f7f5033))
+
+
+
+
+
+## [5.14.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.14.3...@react-navigation/stack@5.14.4) (2021-04-04)
+
+
+### Bug Fixes
+
+* check for screens enabled in ScreenContainer ([493956e](https://github.com/react-navigation/react-navigation/commit/493956ef717a03bd8c3533a2949434e83718c5e4))
+
+
+
+
+
 ## [5.14.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.14.2...@react-navigation/stack@5.14.3) (2021-02-21)
 
 **Note:** Version bump only for package @react-navigation/stack
