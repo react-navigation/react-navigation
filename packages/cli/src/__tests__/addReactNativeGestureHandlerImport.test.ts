@@ -12,7 +12,7 @@ beforeAll(() => {
 });
 
 describe('index file found and contains no imports', () => {
-  it('index.js exists', () => {
+  it('index.js exists', async () => {
     mockVol.reset();
     mockVol.fromNestedJSON(
       {
@@ -23,14 +23,15 @@ describe('index file found and contains no imports', () => {
       '/testTmp'
     );
 
-    const { didAddImport, foundFile } = addReactNativeGestureHandlerImport(
-      '/testTmp/project'
-    );
+    const {
+      didAddImport,
+      foundFile,
+    } = await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(true);
     expect(foundFile).toBe('index.js');
   });
 
-  it('App.jsx exists', () => {
+  it('App.jsx exists', async () => {
     mockVol.reset();
     mockVol.fromNestedJSON(
       {
@@ -41,14 +42,15 @@ describe('index file found and contains no imports', () => {
       '/testTmp'
     );
 
-    const { didAddImport, foundFile } = addReactNativeGestureHandlerImport(
-      '/testTmp/project'
-    );
+    const {
+      didAddImport,
+      foundFile,
+    } = await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(true);
     expect(foundFile).toBe('App.jsx');
   });
 
-  it('index.ts exists', () => {
+  it('index.ts exists', async () => {
     mockVol.reset();
     mockVol.fromNestedJSON(
       {
@@ -59,14 +61,15 @@ describe('index file found and contains no imports', () => {
       '/testTmp'
     );
 
-    const { didAddImport, foundFile } = addReactNativeGestureHandlerImport(
-      '/testTmp/project'
-    );
+    const {
+      didAddImport,
+      foundFile,
+    } = await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(true);
     expect(foundFile).toBe('index.ts');
   });
 
-  it('App.tsx exists', () => {
+  it('App.tsx exists', async () => {
     mockVol.reset();
     mockVol.fromNestedJSON(
       {
@@ -77,14 +80,15 @@ describe('index file found and contains no imports', () => {
       '/testTmp'
     );
 
-    const { didAddImport, foundFile } = addReactNativeGestureHandlerImport(
-      '/testTmp/project'
-    );
+    const {
+      didAddImport,
+      foundFile,
+    } = await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(true);
     expect(foundFile).toBe('App.tsx');
   });
 
-  it('App.jsx and index.s (prioritizing index.ts)', () => {
+  it('App.jsx and index.s (prioritizing index.ts)', async () => {
     mockVol.reset();
     mockVol.fromNestedJSON(
       {
@@ -96,14 +100,15 @@ describe('index file found and contains no imports', () => {
       '/testTmp'
     );
 
-    const { didAddImport, foundFile } = addReactNativeGestureHandlerImport(
-      '/testTmp/project'
-    );
+    const {
+      didAddImport,
+      foundFile,
+    } = await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(true);
     expect(foundFile).toBe('index.js'); // prioritizing index.js
   });
 
-  it('App.tsx and index.ts (prioritizing index.ts)', () => {
+  it('App.tsx and index.ts (prioritizing index.ts)', async () => {
     mockVol.reset();
     mockVol.fromNestedJSON(
       {
@@ -115,16 +120,17 @@ describe('index file found and contains no imports', () => {
       '/testTmp'
     );
 
-    const { didAddImport, foundFile } = addReactNativeGestureHandlerImport(
-      '/testTmp/project'
-    );
+    const {
+      didAddImport,
+      foundFile,
+    } = await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(true);
     expect(foundFile).toBe('index.ts'); // prioritizing index.ts
   });
 });
 
 describe('index file found and contains import statement', () => {
-  it('index.js exists', () => {
+  it('index.js exists', async () => {
     mockVol.reset();
     mockVol.fromNestedJSON(
       {
@@ -135,14 +141,15 @@ describe('index file found and contains import statement', () => {
       '/testTmp'
     );
 
-    const { didAddImport, foundFile } = addReactNativeGestureHandlerImport(
-      '/testTmp/project'
-    );
+    const {
+      didAddImport,
+      foundFile,
+    } = await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(false);
     expect(foundFile).toBe('index.js');
   });
 
-  it('App.jsx exists', () => {
+  it('App.jsx exists', async () => {
     mockVol.reset();
     mockVol.fromNestedJSON(
       {
@@ -153,14 +160,15 @@ describe('index file found and contains import statement', () => {
       '/testTmp'
     );
 
-    const { didAddImport, foundFile } = addReactNativeGestureHandlerImport(
-      '/testTmp/project'
-    );
+    const {
+      didAddImport,
+      foundFile,
+    } = await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(false);
     expect(foundFile).toBe('App.jsx');
   });
 
-  it('index.ts exists', () => {
+  it('index.ts exists', async () => {
     mockVol.reset();
     mockVol.fromNestedJSON(
       {
@@ -171,14 +179,15 @@ describe('index file found and contains import statement', () => {
       '/testTmp'
     );
 
-    const { didAddImport, foundFile } = addReactNativeGestureHandlerImport(
-      '/testTmp/project'
-    );
+    const {
+      didAddImport,
+      foundFile,
+    } = await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(false);
     expect(foundFile).toBe('index.ts');
   });
 
-  it('App.tsx exists', () => {
+  it('App.tsx exists', async () => {
     mockVol.reset();
     mockVol.fromNestedJSON(
       {
@@ -189,14 +198,15 @@ describe('index file found and contains import statement', () => {
       '/testTmp'
     );
 
-    const { didAddImport, foundFile } = addReactNativeGestureHandlerImport(
-      '/testTmp/project'
-    );
+    const {
+      didAddImport,
+      foundFile,
+    } = await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(false);
     expect(foundFile).toBe('App.tsx');
   });
 
-  it('App.jsx and index.s (prioritizing index.ts)', () => {
+  it('App.jsx and index.s (prioritizing index.ts)', async () => {
     mockVol.reset();
     mockVol.fromNestedJSON(
       {
@@ -208,14 +218,15 @@ describe('index file found and contains import statement', () => {
       '/testTmp'
     );
 
-    const { didAddImport, foundFile } = addReactNativeGestureHandlerImport(
-      '/testTmp/project'
-    );
+    const {
+      didAddImport,
+      foundFile,
+    } = await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(false);
     expect(foundFile).toBe('index.js'); // prioritizing index.js
   });
 
-  it('App.tsx and index.ts (prioritizing index.ts)', () => {
+  it('App.tsx and index.ts (prioritizing index.ts)', async () => {
     mockVol.reset();
     mockVol.fromNestedJSON(
       {
@@ -227,16 +238,17 @@ describe('index file found and contains import statement', () => {
       '/testTmp'
     );
 
-    const { didAddImport, foundFile } = addReactNativeGestureHandlerImport(
-      '/testTmp/project'
-    );
+    const {
+      didAddImport,
+      foundFile,
+    } = await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(false);
     expect(foundFile).toBe('index.ts'); // prioritizing index.ts
   });
 });
 
 describe('Test quote type auto detection', () => {
-  it('Single Quote', () => {
+  it('Single Quote', async () => {
     mockVol.reset();
     mockVol.fromNestedJSON(
       {
@@ -247,7 +259,7 @@ describe('Test quote type auto detection', () => {
       '/testTmp'
     );
 
-    addReactNativeGestureHandlerImport('/testTmp/project');
+    await addReactNativeGestureHandlerImport('/testTmp/project');
 
     const fileContent = mockVol.readFileSync(
       '/testTmp/project/index.ts'
@@ -259,7 +271,7 @@ describe('Test quote type auto detection', () => {
     expect(quote).toBe("'");
   });
 
-  it('Double Quote', () => {
+  it('Double Quote', async () => {
     mockVol.reset();
     mockVol.fromNestedJSON(
       {
@@ -270,7 +282,7 @@ describe('Test quote type auto detection', () => {
       '/testTmp'
     );
 
-    addReactNativeGestureHandlerImport('/testTmp/project');
+    await addReactNativeGestureHandlerImport('/testTmp/project');
 
     const fileContent = mockVol.readFileSync(
       '/testTmp/project/index.ts'
