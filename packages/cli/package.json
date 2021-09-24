@@ -11,6 +11,7 @@
     "commander": "^6.2.0",
     "enquirer": "^2.3.6",
     "node-fetch": "^2.6.1",
+    "ora": "^5.4.1",
     "shelljs": "^0.8.4"
   },
   "devDependencies": {

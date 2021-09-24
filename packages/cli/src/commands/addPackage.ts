@@ -1,9 +1,11 @@
 import fetch from 'node-fetch';
 import shell from 'shelljs';
+import ora from 'ora';
 import checkAndGetInstaller from '../utils/checkAndGetInstaller';
 import installPeersDependencies from '../utils/installPeersDependencies';
 import addReactNativeGestureHandlerImport from '../utils/addReactNativeGestureHandlerImport';
 import getLogger from '../utils/logger';
+import enquirer from 'enquirer';
 
 const logger = getLogger();
 
@@ -12,6 +14,7 @@ const installPackage = async (pack: string): Promise<any> => {
    * Fetching package meta data
    */
   logger.log('Fetching package metadata ...');
+  const fetchMetaSpinner = ora('Fetching package metadata').start();
   const [packName, version = 'latest'] = pack.split('@');
 
   let metaData;
@@ -23,11 +26,16 @@ const installPackage = async (pack: string): Promise<any> => {
 
     metaData = await response.json();
 
+    fetchMetaSpinner.succeed();
+    fetchMetaSpinner.stop();
+
     logger.verbose('Meta data');
     logger.verbose(metaData);
   } catch (e) {
     logger.error('Please enter a valid React-Navigation Package');
   }
+
+  const getInstallerSpinner = ora('Check and determining installer').start();
 
   /**
    * Get installer after check
@@ -41,6 +49,12 @@ const installPackage = async (pack: string): Promise<any> => {
     state: getInstallerState,
     rootDirectory,
   } = checkAndGetInstaller(process.cwd());
+
+  if (installer) {
+    getInstallerSpinner.succeed();
+  } else {
+    getInstallerSpinner.fail();
+  }
 
   logger.verbose(`Installer: ${installer}\nrootDirectory: ${rootDirectory}`);
   logger.debug({ installer, getInstallerState, rootDirectory });
@@ -65,9 +79,16 @@ const installPackage = async (pack: string): Promise<any> => {
   /**
    * Install package
    */
+  const installPackageSpinner = ora(`Install ${pack} package\n`).start();
+
   const install = (command: string): void => {
     logger.log(command);
-    shell.exec(command);
+    const out = shell.exec(command);
+    if (out.code === 0) {
+      installPackageSpinner.succeed(`${pack} package installed successfully`);
+    } else {
+      installPackageSpinner.fail(`${pack} package installation failed`);
+    }
   };
 
   shell.cd(rootDirectory as string);
@@ -94,7 +115,23 @@ const installPackage = async (pack: string): Promise<any> => {
   /**
    * Install dependencies
    */
-  installPeersDependencies(metaData, installer as string);
+  const installPeersSpinner = ora('Installing peer dependencies\n').start();
+  const out = installPeersDependencies(metaData, installer as string);
+  if (out && out.code === 0) {
+    installPeersSpinner.succeed('Peer dependencies installed successfully');
+  } else {
+    if (out) {
+      /**
+       * Installation executed and failed
+       */
+      installPeersSpinner.fail('Failed to install peer dependencies');
+    } else {
+      /**
+       * No peer dependencies in meta data
+       */
+      installPeersSpinner.succeed('No peers dependencies in meta data');
+    }
+  }
 
   /**
    * Add `import ${quote}react-native-gesture-handler${quote}` to index.(ts|js)
@@ -103,7 +140,26 @@ const installPackage = async (pack: string): Promise<any> => {
     metaData.peerDependencies?.hasOwnProperty('react-native-gesture-handler')
   ) {
     logger.log('Package have react-native-gesture-handler as peer dependency!');
-    addReactNativeGestureHandlerImport(rootDirectory as string);
+
+    const { didAddImport } = await addReactNativeGestureHandlerImport(
+      rootDirectory as string,
+      async () =>
+        /**
+         * Reverting because we reverted the order of enabled with disabled and that's to have yep on one click (UX).
+         * As most of the time that what people want.
+         */
+        !((await enquirer.prompt({
+          name: 'addAutoImportValue',
+          type: 'toggle',
+          message: 'Do you want the import to be added automatically?',
+          enabled: 'Nope',
+          disabled: 'Yep',
+        } as any)) as any).addAutoImportValue
+    );
+
+    if (!didAddImport) {
+      ora().succeed('react-native-gesture-handler import already exists');
+    }
   }
 };
 
