@@ -10,14 +10,16 @@ const installPeersDependencies = (metaData: any, installer: string) => {
      * construct packages string
      */
     let packages = Object.entries(metaData.peerDependencies).reduce(
-      (packagesStr, [pack, version]: [string, string]) => {
+      (packagesStr, [pack, version]) => {
         if (['react', 'react-native'].includes(pack)) {
           return packagesStr;
         }
 
         let versionStr = '';
         if (installer !== 'expo') {
-          versionStr = version ? `@${version.replace(/ /g, '')}` : '';
+          versionStr = version
+            ? `@${(version as string).replace(/ /g, '')}`
+            : '';
         }
 
         return `${packagesStr} "${pack}${versionStr}"`;

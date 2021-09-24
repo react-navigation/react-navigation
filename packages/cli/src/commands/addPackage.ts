@@ -70,14 +70,14 @@ const installPackage = async (pack: string): Promise<any> => {
     shell.exec(command);
   };
 
-  shell.cd(rootDirectory);
+  shell.cd(rootDirectory as string);
 
   let versionStr = '';
   if (installer !== 'expo') {
     versionStr = version ? `@${version.replace(/ /g, '')}` : '';
   }
 
-  if (['expo', 'yarn'].includes(installer)) {
+  if (['expo', 'yarn'].includes(installer as string)) {
     // expo and yarn
     install(
       `npx ${installer} add @react-navigation/${packName}${versionStr}${
@@ -94,7 +94,7 @@ const installPackage = async (pack: string): Promise<any> => {
   /**
    * Install dependencies
    */
-  installPeersDependencies(metaData, installer);
+  installPeersDependencies(metaData, installer as string);
 
   /**
    * Add `import ${quote}react-native-gesture-handler${quote}` to index.(ts|js)
@@ -103,7 +103,7 @@ const installPackage = async (pack: string): Promise<any> => {
     metaData.peerDependencies?.hasOwnProperty('react-native-gesture-handler')
   ) {
     logger.log('Package have react-native-gesture-handler as peer dependency!');
-    addReactNativeGestureHandlerImport(rootDirectory);
+    addReactNativeGestureHandlerImport(rootDirectory as string);
   }
 };
 

@@ -10,8 +10,8 @@ jest.mock('fs', () => mockVol);
 /**
  * mocking shell which function
  */
-global.shellWhich = { npm: true, yarn: true };
-shell.which = (command: string) => global.shellWhich[command];
+let shellWhich: any = { npm: true, yarn: true };
+shell.which = (command: string) => shellWhich[command];
 
 /**
  * Creating default memfs volume and helper
@@ -199,7 +199,7 @@ describe('Checks tests cases', () => {
       expect(state.isYarnPackageLockFound).toBe(false);
     };
 
-    global.shellWhich.yarn = true;
+    shellWhich.yarn = true;
     runTest('/testTmp/projectRoot/childDir/childDir2');
     runTest('/testTmp/projectRoot');
   });
@@ -228,7 +228,7 @@ describe('Checks tests cases', () => {
      * ( we remove it, test and then install it back again )
      */
     // test
-    global.shellWhich.yarn = false;
+    shellWhich.yarn = false;
     runTest('/testTmp/projectRoot/childDir/childDir2');
     runTest('/testTmp/projectRoot');
   });
