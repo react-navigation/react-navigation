@@ -4,7 +4,19 @@ import getLogger from './logger';
 
 const logger = getLogger();
 
-const addReactNativeGestureHandlerImport = (rootDir: string): void => {
+interface IAddReactNativeGestureHandlerImportReturn {
+  foundFile: string | null;
+  didAddImport: boolean;
+}
+
+const addReactNativeGestureHandlerImport = (
+  rootDir: string
+): IAddReactNativeGestureHandlerImportReturn => {
+  const result: IAddReactNativeGestureHandlerImportReturn = {
+    foundFile: null,
+    didAddImport: false,
+  };
+
   logger.log(
     'Checking and trying to add react-native-gesture-handler package ...'
   );
@@ -14,6 +26,8 @@ const addReactNativeGestureHandlerImport = (rootDir: string): void => {
 
     const filePath = path.resolve(rootDir, indexFileName);
     if (fs.existsSync(filePath)) {
+      result.foundFile = indexFileName;
+
       logger.log(`${indexFileName} Found!`);
 
       let indexFileContent = fs.readFileSync(filePath, 'utf8');
@@ -27,15 +41,17 @@ const addReactNativeGestureHandlerImport = (rootDir: string): void => {
         logger.log(
           `${importExpression} was added successfully to ${indexFileName}`
         );
+        result.didAddImport = true;
       } else {
         logger.log('import already exists!');
       }
-      return;
+      return result;
     }
   }
   logger.warn(
     'No index.(js|ts) or App.(js|ts) were found! (Import not added)!'
   );
+  return result;
 };
 
 export default addReactNativeGestureHandlerImport;
