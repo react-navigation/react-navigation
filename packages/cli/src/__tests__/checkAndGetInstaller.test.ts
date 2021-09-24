@@ -1,11 +1,11 @@
-import { vol } from 'memfs';
+import { vol as mockVol } from 'memfs';
 import checkAndGetInstaller from '../utils/checkAndGetInstaller';
 import shell from 'shelljs';
 
 /**
  * Mocking fs
  */
-jest.mock('fs', () => vol);
+jest.mock('fs', () => mockVol);
 
 /**
  * mocking shell which function
@@ -43,7 +43,7 @@ const addToProjectRoot = (elementsToAdd: any): any => {
  */
 describe('Checks tests cases', () => {
   it('No package.json', async () => {
-    vol.fromNestedJSON(defaultDirectoriesStructure, '/testTmp');
+    mockVol.fromNestedJSON(defaultDirectoriesStructure, '/testTmp');
 
     const runTest = (path: string): void => {
       const { installer, rootDirectory, state } = checkAndGetInstaller(path);
@@ -60,8 +60,8 @@ describe('Checks tests cases', () => {
   });
 
   it('Package.json and expo', async () => {
-    vol.reset();
-    vol.fromNestedJSON(
+    mockVol.reset();
+    mockVol.fromNestedJSON(
       addToProjectRoot({
         'package.json': JSON.stringify({ dependencies: { expo: '^2.0.0' } }),
       }),
@@ -83,8 +83,8 @@ describe('Checks tests cases', () => {
   });
 
   it('Package.json and yarn.lock (alone)', async () => {
-    vol.reset();
-    vol.fromNestedJSON(
+    mockVol.reset();
+    mockVol.fromNestedJSON(
       addToProjectRoot({
         'yarn.lock': '{}',
         'package.json': JSON.stringify({ dependencies: { super: '^2.0.0' } }),
@@ -107,8 +107,8 @@ describe('Checks tests cases', () => {
   });
 
   it('Package.json and package.lock (alone)', async () => {
-    vol.reset();
-    vol.fromNestedJSON(
+    mockVol.reset();
+    mockVol.fromNestedJSON(
       addToProjectRoot({
         'package.lock': '{}',
         'package.json': JSON.stringify({ dependencies: { super: '^2.0.0' } }),
@@ -131,8 +131,8 @@ describe('Checks tests cases', () => {
   });
 
   it('Package.json and expo and yarn.lock and package.lock', async () => {
-    vol.reset();
-    vol.fromNestedJSON(
+    mockVol.reset();
+    mockVol.fromNestedJSON(
       addToProjectRoot({
         'yarn.lock': '{}',
         'package.lock': '{}',
@@ -156,8 +156,8 @@ describe('Checks tests cases', () => {
   });
 
   it('Package.json and yarn.lock and package.lock', async () => {
-    vol.reset();
-    vol.fromNestedJSON(
+    mockVol.reset();
+    mockVol.fromNestedJSON(
       addToProjectRoot({
         'yarn.lock': '{}',
         'package.lock': '{}',
@@ -181,8 +181,8 @@ describe('Checks tests cases', () => {
   });
 
   it('Package.json and no expo, no yarn.lock, no package.lock and yarn installed', async () => {
-    vol.reset();
-    vol.fromNestedJSON(
+    mockVol.reset();
+    mockVol.fromNestedJSON(
       addToProjectRoot({
         'package.json': JSON.stringify({ dependencies: { supper: '^2.0.0' } }),
       }),
@@ -205,8 +205,8 @@ describe('Checks tests cases', () => {
   });
 
   it('Package.json and no expo, no yarn.lock, no package.lock and yarn not installed', async () => {
-    vol.reset();
-    vol.fromNestedJSON(
+    mockVol.reset();
+    mockVol.fromNestedJSON(
       addToProjectRoot({
         'package.json': JSON.stringify({ dependencies: { supper: '^2.0.0' } }),
       }),
