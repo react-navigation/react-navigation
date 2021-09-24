@@ -1,6 +1,7 @@
 export class Logger {
   private _isVerbose = false;
   private _isDebug = false;
+  private _isLogEnabled = true;
 
   public setIsVerbose(enable: boolean): this {
     this._isVerbose = enable;
@@ -12,30 +13,46 @@ export class Logger {
     return this;
   }
 
+  public enable(): this {
+    this._isLogEnabled = true;
+    return this;
+  }
+
+  public disable(): this {
+    this._isLogEnabled = false;
+    return this;
+  }
+
   public log(msg: any): this {
-    console.log(msg);
+    if (this._isLogEnabled) {
+      console.log(msg);
+    }
     return this;
   }
 
   public warn(msg: any): this {
-    console.warn(msg);
+    if (this._isLogEnabled) {
+      console.warn(msg);
+    }
     return this;
   }
 
   public error(msg: any): this {
-    console.error(msg);
+    if (this._isLogEnabled) {
+      console.error(msg);
+    }
     return this;
   }
 
   public verbose(msg: any): this {
-    if (this._isVerbose || this._isDebug) {
+    if (this._isLogEnabled && (this._isVerbose || this._isDebug)) {
       console.log(msg);
     }
     return this;
   }
 
   public debug(msg: any): this {
-    if (this._isDebug) {
+    if (this._isLogEnabled && this._isDebug) {
       console.log(msg);
     }
     return this;
@@ -54,8 +71,8 @@ export default function getLogger(params?: IGetLoggerParams): Logger {
   }
 
   if (params) {
-    logger.setIsVerbose(params.isVerbose);
-    logger.setIsDebug(params.isDebug);
+    logger.setIsVerbose(params.isVerbose || false);
+    logger.setIsDebug(params.isDebug || false);
   }
 
   return logger;
