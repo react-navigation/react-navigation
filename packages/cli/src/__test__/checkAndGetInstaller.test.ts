@@ -2,10 +2,24 @@ import { vol } from 'memfs';
 import checkAndGetInstaller from '../utils/checkAndGetInstaller';
 import shell from 'shelljs';
 
-jest.mock('fs');
+/**
+ * Mocking fs
+ */
+jest.mock('fs', () => vol);
+
+/**
+ * mocking shell which function
+ */
+global.shellWhich = { npm: true, yarn: true };
+shell.which = (command: string) => global.shellWhich[command];
+
+/**
+ * Creating default memfs volume and helper
+ */
+const ROOT_PATH = 'projectRoot';
 
 const defaultDirectoriesStructure = {
-  projectRoot: {
+  [ROOT_PATH]: {
     childDir: {
       childDir2: {
         'readme.md': 'test',
@@ -14,176 +28,208 @@ const defaultDirectoriesStructure = {
   },
 };
 
-it('No package.json', async () => {
-  vol.reset();
-
-  vol.fromNestedJSON(
-    defaultDirectoriesStructure,
-    'tmp' // cwd
-  );
-
-  let installer = checkAndGetInstaller('/tmp/projectRoot/childDir/childDir2');
-  expect(installer).toBe(null);
-  installer = checkAndGetInstaller('/tmp/projectRoot');
-  expect(installer).toBe(null);
-});
-
-it('Package.json and expo', async () => {
-  vol.reset();
-
-  vol.fromNestedJSON(
-    {
-      ...defaultDirectoriesStructure,
-      'package.json': "{ dependencies: { expo: '^2.0.0' } }",
+const addToProjectRoot = (elementsToAdd: any): any => {
+  return {
+    ...defaultDirectoriesStructure,
+    [ROOT_PATH]: {
+      ...defaultDirectoriesStructure[ROOT_PATH],
+      ...elementsToAdd,
     },
-    'tmp' // cwd
-  );
-
-  let installer = checkAndGetInstaller('/tmp/projectRoot/childDir/childDir2');
-  expect(installer).toBe('expo');
-  installer = checkAndGetInstaller('/tmp/projectRoot');
-  expect(installer).toBe('expo');
-});
-
-it('Package.json and yarn.lock (alone)', async () => {
-  vol.reset();
-
-  vol.fromNestedJSON(
-    {
-      ...defaultDirectoriesStructure,
-      'yarn.lock': '{}',
-      'package.json': "{ dependencies: { super: '^2.0.0' } }",
-    },
-    'tmp' // cwd
-  );
-
-  let installer = checkAndGetInstaller('/tmp/projectRoot/childDir/childDir2');
-  expect(installer).toBe('yarn');
-  installer = checkAndGetInstaller('/tmp/projectRoot');
-  expect(installer).toBe('yarn');
-});
-
-it('Package.json and package.lock (alone)', async () => {
-  vol.reset();
-
-  vol.fromNestedJSON(
-    {
-      ...defaultDirectoriesStructure,
-      'package.lock': '{}',
-      'package.json': "{ dependencies: { super: '^2.0.0' } }",
-    },
-    'tmp' // cwd
-  );
-
-  let installer = checkAndGetInstaller('/tmp/projectRoot/childDir/childDir2');
-  expect(installer).toBe('npm');
-  installer = checkAndGetInstaller('/tmp/projectRoot');
-  expect(installer).toBe('npm');
-});
-
-it('Package.json and expo and yarn.lock and package.lock', async () => {
-  vol.reset();
-
-  vol.fromNestedJSON(
-    {
-      ...defaultDirectoriesStructure,
-      'yarn.lock': '{}',
-      'package.lock': '{}',
-      'package.json': "{ dependencies: { expo: '^2.0.0' } }",
-    },
-    'tmp' // cwd
-  );
-
-  let installer = checkAndGetInstaller('/tmp/projectRoot/childDir/childDir2');
-  expect(installer).toBe('expo');
-  installer = checkAndGetInstaller('/tmp/projectRoot');
-  expect(installer).toBe('expo');
-});
-
-it('Package.json and yarn.lock and package.lock', async () => {
-  vol.reset();
-
-  vol.fromNestedJSON(
-    {
-      ...defaultDirectoriesStructure,
-      'yarn.lock': '{}',
-      'package.lock': '{}',
-      'package.json': "{ dependencies: { supper: '^2.0.0' } }",
-    },
-    'tmp' // cwd
-  );
-
-  let installer = checkAndGetInstaller('/tmp/projectRoot/childDir/childDir2');
-  expect(installer).toBe('yarn');
-  installer = checkAndGetInstaller('/tmp/projectRoot');
-  expect(installer).toBe('yarn');
-});
-
-it('Package.json and no expo, no yarn.lock, no package.lock and yarn installed', async () => {
-  vol.reset();
-
-  vol.fromNestedJSON(
-    {
-      ...defaultDirectoriesStructure,
-      'package.json': "{ dependencies: { supper: '^2.0.0' } }",
-    },
-    'tmp' // cwd
-  );
-
-  function runTest() {
-    let installer = checkAndGetInstaller('/tmp/projectRoot/childDir/childDir2');
-    expect(installer).toBe('yarn');
-    installer = checkAndGetInstaller('/tmp/projectRoot');
-    expect(installer).toBe('yarn');
-  }
-
-  if (shell.which('yarn')) {
-    runTest();
-  } else {
-    /**
-     * No yarn installed
-     */
-    // install
-    shell.exec('npm i -g yarn');
-    runTest();
-    // remove
-    shell.exec('npm uninstall -g yarn');
-  }
-});
-
-it('Package.json and no expo, no yarn.lock, no package.lock and yarn not installed', async () => {
-  vol.reset();
-
-  vol.fromNestedJSON(
-    {
-      ...defaultDirectoriesStructure,
-      'package.json': "{ dependencies: { supper: '^2.0.0' } }",
-    },
-    'tmp' // cwd
-  );
-
-  const runTest = () => {
-    let installer = checkAndGetInstaller('/tmp/projectRoot/childDir/childDir2');
-    expect(installer).toBe('npm');
-    installer = checkAndGetInstaller('/tmp/projectRoot');
-    expect(installer).toBe('npm');
   };
+};
 
-  if (shell.which('yarn')) {
+/**
+ * Tests
+ */
+describe('Checks tests cases', () => {
+  it('No package.json', async () => {
+    vol.fromNestedJSON(defaultDirectoriesStructure, '/testTmp');
+
+    const runTest = (path: string): void => {
+      const { installer, rootDirectory, state } = checkAndGetInstaller(path);
+      expect(installer).toBe(null);
+      expect(rootDirectory).toBe(null);
+      expect(state.isExpoFound).toBe(false);
+      expect(state.isPackageJsonFound).toBe(false);
+      expect(state.isNpmPackageLockFound).toBe(false);
+      expect(state.isYarnPackageLockFound).toBe(false);
+    };
+
+    runTest('/testTmp/projectRoot/childDir/childDir2');
+    runTest('/testTmp/projectRoot');
+  });
+
+  it('Package.json and expo', async () => {
+    vol.reset();
+    vol.fromNestedJSON(
+      addToProjectRoot({
+        'package.json': JSON.stringify({ dependencies: { expo: '^2.0.0' } }),
+      }),
+      '/testTmp'
+    );
+
+    const runTest = (path: string): void => {
+      const { installer, rootDirectory, state } = checkAndGetInstaller(path);
+      expect(installer).toBe('expo');
+      expect(rootDirectory).toBe('/testTmp/projectRoot');
+      expect(state.isExpoFound).toBe(true);
+      expect(state.isPackageJsonFound).toBe(true);
+      expect(state.isNpmPackageLockFound).toBe(false);
+      expect(state.isYarnPackageLockFound).toBe(false);
+    };
+
+    runTest('/testTmp/projectRoot/childDir/childDir2');
+    runTest('/testTmp/projectRoot');
+  });
+
+  it('Package.json and yarn.lock (alone)', async () => {
+    vol.reset();
+    vol.fromNestedJSON(
+      addToProjectRoot({
+        'yarn.lock': '{}',
+        'package.json': JSON.stringify({ dependencies: { super: '^2.0.0' } }),
+      }),
+      '/testTmp'
+    );
+
+    const runTest = (path: string): void => {
+      const { installer, rootDirectory, state } = checkAndGetInstaller(path);
+      expect(installer).toBe('yarn');
+      expect(rootDirectory).toBe('/testTmp/projectRoot');
+      expect(state.isExpoFound).toBe(false);
+      expect(state.isPackageJsonFound).toBe(true);
+      expect(state.isNpmPackageLockFound).toBe(false);
+      expect(state.isYarnPackageLockFound).toBe(true);
+    };
+
+    runTest('/testTmp/projectRoot/childDir/childDir2');
+    runTest('/testTmp/projectRoot');
+  });
+
+  it('Package.json and package.lock (alone)', async () => {
+    vol.reset();
+    vol.fromNestedJSON(
+      addToProjectRoot({
+        'package.lock': '{}',
+        'package.json': JSON.stringify({ dependencies: { super: '^2.0.0' } }),
+      }),
+      '/testTmp'
+    );
+
+    const runTest = (path: string): void => {
+      const { installer, rootDirectory, state } = checkAndGetInstaller(path);
+      expect(installer).toBe('npm');
+      expect(rootDirectory).toBe('/testTmp/projectRoot');
+      expect(state.isExpoFound).toBe(false);
+      expect(state.isPackageJsonFound).toBe(true);
+      expect(state.isNpmPackageLockFound).toBe(true);
+      expect(state.isYarnPackageLockFound).toBe(false);
+    };
+
+    runTest('/testTmp/projectRoot/childDir/childDir2');
+    runTest('/testTmp/projectRoot');
+  });
+
+  it('Package.json and expo and yarn.lock and package.lock', async () => {
+    vol.reset();
+    vol.fromNestedJSON(
+      addToProjectRoot({
+        'yarn.lock': '{}',
+        'package.lock': '{}',
+        'package.json': JSON.stringify({ dependencies: { expo: '^2.0.0' } }),
+      }),
+      '/testTmp'
+    );
+
+    const runTest = (path: string): void => {
+      const { installer, rootDirectory, state } = checkAndGetInstaller(path);
+      expect(installer).toBe('expo');
+      expect(rootDirectory).toBe('/testTmp/projectRoot');
+      expect(state.isExpoFound).toBe(true);
+      expect(state.isPackageJsonFound).toBe(true);
+      expect(state.isNpmPackageLockFound).toBe(true);
+      expect(state.isYarnPackageLockFound).toBe(true);
+    };
+
+    runTest('/testTmp/projectRoot/childDir/childDir2');
+    runTest('/testTmp/projectRoot');
+  });
+
+  it('Package.json and yarn.lock and package.lock', async () => {
+    vol.reset();
+    vol.fromNestedJSON(
+      addToProjectRoot({
+        'yarn.lock': '{}',
+        'package.lock': '{}',
+        'package.json': JSON.stringify({ dependencies: { supper: '^2.0.0' } }),
+      }),
+      '/testTmp'
+    );
+
+    const runTest = (path: string): void => {
+      const { installer, rootDirectory, state } = checkAndGetInstaller(path);
+      expect(installer).toBe('yarn');
+      expect(rootDirectory).toBe('/testTmp/projectRoot');
+      expect(state.isExpoFound).toBe(false);
+      expect(state.isPackageJsonFound).toBe(true);
+      expect(state.isNpmPackageLockFound).toBe(true);
+      expect(state.isYarnPackageLockFound).toBe(true);
+    };
+
+    runTest('/testTmp/projectRoot/childDir/childDir2');
+    runTest('/testTmp/projectRoot');
+  });
+
+  it('Package.json and no expo, no yarn.lock, no package.lock and yarn installed', async () => {
+    vol.reset();
+    vol.fromNestedJSON(
+      addToProjectRoot({
+        'package.json': JSON.stringify({ dependencies: { supper: '^2.0.0' } }),
+      }),
+      '/testTmp'
+    );
+
+    const runTest = (path: string): void => {
+      const { installer, rootDirectory, state } = checkAndGetInstaller(path);
+      expect(installer).toBe('yarn');
+      expect(rootDirectory).toBe('/testTmp/projectRoot');
+      expect(state.isExpoFound).toBe(false);
+      expect(state.isPackageJsonFound).toBe(true);
+      expect(state.isNpmPackageLockFound).toBe(false);
+      expect(state.isYarnPackageLockFound).toBe(false);
+    };
+
+    global.shellWhich.yarn = true;
+    runTest('/testTmp/projectRoot/childDir/childDir2');
+    runTest('/testTmp/projectRoot');
+  });
+
+  it('Package.json and no expo, no yarn.lock, no package.lock and yarn not installed', async () => {
+    vol.reset();
+    vol.fromNestedJSON(
+      addToProjectRoot({
+        'package.json': JSON.stringify({ dependencies: { supper: '^2.0.0' } }),
+      }),
+      '/testTmp'
+    );
+
+    const runTest = (path: string): void => {
+      const { installer, rootDirectory, state } = checkAndGetInstaller(path);
+      expect(installer).toBe('npm');
+      expect(rootDirectory).toBe('/testTmp/projectRoot');
+      expect(state.isExpoFound).toBe(false);
+      expect(state.isPackageJsonFound).toBe(true);
+      expect(state.isNpmPackageLockFound).toBe(false);
+      expect(state.isYarnPackageLockFound).toBe(false);
+    };
+
     /**
      * Yarn installed already
      * ( we remove it, test and then install it back again )
      */
-    // get yarn version
-    const yarnVersion = shell.exec('yarn -v');
-    // remove
-    shell.exec('npm uninstall -g yarn');
-    runTest();
-    shell.exec(`npm i -g yarn@${yarnVersion}`);
-  } else {
-    /**
-     * No yarn installed
-     */
-    runTest();
-  }
+    // test
+    global.shellWhich.yarn = false;
+    runTest('/testTmp/projectRoot/childDir/childDir2');
+    runTest('/testTmp/projectRoot');
+  });
 });
