@@ -4,9 +4,22 @@
   "description": "A React-Navigation CLI",
   "main": "src/index.ts",
   "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  },
   "dependencies": {
     "commander": "^6.2.0",
+    "enquirer": "^2.3.6",
     "node-fetch": "^2.6.1",
+    "shelljs": "^0.8.4"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.2",
+    "@types/node": "^16.9.4",
+    "@types/shelljs": "^0.8.9",
+    "jest": "^27.2.1",
+    "memfs": "^3.3.0",
+    "ts-jest": "^27.0.5",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.5"
   }

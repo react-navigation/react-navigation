@@ -60,7 +60,7 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "testRegex": "/__tests__/.*\\.(test|spec)\\.(js|tsx?)$",
+    "testRegex": "/__tests__/.*\\.(test|spec)\\.(js|ts|tsx?)$",
     "setupFiles": [
       "<rootDir>/jest/setup.js"
     ],
