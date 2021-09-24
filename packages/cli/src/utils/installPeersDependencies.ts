@@ -1,9 +1,12 @@
-import shell from 'shelljs';
+import shell, { ShellString } from 'shelljs';
 import getLogger from './logger';
 
 const logger = getLogger();
 
-const installPeersDependencies = (metaData: any, installer: string) => {
+const installPeersDependencies = (
+  metaData: any,
+  installer: string
+): ShellString | null => {
   logger.log('Install Peers Dependencies ...');
   if (metaData.peerDependencies) {
     /**
@@ -35,22 +38,24 @@ const installPeersDependencies = (metaData: any, installer: string) => {
     /**
      * install packages
      */
-    const install = (command: string): void => {
+    const install = (command: string): ShellString => {
       logger.log(command);
-      shell.exec(command);
+      return shell.exec(command);
     };
 
     if (['expo', 'yarn'].includes(installer)) {
       // yarn and expo
-      install(
+      return install(
         `npx ${installer} add ${packages} ${
           installer === 'yarn' ? ` --save` : ''
         }`
       );
     } else {
       // npm
-      install(`${installer} install ${packages} --save`);
+      return install(`${installer} install ${packages} --save`);
     }
+  } else {
+    return null;
   }
 };
 
