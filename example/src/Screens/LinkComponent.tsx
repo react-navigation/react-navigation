@@ -40,7 +40,7 @@ const ArticleScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Link
-          to="/link-component/music"
+          to={{ screen: 'LinkComponent', params: { screen: 'Albums' } }}
           style={[styles.button, { padding: 8 }]}
         >
           Go to /link-component/music
