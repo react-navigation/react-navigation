@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.7...@react-navigation/stack@6.0.8) (2021-09-26)
+
+
+### Bug Fixes
+
+* stop  animations on unmount/cleanup ([5fb5f41](https://github.com/react-navigation/react-navigation/commit/5fb5f41eb6cf86ebe2f7777d6c98bda16ce71b5b))
+
+
+
+
+
 ## [6.0.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.6...@react-navigation/stack@6.0.7) (2021-08-17)
 
 
