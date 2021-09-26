@@ -14,11 +14,11 @@ export type To<
   | string
   | (undefined extends ParamList[RouteName]
       ? {
-          screen: RouteName;
+          screen: Extract<RouteName, string>;
           params?: ParamList[RouteName];
         }
       : {
-          screen: RouteName;
+          screen: Extract<RouteName, string>;
           params: ParamList[RouteName];
         });
 
