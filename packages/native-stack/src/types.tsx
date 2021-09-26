@@ -301,6 +301,15 @@ export type NativeStackNavigationOptions = {
    */
   headerSearchBarOptions?: SearchBarProps;
   /**
+   * Boolean indicating whether to show the menu on longPress of iOS >= 14 back button. Defaults to `true`.
+   * Requires `react-native-screens` version >=3.3.0.
+   *
+   * Only supported on iOS.
+   *
+   * @platform ios
+   */
+  headerBackButtonMenuEnabled?: boolean;
+  /**
    * Sets the status bar animation (similar to the `StatusBar` component).
    * Requires setting `View controller-based status bar appearance -> YES` (or removing the config) in your `Info.plist` file.
    *
@@ -333,6 +342,7 @@ export type NativeStackNavigationOptions = {
   contentStyle?: StyleProp<ViewStyle>;
   /**
    * Whether you can use gestures to dismiss this screen. Defaults to `true`.
+   *
    * Only supported on iOS.
    *
    * @platform ios

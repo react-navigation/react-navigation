@@ -29,6 +29,7 @@ type Props = NativeStackNavigationOptions & {
 
 export default function HeaderConfig({
   headerBackImageSource,
+  headerBackButtonMenuEnabled,
   headerBackTitle,
   headerBackTitleStyle,
   headerBackTitleVisible = true,
@@ -136,6 +137,7 @@ export default function HeaderConfig({
       blurEffect={headerBlurEffect}
       color={tintColor}
       direction={I18nManager.isRTL ? 'rtl' : 'ltr'}
+      disableBackButtonMenu={headerBackButtonMenuEnabled === false}
       hidden={headerShown === false}
       hideBackButton={headerBackVisible === false}
       hideShadow={headerShadowVisible === false}
