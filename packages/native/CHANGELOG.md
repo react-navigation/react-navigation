@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.3...@react-navigation/native@6.0.4) (2021-09-26)
+
+
+### Bug Fixes
+
+* fix building link with useLinkProps ([bcdc559](https://github.com/react-navigation/react-navigation/commit/bcdc55975d64b8a5267f0b0dc47efb395a409762))
+
+
+
+
+
 ## [6.0.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.2...@react-navigation/native@6.0.3) (2021-09-26)
 
 
