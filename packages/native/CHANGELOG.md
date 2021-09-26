@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.2...@react-navigation/native@6.0.3) (2021-09-26)
+
+
+### Bug Fixes
+
+* fix href with useLinkProps. fixes [#9930](https://github.com/react-navigation/react-navigation/issues/9930) ([4ae53e1](https://github.com/react-navigation/react-navigation/commit/4ae53e1705e39aee75041928c07a56ec110bfd05))
+* fix navigation when going back and forth in history on web ([#9970](https://github.com/react-navigation/react-navigation/issues/9970)) ([fb84805](https://github.com/react-navigation/react-navigation/commit/fb84805c889bbb7059e7e95592c004aea2a510d6)), closes [#9408](https://github.com/react-navigation/react-navigation/issues/9408) [#9128](https://github.com/react-navigation/react-navigation/issues/9128)
+* make useScrollToTop work with react-native-largelist ([#9960](https://github.com/react-navigation/react-navigation/issues/9960)) ([073fd57](https://github.com/react-navigation/react-navigation/commit/073fd57537466a054dc902e915430f69bbe363e1))
+* use console.error for linking conflicts instead of throwing ([4b36bcf](https://github.com/react-navigation/react-navigation/commit/4b36bcf346a6196bbc8d5792e8eb4614709161a2))
+
+
+
+
+
 ## [6.0.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.1...@react-navigation/native@6.0.2) (2021-08-07)
 
 

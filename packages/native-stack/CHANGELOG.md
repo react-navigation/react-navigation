@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.2.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.1.0...@react-navigation/native-stack@6.2.0) (2021-09-26)
+
+
+### Bug Fixes
+
+* export header props for other navigators ([8475481](https://github.com/react-navigation/react-navigation/commit/84754812effd8bee576c5d9836c317889dabe11a)), closes [#9965](https://github.com/react-navigation/react-navigation/issues/9965)
+* pass title style to <HeaderTtitle />. fixes [#9885](https://github.com/react-navigation/react-navigation/issues/9885) ([127e030](https://github.com/react-navigation/react-navigation/commit/127e030e03cfec9600cca0327edd159a7bb08896))
+* support same styles in centered title in native stack ([77080d8](https://github.com/react-navigation/react-navigation/commit/77080d84f7632e318d061f1cc6a0a520ceaba401))
+
+
+### Features
+
+* add headerBackButtonMenuEnabled prop ([#9881](https://github.com/react-navigation/react-navigation/issues/9881)) ([c15bcfb](https://github.com/react-navigation/react-navigation/commit/c15bcfba0aeb613220118c876045bd566a675f0f)), closes [/github.com/software-mansion/react-native-screens/discussions/1071#discussioncomment-1227326](https://github.com//github.com/software-mansion/react-native-screens/discussions/1071/issues/discussioncomment-1227326)
+* pass more props to header left in native-stack ([ef41211](https://github.com/react-navigation/react-navigation/commit/ef412116b1ac28262e30fdc85ca963221ae5b685))
+
+
+
+
+
 # [6.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.0.6...@react-navigation/native-stack@6.1.0) (2021-08-18)
 
 

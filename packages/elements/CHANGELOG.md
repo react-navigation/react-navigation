@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.1.0...@react-navigation/elements@1.1.1) (2021-09-26)
+
+
+### Bug Fixes
+
+* resized view never re-appears on macos. fixes [#9889](https://github.com/react-navigation/react-navigation/issues/9889) ([#9904](https://github.com/react-navigation/react-navigation/issues/9904)) ([0dde476](https://github.com/react-navigation/react-navigation/commit/0dde476906006e84d42d754d06a4681633e9fb4b))
+
+
+
+
+
 # [1.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.4...@react-navigation/elements@1.1.0) (2021-08-17)
 
 

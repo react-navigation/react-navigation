@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.5...@react-navigation/bottom-tabs@6.0.6) (2021-09-26)
+
+
+### Bug Fixes
+
+* export header props for other navigators ([8475481](https://github.com/react-navigation/react-navigation/commit/84754812effd8bee576c5d9836c317889dabe11a)), closes [#9965](https://github.com/react-navigation/react-navigation/issues/9965)
+* stop  animations on unmount/cleanup ([5fb5f41](https://github.com/react-navigation/react-navigation/commit/5fb5f41eb6cf86ebe2f7777d6c98bda16ce71b5b))
+
+
+
+
+
 ## [6.0.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.4...@react-navigation/bottom-tabs@6.0.5) (2021-08-17)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

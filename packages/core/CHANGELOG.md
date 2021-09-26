@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.1...@react-navigation/core@6.0.2) (2021-09-26)
+
+
+### Bug Fixes
+
+* automatically queue listeners when container isn't ready ([acdde18](https://github.com/react-navigation/react-navigation/commit/acdde18d8938741fd27d8ff8c8249977e0cb03e7))
+* change error when using React Navigation 4 API ([a802c9d](https://github.com/react-navigation/react-navigation/commit/a802c9df95b9299dd96fa196b4d56fc865f35a86))
+* update the error message for registering navigators ([171d7e1](https://github.com/react-navigation/react-navigation/commit/171d7e1d5beb1f962b15c249dfa746ef7f068835))
+
+
+
+
+
 ## [6.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0...@react-navigation/core@6.0.1) (2021-08-03)
 
 
