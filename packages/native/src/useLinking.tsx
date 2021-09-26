@@ -98,12 +98,16 @@ const createMemoryHistory = () => {
 
       const id = window.history.state?.id ?? nanoid();
 
-      if (items.length) {
-        items[index] = { path, state, id };
+      if (!items.length || items.findIndex((item) => item.id === id) < 0) {
+        // There are two scenarios for creating an array with only one history record:
+        // - When loaded id not found in the items array, this function by default will replace
+        //   the first item. We need to keep only the new updated object, otherwise it will break
+        //   the page when navigating forward in history.
+        // - This is the first time any state modifications are done
+        //   So we need to push the entry as there's nothing to replace
+        items = [{ path, state, id }];
       } else {
-        // This is the first time any state modifications are done
-        // So we need to push the entry as there's nothing to replace
-        items.push({ path, state, id });
+        items[index] = { path, state, id };
       }
 
       window.history.replaceState({ id }, '', path);
@@ -179,6 +183,13 @@ const createMemoryHistory = () => {
         }, 100);
 
         const onPopState = () => {
+          const id = window.history.state?.id;
+          const currentIndex = items.findIndex((item) => item.id === id);
+
+          // Fix createMemoryHistory.index variable's value
+          // as it may go out of sync when navigating in the browser.
+          index = Math.max(currentIndex, 0);
+
           const last = pending.pop();
 
           window.removeEventListener('popstate', onPopState);
