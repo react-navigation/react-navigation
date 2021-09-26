@@ -38,9 +38,9 @@
     "@types/react": "^17.0.9",
     "@types/react-dom": "^17.0.6",
     "antd": "^4.16.1",
-    "flipper": "^0.92.0",
-    "flipper-pkg": "^0.92.0",
-    "flipper-plugin": "^0.92.0",
+    "flipper": "^0.112.0",
+    "flipper-pkg": "^0.112.0",
+    "flipper-plugin": "^0.112.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   }
