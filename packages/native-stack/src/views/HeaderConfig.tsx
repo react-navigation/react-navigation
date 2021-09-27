@@ -57,7 +57,7 @@ export default function HeaderConfig({
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
   const tintColor =
-    headerTintColor ?? Platform.OS === 'ios' ? colors.primary : colors.text;
+    headerTintColor ?? (Platform.OS === 'ios' ? colors.primary : colors.text);
 
   const headerBackTitleStyleFlattened =
     StyleSheet.flatten(headerBackTitleStyle) || {};
