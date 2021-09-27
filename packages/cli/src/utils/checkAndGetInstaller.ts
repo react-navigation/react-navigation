@@ -27,7 +27,7 @@ function checkAndGetInstaller(dir: string): ICheckAndGetInstallerReturn {
   let precDir: string = '';
 
   const result: ICheckAndGetInstallerReturn = {
-    installer: userPickedInstaller || null,
+    installer: userPickedInstaller,
     state: {
       isPackageJsonFound: false,
       isExpoFound: false,
@@ -65,17 +65,17 @@ function checkAndGetInstaller(dir: string): ICheckAndGetInstallerReturn {
         // ---- expo is a dependency -----
         if (isExpoADependency(packageJsonText)) {
           result.state.isExpoFound = true;
-          result.installer = userPickedInstaller || 'expo';
+          result.installer = result.installer || 'expo';
         }
         // ---- yarn lock -----
         if (fs.existsSync(path.resolve(dir, 'yarn.lock'))) {
           result.state.isYarnPackageLockFound = true;
-          result.installer = result.installer || userPickedInstaller || 'yarn';
+          result.installer = result.installer || 'yarn';
         }
         // ---- npm lock -----
         if (fs.existsSync(path.resolve(dir, 'package.lock'))) {
           result.state.isNpmPackageLockFound = true;
-          result.installer = result.installer || userPickedInstaller || 'npm';
+          result.installer = result.installer || 'npm';
         }
 
         // ---- no expo, no lock ----
