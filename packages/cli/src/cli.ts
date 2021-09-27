@@ -1,4 +1,7 @@
-import program from 'commander';
+#!/usr/bin/env node
+/* eslint-disable babel/no-invalid-this */
+
+import program, { Command } from 'commander';
 import installPackage from './commands/addPackage';
 import getLogger from './utils/logger';
 
@@ -17,14 +20,14 @@ program
   .option('-i, --installer <installer>', 'Choose the installer to use manually')
   .option('-V, --verbose', 'output in verbose mode')
   .option('-d, --debug', 'output extra debugging')
-  .on('option:installer', function () {
-    process.env.installer = program.opts().installer;
+  .on('option:installer', function (this: Command) {
+    process.env.installer = this.opts().installer;
   })
-  .on('option:verbose', function () {
-    logger.setIsVerbose(program.opts().verbose);
+  .on('option:verbose', function (this: Command) {
+    logger.setIsVerbose(this.opts().verbose);
   })
-  .on('option:debug', function () {
-    logger.setIsDebug(program.opts().debug);
+  .on('option:debug', function (this: Command) {
+    logger.setIsDebug(this.opts().debug);
   });
 
 program.parse(process.argv);
