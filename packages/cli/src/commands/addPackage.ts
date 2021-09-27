@@ -26,13 +26,22 @@ const installPackage = async (pack: string): Promise<any> => {
 
     metaData = await response.json();
 
-    fetchMetaSpinner.succeed();
-    fetchMetaSpinner.stop();
+    if (typeof metaData === 'string' && metaData.includes('Not Found')) {
+      fetchMetaSpinner.fail(
+        'Package not found! Please enter a valid React-Navigation Package!'
+      );
+      return;
+    }
 
+    fetchMetaSpinner.succeed();
     logger.verbose('Meta data');
     logger.verbose(metaData);
   } catch (e) {
-    logger.error('Please enter a valid React-Navigation Package');
+    fetchMetaSpinner.fail(
+      'Error fetching meta data! Check the package name is right or your network!'
+    );
+    console.error(e);
+    return;
   }
 
   const getInstallerSpinner = ora('Check and determining installer').start();
@@ -148,13 +157,15 @@ const installPackage = async (pack: string): Promise<any> => {
          * Reverting because we reverted the order of enabled with disabled and that's to have yep on one click (UX).
          * As most of the time that what people want.
          */
-        !((await enquirer.prompt({
-          name: 'addAutoImportValue',
-          type: 'toggle',
-          message: 'Do you want the import to be added automatically?',
-          enabled: 'Nope',
-          disabled: 'Yep',
-        } as any)) as any).addAutoImportValue
+        !(
+          (await enquirer.prompt({
+            name: 'addAutoImportValue',
+            type: 'toggle',
+            message: 'Do you want the import to be added automatically?',
+            enabled: 'Nope',
+            disabled: 'Yep',
+          } as any)) as any
+        ).addAutoImportValue
     );
 
     if (!didAddImport) {
