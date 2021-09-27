@@ -1,11 +1,12 @@
+import enquirer from 'enquirer';
 import fetch from 'node-fetch';
-import shell from 'shelljs';
 import ora from 'ora';
+import shell from 'shelljs';
+
+import addReactNativeGestureHandlerImport from '../utils/addReactNativeGestureHandlerImport';
 import checkAndGetInstaller from '../utils/checkAndGetInstaller';
 import installPeersDependencies from '../utils/installPeersDependencies';
-import addReactNativeGestureHandlerImport from '../utils/addReactNativeGestureHandlerImport';
 import getLogger from '../utils/logger';
-import enquirer from 'enquirer';
 
 const logger = getLogger();
 

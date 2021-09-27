@@ -1,6 +1,7 @@
-import shell from 'shelljs';
 import fs from 'fs';
 import path from 'path';
+import shell from 'shelljs';
+
 import isExpoADependency from './isExpoADependency';
 
 export interface ICheckAndGetInstallerReturn {

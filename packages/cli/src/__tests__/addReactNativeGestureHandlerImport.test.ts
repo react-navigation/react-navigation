@@ -1,4 +1,5 @@
 import { vol as mockVol } from 'memfs';
+
 import addReactNativeGestureHandlerImport from '../utils/addReactNativeGestureHandlerImport';
 import getLogger from '../utils/logger';
 
@@ -23,10 +24,8 @@ describe('index file found and contains no imports', () => {
       '/testTmp'
     );
 
-    const {
-      didAddImport,
-      foundFile,
-    } = await addReactNativeGestureHandlerImport('/testTmp/project');
+    const { didAddImport, foundFile } =
+      await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(true);
     expect(foundFile).toBe('index.js');
   });
@@ -42,10 +41,8 @@ describe('index file found and contains no imports', () => {
       '/testTmp'
     );
 
-    const {
-      didAddImport,
-      foundFile,
-    } = await addReactNativeGestureHandlerImport('/testTmp/project');
+    const { didAddImport, foundFile } =
+      await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(true);
     expect(foundFile).toBe('App.jsx');
   });
@@ -61,10 +58,8 @@ describe('index file found and contains no imports', () => {
       '/testTmp'
     );
 
-    const {
-      didAddImport,
-      foundFile,
-    } = await addReactNativeGestureHandlerImport('/testTmp/project');
+    const { didAddImport, foundFile } =
+      await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(true);
     expect(foundFile).toBe('index.ts');
   });
@@ -80,10 +75,8 @@ describe('index file found and contains no imports', () => {
       '/testTmp'
     );
 
-    const {
-      didAddImport,
-      foundFile,
-    } = await addReactNativeGestureHandlerImport('/testTmp/project');
+    const { didAddImport, foundFile } =
+      await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(true);
     expect(foundFile).toBe('App.tsx');
   });
@@ -100,10 +93,8 @@ describe('index file found and contains no imports', () => {
       '/testTmp'
     );
 
-    const {
-      didAddImport,
-      foundFile,
-    } = await addReactNativeGestureHandlerImport('/testTmp/project');
+    const { didAddImport, foundFile } =
+      await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(true);
     expect(foundFile).toBe('index.js'); // prioritizing index.js
   });
@@ -120,10 +111,8 @@ describe('index file found and contains no imports', () => {
       '/testTmp'
     );
 
-    const {
-      didAddImport,
-      foundFile,
-    } = await addReactNativeGestureHandlerImport('/testTmp/project');
+    const { didAddImport, foundFile } =
+      await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(true);
     expect(foundFile).toBe('index.ts'); // prioritizing index.ts
   });
@@ -141,10 +130,8 @@ describe('index file found and contains import statement', () => {
       '/testTmp'
     );
 
-    const {
-      didAddImport,
-      foundFile,
-    } = await addReactNativeGestureHandlerImport('/testTmp/project');
+    const { didAddImport, foundFile } =
+      await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(false);
     expect(foundFile).toBe('index.js');
   });
@@ -160,10 +147,8 @@ describe('index file found and contains import statement', () => {
       '/testTmp'
     );
 
-    const {
-      didAddImport,
-      foundFile,
-    } = await addReactNativeGestureHandlerImport('/testTmp/project');
+    const { didAddImport, foundFile } =
+      await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(false);
     expect(foundFile).toBe('App.jsx');
   });
@@ -179,10 +164,8 @@ describe('index file found and contains import statement', () => {
       '/testTmp'
     );
 
-    const {
-      didAddImport,
-      foundFile,
-    } = await addReactNativeGestureHandlerImport('/testTmp/project');
+    const { didAddImport, foundFile } =
+      await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(false);
     expect(foundFile).toBe('index.ts');
   });
@@ -198,10 +181,8 @@ describe('index file found and contains import statement', () => {
       '/testTmp'
     );
 
-    const {
-      didAddImport,
-      foundFile,
-    } = await addReactNativeGestureHandlerImport('/testTmp/project');
+    const { didAddImport, foundFile } =
+      await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(false);
     expect(foundFile).toBe('App.tsx');
   });
@@ -218,10 +199,8 @@ describe('index file found and contains import statement', () => {
       '/testTmp'
     );
 
-    const {
-      didAddImport,
-      foundFile,
-    } = await addReactNativeGestureHandlerImport('/testTmp/project');
+    const { didAddImport, foundFile } =
+      await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(false);
     expect(foundFile).toBe('index.js'); // prioritizing index.js
   });
@@ -238,10 +217,8 @@ describe('index file found and contains import statement', () => {
       '/testTmp'
     );
 
-    const {
-      didAddImport,
-      foundFile,
-    } = await addReactNativeGestureHandlerImport('/testTmp/project');
+    const { didAddImport, foundFile } =
+      await addReactNativeGestureHandlerImport('/testTmp/project');
     expect(didAddImport).toBe(false);
     expect(foundFile).toBe('index.ts'); // prioritizing index.ts
   });

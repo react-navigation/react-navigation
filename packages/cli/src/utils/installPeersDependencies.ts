@@ -1,4 +1,5 @@
 import shell, { ShellString } from 'shelljs';
+
 import getLogger from './logger';
 
 const logger = getLogger();

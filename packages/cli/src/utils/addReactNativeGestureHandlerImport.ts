@@ -1,5 +1,6 @@
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
+
 import getLogger from './logger';
 
 const logger = getLogger();

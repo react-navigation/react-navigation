@@ -2,6 +2,7 @@
 /* eslint-disable babel/no-invalid-this */
 
 import program, { Command } from 'commander';
+
 import installPackage from './commands/addPackage';
 import getLogger from './utils/logger';
 

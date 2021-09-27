@@ -1,6 +1,7 @@
 import { vol as mockVol } from 'memfs';
-import checkAndGetInstaller from '../utils/checkAndGetInstaller';
 import shell from 'shelljs';
+
+import checkAndGetInstaller from '../utils/checkAndGetInstaller';
 
 /**
  * Mocking fs
