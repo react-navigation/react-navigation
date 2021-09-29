@@ -205,7 +205,13 @@ type NavigationHelpersCommon<
           name: RouteName;
           key?: string;
           params: ParamList[RouteName];
-          merge?: boolean;
+          merge?: false;
+        }
+      | {
+          name: RouteName;
+          key?: string;
+          params: Partial<ParamList[RouteName]>;
+          merge: true;
         }
   ): void;
 
