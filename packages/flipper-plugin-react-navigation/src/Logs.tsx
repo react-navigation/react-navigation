@@ -72,14 +72,13 @@ const Row = styled.button<{ selected: boolean; faded: boolean }>((props) => ({
   'fontSize': theme.monospace.fontSize,
   'textAlign': 'left',
   'padding': `${theme.space.medium}px ${theme.space.large}px`,
-  'color': props.selected ? '#fff' : '#000',
+  'color': props.selected ? '#fff' : '',
   'backgroundColor': props.selected ? theme.primaryColor : 'transparent',
   'opacity': props.faded ? 0.5 : 1,
   'border': 0,
   'boxShadow': `inset 0 -1px 0 0 ${theme.dividerColor}`,
   'width': '100%',
   'cursor': 'pointer',
-
   '&:hover': {
     backgroundColor: props.selected
       ? theme.primaryColor
@@ -97,7 +96,6 @@ const JumpButton = styled.button({
   'cursor': 'pointer',
   'fontSize': theme.fontSize.small,
   'borderRadius': theme.borderRadius,
-
   '&:hover': {
     backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
@@ -125,7 +123,6 @@ const EmptyIcon = styled(CompassOutlined)({
 });
 
 const BlankslateText = styled.h5({
-  color: 'rgba(0, 0, 0, 0.85)',
   fontWeight: 600,
   fontSize: 16,
   lineHeight: 1.5,
