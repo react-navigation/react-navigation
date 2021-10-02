@@ -23,7 +23,7 @@ type NavigateAction<State extends NavigationState> = {
   type: 'NAVIGATE';
   payload: {
     name: string;
-    params?: NavigatorScreenParams<State>;
+    params?: NavigatorScreenParams<ParamListBase, State>;
     path?: string;
   };
 };
