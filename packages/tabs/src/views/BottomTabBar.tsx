@@ -148,12 +148,8 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
   }
 
   componentWillUnmount() {
-    if (this.keyboardDidShowSubscription) {
-      this.keyboardDidShowSubscription.remove();
-    }
-    if (this.keyboardDidHideSubscription) {
-      this.keyboardDidHideSubscription.remove();
-    }
+    this.keyboardDidShowSubscription?.remove();
+    this.keyboardDidHideSubscription?.remove();
   }
 
   // @ts-ignore
