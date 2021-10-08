@@ -100,6 +100,23 @@ export type HeaderOptions = {
    */
   headerStyle?: StyleProp<ViewStyle>;
   /**
+   * Whether to hide the elevation shadow (Android) or the bottom border (iOS) on the header.
+   *
+   * This is a short-hand for the following styles:
+   *
+   * ```js
+   * {
+   *   elevation: 0,
+   *   shadowOpacity: 0,
+   *   borderBottomWidth: 0,
+   * }
+   * ```
+   *
+   * If the above styles are specified in `headerStyle` along with `headerShadowVisible: false`,
+   * then `headerShadowVisible: false` will take precedence.
+   */
+  headerShadowVisible?: boolean;
+  /**
    * Extra padding to add at the top of header to account for translucent status bar.
    * By default, it uses the top value from the safe area insets of the device.
    * Pass 0 or a custom value to disable the default behaviour, and customize the height.
