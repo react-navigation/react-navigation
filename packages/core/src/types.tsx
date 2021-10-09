@@ -440,6 +440,13 @@ export type RouteConfig<
   EventMap extends EventMapBase
 > = {
   /**
+   * Optional key for this screen. This doesn't need to be unique.
+   * If the key changes, existing screens with this name will be removed or reset.
+   * Useful when we have some common screens and have conditional rendering.
+   */
+  navigationKey?: string;
+
+  /**
    * Route name of this screen.
    */
   name: RouteName;
@@ -482,6 +489,12 @@ export type RouteGroupConfig<
   ParamList extends ParamListBase,
   ScreenOptions extends {}
 > = {
+  /**
+   * Optional key for the screens in this group.
+   * If the key changes, all existing screens in this group will be removed or reset.
+   */
+  navigationKey?: string;
+
   /**
    * Navigator options for this screen.
    */
