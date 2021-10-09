@@ -29,10 +29,11 @@ export type ScreenConfigWithParent<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase
-> = [
-  (ScreenOptionsOrCallback<ScreenOptions> | undefined)[] | undefined,
-  RouteConfig<ParamListBase, string, State, ScreenOptions, EventMap>
-];
+> = {
+  keys: (string | undefined)[];
+  options: (ScreenOptionsOrCallback<ScreenOptions> | undefined)[] | undefined;
+  props: RouteConfig<ParamListBase, string, State, ScreenOptions, EventMap>;
+};
 
 type ScreenOptionsOrCallback<ScreenOptions extends {}> =
   | ScreenOptions
@@ -149,15 +150,15 @@ export default function useDescriptors<
     >
   >((acc, route, i) => {
     const config = screens[route.name];
-    const screen = config[1];
+    const screen = config.props;
     const navigation = navigations[route.key];
 
     const optionsList = [
       // The default `screenOptions` passed to the navigator
       screenOptions,
       // The `screenOptions` props passed to `Group` elements
-      ...((config[0]
-        ? config[0].filter(Boolean)
+      ...((config.options
+        ? config.options.filter(Boolean)
         : []) as ScreenOptionsOrCallback<ScreenOptions>[]),
       // The `options` prop passed to `Screen` elements,
       screen.options,

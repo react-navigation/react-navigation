@@ -173,6 +173,7 @@ it('gets state on route names change', () => {
           fiz: { fruit: 'apple' },
         },
         routeGetIdList: {},
+        routeKeyChanges: [],
       }
     )
   ).toEqual({
@@ -206,6 +207,7 @@ it('gets state on route names change', () => {
           baz: { name: 'John' },
         },
         routeGetIdList: {},
+        routeKeyChanges: [],
       }
     )
   ).toEqual({
@@ -240,6 +242,7 @@ it('gets state on route names change with initialRouteName', () => {
           baz: { name: 'John' },
         },
         routeGetIdList: {},
+        routeKeyChanges: [],
       }
     )
   ).toEqual({
