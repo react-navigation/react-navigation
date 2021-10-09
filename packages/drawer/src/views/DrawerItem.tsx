@@ -86,6 +86,7 @@ const LinkPressable = ({
   onLongPress,
   to,
   accessibilityRole,
+  accessibilityState,
   ...rest
 }: Omit<React.ComponentProps<typeof PlatformPressable>, 'style'> & {
   style: StyleProp<ViewStyle>;
@@ -121,6 +122,7 @@ const LinkPressable = ({
       <PlatformPressable
         {...rest}
         accessibilityRole={accessibilityRole}
+        accessibilityState={accessibilityState}
         onPress={onPress}
       >
         <View style={style}>{children}</View>
