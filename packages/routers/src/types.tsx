@@ -182,7 +182,14 @@ export type Router<
    */
   getStateForRouteNamesChange(
     state: State,
-    options: RouterConfigOptions
+    options: RouterConfigOptions & {
+      /**
+       * List of routes whose `key` has changed even if they still have the same name
+       * This allows to remove screens declaratively
+       * Especially useful when we have some common screens and have conditional rendering
+       */
+      routeKeyChanges: string[];
+    }
   ): State;
 
   /**

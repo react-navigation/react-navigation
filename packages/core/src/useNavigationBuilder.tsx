@@ -15,6 +15,7 @@ import { isValidElementType } from 'react-is';
 
 import Group from './Group';
 import isArrayEqual from './isArrayEqual';
+import isRecordEqual from './isRecordEqual';
 import NavigationHelpersContext from './NavigationHelpersContext';
 import NavigationRouteContext from './NavigationRouteContext';
 import NavigationStateContext from './NavigationStateContext';
@@ -247,6 +248,13 @@ export default function useNavigationBuilder<
   }, {});
 
   const routeNames = routeConfigs.map((config) => config[1].name);
+  const routeKeyList = routeNames.reduce<Record<string, string | undefined>>(
+    (acc, curr) => {
+      acc[curr] = screens[curr][1].key;
+      return acc;
+    },
+    {}
+  );
   const routeParamList = routeNames.reduce<Record<string, object | undefined>>(
     (acc, curr) => {
       const { initialParams } = screens[curr][1];
@@ -371,6 +379,14 @@ export default function useNavigationBuilder<
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentState, router, isStateValid]);
 
+  const previousRouteKeyListRef = React.useRef(routeKeyList);
+
+  React.useEffect(() => {
+    previousRouteKeyListRef.current = routeKeyList;
+  });
+
+  const previousRouteKeyList = previousRouteKeyListRef.current;
+
   let state =
     // If the state isn't initialized, or stale, use the state we initialized instead
     // The state won't update until there's a change needed in the state we have initalized locally
@@ -381,12 +397,20 @@ export default function useNavigationBuilder<
 
   let nextState: State = state;
 
-  if (!isArrayEqual(state.routeNames, routeNames)) {
+  if (
+    !isArrayEqual(state.routeNames, routeNames) ||
+    !isRecordEqual(routeKeyList, previousRouteKeyList)
+  ) {
     // When the list of route names change, the router should handle it to remove invalid routes
     nextState = router.getStateForRouteNamesChange(state, {
       routeNames,
       routeParamList,
       routeGetIdList,
+      routeKeyChanges: Object.keys(routeKeyList).filter(
+        (name) =>
+          previousRouteKeyList.hasOwnProperty(name) &&
+          routeKeyList[name] !== previousRouteKeyList[name]
+      ),
     });
   }
 

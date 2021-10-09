@@ -440,6 +440,12 @@ export type RouteConfig<
   EventMap extends EventMapBase
 > = {
   /**
+   * Optional key for this screen.
+   * If the key changes, existing screen with this name will be unmounted.
+   */
+  key?: string;
+
+  /**
    * Route name of this screen.
    */
   name: RouteName;
@@ -482,6 +488,12 @@ export type RouteGroupConfig<
   ParamList extends ParamListBase,
   ScreenOptions extends {}
 > = {
+  /**
+   * Optional key for the screens in this group.
+   * If the key changes, all existing screens in this group will be unmounted.
+   */
+  key?: string;
+
   /**
    * Navigator options for this screen.
    */
