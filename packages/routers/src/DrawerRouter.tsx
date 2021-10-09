@@ -13,6 +13,7 @@ import type {
   PartialState,
   Router,
 } from './types';
+export type DrawerStatus = 'open' | 'closed';
 
 export type DrawerActionType =
   | TabActionType
@@ -23,7 +24,7 @@ export type DrawerActionType =
     };
 
 export type DrawerRouterOptions = TabRouterOptions & {
-  defaultStatus?: 'open' | 'closed';
+  defaultStatus?: DrawerStatus;
 };
 
 export type DrawerNavigationState<ParamList extends ParamListBase> = Omit<
@@ -35,11 +36,15 @@ export type DrawerNavigationState<ParamList extends ParamListBase> = Omit<
    */
   type: 'drawer';
   /**
+   * Default status of the drawer.
+   */
+  default: DrawerStatus;
+  /**
    * List of previously visited route keys and drawer open status.
    */
   history: (
     | { type: 'route'; key: string }
-    | { type: 'drawer'; status: 'open' }
+    | { type: 'drawer'; status: DrawerStatus }
   )[];
 };
 
@@ -74,40 +79,8 @@ export const DrawerActions = {
   },
 };
 
-const isDrawerOpen = (
-  state:
-    | DrawerNavigationState<ParamListBase>
-    | PartialState<DrawerNavigationState<ParamListBase>>
-) => Boolean(state.history?.some((it) => it.type === 'drawer'));
-
-const openDrawer = (
-  state: DrawerNavigationState<ParamListBase>
-): DrawerNavigationState<ParamListBase> => {
-  if (isDrawerOpen(state)) {
-    return state;
-  }
-
-  return {
-    ...state,
-    history: [...state.history, { type: 'drawer', status: 'open' }],
-  };
-};
-
-const closeDrawer = (
-  state: DrawerNavigationState<ParamListBase>
-): DrawerNavigationState<ParamListBase> => {
-  if (!isDrawerOpen(state)) {
-    return state;
-  }
-
-  return {
-    ...state,
-    history: state.history.filter((it) => it.type !== 'drawer'),
-  };
-};
-
 export default function DrawerRouter({
-  defaultStatus,
+  defaultStatus = 'closed',
   ...rest
 }: DrawerRouterOptions): Router<
   DrawerNavigationState<ParamListBase>,
@@ -118,24 +91,79 @@ export default function DrawerRouter({
     TabActionType | CommonNavigationAction
   >;
 
+  const isDrawerInHistory = (
+    state:
+      | DrawerNavigationState<ParamListBase>
+      | PartialState<DrawerNavigationState<ParamListBase>>
+  ) => Boolean(state.history?.some((it) => it.type === 'drawer'));
+
+  const addDrawerToHistory = (
+    state: DrawerNavigationState<ParamListBase>
+  ): DrawerNavigationState<ParamListBase> => {
+    if (isDrawerInHistory(state)) {
+      return state;
+    }
+
+    return {
+      ...state,
+      history: [
+        ...state.history,
+        {
+          type: 'drawer',
+          status: defaultStatus === 'open' ? 'closed' : 'open',
+        },
+      ],
+    };
+  };
+
+  const removeDrawerFromHistory = (
+    state: DrawerNavigationState<ParamListBase>
+  ): DrawerNavigationState<ParamListBase> => {
+    if (!isDrawerInHistory(state)) {
+      return state;
+    }
+
+    return {
+      ...state,
+      history: state.history.filter((it) => it.type !== 'drawer'),
+    };
+  };
+
+  const openDrawer = (
+    state: DrawerNavigationState<ParamListBase>
+  ): DrawerNavigationState<ParamListBase> => {
+    if (defaultStatus === 'open') {
+      return removeDrawerFromHistory(state);
+    }
+
+    return addDrawerToHistory(state);
+  };
+
+  const closeDrawer = (
+    state: DrawerNavigationState<ParamListBase>
+  ): DrawerNavigationState<ParamListBase> => {
+    if (defaultStatus === 'open') {
+      return addDrawerToHistory(state);
+    }
+
+    return removeDrawerFromHistory(state);
+  };
+
   return {
     ...router,
 
     type: 'drawer',
 
     getInitialState({ routeNames, routeParamList, routeGetIdList }) {
-      let state = router.getInitialState({
+      const state = router.getInitialState({
         routeNames,
         routeParamList,
         routeGetIdList,
       });
 
-      if (defaultStatus === 'open') {
-        state = openDrawer(state);
-      }
-
       return {
         ...state,
+        default: defaultStatus,
         stale: false,
         type: 'drawer',
         key: `drawer-${nanoid()}`,
@@ -156,12 +184,15 @@ export default function DrawerRouter({
         routeGetIdList,
       });
 
-      if (isDrawerOpen(partialState)) {
-        state = openDrawer(state);
+      if (isDrawerInHistory(partialState)) {
+        // Re-sync the drawer entry in history to correct it if it was wrong
+        state = removeDrawerFromHistory(state);
+        state = addDrawerToHistory(state);
       }
 
       return {
         ...state,
+        default: defaultStatus,
         type: 'drawer',
         key: `drawer-${nanoid()}`,
       };
@@ -169,10 +200,6 @@ export default function DrawerRouter({
 
     getStateForRouteFocus(state, key) {
       const result = router.getStateForRouteFocus(state, key);
-
-      if (defaultStatus === 'open') {
-        return openDrawer(result);
-      }
 
       return closeDrawer(result);
     },
@@ -186,21 +213,26 @@ export default function DrawerRouter({
           return closeDrawer(state);
 
         case 'TOGGLE_DRAWER':
-          if (isDrawerOpen(state)) {
-            return closeDrawer(state);
+          if (isDrawerInHistory(state)) {
+            return removeDrawerFromHistory(state);
           }
 
-          return openDrawer(state);
+          return addDrawerToHistory(state);
+
+        case 'JUMP_TO':
+        case 'NAVIGATE': {
+          const result = router.getStateForAction(state, action, options);
+
+          if (result != null && result.index !== state.index) {
+            return closeDrawer(result as DrawerNavigationState<ParamListBase>);
+          }
+
+          return result;
+        }
 
         case 'GO_BACK':
-          if (defaultStatus === 'open') {
-            if (!isDrawerOpen(state)) {
-              return openDrawer(state);
-            }
-          } else {
-            if (isDrawerOpen(state)) {
-              return closeDrawer(state);
-            }
+          if (isDrawerInHistory(state)) {
+            return removeDrawerFromHistory(state);
           }
 
           return router.getStateForAction(state, action, options);
