@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.1.6...@react-navigation/drawer@6.1.7) (2021-10-09)
+
+
+### Bug Fixes
+
+* properly handle history if drawer is open by default ([de2d4e4](https://github.com/react-navigation/react-navigation/commit/de2d4e4f0659fea87522b918fb09c8f07bdd0697))
+
+
+
+
+
 ## [6.1.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.1.5...@react-navigation/drawer@6.1.6) (2021-09-26)
 
 **Note:** Version bump only for package @react-navigation/drawer

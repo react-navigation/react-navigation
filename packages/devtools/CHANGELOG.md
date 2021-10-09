@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.2...@react-navigation/devtools@6.0.3) (2021-10-09)
+
+
+### Bug Fixes
+
+* fix parsing stack trace on hermes in devtools ([#10006](https://github.com/react-navigation/react-navigation/issues/10006)) ([83296ff](https://github.com/react-navigation/react-navigation/commit/83296ff2772056cd5f3f7baaf9898c824346ec64))
+
+
+
+
+
 ## [6.0.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.1...@react-navigation/devtools@6.0.2) (2021-09-26)
 
 **Note:** Version bump only for package @react-navigation/devtools
