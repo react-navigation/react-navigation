@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/elements",
   "description": "UI Components for React Navigation",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "keywords": [
     "react-native",
     "react-navigation",
@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@react-native-masked-view/masked-view": "^0.2.4",
-    "@react-navigation/native": "^6.0.4",
+    "@react-navigation/native": "^6.0.5",
     "@testing-library/react-native": "^7.2.0",
     "@types/react": "^17.0.9",
     "@types/react-native": "~0.64.9",

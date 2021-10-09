@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.1.2...@react-navigation/elements@1.2.0) (2021-10-09)
+
+
+### Features
+
+* add a headerShadowVisible option to header ([8e7ba69](https://github.com/react-navigation/react-navigation/commit/8e7ba692661b69f93768add4c103bc31c814327c))
+
+
+
+
+
 ## [1.1.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.1.1...@react-navigation/elements@1.1.2) (2021-09-26)
 
 **Note:** Version bump only for package @react-navigation/elements
