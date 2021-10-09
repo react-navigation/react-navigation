@@ -3,5 +3,13 @@
  * We need to make sure that both values and order match.
  */
 export default function isArrayEqual(a: any[], b: any[]) {
-  return a.length === b.length && a.every((it, index) => it === b[index]);
+  if (a === b) {
+    return true;
+  }
+
+  if (a.length !== b.length) {
+    return false;
+  }
+
+  return a.every((it, index) => it === b[index]);
 }
