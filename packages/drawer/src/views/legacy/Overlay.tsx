@@ -15,12 +15,13 @@ const interpolate: typeof interpolateNode =
 const PROGRESS_EPSILON = 0.05;
 
 type Props = React.ComponentProps<typeof Animated.View> & {
+  isOpenDrawer: boolean;
   progress: Animated.Node<number>;
   onPress: () => void;
 };
 
 const Overlay = React.forwardRef(function Overlay(
-  { progress, onPress, style, ...props }: Props,
+  { isOpenDrawer, progress, onPress, style, ...props }: Props,
   ref: React.Ref<Animated.View>
 ) {
   const animatedStyle = {
@@ -47,7 +48,12 @@ const Overlay = React.forwardRef(function Overlay(
       ref={ref}
       style={[styles.overlay, overlayStyle, animatedStyle, style]}
     >
-      <Pressable onPress={onPress} style={styles.pressable} />
+      <Pressable
+        accessibilityElementsHidden={!isOpenDrawer}
+        importantForAccessibility={isOpenDrawer ? 'auto' : 'no'}
+        onPress={onPress}
+        style={styles.pressable}
+      />
     </Animated.View>
   );
 });

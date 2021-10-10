@@ -5,12 +5,13 @@ import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 const PROGRESS_EPSILON = 0.05;
 
 type Props = React.ComponentProps<typeof Animated.View> & {
+  isOpenDrawer: boolean;
   progress: Animated.SharedValue<number>;
   onPress: () => void;
 };
 
 const Overlay = React.forwardRef(function Overlay(
-  { progress, onPress, style, ...props }: Props,
+  { isOpenDrawer, progress, onPress, style, ...props }: Props,
   ref: React.Ref<Animated.View>
 ) {
   const animatedStyle = useAnimatedStyle(() => {
@@ -29,7 +30,12 @@ const Overlay = React.forwardRef(function Overlay(
       ref={ref}
       style={[styles.overlay, overlayStyle, animatedStyle, style]}
     >
-      <Pressable onPress={onPress} style={styles.pressable} />
+      <Pressable
+        accessibilityElementsHidden={!isOpenDrawer}
+        importantForAccessibility={isOpenDrawer ? 'auto' : 'no'}
+        onPress={onPress}
+        style={styles.pressable}
+      />
     </Animated.View>
   );
 });

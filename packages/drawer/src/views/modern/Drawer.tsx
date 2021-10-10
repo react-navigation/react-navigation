@@ -336,6 +336,7 @@ export default function Drawer({
             </View>
             {drawerType !== 'permanent' ? (
               <Overlay
+                isOpenDrawer={isOpen}
                 progress={progress}
                 onPress={() => toggleDrawer(false)}
                 style={overlayStyle}

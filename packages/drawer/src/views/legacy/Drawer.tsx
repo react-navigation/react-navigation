@@ -575,6 +575,7 @@ export default class DrawerView extends React.Component<DrawerProps> {
                 // Disable overlay if sidebar is permanent
                 drawerType === 'permanent' ? null : (
                   <Overlay
+                    isOpenDrawer={isOpen}
                     progress={progress}
                     onPress={() => this.toggleDrawer(false)}
                     style={overlayStyle as any}
