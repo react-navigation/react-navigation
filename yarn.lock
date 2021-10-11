@@ -17599,10 +17599,17 @@ react-native-safe-area-context@3.2.0, react-native-safe-area-context@~3.2.0:
   resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-3.2.0.tgz#06113c6b208f982d68ab5c3cebd199ca93db6941"
   integrity sha512-k2Nty4PwSnrg9HwrYeeE+EYqViYJoOFwEy9LxL5RIRfoqxAq/uQXNGwpUg2/u4gnKpBbEPa9eRh15KKMe/VHkA==
 
-react-native-screens@^3.3.0, react-native-screens@~3.3.0:
+react-native-screens@^3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-3.3.0.tgz#d4464a96620b85d09e46bd6865b5f48456c244f0"
   integrity sha512-ni11jC6I9cFVXdLIDwkgafDHw/STXUNzkR5Fx3w8Wikdzi8gfTEan2kiOm7aS42d2F/LXddZ6i74Z2em0L6LPQ==
+
+react-native-screens@~3.8.0:
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-3.8.0.tgz#4ec84c55a7b4a4aa9405c812978ca2ba5c0242a4"
+  integrity sha512-lHrnB/elAoMJKv8O12U6BLgeup4lB6ZKJHEOVuG/D72nv/OE9wUusbou6YCB5tp3YbaSpHflPnkFmHA/vCejpw==
+  dependencies:
+    warn-once "^0.1.0"
 
 react-native-tab-view@^3.1.1:
   version "3.1.1"

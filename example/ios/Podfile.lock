@@ -370,7 +370,7 @@ PODS:
     - React-RCTVibration
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.3.0):
+  - RNScreens (3.8.0):
     - React-Core
     - React-RCTImage
   - RNVectorIcons (8.1.0):
@@ -681,7 +681,7 @@ SPEC CHECKSUMS:
   RNCMaskedView: fc29d354a40316a990e8fb46391f08aea829c3aa
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNReanimated: d9da990fc90123f4ffbfdda93d00fc15174863a8
-  RNScreens: bf59f17fbf001f1025243eeed5f19419d3c11ef2
+  RNScreens: 6e1ea5787989f92b0671049b808aef64fa1ef98c
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   UMAppLoader: fe2708bb0ac5cd70052bc207d06aa3b7e72b9e97
   UMBarCodeScannerInterface: 79f92bea5f7af39b381a4c82298105ceb537408a
@@ -701,4 +701,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 559ae797e06704acfdd4e8aabc341b8c11a0bd5e
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2
