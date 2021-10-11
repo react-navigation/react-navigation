@@ -36,6 +36,7 @@ const minmax = (value: number, start: number, end: number) => {
 };
 
 export default function Drawer({
+  accessibilityCloseDrawerLabel,
   dimensions,
   drawerPosition,
   drawerStyle,
@@ -336,6 +337,7 @@ export default function Drawer({
             </View>
             {drawerType !== 'permanent' ? (
               <Overlay
+                accessibilityCloseDrawerLabel={accessibilityCloseDrawerLabel}
                 progress={progress}
                 onPress={() => toggleDrawer(false)}
                 style={overlayStyle}

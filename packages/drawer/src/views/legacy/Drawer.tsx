@@ -482,6 +482,7 @@ export default class DrawerView extends React.Component<DrawerProps> {
 
   render() {
     const {
+      accessibilityCloseDrawerLabel,
       open,
       swipeEnabled,
       drawerPosition,
@@ -575,6 +576,9 @@ export default class DrawerView extends React.Component<DrawerProps> {
                 // Disable overlay if sidebar is permanent
                 drawerType === 'permanent' ? null : (
                   <Overlay
+                    accessibilityCloseDrawerLabel={
+                      accessibilityCloseDrawerLabel
+                    }
                     progress={progress}
                     onPress={() => this.toggleDrawer(false)}
                     style={overlayStyle as any}
@@ -601,6 +605,7 @@ export default class DrawerView extends React.Component<DrawerProps> {
             )}
             <Animated.View
               accessibilityViewIsModal={isOpen && drawerType !== 'permanent'}
+              onAccessibilityEscape={() => this.toggleDrawer(false)}
               removeClippedSubviews={Platform.OS !== 'ios'}
               onLayout={this.handleDrawerLayout}
               style={[

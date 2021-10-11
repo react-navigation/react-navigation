@@ -93,6 +93,7 @@ function DrawerViewBase({
 
   const focusedRouteKey = state.routes[state.index].key;
   const {
+    accessibilityCloseDrawerLabel = 'Close the drawer navigation',
     drawerHideStatusBarOnOpen = false,
     drawerPosition = I18nManager.isRTL ? 'right' : 'left',
     drawerStatusBarAnimation = 'slide',
@@ -305,6 +306,7 @@ function DrawerViewBase({
         renderDrawerContent={renderDrawerContent}
         renderSceneContent={renderSceneContent}
         dimensions={dimensions}
+        accessibilityCloseDrawerLabel={accessibilityCloseDrawerLabel}
       />
     </DrawerStatusContext.Provider>
   );

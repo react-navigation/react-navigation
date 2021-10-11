@@ -15,6 +15,7 @@ const interpolate: typeof interpolateNode =
 const PROGRESS_EPSILON = 0.05;
 
 type Props = React.ComponentProps<typeof Animated.View> & {
+  accessibilityCloseDrawerLabel?: string;
   progress: Animated.Node<number>;
   onPress: () => void;
 };
@@ -47,7 +48,12 @@ const Overlay = React.forwardRef(function Overlay(
       ref={ref}
       style={[styles.overlay, overlayStyle, animatedStyle, style]}
     >
-      <Pressable onPress={onPress} style={styles.pressable} />
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={props.accessibilityCloseDrawerLabel}
+        onPress={onPress}
+        style={styles.pressable}
+      />
     </Animated.View>
   );
 });

@@ -215,6 +215,12 @@ export type DrawerNavigationOptions = HeaderOptions & {
    * Defaults to `false`.
    */
   unmountOnBlur?: boolean;
+
+  /**
+   * A label that is read aloud when the screen reader focuses on the overlay that closes the drawer.
+   * Defaults to `Close the drawer navigation`.
+   */
+  accessibilityCloseDrawerLabel?: string;
 };
 
 export type DrawerContentComponentProps = {
@@ -279,6 +285,7 @@ export type DrawerDescriptor = Descriptor<
 export type DrawerDescriptorMap = Record<string, DrawerDescriptor>;
 
 export type DrawerProps = {
+  accessibilityCloseDrawerLabel?: string;
   dimensions: { width: number; height: number };
   drawerPosition: 'left' | 'right';
   drawerStyle?: StyleProp<ViewStyle>;
