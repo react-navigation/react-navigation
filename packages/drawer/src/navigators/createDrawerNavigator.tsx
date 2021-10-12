@@ -35,14 +35,18 @@ function DrawerNavigator({
   children,
   screenListeners,
   screenOptions,
-  // @ts-expect-error: openByDefault is deprecated
-  openByDefault,
-  // @ts-expect-error: lazy is deprecated
-  lazy,
-  // @ts-expect-error: drawerContentOptions is deprecated
-  drawerContentOptions,
-  ...rest
+  ...restWithDeprecated
 }: Props) {
+  const {
+    // @ts-expect-error: openByDefault is deprecated
+    openByDefault,
+    // @ts-expect-error: lazy is deprecated
+    lazy,
+    // @ts-expect-error: drawerContentOptions is deprecated
+    drawerContentOptions,
+    ...rest
+  } = restWithDeprecated;
+
   let defaultScreenOptions: DrawerNavigationOptions = {};
 
   if (drawerContentOptions) {

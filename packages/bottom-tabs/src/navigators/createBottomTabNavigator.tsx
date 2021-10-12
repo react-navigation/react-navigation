@@ -36,13 +36,14 @@ function BottomTabNavigator({
   sceneContainerStyle,
   ...restWithDeprecated
 }: Props) {
-  let {
+  const {
     // @ts-expect-error: lazy is deprecated
     lazy,
     // @ts-expect-error: tabBarOptions is deprecated
     tabBarOptions,
     ...rest
   } = restWithDeprecated;
+
   let defaultScreenOptions: BottomTabNavigationOptions = {};
 
   if (tabBarOptions) {
