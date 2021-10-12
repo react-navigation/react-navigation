@@ -45,6 +45,7 @@ export default function DrawerItemList({
       drawerIcon,
       drawerLabelStyle,
       drawerItemStyle,
+      drawerAllowFontScaling,
     } = descriptors[route.key].options;
 
     return (
@@ -63,6 +64,7 @@ export default function DrawerItemList({
         inactiveTintColor={drawerInactiveTintColor}
         activeBackgroundColor={drawerActiveBackgroundColor}
         inactiveBackgroundColor={drawerInactiveBackgroundColor}
+        allowFontScaling={drawerAllowFontScaling}
         labelStyle={drawerLabelStyle}
         style={drawerItemStyle}
         to={buildLink(route.name, route.params)}
