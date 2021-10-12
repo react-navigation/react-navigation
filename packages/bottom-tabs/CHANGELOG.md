@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.8...@react-navigation/bottom-tabs@6.0.9) (2021-10-12)
+
+
+### Bug Fixes
+
+* fix type errors in generated declaration file of bottom-tabs ([#10033](https://github.com/react-navigation/react-navigation/issues/10033)) ([0b40dd7](https://github.com/react-navigation/react-navigation/commit/0b40dd745b0734a4329197199e7df5c6a97cd73e)), closes [#10032](https://github.com/react-navigation/react-navigation/issues/10032)
+* move [@ts-expect-error](https://github.com/ts-expect-error) to body to avoid issue in type definitions ([0a08688](https://github.com/react-navigation/react-navigation/commit/0a0868862c9d6ae77055c66938a764306d391b44))
+
+
+
+
+
 ## [6.0.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.7...@react-navigation/bottom-tabs@6.0.8) (2021-10-09)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
