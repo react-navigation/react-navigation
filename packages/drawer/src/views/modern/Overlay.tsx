@@ -26,8 +26,12 @@ const Overlay = React.forwardRef(function Overlay(
   });
 
   const animatedProps = useAnimatedProps(() => {
+    const active = progress.value > PROGRESS_EPSILON;
+
     return {
-      pointerEvents: progress.value > PROGRESS_EPSILON ? 'auto' : 'none',
+      pointerEvents: active ? 'auto' : 'none',
+      accessibilityElementsHidden: !active,
+      importantForAccessibility: active ? 'auto' : 'no-hide-descendants',
     } as const;
   });
 
