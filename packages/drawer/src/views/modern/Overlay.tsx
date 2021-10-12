@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { Platform, Pressable, StyleSheet } from 'react-native';
-import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import Animated, {
+  useAnimatedProps,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 
 const PROGRESS_EPSILON = 0.05;
 
@@ -17,10 +20,15 @@ const Overlay = React.forwardRef(function Overlay(
     return {
       opacity: progress.value,
       // We don't want the user to be able to press through the overlay when drawer is open
-      // One approach is to adjust the pointerEvents based on the progress
-      // But we can also send the overlay behind the screen
+      // We can send the overlay behind the screen to avoid it
       zIndex: progress.value > PROGRESS_EPSILON ? 0 : -1,
     };
+  });
+
+  const animatedProps = useAnimatedProps(() => {
+    return {
+      pointerEvents: progress.value > PROGRESS_EPSILON ? 'auto' : 'none',
+    } as const;
   });
 
   return (
@@ -28,6 +36,7 @@ const Overlay = React.forwardRef(function Overlay(
       {...props}
       ref={ref}
       style={[styles.overlay, overlayStyle, animatedStyle, style]}
+      animatedProps={animatedProps}
     >
       <Pressable onPress={onPress} style={styles.pressable} />
     </Animated.View>
