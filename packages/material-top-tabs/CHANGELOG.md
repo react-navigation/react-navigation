@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.5...@react-navigation/material-top-tabs@6.0.6) (2021-10-12)
+
+
+### Bug Fixes
+
+* move [@ts-expect-error](https://github.com/ts-expect-error) to body to avoid issue in type definitions ([0a08688](https://github.com/react-navigation/react-navigation/commit/0a0868862c9d6ae77055c66938a764306d391b44))
+
+
+
+
+
 ## [6.0.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.4...@react-navigation/material-top-tabs@6.0.5) (2021-10-09)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

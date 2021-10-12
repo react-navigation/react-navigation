@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.1.7...@react-navigation/drawer@6.1.8) (2021-10-12)
+
+
+### Bug Fixes
+
+* add some a11y props to drawer overlay ([5f94c1d](https://github.com/react-navigation/react-navigation/commit/5f94c1d6c421a7d6f8781c5188b4f2a654c338d2))
+* don't make the overlay touchable if drawer isn't open ([7c99b9d](https://github.com/react-navigation/react-navigation/commit/7c99b9d631d76f55939deb534ff62e7fc8b5ed50))
+* move [@ts-expect-error](https://github.com/ts-expect-error) to body to avoid issue in type definitions ([0a08688](https://github.com/react-navigation/react-navigation/commit/0a0868862c9d6ae77055c66938a764306d391b44))
+
+
+
+
+
 ## [6.1.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.1.6...@react-navigation/drawer@6.1.7) (2021-10-09)
 
 
