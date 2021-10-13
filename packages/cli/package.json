@@ -2,9 +2,9 @@
   "name": "cli",
   "version": "1.0.0",
   "description": "A React-Navigation CLI",
-  "main": "lib/commonjs/cli.js",
+  "main": "lib/commonjs/index.js",
   "bin": {
-    "react-navigation": "lib/commonjs/cli.js"
+    "react-navigation": "lib/commonjs/index.js"
   },
   "license": "MIT",
   "scripts": {
