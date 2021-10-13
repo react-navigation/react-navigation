@@ -2,13 +2,14 @@
   "name": "cli",
   "version": "1.0.0",
   "description": "A React-Navigation CLI",
-  "main": "build/cli.js",
+  "main": "lib/commonjs/cli.js",
   "bin": {
-    "react-navigation": "build/cli.js"
+    "react-navigation": "lib/commonjs/cli.js"
   },
   "license": "MIT",
   "scripts": {
-    "prepare": "tsc"
+    "prepare": "bob build",
+    "clean": "del lib"
   },
   "dependencies": {
     "commander": "^6.2.0",
