@@ -23,6 +23,28 @@
     "@types/node": "^16.9.4",
     "@types/shelljs": "^0.8.9",
     "memfs": "^3.3.0",
+    "react-native-builder-bob": "^0.18.1",
     "ts-node": "^9.0.0"
+  },
+  "module": "lib/module/index.js",
+  "types": "lib/typescript/src/index.d.ts",
+  "files": [
+    "src",
+    "lib",
+    "!**/__tests__"
+  ],
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
+    ]
   }
 }
