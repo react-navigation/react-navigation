@@ -8,8 +8,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "prepare": "npm run build",
-    "build": "npx tsc"
+    "prepare": "tsc"
   },
   "dependencies": {
     "commander": "^6.2.0",
