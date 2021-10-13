@@ -1,7 +1,6 @@
 node_modules/
 coverage/
 dist/
-build/
 lib/
 web-build/
 web-report/
