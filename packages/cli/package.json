@@ -4,7 +4,7 @@
   "description": "A React-Navigation CLI",
   "main": "build/cli.js",
   "bin": {
-    "rnav": "build/cli.js"
+    "react-navigation": "build/cli.js"
   },
   "license": "MIT",
   "scripts": {

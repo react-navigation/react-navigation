@@ -31,7 +31,7 @@ We do that using the **add** command.
 It allow us to install a package with all it's peer dependencies automatically. Peer dependencies doesn't get installed by default. And are up for the users to install them and choose the versions they want.
 
 ```ts
-rnav add stack --verbose --installer=npm
+react-navigation add stack --verbose --installer=npm
 ```
 
 Force npm installer option example.
@@ -46,7 +46,7 @@ Options:
 ```
 
 ```ts
-rnav add stack -d -i npm
+react-navigation add stack -d -i npm
 ```
 
 An example with shorthands.
