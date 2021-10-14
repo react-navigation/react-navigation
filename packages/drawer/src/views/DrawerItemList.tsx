@@ -45,7 +45,23 @@ export default function DrawerItemList({
       drawerIcon,
       drawerLabelStyle,
       drawerItemStyle,
+      onPress,
     } = descriptors[route.key].options;
+
+    const defaultOnPress = () => {
+      navigation.dispatch({
+        ...(focused
+          ? DrawerActions.closeDrawer()
+          : CommonActions.navigate({ name: route.name, merge: true })),
+        target: state.key,
+      });
+    };
+
+    let handlePress = defaultOnPress;
+
+    if (onPress) {
+      handlePress = () => onPress(defaultOnPress);
+    }
 
     return (
       <DrawerItem
@@ -66,14 +82,7 @@ export default function DrawerItemList({
         labelStyle={drawerLabelStyle}
         style={drawerItemStyle}
         to={buildLink(route.name, route.params)}
-        onPress={() => {
-          navigation.dispatch({
-            ...(focused
-              ? DrawerActions.closeDrawer()
-              : CommonActions.navigate({ name: route.name, merge: true })),
-            target: state.key,
-          });
-        }}
+        onPress={handlePress}
       />
     );
   }) as React.ReactNode as React.ReactElement;

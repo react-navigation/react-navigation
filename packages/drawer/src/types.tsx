@@ -215,6 +215,12 @@ export type DrawerNavigationOptions = HeaderOptions & {
    * Defaults to `false`.
    */
   unmountOnBlur?: boolean;
+  /**
+   * Optional custom onPress handler.
+   * Default onPress is passed as an argument,
+   * and must be called unless you are fully handling navigation logic and closing drawer.
+   */
+  onPress?: (defaultOnPress: () => void) => void;
 };
 
 export type DrawerContentComponentProps = {
