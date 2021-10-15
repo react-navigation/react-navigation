@@ -1,24 +1,7 @@
-import {
-  getHeaderTitle,
-  Header,
-  SafeAreaProviderCompat,
-  Screen,
-} from '@react-navigation/elements';
-import {
-  DrawerActions,
-  DrawerNavigationState,
-  DrawerStatus,
-  ParamListBase,
-  useTheme,
-} from '@react-navigation/native';
+import { getHeaderTitle, Header, SafeAreaProviderCompat, Screen } from '@react-navigation/elements';
+import { DrawerActions, DrawerNavigationState, DrawerStatus, ParamListBase, useTheme } from '@react-navigation/native';
 import * as React from 'react';
-import {
-  BackHandler,
-  I18nManager,
-  Platform,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { BackHandler, I18nManager, Platform, StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
 
@@ -204,6 +187,7 @@ function DrawerViewBase({
   const renderSceneContent = () => {
     return (
       <MaybeScreenContainer
+        accessible={false}
         enabled={detachInactiveScreens}
         style={styles.content}
       >
