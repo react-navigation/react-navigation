@@ -142,7 +142,7 @@ const SceneView = ({
     gestureEnabled,
     header,
     headerShown,
-    animationTypeForReplace = 'pop',
+    animationTypeForReplace = 'push',
     animation,
     orientation,
     statusBarAnimation,
@@ -162,8 +162,9 @@ const SceneView = ({
     ? headerShown
     : presentation === 'card' && headerShown !== false;
 
-  const isParentHeaderShown = React.useContext(HeaderShownContext);
   const insets = useSafeAreaInsets();
+
+  const isParentHeaderShown = React.useContext(HeaderShownContext);
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
   const headerHeight = getDefaultHeaderHeight(
     useSafeAreaFrame(),
