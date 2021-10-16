@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.2.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.2.4...@react-navigation/native-stack@6.2.5) (2021-10-16)
+
+
+### Bug Fixes
+
+* fix default for animationTypeForReplace to match with JS stack ([ec4c8cc](https://github.com/react-navigation/react-navigation/commit/ec4c8cc97943cde0c2f482bc2abcb20e3a074d48))
+
+
+
+
+
 ## [6.2.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.2.3...@react-navigation/native-stack@6.2.4) (2021-10-12)
 
 **Note:** Version bump only for package @react-navigation/native-stack
