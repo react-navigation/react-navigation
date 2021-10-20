@@ -44,7 +44,7 @@ const addReactNativeGestureHandlerImport = async (
         if (await allowAutoImportPrompt()) {
           const quote = (/['"]/.exec(indexFileContent) || ["'"])[0];
           const importExpression = `import ${quote}react-native-gesture-handler${quote}`;
-          indexFileContent = `${importExpression}}\n${indexFileContent}`;
+          indexFileContent = `${importExpression}\n${indexFileContent}`;
           fs.writeFileSync(filePath, indexFileContent, 'utf8');
           logger.log(
             `${importExpression} was added successfully to ${indexFileName}`
