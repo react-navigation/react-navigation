@@ -1,30 +1,30 @@
-import * as React from 'react';
-import { Animated, View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { getHeaderTitle, HeaderBackContext } from '@react-navigation/elements';
 import {
   NavigationContext,
   NavigationRouteContext,
-  Route,
   ParamListBase,
+  Route,
 } from '@react-navigation/native';
-import { HeaderBackContext, getHeaderTitle } from '@react-navigation/elements';
+import * as React from 'react';
+import { Animated, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
-import Header from './Header';
 import {
-  forSlideLeft,
-  forSlideUp,
   forNoAnimation,
+  forSlideLeft,
   forSlideRight,
+  forSlideUp,
 } from '../../TransitionConfigs/HeaderStyleInterpolators';
 import type {
   Layout,
   Scene,
-  StackHeaderStyleInterpolator,
-  StackNavigationProp,
+  StackHeaderMode,
   StackHeaderProps,
+  StackNavigationProp,
 } from '../../types';
+import Header from './Header';
 
 export type Props = {
-  mode: 'float' | 'screen';
+  mode: StackHeaderMode;
   layout: Layout;
   scenes: (Scene | undefined)[];
   getPreviousScene: (props: { route: Route<string> }) => Scene | undefined;
@@ -33,7 +33,6 @@ export type Props = {
     route: Route<string>;
     height: number;
   }) => void;
-  styleInterpolator: StackHeaderStyleInterpolator;
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 };
 
@@ -44,7 +43,6 @@ export default function HeaderContainer({
   getPreviousScene,
   getFocusedRoute,
   onContentHeightChange,
-  styleInterpolator,
   style,
 }: Props) {
   const focusedRoute = getFocusedRoute();
@@ -57,8 +55,13 @@ export default function HeaderContainer({
           return null;
         }
 
-        const { header, headerMode, headerShown = true, headerTransparent } =
-          scene.descriptor.options || {};
+        const {
+          header,
+          headerMode,
+          headerShown = true,
+          headerTransparent,
+          headerStyleInterpolator,
+        } = scene.descriptor.options;
 
         if (headerMode !== mode || !headerShown) {
           return null;
@@ -89,19 +92,26 @@ export default function HeaderContainer({
           headerMode: previousHeaderMode,
         } = previousDescriptor?.options || {};
 
-        const {
-          headerShown: nextHeaderShown = true,
-          headerMode: nextHeaderMode,
-          gestureDirection: nextGestureDirection,
-        } = nextDescriptor?.options || {};
+        // If any of the next screens don't have a header or header is part of the screen
+        // Then we need to move this header offscreen so that it doesn't cover it
+        const nextHeaderlessScene = self.slice(i + 1).find((scene) => {
+          const {
+            headerShown: currentHeaderShown = true,
+            headerMode: currentHeaderMode,
+          } = scene?.descriptor.options || {};
+
+          return currentHeaderShown === false || currentHeaderMode === 'screen';
+        });
+
+        const { gestureDirection: nextHeaderlessGestureDirection } =
+          nextHeaderlessScene?.descriptor.options || {};
 
         const isHeaderStatic =
           ((previousHeaderShown === false || previousHeaderMode === 'screen') &&
             // We still need to animate when coming back from next scene
             // A hacky way to check this is if the next scene exists
             !nextDescriptor) ||
-          nextHeaderShown === false ||
-          nextHeaderMode === 'screen';
+          nextHeaderlessScene;
 
         const props: StackHeaderProps = {
           layout,
@@ -114,13 +124,13 @@ export default function HeaderContainer({
           styleInterpolator:
             mode === 'float'
               ? isHeaderStatic
-                ? nextGestureDirection === 'vertical' ||
-                  nextGestureDirection === 'vertical-inverted'
+                ? nextHeaderlessGestureDirection === 'vertical' ||
+                  nextHeaderlessGestureDirection === 'vertical-inverted'
                   ? forSlideUp
-                  : nextGestureDirection === 'horizontal-inverted'
+                  : nextHeaderlessGestureDirection === 'horizontal-inverted'
                   ? forSlideRight
                   : forSlideLeft
-                : styleInterpolator
+                : headerStyleInterpolator
               : forNoAnimation,
         };
 

@@ -3,6 +3,214 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.5...@react-navigation/native@6.0.6) (2021-10-12)
+
+**Note:** Version bump only for package @react-navigation/native
+
+
+
+
+
+## [6.0.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.4...@react-navigation/native@6.0.5) (2021-10-09)
+
+**Note:** Version bump only for package @react-navigation/native
+
+
+
+
+
+## [6.0.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.3...@react-navigation/native@6.0.4) (2021-09-26)
+
+
+### Bug Fixes
+
+* fix building link with useLinkProps ([bcdc559](https://github.com/react-navigation/react-navigation/commit/bcdc55975d64b8a5267f0b0dc47efb395a409762))
+
+
+
+
+
+## [6.0.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.2...@react-navigation/native@6.0.3) (2021-09-26)
+
+
+### Bug Fixes
+
+* fix href with useLinkProps. fixes [#9930](https://github.com/react-navigation/react-navigation/issues/9930) ([4ae53e1](https://github.com/react-navigation/react-navigation/commit/4ae53e1705e39aee75041928c07a56ec110bfd05))
+* fix navigation when going back and forth in history on web ([#9970](https://github.com/react-navigation/react-navigation/issues/9970)) ([fb84805](https://github.com/react-navigation/react-navigation/commit/fb84805c889bbb7059e7e95592c004aea2a510d6)), closes [#9408](https://github.com/react-navigation/react-navigation/issues/9408) [#9128](https://github.com/react-navigation/react-navigation/issues/9128)
+* make useScrollToTop work with react-native-largelist ([#9960](https://github.com/react-navigation/react-navigation/issues/9960)) ([073fd57](https://github.com/react-navigation/react-navigation/commit/073fd57537466a054dc902e915430f69bbe363e1))
+* use console.error for linking conflicts instead of throwing ([4b36bcf](https://github.com/react-navigation/react-navigation/commit/4b36bcf346a6196bbc8d5792e8eb4614709161a2))
+
+
+
+
+
+## [6.0.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.1...@react-navigation/native@6.0.2) (2021-08-07)
+
+
+### Bug Fixes
+
+* fix crash in useLinkTo when passing an object ([#9800](https://github.com/react-navigation/react-navigation/issues/9800)) ([dfd0cc7](https://github.com/react-navigation/react-navigation/commit/dfd0cc78fe4531ba7c957f826bc556829e231735))
+
+
+
+
+
+## [6.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0...@react-navigation/native@6.0.1) (2021-08-03)
+
+**Note:** Version bump only for package @react-navigation/native
+
+
+
+
+
+# [6.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.17...@react-navigation/native@6.0.0) (2021-08-01)
+
+
+### Features
+
+* add a way to filter out deep links from being handled ([c322b05](https://github.com/react-navigation/react-navigation/commit/c322b0501c6a9941a033471aed9e5b486b3ace7e))
+
+
+
+
+
+# [6.0.0-next.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.16...@react-navigation/native@6.0.0-next.17) (2021-07-16)
+
+**Note:** Version bump only for package @react-navigation/native
+
+
+
+
+
+# [6.0.0-next.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.15...@react-navigation/native@6.0.0-next.16) (2021-07-16)
+
+**Note:** Version bump only for package @react-navigation/native
+
+
+
+
+
+# [6.0.0-next.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.13...@react-navigation/native@6.0.0-next.15) (2021-07-01)
+
+
+### Bug Fixes
+
+* disable duplicate linking check for independent containers ([20b8ebd](https://github.com/react-navigation/react-navigation/commit/20b8ebd40547d93ccf626fcd9dad327fe1807b52))
+
+
+
+
+
+# [6.0.0-next.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.13...@react-navigation/native@6.0.0-next.14) (2021-06-10)
+
+**Note:** Version bump only for package @react-navigation/native
+
+
+
+
+
+# [6.0.0-next.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.12...@react-navigation/native@6.0.0-next.13) (2021-05-29)
+
+
+### Bug Fixes
+
+* validate property names in linking config ([324ea71](https://github.com/react-navigation/react-navigation/commit/324ea7181db6b743f512854be267cc9d65975b6f))
+
+
+
+
+
+# [6.0.0-next.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.11...@react-navigation/native@6.0.0-next.12) (2021-05-29)
+
+
+### Bug Fixes
+
+* try to fix [#9631](https://github.com/react-navigation/react-navigation/issues/9631) ([b4d7b0e](https://github.com/react-navigation/react-navigation/commit/b4d7b0ee86c09419a18357867a0a25bb90d960c0))
+
+
+
+
+
+# [6.0.0-next.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.10...@react-navigation/native@6.0.0-next.11) (2021-05-27)
+
+**Note:** Version bump only for package @react-navigation/native
+
+
+
+
+
+# [6.0.0-next.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.9...@react-navigation/native@6.0.0-next.10) (2021-05-26)
+
+
+### Features
+
+* expose container ref in useNavigation ([1d40279](https://github.com/react-navigation/react-navigation/commit/1d40279db18ab2aed12517ed3ca6af6d509477d2))
+
+
+
+
+
+# [6.0.0-next.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.8...@react-navigation/native@6.0.0-next.9) (2021-05-23)
+
+
+### Features
+
+* initial implementation of a flipper plugin ([d6f6f5f](https://github.com/react-navigation/react-navigation/commit/d6f6f5f94db85bd9166a5a97889c37690846d519))
+
+
+
+
+
+# [6.0.0-next.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.7...@react-navigation/native@6.0.0-next.8) (2021-05-16)
+
+
+### Bug Fixes
+
+* add ability to pass generic params to Link ([9c30c42](https://github.com/react-navigation/react-navigation/commit/9c30c42c0bddbc90c58b79a8be6d57e57a131e77))
+
+
+
+
+
+# [6.0.0-next.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.6...@react-navigation/native@6.0.0-next.7) (2021-05-10)
+
+
+### Features
+
+* return a NavigationContent component from useNavigationBuilder ([1179d56](https://github.com/react-navigation/react-navigation/commit/1179d56c5008270753feef41acdc1dbd2191efcf))
+
+
+
+
+
+# [6.0.0-next.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.5...@react-navigation/native@6.0.0-next.6) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/native
+
+
+
+
+
+# [6.0.0-next.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.4...@react-navigation/native@6.0.0-next.5) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/native
+
+
+
+
+
+# [6.0.0-next.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.3...@react-navigation/native@6.0.0-next.4) (2021-05-09)
+
+
+### Features
+
+* add ability to specify root param list ([b28bfdd](https://github.com/react-navigation/react-navigation/commit/b28bfddc17cbf3996fac04a34b2a7085ecf88be5))
+* support navigate-like object in Link ([1478659](https://github.com/react-navigation/react-navigation/commit/14786594c004d8176570f1a4ab013b57b3180665))
+
+
+
+
+
 # [6.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.0-next.2...@react-navigation/native@6.0.0-next.3) (2021-05-01)
 
 

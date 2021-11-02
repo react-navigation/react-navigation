@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { Animated, StyleSheet, StyleProp, TextStyle } from 'react-native';
-import color from 'color';
 import { useTheme } from '@react-navigation/native';
+import color from 'color';
+import * as React from 'react';
+import { Animated, StyleProp, StyleSheet, TextStyle } from 'react-native';
 
 type Props = {
   /**
@@ -48,6 +48,8 @@ export default function Badge({
         setRendered(false);
       }
     });
+
+    return () => opacity.stopAnimation();
   }, [opacity, rendered, visible]);
 
   if (visible && !rendered) {

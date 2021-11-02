@@ -1,12 +1,13 @@
+import type { Route } from '@react-navigation/native';
 import React from 'react';
 import {
-  View,
-  StyleSheet,
   StyleProp,
+  StyleSheet,
   TextStyle,
+  View,
   ViewStyle,
 } from 'react-native';
-import type { Route } from '@react-navigation/native';
+
 import Badge from './Badge';
 
 type Props = {
@@ -27,6 +28,7 @@ type Props = {
 };
 
 export default function TabBarIcon({
+  route: _,
   horizontal,
   badge,
   badgeStyle,

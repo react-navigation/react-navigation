@@ -1,19 +1,20 @@
 import * as React from 'react';
 import {
-  StyleSheet,
-  LayoutChangeEvent,
   I18nManager,
-  Platform,
-  Keyboard,
-  StatusBar,
-  View,
   InteractionManager,
+  Keyboard,
+  LayoutChangeEvent,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { PanGestureHandler, GestureState } from '../GestureHandler';
-import Overlay from './Overlay';
-import DrawerProgressContext from '../../utils/DrawerProgressContext';
+
 import type { DrawerProps } from '../../types';
+import DrawerProgressContext from '../../utils/DrawerProgressContext';
+import { GestureState, PanGestureHandler } from '../GestureHandler';
+import Overlay from './Overlay';
 
 const {
   Clock,
@@ -470,10 +471,8 @@ export default class DrawerView extends React.Component<DrawerProps> {
   };
 
   private toggleStatusBar = (hidden: boolean) => {
-    const {
-      hideStatusBarOnOpen: hideStatusBar,
-      statusBarAnimation,
-    } = this.props;
+    const { hideStatusBarOnOpen: hideStatusBar, statusBarAnimation } =
+      this.props;
 
     if (hideStatusBar && this.isStatusBarHidden !== hidden) {
       this.isStatusBarHidden = hidden;
@@ -499,14 +498,10 @@ export default class DrawerView extends React.Component<DrawerProps> {
     const isRight = drawerPosition === 'right';
 
     const contentTranslateX =
-      drawerType === 'front' || drawerType === 'permanent'
-        ? ANIMATED_ZERO
-        : this.translateX;
+      drawerType === 'front' ? ANIMATED_ZERO : this.translateX;
 
     const drawerTranslateX =
-      drawerType === 'permanent'
-        ? ANIMATED_ZERO
-        : drawerType === 'back'
+      drawerType === 'back'
         ? I18nManager.isRTL
           ? multiply(
               sub(this.containerWidth, this.drawerWidth),
@@ -523,7 +518,7 @@ export default class DrawerView extends React.Component<DrawerProps> {
         : multiply(this.drawerWidth, -1);
 
     // FIXME: Currently hitSlop is broken when on Android when drawer is on right
-    // https://github.com/kmagiera/react-native-gesture-handler/issues/569
+    // https://github.com/software-mansion/react-native-gesture-handler/issues/569
     const hitSlop = isRight
       ? // Extend hitSlop to the side of the screen when drawer is closed
         // This lets the user drag the drawer from the side of the screen
@@ -558,7 +553,9 @@ export default class DrawerView extends React.Component<DrawerProps> {
             <Animated.View
               style={[
                 styles.content,
-                { transform: [{ translateX: contentTranslateX }] },
+                drawerType !== 'permanent'
+                  ? { transform: [{ translateX: contentTranslateX }] }
+                  : undefined,
               ]}
             >
               <View
@@ -581,6 +578,10 @@ export default class DrawerView extends React.Component<DrawerProps> {
                     progress={progress}
                     onPress={() => this.toggleDrawer(false)}
                     style={overlayStyle as any}
+                    accessibilityElementsHidden={!isOpen}
+                    importantForAccessibility={
+                      isOpen ? 'auto' : 'no-hide-descendants'
+                    }
                   />
                 )
               }
@@ -608,10 +609,12 @@ export default class DrawerView extends React.Component<DrawerProps> {
               onLayout={this.handleDrawerLayout}
               style={[
                 styles.container,
-                {
-                  transform: [{ translateX: drawerTranslateX }],
-                  opacity: this.drawerOpacity,
-                },
+                drawerType === 'permanent'
+                  ? { opacity: 1 }
+                  : {
+                      transform: [{ translateX: drawerTranslateX }],
+                      opacity: this.drawerOpacity,
+                    },
                 drawerType === 'permanent'
                   ? // Without this, the `left`/`right` values don't get reset
                     isRight

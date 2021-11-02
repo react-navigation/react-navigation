@@ -1,6 +1,7 @@
 import type {
-  getStateFromPath as getStateFromPathDefault,
+  getActionFromState as getActionFromStateDefault,
   getPathFromState as getPathFromStateDefault,
+  getStateFromPath as getStateFromPathDefault,
   PathConfigMap,
   Route,
 } from '@react-navigation/core';
@@ -17,7 +18,7 @@ export type Theme = {
   };
 };
 
-export type LinkingOptions = {
+export type LinkingOptions<ParamList extends {}> = {
   /**
    * Whether deep link handling should be enabled.
    * Defaults to true.
@@ -26,7 +27,8 @@ export type LinkingOptions = {
   /**
    * The prefixes are stripped from the URL before parsing them.
    * Usually they are the `scheme` + `host` (e.g. `myapp://chat?user=jane`)
-   * Only applicable on Android and iOS.
+   *
+   * This is not supported on Web.
    *
    * @example
    * ```js
@@ -41,6 +43,24 @@ export type LinkingOptions = {
    */
   prefixes: string[];
   /**
+   * Optional function which takes an incoming URL returns a boolean
+   * indicating whether React Navigation should handle it.
+   *
+   * This can be used to disable deep linking for specific URLs.
+   * e.g. URLs used for authentication, and not for deep linking to screens.
+   *
+   * This is not supported on Web.
+   *
+   * @example
+   * ```js
+   * {
+   *   // Filter out URLs used by expo-auth-session
+   *   filter: (url) => !url.includes('+expo-auth-session')
+   * }
+   * ```
+   */
+  filter?: (url: string) => boolean;
+  /**
    * Config to fine-tune how to parse the path.
    *
    * @example
@@ -53,11 +73,15 @@ export type LinkingOptions = {
    * }
    * ```
    */
-  config?: { initialRouteName?: string; screens: PathConfigMap };
+  config?: {
+    initialRouteName?: keyof ParamList;
+    screens: PathConfigMap<ParamList>;
+  };
   /**
    * Custom function to get the initial URL used for linking.
    * Uses `Linking.getInitialURL()` by default.
-   * Not supported on Web.
+   *
+   * This is not supported on Web.
    *
    * @example
    * ```js
@@ -74,7 +98,8 @@ export type LinkingOptions = {
   /**
    * Custom function to get subscribe to URL updates.
    * Uses `Linking.addEventListener('url', callback)` by default.
-   * Not supported on Web.
+   *
+   * This is not supported on Web.
    *
    * @example
    * ```js
@@ -101,6 +126,10 @@ export type LinkingOptions = {
    * Only applicable on Web.
    */
   getPathFromState?: typeof getPathFromStateDefault;
+  /**
+   * Custom function to convert the state object to a valid action (advanced).
+   */
+  getActionFromState?: typeof getActionFromStateDefault;
 };
 
 export type DocumentTitleOptions = {

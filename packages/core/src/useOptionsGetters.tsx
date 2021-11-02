@@ -1,7 +1,8 @@
-import * as React from 'react';
 import type { ParamListBase } from '@react-navigation/routers';
-import NavigationStateContext from './NavigationStateContext';
+import * as React from 'react';
+
 import NavigationBuilderContext from './NavigationBuilderContext';
+import NavigationStateContext from './NavigationStateContext';
 import type { NavigationProp } from './types';
 
 type Options = {

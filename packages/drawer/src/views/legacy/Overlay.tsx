@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pressable, Platform, StyleSheet } from 'react-native';
+import { Platform, Pressable, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 const {

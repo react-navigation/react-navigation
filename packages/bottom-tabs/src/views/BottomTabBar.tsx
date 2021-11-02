@@ -1,29 +1,29 @@
-import React from 'react';
+import { MissingIcon } from '@react-navigation/elements';
 import {
-  View,
-  Animated,
-  StyleSheet,
-  Platform,
-  LayoutChangeEvent,
-  StyleProp,
-  ViewStyle,
-} from 'react-native';
-import {
+  CommonActions,
   NavigationContext,
   NavigationRouteContext,
-  TabNavigationState,
   ParamListBase,
-  CommonActions,
-  useTheme,
+  TabNavigationState,
   useLinkBuilder,
+  useTheme,
 } from '@react-navigation/native';
-import { MissingIcon } from '@react-navigation/elements';
+import React from 'react';
+import {
+  Animated,
+  LayoutChangeEvent,
+  Platform,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 import { EdgeInsets, useSafeAreaFrame } from 'react-native-safe-area-context';
 
-import BottomTabItem from './BottomTabItem';
+import type { BottomTabBarProps, BottomTabDescriptorMap } from '../types';
 import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
 import useIsKeyboardShown from '../utils/useIsKeyboardShown';
-import type { BottomTabBarProps, BottomTabDescriptorMap } from '../types';
+import BottomTabItem from './BottomTabItem';
 
 type Props = BottomTabBarProps & {
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
@@ -48,16 +48,16 @@ const shouldUseHorizontalLabels = ({
   layout,
   dimensions,
 }: Options) => {
-  const { tabBarLabelPosition, tabBarAdaptive = true } = descriptors[
-    state.routes[state.index].key
-  ].options;
+  const { tabBarLabelPosition } =
+    descriptors[state.routes[state.index].key].options;
 
   if (tabBarLabelPosition) {
-    return tabBarLabelPosition === 'beside-icon';
-  }
-
-  if (!tabBarAdaptive) {
-    return false;
+    switch (tabBarLabelPosition) {
+      case 'beside-icon':
+        return true;
+      case 'below-icon':
+        return false;
+    }
   }
 
   if (layout.width >= 768) {
@@ -144,6 +144,11 @@ export default function BottomTabBar({
     tabBarHideOnKeyboard = false,
     tabBarVisibilityAnimationConfig,
     tabBarStyle,
+    tabBarBackground,
+    tabBarActiveTintColor,
+    tabBarInactiveTintColor,
+    tabBarActiveBackgroundColor,
+    tabBarInactiveBackgroundColor,
   } = focusedOptions;
 
   const dimensions = useSafeAreaFrame();
@@ -201,6 +206,8 @@ export default function BottomTabBar({
         ...visibilityAnimationConfig?.hide?.config,
       }).start();
     }
+
+    return () => visible.stopAnimation();
   }, [visible, shouldShowTabBar]);
 
   const [layout, setLayout] = React.useState({
@@ -211,15 +218,7 @@ export default function BottomTabBar({
   const handleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
 
-    const topBorderWidth =
-      // @ts-ignore
-      StyleSheet.flatten([styles.tabBar, tabBarStyle])?.borderTopWidth;
-
-    onHeightChange?.(
-      height +
-        paddingBottom +
-        (typeof topBorderWidth === 'number' ? topBorderWidth : 0)
-    );
+    onHeightChange?.(height);
 
     setLayout((layout) => {
       if (height === layout.height && width === layout.width) {
@@ -252,12 +251,15 @@ export default function BottomTabBar({
     layout,
   });
 
+  const tabBarBackgroundElement = tabBarBackground?.();
+
   return (
     <Animated.View
       style={[
         styles.tabBar,
         {
-          backgroundColor: colors.card,
+          backgroundColor:
+            tabBarBackgroundElement != null ? 'transparent' : colors.card,
           borderTopColor: colors.border,
         },
         {
@@ -286,6 +288,9 @@ export default function BottomTabBar({
       pointerEvents={isTabBarHidden ? 'none' : 'auto'}
       onLayout={handleLayout}
     >
+      <View pointerEvents="none" style={StyleSheet.absoluteFill}>
+        {tabBarBackgroundElement}
+      </View>
       <View accessibilityRole="tablist" style={styles.content}>
         {routes.map((route, index) => {
           const focused = index === state.index;
@@ -300,7 +305,7 @@ export default function BottomTabBar({
 
             if (!focused && !event.defaultPrevented) {
               navigation.dispatch({
-                ...CommonActions.navigate(route.name),
+                ...CommonActions.navigate({ name: route.name, merge: true }),
                 target: state.key,
               });
             }
@@ -343,12 +348,10 @@ export default function BottomTabBar({
                   to={buildLink(route.name, route.params)}
                   testID={options.tabBarTestID}
                   allowFontScaling={options.tabBarAllowFontScaling}
-                  activeTintColor={options.tabBarActiveTintColor}
-                  inactiveTintColor={options.tabBarInactiveTintColor}
-                  activeBackgroundColor={options.tabBarActiveBackgroundColor}
-                  inactiveBackgroundColor={
-                    options.tabBarInactiveBackgroundColor
-                  }
+                  activeTintColor={tabBarActiveTintColor}
+                  inactiveTintColor={tabBarInactiveTintColor}
+                  activeBackgroundColor={tabBarActiveBackgroundColor}
+                  inactiveBackgroundColor={tabBarInactiveBackgroundColor}
                   button={options.tabBarButton}
                   icon={
                     options.tabBarIcon ??

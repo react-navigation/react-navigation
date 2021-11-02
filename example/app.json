@@ -20,7 +20,8 @@
       "web"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "org.reactnavigation.example"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -29,6 +30,9 @@
       "**/*"
     ],
     "scheme": "rne",
-    "entryPoint": "App.tsx"
+    "entryPoint": "App.tsx",
+    "android": {
+      "package": "org.reactnavigation.example"
+    }
   }
 }

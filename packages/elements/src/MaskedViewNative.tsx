@@ -4,7 +4,8 @@
 import * as React from 'react';
 import { UIManager } from 'react-native';
 
-type MaskedViewType = typeof import('@react-native-masked-view/masked-view').default;
+type MaskedViewType =
+  typeof import('@react-native-masked-view/masked-view').default;
 
 type Props = React.ComponentProps<MaskedViewType> & {
   children: React.ReactElement;

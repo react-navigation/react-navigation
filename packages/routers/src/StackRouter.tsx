@@ -1,12 +1,13 @@
 import { nanoid } from 'nanoid/non-secure';
+
 import BaseRouter from './BaseRouter';
 import type {
-  NavigationState,
   CommonNavigationAction,
-  Router,
   DefaultRouterOptions,
-  Route,
+  NavigationState,
   ParamListBase,
+  Route,
+  Router,
 } from './types';
 
 export type StackActionType =
@@ -36,14 +37,13 @@ export type StackActionType =
 
 export type StackRouterOptions = DefaultRouterOptions;
 
-export type StackNavigationState<
-  ParamList extends ParamListBase
-> = NavigationState<ParamList> & {
-  /**
-   * Type of the router, in this case, it's stack.
-   */
-  type: 'stack';
-};
+export type StackNavigationState<ParamList extends ParamListBase> =
+  NavigationState<ParamList> & {
+    /**
+     * Type of the router, in this case, it's stack.
+     */
+    type: 'stack';
+  };
 
 export type StackActionHelpers<ParamList extends ParamListBase> = {
   /**
@@ -175,9 +175,14 @@ export default function StackRouter(options: StackRouterOptions) {
       };
     },
 
-    getStateForRouteNamesChange(state, { routeNames, routeParamList }) {
-      const routes = state.routes.filter((route) =>
-        routeNames.includes(route.name)
+    getStateForRouteNamesChange(
+      state,
+      { routeNames, routeParamList, routeKeyChanges }
+    ) {
+      const routes = state.routes.filter(
+        (route) =>
+          routeNames.includes(route.name) &&
+          !routeKeyChanges.includes(route.name)
       );
 
       if (routes.length === 0) {

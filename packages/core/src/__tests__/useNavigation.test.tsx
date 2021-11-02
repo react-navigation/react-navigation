@@ -1,9 +1,10 @@
-import * as React from 'react';
 import { render } from '@testing-library/react-native';
-import useNavigationBuilder from '../useNavigationBuilder';
-import useNavigation from '../useNavigation';
+import * as React from 'react';
+
 import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
+import useNavigation from '../useNavigation';
+import useNavigationBuilder from '../useNavigationBuilder';
 import MockRouter from './__fixtures__/MockRouter';
 
 it('gets navigation prop from context', () => {
@@ -106,13 +107,40 @@ it("gets navigation's parent's parent from context", () => {
   );
 });
 
+it('gets navigation from container from context', () => {
+  expect.assertions(1);
+
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return state.routes.map((route) => descriptors[route.key].render());
+  };
+
+  const Test = () => {
+    const navigation = useNavigation();
+
+    expect(navigation.navigate).toBeDefined();
+
+    return null;
+  };
+
+  render(
+    <BaseNavigationContainer>
+      <Test />
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+});
+
 it('throws if called outside a navigation context', () => {
   expect.assertions(1);
 
   const Test = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     expect(() => useNavigation()).toThrow(
-      "Couldn't find a navigation object. Is your component inside a screen in a navigator?"
+      "Couldn't find a navigation object. Is your component inside NavigationContainer?"
     );
 
     return null;

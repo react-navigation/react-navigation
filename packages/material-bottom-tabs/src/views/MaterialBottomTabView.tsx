@@ -1,16 +1,17 @@
-import * as React from 'react';
-import { Text, StyleSheet, Platform } from 'react-native';
-import { BottomNavigation, DefaultTheme, DarkTheme } from 'react-native-paper';
+import { SafeAreaProviderCompat } from '@react-navigation/elements';
 import {
-  NavigationHelpersContext,
-  Route,
-  TabNavigationState,
-  TabActions,
-  useTheme,
-  useLinkBuilder,
+  CommonActions,
   Link,
   ParamListBase,
+  Route,
+  TabNavigationState,
+  useLinkBuilder,
+  useTheme,
 } from '@react-navigation/native';
+import * as React from 'react';
+import { Platform, StyleSheet, Text } from 'react-native';
+import { BottomNavigation, DarkTheme, DefaultTheme } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type {
   MaterialBottomTabDescriptorMap,
@@ -36,8 +37,8 @@ let MaterialCommunityIcons: React.ComponentType<
 
 try {
   // Optionally require vector-icons
-  MaterialCommunityIcons = require('react-native-vector-icons/MaterialCommunityIcons')
-    .default;
+  MaterialCommunityIcons =
+    require('react-native-vector-icons/MaterialCommunityIcons').default;
 } catch (e) {
   let isErrorLogged = false;
 
@@ -81,6 +82,7 @@ function MaterialBottomTabViewInner({
   descriptors,
   ...rest
 }: Props) {
+  const insets = useSafeAreaInsets();
   const { dark, colors } = useTheme();
   const buildLink = useLinkBuilder();
 
@@ -104,7 +106,10 @@ function MaterialBottomTabViewInner({
       navigationState={state}
       onIndexChange={(index: number) =>
         navigation.dispatch({
-          ...TabActions.jumpTo(state.routes[index].name),
+          ...CommonActions.navigate({
+            name: state.routes[index].name,
+            merge: true,
+          }),
           target: state.key,
         })
       }
@@ -188,15 +193,16 @@ function MaterialBottomTabViewInner({
           preventDefault();
         }
       }}
+      safeAreaInsets={insets}
     />
   );
 }
 
 export default function MaterialBottomTabView(props: Props) {
   return (
-    <NavigationHelpersContext.Provider value={props.navigation}>
+    <SafeAreaProviderCompat>
       <MaterialBottomTabViewInner {...props} />
-    </NavigationHelpersContext.Provider>
+    </SafeAreaProviderCompat>
   );
 }
 

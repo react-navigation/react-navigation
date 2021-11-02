@@ -1,46 +1,46 @@
+import {
+  getHeaderTitle,
+  Header,
+  SafeAreaProviderCompat,
+  Screen,
+} from '@react-navigation/elements';
+import {
+  DrawerActions,
+  DrawerNavigationState,
+  DrawerStatus,
+  ParamListBase,
+  useTheme,
+} from '@react-navigation/native';
 import * as React from 'react';
 import {
-  View,
-  StyleSheet,
+  BackHandler,
   I18nManager,
   Platform,
-  BackHandler,
+  StyleSheet,
+  View,
 } from 'react-native';
-import { ScreenContainer } from 'react-native-screens';
-import { useSafeAreaFrame } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
-import {
-  NavigationHelpersContext,
-  DrawerNavigationState,
-  DrawerActions,
-  useTheme,
-  ParamListBase,
-} from '@react-navigation/native';
-import {
-  Header,
-  Screen,
-  SafeAreaProviderCompat,
-  getHeaderTitle,
-} from '@react-navigation/elements';
+import { useSafeAreaFrame } from 'react-native-safe-area-context';
 
-import { GestureHandlerRootView } from './GestureHandler';
-import ScreenFallback from './ScreenFallback';
-import DrawerToggleButton from './DrawerToggleButton';
-import DrawerContent from './DrawerContent';
-import DrawerStatusContext from '../utils/DrawerStatusContext';
-import DrawerPositionContext from '../utils/DrawerPositionContext';
-import getDrawerStatusFromState from '../utils/getDrawerStatusFromState';
 import type {
+  DrawerContentComponentProps,
   DrawerDescriptorMap,
+  DrawerHeaderProps,
   DrawerNavigationConfig,
   DrawerNavigationHelpers,
-  DrawerContentComponentProps,
-  DrawerHeaderProps,
   DrawerNavigationProp,
   DrawerProps,
 } from '../types';
+import DrawerPositionContext from '../utils/DrawerPositionContext';
+import DrawerStatusContext from '../utils/DrawerStatusContext';
+import getDrawerStatusFromState from '../utils/getDrawerStatusFromState';
+import DrawerContent from './DrawerContent';
+import DrawerToggleButton from './DrawerToggleButton';
+import { GestureHandlerRootView } from './GestureHandler';
+import { MaybeScreen, MaybeScreenContainer } from './ScreenFallback';
 
 type Props = DrawerNavigationConfig & {
+  defaultStatus: DrawerStatus;
   state: DrawerNavigationState<ParamListBase>;
   navigation: DrawerNavigationHelpers;
   descriptors: DrawerDescriptorMap;
@@ -73,10 +73,13 @@ function DrawerViewBase({
   state,
   navigation,
   descriptors,
+  defaultStatus,
   drawerContent = (props: DrawerContentComponentProps) => (
     <DrawerContent {...props} />
   ),
-  detachInactiveScreens = true,
+  detachInactiveScreens = Platform.OS === 'web' ||
+    Platform.OS === 'android' ||
+    Platform.OS === 'ios',
   // Running in chrome debugger
   // @ts-expect-error
   useLegacyImplementation = !global.nativeCallSyncHook ||
@@ -132,25 +135,29 @@ function DrawerViewBase({
   }, [navigation, state.key]);
 
   React.useEffect(() => {
-    if (drawerStatus !== 'open' || drawerType === 'permanent') {
+    if (drawerStatus === defaultStatus || drawerType === 'permanent') {
       return;
     }
 
-    const handleClose = () => {
+    const handleHardwareBack = () => {
       // We shouldn't handle the back button if the parent screen isn't focused
       // This will avoid the drawer overriding event listeners from a focused screen
       if (!navigation.isFocused()) {
         return false;
       }
 
-      handleDrawerClose();
+      if (defaultStatus === 'open') {
+        handleDrawerOpen();
+      } else {
+        handleDrawerClose();
+      }
 
       return true;
     };
 
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        handleClose();
+        handleHardwareBack();
       }
     };
 
@@ -159,7 +166,7 @@ function DrawerViewBase({
     // This will make sure that our handler will run first when back button is pressed
     const subscription = BackHandler.addEventListener(
       'hardwareBackPress',
-      handleClose
+      handleHardwareBack
     );
 
     if (Platform.OS === 'web') {
@@ -173,7 +180,14 @@ function DrawerViewBase({
         document?.body?.removeEventListener?.('keyup', handleEscape);
       }
     };
-  }, [drawerStatus, drawerType, handleDrawerClose, navigation]);
+  }, [
+    defaultStatus,
+    drawerStatus,
+    drawerType,
+    handleDrawerClose,
+    handleDrawerOpen,
+    navigation,
+  ]);
 
   const renderDrawerContent = () => {
     return (
@@ -189,8 +203,10 @@ function DrawerViewBase({
 
   const renderSceneContent = () => {
     return (
-      // @ts-ignore
-      <ScreenContainer enabled={detachInactiveScreens} style={styles.content}>
+      <MaybeScreenContainer
+        enabled={detachInactiveScreens}
+        style={styles.content}
+      >
         {state.routes.map((route, index) => {
           const descriptor = descriptors[route.key];
           const { lazy = true, unmountOnBlur } = descriptor.options;
@@ -221,9 +237,9 @@ function DrawerViewBase({
           } = descriptor.options;
 
           return (
-            <ScreenFallback
+            <MaybeScreen
               key={route.key}
-              style={[StyleSheet.absoluteFill, { opacity: isFocused ? 1 : 0 }]}
+              style={[StyleSheet.absoluteFill, { zIndex: isFocused ? 0 : -1 }]}
               visible={isFocused}
               enabled={detachInactiveScreens}
             >
@@ -232,21 +248,23 @@ function DrawerViewBase({
                 route={descriptor.route}
                 navigation={descriptor.navigation}
                 headerShown={descriptor.options.headerShown}
+                headerTransparent={descriptor.options.headerTransparent}
                 headerStatusBarHeight={descriptor.options.headerStatusBarHeight}
                 header={header({
                   layout: dimensions,
                   route: descriptor.route,
-                  navigation: descriptor.navigation as DrawerNavigationProp<ParamListBase>,
+                  navigation:
+                    descriptor.navigation as DrawerNavigationProp<ParamListBase>,
                   options: descriptor.options,
                 })}
                 style={sceneContainerStyle}
               >
                 {descriptor.render()}
               </Screen>
-            </ScreenFallback>
+            </MaybeScreen>
           );
         })}
-      </ScreenContainer>
+      </MaybeScreenContainer>
     );
   };
 
@@ -294,13 +312,11 @@ function DrawerViewBase({
 
 export default function DrawerView({ navigation, ...rest }: Props) {
   return (
-    <NavigationHelpersContext.Provider value={navigation}>
-      <SafeAreaProviderCompat>
-        <GestureHandlerWrapper style={styles.content}>
-          <DrawerViewBase navigation={navigation} {...rest} />
-        </GestureHandlerWrapper>
-      </SafeAreaProviderCompat>
-    </NavigationHelpersContext.Provider>
+    <SafeAreaProviderCompat>
+      <GestureHandlerWrapper style={styles.content}>
+        <DrawerViewBase navigation={navigation} {...rest} />
+      </GestureHandlerWrapper>
+    </SafeAreaProviderCompat>
   );
 }
 

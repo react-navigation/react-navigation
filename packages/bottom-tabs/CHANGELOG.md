@@ -3,6 +3,257 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.8...@react-navigation/bottom-tabs@6.0.9) (2021-10-12)
+
+
+### Bug Fixes
+
+* fix type errors in generated declaration file of bottom-tabs ([#10033](https://github.com/react-navigation/react-navigation/issues/10033)) ([0b40dd7](https://github.com/react-navigation/react-navigation/commit/0b40dd745b0734a4329197199e7df5c6a97cd73e)), closes [#10032](https://github.com/react-navigation/react-navigation/issues/10032)
+* move [@ts-expect-error](https://github.com/ts-expect-error) to body to avoid issue in type definitions ([0a08688](https://github.com/react-navigation/react-navigation/commit/0a0868862c9d6ae77055c66938a764306d391b44))
+
+
+
+
+
+## [6.0.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.7...@react-navigation/bottom-tabs@6.0.8) (2021-10-09)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+## [6.0.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.6...@react-navigation/bottom-tabs@6.0.7) (2021-09-26)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+## [6.0.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.5...@react-navigation/bottom-tabs@6.0.6) (2021-09-26)
+
+
+### Bug Fixes
+
+* export header props for other navigators ([8475481](https://github.com/react-navigation/react-navigation/commit/84754812effd8bee576c5d9836c317889dabe11a)), closes [#9965](https://github.com/react-navigation/react-navigation/issues/9965)
+* stop  animations on unmount/cleanup ([5fb5f41](https://github.com/react-navigation/react-navigation/commit/5fb5f41eb6cf86ebe2f7777d6c98bda16ce71b5b))
+
+
+
+
+
+## [6.0.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.4...@react-navigation/bottom-tabs@6.0.5) (2021-08-17)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+## [6.0.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.3...@react-navigation/bottom-tabs@6.0.4) (2021-08-11)
+
+
+### Bug Fixes
+
+* fix headerTransparent not working outside stack navigator ([42c43ff](https://github.com/react-navigation/react-navigation/commit/42c43ff7617112afd223ecb323be622666c79096))
+
+
+
+
+
+## [6.0.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.2...@react-navigation/bottom-tabs@6.0.3) (2021-08-09)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+## [6.0.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.1...@react-navigation/bottom-tabs@6.0.2) (2021-08-07)
+
+
+### Bug Fixes
+
+* avoid blink when switching tab screens ([40dcbcf](https://github.com/react-navigation/react-navigation/commit/40dcbcf2fa48d5367d3121ef9f0ad6c1dd5933c6))
+
+
+
+
+
+## [6.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0...@react-navigation/bottom-tabs@6.0.1) (2021-08-03)
+
+
+### Bug Fixes
+
+* preserve params when switching tabs. fixes [#9782](https://github.com/react-navigation/react-navigation/issues/9782) ([98fa233](https://github.com/react-navigation/react-navigation/commit/98fa2330146457045c01af820c6d8e8cb955f9d1))
+
+
+
+
+
+# [6.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.22...@react-navigation/bottom-tabs@6.0.0) (2021-08-01)
+
+
+### Bug Fixes
+
+* remove tabBarAdapative option ([5f4e124](https://github.com/react-navigation/react-navigation/commit/5f4e12403265d22a2e4d03f11a11746b01184116))
+
+
+
+
+
+# [6.0.0-next.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.21...@react-navigation/bottom-tabs@6.0.0-next.22) (2021-07-16)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [6.0.0-next.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.20...@react-navigation/bottom-tabs@6.0.0-next.21) (2021-07-16)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [6.0.0-next.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.18...@react-navigation/bottom-tabs@6.0.0-next.20) (2021-07-01)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [6.0.0-next.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.18...@react-navigation/bottom-tabs@6.0.0-next.19) (2021-06-10)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [6.0.0-next.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.17...@react-navigation/bottom-tabs@6.0.0-next.18) (2021-06-01)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [6.0.0-next.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.16...@react-navigation/bottom-tabs@6.0.0-next.17) (2021-05-29)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [6.0.0-next.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.15...@react-navigation/bottom-tabs@6.0.0-next.16) (2021-05-29)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [6.0.0-next.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.14...@react-navigation/bottom-tabs@6.0.0-next.15) (2021-05-27)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [6.0.0-next.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.13...@react-navigation/bottom-tabs@6.0.0-next.14) (2021-05-26)
+
+
+### Features
+
+* add screenListeners prop on navigators similar to screenOptions ([cde44a5](https://github.com/react-navigation/react-navigation/commit/cde44a5785444a121aa08f94af9f8fe4fc89910a))
+
+
+
+
+
+# [6.0.0-next.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.12...@react-navigation/bottom-tabs@6.0.0-next.13) (2021-05-25)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [6.0.0-next.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.11...@react-navigation/bottom-tabs@6.0.0-next.12) (2021-05-23)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [6.0.0-next.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.10...@react-navigation/bottom-tabs@6.0.0-next.11) (2021-05-16)
+
+
+### Bug Fixes
+
+* fix tab bar height including extra bottom inset ([7c722d2](https://github.com/react-navigation/react-navigation/commit/7c722d2028e914e8f143b9385ebf5e1c00131a01))
+
+
+### Features
+
+* add a tabBarBackground option to bottom tabs ([2f282f1](https://github.com/react-navigation/react-navigation/commit/2f282f107053a65b69f80edb5d9c858cfa569aa2))
+
+
+
+
+
+# [6.0.0-next.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.9...@react-navigation/bottom-tabs@6.0.0-next.10) (2021-05-10)
+
+
+### Bug Fixes
+
+* add a deprecation warning for mode prop in stack ([a6e4981](https://github.com/react-navigation/react-navigation/commit/a6e498170f59648190fa5513e273ca523e56c5d5))
+
+
+### Features
+
+* return a NavigationContent component from useNavigationBuilder ([1179d56](https://github.com/react-navigation/react-navigation/commit/1179d56c5008270753feef41acdc1dbd2191efcf))
+
+
+
+
+
+# [6.0.0-next.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.8...@react-navigation/bottom-tabs@6.0.0-next.9) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [6.0.0-next.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.7...@react-navigation/bottom-tabs@6.0.0-next.8) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [6.0.0-next.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.6...@react-navigation/bottom-tabs@6.0.0-next.7) (2021-05-09)
+
+
+### Bug Fixes
+
+* enable screens only on supported platforms ([#9494](https://github.com/react-navigation/react-navigation/issues/9494)) ([8da4c58](https://github.com/react-navigation/react-navigation/commit/8da4c58065607d44e9dc1ad8943e09537598dcd7))
+* make sure disabling react-native-screens works ([a369ba3](https://github.com/react-navigation/react-navigation/commit/a369ba36451ddc2bb5b247e61b725bce1e3fb5e5))
+
+
+
+
+
 # [6.0.0-next.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.5...@react-navigation/bottom-tabs@6.0.0-next.6) (2021-05-01)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

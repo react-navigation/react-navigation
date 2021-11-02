@@ -1,10 +1,10 @@
-import { Animated } from 'react-native';
-import { isIphoneX } from 'react-native-iphone-x-helper';
-import conditional from '../utils/conditional';
+import { Animated, Platform } from 'react-native';
+
 import type {
-  StackCardInterpolationProps,
   StackCardInterpolatedStyle,
+  StackCardInterpolationProps,
 } from '../types';
+import conditional from '../utils/conditional';
 
 const { add, multiply } = Animated;
 
@@ -98,6 +98,11 @@ export function forModalPresentationIOS({
   layouts: { screen },
   insets,
 }: StackCardInterpolationProps): StackCardInterpolatedStyle {
+  const hasNotchIos =
+    Platform.OS === 'ios' &&
+    !Platform.isPad &&
+    !Platform.isTVOS &&
+    insets.top > 20;
   const isLandscape = screen.width > screen.height;
   const topOffset = isLandscape ? 0 : 10;
   const statusBarHeight = insets.top;
@@ -153,7 +158,7 @@ export function forModalPresentationIOS({
     : isFirst
     ? progress.interpolate({
         inputRange: [0, 1, 1.0001, 2],
-        outputRange: [0, 0, isIphoneX() ? 38 : 0, 10],
+        outputRange: [0, 0, hasNotchIos ? 38 : 0, 10],
       })
     : 10;
 
@@ -164,8 +169,8 @@ export function forModalPresentationIOS({
       borderTopRightRadius: borderRadius,
       // We don't need these for the animation
       // But different border radius for corners improves animation perf
-      borderBottomLeftRadius: isIphoneX() ? borderRadius : 0,
-      borderBottomRightRadius: isIphoneX() ? borderRadius : 0,
+      borderBottomLeftRadius: hasNotchIos ? borderRadius : 0,
+      borderBottomRightRadius: hasNotchIos ? borderRadius : 0,
       marginTop: isFirst ? 0 : statusBarHeight,
       marginBottom: isFirst ? 0 : topOffset,
       transform: [{ translateY }, { scale }],
@@ -301,12 +306,12 @@ export function forScaleFromCenterAndroid({
     closing,
     current.progress.interpolate({
       inputRange: [0, 1],
-      outputRange: [0.9, 1],
+      outputRange: [0.925, 1],
       extrapolate: 'clamp',
     }),
     progress.interpolate({
       inputRange: [0, 1, 2],
-      outputRange: [0.85, 1, 1.1],
+      outputRange: [0.85, 1, 1.075],
     })
   );
 
@@ -358,6 +363,29 @@ export function forBottomSheetAndroid({
       transform: [{ translateY }],
     },
     overlayStyle: { opacity: overlayOpacity },
+  };
+}
+
+/**
+ * Simple fade animation for dialogs
+ */
+export function forFadeFromCenter({
+  current: { progress },
+}: StackCardInterpolationProps): StackCardInterpolatedStyle {
+  return {
+    cardStyle: {
+      opacity: progress.interpolate({
+        inputRange: [0, 0.5, 0.9, 1],
+        outputRange: [0, 0.25, 0.7, 1],
+      }),
+    },
+    overlayStyle: {
+      opacity: progress.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0, 0.5],
+        extrapolate: 'clamp',
+      }),
+    },
   };
 }
 

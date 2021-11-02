@@ -1,72 +1,87 @@
-import * as React from 'react';
-import {
-  ScrollView,
-  Platform,
-  StatusBar,
-  I18nManager,
-  Dimensions,
-  ScaledSize,
-  Linking,
-  LogBox,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { enableScreens } from 'react-native-screens';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {
-  Provider as PaperProvider,
-  DefaultTheme as PaperLightTheme,
-  DarkTheme as PaperDarkTheme,
-  List,
-  Divider,
-  Text,
-} from 'react-native-paper';
-import { createURL } from 'expo-linking';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
+  useFlipper,
+  useReduxDevToolsExtension,
+} from '@react-navigation/devtools';
+import {
+  createDrawerNavigator,
+  DrawerScreenProps,
+} from '@react-navigation/drawer';
+import {
+  CompositeScreenProps,
+  DarkTheme,
+  DefaultTheme,
   InitialState,
   NavigationContainer,
-  DefaultTheme,
-  DarkTheme,
+  NavigatorScreenParams,
   PathConfigMap,
   useNavigationContainerRef,
 } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import {
   createStackNavigator,
   HeaderStyleInterpolators,
-  StackNavigationProp,
+  StackScreenProps,
 } from '@react-navigation/stack';
-import { useReduxDevToolsExtension } from '@react-navigation/devtools';
+import { createURL } from 'expo-linking';
+import * as React from 'react';
+import {
+  Dimensions,
+  I18nManager,
+  Linking,
+  LogBox,
+  Platform,
+  ScaledSize,
+  ScrollView,
+  StatusBar,
+} from 'react-native';
+import {
+  DarkTheme as PaperDarkTheme,
+  DefaultTheme as PaperLightTheme,
+  Divider,
+  List,
+  Provider as PaperProvider,
+  Text,
+} from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import { restartApp } from './Restart';
-import SettingsItem from './Shared/SettingsItem';
-import SimpleStack from './Screens/SimpleStack';
-import ModalStack from './Screens/ModalStack';
-import MixedStack from './Screens/MixedStack';
-import MixedHeaderMode from './Screens/MixedHeaderMode';
-import StackTransparent from './Screens/StackTransparent';
-import StackHeaderCustomization from './Screens/StackHeaderCustomization';
-import BottomTabs from './Screens/BottomTabs';
-import MaterialTopTabsScreen from './Screens/MaterialTopTabs';
-import MaterialBottomTabs from './Screens/MaterialBottomTabs';
-import NotFound from './Screens/NotFound';
-import DynamicTabs from './Screens/DynamicTabs';
-import MasterDetail from './Screens/MasterDetail';
 import AuthFlow from './Screens/AuthFlow';
-import PreventRemove from './Screens/PreventRemove';
+import BottomTabs from './Screens/BottomTabs';
+import DynamicTabs from './Screens/DynamicTabs';
 import LinkComponent from './Screens/LinkComponent';
+import MasterDetail from './Screens/MasterDetail';
+import MaterialBottomTabs from './Screens/MaterialBottomTabs';
+import MaterialTopTabsScreen from './Screens/MaterialTopTabs';
+import MixedHeaderMode from './Screens/MixedHeaderMode';
+import MixedStack from './Screens/MixedStack';
+import ModalStack from './Screens/ModalStack';
+import NativeStack from './Screens/NativeStack';
+import NativeStackHeaderCustomization from './Screens/NativeStackHeaderCustomization';
+import NotFound from './Screens/NotFound';
+import PreventRemove from './Screens/PreventRemove';
+import SimpleStack from './Screens/SimpleStack';
+import StackHeaderCustomization from './Screens/StackHeaderCustomization';
+import StackTransparent from './Screens/StackTransparent';
+import SettingsItem from './Shared/SettingsItem';
 
 if (Platform.OS !== 'web') {
   LogBox.ignoreLogs(['Require cycle:']);
 }
 
-enableScreens();
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace ReactNavigation {
+    interface RootParamList extends RootStackParamList {}
+  }
+}
 
 type RootDrawerParamList = {
   Examples: undefined;
 };
 
 const SCREENS = {
+  NativeStack: { title: 'Native Stack', component: NativeStack },
   SimpleStack: { title: 'Simple Stack', component: SimpleStack },
   ModalStack: {
     title: 'Modal Stack',
@@ -87,6 +102,10 @@ const SCREENS = {
   StackHeaderCustomization: {
     title: 'Header Customization in Stack',
     component: StackHeaderCustomization,
+  },
+  NativeStackHeaderCustomization: {
+    title: 'Header Customization in Native Stack',
+    component: NativeStackHeaderCustomization,
   },
   BottomTabs: { title: 'Bottom Tabs', component: BottomTabs },
   MaterialTopTabs: {
@@ -120,10 +139,17 @@ const SCREENS = {
 };
 
 type RootStackParamList = {
-  Home: undefined;
+  Home: NavigatorScreenParams<RootDrawerParamList>;
   NotFound: undefined;
 } & {
-  [P in keyof typeof SCREENS]: undefined;
+  [P in keyof typeof SCREENS]: NavigatorScreenParams<{
+    Article: { author?: string };
+    Albums: undefined;
+    Chat: undefined;
+    Contacts: undefined;
+    NewsFeed: undefined;
+    Dialog: undefined;
+  }>;
 };
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
@@ -136,9 +162,8 @@ export default function App() {
   const [theme, setTheme] = React.useState(DefaultTheme);
 
   const [isReady, setIsReady] = React.useState(Platform.OS === 'web');
-  const [initialState, setInitialState] = React.useState<
-    InitialState | undefined
-  >();
+  const [initialState, setInitialState] =
+    React.useState<InitialState | undefined>();
 
   React.useEffect(() => {
     const restoreState = async () => {
@@ -198,9 +223,10 @@ export default function App() {
     return () => Dimensions.removeEventListener('change', onDimensionsChange);
   }, []);
 
-  const navigationRef = useNavigationContainerRef<RootStackParamList>();
+  const navigationRef = useNavigationContainerRef();
 
   useReduxDevToolsExtension(navigationRef);
+  useFlipper(navigationRef);
 
   if (!isReady) {
     return null;
@@ -210,9 +236,11 @@ export default function App() {
 
   return (
     <PaperProvider theme={paperTheme}>
-      {Platform.OS === 'ios' && (
-        <StatusBar barStyle={theme.dark ? 'light-content' : 'dark-content'} />
-      )}
+      <StatusBar
+        translucent
+        barStyle={theme.dark ? 'light-content' : 'dark-content'}
+        backgroundColor="rgba(0, 0, 0, 0.24)"
+      />
       <NavigationContainer
         ref={navigationRef}
         initialState={initialState}
@@ -233,7 +261,9 @@ export default function App() {
           prefixes: [createURL('/')],
           config: {
             initialRouteName: 'Home',
-            screens: Object.keys(SCREENS).reduce<PathConfigMap>(
+            screens: (Object.keys(SCREENS) as (keyof typeof SCREENS)[]).reduce<
+              PathConfigMap<RootStackParamList>
+            >(
               (acc, name) => {
                 // Convert screen names such as SimpleStack to kebab case (simple-stack)
                 const path = name
@@ -247,7 +277,7 @@ export default function App() {
                     Article: {
                       path: 'article/:author?',
                       parse: {
-                        author: (author) =>
+                        author: (author: string) =>
                           author.charAt(0).toUpperCase() +
                           author.slice(1).replace(/-/g, ' '),
                       },
@@ -311,9 +341,10 @@ export default function App() {
                 >
                   {({
                     navigation,
-                  }: {
-                    navigation: StackNavigationProp<RootStackParamList>;
-                  }) => (
+                  }: CompositeScreenProps<
+                    DrawerScreenProps<RootDrawerParamList, 'Examples'>,
+                    StackScreenProps<RootStackParamList>
+                  >) => (
                     <ScrollView
                       style={{ backgroundColor: theme.colors.background }}
                     >
@@ -348,7 +379,11 @@ export default function App() {
                               key={name}
                               testID={name}
                               title={SCREENS[name].title}
-                              onPress={() => navigation.navigate(name)}
+                              onPress={() => {
+                                // FIXME: figure this out later
+                                // @ts-expect-error
+                                navigation.navigate(name);
+                              }}
                             />
                           )
                         )}

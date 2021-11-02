@@ -1,48 +1,64 @@
-import * as React from 'react';
 import {
-  getStateFromPath,
   getActionFromState,
-  NavigationContext,
+  getStateFromPath,
+  NavigationContainerRefContext,
 } from '@react-navigation/core';
+import * as React from 'react';
+
 import LinkingContext from './LinkingContext';
 
-export default function useLinkTo() {
-  const navigation = React.useContext(NavigationContext);
+export type To<
+  ParamList extends ReactNavigation.RootParamList = ReactNavigation.RootParamList,
+  RouteName extends keyof ParamList = keyof ParamList
+> =
+  | string
+  | (undefined extends ParamList[RouteName]
+      ? {
+          screen: Extract<RouteName, string>;
+          params?: ParamList[RouteName];
+        }
+      : {
+          screen: Extract<RouteName, string>;
+          params: ParamList[RouteName];
+        });
+
+export default function useLinkTo<
+  ParamList extends ReactNavigation.RootParamList
+>() {
+  const navigation = React.useContext(NavigationContainerRefContext);
   const linking = React.useContext(LinkingContext);
 
   const linkTo = React.useCallback(
-    (path: string) => {
-      if (!path.startsWith('/')) {
-        throw new Error(`The path must start with '/' (${path}).`);
-      }
-
+    (to: To<ParamList>) => {
       if (navigation === undefined) {
         throw new Error(
-          "Couldn't find a navigation object. Is your component inside a screen in a navigator?"
+          "Couldn't find a navigation object. Is your component inside NavigationContainer?"
         );
+      }
+
+      if (typeof to !== 'string') {
+        // @ts-expect-error: This is fine
+        navigation.navigate(to.screen, to.params);
+        return;
+      }
+
+      if (!to.startsWith('/')) {
+        throw new Error(`The path must start with '/' (${to}).`);
       }
 
       const { options } = linking;
 
       const state = options?.getStateFromPath
-        ? options.getStateFromPath(path, options.config)
-        : getStateFromPath(path, options?.config);
+        ? options.getStateFromPath(to, options.config)
+        : getStateFromPath(to, options?.config);
 
       if (state) {
-        let root = navigation;
-        let current;
-
-        // Traverse up to get the root navigation
-        while ((current = root.getParent())) {
-          root = current;
-        }
-
         const action = getActionFromState(state, options?.config);
 
         if (action !== undefined) {
-          root.dispatch(action);
+          navigation.dispatch(action);
         } else {
-          root.reset(state);
+          navigation.reset(state);
         }
       } else {
         throw new Error('Failed to parse the path to a navigation state.');

@@ -1,14 +1,50 @@
-import * as React from 'react';
-import { Platform, GestureResponderEvent } from 'react-native';
 import {
+  getPathFromState,
   NavigationAction,
+  NavigationContainerRefContext,
   NavigationHelpersContext,
+  NavigatorScreenParams,
+  ParamListBase,
 } from '@react-navigation/core';
-import useLinkTo from './useLinkTo';
+import type { NavigationState, PartialState } from '@react-navigation/routers';
+import * as React from 'react';
+import { GestureResponderEvent, Platform } from 'react-native';
 
-type Props = {
-  to: string;
+import LinkingContext from './LinkingContext';
+import useLinkTo, { To } from './useLinkTo';
+
+type Props<ParamList extends ReactNavigation.RootParamList> = {
+  to: To<ParamList>;
   action?: NavigationAction;
+};
+
+const getStateFromParams = (
+  params: NavigatorScreenParams<ParamListBase, NavigationState> | undefined
+): PartialState<NavigationState> | NavigationState | undefined => {
+  if (params?.state) {
+    return params.state;
+  }
+
+  if (params?.screen) {
+    return {
+      routes: [
+        {
+          name: params.screen,
+          params: params.params,
+          // @ts-expect-error
+          state: params.screen
+            ? getStateFromParams(
+                params.params as
+                  | NavigatorScreenParams<ParamListBase, NavigationState>
+                  | undefined
+              )
+            : undefined,
+        },
+      ],
+    };
+  }
+
+  return undefined;
 };
 
 /**
@@ -17,9 +53,13 @@ type Props = {
  * @param props.to Absolute path to screen (e.g. `/feeds/hot`).
  * @param props.action Optional action to use for in-page navigation. By default, the path is parsed to an action based on linking config.
  */
-export default function useLinkProps({ to, action }: Props) {
+export default function useLinkProps<
+  ParamList extends ReactNavigation.RootParamList
+>({ to, action }: Props<ParamList>) {
+  const root = React.useContext(NavigationContainerRefContext);
   const navigation = React.useContext(NavigationHelpersContext);
-  const linkTo = useLinkTo();
+  const { options } = React.useContext(LinkingContext);
+  const linkTo = useLinkTo<ParamList>();
 
   const onPress = (
     e?: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
@@ -45,25 +85,41 @@ export default function useLinkProps({ to, action }: Props) {
       if (action) {
         if (navigation) {
           navigation.dispatch(action);
+        } else if (root) {
+          root.dispatch(action);
         } else {
-          throw new Error("Couldn't find a navigation object.");
-        }
-      } else {
-        if (typeof to !== 'string') {
           throw new Error(
-            `To 'to' option is invalid (found '${String(
-              to
-            )}'. It must be a valid string for navigation.`
+            "Couldn't find a navigation object. Is your component inside NavigationContainer?"
           );
         }
-
+      } else {
         linkTo(to);
       }
     }
   };
 
+  const getPathFromStateHelper = options?.getPathFromState ?? getPathFromState;
+
+  const href =
+    typeof to === 'string'
+      ? to
+      : getPathFromStateHelper(
+          {
+            routes: [
+              {
+                name: to.screen,
+                // @ts-expect-error
+                params: to.params,
+                // @ts-expect-error
+                state: getStateFromParams(to.params),
+              },
+            ],
+          },
+          options?.config
+        );
+
   return {
-    href: to,
+    href,
     accessibilityRole: 'link' as const,
     onPress,
   };

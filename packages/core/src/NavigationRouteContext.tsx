@@ -1,11 +1,10 @@
-import * as React from 'react';
 import type { Route } from '@react-navigation/routers';
+import * as React from 'react';
 
 /**
  * Context which holds the route prop for a screen.
  */
-const NavigationContext = React.createContext<Route<string> | undefined>(
-  undefined
-);
+const NavigationRouteContext =
+  React.createContext<Route<string> | undefined>(undefined);
 
-export default NavigationContext;
+export default NavigationRouteContext;

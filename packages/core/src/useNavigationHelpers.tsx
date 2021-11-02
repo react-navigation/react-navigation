@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   CommonActions,
   NavigationAction,
@@ -6,20 +5,19 @@ import {
   ParamListBase,
   Router,
 } from '@react-navigation/routers';
+import * as React from 'react';
+
 import NavigationContext from './NavigationContext';
+import { NavigationHelpers, NavigationProp, PrivateValueStore } from './types';
 import UnhandledActionContext from './UnhandledActionContext';
 import type { NavigationEventEmitter } from './useEventEmitter';
-import { NavigationHelpers, NavigationProp, PrivateValueStore } from './types';
 
 // This is to make TypeScript compiler happy
 // eslint-disable-next-line babel/no-unused-expressions
 PrivateValueStore;
 
 type Options<State extends NavigationState, Action extends NavigationAction> = {
-  onAction: (
-    action: NavigationAction,
-    visitedNavigators?: Set<string>
-  ) => boolean;
+  onAction: (action: NavigationAction) => boolean;
   getState: () => State;
   emitter: NavigationEventEmitter<any>;
   router: Router<State, Action>;
@@ -85,7 +83,7 @@ export default function useNavigationHelpers<
         );
       },
       getParent: () => parentNavigationHelpers as any,
-      getState: getState,
+      getState,
     } as NavigationHelpers<ParamListBase, EventMap> &
       (NavigationProp<ParamListBase, string, any, any, any> | undefined) &
       ActionHelpers;

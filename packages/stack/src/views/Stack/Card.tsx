@@ -1,39 +1,38 @@
+import Color from 'color';
 import * as React from 'react';
 import {
   Animated,
-  View,
-  StyleSheet,
-  ViewProps,
-  StyleProp,
-  ViewStyle,
-  Platform,
   InteractionManager,
+  Platform,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewProps,
+  ViewStyle,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
-import Color from 'color';
 
-import CardSheet from './CardSheet';
-import {
-  PanGestureHandler,
-  GestureState,
-  PanGestureHandlerGestureEvent,
-} from '../GestureHandler';
-import ModalStatusBarManager from '../ModalStatusBarManager';
 import { forModalPresentationIOS } from '../../TransitionConfigs/CardStyleInterpolators';
+import type {
+  GestureDirection,
+  Layout,
+  StackCardInterpolationProps,
+  StackCardStyleInterpolator,
+  TransitionSpec,
+} from '../../types';
 import CardAnimationContext from '../../utils/CardAnimationContext';
 import getDistanceForDirection from '../../utils/getDistanceForDirection';
 import getInvertedMultiplier from '../../utils/getInvertedMultiplier';
 import memoize from '../../utils/memoize';
-import type {
-  TransitionSpec,
-  StackCardStyleInterpolator,
-  GestureDirection,
-  Layout,
-  StackCardInterpolationProps,
-} from '../../types';
+import {
+  GestureState,
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+} from '../GestureHandler';
+import ModalStatusBarManager from '../ModalStatusBarManager';
+import CardSheet from './CardSheet';
 
 type Props = ViewProps & {
-  // index: number;
   interpolationIndex: number;
   closing: boolean;
   next?: Animated.AnimatedInterpolation;
@@ -46,10 +45,10 @@ type Props = ViewProps & {
   gestureDirection: GestureDirection;
   onOpen: () => void;
   onClose: () => void;
-  onTransition?: (props: { closing: boolean; gesture: boolean }) => void;
-  onGestureBegin?: () => void;
-  onGestureCanceled?: () => void;
-  onGestureEnd?: () => void;
+  onTransition: (props: { closing: boolean; gesture: boolean }) => void;
+  onGestureBegin: () => void;
+  onGestureCanceled: () => void;
+  onGestureEnd: () => void;
   children: React.ReactNode;
   overlay: (props: {
     style: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
@@ -92,7 +91,7 @@ const hasOpacityStyle = (style: any) => {
 
 export default class Card extends React.Component<Props> {
   static defaultProps = {
-    shadowEnabled: true,
+    shadowEnabled: false,
     gestureEnabled: true,
     gestureVelocityImpact: GESTURE_VELOCITY_IMPACT,
     overlay: ({
@@ -142,6 +141,7 @@ export default class Card extends React.Component<Props> {
   }
 
   componentWillUnmount() {
+    this.props.gesture.stopAnimation();
     this.isCurrentlyMounted = false;
     this.handleEndInteraction();
   }
@@ -174,13 +174,8 @@ export default class Card extends React.Component<Props> {
     closing: boolean;
     velocity?: number;
   }) => {
-    const {
-      gesture,
-      transitionSpec,
-      onOpen,
-      onClose,
-      onTransition,
-    } = this.props;
+    const { gesture, transitionSpec, onOpen, onClose, onTransition } =
+      this.props;
 
     const toValue = this.getAnimateToValue({
       ...this.props,
@@ -188,6 +183,8 @@ export default class Card extends React.Component<Props> {
     });
 
     this.lastToValue = toValue;
+
+    this.isClosing.setValue(closing ? TRUE : FALSE);
 
     const spec = closing ? transitionSpec.close : transitionSpec.open;
 
@@ -327,13 +324,13 @@ export default class Card extends React.Component<Props> {
         if (closing) {
           // We call onClose with a delay to make sure that the animation has already started
           // This will make sure that the state update caused by this doesn't affect start of animation
-          this.pendingGestureCallback = (setTimeout(() => {
+          this.pendingGestureCallback = setTimeout(() => {
             onClose();
 
             // Trigger an update after we dispatch the action to remove the screen
             // This will make sure that we check if the screen didn't get removed so we can cancel the animation
             this.forceUpdate();
-          }, 32) as any) as number;
+          }, 32) as any as number;
         }
 
         onGestureEnd?.();
@@ -382,6 +379,7 @@ export default class Card extends React.Component<Props> {
 
   private gestureActivationCriteria() {
     const { layout, gestureDirection, gestureResponseDistance } = this.props;
+    const enableTrackpadTwoFingerGesture = true;
 
     const distance =
       gestureResponseDistance !== undefined
@@ -396,12 +394,14 @@ export default class Card extends React.Component<Props> {
         maxDeltaX: 15,
         minOffsetY: 5,
         hitSlop: { bottom: -layout.height + distance },
+        enableTrackpadTwoFingerGesture,
       };
     } else if (gestureDirection === 'vertical-inverted') {
       return {
         maxDeltaX: 15,
         minOffsetY: -5,
         hitSlop: { top: -layout.height + distance },
+        enableTrackpadTwoFingerGesture,
       };
     } else {
       const hitSlop = -layout.width + distance;
@@ -412,12 +412,14 @@ export default class Card extends React.Component<Props> {
           minOffsetX: 5,
           maxDeltaY: 20,
           hitSlop: { right: hitSlop },
+          enableTrackpadTwoFingerGesture,
         };
       } else {
         return {
           minOffsetX: -5,
           maxDeltaY: 20,
           hitSlop: { left: hitSlop },
+          enableTrackpadTwoFingerGesture,
         };
       }
     }
@@ -428,7 +430,6 @@ export default class Card extends React.Component<Props> {
   render() {
     const {
       styleInterpolator,
-      // index,
       interpolationIndex,
       current,
       gesture,
@@ -464,12 +465,8 @@ export default class Card extends React.Component<Props> {
       interpolationProps
     );
 
-    const {
-      containerStyle,
-      cardStyle,
-      overlayStyle,
-      shadowStyle,
-    } = interpolatedStyle;
+    const { containerStyle, cardStyle, overlayStyle, shadowStyle } =
+      interpolatedStyle;
 
     const handleGestureEvent = gestureEnabled
       ? Animated.event(
@@ -499,9 +496,8 @@ export default class Card extends React.Component<Props> {
           // So we should only enable it on iOS
           Platform.OS === 'ios' &&
           overlayEnabled &&
-          interpolationIndex === 0 &&
           next &&
-          styleInterpolator === forModalPresentationIOS ? (
+          getIsModalPresentation(styleInterpolator) ? (
             <ModalStatusBarManager
               dark={headerDarkContent}
               layout={layout}
@@ -574,6 +570,16 @@ export default class Card extends React.Component<Props> {
     );
   }
 }
+
+export const getIsModalPresentation = (
+  cardStyleInterpolator: StackCardStyleInterpolator
+) => {
+  return (
+    cardStyleInterpolator === forModalPresentationIOS ||
+    // Handle custom modal presentation interpolators as well
+    cardStyleInterpolator.name === 'forModalPresentationIOS'
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

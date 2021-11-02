@@ -1,21 +1,20 @@
-import * as React from 'react';
-import { TabView, SceneRendererProps } from 'react-native-tab-view';
 import {
-  NavigationHelpersContext,
-  TabNavigationState,
-  TabActions,
+  CommonActions,
   ParamListBase,
   Route,
+  TabNavigationState,
   useTheme,
 } from '@react-navigation/native';
+import * as React from 'react';
+import { SceneRendererProps, TabView } from 'react-native-tab-view';
 
-import MaterialTopTabBar from './MaterialTopTabBar';
 import type {
+  MaterialTopTabBarProps,
   MaterialTopTabDescriptorMap,
   MaterialTopTabNavigationConfig,
   MaterialTopTabNavigationHelpers,
-  MaterialTopTabBarProps,
 } from '../types';
+import MaterialTopTabBar from './MaterialTopTabBar';
 
 type Props = MaterialTopTabNavigationConfig & {
   state: TabNavigationState<ParamListBase>;
@@ -43,31 +42,36 @@ export default function MaterialTopTabView({
     });
   };
 
+  const focusedOptions = descriptors[state.routes[state.index].key].options;
+
   return (
-    <NavigationHelpersContext.Provider value={navigation}>
-      <TabView<Route<string>>
-        {...rest}
-        onIndexChange={(index) => {
-          navigation.dispatch({
-            ...TabActions.jumpTo(state.routes[index].name),
-            target: state.key,
-          });
-          onIndexChange?.(index);
-        }}
-        renderScene={({ route }) => descriptors[route.key].render()}
-        navigationState={state}
-        renderTabBar={renderTabBar}
-        renderLazyPlaceholder={({ route }) =>
-          descriptors[route.key].options.lazyPlaceholder?.() ?? null
-        }
-        lazy={({ route }) => descriptors[route.key].options.lazy === true}
-        onSwipeStart={() => navigation.emit({ type: 'swipeStart' })}
-        onSwipeEnd={() => navigation.emit({ type: 'swipeEnd' })}
-        sceneContainerStyle={[
-          { backgroundColor: colors.background },
-          sceneContainerStyle,
-        ]}
-      />
-    </NavigationHelpersContext.Provider>
+    <TabView<Route<string>>
+      {...rest}
+      onIndexChange={(index) =>
+        navigation.dispatch({
+          ...CommonActions.navigate({
+            name: state.routes[index].name,
+            merge: true,
+          }),
+          target: state.key,
+        })
+        onIndexChange?.(index);
+      }
+      renderScene={({ route }) => descriptors[route.key].render()}
+      navigationState={state}
+      renderTabBar={renderTabBar}
+      renderLazyPlaceholder={({ route }) =>
+        descriptors[route.key].options.lazyPlaceholder?.() ?? null
+      }
+      lazy={({ route }) => descriptors[route.key].options.lazy === true}
+      lazyPreloadDistance={focusedOptions.lazyPreloadDistance}
+      swipeEnabled={focusedOptions.swipeEnabled}
+      onSwipeStart={() => navigation.emit({ type: 'swipeStart' })}
+      onSwipeEnd={() => navigation.emit({ type: 'swipeEnd' })}
+      sceneContainerStyle={[
+        { backgroundColor: colors.background },
+        sceneContainerStyle,
+      ]}
+    />
   );
 }

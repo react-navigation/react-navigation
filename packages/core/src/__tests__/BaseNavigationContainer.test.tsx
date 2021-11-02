@@ -1,5 +1,3 @@
-import * as React from 'react';
-import { act, render } from '@testing-library/react-native';
 import {
   DefaultRouterOptions,
   NavigationState,
@@ -8,12 +6,15 @@ import {
   StackRouter,
   TabRouter,
 } from '@react-navigation/routers';
+import { act, render } from '@testing-library/react-native';
+import * as React from 'react';
+
 import BaseNavigationContainer from '../BaseNavigationContainer';
-import NavigationStateContext from '../NavigationStateContext';
 import createNavigationContainerRef from '../createNavigationContainerRef';
-import MockRouter, { MockActions } from './__fixtures__/MockRouter';
-import useNavigationBuilder from '../useNavigationBuilder';
+import NavigationStateContext from '../NavigationStateContext';
 import Screen from '../Screen';
+import useNavigationBuilder from '../useNavigationBuilder';
+import MockRouter, { MockActions } from './__fixtures__/MockRouter';
 
 it('throws when getState is accessed without a container', () => {
   expect.assertions(1);

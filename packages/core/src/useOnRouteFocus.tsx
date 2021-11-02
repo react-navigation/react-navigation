@@ -1,9 +1,10 @@
-import * as React from 'react';
 import type {
   NavigationAction,
   NavigationState,
   Router,
 } from '@react-navigation/routers';
+import * as React from 'react';
+
 import NavigationBuilderContext from './NavigationBuilderContext';
 
 type Options<Action extends NavigationAction> = {
