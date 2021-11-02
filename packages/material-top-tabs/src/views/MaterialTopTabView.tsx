@@ -54,7 +54,7 @@ export default function MaterialTopTabView({
             merge: true,
           }),
           target: state.key,
-        })
+        });
         onIndexChange?.(index);
       }}
       renderScene={({ route }) => descriptors[route.key].render()}
