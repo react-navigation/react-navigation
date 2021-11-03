@@ -115,7 +115,8 @@ export default function NativeStackView({ state, descriptors }: Props) {
                     }
                     headerRight={
                       typeof headerRight === 'function'
-                        ? ({ tintColor }) => headerRight({ tintColor })
+                        ? ({ tintColor }) =>
+                            headerRight({ tintColor, canGoBack })
                         : headerRight
                     }
                     headerTitle={

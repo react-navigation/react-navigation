@@ -85,20 +85,23 @@ export type NativeStackHeaderProps = {
   navigation: NativeStackNavigationProp<ParamListBase>;
 };
 
-export type HeaderBackButtonProps = {
+export type HeaderButtonProps = {
   /**
    * Tint color for the header.
    */
   tintColor?: string;
   /**
+   * Whether it's possible to navigate back in stack.
+   */
+  canGoBack: boolean;
+};
+
+export type HeaderBackButtonProps = HeaderButtonProps & {
+  /**
    * Label text for the button. Usually the title of the previous screen.
    * By default, this is only shown on iOS.
    */
   label?: string;
-  /**
-   * Whether it's possible to navigate back in stack.
-   */
-  canGoBack: boolean;
 };
 
 export type NativeStackNavigationOptions = {
@@ -253,7 +256,7 @@ export type NativeStackNavigationOptions = {
   /**
    * Function which returns a React Element to display on the right side of the header.
    */
-  headerRight?: (props: { tintColor?: string }) => React.ReactNode;
+  headerRight?: (props: HeaderButtonProps) => React.ReactNode;
   /**
    * String or a function that returns a React Element to be used by the header.
    * Defaults to screen `title` or route name.

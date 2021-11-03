@@ -103,6 +103,7 @@ export default function HeaderSegment(props: Props) {
     headerLeft: left = onGoBack
       ? (props: HeaderBackButtonProps) => <HeaderBackButton {...props} />
       : undefined,
+    headerRight: right,
     headerBackImage,
     headerBackTitle,
     headerBackTitleVisible = Platform.OS === 'ios',
@@ -166,6 +167,14 @@ export default function HeaderSegment(props: Props) {
         })
     : undefined;
 
+  const headerRight: StackHeaderOptions['headerRight'] = right
+    ? (props) =>
+        right({
+          ...props,
+          canGoBack: Boolean(onGoBack),
+        })
+    : undefined;
+
   const headerTitle: StackHeaderOptions['headerTitle'] =
     typeof title !== 'function'
       ? (props) => <HeaderTitle {...props} onLayout={handleTitleLayout} />
@@ -178,6 +187,7 @@ export default function HeaderSegment(props: Props) {
       headerTitle={headerTitle}
       headerLeft={headerLeft}
       headerLeftLabelVisible={headerBackTitleVisible}
+      headerRight={headerRight}
       headerTitleContainerStyle={[titleStyle, headerTitleContainerStyle]}
       headerLeftContainerStyle={[leftButtonStyle, headerLeftContainerStyle]}
       headerRightContainerStyle={[rightButtonStyle, headerRightContainerStyle]}

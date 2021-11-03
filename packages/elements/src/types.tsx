@@ -147,15 +147,11 @@ export type HeaderTitleProps = {
   style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
 };
 
-export type HeaderBackButtonProps = {
+export type HeaderButtonProps = {
   /**
-   * Whether the button is disabled.
+   * Tint color for the header button.
    */
-  disabled?: boolean;
-  /**
-   * Callback to call when the button is pressed.
-   */
-  onPress?: () => void;
+  tintColor?: string;
   /**
    * Color for material ripple (Android >= 5.0 only).
    */
@@ -165,13 +161,24 @@ export type HeaderBackButtonProps = {
    */
   pressOpacity?: number;
   /**
+   * Whether it's possible to navigate back in stack.
+   */
+  canGoBack?: boolean;
+};
+
+export type HeaderBackButtonProps = HeaderButtonProps & {
+  /**
+   * Whether the button is disabled.
+   */
+  disabled?: boolean;
+  /**
+   * Callback to call when the button is pressed.
+   */
+  onPress?: () => void;
+  /**
    * Function which returns a React Element to display custom image in header's back button.
    */
   backImage?: (props: { tintColor: string }) => React.ReactNode;
-  /**
-   * Tint color for the header.
-   */
-  tintColor?: string;
   /**
    * Label text for the button. Usually the title of the previous screen.
    * By default, this is only shown on iOS.
@@ -206,10 +213,6 @@ export type HeaderBackButtonProps = {
    * Layout of the title element in the header.
    */
   titleLayout?: Layout;
-  /**
-   * Whether it's possible to navigate back in stack.
-   */
-  canGoBack?: boolean;
   /**
    * Accessibility label for the button for screen readers.
    */

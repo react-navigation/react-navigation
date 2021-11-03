@@ -96,10 +96,13 @@ export default function HeaderConfig({
 
   const headerLeftElement = headerLeft?.({
     tintColor,
+    canGoBack,
     label: headerBackTitle,
+  });
+  const headerRightElement = headerRight?.({
+    tintColor,
     canGoBack,
   });
-  const headerRightElement = headerRight?.({ tintColor });
   const headerTitleElement =
     typeof headerTitle === 'function'
       ? headerTitle({ tintColor, children: titleText })
