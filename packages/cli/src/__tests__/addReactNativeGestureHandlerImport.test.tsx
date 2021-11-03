@@ -1,6 +1,9 @@
 import { vol as mockVol } from 'memfs';
 
-import addReactNativeGestureHandlerImport from '../utils/addReactNativeGestureHandlerImport';
+import addReactNativeGestureHandlerImport, {
+  getAfterTrailingCommentsIndex,
+  transformSource,
+} from '../utils/addReactNativeGestureHandlerImport';
 import getLogger from '../utils/logger';
 
 /**
@@ -12,6 +15,9 @@ beforeAll(() => {
   getLogger().disable();
 });
 
+/**
+ * Files detections
+ */
 describe('index file found and contains no imports', () => {
   it('index.js exists', async () => {
     mockVol.reset();
@@ -269,5 +275,96 @@ describe('Test quote type auto detection', () => {
     ) || [])[0];
     const quote = (/['"]/.exec(importStatement) || [])[0];
     expect(quote).toBe('"');
+  });
+});
+
+/**
+ * File transformation
+ */
+describe('Test file transformation', () => {
+  const commentsBlocks = [
+    '      // 156 some trailing comment',
+    '  // Another trailing one',
+    '/*A one liner star*/',
+    '/*\n Multi liners two stars \n*/',
+    '    /*another one with space */',
+    '/**\n* @format\n*/',
+  ];
+
+  const sourceWithoutComments =
+    `import { AppRegistry } from 'react-native'\n` +
+    `import App from './src/App'\n` +
+    `import { name as appName } from './app.json'\n` +
+    `\n` +
+    `AppRegistry.registerComponent(appName, () => App)\n`;
+
+  describe('Index after trailing comments', () => {
+    it('There is trailing comments', () => {
+      const check = (commentBlock: string) => {
+        const source = `${commentBlock}\n\n${sourceWithoutComments}`;
+        const index = getAfterTrailingCommentsIndex(source);
+        expect(index).toBe(commentBlock.length);
+      };
+
+      for (const commentBlock of commentsBlocks) {
+        check(commentBlock);
+      }
+
+      check(commentsBlocks.join('\n'));
+      check(commentsBlocks.join('\n\n'));
+    });
+
+    it('No trailing comments', () => {
+      expect(getAfterTrailingCommentsIndex(sourceWithoutComments)).toBe(0);
+    });
+  });
+
+  describe('Source transform', () => {
+    const importExpression = `import 'react-native-gesture-handler'`;
+
+    it('There is trailing comments', () => {
+      const check = (commentBlock: string) => {
+        const source = `${commentBlock}\n\n${sourceWithoutComments}`;
+        const expectedOutSource = `${commentBlock}\n\n${importExpression}\n${sourceWithoutComments}`;
+        const outSource = transformSource(source, importExpression);
+
+        expect(outSource).toBe(expectedOutSource);
+      };
+
+      for (const commentBlock of commentsBlocks) {
+        check(commentBlock);
+      }
+
+      check(commentsBlocks.join('\n'));
+      check(commentsBlocks.join('\n\n'));
+    });
+
+    it('Trailing comments, no import, import in comment', () => {
+      const check = (commentBlock: string) => {
+        const _sourceWithoutComment =
+          'const ok = "nice";\n// import power from';
+        const source = `${commentBlock}\n\n${_sourceWithoutComment}`;
+        const expectedOutSource = `${commentBlock}\n\n${importExpression}\n\n${_sourceWithoutComment}`;
+        const outSource = transformSource(source, importExpression);
+
+        expect(outSource).toBe(expectedOutSource);
+      };
+
+      for (const commentBlock of commentsBlocks) {
+        check(commentBlock);
+      }
+
+      check(commentsBlocks.join('\n'));
+      check(commentsBlocks.join('\n\n'));
+    });
+
+    it('No trailing comments', () => {
+      const expectedOutSource = `${importExpression}\n${sourceWithoutComments}`;
+      const outSource = transformSource(
+        sourceWithoutComments,
+        importExpression
+      );
+      expect(outSource).toBe(expectedOutSource);
+    });
   });
 });
