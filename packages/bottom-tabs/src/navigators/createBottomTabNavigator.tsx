@@ -55,6 +55,7 @@ function BottomTabNavigator({
       tabBarInactiveBackgroundColor: tabBarOptions.inactiveBackgroundColor,
       tabBarAllowFontScaling: tabBarOptions.allowFontScaling,
       tabBarShowLabel: tabBarOptions.showLabel,
+      tabBarShowIcon: tabBarOptions.showIcon,
       tabBarLabelStyle: tabBarOptions.labelStyle,
       tabBarIconStyle: tabBarOptions.iconStyle,
       tabBarItemStyle: tabBarOptions.tabStyle,

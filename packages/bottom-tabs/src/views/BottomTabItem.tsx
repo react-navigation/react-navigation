@@ -102,6 +102,10 @@ type Props = {
    */
   showLabel?: boolean;
   /**
+   * Whether to show the icon for the tab.
+   */
+   showIcon?: boolean;
+  /**
    * Whether to allow scaling the font for the label for accessibility purposes.
    */
   allowFontScaling?: boolean;
@@ -179,6 +183,7 @@ export default function BottomTabBarItem({
   activeBackgroundColor = 'transparent',
   inactiveBackgroundColor = 'transparent',
   showLabel = true,
+  showIcon = true,
   allowFontScaling,
   labelStyle,
   iconStyle,
@@ -228,7 +233,7 @@ export default function BottomTabBarItem({
   };
 
   const renderIcon = ({ focused }: { focused: boolean }) => {
-    if (icon === undefined) {
+    if (!showIcon || icon === undefined) {
       return null;
     }
 
@@ -272,6 +277,7 @@ export default function BottomTabBarItem({
       styles.tab,
       { backgroundColor },
       horizontal ? styles.tabLandscape : styles.tabPortrait,
+      showIcon ? null : styles.tabWithoutIcon,
       style,
     ],
     children: (
@@ -291,6 +297,9 @@ const styles = StyleSheet.create({
   tabPortrait: {
     justifyContent: 'flex-end',
     flexDirection: 'column',
+  },
+  tabWithoutIcon: {
+    justifyContent: 'center',
   },
   tabLandscape: {
     justifyContent: 'center',
