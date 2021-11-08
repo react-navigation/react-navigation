@@ -104,7 +104,7 @@ type Props = {
   /**
    * Whether to show the icon for the tab.
    */
-   showIcon?: boolean;
+  showIcon?: boolean;
   /**
    * Whether to allow scaling the font for the label for accessibility purposes.
    */

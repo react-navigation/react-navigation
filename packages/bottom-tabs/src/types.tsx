@@ -108,7 +108,7 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   /**
    * Whether the tab icon should be visible. Defaults to `true`.
    */
-     tabBarShowIcon?: boolean;
+  tabBarShowIcon?: boolean;
 
   /**
    * Whether the label is shown below the icon or beside the icon.
