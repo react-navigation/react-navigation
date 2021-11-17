@@ -8,6 +8,7 @@ export { default as createBottomTabNavigator } from './navigators/createBottomTa
  */
 export { default as BottomTabBar } from './views/BottomTabBar';
 export { default as BottomTabView } from './views/BottomTabView';
+export { default as Badge } from './views/Badge';
 
 /**
  * Utilities
