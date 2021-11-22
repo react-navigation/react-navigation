@@ -189,8 +189,8 @@ type NavigationHelpersCommon<
    */
   navigate<RouteName extends keyof ParamList>(
     ...args: undefined extends ParamList[RouteName]
-      ? [screen: RouteName] | [screen: RouteName, params: ParamList[RouteName]]
-      : [screen: RouteName, params: ParamList[RouteName]]
+      ? [RouteName] | [RouteName, params: ParamList[RouteName]]
+      : [RouteName, params: ParamList[RouteName]]
   ): void;
 
   /**
