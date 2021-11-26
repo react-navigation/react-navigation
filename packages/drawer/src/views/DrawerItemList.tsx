@@ -35,7 +35,7 @@ export default function DrawerItemList({
         canPreventDefault: true,
       });
 
-      if (!focused && !event.defaultPrevented) {
+      if (!event.defaultPrevented) {
         navigation.dispatch({
           ...(focused
             ? DrawerActions.closeDrawer()
