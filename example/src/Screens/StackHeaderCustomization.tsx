@@ -164,7 +164,7 @@ export default function HeaderCustomizationScreen({ navigation }: Props) {
           headerBackground: () => (
             <HeaderBackground
               style={{
-                backgroundColor: 'transparent',
+                backgroundColor: 'blue',
                 borderBottomWidth: StyleSheet.hairlineWidth,
                 borderBottomColor: colors.border,
               }}

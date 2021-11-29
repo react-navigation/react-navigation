@@ -40,11 +40,13 @@ const MaybeNestedStack = ({
   options,
   route,
   presentation,
+  headerHeight,
   children,
 }: {
   options: NativeStackNavigationOptions;
   route: Route<string>;
   presentation: Exclude<StackPresentationTypes, 'push'> | 'card';
+  headerHeight: number;
   children: React.ReactNode;
 }) => {
   const { colors } = useTheme();
@@ -87,7 +89,12 @@ const MaybeNestedStack = ({
     return (
       <ScreenStack style={styles.container}>
         <Screen enabled style={StyleSheet.absoluteFill}>
-          <HeaderConfig {...options} route={route} canGoBack />
+          <HeaderConfig
+            {...options}
+            route={route}
+            headerHeight={headerHeight}
+            canGoBack
+          />
           {content}
         </Screen>
       </ScreenStack>
@@ -221,6 +228,7 @@ const SceneView = ({
               {...options}
               route={route}
               headerShown={isHeaderInPush}
+              headerHeight={headerHeight}
               canGoBack={index !== 0}
             />
           )}
@@ -228,6 +236,7 @@ const SceneView = ({
             options={options}
             route={route}
             presentation={presentation}
+            headerHeight={headerHeight}
           >
             {render()}
           </MaybeNestedStack>

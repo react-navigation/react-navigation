@@ -249,6 +249,12 @@ export type NativeStackNavigationOptions = {
    */
   headerTintColor?: string;
   /**
+   * Function which returns a React Element to render as the background of the header.
+   * This is useful for using backgrounds such as an image, a gradient, blur effect etc.
+   * You can use this with `headerTransparent` to render content underneath a translucent header.
+   */
+  headerBackground?: () => React.ReactNode;
+  /**
    * Function which returns a React Element to display on the left side of the header.
    * This replaces the back button. See `headerBackVisible` to show the back button along side left element.
    */

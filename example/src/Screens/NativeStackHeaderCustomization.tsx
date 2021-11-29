@@ -4,7 +4,14 @@ import {
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { Alert, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  Alert,
+  Image,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { Appbar, Button } from 'react-native-paper';
 
 import Albums from '../Shared/Albums';
@@ -130,6 +137,7 @@ export default function NativeStackScreen({
         component={ArticleScreen}
         options={({ route }) => ({
           title: `Article by ${route.params?.author ?? 'Unknown'}`,
+          headerTintColor: 'white',
           headerTitle: ({ tintColor }) => (
             <Appbar.Action
               color={tintColor}
@@ -142,6 +150,13 @@ export default function NativeStackScreen({
               color={tintColor}
               icon="bookmark"
               onPress={onPress}
+            />
+          ),
+          headerBackground: () => (
+            <Image
+              source={require('../../assets/album-art-24.jpg')}
+              height={100}
+              style={{ height: 100 }}
             />
           ),
         })}
