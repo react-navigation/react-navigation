@@ -39,6 +39,7 @@ export default function HeaderConfig({
   headerLargeTitle,
   headerLargeTitleShadowVisible,
   headerLargeTitleStyle,
+  headerBackground,
   headerLeft,
   headerRight,
   headerShown,
@@ -118,6 +119,9 @@ export default function HeaderConfig({
     );
   }
 
+  const hasHeaderBackground =
+    headerBackground != null && typeof headerBackground === 'function';
+
   /**
    * We need to set this in if:
    * - Back button should stay visible when `headerLeft` is specified
@@ -128,104 +132,109 @@ export default function HeaderConfig({
     : Platform.OS === 'android' && headerTitleElement != null;
 
   return (
-    <ScreenStackHeaderConfig
-      backButtonInCustomView={backButtonInCustomView}
-      backgroundColor={
-        headerStyleFlattened.backgroundColor ??
-        (headerTransparent ? 'transparent' : colors.card)
-      }
-      backTitle={headerBackTitleVisible ? headerBackTitle : ' '}
-      backTitleFontFamily={backTitleFontFamily}
-      backTitleFontSize={headerBackTitleStyleFlattened.fontSize}
-      blurEffect={headerBlurEffect}
-      color={tintColor}
-      direction={I18nManager.isRTL ? 'rtl' : 'ltr'}
-      disableBackButtonMenu={headerBackButtonMenuEnabled === false}
-      hidden={headerShown === false}
-      hideBackButton={headerBackVisible === false}
-      hideShadow={headerShadowVisible === false}
-      largeTitle={headerLargeTitle}
-      largeTitleBackgroundColor={headerLargeStyleFlattened.backgroundColor}
-      largeTitleColor={headerLargeTitleStyleFlattened.color}
-      largeTitleFontFamily={largeTitleFontFamily}
-      largeTitleFontSize={headerLargeTitleStyleFlattened.fontSize}
-      largeTitleFontWeight={headerLargeTitleStyleFlattened.fontWeight}
-      largeTitleHideShadow={headerLargeTitleShadowVisible === false}
-      title={typeof headerTitle === 'string' ? headerTitle : titleText}
-      titleColor={titleColor}
-      titleFontFamily={titleFontFamily}
-      titleFontSize={titleFontSize}
-      titleFontWeight={titleFontWeight}
-      topInsetEnabled={insets.top !== 0}
-      translucent={
-        // This defaults to `true`, so we can't pass `undefined`
-        headerTransparent === true
-      }
-    >
-      {Platform.OS === 'ios' ? (
-        <>
-          {headerLeftElement != null ? (
-            <ScreenStackHeaderLeftView>
-              {headerLeftElement}
-            </ScreenStackHeaderLeftView>
-          ) : null}
-          {headerTitleElement != null ? (
-            <ScreenStackHeaderCenterView>
-              {headerTitleElement}
-            </ScreenStackHeaderCenterView>
-          ) : null}
-        </>
-      ) : (
-        <>
-          {headerLeftElement != null || typeof headerTitle === 'function' ? (
-            <ScreenStackHeaderLeftView>
-              <View style={styles.row}>
+    <React.Fragment>
+      <ScreenStackHeaderConfig
+        backButtonInCustomView={backButtonInCustomView}
+        backgroundColor={
+          headerStyleFlattened.backgroundColor ??
+          (hasHeaderBackground || headerTransparent
+            ? 'transparent'
+            : colors.card)
+        }
+        backTitle={headerBackTitleVisible ? headerBackTitle : ' '}
+        backTitleFontFamily={backTitleFontFamily}
+        backTitleFontSize={headerBackTitleStyleFlattened.fontSize}
+        blurEffect={headerBlurEffect}
+        color={tintColor}
+        direction={I18nManager.isRTL ? 'rtl' : 'ltr'}
+        disableBackButtonMenu={headerBackButtonMenuEnabled === false}
+        hidden={headerShown === false}
+        hideBackButton={headerBackVisible === false}
+        hideShadow={headerShadowVisible === false}
+        largeTitle={headerLargeTitle}
+        largeTitleBackgroundColor={headerLargeStyleFlattened.backgroundColor}
+        largeTitleColor={headerLargeTitleStyleFlattened.color}
+        largeTitleFontFamily={largeTitleFontFamily}
+        largeTitleFontSize={headerLargeTitleStyleFlattened.fontSize}
+        largeTitleFontWeight={headerLargeTitleStyleFlattened.fontWeight}
+        largeTitleHideShadow={headerLargeTitleShadowVisible === false}
+        title={typeof headerTitle === 'string' ? headerTitle : titleText}
+        titleColor={titleColor}
+        titleFontFamily={titleFontFamily}
+        titleFontSize={titleFontSize}
+        titleFontWeight={titleFontWeight}
+        topInsetEnabled={insets.top !== 0}
+        translucent={
+          // This defaults to `true`, so we can't pass `undefined`
+          hasHeaderBackground || headerTransparent === true
+        }
+      >
+        {Platform.OS === 'ios' ? (
+          <>
+            {headerLeftElement != null ? (
+              <ScreenStackHeaderLeftView>
                 {headerLeftElement}
-                {headerTitleAlign !== 'center' ? (
-                  typeof headerTitle === 'function' ? (
-                    headerTitleElement
-                  ) : (
-                    <HeaderTitle
-                      tintColor={tintColor}
-                      style={headerTitleStyleSupported}
-                    >
-                      {titleText}
-                    </HeaderTitle>
-                  )
-                ) : null}
-              </View>
-            </ScreenStackHeaderLeftView>
-          ) : null}
-          {headerTitleAlign === 'center' ? (
-            <ScreenStackHeaderCenterView>
-              {typeof headerTitle === 'function' ? (
-                headerTitleElement
-              ) : (
-                <HeaderTitle
-                  tintColor={tintColor}
-                  style={headerTitleStyleSupported}
-                >
-                  {titleText}
-                </HeaderTitle>
-              )}
-            </ScreenStackHeaderCenterView>
-          ) : null}
-        </>
-      )}
-      {headerBackImageSource !== undefined ? (
-        <ScreenStackHeaderBackButtonImage source={headerBackImageSource} />
-      ) : null}
-      {headerRightElement != null ? (
-        <ScreenStackHeaderRightView>
-          {headerRightElement}
-        </ScreenStackHeaderRightView>
-      ) : null}
-      {Platform.OS === 'ios' && headerSearchBarOptions != null ? (
-        <ScreenStackHeaderSearchBarView>
-          <SearchBar {...headerSearchBarOptions} />
-        </ScreenStackHeaderSearchBarView>
-      ) : null}
-    </ScreenStackHeaderConfig>
+              </ScreenStackHeaderLeftView>
+            ) : null}
+            {headerTitleElement != null ? (
+              <ScreenStackHeaderCenterView>
+                {headerTitleElement}
+              </ScreenStackHeaderCenterView>
+            ) : null}
+          </>
+        ) : (
+          <>
+            {headerLeftElement != null || typeof headerTitle === 'function' ? (
+              <ScreenStackHeaderLeftView>
+                <View style={styles.row}>
+                  {headerLeftElement}
+                  {headerTitleAlign !== 'center' ? (
+                    typeof headerTitle === 'function' ? (
+                      headerTitleElement
+                    ) : (
+                      <HeaderTitle
+                        tintColor={tintColor}
+                        style={headerTitleStyleSupported}
+                      >
+                        {titleText}
+                      </HeaderTitle>
+                    )
+                  ) : null}
+                </View>
+              </ScreenStackHeaderLeftView>
+            ) : null}
+            {headerTitleAlign === 'center' ? (
+              <ScreenStackHeaderCenterView>
+                {typeof headerTitle === 'function' ? (
+                  headerTitleElement
+                ) : (
+                  <HeaderTitle
+                    tintColor={tintColor}
+                    style={headerTitleStyleSupported}
+                  >
+                    {titleText}
+                  </HeaderTitle>
+                )}
+              </ScreenStackHeaderCenterView>
+            ) : null}
+          </>
+        )}
+        {headerBackImageSource !== undefined ? (
+          <ScreenStackHeaderBackButtonImage source={headerBackImageSource} />
+        ) : null}
+        {headerRightElement != null ? (
+          <ScreenStackHeaderRightView>
+            {headerRightElement}
+          </ScreenStackHeaderRightView>
+        ) : null}
+        {Platform.OS === 'ios' && headerSearchBarOptions != null ? (
+          <ScreenStackHeaderSearchBarView>
+            <SearchBar {...headerSearchBarOptions} />
+          </ScreenStackHeaderSearchBarView>
+        ) : null}
+      </ScreenStackHeaderConfig>
+      {headerBackground !== undefined ? headerBackground() : null}
+    </React.Fragment>
   );
 }
 
