@@ -23,11 +23,13 @@ import type { NativeStackNavigationOptions } from '../types';
 import { processFonts } from './FontProcessor';
 
 type Props = NativeStackNavigationOptions & {
+  headerHeight: number;
   route: Route<string>;
   canGoBack: boolean;
 };
 
 export default function HeaderConfig({
+  headerHeight,
   headerBackImageSource,
   headerBackButtonMenuEnabled,
   headerBackTitle,
@@ -39,6 +41,7 @@ export default function HeaderConfig({
   headerLargeTitle,
   headerLargeTitleShadowVisible,
   headerLargeTitleStyle,
+  headerBackground,
   headerLeft,
   headerRight,
   headerShown,
@@ -55,6 +58,7 @@ export default function HeaderConfig({
   canGoBack,
 }: Props): JSX.Element {
   const insets = useSafeAreaInsets();
+
   const { colors } = useTheme();
   const tintColor =
     headerTintColor ?? (Platform.OS === 'ios' ? colors.primary : colors.text);
@@ -128,104 +132,120 @@ export default function HeaderConfig({
     : Platform.OS === 'android' && headerTitleElement != null;
 
   return (
-    <ScreenStackHeaderConfig
-      backButtonInCustomView={backButtonInCustomView}
-      backgroundColor={
-        headerStyleFlattened.backgroundColor ??
-        (headerTransparent ? 'transparent' : colors.card)
-      }
-      backTitle={headerBackTitleVisible ? headerBackTitle : ' '}
-      backTitleFontFamily={backTitleFontFamily}
-      backTitleFontSize={headerBackTitleStyleFlattened.fontSize}
-      blurEffect={headerBlurEffect}
-      color={tintColor}
-      direction={I18nManager.isRTL ? 'rtl' : 'ltr'}
-      disableBackButtonMenu={headerBackButtonMenuEnabled === false}
-      hidden={headerShown === false}
-      hideBackButton={headerBackVisible === false}
-      hideShadow={headerShadowVisible === false}
-      largeTitle={headerLargeTitle}
-      largeTitleBackgroundColor={headerLargeStyleFlattened.backgroundColor}
-      largeTitleColor={headerLargeTitleStyleFlattened.color}
-      largeTitleFontFamily={largeTitleFontFamily}
-      largeTitleFontSize={headerLargeTitleStyleFlattened.fontSize}
-      largeTitleFontWeight={headerLargeTitleStyleFlattened.fontWeight}
-      largeTitleHideShadow={headerLargeTitleShadowVisible === false}
-      title={typeof headerTitle === 'string' ? headerTitle : titleText}
-      titleColor={titleColor}
-      titleFontFamily={titleFontFamily}
-      titleFontSize={titleFontSize}
-      titleFontWeight={titleFontWeight}
-      topInsetEnabled={insets.top !== 0}
-      translucent={
-        // This defaults to `true`, so we can't pass `undefined`
-        headerTransparent === true
-      }
-    >
-      {Platform.OS === 'ios' ? (
-        <>
-          {headerLeftElement != null ? (
-            <ScreenStackHeaderLeftView>
-              {headerLeftElement}
-            </ScreenStackHeaderLeftView>
-          ) : null}
-          {headerTitleElement != null ? (
-            <ScreenStackHeaderCenterView>
-              {headerTitleElement}
-            </ScreenStackHeaderCenterView>
-          ) : null}
-        </>
-      ) : (
-        <>
-          {headerLeftElement != null || typeof headerTitle === 'function' ? (
-            <ScreenStackHeaderLeftView>
-              <View style={styles.row}>
+    <>
+      {headerBackground != null ? (
+        <View
+          style={[
+            styles.background,
+            headerTransparent ? styles.translucent : null,
+            { height: headerHeight },
+          ]}
+        >
+          {headerBackground()}
+        </View>
+      ) : null}
+      <ScreenStackHeaderConfig
+        backButtonInCustomView={backButtonInCustomView}
+        backgroundColor={
+          headerStyleFlattened.backgroundColor ??
+          (headerBackground != null || headerTransparent
+            ? 'transparent'
+            : colors.card)
+        }
+        backTitle={headerBackTitleVisible ? headerBackTitle : ' '}
+        backTitleFontFamily={backTitleFontFamily}
+        backTitleFontSize={headerBackTitleStyleFlattened.fontSize}
+        blurEffect={headerBlurEffect}
+        color={tintColor}
+        direction={I18nManager.isRTL ? 'rtl' : 'ltr'}
+        disableBackButtonMenu={headerBackButtonMenuEnabled === false}
+        hidden={headerShown === false}
+        hideBackButton={headerBackVisible === false}
+        hideShadow={headerShadowVisible === false}
+        largeTitle={headerLargeTitle}
+        largeTitleBackgroundColor={headerLargeStyleFlattened.backgroundColor}
+        largeTitleColor={headerLargeTitleStyleFlattened.color}
+        largeTitleFontFamily={largeTitleFontFamily}
+        largeTitleFontSize={headerLargeTitleStyleFlattened.fontSize}
+        largeTitleFontWeight={headerLargeTitleStyleFlattened.fontWeight}
+        largeTitleHideShadow={headerLargeTitleShadowVisible === false}
+        title={typeof headerTitle === 'string' ? headerTitle : titleText}
+        titleColor={titleColor}
+        titleFontFamily={titleFontFamily}
+        titleFontSize={titleFontSize}
+        titleFontWeight={titleFontWeight}
+        topInsetEnabled={insets.top !== 0}
+        translucent={
+          headerBackground != null ||
+          // This defaults to `true`, so we can't pass `undefined`
+          headerTransparent === true
+        }
+      >
+        {Platform.OS === 'ios' ? (
+          <>
+            {headerLeftElement != null ? (
+              <ScreenStackHeaderLeftView>
                 {headerLeftElement}
-                {headerTitleAlign !== 'center' ? (
-                  typeof headerTitle === 'function' ? (
-                    headerTitleElement
-                  ) : (
-                    <HeaderTitle
-                      tintColor={tintColor}
-                      style={headerTitleStyleSupported}
-                    >
-                      {titleText}
-                    </HeaderTitle>
-                  )
-                ) : null}
-              </View>
-            </ScreenStackHeaderLeftView>
-          ) : null}
-          {headerTitleAlign === 'center' ? (
-            <ScreenStackHeaderCenterView>
-              {typeof headerTitle === 'function' ? (
-                headerTitleElement
-              ) : (
-                <HeaderTitle
-                  tintColor={tintColor}
-                  style={headerTitleStyleSupported}
-                >
-                  {titleText}
-                </HeaderTitle>
-              )}
-            </ScreenStackHeaderCenterView>
-          ) : null}
-        </>
-      )}
-      {headerBackImageSource !== undefined ? (
-        <ScreenStackHeaderBackButtonImage source={headerBackImageSource} />
-      ) : null}
-      {headerRightElement != null ? (
-        <ScreenStackHeaderRightView>
-          {headerRightElement}
-        </ScreenStackHeaderRightView>
-      ) : null}
-      {Platform.OS === 'ios' && headerSearchBarOptions != null ? (
-        <ScreenStackHeaderSearchBarView>
-          <SearchBar {...headerSearchBarOptions} />
-        </ScreenStackHeaderSearchBarView>
-      ) : null}
-    </ScreenStackHeaderConfig>
+              </ScreenStackHeaderLeftView>
+            ) : null}
+            {headerTitleElement != null ? (
+              <ScreenStackHeaderCenterView>
+                {headerTitleElement}
+              </ScreenStackHeaderCenterView>
+            ) : null}
+          </>
+        ) : (
+          <>
+            {headerLeftElement != null || typeof headerTitle === 'function' ? (
+              <ScreenStackHeaderLeftView>
+                <View style={styles.row}>
+                  {headerLeftElement}
+                  {headerTitleAlign !== 'center' ? (
+                    typeof headerTitle === 'function' ? (
+                      headerTitleElement
+                    ) : (
+                      <HeaderTitle
+                        tintColor={tintColor}
+                        style={headerTitleStyleSupported}
+                      >
+                        {titleText}
+                      </HeaderTitle>
+                    )
+                  ) : null}
+                </View>
+              </ScreenStackHeaderLeftView>
+            ) : null}
+            {headerTitleAlign === 'center' ? (
+              <ScreenStackHeaderCenterView>
+                {typeof headerTitle === 'function' ? (
+                  headerTitleElement
+                ) : (
+                  <HeaderTitle
+                    tintColor={tintColor}
+                    style={headerTitleStyleSupported}
+                  >
+                    {titleText}
+                  </HeaderTitle>
+                )}
+              </ScreenStackHeaderCenterView>
+            ) : null}
+          </>
+        )}
+        {headerBackImageSource !== undefined ? (
+          <ScreenStackHeaderBackButtonImage source={headerBackImageSource} />
+        ) : null}
+        {headerRightElement != null ? (
+          <ScreenStackHeaderRightView>
+            {headerRightElement}
+          </ScreenStackHeaderRightView>
+        ) : null}
+        {Platform.OS === 'ios' && headerSearchBarOptions != null ? (
+          <ScreenStackHeaderSearchBarView>
+            <SearchBar {...headerSearchBarOptions} />
+          </ScreenStackHeaderSearchBarView>
+        ) : null}
+      </ScreenStackHeaderConfig>
+    </>
   );
 }
 
@@ -233,5 +253,15 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  translucent: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1,
+  },
+  background: {
+    overflow: 'hidden',
   },
 });
