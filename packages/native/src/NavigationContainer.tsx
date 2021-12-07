@@ -1,21 +1,36 @@
-import * as React from 'react';
 import {
   BaseNavigationContainer,
+  getActionFromState,
+  getPathFromState,
+  getStateFromPath,
   NavigationContainerProps,
   NavigationContainerRef,
+  ParamListBase,
+  validatePathConfig,
 } from '@react-navigation/core';
-import ThemeProvider from './theming/ThemeProvider';
-import DefaultTheme from './theming/DefaultTheme';
-import LinkingContext from './LinkingContext';
-import useThenable from './useThenable';
-import useLinking from './useLinking';
-import useDocumentTitle from './useDocumentTitle';
-import useBackButton from './useBackButton';
-import type { Theme, LinkingOptions, DocumentTitleOptions } from './types';
+import * as React from 'react';
 
-type Props = NavigationContainerProps & {
+import LinkingContext from './LinkingContext';
+import DefaultTheme from './theming/DefaultTheme';
+import ThemeProvider from './theming/ThemeProvider';
+import type { DocumentTitleOptions, LinkingOptions, Theme } from './types';
+import useBackButton from './useBackButton';
+import useDocumentTitle from './useDocumentTitle';
+import useLinking from './useLinking';
+import useThenable from './useThenable';
+
+declare global {
+  var REACT_NAVIGATION_DEVTOOLS: WeakMap<
+    NavigationContainerRef<any>,
+    { readonly linking: LinkingOptions<any> }
+  >;
+}
+
+global.REACT_NAVIGATION_DEVTOOLS = new WeakMap();
+
+type Props<ParamList extends {}> = NavigationContainerProps & {
   theme?: Theme;
-  linking?: LinkingOptions;
+  linking?: LinkingOptions<ParamList>;
   fallback?: React.ReactNode;
   documentTitle?: DocumentTitleOptions;
   onReady?: () => void;
@@ -35,7 +50,7 @@ type Props = NavigationContainerProps & {
  * @param props.children Child elements to render the content.
  * @param props.ref Ref object which refers to the navigation object containing helper methods.
  */
-const NavigationContainer = React.forwardRef(function NavigationContainer(
+function NavigationContainerInner(
   {
     theme = DefaultTheme,
     linking,
@@ -43,20 +58,46 @@ const NavigationContainer = React.forwardRef(function NavigationContainer(
     documentTitle,
     onReady,
     ...rest
-  }: Props,
-  ref?: React.Ref<NavigationContainerRef | null>
+  }: Props<ParamListBase>,
+  ref?: React.Ref<NavigationContainerRef<ParamListBase> | null>
 ) {
   const isLinkingEnabled = linking ? linking.enabled !== false : false;
 
-  const refContainer = React.useRef<NavigationContainerRef>(null);
+  if (linking?.config) {
+    validatePathConfig(linking.config);
+  }
+
+  const refContainer =
+    React.useRef<NavigationContainerRef<ParamListBase>>(null);
 
   useBackButton(refContainer);
   useDocumentTitle(refContainer, documentTitle);
 
   const { getInitialState } = useLinking(refContainer, {
+    independent: rest.independent,
     enabled: isLinkingEnabled,
     prefixes: [],
     ...linking,
+  });
+
+  // Add additional linking related info to the ref
+  // This will be used by the devtools
+  React.useEffect(() => {
+    if (refContainer.current) {
+      REACT_NAVIGATION_DEVTOOLS.set(refContainer.current, {
+        get linking() {
+          return {
+            ...linking,
+            enabled: isLinkingEnabled,
+            prefixes: linking?.prefixes ?? [],
+            getStateFromPath: linking?.getStateFromPath ?? getStateFromPath,
+            getPathFromState: linking?.getPathFromState ?? getPathFromState,
+            getActionFromState:
+              linking?.getActionFromState ?? getActionFromState,
+          };
+        },
+      });
+    }
   });
 
   const [isResolved, initialState] = useThenable(getInitialState);
@@ -98,6 +139,14 @@ const NavigationContainer = React.forwardRef(function NavigationContainer(
       </ThemeProvider>
     </LinkingContext.Provider>
   );
-});
+}
+
+const NavigationContainer = React.forwardRef(NavigationContainerInner) as <
+  RootParamList extends {} = ReactNavigation.RootParamList
+>(
+  props: Props<RootParamList> & {
+    ref?: React.Ref<NavigationContainerRef<RootParamList>>;
+  }
+) => React.ReactElement;
 
 export default NavigationContainer;

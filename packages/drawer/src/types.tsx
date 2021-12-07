@@ -1,19 +1,19 @@
-import type { StyleProp, ViewStyle, TextStyle } from 'react-native';
+import type { HeaderOptions } from '@react-navigation/elements';
+import type {
+  Descriptor,
+  DrawerActionHelpers,
+  DrawerNavigationState,
+  NavigationHelpers,
+  NavigationProp,
+  ParamListBase,
+  Route,
+  RouteProp,
+} from '@react-navigation/native';
+import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 import type {
   PanGestureHandler,
   PanGestureHandlerProperties,
 } from 'react-native-gesture-handler';
-import type {
-  Route,
-  ParamListBase,
-  NavigationProp,
-  Descriptor,
-  NavigationHelpers,
-  DrawerNavigationState,
-  DrawerActionHelpers,
-  RouteProp,
-} from '@react-navigation/native';
-import type { HeaderOptions } from '@react-navigation/elements';
 
 export type Scene = {
   route: Route<string>;
@@ -235,7 +235,7 @@ export type DrawerHeaderProps = {
   /**
    * Route object for the current screen.
    */
-  route: RouteProp<ParamListBase, string>;
+  route: RouteProp<ParamListBase>;
   /**
    * Navigation prop for the header.
    */
@@ -257,7 +257,7 @@ export type DrawerNavigationHelpers = NavigationHelpers<
 
 export type DrawerNavigationProp<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
+  RouteName extends keyof ParamList = keyof ParamList
 > = NavigationProp<
   ParamList,
   RouteName,
@@ -269,7 +269,7 @@ export type DrawerNavigationProp<
 
 export type DrawerScreenProps<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
+  RouteName extends keyof ParamList = keyof ParamList
 > = {
   navigation: DrawerNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
@@ -278,7 +278,7 @@ export type DrawerScreenProps<
 export type DrawerDescriptor = Descriptor<
   DrawerNavigationOptions,
   DrawerNavigationProp<ParamListBase>,
-  RouteProp<ParamListBase, string>
+  RouteProp<ParamListBase>
 >;
 
 export type DrawerDescriptorMap = Record<string, DrawerDescriptor>;

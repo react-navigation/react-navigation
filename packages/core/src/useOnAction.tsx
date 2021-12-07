@@ -1,4 +1,3 @@
-import * as React from 'react';
 import type {
   NavigationAction,
   NavigationState,
@@ -6,13 +5,15 @@ import type {
   Router,
   RouterConfigOptions,
 } from '@react-navigation/routers';
+import * as React from 'react';
+
 import NavigationBuilderContext, {
   ChildActionListener,
   ChildBeforeRemoveListener,
 } from './NavigationBuilderContext';
-import useOnPreventRemove, { shouldPreventRemove } from './useOnPreventRemove';
-import type { NavigationEventEmitter } from './useEventEmitter';
 import type { EventMapCore } from './types';
+import type { NavigationEventEmitter } from './useEventEmitter';
+import useOnPreventRemove, { shouldPreventRemove } from './useOnPreventRemove';
 
 type Options = {
   router: Router<NavigationState, NavigationAction>;
@@ -51,9 +52,8 @@ export default function useOnAction({
     onDispatchAction,
   } = React.useContext(NavigationBuilderContext);
 
-  const routerConfigOptionsRef = React.useRef<RouterConfigOptions>(
-    routerConfigOptions
-  );
+  const routerConfigOptionsRef =
+    React.useRef<RouterConfigOptions>(routerConfigOptions);
 
   React.useEffect(() => {
     routerConfigOptionsRef.current = routerConfigOptions;
@@ -157,10 +157,10 @@ export default function useOnAction({
     beforeRemoveListeners,
   });
 
-  React.useEffect(() => addListenerParent?.('action', onAction), [
-    addListenerParent,
-    onAction,
-  ]);
+  React.useEffect(
+    () => addListenerParent?.('action', onAction),
+    [addListenerParent, onAction]
+  );
 
   return onAction;
 }

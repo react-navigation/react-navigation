@@ -1,5 +1,6 @@
-import * as React from 'react';
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
+import * as React from 'react';
+
 import CurrentRenderContext from './CurrentRenderContext';
 import type {
   Descriptor,
@@ -13,11 +14,7 @@ type Options = {
   navigation: NavigationHelpers<ParamListBase>;
   descriptors: Record<
     string,
-    Descriptor<
-      object,
-      NavigationProp<ParamListBase>,
-      RouteProp<ParamListBase, string>
-    >
+    Descriptor<object, NavigationProp<ParamListBase>, RouteProp<ParamListBase>>
   >;
 };
 

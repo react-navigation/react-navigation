@@ -1,29 +1,31 @@
+import {
+  NavigationContext,
+  NavigationProp,
+  NavigationRouteContext,
+  ParamListBase,
+  RouteProp,
+} from '@react-navigation/native';
 import * as React from 'react';
-import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import {
-  NavigationContext,
-  NavigationRouteContext,
-  NavigationProp,
-  RouteProp,
-  ParamListBase,
-} from '@react-navigation/native';
 
 import Background from './Background';
-import HeaderShownContext from './Header/HeaderShownContext';
-import HeaderHeightContext from './Header/HeaderHeightContext';
 import getDefaultHeaderHeight from './Header/getDefaultHeaderHeight';
+import HeaderHeightContext from './Header/HeaderHeightContext';
+import HeaderShownContext from './Header/HeaderShownContext';
 
 type Props = {
   focused: boolean;
+  modal?: boolean;
   navigation: NavigationProp<ParamListBase>;
-  route: RouteProp<ParamListBase, string>;
+  route: RouteProp<ParamListBase>;
   header: React.ReactNode;
   headerShown?: boolean;
   headerStatusBarHeight?: number;
+  headerTransparent?: boolean;
   style?: StyleProp<ViewStyle>;
   children: React.ReactNode;
 };
@@ -37,8 +39,10 @@ export default function Screen(props: Props) {
 
   const {
     focused,
+    modal = false,
     header,
     headerShown = true,
+    headerTransparent,
     headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
     navigation,
     route,
@@ -47,7 +51,7 @@ export default function Screen(props: Props) {
   } = props;
 
   const [headerHeight, setHeaderHeight] = React.useState(() =>
-    getDefaultHeaderHeight(dimensions, headerStatusBarHeight)
+    getDefaultHeaderHeight(dimensions, modal, headerStatusBarHeight)
   );
 
   return (
@@ -61,7 +65,7 @@ export default function Screen(props: Props) {
           value={isParentHeaderShown || headerShown !== false}
         >
           <HeaderHeightContext.Provider
-            value={headerShown ? headerHeight : parentHeaderHeight}
+            value={headerShown ? headerHeight : parentHeaderHeight ?? 0}
           >
             {children}
           </HeaderHeightContext.Provider>
@@ -76,6 +80,7 @@ export default function Screen(props: Props) {
 
                 setHeaderHeight(height);
               }}
+              style={headerTransparent ? styles.absolute : null}
             >
               {header}
             </View>
@@ -94,5 +99,11 @@ const styles = StyleSheet.create({
   // This is necessary to avoid applying 'column-reverse' to screen content
   content: {
     flex: 1,
+  },
+  absolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
   },
 });

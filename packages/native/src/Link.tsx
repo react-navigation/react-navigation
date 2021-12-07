@@ -1,10 +1,12 @@
-import * as React from 'react';
-import { Text, TextProps, GestureResponderEvent, Platform } from 'react-native';
 import type { NavigationAction } from '@react-navigation/core';
-import useLinkProps from './useLinkProps';
+import * as React from 'react';
+import { GestureResponderEvent, Platform, Text, TextProps } from 'react-native';
 
-type Props = {
-  to: string;
+import useLinkProps from './useLinkProps';
+import type { To } from './useLinkTo';
+
+type Props<ParamList extends ReactNavigation.RootParamList> = {
+  to: To<ParamList>;
   action?: NavigationAction;
   target?: string;
   onPress?: (
@@ -20,8 +22,12 @@ type Props = {
  * @param props.action Optional action to use for in-page navigation. By default, the path is parsed to an action based on linking config.
  * @param props.children Child elements to render the content.
  */
-export default function Link({ to, action, ...rest }: Props) {
-  const props = useLinkProps({ to, action });
+export default function Link<ParamList extends ReactNavigation.RootParamList>({
+  to,
+  action,
+  ...rest
+}: Props<ParamList>) {
+  const props = useLinkProps<ParamList>({ to, action });
 
   const onPress = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent

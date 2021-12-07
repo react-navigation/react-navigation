@@ -1,12 +1,13 @@
-import * as React from 'react';
 import type {
-  ParamListBase,
   NavigationState,
+  ParamListBase,
   Route,
 } from '@react-navigation/routers';
+import * as React from 'react';
+
 import type { RouteProp } from './types';
 
-type RouteCache = Map<Route<string>, RouteProp<ParamListBase, string>>;
+type RouteCache = Map<Route<string>, RouteProp<ParamListBase>>;
 
 /**
  * Utilites such as `getFocusedRouteNameFromRoute` need to access state.

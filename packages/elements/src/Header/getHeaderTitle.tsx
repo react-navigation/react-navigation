@@ -1,7 +1,7 @@
 import type { HeaderOptions } from '../types';
 
 export default function getHeaderTitle(
-  options: HeaderOptions & { title?: string },
+  options: { title?: string; headerTitle?: HeaderOptions['headerTitle'] },
   fallback: string
 ): string {
   return typeof options.headerTitle === 'string'

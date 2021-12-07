@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   CommonActions,
   DrawerActions,
@@ -6,8 +5,10 @@ import {
   ParamListBase,
   useLinkBuilder,
 } from '@react-navigation/native';
+import * as React from 'react';
+
+import type { DrawerDescriptorMap, DrawerNavigationHelpers } from '../types';
 import DrawerItem from './DrawerItem';
-import type { DrawerNavigationHelpers, DrawerDescriptorMap } from '../types';
 
 type Props = {
   state: DrawerNavigationState<ParamListBase>;
@@ -25,7 +26,18 @@ export default function DrawerItemList({
 }: Props) {
   const buildLink = useLinkBuilder();
 
-  return (state.routes.map((route, i) => {
+  const focusedRoute = state.routes[state.index];
+  const focusedDescriptor = descriptors[focusedRoute.key];
+  const focusedOptions = focusedDescriptor.options;
+
+  const {
+    drawerActiveTintColor,
+    drawerInactiveTintColor,
+    drawerActiveBackgroundColor,
+    drawerInactiveBackgroundColor,
+  } = focusedOptions;
+
+  return state.routes.map((route, i) => {
     const focused = i === state.index;
 
     const onPress = () => {
@@ -39,7 +51,7 @@ export default function DrawerItemList({
         navigation.dispatch({
           ...(focused
             ? DrawerActions.closeDrawer()
-            : CommonActions.navigate(route.name)),
+            : CommonActions.navigate({ name: route.name, merge: true })),
           target: state.key,
         });
       }
@@ -49,10 +61,6 @@ export default function DrawerItemList({
       title,
       drawerLabel,
       drawerIcon,
-      drawerActiveTintColor,
-      drawerInactiveTintColor,
-      drawerActiveBackgroundColor,
-      drawerInactiveBackgroundColor,
       drawerLabelStyle,
       drawerItemStyle,
     } = descriptors[route.key].options;
@@ -79,5 +87,5 @@ export default function DrawerItemList({
         onPress={onPress}
       />
     );
-  }) as React.ReactNode) as React.ReactElement;
+  }) as React.ReactNode as React.ReactElement;
 }

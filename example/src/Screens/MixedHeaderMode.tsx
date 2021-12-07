@@ -1,15 +1,16 @@
-import * as React from 'react';
-import { View, Platform, StyleSheet, ScrollView } from 'react-native';
-import { Button } from 'react-native-paper';
 import type { ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
+  HeaderStyleInterpolators,
   StackScreenProps,
   TransitionPresets,
-  HeaderStyleInterpolators,
 } from '@react-navigation/stack';
-import Article from '../Shared/Article';
+import * as React from 'react';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Button } from 'react-native-paper';
+
 import Albums from '../Shared/Albums';
+import Article from '../Shared/Article';
 import NewsFeed from '../Shared/NewsFeed';
 
 export type SimpleStackParams = {
@@ -117,24 +118,29 @@ export default function SimpleStackScreen({
   return (
     <SimpleStack.Navigator
       screenOptions={{
-        ...TransitionPresets.SlideFromRightIOS,
-        headerMode: 'float',
         headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
       }}
     >
-      <SimpleStack.Screen
-        name="Article"
-        component={ArticleScreen}
-        options={({ route }) => ({
-          title: `Article by ${route.params?.author ?? 'Unknown'}`,
-        })}
-        initialParams={{ author: 'Gandalf' }}
-      />
-      <SimpleStack.Screen
-        name="NewsFeed"
-        component={NewsFeedScreen}
-        options={{ title: 'Feed' }}
-      />
+      <SimpleStack.Group
+        screenOptions={{
+          ...TransitionPresets.SlideFromRightIOS,
+          headerMode: 'float',
+        }}
+      >
+        <SimpleStack.Screen
+          name="Article"
+          component={ArticleScreen}
+          options={({ route }) => ({
+            title: `Article by ${route.params?.author ?? 'Unknown'}`,
+          })}
+          initialParams={{ author: 'Gandalf' }}
+        />
+        <SimpleStack.Screen
+          name="NewsFeed"
+          component={NewsFeedScreen}
+          options={{ title: 'Feed' }}
+        />
+      </SimpleStack.Group>
       <SimpleStack.Screen
         name="Albums"
         component={AlbumsScreen}

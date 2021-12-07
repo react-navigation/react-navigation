@@ -1,15 +1,26 @@
-import * as React from 'react';
-import { View, StyleSheet, ScrollView, Platform } from 'react-native';
-import { Button, Paragraph } from 'react-native-paper';
 import { ParamListBase, useTheme } from '@react-navigation/native';
 import {
   createStackNavigator,
   StackScreenProps,
+  useCardAnimation,
 } from '@react-navigation/stack';
-import Article from '../Shared/Article';
+import * as React from 'react';
+import {
+  Animated,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { Button, Paragraph } from 'react-native-paper';
 
-type SimpleStackParams = {
+import Article from '../Shared/Article';
+import NewsFeed from '../Shared/NewsFeed';
+
+type TransparentStackParams = {
   Article: { author: string };
+  NewsFeed: undefined;
   Dialog: undefined;
 };
 
@@ -18,7 +29,43 @@ const scrollEnabled = Platform.select({ web: true, default: false });
 const ArticleScreen = ({
   navigation,
   route,
-}: StackScreenProps<SimpleStackParams, 'Article'>) => {
+}: StackScreenProps<TransparentStackParams, 'Article'>) => {
+  return (
+    <ScrollView>
+      <View style={styles.buttons}>
+        <Button
+          mode="contained"
+          onPress={() => navigation.push('Dialog')}
+          style={styles.button}
+        >
+          Show Dialog
+        </Button>
+        <Button
+          mode="contained"
+          onPress={() => navigation.push('NewsFeed')}
+          style={styles.button}
+        >
+          Push NewsFeed
+        </Button>
+        <Button
+          mode="outlined"
+          onPress={() => navigation.goBack()}
+          style={styles.button}
+        >
+          Go back
+        </Button>
+      </View>
+      <Article
+        author={{ name: route.params.author }}
+        scrollEnabled={scrollEnabled}
+      />
+    </ScrollView>
+  );
+};
+
+const NewsFeedScreen = ({
+  navigation,
+}: StackScreenProps<TransparentStackParams, 'NewsFeed'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -37,20 +84,37 @@ const ArticleScreen = ({
           Go back
         </Button>
       </View>
-      <Article
-        author={{ name: route.params.author }}
-        scrollEnabled={scrollEnabled}
-      />
+      <NewsFeed scrollEnabled={scrollEnabled} />
     </ScrollView>
   );
 };
 
-const DialogScreen = ({ navigation }: StackScreenProps<SimpleStackParams>) => {
+const DialogScreen = ({
+  navigation,
+}: StackScreenProps<TransparentStackParams>) => {
   const { colors } = useTheme();
+  const { current } = useCardAnimation();
 
   return (
     <View style={styles.container}>
-      <View style={[styles.dialog, { backgroundColor: colors.card }]}>
+      <Pressable style={styles.backdrop} onPress={() => navigation.goBack()} />
+      <Animated.View
+        style={[
+          styles.dialog,
+          {
+            backgroundColor: colors.card,
+            transform: [
+              {
+                scale: current.progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0.9, 1],
+                  extrapolate: 'clamp',
+                }),
+              },
+            ],
+          },
+        ]}
+      >
         <Paragraph>
           Mise en place is a French term that literally means “put in place.” It
           also refers to a way cooks in professional kitchens and restaurants
@@ -65,17 +129,16 @@ const DialogScreen = ({ navigation }: StackScreenProps<SimpleStackParams>) => {
         <Button style={styles.close} compact onPress={navigation.goBack}>
           Okay
         </Button>
-      </View>
+      </Animated.View>
     </View>
   );
 };
 
-const SimpleStack = createStackNavigator<SimpleStackParams>();
+const TransparentStack = createStackNavigator<TransparentStackParams>();
 
-type Props = Partial<React.ComponentProps<typeof SimpleStack.Navigator>> &
-  StackScreenProps<ParamListBase>;
+type Props = StackScreenProps<ParamListBase>;
 
-export default function SimpleStackScreen({ navigation, ...rest }: Props) {
+export default function TransparentStackScreen({ navigation }: Props) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -83,52 +146,33 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
   }, [navigation]);
 
   return (
-    <SimpleStack.Navigator mode="modal" {...rest}>
-      <SimpleStack.Screen
+    <TransparentStack.Navigator>
+      <TransparentStack.Screen
         name="Article"
         component={ArticleScreen}
         initialParams={{ author: 'Gandalf' }}
       />
-      <SimpleStack.Screen
+      <TransparentStack.Screen
+        name="NewsFeed"
+        component={NewsFeedScreen}
+        options={{ presentation: 'modal' }}
+      />
+      <TransparentStack.Screen
         name="Dialog"
         component={DialogScreen}
         options={{
           headerShown: false,
-          cardStyle: { backgroundColor: 'transparent' },
-          cardOverlayEnabled: true,
-          cardStyleInterpolator: ({ current: { progress } }) => ({
-            cardStyle: {
-              opacity: progress.interpolate({
-                inputRange: [0, 0.5, 0.9, 1],
-                outputRange: [0, 0.25, 0.7, 1],
-              }),
-              transform: [
-                {
-                  scale: progress.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0.9, 1],
-                    extrapolate: 'clamp',
-                  }),
-                },
-              ],
-            },
-            overlayStyle: {
-              opacity: progress.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0, 0.5],
-                extrapolate: 'clamp',
-              }),
-            },
-          }),
+          presentation: 'transparentModal',
         }}
       />
-    </SimpleStack.Navigator>
+    </TransparentStack.Navigator>
   );
 }
 
 const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     padding: 8,
   },
   button: {
@@ -144,6 +188,10 @@ const styles = StyleSheet.create({
     width: '90%',
     maxWidth: 400,
     borderRadius: 3,
+  },
+  backdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
   close: {
     alignSelf: 'flex-end',

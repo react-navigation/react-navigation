@@ -1,12 +1,14 @@
+import type { NavigationState, ParamListBase } from '@react-navigation/routers';
+import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
-import { render, act } from '@testing-library/react-native';
-import type { NavigationState } from '@react-navigation/routers';
-import Screen from '../Screen';
+
 import BaseNavigationContainer from '../BaseNavigationContainer';
-import useNavigationBuilder from '../useNavigationBuilder';
+import createNavigationContainerRef from '../createNavigationContainerRef';
+import Group from '../Group';
+import Screen from '../Screen';
 import useNavigation from '../useNavigation';
+import useNavigationBuilder from '../useNavigationBuilder';
 import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
-import type { NavigationContainerRef } from '../types';
 
 beforeEach(() => (MockRouterKey.current = 0));
 
@@ -227,6 +229,53 @@ it('initializes state for nested screens in React.Fragment', () => {
           <Screen name="bar" component={jest.fn()} />
           <Screen name="baz" component={jest.fn()} />
         </React.Fragment>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(element).update(element);
+
+  expect(onStateChange).toBeCalledTimes(1);
+  expect(onStateChange).toBeCalledWith({
+    stale: false,
+    type: 'test',
+    index: 0,
+    key: '0',
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+      { key: 'baz', name: 'baz' },
+    ],
+  });
+});
+
+it('initializes state for nested screens in Group', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestScreen = (props: any) => {
+    React.useEffect(() => {
+      props.navigation.dispatch({ type: 'UPDATE' });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    return null;
+  };
+
+  const onStateChange = jest.fn();
+
+  const element = (
+    <BaseNavigationContainer onStateChange={onStateChange}>
+      <TestNavigator>
+        <Screen name="foo" component={TestScreen} />
+        <Group>
+          <Screen name="bar" component={jest.fn()} />
+          <Screen name="baz" component={jest.fn()} />
+        </Group>
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -679,7 +728,7 @@ it('navigates to nested child in a navigator', () => {
 
   const onStateChange = jest.fn();
 
-  const navigation = React.createRef<NavigationContainerRef>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const element = render(
     <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
@@ -715,7 +764,7 @@ it('navigates to nested child in a navigator', () => {
   expect(element).toMatchInlineSnapshot(`"[foo-a, undefined]"`);
 
   act(() =>
-    navigation.current?.navigate('bar', {
+    navigation.navigate('bar', {
       screen: 'bar-b',
       params: { test: 42 },
     })
@@ -726,7 +775,7 @@ it('navigates to nested child in a navigator', () => {
   );
 
   act(() =>
-    navigation.current?.navigate('bar', {
+    navigation.navigate('bar', {
       screen: 'bar-a',
       params: { whoa: 'test' },
     })
@@ -736,15 +785,15 @@ it('navigates to nested child in a navigator', () => {
     `"[bar-a, {\\"lol\\":\\"why\\",\\"whoa\\":\\"test\\"}]"`
   );
 
-  act(() => navigation.current?.navigate('bar', { screen: 'bar-b' }));
+  act(() => navigation.navigate('bar', { screen: 'bar-b' }));
 
-  act(() => navigation.current?.goBack());
+  act(() => navigation.goBack());
 
   expect(element).toMatchInlineSnapshot(
     `"[bar-a, {\\"lol\\":\\"why\\",\\"whoa\\":\\"test\\"}]"`
   );
 
-  act(() => navigation.current?.navigate('bar', { screen: 'bar-b' }));
+  act(() => navigation.navigate('bar', { screen: 'bar-b' }));
 
   expect(element).toMatchInlineSnapshot(
     `"[bar-b, {\\"some\\":\\"stuff\\",\\"test\\":42,\\"whoa\\":\\"test\\"}]"`
@@ -799,7 +848,7 @@ it('navigates to nested child in a navigator with initial: false', () => {
 
   const onStateChange = jest.fn();
 
-  const navigation = React.createRef<NavigationContainerRef>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const first = render(
     <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
@@ -833,7 +882,7 @@ it('navigates to nested child in a navigator with initial: false', () => {
   );
 
   expect(first).toMatchInlineSnapshot(`"[foo-a, undefined]"`);
-  expect(navigation.current?.getRootState()).toEqual({
+  expect(navigation.getRootState()).toEqual({
     index: 0,
     key: '0',
     routeNames: ['foo', 'bar'],
@@ -866,7 +915,7 @@ it('navigates to nested child in a navigator with initial: false', () => {
   });
 
   act(() =>
-    navigation.current?.navigate('bar', {
+    navigation.navigate('bar', {
       screen: 'bar-b',
       params: { test: 42 },
     })
@@ -876,7 +925,7 @@ it('navigates to nested child in a navigator with initial: false', () => {
     `"[bar-b, {\\"some\\":\\"stuff\\",\\"test\\":42}]"`
   );
 
-  expect(navigation.current?.getRootState()).toEqual({
+  expect(navigation.getRootState()).toEqual({
     index: 2,
     key: '0',
     routeNames: ['foo', 'bar'],
@@ -944,7 +993,7 @@ it('navigates to nested child in a navigator with initial: false', () => {
   );
 
   expect(second).toMatchInlineSnapshot(`"[foo-a, undefined]"`);
-  expect(navigation.current?.getRootState()).toEqual({
+  expect(navigation.getRootState()).toEqual({
     index: 0,
     key: '4',
     routeNames: ['foo', 'bar'],
@@ -971,7 +1020,7 @@ it('navigates to nested child in a navigator with initial: false', () => {
   });
 
   act(() =>
-    navigation.current?.navigate('bar', {
+    navigation.navigate('bar', {
       screen: 'bar-b',
       params: { test: 42 },
       initial: false,
@@ -980,7 +1029,7 @@ it('navigates to nested child in a navigator with initial: false', () => {
 
   expect(second).toMatchInlineSnapshot(`"[bar-b, {\\"test\\":42}]"`);
 
-  expect(navigation.current?.getRootState()).toEqual({
+  expect(navigation.getRootState()).toEqual({
     index: 2,
     key: '4',
     routeNames: ['foo', 'bar'],
@@ -1071,7 +1120,7 @@ it('navigates to nested child in a navigator with initial: false', () => {
 
   expect(third).toMatchInlineSnapshot(`"[bar-b, {\\"some\\":\\"stuff\\"}]"`);
 
-  expect(navigation.current?.getRootState()).toEqual({
+  expect(navigation.getRootState()).toEqual({
     index: 1,
     key: '11',
     routeNames: ['foo', 'bar'],
@@ -1119,7 +1168,7 @@ it('resets state of a nested child in a navigator', () => {
 
   const onStateChange = jest.fn();
 
-  const navigation = React.createRef<NavigationContainerRef>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const first = render(
     <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
@@ -1150,7 +1199,7 @@ it('resets state of a nested child in a navigator', () => {
 
   expect(first).toMatchInlineSnapshot(`"[foo-a, undefined]"`);
 
-  expect(navigation.current?.getRootState()).toEqual({
+  expect(navigation.getRootState()).toEqual({
     index: 0,
     key: '0',
     routeNames: ['foo', 'bar'],
@@ -1183,7 +1232,7 @@ it('resets state of a nested child in a navigator', () => {
   });
 
   act(() =>
-    navigation.current?.navigate('bar', {
+    navigation.navigate('bar', {
       state: {
         routes: [{ name: 'bar-a' }, { name: 'bar-b' }],
       },
@@ -1192,7 +1241,7 @@ it('resets state of a nested child in a navigator', () => {
 
   expect(first).toMatchInlineSnapshot(`"[bar-a, undefined]"`);
 
-  expect(navigation.current?.getRootState()).toEqual({
+  expect(navigation.getRootState()).toEqual({
     index: 1,
     key: '0',
     routeNames: ['foo', 'bar'],
@@ -1231,7 +1280,7 @@ it('resets state of a nested child in a navigator', () => {
   });
 
   act(() =>
-    navigation.current?.navigate('bar', {
+    navigation.navigate('bar', {
       state: {
         index: 2,
         routes: [
@@ -1245,7 +1294,7 @@ it('resets state of a nested child in a navigator', () => {
 
   expect(first).toMatchInlineSnapshot(`"[bar-a, {\\"test\\":18}]"`);
 
-  expect(navigation.current?.getRootState()).toEqual({
+  expect(navigation.getRootState()).toEqual({
     index: 1,
     key: '0',
     routeNames: ['foo', 'bar'],
@@ -1336,7 +1385,7 @@ it('preserves order of screens in state with non-numeric names', () => {
     return null;
   };
 
-  const navigation = React.createRef<NavigationContainerRef>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const root = (
     <BaseNavigationContainer ref={navigation}>
@@ -1350,11 +1399,7 @@ it('preserves order of screens in state with non-numeric names', () => {
 
   render(root);
 
-  expect(navigation.current?.getRootState().routeNames).toEqual([
-    'foo',
-    'bar',
-    'baz',
-  ]);
+  expect(navigation.getRootState().routeNames).toEqual(['foo', 'bar', 'baz']);
 });
 
 it('preserves order of screens in state with numeric names', () => {
@@ -1363,7 +1408,7 @@ it('preserves order of screens in state with numeric names', () => {
     return null;
   };
 
-  const navigation = React.createRef<NavigationContainerRef>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const root = (
     <BaseNavigationContainer ref={navigation}>
@@ -1377,11 +1422,7 @@ it('preserves order of screens in state with numeric names', () => {
 
   render(root);
 
-  expect(navigation.current?.getRootState().routeNames).toEqual([
-    '4',
-    '7',
-    '1',
-  ]);
+  expect(navigation.getRootState().routeNames).toEqual(['4', '7', '1']);
 });
 
 it("throws if navigator doesn't have any screens", () => {
@@ -1458,7 +1499,7 @@ it('throws when Screen is not the direct children', () => {
   );
 
   expect(() => render(element).update(element)).toThrowError(
-    "A navigator can only contain 'Screen' components as its direct children (found 'Bar')"
+    "A navigator can only contain 'Screen', 'Group' or 'React.Fragment' as its direct children (found 'Bar')"
   );
 });
 
@@ -1483,7 +1524,7 @@ it('throws when undefined component is a direct children', () => {
   spy.mockRestore();
 
   expect(() => render(element).update(element)).toThrowError(
-    "A navigator can only contain 'Screen' components as its direct children (found 'undefined' for the screen 'foo')"
+    "A navigator can only contain 'Screen', 'Group' or 'React.Fragment' as its direct children (found 'undefined' for the screen 'foo')"
   );
 });
 
@@ -1503,7 +1544,7 @@ it('throws when a tag is a direct children', () => {
   );
 
   expect(() => render(element).update(element)).toThrowError(
-    "A navigator can only contain 'Screen' components as its direct children (found 'screen' for the screen 'foo')"
+    "A navigator can only contain 'Screen', 'Group' or 'React.Fragment' as its direct children (found 'screen' for the screen 'foo')"
   );
 });
 
@@ -1523,7 +1564,7 @@ it('throws when a React Element is not the direct children', () => {
   );
 
   expect(() => render(element).update(element)).toThrowError(
-    "A navigator can only contain 'Screen' components as its direct children (found 'Hello world')"
+    "A navigator can only contain 'Screen', 'Group' or 'React.Fragment' as its direct children (found 'Hello world')"
   );
 });
 
@@ -1801,7 +1842,7 @@ it('returns currently focused route with getCurrentRoute', () => {
 
   const TestScreen = () => null;
 
-  const navigation = React.createRef<NavigationContainerRef>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const container = (
     <BaseNavigationContainer ref={navigation}>
@@ -1824,7 +1865,7 @@ it('returns currently focused route with getCurrentRoute', () => {
 
   render(container).update(container);
 
-  expect(navigation.current?.getCurrentRoute()).toEqual({
+  expect(navigation.getCurrentRoute()).toEqual({
     key: 'bar-a',
     name: 'bar-a',
   });
@@ -1839,26 +1880,23 @@ it("returns focused screen's options with getCurrentOptions when focused screen 
 
   const TestScreen = () => null;
 
-  const navigation = React.createRef<NavigationContainerRef>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const container = (
     <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
         <Screen name="bar" options={{ a: 'b' }}>
           {() => (
-            <TestNavigator
-              initialRouteName="bar-a"
-              screenOptions={() => ({ sample2: 'data' })}
-            >
+            <TestNavigator initialRouteName="bar-a">
               <Screen
                 name="bar-a"
                 component={TestScreen}
-                options={{ sample: 'data' }}
+                options={{ sample: '1' }}
               />
               <Screen
                 name="bar-b"
                 component={TestScreen}
-                options={{ sample3: 'data' }}
+                options={{ sample2: '2' }}
               />
             </TestNavigator>
           )}
@@ -1870,16 +1908,123 @@ it("returns focused screen's options with getCurrentOptions when focused screen 
 
   render(container).update(container);
 
-  expect(navigation.current?.getCurrentOptions()).toEqual({
-    sample: 'data',
-    sample2: 'data',
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample: '1',
   });
 
-  act(() => navigation.current?.navigate('bar-b'));
+  act(() => navigation.navigate('bar-b'));
 
-  expect(navigation.current?.getCurrentOptions()).toEqual({
-    sample2: 'data',
-    sample3: 'data',
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample2: '2',
+  });
+});
+
+it("returns focused screen's options with getCurrentOptions when focused screen is rendered when using screenOptions", () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestScreen = () => null;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const container = (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="bar" options={{ a: 'b' }}>
+          {() => (
+            <TestNavigator
+              initialRouteName="bar-a"
+              screenOptions={() => ({ sample2: '2' })}
+            >
+              <Screen
+                name="bar-a"
+                component={TestScreen}
+                options={{ sample: '1' }}
+              />
+              <Screen
+                name="bar-b"
+                component={TestScreen}
+                options={{ sample3: '3' }}
+              />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="xux" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(container).update(container);
+
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample: '1',
+    sample2: '2',
+  });
+
+  act(() => navigation.navigate('bar-b'));
+
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample2: '2',
+    sample3: '3',
+  });
+});
+
+it("returns focused screen's options with getCurrentOptions when focused screen is rendered when using Group", () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestScreen = () => null;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const container = (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="bar" options={{ a: 'b' }}>
+          {() => (
+            <TestNavigator
+              initialRouteName="bar-a"
+              screenOptions={() => ({ sample2: '2' })}
+            >
+              <Screen
+                name="bar-a"
+                component={TestScreen}
+                options={{ sample: '1' }}
+              />
+              <Group screenOptions={{ sample4: '4' }}>
+                <Screen
+                  name="bar-b"
+                  component={TestScreen}
+                  options={{ sample3: '3' }}
+                />
+              </Group>
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="xux" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(container).update(container);
+
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample: '1',
+    sample2: '2',
+  });
+
+  act(() => navigation.navigate('bar-b'));
+
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample2: '2',
+    sample3: '3',
+    sample4: '4',
   });
 });
 
@@ -1892,26 +2037,23 @@ it("returns focused screen's options with getCurrentOptions when all screens are
 
   const TestScreen = () => null;
 
-  const navigation = React.createRef<NavigationContainerRef>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const container = (
     <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
         <Screen name="bar" options={{ a: 'b' }}>
           {() => (
-            <TestNavigator
-              initialRouteName="bar-a"
-              screenOptions={() => ({ sample2: 'data' })}
-            >
+            <TestNavigator initialRouteName="bar-a">
               <Screen
                 name="bar-a"
                 component={TestScreen}
-                options={{ sample: 'data' }}
+                options={{ sample: '1' }}
               />
               <Screen
                 name="bar-b"
                 component={TestScreen}
-                options={{ sample3: 'data' }}
+                options={{ sample2: '2' }}
               />
             </TestNavigator>
           )}
@@ -1923,16 +2065,123 @@ it("returns focused screen's options with getCurrentOptions when all screens are
 
   render(container).update(container);
 
-  expect(navigation.current?.getCurrentOptions()).toEqual({
-    sample: 'data',
-    sample2: 'data',
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample: '1',
   });
 
-  act(() => navigation.current?.navigate('bar-b'));
+  act(() => navigation.navigate('bar-b'));
 
-  expect(navigation.current?.getCurrentOptions()).toEqual({
-    sample2: 'data',
-    sample3: 'data',
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample2: '2',
+  });
+});
+
+it("returns focused screen's options with getCurrentOptions when all screens are rendered with screenOptions", () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return <>{state.routes.map((route) => descriptors[route.key].render())}</>;
+  };
+
+  const TestScreen = () => null;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const container = (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="bar" options={{ a: 'b' }}>
+          {() => (
+            <TestNavigator
+              initialRouteName="bar-a"
+              screenOptions={() => ({ sample2: '2' })}
+            >
+              <Screen
+                name="bar-a"
+                component={TestScreen}
+                options={{ sample: '1' }}
+              />
+              <Screen
+                name="bar-b"
+                component={TestScreen}
+                options={{ sample3: '3' }}
+              />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="xux" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(container).update(container);
+
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample: '1',
+    sample2: '2',
+  });
+
+  act(() => navigation.navigate('bar-b'));
+
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample2: '2',
+    sample3: '3',
+  });
+});
+
+it("returns focused screen's options with getCurrentOptions when all screens are rendered with Group", () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return <>{state.routes.map((route) => descriptors[route.key].render())}</>;
+  };
+
+  const TestScreen = () => null;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const container = (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="bar" options={{ a: 'b' }}>
+          {() => (
+            <TestNavigator
+              initialRouteName="bar-a"
+              screenOptions={() => ({ sample2: '2' })}
+            >
+              <Screen
+                name="bar-a"
+                component={TestScreen}
+                options={{ sample: '1' }}
+              />
+              <Group screenOptions={{ sample4: '4' }}>
+                <Screen
+                  name="bar-b"
+                  component={TestScreen}
+                  options={{ sample3: '3' }}
+                />
+              </Group>
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="xux" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(container).update(container);
+
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample: '1',
+    sample2: '2',
+  });
+
+  act(() => navigation.navigate('bar-b'));
+
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample2: '2',
+    sample3: '3',
+    sample4: '4',
   });
 });
 
@@ -1945,7 +2194,7 @@ it('does not throw if while getting current options with no options defined', ()
 
   const TestScreen = () => null;
 
-  const navigation = React.createRef<NavigationContainerRef>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const container = (
     <BaseNavigationContainer ref={navigation}>
@@ -1968,11 +2217,11 @@ it('does not throw if while getting current options with no options defined', ()
 
   render(container).update(container);
 
-  expect(navigation.current?.getCurrentOptions()).toEqual({});
+  expect(navigation.getCurrentOptions()).toEqual({});
 });
 
 it('does not throw if while getting current options with empty container', () => {
-  const navigation = React.createRef<NavigationContainerRef>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const container = (
     <BaseNavigationContainer ref={navigation} children={null} />
@@ -1980,5 +2229,5 @@ it('does not throw if while getting current options with empty container', () =>
 
   render(container).update(container);
 
-  expect(navigation.current?.getCurrentOptions()).toEqual(undefined);
+  expect(navigation.getCurrentOptions()).toEqual(undefined);
 });

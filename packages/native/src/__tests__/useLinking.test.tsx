@@ -1,10 +1,14 @@
-import * as React from 'react';
+import {
+  createNavigationContainerRef,
+  ParamListBase,
+} from '@react-navigation/core';
 import { render, RenderAPI } from '@testing-library/react-native';
-import type { NavigationContainerRef } from '@react-navigation/core';
+import * as React from 'react';
+
 import useLinking from '../useLinking';
 
 it('throws if multiple instances of useLinking are used', () => {
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const options = { prefixes: [] };
 
@@ -14,9 +18,14 @@ it('throws if multiple instances of useLinking are used', () => {
     return null;
   }
 
+  const spy = jest.spyOn(console, 'error').mockImplementation();
+
   let element: RenderAPI | undefined;
 
-  expect(() => (element = render(<Sample />))).toThrowError(
+  element = render(<Sample />);
+
+  expect(spy).toHaveBeenCalledTimes(1);
+  expect(spy.mock.calls[0][0]).toMatch(
     'Looks like you have configured linking in multiple places.'
   );
 
@@ -32,15 +41,17 @@ it('throws if multiple instances of useLinking are used', () => {
     return null;
   }
 
-  expect(
-    () =>
-      (element = render(
-        <>
-          <A />
-          <B />
-        </>
-      ))
-  ).toThrowError('Looks like you have configured linking in multiple places.');
+  element = render(
+    <>
+      <A />
+      <B />
+    </>
+  );
+
+  expect(spy).toHaveBeenCalledTimes(2);
+  expect(spy.mock.calls[1][0]).toMatch(
+    'Looks like you have configured linking in multiple places.'
+  );
 
   element?.unmount();
 
@@ -53,17 +64,9 @@ it('throws if multiple instances of useLinking are used', () => {
 
   render(wrapper2).unmount();
 
-  expect(() => (element = render(wrapper2))).not.toThrow();
+  render(wrapper2);
 
-  element?.unmount();
-
-  function Sample3() {
-    useLinking(ref, options);
-    useLinking(ref, { ...options, enabled: false });
-    return null;
-  }
-
-  expect(() => (element = render(<Sample3 />))).not.toThrowError();
+  expect(spy).toHaveBeenCalledTimes(2);
 
   element?.unmount();
 });

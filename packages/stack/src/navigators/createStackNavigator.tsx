@@ -1,76 +1,92 @@
-import * as React from 'react';
-import { Platform } from 'react-native';
 import {
-  useNavigationBuilder,
   createNavigatorFactory,
   DefaultNavigatorOptions,
   EventArg,
-  StackRouter,
-  StackRouterOptions,
-  StackNavigationState,
-  StackActions,
   ParamListBase,
   StackActionHelpers,
+  StackActions,
+  StackNavigationState,
+  StackRouter,
+  StackRouterOptions,
+  useNavigationBuilder,
 } from '@react-navigation/native';
+import * as React from 'react';
 import warnOnce from 'warn-once';
-import StackView from '../views/Stack/StackView';
-import type {
-  StackNavigationConfig,
-  StackNavigationOptions,
-  StackNavigationEventMap,
-  StackHeaderMode,
-} from '../types';
 
-type Props = DefaultNavigatorOptions<StackNavigationOptions> &
+import type {
+  StackHeaderMode,
+  StackNavigationConfig,
+  StackNavigationEventMap,
+  StackNavigationOptions,
+} from '../types';
+import StackView from '../views/Stack/StackView';
+
+type Props = DefaultNavigatorOptions<
+  ParamListBase,
+  StackNavigationState<ParamListBase>,
+  StackNavigationOptions,
+  StackNavigationEventMap
+> &
   StackRouterOptions &
   StackNavigationConfig;
 
 function StackNavigator({
   initialRouteName,
   children,
+  screenListeners,
   screenOptions,
   ...rest
 }: Props) {
+  // @ts-expect-error: mode is deprecated
+  const mode = rest.mode as 'card' | 'modal' | undefined;
+
+  warnOnce(
+    mode != null,
+    `Stack Navigator: 'mode="${mode}"' is deprecated. Use 'presentation: "${mode}"' in 'screenOptions' instead.\n\nSee https://reactnavigation.org/docs/stack-navigator#presentation for more details.`
+  );
+
   // @ts-expect-error: headerMode='none' is deprecated
   const headerMode = rest.headerMode as StackHeaderMode | 'none' | undefined;
 
   warnOnce(
     headerMode === 'none',
-    `Stack Navigator: 'headerMode="none"' is deprecated. Use 'headerShown: false' in 'screenOptions' instead.`
+    `Stack Navigator: 'headerMode="none"' is deprecated. Use 'headerShown: false' in 'screenOptions' instead.\n\nSee https://reactnavigation.org/docs/stack-navigator/#headershown for more details.`
   );
 
   warnOnce(
-    headerMode && headerMode !== 'none',
-    `Stack Navigator: 'headerMode' is moved to 'options'. Moved it to 'screenOptions' to keep current behavior.`
+    headerMode != null && headerMode !== 'none',
+    `Stack Navigator: 'headerMode' is moved to 'options'. Moved it to 'screenOptions' to keep current behavior.\n\nSee https://reactnavigation.org/docs/stack-navigator/#headermode for more details.`
   );
 
-  const { state, descriptors, navigation } = useNavigationBuilder<
-    StackNavigationState<ParamListBase>,
-    StackRouterOptions,
-    StackActionHelpers<ParamListBase>,
-    StackNavigationOptions,
-    StackNavigationEventMap
-  >(StackRouter, {
-    initialRouteName,
-    children,
-    screenOptions,
-    defaultScreenOptions: ({ options }) => ({
-      headerShown: headerMode ? headerMode !== 'none' : true,
-      headerMode:
-        headerMode && headerMode !== 'none'
-          ? headerMode
-          : rest.mode !== 'modal' &&
-            Platform.OS === 'ios' &&
-            options.header === undefined
-          ? 'float'
-          : 'screen',
-      gestureEnabled: Platform.OS === 'ios',
-      animationEnabled:
-        Platform.OS !== 'web' &&
-        Platform.OS !== 'windows' &&
-        Platform.OS !== 'macos',
-    }),
-  });
+  // @ts-expect-error: headerMode='none' is deprecated
+  const keyboardHandlingEnabled = rest.keyboardHandlingEnabled;
+
+  warnOnce(
+    keyboardHandlingEnabled !== undefined,
+    `Stack Navigator: 'keyboardHandlingEnabled' is moved to 'options'. Moved it to 'screenOptions' to keep current behavior.\n\nSee https://reactnavigation.org/docs/stack-navigator/#keyboardhandlingenabled for more details.`
+  );
+
+  const defaultScreenOptions: StackNavigationOptions = {
+    presentation: mode,
+    headerShown: headerMode ? headerMode !== 'none' : true,
+    headerMode: headerMode && headerMode !== 'none' ? headerMode : undefined,
+    keyboardHandlingEnabled,
+  };
+
+  const { state, descriptors, navigation, NavigationContent } =
+    useNavigationBuilder<
+      StackNavigationState<ParamListBase>,
+      StackRouterOptions,
+      StackActionHelpers<ParamListBase>,
+      StackNavigationOptions,
+      StackNavigationEventMap
+    >(StackRouter, {
+      initialRouteName,
+      children,
+      screenListeners,
+      screenOptions,
+      defaultScreenOptions,
+    });
 
   React.useEffect(
     () =>
@@ -98,12 +114,14 @@ function StackNavigator({
   );
 
   return (
-    <StackView
-      {...rest}
-      state={state}
-      descriptors={descriptors}
-      navigation={navigation}
-    />
+    <NavigationContent>
+      <StackView
+        {...rest}
+        state={state}
+        descriptors={descriptors}
+        navigation={navigation}
+      />
+    </NavigationContent>
   );
 }
 

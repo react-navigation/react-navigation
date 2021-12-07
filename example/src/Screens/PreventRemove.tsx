@@ -1,23 +1,23 @@
-import * as React from 'react';
 import {
-  Alert,
-  View,
-  TextInput,
-  ScrollView,
-  StyleSheet,
-  Platform,
-} from 'react-native';
-import { Button } from 'react-native-paper';
-import {
-  useTheme,
   CommonActions,
   ParamListBase,
-  NavigationAction,
+  useTheme,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
   StackScreenProps,
 } from '@react-navigation/stack';
+import * as React from 'react';
+import {
+  Alert,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
+import { Button } from 'react-native-paper';
+
 import Article from '../Shared/Article';
 
 type PreventRemoveParams = {
@@ -68,10 +68,7 @@ const InputScreen = ({
   React.useEffect(
     () =>
       navigation.addListener('beforeRemove', (e) => {
-        const action: NavigationAction & { payload?: { confirmed?: boolean } } =
-          e.data.action;
-
-        if (!hasUnsavedChanges || action.payload?.confirmed) {
+        if (!hasUnsavedChanges) {
           return;
         }
 
@@ -83,7 +80,7 @@ const InputScreen = ({
           );
 
           if (discard) {
-            navigation.dispatch(action);
+            navigation.dispatch(e.data.action);
           }
         } else {
           Alert.alert(
@@ -94,7 +91,7 @@ const InputScreen = ({
               {
                 text: 'Discard',
                 style: 'destructive',
-                onPress: () => navigation.dispatch(action),
+                onPress: () => navigation.dispatch(e.data.action),
               },
             ]
           );

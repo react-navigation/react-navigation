@@ -1,31 +1,29 @@
-import * as React from 'react';
-import { StyleSheet } from 'react-native';
-import { ScreenContainer } from 'react-native-screens';
-import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import {
-  NavigationHelpersContext,
+  getHeaderTitle,
+  Header,
+  SafeAreaProviderCompat,
+  Screen,
+} from '@react-navigation/elements';
+import type {
   ParamListBase,
   TabNavigationState,
 } from '@react-navigation/native';
-import {
-  Header,
-  Screen,
-  SafeAreaProviderCompat,
-  getHeaderTitle,
-} from '@react-navigation/elements';
+import * as React from 'react';
+import { Platform, StyleSheet } from 'react-native';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
-import ScreenFallback from './ScreenFallback';
-import BottomTabBar, { getTabBarHeight } from './BottomTabBar';
-import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
-import BottomTabBarHeightContext from '../utils/BottomTabBarHeightContext';
 import type {
-  BottomTabNavigationConfig,
-  BottomTabDescriptorMap,
-  BottomTabNavigationHelpers,
   BottomTabBarProps,
+  BottomTabDescriptorMap,
   BottomTabHeaderProps,
+  BottomTabNavigationConfig,
+  BottomTabNavigationHelpers,
   BottomTabNavigationProp,
 } from '../types';
+import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
+import BottomTabBarHeightContext from '../utils/BottomTabBarHeightContext';
+import BottomTabBar, { getTabBarHeight } from './BottomTabBar';
+import { MaybeScreen, MaybeScreenContainer } from './ScreenFallback';
 
 type Props = BottomTabNavigationConfig & {
   state: TabNavigationState<ParamListBase>;
@@ -40,7 +38,9 @@ export default function BottomTabView(props: Props) {
     navigation,
     descriptors,
     safeAreaInsets,
-    detachInactiveScreens = true,
+    detachInactiveScreens = Platform.OS === 'web' ||
+      Platform.OS === 'android' ||
+      Platform.OS === 'ios',
     sceneContainerStyle,
   } = props;
 
@@ -89,73 +89,72 @@ export default function BottomTabView(props: Props) {
   const { routes } = state;
 
   return (
-    <NavigationHelpersContext.Provider value={navigation}>
-      <SafeAreaProviderCompat>
-        <ScreenContainer
-          // @ts-ignore
-          enabled={detachInactiveScreens}
-          style={styles.container}
-        >
-          {routes.map((route, index) => {
-            const descriptor = descriptors[route.key];
-            const { lazy = true, unmountOnBlur } = descriptor.options;
-            const isFocused = state.index === index;
+    <SafeAreaProviderCompat>
+      <MaybeScreenContainer
+        enabled={detachInactiveScreens}
+        style={styles.container}
+      >
+        {routes.map((route, index) => {
+          const descriptor = descriptors[route.key];
+          const { lazy = true, unmountOnBlur } = descriptor.options;
+          const isFocused = state.index === index;
 
-            if (unmountOnBlur && !isFocused) {
-              return null;
-            }
+          if (unmountOnBlur && !isFocused) {
+            return null;
+          }
 
-            if (lazy && !loaded.includes(route.key) && !isFocused) {
-              // Don't render a lazy screen if we've never navigated to it
-              return null;
-            }
+          if (lazy && !loaded.includes(route.key) && !isFocused) {
+            // Don't render a lazy screen if we've never navigated to it
+            return null;
+          }
 
-            const {
-              header = ({ layout, options }: BottomTabHeaderProps) => (
-                <Header
-                  {...options}
-                  layout={layout}
-                  title={getHeaderTitle(options, route.name)}
-                />
-              ),
-            } = descriptor.options;
+          const {
+            header = ({ layout, options }: BottomTabHeaderProps) => (
+              <Header
+                {...options}
+                layout={layout}
+                title={getHeaderTitle(options, route.name)}
+              />
+            ),
+          } = descriptor.options;
 
-            return (
-              <ScreenFallback
-                key={route.key}
-                style={StyleSheet.absoluteFill}
-                visible={isFocused}
-                enabled={detachInactiveScreens}
-              >
-                <BottomTabBarHeightContext.Provider value={tabBarHeight}>
-                  <Screen
-                    focused={isFocused}
-                    route={descriptor.route}
-                    navigation={descriptor.navigation}
-                    headerShown={descriptor.options.headerShown}
-                    headerStatusBarHeight={
-                      descriptor.options.headerStatusBarHeight
-                    }
-                    header={header({
-                      layout: dimensions,
-                      route: descriptor.route,
-                      navigation: descriptor.navigation as BottomTabNavigationProp<ParamListBase>,
-                      options: descriptor.options,
-                    })}
-                    style={sceneContainerStyle}
-                  >
-                    {descriptor.render()}
-                  </Screen>
-                </BottomTabBarHeightContext.Provider>
-              </ScreenFallback>
-            );
-          })}
-        </ScreenContainer>
-        <BottomTabBarHeightCallbackContext.Provider value={setTabBarHeight}>
-          {renderTabBar()}
-        </BottomTabBarHeightCallbackContext.Provider>
-      </SafeAreaProviderCompat>
-    </NavigationHelpersContext.Provider>
+          return (
+            <MaybeScreen
+              key={route.key}
+              style={[StyleSheet.absoluteFill, { zIndex: isFocused ? 0 : -1 }]}
+              visible={isFocused}
+              enabled={detachInactiveScreens}
+            >
+              <BottomTabBarHeightContext.Provider value={tabBarHeight}>
+                <Screen
+                  focused={isFocused}
+                  route={descriptor.route}
+                  navigation={descriptor.navigation}
+                  headerShown={descriptor.options.headerShown}
+                  headerTransparent={descriptor.options.headerTransparent}
+                  headerStatusBarHeight={
+                    descriptor.options.headerStatusBarHeight
+                  }
+                  header={header({
+                    layout: dimensions,
+                    route: descriptor.route,
+                    navigation:
+                      descriptor.navigation as BottomTabNavigationProp<ParamListBase>,
+                    options: descriptor.options,
+                  })}
+                  style={sceneContainerStyle}
+                >
+                  {descriptor.render()}
+                </Screen>
+              </BottomTabBarHeightContext.Provider>
+            </MaybeScreen>
+          );
+        })}
+      </MaybeScreenContainer>
+      <BottomTabBarHeightCallbackContext.Provider value={setTabBarHeight}>
+        {renderTabBar()}
+      </BottomTabBarHeightCallbackContext.Provider>
+    </SafeAreaProviderCompat>
   );
 }
 

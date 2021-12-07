@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Platform, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { Platform, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 type Props = {
   visible: boolean;
@@ -42,9 +42,9 @@ export default function ResourceSavingScene({
       <View
         collapsable={false}
         removeClippedSubviews={
-          // On iOS, set removeClippedSubviews to true only when not focused
+          // On iOS & macOS, set removeClippedSubviews to true only when not focused
           // This is an workaround for a bug where the clipped view never re-appears
-          Platform.OS === 'ios' ? !visible : true
+          Platform.OS === 'ios' || Platform.OS === 'macos' ? !visible : true
         }
         pointerEvents={visible ? 'auto' : 'none'}
         style={visible ? styles.attached : styles.detached}

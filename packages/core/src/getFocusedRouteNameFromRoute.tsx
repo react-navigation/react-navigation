@@ -1,4 +1,5 @@
 import type { Route } from '@react-navigation/routers';
+
 import { CHILD_STATE } from './useRouteCache';
 
 export default function getFocusedRouteNameFromRoute(

@@ -1,13 +1,15 @@
-import * as React from 'react';
 import {
-  getStateFromPath as getStateFromPathDefault,
+  findFocusedRoute,
+  getActionFromState as getActionFromStateDefault,
   getPathFromState as getPathFromStateDefault,
+  getStateFromPath as getStateFromPathDefault,
   NavigationContainerRef,
   NavigationState,
-  getActionFromState,
-  findFocusedRoute,
+  ParamListBase,
 } from '@react-navigation/core';
 import { nanoid } from 'nanoid/non-secure';
+import * as React from 'react';
+
 import ServerContext from './ServerContext';
 import type { LinkingOptions } from './types';
 
@@ -96,12 +98,16 @@ const createMemoryHistory = () => {
 
       const id = window.history.state?.id ?? nanoid();
 
-      if (items.length) {
-        items[index] = { path, state, id };
+      if (!items.length || items.findIndex((item) => item.id === id) < 0) {
+        // There are two scenarios for creating an array with only one history record:
+        // - When loaded id not found in the items array, this function by default will replace
+        //   the first item. We need to keep only the new updated object, otherwise it will break
+        //   the page when navigating forward in history.
+        // - This is the first time any state modifications are done
+        //   So we need to push the entry as there's nothing to replace
+        items = [{ path, state, id }];
       } else {
-        // This is the first time any state modifications are done
-        // So we need to push the entry as there's nothing to replace
-        items.push({ path, state, id });
+        items[index] = { path, state, id };
       }
 
       window.history.replaceState({ id }, '', path);
@@ -177,6 +183,13 @@ const createMemoryHistory = () => {
         }, 100);
 
         const onPopState = () => {
+          const id = window.history.state?.id;
+          const currentIndex = items.findIndex((item) => item.id === id);
+
+          // Fix createMemoryHistory.index variable's value
+          // as it may go out of sync when navigating in the browser.
+          index = Math.max(currentIndex, 0);
+
           const last = pending.pop();
 
           window.removeEventListener('popstate', onPopState);
@@ -285,36 +298,58 @@ const series = (cb: () => Promise<void>) => {
   return callback;
 };
 
-let isUsingLinking = false;
+let linkingHandlers: Symbol[] = [];
+
+type Options = LinkingOptions<ParamListBase> & {
+  independent?: boolean;
+};
 
 export default function useLinking(
-  ref: React.RefObject<NavigationContainerRef>,
+  ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
   {
+    independent,
     enabled = true,
     config,
     getStateFromPath = getStateFromPathDefault,
     getPathFromState = getPathFromStateDefault,
-  }: LinkingOptions
+    getActionFromState = getActionFromStateDefault,
+  }: Options
 ) {
   React.useEffect(() => {
-    if (enabled !== false && isUsingLinking) {
-      throw new Error(
+    if (process.env.NODE_ENV === 'production') {
+      return undefined;
+    }
+
+    if (independent) {
+      return undefined;
+    }
+
+    if (enabled !== false && linkingHandlers.length) {
+      console.error(
         [
-          'Looks like you have configured linking in multiple places. This is likely an error since URL integration should only be handled in one place to avoid conflicts. Make sure that:',
-          "- You are not using both 'linking' prop and 'useLinking'",
-          "- You don't have 'useLinking' in multiple components",
+          'Looks like you have configured linking in multiple places. This is likely an error since deep links should only be handled in one place to avoid conflicts. Make sure that:',
+          "- You don't have multiple NavigationContainers in the app each with 'linking' enabled",
+          '- Only a single instance of the root component is rendered',
         ]
           .join('\n')
           .trim()
       );
-    } else {
-      isUsingLinking = enabled !== false;
+    }
+
+    const handler = Symbol();
+
+    if (enabled !== false) {
+      linkingHandlers.push(handler);
     }
 
     return () => {
-      isUsingLinking = false;
+      const index = linkingHandlers.indexOf(handler);
+
+      if (index > -1) {
+        linkingHandlers.splice(index, 1);
+      }
     };
-  });
+  }, [enabled, independent]);
 
   const [history] = React.useState(createMemoryHistory);
 
@@ -325,13 +360,15 @@ export default function useLinking(
   const configRef = React.useRef(config);
   const getStateFromPathRef = React.useRef(getStateFromPath);
   const getPathFromStateRef = React.useRef(getPathFromState);
+  const getActionFromStateRef = React.useRef(getActionFromState);
 
   React.useEffect(() => {
     enabledRef.current = enabled;
     configRef.current = config;
     getStateFromPathRef.current = getStateFromPath;
     getPathFromStateRef.current = getPathFromState;
-  }, [config, enabled, getPathFromState, getStateFromPath]);
+    getActionFromStateRef.current = getActionFromState;
+  });
 
   const server = React.useContext(ServerContext);
 
@@ -412,7 +449,10 @@ export default function useLinking(
         }
 
         if (index > previousIndex) {
-          const action = getActionFromState(state, configRef.current);
+          const action = getActionFromStateRef.current(
+            state,
+            configRef.current
+          );
 
           if (action !== undefined) {
             try {

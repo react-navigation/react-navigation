@@ -1,45 +1,43 @@
+import {
+  getDefaultHeaderHeight,
+  Header,
+  HeaderBackButton,
+  HeaderBackButtonProps,
+  HeaderTitle,
+} from '@react-navigation/elements';
 import * as React from 'react';
 import {
   Animated,
+  LayoutChangeEvent,
+  Platform,
   StyleSheet,
   ViewStyle,
-  LayoutChangeEvent,
 } from 'react-native';
-import type { EdgeInsets } from 'react-native-safe-area-context';
-import {
-  Header,
-  HeaderBackButton,
-  HeaderShownContext,
-  HeaderTitle,
-  getDefaultHeaderHeight,
-} from '@react-navigation/elements';
-import memoize from '../../utils/memoize';
+
 import type {
   Layout,
-  StackHeaderStyleInterpolator,
   SceneProgress,
   StackHeaderOptions,
+  StackHeaderStyleInterpolator,
 } from '../../types';
+import memoize from '../../utils/memoize';
 
-type Props = StackHeaderOptions & {
+type Props = Omit<StackHeaderOptions, 'headerStatusBarHeight'> & {
+  headerStatusBarHeight: number;
   layout: Layout;
   title: string;
-  insets: EdgeInsets;
+  modal: boolean;
   onGoBack?: () => void;
   progress: SceneProgress;
   styleInterpolator: StackHeaderStyleInterpolator;
 };
 
 export default function HeaderSegment(props: Props) {
-  const isParentHeaderShown = React.useContext(HeaderShownContext);
+  const [leftLabelLayout, setLeftLabelLayout] =
+    React.useState<Layout | undefined>(undefined);
 
-  const [leftLabelLayout, setLeftLabelLayout] = React.useState<
-    Layout | undefined
-  >(undefined);
-
-  const [titleLayout, setTitleLayout] = React.useState<Layout | undefined>(
-    undefined
-  );
+  const [titleLayout, setTitleLayout] =
+    React.useState<Layout | undefined>(undefined);
 
   const handleTitleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
@@ -98,14 +96,17 @@ export default function HeaderSegment(props: Props) {
 
   const {
     progress,
-    insets,
     layout,
+    modal,
     onGoBack,
     headerTitle: title,
-    headerLeft: left,
+    headerLeft: left = onGoBack
+      ? (props: HeaderBackButtonProps) => <HeaderBackButton {...props} />
+      : undefined,
+    headerRight: right,
     headerBackImage,
     headerBackTitle,
-    headerBackTitleVisible,
+    headerBackTitleVisible = Platform.OS === 'ios',
     headerTruncatedBackTitle,
     headerBackAccessibilityLabel,
     headerBackTestID,
@@ -116,12 +117,16 @@ export default function HeaderSegment(props: Props) {
     headerRightContainerStyle,
     headerBackgroundContainerStyle,
     headerStyle: customHeaderStyle,
-    headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
+    headerStatusBarHeight,
     styleInterpolator,
     ...rest
   } = props;
 
-  const defaultHeight = getDefaultHeaderHeight(layout, headerStatusBarHeight);
+  const defaultHeight = getDefaultHeaderHeight(
+    layout,
+    modal,
+    headerStatusBarHeight
+  );
 
   const { height = defaultHeight } = StyleSheet.flatten(
     customHeaderStyle || {}
@@ -144,38 +149,45 @@ export default function HeaderSegment(props: Props) {
   );
 
   const headerLeft: StackHeaderOptions['headerLeft'] = left
-    ? left
-    : onGoBack
-    ? (props) => (
-        <HeaderBackButton
-          {...props}
-          backImage={headerBackImage}
-          accessibilityLabel={headerBackAccessibilityLabel}
-          testID={headerBackTestID}
-          allowFontScaling={headerBackAllowFontScaling}
-          onPress={onGoBack}
-          labelVisible={headerBackTitleVisible}
-          label={headerBackTitle}
-          truncatedLabel={headerTruncatedBackTitle}
-          labelStyle={[leftLabelStyle, headerBackTitleStyle]}
-          onLabelLayout={handleLeftLabelLayout}
-          screenLayout={layout}
-          titleLayout={titleLayout}
-          canGoBack={Boolean(onGoBack)}
-        />
-      )
+    ? (props) =>
+        left({
+          ...props,
+          backImage: headerBackImage,
+          accessibilityLabel: headerBackAccessibilityLabel,
+          testID: headerBackTestID,
+          allowFontScaling: headerBackAllowFontScaling,
+          onPress: onGoBack,
+          label: headerBackTitle,
+          truncatedLabel: headerTruncatedBackTitle,
+          labelStyle: [leftLabelStyle, headerBackTitleStyle],
+          onLabelLayout: handleLeftLabelLayout,
+          screenLayout: layout,
+          titleLayout,
+          canGoBack: Boolean(onGoBack),
+        })
+    : undefined;
+
+  const headerRight: StackHeaderOptions['headerRight'] = right
+    ? (props) =>
+        right({
+          ...props,
+          canGoBack: Boolean(onGoBack),
+        })
     : undefined;
 
   const headerTitle: StackHeaderOptions['headerTitle'] =
     typeof title !== 'function'
       ? (props) => <HeaderTitle {...props} onLayout={handleTitleLayout} />
-      : title;
+      : (props) => title({ ...props, onLayout: handleTitleLayout });
 
   return (
     <Header
+      modal={modal}
       layout={layout}
       headerTitle={headerTitle}
       headerLeft={headerLeft}
+      headerLeftLabelVisible={headerBackTitleVisible}
+      headerRight={headerRight}
       headerTitleContainerStyle={[titleStyle, headerTitleContainerStyle]}
       headerLeftContainerStyle={[leftButtonStyle, headerLeftContainerStyle]}
       headerRightContainerStyle={[rightButtonStyle, headerRightContainerStyle]}

@@ -1,18 +1,19 @@
-import * as React from 'react';
-import { View, StyleSheet, ScrollView, Platform } from 'react-native';
-import { Button } from 'react-native-paper';
 import {
   Link,
-  StackActions,
   ParamListBase,
+  StackActions,
   useLinkProps,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
   StackScreenProps,
 } from '@react-navigation/stack';
-import Article from '../Shared/Article';
+import * as React from 'react';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Button } from 'react-native-paper';
+
 import Albums from '../Shared/Albums';
+import Article from '../Shared/Article';
 
 type SimpleStackParams = {
   Article: { author: string };
@@ -24,7 +25,8 @@ const scrollEnabled = Platform.select({ web: true, default: false });
 const LinkButton = ({
   to,
   ...rest
-}: React.ComponentProps<typeof Button> & { to: string }) => {
+}: React.ComponentProps<typeof Button> &
+  Parameters<typeof useLinkProps>[0]) => {
   const props = useLinkProps({ to });
 
   return <Button {...props} {...rest} />;
@@ -38,7 +40,7 @@ const ArticleScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Link
-          to="/link-component/music"
+          to={{ screen: 'LinkComponent', params: { screen: 'Albums' } }}
           style={[styles.button, { padding: 8 }]}
         >
           Go to /link-component/music
@@ -56,6 +58,13 @@ const ArticleScreen = ({
           style={styles.button}
         >
           Go to /link-component/music
+        </LinkButton>
+        <LinkButton
+          to={{ screen: 'Home' }}
+          mode="contained"
+          style={styles.button}
+        >
+          Go to /
         </LinkButton>
         <Button
           mode="outlined"

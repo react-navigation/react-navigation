@@ -1,22 +1,30 @@
-import * as React from 'react';
-import { Linking, Platform } from 'react-native';
 import {
-  getActionFromState,
+  getActionFromState as getActionFromStateDefault,
   getStateFromPath as getStateFromPathDefault,
   NavigationContainerRef,
+  ParamListBase,
 } from '@react-navigation/core';
+import * as React from 'react';
+import { Linking, Platform } from 'react-native';
+
 import extractPathFromURL from './extractPathFromURL';
 import type { LinkingOptions } from './types';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
-let isUsingLinking = false;
+type Options = LinkingOptions<ParamListBase> & {
+  independent?: boolean;
+};
+
+let linkingHandlers: Symbol[] = [];
 
 export default function useLinking(
-  ref: React.RefObject<NavigationContainerRef>,
+  ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
   {
+    independent,
     enabled = true,
     prefixes,
+    filter,
     config,
     getInitialURL = () =>
       Promise.race([
@@ -44,15 +52,24 @@ export default function useLinking(
       };
     },
     getStateFromPath = getStateFromPathDefault,
-  }: LinkingOptions
+    getActionFromState = getActionFromStateDefault,
+  }: Options
 ) {
   React.useEffect(() => {
-    if (enabled !== false && isUsingLinking) {
-      throw new Error(
+    if (process.env.NODE_ENV === 'production') {
+      return undefined;
+    }
+
+    if (independent) {
+      return undefined;
+    }
+
+    if (enabled !== false && linkingHandlers.length) {
+      console.error(
         [
           'Looks like you have configured linking in multiple places. This is likely an error since deep links should only be handled in one place to avoid conflicts. Make sure that:',
-          "- You are not using both 'linking' prop and 'useLinking'",
-          "- You don't have 'useLinking' in multiple components",
+          "- You don't have multiple NavigationContainers in the app each with 'linking' enabled",
+          '- Only a single instance of the root component is rendered',
           Platform.OS === 'android'
             ? "- You have set 'android:launchMode=singleTask' in the '<activity />' section of the 'AndroidManifest.xml' file to avoid launching multiple instances"
             : '',
@@ -60,31 +77,58 @@ export default function useLinking(
           .join('\n')
           .trim()
       );
-    } else {
-      isUsingLinking = enabled !== false;
+    }
+
+    const handler = Symbol();
+
+    if (enabled !== false) {
+      linkingHandlers.push(handler);
     }
 
     return () => {
-      isUsingLinking = false;
+      const index = linkingHandlers.indexOf(handler);
+
+      if (index > -1) {
+        linkingHandlers.splice(index, 1);
+      }
     };
-  });
+  }, [enabled, independent]);
 
   // We store these options in ref to avoid re-creating getInitialState and re-subscribing listeners
   // This lets user avoid wrapping the items in `React.useCallback` or `React.useMemo`
   // Not re-creating `getInitialState` is important coz it makes it easier for the user to use in an effect
   const enabledRef = React.useRef(enabled);
   const prefixesRef = React.useRef(prefixes);
+  const filterRef = React.useRef(filter);
   const configRef = React.useRef(config);
   const getInitialURLRef = React.useRef(getInitialURL);
   const getStateFromPathRef = React.useRef(getStateFromPath);
+  const getActionFromStateRef = React.useRef(getActionFromState);
 
   React.useEffect(() => {
     enabledRef.current = enabled;
     prefixesRef.current = prefixes;
+    filterRef.current = filter;
     configRef.current = config;
     getInitialURLRef.current = getInitialURL;
     getStateFromPathRef.current = getStateFromPath;
-  }, [config, enabled, prefixes, getInitialURL, getStateFromPath]);
+    getActionFromStateRef.current = getActionFromState;
+  });
+
+  const getStateFromURL = React.useCallback(
+    (url: string | null | undefined) => {
+      if (!url || (filterRef.current && !filterRef.current(url))) {
+        return undefined;
+      }
+
+      const path = extractPathFromURL(prefixesRef.current, url);
+
+      return path
+        ? getStateFromPathRef.current(path, configRef.current)
+        : undefined;
+    },
+    []
+  );
 
   const getInitialState = React.useCallback(() => {
     let state: ResultState | undefined;
@@ -94,21 +138,13 @@ export default function useLinking(
 
       if (url != null && typeof url !== 'string') {
         return url.then((url) => {
-          const path = url
-            ? extractPathFromURL(prefixesRef.current, url)
-            : null;
+          const state = getStateFromURL(url);
 
-          return path
-            ? getStateFromPathRef.current(path, configRef.current)
-            : undefined;
+          return state;
         });
       }
 
-      const path = url ? extractPathFromURL(prefixesRef.current, url) : null;
-
-      state = path
-        ? getStateFromPathRef.current(path, configRef.current)
-        : undefined;
+      state = getStateFromURL(url);
     }
 
     const thenable = {
@@ -121,7 +157,7 @@ export default function useLinking(
     };
 
     return thenable as PromiseLike<ResultState | undefined>;
-  }, []);
+  }, [getStateFromURL]);
 
   React.useEffect(() => {
     const listener = (url: string) => {
@@ -129,47 +165,41 @@ export default function useLinking(
         return;
       }
 
-      const path = extractPathFromURL(prefixesRef.current, url);
       const navigation = ref.current;
+      const state = navigation ? getStateFromURL(url) : undefined;
 
-      if (navigation && path) {
-        const state = getStateFromPathRef.current(path, configRef.current);
+      if (navigation && state) {
+        // Make sure that the routes in the state exist in the root navigator
+        // Otherwise there's an error in the linking configuration
+        const rootState = navigation.getRootState();
 
-        if (state) {
-          // Make sure that the routes in the state exist in the root navigator
-          // Otherwise there's an error in the linking configuration
-          const rootState = navigation.getRootState();
+        if (state.routes.some((r) => !rootState?.routeNames.includes(r.name))) {
+          console.warn(
+            "The navigation state parsed from the URL contains routes not present in the root navigator. This usually means that the linking configuration doesn't match the navigation structure. See https://reactnavigation.org/docs/configuring-links for more details on how to specify a linking configuration."
+          );
+          return;
+        }
 
-          if (
-            state.routes.some((r) => !rootState?.routeNames.includes(r.name))
-          ) {
+        const action = getActionFromStateRef.current(state, configRef.current);
+
+        if (action !== undefined) {
+          try {
+            navigation.dispatch(action);
+          } catch (e) {
+            // Ignore any errors from deep linking.
+            // This could happen in case of malformed links, navigation object not being initialized etc.
             console.warn(
-              "The navigation state parsed from the URL contains routes not present in the root navigator. This usually means that the linking configuration doesn't match the navigation structure. See https://reactnavigation.org/docs/configuring-links for more details on how to specify a linking configuration."
+              `An error occurred when trying to handle the link '${url}': ${e.message}`
             );
-            return;
           }
-
-          const action = getActionFromState(state, configRef.current);
-
-          if (action !== undefined) {
-            try {
-              navigation.dispatch(action);
-            } catch (e) {
-              // Ignore any errors from deep linking.
-              // This could happen in case of malformed links, navigation object not being initialized etc.
-              console.warn(
-                `An error occurred when trying to handle the link '${path}': ${e.message}`
-              );
-            }
-          } else {
-            navigation.resetRoot(state);
-          }
+        } else {
+          navigation.resetRoot(state);
         }
       }
     };
 
     return subscribe(listener);
-  }, [enabled, ref, subscribe]);
+  }, [enabled, getStateFromURL, ref, subscribe]);
 
   return {
     getInitialState,

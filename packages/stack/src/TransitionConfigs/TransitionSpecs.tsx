@@ -1,4 +1,5 @@
 import { Easing } from 'react-native';
+
 import type { TransitionSpec } from '../types';
 
 /**

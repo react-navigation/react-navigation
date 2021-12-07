@@ -1,8 +1,9 @@
-import * as React from 'react';
 import type { NavigationState } from '@react-navigation/routers';
+import * as React from 'react';
+
 import NavigationContext from './NavigationContext';
-import type { NavigationEventEmitter } from './useEventEmitter';
 import type { EventMapCore } from './types';
+import type { NavigationEventEmitter } from './useEventEmitter';
 
 type Options<State extends NavigationState> = {
   state: State;

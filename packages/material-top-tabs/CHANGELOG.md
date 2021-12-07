@@ -3,6 +3,203 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.5...@react-navigation/material-top-tabs@6.0.6) (2021-10-12)
+
+
+### Bug Fixes
+
+* move [@ts-expect-error](https://github.com/ts-expect-error) to body to avoid issue in type definitions ([0a08688](https://github.com/react-navigation/react-navigation/commit/0a0868862c9d6ae77055c66938a764306d391b44))
+
+
+
+
+
+## [6.0.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.4...@react-navigation/material-top-tabs@6.0.5) (2021-10-09)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+## [6.0.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.3...@react-navigation/material-top-tabs@6.0.4) (2021-09-26)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+## [6.0.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.2...@react-navigation/material-top-tabs@6.0.3) (2021-09-26)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+## [6.0.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.1...@react-navigation/material-top-tabs@6.0.2) (2021-08-07)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+## [6.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.0...@react-navigation/material-top-tabs@6.0.1) (2021-08-03)
+
+
+### Bug Fixes
+
+* preserve params when switching tabs. fixes [#9782](https://github.com/react-navigation/react-navigation/issues/9782) ([98fa233](https://github.com/react-navigation/react-navigation/commit/98fa2330146457045c01af820c6d8e8cb955f9d1))
+
+
+
+
+
+# [6.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.0-next.18...@react-navigation/material-top-tabs@6.0.0) (2021-08-01)
+
+
+### Features
+
+* add tabBarBadge and tabBarIndicator options for material top tabs ([fdb3ede](https://github.com/react-navigation/react-navigation/commit/fdb3ede3e0eb1e43c4be30c810663880e2f5467c))
+* move some props to screenOptions in material top tabs ([5bfc396](https://github.com/react-navigation/react-navigation/commit/5bfc39668bb5dce8bd872e5ff87f4b3fd683cf62))
+
+
+
+
+
+# [6.0.0-next.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.0-next.17...@react-navigation/material-top-tabs@6.0.0-next.18) (2021-07-16)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+# [6.0.0-next.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.0-next.16...@react-navigation/material-top-tabs@6.0.0-next.17) (2021-07-16)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+# [6.0.0-next.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.0-next.14...@react-navigation/material-top-tabs@6.0.0-next.16) (2021-07-01)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+# [6.0.0-next.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.0-next.14...@react-navigation/material-top-tabs@6.0.0-next.15) (2021-06-10)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+# [6.0.0-next.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.0-next.13...@react-navigation/material-top-tabs@6.0.0-next.14) (2021-05-29)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+# [6.0.0-next.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.0-next.12...@react-navigation/material-top-tabs@6.0.0-next.13) (2021-05-29)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+# [6.0.0-next.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.0-next.11...@react-navigation/material-top-tabs@6.0.0-next.12) (2021-05-27)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+# [6.0.0-next.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.0-next.10...@react-navigation/material-top-tabs@6.0.0-next.11) (2021-05-26)
+
+
+### Features
+
+* add screenListeners prop on navigators similar to screenOptions ([cde44a5](https://github.com/react-navigation/react-navigation/commit/cde44a5785444a121aa08f94af9f8fe4fc89910a))
+
+
+
+
+
+# [6.0.0-next.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.0-next.9...@react-navigation/material-top-tabs@6.0.0-next.10) (2021-05-23)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+# [6.0.0-next.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.0-next.8...@react-navigation/material-top-tabs@6.0.0-next.9) (2021-05-16)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+# [6.0.0-next.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.0-next.7...@react-navigation/material-top-tabs@6.0.0-next.8) (2021-05-10)
+
+
+### Bug Fixes
+
+* add a deprecation warning for mode prop in stack ([a6e4981](https://github.com/react-navigation/react-navigation/commit/a6e498170f59648190fa5513e273ca523e56c5d5))
+
+
+### Features
+
+* return a NavigationContent component from useNavigationBuilder ([1179d56](https://github.com/react-navigation/react-navigation/commit/1179d56c5008270753feef41acdc1dbd2191efcf))
+
+
+
+
+
+# [6.0.0-next.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.0-next.6...@react-navigation/material-top-tabs@6.0.0-next.7) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+# [6.0.0-next.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.0-next.5...@react-navigation/material-top-tabs@6.0.0-next.6) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+# [6.0.0-next.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.0-next.4...@react-navigation/material-top-tabs@6.0.0-next.5) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
+# [6.0.0-next.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.0-next.3...@react-navigation/material-top-tabs@6.0.0-next.4) (2021-05-01)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+
+
+
+
 # [6.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.0.0-next.2...@react-navigation/material-top-tabs@6.0.0-next.3) (2021-04-08)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

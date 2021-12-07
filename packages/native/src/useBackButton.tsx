@@ -1,9 +1,12 @@
+import type {
+  NavigationContainerRef,
+  ParamListBase,
+} from '@react-navigation/core';
 import * as React from 'react';
 import { BackHandler } from 'react-native';
-import type { NavigationContainerRef } from '@react-navigation/core';
 
 export default function useBackButton(
-  ref: React.RefObject<NavigationContainerRef>
+  ref: React.RefObject<NavigationContainerRef<ParamListBase>>
 ) {
   React.useEffect(() => {
     const subscription = BackHandler.addEventListener(

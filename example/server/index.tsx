@@ -1,10 +1,11 @@
 import './resolve-hooks';
 
+import { ServerContainer, ServerContainerRef } from '@react-navigation/native';
 import Koa from 'koa';
 import * as React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { AppRegistry } from 'react-native-web';
-import { ServerContainer, ServerContainerRef } from '@react-navigation/native';
+
 import App from '../src/index';
 
 AppRegistry.registerComponent('App', () => App);

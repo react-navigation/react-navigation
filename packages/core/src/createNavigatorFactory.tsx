@@ -1,7 +1,9 @@
+import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import type * as React from 'react';
-import type { ParamListBase, NavigationState } from '@react-navigation/routers';
+
+import Group from './Group';
 import Screen from './Screen';
-import type { TypedNavigator, EventMapBase } from './types';
+import type { EventMapBase, TypedNavigator } from './types';
 
 /**
  * Higher order component to create a `Navigator` and `Screen` pair.
@@ -25,12 +27,13 @@ export default function createNavigatorFactory<
   > {
     if (arguments[0] !== undefined) {
       throw new Error(
-        "Creating a navigator doesn't take an argument. Maybe you are trying to use React Navigation 4 API with React Navigation 5? See https://reactnavigation.org/docs/upgrading-from-4.x for migration guide."
+        "Creating a navigator doesn't take an argument. Maybe you are trying to use React Navigation 4 API? See https://reactnavigation.org/docs/hello-react-navigation for the latest API and guides."
       );
     }
 
     return {
       Navigator,
+      Group,
       Screen,
     };
   };

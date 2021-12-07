@@ -1,16 +1,16 @@
-import * as React from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  StyleProp,
-  ViewStyle,
-  TextStyle,
-  Platform,
-} from 'react-native';
 import { PlatformPressable } from '@react-navigation/elements';
 import { Link, useTheme } from '@react-navigation/native';
 import Color from 'color';
+import * as React from 'react';
+import {
+  Platform,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextStyle,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 type Props = {
   /**

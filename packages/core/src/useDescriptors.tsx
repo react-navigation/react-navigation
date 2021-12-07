@@ -1,28 +1,46 @@
-import * as React from 'react';
 import type {
   NavigationAction,
   NavigationState,
   ParamListBase,
   Router,
 } from '@react-navigation/routers';
-import SceneView from './SceneView';
+import * as React from 'react';
+
 import NavigationBuilderContext, {
-  AddListener,
   AddKeyedListener,
+  AddListener,
 } from './NavigationBuilderContext';
+import NavigationContext from './NavigationContext';
+import NavigationRouteContext from './NavigationRouteContext';
+import SceneView from './SceneView';
+import type {
+  Descriptor,
+  EventMapBase,
+  NavigationHelpers,
+  NavigationProp,
+  RouteConfig,
+  RouteProp,
+} from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
 import useNavigationCache from './useNavigationCache';
 import useRouteCache from './useRouteCache';
-import NavigationContext from './NavigationContext';
-import NavigationRouteContext from './NavigationRouteContext';
-import type {
-  Descriptor,
-  NavigationHelpers,
-  RouteConfig,
-  RouteProp,
-  EventMapBase,
-  NavigationProp,
-} from './types';
+
+export type ScreenConfigWithParent<
+  State extends NavigationState,
+  ScreenOptions extends {},
+  EventMap extends EventMapBase
+> = {
+  keys: (string | undefined)[];
+  options: (ScreenOptionsOrCallback<ScreenOptions> | undefined)[] | undefined;
+  props: RouteConfig<ParamListBase, string, State, ScreenOptions, EventMap>;
+};
+
+type ScreenOptionsOrCallback<ScreenOptions extends {}> =
+  | ScreenOptions
+  | ((props: {
+      route: RouteProp<ParamListBase, string>;
+      navigation: any;
+    }) => ScreenOptions);
 
 type Options<
   State extends NavigationState,
@@ -32,26 +50,18 @@ type Options<
   state: State;
   screens: Record<
     string,
-    RouteConfig<ParamListBase, string, State, ScreenOptions, EventMap>
+    ScreenConfigWithParent<State, ScreenOptions, EventMap>
   >;
   navigation: NavigationHelpers<ParamListBase>;
-  screenOptions?:
-    | ScreenOptions
-    | ((props: {
-        route: RouteProp<ParamListBase, string>;
-        navigation: any;
-      }) => ScreenOptions);
+  screenOptions?: ScreenOptionsOrCallback<ScreenOptions>;
   defaultScreenOptions?:
     | ScreenOptions
     | ((props: {
-        route: RouteProp<ParamListBase, string>;
+        route: RouteProp<ParamListBase>;
         navigation: any;
         options: ScreenOptions;
       }) => ScreenOptions);
-  onAction: (
-    action: NavigationAction,
-    visitedNavigators?: Set<string>
-  ) => boolean;
+  onAction: (action: NavigationAction) => boolean;
   getState: () => State;
   setState: (state: State) => void;
   addListener: AddListener;
@@ -90,7 +100,7 @@ export default function useDescriptors<
   emitter,
 }: Options<State, ScreenOptions, EventMap>) {
   const [options, setOptions] = React.useState<Record<string, object>>({});
-  const { onDispatchAction, onOptionsChange } = React.useContext(
+  const { onDispatchAction, onOptionsChange, stackRef } = React.useContext(
     NavigationBuilderContext
   );
 
@@ -103,6 +113,7 @@ export default function useDescriptors<
       onRouteFocus,
       onDispatchAction,
       onOptionsChange,
+      stackRef,
     }),
     [
       navigation,
@@ -112,6 +123,7 @@ export default function useDescriptors<
       onRouteFocus,
       onDispatchAction,
       onOptionsChange,
+      stackRef,
     ]
   );
 
@@ -133,33 +145,35 @@ export default function useDescriptors<
         ScreenOptions,
         NavigationProp<ParamListBase, string, State, ScreenOptions, EventMap> &
           ActionHelpers,
-        RouteProp<ParamListBase, string>
+        RouteProp<ParamListBase>
       >
     >
   >((acc, route, i) => {
-    const screen = screens[route.name];
+    const config = screens[route.name];
+    const screen = config.props;
     const navigation = navigations[route.key];
 
-    const customOptions = {
+    const optionsList = [
       // The default `screenOptions` passed to the navigator
-      ...(typeof screenOptions === 'object' || screenOptions == null
-        ? screenOptions
-        : // @ts-expect-error: this is a function, but typescript doesn't think so
-          screenOptions({
-            route,
-            navigation,
-          })),
-      // The `options` prop passed to `Screen` elements
-      ...(typeof screen.options === 'object' || screen.options == null
-        ? screen.options
-        : // @ts-expect-error: this is a function, but typescript doesn't think so
-          screen.options({
-            route,
-            navigation,
-          })),
+      screenOptions,
+      // The `screenOptions` props passed to `Group` elements
+      ...((config.options
+        ? config.options.filter(Boolean)
+        : []) as ScreenOptionsOrCallback<ScreenOptions>[]),
+      // The `options` prop passed to `Screen` elements,
+      screen.options,
       // The options set via `navigation.setOptions`
-      ...options[route.key],
-    };
+      options[route.key],
+    ];
+
+    const customOptions = optionsList.reduce<ScreenOptions>(
+      (acc, curr) =>
+        Object.assign(
+          acc,
+          typeof curr !== 'function' ? curr : curr({ route, navigation })
+        ),
+      {} as ScreenOptions
+    );
 
     const mergedOptions = {
       ...(typeof defaultScreenOptions === 'function'
@@ -172,6 +186,17 @@ export default function useDescriptors<
         : defaultScreenOptions),
       ...customOptions,
     };
+
+    const clearOptions = () =>
+      setOptions((o) => {
+        if (route.key in o) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { [route.key]: _, ...rest } = o;
+          return rest;
+        }
+
+        return o;
+      });
 
     acc[route.key] = {
       route,
@@ -190,6 +215,7 @@ export default function useDescriptors<
                   getState={getState}
                   setState={setState}
                   options={mergedOptions}
+                  clearOptions={clearOptions}
                 />
               </NavigationRouteContext.Provider>
             </NavigationContext.Provider>

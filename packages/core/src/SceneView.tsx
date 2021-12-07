@@ -1,28 +1,26 @@
-import * as React from 'react';
 import type {
-  Route,
-  ParamListBase,
   NavigationState,
+  ParamListBase,
   PartialState,
+  Route,
 } from '@react-navigation/routers';
+import * as React from 'react';
+
+import EnsureSingleNavigator from './EnsureSingleNavigator';
 import NavigationStateContext from './NavigationStateContext';
 import StaticContainer from './StaticContainer';
-import EnsureSingleNavigator from './EnsureSingleNavigator';
+import type { NavigationProp, RouteConfigComponent } from './types';
 import useOptionsGetters from './useOptionsGetters';
-import type { NavigationProp, RouteConfig, EventMapBase } from './types';
 
-type Props<
-  State extends NavigationState,
-  ScreenOptions extends {},
-  EventMap extends EventMapBase
-> = {
-  screen: RouteConfig<ParamListBase, string, State, ScreenOptions, EventMap>;
+type Props<State extends NavigationState, ScreenOptions extends {}> = {
+  screen: RouteConfigComponent<ParamListBase, string> & { name: string };
   navigation: NavigationProp<ParamListBase, string, State, ScreenOptions>;
   route: Route<string>;
   routeState: NavigationState | PartialState<NavigationState> | undefined;
   getState: () => State;
   setState: (state: State) => void;
   options: object;
+  clearOptions: () => void;
 };
 
 /**
@@ -31,8 +29,7 @@ type Props<
  */
 export default function SceneView<
   State extends NavigationState,
-  ScreenOptions extends {},
-  EventMap extends EventMapBase
+  ScreenOptions extends {}
 >({
   screen,
   route,
@@ -41,7 +38,8 @@ export default function SceneView<
   getState,
   setState,
   options,
-}: Props<State, ScreenOptions, EventMap>) {
+  clearOptions,
+}: Props<State, ScreenOptions>) {
   const navigatorKeyRef = React.useRef<string | undefined>();
   const getKey = React.useCallback(() => navigatorKeyRef.current, []);
 
@@ -81,6 +79,12 @@ export default function SceneView<
   React.useEffect(() => {
     isInitialRef.current = false;
   });
+
+  // Clear options set by this screen when it is unmounted
+  React.useEffect(() => {
+    return clearOptions;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const getIsInitial = React.useCallback(() => isInitialRef.current, []);
 

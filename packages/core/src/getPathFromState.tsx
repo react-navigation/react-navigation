@@ -1,13 +1,18 @@
-import * as queryString from 'query-string';
 import type {
   NavigationState,
   PartialState,
   Route,
 } from '@react-navigation/routers';
+import * as queryString from 'query-string';
+
 import fromEntries from './fromEntries';
 import type { PathConfig, PathConfigMap } from './types';
+import validatePathConfig from './validatePathConfig';
 
-type Options = { initialRouteName?: string; screens: PathConfigMap };
+type Options<ParamList> = {
+  initialRouteName?: string;
+  screens: PathConfigMap<ParamList>;
+};
 
 type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 
@@ -61,14 +66,18 @@ const getActiveRoute = (state: State): { name: string; params?: object } => {
  * @param options Extra options to fine-tune how to serialize the path.
  * @returns Path representing the state, e.g. /foo/bar?count=42.
  */
-export default function getPathFromState(
+export default function getPathFromState<ParamList extends {}>(
   state: State,
-  options?: Options
+  options?: Options<ParamList>
 ): string {
   if (state == null) {
     throw Error(
       "Got 'undefined' for the navigation state. You must pass a valid state object."
     );
+  }
+
+  if (options) {
+    validatePathConfig(options);
   }
 
   // Create a normalized configs object which will be easier to use
@@ -238,7 +247,7 @@ const joinPaths = (...paths: string[]): string =>
     .join('/');
 
 const createConfigItem = (
-  config: PathConfig | string,
+  config: PathConfig<object> | string,
   parentPattern?: string
 ): ConfigItem => {
   if (typeof config === 'string') {
@@ -276,7 +285,7 @@ const createConfigItem = (
 };
 
 const createNormalizedConfigs = (
-  options: PathConfigMap,
+  options: PathConfigMap<object>,
   pattern?: string
 ): Record<string, ConfigItem> =>
   fromEntries(

@@ -1,24 +1,26 @@
 import { Platform } from 'react-native';
+
+import type { TransitionPreset } from '../types';
 import {
-  forHorizontalIOS,
-  forVerticalIOS,
-  forModalPresentationIOS,
-  forScaleFromCenterAndroid,
-  forRevealFromBottomAndroid,
-  forFadeFromBottomAndroid,
   forBottomSheetAndroid,
+  forFadeFromBottomAndroid,
+  forFadeFromCenter as forFadeCard,
+  forHorizontalIOS,
+  forModalPresentationIOS,
+  forRevealFromBottomAndroid,
+  forScaleFromCenterAndroid,
+  forVerticalIOS,
 } from './CardStyleInterpolators';
 import { forFade } from './HeaderStyleInterpolators';
 import {
-  TransitionIOSSpec,
-  ScaleFromCenterAndroidSpec,
-  RevealFromBottomAndroidSpec,
-  FadeOutToBottomAndroidSpec,
-  FadeInFromBottomAndroidSpec,
   BottomSheetSlideInSpec,
   BottomSheetSlideOutSpec,
+  FadeInFromBottomAndroidSpec,
+  FadeOutToBottomAndroidSpec,
+  RevealFromBottomAndroidSpec,
+  ScaleFromCenterAndroidSpec,
+  TransitionIOSSpec,
 } from './TransitionSpecs';
-import type { TransitionPreset } from '../types';
 
 const ANDROID_VERSION_PIE = 28;
 const ANDROID_VERSION_10 = 29;
@@ -111,6 +113,19 @@ export const BottomSheetAndroid: TransitionPreset = {
     close: BottomSheetSlideOutSpec,
   },
   cardStyleInterpolator: forBottomSheetAndroid,
+  headerStyleInterpolator: forFade,
+};
+
+/**
+ * Fade transition for transparent modals.
+ */
+export const ModalFadeTransition: TransitionPreset = {
+  gestureDirection: 'vertical',
+  transitionSpec: {
+    open: BottomSheetSlideInSpec,
+    close: BottomSheetSlideOutSpec,
+  },
+  cardStyleInterpolator: forFadeCard,
   headerStyleInterpolator: forFade,
 };
 

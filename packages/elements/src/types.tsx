@@ -1,9 +1,9 @@
 import type {
   Animated,
-  StyleProp,
-  ViewStyle,
-  TextStyle,
   LayoutChangeEvent,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
 } from 'react-native';
 
 export type Layout = { width: number; height: number };
@@ -11,30 +11,12 @@ export type Layout = { width: number; height: number };
 export type HeaderOptions = {
   /**
    * String or a function that returns a React Element to be used by the header.
-   * Defaults to scene `title`.
+   * Defaults to screen `title` or route name.
+   *
    * It receives `allowFontScaling`, `tintColor`, `style` and `children` in the options object as an argument.
    * The title string is passed in `children`.
    */
-  headerTitle?:
-    | string
-    | ((props: {
-        /**
-         * The title text of the header.
-         */
-        children: string;
-        /**
-         * Whether title font should scale to respect Text Size accessibility settings.
-         */
-        allowFontScaling?: boolean;
-        /**
-         * Tint color for the header.
-         */
-        tintColor?: string;
-        /**
-         * Style object for the title element.
-         */
-        style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
-      }) => React.ReactNode);
+  headerTitle?: string | ((props: HeaderTitleProps) => React.ReactNode);
   /**
    * How to align the the header title.
    * Defaults to `center` on iOS and `left` on Android.
@@ -59,7 +41,12 @@ export type HeaderOptions = {
     tintColor?: string;
     pressColor?: string;
     pressOpacity?: number;
+    labelVisible?: boolean;
   }) => React.ReactNode;
+  /**
+   * Whether a label is visible in the left button. Used to add extra padding.
+   */
+  headerLeftLabelVisible?: boolean;
   /**
    * Style object for the container of the `headerLeft` element`.
    */
@@ -113,6 +100,23 @@ export type HeaderOptions = {
    */
   headerStyle?: StyleProp<ViewStyle>;
   /**
+   * Whether to hide the elevation shadow (Android) or the bottom border (iOS) on the header.
+   *
+   * This is a short-hand for the following styles:
+   *
+   * ```js
+   * {
+   *   elevation: 0,
+   *   shadowOpacity: 0,
+   *   borderBottomWidth: 0,
+   * }
+   * ```
+   *
+   * If the above styles are specified in `headerStyle` along with `headerShadowVisible: false`,
+   * then `headerShadowVisible: false` will take precedence.
+   */
+  headerShadowVisible?: boolean;
+  /**
    * Extra padding to add at the top of header to account for translucent status bar.
    * By default, it uses the top value from the safe area insets of the device.
    * Pass 0 or a custom value to disable the default behaviour, and customize the height.
@@ -120,15 +124,34 @@ export type HeaderOptions = {
   headerStatusBarHeight?: number;
 };
 
-export type HeaderBackButtonProps = {
+export type HeaderTitleProps = {
   /**
-   * Whether the button is disabled.
+   * The title text of the header.
    */
-  disabled?: boolean;
+  children: string;
   /**
-   * Callback to call when the button is pressed.
+   * Whether title font should scale to respect Text Size accessibility settings.
    */
-  onPress?: () => void;
+  allowFontScaling?: boolean;
+  /**
+   * Tint color for the header.
+   */
+  tintColor?: string;
+  /**
+   * Callback to trigger when the size of the title element changes.
+   */
+  onLayout?: (e: LayoutChangeEvent) => void;
+  /**
+   * Style object for the title element.
+   */
+  style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
+};
+
+export type HeaderButtonProps = {
+  /**
+   * Tint color for the header button.
+   */
+  tintColor?: string;
   /**
    * Color for material ripple (Android >= 5.0 only).
    */
@@ -138,13 +161,24 @@ export type HeaderBackButtonProps = {
    */
   pressOpacity?: number;
   /**
+   * Whether it's possible to navigate back in stack.
+   */
+  canGoBack?: boolean;
+};
+
+export type HeaderBackButtonProps = HeaderButtonProps & {
+  /**
+   * Whether the button is disabled.
+   */
+  disabled?: boolean;
+  /**
+   * Callback to call when the button is pressed.
+   */
+  onPress?: () => void;
+  /**
    * Function which returns a React Element to display custom image in header's back button.
    */
   backImage?: (props: { tintColor: string }) => React.ReactNode;
-  /**
-   * Tint color for the header.
-   */
-  tintColor?: string;
   /**
    * Label text for the button. Usually the title of the previous screen.
    * By default, this is only shown on iOS.
@@ -179,10 +213,6 @@ export type HeaderBackButtonProps = {
    * Layout of the title element in the header.
    */
   titleLayout?: Layout;
-  /**
-   * Whether it's possible to navigate back in stack.
-   */
-  canGoBack?: boolean;
   /**
    * Accessibility label for the button for screen readers.
    */

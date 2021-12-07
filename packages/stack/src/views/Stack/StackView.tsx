@@ -1,32 +1,31 @@
-import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
 import {
-  SafeAreaInsetsContext,
-  EdgeInsets,
-} from 'react-native-safe-area-context';
+  HeaderShownContext,
+  SafeAreaProviderCompat,
+} from '@react-navigation/elements';
 import {
-  NavigationHelpersContext,
+  ParamListBase,
+  Route,
   StackActions,
   StackNavigationState,
-  Route,
-  ParamListBase,
 } from '@react-navigation/native';
+import * as React from 'react';
+import { StyleSheet, View } from 'react-native';
 import {
-  SafeAreaProviderCompat,
-  HeaderShownContext,
-} from '@react-navigation/elements';
+  EdgeInsets,
+  SafeAreaInsetsContext,
+} from 'react-native-safe-area-context';
 
+import type {
+  StackDescriptorMap,
+  StackNavigationConfig,
+  StackNavigationHelpers,
+} from '../../types';
+import ModalPresentationContext from '../../utils/ModalPresentationContext';
 import { GestureHandlerRootView } from '../GestureHandler';
-import CardStack from './CardStack';
-import KeyboardManager from '../KeyboardManager';
 import HeaderContainer, {
   Props as HeaderContainerProps,
 } from '../Header/HeaderContainer';
-import type {
-  StackNavigationHelpers,
-  StackNavigationConfig,
-  StackDescriptorMap,
-} from '../../types';
+import CardStack from './CardStack';
 
 type Props = StackNavigationConfig & {
   state: StackNavigationState<ParamListBase>;
@@ -288,24 +287,6 @@ export default class StackView extends React.Component<Props, State> {
     descriptors: {},
   };
 
-  private getGesturesEnabled = ({ route }: { route: Route<string> }) => {
-    const descriptor = this.state.descriptors[route.key];
-
-    if (descriptor) {
-      const { gestureEnabled, animationEnabled } = descriptor.options;
-
-      if (animationEnabled === false) {
-        // When animation is disabled, also disable gestures
-        // The gesture to dismiss a route will look weird when not animated
-        return false;
-      }
-
-      return gestureEnabled !== false;
-    }
-
-    return false;
-  };
-
   private getPreviousRoute = ({ route }: { route: Route<string> }) => {
     const { closingRouteKeys, replacingRouteKeys } = this.state;
     const routes = this.state.routes.filter(
@@ -436,63 +417,52 @@ export default class StackView extends React.Component<Props, State> {
   render() {
     const {
       state,
-      navigation,
-      keyboardHandlingEnabled,
-      mode = 'card',
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       descriptors: _,
       ...rest
     } = this.props;
 
-    const {
-      routes,
-      descriptors,
-      openingRouteKeys,
-      closingRouteKeys,
-    } = this.state;
+    const { routes, descriptors, openingRouteKeys, closingRouteKeys } =
+      this.state;
 
     return (
-      <NavigationHelpersContext.Provider value={navigation}>
-        <GestureHandlerWrapper style={styles.container}>
-          <SafeAreaProviderCompat>
-            <SafeAreaInsetsContext.Consumer>
-              {(insets) => (
-                <KeyboardManager enabled={keyboardHandlingEnabled !== false}>
-                  {(props) => (
-                    <HeaderShownContext.Consumer>
-                      {(isParentHeaderShown) => (
-                        <CardStack
-                          mode={mode}
-                          insets={insets as EdgeInsets}
-                          isParentHeaderShown={isParentHeaderShown}
-                          getPreviousRoute={this.getPreviousRoute}
-                          getGesturesEnabled={this.getGesturesEnabled}
-                          routes={routes}
-                          openingRouteKeys={openingRouteKeys}
-                          closingRouteKeys={closingRouteKeys}
-                          onOpenRoute={this.handleOpenRoute}
-                          onCloseRoute={this.handleCloseRoute}
-                          onTransitionStart={this.handleTransitionStart}
-                          onTransitionEnd={this.handleTransitionEnd}
-                          renderHeader={this.renderHeader}
-                          renderScene={this.renderScene}
-                          state={state}
-                          descriptors={descriptors}
-                          onGestureStart={this.handleGestureStart}
-                          onGestureEnd={this.handleGestureEnd}
-                          onGestureCancel={this.handleGestureCancel}
-                          {...rest}
-                          {...props}
-                        />
-                      )}
-                    </HeaderShownContext.Consumer>
-                  )}
-                </KeyboardManager>
-              )}
-            </SafeAreaInsetsContext.Consumer>
-          </SafeAreaProviderCompat>
-        </GestureHandlerWrapper>
-      </NavigationHelpersContext.Provider>
+      <GestureHandlerWrapper style={styles.container}>
+        <SafeAreaProviderCompat>
+          <SafeAreaInsetsContext.Consumer>
+            {(insets) => (
+              <ModalPresentationContext.Consumer>
+                {(isParentModal) => (
+                  <HeaderShownContext.Consumer>
+                    {(isParentHeaderShown) => (
+                      <CardStack
+                        insets={insets as EdgeInsets}
+                        isParentHeaderShown={isParentHeaderShown}
+                        isParentModal={isParentModal}
+                        getPreviousRoute={this.getPreviousRoute}
+                        routes={routes}
+                        openingRouteKeys={openingRouteKeys}
+                        closingRouteKeys={closingRouteKeys}
+                        onOpenRoute={this.handleOpenRoute}
+                        onCloseRoute={this.handleCloseRoute}
+                        onTransitionStart={this.handleTransitionStart}
+                        onTransitionEnd={this.handleTransitionEnd}
+                        renderHeader={this.renderHeader}
+                        renderScene={this.renderScene}
+                        state={state}
+                        descriptors={descriptors}
+                        onGestureStart={this.handleGestureStart}
+                        onGestureEnd={this.handleGestureEnd}
+                        onGestureCancel={this.handleGestureCancel}
+                        {...rest}
+                      />
+                    )}
+                  </HeaderShownContext.Consumer>
+                )}
+              </ModalPresentationContext.Consumer>
+            )}
+          </SafeAreaInsetsContext.Consumer>
+        </SafeAreaProviderCompat>
+      </GestureHandlerWrapper>
     );
   }
 }

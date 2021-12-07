@@ -1,16 +1,17 @@
+import { useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
   I18nManager,
   Image,
-  View,
+  LayoutChangeEvent,
   Platform,
   StyleSheet,
-  LayoutChangeEvent,
+  View,
 } from 'react-native';
-import { useTheme } from '@react-navigation/native';
-import PlatformPressable from '../PlatformPressable';
+
 import MaskedView from '../MaskedView';
+import PlatformPressable from '../PlatformPressable';
 import type { HeaderBackButtonProps } from '../types';
 
 export default function HeaderBackButton({
@@ -19,7 +20,7 @@ export default function HeaderBackButton({
   backImage,
   label,
   labelStyle,
-  labelVisible = Platform.OS === 'ios',
+  labelVisible,
   onLabelLayout,
   onPress,
   pressColor,
@@ -34,9 +35,8 @@ export default function HeaderBackButton({
 }: HeaderBackButtonProps) {
   const { colors } = useTheme();
 
-  const [initialLabelWidth, setInitialLabelWidth] = React.useState<
-    undefined | number
-  >(undefined);
+  const [initialLabelWidth, setInitialLabelWidth] =
+    React.useState<undefined | number>(undefined);
 
   const tintColor =
     customTintColor !== undefined
@@ -171,6 +171,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flexDirection: 'row',
+    minWidth: StyleSheet.hairlineWidth, // Avoid collapsing when title is long
     ...Platform.select({
       ios: null,
       default: {
