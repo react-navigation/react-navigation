@@ -1,9 +1,12 @@
 import { CompassOutlined } from '@ant-design/icons';
-import { DataList, DetailSidebar, styled, theme } from 'flipper-plugin';
+import { DetailSidebar, styled } from 'flipper';
+import { theme } from 'flipper-plugin';
 import * as React from 'react';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { FixedSizeList as List } from 'react-window';
 
 import { Sidebar } from './Sidebar';
-import type { StoreType } from './types';
+import type { Log, StoreType } from './types';
 
 type Props = StoreType & {
   active: boolean;
@@ -11,36 +14,62 @@ type Props = StoreType & {
 
 export function Logs({ active, logs, index, resetTo }: Props) {
   const [selectedID, setSelectedID] = React.useState<string | null>(null);
+  const listRef = React.useRef<List<Log[]>>();
 
   const selectedItem = selectedID
     ? logs.find((log) => log.id === selectedID)
     : logs[logs.length - 1];
 
+  const itemKey = (_index: number) => logs[_index].id;
+
+  React.useEffect(() => {
+    if (listRef.current && !selectedID) {
+      listRef.current.scrollToItem(logs.length - 1);
+    }
+  }, [logs.length, selectedID]);
+
   return logs.length ? (
     <>
-      <DataList
-        style={{ height: '100%' }}
-        items={logs}
-        onRenderItem={({ id, action }, _, i) => (
-          <Row
-            key={id}
-            selected={selectedItem?.id === id}
-            faded={index != null ? index > -1 && i > index : false}
-            onClick={() => {
-              if (id === logs[logs.length - 1].id) {
-                setSelectedID(null);
-              } else {
-                setSelectedID(id);
-              }
-            }}
+      <AutoSizer>
+        {({ height, width }) => (
+          <List
+            ref={listRef as any}
+            itemData={logs}
+            itemSize={51}
+            itemCount={logs.length}
+            itemKey={itemKey}
+            height={height}
+            width={width}
           >
-            {action.type}
-            <JumpButton type="button" onClick={() => resetTo(id)}>
-              Reset to this
-            </JumpButton>
-          </Row>
+            {({ index: itemIndex, style }) => {
+              if (!logs[itemIndex]) return null;
+              const { action, id } = logs[itemIndex];
+              return (
+                <Row
+                  key={id}
+                  selected={selectedItem?.id === id}
+                  faded={
+                    index != null ? index > -1 && itemIndex > index : false
+                  }
+                  onClick={() => {
+                    if (id === logs[logs.length - 1].id) {
+                      setSelectedID(null);
+                    } else {
+                      setSelectedID(id);
+                    }
+                  }}
+                  style={style}
+                >
+                  {action.type}
+                  <JumpButton type="button" onClick={() => resetTo(id)}>
+                    Reset to this
+                  </JumpButton>
+                </Row>
+              );
+            }}
+          </List>
         )}
-      />
+      </AutoSizer>
       {active ? (
         <DetailSidebar>
           {selectedItem && (
