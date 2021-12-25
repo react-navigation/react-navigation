@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
+  isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,
   ScreenStackHeaderCenterView,
   ScreenStackHeaderConfig,
@@ -109,7 +110,7 @@ export default function HeaderConfig({
       : null;
 
   if (
-    Platform.OS === 'ios' &&
+    isSearchBarAvailableForCurrentPlatform &&
     headerSearchBarOptions != null &&
     SearchBar == null
   ) {
@@ -220,7 +221,8 @@ export default function HeaderConfig({
           {headerRightElement}
         </ScreenStackHeaderRightView>
       ) : null}
-      {Platform.OS === 'ios' && headerSearchBarOptions != null ? (
+      {isSearchBarAvailableForCurrentPlatform &&
+      headerSearchBarOptions != null ? (
         <ScreenStackHeaderSearchBarView>
           <SearchBar {...headerSearchBarOptions} />
         </ScreenStackHeaderSearchBarView>
