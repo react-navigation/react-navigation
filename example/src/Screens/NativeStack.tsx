@@ -61,6 +61,14 @@ const NewsFeedScreen = ({
   route,
   navigation,
 }: NativeStackScreenProps<NativeStackParams, 'NewsFeed'>) => {
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerSearchBarOptions: {
+        placeholder: 'Search',
+      },
+    });
+  }, [navigation]);
+
   return (
     <ScrollView>
       <View style={styles.buttons}>

@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
+  isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,
   ScreenStackHeaderCenterView,
   ScreenStackHeaderConfig,
@@ -112,11 +113,13 @@ export default function HeaderConfig({
       ? headerTitle({ tintColor, children: titleText })
       : null;
 
-  if (
-    Platform.OS === 'ios' &&
-    headerSearchBarOptions != null &&
-    SearchBar == null
-  ) {
+  const supportsHeaderSearchBar =
+    typeof isSearchBarAvailableForCurrentPlatform === 'boolean'
+      ? isSearchBarAvailableForCurrentPlatform
+      : // Fallback for older versions of react-native-screens
+        Platform.OS === 'ios' && SearchBar != null;
+
+  if (headerSearchBarOptions != null && !supportsHeaderSearchBar) {
     throw new Error(
       `The current version of 'react-native-screens' doesn't support SearchBar in the header. Please update to the latest version to use this option.`
     );
@@ -243,7 +246,7 @@ export default function HeaderConfig({
             {headerRightElement}
           </ScreenStackHeaderRightView>
         ) : null}
-        {Platform.OS === 'ios' && headerSearchBarOptions != null ? (
+        {supportsHeaderSearchBar && headerSearchBarOptions != null ? (
           <ScreenStackHeaderSearchBarView>
             <SearchBar {...headerSearchBarOptions} />
           </ScreenStackHeaderSearchBarView>
