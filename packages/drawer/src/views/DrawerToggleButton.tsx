@@ -5,7 +5,7 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Image, Platform, StyleSheet } from 'react-native';
+import { Image, Keyboard, Platform, StyleSheet } from 'react-native';
 
 import type { DrawerNavigationProp } from '../types';
 
@@ -25,7 +25,10 @@ export default function DrawerToggleButton({ tintColor, ...rest }: Props) {
       accessible
       accessibilityRole="button"
       android_ripple={{ borderless: true }}
-      onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+      onPress={() => {
+        Keyboard.dismiss();
+        navigation.dispatch(DrawerActions.toggleDrawer());
+      }}
       style={styles.touchable}
       hitSlop={Platform.select({
         ios: undefined,
