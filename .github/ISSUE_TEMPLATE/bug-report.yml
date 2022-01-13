@@ -78,6 +78,8 @@ body:
 
         When filling the table below, **please remove the packages** that you're not using.
       value: |
+        - [] I've removed the packages that I don't use
+
         | package                                | version |
         | -------------------------------------- | ------- |
         | @react-navigation/native               |
