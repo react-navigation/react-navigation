@@ -15,6 +15,8 @@ export default function TabBarTop({
   state,
   navigation,
   descriptors,
+  onTabPress,
+  onTabLongPress,
   ...rest
 }: MaterialTopTabBarProps) {
   const { colors } = useTheme();
@@ -54,7 +56,9 @@ export default function TabBarTop({
           target: route.key,
           canPreventDefault: true,
         });
-
+        
+        onTabPress?.(event);
+        
         if (event.defaultPrevented) {
           preventDefault();
         }
@@ -64,6 +68,7 @@ export default function TabBarTop({
           type: 'tabLongPress',
           target: route.key,
         })
+        onTabLongPress?.({route})
       }
       renderIcon={({ route, focused, color }) => {
         const { options } = descriptors[route.key];
