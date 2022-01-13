@@ -57,7 +57,9 @@ export default function TabBarTop({
           canPreventDefault: true,
         });
         
-        onTabPress?.(event);
+        if(onTabPress) {
+          onTabPress(event);
+        }
         
         if (event.defaultPrevented) {
           preventDefault();
@@ -68,7 +70,9 @@ export default function TabBarTop({
           type: 'tabLongPress',
           target: route.key,
         })
-        onTabLongPress?.({route})
+        if(onTabLongPress) {
+          onTabLongPress({route});
+        }
       }
       renderIcon={({ route, focused, color }) => {
         const { options } = descriptors[route.key];
