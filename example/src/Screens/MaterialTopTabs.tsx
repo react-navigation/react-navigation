@@ -2,6 +2,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import type { ParamListBase } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import * as React from 'react';
+import { Text } from 'react-native';
 
 import Albums from '../Shared/Albums';
 import Chat from '../Shared/Chat';
@@ -11,6 +12,7 @@ type MaterialTopTabParams = {
   Albums: undefined;
   Contacts: undefined;
   Chat: undefined;
+  NoAccess: undefined;
 };
 
 const MaterialTopTabs = createMaterialTopTabNavigator<MaterialTopTabParams>();
@@ -41,6 +43,18 @@ export default function MaterialTopTabsScreen({
         component={Albums}
         options={{ title: 'Albums' }}
       />
+      <MaterialTopTabs.Screen
+        name="NoAccess"
+        component={Null}
+        options={{
+          hideScene: true,
+          tabBarLabel: () => <Text style={{ color: 'red' }}>No Access</Text>,
+        }}
+      />
     </MaterialTopTabs.Navigator>
   );
+}
+
+function Null() {
+  return null;
 }

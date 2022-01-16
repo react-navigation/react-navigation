@@ -225,6 +225,12 @@ export type MaterialTopTabNavigationOptions = {
    * By default, this renders `null`.
    */
   lazyPlaceholder?: () => React.ReactNode;
+
+  /**
+   * Boolean indicating whether to hide the scene.
+   *
+   */
+  hideScene?: boolean;
 };
 
 export type MaterialTopTabDescriptor = Descriptor<

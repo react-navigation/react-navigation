@@ -42,6 +42,14 @@ export default function MaterialTopTabView({
   };
 
   const focusedOptions = descriptors[state.routes[state.index].key].options;
+  const hiddenRoutes = Object.entries(descriptors)
+    .filter(([_, descriptor]) => descriptor.options.hideScene)
+    .map(([routeKey]) => routeKey);
+
+  const sceneNavigationState = {
+    ...state,
+    routes: state.routes.filter((route) => !hiddenRoutes.includes(route.key)),
+  };
 
   return (
     <TabView<Route<string>>
@@ -56,7 +64,7 @@ export default function MaterialTopTabView({
         })
       }
       renderScene={({ route }) => descriptors[route.key].render()}
-      navigationState={state}
+      navigationState={sceneNavigationState}
       renderTabBar={renderTabBar}
       renderLazyPlaceholder={({ route }) =>
         descriptors[route.key].options.lazyPlaceholder?.() ?? null
