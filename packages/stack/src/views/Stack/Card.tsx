@@ -272,7 +272,7 @@ export default class Card extends React.Component<Props> {
     } = this.props;
 
     switch (nativeEvent.state) {
-      case GestureState.BEGAN:
+      case GestureState.ACTIVE:
         this.isSwiping.setValue(TRUE);
         this.handleStartInteraction();
         onGestureBegin?.();
