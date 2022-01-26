@@ -121,20 +121,14 @@ const createMemoryHistory = () => {
     go(n: number) {
       interrupt();
 
-      if (n > 0) {
-        // We shouldn't go forward more than available index
-        n = Math.min(n, items.length - 1);
-      } else if (n < 0) {
-        // We shouldn't go back more than the 0 index
-        // Otherwise we'll exit the page
-        n = index + n < 0 ? -index : n;
-      }
-
       if (n === 0) {
         return;
       }
 
-      index += n;
+      // We shouldn't go back more than the 0 index (otherwise we'll exit the page)
+      // Or forward more than the available index (or the app will crash)
+      index =
+        n < 0 ? Math.max(index - n, 0) : Math.min(index + n, items.length - 1);
 
       // When we call `history.go`, `popstate` will fire when there's history to go back to
       // So we need to somehow handle following cases:
