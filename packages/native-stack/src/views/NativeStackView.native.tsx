@@ -13,7 +13,7 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Platform, PlatformIOSStatic, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
@@ -83,33 +83,12 @@ const MaybeNestedStack = ({
     </DebugContainer>
   );
 
-  const insets = useSafeAreaInsets();
-  const dimensions = useSafeAreaFrame();
-  // landscape is meaningful only for iPhone
-  const isLandscape =
-    dimensions.width > dimensions.height &&
-    !(Platform as PlatformIOSStatic).isPad &&
-    !(Platform as PlatformIOSStatic).isTVOS;
-  // `modal` and `formSheet` presentations do not take whole screen, so should not take the inset.
-  const isFullScreenModal =
-    presentation !== 'modal' && presentation !== 'formSheet';
-  const topInset = isFullScreenModal && !isLandscape ? insets.top : 0;
-  const headerHeight = getDefaultHeaderHeight(
-    dimensions,
-    !isFullScreenModal,
-    topInset
-  );
-
   if (isHeaderInModal) {
     return (
       <ScreenStack style={styles.container}>
         <Screen enabled style={StyleSheet.absoluteFill}>
-          <HeaderShownContext.Provider value>
-            <HeaderHeightContext.Provider value={headerHeight}>
-              <HeaderConfig {...options} route={route} canGoBack />
-              {content}
-            </HeaderHeightContext.Provider>
-          </HeaderShownContext.Provider>
+          <HeaderConfig {...options} route={route} canGoBack />
+          {content}
         </Screen>
       </ScreenStack>
     );
@@ -163,15 +142,23 @@ const SceneView = ({
     : presentation === 'card' && headerShown !== false;
 
   const insets = useSafeAreaInsets();
+  const frame = useSafeAreaFrame();
+
+  // `modal` and `formSheet` presentations do not take whole screen, so should not take the inset.
+  const isModal = presentation === 'modal' || presentation === 'formSheet';
+
+  // Modals are fullscreen in landscape only on iPhone
+  const isIPhone =
+    Platform.OS === 'ios' && !(Platform.isPad && Platform.isTVOS);
+  const isLandscape = frame.width > frame.height;
+
+  const topInset = isModal || (isIPhone && isLandscape) ? 0 : insets.top;
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
 
-  const defaultHeaderHeight = getDefaultHeaderHeight(
-    useSafeAreaFrame(),
-    false,
-    insets.top
-  );
+  const defaultHeaderHeight = getDefaultHeaderHeight(frame, isModal, topInset);
+
   const [customHeaderHeight, setCustomHeaderHeight] =
     React.useState(defaultHeaderHeight);
 
