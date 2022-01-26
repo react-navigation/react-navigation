@@ -25,18 +25,19 @@ function NativeStackNavigator({
   screenOptions,
   ...rest
 }: NativeStackNavigatorProps) {
-  const { state, descriptors, navigation } = useNavigationBuilder<
-    StackNavigationState<ParamListBase>,
-    StackRouterOptions,
-    StackActionHelpers<ParamListBase>,
-    NativeStackNavigationOptions,
-    NativeStackNavigationEventMap
-  >(StackRouter, {
-    initialRouteName,
-    children,
-    screenListeners,
-    screenOptions,
-  });
+  const { state, descriptors, navigation, NavigationContent } =
+    useNavigationBuilder<
+      StackNavigationState<ParamListBase>,
+      StackRouterOptions,
+      StackActionHelpers<ParamListBase>,
+      NativeStackNavigationOptions,
+      NativeStackNavigationEventMap
+    >(StackRouter, {
+      initialRouteName,
+      children,
+      screenListeners,
+      screenOptions,
+    });
 
   React.useEffect(
     () =>
@@ -64,12 +65,14 @@ function NativeStackNavigator({
   );
 
   return (
-    <NativeStackView
-      {...rest}
-      state={state}
-      navigation={navigation}
-      descriptors={descriptors}
-    />
+    <NavigationContent>
+      <NativeStackView
+        {...rest}
+        state={state}
+        navigation={navigation}
+        descriptors={descriptors}
+      />
+    </NavigationContent>
   );
 }
 
