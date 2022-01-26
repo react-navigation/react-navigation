@@ -13,7 +13,7 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Platform, PlatformIOSStatic, StyleSheet } from 'react-native';
+import { Platform, PlatformIOSStatic, StyleSheet, View } from 'react-native';
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
@@ -166,11 +166,16 @@ const SceneView = ({
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
-  const headerHeight = getDefaultHeaderHeight(
+
+  const defaultHeaderHeight = getDefaultHeaderHeight(
     useSafeAreaFrame(),
     false,
     insets.top
   );
+  const [customHeaderHeight, setCustomHeaderHeight] =
+    React.useState(defaultHeaderHeight);
+
+  const headerHeight = header ? customHeaderHeight : defaultHeaderHeight;
 
   return (
     <Screen
@@ -205,20 +210,25 @@ const SceneView = ({
           }
         >
           {header !== undefined && headerShown !== false ? (
-            // TODO: expose custom header height
-            header({
-              back: previousDescriptor
-                ? {
-                    title: getHeaderTitle(
-                      previousDescriptor.options,
-                      previousDescriptor.route.name
-                    ),
-                  }
-                : undefined,
-              options,
-              route,
-              navigation,
-            })
+            <View
+              onLayout={(e) => {
+                setCustomHeaderHeight(e.nativeEvent.layout.height);
+              }}
+            >
+              {header({
+                back: previousDescriptor
+                  ? {
+                      title: getHeaderTitle(
+                        previousDescriptor.options,
+                        previousDescriptor.route.name
+                      ),
+                    }
+                  : undefined,
+                options,
+                route,
+                navigation,
+              })}
+            </View>
           ) : (
             <HeaderConfig
               {...options}
