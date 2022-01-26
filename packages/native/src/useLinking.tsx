@@ -504,6 +504,11 @@ export default function useLinking(
       const previousState = previousStateRef.current;
       const state = navigation.getRootState();
 
+      // root state may not available, for example when root navigators switch inside the container
+      if (!state) {
+        return;
+      }
+
       const pendingPath = pendingPopStatePathRef.current;
       const route = findFocusedRoute(state);
       const path =
