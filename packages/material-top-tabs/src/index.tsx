@@ -14,6 +14,7 @@ export { default as MaterialTopTabView } from './views/MaterialTopTabView';
  */
 export type {
   MaterialTopTabBarProps,
+  MaterialTopTabNavigationEventMap,
   MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationProp,
   MaterialTopTabScreenProps,

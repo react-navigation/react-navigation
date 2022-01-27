@@ -22,6 +22,7 @@ export type {
   BottomTabBarButtonProps,
   BottomTabBarProps,
   BottomTabHeaderProps,
+  BottomTabNavigationEventMap,
   BottomTabNavigationOptions,
   BottomTabNavigationProp,
   BottomTabScreenProps,
