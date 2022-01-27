@@ -12,6 +12,7 @@ export { default as MaterialBottomTabView } from './views/MaterialBottomTabView'
  * Types
  */
 export type {
+  MaterialBottomTabNavigationEventMap,
   MaterialBottomTabNavigationOptions,
   MaterialBottomTabNavigationProp,
   MaterialBottomTabScreenProps,
