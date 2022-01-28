@@ -558,7 +558,7 @@ export default class DrawerView extends React.Component<DrawerProps> {
                     drawerType === 'permanent'
                       ? // Reanimated needs the property to be present, but it results in Browser bug
                         // https://bugs.chromium.org/p/chromium/issues/detail?id=20574
-                        undefined
+                        [{ translateX: 0 }]
                       : [{ translateX: contentTranslateX }],
                 },
               ]}
@@ -619,7 +619,7 @@ export default class DrawerView extends React.Component<DrawerProps> {
                     drawerType === 'permanent'
                       ? // Reanimated needs the property to be present, but it results in Browser bug
                         // https://bugs.chromium.org/p/chromium/issues/detail?id=20574
-                        undefined
+                        [{ translateX: 0 }]
                       : [{ translateX: drawerTranslateX }],
                   opacity: this.drawerOpacity,
                 },
