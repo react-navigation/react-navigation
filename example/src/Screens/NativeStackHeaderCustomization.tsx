@@ -154,9 +154,8 @@ export default function NativeStackScreen({
           ),
           headerBackground: () => (
             <Image
-              source={require('../../assets/album-art-24.jpg')}
-              height={100}
-              style={{ height: 100 }}
+              source={require('../../assets/album-art-19.jpg')}
+              style={styles.headerBackground}
             />
           ),
         })}
@@ -197,5 +196,11 @@ const styles = StyleSheet.create({
   },
   button: {
     margin: 8,
+  },
+  headerBackground: {
+    height: undefined,
+    width: undefined,
+    flex: 1,
+    resizeMode: 'cover',
   },
 });
