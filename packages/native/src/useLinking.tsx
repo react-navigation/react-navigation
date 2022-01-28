@@ -7,6 +7,7 @@ import {
   NavigationState,
   ParamListBase,
 } from '@react-navigation/core';
+import isEqual from 'fast-deep-equal';
 import { nanoid } from 'nanoid/non-secure';
 import * as React from 'react';
 
@@ -476,6 +477,34 @@ export default function useLinking(
       return;
     }
 
+    const getPathForRoute = (
+      route: ReturnType<typeof findFocusedRoute>,
+      state: NavigationState
+    ): string => {
+      // If the `route` object contains a `path`, use that path as long as `route.name` and `params` still match
+      // This makes sure that we preserve the original URL for wildcard routes
+      if (route?.path) {
+        const stateForPath = getStateFromPathRef.current(
+          route.path,
+          configRef.current
+        );
+
+        if (stateForPath) {
+          const focusedRoute = findFocusedRoute(stateForPath);
+
+          if (
+            focusedRoute &&
+            focusedRoute.name === route.name &&
+            isEqual(focusedRoute.params, route.params)
+          ) {
+            return route.path;
+          }
+        }
+      }
+
+      return getPathFromStateRef.current(state, configRef.current);
+    };
+
     if (ref.current) {
       // We need to record the current metadata on the first render if they aren't set
       // This will allow the initial state to be in the history entry
@@ -483,8 +512,7 @@ export default function useLinking(
 
       if (state) {
         const route = findFocusedRoute(state);
-        const path =
-          route?.path ?? getPathFromStateRef.current(state, configRef.current);
+        const path = getPathForRoute(route, state);
 
         if (previousStateRef.current === undefined) {
           previousStateRef.current = state;
@@ -511,8 +539,7 @@ export default function useLinking(
 
       const pendingPath = pendingPopStatePathRef.current;
       const route = findFocusedRoute(state);
-      const path =
-        route?.path ?? getPathFromStateRef.current(state, configRef.current);
+      const path = getPathForRoute(route, state);
 
       previousStateRef.current = state;
       pendingPopStatePathRef.current = undefined;

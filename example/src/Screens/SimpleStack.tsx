@@ -36,6 +36,18 @@ const ArticleScreen = ({
         </Button>
         <Button
           mode="outlined"
+          onPress={() =>
+            navigation.setParams({
+              author:
+                route.params?.author === 'Gandalf' ? 'Babel fish' : 'Gandalf',
+            })
+          }
+          style={styles.button}
+        >
+          Update params
+        </Button>
+        <Button
+          mode="outlined"
           onPress={() => navigation.pop()}
           style={styles.button}
         >
