@@ -161,7 +161,11 @@ export default function HeaderConfig({
         disableBackButtonMenu={headerBackButtonMenuEnabled === false}
         hidden={headerShown === false}
         hideBackButton={headerBackVisible === false}
-        hideShadow={headerShadowVisible === false}
+        hideShadow={
+          headerShadowVisible === false ||
+          headerBackground != null ||
+          headerTransparent
+        }
         largeTitle={headerLargeTitle}
         largeTitleBackgroundColor={headerLargeStyleFlattened.backgroundColor}
         largeTitleColor={headerLargeTitleStyleFlattened.color}
