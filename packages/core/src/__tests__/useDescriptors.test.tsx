@@ -47,7 +47,7 @@ it('sets options with options prop as an object', () => {
           component={TestScreen}
           options={{ title: 'Hello world' }}
         />
-        <Screen name="bar" component={jest.fn()} />
+        <Screen name="bar" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -94,7 +94,7 @@ it('sets options with options prop as a fuction', () => {
           options={({ route }: any) => ({ title: route.params.author })}
           initialParams={{ author: 'Jane' }}
         />
-        <Screen name="bar" component={jest.fn()} />
+        <Screen name="bar" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -283,7 +283,7 @@ it('sets initial options with setOptions', () => {
         <Screen name="foo" options={{ color: 'blue' }}>
           {(props) => <TestScreen {...props} />}
         </Screen>
-        <Screen name="bar" component={jest.fn()} />
+        <Screen name="bar" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -349,7 +349,7 @@ it('updates options with setOptions', () => {
         <Screen name="foo" options={{ color: 'blue' }}>
           {(props) => <TestScreen {...props} />}
         </Screen>
-        <Screen name="bar" component={jest.fn()} />
+        <Screen name="bar" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -417,7 +417,7 @@ it("returns correct value for canGoBack when it's not overridden", () => {
           component={TestScreen}
           options={{ title: 'Hello world' }}
         />
-        <Screen name="bar" component={jest.fn()} />
+        <Screen name="bar" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );

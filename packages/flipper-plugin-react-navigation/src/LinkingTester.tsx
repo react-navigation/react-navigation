@@ -19,11 +19,13 @@ export function LinkingTester({ linking, active }: Props) {
   const [rawConfig, setRawConfig] = React.useState('');
   const [path, setPath] = React.useState('');
 
-  const [state, setState] =
-    React.useState<ReturnType<typeof getStateFromPath> | undefined>();
+  const [state, setState] = React.useState<
+    ReturnType<typeof getStateFromPath> | undefined
+  >();
 
-  const [action, setAction] =
-    React.useState<ReturnType<typeof getActionFromState> | undefined>();
+  const [action, setAction] = React.useState<
+    ReturnType<typeof getActionFromState> | undefined
+  >();
 
   const [error, setError] = React.useState<string | undefined>();
 

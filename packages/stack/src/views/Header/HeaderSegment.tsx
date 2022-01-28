@@ -33,11 +33,13 @@ type Props = Omit<StackHeaderOptions, 'headerStatusBarHeight'> & {
 };
 
 export default function HeaderSegment(props: Props) {
-  const [leftLabelLayout, setLeftLabelLayout] =
-    React.useState<Layout | undefined>(undefined);
+  const [leftLabelLayout, setLeftLabelLayout] = React.useState<
+    Layout | undefined
+  >(undefined);
 
-  const [titleLayout, setTitleLayout] =
-    React.useState<Layout | undefined>(undefined);
+  const [titleLayout, setTitleLayout] = React.useState<Layout | undefined>(
+    undefined
+  );
 
   const handleTitleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;

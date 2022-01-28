@@ -259,8 +259,9 @@ type Props = {
 };
 
 function NativeStackViewInner({ state, navigation, descriptors }: Props) {
-  const [nextDismissedKey, setNextDismissedKey] =
-    React.useState<string | null>(null);
+  const [nextDismissedKey, setNextDismissedKey] = React.useState<string | null>(
+    null
+  );
 
   const dismissedRouteName = nextDismissedKey
     ? state.routes.find((route) => route.key === nextDismissedKey)?.name

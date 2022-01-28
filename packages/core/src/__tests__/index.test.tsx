@@ -38,11 +38,11 @@ it('initializes state for a navigator on navigation', () => {
           component={FooScreen}
           initialParams={{ count: 10 }}
         />
-        <Screen name="bar" component={jest.fn()} />
+        <Screen name="bar" component={React.Fragment} />
         <Screen name="baz">
           {() => (
             <TestNavigator>
-              <Screen name="qux" component={jest.fn()} />
+              <Screen name="qux" component={React.Fragment} />
             </TestNavigator>
           )}
         </Screen>
@@ -120,7 +120,7 @@ it('rehydrates state for a navigator on navigation', () => {
       onStateChange={onStateChange}
     >
       <TestNavigator initialRouteName="foo">
-        <Screen name="foo" component={jest.fn()} />
+        <Screen name="foo" component={React.Fragment} />
         <Screen name="bar" component={BarScreen} />
       </TestNavigator>
     </BaseNavigationContainer>
@@ -179,7 +179,7 @@ it("doesn't rehydrate state if the type of state didn't match router", () => {
           component={FooScreen}
           initialParams={{ answer: 42 }}
         />
-        <Screen name="bar" component={jest.fn()} />
+        <Screen name="bar" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -226,8 +226,8 @@ it('initializes state for nested screens in React.Fragment', () => {
       <TestNavigator>
         <Screen name="foo" component={TestScreen} />
         <React.Fragment>
-          <Screen name="bar" component={jest.fn()} />
-          <Screen name="baz" component={jest.fn()} />
+          <Screen name="bar" component={React.Fragment} />
+          <Screen name="baz" component={React.Fragment} />
         </React.Fragment>
       </TestNavigator>
     </BaseNavigationContainer>
@@ -273,8 +273,8 @@ it('initializes state for nested screens in Group', () => {
       <TestNavigator>
         <Screen name="foo" component={TestScreen} />
         <Group>
-          <Screen name="bar" component={jest.fn()} />
-          <Screen name="baz" component={jest.fn()} />
+          <Screen name="bar" component={React.Fragment} />
+          <Screen name="baz" component={React.Fragment} />
         </Group>
       </TestNavigator>
     </BaseNavigationContainer>
@@ -318,8 +318,8 @@ it('initializes state for nested navigator on navigation', () => {
   const element = (
     <BaseNavigationContainer onStateChange={onStateChange}>
       <TestNavigator initialRouteName="baz">
-        <Screen name="foo" component={jest.fn()} />
-        <Screen name="bar" component={jest.fn()} />
+        <Screen name="foo" component={React.Fragment} />
+        <Screen name="bar" component={React.Fragment} />
         <Screen name="baz">
           {() => (
             <TestNavigator>
@@ -381,7 +381,7 @@ it("doesn't update state if nothing changed", () => {
     <BaseNavigationContainer onStateChange={onStateChange}>
       <TestNavigator initialRouteName="foo">
         <Screen name="foo" component={FooScreen} />
-        <Screen name="bar" component={jest.fn()} />
+        <Screen name="bar" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -413,7 +413,7 @@ it("doesn't update state if action wasn't handled", () => {
     <BaseNavigationContainer onStateChange={onStateChange}>
       <TestNavigator initialRouteName="foo">
         <Screen name="foo" component={FooScreen} />
-        <Screen name="bar" component={jest.fn()} />
+        <Screen name="bar" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -451,7 +451,7 @@ it('cleans up state when the navigator unmounts', () => {
     <BaseNavigationContainer onStateChange={onStateChange}>
       <TestNavigator>
         <Screen name="foo" component={FooScreen} />
-        <Screen name="bar" component={jest.fn()} />
+        <Screen name="bar" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -553,7 +553,7 @@ it('updates route params with setParams', () => {
     <BaseNavigationContainer onStateChange={onStateChange}>
       <TestNavigator initialRouteName="foo">
         <Screen name="foo" component={FooScreen} />
-        <Screen name="bar" component={jest.fn()} />
+        <Screen name="bar" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -619,7 +619,7 @@ it('updates route params with setParams applied to parent', () => {
             </TestNavigator>
           )}
         </Screen>
-        <Screen name="bar" component={jest.fn()} />
+        <Screen name="bar" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -690,8 +690,8 @@ it('handles change in route names', async () => {
   const root = render(
     <BaseNavigationContainer>
       <TestNavigator initialRouteName="bar">
-        <Screen name="foo" component={jest.fn()} />
-        <Screen name="bar" component={jest.fn()} />
+        <Screen name="foo" component={React.Fragment} />
+        <Screen name="bar" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -699,9 +699,9 @@ it('handles change in route names', async () => {
   root.update(
     <BaseNavigationContainer onStateChange={onStateChange}>
       <TestNavigator>
-        <Screen name="foo" component={jest.fn()} />
-        <Screen name="baz" component={jest.fn()} />
-        <Screen name="qux" component={jest.fn()} />
+        <Screen name="foo" component={React.Fragment} />
+        <Screen name="baz" component={React.Fragment} />
+        <Screen name="qux" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -1390,9 +1390,9 @@ it('preserves order of screens in state with non-numeric names', () => {
   const root = (
     <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
-        <Screen name="foo" component={jest.fn()} />
-        <Screen name="bar" component={jest.fn()} />
-        <Screen name="baz" component={jest.fn()} />
+        <Screen name="foo" component={React.Fragment} />
+        <Screen name="bar" component={React.Fragment} />
+        <Screen name="baz" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -1413,9 +1413,9 @@ it('preserves order of screens in state with numeric names', () => {
   const root = (
     <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
-        <Screen name="4" component={jest.fn()} />
-        <Screen name="7" component={jest.fn()} />
-        <Screen name="1" component={jest.fn()} />
+        <Screen name="4" component={React.Fragment} />
+        <Screen name="7" component={React.Fragment} />
+        <Screen name="1" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -1450,7 +1450,7 @@ it('throws if navigator is not inside a container', () => {
 
   const element = (
     <TestNavigator>
-      <Screen name="foo" component={jest.fn()} />
+      <Screen name="foo" component={React.Fragment} />
     </TestNavigator>
   );
 
@@ -1468,10 +1468,10 @@ it('throws if multiple navigators rendered under one container', () => {
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
-        <Screen name="foo" component={jest.fn()} />
+        <Screen name="foo" component={React.Fragment} />
       </TestNavigator>
       <TestNavigator>
-        <Screen name="foo" component={jest.fn()} />
+        <Screen name="foo" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -1492,7 +1492,7 @@ it('throws when Screen is not the direct children', () => {
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
-        <Screen name="foo" component={jest.fn()} />
+        <Screen name="foo" component={React.Fragment} />
         <Bar />
       </TestNavigator>
     </BaseNavigationContainer>
@@ -1516,7 +1516,7 @@ it('throws when undefined component is a direct children', () => {
     <BaseNavigationContainer>
       <TestNavigator>
         {/* @ts-ignore */}
-        <Undefined name="foo" component={jest.fn()} />
+        <Undefined name="foo" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -1538,7 +1538,7 @@ it('throws when a tag is a direct children', () => {
     <BaseNavigationContainer>
       <TestNavigator>
         {/* @ts-ignore */}
-        <screen name="foo" component={jest.fn()} />
+        <screen name="foo" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -1557,7 +1557,7 @@ it('throws when a React Element is not the direct children', () => {
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
-        <Screen name="foo" component={jest.fn()} />
+        <Screen name="foo" component={React.Fragment} />
         Hello world
       </TestNavigator>
     </BaseNavigationContainer>
@@ -1578,7 +1578,7 @@ it("doesn't throw when direct children is Screen or empty element", () => {
   render(
     <BaseNavigationContainer>
       <TestNavigator>
-        <Screen name="foo" component={jest.fn()} />
+        <Screen name="foo" component={React.Fragment} />
         {null}
         {undefined}
         {false}
@@ -1597,9 +1597,9 @@ it('throws when multiple screens with same name are defined', () => {
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
-        <Screen name="foo" component={jest.fn()} />
-        <Screen name="bar" component={jest.fn()} />
-        <Screen name="foo" component={jest.fn()} />
+        <Screen name="foo" component={React.Fragment} />
+        <Screen name="bar" component={React.Fragment} />
+        <Screen name="foo" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -1618,7 +1618,7 @@ it('switches rendered navigators', () => {
   const root = render(
     <BaseNavigationContainer>
       <TestNavigator key="a">
-        <Screen name="foo" component={jest.fn()} />
+        <Screen name="foo" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -1627,7 +1627,7 @@ it('switches rendered navigators', () => {
     root.update(
       <BaseNavigationContainer>
         <TestNavigator key="b">
-          <Screen name="foo" component={jest.fn()} />
+          <Screen name="foo" component={React.Fragment} />
         </TestNavigator>
       </BaseNavigationContainer>
     )
@@ -1645,7 +1645,7 @@ it('throws if no name is passed to Screen', () => {
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
-        <Screen name={undefined as any} component={jest.fn()} />
+        <Screen name={undefined as any} component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -1664,7 +1664,7 @@ it('throws if invalid name is passed to Screen', () => {
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
-        <Screen name={[] as any} component={jest.fn()} />
+        <Screen name={[] as any} component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -1684,7 +1684,7 @@ it('throws if both children and component are passed', () => {
     <BaseNavigationContainer>
       <TestNavigator>
         {/* @ts-ignore */}
-        <Screen name="foo" component={jest.fn()}>
+        <Screen name="foo" component={React.Fragment}>
           {jest.fn()}
         </Screen>
       </TestNavigator>
@@ -1702,12 +1702,14 @@ it('throws if both children and getComponent are passed', () => {
     return null;
   };
 
+  const Test = () => null;
+
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
         {/* @ts-ignore */}
-        <Screen name="foo" getComponent={jest.fn()}>
-          {jest.fn()}
+        <Screen name="foo" getComponent={() => Test}>
+          {() => <Test />}
         </Screen>
       </TestNavigator>
     </BaseNavigationContainer>
@@ -1724,11 +1726,13 @@ it('throws if both component and getComponent are passed', () => {
     return null;
   };
 
+  const Test = () => null;
+
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
         {/* @ts-ignore */}
-        <Screen name="foo" component={jest.fn()} getComponent={jest.fn()} />
+        <Screen name="foo" component={Test} getComponent={() => Test} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -1747,7 +1751,8 @@ it('throws descriptive error for undefined screen component', () => {
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
-        <Screen name="foo" component={undefined as any} />
+        {/* @ts-ignore */}
+        <Screen name="foo" component={undefined} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -1766,7 +1771,8 @@ it('throws descriptive error for invalid screen component', () => {
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
-        <Screen name="foo" component={{} as any} />
+        {/* @ts-ignore */}
+        <Screen name="foo" component={{}} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -1785,7 +1791,8 @@ it('throws descriptive error for invalid getComponent prop', () => {
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
-        <Screen name="foo" getComponent={{} as any} />
+        {/* @ts-ignore */}
+        <Screen name="foo" getComponent={{}} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -1823,7 +1830,7 @@ it("doesn't throw if children is null", () => {
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
-        <Screen name="foo" component={jest.fn()}>
+        <Screen name="foo" component={React.Fragment}>
           {null as any}
         </Screen>
       </TestNavigator>

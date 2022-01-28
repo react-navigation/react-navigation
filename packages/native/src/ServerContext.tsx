@@ -7,7 +7,8 @@ export type ServerContextType = {
   };
 };
 
-const ServerContext =
-  React.createContext<ServerContextType | undefined>(undefined);
+const ServerContext = React.createContext<ServerContextType | undefined>(
+  undefined
+);
 
 export default ServerContext;

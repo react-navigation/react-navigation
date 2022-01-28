@@ -393,12 +393,12 @@ export type Descriptor<
 export type ScreenListeners<
   State extends NavigationState,
   EventMap extends EventMapBase
-> = Partial<
-  {
-    [EventName in keyof (EventMap &
-      EventMapCore<State>)]: EventListenerCallback<EventMap, EventName>;
-  }
->;
+> = Partial<{
+  [EventName in keyof (EventMap & EventMapCore<State>)]: EventListenerCallback<
+    EventMap,
+    EventName
+  >;
+}>;
 
 export type RouteConfigComponent<
   ParamList extends ParamListBase,
