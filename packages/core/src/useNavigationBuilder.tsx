@@ -199,13 +199,19 @@ const getRouteConfigsFromChildren = <
           );
         }
 
-        if (typeof component === 'function' && component.name === 'component') {
-          // Inline anonymous functions passed in the `component` prop will have the name of the prop
-          // It's relatively safe to assume that it's not a component since it should also have PascalCase name
-          // We won't catch all scenarios here, but this should catch a good chunk of incorrect use.
-          console.warn(
-            `Looks like you're passing an inline function for 'component' prop for the screen '${name}' (e.g. component={() => <SomeComponent />}). Passing an inline function will cause the component state to be lost on re-render and cause perf issues since it's re-created every render. You can pass the function as children to 'Screen' instead to achieve the desired behaviour.`
-          );
+        if (typeof component === 'function') {
+          if (component.name === 'component') {
+            // Inline anonymous functions passed in the `component` prop will have the name of the prop
+            // It's relatively safe to assume that it's not a component since it should also have PascalCase name
+            // We won't catch all scenarios here, but this should catch a good chunk of incorrect use.
+            console.warn(
+              `Looks like you're passing an inline function for 'component' prop for the screen '${name}' (e.g. component={() => <SomeComponent />}). Passing an inline function will cause the component state to be lost on re-render and cause perf issues since it's re-created every render. You can pass the function as children to 'Screen' instead to achieve the desired behaviour.`
+            );
+          } else if (/^[a-z]/.test(component.name)) {
+            console.warn(
+              `Got a component with the name '${component.name}' for the screen '${name}'. React Components must start with an uppercase letter. If you're passing a regular function and not a component, pass it as children to 'Screen' instead. Otherwise capitalize your component's name.`
+            );
+          }
         }
       } else {
         throw new Error(
