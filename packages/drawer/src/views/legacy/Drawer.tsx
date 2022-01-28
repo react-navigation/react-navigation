@@ -553,9 +553,14 @@ export default class DrawerView extends React.Component<DrawerProps> {
             <Animated.View
               style={[
                 styles.content,
-                drawerType !== 'permanent'
-                  ? { transform: [{ translateX: contentTranslateX }] }
-                  : undefined,
+                {
+                  transform:
+                    drawerType === 'permanent'
+                      ? // Reanimated needs the property to be present, but it results in Browser bug
+                        // https://bugs.chromium.org/p/chromium/issues/detail?id=20574
+                        undefined
+                      : [{ translateX: contentTranslateX }],
+                },
               ]}
             >
               <View
@@ -609,12 +614,15 @@ export default class DrawerView extends React.Component<DrawerProps> {
               onLayout={this.handleDrawerLayout}
               style={[
                 styles.container,
-                drawerType === 'permanent'
-                  ? { opacity: 1 }
-                  : {
-                      transform: [{ translateX: drawerTranslateX }],
-                      opacity: this.drawerOpacity,
-                    },
+                {
+                  transform:
+                    drawerType === 'permanent'
+                      ? // Reanimated needs the property to be present, but it results in Browser bug
+                        // https://bugs.chromium.org/p/chromium/issues/detail?id=20574
+                        undefined
+                      : [{ translateX: drawerTranslateX }],
+                  opacity: this.drawerOpacity,
+                },
                 drawerType === 'permanent'
                   ? // Without this, the `left`/`right` values don't get reset
                     isRight

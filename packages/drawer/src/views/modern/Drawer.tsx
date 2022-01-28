@@ -260,35 +260,37 @@ export default function Drawer({
   });
 
   const drawerAnimatedStyle = useAnimatedStyle(() => {
-    if (drawerType === 'permanent') {
-      return {};
-    }
-
     return {
-      transform: [
-        {
-          translateX: drawerType === 'back' ? 0 : translateX.value,
-        },
-      ],
+      transform:
+        drawerType === 'permanent'
+          ? // Reanimated needs the property to be present, but it results in Browser bug
+            // https://bugs.chromium.org/p/chromium/issues/detail?id=20574
+            undefined
+          : [
+              {
+                translateX: drawerType === 'back' ? 0 : translateX.value,
+              },
+            ],
     };
   });
 
   const contentAnimatedStyle = useAnimatedStyle(() => {
-    if (drawerType === 'permanent') {
-      return {};
-    }
-
     return {
-      transform: [
-        {
-          translateX:
-            drawerType === 'front'
-              ? 0
-              : drawerPosition === 'left'
-              ? drawerWidth + translateX.value
-              : translateX.value - drawerWidth,
-        },
-      ],
+      transform:
+        drawerType === 'permanent'
+          ? // Reanimated needs the property to be present, but it results in Browser bug
+            // https://bugs.chromium.org/p/chromium/issues/detail?id=20574
+            undefined
+          : [
+              {
+                translateX:
+                  drawerType === 'front'
+                    ? 0
+                    : drawerPosition === 'left'
+                    ? drawerWidth + translateX.value
+                    : translateX.value - drawerWidth,
+              },
+            ],
     };
   });
 
