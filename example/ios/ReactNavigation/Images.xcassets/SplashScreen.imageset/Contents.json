@@ -2,7 +2,7 @@
   "images": [
     {
       "idiom": "universal",
-      "filename": "splashscreen.png",
+      "filename": "image.png",
       "scale": "1x"
     },
     {
@@ -16,6 +16,6 @@
   ],
   "info": {
     "version": 1,
-    "author": "xcode"
+    "author": "expo"
   }
 }
