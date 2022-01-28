@@ -50,7 +50,7 @@ const createMemoryHistory = () => {
       const id = window.history.state?.id;
 
       if (id) {
-        const index = items.findIndex((item) => item.id === id);
+        const index = items.findIndex((item) =>item && item.id === id);
 
         return index > -1 ? index : 0;
       }
@@ -99,7 +99,7 @@ const createMemoryHistory = () => {
 
       const id = window.history.state?.id ?? nanoid();
 
-      if (!items.length || items.findIndex((item) => item.id === id) < 0) {
+      if (!items.length || items.findIndex((item) =>item && item.id === id) < 0) {
         // There are two scenarios for creating an array with only one history record:
         // - When loaded id not found in the items array, this function by default will replace
         //   the first item. We need to keep only the new updated object, otherwise it will break
@@ -179,7 +179,7 @@ const createMemoryHistory = () => {
 
         const onPopState = () => {
           const id = window.history.state?.id;
-          const currentIndex = items.findIndex((item) => item.id === id);
+          const currentIndex = items.findIndex((item) =>item && item.id === id);
 
           // Fix createMemoryHistory.index variable's value
           // as it may go out of sync when navigating in the browser.
