@@ -25,6 +25,11 @@ type Props = {
   descriptors: NativeStackDescriptorMap;
 };
 
+const TRANSPARENT_PRESENTATIONS = [
+  'transparentModal',
+  'containedTransparentModal',
+];
+
 export default function NativeStackView({ state, descriptors }: Props) {
   return (
     <SafeAreaProviderCompat>
@@ -33,9 +38,11 @@ export default function NativeStackView({ state, descriptors }: Props) {
           const isFocused = state.index === i;
           const canGoBack = i !== 0;
           const previousKey = state.routes[i - 1]?.key;
+          const nextKey = state.routes[i + 1]?.key;
           const previousDescriptor = previousKey
             ? descriptors[previousKey]
             : undefined;
+          const nexDescriptor = nextKey ? descriptors[nextKey] : undefined;
           const { options, navigation, render } = descriptors[route.key];
 
           const {
@@ -51,9 +58,12 @@ export default function NativeStackView({ state, descriptors }: Props) {
             headerStyle,
             headerShadowVisible,
             headerTransparent,
-            contentStyle,
             headerBackTitle,
+            presentation,
+            contentStyle,
           } = options;
+
+          const nextPresentation = nexDescriptor?.options.presentation;
 
           return (
             <Screen
@@ -144,7 +154,18 @@ export default function NativeStackView({ state, descriptors }: Props) {
               }
               style={[
                 StyleSheet.absoluteFill,
-                { display: isFocused ? 'flex' : 'none' },
+                {
+                  display:
+                    isFocused ||
+                    (nextPresentation != null &&
+                      TRANSPARENT_PRESENTATIONS.includes(nextPresentation))
+                      ? 'flex'
+                      : 'none',
+                },
+                presentation != null &&
+                TRANSPARENT_PRESENTATIONS.includes(presentation)
+                  ? { backgroundColor: 'transparent' }
+                  : null,
               ]}
             >
               <View style={[styles.contentContainer, contentStyle]}>

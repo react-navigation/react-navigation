@@ -1,9 +1,8 @@
 import { ParamListBase, useTheme } from '@react-navigation/native';
 import {
-  createStackNavigator,
-  StackScreenProps,
-  useCardAnimation,
-} from '@react-navigation/stack';
+  createNativeStackNavigator as createStackNavigator,
+  NativeStackScreenProps as StackScreenProps,
+} from '@react-navigation/native-stack';
 import * as React from 'react';
 import {
   Animated,
@@ -93,7 +92,7 @@ const DialogScreen = ({
   navigation,
 }: StackScreenProps<TransparentStackParams>) => {
   const { colors } = useTheme();
-  const { current } = useCardAnimation();
+  // const { current } = useCardAnimation();
 
   return (
     <View style={styles.container}>
@@ -103,15 +102,15 @@ const DialogScreen = ({
           styles.dialog,
           {
             backgroundColor: colors.card,
-            transform: [
-              {
-                scale: current.progress.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0.9, 1],
-                  extrapolate: 'clamp',
-                }),
-              },
-            ],
+            // transform: [
+            //   {
+            //     scale: current.progress.interpolate({
+            //       inputRange: [0, 1],
+            //       outputRange: [0.9, 1],
+            //       extrapolate: 'clamp',
+            //     }),
+            //   },
+            // ],
           },
         ]}
       >
