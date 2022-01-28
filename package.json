@@ -69,6 +69,9 @@
     "setupFiles": [
       "<rootDir>/jest/setup.js"
     ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(@react-native|react-native|react-native-iphone-x-helper)/)"
+    ],
     "moduleNameMapper": {
       "@react-navigation/([^/]+)": "<rootDir>/packages/$1/src"
     },
@@ -102,7 +105,5 @@
         }
       }
     }
-  },
-  "name": "react-navigation",
-  "version": "1.0.0"
+  }
 }

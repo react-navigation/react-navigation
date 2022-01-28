@@ -40,10 +40,9 @@ export default function useDevToolsBase(
   callback: (result: InitData | ActionData) => void
 ) {
   const lastStateRef = React.useRef<NavigationState | undefined>();
-  const lastActionRef =
-    React.useRef<
-      { action: NavigationAction; stack: string | undefined } | undefined
-    >();
+  const lastActionRef = React.useRef<
+    { action: NavigationAction; stack: string | undefined } | undefined
+  >();
   const callbackRef = React.useRef(callback);
   const lastResetRef = React.useRef<NavigationState | undefined>(undefined);
 
