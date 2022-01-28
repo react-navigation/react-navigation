@@ -6,6 +6,8 @@ import {
   SafeAreaProviderCompat,
 } from '@react-navigation/elements';
 import {
+  NavigationContext,
+  NavigationRouteContext,
   ParamListBase,
   Route,
   StackActions,
@@ -204,25 +206,29 @@ const SceneView = ({
           }
         >
           {header !== undefined && headerShown !== false ? (
-            <View
-              onLayout={(e) => {
-                setCustomHeaderHeight(e.nativeEvent.layout.height);
-              }}
-            >
-              {header({
-                back: previousDescriptor
-                  ? {
-                      title: getHeaderTitle(
-                        previousDescriptor.options,
-                        previousDescriptor.route.name
-                      ),
-                    }
-                  : undefined,
-                options,
-                route,
-                navigation,
-              })}
-            </View>
+            <NavigationContext.Provider value={navigation}>
+              <NavigationRouteContext.Provider value={route}>
+                <View
+                  onLayout={(e) => {
+                    setCustomHeaderHeight(e.nativeEvent.layout.height);
+                  }}
+                >
+                  {header({
+                    back: previousDescriptor
+                      ? {
+                          title: getHeaderTitle(
+                            previousDescriptor.options,
+                            previousDescriptor.route.name
+                          ),
+                        }
+                      : undefined,
+                    options,
+                    route,
+                    navigation,
+                  })}
+                </View>
+              </NavigationRouteContext.Provider>
+            </NavigationContext.Provider>
           ) : (
             <HeaderConfig
               {...options}
