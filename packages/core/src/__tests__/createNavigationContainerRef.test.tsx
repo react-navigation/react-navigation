@@ -45,3 +45,11 @@ it('adds the listener even if container is mounted later', () => {
 
   expect(listener).toHaveBeenCalledTimes(1);
 });
+
+it('removal of non-existing listener should not break updating ref', () => {
+  const ref = createNavigationContainerRef<ParamListBase>();
+  ref.removeListener('state', jest.fn());
+  expect(() => {
+    ref.current = createNavigationContainerRef<ParamListBase>();
+  }).not.toThrow();
+});
