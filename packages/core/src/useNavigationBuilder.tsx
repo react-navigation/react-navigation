@@ -266,8 +266,11 @@ export default function useNavigationBuilder<
     })
   );
 
-  const routeConfigs =
-    getRouteConfigsFromChildren<State, ScreenOptions, EventMap>(children);
+  const routeConfigs = getRouteConfigsFromChildren<
+    State,
+    ScreenOptions,
+    EventMap
+  >(children);
 
   const screens = routeConfigs.reduce<
     Record<string, ScreenConfigWithParent<State, ScreenOptions, EventMap>>
