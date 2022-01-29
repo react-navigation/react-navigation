@@ -97,7 +97,7 @@ const DialogScreen = ({
 
   return (
     <View style={styles.container}>
-      <Pressable style={styles.backdrop} onPress={() => navigation.goBack()} />
+      <Pressable style={styles.backdrop} onPress={navigation.goBack} />
       <Animated.View
         style={[
           styles.dialog,
