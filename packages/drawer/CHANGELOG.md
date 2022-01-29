@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.2.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.1.8...@react-navigation/drawer@6.2.0) (2022-01-29)
+
+
+### Bug Fixes
+
+* fix drawer disappearing on web when switching drawerType ([5246574](https://github.com/react-navigation/react-navigation/commit/524657484e6b21ecc5754b63468dd00304a8e450)), closes [#10210](https://github.com/react-navigation/react-navigation/issues/10210)
+* fix useDrawerStatus typings ([#10163](https://github.com/react-navigation/react-navigation/issues/10163)) ([a11ada8](https://github.com/react-navigation/react-navigation/commit/a11ada84604848090ec374990023d0a352628388)), closes [#10066](https://github.com/react-navigation/react-navigation/issues/10066)
+
+
+### Features
+
+* **native-stack:** export NativeStackView to support custom routers on native-stack ([#10260](https://github.com/react-navigation/react-navigation/issues/10260)) ([7b761f1](https://github.com/react-navigation/react-navigation/commit/7b761f1cc069ca68b96b5155be726024a345346f))
+
+
+
+
+
 ## [6.1.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.1.7...@react-navigation/drawer@6.1.8) (2021-10-12)
 
 

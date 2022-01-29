@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.11...@react-navigation/stack@6.1.0) (2022-01-29)
+
+
+### Bug Fixes
+
+* fix transparent modal when another screen is pushed on top ([9d2d14b](https://github.com/react-navigation/react-navigation/commit/9d2d14b78ec074f0871a005950d9671a9adfe2de)), closes [#10298](https://github.com/react-navigation/react-navigation/issues/10298)
+* make stack navigator work with latest gesture handler ([#10270](https://github.com/react-navigation/react-navigation/issues/10270)) ([5a19877](https://github.com/react-navigation/react-navigation/commit/5a19877080bd406c5657a096f3c8cd5573316718))
+
+
+### Features
+
+* **native-stack:** export NativeStackView to support custom routers on native-stack ([#10260](https://github.com/react-navigation/react-navigation/issues/10260)) ([7b761f1](https://github.com/react-navigation/react-navigation/commit/7b761f1cc069ca68b96b5155be726024a345346f))
+* pass canGoBack to headerRight ([82a1669](https://github.com/react-navigation/react-navigation/commit/82a16690973a7935939a25a66d5786955b6c8ba7))
+
+
+
+
+
 ## [6.0.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.10...@react-navigation/stack@6.0.11) (2021-10-12)
 
 **Note:** Version bump only for package @react-navigation/stack

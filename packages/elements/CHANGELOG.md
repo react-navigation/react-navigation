@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.2.1...@react-navigation/elements@1.3.0) (2022-01-29)
+
+
+### Bug Fixes
+
+* fix exposing custom header height with modals ([3b4edf7](https://github.com/react-navigation/react-navigation/commit/3b4edf7a8dfefb06a7ae1db2cbad48a5b19630bb))
+
+
+### Features
+
+* **native-stack:** add support for header background image ([393773b](https://github.com/react-navigation/react-navigation/commit/393773b688247456d09f397a794eff19424502f6))
+* pass canGoBack to headerRight ([82a1669](https://github.com/react-navigation/react-navigation/commit/82a16690973a7935939a25a66d5786955b6c8ba7))
+
+
+
+
+
 ## [1.2.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.2.0...@react-navigation/elements@1.2.1) (2021-10-12)
 
 **Note:** Version bump only for package @react-navigation/elements
