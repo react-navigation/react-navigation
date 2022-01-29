@@ -3,6 +3,7 @@ import { Platform, Pressable, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 const {
+  // @ts-expect-error: this is to support reanimated 1
   interpolate: interpolateDeprecated,
   interpolateNode,
   cond,

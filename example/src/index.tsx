@@ -33,6 +33,7 @@ import {
   ScaledSize,
   ScrollView,
   StatusBar,
+  Text,
 } from 'react-native';
 import {
   DarkTheme as PaperDarkTheme,
@@ -40,7 +41,6 @@ import {
   Divider,
   List,
   Provider as PaperProvider,
-  Text,
 } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
