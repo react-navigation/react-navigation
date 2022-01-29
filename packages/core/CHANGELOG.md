@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.1.0...@react-navigation/core@6.1.1) (2022-01-29)
+
+
+### Bug Fixes
+
+* removal of non-existing listener should not break updating ref ([#10067](https://github.com/react-navigation/react-navigation/issues/10067)) ([d206ffe](https://github.com/react-navigation/react-navigation/commit/d206ffe77c06595243743f3190f79f723cfd0520))
+* warn for components starting with lower case names ([4b4a7c5](https://github.com/react-navigation/react-navigation/commit/4b4a7c5e78825c63cfe162157f0f9c99a060c040))
+
+
+
+
+
 # [6.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.3...@react-navigation/core@6.1.0) (2021-10-12)
 
 

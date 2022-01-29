@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.3.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.2.5...@react-navigation/native-stack@6.3.0) (2022-01-29)
+
+
+### Bug Fixes
+
+* fix exposing custom header height with modals ([3b4edf7](https://github.com/react-navigation/react-navigation/commit/3b4edf7a8dfefb06a7ae1db2cbad48a5b19630bb))
+* fix useRoute & useNavigation in custom header in native stack ([826b0c5](https://github.com/react-navigation/react-navigation/commit/826b0c52c976137927223a03e4d91b5aae00ec77))
+* hide header shadow for transparent header ([ffcd171](https://github.com/react-navigation/react-navigation/commit/ffcd1713e0518e551207c1b7a6fb259a4db619a0))
+* make native stack background transparent when using transparentModal ([d58f4b9](https://github.com/react-navigation/react-navigation/commit/d58f4b9c09fbc0150ef3110127b79a6f0dd5006c))
+* wrap native stack with NavigationContent ([#10288](https://github.com/react-navigation/react-navigation/issues/10288)) ([d0f8620](https://github.com/react-navigation/react-navigation/commit/d0f8620549a9fa5f8c4828775f06df7ea6d55afb)), closes [#10287](https://github.com/react-navigation/react-navigation/issues/10287) [/github.com/react-navigation/react-navigation/blob/b91c9b05ff96727f5fa6ef0bec51b5d7eac06600/packages/core/src/useNavigation.tsx#L16](https://github.com//github.com/react-navigation/react-navigation/blob/b91c9b05ff96727f5fa6ef0bec51b5d7eac06600/packages/core/src/useNavigation.tsx/issues/L16) [/github.com/react-navigation/react-navigation/blob/b91c9b05ff96727f5fa6ef0bec51b5d7eac06600/packages/native/src/useLinkProps.tsx#L26](https://github.com//github.com/react-navigation/react-navigation/blob/b91c9b05ff96727f5fa6ef0bec51b5d7eac06600/packages/native/src/useLinkProps.tsx/issues/L26) [/github.com/react-navigation/react-navigation/blob/b91c9b05ff96727f5fa6ef0bec51b5d7eac06600/packages/core/src/useNavigationBuilder.tsx#L606](https://github.com//github.com/react-navigation/react-navigation/blob/b91c9b05ff96727f5fa6ef0bec51b5d7eac06600/packages/core/src/useNavigationBuilder.tsx/issues/L606) [/github.com/react-navigation/react-navigation/blob/b91c9b05ff96727f5fa6ef0bec51b5d7eac06600/packages/bottom-tabs/src/navigators/createBottomTabNavigator.tsx#L101](https://github.com//github.com/react-navigation/react-navigation/blob/b91c9b05ff96727f5fa6ef0bec51b5d7eac06600/packages/bottom-tabs/src/navigators/createBottomTabNavigator.tsx/issues/L101) [/github.com/react-navigation/react-navigation/blob/b91c9b05ff96727f5fa6ef0bec51b5d7eac06600/packages/drawer/src/navigators/createDrawerNavigator.tsx#L99](https://github.com//github.com/react-navigation/react-navigation/blob/b91c9b05ff96727f5fa6ef0bec51b5d7eac06600/packages/drawer/src/navigators/createDrawerNavigator.tsx/issues/L99) [/github.com/react-navigation/react-navigation/blob/b91c9b05ff96727f5fa6ef0bec51b5d7eac06600/packages/stack/src/navigators/createStackNavigator.tsx#L110](https://github.com//github.com/react-navigation/react-navigation/blob/b91c9b05ff96727f5fa6ef0bec51b5d7eac06600/packages/stack/src/navigators/createStackNavigator.tsx/issues/L110) [/github.com/react-navigation/react-navigation/blob/b91c9b05ff96727f5fa6ef0bec51b5d7eac06600/packages/native-stack/src/navigators/createNativeStackNavigator.tsx#L67](https://github.com//github.com/react-navigation/react-navigation/blob/b91c9b05ff96727f5fa6ef0bec51b5d7eac06600/packages/native-stack/src/navigators/createNativeStackNavigator.tsx/issues/L67)
+
+
+### Features
+
+* **native-stack:** add support for header background image ([393773b](https://github.com/react-navigation/react-navigation/commit/393773b688247456d09f397a794eff19424502f6))
+* **native-stack:** export NativeStackView to support custom routers on native-stack ([#10260](https://github.com/react-navigation/react-navigation/issues/10260)) ([7b761f1](https://github.com/react-navigation/react-navigation/commit/7b761f1cc069ca68b96b5155be726024a345346f))
+* **native-stack:** expose custom header height ([#10113](https://github.com/react-navigation/react-navigation/issues/10113)) ([e93b2e9](https://github.com/react-navigation/react-navigation/commit/e93b2e9cb48b30eab895945e4da0c83324914e8b))
+* pass canGoBack to headerRight ([82a1669](https://github.com/react-navigation/react-navigation/commit/82a16690973a7935939a25a66d5786955b6c8ba7))
+
+
+
+
+
 ## [6.2.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.2.4...@react-navigation/native-stack@6.2.5) (2021-10-16)
 
 
