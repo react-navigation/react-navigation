@@ -39,7 +39,7 @@ try {
   // Optionally require vector-icons
   MaterialCommunityIcons =
     require('react-native-vector-icons/MaterialCommunityIcons').default;
-} catch (e) {
+} catch (e: any) {
   let isErrorLogged = false;
 
   // Fallback component for icons
@@ -69,7 +69,17 @@ try {
     }
 
     return (
-      <Text {...rest} style={[styles.icon, { color, fontSize: size }]}>
+      // @ts-expect-error: we're passing icon props to text, but we don't care about it since it's just fallback
+      <Text
+        {...rest}
+        style={[
+          styles.icon,
+          {
+            color: typeof color !== 'number' ? color : undefined,
+            fontSize: size,
+          },
+        ]}
+      >
         □
       </Text>
     );

@@ -189,7 +189,12 @@ export default function useLinking(
             // Ignore any errors from deep linking.
             // This could happen in case of malformed links, navigation object not being initialized etc.
             console.warn(
-              `An error occurred when trying to handle the link '${url}': ${e.message}`
+              `An error occurred when trying to handle the link '${url}': ${
+                typeof e === 'object' && e != null && 'message' in e
+                  ? // @ts-expect-error: we're already checking for this
+                    e.message
+                  : e
+              }`
             );
           }
         } else {
