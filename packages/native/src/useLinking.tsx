@@ -107,6 +107,7 @@ const createMemoryHistory = () => {
         // - This is the first time any state modifications are done
         //   So we need to push the entry as there's nothing to replace
         items = [{ path, state, id }];
+        index = 0;
       } else {
         items[index] = { path, state, id };
       }
