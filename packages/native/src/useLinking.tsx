@@ -179,7 +179,7 @@ const createMemoryHistory = () => {
 
         const onPopState = () => {
           const id = window.history.state?.id;
-          const currentIndex = items.findIndex((item) => item && item.id === id);
+          const currentIndex = items.findIndex((item) => item?.id === id);
 
           // Fix createMemoryHistory.index variable's value
           // as it may go out of sync when navigating in the browser.
