@@ -251,7 +251,7 @@ export type DrawerNavigationEventMap = {
   /**
    * Event which fires on tapping on the item in the drawer menu.
    */
-  drawerPress: { data: undefined; canPreventDefault: true };
+  drawerItemPress: { data: undefined; canPreventDefault: true };
 };
 
 export type DrawerNavigationHelpers = NavigationHelpers<
