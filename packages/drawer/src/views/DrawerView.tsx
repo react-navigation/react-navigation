@@ -205,6 +205,7 @@ function DrawerViewBase({
     return (
       <MaybeScreenContainer
         enabled={detachInactiveScreens}
+        hasTwoStates
         style={styles.content}
       >
         {state.routes.map((route, index) => {
