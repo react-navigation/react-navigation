@@ -3,6 +3,67 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.2.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.1.8...@react-navigation/drawer@6.2.0) (2022-01-29)
+
+
+### Bug Fixes
+
+* fix drawer disappearing on web when switching drawerType ([5246574](https://github.com/react-navigation/react-navigation/commit/524657484e6b21ecc5754b63468dd00304a8e450)), closes [#10210](https://github.com/react-navigation/react-navigation/issues/10210)
+* fix useDrawerStatus typings ([#10163](https://github.com/react-navigation/react-navigation/issues/10163)) ([a11ada8](https://github.com/react-navigation/react-navigation/commit/a11ada84604848090ec374990023d0a352628388)), closes [#10066](https://github.com/react-navigation/react-navigation/issues/10066)
+
+
+### Features
+
+* **native-stack:** export NativeStackView to support custom routers on native-stack ([#10260](https://github.com/react-navigation/react-navigation/issues/10260)) ([7b761f1](https://github.com/react-navigation/react-navigation/commit/7b761f1cc069ca68b96b5155be726024a345346f))
+
+
+
+
+
+## [6.1.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.1.7...@react-navigation/drawer@6.1.8) (2021-10-12)
+
+
+### Bug Fixes
+
+* add some a11y props to drawer overlay ([5f94c1d](https://github.com/react-navigation/react-navigation/commit/5f94c1d6c421a7d6f8781c5188b4f2a654c338d2))
+* don't make the overlay touchable if drawer isn't open ([7c99b9d](https://github.com/react-navigation/react-navigation/commit/7c99b9d631d76f55939deb534ff62e7fc8b5ed50))
+* move [@ts-expect-error](https://github.com/ts-expect-error) to body to avoid issue in type definitions ([0a08688](https://github.com/react-navigation/react-navigation/commit/0a0868862c9d6ae77055c66938a764306d391b44))
+
+
+
+
+
+## [6.1.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.1.6...@react-navigation/drawer@6.1.7) (2021-10-09)
+
+
+### Bug Fixes
+
+* properly handle history if drawer is open by default ([de2d4e4](https://github.com/react-navigation/react-navigation/commit/de2d4e4f0659fea87522b918fb09c8f07bdd0697))
+
+
+
+
+
+## [6.1.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.1.5...@react-navigation/drawer@6.1.6) (2021-09-26)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+
+
+
+
+## [6.1.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.1.4...@react-navigation/drawer@6.1.5) (2021-09-26)
+
+
+### Bug Fixes
+
+* export header props for other navigators ([8475481](https://github.com/react-navigation/react-navigation/commit/84754812effd8bee576c5d9836c317889dabe11a)), closes [#9965](https://github.com/react-navigation/react-navigation/issues/9965)
+* in cases where the drawer type is set to be permanent, do not apply any transformations ([2a88d0d](https://github.com/react-navigation/react-navigation/commit/2a88d0d5ee2f504e8b4f95a11eac77c764844352))
+
+
+
+
+
 ## [6.1.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.1.3...@react-navigation/drawer@6.1.4) (2021-08-17)
 
 **Note:** Version bump only for package @react-navigation/drawer

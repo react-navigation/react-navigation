@@ -157,6 +157,7 @@ export default function SimpleStackScreen({
 const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     padding: 8,
   },
   button: {

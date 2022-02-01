@@ -15,6 +15,7 @@ import { isValidElementType } from 'react-is';
 
 import Group from './Group';
 import isArrayEqual from './isArrayEqual';
+import isRecordEqual from './isRecordEqual';
 import NavigationHelpersContext from './NavigationHelpersContext';
 import NavigationRouteContext from './NavigationRouteContext';
 import NavigationStateContext from './NavigationStateContext';
@@ -51,6 +52,9 @@ type NavigatorRoute<State extends NavigationState> = {
   params?: NavigatorScreenParams<ParamListBase, State>;
 };
 
+const isValidKey = (key: unknown) =>
+  key === undefined || (typeof key === 'string' && key !== '');
+
 /**
  * Extract route config object from React children elements.
  *
@@ -62,7 +66,12 @@ const getRouteConfigsFromChildren = <
   EventMap extends EventMapBase
 >(
   children: React.ReactNode,
-  options?: ScreenConfigWithParent<State, ScreenOptions, EventMap>[0]
+  groupKey?: string,
+  groupOptions?: ScreenConfigWithParent<
+    State,
+    ScreenOptions,
+    EventMap
+  >['options']
 ) => {
   const configs = React.Children.toArray(children).reduce<
     ScreenConfigWithParent<State, ScreenOptions, EventMap>[]
@@ -71,29 +80,50 @@ const getRouteConfigsFromChildren = <
       if (child.type === Screen) {
         // We can only extract the config from `Screen` elements
         // If something else was rendered, it's probably a bug
-        acc.push([
-          options,
-          child.props as RouteConfig<
+
+        if (!isValidKey(child.props.navigationKey)) {
+          throw new Error(
+            `Got an invalid 'navigationKey' prop (${JSON.stringify(
+              child.props.navigationKey
+            )}) for the screen '${
+              child.props.name
+            }'. It must be a non-empty string or 'undefined'.`
+          );
+        }
+
+        acc.push({
+          keys: [groupKey, child.props.navigationKey],
+          options: groupOptions,
+          props: child.props as RouteConfig<
             ParamListBase,
             string,
             State,
             ScreenOptions,
             EventMap
           >,
-        ]);
+        });
         return acc;
       }
 
       if (child.type === React.Fragment || child.type === Group) {
+        if (!isValidKey(child.props.navigationKey)) {
+          throw new Error(
+            `Got an invalid 'navigationKey' prop (${JSON.stringify(
+              child.props.navigationKey
+            )}) for the group. It must be a non-empty string or 'undefined'.`
+          );
+        }
+
         // When we encounter a fragment or group, we need to dive into its children to extract the configs
         // This is handy to conditionally define a group of screens
         acc.push(
           ...getRouteConfigsFromChildren<State, ScreenOptions, EventMap>(
             child.props.children,
+            child.props.navigationKey,
             child.type !== Group
-              ? options
-              : options != null
-              ? [...options, child.props.screenOptions]
+              ? groupOptions
+              : groupOptions != null
+              ? [...groupOptions, child.props.screenOptions]
               : [child.props.screenOptions]
           )
         );
@@ -118,7 +148,7 @@ const getRouteConfigsFromChildren = <
 
   if (process.env.NODE_ENV !== 'production') {
     configs.forEach((config) => {
-      const { name, children, component, getComponent } = config[1];
+      const { name, children, component, getComponent } = config.props;
 
       if (typeof name !== 'string' || !name) {
         throw new Error(
@@ -169,13 +199,19 @@ const getRouteConfigsFromChildren = <
           );
         }
 
-        if (typeof component === 'function' && component.name === 'component') {
-          // Inline anonymous functions passed in the `component` prop will have the name of the prop
-          // It's relatively safe to assume that it's not a component since it should also have PascalCase name
-          // We won't catch all scenarios here, but this should catch a good chunk of incorrect use.
-          console.warn(
-            `Looks like you're passing an inline function for 'component' prop for the screen '${name}' (e.g. component={() => <SomeComponent />}). Passing an inline function will cause the component state to be lost on re-render and cause perf issues since it's re-created every render. You can pass the function as children to 'Screen' instead to achieve the desired behaviour.`
-          );
+        if (typeof component === 'function') {
+          if (component.name === 'component') {
+            // Inline anonymous functions passed in the `component` prop will have the name of the prop
+            // It's relatively safe to assume that it's not a component since it should also have PascalCase name
+            // We won't catch all scenarios here, but this should catch a good chunk of incorrect use.
+            console.warn(
+              `Looks like you're passing an inline function for 'component' prop for the screen '${name}' (e.g. component={() => <SomeComponent />}). Passing an inline function will cause the component state to be lost on re-render and cause perf issues since it's re-created every render. You can pass the function as children to 'Screen' instead to achieve the desired behaviour.`
+            );
+          } else if (/^[a-z]/.test(component.name)) {
+            console.warn(
+              `Got a component with the name '${component.name}' for the screen '${name}'. React Components must start with an uppercase letter. If you're passing a regular function and not a component, pass it as children to 'Screen' instead. Otherwise capitalize your component's name.`
+            );
+          }
         }
       } else {
         throw new Error(
@@ -230,26 +266,36 @@ export default function useNavigationBuilder<
     })
   );
 
-  const routeConfigs =
-    getRouteConfigsFromChildren<State, ScreenOptions, EventMap>(children);
+  const routeConfigs = getRouteConfigsFromChildren<
+    State,
+    ScreenOptions,
+    EventMap
+  >(children);
 
   const screens = routeConfigs.reduce<
     Record<string, ScreenConfigWithParent<State, ScreenOptions, EventMap>>
   >((acc, config) => {
-    if (config[1].name in acc) {
+    if (config.props.name in acc) {
       throw new Error(
-        `A navigator cannot contain multiple 'Screen' components with the same name (found duplicate screen named '${config[1].name}')`
+        `A navigator cannot contain multiple 'Screen' components with the same name (found duplicate screen named '${config.props.name}')`
       );
     }
 
-    acc[config[1].name] = config;
+    acc[config.props.name] = config;
     return acc;
   }, {});
 
-  const routeNames = routeConfigs.map((config) => config[1].name);
+  const routeNames = routeConfigs.map((config) => config.props.name);
+  const routeKeyList = routeNames.reduce<Record<string, React.Key | undefined>>(
+    (acc, curr) => {
+      acc[curr] = screens[curr].keys.map((key) => key ?? '').join(':');
+      return acc;
+    },
+    {}
+  );
   const routeParamList = routeNames.reduce<Record<string, object | undefined>>(
     (acc, curr) => {
-      const { initialParams } = screens[curr][1];
+      const { initialParams } = screens[curr].props;
       acc[curr] = initialParams;
       return acc;
     },
@@ -260,7 +306,7 @@ export default function useNavigationBuilder<
   >(
     (acc, curr) =>
       Object.assign(acc, {
-        [curr]: screens[curr][1].getId,
+        [curr]: screens[curr].props.getId,
       }),
     {}
   );
@@ -315,7 +361,7 @@ export default function useNavigationBuilder<
     const initialRouteParamList = routeNames.reduce<
       Record<string, object | undefined>
     >((acc, curr) => {
-      const { initialParams } = screens[curr][1];
+      const { initialParams } = screens[curr].props;
       const initialParamsFromParams =
         route?.params?.state == null &&
         route?.params?.initial !== false &&
@@ -371,6 +417,14 @@ export default function useNavigationBuilder<
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentState, router, isStateValid]);
 
+  const previousRouteKeyListRef = React.useRef(routeKeyList);
+
+  React.useEffect(() => {
+    previousRouteKeyListRef.current = routeKeyList;
+  });
+
+  const previousRouteKeyList = previousRouteKeyListRef.current;
+
   let state =
     // If the state isn't initialized, or stale, use the state we initialized instead
     // The state won't update until there's a change needed in the state we have initalized locally
@@ -381,12 +435,20 @@ export default function useNavigationBuilder<
 
   let nextState: State = state;
 
-  if (!isArrayEqual(state.routeNames, routeNames)) {
+  if (
+    !isArrayEqual(state.routeNames, routeNames) ||
+    !isRecordEqual(routeKeyList, previousRouteKeyList)
+  ) {
     // When the list of route names change, the router should handle it to remove invalid routes
     nextState = router.getStateForRouteNamesChange(state, {
       routeNames,
       routeParamList,
       routeGetIdList,
+      routeKeyChanges: Object.keys(routeKeyList).filter(
+        (name) =>
+          previousRouteKeyList.hasOwnProperty(name) &&
+          routeKeyList[name] !== previousRouteKeyList[name]
+      ),
     });
   }
 
@@ -522,7 +584,7 @@ export default function useNavigationBuilder<
         ...[
           screenListeners,
           ...routeNames.map((name) => {
-            const { listeners } = screens[name][1];
+            const { listeners } = screens[name].props;
             return listeners;
           }),
         ].map((listeners) => {

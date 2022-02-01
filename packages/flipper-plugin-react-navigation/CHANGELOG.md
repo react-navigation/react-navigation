@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.8](https://github.com/react-navigation/react-navigation/compare/flipper-plugin-react-navigation@1.3.7...flipper-plugin-react-navigation@1.3.8) (2022-01-29)
+
+**Note:** Version bump only for package flipper-plugin-react-navigation
+
+
+
+
+
+## [1.3.7](https://github.com/react-navigation/react-navigation/compare/flipper-plugin-react-navigation@1.3.6...flipper-plugin-react-navigation@1.3.7) (2021-10-12)
+
+**Note:** Version bump only for package flipper-plugin-react-navigation
+
+
+
+
+
+## [1.3.6](https://github.com/react-navigation/react-navigation/compare/flipper-plugin-react-navigation@1.3.5...flipper-plugin-react-navigation@1.3.6) (2021-10-09)
+
+**Note:** Version bump only for package flipper-plugin-react-navigation
+
+
+
+
+
+## [1.3.5](https://github.com/react-navigation/react-navigation/compare/flipper-plugin-react-navigation@1.3.4...flipper-plugin-react-navigation@1.3.5) (2021-09-26)
+
+
+### Bug Fixes
+
+* flipper error. closes [#9850](https://github.com/react-navigation/react-navigation/issues/9850)  ([#9959](https://github.com/react-navigation/react-navigation/issues/9959)) ([f3bb534](https://github.com/react-navigation/react-navigation/commit/f3bb53401804bb93ea83c97752f0644e77db736e))
+
+
+
+
+
 ## [1.3.4](https://github.com/react-navigation/react-navigation/compare/flipper-plugin-react-navigation@1.3.3...flipper-plugin-react-navigation@1.3.4) (2021-08-03)
 
 **Note:** Version bump only for package flipper-plugin-react-navigation

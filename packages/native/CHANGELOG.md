@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.6...@react-navigation/native@6.0.7) (2022-01-29)
+
+
+### Bug Fixes
+
+* fix crash in useLinking on Web ([#10262](https://github.com/react-navigation/react-navigation/issues/10262)) ([e612a4c](https://github.com/react-navigation/react-navigation/commit/e612a4c837f73dc5830b0ff9e7e24e1e06d2451c)), closes [/github.com/react-navigation/react-navigation/pull/9970/files#r784475821](https://github.com//github.com/react-navigation/react-navigation/pull/9970/files/issues/r784475821) [/github.com/react-navigation/react-navigation/blob/fb84805c889bbb7059e7e95592c004aea2a510d6/packages/native/src/useLinking.tsx#L84](https://github.com//github.com/react-navigation/react-navigation/blob/fb84805c889bbb7059e7e95592c004aea2a510d6/packages/native/src/useLinking.tsx/issues/L84) [/github.com/react-navigation/react-navigation/blob/fb84805c889bbb7059e7e95592c004aea2a510d6/packages/native/src/useLinking.tsx#L86](https://github.com//github.com/react-navigation/react-navigation/blob/fb84805c889bbb7059e7e95592c004aea2a510d6/packages/native/src/useLinking.tsx/issues/L86) [/github.com/react-navigation/react-navigation/blob/fb84805c889bbb7059e7e95592c004aea2a510d6/packages/native/src/useLinking.tsx#L108](https://github.com//github.com/react-navigation/react-navigation/blob/fb84805c889bbb7059e7e95592c004aea2a510d6/packages/native/src/useLinking.tsx/issues/L108) [/github.com/react-navigation/react-navigation/blob/fb84805c889bbb7059e7e95592c004aea2a510d6/packages/native/src/useLinking.tsx#L110](https://github.com//github.com/react-navigation/react-navigation/blob/fb84805c889bbb7059e7e95592c004aea2a510d6/packages/native/src/useLinking.tsx/issues/L110)
+* update URL on web when params change. fixes [#10046](https://github.com/react-navigation/react-navigation/issues/10046) ([4468b96](https://github.com/react-navigation/react-navigation/commit/4468b96db5065be8342483392d939742d21b20bc))
+* **web:** avoid passing undefined root state in web ([#10186](https://github.com/react-navigation/react-navigation/issues/10186)) ([9087439](https://github.com/react-navigation/react-navigation/commit/90874397e653a6db642822bff18014a3e5980fed)), closes [#10185](https://github.com/react-navigation/react-navigation/issues/10185)
+
+
+
+
+
+## [6.0.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.5...@react-navigation/native@6.0.6) (2021-10-12)
+
+**Note:** Version bump only for package @react-navigation/native
+
+
+
+
+
+## [6.0.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.4...@react-navigation/native@6.0.5) (2021-10-09)
+
+**Note:** Version bump only for package @react-navigation/native
+
+
+
+
+
+## [6.0.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.3...@react-navigation/native@6.0.4) (2021-09-26)
+
+
+### Bug Fixes
+
+* fix building link with useLinkProps ([bcdc559](https://github.com/react-navigation/react-navigation/commit/bcdc55975d64b8a5267f0b0dc47efb395a409762))
+
+
+
+
+
+## [6.0.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.2...@react-navigation/native@6.0.3) (2021-09-26)
+
+
+### Bug Fixes
+
+* fix href with useLinkProps. fixes [#9930](https://github.com/react-navigation/react-navigation/issues/9930) ([4ae53e1](https://github.com/react-navigation/react-navigation/commit/4ae53e1705e39aee75041928c07a56ec110bfd05))
+* fix navigation when going back and forth in history on web ([#9970](https://github.com/react-navigation/react-navigation/issues/9970)) ([fb84805](https://github.com/react-navigation/react-navigation/commit/fb84805c889bbb7059e7e95592c004aea2a510d6)), closes [#9408](https://github.com/react-navigation/react-navigation/issues/9408) [#9128](https://github.com/react-navigation/react-navigation/issues/9128)
+* make useScrollToTop work with react-native-largelist ([#9960](https://github.com/react-navigation/react-navigation/issues/9960)) ([073fd57](https://github.com/react-navigation/react-navigation/commit/073fd57537466a054dc902e915430f69bbe363e1))
+* use console.error for linking conflicts instead of throwing ([4b36bcf](https://github.com/react-navigation/react-navigation/commit/4b36bcf346a6196bbc8d5792e8eb4614709161a2))
+
+
+
+
+
 ## [6.0.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.1...@react-navigation/native@6.0.2) (2021-08-07)
 
 

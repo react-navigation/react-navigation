@@ -123,6 +123,7 @@ export default function DrawerScreen({ navigation, ...rest }: Props) {
 
   return (
     <Drawer.Navigator
+      backBehavior="none"
       defaultStatus="open"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{

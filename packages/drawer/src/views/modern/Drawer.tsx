@@ -261,29 +261,36 @@ export default function Drawer({
 
   const drawerAnimatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [
-        {
-          translateX:
-            drawerType === 'permanent' || drawerType === 'back'
-              ? 0
-              : translateX.value,
-        },
-      ],
+      transform:
+        drawerType === 'permanent'
+          ? // Reanimated needs the property to be present, but it results in Browser bug
+            // https://bugs.chromium.org/p/chromium/issues/detail?id=20574
+            []
+          : [
+              {
+                translateX: drawerType === 'back' ? 0 : translateX.value,
+              },
+            ],
     };
   });
 
   const contentAnimatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [
-        {
-          translateX:
-            drawerType === 'permanent' || drawerType === 'front'
-              ? 0
-              : drawerPosition === 'left'
-              ? drawerWidth + translateX.value
-              : translateX.value - drawerWidth,
-        },
-      ],
+      transform:
+        drawerType === 'permanent'
+          ? // Reanimated needs the property to be present, but it results in Browser bug
+            // https://bugs.chromium.org/p/chromium/issues/detail?id=20574
+            []
+          : [
+              {
+                translateX:
+                  drawerType === 'front'
+                    ? 0
+                    : drawerPosition === 'left'
+                    ? drawerWidth + translateX.value
+                    : translateX.value - drawerWidth,
+              },
+            ],
     };
   });
 

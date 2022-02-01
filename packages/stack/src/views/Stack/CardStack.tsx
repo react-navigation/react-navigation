@@ -530,7 +530,12 @@ export default class CardStack extends React.Component<Props, State> {
       if (detachPreviousScreen === false) {
         activeScreensLimit++;
       } else {
-        break;
+        // Check at least last 2 screens before stopping
+        // This will make sure that screen isn't detached when another screen is animating on top of the transparent one
+        // For example, (Opaque -> Transparent -> Opaque)
+        if (i <= scenes.length - 2) {
+          break;
+        }
       }
     }
 

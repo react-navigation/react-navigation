@@ -1,5 +1,5 @@
 {
-  "description": "Rethinking navigation",
+  "description": "Routing and navigation for your React Native apps",
   "private": true,
   "workspaces": {
     "packages": [
@@ -27,12 +27,21 @@
     "test": "jest",
     "prerelease": "lerna run clean",
     "release": "lerna publish",
-    "example": "yarn --cwd example"
+    "example": "yarn --cwd example",
+    "postinstall": "node scripts/postinstall.js"
   },
   "dependencies": {
-    "react-native-web": "~0.16.3"
+    "expo": "~44.0.2",
+    "expo-splash-screen": "~0.14.1",
+    "expo-status-bar": "~1.2.0",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-native": "0.64.3",
+    "react-native-web": "~0.17.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.12.9",
+    "@babel/generator": "^7.15.4",
     "@commitlint/config-conventional": "^12.1.4",
     "@types/jest": "^26.0.23",
     "babel-jest": "^26.6.3",
@@ -48,10 +57,6 @@
     "prettier": "^2.3.0",
     "typescript": "^4.3.2"
   },
-  "resolutions": {
-    "react": "~16.13.1",
-    "react-native": "~0.63.2"
-  },
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
@@ -63,6 +68,9 @@
     "testRegex": "/__tests__/.*\\.(test|spec)\\.(js|tsx?)$",
     "setupFiles": [
       "<rootDir>/jest/setup.js"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(@react-native|react-native|react-native-iphone-x-helper)/)"
     ],
     "moduleNameMapper": {
       "@react-navigation/([^/]+)": "<rootDir>/packages/$1/src"

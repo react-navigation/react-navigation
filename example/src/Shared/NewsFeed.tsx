@@ -6,6 +6,7 @@ import {
   ScrollView,
   ScrollViewProps,
   StyleSheet,
+  Text,
   TextInput,
   View,
 } from 'react-native';
@@ -15,7 +16,6 @@ import {
   Divider,
   IconButton,
   Subheading,
-  Text,
 } from 'react-native-paper';
 
 type Props = Partial<ScrollViewProps> & {

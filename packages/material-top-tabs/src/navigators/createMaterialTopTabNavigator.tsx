@@ -33,18 +33,22 @@ function MaterialTopTabNavigator({
   children,
   screenListeners,
   screenOptions,
-  // @ts-expect-error: swipeEnabled is deprecated
-  swipeEnabled,
-  // @ts-expect-error: lazy is deprecated
-  lazy,
-  // @ts-expect-error: lazyPlaceholder is deprecated
-  lazyPlaceholder,
-  // @ts-expect-error: lazyPreloadDistance is deprecated
-  lazyPreloadDistance,
-  // @ts-expect-error: tabBarOptions is deprecated
-  tabBarOptions,
-  ...rest
+  ...restWithDeprecated
 }: Props) {
+  const {
+    // @ts-expect-error: swipeEnabled is deprecated
+    swipeEnabled,
+    // @ts-expect-error: lazy is deprecated
+    lazy,
+    // @ts-expect-error: lazyPlaceholder is deprecated
+    lazyPlaceholder,
+    // @ts-expect-error: lazyPreloadDistance is deprecated
+    lazyPreloadDistance,
+    // @ts-expect-error: tabBarOptions is deprecated
+    tabBarOptions,
+    ...rest
+  } = restWithDeprecated;
+
   let defaultScreenOptions: MaterialTopTabNavigationOptions = {};
 
   if (tabBarOptions) {

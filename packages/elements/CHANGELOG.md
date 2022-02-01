@@ -3,6 +3,61 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.2.1...@react-navigation/elements@1.3.0) (2022-01-29)
+
+
+### Bug Fixes
+
+* fix exposing custom header height with modals ([3b4edf7](https://github.com/react-navigation/react-navigation/commit/3b4edf7a8dfefb06a7ae1db2cbad48a5b19630bb))
+
+
+### Features
+
+* **native-stack:** add support for header background image ([393773b](https://github.com/react-navigation/react-navigation/commit/393773b688247456d09f397a794eff19424502f6))
+* pass canGoBack to headerRight ([82a1669](https://github.com/react-navigation/react-navigation/commit/82a16690973a7935939a25a66d5786955b6c8ba7))
+
+
+
+
+
+## [1.2.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.2.0...@react-navigation/elements@1.2.1) (2021-10-12)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+
+
+
+
+# [1.2.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.1.2...@react-navigation/elements@1.2.0) (2021-10-09)
+
+
+### Features
+
+* add a headerShadowVisible option to header ([8e7ba69](https://github.com/react-navigation/react-navigation/commit/8e7ba692661b69f93768add4c103bc31c814327c))
+
+
+
+
+
+## [1.1.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.1.1...@react-navigation/elements@1.1.2) (2021-09-26)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+
+
+
+
+## [1.1.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.1.0...@react-navigation/elements@1.1.1) (2021-09-26)
+
+
+### Bug Fixes
+
+* resized view never re-appears on macos. fixes [#9889](https://github.com/react-navigation/react-navigation/issues/9889) ([#9904](https://github.com/react-navigation/react-navigation/issues/9904)) ([0dde476](https://github.com/react-navigation/react-navigation/commit/0dde476906006e84d42d754d06a4681633e9fb4b))
+
+
+
+
+
 # [1.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.0.4...@react-navigation/elements@1.1.0) (2021-08-17)
 
 

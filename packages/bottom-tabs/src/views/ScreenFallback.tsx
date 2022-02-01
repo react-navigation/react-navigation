@@ -24,6 +24,7 @@ export const MaybeScreenContainer = ({
   ...rest
 }: ViewProps & {
   enabled: boolean;
+  hasTwoStates: boolean;
   children: React.ReactNode;
 }) => {
   if (Screens?.screensEnabled?.()) {

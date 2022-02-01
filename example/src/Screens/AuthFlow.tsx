@@ -1,4 +1,3 @@
-import { HeaderBackButton } from '@react-navigation/elements';
 import { ParamListBase, useTheme } from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -9,19 +8,20 @@ import { ActivityIndicator, StyleSheet, TextInput, View } from 'react-native';
 import { Button, Title } from 'react-native-paper';
 
 type AuthStackParams = {
-  Splash: undefined;
   Home: undefined;
   SignIn: undefined;
-  PostSignOut: undefined;
+  Chat: undefined;
 };
 
 const AUTH_CONTEXT_ERROR =
   'Authentication context not found. Have your wrapped your components with AuthContext.Consumer?';
 
 const AuthContext = React.createContext<{
+  isSignedIn: boolean;
   signIn: () => void;
   signOut: () => void;
 }>({
+  isSignedIn: false,
   signIn: () => {
     throw new Error(AUTH_CONTEXT_ERROR);
   },
@@ -40,7 +40,9 @@ const SplashScreen = () => {
   );
 };
 
-const SignInScreen = () => {
+const SignInScreen = ({
+  navigation,
+}: StackScreenProps<AuthStackParams, 'SignIn'>) => {
   const { signIn } = React.useContext(AuthContext);
   const { colors } = useTheme();
 
@@ -64,11 +66,16 @@ const SignInScreen = () => {
       <Button mode="contained" onPress={signIn} style={styles.button}>
         Sign in
       </Button>
+      <Button onPress={() => navigation.navigate('Chat')} style={styles.button}>
+        Go to Chat
+      </Button>
     </View>
   );
 };
 
-const HomeScreen = () => {
+const HomeScreen = ({
+  navigation,
+}: StackScreenProps<AuthStackParams, 'SignIn'>) => {
   const { signOut } = React.useContext(AuthContext);
 
   return (
@@ -77,6 +84,28 @@ const HomeScreen = () => {
       <Button onPress={signOut} style={styles.button}>
         Sign out
       </Button>
+      <Button onPress={() => navigation.navigate('Chat')} style={styles.button}>
+        Go to Chat
+      </Button>
+    </View>
+  );
+};
+
+const ChatScreen = () => {
+  const { isSignedIn, signIn, signOut } = React.useContext(AuthContext);
+
+  return (
+    <View style={styles.content}>
+      <Title style={styles.text}>What&apos;s up?</Title>
+      {isSignedIn ? (
+        <Button onPress={signOut} style={styles.button}>
+          Sign out
+        </Button>
+      ) : (
+        <Button onPress={signIn} style={styles.button}>
+          Sign in
+        </Button>
+      )}
     </View>
   );
 };
@@ -141,12 +170,15 @@ export default function SimpleStackScreen({
     });
   }, [navigation]);
 
+  const isSignedIn = state.userToken !== undefined;
+
   const authContext = React.useMemo(
     () => ({
+      isSignedIn,
       signIn: () => dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' }),
       signOut: () => dispatch({ type: 'SIGN_OUT' }),
     }),
-    []
+    [isSignedIn]
   );
 
   if (state.isLoading) {
@@ -155,14 +187,8 @@ export default function SimpleStackScreen({
 
   return (
     <AuthContext.Provider value={authContext}>
-      <SimpleStack.Navigator
-        screenOptions={{
-          headerLeft: () => (
-            <HeaderBackButton onPress={() => navigation.goBack()} />
-          ),
-        }}
-      >
-        {state.userToken === undefined ? (
+      <SimpleStack.Navigator>
+        {!isSignedIn ? (
           <SimpleStack.Screen
             name="SignIn"
             options={{
@@ -172,12 +198,13 @@ export default function SimpleStackScreen({
             component={SignInScreen}
           />
         ) : (
-          <SimpleStack.Screen
-            name="Home"
-            options={{ title: 'Home' }}
-            component={HomeScreen}
-          />
+          <SimpleStack.Screen name="Home" component={HomeScreen} />
         )}
+        <SimpleStack.Screen
+          navigationKey={String(isSignedIn)}
+          name="Chat"
+          component={ChatScreen}
+        />
       </SimpleStack.Navigator>
     </AuthContext.Provider>
   );

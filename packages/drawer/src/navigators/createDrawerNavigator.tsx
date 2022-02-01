@@ -5,6 +5,7 @@ import {
   DrawerNavigationState,
   DrawerRouter,
   DrawerRouterOptions,
+  DrawerStatus,
   ParamListBase,
   useNavigationBuilder,
 } from '@react-navigation/native';
@@ -29,19 +30,23 @@ type Props = DefaultNavigatorOptions<
 
 function DrawerNavigator({
   initialRouteName,
-  defaultStatus,
+  defaultStatus: customDefaultStatus,
   backBehavior,
   children,
   screenListeners,
   screenOptions,
-  // @ts-expect-error: openByDefault is deprecated
-  openByDefault,
-  // @ts-expect-error: lazy is deprecated
-  lazy,
-  // @ts-expect-error: drawerContentOptions is deprecated
-  drawerContentOptions,
-  ...rest
+  ...restWithDeprecated
 }: Props) {
+  const {
+    // @ts-expect-error: openByDefault is deprecated
+    openByDefault,
+    // @ts-expect-error: lazy is deprecated
+    lazy,
+    // @ts-expect-error: drawerContentOptions is deprecated
+    drawerContentOptions,
+    ...rest
+  } = restWithDeprecated;
+
   let defaultScreenOptions: DrawerNavigationOptions = {};
 
   if (drawerContentOptions) {
@@ -92,6 +97,13 @@ function DrawerNavigator({
     );
   }
 
+  const defaultStatus: DrawerStatus =
+    customDefaultStatus !== undefined
+      ? customDefaultStatus
+      : openByDefault
+      ? 'open'
+      : 'closed';
+
   const { state, descriptors, navigation, NavigationContent } =
     useNavigationBuilder<
       DrawerNavigationState<ParamListBase>,
@@ -101,12 +113,7 @@ function DrawerNavigator({
       DrawerNavigationEventMap
     >(DrawerRouter, {
       initialRouteName,
-      defaultStatus:
-        defaultStatus !== undefined
-          ? defaultStatus
-          : openByDefault
-          ? 'open'
-          : 'closed',
+      defaultStatus,
       backBehavior,
       children,
       screenListeners,
@@ -118,6 +125,7 @@ function DrawerNavigator({
     <NavigationContent>
       <DrawerView
         {...rest}
+        defaultStatus={defaultStatus}
         state={state}
         descriptors={descriptors}
         navigation={navigation}

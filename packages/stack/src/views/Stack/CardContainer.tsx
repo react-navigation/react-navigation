@@ -165,8 +165,9 @@ function CardContainer({
 
   const { colors } = useTheme();
 
-  const [pointerEvents, setPointerEvents] =
-    React.useState<'box-none' | 'none'>('box-none');
+  const [pointerEvents, setPointerEvents] = React.useState<'box-none' | 'none'>(
+    'box-none'
+  );
 
   React.useEffect(() => {
     const listener = scene.progress.next?.addListener?.(

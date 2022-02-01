@@ -32,6 +32,7 @@ import {
   Platform,
   ScaledSize,
   ScrollView,
+  Text,
 } from 'react-native';
 import {
   DarkTheme as PaperDarkTheme,
@@ -39,7 +40,6 @@ import {
   Divider,
   List,
   Provider as PaperProvider,
-  Text,
 } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -141,7 +141,14 @@ type RootStackParamList = {
   Home: NavigatorScreenParams<RootDrawerParamList>;
   NotFound: undefined;
 } & {
-  [P in keyof typeof SCREENS]: undefined;
+  [P in keyof typeof SCREENS]: NavigatorScreenParams<{
+    Article: { author?: string };
+    Albums: undefined;
+    Chat: undefined;
+    Contacts: undefined;
+    NewsFeed: undefined;
+    Dialog: undefined;
+  }>;
 };
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
@@ -154,8 +161,9 @@ export default function App() {
   const [theme, setTheme] = React.useState(DefaultTheme);
 
   const [isReady, setIsReady] = React.useState(Platform.OS === 'web');
-  const [initialState, setInitialState] =
-    React.useState<InitialState | undefined>();
+  const [initialState, setInitialState] = React.useState<
+    InitialState | undefined
+  >();
 
   React.useEffect(() => {
     const restoreState = async () => {
@@ -248,7 +256,7 @@ export default function App() {
           prefixes: [createURL('/')],
           config: {
             initialRouteName: 'Home',
-            screens: Object.keys(SCREENS).reduce<
+            screens: (Object.keys(SCREENS) as (keyof typeof SCREENS)[]).reduce<
               PathConfigMap<RootStackParamList>
             >(
               (acc, name) => {
@@ -258,8 +266,6 @@ export default function App() {
                   .replace(/^-/, '')
                   .toLowerCase();
 
-                // @ts-expect-error: these types aren't accurate
-                // But we aren't too concerned for now
                 acc[name] = {
                   path,
                   screens: {
@@ -371,7 +377,11 @@ export default function App() {
                               key={name}
                               testID={name}
                               title={SCREENS[name].title}
-                              onPress={() => navigation.navigate(name)}
+                              onPress={() => {
+                                // FIXME: figure this out later
+                                // @ts-expect-error
+                                navigation.navigate(name);
+                              }}
                             />
                           )
                         )}

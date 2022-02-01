@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.9...@react-navigation/bottom-tabs@6.1.0) (2022-01-29)
+
+
+### Features
+
+* **native-stack:** export NativeStackView to support custom routers on native-stack ([#10260](https://github.com/react-navigation/react-navigation/issues/10260)) ([7b761f1](https://github.com/react-navigation/react-navigation/commit/7b761f1cc069ca68b96b5155be726024a345346f))
+
+
+
+
+
+## [6.0.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.8...@react-navigation/bottom-tabs@6.0.9) (2021-10-12)
+
+
+### Bug Fixes
+
+* fix type errors in generated declaration file of bottom-tabs ([#10033](https://github.com/react-navigation/react-navigation/issues/10033)) ([0b40dd7](https://github.com/react-navigation/react-navigation/commit/0b40dd745b0734a4329197199e7df5c6a97cd73e)), closes [#10032](https://github.com/react-navigation/react-navigation/issues/10032)
+* move [@ts-expect-error](https://github.com/ts-expect-error) to body to avoid issue in type definitions ([0a08688](https://github.com/react-navigation/react-navigation/commit/0a0868862c9d6ae77055c66938a764306d391b44))
+
+
+
+
+
+## [6.0.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.7...@react-navigation/bottom-tabs@6.0.8) (2021-10-09)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+## [6.0.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.6...@react-navigation/bottom-tabs@6.0.7) (2021-09-26)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+## [6.0.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.5...@react-navigation/bottom-tabs@6.0.6) (2021-09-26)
+
+
+### Bug Fixes
+
+* export header props for other navigators ([8475481](https://github.com/react-navigation/react-navigation/commit/84754812effd8bee576c5d9836c317889dabe11a)), closes [#9965](https://github.com/react-navigation/react-navigation/issues/9965)
+* stop  animations on unmount/cleanup ([5fb5f41](https://github.com/react-navigation/react-navigation/commit/5fb5f41eb6cf86ebe2f7777d6c98bda16ce71b5b))
+
+
+
+
+
 ## [6.0.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.4...@react-navigation/bottom-tabs@6.0.5) (2021-08-17)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

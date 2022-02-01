@@ -188,6 +188,25 @@ export type NativeStackHeaderProps = {
   navigation: NativeStackNavigationProp<ParamListBase>;
 };
 
+export type HeaderButtonProps = {
+  /**
+   * Tint color for the header.
+   */
+  tintColor?: string;
+  /**
+   * Whether it's possible to navigate back in stack.
+   */
+  canGoBack: boolean;
+};
+
+export type HeaderBackButtonProps = HeaderButtonProps & {
+  /**
+   * Label text for the button. Usually the title of the previous screen.
+   * By default, this is only shown on iOS.
+   */
+  label?: string;
+};
+
 export type NativeStackNavigationOptions = {
   /**
    * String that can be displayed in the header as a fallback for `headerTitle`.
@@ -333,14 +352,20 @@ export type NativeStackNavigationOptions = {
    */
   headerTintColor?: string;
   /**
+   * Function which returns a React Element to render as the background of the header.
+   * This is useful for using backgrounds such as an image, a gradient, blur effect etc.
+   * You can use this with `headerTransparent` to render content underneath a translucent header.
+   */
+  headerBackground?: () => React.ReactNode;
+  /**
    * Function which returns a React Element to display on the left side of the header.
    * This replaces the back button. See `headerBackVisible` to show the back button along side left element.
    */
-  headerLeft?: (props: { tintColor?: string }) => React.ReactNode;
+  headerLeft?: (props: HeaderBackButtonProps) => React.ReactNode;
   /**
    * Function which returns a React Element to display on the right side of the header.
    */
-  headerRight?: (props: { tintColor?: string }) => React.ReactNode;
+  headerRight?: (props: HeaderButtonProps) => React.ReactNode;
   /**
    * String or a function that returns a React Element to be used by the header.
    * Defaults to screen `title` or route name.
@@ -388,6 +413,15 @@ export type NativeStackNavigationOptions = {
    */
   headerSearchBarOptions?: SearchBarProps;
   /**
+   * Boolean indicating whether to show the menu on longPress of iOS >= 14 back button. Defaults to `true`.
+   * Requires `react-native-screens` version >=3.3.0.
+   *
+   * Only supported on iOS.
+   *
+   * @platform ios
+   */
+  headerBackButtonMenuEnabled?: boolean;
+  /**
    * Sets the status bar animation (similar to the `StatusBar` component).
    * Requires setting `View controller-based status bar appearance -> YES` (or removing the config) in your `Info.plist` file.
    * On Android, requires `react-native-screens` version >=3.3.0.
@@ -425,6 +459,7 @@ export type NativeStackNavigationOptions = {
   contentStyle?: StyleProp<ViewStyle>;
   /**
    * Whether you can use gestures to dismiss this screen. Defaults to `true`.
+   *
    * Only supported on iOS.
    *
    * @platform ios

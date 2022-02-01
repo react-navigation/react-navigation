@@ -3,10 +3,13 @@
 const path = require('path');
 const fs = require('fs');
 const escape = require('escape-string-regexp');
-const blacklist = require('metro-config/src/defaults/blacklist');
+const { getDefaultConfig } = require('@expo/metro-config');
+const exclusionList = require('metro-config/src/defaults/exclusionList');
 
 const root = path.resolve(__dirname, '..');
 const packages = path.resolve(root, 'packages');
+
+const defaultConfig = getDefaultConfig(__dirname);
 
 // List all packages under `packages/`
 const workspaces = fs
@@ -27,7 +30,7 @@ const modules = ['@expo/vector-icons']
       );
 
       // We need to make sure that only one version is loaded for peerDependencies
-      // So we blacklist them at the root, and alias them to the versions in example's node_modules
+      // So we exclude them at the root, and alias them to the versions in example's node_modules
       return pak.peerDependencies ? Object.keys(pak.peerDependencies) : [];
     })
   )
@@ -39,6 +42,8 @@ const modules = ['@expo/vector-icons']
   );
 
 module.exports = {
+  ...defaultConfig,
+
   projectRoot: __dirname,
 
   // We need to watch the root of the monorepo
@@ -47,8 +52,10 @@ module.exports = {
   watchFolders: [root],
 
   resolver: {
-    // We need to blacklist the peerDependencies we've collected in packages' node_modules
-    blacklistRE: blacklist(
+    ...defaultConfig.resolver,
+
+    // We need to exclude the peerDependencies we've collected in packages' node_modules
+    blacklistRE: exclusionList(
       [].concat(
         ...workspaces.map((it) =>
           modules.map(
@@ -67,17 +74,9 @@ module.exports = {
     }, {}),
   },
 
-  transformer: {
-    assetPlugins: ['expo-asset/tools/hashAssetFiles'],
-    getTransformOptions: async () => ({
-      transform: {
-        experimentalImportSupport: false,
-        inlineRequires: false,
-      },
-    }),
-  },
-
   server: {
+    ...defaultConfig.server,
+
     enhanceMiddleware: (middleware) => {
       return (req, res, next) => {
         // When an asset is imported outside the project root, it has wrong path on Android

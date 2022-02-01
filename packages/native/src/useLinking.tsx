@@ -7,6 +7,7 @@ import {
   NavigationState,
   ParamListBase,
 } from '@react-navigation/core';
+import isEqual from 'fast-deep-equal';
 import { nanoid } from 'nanoid/non-secure';
 import * as React from 'react';
 
@@ -98,12 +99,17 @@ const createMemoryHistory = () => {
 
       const id = window.history.state?.id ?? nanoid();
 
-      if (items.length) {
-        items[index] = { path, state, id };
+      if (!items.length || items.findIndex((item) => item.id === id) < 0) {
+        // There are two scenarios for creating an array with only one history record:
+        // - When loaded id not found in the items array, this function by default will replace
+        //   the first item. We need to keep only the new updated object, otherwise it will break
+        //   the page when navigating forward in history.
+        // - This is the first time any state modifications are done
+        //   So we need to push the entry as there's nothing to replace
+        items = [{ path, state, id }];
+        index = 0;
       } else {
-        // This is the first time any state modifications are done
-        // So we need to push the entry as there's nothing to replace
-        items.push({ path, state, id });
+        items[index] = { path, state, id };
       }
 
       window.history.replaceState({ id }, '', path);
@@ -117,20 +123,14 @@ const createMemoryHistory = () => {
     go(n: number) {
       interrupt();
 
-      if (n > 0) {
-        // We shouldn't go forward more than available index
-        n = Math.min(n, items.length - 1);
-      } else if (n < 0) {
-        // We shouldn't go back more than the 0 index
-        // Otherwise we'll exit the page
-        n = index + n < 0 ? -index : n;
-      }
-
       if (n === 0) {
         return;
       }
 
-      index += n;
+      // We shouldn't go back more than the 0 index (otherwise we'll exit the page)
+      // Or forward more than the available index (or the app will crash)
+      index =
+        n < 0 ? Math.max(index - n, 0) : Math.min(index + n, items.length - 1);
 
       // When we call `history.go`, `popstate` will fire when there's history to go back to
       // So we need to somehow handle following cases:
@@ -179,6 +179,13 @@ const createMemoryHistory = () => {
         }, 100);
 
         const onPopState = () => {
+          const id = window.history.state?.id;
+          const currentIndex = items.findIndex((item) => item.id === id);
+
+          // Fix createMemoryHistory.index variable's value
+          // as it may go out of sync when navigating in the browser.
+          index = Math.max(currentIndex, 0);
+
           const last = pending.pop();
 
           window.removeEventListener('popstate', onPopState);
@@ -287,7 +294,7 @@ const series = (cb: () => Promise<void>) => {
   return callback;
 };
 
-let isUsingLinking = false;
+let linkingHandlers: Symbol[] = [];
 
 type Options = LinkingOptions<ParamListBase> & {
   independent?: boolean;
@@ -305,28 +312,40 @@ export default function useLinking(
   }: Options
 ) {
   React.useEffect(() => {
+    if (process.env.NODE_ENV === 'production') {
+      return undefined;
+    }
+
     if (independent) {
       return undefined;
     }
 
-    if (enabled !== false && isUsingLinking) {
-      throw new Error(
+    if (enabled !== false && linkingHandlers.length) {
+      console.error(
         [
-          'Looks like you have configured linking in multiple places. This is likely an error since URL integration should only be handled in one place to avoid conflicts. Make sure that:',
-          "- You are not using both 'linking' prop and 'useLinking'",
-          "- You don't have 'useLinking' in multiple components",
+          'Looks like you have configured linking in multiple places. This is likely an error since deep links should only be handled in one place to avoid conflicts. Make sure that:',
+          "- You don't have multiple NavigationContainers in the app each with 'linking' enabled",
+          '- Only a single instance of the root component is rendered',
         ]
           .join('\n')
           .trim()
       );
-    } else {
-      isUsingLinking = enabled !== false;
+    }
+
+    const handler = Symbol();
+
+    if (enabled !== false) {
+      linkingHandlers.push(handler);
     }
 
     return () => {
-      isUsingLinking = false;
+      const index = linkingHandlers.indexOf(handler);
+
+      if (index > -1) {
+        linkingHandlers.splice(index, 1);
+      }
     };
-  });
+  }, [enabled, independent]);
 
   const [history] = React.useState(createMemoryHistory);
 
@@ -438,7 +457,12 @@ export default function useLinking(
               // Ignore any errors from deep linking.
               // This could happen in case of malformed links, navigation object not being initialized etc.
               console.warn(
-                `An error occurred when trying to handle the link '${path}': ${e.message}`
+                `An error occurred when trying to handle the link '${path}': ${
+                  typeof e === 'object' && e != null && 'message' in e
+                    ? // @ts-expect-error: we're already checking for this
+                      e.message
+                    : e
+                }`
               );
             }
           } else {
@@ -459,6 +483,34 @@ export default function useLinking(
       return;
     }
 
+    const getPathForRoute = (
+      route: ReturnType<typeof findFocusedRoute>,
+      state: NavigationState
+    ): string => {
+      // If the `route` object contains a `path`, use that path as long as `route.name` and `params` still match
+      // This makes sure that we preserve the original URL for wildcard routes
+      if (route?.path) {
+        const stateForPath = getStateFromPathRef.current(
+          route.path,
+          configRef.current
+        );
+
+        if (stateForPath) {
+          const focusedRoute = findFocusedRoute(stateForPath);
+
+          if (
+            focusedRoute &&
+            focusedRoute.name === route.name &&
+            isEqual(focusedRoute.params, route.params)
+          ) {
+            return route.path;
+          }
+        }
+      }
+
+      return getPathFromStateRef.current(state, configRef.current);
+    };
+
     if (ref.current) {
       // We need to record the current metadata on the first render if they aren't set
       // This will allow the initial state to be in the history entry
@@ -466,8 +518,7 @@ export default function useLinking(
 
       if (state) {
         const route = findFocusedRoute(state);
-        const path =
-          route?.path ?? getPathFromStateRef.current(state, configRef.current);
+        const path = getPathForRoute(route, state);
 
         if (previousStateRef.current === undefined) {
           previousStateRef.current = state;
@@ -487,10 +538,14 @@ export default function useLinking(
       const previousState = previousStateRef.current;
       const state = navigation.getRootState();
 
+      // root state may not available, for example when root navigators switch inside the container
+      if (!state) {
+        return;
+      }
+
       const pendingPath = pendingPopStatePathRef.current;
       const route = findFocusedRoute(state);
-      const path =
-        route?.path ?? getPathFromStateRef.current(state, configRef.current);
+      const path = getPathForRoute(route, state);
 
       previousStateRef.current = state;
       pendingPopStatePathRef.current = undefined;

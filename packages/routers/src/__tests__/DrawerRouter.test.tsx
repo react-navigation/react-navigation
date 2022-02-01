@@ -34,6 +34,7 @@ it('gets initial state from route names and params with initialRouteName', () =>
       { type: 'route', key: 'bar-test' },
       { type: 'route', key: 'baz-test' },
     ],
+    default: 'closed',
     stale: false,
     type: 'drawer',
   });
@@ -61,6 +62,7 @@ it('gets initial state from route names and params without initialRouteName', ()
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
     history: [{ type: 'route', key: 'bar-test' }],
+    default: 'closed',
     stale: false,
     type: 'drawer',
   });
@@ -98,6 +100,7 @@ it('gets rehydrated state from partial state', () => {
       { key: 'qux-1', name: 'qux', params: { name: 'Jane' } },
     ],
     history: [{ type: 'route', key: 'bar-0' }],
+    default: 'closed',
     stale: false,
     type: 'drawer',
   });
@@ -122,6 +125,7 @@ it('gets rehydrated state from partial state', () => {
       { type: 'route', key: 'bar-test' },
       { type: 'route', key: 'baz-0' },
     ],
+    default: 'closed',
     stale: false,
     type: 'drawer',
   });
@@ -151,6 +155,7 @@ it('gets rehydrated state from partial state', () => {
       { type: 'route', key: 'bar-0' },
       { type: 'route', key: 'qux-2' },
     ],
+    default: 'closed',
     stale: false,
     type: 'drawer',
   });
@@ -173,6 +178,7 @@ it('gets rehydrated state from partial state', () => {
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
     history: [{ type: 'route', key: 'bar-test' }],
+    default: 'closed',
     stale: false,
     type: 'drawer',
   });
@@ -204,6 +210,7 @@ it('gets rehydrated state from partial state', () => {
       { type: 'route', key: 'bar-test' },
       { type: 'drawer', status: 'open' },
     ],
+    default: 'closed',
     stale: false,
     type: 'drawer',
   });
@@ -225,6 +232,7 @@ it("doesn't rehydrate state if it's not stale", () => {
       { type: 'route', key: 'bar-test' },
       { type: 'drawer', status: 'open' },
     ],
+    default: 'closed',
     stale: false as const,
     type: 'drawer' as const,
   };
@@ -259,6 +267,7 @@ it('handles navigate action', () => {
           { key: 'bar', name: 'bar' },
         ],
         history: [{ type: 'route', key: 'bar' }],
+        default: 'closed',
       },
       CommonActions.navigate('baz', { answer: 42 }),
       options
@@ -274,6 +283,7 @@ it('handles navigate action', () => {
       { key: 'bar', name: 'bar' },
     ],
     history: [{ type: 'route', key: 'baz' }],
+    default: 'closed',
   });
 });
 
@@ -301,6 +311,7 @@ it('handles navigate action with open drawer', () => {
           { type: 'route', key: 'bar' },
           { type: 'drawer', status: 'open' },
         ],
+        default: 'closed',
       },
       CommonActions.navigate('baz', { answer: 42 }),
       options
@@ -316,6 +327,7 @@ it('handles navigate action with open drawer', () => {
       { key: 'bar', name: 'bar' },
     ],
     history: [{ type: 'route', key: 'baz' }],
+    default: 'closed',
   });
 });
 
@@ -340,6 +352,7 @@ it('handles open drawer action', () => {
           { key: 'bar', name: 'bar' },
         ],
         history: [{ type: 'route', key: 'bar' }],
+        default: 'closed',
       },
       DrawerActions.openDrawer(),
       options
@@ -358,6 +371,7 @@ it('handles open drawer action', () => {
       { type: 'route', key: 'bar' },
       { type: 'drawer', status: 'open' },
     ],
+    default: 'closed',
   });
 
   const state: DrawerNavigationState<ParamListBase> = {
@@ -374,6 +388,7 @@ it('handles open drawer action', () => {
       { type: 'route', key: 'bar' },
       { type: 'drawer', status: 'open' },
     ],
+    default: 'closed',
   };
 
   expect(
@@ -405,6 +420,7 @@ it('handles close drawer action', () => {
           { type: 'route', key: 'bar' },
           { type: 'drawer', status: 'open' },
         ],
+        default: 'closed',
       },
       DrawerActions.closeDrawer(),
       options
@@ -420,6 +436,7 @@ it('handles close drawer action', () => {
       { key: 'bar', name: 'bar' },
     ],
     history: [{ type: 'route', key: 'bar' }],
+    default: 'closed',
   });
 
   const state: DrawerNavigationState<ParamListBase> = {
@@ -436,6 +453,7 @@ it('handles close drawer action', () => {
       { type: 'route', key: 'bar' },
       { type: 'route', key: 'baz' },
     ],
+    default: 'closed',
   };
 
   expect(
@@ -467,6 +485,7 @@ it('handles toggle drawer action', () => {
           { type: 'route', key: 'bar' },
           { type: 'drawer', status: 'open' },
         ],
+        default: 'closed',
       },
       DrawerActions.toggleDrawer(),
       options
@@ -482,6 +501,7 @@ it('handles toggle drawer action', () => {
       { key: 'bar', name: 'bar' },
     ],
     history: [{ type: 'route', key: 'bar' }],
+    default: 'closed',
   });
 
   expect(
@@ -497,6 +517,7 @@ it('handles toggle drawer action', () => {
           { key: 'bar', name: 'bar' },
         ],
         history: [{ type: 'route', key: 'bar' }],
+        default: 'closed',
       },
       DrawerActions.toggleDrawer(),
       options
@@ -515,6 +536,7 @@ it('handles toggle drawer action', () => {
       { type: 'route', key: 'bar' },
       { type: 'drawer', status: 'open' },
     ],
+    default: 'closed',
   });
 });
 
@@ -531,6 +553,7 @@ it('updates history on focus change', () => {
       { key: 'qux-0', name: 'qux', params: { name: 'Jane' } },
     ],
     history: [{ type: 'route', key: 'bar-0' }],
+    default: 'closed',
     stale: false as const,
     type: 'drawer' as const,
   };
@@ -560,6 +583,7 @@ it('closes drawer on focus change', () => {
           { key: 'qux-0', name: 'qux' },
         ],
         history: [{ type: 'route', key: 'bar-0' }],
+        default: 'closed',
         stale: false,
         type: 'drawer',
       },
@@ -578,6 +602,7 @@ it('closes drawer on focus change', () => {
       { type: 'route', key: 'bar-0' },
       { type: 'route', key: 'baz-0' },
     ],
+    default: 'closed',
     stale: false,
     type: 'drawer',
   });
@@ -597,6 +622,7 @@ it('closes drawer on focus change', () => {
           { type: 'route', key: 'bar-0' },
           { type: 'drawer', status: 'open' },
         ],
+        default: 'closed',
         stale: false,
         type: 'drawer',
       },
@@ -615,6 +641,7 @@ it('closes drawer on focus change', () => {
       { type: 'route', key: 'bar-0' },
       { type: 'route', key: 'baz-0' },
     ],
+    default: 'closed',
     stale: false,
     type: 'drawer',
   });

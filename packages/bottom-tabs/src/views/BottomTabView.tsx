@@ -92,6 +92,7 @@ export default function BottomTabView(props: Props) {
     <SafeAreaProviderCompat>
       <MaybeScreenContainer
         enabled={detachInactiveScreens}
+        hasTwoStates
         style={styles.container}
       >
         {routes.map((route, index) => {

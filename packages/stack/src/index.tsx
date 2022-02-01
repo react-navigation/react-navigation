@@ -43,6 +43,7 @@ export type {
   StackHeaderInterpolationProps,
   StackHeaderProps,
   StackHeaderStyleInterpolator,
+  StackNavigationEventMap,
   StackNavigationOptions,
   StackNavigationProp,
   StackScreenProps,

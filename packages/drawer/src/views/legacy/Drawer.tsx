@@ -498,14 +498,10 @@ export default class DrawerView extends React.Component<DrawerProps> {
     const isRight = drawerPosition === 'right';
 
     const contentTranslateX =
-      drawerType === 'front' || drawerType === 'permanent'
-        ? ANIMATED_ZERO
-        : this.translateX;
+      drawerType === 'front' ? ANIMATED_ZERO : this.translateX;
 
     const drawerTranslateX =
-      drawerType === 'permanent'
-        ? ANIMATED_ZERO
-        : drawerType === 'back'
+      drawerType === 'back'
         ? I18nManager.isRTL
           ? multiply(
               sub(this.containerWidth, this.drawerWidth),
@@ -557,7 +553,14 @@ export default class DrawerView extends React.Component<DrawerProps> {
             <Animated.View
               style={[
                 styles.content,
-                { transform: [{ translateX: contentTranslateX }] },
+                {
+                  transform:
+                    drawerType === 'permanent'
+                      ? // Reanimated needs the property to be present, but it results in Browser bug
+                        // https://bugs.chromium.org/p/chromium/issues/detail?id=20574
+                        []
+                      : [{ translateX: contentTranslateX }],
+                },
               ]}
             >
               <View
@@ -580,6 +583,10 @@ export default class DrawerView extends React.Component<DrawerProps> {
                     progress={progress}
                     onPress={() => this.toggleDrawer(false)}
                     style={overlayStyle as any}
+                    accessibilityElementsHidden={!isOpen}
+                    importantForAccessibility={
+                      isOpen ? 'auto' : 'no-hide-descendants'
+                    }
                   />
                 )
               }
@@ -608,7 +615,12 @@ export default class DrawerView extends React.Component<DrawerProps> {
               style={[
                 styles.container,
                 {
-                  transform: [{ translateX: drawerTranslateX }],
+                  transform:
+                    drawerType === 'permanent'
+                      ? // Reanimated needs the property to be present, but it results in Browser bug
+                        // https://bugs.chromium.org/p/chromium/issues/detail?id=20574
+                        []
+                      : [{ translateX: drawerTranslateX }],
                   opacity: this.drawerOpacity,
                 },
                 drawerType === 'permanent'

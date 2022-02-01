@@ -168,6 +168,11 @@ export type DrawerNavigationOptions = HeaderOptions &
     drawerInactiveBackgroundColor?: string;
 
     /**
+     * Whether label font should scale to respect Text Size accessibility settings.
+     */
+    drawerAllowFontScaling?: boolean;
+
+    /**
      * Style object for the single item, which can contain an icon and/or a label.
      */
     drawerItemStyle?: StyleProp<ViewStyle>;
@@ -299,7 +304,12 @@ export type DrawerHeaderProps = {
   navigation: DrawerNavigationProp<ParamListBase>;
 };
 
-export type DrawerNavigationEventMap = {};
+export type DrawerNavigationEventMap = {
+  /**
+   * Event which fires on tapping on the item in the drawer menu.
+   */
+  drawerItemPress: { data: undefined; canPreventDefault: true };
+};
 
 export type DrawerNavigationHelpers = NavigationHelpers<
   ParamListBase,
