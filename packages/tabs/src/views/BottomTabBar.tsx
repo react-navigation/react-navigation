@@ -7,6 +7,7 @@ import {
   Keyboard,
   Platform,
   LayoutChangeEvent,
+  EmitterSubscription,
 } from 'react-native';
 import {
   getStatusBarHeight,
@@ -121,24 +122,34 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
     visible: new Animated.Value(1),
   };
 
+  keyboardDidShowSubscription: EmitterSubscription | null = null;
+  keyboardDidHideSubscription: EmitterSubscription | null = null;
+
   componentDidMount() {
     if (Platform.OS === 'ios') {
-      Keyboard.addListener('keyboardWillShow', this._handleKeyboardShow);
-      Keyboard.addListener('keyboardWillHide', this._handleKeyboardHide);
+      this.keyboardDidShowSubscription = Keyboard.addListener(
+        'keyboardWillShow',
+        this._handleKeyboardShow
+      );
+      this.keyboardDidHideSubscription = Keyboard.addListener(
+        'keyboardWillHide',
+        this._handleKeyboardHide
+      );
     } else {
-      Keyboard.addListener('keyboardDidShow', this._handleKeyboardShow);
-      Keyboard.addListener('keyboardDidHide', this._handleKeyboardHide);
+      this.keyboardDidShowSubscription = Keyboard.addListener(
+        'keyboardDidShow',
+        this._handleKeyboardShow
+      );
+      this.keyboardDidHideSubscription = Keyboard.addListener(
+        'keyboardDidHide',
+        this._handleKeyboardHide
+      );
     }
   }
 
   componentWillUnmount() {
-    if (Platform.OS === 'ios') {
-      Keyboard.removeListener('keyboardWillShow', this._handleKeyboardShow);
-      Keyboard.removeListener('keyboardWillHide', this._handleKeyboardHide);
-    } else {
-      Keyboard.removeListener('keyboardDidShow', this._handleKeyboardShow);
-      Keyboard.removeListener('keyboardDidHide', this._handleKeyboardHide);
-    }
+    this.keyboardDidShowSubscription?.remove();
+    this.keyboardDidHideSubscription?.remove();
   }
 
   // @ts-ignore
