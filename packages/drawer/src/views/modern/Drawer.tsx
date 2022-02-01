@@ -265,7 +265,7 @@ export default function Drawer({
         drawerType === 'permanent'
           ? // Reanimated needs the property to be present, but it results in Browser bug
             // https://bugs.chromium.org/p/chromium/issues/detail?id=20574
-            undefined
+            []
           : [
               {
                 translateX: drawerType === 'back' ? 0 : translateX.value,
@@ -280,7 +280,7 @@ export default function Drawer({
         drawerType === 'permanent'
           ? // Reanimated needs the property to be present, but it results in Browser bug
             // https://bugs.chromium.org/p/chromium/issues/detail?id=20574
-            undefined
+            []
           : [
               {
                 translateX:
