@@ -182,6 +182,7 @@ export type NativeStackNavigationOptions = {
    *
    * For large title to collapse on scroll, the content of the screen should be wrapped in a scrollable view such as `ScrollView` or `FlatList`.
    * If the scrollable area doesn't fill the screen, the large title won't collapse on scroll.
+   * You also need to specify `contentInsetAdjustmentBehavior="automatic"` in your `ScrollView`, `FlatList` etc.
    *
    * Only supported on iOS.
    *
@@ -304,9 +305,11 @@ export type NativeStackNavigationOptions = {
     }
   >;
   /**
-   * Options to render a native search bar on iOS.
+   * Options to render a native search bar.
+   * You also need to specify `contentInsetAdjustmentBehavior="automatic"` in your `ScrollView`, `FlatList` etc.
+   * If you don't have a `ScrollView`, specify `headerTransparent: false`.
    *
-   * @platform ios
+   * Only supported on iOS and Android.
    */
   headerSearchBarOptions?: SearchBarProps;
   /**

@@ -25,7 +25,7 @@ const ArticleScreen = ({
   route,
 }: NativeStackScreenProps<NativeStackParams, 'Article'>) => {
   return (
-    <ScrollView>
+    <ScrollView contentInsetAdjustmentBehavior="automatic">
       <View style={styles.buttons}>
         <Button
           mode="contained"
@@ -70,7 +70,7 @@ const NewsFeedScreen = ({
   }, [navigation]);
 
   return (
-    <ScrollView>
+    <ScrollView contentInsetAdjustmentBehavior="automatic">
       <View style={styles.buttons}>
         <Button
           mode="contained"
