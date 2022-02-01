@@ -119,6 +119,9 @@ export default function HeaderConfig({
       : // Fallback for older versions of react-native-screens
         Platform.OS === 'ios' && SearchBar != null;
 
+  const hasHeaderSearchBar =
+    supportsHeaderSearchBar && headerSearchBarOptions != null;
+
   if (headerSearchBarOptions != null && !supportsHeaderSearchBar) {
     throw new Error(
       `The current version of 'react-native-screens' doesn't support SearchBar in the header. Please update to the latest version to use this option.`
@@ -185,7 +188,11 @@ export default function HeaderConfig({
         translucent={
           headerBackground != null ||
           // This defaults to `true`, so we can't pass `undefined`
-          headerTransparent === true
+          headerTransparent === true ||
+          // When using a SearchBar or large title, the header needs to be translucent for it to work on iOS
+          ((hasHeaderSearchBar || headerLargeTitle) &&
+            Platform.OS === 'ios' &&
+            headerTransparent !== false)
         }
       >
         {Platform.OS === 'ios' ? (
@@ -246,7 +253,7 @@ export default function HeaderConfig({
             {headerRightElement}
           </ScreenStackHeaderRightView>
         ) : null}
-        {supportsHeaderSearchBar && headerSearchBarOptions != null ? (
+        {hasHeaderSearchBar ? (
           <ScreenStackHeaderSearchBarView>
             <SearchBar {...headerSearchBarOptions} />
           </ScreenStackHeaderSearchBarView>
