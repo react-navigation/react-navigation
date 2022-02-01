@@ -20,7 +20,7 @@ export function Logs({ active, logs, index, resetTo }: Props) {
     ? logs.find((log) => log.id === selectedID)
     : logs[logs.length - 1];
 
-  const itemKey = (_index: number) => logs[_index].id;
+  const itemKey = (index: number) => logs[index].id;
 
   React.useEffect(() => {
     if (listRef.current && !selectedID) {
