@@ -111,6 +111,11 @@ export type DrawerNavigationOptions = HeaderOptions & {
   drawerInactiveBackgroundColor?: string;
 
   /**
+   * Whether label font should scale to respect Text Size accessibility settings.
+   */
+  drawerAllowFontScaling?: boolean;
+
+  /**
    * Style object for the single item, which can contain an icon and/or a label.
    */
   drawerItemStyle?: StyleProp<ViewStyle>;
