@@ -42,7 +42,7 @@ export default function DrawerItemList({
 
     const onPress = () => {
       const event = navigation.emit({
-        type: 'drawerPress',
+        type: 'drawerItemPress',
         target: route.key,
         canPreventDefault: true,
       });
