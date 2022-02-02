@@ -350,6 +350,20 @@ export type NativeStackNavigationOptions = {
    */
   contentStyle?: StyleProp<ViewStyle>;
   /**
+   * Whether the gesture to dismiss should use animation provided to `animation` prop. Defaults to `false`.
+   *
+   * @platform ios
+   */
+  customAnimationOnGesture?: boolean;
+  /**
+   * Whether the gesture to dismiss should work on the whole screen. Swiping with this option results in the same transition animation as `simple_push` by default.
+   * It can be changed to other custom animations with `customAnimationOnSwipe` prop, but default iOS swipe animation is not achievable due to usage of custom recognizer.
+   * Defaults to `false`.
+   *
+   * @platform ios
+   */
+  fullScreenGestureEnabled?: boolean;
+  /**
    * Whether you can use gestures to dismiss this screen. Defaults to `true`.
    *
    * Only supported on iOS.
@@ -374,6 +388,8 @@ export type NativeStackNavigationOptions = {
    * - "default": use the platform default animation
    * - "fade": fade screen in or out
    * - "flip": flip the screen, requires stackPresentation: "modal" (iOS only)
+   * - "simple_push": use the platform default animation, but without shadow and native header transition (iOS only)
+   * - "slide_from_bottom": slide in the new screen from bottom
    * - "slide_from_right": slide in the new screen from right (Android only, uses default animation on iOS)
    * - "slide_from_left": slide in the new screen from left (Android only, uses default animation on iOS)
    * - "none": don't animate the screen
