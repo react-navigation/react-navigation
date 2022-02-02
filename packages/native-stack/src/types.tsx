@@ -356,9 +356,9 @@ export type NativeStackNavigationOptions = {
    */
   customAnimationOnGesture?: boolean;
   /**
-   * Whether the gesture to dismiss should work on the whole screen. Swiping with this option results in the same transition animation as `simple_push` by default.
-   * It can be changed to other custom animations with `customAnimationOnSwipe` prop, but default iOS swipe animation is not achievable due to usage of custom recognizer.
-   * Defaults to `false`.
+   * Whether the gesture to dismiss should work on the whole screen. Using gesture to dismiss with this option results in the same
+   * transition animation as `simple_push`. This behavior can be changed by setting `customAnimationOnGesture` prop. Achieving the
+   * default iOS animation isn't possible due to platform limitations. Defaults to `false`.
    *
    * @platform ios
    */
