@@ -27,8 +27,7 @@
     "test": "jest",
     "prerelease": "lerna run clean",
     "release": "lerna publish",
-    "example": "yarn --cwd example",
-    "postinstall": "node scripts/postinstall.js"
+    "example": "yarn --cwd example"
   },
   "dependencies": {
     "expo": "~44.0.2",
