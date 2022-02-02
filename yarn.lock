@@ -17543,10 +17543,10 @@ react-native-flipper@^0.80.0, react-native-flipper@~0.80.0:
   resolved "https://registry.yarnpkg.com/react-native-flipper/-/react-native-flipper-0.80.0.tgz#ac576ccbb5b0babf926d450d8f0689b59cff2d20"
   integrity sha512-D9IUOY3wCjVupbQS9uWEgUdwO9DD11aOSjxswOeDNozB2GG2xI1iKSeGqNuFFq7Gr522yWVCmjNGpTbjEonPQQ==
 
-react-native-gesture-handler@~2.1.0:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.1.1.tgz#1d417bc7b551ec76129ce09861b3a01622b4ef99"
-  integrity sha512-1+qMhsXKKWTPAFi2ZY8rEhP/4xIevWNb1zLU9MzJkr7tRIEW4G+ipxjLyCw+7hQeqeeIbyZ8kkTyHAUuwTrHDA==
+react-native-gesture-handler@~2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.2.0.tgz#a551f9ca33d8766d0a24268f49e0f1b05191b105"
+  integrity sha512-WF25CNgn164bF9juW8N/jICIFXiEOgsxCuY7DRlnFdiH5ZfvMYtZHRC+zr1fFMap2ty1f2HWDQNVVSo0FDXP4A==
   dependencies:
     "@egjs/hammerjs" "^2.0.17"
     hoist-non-react-statics "^3.3.0"
