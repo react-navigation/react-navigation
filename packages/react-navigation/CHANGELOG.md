@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.4.5](https://github.com/react-navigation/react-navigation/compare/react-navigation@4.4.4...react-navigation@4.4.5) (2022-02-02)
+
+
+### Bug Fixes
+
+* fix incorrect type for NavigationRouter usage ([#9502](https://github.com/react-navigation/react-navigation/issues/9502)) ([45d419b](https://github.com/react-navigation/react-navigation/commit/45d419be93c34e900e8734ce98321ae875ac4997))
+
+
+
+
+
 ## [4.4.4](https://github.com/react-navigation/react-navigation/compare/react-navigation@4.4.3...react-navigation@4.4.4) (2021-02-21)
 
 **Note:** Version bump only for package react-navigation

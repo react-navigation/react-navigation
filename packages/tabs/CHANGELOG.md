@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.2](https://github.com/react-navigation/tabs/compare/react-navigation-tabs@2.11.1...react-navigation-tabs@2.11.2) (2022-02-02)
+
+
+### Bug Fixes
+
+* remove React Native Keyboard method deprecated in 0.65 ([#9858](https://github.com/react-navigation/tabs/issues/9858)) ([51c49c5](https://github.com/react-navigation/tabs/commit/51c49c50e706e93413bf52ea2694939aa9208972))
+
+
+
+
+
 ## [2.11.1](https://github.com/react-navigation/tabs/compare/react-navigation-tabs@2.11.0...react-navigation-tabs@2.11.1) (2021-04-24)
 
 
