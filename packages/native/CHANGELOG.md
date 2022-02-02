@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.7...@react-navigation/native@6.0.8) (2022-02-02)
+
+
+### Bug Fixes
+
+* broken history items index when items reset ([#10312](https://github.com/react-navigation/react-navigation/issues/10312)) ([16f3462](https://github.com/react-navigation/react-navigation/commit/16f3462fb258e7e1264d3eb3f4f6c3a93381e01e))
+
+
+
+
+
 ## [6.0.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.6...@react-navigation/native@6.0.7) (2022-01-29)
 
 

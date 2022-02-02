@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.2.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.1.0...@react-navigation/bottom-tabs@6.2.0) (2022-02-02)
+
+
+### Features
+
+* add prop for new container ([#9772](https://github.com/react-navigation/react-navigation/issues/9772)) ([3fb2140](https://github.com/react-navigation/react-navigation/commit/3fb21409d6d0b66266c6d5eded2014ef2ebbda0a))
+
+
+
+
+
 # [6.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.9...@react-navigation/bottom-tabs@6.1.0) (2022-01-29)
 
 

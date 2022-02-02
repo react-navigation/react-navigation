@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.3.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.2.0...@react-navigation/drawer@6.3.0) (2022-02-02)
+
+
+### Bug Fixes
+
+* **drawer:** fix drawer when changing `drawerType` (ex: front -> permanent) ([#10304](https://github.com/react-navigation/react-navigation/issues/10304)) ([6f7c287](https://github.com/react-navigation/react-navigation/commit/6f7c287f4a2952b34caf2c52afa096776adaec74)), closes [#10305](https://github.com/react-navigation/react-navigation/issues/10305)
+
+
+### Features
+
+* add drawerAllowFontScaling prop to drawer package ([#10041](https://github.com/react-navigation/react-navigation/issues/10041)) ([bd7786e](https://github.com/react-navigation/react-navigation/commit/bd7786e197618353c40b5176486ae15763fa9973))
+* add prop for new container ([#9772](https://github.com/react-navigation/react-navigation/issues/9772)) ([3fb2140](https://github.com/react-navigation/react-navigation/commit/3fb21409d6d0b66266c6d5eded2014ef2ebbda0a))
+* add the 'drawerPress' event ([#9529](https://github.com/react-navigation/react-navigation/issues/9529)) ([0c86f76](https://github.com/react-navigation/react-navigation/commit/0c86f76401e06557d9ff76613ebfde832259f1d7))
+
+
+
+
+
 # [6.2.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.1.8...@react-navigation/drawer@6.2.0) (2022-01-29)
 
 

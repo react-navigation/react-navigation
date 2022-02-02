@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.4.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.3.0...@react-navigation/native-stack@6.4.0) (2022-02-02)
+
+
+### Bug Fixes
+
+* set header to translucent when using searchbar or large title ([a410f84](https://github.com/react-navigation/react-navigation/commit/a410f84d1426ac3cc7bc4052db9072189f236f71))
+
+
+### Features
+
+* add search bar to native-stack on Android ([e329c43](https://github.com/react-navigation/react-navigation/commit/e329c43334a01fa1282338cf519a3fc37dd453ad))
+
+
+
+
+
 # [6.3.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.2.5...@react-navigation/native-stack@6.3.0) (2022-01-29)
 
 
