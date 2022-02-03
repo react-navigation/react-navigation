@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.4.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.4.0...@react-navigation/native-stack@6.4.1) (2022-02-03)
+
+
+### Bug Fixes
+
+* correctly set header to translucent ([c9eed38](https://github.com/react-navigation/react-navigation/commit/c9eed386cd46caee5534e3c339b573858f7de7eb))
+
+
+
+
+
 # [6.4.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.3.0...@react-navigation/native-stack@6.4.0) (2022-02-02)
 
 
