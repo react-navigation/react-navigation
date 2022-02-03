@@ -137,6 +137,14 @@ export default function HeaderConfig({
     ? headerLeftElement != null
     : Platform.OS === 'android' && headerTitleElement != null;
 
+  const translucent =
+    headerBackground != null ||
+    headerTransparent ||
+    // When using a SearchBar or large title, the header needs to be translucent for it to work on iOS
+    ((hasHeaderSearchBar || headerLargeTitle) &&
+      Platform.OS === 'ios' &&
+      headerTransparent !== false);
+
   return (
     <>
       {headerBackground != null ? (
@@ -186,13 +194,8 @@ export default function HeaderConfig({
         titleFontWeight={titleFontWeight}
         topInsetEnabled={insets.top !== 0}
         translucent={
-          headerBackground != null ||
           // This defaults to `true`, so we can't pass `undefined`
-          headerTransparent === true ||
-          // When using a SearchBar or large title, the header needs to be translucent for it to work on iOS
-          ((hasHeaderSearchBar || headerLargeTitle) &&
-            Platform.OS === 'ios' &&
-            headerTransparent !== false)
+          translucent === true
         }
       >
         {Platform.OS === 'ios' ? (
