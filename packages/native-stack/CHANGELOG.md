@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.5.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.4.1...@react-navigation/native-stack@6.5.0) (2022-02-06)
+
+
+### Features
+
+* add customAnimationOnGesture & fullScreenSwipeEnabled props to native-stack ([#10321](https://github.com/react-navigation/react-navigation/issues/10321)) ([ab86045](https://github.com/react-navigation/react-navigation/commit/ab86045efecf03fb9cb704cad1f6add536f01e89))
+
+
+
+
+
 ## [6.4.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.4.0...@react-navigation/native-stack@6.4.1) (2022-02-03)
 
 
