@@ -153,7 +153,10 @@ export default function NativeStackScreen({
       <NativeStack.Screen
         name="NewsFeed"
         component={NewsFeedScreen}
-        options={{ title: 'Feed' }}
+        options={{
+          title: 'Feed',
+          fullScreenGestureEnabled: true,
+        }}
       />
       <NativeStack.Screen
         name="Albums"

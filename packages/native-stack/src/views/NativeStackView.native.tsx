@@ -127,11 +127,13 @@ const SceneView = ({
 }: SceneViewProps) => {
   const { route, navigation, options, render } = descriptor;
   const {
+    animation,
+    animationTypeForReplace = 'push',
+    customAnimationOnGesture,
+    fullScreenGestureEnabled,
     gestureEnabled,
     header,
     headerShown,
-    animationTypeForReplace = 'push',
-    animation,
     orientation,
     statusBarAnimation,
     statusBarHidden,
@@ -178,6 +180,8 @@ const SceneView = ({
       key={route.key}
       enabled
       style={StyleSheet.absoluteFill}
+      customAnimationOnSwipe={customAnimationOnGesture}
+      fullScreenSwipeEnabled={fullScreenGestureEnabled}
       gestureEnabled={
         isAndroid
           ? // This prop enables handling of system back gestures on Android
@@ -196,6 +200,7 @@ const SceneView = ({
       onAppear={onAppear}
       onDisappear={onDisappear}
       onDismissed={onDismissed}
+      isNativeStack
     >
       <HeaderShownContext.Provider
         value={isParentHeaderShown || isHeaderInPush !== false}
