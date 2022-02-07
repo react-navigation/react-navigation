@@ -19,7 +19,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import Animated from 'react-native-reanimated';
+import * as Reanimated from 'react-native-reanimated';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
 
 import type {
@@ -85,7 +85,7 @@ function DrawerViewBase({
   useLegacyImplementation = !global.nativeCallSyncHook ||
     // Reanimated 2 is not configured
     // @ts-expect-error: the type definitions are incomplete
-    !Animated.isConfigured?.(),
+    !Reanimated.isConfigured?.(),
 }: Props) {
   const Drawer: React.ComponentType<DrawerProps> = useLegacyImplementation
     ? require('./legacy/Drawer').default
