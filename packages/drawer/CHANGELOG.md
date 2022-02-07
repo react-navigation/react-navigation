@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.3.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.3.0...@react-navigation/drawer@6.3.1) (2022-02-07)
+
+
+### Bug Fixes
+
+* fix checking whether reanimated 2 is configured ([ba868fc](https://github.com/react-navigation/react-navigation/commit/ba868fcc87035958dd3250e81691f1f3098be033))
+
+
+
+
+
 # [6.3.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.2.0...@react-navigation/drawer@6.3.0) (2022-02-02)
 
 
