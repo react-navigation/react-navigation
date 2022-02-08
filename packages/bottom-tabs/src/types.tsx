@@ -217,7 +217,7 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    * When using `BlurView`, make sure to set `position: 'absolute'` in `tabBarStyle` as well.
    * You'd also need to use `useBottomTabBarHeight()` to add a bottom padding to your content.
    */
-  tabBarBackground?: () => React.ReactNode;
+  tabBarBackground?: (props: BottomTabBackgroundProps) => React.ReactNode;
 
   /**
    * Whether this screens should render the first time it's accessed. Defaults to `true`.
@@ -276,6 +276,17 @@ export type BottomTabNavigationConfig = {
    * Style object for the component wrapping the screen content.
    */
   sceneContainerStyle?: StyleProp<ViewStyle>;
+};
+
+export type BottomTabBackgroundProps = {
+  /**
+   * Index of the current route.
+   */
+  index: number;
+  /**
+   * Length of routes.
+   */
+  length: number;
 };
 
 export type BottomTabHeaderProps = {

@@ -251,7 +251,10 @@ export default function BottomTabBar({
     layout,
   });
 
-  const tabBarBackgroundElement = tabBarBackground?.();
+  const tabBarBackgroundElement = tabBarBackground?.({
+    index: state.index,
+    length: routes.length,
+  });
 
   return (
     <Animated.View
