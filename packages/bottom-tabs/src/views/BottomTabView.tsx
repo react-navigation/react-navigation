@@ -22,7 +22,8 @@ import type {
 } from '../types';
 import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
 import BottomTabBarHeightContext from '../utils/BottomTabBarHeightContext';
-import BottomTabBar, { getTabBarHeight } from './BottomTabBar';
+import getTabBarHeight from '../utils/getTabBarHeight';
+import BottomTabBar from './BottomTabBar';
 import { MaybeScreen, MaybeScreenContainer } from './ScreenFallback';
 
 type Props = BottomTabNavigationConfig & {
