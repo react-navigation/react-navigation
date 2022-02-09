@@ -276,7 +276,7 @@ export default function Drawer({
                 translateX:
                   drawerType === 'front'
                     ? translateX.value
-                    : drawerPosition === "left"
+                    : drawerPosition === 'left'
                     ? 0
                     : nonDrawerWidth,
               },
