@@ -254,12 +254,17 @@ export default function Drawer({
     const translateX =
       drawerPosition === 'left'
         ? minmax(translationX.value + touchDistance, -drawerWidth, 0)
-        : minmax(translationX.value + touchDistance + nonDrawerWidth, nonDrawerWidth, dimensions.width);
+        : minmax(
+            translationX.value + touchDistance + nonDrawerWidth,
+            nonDrawerWidth,
+            dimensions.width
+          );
 
     return translateX;
   });
 
   const drawerAnimatedStyle = useAnimatedStyle(() => {
+    const nonDrawerWidth = dimensions.width - drawerWidth;
     return {
       transform:
         drawerType === 'permanent'
@@ -268,7 +273,12 @@ export default function Drawer({
             []
           : [
               {
-                translateX: translateX.value,
+                translateX:
+                  drawerType === 'front'
+                    ? translateX.value
+                    : drawerPosition === "left"
+                    ? 0
+                    : nonDrawerWidth,
               },
             ],
     };
