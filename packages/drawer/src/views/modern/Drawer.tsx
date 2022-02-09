@@ -268,7 +268,7 @@ export default function Drawer({
             []
           : [
               {
-                translateX: drawerType === 'back' ? 0 : translateX.value,
+                translateX: translateX.value,
               },
             ],
     };
