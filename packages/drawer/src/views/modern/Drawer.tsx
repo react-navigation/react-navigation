@@ -238,14 +238,14 @@ export default function Drawer({
     // the translationX. If the gesture started on the greyed out area we take the distance from the
     // edge of the drawer to the start position. Otherwise we don't subtract at all and the
     // drawer be pulled back as soon as you start the pan.
-    //
+    const nonDrawerWidth = dimensions.width - drawerWidth;
     // This is used only when drawerType is "front"
     const touchDistance =
       drawerType === 'front' && gestureState.value === GestureState.ACTIVE
         ? minmax(
             drawerPosition === 'left'
               ? touchStartX.value - drawerWidth
-              : dimensions.width - drawerWidth - touchStartX.value,
+              : nonDrawerWidth - touchStartX.value,
             0,
             dimensions.width
           )
@@ -254,7 +254,7 @@ export default function Drawer({
     const translateX =
       drawerPosition === 'left'
         ? minmax(translationX.value + touchDistance, -drawerWidth, 0)
-        : minmax(translationX.value - touchDistance, 0, drawerWidth);
+        : minmax(translationX.value + touchDistance + nonDrawerWidth, nonDrawerWidth, dimensions.width);
 
     return translateX;
   });
@@ -320,7 +320,7 @@ export default function Drawer({
             styles.main,
             {
               flexDirection:
-                drawerType === 'permanent' || isRight ? 'row-reverse' : 'row',
+                drawerType === 'permanent' && !isRight ? 'row-reverse' : 'row',
             },
           ]}
         >
