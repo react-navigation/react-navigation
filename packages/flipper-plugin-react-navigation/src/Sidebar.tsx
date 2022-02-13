@@ -1,5 +1,4 @@
-import { Layout, ManagedDataInspector, styled } from 'flipper';
-import { theme } from 'flipper-plugin';
+import { DataInspector, Layout, styled, theme } from 'flipper-plugin';
 import * as React from 'react';
 
 import { Title4 } from './Typography';
@@ -67,9 +66,9 @@ export function Sidebar({
         </>
       ) : null}
       <Title4>Action</Title4>
-      <ManagedDataInspector data={action} expandRoot={false} />
+      <DataInspector data={action} expandRoot={false} />
       <Title4>State</Title4>
-      <ManagedDataInspector data={state} expandRoot={false} />
+      <DataInspector data={state} expandRoot={false} />
     </Layout.Container>
   );
 }
