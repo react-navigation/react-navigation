@@ -134,6 +134,7 @@ const SceneView = ({
     gestureEnabled,
     header,
     headerShown,
+    nativeBackButtonDismissalEnabled = false,
     orientation,
     statusBarAnimation,
     statusBarHidden,
@@ -189,6 +190,7 @@ const SceneView = ({
             false
           : gestureEnabled
       }
+      nativeBackButtonDismissalEnabled={nativeBackButtonDismissalEnabled}
       replaceAnimation={animationTypeForReplace}
       stackPresentation={presentation === 'card' ? 'push' : presentation}
       stackAnimation={animation}
@@ -200,6 +202,12 @@ const SceneView = ({
       onAppear={onAppear}
       onDisappear={onDisappear}
       onDismissed={onDismissed}
+      onHeaderBackButtonClicked={() => {
+        navigation.dispatch({
+          ...StackActions.pop(),
+          source: route.key,
+        });
+      }}
       isNativeStack
     >
       <HeaderShownContext.Provider
