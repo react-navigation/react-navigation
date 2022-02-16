@@ -379,9 +379,8 @@ export type NativeStackNavigationOptions = {
    */
   gestureEnabled?: boolean;
   /**
-   * Boolean indicating whether, when the Android default back button is clicked, the `pop` action should be performed on the native
-   * side or on the JS side to be able to prevent it. Unfortunately the same behavior is not available on iOS since the behavior of
-   * native back button cannot be changed there. Defaults to `false`.
+   * Whether the dismissal of the screen on tap of the header back button on Android should be performed by the native or the
+   * navigation's side. Defaults to `false`.
    *
    * Only supported on Android.
    *
