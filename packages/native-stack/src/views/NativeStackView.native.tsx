@@ -114,6 +114,7 @@ type SceneViewProps = {
   onAppear: () => void;
   onDisappear: () => void;
   onDismissed: () => void;
+  onHeaderBackButtonClicked: () => void;
 };
 
 const SceneView = ({
@@ -124,6 +125,7 @@ const SceneView = ({
   onAppear,
   onDisappear,
   onDismissed,
+  onHeaderBackButtonClicked,
 }: SceneViewProps) => {
   const { route, navigation, options, render } = descriptor;
   const {
@@ -202,12 +204,7 @@ const SceneView = ({
       onAppear={onAppear}
       onDisappear={onDisappear}
       onDismissed={onDismissed}
-      onHeaderBackButtonClicked={() => {
-        navigation.dispatch({
-          ...StackActions.pop(),
-          source: route.key,
-        });
-      }}
+      onHeaderBackButtonClicked={onHeaderBackButtonClicked}
       isNativeStack
     >
       <HeaderShownContext.Provider
@@ -335,6 +332,13 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
               });
 
               setNextDismissedKey(route.key);
+            }}
+            onHeaderBackButtonClicked={() => {
+              navigation.dispatch({
+                ...StackActions.pop(),
+                source: route.key,
+                target: state.key,
+              });
             }}
           />
         );
