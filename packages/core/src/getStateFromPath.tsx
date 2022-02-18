@@ -107,16 +107,14 @@ export default function getStateFromPath<ParamList extends {}>(
   }
 
   // Create a normalized configs array which will be easier to use
-  const configs = ([] as RouteConfig[])
-    .concat(
-      ...Object.keys(screens).map((key) =>
-        createNormalizedConfigs(
-          key,
-          screens as PathConfigMap<object>,
-          [],
-          initialRoutes,
-          []
-        )
+  const configs = Object.keys(screens)
+    .flatMap((key) =>
+      createNormalizedConfigs(
+        key,
+        screens as PathConfigMap<object>,
+        [],
+        initialRoutes,
+        []
       )
     )
     .sort((a, b) => {
