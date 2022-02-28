@@ -41,6 +41,7 @@ export default function BottomTabView(props: Props) {
     detachInactiveScreens = Platform.OS === 'web' ||
       Platform.OS === 'android' ||
       Platform.OS === 'ios',
+    keepInactiveScreensVisible,
     sceneContainerStyle,
   } = props;
 
@@ -123,7 +124,7 @@ export default function BottomTabView(props: Props) {
             <MaybeScreen
               key={route.key}
               style={[StyleSheet.absoluteFill, { zIndex: isFocused ? 0 : -1 }]}
-              visible={isFocused}
+              visible={isFocused || !!keepInactiveScreensVisible}
               enabled={detachInactiveScreens}
             >
               <BottomTabBarHeightContext.Provider value={tabBarHeight}>

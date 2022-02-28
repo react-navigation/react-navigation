@@ -273,6 +273,12 @@ export type BottomTabNavigationConfig = {
    */
   detachInactiveScreens?: boolean;
   /**
+   * Keeps inactive screens visible. By setting this option to `true` the screen needs to be hidden manually.
+   * Use this option to create transition effects which require multiple screens to be visible at the same time.
+   * This option only has effect when `detachInactiveScreens` is also `false`.
+   */
+  keepInactiveScreensVisible?: boolean;
+  /**
    * Style object for the component wrapping the screen content.
    */
   sceneContainerStyle?: StyleProp<ViewStyle>;
