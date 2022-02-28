@@ -285,7 +285,6 @@ export default function Drawer({
   });
 
   const contentAnimatedStyle = useAnimatedStyle(() => {
-    const nonDrawerWidth = dimensions.width - drawerWidth;
     return {
       transform:
         drawerType === 'permanent'
@@ -299,7 +298,7 @@ export default function Drawer({
                     ? 0
                     : drawerPosition === 'left'
                     ? drawerWidth + translateX.value
-                    : translateX.value - drawerWidth - nonDrawerWidth,
+                    : translateX.value - dimensions.width,
               },
             ],
     };
