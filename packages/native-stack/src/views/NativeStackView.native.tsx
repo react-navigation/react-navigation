@@ -20,6 +20,7 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
+import type { ScreenProps } from 'react-native-screens';
 import {
   Screen,
   ScreenStack,
@@ -113,7 +114,7 @@ type SceneViewProps = {
   onWillDisappear: () => void;
   onAppear: () => void;
   onDisappear: () => void;
-  onDismissed: () => void;
+  onDismissed: ScreenProps['onDismissed'];
 };
 
 const SceneView = ({
@@ -319,9 +320,9 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
                 target: route.key,
               });
             }}
-            onDismissed={() => {
+            onDismissed={(event) => {
               navigation.dispatch({
-                ...StackActions.pop(),
+                ...StackActions.pop(event.nativeEvent.dismissCount),
                 source: route.key,
                 target: state.key,
               });
