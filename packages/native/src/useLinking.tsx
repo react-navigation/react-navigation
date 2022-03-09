@@ -87,6 +87,11 @@ const createMemoryHistory = () => {
       items.push({ path, state, id });
       index = items.length - 1;
 
+      if (path === items?.[index - 1].path) {
+        // do not need to push state because current link is the same as previous link
+        return;
+      }
+
       // We pass empty string for title because it's ignored in all browsers except safari
       // We don't store state object in history.state because:
       // - browsers have limits on how big it can be, and we don't control the size
