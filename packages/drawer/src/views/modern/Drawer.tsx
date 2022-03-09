@@ -147,7 +147,7 @@ export default function Drawer({
   const gestureState = useSharedValue<GestureState>(GestureState.UNDETERMINED);
 
   const toggleDrawer = React.useCallback(
-    (open: boolean, velocity?: number) => {
+    (open: boolean, isUserInitiated: boolean, velocity?: number) => {
       'worklet';
 
       const translateX = getDrawerTranslationX(open);
@@ -166,6 +166,10 @@ export default function Drawer({
           restSpeedThreshold: 0.01,
         },
         () => {
+          if (!isUserInitiated) {
+            return;
+          }
+
           if (translationX.value === getDrawerTranslationX(true)) {
             runOnJS(onOpen)();
           } else if (translationX.value === getDrawerTranslationX(false)) {
@@ -177,7 +181,7 @@ export default function Drawer({
     [getDrawerTranslationX, onClose, onOpen, touchStartX, touchX, translationX]
   );
 
-  React.useEffect(() => toggleDrawer(open), [open, toggleDrawer]);
+  React.useEffect(() => toggleDrawer(open, false), [open, toggleDrawer]);
 
   const onGestureEvent = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
@@ -209,7 +213,7 @@ export default function Drawer({
               (event.velocityX === 0 ? event.translationX : event.velocityX) < 0
           : open;
 
-      toggleDrawer(nextOpen, event.velocityX);
+      toggleDrawer(nextOpen, true, event.velocityX);
       runOnJS(onGestureEnd)();
     },
   });
@@ -339,7 +343,7 @@ export default function Drawer({
             {drawerType !== 'permanent' ? (
               <Overlay
                 progress={progress}
-                onPress={() => toggleDrawer(false)}
+                onPress={() => toggleDrawer(false, true)}
                 style={overlayStyle}
               />
             ) : null}
