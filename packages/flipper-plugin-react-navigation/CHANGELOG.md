@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.9](https://github.com/react-navigation/react-navigation/compare/flipper-plugin-react-navigation@1.3.8...flipper-plugin-react-navigation@1.3.9) (2022-03-23)
+
+
+### Bug Fixes
+
+* flipper navigation plugin event table rows selection highlight not working and black theme text not showing ([#10004](https://github.com/react-navigation/react-navigation/issues/10004)) ([94ab791](https://github.com/react-navigation/react-navigation/commit/94ab791cae5061455f036cd3f6bc7fa63167e7c7)), closes [#10003](https://github.com/react-navigation/react-navigation/issues/10003) [#10000](https://github.com/react-navigation/react-navigation/issues/10000)
+
+
+
+
+
 ## [1.3.8](https://github.com/react-navigation/react-navigation/compare/flipper-plugin-react-navigation@1.3.7...flipper-plugin-react-navigation@1.3.8) (2022-01-29)
 
 **Note:** Version bump only for package flipper-plugin-react-navigation
