@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.5.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.5.1...@react-navigation/native-stack@6.5.2) (2022-03-23)
+
+
+### Bug Fixes
+
+* provide proper context to header elements in native stack ([5b01241](https://github.com/react-navigation/react-navigation/commit/5b012411076e8acc20ca779cbc19e36d7606d2b9)), closes [#10453](https://github.com/react-navigation/react-navigation/issues/10453)
+
+
+
+
+
 ## [6.5.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.5.0...@react-navigation/native-stack@6.5.1) (2022-03-23)
 
 
