@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.5.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.5.0...@react-navigation/native-stack@6.5.1) (2022-03-23)
+
+
+### Bug Fixes
+
+* take screen count to dismiss from native side for native stack ([#10377](https://github.com/react-navigation/react-navigation/issues/10377)) ([27225a2](https://github.com/react-navigation/react-navigation/commit/27225a2d97c774c8c61f3d75c47690e5f212bb34))
+
+
+
+
+
 # [6.5.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.4.1...@react-navigation/native-stack@6.5.0) (2022-02-06)
 
 
