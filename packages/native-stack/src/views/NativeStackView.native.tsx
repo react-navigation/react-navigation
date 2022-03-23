@@ -203,17 +203,19 @@ const SceneView = ({
       onDismissed={onDismissed}
       isNativeStack
     >
-      <HeaderShownContext.Provider
-        value={isParentHeaderShown || isHeaderInPush !== false}
-      >
-        <HeaderHeightContext.Provider
-          value={
-            isHeaderInPush !== false ? headerHeight : parentHeaderHeight ?? 0
-          }
-        >
-          {header !== undefined && headerShown !== false ? (
-            <NavigationContext.Provider value={navigation}>
-              <NavigationRouteContext.Provider value={route}>
+      <NavigationContext.Provider value={navigation}>
+        <NavigationRouteContext.Provider value={route}>
+          <HeaderShownContext.Provider
+            value={isParentHeaderShown || isHeaderInPush !== false}
+          >
+            <HeaderHeightContext.Provider
+              value={
+                isHeaderInPush !== false
+                  ? headerHeight
+                  : parentHeaderHeight ?? 0
+              }
+            >
+              {header !== undefined && headerShown !== false ? (
                 <View
                   onLayout={(e) => {
                     setCustomHeaderHeight(e.nativeEvent.layout.height);
@@ -233,27 +235,27 @@ const SceneView = ({
                     navigation,
                   })}
                 </View>
-              </NavigationRouteContext.Provider>
-            </NavigationContext.Provider>
-          ) : (
-            <HeaderConfig
-              {...options}
-              route={route}
-              headerShown={isHeaderInPush}
-              headerHeight={headerHeight}
-              canGoBack={index !== 0}
-            />
-          )}
-          <MaybeNestedStack
-            options={options}
-            route={route}
-            presentation={presentation}
-            headerHeight={headerHeight}
-          >
-            {render()}
-          </MaybeNestedStack>
-        </HeaderHeightContext.Provider>
-      </HeaderShownContext.Provider>
+              ) : (
+                <HeaderConfig
+                  {...options}
+                  route={route}
+                  headerShown={isHeaderInPush}
+                  headerHeight={headerHeight}
+                  canGoBack={index !== 0}
+                />
+              )}
+              <MaybeNestedStack
+                options={options}
+                route={route}
+                presentation={presentation}
+                headerHeight={headerHeight}
+              >
+                {render()}
+              </MaybeNestedStack>
+            </HeaderHeightContext.Provider>
+          </HeaderShownContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>
     </Screen>
   );
 };
