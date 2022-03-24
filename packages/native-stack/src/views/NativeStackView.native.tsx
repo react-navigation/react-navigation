@@ -139,6 +139,7 @@ const SceneView = ({
     statusBarAnimation,
     statusBarHidden,
     statusBarStyle,
+    transitionDuration,
   } = options;
 
   let { presentation = 'card' } = options;
@@ -197,6 +198,7 @@ const SceneView = ({
       statusBarAnimation={statusBarAnimation}
       statusBarHidden={statusBarHidden}
       statusBarStyle={statusBarStyle}
+      transitionDuration={transitionDuration}
       onWillDisappear={onWillDisappear}
       onAppear={onAppear}
       onDisappear={onDisappear}

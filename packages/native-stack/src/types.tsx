@@ -435,6 +435,17 @@ export type NativeStackNavigationOptions = {
    * Only supported on iOS and Android.
    */
   orientation?: ScreenProps['screenOrientation'];
+  /**
+   * The display orientation to use for the screen.
+   *
+   * Changes the duration (in milliseconds) of `slide_from_bottom`, `fade_from_bottom`, `fade` and `simple_push` transitions on iOS. Defaults to `350`.
+   * The duration of `default` and `flip` transitions isn't customizable.
+   *
+   * Only supported on iOS.
+   *
+   * @platform ios
+   */
+  transitionDuration?: number;
 };
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<
