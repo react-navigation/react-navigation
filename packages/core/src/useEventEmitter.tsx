@@ -21,7 +21,9 @@ export default function useEventEmitter<T extends Record<string, any>>(
     listenRef.current = listen;
   });
 
-  const listeners = React.useRef<Record<string, Record<string, Listeners>>>({});
+  const listeners = React.useRef<Record<string, Record<string, Listeners>>>(
+    Object.create(null)
+  );
 
   const create = React.useCallback((target: string) => {
     const removeListener = (type: string, callback: (data: any) => void) => {
