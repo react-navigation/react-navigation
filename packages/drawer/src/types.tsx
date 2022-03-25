@@ -40,9 +40,7 @@ export type DrawerNavigationConfig = {
    * The new implementation based on Reanimated 2 will perform better,
    * but you need additional configuration and need to use Hermes with Flipper to debug.
    *
-   * This defaults to `true` in following cases:
-   * - Reanimated 2 is not configured
-   * - App is connected to Chrome debugger (Reanimated 2 cannot be used with Chrome debugger)
+   * This defaults to `true` if Reanimated 2 is not configured.
    *
    * Otherwise, it defaults to `false`
    */
@@ -152,6 +150,8 @@ export type DrawerNavigationOptions = HeaderOptions & {
    * - `back`: The drawer is revealed behind the screen on swipe.
    * - `slide`: Both the screen and the drawer slide on swipe to reveal the drawer.
    * - `permanent`: A permanent drawer is shown as a sidebar.
+   *
+   * Defaults to `slide` on iOS and `front` on other platforms.
    */
   drawerType?: 'front' | 'back' | 'slide' | 'permanent';
 
