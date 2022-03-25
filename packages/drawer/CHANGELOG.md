@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.3.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.3.1...@react-navigation/drawer@6.3.2) (2022-03-25)
+
+
+### Bug Fixes
+
+* don't force legacy implementation on chrome debugger ([94730e0](https://github.com/react-navigation/react-navigation/commit/94730e0b69513481265a80375bbfd8198b5a9627))
+* fix drawer in RTL and when on right. fixes [#10335](https://github.com/react-navigation/react-navigation/issues/10335) ([a3fad5b](https://github.com/react-navigation/react-navigation/commit/a3fad5b37b4fbb194071b25286767a81d52f8096))
+* remove unsupported option from types ([08c61ad](https://github.com/react-navigation/react-navigation/commit/08c61ad9305a20d894ea0a67a620cf5b4440fdcd))
+
+
+
+
+
 ## [6.3.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.3.0...@react-navigation/drawer@6.3.1) (2022-02-07)
 
 
