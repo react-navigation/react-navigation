@@ -177,15 +177,6 @@ export type DrawerNavigationOptions = HeaderOptions & {
   sceneContainerStyle?: StyleProp<ViewStyle>;
 
   /**
-   * Whether you can use gestures to open or close the drawer.
-   * Setting this to `false` disables swipe gestures as well as tap on overlay to close.
-   * See `swipeEnabled` to disable only the swipe gesture.
-   * Defaults to `true`.
-   * Not supported on Web.
-   */
-  gestureEnabled?: boolean;
-
-  /**
    * Props to pass to the underlying pan gesture handler.
    * Not supported on Web.
    */
