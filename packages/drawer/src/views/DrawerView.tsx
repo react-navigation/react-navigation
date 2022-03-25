@@ -80,12 +80,9 @@ function DrawerViewBase({
   detachInactiveScreens = Platform.OS === 'web' ||
     Platform.OS === 'android' ||
     Platform.OS === 'ios',
-  // Running in chrome debugger
-  // @ts-expect-error
-  useLegacyImplementation = !global.nativeCallSyncHook ||
-    // Reanimated 2 is not configured
-    // @ts-expect-error: the type definitions are incomplete
-    !Reanimated.isConfigured?.(),
+  // Reanimated 2 is not configured
+  // @ts-expect-error: the type definitions are incomplete
+  useLegacyImplementation = !Reanimated.isConfigured?.(),
 }: Props) {
   const Drawer: React.ComponentType<DrawerProps> = useLegacyImplementation
     ? require('./legacy/Drawer').default
