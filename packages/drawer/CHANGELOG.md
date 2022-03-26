@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.3.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.3.2...@react-navigation/drawer@6.3.3) (2022-03-26)
+
+
+### Bug Fixes
+
+* **drawer:** fix drawer clearing interaction handle ([#10413](https://github.com/react-navigation/react-navigation/issues/10413)) ([ee7405e](https://github.com/react-navigation/react-navigation/commit/ee7405ee7e43539fc78f466b9f769b1834b4af49))
+
+
+
+
+
 ## [6.3.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.3.1...@react-navigation/drawer@6.3.2) (2022-03-25)
 
 
