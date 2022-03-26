@@ -130,7 +130,7 @@ export default function Drawer({
     hideStatusBar(true);
   };
 
-  const onGestureEnd = () => {
+  const onGestureFinish = () => {
     endInteraction();
   };
 
@@ -211,7 +211,9 @@ export default function Drawer({
           : open;
 
       toggleDrawer(nextOpen, event.velocityX);
-      runOnJS(onGestureEnd)();
+    },
+    onFinish: () => {
+      runOnJS(onGestureFinish)();
     },
   });
 
