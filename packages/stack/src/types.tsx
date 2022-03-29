@@ -49,10 +49,12 @@ export type StackNavigationHelpers = NavigationHelpers<
 
 export type StackNavigationProp<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = keyof ParamList
+  RouteName extends keyof ParamList = keyof ParamList,
+  NavigatorID extends string | undefined = undefined
 > = NavigationProp<
   ParamList,
   RouteName,
+  NavigatorID,
   StackNavigationState<ParamList>,
   StackNavigationOptions,
   StackNavigationEventMap
@@ -61,9 +63,10 @@ export type StackNavigationProp<
 
 export type StackScreenProps<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = keyof ParamList
+  RouteName extends keyof ParamList = keyof ParamList,
+  NavigatorID extends string | undefined = undefined
 > = {
-  navigation: StackNavigationProp<ParamList, RouteName>;
+  navigation: StackNavigationProp<ParamList, RouteName, NavigatorID>;
   route: RouteProp<ParamList, RouteName>;
 };
 
