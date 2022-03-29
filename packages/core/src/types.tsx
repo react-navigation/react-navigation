@@ -26,6 +26,10 @@ export type DefaultNavigatorOptions<
   EventMap extends EventMapBase
 > = DefaultRouterOptions<Keyof<ParamList>> & {
   /**
+   * Optional ID for the navigator. Can be used with `navigation.getParent(id)` to refer to a parent.
+   */
+  id?: string;
+  /**
    * Children React Elements to extract the route configuration from.
    * Only `Screen`, `Group` and `React.Fragment` are supported as children.
    */
@@ -153,7 +157,7 @@ export type EventEmitter<EventMap extends EventMapBase> = {
   >;
 };
 
-export class PrivateValueStore<A, B, C> {
+export class PrivateValueStore<T extends [any, any, any]> {
   /**
    * UGLY HACK! DO NOT USE THE TYPE!!!
    *
@@ -164,7 +168,7 @@ export class PrivateValueStore<A, B, C> {
    * Adding private keyword works, but the annotation is stripped away in declaration.
    * Turns out if we use an empty string, it doesn't show up in intelliSense.
    */
-  protected ''?: { a: A; b: B; c: C };
+  protected ''?: T;
 }
 
 type NavigationHelpersCommon<
@@ -236,16 +240,26 @@ type NavigationHelpersCommon<
   canGoBack(): boolean;
 
   /**
-   * Returns the navigation prop from the parent navigator,
+   * Returns the name of the navigator specified in the `name` prop.
+   * If no name is specified, returns `undefined`.
    */
-  getParent<T = NavigationProp<ParamListBase> | undefined>(): T;
+  getId(): string | undefined;
+
+  /**
+   * Returns the navigation helpers from a parent navigator based on the ID.
+   * If an ID is provided, the navigation helper from the parent navigator with matching ID (including current) will be returned.
+   * If no ID is provided, the navigation helper from the immediate parent navigator will be returned.
+   *
+   * @param id Optional ID of a parent navigator.
+   */
+  getParent<T = NavigationHelpers<ParamListBase> | undefined>(id?: string): T;
 
   /**
    * Returns the navigator's state.
    * Note that this method doesn't re-render screen when the result changes. So don't use it in `render`.
    */
   getState(): State;
-} & PrivateValueStore<ParamList, keyof ParamList, {}>;
+} & PrivateValueStore<[ParamList, unknown, unknown]>;
 
 export type NavigationHelpers<
   ParamList extends ParamListBase,
@@ -291,10 +305,20 @@ export type NavigationContainerProps = {
 export type NavigationProp<
   ParamList extends {},
   RouteName extends keyof ParamList = Keyof<ParamList>,
+  NavigatorID extends string | undefined = undefined,
   State extends NavigationState = NavigationState<ParamList>,
   ScreenOptions extends {} = {},
   EventMap extends EventMapBase = {}
-> = NavigationHelpersCommon<ParamList, State> & {
+> = Omit<NavigationHelpersCommon<ParamList, State>, 'getParent'> & {
+  /**
+   * Returns the navigation prop from a parent navigator based on the ID.
+   * If an ID is provided, the navigation prop from the parent navigator with matching ID (including current) will be returned.
+   * If no ID is provided, the navigation prop from the immediate parent navigator will be returned.
+   *
+   * @param id Optional ID of a parent navigator.
+   */
+  getParent<T = NavigationProp<ParamListBase> | undefined>(id?: NavigatorID): T;
+
   /**
    * Update the param object for the route.
    * The new params will be shallow merged with the old one.
@@ -311,7 +335,7 @@ export type NavigationProp<
    */
   setOptions(options: Partial<ScreenOptions>): void;
 } & EventConsumer<EventMap & EventMapCore<State>> &
-  PrivateValueStore<ParamList, RouteName, EventMap>;
+  PrivateValueStore<[ParamList, RouteName, EventMap]>;
 
 export type RouteProp<
   ParamList extends ParamListBase,
@@ -319,7 +343,7 @@ export type RouteProp<
 > = Route<Extract<RouteName, string>, ParamList[RouteName]>;
 
 export type CompositeNavigationProp<
-  A extends NavigationProp<ParamListBase, string, any, any>,
+  A extends NavigationProp<ParamListBase, string, any, any, any>,
   B extends NavigationHelpersCommon<ParamListBase, any>
 > = Omit<A & B, keyof NavigationProp<any>> &
   NavigationProp<
@@ -335,29 +359,41 @@ export type CompositeNavigationProp<
      */
     A extends NavigationProp<any, infer R> ? R : string,
     /**
+     * ID from both navigation objects needs to be combined for `getParent`
+     */
+    | (A extends NavigationProp<any, any, infer I> ? I : never)
+    | (B extends NavigationProp<any, any, infer J> ? J : never),
+    /**
      * The type of state should refer to the state specified in the first type
      */
-    A extends NavigationProp<any, any, infer S> ? S : NavigationState,
+    A extends NavigationProp<any, any, any, infer S> ? S : NavigationState,
     /**
      * Screen options from both navigation objects needs to be combined
      * This allows typechecking `setOptions`
      */
-    (A extends NavigationProp<any, any, any, infer O> ? O : {}) &
-      (B extends NavigationProp<any, any, any, infer P> ? P : {}),
+    (A extends NavigationProp<any, any, any, any, infer O> ? O : {}) &
+      (B extends NavigationProp<any, any, any, any, infer P> ? P : {}),
     /**
      * Event consumer config should refer to the config specified in the first type
      * This allows typechecking `addListener`/`removeListener`
      */
-    A extends NavigationProp<any, any, any, any, infer E> ? E : {}
+    A extends NavigationProp<any, any, any, any, any, infer E> ? E : {}
   >;
 
 export type CompositeScreenProps<
   A extends {
-    navigation: NavigationProp<ParamListBase, string, any, any>;
+    navigation: NavigationProp<
+      ParamListBase,
+      string,
+      string | undefined,
+      any,
+      any,
+      any
+    >;
     route: RouteProp<ParamListBase>;
   },
   B extends {
-    navigation: NavigationHelpersCommon<ParamListBase, any>;
+    navigation: NavigationHelpersCommon<any, any>;
   }
 > = {
   navigation: CompositeNavigationProp<A['navigation'], B['navigation']>;
@@ -366,7 +402,7 @@ export type CompositeScreenProps<
 
 export type Descriptor<
   ScreenOptions extends {},
-  Navigation extends NavigationProp<any, any, any, any, any>,
+  Navigation extends NavigationProp<any, any, any, any, any, any>,
   Route extends RouteProp<any, any>
 > = {
   /**

@@ -19,6 +19,7 @@ import type {
 import NativeStackView from '../views/NativeStackView';
 
 function NativeStackNavigator({
+  id,
   initialRouteName,
   children,
   screenListeners,
@@ -33,6 +34,7 @@ function NativeStackNavigator({
       NativeStackNavigationOptions,
       NativeStackNavigationEventMap
     >(StackRouter, {
+      id,
       initialRouteName,
       children,
       screenListeners,
@@ -41,6 +43,7 @@ function NativeStackNavigator({
 
   React.useEffect(
     () =>
+      // @ts-expect-error: there may not be a tab navigator in parent
       navigation?.addListener?.('tabPress', (e: any) => {
         const isFocused = navigation.isFocused();
 

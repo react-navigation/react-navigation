@@ -143,7 +143,14 @@ export default function useDescriptors<
       string,
       Descriptor<
         ScreenOptions,
-        NavigationProp<ParamListBase, string, State, ScreenOptions, EventMap> &
+        NavigationProp<
+          ParamListBase,
+          string,
+          string | undefined,
+          State,
+          ScreenOptions,
+          EventMap
+        > &
           ActionHelpers,
         RouteProp<ParamListBase>
       >

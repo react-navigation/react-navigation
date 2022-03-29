@@ -27,7 +27,7 @@ type HomeDrawerParamList = {
 
 type HomeDrawerScreenProps<T extends keyof HomeDrawerParamList> =
   CompositeScreenProps<
-    DrawerScreenProps<HomeDrawerParamList, T>,
+    DrawerScreenProps<HomeDrawerParamList, T, 'LeftDrawer'>,
     RootStackScreenProps<keyof RootStackParamList>
   >;
 
@@ -38,7 +38,7 @@ type FeedTabParamList = {
 
 type FeedTabScreenProps<T extends keyof FeedTabParamList> =
   CompositeScreenProps<
-    BottomTabScreenProps<FeedTabParamList, T>,
+    BottomTabScreenProps<FeedTabParamList, T, 'BottomTabs'>,
     HomeDrawerScreenProps<keyof HomeDrawerParamList>
   >;
 
@@ -95,6 +95,7 @@ export const PostDetailsScreen = ({
   });
 
   expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+  expectTypeOf(navigation.getParent).parameter(0).toEqualTypeOf<undefined>();
 };
 
 export const FeedScreen = ({
@@ -124,6 +125,9 @@ export const FeedScreen = ({
     >();
 
   expectTypeOf(navigation.getState().type).toEqualTypeOf<'drawer'>();
+  expectTypeOf(navigation.getParent)
+    .parameter(0)
+    .toEqualTypeOf<'LeftDrawer' | undefined>();
 };
 
 export const PopularScreen = ({
@@ -153,4 +157,7 @@ export const PopularScreen = ({
     >();
 
   expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
+  expectTypeOf(navigation.getParent)
+    .parameter(0)
+    .toEqualTypeOf<'LeftDrawer' | 'BottomTabs' | undefined>();
 };

@@ -43,10 +43,12 @@ export type MaterialTopTabNavigationHelpers = NavigationHelpers<
 
 export type MaterialTopTabNavigationProp<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = keyof ParamList
+  RouteName extends keyof ParamList = keyof ParamList,
+  NavigatorID extends string | undefined = undefined
 > = NavigationProp<
   ParamList,
   RouteName,
+  NavigatorID,
   TabNavigationState<ParamList>,
   MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationEventMap
@@ -55,9 +57,10 @@ export type MaterialTopTabNavigationProp<
 
 export type MaterialTopTabScreenProps<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = keyof ParamList
+  RouteName extends keyof ParamList = keyof ParamList,
+  NavigatorID extends string | undefined = undefined
 > = {
-  navigation: MaterialTopTabNavigationProp<ParamList, RouteName>;
+  navigation: MaterialTopTabNavigationProp<ParamList, RouteName, NavigatorID>;
   route: RouteProp<ParamList, RouteName>;
 };
 

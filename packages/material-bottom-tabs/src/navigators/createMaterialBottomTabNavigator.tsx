@@ -27,6 +27,7 @@ type Props = DefaultNavigatorOptions<
   MaterialBottomTabNavigationConfig;
 
 function MaterialBottomTabNavigator({
+  id,
   initialRouteName,
   backBehavior,
   children,
@@ -42,6 +43,7 @@ function MaterialBottomTabNavigator({
       MaterialBottomTabNavigationOptions,
       MaterialBottomTabNavigationEventMap
     >(TabRouter, {
+      id,
       initialRouteName,
       backBehavior,
       children,
