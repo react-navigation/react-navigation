@@ -645,6 +645,7 @@ export default function useNavigationBuilder<
     NavigationAction,
     EventMap
   >({
+    id: options.id,
     onAction,
     getState,
     emitter,

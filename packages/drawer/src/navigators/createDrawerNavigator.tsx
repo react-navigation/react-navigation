@@ -29,6 +29,7 @@ type Props = DefaultNavigatorOptions<
   DrawerNavigationConfig;
 
 function DrawerNavigator({
+  id,
   initialRouteName,
   defaultStatus: customDefaultStatus,
   backBehavior,
@@ -112,6 +113,7 @@ function DrawerNavigator({
       DrawerNavigationOptions,
       DrawerNavigationEventMap
     >(DrawerRouter, {
+      id,
       initialRouteName,
       defaultStatus,
       backBehavior,

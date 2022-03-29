@@ -24,10 +24,12 @@ export type MaterialBottomTabNavigationHelpers = NavigationHelpers<
 
 export type MaterialBottomTabNavigationProp<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = keyof ParamList
+  RouteName extends keyof ParamList = keyof ParamList,
+  NavigatorID extends string | undefined = undefined
 > = NavigationProp<
   ParamList,
   RouteName,
+  NavigatorID,
   TabNavigationState<ParamList>,
   MaterialBottomTabNavigationOptions,
   MaterialBottomTabNavigationEventMap
@@ -36,9 +38,14 @@ export type MaterialBottomTabNavigationProp<
 
 export type MaterialBottomTabScreenProps<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = keyof ParamList
+  RouteName extends keyof ParamList = keyof ParamList,
+  NavigatorID extends string | undefined = undefined
 > = {
-  navigation: MaterialBottomTabNavigationProp<ParamList, RouteName>;
+  navigation: MaterialBottomTabNavigationProp<
+    ParamList,
+    RouteName,
+    NavigatorID
+  >;
   route: RouteProp<ParamList, RouteName>;
 };
 
