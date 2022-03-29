@@ -1,7 +1,13 @@
 import { useTheme } from '@react-navigation/native';
 import color from 'color';
 import * as React from 'react';
-import { Animated, StyleProp, StyleSheet, TextStyle } from 'react-native';
+import {
+  Animated,
+  Platform,
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+} from 'react-native';
 
 type Props = {
   /**
@@ -92,6 +98,7 @@ export default function Badge({
         },
         styles.container,
         restStyle,
+        Platform.OS === 'web' && styles.webOverrides,
       ]}
       {...rest}
     >
@@ -106,5 +113,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: 4,
     overflow: 'hidden',
+  },
+  // Added only for web because it's useless and unsupported on iOS and android
+  webOverrides: {
+    maxWidth: 'none',
   },
 });
