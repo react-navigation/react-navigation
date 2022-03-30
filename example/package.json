@@ -57,6 +57,7 @@
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-preset-expo": "9.0.2",
     "cheerio": "^1.0.0-rc.9",
+    "expect-type": "^0.13.0",
     "expo-cli": "^5.0.3",
     "jest-dev-server": "^5.0.3",
     "jimp": "^0.16.1",
