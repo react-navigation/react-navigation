@@ -1461,7 +1461,7 @@ it('gets self with a ID with getParent(id)', () => {
   expect(element).toMatchInlineSnapshot(`"bar [bar]"`);
 });
 
-it('throws when ID is not found with getParent(id)', () => {
+it('returns undefined when ID is not found with getParent(id)', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -1469,15 +1469,11 @@ it('throws when ID is not found with getParent(id)', () => {
   };
 
   const TestComponent = ({ route, navigation }: any): any =>
-    `${route.name} [${navigation
-      .getParent('Tes')
-      .getState()
-      .routes.map((r: any) => r.name)
-      .join()}]`;
+    `${route.name} [${navigation.getParent('Tes')}]`;
 
   const onStateChange = jest.fn();
 
-  const element = (
+  const element = render(
     <BaseNavigationContainer onStateChange={onStateChange}>
       <TestNavigator>
         <Screen name="foo">
@@ -1497,9 +1493,7 @@ it('throws when ID is not found with getParent(id)', () => {
     </BaseNavigationContainer>
   );
 
-  expect(() => render(element)).toThrowError(
-    `Couldn't find a parent navigator with the ID "Tes". Is this navigator nested under another navigator with this ID?`
-  );
+  expect(element).toMatchInlineSnapshot(`"bar [undefined]"`);
 });
 
 it('gives access to internal state', () => {
