@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.2.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.1.1...@react-navigation/stack@6.2.0) (2022-04-01)
+
+
+### Bug Fixes
+
+* fix type errors when passing animated styles to header ([9058b1c](https://github.com/react-navigation/react-navigation/commit/9058b1c22f4fc1358c72d67150a0e3f37ff802e7))
+
+
+### Features
+
+* add an ID prop to navigators ([4e4935a](https://github.com/react-navigation/react-navigation/commit/4e4935ac2584bc1a00209609cc026fa73e12c10a))
+
+
+
+
+
 ## [6.1.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.1.0...@react-navigation/stack@6.1.1) (2022-02-02)
 
 **Note:** Version bump only for package @react-navigation/stack

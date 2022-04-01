@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.4.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.3.3...@react-navigation/drawer@6.4.0) (2022-04-01)
+
+
+### Features
+
+* add an ID prop to navigators ([4e4935a](https://github.com/react-navigation/react-navigation/commit/4e4935ac2584bc1a00209609cc026fa73e12c10a))
+
+
+
+
+
 ## [6.3.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.3.2...@react-navigation/drawer@6.3.3) (2022-03-26)
 
 
