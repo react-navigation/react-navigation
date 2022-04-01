@@ -437,6 +437,7 @@ export default class StackView extends React.Component<Props, State> {
         : 'screen',
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       descriptors: _,
+      backgroundComponent,
       ...rest
     } = this.props;
 
@@ -450,6 +451,7 @@ export default class StackView extends React.Component<Props, State> {
     return (
       <NavigationHelpersContext.Provider value={navigation}>
         <GestureHandlerWrapper style={styles.container}>
+          {backgroundComponent || null}
           <SafeAreaProviderCompat>
             <SafeAreaConsumer>
               {(insets) => (

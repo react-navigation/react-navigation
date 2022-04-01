@@ -354,6 +354,10 @@ export type StackNavigationConfig = {
    * Defaults to `true`.
    */
   keyboardHandlingEnabled?: boolean;
+  /**
+   * Display a background component that can respond to touch events
+   */
+  backgroundComponent?: React.ReactNode;
 };
 
 export type StackHeaderLeftButtonProps = {
