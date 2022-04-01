@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.2.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.2.0...@react-navigation/core@6.2.1) (2022-04-01)
+
+
+### Bug Fixes
+
+* return undefined instead of throwing when parent is not found ([28a3993](https://github.com/react-navigation/react-navigation/commit/28a39932490496e7131954f96ce19663ec109d47))
+
+
+
+
+
 # [6.2.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.1.1...@react-navigation/core@6.2.0) (2022-04-01)
 
 
