@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.3.1...@react-navigation/elements@1.3.2) (2022-04-01)
+
+
+### Bug Fixes
+
+* fix type errors when passing animated styles to header ([9058b1c](https://github.com/react-navigation/react-navigation/commit/9058b1c22f4fc1358c72d67150a0e3f37ff802e7))
+
+
+
+
+
 ## [1.3.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.3.0...@react-navigation/elements@1.3.1) (2022-02-02)
 
 **Note:** Version bump only for package @react-navigation/elements

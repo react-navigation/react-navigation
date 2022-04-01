@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.6.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.5.2...@react-navigation/native-stack@6.6.0) (2022-04-01)
+
+
+### Features
+
+* add an ID prop to navigators ([4e4935a](https://github.com/react-navigation/react-navigation/commit/4e4935ac2584bc1a00209609cc026fa73e12c10a))
+
+
+
+
+
 ## [6.5.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.5.1...@react-navigation/native-stack@6.5.2) (2022-03-23)
 
 
