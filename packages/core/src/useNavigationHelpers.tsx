@@ -95,12 +95,6 @@ export default function useNavigationHelpers<
             current = current.getParent();
           }
 
-          if (current == null) {
-            throw new Error(
-              `Couldn't find a parent navigator with the ID "${id}". Is this navigator nested under another navigator with this ID?`
-            );
-          }
-
           return current;
         }
 
