@@ -155,7 +155,7 @@ function MaterialBottomTabViewInner({
                 />
               );
             }
-          : undefined
+          : rest.renderTouchable
       }
       renderIcon={({ route, focused, color }) => {
         const { options } = descriptors[route.key];
