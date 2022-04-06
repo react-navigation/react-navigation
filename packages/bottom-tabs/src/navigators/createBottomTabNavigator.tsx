@@ -28,6 +28,7 @@ type Props = DefaultNavigatorOptions<
   BottomTabNavigationConfig;
 
 function BottomTabNavigator({
+  id,
   initialRouteName,
   backBehavior,
   children,
@@ -103,6 +104,7 @@ function BottomTabNavigator({
       BottomTabNavigationOptions,
       BottomTabNavigationEventMap
     >(TabRouter, {
+      id,
       initialRouteName,
       backBehavior,
       children,

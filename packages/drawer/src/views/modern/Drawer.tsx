@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  I18nManager,
   InteractionManager,
   Keyboard,
   Platform,
@@ -135,7 +136,7 @@ export default function Drawer({
     hideStatusBar(true);
   };
 
-  const onGestureEnd = () => {
+  const onGestureFinish = () => {
     endInteraction();
   };
 
@@ -227,7 +228,9 @@ export default function Drawer({
         isUserInitiated: true,
         velocity: event.velocityX,
       });
-      runOnJS(onGestureEnd)();
+    },
+    onFinish: () => {
+      runOnJS(onGestureFinish)();
     },
   });
 
@@ -277,6 +280,8 @@ export default function Drawer({
   });
 
   const drawerAnimatedStyle = useAnimatedStyle(() => {
+    const distanceFromEdge = dimensions.width - drawerWidth;
+
     return {
       transform:
         drawerType === 'permanent'
@@ -285,7 +290,16 @@ export default function Drawer({
             []
           : [
               {
-                translateX: drawerType === 'back' ? 0 : translateX.value,
+                translateX:
+                  // The drawer stays in place when `drawerType` is `back`
+                  (drawerType === 'back' ? 0 : translateX.value) +
+                  (drawerPosition === 'left'
+                    ? I18nManager.isRTL
+                      ? -distanceFromEdge
+                      : 0
+                    : I18nManager.isRTL
+                    ? 0
+                    : distanceFromEdge),
               },
             ],
     };
@@ -301,11 +315,11 @@ export default function Drawer({
           : [
               {
                 translateX:
+                  // The screen content stays in place when `drawerType` is `front`
                   drawerType === 'front'
                     ? 0
-                    : drawerPosition === 'left'
-                    ? drawerWidth + translateX.value
-                    : translateX.value - drawerWidth,
+                    : translateX.value +
+                      drawerWidth * (drawerPosition === 'left' ? 1 : -1),
               },
             ],
     };

@@ -1344,6 +1344,158 @@ it('resets state of a nested child in a navigator', () => {
   });
 });
 
+it('gets immediate parent with getParent()', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestComponent = ({ route, navigation }: any): any =>
+    `${route.name} [${navigation
+      .getParent()
+      .getState()
+      .routes.map((r: any) => r.name)
+      .join()}]`;
+
+  const onStateChange = jest.fn();
+
+  const element = render(
+    <BaseNavigationContainer onStateChange={onStateChange}>
+      <TestNavigator>
+        <Screen name="foo">
+          {() => (
+            <TestNavigator>
+              <Screen name="foo-a">
+                {() => (
+                  <TestNavigator>
+                    <Screen name="bar" component={TestComponent} />
+                  </TestNavigator>
+                )}
+              </Screen>
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(element).toMatchInlineSnapshot(`"bar [foo-a]"`);
+});
+
+it('gets parent with a ID with getParent(id)', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestComponent = ({ route, navigation }: any): any =>
+    `${route.name} [${navigation
+      .getParent('Test')
+      .getState()
+      .routes.map((r: any) => r.name)
+      .join()}]`;
+
+  const onStateChange = jest.fn();
+
+  const element = render(
+    <BaseNavigationContainer onStateChange={onStateChange}>
+      <TestNavigator id="Test">
+        <Screen name="foo">
+          {() => (
+            <TestNavigator>
+              <Screen name="foo-a">
+                {() => (
+                  <TestNavigator>
+                    <Screen name="bar" component={TestComponent} />
+                  </TestNavigator>
+                )}
+              </Screen>
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(element).toMatchInlineSnapshot(`"bar [foo]"`);
+});
+
+it('gets self with a ID with getParent(id)', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestComponent = ({ route, navigation }: any): any =>
+    `${route.name} [${navigation
+      .getParent('Test')
+      .getState()
+      .routes.map((r: any) => r.name)
+      .join()}]`;
+
+  const onStateChange = jest.fn();
+
+  const element = render(
+    <BaseNavigationContainer onStateChange={onStateChange}>
+      <TestNavigator>
+        <Screen name="foo">
+          {() => (
+            <TestNavigator>
+              <Screen name="foo-a">
+                {() => (
+                  <TestNavigator id="Test">
+                    <Screen name="bar" component={TestComponent} />
+                  </TestNavigator>
+                )}
+              </Screen>
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(element).toMatchInlineSnapshot(`"bar [bar]"`);
+});
+
+it('returns undefined when ID is not found with getParent(id)', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestComponent = ({ route, navigation }: any): any =>
+    `${route.name} [${navigation.getParent('Tes')}]`;
+
+  const onStateChange = jest.fn();
+
+  const element = render(
+    <BaseNavigationContainer onStateChange={onStateChange}>
+      <TestNavigator>
+        <Screen name="foo">
+          {() => (
+            <TestNavigator id="Test">
+              <Screen name="foo-a">
+                {() => (
+                  <TestNavigator>
+                    <Screen name="bar" component={TestComponent} />
+                  </TestNavigator>
+                )}
+              </Screen>
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(element).toMatchInlineSnapshot(`"bar [undefined]"`);
+});
+
 it('gives access to internal state', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);

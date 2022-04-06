@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.6.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.6.0...@react-navigation/native-stack@6.6.1) (2022-04-01)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+
+
+
+
+# [6.6.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.5.2...@react-navigation/native-stack@6.6.0) (2022-04-01)
+
+
+### Features
+
+* add an ID prop to navigators ([4e4935a](https://github.com/react-navigation/react-navigation/commit/4e4935ac2584bc1a00209609cc026fa73e12c10a))
+
+
+
+
+
+## [6.5.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.5.1...@react-navigation/native-stack@6.5.2) (2022-03-23)
+
+
+### Bug Fixes
+
+* provide proper context to header elements in native stack ([5b01241](https://github.com/react-navigation/react-navigation/commit/5b012411076e8acc20ca779cbc19e36d7606d2b9)), closes [#10453](https://github.com/react-navigation/react-navigation/issues/10453)
+
+
+
+
+
+## [6.5.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.5.0...@react-navigation/native-stack@6.5.1) (2022-03-23)
+
+
+### Bug Fixes
+
+* take screen count to dismiss from native side for native stack ([#10377](https://github.com/react-navigation/react-navigation/issues/10377)) ([27225a2](https://github.com/react-navigation/react-navigation/commit/27225a2d97c774c8c61f3d75c47690e5f212bb34))
+
+
+
+
+
 # [6.5.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.4.1...@react-navigation/native-stack@6.5.0) (2022-02-06)
 
 

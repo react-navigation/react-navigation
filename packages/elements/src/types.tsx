@@ -98,7 +98,7 @@ export type HeaderOptions = {
   /**
    * Style object for the header. You can specify a custom background color here, for example.
    */
-  headerStyle?: StyleProp<ViewStyle>;
+  headerStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   /**
    * Whether to hide the elevation shadow (Android) or the bottom border (iOS) on the header.
    *

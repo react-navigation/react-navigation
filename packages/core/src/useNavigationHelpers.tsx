@@ -8,7 +8,7 @@ import {
 import * as React from 'react';
 
 import NavigationContext from './NavigationContext';
-import { NavigationHelpers, NavigationProp, PrivateValueStore } from './types';
+import { NavigationHelpers, PrivateValueStore } from './types';
 import UnhandledActionContext from './UnhandledActionContext';
 import type { NavigationEventEmitter } from './useEventEmitter';
 
@@ -17,6 +17,7 @@ import type { NavigationEventEmitter } from './useEventEmitter';
 PrivateValueStore;
 
 type Options<State extends NavigationState, Action extends NavigationAction> = {
+  id: string | undefined;
   onAction: (action: NavigationAction) => boolean;
   getState: () => State;
   emitter: NavigationEventEmitter<any>;
@@ -32,7 +33,13 @@ export default function useNavigationHelpers<
   ActionHelpers extends Record<string, () => void>,
   Action extends NavigationAction,
   EventMap extends Record<string, any>
->({ onAction, getState, emitter, router }: Options<State, Action>) {
+>({
+  id: navigatorId,
+  onAction,
+  getState,
+  emitter,
+  router,
+}: Options<State, Action>) {
   const onUnhandledAction = React.useContext(UnhandledActionContext);
   const parentNavigationHelpers = React.useContext(NavigationContext);
 
@@ -52,16 +59,13 @@ export default function useNavigationHelpers<
       ...CommonActions,
     };
 
-    const helpers = Object.keys(actions).reduce<Record<string, () => void>>(
-      (acc, name) => {
-        // @ts-expect-error: name is a valid key, but TypeScript is dumb
-        acc[name] = (...args: any) => dispatch(actions[name](...args));
-        return acc;
-      },
-      {}
-    );
+    const helpers = Object.keys(actions).reduce((acc, name) => {
+      // @ts-expect-error: name is a valid key, but TypeScript is dumb
+      acc[name] = (...args: any) => dispatch(actions[name](...args));
+      return acc;
+    }, {} as ActionHelpers);
 
-    return {
+    const navigationHelpers = {
       ...parentNavigationHelpers,
       ...helpers,
       dispatch,
@@ -82,12 +86,26 @@ export default function useNavigationHelpers<
           false
         );
       },
-      getParent: () => parentNavigationHelpers as any,
+      getId: () => navigatorId,
+      getParent: (id?: string) => {
+        if (id !== undefined) {
+          let current = navigationHelpers;
+
+          while (current && id !== current.getId()) {
+            current = current.getParent();
+          }
+
+          return current;
+        }
+
+        return parentNavigationHelpers;
+      },
       getState,
-    } as NavigationHelpers<ParamListBase, EventMap> &
-      (NavigationProp<ParamListBase, string, any, any, any> | undefined) &
-      ActionHelpers;
+    } as NavigationHelpers<ParamListBase, EventMap> & ActionHelpers;
+
+    return navigationHelpers;
   }, [
+    navigatorId,
     emitter.emit,
     getState,
     onAction,

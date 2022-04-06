@@ -9,7 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-type Props = ViewProps & {
+type Props = Omit<ViewProps, 'style'> & {
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   children?: React.ReactNode;
 };

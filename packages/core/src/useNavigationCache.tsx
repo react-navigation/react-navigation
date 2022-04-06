@@ -32,7 +32,14 @@ type NavigationCache<
   EventMap extends Record<string, any>
 > = Record<
   string,
-  NavigationProp<ParamListBase, string, State, ScreenOptions, EventMap>
+  NavigationProp<
+    ParamListBase,
+    string,
+    string | undefined,
+    State,
+    ScreenOptions,
+    EventMap
+  >
 >;
 
 /**
@@ -133,6 +140,15 @@ export default function useNavigationCache<
         // FIXME: too much work to fix the types for now
         ...(emitter.create(route.key) as any),
         dispatch: (thunk: Thunk) => withStack(() => dispatch(thunk)),
+        getParent: (id?: string) => {
+          if (id !== undefined && id === rest.getId()) {
+            // If the passed id is the same as the current navigation id,
+            // we return the cached navigation object for the relevant route
+            return acc[route.key];
+          }
+
+          return rest.getParent(id);
+        },
         setOptions: (options: object) =>
           setOptions((o) => ({
             ...o,

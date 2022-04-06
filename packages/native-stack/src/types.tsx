@@ -35,10 +35,12 @@ export type NativeStackNavigationEventMap = {
 
 export type NativeStackNavigationProp<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
+  RouteName extends keyof ParamList = string,
+  NavigatorID extends string | undefined = undefined
 > = NavigationProp<
   ParamList,
   RouteName,
+  NavigatorID,
   StackNavigationState<ParamList>,
   NativeStackNavigationOptions,
   NativeStackNavigationEventMap
@@ -47,9 +49,10 @@ export type NativeStackNavigationProp<
 
 export type NativeStackScreenProps<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
+  RouteName extends keyof ParamList = string,
+  NavigatorID extends string | undefined = undefined
 > = {
-  navigation: NativeStackNavigationProp<ParamList, RouteName>;
+  navigation: NativeStackNavigationProp<ParamList, RouteName, NavigatorID>;
   route: RouteProp<ParamList, RouteName>;
 };
 
