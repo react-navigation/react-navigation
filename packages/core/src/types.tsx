@@ -325,7 +325,11 @@ export type NavigationProp<
    *
    * @param params Params object for the current route.
    */
-  setParams(params: Partial<ParamList[RouteName]>): void;
+  setParams(
+    params: ParamList[RouteName] extends undefined
+      ? undefined
+      : Partial<ParamList[RouteName]>
+  ): void;
 
   /**
    * Update the options for the route.
