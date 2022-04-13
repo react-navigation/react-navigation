@@ -1,9 +1,16 @@
-import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import type { DrawerScreenProps } from '@react-navigation/drawer';
+import type {
+  BottomTabNavigationOptions,
+  BottomTabScreenProps,
+} from '@react-navigation/bottom-tabs';
+import type {
+  DrawerNavigationOptions,
+  DrawerScreenProps,
+} from '@react-navigation/drawer';
 import type {
   CompositeScreenProps,
   NavigatorScreenParams,
 } from '@react-navigation/native';
+import type { StackNavigationOptions } from '@react-navigation/stack';
 import {
   createStackNavigator,
   StackScreenProps,
@@ -70,10 +77,9 @@ export const PostDetailsScreen = ({
     .parameter(0)
     .toEqualTypeOf<keyof RootStackParamList>();
 
-  expectTypeOf(navigation.setOptions).parameter(0).toMatchTypeOf<{
-    title?: string;
-    headerShown?: boolean;
-  }>();
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toMatchTypeOf<StackNavigationOptions>();
 
   expectTypeOf(navigation.addListener)
     .parameter(0)
@@ -113,10 +119,12 @@ export const FeedScreen = ({
 
   expectTypeOf(navigation.openDrawer).toBeFunction();
 
-  expectTypeOf(navigation.setOptions).parameter(0).toMatchTypeOf<{
-    title?: string;
-    lazy?: boolean;
-  }>();
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toMatchTypeOf<StackNavigationOptions>();
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toMatchTypeOf<DrawerNavigationOptions>();
 
   expectTypeOf(navigation.addListener)
     .parameter(0)
@@ -145,16 +153,58 @@ export const PopularScreen = ({
 
   expectTypeOf(navigation.openDrawer).toBeFunction();
 
-  expectTypeOf(navigation.setOptions).parameter(0).toMatchTypeOf<{
-    title?: string;
-    taBarLabel?: string;
-  }>();
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toMatchTypeOf<StackNavigationOptions>();
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toMatchTypeOf<DrawerNavigationOptions>();
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toMatchTypeOf<BottomTabNavigationOptions>();
 
   expectTypeOf(navigation.addListener)
     .parameter(0)
     .toEqualTypeOf<
       'focus' | 'blur' | 'state' | 'beforeRemove' | 'tabPress' | 'tabLongPress'
     >();
+
+  expectTypeOf(navigation.setParams)
+    .parameter(0)
+    .toEqualTypeOf<Partial<FeedTabParamList['Popular']>>();
+
+  expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
+  expectTypeOf(navigation.getParent)
+    .parameter(0)
+    .toEqualTypeOf<'LeftDrawer' | 'BottomTabs' | undefined>();
+};
+
+export const LatestScreen = ({
+  navigation,
+  route,
+}: FeedTabScreenProps<'Latest'>) => {
+  expectTypeOf(route.name).toEqualTypeOf<'Latest'>();
+
+  expectTypeOf(navigation.push)
+    .parameter(0)
+    .toEqualTypeOf<keyof RootStackParamList>();
+  expectTypeOf(navigation.jumpTo)
+    .parameter(0)
+    .toEqualTypeOf<keyof HomeDrawerParamList>();
+
+  expectTypeOf(navigation.openDrawer).toBeFunction();
+
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toMatchTypeOf<StackNavigationOptions>();
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toMatchTypeOf<DrawerNavigationOptions>();
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toMatchTypeOf<BottomTabNavigationOptions>();
+
+  expectTypeOf(navigation.setParams).parameter(0).toEqualTypeOf<undefined>();
 
   expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
   expectTypeOf(navigation.getParent)
