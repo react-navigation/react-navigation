@@ -3,7 +3,7 @@ import warnOnce from 'warn-once';
 
 import BottomTabBarHeightContext from './BottomTabBarHeightContext';
 
-export default function useFloatingBottomTabBarHeight(ignore_warning = false) {
+export default function useFloatingBottomTabBarHeight(ignore_warning:boolean = false) {
   const height = React.useContext(BottomTabBarHeightContext);
 
   if (height === undefined) {
