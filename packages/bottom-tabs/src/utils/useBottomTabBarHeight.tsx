@@ -9,7 +9,7 @@ export default function useFloatingBottomTabBarHeight(
   const height = React.useContext(BottomTabBarHeightContext);
 
   if (height === undefined) {
-    if(!ignore_warning)
+    if (!ignore_warning)
       warnOnce(
         true,
         "Couldn't find the bottom tab bar height (will return 0). Are you inside a screen in Bottom Tab Navigator?\n\nYou can ignore this warning by passing true to the useBottomTabBarHeight hook.\nuseBottomTabBarHeight(true)\n"
