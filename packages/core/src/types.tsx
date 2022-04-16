@@ -438,13 +438,18 @@ export type ScreenListeners<
 
 export type RouteConfigComponent<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList
+  RouteName extends keyof ParamList,
+  ComponentProps = { route: RouteProp<ParamList, RouteName>; navigation: any },
+  Component =
+    | React.ComponentType<ComponentProps>
+    | React.ComponentType<Partial<ComponentProps>>
+    | React.ComponentType<{}>
 > =
   | {
       /**
        * React component to render for this screen.
        */
-      component: React.ComponentType<any>;
+      component: Component;
       getComponent?: never;
       children?: never;
     }
@@ -452,7 +457,7 @@ export type RouteConfigComponent<
       /**
        * Lazily get a React component to render for this screen.
        */
-      getComponent: () => React.ComponentType<any>;
+      getComponent: () => Component;
       component?: never;
       children?: never;
     }
