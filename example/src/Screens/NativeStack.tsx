@@ -1,3 +1,4 @@
+import { useHeaderHeight } from '@react-navigation/elements';
 import type { ParamListBase } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
@@ -6,7 +7,6 @@ import {
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Albums from '../Shared/Albums';
 import Article from '../Shared/Article';
@@ -95,14 +95,10 @@ const NewsFeedScreen = ({
 const AlbumsScreen = ({
   navigation,
 }: NativeStackScreenProps<NativeStackParams, 'Albums'>) => {
-  const insets = useSafeAreaInsets();
+  const headerHeight = useHeaderHeight();
 
   return (
-    <ScrollView
-      contentContainerStyle={{
-        paddingTop: 56 + (Platform.OS === 'ios' ? 0 : insets.top),
-      }}
-    >
+    <ScrollView contentContainerStyle={{ paddingTop: headerHeight }}>
       <View style={styles.buttons}>
         <Button
           mode="contained"
@@ -164,7 +160,6 @@ export default function NativeStackScreen({
         options={{
           title: 'Albums',
           presentation: 'modal',
-          headerShadowVisible: true,
           headerTransparent: true,
           headerBlurEffect: 'light',
         }}
