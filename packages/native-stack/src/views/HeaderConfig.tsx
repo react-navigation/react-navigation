@@ -1,4 +1,4 @@
-import { HeaderTitle } from '@react-navigation/elements';
+import { getHeaderTitle, HeaderTitle } from '@react-navigation/elements';
 import { Route, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
@@ -79,7 +79,7 @@ export default function HeaderConfig({
       headerTitleStyleFlattened.fontFamily,
     ]);
 
-  const titleText = title !== undefined ? title : route.name;
+  const titleText = getHeaderTitle({ title, headerTitle }, route.name);
   const titleColor =
     headerTitleStyleFlattened.color ?? headerTintColor ?? colors.text;
   const titleFontSize = headerTitleStyleFlattened.fontSize;
@@ -110,7 +110,10 @@ export default function HeaderConfig({
   });
   const headerTitleElement =
     typeof headerTitle === 'function'
-      ? headerTitle({ tintColor, children: titleText })
+      ? headerTitle({
+          tintColor,
+          children: titleText,
+        })
       : null;
 
   const supportsHeaderSearchBar =
@@ -187,7 +190,7 @@ export default function HeaderConfig({
         largeTitleFontSize={headerLargeTitleStyleFlattened.fontSize}
         largeTitleFontWeight={headerLargeTitleStyleFlattened.fontWeight}
         largeTitleHideShadow={headerLargeTitleShadowVisible === false}
-        title={typeof headerTitle === 'string' ? headerTitle : titleText}
+        title={titleText}
         titleColor={titleColor}
         titleFontFamily={titleFontFamily}
         titleFontSize={titleFontSize}
