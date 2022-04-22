@@ -1,17 +1,13 @@
-Please provide enough information so that others can review your pull request:
+Please provide enough information so that others can review your pull request.
 
 **Motivation**
 
 Explain the **motivation** for making this change. What existing problem does the pull request solve?
 
+If this pull request addresses an existing issue, link to the issue. If an issue is not present, describe the issue here.
+
 **Test plan**
 
-Demonstrate the code is solid. Example: the exact commands you ran and their output, screenshots / videos if the pull request changes UI.
+Describe the **steps to test this change** so that a reviewer can verify it. Provide screenshots or videos if the change affects UI.
 
-Make sure you test on both platforms if your change affects both platforms.
-
-The code must pass tests.
-
-**Code formatting**
-
-Look around. Match the style of the rest of the codebase. Run `yarn lint --fix` before committing.
+The change must pass lint, typescript and tests.
