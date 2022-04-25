@@ -354,7 +354,9 @@ export default function App() {
                           label="Right to left"
                           value={I18nManager.getConstants().isRTL}
                           onValueChange={() => {
-                            I18nManager.forceRTL(!I18nManager.getConstants().isRTL);
+                            I18nManager.forceRTL(
+                              !I18nManager.getConstants().isRTL
+                            );
                             restartApp();
                           }}
                         />
