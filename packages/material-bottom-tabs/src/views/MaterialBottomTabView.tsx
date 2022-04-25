@@ -25,8 +25,6 @@ type Props = MaterialBottomTabNavigationConfig & {
   descriptors: MaterialBottomTabDescriptorMap;
 };
 
-type Scene = { route: { key: string } };
-
 // Optionally require vector-icons referenced from react-native-paper:
 // https://github.com/callstack/react-native-paper/blob/4b26429c49053eaa4c3e0fae208639e01093fa87/src/components/MaterialCommunityIcon.tsx#L14
 let MaterialCommunityIcons: React.ComponentType<
@@ -109,6 +107,8 @@ function MaterialBottomTabViewInner({
     };
   }, [colors, dark]);
 
+  const focusedOptions = descriptors[state.routes[state.index].key].options;
+
   return (
     <BottomNavigation
       {...rest}
@@ -177,15 +177,39 @@ function MaterialBottomTabViewInner({
 
         return null;
       }}
-      getLabelText={({ route }: Scene) => {
-        const { options } = descriptors[route.key];
+      renderLabel={
+        typeof focusedOptions.tabBarLabel === 'function'
+          ? ({ route, focused, color }) => {
+              const { options } = descriptors[route.key];
 
-        return options.tabBarLabel !== undefined
-          ? options.tabBarLabel
-          : options.title !== undefined
-          ? options.title
-          : (route as Route<string>).name;
-      }}
+              if (typeof options.tabBarLabel === 'function') {
+                return options.tabBarLabel({ focused, color });
+              }
+
+              return undefined;
+            }
+          : undefined
+      }
+      getLabelText={
+        typeof focusedOptions.tabBarLabel !== 'function'
+          ? ({ route }) => {
+              const { options } = descriptors[route.key];
+
+              const label =
+                options.tabBarLabel !== undefined
+                  ? options.tabBarLabel
+                  : options.title !== undefined
+                  ? options.title
+                  : (route as Route<string>).name;
+
+              if (typeof label === 'string') {
+                return label;
+              }
+
+              return undefined;
+            }
+          : undefined
+      }
       getColor={({ route }) => descriptors[route.key].options.tabBarColor}
       getBadge={({ route }) => descriptors[route.key].options.tabBarBadge}
       getAccessibilityLabel={({ route }) =>

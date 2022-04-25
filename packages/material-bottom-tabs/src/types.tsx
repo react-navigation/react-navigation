@@ -61,9 +61,14 @@ export type MaterialBottomTabNavigationOptions = {
   tabBarColor?: string;
 
   /**
-   * Label text of the tab displayed in the navigation bar. When undefined, scene title is used.
+   * String referring to a label of a tab in the navigation bar, or a
+   * a function that given { focused: boolean, color: string } returns a React.Node to display in the navigation bar.
+   *
+   * When undefined, the title option is used.
    */
-  tabBarLabel?: string;
+  tabBarLabel?:
+    | string
+    | ((props: { focused: boolean; color: string }) => React.ReactNode);
 
   /**
    * String referring to an icon in the `MaterialCommunityIcons` set, or a
