@@ -20,7 +20,7 @@ function DrawerContentScrollView(
   const drawerPosition = React.useContext(DrawerPositionContext);
   const insets = useSafeAreaInsets();
 
-  const isRight = I18nManager.isRTL
+  const isRight = I18nManager.getConstants().isRTL
     ? drawerPosition === 'left'
     : drawerPosition === 'right';
 

@@ -11,8 +11,8 @@ export default function getInvertedMultiplier(
     case 'vertical-inverted':
       return -1;
     case 'horizontal':
-      return I18nManager.isRTL ? -1 : 1;
+      return I18nManager.getConstants().isRTL ? -1 : 1;
     case 'horizontal-inverted':
-      return I18nManager.isRTL ? 1 : -1;
+      return I18nManager.getConstants().isRTL ? 1 : -1;
   }
 }
