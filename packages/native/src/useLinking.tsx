@@ -593,9 +593,9 @@ export default function useLinking(
               // This won't be correct if multiple routes were pushed in one go before
               // Usually this shouldn't happen and this is a fallback for that
 
-              // If window.history.length is big enough (i.e. >= 2) then it's ok to go
-              // back. Otherwise, we can't do window.history.go(historyDelta) because that
-              // will cause the browser to leave the page/application.
+              // If window.history.length is big enough then it's ok to go back. Otherwise,
+              // we can't do window.history.go(historyDelta) because that will cause the
+              // browser to leave the page/application.
               if (window.history.length + historyDelta >= 2) {
                 await history.go(historyDelta);
               }
