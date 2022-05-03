@@ -24,6 +24,7 @@ import type { ScreenProps } from 'react-native-screens';
 import {
   Screen,
   ScreenStack,
+  ScreenStackHeaderConfig,
   StackPresentationTypes,
 } from 'react-native-screens';
 import warnOnce from 'warn-once';
@@ -216,25 +217,28 @@ const SceneView = ({
               }
             >
               {header !== undefined && headerShown !== false ? (
-                <View
-                  onLayout={(e) => {
-                    setCustomHeaderHeight(e.nativeEvent.layout.height);
-                  }}
-                >
-                  {header({
-                    back: previousDescriptor
-                      ? {
-                          title: getHeaderTitle(
-                            previousDescriptor.options,
-                            previousDescriptor.route.name
-                          ),
-                        }
-                      : undefined,
-                    options,
-                    route,
-                    navigation,
-                  })}
-                </View>
+                <>
+                  <ScreenStackHeaderConfig hidden />
+                  <View
+                    onLayout={(e) => {
+                      setCustomHeaderHeight(e.nativeEvent.layout.height);
+                    }}
+                  >
+                    {header({
+                      back: previousDescriptor
+                        ? {
+                            title: getHeaderTitle(
+                              previousDescriptor.options,
+                              previousDescriptor.route.name
+                            ),
+                          }
+                        : undefined,
+                      options,
+                      route,
+                      navigation,
+                    })}
+                  </View>
+                </>
               ) : (
                 <HeaderConfig
                   {...options}
