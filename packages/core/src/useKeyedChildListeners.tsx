@@ -15,6 +15,7 @@ export default function useKeyedChildListeners() {
     getState: {},
     beforeRemove: {},
   });
+  Object.setPrototypeOf(keyedListeners, null);
 
   const addKeyedListener = React.useCallback(
     <T extends keyof KeyedListenerMap>(
