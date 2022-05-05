@@ -565,7 +565,10 @@ const parseQueryParams = (
 
   if (parseConfig) {
     Object.keys(params).forEach((name) => {
-      if (parseConfig[name] && typeof params[name] === 'string') {
+      if (
+        Object.hasOwnProperty.call(parseConfig, name) &&
+        typeof params[name] === 'string'
+      ) {
         params[name] = parseConfig[name](params[name] as string);
       }
     });
