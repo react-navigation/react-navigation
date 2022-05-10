@@ -389,7 +389,7 @@ export type NativeStackNavigationOptions = {
    * - `horizontal` – dismiss screen horizontally (default)
    * @platform ios
    */
-  swipeDirection?: ScreenProps['swipeDirection'];
+  gestureDirection?: ScreenProps['swipeDirection'];
   /**
    * Style object for the scene content.
    */
@@ -483,7 +483,7 @@ export type NativeStackNavigationOptions = {
    *
    * @platform ios
    */
-  transitionDuration?: number;
+  animationDuration?: number;
 };
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<
