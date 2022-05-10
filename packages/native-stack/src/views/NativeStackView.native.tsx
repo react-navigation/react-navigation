@@ -135,10 +135,17 @@ const SceneView = ({
     gestureEnabled,
     header,
     headerShown,
+    homeIndicatorHidden,
+    navigationBarColor,
+    navigationBarHidden,
     orientation,
     statusBarAnimation,
     statusBarHidden,
     statusBarStyle,
+    statusBarTranslucent,
+    statusBarColor,
+    swipeDirection = 'horizontal',
+    transitionDuration,
   } = options;
 
   let { presentation = 'card' } = options;
@@ -190,6 +197,9 @@ const SceneView = ({
             false
           : gestureEnabled
       }
+      homeIndicatorHidden={homeIndicatorHidden}
+      navigationBarColor={navigationBarColor}
+      navigationBarHidden={navigationBarHidden}
       replaceAnimation={animationTypeForReplace}
       stackPresentation={presentation === 'card' ? 'push' : presentation}
       stackAnimation={animation}
@@ -197,6 +207,10 @@ const SceneView = ({
       statusBarAnimation={statusBarAnimation}
       statusBarHidden={statusBarHidden}
       statusBarStyle={statusBarStyle}
+      statusBarColor={statusBarColor}
+      statusBarTranslucent={statusBarTranslucent}
+      swipeDirection={swipeDirection}
+      transitionDuration={transitionDuration}
       onWillDisappear={onWillDisappear}
       onAppear={onAppear}
       onDisappear={onDisappear}
