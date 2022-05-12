@@ -22,7 +22,8 @@ import {
 } from 'react-native-safe-area-context';
 import type { ScreenProps } from 'react-native-screens';
 import {
-  Screen,
+  ScreenContext,
+  Screen as DefaultScreen,
   ScreenStack,
   StackPresentationTypes,
 } from 'react-native-screens';
@@ -87,6 +88,9 @@ const MaybeNestedStack = ({
       {children}
     </DebugContainer>
   );
+
+  const ContextScreen = React.useContext(ScreenContext);
+  const Screen = ContextScreen || DefaultScreen;
 
   if (isHeaderInModal) {
     return (
@@ -175,6 +179,9 @@ const SceneView = ({
     React.useState(defaultHeaderHeight);
 
   const headerHeight = header ? customHeaderHeight : defaultHeaderHeight;
+
+  const ContextScreen = React.useContext(ScreenContext);
+  const Screen = ContextScreen || DefaultScreen;
 
   return (
     <Screen
