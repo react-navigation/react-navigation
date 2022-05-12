@@ -22,8 +22,8 @@ import {
 } from 'react-native-safe-area-context';
 import type { ScreenProps } from 'react-native-screens';
 import {
-  ScreenContext,
   Screen as DefaultScreen,
+  ScreenContext,
   ScreenStack,
   StackPresentationTypes,
 } from 'react-native-screens';
