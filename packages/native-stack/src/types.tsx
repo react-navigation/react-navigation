@@ -382,6 +382,14 @@ export type NativeStackNavigationOptions = {
    */
   gestureEnabled?: boolean;
   /**
+   * Whether the home indicator should be hidden on this screen. Defaults to `false`.
+   *
+   * Only supported on iOS.
+   *
+   * @platform ios
+   */
+  homeIndicatorHidden?: boolean;
+  /**
    * The type of animation to use when this screen replaces another screen. Defaults to `pop`.
    *
    * Supported values:
