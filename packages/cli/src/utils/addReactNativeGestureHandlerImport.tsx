@@ -51,7 +51,10 @@ const addReactNativeGestureHandlerImport = async (
          */
         if (await allowAutoImportPrompt()) {
           const quote = (/['"]/.exec(indexFileContent) || ["'"])[0];
-          const importExpression = `import ${quote}react-native-gesture-handler${quote}`;
+          const useSemicolon = indexFileContent.includes(';');
+          const importExpression = `import ${quote}react-native-gesture-handler${quote}${
+            useSemicolon ? ';' : ''
+          }`;
           indexFileContent = transformSource(
             indexFileContent,
             importExpression
