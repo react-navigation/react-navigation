@@ -6,6 +6,8 @@ import {
   SafeAreaProviderCompat,
 } from '@react-navigation/elements';
 import {
+  NavigationContext,
+  NavigationRouteContext,
   ParamListBase,
   Route,
   StackActions,
@@ -13,11 +15,12 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Platform, PlatformIOSStatic, StyleSheet } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
+import type { ScreenProps } from 'react-native-screens';
 import {
   Screen,
   ScreenStack,
@@ -40,11 +43,13 @@ const MaybeNestedStack = ({
   options,
   route,
   presentation,
+  headerHeight,
   children,
 }: {
   options: NativeStackNavigationOptions;
   route: Route<string>;
   presentation: Exclude<StackPresentationTypes, 'push'> | 'card';
+  headerHeight: number;
   children: React.ReactNode;
 }) => {
   const { colors } = useTheme();
@@ -83,33 +88,17 @@ const MaybeNestedStack = ({
     </DebugContainer>
   );
 
-  const insets = useSafeAreaInsets();
-  const dimensions = useSafeAreaFrame();
-  // landscape is meaningful only for iPhone
-  const isLandscape =
-    dimensions.width > dimensions.height &&
-    !(Platform as PlatformIOSStatic).isPad &&
-    !(Platform as PlatformIOSStatic).isTVOS;
-  // `modal` and `formSheet` presentations do not take whole screen, so should not take the inset.
-  const isFullScreenModal =
-    presentation !== 'modal' && presentation !== 'formSheet';
-  const topInset = isFullScreenModal && !isLandscape ? insets.top : 0;
-  const headerHeight = getDefaultHeaderHeight(
-    dimensions,
-    !isFullScreenModal,
-    topInset
-  );
-
   if (isHeaderInModal) {
     return (
       <ScreenStack style={styles.container}>
         <Screen enabled style={StyleSheet.absoluteFill}>
-          <HeaderShownContext.Provider value>
-            <HeaderHeightContext.Provider value={headerHeight}>
-              <HeaderConfig {...options} route={route} />
-              {content}
-            </HeaderHeightContext.Provider>
-          </HeaderShownContext.Provider>
+          <HeaderConfig
+            {...options}
+            route={route}
+            headerHeight={headerHeight}
+            canGoBack
+          />
+          {content}
         </Screen>
       </ScreenStack>
     );
@@ -125,7 +114,7 @@ type SceneViewProps = {
   onWillDisappear: () => void;
   onAppear: () => void;
   onDisappear: () => void;
-  onDismissed: () => void;
+  onDismissed: ScreenProps['onDismissed'];
 };
 
 const SceneView = ({
@@ -139,11 +128,13 @@ const SceneView = ({
 }: SceneViewProps) => {
   const { route, navigation, options, render } = descriptor;
   const {
+    animation,
+    animationTypeForReplace = 'push',
+    customAnimationOnGesture,
+    fullScreenGestureEnabled,
     gestureEnabled,
     header,
     headerShown,
-    animationTypeForReplace = 'pop',
-    animation,
     orientation,
     statusBarAnimation,
     statusBarHidden,
@@ -162,20 +153,36 @@ const SceneView = ({
     ? headerShown
     : presentation === 'card' && headerShown !== false;
 
-  const isParentHeaderShown = React.useContext(HeaderShownContext);
   const insets = useSafeAreaInsets();
+  const frame = useSafeAreaFrame();
+
+  // `modal` and `formSheet` presentations do not take whole screen, so should not take the inset.
+  const isModal = presentation === 'modal' || presentation === 'formSheet';
+
+  // Modals are fullscreen in landscape only on iPhone
+  const isIPhone =
+    Platform.OS === 'ios' && !(Platform.isPad && Platform.isTVOS);
+  const isLandscape = frame.width > frame.height;
+
+  const topInset = isModal || (isIPhone && isLandscape) ? 0 : insets.top;
+
+  const isParentHeaderShown = React.useContext(HeaderShownContext);
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
-  const headerHeight = getDefaultHeaderHeight(
-    useSafeAreaFrame(),
-    false,
-    insets.top
-  );
+
+  const defaultHeaderHeight = getDefaultHeaderHeight(frame, isModal, topInset);
+
+  const [customHeaderHeight, setCustomHeaderHeight] =
+    React.useState(defaultHeaderHeight);
+
+  const headerHeight = header ? customHeaderHeight : defaultHeaderHeight;
 
   return (
     <Screen
       key={route.key}
       enabled
       style={StyleSheet.absoluteFill}
+      customAnimationOnSwipe={customAnimationOnGesture}
+      fullScreenSwipeEnabled={fullScreenGestureEnabled}
       gestureEnabled={
         isAndroid
           ? // This prop enables handling of system back gestures on Android
@@ -194,46 +201,61 @@ const SceneView = ({
       onAppear={onAppear}
       onDisappear={onDisappear}
       onDismissed={onDismissed}
+      isNativeStack
     >
-      <HeaderShownContext.Provider
-        value={isParentHeaderShown || isHeaderInPush !== false}
-      >
-        <HeaderHeightContext.Provider
-          value={
-            isHeaderInPush !== false ? headerHeight : parentHeaderHeight ?? 0
-          }
-        >
-          {header !== undefined && headerShown !== false ? (
-            // TODO: expose custom header height
-            header({
-              back: previousDescriptor
-                ? {
-                    title: getHeaderTitle(
-                      previousDescriptor.options,
-                      previousDescriptor.route.name
-                    ),
-                  }
-                : undefined,
-              options,
-              route,
-              navigation,
-            })
-          ) : (
-            <HeaderConfig
-              {...options}
-              route={route}
-              headerShown={isHeaderInPush}
-            />
-          )}
-          <MaybeNestedStack
-            options={options}
-            route={route}
-            presentation={presentation}
+      <NavigationContext.Provider value={navigation}>
+        <NavigationRouteContext.Provider value={route}>
+          <HeaderShownContext.Provider
+            value={isParentHeaderShown || isHeaderInPush !== false}
           >
-            {render()}
-          </MaybeNestedStack>
-        </HeaderHeightContext.Provider>
-      </HeaderShownContext.Provider>
+            <HeaderHeightContext.Provider
+              value={
+                isHeaderInPush !== false
+                  ? headerHeight
+                  : parentHeaderHeight ?? 0
+              }
+            >
+              {header !== undefined && headerShown !== false ? (
+                <View
+                  onLayout={(e) => {
+                    setCustomHeaderHeight(e.nativeEvent.layout.height);
+                  }}
+                >
+                  {header({
+                    back: previousDescriptor
+                      ? {
+                          title: getHeaderTitle(
+                            previousDescriptor.options,
+                            previousDescriptor.route.name
+                          ),
+                        }
+                      : undefined,
+                    options,
+                    route,
+                    navigation,
+                  })}
+                </View>
+              ) : (
+                <HeaderConfig
+                  {...options}
+                  route={route}
+                  headerShown={isHeaderInPush}
+                  headerHeight={headerHeight}
+                  canGoBack={index !== 0}
+                />
+              )}
+              <MaybeNestedStack
+                options={options}
+                route={route}
+                presentation={presentation}
+                headerHeight={headerHeight}
+              >
+                {render()}
+              </MaybeNestedStack>
+            </HeaderHeightContext.Provider>
+          </HeaderShownContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>
     </Screen>
   );
 };
@@ -245,8 +267,9 @@ type Props = {
 };
 
 function NativeStackViewInner({ state, navigation, descriptors }: Props) {
-  const [nextDismissedKey, setNextDismissedKey] =
-    React.useState<string | null>(null);
+  const [nextDismissedKey, setNextDismissedKey] = React.useState<string | null>(
+    null
+  );
 
   const dismissedRouteName = nextDismissedKey
     ? state.routes.find((route) => route.key === nextDismissedKey)?.name
@@ -299,9 +322,9 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
                 target: route.key,
               });
             }}
-            onDismissed={() => {
+            onDismissed={(event) => {
               navigation.dispatch({
-                ...StackActions.pop(),
+                ...StackActions.pop(event.nativeEvent.dismissCount),
                 source: route.key,
                 target: state.key,
               });

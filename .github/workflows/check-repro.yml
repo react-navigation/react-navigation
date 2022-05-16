@@ -19,7 +19,7 @@ jobs:
               : context.payload.issue.body;
 
             const regex = new RegExp(
-              `https?:\\/\\/((github\\.com\\/${user}\\/[^/]+\\/?[\\s\\n]+)|(snack\\.expo\\.dev\\/.+))`,
+              `https?:\\/\\/((github\\.com\\/${user}\\/[^/]+\\/?[\\s\\n]+)|(snack\\.expo\\.dev\\/.+)|(www\\.typescriptlang\\.org\\/play\\?#.+))`,
               'gm'
             );
 
@@ -48,7 +48,8 @@ jobs:
                 return;
               }
 
-              const body = "Hey! Thanks for opening the issue. The issue doesn't seem to contain a link to a repro (a [snack.expo.dev](https://snack.expo.dev) link or link to a GitHub repo under your username).\n\nCan you provide a [minimal repro](https://stackoverflow.com/help/minimal-reproducible-example) which demonstrates the issue? A repro will help us debug the issue faster. Please try to keep the repro as small as possible and make sure that we can run it without additional setup.";
+            const body =
+              "Hey! Thanks for opening the issue. The issue doesn't seem to contain a link to a repro (a [snack.expo.dev](https://snack.expo.dev) link, a [www.typescriptlang.org/play](https://www.typescriptlang.org/play) link or link to a GitHub repo under your username).\n\nCan you provide a [minimal repro](https://stackoverflow.com/help/minimal-reproducible-example) which demonstrates the issue? Please try to keep the repro as small as possible and make sure that we can run it without additional setup.\n\nA repro will help us debug the issue. The issue will be closed automatically after a while if you don't provide a repro.";
 
               const comments = await github.issues.listComments({
                 issue_number: context.issue.number,
@@ -56,7 +57,7 @@ jobs:
                 repo: context.repo.repo,
               });
 
-              if (comments.data.some(comment => comment.body === body)) {
+              if (comments.data.some((comment) => comment.body === body)) {
                 return;
               }
 

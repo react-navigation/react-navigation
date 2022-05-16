@@ -36,6 +36,18 @@ const ArticleScreen = ({
         </Button>
         <Button
           mode="outlined"
+          onPress={() =>
+            navigation.setParams({
+              author:
+                route.params?.author === 'Gandalf' ? 'Babel fish' : 'Gandalf',
+            })
+          }
+          style={styles.button}
+        >
+          Update params
+        </Button>
+        <Button
+          mode="outlined"
           onPress={() => navigation.pop()}
           style={styles.button}
         >
@@ -144,6 +156,7 @@ export default function SimpleStackScreen({
 const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     padding: 8,
   },
   button: {

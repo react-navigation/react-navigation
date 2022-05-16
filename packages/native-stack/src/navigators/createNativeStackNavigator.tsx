@@ -19,27 +19,31 @@ import type {
 import NativeStackView from '../views/NativeStackView';
 
 function NativeStackNavigator({
+  id,
   initialRouteName,
   children,
   screenListeners,
   screenOptions,
   ...rest
 }: NativeStackNavigatorProps) {
-  const { state, descriptors, navigation } = useNavigationBuilder<
-    StackNavigationState<ParamListBase>,
-    StackRouterOptions,
-    StackActionHelpers<ParamListBase>,
-    NativeStackNavigationOptions,
-    NativeStackNavigationEventMap
-  >(StackRouter, {
-    initialRouteName,
-    children,
-    screenListeners,
-    screenOptions,
-  });
+  const { state, descriptors, navigation, NavigationContent } =
+    useNavigationBuilder<
+      StackNavigationState<ParamListBase>,
+      StackRouterOptions,
+      StackActionHelpers<ParamListBase>,
+      NativeStackNavigationOptions,
+      NativeStackNavigationEventMap
+    >(StackRouter, {
+      id,
+      initialRouteName,
+      children,
+      screenListeners,
+      screenOptions,
+    });
 
   React.useEffect(
     () =>
+      // @ts-expect-error: there may not be a tab navigator in parent
       navigation?.addListener?.('tabPress', (e: any) => {
         const isFocused = navigation.isFocused();
 
@@ -64,12 +68,14 @@ function NativeStackNavigator({
   );
 
   return (
-    <NativeStackView
-      {...rest}
-      state={state}
-      navigation={navigation}
-      descriptors={descriptors}
-    />
+    <NavigationContent>
+      <NativeStackView
+        {...rest}
+        state={state}
+        navigation={navigation}
+        descriptors={descriptors}
+      />
+    </NavigationContent>
   );
 }
 

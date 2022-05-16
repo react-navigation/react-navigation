@@ -28,18 +28,23 @@ type Props = DefaultNavigatorOptions<
   BottomTabNavigationConfig;
 
 function BottomTabNavigator({
+  id,
   initialRouteName,
   backBehavior,
   children,
   screenListeners,
   screenOptions,
   sceneContainerStyle,
-  // @ts-expect-error: lazy is deprecated
-  lazy,
-  // @ts-expect-error: tabBarOptions is deprecated
-  tabBarOptions,
-  ...rest
+  ...restWithDeprecated
 }: Props) {
+  const {
+    // @ts-expect-error: lazy is deprecated
+    lazy,
+    // @ts-expect-error: tabBarOptions is deprecated
+    tabBarOptions,
+    ...rest
+  } = restWithDeprecated;
+
   let defaultScreenOptions: BottomTabNavigationOptions = {};
 
   if (tabBarOptions) {
@@ -99,6 +104,7 @@ function BottomTabNavigator({
       BottomTabNavigationOptions,
       BottomTabNavigationEventMap
     >(TabRouter, {
+      id,
       initialRouteName,
       backBehavior,
       children,

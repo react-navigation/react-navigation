@@ -39,12 +39,31 @@ export default function DrawerItemList({
 
   return state.routes.map((route, i) => {
     const focused = i === state.index;
+
+    const onPress = () => {
+      const event = navigation.emit({
+        type: 'drawerItemPress',
+        target: route.key,
+        canPreventDefault: true,
+      });
+
+      if (!event.defaultPrevented) {
+        navigation.dispatch({
+          ...(focused
+            ? DrawerActions.closeDrawer()
+            : CommonActions.navigate({ name: route.name, merge: true })),
+          target: state.key,
+        });
+      }
+    };
+
     const {
       title,
       drawerLabel,
       drawerIcon,
       drawerLabelStyle,
       drawerItemStyle,
+      drawerAllowFontScaling,
     } = descriptors[route.key].options;
 
     return (
@@ -63,17 +82,11 @@ export default function DrawerItemList({
         inactiveTintColor={drawerInactiveTintColor}
         activeBackgroundColor={drawerActiveBackgroundColor}
         inactiveBackgroundColor={drawerInactiveBackgroundColor}
+        allowFontScaling={drawerAllowFontScaling}
         labelStyle={drawerLabelStyle}
         style={drawerItemStyle}
         to={buildLink(route.name, route.params)}
-        onPress={() => {
-          navigation.dispatch({
-            ...(focused
-              ? DrawerActions.closeDrawer()
-              : CommonActions.navigate({ name: route.name, merge: true })),
-            target: state.key,
-          });
-        }}
+        onPress={onPress}
       />
     );
   }) as React.ReactNode as React.ReactElement;

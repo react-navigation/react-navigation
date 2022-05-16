@@ -1,9 +1,16 @@
-import { HeaderTitle } from '@react-navigation/elements';
+import { getHeaderTitle, HeaderTitle } from '@react-navigation/elements';
 import { Route, useTheme } from '@react-navigation/native';
 import * as React from 'react';
-import { I18nManager, Platform, StyleSheet, View } from 'react-native';
+import {
+  I18nManager,
+  Platform,
+  StyleSheet,
+  TextStyle,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
+  isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,
   ScreenStackHeaderCenterView,
   ScreenStackHeaderConfig,
@@ -17,11 +24,15 @@ import type { NativeStackNavigationOptions } from '../types';
 import { processFonts } from './FontProcessor';
 
 type Props = NativeStackNavigationOptions & {
+  headerHeight: number;
   route: Route<string>;
+  canGoBack: boolean;
 };
 
 export default function HeaderConfig({
+  headerHeight,
   headerBackImageSource,
+  headerBackButtonMenuEnabled,
   headerBackTitle,
   headerBackTitleStyle,
   headerBackTitleVisible = true,
@@ -31,6 +42,7 @@ export default function HeaderConfig({
   headerLargeTitle,
   headerLargeTitleShadowVisible,
   headerLargeTitleStyle,
+  headerBackground,
   headerLeft,
   headerRight,
   headerShown,
@@ -41,18 +53,16 @@ export default function HeaderConfig({
   headerTitleAlign,
   headerTitleStyle,
   headerTransparent,
-  route,
   headerSearchBarOptions,
+  route,
   title,
+  canGoBack,
 }: Props): JSX.Element {
   const insets = useSafeAreaInsets();
+
   const { colors } = useTheme();
   const tintColor =
-    headerTintColor != null
-      ? headerTintColor
-      : Platform.OS === 'ios'
-      ? colors.primary
-      : colors.text;
+    headerTintColor ?? (Platform.OS === 'ios' ? colors.primary : colors.text);
 
   const headerBackTitleStyleFlattened =
     StyleSheet.flatten(headerBackTitleStyle) || {};
@@ -69,22 +79,53 @@ export default function HeaderConfig({
       headerTitleStyleFlattened.fontFamily,
     ]);
 
-  const titleText = title !== undefined ? title : route.name;
+  const titleText = getHeaderTitle({ title, headerTitle }, route.name);
   const titleColor =
     headerTitleStyleFlattened.color ?? headerTintColor ?? colors.text;
+  const titleFontSize = headerTitleStyleFlattened.fontSize;
+  const titleFontWeight = headerTitleStyleFlattened.fontWeight;
 
-  const headerLeftElement = headerLeft?.({ tintColor });
-  const headerRightElement = headerRight?.({ tintColor });
+  const headerTitleStyleSupported: TextStyle = { color: titleColor };
+
+  if (headerTitleStyleFlattened.fontFamily != null) {
+    headerTitleStyleSupported.fontFamily = headerTitleStyleFlattened.fontFamily;
+  }
+
+  if (titleFontSize != null) {
+    headerTitleStyleSupported.fontSize = titleFontSize;
+  }
+
+  if (titleFontWeight != null) {
+    headerTitleStyleSupported.fontWeight = titleFontWeight;
+  }
+
+  const headerLeftElement = headerLeft?.({
+    tintColor,
+    canGoBack,
+    label: headerBackTitle,
+  });
+  const headerRightElement = headerRight?.({
+    tintColor,
+    canGoBack,
+  });
   const headerTitleElement =
     typeof headerTitle === 'function'
-      ? headerTitle({ tintColor, children: titleText })
+      ? headerTitle({
+          tintColor,
+          children: titleText,
+        })
       : null;
 
-  if (
-    Platform.OS === 'ios' &&
-    headerSearchBarOptions != null &&
-    SearchBar == null
-  ) {
+  const supportsHeaderSearchBar =
+    typeof isSearchBarAvailableForCurrentPlatform === 'boolean'
+      ? isSearchBarAvailableForCurrentPlatform
+      : // Fallback for older versions of react-native-screens
+        Platform.OS === 'ios' && SearchBar != null;
+
+  const hasHeaderSearchBar =
+    supportsHeaderSearchBar && headerSearchBarOptions != null;
+
+  if (headerSearchBarOptions != null && !supportsHeaderSearchBar) {
     throw new Error(
       `The current version of 'react-native-screens' doesn't support SearchBar in the header. Please update to the latest version to use this option.`
     );
@@ -99,98 +140,132 @@ export default function HeaderConfig({
     ? headerLeftElement != null
     : Platform.OS === 'android' && headerTitleElement != null;
 
+  const translucent =
+    headerBackground != null ||
+    headerTransparent ||
+    // When using a SearchBar or large title, the header needs to be translucent for it to work on iOS
+    ((hasHeaderSearchBar || headerLargeTitle) &&
+      Platform.OS === 'ios' &&
+      headerTransparent !== false);
+
   return (
-    <ScreenStackHeaderConfig
-      backButtonInCustomView={backButtonInCustomView}
-      backgroundColor={
-        headerStyleFlattened.backgroundColor ??
-        (headerTransparent ? 'transparent' : colors.card)
-      }
-      backTitle={headerBackTitleVisible ? headerBackTitle : ' '}
-      backTitleFontFamily={backTitleFontFamily}
-      backTitleFontSize={headerBackTitleStyleFlattened.fontSize}
-      blurEffect={headerBlurEffect}
-      color={tintColor}
-      direction={I18nManager.isRTL ? 'rtl' : 'ltr'}
-      hidden={headerShown === false}
-      hideBackButton={headerBackVisible === false}
-      hideShadow={headerShadowVisible === false}
-      largeTitle={headerLargeTitle}
-      largeTitleBackgroundColor={headerLargeStyleFlattened.backgroundColor}
-      largeTitleColor={headerLargeTitleStyleFlattened.color}
-      largeTitleFontFamily={largeTitleFontFamily}
-      largeTitleFontSize={headerLargeTitleStyleFlattened.fontSize}
-      largeTitleFontWeight={headerLargeTitleStyleFlattened.fontWeight}
-      largeTitleHideShadow={headerLargeTitleShadowVisible === false}
-      title={typeof headerTitle === 'string' ? headerTitle : titleText}
-      titleColor={titleColor}
-      titleFontFamily={titleFontFamily}
-      titleFontSize={headerTitleStyleFlattened.fontSize}
-      titleFontWeight={headerTitleStyleFlattened.fontWeight}
-      topInsetEnabled={insets.top !== 0}
-      translucent={
-        // This defaults to `true`, so we can't pass `undefined`
-        headerTransparent === true
-      }
-    >
-      {Platform.OS === 'ios' ? (
-        <>
-          {headerLeftElement != null ? (
-            <ScreenStackHeaderLeftView>
-              {headerLeftElement}
-            </ScreenStackHeaderLeftView>
-          ) : null}
-          {headerTitleElement != null ? (
-            <ScreenStackHeaderCenterView>
-              {headerTitleElement}
-            </ScreenStackHeaderCenterView>
-          ) : null}
-        </>
-      ) : (
-        <>
-          {headerLeftElement != null || typeof headerTitle === 'function' ? (
-            <ScreenStackHeaderLeftView>
-              <View style={styles.row}>
+    <>
+      {headerBackground != null ? (
+        <View
+          style={[
+            styles.background,
+            headerTransparent ? styles.translucent : null,
+            { height: headerHeight },
+          ]}
+        >
+          {headerBackground()}
+        </View>
+      ) : null}
+      <ScreenStackHeaderConfig
+        backButtonInCustomView={backButtonInCustomView}
+        backgroundColor={
+          headerStyleFlattened.backgroundColor ??
+          (headerBackground != null || headerTransparent
+            ? 'transparent'
+            : colors.card)
+        }
+        backTitle={headerBackTitleVisible ? headerBackTitle : ' '}
+        backTitleFontFamily={backTitleFontFamily}
+        backTitleFontSize={headerBackTitleStyleFlattened.fontSize}
+        blurEffect={headerBlurEffect}
+        color={tintColor}
+        direction={I18nManager.isRTL ? 'rtl' : 'ltr'}
+        disableBackButtonMenu={headerBackButtonMenuEnabled === false}
+        hidden={headerShown === false}
+        hideBackButton={headerBackVisible === false}
+        hideShadow={
+          headerShadowVisible === false ||
+          headerBackground != null ||
+          headerTransparent
+        }
+        largeTitle={headerLargeTitle}
+        largeTitleBackgroundColor={headerLargeStyleFlattened.backgroundColor}
+        largeTitleColor={headerLargeTitleStyleFlattened.color}
+        largeTitleFontFamily={largeTitleFontFamily}
+        largeTitleFontSize={headerLargeTitleStyleFlattened.fontSize}
+        largeTitleFontWeight={headerLargeTitleStyleFlattened.fontWeight}
+        largeTitleHideShadow={headerLargeTitleShadowVisible === false}
+        title={titleText}
+        titleColor={titleColor}
+        titleFontFamily={titleFontFamily}
+        titleFontSize={titleFontSize}
+        titleFontWeight={titleFontWeight}
+        topInsetEnabled={insets.top !== 0}
+        translucent={
+          // This defaults to `true`, so we can't pass `undefined`
+          translucent === true
+        }
+      >
+        {Platform.OS === 'ios' ? (
+          <>
+            {headerLeftElement != null ? (
+              <ScreenStackHeaderLeftView>
                 {headerLeftElement}
-                {headerTitleAlign !== 'center' ? (
-                  typeof headerTitle === 'function' ? (
-                    headerTitleElement
-                  ) : (
-                    <HeaderTitle tintColor={tintColor} style={headerTitleStyle}>
-                      {titleText}
-                    </HeaderTitle>
-                  )
-                ) : null}
-              </View>
-            </ScreenStackHeaderLeftView>
-          ) : null}
-          {headerTitleAlign === 'center' ? (
-            <ScreenStackHeaderCenterView>
-              {typeof headerTitle === 'function' ? (
-                headerTitleElement
-              ) : (
-                <HeaderTitle tintColor={tintColor} style={headerTitleStyle}>
-                  {titleText}
-                </HeaderTitle>
-              )}
-            </ScreenStackHeaderCenterView>
-          ) : null}
-        </>
-      )}
-      {headerBackImageSource !== undefined ? (
-        <ScreenStackHeaderBackButtonImage source={headerBackImageSource} />
-      ) : null}
-      {headerRightElement != null ? (
-        <ScreenStackHeaderRightView>
-          {headerRightElement}
-        </ScreenStackHeaderRightView>
-      ) : null}
-      {Platform.OS === 'ios' && headerSearchBarOptions != null ? (
-        <ScreenStackHeaderSearchBarView>
-          <SearchBar {...headerSearchBarOptions} />
-        </ScreenStackHeaderSearchBarView>
-      ) : null}
-    </ScreenStackHeaderConfig>
+              </ScreenStackHeaderLeftView>
+            ) : null}
+            {headerTitleElement != null ? (
+              <ScreenStackHeaderCenterView>
+                {headerTitleElement}
+              </ScreenStackHeaderCenterView>
+            ) : null}
+          </>
+        ) : (
+          <>
+            {headerLeftElement != null || typeof headerTitle === 'function' ? (
+              <ScreenStackHeaderLeftView>
+                <View style={styles.row}>
+                  {headerLeftElement}
+                  {headerTitleAlign !== 'center' ? (
+                    typeof headerTitle === 'function' ? (
+                      headerTitleElement
+                    ) : (
+                      <HeaderTitle
+                        tintColor={tintColor}
+                        style={headerTitleStyleSupported}
+                      >
+                        {titleText}
+                      </HeaderTitle>
+                    )
+                  ) : null}
+                </View>
+              </ScreenStackHeaderLeftView>
+            ) : null}
+            {headerTitleAlign === 'center' ? (
+              <ScreenStackHeaderCenterView>
+                {typeof headerTitle === 'function' ? (
+                  headerTitleElement
+                ) : (
+                  <HeaderTitle
+                    tintColor={tintColor}
+                    style={headerTitleStyleSupported}
+                  >
+                    {titleText}
+                  </HeaderTitle>
+                )}
+              </ScreenStackHeaderCenterView>
+            ) : null}
+          </>
+        )}
+        {headerBackImageSource !== undefined ? (
+          <ScreenStackHeaderBackButtonImage source={headerBackImageSource} />
+        ) : null}
+        {headerRightElement != null ? (
+          <ScreenStackHeaderRightView>
+            {headerRightElement}
+          </ScreenStackHeaderRightView>
+        ) : null}
+        {hasHeaderSearchBar ? (
+          <ScreenStackHeaderSearchBarView>
+            <SearchBar {...headerSearchBarOptions} />
+          </ScreenStackHeaderSearchBarView>
+        ) : null}
+      </ScreenStackHeaderConfig>
+    </>
   );
 }
 
@@ -198,5 +273,15 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  translucent: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1,
+  },
+  background: {
+    overflow: 'hidden',
   },
 });

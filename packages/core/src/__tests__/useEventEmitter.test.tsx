@@ -591,17 +591,17 @@ it('fires custom events added with listeners prop', () => {
         <Screen
           name="first"
           listeners={{ someSuperCoolEvent: firstCallback }}
-          component={jest.fn()}
+          component={React.Fragment}
         />
         <Screen
           name="second"
           listeners={{ someSuperCoolEvent: secondCallback }}
-          component={jest.fn()}
+          component={React.Fragment}
         />
         <Screen
           name="third"
           listeners={{ someSuperCoolEvent: thirdCallback }}
-          component={jest.fn()}
+          component={React.Fragment}
         />
       </TestNavigator>
     </BaseNavigationContainer>
@@ -668,17 +668,17 @@ it("doesn't call same listener multiple times with listeners", () => {
         <Screen
           name="first"
           listeners={{ someSuperCoolEvent: callback }}
-          component={jest.fn()}
+          component={React.Fragment}
         />
         <Screen
           name="second"
           listeners={{ someSuperCoolEvent: callback }}
-          component={jest.fn()}
+          component={React.Fragment}
         />
         <Screen
           name="third"
           listeners={{ someSuperCoolEvent: callback }}
-          component={jest.fn()}
+          component={React.Fragment}
         />
       </TestNavigator>
     </BaseNavigationContainer>
@@ -723,21 +723,21 @@ it('fires listeners when callback is provided for listeners prop', () => {
           listeners={({ route, navigation }) => ({
             someSuperCoolEvent: (e) => firstCallback(e, route, navigation),
           })}
-          component={jest.fn()}
+          component={React.Fragment}
         />
         <Screen
           name="second"
           listeners={({ route, navigation }) => ({
             someSuperCoolEvent: (e) => secondCallback(e, route, navigation),
           })}
-          component={jest.fn()}
+          component={React.Fragment}
         />
         <Screen
           name="third"
           listeners={({ route, navigation }) => ({
             someSuperCoolEvent: (e) => thirdCallback(e, route, navigation),
           })}
-          component={jest.fn()}
+          component={React.Fragment}
         />
       </TestNavigator>
     </BaseNavigationContainer>

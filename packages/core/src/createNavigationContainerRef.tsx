@@ -33,7 +33,9 @@ export default function createNavigationContainerRef<
     event: string,
     callback: (...args: any[]) => void
   ) => {
-    listeners[event] = listeners[event]?.filter((cb) => cb !== callback);
+    if (listeners[event]) {
+      listeners[event] = listeners[event].filter((cb) => cb !== callback);
+    }
   };
 
   let current: NavigationContainerRef<ParamList> | null = null;

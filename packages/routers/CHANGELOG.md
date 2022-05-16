@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@6.0.2...@react-navigation/routers@6.1.0) (2021-10-12)
+
+
+### Features
+
+* add a `navigationKey` prop to Screen and Group ([b2fa62c](https://github.com/react-navigation/react-navigation/commit/b2fa62c8ea5c5ad40a3541a7258cba62467e7a56))
+
+
+
+
+
+## [6.0.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@6.0.1...@react-navigation/routers@6.0.2) (2021-10-09)
+
+
+### Bug Fixes
+
+* properly handle history if drawer is open by default ([de2d4e4](https://github.com/react-navigation/react-navigation/commit/de2d4e4f0659fea87522b918fb09c8f07bdd0697))
+
+
+
+
+
 ## [6.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@6.0.0...@react-navigation/routers@6.0.1) (2021-08-03)
 
 

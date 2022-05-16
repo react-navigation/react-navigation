@@ -6,6 +6,8 @@ import type {
 import deepEqual from 'deep-equal';
 import * as React from 'react';
 
+import parseErrorStack from './parseErrorStack';
+
 type StackFrame = {
   lineNumber: number | null;
   column: number | null;
@@ -38,10 +40,9 @@ export default function useDevToolsBase(
   callback: (result: InitData | ActionData) => void
 ) {
   const lastStateRef = React.useRef<NavigationState | undefined>();
-  const lastActionRef =
-    React.useRef<
-      { action: NavigationAction; stack: string | undefined } | undefined
-    >();
+  const lastActionRef = React.useRef<
+    { action: NavigationAction; stack: string | undefined } | undefined
+  >();
   const callbackRef = React.useRef(callback);
   const lastResetRef = React.useRef<NavigationState | undefined>(undefined);
 
@@ -54,26 +55,9 @@ export default function useDevToolsBase(
       return undefined;
     }
 
-    const frames = stack
-      .split('\n')
+    const frames = parseErrorStack(stack)
       .slice(2)
-      .map((line): StackFrame | null => {
-        const partMatch = line.match(/^((.+)@)?(.+):(\d+):(\d+)$/);
-
-        if (!partMatch) {
-          return null;
-        }
-
-        const [, , methodName, file, lineNumber, column] = partMatch;
-
-        return {
-          methodName,
-          file,
-          lineNumber: Number(lineNumber),
-          column: Number(column),
-        };
-      })
-      .filter(Boolean) as StackFrame[];
+      .filter((frame) => frame.file !== '[native code]');
 
     const urlMatch = frames[0]?.file?.match(/^https?:\/\/.+(:\d+)?\//);
 

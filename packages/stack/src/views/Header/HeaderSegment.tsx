@@ -33,11 +33,13 @@ type Props = Omit<StackHeaderOptions, 'headerStatusBarHeight'> & {
 };
 
 export default function HeaderSegment(props: Props) {
-  const [leftLabelLayout, setLeftLabelLayout] =
-    React.useState<Layout | undefined>(undefined);
+  const [leftLabelLayout, setLeftLabelLayout] = React.useState<
+    Layout | undefined
+  >(undefined);
 
-  const [titleLayout, setTitleLayout] =
-    React.useState<Layout | undefined>(undefined);
+  const [titleLayout, setTitleLayout] = React.useState<Layout | undefined>(
+    undefined
+  );
 
   const handleTitleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
@@ -103,6 +105,7 @@ export default function HeaderSegment(props: Props) {
     headerLeft: left = onGoBack
       ? (props: HeaderBackButtonProps) => <HeaderBackButton {...props} />
       : undefined,
+    headerRight: right,
     headerBackImage,
     headerBackTitle,
     headerBackTitleVisible = Platform.OS === 'ios',
@@ -166,6 +169,14 @@ export default function HeaderSegment(props: Props) {
         })
     : undefined;
 
+  const headerRight: StackHeaderOptions['headerRight'] = right
+    ? (props) =>
+        right({
+          ...props,
+          canGoBack: Boolean(onGoBack),
+        })
+    : undefined;
+
   const headerTitle: StackHeaderOptions['headerTitle'] =
     typeof title !== 'function'
       ? (props) => <HeaderTitle {...props} onLayout={handleTitleLayout} />
@@ -178,6 +189,7 @@ export default function HeaderSegment(props: Props) {
       headerTitle={headerTitle}
       headerLeft={headerLeft}
       headerLeftLabelVisible={headerBackTitleVisible}
+      headerRight={headerRight}
       headerTitleContainerStyle={[titleStyle, headerTitleContainerStyle]}
       headerLeftContainerStyle={[leftButtonStyle, headerLeftContainerStyle]}
       headerRightContainerStyle={[rightButtonStyle, headerRightContainerStyle]}

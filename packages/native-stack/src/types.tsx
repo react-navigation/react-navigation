@@ -35,10 +35,12 @@ export type NativeStackNavigationEventMap = {
 
 export type NativeStackNavigationProp<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
+  RouteName extends keyof ParamList = string,
+  NavigatorID extends string | undefined = undefined
 > = NavigationProp<
   ParamList,
   RouteName,
+  NavigatorID,
   StackNavigationState<ParamList>,
   NativeStackNavigationOptions,
   NativeStackNavigationEventMap
@@ -47,9 +49,10 @@ export type NativeStackNavigationProp<
 
 export type NativeStackScreenProps<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
+  RouteName extends keyof ParamList = string,
+  NavigatorID extends string | undefined = undefined
 > = {
-  navigation: NativeStackNavigationProp<ParamList, RouteName>;
+  navigation: NativeStackNavigationProp<ParamList, RouteName, NavigatorID>;
   route: RouteProp<ParamList, RouteName>;
 };
 
@@ -83,6 +86,25 @@ export type NativeStackHeaderProps = {
    * Navigation prop for the header.
    */
   navigation: NativeStackNavigationProp<ParamListBase>;
+};
+
+export type HeaderButtonProps = {
+  /**
+   * Tint color for the header.
+   */
+  tintColor?: string;
+  /**
+   * Whether it's possible to navigate back in stack.
+   */
+  canGoBack: boolean;
+};
+
+export type HeaderBackButtonProps = HeaderButtonProps & {
+  /**
+   * Label text for the button. Usually the title of the previous screen.
+   * By default, this is only shown on iOS.
+   */
+  label?: string;
 };
 
 export type NativeStackNavigationOptions = {
@@ -163,6 +185,7 @@ export type NativeStackNavigationOptions = {
    *
    * For large title to collapse on scroll, the content of the screen should be wrapped in a scrollable view such as `ScrollView` or `FlatList`.
    * If the scrollable area doesn't fill the screen, the large title won't collapse on scroll.
+   * You also need to specify `contentInsetAdjustmentBehavior="automatic"` in your `ScrollView`, `FlatList` etc.
    *
    * Only supported on iOS.
    *
@@ -230,14 +253,20 @@ export type NativeStackNavigationOptions = {
    */
   headerTintColor?: string;
   /**
+   * Function which returns a React Element to render as the background of the header.
+   * This is useful for using backgrounds such as an image, a gradient, blur effect etc.
+   * You can use this with `headerTransparent` to render content underneath a translucent header.
+   */
+  headerBackground?: () => React.ReactNode;
+  /**
    * Function which returns a React Element to display on the left side of the header.
    * This replaces the back button. See `headerBackVisible` to show the back button along side left element.
    */
-  headerLeft?: (props: { tintColor?: string }) => React.ReactNode;
+  headerLeft?: (props: HeaderBackButtonProps) => React.ReactNode;
   /**
    * Function which returns a React Element to display on the right side of the header.
    */
-  headerRight?: (props: { tintColor?: string }) => React.ReactNode;
+  headerRight?: (props: HeaderButtonProps) => React.ReactNode;
   /**
    * String or a function that returns a React Element to be used by the header.
    * Defaults to screen `title` or route name.
@@ -279,11 +308,22 @@ export type NativeStackNavigationOptions = {
     }
   >;
   /**
-   * Options to render a native search bar on iOS.
+   * Options to render a native search bar.
+   * You also need to specify `contentInsetAdjustmentBehavior="automatic"` in your `ScrollView`, `FlatList` etc.
+   * If you don't have a `ScrollView`, specify `headerTransparent: false`.
+   *
+   * Only supported on iOS and Android.
+   */
+  headerSearchBarOptions?: SearchBarProps;
+  /**
+   * Boolean indicating whether to show the menu on longPress of iOS >= 14 back button. Defaults to `true`.
+   * Requires `react-native-screens` version >=3.3.0.
+   *
+   * Only supported on iOS.
    *
    * @platform ios
    */
-  headerSearchBarOptions?: SearchBarProps;
+  headerBackButtonMenuEnabled?: boolean;
   /**
    * Sets the status bar animation (similar to the `StatusBar` component).
    * Requires setting `View controller-based status bar appearance -> YES` (or removing the config) in your `Info.plist` file.
@@ -316,7 +356,26 @@ export type NativeStackNavigationOptions = {
    */
   contentStyle?: StyleProp<ViewStyle>;
   /**
+   * Whether the gesture to dismiss should use animation provided to `animation` prop. Defaults to `false`.
+   *
+   * Doesn't affect the behavior of screens presented modally.
+   *
+   * @platform ios
+   */
+  customAnimationOnGesture?: boolean;
+  /**
+   * Whether the gesture to dismiss should work on the whole screen. Using gesture to dismiss with this option results in the same
+   * transition animation as `simple_push`. This behavior can be changed by setting `customAnimationOnGesture` prop. Achieving the
+   * default iOS animation isn't possible due to platform limitations. Defaults to `false`.
+   *
+   * Doesn't affect the behavior of screens presented modally.
+   *
+   * @platform ios
+   */
+  fullScreenGestureEnabled?: boolean;
+  /**
    * Whether you can use gestures to dismiss this screen. Defaults to `true`.
+   *
    * Only supported on iOS.
    *
    * @platform ios
@@ -338,7 +397,9 @@ export type NativeStackNavigationOptions = {
    * Supported values:
    * - "default": use the platform default animation
    * - "fade": fade screen in or out
-   * - "flip": flip the screen, requires stackPresentation: "modal" (iOS only)
+   * - "flip": flip the screen, requires presentation: "modal" (iOS only)
+   * - "simple_push": use the platform default animation, but without shadow and native header transition (iOS only)
+   * - "slide_from_bottom": slide in the new screen from bottom
    * - "slide_from_right": slide in the new screen from right (Android only, uses default animation on iOS)
    * - "slide_from_left": slide in the new screen from left (Android only, uses default animation on iOS)
    * - "none": don't animate the screen

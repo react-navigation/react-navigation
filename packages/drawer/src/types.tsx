@@ -40,9 +40,7 @@ export type DrawerNavigationConfig = {
    * The new implementation based on Reanimated 2 will perform better,
    * but you need additional configuration and need to use Hermes with Flipper to debug.
    *
-   * This defaults to `true` in following cases:
-   * - Reanimated 2 is not configured
-   * - App is connected to Chrome debugger (Reanimated 2 cannot be used with Chrome debugger)
+   * This defaults to `true` if Reanimated 2 is not configured.
    *
    * Otherwise, it defaults to `false`
    */
@@ -111,6 +109,11 @@ export type DrawerNavigationOptions = HeaderOptions & {
   drawerInactiveBackgroundColor?: string;
 
   /**
+   * Whether label font should scale to respect Text Size accessibility settings.
+   */
+  drawerAllowFontScaling?: boolean;
+
+  /**
    * Style object for the single item, which can contain an icon and/or a label.
    */
   drawerItemStyle?: StyleProp<ViewStyle>;
@@ -147,6 +150,8 @@ export type DrawerNavigationOptions = HeaderOptions & {
    * - `back`: The drawer is revealed behind the screen on swipe.
    * - `slide`: Both the screen and the drawer slide on swipe to reveal the drawer.
    * - `permanent`: A permanent drawer is shown as a sidebar.
+   *
+   * Defaults to `slide` on iOS and `front` on other platforms.
    */
   drawerType?: 'front' | 'back' | 'slide' | 'permanent';
 
@@ -170,15 +175,6 @@ export type DrawerNavigationOptions = HeaderOptions & {
    * Style object for the component wrapping the screen content.
    */
   sceneContainerStyle?: StyleProp<ViewStyle>;
-
-  /**
-   * Whether you can use gestures to open or close the drawer.
-   * Setting this to `false` disables swipe gestures as well as tap on overlay to close.
-   * See `swipeEnabled` to disable only the swipe gesture.
-   * Defaults to `true`.
-   * Not supported on Web.
-   */
-  gestureEnabled?: boolean;
 
   /**
    * Props to pass to the underlying pan gesture handler.
@@ -242,7 +238,12 @@ export type DrawerHeaderProps = {
   navigation: DrawerNavigationProp<ParamListBase>;
 };
 
-export type DrawerNavigationEventMap = {};
+export type DrawerNavigationEventMap = {
+  /**
+   * Event which fires on tapping on the item in the drawer menu.
+   */
+  drawerItemPress: { data: undefined; canPreventDefault: true };
+};
 
 export type DrawerNavigationHelpers = NavigationHelpers<
   ParamListBase,
@@ -252,10 +253,12 @@ export type DrawerNavigationHelpers = NavigationHelpers<
 
 export type DrawerNavigationProp<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = keyof ParamList
+  RouteName extends keyof ParamList = keyof ParamList,
+  NavigatorID extends string | undefined = undefined
 > = NavigationProp<
   ParamList,
   RouteName,
+  NavigatorID,
   DrawerNavigationState<ParamList>,
   DrawerNavigationOptions,
   DrawerNavigationEventMap
@@ -264,9 +267,10 @@ export type DrawerNavigationProp<
 
 export type DrawerScreenProps<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = keyof ParamList
+  RouteName extends keyof ParamList = keyof ParamList,
+  NavigatorID extends string | undefined = undefined
 > = {
-  navigation: DrawerNavigationProp<ParamList, RouteName>;
+  navigation: DrawerNavigationProp<ParamList, RouteName, NavigatorID>;
   route: RouteProp<ParamList, RouteName>;
 };
 

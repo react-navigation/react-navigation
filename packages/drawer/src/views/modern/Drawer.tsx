@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  I18nManager,
   InteractionManager,
   Keyboard,
   Platform,
@@ -129,7 +130,7 @@ export default function Drawer({
     hideStatusBar(true);
   };
 
-  const onGestureEnd = () => {
+  const onGestureFinish = () => {
     endInteraction();
   };
 
@@ -210,7 +211,9 @@ export default function Drawer({
           : open;
 
       toggleDrawer(nextOpen, event.velocityX);
-      runOnJS(onGestureEnd)();
+    },
+    onFinish: () => {
+      runOnJS(onGestureFinish)();
     },
   });
 
@@ -260,30 +263,48 @@ export default function Drawer({
   });
 
   const drawerAnimatedStyle = useAnimatedStyle(() => {
+    const distanceFromEdge = dimensions.width - drawerWidth;
+
     return {
-      transform: [
-        {
-          translateX:
-            drawerType === 'permanent' || drawerType === 'back'
-              ? 0
-              : translateX.value,
-        },
-      ],
+      transform:
+        drawerType === 'permanent'
+          ? // Reanimated needs the property to be present, but it results in Browser bug
+            // https://bugs.chromium.org/p/chromium/issues/detail?id=20574
+            []
+          : [
+              {
+                translateX:
+                  // The drawer stays in place when `drawerType` is `back`
+                  (drawerType === 'back' ? 0 : translateX.value) +
+                  (drawerPosition === 'left'
+                    ? I18nManager.isRTL
+                      ? -distanceFromEdge
+                      : 0
+                    : I18nManager.isRTL
+                    ? 0
+                    : distanceFromEdge),
+              },
+            ],
     };
   });
 
   const contentAnimatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [
-        {
-          translateX:
-            drawerType === 'permanent' || drawerType === 'front'
-              ? 0
-              : drawerPosition === 'left'
-              ? drawerWidth + translateX.value
-              : translateX.value - drawerWidth,
-        },
-      ],
+      transform:
+        drawerType === 'permanent'
+          ? // Reanimated needs the property to be present, but it results in Browser bug
+            // https://bugs.chromium.org/p/chromium/issues/detail?id=20574
+            []
+          : [
+              {
+                translateX:
+                  // The screen content stays in place when `drawerType` is `front`
+                  drawerType === 'front'
+                    ? 0
+                    : translateX.value +
+                      drawerWidth * (drawerPosition === 'left' ? 1 : -1),
+              },
+            ],
     };
   });
 

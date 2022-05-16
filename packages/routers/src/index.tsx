@@ -8,6 +8,7 @@ export type {
   DrawerActionType,
   DrawerNavigationState,
   DrawerRouterOptions,
+  DrawerStatus,
 } from './DrawerRouter';
 export { DrawerActions, default as DrawerRouter } from './DrawerRouter';
 export type {

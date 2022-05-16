@@ -142,7 +142,7 @@ const getHeaderHeights = (
     const style = StyleSheet.flatten(headerStyle || {});
 
     const height =
-      typeof style.height === 'number'
+      'height' in style && typeof style.height === 'number'
         ? style.height
         : previous[curr.route.key];
 
@@ -530,7 +530,12 @@ export default class CardStack extends React.Component<Props, State> {
       if (detachPreviousScreen === false) {
         activeScreensLimit++;
       } else {
-        break;
+        // Check at least last 2 screens before stopping
+        // This will make sure that screen isn't detached when another screen is animating on top of the transparent one
+        // For example, (Opaque -> Transparent -> Opaque)
+        if (i <= scenes.length - 2) {
+          break;
+        }
       }
     }
 
@@ -609,16 +614,23 @@ export default class CardStack extends React.Component<Props, State> {
             const headerHeight =
               headerShown !== false ? headerHeights[route.key] : 0;
 
-            const { backgroundColor: headerBackgroundColor } =
-              StyleSheet.flatten(headerStyle) || {};
-
             let headerDarkContent: boolean | undefined;
 
             if (headerShown) {
               if (typeof headerTintColor === 'string') {
                 headerDarkContent = Color(headerTintColor).isDark();
-              } else if (typeof headerBackgroundColor === 'string') {
-                headerDarkContent = !Color(headerBackgroundColor).isDark();
+              } else {
+                const flattenedHeaderStyle = StyleSheet.flatten(headerStyle);
+
+                if (
+                  flattenedHeaderStyle &&
+                  'backgroundColor' in flattenedHeaderStyle &&
+                  typeof flattenedHeaderStyle.backgroundColor === 'string'
+                ) {
+                  headerDarkContent = !Color(
+                    flattenedHeaderStyle.backgroundColor
+                  ).isDark();
+                }
               }
             }
 

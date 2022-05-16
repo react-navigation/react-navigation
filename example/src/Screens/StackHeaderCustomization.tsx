@@ -164,7 +164,7 @@ export default function HeaderCustomizationScreen({ navigation }: Props) {
           headerBackground: () => (
             <HeaderBackground
               style={{
-                backgroundColor: 'transparent',
+                backgroundColor: 'blue',
                 borderBottomWidth: StyleSheet.hairlineWidth,
                 borderBottomColor: colors.border,
               }}
@@ -185,6 +185,7 @@ export default function HeaderCustomizationScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     padding: 8,
   },
   button: {

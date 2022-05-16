@@ -70,6 +70,7 @@ export default function Header(props: Props) {
     headerTitleContainerStyle: titleContainerStyle,
     headerBackgroundContainerStyle: backgroundContainerStyle,
     headerStyle: customHeaderStyle,
+    headerShadowVisible,
     headerPressColor,
     headerPressOpacity,
     headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
@@ -175,6 +176,15 @@ export default function Header(props: Props) {
     }
   }
 
+  const backgroundStyle = [
+    safeStyles,
+    headerShadowVisible === false && {
+      elevation: 0,
+      shadowOpacity: 0,
+      borderBottomWidth: 0,
+    },
+  ];
+
   const leftButton = headerLeft
     ? headerLeft({
         tintColor: headerTintColor,
@@ -210,9 +220,9 @@ export default function Header(props: Props) {
         ]}
       >
         {headerBackground ? (
-          headerBackground({ style: safeStyles })
+          headerBackground({ style: backgroundStyle })
         ) : headerTransparent ? null : (
-          <HeaderBackground style={safeStyles} />
+          <HeaderBackground style={backgroundStyle} />
         )}
       </Animated.View>
       <Animated.View

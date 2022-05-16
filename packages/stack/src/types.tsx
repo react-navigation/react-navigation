@@ -1,6 +1,7 @@
 import type {
   HeaderBackButton,
   HeaderBackButtonProps,
+  HeaderButtonProps,
   HeaderOptions,
   HeaderTitleProps,
 } from '@react-navigation/elements';
@@ -48,10 +49,12 @@ export type StackNavigationHelpers = NavigationHelpers<
 
 export type StackNavigationProp<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = keyof ParamList
+  RouteName extends keyof ParamList = keyof ParamList,
+  NavigatorID extends string | undefined = undefined
 > = NavigationProp<
   ParamList,
   RouteName,
+  NavigatorID,
   StackNavigationState<ParamList>,
   StackNavigationOptions,
   StackNavigationEventMap
@@ -60,9 +63,10 @@ export type StackNavigationProp<
 
 export type StackScreenProps<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = keyof ParamList
+  RouteName extends keyof ParamList = keyof ParamList,
+  NavigatorID extends string | undefined = undefined
 > = {
-  navigation: StackNavigationProp<ParamList, RouteName>;
+  navigation: StackNavigationProp<ParamList, RouteName, NavigatorID>;
   route: RouteProp<ParamList, RouteName>;
 };
 
@@ -122,7 +126,7 @@ export type StackPresentationMode = 'card' | 'modal';
 
 export type StackHeaderOptions = Omit<
   HeaderOptions,
-  'headerLeft' | 'headerTitle'
+  'headerLeft' | 'headerTitle' | 'headerRight'
 > & {
   /**
    * String or a function that returns a React Element to be used by the header.
@@ -136,6 +140,10 @@ export type StackHeaderOptions = Omit<
    * Function which returns a React Element to display on the left side of the header.
    */
   headerLeft?: (props: HeaderBackButtonProps) => React.ReactNode;
+  /**
+   * Function which returns a React Element to display on the right side of the header.
+   */
+  headerRight?: (props: HeaderButtonProps) => React.ReactNode;
   /**
    * Whether back button title font should scale to respect Text Size accessibility settings. Defaults to `false`.
    */

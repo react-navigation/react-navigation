@@ -1,16 +1,50 @@
 import {
+  getPathFromState,
   NavigationAction,
   NavigationContainerRefContext,
   NavigationHelpersContext,
+  NavigatorScreenParams,
+  ParamListBase,
 } from '@react-navigation/core';
+import type { NavigationState, PartialState } from '@react-navigation/routers';
 import * as React from 'react';
 import { GestureResponderEvent, Platform } from 'react-native';
 
+import LinkingContext from './LinkingContext';
 import useLinkTo, { To } from './useLinkTo';
 
 type Props<ParamList extends ReactNavigation.RootParamList> = {
   to: To<ParamList>;
   action?: NavigationAction;
+};
+
+const getStateFromParams = (
+  params: NavigatorScreenParams<ParamListBase, NavigationState> | undefined
+): PartialState<NavigationState> | NavigationState | undefined => {
+  if (params?.state) {
+    return params.state;
+  }
+
+  if (params?.screen) {
+    return {
+      routes: [
+        {
+          name: params.screen,
+          params: params.params,
+          // @ts-expect-error
+          state: params.screen
+            ? getStateFromParams(
+                params.params as
+                  | NavigatorScreenParams<ParamListBase, NavigationState>
+                  | undefined
+              )
+            : undefined,
+        },
+      ],
+    };
+  }
+
+  return undefined;
 };
 
 /**
@@ -24,6 +58,7 @@ export default function useLinkProps<
 >({ to, action }: Props<ParamList>) {
   const root = React.useContext(NavigationContainerRefContext);
   const navigation = React.useContext(NavigationHelpersContext);
+  const { options } = React.useContext(LinkingContext);
   const linkTo = useLinkTo<ParamList>();
 
   const onPress = (
@@ -63,8 +98,28 @@ export default function useLinkProps<
     }
   };
 
+  const getPathFromStateHelper = options?.getPathFromState ?? getPathFromState;
+
+  const href =
+    typeof to === 'string'
+      ? to
+      : getPathFromStateHelper(
+          {
+            routes: [
+              {
+                name: to.screen,
+                // @ts-expect-error
+                params: to.params,
+                // @ts-expect-error
+                state: getStateFromParams(to.params),
+              },
+            ],
+          },
+          options?.config
+        );
+
   return {
-    href: to,
+    href,
     accessibilityRole: 'link' as const,
     onPress,
   };
