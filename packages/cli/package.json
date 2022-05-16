@@ -12,7 +12,9 @@
     "clean": "del lib"
   },
   "dependencies": {
+    "@types/cross-spawn": "^6.0.2",
     "commander": "^6.2.0",
+    "cross-spawn": "^7.0.3",
     "enquirer": "^2.3.6",
     "node-fetch": "^2.6.1",
     "ora": "^5.4.1",

@@ -3,6 +3,7 @@ import os from 'os';
 import path from 'path';
 
 import getLogger from './logger';
+import { TextStyle } from './textStyle';
 
 const logger = getLogger();
 
@@ -21,23 +22,29 @@ const addReactNativeGestureHandlerImport = async (
   };
 
   logger.log(
-    'Checking and trying to add react-native-gesture-handler package ...'
+    `${TextStyle.stepStart}Checking and trying to add react-native-gesture-handler package ...${TextStyle.reset}`
   );
 
   for (const indexFileName of ['index.ts', 'index.js', 'App.tsx', 'App.jsx']) {
-    logger.log(`Check ${indexFileName} ...`);
+    logger.log(
+      `Check ${TextStyle.highlight}${indexFileName}${TextStyle.reset} ...`
+    );
 
     const filePath = path.resolve(rootDir, indexFileName);
     if (fs.existsSync(filePath)) {
       result.foundFile = indexFileName;
 
-      logger.log(`${indexFileName} Found!`);
+      logger.log(
+        `${TextStyle.highlight}${indexFileName} ${TextStyle.green}Found!${TextStyle.reset}`
+      );
 
       let indexFileContent = fs.readFileSync(filePath, 'utf8');
 
       if (!/import.*?react-native-gesture-handler.*/.test(indexFileContent)) {
         allowAutoImportPrompt = allowAutoImportPrompt || (() => true);
-        logger.log('No import was found!');
+        logger.log(
+          `${TextStyle.highlight}No import was found!${TextStyle.reset}`
+        );
 
         /**
          * Inverting because we inverted the enabled with disabled to make Yep go on a one move (UX)
@@ -51,18 +58,20 @@ const addReactNativeGestureHandlerImport = async (
           );
           fs.writeFileSync(filePath, indexFileContent, 'utf8');
           logger.log(
-            `${importExpression} was added successfully to ${indexFileName}`
+            `${TextStyle.highlight}${importExpression} ${TextStyle.success}was added successfully to ${TextStyle.highlight}${indexFileName}`
           );
           result.didAddImport = true;
         }
       } else {
-        logger.log('import already exists!');
+        logger.log(
+          `${TextStyle.highlight}import already exists!${TextStyle.reset}`
+        );
       }
       return result;
     }
   }
   logger.warn(
-    'No index.(js|ts) or App.(js|ts) were found! (Import not added)!'
+    `${TextStyle.failed}No index.(js|ts) or App.(js|ts) were found! (Import not added)!`
   );
   return result;
 };

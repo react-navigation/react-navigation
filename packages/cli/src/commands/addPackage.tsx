@@ -5,8 +5,10 @@ import shell from 'shelljs';
 
 import addReactNativeGestureHandlerImport from '../utils/addReactNativeGestureHandlerImport';
 import checkAndGetInstaller from '../utils/checkAndGetInstaller';
+import { exec } from '../utils/exec';
 import installPeersDependencies from '../utils/installPeersDependencies';
 import getLogger from '../utils/logger';
+import { TextStyle } from '../utils/textStyle';
 
 const logger = getLogger();
 
@@ -14,11 +16,13 @@ const installPackage = async (pack: string): Promise<any> => {
   /**
    * Fetching package meta data
    */
-  logger.log('Fetching package metadata ...');
-  const fetchMetaSpinner = ora('Fetching package metadata').start();
+  const startingFetchingText = 'Fetching package metadata';
+  const fetchMetaSpinner = ora(
+    `${TextStyle.stepStart}${startingFetchingText}`
+  ).start();
   const [packName, version = 'latest'] = pack.split('@');
 
-  let metaData;
+  let metaData: any;
 
   try {
     let response = await fetch(
@@ -34,8 +38,8 @@ const installPackage = async (pack: string): Promise<any> => {
       return;
     }
 
-    fetchMetaSpinner.succeed();
-    logger.verbose('Meta data');
+    fetchMetaSpinner.succeed(`${TextStyle.stepDone}${startingFetchingText}`);
+    logger.verbose(`${TextStyle.highlight}Meta data${TextStyle.reset}`);
     logger.verbose(metaData);
   } catch (e) {
     fetchMetaSpinner.fail(
@@ -45,7 +49,10 @@ const installPackage = async (pack: string): Promise<any> => {
     return;
   }
 
-  const getInstallerSpinner = ora('Check and determining installer').start();
+  const checkInstallerText = 'Check and determining installer';
+  const getInstallerSpinner = ora(
+    `${TextStyle.stepStart}${checkInstallerText}`
+  ).start();
 
   /**
    * Get installer after check
@@ -61,14 +68,15 @@ const installPackage = async (pack: string): Promise<any> => {
   } = checkAndGetInstaller(process.cwd());
 
   if (installer) {
-    getInstallerSpinner.succeed();
+    getInstallerSpinner.succeed(`${TextStyle.stepDone}${checkInstallerText}`);
   } else {
     getInstallerSpinner.fail();
   }
 
-  logger.verbose(`Installer: ${installer}\nrootDirectory: ${rootDirectory}`);
+  logger.verbose(
+    `Installer: ${TextStyle.highlight}${installer}\nrootDirectory: ${TextStyle.highlight}${rootDirectory}${TextStyle.reset}\n`
+  );
   logger.debug({ installer, getInstallerState, rootDirectory });
-
   /**
    * No installer
    */
@@ -89,15 +97,24 @@ const installPackage = async (pack: string): Promise<any> => {
   /**
    * Install package
    */
-  const installPackageSpinner = ora(`Install ${pack} package\n`).start();
+  logger.log(`\n`);
+  const installPackageSpinner = ora(
+    `${TextStyle.stepStart}Install ${TextStyle.highlight}${pack} ${TextStyle.stepStart}package\n`
+  ).start();
 
   const install = (command: string): void => {
-    logger.log(command);
-    const out = shell.exec(command);
-    if (out.code === 0) {
-      installPackageSpinner.succeed(`${pack} package installed successfully`);
+    logger.log(`${TextStyle.command}${command}${TextStyle.reset}`);
+    const out = exec(command);
+
+    logger.log('\n');
+    if (out.status === 0) {
+      installPackageSpinner.succeed(
+        `${TextStyle.highlight}${TextStyle.bold}${pack} ${TextStyle.stepDone}package installed successfully${TextStyle.reset}`
+      );
     } else {
-      installPackageSpinner.fail(`${pack} package installation failed`);
+      installPackageSpinner.fail(
+        `${TextStyle.highlight}${pack} ${TextStyle.failed}package installation failed\n`
+      );
     }
   };
 
@@ -125,21 +142,32 @@ const installPackage = async (pack: string): Promise<any> => {
   /**
    * Install dependencies
    */
-  const installPeersSpinner = ora('Installing peer dependencies\n').start();
+  logger.log(`\n`);
+  const installPeersSpinner = ora(
+    `${TextStyle.stepStart}Installing peer dependencies\n${TextStyle.reset}`
+  ).start();
   const out = installPeersDependencies(metaData, installer as string);
-  if (out && out.code === 0) {
-    installPeersSpinner.succeed('Peer dependencies installed successfully');
+
+  logger.log('\n');
+  if (out && out.status === 0) {
+    installPeersSpinner.succeed(
+      `${TextStyle.stepDone}Peer dependencies installed successfully${TextStyle.reset}`
+    );
   } else {
     if (out) {
       /**
        * Installation executed and failed
        */
-      installPeersSpinner.fail('Failed to install peer dependencies');
+      installPeersSpinner.fail(
+        `${TextStyle.failed}Failed to install peer dependencies${TextStyle.reset}`
+      );
     } else {
       /**
        * No peer dependencies in meta data
        */
-      installPeersSpinner.succeed('No peers dependencies in meta data');
+      installPeersSpinner.succeed(
+        `${TextStyle.stepStart}No peers dependencies in meta data${TextStyle.reset}`
+      );
     }
   }
 
@@ -149,7 +177,10 @@ const installPackage = async (pack: string): Promise<any> => {
   if (
     metaData.peerDependencies?.hasOwnProperty('react-native-gesture-handler')
   ) {
-    logger.log('Package have react-native-gesture-handler as peer dependency!');
+    logger.log(`\n`);
+    logger.log(
+      `${TextStyle.highlight}Package have react-native-gesture-handler as peer dependency!${TextStyle.reset}`
+    );
 
     const { didAddImport } = await addReactNativeGestureHandlerImport(
       rootDirectory as string,
@@ -170,7 +201,9 @@ const installPackage = async (pack: string): Promise<any> => {
     );
 
     if (!didAddImport) {
-      ora().succeed('react-native-gesture-handler import already exists');
+      ora().succeed(
+        `${TextStyle.stepDone}react-native-gesture-handler import already exists`
+      );
     }
   }
 };

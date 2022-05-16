@@ -1,14 +1,15 @@
-import shell, { ShellString } from 'shelljs';
+import type { SpawnSyncReturns } from 'child_process';
 
+import { exec } from './exec';
 import getLogger from './logger';
+import { TextStyle } from './textStyle';
 
 const logger = getLogger();
 
 const installPeersDependencies = (
   metaData: any,
   installer: string
-): ShellString | null => {
-  logger.log('Install Peers Dependencies ...');
+): SpawnSyncReturns<any> | null => {
   if (metaData.peerDependencies) {
     /**
      * construct packages string
@@ -31,17 +32,19 @@ const installPeersDependencies = (
       ''
     );
 
-    logger.log('Peers dependencies to install :');
-    logger.log('===============================');
-    logger.log(packages.split(' ').join('\n').substr(1));
-    logger.log('===============================');
+    logger.log(`\n${TextStyle.highlight}Peers dependencies to install :`);
+    logger.log(`${TextStyle.underline}===============================`);
+    logger.log(TextStyle.green + packages.split(' ').join('\n').substr(1));
+    logger.log(
+      `${TextStyle.underline}===============================${TextStyle.reset}\n`
+    );
 
     /**
      * install packages
      */
-    const install = (command: string): ShellString => {
-      logger.log(command);
-      return shell.exec(command);
+    const install = (command: string): SpawnSyncReturns<any> => {
+      logger.log(`${TextStyle.command}${command}${TextStyle.reset}`);
+      return exec(command);
     };
 
     if (['expo', 'yarn'].includes(installer)) {
