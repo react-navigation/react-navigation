@@ -41,11 +41,11 @@ const installPackage = async (pack: string): Promise<any> => {
     fetchMetaSpinner.succeed(`${TextStyle.stepDone}${startingFetchingText}`);
     logger.verbose(`${TextStyle.highlight}Meta data${TextStyle.reset}`);
     logger.verbose(metaData);
-  } catch (e) {
+  } catch (e: any) {
     fetchMetaSpinner.fail(
       'Error fetching meta data! Check the package name is right or your network!'
     );
-    console.error(e);
+    logger.error(`${TextStyle.failed}${e.message}${TextStyle.reset}`);
     return;
   }
 
