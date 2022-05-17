@@ -9,7 +9,10 @@ import type { NavigationHelpers } from './types';
 
 type Options = {
   navigation: NavigationHelpers<ParamListBase>;
-  focusedListeners: FocusedNavigationListener[];
+  focusedListeners: Map<
+    string | undefined,
+    FocusedNavigationListener | undefined
+  >;
 };
 
 /**
@@ -19,16 +22,22 @@ export default function useFocusedListenersChildrenAdapter({
   navigation,
   focusedListeners,
 }: Options) {
-  const { addListener } = React.useContext(NavigationBuilderContext);
+  const { addKeyedListener } = React.useContext(NavigationBuilderContext);
 
+  let listenerKey = 'undefined';
   const listener = React.useCallback(
     (callback: FocusedNavigationCallback<any>) => {
       if (navigation.isFocused()) {
-        for (const listener of focusedListeners) {
-          const { handled, result } = listener(callback);
+        const listenerKeys = focusedListeners.keys();
+        for (const key of listenerKeys) {
+          const listener = focusedListeners.get(key);
+          if (listener) {
+            const { handled, result } = listener(callback);
 
-          if (handled) {
-            return { handled, result };
+            if (handled) {
+              listenerKey = key ?? 'undefined';
+              return { handled, result };
+            }
           }
         }
 
@@ -41,7 +50,7 @@ export default function useFocusedListenersChildrenAdapter({
   );
 
   React.useEffect(
-    () => addListener?.('focus', listener),
-    [addListener, listener]
+    () => addKeyedListener?.('focus', listenerKey, listener),
+    [addKeyedListener, listenerKey, listener]
   );
 }

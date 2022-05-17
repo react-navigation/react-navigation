@@ -28,7 +28,6 @@ import {
   PrivateValueStore,
   RouteConfig,
 } from './types';
-import useChildListeners from './useChildListeners';
 import useComponent from './useComponent';
 import useCurrentRender from './useCurrentRender';
 import useDescriptors, { ScreenConfigWithParent } from './useDescriptors';
@@ -613,8 +612,6 @@ export default function useNavigationBuilder<
     emitter.emit({ type: 'state', data: { state } });
   }, [emitter, state]);
 
-  const { listeners: childListeners, addListener } = useChildListeners();
-
   const { keyedListeners, addKeyedListener } = useKeyedChildListeners();
 
   const onAction = useOnAction({
@@ -622,7 +619,7 @@ export default function useNavigationBuilder<
     getState,
     setState,
     key: route?.key,
-    actionListeners: childListeners.action,
+    actionListeners: keyedListeners.action,
     beforeRemoveListeners: keyedListeners.beforeRemove,
     routerConfigOptions: {
       routeNames,
@@ -654,7 +651,7 @@ export default function useNavigationBuilder<
 
   useFocusedListenersChildrenAdapter({
     navigation,
-    focusedListeners: childListeners.focus,
+    focusedListeners: keyedListeners.focus,
   });
 
   useOnGetState({
@@ -677,7 +674,6 @@ export default function useNavigationBuilder<
     getState,
     setState,
     onRouteFocus,
-    addListener,
     addKeyedListener,
     router,
     // @ts-expect-error: this should have both core and custom events, but too much work right now

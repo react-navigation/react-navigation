@@ -8,7 +8,6 @@ import * as React from 'react';
 
 import NavigationBuilderContext, {
   AddKeyedListener,
-  AddListener,
 } from './NavigationBuilderContext';
 import NavigationContext from './NavigationContext';
 import NavigationRouteContext from './NavigationRouteContext';
@@ -64,7 +63,6 @@ type Options<
   onAction: (action: NavigationAction) => boolean;
   getState: () => State;
   setState: (state: State) => void;
-  addListener: AddListener;
   addKeyedListener: AddKeyedListener;
   onRouteFocus: (key: string) => void;
   router: Router<State, NavigationAction>;
@@ -93,7 +91,6 @@ export default function useDescriptors<
   onAction,
   getState,
   setState,
-  addListener,
   addKeyedListener,
   onRouteFocus,
   router,
@@ -108,7 +105,6 @@ export default function useDescriptors<
     () => ({
       navigation,
       onAction,
-      addListener,
       addKeyedListener,
       onRouteFocus,
       onDispatchAction,
@@ -118,7 +114,6 @@ export default function useDescriptors<
     [
       navigation,
       onAction,
-      addListener,
       addKeyedListener,
       onRouteFocus,
       onDispatchAction,

@@ -25,7 +25,6 @@ import type {
   NavigationContainerRef,
 } from './types';
 import UnhandledActionContext from './UnhandledActionContext';
-import useChildListeners from './useChildListeners';
 import useEventEmitter from './useEventEmitter';
 import useKeyedChildListeners from './useKeyedChildListeners';
 import useOptionsGetters from './useOptionsGetters';
@@ -103,38 +102,35 @@ const BaseNavigationContainer = React.forwardRef(
     const isFirstMountRef = React.useRef<boolean>(true);
 
     const navigatorKeyRef = React.useRef<string | undefined>();
-
     const getKey = React.useCallback(() => navigatorKeyRef.current, []);
 
     const setKey = React.useCallback((key: string) => {
       navigatorKeyRef.current = key;
     }, []);
 
-    const { listeners, addListener } = useChildListeners();
-
     const { keyedListeners, addKeyedListener } = useKeyedChildListeners();
-
+    const focusListeners = [...keyedListeners.focus.values()];
     const dispatch = React.useCallback(
       (
         action:
           | NavigationAction
           | ((state: NavigationState) => NavigationAction)
       ) => {
-        if (listeners.focus[0] == null) {
+        if (focusListeners[0] == null) {
           console.error(NOT_INITIALIZED_ERROR);
         } else {
-          listeners.focus[0]((navigation) => navigation.dispatch(action));
+          focusListeners[0]((navigation) => navigation.dispatch(action));
         }
       },
-      [listeners.focus]
+      [keyedListeners.focus]
     );
 
     const canGoBack = React.useCallback(() => {
-      if (listeners.focus[0] == null) {
+      if (focusListeners[0] == null) {
         return false;
       }
 
-      const { result, handled } = listeners.focus[0]((navigation) =>
+      const { result, handled } = focusListeners[0]((navigation) =>
         navigation.canGoBack()
       );
 
@@ -143,16 +139,17 @@ const BaseNavigationContainer = React.forwardRef(
       } else {
         return false;
       }
-    }, [listeners.focus]);
+    }, [keyedListeners.focus]);
 
     const resetRoot = React.useCallback(
       (state?: PartialState<NavigationState> | NavigationState) => {
-        const target = state?.key ?? keyedListeners.getState.root?.().key;
+        const target =
+          state?.key ?? keyedListeners.getState.get('root')?.().key;
 
         if (target == null) {
           console.error(NOT_INITIALIZED_ERROR);
         } else {
-          listeners.focus[0]((navigation) =>
+          focusListeners[0]?.((navigation) =>
             navigation.dispatch({
               ...CommonActions.reset(state),
               target,
@@ -160,11 +157,11 @@ const BaseNavigationContainer = React.forwardRef(
           );
         }
       },
-      [keyedListeners.getState, listeners.focus]
+      [keyedListeners.getState, keyedListeners.focus]
     );
 
     const getRootState = React.useCallback(() => {
-      return keyedListeners.getState.root?.();
+      return keyedListeners.getState.get('root')?.();
     }, [keyedListeners.getState]);
 
     const getCurrentRoute = React.useCallback(() => {
@@ -201,7 +198,7 @@ const BaseNavigationContainer = React.forwardRef(
         getRootState,
         getCurrentRoute,
         getCurrentOptions,
-        isReady: () => listeners.focus[0] != null,
+        isReady: () => focusListeners[0] != null,
       }),
       [
         canGoBack,
@@ -210,7 +207,7 @@ const BaseNavigationContainer = React.forwardRef(
         getCurrentOptions,
         getCurrentRoute,
         getRootState,
-        listeners.focus,
+        keyedListeners.focus,
         resetRoot,
       ]
     );
@@ -249,13 +246,12 @@ const BaseNavigationContainer = React.forwardRef(
 
     const builderContext = React.useMemo(
       () => ({
-        addListener,
         addKeyedListener,
         onDispatchAction,
         onOptionsChange,
         stackRef,
       }),
-      [addListener, addKeyedListener, onDispatchAction, onOptionsChange]
+      [addKeyedListener, onDispatchAction, onOptionsChange]
     );
 
     const scheduleContext = React.useMemo(

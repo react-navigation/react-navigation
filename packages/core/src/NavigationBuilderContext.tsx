@@ -7,25 +7,19 @@ import * as React from 'react';
 
 import type { NavigationHelpers } from './types';
 
-export type ListenerMap = {
-  action: ChildActionListener;
-  focus: FocusedNavigationListener;
-};
+export type MapValueType<A> = A extends Map<any, infer V> ? V : never;
 
 export type KeyedListenerMap = {
-  getState: GetStateListener;
-  beforeRemove: ChildBeforeRemoveListener;
+  getState: Map<string, GetStateListener>;
+  beforeRemove: Map<string, ChildBeforeRemoveListener>;
+  action: Map<string, ChildActionListener>;
+  focus: Map<string, FocusedNavigationListener>;
 };
-
-export type AddListener = <T extends keyof ListenerMap>(
-  type: T,
-  listener: ListenerMap[T]
-) => void;
 
 export type AddKeyedListener = <T extends keyof KeyedListenerMap>(
   type: T,
   key: string,
-  listener: KeyedListenerMap[T]
+  listener: MapValueType<KeyedListenerMap[T]> | undefined
 ) => void;
 
 export type ChildActionListener = (
@@ -56,7 +50,6 @@ const NavigationBuilderContext = React.createContext<{
     action: NavigationAction,
     visitedNavigators?: Set<string>
   ) => boolean;
-  addListener?: AddListener;
   addKeyedListener?: AddKeyedListener;
   onRouteFocus?: (key: string) => void;
   onDispatchAction: (action: NavigationAction, noop: boolean) => void;
