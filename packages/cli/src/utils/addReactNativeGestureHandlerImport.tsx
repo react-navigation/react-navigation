@@ -80,7 +80,8 @@ const addReactNativeGestureHandlerImport = async (
       return result;
     }
   }
-  logger.warn(
+  logger.log('\n');
+  checkingGestureHandlerSpinner.fail(
     `${TextStyle.failed}No index.(js|ts) or App.(js|ts) were found! (Import not added)!`
   );
   return result;
