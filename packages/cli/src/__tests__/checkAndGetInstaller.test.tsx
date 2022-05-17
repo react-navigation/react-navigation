@@ -107,11 +107,11 @@ describe('Checks tests cases', () => {
     runTest('/testTmp/projectRoot');
   });
 
-  it('Package.json and package.lock (alone)', async () => {
+  it('Package.json and package-lock.json (alone)', async () => {
     mockVol.reset();
     mockVol.fromNestedJSON(
       addToProjectRoot({
-        'package.lock': '{}',
+        'package-lock.json': '{}',
         'package.json': JSON.stringify({ dependencies: { super: '^2.0.0' } }),
       }),
       '/testTmp'
@@ -131,12 +131,12 @@ describe('Checks tests cases', () => {
     runTest('/testTmp/projectRoot');
   });
 
-  it('Package.json and expo and yarn.lock and package.lock', async () => {
+  it('Package.json and expo and yarn.lock and package-lock.json', async () => {
     mockVol.reset();
     mockVol.fromNestedJSON(
       addToProjectRoot({
         'yarn.lock': '{}',
-        'package.lock': '{}',
+        'package-lock.json': '{}',
         'package.json': JSON.stringify({ dependencies: { expo: '^2.0.0' } }),
       }),
       '/testTmp'
@@ -156,12 +156,12 @@ describe('Checks tests cases', () => {
     runTest('/testTmp/projectRoot');
   });
 
-  it('Package.json and yarn.lock and package.lock', async () => {
+  it('Package.json and yarn.lock and package-lock.json', async () => {
     mockVol.reset();
     mockVol.fromNestedJSON(
       addToProjectRoot({
         'yarn.lock': '{}',
-        'package.lock': '{}',
+        'package-lock.json': '{}',
         'package.json': JSON.stringify({ dependencies: { supper: '^2.0.0' } }),
       }),
       '/testTmp'
@@ -181,7 +181,7 @@ describe('Checks tests cases', () => {
     runTest('/testTmp/projectRoot');
   });
 
-  it('Package.json and no expo, no yarn.lock, no package.lock and yarn installed', async () => {
+  it('Package.json and no expo, no yarn.lock, no package-lock.json and yarn installed', async () => {
     mockVol.reset();
     mockVol.fromNestedJSON(
       addToProjectRoot({
@@ -205,7 +205,7 @@ describe('Checks tests cases', () => {
     runTest('/testTmp/projectRoot');
   });
 
-  it('Package.json and no expo, no yarn.lock, no package.lock and yarn not installed', async () => {
+  it('Package.json and no expo, no yarn.lock, no package-lock.json and yarn not installed', async () => {
     mockVol.reset();
     mockVol.fromNestedJSON(
       addToProjectRoot({

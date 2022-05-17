@@ -74,7 +74,7 @@ function checkAndGetInstaller(dir: string): ICheckAndGetInstallerReturn {
           result.installer = result.installer || 'yarn';
         }
         // ---- npm lock -----
-        if (fs.existsSync(path.resolve(dir, 'package.lock'))) {
+        if (fs.existsSync(path.resolve(dir, 'package-lock.json'))) {
           result.state.isNpmPackageLockFound = true;
           result.installer = result.installer || 'npm';
         }
