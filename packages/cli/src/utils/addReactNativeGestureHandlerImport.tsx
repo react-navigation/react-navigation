@@ -1,4 +1,5 @@
 import fs from 'fs';
+import ora from 'ora';
 import os from 'os';
 import path from 'path';
 
@@ -20,10 +21,9 @@ const addReactNativeGestureHandlerImport = async (
     foundFile: null,
     didAddImport: false,
   };
-
-  logger.log(
-    `${TextStyle.stepStart}Checking and trying to add react-native-gesture-handler package ...${TextStyle.reset}`
-  );
+  const checkingGestureHandlerSpinner = ora(
+    `${TextStyle.stepStart}Checking and trying to add react-native-gesture-handler package ...\n${TextStyle.reset}`
+  ).start();
 
   for (const indexFileName of ['index.ts', 'index.js', 'App.tsx', 'App.jsx']) {
     logger.log(
@@ -33,6 +33,8 @@ const addReactNativeGestureHandlerImport = async (
     const filePath = path.resolve(rootDir, indexFileName);
     if (fs.existsSync(filePath)) {
       result.foundFile = indexFileName;
+
+      checkingGestureHandlerSpinner.stop();
 
       logger.log(
         `${TextStyle.highlight}${indexFileName} ${TextStyle.green}Found!${TextStyle.reset}`
@@ -60,7 +62,8 @@ const addReactNativeGestureHandlerImport = async (
             importExpression
           );
           fs.writeFileSync(filePath, indexFileContent, 'utf8');
-          logger.log(
+          logger.log('');
+          checkingGestureHandlerSpinner.succeed(
             `${TextStyle.highlight}${importExpression} ${TextStyle.success}was added successfully to ${TextStyle.highlight}${indexFileName}`
           );
           result.didAddImport = true;
@@ -68,6 +71,10 @@ const addReactNativeGestureHandlerImport = async (
       } else {
         logger.log(
           `${TextStyle.highlight}import already exists!${TextStyle.reset}`
+        );
+        logger.log('');
+        checkingGestureHandlerSpinner.succeed(
+          `${TextStyle.stepDone}react-native-gesture-handler import already exists`
         );
       }
       return result;

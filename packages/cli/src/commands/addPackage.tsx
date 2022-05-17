@@ -105,7 +105,6 @@ const installPackage = async (pack: string): Promise<any> => {
   const install = (command: string): void => {
     logger.log(`${TextStyle.command}${command}${TextStyle.reset}`);
     const out = exec(command);
-
     logger.log('\n');
     if (out.status === 0) {
       installPackageSpinner.succeed(
@@ -166,7 +165,7 @@ const installPackage = async (pack: string): Promise<any> => {
        * No peer dependencies in meta data
        */
       installPeersSpinner.succeed(
-        `${TextStyle.stepStart}No peers dependencies in meta data${TextStyle.reset}`
+        `${TextStyle.stepDone}No peers dependencies in meta data${TextStyle.reset}`
       );
     }
   }
@@ -182,7 +181,7 @@ const installPackage = async (pack: string): Promise<any> => {
       `${TextStyle.highlight}Package have react-native-gesture-handler as peer dependency!${TextStyle.reset}`
     );
 
-    const { didAddImport } = await addReactNativeGestureHandlerImport(
+    await addReactNativeGestureHandlerImport(
       rootDirectory as string,
       async () =>
         /**
@@ -199,12 +198,6 @@ const installPackage = async (pack: string): Promise<any> => {
           } as any)) as any
         ).addAutoImportValue
     );
-
-    if (!didAddImport) {
-      ora().succeed(
-        `${TextStyle.stepDone}react-native-gesture-handler import already exists`
-      );
-    }
   }
 };
 
