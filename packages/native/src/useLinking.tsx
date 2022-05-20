@@ -25,9 +25,11 @@ type HistoryRecord = {
   path: string;
 };
 
+let isNewEntriesPushed: boolean = false
+let items: HistoryRecord[] = [];
+
 const createMemoryHistory = () => {
   let index = 0;
-  let items: HistoryRecord[] = [];
 
   // Pending callbacks for `history.go(n)`
   // We might modify the callback stored if it was interrupted, so we have a ref to identify it
@@ -91,6 +93,14 @@ const createMemoryHistory = () => {
       // We don't store state object in history.state because:
       // - browsers have limits on how big it can be, and we don't control the size
       // - while not recommended, there could be non-serializable data in state
+      window.history.pushState({ id }, '', path);
+    },
+
+    unshift(newEntry: object) {
+      const { path } = newEntry
+      const id: string = nanoid();
+      index = items.length
+      items.unshift(newEntry)
       window.history.pushState({ id }, '', path);
     },
 
@@ -522,6 +532,36 @@ export default function useLinking(
 
         if (previousStateRef.current === undefined) {
           previousStateRef.current = state;
+        }
+
+        let allNewEntries: [] = []
+        //Pushing new entry in history
+        if (state.routes.length > 1 && items.length && !isNewEntriesPushed) {
+            state.routes.map((historyRoute: { state: { index: number; }; }) => {
+                    let updatedRoute = []
+                    updatedRoute.push(historyRoute)
+                    const tempState = {...state }
+                    const updatedState = {
+                        ...tempState,
+                        routes: updatedRoute,
+                        index: historyRoute.state.index
+                    }
+                    const newRoute = findFocusedRoute(updatedState);
+                    const routePath = getPathForRoute(newRoute, updatedState);
+                    if (routePath !== path) {
+                        allNewEntries.push({
+                            path: routePath,
+                            state: updatedState
+                        })
+                    }
+            })
+
+            if (!isNewEntriesPushed) {
+                allNewEntries.map(newEntry => {
+                    history.unshift(newEntry)
+                })
+                isNewEntriesPushed = true
+            }
         }
 
         history.replace({ path, state });
