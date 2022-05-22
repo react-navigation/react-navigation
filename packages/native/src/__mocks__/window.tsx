@@ -7,6 +7,9 @@ let index = 0;
 let currentState: any = null;
 
 const history = {
+  get length() {
+    return entries.length;
+  },
   get state() {
     return currentState;
   },
@@ -34,8 +37,10 @@ const history = {
         (n < 0 && Math.abs(n) <= index)
       ) {
         index += n;
-        Object.assign(location, new URL(entries[index].href));
-        listeners.forEach((cb) => cb);
+        const entry = entries[index];
+        Object.assign(location, new URL(entry.href));
+        currentState = entry.state;
+        listeners.forEach((cb) => cb());
       }
     }, 0);
   },

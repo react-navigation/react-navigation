@@ -25,7 +25,7 @@ type HistoryRecord = {
   path: string;
 };
 
-const createMemoryHistory = () => {
+export const createMemoryHistory = () => {
   let index = 0;
   let items: HistoryRecord[] = [];
 
@@ -44,6 +44,9 @@ const createMemoryHistory = () => {
   };
 
   const history = {
+    get length(): number {
+      return items.length;
+    },
     get index(): number {
       // We store an id in the state instead of an index
       // Index could get out of sync with in-memory values if page reloads
@@ -123,14 +126,25 @@ const createMemoryHistory = () => {
     go(n: number) {
       interrupt();
 
+      // To guard against unexpected navigation out of the app we will assume that browser history is only as deep as the length of our memory
+      // history. If we don't have an item to navigate to then update our index and navigate as far as we can without taking the user out of the app.
+      const nextIndex = index + n;
+      const lastItemIndex = items.length - 1;
+      if (n < 0 && !items[nextIndex]) {
+        // Attempted to navigate beyond the first index. Negating the current index will align the browser history with the first item.
+        n = -index;
+        index = 0;
+      } else if (n > 0 && nextIndex > lastItemIndex) {
+        // Attempted to navigate past the last index. Calculate how many indices away from the last index and go there.
+        n = lastItemIndex - index;
+        index = lastItemIndex;
+      } else {
+        index = nextIndex;
+      }
+
       if (n === 0) {
         return;
       }
-
-      // We shouldn't go back more than the 0 index (otherwise we'll exit the page)
-      // Or forward more than the available index (or the app will crash)
-      index =
-        n < 0 ? Math.max(index - n, 0) : Math.min(index + n, items.length - 1);
 
       // When we call `history.go`, `popstate` will fire when there's history to go back to
       // So we need to somehow handle following cases:
@@ -410,7 +424,7 @@ export default function useLinking(
         return;
       }
 
-      const path = location.pathname + location.search;
+      const path = window.location.pathname + window.location.search;
       const index = history.index;
 
       const previousIndex = previousIndexRef.current ?? 0;
