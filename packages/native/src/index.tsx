@@ -10,4 +10,5 @@ export { default as useLinkBuilder } from './useLinkBuilder';
 export { default as useLinkProps } from './useLinkProps';
 export { default as useLinkTo } from './useLinkTo';
 export { default as useScrollToTop } from './useScrollToTop';
+export { default as LinkingContext } from './LinkingContext';
 export * from '@react-navigation/core';
