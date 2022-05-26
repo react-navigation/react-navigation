@@ -123,6 +123,7 @@ function StackNavigator({
         state={state}
         descriptors={descriptors}
         navigation={navigation}
+        detachInactiveScreens={rest.detachInactiveScreens ?? false}
       />
     </NavigationContent>
   );
