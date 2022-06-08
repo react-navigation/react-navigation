@@ -650,6 +650,7 @@ export default function useNavigationBuilder<
   });
 
   useFocusedListenersChildrenAdapter({
+    key: route?.key,
     navigation,
     focusedListeners: keyedListeners.focus,
   });

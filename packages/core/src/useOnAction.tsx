@@ -20,11 +20,8 @@ type Options = {
   key?: string;
   getState: () => NavigationState;
   setState: (state: NavigationState | PartialState<NavigationState>) => void;
-  actionListeners: Map<string | undefined, ChildActionListener | undefined>;
-  beforeRemoveListeners: Map<
-    string | undefined,
-    ChildBeforeRemoveListener | undefined
-  >;
+  actionListeners: Record<string, ChildActionListener | undefined>;
+  beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>;
   routerConfigOptions: RouterConfigOptions;
   emitter: NavigationEventEmitter<EventMapCore<any>>;
 };
@@ -61,21 +58,6 @@ export default function useOnAction({
   React.useEffect(() => {
     routerConfigOptionsRef.current = routerConfigOptions;
   });
-
-  const sortKeys = React.useCallback(
-    (a, b) => {
-      const state = getState();
-      const focusedKey = state.routes[state.index].key;
-      if (a === focusedKey) {
-        return -1;
-      }
-      if (b === focusedKey) {
-        return +1;
-      }
-      return 0;
-    },
-    [getState]
-  );
 
   const onAction = React.useCallback(
     (
@@ -144,14 +126,23 @@ export default function useOnAction({
         }
       }
 
-      const actionListenerKeys = [...actionListeners.keys()]
-        .reverse()
-        .sort(sortKeys);
       // If the action wasn't handled by current navigator or a parent navigator, let children handle it
-      return actionListenerKeys.some((actionListenerKey) => {
-        const listener = actionListeners.get(actionListenerKey);
-        return !!listener?.(action, visitedNavigators);
-      });
+      const currentFocusedRouteKey = state.routes[state.index].key;
+      const orderedActionListenerKeys = [
+        currentFocusedRouteKey,
+        ...Object.keys(actionListeners)
+          .reverse()
+          .filter((listenerKey) => listenerKey !== currentFocusedRouteKey),
+      ];
+
+      for (const listenerKey of orderedActionListenerKeys) {
+        const listener = actionListeners[listenerKey];
+        if (listener?.(action, visitedNavigators)) {
+          return true;
+        }
+      }
+
+      return false;
     },
     [
       actionListeners,
@@ -164,7 +155,6 @@ export default function useOnAction({
       onRouteFocusParent,
       router,
       setState,
-      sortKeys,
     ]
   );
 
@@ -175,8 +165,8 @@ export default function useOnAction({
   });
 
   React.useEffect(
-    () => addListenerParent?.('action', key ?? 'undefined', onAction),
-    [addListenerParent, key, onAction]
+    () => addListenerParent?.('action', key ?? 'root', onAction),
+    [addListenerParent, onAction, key]
   );
 
   return onAction;

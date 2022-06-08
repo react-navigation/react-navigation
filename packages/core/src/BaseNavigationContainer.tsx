@@ -14,7 +14,9 @@ import checkSerializable from './checkSerializable';
 import { NOT_INITIALIZED_ERROR } from './createNavigationContainerRef';
 import EnsureSingleNavigator from './EnsureSingleNavigator';
 import findFocusedRoute from './findFocusedRoute';
-import NavigationBuilderContext from './NavigationBuilderContext';
+import NavigationBuilderContext, {
+  FocusedNavigationListener,
+} from './NavigationBuilderContext';
 import NavigationContainerRefContext from './NavigationContainerRefContext';
 import NavigationContext from './NavigationContext';
 import NavigationRouteContext from './NavigationRouteContext';
@@ -67,6 +69,18 @@ const getPartialState = (
 };
 
 /**
+ * Retrieves the first focus listener.
+ * @param keyedFocusListeners Keyed focus listeners.
+ */
+const getFirstFocusListener = (keyedFocusListeners: {
+  [key: string]: FocusedNavigationListener | undefined;
+}): FocusedNavigationListener | undefined => {
+  return Object.values(keyedFocusListeners).filter(
+    (listener) => listener !== undefined
+  )[0];
+};
+
+/**
  * Container component which holds the navigation state.
  * This should be rendered at the root wrapping the whole app.
  *
@@ -102,6 +116,7 @@ const BaseNavigationContainer = React.forwardRef(
     const isFirstMountRef = React.useRef<boolean>(true);
 
     const navigatorKeyRef = React.useRef<string | undefined>();
+
     const getKey = React.useCallback(() => navigatorKeyRef.current, []);
 
     const setKey = React.useCallback((key: string) => {
@@ -109,28 +124,30 @@ const BaseNavigationContainer = React.forwardRef(
     }, []);
 
     const { keyedListeners, addKeyedListener } = useKeyedChildListeners();
-    const focusListeners = [...keyedListeners.focus.values()];
+
     const dispatch = React.useCallback(
       (
         action:
           | NavigationAction
           | ((state: NavigationState) => NavigationAction)
       ) => {
-        if (focusListeners[0] == null) {
+        const firstFocusListener = getFirstFocusListener(keyedListeners.focus);
+        if (firstFocusListener == null) {
           console.error(NOT_INITIALIZED_ERROR);
         } else {
-          focusListeners[0]((navigation) => navigation.dispatch(action));
+          firstFocusListener((navigation) => navigation.dispatch(action));
         }
       },
       [keyedListeners.focus]
     );
 
     const canGoBack = React.useCallback(() => {
-      if (focusListeners[0] == null) {
+      const firstFocusListener = getFirstFocusListener(keyedListeners.focus);
+      if (firstFocusListener == null) {
         return false;
       }
 
-      const { result, handled } = focusListeners[0]((navigation) =>
+      const { result, handled } = firstFocusListener((navigation) =>
         navigation.canGoBack()
       );
 
@@ -143,13 +160,15 @@ const BaseNavigationContainer = React.forwardRef(
 
     const resetRoot = React.useCallback(
       (state?: PartialState<NavigationState> | NavigationState) => {
-        const target =
-          state?.key ?? keyedListeners.getState.get('root')?.().key;
+        const target = state?.key ?? keyedListeners.getState.root?.().key;
 
         if (target == null) {
           console.error(NOT_INITIALIZED_ERROR);
         } else {
-          focusListeners[0]?.((navigation) =>
+          const firstFocusListener = getFirstFocusListener(
+            keyedListeners.focus
+          );
+          firstFocusListener?.((navigation) =>
             navigation.dispatch({
               ...CommonActions.reset(state),
               target,
@@ -161,7 +180,7 @@ const BaseNavigationContainer = React.forwardRef(
     );
 
     const getRootState = React.useCallback(() => {
-      return keyedListeners.getState.get('root')?.();
+      return keyedListeners.getState.root?.();
     }, [keyedListeners.getState]);
 
     const getCurrentRoute = React.useCallback(() => {
@@ -198,7 +217,7 @@ const BaseNavigationContainer = React.forwardRef(
         getRootState,
         getCurrentRoute,
         getCurrentOptions,
-        isReady: () => focusListeners[0] != null,
+        isReady: () => getFirstFocusListener(keyedListeners.focus) != null,
       }),
       [
         canGoBack,

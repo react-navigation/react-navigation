@@ -1,39 +1,34 @@
 import * as React from 'react';
 
-import type {
-  KeyedListenerMap,
-  MapValueType,
-} from './NavigationBuilderContext';
-
-type KeyedChildListeners = {
-  [ListenerType in keyof KeyedListenerMap]: Map<
-    string | undefined,
-    MapValueType<KeyedListenerMap[ListenerType]> | undefined
-  >;
-};
+import type { KeyedListenerMap } from './NavigationBuilderContext';
 
 /**
- * Hook which lets child navigators add getters to be called for obtaining rehydrated state.
+ * Hook which lets child navigators add action listener, focus listener,
+ * beforeRemove listener, and getters to be called for obtaining rehydrated state.
  */
 export default function useKeyedChildListeners() {
-  const { current: keyedListeners } = React.useRef<KeyedChildListeners>({
-    getState: new Map(),
-    beforeRemove: new Map(),
-    action: new Map(),
-    focus: new Map(),
+  const { current: keyedListeners } = React.useRef<{
+    [K in keyof KeyedListenerMap]: Record<
+      string,
+      KeyedListenerMap[K] | undefined
+    >;
+  }>({
+    action: {},
+    focus: {},
+    getState: {},
+    beforeRemove: {},
   });
 
   const addKeyedListener = React.useCallback(
-    <ListenerType extends keyof KeyedChildListeners>(
-      type: ListenerType,
-      key: string | undefined,
-      listener: MapValueType<KeyedListenerMap[ListenerType]> | undefined
+    <T extends keyof KeyedListenerMap>(
+      type: T,
+      key: string,
+      listener: KeyedListenerMap[T]
     ) => {
-      const keyToSet = key !== undefined ? key : 'undefined';
-      keyedListeners[type].set(keyToSet, listener as any);
+      keyedListeners[type][key] = listener;
 
       return () => {
-        keyedListeners[type].set(keyToSet, undefined);
+        keyedListeners[type][key] = undefined;
       };
     },
     [keyedListeners]

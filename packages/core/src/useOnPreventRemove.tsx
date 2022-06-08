@@ -14,20 +14,14 @@ import type { NavigationEventEmitter } from './useEventEmitter';
 type Options = {
   getState: () => NavigationState;
   emitter: NavigationEventEmitter<EventMapCore<any>>;
-  beforeRemoveListeners: Map<
-    string | undefined,
-    ChildBeforeRemoveListener | undefined
-  >;
+  beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>;
 };
 
 const VISITED_ROUTE_KEYS = Symbol('VISITED_ROUTE_KEYS');
 
 export const shouldPreventRemove = (
   emitter: NavigationEventEmitter<EventMapCore<any>>,
-  beforeRemoveListeners: Map<
-    string | undefined,
-    ChildBeforeRemoveListener | undefined
-  >,
+  beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>,
   currentRoutes: { key: string }[],
   nextRoutes: { key?: string | undefined }[],
   action: NavigationAction
@@ -55,9 +49,7 @@ export const shouldPreventRemove = (
     }
 
     // First, we need to check if any child screens want to prevent it
-    const isPrevented = beforeRemoveListeners.get(route.key)?.(
-      beforeRemoveAction
-    );
+    const isPrevented = beforeRemoveListeners[route.key]?.(beforeRemoveAction);
 
     if (isPrevented) {
       return true;

@@ -7,19 +7,17 @@ import * as React from 'react';
 
 import type { NavigationHelpers } from './types';
 
-export type MapValueType<A> = A extends Map<any, infer V> ? V : never;
-
 export type KeyedListenerMap = {
-  getState: Map<string, GetStateListener>;
-  beforeRemove: Map<string, ChildBeforeRemoveListener>;
-  action: Map<string, ChildActionListener>;
-  focus: Map<string, FocusedNavigationListener>;
+  action: ChildActionListener;
+  focus: FocusedNavigationListener;
+  getState: GetStateListener;
+  beforeRemove: ChildBeforeRemoveListener;
 };
 
 export type AddKeyedListener = <T extends keyof KeyedListenerMap>(
   type: T,
   key: string,
-  listener: MapValueType<KeyedListenerMap[T]> | undefined
+  listener: KeyedListenerMap[T]
 ) => void;
 
 export type ChildActionListener = (
