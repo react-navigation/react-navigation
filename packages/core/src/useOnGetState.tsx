@@ -9,7 +9,7 @@ import NavigationRouteContext from './NavigationRouteContext';
 
 type Options = {
   getState: () => NavigationState;
-  getStateListeners: Record<string, GetStateListener | undefined>;
+  getStateListeners: Map<string, GetStateListener | undefined>;
 };
 
 export default function useOnGetState({
@@ -25,7 +25,7 @@ export default function useOnGetState({
 
     // Avoid returning new route objects if we don't need to
     const routes = state.routes.map((route) => {
-      const childState = getStateListeners[route.key]?.();
+      const childState = getStateListeners.get(route.key)?.();
 
       if (route.state === childState) {
         return route;

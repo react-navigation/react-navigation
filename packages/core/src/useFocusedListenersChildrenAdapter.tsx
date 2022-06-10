@@ -9,7 +9,7 @@ import type { NavigationHelpers } from './types';
 
 type Options = {
   navigation: NavigationHelpers<ParamListBase>;
-  focusedListeners: Record<string, FocusedNavigationListener | undefined>;
+  focusedListeners: Map<string, FocusedNavigationListener | undefined>;
   key?: string;
 };
 
@@ -26,7 +26,7 @@ export default function useFocusedListenersChildrenAdapter({
   const listener = React.useCallback(
     (callback: FocusedNavigationCallback<any>) => {
       if (navigation.isFocused()) {
-        for (const listener of Object.values(focusedListeners)) {
+        for (const listener of focusedListeners.values()) {
           if (listener) {
             const { handled, result } = listener(callback);
             if (handled) {

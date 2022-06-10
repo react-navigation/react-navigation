@@ -20,8 +20,8 @@ type Options = {
   key?: string;
   getState: () => NavigationState;
   setState: (state: NavigationState | PartialState<NavigationState>) => void;
-  actionListeners: Record<string, ChildActionListener | undefined>;
-  beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>;
+  actionListeners: Map<string, ChildActionListener | undefined>;
+  beforeRemoveListeners: Map<string, ChildBeforeRemoveListener | undefined>;
   routerConfigOptions: RouterConfigOptions;
   emitter: NavigationEventEmitter<EventMapCore<any>>;
 };
@@ -130,13 +130,13 @@ export default function useOnAction({
       const currentFocusedRouteKey = state.routes[state.index].key;
       const orderedActionListenerKeys = [
         currentFocusedRouteKey,
-        ...Object.keys(actionListeners)
+        ...Array.from(actionListeners.keys())
           .reverse()
           .filter((listenerKey) => listenerKey !== currentFocusedRouteKey),
       ];
 
       for (const listenerKey of orderedActionListenerKeys) {
-        const listener = actionListeners[listenerKey];
+        const listener = actionListeners.get(listenerKey);
         if (listener?.(action, visitedNavigators)) {
           return true;
         }

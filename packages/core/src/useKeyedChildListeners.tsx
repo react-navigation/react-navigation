@@ -8,15 +8,12 @@ import type { KeyedListenerMap } from './NavigationBuilderContext';
  */
 export default function useKeyedChildListeners() {
   const { current: keyedListeners } = React.useRef<{
-    [K in keyof KeyedListenerMap]: Record<
-      string,
-      KeyedListenerMap[K] | undefined
-    >;
+    [K in keyof KeyedListenerMap]: Map<string, KeyedListenerMap[K] | undefined>;
   }>({
-    action: {},
-    focus: {},
-    getState: {},
-    beforeRemove: {},
+    action: new Map(),
+    focus: new Map(),
+    getState: new Map(),
+    beforeRemove: new Map(),
   });
 
   const addKeyedListener = React.useCallback(
@@ -25,10 +22,11 @@ export default function useKeyedChildListeners() {
       key: string,
       listener: KeyedListenerMap[T]
     ) => {
-      keyedListeners[type][key] = listener;
+      //@ts-expect-error listener should be correct type according to `type`
+      keyedListeners[type].set(key, listener);
 
       return () => {
-        keyedListeners[type][key] = undefined;
+        keyedListeners[type].set(key, undefined);
       };
     },
     [keyedListeners]

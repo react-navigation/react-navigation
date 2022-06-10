@@ -72,10 +72,10 @@ const getPartialState = (
  * Retrieves the first focus listener.
  * @param keyedFocusListeners Keyed focus listeners.
  */
-const getFirstFocusListener = (keyedFocusListeners: {
-  [key: string]: FocusedNavigationListener | undefined;
-}): FocusedNavigationListener | undefined => {
-  return Object.values(keyedFocusListeners).filter(
+const getFirstFocusListener = (
+  keyedFocusListeners: Map<string, FocusedNavigationListener | undefined>
+): FocusedNavigationListener | undefined => {
+  return Array.from(keyedFocusListeners.values()).filter(
     (listener) => listener !== undefined
   )[0];
 };
@@ -160,7 +160,8 @@ const BaseNavigationContainer = React.forwardRef(
 
     const resetRoot = React.useCallback(
       (state?: PartialState<NavigationState> | NavigationState) => {
-        const target = state?.key ?? keyedListeners.getState.root?.().key;
+        const target =
+          state?.key ?? keyedListeners.getState.get('root')?.().key;
 
         if (target == null) {
           console.error(NOT_INITIALIZED_ERROR);
@@ -180,7 +181,7 @@ const BaseNavigationContainer = React.forwardRef(
     );
 
     const getRootState = React.useCallback(() => {
-      return keyedListeners.getState.root?.();
+      return keyedListeners.getState.get('root')?.();
     }, [keyedListeners.getState]);
 
     const getCurrentRoute = React.useCallback(() => {
