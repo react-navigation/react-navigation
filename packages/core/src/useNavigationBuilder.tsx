@@ -77,7 +77,7 @@ const getRouteConfigsFromChildren = <
     ScreenConfigWithParent<State, ScreenOptions, EventMap>[]
   >((acc, child) => {
     if (React.isValidElement(child)) {
-      if (child.type === Screen) {
+      if (child.type === Screen || (child.type as any)?.displayName === 'Screen') {
         // We can only extract the config from `Screen` elements
         // If something else was rendered, it's probably a bug
 
