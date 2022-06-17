@@ -7,6 +7,8 @@ import Animated, {
 
 const PROGRESS_EPSILON = 0.05;
 
+Animated.addWhitelistedNativeProps({ importantForAccessibility: true });
+
 type Props = React.ComponentProps<typeof Animated.View> & {
   progress: Animated.SharedValue<number>;
   onPress: () => void;
