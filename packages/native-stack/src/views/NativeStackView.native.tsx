@@ -161,7 +161,7 @@ const SceneView = ({
 
   // Modals are fullscreen in landscape only on iPhone
   const isIPhone =
-    Platform.OS === 'ios' && !(Platform.isPad && Platform.isTVOS);
+    Platform.OS === 'ios' && !(Platform.isPad || Platform.isTVOS);
   const isLandscape = frame.width > frame.height;
 
   const topInset = isModal || (isIPhone && isLandscape) ? 0 : insets.top;
