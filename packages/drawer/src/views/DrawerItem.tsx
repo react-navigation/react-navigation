@@ -88,6 +88,8 @@ const LinkPressable = ({
   style,
   onPress,
   onLongPress,
+  onPressIn,
+  onPressOut,
   to,
   accessibilityRole,
   ...rest
@@ -115,7 +117,11 @@ const LinkPressable = ({
             onPress?.(e);
           }
         }}
+        // types for PressableProps and TextProps are incompatible with each other by `null` so we
+        // can't use {...rest} for these 3 props
         onLongPress={onLongPress ?? undefined}
+        onPressIn={onPressIn ?? undefined}
+        onPressOut={onPressOut ?? undefined}
       >
         {children}
       </Link>
