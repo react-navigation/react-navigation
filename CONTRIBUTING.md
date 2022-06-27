@@ -45,24 +45,22 @@ Remember to add tests for your change if possible. Run the unit tests by:
 yarn test
 ```
 
-Running the e2e tests with Detox (on iOS) requires the following:
-
-- Mac with macOS (at least macOS High Sierra 10.13.6)
-- Xcode 10.1+ with Xcode command line tools
-
-First you need to install `applesimutils` and `detox-cli`:
+Running the e2e tests with Playwright requires building the [example app](/example/) for web:
 
 ```sh
-brew tap wix/brew
-brew install applesimutils
-yarn global add detox-cli
+yarn example expo build:web --no-pwa
 ```
 
-Then you can build and run the tests:
+Before running tests configure Playwright with:
 
 ```sh
-detox build -c ios.sim.debug
-detox test -c ios.sim.debug
+yarn playwright install
+```
+
+Run the e2e tests by:
+
+```sh
+yarn example test:e2e
 ```
 
 ### Commit message convention
