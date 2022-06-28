@@ -47,7 +47,7 @@
   "devDependencies": {
     "@react-navigation/native": "^6.0.10",
     "@testing-library/react-native": "^7.2.0",
-    "@types/react": "^17.0.21",
+    "@types/react": "^17.0.47",
     "@types/react-native": "~0.68.1",
     "del-cli": "^3.0.1",
     "react": "17.0.2",
