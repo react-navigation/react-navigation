@@ -17,10 +17,14 @@ export default function useChildListeners() {
     <T extends keyof ListenerMap>(type: T, listener: ListenerMap[T]) => {
       listeners[type].push(listener);
 
+      let removed = false;
       return () => {
         const index = listeners[type].indexOf(listener);
 
-        listeners[type].splice(index, 1);
+        if (!removed && index > -1) {
+          removed = true;
+          listeners[type].splice(index, 1);
+        }
       };
     },
     [listeners]
