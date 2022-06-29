@@ -21,7 +21,7 @@ export default function useChildListeners() {
       return () => {
         const index = listeners[type].indexOf(listener);
 
-        if (!removed) {
+        if (!removed && index > -1) {
           removed = true;
           listeners[type].splice(index, 1);
         }

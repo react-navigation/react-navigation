@@ -35,7 +35,9 @@ export default function useEventEmitter<T extends Record<string, any>>(
 
       const index = callbacks.indexOf(callback);
 
-      callbacks.splice(index, 1);
+      if (index > -1) {
+        callbacks.splice(index, 1);
+      }
     };
 
     const addListener = (type: string, callback: (data: any) => void) => {
