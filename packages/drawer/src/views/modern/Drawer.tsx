@@ -377,7 +377,7 @@ export default function Drawer({
 
 const styles = StyleSheet.create({
   container: {
-    top: 0,
+    top: 56,
     bottom: 0,
     maxWidth: '100%',
     width: DEFAULT_DRAWER_WIDTH,
