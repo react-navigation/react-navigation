@@ -24,7 +24,6 @@ export default function useEventEmitter<T extends Record<string, any>>(
   const listeners = React.useRef<Record<string, Record<string, Listeners>>>({});
 
   const create = React.useCallback((target: string) => {
-    let removed = false;
     const removeListener = (type: string, callback: (data: any) => void) => {
       const callbacks = listeners.current[type]
         ? listeners.current[type][target]
@@ -36,10 +35,7 @@ export default function useEventEmitter<T extends Record<string, any>>(
 
       const index = callbacks.indexOf(callback);
 
-      if (!removed || index !== -1) {
-        removed = true;
-        callbacks.splice(index, 1);
-      }
+      callbacks.splice(index, 1);
     };
 
     const addListener = (type: string, callback: (data: any) => void) => {
@@ -47,7 +43,14 @@ export default function useEventEmitter<T extends Record<string, any>>(
       listeners.current[type][target] = listeners.current[type][target] || [];
       listeners.current[type][target].push(callback);
 
-      return () => removeListener(type, callback);
+      let removed = false;
+      return () => {
+        // Prevent removing other listeners when unsubscribing same listener multiple times
+        if (!removed) {
+          removed = true;
+          removeListener(type, callback);
+        }
+      };
     };
 
     return {
