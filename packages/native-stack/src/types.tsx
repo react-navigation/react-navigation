@@ -329,7 +329,7 @@ export type NativeStackNavigationOptions = {
    *
    * @platform ios
    */
-  homeIndicatorHidden?: boolean;
+  autoHideHomeIndicator?: boolean;
   /**
    * Sets the navigation bar color. Defaults to initial status bar color.
    *
