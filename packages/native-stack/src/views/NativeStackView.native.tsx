@@ -216,7 +216,7 @@ const SceneView = ({
             false
           : gestureEnabled
       }
-      homeIndicatorHidden={homeIndicatorHidden}
+      homeIndicatorHidden={autoHideHomeIndicator}
       navigationBarColor={navigationBarColor}
       navigationBarHidden={navigationBarHidden}
       replaceAnimation={animationTypeForReplace}
