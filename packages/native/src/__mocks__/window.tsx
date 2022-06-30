@@ -7,9 +7,6 @@ let index = 0;
 let currentState: any = null;
 
 const history = {
-  get length() {
-    return entries.length;
-  },
   get state() {
     return currentState;
   },
@@ -40,7 +37,7 @@ const history = {
         const entry = entries[index];
         Object.assign(location, new URL(entry.href));
         currentState = entry.state;
-        listeners.forEach((cb) => cb());
+        listeners.forEach((cb) => cb);
       }
     }, 0);
   },
