@@ -3,8 +3,7 @@ import type { NavigationState } from '@react-navigation/core';
 import window from '../__mocks__/window';
 import createMemoryHistory from '../createMemoryHistory';
 
-// @ts-expect-error: practically window is same as global, so we can ignore the error
-global.window = window;
+Object.assign(global, window);
 
 // eslint-disable-next-line import/extensions
 jest.mock('../useLinking', () => require('../useLinking.tsx'));
