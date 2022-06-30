@@ -133,7 +133,7 @@ const SceneView = ({
     gestureEnabled,
     header,
     headerShown,
-    homeIndicatorHidden,
+    autoHideHomeIndicator,
     navigationBarColor,
     navigationBarHidden,
     orientation,
