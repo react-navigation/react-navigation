@@ -68,13 +68,13 @@ it('will not attempt to navigate beyond whatever browser history it is possible 
   history.push({ path: '/route-two', state: mockStateTwo });
   expect(history.index).toBe(1);
 
-  // When we navigate back then our memory history should still have a length of 2, but our index will have updated
+  // When we navigate back our index should be updated
   history.go(-1);
   jest.runAllTimers();
   expect(windowGoSpy).toHaveBeenCalledTimes(1);
   expect(history.index).toBe(0);
 
-  // When we navigate forward once then we should only see our index change
+  // When we navigate forward once then we should see our index change
   history.go(1);
   jest.runAllTimers();
   expect(windowGoSpy).toHaveBeenCalledTimes(2);
