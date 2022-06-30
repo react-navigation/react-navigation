@@ -35,7 +35,9 @@ export default function useEventEmitter<T extends Record<string, any>>(
 
       const index = callbacks.indexOf(callback);
 
-      callbacks.splice(index, 1);
+      if (index > -1) {
+        callbacks.splice(index, 1);
+      }
     };
 
     const addListener = (type: string, callback: (data: any) => void) => {
@@ -43,7 +45,14 @@ export default function useEventEmitter<T extends Record<string, any>>(
       listeners.current[type][target] = listeners.current[type][target] || [];
       listeners.current[type][target].push(callback);
 
-      return () => removeListener(type, callback);
+      let removed = false;
+      return () => {
+        // Prevent removing other listeners when unsubscribing same listener multiple times
+        if (!removed) {
+          removed = true;
+          removeListener(type, callback);
+        }
+      };
     };
 
     return {

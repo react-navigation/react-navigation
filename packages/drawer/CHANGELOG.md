@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.4.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.4.1...@react-navigation/drawer@6.4.2) (2022-06-23)
+
+
+### Bug Fixes
+
+* detach drawer open/close from animation ([#10647](https://github.com/react-navigation/react-navigation/issues/10647)) ([68a4e53](https://github.com/react-navigation/react-navigation/commit/68a4e53a6c16b6a0f627270fe082d9f72f83539d)), closes [#10504](https://github.com/react-navigation/react-navigation/issues/10504) [#10410](https://github.com/react-navigation/react-navigation/issues/10410)
+
+
+
+
+
 ## [6.4.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.4.0...@react-navigation/drawer@6.4.1) (2022-04-01)
 
 **Note:** Version bump only for package @react-navigation/drawer

@@ -155,25 +155,21 @@ export default function Drawer({
 
       touchStartX.value = 0;
       touchX.value = 0;
-      translationX.value = withSpring(
-        translateX,
-        {
-          velocity,
-          stiffness: 1000,
-          damping: 500,
-          mass: 3,
-          overshootClamping: true,
-          restDisplacementThreshold: 0.01,
-          restSpeedThreshold: 0.01,
-        },
-        () => {
-          if (translationX.value === getDrawerTranslationX(true)) {
-            runOnJS(onOpen)();
-          } else if (translationX.value === getDrawerTranslationX(false)) {
-            runOnJS(onClose)();
-          }
-        }
-      );
+      translationX.value = withSpring(translateX, {
+        velocity,
+        stiffness: 1000,
+        damping: 500,
+        mass: 3,
+        overshootClamping: true,
+        restDisplacementThreshold: 0.01,
+        restSpeedThreshold: 0.01,
+      });
+
+      if (open) {
+        runOnJS(onOpen)();
+      } else {
+        runOnJS(onClose)();
+      }
     },
     [getDrawerTranslationX, onClose, onOpen, touchStartX, touchX, translationX]
   );
