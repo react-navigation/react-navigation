@@ -142,20 +142,24 @@ const SceneView = ({
     statusBarStyle,
     statusBarTranslucent,
     statusBarColor,
-    gestureDirection = 'horizontal',
   } = options;
 
   let {
     animation,
     customAnimationOnGesture,
     fullScreenGestureEnabled,
+    gestureDirection,
     presentation = 'card',
   } = options;
 
+  if (gestureDirection === undefined) {
+    gestureDirection = presentation === 'card' ? 'horizontal' : 'vertical';
+  }
+
   if (gestureDirection === 'vertical') {
-    // for `vertical` direction to work, we need to set `fullScreenSwipeEnabled` to `true`
+    // for `vertical` direction to work, we need to set `fullScreenGestureEnabled` to `true`
     // so the screen can be dismissed from any point on screen.
-    // `customAnimationOnGesture` needs to be set to `true` so the `stackAnimation` set by user can be used,
+    // `customAnimationOnGesture` needs to be set to `true` so the `animation` set by user can be used,
     // otherwise `simple_push` will be used.
     // Also, the default animation for this direction seems to be `slide_from_bottom`.
     if (fullScreenGestureEnabled === undefined) {
