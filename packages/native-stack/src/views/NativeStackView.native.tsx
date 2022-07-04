@@ -154,7 +154,7 @@ const SceneView = ({
     gestureDirection = presentation === 'card' ? 'horizontal' : 'vertical',
   } = options;
 
-  if (gestureDirection === 'vertical') {
+  if (gestureDirection === 'vertical' && Platform.OS === 'ios') {
     // for `vertical` direction to work, we need to set `fullScreenGestureEnabled` to `true`
     // so the screen can be dismissed from any point on screen.
     // `customAnimationOnGesture` needs to be set to `true` so the `animation` set by user can be used,
