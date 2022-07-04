@@ -115,6 +115,7 @@ type SceneViewProps = {
   onAppear: () => void;
   onDisappear: () => void;
   onDismissed: ScreenProps['onDismissed'];
+  gestureDirectionOverride?: ScreenProps['swipeDirection'];
 };
 
 const SceneView = ({
@@ -125,6 +126,7 @@ const SceneView = ({
   onAppear,
   onDisappear,
   onDismissed,
+  gestureDirectionOverride,
 }: SceneViewProps) => {
   const { route, navigation, options, render } = descriptor;
   const {
@@ -228,7 +230,7 @@ const SceneView = ({
       statusBarStyle={statusBarStyle}
       statusBarColor={statusBarColor}
       statusBarTranslucent={statusBarTranslucent}
-      swipeDirection={gestureDirection}
+      swipeDirection={gestureDirectionOverride ?? gestureDirection}
       transitionDuration={animationDuration}
       onWillDisappear={onWillDisappear}
       onAppear={onAppear}
@@ -324,16 +326,19 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
       {state.routes.map((route, index) => {
         const descriptor = descriptors[route.key];
         const previousKey = state.routes[index - 1]?.key;
+        const nextKey = state.routes[index + 1]?.key;
         const previousDescriptor = previousKey
           ? descriptors[previousKey]
           : undefined;
+        const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
 
         // workaround for rn-screens where gestureDirection has to be set on both
         // current and previous screen - software-mansion/react-native-screens/pull/1509
-        const { gestureDirection } = descriptor.options;
-        if (gestureDirection && previousDescriptor) {
-          previousDescriptor.options.gestureDirection = gestureDirection;
-        }
+        const nextGestureDirection = nextDescriptor?.options.gestureDirection;
+        const gestureDirection =
+          nextGestureDirection != null
+            ? nextGestureDirection
+            : descriptor.options.gestureDirection;
 
         return (
           <SceneView
@@ -371,6 +376,7 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
 
               setNextDismissedKey(route.key);
             }}
+            gestureDirectionOverride={gestureDirection}
           />
         );
       })}
