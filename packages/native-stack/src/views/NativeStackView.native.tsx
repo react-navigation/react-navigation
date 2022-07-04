@@ -148,13 +148,9 @@ const SceneView = ({
     animation,
     customAnimationOnGesture,
     fullScreenGestureEnabled,
-    gestureDirection,
     presentation = 'card',
+    gestureDirection = presentation === 'card' ? 'horizontal' : 'vertical',
   } = options;
-
-  if (gestureDirection === undefined) {
-    gestureDirection = presentation === 'card' ? 'horizontal' : 'vertical';
-  }
 
   if (gestureDirection === 'vertical') {
     // for `vertical` direction to work, we need to set `fullScreenGestureEnabled` to `true`
