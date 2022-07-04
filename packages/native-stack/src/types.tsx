@@ -325,7 +325,7 @@ export type NativeStackNavigationOptions = {
    */
   headerBackButtonMenuEnabled?: boolean;
   /**
-   * Whether the home indicator should be hidden on this screen. Defaults to `false`.
+   * Whether the home indicator should prefer to stay hidden on this screen. Defaults to `false`.
    *
    * @platform ios
    */
@@ -383,10 +383,12 @@ export type NativeStackNavigationOptions = {
   statusBarTranslucent?: boolean;
   /**
    * Sets the direction in which you should swipe to dismiss the screen.
-   * When using `vertical` option, options `fullScreenSwipeEnabled: true`, `customAnimationOnSwipe: true` and `stackAnimation: 'slide_from_bottom'` are set by default.
-   * The following values are supported:
+   * When using `vertical` option, options `fullScreenGestureEnabled: true`, `customAnimationOnGesture: true` and `animation: 'slide_from_bottom'` are set by default.
+   *
+   * Supported values:
    * - `vertical` – dismiss screen vertically
    * - `horizontal` – dismiss screen horizontally (default)
+   *
    * @platform ios
    */
   gestureDirection?: ScreenProps['swipeDirection'];
@@ -447,6 +449,13 @@ export type NativeStackNavigationOptions = {
    */
   animation?: ScreenProps['stackAnimation'];
   /**
+   * Changes the duration (in milliseconds) of `slide_from_bottom`, `fade_from_bottom`, `fade` and `simple_push` transitions on iOS. Defaults to `350`.
+   * The duration of `default` and `flip` transitions isn't customizable.
+   *
+   * @platform ios
+   */
+  animationDuration?: number;
+  /**
    * How should the screen be presented.
    *
    * Supported values:
@@ -477,13 +486,6 @@ export type NativeStackNavigationOptions = {
    * Only supported on iOS and Android.
    */
   orientation?: ScreenProps['screenOrientation'];
-  /**
-   * Changes the duration (in milliseconds) of `slide_from_bottom`, `fade_from_bottom`, `fade` and `simple_push` transitions on iOS. Defaults to `350`.
-   * The duration of `default` and `flip` transitions isn't customizable.
-   *
-   * @platform ios
-   */
-  animationDuration?: number;
 };
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<

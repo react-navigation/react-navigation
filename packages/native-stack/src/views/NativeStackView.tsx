@@ -42,7 +42,7 @@ export default function NativeStackView({ state, descriptors }: Props) {
           const previousDescriptor = previousKey
             ? descriptors[previousKey]
             : undefined;
-          const nexDescriptor = nextKey ? descriptors[nextKey] : undefined;
+          const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
           const { options, navigation, render } = descriptors[route.key];
 
           const {
@@ -64,7 +64,7 @@ export default function NativeStackView({ state, descriptors }: Props) {
             contentStyle,
           } = options;
 
-          const nextPresentation = nexDescriptor?.options.presentation;
+          const nextPresentation = nextDescriptor?.options.presentation;
 
           return (
             <Screen

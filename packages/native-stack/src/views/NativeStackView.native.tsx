@@ -111,6 +111,7 @@ type SceneViewProps = {
   index: number;
   descriptor: NativeStackDescriptor;
   previousDescriptor?: NativeStackDescriptor;
+  nextDescriptor?: NativeStackDescriptor;
   onWillDisappear: () => void;
   onAppear: () => void;
   onDisappear: () => void;
@@ -120,6 +121,7 @@ type SceneViewProps = {
 const SceneView = ({
   descriptor,
   previousDescriptor,
+  nextDescriptor,
   index,
   onWillDisappear,
   onAppear,
@@ -142,7 +144,6 @@ const SceneView = ({
     statusBarStyle,
     statusBarTranslucent,
     statusBarColor,
-    gestureDirection = 'horizontal',
   } = options;
 
   let {
@@ -150,12 +151,13 @@ const SceneView = ({
     customAnimationOnGesture,
     fullScreenGestureEnabled,
     presentation = 'card',
+    gestureDirection = presentation === 'card' ? 'horizontal' : 'vertical',
   } = options;
 
-  if (gestureDirection === 'vertical') {
-    // for `vertical` direction to work, we need to set `fullScreenSwipeEnabled` to `true`
+  if (gestureDirection === 'vertical' && Platform.OS === 'ios') {
+    // for `vertical` direction to work, we need to set `fullScreenGestureEnabled` to `true`
     // so the screen can be dismissed from any point on screen.
-    // `customAnimationOnGesture` needs to be set to `true` so the `stackAnimation` set by user can be used,
+    // `customAnimationOnGesture` needs to be set to `true` so the `animation` set by user can be used,
     // otherwise `simple_push` will be used.
     // Also, the default animation for this direction seems to be `slide_from_bottom`.
     if (fullScreenGestureEnabled === undefined) {
@@ -168,6 +170,12 @@ const SceneView = ({
       animation = 'slide_from_bottom';
     }
   }
+
+  // workaround for rn-screens where gestureDirection has to be set on both
+  // current and previous screen - software-mansion/react-native-screens/pull/1509
+  const nextGestureDirection = nextDescriptor?.options.gestureDirection;
+  const gestureDirectionOverride =
+    nextGestureDirection != null ? nextGestureDirection : gestureDirection;
 
   if (index === 0) {
     // first screen should always be treated as `card`, it resolves problems with no header animation
@@ -228,7 +236,7 @@ const SceneView = ({
       statusBarStyle={statusBarStyle}
       statusBarColor={statusBarColor}
       statusBarTranslucent={statusBarTranslucent}
-      swipeDirection={gestureDirection}
+      swipeDirection={gestureDirectionOverride}
       transitionDuration={animationDuration}
       onWillDisappear={onWillDisappear}
       onAppear={onAppear}
@@ -324,9 +332,11 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
       {state.routes.map((route, index) => {
         const descriptor = descriptors[route.key];
         const previousKey = state.routes[index - 1]?.key;
+        const nextKey = state.routes[index + 1]?.key;
         const previousDescriptor = previousKey
           ? descriptors[previousKey]
           : undefined;
+        const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
 
         return (
           <SceneView
@@ -334,6 +344,7 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
             index={index}
             descriptor={descriptor}
             previousDescriptor={previousDescriptor}
+            nextDescriptor={nextDescriptor}
             onWillDisappear={() => {
               navigation.emit({
                 type: 'transitionStart',
