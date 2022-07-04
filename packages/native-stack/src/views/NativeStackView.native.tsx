@@ -328,6 +328,13 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
           ? descriptors[previousKey]
           : undefined;
 
+        // workaround for rn-screens where gestureDirection has to be set on both
+        // current and previous screen - software-mansion/react-native-screens/pull/1509
+        const { gestureDirection } = descriptor.options;
+        if (gestureDirection && previousDescriptor) {
+          previousDescriptor.options.gestureDirection = gestureDirection;
+        }
+
         return (
           <SceneView
             key={route.key}
