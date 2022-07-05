@@ -1,4 +1,5 @@
 export { default as Link } from './Link';
+export { default as LinkingContext } from './LinkingContext';
 export { default as NavigationContainer } from './NavigationContainer';
 export { default as ServerContainer } from './ServerContainer';
 export { default as DarkTheme } from './theming/DarkTheme';
