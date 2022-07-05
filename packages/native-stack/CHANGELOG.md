@@ -8,7 +8,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-* ensure same @types/react version in repo ([#10663](https://github.com/react-navigation/react-navigation/issues/10663)) ([e662465](https://github.com/react-navigation/react-navigation/commit/e6624653fbbd931158dbebd17142abf9637205b6)), closes [#10655](https://github.com/react-navigation/react-navigation/issues/10655)
 * explicitly set gestureDirection default value in native-stack ([#10674](https://github.com/react-navigation/react-navigation/issues/10674)) ([25a0d4c](https://github.com/react-navigation/react-navigation/commit/25a0d4c3f7422d2e7cecd5afba253cab13a888a1))
 * fix typo in native-stack types ([f4df53a](https://github.com/react-navigation/react-navigation/commit/f4df53aac999a20272445a01dcf999087c5cf434))
 * use top inset for header height on ipad ([#10652](https://github.com/react-navigation/react-navigation/issues/10652)) ([d5b2600](https://github.com/react-navigation/react-navigation/commit/d5b2600776d34dc94240ba642d82691030920331)), closes [#10609](https://github.com/react-navigation/react-navigation/issues/10609)

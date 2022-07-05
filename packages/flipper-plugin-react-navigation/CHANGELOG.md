@@ -5,10 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [1.3.12](https://github.com/react-navigation/react-navigation/compare/flipper-plugin-react-navigation@1.3.11...flipper-plugin-react-navigation@1.3.12) (2022-07-05)
 
-
-### Bug Fixes
-
-* ensure same @types/react version in repo ([#10663](https://github.com/react-navigation/react-navigation/issues/10663)) ([e662465](https://github.com/react-navigation/react-navigation/commit/e6624653fbbd931158dbebd17142abf9637205b6)), closes [#10655](https://github.com/react-navigation/react-navigation/issues/10655)
+**Note:** Version bump only for package flipper-plugin-react-navigation
 
 
 

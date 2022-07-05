@@ -8,7 +8,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-* ensure same @types/react version in repo ([#10663](https://github.com/react-navigation/react-navigation/issues/10663)) ([e662465](https://github.com/react-navigation/react-navigation/commit/e6624653fbbd931158dbebd17142abf9637205b6)), closes [#10655](https://github.com/react-navigation/react-navigation/issues/10655)
 * make event listeners idempotent ([#10667](https://github.com/react-navigation/react-navigation/issues/10667)) ([3bb31e9](https://github.com/react-navigation/react-navigation/commit/3bb31e9821fa723574359c61fcf674bce550f16d)), closes [#10664](https://github.com/react-navigation/react-navigation/issues/10664)
 
 
