@@ -331,7 +331,7 @@ export type NativeStackNavigationOptions = {
    */
   autoHideHomeIndicator?: boolean;
   /**
-   * Sets the navigation bar color. Defaults to initial status bar color.
+   * Sets the navigation bar color. Defaults to initial navigation bar color.
    *
    * @platform android
    */
