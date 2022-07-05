@@ -8,6 +8,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
+* expose `LinkingContext` ([#10604](https://github.com/react-navigation/react-navigation/issues/10604)) ([ac24e61](https://github.com/react-navigation/react-navigation/commit/ac24e617af10c48b161d1aaa7dfc8c1c1218a3cd))
 * prevent `history.go()` navigation outside bounds ([#10601](https://github.com/react-navigation/react-navigation/issues/10601)) ([ff8d8a3](https://github.com/react-navigation/react-navigation/commit/ff8d8a31d83f76129be5a8ee0a95ef2919eb1240)), closes [#10481](https://github.com/react-navigation/react-navigation/issues/10481)
 
 
