@@ -5,7 +5,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [6.3.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.3.1...@react-navigation/bottom-tabs@6.3.2) (2022-07-05)
 
-**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+### Bug Fixes
+
+* export BottomTabBarHeightCallbackContext ([#10617](https://github.com/react-navigation/react-navigation/issues/10617)) ([21dd443](https://github.com/react-navigation/react-navigation/commit/21dd44364395a2dba8b20aeeb60ac1bc396ae94e))
 
 
 
