@@ -9,6 +9,7 @@ import {
   NavigationContext,
   NavigationRouteContext,
   ParamListBase,
+  PreventRemoveContext,
   Route,
   StackActions,
   StackNavigationState,
@@ -40,7 +41,6 @@ import type {
   NativeStackNavigationHelpers,
   NativeStackNavigationOptions,
 } from '../types';
-import { PreventRemoveContext } from '../utils/PreventRemoveProvider';
 import DebugContainer from './DebugContainer';
 import HeaderConfig from './HeaderConfig';
 

@@ -1,18 +1,12 @@
 import React from 'react';
 
+import PreventRemoveContext from './PreventRemoveContext';
+
 type Props = {
   children: React.ReactNode;
 };
 
-export const PreventRemoveContext = React.createContext<{
-  isPrevented: boolean;
-  setPrevented: React.Dispatch<boolean>;
-}>({
-  isPrevented: false,
-  setPrevented: () => {},
-});
-
-export function PreventRemoveProvider({ children }: Props) {
+export default function PreventRemoveProvider({ children }: Props) {
   const [isPrevented, setPrevented] = React.useState(false);
 
   return (

@@ -2,10 +2,9 @@ import {
   EventListenerCallback,
   EventMapCore,
   NavigationContext,
-} from '@react-navigation/native';
+  PreventRemoveContext,
+} from '@react-navigation/core';
 import React from 'react';
-
-import { PreventRemoveContext } from './PreventRemoveProvider';
 
 /**
  * Hook to prevent screen from being removed.
@@ -26,7 +25,7 @@ export default function usePreventRemove(
   const currentKey = state?.routes[state.index].key;
 
   React.useEffect(() => {
-    setPrevented(preventRemove && initialKey === currentKey);
+    setPrevented?.(preventRemove && initialKey === currentKey);
   }, [setPrevented, preventRemove, currentKey, initialKey]);
 
   React.useEffect(
@@ -37,8 +36,6 @@ export default function usePreventRemove(
         }
 
         e.preventDefault();
-
-        console.log(e.data.action);
 
         callback?.(e);
       }),

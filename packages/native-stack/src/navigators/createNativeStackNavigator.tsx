@@ -2,6 +2,7 @@ import {
   createNavigatorFactory,
   EventArg,
   ParamListBase,
+  PreventRemoveProvider,
   StackActionHelpers,
   StackActions,
   StackNavigationState,
@@ -16,7 +17,6 @@ import type {
   NativeStackNavigationOptions,
   NativeStackNavigatorProps,
 } from '../types';
-import { PreventRemoveProvider } from '../utils/PreventRemoveProvider';
 import NativeStackView from '../views/NativeStackView';
 
 function NativeStackNavigator({
