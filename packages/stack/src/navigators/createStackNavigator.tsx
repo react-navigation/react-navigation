@@ -3,6 +3,7 @@ import {
   DefaultNavigatorOptions,
   EventArg,
   ParamListBase,
+  PreventRemoveProvider,
   StackActionHelpers,
   StackActions,
   StackNavigationState,
@@ -118,12 +119,14 @@ function StackNavigator({
 
   return (
     <NavigationContent>
-      <StackView
-        {...rest}
-        state={state}
-        descriptors={descriptors}
-        navigation={navigation}
-      />
+      <PreventRemoveProvider>
+        <StackView
+          {...rest}
+          state={state}
+          descriptors={descriptors}
+          navigation={navigation}
+        />
+      </PreventRemoveProvider>
     </NavigationContent>
   );
 }
