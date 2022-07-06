@@ -1,12 +1,10 @@
+import { usePreventRemove } from '@react-navigation/core';
 import {
   CommonActions,
   ParamListBase,
   useTheme,
 } from '@react-navigation/native';
-import {
-  createNativeStackNavigator,
-  usePreventRemove,
-} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { StackScreenProps } from '@react-navigation/stack';
 import * as React from 'react';
 import {
