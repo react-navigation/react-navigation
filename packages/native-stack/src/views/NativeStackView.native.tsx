@@ -15,7 +15,13 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import {
+  NativeSyntheticEvent,
+  Platform,
+  StyleSheet,
+  TargetedEvent,
+  View,
+} from 'react-native';
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
@@ -34,6 +40,7 @@ import type {
   NativeStackNavigationHelpers,
   NativeStackNavigationOptions,
 } from '../types';
+import { PreventRemoveContext } from '../utils/PreventRemoveProvider';
 import DebugContainer from './DebugContainer';
 import HeaderConfig from './HeaderConfig';
 
@@ -116,6 +123,8 @@ type SceneViewProps = {
   onAppear: () => void;
   onDisappear: () => void;
   onDismissed: ScreenProps['onDismissed'];
+  onHeaderBackButtonClicked: () => void;
+  onNativeDismissCancelled: (e: NativeSyntheticEvent<TargetedEvent>) => void;
 };
 
 const SceneView = ({
@@ -127,6 +136,8 @@ const SceneView = ({
   onAppear,
   onDisappear,
   onDismissed,
+  onHeaderBackButtonClicked,
+  onNativeDismissCancelled,
 }: SceneViewProps) => {
   const { route, navigation, options, render } = descriptor;
   const {
@@ -202,6 +213,7 @@ const SceneView = ({
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
+  const { isPrevented } = React.useContext(PreventRemoveContext);
 
   const defaultHeaderHeight = getDefaultHeaderHeight(frame, isModal, topInset);
 
@@ -243,6 +255,12 @@ const SceneView = ({
       onDisappear={onDisappear}
       onDismissed={onDismissed}
       isNativeStack
+      // Props for preventing removal in native-stack
+      nativeBackButtonDismissalEnabled={!isPrevented} // on Android
+      // @ts-expect-error prop not publicly exported from rn-screens
+      preventNativeDismiss={isPrevented} // on iOS
+      onHeaderBackButtonClicked={onHeaderBackButtonClicked}
+      onNativeDismissCancelled={onNativeDismissCancelled}
     >
       <NavigationContext.Provider value={navigation}>
         <NavigationRouteContext.Provider value={route}>
@@ -374,6 +392,20 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
               });
 
               setNextDismissedKey(route.key);
+            }}
+            onHeaderBackButtonClicked={() => {
+              navigation.dispatch({
+                ...StackActions.pop(),
+                source: route.key,
+                target: state.key,
+              });
+            }}
+            onNativeDismissCancelled={(event: any) => {
+              navigation.dispatch({
+                ...StackActions.pop(event.nativeEvent.dismissCount),
+                source: route.key,
+                target: state.key,
+              });
             }}
           />
         );

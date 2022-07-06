@@ -16,6 +16,7 @@ import type {
   NativeStackNavigationOptions,
   NativeStackNavigatorProps,
 } from '../types';
+import { PreventRemoveProvider } from '../utils/PreventRemoveProvider';
 import NativeStackView from '../views/NativeStackView';
 
 function NativeStackNavigator({
@@ -69,12 +70,14 @@ function NativeStackNavigator({
 
   return (
     <NavigationContent>
-      <NativeStackView
-        {...rest}
-        state={state}
-        navigation={navigation}
-        descriptors={descriptors}
-      />
+      <PreventRemoveProvider>
+        <NativeStackView
+          {...rest}
+          state={state}
+          navigation={navigation}
+          descriptors={descriptors}
+        />
+      </PreventRemoveProvider>
     </NavigationContent>
   );
 }

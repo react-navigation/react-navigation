@@ -9,6 +9,11 @@ export { default as createNativeStackNavigator } from './navigators/createNative
 export { default as NativeStackView } from './views/NativeStackView';
 
 /**
+ * Utils
+ */
+export { default as usePreventRemove } from './utils/usePreventRemove';
+
+/**
  * Types
  */
 export type {

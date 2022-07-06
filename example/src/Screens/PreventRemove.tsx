@@ -4,9 +4,10 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import {
-  createStackNavigator,
-  StackScreenProps,
-} from '@react-navigation/stack';
+  createNativeStackNavigator,
+  usePreventRemove,
+} from '@react-navigation/native-stack';
+import type { StackScreenProps } from '@react-navigation/stack';
 import * as React from 'react';
 import {
   Alert,
@@ -65,40 +66,29 @@ const InputScreen = ({
 
   const hasUnsavedChanges = Boolean(text);
 
-  React.useEffect(
-    () =>
-      navigation.addListener('beforeRemove', (e) => {
-        if (!hasUnsavedChanges) {
-          return;
-        }
-
-        e.preventDefault();
-
-        if (Platform.OS === 'web') {
-          const discard = confirm(
-            'You have unsaved changes. Discard them and leave the screen?'
-          );
-
-          if (discard) {
-            navigation.dispatch(e.data.action);
-          }
-        } else {
-          Alert.alert(
-            'Discard changes?',
-            'You have unsaved changes. Discard them and leave the screen?',
-            [
-              { text: "Don't leave", style: 'cancel', onPress: () => {} },
-              {
-                text: 'Discard',
-                style: 'destructive',
-                onPress: () => navigation.dispatch(e.data.action),
-              },
-            ]
-          );
-        }
-      }),
-    [hasUnsavedChanges, navigation]
-  );
+  usePreventRemove(hasUnsavedChanges, (e) => {
+    if (Platform.OS === 'web') {
+      const discard = confirm(
+        'You have unsaved changes. Discard them and leave the screen?'
+      );
+      if (discard) {
+        navigation.dispatch(e.data.action);
+      }
+    } else {
+      Alert.alert(
+        'Discard changes?',
+        'You have unsaved changes. Discard them and leave the screen?',
+        [
+          { text: "Don't leave", style: 'cancel', onPress: () => {} },
+          {
+            text: 'Discard',
+            style: 'destructive',
+            onPress: () => navigation.dispatch(e.data.action),
+          },
+        ]
+      );
+    }
+  });
 
   return (
     <View style={styles.content}>
@@ -136,11 +126,11 @@ const InputScreen = ({
   );
 };
 
-const SimpleStack = createStackNavigator<PreventRemoveParams>();
+const Stack = createNativeStackNavigator<PreventRemoveParams>();
 
 type Props = StackScreenProps<ParamListBase>;
 
-export default function SimpleStackScreen({ navigation }: Props) {
+export default function StackScreen({ navigation }: Props) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -148,10 +138,10 @@ export default function SimpleStackScreen({ navigation }: Props) {
   }, [navigation]);
 
   return (
-    <SimpleStack.Navigator>
-      <SimpleStack.Screen name="Input" component={InputScreen} />
-      <SimpleStack.Screen name="Article" component={ArticleScreen} />
-    </SimpleStack.Navigator>
+    <Stack.Navigator>
+      <Stack.Screen name="Input" component={InputScreen} />
+      <Stack.Screen name="Article" component={ArticleScreen} />
+    </Stack.Navigator>
   );
 }
 
