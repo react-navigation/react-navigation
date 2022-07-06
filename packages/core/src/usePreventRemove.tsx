@@ -1,10 +1,8 @@
-import {
-  EventListenerCallback,
-  EventMapCore,
-  NavigationContext,
-  PreventRemoveContext,
-} from '@react-navigation/core';
 import React from 'react';
+
+import NavigationContext from './NavigationContext';
+import PreventRemoveContext from './PreventRemoveContext';
+import type { EventListenerCallback, EventMapCore } from './types';
 
 /**
  * Hook to prevent screen from being removed.
