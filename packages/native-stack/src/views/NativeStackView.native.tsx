@@ -16,13 +16,7 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import {
-  NativeSyntheticEvent,
-  Platform,
-  StyleSheet,
-  TargetedEvent,
-  View,
-} from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
@@ -124,7 +118,7 @@ type SceneViewProps = {
   onDisappear: () => void;
   onDismissed: ScreenProps['onDismissed'];
   onHeaderBackButtonClicked: () => void;
-  onNativeDismissCancelled: (e: NativeSyntheticEvent<TargetedEvent>) => void;
+  onNativeDismissCancelled: ScreenProps['onDismissed'];
 };
 
 const SceneView = ({
@@ -400,7 +394,7 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
                 target: state.key,
               });
             }}
-            onNativeDismissCancelled={(event: any) => {
+            onNativeDismissCancelled={(event) => {
               navigation.dispatch({
                 ...StackActions.pop(event.nativeEvent.dismissCount),
                 source: route.key,
