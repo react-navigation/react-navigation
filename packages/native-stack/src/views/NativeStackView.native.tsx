@@ -207,12 +207,16 @@ const SceneView = ({
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
-  const { isPrevented } = React.useContext(PreventRemoveContext);
+  const { isPrevented: isParentPrevented } =
+    React.useContext(PreventRemoveContext);
 
   const defaultHeaderHeight = getDefaultHeaderHeight(frame, isModal, topInset);
 
   const [customHeaderHeight, setCustomHeaderHeight] =
     React.useState(defaultHeaderHeight);
+  const [isPrevented, setPrevented] = React.useState(false);
+
+  console.log({ name: route.name, isParentPrevented, isPrevented });
 
   const headerHeight = header ? customHeaderHeight : defaultHeaderHeight;
 
@@ -268,43 +272,50 @@ const SceneView = ({
                   : parentHeaderHeight ?? 0
               }
             >
-              {header !== undefined && headerShown !== false ? (
-                <View
-                  onLayout={(e) => {
-                    setCustomHeaderHeight(e.nativeEvent.layout.height);
-                  }}
-                >
-                  {header({
-                    back: previousDescriptor
-                      ? {
-                          title: getHeaderTitle(
-                            previousDescriptor.options,
-                            previousDescriptor.route.name
-                          ),
-                        }
-                      : undefined,
-                    options,
-                    route,
-                    navigation,
-                  })}
-                </View>
-              ) : (
-                <HeaderConfig
-                  {...options}
-                  route={route}
-                  headerShown={isHeaderInPush}
-                  headerHeight={headerHeight}
-                  canGoBack={index !== 0}
-                />
-              )}
-              <MaybeNestedStack
-                options={options}
-                route={route}
-                presentation={presentation}
-                headerHeight={headerHeight}
+              <PreventRemoveContext.Provider
+                value={{
+                  isPrevented,
+                  setPrevented,
+                }}
               >
-                {render()}
-              </MaybeNestedStack>
+                {header !== undefined && headerShown !== false ? (
+                  <View
+                    onLayout={(e) => {
+                      setCustomHeaderHeight(e.nativeEvent.layout.height);
+                    }}
+                  >
+                    {header({
+                      back: previousDescriptor
+                        ? {
+                            title: getHeaderTitle(
+                              previousDescriptor.options,
+                              previousDescriptor.route.name
+                            ),
+                          }
+                        : undefined,
+                      options,
+                      route,
+                      navigation,
+                    })}
+                  </View>
+                ) : (
+                  <HeaderConfig
+                    {...options}
+                    route={route}
+                    headerShown={isHeaderInPush}
+                    headerHeight={headerHeight}
+                    canGoBack={index !== 0}
+                  />
+                )}
+                <MaybeNestedStack
+                  options={options}
+                  route={route}
+                  presentation={presentation}
+                  headerHeight={headerHeight}
+                >
+                  {render()}
+                </MaybeNestedStack>
+              </PreventRemoveContext.Provider>
             </HeaderHeightContext.Provider>
           </HeaderShownContext.Provider>
         </NavigationRouteContext.Provider>

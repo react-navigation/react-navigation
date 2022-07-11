@@ -2,7 +2,6 @@ import {
   createNavigatorFactory,
   EventArg,
   ParamListBase,
-  PreventRemoveProvider,
   StackActionHelpers,
   StackActions,
   StackNavigationState,
@@ -70,14 +69,12 @@ function NativeStackNavigator({
 
   return (
     <NavigationContent>
-      <PreventRemoveProvider>
-        <NativeStackView
-          {...rest}
-          state={state}
-          navigation={navigation}
-          descriptors={descriptors}
-        />
-      </PreventRemoveProvider>
+      <NativeStackView
+        {...rest}
+        state={state}
+        navigation={navigation}
+        descriptors={descriptors}
+      />
     </NavigationContent>
   );
 }
