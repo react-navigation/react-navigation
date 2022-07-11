@@ -14,14 +14,9 @@ export default function usePreventRemove(
   callback?: EventListenerCallback<EventMapCore<any>, 'beforeRemove'>
 ) {
   const navigation = useNavigation();
-  const state = navigation?.getState();
-
-  const [initialKey] = React.useState(state?.routes[state.index].key);
-
-  const currentKey = state?.routes[state.index].key;
 
   React.useEffect(() => {
-    const shouldPreventRemove = preventRemove && initialKey === currentKey;
+    const shouldPreventRemove = preventRemove && navigation.isFocused();
 
     navigation.setOptions({ shouldPreventRemove });
 
@@ -30,7 +25,7 @@ export default function usePreventRemove(
     // but I'm not sure if this is the path we want to take.
     const parent = navigation.getParent();
     parent?.setOptions({ shouldPreventRemove });
-  }, [navigation, preventRemove, currentKey, initialKey]);
+  }, [navigation, preventRemove]);
 
   React.useEffect(
     () =>
