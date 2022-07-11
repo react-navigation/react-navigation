@@ -256,7 +256,11 @@ const SceneView = ({
         !isParentPrevented && !shouldPreventRemove
       } // on Android
       // @ts-expect-error prop not publicly exported from rn-screens
-      preventNativeDismiss={isParentPrevented || shouldPreventRemove} // on iOS
+      preventNativeDismiss={
+        shouldPreventRemove !== undefined
+          ? shouldPreventRemove || isParentPrevented
+          : false
+      } // on iOS
       onHeaderBackButtonClicked={onHeaderBackButtonClicked}
       onNativeDismissCancelled={onNativeDismissCancelled}
     >
@@ -273,7 +277,7 @@ const SceneView = ({
               }
             >
               <PreventRemoveContext.Provider
-                value={isParentPrevented || shouldPreventRemove !== false}
+                value={isParentPrevented || shouldPreventRemove}
               >
                 {header !== undefined && headerShown !== false ? (
                   <View
