@@ -149,6 +149,8 @@ const SceneView = ({
     statusBarStyle,
     statusBarTranslucent,
     statusBarColor,
+    // @ts-expect-error internal prop used in usePreventRemove hook
+    shouldPreventRemove,
   } = options;
 
   let {
@@ -207,14 +209,12 @@ const SceneView = ({
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
-  const { isPrevented: isParentPrevented } =
-    React.useContext(PreventRemoveContext);
+  const isParentPrevented = React.useContext(PreventRemoveContext);
 
   const defaultHeaderHeight = getDefaultHeaderHeight(frame, isModal, topInset);
 
   const [customHeaderHeight, setCustomHeaderHeight] =
     React.useState(defaultHeaderHeight);
-  const [isPrevented, setPrevented] = React.useState(false);
 
   const headerHeight = header ? customHeaderHeight : defaultHeaderHeight;
 
@@ -252,9 +252,11 @@ const SceneView = ({
       onDismissed={onDismissed}
       isNativeStack
       // Props for preventing removal in native-stack
-      nativeBackButtonDismissalEnabled={!isPrevented} // on Android
+      nativeBackButtonDismissalEnabled={
+        !isParentPrevented && !shouldPreventRemove
+      } // on Android
       // @ts-expect-error prop not publicly exported from rn-screens
-      preventNativeDismiss={isPrevented} // on iOS
+      preventNativeDismiss={isParentPrevented || shouldPreventRemove} // on iOS
       onHeaderBackButtonClicked={onHeaderBackButtonClicked}
       onNativeDismissCancelled={onNativeDismissCancelled}
     >
@@ -271,10 +273,7 @@ const SceneView = ({
               }
             >
               <PreventRemoveContext.Provider
-                value={{
-                  isPrevented: isParentPrevented || isPrevented,
-                  setPrevented,
-                }}
+                value={isParentPrevented || shouldPreventRemove !== false}
               >
                 {header !== undefined && headerShown !== false ? (
                   <View
