@@ -216,8 +216,6 @@ const SceneView = ({
     React.useState(defaultHeaderHeight);
   const [isPrevented, setPrevented] = React.useState(false);
 
-  console.log({ name: route.name, isParentPrevented, isPrevented });
-
   const headerHeight = header ? customHeaderHeight : defaultHeaderHeight;
 
   return (
@@ -274,7 +272,7 @@ const SceneView = ({
             >
               <PreventRemoveContext.Provider
                 value={{
-                  isPrevented,
+                  isPrevented: isParentPrevented || isPrevented,
                   setPrevented,
                 }}
               >
