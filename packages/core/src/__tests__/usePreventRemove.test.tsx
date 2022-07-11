@@ -4,7 +4,6 @@ import React from 'react';
 
 import BaseNavigationContainer from '../BaseNavigationContainer';
 import createNavigationContainerRef from '../createNavigationContainerRef';
-import PreventRemoveProvider from '../PreventRemoveProvider';
 import Screen from '../Screen';
 import useNavigationBuilder from '../useNavigationBuilder';
 import usePreventRemove from '../usePreventRemove';
@@ -54,13 +53,11 @@ it("prevents removing a screen with 'usePreventRemove' hook", () => {
 
   const element = (
     <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
-      <PreventRemoveProvider>
-        <TestNavigator>
-          <Screen name="foo">{() => null}</Screen>
-          <Screen name="bar" component={TestScreen} />
-          <Screen name="baz">{() => null}</Screen>
-        </TestNavigator>
-      </PreventRemoveProvider>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar" component={TestScreen} />
+        <Screen name="baz">{() => null}</Screen>
+      </TestNavigator>
     </BaseNavigationContainer>
   );
 
@@ -161,13 +158,11 @@ it("should have no effect when 'usePreventRemove' hook is set to false", () => {
 
   const element = (
     <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
-      <PreventRemoveProvider>
-        <TestNavigator>
-          <Screen name="foo">{() => null}</Screen>
-          <Screen name="bar" component={TestScreen} />
-          <Screen name="baz">{() => null}</Screen>
-        </TestNavigator>
-      </PreventRemoveProvider>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar" component={TestScreen} />
+        <Screen name="baz">{() => null}</Screen>
+      </TestNavigator>
     </BaseNavigationContainer>
   );
 
