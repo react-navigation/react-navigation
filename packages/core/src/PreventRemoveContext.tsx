@@ -1,5 +1,5 @@
-import getNamedContext from './getNamedContext';
+import React from 'react';
 
-const PreventRemoveContext = getNamedContext('PreventRemoveContext', false);
+const PreventRemoveContext = React.createContext(false);
 
 export default PreventRemoveContext;
