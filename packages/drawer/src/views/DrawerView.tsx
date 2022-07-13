@@ -86,7 +86,7 @@ function DrawerViewBase({
 }: Props) {
   // Reanimated v3 dropped legacy v1 syntax
   const legacyImplemenationNotAvailable =
-    require('react-native-reanimated').interpolateNode === undefined;
+    require('react-native-reanimated').abs === undefined;
 
   if (useLegacyImplementation && legacyImplemenationNotAvailable) {
     throw new Error(
