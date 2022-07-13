@@ -90,7 +90,7 @@ function DrawerViewBase({
 
   if (useLegacyImplementation && legacyImplemenationNotAvailable) {
     throw new Error(
-      'Legacy drawer implementation is not available with Reanimated 3 as it no longer includes support for Reanimated 1 legacy API.'
+      'The `useLegacyImplementation` prop is not available with Reanimated 3 as it no longer includes support for Reanimated 1 legacy API. Remove the `useLegacyImplementation` prop from `Drawer.Navigator` to be able to use it.'
     );
   }
 
