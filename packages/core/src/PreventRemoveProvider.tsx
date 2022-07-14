@@ -4,9 +4,9 @@ import PreventRemoveContext from './PreventRemoveContext';
 import useNavigationState from './useNavigationState';
 
 export default function PreventRemoveProvider({ children }: any) {
-  const [preventedRoutes, setPreventedRoutes] = React.useState<
-    Record<string, { shouldPrevent: boolean }>
-  >({});
+  const [preventedRoutes, setPreventedRoutes] = React.useState(
+    new Map<string, { shouldPrevent: boolean }>()
+  );
 
   const state = useNavigationState((state) => state);
 
@@ -16,21 +16,21 @@ export default function PreventRemoveProvider({ children }: any) {
 
   const setPreventRemove = React.useCallback(
     (routeKey: string, shouldPrevent: boolean): void => {
-      const nextPrevented = {
-        ...preventedRoutes,
-        [routeKey]: { shouldPrevent },
-      };
+      const nextPrevented = new Map(preventedRoutes);
+      if (shouldPrevent) {
+        nextPrevented.set(routeKey, { shouldPrevent });
+      } else {
+        nextPrevented.delete(routeKey);
+      }
 
       setPreventedRoutes(nextPrevented);
 
-      // when setParentPrevented is defined in focusedRouteKey will have the focused parent screen
+      // focusedRouteKey will be the focused parent screen when setParentPrevented is defined
       if (setParentPrevented) {
         const focusedRouteKey = state?.routes[state?.index].key;
         setParentPrevented(
           focusedRouteKey,
-          Object.values(nextPrevented).some(
-            ({ shouldPrevent }) => shouldPrevent
-          )
+          [...nextPrevented.values()].some(({ shouldPrevent }) => shouldPrevent)
         );
       }
     },
@@ -39,7 +39,10 @@ export default function PreventRemoveProvider({ children }: any) {
 
   return (
     <PreventRemoveContext.Provider
-      value={{ setPreventRemove, preventedRoutes }}
+      value={{
+        setPreventRemove,
+        preventedRoutes: Object.fromEntries(preventedRoutes),
+      }}
     >
       {children}
     </PreventRemoveContext.Provider>
