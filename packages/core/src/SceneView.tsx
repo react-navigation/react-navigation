@@ -115,9 +115,10 @@ export default function SceneView<
     ]
   );
 
-  const ScreenComponent = screen.getComponent
-    ? screen.getComponent()
-    : screen.component;
+  const ScreenComponent = React.useMemo(
+    () => screen.getComponent?.() ?? screen.component,
+    [screen]
+  );
 
   return (
     <NavigationStateContext.Provider value={context}>
