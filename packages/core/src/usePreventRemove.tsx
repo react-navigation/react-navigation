@@ -25,7 +25,7 @@ export default function usePreventRemove(
     return () => {
       setPreventRemove?.(routeKey, false);
     };
-  }, [preventRemove, routeKey]);
+  }, [setPreventRemove, routeKey, preventRemove]);
 
   React.useEffect(
     () =>

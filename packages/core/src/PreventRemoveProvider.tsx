@@ -21,28 +21,34 @@ export default function PreventRemoveProvider({ children }: Props) {
   const { setPreventRemove: setParentPrevented } =
     React.useContext(PreventRemoveContext);
 
+  const shouldPreventParent = React.useMemo(
+    () =>
+      [...preventedRoutes.values()].some(({ shouldPrevent }) => shouldPrevent),
+    [preventedRoutes]
+  );
+
   const setPreventRemove = React.useCallback(
     (routeKey: string, shouldPrevent: boolean): void => {
-      const nextPrevented = new Map(preventedRoutes);
-      if (shouldPrevent) {
-        nextPrevented.set(routeKey, { shouldPrevent });
-      } else {
-        nextPrevented.delete(routeKey);
-      }
+      setPreventedRoutes((prevPrevented) => {
+        const nextPrevented = new Map(prevPrevented);
 
-      setPreventedRoutes(nextPrevented);
+        if (shouldPrevent) {
+          nextPrevented.set(routeKey, { shouldPrevent });
+        } else {
+          nextPrevented.delete(routeKey);
+        }
+
+        return nextPrevented;
+      });
 
       if (setParentPrevented !== undefined) {
         // when setParentPrevented is defined that means the
         // focused route key is the route key of the parent
         const parentRouteKey = state?.routes[state?.index].key;
-        setParentPrevented(
-          parentRouteKey,
-          [...nextPrevented.values()].some(({ shouldPrevent }) => shouldPrevent)
-        );
+        setParentPrevented(parentRouteKey, shouldPreventParent);
       }
     },
-    [preventedRoutes, setParentPrevented, state?.index, state?.routes]
+    [setParentPrevented, state?.index, state?.routes, shouldPreventParent]
   );
 
   return (
