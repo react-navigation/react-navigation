@@ -25,11 +25,12 @@ export default function PreventRemoveProvider({ children }: any) {
 
       setPreventedRoutes(nextPrevented);
 
-      // focusedRouteKey will be the focused parent screen when setParentPrevented is defined
-      if (setParentPrevented) {
-        const focusedRouteKey = state?.routes[state?.index].key;
+      if (setParentPrevented !== undefined) {
+        // when setParentPrevented is defined that means the
+        // focused route key is the route key of the parent
+        const parentRouteKey = state?.routes[state?.index].key;
         setParentPrevented(
-          focusedRouteKey,
+          parentRouteKey,
           [...nextPrevented.values()].some(({ shouldPrevent }) => shouldPrevent)
         );
       }
