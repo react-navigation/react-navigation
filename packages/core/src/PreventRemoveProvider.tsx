@@ -3,7 +3,14 @@ import React from 'react';
 import PreventRemoveContext from './PreventRemoveContext';
 import useNavigationState from './useNavigationState';
 
-export default function PreventRemoveProvider({ children }: any) {
+type Props = {
+  children: React.ReactNode;
+};
+
+/**
+ * Component used for managing which routes have to be prevented from removal in native-stack
+ */
+export default function PreventRemoveProvider({ children }: Props) {
   const [preventedRoutes, setPreventedRoutes] = React.useState(
     new Map<string, { shouldPrevent: boolean }>()
   );
