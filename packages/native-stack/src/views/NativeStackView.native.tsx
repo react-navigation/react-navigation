@@ -149,8 +149,6 @@ const SceneView = ({
     statusBarStyle,
     statusBarTranslucent,
     statusBarColor,
-    // @ts-expect-error internal prop used in usePreventRemove hook
-    shouldPreventRemove,
   } = options;
 
   let {
@@ -209,7 +207,7 @@ const SceneView = ({
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
-  const isParentPrevented = React.useContext(PreventRemoveContext);
+  const { preventedRoutes } = React.useContext(PreventRemoveContext);
 
   const defaultHeaderHeight = getDefaultHeaderHeight(frame, isModal, topInset);
 
@@ -217,6 +215,8 @@ const SceneView = ({
     React.useState(defaultHeaderHeight);
 
   const headerHeight = header ? customHeaderHeight : defaultHeaderHeight;
+
+  const isRemovePrevented = preventedRoutes[route.key]?.shouldPrevent ?? false;
 
   return (
     <Screen
@@ -252,15 +252,9 @@ const SceneView = ({
       onDismissed={onDismissed}
       isNativeStack
       // Props for preventing removal in native-stack
-      nativeBackButtonDismissalEnabled={
-        !isParentPrevented && !shouldPreventRemove
-      } // on Android
+      nativeBackButtonDismissalEnabled={!isRemovePrevented} // on Android
       // @ts-expect-error prop not publicly exported from rn-screens
-      preventNativeDismiss={
-        shouldPreventRemove !== undefined
-          ? shouldPreventRemove || isParentPrevented
-          : false
-      } // on iOS
+      preventNativeDismiss={isRemovePrevented} // on iOS
       onHeaderBackButtonClicked={onHeaderBackButtonClicked}
       onNativeDismissCancelled={onNativeDismissCancelled}
     >
@@ -276,47 +270,43 @@ const SceneView = ({
                   : parentHeaderHeight ?? 0
               }
             >
-              <PreventRemoveContext.Provider
-                value={isParentPrevented || shouldPreventRemove}
-              >
-                {header !== undefined && headerShown !== false ? (
-                  <View
-                    onLayout={(e) => {
-                      setCustomHeaderHeight(e.nativeEvent.layout.height);
-                    }}
-                  >
-                    {header({
-                      back: previousDescriptor
-                        ? {
-                            title: getHeaderTitle(
-                              previousDescriptor.options,
-                              previousDescriptor.route.name
-                            ),
-                          }
-                        : undefined,
-                      options,
-                      route,
-                      navigation,
-                    })}
-                  </View>
-                ) : (
-                  <HeaderConfig
-                    {...options}
-                    route={route}
-                    headerShown={isHeaderInPush}
-                    headerHeight={headerHeight}
-                    canGoBack={index !== 0}
-                  />
-                )}
-                <MaybeNestedStack
-                  options={options}
-                  route={route}
-                  presentation={presentation}
-                  headerHeight={headerHeight}
+              {header !== undefined && headerShown !== false ? (
+                <View
+                  onLayout={(e) => {
+                    setCustomHeaderHeight(e.nativeEvent.layout.height);
+                  }}
                 >
-                  {render()}
-                </MaybeNestedStack>
-              </PreventRemoveContext.Provider>
+                  {header({
+                    back: previousDescriptor
+                      ? {
+                          title: getHeaderTitle(
+                            previousDescriptor.options,
+                            previousDescriptor.route.name
+                          ),
+                        }
+                      : undefined,
+                    options,
+                    route,
+                    navigation,
+                  })}
+                </View>
+              ) : (
+                <HeaderConfig
+                  {...options}
+                  route={route}
+                  headerShown={isHeaderInPush}
+                  headerHeight={headerHeight}
+                  canGoBack={index !== 0}
+                />
+              )}
+              <MaybeNestedStack
+                options={options}
+                route={route}
+                presentation={presentation}
+                headerHeight={headerHeight}
+              >
+                {render()}
+              </MaybeNestedStack>
             </HeaderHeightContext.Provider>
           </HeaderShownContext.Provider>
         </NavigationRouteContext.Provider>

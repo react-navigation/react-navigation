@@ -1,7 +1,9 @@
 import React from 'react';
 
+import PreventRemoveContext from './PreventRemoveContext';
 import type { EventListenerCallback, EventMapCore } from './types';
 import useNavigation from './useNavigation';
+import useRoute from './useRoute';
 
 /**
  * Hook to prevent screen from being removed.
@@ -14,18 +16,13 @@ export default function usePreventRemove(
   callback?: EventListenerCallback<EventMapCore<any>, 'beforeRemove'>
 ) {
   const navigation = useNavigation();
+  const { key: routeKey } = useRoute();
+
+  const { setPreventRemove } = React.useContext(PreventRemoveContext);
 
   React.useEffect(() => {
-    const shouldPreventRemove = preventRemove && navigation.isFocused();
-
-    navigation.setOptions({ shouldPreventRemove });
-
-    // FIXME: this is wishful, stupid and won't work in real life scenarios.
-    // We could iterate through every parent and set this prop on each
-    // but I'm not sure if this is the path we want to take.
-    const parent = navigation.getParent();
-    parent?.setOptions({ shouldPreventRemove });
-  }, [navigation, preventRemove]);
+    setPreventRemove?.(routeKey, preventRemove);
+  }, [preventRemove, routeKey]);
 
   React.useEffect(
     () =>
