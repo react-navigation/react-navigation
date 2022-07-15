@@ -4,8 +4,10 @@ import {
   ParamListBase,
   useTheme,
 } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import type { StackScreenProps } from '@react-navigation/stack';
+import {
+  createNativeStackNavigator,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 import * as React from 'react';
 import {
   Alert,
@@ -29,7 +31,7 @@ const scrollEnabled = Platform.select({ web: true, default: false });
 const ArticleScreen = ({
   navigation,
   route,
-}: StackScreenProps<PreventRemoveParams, 'Article'>) => {
+}: NativeStackScreenProps<PreventRemoveParams, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -58,7 +60,7 @@ const ArticleScreen = ({
 
 const InputScreen = ({
   navigation,
-}: StackScreenProps<PreventRemoveParams, 'Input'>) => {
+}: NativeStackScreenProps<PreventRemoveParams, 'Input'>) => {
   const [text, setText] = React.useState('');
   const { colors } = useTheme();
 
@@ -126,7 +128,7 @@ const InputScreen = ({
 
 const Stack = createNativeStackNavigator<PreventRemoveParams>();
 
-type Props = StackScreenProps<ParamListBase>;
+type Props = NativeStackScreenProps<ParamListBase>;
 
 export default function StackScreen({ navigation }: Props) {
   React.useLayoutEffect(() => {
@@ -136,7 +138,11 @@ export default function StackScreen({ navigation }: Props) {
   }, [navigation]);
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerBackButtonMenuEnabled: false,
+      }}
+    >
       <Stack.Screen name="Input" component={InputScreen} />
       <Stack.Screen name="Article" component={ArticleScreen} />
     </Stack.Navigator>
