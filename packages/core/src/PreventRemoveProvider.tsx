@@ -1,7 +1,8 @@
 import React from 'react';
+import useLatestCallback from 'use-latest-callback';
 
+import NavigationRouteContext from './NavigationRouteContext';
 import PreventRemoveContext from './PreventRemoveContext';
-import useNavigationState from './useNavigationState';
 
 type Props = {
   children: React.ReactNode;
@@ -15,49 +16,45 @@ export default function PreventRemoveProvider({ children }: Props) {
     new Map<string, { shouldPrevent: boolean }>()
   );
 
-  const state = useNavigationState((state) => state);
+  const route = React.useContext(NavigationRouteContext);
 
   // take `setPreventRemove` from parent context
   const { setPreventRemove: setParentPrevented } =
     React.useContext(PreventRemoveContext);
 
-  const shouldPreventParent = React.useMemo(
-    () =>
-      [...preventedRoutes.values()].some(({ shouldPrevent }) => shouldPrevent),
-    [preventedRoutes]
+  const setPreventRemove = useLatestCallback(
+    (routeKey: string, shouldPrevent: boolean): void => {
+      const nextPrevented = new Map(preventedRoutes);
+
+      if (shouldPrevent) {
+        nextPrevented.set(routeKey, { shouldPrevent });
+      } else {
+        nextPrevented.delete(routeKey);
+      }
+
+      setPreventedRoutes(nextPrevented);
+
+      if (route !== undefined && setParentPrevented !== undefined) {
+        // when route is defined (and setParentPrevented) it means we're in a nested stack
+        // route.key then will host route key of parent
+        setParentPrevented(
+          route.key,
+          [...nextPrevented.values()].some(({ shouldPrevent }) => shouldPrevent)
+        );
+      }
+    }
   );
 
-  const setPreventRemove = React.useCallback(
-    (routeKey: string, shouldPrevent: boolean): void => {
-      setPreventedRoutes((prevPrevented) => {
-        const nextPrevented = new Map(prevPrevented);
-
-        if (shouldPrevent) {
-          nextPrevented.set(routeKey, { shouldPrevent });
-        } else {
-          nextPrevented.delete(routeKey);
-        }
-
-        return nextPrevented;
-      });
-
-      if (setParentPrevented !== undefined) {
-        // when setParentPrevented is defined that means the
-        // focused route key is the route key of the parent
-        const parentRouteKey = state?.routes[state?.index].key;
-        setParentPrevented(parentRouteKey, shouldPreventParent);
-      }
-    },
-    [setParentPrevented, state?.index, state?.routes, shouldPreventParent]
+  const value = React.useMemo(
+    () => ({
+      setPreventRemove,
+      preventedRoutes: Object.fromEntries(preventedRoutes),
+    }),
+    [preventedRoutes, setPreventRemove]
   );
 
   return (
-    <PreventRemoveContext.Provider
-      value={{
-        setPreventRemove,
-        preventedRoutes: Object.fromEntries(preventedRoutes),
-      }}
-    >
+    <PreventRemoveContext.Provider value={value}>
       {children}
     </PreventRemoveContext.Provider>
   );

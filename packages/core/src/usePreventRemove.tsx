@@ -1,4 +1,5 @@
 import React from 'react';
+import useLatestCallback from 'use-latest-callback';
 
 import PreventRemoveContext from './PreventRemoveContext';
 import type { EventListenerCallback, EventMapCore } from './types';
@@ -27,17 +28,18 @@ export default function usePreventRemove(
     };
   }, [setPreventRemove, routeKey, preventRemove]);
 
+  const beforeRemoveListener = useLatestCallback((e: any) => {
+    if (!preventRemove) {
+      return;
+    }
+
+    e.preventDefault();
+
+    callback?.(e);
+  });
+
   React.useEffect(
-    () =>
-      navigation?.addListener('beforeRemove', (e) => {
-        if (!preventRemove) {
-          return;
-        }
-
-        e.preventDefault();
-
-        callback?.(e);
-      }),
-    [preventRemove, navigation, callback]
+    () => navigation?.addListener('beforeRemove', beforeRemoveListener),
+    [navigation, beforeRemoveListener]
   );
 }
