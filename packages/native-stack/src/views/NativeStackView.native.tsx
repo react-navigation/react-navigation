@@ -334,8 +334,9 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
     if (dismissedRouteName) {
       const message =
         `The screen '${dismissedRouteName}' was removed natively but didn't get removed from JS state. ` +
-        `This can happen if the action was prevented in a 'beforeRemove' listener, which is not fully supported in native-stack.\n\n` +
-        `Consider using 'gestureEnabled: false' to prevent back gesture and use a custom back button with 'headerLeft' option to override the native behavior.`;
+        `This can happen if the action was prevented in a 'beforeRemove' listener or with 'usePreventRemove' hook.\n\n` +
+        `When using 'usePreventRemove' consider using 'headerBackButtonMenuEnabled: false' to prevent users from natively going back multiple screens.\n\n` +
+        `When using a 'beforeRemove' listener consider using 'gestureEnabled: false' to prevent back gesture and use a custom back button with 'headerLeft' option to override the native behavior.`;
 
       console.error(message);
     }
