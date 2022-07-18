@@ -2,7 +2,6 @@ import {
   createNavigatorFactory,
   EventArg,
   ParamListBase,
-  PreventRemoveProvider,
   StackActionHelpers,
   StackActions,
   StackNavigationState,

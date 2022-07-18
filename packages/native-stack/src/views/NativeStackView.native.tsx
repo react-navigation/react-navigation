@@ -139,6 +139,7 @@ const SceneView = ({
     animationTypeForReplace = 'push',
     gestureEnabled,
     header,
+    headerBackButtonMenuEnabled,
     headerShown,
     autoHideHomeIndicator,
     navigationBarColor,
@@ -216,7 +217,7 @@ const SceneView = ({
 
   const headerHeight = header ? customHeaderHeight : defaultHeaderHeight;
 
-  const isRemovePrevented = preventedRoutes[route.key]?.shouldPrevent ?? false;
+  const isRemovePrevented = preventedRoutes[route.key]?.shouldPrevent;
 
   return (
     <Screen
@@ -252,7 +253,9 @@ const SceneView = ({
       onDismissed={onDismissed}
       isNativeStack
       // Props for preventing removal in native-stack
-      nativeBackButtonDismissalEnabled={!isRemovePrevented} // on Android
+      nativeBackButtonDismissalEnabled={
+        isRemovePrevented === undefined ? false : !isRemovePrevented
+      } // on Android
       // @ts-expect-error prop not publicly exported from rn-screens
       preventNativeDismiss={isRemovePrevented} // on iOS
       onHeaderBackButtonClicked={onHeaderBackButtonClicked}
@@ -294,6 +297,11 @@ const SceneView = ({
                 <HeaderConfig
                   {...options}
                   route={route}
+                  headerBackButtonMenuEnabled={
+                    isRemovePrevented !== undefined
+                      ? !isRemovePrevented
+                      : headerBackButtonMenuEnabled
+                  }
                   headerShown={isHeaderInPush}
                   headerHeight={headerHeight}
                   canGoBack={index !== 0}

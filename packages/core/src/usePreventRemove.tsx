@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid/non-secure';
 import React from 'react';
 import useLatestCallback from 'use-latest-callback';
 
@@ -16,17 +17,19 @@ export default function usePreventRemove(
   preventRemove: boolean,
   callback?: EventListenerCallback<EventMapCore<any>, 'beforeRemove'>
 ) {
+  const [id] = React.useState(() => nanoid());
+
   const navigation = useNavigation();
   const { key: routeKey } = useRoute();
 
   const { setPreventRemove } = React.useContext(PreventRemoveContext);
 
   React.useEffect(() => {
-    setPreventRemove?.(routeKey, preventRemove);
+    setPreventRemove?.(id, routeKey, preventRemove);
     return () => {
-      setPreventRemove?.(routeKey, false);
+      setPreventRemove?.(id, routeKey, false);
     };
-  }, [setPreventRemove, routeKey, preventRemove]);
+  }, [setPreventRemove, id, routeKey, preventRemove]);
 
   const beforeRemoveListener = useLatestCallback((e: any) => {
     if (!preventRemove) {

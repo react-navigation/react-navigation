@@ -138,11 +138,7 @@ export default function StackScreen({ navigation }: Props) {
   }, [navigation]);
 
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerBackButtonMenuEnabled: false,
-      }}
-    >
+    <Stack.Navigator>
       <Stack.Screen name="Input" component={InputScreen} />
       <Stack.Screen name="Article" component={ArticleScreen} />
     </Stack.Navigator>
