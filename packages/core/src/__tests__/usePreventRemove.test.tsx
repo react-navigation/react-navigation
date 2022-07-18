@@ -128,6 +128,115 @@ it("prevents removing a screen with 'usePreventRemove' hook", () => {
   });
 });
 
+it("prevents removing a screen when 'usePreventRemove' hook is called multiple times", () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(StackRouter, props);
+
+    return (
+      <React.Fragment>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </React.Fragment>
+    );
+  };
+
+  const onPreventRemove = jest.fn();
+
+  let shouldContinue = false;
+
+  const TestScreen = (props: any) => {
+    usePreventRemove(false);
+    usePreventRemove(true, (e) => {
+      onPreventRemove();
+      if (shouldContinue) {
+        props.navigation.dispatch(e.data.action);
+      }
+    });
+    usePreventRemove(false);
+
+    return null;
+  };
+
+  const onStateChange = jest.fn();
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const element = (
+    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar" component={TestScreen} />
+        <Screen name="baz">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(element);
+
+  act(() => ref.current?.navigate('bar'));
+
+  expect(onStateChange).toBeCalledTimes(1);
+  expect(onStateChange).toBeCalledWith({
+    index: 1,
+    key: 'stack-2',
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [
+      { key: 'foo-3', name: 'foo' },
+      { key: 'bar-4', name: 'bar' },
+    ],
+    stale: false,
+    type: 'stack',
+  });
+
+  act(() => ref.current?.navigate('baz'));
+
+  expect(onStateChange).toBeCalledTimes(2);
+  expect(onStateChange).toBeCalledWith({
+    index: 2,
+    key: 'stack-2',
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [
+      { key: 'foo-3', name: 'foo' },
+      { key: 'bar-4', name: 'bar' },
+      { key: 'baz-8', name: 'baz' }, // baz-5 - usePreventRemove calls nanoid which bumps the keys in mocks
+    ],
+    stale: false,
+    type: 'stack',
+  });
+
+  act(() => ref.current?.navigate('foo'));
+
+  expect(onStateChange).toBeCalledTimes(2);
+  expect(onPreventRemove).toBeCalledTimes(1);
+
+  expect(ref.current?.getRootState()).toEqual({
+    index: 2,
+    key: 'stack-2',
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [
+      { key: 'foo-3', name: 'foo' },
+      { key: 'bar-4', name: 'bar' },
+      { key: 'baz-8', name: 'baz' }, // baz-5 - usePreventRemove calls nanoid which bumps the keys in mocks
+    ],
+    stale: false,
+    type: 'stack',
+  });
+
+  shouldContinue = true;
+
+  act(() => ref.current?.navigate('bar'));
+  act(() => ref.current?.navigate('foo'));
+
+  expect(onStateChange).toBeCalledTimes(4);
+  expect(onStateChange).toBeCalledWith({
+    index: 0,
+    key: 'stack-2',
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [{ key: 'foo-3', name: 'foo' }],
+    stale: false,
+    type: 'stack',
+  });
+});
+
 it("should have no effect when 'usePreventRemove' hook is set to false", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(StackRouter, props);
