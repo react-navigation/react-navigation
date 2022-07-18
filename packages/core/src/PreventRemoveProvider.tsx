@@ -25,22 +25,21 @@ const transformPreventedRoutes = (
   const preventedRoutesObjById = Object.fromEntries(preventedRoutesById);
   // get rid of IDs
   const preventedRoutesToTransform = Object.values(preventedRoutesObjById);
-
-  // when routeKey was in route we can safely assume it should be prevented
+  // when routeKey was in the Map we can safely assume it should be prevented
   const preventedRoutesWithRepetition = preventedRoutesToTransform.map(
     ({ routeKey }) => ({ [routeKey]: { shouldPrevent: true } })
   );
-  // remove the duplicates
+  // remove duplicates
   const preventedRoutesArr = [...new Set(preventedRoutesWithRepetition)];
   // and create an object from that array
   return Object.assign({}, ...preventedRoutesArr);
 };
 
 /**
- * Component used for managing which routes have to be prevented from removal in native-stack
+ * Component used for managing which routes have to be prevented from removal in native-stack.
  */
 export default function PreventRemoveProvider({ children }: Props) {
-  const [id] = React.useState(() => nanoid());
+  const [parentId] = React.useState(() => nanoid());
   const [preventedRoutesById, setPreventedRoutesById] =
     React.useState<PreventedRoutesMap>(new Map());
 
@@ -95,14 +94,14 @@ export default function PreventRemoveProvider({ children }: Props) {
     if (route?.key !== undefined && setParentPrevented !== undefined) {
       // when route is defined (and setParentPrevented) it means we're in a nested stack
       // route.key then will host route key of parent
-      setParentPrevented(id, route.key, isPrevented);
+      setParentPrevented(parentId, route.key, isPrevented);
       return () => {
-        setParentPrevented(id, route.key, false);
+        setParentPrevented(parentId, route.key, false);
       };
     }
 
     return;
-  }, [id, isPrevented, route?.key, setParentPrevented]);
+  }, [parentId, isPrevented, route?.key, setParentPrevented]);
 
   const value = React.useMemo(
     () => ({
