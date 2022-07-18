@@ -62,6 +62,7 @@ import NativeStackPreventRemove from './Screens/NativeStackPreventRemove';
 import NotFound from './Screens/NotFound';
 import SimpleStack from './Screens/SimpleStack';
 import StackHeaderCustomization from './Screens/StackHeaderCustomization';
+import StackPreventRemove from './Screens/StackPreventRemove';
 import StackTransparent from './Screens/StackTransparent';
 import SettingsItem from './Shared/SettingsItem';
 
@@ -127,6 +128,10 @@ const SCREENS = {
   AuthFlow: {
     title: 'Auth Flow',
     component: AuthFlow,
+  },
+  StackPreventRemove: {
+    title: 'Prevent removing screen in Stack',
+    component: StackPreventRemove,
   },
   NativeStackPreventRemove: {
     title: 'Prevent removing screen in Native Stack',
