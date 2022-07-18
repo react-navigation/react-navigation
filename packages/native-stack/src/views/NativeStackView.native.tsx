@@ -217,7 +217,7 @@ const SceneView = ({
 
   const headerHeight = header ? customHeaderHeight : defaultHeaderHeight;
 
-  const isRemovePrevented = preventedRoutes[route.key]?.shouldPrevent;
+  const isRemovePrevented = preventedRoutes[route.key]?.preventRemove;
 
   return (
     <Screen

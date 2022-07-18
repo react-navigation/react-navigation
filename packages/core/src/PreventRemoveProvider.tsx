@@ -14,20 +14,18 @@ type PreventedRoutesMap = Map<
   string,
   {
     routeKey: string;
-    shouldPrevent: boolean;
+    preventRemove: boolean;
   }
 >;
 
 const transformPreventedRoutes = (
-  preventedRoutesById: PreventedRoutesMap
+  preventedRoutesMap: PreventedRoutesMap
 ): PreventedRoutes => {
-  // create an object from Map
-  const preventedRoutesObjById = Object.fromEntries(preventedRoutesById);
-  // get rid of IDs
-  const preventedRoutesToTransform = Object.values(preventedRoutesObjById);
-  // when routeKey was in the Map we can safely assume it should be prevented
+  // create an array from values from map
+  const preventedRoutesToTransform = [...preventedRoutesMap.values()];
+  // when routeKey was in the map we can safely assume it should be prevented
   const preventedRoutesWithRepetition = preventedRoutesToTransform.map(
-    ({ routeKey }) => ({ [routeKey]: { shouldPrevent: true } })
+    ({ routeKey }) => ({ [routeKey]: { preventRemove: true } })
   );
   // remove duplicates
   const preventedRoutesArr = [...new Set(preventedRoutesWithRepetition)];
@@ -40,7 +38,7 @@ const transformPreventedRoutes = (
  */
 export default function PreventRemoveProvider({ children }: Props) {
   const [parentId] = React.useState(() => nanoid());
-  const [preventedRoutesById, setPreventedRoutesById] =
+  const [preventedRoutesMap, setPreventedRoutesMap] =
     React.useState<PreventedRoutesMap>(new Map());
 
   const navigation = React.useContext(NavigationHelpersContext);
@@ -51,9 +49,9 @@ export default function PreventRemoveProvider({ children }: Props) {
     React.useContext(PreventRemoveContext);
 
   const setPreventRemove = useLatestCallback(
-    (id: string, routeKey: string, shouldPrevent: boolean): void => {
+    (id: string, routeKey: string, preventRemove: boolean): void => {
       if (
-        shouldPrevent &&
+        preventRemove &&
         (navigation == null ||
           navigation
             ?.getState()
@@ -64,19 +62,22 @@ export default function PreventRemoveProvider({ children }: Props) {
         );
       }
 
-      setPreventedRoutesById((prevPrevented) => {
+      setPreventedRoutesMap((prevPrevented) => {
         // values haven't changed - do nothing
         if (
           routeKey === prevPrevented.get(id)?.routeKey &&
-          shouldPrevent === prevPrevented.get(id)?.shouldPrevent
+          preventRemove === prevPrevented.get(id)?.preventRemove
         ) {
           return prevPrevented;
         }
 
         const nextPrevented = new Map(prevPrevented);
 
-        if (shouldPrevent) {
-          nextPrevented.set(id, { routeKey, shouldPrevent });
+        if (preventRemove) {
+          nextPrevented.set(id, {
+            routeKey,
+            preventRemove,
+          });
         } else {
           nextPrevented.delete(id);
         }
@@ -86,8 +87,8 @@ export default function PreventRemoveProvider({ children }: Props) {
     }
   );
 
-  const isPrevented = [...preventedRoutesById.values()].some(
-    ({ shouldPrevent }) => shouldPrevent
+  const isPrevented = [...preventedRoutesMap.values()].some(
+    ({ preventRemove }) => preventRemove
   );
 
   React.useEffect(() => {
@@ -106,9 +107,9 @@ export default function PreventRemoveProvider({ children }: Props) {
   const value = React.useMemo(
     () => ({
       setPreventRemove,
-      preventedRoutes: transformPreventedRoutes(preventedRoutesById),
+      preventedRoutes: transformPreventedRoutes(preventedRoutesMap),
     }),
-    [setPreventRemove, preventedRoutesById]
+    [setPreventRemove, preventedRoutesMap]
   );
 
   return (
