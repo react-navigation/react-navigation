@@ -88,7 +88,7 @@ it("prevents removing a screen with 'usePreventRemove' hook", () => {
     routes: [
       { key: 'foo-3', name: 'foo' },
       { key: 'bar-4', name: 'bar' },
-      { key: 'baz-5', name: 'baz' },
+      { key: 'baz-6', name: 'baz' }, // baz-5 - usePreventRemove calls nanoid which bumps the keys in mocks
     ],
     stale: false,
     type: 'stack',
@@ -106,7 +106,7 @@ it("prevents removing a screen with 'usePreventRemove' hook", () => {
     routes: [
       { key: 'foo-3', name: 'foo' },
       { key: 'bar-4', name: 'bar' },
-      { key: 'baz-5', name: 'baz' },
+      { key: 'baz-6', name: 'baz' }, // baz-5 - usePreventRemove calls nanoid which bumps the keys in mocks
     ],
     stale: false,
     type: 'stack',
@@ -190,7 +190,7 @@ it("should have no effect when 'usePreventRemove' hook is set to false", () => {
     routes: [
       { key: 'foo-3', name: 'foo' },
       { key: 'bar-4', name: 'bar' },
-      { key: 'baz-5', name: 'baz' },
+      { key: 'baz-6', name: 'baz' }, // baz-5 - usePreventRemove calls nanoid which bumps the keys in mocks
     ],
     stale: false,
     type: 'stack',
@@ -639,17 +639,17 @@ it("prevents removing by multiple screens with 'usePreventRemove' hook", () => {
         name: 'bax',
         state: {
           index: 0,
-          key: 'stack-8',
+          key: 'stack-10', // stack-8 - usePreventRemove calls nanoid which bumps the keys in mocks vvv
           routeNames: ['qux'],
           routes: [
             {
-              key: 'qux-9',
+              key: 'qux-11', //qux-9
               name: 'qux',
               state: {
                 index: 0,
-                key: 'stack-11',
+                key: 'stack-13', // stack-11
                 routeNames: ['lex'],
-                routes: [{ key: 'lex-12', name: 'lex' }],
+                routes: [{ key: 'lex-14', name: 'lex' }], // lex-12
                 stale: false,
                 type: 'stack',
               },
