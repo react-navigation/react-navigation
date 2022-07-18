@@ -1,13 +1,12 @@
 import * as React from 'react';
 
-type Render = (children: JSX.Element) => JSX.Element;
+type Render = (children: React.ReactNode) => JSX.Element;
 
 type Props = {
   render: Render;
-  children: JSX.Element;
+  children: React.ReactNode;
 };
 
-// todo: check convention
 const NavigationContent = ({ render, children }: Props) => {
   return render(children);
 };
@@ -24,7 +23,7 @@ export default function useComponent(render: Render) {
     renderRef.current = null;
   });
 
-  return React.useRef(({ children }: { children: JSX.Element }) => {
+  return React.useRef(({ children }: { children: React.ReactNode }) => {
     const render = renderRef.current;
 
     if (render === null) {
