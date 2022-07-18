@@ -88,10 +88,7 @@ it("prevents removing a screen with 'usePreventRemove' hook", () => {
     routes: [
       { key: 'foo-3', name: 'foo' },
       { key: 'bar-4', name: 'bar' },
-      {
-        key: 'baz-5',
-        name: 'baz',
-      },
+      { key: 'baz-5', name: 'baz' },
     ],
     stale: false,
     type: 'stack',
@@ -193,10 +190,7 @@ it("should have no effect when 'usePreventRemove' hook is set to false", () => {
     routes: [
       { key: 'foo-3', name: 'foo' },
       { key: 'bar-4', name: 'bar' },
-      {
-        key: 'baz-5',
-        name: 'baz',
-      },
+      { key: 'baz-5', name: 'baz' },
     ],
     stale: false,
     type: 'stack',
@@ -393,7 +387,7 @@ it("prevents removing a child screen with 'usePreventRemove' hook", () => {
   });
 });
 
-it("prevents removing a grand child screen with 'beforeRemove' event", () => {
+it("prevents removing a grand child screen with 'usePreventRemove' hook", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(StackRouter, props);
 
@@ -584,20 +578,15 @@ it("prevents removing by multiple screens with 'usePreventRemove' hook", () => {
   };
 
   const TestScreen = (props: any) => {
-    React.useEffect(
-      () =>
-        props.navigation.addListener('beforeRemove', (e: any) => {
-          // @ts-expect-error: we should have the required mocks
-          onPreventRemove[props.route.name]();
-          e.preventDefault();
+    usePreventRemove(true, (e: any) => {
+      // @ts-expect-error: we should have the required mocks
+      onPreventRemove[props.route.name]();
 
-          // @ts-expect-error: we should have the required properties
-          if (!shouldContinue[props.route.name]) {
-            props.navigation.dispatch(e.data.action);
-          }
-        }),
-      [props.navigation, props.route.name]
-    );
+      // @ts-expect-error: we should have the required properties
+      if (!shouldContinue[props.route.name]) {
+        props.navigation.dispatch(e.data.action);
+      }
+    });
 
     return null;
   };
