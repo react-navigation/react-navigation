@@ -8,7 +8,7 @@ import useNavigation from './useNavigation';
 import useRoute from './useRoute';
 
 /**
- * Hook to prevent screen from being removed.
+ * Hook to prevent screen from being removed. Can be used to prevent users from leaving the screen.
  *
  * @param preventRemove Boolean indicating whether to prevent screen from being removed.
  * @param callback Optional function which is executed when screen was prevented from being removed.
