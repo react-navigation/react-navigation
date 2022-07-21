@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid/non-secure';
-import React from 'react';
+import * as React from 'react';
 import useLatestCallback from 'use-latest-callback';
 
 import NavigationHelpersContext from './NavigationHelpersContext';
@@ -44,9 +44,9 @@ export default function PreventRemoveProvider({ children }: Props) {
   const navigation = React.useContext(NavigationHelpersContext);
   const route = React.useContext(NavigationRouteContext);
 
-  // take `setPreventRemove` from parent context
-  const { setPreventRemove: setParentPrevented } =
-    React.useContext(PreventRemoveContext);
+  const preventRemoveContextValue = React.useContext(PreventRemoveContext);
+  // take `setPreventRemove` from parent context - if exist it means we're in a nested context
+  const setParentPrevented = preventRemoveContextValue?.setPreventRemove;
 
   const setPreventRemove = useLatestCallback(
     (id: string, routeKey: string, preventRemove: boolean): void => {
@@ -94,7 +94,7 @@ export default function PreventRemoveProvider({ children }: Props) {
   React.useEffect(() => {
     if (route?.key !== undefined && setParentPrevented !== undefined) {
       // when route is defined (and setParentPrevented) it means we're in a nested stack
-      // route.key then will host route key of parent
+      // route.key then will be the route key of parent
       setParentPrevented(parentId, route.key, isPrevented);
       return () => {
         setParentPrevented(parentId, route.key, false);

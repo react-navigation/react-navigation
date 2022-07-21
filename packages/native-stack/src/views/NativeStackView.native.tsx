@@ -9,10 +9,10 @@ import {
   NavigationContext,
   NavigationRouteContext,
   ParamListBase,
-  PreventRemoveContext,
   Route,
   StackActions,
   StackNavigationState,
+  usePreventRemoveContext,
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -208,7 +208,8 @@ const SceneView = ({
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
-  const { preventedRoutes } = React.useContext(PreventRemoveContext);
+
+  const { preventedRoutes } = usePreventRemoveContext();
 
   const defaultHeaderHeight = getDefaultHeaderHeight(frame, isModal, topInset);
 
@@ -252,10 +253,8 @@ const SceneView = ({
       onDisappear={onDisappear}
       onDismissed={onDismissed}
       isNativeStack
-      // Props for preventing removal in native-stack
-      nativeBackButtonDismissalEnabled={
-        isRemovePrevented === undefined ? false : !isRemovePrevented
-      } // on Android
+      // Props for enabling preventing removal in native-stack
+      nativeBackButtonDismissalEnabled={false} // on Android
       // @ts-expect-error prop not publicly exported from rn-screens
       preventNativeDismiss={isRemovePrevented} // on iOS
       onHeaderBackButtonClicked={onHeaderBackButtonClicked}

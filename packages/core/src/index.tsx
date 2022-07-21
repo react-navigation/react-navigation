@@ -21,6 +21,7 @@ export { default as useNavigationBuilder } from './useNavigationBuilder';
 export { default as useNavigationContainerRef } from './useNavigationContainerRef';
 export { default as useNavigationState } from './useNavigationState';
 export { default as usePreventRemove } from './usePreventRemove';
+export { default as usePreventRemoveContext } from './usePreventRemoveContext';
 export { default as useRoute } from './useRoute';
 export { default as validatePathConfig } from './validatePathConfig';
 export * from '@react-navigation/routers';

@@ -1,6 +1,6 @@
 import { ParamListBase, StackRouter } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
-import React from 'react';
+import * as React from 'react';
 
 import BaseNavigationContainer from '../BaseNavigationContainer';
 import createNavigationContainerRef from '../createNavigationContainerRef';
@@ -23,12 +23,15 @@ beforeEach(() => {
 
 it("prevents removing a screen with 'usePreventRemove' hook", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(StackRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -72,7 +75,7 @@ it("prevents removing a screen with 'usePreventRemove' hook", () => {
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
+      { key: 'bar-5', name: 'bar' },
     ],
     stale: false,
     type: 'stack',
@@ -87,8 +90,8 @@ it("prevents removing a screen with 'usePreventRemove' hook", () => {
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
-      { key: 'baz-6', name: 'baz' }, // baz-5 - usePreventRemove calls nanoid which bumps the keys in mocks
+      { key: 'bar-5', name: 'bar' },
+      { key: 'baz-7', name: 'baz' },
     ],
     stale: false,
     type: 'stack',
@@ -105,8 +108,8 @@ it("prevents removing a screen with 'usePreventRemove' hook", () => {
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
-      { key: 'baz-6', name: 'baz' }, // baz-5 - usePreventRemove calls nanoid which bumps the keys in mocks
+      { key: 'bar-5', name: 'bar' },
+      { key: 'baz-7', name: 'baz' },
     ],
     stale: false,
     type: 'stack',
@@ -130,12 +133,15 @@ it("prevents removing a screen with 'usePreventRemove' hook", () => {
 
 it("prevents removing a screen when 'usePreventRemove' hook is called multiple times", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(StackRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -144,14 +150,14 @@ it("prevents removing a screen when 'usePreventRemove' hook is called multiple t
   let shouldContinue = false;
 
   const TestScreen = (props: any) => {
-    usePreventRemove(false);
+    usePreventRemove(false, () => {});
     usePreventRemove(true, (e) => {
       onPreventRemove();
       if (shouldContinue) {
         props.navigation.dispatch(e.data.action);
       }
     });
-    usePreventRemove(false);
+    usePreventRemove(false, () => {});
 
     return null;
   };
@@ -181,7 +187,7 @@ it("prevents removing a screen when 'usePreventRemove' hook is called multiple t
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
+      { key: 'bar-5', name: 'bar' },
     ],
     stale: false,
     type: 'stack',
@@ -196,8 +202,8 @@ it("prevents removing a screen when 'usePreventRemove' hook is called multiple t
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
-      { key: 'baz-8', name: 'baz' }, // baz-5 - usePreventRemove calls nanoid which bumps the keys in mocks
+      { key: 'bar-5', name: 'bar' },
+      { key: 'baz-9', name: 'baz' },
     ],
     stale: false,
     type: 'stack',
@@ -214,8 +220,8 @@ it("prevents removing a screen when 'usePreventRemove' hook is called multiple t
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
-      { key: 'baz-8', name: 'baz' }, // baz-5 - usePreventRemove calls nanoid which bumps the keys in mocks
+      { key: 'bar-5', name: 'bar' },
+      { key: 'baz-9', name: 'baz' },
     ],
     stale: false,
     type: 'stack',
@@ -239,12 +245,15 @@ it("prevents removing a screen when 'usePreventRemove' hook is called multiple t
 
 it("should have no effect when 'usePreventRemove' hook is set to false", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(StackRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -283,7 +292,7 @@ it("should have no effect when 'usePreventRemove' hook is set to false", () => {
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
+      { key: 'bar-5', name: 'bar' },
     ],
     stale: false,
     type: 'stack',
@@ -298,8 +307,8 @@ it("should have no effect when 'usePreventRemove' hook is set to false", () => {
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
-      { key: 'baz-6', name: 'baz' }, // baz-5 - usePreventRemove calls nanoid which bumps the keys in mocks
+      { key: 'bar-5', name: 'bar' },
+      { key: 'baz-7', name: 'baz' },
     ],
     stale: false,
     type: 'stack',
@@ -336,12 +345,15 @@ it("should have no effect when 'usePreventRemove' hook is set to false", () => {
 
 it("prevents removing a child screen with 'usePreventRemove' hook", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(StackRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -391,7 +403,7 @@ it("prevents removing a child screen with 'usePreventRemove' hook", () => {
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
+      { key: 'bar-5', name: 'bar' },
     ],
     stale: false,
     type: 'stack',
@@ -406,15 +418,15 @@ it("prevents removing a child screen with 'usePreventRemove' hook", () => {
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
+      { key: 'bar-5', name: 'bar' },
       {
-        key: 'baz-5',
+        key: 'baz-6',
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-7',
+          key: 'stack-8',
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-8', name: 'qux' }],
+          routes: [{ key: 'qux-9', name: 'qux' }],
           stale: false,
           type: 'stack',
         },
@@ -435,15 +447,15 @@ it("prevents removing a child screen with 'usePreventRemove' hook", () => {
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
+      { key: 'bar-5', name: 'bar' },
       {
-        key: 'baz-5',
+        key: 'baz-6',
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-7',
+          key: 'stack-8',
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-8', name: 'qux' }],
+          routes: [{ key: 'qux-9', name: 'qux' }],
           stale: false,
           type: 'stack',
         },
@@ -462,15 +474,15 @@ it("prevents removing a child screen with 'usePreventRemove' hook", () => {
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
+      { key: 'bar-5', name: 'bar' },
       {
-        key: 'baz-5',
+        key: 'baz-6',
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-7',
+          key: 'stack-8',
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-8', name: 'qux' }],
+          routes: [{ key: 'qux-9', name: 'qux' }],
           stale: false,
           type: 'stack',
         },
@@ -498,12 +510,15 @@ it("prevents removing a child screen with 'usePreventRemove' hook", () => {
 
 it("prevents removing a grand child screen with 'usePreventRemove' hook", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(StackRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -559,7 +574,7 @@ it("prevents removing a grand child screen with 'usePreventRemove' hook", () => 
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
+      { key: 'bar-5', name: 'bar' },
     ],
     stale: false,
     type: 'stack',
@@ -574,23 +589,23 @@ it("prevents removing a grand child screen with 'usePreventRemove' hook", () => 
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
+      { key: 'bar-5', name: 'bar' },
       {
-        key: 'baz-5',
+        key: 'baz-6',
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-7',
+          key: 'stack-8',
           routeNames: ['qux'],
           routes: [
             {
-              key: 'qux-8',
+              key: 'qux-9',
               name: 'qux',
               state: {
                 index: 0,
-                key: 'stack-10',
+                key: 'stack-12',
                 routeNames: ['lex'],
-                routes: [{ key: 'lex-11', name: 'lex' }],
+                routes: [{ key: 'lex-13', name: 'lex' }],
                 stale: false,
                 type: 'stack',
               },
@@ -616,23 +631,23 @@ it("prevents removing a grand child screen with 'usePreventRemove' hook", () => 
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
+      { key: 'bar-5', name: 'bar' },
       {
-        key: 'baz-5',
+        key: 'baz-6',
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-7',
+          key: 'stack-8',
           routeNames: ['qux'],
           routes: [
             {
-              key: 'qux-8',
+              key: 'qux-9',
               name: 'qux',
               state: {
                 index: 0,
-                key: 'stack-10',
+                key: 'stack-12',
                 routeNames: ['lex'],
-                routes: [{ key: 'lex-11', name: 'lex' }],
+                routes: [{ key: 'lex-13', name: 'lex' }],
                 stale: false,
                 type: 'stack',
               },
@@ -665,12 +680,15 @@ it("prevents removing a grand child screen with 'usePreventRemove' hook", () => 
 
 it("prevents removing by multiple screens with 'usePreventRemove' hook", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(StackRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -741,24 +759,24 @@ it("prevents removing by multiple screens with 'usePreventRemove' hook", () => {
     routeNames: ['foo', 'bar', 'baz', 'bax'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
-      { key: 'baz-5', name: 'baz' },
+      { key: 'bar-5', name: 'bar' },
+      { key: 'baz-6', name: 'baz' },
       {
-        key: 'bax-6',
+        key: 'bax-7',
         name: 'bax',
         state: {
           index: 0,
-          key: 'stack-10', // stack-8 - usePreventRemove calls nanoid which bumps the keys in mocks vvv
+          key: 'stack-11',
           routeNames: ['qux'],
           routes: [
             {
-              key: 'qux-11', //qux-9
+              key: 'qux-12',
               name: 'qux',
               state: {
                 index: 0,
-                key: 'stack-13', // stack-11
+                key: 'stack-15',
                 routeNames: ['lex'],
-                routes: [{ key: 'lex-14', name: 'lex' }], // lex-12
+                routes: [{ key: 'lex-16', name: 'lex' }],
                 stale: false,
                 type: 'stack',
               },
@@ -818,12 +836,15 @@ it("prevents removing by multiple screens with 'usePreventRemove' hook", () => {
 
 it("prevents removing a child screen with 'usePreventRemove' hook with 'resetRoot'", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(StackRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -872,13 +893,13 @@ it("prevents removing a child screen with 'usePreventRemove' hook with 'resetRoo
     routes: [
       { key: 'foo-3', name: 'foo' },
       {
-        key: 'baz-4',
+        key: 'baz-5',
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-6',
+          key: 'stack-7',
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-7', name: 'qux' }],
+          routes: [{ key: 'qux-8', name: 'qux' }],
           stale: false,
           type: 'stack',
         },
@@ -908,13 +929,13 @@ it("prevents removing a child screen with 'usePreventRemove' hook with 'resetRoo
     routes: [
       { key: 'foo-3', name: 'foo' },
       {
-        key: 'baz-4',
+        key: 'baz-5',
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-6',
+          key: 'stack-7',
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-7', name: 'qux' }],
+          routes: [{ key: 'qux-8', name: 'qux' }],
           stale: false,
           type: 'stack',
         },
