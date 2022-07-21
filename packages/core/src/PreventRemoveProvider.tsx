@@ -18,19 +18,23 @@ type PreventedRoutesMap = Map<
   }
 >;
 
+/**
+ * Util function to transform map of prevented routes to a simpler object.
+ */
 const transformPreventedRoutes = (
   preventedRoutesMap: PreventedRoutesMap
 ): PreventedRoutes => {
-  // create an array from values from map
   const preventedRoutesToTransform = [...preventedRoutesMap.values()];
-  // when routeKey was in the map we can safely assume it should be prevented
-  const preventedRoutesWithRepetition = preventedRoutesToTransform.map(
-    ({ routeKey }) => ({ [routeKey]: { preventRemove: true } })
+
+  const preventedRoutes = preventedRoutesToTransform.reduce<PreventedRoutes>(
+    (acc, { routeKey, preventRemove }) => {
+      acc[routeKey] = { preventRemove };
+      return acc;
+    },
+    {}
   );
-  // remove duplicates
-  const preventedRoutesArr = [...new Set(preventedRoutesWithRepetition)];
-  // and create an object from that array
-  return Object.assign({}, ...preventedRoutesArr);
+
+  return preventedRoutes;
 };
 
 /**
