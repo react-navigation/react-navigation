@@ -22,9 +22,11 @@ export default function useKeyedChildListeners() {
       key: string,
       listener: KeyedListenerMap[T]
     ) => {
+      // @ts-expect-error: according to ref stated above you can use `key` to index type
       keyedListeners[type][key] = listener;
 
       return () => {
+        // @ts-expect-error: according to ref stated above you can use `key` to index type
         keyedListeners[type][key] = undefined;
       };
     },

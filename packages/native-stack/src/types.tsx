@@ -325,6 +325,24 @@ export type NativeStackNavigationOptions = {
    */
   headerBackButtonMenuEnabled?: boolean;
   /**
+   * Whether the home indicator should prefer to stay hidden on this screen. Defaults to `false`.
+   *
+   * @platform ios
+   */
+  autoHideHomeIndicator?: boolean;
+  /**
+   * Sets the navigation bar color. Defaults to initial navigation bar color.
+   *
+   * @platform android
+   */
+  navigationBarColor?: string;
+  /**
+   * Sets the visibility of the navigation bar. Defaults to `false`.
+   *
+   * @platform android
+   */
+  navigationBarHidden?: boolean;
+  /**
    * Sets the status bar animation (similar to the `StatusBar` component).
    * Requires setting `View controller-based status bar appearance -> YES` (or removing the config) in your `Info.plist` file.
    *
@@ -333,6 +351,12 @@ export type NativeStackNavigationOptions = {
    * @platform ios
    */
   statusBarAnimation?: ScreenProps['statusBarAnimation'];
+  /**
+   * Sets the status bar color (similar to the `StatusBar` component). Defaults to initial status bar color.
+   *
+   * @platform android
+   */
+  statusBarColor?: string;
   /**
    * Whether the status bar should be hidden on this screen.
    * Requires setting `View controller-based status bar appearance -> YES` in your Info.plist file.
@@ -351,6 +375,23 @@ export type NativeStackNavigationOptions = {
    * @platform ios
    */
   statusBarStyle?: ScreenProps['statusBarStyle'];
+  /**
+   * Sets the translucency of the status bar. Defaults to `false`.
+   *
+   * @platform android
+   */
+  statusBarTranslucent?: boolean;
+  /**
+   * Sets the direction in which you should swipe to dismiss the screen.
+   * When using `vertical` option, options `fullScreenGestureEnabled: true`, `customAnimationOnGesture: true` and `animation: 'slide_from_bottom'` are set by default.
+   *
+   * Supported values:
+   * - `vertical` – dismiss screen vertically
+   * - `horizontal` – dismiss screen horizontally (default)
+   *
+   * @platform ios
+   */
+  gestureDirection?: ScreenProps['swipeDirection'];
   /**
    * Style object for the scene content.
    */
@@ -407,6 +448,13 @@ export type NativeStackNavigationOptions = {
    * Only supported on iOS and Android.
    */
   animation?: ScreenProps['stackAnimation'];
+  /**
+   * Changes the duration (in milliseconds) of `slide_from_bottom`, `fade_from_bottom`, `fade` and `simple_push` transitions on iOS. Defaults to `350`.
+   * The duration of `default` and `flip` transitions isn't customizable.
+   *
+   * @platform ios
+   */
+  animationDuration?: number;
   /**
    * How should the screen be presented.
    *

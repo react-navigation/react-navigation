@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.10...@react-navigation/native@6.0.11) (2022-07-05)
+
+
+### Bug Fixes
+
+* ensure same @types/react version in repo ([#10663](https://github.com/react-navigation/react-navigation/issues/10663)) ([e662465](https://github.com/react-navigation/react-navigation/commit/e6624653fbbd931158dbebd17142abf9637205b6)), closes [#10655](https://github.com/react-navigation/react-navigation/issues/10655)
+* expose `LinkingContext` ([#10604](https://github.com/react-navigation/react-navigation/issues/10604)) ([ac24e61](https://github.com/react-navigation/react-navigation/commit/ac24e617af10c48b161d1aaa7dfc8c1c1218a3cd))
+* prevent `history.go()` navigation outside bounds ([#10601](https://github.com/react-navigation/react-navigation/issues/10601)) ([ff8d8a3](https://github.com/react-navigation/react-navigation/commit/ff8d8a31d83f76129be5a8ee0a95ef2919eb1240)), closes [#10481](https://github.com/react-navigation/react-navigation/issues/10481)
+
+
+
+
+
 ## [6.0.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.9...@react-navigation/native@6.0.10) (2022-04-01)
 
 **Note:** Version bump only for package @react-navigation/native

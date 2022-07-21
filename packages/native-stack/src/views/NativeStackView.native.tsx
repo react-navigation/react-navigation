@@ -111,6 +111,7 @@ type SceneViewProps = {
   index: number;
   descriptor: NativeStackDescriptor;
   previousDescriptor?: NativeStackDescriptor;
+  nextDescriptor?: NativeStackDescriptor;
   onWillDisappear: () => void;
   onAppear: () => void;
   onDisappear: () => void;
@@ -120,6 +121,7 @@ type SceneViewProps = {
 const SceneView = ({
   descriptor,
   previousDescriptor,
+  nextDescriptor,
   index,
   onWillDisappear,
   onAppear,
@@ -128,20 +130,52 @@ const SceneView = ({
 }: SceneViewProps) => {
   const { route, navigation, options, render } = descriptor;
   const {
-    animation,
+    animationDuration,
     animationTypeForReplace = 'push',
-    customAnimationOnGesture,
-    fullScreenGestureEnabled,
     gestureEnabled,
     header,
     headerShown,
+    autoHideHomeIndicator,
+    navigationBarColor,
+    navigationBarHidden,
     orientation,
     statusBarAnimation,
     statusBarHidden,
     statusBarStyle,
+    statusBarTranslucent,
+    statusBarColor,
   } = options;
 
-  let { presentation = 'card' } = options;
+  let {
+    animation,
+    customAnimationOnGesture,
+    fullScreenGestureEnabled,
+    presentation = 'card',
+    gestureDirection = presentation === 'card' ? 'horizontal' : 'vertical',
+  } = options;
+
+  if (gestureDirection === 'vertical' && Platform.OS === 'ios') {
+    // for `vertical` direction to work, we need to set `fullScreenGestureEnabled` to `true`
+    // so the screen can be dismissed from any point on screen.
+    // `customAnimationOnGesture` needs to be set to `true` so the `animation` set by user can be used,
+    // otherwise `simple_push` will be used.
+    // Also, the default animation for this direction seems to be `slide_from_bottom`.
+    if (fullScreenGestureEnabled === undefined) {
+      fullScreenGestureEnabled = true;
+    }
+    if (customAnimationOnGesture === undefined) {
+      customAnimationOnGesture = true;
+    }
+    if (animation === undefined) {
+      animation = 'slide_from_bottom';
+    }
+  }
+
+  // workaround for rn-screens where gestureDirection has to be set on both
+  // current and previous screen - software-mansion/react-native-screens/pull/1509
+  const nextGestureDirection = nextDescriptor?.options.gestureDirection;
+  const gestureDirectionOverride =
+    nextGestureDirection != null ? nextGestureDirection : gestureDirection;
 
   if (index === 0) {
     // first screen should always be treated as `card`, it resolves problems with no header animation
@@ -161,7 +195,7 @@ const SceneView = ({
 
   // Modals are fullscreen in landscape only on iPhone
   const isIPhone =
-    Platform.OS === 'ios' && !(Platform.isPad && Platform.isTVOS);
+    Platform.OS === 'ios' && !(Platform.isPad || Platform.isTVOS);
   const isLandscape = frame.width > frame.height;
 
   const topInset = isModal || (isIPhone && isLandscape) ? 0 : insets.top;
@@ -190,6 +224,9 @@ const SceneView = ({
             false
           : gestureEnabled
       }
+      homeIndicatorHidden={autoHideHomeIndicator}
+      navigationBarColor={navigationBarColor}
+      navigationBarHidden={navigationBarHidden}
       replaceAnimation={animationTypeForReplace}
       stackPresentation={presentation === 'card' ? 'push' : presentation}
       stackAnimation={animation}
@@ -197,6 +234,10 @@ const SceneView = ({
       statusBarAnimation={statusBarAnimation}
       statusBarHidden={statusBarHidden}
       statusBarStyle={statusBarStyle}
+      statusBarColor={statusBarColor}
+      statusBarTranslucent={statusBarTranslucent}
+      swipeDirection={gestureDirectionOverride}
+      transitionDuration={animationDuration}
       onWillDisappear={onWillDisappear}
       onAppear={onAppear}
       onDisappear={onDisappear}
@@ -291,9 +332,11 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
       {state.routes.map((route, index) => {
         const descriptor = descriptors[route.key];
         const previousKey = state.routes[index - 1]?.key;
+        const nextKey = state.routes[index + 1]?.key;
         const previousDescriptor = previousKey
           ? descriptors[previousKey]
           : undefined;
+        const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
 
         return (
           <SceneView
@@ -301,6 +344,7 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
             index={index}
             descriptor={descriptor}
             previousDescriptor={previousDescriptor}
+            nextDescriptor={nextDescriptor}
             onWillDisappear={() => {
               navigation.emit({
                 type: 'transitionStart',

@@ -12,8 +12,7 @@ import * as React from 'react';
 import window from '../__mocks__/window';
 import NavigationContainer from '../NavigationContainer';
 
-// @ts-expect-error: practically window is same as global, so we can ignore the error
-global.window = window;
+Object.assign(global, window);
 
 // We want to use the web version of useLinking
 // eslint-disable-next-line import/extensions

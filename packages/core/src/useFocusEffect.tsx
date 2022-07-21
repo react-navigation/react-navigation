@@ -52,7 +52,7 @@ export default function useFocusEffect(effect: EffectCallback) {
             'Instead, write the async function inside your effect ' +
             'and call it immediately:\n\n' +
             'useFocusEffect(\n' +
-            '  React.useCallback() => {\n' +
+            '  React.useCallback(() => {\n' +
             '    async function fetchData() {\n' +
             '      // You can await here\n' +
             '      const response = await MyAPI.getData(someId);\n' +
