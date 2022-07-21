@@ -341,13 +341,35 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
     if (dismissedRouteName) {
       const message =
         `The screen '${dismissedRouteName}' was removed natively but didn't get removed from JS state. ` +
-        `This can happen if the action was prevented in a 'beforeRemove' listener or with 'usePreventRemove' hook.\n\n` +
-        `When using 'usePreventRemove' consider using 'headerBackButtonMenuEnabled: false' to prevent users from natively going back multiple screens.\n\n` +
-        `When using a 'beforeRemove' listener consider using 'gestureEnabled: false' to prevent back gesture and use a custom back button with 'headerLeft' option to override the native behavior.`;
+        `This can happen if the action was prevented in a 'beforeRemove' listener, which is not fully supported in native-stack.\n\n` +
+        `Consider using a 'usePreventRemove' hook with 'headerBackButtonMenuEnabled: false' to prevent users from natively going back multiple screens.`;
 
       console.error(message);
     }
   }, [dismissedRouteName]);
+
+  const { preventedRoutes } = usePreventRemoveContext();
+  const preventedRouteKey = Object.keys(preventedRoutes)[0];
+  const preventedDescriptor = descriptors[preventedRouteKey];
+  const isHeaderBackButtonMenuEnabledOnPreventedScreen =
+    preventedDescriptor?.options?.headerBackButtonMenuEnabled;
+  const preventedRouteName = preventedDescriptor?.route?.name;
+
+  React.useEffect(() => {
+    if (
+      preventedRouteKey != null &&
+      isHeaderBackButtonMenuEnabledOnPreventedScreen
+    ) {
+      const message =
+        `The screen ${preventedRouteName} uses 'usePreventRemove' hook alongside 'headerBackButtonMenuEnabled: true', which is not supported. \n\n` +
+        `Consider removing 'headerBackButtonMenuEnabled: true' from ${preventedRouteName} screen to get rid of this error.`;
+      console.error(message);
+    }
+  }, [
+    preventedRouteKey,
+    isHeaderBackButtonMenuEnabledOnPreventedScreen,
+    preventedRouteName,
+  ]);
 
   return (
     <ScreenStack style={styles.container}>
