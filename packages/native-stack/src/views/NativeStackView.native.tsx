@@ -35,6 +35,8 @@ import type {
   NativeStackNavigationHelpers,
   NativeStackNavigationOptions,
 } from '../types';
+import useDismissedRouteError from '../utils/useDismissedRouteError';
+import useInvalidPreventRemoveError from '../utils/useInvalidPreventRemoveError';
 import DebugContainer from './DebugContainer';
 import HeaderConfig from './HeaderConfig';
 
@@ -329,47 +331,8 @@ type Props = {
 };
 
 function NativeStackViewInner({ state, navigation, descriptors }: Props) {
-  const [nextDismissedKey, setNextDismissedKey] = React.useState<string | null>(
-    null
-  );
-
-  const dismissedRouteName = nextDismissedKey
-    ? state.routes.find((route) => route.key === nextDismissedKey)?.name
-    : null;
-
-  React.useEffect(() => {
-    if (dismissedRouteName) {
-      const message =
-        `The screen '${dismissedRouteName}' was removed natively but didn't get removed from JS state. ` +
-        `This can happen if the action was prevented in a 'beforeRemove' listener, which is not fully supported in native-stack.\n\n` +
-        `Consider using a 'usePreventRemove' hook with 'headerBackButtonMenuEnabled: false' to prevent users from natively going back multiple screens.`;
-
-      console.error(message);
-    }
-  }, [dismissedRouteName]);
-
-  const { preventedRoutes } = usePreventRemoveContext();
-  const preventedRouteKey = Object.keys(preventedRoutes)[0];
-  const preventedDescriptor = descriptors[preventedRouteKey];
-  const isHeaderBackButtonMenuEnabledOnPreventedScreen =
-    preventedDescriptor?.options?.headerBackButtonMenuEnabled;
-  const preventedRouteName = preventedDescriptor?.route?.name;
-
-  React.useEffect(() => {
-    if (
-      preventedRouteKey != null &&
-      isHeaderBackButtonMenuEnabledOnPreventedScreen
-    ) {
-      const message =
-        `The screen ${preventedRouteName} uses 'usePreventRemove' hook alongside 'headerBackButtonMenuEnabled: true', which is not supported. \n\n` +
-        `Consider removing 'headerBackButtonMenuEnabled: true' from ${preventedRouteName} screen to get rid of this error.`;
-      console.error(message);
-    }
-  }, [
-    preventedRouteKey,
-    isHeaderBackButtonMenuEnabledOnPreventedScreen,
-    preventedRouteName,
-  ]);
+  const { setNextDismissedKey } = useDismissedRouteError(state);
+  useInvalidPreventRemoveError(descriptors);
 
   return (
     <ScreenStack style={styles.container}>
