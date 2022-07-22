@@ -28,7 +28,9 @@ const transformPreventedRoutes = (
 
   const preventedRoutes = preventedRoutesToTransform.reduce<PreventedRoutes>(
     (acc, { routeKey, preventRemove }) => {
-      acc[routeKey] = { preventRemove };
+      acc[routeKey] = {
+        preventRemove: acc[routeKey]?.preventRemove || preventRemove,
+      };
       return acc;
     },
     {}
