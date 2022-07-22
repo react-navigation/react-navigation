@@ -84,6 +84,16 @@ function DrawerViewBase({
   // @ts-expect-error: the type definitions are incomplete
   useLegacyImplementation = !Reanimated.isConfigured?.(),
 }: Props) {
+  // Reanimated v3 dropped legacy v1 syntax
+  const legacyImplemenationNotAvailable =
+    require('react-native-reanimated').abs === undefined;
+
+  if (useLegacyImplementation && legacyImplemenationNotAvailable) {
+    throw new Error(
+      'The `useLegacyImplementation` prop is not available with Reanimated 3 as it no longer includes support for Reanimated 1 legacy API. Remove the `useLegacyImplementation` prop from `Drawer.Navigator` to be able to use it.'
+    );
+  }
+
   const Drawer: React.ComponentType<DrawerProps> = useLegacyImplementation
     ? require('./legacy/Drawer').default
     : require('./modern/Drawer').default;
