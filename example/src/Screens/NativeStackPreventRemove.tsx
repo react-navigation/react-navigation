@@ -1,4 +1,4 @@
-import { usePreventRemove } from '@react-navigation/core';
+import { UNSTABLE_usePreventRemove } from '@react-navigation/core';
 import {
   CommonActions,
   ParamListBase,
@@ -66,13 +66,13 @@ const InputScreen = ({
 
   const hasUnsavedChanges = Boolean(text);
 
-  usePreventRemove(hasUnsavedChanges, (e) => {
+  UNSTABLE_usePreventRemove(hasUnsavedChanges, (data) => {
     if (Platform.OS === 'web') {
       const discard = confirm(
         'You have unsaved changes. Discard them and leave the screen?'
       );
       if (discard) {
-        navigation.dispatch(e.data.action);
+        navigation.dispatch(data.action);
       }
     } else {
       Alert.alert(
@@ -83,7 +83,7 @@ const InputScreen = ({
           {
             text: 'Discard',
             style: 'destructive',
-            onPress: () => navigation.dispatch(e.data.action),
+            onPress: () => navigation.dispatch(data.action),
           },
         ]
       );

@@ -40,10 +40,10 @@ it("prevents removing a screen with 'usePreventRemove' hook", () => {
   let shouldContinue = false;
 
   const TestScreen = (props: any) => {
-    usePreventRemove(true, (e) => {
+    usePreventRemove(true, (data) => {
       onPreventRemove();
       if (shouldContinue) {
-        props.navigation.dispatch(e.data.action);
+        props.navigation.dispatch(data.action);
       }
     });
 
@@ -151,10 +151,10 @@ it("prevents removing a screen when 'usePreventRemove' hook is called multiple t
 
   const TestScreen = (props: any) => {
     usePreventRemove(false, () => {});
-    usePreventRemove(true, (e) => {
+    usePreventRemove(true, (data) => {
       onPreventRemove();
       if (shouldContinue) {
-        props.navigation.dispatch(e.data.action);
+        props.navigation.dispatch(data.action);
       }
     });
     usePreventRemove(false, () => {});
@@ -362,10 +362,10 @@ it("prevents removing a child screen with 'usePreventRemove' hook", () => {
   let shouldContinue = false;
 
   const TestScreen = (props: any) => {
-    usePreventRemove(true, (e) => {
+    usePreventRemove(true, (data) => {
       onPreventRemove();
       if (shouldContinue) {
-        props.navigation.dispatch(e.data.action);
+        props.navigation.dispatch(data.action);
       }
     });
 
@@ -527,10 +527,10 @@ it("prevents removing a grand child screen with 'usePreventRemove' hook", () => 
   let shouldContinue = false;
 
   const TestScreen = (props: any) => {
-    usePreventRemove(true, (e) => {
+    usePreventRemove(true, (data) => {
       onPreventRemove();
       if (shouldContinue) {
-        props.navigation.dispatch(e.data.action);
+        props.navigation.dispatch(data.action);
       }
     });
 
@@ -705,13 +705,13 @@ it("prevents removing by multiple screens with 'usePreventRemove' hook", () => {
   };
 
   const TestScreen = (props: any) => {
-    usePreventRemove(true, (e: any) => {
+    usePreventRemove(true, (data) => {
       // @ts-expect-error: we should have the required mocks
       onPreventRemove[props.route.name]();
 
       // @ts-expect-error: we should have the required properties
       if (!shouldContinue[props.route.name]) {
-        props.navigation.dispatch(e.data.action);
+        props.navigation.dispatch(data.action);
       }
     });
 
@@ -851,9 +851,9 @@ it("prevents removing a child screen with 'usePreventRemove' hook with 'resetRoo
   let shouldContinue = false;
 
   const TestScreen = (props: any) => {
-    usePreventRemove(true, (e: any) => {
+    usePreventRemove(true, (data) => {
       if (shouldContinue) {
-        props.navigation.dispatch(e.data.action);
+        props.navigation.dispatch(data.action);
       }
     });
 

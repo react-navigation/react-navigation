@@ -1,3 +1,4 @@
+import type { NavigationAction } from '@react-navigation/routers';
 import { nanoid } from 'nanoid/non-secure';
 import * as React from 'react';
 import useLatestCallback from 'use-latest-callback';
@@ -15,7 +16,7 @@ import useRoute from './useRoute';
  */
 export default function usePreventRemove(
   preventRemove: boolean,
-  callback: EventListenerCallback<EventMapCore<any>, 'beforeRemove'>
+  callback: (data: { action: NavigationAction }) => void
 ) {
   const [id] = React.useState(() => nanoid());
 
@@ -40,7 +41,7 @@ export default function usePreventRemove(
 
     e.preventDefault();
 
-    callback(e);
+    callback(e.data);
   });
 
   React.useEffect(
