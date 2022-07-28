@@ -58,10 +58,11 @@ import MixedStack from './Screens/MixedStack';
 import ModalStack from './Screens/ModalStack';
 import NativeStack from './Screens/NativeStack';
 import NativeStackHeaderCustomization from './Screens/NativeStackHeaderCustomization';
+import NativeStackPreventRemove from './Screens/NativeStackPreventRemove';
 import NotFound from './Screens/NotFound';
-import PreventRemove from './Screens/PreventRemove';
 import SimpleStack from './Screens/SimpleStack';
 import StackHeaderCustomization from './Screens/StackHeaderCustomization';
+import StackPreventRemove from './Screens/StackPreventRemove';
 import StackTransparent from './Screens/StackTransparent';
 import SettingsItem from './Shared/SettingsItem';
 
@@ -128,9 +129,13 @@ const SCREENS = {
     title: 'Auth Flow',
     component: AuthFlow,
   },
-  PreventRemove: {
-    title: 'Prevent removing screen',
-    component: PreventRemove,
+  StackPreventRemove: {
+    title: 'Prevent removing screen in Stack',
+    component: StackPreventRemove,
+  },
+  NativeStackPreventRemove: {
+    title: 'Prevent removing screen in Native Stack',
+    component: NativeStackPreventRemove,
   },
   LinkComponent: {
     title: '<Link />',
