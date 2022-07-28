@@ -21094,6 +21094,11 @@ urlgrey@1.0.0:
   dependencies:
     fast-url-parser "^1.1.3"
 
+use-latest-callback@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/use-latest-callback/-/use-latest-callback-0.1.4.tgz#b424e5773bc8ca2368143e62c735490fbcf7d216"
+  integrity sha512-mzFuM+C+2uUB8wxdLRs8MWrzJ7G2jQSpmoNrnvGmyHs6S6PxfTfCfbU08scYjypXnGr7zgLw20BSt/ro5lTGLw==
+
 "use-subscription@>=1.0.0 <1.6.0":
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/use-subscription/-/use-subscription-1.5.1.tgz#73501107f02fad84c6dd57965beb0b75c68c42d1"
