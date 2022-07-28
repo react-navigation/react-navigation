@@ -66,7 +66,7 @@ const InputScreen = ({
 
   const hasUnsavedChanges = Boolean(text);
 
-  UNSTABLE_usePreventRemove(hasUnsavedChanges, (data) => {
+  UNSTABLE_usePreventRemove(hasUnsavedChanges, ({ data }) => {
     if (Platform.OS === 'web') {
       const discard = confirm(
         'You have unsaved changes. Discard them and leave the screen?'
@@ -139,7 +139,13 @@ export default function StackScreen({ navigation }: Props) {
 
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Input" component={InputScreen} />
+      <Stack.Screen
+        name="Input"
+        component={InputScreen}
+        options={{
+          presentation: 'modal',
+        }}
+      />
       <Stack.Screen name="Article" component={ArticleScreen} />
     </Stack.Navigator>
   );

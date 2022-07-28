@@ -16,7 +16,7 @@ import useRoute from './useRoute';
  */
 export default function usePreventRemove(
   preventRemove: boolean,
-  callback: (data: { action: NavigationAction }) => void
+  callback: (options: { data: { action: NavigationAction } }) => void
 ) {
   const [id] = React.useState(() => nanoid());
 
@@ -41,7 +41,7 @@ export default function usePreventRemove(
 
     e.preventDefault();
 
-    callback(e.data);
+    callback({ data: e.data });
   });
 
   React.useEffect(
