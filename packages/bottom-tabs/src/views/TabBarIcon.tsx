@@ -1,4 +1,5 @@
 import type { Route } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import {
   StyleProp,
@@ -40,6 +41,7 @@ export default function TabBarIcon({
   style,
 }: Props) {
   const size = 25;
+  const focused = useIsFocused();
 
   // We render the icon twice at the same position on top of each other:
   // active and inactive one, so we can fade between them.
@@ -49,14 +51,14 @@ export default function TabBarIcon({
     >
       <View style={[styles.icon, { opacity: activeOpacity }]}>
         {renderIcon({
-          focused: true,
+          focused,
           size,
           color: activeTintColor,
         })}
       </View>
       <View style={[styles.icon, { opacity: inactiveOpacity }]}>
         {renderIcon({
-          focused: false,
+          focused,
           size,
           color: inactiveTintColor,
         })}
