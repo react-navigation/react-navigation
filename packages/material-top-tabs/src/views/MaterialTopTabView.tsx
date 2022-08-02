@@ -46,15 +46,17 @@ export default function MaterialTopTabView({
   return (
     <TabView<Route<string>>
       {...rest}
-      onIndexChange={(index) =>
-        navigation.dispatch({
+      onIndexChange={(index) => {
+        const route =
+          state.routes[index] ?? state.routes[state.routes.length - 1];
+        return navigation.dispatch({
           ...CommonActions.navigate({
-            name: state.routes[index].name,
+            name: route.name,
             merge: true,
           }),
           target: state.key,
-        })
-      }
+        });
+      }}
       renderScene={({ route }) => descriptors[route.key].render()}
       navigationState={state}
       renderTabBar={renderTabBar}
