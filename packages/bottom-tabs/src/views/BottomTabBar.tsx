@@ -11,6 +11,7 @@ import {
 import React from 'react';
 import {
   Animated,
+  GestureResponderEvent,
   LayoutChangeEvent,
   Platform,
   StyleProp,
@@ -296,11 +297,14 @@ export default function BottomTabBar({
           const focused = index === state.index;
           const { options } = descriptors[route.key];
 
-          const onPress = () => {
+          const onPress = (
+            e: GestureResponderEvent | React.MouseEvent<HTMLElement, MouseEvent>
+          ) => {
             const event = navigation.emit({
               type: 'tabPress',
               target: route.key,
               canPreventDefault: true,
+              data: e,
             });
 
             if (!focused && !event.defaultPrevented) {
@@ -311,10 +315,11 @@ export default function BottomTabBar({
             }
           };
 
-          const onLongPress = () => {
+          const onLongPress = (e: GestureResponderEvent) => {
             navigation.emit({
               type: 'tabLongPress',
               target: route.key,
+              data: e,
             });
           };
 

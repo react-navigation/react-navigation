@@ -25,11 +25,14 @@ export type BottomTabNavigationEventMap = {
   /**
    * Event which fires on tapping on the tab in the tab bar.
    */
-  tabPress: { data: undefined; canPreventDefault: true };
+  tabPress: {
+    data: GestureResponderEvent | React.MouseEvent<HTMLElement, MouseEvent>;
+    canPreventDefault: true;
+  };
   /**
    * Event which fires on long press on the tab in the tab bar.
    */
-  tabLongPress: { data: undefined };
+  tabLongPress: { data: GestureResponderEvent };
 };
 
 export type LabelPosition = 'beside-icon' | 'below-icon';
