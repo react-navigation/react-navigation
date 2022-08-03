@@ -2,15 +2,12 @@ pre-commit:
   parallel: true
   commands:
     lint:
-      files: git diff --name-only @{push}
       glob: "*.{js,ts,tsx}"
-      run: yarn lint
+      run: yarn lint {staged_files}
     types:
-      files: git diff --name-only @{push}
       glob: "*.{json,js,ts,tsx}"
       run: yarn tsc --noEmit
     test:
-      files: git diff --name-only @{push}
       glob: "*.{json,js,ts,tsx}"
       run: yarn test
 commit-msg:
