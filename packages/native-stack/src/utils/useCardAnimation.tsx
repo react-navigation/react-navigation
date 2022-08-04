@@ -1,4 +1,3 @@
-import React from 'react';
 import { Animated } from 'react-native';
 import { useTransitionProgress } from 'react-native-screens';
 
@@ -30,20 +29,20 @@ export type NativeStackCardInterpolationProps = {
 
 export default function useCardAnimation(): NativeStackCardInterpolationProps {
   const { progress, closing } = useTransitionProgress();
-  const [closingValue, setClosingValue] = React.useState<number>(0);
-  const [progressValue, setProgressValue] = React.useState<number>(0);
-
-  React.useEffect(() => {
-    closing.addListener(({ value }) => setClosingValue(value));
-  }, [closing]);
-
-  React.useEffect(() => {
-    progress.addListener(({ value }) => setProgressValue(value));
-  }, [progress]);
 
   return {
     current: {
-      progress: new Animated.Value(Math.abs(progressValue - closingValue)),
+      // p + c - 2 * c * p
+      progress: Animated.add(
+        progress,
+        Animated.add(
+          closing,
+          Animated.multiply(
+            new Animated.Value(-2),
+            Animated.multiply(progress, closing)
+          )
+        )
+      ),
     },
     closing,
   };
