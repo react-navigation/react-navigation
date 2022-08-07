@@ -11,10 +11,12 @@ export default function useKeyedChildListeners() {
       string,
       KeyedListenerMap[K] | undefined
     >;
-  }>({
-    getState: {},
-    beforeRemove: {},
-  });
+  }>(
+    Object.assign(Object.create(null), {
+      getState: {},
+      beforeRemove: {},
+    })
+  );
 
   const addKeyedListener = React.useCallback(
     <T extends keyof KeyedListenerMap>(
