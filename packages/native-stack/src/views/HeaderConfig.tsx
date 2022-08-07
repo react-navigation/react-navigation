@@ -174,7 +174,7 @@ export default function HeaderConfig({
         backTitleFontSize={headerBackTitleStyleFlattened.fontSize}
         blurEffect={headerBlurEffect}
         color={tintColor}
-        direction={I18nManager.isRTL ? 'rtl' : 'ltr'}
+        direction={I18nManager.getConstants().isRTL ? 'rtl' : 'ltr'}
         disableBackButtonMenu={headerBackButtonMenuEnabled === false}
         hidden={headerShown === false}
         hideBackButton={headerBackVisible === false}

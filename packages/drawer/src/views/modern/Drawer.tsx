@@ -273,10 +273,10 @@ export default function Drawer({
                   // The drawer stays in place when `drawerType` is `back`
                   (drawerType === 'back' ? 0 : translateX.value) +
                   (drawerPosition === 'left'
-                    ? I18nManager.isRTL
+                    ? I18nManager.getConstants().isRTL
                       ? -distanceFromEdge
                       : 0
-                    : I18nManager.isRTL
+                    : I18nManager.getConstants().isRTL
                     ? 0
                     : distanceFromEdge),
               },

@@ -357,9 +357,11 @@ export default function App() {
                       <SafeAreaView edges={['right', 'bottom', 'left']}>
                         <SettingsItem
                           label="Right to left"
-                          value={I18nManager.isRTL}
+                          value={I18nManager.getConstants().isRTL}
                           onValueChange={() => {
-                            I18nManager.forceRTL(!I18nManager.isRTL);
+                            I18nManager.forceRTL(
+                              !I18nManager.getConstants().isRTL
+                            );
                             restartApp();
                           }}
                         />
