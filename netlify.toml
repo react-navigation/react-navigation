@@ -3,3 +3,4 @@
   base    = "/"
   publish = "example/web-build"
   command = "yarn example expo build:web"
+  environment = { YARN_VERSION = "3.2.2" }

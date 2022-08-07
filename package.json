@@ -5,11 +5,6 @@
     "packages": [
       "packages/*",
       "example"
-    ],
-    "nohoist": [
-      "flipper-plugin-react-navigation/flipper",
-      "flipper-plugin-react-navigation/flipper-pkg",
-      "flipper-plugin-react-navigation/flipper-pkg/**"
     ]
   },
   "publishConfig": {
@@ -27,8 +22,13 @@
     "test": "jest",
     "prerelease": "lerna run clean",
     "release": "lerna publish",
-    "example": "yarn --cwd example"
+    "example": "yarn workspace @react-navigation/example"
   },
+  "engines": {
+    "yarn": "3.2.2",
+    "node": ">=16"
+  },
+  "packageManager": "yarn@3.2.2",
   "dependencies": {
     "react-native-web": "0.17.7"
   },

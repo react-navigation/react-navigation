@@ -11,7 +11,7 @@
     "ios": "expo run:ios",
     "preios": "pod-install",
     "server": "nodemon -e '.js,.ts,.tsx' --exec \"babel-node -i '/node_modules[/\\](?react-native)/' -x '.web.tsx,.web.ts,.web.js,.tsx,.ts,.js' --config-file ./server/babel.config.js server\"",
-    "test:e2e": "playwright test --config=e2e/playwright.config.ts"
+    "test:e2e": "npx playwright test --config=e2e/playwright.config.ts"
   },
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
