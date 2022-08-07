@@ -101,7 +101,7 @@ function DrawerViewBase({
   const focusedRouteKey = state.routes[state.index].key;
   const {
     drawerHideStatusBarOnOpen = false,
-    drawerPosition = I18nManager.isRTL ? 'right' : 'left',
+    drawerPosition = I18nManager.getConstants().isRTL ? 'right' : 'left',
     drawerStatusBarAnimation = 'slide',
     drawerStyle,
     drawerType = Platform.select({ ios: 'slide', default: 'front' }),

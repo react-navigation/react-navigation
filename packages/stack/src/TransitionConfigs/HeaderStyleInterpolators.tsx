@@ -61,7 +61,7 @@ export function forUIKit({
         {
           translateX: progress.interpolate({
             inputRange: [0, 1, 2],
-            outputRange: I18nManager.isRTL
+            outputRange: I18nManager.getConstants().isRTL
               ? [-rightOffset, 0, leftLabelOffset]
               : [leftLabelOffset, 0, -rightOffset],
           }),
@@ -83,7 +83,7 @@ export function forUIKit({
         {
           translateX: progress.interpolate({
             inputRange: [0.5, 1, 2],
-            outputRange: I18nManager.isRTL
+            outputRange: I18nManager.getConstants().isRTL
               ? [-titleLeftOffset, 0, rightOffset]
               : [rightOffset, 0, -titleLeftOffset],
           }),
@@ -95,7 +95,7 @@ export function forUIKit({
         {
           translateX: progress.interpolate({
             inputRange: [0, 1, 2],
-            outputRange: I18nManager.isRTL
+            outputRange: I18nManager.getConstants().isRTL
               ? [-layouts.screen.width, 0, layouts.screen.width]
               : [layouts.screen.width, 0, -layouts.screen.width],
           }),
@@ -170,7 +170,7 @@ export function forSlideLeft({
 
   const translateX = progress.interpolate({
     inputRange: [0, 1, 2],
-    outputRange: I18nManager.isRTL
+    outputRange: I18nManager.getConstants().isRTL
       ? [-screen.width, 0, screen.width]
       : [screen.width, 0, -screen.width],
   });
@@ -210,7 +210,7 @@ export function forSlideRight({
 
   const translateX = progress.interpolate({
     inputRange: [0, 1, 2],
-    outputRange: I18nManager.isRTL
+    outputRange: I18nManager.getConstants().isRTL
       ? [screen.width, 0, -screen.width]
       : [-screen.width, 0, screen.width],
   });
