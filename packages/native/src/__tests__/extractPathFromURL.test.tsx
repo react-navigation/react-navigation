@@ -68,6 +68,14 @@ it('extracts path from URL with protocol and host', () => {
       'scheme:///example.com/some/path'
     )
   ).toBe('/some/path');
+
+  expect(
+    extractPathFromURL(['scheme://example.com'], 'scheme://example.com/')
+  ).toBe('/');
+
+  expect(
+    extractPathFromURL(['scheme://example.com'], 'scheme://example.com')
+  ).toBe('');
 });
 
 it('extracts path from URL with protocol and host with wildcard', () => {

@@ -123,7 +123,7 @@ export default function useLinking(
 
       const path = extractPathFromURL(prefixesRef.current, url);
 
-      return path
+      return path !== undefined
         ? getStateFromPathRef.current(path, configRef.current)
         : undefined;
     },
