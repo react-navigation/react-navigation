@@ -1,7 +1,4 @@
-import type {
-  CompositeScreenProps,
-  ParamListBase,
-} from '@react-navigation/native';
+import type { ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
   StackNavigationOptions,
@@ -68,10 +65,7 @@ const ArticleScreen = ({
 const NewsFeedScreen = ({
   route,
   navigation,
-}: CompositeScreenProps<
-  StackScreenProps<SimpleStackParams, 'NewsFeed'>,
-  StackScreenProps<SimpleStackParams, 'NewsFeed'>
->) => {
+}: StackScreenProps<SimpleStackParams, 'NewsFeed'>) => {
   let x: 'Albums' | 'Article';
   return (
     <ScrollView>
