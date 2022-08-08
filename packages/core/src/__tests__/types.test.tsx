@@ -4,21 +4,25 @@
 import type { FC } from 'react';
 import React from 'react';
 
-import type { RouteConfigComponent, RouteProp } from '../types';
+import type {
+  NavigationHelpersCommon,
+  RouteConfigComponent,
+  RouteProp,
+} from '../types';
 
 describe('RouteConfigComponent', () => {
-  type RouteParams = {
+  type ParamList = {
     hasParam: { param: string };
     hasParam2: { param2: string };
     noParam: undefined;
   };
 
-  const Screen = <Name extends keyof RouteParams>(
-    _: { name: Name } & RouteConfigComponent<RouteParams, Name>
+  const Screen = <Name extends keyof ParamList>(
+    _: { name: Name } & RouteConfigComponent<ParamList, Name>
   ) => null;
 
   it("doesn't accept incorrect route params", () => {
-    const Component: FC<{ route: RouteProp<RouteParams, 'hasParam'> }> = () =>
+    const Component: FC<{ route: RouteProp<ParamList, 'hasParam'> }> = () =>
       null;
     // @ts-expect-error
     <Screen name="hasParam2" component={Component} />;
@@ -52,7 +56,43 @@ describe('RouteConfigComponent', () => {
 
   it('allows the component to accept just the `navigation` prop', () => {
     const Component: FC<{ navigation: object }> = () => null;
+    // ok
     <Screen name="hasParam" component={Component} />;
+    // ok
     <Screen name="noParam" component={Component} />;
+  });
+});
+
+describe('NavigationHelpersCommon.navigate', () => {
+  type ParamList = {
+    hasParam: { param: string };
+    hasParam2: { param2: string };
+    noParam: undefined;
+  };
+  const navigate: NavigationHelpersCommon<ParamList>['navigate'] = () => {};
+  it('strictly checks type of route params', () => {
+    // ok
+    navigate('noParam');
+    // ok
+    navigate('hasParam', { param: '123' });
+    // @ts-expect-error
+    navigate('hasParam2', { param: '123' });
+  });
+
+  it('strictly checks type of route params when a union RouteName is passed', () => {
+    let routeName = undefined as unknown as keyof ParamList;
+
+    // @ts-expect-error
+    navigate(routeName);
+
+    // ok
+    if (routeName === 'noParam') navigate(routeName);
+    // ok
+    if (routeName === 'hasParam') navigate(routeName, { param: '123' });
+
+    // @ts-expect-error
+    if (routeName === 'hasParam') navigate(routeName);
+    // @ts-expect-error
+    if (routeName === 'hasParam2') navigate(routeName, { param: '123' });
   });
 });

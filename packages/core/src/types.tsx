@@ -171,7 +171,7 @@ export class PrivateValueStore<T extends [any, any, any]> {
   protected ''?: T;
 }
 
-type NavigationHelpersCommon<
+export type NavigationHelpersCommon<
   ParamList extends ParamListBase,
   State extends NavigationState = NavigationState
 > = {
@@ -192,9 +192,18 @@ type NavigationHelpersCommon<
    * @param [params] Params object for the route.
    */
   navigate<RouteName extends keyof ParamList>(
-    ...args: undefined extends ParamList[RouteName]
-      ? [screen: RouteName] | [screen: RouteName, params: ParamList[RouteName]]
-      : [screen: RouteName, params: ParamList[RouteName]]
+    ...args: // this first condition allows us to iterate over a union type
+    // This is to avoid getting a union of all the params from `ParamList[RouteName]`,
+    // which will get our types all mixed up if a union RouteName is passed in.
+    RouteName extends unknown
+      ? // This condition checks if the params are optional,
+        // which means it's either undefined or a union with undefined
+        undefined extends ParamList[RouteName]
+        ?
+            | [screen: RouteName] // if the params are optional, we don't have to provide it
+            | [screen: RouteName, params: ParamList[RouteName]]
+        : [screen: RouteName, params: ParamList[RouteName]]
+      : never
   ): void;
 
   /**
@@ -203,14 +212,16 @@ type NavigationHelpersCommon<
    * @param route Object with `key` or `name` for the route to navigate to, and a `params` object.
    */
   navigate<RouteName extends keyof ParamList>(
-    options:
-      | { key: string; params?: ParamList[RouteName]; merge?: boolean }
-      | {
-          name: RouteName;
-          key?: string;
-          params: ParamList[RouteName];
-          merge?: boolean;
-        }
+    options: RouteName extends unknown
+      ?
+          | { key: string; params?: ParamList[RouteName]; merge?: boolean }
+          | {
+              name: RouteName;
+              key?: string;
+              params: ParamList[RouteName];
+              merge?: boolean;
+            }
+      : never
   ): void;
 
   /**

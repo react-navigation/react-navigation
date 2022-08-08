@@ -1,3 +1,5 @@
+import type { NavigatorScreenParams } from '@react-navigation/core';
+
 import AuthFlow from './Screens/AuthFlow';
 import BottomTabs from './Screens/BottomTabs';
 import DynamicTabs from './Screens/DynamicTabs';
@@ -20,7 +22,7 @@ export type RootDrawerParamList = {
   Examples: undefined;
 };
 
-export type SimpleStackParams = {
+export type LinkComponentDemoParamList = {
   Article: { author: string };
   Albums: undefined;
 };
@@ -111,9 +113,9 @@ export const SCREENS = {
   LinkComponent: {
     title: '<Link />',
     component: LinkComponent,
-    params: paramsType<{
-      screen: keyof SimpleStackParams;
-    }>(),
+    params: paramsType<
+      NavigatorScreenParams<LinkComponentDemoParamList> | undefined
+    >(),
   },
 };
 
