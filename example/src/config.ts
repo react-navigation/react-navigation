@@ -25,6 +25,8 @@ export type SimpleStackParams = {
   Albums: undefined;
 };
 
+const paramsType = <params>() => undefined as unknown as params;
+
 export const SCREENS = {
   NativeStack: {
     title: 'Native Stack',
@@ -109,9 +111,9 @@ export const SCREENS = {
   LinkComponent: {
     title: '<Link />',
     component: LinkComponent,
-    params: undefined as unknown as {
+    params: paramsType<{
       screen: keyof SimpleStackParams;
-    },
+    }>(),
   },
 };
 
