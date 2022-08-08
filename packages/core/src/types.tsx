@@ -171,7 +171,7 @@ export class PrivateValueStore<T extends [any, any, any]> {
   protected ''?: T;
 }
 
-export type NavigationHelpersCommon<
+type NavigationHelpersCommon<
   ParamList extends ParamListBase,
   State extends NavigationState = NavigationState
 > = {
@@ -451,20 +451,25 @@ export type ScreenListeners<
   >;
 }>;
 
+type ScreenComponentType<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList
+> =
+  | React.ComponentType<{
+      route: RouteProp<ParamList, RouteName>;
+      navigation: any;
+    }>
+  | React.ComponentType<{}>;
+
 export type RouteConfigComponent<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList,
-  ComponentProps = { route: RouteProp<ParamList, RouteName>; navigation: any },
-  Component =
-    | React.ComponentType<ComponentProps>
-    | React.ComponentType<Partial<ComponentProps>>
-    | React.ComponentType<{}>
+  RouteName extends keyof ParamList
 > =
   | {
       /**
        * React component to render for this screen.
        */
-      component: Component;
+      component: ScreenComponentType<ParamList, RouteName>;
       getComponent?: never;
       children?: never;
     }
@@ -472,7 +477,7 @@ export type RouteConfigComponent<
       /**
        * Lazily get a React component to render for this screen.
        */
-      getComponent: () => Component;
+      getComponent: () => ScreenComponentType<ParamList, RouteName>;
       component?: never;
       children?: never;
     }

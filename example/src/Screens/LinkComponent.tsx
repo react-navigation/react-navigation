@@ -8,7 +8,7 @@ import {
   createStackNavigator,
   StackScreenProps,
 } from '@react-navigation/stack';
-import type { LinkComponentDemoParamList } from 'example/src/config';
+import type { LinkComponentDemoParamList } from 'example/src/screens';
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';

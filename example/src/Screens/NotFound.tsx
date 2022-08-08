@@ -1,5 +1,5 @@
 import type { StackScreenProps } from '@react-navigation/stack';
-import type { RootStackParamList } from 'example/src/config';
+import type { RootStackParamList } from 'example/src/screens';
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native-paper';

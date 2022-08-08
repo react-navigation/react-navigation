@@ -44,13 +44,13 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
+import { restartApp } from './Restart';
 import {
   RootDrawerParamList,
   RootStackParamList,
   SCREEN_NAMES,
   SCREENS,
-} from './config';
-import { restartApp } from './Restart';
+} from './screens';
 import NotFound from './Screens/NotFound';
 import SettingsItem from './Shared/SettingsItem';
 

@@ -1,4 +1,4 @@
-import type { NavigatorScreenParams } from '@react-navigation/core';
+import type { NavigatorScreenParams } from '@react-navigation/native';
 
 import AuthFlow from './Screens/AuthFlow';
 import BottomTabs from './Screens/BottomTabs';
@@ -27,7 +27,7 @@ export type LinkComponentDemoParamList = {
   Albums: undefined;
 };
 
-const paramsType = <params>() => undefined as unknown as params;
+const paramsType = <params,>() => undefined as unknown as params;
 
 export const SCREENS = {
   NativeStack: {

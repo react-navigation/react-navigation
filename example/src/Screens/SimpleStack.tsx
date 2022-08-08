@@ -66,13 +66,12 @@ const NewsFeedScreen = ({
   route,
   navigation,
 }: StackScreenProps<SimpleStackParams, 'NewsFeed'>) => {
-  let x: 'Albums' | 'Article';
   return (
     <ScrollView>
       <View style={styles.buttons}>
         <Button
           mode="contained"
-          onPress={() => navigation.navigate(x)}
+          onPress={() => navigation.navigate('Albums')}
           style={styles.button}
         >
           Navigate to album
