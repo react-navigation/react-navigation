@@ -11,10 +11,12 @@ export default function useKeyedChildListeners() {
       string,
       KeyedListenerMap[K] | undefined
     >;
-  }>({
-    getState: {},
-    beforeRemove: {},
-  });
+  }>(
+    Object.assign(Object.create(null), {
+      getState: {},
+      beforeRemove: {},
+    })
+  );
 
   const addKeyedListener = React.useCallback(
     <T extends keyof KeyedListenerMap>(
@@ -22,9 +24,11 @@ export default function useKeyedChildListeners() {
       key: string,
       listener: KeyedListenerMap[T]
     ) => {
+      // @ts-expect-error: according to ref stated above you can use `key` to index type
       keyedListeners[type][key] = listener;
 
       return () => {
+        // @ts-expect-error: according to ref stated above you can use `key` to index type
         keyedListeners[type][key] = undefined;
       };
     },

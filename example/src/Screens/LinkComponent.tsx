@@ -8,17 +8,13 @@ import {
   createStackNavigator,
   StackScreenProps,
 } from '@react-navigation/stack';
+import type { SimpleStackParams } from 'example/src/config';
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 
 import Albums from '../Shared/Albums';
 import Article from '../Shared/Article';
-
-type SimpleStackParams = {
-  Article: { author: string };
-  Albums: undefined;
-};
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 

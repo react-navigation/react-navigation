@@ -14,15 +14,18 @@ If you are looking for version 4, the code can be found in the [4.x branch](http
 
 | Name                                                                     |                                                                               Latest Version                                                                                |
 | ------------------------------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| [@react-navigation/bottom-tabs](/packages/bottom-tabs)                   |          [![badge](https://img.shields.io/npm/v/@react-navigation/bottom-tabs.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/bottom-tabs)          |
 | [@react-navigation/core](/packages/core)                                 |                 [![badge](https://img.shields.io/npm/v/@react-navigation/core.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/core)                 |
+| [@react-navigation/devtools](/packages/devtools)                         |             [![badge](https://img.shields.io/npm/v/@react-navigation/devtools.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/devtools)             |
+| [@react-navigation/drawer](/packages/drawer)                             |               [![badge](https://img.shields.io/npm/v/@react-navigation/drawer.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/drawer)               |
+| [@react-navigation/elements](/packages/elements)                             |               [![badge](https://img.shields.io/npm/v/@react-navigation/elements.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/elements)       |
+| [flipper-plugin-react-navigation](/packages/flipper-plugin-react-navigation)                             |               [![badge](https://img.shields.io/npm/v/flipper-plugin-react-navigation.svg?style=flat-square)](https://www.npmjs.com/package/flipper-plugin-react-navigation)       |
+| [@react-navigation/material-bottom-tabs](/packages/material-bottom-tabs) | [![badge](https://img.shields.io/npm/v/@react-navigation/material-bottom-tabs.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/material-bottom-tabs) |
+| [@react-navigation/material-top-tabs](/packages/material-top-tabs)       |    [![badge](https://img.shields.io/npm/v/@react-navigation/material-top-tabs.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/material-top-tabs)    |
+| [@react-navigation/native-stack](/packages/native-stack)                               |                [![badge](https://img.shields.io/npm/v/@react-navigation/stack.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/native-stack)                |
 | [@react-navigation/native](/packages/native)                             |               [![badge](https://img.shields.io/npm/v/@react-navigation/native.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/native)               |
 | [@react-navigation/routers](/packages/routers)                           |              [![badge](https://img.shields.io/npm/v/@react-navigation/routers.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/routers)              |
 | [@react-navigation/stack](/packages/stack)                               |                [![badge](https://img.shields.io/npm/v/@react-navigation/stack.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/stack)                |
-| [@react-navigation/drawer](/packages/drawer)                             |               [![badge](https://img.shields.io/npm/v/@react-navigation/drawer.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/drawer)               |
-| [@react-navigation/material-top-tabs](/packages/material-top-tabs)       |    [![badge](https://img.shields.io/npm/v/@react-navigation/material-top-tabs.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/material-top-tabs)    |
-| [@react-navigation/material-bottom-tabs](/packages/material-bottom-tabs) | [![badge](https://img.shields.io/npm/v/@react-navigation/material-bottom-tabs.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/material-bottom-tabs) |
-| [@react-navigation/bottom-tabs](/packages/bottom-tabs)                   |          [![badge](https://img.shields.io/npm/v/@react-navigation/bottom-tabs.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/bottom-tabs)          |
-| [@react-navigation/devtools](/packages/devtools)                         |             [![badge](https://img.shields.io/npm/v/@react-navigation/devtools.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/devtools)             |
 
 ## Contributing
 
@@ -44,6 +47,7 @@ Then follow these steps to publish and install a forked package:
 1. Open a Terminal and `cd` to the location of the cloned repo
 1. Run `yarn` to install any dependencies
 1. If you want to make any changes, make them and commit
+1. Run `yarn lerna run prepare` to perform the build steps
 1. Now `cd` to the package directory that you want to use (e.g. `cd packages/stack` for `@react-navigation/stack`)
 1. Run `gitpkg publish` to publish the package to your repo
 

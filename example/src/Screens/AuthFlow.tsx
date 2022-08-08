@@ -75,7 +75,7 @@ const SignInScreen = ({
 
 const HomeScreen = ({
   navigation,
-}: StackScreenProps<AuthStackParams, 'SignIn'>) => {
+}: StackScreenProps<AuthStackParams, 'Home'>) => {
   const { signOut } = React.useContext(AuthContext);
 
   return (

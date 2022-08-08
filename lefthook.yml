@@ -1,0 +1,17 @@
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      glob: "*.{js,ts,tsx}"
+      run: yarn lint {staged_files}
+    types:
+      glob: "*.{json,js,ts,tsx}"
+      run: yarn tsc --noEmit
+    test:
+      glob: "*.{json,js,ts,tsx}"
+      run: yarn test
+commit-msg:
+  parallel: true
+  commands:
+    commitlint:
+      run: yarn commitlint --edit

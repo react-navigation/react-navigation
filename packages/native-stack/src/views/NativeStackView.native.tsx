@@ -12,6 +12,7 @@ import {
   Route,
   StackActions,
   StackNavigationState,
+  usePreventRemoveContext,
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -34,6 +35,8 @@ import type {
   NativeStackNavigationHelpers,
   NativeStackNavigationOptions,
 } from '../types';
+import useDismissedRouteError from '../utils/useDismissedRouteError';
+import useInvalidPreventRemoveError from '../utils/useInvalidPreventRemoveError';
 import DebugContainer from './DebugContainer';
 import HeaderConfig from './HeaderConfig';
 
@@ -111,37 +114,76 @@ type SceneViewProps = {
   index: number;
   descriptor: NativeStackDescriptor;
   previousDescriptor?: NativeStackDescriptor;
+  nextDescriptor?: NativeStackDescriptor;
   onWillDisappear: () => void;
   onAppear: () => void;
   onDisappear: () => void;
   onDismissed: ScreenProps['onDismissed'];
+  onHeaderBackButtonClicked: () => void;
+  onNativeDismissCancelled: ScreenProps['onDismissed'];
 };
 
 const SceneView = ({
   descriptor,
   previousDescriptor,
+  nextDescriptor,
   index,
   onWillDisappear,
   onAppear,
   onDisappear,
   onDismissed,
+  onHeaderBackButtonClicked,
+  onNativeDismissCancelled,
 }: SceneViewProps) => {
   const { route, navigation, options, render } = descriptor;
   const {
-    animation,
+    animationDuration,
     animationTypeForReplace = 'push',
-    customAnimationOnGesture,
-    fullScreenGestureEnabled,
     gestureEnabled,
     header,
+    headerBackButtonMenuEnabled,
     headerShown,
+    autoHideHomeIndicator,
+    navigationBarColor,
+    navigationBarHidden,
     orientation,
     statusBarAnimation,
     statusBarHidden,
     statusBarStyle,
+    statusBarTranslucent,
+    statusBarColor,
   } = options;
 
-  let { presentation = 'card' } = options;
+  let {
+    animation,
+    customAnimationOnGesture,
+    fullScreenGestureEnabled,
+    presentation = 'card',
+    gestureDirection = presentation === 'card' ? 'horizontal' : 'vertical',
+  } = options;
+
+  if (gestureDirection === 'vertical' && Platform.OS === 'ios') {
+    // for `vertical` direction to work, we need to set `fullScreenGestureEnabled` to `true`
+    // so the screen can be dismissed from any point on screen.
+    // `customAnimationOnGesture` needs to be set to `true` so the `animation` set by user can be used,
+    // otherwise `simple_push` will be used.
+    // Also, the default animation for this direction seems to be `slide_from_bottom`.
+    if (fullScreenGestureEnabled === undefined) {
+      fullScreenGestureEnabled = true;
+    }
+    if (customAnimationOnGesture === undefined) {
+      customAnimationOnGesture = true;
+    }
+    if (animation === undefined) {
+      animation = 'slide_from_bottom';
+    }
+  }
+
+  // workaround for rn-screens where gestureDirection has to be set on both
+  // current and previous screen - software-mansion/react-native-screens/pull/1509
+  const nextGestureDirection = nextDescriptor?.options.gestureDirection;
+  const gestureDirectionOverride =
+    nextGestureDirection != null ? nextGestureDirection : gestureDirection;
 
   if (index === 0) {
     // first screen should always be treated as `card`, it resolves problems with no header animation
@@ -161,7 +203,7 @@ const SceneView = ({
 
   // Modals are fullscreen in landscape only on iPhone
   const isIPhone =
-    Platform.OS === 'ios' && !(Platform.isPad && Platform.isTVOS);
+    Platform.OS === 'ios' && !(Platform.isPad || Platform.isTVOS);
   const isLandscape = frame.width > frame.height;
 
   const topInset = isModal || (isIPhone && isLandscape) ? 0 : insets.top;
@@ -169,12 +211,16 @@ const SceneView = ({
   const isParentHeaderShown = React.useContext(HeaderShownContext);
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
 
+  const { preventedRoutes } = usePreventRemoveContext();
+
   const defaultHeaderHeight = getDefaultHeaderHeight(frame, isModal, topInset);
 
   const [customHeaderHeight, setCustomHeaderHeight] =
     React.useState(defaultHeaderHeight);
 
   const headerHeight = header ? customHeaderHeight : defaultHeaderHeight;
+
+  const isRemovePrevented = preventedRoutes[route.key]?.preventRemove;
 
   return (
     <Screen
@@ -190,6 +236,9 @@ const SceneView = ({
             false
           : gestureEnabled
       }
+      homeIndicatorHidden={autoHideHomeIndicator}
+      navigationBarColor={navigationBarColor}
+      navigationBarHidden={navigationBarHidden}
       replaceAnimation={animationTypeForReplace}
       stackPresentation={presentation === 'card' ? 'push' : presentation}
       stackAnimation={animation}
@@ -197,11 +246,21 @@ const SceneView = ({
       statusBarAnimation={statusBarAnimation}
       statusBarHidden={statusBarHidden}
       statusBarStyle={statusBarStyle}
+      statusBarColor={statusBarColor}
+      statusBarTranslucent={statusBarTranslucent}
+      swipeDirection={gestureDirectionOverride}
+      transitionDuration={animationDuration}
       onWillDisappear={onWillDisappear}
       onAppear={onAppear}
       onDisappear={onDisappear}
       onDismissed={onDismissed}
       isNativeStack
+      // Props for enabling preventing removal in native-stack
+      nativeBackButtonDismissalEnabled={false} // on Android
+      // @ts-expect-error prop not publicly exported from rn-screens
+      preventNativeDismiss={isRemovePrevented} // on iOS
+      onHeaderBackButtonClicked={onHeaderBackButtonClicked}
+      onNativeDismissCancelled={onNativeDismissCancelled}
     >
       <NavigationContext.Provider value={navigation}>
         <NavigationRouteContext.Provider value={route}>
@@ -239,6 +298,11 @@ const SceneView = ({
                 <HeaderConfig
                   {...options}
                   route={route}
+                  headerBackButtonMenuEnabled={
+                    isRemovePrevented !== undefined
+                      ? !isRemovePrevented
+                      : headerBackButtonMenuEnabled
+                  }
                   headerShown={isHeaderInPush}
                   headerHeight={headerHeight}
                   canGoBack={index !== 0}
@@ -267,33 +331,19 @@ type Props = {
 };
 
 function NativeStackViewInner({ state, navigation, descriptors }: Props) {
-  const [nextDismissedKey, setNextDismissedKey] = React.useState<string | null>(
-    null
-  );
-
-  const dismissedRouteName = nextDismissedKey
-    ? state.routes.find((route) => route.key === nextDismissedKey)?.name
-    : null;
-
-  React.useEffect(() => {
-    if (dismissedRouteName) {
-      const message =
-        `The screen '${dismissedRouteName}' was removed natively but didn't get removed from JS state. ` +
-        `This can happen if the action was prevented in a 'beforeRemove' listener, which is not fully supported in native-stack.\n\n` +
-        `Consider using 'gestureEnabled: false' to prevent back gesture and use a custom back button with 'headerLeft' option to override the native behavior.`;
-
-      console.error(message);
-    }
-  }, [dismissedRouteName]);
+  const { setNextDismissedKey } = useDismissedRouteError(state);
+  useInvalidPreventRemoveError(descriptors);
 
   return (
     <ScreenStack style={styles.container}>
       {state.routes.map((route, index) => {
         const descriptor = descriptors[route.key];
         const previousKey = state.routes[index - 1]?.key;
+        const nextKey = state.routes[index + 1]?.key;
         const previousDescriptor = previousKey
           ? descriptors[previousKey]
           : undefined;
+        const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
 
         return (
           <SceneView
@@ -301,6 +351,7 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
             index={index}
             descriptor={descriptor}
             previousDescriptor={previousDescriptor}
+            nextDescriptor={nextDescriptor}
             onWillDisappear={() => {
               navigation.emit({
                 type: 'transitionStart',
@@ -330,6 +381,20 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
               });
 
               setNextDismissedKey(route.key);
+            }}
+            onHeaderBackButtonClicked={() => {
+              navigation.dispatch({
+                ...StackActions.pop(),
+                source: route.key,
+                target: state.key,
+              });
+            }}
+            onNativeDismissCancelled={(event) => {
+              navigation.dispatch({
+                ...StackActions.pop(event.nativeEvent.dismissCount),
+                source: route.key,
+                target: state.key,
+              });
             }}
           />
         );

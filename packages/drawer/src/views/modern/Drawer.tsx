@@ -155,25 +155,21 @@ export default function Drawer({
 
       touchStartX.value = 0;
       touchX.value = 0;
-      translationX.value = withSpring(
-        translateX,
-        {
-          velocity,
-          stiffness: 1000,
-          damping: 500,
-          mass: 3,
-          overshootClamping: true,
-          restDisplacementThreshold: 0.01,
-          restSpeedThreshold: 0.01,
-        },
-        () => {
-          if (translationX.value === getDrawerTranslationX(true)) {
-            runOnJS(onOpen)();
-          } else if (translationX.value === getDrawerTranslationX(false)) {
-            runOnJS(onClose)();
-          }
-        }
-      );
+      translationX.value = withSpring(translateX, {
+        velocity,
+        stiffness: 1000,
+        damping: 500,
+        mass: 3,
+        overshootClamping: true,
+        restDisplacementThreshold: 0.01,
+        restSpeedThreshold: 0.01,
+      });
+
+      if (open) {
+        runOnJS(onOpen)();
+      } else {
+        runOnJS(onClose)();
+      }
     },
     [getDrawerTranslationX, onClose, onOpen, touchStartX, touchX, translationX]
   );
@@ -262,6 +258,7 @@ export default function Drawer({
     return translateX;
   });
 
+  const isRTL = I18nManager.getConstants().isRTL;
   const drawerAnimatedStyle = useAnimatedStyle(() => {
     const distanceFromEdge = dimensions.width - drawerWidth;
 
@@ -277,10 +274,10 @@ export default function Drawer({
                   // The drawer stays in place when `drawerType` is `back`
                   (drawerType === 'back' ? 0 : translateX.value) +
                   (drawerPosition === 'left'
-                    ? I18nManager.isRTL
+                    ? isRTL
                       ? -distanceFromEdge
                       : 0
-                    : I18nManager.isRTL
+                    : isRTL
                     ? 0
                     : distanceFromEdge),
               },
