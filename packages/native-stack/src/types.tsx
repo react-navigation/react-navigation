@@ -325,6 +325,15 @@ export type NativeStackNavigationOptions = {
    */
   headerBackButtonMenuEnabled?: boolean;
   /**
+   * Whether the keyboard should hide when swiping to the previous screen. Defaults to `false`.
+   * Requires `react-native-screens` version >=3.15.0.
+   *
+   * Only supported on iOS.
+   *
+   * @platform ios
+   */
+  hideKeyboardOnSwipe?: boolean;
+  /**
    * Whether the home indicator should prefer to stay hidden on this screen. Defaults to `false`.
    *
    * @platform ios

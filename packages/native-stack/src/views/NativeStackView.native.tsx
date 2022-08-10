@@ -147,6 +147,7 @@ const SceneView = ({
     header,
     headerBackButtonMenuEnabled,
     headerShown,
+    hideKeyboardOnSwipe,
     autoHideHomeIndicator,
     navigationBarColor,
     navigationBarHidden,
@@ -253,6 +254,7 @@ const SceneView = ({
           : gestureEnabled
       }
       homeIndicatorHidden={autoHideHomeIndicator}
+      hideKeyboardOnSwipe={hideKeyboardOnSwipe}
       navigationBarColor={navigationBarColor}
       navigationBarHidden={navigationBarHidden}
       replaceAnimation={animationTypeForReplace}
