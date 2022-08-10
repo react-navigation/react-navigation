@@ -2,6 +2,7 @@ import {
   CommonActions,
   DrawerActions,
   DrawerNavigationState,
+  NavigationRoute,
   ParamListBase,
   useLinkBuilder,
 } from '@react-navigation/native';
@@ -14,6 +15,7 @@ type Props = {
   state: DrawerNavigationState<ParamListBase>;
   navigation: DrawerNavigationHelpers;
   descriptors: DrawerDescriptorMap;
+  displayOnly?: (route: NavigationRoute<ParamListBase, string>) => boolean;
 };
 
 /**
@@ -23,6 +25,7 @@ export default function DrawerItemList({
   state,
   navigation,
   descriptors,
+  displayOnly,
 }: Props) {
   const buildLink = useLinkBuilder();
 
@@ -38,6 +41,10 @@ export default function DrawerItemList({
   } = focusedOptions;
 
   return state.routes.map((route, i) => {
+    if (!displayOnly || displayOnly(route) === false) {
+      return null;
+    }
+
     const focused = i === state.index;
 
     const onPress = () => {
