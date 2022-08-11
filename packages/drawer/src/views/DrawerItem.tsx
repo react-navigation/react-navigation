@@ -190,8 +190,8 @@ export default function DrawerItem(props: Props) {
           {iconNode}
           <View
             style={[
-              styles.label,
               { marginLeft: iconNode ? 32 : 0, marginVertical: 5 },
+              styles.label,
             ]}
           >
             {typeof label === 'string' ? (
