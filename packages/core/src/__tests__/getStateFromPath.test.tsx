@@ -2272,6 +2272,38 @@ it('tries to match wildcard patterns at the end', () => {
   ).toEqual(state);
 });
 
+it('uses correct config when screen appears multiple times', () => {
+  const path = 'foo/bar';
+  const config = {
+    screens: {
+      Foo: {
+        screens: {
+          Baz: {
+            path: 'foo/:bar',
+            exact: true,
+          },
+        },
+      },
+      Bar: {
+        path: 'bar',
+        screens: {
+          Baz: 'baz',
+        },
+      },
+    },
+  };
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [{ name: 'Baz', params: { bar: 'bar' }, path: 'foo/bar' }],
+        },
+      },
+    ],
+  });
+});
+
 it('uses nearest parent wildcard match for unmatched paths', () => {
   const path = '/bar/42/baz/test';
   const config = {
