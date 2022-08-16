@@ -45,12 +45,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import { restartApp } from './Restart';
-import {
-  RootDrawerParamList,
-  RootStackParamList,
-  SCREEN_NAMES,
-  SCREENS,
-} from './screens';
+import { RootDrawerParamList, RootStackParamList, SCREENS } from './screens';
 import NotFound from './Screens/NotFound';
 import SettingsItem from './Shared/SettingsItem';
 
@@ -63,6 +58,8 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 const NAVIGATION_PERSISTENCE_KEY = 'NAVIGATION_STATE';
 const THEME_PERSISTENCE_KEY = 'THEME_TYPE';
+
+const SCREEN_NAMES = Object.keys(SCREENS) as (keyof typeof SCREENS)[];
 
 export default function App() {
   const [theme, setTheme] = React.useState(DefaultTheme);

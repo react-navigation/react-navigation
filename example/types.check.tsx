@@ -10,8 +10,6 @@ import type {
   CompositeScreenProps,
   NavigationHelpers,
   NavigatorScreenParams,
-  RouteConfigComponent,
-  RouteProp,
 } from '@react-navigation/native';
 import type { StackNavigationOptions } from '@react-navigation/stack';
 import {
@@ -19,8 +17,11 @@ import {
   StackScreenProps,
 } from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
-import React, { FC } from 'react';
+import * as React from 'react';
 
+/**
+ * Check for the type of the `navigation` and `route` objects with regular usage
+ */
 type RootStackParamList = {
   Home: NavigatorScreenParams<HomeDrawerParamList>;
   PostDetails: { id: string; section?: string };
@@ -216,98 +217,142 @@ export const LatestScreen = ({
     .toEqualTypeOf<'LeftDrawer' | 'BottomTabs' | undefined>();
 };
 
-// ================================================
-// The checks below uses jest syntax for semantics only.
-// These tests will never actually run.
-// Notice the use of // @ts-expect-error for assertions
-// instead of `expectTypeOf`. This is because `expect-type` fails
-// to throw errors in various cases involving parameters or union types.
-// ================================================
+/**
+ * Check for errors when the screen component isn't typed correctly
+ */
+type SecondParamList = {
+  HasParams1: { id: string };
+  HasParams2: { user: string };
+  NoParams: undefined;
+};
 
-describe('RouteConfigComponent', () => {
-  type ParamList = {
-    hasParam: { param: string };
-    hasParam2: { param2: string };
-    noParam: undefined;
-  };
+const SecondStack = createStackNavigator<SecondParamList>();
 
-  const Screen = <Name extends keyof ParamList>(
-    _: { name: Name } & RouteConfigComponent<ParamList, Name>
-  ) => null;
+// No error when type for props is correct
+<SecondStack.Screen
+  name="HasParams1"
+  component={(_: StackScreenProps<SecondParamList, 'HasParams1'>) => <></>}
+/>;
 
-  it("doesn't accept incorrect route params", () => {
-    const Component: FC<{ route: RouteProp<ParamList, 'hasParam'> }> = () =>
-      null;
-    // @ts-expect-error
-    <Screen name="hasParam2" component={Component} />;
-    // @ts-expect-error
-    <Screen name="noParam" component={Component} />;
-    // ok
-    <Screen name="hasParam" component={Component} />;
-  });
+<SecondStack.Screen
+  name="HasParams1"
+  component={(_: { route: { params: { id: string } } }) => <></>}
+/>;
 
-  it("doesn't require the component to accept the `route` or `navigation` prop", () => {
-    const Component: FC<{}> = () => null;
-    // ok
-    <Screen name="hasParam" component={Component} />;
-    // ok
-    <Screen name="noParam" component={Component} />;
-  });
+<SecondStack.Screen
+  name="NoParams"
+  component={(_: StackScreenProps<SecondParamList, 'NoParams'>) => <></>}
+/>;
 
-  it('allows the component to declare any optional props', () => {
-    const Component: FC<{ someProp?: string }> = () => null;
-    <Screen name="hasParam" component={Component} />;
-    <Screen name="noParam" component={Component} />;
-  });
+<SecondStack.Screen
+  name="NoParams"
+  component={(_: { route: { params?: undefined } }) => <></>}
+/>;
 
-  it("doesn't allow a required prop that's neither `route` nor `navigation`", () => {
-    const Component: FC<{ someProp: string }> = () => null;
-    // @ts-expect-error
-    <Screen name="hasParam" component={Component} />;
-    // @ts-expect-error
-    <Screen name="noParam" component={Component} />;
-  });
+// No error when the component hasn't specified params
+<SecondStack.Screen
+  name="HasParams1"
+  component={(_: { route: {} }) => <></>}
+/>;
 
-  it('allows the component to accept just the `navigation` prop', () => {
-    const Component: FC<{ navigation: object }> = () => null;
-    // ok
-    <Screen name="hasParam" component={Component} />;
-    // ok
-    <Screen name="noParam" component={Component} />;
-  });
-});
+// No error when the component has specified params as optional
+<SecondStack.Screen
+  name="HasParams1"
+  component={(_: { route: { params: { id?: string } } }) => <></>}
+/>;
 
-describe('NavigationHelpers.navigate', () => {
-  type ParamList = {
-    hasParam: { param: string };
-    hasParam2: { param2: string };
-    noParam: undefined;
-  };
-  const navigate: NavigationHelpers<ParamList>['navigate'] = () => {};
+// No error when the component doesn't take route prop
+<SecondStack.Screen name="HasParams1" component={() => <></>} />;
 
-  it('strictly checks type of route params', () => {
-    // ok
-    navigate('noParam');
-    // ok
-    navigate('hasParam', { param: '123' });
-    // @ts-expect-error
-    navigate('hasParam2', { param: '123' });
-  });
+<SecondStack.Screen
+  name="HasParams1"
+  component={(_: { navigation: unknown }) => <></>}
+/>;
 
-  it('strictly checks type of route params when a union RouteName is passed', () => {
-    let routeName = undefined as unknown as keyof ParamList;
+<SecondStack.Screen name="NoParams" component={() => <></>} />;
 
-    // @ts-expect-error
-    navigate(routeName);
+<SecondStack.Screen
+  name="NoParams"
+  component={(_: { navigation: unknown }) => <></>}
+/>;
 
-    // ok
-    if (routeName === 'noParam') navigate(routeName);
-    // ok
-    if (routeName === 'hasParam') navigate(routeName, { param: '123' });
+// Error if props don't match type
+<SecondStack.Screen
+  // @ts-expect-error
+  name="HasParams1"
+  component={(_: StackScreenProps<SecondParamList, 'HasParams2'>) => <></>}
+/>;
 
-    // @ts-expect-error
-    if (routeName === 'hasParam') navigate(routeName);
-    // @ts-expect-error
-    if (routeName === 'hasParam2') navigate(routeName, { param: '123' });
-  });
-});
+<SecondStack.Screen
+  name="HasParams1"
+  // @ts-expect-error
+  component={(_: { route: { params: { ids: string } } }) => <></>}
+/>;
+
+<SecondStack.Screen
+  // @ts-expect-error
+  name="NoParams"
+  component={(_: StackScreenProps<SecondParamList, 'HasParams1'>) => <></>}
+/>;
+
+<SecondStack.Screen
+  name="NoParams"
+  // @ts-expect-error
+  component={(_: { route: { params: { ids: string } } }) => <></>}
+/>;
+
+// Error if component specifies a prop other than route or navigation
+<SecondStack.Screen
+  name="HasParams1"
+  // @ts-expect-error
+  component={(_: { foo: number }) => <></>}
+/>;
+
+<SecondStack.Screen
+  name="NoParams"
+  // @ts-expect-error
+  component={(_: { foo: number }) => <></>}
+/>;
+
+/**
+ * Check for errors with `navigation.navigate`
+ */
+type ThirdParamList = {
+  HasParams1: { id: string };
+  HasParams2: { user: string };
+  NoParams: undefined;
+};
+
+export const ThirdScreen = ({
+  navigation,
+}: {
+  navigation: NavigationHelpers<ThirdParamList>;
+}) => {
+  // No error when correct params are passed
+  navigation.navigate('NoParams');
+  navigation.navigate('HasParams1', { id: '123' });
+  navigation.navigate('HasParams2', { user: '123' });
+
+  // Error when incorrect params are passed
+  // @ts-expect-error
+  navigation.navigate('HasParams1', { user: '123' });
+  // @ts-expect-error
+  navigation.navigate('HasParams2', { id: '123' });
+
+  // Union type and type narrowing
+  const ScreenName: keyof ThirdParamList = null as any;
+
+  // @ts-expect-error
+  navigation.navigate(ScreenName);
+
+  // @ts-expect-error
+  if (ScreenName === 'HasParams1') navigation.navigate(ScreenName);
+
+  if (ScreenName === 'HasParams1')
+    navigation.navigate(ScreenName, { id: '123' });
+
+  if (ScreenName === 'NoParams') navigation.navigate(ScreenName);
+
+  // @ts-expect-error
+  if (ScreenName === 'NoParams') navigation.navigate(ScreenName, { id: '123' });
+};
