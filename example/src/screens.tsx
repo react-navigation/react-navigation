@@ -27,106 +27,86 @@ export type LinkComponentDemoParamList = {
   Albums: undefined;
 };
 
-const paramsType = <params,>() => undefined as unknown as params;
-
 export const SCREENS = {
   NativeStack: {
     title: 'Native Stack',
     component: NativeStack,
-    params: undefined,
   },
   SimpleStack: {
     title: 'Simple Stack',
     component: SimpleStack,
-    params: undefined,
   },
   ModalStack: {
     title: 'Modal Stack',
     component: ModalStack,
-    params: undefined,
   },
   MixedStack: {
     title: 'Regular + Modal Stack',
     component: MixedStack,
-    params: undefined,
   },
   MixedHeaderMode: {
     title: 'Float + Screen Header Stack',
     component: MixedHeaderMode,
-    params: undefined,
   },
   StackTransparent: {
     title: 'Transparent Stack',
     component: StackTransparent,
-    params: undefined,
   },
   StackHeaderCustomization: {
     title: 'Header Customization in Stack',
     component: StackHeaderCustomization,
-    params: undefined,
   },
   NativeStackHeaderCustomization: {
     title: 'Header Customization in Native Stack',
     component: NativeStackHeaderCustomization,
-    params: undefined,
   },
   BottomTabs: {
     title: 'Bottom Tabs',
     component: BottomTabs,
-    params: undefined,
   },
   MaterialTopTabs: {
     title: 'Material Top Tabs',
     component: MaterialTopTabsScreen,
-    params: undefined,
   },
   MaterialBottomTabs: {
     title: 'Material Bottom Tabs',
     component: MaterialBottomTabs,
-    params: undefined,
   },
   DynamicTabs: {
     title: 'Dynamic Tabs',
     component: DynamicTabs,
-    params: undefined,
   },
   MasterDetail: {
     title: 'Master Detail',
     component: MasterDetail,
-    params: undefined,
   },
   AuthFlow: {
     title: 'Auth Flow',
     component: AuthFlow,
-    params: undefined,
   },
   StackPreventRemove: {
     title: 'Prevent removing screen in Stack',
     component: StackPreventRemove,
-    params: undefined,
   },
   NativeStackPreventRemove: {
     title: 'Prevent removing screen in Native Stack',
     component: NativeStackPreventRemove,
-    params: undefined,
   },
   LinkComponent: {
     title: '<Link />',
     component: LinkComponent,
-    params: paramsType<
-      NavigatorScreenParams<LinkComponentDemoParamList> | undefined
-    >(),
   },
 };
 
-export const SCREEN_NAMES = Object.keys(SCREENS) as (keyof typeof SCREENS)[];
-
-export type RootStackParamList = {
+type ParamListTypes = {
   Home: undefined;
   NotFound: undefined;
-} & {
-  [P in keyof typeof SCREENS]: typeof SCREENS[P]['params'];
+  LinkComponent: NavigatorScreenParams<LinkComponentDemoParamList> | undefined;
 };
+
+export type RootStackParamList = {
+  [P in Exclude<keyof typeof SCREENS, keyof ParamListTypes>]: undefined;
+} & ParamListTypes;
 
 // Make the default RootParamList the same as the RootStackParamList
 declare global {
