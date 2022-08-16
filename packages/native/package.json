@@ -33,7 +33,7 @@
     "access": "public"
   },
   "scripts": {
-    "prepare": "bob build",
+    "prepack": "bob build",
     "clean": "del lib"
   },
   "dependencies": {

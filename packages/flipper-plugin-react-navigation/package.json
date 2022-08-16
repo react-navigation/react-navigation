@@ -25,6 +25,9 @@
     "watch": "flipper-pkg bundle --watch",
     "test": "jest --no-watchman"
   },
+  "installConfig": {
+    "hoistingLimits": "workspaces"
+  },
   "peerDependencies": {
     "antd": "*",
     "flipper": "*",
