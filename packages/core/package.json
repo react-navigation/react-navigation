@@ -39,18 +39,18 @@
     "escape-string-regexp": "^4.0.0",
     "nanoid": "^3.1.23",
     "query-string": "^7.0.0",
-    "react-is": "^16.13.0",
+    "react-is": "^18.0.0",
     "use-latest-callback": "^0.1.4"
   },
   "devDependencies": {
     "@testing-library/react-native": "^7.2.0",
-    "@types/react": "^17.0.47",
+    "@types/react": "~18.0.0",
     "@types/react-is": "^17.0.0",
     "del-cli": "^3.0.1",
     "immer": "^9.0.2",
-    "react": "17.0.2",
+    "react": "18.0.0",
     "react-native-builder-bob": "^0.18.1",
-    "react-test-renderer": "17.0.2",
+    "react-test-renderer": "18.0.0",
     "typescript": "^4.7.4"
   },
   "peerDependencies": {
