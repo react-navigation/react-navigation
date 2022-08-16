@@ -14,9 +14,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Setup Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: 16.x
+          cache: 'yarn'
 
       - name: Setup Expo
         uses: expo/expo-github-action@v6
@@ -25,14 +26,16 @@ jobs:
 
       - name: Restore yarn cache
         id: yarn-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
-          path: '**/node_modules'
+          path: |
+            '**/node_modules'
+            '.yarn/install-state.gz'
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - name: Publish Expo app
         working-directory: ./example
