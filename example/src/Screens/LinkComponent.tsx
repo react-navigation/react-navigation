@@ -8,17 +8,13 @@ import {
   createStackNavigator,
   StackScreenProps,
 } from '@react-navigation/stack';
+import type { LinkComponentDemoParamList } from 'example/src/screens';
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 
 import Albums from '../Shared/Albums';
 import Article from '../Shared/Article';
-
-type SimpleStackParams = {
-  Article: { author: string };
-  Albums: undefined;
-};
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
@@ -35,7 +31,7 @@ const LinkButton = ({
 const ArticleScreen = ({
   navigation,
   route,
-}: StackScreenProps<SimpleStackParams, 'Article'>) => {
+}: StackScreenProps<LinkComponentDemoParamList, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -82,7 +78,9 @@ const ArticleScreen = ({
   );
 };
 
-const AlbumsScreen = ({ navigation }: StackScreenProps<SimpleStackParams>) => {
+const AlbumsScreen = ({
+  navigation,
+}: StackScreenProps<LinkComponentDemoParamList>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -112,7 +110,7 @@ const AlbumsScreen = ({ navigation }: StackScreenProps<SimpleStackParams>) => {
   );
 };
 
-const SimpleStack = createStackNavigator<SimpleStackParams>();
+const SimpleStack = createStackNavigator<LinkComponentDemoParamList>();
 
 type Props = Partial<React.ComponentProps<typeof SimpleStack.Navigator>> &
   StackScreenProps<ParamListBase>;

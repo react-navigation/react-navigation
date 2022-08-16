@@ -1,4 +1,5 @@
 import type { StackScreenProps } from '@react-navigation/stack';
+import type { RootStackParamList } from 'example/src/screens';
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native-paper';
@@ -6,7 +7,7 @@ import { Button } from 'react-native-paper';
 const NotFoundScreen = ({
   route,
   navigation,
-}: StackScreenProps<{ Home: undefined }>) => {
+}: StackScreenProps<RootStackParamList, 'NotFound'>) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>404 Not Found ({route.path})</Text>

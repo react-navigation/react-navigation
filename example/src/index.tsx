@@ -13,7 +13,6 @@ import {
   DefaultTheme,
   InitialState,
   NavigationContainer,
-  NavigatorScreenParams,
   PathConfigMap,
   useNavigationContainerRef,
 } from '@react-navigation/native';
@@ -46,116 +45,18 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import { restartApp } from './Restart';
-import AuthFlow from './Screens/AuthFlow';
-import BottomTabs from './Screens/BottomTabs';
-import DynamicTabs from './Screens/DynamicTabs';
-import LinkComponent from './Screens/LinkComponent';
-import MasterDetail from './Screens/MasterDetail';
-import MaterialBottomTabs from './Screens/MaterialBottomTabs';
-import MaterialTopTabsScreen from './Screens/MaterialTopTabs';
-import MixedHeaderMode from './Screens/MixedHeaderMode';
-import MixedStack from './Screens/MixedStack';
-import ModalStack from './Screens/ModalStack';
-import NativeStack from './Screens/NativeStack';
-import NativeStackHeaderCustomization from './Screens/NativeStackHeaderCustomization';
-import NativeStackPreventRemove from './Screens/NativeStackPreventRemove';
+import {
+  RootDrawerParamList,
+  RootStackParamList,
+  SCREEN_NAMES,
+  SCREENS,
+} from './screens';
 import NotFound from './Screens/NotFound';
-import SimpleStack from './Screens/SimpleStack';
-import StackHeaderCustomization from './Screens/StackHeaderCustomization';
-import StackPreventRemove from './Screens/StackPreventRemove';
-import StackTransparent from './Screens/StackTransparent';
 import SettingsItem from './Shared/SettingsItem';
 
 if (Platform.OS !== 'web') {
   LogBox.ignoreLogs(['Require cycle:']);
 }
-
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList {}
-  }
-}
-
-type RootDrawerParamList = {
-  Examples: undefined;
-};
-
-const SCREENS = {
-  NativeStack: { title: 'Native Stack', component: NativeStack },
-  SimpleStack: { title: 'Simple Stack', component: SimpleStack },
-  ModalStack: {
-    title: 'Modal Stack',
-    component: ModalStack,
-  },
-  MixedStack: {
-    title: 'Regular + Modal Stack',
-    component: MixedStack,
-  },
-  MixedHeaderMode: {
-    title: 'Float + Screen Header Stack',
-    component: MixedHeaderMode,
-  },
-  StackTransparent: {
-    title: 'Transparent Stack',
-    component: StackTransparent,
-  },
-  StackHeaderCustomization: {
-    title: 'Header Customization in Stack',
-    component: StackHeaderCustomization,
-  },
-  NativeStackHeaderCustomization: {
-    title: 'Header Customization in Native Stack',
-    component: NativeStackHeaderCustomization,
-  },
-  BottomTabs: { title: 'Bottom Tabs', component: BottomTabs },
-  MaterialTopTabs: {
-    title: 'Material Top Tabs',
-    component: MaterialTopTabsScreen,
-  },
-  MaterialBottomTabs: {
-    title: 'Material Bottom Tabs',
-    component: MaterialBottomTabs,
-  },
-  DynamicTabs: {
-    title: 'Dynamic Tabs',
-    component: DynamicTabs,
-  },
-  MasterDetail: {
-    title: 'Master Detail',
-    component: MasterDetail,
-  },
-  AuthFlow: {
-    title: 'Auth Flow',
-    component: AuthFlow,
-  },
-  StackPreventRemove: {
-    title: 'Prevent removing screen in Stack',
-    component: StackPreventRemove,
-  },
-  NativeStackPreventRemove: {
-    title: 'Prevent removing screen in Native Stack',
-    component: NativeStackPreventRemove,
-  },
-  LinkComponent: {
-    title: '<Link />',
-    component: LinkComponent,
-  },
-};
-
-type RootStackParamList = {
-  Home: NavigatorScreenParams<RootDrawerParamList>;
-  NotFound: undefined;
-} & {
-  [P in keyof typeof SCREENS]: NavigatorScreenParams<{
-    Article: { author?: string };
-    Albums: undefined;
-    Chat: undefined;
-    Contacts: undefined;
-    NewsFeed: undefined;
-    Dialog: undefined;
-  }>;
-};
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
@@ -267,9 +168,7 @@ export default function App() {
           prefixes: [createURL('/')],
           config: {
             initialRouteName: 'Home',
-            screens: (Object.keys(SCREENS) as (keyof typeof SCREENS)[]).reduce<
-              PathConfigMap<RootStackParamList>
-            >(
+            screens: SCREEN_NAMES.reduce<PathConfigMap<RootStackParamList>>(
               (acc, name) => {
                 // Convert screen names such as SimpleStack to kebab case (simple-stack)
                 const path = name
@@ -381,20 +280,16 @@ export default function App() {
                           }}
                         />
                         <Divider />
-                        {(Object.keys(SCREENS) as (keyof typeof SCREENS)[]).map(
-                          (name) => (
-                            <List.Item
-                              key={name}
-                              testID={name}
-                              title={SCREENS[name].title}
-                              onPress={() => {
-                                // FIXME: figure this out later
-                                // @ts-expect-error
-                                navigation.navigate(name);
-                              }}
-                            />
-                          )
-                        )}
+                        {SCREEN_NAMES.map((name) => (
+                          <List.Item
+                            key={name}
+                            testID={name}
+                            title={SCREENS[name].title}
+                            onPress={() => {
+                              navigation.navigate(name);
+                            }}
+                          />
+                        ))}
                       </SafeAreaView>
                     </ScrollView>
                   )}
@@ -407,7 +302,7 @@ export default function App() {
             component={NotFound}
             options={{ title: 'Oops!' }}
           />
-          {(Object.keys(SCREENS) as (keyof typeof SCREENS)[]).map((name) => (
+          {SCREEN_NAMES.map((name) => (
             <Stack.Screen
               key={name}
               name={name}
