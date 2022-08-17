@@ -1,6 +1,7 @@
 import {
   getDefaultHeaderHeight,
   getHeaderTitle,
+  HeaderBackContext,
   HeaderHeightContext,
   HeaderShownContext,
   SafeAreaProviderCompat,
@@ -210,6 +211,7 @@ const SceneView = ({
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
+  const parentHeaderBack = React.useContext(HeaderBackContext);
 
   const { preventedRoutes } = usePreventRemoveContext();
 
@@ -219,6 +221,14 @@ const SceneView = ({
     React.useState(defaultHeaderHeight);
 
   const headerHeight = header ? customHeaderHeight : defaultHeaderHeight;
+  const headerBack = previousDescriptor
+    ? {
+        title: getHeaderTitle(
+          previousDescriptor.options,
+          previousDescriptor.route.name
+        ),
+      }
+    : parentHeaderBack;
 
   const isRemovePrevented = preventedRoutes[route.key]?.preventRemove;
 
@@ -281,14 +291,7 @@ const SceneView = ({
                   }}
                 >
                   {header({
-                    back: previousDescriptor
-                      ? {
-                          title: getHeaderTitle(
-                            previousDescriptor.options,
-                            previousDescriptor.route.name
-                          ),
-                        }
-                      : undefined,
+                    back: headerBack,
                     options,
                     route,
                     navigation,
@@ -305,7 +308,12 @@ const SceneView = ({
                   }
                   headerShown={isHeaderInPush}
                   headerHeight={headerHeight}
-                  canGoBack={index !== 0}
+                  headerBackTitle={
+                    options.headerBackTitle !== undefined
+                      ? options.headerBackTitle
+                      : headerBack?.title
+                  }
+                  canGoBack={headerBack !== undefined}
                 />
               )}
               <MaybeNestedStack
@@ -314,7 +322,9 @@ const SceneView = ({
                 presentation={presentation}
                 headerHeight={headerHeight}
               >
-                {render()}
+                <HeaderBackContext.Provider value={headerBack}>
+                  {render()}
+                </HeaderBackContext.Provider>
               </MaybeNestedStack>
             </HeaderHeightContext.Provider>
           </HeaderShownContext.Provider>
@@ -332,6 +342,7 @@ type Props = {
 
 function NativeStackViewInner({ state, navigation, descriptors }: Props) {
   const { setNextDismissedKey } = useDismissedRouteError(state);
+
   useInvalidPreventRemoveError(descriptors);
 
   return (

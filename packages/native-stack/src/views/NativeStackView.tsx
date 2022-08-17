@@ -2,6 +2,7 @@ import {
   getHeaderTitle,
   Header,
   HeaderBackButton,
+  HeaderBackContext,
   SafeAreaProviderCompat,
   Screen,
 } from '@react-navigation/elements';
@@ -31,12 +32,13 @@ const TRANSPARENT_PRESENTATIONS = [
 ];
 
 export default function NativeStackView({ state, descriptors }: Props) {
+  const parentHeaderBack = React.useContext(HeaderBackContext);
+
   return (
     <SafeAreaProviderCompat>
       <View style={styles.container}>
         {state.routes.map((route, i) => {
           const isFocused = state.index === i;
-          const canGoBack = i !== 0;
           const previousKey = state.routes[i - 1]?.key;
           const nextKey = state.routes[i + 1]?.key;
           const previousDescriptor = previousKey
@@ -44,6 +46,17 @@ export default function NativeStackView({ state, descriptors }: Props) {
             : undefined;
           const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
           const { options, navigation, render } = descriptors[route.key];
+
+          const headerBack = previousDescriptor
+            ? {
+                title: getHeaderTitle(
+                  previousDescriptor.options,
+                  previousDescriptor.route.name
+                ),
+              }
+            : parentHeaderBack;
+
+          const canGoBack = headerBack !== undefined;
 
           const {
             header,
@@ -77,14 +90,7 @@ export default function NativeStackView({ state, descriptors }: Props) {
               header={
                 header !== undefined ? (
                   header({
-                    back: previousDescriptor
-                      ? {
-                          title: getHeaderTitle(
-                            previousDescriptor.options,
-                            previousDescriptor.route.name
-                          ),
-                        }
-                      : undefined,
+                    back: headerBack,
                     options,
                     route,
                     navigation,
@@ -161,9 +167,11 @@ export default function NativeStackView({ state, descriptors }: Props) {
                   : null,
               ]}
             >
-              <View style={[styles.contentContainer, contentStyle]}>
-                {render()}
-              </View>
+              <HeaderBackContext.Provider value={headerBack}>
+                <View style={[styles.contentContainer, contentStyle]}>
+                  {render()}
+                </View>
+              </HeaderBackContext.Provider>
             </Screen>
           );
         })}
