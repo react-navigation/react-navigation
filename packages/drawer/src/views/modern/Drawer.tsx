@@ -124,13 +124,17 @@ export default function Drawer({
     }
   };
 
+  const [gestureInProgress, setGestureInProgress] = React.useState(false);
+
   const onGestureStart = () => {
+    setGestureInProgress(true);
     startInteraction();
     hideKeyboard();
     hideStatusBar(true);
   };
 
   const onGestureFinish = () => {
+    setGestureInProgress(false);
     endInteraction();
   };
 
@@ -347,7 +351,7 @@ export default function Drawer({
             >
               {renderSceneContent()}
             </View>
-            {drawerType !== 'permanent' ? (
+            {drawerType !== 'permanent' && (gestureInProgress || isOpen) ? (
               <Overlay
                 progress={progress}
                 onPress={() => toggleDrawer(false)}
