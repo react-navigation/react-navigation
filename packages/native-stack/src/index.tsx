@@ -16,5 +16,6 @@ export type {
   NativeStackNavigationEventMap,
   NativeStackNavigationOptions,
   NativeStackNavigationProp,
+  NativeStackNavigatorProps,
   NativeStackScreenProps,
 } from './types';
