@@ -8,7 +8,7 @@
     "client": "expo start --dev-client",
     "web": "expo start --web",
     "android": "expo run:android",
-    "ios": "npm-run-all -s pod-install run:ios",
+    "ios": "run-s pod-install run:ios",
     "run:ios": "expo run:ios",
     "pod-install": "pod-install",
     "server": "nodemon -e '.js,.ts,.tsx' --exec \"babel-node -i '/node_modules[/\\](?react-native)/' -x '.web.tsx,.web.ts,.web.js,.tsx,.ts,.js' --config-file ./server/babel.config.js server\"",
