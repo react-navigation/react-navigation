@@ -24,7 +24,8 @@
       "bundleIdentifier": "org.reactnavigation.example"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/a7070fc4-41f3-403d-826d-292b5d868327"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -34,6 +35,11 @@
     "android": {
       "package": "org.reactnavigation.example"
     },
-    "runtimeVersion": "1.0.0"
+    "runtimeVersion": "1.0.0",
+    "extra": {
+      "eas": {
+        "projectId": "a7070fc4-41f3-403d-826d-292b5d868327"
+      }
+    }
   }
 }
