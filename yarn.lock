@@ -3053,6 +3053,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo/config-plugins@npm:4.1.5":
+  version: 4.1.5
+  resolution: "@expo/config-plugins@npm:4.1.5"
+  dependencies:
+    "@expo/config-types": ^45.0.0
+    "@expo/json-file": 8.2.36
+    "@expo/plist": 0.0.18
+    "@expo/sdk-runtime-versions": ^1.0.0
+    "@react-native/normalize-color": ^2.0.0
+    chalk: ^4.1.2
+    debug: ^4.3.1
+    find-up: ~5.0.0
+    getenv: ^1.0.0
+    glob: 7.1.6
+    resolve-from: ^5.0.0
+    semver: ^7.3.5
+    slash: ^3.0.0
+    xcode: ^3.0.1
+    xml2js: 0.4.23
+  checksum: f631217251281b1e25949adbec175ef1362dd08d837ce676ed8350c1401b5764091ba100f76f42adb623e4cdcde5b270be77ad6606f978d419c07fd8c81b701c
+  languageName: node
+  linkType: hard
+
 "@expo/config-plugins@npm:~5.0.0, @expo/config-plugins@npm:~5.0.1":
   version: 5.0.1
   resolution: "@expo/config-plugins@npm:5.0.1"
@@ -3076,10 +3099,36 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo/config-types@npm:^45.0.0":
+  version: 45.0.0
+  resolution: "@expo/config-types@npm:45.0.0"
+  checksum: 9b4866540654da61af0985ebfc975b3cb690625acf7742443a7e56263bf134b261e22719720982223407f8957d08a3646178c79f482861218882f0956d804021
+  languageName: node
+  linkType: hard
+
 "@expo/config-types@npm:^46.0.0, @expo/config-types@npm:^46.0.1":
   version: 46.0.2
   resolution: "@expo/config-types@npm:46.0.2"
   checksum: ea7b3c64e875dfe65209e5f099b3ef4ddc464f308aff50ba08c26c1dfc3d3c177203190b29b5d7dd334932d74f765690c44829d637d7a71a72078214c69a07ab
+  languageName: node
+  linkType: hard
+
+"@expo/config@npm:6.0.24":
+  version: 6.0.24
+  resolution: "@expo/config@npm:6.0.24"
+  dependencies:
+    "@babel/code-frame": ~7.10.4
+    "@expo/config-plugins": 4.1.5
+    "@expo/config-types": ^45.0.0
+    "@expo/json-file": 8.2.36
+    getenv: ^1.0.0
+    glob: 7.1.6
+    require-from-string: ^2.0.2
+    resolve-from: ^5.0.0
+    semver: 7.3.2
+    slugify: ^1.3.4
+    sucrase: ^3.20.0
+  checksum: 5d29474a4985c43e55fa40f3131d7cb2e9d252745c5dc398f38a8dfc3622e1f273d78e578681f93bf2e304a7d0da12727c680af7ea1f931e6e5440f57d92dc22
   languageName: node
   linkType: hard
 
@@ -3334,17 +3383,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/webpack-config@npm:^0.17.0":
-  version: 0.17.2
-  resolution: "@expo/webpack-config@npm:0.17.2"
+"@expo/webpack-config@npm:^0.16.27":
+  version: 0.16.27
+  resolution: "@expo/webpack-config@npm:0.16.27"
   dependencies:
     "@babel/core": 7.9.0
+    "@expo/config": 6.0.24
     babel-loader: 8.1.0
     chalk: ^4.0.0
     clean-webpack-plugin: ^3.0.0
     copy-webpack-plugin: ~6.0.3
     css-loader: ~3.6.0
-    expo-pwa: 0.0.123
+    expo-pwa: 0.0.122
     file-loader: ~6.0.0
     find-yarn-workspace-root: ~2.0.0
     getenv: ^1.0.0
@@ -3367,7 +3417,7 @@ __metadata:
     webpack: 4.43.0
     webpack-dev-server: 3.11.0
     webpack-manifest-plugin: ~2.2.0
-  checksum: 7a62282366c2a63d6297691855184af721b0fd21d0a475aa61dd21fb6175cc2631b49f307921941b0b84b1379085bdbe6c340fc5935c29625caaf49085916949
+  checksum: 2788e707939d33dd455dfab1e80fe0a4190642823e8ae14a532257450ce2486c3ee326b0588a078a9402617a5fa855ff75db6632207a20a0d08b90b6347a45a3
   languageName: node
   linkType: hard
 
@@ -5816,7 +5866,7 @@ __metadata:
     "@babel/core": ^7.18.6
     "@babel/node": ^7.14.2
     "@expo/vector-icons": ^13.0.0
-    "@expo/webpack-config": ^0.17.0
+    "@expo/webpack-config": ^0.16.27
     "@playwright/test": ^1.12.2
     "@react-native-async-storage/async-storage": ~1.17.3
     "@react-native-masked-view/masked-view": 0.2.7
@@ -12856,19 +12906,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-pwa@npm:0.0.123":
-  version: 0.0.123
-  resolution: "expo-pwa@npm:0.0.123"
+"expo-pwa@npm:0.0.122":
+  version: 0.0.122
+  resolution: "expo-pwa@npm:0.0.122"
   dependencies:
+    "@expo/config": 6.0.24
     "@expo/image-utils": 0.3.22
     chalk: ^4.0.0
     commander: 2.20.0
     update-check: 1.5.3
-  peerDependencies:
-    expo: "*"
   bin:
     expo-pwa: build/cli.js
-  checksum: 9c60383685030417e6d8274b7f396741f6cd26b664f653267d3c69a96322c19389374339ac9dbd1efa8e8899352e60df19a76cd7e34f6e90359d73504ea36cbe
+  checksum: 4bc70f85e6041fe903ba8d2768d4e72d1525af086a19803ad8f33fa195ae5ac151838a76ca503d6ef6bd9b6b8a087c9070a9366ab8f0d0c380a032a75c6f283b
   languageName: node
   linkType: hard
 
