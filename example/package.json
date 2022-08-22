@@ -57,7 +57,6 @@
     "babel-preset-expo": "~9.2.0",
     "cheerio": "^1.0.0-rc.9",
     "expect-type": "^0.13.0",
-    "expo-cli": "^5.4.11",
     "jest-dev-server": "^5.0.3",
     "jimp": "^0.16.1",
     "mock-require": "^3.0.3",
