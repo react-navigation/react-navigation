@@ -319,12 +319,13 @@ export default function useNavigationBuilder<
   }
 
   const isStateValid = React.useCallback(
-    (state) => state.type === undefined || state.type === router.type,
+    (state: NavigationState | PartialState<NavigationState>) =>
+      state.type === undefined || state.type === router.type,
     [router.type]
   );
 
   const isStateInitialized = React.useCallback(
-    (state) =>
+    (state: NavigationState | PartialState<NavigationState> | undefined) =>
       state !== undefined && state.stale === false && isStateValid(state),
     [isStateValid]
   );

@@ -230,7 +230,7 @@ const BaseNavigationContainer = React.forwardRef(
     const lastEmittedOptionsRef = React.useRef<object | undefined>();
 
     const onOptionsChange = React.useCallback(
-      (options) => {
+      (options: object) => {
         if (lastEmittedOptionsRef.current === options) {
           return;
         }
