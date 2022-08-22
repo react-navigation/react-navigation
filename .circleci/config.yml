@@ -74,7 +74,7 @@ jobs:
       - attach_project
       - run:
           name: Build example for web
-          command: yarn example expo build:web --no-pwa
+          command: yarn example expo export:web
       # Yarn does not execute the postinstall scripts if the package is in the cache
       - run:
           name: Install browsers
