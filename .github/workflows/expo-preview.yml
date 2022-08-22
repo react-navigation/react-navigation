@@ -17,8 +17,9 @@ jobs:
           cache: 'yarn'
 
       - name: Setup Expo
-        uses: expo/expo-github-action@v6
+        uses: expo/expo-github-action@v7
         with:
+          eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Restore yarn cache
@@ -36,7 +37,7 @@ jobs:
 
       - name: Publish Expo app
         working-directory: ./example
-        run: yarn expo publish --release-channel=pr-${{ github.event.number }}
+        run: eas update --release-channel=pr-${{ github.event.number }}
         env:
           EXPO_USE_DEV_SERVER: true
 
