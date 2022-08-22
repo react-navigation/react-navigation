@@ -4,7 +4,8 @@
   "version": "5.1.0",
   "private": true,
   "scripts": {
-    "start": "expo start --dev-client",
+    "start": "expo start",
+    "client": "expo start --dev-client",
     "web": "expo start --web",
     "android": "expo run:android",
     "ios": "expo run:ios",
