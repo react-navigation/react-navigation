@@ -33,6 +33,7 @@
     "entryPoint": "App.tsx",
     "android": {
       "package": "org.reactnavigation.example"
-    }
+    },
+    "runtimeVersion": "1.0.0"
   }
 }

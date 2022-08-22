@@ -37,7 +37,7 @@ jobs:
 
       - name: Publish Expo app
         working-directory: ./example
-        run: eas update --branch=pr-${{ github.event.number }} --auto
+        run: eas update --auto
         env:
           EXPO_USE_DEV_SERVER: true
 
