@@ -8,6 +8,8 @@ import {
   MaterialBottomTabScreenProps,
 } from '../index';
 
+jest.mock('react-native-paper/lib/commonjs/utils/useIsKeyboardShown');
+
 it('renders a material bottom tab navigator with screens', async () => {
   const Test = ({
     route,

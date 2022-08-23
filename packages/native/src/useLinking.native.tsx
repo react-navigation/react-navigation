@@ -42,12 +42,15 @@ export default function useLinking(
         | { remove(): void }
         | undefined;
 
+      // Storing this in a local variable stops Jest from complaining about import after teardown
+      const removeEventListener = Linking.removeEventListener?.bind(Linking);
+
       return () => {
         // https://github.com/facebook/react-native/commit/6d1aca806cee86ad76de771ed3a1cc62982ebcd7
         if (subscription?.remove) {
           subscription.remove();
         } else {
-          Linking.removeEventListener('url', callback);
+          removeEventListener?.('url', callback);
         }
       };
     },
