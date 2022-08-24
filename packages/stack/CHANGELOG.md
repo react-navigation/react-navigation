@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.2.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.2.2...@react-navigation/stack@6.2.3) (2022-08-24)
+
+
+### Bug Fixes
+
+* replace deprecated I18nManager.isRTL with 18nManager.getConstants().isRTL ([#10547](https://github.com/react-navigation/react-navigation/issues/10547)) ([50b88d4](https://github.com/react-navigation/react-navigation/commit/50b88d40496a04f613073c63119b21a104ec9bc2))
+
+
+
+
+
 ## [6.2.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.2.1...@react-navigation/stack@6.2.2) (2022-07-05)
 
 

@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.8.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.7.0...@react-navigation/native-stack@6.8.0) (2022-08-24)
+
+
+### Bug Fixes
+
+* improve when back button is shown in nested native stacks ([#10761](https://github.com/react-navigation/react-navigation/issues/10761)) ([05dab7d](https://github.com/react-navigation/react-navigation/commit/05dab7d6f146ba076a00cb4ed1bbc1070224e9ab))
+* replace deprecated I18nManager.isRTL with 18nManager.getConstants().isRTL ([#10547](https://github.com/react-navigation/react-navigation/issues/10547)) ([50b88d4](https://github.com/react-navigation/react-navigation/commit/50b88d40496a04f613073c63119b21a104ec9bc2))
+
+
+### Features
+
+* implement usePreventRemove hook ([#10682](https://github.com/react-navigation/react-navigation/issues/10682)) ([7411516](https://github.com/react-navigation/react-navigation/commit/741151654752e0e55affbc8e04dd4876eaedd760))
+
+
+
+
+
 # [6.7.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.6.2...@react-navigation/native-stack@6.7.0) (2022-07-05)
 
 
