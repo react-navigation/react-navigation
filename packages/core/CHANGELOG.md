@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.3.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.2.2...@react-navigation/core@6.3.0) (2022-08-24)
+
+
+### Bug Fixes
+
+* add missing parentheses typo in useFocusEffect error message ([#10688](https://github.com/react-navigation/react-navigation/issues/10688)) ([9203045](https://github.com/react-navigation/react-navigation/commit/9203045b9c3cd39973b6085e5dfef17d7524f22e))
+* handle path with empty string properly for linking ([#10708](https://github.com/react-navigation/react-navigation/issues/10708)) ([e8c374e](https://github.com/react-navigation/react-navigation/commit/e8c374e0643a1521566c654e0052b53f2fd0667a))
+* potential prototype pollution attacks ([#10455](https://github.com/react-navigation/react-navigation/issues/10455)) ([10e5d2b](https://github.com/react-navigation/react-navigation/commit/10e5d2bbc0b19af7e87ee96e4c402ed6d9d54d79))
+* prevent Object properties to be used as parsing functions ([#10570](https://github.com/react-navigation/react-navigation/issues/10570)) ([7fbd3e5](https://github.com/react-navigation/react-navigation/commit/7fbd3e5025ecf6f5d20b05c0ac2d583d772435ab))
+* strongly type the `component` prop on `RouteConfigComponent` ([#10519](https://github.com/react-navigation/react-navigation/issues/10519)) ([55da7c9](https://github.com/react-navigation/react-navigation/commit/55da7c9b72076c98a65eb4b1b338e990a2f5a21c))
+* wrong setParams type if route does not have params ([#10512](https://github.com/react-navigation/react-navigation/issues/10512)) ([8ed42cd](https://github.com/react-navigation/react-navigation/commit/8ed42cdfe886e0b004319eea7c92d6081bdf289d))
+
+
+### Features
+
+* implement usePreventRemove hook ([#10682](https://github.com/react-navigation/react-navigation/issues/10682)) ([7411516](https://github.com/react-navigation/react-navigation/commit/741151654752e0e55affbc8e04dd4876eaedd760))
+
+
+
+
+
 ## [6.2.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.2.1...@react-navigation/core@6.2.2) (2022-07-05)
 
 
