@@ -408,7 +408,7 @@ Function which takes an object with the current route, focused status and color 
 <TabBar
   renderIcon={({ route, focused, color }) => (
     <Icon
-      name={focused ? 'abums' : 'albums-outlined'}
+      name={focused ? 'albums' : 'albums-outlined'}
       color={color}
     />
   )}
