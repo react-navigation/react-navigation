@@ -87,7 +87,7 @@ type Props = {
    * does not exceed this number.
    * @default 1
    */
-   numberOfLines?: number;
+  numberOfLines?: number;
 };
 
 const LinkPressable = ({
