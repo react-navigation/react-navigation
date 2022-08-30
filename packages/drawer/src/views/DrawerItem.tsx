@@ -81,6 +81,13 @@ type Props = {
    * Whether label font should scale to respect Text Size accessibility settings.
    */
   allowFontScaling?: boolean;
+  /**
+   * Used to truncate the text with an ellipsis after computing the text
+   * layout, including line wrapping, such that the total number of lines
+   * does not exceed this number.
+   * @default 1
+   */
+   numberOfLines?: number;
 };
 
 const LinkPressable = ({
@@ -152,6 +159,7 @@ export default function DrawerItem(props: Props) {
     to,
     focused = false,
     allowFontScaling,
+    numberOfLines = 1,
     activeTintColor = colors.primary,
     inactiveTintColor = Color(colors.text).alpha(0.68).rgb().string(),
     activeBackgroundColor = Color(activeTintColor).alpha(0.12).rgb().string(),
@@ -196,7 +204,7 @@ export default function DrawerItem(props: Props) {
           >
             {typeof label === 'string' ? (
               <Text
-                numberOfLines={1}
+                numberOfLines={numberOfLines}
                 allowFontScaling={allowFontScaling}
                 style={[
                   {
