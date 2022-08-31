@@ -357,6 +357,7 @@ export default class TabBar<T extends Route> extends React.Component<
             alwaysBounceHorizontal={false}
             scrollsToTop={false}
             showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             automaticallyAdjustContentInsets={false}
             overScrollMode="never"
             contentContainerStyle={[
