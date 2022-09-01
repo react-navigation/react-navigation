@@ -518,6 +518,10 @@ Style to apply to the inner container for tabs.
 
 Style to apply to the tab bar container.
 
+### `gap`
+
+Define a spacing between tabs.
+
 ## Using with other libraries
 
 ### [React Navigation](https://github.com/react-navigation/react-navigation)
