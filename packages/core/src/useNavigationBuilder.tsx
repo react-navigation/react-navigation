@@ -19,6 +19,7 @@ import isRecordEqual from './isRecordEqual';
 import NavigationHelpersContext from './NavigationHelpersContext';
 import NavigationRouteContext from './NavigationRouteContext';
 import NavigationStateContext from './NavigationStateContext';
+import PreventRemoveProvider from './PreventRemoveProvider';
 import Screen from './Screen';
 import {
   DefaultNavigatorOptions,
@@ -690,9 +691,11 @@ export default function useNavigationBuilder<
     descriptors,
   });
 
-  const NavigationContent = useComponent(NavigationHelpersContext.Provider, {
-    value: navigation,
-  });
+  const NavigationContent = useComponent((children: React.ReactNode) => (
+    <NavigationHelpersContext.Provider value={navigation}>
+      <PreventRemoveProvider>{children}</PreventRemoveProvider>
+    </NavigationHelpersContext.Provider>
+  ));
 
   return {
     state,

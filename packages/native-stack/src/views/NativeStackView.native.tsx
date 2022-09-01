@@ -1,6 +1,7 @@
 import {
   getDefaultHeaderHeight,
   getHeaderTitle,
+  HeaderBackContext,
   HeaderHeightContext,
   HeaderShownContext,
   SafeAreaProviderCompat,
@@ -12,6 +13,7 @@ import {
   Route,
   StackActions,
   StackNavigationState,
+  usePreventRemoveContext,
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -34,6 +36,8 @@ import type {
   NativeStackNavigationHelpers,
   NativeStackNavigationOptions,
 } from '../types';
+import useDismissedRouteError from '../utils/useDismissedRouteError';
+import useInvalidPreventRemoveError from '../utils/useInvalidPreventRemoveError';
 import DebugContainer from './DebugContainer';
 import HeaderConfig from './HeaderConfig';
 
@@ -116,6 +120,8 @@ type SceneViewProps = {
   onAppear: () => void;
   onDisappear: () => void;
   onDismissed: ScreenProps['onDismissed'];
+  onHeaderBackButtonClicked: () => void;
+  onNativeDismissCancelled: ScreenProps['onDismissed'];
 };
 
 const SceneView = ({
@@ -127,6 +133,8 @@ const SceneView = ({
   onAppear,
   onDisappear,
   onDismissed,
+  onHeaderBackButtonClicked,
+  onNativeDismissCancelled,
 }: SceneViewProps) => {
   const { route, navigation, options, render } = descriptor;
   const {
@@ -134,6 +142,7 @@ const SceneView = ({
     animationTypeForReplace = 'push',
     gestureEnabled,
     header,
+    headerBackButtonMenuEnabled,
     headerShown,
     autoHideHomeIndicator,
     navigationBarColor,
@@ -202,6 +211,9 @@ const SceneView = ({
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
+  const parentHeaderBack = React.useContext(HeaderBackContext);
+
+  const { preventedRoutes } = usePreventRemoveContext();
 
   const defaultHeaderHeight = getDefaultHeaderHeight(frame, isModal, topInset);
 
@@ -209,6 +221,16 @@ const SceneView = ({
     React.useState(defaultHeaderHeight);
 
   const headerHeight = header ? customHeaderHeight : defaultHeaderHeight;
+  const headerBack = previousDescriptor
+    ? {
+        title: getHeaderTitle(
+          previousDescriptor.options,
+          previousDescriptor.route.name
+        ),
+      }
+    : parentHeaderBack;
+
+  const isRemovePrevented = preventedRoutes[route.key]?.preventRemove;
 
   return (
     <Screen
@@ -243,6 +265,12 @@ const SceneView = ({
       onDisappear={onDisappear}
       onDismissed={onDismissed}
       isNativeStack
+      // Props for enabling preventing removal in native-stack
+      nativeBackButtonDismissalEnabled={false} // on Android
+      // @ts-expect-error prop not publicly exported from rn-screens
+      preventNativeDismiss={isRemovePrevented} // on iOS
+      onHeaderBackButtonClicked={onHeaderBackButtonClicked}
+      onNativeDismissCancelled={onNativeDismissCancelled}
     >
       <NavigationContext.Provider value={navigation}>
         <NavigationRouteContext.Provider value={route}>
@@ -263,14 +291,7 @@ const SceneView = ({
                   }}
                 >
                   {header({
-                    back: previousDescriptor
-                      ? {
-                          title: getHeaderTitle(
-                            previousDescriptor.options,
-                            previousDescriptor.route.name
-                          ),
-                        }
-                      : undefined,
+                    back: headerBack,
                     options,
                     route,
                     navigation,
@@ -280,9 +301,19 @@ const SceneView = ({
                 <HeaderConfig
                   {...options}
                   route={route}
+                  headerBackButtonMenuEnabled={
+                    isRemovePrevented !== undefined
+                      ? !isRemovePrevented
+                      : headerBackButtonMenuEnabled
+                  }
                   headerShown={isHeaderInPush}
                   headerHeight={headerHeight}
-                  canGoBack={index !== 0}
+                  headerBackTitle={
+                    options.headerBackTitle !== undefined
+                      ? options.headerBackTitle
+                      : headerBack?.title
+                  }
+                  canGoBack={headerBack !== undefined}
                 />
               )}
               <MaybeNestedStack
@@ -291,7 +322,9 @@ const SceneView = ({
                 presentation={presentation}
                 headerHeight={headerHeight}
               >
-                {render()}
+                <HeaderBackContext.Provider value={headerBack}>
+                  {render()}
+                </HeaderBackContext.Provider>
               </MaybeNestedStack>
             </HeaderHeightContext.Provider>
           </HeaderShownContext.Provider>
@@ -308,24 +341,9 @@ type Props = {
 };
 
 function NativeStackViewInner({ state, navigation, descriptors }: Props) {
-  const [nextDismissedKey, setNextDismissedKey] = React.useState<string | null>(
-    null
-  );
+  const { setNextDismissedKey } = useDismissedRouteError(state);
 
-  const dismissedRouteName = nextDismissedKey
-    ? state.routes.find((route) => route.key === nextDismissedKey)?.name
-    : null;
-
-  React.useEffect(() => {
-    if (dismissedRouteName) {
-      const message =
-        `The screen '${dismissedRouteName}' was removed natively but didn't get removed from JS state. ` +
-        `This can happen if the action was prevented in a 'beforeRemove' listener, which is not fully supported in native-stack.\n\n` +
-        `Consider using 'gestureEnabled: false' to prevent back gesture and use a custom back button with 'headerLeft' option to override the native behavior.`;
-
-      console.error(message);
-    }
-  }, [dismissedRouteName]);
+  useInvalidPreventRemoveError(descriptors);
 
   return (
     <ScreenStack style={styles.container}>
@@ -374,6 +392,20 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
               });
 
               setNextDismissedKey(route.key);
+            }}
+            onHeaderBackButtonClicked={() => {
+              navigation.dispatch({
+                ...StackActions.pop(),
+                source: route.key,
+                target: state.key,
+              });
+            }}
+            onNativeDismissCancelled={(event) => {
+              navigation.dispatch({
+                ...StackActions.pop(event.nativeEvent.dismissCount),
+                source: route.key,
+                target: state.key,
+              });
             }}
           />
         );

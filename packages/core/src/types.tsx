@@ -192,9 +192,18 @@ type NavigationHelpersCommon<
    * @param [params] Params object for the route.
    */
   navigate<RouteName extends keyof ParamList>(
-    ...args: undefined extends ParamList[RouteName]
-      ? [screen: RouteName] | [screen: RouteName, params: ParamList[RouteName]]
-      : [screen: RouteName, params: ParamList[RouteName]]
+    ...args: // this first condition allows us to iterate over a union type
+    // This is to avoid getting a union of all the params from `ParamList[RouteName]`,
+    // which will get our types all mixed up if a union RouteName is passed in.
+    RouteName extends unknown
+      ? // This condition checks if the params are optional,
+        // which means it's either undefined or a union with undefined
+        undefined extends ParamList[RouteName]
+        ?
+            | [screen: RouteName] // if the params are optional, we don't have to provide it
+            | [screen: RouteName, params: ParamList[RouteName]]
+        : [screen: RouteName, params: ParamList[RouteName]]
+      : never
   ): void;
 
   /**
@@ -203,14 +212,16 @@ type NavigationHelpersCommon<
    * @param route Object with `key` or `name` for the route to navigate to, and a `params` object.
    */
   navigate<RouteName extends keyof ParamList>(
-    options:
-      | { key: string; params?: ParamList[RouteName]; merge?: boolean }
-      | {
-          name: RouteName;
-          key?: string;
-          params: ParamList[RouteName];
-          merge?: boolean;
-        }
+    options: RouteName extends unknown
+      ?
+          | { key: string; params?: ParamList[RouteName]; merge?: boolean }
+          | {
+              name: RouteName;
+              key?: string;
+              params: ParamList[RouteName];
+              merge?: boolean;
+            }
+      : never
   ): void;
 
   /**
@@ -325,7 +336,11 @@ export type NavigationProp<
    *
    * @param params Params object for the current route.
    */
-  setParams(params: Partial<ParamList[RouteName]>): void;
+  setParams(
+    params: ParamList[RouteName] extends undefined
+      ? undefined
+      : Partial<ParamList[RouteName]>
+  ): void;
 
   /**
    * Update the options for the route.
@@ -436,6 +451,16 @@ export type ScreenListeners<
   >;
 }>;
 
+type ScreenComponentType<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList
+> =
+  | React.ComponentType<{
+      route: RouteProp<ParamList, RouteName>;
+      navigation: any;
+    }>
+  | React.ComponentType<{}>;
+
 export type RouteConfigComponent<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList
@@ -444,7 +469,7 @@ export type RouteConfigComponent<
       /**
        * React component to render for this screen.
        */
-      component: React.ComponentType<any>;
+      component: ScreenComponentType<ParamList, RouteName>;
       getComponent?: never;
       children?: never;
     }
@@ -452,7 +477,7 @@ export type RouteConfigComponent<
       /**
        * Lazily get a React component to render for this screen.
        */
-      getComponent: () => React.ComponentType<any>;
+      getComponent: () => ScreenComponentType<ParamList, RouteName>;
       component?: never;
       children?: never;
     }

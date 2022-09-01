@@ -902,6 +902,54 @@ it('keeps query params if path is empty', () => {
   ).toEqual(path);
 });
 
+it('does not use Object.prototype properties as parsing functions', () => {
+  const path = '/?toString=42';
+  const config = {
+    screens: {
+      Foo: {
+        screens: {
+          Foe: 'foe',
+          Bar: {
+            screens: {
+              Qux: {
+                path: '',
+                parse: {},
+              },
+              Baz: 'baz',
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              state: {
+                routes: [{ name: 'Qux', params: { toString: 42 } }],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe(path);
+  expect(
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
+  ).toEqual(path);
+});
+
 it('cuts nested configs too', () => {
   const path = '/foo/baz';
   const config = {

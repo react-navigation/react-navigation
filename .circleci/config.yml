@@ -6,7 +6,7 @@ executors:
       - image: circleci/node:14
     working_directory: ~/project
     environment:
-      YARN_CACHE_FOLDER: "~/.cache/yarn"
+      YARN_GLOBAL_FOLDER: "~/.yarn/global"
 
   playwright:
     docker:
@@ -33,11 +33,11 @@ jobs:
             - yarn-packages-v1-
       - run:
           name: Install project dependencies
-          command: yarn install --frozen-lockfile
+          command: yarn install --immutable
       - save_cache:
           key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
-            - ~/.cache/yarn
+            - ~/.yarn/global
       - persist_to_workspace:
           root: .
           paths:
@@ -78,7 +78,7 @@ jobs:
       # Yarn does not execute the postinstall scripts if the package is in the cache
       - run:
           name: Install browsers
-          command: yarn playwright install
+          command: npx playwright install
       - run:
           name: Run integration tests
           command: yarn example test:e2e
@@ -89,7 +89,7 @@ jobs:
       - attach_project
       - run:
           name: Build packages in the monorepo
-          command: yarn lerna run prepare
+          command: yarn lerna run prepack
       - run:
           name: Verify built type definitions are correct
           command: yarn typescript

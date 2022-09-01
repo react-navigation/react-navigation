@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.2.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.2.2...@react-navigation/material-bottom-tabs@6.2.3) (2022-08-24)
+
+
+### Bug Fixes
+
+* use custom theme from paper if configured ([f8feedf](https://github.com/react-navigation/react-navigation/commit/f8feedf8e7cb9363e48fb921304f4cad89f53962))
+
+
+
+
+
 ## [6.2.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.2.1...@react-navigation/material-bottom-tabs@6.2.2) (2022-07-05)
 
 

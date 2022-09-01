@@ -893,6 +893,48 @@ it('returns matching screen if path is empty', () => {
   ).toEqual(changePath(state, '/'));
 });
 
+it('returns matching screen if path is only slash', () => {
+  const path = '/';
+  const config = {
+    screens: {
+      Foo: {
+        screens: {
+          Foe: 'foe',
+          Bar: {
+            screens: {
+              Qux: '',
+              Baz: 'baz',
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              state: {
+                routes: [{ name: 'Qux', path }],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/'));
+});
+
 it('returns matching screen with params if path is empty', () => {
   const path = '?foo=42';
   const config = {

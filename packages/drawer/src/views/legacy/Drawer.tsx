@@ -502,7 +502,7 @@ export default class DrawerView extends React.Component<DrawerProps> {
 
     const drawerTranslateX =
       drawerType === 'back'
-        ? I18nManager.isRTL
+        ? I18nManager.getConstants().isRTL
           ? multiply(
               sub(this.containerWidth, this.drawerWidth),
               isRight ? 1 : -1
@@ -513,7 +513,7 @@ export default class DrawerView extends React.Component<DrawerProps> {
     const offset =
       drawerType === 'back'
         ? 0
-        : I18nManager.isRTL
+        : I18nManager.getConstants().isRTL
         ? '100%'
         : multiply(this.drawerWidth, -1);
 
