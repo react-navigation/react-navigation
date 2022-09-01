@@ -1,6 +1,9 @@
 import { Animated } from 'react-native';
 import { useTransitionProgress } from 'react-native-screens';
 
+// TODO: move conditional from here and stack to somewhere where it makes sense
+import conditional from './conditional';
+
 export type NativeStackCardInterpolationProps = {
   /**
    * Values for the current screen.
@@ -32,16 +35,10 @@ export default function useCardAnimation(): NativeStackCardInterpolationProps {
 
   return {
     current: {
-      // p + c - 2 * c * p
-      progress: Animated.add(
-        progress,
-        Animated.add(
-          closing,
-          Animated.multiply(
-            new Animated.Value(-2),
-            Animated.multiply(progress, closing)
-          )
-        )
+      progress: conditional(
+        closing,
+        Animated.subtract(closing, progress),
+        progress
       ),
     },
     closing,
