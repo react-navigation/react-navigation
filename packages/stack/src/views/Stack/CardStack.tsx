@@ -81,7 +81,7 @@ type State = {
   headerHeights: Record<string, number>;
 };
 
-const EPSILON = 0.01;
+const EPSILON = 1e-5;
 
 const STATE_INACTIVE = 0;
 const STATE_TRANSITIONING_OR_BELOW_TOP = 1;
