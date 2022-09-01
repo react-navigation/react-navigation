@@ -81,6 +81,8 @@ export default function PanResponderAdapter<T extends Route>({
 
       const { timing, ...transitionConfig } = DefaultTransitionSpec;
 
+      onIndexChangeRef.current(index);
+
       Animated.parallel([
         timing(panX, {
           ...transitionConfig,
@@ -89,7 +91,6 @@ export default function PanResponderAdapter<T extends Route>({
         }),
       ]).start(({ finished }) => {
         if (finished) {
-          onIndexChangeRef.current(index);
           pendingIndexRef.current = undefined;
         }
       });
