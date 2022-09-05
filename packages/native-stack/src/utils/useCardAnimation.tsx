@@ -1,7 +1,11 @@
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { Animated } from 'react-native';
 import { useTransitionProgress } from 'react-native-screens';
 
-// TODO: move conditional from here and stack to somewhere where it makes sense
 import conditional from './conditional';
 
 export type NativeStackCardInterpolationProps = {
@@ -31,16 +35,34 @@ export type NativeStackCardInterpolationProps = {
 };
 
 export default function useCardAnimation(): NativeStackCardInterpolationProps {
-  const { progress, closing } = useTransitionProgress();
+  const { progress: transitionProgress, closing } = useTransitionProgress();
+  const focused = useIsFocused();
+
+  // RNScreens implement transtion progress as always from 0 to 1 in both directions
+  // but useCardAnimation from JS Stack uses 0 to 1 on opening and 1 to 0 on closing
+  const current = focused
+    ? {
+        progress: conditional(
+          closing,
+          Animated.subtract(closing, transitionProgress),
+          transitionProgress
+        ),
+      }
+    : { progress: new Animated.Value(1) };
+
+  const next = !focused
+    ? {
+        progress: conditional(
+          closing,
+          transitionProgress,
+          Animated.subtract(new Animated.Value(1), transitionProgress)
+        ),
+      }
+    : { progress: new Animated.Value(1) };
 
   return {
-    current: {
-      progress: conditional(
-        closing,
-        Animated.subtract(closing, progress),
-        progress
-      ),
-    },
+    current,
+    next,
     closing,
   };
 }
