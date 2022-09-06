@@ -22,6 +22,7 @@ import {
   StackScreenProps,
 } from '@react-navigation/stack';
 import { createURL } from 'expo-linking';
+import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
 import {
   Dimensions,
@@ -50,8 +51,10 @@ import NotFound from './Screens/NotFound';
 import SettingsItem from './Shared/SettingsItem';
 
 if (Platform.OS !== 'web') {
-  LogBox.ignoreLogs(['Require cycle:']);
+  LogBox.ignoreLogs(['The native module for Flipper seems unavailable']);
 }
+
+SplashScreen.preventAutoHideAsync();
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
@@ -148,6 +151,7 @@ export default function App() {
       <NavigationContainer
         ref={navigationRef}
         initialState={initialState}
+        onReady={() => SplashScreen.hideAsync()}
         onStateChange={(state) =>
           AsyncStorage?.setItem(
             NAVIGATION_PERSISTENCE_KEY,
