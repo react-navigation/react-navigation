@@ -13,7 +13,7 @@ import type {
 export type StackActionType =
   | {
       type: 'REPLACE';
-      payload: { name: string; key?: string | undefined; params?: object };
+      payload: { name: string; params?: object };
       source?: string;
       target?: string;
     }
@@ -235,7 +235,7 @@ export default function StackRouter(options: StackRouterOptions) {
             return null;
           }
 
-          const { name, key, params } = action.payload;
+          const { name, params } = action.payload;
 
           if (!state.routeNames.includes(name)) {
             return null;
@@ -246,7 +246,7 @@ export default function StackRouter(options: StackRouterOptions) {
             routes: state.routes.map((route, i) =>
               i === index
                 ? {
-                    key: key !== undefined ? key : `${name}-${nanoid()}`,
+                    key: `${name}-${nanoid()}`,
                     name,
                     params:
                       routeParamList[name] !== undefined
@@ -346,126 +346,98 @@ export default function StackRouter(options: StackRouterOptions) {
             options
           );
 
-        case 'NAVIGATE':
-          if (
-            action.payload.name !== undefined &&
-            !state.routeNames.includes(action.payload.name)
-          ) {
+        case 'NAVIGATE': {
+          if (!state.routeNames.includes(action.payload.name)) {
             return null;
           }
 
-          if (action.payload.key || action.payload.name) {
-            // If the route already exists, navigate to that
-            let index = -1;
+          // If the route already exists, navigate to that
+          let index = -1;
 
-            const getId =
-              // `getId` and `key` can't be used together
-              action.payload.key === undefined &&
-              action.payload.name !== undefined
-                ? options.routeGetIdList[action.payload.name]
-                : undefined;
-            const id = getId?.({ params: action.payload.params });
+          const getId = options.routeGetIdList[action.payload.name];
+          const id = getId?.({ params: action.payload.params });
 
-            if (id) {
-              index = state.routes.findIndex(
-                (route) =>
-                  route.name === action.payload.name &&
-                  id === getId?.({ params: route.params })
-              );
-            } else if (
-              (state.routes[state.index].name === action.payload.name &&
-                action.payload.key === undefined) ||
-              state.routes[state.index].key === action.payload.key
-            ) {
-              index = state.index;
-            } else {
-              for (let i = state.routes.length - 1; i >= 0; i--) {
-                if (
-                  (state.routes[i].name === action.payload.name &&
-                    action.payload.key === undefined) ||
-                  state.routes[i].key === action.payload.key
-                ) {
-                  index = i;
-                  break;
-                }
+          if (id) {
+            index = state.routes.findIndex(
+              (route) =>
+                route.name === action.payload.name &&
+                id === getId?.({ params: route.params })
+            );
+          } else if (state.routes[state.index].name === action.payload.name) {
+            index = state.index;
+          } else {
+            for (let i = state.routes.length - 1; i >= 0; i--) {
+              if (state.routes[i].name === action.payload.name) {
+                index = i;
+                break;
               }
             }
+          }
 
-            if (
-              index === -1 &&
-              action.payload.key &&
-              action.payload.name === undefined
-            ) {
-              return null;
-            }
-
-            if (index === -1 && action.payload.name !== undefined) {
-              const routes = [
-                ...state.routes,
-                {
-                  key:
-                    action.payload.key ?? `${action.payload.name}-${nanoid()}`,
-                  name: action.payload.name,
-                  path: action.payload.path,
-                  params:
-                    routeParamList[action.payload.name] !== undefined
-                      ? {
-                          ...routeParamList[action.payload.name],
-                          ...action.payload.params,
-                        }
-                      : action.payload.params,
-                },
-              ];
-
-              return {
-                ...state,
-                routes,
-                index: routes.length - 1,
-              };
-            }
-
-            const route = state.routes[index];
-
-            let params;
-
-            if (action.payload.merge) {
-              params =
-                action.payload.params !== undefined ||
-                routeParamList[route.name] !== undefined
-                  ? {
-                      ...routeParamList[route.name],
-                      ...route.params,
-                      ...action.payload.params,
-                    }
-                  : route.params;
-            } else {
-              params =
-                routeParamList[route.name] !== undefined
-                  ? {
-                      ...routeParamList[route.name],
-                      ...action.payload.params,
-                    }
-                  : action.payload.params;
-            }
+          if (index === -1) {
+            const routes = [
+              ...state.routes,
+              {
+                key: `${action.payload.name}-${nanoid()}`,
+                name: action.payload.name,
+                path: action.payload.path,
+                params:
+                  routeParamList[action.payload.name] !== undefined
+                    ? {
+                        ...routeParamList[action.payload.name],
+                        ...action.payload.params,
+                      }
+                    : action.payload.params,
+              },
+            ];
 
             return {
               ...state,
-              index,
-              routes: [
-                ...state.routes.slice(0, index),
-                params !== route.params ||
-                (action.payload.path && action.payload.path !== route.path)
-                  ? {
-                      ...route,
-                      path: action.payload.path ?? route.path,
-                      params,
-                    }
-                  : state.routes[index],
-              ],
+              routes,
+              index: routes.length - 1,
             };
           }
 
-          return null;
+          const route = state.routes[index];
+
+          let params;
+
+          if (action.payload.merge) {
+            params =
+              action.payload.params !== undefined ||
+              routeParamList[route.name] !== undefined
+                ? {
+                    ...routeParamList[route.name],
+                    ...route.params,
+                    ...action.payload.params,
+                  }
+                : route.params;
+          } else {
+            params =
+              routeParamList[route.name] !== undefined
+                ? {
+                    ...routeParamList[route.name],
+                    ...action.payload.params,
+                  }
+                : action.payload.params;
+          }
+
+          return {
+            ...state,
+            index,
+            routes: [
+              ...state.routes.slice(0, index),
+              params !== route.params ||
+              (action.payload.path && action.payload.path !== route.path)
+                ? {
+                    ...route,
+                    path: action.payload.path ?? route.path,
+                    params,
+                  }
+                : state.routes[index],
+            ],
+          };
+        }
 
         case 'GO_BACK':
           if (state.index > 0) {
