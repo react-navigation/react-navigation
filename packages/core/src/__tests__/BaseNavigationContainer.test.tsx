@@ -734,6 +734,40 @@ it("throws if the ref hasn't finished initializing", () => {
   render(element);
 });
 
+it('fires onReady after navigator is rendered', () => {
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const onReady = jest.fn();
+
+  const element = (
+    <BaseNavigationContainer ref={ref} onReady={onReady}>
+      {null}
+    </BaseNavigationContainer>
+  );
+
+  const root = render(element);
+
+  expect(onReady).not.toBeCalled();
+  expect(ref.current?.isReady()).toBe(false);
+
+  root.rerender(
+    <BaseNavigationContainer ref={ref} onReady={onReady}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(onReady).toHaveBeenCalledTimes(1);
+  expect(ref.current?.isReady()).toBe(true);
+});
+
 it('invokes the unhandled action listener with the unhandled action', () => {
   const ref = createNavigationContainerRef<ParamListBase>();
   const fn = jest.fn();
@@ -811,7 +845,7 @@ it('works with state change events in independent nested container', () => {
 
   expect(onStateChange).toBeCalledWith({
     index: 1,
-    key: '15',
+    key: '16',
     routeNames: ['qux', 'lex'],
     routes: [
       { key: 'qux', name: 'qux' },
@@ -823,7 +857,7 @@ it('works with state change events in independent nested container', () => {
 
   expect(ref.current?.getRootState()).toEqual({
     index: 1,
-    key: '15',
+    key: '16',
     routeNames: ['qux', 'lex'],
     routes: [
       { key: 'qux', name: 'qux' },
