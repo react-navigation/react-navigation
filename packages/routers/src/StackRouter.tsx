@@ -33,6 +33,16 @@ export type StackActionType =
       type: 'POP_TO_TOP';
       source?: string;
       target?: string;
+    }
+  | {
+      type: 'POP_TO';
+      payload: {
+        name: string;
+        params?: object;
+        merge?: boolean;
+      };
+      source?: string;
+      target?: string;
     };
 
 export type StackRouterOptions = DefaultRouterOptions;
@@ -79,6 +89,30 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
    * Pop to the first route in the stack, dismissing all other screens.
    */
   popToTop(): void;
+
+  /**
+   * Pop any screens to go back to the specified screen.
+   * If the specified screen doesn't exist, it'll be added to the stack.
+   *
+   * @param name Name of the route to navigate to.
+   * @param [params] Params object for the route.
+   * @param [merge] Whether to merge the params onto the route.
+   */
+  popTo<RouteName extends keyof ParamList>(
+    ...args: // This condition allows us to iterate over a union type, similar to navigate
+    RouteName extends unknown
+      ? // This condition checks if the params are optional,
+        // which means it's either undefined or a union with undefined
+        undefined extends ParamList[RouteName]
+        ?
+            | [screen: RouteName]
+            | [screen: RouteName, params: ParamList[RouteName]]
+            | [screen: RouteName, params: ParamList[RouteName], merge: boolean]
+        :
+            | [screen: RouteName, params: ParamList[RouteName]]
+            | [screen: RouteName, params: ParamList[RouteName], merge: boolean]
+      : never
+  ): void;
 };
 
 export const StackActions = {
@@ -93,6 +127,9 @@ export const StackActions = {
   },
   popToTop(): StackActionType {
     return { type: 'POP_TO_TOP' };
+  },
+  popTo(name: string, params?: object, merge?: boolean): StackActionType {
+    return { type: 'POP_TO', payload: { name, params, merge } };
   },
 };
 
@@ -262,57 +299,89 @@ export default function StackRouter(options: StackRouterOptions) {
         }
 
         case 'PUSH':
-          if (state.routeNames.includes(action.payload.name)) {
-            const getId = options.routeGetIdList[action.payload.name];
-            const id = getId?.({ params: action.payload.params });
-
-            const route = id
-              ? state.routes.find(
-                  (route) =>
-                    route.name === action.payload.name &&
-                    id === getId?.({ params: route.params })
-                )
-              : undefined;
-
-            let routes: Route<string>[];
-
-            if (route) {
-              routes = state.routes.filter((r) => r.key !== route.key);
-              routes.push({
-                ...route,
-                params:
-                  routeParamList[action.payload.name] !== undefined
-                    ? {
-                        ...routeParamList[action.payload.name],
-                        ...action.payload.params,
-                      }
-                    : action.payload.params,
-              });
-            } else {
-              routes = [
-                ...state.routes,
-                {
-                  key: `${action.payload.name}-${nanoid()}`,
-                  name: action.payload.name,
-                  params:
-                    routeParamList[action.payload.name] !== undefined
-                      ? {
-                          ...routeParamList[action.payload.name],
-                          ...action.payload.params,
-                        }
-                      : action.payload.params,
-                },
-              ];
-            }
-
-            return {
-              ...state,
-              index: routes.length - 1,
-              routes,
-            };
+        case 'NAVIGATE': {
+          if (!state.routeNames.includes(action.payload.name)) {
+            return null;
           }
 
-          return null;
+          const getId = options.routeGetIdList[action.payload.name];
+          const id = getId?.({ params: action.payload.params });
+
+          let route: Route<string> | undefined;
+
+          if (id !== undefined) {
+            route = state.routes.find(
+              (route) =>
+                route.name === action.payload.name &&
+                id === getId?.({ params: route.params })
+            );
+          } else {
+            const currentRoute = state.routes[state.index];
+
+            // If the route matches the current one, then navigate to it
+            if (
+              action.type === 'NAVIGATE' &&
+              action.payload.name === currentRoute.name
+            ) {
+              route = currentRoute;
+            }
+          }
+
+          let params;
+
+          if (action.type === 'NAVIGATE' && action.payload.merge && route) {
+            params =
+              action.payload.params !== undefined ||
+              routeParamList[action.payload.name] !== undefined
+                ? {
+                    ...routeParamList[action.payload.name],
+                    ...route.params,
+                    ...action.payload.params,
+                  }
+                : route.params;
+          } else {
+            params =
+              routeParamList[action.payload.name] !== undefined
+                ? {
+                    ...routeParamList[action.payload.name],
+                    ...action.payload.params,
+                  }
+                : action.payload.params;
+          }
+
+          let routes: Route<string>[];
+
+          if (route) {
+            const routeKey = route.key;
+
+            routes = state.routes.filter((r) => r.key !== routeKey);
+            routes.push({
+              ...route,
+              path:
+                action.type === 'NAVIGATE' && action.payload.path !== undefined
+                  ? action.payload.path
+                  : route.path,
+              params,
+            });
+          } else {
+            routes = [
+              ...state.routes,
+              {
+                key: `${action.payload.name}-${nanoid()}`,
+                name: action.payload.name,
+                path:
+                  action.type === 'NAVIGATE' ? action.payload.path : undefined,
+                params,
+              },
+            ];
+          }
+
+          return {
+            ...state,
+            index: routes.length - 1,
+            routes,
+          };
+        }
 
         case 'POP': {
           const index =
@@ -346,7 +415,7 @@ export default function StackRouter(options: StackRouterOptions) {
             options
           );
 
-        case 'NAVIGATE': {
+        case 'POP_TO': {
           if (!state.routeNames.includes(action.payload.name)) {
             return null;
           }
@@ -374,13 +443,13 @@ export default function StackRouter(options: StackRouterOptions) {
             }
           }
 
+          // If the route doesn't exist, remove the current route and add the new one
           if (index === -1) {
             const routes = [
-              ...state.routes,
+              ...state.routes.slice(0, -1),
               {
                 key: `${action.payload.name}-${nanoid()}`,
                 name: action.payload.name,
-                path: action.payload.path,
                 params:
                   routeParamList[action.payload.name] !== undefined
                     ? {
@@ -427,13 +496,8 @@ export default function StackRouter(options: StackRouterOptions) {
             index,
             routes: [
               ...state.routes.slice(0, index),
-              params !== route.params ||
-              (action.payload.path && action.payload.path !== route.path)
-                ? {
-                    ...route,
-                    path: action.payload.path ?? route.path,
-                    params,
-                  }
+              params !== route.params
+                ? { ...route, params }
                 : state.routes[index],
             ],
           };
