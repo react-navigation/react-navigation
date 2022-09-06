@@ -42,6 +42,13 @@ const ArticleScreen = ({
           Replace with feed
         </Button>
         <Button
+          mode="contained"
+          onPress={() => navigation.popTo('Albums')}
+          style={styles.button}
+        >
+          Pop to Albums
+        </Button>
+        <Button
           mode="outlined"
           onPress={() => navigation.pop()}
           style={styles.button}
