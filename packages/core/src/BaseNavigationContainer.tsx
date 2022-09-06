@@ -8,6 +8,7 @@ import {
   Route,
 } from '@react-navigation/routers';
 import * as React from 'react';
+import useLatestCallback from 'use-latest-callback';
 
 import checkDuplicateRouteNames from './checkDuplicateRouteNames';
 import checkSerializable from './checkSerializable';
@@ -72,7 +73,9 @@ const getPartialState = (
  * This should be rendered at the root wrapping the whole app.
  *
  * @param props.initialState Initial state object for the navigation tree.
+ * @param props.onReady Callback which is called after the navigation tree mounts.
  * @param props.onStateChange Callback which is called with the latest navigation state when it changes.
+ * @param props.onUnhandledAction Callback which is called when an action is not handled.
  * @param props.children Child elements to render the content.
  * @param props.ref Ref object which refers to the navigation object containing helper methods.
  */
@@ -81,6 +84,7 @@ const BaseNavigationContainer = React.forwardRef(
     {
       initialState,
       onStateChange,
+      onReady,
       onUnhandledAction,
       independent,
       children,
@@ -114,7 +118,7 @@ const BaseNavigationContainer = React.forwardRef(
 
     const { keyedListeners, addKeyedListener } = useKeyedChildListeners();
 
-    const dispatch = React.useCallback(
+    const dispatch = useLatestCallback(
       (
         action:
           | NavigationAction
@@ -125,11 +129,10 @@ const BaseNavigationContainer = React.forwardRef(
         } else {
           listeners.focus[0]((navigation) => navigation.dispatch(action));
         }
-      },
-      [listeners.focus]
+      }
     );
 
-    const canGoBack = React.useCallback(() => {
+    const canGoBack = useLatestCallback(() => {
       if (listeners.focus[0] == null) {
         return false;
       }
@@ -143,9 +146,9 @@ const BaseNavigationContainer = React.forwardRef(
       } else {
         return false;
       }
-    }, [listeners.focus]);
+    });
 
-    const resetRoot = React.useCallback(
+    const resetRoot = useLatestCallback(
       (state?: PartialState<NavigationState> | NavigationState) => {
         const target = state?.key ?? keyedListeners.getState.root?.().key;
 
@@ -159,15 +162,14 @@ const BaseNavigationContainer = React.forwardRef(
             })
           );
         }
-      },
-      [keyedListeners.getState, listeners.focus]
+      }
     );
 
-    const getRootState = React.useCallback(() => {
+    const getRootState = useLatestCallback(() => {
       return keyedListeners.getState.root?.();
-    }, [keyedListeners.getState]);
+    });
 
-    const getCurrentRoute = React.useCallback(() => {
+    const getCurrentRoute = useLatestCallback(() => {
       const state = getRootState();
 
       if (state == null) {
@@ -177,7 +179,9 @@ const BaseNavigationContainer = React.forwardRef(
       const route = findFocusedRoute(state);
 
       return route as Route<string> | undefined;
-    }, [getRootState]);
+    });
+
+    const isReady = useLatestCallback(() => listeners.focus[0] != null);
 
     const emitter = useEventEmitter<NavigationContainerEventMap>();
 
@@ -201,7 +205,7 @@ const BaseNavigationContainer = React.forwardRef(
         getRootState,
         getCurrentRoute,
         getCurrentOptions,
-        isReady: () => listeners.focus[0] != null,
+        isReady,
       }),
       [
         canGoBack,
@@ -210,40 +214,36 @@ const BaseNavigationContainer = React.forwardRef(
         getCurrentOptions,
         getCurrentRoute,
         getRootState,
-        listeners.focus,
+        isReady,
         resetRoot,
       ]
     );
 
     React.useImperativeHandle(ref, () => navigation, [navigation]);
 
-    const onDispatchAction = React.useCallback(
+    const onDispatchAction = useLatestCallback(
       (action: NavigationAction, noop: boolean) => {
         emitter.emit({
           type: '__unsafe_action__',
           data: { action, noop, stack: stackRef.current },
         });
-      },
-      [emitter]
+      }
     );
 
     const lastEmittedOptionsRef = React.useRef<object | undefined>();
 
-    const onOptionsChange = React.useCallback(
-      (options) => {
-        if (lastEmittedOptionsRef.current === options) {
-          return;
-        }
+    const onOptionsChange = useLatestCallback((options: object) => {
+      if (lastEmittedOptionsRef.current === options) {
+        return;
+      }
 
-        lastEmittedOptionsRef.current = options;
+      lastEmittedOptionsRef.current = options;
 
-        emitter.emit({
-          type: 'options',
-          data: { options },
-        });
-      },
-      [emitter]
-    );
+      emitter.emit({
+        type: 'options',
+        data: { options },
+      });
+    });
 
     const stackRef = React.useRef<string | undefined>();
 
@@ -288,14 +288,24 @@ const BaseNavigationContainer = React.forwardRef(
       ]
     );
 
+    const onReadyRef = React.useRef(onReady);
     const onStateChangeRef = React.useRef(onStateChange);
     const stateRef = React.useRef(state);
 
     React.useEffect(() => {
       isInitialRef.current = false;
       onStateChangeRef.current = onStateChange;
+      onReadyRef.current = onReady;
       stateRef.current = state;
     });
+
+    const isNavigationReady = isReady();
+
+    React.useEffect(() => {
+      if (isNavigationReady) {
+        onReadyRef.current?.();
+      }
+    }, [isNavigationReady]);
 
     React.useEffect(() => {
       const hydratedState = getRootState();
@@ -376,7 +386,7 @@ const BaseNavigationContainer = React.forwardRef(
       isFirstMountRef.current = false;
     }, [getRootState, emitter, state]);
 
-    const defaultOnUnhandledAction = React.useCallback(
+    const defaultOnUnhandledAction = useLatestCallback(
       (action: NavigationAction) => {
         if (process.env.NODE_ENV === 'production') {
           return;
@@ -415,8 +425,7 @@ const BaseNavigationContainer = React.forwardRef(
         message += `\n\nThis is a development-only warning and won't be shown in production.`;
 
         console.error(message);
-      },
-      []
+      }
     );
 
     let element = (

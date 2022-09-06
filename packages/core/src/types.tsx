@@ -296,6 +296,10 @@ export type NavigationContainerProps = {
    */
   onStateChange?: (state: NavigationState | undefined) => void;
   /**
+   * Callback which is called after the navigation tree mounts.
+   */
+  onReady?: () => void;
+  /**
    * Callback which is called when an action is not handled.
    */
   onUnhandledAction?: (action: NavigationAction) => void;
