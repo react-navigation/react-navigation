@@ -213,14 +213,11 @@ type NavigationHelpersCommon<
    */
   navigate<RouteName extends keyof ParamList>(
     options: RouteName extends unknown
-      ?
-          | { key: string; params?: ParamList[RouteName]; merge?: boolean }
-          | {
-              name: RouteName;
-              key?: string;
-              params: ParamList[RouteName];
-              merge?: boolean;
-            }
+      ? {
+          name: RouteName;
+          params: ParamList[RouteName];
+          merge?: boolean;
+        }
       : never
   ): void;
 

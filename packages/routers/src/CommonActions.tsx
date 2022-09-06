@@ -15,21 +15,12 @@ export type Action =
     }
   | {
       type: 'NAVIGATE';
-      payload:
-        | {
-            key: string;
-            name?: undefined;
-            params?: object;
-            path?: string;
-            merge?: boolean;
-          }
-        | {
-            name: string;
-            key?: string;
-            params?: object;
-            path?: string;
-            merge?: boolean;
-          };
+      payload: {
+        name: string;
+        params?: object;
+        path?: string;
+        merge?: boolean;
+      };
       source?: string;
       target?: string;
     }
@@ -50,17 +41,12 @@ export function goBack(): Action {
   return { type: 'GO_BACK' };
 }
 
-export function navigate(
-  options:
-    | { key: string; params?: object; path?: string; merge?: boolean }
-    | {
-        name: string;
-        key?: string;
-        params?: object;
-        path?: string;
-        merge?: boolean;
-      }
-): Action;
+export function navigate(options: {
+  name: string;
+  params?: object;
+  path?: string;
+  merge?: boolean;
+}): Action;
 // eslint-disable-next-line no-redeclare
 export function navigate(name: string, params?: object): Action;
 // eslint-disable-next-line no-redeclare
@@ -70,9 +56,9 @@ export function navigate(...args: any): Action {
   } else {
     const payload = args[0] || {};
 
-    if (!payload.hasOwnProperty('key') && !payload.hasOwnProperty('name')) {
+    if (!payload.hasOwnProperty('name')) {
       throw new Error(
-        'You need to specify name or key when calling navigate with an object as the argument. See https://reactnavigation.org/docs/navigation-actions#navigate for usage.'
+        'You need to specify a name when calling navigate with an object as the argument. See https://reactnavigation.org/docs/navigation-actions#navigate for usage.'
       );
     }
 

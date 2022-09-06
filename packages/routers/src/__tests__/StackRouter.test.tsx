@@ -366,81 +366,6 @@ it('handles navigate action', () => {
       options
     )
   ).toBe(null);
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'stack',
-        key: 'root',
-        index: 1,
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          { key: 'baz-0', name: 'baz' },
-          { key: 'bar-0', name: 'bar' },
-        ],
-      },
-      CommonActions.navigate({ key: 'unknown' }),
-      options
-    )
-  ).toBe(null);
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'stack',
-        key: 'root',
-        index: 1,
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          { key: 'baz-0', name: 'baz' },
-          { key: 'bar', name: 'bar' },
-        ],
-      },
-      {
-        type: 'NAVIGATE',
-        payload: { key: 'baz-0', name: 'baz' },
-      },
-      options
-    )
-  ).toEqual({
-    stale: false,
-    type: 'stack',
-    key: 'root',
-    index: 0,
-    routeNames: ['baz', 'bar', 'qux'],
-    routes: [{ key: 'baz-0', name: 'baz' }],
-  });
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'stack',
-        key: 'root',
-        index: 1,
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          { key: 'baz-0', name: 'baz' },
-          { key: 'bar', name: 'bar' },
-        ],
-      },
-      CommonActions.navigate({ key: 'baz-1', name: 'baz' }),
-      options
-    )
-  ).toEqual({
-    stale: false,
-    type: 'stack',
-    key: 'root',
-    index: 2,
-    routeNames: ['baz', 'bar', 'qux'],
-    routes: [
-      { key: 'baz-0', name: 'baz' },
-      { key: 'bar', name: 'bar' },
-      { key: 'baz-1', name: 'baz' },
-    ],
-  });
 });
 
 it("doesn't navigate to nonexistent screen", () => {
@@ -465,28 +390,6 @@ it("doesn't navigate to nonexistent screen", () => {
         ],
       },
       CommonActions.navigate('far', { answer: 42 }),
-      options
-    )
-  ).toBe(null);
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'stack',
-        key: 'root',
-        index: 1,
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          { key: 'baz', name: 'baz' },
-          { key: 'bar', name: 'bar' },
-        ],
-      },
-      CommonActions.navigate({
-        name: 'far',
-        key: 'test',
-        params: { answer: 42 },
-      }),
       options
     )
   ).toBe(null);
@@ -582,39 +485,6 @@ it('ensures unique ID for navigate', () => {
       { key: 'bar', name: 'bar' },
       { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
       { key: 'bar-test', name: 'bar', params: { foo: 'b' } },
-    ],
-  });
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'stack',
-        key: 'root',
-        index: 1,
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          { key: 'bar', name: 'bar' },
-          { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
-        ],
-      },
-      CommonActions.navigate({
-        key: 'test',
-        name: 'bar',
-        params: { foo: 'a' },
-      }),
-      options
-    )
-  ).toEqual({
-    stale: false,
-    type: 'stack',
-    key: 'root',
-    index: 2,
-    routeNames: ['baz', 'bar', 'qux'],
-    routes: [
-      { key: 'bar', name: 'bar' },
-      { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
-      { key: 'test', name: 'bar', params: { foo: 'a' } },
     ],
   });
 });
