@@ -294,17 +294,9 @@ export default function TabRouter({
       switch (action.type) {
         case 'JUMP_TO':
         case 'NAVIGATE': {
-          let index = -1;
-
-          if (action.type === 'NAVIGATE' && action.payload.key) {
-            index = state.routes.findIndex(
-              (route) => route.key === action.payload.key
-            );
-          } else {
-            index = state.routes.findIndex(
-              (route) => route.name === action.payload.name
-            );
-          }
+          const index = state.routes.findIndex(
+            (route) => route.name === action.payload.name
+          );
 
           if (index === -1) {
             return null;

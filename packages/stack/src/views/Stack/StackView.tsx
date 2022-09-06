@@ -3,6 +3,7 @@ import {
   SafeAreaProviderCompat,
 } from '@react-navigation/elements';
 import {
+  CommonActions,
   ParamListBase,
   Route,
   StackActions,
@@ -328,7 +329,18 @@ export default class StackView extends React.Component<Props, State> {
     ) {
       // If route isn't present in current state, but was closing, assume that a close animation was cancelled
       // So we need to add this route back to the state
-      navigation.navigate(route);
+      navigation.dispatch((state) => {
+        const routes = [
+          ...state.routes.filter((r) => r.key !== route.key),
+          route,
+        ];
+
+        return CommonActions.reset({
+          ...state,
+          routes,
+          index: routes.length - 1,
+        });
+      });
     } else {
       this.setState((state) => ({
         routes: state.replacingRouteKeys.length
