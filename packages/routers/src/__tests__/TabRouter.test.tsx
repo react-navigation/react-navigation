@@ -647,39 +647,6 @@ it('handles navigate action', () => {
         index: 1,
         routeNames: ['baz', 'bar'],
         routes: [
-          { key: 'baz-1', name: 'baz' },
-          { key: 'bar-1', name: 'bar' },
-        ],
-        history: [{ type: 'route', key: 'bar-1' }],
-      },
-      CommonActions.navigate({ key: 'bar-1', params: { answer: 42 } }),
-      options
-    )
-  ).toEqual({
-    stale: false,
-    type: 'tab',
-    key: 'root',
-    index: 1,
-    routeNames: ['baz', 'bar'],
-    routes: [
-      { key: 'baz-1', name: 'baz' },
-      { key: 'bar-1', name: 'bar', params: { answer: 42 } },
-    ],
-    history: [
-      { type: 'route', key: 'baz-1' },
-      { type: 'route', key: 'bar-1' },
-    ],
-  });
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'tab',
-        key: 'root',
-        index: 1,
-        routeNames: ['baz', 'bar'],
-        routes: [
           { key: 'baz', name: 'baz' },
           { key: 'bar', name: 'bar' },
         ],
@@ -744,29 +711,6 @@ it("doesn't navigate to nonexistent screen", () => {
         history: [{ type: 'route', key: 'bar' }],
       },
       CommonActions.navigate('foo', { answer: 42 }),
-      options
-    )
-  ).toBe(null);
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'tab',
-        key: 'root',
-        index: 1,
-        routeNames: ['baz', 'bar'],
-        routes: [
-          { key: 'baz', name: 'baz' },
-          { key: 'bar', name: 'bar' },
-        ],
-        history: [{ type: 'route', key: 'bar' }],
-      },
-      CommonActions.navigate({
-        name: 'foo',
-        key: 'test',
-        params: { answer: 42 },
-      }),
       options
     )
   ).toBe(null);
