@@ -192,7 +192,7 @@ type NavigationHelpersCommon<
    * @param [params] Params object for the route.
    */
   navigate<RouteName extends keyof ParamList>(
-    ...args: // this first condition allows us to iterate over a union type
+    ...args: // This condition allows us to iterate over a union type
     // This is to avoid getting a union of all the params from `ParamList[RouteName]`,
     // which will get our types all mixed up if a union RouteName is passed in.
     RouteName extends unknown
@@ -209,13 +209,14 @@ type NavigationHelpersCommon<
   /**
    * Navigate to a route in current navigation tree.
    *
-   * @param route Object with `key` or `name` for the route to navigate to, and a `params` object.
+   * @param route Object with `name` for the route to navigate to, and a `params` object.
    */
   navigate<RouteName extends keyof ParamList>(
     options: RouteName extends unknown
       ? {
           name: RouteName;
           params: ParamList[RouteName];
+          path?: string;
           merge?: boolean;
         }
       : never
