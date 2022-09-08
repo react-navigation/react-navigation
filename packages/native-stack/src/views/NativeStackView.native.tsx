@@ -192,10 +192,6 @@ const SceneView = ({
     presentation = 'card';
   }
 
-  const isHeaderInPush = isAndroid
-    ? headerShown
-    : presentation === 'card' && headerShown !== false;
-
   const insets = useSafeAreaInsets();
   const frame = useSafeAreaFrame();
 
@@ -207,11 +203,14 @@ const SceneView = ({
     Platform.OS === 'ios' && !(Platform.isPad || Platform.isTVOS);
   const isLandscape = frame.width > frame.height;
 
-  const topInset = isModal || (isIPhone && isLandscape) ? 0 : insets.top;
-
   const isParentHeaderShown = React.useContext(HeaderShownContext);
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
   const parentHeaderBack = React.useContext(HeaderBackContext);
+
+  const topInset =
+    isModal || isParentHeaderShown || (isIPhone && isLandscape)
+      ? 0
+      : insets.top;
 
   const { preventedRoutes } = usePreventRemoveContext();
 
@@ -275,13 +274,11 @@ const SceneView = ({
       <NavigationContext.Provider value={navigation}>
         <NavigationRouteContext.Provider value={route}>
           <HeaderShownContext.Provider
-            value={isParentHeaderShown || isHeaderInPush !== false}
+            value={isParentHeaderShown || headerShown !== false}
           >
             <HeaderHeightContext.Provider
               value={
-                isHeaderInPush !== false
-                  ? headerHeight
-                  : parentHeaderHeight ?? 0
+                headerShown !== false ? headerHeight : parentHeaderHeight ?? 0
               }
             >
               {header !== undefined && headerShown !== false ? (
@@ -306,7 +303,7 @@ const SceneView = ({
                       ? !isRemovePrevented
                       : headerBackButtonMenuEnabled
                   }
-                  headerShown={isHeaderInPush}
+                  headerShown={headerShown}
                   headerHeight={headerHeight}
                   headerBackTitle={
                     options.headerBackTitle !== undefined
