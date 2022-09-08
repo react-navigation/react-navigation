@@ -30,6 +30,7 @@ export type Props<T extends Route> = PagerProps & {
   lazy?: ((props: { route: T }) => boolean) | boolean;
   lazyPreloadDistance?: number;
   sceneContainerStyle?: StyleProp<ViewStyle>;
+  pagerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
 };
 
@@ -46,6 +47,7 @@ export default function TabView<T extends Route>({
   renderLazyPlaceholder = () => null,
   renderTabBar = (props) => <TabBar {...props} />,
   sceneContainerStyle,
+  pagerStyle,
   style,
   swipeEnabled = true,
   tabBarPosition = 'top',
@@ -84,6 +86,7 @@ export default function TabView<T extends Route>({
         onSwipeStart={onSwipeStart}
         onSwipeEnd={onSwipeEnd}
         onIndexChange={jumpToIndex}
+        style={pagerStyle}
       >
         {({ position, render, addEnterListener, jumpTo }) => {
           // All of the props here must not change between re-renders

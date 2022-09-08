@@ -331,6 +331,10 @@ Object containing the initial height and width of the screens. Passing this will
 
 Style to apply to the view wrapping each screen. You can pass this to override some default styles such as overflow clipping:
 
+##### `pagerStyle`
+
+Style to apply to the pager view wrapping all the scenes.
+
 ##### `style`
 
 Style to apply to the tab view container.
