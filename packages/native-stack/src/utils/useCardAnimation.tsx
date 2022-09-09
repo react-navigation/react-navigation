@@ -14,6 +14,12 @@ export type NativeStackCardInterpolationProps = {
      */
     progress: Animated.AnimatedInterpolation;
   };
+  next?: {
+    /**
+     * Animated node representing the progress value of the next screen.
+     */
+    progress: Animated.AnimatedInterpolation;
+  };
   /**
    * Values for the screen after this one in the stack.
    * This can be `undefined` in case the screen animating is the last one.
@@ -28,6 +34,8 @@ export default function useCardAnimation(): NativeStackCardInterpolationProps {
   const { progress: transitionProgress, closing } = useTransitionProgress();
   const focused = useIsFocused();
 
+  const one = new Animated.Value(1);
+
   // RNScreens implement transtion progress as always from 0 to 1 in both directions
   // but useCardAnimation from JS Stack uses 0 to 1 on opening and 1 to 0 on closing
   const current = {
@@ -37,11 +45,22 @@ export default function useCardAnimation(): NativeStackCardInterpolationProps {
           Animated.subtract(closing, transitionProgress),
           transitionProgress
         )
-      : new Animated.Value(1),
+      : one,
+  };
+
+  const next = {
+    progress: focused
+      ? one
+      : conditional(
+          closing,
+          transitionProgress,
+          Animated.subtract(one, transitionProgress)
+        ),
   };
 
   return {
     current,
+    next,
     closing,
   };
 }
