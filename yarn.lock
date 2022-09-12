@@ -3439,7 +3439,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/webpack-config@npm:0.17.2, @expo/webpack-config@npm:^0.17.0":
+"@expo/webpack-config@npm:0.17.2":
   version: 0.17.2
   resolution: "@expo/webpack-config@npm:0.17.2"
   dependencies:
@@ -3473,6 +3473,44 @@ __metadata:
     webpack-dev-server: 3.11.0
     webpack-manifest-plugin: ~2.2.0
   checksum: 7a62282366c2a63d6297691855184af721b0fd21d0a475aa61dd21fb6175cc2631b49f307921941b0b84b1379085bdbe6c340fc5935c29625caaf49085916949
+  languageName: node
+  linkType: hard
+
+"@expo/webpack-config@npm:^0.16.27":
+  version: 0.16.27
+  resolution: "@expo/webpack-config@npm:0.16.27"
+  dependencies:
+    "@babel/core": 7.9.0
+    "@expo/config": 6.0.24
+    babel-loader: 8.1.0
+    chalk: ^4.0.0
+    clean-webpack-plugin: ^3.0.0
+    copy-webpack-plugin: ~6.0.3
+    css-loader: ~3.6.0
+    expo-pwa: 0.0.122
+    file-loader: ~6.0.0
+    find-yarn-workspace-root: ~2.0.0
+    getenv: ^1.0.0
+    html-loader: ~1.1.0
+    html-webpack-plugin: ~4.3.0
+    image-size: ^1.0.0
+    is-wsl: ^2.0.0
+    loader-utils: ^2.0.0
+    mini-css-extract-plugin: ^0.5.0
+    node-html-parser: ^1.2.12
+    optimize-css-assets-webpack-plugin: ^5.0.3
+    pnp-webpack-plugin: ^1.5.0
+    postcss-safe-parser: ^4.0.2
+    react-dev-utils: ~11.0.1
+    schema-utils: ^3.1.1
+    semver: ~7.3.2
+    style-loader: ~1.2.1
+    terser-webpack-plugin: ^3.0.6
+    url-loader: ~4.1.0
+    webpack: 4.43.0
+    webpack-dev-server: 3.11.0
+    webpack-manifest-plugin: ~2.2.0
+  checksum: 2788e707939d33dd455dfab1e80fe0a4190642823e8ae14a532257450ce2486c3ee326b0588a078a9402617a5fa855ff75db6632207a20a0d08b90b6347a45a3
   languageName: node
   linkType: hard
 
@@ -6066,7 +6104,7 @@ __metadata:
     "@babel/core": ^7.18.6
     "@babel/node": ^7.14.2
     "@expo/vector-icons": ^13.0.0
-    "@expo/webpack-config": ^0.17.0
+    "@expo/webpack-config": ^0.16.27
     "@playwright/test": ^1.12.2
     "@react-native-async-storage/async-storage": ~1.17.3
     "@react-native-masked-view/masked-view": 0.2.7
@@ -13322,6 +13360,21 @@ __metadata:
     compare-versions: ^3.4.0
     invariant: ^2.2.4
   checksum: 304e60c5f8b6b9c8f13f13fffa111bb9819b15bc06c6ff173d70857da6d25dc3039325c1b27c013c9646a7158c61298972a97a6db3fe0c6399bef70b7410337a
+  languageName: node
+  linkType: hard
+
+"expo-pwa@npm:0.0.122":
+  version: 0.0.122
+  resolution: "expo-pwa@npm:0.0.122"
+  dependencies:
+    "@expo/config": 6.0.24
+    "@expo/image-utils": 0.3.22
+    chalk: ^4.0.0
+    commander: 2.20.0
+    update-check: 1.5.3
+  bin:
+    expo-pwa: build/cli.js
+  checksum: 4bc70f85e6041fe903ba8d2768d4e72d1525af086a19803ad8f33fa195ae5ac151838a76ca503d6ef6bd9b6b8a087c9070a9366ab8f0d0c380a032a75c6f283b
   languageName: node
   linkType: hard
 
