@@ -36,7 +36,7 @@ jobs:
 
       - name: Publish Expo app
         working-directory: ./example
-        run: yarn expo publish --release-channel=pr-${{ github.event.number }}
+        run: yarn expo-cli publish --release-channel=pr-${{ github.event.number }}
         env:
           EXPO_USE_DEV_SERVER: true
 
