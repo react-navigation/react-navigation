@@ -6038,7 +6038,7 @@ __metadata:
     react: 18.0.0
     react-is: ^16.13.0
     react-native-builder-bob: ^0.18.1
-    react-test-renderer: 17.0.2
+    react-test-renderer: 18.0.0
     typescript: ^4.7.4
     use-latest-callback: ^0.1.5
   peerDependencies:
@@ -6174,7 +6174,7 @@ __metadata:
     react-native-tab-view: ^3.1.1
     react-native-vector-icons: ^9.1.0
     react-native-web: ~0.18.7
-    react-test-renderer: 17.0.2
+    react-test-renderer: 18.0.0
     serve: ^11.3.0
     typescript: ^4.7.4
   languageName: unknown
@@ -24108,7 +24108,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-is@npm:^16.12.0 || ^17.0.0 || ^18.0.0":
+"react-is@npm:^16.12.0 || ^17.0.0 || ^18.0.0, react-is@npm:^18.0.0":
   version: 18.2.0
   resolution: "react-is@npm:18.2.0"
   checksum: e72d0ba81b5922759e4aff17e0252bd29988f9642ed817f56b25a3e217e13eea8a7f2322af99a06edb779da12d5d636e9fda473d620df9a3da0df2a74141d53e
@@ -24468,7 +24468,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-test-renderer@npm:17.0.2, react-test-renderer@npm:^17.0.1":
+"react-test-renderer@npm:18.0.0":
+  version: 18.0.0
+  resolution: "react-test-renderer@npm:18.0.0"
+  dependencies:
+    react-is: ^18.0.0
+    react-shallow-renderer: ^16.13.1
+    scheduler: ^0.21.0
+  peerDependencies:
+    react: ^18.0.0
+  checksum: c0e5250fa2e4c3650e247b986c262631bec68f18c06817269ab7a4e2cffa5a152bb58ce0fe4182ffa8c333e6c2a8d763ac92e0928e5f6914a7aa188c2de1943a
+  languageName: node
+  linkType: hard
+
+"react-test-renderer@npm:^17.0.1":
   version: 17.0.2
   resolution: "react-test-renderer@npm:17.0.2"
   dependencies:
