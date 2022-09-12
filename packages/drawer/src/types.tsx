@@ -243,6 +243,14 @@ export type DrawerNavigationEventMap = {
    * Event which fires on tapping on the item in the drawer menu.
    */
   drawerItemPress: { data: undefined; canPreventDefault: true };
+  /**
+   * Event which fires when the drawer is opened.
+   */
+  drawerOpened: { data: undefined };
+  /**
+   * Event which fires when the drawer is closed.
+   */
+  drawerClosed: { data: undefined };
 };
 
 export type DrawerNavigationHelpers = NavigationHelpers<
@@ -290,6 +298,7 @@ export type DrawerProps = {
   gestureHandlerProps?: React.ComponentProps<typeof PanGestureHandler>;
   hideStatusBarOnOpen: boolean;
   keyboardDismissMode: 'none' | 'on-drag';
+  onDrawerAnimationComplete: (open: boolean) => void;
   onClose: () => void;
   onOpen: () => void;
   open: boolean;

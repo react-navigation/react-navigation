@@ -285,6 +285,7 @@ export default class DrawerView extends React.Component<DrawerProps> {
         call([this.isOpen], ([value]: readonly Binary[]) => {
           const open = Boolean(value);
           this.handleEndInteraction();
+          this.props.onDrawerAnimationComplete(open);
 
           if (open !== this.props.open) {
             // Sync drawer's state after animation finished

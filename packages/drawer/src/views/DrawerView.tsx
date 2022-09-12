@@ -141,6 +141,21 @@ function DrawerViewBase({
     });
   }, [navigation, state.key]);
 
+  const onDrawerAnimationComplete = React.useCallback(
+    (isOpen: boolean) => {
+      if (isOpen) {
+        navigation.emit({
+          type: 'drawerOpened',
+        });
+      } else {
+        navigation.emit({
+          type: 'drawerClosed',
+        });
+      }
+    },
+    [navigation]
+  );
+
   React.useEffect(() => {
     if (drawerStatus === defaultStatus || drawerType === 'permanent') {
       return;
@@ -282,6 +297,7 @@ function DrawerViewBase({
         open={drawerStatus !== 'closed'}
         onOpen={handleDrawerOpen}
         onClose={handleDrawerClose}
+        onDrawerAnimationComplete={onDrawerAnimationComplete}
         gestureHandlerProps={gestureHandlerProps}
         swipeEnabled={swipeEnabled}
         swipeEdgeWidth={swipeEdgeWidth}

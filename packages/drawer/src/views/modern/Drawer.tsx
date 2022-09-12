@@ -14,6 +14,7 @@ import {
   State as GestureState,
 } from 'react-native-gesture-handler';
 import Animated, {
+  AnimationCallback,
   interpolate,
   runOnJS,
   useAnimatedGestureHandler,
@@ -44,6 +45,7 @@ export default function Drawer({
   gestureHandlerProps,
   hideStatusBarOnOpen,
   keyboardDismissMode,
+  onDrawerAnimationComplete,
   onClose,
   onOpen,
   open,
@@ -151,19 +153,27 @@ export default function Drawer({
     (open: boolean, velocity?: number) => {
       'worklet';
 
+      const animationCallback: AnimationCallback = (finished) => {
+        if (finished) runOnJS(onDrawerAnimationComplete)(open);
+      };
+
       const translateX = getDrawerTranslationX(open);
 
       touchStartX.value = 0;
       touchX.value = 0;
-      translationX.value = withSpring(translateX, {
-        velocity,
-        stiffness: 1000,
-        damping: 500,
-        mass: 3,
-        overshootClamping: true,
-        restDisplacementThreshold: 0.01,
-        restSpeedThreshold: 0.01,
-      });
+      translationX.value = withSpring(
+        translateX,
+        {
+          velocity,
+          stiffness: 1000,
+          damping: 500,
+          mass: 3,
+          overshootClamping: true,
+          restDisplacementThreshold: 0.01,
+          restSpeedThreshold: 0.01,
+        },
+        animationCallback
+      );
 
       if (open) {
         runOnJS(onOpen)();
@@ -171,7 +181,15 @@ export default function Drawer({
         runOnJS(onClose)();
       }
     },
-    [getDrawerTranslationX, onClose, onOpen, touchStartX, touchX, translationX]
+    [
+      getDrawerTranslationX,
+      onDrawerAnimationComplete,
+      onClose,
+      onOpen,
+      touchStartX,
+      touchX,
+      translationX,
+    ]
   );
 
   React.useEffect(() => toggleDrawer(open), [open, toggleDrawer]);
