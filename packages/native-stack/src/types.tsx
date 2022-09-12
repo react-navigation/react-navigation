@@ -486,6 +486,11 @@ export type NativeStackNavigationOptions = {
    * Only supported on iOS and Android.
    */
   orientation?: ScreenProps['screenOrientation'];
+  /**
+   * Whether inactive screens should be suspended from re-rendering. Defaults to `false`.
+   * Defaults to `true` when `enableFreeze()` is run at the top of the application.
+   */
+  freezeOnBlur?: boolean;
 };
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<

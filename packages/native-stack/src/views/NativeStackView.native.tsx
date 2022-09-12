@@ -153,6 +153,7 @@ const SceneView = ({
     statusBarStyle,
     statusBarTranslucent,
     statusBarColor,
+    freezeOnBlur,
   } = options;
 
   let {
@@ -238,6 +239,7 @@ const SceneView = ({
       enabled
       style={StyleSheet.absoluteFill}
       customAnimationOnSwipe={customAnimationOnGesture}
+      freezeOnBlur={freezeOnBlur}
       fullScreenSwipeEnabled={fullScreenGestureEnabled}
       gestureEnabled={
         isAndroid
