@@ -3082,30 +3082,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/config-plugins@npm:4.1.5":
-  version: 4.1.5
-  resolution: "@expo/config-plugins@npm:4.1.5"
-  dependencies:
-    "@expo/config-types": ^45.0.0
-    "@expo/json-file": 8.2.36
-    "@expo/plist": 0.0.18
-    "@expo/sdk-runtime-versions": ^1.0.0
-    "@react-native/normalize-color": ^2.0.0
-    chalk: ^4.1.2
-    debug: ^4.3.1
-    find-up: ~5.0.0
-    getenv: ^1.0.0
-    glob: 7.1.6
-    resolve-from: ^5.0.0
-    semver: ^7.3.5
-    slash: ^3.0.0
-    xcode: ^3.0.1
-    xml2js: 0.4.23
-  checksum: f631217251281b1e25949adbec175ef1362dd08d837ce676ed8350c1401b5764091ba100f76f42adb623e4cdcde5b270be77ad6606f978d419c07fd8c81b701c
-  languageName: node
-  linkType: hard
-
-"@expo/config-plugins@npm:~5.0.0, @expo/config-plugins@npm:~5.0.1":
+"@expo/config-plugins@npm:^5.0.0":
   version: 5.0.1
   resolution: "@expo/config-plugins@npm:5.0.1"
   dependencies:
@@ -3281,25 +3258,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/image-utils@npm:0.3.21":
-  version: 0.3.21
-  resolution: "@expo/image-utils@npm:0.3.21"
-  dependencies:
-    "@expo/spawn-async": 1.5.0
-    chalk: ^4.0.0
-    fs-extra: 9.0.0
-    getenv: ^1.0.0
-    jimp-compact: 0.16.1
-    mime: ^2.4.4
-    node-fetch: ^2.6.0
-    parse-png: ^2.1.0
-    resolve-from: ^5.0.0
-    semver: 7.3.2
-    tempy: 0.3.0
-  checksum: ab3094eaae4d33960f33431c03878991f0a3c964f3335087cf4ce0eb288c66a7e36301e6782e63b8b8463f0ce9374ec8d6d70c690b502c4f4057f2d8aa74e588
-  languageName: node
-  linkType: hard
-
 "@expo/image-utils@npm:0.3.22":
   version: 0.3.22
   resolution: "@expo/image-utils@npm:0.3.22"
@@ -3401,26 +3359,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/prebuild-config@npm:4.0.3":
-  version: 4.0.3
-  resolution: "@expo/prebuild-config@npm:4.0.3"
-  dependencies:
-    "@expo/config": 6.0.24
-    "@expo/config-plugins": 4.1.5
-    "@expo/config-types": ^45.0.0
-    "@expo/image-utils": 0.3.21
-    "@expo/json-file": 8.2.36
-    debug: ^4.3.1
-    expo-modules-autolinking: 0.8.1
-    fs-extra: ^9.0.0
-    resolve-from: ^5.0.0
-    semver: 7.3.2
-    xml2js: 0.4.23
-  checksum: d9db7f8f69167137e0bd4878bd49def4ce67291c95762dd9ca34644b778f2158e97dd0057c29e8f5cd56b6c24beaec73525b99871c79d0b398e80d41638eeec8
-  languageName: node
-  linkType: hard
-
-"@expo/prebuild-config@npm:~5.0.0, @expo/prebuild-config@npm:~5.0.3":
+"@expo/prebuild-config@npm:^5.0.1":
   version: 5.0.3
   resolution: "@expo/prebuild-config@npm:5.0.3"
   dependencies:
@@ -6145,7 +6084,7 @@ __metadata:
     cheerio: ^1.0.0-rc.9
     color: ^4.2.3
     expect-type: ^0.13.0
-    expo: ^46.0.0
+    expo: ~46.0.9
     expo-asset: ~8.6.1
     expo-blur: ~11.2.0
     expo-cli: ^6.0.5
@@ -6160,7 +6099,7 @@ __metadata:
     mock-require-assets: ^0.0.1
     node-fetch: ^2.6.1
     nodemon: ^2.0.6
-    pod-install: ^0.1.23
+    pod-install: ^0.1.38
     react: 18.0.0
     react-dom: 18.0.0
     react-native: 0.69.5
@@ -6176,7 +6115,7 @@ __metadata:
     react-native-web: ~0.18.7
     react-test-renderer: 18.0.0
     serve: ^11.3.0
-    typescript: ^4.7.4
+    typescript: ^4.6.3
   languageName: unknown
   linkType: soft
 
@@ -13361,7 +13300,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-modules-autolinking@npm:0.10.3":
+"expo-modules-autolinking@npm:~0.10.1":
   version: 0.10.3
   resolution: "expo-modules-autolinking@npm:0.10.3"
   dependencies:
@@ -13373,21 +13312,6 @@ __metadata:
   bin:
     expo-modules-autolinking: bin/expo-modules-autolinking.js
   checksum: 9e98d688ce0d3773b0098deae9d5565b4523d000d90a1ed4dc73b023f358d0573944ebc4a041b4a4492727e38668d011dc40274ec05a671123d5435834eb196e
-  languageName: node
-  linkType: hard
-
-"expo-modules-autolinking@npm:0.8.1":
-  version: 0.8.1
-  resolution: "expo-modules-autolinking@npm:0.8.1"
-  dependencies:
-    chalk: ^4.1.0
-    commander: ^7.2.0
-    fast-glob: ^3.2.5
-    find-up: ^5.0.0
-    fs-extra: ^9.1.0
-  bin:
-    expo-modules-autolinking: bin/expo-modules-autolinking.js
-  checksum: d4be895e05619acd3003265e6c997a3f69db47cc0ea01e6750aa53231f02b2da0a152e2ab63ff541e60e1b5570b76547d13d24004dc591983afb5bc29b49c9a7
   languageName: node
   linkType: hard
 
@@ -13476,7 +13400,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo@npm:^46.0.0":
+"expo@npm:~46.0.9":
   version: 46.0.10
   resolution: "expo@npm:46.0.10"
   dependencies:
@@ -22214,12 +22138,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pod-install@npm:^0.1.23":
-  version: 0.1.31
-  resolution: "pod-install@npm:0.1.31"
+"pod-install@npm:^0.1.38":
+  version: 0.1.38
+  resolution: "pod-install@npm:0.1.38"
   bin:
     pod-install: build/index.js
-  checksum: 20cefa04a563efab993ae058247a58b2271253b82ca9fc148a7d92a8f22623336523e2a3f66d6c3f0c000c070341046b8c8a311c91d3c8c6aae26f0a91042a76
+  checksum: 9ff3e8f50dba2cee1c174deeb394312d6a950096f39c5a413a9dbf9acf4acb890440a9c316381799c8e125858c4c84d2c4f0c3d7ef2ceb056ea820a417004fd7
   languageName: node
   linkType: hard
 
@@ -27823,6 +27747,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typescript@npm:^4.6.3":
+  version: 4.8.3
+  resolution: "typescript@npm:4.8.3"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 8286a5edcaf3d68e65c451aa1e7150ad1cf53ee0813c07ec35b7abdfdb10f355ecaa13c6a226a694ae7a67785fd7eeebf89f845da0b4f7e4a35561ddc459aba0
+  languageName: node
+  linkType: hard
+
 "typescript@npm:^4.7.4":
   version: 4.7.4
   resolution: "typescript@npm:4.7.4"
@@ -27830,6 +27764,16 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 5750181b1cd7e6482c4195825547e70f944114fb47e58e4aa7553e62f11b3f3173766aef9c281783edfd881f7b8299cf35e3ca8caebe73d8464528c907a164df
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@^4.6.3#~builtin<compat/typescript>":
+  version: 4.8.3
+  resolution: "typescript@patch:typescript@npm%3A4.8.3#~builtin<compat/typescript>::version=4.8.3&hash=f456af"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 0404a09c625df01934ef774b45ce1ca57ccae41cd625fcdbb82056715320d9329e70d9d75c2c732ec6ef947444ca978c189a332b71fa21f5c1437d5a83e24906
   languageName: node
   linkType: hard
 
