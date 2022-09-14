@@ -268,7 +268,7 @@ const SceneView = ({
       isNativeStack
       nativeBackButtonDismissalEnabled={false} // on Android
       onHeaderBackButtonClicked={onHeaderBackButtonClicked}
-      // @ts-expect-error props not exported from rn-screens
+      // @ts-ignore props not exported from rn-screens
       preventNativeDismiss={isRemovePrevented} // on iOS
       onNativeDismissCancelled={onNativeDismissCancelled}
       // this prop is available since rn-screens 3.16
