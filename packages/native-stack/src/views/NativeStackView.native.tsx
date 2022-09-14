@@ -120,7 +120,7 @@ type SceneViewProps = {
   onAppear: () => void;
   onDisappear: () => void;
   onDismissed: ScreenProps['onDismissed'];
-  onHeaderBackButtonClicked: () => void;
+  onHeaderBackButtonClicked: ScreenProps['onHeaderBackButtonClicked'];
   onNativeDismissCancelled: ScreenProps['onDismissed'];
 };
 
@@ -239,7 +239,6 @@ const SceneView = ({
       enabled
       style={StyleSheet.absoluteFill}
       customAnimationOnSwipe={customAnimationOnGesture}
-      freezeOnBlur={freezeOnBlur}
       fullScreenSwipeEnabled={fullScreenGestureEnabled}
       gestureEnabled={
         isAndroid
@@ -267,12 +266,13 @@ const SceneView = ({
       onDisappear={onDisappear}
       onDismissed={onDismissed}
       isNativeStack
-      // Props for enabling preventing removal in native-stack
       nativeBackButtonDismissalEnabled={false} // on Android
-      // @ts-expect-error prop not publicly exported from rn-screens
-      preventNativeDismiss={isRemovePrevented} // on iOS
       onHeaderBackButtonClicked={onHeaderBackButtonClicked}
+      // @ts-expect-error props not exported from rn-screens
+      preventNativeDismiss={isRemovePrevented} // on iOS
       onNativeDismissCancelled={onNativeDismissCancelled}
+      // this prop is available since rn-screens 3.16
+      freezeOnBlur={freezeOnBlur}
     >
       <NavigationContext.Provider value={navigation}>
         <NavigationRouteContext.Provider value={route}>
