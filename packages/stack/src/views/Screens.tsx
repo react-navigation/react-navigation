@@ -26,15 +26,22 @@ export const MaybeScreenContainer = ({
 export const MaybeScreen = ({
   enabled,
   active,
+  freezeOnBlur,
   ...rest
 }: ViewProps & {
   enabled: boolean;
   active: 0 | 1 | Animated.AnimatedInterpolation;
   children: React.ReactNode;
+  freezeOnBlur?: boolean;
 }) => {
   if (Screens != null) {
     return (
-      <Screens.Screen enabled={enabled} activityState={active} {...rest} />
+      <Screens.Screen
+        enabled={enabled}
+        activityState={active}
+        freezeOnBlur={freezeOnBlur}
+        {...rest}
+      />
     );
   }
 
