@@ -26,7 +26,6 @@ export const MaybeScreenContainer = ({
 export const MaybeScreen = ({
   enabled,
   active,
-  freezeOnBlur,
   ...rest
 }: ViewProps & {
   enabled: boolean;
@@ -36,12 +35,7 @@ export const MaybeScreen = ({
 }) => {
   if (Screens != null) {
     return (
-      <Screens.Screen
-        enabled={enabled}
-        activityState={active}
-        freezeOnBlur={freezeOnBlur}
-        {...rest}
-      />
+      <Screens.Screen enabled={enabled} activityState={active} {...rest} />
     );
   }
 
