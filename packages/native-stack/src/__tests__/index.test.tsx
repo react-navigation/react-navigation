@@ -18,6 +18,10 @@ jest.mock('react-native-safe-area-context', () => ({
   }),
 }));
 
+afterEach(() => {
+  jest.resetAllMocks();
+});
+
 it('renders a native-stack navigator with screens', async () => {
   const Test = ({
     route,
@@ -44,7 +48,7 @@ it('renders a native-stack navigator with screens', async () => {
   expect(queryByText('Screen A')).not.toBeNull();
   expect(queryByText('Screen B')).toBeNull();
 
-  fireEvent.press(await findByText('Go to B'));
+  fireEvent.press(await findByText(/go to b/i));
 
   expect(queryByText('Screen B')).not.toBeNull();
 });
