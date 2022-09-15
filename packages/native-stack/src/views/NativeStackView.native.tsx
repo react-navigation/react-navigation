@@ -311,7 +311,7 @@ const SceneView = ({
                   headerBackTitle={
                     options.headerBackTitle !== undefined
                       ? options.headerBackTitle
-                      : headerBack?.title
+                      : undefined
                   }
                   canGoBack={headerBack !== undefined}
                 />
