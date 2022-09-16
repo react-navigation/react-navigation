@@ -48,7 +48,7 @@ yarn test
 Running the e2e tests with Playwright requires building the [example app](/example/) for web:
 
 ```sh
-yarn example expo build:web --no-pwa
+yarn example expo export:web
 ```
 
 Before running tests configure Playwright with:

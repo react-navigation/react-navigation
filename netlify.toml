@@ -2,5 +2,5 @@
 [build]
   base    = "/"
   publish = "example/web-build"
-  command = "yarn example expo build:web"
+  command = "yarn example expo export:web"
   environment = { YARN_VERSION = "3.2.2" }
