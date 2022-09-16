@@ -9,7 +9,7 @@
     <key>EXUpdatesLaunchWaitMs</key>
     <integer>0</integer>
     <key>EXUpdatesSDKVersion</key>
-    <string>45.0.0</string>
+    <string>46.0.0</string>
     <key>EXUpdatesURL</key>
     <string>https://exp.host/@react-navigation/react-navigation-example</string>
   </dict>
