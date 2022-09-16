@@ -8,7 +8,6 @@ import {
   TextStyle,
   View,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,
@@ -24,6 +23,7 @@ import type { NativeStackNavigationOptions } from '../types';
 import { processFonts } from './FontProcessor';
 
 type Props = NativeStackNavigationOptions & {
+  headerTopInsetEnabled: boolean;
   headerHeight: number;
   route: Route<string>;
   canGoBack: boolean;
@@ -54,12 +54,11 @@ export default function HeaderConfig({
   headerTitleStyle,
   headerTransparent,
   headerSearchBarOptions,
+  headerTopInsetEnabled,
   route,
   title,
   canGoBack,
 }: Props): JSX.Element {
-  const insets = useSafeAreaInsets();
-
   const { colors } = useTheme();
   const tintColor =
     headerTintColor ?? (Platform.OS === 'ios' ? colors.primary : colors.text);
@@ -195,7 +194,7 @@ export default function HeaderConfig({
         titleFontFamily={titleFontFamily}
         titleFontSize={titleFontSize}
         titleFontWeight={titleFontWeight}
-        topInsetEnabled={insets.top !== 0}
+        topInsetEnabled={headerTopInsetEnabled}
         translucent={
           // This defaults to `true`, so we can't pass `undefined`
           translucent === true
