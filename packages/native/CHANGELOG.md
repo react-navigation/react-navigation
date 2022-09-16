@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.11...@react-navigation/native@6.0.13) (2022-09-16)
+
+
+### Bug Fixes
+
+* handle path with empty string properly for linking ([#10708](https://github.com/react-navigation/react-navigation/issues/10708)) ([e8c374e](https://github.com/react-navigation/react-navigation/commit/e8c374e0643a1521566c654e0052b53f2fd0667a))
+
+
+
+
+
 ## [6.0.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.11...@react-navigation/native@6.0.12) (2022-08-24)
 
 

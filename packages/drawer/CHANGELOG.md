@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.5.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.4.3...@react-navigation/drawer@6.5.0) (2022-09-16)
+
+
+### Bug Fixes
+
+* add helpful error when using legacy implementation with Reanimated v3 ([#10693](https://github.com/react-navigation/react-navigation/issues/10693)) ([d19987b](https://github.com/react-navigation/react-navigation/commit/d19987b0574975df434aa54e0f1c1fba62e7aaa3))
+* export `PanGestureHandlerGestureEvent` as a type ([#10814](https://github.com/react-navigation/react-navigation/issues/10814)) ([f3d06ba](https://github.com/react-navigation/react-navigation/commit/f3d06ba7c3393fcdb30ad5cf515565cd5196b3f0))
+* fix isRTL check in drawer ([2d2f4e3](https://github.com/react-navigation/react-navigation/commit/2d2f4e3a53a08b02866780e880338bf347092ff2))
+* replace deprecated I18nManager.isRTL with 18nManager.getConstants().isRTL ([#10547](https://github.com/react-navigation/react-navigation/issues/10547)) ([50b88d4](https://github.com/react-navigation/react-navigation/commit/50b88d40496a04f613073c63119b21a104ec9bc2))
+
+
+### Features
+
+* add freezeOnBlur prop  ([#10834](https://github.com/react-navigation/react-navigation/issues/10834)) ([e13b4d9](https://github.com/react-navigation/react-navigation/commit/e13b4d9341362512ba4bf921a17552f3be8735c1))
+
+
+
+
+
 ## [6.4.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.4.3...@react-navigation/drawer@6.4.4) (2022-08-24)
 
 

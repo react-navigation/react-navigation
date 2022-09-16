@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.9.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.7.0...@react-navigation/native-stack@6.9.0) (2022-09-16)
+
+
+### Bug Fixes
+
+* fix incorrect height in useHeaderHeight in native-stack ([#10827](https://github.com/react-navigation/react-navigation/issues/10827)) ([b8ea527](https://github.com/react-navigation/react-navigation/commit/b8ea5279d65beb44833b0f40af95ef563b9831f7)), closes [#10333](https://github.com/react-navigation/react-navigation/issues/10333)
+* improve when back button is shown in nested native stacks ([#10761](https://github.com/react-navigation/react-navigation/issues/10761)) ([05dab7d](https://github.com/react-navigation/react-navigation/commit/05dab7d6f146ba076a00cb4ed1bbc1070224e9ab))
+* replace deprecated I18nManager.isRTL with 18nManager.getConstants().isRTL ([#10547](https://github.com/react-navigation/react-navigation/issues/10547)) ([50b88d4](https://github.com/react-navigation/react-navigation/commit/50b88d40496a04f613073c63119b21a104ec9bc2))
+* restore native behavior of back button ([7ba7246](https://github.com/react-navigation/react-navigation/commit/7ba72468c0434e02bdaa6a8af80c809119b344e9)), closes [#10761](https://github.com/react-navigation/react-navigation/issues/10761) [software-mansion/react-native-screens#1589](https://github.com/software-mansion/react-native-screens/issues/1589)
+
+
+### Features
+
+* add freezeOnBlur prop  ([#10834](https://github.com/react-navigation/react-navigation/issues/10834)) ([e13b4d9](https://github.com/react-navigation/react-navigation/commit/e13b4d9341362512ba4bf921a17552f3be8735c1))
+* implement usePreventRemove hook ([#10682](https://github.com/react-navigation/react-navigation/issues/10682)) ([7411516](https://github.com/react-navigation/react-navigation/commit/741151654752e0e55affbc8e04dd4876eaedd760))
+
+
+
+
+
 # [6.8.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.7.0...@react-navigation/native-stack@6.8.0) (2022-08-24)
 
 

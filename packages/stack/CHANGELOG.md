@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.3.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.2.2...@react-navigation/stack@6.3.0) (2022-09-16)
+
+
+### Bug Fixes
+
+* export `PanGestureHandlerGestureEvent` as a type ([#10814](https://github.com/react-navigation/react-navigation/issues/10814)) ([f3d06ba](https://github.com/react-navigation/react-navigation/commit/f3d06ba7c3393fcdb30ad5cf515565cd5196b3f0))
+* fix previous screen detach too early ([#10813](https://github.com/react-navigation/react-navigation/issues/10813)) ([a6b7d10](https://github.com/react-navigation/react-navigation/commit/a6b7d102d7ad6a6ee672ee5210cce4c1715acf03)), closes [/github.com/software-mansion/react-native-screens/issues/1285#issuecomment-1026928610](https://github.com//github.com/software-mansion/react-native-screens/issues/1285/issues/issuecomment-1026928610)
+* migrate off setNativeProps ([#10767](https://github.com/react-navigation/react-navigation/issues/10767)) ([495b28f](https://github.com/react-navigation/react-navigation/commit/495b28f06a8c89ce9bc2c812bcbb2374366b9aaf)), closes [#10720](https://github.com/react-navigation/react-navigation/issues/10720)
+* replace deprecated I18nManager.isRTL with 18nManager.getConstants().isRTL ([#10547](https://github.com/react-navigation/react-navigation/issues/10547)) ([50b88d4](https://github.com/react-navigation/react-navigation/commit/50b88d40496a04f613073c63119b21a104ec9bc2))
+
+
+### Features
+
+* add freezeOnBlur prop  ([#10834](https://github.com/react-navigation/react-navigation/issues/10834)) ([e13b4d9](https://github.com/react-navigation/react-navigation/commit/e13b4d9341362512ba4bf921a17552f3be8735c1))
+
+
+
+
+
 ## [6.2.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.2.2...@react-navigation/stack@6.2.3) (2022-08-24)
 
 
