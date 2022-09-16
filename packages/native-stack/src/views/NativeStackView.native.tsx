@@ -48,12 +48,14 @@ const MaybeNestedStack = ({
   route,
   presentation,
   headerHeight,
+  headerTopInsetEnabled,
   children,
 }: {
   options: NativeStackNavigationOptions;
   route: Route<string>;
   presentation: Exclude<StackPresentationTypes, 'push'> | 'card';
   headerHeight: number;
+  headerTopInsetEnabled: boolean;
   children: React.ReactNode;
 }) => {
   const { colors } = useTheme();
@@ -100,6 +102,7 @@ const MaybeNestedStack = ({
             {...options}
             route={route}
             headerHeight={headerHeight}
+            headerTopInsetEnabled={headerTopInsetEnabled}
             canGoBack
           />
           {content}
@@ -192,10 +195,6 @@ const SceneView = ({
     presentation = 'card';
   }
 
-  const isHeaderInPush = isAndroid
-    ? headerShown
-    : presentation === 'card' && headerShown !== false;
-
   const insets = useSafeAreaInsets();
   const frame = useSafeAreaFrame();
 
@@ -207,11 +206,16 @@ const SceneView = ({
     Platform.OS === 'ios' && !(Platform.isPad || Platform.isTVOS);
   const isLandscape = frame.width > frame.height;
 
-  const topInset = isModal || (isIPhone && isLandscape) ? 0 : insets.top;
-
   const isParentHeaderShown = React.useContext(HeaderShownContext);
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
   const parentHeaderBack = React.useContext(HeaderBackContext);
+
+  const topInset =
+    isParentHeaderShown ||
+    (Platform.OS === 'ios' && isModal) ||
+    (isIPhone && isLandscape)
+      ? 0
+      : insets.top;
 
   const { preventedRoutes } = usePreventRemoveContext();
 
@@ -220,6 +224,7 @@ const SceneView = ({
   const [customHeaderHeight, setCustomHeaderHeight] =
     React.useState(defaultHeaderHeight);
 
+  const headerTopInsetEnabled = topInset !== 0;
   const headerHeight = header ? customHeaderHeight : defaultHeaderHeight;
   const headerBack = previousDescriptor
     ? {
@@ -275,13 +280,11 @@ const SceneView = ({
       <NavigationContext.Provider value={navigation}>
         <NavigationRouteContext.Provider value={route}>
           <HeaderShownContext.Provider
-            value={isParentHeaderShown || isHeaderInPush !== false}
+            value={isParentHeaderShown || headerShown !== false}
           >
             <HeaderHeightContext.Provider
               value={
-                isHeaderInPush !== false
-                  ? headerHeight
-                  : parentHeaderHeight ?? 0
+                headerShown !== false ? headerHeight : parentHeaderHeight ?? 0
               }
             >
               {header !== undefined && headerShown !== false ? (
@@ -306,13 +309,14 @@ const SceneView = ({
                       ? !isRemovePrevented
                       : headerBackButtonMenuEnabled
                   }
-                  headerShown={isHeaderInPush}
+                  headerShown={headerShown}
                   headerHeight={headerHeight}
                   headerBackTitle={
                     options.headerBackTitle !== undefined
                       ? options.headerBackTitle
                       : undefined
                   }
+                  headerTopInsetEnabled={headerTopInsetEnabled}
                   canGoBack={headerBack !== undefined}
                 />
               )}
@@ -321,6 +325,7 @@ const SceneView = ({
                 route={route}
                 presentation={presentation}
                 headerHeight={headerHeight}
+                headerTopInsetEnabled={headerTopInsetEnabled}
               >
                 <HeaderBackContext.Provider value={headerBack}>
                   {render()}
