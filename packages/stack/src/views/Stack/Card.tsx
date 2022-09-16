@@ -250,7 +250,7 @@ export default class Card extends React.Component<Props, State> {
   private setPointerEventsEnabled = (enabled: boolean) => {
     const pointerEvents = enabled ? 'box-none' : 'none';
 
-    this.setState((state) => ({ ...state, pointerEvents }));
+    this.setState({ pointerEvents });
   };
 
   private handleStartInteraction = () => {
