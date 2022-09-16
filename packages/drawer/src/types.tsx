@@ -211,6 +211,15 @@ export type DrawerNavigationOptions = HeaderOptions & {
    * Defaults to `false`.
    */
   unmountOnBlur?: boolean;
+
+  /**
+   * Whether inactive screens should be suspended from re-rendering. Defaults to `false`.
+   * Defaults to `true` when `enableFreeze()` is run at the top of the application.
+   * Requires `react-native-screens` version >=3.16.0.
+   *
+   * Only supported on iOS and Android.
+   */
+  freezeOnBlur?: boolean;
 };
 
 export type DrawerContentComponentProps = {
