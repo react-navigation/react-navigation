@@ -123,7 +123,7 @@ type SceneViewProps = {
   onAppear: () => void;
   onDisappear: () => void;
   onDismissed: ScreenProps['onDismissed'];
-  onHeaderBackButtonClicked: () => void;
+  onHeaderBackButtonClicked: ScreenProps['onHeaderBackButtonClicked'];
   onNativeDismissCancelled: ScreenProps['onDismissed'];
 };
 
@@ -156,6 +156,7 @@ const SceneView = ({
     statusBarStyle,
     statusBarTranslucent,
     statusBarColor,
+    freezeOnBlur,
   } = options;
 
   let {
@@ -270,12 +271,13 @@ const SceneView = ({
       onDisappear={onDisappear}
       onDismissed={onDismissed}
       isNativeStack
-      // Props for enabling preventing removal in native-stack
       nativeBackButtonDismissalEnabled={false} // on Android
-      // @ts-expect-error prop not publicly exported from rn-screens
-      preventNativeDismiss={isRemovePrevented} // on iOS
       onHeaderBackButtonClicked={onHeaderBackButtonClicked}
+      // @ts-ignore props not exported from rn-screens
+      preventNativeDismiss={isRemovePrevented} // on iOS
       onNativeDismissCancelled={onNativeDismissCancelled}
+      // this prop is available since rn-screens 3.16
+      freezeOnBlur={freezeOnBlur}
     >
       <NavigationContext.Provider value={navigation}>
         <NavigationRouteContext.Provider value={route}>
