@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.3.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.3.0...@react-navigation/stack@6.3.1) (2022-09-19)
+
+
+### Reverts
+
+* Revert "fix: migrate off setNativeProps (#10767)" ([dfc11e7](https://github.com/react-navigation/react-navigation/commit/dfc11e7616c99182ac736c7d22d3d67c4075c211)), closes [#10767](https://github.com/react-navigation/react-navigation/issues/10767)
+
+
+
+
+
 # [6.3.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.2.2...@react-navigation/stack@6.3.0) (2022-09-16)
 
 
