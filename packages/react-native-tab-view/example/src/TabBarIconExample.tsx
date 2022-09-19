@@ -19,61 +19,54 @@ type Route = {
 
 type State = NavigationState<Route>;
 
-export default class TabBarIconExample extends React.Component<{}, State> {
-  // eslint-disable-next-line react/sort-comp
-  static title = 'Top tab bar with icons';
-  static backgroundColor = '#e91e63';
-  static appbarElevation = 0;
+const TabBarIconExample = () => {
+  const [index, onIndexChange] = React.useState(0);
+  const [routes] = React.useState<Route[]>([
+    { key: 'chat', icon: 'md-chatbubbles' },
+    { key: 'contacts', icon: 'md-people' },
+    { key: 'article', icon: 'md-list' },
+  ]);
 
-  state: State = {
-    index: 0,
-    routes: [
-      { key: 'chat', icon: 'md-chatbubbles' },
-      { key: 'contacts', icon: 'md-people' },
-      { key: 'article', icon: 'md-list' },
-    ],
-  };
-
-  private handleIndexChange = (index: number) =>
-    this.setState({
-      index,
-    });
-
-  private renderIcon = ({ route, color }: { route: Route; color: string }) => (
+  const renderIcon = ({ route, color }: { route: Route; color: string }) => (
     <Ionicons name={route.icon} size={24} color={color} />
   );
 
-  private renderTabBar = (
+  const renderTabBar = (
     props: SceneRendererProps & { navigationState: State }
-  ) => {
-    return (
-      <TabBar
-        {...props}
-        indicatorStyle={styles.indicator}
-        renderIcon={this.renderIcon}
-        style={styles.tabbar}
-      />
-    );
-  };
+  ) => (
+    <TabBar
+      {...props}
+      indicatorStyle={styles.indicator}
+      renderIcon={renderIcon}
+      style={styles.tabbar}
+    />
+  );
 
-  private renderScene = SceneMap({
+  const renderScene = SceneMap({
     chat: Chat,
     contacts: Contacts,
     article: Article,
   });
 
-  render() {
-    return (
-      <TabView
-        lazy
-        navigationState={this.state}
-        renderScene={this.renderScene}
-        renderTabBar={this.renderTabBar}
-        onIndexChange={this.handleIndexChange}
-      />
-    );
-  }
-}
+  return (
+    <TabView
+      lazy
+      navigationState={{
+        index,
+        routes,
+      }}
+      renderScene={renderScene}
+      renderTabBar={renderTabBar}
+      onIndexChange={onIndexChange}
+    />
+  );
+};
+
+TabBarIconExample.title = 'Top tab bar with icons';
+TabBarIconExample.backgroundColor = '#e91e63';
+TabBarIconExample.appbarElevation = 0;
+
+export default TabBarIconExample;
 
 const styles = StyleSheet.create({
   tabbar: {

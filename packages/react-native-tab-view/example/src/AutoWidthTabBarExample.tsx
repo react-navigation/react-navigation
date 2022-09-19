@@ -17,33 +17,18 @@ type State = NavigationState<{
   title: string;
 }>;
 
-export default class DynamicWidthTabBarExample extends React.Component<
-  {},
-  State
-> {
-  // eslint-disable-next-line react/sort-comp
-  static title = 'Scrollable tab bar (auto width)';
-  static backgroundColor = '#3f51b5';
-  static appbarElevation = 0;
+const AutoWidthTabBarExample = () => {
+  const [index, onIndexChange] = React.useState(1);
+  const [routes] = React.useState([
+    { key: 'article', title: 'Article' },
+    { key: 'contacts', title: 'Contacts' },
+    { key: 'albums', title: 'Albums' },
+    { key: 'chat', title: 'Chat' },
+    { key: 'long', title: 'long long long title' },
+    { key: 'medium', title: 'medium title' },
+  ]);
 
-  state = {
-    index: 1,
-    routes: [
-      { key: 'article', title: 'Article' },
-      { key: 'contacts', title: 'Contacts' },
-      { key: 'albums', title: 'Albums' },
-      { key: 'chat', title: 'Chat' },
-      { key: 'long', title: 'long long long title' },
-      { key: 'medium', title: 'medium title' },
-    ],
-  };
-
-  private handleIndexChange = (index: number) =>
-    this.setState({
-      index,
-    });
-
-  private renderTabBar = (
+  const renderTabBar = (
     props: SceneRendererProps & { navigationState: State }
   ) => (
     <TabBar
@@ -56,7 +41,7 @@ export default class DynamicWidthTabBarExample extends React.Component<
     />
   );
 
-  private renderScene = SceneMap({
+  const renderScene = SceneMap({
     albums: Albums,
     contacts: Contacts,
     article: Article,
@@ -65,17 +50,24 @@ export default class DynamicWidthTabBarExample extends React.Component<
     medium: Article,
   });
 
-  render() {
-    return (
-      <TabView
-        navigationState={this.state}
-        renderScene={this.renderScene}
-        renderTabBar={this.renderTabBar}
-        onIndexChange={this.handleIndexChange}
-      />
-    );
-  }
-}
+  return (
+    <TabView
+      navigationState={{
+        index,
+        routes,
+      }}
+      renderScene={renderScene}
+      renderTabBar={renderTabBar}
+      onIndexChange={onIndexChange}
+    />
+  );
+};
+
+AutoWidthTabBarExample.title = 'Scrollable tab bar (auto width)';
+AutoWidthTabBarExample.backgroundColor = '#3f51b5';
+AutoWidthTabBarExample.appbarElevation = 0;
+
+export default AutoWidthTabBarExample;
 
 const styles = StyleSheet.create({
   tabbar: {

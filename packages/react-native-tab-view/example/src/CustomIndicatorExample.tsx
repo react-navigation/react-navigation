@@ -19,36 +19,24 @@ type Route = {
 
 type State = NavigationState<Route>;
 
-export default class CustomIndicatorExample extends React.Component<{}, State> {
-  // eslint-disable-next-line react/sort-comp
-  static title = 'Custom indicator';
-  static backgroundColor = '#263238';
-  static appbarElevation = 4;
+const CustomIndicatorExample = () => {
+  const [index, onIndexChange] = React.useState(0);
+  const [routes] = React.useState<Route[]>([
+    {
+      key: 'article',
+      icon: 'ios-document',
+    },
+    {
+      key: 'contacts',
+      icon: 'ios-people',
+    },
+    {
+      key: 'albums',
+      icon: 'ios-albums',
+    },
+  ]);
 
-  state: State = {
-    index: 0,
-    routes: [
-      {
-        key: 'article',
-        icon: 'ios-document',
-      },
-      {
-        key: 'contacts',
-        icon: 'ios-people',
-      },
-      {
-        key: 'albums',
-        icon: 'ios-albums',
-      },
-    ],
-  };
-
-  private handleIndexChange = (index: number) =>
-    this.setState({
-      index,
-    });
-
-  private renderIndicator = (
+  const renderIndicator = (
     props: SceneRendererProps & {
       navigationState: State;
       getTabWidth: (i: number) => number;
@@ -97,11 +85,11 @@ export default class CustomIndicatorExample extends React.Component<{}, State> {
     );
   };
 
-  private renderIcon = ({ route }: { route: Route }) => (
+  const renderIcon = ({ route }: { route: Route }) => (
     <Ionicons name={route.icon} size={24} style={styles.icon} />
   );
 
-  private renderBadge = ({ route }: { route: Route }) => {
+  const renderBadge = ({ route }: { route: Route }) => {
     if (route.key === 'albums') {
       return (
         <View style={styles.badge}>
@@ -112,36 +100,43 @@ export default class CustomIndicatorExample extends React.Component<{}, State> {
     return null;
   };
 
-  private renderTabBar = (
+  const renderTabBar = (
     props: SceneRendererProps & { navigationState: State }
   ) => (
     <TabBar
       {...props}
-      renderIcon={this.renderIcon}
-      renderBadge={this.renderBadge}
-      renderIndicator={this.renderIndicator}
+      renderIcon={renderIcon}
+      renderBadge={renderBadge}
+      renderIndicator={renderIndicator}
       style={styles.tabbar}
     />
   );
 
-  private renderScene = SceneMap({
+  const renderScene = SceneMap({
     article: Article,
     contacts: Contacts,
     albums: Albums,
   });
 
-  render() {
-    return (
-      <TabView
-        navigationState={this.state}
-        renderScene={this.renderScene}
-        renderTabBar={this.renderTabBar}
-        tabBarPosition="bottom"
-        onIndexChange={this.handleIndexChange}
-      />
-    );
-  }
-}
+  return (
+    <TabView
+      navigationState={{
+        index,
+        routes,
+      }}
+      renderScene={renderScene}
+      renderTabBar={renderTabBar}
+      tabBarPosition="bottom"
+      onIndexChange={onIndexChange}
+    />
+  );
+};
+
+CustomIndicatorExample.title = 'Custom indicator';
+CustomIndicatorExample.backgroundColor = '#263238';
+CustomIndicatorExample.appbarElevation = 4;
+
+export default CustomIndicatorExample;
 
 const styles = StyleSheet.create({
   tabbar: {

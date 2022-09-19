@@ -26,30 +26,16 @@ type Route = {
 
 type State = NavigationState<Route>;
 
-export default class CustomTabBarExample extends React.Component<{}, State> {
-  // eslint-disable-next-line react/sort-comp
-  static title = 'Custom tab bar';
-  static backgroundColor = '#fafafa';
-  static tintColor = '#263238';
-  static appbarElevation = 4;
-  static statusBarStyle = 'dark-content' as 'dark-content';
+const CustomTabBarExample = () => {
+  const [index, onIndexChange] = React.useState(0);
+  const [routes] = React.useState<Route[]>([
+    { key: 'contacts', title: 'Contacts', icon: 'ios-people' },
+    { key: 'albums', title: 'Albums', icon: 'ios-albums' },
+    { key: 'article', title: 'Article', icon: 'ios-document' },
+    { key: 'chat', title: 'Chat', icon: 'ios-chatbubble' },
+  ]);
 
-  state: State = {
-    index: 0,
-    routes: [
-      { key: 'contacts', title: 'Contacts', icon: 'ios-people' },
-      { key: 'albums', title: 'Albums', icon: 'ios-albums' },
-      { key: 'article', title: 'Article', icon: 'ios-document' },
-      { key: 'chat', title: 'Chat', icon: 'ios-chatbubble' },
-    ],
-  };
-
-  private handleIndexChange = (index: number) =>
-    this.setState({
-      index,
-    });
-
-  private renderItem =
+  const renderItem =
     ({
       navigationState,
       position,
@@ -93,7 +79,7 @@ export default class CustomTabBarExample extends React.Component<{}, State> {
       );
     };
 
-  private renderTabBar = (
+  const renderTabBar = (
     props: SceneRendererProps & { navigationState: State }
   ) => (
     <View style={styles.tabbar}>
@@ -103,32 +89,41 @@ export default class CustomTabBarExample extends React.Component<{}, State> {
             key={route.key}
             onPress={() => props.jumpTo(route.key)}
           >
-            {this.renderItem(props)({ route, index })}
+            {renderItem(props)({ route, index })}
           </TouchableWithoutFeedback>
         );
       })}
     </View>
   );
 
-  private renderScene = SceneMap({
+  const renderScene = SceneMap({
     contacts: Contacts,
     albums: Albums,
     article: Article,
     chat: Chat,
   });
 
-  render() {
-    return (
-      <TabView
-        navigationState={this.state}
-        renderScene={this.renderScene}
-        renderTabBar={this.renderTabBar}
-        tabBarPosition="bottom"
-        onIndexChange={this.handleIndexChange}
-      />
-    );
-  }
-}
+  return (
+    <TabView
+      navigationState={{
+        index,
+        routes,
+      }}
+      renderScene={renderScene}
+      renderTabBar={renderTabBar}
+      tabBarPosition="bottom"
+      onIndexChange={onIndexChange}
+    />
+  );
+};
+
+CustomTabBarExample.title = 'Custom tab bar';
+CustomTabBarExample.backgroundColor = '#fafafa';
+CustomTabBarExample.appbarElevation = 0;
+CustomTabBarExample.tintColor = '#263238';
+CustomTabBarExample.statusBarStyle = 'dark-content' as 'dark-content';
+
+export default CustomTabBarExample;
 
 const styles = StyleSheet.create({
   tabbar: {
