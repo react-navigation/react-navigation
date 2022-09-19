@@ -3,13 +3,14 @@ import {
   Animated,
   StyleSheet,
   View,
-  ScrollView,
   StyleProp,
   ViewStyle,
   TextStyle,
   LayoutChangeEvent,
   I18nManager,
   Platform,
+  FlatList,
+  ListRenderItemInfo,
 } from 'react-native';
 import TabBarItem, { Props as TabBarItemProps } from './TabBarItem';
 import TabBarIndicator, { Props as IndicatorProps } from './TabBarIndicator';
@@ -131,7 +132,7 @@ export default class TabBar<T extends Route> extends React.Component<
 
   private scrollAmount = new Animated.Value(0);
 
-  private scrollViewRef = React.createRef<ScrollView>();
+  private flatListRef = React.createRef<FlatList>();
 
   private getFlattenedTabWidth = (style: StyleProp<ViewStyle>) => {
     const tabStyle = StyleSheet.flatten(style);
@@ -166,7 +167,6 @@ export default class TabBar<T extends Route> extends React.Component<
     if (scrollEnabled) {
       return (layout.width / 5) * 2;
     }
-
     return layout.width / routes.length;
   };
 
@@ -248,8 +248,8 @@ export default class TabBar<T extends Route> extends React.Component<
 
   private resetScroll = (index: number) => {
     if (this.props.scrollEnabled) {
-      this.scrollViewRef.current?.scrollTo({
-        x: this.getScrollAmount(this.props, this.state, index),
+      this.flatListRef.current?.scrollToOffset({
+        offset: this.getScrollAmount(this.props, this.state, index),
         animated: true,
       });
     }
@@ -367,7 +367,9 @@ export default class TabBar<T extends Route> extends React.Component<
           })}
         </Animated.View>
         <View style={styles.scroll}>
-          <Animated.ScrollView
+          <Animated.FlatList
+            data={routes as Animated.WithAnimatedValue<T>[]}
+            keyExtractor={(item) => item.key}
             horizontal
             accessibilityRole="tablist"
             keyboardShouldPersistTaps="handled"
@@ -392,19 +394,7 @@ export default class TabBar<T extends Route> extends React.Component<
               contentContainerStyle,
             ]}
             scrollEventThrottle={16}
-            onScroll={Animated.event(
-              [
-                {
-                  nativeEvent: {
-                    contentOffset: { x: this.scrollAmount },
-                  },
-                },
-              ],
-              { useNativeDriver: true }
-            )}
-            ref={this.scrollViewRef}
-          >
-            {routes.map((route: T, index) => {
+            renderItem={({ item: route, index }: ListRenderItemInfo<T>) => {
               const props: TabBarItemProps<T> & { key: string } = {
                 key: route.key,
                 position: position,
@@ -459,7 +449,20 @@ export default class TabBar<T extends Route> extends React.Component<
                 },
                 onLongPress: () => onTabLongPress?.({ route }),
                 labelStyle: labelStyle,
-                style: tabStyle,
+                style: [
+                  tabStyle,
+                  // Calculate the deafult width for tab for FlatList to work.
+                  this.getFlattenedTabWidth(tabStyle) === undefined && {
+                    width: this.getComputedTabWidth(
+                      index,
+                      layout,
+                      routes,
+                      scrollEnabled,
+                      tabWidths,
+                      this.getFlattenedTabWidth(tabStyle)
+                    ),
+                  },
+                ],
               };
 
               return (
@@ -472,8 +475,19 @@ export default class TabBar<T extends Route> extends React.Component<
                   )}
                 </React.Fragment>
               );
-            })}
-          </Animated.ScrollView>
+            }}
+            onScroll={Animated.event(
+              [
+                {
+                  nativeEvent: {
+                    contentOffset: { x: this.scrollAmount },
+                  },
+                },
+              ],
+              { useNativeDriver: true }
+            )}
+            ref={this.flatListRef}
+          />
         </View>
       </Animated.View>
     );
