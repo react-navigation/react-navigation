@@ -67,10 +67,6 @@ type Props = ViewProps & {
   contentStyle?: StyleProp<ViewStyle>;
 };
 
-type State = {
-  pointerEvents: ViewProps['pointerEvents'];
-};
-
 const GESTURE_VELOCITY_IMPACT = 0.3;
 
 const TRUE = 1;
@@ -93,7 +89,7 @@ const hasOpacityStyle = (style: any) => {
   return false;
 };
 
-export default class Card extends React.Component<Props, State> {
+export default class Card extends React.Component<Props> {
   static defaultProps = {
     shadowEnabled: false,
     gestureEnabled: true,
@@ -106,10 +102,6 @@ export default class Card extends React.Component<Props, State> {
       style ? (
         <Animated.View pointerEvents="none" style={[styles.overlay, style]} />
       ) : null,
-  };
-
-  state: State = {
-    pointerEvents: 'auto',
   };
 
   componentDidMount() {
@@ -250,7 +242,7 @@ export default class Card extends React.Component<Props, State> {
   private setPointerEventsEnabled = (enabled: boolean) => {
     const pointerEvents = enabled ? 'box-none' : 'none';
 
-    this.setState({ pointerEvents });
+    this.contentRef.current?.setNativeProps({ pointerEvents });
   };
 
   private handleStartInteraction = () => {
@@ -433,6 +425,8 @@ export default class Card extends React.Component<Props, State> {
     }
   }
 
+  private contentRef = React.createRef<View>();
+
   render() {
     const {
       styleInterpolator,
@@ -561,7 +555,7 @@ export default class Card extends React.Component<Props, State> {
                   />
                 ) : null}
                 <CardSheet
-                  pointerEvents={this.state.pointerEvents}
+                  ref={this.contentRef}
                   enabled={pageOverflowEnabled}
                   layout={layout}
                   style={contentStyle}
