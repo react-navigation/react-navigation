@@ -136,11 +136,12 @@ export default class Card extends React.Component<Props, State> {
     const toValue = this.getAnimateToValue(this.props);
 
     if (
-      this.getAnimateToValue(prevProps) !== toValue ||
-      this.lastToValue !== toValue
+      closing !== prevProps.closing &&
+      (this.getAnimateToValue(prevProps) !== toValue ||
+        this.lastToValue !== toValue)
     ) {
       // We need to trigger the animation when route was closed
-      // Thr route might have been closed by a `POP` action or by a gesture
+      // The route might have been closed by a `POP` action or by a gesture
       // When route was closed due to a gesture, the animation would've happened already
       // It's still important to trigger the animation so that `onClose` is called
       // If `onClose` is not called, cleanup step won't be performed for gestures
