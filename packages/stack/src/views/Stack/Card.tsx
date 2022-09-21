@@ -71,12 +71,6 @@ type State = {
   pointerEvents: ViewProps['pointerEvents'];
 };
 
-const POINTER_EVENTS: ViewProps['pointerEvents'][] = [
-  'auto',
-  'box-none',
-  'none',
-];
-
 const GESTURE_VELOCITY_IMPACT = 0.3;
 
 const TRUE = 1;
@@ -121,10 +115,6 @@ export default class Card extends React.Component<Props, State> {
   componentDidMount() {
     this.animate({ closing: this.props.closing });
     this.isCurrentlyMounted = true;
-
-    this.pointerEvents.addListener(({ value }) => {
-      this.setState({ pointerEvents: POINTER_EVENTS[value] });
-    });
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -185,11 +175,6 @@ export default class Card extends React.Component<Props, State> {
   private pendingGestureCallback: number | undefined;
 
   private lastToValue: number | undefined;
-
-  // setNativeProps is getting removed in Fabric architecture
-  // in our case migrating to component state is not possible as we change
-  // pointerEvents inside componentDidUpdate
-  private pointerEvents = new Animated.Value(POINTER_EVENTS.indexOf('auto'));
 
   private animate = ({
     closing,
@@ -264,11 +249,9 @@ export default class Card extends React.Component<Props, State> {
   };
 
   private setPointerEventsEnabled = (enabled: boolean) => {
-    const pointerEvents = enabled
-      ? POINTER_EVENTS.indexOf('box-none')
-      : POINTER_EVENTS.indexOf('none');
+    const pointerEvents = enabled ? 'box-none' : 'none';
 
-    this.pointerEvents.setValue(pointerEvents);
+    this.setState({ pointerEvents });
   };
 
   private handleStartInteraction = () => {
