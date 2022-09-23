@@ -152,18 +152,32 @@ export default function getStateFromPath<ParamList extends {}>(
         if (bParts[i] == null) {
           return -1;
         }
-        const aWildCard = aParts[i] === '*' || aParts[i].startsWith(':');
-        const bWildCard = bParts[i] === '*' || bParts[i].startsWith(':');
+        const aWildCard = aParts[i] === '*';
+        const bWildCard = bParts[i] === '*';
         // if both are wildcard we compare next component
         if (aWildCard && bWildCard) {
           continue;
         }
-        // if only a is wild card, b get higher priority
+        // if only a is wildcard, b get higher priority
         if (aWildCard) {
           return 1;
         }
-        // if only b is wild card, a get higher priority
+        // if only b is wildcard, a get higher priority
         if (bWildCard) {
+          return -1;
+        }
+        const aSlug = aParts[i].startsWith(':');
+        const bSlug = bParts[i].startsWith(':');
+        // if both are slug we compare next component
+        if (aSlug && bSlug) {
+          continue;
+        }
+        // if only a is slug, b get higher priority
+        if (aSlug) {
+          return 1;
+        }
+        // if only b is slug, a get higher priority
+        if (bSlug) {
           return -1;
         }
       }
