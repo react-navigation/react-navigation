@@ -183,7 +183,7 @@ export default function getPathFromState<ParamList extends {}>(
           // This can occur when a wildcard matches all routes after a given segment
           // and the provided path was `/`.
           if (p === '*') {
-            return '';
+            return route.path ?? '';
           }
 
           // If the path has a pattern for a param, put the param in the path
