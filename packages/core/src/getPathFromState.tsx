@@ -190,13 +190,13 @@ export default function getPathFromState<ParamList extends {}>(
           if (p.startsWith(':')) {
             const value = allParams[name];
 
-            if (value === undefined && p.endsWith('?')) {
-              // Optional params without value assigned in route.params should be ignored
+            if (value == null) {
+              // 1. Optional params without value assigned in route.params should be ignored.
+              // 2. If the value is `undefined`, it means that the param is not present in the pattern.
               return '';
             }
 
-            // Prevent `encodeURIComponent(undefined)` -> 'undefined'
-            return value ? encodeURIComponent(value) : '';
+            return encodeURIComponent(value);
           }
 
           return encodeURIComponent(p);
