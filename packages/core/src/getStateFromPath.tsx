@@ -216,34 +216,14 @@ export default function getStateFromPath<ParamList extends {}>(
   if (remaining === '/') {
     // We need to add special handling of empty path so navigation to empty path also works
     // When handling empty path, we should only look at the root level config
-    const match =
-      configs.find(
-        (config) =>
-          config.path === '' &&
-          config.routeNames.every(
-            // Make sure that none of the parent configs have a non-empty path defined
-            (name) => !configs.find((c) => c.screen === name)?.path
-          )
-        // Search for slug matches
-      ) ??
-      configs.find(
-        (config) =>
-          config.path.startsWith(':') &&
-          config.routeNames.every(
-            // Make sure that none of the parent configs have a non-empty path defined
-            (name) =>
-              configs.find((c) => c.screen === name)?.path.startsWith(':')
-          )
-        // Search for wildcard matches last
-      ) ??
-      configs.find(
-        (config) =>
-          config.path === '*' &&
-          config.routeNames.every(
-            // Make sure that none of the parent configs have a non-empty path defined
-            (name) => configs.find((c) => c.screen === name)?.path === '*'
-          )
-      );
+    const match = configs.find(
+      (config) =>
+        config.path === '' &&
+        config.routeNames.every(
+          // Make sure that none of the parent configs have a non-empty path defined
+          (name) => !configs.find((c) => c.screen === name)?.path
+        )
+    );
 
     if (match) {
       return createNestedStateObject(
