@@ -180,11 +180,10 @@ export default function getPathFromState<ParamList extends {}>(
         .map((p) => {
           const name = getParamName(p);
 
-          // We don't know what to show for wildcard patterns
-          // Showing the route name seems ok, though whatever we show here will be incorrect
-          // Since the page doesn't actually exist
+          // This can occur when a wildcard matches all routes after a given segment
+          // and the provided path was `/`.
           if (p === '*') {
-            return route.name;
+            return '';
           }
 
           // If the path has a pattern for a param, put the param in the path
@@ -196,7 +195,8 @@ export default function getPathFromState<ParamList extends {}>(
               return '';
             }
 
-            return encodeURIComponent(value);
+            // Prevent `encodeURIComponent(undefined)` -> 'undefined'
+            return value ? encodeURIComponent(value) : '';
           }
 
           return encodeURIComponent(p);
