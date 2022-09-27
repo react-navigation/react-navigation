@@ -21,6 +21,7 @@
   "scripts": {
     "lint": "flipper-pkg lint",
     "prepack": "flipper-pkg lint && flipper-pkg bundle",
+    "clean": "del dist",
     "build": "flipper-pkg bundle",
     "watch": "flipper-pkg bundle --watch",
     "test": "jest --no-watchman"
@@ -43,6 +44,7 @@
     "@types/react-virtualized-auto-sizer": "^1.0.1",
     "@types/react-window": "^1.8.5",
     "antd": "^4.16.1",
+    "del-cli": "^3.0.1",
     "flipper": "^0.112.0",
     "flipper-pkg": "^0.112.0",
     "flipper-plugin": "^0.112.0",
