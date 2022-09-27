@@ -24,6 +24,7 @@
     "build": "yarn workspaces foreach -v --topological-dev run prepack",
     "publish": "changeset publish",
     "release": "run-s clean build publish",
+    "version": "changeset version && YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn",
     "example": "yarn workspace @react-navigation/example"
   },
   "engines": {
