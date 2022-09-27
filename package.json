@@ -22,7 +22,8 @@
     "test": "jest",
     "clean": "yarn workspaces foreach -p run clean",
     "build": "yarn workspaces foreach -v --topological-dev run prepack",
-    "release": "echo 'TODO: add changesets'",
+    "publish": "changeset publish",
+    "release": "run-s clean build publish",
     "example": "yarn workspace @react-navigation/example"
   },
   "engines": {
@@ -33,6 +34,7 @@
   "devDependencies": {
     "@babel/core": "^7.18.6",
     "@babel/generator": "^7.15.4",
+    "@changesets/cli": "^2.24.4",
     "@commitlint/config-conventional": "^12.1.4",
     "@evilmartians/lefthook": "^1.0.4",
     "@types/jest": "^26.0.23",
