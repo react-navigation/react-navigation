@@ -11,3 +11,5 @@ If this pull request addresses an existing issue, link to the issue. If an issue
 Describe the **steps to test this change** so that a reviewer can verify it. Provide screenshots or videos if the change affects UI.
 
 The change must pass lint, typescript and tests.
+
+Make sure to [add a changeset](https://github.com/changesets/changesets/blob/main/docs/adding-a-changeset.md) (by `yarn changeset`) when the proposed change has an impact on a react-navigation release.
