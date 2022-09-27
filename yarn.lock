@@ -2516,6 +2516,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@changesets/changelog-github@npm:^0.4.6":
+  version: 0.4.6
+  resolution: "@changesets/changelog-github@npm:0.4.6"
+  dependencies:
+    "@changesets/get-github-info": ^0.5.1
+    "@changesets/types": ^5.1.0
+    dotenv: ^8.1.0
+  checksum: f2f729028c08b8950eec1ca871e910eca528ff803d9c5dd31b314b79d06b7972e6af892139c6f02e7d85288e8d371e1729c9b1ccb7f7194387c16751697bcd20
+  languageName: node
+  linkType: hard
+
 "@changesets/cli@npm:^2.24.4":
   version: 2.24.4
   resolution: "@changesets/cli@npm:2.24.4"
@@ -2593,6 +2604,16 @@ __metadata:
     fs-extra: ^7.0.1
     semver: ^5.4.1
   checksum: 0ccde4d7e233fef875447e08219da45eb3cd9b073124b6ce051b35ed3fac89ce2cb185fce41eae1ed2a41aa741cd9f999f5384c5c76086c72c5b5e7609716fd9
+  languageName: node
+  linkType: hard
+
+"@changesets/get-github-info@npm:^0.5.1":
+  version: 0.5.1
+  resolution: "@changesets/get-github-info@npm:0.5.1"
+  dependencies:
+    dataloader: ^1.4.0
+    node-fetch: ^2.5.0
+  checksum: e995274c4f5c021e5a7df0867816b86abeff136746dd91f33feb3368b175c1d1513db81282dc4d89a33cad61cfcc835f676cfa9d694a9c1631af35dad3057c69
   languageName: node
   linkType: hard
 
@@ -10432,6 +10453,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dataloader@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "dataloader@npm:1.4.0"
+  checksum: e2c93d43afde68980efc0cd9ff48e9851116e27a9687f863e02b56d46f7e7868cc762cd6dcbaf4197e1ca850a03651510c165c2ae24b8e9843fd894002ad0e20
+  languageName: node
+  linkType: hard
+
 "date-fns@npm:2.x":
   version: 2.28.0
   resolution: "date-fns@npm:2.28.0"
@@ -11166,6 +11194,13 @@ __metadata:
   dependencies:
     is-obj: ^2.0.0
   checksum: d5775790093c234ef4bfd5fbe40884ff7e6c87573e5339432870616331189f7f5d86575c5b5af2dcf0f61172990f4f734d07844b1f23482fff09e3c4bead05ea
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^8.1.0":
+  version: 8.6.0
+  resolution: "dotenv@npm:8.6.0"
+  checksum: 38e902c80b0666ab59e9310a3d24ed237029a7ce34d976796349765ac96b8d769f6df19090f1f471b77a25ca391971efde8a1ea63bb83111bd8bec8e5cc9b2cd
   languageName: node
   linkType: hard
 
@@ -19138,7 +19173,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:2.6.7, node-fetch@npm:^2.2.0, node-fetch@npm:^2.6.0, node-fetch@npm:^2.6.1, node-fetch@npm:^2.6.7":
+"node-fetch@npm:2.6.7, node-fetch@npm:^2.2.0, node-fetch@npm:^2.5.0, node-fetch@npm:^2.6.0, node-fetch@npm:^2.6.1, node-fetch@npm:^2.6.7":
   version: 2.6.7
   resolution: "node-fetch@npm:2.6.7"
   dependencies:
@@ -23806,6 +23841,7 @@ __metadata:
   dependencies:
     "@babel/core": ^7.18.6
     "@babel/generator": ^7.15.4
+    "@changesets/changelog-github": ^0.4.6
     "@changesets/cli": ^2.24.4
     "@commitlint/config-conventional": ^12.1.4
     "@evilmartians/lefthook": ^1.0.4

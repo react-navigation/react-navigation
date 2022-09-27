@@ -35,6 +35,7 @@
   "devDependencies": {
     "@babel/core": "^7.18.6",
     "@babel/generator": "^7.15.4",
+    "@changesets/changelog-github": "^0.4.6",
     "@changesets/cli": "^2.24.4",
     "@commitlint/config-conventional": "^12.1.4",
     "@evilmartians/lefthook": "^1.0.4",
