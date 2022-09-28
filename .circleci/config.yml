@@ -3,7 +3,7 @@ version: 2.1
 executors:
   default:
     docker:
-      - image: circleci/node:14
+      - image: cimg/node:16.17
     working_directory: ~/project
     environment:
       YARN_GLOBAL_FOLDER: '~/.yarn/berry/cache'
