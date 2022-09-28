@@ -5,6 +5,8 @@ executors:
     docker:
       - image: circleci/node:14
     working_directory: ~/project
+    environment:
+      YARN_GLOBAL_FOLDER: '~/.yarn/berry/cache'
 
   playwright:
     docker:
@@ -35,6 +37,8 @@ jobs:
       - save_cache:
           key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
+            - ~/.yarn/berry/cache
+            - ~/.yarn/cache
             - .yarn/cache
       - persist_to_workspace:
           root: .
