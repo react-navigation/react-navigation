@@ -5,14 +5,12 @@ executors:
     docker:
       - image: circleci/node:14
     working_directory: ~/project
-    environment:
-      YARN_GLOBAL_FOLDER: "~/.yarn/global"
 
   playwright:
     docker:
-    - image: mcr.microsoft.com/playwright:focal
-      environment:
-        NODE_ENV: development
+      - image: mcr.microsoft.com/playwright:focal
+        environment:
+          NODE_ENV: development
 
 commands:
   attach_project:
@@ -37,7 +35,7 @@ jobs:
       - save_cache:
           key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
-            - ~/.yarn/global
+            - .yarn/cache
       - persist_to_workspace:
           root: .
           paths:
