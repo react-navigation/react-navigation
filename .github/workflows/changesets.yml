@@ -12,11 +12,20 @@ jobs:
           ref: ${{github.event.pull_request.head.sha}}
           fetch-depth: 0
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: 'yarn'
+
       - name: Use yarn cache
         uses: actions/cache@v3
         id: yarn-cache
         with:
-          path: .yarn/cache
+          path: |
+            '**/node_modules'
+            '.yarn/cache'
+            '.yarn/install-state.gz'
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
