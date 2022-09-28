@@ -5,8 +5,6 @@ executors:
     docker:
       - image: cimg/node:16.17
     working_directory: ~/project
-    environment:
-      YARN_GLOBAL_FOLDER: '~/.yarn/global'
 
   playwright:
     docker:
@@ -37,7 +35,7 @@ jobs:
       - save_cache:
           key: yarn-packages-v2-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
-            - ~/.yarn/global/cache
+            - .yarn/cache
       - persist_to_workspace:
           root: .
           paths:
