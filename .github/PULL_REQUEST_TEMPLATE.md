@@ -12,4 +12,4 @@ Describe the **steps to test this change** so that a reviewer can verify it. Pro
 
 The change must pass lint, typescript and tests.
 
-Make sure to [add a changeset](https://github.com/changesets/changesets/blob/main/docs/adding-a-changeset.md) (by `yarn changeset`) when the proposed change has an impact on a react-navigation release.
+When the proposed change is going to be included in the npm package make sure to [add a changeset](https://github.com/changesets/changesets/blob/main/docs/adding-a-changeset.md) (`yarn changeset`). Documentation and CI improvements need an empty changeset (`yarn changeset --empty`) to satisfy the CI check.
