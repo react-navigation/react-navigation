@@ -97,6 +97,14 @@ jobs:
           name: Verify paths for types
           command: node scripts/check-types-path.js
 
+    changesets:
+      executor: default
+      steps:
+        - attach_project
+        - run:
+            name: Check changesets
+            command: yarn changeset status --since origin/main
+
 workflows:
   build-and-test:
     jobs:
@@ -111,5 +119,8 @@ workflows:
           requires:
             - install-dependencies
       - build-packages:
+          requires:
+            - install-dependencies
+      - changesets:
           requires:
             - install-dependencies
