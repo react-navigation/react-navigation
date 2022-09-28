@@ -28,14 +28,14 @@ jobs:
       - attach_project
       - restore_cache:
           keys:
-            - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            - yarn-packages-v1-{{ .Branch }}-
-            - yarn-packages-v1-
+            - yarn-packages-v2-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - yarn-packages-v2-{{ .Branch }}-
+            - yarn-packages-v2-
       - run:
           name: Install project dependencies
           command: yarn install --immutable
       - save_cache:
-          key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          key: yarn-packages-v2-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
             - ~/.yarn/global/cache
       - persist_to_workspace:
