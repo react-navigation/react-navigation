@@ -14,7 +14,7 @@ If you don't know where to start, check the ones with the label [`good first iss
 
 ## Development workflow
 
-The project uses a monorepo structure for the packages managed by [yarn workspaces](https://yarnpkg.com/lang/en/docs/workspaces/) and [lerna](https://lerna.js.org). To get started with the project, run `yarn` in the root directory to install the required dependencies for each package:
+The project uses a monorepo structure for the packages managed by [yarn workspaces](https://yarnpkg.com/lang/en/docs/workspaces/). To get started with the project, run `yarn` in the root directory to install the required dependencies for each package:
 
 ```sh
 yarn
@@ -104,17 +104,14 @@ When you're sending a pull request:
 - Verify that linters and tests are passing.
 - Review the documentation to make sure it looks good.
 - Follow the pull request template when opening a pull request.
+- Add a changeset when introduced changes will be included in the npm package.
 - For pull requests that change the API or implementation, discuss with maintainers first by opening an issue.
 
 ## Publishing
 
-Maintainers with write access to the GitHub repo and the npm organization can publish new versions. To publish a new version, first, you need to export a `GH_TOKEN` environment variable as mentioned [here](https://github.com/lerna/lerna/tree/master/commands/version#--create-release-type). Then run:
+The release process in react-navigation is fully automated due to the use of `changesets`. Changesets are Markdown files containing information about changes made in pull requests. These files are stored in the `.changeset/` directory and picked up by a bot, which creates a release pull request based on the information contained in them.
 
-```sh
-yarn release
-```
-
-This will automatically bump the version and publish the packages. It'll also publish the changelogs on GitHub for each package.
+Merging of this pull request will automatically bump the version and publish the packages. It'll also publish changelogs on GitHub for each package.
 
 ## Code of Conduct
 
