@@ -5,14 +5,12 @@ executors:
     docker:
       - image: circleci/node:14
     working_directory: ~/project
-    environment:
-      YARN_GLOBAL_FOLDER: "~/.yarn/global"
 
   playwright:
     docker:
-    - image: mcr.microsoft.com/playwright:focal
-      environment:
-        NODE_ENV: development
+      - image: mcr.microsoft.com/playwright:focal
+        environment:
+          NODE_ENV: development
 
 commands:
   attach_project:
@@ -28,16 +26,16 @@ jobs:
       - attach_project
       - restore_cache:
           keys:
-            - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            - yarn-packages-v1-{{ .Branch }}-
-            - yarn-packages-v1-
+            - yarn-packages-v3-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - yarn-packages-v3-{{ .Branch }}-
+            - yarn-packages-v3-
       - run:
           name: Install project dependencies
           command: yarn install --immutable
       - save_cache:
-          key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          key: yarn-packages-v3-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
-            - ~/.yarn/global
+            - ~/.yarn/berry/cache
       - persist_to_workspace:
           root: .
           paths:
