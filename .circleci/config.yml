@@ -26,16 +26,16 @@ jobs:
       - attach_project
       - restore_cache:
           keys:
-            - yarn-packages-test2-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            - yarn-packages-test2-{{ .Branch }}-
-            - yarn-packages-test2-
+            - yarn-packages-test3-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - yarn-packages-test3-{{ .Branch }}-
+            - yarn-packages-test3-
       - run:
           name: Install project dependencies
           command: yarn install --immutable
       - save_cache:
-          key: yarn-packages-test2-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          key: yarn-packages-test3-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
-            - .yarn/berry/cache
+            - ~/.yarn/berry/cache
       - persist_to_workspace:
           root: .
           paths:
