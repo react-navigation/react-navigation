@@ -293,7 +293,8 @@ export default function TabRouter({
     getStateForAction(state, action, { routeParamList }) {
       switch (action.type) {
         case 'JUMP_TO':
-        case 'NAVIGATE': {
+        case 'NAVIGATE':
+        case 'NAVIGATE_DEPRECATED': {
           const index = state.routes.findIndex(
             (route) => route.name === action.payload.name
           );
@@ -372,10 +373,6 @@ export default function TabRouter({
         default:
           return BaseRouter.getStateForAction(state, action);
       }
-    },
-
-    shouldActionChangeFocus(action) {
-      return action.type === 'NAVIGATE';
     },
 
     actionCreators: TabActions,
