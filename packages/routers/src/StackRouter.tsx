@@ -383,6 +383,93 @@ export default function StackRouter(options: StackRouterOptions) {
           };
         }
 
+        case 'NAVIGATE_DEPRECATED': {
+          if (!state.routeNames.includes(action.payload.name)) {
+            return null;
+          }
+
+          // If the route already exists, navigate to that
+          let index = -1;
+
+          const getId = options.routeGetIdList[action.payload.name];
+          const id = getId?.({ params: action.payload.params });
+
+          if (id) {
+            index = state.routes.findIndex(
+              (route) =>
+                route.name === action.payload.name &&
+                id === getId?.({ params: route.params })
+            );
+          } else if (state.routes[state.index].name === action.payload.name) {
+            index = state.index;
+          } else {
+            for (let i = state.routes.length - 1; i >= 0; i--) {
+              if (state.routes[i].name === action.payload.name) {
+                index = i;
+                break;
+              }
+            }
+          }
+
+          if (index === -1) {
+            const routes = [
+              ...state.routes,
+              {
+                key: `${action.payload.name}-${nanoid()}`,
+                name: action.payload.name,
+                params:
+                  routeParamList[action.payload.name] !== undefined
+                    ? {
+                        ...routeParamList[action.payload.name],
+                        ...action.payload.params,
+                      }
+                    : action.payload.params,
+              },
+            ];
+
+            return {
+              ...state,
+              routes,
+              index: routes.length - 1,
+            };
+          }
+
+          const route = state.routes[index];
+
+          let params;
+
+          if (action.payload.merge) {
+            params =
+              action.payload.params !== undefined ||
+              routeParamList[route.name] !== undefined
+                ? {
+                    ...routeParamList[route.name],
+                    ...route.params,
+                    ...action.payload.params,
+                  }
+                : route.params;
+          } else {
+            params =
+              routeParamList[route.name] !== undefined
+                ? {
+                    ...routeParamList[route.name],
+                    ...action.payload.params,
+                  }
+                : action.payload.params;
+          }
+
+          return {
+            ...state,
+            index,
+            routes: [
+              ...state.routes.slice(0, index),
+              params !== route.params
+                ? { ...route, params }
+                : state.routes[index],
+            ],
+          };
+        }
+
         case 'POP': {
           const index =
             action.target === state.key && action.source

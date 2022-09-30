@@ -223,6 +223,46 @@ type NavigationHelpersCommon<
   ): void;
 
   /**
+   * Navigate to a route in current navigation tree.
+   *
+   * @deprecated Use `navigate` instead.
+   *
+   * @param name Route name of the route.
+   * @param [params] Params object for the route.
+   */
+  navigateDeprecated<RouteName extends keyof ParamList>(
+    ...args: // This condition allows us to iterate over a union type
+    // This is to avoid getting a union of all the params from `ParamList[RouteName]`,
+    // which will get our types all mixed up if a union RouteName is passed in.
+    RouteName extends unknown
+      ? // This condition checks if the params are optional,
+        // which means it's either undefined or a union with undefined
+        undefined extends ParamList[RouteName]
+        ?
+            | [screen: RouteName] // if the params are optional, we don't have to provide it
+            | [screen: RouteName, params: ParamList[RouteName]]
+        : [screen: RouteName, params: ParamList[RouteName]]
+      : never
+  ): void;
+
+  /**
+   * Navigate to a route in current navigation tree.
+   *
+   * @deprecated Use `navigate` instead.
+   *
+   * @param route Object with `name` for the route to navigate to, and a `params` object.
+   */
+  navigateDeprecated<RouteName extends keyof ParamList>(
+    options: RouteName extends unknown
+      ? {
+          name: RouteName;
+          params: ParamList[RouteName];
+          merge?: boolean;
+        }
+      : never
+  ): void;
+
+  /**
    * Reset the navigation state to the provided state.
    *
    * @param state Navigation state object.
