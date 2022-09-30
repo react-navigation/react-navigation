@@ -51,6 +51,7 @@ export default function TabView<T extends Route>({
   style,
   swipeEnabled = true,
   tabBarPosition = 'top',
+  animationEnabled = true,
 }: Props<T>) {
   const [layout, setLayout] = React.useState({
     width: 0,
@@ -86,6 +87,7 @@ export default function TabView<T extends Route>({
         onSwipeStart={onSwipeStart}
         onSwipeEnd={onSwipeEnd}
         onIndexChange={jumpToIndex}
+        animationEnabled={animationEnabled}
         style={pagerStyle}
       >
         {({ position, render, addEnterListener, jumpTo }) => {

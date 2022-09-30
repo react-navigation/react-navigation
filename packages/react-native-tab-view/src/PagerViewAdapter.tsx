@@ -41,6 +41,7 @@ export default function PagerViewAdapter<T extends Route>({
   onSwipeEnd,
   children,
   style,
+  animationEnabled,
   ...rest
 }: Props<T>) {
   const { index } = navigationState;
@@ -58,13 +59,21 @@ export default function PagerViewAdapter<T extends Route>({
     navigationStateRef.current = navigationState;
   });
 
-  const jumpTo = React.useCallback((key: string) => {
-    const index = navigationStateRef.current.routes.findIndex(
-      (route: { key: string }) => route.key === key
-    );
+  const jumpTo = React.useCallback(
+    (key: string) => {
+      const index = navigationStateRef.current.routes.findIndex(
+        (route: { key: string }) => route.key === key
+      );
 
-    pagerRef.current?.setPage(index);
-  }, []);
+      if (animationEnabled) {
+        pagerRef.current?.setPage(index);
+      } else {
+        pagerRef.current?.setPageWithoutAnimation(index);
+        position.setValue(index);
+      }
+    },
+    [animationEnabled, position]
+  );
 
   React.useEffect(() => {
     if (keyboardDismissMode === 'auto') {
@@ -72,9 +81,14 @@ export default function PagerViewAdapter<T extends Route>({
     }
 
     if (indexRef.current !== index) {
-      pagerRef.current?.setPage(index);
+      if (animationEnabled) {
+        pagerRef.current?.setPage(index);
+      } else {
+        pagerRef.current?.setPageWithoutAnimation(index);
+        position.setValue(index);
+      }
     }
-  }, [keyboardDismissMode, index]);
+  }, [keyboardDismissMode, index, animationEnabled, position]);
 
   const onPageScrollStateChanged = (
     state: PageScrollStateChangedNativeEvent

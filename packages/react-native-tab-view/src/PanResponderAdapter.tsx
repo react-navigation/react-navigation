@@ -58,6 +58,7 @@ export default function PanResponderAdapter<T extends Route>({
   onSwipeEnd,
   children,
   style,
+  animationEnabled = false,
 }: Props<T>) {
   const { routes, index } = navigationState;
 
@@ -76,27 +77,32 @@ export default function PanResponderAdapter<T extends Route>({
   const swipeDistanceThreshold = layout.width / 1.75;
 
   const jumpToIndex = React.useCallback(
-    (index: number) => {
+    (index: number, animate = animationEnabled) => {
       const offset = -index * layoutRef.current.width;
 
       const { timing, ...transitionConfig } = DefaultTransitionSpec;
 
-      Animated.parallel([
-        timing(panX, {
-          ...transitionConfig,
-          toValue: offset,
-          useNativeDriver: false,
-        }),
-      ]).start(({ finished }) => {
-        if (finished) {
-          onIndexChangeRef.current(index);
-          pendingIndexRef.current = undefined;
-        }
-      });
-
-      pendingIndexRef.current = index;
+      if (animate) {
+        Animated.parallel([
+          timing(panX, {
+            ...transitionConfig,
+            toValue: offset,
+            useNativeDriver: false,
+          }),
+        ]).start(({ finished }) => {
+          if (finished) {
+            onIndexChangeRef.current(index);
+            pendingIndexRef.current = undefined;
+          }
+        });
+        pendingIndexRef.current = index;
+      } else {
+        panX.setValue(offset);
+        onIndexChangeRef.current(index);
+        pendingIndexRef.current = undefined;
+      }
     },
-    [panX]
+    [animationEnabled, panX]
   );
 
   React.useEffect(() => {
@@ -230,7 +236,7 @@ export default function PanResponderAdapter<T extends Route>({
       nextIndex = currentIndex;
     }
 
-    jumpToIndex(nextIndex);
+    jumpToIndex(nextIndex, true);
   };
 
   // TODO: use the listeners

@@ -308,6 +308,10 @@ String indicating whether the keyboard gets dismissed in response to a drag gest
 
 Boolean indicating whether to enable swipe gestures. Swipe gestures are enabled by default. Passing `false` will disable swipe gestures, but the user can still switch tabs by pressing the tab bar.
 
+#### `animationEnabled`
+
+Enables animation when changing tab. By default it's true.
+
 ##### `onSwipeStart`
 
 Callback which is called when the swipe gesture starts, i.e. the user touches the screen and moves it.
