@@ -10,7 +10,9 @@ import useNavigation from '../useNavigation';
 import useNavigationBuilder from '../useNavigationBuilder';
 import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
 
-beforeEach(() => (MockRouterKey.current = 0));
+beforeEach(() => {
+  MockRouterKey.current = 0;
+});
 
 it('initializes state for a navigator on navigation', () => {
   const TestNavigator = (props: any) => {

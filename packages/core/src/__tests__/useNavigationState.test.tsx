@@ -6,7 +6,11 @@ import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
 import useNavigationBuilder from '../useNavigationBuilder';
 import useNavigationState from '../useNavigationState';
-import MockRouter from './__fixtures__/MockRouter';
+import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
+
+beforeEach(() => {
+  MockRouterKey.current = 0;
+});
 
 it('gets the current navigation state', () => {
   const TestNavigator = (props: any): any => {

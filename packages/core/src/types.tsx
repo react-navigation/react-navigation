@@ -344,6 +344,16 @@ export type NavigationContainerProps = {
    */
   onUnhandledAction?: (action: NavigationAction) => void;
   /**
+   * Whether child navigator should handle a navigation action.
+   * The child navigator needs to be mounted before it can handle the action.
+   * Defaults to `false`.
+   *
+   * This will be removed in the next major release.
+   *
+   * @deprecated Use nested navigation API instead
+   */
+  navigationInChildEnabled?: boolean;
+  /**
    * Whether this navigation container should be independent of parent containers.
    * If this is not set to `true`, this container cannot be nested inside another container.
    * Setting it to `true` disconnects any children navigators from parent container.
