@@ -14,21 +14,18 @@ const COVERS = [
   require('../../assets/album-art-8.jpg'),
 ];
 
-export default class Albums extends React.Component {
-  render() {
-    return (
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.content}
-      >
-        {COVERS.map((source, i) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <Image key={i} source={source} style={styles.cover} />
-        ))}
-      </ScrollView>
-    );
-  }
-}
+const Albums = () => {
+  return (
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      {COVERS.map((source, i) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <Image key={i} source={source} style={styles.cover} />
+      ))}
+    </ScrollView>
+  );
+};
+
+export default Albums;
 
 const styles = StyleSheet.create({
   container: {

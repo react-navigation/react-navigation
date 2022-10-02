@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  ListRenderItemInfo,
+} from 'react-native';
 
 type Item = { name: string; number: number };
 
@@ -56,46 +62,45 @@ const CONTACTS: Item[] = [
   { name: 'Vincent Sandoval', number: 2606111495 },
 ];
 
-class ContactItem extends React.PureComponent<{
-  item: { name: string; number: number };
-}> {
-  render() {
-    const { item } = this.props;
-
-    return (
-      <View style={styles.item}>
-        <View style={styles.avatar}>
-          <Text style={styles.letter}>
-            {item.name.slice(0, 1).toUpperCase()}
-          </Text>
-        </View>
-        <View style={styles.details}>
-          <Text style={styles.name}>{item.name}</Text>
-          <Text style={styles.number}>{item.number}</Text>
-        </View>
+const ContactItem = ({ item: { name, number } }: { item: Item }) => {
+  return (
+    <View style={styles.item}>
+      <View style={styles.avatar}>
+        <Text style={styles.letter}>{name.slice(0, 1).toUpperCase()}</Text>
       </View>
-    );
-  }
-}
+      <View style={styles.details}>
+        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.number}>{number}</Text>
+      </View>
+    </View>
+  );
+};
 
-export default class Contacts extends React.Component {
-  private renderItem = ({ item }: { item: Item }) => (
-    <ContactItem item={item} />
+const Contacts = () => {
+  const renderItem = React.useCallback(({ item }: ListRenderItemInfo<Item>) => {
+    return <ContactItem item={item} />;
+  }, []);
+
+  const keyExtractor = React.useCallback(
+    ({ number }: Item) => number.toString(),
+    []
   );
 
-  private ItemSeparator = () => <View style={styles.separator} />;
+  const ItemSeparator = React.useCallback(() => {
+    return <View style={styles.separator} />;
+  }, []);
 
-  render() {
-    return (
-      <FlatList
-        data={CONTACTS}
-        keyExtractor={(_, i) => String(i)}
-        renderItem={this.renderItem}
-        ItemSeparatorComponent={this.ItemSeparator}
-      />
-    );
-  }
-}
+  return (
+    <FlatList
+      data={CONTACTS}
+      keyExtractor={keyExtractor}
+      renderItem={renderItem}
+      ItemSeparatorComponent={ItemSeparator}
+    />
+  );
+};
+
+export default Contacts;
 
 const styles = StyleSheet.create({
   item: {

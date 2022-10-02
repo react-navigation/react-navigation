@@ -15,52 +15,51 @@ const MESSAGES = [
   'make me a sandwich',
 ];
 
-export default class Chat extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <ScrollView
-          style={styles.inverted}
-          contentContainerStyle={styles.content}
-        >
-          {MESSAGES.map((text, i) => {
-            const odd = i % 2;
+const Chat = () => {
+  return (
+    <View style={styles.container}>
+      <ScrollView
+        style={styles.inverted}
+        contentContainerStyle={styles.content}
+      >
+        {MESSAGES.map((text, i) => {
+          const odd = i % 2;
 
-            return (
+          return (
+            <View
+              // eslint-disable-next-line react/no-array-index-key
+              key={i}
+              style={[odd ? styles.odd : styles.even, styles.inverted]}
+            >
+              <Image
+                style={styles.avatar}
+                source={
+                  odd
+                    ? require('../../assets/avatar-2.png')
+                    : require('../../assets/avatar-1.png')
+                }
+              />
               <View
-                // eslint-disable-next-line react/no-array-index-key
-                key={i}
-                style={[odd ? styles.odd : styles.even, styles.inverted]}
+                style={[styles.bubble, odd ? styles.received : styles.sent]}
               >
-                <Image
-                  style={styles.avatar}
-                  source={
-                    odd
-                      ? require('../../assets/avatar-2.png')
-                      : require('../../assets/avatar-1.png')
-                  }
-                />
-                <View
-                  style={[styles.bubble, odd ? styles.received : styles.sent]}
-                >
-                  <Text style={odd ? styles.receivedText : styles.sentText}>
-                    {text}
-                  </Text>
-                </View>
+                <Text style={odd ? styles.receivedText : styles.sentText}>
+                  {text}
+                </Text>
               </View>
-            );
-          })}
-        </ScrollView>
-        <TextInput
-          style={styles.input}
-          placeholder="Write a message"
-          underlineColorAndroid="transparent"
-        />
-      </View>
-    );
-  }
-}
+            </View>
+          );
+        })}
+      </ScrollView>
+      <TextInput
+        style={styles.input}
+        placeholder="Write a message"
+        underlineColorAndroid="transparent"
+      />
+    </View>
+  );
+};
 
+export default Chat;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
