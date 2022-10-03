@@ -11,6 +11,7 @@ import * as React from 'react';
 
 import BaseNavigationContainer from '../BaseNavigationContainer';
 import createNavigationContainerRef from '../createNavigationContainerRef';
+import NavigationIndependentTree from '../NavigationIndependentTree';
 import NavigationStateContext from '../NavigationStateContext';
 import Screen from '../Screen';
 import useNavigationBuilder from '../useNavigationBuilder';
@@ -77,9 +78,11 @@ it('throws when nesting containers', () => {
   expect(() =>
     render(
       <BaseNavigationContainer>
-        <BaseNavigationContainer independent>
-          <React.Fragment />
-        </BaseNavigationContainer>
+        <NavigationIndependentTree>
+          <BaseNavigationContainer>
+            <React.Fragment />
+          </BaseNavigationContainer>
+        </NavigationIndependentTree>
       </BaseNavigationContainer>
     )
   ).not.toThrowError(
@@ -780,16 +783,14 @@ it('works with state change events in independent nested container', () => {
       <TestNavigator>
         <Screen name="foo">
           {() => (
-            <BaseNavigationContainer
-              independent
-              ref={ref}
-              onStateChange={onStateChange}
-            >
-              <TestNavigator>
-                <Screen name="qux">{() => null}</Screen>
-                <Screen name="lex">{() => null}</Screen>
-              </TestNavigator>
-            </BaseNavigationContainer>
+            <NavigationIndependentTree>
+              <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+                <TestNavigator>
+                  <Screen name="qux">{() => null}</Screen>
+                  <Screen name="lex">{() => null}</Screen>
+                </TestNavigator>
+              </BaseNavigationContainer>
+            </NavigationIndependentTree>
           )}
         </Screen>
         <Screen name="bar">{() => null}</Screen>

@@ -354,12 +354,6 @@ export type NavigationContainerProps = {
    */
   navigationInChildEnabled?: boolean;
   /**
-   * Whether this navigation container should be independent of parent containers.
-   * If this is not set to `true`, this container cannot be nested inside another container.
-   * Setting it to `true` disconnects any children navigators from parent container.
-   */
-  independent?: boolean;
-  /**
    * Children elements to render.
    */
   children: React.ReactNode;

@@ -3,6 +3,7 @@ import {
   getStateFromPath as getStateFromPathDefault,
   NavigationContainerRef,
   ParamListBase,
+  useNavigationIndependentTree,
 } from '@react-navigation/core';
 import * as React from 'react';
 import { Linking, Platform } from 'react-native';
@@ -12,16 +13,13 @@ import type { LinkingOptions } from './types';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
-type Options = LinkingOptions<ParamListBase> & {
-  independent?: boolean;
-};
+type Options = LinkingOptions<ParamListBase>;
 
 let linkingHandlers: Symbol[] = [];
 
 export default function useLinking(
   ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
   {
-    independent,
     enabled = true,
     prefixes,
     filter,
@@ -58,6 +56,8 @@ export default function useLinking(
     getActionFromState = getActionFromStateDefault,
   }: Options
 ) {
+  const independent = useNavigationIndependentTree();
+
   React.useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
       return undefined;

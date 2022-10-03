@@ -18,8 +18,7 @@ import EnsureSingleNavigator from './EnsureSingleNavigator';
 import findFocusedRoute from './findFocusedRoute';
 import NavigationBuilderContext from './NavigationBuilderContext';
 import NavigationContainerRefContext from './NavigationContainerRefContext';
-import NavigationContext from './NavigationContext';
-import NavigationRouteContext from './NavigationRouteContext';
+import NavigationIndependentTreeContext from './NavigationIndependentTreeContext';
 import NavigationStateContext from './NavigationStateContext';
 import type {
   NavigationContainerEventMap,
@@ -30,6 +29,7 @@ import UnhandledActionContext from './UnhandledActionContext';
 import useChildListeners from './useChildListeners';
 import useEventEmitter from './useEventEmitter';
 import useKeyedChildListeners from './useKeyedChildListeners';
+import useNavigationIndependentTree from './useNavigationIndependentTree';
 import useOptionsGetters from './useOptionsGetters';
 import { ScheduleUpdateContext } from './useScheduleUpdate';
 import useSyncState from './useSyncState';
@@ -88,16 +88,16 @@ const BaseNavigationContainer = React.forwardRef(
       onReady,
       onUnhandledAction,
       navigationInChildEnabled = false,
-      independent,
       children,
     }: NavigationContainerProps,
     ref?: React.Ref<NavigationContainerRef<ParamListBase>>
   ) {
     const parent = React.useContext(NavigationStateContext);
+    const independent = useNavigationIndependentTree();
 
     if (!parent.isDefault && !independent) {
       throw new Error(
-        "Looks like you have nested a 'NavigationContainer' inside another. Normally you need only one container at the root of the app, so this was probably an error. If this was intentional, pass 'independent={true}' explicitly. Note that this will make the child navigators disconnected from the parent and you won't be able to navigate between them."
+        "Looks like you have nested a 'NavigationContainer' inside another. Normally you need only one container at the root of the app, so this was probably an error. If this was intentional, wrap the container in 'NavigationIndependentTree' explicitly. Note that this will make the child navigators disconnected from the parent and you won't be able to navigate between them."
       );
     }
 
@@ -430,38 +430,27 @@ const BaseNavigationContainer = React.forwardRef(
       }
     );
 
-    let element = (
-      <NavigationContainerRefContext.Provider value={navigation}>
-        <ScheduleUpdateContext.Provider value={scheduleContext}>
-          <NavigationBuilderContext.Provider value={builderContext}>
-            <NavigationStateContext.Provider value={context}>
-              <UnhandledActionContext.Provider
-                value={onUnhandledAction ?? defaultOnUnhandledAction}
-              >
-                <DeprecatedNavigationInChildContext.Provider
-                  value={navigationInChildEnabled}
+    return (
+      <NavigationIndependentTreeContext.Provider value={false}>
+        <NavigationContainerRefContext.Provider value={navigation}>
+          <ScheduleUpdateContext.Provider value={scheduleContext}>
+            <NavigationBuilderContext.Provider value={builderContext}>
+              <NavigationStateContext.Provider value={context}>
+                <UnhandledActionContext.Provider
+                  value={onUnhandledAction ?? defaultOnUnhandledAction}
                 >
-                  <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
-                </DeprecatedNavigationInChildContext.Provider>
-              </UnhandledActionContext.Provider>
-            </NavigationStateContext.Provider>
-          </NavigationBuilderContext.Provider>
-        </ScheduleUpdateContext.Provider>
-      </NavigationContainerRefContext.Provider>
+                  <DeprecatedNavigationInChildContext.Provider
+                    value={navigationInChildEnabled}
+                  >
+                    <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
+                  </DeprecatedNavigationInChildContext.Provider>
+                </UnhandledActionContext.Provider>
+              </NavigationStateContext.Provider>
+            </NavigationBuilderContext.Provider>
+          </ScheduleUpdateContext.Provider>
+        </NavigationContainerRefContext.Provider>
+      </NavigationIndependentTreeContext.Provider>
     );
-
-    if (independent) {
-      // We need to clear any existing contexts for nested independent container to work correctly
-      element = (
-        <NavigationRouteContext.Provider value={undefined}>
-          <NavigationContext.Provider value={undefined}>
-            {element}
-          </NavigationContext.Provider>
-        </NavigationRouteContext.Provider>
-      );
-    }
-
-    return element;
   }
 );
 
