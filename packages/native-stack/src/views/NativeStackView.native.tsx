@@ -147,6 +147,7 @@ const SceneView = ({
     header,
     headerBackButtonMenuEnabled,
     headerShown,
+    headerTransparent,
     autoHideHomeIndicator,
     navigationBarColor,
     navigationBarHidden,
@@ -294,6 +295,7 @@ const SceneView = ({
                   onLayout={(e) => {
                     setCustomHeaderHeight(e.nativeEvent.layout.height);
                   }}
+                  style={headerTransparent ? styles.absolute : null}
                 >
                   {header({
                     back: headerBack,
@@ -432,5 +434,12 @@ export default function NativeStackView(props: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  absolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1,
   },
 });
