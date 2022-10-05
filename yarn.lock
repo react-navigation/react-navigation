@@ -5989,7 +5989,6 @@ __metadata:
     react-native-safe-area-context: 4.3.1
     react-native-screens: ~3.15.0
     typescript: ^4.7.4
-    warn-once: ^0.1.0
   peerDependencies:
     "@react-navigation/native": ^6.0.0
     react: "*"
@@ -6063,7 +6062,6 @@ __metadata:
     react-native-safe-area-context: 4.3.1
     react-native-screens: ~3.15.0
     typescript: ^4.7.4
-    warn-once: ^0.1.0
   peerDependencies:
     "@react-navigation/native": ^6.0.0
     react: "*"
@@ -6201,7 +6199,6 @@ __metadata:
     react-native-pager-view: 5.4.24
     react-native-tab-view: ^3.1.1
     typescript: ^4.7.4
-    warn-once: ^0.1.0
   peerDependencies:
     "@react-navigation/native": ^6.0.0
     react: "*"
@@ -6290,7 +6287,6 @@ __metadata:
     react-native-safe-area-context: 4.3.1
     react-native-screens: ~3.15.0
     typescript: ^4.7.4
-    warn-once: ^0.1.0
   peerDependencies:
     "@react-navigation/native": ^6.0.0
     react: "*"
