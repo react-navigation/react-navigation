@@ -6,6 +6,7 @@ import type {
   ParamListBase,
   PartialState,
   Route,
+  RouterConfigOptions,
 } from '@react-navigation/routers';
 import type * as React from 'react';
 
@@ -308,6 +309,13 @@ type NavigationHelpersCommon<
    * Note that this method doesn't re-render screen when the result changes. So don't use it in `render`.
    */
   getState(): State;
+
+  /**
+   * Schedules a route names change after conditional rendering.
+   *
+   * @param state State object to update.
+   */
+  setStateForNextRouteNamesChange(state: State): State;
 } & PrivateValueStore<[ParamList, unknown, unknown]>;
 
 export type NavigationHelpers<

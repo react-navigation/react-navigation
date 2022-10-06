@@ -10,6 +10,7 @@ import {
   RouterConfigOptions,
   RouterFactory,
 } from '@react-navigation/routers';
+import { nanoid } from 'nanoid/non-secure';
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
 
@@ -435,6 +436,51 @@ export default function useNavigationBuilder<
       ? (currentState as State)
       : (initializedState as State);
 
+  // TODO: handle drawer too
+  const setStateForNextRouteNamesChange = React.useCallback(
+    (prevState: State) => {
+      const routeKeyChanges = Object.keys(routeKeyList).filter(
+        (name) =>
+          previousRouteKeyList.hasOwnProperty(name) &&
+          routeKeyList[name] !== previousRouteKeyList[name]
+      );
+
+      const routes = prevState.routes.filter(
+        (route) =>
+          routeNames.includes(route.name) &&
+          !routeKeyChanges.includes(route.name)
+      );
+
+      if (routes.length === 0) {
+        const initialRouteName =
+          options.initialRouteName !== undefined &&
+          routeNames.includes(options.initialRouteName)
+            ? options.initialRouteName
+            : routeNames[0];
+
+        routes.push({
+          key: `${initialRouteName}-${nanoid()}`,
+          name: initialRouteName,
+          params: routeParamList[initialRouteName],
+        });
+      }
+
+      return {
+        ...prevState,
+        routeNames,
+        routes,
+        index: Math.min(prevState.index, routes.length - 1),
+      };
+    },
+    [
+      options.initialRouteName,
+      previousRouteKeyList,
+      routeKeyList,
+      routeNames,
+      routeParamList,
+    ]
+  );
+
   let nextState: State = state;
 
   if (
@@ -442,16 +488,17 @@ export default function useNavigationBuilder<
     !isRecordEqual(routeKeyList, previousRouteKeyList)
   ) {
     // When the list of route names change, the router should handle it to remove invalid routes
-    nextState = router.getStateForRouteNamesChange(state, {
-      routeNames,
-      routeParamList,
-      routeGetIdList,
-      routeKeyChanges: Object.keys(routeKeyList).filter(
-        (name) =>
-          previousRouteKeyList.hasOwnProperty(name) &&
-          routeKeyList[name] !== previousRouteKeyList[name]
-      ),
-    });
+    // nextState = router.getStateForRouteNamesChange(state, {
+    //   routeNames,
+    //   routeParamList,
+    //   routeGetIdList,
+    //   routeKeyChanges: Object.keys(routeKeyList).filter(
+    //     (name) =>
+    //       previousRouteKeyList.hasOwnProperty(name) &&
+    //       routeKeyList[name] !== previousRouteKeyList[name]
+    //   ),
+    // });
+    nextState = setStateForNextRouteNamesChange(state);
   }
 
   const previousNestedParamsRef = React.useRef(route?.params);
@@ -641,7 +688,7 @@ export default function useNavigationBuilder<
     setState,
   });
 
-  const navigation = useNavigationHelpers<
+  let navigation = useNavigationHelpers<
     State,
     ActionHelpers,
     NavigationAction,
@@ -653,6 +700,8 @@ export default function useNavigationBuilder<
     emitter,
     router,
   });
+
+  navigation = { ...navigation, setStateForNextRouteNamesChange };
 
   useFocusedListenersChildrenAdapter({
     navigation,
