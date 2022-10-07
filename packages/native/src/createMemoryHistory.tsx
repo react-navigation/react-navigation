@@ -84,7 +84,7 @@ export default function createMemoryHistory() {
 
       const id = window.history.state?.id ?? nanoid();
 
-      let index = items.findIndex(item => item.id === id)
+      let index = items.findIndex((item) => item.id === id);
       if (!items.length || index < 0) {
         // There are two scenarios for creating an array with only one history record:
         // - When loaded id not found in the items array, this function by default will replace
