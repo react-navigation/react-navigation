@@ -11,10 +11,8 @@ import {
   useNavigationBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
-import warnOnce from 'warn-once';
 
 import type {
-  StackHeaderMode,
   StackNavigationConfig,
   StackNavigationEventMap,
   StackNavigationOptions,
@@ -38,42 +36,6 @@ function StackNavigator({
   screenOptions,
   ...rest
 }: Props) {
-  // @ts-expect-error: mode is deprecated
-  const mode = rest.mode as 'card' | 'modal' | undefined;
-
-  warnOnce(
-    mode != null,
-    `Stack Navigator: 'mode="${mode}"' is deprecated. Use 'presentation: "${mode}"' in 'screenOptions' instead.\n\nSee https://reactnavigation.org/docs/stack-navigator#presentation for more details.`
-  );
-
-  // @ts-expect-error: headerMode='none' is deprecated
-  const headerMode = rest.headerMode as StackHeaderMode | 'none' | undefined;
-
-  warnOnce(
-    headerMode === 'none',
-    `Stack Navigator: 'headerMode="none"' is deprecated. Use 'headerShown: false' in 'screenOptions' instead.\n\nSee https://reactnavigation.org/docs/stack-navigator/#headershown for more details.`
-  );
-
-  warnOnce(
-    headerMode != null && headerMode !== 'none',
-    `Stack Navigator: 'headerMode' is moved to 'options'. Moved it to 'screenOptions' to keep current behavior.\n\nSee https://reactnavigation.org/docs/stack-navigator/#headermode for more details.`
-  );
-
-  // @ts-expect-error: headerMode='none' is deprecated
-  const keyboardHandlingEnabled = rest.keyboardHandlingEnabled;
-
-  warnOnce(
-    keyboardHandlingEnabled !== undefined,
-    `Stack Navigator: 'keyboardHandlingEnabled' is moved to 'options'. Moved it to 'screenOptions' to keep current behavior.\n\nSee https://reactnavigation.org/docs/stack-navigator/#keyboardhandlingenabled for more details.`
-  );
-
-  const defaultScreenOptions: StackNavigationOptions = {
-    presentation: mode,
-    headerShown: headerMode ? headerMode !== 'none' : true,
-    headerMode: headerMode && headerMode !== 'none' ? headerMode : undefined,
-    keyboardHandlingEnabled,
-  };
-
   const { state, descriptors, navigation, NavigationContent } =
     useNavigationBuilder<
       StackNavigationState<ParamListBase>,
@@ -87,7 +49,6 @@ function StackNavigator({
       children,
       screenListeners,
       screenOptions,
-      defaultScreenOptions,
     });
 
   React.useEffect(
