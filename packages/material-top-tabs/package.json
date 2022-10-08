@@ -41,8 +41,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "color": "^4.2.3",
-    "warn-once": "^0.1.0"
+    "color": "^4.2.3"
   },
   "devDependencies": {
     "@react-navigation/native": "workspace:^",
