@@ -84,13 +84,10 @@ export default function createMemoryHistory() {
 
       const id = window.history.state?.id ?? nanoid();
 
-      if (!items.length || items.findIndex((item) => item.id === id) < 0) {
-        // There are two scenarios for creating an array with only one history record:
-        // - When loaded id not found in the items array, this function by default will replace
-        //   the first item. We need to keep only the new updated object, otherwise it will break
-        //   the page when navigating forward in history.
-        // - This is the first time any state modifications are done
-        //   So we need to push the entry as there's nothing to replace
+      // Re-calculate the *true* index here instead of relying on the existing index to be correct
+      let index = items.findIndex((item) => item.id === id);
+
+      if (!items.length || index < 0) {
         items = [{ path, state, id }];
         index = 0;
       } else {

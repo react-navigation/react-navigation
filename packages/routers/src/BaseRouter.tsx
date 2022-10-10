@@ -37,10 +37,11 @@ const BaseRouter = {
 
       case 'RESET': {
         const nextState = action.payload as State | PartialState<State>;
+        const routes = nextState?.routes || [];
 
         if (
-          nextState.routes.length === 0 ||
-          nextState.routes.some(
+          routes.length === 0 ||
+          routes.some(
             (route: { name: string }) => !state.routeNames.includes(route.name)
           )
         ) {

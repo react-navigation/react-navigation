@@ -84,6 +84,15 @@ it('resets state to new state with RESET', () => {
   expect(result).toEqual({ index: 0, routes });
 });
 
+it('handle RESET with undefined payload', () => {
+  const result = BaseRouter.getStateForAction(
+    STATE,
+    CommonActions.reset(undefined)
+  );
+
+  expect(result).toBeNull();
+});
+
 it('adds keys to routes missing keys during RESET', () => {
   const result = BaseRouter.getStateForAction(
     STATE,

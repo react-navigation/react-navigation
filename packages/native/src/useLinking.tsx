@@ -269,11 +269,10 @@ export default function useLinking(
           navigation.resetRoot(state);
         }
       } else {
-        // if current path didn't return any state, we should revert to initial state
-        navigation.resetRoot(state);
+        getInitialState().then(navigation.resetRoot);
       }
     });
-  }, [enabled, history, ref]);
+  }, [enabled, history, ref, getInitialState]);
 
   React.useEffect(() => {
     if (!enabled) {
