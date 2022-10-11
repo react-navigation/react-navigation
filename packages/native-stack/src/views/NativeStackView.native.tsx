@@ -147,6 +147,7 @@ const SceneView = ({
     header,
     headerBackButtonMenuEnabled,
     headerShown,
+    headerTransparent,
     autoHideHomeIndicator,
     navigationBarColor,
     navigationBarHidden,
@@ -289,50 +290,59 @@ const SceneView = ({
                 headerShown !== false ? headerHeight : parentHeaderHeight ?? 0
               }
             >
-              {header !== undefined && headerShown !== false ? (
-                <View
-                  onLayout={(e) => {
-                    setCustomHeaderHeight(e.nativeEvent.layout.height);
-                  }}
-                >
-                  {header({
-                    back: headerBack,
-                    options,
-                    route,
-                    navigation,
-                  })}
-                </View>
-              ) : (
-                <HeaderConfig
-                  {...options}
-                  route={route}
-                  headerBackButtonMenuEnabled={
-                    isRemovePrevented !== undefined
-                      ? !isRemovePrevented
-                      : headerBackButtonMenuEnabled
-                  }
-                  headerShown={headerShown}
-                  headerHeight={headerHeight}
-                  headerBackTitle={
-                    options.headerBackTitle !== undefined
-                      ? options.headerBackTitle
-                      : undefined
-                  }
-                  headerTopInsetEnabled={headerTopInsetEnabled}
-                  canGoBack={headerBack !== undefined}
-                />
-              )}
-              <MaybeNestedStack
-                options={options}
+              {/**
+               * `HeaderConfig` needs to be the direct child of `Screen` without any intermediate `View`
+               * We don't render it conditionally to make it possible to dynamically render a custom `header`
+               * Otherwise dynamically rendering a custom `header` leaves the native header visible
+               *
+               * https://github.com/software-mansion/react-native-screens/blob/main/guides/GUIDE_FOR_LIBRARY_AUTHORS.md#screenstackheaderconfig
+               */}
+              <HeaderConfig
+                {...options}
                 route={route}
-                presentation={presentation}
+                headerBackButtonMenuEnabled={
+                  isRemovePrevented !== undefined
+                    ? !isRemovePrevented
+                    : headerBackButtonMenuEnabled
+                }
+                headerShown={header !== undefined ? false : headerShown}
                 headerHeight={headerHeight}
+                headerBackTitle={
+                  options.headerBackTitle !== undefined
+                    ? options.headerBackTitle
+                    : undefined
+                }
                 headerTopInsetEnabled={headerTopInsetEnabled}
-              >
-                <HeaderBackContext.Provider value={headerBack}>
-                  {render()}
-                </HeaderBackContext.Provider>
-              </MaybeNestedStack>
+                canGoBack={headerBack !== undefined}
+              />
+              <View style={styles.scene}>
+                <MaybeNestedStack
+                  options={options}
+                  route={route}
+                  presentation={presentation}
+                  headerHeight={headerHeight}
+                  headerTopInsetEnabled={headerTopInsetEnabled}
+                >
+                  <HeaderBackContext.Provider value={headerBack}>
+                    {render()}
+                  </HeaderBackContext.Provider>
+                </MaybeNestedStack>
+                {header !== undefined && headerShown !== false ? (
+                  <View
+                    onLayout={(e) => {
+                      setCustomHeaderHeight(e.nativeEvent.layout.height);
+                    }}
+                    style={headerTransparent ? styles.absolute : null}
+                  >
+                    {header({
+                      back: headerBack,
+                      options,
+                      route,
+                      navigation,
+                    })}
+                  </View>
+                ) : null}
+              </View>
             </HeaderHeightContext.Provider>
           </HeaderShownContext.Provider>
         </NavigationRouteContext.Provider>
@@ -432,5 +442,15 @@ export default function NativeStackView(props: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scene: {
+    flex: 1,
+    flexDirection: 'column-reverse',
+  },
+  absolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
   },
 });
