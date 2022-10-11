@@ -62,6 +62,7 @@ export type Props<T extends Route> = SceneRendererProps & {
   contentContainerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
   gap?: number;
+  testID?: string;
 };
 
 type FlattenedTabWidth = string | number | undefined;
@@ -274,6 +275,7 @@ export default function TabBar<T extends Route>({
   renderTabBarItem,
   style,
   tabStyle,
+  testID,
 }: Props<T>) {
   const [layout, setLayout] = React.useState<Layout>({ width: 0, height: 0 });
   const [tabWidths, setTabWidths] = React.useState<Record<string, number>>({});
@@ -548,6 +550,7 @@ export default function TabBar<T extends Route>({
           renderItem={renderItem}
           onScroll={handleScroll}
           ref={flatListRef}
+          testID={testID}
         />
       </View>
     </Animated.View>

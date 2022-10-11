@@ -530,6 +530,10 @@ Style to apply to the tab bar container.
 
 Define a spacing between tabs.
 
+##### `testID`
+
+Test id for the tabBar. Can be used for scrolling the tab bar in tests
+
 ## Using with other libraries
 
 ### [React Navigation](https://github.com/react-navigation/react-navigation)
