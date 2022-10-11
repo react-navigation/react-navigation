@@ -64,6 +64,7 @@ export default function MaterialTopTabView({
       lazy={({ route }) => descriptors[route.key].options.lazy === true}
       lazyPreloadDistance={focusedOptions.lazyPreloadDistance}
       swipeEnabled={focusedOptions.swipeEnabled}
+      animationEnabled={focusedOptions.animationEnabled}
       onSwipeStart={() => navigation.emit({ type: 'swipeStart' })}
       onSwipeEnd={() => navigation.emit({ type: 'swipeEnd' })}
       sceneContainerStyle={[
