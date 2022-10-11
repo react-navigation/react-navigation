@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.9.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.9.0...@react-navigation/native-stack@6.9.1) (2022-10-11)
+
+
+### Bug Fixes
+
+* fix headerTransparent with custom header in native-stack ([#10919](https://github.com/react-navigation/react-navigation/issues/10919)) ([40bed38](https://github.com/react-navigation/react-navigation/commit/40bed380147a194edc8500d5220cd983ecfb27e0)), closes [#10822](https://github.com/react-navigation/react-navigation/issues/10822) [#10902](https://github.com/react-navigation/react-navigation/issues/10902)
+
+
+
+
+
 # [6.9.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.7.0...@react-navigation/native-stack@6.9.0) (2022-09-16)
 
 
