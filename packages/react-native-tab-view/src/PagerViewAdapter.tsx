@@ -129,8 +129,13 @@ export default function PagerViewAdapter<T extends Route>({
     };
   }, []);
 
+  const memoizedPosition = React.useMemo(
+    () => Animated.add(position, offset),
+    [offset, position]
+  );
+
   return children({
-    position: Animated.add(position, offset),
+    position: memoizedPosition,
     addEnterListener,
     jumpTo,
     render: (children) => (

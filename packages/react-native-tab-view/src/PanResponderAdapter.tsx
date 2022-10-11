@@ -283,10 +283,13 @@ export default function PanResponderAdapter<T extends Route>({
     I18nManager.isRTL ? -1 : 1
   );
 
+  const position = React.useMemo(
+    () => (layout.width ? Animated.divide(panX, -layout.width) : null),
+    [layout.width, panX]
+  );
+
   return children({
-    position: layout.width
-      ? Animated.divide(panX, -layout.width)
-      : new Animated.Value(index),
+    position: position ?? new Animated.Value(index),
     addEnterListener,
     jumpTo,
     render: (children) => (

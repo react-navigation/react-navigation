@@ -22,7 +22,8 @@
     "react-native": "0.69.5",
     "react-native-pager-view": "5.4.25",
     "react-native-safe-area-context": "4.3.1",
-    "react-native-web": "~0.18.7"
+    "react-native-web": "~0.18.7",
+    "use-latest-callback": "^0.1.5"
   },
   "devDependencies": {
     "babel-plugin-module-resolver": "^4.1.0",

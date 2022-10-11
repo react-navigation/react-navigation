@@ -17,121 +17,85 @@ type Props<T extends Route> = SceneRendererProps &
     style?: StyleProp<ViewStyle>;
   };
 
-type State = {
-  loading: boolean;
-};
+export default function SceneView<T extends Route>({
+  children,
+  navigationState,
+  lazy,
+  layout,
+  index,
+  lazyPreloadDistance,
+  addEnterListener,
+  style,
+}: Props<T>) {
+  const [isLoading, setIsLoading] = React.useState(
+    Math.abs(navigationState.index - index) > lazyPreloadDistance
+  );
 
-export default class SceneView<T extends Route> extends React.Component<
-  Props<T>,
-  State
-> {
-  static getDerivedStateFromProps(props: Props<Route>, state: State) {
-    if (
-      state.loading &&
-      Math.abs(props.navigationState.index - props.index) <=
-        props.lazyPreloadDistance
-    ) {
-      // Always render the route when it becomes focused
-      return { loading: false };
-    }
-
-    return null;
+  if (
+    isLoading &&
+    Math.abs(navigationState.index - index) <= lazyPreloadDistance
+  ) {
+    // Always render the route when it becomes focused
+    setIsLoading(false);
   }
 
-  state = {
-    loading:
-      Math.abs(this.props.navigationState.index - this.props.index) >
-      this.props.lazyPreloadDistance,
-  };
+  React.useEffect(() => {
+    const handleEnter = (value: number) => {
+      // If we're entering the current route, we need to load it
+      if (value === index) {
+        setIsLoading((prevState) => {
+          if (prevState) {
+            return false;
+          }
+          return prevState;
+        });
+      }
+    };
 
-  componentDidMount() {
-    if (this.props.lazy) {
+    let unsubscribe: (() => void) | undefined;
+    let timer: NodeJS.Timeout;
+
+    if (lazy && isLoading) {
       // If lazy mode is enabled, listen to when we enter screens
-      this.unsubscribe = this.props.addEnterListener(this.handleEnter);
-    } else if (this.state.loading) {
+      unsubscribe = addEnterListener(handleEnter);
+    } else if (isLoading) {
       // If lazy mode is not enabled, render the scene with a delay if not loaded already
       // This improves the initial startup time as the scene is no longer blocking
-      this.timerHandler = setTimeout(
-        () => this.setState({ loading: false }),
-        0
-      );
+      timer = setTimeout(() => setIsLoading(false), 0);
     }
-  }
 
-  componentDidUpdate(prevProps: Props<T>, prevState: State) {
-    if (
-      this.props.lazy !== prevProps.lazy ||
-      this.state.loading !== prevState.loading
-    ) {
-      // We only need the listener if the tab hasn't loaded yet and lazy is enabled
-      if (this.props.lazy && this.state.loading) {
-        this.unsubscribe?.();
-        this.unsubscribe = this.props.addEnterListener(this.handleEnter);
-      } else {
-        this.unsubscribe?.();
+    return () => {
+      unsubscribe?.();
+      clearTimeout(timer);
+    };
+  }, [addEnterListener, index, isLoading, lazy]);
+
+  const focused = navigationState.index === index;
+
+  return (
+    <View
+      accessibilityElementsHidden={!focused}
+      importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
+      style={[
+        styles.route,
+        // If we don't have the layout yet, make the focused screen fill the container
+        // This avoids delay before we are able to render pages side by side
+        layout.width
+          ? { width: layout.width }
+          : focused
+          ? StyleSheet.absoluteFill
+          : null,
+        style,
+      ]}
+    >
+      {
+        // Only render the route only if it's either focused or layout is available
+        // When layout is not available, we must not render unfocused routes
+        // so that the focused route can fill the screen
+        focused || layout.width ? children({ loading: isLoading }) : null
       }
-    }
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe?.();
-
-    if (this.timerHandler) {
-      clearTimeout(this.timerHandler);
-      this.timerHandler = undefined;
-    }
-  }
-
-  private timerHandler: NodeJS.Timeout | undefined;
-
-  private unsubscribe: (() => void) | null = null;
-
-  private handleEnter = (value: number) => {
-    const { index } = this.props;
-
-    // If we're entering the current route, we need to load it
-    if (value === index) {
-      this.setState((prevState) => {
-        if (prevState.loading) {
-          return { loading: false };
-        }
-
-        return null;
-      });
-    }
-  };
-
-  render() {
-    const { navigationState, index, layout, style } = this.props;
-    const { loading } = this.state;
-
-    const focused = navigationState.index === index;
-
-    return (
-      <View
-        accessibilityElementsHidden={!focused}
-        importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
-        style={[
-          styles.route,
-          // If we don't have the layout yet, make the focused screen fill the container
-          // This avoids delay before we are able to render pages side by side
-          layout.width
-            ? { width: layout.width }
-            : focused
-            ? StyleSheet.absoluteFill
-            : null,
-          style,
-        ]}
-      >
-        {
-          // Only render the route only if it's either focused or layout is available
-          // When layout is not available, we must not render unfocused routes
-          // so that the focused route can fill the screen
-          focused || layout.width ? this.props.children({ loading }) : null
-        }
-      </View>
-    );
-  }
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

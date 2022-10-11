@@ -97,5 +97,8 @@
         }
       ]
     ]
+  },
+  "dependencies": {
+    "use-latest-callback": "^0.1.5"
   }
 }
