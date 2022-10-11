@@ -5,7 +5,11 @@ import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
 import useNavigation from '../useNavigation';
 import useNavigationBuilder from '../useNavigationBuilder';
-import MockRouter from './__fixtures__/MockRouter';
+import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
+
+beforeEach(() => {
+  MockRouterKey.current = 0;
+});
 
 it('gets navigation prop from context', () => {
   expect.assertions(1);

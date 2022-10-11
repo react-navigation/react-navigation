@@ -6,6 +6,7 @@ import {
   NavigationContainerRef,
   NavigationState,
   ParamListBase,
+  useNavigationIndependentTree,
 } from '@react-navigation/core';
 import isEqual from 'fast-deep-equal';
 import * as React from 'react';
@@ -93,14 +94,11 @@ const series = (cb: () => Promise<void>) => {
 
 let linkingHandlers: Symbol[] = [];
 
-type Options = LinkingOptions<ParamListBase> & {
-  independent?: boolean;
-};
+type Options = LinkingOptions<ParamListBase>;
 
 export default function useLinking(
   ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
   {
-    independent,
     enabled = true,
     config,
     getStateFromPath = getStateFromPathDefault,
@@ -108,6 +106,8 @@ export default function useLinking(
     getActionFromState = getActionFromStateDefault,
   }: Options
 ) {
+  const independent = useNavigationIndependentTree();
+
   React.useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
       return undefined;

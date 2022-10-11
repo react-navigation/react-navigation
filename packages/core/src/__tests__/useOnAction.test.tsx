@@ -191,6 +191,7 @@ it("lets children handle the action if parent didn't", () => {
 
   const element = (
     <BaseNavigationContainer
+      navigationInChildEnabled
       initialState={initialState}
       onStateChange={onStateChange}
     >

@@ -5,7 +5,11 @@ import * as React from 'react';
 import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
 import useNavigationBuilder from '../useNavigationBuilder';
-import MockRouter from './__fixtures__/MockRouter';
+import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
+
+beforeEach(() => {
+  MockRouterKey.current = 0;
+});
 
 it('fires focus and blur events in root navigator', () => {
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
@@ -265,7 +269,7 @@ it('fires focus and blur events in nested navigator', () => {
   expect(thirdFocusCallback).toBeCalledTimes(0);
   expect(fourthFocusCallback).toBeCalledTimes(1);
 
-  act(() => parent.current.navigate('third'));
+  act(() => parent.current.navigate('nested', { screen: 'third' }));
 
   expect(fourthBlurCallback).toBeCalledTimes(1);
   expect(thirdFocusCallback).toBeCalledTimes(1);
