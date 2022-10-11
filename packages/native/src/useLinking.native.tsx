@@ -104,6 +104,7 @@ export default function useLinking(
   const prefixesRef = React.useRef(prefixes);
   const filterRef = React.useRef(filter);
   const configRef = React.useRef(config);
+  const previousUrlRef = React.useRef<string | undefined>(undefined);
   const getInitialURLRef = React.useRef(getInitialURL);
   const getStateFromPathRef = React.useRef(getStateFromPath);
   const getActionFromStateRef = React.useRef(getActionFromState);
@@ -162,11 +163,19 @@ export default function useLinking(
     return thenable as PromiseLike<ResultState | undefined>;
   }, [getStateFromURL]);
 
+  const getLastLinkingUrl = React.useCallback(() => {
+    return previousUrlRef.current;
+  }, []);
+
   React.useEffect(() => {
     const listener = (url: string) => {
+      previousUrlRef.current = url;
+
       if (!enabled) {
         return;
       }
+
+      console.log('listener');
 
       const navigation = ref.current;
       const state = navigation ? getStateFromURL(url) : undefined;
@@ -211,5 +220,6 @@ export default function useLinking(
 
   return {
     getInitialState,
+    getLastLinkingUrl,
   };
 }

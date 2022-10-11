@@ -436,6 +436,8 @@ export default function useNavigationBuilder<
       ? (currentState as State)
       : (initializedState as State);
 
+  let nextState = React.useRef<State>(state);
+
   // TODO: handle drawer too
   const setStateForNextRouteNamesChange = React.useCallback(
     (prevState: State) => {
@@ -465,7 +467,7 @@ export default function useNavigationBuilder<
         });
       }
 
-      return {
+      nextState.current = {
         ...prevState,
         routeNames,
         routes,
@@ -480,8 +482,6 @@ export default function useNavigationBuilder<
       routeParamList,
     ]
   );
-
-  let nextState: State = state;
 
   if (
     !isArrayEqual(state.routeNames, routeNames) ||
@@ -498,7 +498,7 @@ export default function useNavigationBuilder<
     //       routeKeyList[name] !== previousRouteKeyList[name]
     //   ),
     // });
-    nextState = setStateForNextRouteNamesChange(state);
+    setStateForNextRouteNamesChange(state);
   }
 
   const previousNestedParamsRef = React.useRef(route?.params);
@@ -534,36 +534,36 @@ export default function useNavigationBuilder<
 
     // The update should be limited to current navigator only, so we call the router manually
     const updatedState = action
-      ? router.getStateForAction(nextState, action, {
+      ? router.getStateForAction(nextState.current, action, {
           routeNames,
           routeParamList,
           routeGetIdList,
         })
       : null;
 
-    nextState =
+    nextState.current =
       updatedState !== null
         ? router.getRehydratedState(updatedState, {
             routeNames,
             routeParamList,
             routeGetIdList,
           })
-        : nextState;
+        : nextState.current;
   }
 
-  const shouldUpdate = state !== nextState;
+  const shouldUpdate = state !== nextState.current;
 
   useScheduleUpdate(() => {
     if (shouldUpdate) {
       // If the state needs to be updated, we'll schedule an update
-      setState(nextState);
+      setState(nextState.current);
     }
   });
 
   // The up-to-date state will come in next render, but we don't need to wait for it
   // We can't use the outdated state since the screens have changed, which will cause error due to mismatched config
   // So we override the state object we return to use the latest state as soon as possible
-  state = nextState;
+  state = nextState.current;
 
   React.useEffect(() => {
     setKey(navigatorKey);
@@ -572,7 +572,7 @@ export default function useNavigationBuilder<
       // If it's not initial render, we need to update the state
       // This will make sure that our container gets notifier of state changes due to new mounts
       // This is necessary for proper screen tracking, URL updates etc.
-      setState(nextState);
+      setState(nextState.current);
     }
 
     return () => {
