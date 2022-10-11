@@ -5,7 +5,11 @@ import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
 import useIsFocused from '../useIsFocused';
 import useNavigationBuilder from '../useNavigationBuilder';
-import MockRouter from './__fixtures__/MockRouter';
+import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
+
+beforeEach(() => {
+  MockRouterKey.current = 0;
+});
 
 it('renders correct focus state', () => {
   const TestNavigator = (props: any): any => {

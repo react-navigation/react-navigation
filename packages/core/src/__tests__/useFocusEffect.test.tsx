@@ -5,7 +5,11 @@ import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
 import useFocusEffect from '../useFocusEffect';
 import useNavigationBuilder from '../useNavigationBuilder';
-import MockRouter from './__fixtures__/MockRouter';
+import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
+
+beforeEach(() => {
+  MockRouterKey.current = 0;
+});
 
 it('runs focus effect on focus change', () => {
   const TestNavigator = (props: any): any => {
