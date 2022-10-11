@@ -6,7 +6,11 @@ import BaseNavigationContainer from '../BaseNavigationContainer';
 import createNavigationContainerRef from '../createNavigationContainerRef';
 import Screen from '../Screen';
 import useNavigationBuilder from '../useNavigationBuilder';
-import MockRouter from './__fixtures__/MockRouter';
+import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
+
+beforeEach(() => {
+  MockRouterKey.current = 0;
+});
 
 it('adds the listener even if container is mounted later', () => {
   const ref = createNavigationContainerRef<ParamListBase>();
