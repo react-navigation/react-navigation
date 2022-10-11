@@ -6,7 +6,11 @@ import Screen from '../Screen';
 import type { RouteProp } from '../types';
 import useNavigationBuilder from '../useNavigationBuilder';
 import useRoute from '../useRoute';
-import MockRouter from './__fixtures__/MockRouter';
+import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
+
+beforeEach(() => {
+  MockRouterKey.current = 0;
+});
 
 it('gets route prop from context', () => {
   expect.assertions(1);
