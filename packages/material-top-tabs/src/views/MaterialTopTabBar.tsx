@@ -48,7 +48,9 @@ export default function TabBarTop({
       getAccessibilityLabel={({ route }) =>
         descriptors[route.key].options.tabBarAccessibilityLabel
       }
-      getTestID={({ route }) => descriptors[route.key].options.tabBarTestID}
+      getTestID={({ route }) =>
+        descriptors[route.key].options.tabBarButtonTestID
+      }
       onTabPress={({ route, preventDefault }) => {
         const event = navigation.emit({
           type: 'tabPress',
