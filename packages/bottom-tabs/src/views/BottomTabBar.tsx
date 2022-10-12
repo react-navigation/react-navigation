@@ -346,7 +346,7 @@ export default function BottomTabBar({
                   onLongPress={onLongPress}
                   accessibilityLabel={accessibilityLabel}
                   to={buildLink(route.name, route.params)}
-                  testID={options.tabBarTestID}
+                  testID={options.tabBarButtonTestID}
                   allowFontScaling={options.tabBarAllowFontScaling}
                   activeTintColor={tabBarActiveTintColor}
                   inactiveTintColor={tabBarInactiveTintColor}

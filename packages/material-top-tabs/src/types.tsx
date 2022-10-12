@@ -136,7 +136,7 @@ export type MaterialTopTabNavigationOptions = {
   /**
    * ID to locate this tab button in tests.
    */
-  tabBarTestID?: string;
+  tabBarButtonTestID?: string;
 
   /**
    * Color for the icon and label in the active tab.

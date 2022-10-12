@@ -86,7 +86,7 @@ export type MaterialBottomTabNavigationOptions = {
   /**
    * ID to locate this tab button in tests.
    */
-  tabBarTestID?: string;
+  tabBarButtonTestID?: string;
 };
 
 export type MaterialBottomTabDescriptor = Descriptor<
