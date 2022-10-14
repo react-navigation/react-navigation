@@ -51,7 +51,7 @@ export default function DrawerItemList({
         navigation.dispatch({
           ...(focused
             ? DrawerActions.closeDrawer()
-            : CommonActions.navigate({ name: route.name, merge: true })),
+            : CommonActions.navigate(route)),
           target: state.key,
         });
       }
