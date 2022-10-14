@@ -23,7 +23,6 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import type { DrawerProps } from '../../types';
-import { applyPropsToGesture } from '../../utils/applyPropsToGesture';
 import DrawerProgressContext from '../../utils/DrawerProgressContext';
 import Overlay from './Overlay';
 
@@ -177,47 +176,47 @@ export default function Drawer({
   React.useEffect(() => toggleDrawer(open), [open, toggleDrawer]);
 
   const startX = useSharedValue(0);
-  let panGesture = applyPropsToGesture(
-    Gesture.Pan()
-      .activeOffsetX([-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM])
-      .hitSlop(hitSlop)
-      .enabled(drawerType !== 'permanent' && swipeEnabled)
-      .onStart((event) => {
-        console.log('onStart');
-        startX.value = translationX.value;
-        gestureState.value = event.state;
-        touchStartX.value = event.x;
+  let panGesture = Gesture.Pan()
+    .activeOffsetX([-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM])
+    .hitSlop(hitSlop)
+    .enabled(drawerType !== 'permanent' && swipeEnabled)
+    .onStart((event) => {
+      console.log('onStart');
+      startX.value = translationX.value;
+      gestureState.value = event.state;
+      touchStartX.value = event.x;
 
-        runOnJS(onGestureStart)();
-      })
-      .onUpdate((event) => {
-        touchX.value = event.x;
-        translationX.value = startX.value + event.translationX;
-        gestureState.value = event.state;
-      })
-      .onEnd((event) => {
-        gestureState.value = event.state;
+      runOnJS(onGestureStart)();
+    })
+    .onUpdate((event) => {
+      touchX.value = event.x;
+      translationX.value = startX.value + event.translationX;
+      gestureState.value = event.state;
+    })
+    .onEnd((event) => {
+      gestureState.value = event.state;
 
-        const nextOpen =
-          (Math.abs(event.translationX) > SWIPE_DISTANCE_MINIMUM &&
-            Math.abs(event.translationX) > swipeVelocityThreshold) ||
-          Math.abs(event.translationX) > swipeDistanceThreshold
-            ? drawerPosition === 'left'
-              ? // If swiped to right, open the drawer, otherwise close it
-                (event.velocityX === 0 ? event.translationX : event.velocityX) >
-                0
-              : // If swiped to left, open the drawer, otherwise close it
-                (event.velocityX === 0 ? event.translationX : event.velocityX) <
-                0
-            : open;
+      const nextOpen =
+        (Math.abs(event.translationX) > SWIPE_DISTANCE_MINIMUM &&
+          Math.abs(event.translationX) > swipeVelocityThreshold) ||
+        Math.abs(event.translationX) > swipeDistanceThreshold
+          ? drawerPosition === 'left'
+            ? // If swiped to right, open the drawer, otherwise close it
+              (event.velocityX === 0 ? event.translationX : event.velocityX) > 0
+            : // If swiped to left, open the drawer, otherwise close it
+              (event.velocityX === 0 ? event.translationX : event.velocityX) < 0
+          : open;
 
-        toggleDrawer(nextOpen, event.velocityX);
-      })
-      .onFinalize(() => {
-        runOnJS(onGestureFinish)();
-      }),
-    gestureHandlerProps
-  );
+      toggleDrawer(nextOpen, event.velocityX);
+    })
+    .onFinalize(() => {
+      runOnJS(onGestureFinish)();
+    });
+  // @ts-expect-error Ref types incompatible yet, needs to get fixed upstream
+  panGesture.config = {
+    ...panGesture.config,
+    ...gestureHandlerProps,
+  };
 
   const translateX = useDerivedValue(() => {
     // Comment stolen from react-native-gesture-handler/DrawerLayout
