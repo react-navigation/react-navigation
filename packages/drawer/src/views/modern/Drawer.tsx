@@ -9,14 +9,13 @@ import {
   View,
 } from 'react-native';
 import {
-  PanGestureHandler,
-  PanGestureHandlerGestureEvent,
+  Gesture,
+  GestureDetector,
   State as GestureState,
 } from 'react-native-gesture-handler';
 import Animated, {
   interpolate,
   runOnJS,
-  useAnimatedGestureHandler,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -24,6 +23,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import type { DrawerProps } from '../../types';
+import { applyPropsToGesture } from '../../utils/applyPropsToGesture';
 import DrawerProgressContext from '../../utils/DrawerProgressContext';
 import Overlay from './Overlay';
 
@@ -176,42 +176,48 @@ export default function Drawer({
 
   React.useEffect(() => toggleDrawer(open), [open, toggleDrawer]);
 
-  const onGestureEvent = useAnimatedGestureHandler<
-    PanGestureHandlerGestureEvent,
-    { startX: number }
-  >({
-    onStart: (event, ctx) => {
-      ctx.startX = translationX.value;
-      gestureState.value = event.state;
-      touchStartX.value = event.x;
+  const startX = useSharedValue(0);
+  let panGesture = applyPropsToGesture(
+    Gesture.Pan()
+      .activeOffsetX([-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM])
+      .hitSlop(hitSlop)
+      .enabled(drawerType !== 'permanent' && swipeEnabled)
+      .onStart((event) => {
+        console.log('onStart');
+        startX.value = translationX.value;
+        gestureState.value = event.state;
+        touchStartX.value = event.x;
 
-      runOnJS(onGestureStart)();
-    },
-    onActive: (event, ctx) => {
-      touchX.value = event.x;
-      translationX.value = ctx.startX + event.translationX;
-      gestureState.value = event.state;
-    },
-    onEnd: (event) => {
-      gestureState.value = event.state;
+        runOnJS(onGestureStart)();
+      })
+      .onUpdate((event) => {
+        touchX.value = event.x;
+        translationX.value = startX.value + event.translationX;
+        gestureState.value = event.state;
+      })
+      .onEnd((event) => {
+        gestureState.value = event.state;
 
-      const nextOpen =
-        (Math.abs(event.translationX) > SWIPE_DISTANCE_MINIMUM &&
-          Math.abs(event.translationX) > swipeVelocityThreshold) ||
-        Math.abs(event.translationX) > swipeDistanceThreshold
-          ? drawerPosition === 'left'
-            ? // If swiped to right, open the drawer, otherwise close it
-              (event.velocityX === 0 ? event.translationX : event.velocityX) > 0
-            : // If swiped to left, open the drawer, otherwise close it
-              (event.velocityX === 0 ? event.translationX : event.velocityX) < 0
-          : open;
+        const nextOpen =
+          (Math.abs(event.translationX) > SWIPE_DISTANCE_MINIMUM &&
+            Math.abs(event.translationX) > swipeVelocityThreshold) ||
+          Math.abs(event.translationX) > swipeDistanceThreshold
+            ? drawerPosition === 'left'
+              ? // If swiped to right, open the drawer, otherwise close it
+                (event.velocityX === 0 ? event.translationX : event.velocityX) >
+                0
+              : // If swiped to left, open the drawer, otherwise close it
+                (event.velocityX === 0 ? event.translationX : event.velocityX) <
+                0
+            : open;
 
-      toggleDrawer(nextOpen, event.velocityX);
-    },
-    onFinish: () => {
-      runOnJS(onGestureFinish)();
-    },
-  });
+        toggleDrawer(nextOpen, event.velocityX);
+      })
+      .onFinalize(() => {
+        runOnJS(onGestureFinish)();
+      }),
+    gestureHandlerProps
+  );
 
   const translateX = useDerivedValue(() => {
     // Comment stolen from react-native-gesture-handler/DrawerLayout
@@ -317,14 +323,7 @@ export default function Drawer({
 
   return (
     <DrawerProgressContext.Provider value={progress}>
-      <PanGestureHandler
-        activeOffsetX={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
-        failOffsetY={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
-        hitSlop={hitSlop}
-        enabled={drawerType !== 'permanent' && swipeEnabled}
-        onGestureEvent={onGestureEvent}
-        {...gestureHandlerProps}
-      >
+      <GestureDetector gesture={panGesture}>
         {/* Immediate child of gesture handler needs to be an Animated.View */}
         <Animated.View
           style={[
@@ -371,7 +370,7 @@ export default function Drawer({
             {renderDrawerContent()}
           </Animated.View>
         </Animated.View>
-      </PanGestureHandler>
+      </GestureDetector>
     </DrawerProgressContext.Provider>
   );
 }
