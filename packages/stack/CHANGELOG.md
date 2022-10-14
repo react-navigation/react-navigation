@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.3.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.3.1...@react-navigation/stack@6.3.2) (2022-10-05)
+
+
+### Bug Fixes
+
+* add additional check before running `animate` in `componentDidUpdate` ([#10871](https://github.com/react-navigation/react-navigation/issues/10871)) ([b9fb2d1](https://github.com/react-navigation/react-navigation/commit/b9fb2d14c6d518793f11e5f38a79f8a83baf3c09)), closes [#10767](https://github.com/react-navigation/react-navigation/issues/10767)
+
+
+
+
+
 ## [6.3.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.3.0...@react-navigation/stack@6.3.1) (2022-09-19)
 
 

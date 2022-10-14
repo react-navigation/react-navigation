@@ -162,7 +162,7 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   /**
    * ID to locate this tab button in tests.
    */
-  tabBarTestID?: string;
+  tabBarButtonTestID?: string;
 
   /**
    * Function which returns a React element to render as the tab bar button.

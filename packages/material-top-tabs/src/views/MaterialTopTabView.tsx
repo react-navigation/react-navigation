@@ -46,15 +46,14 @@ export default function MaterialTopTabView({
   return (
     <TabView<Route<string>>
       {...rest}
-      onIndexChange={(index) =>
+      onIndexChange={(index) => {
+        const route = state.routes[index];
+
         navigation.dispatch({
-          ...CommonActions.navigate({
-            name: state.routes[index].name,
-            merge: true,
-          }),
+          ...CommonActions.navigate(route),
           target: state.key,
-        })
-      }
+        });
+      }}
       renderScene={({ route }) => descriptors[route.key].render()}
       navigationState={state}
       renderTabBar={renderTabBar}
@@ -64,6 +63,7 @@ export default function MaterialTopTabView({
       lazy={({ route }) => descriptors[route.key].options.lazy === true}
       lazyPreloadDistance={focusedOptions.lazyPreloadDistance}
       swipeEnabled={focusedOptions.swipeEnabled}
+      animationEnabled={focusedOptions.animationEnabled}
       onSwipeStart={() => navigation.emit({ type: 'swipeStart' })}
       onSwipeEnd={() => navigation.emit({ type: 'swipeEnd' })}
       sceneContainerStyle={[

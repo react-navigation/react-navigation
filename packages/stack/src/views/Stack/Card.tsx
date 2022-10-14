@@ -67,6 +67,10 @@ type Props = ViewProps & {
   contentStyle?: StyleProp<ViewStyle>;
 };
 
+type State = {
+  pointerEvents: ViewProps['pointerEvents'];
+};
+
 const GESTURE_VELOCITY_IMPACT = 0.3;
 
 const TRUE = 1;
@@ -89,7 +93,7 @@ const hasOpacityStyle = (style: any) => {
   return false;
 };
 
-export default class Card extends React.Component<Props> {
+export default class Card extends React.Component<Props, State> {
   static defaultProps = {
     shadowEnabled: false,
     gestureEnabled: true,
@@ -102,6 +106,10 @@ export default class Card extends React.Component<Props> {
       style ? (
         <Animated.View pointerEvents="none" style={[styles.overlay, style]} />
       ) : null,
+  };
+
+  state: State = {
+    pointerEvents: 'auto',
   };
 
   componentDidMount() {
@@ -128,11 +136,12 @@ export default class Card extends React.Component<Props> {
     const toValue = this.getAnimateToValue(this.props);
 
     if (
-      this.getAnimateToValue(prevProps) !== toValue ||
-      this.lastToValue !== toValue
+      closing !== prevProps.closing &&
+      (this.getAnimateToValue(prevProps) !== toValue ||
+        this.lastToValue !== toValue)
     ) {
       // We need to trigger the animation when route was closed
-      // Thr route might have been closed by a `POP` action or by a gesture
+      // The route might have been closed by a `POP` action or by a gesture
       // When route was closed due to a gesture, the animation would've happened already
       // It's still important to trigger the animation so that `onClose` is called
       // If `onClose` is not called, cleanup step won't be performed for gestures
@@ -242,7 +251,7 @@ export default class Card extends React.Component<Props> {
   private setPointerEventsEnabled = (enabled: boolean) => {
     const pointerEvents = enabled ? 'box-none' : 'none';
 
-    this.contentRef.current?.setNativeProps({ pointerEvents });
+    this.setState({ pointerEvents });
   };
 
   private handleStartInteraction = () => {
@@ -425,8 +434,6 @@ export default class Card extends React.Component<Props> {
     }
   }
 
-  private contentRef = React.createRef<View>();
-
   render() {
     const {
       styleInterpolator,
@@ -555,7 +562,7 @@ export default class Card extends React.Component<Props> {
                   />
                 ) : null}
                 <CardSheet
-                  ref={this.contentRef}
+                  pointerEvents={this.state.pointerEvents}
                   enabled={pageOverflowEnabled}
                   layout={layout}
                   style={contentStyle}

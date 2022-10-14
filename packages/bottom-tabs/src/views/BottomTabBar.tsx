@@ -305,7 +305,7 @@ export default function BottomTabBar({
 
             if (!focused && !event.defaultPrevented) {
               navigation.dispatch({
-                ...CommonActions.navigate({ name: route.name, merge: true }),
+                ...CommonActions.navigate(route),
                 target: state.key,
               });
             }
@@ -346,7 +346,7 @@ export default function BottomTabBar({
                   onLongPress={onLongPress}
                   accessibilityLabel={accessibilityLabel}
                   to={buildLink(route.name, route.params)}
-                  testID={options.tabBarTestID}
+                  testID={options.tabBarButtonTestID}
                   allowFontScaling={options.tabBarAllowFontScaling}
                   activeTintColor={tabBarActiveTintColor}
                   inactiveTintColor={tabBarInactiveTintColor}

@@ -16,7 +16,9 @@ import MockRouter, {
 
 jest.useFakeTimers();
 
-beforeEach(() => (MockRouterKey.current = 0));
+beforeEach(() => {
+  MockRouterKey.current = 0;
+});
 
 it('sets options with options prop as an object', () => {
   const TestNavigator = (props: any) => {

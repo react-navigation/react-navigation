@@ -72,8 +72,7 @@ function NavigationContainerInner(
   useBackButton(refContainer);
   useDocumentTitle(refContainer, documentTitle);
 
-  const { getInitialState, getLastLinkingUrl } = useLinking(refContainer, {
-    independent: rest.independent,
+  const { getInitialState } = useLinking(refContainer, {
     enabled: isLinkingEnabled,
     prefixes: [],
     ...linking,
@@ -103,10 +102,7 @@ function NavigationContainerInner(
 
   React.useImperativeHandle(ref, () => refContainer.current);
 
-  const linkingContext = React.useMemo(
-    () => ({ options: linking, getLastLinkingUrl }),
-    [linking, getLastLinkingUrl]
-  );
+  const linkingContext = React.useMemo(() => ({ options: linking }), [linking]);
 
   const isLinkingReady =
     rest.initialState != null || !isLinkingEnabled || isResolved;
