@@ -305,7 +305,7 @@ export default function BottomTabBar({
 
             if (!focused && !event.defaultPrevented) {
               navigation.dispatch({
-                ...CommonActions.navigate({ name: route.name, merge: true }),
+                ...CommonActions.navigate(route),
                 target: state.key,
               });
             }
