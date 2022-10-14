@@ -123,15 +123,14 @@ function MaterialBottomTabViewInner({
       {...rest}
       theme={theme}
       navigationState={state}
-      onIndexChange={(index: number) =>
+      onIndexChange={(index: number) => {
+        const route = state.routes[index];
+
         navigation.dispatch({
-          ...CommonActions.navigate({
-            name: state.routes[index].name,
-            merge: true,
-          }),
+          ...CommonActions.navigate(route),
           target: state.key,
-        })
-      }
+        });
+      }}
       renderScene={({ route }) => descriptors[route.key].render()}
       renderTouchable={
         Platform.OS === 'web'
