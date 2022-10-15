@@ -181,7 +181,6 @@ export default function Drawer({
     .hitSlop(hitSlop)
     .enabled(drawerType !== 'permanent' && swipeEnabled)
     .onStart((event) => {
-      console.log('onStart');
       startX.value = translationX.value;
       gestureState.value = event.state;
       touchStartX.value = event.x;
