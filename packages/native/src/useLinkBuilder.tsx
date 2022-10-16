@@ -1,5 +1,8 @@
 import {
+  CommonActions,
+  getActionFromState,
   getPathFromState,
+  getStateFromPath,
   NavigationHelpers,
   NavigationHelpersContext,
   NavigationProp,
@@ -49,7 +52,7 @@ export default function useLinkBuilder() {
   const navigation = React.useContext(NavigationHelpersContext);
   const linking = React.useContext(LinkingContext);
 
-  const buildLink = React.useCallback(
+  const buildHref = React.useCallback(
     (name: string, params?: object) => {
       const { options } = linking;
 
@@ -78,5 +81,35 @@ export default function useLinkBuilder() {
     [linking, navigation]
   );
 
-  return buildLink;
+  const buildAction = React.useCallback(
+    (href: string) => {
+      if (!href.startsWith('/')) {
+        throw new Error(`The path must start with '/' (${href}).`);
+      }
+
+      const { options } = linking;
+
+      const state = options?.getStateFromPath
+        ? options.getStateFromPath(href, options.config)
+        : getStateFromPath(href, options?.config);
+
+      if (state) {
+        const action = getActionFromState(state, options?.config);
+
+        if (action !== undefined) {
+          return action;
+        } else {
+          return CommonActions.reset(state);
+        }
+      } else {
+        throw new Error('Failed to parse the path to a navigation state.');
+      }
+    },
+    [linking]
+  );
+
+  return {
+    buildHref,
+    buildAction,
+  };
 }

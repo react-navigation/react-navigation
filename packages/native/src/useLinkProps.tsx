@@ -11,12 +11,29 @@ import * as React from 'react';
 import { GestureResponderEvent, Platform } from 'react-native';
 
 import LinkingContext from './LinkingContext';
-import useLinkTo, { To } from './useLinkTo';
 
-type Props<ParamList extends ReactNavigation.RootParamList> = {
-  to: To<ParamList>;
-  action?: NavigationAction;
-};
+export type Props<
+  ParamList extends ReactNavigation.RootParamList,
+  RouteName extends keyof ParamList = keyof ParamList
+> =
+  | ((undefined extends ParamList[RouteName]
+      ? {
+          screen: Extract<RouteName, string>;
+          params?: ParamList[RouteName];
+        }
+      : {
+          screen: Extract<RouteName, string>;
+          params: ParamList[RouteName];
+        }) & {
+      href?: string;
+      action?: NavigationAction;
+    })
+  | {
+      href?: string;
+      action: NavigationAction;
+      screen?: undefined;
+      params?: undefined;
+    };
 
 const getStateFromParams = (
   params: NavigatorScreenParams<ParamListBase, NavigationState> | undefined
@@ -55,11 +72,10 @@ const getStateFromParams = (
  */
 export default function useLinkProps<
   ParamList extends ReactNavigation.RootParamList
->({ to, action }: Props<ParamList>) {
+>({ screen, params, href, action }: Props<ParamList>) {
   const root = React.useContext(NavigationContainerRefContext);
   const navigation = React.useContext(NavigationHelpersContext);
   const { options } = React.useContext(LinkingContext);
-  const linkTo = useLinkTo<ParamList>();
 
   const onPress = (
     e?: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
@@ -93,33 +109,33 @@ export default function useLinkProps<
           );
         }
       } else {
-        linkTo(to);
+        // @ts-expect-error: This is already type-checked by the prop types
+        navigation?.navigate(screen, params);
       }
     }
   };
 
   const getPathFromStateHelper = options?.getPathFromState ?? getPathFromState;
 
-  const href =
-    typeof to === 'string'
-      ? to
-      : getPathFromStateHelper(
-          {
-            routes: [
-              {
-                name: to.screen,
-                // @ts-expect-error
-                params: to.params,
-                // @ts-expect-error
-                state: getStateFromParams(to.params),
-              },
-            ],
-          },
-          options?.config
-        );
-
   return {
-    href,
+    href:
+      href ??
+      (Platform.OS === 'web' && screen != null
+        ? getPathFromStateHelper(
+            {
+              routes: [
+                {
+                  name: screen,
+                  // @ts-expect-error
+                  params: params,
+                  // @ts-expect-error
+                  state: getStateFromParams(to.params),
+                },
+              ],
+            },
+            options?.config
+          )
+        : undefined),
     accessibilityRole: 'link' as const,
     onPress,
   };

@@ -19,11 +19,15 @@ import Article from '../Shared/Article';
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const LinkButton = ({
-  to,
+  screen,
+  params,
+  action,
+  href,
   ...rest
 }: React.ComponentProps<typeof Button> &
   Parameters<typeof useLinkProps>[0]) => {
-  const props = useLinkProps({ to });
+  // @ts-expect-error: This is already type-checked by the prop types
+  const props = useLinkProps({ screen, params, action, href });
 
   return <Button {...props} {...rest} />;
 };
@@ -36,31 +40,22 @@ const ArticleScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Link
-          to={{ screen: 'LinkComponent', params: { screen: 'Albums' } }}
+          screen="LinkComponent"
+          params={{ screen: 'Albums' }}
           style={[styles.button, { padding: 8 }]}
         >
-          Go to /link-component/music
+          Go to LinkComponent &gt; Albums
         </Link>
         <Link
-          to="/link-component/music"
+          screen="LinkComponent"
+          params={{ screen: 'Albums' }}
           action={StackActions.replace('Albums')}
           style={[styles.button, { padding: 8 }]}
         >
-          Replace with /link-component/music
+          Replace with LinkComponent &gt; Albums
         </Link>
-        <LinkButton
-          to="/link-component/music"
-          mode="contained"
-          style={styles.button}
-        >
-          Go to /link-component/music
-        </LinkButton>
-        <LinkButton
-          to={{ screen: 'Home' }}
-          mode="contained"
-          style={styles.button}
-        >
-          Go to /
+        <LinkButton screen="Home" mode="contained" style={styles.button}>
+          Go to Home
         </LinkButton>
         <Button
           mode="outlined"
@@ -85,13 +80,15 @@ const AlbumsScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Link
-          to="/link-component/article/babel"
+          screen="LinkComponent"
+          params={{ screen: 'Article', params: { author: 'Babel' } }}
           style={[styles.button, { padding: 8 }]}
         >
           Go to /link-component/article
         </Link>
         <LinkButton
-          to="/link-component/article/babel"
+          screen="LinkComponent"
+          params={{ screen: 'Article', params: { author: 'Babel' } }}
           mode="contained"
           style={styles.button}
         >
