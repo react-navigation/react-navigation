@@ -5,7 +5,7 @@ import {
   ParamListBase,
   Route,
   TabNavigationState,
-  useLinkBuilder,
+  useLinkTools,
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -100,7 +100,7 @@ function MaterialBottomTabViewInner({
   const { dark, colors } = useTheme();
   const paperTheme = usePaperTheme();
 
-  const buildLink = useLinkBuilder();
+  const buildLink = useLinkTools();
 
   const t =
     // If the theme from React Navigation and Paper match, then user the customized theme

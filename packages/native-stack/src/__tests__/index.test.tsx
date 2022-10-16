@@ -11,8 +11,8 @@ import { Button, Platform, Text, View } from 'react-native';
 import { createNativeStackNavigator, NativeStackScreenProps } from '../index';
 
 jest.mock('react-native/Libraries/Utilities/Platform', () => ({
+  ...jest.requireActual('react-native/Libraries/Utilities/Platform'),
   OS: 'ios',
-  select: () => null,
 }));
 
 jest.mock('react-native-safe-area-context', () => ({
