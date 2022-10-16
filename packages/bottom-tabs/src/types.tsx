@@ -320,7 +320,7 @@ export type BottomTabBarButtonProps = Omit<
   TouchableWithoutFeedbackProps,
   'onPress'
 > & {
-  to?: string;
+  href?: string;
   children: React.ReactNode;
   onPress?: (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
