@@ -63,7 +63,7 @@
     "@react-navigation/native": "^6.0.0",
     "react": "*",
     "react-native": "*",
-    "react-native-gesture-handler": ">= 1.0.0",
+    "react-native-gesture-handler": ">= 2.0.0",
     "react-native-reanimated": ">= 1.0.0",
     "react-native-safe-area-context": ">= 3.0.0",
     "react-native-screens": ">= 3.0.0"
