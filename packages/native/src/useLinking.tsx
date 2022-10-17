@@ -104,7 +104,8 @@ export default function useLinking(
     getStateFromPath = getStateFromPathDefault,
     getPathFromState = getPathFromStateDefault,
     getActionFromState = getActionFromStateDefault,
-  }: Options
+  }: Options,
+  _: React.MutableRefObject<string | undefined> // native only prop
 ) {
   const independent = useNavigationIndependentTree();
 

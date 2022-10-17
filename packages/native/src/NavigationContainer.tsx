@@ -60,6 +60,8 @@ function NavigationContainerInner(
   }: Props<ParamListBase>,
   ref?: React.Ref<NavigationContainerRef<ParamListBase> | null>
 ) {
+  const lastUnhandledURL = React.useRef<string | undefined>();
+
   const isLinkingEnabled = linking ? linking.enabled !== false : false;
 
   if (linking?.config) {
@@ -72,11 +74,15 @@ function NavigationContainerInner(
   useBackButton(refContainer);
   useDocumentTitle(refContainer, documentTitle);
 
-  const { getInitialState } = useLinking(refContainer, {
-    enabled: isLinkingEnabled,
-    prefixes: [],
-    ...linking,
-  });
+  const { getInitialState } = useLinking(
+    refContainer,
+    {
+      enabled: isLinkingEnabled,
+      prefixes: [],
+      ...linking,
+    },
+    lastUnhandledURL
+  );
 
   // Add additional linking related info to the ref
   // This will be used by the devtools
@@ -102,7 +108,10 @@ function NavigationContainerInner(
 
   React.useImperativeHandle(ref, () => refContainer.current);
 
-  const linkingContext = React.useMemo(() => ({ options: linking }), [linking]);
+  const linkingContext = React.useMemo(
+    () => ({ options: linking, lastUnhandledURL }),
+    [linking, lastUnhandledURL]
+  );
 
   const isLinkingReady =
     rest.initialState != null || !isLinkingEnabled || isResolved;

@@ -54,7 +54,8 @@ export default function useLinking(
     },
     getStateFromPath = getStateFromPathDefault,
     getActionFromState = getActionFromStateDefault,
-  }: Options
+  }: Options,
+  lastUnhandledURL: React.MutableRefObject<string | undefined>
 ) {
   const independent = useNavigationIndependentTree();
 
@@ -104,7 +105,6 @@ export default function useLinking(
   const prefixesRef = React.useRef(prefixes);
   const filterRef = React.useRef(filter);
   const configRef = React.useRef(config);
-  const previousUrlRef = React.useRef<string | undefined>(undefined);
   const getInitialURLRef = React.useRef(getInitialURL);
   const getStateFromPathRef = React.useRef(getStateFromPath);
   const getActionFromStateRef = React.useRef(getActionFromState);
@@ -163,19 +163,11 @@ export default function useLinking(
     return thenable as PromiseLike<ResultState | undefined>;
   }, [getStateFromURL]);
 
-  const getLastLinkingUrl = React.useCallback(() => {
-    return previousUrlRef.current;
-  }, []);
-
   React.useEffect(() => {
     const listener = (url: string) => {
-      previousUrlRef.current = url;
-
       if (!enabled) {
         return;
       }
-
-      console.log('listener');
 
       const navigation = ref.current;
       const state = navigation ? getStateFromURL(url) : undefined;
@@ -186,6 +178,9 @@ export default function useLinking(
         const rootState = navigation.getRootState();
 
         if (state.routes.some((r) => !rootState?.routeNames.includes(r.name))) {
+          // save last unhandled url for later use in conditional rendering
+          lastUnhandledURL.current = url;
+
           console.warn(
             "The navigation state parsed from the URL contains routes not present in the root navigator. This usually means that the linking configuration doesn't match the navigation structure. See https://reactnavigation.org/docs/configuring-links for more details on how to specify a linking configuration."
           );
@@ -216,10 +211,9 @@ export default function useLinking(
     };
 
     return subscribe(listener);
-  }, [enabled, getStateFromURL, ref, subscribe]);
+  }, [enabled, getStateFromURL, lastUnhandledURL, ref, subscribe]);
 
   return {
     getInitialState,
-    getLastLinkingUrl,
   };
 }

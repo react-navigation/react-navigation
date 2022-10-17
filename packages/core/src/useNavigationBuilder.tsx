@@ -10,7 +10,6 @@ import {
   RouterConfigOptions,
   RouterFactory,
 } from '@react-navigation/routers';
-import { nanoid } from 'nanoid/non-secure';
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
 
@@ -428,6 +427,13 @@ export default function useNavigationBuilder<
 
   const previousRouteKeyList = previousRouteKeyListRef.current;
 
+  // This state gets set on unhandled deep link
+  const stateForNextRouteNamesChange = React.useRef<State | null>(null);
+
+  const setStateForNextRouteNamesChange = (nextState: State) => {
+    stateForNextRouteNamesChange.current = nextState;
+  };
+
   let state =
     // If the state isn't initialized, or stale, use the state we initialized instead
     // The state won't update until there's a change needed in the state we have initalized locally
@@ -436,69 +442,30 @@ export default function useNavigationBuilder<
       ? (currentState as State)
       : (initializedState as State);
 
-  let nextState = React.useRef<State>(state);
-
-  // TODO: handle drawer too
-  const setStateForNextRouteNamesChange = React.useCallback(
-    (prevState: State) => {
-      const routeKeyChanges = Object.keys(routeKeyList).filter(
-        (name) =>
-          previousRouteKeyList.hasOwnProperty(name) &&
-          routeKeyList[name] !== previousRouteKeyList[name]
-      );
-
-      const routes = prevState.routes.filter(
-        (route) =>
-          routeNames.includes(route.name) &&
-          !routeKeyChanges.includes(route.name)
-      );
-
-      if (routes.length === 0) {
-        const initialRouteName =
-          options.initialRouteName !== undefined &&
-          routeNames.includes(options.initialRouteName)
-            ? options.initialRouteName
-            : routeNames[0];
-
-        routes.push({
-          key: `${initialRouteName}-${nanoid()}`,
-          name: initialRouteName,
-          params: routeParamList[initialRouteName],
-        });
-      }
-
-      nextState.current = {
-        ...prevState,
-        routeNames,
-        routes,
-        index: Math.min(prevState.index, routes.length - 1),
-      };
-    },
-    [
-      options.initialRouteName,
-      previousRouteKeyList,
-      routeKeyList,
-      routeNames,
-      routeParamList,
-    ]
-  );
+  let nextState: State = state;
 
   if (
     !isArrayEqual(state.routeNames, routeNames) ||
     !isRecordEqual(routeKeyList, previousRouteKeyList)
   ) {
     // When the list of route names change, the router should handle it to remove invalid routes
-    // nextState = router.getStateForRouteNamesChange(state, {
-    //   routeNames,
-    //   routeParamList,
-    //   routeGetIdList,
-    //   routeKeyChanges: Object.keys(routeKeyList).filter(
-    //     (name) =>
-    //       previousRouteKeyList.hasOwnProperty(name) &&
-    //       routeKeyList[name] !== previousRouteKeyList[name]
-    //   ),
-    // });
-    setStateForNextRouteNamesChange(state);
+    // but first we need to check whether there's pending state scheduled to be handled on unhandled linking URL
+    nextState =
+      stateForNextRouteNamesChange.current == null
+        ? router.getStateForRouteNamesChange(state, {
+            routeNames,
+            routeParamList,
+            routeGetIdList,
+            routeKeyChanges: Object.keys(routeKeyList).filter(
+              (name) =>
+                previousRouteKeyList.hasOwnProperty(name) &&
+                routeKeyList[name] !== previousRouteKeyList[name]
+            ),
+          })
+        : stateForNextRouteNamesChange.current;
+
+    // Clear scheduled state after it's handled
+    stateForNextRouteNamesChange.current = null;
   }
 
   const previousNestedParamsRef = React.useRef(route?.params);
@@ -534,36 +501,36 @@ export default function useNavigationBuilder<
 
     // The update should be limited to current navigator only, so we call the router manually
     const updatedState = action
-      ? router.getStateForAction(nextState.current, action, {
+      ? router.getStateForAction(nextState, action, {
           routeNames,
           routeParamList,
           routeGetIdList,
         })
       : null;
 
-    nextState.current =
+    nextState =
       updatedState !== null
         ? router.getRehydratedState(updatedState, {
             routeNames,
             routeParamList,
             routeGetIdList,
           })
-        : nextState.current;
+        : nextState;
   }
 
-  const shouldUpdate = state !== nextState.current;
+  const shouldUpdate = state !== nextState;
 
   useScheduleUpdate(() => {
     if (shouldUpdate) {
       // If the state needs to be updated, we'll schedule an update
-      setState(nextState.current);
+      setState(nextState);
     }
   });
 
   // The up-to-date state will come in next render, but we don't need to wait for it
   // We can't use the outdated state since the screens have changed, which will cause error due to mismatched config
   // So we override the state object we return to use the latest state as soon as possible
-  state = nextState.current;
+  state = nextState;
 
   React.useEffect(() => {
     setKey(navigatorKey);
@@ -572,7 +539,7 @@ export default function useNavigationBuilder<
       // If it's not initial render, we need to update the state
       // This will make sure that our container gets notifier of state changes due to new mounts
       // This is necessary for proper screen tracking, URL updates etc.
-      setState(nextState.current);
+      setState(nextState);
     }
 
     return () => {
