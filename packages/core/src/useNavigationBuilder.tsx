@@ -430,9 +430,12 @@ export default function useNavigationBuilder<
   // This state gets set on unhandled deep link
   const stateForNextRouteNamesChange = React.useRef<State | null>(null);
 
-  const setStateForNextRouteNamesChange = (nextState: State) => {
-    stateForNextRouteNamesChange.current = nextState;
-  };
+  const setStateForNextRouteNamesChange = React.useCallback(
+    (nextState: State) => {
+      stateForNextRouteNamesChange.current = nextState;
+    },
+    []
+  );
 
   let state =
     // If the state isn't initialized, or stale, use the state we initialized instead
