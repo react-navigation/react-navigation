@@ -1,6 +1,7 @@
 import {
   getStateFromPath,
   NavigationHelpersContext,
+  NavigationState,
 } from '@react-navigation/core';
 import { nanoid } from 'nanoid/non-secure';
 import React from 'react';
@@ -49,7 +50,9 @@ function useLinkingOnConditionalRender() {
       key: `${route.name}-${nanoid()}`,
     }));
 
-    const state = navigation?.getState();
+    if (!navigation) return;
+
+    const state: NavigationState = navigation.getState();
 
     // Then we traverse the root state and find the part of the state that corresponds to this navigator
     const nextState = {
@@ -58,7 +61,7 @@ function useLinkingOnConditionalRender() {
     };
 
     // Once we have the state, we can tell React Navigation to use it for next route names change (conditional rendering logic change)
-    navigation?.setStateForNextRouteNamesChange(nextState);
+    navigation.setStateForNextRouteNamesChange(nextState);
   };
 
   return handleLastLinkingUrl;
