@@ -471,6 +471,13 @@ export default function useNavigationBuilder<
     stateForNextRouteNamesChange.current = null;
   }
 
+  // Make sure to clean any scheduled state on unmount
+  React.useEffect(() => {
+    return () => {
+      stateForNextRouteNamesChange.current = null;
+    };
+  }, []);
+
   const previousNestedParamsRef = React.useRef(route?.params);
 
   React.useEffect(() => {
