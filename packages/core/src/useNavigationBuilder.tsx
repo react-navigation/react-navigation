@@ -655,7 +655,7 @@ export default function useNavigationBuilder<
     setState,
   });
 
-  let navigation = useNavigationHelpers<
+  const navigation = useNavigationHelpers<
     State,
     ActionHelpers,
     NavigationAction,
@@ -666,9 +666,8 @@ export default function useNavigationBuilder<
     getState,
     emitter,
     router,
+    setStateForNextRouteNamesChange,
   });
-
-  navigation = { ...navigation, setStateForNextRouteNamesChange };
 
   useFocusedListenersChildrenAdapter({
     navigation,
