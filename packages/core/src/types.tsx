@@ -310,11 +310,11 @@ type NavigationHelpersCommon<
   getState(): State;
 
   /**
-   * Schedules a route names change after conditional rendering.
+   * Schedules the next navigation state on route names change.
    *
-   * @param state State object to update.
+   * @param state Navigation state object.
    */
-  setStateForNextRouteNamesChange(state: State): State;
+  setStateForNextRouteNamesChange(state: PartialState<State> | State): void;
 } & PrivateValueStore<[ParamList, unknown, unknown]>;
 
 export type NavigationHelpers<
