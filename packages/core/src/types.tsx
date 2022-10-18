@@ -6,7 +6,6 @@ import type {
   ParamListBase,
   PartialState,
   Route,
-  RouterConfigOptions,
 } from '@react-navigation/routers';
 import type * as React from 'react';
 
