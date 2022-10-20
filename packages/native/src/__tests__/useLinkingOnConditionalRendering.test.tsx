@@ -30,7 +30,12 @@ it('should schedule a state to be handled on conditional linking', async () => {
 
   const Stack = createStackNavigator();
 
-  const TestScreen = ({ route }: any): any => <Text>{route.name}</Text>;
+  const TestScreen = ({ route, signOut }: any): any => (
+    <>
+      <Text>{route.name}</Text>
+      <Button title="sign out" onPress={signOut} />
+    </>
+  );
   const SignInScreen = ({ route, signIn }: any): any => {
     const fn = useLinkingOnConditionalRender();
     return (
@@ -70,8 +75,16 @@ it('should schedule a state to be handled on conditional linking', async () => {
         <Stack.Navigator>
           {isSignedIn ? (
             <>
-              <Stack.Screen name="Home" component={TestScreen} />
-              <Stack.Screen name="Profile" component={TestScreen} />
+              <Stack.Screen name="Home">
+                {(props) => (
+                  <TestScreen signOut={() => setSignedIn(false)} {...props} />
+                )}
+              </Stack.Screen>
+              <Stack.Screen name="Profile">
+                {(props) => (
+                  <TestScreen signOut={() => setSignedIn(false)} {...props} />
+                )}
+              </Stack.Screen>
             </>
           ) : (
             <Stack.Screen name="SignIn">
@@ -95,6 +108,16 @@ it('should schedule a state to be handled on conditional linking', async () => {
 
   expect(queryByText('SignIn')).toBeNull();
   expect(queryByText('Profile')).not.toBeNull();
+
+  fireEvent.press(queryByText(/sign out/i));
+
+  expect(queryByText('SignIn')).not.toBeNull();
+  expect(queryByText('Home')).toBeNull();
+  expect(queryByText('Profile')).toBeNull();
+
+  fireEvent.press(queryByText(/sign in/i));
+
+  expect(queryByText('Home')).not.toBeNull();
 
   consoleWarnMock.mockRestore();
 });
