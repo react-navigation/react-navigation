@@ -55,7 +55,7 @@ export default function useLinking(
     getStateFromPath = getStateFromPathDefault,
     getActionFromState = getActionFromStateDefault,
   }: Options,
-  lastUnhandledURL: React.MutableRefObject<string | undefined>
+  lastUnhandledURL: React.MutableRefObject<string | null | undefined>
 ) {
   const independent = useNavigationIndependentTree();
 
@@ -134,6 +134,30 @@ export default function useLinking(
     []
   );
 
+  const validateRoutesNotExistInRootState = React.useCallback(
+    (state: ResultState) => {
+      const navigation = ref.current;
+      const rootState = navigation?.getRootState();
+      // Make sure that the routes in the state exist in the root navigator
+      // Otherwise there's an error in the linking configuration
+      return state?.routes.some((r) => !rootState?.routeNames.includes(r.name));
+    },
+    [ref]
+  );
+
+  const saveLastUnhandledUrl = React.useCallback(
+    (url: string | null | undefined) => {
+      // Save last unhandled url for later use in conditional rendering
+      lastUnhandledURL.current = url;
+
+      // TODO: how to silence warning when it may or may not be handled in conditional rendering?
+      console.warn(
+        "The navigation state parsed from the URL contains routes not present in the root navigator. This usually means that the linking configuration doesn't match the navigation structure. See https://reactnavigation.org/docs/configuring-links for more details on how to specify a linking configuration."
+      );
+    },
+    [lastUnhandledURL]
+  );
+
   const getInitialState = React.useCallback(() => {
     let state: ResultState | undefined;
 
@@ -143,6 +167,11 @@ export default function useLinking(
       if (url != null && typeof url !== 'string') {
         return url.then((url) => {
           const state = getStateFromURL(url);
+
+          if (validateRoutesNotExistInRootState(state)) {
+            saveLastUnhandledUrl(url);
+            return;
+          }
 
           return state;
         });
@@ -161,7 +190,11 @@ export default function useLinking(
     };
 
     return thenable as PromiseLike<ResultState | undefined>;
-  }, [getStateFromURL]);
+  }, [
+    getStateFromURL,
+    saveLastUnhandledUrl,
+    validateRoutesNotExistInRootState,
+  ]);
 
   React.useEffect(() => {
     const listener = (url: string) => {
@@ -173,17 +206,8 @@ export default function useLinking(
       const state = navigation ? getStateFromURL(url) : undefined;
 
       if (navigation && state) {
-        // Make sure that the routes in the state exist in the root navigator
-        // Otherwise there's an error in the linking configuration
-        const rootState = navigation.getRootState();
-
-        if (state.routes.some((r) => !rootState?.routeNames.includes(r.name))) {
-          // save last unhandled url for later use in conditional rendering
-          lastUnhandledURL.current = url;
-
-          console.warn(
-            "The navigation state parsed from the URL contains routes not present in the root navigator. This usually means that the linking configuration doesn't match the navigation structure. See https://reactnavigation.org/docs/configuring-links for more details on how to specify a linking configuration."
-          );
+        if (validateRoutesNotExistInRootState(state)) {
+          saveLastUnhandledUrl(url);
           return;
         }
 
@@ -211,7 +235,15 @@ export default function useLinking(
     };
 
     return subscribe(listener);
-  }, [enabled, getStateFromURL, lastUnhandledURL, ref, subscribe]);
+  }, [
+    enabled,
+    getStateFromURL,
+    lastUnhandledURL,
+    ref,
+    saveLastUnhandledUrl,
+    subscribe,
+    validateRoutesNotExistInRootState,
+  ]);
 
   return {
     getInitialState,

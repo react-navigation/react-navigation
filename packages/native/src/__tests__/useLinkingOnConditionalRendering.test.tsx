@@ -5,19 +5,12 @@ import {
   StackRouter,
   useNavigationBuilder,
 } from '@react-navigation/core';
-import { fireEvent, render } from '@testing-library/react-native';
+import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import * as React from 'react';
 import { Button, Text } from 'react-native';
 
-import window from '../__mocks__/window';
 import NavigationContainer from '../NavigationContainer';
 import useLinkingOnConditionalRender from '../useLinkingOnConditionalRender';
-
-Object.assign(global, window);
-
-// We want to use the web version of useLinking
-// eslint-disable-next-line import/extensions
-jest.mock('../useLinking', () => require('../useLinking.tsx').default);
 
 it('should schedule a state to be handled on conditional linking', async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
@@ -55,12 +48,15 @@ it('should schedule a state to be handled on conditional linking', async () => {
   };
 
   const linking = {
-    prefixes: [],
+    prefixes: ['rn://'],
     config: {
       screens: {
         Home: 'home',
         Profile: 'profile',
       },
+    },
+    async getInitialURL() {
+      return 'rn://profile';
     },
   };
 
@@ -89,12 +85,16 @@ it('should schedule a state to be handled on conditional linking', async () => {
     );
   };
 
-  const { queryByText, findByText } = render(<App />);
+  const consoleWarnMock = jest.spyOn(console, 'warn').mockImplementation();
+  const { queryByText } = await waitFor(() => render(<App />));
 
+  expect(console.warn).toHaveBeenCalledTimes(1);
   expect(queryByText('SignIn')).not.toBeNull();
 
-  fireEvent.press(await findByText(/sign in/i));
+  fireEvent.press(queryByText(/sign in/i));
 
   expect(queryByText('SignIn')).toBeNull();
-  expect(queryByText('Home')).not.toBeNull();
+  expect(queryByText('Profile')).not.toBeNull();
+
+  consoleWarnMock.mockRestore();
 });
