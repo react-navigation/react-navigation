@@ -1,7 +1,7 @@
 import {
   getStateFromPath,
-  NavigationHelpersContext,
-  NavigationState,
+  NavigationContext,
+  useRoute,
 } from '@react-navigation/core';
 import { nanoid } from 'nanoid/non-secure';
 import React from 'react';
@@ -10,51 +10,53 @@ import extractPathFromURL from './extractPathFromURL';
 import LinkingContext from './LinkingContext';
 
 function useLinkingOnConditionalRender() {
-  const navigation = React.useContext(NavigationHelpersContext);
+  const navigation = React.useContext(NavigationContext);
   const linking = React.useContext(LinkingContext);
 
+  const { name: routeName } = useRoute();
   const { options, lastUnhandledURL } = linking;
 
+  if (navigation == null) {
+    throw Error(
+      "Couldn't find a navigation context. Is your component inside NavigationContainer?"
+    );
+  }
+
+  if (options == null) {
+    console.warn(
+      `Looks like you're using 'useLinkingOnConditionalRender' hook inside ${routeName} screen without configured links. This has no effect. Either provide linking configuration to the NavigationContainer or remove this hook to get rid of this warning.`
+    );
+  }
+
   /*
-   * Function to handle last unhandled URL.
-   * This function has to be called when the conditional rendering of the navigator is about to happen
-   * e.g. in the `onPress` of a button
+   * Function to handle last unhandled URL. This function has to be called when the conditional
+   * rendering of the navigator is about to happen e.g. in the `onPress` of a log in button.
    */
   const handleLastLinkingUrl = () => {
-    // TODO: clear this mess
-    if (!options) return;
+    if (options == null || lastUnhandledURL?.current == null) {
+      // noop, nothing to handle
+      return;
+    }
 
     const { config, prefixes } = options;
-    // TODO: clear this very mess
-    if (!config || !prefixes || !lastUnhandledURL) return;
 
-    const path = extractPathFromURL(prefixes, lastUnhandledURL?.current ?? '');
+    const path = extractPathFromURL(prefixes, lastUnhandledURL.current);
 
-    // cleanup
-    lastUnhandledURL.current = undefined;
-
-    // First we parse the URL to get the desired state
+    // First, we parse the URL to get the desired state
     const getStateFromPathHelper =
       options?.getStateFromPath ?? getStateFromPath;
 
-    if (!path) return;
-
-    const rootState = getStateFromPathHelper(path, config);
-
-    if (!rootState) return;
-
-    const { routes } = rootState;
-
-    const routesWithKey = routes.map((route) => ({
-      ...route,
-      key: `${route.name}-${nanoid()}`,
-    }));
-
-    if (!navigation) return;
-
-    const state: NavigationState = navigation.getState();
+    const rootState = getStateFromPathHelper(path ?? '', config);
 
     // Then we traverse the root state and find the part of the state that corresponds to this navigator
+    const routesWithKey =
+      rootState?.routes.map((route) => ({
+        ...route,
+        key: `${route.name}-${nanoid()}`,
+      })) ?? [];
+
+    const state = navigation.getState();
+
     const nextState = {
       ...state,
       routes: routesWithKey,
@@ -62,6 +64,9 @@ function useLinkingOnConditionalRender() {
 
     // Once we have the state, we can tell React Navigation to use it for next route names change (conditional rendering logic change)
     navigation.setStateForNextRouteNamesChange(nextState);
+
+    // Finally, we clear unhandled link after it was handled
+    lastUnhandledURL.current = undefined;
   };
 
   return handleLastLinkingUrl;
