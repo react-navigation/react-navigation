@@ -454,18 +454,17 @@ export default function useNavigationBuilder<
     // When the list of route names change, the router should handle it to remove invalid routes
     // but first we need to check whether there's pending state scheduled to be handled on unhandled linking URL
     nextState =
-      stateForNextRouteNamesChange.current == null
-        ? router.getStateForRouteNamesChange(state, {
-            routeNames,
-            routeParamList,
-            routeGetIdList,
-            routeKeyChanges: Object.keys(routeKeyList).filter(
-              (name) =>
-                previousRouteKeyList.hasOwnProperty(name) &&
-                routeKeyList[name] !== previousRouteKeyList[name]
-            ),
-          })
-        : stateForNextRouteNamesChange.current;
+      stateForNextRouteNamesChange.current ??
+      router.getStateForRouteNamesChange(state, {
+        routeNames,
+        routeParamList,
+        routeGetIdList,
+        routeKeyChanges: Object.keys(routeKeyList).filter(
+          (name) =>
+            previousRouteKeyList.hasOwnProperty(name) &&
+            routeKeyList[name] !== previousRouteKeyList[name]
+        ),
+      });
 
     // Clear scheduled state after it's handled
     stateForNextRouteNamesChange.current = null;
