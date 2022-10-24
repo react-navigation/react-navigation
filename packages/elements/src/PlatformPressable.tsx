@@ -15,6 +15,7 @@ export type Props = Omit<PressableProps, 'style'> & {
   pressColor?: string;
   pressOpacity?: number;
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+  href?: string;
   children: React.ReactNode;
 };
 

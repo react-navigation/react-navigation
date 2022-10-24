@@ -66,6 +66,7 @@ export const Header = React.memo(function Header({
       }
       headerStatusBarHeight={statusBarHeight}
       onGoBack={back ? goBack : undefined}
+      href={back ? back.href : undefined}
       styleInterpolator={styleInterpolator}
     />
   );

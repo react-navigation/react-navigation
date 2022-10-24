@@ -1,6 +1,5 @@
 import { getNamedContext } from '../getNamedContext';
 
-export const HeaderBackContext = getNamedContext<{ title: string } | undefined>(
-  'HeaderBackContext',
-  undefined
-);
+export const HeaderBackContext = getNamedContext<
+  { title: string; href?: string } | undefined
+>('HeaderBackContext', undefined);

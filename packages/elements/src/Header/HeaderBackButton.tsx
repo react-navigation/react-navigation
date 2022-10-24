@@ -31,6 +31,7 @@ export function HeaderBackButton({
   accessibilityLabel = label && label !== 'Back' ? `${label}, back` : 'Go back',
   testID,
   style,
+  href,
 }: HeaderBackButtonProps) {
   const { colors, fonts } = useTheme();
   const { direction } = useLocale();
@@ -147,13 +148,24 @@ export function HeaderBackButton({
     );
   };
 
-  const handlePress = () => onPress && requestAnimationFrame(onPress);
+  const handlePress = (e: any) => {
+    const ignoreEvents =
+      !(e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) && // ignore clicks with modifier keys
+      (e.button == null || e.button === 0); // ignore everything but left clicks
+
+    if (Platform.OS === 'web' && href && ignoreEvents) {
+      e.preventDefault();
+    }
+
+    return onPress && requestAnimationFrame(onPress);
+  };
 
   return (
     <PlatformPressable
       disabled={disabled}
+      href={href}
       accessible
-      accessibilityRole="button"
+      accessibilityRole={Platform.OS === 'web' && href ? 'link' : 'button'}
       accessibilityLabel={accessibilityLabel}
       testID={testID}
       onPress={disabled ? undefined : handlePress}
