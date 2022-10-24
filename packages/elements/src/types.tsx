@@ -1,4 +1,4 @@
-import type { ParamListBase, RouteProp } from '@react-navigation/native';
+import type { Route } from '@react-navigation/native';
 import type {
   Animated,
   LayoutChangeEvent,
@@ -169,10 +169,6 @@ export type HeaderButtonProps = {
 
 export type HeaderBackButtonProps = HeaderButtonProps & {
   /**
-   * Route object for the previous screen.
-   */
-  previousRoute?: RouteProp<ParamListBase>;
-  /**
    * Whether the button is disabled.
    */
   disabled?: boolean;
@@ -210,6 +206,10 @@ export type HeaderBackButtonProps = HeaderButtonProps & {
    * Callback to trigger when the size of the label changes.
    */
   onLabelLayout?: (e: LayoutChangeEvent) => void;
+  /**
+   * Route object for the previous screen.
+   */
+  previousRoute?: Route<string>;
   /**
    * Layout of the screen.
    */

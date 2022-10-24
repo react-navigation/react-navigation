@@ -5,6 +5,7 @@ import {
   HeaderBackButtonProps,
   HeaderTitle,
 } from '@react-navigation/elements';
+import type { Route } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
@@ -30,6 +31,7 @@ type Props = Omit<StackHeaderOptions, 'headerStatusBarHeight'> & {
   onGoBack?: () => void;
   progress: SceneProgress;
   styleInterpolator: StackHeaderStyleInterpolator;
+  previousRoute: Route<string>;
 };
 
 export default function HeaderSegment(props: Props) {
@@ -102,8 +104,11 @@ export default function HeaderSegment(props: Props) {
     modal,
     onGoBack,
     headerTitle: title,
+    previousRoute,
     headerLeft: left = onGoBack
-      ? (props: HeaderBackButtonProps) => <HeaderBackButton {...props} />
+      ? (props: HeaderBackButtonProps) => (
+          <HeaderBackButton {...props} previousRoute={previousRoute} />
+        )
       : undefined,
     headerRight: right,
     headerBackImage,
