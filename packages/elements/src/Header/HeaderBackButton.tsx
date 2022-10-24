@@ -10,11 +10,12 @@ import {
   View,
 } from 'react-native';
 
+import LinkPressable from '../LinkPressable';
 import MaskedView from '../MaskedView';
-import PlatformPressable from '../PlatformPressable';
 import type { HeaderBackButtonProps } from '../types';
 
 export default function HeaderBackButton({
+  previousRoute,
   disabled,
   allowFontScaling,
   backImage,
@@ -144,8 +145,9 @@ export default function HeaderBackButton({
   const handlePress = () => onPress && requestAnimationFrame(onPress);
 
   return (
-    <PlatformPressable
+    <LinkPressable
       disabled={disabled}
+      route={previousRoute}
       accessible
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
@@ -164,7 +166,7 @@ export default function HeaderBackButton({
         {renderBackImage()}
         {renderLabel()}
       </React.Fragment>
-    </PlatformPressable>
+    </LinkPressable>
   );
 }
 

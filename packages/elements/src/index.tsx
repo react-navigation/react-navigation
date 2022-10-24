@@ -9,6 +9,7 @@ export { default as HeaderHeightContext } from './Header/HeaderHeightContext';
 export { default as HeaderShownContext } from './Header/HeaderShownContext';
 export { default as HeaderTitle } from './Header/HeaderTitle';
 export { default as useHeaderHeight } from './Header/useHeaderHeight';
+export { default as LinkPressable } from './LinkPressable';
 export { default as MissingIcon } from './MissingIcon';
 export { default as PlatformPressable } from './PlatformPressable';
 export { default as ResourceSavingView } from './ResourceSavingView';

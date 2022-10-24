@@ -78,6 +78,7 @@ export default function NativeStackView({ state, descriptors }: Props) {
           } = options;
 
           const nextPresentation = nextDescriptor?.options.presentation;
+          const previousRoute = state.routes.find((r) => r.key === previousKey);
 
           return (
             <Screen
@@ -110,6 +111,7 @@ export default function NativeStackView({ state, descriptors }: Props) {
                         : headerLeft === undefined && canGoBack
                         ? ({ tintColor }) => (
                             <HeaderBackButton
+                              previousRoute={previousRoute}
                               tintColor={tintColor}
                               backImage={
                                 headerBackImageSource !== undefined

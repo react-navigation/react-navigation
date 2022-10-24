@@ -1,3 +1,4 @@
+import type { ParamListBase, RouteProp } from '@react-navigation/native';
 import type {
   Animated,
   LayoutChangeEvent,
@@ -167,6 +168,10 @@ export type HeaderButtonProps = {
 };
 
 export type HeaderBackButtonProps = HeaderButtonProps & {
+  /**
+   * Route object for the previous screen.
+   */
+  previousRoute?: RouteProp<ParamListBase>;
   /**
    * Whether the button is disabled.
    */
