@@ -1,4 +1,4 @@
-import { useTheme } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
@@ -15,7 +15,6 @@ import MaskedView from '../MaskedView';
 import type { HeaderBackButtonProps } from '../types';
 
 export default function HeaderBackButton({
-  previousRoute,
   disabled,
   allowFontScaling,
   backImage,
@@ -35,6 +34,10 @@ export default function HeaderBackButton({
   style,
 }: HeaderBackButtonProps) {
   const { colors } = useTheme();
+  const navigation = useNavigation();
+
+  const state = navigation.getState();
+  const previousRoute = state.routes[state.index - 1];
 
   const [initialLabelWidth, setInitialLabelWidth] = React.useState<
     undefined | number

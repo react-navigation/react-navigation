@@ -52,9 +52,6 @@ export default React.memo(function Header({
       ? 0
       : insets.top;
 
-  const state = navigation.getState();
-  const previousRoute = state.routes[state.index - 1];
-
   return (
     <HeaderSegment
       {...options}
@@ -70,7 +67,6 @@ export default React.memo(function Header({
       headerStatusBarHeight={statusBarHeight}
       onGoBack={back ? goBack : undefined}
       styleInterpolator={styleInterpolator}
-      previousRoute={previousRoute}
     />
   );
 });
