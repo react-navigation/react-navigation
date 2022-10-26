@@ -1,9 +1,4 @@
-import {
-  CommonActions,
-  Link,
-  Route,
-  useLinkBuilder,
-} from '@react-navigation/native';
+import { CommonActions, Link, Route } from '@react-navigation/native';
 import * as React from 'react';
 import { Platform, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
@@ -11,6 +6,7 @@ import PlatformPressable from './PlatformPressable';
 
 export default function LinkPressable({
   route,
+  href,
   children,
   style,
   onPress,
@@ -23,18 +19,17 @@ export default function LinkPressable({
   style: StyleProp<ViewStyle>;
 } & {
   route?: Route<string>;
+  href?: string;
   children: React.ReactNode;
   onPress?: () => void;
 }) {
-  const { buildHref } = useLinkBuilder();
-
-  if (Platform.OS === 'web' && route) {
+  if (Platform.OS === 'web' && route && href) {
     // React Native Web doesn't forward `onClick` if we use `TouchableWithoutFeedback`.
     // We need to use `onClick` to be able to prevent default browser handling of links.
     return (
       <Link
         {...rest}
-        href={buildHref(route.name, route.params)}
+        href={href}
         action={CommonActions.navigate(route.name, route.params)}
         style={[styles.button, style]}
         onPress={(e: any) => {

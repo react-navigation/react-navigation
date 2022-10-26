@@ -32,6 +32,7 @@ export default function HeaderBackButton({
   accessibilityLabel = label && label !== 'Back' ? `${label}, back` : 'Go back',
   testID,
   style,
+  href,
 }: HeaderBackButtonProps) {
   const { colors } = useTheme();
   const navigation = useNavigation();
@@ -150,6 +151,7 @@ export default function HeaderBackButton({
   return (
     <LinkPressable
       disabled={disabled}
+      href={href}
       route={previousRoute}
       accessible
       accessibilityRole="button"

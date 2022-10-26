@@ -6,7 +6,9 @@ import {
   SafeAreaProviderCompat,
   Screen,
 } from '@react-navigation/elements';
-import type {
+import {
+  getPathFromState,
+  LinkingContext,
   ParamListBase,
   StackNavigationState,
 } from '@react-navigation/native';
@@ -33,6 +35,8 @@ const TRANSPARENT_PRESENTATIONS = [
 
 export default function NativeStackView({ state, descriptors }: Props) {
   const parentHeaderBack = React.useContext(HeaderBackContext);
+  const linking = React.useContext(LinkingContext);
+  const { options: linkingOptions } = linking;
 
   return (
     <SafeAreaProviderCompat>
@@ -52,6 +56,10 @@ export default function NativeStackView({ state, descriptors }: Props) {
                 title: getHeaderTitle(
                   previousDescriptor.options,
                   previousDescriptor.route.name
+                ),
+                path: getPathFromState(
+                  { routes: [previousDescriptor.route] },
+                  linkingOptions?.config
                 ),
               }
             : parentHeaderBack;
@@ -125,7 +133,7 @@ export default function NativeStackView({ state, descriptors }: Props) {
                                   : undefined
                               }
                               onPress={navigation.goBack}
-                              canGoBack={canGoBack}
+                              href={headerBack.path}
                             />
                           )
                         : headerLeft
