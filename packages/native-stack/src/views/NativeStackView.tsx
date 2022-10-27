@@ -7,10 +7,9 @@ import {
   Screen,
 } from '@react-navigation/elements';
 import {
-  getPathFromState,
-  LinkingContext,
   ParamListBase,
   StackNavigationState,
+  useLinkBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
@@ -35,8 +34,7 @@ const TRANSPARENT_PRESENTATIONS = [
 
 export default function NativeStackView({ state, descriptors }: Props) {
   const parentHeaderBack = React.useContext(HeaderBackContext);
-  const linking = React.useContext(LinkingContext);
-  const { options: linkingOptions } = linking;
+  const { buildHref } = useLinkBuilder();
 
   return (
     <SafeAreaProviderCompat>
@@ -57,9 +55,9 @@ export default function NativeStackView({ state, descriptors }: Props) {
                   previousDescriptor.options,
                   previousDescriptor.route.name
                 ),
-                path: getPathFromState(
-                  { routes: [previousDescriptor.route] },
-                  linkingOptions?.config
+                path: buildHref(
+                  previousDescriptor.route.name,
+                  previousDescriptor.route.params
                 ),
               }
             : parentHeaderBack;
