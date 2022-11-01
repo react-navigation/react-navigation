@@ -80,9 +80,12 @@ function DrawerViewBase({
   detachInactiveScreens = Platform.OS === 'web' ||
     Platform.OS === 'android' ||
     Platform.OS === 'ios',
-  // Reanimated 2 is not configured
-  // @ts-expect-error: the type definitions are incomplete
-  useLegacyImplementation = !Reanimated.isConfigured?.(),
+  // Running in chrome debugger
+  // @ts-expect-error
+  useLegacyImplementation = !global.nativeCallSyncHook ||
+    // Reanimated 2 is not configured
+    // @ts-expect-error: the type definitions are incomplete
+    !Reanimated.isConfigured?.(),
 }: Props) {
   // Reanimated v3 dropped legacy v1 syntax
   const legacyImplemenationNotAvailable =
