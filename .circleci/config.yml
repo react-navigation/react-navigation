@@ -11,6 +11,7 @@ executors:
       - image: mcr.microsoft.com/playwright:focal
         environment:
           NODE_ENV: development
+          NODE_OPTIONS: --openssl-legacy-provider
 
 commands:
   attach_project:
