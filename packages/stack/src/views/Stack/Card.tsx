@@ -30,7 +30,7 @@ import {
   PanGestureHandlerGestureEvent,
 } from '../GestureHandler';
 import ModalStatusBarManager from '../ModalStatusBarManager';
-import CardSheet from './CardSheet';
+import CardSheet, { CardSheetRef } from './CardSheet';
 
 type Props = ViewProps & {
   interpolationIndex: number;
@@ -242,7 +242,7 @@ export default class Card extends React.Component<Props> {
   private setPointerEventsEnabled = (enabled: boolean) => {
     const pointerEvents = enabled ? 'box-none' : 'none';
 
-    this.contentRef.current?.setNativeProps({ pointerEvents });
+    this.ref.current?.setPointerEvents(pointerEvents);
   };
 
   private handleStartInteraction = () => {
@@ -425,7 +425,7 @@ export default class Card extends React.Component<Props> {
     }
   }
 
-  private contentRef = React.createRef<View>();
+  private ref = React.createRef<CardSheetRef>();
 
   render() {
     const {
@@ -555,7 +555,7 @@ export default class Card extends React.Component<Props> {
                   />
                 ) : null}
                 <CardSheet
-                  ref={this.contentRef}
+                  ref={this.ref}
                   enabled={pageOverflowEnabled}
                   layout={layout}
                   style={contentStyle}
