@@ -3,7 +3,7 @@ version: 2.1
 executors:
   default:
     docker:
-      - image: circleci/node:14
+      - image: circleci/node:18
     working_directory: ~/project
 
   playwright:
