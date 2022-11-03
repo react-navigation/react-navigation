@@ -5,5 +5,5 @@
   command = "yarn example expo export:web"
   environment = { YARN_VERSION = "3.2.2" }
 
-[build.environment]
+[template.environment]
   NODE_OPTIONS = "--openssl-legacy-provider"
