@@ -8,6 +8,8 @@
 
 node_version=$(node -v)
 
+echo "REAL node version used: $node_version"
+
 # remove the "v" from the version string
 node_version=${node_version:1}
 
