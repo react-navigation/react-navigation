@@ -3,4 +3,3 @@
   publish = "example/web-build"
   command = "./scripts/legacy-openssl.sh yarn example expo export:web"
   environment = { YARN_VERSION = "3.2.2" }
-  
