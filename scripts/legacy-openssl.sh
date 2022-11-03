@@ -8,10 +8,10 @@
 
 node_version=$(node -v)
 
-# We need to remove the "v" from the version string
+# remove the "v" from the version string
 node_version=${node_version:1}
 
-# We need to take only the first segment of version for example: 17.0.1 -> 17
+# only take the first segment of version for example: 17.0.1 -> 17
 node_version=${node_version%%.*}
 
 if [ "$node_version" -ge 17 ]; then
