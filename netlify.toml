@@ -1,9 +1,8 @@
-
 [build]
   base    = "/"
   publish = "example/web-build"
   command = "yarn example expo export:web"
-  environment = { YARN_VERSION = "3.2.2" }
 
-[template.environment]
+[build.environment]
   NODE_OPTIONS = "--openssl-legacy-provider"
+  YARN_VERSION = "3.2.2"
