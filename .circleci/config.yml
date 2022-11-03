@@ -3,7 +3,7 @@ version: 2.1
 executors:
   default:
     docker:
-      - image: circleci/node:14
+      - image: cimg/node:lts
     working_directory: ~/project
 
   playwright:
@@ -72,7 +72,7 @@ jobs:
       - attach_project
       - run:
           name: Build example for web
-          command: yarn example expo export:web
+          command: NODE_OPTIONS=--openssl-legacy-provider yarn example expo export:web
       # Yarn does not execute the postinstall scripts if the package is in the cache
       - run:
           name: Install browsers
