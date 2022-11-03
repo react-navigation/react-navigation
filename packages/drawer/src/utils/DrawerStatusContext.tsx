@@ -1,7 +1,4 @@
-import * as React from 'react';
 import type { DrawerStatus } from '@react-navigation/native';
+import * as React from 'react';
 
-export default React.createContext<DrawerStatus | undefined>(
-  undefined
-);
-
+export default React.createContext<DrawerStatus | undefined>(undefined);
