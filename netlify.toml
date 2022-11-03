@@ -4,5 +4,6 @@
   command = "yarn example expo export:web"
 
 [build.environment]
+  NODE_VERSION = "18.12.0"
   NODE_OPTIONS = "--openssl-legacy-provider"
   YARN_VERSION = "3.2.2"
