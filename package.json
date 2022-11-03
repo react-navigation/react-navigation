@@ -21,14 +21,14 @@
     "typescript": "tsc --noEmit --composite false",
     "test": "jest",
     "clean": "lerna run clean",
-    "build": "lerna run prepack",
+    "build": "npx cross-env NODE_OPTIONS=--openssl-legacy-provider lerna run prepack",
     "publish": "lerna publish",
     "release": "run-s clean build publish",
     "example": "yarn workspace @react-navigation/example"
   },
   "engines": {
     "yarn": "3.2.2",
-    "node": "16"
+    "node": ">=16"
   },
   "packageManager": "yarn@3.2.2",
   "devDependencies": {

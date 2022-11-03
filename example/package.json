@@ -4,9 +4,9 @@
   "version": "5.1.0",
   "private": true,
   "scripts": {
-    "start": "expo start",
-    "client": "expo start --dev-client",
-    "web": "expo start --web",
+    "start": "npx cross-env NODE_OPTIONS=--openssl-legacy-provider expo start",
+    "client": "npx cross-env NODE_OPTIONS=--openssl-legacy-provider expo start --dev-client",
+    "web": "npx cross-env NODE_OPTIONS=--openssl-legacy-provider expo start --web",
     "android": "expo run:android",
     "ios": "run-s pod-install run:ios",
     "run:ios": "expo run:ios",
