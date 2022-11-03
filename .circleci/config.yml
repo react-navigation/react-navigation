@@ -3,9 +3,7 @@ version: 2.1
 executors:
   default:
     docker:
-      - image: cimg/node:18.12.0
-        environment:
-          NODE_OPTIONS: --openssl-legacy-provider
+      - image: circleci/node:16
     working_directory: ~/project
 
   playwright:
