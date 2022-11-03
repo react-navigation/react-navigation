@@ -4,6 +4,8 @@ executors:
   default:
     docker:
       - image: cimg/node:18.12.0
+        environment:
+          NODE_OPTIONS: --openssl-legacy-provider
     working_directory: ~/project
 
   playwright:
@@ -11,7 +13,6 @@ executors:
       - image: mcr.microsoft.com/playwright:focal
         environment:
           NODE_ENV: development
-          NODE_OPTIONS: --openssl-legacy-provider
 
 commands:
   attach_project:
