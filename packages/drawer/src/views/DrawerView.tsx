@@ -230,6 +230,7 @@ function DrawerViewBase({
           }
 
           const {
+            freezeOnBlur,
             header = ({ layout, options }: DrawerHeaderProps) => (
               <Header
                 {...options}
@@ -241,6 +242,9 @@ function DrawerViewBase({
                 }
               />
             ),
+            headerShown,
+            headerStatusBarHeight,
+            headerTransparent,
             sceneContainerStyle,
           } = descriptor.options;
 
@@ -250,14 +254,15 @@ function DrawerViewBase({
               style={[StyleSheet.absoluteFill, { zIndex: isFocused ? 0 : -1 }]}
               visible={isFocused}
               enabled={detachInactiveScreens}
+              freezeOnBlur={freezeOnBlur}
             >
               <Screen
                 focused={isFocused}
                 route={descriptor.route}
                 navigation={descriptor.navigation}
-                headerShown={descriptor.options.headerShown}
-                headerTransparent={descriptor.options.headerTransparent}
-                headerStatusBarHeight={descriptor.options.headerStatusBarHeight}
+                headerShown={headerShown}
+                headerStatusBarHeight={headerStatusBarHeight}
+                headerTransparent={headerTransparent}
                 header={header({
                   layout: dimensions,
                   route: descriptor.route,

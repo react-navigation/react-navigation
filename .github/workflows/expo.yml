@@ -39,4 +39,4 @@ jobs:
 
       - name: Publish Expo app
         working-directory: ./example
-        run: yarn expo publish
+        run: yarn expo-cli publish

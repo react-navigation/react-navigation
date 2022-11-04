@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.4.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.3.2...@react-navigation/bottom-tabs@6.4.0) (2022-09-16)
+
+
+### Features
+
+* add freezeOnBlur prop  ([#10834](https://github.com/react-navigation/react-navigation/issues/10834)) ([e13b4d9](https://github.com/react-navigation/react-navigation/commit/e13b4d9341362512ba4bf921a17552f3be8735c1))
+
+
+
+
+
 ## [6.3.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.3.2...@react-navigation/bottom-tabs@6.3.3) (2022-08-24)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

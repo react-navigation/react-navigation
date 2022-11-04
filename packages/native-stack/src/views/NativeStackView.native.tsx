@@ -48,12 +48,14 @@ const MaybeNestedStack = ({
   route,
   presentation,
   headerHeight,
+  headerTopInsetEnabled,
   children,
 }: {
   options: NativeStackNavigationOptions;
   route: Route<string>;
   presentation: Exclude<StackPresentationTypes, 'push'> | 'card';
   headerHeight: number;
+  headerTopInsetEnabled: boolean;
   children: React.ReactNode;
 }) => {
   const { colors } = useTheme();
@@ -100,6 +102,7 @@ const MaybeNestedStack = ({
             {...options}
             route={route}
             headerHeight={headerHeight}
+            headerTopInsetEnabled={headerTopInsetEnabled}
             canGoBack
           />
           {content}
@@ -120,7 +123,7 @@ type SceneViewProps = {
   onAppear: () => void;
   onDisappear: () => void;
   onDismissed: ScreenProps['onDismissed'];
-  onHeaderBackButtonClicked: () => void;
+  onHeaderBackButtonClicked: ScreenProps['onHeaderBackButtonClicked'];
   onNativeDismissCancelled: ScreenProps['onDismissed'];
 };
 
@@ -144,6 +147,7 @@ const SceneView = ({
     header,
     headerBackButtonMenuEnabled,
     headerShown,
+    headerTransparent,
     autoHideHomeIndicator,
     navigationBarColor,
     navigationBarHidden,
@@ -153,6 +157,7 @@ const SceneView = ({
     statusBarStyle,
     statusBarTranslucent,
     statusBarColor,
+    freezeOnBlur,
   } = options;
 
   let {
@@ -192,10 +197,6 @@ const SceneView = ({
     presentation = 'card';
   }
 
-  const isHeaderInPush = isAndroid
-    ? headerShown
-    : presentation === 'card' && headerShown !== false;
-
   const insets = useSafeAreaInsets();
   const frame = useSafeAreaFrame();
 
@@ -207,11 +208,16 @@ const SceneView = ({
     Platform.OS === 'ios' && !(Platform.isPad || Platform.isTVOS);
   const isLandscape = frame.width > frame.height;
 
-  const topInset = isModal || (isIPhone && isLandscape) ? 0 : insets.top;
-
   const isParentHeaderShown = React.useContext(HeaderShownContext);
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
   const parentHeaderBack = React.useContext(HeaderBackContext);
+
+  const topInset =
+    isParentHeaderShown ||
+    (Platform.OS === 'ios' && isModal) ||
+    (isIPhone && isLandscape)
+      ? 0
+      : insets.top;
 
   const { preventedRoutes } = usePreventRemoveContext();
 
@@ -220,6 +226,7 @@ const SceneView = ({
   const [customHeaderHeight, setCustomHeaderHeight] =
     React.useState(defaultHeaderHeight);
 
+  const headerTopInsetEnabled = topInset !== 0;
   const headerHeight = header ? customHeaderHeight : defaultHeaderHeight;
   const headerBack = previousDescriptor
     ? {
@@ -265,67 +272,77 @@ const SceneView = ({
       onDisappear={onDisappear}
       onDismissed={onDismissed}
       isNativeStack
-      // Props for enabling preventing removal in native-stack
       nativeBackButtonDismissalEnabled={false} // on Android
-      // @ts-expect-error prop not publicly exported from rn-screens
-      preventNativeDismiss={isRemovePrevented} // on iOS
       onHeaderBackButtonClicked={onHeaderBackButtonClicked}
+      // @ts-ignore props not exported from rn-screens
+      preventNativeDismiss={isRemovePrevented} // on iOS
       onNativeDismissCancelled={onNativeDismissCancelled}
+      // this prop is available since rn-screens 3.16
+      freezeOnBlur={freezeOnBlur}
     >
       <NavigationContext.Provider value={navigation}>
         <NavigationRouteContext.Provider value={route}>
           <HeaderShownContext.Provider
-            value={isParentHeaderShown || isHeaderInPush !== false}
+            value={isParentHeaderShown || headerShown !== false}
           >
             <HeaderHeightContext.Provider
               value={
-                isHeaderInPush !== false
-                  ? headerHeight
-                  : parentHeaderHeight ?? 0
+                headerShown !== false ? headerHeight : parentHeaderHeight ?? 0
               }
             >
-              {header !== undefined && headerShown !== false ? (
-                <View
-                  onLayout={(e) => {
-                    setCustomHeaderHeight(e.nativeEvent.layout.height);
-                  }}
-                >
-                  {header({
-                    back: headerBack,
-                    options,
-                    route,
-                    navigation,
-                  })}
-                </View>
-              ) : (
-                <HeaderConfig
-                  {...options}
-                  route={route}
-                  headerBackButtonMenuEnabled={
-                    isRemovePrevented !== undefined
-                      ? !isRemovePrevented
-                      : headerBackButtonMenuEnabled
-                  }
-                  headerShown={isHeaderInPush}
-                  headerHeight={headerHeight}
-                  headerBackTitle={
-                    options.headerBackTitle !== undefined
-                      ? options.headerBackTitle
-                      : headerBack?.title
-                  }
-                  canGoBack={headerBack !== undefined}
-                />
-              )}
-              <MaybeNestedStack
-                options={options}
+              {/**
+               * `HeaderConfig` needs to be the direct child of `Screen` without any intermediate `View`
+               * We don't render it conditionally to make it possible to dynamically render a custom `header`
+               * Otherwise dynamically rendering a custom `header` leaves the native header visible
+               *
+               * https://github.com/software-mansion/react-native-screens/blob/main/guides/GUIDE_FOR_LIBRARY_AUTHORS.md#screenstackheaderconfig
+               */}
+              <HeaderConfig
+                {...options}
                 route={route}
-                presentation={presentation}
+                headerBackButtonMenuEnabled={
+                  isRemovePrevented !== undefined
+                    ? !isRemovePrevented
+                    : headerBackButtonMenuEnabled
+                }
+                headerShown={header !== undefined ? false : headerShown}
                 headerHeight={headerHeight}
-              >
-                <HeaderBackContext.Provider value={headerBack}>
-                  {render()}
-                </HeaderBackContext.Provider>
-              </MaybeNestedStack>
+                headerBackTitle={
+                  options.headerBackTitle !== undefined
+                    ? options.headerBackTitle
+                    : undefined
+                }
+                headerTopInsetEnabled={headerTopInsetEnabled}
+                canGoBack={headerBack !== undefined}
+              />
+              <View style={styles.scene}>
+                <MaybeNestedStack
+                  options={options}
+                  route={route}
+                  presentation={presentation}
+                  headerHeight={headerHeight}
+                  headerTopInsetEnabled={headerTopInsetEnabled}
+                >
+                  <HeaderBackContext.Provider value={headerBack}>
+                    {render()}
+                  </HeaderBackContext.Provider>
+                </MaybeNestedStack>
+                {header !== undefined && headerShown !== false ? (
+                  <View
+                    onLayout={(e) => {
+                      setCustomHeaderHeight(e.nativeEvent.layout.height);
+                    }}
+                    style={headerTransparent ? styles.absolute : null}
+                  >
+                    {header({
+                      back: headerBack,
+                      options,
+                      route,
+                      navigation,
+                    })}
+                  </View>
+                ) : null}
+              </View>
             </HeaderHeightContext.Provider>
           </HeaderShownContext.Provider>
         </NavigationRouteContext.Provider>
@@ -425,5 +442,15 @@ export default function NativeStackView(props: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scene: {
+    flex: 1,
+    flexDirection: 'column-reverse',
+  },
+  absolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
   },
 });
