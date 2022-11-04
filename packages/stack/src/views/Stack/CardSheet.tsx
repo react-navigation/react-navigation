@@ -7,15 +7,27 @@ type Props = ViewProps & {
   children: React.ReactNode;
 };
 
+export type CardSheetRef = {
+  setPointerEvents: React.Dispatch<ViewProps['pointerEvents']>;
+};
+
 // This component will render a page which overflows the screen
 // if the container fills the body by comparing the size
 // This lets the document.body handle scrolling of the content
 // It's necessary for mobile browsers to be able to hide address bar on scroll
-export default React.forwardRef<View, Props>(function CardSheet(
+export default React.forwardRef<CardSheetRef, Props>(function CardSheet(
   { enabled, layout, style, ...rest },
   ref
 ) {
   const [fill, setFill] = React.useState(false);
+  // To avoid triggering a rerender in Card during animation we had to move
+  // the state to CardSheet. The `setPointerEvents` is then hoisted back to the Card.
+  const [pointerEvents, setPointerEvents] =
+    React.useState<ViewProps['pointerEvents']>('auto');
+
+  React.useImperativeHandle(ref, () => {
+    return { setPointerEvents };
+  });
 
   React.useEffect(() => {
     if (typeof document === 'undefined' || !document.body) {
@@ -32,7 +44,7 @@ export default React.forwardRef<View, Props>(function CardSheet(
   return (
     <View
       {...rest}
-      ref={ref}
+      pointerEvents={pointerEvents}
       style={[enabled && fill ? styles.page : styles.card, style]}
     />
   );
