@@ -20,7 +20,7 @@
   "flipperBundlerEntry": "src/index.tsx",
   "scripts": {
     "lint": "flipper-pkg lint",
-    "prepack": "flipper-pkg lint && flipper-pkg bundle",
+    "prepack": "NODE_OPTIONS=--openssl-legacy-provider run-s lint build",
     "build": "flipper-pkg bundle",
     "watch": "flipper-pkg bundle --watch",
     "test": "jest --no-watchman"
