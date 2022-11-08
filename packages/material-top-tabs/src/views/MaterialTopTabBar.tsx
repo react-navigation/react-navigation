@@ -41,6 +41,7 @@ export default function TabBarTop({
         { backgroundColor: colors.primary },
         focusedOptions.tabBarIndicatorStyle,
       ]}
+      gap={focusedOptions.tabBarGap}
       indicatorContainerStyle={focusedOptions.tabBarIndicatorContainerStyle}
       contentContainerStyle={focusedOptions.tabBarContentContainerStyle}
       style={[{ backgroundColor: colors.card }, focusedOptions.tabBarStyle]}

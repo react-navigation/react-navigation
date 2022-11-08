@@ -196,6 +196,11 @@ export type MaterialTopTabNavigationOptions = {
   tabBarStyle?: StyleProp<ViewStyle>;
 
   /**
+   * Gap between tabs
+   */
+  tabBarGap?: number;
+
+  /**
    * Whether to enable swipe gestures when this screen is focused.
    * Swipe gestures are enabled by default. Passing `false` will disable swipe gestures,
    * but the user can still switch tabs by pressing the tab bar.
