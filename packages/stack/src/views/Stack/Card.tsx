@@ -30,7 +30,7 @@ import {
   PanGestureHandlerGestureEvent,
 } from '../GestureHandler';
 import ModalStatusBarManager from '../ModalStatusBarManager';
-import CardSheet from './CardSheet';
+import CardSheet, { CardSheetRef } from './CardSheet';
 
 type Props = ViewProps & {
   interpolationIndex: number;
@@ -67,10 +67,6 @@ type Props = ViewProps & {
   contentStyle?: StyleProp<ViewStyle>;
 };
 
-type State = {
-  pointerEvents: ViewProps['pointerEvents'];
-};
-
 const GESTURE_VELOCITY_IMPACT = 0.3;
 
 const TRUE = 1;
@@ -93,7 +89,7 @@ const hasOpacityStyle = (style: any) => {
   return false;
 };
 
-export default class Card extends React.Component<Props, State> {
+export default class Card extends React.Component<Props> {
   static defaultProps = {
     shadowEnabled: false,
     gestureEnabled: true,
@@ -106,10 +102,6 @@ export default class Card extends React.Component<Props, State> {
       style ? (
         <Animated.View pointerEvents="none" style={[styles.overlay, style]} />
       ) : null,
-  };
-
-  state: State = {
-    pointerEvents: 'auto',
   };
 
   componentDidMount() {
@@ -136,12 +128,11 @@ export default class Card extends React.Component<Props, State> {
     const toValue = this.getAnimateToValue(this.props);
 
     if (
-      closing !== prevProps.closing &&
-      (this.getAnimateToValue(prevProps) !== toValue ||
-        this.lastToValue !== toValue)
+      this.getAnimateToValue(prevProps) !== toValue ||
+      this.lastToValue !== toValue
     ) {
       // We need to trigger the animation when route was closed
-      // The route might have been closed by a `POP` action or by a gesture
+      // Thr route might have been closed by a `POP` action or by a gesture
       // When route was closed due to a gesture, the animation would've happened already
       // It's still important to trigger the animation so that `onClose` is called
       // If `onClose` is not called, cleanup step won't be performed for gestures
@@ -251,7 +242,7 @@ export default class Card extends React.Component<Props, State> {
   private setPointerEventsEnabled = (enabled: boolean) => {
     const pointerEvents = enabled ? 'box-none' : 'none';
 
-    this.setState({ pointerEvents });
+    this.ref.current?.setPointerEvents(pointerEvents);
   };
 
   private handleStartInteraction = () => {
@@ -434,6 +425,8 @@ export default class Card extends React.Component<Props, State> {
     }
   }
 
+  private ref = React.createRef<CardSheetRef>();
+
   render() {
     const {
       styleInterpolator,
@@ -562,7 +555,7 @@ export default class Card extends React.Component<Props, State> {
                   />
                 ) : null}
                 <CardSheet
-                  pointerEvents={this.state.pointerEvents}
+                  ref={this.ref}
                   enabled={pageOverflowEnabled}
                   layout={layout}
                   style={contentStyle}

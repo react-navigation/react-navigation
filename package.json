@@ -28,7 +28,7 @@
   },
   "engines": {
     "yarn": "3.2.2",
-    "node": ">=16"
+    "node": ">=18"
   },
   "packageManager": "yarn@3.2.2",
   "devDependencies": {

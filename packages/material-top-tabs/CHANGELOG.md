@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.3.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.2.4...@react-navigation/material-top-tabs@6.3.0) (2022-10-11)
+
+
+### Features
+
+* expose animationEnabled in material top tabs ([d1bd31f](https://github.com/react-navigation/react-navigation/commit/d1bd31f11b1a40a319e7fb6e3fee074edd059349))
+
+
+
+
+
 ## [6.2.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.2.2...@react-navigation/material-top-tabs@6.2.4) (2022-09-16)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
