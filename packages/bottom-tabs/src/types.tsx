@@ -34,6 +34,8 @@ export type BottomTabNavigationEventMap = {
 
 export type LabelPosition = 'beside-icon' | 'below-icon';
 
+export type TabBarPosition = 'left' | 'right' | 'bottom';
+
 export type BottomTabNavigationHelpers = NavigationHelpers<
   ParamListBase,
   BottomTabNavigationEventMap
@@ -288,6 +290,11 @@ export type BottomTabNavigationConfig = {
    * Style object for the component wrapping the screen content.
    */
   sceneContainerStyle?: StyleProp<ViewStyle>;
+
+  /**
+   * Bottom tab-bar position on the window.
+   */
+  tabBarPosition?: TabBarPosition;
 };
 
 export type BottomTabHeaderProps = {
@@ -314,6 +321,7 @@ export type BottomTabBarProps = {
   descriptors: BottomTabDescriptorMap;
   navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>;
   insets: EdgeInsets;
+  tabBarPosition: TabBarPosition;
 };
 
 export type BottomTabBarButtonProps = Omit<
@@ -326,3 +334,13 @@ export type BottomTabBarButtonProps = Omit<
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
   ) => void;
 };
+
+export type TabBarPositionMapConfig = Record<
+  TabBarPosition,
+  Record<'tabBar' | 'content' | 'tabBarItem', StyleProp<ViewStyle>>
+>;
+
+export type TabBarContainerPositionMapConfig = Record<
+  TabBarPosition,
+  StyleProp<ViewStyle>
+>;

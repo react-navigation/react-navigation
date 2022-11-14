@@ -19,6 +19,7 @@ import type {
   BottomTabNavigationConfig,
   BottomTabNavigationHelpers,
   BottomTabNavigationProp,
+  TabBarContainerPositionMapConfig,
 } from '../types';
 import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
 import BottomTabBarHeightContext from '../utils/BottomTabBarHeightContext';
@@ -38,6 +39,7 @@ export default function BottomTabView(props: Props) {
     navigation,
     descriptors,
     safeAreaInsets,
+    tabBarPosition = 'bottom',
     detachInactiveScreens = Platform.OS === 'web' ||
       Platform.OS === 'android' ||
       Platform.OS === 'ios',
@@ -55,6 +57,7 @@ export default function BottomTabView(props: Props) {
   const [tabBarHeight, setTabBarHeight] = React.useState(() =>
     getTabBarHeight({
       state,
+      tabBarPosition,
       descriptors,
       dimensions,
       layout: { width: dimensions.width, height: 0 },
@@ -72,6 +75,7 @@ export default function BottomTabView(props: Props) {
         {(insets) =>
           tabBar({
             state: state,
+            tabBarPosition,
             descriptors: descriptors,
             navigation: navigation,
             insets: {
@@ -89,7 +93,7 @@ export default function BottomTabView(props: Props) {
   const { routes } = state;
 
   return (
-    <SafeAreaProviderCompat>
+    <SafeAreaProviderCompat style={tabBarContainerPosition[tabBarPosition]}>
       <MaybeScreenContainer
         enabled={detachInactiveScreens}
         hasTwoStates
@@ -155,12 +159,23 @@ export default function BottomTabView(props: Props) {
           );
         })}
       </MaybeScreenContainer>
+
       <BottomTabBarHeightCallbackContext.Provider value={setTabBarHeight}>
         {renderTabBar()}
       </BottomTabBarHeightCallbackContext.Provider>
     </SafeAreaProviderCompat>
   );
 }
+
+const tabBarContainerPosition: TabBarContainerPositionMapConfig = {
+  bottom: {},
+  right: {
+    flexDirection: 'row',
+  },
+  left: {
+    flexDirection: 'row-reverse',
+  },
+};
 
 const styles = StyleSheet.create({
   container: {

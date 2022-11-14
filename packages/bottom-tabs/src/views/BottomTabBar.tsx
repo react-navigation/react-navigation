@@ -20,7 +20,11 @@ import {
 } from 'react-native';
 import { EdgeInsets, useSafeAreaFrame } from 'react-native-safe-area-context';
 
-import type { BottomTabBarProps, BottomTabDescriptorMap } from '../types';
+import type {
+  BottomTabBarProps,
+  BottomTabDescriptorMap,
+  TabBarPositionMapConfig,
+} from '../types';
 import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
 import useIsKeyboardShown from '../utils/useIsKeyboardShown';
 import BottomTabItem from './BottomTabItem';
@@ -40,16 +44,21 @@ type Options = {
   descriptors: BottomTabDescriptorMap;
   layout: { height: number; width: number };
   dimensions: { height: number; width: number };
-};
+} & Pick<BottomTabBarProps, 'tabBarPosition'>;
 
 const shouldUseHorizontalLabels = ({
   state,
   descriptors,
   layout,
+  tabBarPosition,
   dimensions,
 }: Options) => {
   const { tabBarLabelPosition } =
     descriptors[state.routes[state.index].key].options;
+
+  if (tabBarPosition !== 'bottom') {
+    return false;
+  }
 
   if (tabBarLabelPosition) {
     switch (tabBarLabelPosition) {
@@ -129,6 +138,7 @@ export default function BottomTabBar({
   state,
   navigation,
   descriptors,
+  tabBarPosition,
   insets,
   style,
 }: Props) {
@@ -241,6 +251,7 @@ export default function BottomTabBar({
     insets,
     dimensions,
     layout,
+    tabBarPosition,
     style: [tabBarStyle, style],
   });
 
@@ -249,18 +260,87 @@ export default function BottomTabBar({
     descriptors,
     dimensions,
     layout,
+    tabBarPosition,
   });
 
   const tabBarBackgroundElement = tabBarBackground?.();
 
+  const tabBarPositionMap: TabBarPositionMapConfig = {
+    right: {
+      tabBarItem: {
+        height:
+          Platform.OS === ('ios' || 'android')
+            ? tabBarHeight / 1.5
+            : DEFAULT_TABBAR_HEIGHT,
+        marginTop: COMPACT_TABBAR_HEIGHT / 2,
+        flex: Platform.OS === ('ios' || 'android') ? 0 : 0.07,
+      },
+      tabBar: {
+        paddingHorizontal: 5,
+        borderLeftColor: colors.border,
+        paddingTop: insets.top + tabBarHeight,
+        borderLeftWidth: StyleSheet.hairlineWidth,
+      },
+      content: {
+        flex: 1,
+        width: tabBarHeight,
+        maxWidth:
+          Platform.OS === ('ios' || 'android')
+            ? DEFAULT_TABBAR_HEIGHT
+            : DEFAULT_TABBAR_HEIGHT * 1.3,
+      },
+    },
+
+    left: {
+      tabBarItem: {
+        height:
+          Platform.OS === ('ios' || 'android')
+            ? tabBarHeight / 1.5
+            : DEFAULT_TABBAR_HEIGHT,
+        marginTop: COMPACT_TABBAR_HEIGHT / 2,
+        flex: Platform.OS === ('ios' || 'android') ? 0 : 0.07,
+      },
+      tabBar: {
+        paddingHorizontal: 5,
+        borderRightColor: colors.border,
+        paddingTop: insets.top + tabBarHeight,
+        borderRightWidth: StyleSheet.hairlineWidth,
+      },
+      content: {
+        flex: 1,
+        width: tabBarHeight,
+        maxWidth:
+          Platform.OS === ('ios' || 'android')
+            ? DEFAULT_TABBAR_HEIGHT
+            : DEFAULT_TABBAR_HEIGHT * 1.3,
+      },
+    },
+
+    bottom: {
+      tabBarItem: {},
+      tabBar: {
+        height: tabBarHeight,
+        borderTopColor: colors.border,
+        borderTopWidth: StyleSheet.hairlineWidth,
+        paddingHorizontal: Math.max(insets.left, insets.right),
+      },
+      content: {
+        flex: 1,
+        flexDirection: 'row',
+      },
+    },
+  };
+
   return (
     <Animated.View
       style={[
-        styles.tabBar,
+        tabBarPositionMap[tabBarPosition].tabBar,
         {
+          left: 0,
+          right: 0,
+          bottom: 0,
           backgroundColor:
             tabBarBackgroundElement != null ? 'transparent' : colors.card,
-          borderTopColor: colors.border,
         },
         {
           transform: [
@@ -279,9 +359,7 @@ export default function BottomTabBar({
           position: isTabBarHidden ? 'absolute' : (null as any),
         },
         {
-          height: tabBarHeight,
           paddingBottom,
-          paddingHorizontal: Math.max(insets.left, insets.right),
         },
         tabBarStyle,
       ]}
@@ -291,7 +369,10 @@ export default function BottomTabBar({
       <View pointerEvents="none" style={StyleSheet.absoluteFill}>
         {tabBarBackgroundElement}
       </View>
-      <View accessibilityRole="tablist" style={styles.content}>
+      <View
+        accessibilityRole="tablist"
+        style={tabBarPositionMap[tabBarPosition].content}
+      >
         {routes.map((route, index) => {
           const focused = index === state.index;
           const { options } = descriptors[route.key];
@@ -365,7 +446,10 @@ export default function BottomTabBar({
                   showLabel={tabBarShowLabel}
                   labelStyle={options.tabBarLabelStyle}
                   iconStyle={options.tabBarIconStyle}
-                  style={options.tabBarItemStyle}
+                  style={[
+                    options.tabBarItemStyle,
+                    tabBarPositionMap[tabBarPosition].tabBarItem,
+                  ]}
                 />
               </NavigationRouteContext.Provider>
             </NavigationContext.Provider>
@@ -375,17 +459,3 @@ export default function BottomTabBar({
     </Animated.View>
   );
 }
-
-const styles = StyleSheet.create({
-  tabBar: {
-    left: 0,
-    right: 0,
-    bottom: 0,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    elevation: 8,
-  },
-  content: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-});
