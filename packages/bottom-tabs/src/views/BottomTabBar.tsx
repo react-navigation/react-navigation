@@ -38,8 +38,9 @@ type TabBarPositionMapConfig = Record<
   Record<'tabBar' | 'content' | 'tabBarItem', StyleProp<ViewStyle>>
 >;
 
-const COMPACT_TABITEM_GAP = 15;
+const COMPACT_TABITEM_GAP = 12;
 const DEFAULT_TABBAR_HEIGHT = 49;
+const MINIMUM_TABBAR_HEIGHT = 50;
 const COMPACT_TABBAR_HEIGHT = 32;
 const DEFAULT_MAX_TAB_ITEM_WIDTH = 125;
 
@@ -61,10 +62,6 @@ const shouldUseHorizontalLabels = ({
   const { tabBarLabelPosition, tabBarPosition } =
     descriptors[state.routes[state.index].key].options;
 
-  if (tabBarPosition !== 'bottom') {
-    return false;
-  }
-
   if (tabBarLabelPosition) {
     switch (tabBarLabelPosition) {
       case 'beside-icon':
@@ -72,6 +69,8 @@ const shouldUseHorizontalLabels = ({
       case 'below-icon':
         return false;
     }
+  } else if (tabBarPosition !== 'bottom') {
+    return false;
   }
 
   if (layout.width >= 768) {
@@ -143,7 +142,6 @@ export default function BottomTabBar({
   state,
   navigation,
   descriptors,
-  tabBarPosition,
   insets,
   style,
 }: Props) {
@@ -162,6 +160,7 @@ export default function BottomTabBar({
     tabBarBackground,
     tabBarActiveTintColor,
     tabBarInactiveTintColor,
+    tabBarPosition = 'bottom',
     tabBarActiveBackgroundColor,
     tabBarInactiveBackgroundColor,
   } = focusedOptions;
@@ -268,9 +267,11 @@ export default function BottomTabBar({
 
   const tabBarBackgroundElement = tabBarBackground?.();
 
-  const sharedTabBarStyle = {
+  const sharedTabBarStyle: TabBarPositionMapConfig['bottom'] = {
     tabBarItem: {
-      flex: 1,
+      flex: 0,
+      justifyContent: 'flex-start',
+      minHeight: MINIMUM_TABBAR_HEIGHT,
       marginVertical: COMPACT_TABITEM_GAP,
     },
     tabBar: {
@@ -279,11 +280,7 @@ export default function BottomTabBar({
     },
     content: {
       flex: 1,
-      width: tabBarHeight,
-      maxWidth:
-        Platform.OS === 'ios' || Platform.OS === 'android'
-          ? DEFAULT_TABBAR_HEIGHT
-          : DEFAULT_TABBAR_HEIGHT * 1.3,
+      paddingHorizontal: COMPACT_TABITEM_GAP,
     },
   };
 
@@ -291,7 +288,7 @@ export default function BottomTabBar({
     right: {
       ...sharedTabBarStyle,
       tabBar: {
-        ...sharedTabBarStyle.tabBar,
+        ...(sharedTabBarStyle.tabBar as unknown as ViewStyle),
         borderLeftColor: colors.border,
         borderLeftWidth: StyleSheet.hairlineWidth,
       },
@@ -300,7 +297,7 @@ export default function BottomTabBar({
     left: {
       ...sharedTabBarStyle,
       tabBar: {
-        ...sharedTabBarStyle.tabBar,
+        ...(sharedTabBarStyle.tabBar as unknown as ViewStyle),
         borderRightColor: colors.border,
         borderRightWidth: StyleSheet.hairlineWidth,
       },

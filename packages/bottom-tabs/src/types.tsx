@@ -321,7 +321,6 @@ export type BottomTabBarProps = {
   descriptors: BottomTabDescriptorMap;
   navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>;
   insets: EdgeInsets;
-  tabBarPosition: TabBarPosition;
 };
 
 export type BottomTabBarButtonProps = Omit<

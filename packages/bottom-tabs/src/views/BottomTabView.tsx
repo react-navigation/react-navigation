@@ -79,7 +79,6 @@ export default function BottomTabView(props: Props) {
         {(insets) =>
           tabBar({
             state: state,
-            tabBarPosition,
             descriptors: descriptors,
             navigation: navigation,
             insets: {

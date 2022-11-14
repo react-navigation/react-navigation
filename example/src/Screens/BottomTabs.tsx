@@ -70,7 +70,6 @@ export default function BottomTabsScreen({
   return (
     <BottomTabs.Navigator
       screenOptions={{
-        tabBarPosition: 'right',
         headerLeft: (props) => (
           <HeaderBackButton {...props} onPress={navigation.goBack} />
         ),
