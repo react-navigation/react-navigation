@@ -180,8 +180,7 @@ export default function HeaderConfig({
         hideShadow={
           headerShadowVisible === false ||
           headerBackground != null ||
-          // On iOS, even transparent headers have a border (called shadow in this property)
-          (Platform.OS !== 'ios' && headerTransparent)
+          (headerTransparent && headerShadowVisible !== true)
         }
         largeTitle={headerLargeTitle}
         largeTitleBackgroundColor={headerLargeStyleFlattened.backgroundColor}
