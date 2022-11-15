@@ -654,7 +654,10 @@ export default class CardStack extends React.Component<Props, State> {
             return (
               <MaybeScreen
                 key={route.key}
-                style={StyleSheet.absoluteFill}
+                style={{
+                  ...StyleSheet.absoluteFillObject,
+                  position: 'relative',
+                }}
                 enabled={detachInactiveScreens}
                 active={isScreenActive}
                 freezeOnBlur={freezeOnBlur}

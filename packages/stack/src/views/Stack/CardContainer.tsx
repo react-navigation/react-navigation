@@ -272,8 +272,9 @@ function CardContainer({
             !focused
               ? 'none'
               : 'flex',
+          ...StyleSheet.absoluteFillObject,
+          position: 'relative',
         },
-        StyleSheet.absoluteFill,
       ]}
     >
       <View style={styles.container}>

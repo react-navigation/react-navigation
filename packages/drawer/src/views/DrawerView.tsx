@@ -251,7 +251,13 @@ function DrawerViewBase({
           return (
             <MaybeScreen
               key={route.key}
-              style={[StyleSheet.absoluteFill, { zIndex: isFocused ? 0 : -1 }]}
+              style={[
+                {
+                  ...StyleSheet.absoluteFillObject,
+                  position: 'relative',
+                  zIndex: isFocused ? 0 : -1,
+                },
+              ]}
               visible={isFocused}
               enabled={detachInactiveScreens}
               freezeOnBlur={freezeOnBlur}
