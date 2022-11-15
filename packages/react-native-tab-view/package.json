@@ -65,7 +65,7 @@
     "react": "18.1.0",
     "react-native": "0.70.5",
     "react-native-builder-bob": "^0.20.1",
-    "react-native-pager-view": "6.1.0",
+    "react-native-pager-view": "6.0.2",
     "release-it": "^15.5.0",
     "typescript": "^4.8.2"
   },
