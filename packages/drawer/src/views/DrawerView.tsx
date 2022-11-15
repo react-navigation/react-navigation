@@ -247,6 +247,7 @@ function DrawerViewBase({
                   ...StyleSheet.absoluteFillObject,
                   position: 'relative',
                   zIndex: isFocused ? 0 : -1,
+                  maxHeight: '100vh', // so that drawer's content is scrollable
                 },
               ]}
               visible={isFocused}
