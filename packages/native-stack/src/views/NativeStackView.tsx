@@ -152,8 +152,9 @@ export function NativeStackView({ state, descriptors }: Props) {
                 )
               }
               style={[
-                StyleSheet.absoluteFill,
                 {
+                  ...StyleSheet.absoluteFillObject,
+                  position: 'relative',
                   display:
                     isFocused ||
                     (nextPresentation != null &&
