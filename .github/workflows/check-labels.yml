@@ -1,7 +1,9 @@
 name: Check for labels
 on:
   issues:
-    types: [opened, edited]
+    types:
+      - opened
+      - edited
 
 jobs:
   check-labels:
