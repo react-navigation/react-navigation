@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.3.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.3.3...@react-navigation/stack@6.3.4) (2022-11-04)
+
+
+### Bug Fixes
+
+* migrate setNativeProps to state ([#10968](https://github.com/react-navigation/react-navigation/issues/10968)) ([37d5440](https://github.com/react-navigation/react-navigation/commit/37d5440d50a5b081910e436d1ba4b30f5797f81d)), closes [#10871](https://github.com/react-navigation/react-navigation/issues/10871)
+
+
+
+
+
+## [6.3.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.3.2...@react-navigation/stack@6.3.3) (2022-10-27)
+
+
+### Reverts
+
+* Revert "fix: add additional check before running `animate` in `componentDidUpdate` (#10871)" ([7d8f748](https://github.com/react-navigation/react-navigation/commit/7d8f748b1b2a87a3a7873e2c793966422ee1a370)), closes [#10871](https://github.com/react-navigation/react-navigation/issues/10871)
+
+
+
+
+
 ## [6.3.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.3.1...@react-navigation/stack@6.3.2) (2022-10-05)
 
 
