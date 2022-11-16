@@ -7,6 +7,7 @@
     "start": "NODE_OPTIONS=--openssl-legacy-provider expo start",
     "client": "NODE_OPTIONS=--openssl-legacy-provider expo start --dev-client",
     "web": "NODE_OPTIONS=--openssl-legacy-provider expo start --web",
+    "web:export": "NODE_OPTIONS=--openssl-legacy-provider expo export:web",
     "android": "expo run:android",
     "ios": "run-s pod-install run:ios",
     "run:ios": "expo run:ios",
