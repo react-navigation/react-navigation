@@ -1,9 +1,13 @@
 name: Check for repro
 on:
   issues:
-    types: [opened, edited]
+    types:
+      - opened
+      - edited
   issue_comment:
-    types: [created, edited]
+    types:
+      - created
+      - edited
 
 jobs:
   check-repro:

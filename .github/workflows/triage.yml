@@ -1,7 +1,8 @@
 name: Triage
 on:
   issues:
-    types: [labeled]
+    types:
+      - labeled
 
 jobs:
   needs-more-info:

@@ -12,20 +12,20 @@ If you are looking for version 4, the code can be found in the [4.x branch](http
 
 ## Package Versions
 
-| Name                                                                     |                                                                               Latest Version                                                                                |
-| ------------------------------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| [@react-navigation/bottom-tabs](/packages/bottom-tabs)                   |          [![badge](https://img.shields.io/npm/v/@react-navigation/bottom-tabs.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/bottom-tabs)          |
-| [@react-navigation/core](/packages/core)                                 |                 [![badge](https://img.shields.io/npm/v/@react-navigation/core.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/core)                 |
-| [@react-navigation/devtools](/packages/devtools)                         |             [![badge](https://img.shields.io/npm/v/@react-navigation/devtools.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/devtools)             |
-| [@react-navigation/drawer](/packages/drawer)                             |               [![badge](https://img.shields.io/npm/v/@react-navigation/drawer.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/drawer)               |
-| [@react-navigation/elements](/packages/elements)                             |               [![badge](https://img.shields.io/npm/v/@react-navigation/elements.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/elements)       |
-| [flipper-plugin-react-navigation](/packages/flipper-plugin-react-navigation)                             |               [![badge](https://img.shields.io/npm/v/flipper-plugin-react-navigation.svg?style=flat-square)](https://www.npmjs.com/package/flipper-plugin-react-navigation)       |
-| [@react-navigation/material-bottom-tabs](/packages/material-bottom-tabs) | [![badge](https://img.shields.io/npm/v/@react-navigation/material-bottom-tabs.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/material-bottom-tabs) |
-| [@react-navigation/material-top-tabs](/packages/material-top-tabs)       |    [![badge](https://img.shields.io/npm/v/@react-navigation/material-top-tabs.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/material-top-tabs)    |
-| [@react-navigation/native-stack](/packages/native-stack)                               |                [![badge](https://img.shields.io/npm/v/@react-navigation/stack.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/native-stack)                |
-| [@react-navigation/native](/packages/native)                             |               [![badge](https://img.shields.io/npm/v/@react-navigation/native.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/native)               |
-| [@react-navigation/routers](/packages/routers)                           |              [![badge](https://img.shields.io/npm/v/@react-navigation/routers.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/routers)              |
-| [@react-navigation/stack](/packages/stack)                               |                [![badge](https://img.shields.io/npm/v/@react-navigation/stack.svg?style=flat-square)](https://www.npmjs.com/package/@react-navigation/stack)                |
+| Name                                                                         |                                                                      Latest Version                                                                       |
+| ---------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| [@react-navigation/bottom-tabs](/packages/bottom-tabs)                       |          [![badge](https://img.shields.io/npm/v/@react-navigation/bottom-tabs.svg)](https://www.npmjs.com/package/@react-navigation/bottom-tabs)          |
+| [@react-navigation/core](/packages/core)                                     |                 [![badge](https://img.shields.io/npm/v/@react-navigation/core.svg)](https://www.npmjs.com/package/@react-navigation/core)                 |
+| [@react-navigation/devtools](/packages/devtools)                             |             [![badge](https://img.shields.io/npm/v/@react-navigation/devtools.svg)](https://www.npmjs.com/package/@react-navigation/devtools)             |
+| [@react-navigation/drawer](/packages/drawer)                                 |               [![badge](https://img.shields.io/npm/v/@react-navigation/drawer.svg)](https://www.npmjs.com/package/@react-navigation/drawer)               |
+| [@react-navigation/elements](/packages/elements)                             |             [![badge](https://img.shields.io/npm/v/@react-navigation/elements.svg)](https://www.npmjs.com/package/@react-navigation/elements)             |
+| [flipper-plugin-react-navigation](/packages/flipper-plugin-react-navigation) |        [![badge](https://img.shields.io/npm/v/flipper-plugin-react-navigation.svg)](https://www.npmjs.com/package/flipper-plugin-react-navigation)        |
+| [@react-navigation/material-bottom-tabs](/packages/material-bottom-tabs)     | [![badge](https://img.shields.io/npm/v/@react-navigation/material-bottom-tabs.svg)](https://www.npmjs.com/package/@react-navigation/material-bottom-tabs) |
+| [@react-navigation/material-top-tabs](/packages/material-top-tabs)           |    [![badge](https://img.shields.io/npm/v/@react-navigation/material-top-tabs.svg)](https://www.npmjs.com/package/@react-navigation/material-top-tabs)    |
+| [@react-navigation/native-stack](/packages/native-stack)                     |            [![badge](https://img.shields.io/npm/v/@react-navigation/stack.svg)](https://www.npmjs.com/package/@react-navigation/native-stack)             |
+| [@react-navigation/native](/packages/native)                                 |               [![badge](https://img.shields.io/npm/v/@react-navigation/native.svg)](https://www.npmjs.com/package/@react-navigation/native)               |
+| [@react-navigation/routers](/packages/routers)                               |              [![badge](https://img.shields.io/npm/v/@react-navigation/routers.svg)](https://www.npmjs.com/package/@react-navigation/routers)              |
+| [@react-navigation/stack](/packages/stack)                                   |                [![badge](https://img.shields.io/npm/v/@react-navigation/stack.svg)](https://www.npmjs.com/package/@react-navigation/stack)                |
 
 ## Contributing
 
@@ -67,9 +67,9 @@ Remember to replace `<user>`, `<repo>` and `<name>` with right values.
 
 <!-- badges -->
 
-[build-badge]: https://img.shields.io/circleci/project/github/react-navigation/react-navigation/main.svg?style=flat-square
-[build]: https://circleci.com/gh/react-navigation/react-navigation
-[coverage-badge]: https://img.shields.io/codecov/c/github/react-navigation/react-navigation.svg?style=flat-square
+[build-badge]: https://github.com/react-navigation/react-navigation/actions/workflows/ci.yml/badge.svg
+[build]: https://github.com/react-navigation/react-navigation/actions/workflows/ci.yml
+[coverage-badge]: https://img.shields.io/codecov/c/github/react-navigation/react-navigation.svg
 [coverage]: https://codecov.io/github/react-navigation/react-navigation
-[license-badge]: https://img.shields.io/npm/l/@react-navigation/core.svg?style=flat-square
+[license-badge]: https://img.shields.io/npm/l/@react-navigation/core.svg
 [license]: https://opensource.org/licenses/MIT
