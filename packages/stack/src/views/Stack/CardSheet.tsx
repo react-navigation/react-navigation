@@ -55,6 +55,5 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
-    overflow: 'hidden',
   },
 });

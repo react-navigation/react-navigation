@@ -49,7 +49,7 @@ export function HeaderContainer({
   const parentHeaderBack = React.useContext(HeaderBackContext);
 
   return (
-    <Animated.View pointerEvents="box-none" style={style}>
+    <Animated.View pointerEvents="box-none" style={[styles.sticky, style]}>
       {scenes.slice(-3).map((scene, i, self) => {
         if ((mode === 'screen' && i !== self.length - 1) || !scene) {
           return null;
@@ -179,6 +179,12 @@ export function HeaderContainer({
 const styles = StyleSheet.create({
   header: {
     position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+  },
+  sticky: {
+    position: 'sticky' as any,
     top: 0,
     left: 0,
     right: 0,
