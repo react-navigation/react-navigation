@@ -23,7 +23,7 @@ import { EdgeInsets, useSafeAreaFrame } from 'react-native-safe-area-context';
 import type {
   BottomTabBarProps,
   BottomTabDescriptorMap,
-  TabBarPositionMapConfig,
+  TabBarPosition,
 } from '../types';
 import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
 import useIsKeyboardShown from '../utils/useIsKeyboardShown';
@@ -33,6 +33,12 @@ type Props = BottomTabBarProps & {
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 };
 
+type TabBarPositionMapConfig = Record<
+  TabBarPosition,
+  Record<'tabBar' | 'content' | 'tabBarItem', StyleProp<ViewStyle>>
+>;
+
+const COMPACT_TABITEM_GAP = 15;
 const DEFAULT_TABBAR_HEIGHT = 49;
 const COMPACT_TABBAR_HEIGHT = 32;
 const DEFAULT_MAX_TAB_ITEM_WIDTH = 125;
@@ -44,16 +50,15 @@ type Options = {
   descriptors: BottomTabDescriptorMap;
   layout: { height: number; width: number };
   dimensions: { height: number; width: number };
-} & Pick<BottomTabBarProps, 'tabBarPosition'>;
+};
 
 const shouldUseHorizontalLabels = ({
   state,
   descriptors,
   layout,
-  tabBarPosition,
   dimensions,
 }: Options) => {
-  const { tabBarLabelPosition } =
+  const { tabBarLabelPosition, tabBarPosition } =
     descriptors[state.routes[state.index].key].options;
 
   if (tabBarPosition !== 'bottom') {
@@ -251,7 +256,6 @@ export default function BottomTabBar({
     insets,
     dimensions,
     layout,
-    tabBarPosition,
     style: [tabBarStyle, style],
   });
 
@@ -260,59 +264,45 @@ export default function BottomTabBar({
     descriptors,
     dimensions,
     layout,
-    tabBarPosition,
   });
 
   const tabBarBackgroundElement = tabBarBackground?.();
 
+  const sharedTabBarStyle = {
+    tabBarItem: {
+      flex: 1,
+      marginVertical: COMPACT_TABITEM_GAP,
+    },
+    tabBar: {
+      paddingHorizontal: 5,
+      paddingTop: insets.top,
+    },
+    content: {
+      flex: 1,
+      width: tabBarHeight,
+      maxWidth:
+        Platform.OS === 'ios' || Platform.OS === 'android'
+          ? DEFAULT_TABBAR_HEIGHT
+          : DEFAULT_TABBAR_HEIGHT * 1.3,
+    },
+  };
+
   const tabBarPositionMap: TabBarPositionMapConfig = {
     right: {
-      tabBarItem: {
-        height:
-          Platform.OS === ('ios' || 'android')
-            ? tabBarHeight / 1.5
-            : DEFAULT_TABBAR_HEIGHT,
-        marginTop: COMPACT_TABBAR_HEIGHT / 2,
-        flex: Platform.OS === ('ios' || 'android') ? 0 : 0.07,
-      },
+      ...sharedTabBarStyle,
       tabBar: {
-        paddingHorizontal: 5,
+        ...sharedTabBarStyle.tabBar,
         borderLeftColor: colors.border,
-        paddingTop: insets.top + tabBarHeight,
         borderLeftWidth: StyleSheet.hairlineWidth,
-      },
-      content: {
-        flex: 1,
-        width: tabBarHeight,
-        maxWidth:
-          Platform.OS === ('ios' || 'android')
-            ? DEFAULT_TABBAR_HEIGHT
-            : DEFAULT_TABBAR_HEIGHT * 1.3,
       },
     },
 
     left: {
-      tabBarItem: {
-        height:
-          Platform.OS === ('ios' || 'android')
-            ? tabBarHeight / 1.5
-            : DEFAULT_TABBAR_HEIGHT,
-        marginTop: COMPACT_TABBAR_HEIGHT / 2,
-        flex: Platform.OS === ('ios' || 'android') ? 0 : 0.07,
-      },
+      ...sharedTabBarStyle,
       tabBar: {
-        paddingHorizontal: 5,
+        ...sharedTabBarStyle.tabBar,
         borderRightColor: colors.border,
-        paddingTop: insets.top + tabBarHeight,
         borderRightWidth: StyleSheet.hairlineWidth,
-      },
-      content: {
-        flex: 1,
-        width: tabBarHeight,
-        maxWidth:
-          Platform.OS === ('ios' || 'android')
-            ? DEFAULT_TABBAR_HEIGHT
-            : DEFAULT_TABBAR_HEIGHT * 1.3,
       },
     },
 
@@ -334,11 +324,9 @@ export default function BottomTabBar({
   return (
     <Animated.View
       style={[
+        styles.layout,
         tabBarPositionMap[tabBarPosition].tabBar,
         {
-          left: 0,
-          right: 0,
-          bottom: 0,
           backgroundColor:
             tabBarBackgroundElement != null ? 'transparent' : colors.card,
         },
@@ -459,3 +447,11 @@ export default function BottomTabBar({
     </Animated.View>
   );
 }
+
+const styles = StyleSheet.create({
+  layout: {
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+});

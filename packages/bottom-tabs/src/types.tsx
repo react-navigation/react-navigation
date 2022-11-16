@@ -255,6 +255,11 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    * Only supported on iOS and Android.
    */
   freezeOnBlur?: boolean;
+
+  /**
+   * Bottom tab-bar position on the window.
+   */
+  tabBarPosition?: TabBarPosition;
 };
 
 export type BottomTabDescriptor = Descriptor<
@@ -290,11 +295,6 @@ export type BottomTabNavigationConfig = {
    * Style object for the component wrapping the screen content.
    */
   sceneContainerStyle?: StyleProp<ViewStyle>;
-
-  /**
-   * Bottom tab-bar position on the window.
-   */
-  tabBarPosition?: TabBarPosition;
 };
 
 export type BottomTabHeaderProps = {
@@ -334,13 +334,3 @@ export type BottomTabBarButtonProps = Omit<
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
   ) => void;
 };
-
-export type TabBarPositionMapConfig = Record<
-  TabBarPosition,
-  Record<'tabBar' | 'content' | 'tabBarItem', StyleProp<ViewStyle>>
->;
-
-export type TabBarContainerPositionMapConfig = Record<
-  TabBarPosition,
-  StyleProp<ViewStyle>
->;

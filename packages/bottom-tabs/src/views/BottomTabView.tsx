@@ -9,7 +9,7 @@ import type {
   TabNavigationState,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
 import type {
@@ -19,7 +19,7 @@ import type {
   BottomTabNavigationConfig,
   BottomTabNavigationHelpers,
   BottomTabNavigationProp,
-  TabBarContainerPositionMapConfig,
+  TabBarPosition,
 } from '../types';
 import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
 import BottomTabBarHeightContext from '../utils/BottomTabBarHeightContext';
@@ -32,6 +32,11 @@ type Props = BottomTabNavigationConfig & {
   descriptors: BottomTabDescriptorMap;
 };
 
+type TabBarContainerPositionMapConfig = Record<
+  TabBarPosition,
+  StyleProp<ViewStyle>
+>;
+
 export default function BottomTabView(props: Props) {
   const {
     tabBar = (props: BottomTabBarProps) => <BottomTabBar {...props} />,
@@ -39,7 +44,6 @@ export default function BottomTabView(props: Props) {
     navigation,
     descriptors,
     safeAreaInsets,
-    tabBarPosition = 'bottom',
     detachInactiveScreens = Platform.OS === 'web' ||
       Platform.OS === 'android' ||
       Platform.OS === 'ios',
@@ -47,6 +51,7 @@ export default function BottomTabView(props: Props) {
   } = props;
 
   const focusedRouteKey = state.routes[state.index].key;
+  const { tabBarPosition = 'bottom' } = descriptors[focusedRouteKey].options;
   const [loaded, setLoaded] = React.useState([focusedRouteKey]);
 
   if (!loaded.includes(focusedRouteKey)) {
@@ -57,7 +62,6 @@ export default function BottomTabView(props: Props) {
   const [tabBarHeight, setTabBarHeight] = React.useState(() =>
     getTabBarHeight({
       state,
-      tabBarPosition,
       descriptors,
       dimensions,
       layout: { width: dimensions.width, height: 0 },
