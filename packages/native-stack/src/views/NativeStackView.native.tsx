@@ -204,8 +204,7 @@ const SceneView = ({
   const isModal = presentation === 'modal' || presentation === 'formSheet';
 
   // Modals are fullscreen in landscape only on iPhone
-  const isIPhone =
-    Platform.OS === 'ios' && !(Platform.isPad || Platform.isTVOS);
+  const isIPhone = Platform.OS === 'ios' && !(Platform.isPad || Platform.isTV);
   const isLandscape = frame.width > frame.height;
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);

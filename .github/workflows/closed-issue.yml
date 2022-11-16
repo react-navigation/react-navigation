@@ -1,7 +1,8 @@
 name: Comment on closed issue
 on:
   issue_comment:
-    types: [created]
+    types:
+      - created
 
 jobs:
   closed-issue:

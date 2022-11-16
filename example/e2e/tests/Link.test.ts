@@ -33,7 +33,6 @@ it('goes to the album page and goes back', async ({ page }) => {
   await waitAndAssertPageHeading(page, 'Albums');
 
   await page.click('[aria-label="Article by Gandalf, back"]');
-  await page.waitForNavigation();
 
   await page.waitForURL('**/link-component/article/gandalf');
   expect(await page.title()).toBe(
