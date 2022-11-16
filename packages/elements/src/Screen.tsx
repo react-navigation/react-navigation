@@ -80,7 +80,7 @@ export default function Screen(props: Props) {
 
                 setHeaderHeight(height);
               }}
-              style={headerTransparent ? styles.absolute : null}
+              style={headerTransparent ? styles.absolute : styles.sticky}
             >
               {header}
             </View>
@@ -102,6 +102,12 @@ const styles = StyleSheet.create({
   },
   absolute: {
     position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+  },
+  sticky: {
+    position: 'sticky' as any,
     top: 0,
     left: 0,
     right: 0,
