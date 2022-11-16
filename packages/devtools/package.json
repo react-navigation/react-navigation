@@ -41,7 +41,7 @@
     "stacktrace-parser": "^0.1.10"
   },
   "devDependencies": {
-    "@react-navigation/core": "^6.4.0",
+    "@react-navigation/core": "workspace:^",
     "@testing-library/react-native": "^11.5.0",
     "@types/deep-equal": "^1.0.1",
     "@types/react": "~18.0.0",
