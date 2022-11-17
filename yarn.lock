@@ -3781,6 +3781,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jest/schemas@npm:^29.0.0":
+  version: 29.0.0
+  resolution: "@jest/schemas@npm:29.0.0"
+  dependencies:
+    "@sinclair/typebox": ^0.24.1
+  checksum: 41355c78f09eb1097e57a3c5d0ca11c9099e235e01ea5fa4e3953562a79a6a9296c1d300f1ba50ca75236048829e056b00685cd2f1ff8285e56fd2ce01249acb
+  languageName: node
+  linkType: hard
+
 "@jest/source-map@npm:^26.6.2":
   version: 26.6.2
   resolution: "@jest/source-map@npm:26.6.2"
@@ -6217,7 +6226,7 @@ __metadata:
   dependencies:
     "@react-navigation/elements": ^1.3.6
     "@react-navigation/native": ^6.0.13
-    "@testing-library/react-native": ^7.2.0
+    "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.0
     "@types/react-native": ~0.69.1
     del-cli: ^3.0.1
@@ -6334,6 +6343,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sinclair/typebox@npm:^0.24.1":
+  version: 0.24.51
+  resolution: "@sinclair/typebox@npm:0.24.51"
+  checksum: fd0d855e748ef767eb19da1a60ed0ab928e91e0f358c1dd198d600762c0015440b15755e96d1176e2a0db7e09c6a64ed487828ee10dd0c3e22f61eb09c478cd0
+  languageName: node
+  linkType: hard
+
 "@sindresorhus/is@npm:^0.14.0":
   version: 0.14.0
   resolution: "@sindresorhus/is@npm:0.14.0"
@@ -6388,6 +6404,23 @@ __metadata:
   version: 0.0.1
   resolution: "@tanishiking/aho-corasick@npm:0.0.1"
   checksum: caab85906b0acc1c25d24d8728eb4f2398c0e0c2e9f57ab1d6f703e60c01cee9cb104a98b66252a168dbbc8907c07791788f7722690b99cfc139af3f95b71cdb
+  languageName: node
+  linkType: hard
+
+"@testing-library/react-native@npm:^11.5.0":
+  version: 11.5.0
+  resolution: "@testing-library/react-native@npm:11.5.0"
+  dependencies:
+    pretty-format: ^29.0.0
+  peerDependencies:
+    jest: ">=28.0.0"
+    react: ">=16.0.0"
+    react-native: ">=0.59"
+    react-test-renderer: ">=16.0.0"
+  peerDependenciesMeta:
+    jest:
+      optional: true
+  checksum: 841c769c2734d7fb7d9a4054fad0582505e49c4c2d99ddcf742ef11f6dd6ee3bcf040400e27dbb55d7fda48b305ae92f40dc8c507e93dffb96d768ff3aba7bad
   languageName: node
   linkType: hard
 
@@ -22665,6 +22698,17 @@ __metadata:
     ansi-styles: ^5.0.0
     react-is: ^17.0.1
   checksum: 5eda32e4e47ddd1a9e8fe9ebef519b217ba403eb8bcb804ba551dfb37f87e674472013fcf78480ab535844fdddcc706fac94511eba349bfb94a138a02d1a7a59
+  languageName: node
+  linkType: hard
+
+"pretty-format@npm:^29.0.0":
+  version: 29.3.1
+  resolution: "pretty-format@npm:29.3.1"
+  dependencies:
+    "@jest/schemas": ^29.0.0
+    ansi-styles: ^5.0.0
+    react-is: ^18.0.0
+  checksum: 9917a0bb859cd7a24a343363f70d5222402c86d10eb45bcc2f77b23a4e67586257390e959061aec22762a782fe6bafb59bf34eb94527bc2e5d211afdb287eb4e
   languageName: node
   linkType: hard
 

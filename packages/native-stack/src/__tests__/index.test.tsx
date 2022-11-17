@@ -50,6 +50,7 @@ it('renders a native-stack navigator with screens', async () => {
 
   fireEvent.press(await findByText(/go to b/i));
 
+  expect(queryByText('Screen A', { includeHiddenElements: false })).toBeNull();
   expect(queryByText('Screen B')).not.toBeNull();
 });
 
