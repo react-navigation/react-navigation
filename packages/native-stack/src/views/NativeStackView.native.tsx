@@ -237,6 +237,7 @@ const SceneView = ({
     : parentHeaderBack;
 
   const isRemovePrevented = preventedRoutes[route.key]?.preventRemove;
+  const isFocused = navigation.isFocused();
 
   return (
     <Screen
@@ -278,6 +279,8 @@ const SceneView = ({
       onNativeDismissCancelled={onNativeDismissCancelled}
       // this prop is available since rn-screens 3.16
       freezeOnBlur={freezeOnBlur}
+      accessibilityElementsHidden={!isFocused}
+      importantForAccessibility={isFocused ? 'auto' : 'no-hide-descendants'}
     >
       <NavigationContext.Provider value={navigation}>
         <NavigationRouteContext.Provider value={route}>
