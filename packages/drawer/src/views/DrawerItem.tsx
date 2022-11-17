@@ -81,6 +81,14 @@ type Props = {
    * Whether label font should scale to respect Text Size accessibility settings.
    */
   allowFontScaling?: boolean;
+  /**
+   * Accessibility label for the drawer.
+   */
+  accessibilityLabel?: string;
+  /**
+   * ID to locate this drawer in tests.
+   */
+  testID?: string;
 };
 
 const LinkPressable = ({
@@ -160,6 +168,8 @@ export default function DrawerItem(props: Props) {
     onPress,
     pressColor,
     pressOpacity,
+    accessibilityLabel,
+    testID,
     ...rest
   } = props;
 
@@ -174,6 +184,8 @@ export default function DrawerItem(props: Props) {
   return (
     <View
       collapsable={false}
+      accessibilityLabel={accessibilityLabel}
+      testID={testID}
       {...rest}
       style={[styles.container, { borderRadius, backgroundColor }, style]}
     >

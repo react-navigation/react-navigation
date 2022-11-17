@@ -64,6 +64,8 @@ export default function DrawerItemList({
       drawerLabelStyle,
       drawerItemStyle,
       drawerAllowFontScaling,
+      drawerAccessibilityLabel,
+      drawerTestID,
     } = descriptors[route.key].options;
 
     return (
@@ -87,6 +89,8 @@ export default function DrawerItemList({
         style={drawerItemStyle}
         to={buildLink(route.name, route.params)}
         onPress={onPress}
+        accessibilityLabel={drawerAccessibilityLabel}
+        testID={drawerTestID}
       />
     );
   }) as React.ReactNode as React.ReactElement;

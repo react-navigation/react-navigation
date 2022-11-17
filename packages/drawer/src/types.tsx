@@ -220,6 +220,16 @@ export type DrawerNavigationOptions = HeaderOptions & {
    * Only supported on iOS and Android.
    */
   freezeOnBlur?: boolean;
+
+  /**
+   * Accessibility label for the drawer.
+   */
+  drawerAccessibilityLabel?: string;
+
+  /**
+   * ID to locate this drawer in tests.
+   */
+  drawerTestID?: string;
 };
 
 export type DrawerContentComponentProps = {
