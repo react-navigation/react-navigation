@@ -25,7 +25,7 @@ jobs:
 
       - name: Publish Expo app
         working-directory: ./example
-        run: CI=1 eas update --branch=${{ github.head_ref }} --message="$(git log -1 --pretty=%B)"
+        run: CI=1 eas update --branch=pr-${{ github.event.number }} --message="$(git log -1 --pretty=%B)"
         env:
           EXPO_USE_DEV_SERVER: true
 
@@ -46,7 +46,7 @@ jobs:
 
             const { sdkVersion } = config;
             const { projectId } = config.extra.eas;
-            const channel = '${{ github.head_ref }}';
+            const channel = 'pr-${{ github.event.number }}';
 
             const url = `https://expo.dev/@react-navigation/react-navigation-example?serviceType=eas&distribution=expo-go&scheme=exp+react-navigation-example&channel=${channel}&sdkVersion=${sdkVersion}`;
 
