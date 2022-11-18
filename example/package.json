@@ -7,6 +7,7 @@
     "start": "NODE_OPTIONS=--openssl-legacy-provider expo start",
     "client": "NODE_OPTIONS=--openssl-legacy-provider expo start --dev-client",
     "web": "NODE_OPTIONS=--openssl-legacy-provider expo start --web",
+    "web:export": "NODE_OPTIONS=--openssl-legacy-provider expo export:web",
     "android": "expo run:android",
     "ios": "run-s pod-install run:ios",
     "run:ios": "expo run:ios",
@@ -69,6 +70,6 @@
     "react-native-flipper": "~0.125.0",
     "react-test-renderer": "18.0.0",
     "serve": "^11.3.0",
-    "typescript": "^4.7.4"
+    "typescript": "^4.9.3"
   }
 }
