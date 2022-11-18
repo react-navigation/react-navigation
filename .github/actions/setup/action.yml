@@ -8,8 +8,9 @@ runs:
       uses: actions/setup-node@v3
       with:
         node-version: 18.x
+        cache: 'npm'
 
-    - name: Restore yarn cache
+    - name: Cache dependencies
       id: yarn-cache
       uses: actions/cache@v3
       with:
