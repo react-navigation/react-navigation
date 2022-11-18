@@ -33,6 +33,7 @@ jobs:
         run: mv example/android.backup example/android && mv example/ios.backup example/ios
 
       - name: Get expo config
+        working-directory: ./example
         id: expo
         run: echo "EXPO_CONFIG=$(npx expo config --json)" >> $GITHUB_OUTPUT
 
