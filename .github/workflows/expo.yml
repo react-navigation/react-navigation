@@ -22,6 +22,12 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
+      - name: Backup prebuild files
+        run: mv example/android example/android.backup && mv example/ios example/ios.backup
+
       - name: Publish Expo app
         working-directory: ./example
         run: npx eas update --auto
+
+      - name: Restore prebuild files
+        run: mv example/android.backup example/android && mv example/ios.backup example/ios
