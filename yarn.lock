@@ -4526,7 +4526,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/test@npm:^1.12.2":
+"@playwright/test@npm:^1.28.0":
   version: 1.28.1
   resolution: "@playwright/test@npm:1.28.1"
   dependencies:
@@ -4938,7 +4938,7 @@ __metadata:
     "@babel/node": ^7.14.2
     "@expo/vector-icons": ^13.0.0
     "@expo/webpack-config": ^0.16.27
-    "@playwright/test": ^1.12.2
+    "@playwright/test": ^1.28.0
     "@react-native-async-storage/async-storage": ~1.17.3
     "@react-native-masked-view/masked-view": 0.2.7
     "@types/cheerio": ^0.22.29

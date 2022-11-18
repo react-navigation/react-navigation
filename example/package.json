@@ -46,7 +46,7 @@
     "@babel/core": "^7.18.6",
     "@babel/node": "^7.14.2",
     "@expo/webpack-config": "^0.16.27",
-    "@playwright/test": "^1.12.2",
+    "@playwright/test": "^1.28.0",
     "@types/cheerio": "^0.22.29",
     "@types/jest-dev-server": "^4.2.0",
     "@types/koa": "^2.13.3",
