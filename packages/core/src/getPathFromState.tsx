@@ -9,7 +9,7 @@ import fromEntries from './fromEntries';
 import type { PathConfig, PathConfigMap } from './types';
 import validatePathConfig from './validatePathConfig';
 
-type Options<ParamList> = {
+type Options<ParamList extends {}> = {
   initialRouteName?: string;
   screens: PathConfigMap<ParamList>;
 };

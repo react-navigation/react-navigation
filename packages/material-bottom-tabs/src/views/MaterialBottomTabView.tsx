@@ -74,7 +74,6 @@ try {
     }
 
     return (
-      // @ts-expect-error: we're passing icon props to text, but we don't care about it since it's just fallback
       <Text
         {...rest}
         style={[
