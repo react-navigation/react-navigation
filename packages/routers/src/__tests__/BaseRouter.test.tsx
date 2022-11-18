@@ -62,7 +62,7 @@ it("doesn't handle SET_PARAMS if source key isn't present", () => {
     source: 'magic',
   });
 
-  expect(result).toBe(null);
+  expect(result).toBeNull();
 });
 
 it('resets state to new state with RESET', () => {
@@ -114,7 +114,7 @@ it("doesn't handle RESET if routes don't match routeNames", () => {
     })
   );
 
-  expect(result).toEqual(null);
+  expect(result).toBeNull();
 });
 
 it("doesn't handle RESET if routeNames don't match", () => {
@@ -126,7 +126,7 @@ it("doesn't handle RESET if routeNames don't match", () => {
     })
   );
 
-  expect(result).toEqual(null);
+  expect(result).toBeNull();
 });
 
 it("doesn't handle RESET if there are no routes", () => {
@@ -138,5 +138,5 @@ it("doesn't handle RESET if there are no routes", () => {
     })
   );
 
-  expect(result).toEqual(null);
+  expect(result).toBeNull();
 });

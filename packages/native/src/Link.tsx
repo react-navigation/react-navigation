@@ -5,14 +5,19 @@ import { GestureResponderEvent, Platform, Text, TextProps } from 'react-native';
 import useLinkProps from './useLinkProps';
 import type { To } from './useLinkTo';
 
-type Props<ParamList extends ReactNavigation.RootParamList> = {
+type Props<ParamList extends ReactNavigation.RootParamList> = Omit<
+  TextProps,
+  'disabled'
+> & {
   to: To<ParamList>;
   action?: NavigationAction;
   target?: string;
   onPress?: (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
   ) => void;
-} & (TextProps & { children: React.ReactNode });
+  disabled?: boolean | null | undefined;
+  children: React.ReactNode;
+};
 
 /**
  * Component to render link to another screen using a path.

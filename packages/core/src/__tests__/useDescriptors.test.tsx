@@ -426,7 +426,7 @@ it("returns correct value for canGoBack when it's not overridden", () => {
 
   render(root).update(root);
 
-  expect(result).toEqual(false);
+  expect(result).toBe(false);
 });
 
 it(`returns false for canGoBack when current router doesn't handle GO_BACK`, () => {

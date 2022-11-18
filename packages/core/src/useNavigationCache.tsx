@@ -13,6 +13,7 @@ import type { NavigationEventEmitter } from './useEventEmitter';
 
 type Options<
   State extends NavigationState,
+  ScreenOptions extends {},
   EventMap extends Record<string, any>
 > = {
   state: State;
@@ -20,7 +21,9 @@ type Options<
   navigation: NavigationHelpers<ParamListBase> &
     Partial<NavigationProp<ParamListBase, string, any, any, any>>;
   setOptions: (
-    cb: (options: Record<string, object>) => Record<string, object>
+    cb: (
+      options: Record<string, ScreenOptions>
+    ) => Record<string, ScreenOptions>
   ) => void;
   router: Router<State, NavigationAction>;
   emitter: NavigationEventEmitter<EventMap>;
@@ -58,7 +61,7 @@ export default function useNavigationCache<
   setOptions,
   router,
   emitter,
-}: Options<State, EventMap>) {
+}: Options<State, ScreenOptions, EventMap>) {
   const { stackRef } = React.useContext(NavigationBuilderContext);
 
   // Cache object which holds navigation objects for each screen

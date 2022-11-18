@@ -502,16 +502,16 @@ it('fires custom events added with addListener', () => {
   expect(thirdCallback.mock.calls[0][0].type).toBe('someSuperCoolEvent');
   expect(thirdCallback.mock.calls[0][0].data).toBe(42);
   expect(thirdCallback.mock.calls[0][0].target).toBe(target);
-  expect(thirdCallback.mock.calls[0][0].defaultPrevented).toBe(undefined);
-  expect(thirdCallback.mock.calls[0][0].preventDefault).toBe(undefined);
+  expect(thirdCallback.mock.calls[0][0].defaultPrevented).toBeUndefined();
+  expect(thirdCallback.mock.calls[0][0].preventDefault).toBeUndefined();
 
   act(() => {
     ref.current.navigation.emit({ type: eventName });
   });
 
-  expect(firstCallback.mock.calls[0][0].target).toBe(undefined);
-  expect(secondCallback.mock.calls[0][0].target).toBe(undefined);
-  expect(thirdCallback.mock.calls[1][0].target).toBe(undefined);
+  expect(firstCallback.mock.calls[0][0].target).toBeUndefined();
+  expect(secondCallback.mock.calls[0][0].target).toBeUndefined();
+  expect(thirdCallback.mock.calls[1][0].target).toBeUndefined();
 
   expect(firstCallback).toBeCalledTimes(1);
   expect(secondCallback).toBeCalledTimes(1);
@@ -634,14 +634,14 @@ it('fires custom events added with listeners prop', () => {
   expect(thirdCallback.mock.calls[0][0].type).toBe('someSuperCoolEvent');
   expect(thirdCallback.mock.calls[0][0].data).toBe(42);
   expect(thirdCallback.mock.calls[0][0].target).toBe(target);
-  expect(thirdCallback.mock.calls[0][0].defaultPrevented).toBe(undefined);
-  expect(thirdCallback.mock.calls[0][0].preventDefault).toBe(undefined);
+  expect(thirdCallback.mock.calls[0][0].defaultPrevented).toBeUndefined();
+  expect(thirdCallback.mock.calls[0][0].preventDefault).toBeUndefined();
 
   act(() => {
     ref.current.navigation.emit({ type: eventName });
   });
 
-  expect(firstCallback.mock.calls[0][0].target).toBe(undefined);
+  expect(firstCallback.mock.calls[0][0].target).toBeUndefined();
 
   expect(firstCallback).toBeCalledTimes(1);
   expect(secondCallback).toBeCalledTimes(0);
@@ -770,14 +770,14 @@ it('fires listeners when callback is provided for listeners prop', () => {
   expect(thirdCallback.mock.calls[0][0].type).toBe('someSuperCoolEvent');
   expect(thirdCallback.mock.calls[0][0].data).toBe(42);
   expect(thirdCallback.mock.calls[0][0].target).toBe(target);
-  expect(thirdCallback.mock.calls[0][0].defaultPrevented).toBe(undefined);
-  expect(thirdCallback.mock.calls[0][0].preventDefault).toBe(undefined);
+  expect(thirdCallback.mock.calls[0][0].defaultPrevented).toBeUndefined();
+  expect(thirdCallback.mock.calls[0][0].preventDefault).toBeUndefined();
 
   act(() => {
     ref.current.navigation.emit({ type: eventName });
   });
 
-  expect(firstCallback.mock.calls[0][0].target).toBe(undefined);
+  expect(firstCallback.mock.calls[0][0].target).toBeUndefined();
 
   expect(firstCallback).toBeCalledTimes(1);
   expect(secondCallback).toBeCalledTimes(0);
@@ -807,7 +807,7 @@ it('has option to prevent default', () => {
     expect(e.type).toBe('someSuperCoolEvent');
     expect(e.data).toBe(42);
     expect(e.defaultPrevented).toBe(false);
-    expect(e.preventDefault).not.toBe(undefined);
+    expect(e.preventDefault).toBeDefined();
 
     e.preventDefault();
 

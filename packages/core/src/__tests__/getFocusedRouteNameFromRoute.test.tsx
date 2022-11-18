@@ -2,7 +2,7 @@ import getFocusedRouteNameFromRoute from '../getFocusedRouteNameFromRoute';
 import { CHILD_STATE } from '../useRouteCache';
 
 it('gets undefined if there is no nested state', () => {
-  expect(getFocusedRouteNameFromRoute({ name: 'Home' })).toBe(undefined);
+  expect(getFocusedRouteNameFromRoute({ name: 'Home' })).toBeUndefined();
 });
 
 it('gets focused route name from nested state', () => {
@@ -113,5 +113,5 @@ it('gets nested screen in params if present', () => {
       name: 'Home',
       params: { screen: {} },
     })
-  ).toBe(undefined);
+  ).toBeUndefined();
 });

@@ -33,7 +33,8 @@ export function Sidebar({
                   <div key={index}>
                     {methodName.split('.').map((part, i, self) => {
                       if (i === self.length - 1 && i !== 0) {
-                        return <Method>{part}</Method>;
+                        // eslint-disable-next-line react/no-array-index-key
+                        return <Method key={i}>{part}</Method>;
                       }
 
                       if (self.length !== 1) {

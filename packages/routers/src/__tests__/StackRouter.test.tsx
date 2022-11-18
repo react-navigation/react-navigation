@@ -378,7 +378,7 @@ it("doesn't navigate to nonexistent screen", () => {
       CommonActions.navigate('far', { answer: 42 }),
       options
     )
-  ).toBe(null);
+  ).toBeNull();
 });
 
 it('ensures unique ID for navigate', () => {
@@ -627,7 +627,7 @@ it('handles navigate action (legacy)', () => {
       CommonActions.navigateDeprecated('unknown'),
       options
     )
-  ).toBe(null);
+  ).toBeNull();
 });
 
 it("doesn't navigate to nonexistent screen (legacy)", () => {
@@ -654,7 +654,7 @@ it("doesn't navigate to nonexistent screen (legacy)", () => {
       CommonActions.navigateDeprecated('far', { answer: 42 }),
       options
     )
-  ).toBe(null);
+  ).toBeNull();
 
   expect(
     router.getStateForAction(
@@ -675,7 +675,7 @@ it("doesn't navigate to nonexistent screen (legacy)", () => {
       }),
       options
     )
-  ).toBe(null);
+  ).toBeNull();
 });
 
 it('ensures unique ID for navigate (legacy)', () => {
@@ -860,7 +860,7 @@ it('handles go back action', () => {
       CommonActions.goBack(),
       options
     )
-  ).toBe(null);
+  ).toBeNull();
 });
 
 it('handles pop action', () => {
@@ -1034,7 +1034,7 @@ it('handles pop action', () => {
       StackActions.pop(),
       options
     )
-  ).toBe(null);
+  ).toBeNull();
 });
 
 it('handles pop to top action', () => {
@@ -1182,7 +1182,7 @@ it("doesn't handle replace if source key isn't present", () => {
       },
       options
     )
-  ).toBe(null);
+  ).toBeNull();
 });
 
 it("doesn't handle replace if screen to replace with isn't present", () => {
@@ -1213,7 +1213,7 @@ it("doesn't handle replace if screen to replace with isn't present", () => {
       },
       options
     )
-  ).toBe(null);
+  ).toBeNull();
 });
 
 it('handles push action', () => {
@@ -1289,7 +1289,7 @@ it('handles push action', () => {
       StackActions.push('unknown'),
       options
     )
-  ).toBe(null);
+  ).toBeNull();
 });
 
 it("doesn't push nonexistent screen", () => {
@@ -1316,7 +1316,7 @@ it("doesn't push nonexistent screen", () => {
       StackActions.push('far', { answer: 42 }),
       options
     )
-  ).toBe(null);
+  ).toBeNull();
 });
 
 it('ensures unique ID for push', () => {
@@ -1724,7 +1724,7 @@ it("doesn't popTo to nonexistent screen", () => {
       CommonActions.navigate('far', { answer: 42 }),
       options
     )
-  ).toBe(null);
+  ).toBeNull();
 });
 
 it("doesn't merge params on popTo to an existing screen", () => {

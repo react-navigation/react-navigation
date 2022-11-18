@@ -1692,7 +1692,11 @@ it('throws when a tag is a direct children', () => {
     <BaseNavigationContainer>
       <TestNavigator>
         {/* @ts-ignore */}
-        <screen name="foo" component={React.Fragment} />
+        <screen
+          name="foo"
+          // eslint-disable-next-line react/no-unknown-property
+          component={React.Fragment}
+        />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -2390,5 +2394,5 @@ it('does not throw if while getting current options with empty container', () =>
 
   render(container).update(container);
 
-  expect(navigation.getCurrentOptions()).toEqual(undefined);
+  expect(navigation.getCurrentOptions()).toBeUndefined();
 });

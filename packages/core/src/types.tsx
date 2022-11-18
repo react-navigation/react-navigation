@@ -719,7 +719,7 @@ export type TypedNavigator<
 };
 
 export type NavigatorScreenParams<
-  ParamList,
+  ParamList extends {},
   State extends NavigationState = NavigationState
 > =
   | {

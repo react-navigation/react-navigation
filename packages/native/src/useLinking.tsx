@@ -256,8 +256,7 @@ export default function useLinking(
               console.warn(
                 `An error occurred when trying to handle the link '${path}': ${
                   typeof e === 'object' && e != null && 'message' in e
-                    ? // @ts-expect-error: we're already checking for this
-                      e.message
+                    ? e.message
                     : e
                 }`
               );
