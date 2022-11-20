@@ -1,6 +1,10 @@
 import { useHeaderHeight } from '@react-navigation/elements';
 import { NavigationContainer, ParamListBase } from '@react-navigation/native';
-import { fireEvent, render } from '@testing-library/react-native';
+import {
+  fireEvent,
+  isHiddenFromAccessibility,
+  render,
+} from '@testing-library/react-native';
 import * as React from 'react';
 import { Button, Platform, Text, View } from 'react-native';
 
@@ -36,7 +40,7 @@ it('renders a native-stack navigator with screens', async () => {
 
   const Stack = createNativeStackNavigator();
 
-  const { findByText, queryByText } = render(
+  const { getByText, queryByText } = render(
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="A" component={Test} />
@@ -45,13 +49,13 @@ it('renders a native-stack navigator with screens', async () => {
     </NavigationContainer>
   );
 
-  expect(queryByText('Screen A')).not.toBeNull();
+  expect(isHiddenFromAccessibility(getByText('Screen A'))).toBe(false);
   expect(queryByText('Screen B')).toBeNull();
 
-  fireEvent.press(await findByText(/go to b/i));
+  fireEvent.press(getByText(/go to b/i));
 
-  expect(queryByText('Screen A', { includeHiddenElements: false })).toBeNull();
-  expect(queryByText('Screen B')).not.toBeNull();
+  expect(isHiddenFromAccessibility(getByText('Screen A'))).toBe(true);
+  expect(isHiddenFromAccessibility(getByText('Screen B'))).toBe(false);
 });
 
 describe('useHeaderHeight in native-stack', () => {
