@@ -3,19 +3,34 @@
 /* eslint-disable import/no-commonjs */
 
 const fs = require('fs');
+const cp = require('child_process');
 const path = require('path');
 
 const prebuildFolders = ['ios', 'android'];
 
-const notExist = prebuildFolders.some((folder) => {
+const prebuildFoldersExist = prebuildFolders.some((folder) => {
   const folderPath = path.join(__dirname, '../example', folder);
-  return !fs.existsSync(folderPath);
+  return fs.existsSync(folderPath);
 });
 
-if (notExist) {
-  const message = `Native source code folders ${prebuildFolders.join(
-    ', '
-  )} does not exist.\n\nRun 'npx expo prebuild' in 'example/' dir to generate them.`;
-  console.log(message);
-  process.exit(1);
+if (!prebuildFoldersExist) {
+  console.log(
+    `[react-navigation] Native source code folders ${prebuildFolders.join(
+      ', '
+    )} does not exist.\n\n[react-navigation] Running 'npx expo prebuild'...\n\n`
+  );
+
+  cp.execSync('npx expo prebuild', {
+    stdio: 'inherit',
+  });
 }
+
+const podfilePath = path.join(__dirname, '../example/ios/Podfile');
+
+const podfile = fs.readFileSync(podfilePath, 'utf8');
+const podfileWithFlipperEnabled = podfile.replace(
+  /#\s*use_flipper!/gm,
+  'use_flipper!'
+);
+
+fs.writeFileSync(podfilePath, podfileWithFlipperEnabled);
