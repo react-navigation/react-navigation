@@ -45,7 +45,7 @@
     "warn-once": "^0.1.0"
   },
   "devDependencies": {
-    "@react-navigation/native": "^6.0.13",
+    "@react-navigation/native": "workspace:^",
     "@testing-library/react-native": "^11.5.0",
     "@types/react": "~18.0.0",
     "@types/react-native": "~0.69.1",

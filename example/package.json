@@ -9,9 +9,7 @@
     "web": "NODE_OPTIONS=--openssl-legacy-provider expo start --web",
     "web:export": "NODE_OPTIONS=--openssl-legacy-provider expo export:web",
     "android": "expo run:android",
-    "ios": "run-s pod-install run:ios",
-    "run:ios": "expo run:ios",
-    "pod-install": "pod-install",
+    "ios": "expo run:ios",
     "server": "nodemon -e '.js,.ts,.tsx' --exec \"babel-node -i '/node_modules[/\\](?react-native)/' -x '.web.tsx,.web.ts,.web.js,.tsx,.ts,.js' --config-file ./server/babel.config.js server\"",
     "test:e2e": "npx playwright test --config=e2e/playwright.config.ts"
   },
@@ -66,7 +64,6 @@
     "mock-require-assets": "^0.0.1",
     "node-fetch": "^2.6.1",
     "nodemon": "^2.0.6",
-    "pod-install": "^0.1.38",
     "react-native-flipper": "~0.125.0",
     "react-test-renderer": "18.0.0",
     "serve": "^11.3.0",
