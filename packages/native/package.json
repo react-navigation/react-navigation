@@ -43,7 +43,7 @@
     "nanoid": "^3.1.23"
   },
   "devDependencies": {
-    "@testing-library/react-native": "^7.2.0",
+    "@testing-library/react-native": "^11.5.0",
     "@types/react": "~18.0.0",
     "@types/react-dom": "~18.0.0",
     "@types/react-native": "~0.69.1",
