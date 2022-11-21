@@ -10,9 +10,8 @@
     "web:export": "NODE_OPTIONS=--openssl-legacy-provider expo export:web",
     "android": "run-s check:prebuild run:android",
     "run:android": "expo run:android",
-    "ios": "run-s check:prebuild pod-install run:ios",
+    "ios": "run-s check:prebuild run:ios",
     "run:ios": "expo run:ios",
-    "pod-install": "pod-install",
     "server": "nodemon -e '.js,.ts,.tsx' --exec \"babel-node -i '/node_modules[/\\](?react-native)/' -x '.web.tsx,.web.ts,.web.js,.tsx,.ts,.js' --config-file ./server/babel.config.js server\"",
     "test:e2e": "npx playwright test --config=e2e/playwright.config.ts",
     "check:prebuild": "node ../scripts/check-prebuild.js"
