@@ -63,20 +63,6 @@ Run the e2e tests by:
 yarn example test:e2e
 ```
 
-To build the [example app](/example/) in bare workflow run:
-
-```sh
-cd example/ && npx expo prebuild
-```
-
-Before compiling iOS in bare workflow remember to uncomment these lines in `example/ios/Podfile`:
-
-```ruby
-if !ENV['CI']
-  use_flipper!()
-end
-```
-
 ### Commit message convention
 
 We follow the [conventional commits specification](https://www.conventionalcommits.org/en) for our commit messages:
