@@ -22,6 +22,13 @@ jest.mock('react-native-safe-area-context', () => ({
   }),
 }));
 
+/**
+ * Check if the element is "visible" (not hidden) from accessibility.
+ */
+const isVisible = (element: any) => {
+  return !isHiddenFromAccessibility(element);
+};
+
 afterEach(() => {
   jest.resetAllMocks();
 });
@@ -49,13 +56,13 @@ it('renders a native-stack navigator with screens', async () => {
     </NavigationContainer>
   );
 
-  expect(isHiddenFromAccessibility(getByText('Screen A'))).toBe(false);
+  expect(isVisible(getByText('Screen A'))).toBe(true);
   expect(queryByText('Screen B')).toBeNull();
 
   fireEvent.press(getByText(/go to b/i));
 
-  expect(isHiddenFromAccessibility(getByText('Screen A'))).toBe(true);
-  expect(isHiddenFromAccessibility(getByText('Screen B'))).toBe(false);
+  expect(isVisible(getByText('Screen A'))).toBe(false);
+  expect(isVisible(getByText('Screen B'))).toBe(true);
 });
 
 describe('useHeaderHeight in native-stack', () => {
