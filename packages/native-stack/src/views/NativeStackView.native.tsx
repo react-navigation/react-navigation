@@ -279,8 +279,6 @@ const SceneView = ({
       onNativeDismissCancelled={onNativeDismissCancelled}
       // this prop is available since rn-screens 3.16
       freezeOnBlur={freezeOnBlur}
-      accessibilityElementsHidden={!isFocused}
-      importantForAccessibility={isFocused ? 'auto' : 'no-hide-descendants'}
     >
       <NavigationContext.Provider value={navigation}>
         <NavigationRouteContext.Provider value={route}>
@@ -317,7 +315,13 @@ const SceneView = ({
                 headerTopInsetEnabled={headerTopInsetEnabled}
                 canGoBack={headerBack !== undefined}
               />
-              <View style={styles.scene}>
+              <View
+                accessibilityElementsHidden={!isFocused}
+                importantForAccessibility={
+                  isFocused ? 'auto' : 'no-hide-descendants'
+                }
+                style={styles.scene}
+              >
                 <MaybeNestedStack
                   options={options}
                   route={route}
