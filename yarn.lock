@@ -3781,6 +3781,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jest/schemas@npm:^29.0.0":
+  version: 29.0.0
+  resolution: "@jest/schemas@npm:29.0.0"
+  dependencies:
+    "@sinclair/typebox": ^0.24.1
+  checksum: 41355c78f09eb1097e57a3c5d0ca11c9099e235e01ea5fa4e3953562a79a6a9296c1d300f1ba50ca75236048829e056b00685cd2f1ff8285e56fd2ce01249acb
+  languageName: node
+  linkType: hard
+
 "@jest/source-map@npm:^26.6.2":
   version: 26.6.2
   resolution: "@jest/source-map@npm:26.6.2"
@@ -5977,7 +5986,7 @@ __metadata:
   dependencies:
     "@react-navigation/elements": ^1.3.6
     "@react-navigation/native": ^6.0.13
-    "@testing-library/react-native": ^7.2.0
+    "@testing-library/react-native": ^11.5.0
     "@types/color": ^3.0.1
     "@types/react": ~18.0.0
     "@types/react-native": ~0.69.1
@@ -6004,7 +6013,7 @@ __metadata:
   resolution: "@react-navigation/core@workspace:packages/core"
   dependencies:
     "@react-navigation/routers": ^6.1.3
-    "@testing-library/react-native": ^7.2.0
+    "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.0
     "@types/react-is": ^17.0.0
     del-cli: ^3.0.1
@@ -6028,7 +6037,7 @@ __metadata:
   resolution: "@react-navigation/devtools@workspace:packages/devtools"
   dependencies:
     "@react-navigation/core": ^6.4.0
-    "@testing-library/react-native": ^7.2.0
+    "@testing-library/react-native": ^11.5.0
     "@types/deep-equal": ^1.0.1
     "@types/react": ~18.0.0
     deep-equal: ^2.0.5
@@ -6050,7 +6059,7 @@ __metadata:
   dependencies:
     "@react-navigation/elements": ^1.3.6
     "@react-navigation/native": ^6.0.13
-    "@testing-library/react-native": ^7.2.0
+    "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.0
     "@types/react-native": ~0.69.1
     color: ^4.2.3
@@ -6081,7 +6090,7 @@ __metadata:
   dependencies:
     "@react-native-masked-view/masked-view": 0.2.7
     "@react-navigation/native": ^6.0.13
-    "@testing-library/react-native": ^7.2.0
+    "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.0
     "@types/react-native": ~0.69.1
     del-cli: ^3.0.1
@@ -6163,7 +6172,7 @@ __metadata:
   dependencies:
     "@react-navigation/elements": ^1.3.6
     "@react-navigation/native": ^6.0.13
-    "@testing-library/react-native": ^7.2.0
+    "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.0
     "@types/react-native": ~0.69.1
     "@types/react-native-vector-icons": ^6.4.10
@@ -6190,7 +6199,7 @@ __metadata:
   resolution: "@react-navigation/material-top-tabs@workspace:packages/material-top-tabs"
   dependencies:
     "@react-navigation/native": ^6.0.13
-    "@testing-library/react-native": ^7.2.0
+    "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.0
     "@types/react-native": ~0.69.1
     color: ^4.2.3
@@ -6217,7 +6226,7 @@ __metadata:
   dependencies:
     "@react-navigation/elements": ^1.3.6
     "@react-navigation/native": ^6.0.13
-    "@testing-library/react-native": ^7.2.0
+    "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.0
     "@types/react-native": ~0.69.1
     del-cli: ^3.0.1
@@ -6241,7 +6250,7 @@ __metadata:
   resolution: "@react-navigation/native@workspace:packages/native"
   dependencies:
     "@react-navigation/core": ^6.4.0
-    "@testing-library/react-native": ^7.2.0
+    "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.0
     "@types/react-dom": ~18.0.0
     "@types/react-native": ~0.69.1
@@ -6277,7 +6286,7 @@ __metadata:
   dependencies:
     "@react-navigation/elements": ^1.3.6
     "@react-navigation/native": ^6.0.13
-    "@testing-library/react-native": ^7.2.0
+    "@testing-library/react-native": ^11.5.0
     "@types/color": ^3.0.1
     "@types/react": ~18.0.0
     "@types/react-native": ~0.69.1
@@ -6331,6 +6340,13 @@ __metadata:
   version: 2.0.0
   resolution: "@sideway/pinpoint@npm:2.0.0"
   checksum: 0f4491e5897fcf5bf02c46f5c359c56a314e90ba243f42f0c100437935daa2488f20482f0f77186bd6bf43345095a95d8143ecf8b1f4d876a7bc0806aba9c3d2
+  languageName: node
+  linkType: hard
+
+"@sinclair/typebox@npm:^0.24.1":
+  version: 0.24.51
+  resolution: "@sinclair/typebox@npm:0.24.51"
+  checksum: fd0d855e748ef767eb19da1a60ed0ab928e91e0f358c1dd198d600762c0015440b15755e96d1176e2a0db7e09c6a64ed487828ee10dd0c3e22f61eb09c478cd0
   languageName: node
   linkType: hard
 
@@ -6391,16 +6407,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react-native@npm:^7.2.0":
-  version: 7.2.0
-  resolution: "@testing-library/react-native@npm:7.2.0"
+"@testing-library/react-native@npm:^11.5.0":
+  version: 11.5.0
+  resolution: "@testing-library/react-native@npm:11.5.0"
   dependencies:
-    pretty-format: ^26.0.1
+    pretty-format: ^29.0.0
   peerDependencies:
+    jest: ">=28.0.0"
     react: ">=16.0.0"
     react-native: ">=0.59"
     react-test-renderer: ">=16.0.0"
-  checksum: 9cc50fbce6003131e62e96291445a19b6bb68889ed5a0167d988cd02cffe373febc52830cfdf033dc914b63bf850cbb1c1884dfd196cbc8c22536a5889fb47ee
+  peerDependenciesMeta:
+    jest:
+      optional: true
+  checksum: 841c769c2734d7fb7d9a4054fad0582505e49c4c2d99ddcf742ef11f6dd6ee3bcf040400e27dbb55d7fda48b305ae92f40dc8c507e93dffb96d768ff3aba7bad
   languageName: node
   linkType: hard
 
@@ -22645,7 +22665,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pretty-format@npm:^26.0.0, pretty-format@npm:^26.0.1, pretty-format@npm:^26.5.2, pretty-format@npm:^26.6.2":
+"pretty-format@npm:^26.0.0, pretty-format@npm:^26.5.2, pretty-format@npm:^26.6.2":
   version: 26.6.2
   resolution: "pretty-format@npm:26.6.2"
   dependencies:
@@ -22665,6 +22685,17 @@ __metadata:
     ansi-styles: ^5.0.0
     react-is: ^17.0.1
   checksum: 5eda32e4e47ddd1a9e8fe9ebef519b217ba403eb8bcb804ba551dfb37f87e674472013fcf78480ab535844fdddcc706fac94511eba349bfb94a138a02d1a7a59
+  languageName: node
+  linkType: hard
+
+"pretty-format@npm:^29.0.0":
+  version: 29.3.1
+  resolution: "pretty-format@npm:29.3.1"
+  dependencies:
+    "@jest/schemas": ^29.0.0
+    ansi-styles: ^5.0.0
+    react-is: ^18.0.0
+  checksum: 9917a0bb859cd7a24a343363f70d5222402c86d10eb45bcc2f77b23a4e67586257390e959061aec22762a782fe6bafb59bf34eb94527bc2e5d211afdb287eb4e
   languageName: node
   linkType: hard
 
