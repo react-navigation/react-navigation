@@ -6137,7 +6137,6 @@ __metadata:
     mock-require-assets: ^0.0.1
     node-fetch: ^2.6.1
     nodemon: ^2.0.6
-    pod-install: ^0.1.38
     react: 18.0.0
     react-dom: 18.0.0
     react-native: 0.69.5
@@ -22157,15 +22156,6 @@ __metadata:
   dependencies:
     ts-pnp: ^1.1.6
   checksum: a41716d13607be5a3e06ba58b17e9e619cf07da3a0a7b10bd41cd89362873041054fd2b7966ad30a1b26b826cfb8fecc0469a95902d5b1b8ba8f591e2fe6b96d
-  languageName: node
-  linkType: hard
-
-"pod-install@npm:^0.1.38":
-  version: 0.1.38
-  resolution: "pod-install@npm:0.1.38"
-  bin:
-    pod-install: build/index.js
-  checksum: 9ff3e8f50dba2cee1c174deeb394312d6a950096f39c5a413a9dbf9acf4acb890440a9c316381799c8e125858c4c84d2c4f0c3d7ef2ceb056ea820a417004fd7
   languageName: node
   linkType: hard
 
