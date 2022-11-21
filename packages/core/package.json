@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/core",
   "description": "Core utilities for building navigators",
-  "version": "6.4.0",
+  "version": "6.4.1",
   "keywords": [
     "react",
     "react-native",
@@ -43,7 +43,7 @@
     "use-latest-callback": "^0.1.5"
   },
   "devDependencies": {
-    "@testing-library/react-native": "^7.2.0",
+    "@testing-library/react-native": "^11.5.0",
     "@types/react": "~18.0.0",
     "@types/react-is": "^17.0.0",
     "del-cli": "^3.0.1",

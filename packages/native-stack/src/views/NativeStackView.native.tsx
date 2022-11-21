@@ -116,6 +116,7 @@ const MaybeNestedStack = ({
 
 type SceneViewProps = {
   index: number;
+  focused: boolean;
   descriptor: NativeStackDescriptor;
   previousDescriptor?: NativeStackDescriptor;
   nextDescriptor?: NativeStackDescriptor;
@@ -128,10 +129,11 @@ type SceneViewProps = {
 };
 
 const SceneView = ({
+  index,
+  focused,
   descriptor,
   previousDescriptor,
   nextDescriptor,
-  index,
   onWillDisappear,
   onAppear,
   onDisappear,
@@ -314,7 +316,13 @@ const SceneView = ({
                 headerTopInsetEnabled={headerTopInsetEnabled}
                 canGoBack={headerBack !== undefined}
               />
-              <View style={styles.scene}>
+              <View
+                accessibilityElementsHidden={!focused}
+                importantForAccessibility={
+                  focused ? 'auto' : 'no-hide-descendants'
+                }
+                style={styles.scene}
+              >
                 <MaybeNestedStack
                   options={options}
                   route={route}
@@ -365,6 +373,7 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
     <ScreenStack style={styles.container}>
       {state.routes.map((route, index) => {
         const descriptor = descriptors[route.key];
+        const isFocused = state.index === index;
         const previousKey = state.routes[index - 1]?.key;
         const nextKey = state.routes[index + 1]?.key;
         const previousDescriptor = previousKey
@@ -376,6 +385,7 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
           <SceneView
             key={route.key}
             index={index}
+            focused={isFocused}
             descriptor={descriptor}
             previousDescriptor={previousDescriptor}
             nextDescriptor={nextDescriptor}

@@ -8,6 +8,8 @@
   "version": "independent",
   "command": {
     "publish": {
+      "graphType": "all",
+      "syncWorkspaceLock": true,
       "allowBranch": "main",
       "conventionalCommits": true,
       "createRelease": "github",
