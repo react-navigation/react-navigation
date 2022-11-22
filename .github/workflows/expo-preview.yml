@@ -20,17 +20,11 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: Backup prebuild files
-        run: mv example/android example/android.backup && mv example/ios example/ios.backup
-
       - name: Publish Expo app
         working-directory: ./example
         run: CI=1 eas update --branch=pr-${{ github.event.number }} --message="$(git log -1 --pretty=%B)"
         env:
           EXPO_USE_DEV_SERVER: true
-
-      - name: Restore prebuild files
-        run: mv example/android.backup example/android && mv example/ios.backup example/ios
 
       - name: Get expo config
         working-directory: ./example
