@@ -32,5 +32,10 @@
     "rules": {
       "jest/*": 0
     }
+  }, {
+    "files":["scripts/*.js"],
+    "rules": {
+      "import/no-commonjs": 0
+    }
   }]
 }

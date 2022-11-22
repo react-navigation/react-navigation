@@ -4,14 +4,17 @@
   "version": "5.1.0",
   "private": true,
   "scripts": {
-    "start": "NODE_OPTIONS=--openssl-legacy-provider expo start",
+    "start": "expo start --dev-client",
     "client": "NODE_OPTIONS=--openssl-legacy-provider expo start --dev-client",
     "web": "NODE_OPTIONS=--openssl-legacy-provider expo start --web",
     "web:export": "NODE_OPTIONS=--openssl-legacy-provider expo export:web",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
+    "android": "run-s check:prebuild run:android",
+    "run:android": "expo run:android",
+    "ios": "run-s check:prebuild run:ios",
+    "run:ios": "expo run:ios",
     "server": "nodemon -e '.js,.ts,.tsx' --exec \"babel-node -i '/node_modules[/\\](?react-native)/' -x '.web.tsx,.web.ts,.web.js,.tsx,.ts,.js' --config-file ./server/babel.config.js server\"",
-    "test:e2e": "npx playwright test --config=e2e/playwright.config.ts"
+    "test:e2e": "npx playwright test --config=e2e/playwright.config.ts",
+    "check:prebuild": "node ../scripts/check-prebuild.js"
   },
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
@@ -64,6 +67,7 @@
     "mock-require-assets": "^0.0.1",
     "node-fetch": "^2.6.1",
     "nodemon": "^2.0.6",
+    "npm-run-all": "^4.1.5",
     "react-native-flipper": "~0.125.0",
     "react-test-renderer": "18.0.0",
     "serve": "^11.3.0",
