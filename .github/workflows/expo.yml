@@ -24,4 +24,4 @@ jobs:
 
       - name: Publish Expo app
         working-directory: ./example
-        run: npx eas update --auto
+        run: CI=1 eas update --auto
