@@ -17,10 +17,11 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Setup Expo
-        uses: expo/expo-github-action@v6
+        uses: expo/expo-github-action@v7
         with:
+          eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Publish Expo app
         working-directory: ./example
-        run: yarn expo-cli publish
+        run: CI=1 eas update --auto

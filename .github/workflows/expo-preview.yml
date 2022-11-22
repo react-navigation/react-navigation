@@ -15,26 +15,41 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Setup Expo
-        uses: expo/expo-github-action@v6
+        uses: expo/expo-github-action@v7
         with:
+          eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Publish Expo app
         working-directory: ./example
-        run: yarn expo-cli publish --release-channel=pr-${{ github.event.number }}
+        run: CI=1 eas update --branch=pr-${{ github.event.number }} --message="$(git log -1 --pretty=%B)"
         env:
           EXPO_USE_DEV_SERVER: true
 
-      - name: Get expo link
+      - name: Get expo config
+        working-directory: ./example
         id: expo
-        run: echo "::set-output name=path::@react-navigation/react-navigation-example?release-channel=pr-${{ github.event.number }}"
+        run: echo "EXPO_CONFIG=$(npx expo config --json)" >> $GITHUB_OUTPUT
 
       - name: Comment on PR
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const body = 'The Expo app for the example from this branch is ready!\n\n[expo.dev/${{ steps.expo.outputs.path }}](https://expo.dev/${{ steps.expo.outputs.path }})\n\n<a href="https://exp.host/${{ steps.expo.outputs.path }}"><img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=exp://exp.host/${{ steps.expo.outputs.path }}" height="200px" width="200px"></a>';
+            const config = JSON.parse('${{ steps.expo.outputs.EXPO_CONFIG }}');
+
+            const { sdkVersion } = config;
+            const { projectId } = config.extra.eas;
+            const channel = 'pr-${{ github.event.number }}';
+
+            const url = `https://expo.dev/@react-navigation/react-navigation-example?serviceType=eas&distribution=expo-go&scheme=exp+react-navigation-example&channel=${channel}&sdkVersion=${sdkVersion}`;
+
+            const body = `The Expo app for the example from this branch is ready!
+
+            [${url}](${url})
+
+            <a href="${url}"><img src="https://qr.expo.dev/eas-update?appScheme=exp&projectId=${projectId}&channel=${channel}&runtimeVersion=exposdk:${sdkVersion}&host=u.expo.dev" height="200px" width="200px"></a>
+            `;
 
             const comments = await github.issues.listComments({
               issue_number: context.issue.number,
