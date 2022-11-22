@@ -4,7 +4,7 @@
   "version": "5.1.0",
   "private": true,
   "scripts": {
-    "start": "expo start --dev-client",
+    "start": "NODE_OPTIONS=--openssl-legacy-provider expo start",
     "client": "NODE_OPTIONS=--openssl-legacy-provider expo start --dev-client",
     "web": "NODE_OPTIONS=--openssl-legacy-provider expo start --web",
     "web:export": "NODE_OPTIONS=--openssl-legacy-provider expo export:web",
