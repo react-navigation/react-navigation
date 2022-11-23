@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/material-top-tabs",
   "description": "Integration for the animated tab view component from react-native-tab-view",
-  "version": "6.3.0",
+  "version": "6.3.1",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -45,8 +45,8 @@
     "warn-once": "^0.1.0"
   },
   "devDependencies": {
-    "@react-navigation/native": "^6.0.13",
-    "@testing-library/react-native": "^7.2.0",
+    "@react-navigation/native": "workspace:^",
+    "@testing-library/react-native": "^11.5.0",
     "@types/react": "~18.0.0",
     "@types/react-native": "~0.69.1",
     "del-cli": "^3.0.1",

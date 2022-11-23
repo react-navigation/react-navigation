@@ -180,7 +180,7 @@ export default function HeaderConfig({
         hideShadow={
           headerShadowVisible === false ||
           headerBackground != null ||
-          headerTransparent
+          (headerTransparent && headerShadowVisible !== true)
         }
         largeTitle={headerLargeTitle}
         largeTitleBackgroundColor={headerLargeStyleFlattened.backgroundColor}

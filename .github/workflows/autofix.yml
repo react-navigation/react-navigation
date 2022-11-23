@@ -1,0 +1,26 @@
+name: autofix.ci
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  autofix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Fix lint issues
+        run: yarn lint --fix
+
+      - name: Autofix
+        uses: autofix-ci/action@8106fde54b877517c9af2c3d68918ddeaa7bed64

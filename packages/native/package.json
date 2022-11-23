@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/native",
   "description": "React Native integration for React Navigation",
-  "version": "6.0.13",
+  "version": "6.0.14",
   "keywords": [
     "react-native",
     "react-navigation",
@@ -37,13 +37,13 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/core": "^6.4.0",
+    "@react-navigation/core": "^6.4.1",
     "escape-string-regexp": "^4.0.0",
     "fast-deep-equal": "^3.1.3",
     "nanoid": "^3.1.23"
   },
   "devDependencies": {
-    "@testing-library/react-native": "^7.2.0",
+    "@testing-library/react-native": "^11.5.0",
     "@types/react": "~18.0.0",
     "@types/react-dom": "~18.0.0",
     "@types/react-native": "~0.69.1",
