@@ -670,4 +670,38 @@ describe('useHeaderHeight in native-stack', () => {
     fireEvent.press(await findByText(/go to b/i));
     expect(headerHeight).toBe(0);
   });
+
+  it('returns headerHeight 0 when provide defaultScreenOptions.headerShown: false', async () => {
+    Platform.OS = 'ios';
+
+    let headerHeight;
+    const Test = ({ navigation }: NativeStackScreenProps<ParamListBase>) => {
+      headerHeight = useHeaderHeight();
+      return (
+        <Button onPress={() => navigation.navigate('B')} title="Go to B" />
+      );
+    };
+
+    const Stack = createNativeStackNavigator();
+    const NestedStack = createNativeStackNavigator();
+
+    const { findByText } = render(
+      <NavigationContainer>
+        <Stack.Navigator defaultScreenOptions={{ headerShown: false }}>
+          <Stack.Screen name="A" component={Test} />
+          <Stack.Screen name="B">
+            {() => (
+              <NestedStack.Navigator screenOptions={{ headerShown: false }}>
+                <NestedStack.Screen name="C" component={Test} />
+              </NestedStack.Navigator>
+            )}
+          </Stack.Screen>
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+
+    expect(headerHeight).toBe(0);
+    fireEvent.press(await findByText(/go to b/i));
+    expect(headerHeight).toBe(0);
+  });
 });
