@@ -2,9 +2,6 @@
 
 A cross-platform Tab View component for React Native. Implemented using [`react-native-pager-view`](https://github.com/callstack/react-native-viewpager) on Android & iOS, and [PanResponder](https://reactnative.dev/docs/panresponder) on Web, macOS, and Windows.
 
-- [Run the example app to see it in action](https://expo.io/@satya164/react-native-tab-view-demos).
-- Checkout the [example/](https://github.com/satya164/react-native-tab-view/tree/main/example) folder for source code.
-
 ## Features
 
 - Smooth animations and gestures
