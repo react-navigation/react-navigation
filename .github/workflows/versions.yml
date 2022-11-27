@@ -25,6 +25,8 @@ jobs:
             @react-navigation/material-top-tabs
             @react-navigation/routers
             @react-navigation/stack
+            react-native-tab-view
+            flipper-plugin-react-navigation
 
       - uses: react-navigation/check-versions-action@v1.0.0
         if: contains(github.event.issue.labels.*.name, 'version-4')

@@ -59,8 +59,6 @@ body:
         - label: Web
         - label: Windows
         - label: MacOS
-    validations:
-      required: true
   - type: checkboxes
     attributes:
       label: Packages
@@ -73,8 +71,8 @@ body:
         - label: '@react-navigation/​material-top-tabs'
         - label: '@react-navigation/​stack'
         - label: '@react-navigation/​native-stack'
-    validations:
-      required: true
+        - label: 'react-native-tab-view'
+        - label: 'flipper-plugin-react-navigation'
   - type: textarea
     attributes:
       label: Environment
