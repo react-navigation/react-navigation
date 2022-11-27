@@ -1,23 +1,24 @@
 import * as React from 'react';
 import {
   Animated,
-  PanResponder,
-  Keyboard,
-  StyleSheet,
   GestureResponderEvent,
-  PanResponderGestureState,
   I18nManager,
+  Keyboard,
+  PanResponder,
+  PanResponderGestureState,
+  StyleSheet,
   View,
 } from 'react-native';
-import useAnimatedValue from './useAnimatedValue';
+
 import type {
-  NavigationState,
-  Route,
-  Layout,
   EventEmitterProps,
-  PagerProps,
+  Layout,
   Listener,
+  NavigationState,
+  PagerProps,
+  Route,
 } from './types';
+import useAnimatedValue from './useAnimatedValue';
 
 type Props<T extends Route> = PagerProps & {
   layout: Layout;
@@ -27,7 +28,7 @@ type Props<T extends Route> = PagerProps & {
     props: EventEmitterProps & {
       // Animated value which represents the state of current index
       // It can include fractional digits as it represents the intermediate value
-      position: Animated.AnimatedInterpolation<number>;
+      position: Animated.AnimatedInterpolation;
       // Function to actually render the content of the pager
       // The parent component takes care of rendering
       render: (children: React.ReactNode) => React.ReactNode;

@@ -1,27 +1,7 @@
 {
   "name": "react-native-tab-view",
-  "version": "3.3.0",
   "description": "Tab view component for React Native",
-  "main": "lib/commonjs/index.js",
-  "react-native": "src/index.tsx",
-  "module": "lib/module/index.js",
-  "types": "lib/typescript/index.d.ts",
-  "files": [
-    "src",
-    "lib"
-  ],
-  "scripts": {
-    "test": "jest",
-    "typescript": "tsc --noEmit",
-    "lint": "eslint --ext .js,.ts,.tsx .",
-    "release": "release-it",
-    "example": "yarn --cwd example",
-    "bootstrap": "yarn example && yarn",
-    "prepare": "bob build"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
+  "version": "3.3.0",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -33,59 +13,45 @@
     "scrollable",
     "coverflow"
   ],
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/satya164/react-native-tab-view.git"
+    "url": "https://github.com/react-navigation/react-navigation.git",
+    "directory": "packages/react-native-tab-view"
   },
-  "author": "Satyajit Sahoo <satyajit.happy@gmail.com> (https://github.com/satya164/)",
-  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/satya164/react-native-tab-view/issues"
+    "url": "https://github.com/react-navigation/react-navigation/issues"
   },
-  "homepage": "https://github.com/satya164/react-native-tab-view#readme",
+  "homepage": "https://github.com/react-navigation/react-navigation/tree/main/packages/react-native-tab-view#readme",
+  "main": "lib/commonjs/index.js",
+  "react-native": "src/index.tsx",
+  "source": "src/index.tsx",
+  "module": "lib/module/index.js",
+  "types": "lib/typescript/src/index.d.ts",
+  "files": [
+    "src",
+    "lib",
+    "!**/__tests__"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "prepack": "bob build",
+    "clean": "del lib"
+  },
   "dependencies": {
     "use-latest-callback": "^0.1.5"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^17.1.0",
-    "@expo/vector-icons": "^13.0.0",
-    "@release-it/conventional-changelog": "^5.1.0",
-    "@types/react": "^18.0.24",
-    "@types/react-native": "0.70.6",
-    "babel-jest": "^29.0.1",
-    "babel-loader": "^8.2.5",
-    "babel-preset-react-native": "^4.0.0",
-    "commitlint": "^17.1.2",
-    "eslint": "^8.23.0",
-    "eslint-config-satya164": "^3.1.11",
-    "eslint-plugin-react-native-globals": "^0.1.2",
-    "husky": "^4.2.5",
-    "jest": "^29.0.1",
-    "prettier": "^2.7.1",
-    "react": "18.1.0",
-    "react-native": "0.70.5",
-    "react-native-builder-bob": "^0.20.1",
-    "react-native-pager-view": "6.0.2",
-    "release-it": "^15.5.0",
-    "typescript": "^4.8.2"
+    "react": "18.0.0",
+    "react-native": "0.69.5",
+    "react-native-builder-bob": "^0.18.1",
+    "react-native-pager-view": "5.4.24",
+    "typescript": "^4.7.4"
   },
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
     "react-native-pager-view": "*"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "yarn lint && yarn typescript"
-    }
-  },
-  "jest": {
-    "preset": "react-native",
-    "modulePathIgnorePatterns": [
-      "<rootDir>/example/node_modules",
-      "<rootDir>/lib/"
-    ]
   },
   "react-native-builder-bob": {
     "source": "src",

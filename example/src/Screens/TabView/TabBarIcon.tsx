@@ -1,16 +1,17 @@
+import { Ionicons } from '@expo/vector-icons';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import {
-  TabView,
-  TabBar,
-  SceneMap,
   NavigationState,
+  SceneMap,
   SceneRendererProps,
+  TabBar,
+  TabView,
 } from 'react-native-tab-view';
-import Article from './Shared/Article';
-import Chat from './Shared/Chat';
-import Contacts from './Shared/Contacts';
+
+import Article from '../../Shared/Article';
+import Chat from '../../Shared/Chat';
+import Contacts from '../../Shared/Contacts';
 
 type Route = {
   key: string;
@@ -19,7 +20,13 @@ type Route = {
 
 type State = NavigationState<Route>;
 
-const TabBarIconExample = () => {
+const renderScene = SceneMap({
+  chat: () => <Chat bottom />,
+  contacts: () => <Contacts />,
+  article: () => <Article />,
+});
+
+const TabBarIcon = () => {
   const [index, onIndexChange] = React.useState(0);
   const [routes] = React.useState<Route[]>([
     { key: 'chat', icon: 'md-chatbubbles' },
@@ -42,12 +49,6 @@ const TabBarIconExample = () => {
     />
   );
 
-  const renderScene = SceneMap({
-    chat: Chat,
-    contacts: Contacts,
-    article: Article,
-  });
-
   return (
     <TabView
       lazy
@@ -62,11 +63,16 @@ const TabBarIconExample = () => {
   );
 };
 
-TabBarIconExample.title = 'Top tab bar with icons';
-TabBarIconExample.backgroundColor = '#e91e63';
-TabBarIconExample.appbarElevation = 0;
+TabBarIcon.options = {
+  title: 'Top tab bar with icons',
+  headerShadowVisible: false,
+  headerTintColor: '#fff',
+  headerStyle: {
+    backgroundColor: '#e91e63',
+  },
+};
 
-export default TabBarIconExample;
+export default TabBarIcon;
 
 const styles = StyleSheet.create({
   tabbar: {

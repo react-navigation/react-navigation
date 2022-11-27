@@ -17,6 +17,7 @@ import SimpleStack from './Screens/SimpleStack';
 import StackHeaderCustomization from './Screens/StackHeaderCustomization';
 import StackPreventRemove from './Screens/StackPreventRemove';
 import StackTransparent from './Screens/StackTransparent';
+import TabView from './Screens/TabView';
 
 export type RootDrawerParamList = {
   Examples: undefined;
@@ -95,6 +96,10 @@ export const SCREENS = {
   LinkComponent: {
     title: '<Link />',
     component: LinkComponent,
+  },
+  TabView: {
+    title: 'TabView',
+    component: TabView,
   },
 };
 

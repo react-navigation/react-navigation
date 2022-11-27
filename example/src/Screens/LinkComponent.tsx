@@ -8,11 +8,11 @@ import {
   createStackNavigator,
   StackScreenProps,
 } from '@react-navigation/stack';
-import type { LinkComponentDemoParamList } from 'example/src/screens';
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 
+import type { LinkComponentDemoParamList } from '../screens';
 import Albums from '../Shared/Albums';
 import Article from '../Shared/Article';
 

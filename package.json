@@ -63,7 +63,8 @@
       "node_modules/(?!(@react-native|react-native|react-native-iphone-x-helper)/)"
     ],
     "moduleNameMapper": {
-      "@react-navigation/([^/]+)": "<rootDir>/packages/$1/src"
+      "@react-navigation/([^/]+)": "<rootDir>/packages/$1/src",
+      "react-native-tab-view": "<rootDir>/packages/react-native-tab-view/src"
     },
     "preset": "react-native"
   },

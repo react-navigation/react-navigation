@@ -1,9 +1,5 @@
 # React Native Tab View
 
-[![Build Status][build-badge]][build]
-[![Version][version-badge]][package]
-[![MIT License][license-badge]][license]
-
 A cross-platform Tab View component for React Native. Implemented using [`react-native-pager-view`](https://github.com/callstack/react-native-viewpager) on Android & iOS, and [PanResponder](https://reactnative.dev/docs/panresponder) on Web, macOS, and Windows.
 
 - [Run the example app to see it in action](https://expo.io/@satya164/react-native-tab-view-demos).
@@ -20,7 +16,7 @@ A cross-platform Tab View component for React Native. Implemented using [`react-
 
 ## Demo
 
-<a href="https://raw.githubusercontent.com/satya164/react-native-tab-view/main/demo/demo.mp4"><img src="https://raw.githubusercontent.com/satya164/react-native-tab-view/main/demo/demo.gif" width="360"></a>
+<a href="https://github.com/react-navigation/react-navigation/blob/main/packages/react-native-tab-view/demo/demo.gif"><img src="https://github.com/react-navigation/react-navigation/blob/main/packages/react-native-tab-view/demo/demo.gif" width="360"></a>
 
 ## React Native Compatibility
 
@@ -650,31 +646,3 @@ Nesting the `TabView` inside a vertical `ScrollView` will disable the optimizati
 ### Use `lazy` and `renderLazyPlaceholder` props to render routes as needed
 
 The `lazy` option is disabled by default to provide a smoother tab switching experience, but you can enable it and provide a placeholder component for a better lazy loading experience. Enabling `lazy` can improve initial load performance by rendering routes only when they come into view. Refer the [prop reference](#lazy) for more details.
-
-## Contributing
-
-While developing, you can run the [example app](/example/README.md) to test your changes.
-
-Make sure your code passes TypeScript and ESLint. Run the following to verify:
-
-```sh
-yarn typescript
-yarn lint
-```
-
-To fix formatting errors, run the following:
-
-```sh
-yarn lint -- --fix
-```
-
-Remember to add tests for your change if possible.
-
-<!-- badges -->
-
-[build-badge]: https://img.shields.io/circleci/project/github/satya164/react-native-tab-view/main.svg?style=flat-square
-[build]: https://circleci.com/gh/satya164/react-native-tab-view
-[version-badge]: https://img.shields.io/npm/v/react-native-tab-view.svg?style=flat-square
-[package]: https://www.npmjs.com/package/react-native-tab-view
-[license-badge]: https://img.shields.io/npm/l/react-native-tab-view.svg?style=flat-square
-[license]: https://opensource.org/licenses/MIT

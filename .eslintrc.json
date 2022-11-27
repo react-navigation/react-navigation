@@ -16,7 +16,8 @@
       "@react-navigation/material-top-tabs",
       "@react-navigation/material-bottom-tabs",
       "@react-navigation/elements",
-      "@react-navigation/devtools"
+      "@react-navigation/devtools",
+      "react-native-tab-view"
     ]
   },
   "env": {

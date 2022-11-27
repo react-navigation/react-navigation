@@ -3,13 +3,13 @@
 import * as React from 'react';
 import {
   Animated,
-  View,
   Image,
-  Text,
-  StyleSheet,
   ImageRequireSource,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
-import { TabView, SceneRendererProps } from 'react-native-tab-view';
+import { SceneRendererProps, TabView } from 'react-native-tab-view';
 
 type Route = {
   key: string;
@@ -22,14 +22,14 @@ type Props = SceneRendererProps & {
 };
 
 const ALBUMS: { [key: string]: ImageRequireSource } = {
-  'Abbey Road': require('../assets/album-art-1.jpg'),
-  'Bat Out of Hell': require('../assets/album-art-2.jpg'),
-  'Homogenic': require('../assets/album-art-3.jpg'),
-  'Number of the Beast': require('../assets/album-art-4.jpg'),
-  "It's Blitz": require('../assets/album-art-5.jpg'),
-  'The Man-Machine': require('../assets/album-art-6.jpg'),
-  'The Score': require('../assets/album-art-7.jpg'),
-  'Lost Horizons': require('../assets/album-art-8.jpg'),
+  'Abbey Road': require('../../../assets/album-art-01.jpg'),
+  'Bat Out of Hell': require('../../../assets/album-art-02.jpg'),
+  'Homogenic': require('../../../assets/album-art-03.jpg'),
+  'Number of the Beast': require('../../../assets/album-art-04.jpg'),
+  "It's Blitz": require('../../../assets/album-art-05.jpg'),
+  'The Man-Machine': require('../../../assets/album-art-06.jpg'),
+  'The Score': require('../../../assets/album-art-07.jpg'),
+  'Lost Horizons': require('../../../assets/album-art-08.jpg'),
 };
 
 const Scene = ({ route, position, layout, index, length }: Props) => {
@@ -87,7 +87,7 @@ const Scene = ({ route, position, layout, index, length }: Props) => {
   );
 };
 
-export default function CoverflowExample() {
+export default function Coverflow() {
   const [index, onIndexChange] = React.useState(2);
   const [routes] = React.useState(Object.keys(ALBUMS).map((key) => ({ key })));
 
@@ -113,9 +113,14 @@ export default function CoverflowExample() {
   );
 }
 
-CoverflowExample.title = 'Coverflow';
-CoverflowExample.backgroundColor = '#000';
-CoverflowExample.appbarElevation = 0;
+Coverflow.options = {
+  title: 'Coverflow',
+  headerShadowVisible: false,
+  headerTintColor: '#fff',
+  headerStyle: {
+    backgroundColor: '#000',
+  },
+};
 
 const styles = StyleSheet.create({
   container: {

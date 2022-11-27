@@ -2,14 +2,14 @@ import * as React from 'react';
 import {
   Animated,
   Easing,
-  StyleSheet,
   I18nManager,
-  StyleProp,
-  ViewStyle,
   Platform,
+  StyleProp,
+  StyleSheet,
+  ViewStyle,
 } from 'react-native';
 
-import type { Route, SceneRendererProps, NavigationState } from './types';
+import type { NavigationState, Route, SceneRendererProps } from './types';
 import useAnimatedValue from './useAnimatedValue';
 
 export type GetTabWidth = (index: number) => number;
@@ -23,7 +23,7 @@ export type Props<T extends Route> = SceneRendererProps & {
 };
 
 const getTranslateX = (
-  position: Animated.AnimatedInterpolation<number>,
+  position: Animated.AnimatedInterpolation,
   routes: Route[],
   getTabWidth: GetTabWidth,
   gap?: number

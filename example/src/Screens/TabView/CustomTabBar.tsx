@@ -1,22 +1,24 @@
+import { Ionicons } from '@expo/vector-icons';
 import * as React from 'react';
 import {
   Animated,
-  View,
+  StyleSheet,
   Text,
   TouchableWithoutFeedback,
-  StyleSheet,
+  View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-  TabView,
-  SceneMap,
   NavigationState,
+  SceneMap,
   SceneRendererProps,
+  TabView,
 } from 'react-native-tab-view';
-import { Ionicons } from '@expo/vector-icons';
-import Albums from './Shared/Albums';
-import Article from './Shared/Article';
-import Chat from './Shared/Chat';
-import Contacts from './Shared/Contacts';
+
+import Albums from '../../Shared/Albums';
+import Article from '../../Shared/Article';
+import Chat from '../../Shared/Chat';
+import Contacts from '../../Shared/Contacts';
 
 type Route = {
   key: string;
@@ -26,7 +28,15 @@ type Route = {
 
 type State = NavigationState<Route>;
 
-const CustomTabBarExample = () => {
+const renderScene = SceneMap({
+  contacts: () => <Contacts />,
+  albums: () => <Albums />,
+  article: () => <Article />,
+  chat: () => <Chat />,
+});
+
+const CustomTabBar = () => {
+  const insets = useSafeAreaInsets();
   const [index, onIndexChange] = React.useState(0);
   const [routes] = React.useState<Route[]>([
     { key: 'contacts', title: 'Contacts', icon: 'ios-people' },
@@ -41,7 +51,7 @@ const CustomTabBarExample = () => {
       position,
     }: {
       navigationState: State;
-      position: Animated.AnimatedInterpolation<number>;
+      position: Animated.AnimatedInterpolation;
     }) =>
     ({ route, index }: { route: Route; index: number }) => {
       const inputRange = navigationState.routes.map((_, i) => i);
@@ -82,7 +92,16 @@ const CustomTabBarExample = () => {
   const renderTabBar = (
     props: SceneRendererProps & { navigationState: State }
   ) => (
-    <View style={styles.tabbar}>
+    <View
+      style={[
+        styles.tabbar,
+        {
+          paddingBottom: insets.bottom,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+        },
+      ]}
+    >
       {props.navigationState.routes.map((route: Route, index: number) => {
         return (
           <TouchableWithoutFeedback
@@ -95,13 +114,6 @@ const CustomTabBarExample = () => {
       })}
     </View>
   );
-
-  const renderScene = SceneMap({
-    contacts: Contacts,
-    albums: Albums,
-    article: Article,
-    chat: Chat,
-  });
 
   return (
     <TabView
@@ -117,13 +129,11 @@ const CustomTabBarExample = () => {
   );
 };
 
-CustomTabBarExample.title = 'Custom tab bar';
-CustomTabBarExample.backgroundColor = '#fafafa';
-CustomTabBarExample.appbarElevation = 0;
-CustomTabBarExample.tintColor = '#263238';
-CustomTabBarExample.statusBarStyle = 'dark-content' as 'dark-content';
+CustomTabBar.options = {
+  title: 'Custom tab bar',
+};
 
-export default CustomTabBarExample;
+export default CustomTabBar;
 
 const styles = StyleSheet.create({
   tabbar: {

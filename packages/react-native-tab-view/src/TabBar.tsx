@@ -1,26 +1,27 @@
 import * as React from 'react';
 import {
   Animated,
-  StyleSheet,
-  View,
-  StyleProp,
-  ViewStyle,
-  TextStyle,
-  LayoutChangeEvent,
-  I18nManager,
-  Platform,
   FlatList,
+  I18nManager,
+  LayoutChangeEvent,
   ListRenderItemInfo,
+  Platform,
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+  View,
+  ViewStyle,
 } from 'react-native';
-import TabBarItem, { Props as TabBarItemProps } from './TabBarItem';
+
 import TabBarIndicator, { Props as IndicatorProps } from './TabBarIndicator';
+import TabBarItem, { Props as TabBarItemProps } from './TabBarItem';
 import type {
+  Event,
+  Layout,
+  NavigationState,
   Route,
   Scene,
   SceneRendererProps,
-  NavigationState,
-  Layout,
-  Event,
 } from './types';
 import useAnimatedValue from './useAnimatedValue';
 

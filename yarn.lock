@@ -4885,7 +4885,7 @@ __metadata:
     jimp: ^0.16.1
     koa: ^2.13.4
     mock-require: ^3.0.3
-    mock-require-assets: ^0.0.1
+    mock-require-assets: ^0.0.3
     node-fetch: ^2.6.1
     nodemon: ^2.0.6
     npm-run-all: ^4.1.5
@@ -4950,7 +4950,7 @@ __metadata:
     react-native: 0.69.5
     react-native-builder-bob: ^0.18.1
     react-native-pager-view: 5.4.24
-    react-native-tab-view: ^3.3.0
+    react-native-tab-view: "workspace:^"
     typescript: ^4.7.4
     warn-once: ^0.1.0
   peerDependencies:
@@ -18655,10 +18655,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mock-require-assets@npm:^0.0.1":
-  version: 0.0.1
-  resolution: "mock-require-assets@npm:0.0.1"
-  checksum: c8eb226d4073b15b48e884ac78f203b2bb1ffd234d03b1f2d17b7e3ea65e8444582a020c62cb46844f649da5fce61324c14750d7274580448b62101250afd64b
+"mock-require-assets@npm:^0.0.3":
+  version: 0.0.3
+  resolution: "mock-require-assets@npm:0.0.3"
+  checksum: cb9a7b34463014821e5e8bc5c4c3fe0cbee71a72f3f004c714e7738450eabdb4358a469852199e7b3ce387013aba01599e8913b7fde38581882ea1bfd36a0531
   languageName: node
   linkType: hard
 
@@ -22879,18 +22879,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-tab-view@npm:^3.3.0":
-  version: 3.3.0
-  resolution: "react-native-tab-view@npm:3.3.0"
+"react-native-tab-view@^3.3.0, react-native-tab-view@workspace:^, react-native-tab-view@workspace:packages/react-native-tab-view":
+  version: 0.0.0-use.local
+  resolution: "react-native-tab-view@workspace:packages/react-native-tab-view"
   dependencies:
+    react: 18.0.0
+    react-native: 0.69.5
+    react-native-builder-bob: ^0.18.1
+    react-native-pager-view: 5.4.24
+    typescript: ^4.7.4
     use-latest-callback: ^0.1.5
   peerDependencies:
     react: "*"
     react-native: "*"
     react-native-pager-view: "*"
-  checksum: 44d876cfb600c6e88658c210ef3220cd38fc758c902b653416f509f78d9a8d2683e912c36a0d55644e142d2ba1f6b9c58a5306537ff7c09f2e9fb57cd09731c2
-  languageName: node
-  linkType: hard
+  languageName: unknown
+  linkType: soft
 
 "react-native-vector-icons@npm:^9.1.0":
   version: 9.1.0

@@ -1,16 +1,18 @@
-import * as React from 'react';
-import { Animated, View, Text, StyleSheet, I18nManager } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import * as React from 'react';
+import { Animated, I18nManager, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-  TabView,
-  TabBar,
-  SceneMap,
   NavigationState,
+  SceneMap,
   SceneRendererProps,
+  TabBar,
+  TabView,
 } from 'react-native-tab-view';
-import Albums from './Shared/Albums';
-import Article from './Shared/Article';
-import Contacts from './Shared/Contacts';
+
+import Albums from '../../Shared/Albums';
+import Article from '../../Shared/Article';
+import Contacts from '../../Shared/Contacts';
 
 type Route = {
   key: string;
@@ -19,7 +21,14 @@ type Route = {
 
 type State = NavigationState<Route>;
 
-const CustomIndicatorExample = () => {
+const renderScene = SceneMap({
+  article: () => <Article />,
+  contacts: () => <Contacts />,
+  albums: () => <Albums />,
+});
+
+const CustomIndicator = () => {
+  const insets = useSafeAreaInsets();
   const [index, onIndexChange] = React.useState(0);
   const [routes] = React.useState<Route[]>([
     {
@@ -103,20 +112,16 @@ const CustomIndicatorExample = () => {
   const renderTabBar = (
     props: SceneRendererProps & { navigationState: State }
   ) => (
-    <TabBar
-      {...props}
-      renderIcon={renderIcon}
-      renderBadge={renderBadge}
-      renderIndicator={renderIndicator}
-      style={styles.tabbar}
-    />
+    <View style={[styles.tabbar, { paddingBottom: insets.bottom }]}>
+      <TabBar
+        {...props}
+        renderIcon={renderIcon}
+        renderBadge={renderBadge}
+        renderIndicator={renderIndicator}
+        style={styles.tabbar}
+      />
+    </View>
   );
-
-  const renderScene = SceneMap({
-    article: Article,
-    contacts: Contacts,
-    albums: Albums,
-  });
 
   return (
     <TabView
@@ -132,11 +137,16 @@ const CustomIndicatorExample = () => {
   );
 };
 
-CustomIndicatorExample.title = 'Custom indicator';
-CustomIndicatorExample.backgroundColor = '#263238';
-CustomIndicatorExample.appbarElevation = 4;
+CustomIndicator.options = {
+  title: 'Custom indicator',
+  headerShadowVisible: false,
+  headerTintColor: '#fff',
+  headerStyle: {
+    backgroundColor: '#263238',
+  },
+};
 
-export default CustomIndicatorExample;
+export default CustomIndicator;
 
 const styles = StyleSheet.create({
   tabbar: {
