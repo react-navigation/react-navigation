@@ -62,7 +62,22 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Hey! Thanks for opening the issue. The issue tracker is intended for only tracking bug reports. Seems you have a feature request. Please post the feature request on [Canny](https://react-navigation.canny.io/feature-requests). This lets other users upvote your feature request and helps us prioritize the most requested features.\n\nYou can also open a detailed proposal in our [RFC repo](https://github.com/react-navigation/rfcs) for discussion."
+              body: "Hey! Thanks for opening the issue. The issue tracker is intended for only tracking bug reports. Seems you have a feature request. Please post the feature request on [Canny](https://react-navigation.canny.io/feature-requests) and mention your use case. This lets other users upvote your feature request and helps us prioritize the most requested features.\n\nYou can also open a detailed proposal in our [discussion forum](https://github.com/react-navigation/react-navigation/discussions)."
+            })
+
+  out-of-tree-platforms:
+    runs-on: ubuntu-latest
+    if: github.event.label.name == 'platform:windows' || github.event.label.name == 'platform:macos'
+    steps:
+      - uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Hey! Thanks for opening the issue. Windows and MacOS support in React Navigation is a community effort. We don't have the resources to test and maintain these platforms. Any help with fixing issues on these platforms is appreciated. Please feel free to open a PR to fix the issue."
             })
 
   react-native-screens:
