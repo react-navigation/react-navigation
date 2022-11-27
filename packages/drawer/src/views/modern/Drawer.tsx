@@ -30,6 +30,12 @@ import Overlay from './Overlay';
 const SWIPE_DISTANCE_MINIMUM = 5;
 const DEFAULT_DRAWER_WIDTH = '80%';
 
+type ToggleOptions = {
+  open: boolean;
+  isUserInitiated: boolean;
+  velocity?: number;
+};
+
 const minmax = (value: number, start: number, end: number) => {
   'worklet';
 
@@ -148,7 +154,7 @@ export default function Drawer({
   const gestureState = useSharedValue<GestureState>(GestureState.UNDETERMINED);
 
   const toggleDrawer = React.useCallback(
-    (open: boolean, velocity?: number) => {
+    ({ open, isUserInitiated, velocity }: ToggleOptions) => {
       'worklet';
 
       const translateX = getDrawerTranslationX(open);
@@ -165,6 +171,10 @@ export default function Drawer({
         restSpeedThreshold: 0.01,
       });
 
+      if (!isUserInitiated) {
+        return;
+      }
+
       if (open) {
         runOnJS(onOpen)();
       } else {
@@ -174,7 +184,10 @@ export default function Drawer({
     [getDrawerTranslationX, onClose, onOpen, touchStartX, touchX, translationX]
   );
 
-  React.useEffect(() => toggleDrawer(open), [open, toggleDrawer]);
+  React.useEffect(
+    () => toggleDrawer({ open, isUserInitiated: false }),
+    [open, toggleDrawer]
+  );
 
   const onGestureEvent = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
@@ -213,7 +226,11 @@ export default function Drawer({
               (event.velocityX === 0 ? event.translationX : event.velocityX) < 0
           : open;
 
-      toggleDrawer(nextOpen, event.velocityX);
+      toggleDrawer({
+        open: nextOpen,
+        isUserInitiated: true,
+        velocity: event.velocityX,
+      });
     },
     onFinish: () => {
       runOnJS(onGestureFinish)();
@@ -357,7 +374,9 @@ export default function Drawer({
             {drawerType !== 'permanent' ? (
               <Overlay
                 progress={progress}
-                onPress={() => toggleDrawer(false)}
+                onPress={() =>
+                  toggleDrawer({ open: false, isUserInitiated: true })
+                }
                 style={overlayStyle}
               />
             ) : null}
