@@ -41,7 +41,8 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "color": "^4.2.3"
+    "color": "^4.2.3",
+    "react-native-tab-view": "^3.3.0"
   },
   "devDependencies": {
     "@react-navigation/native": "workspace:^",
@@ -53,15 +54,13 @@
     "react-native": "0.69.5",
     "react-native-builder-bob": "^0.19.1",
     "react-native-pager-view": "5.4.24",
-    "react-native-tab-view": "workspace:^",
     "typescript": "^4.9.3"
   },
   "peerDependencies": {
     "@react-navigation/native": "^6.0.0",
     "react": "*",
     "react-native": "*",
-    "react-native-pager-view": ">= 4.0.0",
-    "react-native-tab-view": ">= 3.0.0"
+    "react-native-pager-view": ">= 4.0.0"
   },
   "react-native-builder-bob": {
     "source": "src",
