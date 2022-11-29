@@ -76,9 +76,9 @@ describe('useHeaderHeight in native-stack', () => {
       </NavigationContainer>
     );
 
-    expect(headerHeight).toBe(56);
+    expect(headerHeight).toBe(64);
     fireEvent.press(await findByText(/go to b/i));
-    expect(headerHeight).toBe(56);
+    expect(headerHeight).toBe(64);
   });
 
   it('returns header height on iOS', async () => {
@@ -243,9 +243,9 @@ describe('useHeaderHeight in native-stack', () => {
       </NavigationContainer>
     );
 
-    expect(headerHeight).toBe(56);
+    expect(headerHeight).toBe(64);
     fireEvent.press(await findByText(/go to b/i));
-    expect(headerHeight).toBe(56);
+    expect(headerHeight).toBe(64);
   });
 
   it("doesn't return header height with headerShown: false on iOS", async () => {
@@ -307,7 +307,7 @@ describe('useHeaderHeight in native-stack', () => {
 
     expect(headerHeight).toBe(0);
     fireEvent.press(await findByText(/go to b/i));
-    expect(headerHeight).toBe(56);
+    expect(headerHeight).toBe(64);
   });
 
   it("doesn't return header height with headerShown: false on Web", async () => {
@@ -476,9 +476,9 @@ describe('useHeaderHeight in native-stack', () => {
       </NavigationContainer>
     );
 
-    expect(headerHeight).toBe(56);
+    expect(headerHeight).toBe(64);
     fireEvent.press(await findByText(/go to b/i));
-    expect(headerHeight).toBe(56);
+    expect(headerHeight).toBe(64);
   });
 
   it('returns parent header height in nested stack when headerShown: false on Android', async () => {
@@ -514,9 +514,9 @@ describe('useHeaderHeight in native-stack', () => {
       </NavigationContainer>
     );
 
-    expect(headerHeight).toBe(56);
+    expect(headerHeight).toBe(64);
     fireEvent.press(await findByText(/go to b/i));
-    expect(headerHeight).toBe(56);
+    expect(headerHeight).toBe(64);
   });
 
   it('returns header height 0 in nested stack when headerShown: false on both screens on Android', async () => {
