@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/material-bottom-tabs",
   "description": "Integration for bottom navigation component from react-native-paper",
-  "version": "6.2.5",
+  "version": "6.2.6",
   "keywords": [
     "react-native-component",
     "react-component",
