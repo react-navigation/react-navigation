@@ -35,7 +35,7 @@ type Props = BottomTabBarProps & {
 
 type TabBarPositionMapConfig = Record<
   TabBarPosition,
-  Record<'tabBar' | 'content' | 'tabBarItem', StyleProp<ViewStyle>>
+  Record<'tabBar' | 'content' | 'tabBarItem', ViewStyle>
 >;
 
 const COMPACT_TABITEM_GAP = 12;
@@ -69,7 +69,9 @@ const shouldUseHorizontalLabels = ({
       case 'below-icon':
         return false;
     }
-  } else if (tabBarPosition !== 'bottom') {
+  }
+
+  if (tabBarPosition !== 'bottom') {
     return false;
   }
 
@@ -275,6 +277,7 @@ export default function BottomTabBar({
       marginVertical: COMPACT_TABITEM_GAP,
     },
     tabBar: {
+      elevation: 8,
       paddingHorizontal: 5,
       paddingTop: insets.top,
     },
@@ -288,7 +291,7 @@ export default function BottomTabBar({
     right: {
       ...sharedTabBarStyle,
       tabBar: {
-        ...(sharedTabBarStyle.tabBar as unknown as ViewStyle),
+        ...sharedTabBarStyle.tabBar,
         borderLeftColor: colors.border,
         borderLeftWidth: StyleSheet.hairlineWidth,
       },
@@ -297,7 +300,7 @@ export default function BottomTabBar({
     left: {
       ...sharedTabBarStyle,
       tabBar: {
-        ...(sharedTabBarStyle.tabBar as unknown as ViewStyle),
+        ...sharedTabBarStyle.tabBar,
         borderRightColor: colors.border,
         borderRightWidth: StyleSheet.hairlineWidth,
       },
@@ -306,6 +309,7 @@ export default function BottomTabBar({
     bottom: {
       tabBarItem: {},
       tabBar: {
+        elevation: 8,
         height: tabBarHeight,
         borderTopColor: colors.border,
         borderTopWidth: StyleSheet.hairlineWidth,
