@@ -29,10 +29,8 @@ export default function getDefaultHeaderHeight(
         }
       }
     }
-  } else if (Platform.OS === 'android') {
-    // android also uses 64 as it's height due to MD-v3 guideline specification
-    headerHeight = 64;
   } else {
+    // android also uses 64 as it's height due to MD-v3 guideline specification
     headerHeight = 64;
   }
 

@@ -163,7 +163,9 @@ export default function DrawerItem(props: Props) {
     ...rest
   } = props;
 
-  const { borderRadius = 4 } = StyleSheet.flatten(style || {});
+  // border-radius for android is calculated using the drawer item height / 2 to get perfect round edges
+  const { borderRadius = Platform.OS === 'android' ? 56 / 2 : 4 } =
+    StyleSheet.flatten(style || {});
   const color = focused ? activeTintColor : inactiveTintColor;
   const backgroundColor = focused
     ? activeBackgroundColor
@@ -191,7 +193,13 @@ export default function DrawerItem(props: Props) {
           <View
             style={[
               styles.label,
-              { marginLeft: iconNode ? 32 : 0, marginVertical: 5 },
+              {
+                marginLeft: iconNode
+                  ? Platform.OS === 'android'
+                    ? 12
+                    : 32
+                  : 0,
+              },
             ]}
           >
             {typeof label === 'string' ? (
@@ -223,11 +231,24 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginVertical: 4,
     overflow: 'hidden',
+    ...Platform.select({
+      android: {
+        height: 56,
+        marginHorizontal: 16,
+      },
+    }),
   },
   wrapper: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 8,
+    ...Platform.select({
+      android: {
+        height: '100%',
+        paddingVertical: 0,
+        paddingHorizontal: 16,
+      },
+    }),
   },
   label: {
     marginRight: 32,
