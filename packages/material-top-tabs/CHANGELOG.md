@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.4.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.3.1...@react-navigation/material-top-tabs@6.4.0) (2022-11-29)
+
+### Features
+
+* expose tabBarGap option in material top tabs ([#11038](https://github.com/react-navigation/react-navigation/issues/11038)) ([29818a8](https://github.com/react-navigation/react-navigation/commit/29818a80d5086e0702b352e68996a4384eb997e3)) - by @mlecoq
+
 ## [6.3.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@6.3.0...@react-navigation/material-top-tabs@6.3.1) (2022-11-21)
 
 ### Bug Fixes
