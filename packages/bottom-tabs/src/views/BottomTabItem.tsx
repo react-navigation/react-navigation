@@ -33,6 +33,7 @@ type Props = {
         focused: boolean;
         color: string;
         position: LabelPosition;
+        textComponent: React.ReactElement;
       }) => React.ReactNode);
   /**
    * Icon to display for the tab.
@@ -203,9 +204,8 @@ export default function BottomTabBarItem({
 
     const color = focused ? activeTintColor : inactiveTintColor;
 
-    if (typeof label === 'string') {
-      return (
-        <Text
+    const textComponent= (
+      <Text
           numberOfLines={1}
           style={[
             styles.label,
@@ -218,12 +218,16 @@ export default function BottomTabBarItem({
           {label}
         </Text>
       );
+
+    if (typeof label === 'string') {
+      return textComponent
     }
 
     return label({
       focused,
       color,
       position: horizontal ? 'beside-icon' : 'below-icon',
+      textComponent
     });
   };
 
