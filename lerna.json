@@ -13,6 +13,7 @@
       "allowBranch": "main",
       "conventionalCommits": true,
       "createRelease": "github",
+      "changelogIncludeCommitsClientLogin": " - by @%l",
       "message": "chore: publish",
       "ignoreChanges": [
         "**/__fixtures__/**",
