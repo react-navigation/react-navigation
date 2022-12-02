@@ -1,8 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  useFlipper,
-  useReduxDevToolsExtension,
-} from '@react-navigation/devtools';
+import { useReduxDevToolsExtension } from '@react-navigation/devtools';
 import {
   createDrawerNavigator,
   DrawerScreenProps,
@@ -28,7 +25,6 @@ import {
   Dimensions,
   I18nManager,
   Linking,
-  LogBox,
   Platform,
   ScaledSize,
   ScrollView,
@@ -49,10 +45,6 @@ import { restartApp } from './Restart';
 import { RootDrawerParamList, RootStackParamList, SCREENS } from './screens';
 import NotFound from './Screens/NotFound';
 import SettingsItem from './Shared/SettingsItem';
-
-if (Platform.OS !== 'web') {
-  LogBox.ignoreLogs(['The native module for Flipper seems unavailable']);
-}
 
 SplashScreen.preventAutoHideAsync();
 
@@ -133,7 +125,6 @@ export default function App() {
   const navigationRef = useNavigationContainerRef();
 
   useReduxDevToolsExtension(navigationRef);
-  useFlipper(navigationRef);
 
   if (!isReady) {
     return null;

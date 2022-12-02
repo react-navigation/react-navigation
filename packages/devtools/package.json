@@ -48,7 +48,6 @@
     "del-cli": "^3.0.1",
     "react": "18.0.0",
     "react-native-builder-bob": "^0.19.1",
-    "react-native-flipper": "~0.125.0",
     "typescript": "^4.9.3"
   },
   "peerDependencies": {

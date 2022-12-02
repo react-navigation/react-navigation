@@ -26,7 +26,6 @@ If you are looking for version 4, the code can be found in the [4.x branch](http
 | [@react-navigation/routers](/packages/routers)                               |              [![badge](https://img.shields.io/npm/v/@react-navigation/routers.svg)](https://www.npmjs.com/package/@react-navigation/routers)              |
 | [@react-navigation/stack](/packages/stack)                                   |                [![badge](https://img.shields.io/npm/v/@react-navigation/stack.svg)](https://www.npmjs.com/package/@react-navigation/stack)                |
 | [react-native-tab-view](/packages/react-native-tab-view) |        [![badge](https://img.shields.io/npm/v/react-native-tab-view.svg)](https://www.npmjs.com/package/react-native-tab-view)        |
-| [flipper-plugin-react-navigation](/packages/flipper-plugin-react-navigation) |        [![badge](https://img.shields.io/npm/v/flipper-plugin-react-navigation.svg)](https://www.npmjs.com/package/flipper-plugin-react-navigation)        |
 
 ## Contributing
 
