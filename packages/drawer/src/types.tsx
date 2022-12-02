@@ -38,7 +38,7 @@ export type DrawerNavigationConfig = {
   /**
    * Whether to use the legacy implementation based on Reanimated 1.
    * The new implementation based on Reanimated 2 will perform better,
-   * but you need additional configuration and need to use Hermes with Flipper to debug.
+   * but it's not possible to use Chrome remote debugger.
    *
    * This defaults to `true` if Reanimated 2 is not configured.
    *

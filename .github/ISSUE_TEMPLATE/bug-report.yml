@@ -65,14 +65,13 @@ body:
       description: |
         Which packages are affected by the issue?
       options:
-        - label: '@react-navigation/​bottom-tabs'
-        - label: '@react-navigation/​drawer'
-        - label: '@react-navigation/​material-bottom-tabs'
-        - label: '@react-navigation/​material-top-tabs'
-        - label: '@react-navigation/​stack'
-        - label: '@react-navigation/​native-stack'
+        - label: '@react-navigation/bottom-tabs'
+        - label: '@react-navigation/drawer'
+        - label: '@react-navigation/material-bottom-tabs'
+        - label: '@react-navigation/material-top-tabs'
+        - label: '@react-navigation/stack'
+        - label: '@react-navigation/native-stack'
         - label: 'react-native-tab-view'
-        - label: 'flipper-plugin-react-navigation'
   - type: textarea
     attributes:
       label: Environment

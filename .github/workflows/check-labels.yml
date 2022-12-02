@@ -16,7 +16,7 @@ jobs:
             const body = context.payload.issue.body;
 
             const packages = Array.from(
-              body.matchAll(/- \[x\] (@react-navigation​\/([\S]+)|react-native-tab-view|flipper-plugin-react-navigation)/gim)
+              body.matchAll(/- \[x\] (@react-navigation\/([\S]+)|react-native-tab-view)/gim)
             )
               .map((match) => match[1])
               .filter((name) =>
@@ -28,7 +28,6 @@ jobs:
                   'stack',
                   'native-stack',
                   'react-native-tab-view',
-                  'flipper-plugin-react-navigation',
                 ].includes(name)
               )
               .map((name) => `package:${name}`);
