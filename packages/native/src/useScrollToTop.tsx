@@ -57,7 +57,7 @@ export default function useScrollToTop(
     // We need to find the closest tab navigators and add the listener there
     while (currentNavigator) {
       if (currentNavigator.getState().type === 'tab') {
-        tabNavigators = tabNavigators.concat(currentNavigator);
+        tabNavigators.push(currentNavigator);
       }
       currentNavigator = currentNavigator.getParent();
     }
