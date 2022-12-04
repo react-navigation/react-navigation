@@ -51,12 +51,12 @@ export default function useScrollToTop(
   React.useEffect(() => {
     let tabNavigators = [];
     let currentNavigator = navigation;
-    
-     // The screen might be inside another navigator such as stack nested in tabs
-     // The screen might be in multiple tab bars (as a top tab bar and a bottom tab bar and we want both events to work)
-     // We need to find the closest tab navigators and add the listener there
-     while (currentNavigator) {
-      if(currentNavigator.getState().type === 'tab') {
+
+    // The screen might be inside another navigator such as stack nested in tabs
+    // The screen might be in multiple tab bars (as a top tab bar and a bottom tab bar and we want both events to work)
+    // We need to find the closest tab navigators and add the listener there
+    while (currentNavigator) {
+      if (currentNavigator.getState().type === 'tab') {
         tabNavigators = tabNavigators.concat(currentNavigator);
       }
       currentNavigator = currentNavigator.getParent();
@@ -66,7 +66,7 @@ export default function useScrollToTop(
       return;
     }
 
-    const unsubscribers = tabNavigators.map(tabNavigator => {
+    const unsubscribers = tabNavigators.map((tabNavigator) => {
       return tabNavigator.addListener(
         // We don't wanna import tab types here to avoid extra deps
         // in addition, there are multiple tab implementations
@@ -87,7 +87,12 @@ export default function useScrollToTop(
           requestAnimationFrame(() => {
             const scrollable = getScrollableNode(ref) as ScrollableWrapper;
 
-            if (isFocused && isTabNavigator && scrollable && !e.defaultPrevented) {
+            if (
+              isFocused &&
+              isTabNavigator &&
+              scrollable &&
+              !e.defaultPrevented
+            ) {
               if ('scrollToTop' in scrollable) {
                 scrollable.scrollToTop();
               } else if ('scrollTo' in scrollable) {
@@ -101,10 +106,10 @@ export default function useScrollToTop(
           });
         }
       );
-    })
+    });
 
     return () => {
-        unsubscribers.map(unsubscribe => unsubscribe())
+      unsubscribers.map((unsubscribe) => unsubscribe());
     };
   }, [navigation, ref, route.key]);
 }
