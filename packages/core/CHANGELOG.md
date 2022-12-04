@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.4.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.4.1...@react-navigation/core@6.4.3) (2022-11-29)
+
+**Note:** Version bump only for package @react-navigation/core
+
 ## [6.4.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.4.0...@react-navigation/core@6.4.1) (2022-11-21)
 
 ### Bug Fixes

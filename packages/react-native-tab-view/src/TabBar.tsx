@@ -11,7 +11,9 @@ import {
   TextStyle,
   View,
   ViewStyle,
+  ViewToken,
 } from 'react-native';
+import useLatestCallback from 'use-latest-callback';
 
 import TabBarIndicator, { Props as IndicatorProps } from './TabBarIndicator';
 import TabBarItem, { Props as TabBarItemProps } from './TabBarItem';
@@ -248,6 +250,10 @@ const renderIndicatorDefault = (props: IndicatorProps<Route>) => (
 
 const getTestIdDefault = ({ route }: Scene<Route>) => route.testID;
 
+// How many items measurements should we update per batch.
+// Defaults to 10, since that's whats FlatList is using in initialNumToRender.
+const MEASURE_PER_BATCH = 10;
+
 export default function TabBar<T extends Route>({
   getLabelText = getLabelTextDefault,
   getAccessible = getAccessibleDefault,
@@ -280,7 +286,7 @@ export default function TabBar<T extends Route>({
 }: Props<T>) {
   const [layout, setLayout] = React.useState<Layout>({ width: 0, height: 0 });
   const [tabWidths, setTabWidths] = React.useState<Record<string, number>>({});
-  const flatListRef = React.useRef<FlatList>(null);
+  const flatListRef = React.useRef<FlatList | null>(null);
   const isFirst = React.useRef(true);
   const scrollAmount = useAnimatedValue(0);
   const measuredTabWidths = React.useRef<Record<string, number>>({});
@@ -299,7 +305,9 @@ export default function TabBar<T extends Route>({
 
   const hasMeasuredTabWidths =
     Boolean(layout.width) &&
-    routes.every((r) => typeof tabWidths[r.key] === 'number');
+    routes
+      .slice(0, navigationState.index)
+      .every((r) => typeof tabWidths[r.key] === 'number');
 
   React.useEffect(() => {
     if (isFirst.current) {
@@ -308,7 +316,6 @@ export default function TabBar<T extends Route>({
     }
 
     if (isWidthDynamic && !hasMeasuredTabWidths) {
-      // When tab width is dynamic, only adjust the scroll once we have all tab widths and layout
       return;
     }
 
@@ -376,11 +383,24 @@ export default function TabBar<T extends Route>({
 
               // When we have measured widths for all of the tabs, we should updates the state
               // We avoid doing separate setState for each layout since it triggers multiple renders and slows down app
+              // If we have more than 10 routes divide updating tabWidths into multiple batches. Here we update only first batch of 10 items.
               if (
+                routes.length > MEASURE_PER_BATCH &&
+                index === MEASURE_PER_BATCH &&
+                routes
+                  .slice(0, MEASURE_PER_BATCH)
+                  .every(
+                    (r) => typeof measuredTabWidths.current[r.key] === 'number'
+                  )
+              ) {
+                setTabWidths({ ...measuredTabWidths.current });
+              } else if (
                 routes.every(
                   (r) => typeof measuredTabWidths.current[r.key] === 'number'
                 )
               ) {
+                // When we have measured widths for all of the tabs, we should updates the state
+                // We avoid doing separate setState for each layout since it triggers multiple renders and slows down app
                 setTabWidths({ ...measuredTabWidths.current });
               }
             }
@@ -495,6 +515,25 @@ export default function TabBar<T extends Route>({
     [scrollAmount]
   );
 
+  const handleViewableItemsChanged = useLatestCallback(
+    ({ changed }: { changed: ViewToken[] }) => {
+      if (routes.length <= MEASURE_PER_BATCH) {
+        return;
+      }
+      // Get next vievable item
+      const item = changed[changed.length - 1];
+      const index = item?.index || 0;
+      if (
+        item.isViewable &&
+        (index % 10 === 0 ||
+          index === navigationState.index ||
+          index === routes.length - 1)
+      ) {
+        setTabWidths({ ...measuredTabWidths.current });
+      }
+    }
+  );
+
   return (
     <Animated.View onLayout={handleLayout} style={[styles.tabBar, style]}>
       <Animated.View
@@ -540,6 +579,8 @@ export default function TabBar<T extends Route>({
           keyboardShouldPersistTaps="handled"
           scrollEnabled={scrollEnabled}
           bounces={bounces}
+          initialNumToRender={MEASURE_PER_BATCH}
+          onViewableItemsChanged={handleViewableItemsChanged}
           alwaysBounceHorizontal={false}
           scrollsToTop={false}
           showsHorizontalScrollIndicator={false}

@@ -4726,7 +4726,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/bottom-tabs@workspace:packages/bottom-tabs"
   dependencies:
-    "@react-navigation/elements": ^1.3.7
+    "@react-navigation/elements": ^1.3.9
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": ^11.5.0
     "@types/color": ^3.0.1
@@ -4750,11 +4750,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-navigation/core@^6.4.1, @react-navigation/core@workspace:^, @react-navigation/core@workspace:packages/core":
+"@react-navigation/core@^6.4.3, @react-navigation/core@workspace:^, @react-navigation/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@react-navigation/core@workspace:packages/core"
   dependencies:
-    "@react-navigation/routers": ^6.1.3
+    "@react-navigation/routers": ^6.1.5
     "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.0
     "@types/react-is": ^17.0.0
@@ -4762,7 +4762,7 @@ __metadata:
     escape-string-regexp: ^4.0.0
     immer: ^9.0.2
     nanoid: ^3.1.23
-    query-string: ^7.0.0
+    query-string: ^7.1.3
     react: 18.0.0
     react-is: ^16.13.0
     react-native-builder-bob: ^0.18.1
@@ -4799,7 +4799,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/drawer@workspace:packages/drawer"
   dependencies:
-    "@react-navigation/elements": ^1.3.7
+    "@react-navigation/elements": ^1.3.9
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.0
@@ -4826,7 +4826,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-navigation/elements@^1.3.7, @react-navigation/elements@workspace:packages/elements":
+"@react-navigation/elements@^1.3.9, @react-navigation/elements@workspace:packages/elements":
   version: 0.0.0-use.local
   resolution: "@react-navigation/elements@workspace:packages/elements"
   dependencies:
@@ -4899,7 +4899,7 @@ __metadata:
     react-native-reanimated: ~2.9.1
     react-native-safe-area-context: 4.3.1
     react-native-screens: ~3.15.0
-    react-native-tab-view: ^3.3.0
+    react-native-tab-view: ^3.3.2
     react-native-vector-icons: ^9.1.0
     react-native-web: ~0.18.7
     react-test-renderer: 18.0.0
@@ -4912,7 +4912,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/material-bottom-tabs@workspace:packages/material-bottom-tabs"
   dependencies:
-    "@react-navigation/elements": ^1.3.7
+    "@react-navigation/elements": ^1.3.9
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.0
@@ -4966,7 +4966,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/native-stack@workspace:packages/native-stack"
   dependencies:
-    "@react-navigation/elements": ^1.3.7
+    "@react-navigation/elements": ^1.3.9
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.0
@@ -4991,7 +4991,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/native@workspace:packages/native"
   dependencies:
-    "@react-navigation/core": ^6.4.1
+    "@react-navigation/core": ^6.4.3
     "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.0
     "@types/react-dom": ~18.0.0
@@ -5011,7 +5011,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-navigation/routers@^6.1.3, @react-navigation/routers@workspace:packages/routers":
+"@react-navigation/routers@^6.1.5, @react-navigation/routers@workspace:packages/routers":
   version: 0.0.0-use.local
   resolution: "@react-navigation/routers@workspace:packages/routers"
   dependencies:
@@ -5026,7 +5026,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/stack@workspace:packages/stack"
   dependencies:
-    "@react-navigation/elements": ^1.3.7
+    "@react-navigation/elements": ^1.3.9
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": ^11.5.0
     "@types/color": ^3.0.1
@@ -10183,6 +10183,13 @@ __metadata:
   version: 0.2.0
   resolution: "decode-uri-component@npm:0.2.0"
   checksum: f3749344ab9305ffcfe4bfe300e2dbb61fc6359e2b736812100a3b1b6db0a5668cba31a05e4b45d4d63dbf1a18dfa354cd3ca5bb3ededddabb8cd293f4404f94
+  languageName: node
+  linkType: hard
+
+"decode-uri-component@npm:^0.2.2":
+  version: 0.2.2
+  resolution: "decode-uri-component@npm:0.2.2"
+  checksum: 95476a7d28f267292ce745eac3524a9079058bbb35767b76e3ee87d42e34cd0275d2eb19d9d08c3e167f97556e8a2872747f5e65cbebcac8b0c98d83e285f139
   languageName: node
   linkType: hard
 
@@ -21644,15 +21651,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"query-string@npm:^7.0.0":
-  version: 7.1.0
-  resolution: "query-string@npm:7.1.0"
+"query-string@npm:^7.1.3":
+  version: 7.1.3
+  resolution: "query-string@npm:7.1.3"
   dependencies:
-    decode-uri-component: ^0.2.0
+    decode-uri-component: ^0.2.2
     filter-obj: ^1.1.0
     split-on-first: ^1.0.0
     strict-uri-encode: ^2.0.0
-  checksum: 4594a0a092772eb6854310feea85e34f8dcf70df494776a45b9e5be53621ffbcf930ae669974e4e171ce5e0f29a837e9821d48db843106dd94ee390f6f5ac857
+  checksum: 91af02dcd9cc9227a052841d5c2eecb80a0d6489d05625df506a097ef1c59037cfb5e907f39b84643cbfd535c955abec3e553d0130a7b510120c37d06e0f4346
   languageName: node
   linkType: hard
 
@@ -22879,7 +22886,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-tab-view@^3.3.0, react-native-tab-view@workspace:^, react-native-tab-view@workspace:packages/react-native-tab-view":
+"react-native-tab-view@^3.3.2, react-native-tab-view@workspace:^, react-native-tab-view@workspace:packages/react-native-tab-view":
   version: 0.0.0-use.local
   resolution: "react-native-tab-view@workspace:packages/react-native-tab-view"
   dependencies:
