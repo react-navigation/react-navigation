@@ -109,7 +109,7 @@ export default function useScrollToTop(
     });
 
     return () => {
-      unsubscribers.map((unsubscribe) => unsubscribe());
+      unsubscribers.forEach(unsubscribe => unsubscribe());
     };
   }, [navigation, ref, route.key]);
 }
