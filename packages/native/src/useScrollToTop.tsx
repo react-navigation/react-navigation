@@ -1,5 +1,6 @@
 import { EventArg, useNavigation, useRoute } from '@react-navigation/core';
 import * as React from 'react';
+import type {NavigationProp} from '@react-navigation/native';
 
 type ScrollOptions = { x?: number; y?: number; animated?: boolean };
 
@@ -49,17 +50,17 @@ export default function useScrollToTop(
   const route = useRoute();
 
   React.useEffect(() => {
-    let tabNavigators = [];
-    let currentNavigator = navigation;
+    let tabNavigators: NavigationProp<ReactNavigation.RootParamList>[]= [];
+    let currentNavigation = navigation;
 
     // The screen might be inside another navigator such as stack nested in tabs
     // The screen might be in multiple tab bars (as a top tab bar and a bottom tab bar and we want both events to work)
     // We need to find the closest tab navigators and add the listener there
-    while (currentNavigator) {
-      if (currentNavigator.getState().type === 'tab') {
-        tabNavigators.push(currentNavigator);
+    while (currentNavigation) {
+      if (currentNavigation.getState().type === 'tab') {
+        tabNavigators.push(currentNavigation);
       }
-      currentNavigator = currentNavigator.getParent();
+      currentNavigation = currentNavigation.getParent();
     }
 
     if (tabNavigators.length === 0) {
