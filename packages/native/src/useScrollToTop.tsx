@@ -1,6 +1,6 @@
 import { EventArg, useNavigation, useRoute } from '@react-navigation/core';
+import type { NavigationProp } from '@react-navigation/native';
 import * as React from 'react';
-import type {NavigationProp} from '@react-navigation/native';
 
 type ScrollOptions = { x?: number; y?: number; animated?: boolean };
 
@@ -50,7 +50,7 @@ export default function useScrollToTop(
   const route = useRoute();
 
   React.useEffect(() => {
-    let tabNavigators: NavigationProp<ReactNavigation.RootParamList>[]= [];
+    let tabNavigators: NavigationProp<ReactNavigation.RootParamList>[] = [];
     let currentNavigation = navigation;
 
     // The screen might be inside another navigator such as stack nested in tabs
