@@ -22,7 +22,7 @@
     "test": "jest",
     "clean": "lerna run clean",
     "build": "lerna run prepack",
-    "release": "lerna publish",
+    "release": "lerna run publish",
     "example": "yarn workspace @react-navigation/example"
   },
   "engines": {
