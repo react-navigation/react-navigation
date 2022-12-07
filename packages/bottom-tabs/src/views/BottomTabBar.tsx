@@ -340,6 +340,7 @@ export default function BottomTabBar({
               <NavigationRouteContext.Provider value={route}>
                 <BottomTabItem
                   route={route}
+                  descriptor={descriptors[route.key]}
                   focused={focused}
                   horizontal={hasHorizontalLabels}
                   onPress={onPress}

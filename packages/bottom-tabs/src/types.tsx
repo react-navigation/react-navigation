@@ -91,7 +91,7 @@ export type BottomTabNavigationOptions = HeaderOptions & {
 
   /**
    * Title string of a tab displayed in the tab bar
-   * or a function that given { focused: boolean, color: string, position: 'below-icon' | 'beside-icon' } returns a React.Node to display in tab bar.
+   * or a function that given { focused: boolean, color: string, position: 'below-icon' | 'beside-icon', children: string } returns a React.Node to display in tab bar.
    *
    * When undefined, scene title is used. Use `tabBarShowLabel` to hide the label.
    */
@@ -101,6 +101,7 @@ export type BottomTabNavigationOptions = HeaderOptions & {
         focused: boolean;
         color: string;
         position: LabelPosition;
+        children: string;
       }) => React.ReactNode);
 
   /**
