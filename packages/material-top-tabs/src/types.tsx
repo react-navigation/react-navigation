@@ -78,7 +78,11 @@ export type MaterialTopTabNavigationOptions = {
    */
   tabBarLabel?:
     | string
-    | ((props: { focused: boolean; color: string }) => React.ReactNode);
+    | ((props: {
+        focused: boolean;
+        color: string;
+        children: string;
+      }) => React.ReactNode);
 
   /**
    * Accessibility label for the tab button. This is read by the screen reader when the user taps the tab.

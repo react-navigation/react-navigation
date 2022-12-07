@@ -110,7 +110,14 @@ export default function TabBarTop({
           );
         }
 
-        return label({ focused, color });
+        const children =
+          typeof options.tabBarLabel === 'string'
+            ? options.tabBarLabel
+            : options.title !== undefined
+            ? options.title
+            : route.name;
+
+        return label({ focused, color, children });
       }}
       renderBadge={({ route }) => {
         const { tabBarBadge } = descriptors[route.key].options;
