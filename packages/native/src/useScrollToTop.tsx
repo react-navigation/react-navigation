@@ -1,4 +1,9 @@
-import { EventArg, NavigationProp, useNavigation, useRoute } from '@react-navigation/core';
+import {
+  EventArg,
+  NavigationProp,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/core';
 import * as React from 'react';
 
 type ScrollOptions = { x?: number; y?: number; animated?: boolean };
