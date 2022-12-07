@@ -341,6 +341,7 @@ export default function BottomTabBar({
                 <BottomTabItem
                   href={buildHref(route.name, route.params)}
                   route={route}
+                  descriptor={descriptors[route.key]}
                   focused={focused}
                   horizontal={hasHorizontalLabels}
                   onPress={onPress}
