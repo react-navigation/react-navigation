@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.5.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.5.3...@react-navigation/drawer@6.5.4) (2022-12-07)
+
+### Bug Fixes
+
+* drawerstatuscontext should be exported ([#11041](https://github.com/react-navigation/react-navigation/issues/11041)) ([b3722fd](https://github.com/react-navigation/react-navigation/commit/b3722fd19958be5b1becd110306cb98a5e8f5cb4)) - by @leonchabbey
+
 ## [6.5.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.5.1...@react-navigation/drawer@6.5.3) (2022-11-29)
 
 **Note:** Version bump only for package @react-navigation/drawer

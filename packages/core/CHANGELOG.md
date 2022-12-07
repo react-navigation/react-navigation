@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.4.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.4.3...@react-navigation/core@6.4.4) (2022-12-07)
+
+### Bug Fixes
+
+* bump query-string version ([#11069](https://github.com/react-navigation/react-navigation/issues/11069)) ([e840128](https://github.com/react-navigation/react-navigation/commit/e8401289e98a9e3a62a5b9c178686bb353025deb)) - by @krudos
+
 ## [6.4.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.4.1...@react-navigation/core@6.4.3) (2022-11-29)
 
 **Note:** Version bump only for package @react-navigation/core

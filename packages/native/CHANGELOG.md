@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.16...@react-navigation/native@6.1.0) (2022-12-07)
+
+### Bug Fixes
+
+* keep hash/fragment section un URLs on web ([#11078](https://github.com/react-navigation/react-navigation/issues/11078)) ([31cb2a2](https://github.com/react-navigation/react-navigation/commit/31cb2a2420f2a1c46c27e7e75cb75db5cb026b03)) - by @nikgraf
+
+### Features
+
+* make useScrollToTop work when nesting multiple tab navigators ([#11063](https://github.com/react-navigation/react-navigation/issues/11063)) ([e391595](https://github.com/react-navigation/react-navigation/commit/e391595bf937f166abdb1f7958bc831c2832afc2)), closes [/github.com/react-navigation/react-navigation/pull/9434#issuecomment-1328345015](https://github.com//github.com/react-navigation/react-navigation/pull/9434/issues/issuecomment-1328345015) - by @anthonyguay
+
 ## [6.0.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.14...@react-navigation/native@6.0.16) (2022-11-29)
 
 **Note:** Version bump only for package @react-navigation/native

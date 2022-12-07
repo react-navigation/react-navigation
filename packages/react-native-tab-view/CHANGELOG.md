@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.3.3](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@3.3.2...react-native-tab-view@3.3.3) (2022-12-07)
+
+**Note:** Version bump only for package react-native-tab-view
+
 ## [3.3.2](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@3.3.0...react-native-tab-view@3.3.2) (2022-11-29)
 
 ### Bug Fixes
