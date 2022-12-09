@@ -4108,10 +4108,10 @@ __metadata:
     del-cli: ^3.0.1
     react: 18.0.0
     react-native: 0.69.5
-    react-native-builder-bob: ^0.19.1
+    react-native-builder-bob: ^0.20.3
     react-native-safe-area-context: 4.3.1
     react-native-screens: ~3.15.0
-    typescript: ^4.9.3
+    typescript: ^4.9.4
   peerDependencies:
     "@react-navigation/native": ^6.0.0
     react: "*"
@@ -4136,9 +4136,9 @@ __metadata:
     query-string: ^7.0.0
     react: 18.0.0
     react-is: ^16.13.0
-    react-native-builder-bob: ^0.19.1
+    react-native-builder-bob: ^0.20.3
     react-test-renderer: 18.0.0
-    typescript: ^4.9.3
+    typescript: ^4.9.4
     use-latest-callback: ^0.1.5
   peerDependencies:
     react: "*"
@@ -4157,9 +4157,9 @@ __metadata:
     del-cli: ^3.0.1
     nanoid: ^3.1.23
     react: 18.0.0
-    react-native-builder-bob: ^0.19.1
+    react-native-builder-bob: ^0.20.3
     stacktrace-parser: ^0.1.10
-    typescript: ^4.9.3
+    typescript: ^4.9.4
   peerDependencies:
     react: "*"
   languageName: unknown
@@ -4178,12 +4178,12 @@ __metadata:
     del-cli: ^3.0.1
     react: 18.0.0
     react-native: 0.69.5
-    react-native-builder-bob: ^0.19.1
+    react-native-builder-bob: ^0.20.3
     react-native-gesture-handler: ~2.5.0
     react-native-reanimated: ~2.9.1
     react-native-safe-area-context: 4.3.1
     react-native-screens: ~3.15.0
-    typescript: ^4.9.3
+    typescript: ^4.9.4
   peerDependencies:
     "@react-navigation/native": ^6.0.0
     react: "*"
@@ -4207,8 +4207,8 @@ __metadata:
     del-cli: ^3.0.1
     react: 18.0.0
     react-native: 0.69.5
-    react-native-builder-bob: ^0.19.1
-    typescript: ^4.9.3
+    react-native-builder-bob: ^0.20.3
+    typescript: ^4.9.4
   peerDependencies:
     "@react-navigation/native": ^6.0.0
     react: "*"
@@ -4271,7 +4271,7 @@ __metadata:
     react-native-web: ~0.18.7
     react-test-renderer: 18.0.0
     serve: ^11.3.0
-    typescript: ^4.9.3
+    typescript: ^4.9.4
   languageName: unknown
   linkType: soft
 
@@ -4288,11 +4288,11 @@ __metadata:
     del-cli: ^3.0.1
     react: 18.0.0
     react-native: 0.69.5
-    react-native-builder-bob: ^0.19.1
+    react-native-builder-bob: ^0.20.3
     react-native-paper: ^4.12.1
     react-native-safe-area-context: 4.3.1
     react-native-vector-icons: ^9.1.0
-    typescript: ^4.9.3
+    typescript: ^4.9.4
   peerDependencies:
     "@react-navigation/native": ^6.0.0
     react: "*"
@@ -4315,10 +4315,10 @@ __metadata:
     del-cli: ^3.0.1
     react: 18.0.0
     react-native: 0.69.5
-    react-native-builder-bob: ^0.19.1
+    react-native-builder-bob: ^0.20.3
     react-native-pager-view: 5.4.24
     react-native-tab-view: ^3.3.0
-    typescript: ^4.9.3
+    typescript: ^4.9.4
   peerDependencies:
     "@react-navigation/native": ^6.0.0
     react: "*"
@@ -4339,10 +4339,10 @@ __metadata:
     del-cli: ^3.0.1
     react: 18.0.0
     react-native: 0.69.5
-    react-native-builder-bob: ^0.19.1
+    react-native-builder-bob: ^0.20.3
     react-native-screens: ^3.11.1
-    typescript: ^4.9.3
-    warn-once: ^0.1.0
+    typescript: ^4.9.4
+    warn-once: ^0.1.1
   peerDependencies:
     "@react-navigation/native": ^6.0.0
     react: "*"
@@ -4368,8 +4368,8 @@ __metadata:
     react: 18.0.0
     react-dom: 18.0.0
     react-native: 0.69.5
-    react-native-builder-bob: ^0.19.1
-    typescript: ^4.9.3
+    react-native-builder-bob: ^0.20.3
+    typescript: ^4.9.4
   peerDependencies:
     react: "*"
     react-native: "*"
@@ -4382,8 +4382,8 @@ __metadata:
   dependencies:
     del-cli: ^3.0.1
     nanoid: ^3.1.23
-    react-native-builder-bob: ^0.19.1
-    typescript: ^4.9.3
+    react-native-builder-bob: ^0.20.3
+    typescript: ^4.9.4
   languageName: unknown
   linkType: soft
 
@@ -4401,11 +4401,11 @@ __metadata:
     del-cli: ^3.0.1
     react: 18.0.0
     react-native: 0.69.5
-    react-native-builder-bob: ^0.19.1
+    react-native-builder-bob: ^0.20.3
     react-native-gesture-handler: ~2.5.0
     react-native-safe-area-context: 4.3.1
     react-native-screens: ~3.15.0
-    typescript: ^4.9.3
+    typescript: ^4.9.4
   peerDependencies:
     "@react-navigation/native": ^6.0.0
     react: "*"
@@ -19253,9 +19253,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-builder-bob@npm:^0.19.1":
-  version: 0.19.1
-  resolution: "react-native-builder-bob@npm:0.19.1"
+"react-native-builder-bob@npm:^0.20.3":
+  version: 0.20.3
+  resolution: "react-native-builder-bob@npm:0.20.3"
   dependencies:
     "@babel/core": ^7.18.5
     "@babel/plugin-proposal-class-properties": ^7.17.12
@@ -19282,7 +19282,7 @@ __metadata:
       optional: true
   bin:
     bob: bin/bob
-  checksum: 37beec00043c28f0894af0337c36788f1c98e7ba3fb6e43655b319f246989a20e9e8fc22e313018d3bbe3656c0de6aa9250c90b8f518dd4879b6ef26271772e0
+  checksum: aba62c5373d7cf59463ccafd0fc37217d0487fd7f6ef267dd91fc7dde7ac1a9192f0697feeb83e8ec0552eb8c45fb5722c0fcf322944fa601f9df100ab90a76b
   languageName: node
   linkType: hard
 
@@ -19417,9 +19417,9 @@ __metadata:
   dependencies:
     react: 18.0.0
     react-native: 0.69.5
-    react-native-builder-bob: ^0.19.1
+    react-native-builder-bob: ^0.20.3
     react-native-pager-view: 5.4.24
-    typescript: ^4.9.3
+    typescript: ^4.9.4
     use-latest-callback: ^0.1.5
   peerDependencies:
     react: "*"
@@ -20263,7 +20263,7 @@ __metadata:
     jest: ^26.6.3
     metro-react-native-babel-preset: ^0.66.0
     prettier: ^2.3.0
-    typescript: ^4.9.3
+    typescript: ^4.9.4
   languageName: unknown
   linkType: soft
 
@@ -22354,23 +22354,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.9.3":
-  version: 4.9.3
-  resolution: "typescript@npm:4.9.3"
+"typescript@npm:^4.9.4":
+  version: 4.9.4
+  resolution: "typescript@npm:4.9.4"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 17b8f816050b412403e38d48eef0e893deb6be522d6dc7caf105e54a72e34daf6835c447735fd2b28b66784e72bfbf87f627abb4818a8e43d1fa8106396128dc
+  checksum: e782fb9e0031cb258a80000f6c13530288c6d63f1177ed43f770533fdc15740d271554cdae86701c1dd2c83b082cea808b07e97fd68b38a172a83dbf9e0d0ef9
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.9.3#~builtin<compat/typescript>":
-  version: 4.9.3
-  resolution: "typescript@patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=f456af"
+"typescript@patch:typescript@^4.9.4#~builtin<compat/typescript>":
+  version: 4.9.4
+  resolution: "typescript@patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=f456af"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: ef65c22622d864497d0a0c5db693523329b3284c15fe632e93ad9aa059e8dc38ef3bd767d6f26b1e5ecf9446f49bd0f6c4e5714a2eeaf352805dc002479843d1
+  checksum: 37f6e2c3c5e2aa5934b85b0fddbf32eeac8b1bacf3a5b51d01946936d03f5377fe86255d4e5a4ae628fd0cd553386355ad362c57f13b4635064400f3e8e05b9d
   languageName: node
   linkType: hard
 
@@ -23030,7 +23030,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"warn-once@npm:^0.1.0":
+"warn-once@npm:^0.1.0, warn-once@npm:^0.1.1":
   version: 0.1.1
   resolution: "warn-once@npm:0.1.1"
   checksum: e6a5a1f5a8dba7744399743d3cfb571db4c3947897875d4962a7c5b1bf2195ab4518c838cb4cea652e71729f21bba2e98dc75686f5fccde0fabbd894e2ed0c0d
