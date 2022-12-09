@@ -10,11 +10,13 @@
     "publish": {
       "graphType": "all",
       "syncWorkspaceLock": true,
-      "allowBranch": "main",
+      "allowBranch": "7.x",
       "conventionalCommits": true,
       "createRelease": "github",
       "changelogIncludeCommitsClientLogin": " - by @%l",
       "message": "chore: publish",
+      "preId": "alpha",
+      "preDistTag": "next",
       "ignoreChanges": [
         "**/__fixtures__/**",
         "**/__tests__/**",
