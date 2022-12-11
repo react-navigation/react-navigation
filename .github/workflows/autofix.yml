@@ -3,10 +3,10 @@ name: autofix.ci
 on:
   push:
     branches:
-      - main
+      - 7.x
   pull_request:
     branches:
-      - main
+      - 7.x
 
 permissions:
   contents: read
