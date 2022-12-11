@@ -50,11 +50,6 @@
     "prettier": "^2.3.0",
     "typescript": "^4.9.4"
   },
-  "resolutions": {
-    "expo-modules-autolinking": "~0.10.1",
-    "@expo/config-plugins": "^5.0.0",
-    "@expo/prebuild-config": "^5.0.1"
-  },
   "jest": {
     "testEnvironment": "node",
     "testRegex": "/__tests__/.*\\.(test|spec)\\.(js|tsx?)$",

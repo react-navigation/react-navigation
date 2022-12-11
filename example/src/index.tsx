@@ -22,14 +22,13 @@ import { createURL } from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
 import {
-  Dimensions,
   I18nManager,
   Linking,
   Platform,
-  ScaledSize,
   ScrollView,
   StatusBar,
   Text,
+  useWindowDimensions,
 } from 'react-native';
 import {
   DarkTheme as PaperDarkTheme,
@@ -110,17 +109,7 @@ export default function App() {
     };
   }, [theme.colors, theme.dark]);
 
-  const [dimensions, setDimensions] = React.useState(Dimensions.get('window'));
-
-  React.useEffect(() => {
-    const onDimensionsChange = ({ window }: { window: ScaledSize }) => {
-      setDimensions(window);
-    };
-
-    Dimensions.addEventListener('change', onDimensionsChange);
-
-    return () => Dimensions.removeEventListener('change', onDimensionsChange);
-  }, []);
+  const dimensions = useWindowDimensions();
 
   const navigationRef = useNavigationContainerRef();
 
@@ -142,7 +131,9 @@ export default function App() {
       <NavigationContainer
         ref={navigationRef}
         initialState={initialState}
-        onReady={() => SplashScreen.hideAsync()}
+        onReady={() => {
+          SplashScreen.hideAsync();
+        }}
         onStateChange={(state) =>
           AsyncStorage?.setItem(
             NAVIGATION_PERSISTENCE_KEY,
