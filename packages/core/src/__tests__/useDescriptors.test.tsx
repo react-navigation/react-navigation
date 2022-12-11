@@ -153,25 +153,25 @@ it('sets options with screenOptions prop as an object', () => {
   );
 
   expect(root).toMatchInlineSnapshot(`
-        Array [
-          <main>
-            <h1>
-              Hello world
-            </h1>
-            <div>
-              Test screen A
-            </div>
-          </main>,
-          <main>
-            <h1>
-              Hello world
-            </h1>
-            <div>
-              Test screen B
-            </div>
-          </main>,
-        ]
-    `);
+    [
+      <main>
+        <h1>
+          Hello world
+        </h1>
+        <div>
+          Test screen A
+        </div>
+      </main>,
+      <main>
+        <h1>
+          Hello world
+        </h1>
+        <div>
+          Test screen B
+        </div>
+      </main>,
+    ]
+  `);
 });
 
 it('sets options with screenOptions prop as a fuction', () => {
@@ -226,7 +226,7 @@ it('sets options with screenOptions prop as a fuction', () => {
   );
 
   expect(root).toMatchInlineSnapshot(`
-    Array [
+    [
       <main>
         <h1>
           foo: Jane

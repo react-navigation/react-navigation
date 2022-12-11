@@ -14,7 +14,7 @@ import PlatformPressable from './PlatformPressable';
 import type { NavigationState, Route, Scene } from './types';
 
 export type Props<T extends Route> = {
-  position: Animated.AnimatedInterpolation;
+  position: Animated.AnimatedInterpolation<number>;
   route: T;
   navigationState: NavigationState<T>;
   activeColor?: string;
@@ -48,7 +48,7 @@ const DEFAULT_ACTIVE_COLOR = 'rgba(255, 255, 255, 1)';
 const DEFAULT_INACTIVE_COLOR = 'rgba(255, 255, 255, 0.7)';
 
 const getActiveOpacity = (
-  position: Animated.AnimatedInterpolation,
+  position: Animated.AnimatedInterpolation<number>,
   routesLength: number,
   tabIndex: number
 ) => {
@@ -65,7 +65,7 @@ const getActiveOpacity = (
 };
 
 const getInactiveOpacity = (
-  position: Animated.AnimatedInterpolation,
+  position: Animated.AnimatedInterpolation<number>,
   routesLength: number,
   tabIndex: number
 ) => {

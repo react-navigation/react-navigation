@@ -35,8 +35,8 @@ import CardSheet, { CardSheetRef } from './CardSheet';
 type Props = ViewProps & {
   interpolationIndex: number;
   closing: boolean;
-  next?: Animated.AnimatedInterpolation;
-  current: Animated.AnimatedInterpolation;
+  next?: Animated.AnimatedInterpolation<number>;
+  current: Animated.AnimatedInterpolation<number>;
   gesture: Animated.Value;
   layout: Layout;
   insets: EdgeInsets;
@@ -351,8 +351,8 @@ export default class Card extends React.Component<Props> {
   private getCardAnimation = memoize(
     (
       interpolationIndex: number,
-      current: Animated.AnimatedInterpolation,
-      next: Animated.AnimatedInterpolation | undefined,
+      current: Animated.AnimatedInterpolation<number>,
+      next: Animated.AnimatedInterpolation<number> | undefined,
       layout: Layout,
       insetTop: number,
       insetRight: number,
