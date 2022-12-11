@@ -75,8 +75,8 @@ export default function HeaderSegment(props: Props) {
     (
       styleInterpolator: StackHeaderStyleInterpolator,
       layout: Layout,
-      current: Animated.AnimatedInterpolation,
-      next: Animated.AnimatedInterpolation | undefined,
+      current: Animated.AnimatedInterpolation<number>,
+      next: Animated.AnimatedInterpolation<number> | undefined,
       titleLayout: Layout | undefined,
       leftLabelLayout: Layout | undefined,
       headerHeight: number
