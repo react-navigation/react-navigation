@@ -1,3 +1,4 @@
+export { default as createStaticNavigation } from './createStaticNavigation';
 export { default as Link } from './Link';
 export { default as LinkingContext } from './LinkingContext';
 export { default as NavigationContainer } from './NavigationContainer';

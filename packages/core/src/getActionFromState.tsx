@@ -63,10 +63,7 @@ export default function getActionFromState(
 
   let current: PartialState<NavigationState> | undefined = route?.state;
   let config: ConfigItem | undefined = normalizedConfig?.screens?.[route?.name];
-  let params = { ...route.params } as NavigatorScreenParams<
-    ParamListBase,
-    NavigationState
-  >;
+  let params = { ...route.params } as NavigatorScreenParams<ParamListBase>;
 
   let payload = route
     ? { name: route.name, path: route.path, params }
@@ -111,10 +108,7 @@ export default function getActionFromState(
 
     if (route.state) {
       params.params = { ...route.params };
-      params = params.params as NavigatorScreenParams<
-        ParamListBase,
-        NavigationState
-      >;
+      params = params.params as NavigatorScreenParams<ParamListBase>;
     } else {
       params.path = route.path;
       params.params = route.params;

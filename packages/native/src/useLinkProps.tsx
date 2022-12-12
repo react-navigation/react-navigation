@@ -31,7 +31,7 @@ export type Props<
     };
 
 const getStateFromParams = (
-  params: NavigatorScreenParams<ParamListBase, NavigationState> | undefined
+  params: NavigatorScreenParams<ParamListBase> | undefined
 ): PartialState<NavigationState> | NavigationState | undefined => {
   if (params?.state) {
     return params.state;
@@ -47,7 +47,7 @@ const getStateFromParams = (
           state: params.screen
             ? getStateFromParams(
                 params.params as
-                  | NavigatorScreenParams<ParamListBase, NavigationState>
+                  | NavigatorScreenParams<ParamListBase>
                   | undefined
               )
             : undefined,

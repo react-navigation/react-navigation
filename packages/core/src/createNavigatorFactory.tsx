@@ -3,13 +3,14 @@ import type * as React from 'react';
 
 import Group from './Group';
 import Screen from './Screen';
+import type { StaticConfig } from './StaticNavigation';
 import type { EventMapBase, TypedNavigator } from './types';
 
 /**
  * Higher order component to create a `Navigator` and `Screen` pair.
  * Custom navigators should wrap the navigator component in `createNavigator` before exporting.
  *
- * @param Navigator The navigtor component to wrap.
+ * @param Navigator The navigator component to wrap.
  * @returns Factory method to create a `Navigator` and `Screen` pair.
  */
 export default function createNavigatorFactory<
@@ -18,23 +19,51 @@ export default function createNavigatorFactory<
   EventMap extends EventMapBase,
   NavigatorComponent extends React.ComponentType<any>
 >(Navigator: NavigatorComponent) {
-  return function <ParamList extends ParamListBase>(): TypedNavigator<
+  function createNavigator<ParamList extends ParamListBase>(): TypedNavigator<
     ParamList,
     State,
     ScreenOptions,
     EventMap,
     typeof Navigator
-  > {
-    if (arguments[0] !== undefined) {
-      throw new Error(
-        "Creating a navigator doesn't take an argument. Maybe you are trying to use React Navigation 4 API? See https://reactnavigation.org/docs/hello-react-navigation for the latest API and guides."
-      );
+  >;
+
+  // eslint-disable-next-line no-redeclare
+  function createNavigator<
+    ParamList extends ParamListBase,
+    Config extends StaticConfig<
+      ParamList,
+      State,
+      ScreenOptions,
+      EventMap,
+      typeof Navigator
+    >
+  >(
+    config: Config
+  ): TypedNavigator<
+    ParamList,
+    State,
+    ScreenOptions,
+    EventMap,
+    typeof Navigator
+  > & { config: Config };
+
+  // eslint-disable-next-line no-redeclare
+  function createNavigator(config?: any): any {
+    if (config != null) {
+      return {
+        Navigator,
+        Screen,
+        Group,
+        config,
+      };
     }
 
     return {
       Navigator,
-      Group,
       Screen,
+      Group,
     };
-  };
+  }
+
+  return createNavigator;
 }
