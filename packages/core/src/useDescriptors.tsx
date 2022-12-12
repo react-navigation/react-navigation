@@ -136,7 +136,7 @@ export default function useDescriptors<
     emitter,
   });
 
-  const routes = useRouteCache(state.routes);
+  const routes = useRouteCache(state.routes).concat(state.retained || []);
 
   return routes.reduce<
     Record<
@@ -219,7 +219,12 @@ export default function useDescriptors<
                   navigation={navigation}
                   route={route}
                   screen={screen}
-                  routeState={state.routes[i].state}
+                  routeState={
+                    i < state.routes.length
+                      ? state.routes[i].state
+                      : // @ts-ignore
+                        route.state
+                  }
                   getState={getState}
                   setState={setState}
                   options={mergedOptions}

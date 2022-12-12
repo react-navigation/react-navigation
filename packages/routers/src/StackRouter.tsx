@@ -36,6 +36,11 @@ export type StackActionType =
       target?: string;
     }
   | {
+      type: 'RETAIN_TOP';
+      source?: string;
+      target?: string;
+    }
+  | {
       type: 'DROP_RETAINED';
       payload: { key: string };
       source?: string;
@@ -112,11 +117,14 @@ export const StackActions = {
   popToTop(): StackActionType {
     return { type: 'POP_TO_TOP' };
   },
-  restoreRetained(key: string): StackActionType {
-    return { type: 'RESTORE_RETAINED', payload: { key } };
-  },
   retain(key: string): StackActionType {
     return { type: 'RETAIN', payload: { key } };
+  },
+  retainTop(): StackActionType {
+    return { type: 'RETAIN_TOP' };
+  },
+  restoreRetained(key: string): StackActionType {
+    return { type: 'RESTORE_RETAINED', payload: { key } };
   },
   dropRetained(key: string): StackActionType {
     return { type: 'DROP_RETAINED', payload: { key } };
@@ -251,6 +259,7 @@ export default function StackRouter(options: StackRouterOptions) {
     },
 
     getStateForAction(state, action, options) {
+      console.log('ACTION', action);
       const { routeParamList } = options;
 
       switch (action.type) {
@@ -360,7 +369,9 @@ export default function StackRouter(options: StackRouterOptions) {
               index: routes.length - 1,
               routes,
               retained: (state.retained || []).concat(
-                state.routes.slice(count, index).filter((route) => route.retain)
+                state.routes
+                  .slice(count, index + 1)
+                  .filter((route) => route.retain)
               ),
             };
           }
@@ -400,6 +411,15 @@ export default function StackRouter(options: StackRouterOptions) {
             index: routes.length - 1,
             routes,
             retained: state.retained?.filter((r) => r.key !== route.key),
+          };
+        }
+
+        case 'RETAIN_TOP': {
+          return {
+            ...state,
+            routes: state.routes.map((r, i) =>
+              i === state.routes.length - 1 ? { ...r, retain: true } : r
+            ),
           };
         }
 

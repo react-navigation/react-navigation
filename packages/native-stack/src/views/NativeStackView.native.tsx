@@ -410,11 +410,11 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
 
   useInvalidPreventRemoveError(descriptors);
 
-  const currentKeys: { [key: string]: boolean } = {};
-  state.routes.forEach((route) => (currentKeys[route.key] = true));
+  // const currentKeys: { [key: string]: boolean } = {};
+  // state.routes.forEach((route) => (currentKeys[route.key] = true));
 
-  const currentState = React.useRef(state);
-  currentState.current = state;
+  // const currentState = React.useRef(state);
+  // currentState.current = state;
 
   // const pin = React.useMemo(
   //   () => ({
@@ -440,6 +440,7 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
   //   }),
   //   []
   // );
+  console.log('NATIVE TSACK VIEW', state.retained, state.routes);
 
   return (
     // <PinnedRoutesContext.Provider value={pin}>
