@@ -136,7 +136,7 @@ export default function useDescriptors<
     emitter,
   });
 
-  const routes = useRouteCache(state.routes).concat(state.retained || []);
+  const routes = useRouteCache(state.routes);
 
   return routes.reduce<
     Record<

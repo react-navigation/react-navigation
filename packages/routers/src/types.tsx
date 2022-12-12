@@ -32,10 +32,6 @@ export type NavigationState<ParamList extends ParamListBase = ParamListBase> =
      */
     routes: NavigationRoute<ParamList, keyof ParamList>[];
     /**
-     * List of retained routes, which have been removed from the list of rendered routes.
-     */
-    retained?: NavigationRoute<ParamList, keyof ParamList>[];
-    /**
      * Custom type for the state, whether it's for tab, stack, drawer etc.
      * During rehydration, the state will be discarded if type doesn't match with router type.
      * It can also be used to detect the type of the navigator we're dealing with.
@@ -87,6 +83,10 @@ export type Route<
    * Whether to "retain" the route after removal.
    */
   retain?: boolean;
+  /**
+   * Whether this is to be hidden from the world
+   */
+  hidden?: boolean;
 }> &
   (undefined extends Params
     ? Readonly<{

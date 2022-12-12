@@ -363,16 +363,17 @@ export default function StackRouter(options: StackRouterOptions) {
             const routes = state.routes
               .slice(0, count)
               .concat(state.routes.slice(index + 1));
+            const retained = state.routes
+              .slice(count, index + 1)
+              .filter((route) => route.retain);
+            if (retained.length) {
+              routes.unshift(...retained.map((r) => ({ ...r, hidden: true })));
+            }
 
             return {
               ...state,
               index: routes.length - 1,
               routes,
-              retained: (state.retained || []).concat(
-                state.routes
-                  .slice(count, index + 1)
-                  .filter((route) => route.retain)
-              ),
             };
           }
 
@@ -380,37 +381,17 @@ export default function StackRouter(options: StackRouterOptions) {
         }
 
         case 'RESTORE_RETAINED': {
-          const route = state.retained?.find(
+          const route = state.routes.find(
             (route) => route.key === action.payload.key
           );
           if (!route) {
-            const index = state.routes.findIndex(
-              (r) => r.key === action.payload.key
-            );
-            if (index === -1) {
-              return null;
-            }
-            if (index === state.routes.length - 1) {
-              return null; // already on top
-            }
-            return router.getStateForAction(
-              state,
-              {
-                type: 'POP',
-                payload: { count: state.routes.length - 1 - index },
-                target: action.target,
-                source: action.source,
-              },
-              options
-            );
+            return null;
           }
-
-          const routes = [...state.routes, route];
           return {
             ...state,
-            index: routes.length - 1,
-            routes,
-            retained: state.retained?.filter((r) => r.key !== route.key),
+            routes: state.routes
+              .filter((r) => r.key !== route.key)
+              .concat([{ ...route, hidden: false, retain: false }]),
           };
         }
 
@@ -433,16 +414,15 @@ export default function StackRouter(options: StackRouterOptions) {
         }
 
         case 'DROP_RETAINED': {
-          const routes = state.routes.map((r) =>
-            r.key === action.payload.key ? { ...r, retain: false } : r
-          );
+          const routes = state.routes
+            .map((r) =>
+              r.key === action.payload.key ? { ...r, retain: false } : r
+            )
+            .filter((r) => r.key !== action.payload.key || !r.hidden);
           return {
             ...state,
             routes,
             index: routes.length - 1,
-            retained: state.retained?.filter(
-              (r) => r.key !== action.payload.key
-            ),
           };
         }
 
@@ -572,9 +552,9 @@ export default function StackRouter(options: StackRouterOptions) {
                     }
                   : state.routes[index],
               ],
-              retained: (state.retained || []).concat(
-                state.routes.slice(index + 1).filter((route) => route.retain)
-              ),
+              // retained: (state.retained || []).concat(
+              //   state.routes.slice(index + 1).filter((route) => route.retain)
+              // ),
             };
           }
 
