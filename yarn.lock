@@ -4735,7 +4735,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/bottom-tabs@workspace:packages/bottom-tabs"
   dependencies:
-    "@react-navigation/elements": ^1.3.10
+    "@react-navigation/elements": ^1.3.11
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": ^11.5.0
     "@types/color": ^3.0.1
@@ -4759,11 +4759,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-navigation/core@^6.4.4, @react-navigation/core@workspace:^, @react-navigation/core@workspace:packages/core":
+"@react-navigation/core@^6.4.5, @react-navigation/core@workspace:^, @react-navigation/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@react-navigation/core@workspace:packages/core"
   dependencies:
-    "@react-navigation/routers": ^6.1.5
+    "@react-navigation/routers": ^6.1.6
     "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.0
     "@types/react-is": ^17.0.0
@@ -4808,7 +4808,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/drawer@workspace:packages/drawer"
   dependencies:
-    "@react-navigation/elements": ^1.3.10
+    "@react-navigation/elements": ^1.3.11
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.0
@@ -4835,7 +4835,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-navigation/elements@^1.3.10, @react-navigation/elements@workspace:packages/elements":
+"@react-navigation/elements@^1.3.11, @react-navigation/elements@workspace:packages/elements":
   version: 0.0.0-use.local
   resolution: "@react-navigation/elements@workspace:packages/elements"
   dependencies:
@@ -4908,7 +4908,7 @@ __metadata:
     react-native-reanimated: ~2.9.1
     react-native-safe-area-context: 4.3.1
     react-native-screens: ~3.15.0
-    react-native-tab-view: ^3.3.3
+    react-native-tab-view: ^3.3.4
     react-native-vector-icons: ^9.1.0
     react-native-web: ~0.18.7
     react-test-renderer: 18.0.0
@@ -4921,7 +4921,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/material-bottom-tabs@workspace:packages/material-bottom-tabs"
   dependencies:
-    "@react-navigation/elements": ^1.3.10
+    "@react-navigation/elements": ^1.3.11
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.0
@@ -4975,7 +4975,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/native-stack@workspace:packages/native-stack"
   dependencies:
-    "@react-navigation/elements": ^1.3.10
+    "@react-navigation/elements": ^1.3.11
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.0
@@ -5000,7 +5000,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/native@workspace:packages/native"
   dependencies:
-    "@react-navigation/core": ^6.4.4
+    "@react-navigation/core": ^6.4.5
     "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.0
     "@types/react-dom": ~18.0.0
@@ -5020,7 +5020,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-navigation/routers@^6.1.5, @react-navigation/routers@workspace:packages/routers":
+"@react-navigation/routers@^6.1.6, @react-navigation/routers@workspace:packages/routers":
   version: 0.0.0-use.local
   resolution: "@react-navigation/routers@workspace:packages/routers"
   dependencies:
@@ -5035,7 +5035,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/stack@workspace:packages/stack"
   dependencies:
-    "@react-navigation/elements": ^1.3.10
+    "@react-navigation/elements": ^1.3.11
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": ^11.5.0
     "@types/color": ^3.0.1
@@ -22919,7 +22919,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-tab-view@^3.3.3, react-native-tab-view@workspace:^, react-native-tab-view@workspace:packages/react-native-tab-view":
+"react-native-tab-view@^3.3.4, react-native-tab-view@workspace:^, react-native-tab-view@workspace:packages/react-native-tab-view":
   version: 0.0.0-use.local
   resolution: "react-native-tab-view@workspace:packages/react-native-tab-view"
   dependencies:

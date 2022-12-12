@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.5.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.5.4...@react-navigation/drawer@6.5.5) (2022-12-12)
+
+### Bug Fixes
+
+* fix overlay not receiving clicks on web ([6e120f6](https://github.com/react-navigation/react-navigation/commit/6e120f6f1ab5fb2f697e2b8734692eadc21e7411)) - by @satya164
+
 ## [6.5.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.5.3...@react-navigation/drawer@6.5.4) (2022-12-07)
 
 ### Bug Fixes
