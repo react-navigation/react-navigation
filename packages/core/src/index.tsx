@@ -1,6 +1,7 @@
 export { default as BaseNavigationContainer } from './BaseNavigationContainer';
 export { default as createNavigationContainerRef } from './createNavigationContainerRef';
 export { default as createNavigatorFactory } from './createNavigatorFactory';
+export { StaticParamList, StaticScreenProps } from './createStaticNavigation';
 export { default as CurrentRenderContext } from './CurrentRenderContext';
 export { default as findFocusedRoute } from './findFocusedRoute';
 export { default as getActionFromState } from './getActionFromState';
