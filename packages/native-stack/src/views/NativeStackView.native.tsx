@@ -116,6 +116,7 @@ const MaybeNestedStack = ({
 
 type SceneViewProps = {
   index: number;
+  hidden: boolean;
   focused: boolean;
   descriptor: NativeStackDescriptor;
   previousDescriptor?: NativeStackDescriptor;
@@ -134,6 +135,7 @@ const SceneView = ({
   descriptor,
   previousDescriptor,
   nextDescriptor,
+  hidden,
   onWillDisappear,
   onAppear,
   onDisappear,
@@ -253,6 +255,8 @@ const SceneView = ({
     <Screen
       key={route.key}
       enabled
+      // @ts-ignore
+      hidden={hidden}
       style={StyleSheet.absoluteFill}
       customAnimationOnSwipe={customAnimationOnGesture}
       fullScreenSwipeEnabled={fullScreenGestureEnabled}
@@ -392,79 +396,125 @@ type Props = {
   descriptors: NativeStackDescriptorMap;
 };
 
+// const PinnedRoutesContext = React.createContext<{
+//   pin: () => void;
+// }>({
+//   pin() {},
+// });
+
 function NativeStackViewInner({ state, navigation, descriptors }: Props) {
   const { setNextDismissedKey } = useDismissedRouteError(state);
+  // const [pinnedRoutes, setPinnedRoute] = React.useState<
+  //   Props['state']['routes'][0] | null
+  // >(null);
 
   useInvalidPreventRemoveError(descriptors);
 
+  const currentKeys: { [key: string]: boolean } = {};
+  state.routes.forEach((route) => (currentKeys[route.key] = true));
+
+  const currentState = React.useRef(state);
+  currentState.current = state;
+
+  // const pin = React.useMemo(
+  //   () => ({
+  //     pin() {
+  //       setPinnedRoute(() => {
+  //         const routes = currentState.current.routes;
+  //         return routes[routes.length - 1];
+  //       });
+  //     },
+  //     restore() {
+  //       setPinnedRoute((prev) => {
+  //         // umm so if the route is still in the stack, do something different
+  //         if (prev) {
+  //           navigation.dispatch({
+  //             ...StackActions.push(prev.name, prev.params),
+  //             source: prev.key,
+  //             target: prev.key,
+  //           });
+  //         }
+  //         return null;
+  //       });
+  //     },
+  //   }),
+  //   []
+  // );
+
   return (
+    // <PinnedRoutesContext.Provider value={pin}>
     <ScreenStack style={styles.container}>
-      {state.routes.map((route, index) => {
-        const descriptor = descriptors[route.key];
-        const isFocused = state.index === index;
-        const previousKey = state.routes[index - 1]?.key;
-        const nextKey = state.routes[index + 1]?.key;
-        const previousDescriptor = previousKey
-          ? descriptors[previousKey]
-          : undefined;
-        const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
+      {(state.retained || [])
+        .map((route) => ({ route, hidden: true }))
+        .concat(state.routes.map((route) => ({ route, hidden: false })))
+        .map(({ route, hidden }, index) => {
+          const descriptor = descriptors[route.key];
+          const isFocused = state.index === index;
+          const previousKey = state.routes[index - 1]?.key;
+          const nextKey = state.routes[index + 1]?.key;
+          const previousDescriptor = previousKey
+            ? descriptors[previousKey]
+            : undefined;
+          const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
 
-        return (
-          <SceneView
-            key={route.key}
-            index={index}
-            focused={isFocused}
-            descriptor={descriptor}
-            previousDescriptor={previousDescriptor}
-            nextDescriptor={nextDescriptor}
-            onWillDisappear={() => {
-              navigation.emit({
-                type: 'transitionStart',
-                data: { closing: true },
-                target: route.key,
-              });
-            }}
-            onAppear={() => {
-              navigation.emit({
-                type: 'transitionEnd',
-                data: { closing: false },
-                target: route.key,
-              });
-            }}
-            onDisappear={() => {
-              navigation.emit({
-                type: 'transitionEnd',
-                data: { closing: true },
-                target: route.key,
-              });
-            }}
-            onDismissed={(event) => {
-              navigation.dispatch({
-                ...StackActions.pop(event.nativeEvent.dismissCount),
-                source: route.key,
-                target: state.key,
-              });
+          return (
+            <SceneView
+              key={route.key}
+              index={index}
+              hidden={hidden}
+              focused={isFocused}
+              descriptor={descriptor}
+              previousDescriptor={previousDescriptor}
+              nextDescriptor={nextDescriptor}
+              onWillDisappear={() => {
+                navigation.emit({
+                  type: 'transitionStart',
+                  data: { closing: true },
+                  target: route.key,
+                });
+              }}
+              onAppear={() => {
+                navigation.emit({
+                  type: 'transitionEnd',
+                  data: { closing: false },
+                  target: route.key,
+                });
+              }}
+              onDisappear={() => {
+                navigation.emit({
+                  type: 'transitionEnd',
+                  data: { closing: true },
+                  target: route.key,
+                });
+              }}
+              onDismissed={(event) => {
+                navigation.dispatch({
+                  ...StackActions.pop(event.nativeEvent.dismissCount),
+                  source: route.key,
+                  target: state.key,
+                });
 
-              setNextDismissedKey(route.key);
-            }}
-            onHeaderBackButtonClicked={() => {
-              navigation.dispatch({
-                ...StackActions.pop(),
-                source: route.key,
-                target: state.key,
-              });
-            }}
-            onNativeDismissCancelled={(event) => {
-              navigation.dispatch({
-                ...StackActions.pop(event.nativeEvent.dismissCount),
-                source: route.key,
-                target: state.key,
-              });
-            }}
-          />
-        );
-      })}
+                setNextDismissedKey(route.key);
+              }}
+              onHeaderBackButtonClicked={() => {
+                navigation.dispatch({
+                  ...StackActions.pop(),
+                  source: route.key,
+                  target: state.key,
+                });
+              }}
+              onNativeDismissCancelled={(event) => {
+                navigation.dispatch({
+                  ...StackActions.pop(event.nativeEvent.dismissCount),
+                  source: route.key,
+                  target: state.key,
+                });
+              }}
+            />
+          );
+        })}
     </ScreenStack>
+    // </PinnedRoutesContext.Provider>
   );
 }
 

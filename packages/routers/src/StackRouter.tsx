@@ -30,6 +30,24 @@ export type StackActionType =
       target?: string;
     }
   | {
+      type: 'RETAIN';
+      payload: { key: string };
+      source?: string;
+      target?: string;
+    }
+  | {
+      type: 'DROP_RETAINED';
+      payload: { key: string };
+      source?: string;
+      target?: string;
+    }
+  | {
+      type: 'RESTORE_RETAINED';
+      payload: { key: string };
+      source?: string;
+      target?: string;
+    }
+  | {
       type: 'POP_TO_TOP';
       source?: string;
       target?: string;
@@ -94,6 +112,15 @@ export const StackActions = {
   popToTop(): StackActionType {
     return { type: 'POP_TO_TOP' };
   },
+  restoreRetained(key: string): StackActionType {
+    return { type: 'RESTORE_RETAINED', payload: { key } };
+  },
+  retain(key: string): StackActionType {
+    return { type: 'RETAIN', payload: { key } };
+  },
+  dropRetained(key: string): StackActionType {
+    return { type: 'DROP_RETAINED', payload: { key } };
+  },
 };
 
 export default function StackRouter(options: StackRouterOptions) {
@@ -118,6 +145,7 @@ export default function StackRouter(options: StackRouterOptions) {
         key: `stack-${nanoid()}`,
         index: 0,
         routeNames,
+        retained: [],
         routes: [
           {
             key: `${initialRouteName}-${nanoid()}`,
@@ -172,6 +200,7 @@ export default function StackRouter(options: StackRouterOptions) {
         index: routes.length - 1,
         routeNames,
         routes,
+        retained: [],
       };
     },
 
@@ -330,10 +359,71 @@ export default function StackRouter(options: StackRouterOptions) {
               ...state,
               index: routes.length - 1,
               routes,
+              retained: (state.retained || []).concat(
+                state.routes.slice(count, index).filter((route) => route.retain)
+              ),
             };
           }
 
           return null;
+        }
+
+        case 'RESTORE_RETAINED': {
+          const route = state.retained?.find(
+            (route) => route.key === action.payload.key
+          );
+          if (!route) {
+            const index = state.routes.findIndex(
+              (r) => r.key === action.payload.key
+            );
+            if (index === -1) {
+              return null;
+            }
+            if (index === state.routes.length - 1) {
+              return null; // already on top
+            }
+            return router.getStateForAction(
+              state,
+              {
+                type: 'POP',
+                payload: { count: state.routes.length - 1 - index },
+                target: action.target,
+                source: action.source,
+              },
+              options
+            );
+          }
+
+          const routes = [...state.routes, route];
+          return {
+            ...state,
+            index: routes.length - 1,
+            routes,
+            retained: state.retained?.filter((r) => r.key !== route.key),
+          };
+        }
+
+        case 'RETAIN': {
+          return {
+            ...state,
+            routes: state.routes.map((r) =>
+              r.key === action.payload.key ? { ...r, retain: true } : r
+            ),
+          };
+        }
+
+        case 'DROP_RETAINED': {
+          const routes = state.routes.map((r) =>
+            r.key === action.payload.key ? { ...r, retain: false } : r
+          );
+          return {
+            ...state,
+            routes,
+            index: routes.length - 1,
+            retained: state.retained?.filter(
+              (r) => r.key !== action.payload.key
+            ),
+          };
         }
 
         case 'POP_TO_TOP':
@@ -462,6 +552,9 @@ export default function StackRouter(options: StackRouterOptions) {
                     }
                   : state.routes[index],
               ],
+              retained: (state.retained || []).concat(
+                state.routes.slice(index + 1).filter((route) => route.retain)
+              ),
             };
           }
 
