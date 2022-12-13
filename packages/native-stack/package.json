@@ -61,7 +61,7 @@
     "react": "*",
     "react-native": "*",
     "react-native-safe-area-context": ">= 3.0.0",
-    "react-native-screens": ">= 3.0.0"
+    "react-native-screens": ">= 3.19.0"
   },
   "react-native-builder-bob": {
     "source": "src",

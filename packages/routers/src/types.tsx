@@ -95,10 +95,10 @@ export type Route<
    *   when dismissed.
    *
    * Transitions:
-   * - retain: null -> 'retail'
-   * - drop: 'hidden' -> (gone), or 'retain' -> null
-   * - restore: 'hidden' -> null
-   * - pop: 'retain' -> 'hidden', or null -> (gone)
+   * - RETAIN: null -> 'retain'
+   * - DROP_RETAINED: 'hidden' -> (gone), or 'retain' -> null
+   * - RESTORE_RETAINED: 'hidden' -> null
+   * - POP: 'retain' -> 'hidden', or null -> (gone)
    *
    * Hidden routes are put at the start of the routes list, and when restored
    * get returned to the end of the list.
