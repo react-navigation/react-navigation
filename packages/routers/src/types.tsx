@@ -91,7 +91,17 @@ export type Route<
    *   retained even after being dismissed.
    * - 'hidden': The route has been dismissed from the stack, but resources
    *   are still retained.
-   * - null: The route will not be retained when dismissed.
+   * - null: The route is visible / in the stack, and will not be retained
+   *   when dismissed.
+   *
+   * Transitions:
+   * - retain: null -> 'retail'
+   * - drop: 'hidden' -> (gone), or 'retain' -> null
+   * - restore: 'hidden' -> null
+   * - pop: 'retain' -> 'hidden', or null -> (gone)
+   *
+   * Hidden routes are put at the start of the routes list, and when restored
+   * get returned to the end of the list.
    */
   retainStatus?: 'retain' | 'hidden' | null;
 }> &
