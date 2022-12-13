@@ -401,7 +401,9 @@ export default function StackRouter(options: StackRouterOptions) {
           return {
             ...state,
             routes: state.routes.map((r, i) =>
-              i === state.routes.length - 1 ? { ...r, retain: true } : r
+              i === state.routes.length - 1
+                ? { ...r, retainStatus: 'retain' }
+                : r
             ),
           };
         }
@@ -410,7 +412,9 @@ export default function StackRouter(options: StackRouterOptions) {
           return {
             ...state,
             routes: state.routes.map((r) =>
-              r.key === action.payload.key ? { ...r, retain: true } : r
+              r.key === action.payload.key
+                ? { ...r, retainStatus: 'retain' }
+                : r
             ),
           };
         }
