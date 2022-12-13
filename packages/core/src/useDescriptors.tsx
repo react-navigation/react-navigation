@@ -219,12 +219,7 @@ export default function useDescriptors<
                   navigation={navigation}
                   route={route}
                   screen={screen}
-                  routeState={
-                    i < state.routes.length
-                      ? state.routes[i].state
-                      : // @ts-ignore
-                        route.state
-                  }
+                  routeState={state.routes[i].state}
                   getState={getState}
                   setState={setState}
                   options={mergedOptions}

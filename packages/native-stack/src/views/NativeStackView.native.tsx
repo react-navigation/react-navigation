@@ -396,54 +396,12 @@ type Props = {
   descriptors: NativeStackDescriptorMap;
 };
 
-// const PinnedRoutesContext = React.createContext<{
-//   pin: () => void;
-// }>({
-//   pin() {},
-// });
-
 function NativeStackViewInner({ state, navigation, descriptors }: Props) {
   const { setNextDismissedKey } = useDismissedRouteError(state);
-  // const [pinnedRoutes, setPinnedRoute] = React.useState<
-  //   Props['state']['routes'][0] | null
-  // >(null);
 
   useInvalidPreventRemoveError(descriptors);
 
-  // const currentKeys: { [key: string]: boolean } = {};
-  // state.routes.forEach((route) => (currentKeys[route.key] = true));
-
-  // const currentState = React.useRef(state);
-  // currentState.current = state;
-
-  // const pin = React.useMemo(
-  //   () => ({
-  //     pin() {
-  //       setPinnedRoute(() => {
-  //         const routes = currentState.current.routes;
-  //         return routes[routes.length - 1];
-  //       });
-  //     },
-  //     restore() {
-  //       setPinnedRoute((prev) => {
-  //         // umm so if the route is still in the stack, do something different
-  //         if (prev) {
-  //           navigation.dispatch({
-  //             ...StackActions.push(prev.name, prev.params),
-  //             source: prev.key,
-  //             target: prev.key,
-  //           });
-  //         }
-  //         return null;
-  //       });
-  //     },
-  //   }),
-  //   []
-  // );
-  console.log('NATIVE TSACK VIEW', state.routes);
-
   return (
-    // <PinnedRoutesContext.Provider value={pin}>
     <ScreenStack style={styles.container}>
       {state.routes.map((route, index) => {
         const descriptor = descriptors[route.key];
@@ -459,7 +417,7 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
           <SceneView
             key={route.key}
             index={index}
-            hidden={!!route.hidden}
+            hidden={route.retainStatus === 'hidden'}
             focused={isFocused}
             descriptor={descriptor}
             previousDescriptor={previousDescriptor}
@@ -512,7 +470,6 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
         );
       })}
     </ScreenStack>
-    // </PinnedRoutesContext.Provider>
   );
 }
 

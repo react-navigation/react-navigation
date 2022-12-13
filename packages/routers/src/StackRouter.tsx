@@ -153,7 +153,6 @@ export default function StackRouter(options: StackRouterOptions) {
         key: `stack-${nanoid()}`,
         index: 0,
         routeNames,
-        retained: [],
         routes: [
           {
             key: `${initialRouteName}-${nanoid()}`,
@@ -208,7 +207,6 @@ export default function StackRouter(options: StackRouterOptions) {
         index: routes.length - 1,
         routeNames,
         routes,
-        retained: [],
       };
     },
 
@@ -259,7 +257,6 @@ export default function StackRouter(options: StackRouterOptions) {
     },
 
     getStateForAction(state, action, options) {
-      console.log('ACTION', action);
       const { routeParamList } = options;
 
       switch (action.type) {
@@ -365,9 +362,14 @@ export default function StackRouter(options: StackRouterOptions) {
               .concat(state.routes.slice(index + 1));
             const retained = state.routes
               .slice(count, index + 1)
-              .filter((route) => route.retain);
+              .filter((route) => route.retainStatus === 'retain');
             if (retained.length) {
-              routes.unshift(...retained.map((r) => ({ ...r, hidden: true })));
+              routes.unshift(
+                ...retained.map((r) => ({
+                  ...r,
+                  retainStatus: 'hidden' as const,
+                }))
+              );
             }
 
             return {
@@ -391,7 +393,7 @@ export default function StackRouter(options: StackRouterOptions) {
             ...state,
             routes: state.routes
               .filter((r) => r.key !== route.key)
-              .concat([{ ...route, hidden: false, retain: false }]),
+              .concat([{ ...route, retainStatus: null }]),
           };
         }
 
@@ -416,9 +418,14 @@ export default function StackRouter(options: StackRouterOptions) {
         case 'DROP_RETAINED': {
           const routes = state.routes
             .map((r) =>
-              r.key === action.payload.key ? { ...r, retain: false } : r
+              r.key === action.payload.key && r.retainStatus === 'retain'
+                ? { ...r, retainStatus: null }
+                : r
             )
-            .filter((r) => r.key !== action.payload.key || !r.hidden);
+            .filter(
+              (r) =>
+                !(r.key === action.payload.key && r.retainStatus === 'hidden')
+            );
           return {
             ...state,
             routes,
@@ -552,9 +559,6 @@ export default function StackRouter(options: StackRouterOptions) {
                     }
                   : state.routes[index],
               ],
-              // retained: (state.retained || []).concat(
-              //   state.routes.slice(index + 1).filter((route) => route.retain)
-              // ),
             };
           }
 

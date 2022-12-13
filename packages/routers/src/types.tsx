@@ -80,13 +80,20 @@ export type Route<
    */
   path?: string;
   /**
-   * Whether to "retain" the route after removal.
+   * Whether to "retain" the route after removal. This means associated native
+   * resources will not be freed, and react events will still fire. This is
+   * used for native picture-in-picture support, where a ViewController needs
+   * to be retained even after it has been dismissed.
+   * This also allows the screen to be restored, when the user taps on the
+   * picture-in-picture window.
+   *
+   * - 'retain': The route is currently visible / in the stack, but will be
+   *   retained even after being dismissed.
+   * - 'hidden': The route has been dismissed from the stack, but resources
+   *   are still retained.
+   * - null: The route will not be retained when dismissed.
    */
-  retain?: boolean;
-  /**
-   * Whether this is to be hidden from the world
-   */
-  hidden?: boolean;
+  retainStatus?: 'retain' | 'hidden' | null;
 }> &
   (undefined extends Params
     ? Readonly<{
