@@ -255,7 +255,6 @@ const SceneView = ({
     <Screen
       key={route.key}
       enabled
-      // @ts-ignore
       hidden={hidden}
       style={StyleSheet.absoluteFill}
       customAnimationOnSwipe={customAnimationOnGesture}
