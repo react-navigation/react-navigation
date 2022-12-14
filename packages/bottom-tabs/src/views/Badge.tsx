@@ -70,6 +70,7 @@ export default function Badge({
 
   return (
     <Animated.Text
+      allowFontScaling={false}
       numberOfLines={1}
       style={[
         {
