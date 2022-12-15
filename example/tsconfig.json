@@ -12,6 +12,7 @@
     { "path": "../packages/native-stack" },
     { "path": "../packages/routers" },
     { "path": "../packages/stack" },
+    { "path": "../packages/react-native-tab-view" },
   ],
   "compilerOptions": {
     // Avoid expo-cli auto-generating a tsconfig

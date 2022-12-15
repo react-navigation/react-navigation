@@ -3,14 +3,15 @@ import { Animated, Keyboard, StyleSheet } from 'react-native';
 import ViewPager, {
   PageScrollStateChangedNativeEvent,
 } from 'react-native-pager-view';
-import useAnimatedValue from './useAnimatedValue';
+
 import type {
-  NavigationState,
-  Route,
-  Listener,
   EventEmitterProps,
+  Listener,
+  NavigationState,
   PagerProps,
+  Route,
 } from './types';
+import useAnimatedValue from './useAnimatedValue';
 
 const AnimatedViewPager = Animated.createAnimatedComponent(ViewPager);
 

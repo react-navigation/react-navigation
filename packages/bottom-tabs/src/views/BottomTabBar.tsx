@@ -5,7 +5,7 @@ import {
   NavigationRouteContext,
   ParamListBase,
   TabNavigationState,
-  useLinkBuilder,
+  useLinkTools,
   useTheme,
 } from '@react-navigation/native';
 import React from 'react';
@@ -133,7 +133,7 @@ export default function BottomTabBar({
   style,
 }: Props) {
   const { colors } = useTheme();
-  const buildLink = useLinkBuilder();
+  const { buildHref } = useLinkTools();
 
   const focusedRoute = state.routes[state.index];
   const focusedDescriptor = descriptors[focusedRoute.key];
@@ -305,7 +305,7 @@ export default function BottomTabBar({
 
             if (!focused && !event.defaultPrevented) {
               navigation.dispatch({
-                ...CommonActions.navigate({ name: route.name, merge: true }),
+                ...CommonActions.navigate(route),
                 target: state.key,
               });
             }
@@ -339,14 +339,15 @@ export default function BottomTabBar({
             >
               <NavigationRouteContext.Provider value={route}>
                 <BottomTabItem
+                  href={buildHref(route.name, route.params)}
                   route={route}
+                  descriptor={descriptors[route.key]}
                   focused={focused}
                   horizontal={hasHorizontalLabels}
                   onPress={onPress}
                   onLongPress={onLongPress}
                   accessibilityLabel={accessibilityLabel}
-                  to={buildLink(route.name, route.params)}
-                  testID={options.tabBarTestID}
+                  testID={options.tabBarButtonTestID}
                   allowFontScaling={options.tabBarAllowFontScaling}
                   activeTintColor={tabBarActiveTintColor}
                   inactiveTintColor={tabBarInactiveTintColor}

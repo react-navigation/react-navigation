@@ -2,14 +2,14 @@ import * as React from 'react';
 import {
   Animated,
   Easing,
-  StyleSheet,
   I18nManager,
-  StyleProp,
-  ViewStyle,
   Platform,
+  StyleProp,
+  StyleSheet,
+  ViewStyle,
 } from 'react-native';
 
-import type { Route, SceneRendererProps, NavigationState } from './types';
+import type { NavigationState, Route, SceneRendererProps } from './types';
 import useAnimatedValue from './useAnimatedValue';
 
 export type GetTabWidth = (index: number) => number;
@@ -59,9 +59,12 @@ export default function TabBarIndicator<T extends Route>({
 
   const opacity = useAnimatedValue(isWidthDynamic ? 0 : 1);
 
-  const hasMeasuredTabWidths =
-    Boolean(layout.width) &&
-    navigationState.routes.every((_, i) => getTabWidth(i));
+  const indicatorVisible = isWidthDynamic
+    ? layout.width &&
+      navigationState.routes
+        .slice(0, navigationState.index)
+        .every((_, r) => getTabWidth(r))
+    : true;
 
   React.useEffect(() => {
     const fadeInIndicator = () => {
@@ -69,7 +72,7 @@ export default function TabBarIndicator<T extends Route>({
         !isIndicatorShown.current &&
         isWidthDynamic &&
         // We should fade-in the indicator when we have widths for all the tab items
-        hasMeasuredTabWidths
+        indicatorVisible
       ) {
         isIndicatorShown.current = true;
 
@@ -85,7 +88,7 @@ export default function TabBarIndicator<T extends Route>({
     fadeInIndicator();
 
     return () => opacity.stopAnimation();
-  }, [hasMeasuredTabWidths, isWidthDynamic, opacity]);
+  }, [indicatorVisible, isWidthDynamic, opacity]);
 
   const { routes } = navigationState;
 

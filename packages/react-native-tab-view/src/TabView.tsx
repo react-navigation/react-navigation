@@ -1,20 +1,21 @@
 import * as React from 'react';
 import {
+  LayoutChangeEvent,
+  StyleProp,
   StyleSheet,
   View,
-  StyleProp,
   ViewStyle,
-  LayoutChangeEvent,
 } from 'react-native';
-import TabBar from './TabBar';
-import SceneView from './SceneView';
+
 import Pager from './Pager';
+import SceneView from './SceneView';
+import TabBar from './TabBar';
 import type {
   Layout,
   NavigationState,
+  PagerProps,
   Route,
   SceneRendererProps,
-  PagerProps,
 } from './types';
 
 export type Props<T extends Route> = PagerProps & {

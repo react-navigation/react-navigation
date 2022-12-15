@@ -1,33 +1,40 @@
-import type { NavigationAction } from '@react-navigation/core';
 import * as React from 'react';
 import { GestureResponderEvent, Platform, Text, TextProps } from 'react-native';
 
-import useLinkProps from './useLinkProps';
-import type { To } from './useLinkTo';
+import useLinkProps, { Props as LinkProps } from './useLinkProps';
 
-type Props<ParamList extends ReactNavigation.RootParamList> = {
-  to: To<ParamList>;
-  action?: NavigationAction;
-  target?: string;
-  onPress?: (
-    e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
-  ) => void;
-} & (TextProps & { children: React.ReactNode });
+type Props<ParamList extends ReactNavigation.RootParamList> =
+  LinkProps<ParamList> &
+    Omit<TextProps, 'disabled'> & {
+      target?: string;
+      onPress?: (
+        e:
+          | React.MouseEvent<HTMLAnchorElement, MouseEvent>
+          | GestureResponderEvent
+      ) => void;
+      disabled?: boolean | null;
+      children: React.ReactNode;
+    };
 
 /**
  * Component to render link to another screen using a path.
  * Uses an anchor tag on the web.
  *
- * @param props.to Absolute path to screen (e.g. `/feeds/hot`).
+ * @param props.screen Name of the screen to navigate to (e.g. `'Feeds'`).
+ * @param props.params Params to pass to the screen to navigate to (e.g. `{ sort: 'hot' }`).
+ * @param props.href Optional absolute path to use for the href (e.g. `/feeds/hot`).
  * @param props.action Optional action to use for in-page navigation. By default, the path is parsed to an action based on linking config.
  * @param props.children Child elements to render the content.
  */
 export default function Link<ParamList extends ReactNavigation.RootParamList>({
-  to,
+  screen,
+  params,
   action,
+  href,
   ...rest
 }: Props<ParamList>) {
-  const props = useLinkProps<ParamList>({ to, action });
+  // @ts-expect-error: This is already type-checked by the prop types
+  const props = useLinkProps<ParamList>({ screen, params, action, href });
 
   const onPress = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
@@ -36,7 +43,10 @@ export default function Link<ParamList extends ReactNavigation.RootParamList>({
       rest.onPress?.(e);
     }
 
-    props.onPress(e);
+    // Let user prevent default behavior
+    if (!e.defaultPrevented) {
+      props.onPress(e);
+    }
   };
 
   return React.createElement(Text, {

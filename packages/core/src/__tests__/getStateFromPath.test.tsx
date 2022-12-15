@@ -13,7 +13,7 @@ const changePath = <T extends InitialState>(state: T, path: string): T =>
   });
 
 it('returns undefined for invalid path', () => {
-  expect(getStateFromPath<object>('//')).toBe(undefined);
+  expect(getStateFromPath<object>('//')).toBeUndefined();
 });
 
 it('converts path string to initial state', () => {
@@ -848,7 +848,7 @@ it('returns undefined if path is empty and no matching screen is present', () =>
 
   const path = '';
 
-  expect(getStateFromPath<object>(path, config)).toEqual(undefined);
+  expect(getStateFromPath<object>(path, config)).toBeUndefined();
 });
 
 it('returns matching screen if path is empty', () => {
@@ -1002,7 +1002,7 @@ it("doesn't match nested screen if path is empty", () => {
 
   const path = '';
 
-  expect(getStateFromPath<object>(path, config)).toEqual(undefined);
+  expect(getStateFromPath<object>(path, config)).toBeUndefined();
 });
 
 it('chooses more exhaustive pattern', () => {

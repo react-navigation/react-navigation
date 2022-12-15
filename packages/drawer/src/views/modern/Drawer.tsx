@@ -178,19 +178,26 @@ export default function Drawer({
 
   const onGestureEvent = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
-    { startX: number }
+    { startX: number; hasCalledOnStart: boolean }
   >({
     onStart: (event, ctx) => {
+      ctx.hasCalledOnStart = false;
       ctx.startX = translationX.value;
       gestureState.value = event.state;
       touchStartX.value = event.x;
-
-      runOnJS(onGestureStart)();
     },
     onActive: (event, ctx) => {
       touchX.value = event.x;
       translationX.value = ctx.startX + event.translationX;
       gestureState.value = event.state;
+
+      // onStart will _always_ be called, even when the activation
+      // criteria isn't met yet. This makes sure onGestureStart is only
+      // called when the criteria is really met.
+      if (!ctx.hasCalledOnStart) {
+        ctx.hasCalledOnStart = true;
+        runOnJS(onGestureStart)();
+      }
     },
     onEnd: (event) => {
       gestureState.value = event.state;

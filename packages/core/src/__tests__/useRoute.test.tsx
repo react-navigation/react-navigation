@@ -6,7 +6,11 @@ import Screen from '../Screen';
 import type { RouteProp } from '../types';
 import useNavigationBuilder from '../useNavigationBuilder';
 import useRoute from '../useRoute';
-import MockRouter from './__fixtures__/MockRouter';
+import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
+
+beforeEach(() => {
+  MockRouterKey.current = 0;
+});
 
 it('gets route prop from context', () => {
   expect.assertions(1);
@@ -20,7 +24,7 @@ it('gets route prop from context', () => {
   const Test = () => {
     const route = useRoute<RouteProp<{ sample: { x: string } }, 'sample'>>();
 
-    expect(route?.params?.x).toEqual(1);
+    expect(route?.params?.x).toBe(1);
 
     return null;
   };

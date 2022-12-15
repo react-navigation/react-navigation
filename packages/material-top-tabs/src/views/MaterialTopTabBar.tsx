@@ -41,13 +41,16 @@ export default function TabBarTop({
         { backgroundColor: colors.primary },
         focusedOptions.tabBarIndicatorStyle,
       ]}
+      gap={focusedOptions.tabBarGap}
       indicatorContainerStyle={focusedOptions.tabBarIndicatorContainerStyle}
       contentContainerStyle={focusedOptions.tabBarContentContainerStyle}
       style={[{ backgroundColor: colors.card }, focusedOptions.tabBarStyle]}
       getAccessibilityLabel={({ route }) =>
         descriptors[route.key].options.tabBarAccessibilityLabel
       }
-      getTestID={({ route }) => descriptors[route.key].options.tabBarTestID}
+      getTestID={({ route }) =>
+        descriptors[route.key].options.tabBarButtonTestID
+      }
       onTabPress={({ route, preventDefault }) => {
         const event = navigation.emit({
           type: 'tabPress',
@@ -107,7 +110,14 @@ export default function TabBarTop({
           );
         }
 
-        return label({ focused, color });
+        const children =
+          typeof options.tabBarLabel === 'string'
+            ? options.tabBarLabel
+            : options.title !== undefined
+            ? options.title
+            : route.name;
+
+        return label({ focused, color, children });
       }}
       renderBadge={({ route }) => {
         const { tabBarBadge } = descriptors[route.key].options;

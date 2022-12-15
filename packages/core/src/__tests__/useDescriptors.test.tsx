@@ -16,7 +16,9 @@ import MockRouter, {
 
 jest.useFakeTimers();
 
-beforeEach(() => (MockRouterKey.current = 0));
+beforeEach(() => {
+  MockRouterKey.current = 0;
+});
 
 it('sets options with options prop as an object', () => {
   const TestNavigator = (props: any) => {
@@ -151,25 +153,25 @@ it('sets options with screenOptions prop as an object', () => {
   );
 
   expect(root).toMatchInlineSnapshot(`
-        Array [
-          <main>
-            <h1>
-              Hello world
-            </h1>
-            <div>
-              Test screen A
-            </div>
-          </main>,
-          <main>
-            <h1>
-              Hello world
-            </h1>
-            <div>
-              Test screen B
-            </div>
-          </main>,
-        ]
-    `);
+    [
+      <main>
+        <h1>
+          Hello world
+        </h1>
+        <div>
+          Test screen A
+        </div>
+      </main>,
+      <main>
+        <h1>
+          Hello world
+        </h1>
+        <div>
+          Test screen B
+        </div>
+      </main>,
+    ]
+  `);
 });
 
 it('sets options with screenOptions prop as a fuction', () => {
@@ -224,7 +226,7 @@ it('sets options with screenOptions prop as a fuction', () => {
   );
 
   expect(root).toMatchInlineSnapshot(`
-    Array [
+    [
       <main>
         <h1>
           foo: Jane
@@ -424,7 +426,7 @@ it("returns correct value for canGoBack when it's not overridden", () => {
 
   render(root).update(root);
 
-  expect(result).toEqual(false);
+  expect(result).toBe(false);
 });
 
 it(`returns false for canGoBack when current router doesn't handle GO_BACK`, () => {

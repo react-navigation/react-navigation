@@ -1,0 +1,90 @@
+name: CI
+on:
+  push:
+    branches:
+      - 7.x
+  pull_request:
+    branches:
+      - 7.x
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Lint files
+        run: yarn lint
+
+      - name: Typecheck files
+        run: yarn typescript
+
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Run unit tests
+        run: yarn test --maxWorkers=2 --coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+
+  integration-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Get Playwright version
+        id: playwright
+        run: echo "VERSION=$(node --print 'require(`@playwright/test/package.json`).version')" >> $GITHUB_OUTPUT
+
+      - name: Cache Playwright
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright.outputs.VERSION }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+
+      - name: Build example for web
+        run: |
+          npm install -g sharp-cli@^2.1.0
+          yarn example web:export
+
+      - name: Run integration tests
+        run: yarn example test:e2e
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Build packages in the monorepo
+        run: yarn lerna run prepack
+
+      - name: Verify built type definitions are correct
+        run: yarn typescript
+
+      - name: Verify paths for types
+        run: node scripts/check-types-path.js

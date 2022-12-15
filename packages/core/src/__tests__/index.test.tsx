@@ -10,7 +10,9 @@ import useNavigation from '../useNavigation';
 import useNavigationBuilder from '../useNavigationBuilder';
 import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
 
-beforeEach(() => (MockRouterKey.current = 0));
+beforeEach(() => {
+  MockRouterKey.current = 0;
+});
 
 it('initializes state for a navigator on navigation', () => {
   const TestNavigator = (props: any) => {
@@ -679,7 +681,7 @@ it('updates route params with setParams applied to parent', () => {
   });
 });
 
-it('handles change in route names', async () => {
+it('handles change in route names', () => {
   const TestNavigator = (props: any): any => {
     useNavigationBuilder(MockRouter, props);
     return null;
@@ -771,7 +773,7 @@ it('navigates to nested child in a navigator', () => {
   );
 
   expect(element).toMatchInlineSnapshot(
-    `"[bar-b, {\\"some\\":\\"stuff\\",\\"test\\":42}]"`
+    `"[bar-b, {"some":"stuff","test":42}]"`
   );
 
   act(() =>
@@ -782,7 +784,7 @@ it('navigates to nested child in a navigator', () => {
   );
 
   expect(element).toMatchInlineSnapshot(
-    `"[bar-a, {\\"lol\\":\\"why\\",\\"whoa\\":\\"test\\"}]"`
+    `"[bar-a, {"lol":"why","whoa":"test"}]"`
   );
 
   act(() => navigation.navigate('bar', { screen: 'bar-b' }));
@@ -790,13 +792,13 @@ it('navigates to nested child in a navigator', () => {
   act(() => navigation.goBack());
 
   expect(element).toMatchInlineSnapshot(
-    `"[bar-a, {\\"lol\\":\\"why\\",\\"whoa\\":\\"test\\"}]"`
+    `"[bar-a, {"lol":"why","whoa":"test"}]"`
   );
 
   act(() => navigation.navigate('bar', { screen: 'bar-b' }));
 
   expect(element).toMatchInlineSnapshot(
-    `"[bar-b, {\\"some\\":\\"stuff\\",\\"test\\":42,\\"whoa\\":\\"test\\"}]"`
+    `"[bar-b, {"some":"stuff","test":42,"whoa":"test"}]"`
   );
 });
 
@@ -921,9 +923,7 @@ it('navigates to nested child in a navigator with initial: false', () => {
     })
   );
 
-  expect(first).toMatchInlineSnapshot(
-    `"[bar-b, {\\"some\\":\\"stuff\\",\\"test\\":42}]"`
-  );
+  expect(first).toMatchInlineSnapshot(`"[bar-b, {"some":"stuff","test":42}]"`);
 
   expect(navigation.getRootState()).toEqual({
     index: 2,
@@ -1027,7 +1027,7 @@ it('navigates to nested child in a navigator with initial: false', () => {
     })
   );
 
-  expect(second).toMatchInlineSnapshot(`"[bar-b, {\\"test\\":42}]"`);
+  expect(second).toMatchInlineSnapshot(`"[bar-b, {"test":42}]"`);
 
   expect(navigation.getRootState()).toEqual({
     index: 2,
@@ -1118,7 +1118,7 @@ it('navigates to nested child in a navigator with initial: false', () => {
     </BaseNavigationContainer>
   );
 
-  expect(third).toMatchInlineSnapshot(`"[bar-b, {\\"some\\":\\"stuff\\"}]"`);
+  expect(third).toMatchInlineSnapshot(`"[bar-b, {"some":"stuff"}]"`);
 
   expect(navigation.getRootState()).toEqual({
     index: 1,
@@ -1292,7 +1292,7 @@ it('resets state of a nested child in a navigator', () => {
     })
   );
 
-  expect(first).toMatchInlineSnapshot(`"[bar-a, {\\"test\\":18}]"`);
+  expect(first).toMatchInlineSnapshot(`"[bar-a, {"test":18}]"`);
 
   expect(navigation.getRootState()).toEqual({
     index: 1,
@@ -1690,7 +1690,11 @@ it('throws when a tag is a direct children', () => {
     <BaseNavigationContainer>
       <TestNavigator>
         {/* @ts-ignore */}
-        <screen name="foo" component={React.Fragment} />
+        <screen
+          name="foo"
+          // eslint-disable-next-line react/no-unknown-property
+          component={React.Fragment}
+        />
       </TestNavigator>
     </BaseNavigationContainer>
   );
@@ -2388,5 +2392,5 @@ it('does not throw if while getting current options with empty container', () =>
 
   render(container).update(container);
 
-  expect(navigation.getCurrentOptions()).toEqual(undefined);
+  expect(navigation.getCurrentOptions()).toBeUndefined();
 });

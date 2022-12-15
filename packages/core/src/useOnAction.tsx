@@ -7,6 +7,7 @@ import type {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
+import DeprecatedNavigationInChildContext from './DeprecatedNavigationInChildContext';
 import NavigationBuilderContext, {
   ChildActionListener,
   ChildBeforeRemoveListener,
@@ -51,6 +52,9 @@ export default function useOnAction({
     addListener: addListenerParent,
     onDispatchAction,
   } = React.useContext(NavigationBuilderContext);
+  const navigationInChildEnabled = React.useContext(
+    DeprecatedNavigationInChildContext
+  );
 
   const routerConfigOptionsRef =
     React.useRef<RouterConfigOptions>(routerConfigOptions);
@@ -126,12 +130,15 @@ export default function useOnAction({
         }
       }
 
-      // If the action wasn't handled by current navigator or a parent navigator, let children handle it
-      for (let i = actionListeners.length - 1; i >= 0; i--) {
-        const listener = actionListeners[i];
+      if (navigationInChildEnabled) {
+        // If the action wasn't handled by current navigator or a parent navigator, let children handle it
+        // This behavior is deprecated and will be removed in the future
+        for (let i = actionListeners.length - 1; i >= 0; i--) {
+          const listener = actionListeners[i];
 
-        if (listener(action, visitedNavigators)) {
-          return true;
+          if (listener(action, visitedNavigators)) {
+            return true;
+          }
         }
       }
 
@@ -142,6 +149,7 @@ export default function useOnAction({
       beforeRemoveListeners,
       emitter,
       getState,
+      navigationInChildEnabled,
       key,
       onActionParent,
       onDispatchAction,

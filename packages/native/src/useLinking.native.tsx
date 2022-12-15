@@ -3,6 +3,7 @@ import {
   getStateFromPath as getStateFromPathDefault,
   NavigationContainerRef,
   ParamListBase,
+  useNavigationIndependentTree,
 } from '@react-navigation/core';
 import * as React from 'react';
 import { Linking, Platform } from 'react-native';
@@ -12,16 +13,13 @@ import type { LinkingOptions } from './types';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
-type Options = LinkingOptions<ParamListBase> & {
-  independent?: boolean;
-};
+type Options = LinkingOptions<ParamListBase>;
 
 let linkingHandlers: Symbol[] = [];
 
 export default function useLinking(
   ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
   {
-    independent,
     enabled = true,
     prefixes,
     filter,
@@ -43,6 +41,7 @@ export default function useLinking(
         | undefined;
 
       // Storing this in a local variable stops Jest from complaining about import after teardown
+      // @ts-expect-error: removeEventListener is not present in newer RN versions
       const removeEventListener = Linking.removeEventListener?.bind(Linking);
 
       return () => {
@@ -58,6 +57,8 @@ export default function useLinking(
     getActionFromState = getActionFromStateDefault,
   }: Options
 ) {
+  const independent = useNavigationIndependentTree();
+
   React.useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
       return undefined;
@@ -194,8 +195,7 @@ export default function useLinking(
             console.warn(
               `An error occurred when trying to handle the link '${url}': ${
                 typeof e === 'object' && e != null && 'message' in e
-                  ? // @ts-expect-error: we're already checking for this
-                    e.message
+                  ? e.message
                   : e
               }`
             );

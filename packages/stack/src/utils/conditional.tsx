@@ -10,9 +10,9 @@ const { add, multiply } = Animated;
  * @param fallback Animated Node to use if the condition is `false`
  */
 export default function conditional(
-  condition: Animated.AnimatedInterpolation,
-  main: Animated.AnimatedInterpolation,
-  fallback: Animated.AnimatedInterpolation
+  condition: Animated.AnimatedInterpolation<0 | 1>,
+  main: Animated.AnimatedInterpolation<number>,
+  fallback: Animated.AnimatedInterpolation<number>
 ) {
   // To implement this behavior, we multiply the main node with the condition.
   // So if condition is 0, result will be 0, and if condition is 1, result will be main node.

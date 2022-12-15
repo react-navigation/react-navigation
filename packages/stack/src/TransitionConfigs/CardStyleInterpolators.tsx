@@ -101,7 +101,7 @@ export function forModalPresentationIOS({
   const hasNotchIos =
     Platform.OS === 'ios' &&
     !Platform.isPad &&
-    !Platform.isTVOS &&
+    !Platform.isTV &&
     insets.top > 20;
   const isLandscape = screen.width > screen.height;
   const topOffset = isLandscape ? 0 : 10;

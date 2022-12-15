@@ -3,7 +3,7 @@ import {
   DrawerActions,
   DrawerNavigationState,
   ParamListBase,
-  useLinkBuilder,
+  useLinkTools,
 } from '@react-navigation/native';
 import * as React from 'react';
 
@@ -24,7 +24,7 @@ export default function DrawerItemList({
   navigation,
   descriptors,
 }: Props) {
-  const buildLink = useLinkBuilder();
+  const { buildHref } = useLinkTools();
 
   const focusedRoute = state.routes[state.index];
   const focusedDescriptor = descriptors[focusedRoute.key];
@@ -51,7 +51,7 @@ export default function DrawerItemList({
         navigation.dispatch({
           ...(focused
             ? DrawerActions.closeDrawer()
-            : CommonActions.navigate({ name: route.name, merge: true })),
+            : CommonActions.navigate(route)),
           target: state.key,
         });
       }
@@ -69,6 +69,8 @@ export default function DrawerItemList({
     return (
       <DrawerItem
         key={route.key}
+        route={route}
+        href={buildHref(route.name, route.params)}
         label={
           drawerLabel !== undefined
             ? drawerLabel
@@ -85,7 +87,6 @@ export default function DrawerItemList({
         allowFontScaling={drawerAllowFontScaling}
         labelStyle={drawerLabelStyle}
         style={drawerItemStyle}
-        to={buildLink(route.name, route.params)}
         onPress={onPress}
       />
     );

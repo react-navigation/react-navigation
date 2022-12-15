@@ -15,6 +15,8 @@ type MaterialTopTabParams = {
 
 const MaterialTopTabs = createMaterialTopTabNavigator<MaterialTopTabParams>();
 
+const ChatScreen = () => <Chat bottom />;
+
 export default function MaterialTopTabsScreen({
   navigation,
 }: StackScreenProps<ParamListBase>) {
@@ -28,7 +30,7 @@ export default function MaterialTopTabsScreen({
     <MaterialTopTabs.Navigator>
       <MaterialTopTabs.Screen
         name="Chat"
-        component={Chat}
+        component={ChatScreen}
         options={{ title: 'Chat' }}
       />
       <MaterialTopTabs.Screen

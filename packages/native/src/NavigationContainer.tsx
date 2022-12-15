@@ -33,7 +33,6 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
   linking?: LinkingOptions<ParamList>;
   fallback?: React.ReactNode;
   documentTitle?: DocumentTitleOptions;
-  onReady?: () => void;
 };
 
 /**
@@ -43,6 +42,7 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
  * @param props.initialState Initial state object for the navigation tree. When deep link handling is enabled, this will override deep links when specified. Make sure that you don't specify an `initialState` when there's a deep link (`Linking.getInitialURL()`).
  * @param props.onReady Callback which is called after the navigation tree mounts.
  * @param props.onStateChange Callback which is called with the latest navigation state when it changes.
+ * @param props.onUnhandledAction Callback which is called when an action is not handled.
  * @param props.theme Theme object for the navigators.
  * @param props.linking Options for deep linking. Deep link handling is enabled when this prop is provided, unless `linking.enabled` is `false`.
  * @param props.fallback Fallback component to render until we have finished getting initial state when linking is enabled. Defaults to `null`.
@@ -56,7 +56,6 @@ function NavigationContainerInner(
     linking,
     fallback = null,
     documentTitle,
-    onReady,
     ...rest
   }: Props<ParamListBase>,
   ref?: React.Ref<NavigationContainerRef<ParamListBase> | null>
@@ -74,7 +73,6 @@ function NavigationContainerInner(
   useDocumentTitle(refContainer, documentTitle);
 
   const { getInitialState } = useLinking(refContainer, {
-    independent: rest.independent,
     enabled: isLinkingEnabled,
     prefixes: [],
     ...linking,
@@ -106,21 +104,10 @@ function NavigationContainerInner(
 
   const linkingContext = React.useMemo(() => ({ options: linking }), [linking]);
 
-  const isReady = rest.initialState != null || !isLinkingEnabled || isResolved;
+  const isLinkingReady =
+    rest.initialState != null || !isLinkingEnabled || isResolved;
 
-  const onReadyRef = React.useRef(onReady);
-
-  React.useEffect(() => {
-    onReadyRef.current = onReady;
-  });
-
-  React.useEffect(() => {
-    if (isReady) {
-      onReadyRef.current?.();
-    }
-  }, [isReady]);
-
-  if (!isReady) {
+  if (!isLinkingReady) {
     // This is temporary until we have Suspense for data-fetching
     // Then the fallback will be handled by a parent `Suspense` component
     return fallback as React.ReactElement;

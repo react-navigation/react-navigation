@@ -1,23 +1,24 @@
 import * as React from 'react';
 import {
   Animated,
-  PanResponder,
-  Keyboard,
-  StyleSheet,
   GestureResponderEvent,
-  PanResponderGestureState,
   I18nManager,
+  Keyboard,
+  PanResponder,
+  PanResponderGestureState,
+  StyleSheet,
   View,
 } from 'react-native';
-import useAnimatedValue from './useAnimatedValue';
+
 import type {
-  NavigationState,
-  Route,
-  Layout,
   EventEmitterProps,
-  PagerProps,
+  Layout,
   Listener,
+  NavigationState,
+  PagerProps,
+  Route,
 } from './types';
+import useAnimatedValue from './useAnimatedValue';
 
 type Props<T extends Route> = PagerProps & {
   layout: Layout;

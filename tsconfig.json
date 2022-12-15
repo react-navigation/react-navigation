@@ -2,7 +2,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@react-navigation/*": ["./packages/*/src"]
+      "@react-navigation/*": ["./packages/*/src"],
+      "react-native-tab-view": ["./packages/react-native-tab-view/src"],
     },
     "composite": true,
     "allowUnreachableCode": false,
@@ -25,5 +26,5 @@
     "strict": true,
     "target": "esnext"
   },
-  "exclude": ["packages/*/lib", "packages/flipper-plugin-react-navigation"]
+  "exclude": ["packages/*/lib"]
 }

@@ -1,4 +1,6 @@
 {
   "extends": "./tsconfig",
-  "exclude": ["example"]
+  "compilerOptions": {
+    "paths": {}
+  }
 }

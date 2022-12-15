@@ -16,7 +16,8 @@
       "@react-navigation/material-top-tabs",
       "@react-navigation/material-bottom-tabs",
       "@react-navigation/elements",
-      "@react-navigation/devtools"
+      "@react-navigation/devtools",
+      "react-native-tab-view"
     ]
   },
   "env": {
@@ -31,6 +32,11 @@
     "files":["example/e2e/tests/*.ts"],
     "rules": {
       "jest/*": 0
+    }
+  }, {
+    "files":["scripts/*.js"],
+    "rules": {
+      "import/no-commonjs": 0
     }
   }]
 }

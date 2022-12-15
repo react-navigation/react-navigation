@@ -1,4 +1,4 @@
-import { Link, Route, useTheme } from '@react-navigation/native';
+import { CommonActions, Link, Route, useTheme } from '@react-navigation/native';
 import Color from 'color';
 import React from 'react';
 import {
@@ -12,18 +12,30 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import type { BottomTabBarButtonProps, LabelPosition } from '../types';
+import type {
+  BottomTabBarButtonProps,
+  BottomTabDescriptor,
+  LabelPosition,
+} from '../types';
 import TabBarIcon from './TabBarIcon';
 
 type Props = {
+  /**
+   * The route object which should be specified by the tab.
+   */
+  route: Route<string>;
+  /**
+   * The `href` to use for the anchor tag on web
+   */
+  href?: string;
   /**
    * Whether the tab is focused.
    */
   focused: boolean;
   /**
-   * The route object which should be specified by the tab.
+   * The descriptor object for the route.
    */
-  route: Route<string>;
+  descriptor: BottomTabDescriptor;
   /**
    * The label text of the tab.
    */
@@ -33,6 +45,7 @@ type Props = {
         focused: boolean;
         color: string;
         position: LabelPosition;
+        children: string;
       }) => React.ReactNode);
   /**
    * Icon to display for the tab.
@@ -50,10 +63,6 @@ type Props = {
    * Custom style for the badge.
    */
   badgeStyle?: StyleProp<TextStyle>;
-  /**
-   * URL to use for the link to the tab.
-   */
-  to?: string;
   /**
    * The button for the tab. Uses a `TouchableWithoutFeedback` by default.
    */
@@ -119,29 +128,31 @@ type Props = {
   style?: StyleProp<ViewStyle>;
 };
 
-export default function BottomTabBarItem({
-  focused,
+export default function BottomTabItem({
   route,
+  href,
+  focused,
+  descriptor,
   label,
   icon,
   badge,
   badgeStyle,
-  to,
   button = ({
+    href,
     children,
     style,
     onPress,
-    to,
     accessibilityRole,
     ...rest
   }: BottomTabBarButtonProps) => {
-    if (Platform.OS === 'web' && to) {
+    if (Platform.OS === 'web') {
       // React Native Web doesn't forward `onClick` if we use `TouchableWithoutFeedback`.
       // We need to use `onClick` to be able to prevent default browser handling of links.
       return (
         <Link
           {...rest}
-          to={to}
+          href={href}
+          action={CommonActions.navigate(route.name, route.params)}
           style={[styles.button, style]}
           onPress={(e: any) => {
             if (
@@ -220,10 +231,19 @@ export default function BottomTabBarItem({
       );
     }
 
+    const { options } = descriptor;
+    const children =
+      typeof options.tabBarLabel === 'string'
+        ? options.tabBarLabel
+        : options.title !== undefined
+        ? options.title
+        : route.name;
+
     return label({
       focused,
       color,
       position: horizontal ? 'beside-icon' : 'below-icon',
+      children,
     });
   };
 
@@ -258,7 +278,7 @@ export default function BottomTabBarItem({
     : inactiveBackgroundColor;
 
   return button({
-    to,
+    href,
     onPress,
     onLongPress,
     testID,

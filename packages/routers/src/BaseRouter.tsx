@@ -74,7 +74,7 @@ const BaseRouter = {
   },
 
   shouldActionChangeFocus(action: CommonNavigationAction) {
-    return action.type === 'NAVIGATE';
+    return action.type === 'NAVIGATE' || action.type === 'NAVIGATE_DEPRECATED';
   },
 };
 

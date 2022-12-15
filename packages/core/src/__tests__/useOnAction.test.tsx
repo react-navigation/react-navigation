@@ -3,6 +3,7 @@ import {
   NavigationState,
   ParamListBase,
   Router,
+  StackActions,
   StackRouter,
 } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
@@ -190,6 +191,7 @@ it("lets children handle the action if parent didn't", () => {
 
   const element = (
     <BaseNavigationContainer
+      navigationInChildEnabled
       initialState={initialState}
       onStateChange={onStateChange}
     >
@@ -621,7 +623,7 @@ it("prevents removing a screen with 'beforeRemove' event", () => {
     type: 'stack',
   });
 
-  act(() => ref.current?.navigate('foo'));
+  act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toBeCalledTimes(2);
   expect(onBeforeRemove).toBeCalledTimes(1);
@@ -641,7 +643,7 @@ it("prevents removing a screen with 'beforeRemove' event", () => {
 
   shouldPrevent = false;
 
-  act(() => ref.current?.navigate('foo'));
+  act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toBeCalledTimes(3);
   expect(onStateChange).toBeCalledWith({
@@ -771,7 +773,7 @@ it("prevents removing a child screen with 'beforeRemove' event", () => {
     type: 'stack',
   });
 
-  act(() => ref.current?.navigate('foo'));
+  act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toBeCalledTimes(2);
   expect(onBeforeRemove).toBeCalledTimes(1);
@@ -802,7 +804,7 @@ it("prevents removing a child screen with 'beforeRemove' event", () => {
 
   shouldPrevent = false;
 
-  act(() => ref.current?.navigate('foo'));
+  act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toBeCalledTimes(3);
   expect(onStateChange).toBeCalledWith({
@@ -950,7 +952,7 @@ it("prevents removing a grand child screen with 'beforeRemove' event", () => {
     type: 'stack',
   });
 
-  act(() => ref.current?.navigate('foo'));
+  act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toBeCalledTimes(2);
   expect(onBeforeRemove).toBeCalledTimes(1);
@@ -994,7 +996,7 @@ it("prevents removing a grand child screen with 'beforeRemove' event", () => {
 
   shouldPrevent = false;
 
-  act(() => ref.current?.navigate('foo'));
+  act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toBeCalledTimes(3);
   expect(onStateChange).toBeCalledWith({
@@ -1141,7 +1143,7 @@ it("prevents removing by multiple screens with 'beforeRemove' event", () => {
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).toBeCalledWith(preventedState);
 
-  act(() => ref.current?.navigate('foo'));
+  act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toBeCalledTimes(1);
   expect(onBeforeRemove.lex).toBeCalledTimes(1);
@@ -1150,7 +1152,7 @@ it("prevents removing by multiple screens with 'beforeRemove' event", () => {
 
   shouldPrevent.lex = false;
 
-  act(() => ref.current?.navigate('foo'));
+  act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toBeCalledTimes(1);
   expect(onBeforeRemove.baz).toBeCalledTimes(1);
@@ -1159,7 +1161,7 @@ it("prevents removing by multiple screens with 'beforeRemove' event", () => {
 
   shouldPrevent.baz = false;
 
-  act(() => ref.current?.navigate('foo'));
+  act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toBeCalledTimes(1);
   expect(onBeforeRemove.bar).toBeCalledTimes(1);
@@ -1168,7 +1170,7 @@ it("prevents removing by multiple screens with 'beforeRemove' event", () => {
 
   shouldPrevent.bar = false;
 
-  act(() => ref.current?.navigate('foo'));
+  act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toBeCalledTimes(2);
   expect(onStateChange).toBeCalledWith({

@@ -99,7 +99,9 @@ export default function useDescriptors<
   router,
   emitter,
 }: Options<State, ScreenOptions, EventMap>) {
-  const [options, setOptions] = React.useState<Record<string, object>>({});
+  const [options, setOptions] = React.useState<Record<string, ScreenOptions>>(
+    {}
+  );
   const { onDispatchAction, onOptionsChange, stackRef } = React.useContext(
     NavigationBuilderContext
   );
@@ -177,6 +179,7 @@ export default function useDescriptors<
       (acc, curr) =>
         Object.assign(
           acc,
+          // @ts-expect-error: we check for function but TS still complains
           typeof curr !== 'function' ? curr : curr({ route, navigation })
         ),
       {} as ScreenOptions

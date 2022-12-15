@@ -927,7 +927,7 @@ it('gets navigate action from state with more than 2 screens with lower index', 
 });
 
 it("doesn't return action if no routes are provided'", () => {
-  expect(getActionFromState({ routes: [] })).toBe(undefined);
+  expect(getActionFromState({ routes: [] })).toBeUndefined();
 });
 
 it('gets undefined action from state', () => {
@@ -949,6 +949,6 @@ it('gets undefined action from state', () => {
     ],
   };
 
-  expect(getActionFromState(state)).toBe(undefined);
-  expect(getActionFromState({ routes: [] })).toBe(undefined);
+  expect(getActionFromState(state)).toBeUndefined();
+  expect(getActionFromState({ routes: [] })).toBeUndefined();
 });

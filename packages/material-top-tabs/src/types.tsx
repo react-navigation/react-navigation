@@ -78,7 +78,11 @@ export type MaterialTopTabNavigationOptions = {
    */
   tabBarLabel?:
     | string
-    | ((props: { focused: boolean; color: string }) => React.ReactNode);
+    | ((props: {
+        focused: boolean;
+        color: string;
+        children: string;
+      }) => React.ReactNode);
 
   /**
    * Accessibility label for the tab button. This is read by the screen reader when the user taps the tab.
@@ -116,7 +120,9 @@ export type MaterialTopTabNavigationOptions = {
    */
   tabBarIndicator?: (
     props: Omit<
-      Parameters<React.ComponentProps<typeof TabBar>['renderIndicator']>[0],
+      Parameters<
+        NonNullable<React.ComponentProps<typeof TabBar>['renderIndicator']>
+      >[0],
       'navigationState'
     > & { state: TabNavigationState<ParamListBase> }
   ) => React.ReactNode;
@@ -134,7 +140,7 @@ export type MaterialTopTabNavigationOptions = {
   /**
    * ID to locate this tab button in tests.
    */
-  tabBarTestID?: string;
+  tabBarButtonTestID?: string;
 
   /**
    * Color for the icon and label in the active tab.
@@ -194,11 +200,22 @@ export type MaterialTopTabNavigationOptions = {
   tabBarStyle?: StyleProp<ViewStyle>;
 
   /**
+   * Gap between tabs
+   */
+  tabBarGap?: number;
+
+  /**
    * Whether to enable swipe gestures when this screen is focused.
    * Swipe gestures are enabled by default. Passing `false` will disable swipe gestures,
    * but the user can still switch tabs by pressing the tab bar.
    */
   swipeEnabled?: boolean;
+
+  /**
+   * Whether to enable animations when switching between tabs by pressing on the tab bar or programmatically.
+   * Switching tab via swipe gesture will still result in an animation.
+   */
+  animationEnabled?: boolean;
 
   /**
    * Whether this screen should be lazily rendered. When this is set to `true`,
@@ -251,6 +268,7 @@ export type MaterialTopTabNavigationConfig = Omit<
   | 'renderTabBar'
   | 'renderLazyPlaceholder'
   | 'swipeEnabled'
+  | 'animationEnabled'
   | 'lazy'
   | 'lazyPreloadDistance'
   | 'lazyPlaceholder'

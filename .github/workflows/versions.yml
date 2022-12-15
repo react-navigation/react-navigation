@@ -1,7 +1,9 @@
 name: Check versions
 on:
   issues:
-    types: [opened, edited]
+    types:
+      - opened
+      - edited
 
 jobs:
   check-versions:
@@ -23,6 +25,7 @@ jobs:
             @react-navigation/material-top-tabs
             @react-navigation/routers
             @react-navigation/stack
+            react-native-tab-view
 
       - uses: react-navigation/check-versions-action@v1.0.0
         if: contains(github.event.issue.labels.*.name, 'version-4')

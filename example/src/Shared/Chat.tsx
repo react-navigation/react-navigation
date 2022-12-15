@@ -10,6 +10,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const MESSAGES = [
   'okay',
@@ -18,7 +19,11 @@ const MESSAGES = [
   'make me a sandwich',
 ];
 
-export default function Chat(props: Partial<ScrollViewProps>) {
+export default function Chat({
+  bottom,
+  ...rest
+}: Partial<ScrollViewProps & { bottom: boolean }>) {
+  const insets = useSafeAreaInsets();
   const ref = React.useRef<ScrollView>(null);
 
   useScrollToTop(ref);
@@ -30,7 +35,7 @@ export default function Chat(props: Partial<ScrollViewProps>) {
       <ScrollView
         style={styles.inverted}
         contentContainerStyle={styles.content}
-        {...props}
+        {...rest}
       >
         {MESSAGES.map((text, i) => {
           const odd = i % 2;
@@ -72,6 +77,9 @@ export default function Chat(props: Partial<ScrollViewProps>) {
         placeholder="Write a message"
         underlineColorAndroid="transparent"
       />
+      {bottom ? (
+        <View style={[styles.spacer, { height: insets.bottom }]} />
+      ) : null}
     </View>
   );
 }
@@ -112,5 +120,8 @@ const styles = StyleSheet.create({
     height: 48,
     paddingVertical: 12,
     paddingHorizontal: 24,
+  },
+  spacer: {
+    backgroundColor: '#fff',
   },
 });

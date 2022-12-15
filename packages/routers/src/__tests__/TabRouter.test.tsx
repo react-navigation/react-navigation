@@ -647,39 +647,6 @@ it('handles navigate action', () => {
         index: 1,
         routeNames: ['baz', 'bar'],
         routes: [
-          { key: 'baz-1', name: 'baz' },
-          { key: 'bar-1', name: 'bar' },
-        ],
-        history: [{ type: 'route', key: 'bar-1' }],
-      },
-      CommonActions.navigate({ key: 'bar-1', params: { answer: 42 } }),
-      options
-    )
-  ).toEqual({
-    stale: false,
-    type: 'tab',
-    key: 'root',
-    index: 1,
-    routeNames: ['baz', 'bar'],
-    routes: [
-      { key: 'baz-1', name: 'baz' },
-      { key: 'bar-1', name: 'bar', params: { answer: 42 } },
-    ],
-    history: [
-      { type: 'route', key: 'baz-1' },
-      { type: 'route', key: 'bar-1' },
-    ],
-  });
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'tab',
-        key: 'root',
-        index: 1,
-        routeNames: ['baz', 'bar'],
-        routes: [
           { key: 'baz', name: 'baz' },
           { key: 'bar', name: 'bar' },
         ],
@@ -718,7 +685,7 @@ it('handles navigate action', () => {
       CommonActions.navigate('non-existent'),
       options
     )
-  ).toBe(null);
+  ).toBeNull();
 });
 
 it("doesn't navigate to nonexistent screen", () => {
@@ -746,30 +713,7 @@ it("doesn't navigate to nonexistent screen", () => {
       CommonActions.navigate('foo', { answer: 42 }),
       options
     )
-  ).toBe(null);
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'tab',
-        key: 'root',
-        index: 1,
-        routeNames: ['baz', 'bar'],
-        routes: [
-          { key: 'baz', name: 'baz' },
-          { key: 'bar', name: 'bar' },
-        ],
-        history: [{ type: 'route', key: 'bar' }],
-      },
-      CommonActions.navigate({
-        name: 'foo',
-        key: 'test',
-        params: { answer: 42 },
-      }),
-      options
-    )
-  ).toBe(null);
+  ).toBeNull();
 });
 
 it('handles jump to action', () => {
@@ -839,7 +783,7 @@ it("doesn't jump to nonexistent screen", () => {
       TabActions.jumpTo('foo', { answer: 42 }),
       options
     )
-  ).toBe(null);
+  ).toBeNull();
 });
 
 it('handles back action with backBehavior: history', () => {
@@ -854,7 +798,7 @@ it('handles back action with backBehavior: history', () => {
 
   expect(
     router.getStateForAction(state, CommonActions.goBack(), options)
-  ).toEqual(null);
+  ).toBeNull();
 
   state = router.getStateForAction(
     state,
@@ -941,7 +885,7 @@ it('handles back action with backBehavior: order', () => {
 
   expect(
     router.getStateForAction(state, CommonActions.goBack(), options)
-  ).toEqual(null);
+  ).toBeNull();
 
   state = router.getStateForAction(
     state,
@@ -998,7 +942,7 @@ it('handles back action with backBehavior: order', () => {
 
   expect(
     router.getStateForAction(state, CommonActions.goBack(), options)
-  ).toEqual(null);
+  ).toBeNull();
 });
 
 it('handles back action with backBehavior: initialRoute', () => {
@@ -1013,7 +957,7 @@ it('handles back action with backBehavior: initialRoute', () => {
 
   expect(
     router.getStateForAction(state, CommonActions.goBack(), options)
-  ).toEqual(null);
+  ).toBeNull();
 
   state = router.getStateForAction(
     state,
@@ -1067,7 +1011,7 @@ it('handles back action with backBehavior: initialRoute', () => {
 
   expect(
     router.getStateForAction(state, CommonActions.goBack(), options)
-  ).toEqual(null);
+  ).toBeNull();
 });
 
 it('handles back action with backBehavior: initialRoute and initialRouteName', () => {
@@ -1086,7 +1030,7 @@ it('handles back action with backBehavior: initialRoute and initialRouteName', (
 
   expect(
     router.getStateForAction(state, CommonActions.goBack(), options)
-  ).toEqual(null);
+  ).toBeNull();
 
   state = router.getStateForAction(
     state,
@@ -1140,7 +1084,7 @@ it('handles back action with backBehavior: initialRoute and initialRouteName', (
 
   expect(
     router.getStateForAction(state, CommonActions.goBack(), options)
-  ).toEqual(null);
+  ).toBeNull();
 });
 
 it('handles back action with backBehavior: none', () => {
@@ -1161,7 +1105,7 @@ it('handles back action with backBehavior: none', () => {
 
   expect(
     router.getStateForAction(state, CommonActions.goBack(), options)
-  ).toEqual(null);
+  ).toBeNull();
 });
 
 it('updates route key history on navigate and jump to', () => {

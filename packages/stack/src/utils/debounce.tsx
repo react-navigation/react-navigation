@@ -6,7 +6,6 @@ export default function debounce<T extends (...args: any[]) => void>(
 
   return function (this: any, ...args) {
     if (!timeout) {
-      // eslint-disable-next-line babel/no-invalid-this
       func.apply(this, args);
 
       timeout = setTimeout(() => {

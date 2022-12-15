@@ -11,10 +11,18 @@ import * as React from 'react';
 
 import BaseNavigationContainer from '../BaseNavigationContainer';
 import createNavigationContainerRef from '../createNavigationContainerRef';
+import NavigationIndependentTree from '../NavigationIndependentTree';
 import NavigationStateContext from '../NavigationStateContext';
 import Screen from '../Screen';
 import useNavigationBuilder from '../useNavigationBuilder';
-import MockRouter, { MockActions } from './__fixtures__/MockRouter';
+import MockRouter, {
+  MockActions,
+  MockRouterKey,
+} from './__fixtures__/MockRouter';
+
+beforeEach(() => {
+  MockRouterKey.current = 0;
+});
 
 it('throws when getState is accessed without a container', () => {
   expect.assertions(1);
@@ -70,9 +78,11 @@ it('throws when nesting containers', () => {
   expect(() =>
     render(
       <BaseNavigationContainer>
-        <BaseNavigationContainer independent>
-          <React.Fragment />
-        </BaseNavigationContainer>
+        <NavigationIndependentTree>
+          <BaseNavigationContainer>
+            <React.Fragment />
+          </BaseNavigationContainer>
+        </NavigationIndependentTree>
       </BaseNavigationContainer>
     )
   ).not.toThrowError(
@@ -81,11 +91,9 @@ it('throws when nesting containers', () => {
 });
 
 it('handle dispatching with ref', () => {
-  const CurrentParentRouter = MockRouter;
-
-  function CurrentChildRouter(options: DefaultRouterOptions) {
+  function CurrentRootRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
-    const ChildRouter: Router<
+    const RootRouter: Router<
       NavigationState,
       MockActions | { type: 'REVERSE' }
     > = {
@@ -105,21 +113,12 @@ it('handle dispatching with ref', () => {
         return CurrentMockRouter.getStateForAction(state, action, options);
       },
     };
-    return ChildRouter;
+    return RootRouter;
   }
 
-  const ChildNavigator = (props: any) => {
+  const RootNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(
-      CurrentChildRouter,
-      props
-    );
-
-    return descriptors[state.routes[state.index].key].render();
-  };
-
-  const ParentNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(
-      CurrentParentRouter,
+      CurrentRootRouter,
       props
     );
 
@@ -137,19 +136,7 @@ it('handle dispatching with ref', () => {
   const initialState = {
     index: 1,
     routes: [
-      {
-        key: 'baz',
-        name: 'baz',
-        state: {
-          index: 0,
-          key: '4',
-          routeNames: ['qux2', 'lex2'],
-          routes: [
-            { key: 'qux2', name: 'qux2' },
-            { key: 'lex2', name: 'lex2' },
-          ],
-        },
-      },
+      { key: 'baz', name: 'baz' },
       { key: 'bar', name: 'bar' },
     ],
   };
@@ -160,26 +147,12 @@ it('handle dispatching with ref', () => {
       initialState={initialState}
       onStateChange={onStateChange}
     >
-      <ParentNavigator>
+      <RootNavigator>
         <Screen name="foo">{() => null}</Screen>
-        <Screen name="foo2">
-          {() => (
-            <ChildNavigator>
-              <Screen name="qux1">{() => null}</Screen>
-              <Screen name="lex1">{() => null}</Screen>
-            </ChildNavigator>
-          )}
-        </Screen>
+        <Screen name="foo2">{() => null}</Screen>
         <Screen name="bar">{() => null}</Screen>
-        <Screen name="baz">
-          {() => (
-            <ChildNavigator>
-              <Screen name="qux2">{() => null}</Screen>
-              <Screen name="lex2">{() => null}</Screen>
-            </ChildNavigator>
-          )}
-        </Screen>
-      </ParentNavigator>
+        <Screen name="baz">{() => null}</Screen>
+      </RootNavigator>
     </BaseNavigationContainer>
   );
 
@@ -193,26 +166,12 @@ it('handle dispatching with ref', () => {
   expect(onStateChange).lastCalledWith({
     stale: false,
     type: 'test',
-    index: 0,
+    index: 1,
     key: '0',
     routeNames: ['foo', 'foo2', 'bar', 'baz'],
     routes: [
-      {
-        key: 'baz',
-        name: 'baz',
-        state: {
-          stale: false,
-          type: 'test',
-          index: 0,
-          key: '1',
-          routeNames: ['qux2', 'lex2'],
-          routes: [
-            { key: 'lex2', name: 'lex2' },
-            { key: 'qux2', name: 'qux2' },
-          ],
-        },
-      },
       { key: 'bar', name: 'bar' },
+      { key: 'baz', name: 'baz' },
     ],
   });
 });
@@ -286,7 +245,7 @@ it('handle resetting state with ref', () => {
   expect(onStateChange).toBeCalledTimes(1);
   expect(onStateChange).lastCalledWith({
     index: 1,
-    key: '5',
+    key: '3',
     routeNames: ['foo', 'foo2', 'bar', 'baz'],
     routes: [
       {
@@ -294,7 +253,7 @@ it('handle resetting state with ref', () => {
         name: 'baz',
         state: {
           index: 0,
-          key: '6',
+          key: '4',
           routeNames: ['qux2', 'lex2'],
           routes: [
             { key: 'qux2', name: 'qux2' },
@@ -344,7 +303,7 @@ it('handles getRootState', () => {
   }
   expect(state).toEqual({
     index: 0,
-    key: '7',
+    key: '0',
     routeNames: ['foo', 'bar'],
     routes: [
       {
@@ -352,7 +311,7 @@ it('handles getRootState', () => {
         name: 'foo',
         state: {
           index: 0,
-          key: '8',
+          key: '1',
           routeNames: ['qux', 'lex'],
           routes: [
             { key: 'qux', name: 'qux' },
@@ -409,7 +368,7 @@ it('emits state events when the state changes', () => {
     type: 'test',
     stale: false,
     index: 1,
-    key: '9',
+    key: '0',
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo', name: 'foo' },
@@ -427,7 +386,7 @@ it('emits state events when the state changes', () => {
     type: 'test',
     stale: false,
     index: 2,
-    key: '9',
+    key: '0',
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo', name: 'foo' },
@@ -499,7 +458,7 @@ it('emits state events when new navigator mounts', () => {
     stale: false,
     type: 'test',
     index: 0,
-    key: '10',
+    key: '0',
     routeNames: ['foo', 'bar'],
     routes: [
       { key: 'foo', name: 'foo' },
@@ -510,7 +469,7 @@ it('emits state events when new navigator mounts', () => {
           stale: false,
           type: 'test',
           index: 0,
-          key: '11',
+          key: '1',
           routeNames: ['baz', 'bax'],
           routes: [
             { key: 'baz', name: 'baz' },
@@ -734,6 +693,40 @@ it("throws if the ref hasn't finished initializing", () => {
   render(element);
 });
 
+it('fires onReady after navigator is rendered', () => {
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const onReady = jest.fn();
+
+  const element = (
+    <BaseNavigationContainer ref={ref} onReady={onReady}>
+      {null}
+    </BaseNavigationContainer>
+  );
+
+  const root = render(element);
+
+  expect(onReady).not.toBeCalled();
+  expect(ref.current?.isReady()).toBe(false);
+
+  root.rerender(
+    <BaseNavigationContainer ref={ref} onReady={onReady}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(onReady).toHaveBeenCalledTimes(1);
+  expect(ref.current?.isReady()).toBe(true);
+});
+
 it('invokes the unhandled action listener with the unhandled action', () => {
   const ref = createNavigationContainerRef<ParamListBase>();
   const fn = jest.fn();
@@ -790,16 +783,14 @@ it('works with state change events in independent nested container', () => {
       <TestNavigator>
         <Screen name="foo">
           {() => (
-            <BaseNavigationContainer
-              independent
-              ref={ref}
-              onStateChange={onStateChange}
-            >
-              <TestNavigator>
-                <Screen name="qux">{() => null}</Screen>
-                <Screen name="lex">{() => null}</Screen>
-              </TestNavigator>
-            </BaseNavigationContainer>
+            <NavigationIndependentTree>
+              <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+                <TestNavigator>
+                  <Screen name="qux">{() => null}</Screen>
+                  <Screen name="lex">{() => null}</Screen>
+                </TestNavigator>
+              </BaseNavigationContainer>
+            </NavigationIndependentTree>
           )}
         </Screen>
         <Screen name="bar">{() => null}</Screen>
@@ -811,7 +802,7 @@ it('works with state change events in independent nested container', () => {
 
   expect(onStateChange).toBeCalledWith({
     index: 1,
-    key: '15',
+    key: '1',
     routeNames: ['qux', 'lex'],
     routes: [
       { key: 'qux', name: 'qux' },
@@ -823,7 +814,7 @@ it('works with state change events in independent nested container', () => {
 
   expect(ref.current?.getRootState()).toEqual({
     index: 1,
-    key: '15',
+    key: '1',
     routeNames: ['qux', 'lex'],
     routes: [
       { key: 'qux', name: 'qux' },

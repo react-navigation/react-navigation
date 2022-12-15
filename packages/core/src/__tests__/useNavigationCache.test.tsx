@@ -8,7 +8,9 @@ import useNavigationBuilder from '../useNavigationBuilder';
 import useNavigationCache from '../useNavigationCache';
 import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
 
-beforeEach(() => (MockRouterKey.current = 0));
+beforeEach(() => {
+  MockRouterKey.current = 0;
+});
 
 it('preserves reference for navigation objects', () => {
   expect.assertions(2);

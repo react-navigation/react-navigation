@@ -1,7 +1,9 @@
 name: Check for labels
 on:
   issues:
-    types: [opened, edited]
+    types:
+      - opened
+      - edited
 
 jobs:
   check-labels:
@@ -14,7 +16,7 @@ jobs:
             const body = context.payload.issue.body;
 
             const packages = Array.from(
-              body.matchAll(/- \[x\] @react-navigation​\/([\S]+)/gim)
+              body.matchAll(/- \[x\] (@react-navigation\/([\S]+)|react-native-tab-view)/gim)
             )
               .map((match) => match[1])
               .filter((name) =>
@@ -25,6 +27,7 @@ jobs:
                   'material-top-tabs',
                   'stack',
                   'native-stack',
+                  'react-native-tab-view',
                 ].includes(name)
               )
               .map((name) => `package:${name}`);

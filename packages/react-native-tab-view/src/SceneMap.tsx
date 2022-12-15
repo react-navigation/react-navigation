@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import type { SceneRendererProps } from './types';
 
 type SceneProps = {
