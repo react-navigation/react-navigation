@@ -46,28 +46,7 @@ type Props = DrawerNavigationConfig & {
   descriptors: DrawerDescriptorMap;
 };
 
-const getDefaultDrawerWidth = ({
-  height,
-  width,
-}: {
-  height: number;
-  width: number;
-}) => {
-  /*
-   * Default drawer width is screen width - header height
-   * with a max width of 280 on mobile and 320 on tablet
-   * https://material.io/components/navigation-drawer
-   */
-  const smallerAxisSize = Math.min(height, width);
-  const isLandscape = width > height;
-  const isTablet = smallerAxisSize >= 600;
-  const appBarHeight = Platform.OS === 'ios' ? (isLandscape ? 32 : 44) : 56;
-  // Use MD v3 drawer container width for phones greater 412
-  const isMDV3AndroidDrawerWidth = Platform.OS === 'android' && width >= 412;
-  const maxWidth = isMDV3AndroidDrawerWidth ? 360 : isTablet ? 320 : 280;
-
-  return Math.min(smallerAxisSize - appBarHeight, maxWidth);
-};
+const DRAWER_WIDTH = 360;
 
 const GestureHandlerWrapper = GestureHandlerRootView ?? View;
 
@@ -301,31 +280,9 @@ function DrawerViewBase({
         drawerPosition={drawerPosition}
         drawerStyle={[
           {
-            width: getDefaultDrawerWidth(dimensions),
+            width: DRAWER_WIDTH,
             backgroundColor: colors.card,
           },
-          drawerType === 'permanent' &&
-            (drawerPosition === 'left'
-              ? {
-                  borderRightColor: colors.border,
-                  borderRightWidth: StyleSheet.hairlineWidth,
-                  ...Platform.select({
-                    android: {
-                      borderTopRightRadius: 16,
-                      borderBottomRightRadius: 16,
-                    },
-                  }),
-                }
-              : {
-                  borderLeftColor: colors.border,
-                  borderLeftWidth: StyleSheet.hairlineWidth,
-                  ...Platform.select({
-                    android: {
-                      borderTopLeftRadius: 16,
-                      borderBottomLeftRadius: 16,
-                    },
-                  }),
-                }),
           drawerStyle,
         ]}
         overlayStyle={{ backgroundColor: overlayColor }}

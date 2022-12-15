@@ -146,6 +146,8 @@ const LinkPressable = ({
   }
 };
 
+const DRAWER_ITEM_HEIGHT = 56;
+
 /**
  * A component used to show an action item with an icon and a label in a navigation drawer.
  */
@@ -171,9 +173,9 @@ export default function DrawerItem(props: Props) {
     ...rest
   } = props;
 
-  // border-radius for android is calculated using the drawer item height / 2 to get perfect round edges
-  const { borderRadius = Platform.OS === 'android' ? 56 / 2 : 4 } =
-    StyleSheet.flatten(style || {});
+  const { borderRadius = DRAWER_ITEM_HEIGHT / 2 } = StyleSheet.flatten(
+    style || {}
+  );
   const color = focused ? activeTintColor : inactiveTintColor;
   const backgroundColor = focused
     ? activeBackgroundColor
@@ -203,11 +205,7 @@ export default function DrawerItem(props: Props) {
             style={[
               styles.label,
               {
-                marginLeft: iconNode
-                  ? Platform.OS === 'android'
-                    ? 12
-                    : 32
-                  : 0,
+                marginLeft: iconNode ? 12 : 0,
               },
             ]}
           >
@@ -237,27 +235,17 @@ export default function DrawerItem(props: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 10,
+    marginHorizontal: 16,
     marginVertical: 4,
     overflow: 'hidden',
-    ...Platform.select({
-      android: {
-        height: 56,
-        marginHorizontal: 16,
-      },
-    }),
+    height: DRAWER_ITEM_HEIGHT,
   },
   wrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 8,
-    ...Platform.select({
-      android: {
-        height: '100%',
-        paddingVertical: 0,
-        paddingHorizontal: 16,
-      },
-    }),
+    height: '100%',
+    paddingVertical: 0,
+    paddingHorizontal: 16,
   },
   label: {
     marginRight: 32,
