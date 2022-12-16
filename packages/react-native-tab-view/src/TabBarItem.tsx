@@ -244,6 +244,7 @@ const TabBarItemInternal = <T extends Route>({
       pressColor={pressColor}
       pressOpacity={pressOpacity}
       delayPressIn={0}
+      unstable_pressDelay={0}
       onLayout={onLayout}
       onPress={onPress}
       onLongPress={onLongPress}
