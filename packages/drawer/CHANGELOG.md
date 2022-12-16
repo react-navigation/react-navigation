@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.5.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.5.5...@react-navigation/drawer@6.5.6) (2022-12-16)
+
+### Bug Fixes
+
+* fix drawer toggle race condition ([#11036](https://github.com/react-navigation/react-navigation/issues/11036)) ([388b02f](https://github.com/react-navigation/react-navigation/commit/388b02f2f7cad3e7d25d439a115ea9f506bb7fc0)) - by @ricmatsui
+
 ## [6.5.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.5.4...@react-navigation/drawer@6.5.5) (2022-12-12)
 
 ### Bug Fixes
