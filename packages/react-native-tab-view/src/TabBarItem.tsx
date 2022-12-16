@@ -1,3 +1,4 @@
+import { PlatformPressable } from '@react-navigation/elements';
 import * as React from 'react';
 import {
   Animated,
@@ -10,7 +11,6 @@ import {
 } from 'react-native';
 import useLatestCallback from 'use-latest-callback';
 
-import PlatformPressable from './PlatformPressable';
 import type { NavigationState, Route, Scene } from './types';
 
 export type Props<T extends Route> = {
@@ -243,8 +243,6 @@ const TabBarItemInternal = <T extends Route>({
       accessibilityStates={isFocused ? ['selected'] : []}
       pressColor={pressColor}
       pressOpacity={pressOpacity}
-      delayPressIn={0}
-      unstable_pressDelay={0}
       onLayout={onLayout}
       onPress={onPress}
       onLongPress={onLongPress}
