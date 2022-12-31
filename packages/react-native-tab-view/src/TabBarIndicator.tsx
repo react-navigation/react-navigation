@@ -3,7 +3,6 @@ import {
   Animated,
   Easing,
   I18nManager,
-  Platform,
   StyleProp,
   StyleSheet,
   ViewStyle,
@@ -127,9 +126,7 @@ export default function TabBarIndicator<T extends Route>({
         { width: width === 'auto' ? 1 : width },
         // If layout is not available, use `left` property for positioning the indicator
         // This avoids rendering delay until we are able to calculate translateX
-        // If platform is macos use `left` property as `transform` is broken at the moment.
-        // See: https://github.com/microsoft/react-native-macos/issues/280
-        layout.width && Platform.OS !== 'macos'
+        layout.width
           ? { left: 0 }
           : { left: `${(100 / routes.length) * navigationState.index}%` },
         { transform },
