@@ -55,7 +55,14 @@ export default function MaterialTopTabView({
           target: state.key,
         })
       }
-      renderScene={({ route }) => descriptors[route.key].render()}
+      renderScene={({ route }) => {
+        const {
+          options: { wrapper: Wrapper },
+          render,
+        } = descriptors[route.key];
+
+        return Wrapper ? <Wrapper>{render()}</Wrapper> : render();
+      }}
       navigationState={state}
       renderTabBar={renderTabBar}
       renderLazyPlaceholder={({ route }) =>

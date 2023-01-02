@@ -87,6 +87,11 @@ export type MaterialBottomTabNavigationOptions = {
    * ID to locate this tab button in tests.
    */
   tabBarTestID?: string;
+
+  /**
+   * A component to wrap the screen content with, useful for suspense and error boundaries.
+   */
+  wrapper?: (props: { children: React.ReactNode }) => JSX.Element;
 };
 
 export type MaterialBottomTabDescriptor = Descriptor<
@@ -114,5 +119,6 @@ export type MaterialBottomTabNavigationConfig = Partial<
     | 'getColor'
     | 'getLabelText'
     | 'getTestID'
+    | 'wrapper'
   >
 >;

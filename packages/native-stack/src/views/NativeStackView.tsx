@@ -75,6 +75,7 @@ export default function NativeStackView({ state, descriptors }: Props) {
             headerBackTitle,
             presentation,
             contentStyle,
+            wrapper: Wrapper,
           } = options;
 
           const nextPresentation = nextDescriptor?.options.presentation;
@@ -169,7 +170,7 @@ export default function NativeStackView({ state, descriptors }: Props) {
             >
               <HeaderBackContext.Provider value={headerBack}>
                 <View style={[styles.contentContainer, contentStyle]}>
-                  {render()}
+                  {Wrapper ? <Wrapper>{render()}</Wrapper> : render()}
                 </View>
               </HeaderBackContext.Provider>
             </Screen>

@@ -246,6 +246,7 @@ function DrawerViewBase({
             headerStatusBarHeight,
             headerTransparent,
             sceneContainerStyle,
+            wrapper: Wrapper,
           } = descriptor.options;
 
           return (
@@ -272,7 +273,11 @@ function DrawerViewBase({
                 })}
                 style={sceneContainerStyle}
               >
-                {descriptor.render()}
+                {Wrapper ? (
+                  <Wrapper>{descriptor.render()}</Wrapper>
+                ) : (
+                  descriptor.render()
+                )}
               </Screen>
             </MaybeScreen>
           );

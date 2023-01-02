@@ -254,6 +254,11 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    * Only supported on iOS and Android.
    */
   freezeOnBlur?: boolean;
+
+  /**
+   * A component to wrap the screen content with, useful for suspense and error boundaries.
+   */
+  wrapper?: (props: { children: React.ReactNode }) => JSX.Element;
 };
 
 export type BottomTabDescriptor = Descriptor<

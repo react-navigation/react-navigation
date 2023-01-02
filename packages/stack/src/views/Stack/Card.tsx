@@ -65,6 +65,7 @@ type Props = ViewProps & {
   styleInterpolator: StackCardStyleInterpolator;
   containerStyle?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
+  wrapper?: (props: { children: React.ReactNode }) => JSX.Element;
 };
 
 const GESTURE_VELOCITY_IMPACT = 0.3;
@@ -446,6 +447,7 @@ export default class Card extends React.Component<Props> {
       children,
       containerStyle: customContainerStyle,
       contentStyle,
+      wrapper: Wrapper,
       ...rest
     } = this.props;
 
@@ -560,7 +562,7 @@ export default class Card extends React.Component<Props> {
                   layout={layout}
                   style={contentStyle}
                 >
-                  {children}
+                  {Wrapper ? <Wrapper>{children}</Wrapper> : children}
                 </CardSheet>
               </Animated.View>
             </PanGestureHandler>

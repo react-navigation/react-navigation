@@ -245,6 +245,10 @@ export type MaterialTopTabNavigationOptions = {
    * By default, this renders `null`.
    */
   lazyPlaceholder?: () => React.ReactNode;
+  /**
+   * A component to wrap the screen content with, useful for suspense and error boundaries.
+   */
+  wrapper?: (props: { children: React.ReactNode }) => JSX.Element;
 };
 
 export type MaterialTopTabDescriptor = Descriptor<
@@ -277,6 +281,10 @@ export type MaterialTopTabNavigationConfig = Omit<
    * Function that returns a React element to display as the tab bar.
    */
   tabBar?: (props: MaterialTopTabBarProps) => React.ReactNode;
+  /**
+   * A component to wrap the screen content with, useful for suspense and error boundaries.
+   */
+  wrapper?: (props: { children: React.ReactNode }) => JSX.Element;
 };
 
 export type MaterialTopTabBarProps = SceneRendererProps & {

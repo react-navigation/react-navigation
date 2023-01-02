@@ -198,6 +198,7 @@ function CardContainer({
     headerMode,
     headerShown,
     transitionSpec,
+    wrapper,
   } = scene.descriptor.options;
 
   const previousScene = getPreviousScene({ route: scene.descriptor.route });
@@ -244,6 +245,7 @@ function CardContainer({
       pointerEvents={active ? 'box-none' : pointerEvents}
       pageOverflowEnabled={headerMode !== 'float' && presentation !== 'modal'}
       headerDarkContent={headerDarkContent}
+      wrapper={wrapper}
       containerStyle={
         hasAbsoluteFloatHeader && headerMode !== 'screen'
           ? { marginTop: headerHeight }
