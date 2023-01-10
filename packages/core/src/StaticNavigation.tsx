@@ -1,15 +1,6 @@
-import type React from 'react';
+import * as React from 'react';
 
 import type { NavigatorScreenParams } from './types';
-
-type StaticNavigation<
-  Navigator extends React.ComponentType<any>,
-  Screen extends React.ComponentType<any>
-> = {
-  Navigator: Navigator;
-  Screen: Screen;
-  config: StaticConfig<Navigator, Screen>;
-};
 
 type ComponentForOption<T> = T extends { component: React.ComponentType<any> }
   ? T['component']
@@ -59,3 +50,58 @@ export type StaticScreenProps<T extends Record<string, unknown> | undefined> = {
 export type StaticParamList<
   T extends { readonly config: StaticConfig<any, any> }
 > = ParamListForScreens<T['config']['screens']>;
+
+export type StaticNavigation<
+  Navigator extends React.ComponentType<any>,
+  Screen extends React.ComponentType<any>
+> = {
+  Navigator: Navigator;
+  Screen: Screen;
+  config: StaticConfig<Navigator, Screen>;
+};
+
+const MemoizedScreen = React.memo(
+  <T extends { component: React.ComponentType<any>; route: any }>({
+    component,
+    ...rest
+  }: T) => {
+    return React.createElement(component, rest);
+  }
+);
+
+export function createComponentForStaticNavigation(
+  tree: StaticNavigation<any, any>
+) {
+  const { Navigator, Screen, config } = tree;
+  const { screens, ...rest } = config;
+
+  const children = Object.entries(screens).map(([name, screen]) => {
+    let component: React.ComponentType<any>;
+    let props: {};
+
+    if (typeof screen === 'function') {
+      component = screen;
+      props = {};
+    } else if ('component' in screen) {
+      const { component: screenComponent, ...rest } = screen;
+
+      component = screenComponent;
+      props = rest;
+    } else {
+      component = createComponentForStaticNavigation(screen);
+      props = {};
+    }
+
+    return (
+      <Screen key={name} name={name} {...props}>
+        {({ route }: any) => (
+          <MemoizedScreen component={component} route={route} />
+        )}
+      </Screen>
+    );
+  });
+
+  return function NavigatorComponent() {
+    return <Navigator {...rest}>{children}</Navigator>;
+  };
+}

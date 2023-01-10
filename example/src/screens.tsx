@@ -18,6 +18,7 @@ import SimpleStack from './Screens/SimpleStack';
 import StackHeaderCustomization from './Screens/StackHeaderCustomization';
 import StackPreventRemove from './Screens/StackPreventRemove';
 import StackTransparent from './Screens/StackTransparent';
+import StaticScreen from './Screens/Static';
 import TabView from './Screens/TabView';
 
 export type RootDrawerParamList = {
@@ -105,6 +106,10 @@ export const SCREENS = {
   DrawerView: {
     title: 'DrawerView',
     component: DrawerView,
+  },
+  Static: {
+    title: 'Static config',
+    component: StaticScreen,
   },
 };
 

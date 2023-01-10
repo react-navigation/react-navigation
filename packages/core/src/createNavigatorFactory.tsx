@@ -1,9 +1,9 @@
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import type * as React from 'react';
 
-import type { StaticConfig } from './createStaticNavigation';
 import Group from './Group';
 import Screen from './Screen';
+import type { StaticConfig } from './StaticNavigation';
 import type { EventMapBase, TypedNavigator } from './types';
 
 /**
@@ -30,7 +30,7 @@ export default function createNavigatorFactory<
   // eslint-disable-next-line no-redeclare
   function createNavigator<
     ParamList extends ParamListBase,
-    Config extends StaticConfig<any, any>
+    Config extends StaticConfig<typeof Navigator, typeof Screen>
   >(
     config: Config
   ): TypedNavigator<
@@ -48,6 +48,7 @@ export default function createNavigatorFactory<
         Navigator,
         Screen,
         Group,
+        config,
       };
     }
 
@@ -55,7 +56,6 @@ export default function createNavigatorFactory<
       Navigator,
       Screen,
       Group,
-      config,
     };
   }
 

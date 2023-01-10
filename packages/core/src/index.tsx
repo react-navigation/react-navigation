@@ -1,7 +1,6 @@
 export { default as BaseNavigationContainer } from './BaseNavigationContainer';
 export { default as createNavigationContainerRef } from './createNavigationContainerRef';
 export { default as createNavigatorFactory } from './createNavigatorFactory';
-export { StaticParamList, StaticScreenProps } from './createStaticNavigation';
 export { default as CurrentRenderContext } from './CurrentRenderContext';
 export { default as findFocusedRoute } from './findFocusedRoute';
 export { default as getActionFromState } from './getActionFromState';
@@ -15,6 +14,12 @@ export { default as NavigationIndependentTree } from './NavigationIndependentTre
 export { default as NavigationRouteContext } from './NavigationRouteContext';
 export { default as PreventRemoveContext } from './PreventRemoveContext';
 export { default as PreventRemoveProvider } from './PreventRemoveProvider';
+export {
+  createComponentForStaticNavigation,
+  StaticNavigation,
+  StaticParamList,
+  StaticScreenProps,
+} from './StaticNavigation';
 export * from './types';
 export { default as useFocusEffect } from './useFocusEffect';
 export { default as useIsFocused } from './useIsFocused';

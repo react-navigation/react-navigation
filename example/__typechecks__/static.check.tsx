@@ -1,5 +1,3 @@
-import 'react-native-gesture-handler';
-
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import type {
   NavigationProp,
@@ -10,7 +8,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
 
 const HomeTabs = createBottomTabNavigator({
-  initialRouteName: 'First',
   screens: {
     Groups: () => null,
     Chat: (_: StaticScreenProps<{ id: number }>) => null,
@@ -18,7 +15,6 @@ const HomeTabs = createBottomTabNavigator({
 });
 
 const RootStack = createStackNavigator({
-  initialRouteName: 'Home',
   screens: {
     Home: HomeTabs,
     Profile: (_: StaticScreenProps<{ user: string }>) => null,
@@ -92,3 +88,28 @@ navigation.navigate('Home', { screen: 'Groups', params: { id: '123' } });
 
 // @ts-expect-error
 navigation.navigate('Home', { screen: 'Chat' });
+
+/**
+ * Infer navigator config options
+ */
+createBottomTabNavigator({
+  backBehavior: 'initialRoute',
+  screenOptions: {
+    tabBarActiveTintColor: 'tomato',
+  },
+  screens: {},
+});
+
+createBottomTabNavigator({
+  // @ts-expect-error
+  backBehavior: 'unsupported',
+  screens: {},
+});
+
+createBottomTabNavigator({
+  screenOptions: {
+    // @ts-expect-error
+    tabBarActiveTintColor: 42,
+  },
+  screens: {},
+});
