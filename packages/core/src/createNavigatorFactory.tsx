@@ -30,7 +30,13 @@ export default function createNavigatorFactory<
   // eslint-disable-next-line no-redeclare
   function createNavigator<
     ParamList extends ParamListBase,
-    Config extends StaticConfig<typeof Navigator, typeof Screen>
+    Config extends StaticConfig<
+      ParamList,
+      State,
+      ScreenOptions,
+      EventMap,
+      typeof Navigator
+    >
   >(
     config: Config
   ): TypedNavigator<

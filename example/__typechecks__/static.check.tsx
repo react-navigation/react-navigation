@@ -113,3 +113,29 @@ createBottomTabNavigator({
   },
   screens: {},
 });
+
+/**
+ * Infer screen  options
+ */
+createBottomTabNavigator({
+  screens: {
+    Test: {
+      component: () => null,
+      options: {
+        tabBarActiveTintColor: 'tomato',
+      },
+    },
+  },
+});
+
+createBottomTabNavigator({
+  screens: {
+    Test: {
+      component: () => null,
+      options: {
+        // @ts-expect-error
+        tabBarActiveTintColor: 42,
+      },
+    },
+  },
+});

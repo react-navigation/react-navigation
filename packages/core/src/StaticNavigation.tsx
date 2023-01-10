@@ -1,6 +1,12 @@
+import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
 
-import type { NavigatorScreenParams } from './types';
+import type {
+  DefaultNavigatorOptions,
+  EventMapBase,
+  NavigatorScreenParams,
+  RouteConfig,
+} from './types';
 
 type ComponentForOption<T> = T extends { component: React.ComponentType<any> }
   ? T['component']
@@ -10,34 +16,52 @@ type ComponentForOption<T> = T extends { component: React.ComponentType<any> }
 
 type UnknownToUndefined<T> = unknown extends T ? undefined : T;
 
-type ParamsForScreen<T> = T extends StaticNavigation<any, any>
+type ParamsForScreen<T> = T extends { navigator: StaticNavigation<any, any> }
+  ? NavigatorScreenParams<StaticParamList<T['navigator']>> | undefined
+  : T extends StaticNavigation<any, any>
   ? NavigatorScreenParams<StaticParamList<T>> | undefined
   : UnknownToUndefined<
       React.ComponentProps<ComponentForOption<T>>['route']['params']
     >;
 
-type ParamListForScreens<Screens extends StaticConfig<any, any>['screens']> = {
+type ParamListForScreens<
+  Screens extends StaticConfig<any, any, any, any, any>['screens']
+> = {
   [Key in keyof Screens]: ParamsForScreen<Screens[Key]>;
 };
 
-type ScreenConfig<T extends React.ComponentType<any>> = Omit<
-  React.ComponentProps<T>,
-  'name' | 'component' | 'children'
-> & {
-  component: React.ComponentType<any>;
-  path?: string;
-};
-
 export type StaticConfig<
-  Navigator extends React.ComponentType<any>,
-  Screen extends React.ComponentType<any>
-> = Omit<React.ComponentProps<Navigator>, 'screens' | 'children'> & {
+  ParamList extends ParamListBase,
+  State extends NavigationState,
+  ScreenOptions extends {},
+  EventMap extends EventMapBase,
+  Navigator extends React.ComponentType<any>
+> = Omit<
+  Omit<
+    React.ComponentProps<Navigator>,
+    keyof DefaultNavigatorOptions<any, any, any, any>
+  > &
+    DefaultNavigatorOptions<ParamList, State, ScreenOptions, EventMap>,
+  'screens' | 'children'
+> & {
   screens: {
     [key: string]:
       | React.ComponentType<any>
-      | ScreenConfig<Screen>
-      // TODO: make this a property rather than direct child
-      | StaticNavigation<any, any>;
+      | StaticNavigation<any, any>
+      | ((Omit<
+          RouteConfig<
+            ParamList,
+            keyof ParamList,
+            State,
+            ScreenOptions,
+            EventMap
+          >,
+          'name' | 'component' | 'getComponent' | 'children'
+        > & { path?: string }) &
+          (
+            | { component: React.ComponentType<any> }
+            | { navigator: StaticNavigation<any, any> }
+          ));
   };
 };
 
@@ -48,7 +72,7 @@ export type StaticScreenProps<T extends Record<string, unknown> | undefined> = {
 };
 
 export type StaticParamList<
-  T extends { readonly config: StaticConfig<any, any> }
+  T extends { readonly config: StaticConfig<any, any, any, any, any> }
 > = ParamListForScreens<T['config']['screens']>;
 
 export type StaticNavigation<
@@ -57,7 +81,7 @@ export type StaticNavigation<
 > = {
   Navigator: Navigator;
   Screen: Screen;
-  config: StaticConfig<Navigator, Screen>;
+  config: StaticConfig<any, any, any, any, any>;
 };
 
 const MemoizedScreen = React.memo(
@@ -76,26 +100,35 @@ export function createComponentForStaticNavigation(
   const { screens, ...rest } = config;
 
   const children = Object.entries(screens).map(([name, screen]) => {
-    let component: React.ComponentType<any>;
-    let props: {};
+    let component: React.ComponentType<any> | undefined;
+    let props: {} = {};
 
-    if (typeof screen === 'function') {
-      component = screen;
-      props = {};
-    } else if ('component' in screen) {
+    if ('component' in screen) {
       const { component: screenComponent, ...rest } = screen;
 
       component = screenComponent;
       props = rest;
-    } else {
+    } else if ('navigator' in screen) {
+      const { navigator, ...rest } = screen;
+
+      component = createComponentForStaticNavigation(navigator);
+      props = rest;
+    } else if (typeof screen === 'function') {
+      component = screen;
+    } else if ('config' in screen) {
       component = createComponentForStaticNavigation(screen);
-      props = {};
+    }
+
+    if (component == null) {
+      throw new Error(
+        `Couldn't find a 'component' or 'navigator' property for the screen '${name}'. This can happen if you passed 'undefined'. You likely forgot to export your component from the file it's defined in, or mixed up default import and named import when importing.`
+      );
     }
 
     return (
       <Screen key={name} name={name} {...props}>
         {({ route }: any) => (
-          <MemoizedScreen component={component} route={route} />
+          <MemoizedScreen component={component!} route={route} />
         )}
       </Screen>
     );
