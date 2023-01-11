@@ -84,15 +84,6 @@ export type StaticNavigation<
   config: StaticConfig<any, any, any, any, any>;
 };
 
-const MemoizedScreen = React.memo(
-  <T extends { component: React.ComponentType<any>; route: any }>({
-    component,
-    ...rest
-  }: T) => {
-    return React.createElement(component, rest);
-  }
-);
-
 export function createComponentForStaticNavigation(
   tree: StaticNavigation<any, any>
 ) {
@@ -124,6 +115,17 @@ export function createComponentForStaticNavigation(
         `Couldn't find a 'component' or 'navigator' property for the screen '${name}'. This can happen if you passed 'undefined'. You likely forgot to export your component from the file it's defined in, or mixed up default import and named import when importing.`
       );
     }
+
+    const MemoizedScreen = React.memo(
+      <T extends { component: React.ComponentType<any>; route: any }>({
+        component,
+        ...rest
+      }: T) => {
+        return React.createElement(component, rest);
+      }
+    );
+
+    MemoizedScreen.displayName = `Screen(${name})`;
 
     return (
       <Screen key={name} name={name} {...props}>
