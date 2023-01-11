@@ -16,6 +16,7 @@ export { default as PreventRemoveContext } from './PreventRemoveContext';
 export { default as PreventRemoveProvider } from './PreventRemoveProvider';
 export {
   createComponentForStaticNavigation,
+  createPathConfigForStaticNavigation,
   StaticNavigation,
   StaticParamList,
   StaticScreenProps,

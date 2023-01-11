@@ -1,12 +1,16 @@
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
 
+import fromEntries from './fromEntries';
 import type {
   DefaultNavigatorOptions,
   EventMapBase,
   NavigatorScreenParams,
+  PathConfig,
   RouteConfig,
 } from './types';
+
+type FlatType<T> = T extends object ? { [K in keyof T]: T[K] } : T;
 
 type ComponentForOption<T> = T extends { component: React.ComponentType<any> }
   ? T['component']
@@ -57,7 +61,16 @@ export type StaticConfig<
             EventMap
           >,
           'name' | 'component' | 'getComponent' | 'children'
-        > & { path?: string }) &
+        > & {
+          linking?:
+            | FlatType<
+                Pick<
+                  PathConfig<ParamListBase>,
+                  'path' | 'exact' | 'parse' | 'stringify'
+                >
+              >
+            | string;
+        }) &
           (
             | { component: React.ComponentType<any> }
             | { navigator: StaticNavigation<any, any> }
@@ -75,12 +88,9 @@ export type StaticParamList<
   T extends { readonly config: StaticConfig<any, any, any, any, any> }
 > = ParamListForScreens<T['config']['screens']>;
 
-export type StaticNavigation<
-  Navigator extends React.ComponentType<any>,
-  Screen extends React.ComponentType<any>
-> = {
-  Navigator: Navigator;
-  Screen: Screen;
+export type StaticNavigation<NavigatorProps, ScreenProps> = {
+  Navigator: React.ComponentType<NavigatorProps>;
+  Screen: React.ComponentType<ScreenProps>;
   config: StaticConfig<any, any, any, any, any>;
 };
 
@@ -139,4 +149,36 @@ export function createComponentForStaticNavigation(
   return function NavigatorComponent() {
     return <Navigator {...rest}>{children}</Navigator>;
   };
+}
+
+export function createPathConfigForStaticNavigation(
+  screens: StaticConfig<any, any, any, any, any>['screens']
+) {
+  return fromEntries(
+    Object.entries(screens)
+      .map(([key, screen]) => {
+        const screenConfig: PathConfig<ParamListBase> = {};
+
+        if ('linking' in screen) {
+          if (typeof screen.linking === 'string') {
+            screenConfig.path = screen.linking;
+          } else {
+            Object.assign(screenConfig, screen.linking);
+          }
+        }
+
+        if ('config' in screen) {
+          screenConfig.screens = createPathConfigForStaticNavigation(
+            screen.config.screens
+          );
+        } else if ('navigator' in screen && screen.navigator.config.screens) {
+          screenConfig.screens = createPathConfigForStaticNavigation(
+            screen.navigator.config.screens
+          );
+        }
+
+        return [key, screenConfig] as const;
+      })
+      .filter(([, screen]) => Object.keys(screen).length > 0)
+  );
 }
