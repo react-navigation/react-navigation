@@ -540,6 +540,11 @@ export type RouteGroupConfig<
   ScreenOptions extends {}
 > = {
   /**
+   * Optional name for the group.
+   */
+  name?: string;
+
+  /**
    * Optional key for the screens in this group.
    * If the key changes, all existing screens in this group will be removed or reset.
    */
