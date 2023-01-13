@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.3.12...@react-navigation/elements@1.3.13) (2023-01-10)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [1.3.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.3.11...@react-navigation/elements@1.3.12) (2022-12-16)
+
+### Bug Fixes
+
+* allow complex children in HeaderTitle ([#11100](https://github.com/react-navigation/react-navigation/issues/11100)) ([260e35d](https://github.com/react-navigation/react-navigation/commit/260e35d4a1ef5ad182af35ef7696430ac48b6657)) - by @vonovak
+
 ## [1.3.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.3.10...@react-navigation/elements@1.3.11) (2022-12-12)
 
 **Note:** Version bump only for package @react-navigation/elements
