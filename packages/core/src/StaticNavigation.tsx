@@ -34,6 +34,8 @@ type ParamListForScreens<
   [Key in keyof Screens]: ParamsForScreen<Screens[Key]>;
 };
 
+type LayoutComponent = React.ComponentType<{ children: React.ReactNode }>;
+
 export type StaticConfig<
   ParamList extends ParamListBase,
   State extends NavigationState,
@@ -73,7 +75,10 @@ export type StaticConfig<
         }) &
           (
             | { component: React.ComponentType<any> }
-            | { navigator: StaticNavigation<any, any> }
+            | {
+                navigator: StaticNavigation<any, any>;
+                layout?: LayoutComponent;
+              }
           ));
   };
 };
@@ -102,6 +107,7 @@ export function createComponentForStaticNavigation(
 
   const children = Object.entries(screens).map(([name, screen]) => {
     let component: React.ComponentType<any> | undefined;
+    let layout: React.ComponentType<any> | undefined;
     let props: {} = {};
 
     if ('component' in screen) {
@@ -110,9 +116,10 @@ export function createComponentForStaticNavigation(
       component = screenComponent;
       props = rest;
     } else if ('navigator' in screen) {
-      const { navigator, ...rest } = screen;
+      const { navigator, layout: _layout, ...rest } = screen;
 
       component = createComponentForStaticNavigation(navigator);
+      layout = _layout;
       props = rest;
     } else if (typeof screen === 'function') {
       component = screen;
@@ -127,11 +134,24 @@ export function createComponentForStaticNavigation(
     }
 
     const MemoizedScreen = React.memo(
-      <T extends { component: React.ComponentType<any>; route: any }>({
+      <
+        T extends {
+          component: React.ComponentType<any>;
+          layout?: LayoutComponent;
+          route: any;
+        }
+      >({
         component,
+        layout,
         ...rest
       }: T) => {
-        return React.createElement(component, rest);
+        const children = React.createElement(component, rest);
+
+        if (layout) {
+          return React.createElement(layout, { children });
+        }
+
+        return children;
       }
     );
 
@@ -140,7 +160,11 @@ export function createComponentForStaticNavigation(
     return (
       <Screen key={name} name={name} {...props}>
         {({ route }: any) => (
-          <MemoizedScreen component={component!} route={route} />
+          <MemoizedScreen
+            component={component!}
+            route={route}
+            layout={layout}
+          />
         )}
       </Screen>
     );
