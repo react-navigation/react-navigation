@@ -8,6 +8,7 @@ import type {
   NavigatorScreenParams,
   PathConfig,
   RouteConfig,
+  RouteProp,
 } from './types';
 
 type FlatType<T> = T extends object ? { [K in keyof T]: T[K] } : T;
@@ -29,58 +30,69 @@ type ParamsForScreen<T> = T extends { navigator: StaticNavigation<any, any> }
     >;
 
 type ParamListForScreens<
-  Screens extends StaticConfig<any, any, any, any, any>['screens']
+  Screens extends StaticConfigScreens<
+    ParamListBase,
+    NavigationState,
+    {},
+    EventMapBase
+  >
 > = {
   [Key in keyof Screens]: ParamsForScreen<Screens[Key]>;
 };
 
 type LayoutComponent = React.ComponentType<{ children: React.ReactNode }>;
 
+type StaticConfigScreens<
+  ParamList extends ParamListBase,
+  State extends NavigationState,
+  ScreenOptions extends {},
+  EventMap extends EventMapBase
+> = {
+  [key: string]:
+    | React.ComponentType<any>
+    | StaticNavigation<any, any>
+    | ((Omit<
+        RouteConfig<ParamList, keyof ParamList, State, ScreenOptions, EventMap>,
+        'name' | 'component' | 'getComponent' | 'children'
+      > & {
+        linking?:
+          | FlatType<
+              Pick<
+                PathConfig<ParamListBase>,
+                'path' | 'exact' | 'parse' | 'stringify'
+              >
+            >
+          | string;
+      }) &
+        (
+          | { component: React.ComponentType<any> }
+          | {
+              navigator: StaticNavigation<any, any>;
+              layout?: LayoutComponent;
+            }
+        ));
+};
+
 export type StaticConfig<
   ParamList extends ParamListBase,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
-  Navigator extends React.ComponentType<any>
+  Navigator extends React.ComponentType<{}>
 > = Omit<
   Omit<
     React.ComponentProps<Navigator>,
-    keyof DefaultNavigatorOptions<any, any, any, any>
+    keyof DefaultNavigatorOptions<
+      ParamListBase,
+      NavigationState,
+      {},
+      EventMapBase
+    >
   > &
     DefaultNavigatorOptions<ParamList, State, ScreenOptions, EventMap>,
   'screens' | 'children'
 > & {
-  screens: {
-    [key: string]:
-      | React.ComponentType<any>
-      | StaticNavigation<any, any>
-      | ((Omit<
-          RouteConfig<
-            ParamList,
-            keyof ParamList,
-            State,
-            ScreenOptions,
-            EventMap
-          >,
-          'name' | 'component' | 'getComponent' | 'children'
-        > & {
-          linking?:
-            | FlatType<
-                Pick<
-                  PathConfig<ParamListBase>,
-                  'path' | 'exact' | 'parse' | 'stringify'
-                >
-              >
-            | string;
-        }) &
-          (
-            | { component: React.ComponentType<any> }
-            | {
-                navigator: StaticNavigation<any, any>;
-                layout?: LayoutComponent;
-              }
-          ));
-  };
+  screens: StaticConfigScreens<ParamList, State, ScreenOptions, EventMap>;
 };
 
 export type StaticScreenProps<T extends Record<string, unknown> | undefined> = {
@@ -90,13 +102,28 @@ export type StaticScreenProps<T extends Record<string, unknown> | undefined> = {
 };
 
 export type StaticParamList<
-  T extends { readonly config: StaticConfig<any, any, any, any, any> }
+  T extends {
+    readonly config: {
+      readonly screens: StaticConfigScreens<
+        ParamListBase,
+        NavigationState,
+        {},
+        EventMapBase
+      >;
+    };
+  }
 > = ParamListForScreens<T['config']['screens']>;
 
 export type StaticNavigation<NavigatorProps, ScreenProps> = {
   Navigator: React.ComponentType<NavigatorProps>;
   Screen: React.ComponentType<ScreenProps>;
-  config: StaticConfig<any, any, any, any, any>;
+  config: StaticConfig<
+    ParamListBase,
+    NavigationState,
+    {},
+    EventMapBase,
+    React.ComponentType<any>
+  >;
 };
 
 export function createComponentForStaticNavigation(
@@ -107,7 +134,7 @@ export function createComponentForStaticNavigation(
 
   const children = Object.entries(screens).map(([name, screen]) => {
     let component: React.ComponentType<any> | undefined;
-    let layout: React.ComponentType<any> | undefined;
+    let layout: LayoutComponent | undefined;
     let props: {} = {};
 
     if ('component' in screen) {
@@ -138,7 +165,7 @@ export function createComponentForStaticNavigation(
         T extends {
           component: React.ComponentType<any>;
           layout?: LayoutComponent;
-          route: any;
+          route: RouteProp<ParamListBase>;
         }
       >({
         component,
@@ -176,7 +203,7 @@ export function createComponentForStaticNavigation(
 }
 
 export function createPathConfigForStaticNavigation(
-  screens: StaticConfig<any, any, any, any, any>['screens']
+  screens: StaticConfigScreens<ParamListBase, NavigationState, {}, EventMapBase>
 ) {
   return fromEntries(
     Object.entries(screens)
