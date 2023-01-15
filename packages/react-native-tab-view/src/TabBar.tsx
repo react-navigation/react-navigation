@@ -330,11 +330,14 @@ export default function TabBar<T extends Route>({
   const handleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
 
-    setLayout((layout) =>
-      layout.width === width && layout.height === height
-        ? layout
-        : { width, height }
-    );
+		// empty layouts event might occurs, we do not want to update state in those cases
+		if (height && width) {
+			setLayout((layout) =>
+				layout.width === width && layout.height === height
+					? layout
+					: { width, height }
+			);
+		}
   };
 
   const tabBarWidth = getTabBarWidth({
