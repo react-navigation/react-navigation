@@ -30,29 +30,6 @@ export type StackActionType =
       target?: string;
     }
   | {
-      type: 'RETAIN';
-      payload: { key: string };
-      source?: string;
-      target?: string;
-    }
-  | {
-      type: 'RETAIN_TOP';
-      source?: string;
-      target?: string;
-    }
-  | {
-      type: 'DROP_RETAINED';
-      payload: { key: string };
-      source?: string;
-      target?: string;
-    }
-  | {
-      type: 'RESTORE_RETAINED';
-      payload: { key: string };
-      source?: string;
-      target?: string;
-    }
-  | {
       type: 'POP_TO_TOP';
       source?: string;
       target?: string;
@@ -116,18 +93,6 @@ export const StackActions = {
   },
   popToTop(): StackActionType {
     return { type: 'POP_TO_TOP' };
-  },
-  retain(key: string): StackActionType {
-    return { type: 'RETAIN', payload: { key } };
-  },
-  retainTop(): StackActionType {
-    return { type: 'RETAIN_TOP' };
-  },
-  restoreRetained(key: string): StackActionType {
-    return { type: 'RESTORE_RETAINED', payload: { key } };
-  },
-  dropRetained(key: string): StackActionType {
-    return { type: 'DROP_RETAINED', payload: { key } };
   },
 };
 
@@ -360,17 +325,6 @@ export default function StackRouter(options: StackRouterOptions) {
             const routes = state.routes
               .slice(0, count)
               .concat(state.routes.slice(index + 1));
-            const retained = state.routes
-              .slice(count, index + 1)
-              .filter((route) => route.retainStatus === 'retain');
-            if (retained.length) {
-              routes.unshift(
-                ...retained.map((r) => ({
-                  ...r,
-                  retainStatus: 'hidden' as const,
-                }))
-              );
-            }
 
             return {
               ...state,
@@ -380,61 +334,6 @@ export default function StackRouter(options: StackRouterOptions) {
           }
 
           return null;
-        }
-
-        case 'RESTORE_RETAINED': {
-          const route = state.routes.find(
-            (route) => route.key === action.payload.key
-          );
-          if (!route) {
-            return null;
-          }
-          return {
-            ...state,
-            routes: state.routes
-              .filter((r) => r.key !== route.key)
-              .concat([{ ...route, retainStatus: null }]),
-          };
-        }
-
-        case 'RETAIN_TOP': {
-          return {
-            ...state,
-            routes: state.routes.map((r, i) =>
-              i === state.routes.length - 1
-                ? { ...r, retainStatus: 'retain' }
-                : r
-            ),
-          };
-        }
-
-        case 'RETAIN': {
-          return {
-            ...state,
-            routes: state.routes.map((r) =>
-              r.key === action.payload.key
-                ? { ...r, retainStatus: 'retain' }
-                : r
-            ),
-          };
-        }
-
-        case 'DROP_RETAINED': {
-          const routes = state.routes
-            .map((r) =>
-              r.key === action.payload.key && r.retainStatus === 'retain'
-                ? { ...r, retainStatus: null }
-                : r
-            )
-            .filter(
-              (r) =>
-                !(r.key === action.payload.key && r.retainStatus === 'hidden')
-            );
-          return {
-            ...state,
-            routes,
-            index: routes.length - 1,
-          };
         }
 
         case 'POP_TO_TOP':

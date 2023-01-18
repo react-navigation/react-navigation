@@ -79,31 +79,6 @@ export type Route<
    * Usually present when the screen was opened from a deep link.
    */
   path?: string;
-  /**
-   * Whether to "retain" the route after removal. This means associated native
-   * resources will not be freed, and react events will still fire. This is
-   * used for native picture-in-picture support, where a ViewController needs
-   * to be retained even after it has been dismissed.
-   * This also allows the screen to be restored, when the user taps on the
-   * picture-in-picture window.
-   *
-   * - 'retain': The route is currently visible / in the stack, but will be
-   *   retained even after being dismissed.
-   * - 'hidden': The route has been dismissed from the stack, but resources
-   *   are still retained.
-   * - null: The route is visible / in the stack, and will not be retained
-   *   when dismissed.
-   *
-   * Transitions:
-   * - RETAIN: null -> 'retain'
-   * - DROP_RETAINED: 'hidden' -> (gone), or 'retain' -> null
-   * - RESTORE_RETAINED: 'hidden' -> null
-   * - POP: 'retain' -> 'hidden', or null -> (gone)
-   *
-   * Hidden routes are put at the start of the routes list, and when restored
-   * get returned to the end of the list.
-   */
-  retainStatus?: 'retain' | 'hidden' | null;
 }> &
   (undefined extends Params
     ? Readonly<{
