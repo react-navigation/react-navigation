@@ -19,7 +19,7 @@ type Props = Omit<
 export default function createStaticNavigation(
   tree: StaticNavigation<any, any>
 ) {
-  const Component = createComponentForStaticNavigation(tree);
+  const Component = createComponentForStaticNavigation(tree, 'RootNavigator');
   const linkingConfig = {
     screens: tree.config.screens
       ? createPathConfigForStaticNavigation(tree.config.screens)

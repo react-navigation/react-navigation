@@ -8,8 +8,8 @@ import type {
   NavigatorScreenParams,
   PathConfig,
   RouteConfig,
-  RouteProp,
 } from './types';
+import useRoute from './useRoute';
 
 type FlatType<T> = T extends object ? { [K in keyof T]: T[K] } : T;
 
@@ -55,6 +55,7 @@ type StaticConfigScreens<
         RouteConfig<ParamList, keyof ParamList, State, ScreenOptions, EventMap>,
         'name' | 'component' | 'getComponent' | 'children'
       > & {
+        if?: () => boolean;
         linking?:
           | FlatType<
               Pick<
@@ -126,32 +127,55 @@ export type StaticNavigation<NavigatorProps, ScreenProps> = {
   >;
 };
 
+const MemoizedScreen = React.memo(
+  <T extends React.ComponentType<any>>({ component }: { component: T }) => {
+    const route = useRoute();
+    const children = React.createElement(component, { route });
+
+    return children;
+  }
+);
+
 export function createComponentForStaticNavigation(
-  tree: StaticNavigation<any, any>
+  tree: StaticNavigation<any, any>,
+  displayName: string
 ) {
   const { Navigator, Screen, config } = tree;
   const { screens, ...rest } = config;
 
-  const children = Object.entries(screens).map(([name, screen]) => {
+  const items = Object.entries(screens).map(([name, screen]) => {
     let component: React.ComponentType<any> | undefined;
     let layout: LayoutComponent | undefined;
     let props: {} = {};
+    let useIf: (() => boolean) | undefined;
+
+    let isNavigator = false;
 
     if ('component' in screen) {
-      const { component: screenComponent, ...rest } = screen;
+      const { component: screenComponent, if: _if, ...rest } = screen;
 
+      useIf = _if;
       component = screenComponent;
       props = rest;
     } else if ('navigator' in screen) {
-      const { navigator, layout: _layout, ...rest } = screen;
+      const { navigator, layout: _layout, if: _if, ...rest } = screen;
 
-      component = createComponentForStaticNavigation(navigator);
+      isNavigator = true;
       layout = _layout;
+      useIf = _if;
+      component = createComponentForStaticNavigation(
+        navigator,
+        `${name}Navigator`
+      );
       props = rest;
     } else if (typeof screen === 'function') {
       component = screen;
     } else if ('config' in screen) {
-      component = createComponentForStaticNavigation(screen);
+      isNavigator = true;
+      component = createComponentForStaticNavigation(
+        screen,
+        `${name}Navigator`
+      );
     }
 
     if (component == null) {
@@ -160,46 +184,40 @@ export function createComponentForStaticNavigation(
       );
     }
 
-    const MemoizedScreen = React.memo(
-      <
-        T extends {
-          component: React.ComponentType<any>;
-          layout?: LayoutComponent;
-          route: RouteProp<ParamListBase>;
-        }
-      >({
-        component,
-        layout,
-        ...rest
-      }: T) => {
-        const children = React.createElement(component, rest);
+    let element = isNavigator ? (
+      React.createElement(component, {})
+    ) : (
+      <MemoizedScreen component={component} />
+    );
 
-        if (layout) {
-          return React.createElement(layout, { children });
-        }
+    if (layout) {
+      element = React.createElement(layout, { children: element });
+    }
 
-        return children;
+    return () => {
+      const shouldRender = useIf == null || useIf();
+
+      if (!shouldRender) {
+        return null;
       }
-    );
 
-    MemoizedScreen.displayName = `Screen(${name})`;
-
-    return (
-      <Screen key={name} name={name} {...props}>
-        {({ route }: any) => (
-          <MemoizedScreen
-            component={component!}
-            route={route}
-            layout={layout}
-          />
-        )}
-      </Screen>
-    );
+      return (
+        <Screen key={name} name={name} {...props}>
+          {() => element}
+        </Screen>
+      );
+    };
   });
 
-  return function NavigatorComponent() {
+  const NavigatorComponent = () => {
+    const children = items.map((item) => item());
+
     return <Navigator {...rest}>{children}</Navigator>;
   };
+
+  NavigatorComponent.displayName = displayName;
+
+  return NavigatorComponent;
 }
 
 export function createPathConfigForStaticNavigation(
