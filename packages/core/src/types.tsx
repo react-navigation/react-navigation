@@ -739,11 +739,48 @@ export type NavigatorScreenParams<
     }[keyof ParamList];
 
 export type PathConfig<ParamList extends {}> = {
+  /**
+   * Path string to match against.
+   * e.g. `/users/:id` will match `/users/1` and extract `id` param as `1`.
+   */
   path?: string;
+  /**
+   * Whether the path should be consider parent paths or use the exact path.
+   * By default, paths are relating to the path config on the parent screen.
+   * If `exact` is set to `true`, the parent path configuration is not used.
+   */
   exact?: boolean;
+  /**
+   * An object mapping the param name to a function which parses the param value.
+   *
+   * @example
+   * ```js
+   * parse: {
+   *   id: Number,
+   *   date: (value) => new Date(value)
+   * }
+   * ```
+   */
   parse?: Record<string, (value: string) => any>;
+  /**
+   * An object mapping the param name to a function which converts the param value to a string.
+   * By default, all params are converted to strings using `String(value)`.
+   *
+   * @example
+   * ```js
+   * stringify: {
+   *   date: (value) => value.toISOString()
+   * }
+   * ```
+   */
   stringify?: Record<string, (value: any) => string>;
+  /**
+   * Path configuration for child screens.
+   */
   screens?: PathConfigMap<ParamList>;
+  /**
+   * Name of the initial route to use for the navigator when the path matches.
+   */
   initialRouteName?: keyof ParamList;
 };
 

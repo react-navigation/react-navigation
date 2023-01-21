@@ -13,16 +13,26 @@ type Props = Omit<
   React.ComponentProps<typeof NavigationContainer>,
   'linking' | 'children'
 > & {
+  /**
+   * Options for deep linking.
+   */
   linking?: Omit<LinkingOptions<ParamListBase>, 'config'>;
 };
 
+/**
+ * Create a navigation component from a static navigation config.
+ * The returned component is a wrapper around `NavigationContainer`.
+ *
+ * @param tree Static navigation config.
+ * @returns Navigation component to use in your app.
+ */
 export default function createStaticNavigation(
   tree: StaticNavigation<any, any>
 ) {
   const Component = createComponentForStaticNavigation(tree, 'RootNavigator');
   const linkingConfig = {
     screens: tree.config.screens
-      ? createPathConfigForStaticNavigation(tree.config.screens)
+      ? createPathConfigForStaticNavigation(tree)
       : {},
   };
 

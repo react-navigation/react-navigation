@@ -11,6 +11,9 @@ import type {
 } from './types';
 import useRoute from './useRoute';
 
+/**
+ * Flatten a type recursively to remove all type alias names.
+ */
 type FlatType<T> = T extends object ? { [K in keyof T]: T[K] } : T;
 
 type ComponentForOption<T> = T extends { screen: React.ComponentType<any> }
@@ -55,7 +58,31 @@ type StaticConfigScreens<
         RouteConfig<ParamList, keyof ParamList, State, ScreenOptions, EventMap>,
         'name' | 'component' | 'getComponent' | 'children'
       > & {
+        /**
+         * Callback to determine whether the screen should be rendered or not.
+         * This can be useful for conditional rendering of screens,
+         * e.g. - if you want to render a different screen for logged in users.
+         *
+         * You can use a custom hook to use custom logic to determine the return value.
+         *
+         * @example
+         * ```js
+         * if: useIsLoggedIn
+         * ```
+         */
         if?: () => boolean;
+        /**
+         * Linking config for the screen.
+         * This can be a string to specify the path, or an object with more options.
+         *
+         * @example
+         * ```js
+         * linking: {
+         *   path: 'profile/:id',
+         *   exact: true,
+         * },
+         * ```
+         */
         linking?:
           | FlatType<
               Pick<
@@ -67,10 +94,21 @@ type StaticConfigScreens<
       }) &
         (
           | {
+              /**
+               * Static navigation config for the screen.
+               */
               screen: StaticNavigation<any, any>;
+              /**
+               * Wrapper component to render the navigator in.
+               */
               layout?: LayoutComponent;
             }
-          | { screen: React.ComponentType<any> }
+          | {
+              /**
+               * Component to render for the screen.
+               */
+              screen: React.ComponentType<any>;
+            }
         ));
 };
 
@@ -93,15 +131,25 @@ export type StaticConfig<
     DefaultNavigatorOptions<ParamList, State, ScreenOptions, EventMap>,
   'screens' | 'children'
 > & {
+  /**
+   * Screens to render in the navigator and their configuration.
+   */
   screens: StaticConfigScreens<ParamList, State, ScreenOptions, EventMap>;
 };
 
+/**
+ * Props for a screen component which is rendered by a static navigator.
+ * Takes the route params as a generic argument.
+ */
 export type StaticScreenProps<T extends Record<string, unknown> | undefined> = {
   route: {
     params: T;
   };
 };
 
+/**
+ * Infer the param list from the static navigation config.
+ */
 export type StaticParamList<
   T extends {
     readonly config: {
@@ -136,10 +184,17 @@ const MemoizedScreen = React.memo(
   }
 );
 
+/**
+ * Create a component that renders a navigator based on the static configuration.
+ *
+ * @param tree Static navigation config.
+ * @param displayName Name of the component to be displayed in React DevTools.
+ * @returns A component which renders the navigator.
+ */
 export function createComponentForStaticNavigation(
   tree: StaticNavigation<any, any>,
   displayName: string
-) {
+): React.ComponentType<{}> {
   const { Navigator, Screen, config } = tree;
   const { screens, ...rest } = config;
 
@@ -216,11 +271,35 @@ export function createComponentForStaticNavigation(
   return NavigatorComponent;
 }
 
-export function createPathConfigForStaticNavigation(
-  screens: StaticConfigScreens<ParamListBase, NavigationState, {}, EventMapBase>
-) {
+/**
+ * Create a path config object from a static navigation config for deep linking.
+ *
+ * @param tree Static navigation config.
+ * @returns Path config object to use in linking config.
+ *
+ * @example
+ * ```js
+ * const config = {
+ *   screens: {
+ *     Home: {
+ *       screens: createPathConfigForStaticNavigation(HomeTabs),
+ *     },
+ *   },
+ * };
+ * ```
+ */
+export function createPathConfigForStaticNavigation(tree: {
+  config: {
+    screens: StaticConfigScreens<
+      ParamListBase,
+      NavigationState,
+      {},
+      EventMapBase
+    >;
+  };
+}) {
   return fromEntries(
-    Object.entries(screens)
+    Object.entries(tree.config.screens)
       .map(([key, item]) => {
         const screenConfig: PathConfig<ParamListBase> = {};
 
@@ -233,16 +312,14 @@ export function createPathConfigForStaticNavigation(
         }
 
         if ('config' in item) {
-          screenConfig.screens = createPathConfigForStaticNavigation(
-            item.config.screens
-          );
+          screenConfig.screens = createPathConfigForStaticNavigation(item);
         } else if (
           'screen' in item &&
           'config' in item.screen &&
           item.screen.config.screens
         ) {
           screenConfig.screens = createPathConfigForStaticNavigation(
-            item.screen.config.screens
+            item.screen
           );
         }
 
