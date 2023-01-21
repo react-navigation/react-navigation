@@ -19,7 +19,7 @@ const RootStack = createStackNavigator({
     Home: HomeTabs,
     Profile: (_: StaticScreenProps<{ user: string }>) => null,
     Feed: {
-      component: (_: StaticScreenProps<{ sort: 'hot' | 'recent' }>) => null,
+      screen: (_: StaticScreenProps<{ sort: 'hot' | 'recent' }>) => null,
       options: {
         headerTitle: 'My Feed',
       },
@@ -120,7 +120,7 @@ createBottomTabNavigator({
 createBottomTabNavigator({
   screens: {
     Test: {
-      component: () => null,
+      screen: () => null,
       options: {
         tabBarActiveTintColor: 'tomato',
       },
@@ -131,7 +131,7 @@ createBottomTabNavigator({
 createBottomTabNavigator({
   screens: {
     Test: {
-      component: () => null,
+      screen: () => null,
       options: {
         // @ts-expect-error
         tabBarActiveTintColor: 42,

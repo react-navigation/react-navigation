@@ -13,16 +13,16 @@ import useRoute from './useRoute';
 
 type FlatType<T> = T extends object ? { [K in keyof T]: T[K] } : T;
 
-type ComponentForOption<T> = T extends { component: React.ComponentType<any> }
-  ? T['component']
+type ComponentForOption<T> = T extends { screen: React.ComponentType<any> }
+  ? T['screen']
   : T extends React.ComponentType<any>
   ? T
   : never;
 
 type UnknownToUndefined<T> = unknown extends T ? undefined : T;
 
-type ParamsForScreen<T> = T extends { navigator: StaticNavigation<any, any> }
-  ? NavigatorScreenParams<StaticParamList<T['navigator']>> | undefined
+type ParamsForScreen<T> = T extends { screen: StaticNavigation<any, any> }
+  ? NavigatorScreenParams<StaticParamList<T['screen']>> | undefined
   : T extends StaticNavigation<any, any>
   ? NavigatorScreenParams<StaticParamList<T>> | undefined
   : UnknownToUndefined<
@@ -66,11 +66,11 @@ type StaticConfigScreens<
           | string;
       }) &
         (
-          | { component: React.ComponentType<any> }
           | {
-              navigator: StaticNavigation<any, any>;
+              screen: StaticNavigation<any, any>;
               layout?: LayoutComponent;
             }
+          | { screen: React.ComponentType<any> }
         ));
 };
 
@@ -143,7 +143,7 @@ export function createComponentForStaticNavigation(
   const { Navigator, Screen, config } = tree;
   const { screens, ...rest } = config;
 
-  const items = Object.entries(screens).map(([name, screen]) => {
+  const items = Object.entries(screens).map(([name, item]) => {
     let component: React.ComponentType<any> | undefined;
     let layout: LayoutComponent | undefined;
     let props: {} = {};
@@ -151,36 +151,32 @@ export function createComponentForStaticNavigation(
 
     let isNavigator = false;
 
-    if ('component' in screen) {
-      const { component: screenComponent, if: _if, ...rest } = screen;
+    if ('screen' in item) {
+      const { screen, if: _if, ...rest } = item;
 
       useIf = _if;
-      component = screenComponent;
       props = rest;
-    } else if ('navigator' in screen) {
-      const { navigator, layout: _layout, if: _if, ...rest } = screen;
 
+      if (typeof screen === 'function') {
+        component = screen;
+      } else if ('config' in screen) {
+        isNavigator = true;
+        layout = 'layout' in item ? item.layout : undefined;
+        component = createComponentForStaticNavigation(
+          screen,
+          `${name}Navigator`
+        );
+      }
+    } else if (typeof item === 'function') {
+      component = item;
+    } else if ('config' in item) {
       isNavigator = true;
-      layout = _layout;
-      useIf = _if;
-      component = createComponentForStaticNavigation(
-        navigator,
-        `${name}Navigator`
-      );
-      props = rest;
-    } else if (typeof screen === 'function') {
-      component = screen;
-    } else if ('config' in screen) {
-      isNavigator = true;
-      component = createComponentForStaticNavigation(
-        screen,
-        `${name}Navigator`
-      );
+      component = createComponentForStaticNavigation(item, `${name}Navigator`);
     }
 
     if (component == null) {
       throw new Error(
-        `Couldn't find a 'component' or 'navigator' property for the screen '${name}'. This can happen if you passed 'undefined'. You likely forgot to export your component from the file it's defined in, or mixed up default import and named import when importing.`
+        `Couldn't find a 'screen' property for the screen '${name}'. This can happen if you passed 'undefined'. You likely forgot to export your component from the file it's defined in, or mixed up default import and named import when importing.`
       );
     }
 
@@ -225,24 +221,28 @@ export function createPathConfigForStaticNavigation(
 ) {
   return fromEntries(
     Object.entries(screens)
-      .map(([key, screen]) => {
+      .map(([key, item]) => {
         const screenConfig: PathConfig<ParamListBase> = {};
 
-        if ('linking' in screen) {
-          if (typeof screen.linking === 'string') {
-            screenConfig.path = screen.linking;
+        if ('linking' in item) {
+          if (typeof item.linking === 'string') {
+            screenConfig.path = item.linking;
           } else {
-            Object.assign(screenConfig, screen.linking);
+            Object.assign(screenConfig, item.linking);
           }
         }
 
-        if ('config' in screen) {
+        if ('config' in item) {
           screenConfig.screens = createPathConfigForStaticNavigation(
-            screen.config.screens
+            item.config.screens
           );
-        } else if ('navigator' in screen && screen.navigator.config.screens) {
+        } else if (
+          'screen' in item &&
+          'config' in item.screen &&
+          item.screen.config.screens
+        ) {
           screenConfig.screens = createPathConfigForStaticNavigation(
-            screen.navigator.config.screens
+            item.screen.config.screens
           );
         }
 

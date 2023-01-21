@@ -47,19 +47,19 @@ const TabLayout = ({ children }: { children: React.ReactNode }) => {
 const HomeTabs = createBottomTabNavigator({
   screens: {
     Albums: {
-      component: Albums,
+      screen: Albums,
       options: {
         tabBarIcon: getTabBarIcon('image-album'),
       },
     },
     Contacts: {
-      component: Contacts,
+      screen: Contacts,
       options: {
         tabBarIcon: getTabBarIcon('contacts'),
       },
     },
     Chat: {
-      component: Chat,
+      screen: Chat,
       options: {
         tabBarIcon: getTabBarIcon('message-reply'),
       },
@@ -74,7 +74,7 @@ const RootStack = createStackNavigator({
   },
   screens: {
     Home: {
-      navigator: HomeTabs,
+      screen: HomeTabs,
       layout: TabLayout,
     },
   },
