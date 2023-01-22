@@ -130,9 +130,9 @@ export default function useOnAction({
         }
       }
 
-      if (navigationInChildEnabled) {
+      if (typeof action.target === 'string' || navigationInChildEnabled) {
         // If the action wasn't handled by current navigator or a parent navigator, let children handle it
-        // This behavior is deprecated and will be removed in the future
+        // Handling this when target isn't specified is deprecated and will be removed in the future
         for (let i = actionListeners.length - 1; i >= 0; i--) {
           const listener = actionListeners[i];
 

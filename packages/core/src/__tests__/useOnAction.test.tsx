@@ -240,7 +240,7 @@ it("lets children handle the action if parent didn't", () => {
   });
 });
 
-it('action goes to correct navigator if target is specified', () => {
+it('action goes to correct parent navigator if target is specified', () => {
   function CurrentTestRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
     const TestRouter: Router<
@@ -267,20 +267,7 @@ it('action goes to correct navigator if target is specified', () => {
     return TestRouter;
   }
 
-  const ChildNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(
-      CurrentTestRouter,
-      props
-    );
-
-    return (
-      <React.Fragment>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
-    );
-  };
-
-  const ParentNavigator = (props: any) => {
+  const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(
       CurrentTestRouter,
       props
@@ -335,18 +322,18 @@ it('action goes to correct navigator if target is specified', () => {
       initialState={initialState}
       onStateChange={onStateChange}
     >
-      <ParentNavigator>
+      <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar">{() => null}</Screen>
         <Screen name="baz">
           {() => (
-            <ChildNavigator>
+            <TestNavigator>
               <Screen name="qux">{() => null}</Screen>
               <Screen name="lex" component={TestScreen} />
-            </ChildNavigator>
+            </TestNavigator>
           )}
         </Screen>
-      </ParentNavigator>
+      </TestNavigator>
     </BaseNavigationContainer>
   );
 
@@ -357,6 +344,133 @@ it('action goes to correct navigator if target is specified', () => {
     stale: false,
     type: 'test',
     index: 1,
+    key: '0',
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+      {
+        key: 'baz',
+        name: 'baz',
+        state: {
+          stale: false,
+          type: 'test',
+          index: 0,
+          key: '1',
+          routeNames: ['qux', 'lex'],
+          routes: [
+            { key: 'lex', name: 'lex' },
+            { key: 'qux', name: 'qux' },
+          ],
+        },
+      },
+    ],
+  });
+});
+
+it('action goes to correct child navigator if target is specified', () => {
+  function CurrentTestRouter(options: DefaultRouterOptions) {
+    const CurrentMockRouter = MockRouter(options);
+    const TestRouter: Router<
+      NavigationState,
+      MockActions | { type: 'REVERSE' }
+    > = {
+      ...CurrentMockRouter,
+
+      shouldActionChangeFocus() {
+        return true;
+      },
+
+      getStateForAction(state, action, options) {
+        if (action.type === 'REVERSE') {
+          return {
+            ...state,
+            routes: state.routes.slice().reverse(),
+          };
+        }
+
+        return CurrentMockRouter.getStateForAction(state, action, options);
+      },
+    };
+    return TestRouter;
+  }
+
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(
+      CurrentTestRouter,
+      props
+    );
+
+    return (
+      <React.Fragment>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </React.Fragment>
+    );
+  };
+
+  const initialState = {
+    stale: false,
+    type: 'test',
+    index: 0,
+    key: '0',
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+      {
+        key: 'baz',
+        name: 'baz',
+        state: {
+          stale: false,
+          type: 'test',
+          index: 0,
+          key: '1',
+          routeNames: ['qux', 'lex'],
+          routes: [
+            { key: 'qux', name: 'qux' },
+            { key: 'lex', name: 'lex' },
+          ],
+        },
+      },
+    ],
+  };
+
+  const onStateChange = jest.fn();
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const element = (
+    <BaseNavigationContainer
+      ref={ref}
+      initialState={initialState}
+      onStateChange={onStateChange}
+    >
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar">{() => null}</Screen>
+        <Screen name="baz">
+          {() => (
+            <TestNavigator>
+              <Screen name="qux">{() => null}</Screen>
+              <Screen name="lex">{() => null}</Screen>
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(element).update(element);
+
+  act(() => {
+    ref.dispatch({ type: 'REVERSE', target: '1' });
+  });
+
+  expect(onStateChange).toBeCalledTimes(1);
+  expect(onStateChange).toBeCalledWith({
+    stale: false,
+    type: 'test',
+    index: 2,
     key: '0',
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
