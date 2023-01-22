@@ -313,7 +313,11 @@ export default function TabRouter({
 
                 let params;
 
-                if (action.type === 'NAVIGATE' && action.payload.merge) {
+                if (
+                  (action.type === 'NAVIGATE' ||
+                    action.type === 'NAVIGATE_DEPRECATED') &&
+                  action.payload.merge
+                ) {
                   params =
                     action.payload.params !== undefined ||
                     routeParamList[route.name] !== undefined
