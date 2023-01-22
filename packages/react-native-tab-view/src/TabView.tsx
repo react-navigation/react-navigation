@@ -24,10 +24,14 @@ export type Props<T extends Route> = PagerProps & {
   renderScene: (props: SceneRendererProps & { route: T }) => React.ReactNode;
   renderLazyPlaceholder?: (props: { route: T }) => React.ReactNode;
   renderTabBar?: (
-    props: SceneRendererProps & { navigationState: NavigationState<T> }
+    props: SceneRendererProps & {
+      navigationState: NavigationState<T>;
+      tabBarInitialLayout?: Partial<Layout>;
+    }
   ) => React.ReactNode;
   tabBarPosition?: 'top' | 'bottom';
   initialLayout?: Partial<Layout>;
+  tabBarInitialLayout?: Partial<Layout>;
   lazy?: ((props: { route: T }) => boolean) | boolean;
   lazyPreloadDistance?: number;
   sceneContainerStyle?: StyleProp<ViewStyle>;
@@ -47,6 +51,7 @@ export default function TabView<T extends Route>({
   onSwipeEnd,
   renderLazyPlaceholder = () => null,
   renderTabBar = (props) => <TabBar {...props} />,
+  tabBarInitialLayout,
   sceneContainerStyle,
   pagerStyle,
   style,
@@ -106,6 +111,7 @@ export default function TabView<T extends Route>({
                 renderTabBar({
                   ...sceneRendererProps,
                   navigationState,
+                  tabBarInitialLayout,
                 })}
               {render(
                 navigationState.routes.map((route, i) => {
@@ -136,6 +142,7 @@ export default function TabView<T extends Route>({
                 renderTabBar({
                   ...sceneRendererProps,
                   navigationState,
+                  tabBarInitialLayout,
                 })}
             </React.Fragment>
           );

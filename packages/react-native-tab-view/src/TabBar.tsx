@@ -58,6 +58,7 @@ export type Props<T extends Route> = SceneRendererProps & {
   ) => React.ReactElement;
   onTabPress?: (scene: Scene<T> & Event) => void;
   onTabLongPress?: (scene: Scene<T>) => void;
+  tabBarInitialLayout?: Partial<Layout>;
   tabStyle?: StyleProp<ViewStyle>;
   indicatorStyle?: StyleProp<ViewStyle>;
   indicatorContainerStyle?: StyleProp<ViewStyle>;
@@ -280,11 +281,16 @@ export default function TabBar<T extends Route>({
   renderIcon,
   renderLabel,
   renderTabBarItem,
+  tabBarInitialLayout,
   style,
   tabStyle,
   testID,
 }: Props<T>) {
-  const [layout, setLayout] = React.useState<Layout>({ width: 0, height: 0 });
+  const [layout, setLayout] = React.useState<Layout>({
+    width: 0,
+    height: 0,
+    ...tabBarInitialLayout,
+  });
   const [tabWidths, setTabWidths] = React.useState<Record<string, number>>({});
   const flatListRef = React.useRef<FlatList | null>(null);
   const isFirst = React.useRef(true);
