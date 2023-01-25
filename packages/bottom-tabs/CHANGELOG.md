@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.5.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.5.2...@react-navigation/bottom-tabs@6.5.3) (2023-01-10)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+## [6.5.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.5.1...@react-navigation/bottom-tabs@6.5.2) (2022-12-16)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+## [6.5.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.5.0...@react-navigation/bottom-tabs@6.5.1) (2022-12-12)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [6.5.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.4.3...@react-navigation/bottom-tabs@6.5.0) (2022-12-07)
+
+### Features
+
+* expose the original label in children prop for custom label functions in tab navigators ([417cb56](https://github.com/react-navigation/react-navigation/commit/417cb566c3c5304a0f5ebf4f32d0d42e5d1ca0f6)) - by @satya164
+
 ## [6.4.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.4.1...@react-navigation/bottom-tabs@6.4.3) (2022-11-29)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

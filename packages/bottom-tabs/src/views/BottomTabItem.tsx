@@ -12,7 +12,11 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import type { BottomTabBarButtonProps, LabelPosition } from '../types';
+import type {
+  BottomTabBarButtonProps,
+  BottomTabDescriptor,
+  LabelPosition,
+} from '../types';
 import TabBarIcon from './TabBarIcon';
 
 type Props = {
@@ -25,6 +29,10 @@ type Props = {
    */
   route: Route<string>;
   /**
+   * The descriptor object for the route.
+   */
+  descriptor: BottomTabDescriptor;
+  /**
    * The label text of the tab.
    */
   label:
@@ -33,6 +41,7 @@ type Props = {
         focused: boolean;
         color: string;
         position: LabelPosition;
+        children: string;
       }) => React.ReactNode);
   /**
    * Icon to display for the tab.
@@ -122,6 +131,7 @@ type Props = {
 export default function BottomTabBarItem({
   focused,
   route,
+  descriptor,
   label,
   icon,
   badge,
@@ -220,10 +230,19 @@ export default function BottomTabBarItem({
       );
     }
 
+    const { options } = descriptor;
+    const children =
+      typeof options.tabBarLabel === 'string'
+        ? options.tabBarLabel
+        : options.title !== undefined
+        ? options.title
+        : route.name;
+
     return label({
       focused,
       color,
       position: horizontal ? 'beside-icon' : 'below-icon',
+      children,
     });
   };
 

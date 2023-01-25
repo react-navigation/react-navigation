@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
   },
   pressable: {
     flex: 1,
+    pointerEvents: 'auto',
   },
 });
 

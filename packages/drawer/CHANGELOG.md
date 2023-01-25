@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.5.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.5.6...@react-navigation/drawer@6.5.7) (2023-01-10)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+## [6.5.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.5.5...@react-navigation/drawer@6.5.6) (2022-12-16)
+
+### Bug Fixes
+
+* fix drawer toggle race condition ([#11036](https://github.com/react-navigation/react-navigation/issues/11036)) ([388b02f](https://github.com/react-navigation/react-navigation/commit/388b02f2f7cad3e7d25d439a115ea9f506bb7fc0)) - by @ricmatsui
+
+## [6.5.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.5.4...@react-navigation/drawer@6.5.5) (2022-12-12)
+
+### Bug Fixes
+
+* fix overlay not receiving clicks on web ([6e120f6](https://github.com/react-navigation/react-navigation/commit/6e120f6f1ab5fb2f697e2b8734692eadc21e7411)) - by @satya164
+
+## [6.5.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.5.3...@react-navigation/drawer@6.5.4) (2022-12-07)
+
+### Bug Fixes
+
+* drawerstatuscontext should be exported ([#11041](https://github.com/react-navigation/react-navigation/issues/11041)) ([b3722fd](https://github.com/react-navigation/react-navigation/commit/b3722fd19958be5b1becd110306cb98a5e8f5cb4)) - by @leonchabbey
+
 ## [6.5.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.5.1...@react-navigation/drawer@6.5.3) (2022-11-29)
 
 **Note:** Version bump only for package @react-navigation/drawer
