@@ -270,7 +270,7 @@ export type BottomTabNavigationConfig = {
    */
   tabBar?: (props: BottomTabBarProps) => React.ReactNode;
   /**
-   * Function that returns a React element to display as the tab bar.
+   * Whether the tab bar gets shown. Defaults to `true`.
    */
   tabBarShown?: boolean;
   /**
