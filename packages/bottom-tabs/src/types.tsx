@@ -269,6 +269,10 @@ export type BottomTabNavigationConfig = {
    */
   tabBar?: (props: BottomTabBarProps) => React.ReactNode;
   /**
+   * Function that returns a React element to display as the tab bar.
+   */
+  tabBarShown?: boolean;
+  /**
    * Safe area insets for the tab bar. This is used to avoid elements like the navigation bar on Android and bottom safe area on iOS.
    * By default, the device's safe area insets are automatically detected. You can override the behavior with this option.
    */
@@ -314,6 +318,7 @@ export type BottomTabBarProps = {
   descriptors: BottomTabDescriptorMap;
   navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>;
   insets: EdgeInsets;
+  tabBarShown: boolean;
 };
 
 export type BottomTabBarButtonProps = Omit<

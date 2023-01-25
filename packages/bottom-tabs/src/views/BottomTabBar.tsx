@@ -131,6 +131,7 @@ export default function BottomTabBar({
   descriptors,
   insets,
   style,
+  tabBarShown,
 }: Props) {
   const { colors } = useTheme();
   const buildLink = useLinkBuilder();
@@ -156,7 +157,7 @@ export default function BottomTabBar({
 
   const onHeightChange = React.useContext(BottomTabBarHeightCallbackContext);
 
-  const shouldShowTabBar = !(tabBarHideOnKeyboard && isKeyboardShown);
+  const shouldShowTabBar = !(tabBarHideOnKeyboard && isKeyboardShown) && tabBarShown;
 
   const visibilityAnimationConfigRef = React.useRef(
     tabBarVisibilityAnimationConfig

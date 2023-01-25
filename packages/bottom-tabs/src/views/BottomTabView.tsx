@@ -42,6 +42,7 @@ export default function BottomTabView(props: Props) {
       Platform.OS === 'android' ||
       Platform.OS === 'ios',
     sceneContainerStyle,
+    tabBarShown = true,
   } = props;
 
   const focusedRouteKey = state.routes[state.index].key;
@@ -74,6 +75,7 @@ export default function BottomTabView(props: Props) {
             state: state,
             descriptors: descriptors,
             navigation: navigation,
+            tabBarShown: tabBarShown,
             insets: {
               top: safeAreaInsets?.top ?? insets?.top ?? 0,
               right: safeAreaInsets?.right ?? insets?.right ?? 0,
