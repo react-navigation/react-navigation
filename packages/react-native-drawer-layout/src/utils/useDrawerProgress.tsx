@@ -10,7 +10,7 @@ export default function useDrawerProgress():
 
   if (progress === undefined) {
     throw new Error(
-      "Couldn't find a drawer. Is your component inside a drawer navigator?"
+      "Couldn't find a drawer. Is your component inside a drawer?"
     );
   }
 

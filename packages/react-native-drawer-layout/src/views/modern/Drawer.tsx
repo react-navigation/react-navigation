@@ -8,11 +8,6 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {
-  PanGestureHandler,
-  PanGestureHandlerGestureEvent,
-  State as GestureState,
-} from 'react-native-gesture-handler';
 import Animated, {
   interpolate,
   runOnJS,
@@ -23,12 +18,20 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
+import {
+  DEFAULT_DRAWER_WIDTH,
+  SWIPE_MIN_DISTANCE,
+  SWIPE_MIN_OFFSET,
+  SWIPE_MIN_VELOCITY,
+} from '../../constants';
 import type { DrawerProps } from '../../types';
 import DrawerProgressContext from '../../utils/DrawerProgressContext';
+import {
+  GestureState,
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+} from '../GestureHandler';
 import Overlay from './Overlay';
-
-const SWIPE_DISTANCE_MINIMUM = 5;
-const DEFAULT_DRAWER_WIDTH = '80%';
 
 const minmax = (value: number, start: number, end: number) => {
   'worklet';
@@ -36,8 +39,12 @@ const minmax = (value: number, start: number, end: number) => {
   return Math.min(Math.max(value, start), end);
 };
 
+type Props = DrawerProps & {
+  layout: { width: number };
+};
+
 export default function Drawer({
-  dimensions,
+  layout,
   drawerPosition,
   drawerStyle,
   drawerType,
@@ -48,14 +55,14 @@ export default function Drawer({
   onOpen,
   open,
   overlayStyle,
-  renderDrawerContent,
-  renderSceneContent,
   statusBarAnimation,
-  swipeDistanceThreshold,
-  swipeEdgeWidth,
   swipeEnabled,
-  swipeVelocityThreshold,
-}: DrawerProps) {
+  swipeEdgeWidth,
+  swipeMinDistance = SWIPE_MIN_DISTANCE,
+  swipeMinVelocity = SWIPE_MIN_VELOCITY,
+  renderDrawerContent,
+  children,
+}: Props) {
   const getDrawerWidth = (): number => {
     const { width = DEFAULT_DRAWER_WIDTH } =
       StyleSheet.flatten(drawerStyle) || {};
@@ -65,7 +72,7 @@ export default function Drawer({
       const percentage = Number(width.replace(/%$/, ''));
 
       if (Number.isFinite(percentage)) {
-        return dimensions.width * (percentage / 100);
+        return layout.width * (percentage / 100);
       }
     }
 
@@ -203,9 +210,9 @@ export default function Drawer({
       gestureState.value = event.state;
 
       const nextOpen =
-        (Math.abs(event.translationX) > SWIPE_DISTANCE_MINIMUM &&
-          Math.abs(event.translationX) > swipeVelocityThreshold) ||
-        Math.abs(event.translationX) > swipeDistanceThreshold
+        (Math.abs(event.translationX) > SWIPE_MIN_OFFSET &&
+          Math.abs(event.translationX) > swipeMinVelocity) ||
+        Math.abs(event.translationX) > swipeMinDistance
           ? drawerPosition === 'left'
             ? // If swiped to right, open the drawer, otherwise close it
               (event.velocityX === 0 ? event.translationX : event.velocityX) > 0
@@ -251,9 +258,9 @@ export default function Drawer({
         ? minmax(
             drawerPosition === 'left'
               ? touchStartX.value - drawerWidth
-              : dimensions.width - drawerWidth - touchStartX.value,
+              : layout.width - drawerWidth - touchStartX.value,
             0,
-            dimensions.width
+            layout.width
           )
         : 0;
 
@@ -267,7 +274,7 @@ export default function Drawer({
 
   const isRTL = I18nManager.getConstants().isRTL;
   const drawerAnimatedStyle = useAnimatedStyle(() => {
-    const distanceFromEdge = dimensions.width - drawerWidth;
+    const distanceFromEdge = layout.width - drawerWidth;
 
     return {
       transform:
@@ -325,8 +332,8 @@ export default function Drawer({
   return (
     <DrawerProgressContext.Provider value={progress}>
       <PanGestureHandler
-        activeOffsetX={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
-        failOffsetY={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
+        activeOffsetX={[-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET]}
+        failOffsetY={[-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET]}
         hitSlop={hitSlop}
         enabled={drawerType !== 'permanent' && swipeEnabled}
         onGestureEvent={onGestureEvent}
@@ -352,7 +359,7 @@ export default function Drawer({
               }
               style={styles.content}
             >
-              {renderSceneContent()}
+              {children}
             </View>
             {drawerType !== 'permanent' ? (
               <Overlay

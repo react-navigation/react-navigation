@@ -17,6 +17,7 @@
       "@react-navigation/material-bottom-tabs",
       "@react-navigation/elements",
       "@react-navigation/devtools",
+      "react-native-drawer-layout",
       "react-native-tab-view"
     ]
   },
