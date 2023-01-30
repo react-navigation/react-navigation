@@ -11,6 +11,12 @@ import {
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 
+import {
+  DEFAULT_DRAWER_WIDTH,
+  SWIPE_MIN_DISTANCE,
+  SWIPE_MIN_OFFSET,
+  SWIPE_MIN_VELOCITY,
+} from '../../constants';
 import type { DrawerProps } from '../../types';
 import DrawerProgressContext from '../../utils/DrawerProgressContext';
 import { GestureState, PanGestureHandler } from '../GestureHandler';
@@ -52,10 +58,6 @@ const UNSET = -1;
 const DIRECTION_LEFT = 1;
 const DIRECTION_RIGHT = -1;
 
-const SWIPE_DISTANCE_MINIMUM = 5;
-
-const DEFAULT_DRAWER_WIDTH = '80%';
-
 const SPRING_CONFIG = {
   stiffness: 1000,
   damping: 500,
@@ -70,15 +72,19 @@ const ANIMATED_ONE = new Animated.Value(1);
 
 type Binary = 0 | 1;
 
-export default class DrawerView extends React.Component<DrawerProps> {
-  componentDidUpdate(prevProps: DrawerProps) {
+type Props = DrawerProps & {
+  layout: { width: number };
+};
+
+export default class Drawer extends React.Component<Props> {
+  componentDidUpdate(prevProps: Props) {
     const {
       open,
       drawerPosition,
       drawerType,
-      swipeDistanceThreshold,
-      swipeVelocityThreshold,
-      hideStatusBarOnOpen: hideStatusBar,
+      swipeMinDistance,
+      swipeMinVelocity,
+      hideStatusBarOnOpen,
     } = this.props;
 
     if (
@@ -91,7 +97,7 @@ export default class DrawerView extends React.Component<DrawerProps> {
 
     this.pendingOpenValue = undefined;
 
-    if (open !== prevProps.open && hideStatusBar) {
+    if (open !== prevProps.open && hideStatusBarOnOpen) {
       this.toggleStatusBar(open);
     }
 
@@ -105,12 +111,16 @@ export default class DrawerView extends React.Component<DrawerProps> {
       this.isDrawerTypeFront.setValue(drawerType === 'front' ? TRUE : FALSE);
     }
 
-    if (prevProps.swipeDistanceThreshold !== swipeDistanceThreshold) {
-      this.swipeDistanceThreshold.setValue(swipeDistanceThreshold);
+    if (prevProps.swipeMinDistance !== swipeMinDistance) {
+      this.swipeDistanceThreshold.setValue(
+        swipeMinDistance ?? SWIPE_MIN_DISTANCE
+      );
     }
 
-    if (prevProps.swipeVelocityThreshold !== swipeVelocityThreshold) {
-      this.swipeVelocityThreshold.setValue(swipeVelocityThreshold);
+    if (prevProps.swipeMinVelocity !== swipeMinVelocity) {
+      this.swipeVelocityThreshold.setValue(
+        swipeMinVelocity ?? SWIPE_MIN_VELOCITY
+      );
     }
   }
 
@@ -133,7 +143,7 @@ export default class DrawerView extends React.Component<DrawerProps> {
   };
 
   private getDrawerWidth = (): number => {
-    const { drawerStyle, dimensions } = this.props;
+    const { drawerStyle, layout } = this.props;
     const { width = DEFAULT_DRAWER_WIDTH } =
       StyleSheet.flatten(drawerStyle) || {};
 
@@ -142,7 +152,7 @@ export default class DrawerView extends React.Component<DrawerProps> {
       const percentage = Number(width.replace(/%$/, ''));
 
       if (Number.isFinite(percentage)) {
-        return dimensions.width * (percentage / 100);
+        return layout.width * (percentage / 100);
       }
     }
 
@@ -176,7 +186,7 @@ export default class DrawerView extends React.Component<DrawerProps> {
       : 0
   );
 
-  private containerWidth = new Value<number>(this.props.dimensions.width);
+  private containerWidth = new Value<number>(this.props.layout.width);
   private drawerWidth = new Value<number>(this.initialDrawerWidth);
   private drawerOpacity = new Value<number>(
     this.props.drawerType === 'permanent' ? 1 : 0
@@ -235,10 +245,10 @@ export default class DrawerView extends React.Component<DrawerProps> {
   );
 
   private swipeDistanceThreshold = new Value<number>(
-    this.props.swipeDistanceThreshold
+    this.props.swipeMinDistance ?? SWIPE_MIN_DISTANCE
   );
   private swipeVelocityThreshold = new Value<number>(
-    this.props.swipeVelocityThreshold
+    this.props.swipeMinVelocity ?? SWIPE_MIN_VELOCITY
   );
 
   private currentOpenValue: boolean = this.props.open;
@@ -387,7 +397,7 @@ export default class DrawerView extends React.Component<DrawerProps> {
             cond(
               or(
                 and(
-                  greaterThan(abs(this.gestureX), SWIPE_DISTANCE_MINIMUM),
+                  greaterThan(abs(this.gestureX), SWIPE_MIN_OFFSET),
                   greaterThan(abs(this.velocityX), this.swipeVelocityThreshold)
                 ),
                 greaterThan(abs(this.gestureX), this.swipeDistanceThreshold)
@@ -490,7 +500,7 @@ export default class DrawerView extends React.Component<DrawerProps> {
       drawerStyle,
       overlayStyle,
       renderDrawerContent,
-      renderSceneContent,
+      children,
       gestureHandlerProps,
     } = this.props;
 
@@ -530,8 +540,8 @@ export default class DrawerView extends React.Component<DrawerProps> {
     return (
       <DrawerProgressContext.Provider value={progress}>
         <PanGestureHandler
-          activeOffsetX={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
-          failOffsetY={[-SWIPE_DISTANCE_MINIMUM, SWIPE_DISTANCE_MINIMUM]}
+          activeOffsetX={[-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET]}
+          failOffsetY={[-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET]}
           onGestureEvent={this.handleGestureEvent}
           onHandlerStateChange={this.handleGestureStateChange}
           hitSlop={hitSlop}
@@ -574,7 +584,7 @@ export default class DrawerView extends React.Component<DrawerProps> {
                 }
                 style={styles.content}
               >
-                {renderSceneContent()}
+                {children}
               </View>
               {
                 // Disable overlay if sidebar is permanent

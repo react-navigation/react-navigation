@@ -2,6 +2,7 @@ import type { NavigatorScreenParams } from '@react-navigation/native';
 
 import AuthFlow from './Screens/AuthFlow';
 import BottomTabs from './Screens/BottomTabs';
+import DrawerView from './Screens/DrawerView';
 import DynamicTabs from './Screens/DynamicTabs';
 import LinkComponent from './Screens/LinkComponent';
 import MasterDetail from './Screens/MasterDetail';
@@ -100,6 +101,10 @@ export const SCREENS = {
   TabView: {
     title: 'TabView',
     component: TabView,
+  },
+  DrawerView: {
+    title: 'DrawerView',
+    component: DrawerView,
   },
 };
 

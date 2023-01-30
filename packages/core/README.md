@@ -7,7 +7,7 @@ Core utilities for building navigators independent of the platform.
 Open a Terminal in your project's folder and run,
 
 ```sh
-yarn add @react-navigation/core
+npm install @react-navigation/core
 ```
 
 ## Usage

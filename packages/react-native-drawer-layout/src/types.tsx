@@ -1,0 +1,116 @@
+import type { StyleProp, ViewStyle } from 'react-native';
+import type { PanGestureHandler } from 'react-native-gesture-handler';
+
+export type Layout = { width: number; height: number };
+
+export type DrawerProps = {
+  /**
+   * Whether the drawer is open or not.
+   */
+  open: boolean;
+
+  /**
+   * Callback which is called when the drawer is opened.
+   */
+  onOpen: () => void;
+
+  /**
+   * Callback which is called when the drawer is closed.
+   */
+  onClose: () => void;
+
+  /**
+   * Callback which returns a react element to render as the content of the drawer.
+   */
+  renderDrawerContent: () => React.ReactNode;
+
+  /**
+   * Object containing the layout of the container.
+   * Defaults to the dimensions of the application's window.
+   */
+  layout?: { width: number; height: number };
+
+  /**
+   * Position of the drawer on the screen.
+   * Defaults to `right` in RTL mode, otherwise `left`.
+   */
+  drawerPosition?: 'left' | 'right';
+
+  /**
+   * Type of the drawer. It determines how the drawer looks and animates.
+   * - `front`: Traditional drawer which covers the screen with a overlay behind it.
+   * - `back`: The drawer is revealed behind the screen on swipe.
+   * - `slide`: Both the screen and the drawer slide on swipe to reveal the drawer.
+   * - `permanent`: A permanent drawer is shown as a sidebar.
+   *
+   * Defaults to `slide` on iOS and `front` on other platforms.
+   */
+  drawerType?: 'front' | 'back' | 'slide' | 'permanent';
+
+  /**
+   * Style object for the drawer component.
+   * You can pass a custom background color for drawer or a custom width here.
+   */
+  drawerStyle?: StyleProp<ViewStyle>;
+
+  /**
+   * Style object for the drawer overlay.
+   */
+  overlayStyle?: StyleProp<ViewStyle>;
+
+  /**
+   * Whether the keyboard should be dismissed when the swipe gesture begins.
+   * Defaults to `'on-drag'`. Set to `'none'` to disable keyboard handling.
+   */
+  keyboardDismissMode?: 'none' | 'on-drag';
+
+  /**
+   * Whether the statusbar should be hidden when the drawer is pulled or opens.
+   * Defaults to `false`.
+   */
+  hideStatusBarOnOpen?: boolean;
+
+  /**
+   * Animation of the statusbar when hiding it. Use in combination with `hideStatusBarOnOpen`.
+   */
+  statusBarAnimation?: 'slide' | 'fade' | 'none';
+
+  /**
+   * Whether you can use swipe gestures to open or close the drawer.
+   * Defaults to `true`.
+   * This is not supported on Web.
+   */
+  swipeEnabled?: boolean;
+
+  /**
+   * How far from the edge of the screen the swipe gesture should activate.
+   * Defaults to `32`.
+   * This is not supported on Web.
+   */
+  swipeEdgeWidth?: number;
+
+  /**
+   * Minimum swipe distance that should activate opening the drawer.
+   * Defaults to `60`.
+   * This is not supported on Web.
+   */
+  swipeMinDistance?: number;
+
+  /**
+   * Minimum swipe velocity that should activate opening the drawer.
+   * Defaults to `500`.
+   * This is not supported on Web.
+   */
+  swipeMinVelocity?: number;
+
+  /**
+   * Props to pass to the underlying pan gesture handler.
+   * This is not supported on Web.
+   */
+  gestureHandlerProps?: React.ComponentProps<typeof PanGestureHandler>;
+
+  /**
+   * Content that the drawer should wrap.
+   */
+  children: React.ReactNode;
+};

@@ -12,14 +12,8 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import {
-  BackHandler,
-  I18nManager,
-  Platform,
-  StyleSheet,
-  View,
-} from 'react-native';
-import * as Reanimated from 'react-native-reanimated';
+import { BackHandler, I18nManager, Platform, StyleSheet } from 'react-native';
+import { Drawer } from 'react-native-drawer-layout';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
 
 import type {
@@ -29,14 +23,12 @@ import type {
   DrawerNavigationConfig,
   DrawerNavigationHelpers,
   DrawerNavigationProp,
-  DrawerProps,
 } from '../types';
 import DrawerPositionContext from '../utils/DrawerPositionContext';
 import DrawerStatusContext from '../utils/DrawerStatusContext';
 import getDrawerStatusFromState from '../utils/getDrawerStatusFromState';
 import DrawerContent from './DrawerContent';
 import DrawerToggleButton from './DrawerToggleButton';
-import { GestureHandlerRootView } from './GestureHandler';
 import { MaybeScreen, MaybeScreenContainer } from './ScreenFallback';
 
 type Props = DrawerNavigationConfig & {
@@ -45,29 +37,6 @@ type Props = DrawerNavigationConfig & {
   navigation: DrawerNavigationHelpers;
   descriptors: DrawerDescriptorMap;
 };
-
-const getDefaultDrawerWidth = ({
-  height,
-  width,
-}: {
-  height: number;
-  width: number;
-}) => {
-  /*
-   * Default drawer width is screen width - header height
-   * with a max width of 280 on mobile and 320 on tablet
-   * https://material.io/components/navigation-drawer
-   */
-  const smallerAxisSize = Math.min(height, width);
-  const isLandscape = width > height;
-  const isTablet = smallerAxisSize >= 600;
-  const appBarHeight = Platform.OS === 'ios' ? (isLandscape ? 32 : 44) : 56;
-  const maxWidth = isTablet ? 320 : 280;
-
-  return Math.min(smallerAxisSize - appBarHeight, maxWidth);
-};
-
-const GestureHandlerWrapper = GestureHandlerRootView ?? View;
 
 function DrawerViewBase({
   state,
@@ -80,39 +49,22 @@ function DrawerViewBase({
   detachInactiveScreens = Platform.OS === 'web' ||
     Platform.OS === 'android' ||
     Platform.OS === 'ios',
-  // Reanimated 2 is not configured
-  // @ts-expect-error: the type definitions are incomplete
-  useLegacyImplementation = !Reanimated.isConfigured?.(),
 }: Props) {
-  // Reanimated v3 dropped legacy v1 syntax
-  const legacyImplemenationNotAvailable =
-    require('react-native-reanimated').abs === undefined;
-
-  if (useLegacyImplementation && legacyImplemenationNotAvailable) {
-    throw new Error(
-      'The `useLegacyImplementation` prop is not available with Reanimated 3 as it no longer includes support for Reanimated 1 legacy API. Remove the `useLegacyImplementation` prop from `Drawer.Navigator` to be able to use it.'
-    );
-  }
-
-  const Drawer: React.ComponentType<DrawerProps> = useLegacyImplementation
-    ? require('./legacy/Drawer').default
-    : require('./modern/Drawer').default;
-
   const focusedRouteKey = state.routes[state.index].key;
   const {
-    drawerHideStatusBarOnOpen = false,
+    drawerHideStatusBarOnOpen,
     drawerPosition = I18nManager.getConstants().isRTL ? 'right' : 'left',
-    drawerStatusBarAnimation = 'slide',
+    drawerStatusBarAnimation,
     drawerStyle,
-    drawerType = Platform.select({ ios: 'slide', default: 'front' }),
+    drawerType,
     gestureHandlerProps,
-    keyboardDismissMode = 'on-drag',
+    keyboardDismissMode,
     overlayColor = 'rgba(0, 0, 0, 0.5)',
-    swipeEdgeWidth = 32,
+    swipeEdgeWidth,
     swipeEnabled = Platform.OS !== 'web' &&
       Platform.OS !== 'windows' &&
       Platform.OS !== 'macos',
-    swipeMinDistance = 60,
+    swipeMinDistance,
   } = descriptors[focusedRouteKey].options;
 
   const [loaded, setLoaded] = React.useState([focusedRouteKey]);
@@ -287,21 +239,18 @@ function DrawerViewBase({
         open={drawerStatus !== 'closed'}
         onOpen={handleDrawerOpen}
         onClose={handleDrawerClose}
+        layout={dimensions}
         gestureHandlerProps={gestureHandlerProps}
         swipeEnabled={swipeEnabled}
         swipeEdgeWidth={swipeEdgeWidth}
-        swipeVelocityThreshold={500}
-        swipeDistanceThreshold={swipeMinDistance}
+        swipeMinDistance={swipeMinDistance}
         hideStatusBarOnOpen={drawerHideStatusBarOnOpen}
         statusBarAnimation={drawerStatusBarAnimation}
         keyboardDismissMode={keyboardDismissMode}
         drawerType={drawerType}
         drawerPosition={drawerPosition}
         drawerStyle={[
-          {
-            width: getDefaultDrawerWidth(dimensions),
-            backgroundColor: colors.card,
-          },
+          { backgroundColor: colors.card },
           drawerType === 'permanent' &&
             (drawerPosition === 'left'
               ? {
@@ -316,9 +265,9 @@ function DrawerViewBase({
         ]}
         overlayStyle={{ backgroundColor: overlayColor }}
         renderDrawerContent={renderDrawerContent}
-        renderSceneContent={renderSceneContent}
-        dimensions={dimensions}
-      />
+      >
+        {renderSceneContent()}
+      </Drawer>
     </DrawerStatusContext.Provider>
   );
 }
@@ -326,9 +275,7 @@ function DrawerViewBase({
 export default function DrawerView({ navigation, ...rest }: Props) {
   return (
     <SafeAreaProviderCompat>
-      <GestureHandlerWrapper style={styles.content}>
-        <DrawerViewBase navigation={navigation} {...rest} />
-      </GestureHandlerWrapper>
+      <DrawerViewBase navigation={navigation} {...rest} />
     </SafeAreaProviderCompat>
   );
 }
