@@ -4,7 +4,8 @@
     { "path": "../core" },
     { "path": "../routers" },
     { "path": "../native" },
-    { "path": "../elements" }
+    { "path": "../elements" },
+    { "path": "../react-native-drawer-layout" }
   ],
   "compilerOptions": {
     "outDir": "./lib/typescript"

@@ -29,7 +29,7 @@ To use this library you need to ensure you are using the correct version of Reac
 Open a Terminal in the project root and run:
 
 ```sh
-yarn add react-native-tab-view
+npm install react-native-tab-view
 ```
 
 Now we need to install [`react-native-pager-view`](https://github.com/callstack/react-native-viewpager) if you plan to support iOS and Android.
@@ -43,7 +43,7 @@ expo install react-native-pager-view
 If you are not using Expo, run the following:
 
 ```sh
-yarn add react-native-pager-view
+npm install react-native-pager-view
 ```
 
 We're done! Now you can build and run the app on your device/simulator.

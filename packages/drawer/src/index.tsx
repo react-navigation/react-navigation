@@ -16,12 +16,14 @@ export { default as DrawerView } from './views/DrawerView';
 /**
  * Utilities
  */
-export { default as DrawerGestureContext } from './utils/DrawerGestureContext';
-export { default as DrawerProgressContext } from './utils/DrawerProgressContext';
 export { default as DrawerStatusContext } from './utils/DrawerStatusContext';
 export { default as getDrawerStatusFromState } from './utils/getDrawerStatusFromState';
-export { default as useDrawerProgress } from './utils/useDrawerProgress';
 export { default as useDrawerStatus } from './utils/useDrawerStatus';
+export {
+  DrawerGestureContext,
+  DrawerProgressContext,
+  useDrawerProgress,
+} from 'react-native-drawer-layout';
 
 /**
  * Types
