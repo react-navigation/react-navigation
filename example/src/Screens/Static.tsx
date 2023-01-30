@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -29,25 +29,27 @@ const useIsChatShown = () => {
   return isChatShown;
 };
 
-const TabLayout = ({ children }: { children: React.ReactNode }) => {
+const scrollEnabled = Platform.select({ web: true, default: false });
+
+const AlbumsScreen = () => {
   const { isChatShown, setIsChatShown } = React.useContext(ChatShownContext);
 
   return (
-    <View style={{ flex: 1 }}>
+    <ScrollView>
       <View style={styles.buttons}>
         <Button mode="contained" onPress={() => setIsChatShown(!isChatShown)}>
           {isChatShown ? 'Hide' : 'Show'} Chat
         </Button>
       </View>
-      {children}
-    </View>
+      <Albums scrollEnabled={scrollEnabled} />
+    </ScrollView>
   );
 };
 
 const HomeTabs = createBottomTabNavigator({
   screens: {
     Albums: {
-      screen: Albums,
+      screen: AlbumsScreen,
       options: {
         tabBarIcon: getTabBarIcon('image-album'),
       },
@@ -73,10 +75,7 @@ const RootStack = createStackNavigator({
     headerShown: false,
   },
   screens: {
-    Home: {
-      screen: HomeTabs,
-      layout: TabLayout,
-    },
+    Home: HomeTabs,
   },
 });
 

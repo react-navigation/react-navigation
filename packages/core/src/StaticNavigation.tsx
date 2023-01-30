@@ -43,8 +43,6 @@ type ParamListForScreens<
   [Key in keyof Screens]: ParamsForScreen<Screens[Key]>;
 };
 
-type LayoutComponent = React.ComponentType<{ children: React.ReactNode }>;
-
 type StaticConfigScreens<
   ParamList extends ParamListBase,
   State extends NavigationState,
@@ -54,7 +52,7 @@ type StaticConfigScreens<
   [key: string]:
     | React.ComponentType<any>
     | StaticNavigation<any, any>
-    | ((Omit<
+    | (Omit<
         RouteConfig<ParamList, keyof ParamList, State, ScreenOptions, EventMap>,
         'name' | 'component' | 'getComponent' | 'children'
       > & {
@@ -91,25 +89,11 @@ type StaticConfigScreens<
               >
             >
           | string;
-      }) &
-        (
-          | {
-              /**
-               * Static navigation config for the screen.
-               */
-              screen: StaticNavigation<any, any>;
-              /**
-               * Wrapper component to render the navigator in.
-               */
-              layout?: LayoutComponent;
-            }
-          | {
-              /**
-               * Component to render for the screen.
-               */
-              screen: React.ComponentType<any>;
-            }
-        ));
+        /**
+         * Static navigation config or Component to render for the screen.
+         */
+        screen: StaticNavigation<any, any> | React.ComponentType<any>;
+      });
 };
 
 export type StaticConfig<
@@ -200,7 +184,6 @@ export function createComponentForStaticNavigation(
 
   const items = Object.entries(screens).map(([name, item]) => {
     let component: React.ComponentType<any> | undefined;
-    let layout: LayoutComponent | undefined;
     let props: {} = {};
     let useIf: (() => boolean) | undefined;
 
@@ -216,7 +199,6 @@ export function createComponentForStaticNavigation(
         component = screen;
       } else if ('config' in screen) {
         isNavigator = true;
-        layout = 'layout' in item ? item.layout : undefined;
         component = createComponentForStaticNavigation(
           screen,
           `${name}Navigator`
@@ -240,10 +222,6 @@ export function createComponentForStaticNavigation(
     ) : (
       <MemoizedScreen component={component} />
     );
-
-    if (layout) {
-      element = React.createElement(layout, { children: element });
-    }
 
     return () => {
       const shouldRender = useIf == null || useIf();
