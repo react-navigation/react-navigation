@@ -412,7 +412,7 @@ export default function useLinking(
     // This could happen since `history.go(n)` is asynchronous
     // If `pushState` or `replaceState` were called before `history.go(n)` completes, it'll mess stuff up
     return ref.current?.addListener('state', series(onStateChange));
-  });
+  }, [enabled, history, ref]);
 
   return {
     getInitialState,
