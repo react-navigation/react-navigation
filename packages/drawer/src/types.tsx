@@ -172,6 +172,11 @@ export type DrawerNavigationOptions = HeaderOptions & {
   overlayColor?: string;
 
   /**
+   * Screen readers will read this string when the user presses on the overlay adjacent to an opened drawer. Defaults to "Close drawer".
+   * **/
+  overlayAccessibilityLabel?: string;
+
+  /**
    * Style object for the component wrapping the screen content.
    */
   sceneContainerStyle?: StyleProp<ViewStyle>;
@@ -310,4 +315,5 @@ export type DrawerProps = {
   swipeEdgeWidth: number;
   swipeEnabled: boolean;
   swipeVelocityThreshold: number;
+  overlayAccessibilityLabel?: string;
 };
