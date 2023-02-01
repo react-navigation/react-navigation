@@ -208,29 +208,31 @@ export default function useDescriptors<
         return o;
       });
 
+    const element = (
+      <NavigationBuilderContext.Provider key={route.key} value={context}>
+        <NavigationContext.Provider value={navigation}>
+          <NavigationRouteContext.Provider value={route}>
+            <SceneView
+              navigation={navigation}
+              route={route}
+              screen={screen}
+              routeState={state.routes[i].state}
+              getState={getState}
+              setState={setState}
+              options={mergedOptions}
+              clearOptions={clearOptions}
+            />
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>
+      </NavigationBuilderContext.Provider>
+    );
+
     acc[route.key] = {
       route,
       // @ts-expect-error: it's missing action helpers, fix later
       navigation,
       render() {
-        return (
-          <NavigationBuilderContext.Provider key={route.key} value={context}>
-            <NavigationContext.Provider value={navigation}>
-              <NavigationRouteContext.Provider value={route}>
-                <SceneView
-                  navigation={navigation}
-                  route={route}
-                  screen={screen}
-                  routeState={state.routes[i].state}
-                  getState={getState}
-                  setState={setState}
-                  options={mergedOptions}
-                  clearOptions={clearOptions}
-                />
-              </NavigationRouteContext.Provider>
-            </NavigationContext.Provider>
-          </NavigationBuilderContext.Provider>
-        );
+        return element;
       },
       options: mergedOptions as ScreenOptions,
     };
