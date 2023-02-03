@@ -152,11 +152,12 @@ export default function useNavigationCache<
 
           return rest.getParent(id);
         },
-        setOptions: (options: object) =>
+        setOptions: (options: object) => {
           setOptions((o) => ({
             ...o,
             [route.key]: { ...o[route.key], ...options },
-          })),
+          }));
+        },
         isFocused: () => {
           const state = getState();
 

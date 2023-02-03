@@ -84,7 +84,7 @@ export const PostDetailsScreen = ({
 
   expectTypeOf(navigation.setOptions)
     .parameter(0)
-    .toMatchTypeOf<StackNavigationOptions>();
+    .toMatchTypeOf<Partial<StackNavigationOptions>>();
 
   expectTypeOf(navigation.addListener)
     .parameter(0)
@@ -126,10 +126,7 @@ export const FeedScreen = ({
 
   expectTypeOf(navigation.setOptions)
     .parameter(0)
-    .toMatchTypeOf<StackNavigationOptions>();
-  expectTypeOf(navigation.setOptions)
-    .parameter(0)
-    .toMatchTypeOf<DrawerNavigationOptions>();
+    .toMatchTypeOf<Partial<DrawerNavigationOptions>>();
 
   expectTypeOf(navigation.addListener)
     .parameter(0)
@@ -160,13 +157,7 @@ export const PopularScreen = ({
 
   expectTypeOf(navigation.setOptions)
     .parameter(0)
-    .toMatchTypeOf<StackNavigationOptions>();
-  expectTypeOf(navigation.setOptions)
-    .parameter(0)
-    .toMatchTypeOf<DrawerNavigationOptions>();
-  expectTypeOf(navigation.setOptions)
-    .parameter(0)
-    .toMatchTypeOf<BottomTabNavigationOptions>();
+    .toMatchTypeOf<Partial<BottomTabNavigationOptions>>();
 
   expectTypeOf(navigation.addListener)
     .parameter(0)
@@ -201,13 +192,7 @@ export const LatestScreen = ({
 
   expectTypeOf(navigation.setOptions)
     .parameter(0)
-    .toMatchTypeOf<StackNavigationOptions>();
-  expectTypeOf(navigation.setOptions)
-    .parameter(0)
-    .toMatchTypeOf<DrawerNavigationOptions>();
-  expectTypeOf(navigation.setOptions)
-    .parameter(0)
-    .toMatchTypeOf<BottomTabNavigationOptions>();
+    .toMatchTypeOf<Partial<BottomTabNavigationOptions>>();
 
   expectTypeOf(navigation.setParams).parameter(0).toEqualTypeOf<undefined>();
 
