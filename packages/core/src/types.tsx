@@ -171,7 +171,7 @@ type NavigationHelpersCommon<
    * @param action Action object or update function.
    */
   dispatch(
-    action: NavigationAction | ((state: State) => NavigationAction)
+    action: NavigationAction | ((state: Readonly<State>) => NavigationAction)
   ): void;
 
   /**
@@ -323,7 +323,7 @@ export type NavigationContainerProps = {
   /**
    * Callback which is called with the latest navigation state when it changes.
    */
-  onStateChange?: (state: NavigationState | undefined) => void;
+  onStateChange?: (state: Readonly<NavigationState> | undefined) => void;
   /**
    * Callback which is called after the navigation tree mounts.
    */
@@ -331,7 +331,7 @@ export type NavigationContainerProps = {
   /**
    * Callback which is called when an action is not handled.
    */
-  onUnhandledAction?: (action: NavigationAction) => void;
+  onUnhandledAction?: (action: Readonly<NavigationAction>) => void;
   /**
    * Whether child navigator should handle a navigation action.
    * The child navigator needs to be mounted before it can handle the action.
@@ -381,7 +381,7 @@ export type NavigationProp<
    * Update the options for the route.
    * The options object will be shallow merged with default options object.
    *
-   * @param options Options object for the route.
+   * @param update Options object or a callback which takes the options from navigator config and returns a new options object.
    */
   setOptions(options: Partial<ScreenOptions>): void;
 } & EventConsumer<EventMap & EventMapCore<State>> &
@@ -418,11 +418,9 @@ export type CompositeNavigationProp<
      */
     A extends NavigationProp<any, any, any, infer S> ? S : NavigationState,
     /**
-     * Screen options from both navigation objects needs to be combined
-     * This allows typechecking `setOptions`
+     * Screen options should refer to the options specified in the first type
      */
-    (A extends NavigationProp<any, any, any, any, infer O> ? O : {}) &
-      (B extends NavigationProp<any, any, any, any, infer P> ? P : {}),
+    A extends NavigationProp<any, any, any, any, infer O> ? O : {},
     /**
      * Event consumer config should refer to the config specified in the first type
      * This allows typechecking `addListener`/`removeListener`
@@ -573,7 +571,11 @@ export type RouteConfig<
    * For a given screen name, there will always be only one screen corresponding to an ID.
    * If `undefined` is returned, it acts same as no `getId` being specified.
    */
-  getId?: ({ params }: { params: ParamList[RouteName] }) => string | undefined;
+  getId?: ({
+    params,
+  }: {
+    params: Readonly<ParamList[RouteName]>;
+  }) => string | undefined;
 
   /**
    * Initial params object for the route.
