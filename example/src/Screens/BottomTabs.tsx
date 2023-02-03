@@ -145,6 +145,7 @@ export function BottomTabs() {
           name="TabStack"
           component={SimpleStack}
           options={{
+            popToTopOnBlur: true,
             title: 'Article',
             headerShown: false,
             tabBarIcon: getTabBarIcon('file-document'),
@@ -154,7 +155,7 @@ export function BottomTabs() {
           name="TabChat"
           component={Chat}
           options={{
-            tabBarLabel: 'Chat',
+            title: 'Chat',
             tabBarIcon: getTabBarIcon('message-reply'),
             tabBarBadge: 2,
           }}
