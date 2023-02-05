@@ -8,11 +8,12 @@ import type {
   NavigatorScreenParams,
   PathConfig,
   RouteConfig,
+  RouteGroupConfig,
 } from './types';
 import useRoute from './useRoute';
 
 /**
- * Flatten a type recursively to remove all type alias names.
+ * Flatten a type to remove all type alias names.
  */
 type FlatType<T> = T extends object ? { [K in keyof T]: T[K] } : T;
 
@@ -24,9 +25,15 @@ type ComponentForOption<T> = T extends { screen: React.ComponentType<any> }
 
 type UnknownToUndefined<T> = unknown extends T ? undefined : T;
 
-type ParamsForScreen<T> = T extends { screen: StaticNavigation<any, any> }
+/**
+ * keyof T doesn't work for union types. We can use distributive conditional types instead.
+ * https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#distributive-conditional-types
+ */
+type KeysOf<T> = T extends any ? keyof T : never;
+
+type ParamsForScreen<T> = T extends { screen: StaticNavigation<any, any, any> }
   ? NavigatorScreenParams<StaticParamList<T['screen']>> | undefined
-  : T extends StaticNavigation<any, any>
+  : T extends StaticNavigation<any, any, any>
   ? NavigatorScreenParams<StaticParamList<T>> | undefined
   : UnknownToUndefined<
       React.ComponentProps<ComponentForOption<T>>['route']['params']
@@ -40,8 +47,34 @@ type ParamListForScreens<
     EventMapBase
   >
 > = {
-  [Key in keyof Screens]: ParamsForScreen<Screens[Key]>;
+  [Key in KeysOf<Screens>]: ParamsForScreen<Screens[Key]>;
 };
+
+type ParamListForGroups<
+  Groups extends
+    | Readonly<{
+        [key: string]: {
+          screens: StaticConfigScreens<
+            ParamListBase,
+            NavigationState,
+            {},
+            EventMapBase
+          >;
+        };
+      }>
+    | undefined
+> = Groups extends {
+  [key: string]: {
+    screens: StaticConfigScreens<
+      ParamListBase,
+      NavigationState,
+      {},
+      EventMapBase
+    >;
+  };
+}
+  ? ParamListForScreens<Groups[keyof Groups]['screens']>
+  : {};
 
 type StaticConfigScreens<
   ParamList extends ParamListBase,
@@ -51,7 +84,7 @@ type StaticConfigScreens<
 > = {
   [key: string]:
     | React.ComponentType<any>
-    | StaticNavigation<any, any>
+    | StaticNavigation<any, any, any>
     | (Omit<
         RouteConfig<ParamList, keyof ParamList, State, ScreenOptions, EventMap>,
         'name' | 'component' | 'getComponent' | 'children'
@@ -92,8 +125,25 @@ type StaticConfigScreens<
         /**
          * Static navigation config or Component to render for the screen.
          */
-        screen: StaticNavigation<any, any> | React.ComponentType<any>;
+        screen: StaticNavigation<any, any, any> | React.ComponentType<any>;
       });
+};
+
+type GroupConfig<
+  ParamList extends ParamListBase,
+  State extends NavigationState,
+  ScreenOptions extends {},
+  EventMap extends EventMapBase
+> = Omit<RouteGroupConfig<ParamList, ScreenOptions>, 'screens' | 'children'> & {
+  /**
+   * Callback to determine whether the screens in the group should be rendered or not.
+   * This can be useful for conditional rendering of group of screens.
+   */
+  if?: () => boolean;
+  /**
+   * Static navigation config or Component to render for the screen.
+   */
+  screens: StaticConfigScreens<ParamList, State, ScreenOptions, EventMap>;
 };
 
 export type StaticConfig<
@@ -119,6 +169,12 @@ export type StaticConfig<
    * Screens to render in the navigator and their configuration.
    */
   screens: StaticConfigScreens<ParamList, State, ScreenOptions, EventMap>;
+  /**
+   * Groups of screens to render in the navigator and their configuration.
+   */
+  groups?: {
+    [key: string]: GroupConfig<ParamList, State, ScreenOptions, EventMap>;
+  };
 };
 
 /**
@@ -143,12 +199,24 @@ export type StaticParamList<
         {},
         EventMapBase
       >;
+      readonly groups?: {
+        [key: string]: {
+          screens: StaticConfigScreens<
+            ParamListBase,
+            NavigationState,
+            {},
+            EventMapBase
+          >;
+        };
+      };
     };
   }
-> = ParamListForScreens<T['config']['screens']>;
+> = ParamListForScreens<T['config']['screens']> &
+  ParamListForGroups<T['config']['groups']>;
 
-export type StaticNavigation<NavigatorProps, ScreenProps> = {
+export type StaticNavigation<NavigatorProps, GroupProps, ScreenProps> = {
   Navigator: React.ComponentType<NavigatorProps>;
+  Group: React.ComponentType<GroupProps>;
   Screen: React.ComponentType<ScreenProps>;
   config: StaticConfig<
     ParamListBase,
@@ -168,21 +236,11 @@ const MemoizedScreen = React.memo(
   }
 );
 
-/**
- * Create a component that renders a navigator based on the static configuration.
- *
- * @param tree Static navigation config.
- * @param displayName Name of the component to be displayed in React DevTools.
- * @returns A component which renders the navigator.
- */
-export function createComponentForStaticNavigation(
-  tree: StaticNavigation<any, any>,
-  displayName: string
-): React.ComponentType<{}> {
-  const { Navigator, Screen, config } = tree;
-  const { screens, ...rest } = config;
-
-  const items = Object.entries(screens).map(([name, item]) => {
+const getItemsFromScreens = (
+  Screen: React.ComponentType<any>,
+  screens: StaticConfigScreens<any, any, any, any>
+) => {
+  return Object.entries(screens).map(([name, item]) => {
     let component: React.ComponentType<any> | undefined;
     let props: {} = {};
     let useIf: (() => boolean) | undefined;
@@ -237,6 +295,44 @@ export function createComponentForStaticNavigation(
       );
     };
   });
+};
+
+/**
+ * Create a component that renders a navigator based on the static configuration.
+ *
+ * @param tree Static navigation config.
+ * @param displayName Name of the component to be displayed in React DevTools.
+ * @returns A component which renders the navigator.
+ */
+export function createComponentForStaticNavigation(
+  tree: StaticNavigation<any, any, any>,
+  displayName: string
+): React.ComponentType<{}> {
+  const { Navigator, Group, Screen, config } = tree;
+  const { screens, groups, ...rest } = config;
+
+  const items = getItemsFromScreens(Screen, screens);
+
+  if (groups) {
+    items.push(
+      ...Object.values(groups).map(({ if: useIf, ...group }) => {
+        const groupItems = getItemsFromScreens(Screen, group.screens);
+
+        return () => {
+          // Call unconditionally since screen configs may contain `useIf` hooks
+          const children = groupItems.map((item) => item());
+
+          const shouldRender = useIf == null || useIf();
+
+          if (!shouldRender) {
+            return null;
+          }
+
+          return <Group {...group}>{children}</Group>;
+        };
+      })
+    );
+  }
 
   const NavigatorComponent = () => {
     const children = items.map((item) => item());

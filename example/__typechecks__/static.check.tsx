@@ -26,6 +26,19 @@ const RootStack = createStackNavigator({
     },
     Settings: () => null,
   },
+  groups: {
+    Guest: {
+      screens: {
+        Login: () => null,
+        Register: () => null,
+      },
+    },
+    User: {
+      screens: {
+        Account: () => null,
+      },
+    },
+  },
 });
 
 type ParamList = StaticParamList<typeof RootStack>;
@@ -36,7 +49,7 @@ declare const navigation: NavigationProp<ParamList>;
  * Infer screen names from config
  */
 expectTypeOf(navigation.getState().routes[0].name).toEqualTypeOf<
-  'Home' | 'Profile' | 'Feed' | 'Settings'
+  'Home' | 'Profile' | 'Feed' | 'Settings' | 'Login' | 'Register' | 'Account'
 >();
 
 /**

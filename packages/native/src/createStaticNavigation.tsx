@@ -27,7 +27,7 @@ type Props = Omit<
  * @returns Navigation component to use in your app.
  */
 export default function createStaticNavigation(
-  tree: StaticNavigation<any, any>
+  tree: StaticNavigation<any, any, any>
 ) {
   const Component = createComponentForStaticNavigation(tree, 'RootNavigator');
   const linkingConfig = {
