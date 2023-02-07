@@ -57,19 +57,15 @@ body:
         - label: Android
         - label: iOS
         - label: Web
-    validations:
-      required: true
   - type: checkboxes
     attributes:
       label: Packages
       description: |
         Which packages are affected by the issue?
       options:
-        - label: 'react-navigation-​drawer'
-        - label: 'react-navigation-​stack'
-        - label: 'react-navigation-​tabs'
-    validations:
-      required: true
+        - label: 'react-navigation-drawer'
+        - label: 'react-navigation-stack'
+        - label: 'react-navigation-tabs'
   - type: textarea
     attributes:
       label: Environment

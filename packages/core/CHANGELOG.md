@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.4.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.4.5...@react-navigation/core@6.4.6) (2023-01-10)
+
+### Bug Fixes
+
+* remove defaultScreenOptions from default navigator options ([681b8b2](https://github.com/react-navigation/react-navigation/commit/681b8b2a1fe3fdf4ed0fd3f1153dcd0739dc6b27)) - by @satya164
+
 ## [6.4.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.4.4...@react-navigation/core@6.4.5) (2022-12-12)
 
 **Note:** Version bump only for package @react-navigation/core
