@@ -318,7 +318,7 @@ export function createComponentForStaticNavigation(
 
   if (groups) {
     items.push(
-      ...Object.values(groups).map(({ if: useIf, ...group }) => {
+      ...Object.entries(groups).map(([key, { if: useIf, ...group }]) => {
         const groupItems = getItemsFromScreens(Screen, group.screens);
 
         return () => {
@@ -331,7 +331,11 @@ export function createComponentForStaticNavigation(
             return null;
           }
 
-          return <Group {...group}>{children}</Group>;
+          return (
+            <Group navigationKey={key} {...group}>
+              {children}
+            </Group>
+          );
         };
       })
     );
