@@ -13,17 +13,20 @@ import type {
 import useRoute from './useRoute';
 
 /**
- * Flatten a type to remove all type alias names.
+ * Flatten a type to remove all type alias names, unions etc.
+ * This will show a plain object when hovering over the type.
  */
-type FlatType<T> = T extends object ? { [K in keyof T]: T[K] } : T;
-
-type ComponentForOption<T> = T extends { screen: React.ComponentType<any> }
-  ? T['screen']
-  : T extends React.ComponentType<any>
-  ? T
-  : never;
+type FlatType<T> = { [K in keyof T]: T[K] } & {};
 
 type UnknownToUndefined<T> = unknown extends T ? undefined : T;
+
+type ParamsForScreenComponent<T> = T extends {
+  screen: React.ComponentType<{ route: { params: infer P } }>;
+}
+  ? P
+  : T extends React.ComponentType<{ route: { params: infer P } }>
+  ? P
+  : undefined;
 
 /**
  * keyof T doesn't work for union types. We can use distributive conditional types instead.
@@ -35,9 +38,7 @@ type ParamsForScreen<T> = T extends { screen: StaticNavigation<any, any, any> }
   ? NavigatorScreenParams<StaticParamList<T['screen']>> | undefined
   : T extends StaticNavigation<any, any, any>
   ? NavigatorScreenParams<StaticParamList<T>> | undefined
-  : UnknownToUndefined<
-      React.ComponentProps<ComponentForOption<T>>['route']['params']
-    >;
+  : UnknownToUndefined<ParamsForScreenComponent<T>>;
 
 type ParamListForScreens<
   Screens extends StaticConfigScreens<
@@ -82,7 +83,7 @@ type StaticConfigScreens<
   ScreenOptions extends {},
   EventMap extends EventMapBase
 > = {
-  [key: string]:
+  [key in keyof ParamList]:
     | React.ComponentType<any>
     | StaticNavigation<any, any, any>
     | (Omit<
@@ -211,8 +212,10 @@ export type StaticParamList<
       };
     };
   }
-> = ParamListForScreens<T['config']['screens']> &
-  ParamListForGroups<T['config']['groups']>;
+> = FlatType<
+  ParamListForScreens<T['config']['screens']> &
+    ParamListForGroups<T['config']['groups']>
+>;
 
 export type StaticNavigation<NavigatorProps, GroupProps, ScreenProps> = {
   Navigator: React.ComponentType<NavigatorProps>;

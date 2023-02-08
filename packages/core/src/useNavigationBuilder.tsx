@@ -63,9 +63,9 @@ type NavigationBuilderOptions<ScreenOptions extends {}> = {
       }) => ScreenOptions);
 };
 
-type NavigatorRoute<State extends NavigationState> = {
+type NavigatorRoute = {
   key: string;
-  params?: NavigatorScreenParams<ParamListBase, State>;
+  params?: NavigatorScreenParams<ParamListBase>;
 };
 
 const isValidKey = (key: unknown) =>
@@ -272,7 +272,7 @@ export default function useNavigationBuilder<
   const navigatorKey = useRegisterNavigator();
 
   const route = React.useContext(NavigationRouteContext) as
-    | NavigatorRoute<State>
+    | NavigatorRoute
     | undefined;
 
   const { children, screenListeners, ...rest } = options;
@@ -422,7 +422,7 @@ export default function useNavigationBuilder<
     } else {
       return [
         router.getRehydratedState(
-          route?.params?.state ?? (currentState as PartialState<State>),
+          (route?.params?.state ?? currentState) as PartialState<State>,
           {
             routeNames,
             routeParamList: initialRouteParamList,

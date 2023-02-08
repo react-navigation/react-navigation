@@ -709,16 +709,13 @@ export type TypedNavigator<
   ) => null;
 };
 
-export type NavigatorScreenParams<
-  ParamList extends {},
-  State extends NavigationState = NavigationState
-> =
+export type NavigatorScreenParams<ParamList extends {}> =
   | {
       screen?: never;
       params?: never;
       initial?: never;
       path?: string;
-      state: PartialState<State> | State | undefined;
+      state: PartialState<NavigationState> | NavigationState | undefined;
     }
   | {
       [RouteName in keyof ParamList]: undefined extends ParamList[RouteName]
@@ -787,7 +784,7 @@ export type PathConfig<ParamList extends {}> = {
 export type PathConfigMap<ParamList extends {}> = {
   [RouteName in keyof ParamList]?: NonNullable<
     ParamList[RouteName]
-  > extends NavigatorScreenParams<infer T, any>
+  > extends NavigatorScreenParams<infer T>
     ? string | PathConfig<T>
     : string | Omit<PathConfig<{}>, 'screens' | 'initialRouteName'>;
 };
