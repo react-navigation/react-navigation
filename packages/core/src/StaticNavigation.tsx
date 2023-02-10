@@ -18,6 +18,12 @@ import useRoute from './useRoute';
  */
 type FlatType<T> = { [K in keyof T]: T[K] } & {};
 
+/**
+ * keyof T doesn't work for union types. We can use distributive conditional types instead.
+ * https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#distributive-conditional-types
+ */
+type KeysOf<T> = T extends any ? keyof T : never;
+
 type UnknownToUndefined<T> = unknown extends T ? undefined : T;
 
 type ParamsForScreenComponent<T> = T extends {
@@ -27,12 +33,6 @@ type ParamsForScreenComponent<T> = T extends {
   : T extends React.ComponentType<{ route: { params: infer P } }>
   ? P
   : undefined;
-
-/**
- * keyof T doesn't work for union types. We can use distributive conditional types instead.
- * https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#distributive-conditional-types
- */
-type KeysOf<T> = T extends any ? keyof T : never;
 
 type ParamsForScreen<T> = T extends { screen: StaticNavigation<any, any, any> }
   ? NavigatorScreenParams<StaticParamList<T['screen']>> | undefined
@@ -332,7 +332,7 @@ export function createComponentForStaticNavigation(
           }
 
           return (
-            <Group navigationKey={key} {...group}>
+            <Group navigationKey={key} {...group} key={key}>
               {children}
             </Group>
           );
