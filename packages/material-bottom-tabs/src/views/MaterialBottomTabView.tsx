@@ -111,7 +111,7 @@ function MaterialBottomTabViewInner({
     return {
       ...t,
       colors: {
-        ...t.colors,
+        ...t?.colors,
         ...colors,
         surface: colors.card,
       },
