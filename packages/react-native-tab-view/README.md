@@ -324,6 +324,10 @@ Object containing the initial height and width of the screens. Passing this will
 />
 ```
 
+##### `overScrollMode`
+
+Used to override default value of pager's overScroll mode. Can be `auto`, `always` or `never` (Android only).
+
 ##### `sceneContainerStyle`
 
 Style to apply to the view wrapping each screen. You can pass this to override some default styles such as overflow clipping:
