@@ -94,6 +94,7 @@ function MaterialBottomTabViewInner({
   state,
   navigation,
   descriptors,
+  safeAreaInsets,
   ...rest
 }: Props) {
   const insets = useSafeAreaInsets();
@@ -213,7 +214,12 @@ function MaterialBottomTabViewInner({
           preventDefault();
         }
       }}
-      safeAreaInsets={insets}
+      safeAreaInsets={{
+        top: safeAreaInsets?.top ?? insets?.top,
+        right: safeAreaInsets?.right ?? insets?.right,
+        bottom: safeAreaInsets?.bottom ?? insets?.bottom,
+        left: safeAreaInsets?.left ?? insets?.left,
+      }}
     />
   );
 }
