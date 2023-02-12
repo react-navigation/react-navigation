@@ -28,6 +28,7 @@ import {
   NavigatorScreenParams,
   PrivateValueStore,
   RouteConfig,
+  RouteProp,
 } from './types';
 import useChildListeners from './useChildListeners';
 import useComponent from './useComponent';
@@ -47,6 +48,20 @@ import useScheduleUpdate from './useScheduleUpdate';
 // This is to make TypeScript compiler happy
 // eslint-disable-next-line babel/no-unused-expressions
 PrivateValueStore;
+
+type NavigationBuilderOptions<ScreenOptions extends {}> = {
+  /**
+   * Default options specified by the navigator.
+   * It receives the custom options in the arguments if a function is specified.
+   */
+  defaultScreenOptions?:
+    | ScreenOptions
+    | ((props: {
+        route: RouteProp<ParamListBase>;
+        navigation: any;
+        options: ScreenOptions;
+      }) => ScreenOptions);
+};
 
 type NavigatorRoute<State extends NavigationState> = {
   key: string;
@@ -246,6 +261,7 @@ export default function useNavigationBuilder<
     ScreenOptions,
     EventMap
   > &
+    NavigationBuilderOptions<ScreenOptions> &
     RouterOptions
 ) {
   const navigatorKey = useRegisterNavigator();

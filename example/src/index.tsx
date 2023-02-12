@@ -230,6 +230,7 @@ export default function App() {
               <Drawer.Navigator
                 screenOptions={{
                   drawerType: isLargeScreen ? 'permanent' : undefined,
+                  overlayAccessibilityLabel: 'Close drawer',
                 }}
               >
                 <Drawer.Screen

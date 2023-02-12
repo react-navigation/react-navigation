@@ -61,6 +61,7 @@ export default function Drawer({
   swipeEdgeWidth,
   swipeEnabled,
   swipeVelocityThreshold,
+  overlayAccessibilityLabel,
 }: DrawerProps) {
   const getDrawerWidth = (): number => {
     const { width = DEFAULT_DRAWER_WIDTH } =
@@ -378,11 +379,11 @@ export default function Drawer({
                   toggleDrawer({ open: false, isUserInitiated: true })
                 }
                 style={overlayStyle}
+                accessibilityLabel={overlayAccessibilityLabel}
               />
             ) : null}
           </Animated.View>
           <Animated.View
-            accessibilityViewIsModal={isOpen && drawerType !== 'permanent'}
             removeClippedSubviews={Platform.OS !== 'ios'}
             style={[
               styles.container,

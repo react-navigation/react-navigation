@@ -31,7 +31,7 @@ jobs:
               }
             }
 
-            const body = `Hey ${creator}! Thanks for opening your first pull request in this repo. If you haven't already, make sure to read our [contribution guidelines](https://github.com/react-navigation/react-navigation/blob/main/CONTRIBUTING.md).`;
+            const body = `Hey @${creator}! Thanks for opening your first pull request in this repo. If you haven't already, make sure to read our [contribution guidelines](https://github.com/react-navigation/react-navigation/blob/main/CONTRIBUTING.md).`;
 
             const comments = await github.issues.listComments({
               issue_number: context.issue.number,

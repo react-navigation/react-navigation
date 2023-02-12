@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.1.2...@react-navigation/native@6.1.3) (2023-01-31)
+
+### Bug Fixes
+
+* don't modify browser history on re-render ([79d8dc1](https://github.com/react-navigation/react-navigation/commit/79d8dc107aaadf4923024f8b122c0b55e1079706)) - by @satya164
+
+## [6.1.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.1.1...@react-navigation/native@6.1.2) (2023-01-10)
+
+**Note:** Version bump only for package @react-navigation/native
+
 ## [6.1.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.1.0...@react-navigation/native@6.1.1) (2022-12-12)
 
 **Note:** Version bump only for package @react-navigation/native
