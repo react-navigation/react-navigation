@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   Animated,
   LayoutChangeEvent,
+  PressableAndroidRippleConfig,
   StyleProp,
   StyleSheet,
   TextStyle,
@@ -42,6 +43,7 @@ export type Props<T extends Route> = {
   defaultTabWidth?: number;
   labelStyle?: StyleProp<TextStyle>;
   style: StyleProp<ViewStyle>;
+  android_ripple?: PressableAndroidRippleConfig;
 };
 
 const DEFAULT_ACTIVE_COLOR = 'rgba(255, 255, 255, 1)';
@@ -113,6 +115,7 @@ const TabBarItemInternal = <T extends Route>({
   defaultTabWidth,
   routesLength,
   renderLabel: renderLabelCustom,
+  android_ripple = { borderless: true },
 }: TabBarItemInternalProps<T>) => {
   const labelColorFromStyle = StyleSheet.flatten(labelStyle || {}).color;
 
@@ -233,7 +236,7 @@ const TabBarItemInternal = <T extends Route>({
 
   return (
     <PlatformPressable
-      android_ripple={{ borderless: true }}
+      android_ripple={android_ripple}
       testID={getTestID(scene)}
       accessible={getAccessible(scene)}
       accessibilityLabel={accessibilityLabel}

@@ -42,6 +42,7 @@ export default function TabBarTop({
         focusedOptions.tabBarIndicatorStyle,
       ]}
       gap={focusedOptions.tabBarGap}
+      android_ripple={focusedOptions.tabBarAndroidRipple}
       indicatorContainerStyle={focusedOptions.tabBarIndicatorContainerStyle}
       contentContainerStyle={focusedOptions.tabBarContentContainerStyle}
       style={[{ backgroundColor: colors.card }, focusedOptions.tabBarStyle]}

@@ -6,6 +6,7 @@ import {
   LayoutChangeEvent,
   ListRenderItemInfo,
   Platform,
+  PressableAndroidRippleConfig,
   StyleProp,
   StyleSheet,
   TextStyle,
@@ -66,6 +67,7 @@ export type Props<T extends Route> = SceneRendererProps & {
   style?: StyleProp<ViewStyle>;
   gap?: number;
   testID?: string;
+  android_ripple?: PressableAndroidRippleConfig;
 };
 
 type FlattenedTabWidth = string | number | undefined;
@@ -283,6 +285,7 @@ export default function TabBar<T extends Route>({
   style,
   tabStyle,
   testID,
+  android_ripple,
 }: Props<T>) {
   const [layout, setLayout] = React.useState<Layout>({ width: 0, height: 0 });
   const [tabWidths, setTabWidths] = React.useState<Record<string, number>>({});
@@ -436,6 +439,7 @@ export default function TabBar<T extends Route>({
               getFlattenedTabWidth(tabStyle)
             )
           : undefined,
+        android_ripple,
       };
 
       return (
@@ -451,6 +455,7 @@ export default function TabBar<T extends Route>({
     },
     [
       activeColor,
+      android_ripple,
       gap,
       getAccessibilityLabel,
       getAccessible,
