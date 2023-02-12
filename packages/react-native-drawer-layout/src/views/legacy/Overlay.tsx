@@ -18,10 +18,17 @@ const PROGRESS_EPSILON = 0.05;
 type Props = React.ComponentProps<typeof Animated.View> & {
   progress: Animated.Node<number>;
   onPress: () => void;
+  accessibilityLabel?: string;
 };
 
 const Overlay = React.forwardRef(function Overlay(
-  { progress, onPress, style, ...props }: Props,
+  {
+    progress,
+    onPress,
+    style,
+    accessibilityLabel = 'Close drawer',
+    ...props
+  }: Props,
   ref: React.Ref<Animated.View>
 ) {
   const animatedStyle = {
@@ -48,7 +55,12 @@ const Overlay = React.forwardRef(function Overlay(
       ref={ref}
       style={[styles.overlay, overlayStyle, animatedStyle, style]}
     >
-      <Pressable onPress={onPress} style={styles.pressable} />
+      <Pressable
+        onPress={onPress}
+        style={styles.pressable}
+        accessibilityRole="button"
+        accessibilityLabel={accessibilityLabel}
+      />
     </Animated.View>
   );
 });

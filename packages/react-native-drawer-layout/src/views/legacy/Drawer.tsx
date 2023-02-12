@@ -502,6 +502,7 @@ export default class Drawer extends React.Component<Props> {
       renderDrawerContent,
       children,
       gestureHandlerProps,
+      overlayAccessibilityLabel,
     } = this.props;
 
     const isOpen = drawerType === 'permanent' ? true : open;
@@ -592,6 +593,7 @@ export default class Drawer extends React.Component<Props> {
                   <Overlay
                     progress={progress}
                     onPress={() => this.toggleDrawer(false)}
+                    accessibilityLabel={overlayAccessibilityLabel}
                     style={overlayStyle as any}
                     accessibilityElementsHidden={!isOpen}
                     importantForAccessibility={
@@ -619,7 +621,6 @@ export default class Drawer extends React.Component<Props> {
               />
             )}
             <Animated.View
-              accessibilityViewIsModal={isOpen && drawerType !== 'permanent'}
               removeClippedSubviews={Platform.OS !== 'ios'}
               onLayout={this.handleDrawerLayout}
               style={[
