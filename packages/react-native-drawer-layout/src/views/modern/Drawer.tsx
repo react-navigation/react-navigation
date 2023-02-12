@@ -55,6 +55,7 @@ export default function Drawer({
   onOpen,
   open,
   overlayStyle,
+  overlayAccessibilityLabel,
   statusBarAnimation,
   swipeEnabled,
   swipeEdgeWidth,
@@ -366,11 +367,11 @@ export default function Drawer({
                 progress={progress}
                 onPress={() => toggleDrawer(false)}
                 style={overlayStyle}
+                accessibilityLabel={overlayAccessibilityLabel}
               />
             ) : null}
           </Animated.View>
           <Animated.View
-            accessibilityViewIsModal={isOpen && drawerType !== 'permanent'}
             removeClippedSubviews={Platform.OS !== 'ios'}
             style={[
               styles.container,

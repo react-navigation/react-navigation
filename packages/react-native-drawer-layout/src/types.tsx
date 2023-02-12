@@ -59,6 +59,12 @@ export type DrawerProps = {
   overlayStyle?: StyleProp<ViewStyle>;
 
   /**
+   * Accessibility label for the overlay. This is read by the screen reader when the user taps the overlay.
+   * Defaults to "Close drawer".
+   */
+  overlayAccessibilityLabel?: string;
+
+  /**
    * Whether the keyboard should be dismissed when the swipe gesture begins.
    * Defaults to `'on-drag'`. Set to `'none'` to disable keyboard handling.
    */
