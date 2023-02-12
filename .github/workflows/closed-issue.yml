@@ -14,6 +14,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
               const body = "Hey! This issue is closed and isn't watched by the core team. You are welcome to discuss the issue with others in this thread, but if you think this issue is still valid and needs to be tracked, please open a new issue with a repro.";
+
               const comments = await github.issues.listComments({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
