@@ -165,7 +165,7 @@ export type StackHeaderOptions = Omit<
   /**
    * Whether the back button title should be visible or not.
    *
-   * Defaults to `true` on iOS, `false on Android.
+   * Defaults to `true` on iOS, `false` on Android.
    */
   headerBackTitleVisible?: boolean;
   /**
