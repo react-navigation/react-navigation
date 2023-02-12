@@ -52,8 +52,21 @@ jobs:
                 return;
               }
 
-            const body =
-              "Hey! Thanks for opening the issue. The issue doesn't seem to contain a link to a repro (a [snack.expo.dev](https://snack.expo.dev) link, a [www.typescriptlang.org/play](https://www.typescriptlang.org/play) link or link to a GitHub repo under your username).\n\nCan you provide a [minimal repro](https://stackoverflow.com/help/minimal-reproducible-example) which demonstrates the issue? Please try to keep the repro as small as possible and make sure that we can run it without additional setup.\n\nA repro will help us debug the issue. The issue will be closed automatically after a while if you don't provide a repro.";
+            const body = `Hey @${user}! Thanks for opening the issue. It seems that the issue doesn't contain a link to a repro.
+
+            **The best way to get attention to your issue is to provide an easy way for a developer to reproduce the issue.**
+
+            You can provide a repro using any of the following:
+
+            - [Expo Snack](https://snack.expo.io)
+            - [TypeScript Playground](https://www.typescriptlang.org/play)
+            - GitHub repo under your username
+
+            A snack link is preferred since it's the easiest way to both create and share a repro. If it's not possible to create a repro using a snack, link to a GitHub repo under your username is a good alternative. **Don't link to a branch or specific file etc.** as it won't be detected.
+
+            Try to keep the repro as small as possible by narrowing down the minimal amount of code needed to reproduce the issue. **Don't link to your entire project or a project containing code unrelated to the issue.** See ["How to create a Minimal, Reproducible Example"](https://stackoverflow.com/help/minimal-reproducible-example) for more information.
+
+            You can edit your original issue to include a link to the repro, or leave it as a comment. **The issue will be closed automatically after a while** if you don't provide a repro.`
 
               const comments = await github.issues.listComments({
                 issue_number: context.issue.number,

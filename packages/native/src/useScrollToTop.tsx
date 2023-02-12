@@ -5,6 +5,7 @@ import {
   useRoute,
 } from '@react-navigation/core';
 import * as React from 'react';
+import type { ScrollView } from 'react-native';
 
 type ScrollOptions = { x?: number; y?: number; animated?: boolean };
 
@@ -15,7 +16,7 @@ type ScrollableView =
   | { scrollResponderScrollTo(options: ScrollOptions): void };
 
 type ScrollableWrapper =
-  | { getScrollResponder(): React.ReactNode }
+  | { getScrollResponder(): React.ReactNode | ScrollView }
   | { getNode(): ScrollableView }
   | ScrollableView;
 
