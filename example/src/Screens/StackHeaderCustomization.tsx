@@ -1,3 +1,4 @@
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { HeaderBackground, useHeaderHeight } from '@react-navigation/elements';
 import { ParamListBase, useTheme } from '@react-navigation/native';
 import {
@@ -16,7 +17,6 @@ import {
   View,
 } from 'react-native';
 import { Appbar, Button } from 'react-native-paper';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Albums from '../Shared/Albums';
 import Article from '../Shared/Article';

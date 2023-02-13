@@ -1,3 +1,4 @@
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
   createBottomTabNavigator,
   useBottomTabBarHeight,
@@ -13,7 +14,6 @@ import type { StackScreenProps } from '@react-navigation/stack';
 import { BlurView } from 'expo-blur';
 import * as React from 'react';
 import { ScrollView, StatusBar, StyleSheet } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Albums from '../Shared/Albums';
 import Chat from '../Shared/Chat';
@@ -21,7 +21,7 @@ import Contacts from '../Shared/Contacts';
 import SimpleStackScreen, { SimpleStackParams } from './SimpleStack';
 
 const getTabBarIcon =
-  (name: string) =>
+  (name: React.ComponentProps<typeof MaterialCommunityIcons>['name']) =>
   ({ color, size }: { color: string; size: number }) =>
     <MaterialCommunityIcons name={name} color={color} size={size} />;
 

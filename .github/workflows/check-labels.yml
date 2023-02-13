@@ -23,7 +23,6 @@ jobs:
                 [
                   'bottom-tabs',
                   'drawer',
-                  'material-bottom-tabs',
                   'material-top-tabs',
                   'stack',
                   'native-stack',

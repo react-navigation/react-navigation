@@ -6,7 +6,6 @@ import DrawerView from './Screens/DrawerView';
 import DynamicTabs from './Screens/DynamicTabs';
 import LinkComponent from './Screens/LinkComponent';
 import MasterDetail from './Screens/MasterDetail';
-import MaterialBottomTabs from './Screens/MaterialBottomTabs';
 import MaterialTopTabsScreen from './Screens/MaterialTopTabs';
 import MixedHeaderMode from './Screens/MixedHeaderMode';
 import MixedStack from './Screens/MixedStack';
@@ -69,10 +68,6 @@ export const SCREENS = {
   MaterialTopTabs: {
     title: 'Material Top Tabs',
     component: MaterialTopTabsScreen,
-  },
-  MaterialBottomTabs: {
-    title: 'Material Bottom Tabs',
-    component: MaterialBottomTabs,
   },
   DynamicTabs: {
     title: 'Dynamic Tabs',

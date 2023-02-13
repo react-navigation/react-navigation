@@ -1,3 +1,4 @@
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useReduxDevToolsExtension } from '@react-navigation/devtools';
 import {
@@ -38,7 +39,6 @@ import {
   Provider as PaperProvider,
 } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import { restartApp } from './Restart';
 import { RootDrawerParamList, RootStackParamList, SCREENS } from './screens';

@@ -21,7 +21,6 @@ jobs:
             @react-navigation/core
             @react-navigation/devtools
             @react-navigation/drawer
-            @react-navigation/material-bottom-tabs
             @react-navigation/material-top-tabs
             @react-navigation/routers
             @react-navigation/stack

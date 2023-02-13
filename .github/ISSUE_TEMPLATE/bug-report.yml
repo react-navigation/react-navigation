@@ -67,7 +67,6 @@ body:
       options:
         - label: '@react-navigation/bottom-tabs'
         - label: '@react-navigation/drawer'
-        - label: '@react-navigation/material-bottom-tabs'
         - label: '@react-navigation/material-top-tabs'
         - label: '@react-navigation/stack'
         - label: '@react-navigation/native-stack'
@@ -87,7 +86,6 @@ body:
         | @react-navigation/native               |
         | @react-navigation/bottom-tabs          |
         | @react-navigation/drawer               |
-        | @react-navigation/material-bottom-tabs |
         | @react-navigation/material-top-tabs    |
         | @react-navigation/stack                |
         | @react-navigation/native-stack         |

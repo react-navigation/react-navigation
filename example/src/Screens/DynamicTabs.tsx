@@ -1,8 +1,8 @@
+import Feather from '@expo/vector-icons/Feather';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Title } from 'react-native-paper';
-import Feather from 'react-native-vector-icons/Feather';
 
 type BottomTabParams = {
   [key: string]: undefined;
