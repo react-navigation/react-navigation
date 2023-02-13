@@ -18,10 +18,7 @@ import {
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 
-import {
-  forModalPresentationIOS,
-  forNoAnimation as forNoAnimationCard,
-} from '../../TransitionConfigs/CardStyleInterpolators';
+import { forNoAnimation as forNoAnimationCard } from '../../TransitionConfigs/CardStyleInterpolators';
 import {
   DefaultTransition,
   ModalFadeTransition,
@@ -523,8 +520,10 @@ export default class CardStack extends React.Component<Props, State> {
           : getIsModalPresentation(options.cardStyleInterpolator)
           ? i !==
             scenes
-              .map((scene) => scene.descriptor.options.cardStyleInterpolator)
-              .lastIndexOf(forModalPresentationIOS)
+              .map(
+                (scene) => scene.descriptor.options.cardStyleInterpolator.name
+              )
+              .lastIndexOf('forModalPresentationIOS')
           : true,
       } = options;
 
