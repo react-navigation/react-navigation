@@ -121,10 +121,6 @@ export type NativeStackNavigationOptions = {
    * You can use it to show a back button alongside `headerLeft` if you have specified it.
    *
    * This will have no effect on the first screen in the stack.
-   *
-   * Only supported on iOS.
-   *
-   * @platform ios
    */
   headerBackVisible?: boolean;
   /**
