@@ -440,7 +440,7 @@ export type ScreenListeners<
   >;
 }>;
 
-type ScreenComponentType<
+export type ScreenComponentType<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList
 > =
