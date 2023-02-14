@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.6.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.5.8...@react-navigation/drawer@6.6.0) (2023-02-14)
+
+### Bug Fixes
+
+* added close drawer accessibility tap area ([#11184](https://github.com/react-navigation/react-navigation/issues/11184)) ([061fb13](https://github.com/react-navigation/react-navigation/commit/061fb13273686bc5337442f1026ae426399b9808)) - by @mikegarfinkle
+
+### Features
+
+* add testID and accessibilityLabel to DrawerItem ([#11168](https://github.com/react-navigation/react-navigation/issues/11168)) ([99ff9f7](https://github.com/react-navigation/react-navigation/commit/99ff9f7b92f6bb1ac32bc6c7482ae1faffec4ae8)) - by @andrewtremblay
+
 ## [6.5.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.5.7...@react-navigation/drawer@6.5.8) (2023-01-31)
 
 **Note:** Version bump only for package @react-navigation/drawer

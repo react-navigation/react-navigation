@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.1.3...@react-navigation/native@6.1.4) (2023-02-14)
+
+### Bug Fixes
+
+* add `ScrollView` type to 'getScrollResponder' ([#11112](https://github.com/react-navigation/react-navigation/issues/11112)) ([bb3b849](https://github.com/react-navigation/react-navigation/commit/bb3b849c0765287bc52a8ee2b8afda6edb49fd7c)) - by @ken0nek
+
 ## [6.1.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.1.2...@react-navigation/native@6.1.3) (2023-01-31)
 
 ### Bug Fixes
