@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.3.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.3.13...@react-navigation/stack@6.3.14) (2023-02-16)
+
+### Bug Fixes
+
+* fix checking for modal presentation in stack ([b0253c3](https://github.com/react-navigation/react-navigation/commit/b0253c39cdbc4046c18564744d114cc7792e4aac)) - by @satya164
+
 ## [6.3.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.3.12...@react-navigation/stack@6.3.13) (2023-02-14)
 
 ### Bug Fixes
