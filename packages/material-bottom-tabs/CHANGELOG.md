@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.2.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.2.12...@react-navigation/material-bottom-tabs@6.2.13) (2023-02-14)
+
+### Bug Fixes
+
+* fix material bottom tabs not respecting safeAreaInsets prop ([fbfc9b3](https://github.com/react-navigation/react-navigation/commit/fbfc9b39db4ac8cb56d0c8f28b0f27b8cda0a508)) - by @satya164
+
 ## [6.2.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.2.11...@react-navigation/material-bottom-tabs@6.2.12) (2023-01-31)
 
 **Note:** Version bump only for package @react-navigation/material-bottom-tabs

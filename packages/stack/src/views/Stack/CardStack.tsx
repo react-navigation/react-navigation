@@ -35,6 +35,7 @@ import type {
   StackHeaderMode,
   StackNavigationOptions,
 } from '../../types';
+import findLastIndex from '../../utils/findLastIndex';
 import getDistanceForDirection from '../../utils/getDistanceForDirection';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import { MaybeScreen, MaybeScreenContainer } from '../Screens';
@@ -521,9 +522,14 @@ export default class CardStack extends React.Component<Props, State> {
           ? false
           : getIsModalPresentation(options.cardStyleInterpolator)
           ? i !==
-            scenes
-              .map((scene) => scene.descriptor.options.cardStyleInterpolator)
-              .lastIndexOf(forModalPresentationIOS)
+            findLastIndex(scenes, (scene) => {
+              const { cardStyleInterpolator } = scene.descriptor.options;
+
+              return (
+                cardStyleInterpolator === forModalPresentationIOS ||
+                cardStyleInterpolator?.name === 'forModalPresentationIOS'
+              );
+            })
           : true,
       } = options;
 

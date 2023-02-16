@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.3.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.3.13...@react-navigation/stack@6.3.14) (2023-02-16)
+
+### Bug Fixes
+
+* fix checking for modal presentation in stack ([b0253c3](https://github.com/react-navigation/react-navigation/commit/b0253c39cdbc4046c18564744d114cc7792e4aac)) - by @satya164
+
+## [6.3.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.3.12...@react-navigation/stack@6.3.13) (2023-02-14)
+
+### Bug Fixes
+
+* Check cardStyleInterpolator name to allow for custom animation as well ([#11209](https://github.com/react-navigation/react-navigation/issues/11209)) ([a5050ba](https://github.com/react-navigation/react-navigation/commit/a5050baa6001706ec1c6ce295685b9bb1af79abd)), closes [/github.com/react-navigation/react-navigation/blob/main/packages/stack/src/TransitionConfigs/CardStyleInterpolators.tsx#L93](https://github.com//github.com/react-navigation/react-navigation/blob/main/packages/stack/src/TransitionConfigs/CardStyleInterpolators.tsx/issues/L93) [/github.com/react-navigation/react-navigation/blob/main/packages/stack/src/views/Stack/Card.tsx#L580](https://github.com//github.com/react-navigation/react-navigation/blob/main/packages/stack/src/views/Stack/Card.tsx/issues/L580) - by @drager
+
 ## [6.3.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.3.11...@react-navigation/stack@6.3.12) (2023-01-31)
 
 **Note:** Version bump only for package @react-navigation/stack

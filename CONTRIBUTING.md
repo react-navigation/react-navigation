@@ -108,7 +108,7 @@ When you're sending a pull request:
 
 ## Publishing
 
-Maintainers with write access to the GitHub repo and the npm organization can publish new versions. To publish a new version, first, you need to export a `GH_TOKEN` environment variable as mentioned [here](https://github.com/lerna/lerna/tree/master/commands/version#--create-release-type). Then run:
+Maintainers with write access to the GitHub repo and the npm organization can publish new versions. To publish a new version, first, you need to export a `GH_TOKEN` environment variable as mentioned [here](https://github.com/lerna-lite/lerna-lite/blob/main/packages/version/README.md#remote-client-auth-tokens). Then run:
 
 ```sh
 yarn release

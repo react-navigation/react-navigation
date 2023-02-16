@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.4.0](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@3.3.4...react-native-tab-view@3.4.0) (2023-02-14)
+
+### Features
+
+* add support to override pager's overScrollMode ([#11194](https://github.com/react-navigation/react-navigation/issues/11194)) ([8d60b3c](https://github.com/react-navigation/react-navigation/commit/8d60b3cd9ed6f1df502982cbff8b75c633f455c7)) - by @ouabing
+* allow users to pass `android_ripple` config in TabView ([#11203](https://github.com/react-navigation/react-navigation/issues/11203)) ([a452ecb](https://github.com/react-navigation/react-navigation/commit/a452ecbfa00d963ff46f231919e66b3cd87f5939)), closes [#11198](https://github.com/react-navigation/react-navigation/issues/11198) - by @okwasniewski
+
 ## [3.3.4](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@3.3.3...react-native-tab-view@3.3.4) (2022-12-12)
 
 **Note:** Version bump only for package react-native-tab-view
