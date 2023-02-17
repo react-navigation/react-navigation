@@ -23,6 +23,20 @@ const RootStack = createStackNavigator({
       options: {
         headerTitle: 'My Feed',
       },
+      linking: {
+        path: 'feed/:sort',
+        parse: {
+          sort: String,
+        },
+      },
+      initialParams: {
+        sort: 'hot',
+      },
+      listeners: {
+        transitionEnd: (e) => {
+          expectTypeOf(e.data).toMatchTypeOf<{ closing: boolean }>();
+        },
+      },
     },
     Settings: () => null,
   },
@@ -148,6 +162,17 @@ createBottomTabNavigator({
       options: {
         // @ts-expect-error
         tabBarActiveTintColor: 42,
+      },
+    },
+  },
+});
+
+createBottomTabNavigator({
+  screens: {
+    Test: {
+      screen: (_: { foo: number }) => null,
+      initialParams: {
+        foo: 'test',
       },
     },
   },

@@ -118,7 +118,7 @@ type StaticConfigScreens<
         linking?:
           | FlatType<
               Pick<
-                PathConfig<ParamListBase>,
+                PathConfig<ParamList>,
                 'path' | 'exact' | 'parse' | 'stringify'
               >
             >
@@ -194,20 +194,10 @@ export type StaticScreenProps<T extends Record<string, unknown> | undefined> = {
 export type StaticParamList<
   T extends {
     readonly config: {
-      readonly screens: StaticConfigScreens<
-        ParamListBase,
-        NavigationState,
-        {},
-        EventMapBase
-      >;
+      readonly screens: Record<string, any>;
       readonly groups?: {
         [key: string]: {
-          screens: StaticConfigScreens<
-            ParamListBase,
-            NavigationState,
-            {},
-            EventMapBase
-          >;
+          screens: Record<string, any>;
         };
       };
     };
