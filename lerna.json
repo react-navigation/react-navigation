@@ -10,7 +10,7 @@
     "publish": {
       "graphType": "all",
       "syncWorkspaceLock": true,
-      "allowBranch": "7.x",
+      "allowBranch": "main",
       "conventionalCommits": true,
       "createRelease": "github",
       "changelogIncludeCommitsClientLogin": " - by @%l",

@@ -2,7 +2,7 @@ name: Expo Publish
 on:
   push:
     branches:
-      - 7.x
+      - main
   workflow_dispatch:
 
 jobs:
