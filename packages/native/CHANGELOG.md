@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.14...@react-navigation/native@7.0.0-alpha.0) (2023-02-17)
+
+### Bug Fixes
+
+* add `ScrollView` type to 'getScrollResponder' ([#11112](https://github.com/react-navigation/react-navigation/issues/11112)) ([f4324cd](https://github.com/react-navigation/react-navigation/commit/f4324cdbb50218bed30abf673f5070e20e2d7db8)) - by @ken0nek
+* don't modify browser history on re-render ([ab66777](https://github.com/react-navigation/react-navigation/commit/ab66777c092fae3d28c9c8381aeb5b92945ca256)) - by @satya164
+* keep hash/fragment section un URLs on web ([#11078](https://github.com/react-navigation/react-navigation/issues/11078)) ([a30daa0](https://github.com/react-navigation/react-navigation/commit/a30daa07fb667389420d78590757914487e32c19)) - by @nikgraf
+
+* refactor!: improve the API for Link component ([7f35837](https://github.com/react-navigation/react-navigation/commit/7f3583793ad17475531e155f1f433ffa16547015)) - by @satya164
+* fix!: align onReady callback and navigationRef.isReady ([1959baa](https://github.com/react-navigation/react-navigation/commit/1959baa97c101712db84905827f13a8a78a42ca7)) - by @satya164
+
+### Features
+
+* make useScrollToTop work when nesting multiple tab navigators ([#11063](https://github.com/react-navigation/react-navigation/issues/11063)) ([dce463a](https://github.com/react-navigation/react-navigation/commit/dce463a0e39b21509670b5c1d0cab933aa9e4962)), closes [/github.com/react-navigation/react-navigation/pull/9434#issuecomment-1328345015](https://github.com//github.com/react-navigation/react-navigation/pull/9434/issues/issuecomment-1328345015) - by @anthonyguay
+* support statically confguring navigation tree ([#11144](https://github.com/react-navigation/react-navigation/issues/11144)) ([4cc322e](https://github.com/react-navigation/react-navigation/commit/4cc322e08b3d6fe089710c9c6869bbdc183c2bd6)) - by @satya164
+
+### BREAKING CHANGES
+
+* Initially the `Link` component was designed to work with path strings via the `to` prop. But it has few issues:
+
+- The path strings are not type-safe, making it easy to cause typos and bugs after
+refactor
+- The API made navigating via screen name more incovenient, even if that's the preferred approach
+
+This revamps the API of the `Link` component to make it easier to use. Instead of `to` prop, it now accepts `screen` and `params` props, as well as an optional `href` prop to
+use instead of the generated path.
+
+e.g.:
+
+```js
+<Link screen="Details" params={{ foo: 42 }}>Go to Details</Link>
+```
+
+This also drops the `useLinkTo` hook and consolidates into the `useLinkTools` hook - which lets us build a `href` for a screen or action for a path.
+* Previously, the `onReady` prop and `navigationRef.isReady()` work slightly
+differently. The
+`onReady` callback fired when `NavigationContainer` finishes mounting and deep links is resolved.
+The `navigationRef.isReady()` method additionally checks if there are any navigators rendered - which may not be `true` if the user is rendering their navigators conditionally inside a
+`NavigationContainer`.
+
+This changes `onReady` to work similar to `navigationRef.isReady()`. The `onReady` callback will now fire only when there are navigators rendered - reflecting the value of
+`navigationRef.isReady()`.
+
 ## [6.0.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.0.13...@react-navigation/native@6.0.14) (2022-11-21)
 
 ### Bug Fixes

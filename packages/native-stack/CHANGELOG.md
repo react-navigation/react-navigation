@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.9.2...@react-navigation/native-stack@7.0.0-alpha.0) (2023-02-17)
+
+### Bug Fixes
+
+* fix headerBackVisible type annotation ([#11220](https://github.com/react-navigation/react-navigation/issues/11220)) ([d18936a](https://github.com/react-navigation/react-navigation/commit/d18936a21fbd8a3974a4a83f613df0ef00aafbcd)) - by @Vin-Xi
+* make headerBackground visible with transparent header ([#11109](https://github.com/react-navigation/react-navigation/issues/11109)) ([2b1e8dc](https://github.com/react-navigation/react-navigation/commit/2b1e8dccc315ffa47fb7d4fabb1c597f508c5511)) - by @yhkaplan
+
+* refactor!: improve the API for Link component ([7f35837](https://github.com/react-navigation/react-navigation/commit/7f3583793ad17475531e155f1f433ffa16547015)) - by @satya164
+
+### BREAKING CHANGES
+
+* Initially the `Link` component was designed to work with path strings via the `to` prop. But it has few issues:
+
+- The path strings are not type-safe, making it easy to cause typos and bugs after
+refactor
+- The API made navigating via screen name more incovenient, even if that's the preferred approach
+
+This revamps the API of the `Link` component to make it easier to use. Instead of `to` prop, it now accepts `screen` and `params` props, as well as an optional `href` prop to
+use instead of the generated path.
+
+e.g.:
+
+```js
+<Link screen="Details" params={{ foo: 42 }}>Go to Details</Link>
+```
+
+This also drops the `useLinkTo` hook and consolidates into the `useLinkTools` hook - which lets us build a `href` for a screen or action for a path.
+
 ## [6.9.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.9.1...@react-navigation/native-stack@6.9.2) (2022-11-21)
 
 ### Bug Fixes

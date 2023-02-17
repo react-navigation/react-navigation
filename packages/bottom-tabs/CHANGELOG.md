@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.4.1...@react-navigation/bottom-tabs@7.0.0-alpha.0) (2023-02-17)
+
+* refactor!: improve the API for Link component ([7f35837](https://github.com/react-navigation/react-navigation/commit/7f3583793ad17475531e155f1f433ffa16547015)) - by @satya164
+
+### Features
+
+* expose the original label in children prop for custom label functions in tab navigators ([a6fd49f](https://github.com/react-navigation/react-navigation/commit/a6fd49f9af9353cf5fd5364feafcbeea25c3ff7f)) - by @satya164
+
+### BREAKING CHANGES
+
+* Initially the `Link` component was designed to work with path strings via the `to` prop. But it has few issues:
+
+- The path strings are not type-safe, making it easy to cause typos and bugs after
+refactor
+- The API made navigating via screen name more incovenient, even if that's the preferred approach
+
+This revamps the API of the `Link` component to make it easier to use. Instead of `to` prop, it now accepts `screen` and `params` props, as well as an optional `href` prop to
+use instead of the generated path.
+
+e.g.:
+
+```js
+<Link screen="Details" params={{ foo: 42 }}>Go to Details</Link>
+```
+
+This also drops the `useLinkTo` hook and consolidates into the `useLinkTools` hook - which lets us build a `href` for a screen or action for a path.
+
 ## [6.4.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.4.0...@react-navigation/bottom-tabs@6.4.1) (2022-11-21)
 
 ### Bug Fixes

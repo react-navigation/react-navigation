@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.5.1...@react-navigation/drawer@7.0.0-alpha.0) (2023-02-17)
+
+### Bug Fixes
+
+* added close drawer accessibility tap area ([#11184](https://github.com/react-navigation/react-navigation/issues/11184)) ([20ec204](https://github.com/react-navigation/react-navigation/commit/20ec2042b9d3c22388682c16fca4ef23e91ee011)) - by @mikegarfinkle
+* drawerstatuscontext should be exported ([#11041](https://github.com/react-navigation/react-navigation/issues/11041)) ([6e4cb06](https://github.com/react-navigation/react-navigation/commit/6e4cb06cc0e3de4d5fb3b8f2051f09fdc8aec53e)) - by @leonchabbey
+* fix overlay not receiving clicks on web ([666c8db](https://github.com/react-navigation/react-navigation/commit/666c8dbad8f8d04b1c252f0b86e234b4a1133039)) - by @satya164
+
+### Code Refactoring
+
+* drop react-native-flipper-plugin ([643b8e8](https://github.com/react-navigation/react-navigation/commit/643b8e83b7eeb119b0a339fd8866d790d3178f50)), closes [/github.com/react-native-community/discussions-and-proposals/discussions/546#discussioncomment-4178951](https://github.com//github.com/react-native-community/discussions-and-proposals/discussions/546/issues/discussioncomment-4178951) - by @satya164
+
+* refactor!: improve the API for Link component ([7f35837](https://github.com/react-navigation/react-navigation/commit/7f3583793ad17475531e155f1f433ffa16547015)) - by @satya164
+
+### Features
+
+* add testID and accessibilityLabel to DrawerItem ([#11168](https://github.com/react-navigation/react-navigation/issues/11168)) ([4471fa0](https://github.com/react-navigation/react-navigation/commit/4471fa035dbd79d984888866791c34937693814d)) - by @andrewtremblay
+* extract drawer to a separate package ([58b7cae](https://github.com/react-navigation/react-navigation/commit/58b7caeaad00eafbcda36561e75e538e0f02c4af)) - by @satya164
+
+### BREAKING CHANGES
+
+* Initially the `Link` component was designed to work with path strings via the `to` prop. But it has few issues:
+
+- The path strings are not type-safe, making it easy to cause typos and bugs after
+refactor
+- The API made navigating via screen name more incovenient, even if that's the preferred approach
+
+This revamps the API of the `Link` component to make it easier to use. Instead of `to` prop, it now accepts `screen` and `params` props, as well as an optional `href` prop to
+use instead of the generated path.
+
+e.g.:
+
+```js
+<Link screen="Details" params={{ foo: 42 }}>Go to Details</Link>
+```
+
+This also drops the `useLinkTo` hook and consolidates into the `useLinkTools` hook - which lets us build a `href` for a screen or action for a path.
+* React Native team is focusing on migrating away from Flipper. So it doesn't make much sense for us to spend additional resources to support the Flipper plugin.
+
 ## [6.5.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.5.0...@react-navigation/drawer@6.5.1) (2022-11-21)
 
 ### Bug Fixes

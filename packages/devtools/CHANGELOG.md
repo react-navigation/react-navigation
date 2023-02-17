@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.11...@react-navigation/devtools@7.0.0-alpha.0) (2023-02-17)
+
+### Code Refactoring
+
+* drop react-native-flipper-plugin ([643b8e8](https://github.com/react-navigation/react-navigation/commit/643b8e83b7eeb119b0a339fd8866d790d3178f50)), closes [/github.com/react-native-community/discussions-and-proposals/discussions/546#discussioncomment-4178951](https://github.com//github.com/react-native-community/discussions-and-proposals/discussions/546/issues/discussioncomment-4178951) - by @satya164
+
+### BREAKING CHANGES
+
+* React Native team is focusing on migrating away from Flipper. So it doesn't make much sense for us to spend additional resources to support the Flipper plugin.
+
 ## [6.0.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@6.0.10...@react-navigation/devtools@6.0.11) (2022-11-21)
 
 ### Bug Fixes
