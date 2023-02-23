@@ -290,7 +290,7 @@ export default function TabRouter({
       return changeIndex(state, index, backBehavior, initialRouteName);
     },
 
-    getStateForAction(state, action, { routeParamList }) {
+    getStateForAction(state, action, { routeParamList, routeGetIdList }) {
       switch (action.type) {
         case 'JUMP_TO':
         case 'NAVIGATE': {
@@ -318,9 +318,23 @@ export default function TabRouter({
                   return route;
                 }
 
+                const getId = routeGetIdList[route.name];
+
+                const currentId = getId?.({ params: route.params });
+                const nextId = getId?.({ params: action.payload.params });
+
+                const key =
+                  currentId === nextId
+                    ? route.key
+                    : `${route.name}-${nanoid()}`;
+
                 let params;
 
-                if (action.type === 'NAVIGATE' && action.payload.merge) {
+                if (
+                  action.type === 'NAVIGATE' &&
+                  action.payload.merge &&
+                  currentId === nextId
+                ) {
                   params =
                     action.payload.params !== undefined ||
                     routeParamList[route.name] !== undefined
@@ -346,7 +360,7 @@ export default function TabRouter({
                     : route.path;
 
                 return params !== route.params || path !== route.path
-                  ? { ...route, path, params }
+                  ? { ...route, key, path, params }
                   : route;
               }),
             },
