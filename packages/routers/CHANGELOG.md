@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@6.1.6...@react-navigation/routers@6.1.7) (2023-02-23)
+
+### Bug Fixes
+
+* handle getId in tab and drawer routers ([4e2d6d8](https://github.com/react-navigation/react-navigation/commit/4e2d6d837d21ddbf6e4bb46056c4da793e0350ff)) - by @
+
 ## [6.1.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@6.1.5...@react-navigation/routers@6.1.6) (2022-12-12)
 
 **Note:** Version bump only for package @react-navigation/routers
