@@ -23,6 +23,7 @@ import {
   forNoAnimation as forNoAnimationCard,
 } from '../../TransitionConfigs/CardStyleInterpolators';
 import {
+  AnimationTransitions,
   DefaultTransition,
   ModalFadeTransition,
   ModalTransition,
@@ -275,20 +276,29 @@ export default class CardStack extends React.Component<Props, State> {
           : DefaultTransition;
 
       const {
+        animation,
         animationEnabled = Platform.OS !== 'web' &&
           Platform.OS !== 'windows' &&
           Platform.OS !== 'macos',
         gestureEnabled = Platform.OS === 'ios' && animationEnabled,
         gestureDirection = defaultTransitionPreset.gestureDirection,
         transitionSpec = defaultTransitionPreset.transitionSpec,
+        headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
+      } = optionsForTransitionConfig;
+
+      let {
         cardStyleInterpolator = animationEnabled === false
           ? forNoAnimationCard
           : defaultTransitionPreset.cardStyleInterpolator,
-        headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
         cardOverlayEnabled = (Platform.OS !== 'ios' &&
           optionsForTransitionConfig.presentation !== 'transparentModal') ||
           getIsModalPresentation(cardStyleInterpolator),
       } = optionsForTransitionConfig;
+
+      if (animation != null) {
+        const transition = AnimationTransitions[animation];
+        cardStyleInterpolator = transition.cardStyleInterpolator;
+      }
 
       const headerMode: StackHeaderMode =
         descriptor.options.headerMode ??
@@ -310,6 +320,7 @@ export default class CardStack extends React.Component<Props, State> {
           ...descriptor,
           options: {
             ...descriptor.options,
+            animation,
             animationEnabled,
             cardOverlayEnabled,
             cardStyleInterpolator,

@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 
-import type { TransitionPreset } from '../types';
+import type { StackAnimationTypes, TransitionPreset } from '../types';
 import {
   forBottomSheetAndroid,
   forFadeFromBottomAndroid,
@@ -150,3 +150,19 @@ export const ModalTransition = Platform.select({
   ios: ModalPresentationIOS,
   default: BottomSheetAndroid,
 });
+
+type AnimationTransitionMap = {
+  [key in StackAnimationTypes]: TransitionPreset;
+};
+
+// TODO: Add proper transitions
+export const AnimationTransitions: AnimationTransitionMap = {
+  default: DefaultTransition,
+  fade: ModalFadeTransition,
+  fade_from_bottom: FadeFromBottomAndroid,
+  none: DefaultTransition,
+  simple_push: DefaultTransition,
+  slide_from_bottom: BottomSheetAndroid,
+  slide_from_left: DefaultTransition,
+  slide_from_right: SlideFromRightIOS,
+};

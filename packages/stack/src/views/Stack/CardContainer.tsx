@@ -184,6 +184,7 @@ function CardContainer({
   }, [pointerEvents, scene.progress.next]);
 
   const {
+    animation,
     presentation,
     animationEnabled,
     cardOverlay,
@@ -217,6 +218,7 @@ function CardContainer({
 
   return (
     <Card
+      animation={animation}
       interpolationIndex={interpolationIndex}
       gestureDirection={gestureDirection}
       layout={layout}

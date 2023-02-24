@@ -16,6 +16,7 @@ import { forModalPresentationIOS } from '../../TransitionConfigs/CardStyleInterp
 import type {
   GestureDirection,
   Layout,
+  StackAnimationTypes,
   StackCardInterpolationProps,
   StackCardStyleInterpolator,
   TransitionSpec,
@@ -33,6 +34,7 @@ import ModalStatusBarManager from '../ModalStatusBarManager';
 import CardSheet, { CardSheetRef } from './CardSheet';
 
 type Props = ViewProps & {
+  animation?: StackAnimationTypes;
   interpolationIndex: number;
   closing: boolean;
   next?: Animated.AnimatedInterpolation<number>;

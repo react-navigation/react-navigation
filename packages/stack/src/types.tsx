@@ -78,6 +78,16 @@ export type GestureDirection =
   | 'vertical'
   | 'vertical-inverted';
 
+export type StackAnimationTypes =
+  | 'default'
+  | 'fade'
+  | 'fade_from_bottom'
+  | 'none'
+  | 'simple_push'
+  | 'slide_from_bottom'
+  | 'slide_from_right'
+  | 'slide_from_left';
+
 type SceneOptionsDefaults = TransitionPreset & {
   animationEnabled: boolean;
   gestureEnabled: boolean;
@@ -306,6 +316,21 @@ export type StackNavigationOptions = StackHeaderOptions &
      * When `pop` is used, the `pop` animation is applied to the screen being replaced.
      */
     animationTypeForReplace?: 'push' | 'pop';
+    /**
+     * How the screen should animate when pushed or popped.
+     *
+     * Supported values:
+     * - "default": use the platform default animation
+     * - "fade": fade screen in or out
+     * - "simple_push": use the platform default animation, but without shadow and native header transition (iOS only)
+     * - "slide_from_bottom": slide in the new screen from bottom
+     * - "slide_from_right": slide in the new screen from right (Android only, uses default animation on iOS)
+     * - "slide_from_left": slide in the new screen from left (Android only, uses default animation on iOS)
+     * - "none": don't animate the screen
+     *
+     * Only supported on iOS and Android.
+     */
+    animation?: StackAnimationTypes;
     /**
      * Whether you can use gestures to dismiss this screen. Defaults to `true` on iOS, `false` on Android.
      * Not supported on Web.
