@@ -159,7 +159,7 @@ const LinkPressable = ({
  * A component used to show an action item with an icon and a label in a navigation drawer.
  */
 export function DrawerItem(props: Props) {
-  const { colors } = useTheme();
+  const { colors, fonts } = useTheme();
 
   const {
     route,
@@ -220,13 +220,7 @@ export function DrawerItem(props: Props) {
               <Text
                 numberOfLines={1}
                 allowFontScaling={allowFontScaling}
-                style={[
-                  {
-                    color,
-                    fontWeight: '500',
-                  },
-                  labelStyle,
-                ]}
+                style={[{ color }, fonts.medium, labelStyle]}
               >
                 {label}
               </Text>

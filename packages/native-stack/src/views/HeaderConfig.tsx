@@ -59,15 +59,22 @@ export function HeaderConfig({
   title,
   canGoBack,
 }: Props): JSX.Element {
-  const { colors } = useTheme();
+  const { colors, fonts } = useTheme();
   const tintColor =
     headerTintColor ?? (Platform.OS === 'ios' ? colors.primary : colors.text);
 
   const headerBackTitleStyleFlattened =
-    StyleSheet.flatten(headerBackTitleStyle) || {};
+    StyleSheet.flatten([headerBackTitleStyle, fonts.regular]) || {};
   const headerLargeTitleStyleFlattened =
-    StyleSheet.flatten(headerLargeTitleStyle) || {};
-  const headerTitleStyleFlattened = StyleSheet.flatten(headerTitleStyle) || {};
+    StyleSheet.flatten([
+      headerLargeTitleStyle,
+      Platform.select({ ios: fonts.heavy, default: fonts.medium }),
+    ]) || {};
+  const headerTitleStyleFlattened =
+    StyleSheet.flatten([
+      headerTitleStyle,
+      Platform.select({ ios: fonts.bold, default: fonts.medium }),
+    ]) || {};
   const headerStyleFlattened = StyleSheet.flatten(headerStyle) || {};
   const headerLargeStyleFlattened = StyleSheet.flatten(headerLargeStyle) || {};
 
@@ -78,11 +85,32 @@ export function HeaderConfig({
       headerTitleStyleFlattened.fontFamily,
     ]);
 
+  const backTitleFontSize =
+    'fontSize' in headerBackTitleStyleFlattened
+      ? headerBackTitleStyleFlattened.fontSize
+      : undefined;
+
   const titleText = getHeaderTitle({ title, headerTitle }, route.name);
   const titleColor =
-    headerTitleStyleFlattened.color ?? headerTintColor ?? colors.text;
-  const titleFontSize = headerTitleStyleFlattened.fontSize;
+    'color' in headerTitleStyleFlattened
+      ? headerTitleStyleFlattened.color
+      : headerTintColor ?? colors.text;
+  const titleFontSize =
+    'fontSize' in headerTitleStyleFlattened
+      ? headerTitleStyleFlattened.fontSize
+      : undefined;
   const titleFontWeight = headerTitleStyleFlattened.fontWeight;
+
+  const largeTitleBackgroundColor = headerLargeStyleFlattened.backgroundColor;
+  const largeTitleColor =
+    'color' in headerLargeTitleStyleFlattened
+      ? headerLargeTitleStyleFlattened.color
+      : undefined;
+  const largeTitleFontSize =
+    'fontSize' in headerLargeTitleStyleFlattened
+      ? headerLargeTitleStyleFlattened.fontSize
+      : undefined;
+  const largeTitleFontWeight = headerLargeTitleStyleFlattened.fontWeight;
 
   const headerTitleStyleSupported: TextStyle = { color: titleColor };
 
@@ -97,6 +125,12 @@ export function HeaderConfig({
   if (titleFontWeight != null) {
     headerTitleStyleSupported.fontWeight = titleFontWeight;
   }
+
+  const headerBackgroundColor =
+    headerStyleFlattened.backgroundColor ??
+    (headerBackground != null || headerTransparent
+      ? 'transparent'
+      : colors.card);
 
   const headerLeftElement = headerLeft?.({
     tintColor,
@@ -162,15 +196,10 @@ export function HeaderConfig({
       ) : null}
       <ScreenStackHeaderConfig
         backButtonInCustomView={backButtonInCustomView}
-        backgroundColor={
-          headerStyleFlattened.backgroundColor ??
-          (headerBackground != null || headerTransparent
-            ? 'transparent'
-            : colors.card)
-        }
+        backgroundColor={headerBackgroundColor}
         backTitle={headerBackTitleVisible ? headerBackTitle : ' '}
         backTitleFontFamily={backTitleFontFamily}
-        backTitleFontSize={headerBackTitleStyleFlattened.fontSize}
+        backTitleFontSize={backTitleFontSize}
         blurEffect={headerBlurEffect}
         color={tintColor}
         direction={I18nManager.getConstants().isRTL ? 'rtl' : 'ltr'}
@@ -183,11 +212,11 @@ export function HeaderConfig({
           (headerTransparent && headerShadowVisible !== true)
         }
         largeTitle={headerLargeTitle}
-        largeTitleBackgroundColor={headerLargeStyleFlattened.backgroundColor}
-        largeTitleColor={headerLargeTitleStyleFlattened.color}
+        largeTitleBackgroundColor={largeTitleBackgroundColor}
+        largeTitleColor={largeTitleColor}
         largeTitleFontFamily={largeTitleFontFamily}
-        largeTitleFontSize={headerLargeTitleStyleFlattened.fontSize}
-        largeTitleFontWeight={headerLargeTitleStyleFlattened.fontWeight}
+        largeTitleFontSize={largeTitleFontSize}
+        largeTitleFontWeight={largeTitleFontWeight}
         largeTitleHideShadow={headerLargeTitleShadowVisible === false}
         title={titleText}
         titleColor={titleColor}

@@ -1,4 +1,5 @@
 import type { Theme } from '../types';
+import { fonts } from './fonts';
 
 export const DarkTheme: Theme = {
   dark: true,
@@ -10,4 +11,5 @@ export const DarkTheme: Theme = {
     border: 'rgb(39, 39, 41)',
     notification: 'rgb(255, 69, 58)',
   },
+  fonts,
 };
