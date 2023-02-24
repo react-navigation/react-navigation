@@ -9,6 +9,8 @@ export { HeaderHeightContext } from './Header/HeaderHeightContext';
 export { HeaderShownContext } from './Header/HeaderShownContext';
 export { HeaderTitle } from './Header/HeaderTitle';
 export { useHeaderHeight } from './Header/useHeaderHeight';
+export { getLabel } from './Label/getLabel';
+export { Label } from './Label/Label';
 export { MissingIcon } from './MissingIcon';
 export { PlatformPressable } from './PlatformPressable';
 export { ResourceSavingView } from './ResourceSavingView';

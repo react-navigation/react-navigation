@@ -1,4 +1,4 @@
-import { MissingIcon } from '@react-navigation/elements';
+import { getLabel, MissingIcon } from '@react-navigation/elements';
 import {
   CommonActions,
   NavigationContext,
@@ -319,11 +319,12 @@ export function BottomTabBar({
           };
 
           const label =
-            options.tabBarLabel !== undefined
+            typeof options.tabBarLabel === 'function'
               ? options.tabBarLabel
-              : options.title !== undefined
-              ? options.title
-              : route.name;
+              : getLabel(
+                  { label: options.tabBarLabel, title: options.title },
+                  route.name
+                );
 
           const accessibilityLabel =
             options.tabBarAccessibilityLabel !== undefined
