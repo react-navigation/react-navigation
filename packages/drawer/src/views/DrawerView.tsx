@@ -15,6 +15,7 @@ import * as React from 'react';
 import { BackHandler, I18nManager, Platform, StyleSheet } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
+import useLatestCallback from 'use-latest-callback';
 
 import type {
   DrawerContentComponentProps,
@@ -80,19 +81,56 @@ function DrawerViewBase({
 
   const drawerStatus = getDrawerStatusFromState(state);
 
-  const handleDrawerOpen = React.useCallback(() => {
+  const handleDrawerOpen = useLatestCallback(() => {
     navigation.dispatch({
       ...DrawerActions.openDrawer(),
       target: state.key,
     });
-  }, [navigation, state.key]);
+  });
 
-  const handleDrawerClose = React.useCallback(() => {
+  const handleDrawerClose = useLatestCallback(() => {
     navigation.dispatch({
       ...DrawerActions.closeDrawer(),
       target: state.key,
     });
-  }, [navigation, state.key]);
+  });
+
+  const handleGestureStart = useLatestCallback(() => {
+    navigation.emit({
+      type: 'gestureStart',
+      target: state.key,
+    });
+  });
+
+  const handleGestureEnd = useLatestCallback(() => {
+    navigation.emit({
+      type: 'gestureEnd',
+      target: state.key,
+    });
+  });
+
+  const handleGestureCancel = useLatestCallback(() => {
+    navigation.emit({
+      type: 'gestureCancel',
+      target: state.key,
+    });
+  });
+
+  const handleTransitionStart = useLatestCallback((closing: boolean) => {
+    navigation.emit({
+      type: 'transitionStart',
+      data: { closing },
+      target: state.key,
+    });
+  });
+
+  const handleTransitionEnd = useLatestCallback((closing: boolean) => {
+    navigation.emit({
+      type: 'transitionEnd',
+      data: { closing },
+      target: state.key,
+    });
+  });
 
   React.useEffect(() => {
     if (drawerStatus === defaultStatus || drawerType === 'permanent') {
@@ -240,6 +278,11 @@ function DrawerViewBase({
         open={drawerStatus !== 'closed'}
         onOpen={handleDrawerOpen}
         onClose={handleDrawerClose}
+        onGestureStart={handleGestureStart}
+        onGestureEnd={handleGestureEnd}
+        onGestureCancel={handleGestureCancel}
+        onTransitionStart={handleTransitionStart}
+        onTransitionEnd={handleTransitionEnd}
         layout={dimensions}
         gestureHandlerProps={gestureHandlerProps}
         swipeEnabled={swipeEnabled}

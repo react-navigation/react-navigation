@@ -284,6 +284,14 @@ export default class Drawer extends React.Component<Props> {
         set(this.manuallyTriggerSpring, FALSE),
       ]),
       spring(this.clock, state, { ...SPRING_CONFIG, toValue }),
+      onChange(
+        state.finished,
+        cond(
+          state.finished,
+          call([this.isOpen], (open) => this.props.onTransitionEnd?.(!open)),
+          call([this.isOpen], (open) => this.props.onTransitionStart?.(!open))
+        )
+      ),
       cond(state.finished, [
         // Reset gesture and velocity from previous gesture
         set(this.touchX, 0),
@@ -370,6 +378,18 @@ export default class Drawer extends React.Component<Props> {
         call([], this.handleStartInteraction)
       )
     ),
+    onChange(
+      this.gestureState,
+      cond(eq(this.gestureState, GestureState.END), [
+        call([], () => this.props.onGestureEnd?.()),
+      ])
+    ),
+    onChange(
+      this.gestureState,
+      cond(eq(this.gestureState, GestureState.CANCELLED), [
+        call([], () => this.props.onGestureCancel?.()),
+      ])
+    ),
     cond(
       eq(this.gestureState, GestureState.ACTIVE),
       [
@@ -378,6 +398,7 @@ export default class Drawer extends React.Component<Props> {
           set(this.isSwiping, TRUE),
           // Also update the drag offset to the last position
           set(this.offsetX, this.position),
+          call([], () => this.props.onGestureStart?.()),
         ]),
         // Update position with previous offset + gesture distance
         set(
