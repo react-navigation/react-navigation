@@ -131,7 +131,16 @@ export const FeedScreen = ({
   expectTypeOf(navigation.addListener)
     .parameter(0)
     .toEqualTypeOf<
-      'focus' | 'blur' | 'state' | 'beforeRemove' | 'drawerItemPress'
+      | 'focus'
+      | 'blur'
+      | 'state'
+      | 'beforeRemove'
+      | 'drawerItemPress'
+      | 'transitionStart'
+      | 'transitionEnd'
+      | 'gestureStart'
+      | 'gestureEnd'
+      | 'gestureCancel'
     >();
 
   expectTypeOf(navigation.getState().type).toEqualTypeOf<'drawer'>();

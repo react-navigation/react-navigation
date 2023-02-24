@@ -94,6 +94,49 @@ function DrawerViewBase({
     });
   }, [navigation, state.key]);
 
+  const handleGestureStart = React.useCallback(() => {
+    navigation.emit({
+      type: 'gestureStart',
+      target: state.key,
+    });
+  }, [navigation, state.key]);
+
+  const handleGestureEnd = React.useCallback(() => {
+    navigation.emit({
+      type: 'gestureEnd',
+      target: state.key,
+    });
+  }, [navigation, state.key]);
+
+  const handleGestureCancel = React.useCallback(() => {
+    navigation.emit({
+      type: 'gestureCancel',
+      target: state.key,
+    });
+  }, [navigation, state.key]);
+
+  const handleTransitionStart = React.useCallback(
+    (closing: boolean) => {
+      navigation.emit({
+        type: 'transitionStart',
+        data: { closing },
+        target: state.key,
+      });
+    },
+    [navigation, state.key]
+  );
+
+  const handleTransitionEnd = React.useCallback(
+    (closing: boolean) => {
+      navigation.emit({
+        type: 'transitionEnd',
+        data: { closing },
+        target: state.key,
+      });
+    },
+    [navigation, state.key]
+  );
+
   React.useEffect(() => {
     if (drawerStatus === defaultStatus || drawerType === 'permanent') {
       return;
@@ -240,6 +283,11 @@ function DrawerViewBase({
         open={drawerStatus !== 'closed'}
         onOpen={handleDrawerOpen}
         onClose={handleDrawerClose}
+        onGestureStart={handleGestureStart}
+        onGestureEnd={handleGestureEnd}
+        onGestureCancel={handleGestureCancel}
+        onTransitionStart={handleTransitionStart}
+        onTransitionEnd={handleTransitionEnd}
         layout={dimensions}
         gestureHandlerProps={gestureHandlerProps}
         swipeEnabled={swipeEnabled}
