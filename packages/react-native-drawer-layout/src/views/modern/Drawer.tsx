@@ -17,6 +17,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import useLatestCallback from 'use-latest-callback';
 
 import {
   DEFAULT_DRAWER_WIDTH,
@@ -162,19 +163,15 @@ export default function Drawer({
   const translationX = useSharedValue(getDrawerTranslationX(open));
   const gestureState = useSharedValue<GestureState>(GestureState.UNDETERMINED);
 
-  const handleAnimationStart = React.useCallback(
-    (open: boolean) => {
-      onTransitionStart?.(!open);
-    },
-    [onTransitionStart]
-  );
+  const handleAnimationStart = useLatestCallback((open: boolean) => {
+    onTransitionStart?.(!open);
+  });
 
-  const handleAnimationEnd = React.useCallback(
+  const handleAnimationEnd = useLatestCallback(
     (open: boolean, finished?: boolean) => {
       if (!finished) return;
       onTransitionEnd?.(!open);
-    },
-    [onTransitionEnd]
+    }
   );
 
   const toggleDrawer = React.useCallback(

@@ -36,6 +36,9 @@
     "prepack": "bob build",
     "clean": "del lib"
   },
+  "dependencies": {
+    "use-latest-callback": "^0.1.5"
+  },
   "devDependencies": {
     "del-cli": "^5.0.0",
     "react": "18.1.0",
