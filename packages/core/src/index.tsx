@@ -15,11 +15,11 @@ export { default as NavigationRouteContext } from './NavigationRouteContext';
 export { default as PreventRemoveContext } from './PreventRemoveContext';
 export { default as PreventRemoveProvider } from './PreventRemoveProvider';
 export {
+  type StaticNavigation,
+  type StaticParamList,
+  type StaticScreenProps,
   createComponentForStaticNavigation,
   createPathConfigForStaticNavigation,
-  StaticNavigation,
-  StaticParamList,
-  StaticScreenProps,
 } from './StaticNavigation';
 export * from './types';
 export { default as useFocusEffect } from './useFocusEffect';
