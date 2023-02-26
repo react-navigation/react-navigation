@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.5.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.5.6...@react-navigation/bottom-tabs@6.5.7) (2023-02-26)
+
+### Bug Fixes
+
+* fix paths in sourcemap files ([42c906d](https://github.com/react-navigation/react-navigation/commit/42c906d77d0235f7b3733c783308863ec686a54e)) - by @
+
 ## [6.5.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.5.5...@react-navigation/bottom-tabs@6.5.6) (2023-02-23)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

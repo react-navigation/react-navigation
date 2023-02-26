@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.3.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.3.15...@react-navigation/stack@6.3.16) (2023-02-26)
+
+### Bug Fixes
+
+* fix paths in sourcemap files ([42c906d](https://github.com/react-navigation/react-navigation/commit/42c906d77d0235f7b3733c783308863ec686a54e)) - by @
+
 ## [6.3.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.3.14...@react-navigation/stack@6.3.15) (2023-02-23)
 
 **Note:** Version bump only for package @react-navigation/stack
