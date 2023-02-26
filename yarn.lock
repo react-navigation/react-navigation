@@ -4745,7 +4745,7 @@ __metadata:
     del-cli: ^3.0.1
     react: 18.0.0
     react-native: 0.69.5
-    react-native-builder-bob: ^0.20.3
+    react-native-builder-bob: ^0.20.4
     react-native-safe-area-context: 4.3.1
     react-native-screens: ~3.15.0
     typescript: ^4.7.4
@@ -4774,7 +4774,7 @@ __metadata:
     query-string: ^7.1.3
     react: 18.0.0
     react-is: ^16.13.0
-    react-native-builder-bob: ^0.20.3
+    react-native-builder-bob: ^0.20.4
     react-test-renderer: 18.0.0
     typescript: ^4.7.4
     use-latest-callback: ^0.1.5
@@ -4795,7 +4795,7 @@ __metadata:
     del-cli: ^3.0.1
     nanoid: ^3.1.23
     react: 18.0.0
-    react-native-builder-bob: ^0.20.3
+    react-native-builder-bob: ^0.20.4
     react-native-flipper: ~0.125.0
     stacktrace-parser: ^0.1.10
     typescript: ^4.7.4
@@ -4817,7 +4817,7 @@ __metadata:
     del-cli: ^3.0.1
     react: 18.0.0
     react-native: 0.69.5
-    react-native-builder-bob: ^0.20.3
+    react-native-builder-bob: ^0.20.4
     react-native-gesture-handler: ~2.5.0
     react-native-reanimated: ~2.9.1
     react-native-safe-area-context: 4.3.1
@@ -4847,7 +4847,7 @@ __metadata:
     del-cli: ^3.0.1
     react: 18.0.0
     react-native: 0.69.5
-    react-native-builder-bob: ^0.20.3
+    react-native-builder-bob: ^0.20.4
     typescript: ^4.7.4
   peerDependencies:
     "@react-navigation/native": ^6.0.0
@@ -4930,7 +4930,7 @@ __metadata:
     del-cli: ^3.0.1
     react: 18.0.0
     react-native: 0.69.5
-    react-native-builder-bob: ^0.20.3
+    react-native-builder-bob: ^0.20.4
     react-native-paper: ^4.12.1
     react-native-safe-area-context: 4.3.1
     react-native-vector-icons: ^9.1.0
@@ -4957,7 +4957,7 @@ __metadata:
     del-cli: ^3.0.1
     react: 18.0.0
     react-native: 0.69.5
-    react-native-builder-bob: ^0.20.3
+    react-native-builder-bob: ^0.20.4
     react-native-pager-view: 5.4.24
     react-native-tab-view: "workspace:^"
     typescript: ^4.7.4
@@ -4983,7 +4983,7 @@ __metadata:
     del-cli: ^3.0.1
     react: 18.0.0
     react-native: 0.69.5
-    react-native-builder-bob: ^0.20.3
+    react-native-builder-bob: ^0.20.4
     react-native-screens: ~3.15.0
     typescript: ^4.7.4
     warn-once: ^0.1.0
@@ -5012,7 +5012,7 @@ __metadata:
     react: 18.0.0
     react-dom: 18.0.0
     react-native: 0.69.5
-    react-native-builder-bob: ^0.20.3
+    react-native-builder-bob: ^0.20.4
     typescript: ^4.7.4
   peerDependencies:
     react: "*"
@@ -5026,7 +5026,7 @@ __metadata:
   dependencies:
     del-cli: ^3.0.1
     nanoid: ^3.1.23
-    react-native-builder-bob: ^0.20.3
+    react-native-builder-bob: ^0.20.4
     typescript: ^4.7.4
   languageName: unknown
   linkType: soft
@@ -5045,7 +5045,7 @@ __metadata:
     del-cli: ^3.0.1
     react: 18.0.0
     react-native: 0.69.5
-    react-native-builder-bob: ^0.20.3
+    react-native-builder-bob: ^0.20.4
     react-native-gesture-handler: ~2.5.0
     react-native-safe-area-context: 4.3.1
     react-native-screens: ~3.15.0
@@ -12375,20 +12375,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.0.3, fast-glob@npm:^3.1.1, fast-glob@npm:^3.2.4, fast-glob@npm:^3.2.5, fast-glob@npm:^3.2.9":
-  version: 3.2.11
-  resolution: "fast-glob@npm:3.2.11"
-  dependencies:
-    "@nodelib/fs.stat": ^2.0.2
-    "@nodelib/fs.walk": ^1.2.3
-    glob-parent: ^5.1.2
-    merge2: ^1.3.0
-    micromatch: ^4.0.4
-  checksum: f473105324a7780a20c06de842e15ddbb41d3cb7e71d1e4fe6e8373204f22245d54f5ab9e2061e6a1c613047345954d29b022e0e76f5c28b1df9858179a0e6d7
-  languageName: node
-  linkType: hard
-
-"fast-glob@npm:^3.2.11":
+"fast-glob@npm:^3.0.3, fast-glob@npm:^3.1.1, fast-glob@npm:^3.2.11, fast-glob@npm:^3.2.4, fast-glob@npm:^3.2.5, fast-glob@npm:^3.2.9":
   version: 3.2.12
   resolution: "fast-glob@npm:3.2.12"
   dependencies:
@@ -22862,9 +22849,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-builder-bob@npm:^0.20.3":
-  version: 0.20.3
-  resolution: "react-native-builder-bob@npm:0.20.3"
+"react-native-builder-bob@npm:^0.20.4":
+  version: 0.20.4
+  resolution: "react-native-builder-bob@npm:0.20.4"
   dependencies:
     "@babel/core": ^7.18.5
     "@babel/plugin-proposal-class-properties": ^7.17.12
@@ -22891,7 +22878,7 @@ __metadata:
       optional: true
   bin:
     bob: bin/bob
-  checksum: aba62c5373d7cf59463ccafd0fc37217d0487fd7f6ef267dd91fc7dde7ac1a9192f0697feeb83e8ec0552eb8c45fb5722c0fcf322944fa601f9df100ab90a76b
+  checksum: 258da6ecd03be52cc05a3e3a7c481890c7c0b7b62ae9f263c5f3d6fafeae95bd9445ad2f6c2513f7f4e4569eee935a18ae94c7491f58d6916af515c88de9e0a1
   languageName: node
   linkType: hard
 
@@ -23024,7 +23011,7 @@ __metadata:
     del-cli: ^3.0.1
     react: 18.0.0
     react-native: 0.69.5
-    react-native-builder-bob: ^0.20.3
+    react-native-builder-bob: ^0.20.4
     react-native-pager-view: 5.4.24
     typescript: ^4.7.4
     use-latest-callback: ^0.1.5
@@ -25747,20 +25734,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"table@npm:^6.0.9":
-  version: 6.8.0
-  resolution: "table@npm:6.8.0"
-  dependencies:
-    ajv: ^8.0.1
-    lodash.truncate: ^4.4.2
-    slice-ansi: ^4.0.0
-    string-width: ^4.2.3
-    strip-ansi: ^6.0.1
-  checksum: 5b07fe462ee03d2e1fac02cbb578efd2e0b55ac07e3d3db2e950aa9570ade5a4a2b8d3c15e9f25c89e4e50b646bc4269934601ee1eef4ca7968ad31960977690
-  languageName: node
-  linkType: hard
-
-"table@npm:^6.7.1":
+"table@npm:^6.0.9, table@npm:^6.7.1":
   version: 6.8.1
   resolution: "table@npm:6.8.1"
   dependencies:
