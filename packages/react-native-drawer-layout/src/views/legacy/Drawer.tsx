@@ -18,9 +18,9 @@ import {
   SWIPE_MIN_VELOCITY,
 } from '../../constants';
 import type { DrawerProps } from '../../types';
-import DrawerProgressContext from '../../utils/DrawerProgressContext';
+import { DrawerProgressContext } from '../../utils/DrawerProgressContext';
 import { GestureState, PanGestureHandler } from '../GestureHandler';
-import Overlay from './Overlay';
+import { Overlay } from './Overlay';
 
 const {
   Clock,
@@ -76,7 +76,7 @@ type Props = DrawerProps & {
   layout: { width: number };
 };
 
-export default class Drawer extends React.Component<Props> {
+export class Drawer extends React.Component<Props> {
   componentDidUpdate(prevProps: Props) {
     const {
       open,

@@ -50,7 +50,7 @@ const getDefaultDrawerWidth = ({
   return Math.min(smallerAxisSize - appBarHeight, maxWidth);
 };
 
-export default function Drawer({
+export function Drawer({
   // Reanimated 2 is not configured
   // @ts-expect-error: the type definitions are incomplete
   useLegacyImplementation = !Reanimated.isConfigured?.(),
@@ -80,10 +80,10 @@ export default function Drawer({
     );
   }
 
-  const Drawer: typeof import('./modern/Drawer').default =
+  const Drawer: typeof import('./modern/Drawer').Drawer =
     useLegacyImplementation
-      ? require('./legacy/Drawer').default
-      : require('./modern/Drawer').default;
+      ? require('./legacy/Drawer').Drawer
+      : require('./modern/Drawer').Drawer;
 
   const windowDimensions = useWindowDimensions();
   const layout = customLayout ?? windowDimensions;
