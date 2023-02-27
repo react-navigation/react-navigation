@@ -296,8 +296,8 @@ export default class CardStack extends React.Component<Props, State> {
       } = optionsForTransitionConfig;
 
       if (animation != null) {
-        const transition = AnimationTransitions[animation];
-        cardStyleInterpolator = transition.cardStyleInterpolator;
+        cardStyleInterpolator =
+          AnimationTransitions[animation].cardStyleInterpolator;
       }
 
       const headerMode: StackHeaderMode =

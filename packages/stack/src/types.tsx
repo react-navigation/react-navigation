@@ -322,10 +322,10 @@ export type StackNavigationOptions = StackHeaderOptions &
      * Supported values:
      * - "default": use the platform default animation
      * - "fade": fade screen in or out
-     * - "simple_push": use the platform default animation, but without shadow and native header transition (iOS only)
+     * - "simple_push": use the platform default animation, but without shadow and native header transition
      * - "slide_from_bottom": slide in the new screen from bottom
-     * - "slide_from_right": slide in the new screen from right (Android only, uses default animation on iOS)
-     * - "slide_from_left": slide in the new screen from left (Android only, uses default animation on iOS)
+     * - "slide_from_right": slide in the new screen from right
+     * - "slide_from_left": slide in the new screen from left
      * - "none": don't animate the screen
      *
      * Only supported on iOS and Android.

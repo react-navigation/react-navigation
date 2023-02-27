@@ -63,6 +63,13 @@ export function forHorizontalIOS({
   };
 }
 
+export function forHorizontalIOSInverted(
+  props: StackCardInterpolationProps
+): StackCardInterpolatedStyle {
+  props.inverted = new Animated.Value(-1);
+  return forHorizontalIOS(props);
+}
+
 /**
  * Standard iOS-style slide in from the bottom (used for modals).
  */

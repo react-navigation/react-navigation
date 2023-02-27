@@ -6,6 +6,7 @@ import {
   forFadeFromBottomAndroid,
   forFadeFromCenter as forFadeCard,
   forHorizontalIOS,
+  forHorizontalIOSInverted,
   forModalPresentationIOS,
   forRevealFromBottomAndroid,
   forScaleFromCenterAndroid,
@@ -36,6 +37,11 @@ export const SlideFromRightIOS: TransitionPreset = {
   },
   cardStyleInterpolator: forHorizontalIOS,
   headerStyleInterpolator: forFade,
+};
+
+export const SlideFromLeftIOS: TransitionPreset = {
+  ...SlideFromRightIOS,
+  cardStyleInterpolator: forHorizontalIOSInverted,
 };
 
 /**
@@ -155,7 +161,6 @@ type AnimationTransitionMap = {
   [key in StackAnimationTypes]: TransitionPreset;
 };
 
-// TODO: Add proper transitions
 export const AnimationTransitions: AnimationTransitionMap = {
   default: DefaultTransition,
   fade: ModalFadeTransition,
@@ -163,6 +168,6 @@ export const AnimationTransitions: AnimationTransitionMap = {
   none: DefaultTransition,
   simple_push: DefaultTransition,
   slide_from_bottom: BottomSheetAndroid,
-  slide_from_left: DefaultTransition,
+  slide_from_left: SlideFromLeftIOS,
   slide_from_right: SlideFromRightIOS,
 };

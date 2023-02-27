@@ -139,6 +139,11 @@ export default class StackView extends React.Component<Props, State> {
     const isAnimationEnabled = (key: string) => {
       const descriptor = props.descriptors[key] || state.descriptors[key];
 
+      const animation = descriptor?.options?.animation;
+      if (animation && animation === 'none') {
+        return false;
+      }
+
       return descriptor ? descriptor.options.animationEnabled !== false : true;
     };
 
