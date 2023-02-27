@@ -13,7 +13,7 @@ type Props = React.ComponentProps<typeof Animated.View> & {
   accessibilityLabel?: string;
 };
 
-const Overlay = React.forwardRef(function Overlay(
+export const Overlay = React.forwardRef(function Overlay(
   {
     progress,
     onPress,
@@ -78,5 +78,3 @@ const styles = StyleSheet.create({
     pointerEvents: 'auto',
   },
 });
-
-export default Overlay;

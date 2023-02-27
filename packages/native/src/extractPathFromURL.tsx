@@ -1,6 +1,6 @@
 import escapeStringRegexp from 'escape-string-regexp';
 
-export default function extractPathFromURL(prefixes: string[], url: string) {
+export function extractPathFromURL(prefixes: string[], url: string) {
   for (const prefix of prefixes) {
     const protocol = prefix.match(/^[^:]+:/)?.[0] ?? '';
     const host = prefix

@@ -15,10 +15,10 @@ import { BlurView } from 'expo-blur';
 import * as React from 'react';
 import { ScrollView, StatusBar, StyleSheet } from 'react-native';
 
-import Albums from '../Shared/Albums';
-import Chat from '../Shared/Chat';
-import Contacts from '../Shared/Contacts';
-import SimpleStackScreen, { SimpleStackParams } from './SimpleStack';
+import { Albums } from '../Shared/Albums';
+import { Chat } from '../Shared/Chat';
+import { Contacts } from '../Shared/Contacts';
+import { SimpleStack, SimpleStackParams } from './SimpleStack';
 
 const getTabBarIcon =
   (name: React.ComponentProps<typeof MaterialCommunityIcons>['name']) =>
@@ -52,9 +52,9 @@ const AlbumsScreen = () => {
   );
 };
 
-const BottomTabs = createBottomTabNavigator<BottomTabParams>();
+const Tab = createBottomTabNavigator<BottomTabParams>();
 
-export default function BottomTabsScreen({
+export function BottomTabs({
   navigation,
   route,
 }: StackScreenProps<ParamListBase, string>) {
@@ -68,22 +68,22 @@ export default function BottomTabsScreen({
   }, [navigation, routeName]);
 
   return (
-    <BottomTabs.Navigator
+    <Tab.Navigator
       screenOptions={{
         headerLeft: (props) => (
           <HeaderBackButton {...props} onPress={navigation.goBack} />
         ),
       }}
     >
-      <BottomTabs.Screen
+      <Tab.Screen
         name="TabStack"
-        component={SimpleStackScreen}
+        component={SimpleStack}
         options={{
           title: 'Article',
           tabBarIcon: getTabBarIcon('file-document'),
         }}
       />
-      <BottomTabs.Screen
+      <Tab.Screen
         name="TabChat"
         component={Chat}
         options={{
@@ -92,7 +92,7 @@ export default function BottomTabsScreen({
           tabBarBadge: 2,
         }}
       />
-      <BottomTabs.Screen
+      <Tab.Screen
         name="TabContacts"
         component={Contacts}
         options={{
@@ -100,7 +100,7 @@ export default function BottomTabsScreen({
           tabBarIcon: getTabBarIcon('contacts'),
         }}
       />
-      <BottomTabs.Screen
+      <Tab.Screen
         name="TabAlbums"
         component={AlbumsScreen}
         options={{
@@ -130,6 +130,6 @@ export default function BottomTabsScreen({
           ),
         }}
       />
-    </BottomTabs.Navigator>
+    </Tab.Navigator>
   );
 }

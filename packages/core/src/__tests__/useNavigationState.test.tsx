@@ -2,11 +2,11 @@ import type { NavigationState } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
 
-import BaseNavigationContainer from '../BaseNavigationContainer';
-import Screen from '../Screen';
-import useNavigationBuilder from '../useNavigationBuilder';
-import useNavigationState from '../useNavigationState';
-import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
+import { BaseNavigationContainer } from '../BaseNavigationContainer';
+import { Screen } from '../Screen';
+import { useNavigationBuilder } from '../useNavigationBuilder';
+import { useNavigationState } from '../useNavigationState';
+import { MockRouter, MockRouterKey } from './__fixtures__/MockRouter';
 
 beforeEach(() => {
   MockRouterKey.current = 0;

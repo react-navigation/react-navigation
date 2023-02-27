@@ -20,17 +20,17 @@ import type {
   StackCardStyleInterpolator,
   TransitionSpec,
 } from '../../types';
-import CardAnimationContext from '../../utils/CardAnimationContext';
-import getDistanceForDirection from '../../utils/getDistanceForDirection';
-import getInvertedMultiplier from '../../utils/getInvertedMultiplier';
-import memoize from '../../utils/memoize';
+import { CardAnimationContext } from '../../utils/CardAnimationContext';
+import { getDistanceForDirection } from '../../utils/getDistanceForDirection';
+import { getInvertedMultiplier } from '../../utils/getInvertedMultiplier';
+import { memoize } from '../../utils/memoize';
 import {
   GestureState,
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
 } from '../GestureHandler';
-import ModalStatusBarManager from '../ModalStatusBarManager';
-import CardSheet, { CardSheetRef } from './CardSheet';
+import { ModalStatusBarManager } from '../ModalStatusBarManager';
+import { CardSheet, CardSheetRef } from './CardSheet';
 
 type Props = ViewProps & {
   interpolationIndex: number;
@@ -89,7 +89,7 @@ const hasOpacityStyle = (style: any) => {
   return false;
 };
 
-export default class Card extends React.Component<Props> {
+export class Card extends React.Component<Props> {
   static defaultProps = {
     shadowEnabled: false,
     gestureEnabled: true,

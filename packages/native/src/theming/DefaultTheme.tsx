@@ -1,6 +1,6 @@
 import type { Theme } from '../types';
 
-const DefaultTheme: Theme = {
+export const DefaultTheme: Theme = {
   dark: false,
   colors: {
     primary: 'rgb(0, 122, 255)',
@@ -11,5 +11,3 @@ const DefaultTheme: Theme = {
     notification: 'rgb(255, 59, 48)',
   },
 };
-
-export default DefaultTheme;

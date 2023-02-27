@@ -15,7 +15,7 @@ import type {
   MaterialTopTabNavigationEventMap,
   MaterialTopTabNavigationOptions,
 } from '../types';
-import MaterialTopTabView from '../views/MaterialTopTabView';
+import { MaterialTopTabView } from '../views/MaterialTopTabView';
 
 type Props = DefaultNavigatorOptions<
   ParamListBase,
@@ -63,7 +63,7 @@ function MaterialTopTabNavigator({
   );
 }
 
-export default createNavigatorFactory<
+export const createMaterialTopTabNavigator = createNavigatorFactory<
   TabNavigationState<ParamListBase>,
   MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationEventMap,

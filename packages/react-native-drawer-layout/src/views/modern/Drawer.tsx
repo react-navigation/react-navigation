@@ -26,13 +26,13 @@ import {
   SWIPE_MIN_VELOCITY,
 } from '../../constants';
 import type { DrawerProps } from '../../types';
-import DrawerProgressContext from '../../utils/DrawerProgressContext';
+import { DrawerProgressContext } from '../../utils/DrawerProgressContext';
 import {
   GestureState,
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
 } from '../GestureHandler';
-import Overlay from './Overlay';
+import { Overlay } from './Overlay';
 
 const minmax = (value: number, start: number, end: number) => {
   'worklet';
@@ -44,7 +44,7 @@ type Props = DrawerProps & {
   layout: { width: number };
 };
 
-export default function Drawer({
+export function Drawer({
   layout,
   drawerPosition,
   drawerStyle,

@@ -10,9 +10,9 @@ import {
   TabView,
 } from 'react-native-tab-view';
 
-import Albums from '../../Shared/Albums';
-import Article from '../../Shared/Article';
-import Contacts from '../../Shared/Contacts';
+import { Albums } from '../../Shared/Albums';
+import { Article } from '../../Shared/Article';
+import { Contacts } from '../../Shared/Contacts';
 
 type Route = {
   key: string;
@@ -27,7 +27,7 @@ const renderScene = SceneMap({
   albums: () => <Albums />,
 });
 
-const CustomIndicator = () => {
+export const CustomIndicator = () => {
   const insets = useSafeAreaInsets();
   const [index, onIndexChange] = React.useState(0);
   const [routes] = React.useState<Route[]>([
@@ -145,8 +145,6 @@ CustomIndicator.options = {
     backgroundColor: '#263238',
   },
 };
-
-export default CustomIndicator;
 
 const styles = StyleSheet.create({
   tabbar: {

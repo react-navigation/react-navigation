@@ -14,9 +14,9 @@ import * as React from 'react';
 import { useWindowDimensions } from 'react-native';
 import { Appbar } from 'react-native-paper';
 
-import Albums from '../Shared/Albums';
-import Article from '../Shared/Article';
-import NewsFeed from '../Shared/NewsFeed';
+import { Albums } from '../Shared/Albums';
+import { Article } from '../Shared/Article';
+import { NewsFeed } from '../Shared/NewsFeed';
 
 type DrawerParams = {
   Article: undefined;
@@ -101,7 +101,7 @@ const Drawer = createDrawerNavigator<DrawerParams>();
 type Props = Partial<React.ComponentProps<typeof Drawer.Navigator>> &
   StackScreenProps<ParamListBase>;
 
-export default function DrawerScreen({ navigation, ...rest }: Props) {
+export function MasterDetail({ navigation, ...rest }: Props) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,

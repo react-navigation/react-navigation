@@ -5,7 +5,7 @@ import type {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
-import NavigationBuilderContext from './NavigationBuilderContext';
+import { NavigationBuilderContext } from './NavigationBuilderContext';
 
 type Options<Action extends NavigationAction> = {
   router: Router<NavigationState, Action>;
@@ -19,7 +19,7 @@ type Options<Action extends NavigationAction> = {
  * Focus action needs to be treated specially, coz when a nested route is focused,
  * the parent navigators also needs to be focused.
  */
-export default function useOnRouteFocus<Action extends NavigationAction>({
+export function useOnRouteFocus<Action extends NavigationAction>({
   router,
   getState,
   key: sourceRouteKey,

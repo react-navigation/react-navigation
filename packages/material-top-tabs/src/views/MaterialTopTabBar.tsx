@@ -11,7 +11,7 @@ import { TabBar, TabBarIndicator } from 'react-native-tab-view';
 
 import type { MaterialTopTabBarProps } from '../types';
 
-export default function TabBarTop({
+export function MaterialTopTabBar({
   state,
   navigation,
   descriptors,

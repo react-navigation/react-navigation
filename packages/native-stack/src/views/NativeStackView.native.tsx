@@ -36,10 +36,10 @@ import type {
   NativeStackNavigationHelpers,
   NativeStackNavigationOptions,
 } from '../types';
-import useDismissedRouteError from '../utils/useDismissedRouteError';
-import useInvalidPreventRemoveError from '../utils/useInvalidPreventRemoveError';
-import DebugContainer from './DebugContainer';
-import HeaderConfig from './HeaderConfig';
+import { useDismissedRouteError } from '../utils/useDismissedRouteError';
+import { useInvalidPreventRemoveError } from '../utils/useInvalidPreventRemoveError';
+import { DebugContainer } from './DebugContainer';
+import { HeaderConfig } from './HeaderConfig';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -440,7 +440,7 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
   );
 }
 
-export default function NativeStackView(props: Props) {
+export function NativeStackView(props: Props) {
   return (
     <SafeAreaProviderCompat>
       <NativeStackViewInner {...props} />

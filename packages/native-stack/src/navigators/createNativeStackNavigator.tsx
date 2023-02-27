@@ -16,7 +16,7 @@ import type {
   NativeStackNavigationOptions,
   NativeStackNavigatorProps,
 } from '../types';
-import NativeStackView from '../views/NativeStackView';
+import { NativeStackView } from '../views/NativeStackView';
 
 function NativeStackNavigator({
   id,
@@ -79,7 +79,7 @@ function NativeStackNavigator({
   );
 }
 
-export default createNavigatorFactory<
+export const createNativeStackNavigator = createNavigatorFactory<
   StackNavigationState<ParamListBase>,
   NativeStackNavigationOptions,
   NativeStackNavigationEventMap,

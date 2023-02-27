@@ -3,27 +3,28 @@ import * as React from 'react';
 /**
  * Component which prevents updates for children if no props changed
  */
-function StaticContainer(props: any) {
-  return props.children;
-}
+export const StaticContainer = React.memo(
+  function StaticContainer(props: any) {
+    return props.children;
+  },
+  (prevProps: any, nextProps: any) => {
+    const prevPropKeys = Object.keys(prevProps);
+    const nextPropKeys = Object.keys(nextProps);
 
-export default React.memo(StaticContainer, (prevProps: any, nextProps: any) => {
-  const prevPropKeys = Object.keys(prevProps);
-  const nextPropKeys = Object.keys(nextProps);
-
-  if (prevPropKeys.length !== nextPropKeys.length) {
-    return false;
-  }
-
-  for (const key of prevPropKeys) {
-    if (key === 'children') {
-      continue;
-    }
-
-    if (prevProps[key] !== nextProps[key]) {
+    if (prevPropKeys.length !== nextPropKeys.length) {
       return false;
     }
-  }
 
-  return true;
-});
+    for (const key of prevPropKeys) {
+      if (key === 'children') {
+        continue;
+      }
+
+      if (prevProps[key] !== nextProps[key]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+);

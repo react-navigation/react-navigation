@@ -5,7 +5,7 @@ import type { EventMapBase, RouteConfig } from './types';
 /**
  * Empty component used for specifying route configuration.
  */
-export default function Screen<
+export function Screen<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList,
   State extends NavigationState,

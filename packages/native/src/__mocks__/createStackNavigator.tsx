@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/core';
 import * as React from 'react';
 
-const createStackNavigator = createNavigatorFactory((props) => {
+export const createStackNavigator = createNavigatorFactory((props) => {
   const { state, descriptors, NavigationContent } = useNavigationBuilder(
     StackRouter,
     props
@@ -17,5 +17,3 @@ const createStackNavigator = createNavigatorFactory((props) => {
     </NavigationContent>
   );
 });
-
-export default createStackNavigator;

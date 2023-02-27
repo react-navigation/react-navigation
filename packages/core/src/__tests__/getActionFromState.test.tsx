@@ -1,4 +1,4 @@
-import getActionFromState from '../getActionFromState';
+import { getActionFromState } from '../getActionFromState';
 
 it('gets navigate action from state', () => {
   const state = {

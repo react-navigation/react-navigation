@@ -13,8 +13,8 @@ import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 
 import type { LinkComponentDemoParamList } from '../screens';
-import Albums from '../Shared/Albums';
-import Article from '../Shared/Article';
+import { Albums } from '../Shared/Albums';
+import { Article } from '../Shared/Article';
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
@@ -112,7 +112,7 @@ const SimpleStack = createStackNavigator<LinkComponentDemoParamList>();
 type Props = Partial<React.ComponentProps<typeof SimpleStack.Navigator>> &
   StackScreenProps<ParamListBase>;
 
-export default function SimpleStackScreen({ navigation, ...rest }: Props) {
+export function LinkComponent({ navigation, ...rest }: Props) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,

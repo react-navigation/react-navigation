@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 import { Button } from 'react-native-paper';
 
-import Article from '../Shared/Article';
+import { Article } from '../Shared/Article';
 
 type PreventRemoveParams = {
   Article: { author: string };
@@ -136,11 +136,11 @@ const InputScreen = ({
   );
 };
 
-const SimpleStack = createStackNavigator<PreventRemoveParams>();
+const Stack = createStackNavigator<PreventRemoveParams>();
 
 type Props = StackScreenProps<ParamListBase>;
 
-export default function SimpleStackScreen({ navigation }: Props) {
+export function StackPreventRemove({ navigation }: Props) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -148,10 +148,10 @@ export default function SimpleStackScreen({ navigation }: Props) {
   }, [navigation]);
 
   return (
-    <SimpleStack.Navigator>
-      <SimpleStack.Screen name="Input" component={InputScreen} />
-      <SimpleStack.Screen name="Article" component={ArticleScreen} />
-    </SimpleStack.Navigator>
+    <Stack.Navigator>
+      <Stack.Screen name="Input" component={InputScreen} />
+      <Stack.Screen name="Article" component={ArticleScreen} />
+    </Stack.Navigator>
   );
 }
 

@@ -1,12 +1,12 @@
 /**
  * Navigators
  */
-export { default as createNativeStackNavigator } from './navigators/createNativeStackNavigator';
+export { createNativeStackNavigator } from './navigators/createNativeStackNavigator';
 
 /**
  * Views
  */
-export { default as NativeStackView } from './views/NativeStackView';
+export { NativeStackView } from './views/NativeStackView';
 
 /**
  * Types

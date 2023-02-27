@@ -17,7 +17,7 @@ import type {
   StackNavigationEventMap,
   StackNavigationOptions,
 } from '../types';
-import StackView from '../views/Stack/StackView';
+import { StackView } from '../views/Stack/StackView';
 
 type Props = DefaultNavigatorOptions<
   ParamListBase,
@@ -89,7 +89,7 @@ function StackNavigator({
   );
 }
 
-export default createNavigatorFactory<
+export const createStackNavigator = createNavigatorFactory<
   StackNavigationState<ParamListBase>,
   StackNavigationOptions,
   StackNavigationEventMap,

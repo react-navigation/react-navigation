@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid/non-secure';
 
-import BaseRouter from './BaseRouter';
+import { BaseRouter } from './BaseRouter';
 import type {
   CommonNavigationAction,
   DefaultRouterOptions,
@@ -133,7 +133,7 @@ export const StackActions = {
   },
 };
 
-export default function StackRouter(options: StackRouterOptions) {
+export function StackRouter(options: StackRouterOptions) {
   const router: Router<
     StackNavigationState<ParamListBase>,
     CommonNavigationAction | StackActionType

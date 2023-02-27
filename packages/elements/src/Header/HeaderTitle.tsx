@@ -15,7 +15,7 @@ type Props = Omit<TextProps, 'style'> & {
   style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
 };
 
-export default function HeaderTitle({ tintColor, style, ...rest }: Props) {
+export function HeaderTitle({ tintColor, style, ...rest }: Props) {
   const { colors } = useTheme();
 
   return (

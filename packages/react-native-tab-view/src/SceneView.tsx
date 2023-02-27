@@ -18,7 +18,7 @@ type Props<T extends Route> = SceneRendererProps &
     style?: StyleProp<ViewStyle>;
   };
 
-export default function SceneView<T extends Route>({
+export function SceneView<T extends Route>({
   children,
   navigationState,
   lazy,

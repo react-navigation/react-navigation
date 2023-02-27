@@ -20,9 +20,9 @@ import type {
   BottomTabNavigationHelpers,
   BottomTabNavigationProp,
 } from '../types';
-import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
-import BottomTabBarHeightContext from '../utils/BottomTabBarHeightContext';
-import BottomTabBar, { getTabBarHeight } from './BottomTabBar';
+import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCallbackContext';
+import { BottomTabBarHeightContext } from '../utils/BottomTabBarHeightContext';
+import { BottomTabBar, getTabBarHeight } from './BottomTabBar';
 import { MaybeScreen, MaybeScreenContainer } from './ScreenFallback';
 
 type Props = BottomTabNavigationConfig & {
@@ -31,7 +31,7 @@ type Props = BottomTabNavigationConfig & {
   descriptors: BottomTabDescriptorMap;
 };
 
-export default function BottomTabView(props: Props) {
+export function BottomTabView(props: Props) {
   const {
     tabBar = (props: BottomTabBarProps) => <BottomTabBar {...props} />,
     state,

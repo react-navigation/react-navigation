@@ -7,12 +7,12 @@ import * as React from 'react';
 import { ScrollView } from 'react-native';
 import { List } from 'react-native-paper';
 
-import AutoWidthTabBar from './TabView/AutoWidthTabBar';
-import Coverflow from './TabView/Coverflow';
-import CustomIndicator from './TabView/CustomIndicator';
-import CustomTabBar from './TabView/CustomTabBar';
-import ScrollableTabBar from './TabView/ScrollableTabBar';
-import TabBarIcon from './TabView/TabBarIcon';
+import { AutoWidthTabBar } from './TabView/AutoWidthTabBar';
+import { Coverflow } from './TabView/Coverflow';
+import { CustomIndicator } from './TabView/CustomIndicator';
+import { CustomTabBar } from './TabView/CustomTabBar';
+import { ScrollableTabBar } from './TabView/ScrollableTabBar';
+import { TabBarIcon } from './TabView/TabBarIcon';
 
 const EXAMPLE_SCREENS = {
   ScrollableTabBar,
@@ -54,9 +54,7 @@ const ExampleListScreen = ({
   );
 };
 
-export default function TabViewStackScreen({
-  navigation,
-}: StackScreenProps<ParamListBase>) {
+export function TabView({ navigation }: StackScreenProps<ParamListBase>) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,

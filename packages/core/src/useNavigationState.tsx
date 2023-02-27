@@ -2,7 +2,7 @@ import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
 
 import type { NavigationProp } from './types';
-import useNavigation from './useNavigation';
+import { useNavigation } from './useNavigation';
 
 type Selector<ParamList extends ParamListBase, T> = (
   state: NavigationState<ParamList>
@@ -13,7 +13,7 @@ type Selector<ParamList extends ParamListBase, T> = (
  *
  * @param selector Selector function to get a value from the state.
  */
-export default function useNavigationState<ParamList extends ParamListBase, T>(
+export function useNavigationState<ParamList extends ParamListBase, T>(
   selector: Selector<ParamList, T>
 ): T {
   const navigation = useNavigation<NavigationProp<ParamList>>();

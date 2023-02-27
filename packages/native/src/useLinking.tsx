@@ -11,8 +11,8 @@ import {
 import isEqual from 'fast-deep-equal';
 import * as React from 'react';
 
-import createMemoryHistory from './createMemoryHistory';
-import ServerContext from './ServerContext';
+import { createMemoryHistory } from './createMemoryHistory';
+import { ServerContext } from './ServerContext';
 import type { LinkingOptions } from './types';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
@@ -96,7 +96,7 @@ let linkingHandlers: Symbol[] = [];
 
 type Options = LinkingOptions<ParamListBase>;
 
-export default function useLinking(
+export function useLinking(
   ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
   {
     enabled = true,

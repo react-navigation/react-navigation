@@ -39,7 +39,7 @@ const COVERS = [
   require('../../assets/album-art-24.jpg'),
 ];
 
-export default function Albums(props: Partial<ScrollViewProps>) {
+export function Albums(props: Partial<ScrollViewProps>) {
   const dimensions = useWindowDimensions();
 
   const ref = React.useRef<ScrollView>(null);

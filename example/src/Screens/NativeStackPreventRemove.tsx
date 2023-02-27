@@ -19,7 +19,7 @@ import {
 } from 'react-native';
 import { Button } from 'react-native-paper';
 
-import Article from '../Shared/Article';
+import { Article } from '../Shared/Article';
 
 type PreventRemoveParams = {
   Article: { author: string };
@@ -130,7 +130,7 @@ const Stack = createNativeStackNavigator<PreventRemoveParams>();
 
 type Props = NativeStackScreenProps<ParamListBase>;
 
-export default function StackScreen({ navigation }: Props) {
+export function NativeStackPreventRemove({ navigation }: Props) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,

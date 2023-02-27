@@ -6,9 +6,9 @@ import type {
 import escape from 'escape-string-regexp';
 import * as queryString from 'query-string';
 
-import findFocusedRoute from './findFocusedRoute';
+import { findFocusedRoute } from './findFocusedRoute';
 import type { PathConfigMap } from './types';
-import validatePathConfig from './validatePathConfig';
+import { validatePathConfig } from './validatePathConfig';
 
 type Options<ParamList extends {}> = {
   initialRouteName?: string;
@@ -62,7 +62,7 @@ type ParsedRoute = {
  * @param path Path string to parse and convert, e.g. /foo/bar?count=42.
  * @param options Extra options to fine-tune how to parse the path.
  */
-export default function getStateFromPath<ParamList extends {}>(
+export function getStateFromPath<ParamList extends {}>(
   path: string,
   options?: Options<ParamList>
 ): ResultState | undefined {

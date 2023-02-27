@@ -9,9 +9,9 @@ import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 
-import Albums from '../Shared/Albums';
-import Chat from '../Shared/Chat';
-import Contacts from '../Shared/Contacts';
+import { Albums } from '../Shared/Albums';
+import { Chat } from '../Shared/Chat';
+import { Contacts } from '../Shared/Contacts';
 
 const getTabBarIcon =
   (name: React.ComponentProps<typeof MaterialCommunityIcons>['name']) =>
@@ -81,7 +81,7 @@ const RootStack = createStackNavigator({
 
 const Navigation = createStaticNavigation(RootStack);
 
-export default function StaticScreen() {
+export function StaticScreen() {
   const [isChatShown, setIsChatShown] = React.useState(false);
 
   return (

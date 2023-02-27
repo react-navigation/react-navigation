@@ -1,6 +1,6 @@
 import type { NavigationState, PartialState } from '@react-navigation/routers';
 
-export default function checkDuplicateRouteNames(state: NavigationState) {
+export function checkDuplicateRouteNames(state: NavigationState) {
   const duplicates: string[][] = [];
 
   const getRouteNames = (

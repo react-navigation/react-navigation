@@ -8,9 +8,9 @@ import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 
-import Albums from '../Shared/Albums';
-import Article from '../Shared/Article';
-import NewsFeed from '../Shared/NewsFeed';
+import { Albums } from '../Shared/Albums';
+import { Article } from '../Shared/Article';
+import { NewsFeed } from '../Shared/NewsFeed';
 
 export type NativeStackParams = {
   Article: { author: string } | undefined;
@@ -129,9 +129,9 @@ const AlbumsScreen = ({
   );
 };
 
-const NativeStack = createNativeStackNavigator<NativeStackParams>();
+const Stack = createNativeStackNavigator<NativeStackParams>();
 
-export default function NativeStackScreen({
+export function NativeStack({
   navigation,
 }: NativeStackScreenProps<ParamListBase>) {
   React.useLayoutEffect(() => {
@@ -142,8 +142,8 @@ export default function NativeStackScreen({
   }, [navigation]);
 
   return (
-    <NativeStack.Navigator>
-      <NativeStack.Screen
+    <Stack.Navigator>
+      <Stack.Screen
         name="Article"
         component={ArticleScreen}
         options={({ route }) => ({
@@ -153,7 +153,7 @@ export default function NativeStackScreen({
         })}
         initialParams={{ author: 'Gandalf' }}
       />
-      <NativeStack.Screen
+      <Stack.Screen
         name="NewsFeed"
         component={NewsFeedScreen}
         options={{
@@ -161,7 +161,7 @@ export default function NativeStackScreen({
           fullScreenGestureEnabled: true,
         }}
       />
-      <NativeStack.Screen
+      <Stack.Screen
         name="Albums"
         component={AlbumsScreen}
         options={{
@@ -171,7 +171,7 @@ export default function NativeStackScreen({
           headerBlurEffect: 'light',
         }}
       />
-    </NativeStack.Navigator>
+    </Stack.Navigator>
   );
 }
 

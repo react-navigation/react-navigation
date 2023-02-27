@@ -25,11 +25,11 @@ import type {
   DrawerNavigationHelpers,
   DrawerNavigationProp,
 } from '../types';
-import DrawerPositionContext from '../utils/DrawerPositionContext';
-import DrawerStatusContext from '../utils/DrawerStatusContext';
-import getDrawerStatusFromState from '../utils/getDrawerStatusFromState';
-import DrawerContent from './DrawerContent';
-import DrawerToggleButton from './DrawerToggleButton';
+import { DrawerPositionContext } from '../utils/DrawerPositionContext';
+import { DrawerStatusContext } from '../utils/DrawerStatusContext';
+import { getDrawerStatusFromState } from '../utils/getDrawerStatusFromState';
+import { DrawerContent } from './DrawerContent';
+import { DrawerToggleButton } from './DrawerToggleButton';
 import { MaybeScreen, MaybeScreenContainer } from './ScreenFallback';
 
 type Props = DrawerNavigationConfig & {
@@ -317,7 +317,7 @@ function DrawerViewBase({
   );
 }
 
-export default function DrawerView({ navigation, ...rest }: Props) {
+export function DrawerView({ navigation, ...rest }: Props) {
   return (
     <SafeAreaProviderCompat>
       <DrawerViewBase navigation={navigation} {...rest} />

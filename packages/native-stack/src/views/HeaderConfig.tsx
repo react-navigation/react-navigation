@@ -29,7 +29,7 @@ type Props = NativeStackNavigationOptions & {
   canGoBack: boolean;
 };
 
-export default function HeaderConfig({
+export function HeaderConfig({
   headerHeight,
   headerBackImageSource,
   headerBackButtonMenuEnabled,

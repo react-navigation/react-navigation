@@ -2,7 +2,7 @@ import { I18nManager } from 'react-native';
 
 import type { GestureDirection } from '../types';
 
-export default function getInvertedMultiplier(
+export function getInvertedMultiplier(
   gestureDirection: GestureDirection
 ): 1 | -1 {
   switch (gestureDirection) {

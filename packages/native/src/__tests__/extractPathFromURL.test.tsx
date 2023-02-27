@@ -1,4 +1,4 @@
-import extractPathFromURL from '../extractPathFromURL';
+import { extractPathFromURL } from '../extractPathFromURL';
 
 it('extracts path from URL with protocol', () => {
   expect(extractPathFromURL(['scheme://'], 'scheme://some/path')).toBe(

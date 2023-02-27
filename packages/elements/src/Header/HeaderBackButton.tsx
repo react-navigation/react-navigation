@@ -10,11 +10,11 @@ import {
   View,
 } from 'react-native';
 
-import MaskedView from '../MaskedView';
-import PlatformPressable from '../PlatformPressable';
+import { MaskedView } from '../MaskedView';
+import { PlatformPressable } from '../PlatformPressable';
 import type { HeaderBackButtonProps } from '../types';
 
-export default function HeaderBackButton({
+export function HeaderBackButton({
   disabled,
   allowFontScaling,
   backImage,

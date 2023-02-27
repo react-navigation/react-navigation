@@ -1,13 +1,13 @@
 import * as React from 'react';
 
-import NavigationContext from './NavigationContext';
-import NavigationIndependentTreeContext from './NavigationIndependentTreeContext';
-import NavigationRouteContext from './NavigationRouteContext';
+import { NavigationContext } from './NavigationContext';
+import { NavigationIndependentTreeContext } from './NavigationIndependentTreeContext';
+import { NavigationRouteContext } from './NavigationRouteContext';
 
 /**
  * Component to make the child navigation container independent of parent containers.
  */
-export default function NavigationIndependentTree({
+export function NavigationIndependentTree({
   children,
 }: {
   children: React.ReactNode;

@@ -9,7 +9,7 @@ declare global {
 // We use a global variable to keep our contexts so that we can reuse same contexts across packages
 global[contexts] = global[contexts] ?? new Map<string, React.Context<any>>();
 
-export default function getNamedContext<T>(
+export function getNamedContext<T>(
   name: string,
   initialValue: T
 ): React.Context<T> {

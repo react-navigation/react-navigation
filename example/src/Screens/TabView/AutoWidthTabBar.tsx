@@ -8,10 +8,10 @@ import {
   TabView,
 } from 'react-native-tab-view';
 
-import Albums from '../../Shared/Albums';
-import Article from '../../Shared/Article';
-import Chat from '../../Shared/Chat';
-import Contacts from '../../Shared/Contacts';
+import { Albums } from '../../Shared/Albums';
+import { Article } from '../../Shared/Article';
+import { Chat } from '../../Shared/Chat';
+import { Contacts } from '../../Shared/Contacts';
 
 type State = NavigationState<{
   key: string;
@@ -27,7 +27,7 @@ const renderScene = SceneMap({
   medium: () => <Article />,
 });
 
-const AutoWidthTabBar = () => {
+export const AutoWidthTabBar = () => {
   const [index, onIndexChange] = React.useState(1);
   const [routes] = React.useState([
     { key: 'article', title: 'Article' },
@@ -72,8 +72,6 @@ AutoWidthTabBar.options = {
     backgroundColor: '#3f51b5',
   },
 };
-
-export default AutoWidthTabBar;
 
 const styles = StyleSheet.create({
   tabbar: {

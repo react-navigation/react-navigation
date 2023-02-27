@@ -12,7 +12,7 @@ type Listeners = ((e: any) => void)[];
 /**
  * Hook to manage the event system used by the navigator to notify screens of various events.
  */
-export default function useEventEmitter<T extends Record<string, any>>(
+export function useEventEmitter<T extends Record<string, any>>(
   listen?: (e: any) => void
 ): NavigationEventEmitter<T> {
   const listenRef = React.useRef(listen);

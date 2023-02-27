@@ -7,14 +7,15 @@ import type {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
-import DeprecatedNavigationInChildContext from './DeprecatedNavigationInChildContext';
-import NavigationBuilderContext, {
+import { DeprecatedNavigationInChildContext } from './DeprecatedNavigationInChildContext';
+import {
   ChildActionListener,
   ChildBeforeRemoveListener,
+  NavigationBuilderContext,
 } from './NavigationBuilderContext';
 import type { EventMapCore } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
-import useOnPreventRemove, { shouldPreventRemove } from './useOnPreventRemove';
+import { shouldPreventRemove, useOnPreventRemove } from './useOnPreventRemove';
 
 type Options = {
   router: Router<NavigationState, NavigationAction>;
@@ -36,7 +37,7 @@ type Options = {
  *
  * When the action handler handles as action, it returns `true`, otherwise `false`.
  */
-export default function useOnAction({
+export function useOnAction({
   router,
   getState,
   setState,

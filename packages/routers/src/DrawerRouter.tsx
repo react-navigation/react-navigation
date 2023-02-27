@@ -1,10 +1,11 @@
 import { nanoid } from 'nanoid/non-secure';
 
-import TabRouter, {
+import {
   TabActionHelpers,
   TabActions,
   TabActionType,
   TabNavigationState,
+  TabRouter,
   TabRouterOptions,
 } from './TabRouter';
 import type {
@@ -79,7 +80,7 @@ export const DrawerActions = {
   },
 };
 
-export default function DrawerRouter({
+export function DrawerRouter({
   defaultStatus = 'closed',
   ...rest
 }: DrawerRouterOptions): Router<

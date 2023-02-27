@@ -22,7 +22,7 @@ type Props = {
   style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
 };
 
-export default function Badge({
+export function Badge({
   children,
   style,
   visible = true,

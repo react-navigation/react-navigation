@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GestureResponderEvent, Platform, Text, TextProps } from 'react-native';
 
-import useLinkProps, { Props as LinkProps } from './useLinkProps';
+import { Props as LinkProps, useLinkProps } from './useLinkProps';
 
 type Props<ParamList extends ReactNavigation.RootParamList> =
   LinkProps<ParamList> &
@@ -26,7 +26,7 @@ type Props<ParamList extends ReactNavigation.RootParamList> =
  * @param props.action Optional action to use for in-page navigation. By default, the path is parsed to an action based on linking config.
  * @param props.children Child elements to render the content.
  */
-export default function Link<ParamList extends ReactNavigation.RootParamList>({
+export function Link<ParamList extends ReactNavigation.RootParamList>({
   screen,
   params,
   action,

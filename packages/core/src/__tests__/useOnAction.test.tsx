@@ -9,12 +9,13 @@ import {
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
 
-import BaseNavigationContainer from '../BaseNavigationContainer';
-import createNavigationContainerRef from '../createNavigationContainerRef';
-import Screen from '../Screen';
-import useNavigationBuilder from '../useNavigationBuilder';
-import MockRouter, {
+import { BaseNavigationContainer } from '../BaseNavigationContainer';
+import { createNavigationContainerRef } from '../createNavigationContainerRef';
+import { Screen } from '../Screen';
+import { useNavigationBuilder } from '../useNavigationBuilder';
+import {
   MockActions,
+  MockRouter,
   MockRouterKey,
 } from './__fixtures__/MockRouter';
 

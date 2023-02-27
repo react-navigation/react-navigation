@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import type { NavigationState, Route, SceneRendererProps } from './types';
-import useAnimatedValue from './useAnimatedValue';
+import { useAnimatedValue } from './useAnimatedValue';
 
 export type GetTabWidth = (index: number) => number;
 
@@ -45,7 +45,7 @@ const getTranslateX = (
   return Animated.multiply(translateX, I18nManager.isRTL ? -1 : 1);
 };
 
-export default function TabBarIndicator<T extends Route>({
+export function TabBarIndicator<T extends Route>({
   getTabWidth,
   layout,
   navigationState,

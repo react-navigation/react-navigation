@@ -17,7 +17,7 @@ import type {
   BottomTabDescriptor,
   LabelPosition,
 } from '../types';
-import TabBarIcon from './TabBarIcon';
+import { TabBarIcon } from './TabBarIcon';
 
 type Props = {
   /**
@@ -128,7 +128,7 @@ type Props = {
   style?: StyleProp<ViewStyle>;
 };
 
-export default function BottomTabItem({
+export function BottomTabItem({
   route,
   href,
   focused,

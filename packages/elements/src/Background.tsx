@@ -6,7 +6,7 @@ type Props = ViewProps & {
   children: React.ReactNode;
 };
 
-export default function Background({ style, ...rest }: Props) {
+export function Background({ style, ...rest }: Props) {
   const { colors } = useTheme();
 
   return (

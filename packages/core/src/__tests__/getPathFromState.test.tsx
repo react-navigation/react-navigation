@@ -1,7 +1,7 @@
 import type { NavigationState, PartialState } from '@react-navigation/routers';
 
-import getPathFromState from '../getPathFromState';
-import getStateFromPath from '../getStateFromPath';
+import { getPathFromState } from '../getPathFromState';
+import { getStateFromPath } from '../getStateFromPath';
 
 type State = PartialState<NavigationState>;
 

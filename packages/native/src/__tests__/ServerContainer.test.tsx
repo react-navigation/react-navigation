@@ -8,8 +8,8 @@ import {
 import * as React from 'react';
 import { renderToString } from 'react-dom/server';
 
-import NavigationContainer from '../NavigationContainer';
-import ServerContainer from '../ServerContainer';
+import { NavigationContainer } from '../NavigationContainer';
+import { ServerContainer } from '../ServerContainer';
 import type { ServerContainerRef } from '../types';
 
 // @ts-expect-error: practically window is same as global, so we can ignore the error
@@ -20,7 +20,7 @@ window.removeEventListener = () => {};
 
 // We want to use the web version of useLinking
 // eslint-disable-next-line import/extensions
-jest.mock('../useLinking', () => require('../useLinking.tsx').default);
+jest.mock('../useLinking', () => require('../useLinking.tsx'));
 
 it('renders correct state with location', () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {

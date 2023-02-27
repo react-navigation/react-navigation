@@ -18,7 +18,7 @@ import type {
   PagerProps,
   Route,
 } from './types';
-import useAnimatedValue from './useAnimatedValue';
+import { useAnimatedValue } from './useAnimatedValue';
 
 type Props<T extends Route> = PagerProps & {
   layout: Layout;
@@ -49,7 +49,7 @@ const DefaultTransitionSpec = {
   overshootClamping: true,
 };
 
-export default function PanResponderAdapter<T extends Route>({
+export function PanResponderAdapter<T extends Route>({
   layout,
   keyboardDismissMode = 'auto',
   swipeEnabled = true,

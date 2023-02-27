@@ -4,7 +4,7 @@ import {
   PanGestureHandlerProperties,
 } from 'react-native-gesture-handler';
 
-import DrawerGestureContext from '../utils/DrawerGestureContext';
+import { DrawerGestureContext } from '../utils/DrawerGestureContext';
 
 export function PanGestureHandler(props: PanGestureHandlerProperties) {
   const gestureRef = React.useRef<PanGestureHandlerNative>(null);

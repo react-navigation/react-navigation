@@ -10,14 +10,14 @@ import {
 } from '@react-navigation/core';
 import * as React from 'react';
 
-import LinkingContext from './LinkingContext';
-import DefaultTheme from './theming/DefaultTheme';
-import ThemeProvider from './theming/ThemeProvider';
+import { LinkingContext } from './LinkingContext';
+import { DefaultTheme } from './theming/DefaultTheme';
+import { ThemeProvider } from './theming/ThemeProvider';
 import type { DocumentTitleOptions, LinkingOptions, Theme } from './types';
-import useBackButton from './useBackButton';
-import useDocumentTitle from './useDocumentTitle';
-import useLinking from './useLinking';
-import useThenable from './useThenable';
+import { useBackButton } from './useBackButton';
+import { useDocumentTitle } from './useDocumentTitle';
+import { useLinking } from './useLinking';
+import { useThenable } from './useThenable';
 
 declare global {
   var REACT_NAVIGATION_DEVTOOLS: WeakMap<
@@ -128,12 +128,10 @@ function NavigationContainerInner(
   );
 }
 
-const NavigationContainer = React.forwardRef(NavigationContainerInner) as <
-  RootParamList extends {} = ReactNavigation.RootParamList
->(
+export const NavigationContainer = React.forwardRef(
+  NavigationContainerInner
+) as <RootParamList extends {} = ReactNavigation.RootParamList>(
   props: Props<RootParamList> & {
     ref?: React.Ref<NavigationContainerRef<RootParamList>>;
   }
 ) => React.ReactElement;
-
-export default NavigationContainer;

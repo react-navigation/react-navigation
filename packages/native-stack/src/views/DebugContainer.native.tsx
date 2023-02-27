@@ -9,10 +9,11 @@ type ContainerProps = ViewProps & {
   children: React.ReactNode;
 };
 
-let Container = View as unknown as React.ComponentType<ContainerProps>;
+export let DebugContainer =
+  View as unknown as React.ComponentType<ContainerProps>;
 
 if (process.env.NODE_ENV !== 'production') {
-  const DebugContainer = (props: ContainerProps) => {
+  DebugContainer = (props: ContainerProps) => {
     const { stackPresentation, ...rest } = props;
 
     if (Platform.OS === 'ios' && stackPresentation !== 'push') {
@@ -26,8 +27,4 @@ if (process.env.NODE_ENV !== 'production') {
 
     return <View {...rest} />;
   };
-
-  Container = DebugContainer;
 }
-
-export default Container;

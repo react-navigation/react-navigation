@@ -20,7 +20,7 @@ import type {
   StackHeaderOptions,
   StackHeaderStyleInterpolator,
 } from '../../types';
-import memoize from '../../utils/memoize';
+import { memoize } from '../../utils/memoize';
 
 type Props = Omit<StackHeaderOptions, 'headerStatusBarHeight'> & {
   headerStatusBarHeight: number;
@@ -32,7 +32,7 @@ type Props = Omit<StackHeaderOptions, 'headerStatusBarHeight'> & {
   styleInterpolator: StackHeaderStyleInterpolator;
 };
 
-export default function HeaderSegment(props: Props) {
+export function HeaderSegment(props: Props) {
   const [leftLabelLayout, setLeftLabelLayout] = React.useState<
     Layout | undefined
   >(undefined);

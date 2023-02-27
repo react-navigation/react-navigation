@@ -17,7 +17,7 @@ export const SingleNavigatorContext = React.createContext<
 /**
  * Component which ensures that there's only one navigator nested under it.
  */
-export default function EnsureSingleNavigator({ children }: Props) {
+export function EnsureSingleNavigator({ children }: Props) {
   const navigatorKeyRef = React.useRef<string | undefined>();
 
   const value = React.useMemo(

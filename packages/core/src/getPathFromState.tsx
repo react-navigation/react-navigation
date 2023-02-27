@@ -5,9 +5,9 @@ import type {
 } from '@react-navigation/routers';
 import * as queryString from 'query-string';
 
-import fromEntries from './fromEntries';
+import { fromEntries } from './fromEntries';
 import type { PathConfig, PathConfigMap } from './types';
-import validatePathConfig from './validatePathConfig';
+import { validatePathConfig } from './validatePathConfig';
 
 type Options<ParamList extends {}> = {
   initialRouteName?: string;
@@ -66,7 +66,7 @@ const getActiveRoute = (state: State): { name: string; params?: object } => {
  * @param options Extra options to fine-tune how to serialize the path.
  * @returns Path representing the state, e.g. /foo/bar?count=42.
  */
-export default function getPathFromState<ParamList extends {}>(
+export function getPathFromState<ParamList extends {}>(
   state: State,
   options?: Options<ParamList>
 ): string {

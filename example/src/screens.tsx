@@ -1,24 +1,24 @@
 import type { NavigatorScreenParams } from '@react-navigation/native';
 
-import AuthFlow from './Screens/AuthFlow';
-import BottomTabs from './Screens/BottomTabs';
-import DrawerView from './Screens/DrawerView';
-import DynamicTabs from './Screens/DynamicTabs';
-import LinkComponent from './Screens/LinkComponent';
-import MasterDetail from './Screens/MasterDetail';
-import MaterialTopTabsScreen from './Screens/MaterialTopTabs';
-import MixedHeaderMode from './Screens/MixedHeaderMode';
-import MixedStack from './Screens/MixedStack';
-import ModalStack from './Screens/ModalStack';
-import NativeStack from './Screens/NativeStack';
-import NativeStackHeaderCustomization from './Screens/NativeStackHeaderCustomization';
-import NativeStackPreventRemove from './Screens/NativeStackPreventRemove';
-import SimpleStack from './Screens/SimpleStack';
-import StackHeaderCustomization from './Screens/StackHeaderCustomization';
-import StackPreventRemove from './Screens/StackPreventRemove';
-import StackTransparent from './Screens/StackTransparent';
-import StaticScreen from './Screens/Static';
-import TabView from './Screens/TabView';
+import { AuthFlow } from './Screens/AuthFlow';
+import { BottomTabs } from './Screens/BottomTabs';
+import { DrawerView } from './Screens/DrawerView';
+import { DynamicTabs } from './Screens/DynamicTabs';
+import { LinkComponent } from './Screens/LinkComponent';
+import { MasterDetail } from './Screens/MasterDetail';
+import { MaterialTopTabsScreen } from './Screens/MaterialTopTabs';
+import { MixedHeaderMode } from './Screens/MixedHeaderMode';
+import { MixedStack } from './Screens/MixedStack';
+import { ModalStack } from './Screens/ModalStack';
+import { NativeStack } from './Screens/NativeStack';
+import { NativeStackHeaderCustomization } from './Screens/NativeStackHeaderCustomization';
+import { NativeStackPreventRemove } from './Screens/NativeStackPreventRemove';
+import { SimpleStack } from './Screens/SimpleStack';
+import { StackHeaderCustomization } from './Screens/StackHeaderCustomization';
+import { StackPreventRemove } from './Screens/StackPreventRemove';
+import { StackTransparent } from './Screens/StackTransparent';
+import { StaticScreen } from './Screens/Static';
+import { TabView } from './Screens/TabView';
 
 export type RootDrawerParamList = {
   Examples: undefined;

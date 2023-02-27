@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import NavigationContainerRefContext from './NavigationContainerRefContext';
-import NavigationContext from './NavigationContext';
+import { NavigationContainerRefContext } from './NavigationContainerRefContext';
+import { NavigationContext } from './NavigationContext';
 import type { NavigationProp } from './types';
 
 /**
@@ -9,7 +9,7 @@ import type { NavigationProp } from './types';
  *
  * @returns Navigation prop of the parent screen.
  */
-export default function useNavigation<
+export function useNavigation<
   T = NavigationProp<ReactNavigation.RootParamList>
 >(): T {
   const root = React.useContext(NavigationContainerRefContext);

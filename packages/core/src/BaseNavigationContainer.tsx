@@ -10,29 +10,29 @@ import {
 import * as React from 'react';
 import useLatestCallback from 'use-latest-callback';
 
-import checkDuplicateRouteNames from './checkDuplicateRouteNames';
-import checkSerializable from './checkSerializable';
+import { checkDuplicateRouteNames } from './checkDuplicateRouteNames';
+import { checkSerializable } from './checkSerializable';
 import { NOT_INITIALIZED_ERROR } from './createNavigationContainerRef';
-import DeprecatedNavigationInChildContext from './DeprecatedNavigationInChildContext';
-import EnsureSingleNavigator from './EnsureSingleNavigator';
-import findFocusedRoute from './findFocusedRoute';
-import NavigationBuilderContext from './NavigationBuilderContext';
-import NavigationContainerRefContext from './NavigationContainerRefContext';
-import NavigationIndependentTreeContext from './NavigationIndependentTreeContext';
-import NavigationStateContext from './NavigationStateContext';
+import { DeprecatedNavigationInChildContext } from './DeprecatedNavigationInChildContext';
+import { EnsureSingleNavigator } from './EnsureSingleNavigator';
+import { findFocusedRoute } from './findFocusedRoute';
+import { NavigationBuilderContext } from './NavigationBuilderContext';
+import { NavigationContainerRefContext } from './NavigationContainerRefContext';
+import { NavigationIndependentTreeContext } from './NavigationIndependentTreeContext';
+import { NavigationStateContext } from './NavigationStateContext';
 import type {
   NavigationContainerEventMap,
   NavigationContainerProps,
   NavigationContainerRef,
 } from './types';
-import UnhandledActionContext from './UnhandledActionContext';
-import useChildListeners from './useChildListeners';
-import useEventEmitter from './useEventEmitter';
-import useKeyedChildListeners from './useKeyedChildListeners';
-import useNavigationIndependentTree from './useNavigationIndependentTree';
-import useOptionsGetters from './useOptionsGetters';
+import { UnhandledActionContext } from './UnhandledActionContext';
+import { useChildListeners } from './useChildListeners';
+import { useEventEmitter } from './useEventEmitter';
+import { useKeyedChildListeners } from './useKeyedChildListeners';
+import { useNavigationIndependentTree } from './useNavigationIndependentTree';
+import { useOptionsGetters } from './useOptionsGetters';
 import { ScheduleUpdateContext } from './useScheduleUpdate';
-import useSyncState from './useSyncState';
+import { useSyncState } from './useSyncState';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
 
@@ -80,7 +80,7 @@ const getPartialState = (
  * @param props.children Child elements to render the content.
  * @param props.ref Ref object which refers to the navigation object containing helper methods.
  */
-const BaseNavigationContainer = React.forwardRef(
+export const BaseNavigationContainer = React.forwardRef(
   function BaseNavigationContainer(
     {
       initialState,
@@ -453,5 +453,3 @@ const BaseNavigationContainer = React.forwardRef(
     );
   }
 );
-
-export default BaseNavigationContainer;

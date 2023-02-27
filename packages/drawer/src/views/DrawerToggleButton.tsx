@@ -16,7 +16,7 @@ type Props = {
   tintColor?: string;
 };
 
-export default function DrawerToggleButton({ tintColor, ...rest }: Props) {
+export function DrawerToggleButton({ tintColor, ...rest }: Props) {
   const navigation = useNavigation<DrawerNavigationProp<ParamListBase>>();
 
   return (

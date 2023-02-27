@@ -4,7 +4,7 @@ import type {
   StackCardInterpolatedStyle,
   StackCardInterpolationProps,
 } from '../types';
-import conditional from '../utils/conditional';
+import { conditional } from '../utils/conditional';
 
 const { add, multiply } = Animated;
 
