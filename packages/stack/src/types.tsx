@@ -83,7 +83,6 @@ export type StackAnimationTypes =
   | 'fade'
   | 'fade_from_bottom'
   | 'none'
-  | 'simple_push'
   | 'slide_from_bottom'
   | 'slide_from_right'
   | 'slide_from_left';
@@ -322,7 +321,7 @@ export type StackNavigationOptions = StackHeaderOptions &
      * Supported values:
      * - "default": use the platform default animation
      * - "fade": fade screen in or out
-     * - "simple_push": use the platform default animation, but without shadow and native header transition
+     * - "fade_from_bottom": fade screen in or out from bottom
      * - "slide_from_bottom": slide in the new screen from bottom
      * - "slide_from_right": slide in the new screen from right
      * - "slide_from_left": slide in the new screen from left

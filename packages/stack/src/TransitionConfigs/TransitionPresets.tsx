@@ -166,7 +166,6 @@ export const AnimationTransitions: AnimationTransitionMap = {
   fade: ModalFadeTransition,
   fade_from_bottom: FadeFromBottomAndroid,
   none: DefaultTransition,
-  simple_push: DefaultTransition,
   slide_from_bottom: BottomSheetAndroid,
   slide_from_left: SlideFromLeftIOS,
   slide_from_right: SlideFromRightIOS,
