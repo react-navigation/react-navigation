@@ -33,7 +33,7 @@ export function HeaderBackButton({
   testID,
   style,
 }: HeaderBackButtonProps) {
-  const { colors } = useTheme();
+  const { colors, fonts } = useTheme();
 
   const [initialLabelWidth, setInitialLabelWidth] = React.useState<
     undefined | number
@@ -106,8 +106,9 @@ export function HeaderBackButton({
             leftLabelText === label ? handleLabelLayout : undefined
           }
           style={[
-            styles.label,
             tintColor ? { color: tintColor } : null,
+            fonts.regular,
+            styles.label,
             labelStyle,
           ]}
           numberOfLines={1}

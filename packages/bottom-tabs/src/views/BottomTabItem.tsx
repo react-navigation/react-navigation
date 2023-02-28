@@ -195,7 +195,7 @@ export function BottomTabItem({
   iconStyle,
   style,
 }: Props) {
-  const { colors } = useTheme();
+  const { colors, fonts } = useTheme();
 
   const activeTintColor =
     customActiveTintColor === undefined
@@ -219,8 +219,9 @@ export function BottomTabItem({
         <Text
           numberOfLines={1}
           style={[
-            styles.label,
             { color },
+            fonts.regular,
+            styles.label,
             horizontal ? styles.labelBeside : styles.labelBeneath,
             labelStyle,
           ]}

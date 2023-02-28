@@ -17,7 +17,7 @@ export function MaterialTopTabBar({
   descriptors,
   ...rest
 }: MaterialTopTabBarProps) {
-  const { colors } = useTheme();
+  const { colors, fonts } = useTheme();
 
   const focusedOptions = descriptors[state.routes[state.index].key].options;
 
@@ -103,7 +103,12 @@ export function MaterialTopTabBar({
         if (typeof label === 'string') {
           return (
             <Text
-              style={[styles.label, { color }, options.tabBarLabelStyle]}
+              style={[
+                { color },
+                fonts.regular,
+                styles.label,
+                options.tabBarLabelStyle,
+              ]}
               allowFontScaling={options.tabBarAllowFontScaling}
             >
               {label}
