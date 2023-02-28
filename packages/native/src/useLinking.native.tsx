@@ -8,7 +8,7 @@ import {
 import * as React from 'react';
 import { Linking, Platform } from 'react-native';
 
-import extractPathFromURL from './extractPathFromURL';
+import { extractPathFromURL } from './extractPathFromURL';
 import type { LinkingOptions } from './types';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
@@ -17,7 +17,7 @@ type Options = LinkingOptions<ParamListBase>;
 
 let linkingHandlers: Symbol[] = [];
 
-export default function useLinking(
+export function useLinking(
   ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
   {
     enabled = true,

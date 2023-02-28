@@ -10,7 +10,7 @@ type BottomTabParams = {
 
 const BottomTabs = createBottomTabNavigator<BottomTabParams>();
 
-export default function BottomTabsScreen() {
+export function DynamicTabs() {
   const [tabs, setTabs] = React.useState([0, 1]);
 
   return (

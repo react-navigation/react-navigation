@@ -10,11 +10,11 @@ import {
   View,
 } from 'react-native';
 
-import MaskedView from '../MaskedView';
-import PlatformPressable from '../PlatformPressable';
+import { MaskedView } from '../MaskedView';
+import { PlatformPressable } from '../PlatformPressable';
 import type { HeaderBackButtonProps } from '../types';
 
-export default function HeaderBackButton({
+export function HeaderBackButton({
   disabled,
   allowFontScaling,
   backImage,
@@ -33,7 +33,7 @@ export default function HeaderBackButton({
   testID,
   style,
 }: HeaderBackButtonProps) {
-  const { colors } = useTheme();
+  const { colors, fonts } = useTheme();
 
   const [initialLabelWidth, setInitialLabelWidth] = React.useState<
     undefined | number
@@ -106,8 +106,9 @@ export default function HeaderBackButton({
             leftLabelText === label ? handleLabelLayout : undefined
           }
           style={[
-            styles.label,
             tintColor ? { color: tintColor } : null,
+            fonts.regular,
+            styles.label,
             labelStyle,
           ]}
           numberOfLines={1}

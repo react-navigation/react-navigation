@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import useLatestCallback from 'use-latest-callback';
 
-import PlatformPressable from './PlatformPressable';
+import { PlatformPressable } from './PlatformPressable';
 import type { NavigationState, Route, Scene } from './types';
 
 export type Props<T extends Route> = {
@@ -265,7 +265,7 @@ const MemoizedTabBarItemInternal = React.memo(
   TabBarItemInternal
 ) as typeof TabBarItemInternal;
 
-function TabBarItem<T extends Route>(props: Props<T>) {
+export function TabBarItem<T extends Route>(props: Props<T>) {
   const { onPress, onLongPress, onLayout, navigationState, route, ...rest } =
     props;
   const onPressLatest = useLatestCallback(onPress);
@@ -287,8 +287,6 @@ function TabBarItem<T extends Route>(props: Props<T>) {
     />
   );
 }
-
-export default TabBarItem;
 
 const styles = StyleSheet.create({
   label: {

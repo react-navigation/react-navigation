@@ -1,9 +1,9 @@
 import { render } from '@testing-library/react-native';
 import * as React from 'react';
 
-import createStackNavigator from '../__mocks__/createStackNavigator';
-import NavigationContainer from '../NavigationContainer';
-import useLinkTools from '../useLinkTools';
+import { createStackNavigator } from '../__mocks__/createStackNavigator';
+import { NavigationContainer } from '../NavigationContainer';
+import { useLinkTools } from '../useLinkTools';
 
 it('builds href from name and params', () => {
   expect.assertions(3);

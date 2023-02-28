@@ -6,6 +6,22 @@ import type {
   Route,
 } from '@react-navigation/core';
 
+type FontStyle = {
+  fontFamily: string;
+  fontWeight:
+    | 'normal'
+    | 'bold'
+    | '100'
+    | '200'
+    | '300'
+    | '400'
+    | '500'
+    | '600'
+    | '700'
+    | '800'
+    | '900';
+};
+
 export type Theme = {
   dark: boolean;
   colors: {
@@ -15,6 +31,12 @@ export type Theme = {
     text: string;
     border: string;
     notification: string;
+  };
+  fonts: {
+    regular: FontStyle;
+    medium: FontStyle;
+    bold: FontStyle;
+    heavy: FontStyle;
   };
 };
 

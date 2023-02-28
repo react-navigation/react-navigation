@@ -1,7 +1,7 @@
 import type { NavigationContainerRef } from '@react-navigation/core';
 import * as React from 'react';
 
-import useDevToolsBase from './useDevToolsBase';
+import { useDevToolsBase } from './useDevToolsBase';
 
 type DevToolsConnection = {
   init(value: any): void;
@@ -18,7 +18,7 @@ type DevToolsExtension = {
 
 declare const __REDUX_DEVTOOLS_EXTENSION__: DevToolsExtension | undefined;
 
-export default function useReduxDevToolsExtension(
+export function useReduxDevToolsExtension(
   ref: React.RefObject<NavigationContainerRef<any>>
 ) {
   const devToolsRef = React.useRef<DevToolsConnection>();

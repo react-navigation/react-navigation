@@ -8,7 +8,7 @@ import {
 import * as React from 'react';
 
 import type { DrawerDescriptorMap, DrawerNavigationHelpers } from '../types';
-import DrawerItem from './DrawerItem';
+import { DrawerItem } from './DrawerItem';
 
 type Props = {
   state: DrawerNavigationState<ParamListBase>;
@@ -19,11 +19,7 @@ type Props = {
 /**
  * Component that renders the navigation list in the drawer.
  */
-export default function DrawerItemList({
-  state,
-  navigation,
-  descriptors,
-}: Props) {
+export function DrawerItemList({ state, navigation, descriptors }: Props) {
   const { buildHref } = useLinkTools();
 
   const focusedRoute = state.routes[state.index];

@@ -9,9 +9,9 @@ import {
   TabView,
 } from 'react-native-tab-view';
 
-import Article from '../../Shared/Article';
-import Chat from '../../Shared/Chat';
-import Contacts from '../../Shared/Contacts';
+import { Article } from '../../Shared/Article';
+import { Chat } from '../../Shared/Chat';
+import { Contacts } from '../../Shared/Contacts';
 
 type Route = {
   key: string;
@@ -26,7 +26,7 @@ const renderScene = SceneMap({
   article: () => <Article />,
 });
 
-const TabBarIcon = () => {
+export const TabBarIcon = () => {
   const [index, onIndexChange] = React.useState(0);
   const [routes] = React.useState<Route[]>([
     { key: 'chat', icon: 'md-chatbubbles' },
@@ -71,8 +71,6 @@ TabBarIcon.options = {
     backgroundColor: '#e91e63',
   },
 };
-
-export default TabBarIcon;
 
 const styles = StyleSheet.create({
   tabbar: {

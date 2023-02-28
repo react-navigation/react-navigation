@@ -21,12 +21,13 @@ import type {
   StackNavigationConfig,
   StackNavigationHelpers,
 } from '../../types';
-import ModalPresentationContext from '../../utils/ModalPresentationContext';
+import { ModalPresentationContext } from '../../utils/ModalPresentationContext';
 import { GestureHandlerRootView } from '../GestureHandler';
-import HeaderContainer, {
+import {
+  HeaderContainer,
   Props as HeaderContainerProps,
 } from '../Header/HeaderContainer';
-import CardStack from './CardStack';
+import { CardStack } from './CardStack';
 
 type Props = StackNavigationConfig & {
   state: StackNavigationState<ParamListBase>;
@@ -61,7 +62,7 @@ const GestureHandlerWrapper = GestureHandlerRootView ?? View;
 const isArrayEqual = (a: any[], b: any[]) =>
   a.length === b.length && a.every((it, index) => it === b[index]);
 
-export default class StackView extends React.Component<Props, State> {
+export class StackView extends React.Component<Props, State> {
   static getDerivedStateFromProps(
     props: Readonly<Props>,
     state: Readonly<State>

@@ -1,13 +1,13 @@
 /**
  * Navigators
  */
-export { default as createMaterialTopTabNavigator } from './navigators/createMaterialTopTabNavigator';
+export { createMaterialTopTabNavigator } from './navigators/createMaterialTopTabNavigator';
 
 /**
  * Views
  */
-export { default as MaterialTopTabBar } from './views/MaterialTopTabBar';
-export { default as MaterialTopTabView } from './views/MaterialTopTabView';
+export { MaterialTopTabBar } from './views/MaterialTopTabBar';
+export { MaterialTopTabView } from './views/MaterialTopTabView';
 
 /**
  * Types

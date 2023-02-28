@@ -3,7 +3,7 @@ import { HostComponent, Keyboard, TextInput } from 'react-native';
 
 type InputRef = React.ElementRef<HostComponent<unknown>> | undefined;
 
-export default function useKeyboardManager(isEnabled: () => boolean) {
+export function useKeyboardManager(isEnabled: () => boolean) {
   // Numeric id of the previously focused text input
   // When a gesture didn't change the tab, we can restore the focused input with this
   const previouslyFocusedTextInputRef = React.useRef<InputRef>(undefined);

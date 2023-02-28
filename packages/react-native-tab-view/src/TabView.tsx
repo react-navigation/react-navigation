@@ -7,9 +7,9 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import Pager from './Pager';
-import SceneView from './SceneView';
-import TabBar from './TabBar';
+import { Pager } from './Pager';
+import { SceneView } from './SceneView';
+import { TabBar } from './TabBar';
 import type {
   Layout,
   NavigationState,
@@ -35,7 +35,7 @@ export type Props<T extends Route> = PagerProps & {
   style?: StyleProp<ViewStyle>;
 };
 
-export default function TabView<T extends Route>({
+export function TabView<T extends Route>({
   onIndexChange,
   navigationState,
   renderScene,

@@ -4,7 +4,7 @@ import { Assets } from '@react-navigation/elements';
 import { registerRootComponent } from 'expo';
 import { Asset } from 'expo-asset';
 
-import App from './src/index';
+import { App } from './src/index';
 
 Asset.loadAsync(Assets);
 

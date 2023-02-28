@@ -1,6 +1,7 @@
 import type { Theme } from '../types';
+import { fonts } from './fonts';
 
-const DarkTheme: Theme = {
+export const DarkTheme: Theme = {
   dark: true,
   colors: {
     primary: 'rgb(10, 132, 255)',
@@ -10,6 +11,5 @@ const DarkTheme: Theme = {
     border: 'rgb(39, 39, 41)',
     notification: 'rgb(255, 69, 58)',
   },
+  fonts,
 };
-
-export default DarkTheme;

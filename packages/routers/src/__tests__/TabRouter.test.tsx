@@ -5,7 +5,7 @@ import {
   TabActions,
   TabNavigationState,
   TabRouter,
-} from '..';
+} from '../../src';
 
 jest.mock('nanoid/non-secure', () => ({ nanoid: () => 'test' }));
 
@@ -716,6 +716,81 @@ it("doesn't navigate to nonexistent screen", () => {
   ).toBeNull();
 });
 
+it('ensures unique ID for navigate', () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {
+      baz: ({ params }) => params?.foo,
+      bar: ({ params }) => params?.foo,
+    },
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        key: 'root',
+        index: 0,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
+        history: [{ type: 'route', key: 'baz' }],
+      },
+      CommonActions.navigate('baz', { foo: 'a' }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    key: 'root',
+    index: 0,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz-test', name: 'baz', params: { foo: 'a' } },
+      { key: 'bar', name: 'bar' },
+    ],
+    history: [{ type: 'route', key: 'baz-test' }],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        key: 'root',
+        index: 0,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
+        history: [{ type: 'route', key: 'bar' }],
+      },
+      CommonActions.navigate('bar', { foo: 'a' }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
+    ],
+    history: [
+      { type: 'route', key: 'baz' },
+      { type: 'route', key: 'bar-test' },
+    ],
+  });
+});
+
 it('handles jump to action', () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
@@ -784,6 +859,81 @@ it("doesn't jump to nonexistent screen", () => {
       options
     )
   ).toBeNull();
+});
+
+it('ensures unique ID for jump to', () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {
+      baz: ({ params }) => params?.foo,
+      bar: ({ params }) => params?.foo,
+    },
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        key: 'root',
+        index: 0,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
+        history: [{ type: 'route', key: 'baz' }],
+      },
+      TabActions.jumpTo('baz', { foo: 'a' }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    key: 'root',
+    index: 0,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz-test', name: 'baz', params: { foo: 'a' } },
+      { key: 'bar', name: 'bar' },
+    ],
+    history: [{ type: 'route', key: 'baz-test' }],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        key: 'root',
+        index: 0,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
+        history: [{ type: 'route', key: 'bar' }],
+      },
+      TabActions.jumpTo('bar', { foo: 'a' }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
+    ],
+    history: [
+      { type: 'route', key: 'baz' },
+      { type: 'route', key: 'bar-test' },
+    ],
+  });
 });
 
 it('handles back action with backBehavior: history', () => {

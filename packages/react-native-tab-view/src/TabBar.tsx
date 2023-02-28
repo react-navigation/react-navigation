@@ -16,8 +16,8 @@ import {
 } from 'react-native';
 import useLatestCallback from 'use-latest-callback';
 
-import TabBarIndicator, { Props as IndicatorProps } from './TabBarIndicator';
-import TabBarItem, { Props as TabBarItemProps } from './TabBarItem';
+import { Props as IndicatorProps, TabBarIndicator } from './TabBarIndicator';
+import { Props as TabBarItemProps, TabBarItem } from './TabBarItem';
 import type {
   Event,
   Layout,
@@ -26,7 +26,7 @@ import type {
   Scene,
   SceneRendererProps,
 } from './types';
-import useAnimatedValue from './useAnimatedValue';
+import { useAnimatedValue } from './useAnimatedValue';
 
 export type Props<T extends Route> = SceneRendererProps & {
   navigationState: NavigationState<T>;
@@ -256,7 +256,7 @@ const getTestIdDefault = ({ route }: Scene<Route>) => route.testID;
 // Defaults to 10, since that's whats FlatList is using in initialNumToRender.
 const MEASURE_PER_BATCH = 10;
 
-export default function TabBar<T extends Route>({
+export function TabBar<T extends Route>({
   getLabelText = getLabelTextDefault,
   getAccessible = getAccessibleDefault,
   getAccessibilityLabel = getAccessibilityLabelDefault,

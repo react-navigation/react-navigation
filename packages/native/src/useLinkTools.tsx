@@ -10,7 +10,7 @@ import {
 } from '@react-navigation/core';
 import * as React from 'react';
 
-import LinkingContext from './LinkingContext';
+import { LinkingContext } from './LinkingContext';
 
 type NavigationObject =
   | NavigationHelpers<ParamListBase>
@@ -48,7 +48,7 @@ const getRootStateForNavigate = (
  * Build destination link for a navigate action.
  * Useful for showing anchor tags on the web for buttons that perform navigation.
  */
-export default function useLinkTools() {
+export function useLinkTools() {
   const navigation = React.useContext(NavigationHelpersContext);
   const linking = React.useContext(LinkingContext);
 

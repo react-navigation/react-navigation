@@ -7,9 +7,9 @@ import {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
-import NavigationContext from './NavigationContext';
+import { NavigationContext } from './NavigationContext';
 import { NavigationHelpers, PrivateValueStore } from './types';
-import UnhandledActionContext from './UnhandledActionContext';
+import { UnhandledActionContext } from './UnhandledActionContext';
 import type { NavigationEventEmitter } from './useEventEmitter';
 
 // This is to make TypeScript compiler happy
@@ -28,7 +28,7 @@ type Options<State extends NavigationState, Action extends NavigationAction> = {
  * Navigation object with helper methods to be used by a navigator.
  * This object includes methods for common actions as well as methods the parent screen's navigation object.
  */
-export default function useNavigationHelpers<
+export function useNavigationHelpers<
   State extends NavigationState,
   ActionHelpers extends Record<string, () => void>,
   Action extends NavigationAction,

@@ -2,7 +2,7 @@ import type { Route } from '@react-navigation/routers';
 
 import { CHILD_STATE } from './useRouteCache';
 
-export default function getFocusedRouteNameFromRoute(
+export function getFocusedRouteNameFromRoute(
   route: Partial<Route<string>>
 ): string | undefined {
   // @ts-expect-error: this isn't in type definitions coz we want this private

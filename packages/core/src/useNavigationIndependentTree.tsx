@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import NavigationIndependentTreeContext from './NavigationIndependentTreeContext';
+import { NavigationIndependentTreeContext } from './NavigationIndependentTreeContext';
 
-export default function useNavigationIndependentTree() {
+export function useNavigationIndependentTree() {
   return React.useContext(NavigationIndependentTreeContext);
 }

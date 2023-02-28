@@ -15,40 +15,39 @@ export type CardSheetRef = {
 // if the container fills the body by comparing the size
 // This lets the document.body handle scrolling of the content
 // It's necessary for mobile browsers to be able to hide address bar on scroll
-export default React.forwardRef<CardSheetRef, Props>(function CardSheet(
-  { enabled, layout, style, ...rest },
-  ref
-) {
-  const [fill, setFill] = React.useState(false);
-  // To avoid triggering a rerender in Card during animation we had to move
-  // the state to CardSheet. The `setPointerEvents` is then hoisted back to the Card.
-  const [pointerEvents, setPointerEvents] =
-    React.useState<ViewProps['pointerEvents']>('auto');
+export const CardSheet = React.forwardRef<CardSheetRef, Props>(
+  function CardSheet({ enabled, layout, style, ...rest }, ref) {
+    const [fill, setFill] = React.useState(false);
+    // To avoid triggering a rerender in Card during animation we had to move
+    // the state to CardSheet. The `setPointerEvents` is then hoisted back to the Card.
+    const [pointerEvents, setPointerEvents] =
+      React.useState<ViewProps['pointerEvents']>('auto');
 
-  React.useImperativeHandle(ref, () => {
-    return { setPointerEvents };
-  });
+    React.useImperativeHandle(ref, () => {
+      return { setPointerEvents };
+    });
 
-  React.useEffect(() => {
-    if (typeof document === 'undefined' || !document.body) {
-      // Only run when DOM is available
-      return;
-    }
+    React.useEffect(() => {
+      if (typeof document === 'undefined' || !document.body) {
+        // Only run when DOM is available
+        return;
+      }
 
-    const width = document.body.clientWidth;
-    const height = document.body.clientHeight;
+      const width = document.body.clientWidth;
+      const height = document.body.clientHeight;
 
-    setFill(width === layout.width && height === layout.height);
-  }, [layout.height, layout.width]);
+      setFill(width === layout.width && height === layout.height);
+    }, [layout.height, layout.width]);
 
-  return (
-    <View
-      {...rest}
-      pointerEvents={pointerEvents}
-      style={[enabled && fill ? styles.page : styles.card, style]}
-    />
-  );
-});
+    return (
+      <View
+        {...rest}
+        pointerEvents={pointerEvents}
+        style={[enabled && fill ? styles.page : styles.card, style]}
+      />
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   page: {

@@ -1,7 +1,7 @@
 const formatToList = (items: string[]) =>
   items.map((key) => `- ${key}`).join('\n');
 
-export default function validatePathConfig(config: any, root = true) {
+export function validatePathConfig(config: any, root = true) {
   const validKeys = ['initialRouteName', 'screens'];
 
   if (!root) {

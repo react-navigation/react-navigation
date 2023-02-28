@@ -1,1 +1,1 @@
-export { default } from './PagerViewAdapter';
+export { PagerViewAdapter as Pager } from './PagerViewAdapter';

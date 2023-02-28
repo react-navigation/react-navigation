@@ -4,11 +4,11 @@ import * as React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { StackHeaderProps } from '../../types';
-import debounce from '../../utils/debounce';
-import ModalPresentationContext from '../../utils/ModalPresentationContext';
-import HeaderSegment from './HeaderSegment';
+import { debounce } from '../../utils/debounce';
+import { ModalPresentationContext } from '../../utils/ModalPresentationContext';
+import { HeaderSegment } from './HeaderSegment';
 
-export default React.memo(function Header({
+export const Header = React.memo(function Header({
   back,
   layout,
   progress,

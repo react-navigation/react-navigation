@@ -1,8 +1,8 @@
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import type * as React from 'react';
 
-import Group from './Group';
-import Screen from './Screen';
+import { Group } from './Group';
+import { Screen } from './Screen';
 import type { StaticConfig } from './StaticNavigation';
 import type { EventMapBase, TypedNavigator } from './types';
 
@@ -13,7 +13,7 @@ import type { EventMapBase, TypedNavigator } from './types';
  * @param Navigator The navigator component to wrap.
  * @returns Factory method to create a `Navigator` and `Screen` pair.
  */
-export default function createNavigatorFactory<
+export function createNavigatorFactory<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,

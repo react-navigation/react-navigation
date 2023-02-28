@@ -42,8 +42,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { restartApp } from './Restart';
 import { RootDrawerParamList, RootStackParamList, SCREENS } from './screens';
-import NotFound from './Screens/NotFound';
-import SettingsItem from './Shared/SettingsItem';
+import { NotFound } from './Screens/NotFound';
+import { SettingsItem } from './Shared/SettingsItem';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -55,7 +55,7 @@ const THEME_PERSISTENCE_KEY = 'THEME_TYPE';
 
 const SCREEN_NAMES = Object.keys(SCREENS) as (keyof typeof SCREENS)[];
 
-export default function App() {
+export function App() {
   const [theme, setTheme] = React.useState(DefaultTheme);
 
   const [isReady, setIsReady] = React.useState(Platform.OS === 'web');

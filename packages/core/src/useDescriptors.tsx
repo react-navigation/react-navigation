@@ -6,13 +6,14 @@ import type {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
-import NavigationBuilderContext, {
+import {
   AddKeyedListener,
   AddListener,
+  NavigationBuilderContext,
 } from './NavigationBuilderContext';
-import NavigationContext from './NavigationContext';
-import NavigationRouteContext from './NavigationRouteContext';
-import SceneView from './SceneView';
+import { NavigationContext } from './NavigationContext';
+import { NavigationRouteContext } from './NavigationRouteContext';
+import { SceneView } from './SceneView';
 import type {
   Descriptor,
   EventMapBase,
@@ -22,8 +23,8 @@ import type {
   RouteProp,
 } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
-import useNavigationCache from './useNavigationCache';
-import useRouteCache from './useRouteCache';
+import { useNavigationCache } from './useNavigationCache';
+import { useRouteCache } from './useRouteCache';
 
 export type ScreenConfigWithParent<
   State extends NavigationState,
@@ -79,7 +80,7 @@ type Options<
  * - Options specified by the screen for the navigator
  * - Navigation object intended for the route
  */
-export default function useDescriptors<
+export function useDescriptors<
   State extends NavigationState,
   ActionHelpers extends Record<string, () => void>,
   ScreenOptions extends {},

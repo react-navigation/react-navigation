@@ -1,7 +1,7 @@
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
 
-import fromEntries from './fromEntries';
+import { fromEntries } from './fromEntries';
 import type {
   DefaultNavigatorOptions,
   EventMapBase,
@@ -10,7 +10,7 @@ import type {
   RouteConfig,
   RouteGroupConfig,
 } from './types';
-import useRoute from './useRoute';
+import { useRoute } from './useRoute';
 
 /**
  * Flatten a type to remove all type alias names, unions etc.

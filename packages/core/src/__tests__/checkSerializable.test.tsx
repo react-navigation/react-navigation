@@ -1,4 +1,4 @@
-import checkSerializable from '../checkSerializable';
+import { checkSerializable } from '../checkSerializable';
 
 it('returns true for serializable object', () => {
   expect(

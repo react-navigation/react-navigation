@@ -9,14 +9,14 @@ import {
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
 
-import window from '../__mocks__/window';
-import NavigationContainer from '../NavigationContainer';
+import { window } from '../__mocks__/window';
+import { NavigationContainer } from '../NavigationContainer';
 
 Object.assign(global, window);
 
 // We want to use the web version of useLinking
 // eslint-disable-next-line import/extensions
-jest.mock('../useLinking', () => require('../useLinking.tsx').default);
+jest.mock('../useLinking', () => require('../useLinking.tsx'));
 
 it('integrates with the history API', () => {
   jest.useFakeTimers();

@@ -24,7 +24,7 @@ try {
 const isMaskedViewAvailable =
   UIManager.getViewManagerConfig('RNCMaskedView') != null;
 
-export default function MaskedView({ children, ...rest }: Props) {
+export function MaskedView({ children, ...rest }: Props) {
   if (isMaskedViewAvailable && RNCMaskedView) {
     return <RNCMaskedView {...rest}>{children}</RNCMaskedView>;
   }

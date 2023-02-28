@@ -11,7 +11,7 @@ const NavigationContent = ({ render, children }: Props) => {
   return render(children);
 };
 
-export default function useComponent(render: Render) {
+export function useComponent(render: Render) {
   const renderRef = React.useRef<Render | null>(render);
 
   // Normally refs shouldn't be mutated in render

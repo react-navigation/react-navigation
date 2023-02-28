@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { EmitterSubscription, Keyboard, Platform } from 'react-native';
 
-export default function useIsKeyboardShown() {
+export function useIsKeyboardShown() {
   const [isKeyboardShown, setIsKeyboardShown] = React.useState(false);
 
   React.useEffect(() => {

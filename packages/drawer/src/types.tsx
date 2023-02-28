@@ -258,6 +258,26 @@ export type DrawerNavigationEventMap = {
    * Event which fires on tapping on the item in the drawer menu.
    */
   drawerItemPress: { data: undefined; canPreventDefault: true };
+  /**
+   * Event which fires when a transition animation starts.
+   */
+  transitionStart: { data: { closing: boolean } };
+  /**
+   * Event which fires when a transition animation ends.
+   */
+  transitionEnd: { data: { closing: boolean } };
+  /**
+   * Event which fires when navigation gesture starts.
+   */
+  gestureStart: { data: undefined };
+  /**
+   * Event which fires when navigation gesture is completed.
+   */
+  gestureEnd: { data: undefined };
+  /**
+   * Event which fires when navigation gesture is canceled.
+   */
+  gestureCancel: { data: undefined };
 };
 
 export type DrawerNavigationHelpers = NavigationHelpers<

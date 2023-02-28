@@ -1,4 +1,4 @@
-export default function memoize<Result, Deps extends readonly any[]>(
+export function memoize<Result, Deps extends readonly any[]>(
   callback: (...deps: Deps) => Result
 ) {
   let previous: Deps | undefined;

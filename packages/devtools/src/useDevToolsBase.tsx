@@ -6,7 +6,7 @@ import type {
 import deepEqual from 'deep-equal';
 import * as React from 'react';
 
-import parseErrorStack from './parseErrorStack';
+import { parseErrorStack } from './parseErrorStack';
 
 type StackFrame = {
   lineNumber: number | null;
@@ -35,7 +35,7 @@ type ActionData = {
   stack: string | undefined;
 };
 
-export default function useDevToolsBase(
+export function useDevToolsBase(
   ref: React.RefObject<NavigationContainerRef<any>>,
   callback: (result: InitData | ActionData) => void
 ) {

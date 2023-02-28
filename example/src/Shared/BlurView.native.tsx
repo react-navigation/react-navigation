@@ -1,3 +1,3 @@
 import { BlurView } from 'expo-blur';
 
-export default BlurView;
+export { BlurView };

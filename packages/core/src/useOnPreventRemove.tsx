@@ -4,10 +4,11 @@ import type {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
-import NavigationBuilderContext, {
+import {
   ChildBeforeRemoveListener,
+  NavigationBuilderContext,
 } from './NavigationBuilderContext';
-import NavigationRouteContext from './NavigationRouteContext';
+import { NavigationRouteContext } from './NavigationRouteContext';
 import type { EventMapCore } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
 
@@ -72,7 +73,7 @@ export const shouldPreventRemove = (
   return false;
 };
 
-export default function useOnPreventRemove({
+export function useOnPreventRemove({
   getState,
   emitter,
   beforeRemoveListeners,

@@ -1,7 +1,7 @@
 import type { NavigationState } from '@react-navigation/routers';
 import * as React from 'react';
 
-import NavigationContext from './NavigationContext';
+import { NavigationContext } from './NavigationContext';
 import type { EventMapCore } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
 
@@ -13,7 +13,7 @@ type Options<State extends NavigationState> = {
 /**
  * Hook to take care of emitting `focus` and `blur` events.
  */
-export default function useFocusEvents<State extends NavigationState>({
+export function useFocusEvents<State extends NavigationState>({
   state,
   emitter,
 }: Options<State>) {

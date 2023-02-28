@@ -6,10 +6,10 @@ import {
 } from 'react-native-safe-area-context';
 
 import type { HeaderOptions, Layout } from '../types';
-import getDefaultHeaderHeight from './getDefaultHeaderHeight';
-import HeaderBackground from './HeaderBackground';
-import HeaderShownContext from './HeaderShownContext';
-import HeaderTitle from './HeaderTitle';
+import { getDefaultHeaderHeight } from './getDefaultHeaderHeight';
+import { HeaderBackground } from './HeaderBackground';
+import { HeaderShownContext } from './HeaderShownContext';
+import { HeaderTitle } from './HeaderTitle';
 
 type Props = HeaderOptions & {
   /**
@@ -42,7 +42,7 @@ const warnIfHeaderStylesDefined = (styles: Record<string, any>) => {
   });
 };
 
-export default function Header(props: Props) {
+export function Header(props: Props) {
   const insets = useSafeAreaInsets();
   const frame = useSafeAreaFrame();
 

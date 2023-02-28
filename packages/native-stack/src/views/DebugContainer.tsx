@@ -7,7 +7,7 @@ type ContainerProps = ViewProps & {
   children: React.ReactNode;
 };
 
-export default function Container(props: ContainerProps) {
+export function DebugContainer(props: ContainerProps) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { stackPresentation: _, ...rest } = props;
   return <View {...rest} />;

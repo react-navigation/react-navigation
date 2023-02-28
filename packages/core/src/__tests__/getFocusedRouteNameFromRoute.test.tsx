@@ -1,4 +1,4 @@
-import getFocusedRouteNameFromRoute from '../getFocusedRouteNameFromRoute';
+import { getFocusedRouteNameFromRoute } from '../getFocusedRouteNameFromRoute';
 import { CHILD_STATE } from '../useRouteCache';
 
 it('gets undefined if there is no nested state', () => {

@@ -1,9 +1,9 @@
 import type { InitialState } from '@react-navigation/routers';
 import produce from 'immer';
 
-import findFocusedRoute from '../findFocusedRoute';
-import getPathFromState from '../getPathFromState';
-import getStateFromPath from '../getStateFromPath';
+import { findFocusedRoute } from '../findFocusedRoute';
+import { getPathFromState } from '../getPathFromState';
+import { getStateFromPath } from '../getStateFromPath';
 
 const changePath = <T extends InitialState>(state: T, path: string): T =>
   produce(state, (draftState) => {

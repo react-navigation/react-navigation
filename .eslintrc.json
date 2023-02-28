@@ -25,18 +25,24 @@
     "node": true
   },
   "rules": {
+    "import/no-default-export": "error",
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error"
   },
   "overrides": [{
     "files":["example/e2e/tests/*.ts"],
     "rules": {
-      "jest/*": 0
+      "jest/*": "off"
     }
   }, {
     "files":["scripts/*.js"],
     "rules": {
-      "import/no-commonjs": 0
+      "import/no-commonjs": "off"
+    }
+  }, {
+    "files":["**/config/*.{ts,js}", "*.config.{ts,js}"],
+    "rules": {
+      "import/no-default-export": "off"
     }
   }]
 }

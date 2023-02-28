@@ -11,13 +11,13 @@ import { TabBar, TabBarIndicator } from 'react-native-tab-view';
 
 import type { MaterialTopTabBarProps } from '../types';
 
-export default function TabBarTop({
+export function MaterialTopTabBar({
   state,
   navigation,
   descriptors,
   ...rest
 }: MaterialTopTabBarProps) {
-  const { colors } = useTheme();
+  const { colors, fonts } = useTheme();
 
   const focusedOptions = descriptors[state.routes[state.index].key].options;
 
@@ -103,7 +103,12 @@ export default function TabBarTop({
         if (typeof label === 'string') {
           return (
             <Text
-              style={[styles.label, { color }, options.tabBarLabelStyle]}
+              style={[
+                { color },
+                fonts.regular,
+                styles.label,
+                options.tabBarLabelStyle,
+              ]}
               allowFontScaling={options.tabBarAllowFontScaling}
             >
               {label}

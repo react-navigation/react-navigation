@@ -6,7 +6,7 @@ import * as React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { AppRegistry } from 'react-native-web';
 
-import App from '../src/index';
+import { App } from '../src/index';
 
 AppRegistry.registerComponent('App', () => App);
 

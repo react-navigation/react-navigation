@@ -15,8 +15,8 @@ type Props = Omit<TextProps, 'style'> & {
   style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
 };
 
-export default function HeaderTitle({ tintColor, style, ...rest }: Props) {
-  const { colors } = useTheme();
+export function HeaderTitle({ tintColor, style, ...rest }: Props) {
+  const { colors, fonts } = useTheme();
 
   return (
     <Animated.Text
@@ -25,8 +25,9 @@ export default function HeaderTitle({ tintColor, style, ...rest }: Props) {
       numberOfLines={1}
       {...rest}
       style={[
-        styles.title,
         { color: tintColor === undefined ? colors.text : tintColor },
+        Platform.select({ ios: fonts.bold, default: fonts.medium }),
+        styles.title,
         style,
       ]}
     />
@@ -37,16 +38,12 @@ const styles = StyleSheet.create({
   title: Platform.select({
     ios: {
       fontSize: 17,
-      fontWeight: '600',
     },
     android: {
       fontSize: 20,
-      fontFamily: 'sans-serif-medium',
-      fontWeight: 'normal',
     },
     default: {
       fontSize: 18,
-      fontWeight: '500',
     },
   }),
 });

@@ -35,12 +35,12 @@ import type {
   StackHeaderMode,
   StackNavigationOptions,
 } from '../../types';
-import findLastIndex from '../../utils/findLastIndex';
-import getDistanceForDirection from '../../utils/getDistanceForDirection';
+import { findLastIndex } from '../../utils/findLastIndex';
+import { getDistanceForDirection } from '../../utils/getDistanceForDirection';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import { MaybeScreen, MaybeScreenContainer } from '../Screens';
 import { getIsModalPresentation } from './Card';
-import CardContainer from './CardContainer';
+import { CardContainer } from './CardContainer';
 
 type GestureValues = {
   [key: string]: Animated.Value;
@@ -202,7 +202,7 @@ const getProgressFromGesture = (
   });
 };
 
-export default class CardStack extends React.Component<Props, State> {
+export class CardStack extends React.Component<Props, State> {
   static getDerivedStateFromProps(
     props: Props,
     state: State

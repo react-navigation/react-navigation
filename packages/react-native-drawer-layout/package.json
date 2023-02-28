@@ -36,11 +36,14 @@
     "prepack": "bob build",
     "clean": "del lib"
   },
+  "dependencies": {
+    "use-latest-callback": "^0.1.5"
+  },
   "devDependencies": {
     "del-cli": "^5.0.0",
     "react": "18.1.0",
     "react-native": "0.70.5",
-    "react-native-builder-bob": "^0.20.3",
+    "react-native-builder-bob": "^0.20.4",
     "typescript": "^4.9.4"
   },
   "peerDependencies": {

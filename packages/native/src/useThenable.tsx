@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export default function useThenable<T>(create: () => PromiseLike<T>) {
+export function useThenable<T>(create: () => PromiseLike<T>) {
   const [promise] = React.useState(create);
 
   let initialState: [boolean, T | undefined] = [false, undefined];

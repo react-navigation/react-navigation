@@ -7,6 +7,6 @@ type Props = ViewProps & {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function BlurView({ tint, intensity, ...rest }: Props) {
+export function BlurView({ tint, intensity, ...rest }: Props) {
   return <View {...rest} />;
 }

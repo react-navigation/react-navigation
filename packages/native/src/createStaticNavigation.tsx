@@ -6,7 +6,7 @@ import {
 } from '@react-navigation/core';
 import * as React from 'react';
 
-import NavigationContainer from './NavigationContainer';
+import { NavigationContainer } from './NavigationContainer';
 import type { LinkingOptions } from './types';
 
 type Props = Omit<
@@ -26,9 +26,7 @@ type Props = Omit<
  * @param tree Static navigation config.
  * @returns Navigation component to use in your app.
  */
-export default function createStaticNavigation(
-  tree: StaticNavigation<any, any, any>
-) {
+export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
   const Component = createComponentForStaticNavigation(tree, 'RootNavigator');
   const linkingConfig = {
     screens: tree.config.screens

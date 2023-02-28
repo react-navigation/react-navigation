@@ -28,7 +28,7 @@ const RealDrawer = () => {
   );
 };
 
-export default function TabViewStackScreen() {
+export function DrawerView() {
   const [open, setOpen] = React.useState(false);
 
   return (

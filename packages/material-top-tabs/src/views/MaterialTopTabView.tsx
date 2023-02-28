@@ -14,7 +14,7 @@ import type {
   MaterialTopTabNavigationConfig,
   MaterialTopTabNavigationHelpers,
 } from '../types';
-import MaterialTopTabBar from './MaterialTopTabBar';
+import { MaterialTopTabBar } from './MaterialTopTabBar';
 
 type Props = MaterialTopTabNavigationConfig & {
   state: TabNavigationState<ParamListBase>;
@@ -22,7 +22,7 @@ type Props = MaterialTopTabNavigationConfig & {
   descriptors: MaterialTopTabDescriptorMap;
 };
 
-export default function MaterialTopTabView({
+export function MaterialTopTabView({
   tabBar = (props: MaterialTopTabBarProps) => <MaterialTopTabBar {...props} />,
   state,
   navigation,

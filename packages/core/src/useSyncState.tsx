@@ -5,7 +5,7 @@ const UNINTIALIZED_STATE = {};
 /**
  * This is definitely not compatible with concurrent mode, but we don't have a solution for sync state yet.
  */
-export default function useSyncState<T>(initialState?: (() => T) | T) {
+export function useSyncState<T>(initialState?: (() => T) | T) {
   const stateRef = React.useRef<T>(UNINTIALIZED_STATE as any);
   const isSchedulingRef = React.useRef(false);
   const isMountedRef = React.useRef(true);

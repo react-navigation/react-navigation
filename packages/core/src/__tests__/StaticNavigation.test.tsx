@@ -5,13 +5,13 @@ import type {
 import { render } from '@testing-library/react-native';
 import * as React from 'react';
 
-import BaseNavigationContainer from '../BaseNavigationContainer';
-import createNavigatorFactory from '../createNavigatorFactory';
+import { BaseNavigationContainer } from '../BaseNavigationContainer';
+import { createNavigatorFactory } from '../createNavigatorFactory';
 import { createComponentForStaticNavigation } from '../StaticNavigation';
 import type { EventMapBase } from '../types';
-import useIsFocused from '../useIsFocused';
-import useNavigationBuilder from '../useNavigationBuilder';
-import MockRouter from './__fixtures__/MockRouter';
+import { useIsFocused } from '../useIsFocused';
+import { useNavigationBuilder } from '../useNavigationBuilder';
+import { MockRouter } from './__fixtures__/MockRouter';
 
 const TestNavigator = (props: any) => {
   const { state, descriptors } = useNavigationBuilder<

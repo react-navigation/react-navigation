@@ -11,7 +11,7 @@ export type MockActions = CommonNavigationAction | { type: 'NOOP' | 'UPDATE' };
 
 export const MockRouterKey = { current: 0 };
 
-export default function MockRouter(options: DefaultRouterOptions) {
+export function MockRouter(options: DefaultRouterOptions) {
   const router: Router<NavigationState, MockActions> = {
     type: 'test',
 

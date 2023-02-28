@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
-import NavigationBuilderContext from './NavigationBuilderContext';
+import { NavigationBuilderContext } from './NavigationBuilderContext';
 import type { NavigationHelpers, NavigationProp } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
 
@@ -50,7 +50,7 @@ type NavigationCache<
  * It's important to cache them to make sure navigation objects don't change between renders.
  * This lets us apply optimizations like `React.memo` to minimize re-rendering screens.
  */
-export default function useNavigationCache<
+export function useNavigationCache<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends Record<string, any>

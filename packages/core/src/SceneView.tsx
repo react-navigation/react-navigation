@@ -6,11 +6,11 @@ import type {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
-import EnsureSingleNavigator from './EnsureSingleNavigator';
-import NavigationStateContext from './NavigationStateContext';
-import StaticContainer from './StaticContainer';
+import { EnsureSingleNavigator } from './EnsureSingleNavigator';
+import { NavigationStateContext } from './NavigationStateContext';
+import { StaticContainer } from './StaticContainer';
 import type { NavigationProp, RouteConfigComponent } from './types';
-import useOptionsGetters from './useOptionsGetters';
+import { useOptionsGetters } from './useOptionsGetters';
 
 type Props<State extends NavigationState, ScreenOptions extends {}> = {
   screen: RouteConfigComponent<ParamListBase, string> & { name: string };
@@ -33,7 +33,7 @@ type Props<State extends NavigationState, ScreenOptions extends {}> = {
  * Component which takes care of rendering the screen for a route.
  * It provides all required contexts and applies optimizations when applicable.
  */
-export default function SceneView<
+export function SceneView<
   State extends NavigationState,
   ScreenOptions extends {}
 >({

@@ -8,7 +8,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import Badge from './Badge';
+import { Badge } from './Badge';
 
 type Props = {
   route: Route<string>;
@@ -27,7 +27,7 @@ type Props = {
   style: StyleProp<ViewStyle>;
 };
 
-export default function TabBarIcon({
+export function TabBarIcon({
   route: _,
   horizontal,
   badge,

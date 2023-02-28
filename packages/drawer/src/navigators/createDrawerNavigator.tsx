@@ -15,7 +15,7 @@ import type {
   DrawerNavigationEventMap,
   DrawerNavigationOptions,
 } from '../types';
-import DrawerView from '../views/DrawerView';
+import { DrawerView } from '../views/DrawerView';
 
 type Props = DefaultNavigatorOptions<
   ParamListBase,
@@ -66,7 +66,7 @@ function DrawerNavigator({
   );
 }
 
-export default createNavigatorFactory<
+export const createDrawerNavigator = createNavigatorFactory<
   DrawerNavigationState<ParamListBase>,
   DrawerNavigationOptions,
   DrawerNavigationEventMap,

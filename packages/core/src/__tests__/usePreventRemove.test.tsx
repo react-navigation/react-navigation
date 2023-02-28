@@ -6,11 +6,11 @@ import {
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
 
-import BaseNavigationContainer from '../BaseNavigationContainer';
-import createNavigationContainerRef from '../createNavigationContainerRef';
-import Screen from '../Screen';
-import useNavigationBuilder from '../useNavigationBuilder';
-import usePreventRemove from '../usePreventRemove';
+import { BaseNavigationContainer } from '../BaseNavigationContainer';
+import { createNavigationContainerRef } from '../createNavigationContainerRef';
+import { Screen } from '../Screen';
+import { useNavigationBuilder } from '../useNavigationBuilder';
+import { UNSTABLE_usePreventRemove as usePreventRemove } from '../usePreventRemove';
 import { MockRouterKey } from './__fixtures__/MockRouter';
 
 jest.mock('nanoid/non-secure', () => {

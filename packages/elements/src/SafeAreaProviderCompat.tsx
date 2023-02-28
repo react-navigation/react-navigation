@@ -31,7 +31,7 @@ const initialMetrics =
       }
     : initialWindowMetrics;
 
-export default function SafeAreaProviderCompat({ children, style }: Props) {
+export function SafeAreaProviderCompat({ children, style }: Props) {
   const insets = React.useContext(SafeAreaInsetsContext);
 
   if (insets) {

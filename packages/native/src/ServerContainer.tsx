@@ -1,7 +1,7 @@
 import { CurrentRenderContext } from '@react-navigation/core';
 import * as React from 'react';
 
-import ServerContext, { ServerContextType } from './ServerContext';
+import { ServerContext, ServerContextType } from './ServerContext';
 import type { ServerContainerRef } from './types';
 
 type Props = ServerContextType & {
@@ -15,7 +15,7 @@ type Props = ServerContextType & {
  * @param props.children Child elements to render the content.
  * @param props.ref Ref object which contains helper methods.
  */
-export default React.forwardRef(function ServerContainer(
+export const ServerContainer = React.forwardRef(function ServerContainer(
   { children, location }: Props,
   ref: React.Ref<ServerContainerRef>
 ) {

@@ -15,7 +15,7 @@ import type {
   BottomTabNavigationEventMap,
   BottomTabNavigationOptions,
 } from '../types';
-import BottomTabView from '../views/BottomTabView';
+import { BottomTabView } from '../views/BottomTabView';
 
 type Props = DefaultNavigatorOptions<
   ParamListBase,
@@ -65,7 +65,7 @@ function BottomTabNavigator({
   );
 }
 
-export default createNavigatorFactory<
+export const createBottomTabNavigator = createNavigatorFactory<
   TabNavigationState<ParamListBase>,
   BottomTabNavigationOptions,
   BottomTabNavigationEventMap,
