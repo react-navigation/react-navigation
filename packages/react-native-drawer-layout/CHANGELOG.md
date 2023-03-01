@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.2.0](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@3.1.0...react-native-drawer-layout@3.2.0) (2023-03-01)
+
+### Bug Fixes
+
+* fix paths in sourcemap files ([368e069](https://github.com/react-navigation/react-navigation/commit/368e0691b9fb07d4b1cbe71cfe4c2f40512f93ad)) - by @satya164
+
+### Features
+
+* add gesture and transition events to drawer ([#11240](https://github.com/react-navigation/react-navigation/issues/11240)) ([50b94e4](https://github.com/react-navigation/react-navigation/commit/50b94e4f9518975b4fc7b46fe14d387bd9b17c7e)) - by @BeeMargarida
+
 # 3.1.0 (2023-02-17)
 
 ### Bug Fixes
