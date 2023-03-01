@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.0...@react-navigation/bottom-tabs@7.0.0-alpha.1) (2023-03-01)
+
+### Bug Fixes
+
+* fix paths in sourcemap files ([368e069](https://github.com/react-navigation/react-navigation/commit/368e0691b9fb07d4b1cbe71cfe4c2f40512f93ad)) - by @satya164
+
+### Features
+
+* add ability to customize the fonts with the theme ([#11243](https://github.com/react-navigation/react-navigation/issues/11243)) ([1cd6836](https://github.com/react-navigation/react-navigation/commit/1cd6836f1d10bcdf7f96d9e4b9f7de0ddea9391f)) - by @satya164
+
 # [7.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.4.1...@react-navigation/bottom-tabs@7.0.0-alpha.0) (2023-02-17)
 
 * refactor!: improve the API for Link component ([7f35837](https://github.com/react-navigation/react-navigation/commit/7f3583793ad17475531e155f1f433ffa16547015)) - by @satya164

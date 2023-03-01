@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.0...@react-navigation/core@7.0.0-alpha.1) (2023-03-01)
+
+### Bug Fixes
+
+* fix paths in sourcemap files ([368e069](https://github.com/react-navigation/react-navigation/commit/368e0691b9fb07d4b1cbe71cfe4c2f40512f93ad)) - by @satya164
+* properly export types to avoid webpack warning ([4f597a8](https://github.com/react-navigation/react-navigation/commit/4f597a8614630a7d42728b1221a5880e6a265a1c)) - by @satya164
+
 # [7.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.4.1...@react-navigation/core@7.0.0-alpha.0) (2023-02-17)
 
 ### Bug Fixes
