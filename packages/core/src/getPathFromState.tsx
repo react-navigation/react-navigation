@@ -10,6 +10,7 @@ import type { PathConfig, PathConfigMap } from './types';
 import { validatePathConfig } from './validatePathConfig';
 
 type Options<ParamList extends {}> = {
+  path?: string;
   initialRouteName?: string;
   screens: PathConfigMap<ParamList>;
 };
@@ -233,6 +234,11 @@ export function getPathFromState<ParamList extends {}>(
   // Remove multiple as well as trailing slashes
   path = path.replace(/\/+/g, '/');
   path = path.length > 1 ? path.replace(/\/$/, '') : path;
+
+  // Include the root path if specified
+  if (options?.path) {
+    path = joinPaths(options.path, path);
+  }
 
   return path;
 }

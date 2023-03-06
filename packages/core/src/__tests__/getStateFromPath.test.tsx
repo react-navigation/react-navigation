@@ -508,6 +508,42 @@ it('handles parse in nested object for second route depth and and path and parse
   ).toEqual(state);
 });
 
+it('handles path at top level', () => {
+  const path = 'foo/fruits/apple';
+  const config = {
+    path: 'foo',
+    screens: {
+      Foo: {
+        screens: {
+          Fruits: 'fruits/:fruit',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Fruits',
+              params: { fruit: 'apple' },
+              path,
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
+});
+
 it('handles initialRouteName at top level', () => {
   const path = '/baz';
   const config = {
@@ -830,7 +866,50 @@ it('accepts initialRouteName without config for it', () => {
   ).toEqual(state);
 });
 
+it('returns undefined if no matching screen is present (top level path)', () => {
+  const path = '/foo/bar';
+  const config = {
+    path: 'qux',
+    screens: {
+      Foo: {
+        screens: {
+          Foe: 'foo',
+          Bar: {
+            screens: {
+              Baz: 'bar',
+            },
+          },
+        },
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>(path, config)).toBeUndefined();
+});
+
+it('returns undefined if no matching screen is present', () => {
+  const path = '/baz';
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Foe: 'foe',
+          Bar: {
+            screens: {
+              Baz: 'baz',
+            },
+          },
+        },
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>(path, config)).toBeUndefined();
+});
+
 it('returns undefined if path is empty and no matching screen is present', () => {
+  const path = '';
   const config = {
     screens: {
       Foo: {
@@ -845,8 +924,6 @@ it('returns undefined if path is empty and no matching screen is present', () =>
       },
     },
   };
-
-  const path = '';
 
   expect(getStateFromPath<object>(path, config)).toBeUndefined();
 });
@@ -2467,6 +2544,7 @@ it('correctly applies initialRouteName for config with similar route names v2', 
 it('throws when invalid properties are specified in the config', () => {
   expect(() =>
     getStateFromPath<object>('', {
+      path: 42,
       Foo: 'foo',
       Bar: {
         path: 'bar',
@@ -2474,14 +2552,16 @@ it('throws when invalid properties are specified in the config', () => {
     } as any)
   ).toThrowErrorMatchingInlineSnapshot(`
     "Found invalid properties in the configuration:
-    - Foo
-    - Bar
-
-    Did you forget to specify them under a 'screens' property?
+    - path (expected 'string', got 'number')
+    - Foo (extraneous)
+    - Bar (extraneous)
 
     You can only specify the following properties:
-    - initialRouteName
-    - screens
+    - path (string)
+    - initialRouteName (string)
+    - screens (object)
+
+    If you want to specify configuration for screens, you need to specify them under a 'screens' property.
 
     See https://reactnavigation.org/docs/configuring-links for more details on how to specify a linking configuration."
   `);
@@ -2502,18 +2582,26 @@ it('throws when invalid properties are specified in the config', () => {
     } as any)
   ).toThrowErrorMatchingInlineSnapshot(`
     "Found invalid properties in the configuration:
-    - Qux
-
-    Did you forget to specify them under a 'screens' property?
+    - Qux (extraneous)
 
     You can only specify the following properties:
-    - initialRouteName
-    - screens
-    - path
-    - exact
-    - stringify
-    - parse
+    - path (string)
+    - initialRouteName (string)
+    - screens (object)
+    - exact (boolean)
+    - stringify (object)
+    - parse (object)
+
+    If you want to specify configuration for screens, you need to specify them under a 'screens' property.
 
     See https://reactnavigation.org/docs/configuring-links for more details on how to specify a linking configuration."
   `);
+
+  expect(() =>
+    getStateFromPath<object>('', {
+      path: 'foo/:id',
+    } as any)
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Found invalid path 'foo/:id'. The 'path' in the top-level configuration cannot contain patterns for params."`
+  );
 });
