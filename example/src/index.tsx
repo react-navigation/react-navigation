@@ -40,18 +40,20 @@ import {
 } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { restartApp } from './Restart';
 import { RootDrawerParamList, RootStackParamList, SCREENS } from './screens';
 import { NotFound } from './Screens/NotFound';
 import { SettingsItem } from './Shared/SettingsItem';
 
 SplashScreen.preventAutoHideAsync();
 
+I18nManager.forceRTL(false);
+
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
 
 const NAVIGATION_PERSISTENCE_KEY = 'NAVIGATION_STATE';
 const THEME_PERSISTENCE_KEY = 'THEME_TYPE';
+const DIRECTION_PERSISTENCE_KEY = 'DIRECTION';
 
 const SCREEN_NAMES = Object.keys(SCREENS) as (keyof typeof SCREENS)[];
 
@@ -62,6 +64,8 @@ export function App() {
   const [initialState, setInitialState] = React.useState<
     InitialState | undefined
   >();
+
+  const [isRTL, setIsRTL] = React.useState(false);
 
   React.useEffect(() => {
     const restoreState = async () => {
@@ -84,6 +88,16 @@ export function App() {
           const themeName = await AsyncStorage?.getItem(THEME_PERSISTENCE_KEY);
 
           setTheme(themeName === 'dark' ? DarkTheme : DefaultTheme);
+        } catch (e) {
+          // Ignore
+        }
+
+        try {
+          const direction = await AsyncStorage?.getItem(
+            DIRECTION_PERSISTENCE_KEY
+          );
+
+          setIsRTL(direction === 'rtl');
         } catch (e) {
           // Ignore
         }
@@ -135,12 +149,13 @@ export function App() {
           SplashScreen.hideAsync();
         }}
         onStateChange={(state) =>
-          AsyncStorage?.setItem(
+          AsyncStorage.setItem(
             NAVIGATION_PERSISTENCE_KEY,
             JSON.stringify(state)
           )
         }
         theme={theme}
+        direction={isRTL ? 'rtl' : 'ltr'}
         linking={{
           // To test deep linking on, run the following in the Terminal:
           // Android: adb shell am start -a android.intent.action.VIEW -d "exp://127.0.0.1:19000/--/simple-stack"
@@ -214,6 +229,7 @@ export function App() {
           >
             {() => (
               <Drawer.Navigator
+                useLegacyImplementation={false}
                 screenOptions={{
                   drawerType: isLargeScreen ? 'permanent' : undefined,
                 }}
@@ -239,12 +255,14 @@ export function App() {
                       <SafeAreaView edges={['right', 'bottom', 'left']}>
                         <SettingsItem
                           label="Right to left"
-                          value={I18nManager.getConstants().isRTL}
+                          value={isRTL}
                           onValueChange={() => {
-                            I18nManager.forceRTL(
-                              !I18nManager.getConstants().isRTL
+                            AsyncStorage.setItem(
+                              DIRECTION_PERSISTENCE_KEY,
+                              isRTL ? 'ltr' : 'rtl'
                             );
-                            restartApp();
+
+                            setIsRTL((rtl) => !rtl);
                           }}
                         />
                         <Divider />
@@ -252,7 +270,7 @@ export function App() {
                           label="Dark theme"
                           value={theme.dark}
                           onValueChange={() => {
-                            AsyncStorage?.setItem(
+                            AsyncStorage.setItem(
                               THEME_PERSISTENCE_KEY,
                               theme.dark ? 'light' : 'dark'
                             );

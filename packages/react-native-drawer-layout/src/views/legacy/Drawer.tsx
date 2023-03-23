@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  I18nManager,
   InteractionManager,
   Keyboard,
   LayoutChangeEvent,
@@ -533,21 +532,9 @@ export class Drawer extends React.Component<Props> {
       drawerType === 'front' ? ANIMATED_ZERO : this.translateX;
 
     const drawerTranslateX =
-      drawerType === 'back'
-        ? I18nManager.getConstants().isRTL
-          ? multiply(
-              sub(this.containerWidth, this.drawerWidth),
-              isRight ? 1 : -1
-            )
-          : ANIMATED_ZERO
-        : this.translateX;
+      drawerType === 'back' ? ANIMATED_ZERO : this.translateX;
 
-    const offset =
-      drawerType === 'back'
-        ? 0
-        : I18nManager.getConstants().isRTL
-        ? '100%'
-        : multiply(this.drawerWidth, -1);
+    const offset = drawerType === 'back' ? 0 : '100%';
 
     // FIXME: Currently hitSlop is broken when on Android when drawer is on right
     // https://github.com/software-mansion/react-native-gesture-handler/issues/569
