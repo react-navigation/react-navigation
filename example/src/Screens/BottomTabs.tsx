@@ -74,6 +74,34 @@ export function BottomTabs({
           <HeaderBackButton {...props} onPress={navigation.goBack} />
         ),
       }}
+      sceneAnimationOptions={{
+        animationEnabled: true,
+        animationType: 'shifting',
+        transitionSpec: {
+          animation: 'timing',
+          config: {
+            duration: 1000,
+          },
+        },
+        sceneStyleInterpolator: ({ current }) => {
+          const top = current.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, 1],
+          });
+
+          const left = current.interpolate({
+            inputRange: [-1, 0, 1],
+            outputRange: [-50, 0, 50],
+          });
+
+          return {
+            sceneStyle: {
+              opacty: 1,
+              transform: [{ translateX: left }, { translateY: top }],
+            },
+          };
+        },
+      }}
     >
       <Tab.Screen
         name="TabStack"
