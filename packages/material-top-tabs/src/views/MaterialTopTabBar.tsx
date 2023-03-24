@@ -2,6 +2,7 @@ import {
   ParamListBase,
   Route,
   TabNavigationState,
+  useLocale,
   useTheme,
 } from '@react-navigation/native';
 import Color from 'color';
@@ -18,6 +19,7 @@ export function MaterialTopTabBar({
   ...rest
 }: MaterialTopTabBarProps) {
   const { colors, fonts } = useTheme();
+  const { direction } = useLocale();
 
   const focusedOptions = descriptors[state.routes[state.index].key].options;
 
@@ -30,6 +32,7 @@ export function MaterialTopTabBar({
     <TabBar
       {...rest}
       navigationState={state}
+      direction={direction}
       scrollEnabled={focusedOptions.tabBarScrollEnabled}
       bounces={focusedOptions.tabBarBounces}
       activeColor={activeColor}
