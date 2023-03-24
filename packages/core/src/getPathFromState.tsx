@@ -5,7 +5,6 @@ import type {
 } from '@react-navigation/routers';
 import * as queryString from 'query-string';
 
-import { fromEntries } from './fromEntries';
 import type { PathConfig, PathConfigMap } from './types';
 import { validatePathConfig } from './validatePathConfig';
 
@@ -116,7 +115,7 @@ export function getPathFromState<ParamList extends {}>(
       if (route.params) {
         const stringify = currentOptions[route.name]?.stringify;
 
-        const currentParams = fromEntries(
+        const currentParams = Object.fromEntries(
           Object.entries(route.params).map(([key, value]) => [
             key,
             stringify?.[key] ? stringify[key](value) : String(value),
@@ -294,7 +293,7 @@ const createNormalizedConfigs = (
   options: PathConfigMap<object>,
   pattern?: string
 ): Record<string, ConfigItem> =>
-  fromEntries(
+  Object.fromEntries(
     Object.entries(options).map(([name, c]) => {
       const result = createConfigItem(c, pattern);
 

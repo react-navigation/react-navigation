@@ -1,5 +1,3 @@
-import { fromEntries } from './fromEntries';
-
 const formatToList = (items: Record<string, string>) =>
   Object.entries(items)
     .map(([key, value]) => `- ${key} (${value})`)
@@ -27,7 +25,7 @@ export function validatePathConfig(config: unknown, root = true) {
     );
   }
 
-  const validationErrors = fromEntries(
+  const validationErrors = Object.fromEntries(
     Object.keys(config)
       .map((key) => {
         if (key in validation) {
