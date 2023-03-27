@@ -9,6 +9,7 @@ import {
   validatePathConfig,
 } from '@react-navigation/core';
 import * as React from 'react';
+import { I18nManager } from 'react-native';
 
 import { LinkingContext } from './LinkingContext';
 import { LocaleDirContext } from './LocaleDirContext';
@@ -60,7 +61,7 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
  */
 function NavigationContainerInner(
   {
-    direction = 'ltr',
+    direction = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr',
     theme = DefaultTheme,
     linking,
     fallback = null,
