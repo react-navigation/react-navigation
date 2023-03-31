@@ -21,6 +21,7 @@ import {
 } from '@react-navigation/stack';
 import { createURL } from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
+import { reloadAsync } from 'expo-updates';
 import * as React from 'react';
 import {
   I18nManager,
@@ -44,10 +45,6 @@ import { RootDrawerParamList, RootStackParamList, SCREENS } from './screens';
 import { NotFound } from './Screens/NotFound';
 import { SettingsItem } from './Shared/SettingsItem';
 
-SplashScreen.preventAutoHideAsync();
-
-I18nManager.forceRTL(false);
-
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -57,6 +54,23 @@ const DIRECTION_PERSISTENCE_KEY = 'DIRECTION';
 
 const SCREEN_NAMES = Object.keys(SCREENS) as (keyof typeof SCREENS)[];
 
+let previousDirection = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr';
+
+if (Platform.OS === 'web') {
+  if (
+    typeof localStorage !== 'undefined' &&
+    typeof document !== 'undefined' &&
+    document.documentElement
+  ) {
+    const direction = localStorage.getItem(DIRECTION_PERSISTENCE_KEY);
+
+    if (direction !== null) {
+      previousDirection = direction;
+      document.documentElement.dir = direction;
+    }
+  }
+}
+
 export function App() {
   const [theme, setTheme] = React.useState(DefaultTheme);
 
@@ -65,7 +79,7 @@ export function App() {
     InitialState | undefined
   >();
 
-  const [isRTL, setIsRTL] = React.useState(false);
+  const [isRTL, setIsRTL] = React.useState(previousDirection === 'rtl');
 
   React.useEffect(() => {
     const restoreState = async () => {
@@ -108,6 +122,29 @@ export function App() {
 
     restoreState();
   }, []);
+
+  React.useEffect(() => {
+    AsyncStorage.setItem(THEME_PERSISTENCE_KEY, theme.dark ? 'dark' : 'light');
+  }, [theme.dark]);
+
+  React.useEffect(() => {
+    const direction = isRTL ? 'rtl' : 'ltr';
+
+    AsyncStorage.setItem(DIRECTION_PERSISTENCE_KEY, direction);
+
+    if (Platform.OS === 'web') {
+      document.documentElement.dir = direction;
+      localStorage.setItem(DIRECTION_PERSISTENCE_KEY, direction);
+    }
+
+    if (isRTL !== I18nManager.getConstants().isRTL) {
+      I18nManager.forceRTL(isRTL);
+
+      if (Platform.OS !== 'web') {
+        reloadAsync();
+      }
+    }
+  }, [isRTL]);
 
   const paperTheme = React.useMemo(() => {
     const t = theme.dark ? PaperDarkTheme : PaperLightTheme;
@@ -256,29 +293,15 @@ export function App() {
                         <SettingsItem
                           label="Right to left"
                           value={isRTL}
-                          onValueChange={() => {
-                            AsyncStorage.setItem(
-                              DIRECTION_PERSISTENCE_KEY,
-                              isRTL ? 'ltr' : 'rtl'
-                            );
-
-                            setIsRTL((rtl) => !rtl);
-                          }}
+                          onValueChange={() => setIsRTL((rtl) => !rtl)}
                         />
                         <Divider />
                         <SettingsItem
                           label="Dark theme"
                           value={theme.dark}
-                          onValueChange={() => {
-                            AsyncStorage.setItem(
-                              THEME_PERSISTENCE_KEY,
-                              theme.dark ? 'light' : 'dark'
-                            );
-
-                            setTheme((t) =>
-                              t.dark ? DefaultTheme : DarkTheme
-                            );
-                          }}
+                          onValueChange={() =>
+                            setTheme((t) => (t.dark ? DefaultTheme : DarkTheme))
+                          }
                         />
                         <Divider />
                         {SCREEN_NAMES.map((name) => (
