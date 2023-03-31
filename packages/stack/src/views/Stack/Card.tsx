@@ -464,6 +464,19 @@ export class Card extends React.Component<Props> {
       children,
       containerStyle: customContainerStyle,
       contentStyle,
+      /* eslint-disable @typescript-eslint/no-unused-vars */
+      closing,
+      direction,
+      gestureResponseDistance,
+      gestureVelocityImpact,
+      onClose,
+      onGestureBegin,
+      onGestureCanceled,
+      onGestureEnd,
+      onOpen,
+      onTransition,
+      transitionSpec,
+      /* eslint-enable @typescript-eslint/no-unused-vars */
       ...rest
     } = this.props;
 
