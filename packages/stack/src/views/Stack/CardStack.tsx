@@ -471,7 +471,10 @@ export class CardStack extends React.Component<Props, State> {
     return undefined;
   };
 
-  private lastActivityStateForIndex: Record<number, number> = {};
+  private lastActivityStateForIndex: Record<
+    number,
+    number | Animated.AnimatedInterpolation<number>
+  > = {};
 
   render() {
     const {
@@ -592,7 +595,14 @@ export class CardStack extends React.Component<Props, State> {
               | 1
               | 2 = 1;
 
-            if (index < self.length - activeScreensLimit - 1 || (this.lastActivityStateForIndex[index] === STATE_INACTIVE && index < self.length - activeScreensLimit)) {
+            const activeAfterTransition =
+              index >= self.length - activeScreensLimit;
+
+            if (
+              index < self.length - activeScreensLimit - 1 ||
+              (this.lastActivityStateForIndex[index] === STATE_INACTIVE &&
+                !activeAfterTransition)
+            ) {
               // screen should be inactive because it is too deep in the stack
               // or it was inactive before and it will still be inactive after the transition.
               isScreenActive = STATE_INACTIVE;
@@ -601,7 +611,7 @@ export class CardStack extends React.Component<Props, State> {
               const outputValue =
                 index === self.length - 1
                   ? STATE_ON_TOP // the screen is on top after the transition
-                  : index >= self.length - activeScreensLimit
+                  : activeAfterTransition
                   ? STATE_TRANSITIONING_OR_BELOW_TOP // the screen should stay active after the transition, it is not on top but is in activeLimit
                   : STATE_INACTIVE; // the screen should be active only during the transition, it is at the edge of activeLimit
               isScreenActive = sceneForActivity
