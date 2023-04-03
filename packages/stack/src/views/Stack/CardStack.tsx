@@ -471,6 +471,8 @@ export class CardStack extends React.Component<Props, State> {
     return undefined;
   };
 
+  private lastActivityStateForIndex: Record<number, number> = {};
+
   render() {
     const {
       insets,
@@ -590,8 +592,9 @@ export class CardStack extends React.Component<Props, State> {
               | 1
               | 2 = 1;
 
-            if (index < self.length - activeScreensLimit - 1) {
+            if (index < self.length - activeScreensLimit - 1 || (this.lastActivityStateForIndex[index] === STATE_INACTIVE && index < self.length - activeScreensLimit)) {
               // screen should be inactive because it is too deep in the stack
+              // or it was inactive before and it will still be inactive after the transition.
               isScreenActive = STATE_INACTIVE;
             } else {
               const sceneForActivity = scenes[self.length - 1];
@@ -609,6 +612,7 @@ export class CardStack extends React.Component<Props, State> {
                   })
                 : STATE_TRANSITIONING_OR_BELOW_TOP;
             }
+            this.lastActivityStateForIndex[index] = isScreenActive;
 
             const {
               headerShown = true,
