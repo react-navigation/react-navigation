@@ -1,7 +1,6 @@
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
 
-import { fromEntries } from './fromEntries';
 import type {
   DefaultNavigatorOptions,
   EventMapBase,
@@ -369,7 +368,7 @@ export function createPathConfigForStaticNavigation(tree: {
     >;
   };
 }) {
-  return fromEntries(
+  return Object.fromEntries(
     Object.entries(tree.config.screens)
       .map(([key, item]) => {
         const screenConfig: PathConfig<ParamListBase> = {};

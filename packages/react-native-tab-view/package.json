@@ -22,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
-  "homepage": "https://github.com/react-navigation/react-navigation/tree/main/packages/react-native-tab-view#readme",
+  "homepage": "https://reactnavigation.org/docs/tab-view/",
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "source": "src/index.tsx",

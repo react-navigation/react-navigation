@@ -96,8 +96,21 @@ export type LinkingOptions<ParamList extends {}> = {
    * ```
    */
   config?: {
-    initialRouteName?: keyof ParamList;
+    /**
+     * Path string to match against for the whole navigation tree.
+     * It's not possible to specify params here since this doesn't belong to a screen.
+     * This is useful when the whole app is under a specific path.
+     * e.g. all of the screens are under `/admin` in `https://example.com/admin`
+     */
+    path?: string;
+    /**
+     * Path configuration for child screens.
+     */
     screens: PathConfigMap<ParamList>;
+    /**
+     * Name of the initial route to use for the root navigator.
+     */
+    initialRouteName?: keyof ParamList;
   };
   /**
    * Custom function to get the initial URL used for linking.

@@ -20,7 +20,7 @@
   "bugs": {
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
-  "homepage": "https://github.com/react-navigation/react-navigation/tree/main/packages/react-native-drawer-layout#readme",
+  "homepage": "https://reactnavigation.org/docs/drawer-layout/",
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "source": "src/index.tsx",
