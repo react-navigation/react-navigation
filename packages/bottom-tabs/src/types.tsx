@@ -11,7 +11,6 @@ import type {
 import type * as React from 'react';
 import type {
   Animated,
-  EasingFunction,
   GestureResponderEvent,
   StyleProp,
   TextStyle,
@@ -255,6 +254,25 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    * Only supported on iOS and Android.
    */
   freezeOnBlur?: boolean;
+
+  sceneAnimationOptions?: {
+    /**
+     * Whether default transition animation should be enabled on the screen.
+     * If you set it to `false`, the screen won't animate when pushing or popping.
+     * Defaults to `true` on Android and iOS, `false` on Web.
+     */
+    animationEnabled?: boolean;
+
+    /**
+     * Function which specifies interpolated styles for various parts of the card, e.g. the overlay, shadow etc.
+     */
+    styleInterpolator?: BottomTabSceneStyleInterpolator;
+
+    /**
+     * Object which specifies the animation type (timing or spring) and their options (such as duration for timing).
+     */
+    transitionSpec?: TransitionSpec;
+  };
 };
 
 export type BottomTabDescriptor = Descriptor<
@@ -279,7 +297,7 @@ export type BottomTabSceneInterpolatedStyle = {
   sceneStyle: any;
 };
 
-export type BottomTabCardStyleInterpolator = (
+export type BottomTabSceneStyleInterpolator = (
   props: BottomTabSceneInterpolationProps
 ) => BottomTabSceneInterpolatedStyle;
 
@@ -324,39 +342,6 @@ export type BottomTabNavigationConfig = {
    * Style object for the component wrapping the screen content.
    */
   sceneContainerStyle?: StyleProp<ViewStyle>;
-
-  /**
-   * various options to enable/disable and customize your scene transitions
-   */
-  sceneAnimationOptions?: {
-    /**
-     * Whether default transition animation should be enabled on the screen.
-     * If you set it to `false`, the screen won't animate when pushing or popping.
-     * Defaults to `true` on Android and iOS, `false` on Web.
-     */
-    animationEnabled?: boolean;
-
-    /**
-     * The scene animation Easing.
-     */
-    animationEasing?: EasingFunction | undefined;
-
-    /**
-     * The scene animation effect. Specify `'shifting'` for a different effect.
-     * By default, 'opacity' will be used.
-     */
-    animationType?: 'opacity' | 'shifting';
-
-    /**
-     * Function which specifies interpolated styles for various parts of the card, e.g. the overlay, shadow etc.
-     */
-    sceneStyleInterpolator?: BottomTabCardStyleInterpolator;
-
-    /**
-     * Object which specifies the animation type (timing or spring) and their options (such as duration for timing).
-     */
-    transitionSpec?: TransitionSpec;
-  };
 };
 
 export type BottomTabHeaderProps = {

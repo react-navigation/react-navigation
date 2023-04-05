@@ -1,6 +1,8 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
   createBottomTabNavigator,
+  SceneStyleInterpolator,
+  TransitionSpecs,
   useBottomTabBarHeight,
 } from '@react-navigation/bottom-tabs';
 import { HeaderBackButton, useHeaderHeight } from '@react-navigation/elements';
@@ -54,7 +56,7 @@ const AlbumsScreen = () => {
 
 const Tab = createBottomTabNavigator<BottomTabParams>();
 
-export function BottomTabs({
+export function BottomTabsAnimated({
   navigation,
   route,
 }: StackScreenProps<ParamListBase, string>) {
@@ -73,6 +75,12 @@ export function BottomTabs({
         headerLeft: (props) => (
           <HeaderBackButton {...props} onPress={navigation.goBack} />
         ),
+        sceneAnimationOptions: {
+          animationEnabled: true,
+          transitionSpec: TransitionSpecs.CrossFadeAnimationSpec,
+          styleInterpolator: ({ current }) =>
+            SceneStyleInterpolator.forCrossFade({ current }),
+        },
       }}
     >
       <Tab.Screen
