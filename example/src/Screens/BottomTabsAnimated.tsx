@@ -75,12 +75,11 @@ export function BottomTabsAnimated({
         headerLeft: (props) => (
           <HeaderBackButton {...props} onPress={navigation.goBack} />
         ),
-        sceneAnimationOptions: {
-          animationEnabled: true,
-          transitionSpec: TransitionSpecs.CrossFadeAnimationSpec,
-          styleInterpolator: ({ current }) =>
-            SceneStyleInterpolator.forCrossFade({ current }),
-        },
+
+        animationEnabled: true,
+        transitionSpec: TransitionSpecs.CrossFadeAnimationSpec,
+        styleInterpolator: ({ current }) =>
+          SceneStyleInterpolator.forCrossFade({ current }),
       }}
     >
       <Tab.Screen

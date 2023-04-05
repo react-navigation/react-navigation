@@ -47,13 +47,8 @@ export function BottomTabView(props: Props) {
 
   const focusedRouteKey = state.routes[state.index].key;
 
-  const { sceneAnimationOptions = {} } = descriptors[focusedRouteKey].options;
-
-  const {
-    animationEnabled = true,
-    styleInterpolator,
-    transitionSpec,
-  } = sceneAnimationOptions;
+  const { animationEnabled, styleInterpolator, transitionSpec } =
+    descriptors[focusedRouteKey].options;
 
   /**
    * List of loaded tabs, tabs will be loaded when navigated to.

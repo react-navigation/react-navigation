@@ -255,24 +255,22 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    */
   freezeOnBlur?: boolean;
 
-  sceneAnimationOptions?: {
-    /**
-     * Whether default transition animation should be enabled on the screen.
-     * If you set it to `false`, the screen won't animate when pushing or popping.
-     * Defaults to `true` on Android and iOS, `false` on Web.
-     */
-    animationEnabled?: boolean;
+  /**
+   * Whether default transition animation should be enabled on the screen.
+   * If you set it to `false`, the screen won't animate when pushing or popping.
+   * Defaults to `true` on Android and iOS, `false` on Web.
+   */
+  animationEnabled?: boolean;
 
-    /**
-     * Function which specifies interpolated styles for various parts of the card, e.g. the overlay, shadow etc.
-     */
-    styleInterpolator?: BottomTabSceneStyleInterpolator;
+  /**
+   * Function which specifies interpolated styles for various parts of the card, e.g. the overlay, shadow etc.
+   */
+  styleInterpolator?: BottomTabSceneStyleInterpolator;
 
-    /**
-     * Object which specifies the animation type (timing or spring) and their options (such as duration for timing).
-     */
-    transitionSpec?: TransitionSpec;
-  };
+  /**
+   * Object which specifies the animation type (timing or spring) and their options (such as duration for timing).
+   */
+  transitionSpec?: TransitionSpec;
 };
 
 export type BottomTabDescriptor = Descriptor<
