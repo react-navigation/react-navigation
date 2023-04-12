@@ -10,7 +10,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/react-navigation/react-navigation.git",
+    "url": "git+https://github.com/WestdeutscherRundfunkKoeln/react-navigation.git",
     "directory": "packages/devtools"
   },
   "bugs": {
