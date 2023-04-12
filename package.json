@@ -1,4 +1,7 @@
 {
+  "name": "@westdeutscherrundfunkkoeln/react-navigation",
+  "title": "Fork from react-navigation",
+  "version": "1.0.0",
   "description": "Routing and navigation for your React Native apps",
   "private": true,
   "workspaces": {
@@ -13,7 +16,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/react-navigation/react-navigation.git"
+    "url": "git+https://github.com/WestdeutscherRundfunkKoeln/react-navigation.git"
   },
   "author": "Satyajit Sahoo <satyajit.happy@gmail.com> (https://github.com/satya164/), Michał Osadnik <micosa97@gmail.com> (https://github.com/osdnk/)",
   "scripts": {

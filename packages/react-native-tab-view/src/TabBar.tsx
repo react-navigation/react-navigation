@@ -254,7 +254,7 @@ const getTestIdDefault = ({ route }: Scene<Route>) => route.testID;
 
 // How many items measurements should we update per batch.
 // Defaults to 10, since that's whats FlatList is using in initialNumToRender.
-const MEASURE_PER_BATCH = 10;
+const MEASURE_PER_BATCH = 15;
 
 export function TabBar<T extends Route>({
   getLabelText = getLabelTextDefault,
