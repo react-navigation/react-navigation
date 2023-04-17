@@ -14,6 +14,24 @@ export function createMemoryHistory() {
   let index = 0;
   let items: HistoryRecord[] = [];
 
+  const log = () => {
+    console.log(
+      JSON.stringify(
+        {
+          index,
+          indexGetter: history.index,
+          items: items.map((item, i) => ({
+            selected: history.index === i ? '<<<<<<<' : undefined,
+            path: item.path,
+            id: item.id,
+            state: item.state?.key || null,
+          })),
+        },
+        null,
+        4
+      )
+    );
+  };
   // Pending callbacks for `history.go(n)`
   // We might modify the callback stored if it was interrupted, so we have a ref to identify it
   const pending: { ref: unknown; cb: (interrupted?: boolean) => void }[] = [];
@@ -77,6 +95,7 @@ export function createMemoryHistory() {
       // - browsers have limits on how big it can be, and we don't control the size
       // - while not recommended, there could be non-serializable data in state
       window.history.pushState({ id }, '', path);
+      log();
     },
 
     replace({ path, state }: { path: string; state: NavigationState }) {
@@ -106,6 +125,7 @@ export function createMemoryHistory() {
       }
 
       window.history.replaceState({ id }, '', pathWithHash);
+      log();
     },
 
     // `history.go(n)` is asynchronous, there are couple of things to keep in mind:
@@ -212,6 +232,7 @@ export function createMemoryHistory() {
         }
 
         listener();
+        log();
       };
 
       window.addEventListener('popstate', onPopState);
