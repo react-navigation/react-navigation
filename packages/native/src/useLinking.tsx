@@ -355,13 +355,13 @@ export function useLinking(
         state
       );
 
-      if (
-        previousFocusedState &&
-        focusedState &&
-        // We should only handle push/pop if path changed from what was in last `popstate`
-        // Otherwise it's likely a change triggered by `popstate`
-        path !== pendingPath
-      ) {
+      // We should only handle push/pop if path changed from what was in last `popstate`
+      // Otherwise it's likely a change triggered by `popstate`
+      if (path === pendingPath) {
+        return;
+      }
+
+      if (previousFocusedState && focusedState) {
         const historyDelta =
           (focusedState.history
             ? focusedState.history.length
