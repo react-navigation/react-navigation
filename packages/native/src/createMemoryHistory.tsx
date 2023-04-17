@@ -203,12 +203,9 @@ export function createMemoryHistory() {
         }, 100);
 
         const onPopState = () => {
-          const id = window.history.state?.id;
-          const currentIndex = items.findIndex((item) => item.id === id);
-
           // Fix createMemoryHistory.index variable's value
           // as it may go out of sync when navigating in the browser.
-          index = Math.max(currentIndex, 0);
+          index = this.index;
 
           const last = pending.pop();
 
@@ -226,6 +223,10 @@ export function createMemoryHistory() {
     // Here we normalize it so that only external changes (e.g. user pressing back/forward) trigger the listener
     listen(listener: () => void) {
       const onPopState = () => {
+        // Fix createMemoryHistory.index variable's value
+        // as it may go out of sync when navigating in the browser.
+        index = this.index;
+
         if (pending.length) {
           // This was triggered by `history.go(n)`, we shouldn't call the listener
           return;
