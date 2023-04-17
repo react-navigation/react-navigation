@@ -269,7 +269,13 @@ export function useLinking(
         }
       } else {
         // if current path didn't return any state, we should revert to initial state
-        navigation.resetRoot(state);
+        navigation.resetRoot();
+      }
+
+      // If the record doesn't have saved state, update it with the current one.
+      // The states are lost after reloading the page.
+      if (record && !record.state) {
+        history.updateState(navigation.getRootState());
       }
     });
   }, [enabled, history, ref]);
@@ -385,10 +391,8 @@ export function useLinking(
               // An existing entry for this path exists and it's less than current index, go back to that
               await history.go(nextIndex - currentIndex);
             } else {
-              // We couldn't find an existing entry to go back to, so we'll go back by the delta
-              // This won't be correct if multiple routes were pushed in one go before
-              // Usually this shouldn't happen and this is a fallback for that
-              await history.go(historyDelta);
+              // We couldn't find an existing entry to go back to, so we'll do a replace.
+              history.replace({ path, state });
             }
 
             // Store the updated state as well as fix the path if incorrect

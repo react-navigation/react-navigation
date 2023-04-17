@@ -93,7 +93,10 @@ it('will not attempt to navigate beyond whatever browser history it is possible 
   expect(windowGoSpy).toHaveBeenCalledTimes(3);
 
   const item = history.get(0);
-  expect(window.history.state).toEqual({ id: item.id });
+  expect(window.history.state).toEqual({
+    id: item.id,
+    backup: [{ id: item.id, path: item.path }],
+  });
 
   // Next replace the state and verify the item we are replacing
   // has the same id but the path has changed
@@ -125,7 +128,10 @@ it('will not attempt to navigate beyond whatever browser history it is possible 
   expect(item.path).toBe('/route-one');
   expect(replacedItem.path).toBe('/route-three');
   expect(item.id).toEqual(replacedItem.id);
-  expect(window.history.state).toEqual({ id: replacedItem.id });
+  expect(window.history.state).toEqual({
+    id: replacedItem.id,
+    backup: [{ id: replacedItem.id, path: replacedItem.path }],
+  });
 
   // Push another item
   const mockStateFour: NavigationState = {
@@ -154,6 +160,19 @@ it('will not attempt to navigate beyond whatever browser history it is possible 
   history.push({ path: '/route-one', state: mockStateFour });
   expect(history.index).toBe(1);
   expect(history.get(0).path).toBe('/route-three');
+  const oldItem = history.get(0);
   const newItem = history.get(1);
-  expect(window.history.state).toEqual({ id: newItem.id });
+  expect(window.history.state).toEqual({
+    id: newItem.id,
+    backup: [
+      {
+        id: oldItem.id,
+        path: oldItem.path,
+      },
+      {
+        id: newItem.id,
+        path: newItem.path,
+      },
+    ],
+  });
 });

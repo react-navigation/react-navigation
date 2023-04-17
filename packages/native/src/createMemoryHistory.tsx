@@ -5,7 +5,7 @@ type HistoryRecord = {
   // Unique identifier for this record to match it with window.history.state
   id: string;
   // Navigation state object for the history entry
-  state: NavigationState;
+  state?: NavigationState;
   // Path of the history entry
   path: string;
 };
@@ -32,9 +32,24 @@ export function createMemoryHistory() {
       )
     );
   };
+
+  const currentId = window.history?.state?.id;
+
+  // If there is an id already that means the page was reloaded and there should be backup to recover history entries.
+  if (currentId) {
+    items = window.history.state.backup;
+    index = items.length - 1;
+  }
+
   // Pending callbacks for `history.go(n)`
   // We might modify the callback stored if it was interrupted, so we have a ref to identify it
   const pending: { ref: unknown; cb: (interrupted?: boolean) => void }[] = [];
+
+  // Save only the entries to the left (back)
+  // because the ones to the right (forward) aren't useful and let us avoid unnecessary logic.
+  // Don't save state in the backup.
+  const getStatelessItems = () =>
+    items.slice(0, index + 1).map((item) => ({ path: item.path, id: item.id }));
 
   const interrupt = () => {
     // If another history operation was performed we need to interrupt existing ones
@@ -94,8 +109,12 @@ export function createMemoryHistory() {
       // We don't store state object in history.state because:
       // - browsers have limits on how big it can be, and we don't control the size
       // - while not recommended, there could be non-serializable data in state
-      window.history.pushState({ id }, '', path);
+      window.history.pushState({ id, backup: getStatelessItems() }, '', path);
       log();
+    },
+
+    updateState(state: NavigationState) {
+      items[index].state = state;
     },
 
     replace({ path, state }: { path: string; state: NavigationState }) {
@@ -124,7 +143,11 @@ export function createMemoryHistory() {
         items[index] = { path, state, id };
       }
 
-      window.history.replaceState({ id }, '', pathWithHash);
+      window.history.replaceState(
+        { id, backup: getStatelessItems() },
+        '',
+        pathWithHash
+      );
       log();
     },
 
@@ -223,6 +246,12 @@ export function createMemoryHistory() {
     // Here we normalize it so that only external changes (e.g. user pressing back/forward) trigger the listener
     listen(listener: () => void) {
       const onPopState = () => {
+        const id = window.history.state?.id;
+
+        if (id && !items.find((item) => item.id === id)) {
+          items.push({ path: location.pathname + location.search, id });
+        }
+
         // Fix createMemoryHistory.index variable's value
         // as it may go out of sync when navigating in the browser.
         index = this.index;
