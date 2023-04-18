@@ -265,7 +265,9 @@ export function useLinking(
             navigation.resetRoot(state);
           }
         } else {
-          navigation.resetRoot(state);
+          // Using a partial state without the root key will make the saved states unusable
+          const key = navigation.getRootState().key;
+          navigation.resetRoot({ key, ...state });
         }
       } else {
         // if current path didn't return any state, we should revert to initial state

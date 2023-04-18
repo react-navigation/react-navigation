@@ -205,7 +205,7 @@ export function StackRouter(options: StackRouterOptions) {
       return {
         stale: false,
         type: 'stack',
-        key: `stack-${nanoid()}`,
+        key: state.key || `stack-${nanoid()}`,
         index: routes.length - 1,
         routeNames,
         routes,
