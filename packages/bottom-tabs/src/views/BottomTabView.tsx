@@ -62,17 +62,23 @@ export function BottomTabView(props: Props) {
 
   const tabAnims = useAnimatedHashMap(state.routes);
 
-  const animateToIndex = React.useCallback(() => {
-    state.routes.map((route) => {
-      return Animated[transitionSpec?.animation || 'timing'](
-        tabAnims[route.key],
-        {
-          ...transitionSpec?.config,
-          toValue: route.key === focusedRouteKey ? 0 : 1,
-          useNativeDriver: true,
-        }
+  React.useEffect(() => {
+    const animateToIndex = () => {
+      Animated.parallel(
+        state.routes.map((route) => {
+          return Animated[transitionSpec?.animation || 'timing'](
+            tabAnims[route.key],
+            {
+              ...transitionSpec?.config,
+              toValue: route.key === focusedRouteKey ? 0 : 1,
+              useNativeDriver: true,
+            }
+          );
+        })
       ).start();
-    });
+    };
+
+    animateToIndex();
   }, [
     transitionSpec?.animation,
     transitionSpec?.config,
@@ -80,10 +86,6 @@ export function BottomTabView(props: Props) {
     tabAnims,
     focusedRouteKey,
   ]);
-
-  React.useEffect(() => {
-    animateToIndex();
-  }, [animateToIndex]);
 
   const dimensions = SafeAreaProviderCompat.initialMetrics.frame;
   const [tabBarHeight, setTabBarHeight] = React.useState(() =>
