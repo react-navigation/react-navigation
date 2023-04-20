@@ -2,7 +2,7 @@ import type * as CommonActions from './CommonActions';
 
 export type CommonNavigationAction = CommonActions.Action;
 
-export type NavigationRoute<
+type NavigationRoute<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList
 > = Route<Extract<RouteName, string>, ParamList[RouteName]> & {

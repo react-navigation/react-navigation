@@ -256,16 +256,15 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   freezeOnBlur?: boolean;
 
   /**
-   * Whether default transition animation should be enabled on the screen.
-   * If you set it to `false`, the screen won't animate when pushing or popping.
-   * Defaults to `true` on Android and iOS, `false` on Web.
+   * Whether transition animations should be enabled when switching tabs.
+   * Defaults to `false`.
    */
   animationEnabled?: boolean;
 
   /**
-   * Function which specifies interpolated styles for various parts of the card, e.g. the overlay, shadow etc.
+   * Function which specifies interpolated styles for bottom-tab scenes.
    */
-  styleInterpolator?: BottomTabSceneStyleInterpolator;
+  sceneStyleInterpolator?: BottomTabSceneStyleInterpolator;
 
   /**
    * Object which specifies the animation type (timing or spring) and their options (such as duration for timing).

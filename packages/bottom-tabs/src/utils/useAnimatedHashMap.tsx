@@ -1,12 +1,17 @@
-import type { NavigationRoute, ParamListBase } from '@react-navigation/routers';
+import type { Route } from '@react-navigation/routers';
 import * as React from 'react';
 import { Animated } from 'react-native';
 
-export function useAnimatedValueObject(
-  routes: NavigationRoute<ParamListBase, string>[]
-) {
+export function useAnimatedHashMap(routes: Route<string>[]) {
   const refs = React.useRef<Record<string, Animated.Value>>({});
   const previous = refs.current;
+  const routeKeys = Object.keys(previous);
+  if (
+    routes.length === routeKeys.length &&
+    routes.every((route) => routeKeys.includes(route.key))
+  ) {
+    return previous;
+  }
   refs.current = {};
 
   routes.forEach(({ key }) => {

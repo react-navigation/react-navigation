@@ -22,7 +22,7 @@ import type {
 } from '../types';
 import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCallbackContext';
 import { BottomTabBarHeightContext } from '../utils/BottomTabBarHeightContext';
-import { useAnimatedValueObject } from '../utils/useAnimatedValueObject';
+import { useAnimatedHashMap } from '../utils/useAnimatedHashMap';
 import { BottomTabBar, getTabBarHeight } from './BottomTabBar';
 import { MaybeScreen, MaybeScreenContainer } from './ScreenFallback';
 
@@ -47,7 +47,7 @@ export function BottomTabView(props: Props) {
 
   const focusedRouteKey = state.routes[state.index].key;
 
-  const { animationEnabled, styleInterpolator, transitionSpec } =
+  const { animationEnabled, sceneStyleInterpolator, transitionSpec } =
     descriptors[focusedRouteKey].options;
 
   /**
@@ -60,16 +60,16 @@ export function BottomTabView(props: Props) {
     setLoaded([...loaded, focusedRouteKey]);
   }
 
-  const tabsPositionAnims = useAnimatedValueObject(state.routes);
+  const tabAnims = useAnimatedHashMap(state.routes);
 
   const animateToIndex = React.useCallback(() => {
     state.routes.map((route) => {
       return Animated[transitionSpec?.animation || 'timing'](
-        tabsPositionAnims[route.key],
+        tabAnims[route.key],
         {
+          ...transitionSpec?.config,
           toValue: route.key === focusedRouteKey ? 0 : 1,
           useNativeDriver: true,
-          ...transitionSpec?.config,
         }
       ).start();
     });
@@ -77,7 +77,7 @@ export function BottomTabView(props: Props) {
     transitionSpec?.animation,
     transitionSpec?.config,
     state.routes,
-    tabsPositionAnims,
+    tabAnims,
     focusedRouteKey,
   ]);
 
@@ -157,11 +157,10 @@ export function BottomTabView(props: Props) {
             headerTransparent,
           } = descriptor.options;
 
-          const { sceneStyle } = styleInterpolator
-            ? styleInterpolator({
-                current: tabsPositionAnims[route.key],
-              })
-            : { sceneStyle: {} };
+          const { sceneStyle } =
+            sceneStyleInterpolator?.({
+              current: tabAnims[route.key],
+            }) ?? {};
 
           return (
             <MaybeScreen

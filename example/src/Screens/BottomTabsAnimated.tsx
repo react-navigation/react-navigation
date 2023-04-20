@@ -13,9 +13,8 @@ import {
   useIsFocused,
 } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
-import { BlurView } from 'expo-blur';
 import * as React from 'react';
-import { ScrollView, StatusBar, StyleSheet } from 'react-native';
+import { ScrollView, StatusBar } from 'react-native';
 
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
@@ -75,10 +74,9 @@ export function BottomTabsAnimated({
         headerLeft: (props) => (
           <HeaderBackButton {...props} onPress={navigation.goBack} />
         ),
-
         animationEnabled: true,
         transitionSpec: TransitionSpecs.CrossFadeAnimationSpec,
-        styleInterpolator: ({ current }) =>
+        sceneStyleInterpolator: ({ current }) =>
           SceneStyleInterpolator.forCrossFade({ current }),
       }}
     >
@@ -112,29 +110,8 @@ export function BottomTabsAnimated({
         component={AlbumsScreen}
         options={{
           title: 'Albums',
-          headerTintColor: '#fff',
-          headerTransparent: true,
-          headerBackground: () => (
-            <BlurView
-              tint="dark"
-              intensity={100}
-              style={StyleSheet.absoluteFill}
-            />
-          ),
           tabBarIcon: getTabBarIcon('image-album'),
-          tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.5)',
-          tabBarActiveTintColor: '#fff',
-          tabBarStyle: {
-            position: 'absolute',
-            borderTopColor: 'rgba(0, 0, 0, .2)',
-          },
-          tabBarBackground: () => (
-            <BlurView
-              tint="dark"
-              intensity={100}
-              style={StyleSheet.absoluteFill}
-            />
-          ),
+          headerTransparent: true,
         }}
       />
     </Tab.Navigator>
