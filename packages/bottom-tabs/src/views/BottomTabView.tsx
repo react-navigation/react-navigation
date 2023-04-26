@@ -44,6 +44,7 @@ export function BottomTabView(props: Props) {
       Platform.OS === 'ios',
     sceneContainerStyle,
   } = props;
+  const [isAnimating, setIsAnimating] = React.useState(false);
 
   const focusedRouteKey = state.routes[state.index].key;
 
@@ -63,6 +64,7 @@ export function BottomTabView(props: Props) {
   const tabAnims = useAnimatedHashMap(state.routes);
 
   React.useEffect(() => {
+    setIsAnimating((value) => !value);
     const animateToIndex = () => {
       Animated.parallel(
         state.routes.map((route) => {
@@ -75,7 +77,11 @@ export function BottomTabView(props: Props) {
             }
           );
         })
-      ).start();
+      ).start(({ finished }) => {
+        if (finished) {
+          setIsAnimating(!finished);
+        }
+      });
     };
 
     animateToIndex();
@@ -128,7 +134,7 @@ export function BottomTabView(props: Props) {
     <SafeAreaProviderCompat>
       <MaybeScreenContainer
         enabled={detachInactiveScreens}
-        hasTwoStates
+        hasTwoStates={!animationEnabled}
         style={styles.container}
       >
         {routes.map((route, index) => {
@@ -168,7 +174,7 @@ export function BottomTabView(props: Props) {
             <MaybeScreen
               key={route.key}
               style={[StyleSheet.absoluteFill, { zIndex: isFocused ? 0 : -1 }]}
-              visible={isFocused}
+              visible={isAnimating || isFocused}
               enabled={detachInactiveScreens}
               freezeOnBlur={freezeOnBlur}
             >
@@ -187,13 +193,9 @@ export function BottomTabView(props: Props) {
                       descriptor.navigation as BottomTabNavigationProp<ParamListBase>,
                     options: descriptor.options,
                   })}
-                  style={sceneContainerStyle}
+                  style={[sceneContainerStyle, animationEnabled && sceneStyle]}
                 >
-                  <Animated.View
-                    style={[styles.content, animationEnabled && sceneStyle]}
-                  >
-                    {descriptor.render()}
-                  </Animated.View>
+                  {descriptor.render()}
                 </Screen>
               </BottomTabBarHeightContext.Provider>
             </MaybeScreen>
@@ -211,8 +213,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     overflow: 'hidden',
-  },
-  content: {
-    flex: 1,
   },
 });
