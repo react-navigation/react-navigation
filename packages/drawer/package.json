@@ -44,7 +44,7 @@
     "@react-navigation/elements": "^1.4.0-alpha.0",
     "color": "^4.2.3",
     "react-native-drawer-layout": "workspace:^",
-    "use-latest-callback": "^0.1.5"
+    "use-latest-callback": "^0.1.6"
   },
   "devDependencies": {
     "@react-navigation/native": "workspace:^",

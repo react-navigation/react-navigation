@@ -42,7 +42,8 @@
   },
   "dependencies": {
     "color": "^4.2.3",
-    "react-native-tab-view": "^3.5.1"
+    "react-native-tab-view": "^3.5.1",
+    "use-latest-callback": "^0.1.6"
   },
   "devDependencies": {
     "@react-navigation/native": "workspace:^",

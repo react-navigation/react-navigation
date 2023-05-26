@@ -266,11 +266,19 @@ const MemoizedTabBarItemInternal = React.memo(
 ) as typeof TabBarItemInternal;
 
 export function TabBarItem<T extends Route>(props: Props<T>) {
-  const { onPress, onLongPress, onLayout, navigationState, route, ...rest } =
-    props;
+  const {
+    onPress,
+    onLongPress,
+    onLayout,
+    navigationState,
+    route,
+    getAccessibilityLabel,
+    ...rest
+  } = props;
   const onPressLatest = useLatestCallback(onPress);
   const onLongPressLatest = useLatestCallback(onLongPress);
   const onLayoutLatest = useLatestCallback(onLayout ? onLayout : () => {});
+  const getAccessibilityLabelLatest = useLatestCallback(getAccessibilityLabel);
 
   const tabIndex = navigationState.routes.indexOf(route);
 
@@ -281,6 +289,7 @@ export function TabBarItem<T extends Route>(props: Props<T>) {
       onLayout={onLayoutLatest}
       onLongPress={onLongPressLatest}
       isFocused={navigationState.index === tabIndex}
+      getAccessibilityLabel={getAccessibilityLabelLatest}
       route={route}
       index={tabIndex}
       routesLength={navigationState.routes.length}

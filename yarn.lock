@@ -4397,7 +4397,7 @@ __metadata:
     react-native-builder-bob: ^0.20.4
     react-test-renderer: 18.1.0
     typescript: ^4.9.4
-    use-latest-callback: ^0.1.5
+    use-latest-callback: ^0.1.6
   peerDependencies:
     react: "*"
   languageName: unknown
@@ -4443,7 +4443,7 @@ __metadata:
     react-native-safe-area-context: 4.5.0
     react-native-screens: ~3.20.0
     typescript: ^4.9.4
-    use-latest-callback: ^0.1.5
+    use-latest-callback: ^0.1.6
   peerDependencies:
     "@react-navigation/native": ^6.0.0
     react: "*"
@@ -4546,6 +4546,7 @@ __metadata:
     react-native-pager-view: 6.1.2
     react-native-tab-view: ^3.5.1
     typescript: ^4.9.4
+    use-latest-callback: ^0.1.6
   peerDependencies:
     "@react-navigation/native": ^6.0.0
     react: "*"
@@ -17091,7 +17092,7 @@ __metadata:
     react-native: 0.71.8
     react-native-builder-bob: ^0.20.4
     typescript: ^4.9.4
-    use-latest-callback: ^0.1.5
+    use-latest-callback: ^0.1.6
   peerDependencies:
     react: "*"
     react-native: "*"
@@ -17209,7 +17210,7 @@ __metadata:
     react-native-builder-bob: ^0.20.4
     react-native-pager-view: 6.1.2
     typescript: ^4.9.4
-    use-latest-callback: ^0.1.5
+    use-latest-callback: ^0.1.6
   peerDependencies:
     react: "*"
     react-native: "*"
@@ -20106,10 +20107,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-latest-callback@npm:^0.1.5":
-  version: 0.1.5
-  resolution: "use-latest-callback@npm:0.1.5"
-  checksum: a7af3275985b7918c3e0e7a57bb5fc8ad678b21673fc618fe778d111992bdabb4f9592cd3e0286e032a7c956ee3c9d1aba39801c13f32d68bc4c4a008e38783b
+"use-latest-callback@npm:^0.1.6":
+  version: 0.1.6
+  resolution: "use-latest-callback@npm:0.1.6"
+  peerDependencies:
+    react: ">=16.8"
+  checksum: d94bea5cc5910d5967b12c766355c11812c1f57b5993d4b429dd6e580ac5904087ce732891d4fb3a855e0e56e6a7900b9af2084ede1d86df8e381afe47c2947a
   languageName: node
   linkType: hard
 
