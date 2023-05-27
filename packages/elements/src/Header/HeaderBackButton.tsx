@@ -154,7 +154,7 @@ export function HeaderBackButton({
       onPress={disabled ? undefined : handlePress}
       pressColor={pressColor}
       pressOpacity={pressOpacity}
-      android_ripple={{ borderless: true, foreground: true }}
+      android_ripple={{ borderless: true, foreground: true, radius: 22 }}
       style={[styles.container, disabled && styles.disabled, style]}
       hitSlop={Platform.select({
         ios: undefined,
