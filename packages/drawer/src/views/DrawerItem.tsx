@@ -3,6 +3,7 @@ import { CommonActions, Link, Route, useTheme } from '@react-navigation/native';
 import Color from 'color';
 import * as React from 'react';
 import {
+  GestureResponderEvent,
   Platform,
   StyleProp,
   StyleSheet,
@@ -106,6 +107,9 @@ const LinkPressable = ({
   onPressIn,
   onPressOut,
   accessibilityRole,
+  // omit accessibilityState out of rest
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  accessibilityState,
   ...rest
 }: Omit<React.ComponentProps<typeof PlatformPressable>, 'style'> & {
   style: StyleProp<ViewStyle>;
@@ -113,24 +117,30 @@ const LinkPressable = ({
   route: Route<string>;
   href?: string;
   children: React.ReactNode;
-  onPress?: () => void;
+  onPress?: (
+    e: GestureResponderEvent | React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => void;
 }) => {
   if (Platform.OS === 'web') {
     // React Native Web doesn't forward `onClick` if we use `TouchableWithoutFeedback`.
     // We need to use `onClick` to be able to prevent default browser handling of links.
+
     return (
       <Link
         {...rest}
         href={href}
         action={CommonActions.navigate(route.name, route.params)}
         style={[styles.button, style]}
-        onPress={(e: any) => {
+        onPress={(e) => {
           if (
+            e instanceof MouseEvent &&
             !(e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) && // ignore clicks with modifier keys
             (e.button == null || e.button === 0) // ignore everything but left clicks
           ) {
             e.preventDefault();
-            onPress?.(e);
+            if ('onPress' in rest) {
+              onPress?.(e);
+            }
           }
         }}
         // types for PressableProps and TextProps are incompatible with each other by `null` so we
