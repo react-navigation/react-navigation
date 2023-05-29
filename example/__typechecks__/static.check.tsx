@@ -44,7 +44,8 @@ const RootStack = createStackNavigator({
     Guest: {
       screens: {
         Login: () => null,
-        Register: () => null,
+        Register: (_: StaticScreenProps<{ method: 'email' | 'social' }>) =>
+          null,
       },
     },
     User: {
@@ -103,6 +104,14 @@ navigation.navigate('Settings', undefined);
 
 // @ts-expect-error
 navigation.navigate('Settings', { nonexistent: 'test' });
+
+/**
+ * Infer params from component props for inside group
+ */
+navigation.navigate('Register', { method: 'email' });
+
+// @ts-expect-error
+navigation.navigate('Register', { method: 'token' });
 
 /**
  * Infer params from nested navigator
@@ -176,4 +185,14 @@ createBottomTabNavigator({
       },
     },
   },
+});
+
+/**
+ * Requires `screens` to be defined
+ */
+// @ts-expect-error
+createStackNavigator({});
+
+createStackNavigator({
+  screens: {},
 });
