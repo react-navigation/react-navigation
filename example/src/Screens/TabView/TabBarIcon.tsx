@@ -46,6 +46,7 @@ export const TabBarIcon = () => {
       indicatorStyle={styles.indicator}
       renderIcon={renderIcon}
       style={styles.tabbar}
+      gap={40}
     />
   );
 

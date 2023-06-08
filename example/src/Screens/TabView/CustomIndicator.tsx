@@ -49,9 +49,11 @@ export const CustomIndicator = () => {
     props: SceneRendererProps & {
       navigationState: State;
       getTabWidth: (i: number) => number;
+      gap?: number;
+      width: number | string | undefined;
     }
   ) => {
-    const { position, navigationState, getTabWidth } = props;
+    const { position, getTabWidth, gap, width } = props;
     const inputRange = [
       0, 0.48, 0.49, 0.51, 0.52, 1, 1.48, 1.49, 1.51, 1.52, 2,
     ];
@@ -73,7 +75,9 @@ export const CustomIndicator = () => {
       inputRange: inputRange,
       outputRange: inputRange.map((x) => {
         const i = Math.round(x);
-        return i * getTabWidth(i) * (I18nManager.isRTL ? -1 : 1);
+        return (
+          (i * getTabWidth(i) + i * (gap ?? 0)) * (I18nManager.isRTL ? -1 : 1)
+        );
       }),
     });
 
@@ -82,7 +86,7 @@ export const CustomIndicator = () => {
         style={[
           styles.container,
           {
-            width: `${100 / navigationState.routes.length}%`,
+            width: width,
             transform: [{ translateX }] as any,
           },
         ]}
@@ -119,6 +123,7 @@ export const CustomIndicator = () => {
         renderBadge={renderBadge}
         renderIndicator={renderIndicator}
         style={styles.tabbar}
+        gap={40}
       />
     </View>
   );

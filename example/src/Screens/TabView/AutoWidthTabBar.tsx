@@ -48,6 +48,7 @@ export const AutoWidthTabBar = () => {
       style={styles.tabbar}
       labelStyle={styles.label}
       tabStyle={styles.tabStyle}
+      gap={40}
     />
   );
 

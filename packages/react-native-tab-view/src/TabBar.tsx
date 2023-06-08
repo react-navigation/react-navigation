@@ -88,7 +88,8 @@ const getComputedTabWidth = (
   routes: Route[],
   scrollEnabled: boolean | undefined,
   tabWidths: { [key: string]: number },
-  flattenedWidth: FlattenedTabWidth
+  flattenedWidth: FlattenedTabWidth,
+  gap: number | undefined
 ) => {
   if (flattenedWidth === 'auto') {
     return tabWidths[routes[index].key] || 0;
@@ -109,7 +110,9 @@ const getComputedTabWidth = (
   if (scrollEnabled) {
     return (layout.width / 5) * 2;
   }
-  return layout.width / routes.length;
+  const gapTotalWidth = (gap ?? 0) * (routes.length - 1);
+
+  return (layout.width - gapTotalWidth) / routes.length;
 };
 
 const getMaxScrollDistance = (tabBarWidth: number, layoutWidth: number) =>
@@ -149,7 +152,8 @@ const getTabBarWidth = <T extends Route>({
         routes,
         scrollEnabled,
         tabWidths,
-        flattenedTabWidth
+        flattenedTabWidth,
+        gap
       ),
     0
   );
@@ -208,16 +212,16 @@ const getScrollAmount = <T extends Route>({
       navigationState.routes,
       scrollEnabled,
       tabWidths,
-      flattenedTabWidth
+      flattenedTabWidth,
+      gap
     );
 
     // To get the current index centered we adjust scroll amount by width of indexes
     // 0 through (i - 1) and add half the width of current index i
     return (
       total +
-      (navigationState.index === i
-        ? (tabWidth + (gap ?? 0)) / 2
-        : tabWidth + (gap ?? 0))
+      (i > 0 ? gap ?? 0 : 0) +
+      (navigationState.index === i ? tabWidth / 2 : tabWidth)
     );
   }, 0);
 
@@ -350,8 +354,6 @@ export function TabBar<T extends Route>({
   });
 
   const separatorsWidth = Math.max(0, routes.length - 1) * gap;
-  const separatorPercent = (separatorsWidth / tabBarWidth) * 100;
-  const tabBarWidthPercent = `${routes.length * 40}%`;
 
   const translateX = React.useMemo(
     () =>
@@ -436,7 +438,8 @@ export function TabBar<T extends Route>({
               routes,
               scrollEnabled,
               tabWidths,
-              getFlattenedTabWidth(tabStyle)
+              getFlattenedTabWidth(tabStyle),
+              gap
             )
           : undefined,
         android_ripple,
@@ -488,21 +491,10 @@ export function TabBar<T extends Route>({
   const contentContainerStyleMemoized = React.useMemo(
     () => [
       styles.tabContent,
-      scrollEnabled
-        ? {
-            width:
-              tabBarWidth > separatorsWidth ? tabBarWidth : tabBarWidthPercent,
-          }
-        : styles.container,
+      scrollEnabled ? { width: tabBarWidth } : styles.container,
       contentContainerStyle,
     ],
-    [
-      contentContainerStyle,
-      scrollEnabled,
-      separatorsWidth,
-      tabBarWidth,
-      tabBarWidthPercent,
-    ]
+    [contentContainerStyle, scrollEnabled, tabBarWidth]
   );
 
   const handleScroll = React.useMemo(
@@ -546,11 +538,7 @@ export function TabBar<T extends Route>({
         style={[
           styles.indicatorContainer,
           scrollEnabled ? { transform: [{ translateX }] as any } : null,
-          tabBarWidth > separatorsWidth
-            ? { width: tabBarWidth - separatorsWidth }
-            : scrollEnabled
-            ? { width: tabBarWidthPercent }
-            : null,
+          scrollEnabled ? { width: tabBarWidth } : null,
           indicatorContainerStyle,
         ]}
       >
@@ -561,7 +549,7 @@ export function TabBar<T extends Route>({
           jumpTo,
           width: isWidthDynamic
             ? 'auto'
-            : `${(100 - separatorPercent) / routes.length}%`,
+            : Math.max(0, (tabBarWidth - separatorsWidth) / routes.length),
           style: indicatorStyle,
           getTabWidth: (i: number) =>
             getComputedTabWidth(
@@ -570,7 +558,8 @@ export function TabBar<T extends Route>({
               routes,
               scrollEnabled,
               tabWidths,
-              flattenedTabWidth
+              flattenedTabWidth,
+              gap
             ),
           gap,
         })}

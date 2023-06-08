@@ -44,6 +44,7 @@ export const ScrollableTabBar = () => {
       style={styles.tabbar}
       tabStyle={styles.tab}
       labelStyle={styles.label}
+      gap={40}
     />
   );
 
