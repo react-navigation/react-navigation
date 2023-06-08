@@ -359,10 +359,13 @@ export function TabBar<T extends Route>({
   renderTabBarItem,
   style,
   tabStyle,
+  layout: propLayout,
   testID,
   android_ripple,
 }: Props<T>) {
-  const [layout, setLayout] = React.useState<Layout>({ width: 0, height: 0 });
+  const [layout, setLayout] = React.useState<Layout>(
+    propLayout ?? { width: 0, height: 0 }
+  );
   const [tabWidths, setTabWidths] = React.useState<Record<string, number>>({});
   const flatListRef = React.useRef<FlatList | null>(null);
   const isFirst = React.useRef(true);
