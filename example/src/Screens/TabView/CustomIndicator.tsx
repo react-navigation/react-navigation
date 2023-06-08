@@ -1,6 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as React from 'react';
-import { Animated, I18nManager, StyleSheet, Text, View } from 'react-native';
+import {
+  Animated,
+  I18nManager,
+  StyleProp,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   NavigationState,
@@ -51,9 +59,10 @@ export const CustomIndicator = () => {
       getTabWidth: (i: number) => number;
       gap?: number;
       width: number | string | undefined;
+      style?: StyleProp<ViewStyle>;
     }
   ) => {
-    const { position, getTabWidth, gap, width } = props;
+    const { position, getTabWidth, gap, width, style } = props;
     const inputRange = [
       0, 0.48, 0.49, 0.51, 0.52, 1, 1.48, 1.49, 1.51, 1.52, 2,
     ];
@@ -84,6 +93,7 @@ export const CustomIndicator = () => {
     return (
       <Animated.View
         style={[
+          style,
           styles.container,
           {
             width: width,
@@ -123,6 +133,7 @@ export const CustomIndicator = () => {
         renderBadge={renderBadge}
         renderIndicator={renderIndicator}
         style={styles.tabbar}
+        contentContainerStyle={styles.tabbarContentContainer}
         gap={40}
       />
     </View>
@@ -155,6 +166,9 @@ const styles = StyleSheet.create({
   tabbar: {
     backgroundColor: '#263238',
     overflow: 'hidden',
+  },
+  tabbarContentContainer: {
+    paddingHorizontal: 20,
   },
   icon: {
     backgroundColor: 'transparent',

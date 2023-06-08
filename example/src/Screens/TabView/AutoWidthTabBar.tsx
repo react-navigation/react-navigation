@@ -46,6 +46,7 @@ export const AutoWidthTabBar = () => {
       scrollEnabled
       indicatorStyle={styles.indicator}
       style={styles.tabbar}
+      contentContainerStyle={styles.tabbarContentContainer}
       labelStyle={styles.label}
       tabStyle={styles.tabStyle}
       gap={40}
@@ -77,6 +78,9 @@ AutoWidthTabBar.options = {
 const styles = StyleSheet.create({
   tabbar: {
     backgroundColor: '#3f51b5',
+  },
+  tabbarContentContainer: {
+    paddingHorizontal: 20,
   },
   indicator: {
     backgroundColor: '#ffeb3b',
