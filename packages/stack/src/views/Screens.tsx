@@ -32,6 +32,7 @@ export const MaybeScreen = ({
   active: 0 | 1 | Animated.AnimatedInterpolation<0 | 1>;
   children: React.ReactNode;
   freezeOnBlur?: boolean;
+  homeIndicatorHidden?: boolean;
 }) => {
   if (Screens != null) {
     return (
