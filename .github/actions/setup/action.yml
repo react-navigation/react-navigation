@@ -17,19 +17,11 @@ runs:
         path: |
           **/node_modules
           .yarn/install-state.gz
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock', '**/package.json') }}
         restore-keys: |
           ${{ runner.os }}-yarn-
 
-    - name: Check for changes
-      uses: dorny/paths-filter@v2
-      id: changes
-      with:
-        filters: |
-          package-json:
-            - '**/package.json'
-
     - name: Install dependencies
-      if: steps.yarn-cache.outputs.cache-hit != 'true' || steps.changes.outputs.package-json == 'true'
+      if: steps.yarn-cache.outputs.cache-hit != 'true'
       run: yarn install --immutable
       shell: bash
