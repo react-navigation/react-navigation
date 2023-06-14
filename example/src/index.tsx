@@ -24,15 +24,14 @@ import {
 import { createURL } from 'expo-linking';
 import * as React from 'react';
 import {
-  Dimensions,
   I18nManager,
   Linking,
   LogBox,
   Platform,
-  ScaledSize,
   ScrollView,
   StatusBar,
   Text,
+  useWindowDimensions,
 } from 'react-native';
 import {
   DarkTheme as PaperDarkTheme,
@@ -115,17 +114,7 @@ export default function App() {
     };
   }, [theme.colors, theme.dark]);
 
-  const [dimensions, setDimensions] = React.useState(Dimensions.get('window'));
-
-  React.useEffect(() => {
-    const onDimensionsChange = ({ window }: { window: ScaledSize }) => {
-      setDimensions(window);
-    };
-
-    Dimensions.addEventListener('change', onDimensionsChange);
-
-    return () => Dimensions.removeEventListener('change', onDimensionsChange);
-  }, []);
+  const dimensions = useWindowDimensions();
 
   const navigationRef = useNavigationContainerRef();
 
