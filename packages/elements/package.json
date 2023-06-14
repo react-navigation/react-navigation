@@ -42,7 +42,7 @@
     "@testing-library/react-native": "^11.5.0",
     "@types/react": "~18.0.27",
     "@types/react-native": "~0.70.8",
-    "del-cli": "^3.0.1",
+    "del-cli": "^5.0.0",
     "react": "18.2.0",
     "react-native": "0.71.3",
     "react-native-builder-bob": "^0.20.4",
