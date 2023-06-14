@@ -6154,7 +6154,7 @@ __metadata:
     "@testing-library/react-native": ^11.5.0
     "@types/color": ^3.0.1
     "@types/react": ~18.0.27
-    "@types/react-native": ~0.70.8
+    "@types/react-native": ~0.71.3
     color: ^4.2.3
     del-cli: ^5.0.0
     react: 18.2.0
@@ -6226,7 +6226,7 @@ __metadata:
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.27
-    "@types/react-native": ~0.70.8
+    "@types/react-native": ~0.71.3
     color: ^4.2.3
     del-cli: ^5.0.0
     react: 18.2.0
@@ -6257,7 +6257,7 @@ __metadata:
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.27
-    "@types/react-native": ~0.70.8
+    "@types/react-native": ~0.71.3
     del-cli: ^5.0.0
     react: 18.2.0
     react-native: 0.71.3
@@ -6289,7 +6289,7 @@ __metadata:
     "@types/node-fetch": ^2.5.10
     "@types/react": ~18.0.27
     "@types/react-dom": ~18.0.10
-    "@types/react-native": ~0.70.8
+    "@types/react-native": ~0.71.3
     babel-loader: ^8.2.2
     babel-plugin-module-resolver: ^4.0.0
     babel-preset-expo: ^9.3.0
@@ -6339,7 +6339,7 @@ __metadata:
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.27
-    "@types/react-native": ~0.70.8
+    "@types/react-native": ~0.71.3
     "@types/react-native-vector-icons": ^6.4.10
     del-cli: ^5.0.0
     react: 18.2.0
@@ -6366,7 +6366,7 @@ __metadata:
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.27
-    "@types/react-native": ~0.70.8
+    "@types/react-native": ~0.71.3
     color: ^4.2.3
     del-cli: ^5.0.0
     react: 18.2.0
@@ -6393,7 +6393,7 @@ __metadata:
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.27
-    "@types/react-native": ~0.70.8
+    "@types/react-native": ~0.71.3
     del-cli: ^5.0.0
     react: 18.2.0
     react-native: 0.71.3
@@ -6418,7 +6418,7 @@ __metadata:
     "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.27
     "@types/react-dom": ~18.0.10
-    "@types/react-native": ~0.70.8
+    "@types/react-native": ~0.71.3
     del-cli: ^5.0.0
     escape-string-regexp: ^4.0.0
     fast-deep-equal: ^3.1.3
@@ -6454,7 +6454,7 @@ __metadata:
     "@testing-library/react-native": ^11.5.0
     "@types/color": ^3.0.1
     "@types/react": ~18.0.27
-    "@types/react-native": ~0.70.8
+    "@types/react-native": ~0.71.3
     color: ^4.2.3
     del-cli: ^5.0.0
     react: 18.2.0
@@ -7271,12 +7271,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-native@npm:~0.70.8":
-  version: 0.70.14
-  resolution: "@types/react-native@npm:0.70.14"
+"@types/react-native@npm:~0.71.3":
+  version: 0.71.8
+  resolution: "@types/react-native@npm:0.71.8"
   dependencies:
     "@types/react": "*"
-  checksum: 6df79ca70fe0643229dc23ad5121b4bdc80347a10ea8b352e89a97dda6e6f234c5a035e1d88debd3452f91964b95e7cc9a157105c9e09d93cadd28fd079394ba
+  checksum: 20ea5ee86a6695273fc4b76c736b8975758205bc5f1f223c6c34f07b485502a7851e20f9c9b368cbea6a83c8a59c3e7d0c1b60bf4d7ce5329916d2f3934a8250
   languageName: node
   linkType: hard
 

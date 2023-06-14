@@ -54,7 +54,7 @@
     "@types/node-fetch": "^2.5.10",
     "@types/react": "~18.0.27",
     "@types/react-dom": "~18.0.10",
-    "@types/react-native": "~0.70.8",
+    "@types/react-native": "~0.71.3",
     "babel-loader": "^8.2.2",
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-preset-expo": "^9.3.0",
