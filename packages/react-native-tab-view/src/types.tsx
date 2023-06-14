@@ -33,7 +33,7 @@ export type Listener = (value: number) => void;
 
 export type SceneRendererProps = {
   layout: Layout;
-  position: Animated.AnimatedInterpolation;
+  position: Animated.AnimatedInterpolation<number>;
   jumpTo: (key: string) => void;
 };
 

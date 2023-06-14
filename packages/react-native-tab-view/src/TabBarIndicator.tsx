@@ -23,7 +23,7 @@ export type Props<T extends Route> = SceneRendererProps & {
 };
 
 const getTranslateX = (
-  position: Animated.AnimatedInterpolation,
+  position: Animated.AnimatedInterpolation<number>,
   routes: Route[],
   getTabWidth: GetTabWidth,
   gap?: number

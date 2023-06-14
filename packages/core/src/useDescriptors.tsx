@@ -177,6 +177,7 @@ export default function useDescriptors<
       (acc, curr) =>
         Object.assign(
           acc,
+          // @ts-expect-error: we check for function but TS still complains
           typeof curr !== 'function' ? curr : curr({ route, navigation })
         ),
       {} as ScreenOptions

@@ -702,7 +702,7 @@ export type PathConfig<ParamList extends {}> = {
 export type PathConfigMap<ParamList extends {}> = {
   [RouteName in keyof ParamList]?: NonNullable<
     ParamList[RouteName]
-  > extends NavigatorScreenParams<infer T, any>
+  > extends NavigatorScreenParams<infer T>
     ? string | PathConfig<T>
     : string | Omit<PathConfig<{}>, 'screens' | 'initialRouteName'>;
 };
