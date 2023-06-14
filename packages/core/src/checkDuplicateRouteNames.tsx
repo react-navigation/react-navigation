@@ -7,7 +7,7 @@ export default function checkDuplicateRouteNames(state: NavigationState) {
     location: string,
     state: NavigationState | PartialState<NavigationState>
   ) => {
-    state.routes.forEach((route: typeof state.routes[0]) => {
+    state.routes.forEach((route: (typeof state.routes)[0]) => {
       const currentLocation = location
         ? `${location} > ${route.name}`
         : route.name;
