@@ -168,9 +168,10 @@ export default function HeaderConfig({
             ? 'transparent'
             : colors.card)
         }
-        backTitle={headerBackTitleVisible ? headerBackTitle : ' '}
+        backTitle={headerBackTitle}
         backTitleFontFamily={backTitleFontFamily}
         backTitleFontSize={headerBackTitleStyleFlattened.fontSize}
+        backTitleVisible={headerBackTitleVisible}
         blurEffect={headerBlurEffect}
         color={tintColor}
         direction={I18nManager.getConstants().isRTL ? 'rtl' : 'ltr'}
