@@ -168,7 +168,7 @@ export default function HeaderConfig({
             ? 'transparent'
             : colors.card)
         }
-        backTitle={headerBackTitle}
+        backTitle={headerBackTitleVisible ? headerBackTitle : ' '}
         backTitleFontFamily={backTitleFontFamily}
         backTitleFontSize={headerBackTitleStyleFlattened.fontSize}
         backTitleVisible={headerBackTitleVisible}
