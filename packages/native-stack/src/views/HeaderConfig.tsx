@@ -9,6 +9,8 @@ import {
   View,
 } from 'react-native';
 import {
+  // @ts-expect-error: available in newer versions of react-native-screens
+  isNewBackTitleImplementation,
   isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,
   ScreenStackHeaderCenterView,
@@ -168,10 +170,14 @@ export default function HeaderConfig({
             ? 'transparent'
             : colors.card)
         }
-        backTitle={headerBackTitleVisible ? headerBackTitle : ' '}
+        backTitle={
+          isNewBackTitleImplementation || headerBackTitleVisible
+            ? headerBackTitle
+            : ' '
+        }
+        backTitleVisible={headerBackTitleVisible}
         backTitleFontFamily={backTitleFontFamily}
         backTitleFontSize={headerBackTitleStyleFlattened.fontSize}
-        backTitleVisible={headerBackTitleVisible}
         blurEffect={headerBlurEffect}
         color={tintColor}
         direction={I18nManager.getConstants().isRTL ? 'rtl' : 'ltr'}
