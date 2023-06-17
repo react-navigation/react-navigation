@@ -95,6 +95,7 @@ function MaterialBottomTabViewInner({
   navigation,
   descriptors,
   safeAreaInsets,
+  renderTouchable,
   ...rest
 }: Props) {
   const insets = useSafeAreaInsets();
@@ -165,7 +166,7 @@ function MaterialBottomTabViewInner({
                 />
               );
             }
-          : undefined
+          : renderTouchable
       }
       renderIcon={({ route, focused, color }) => {
         const { options } = descriptors[route.key];
