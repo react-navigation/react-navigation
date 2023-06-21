@@ -58,7 +58,7 @@ export const CustomIndicator = () => {
       navigationState: State;
       getTabWidth: (i: number) => number;
       gap?: number;
-      width: number | string | undefined;
+      width?: number | string;
       style?: StyleProp<ViewStyle>;
     }
   ) => {

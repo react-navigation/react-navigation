@@ -126,7 +126,7 @@ const getComputedTabWidth = (
   flattenedWidth: FlattenedTabWidth,
   flattenedPaddingLeft: FlattenedTabPadding,
   flattenedPaddingRight: FlattenedTabPadding,
-  gap: number | undefined
+  gap?: number
 ) => {
   if (flattenedWidth === 'auto') {
     return tabWidths[routes[index].key] || 0;
