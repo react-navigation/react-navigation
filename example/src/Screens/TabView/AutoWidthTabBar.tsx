@@ -49,7 +49,7 @@ export const AutoWidthTabBar = () => {
       contentContainerStyle={styles.tabbarContentContainer}
       labelStyle={styles.label}
       tabStyle={styles.tabStyle}
-      gap={40}
+      gap={20}
     />
   );
 
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#3f51b5',
   },
   tabbarContentContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
   indicator: {
     backgroundColor: '#ffeb3b',

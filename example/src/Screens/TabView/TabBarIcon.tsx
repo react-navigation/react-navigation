@@ -47,7 +47,7 @@ export const TabBarIcon = () => {
       renderIcon={renderIcon}
       style={styles.tabbar}
       contentContainerStyle={styles.tabbarContentContainer}
-      gap={40}
+      gap={20}
     />
   );
 
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e91e63',
   },
   tabbarContentContainer: {
-    paddingHorizontal: '15%',
+    paddingHorizontal: '10%',
   },
   indicator: {
     backgroundColor: '#ffeb3b',

@@ -134,7 +134,7 @@ export const CustomIndicator = () => {
         renderIndicator={renderIndicator}
         style={styles.tabbar}
         contentContainerStyle={styles.tabbarContentContainer}
-        gap={40}
+        gap={20}
       />
     </View>
   );
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   tabbarContentContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
   icon: {
     backgroundColor: 'transparent',
