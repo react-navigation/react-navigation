@@ -153,7 +153,12 @@ const getRouteConfigsFromChildren = <
           ? `'${
               typeof child.type === 'string' ? child.type : child.type?.name
             }'${
-              child.props?.name ? ` for the screen '${child.props.name}'` : ''
+              child.props != null &&
+              typeof child.props === 'object' &&
+              'name' in child.props &&
+              child.props?.name
+                ? ` for the screen '${child.props.name}'`
+                : ''
             }`
           : typeof child === 'object'
           ? JSON.stringify(child)

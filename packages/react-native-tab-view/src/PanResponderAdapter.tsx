@@ -28,7 +28,7 @@ type Props<T extends Route> = PagerProps & {
     props: EventEmitterProps & {
       // Animated value which represents the state of current index
       // It can include fractional digits as it represents the intermediate value
-      position: Animated.AnimatedInterpolation;
+      position: Animated.AnimatedInterpolation<number>;
       // Function to actually render the content of the pager
       // The parent component takes care of rendering
       render: (children: React.ReactNode) => React.ReactNode;
