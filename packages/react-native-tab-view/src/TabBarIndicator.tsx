@@ -116,7 +116,7 @@ export function TabBarIndicator<T extends Route>({
               })
             : outputRange[0],
       },
-      { translateX: 0.5 }
+      { translateX: I18nManager.isRTL ? -0.5 : 0.5 }
     );
   }
 
