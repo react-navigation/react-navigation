@@ -404,7 +404,7 @@ export type StackCardInterpolationProps = {
   /**
    * Animated node representing multiplier when direction is inverted (-1 - inverted, 1 - normal).
    */
-  inverted: Animated.AnimatedInterpolation<1 | -1>;
+  inverted: Animated.AnimatedInterpolation<-1 | 1>;
   /**
    * Layout measurements for various items we use for animation.
    */
