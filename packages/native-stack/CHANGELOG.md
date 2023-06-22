@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.9.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.9.12...@react-navigation/native-stack@6.9.13) (2023-06-22)
+
+### Bug Fixes
+
+* fix headerBackTitleVisible in native-stack ([#11423](https://github.com/react-navigation/react-navigation/issues/11423)) ([596c633](https://github.com/react-navigation/react-navigation/commit/596c633f78d8f0aef2b7df7c4ec308cbe4b26fe5)) - by @kacperkapusciak
+
 ## [6.9.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.9.11...@react-navigation/native-stack@6.9.12) (2023-02-26)
 
 ### Bug Fixes
