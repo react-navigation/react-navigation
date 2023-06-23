@@ -3,13 +3,12 @@
 import { useScrollToTop } from '@react-navigation/native';
 import * as React from 'react';
 import {
-  Dimensions,
   Image,
   Platform,
-  ScaledSize,
   ScrollView,
   ScrollViewProps,
   StyleSheet,
+  useWindowDimensions,
   View,
 } from 'react-native';
 
@@ -41,17 +40,7 @@ const COVERS = [
 ];
 
 export default function Albums(props: Partial<ScrollViewProps>) {
-  const [dimensions, setDimensions] = React.useState(Dimensions.get('window'));
-
-  React.useEffect(() => {
-    const onDimensionsChange = ({ window }: { window: ScaledSize }) => {
-      setDimensions(window);
-    };
-
-    Dimensions.addEventListener('change', onDimensionsChange);
-
-    return () => Dimensions.removeEventListener('change', onDimensionsChange);
-  }, []);
+  const dimensions = useWindowDimensions();
 
   const ref = React.useRef<ScrollView>(null);
 

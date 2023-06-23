@@ -12,7 +12,10 @@ type Props<ParamList extends ReactNavigation.RootParamList> = {
   onPress?: (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
   ) => void;
-} & (TextProps & { children: React.ReactNode });
+} & (Omit<TextProps, 'disabled'> & {
+  disabled?: boolean | null;
+  children: React.ReactNode;
+});
 
 /**
  * Component to render link to another screen using a path.

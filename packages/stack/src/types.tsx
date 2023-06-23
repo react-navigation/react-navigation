@@ -107,17 +107,17 @@ export type SceneProgress = {
   /**
    * Progress value of the current screen.
    */
-  current: Animated.AnimatedInterpolation;
+  current: Animated.AnimatedInterpolation<number>;
   /**
    * Progress value for the screen after this one in the stack.
    * This can be `undefined` in case the screen animating is the last one.
    */
-  next?: Animated.AnimatedInterpolation;
+  next?: Animated.AnimatedInterpolation<number>;
   /**
    * Progress value for the screen before this one in the stack.
    * This can be `undefined` in case the screen animating is the first one.
    */
-  previous?: Animated.AnimatedInterpolation;
+  previous?: Animated.AnimatedInterpolation<number>;
 };
 
 export type StackHeaderMode = 'float' | 'screen';
@@ -377,7 +377,7 @@ export type StackCardInterpolationProps = {
     /**
      * Animated node representing the progress value of the current screen.
      */
-    progress: Animated.AnimatedInterpolation;
+    progress: Animated.AnimatedInterpolation<number>;
   };
   /**
    * Values for the screen after this one in the stack.
@@ -387,7 +387,7 @@ export type StackCardInterpolationProps = {
     /**
      * Animated node representing the progress value of the next screen.
      */
-    progress: Animated.AnimatedInterpolation;
+    progress: Animated.AnimatedInterpolation<number>;
   };
   /**
    * The index of the card with this interpolation in the stack.
@@ -396,15 +396,15 @@ export type StackCardInterpolationProps = {
   /**
    * Animated node representing whether the card is closing (1 - closing, 0 - not closing).
    */
-  closing: Animated.AnimatedInterpolation;
+  closing: Animated.AnimatedInterpolation<0 | 1>;
   /**
    * Animated node representing whether the card is being swiped (1 - swiping, 0 - not swiping).
    */
-  swiping: Animated.AnimatedInterpolation;
+  swiping: Animated.AnimatedInterpolation<0 | 1>;
   /**
    * Animated node representing multiplier when direction is inverted (-1 - inverted, 1 - normal).
    */
-  inverted: Animated.AnimatedInterpolation;
+  inverted: Animated.AnimatedInterpolation<-1 | 1>;
   /**
    * Layout measurements for various items we use for animation.
    */
@@ -456,7 +456,7 @@ export type StackHeaderInterpolationProps = {
     /**
      * Animated node representing the progress value of the current screen.
      */
-    progress: Animated.AnimatedInterpolation;
+    progress: Animated.AnimatedInterpolation<number>;
   };
   /**
    * Values for the screen after this one in the stack.
@@ -466,7 +466,7 @@ export type StackHeaderInterpolationProps = {
     /**
      * Animated node representing the progress value of the next screen.
      */
-    progress: Animated.AnimatedInterpolation;
+    progress: Animated.AnimatedInterpolation<number>;
   };
   /**
    * Layout measurements for various items we use for animation.

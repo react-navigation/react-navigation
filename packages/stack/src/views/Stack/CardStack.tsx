@@ -583,7 +583,11 @@ export default class CardStack extends React.Component<Props, State> {
             // For those that should be active, but are not the top screen, the value is 1
             // For those on top of the stack and with interaction enabled, the value is 2
             // For the old implementation, it stays the same it was
-            let isScreenActive: Animated.AnimatedInterpolation | 2 | 1 | 0 = 1;
+            let isScreenActive:
+              | Animated.AnimatedInterpolation<0 | 1 | 2>
+              | 2
+              | 1
+              | 0 = 1;
 
             if (index < self.length - activeScreensLimit - 1) {
               // screen should be inactive because it is too deep in the stack

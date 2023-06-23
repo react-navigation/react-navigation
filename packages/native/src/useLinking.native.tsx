@@ -43,6 +43,7 @@ export default function useLinking(
         | undefined;
 
       // Storing this in a local variable stops Jest from complaining about import after teardown
+      // @ts-expect-error: removeEventListener is not present in newer RN versions
       const removeEventListener = Linking.removeEventListener?.bind(Linking);
 
       return () => {
@@ -194,8 +195,7 @@ export default function useLinking(
             console.warn(
               `An error occurred when trying to handle the link '${url}': ${
                 typeof e === 'object' && e != null && 'message' in e
-                  ? // @ts-expect-error: we're already checking for this
-                    e.message
+                  ? e.message
                   : e
               }`
             );

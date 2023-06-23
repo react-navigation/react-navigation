@@ -9,6 +9,8 @@ import {
   View,
 } from 'react-native';
 import {
+  // @ts-expect-error: Available since react-native-screens v3.21
+  isNewBackTitleImplementation,
   isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,
   ScreenStackHeaderCenterView,
@@ -168,7 +170,13 @@ export default function HeaderConfig({
             ? 'transparent'
             : colors.card)
         }
-        backTitle={headerBackTitleVisible ? headerBackTitle : ' '}
+        backTitle={
+          isNewBackTitleImplementation || headerBackTitleVisible
+            ? headerBackTitle
+            : ' '
+        }
+        // @ts-expect-error: Available since react-native-screens v3.21
+        backTitleVisible={headerBackTitleVisible}
         backTitleFontFamily={backTitleFontFamily}
         backTitleFontSize={headerBackTitleStyleFlattened.fontSize}
         blurEffect={headerBlurEffect}
