@@ -120,19 +120,35 @@ export function TabBarIndicator<T extends Route>({
     );
   }
 
+  const styleList = [];
+
+  // scaleX doesn't work on chrome and opera for linux, including their
+  // versions for android
+  if (Platform.OS === 'web' && width === 'auto') {
+    styleList.push(
+      { width: transform[1].scaleX },
+      { left: transform[0].translateX },
+    );
+  }
+  else {
+    styleList.push(
+      { width: width === 'auto' ? 1 : width },
+      // If layout is not available, use `left` property for positioning the indicator
+      // This avoids rendering delay until we are able to calculate translateX
+      // If platform is macos use `left` property as `transform` is broken at the moment.
+      // See: https://github.com/microsoft/react-native-macos/issues/280
+      layout.width && Platform.OS !== 'macos'
+        ? { left: 0 }
+        : { left: `${(100 / routes.length) * navigationState.index}%` },
+      { transform },
+    );
+  }
+
   return (
     <Animated.View
       style={[
         styles.indicator,
-        { width: width === 'auto' ? 1 : width },
-        // If layout is not available, use `left` property for positioning the indicator
-        // This avoids rendering delay until we are able to calculate translateX
-        // If platform is macos use `left` property as `transform` is broken at the moment.
-        // See: https://github.com/microsoft/react-native-macos/issues/280
-        layout.width && Platform.OS !== 'macos'
-          ? { left: 0 }
-          : { left: `${(100 / routes.length) * navigationState.index}%` },
-        { transform },
+        ...styleList,
         width === 'auto' ? { opacity: opacity } : null,
         style,
       ]}
