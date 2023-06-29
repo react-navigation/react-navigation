@@ -122,7 +122,7 @@ function MaterialBottomTabViewInner({
   return (
     <BottomNavigation
       {...rest}
-      theme={theme}
+      theme={rest.theme ? {...theme, ...rest.theme} : theme}
       navigationState={state}
       onIndexChange={(index: number) =>
         navigation.dispatch({
