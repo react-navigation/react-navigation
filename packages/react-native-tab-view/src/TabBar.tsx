@@ -579,7 +579,7 @@ export function TabBar<T extends Route>({
   const contentContainerStyleMemoized = React.useMemo(
     () => [
       styles.tabContent,
-      scrollEnabled ? { width: tabBarWidth } : styles.container,
+      scrollEnabled ? { width: tabBarWidth } : null,
       contentContainerStyle,
     ],
     [contentContainerStyle, scrollEnabled, tabBarWidth]
@@ -690,9 +690,6 @@ export function TabBar<T extends Route>({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   scroll: {
     overflow: Platform.select({ default: 'scroll', web: undefined }),
   },
@@ -709,6 +706,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   tabContent: {
+    flexGrow: 1,
     flexDirection: 'row',
     flexWrap: 'nowrap',
   },
