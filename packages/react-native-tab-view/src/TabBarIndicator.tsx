@@ -127,10 +127,9 @@ export function TabBarIndicator<T extends Route>({
   if (Platform.OS === 'web' && width === 'auto') {
     styleList.push(
       { width: transform[1].scaleX },
-      { left: transform[0].translateX },
+      { left: transform[0].translateX }
     );
-  }
-  else {
+  } else {
     styleList.push(
       { width: width === 'auto' ? 1 : width },
       // If layout is not available, use `left` property for positioning the indicator
@@ -140,7 +139,7 @@ export function TabBarIndicator<T extends Route>({
       layout.width && Platform.OS !== 'macos'
         ? { left: 0 }
         : { left: `${(100 / routes.length) * navigationState.index}%` },
-      { transform },
+      { transform }
     );
   }
 
