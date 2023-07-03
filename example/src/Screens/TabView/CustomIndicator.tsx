@@ -1,6 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as React from 'react';
-import { Animated, I18nManager, StyleSheet, Text, View } from 'react-native';
+import {
+  Animated,
+  I18nManager,
+  StyleProp,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   NavigationState,
@@ -49,9 +57,12 @@ export const CustomIndicator = () => {
     props: SceneRendererProps & {
       navigationState: State;
       getTabWidth: (i: number) => number;
+      gap?: number;
+      width?: number | string;
+      style?: StyleProp<ViewStyle>;
     }
   ) => {
-    const { position, navigationState, getTabWidth } = props;
+    const { position, getTabWidth, gap, width, style } = props;
     const inputRange = [
       0, 0.48, 0.49, 0.51, 0.52, 1, 1.48, 1.49, 1.51, 1.52, 2,
     ];
@@ -73,16 +84,19 @@ export const CustomIndicator = () => {
       inputRange: inputRange,
       outputRange: inputRange.map((x) => {
         const i = Math.round(x);
-        return i * getTabWidth(i) * (I18nManager.isRTL ? -1 : 1);
+        return (
+          (i * getTabWidth(i) + i * (gap ?? 0)) * (I18nManager.isRTL ? -1 : 1)
+        );
       }),
     });
 
     return (
       <Animated.View
         style={[
+          style,
           styles.container,
           {
-            width: `${100 / navigationState.routes.length}%`,
+            width: width,
             transform: [{ translateX }] as any,
           },
         ]}
@@ -119,6 +133,8 @@ export const CustomIndicator = () => {
         renderBadge={renderBadge}
         renderIndicator={renderIndicator}
         style={styles.tabbar}
+        contentContainerStyle={styles.tabbarContentContainer}
+        gap={20}
       />
     </View>
   );
@@ -150,6 +166,9 @@ const styles = StyleSheet.create({
   tabbar: {
     backgroundColor: '#263238',
     overflow: 'hidden',
+  },
+  tabbarContentContainer: {
+    paddingHorizontal: 10,
   },
   icon: {
     backgroundColor: 'transparent',
