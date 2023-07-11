@@ -336,6 +336,10 @@ export class Card extends React.Component<Props> {
         onGestureEnd?.();
         break;
       }
+      case GestureState.FAILED: {
+        this.handleEndInteraction();
+        break;
+      }
     }
   };
 
