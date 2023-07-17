@@ -85,7 +85,7 @@ export function NativeStackView({ state, descriptors }: Props) {
               focused={isFocused}
               route={route}
               navigation={navigation}
-              headerShown={headerShown}
+              headerShown={typeof headerShown === 'function' ? headerShown() : headerShown}
               headerTransparent={headerTransparent}
               header={
                 header !== undefined ? (
