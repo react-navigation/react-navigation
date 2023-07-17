@@ -217,7 +217,7 @@ export type NativeStackNavigationOptions = {
    * Whether to show the header. The header is shown by default.
    * Setting this to `false` hides the header.
    */
-  headerShown?: boolean;
+  headerShown?: boolean | () => boolean;
   /**
    * Style object for header. Supported properties:
    * - backgroundColor
