@@ -21,7 +21,6 @@ import type {
 export type Props<T extends Route> = PagerProps & {
   onIndexChange: (index: number) => void;
   navigationState: NavigationState<T>;
-  renderScene: (props: SceneRendererProps & { route: T }) => React.ReactNode;
   renderLazyPlaceholder?: (props: { route: T }) => React.ReactNode;
   renderTabBar?: (
     props: SceneRendererProps & { navigationState: NavigationState<T> }
@@ -33,6 +32,7 @@ export type Props<T extends Route> = PagerProps & {
   sceneContainerStyle?: StyleProp<ViewStyle>;
   pagerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
+  renderScene?: (props: SceneRendererProps & { route: T }) => React.ReactNode;
 };
 
 export function TabView<T extends Route>({
@@ -125,7 +125,7 @@ export function TabView<T extends Route>({
                       {({ loading }) =>
                         loading
                           ? renderLazyPlaceholder({ route })
-                          : renderScene({
+                          : renderScene?.({
                               ...sceneRendererProps,
                               route,
                             })

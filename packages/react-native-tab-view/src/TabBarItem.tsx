@@ -13,7 +13,7 @@ import useLatestCallback from 'use-latest-callback';
 
 import { PlatformPressable } from './PlatformPressable';
 import { TabBarItemLabel } from './TabBarItemLabel';
-import type { NavigationState, Route, Scene } from './types';
+import type { NavigationState, Route, TabDescriptor } from './types';
 
 export type Props<T extends Route> = {
   position: Animated.AnimatedInterpolation<number>;
@@ -23,21 +23,7 @@ export type Props<T extends Route> = {
   inactiveColor?: string;
   pressColor?: string;
   pressOpacity?: number;
-  getLabelText: (scene: Scene<T>) => string | undefined;
-  getAccessible: (scene: Scene<T>) => boolean | undefined;
-  getAccessibilityLabel: (scene: Scene<T>) => string | undefined;
-  getTestID: (scene: Scene<T>) => string | undefined;
-  renderLabel?: (scene: {
-    route: T;
-    focused: boolean;
-    color: string;
-  }) => React.ReactNode;
-  renderIcon?: (scene: {
-    route: T;
-    focused: boolean;
-    color: string;
-  }) => React.ReactNode;
-  renderBadge?: (scene: Scene<T>) => React.ReactNode;
+  options?: TabDescriptor<T>;
   onLayout?: (event: LayoutChangeEvent) => void;
   onPress: () => void;
   onLongPress: () => void;
@@ -49,6 +35,7 @@ export type Props<T extends Route> = {
 
 const DEFAULT_ACTIVE_COLOR = 'rgba(255, 255, 255, 1)';
 const DEFAULT_INACTIVE_COLOR = 'rgba(255, 255, 255, 0.7)';
+const ICON_SIZE = 24;
 
 const getActiveOpacity = (
   position: Animated.AnimatedInterpolation<number>,
@@ -91,26 +78,22 @@ type TabBarItemInternalProps<T extends Route> = Omit<
   | 'getLabelText'
   | 'getTestID'
   | 'getAccessible'
+  | 'options'
 > & {
   isFocused: boolean;
   index: number;
   routesLength: number;
-  accessibilityLabel?: string;
-  label?: string;
-  testID?: string;
-  accessible?: boolean;
-};
+} & TabDescriptor<T>;
 
 const TabBarItemInternal = <T extends Route>({
   accessibilityLabel,
   accessible,
-  label: labelText,
+  label: customlabel,
   testID,
   onLongPress,
   onPress,
   isFocused,
   position,
-  route,
   style,
   inactiveColor: inactiveColorCustom,
   activeColor: activeColorCustom,
@@ -119,12 +102,14 @@ const TabBarItemInternal = <T extends Route>({
   index: tabIndex,
   pressColor,
   pressOpacity,
-  renderBadge,
-  renderIcon,
   defaultTabWidth,
+  icon: customIcon,
+  badge: customBadge,
+  labelText,
   routesLength,
-  renderLabel: renderLabelCustom,
   android_ripple = { borderless: true },
+  labelAllowFontScaling,
+  route,
 }: TabBarItemInternalProps<T>) => {
   const labelColorFromStyle = StyleSheet.flatten(labelStyle || {}).color;
 
@@ -144,73 +129,76 @@ const TabBarItemInternal = <T extends Route>({
   const activeOpacity = getActiveOpacity(position, routesLength, tabIndex);
   const inactiveOpacity = getInactiveOpacity(position, routesLength, tabIndex);
 
-  let icon: React.ReactNode | null = null;
-  let label: React.ReactNode | null = null;
-
-  if (renderIcon) {
-    const activeIcon = renderIcon({
-      route,
-      focused: true,
-      color: activeColor,
-    });
-    const inactiveIcon = renderIcon({
-      route,
-      focused: false,
-      color: inactiveColor,
-    });
-
-    if (inactiveIcon != null && activeIcon != null) {
-      icon = (
-        <View style={styles.icon}>
-          <Animated.View style={{ opacity: inactiveOpacity }}>
-            {inactiveIcon}
-          </Animated.View>
-          <Animated.View
-            style={[StyleSheet.absoluteFill, { opacity: activeOpacity }]}
-          >
-            {activeIcon}
-          </Animated.View>
-        </View>
-      );
+  const icon = React.useMemo(() => {
+    if (!customIcon) {
+      return null;
     }
-  }
 
-  const renderLabel = renderLabelCustom
-    ? renderLabelCustom
-    : (labelProps: { color: string }) => (
-        <TabBarItemLabel
-          {...labelProps}
-          icon={icon}
-          label={labelText}
-          labelStyle={labelStyle}
-        />
-      );
-
-  if (renderLabel) {
-    const activeLabel = renderLabel({
-      route,
-      focused: true,
-      color: activeColor,
-    });
-    const inactiveLabel = renderLabel({
-      route,
+    const inactiveIcon = customIcon({
       focused: false,
       color: inactiveColor,
+      size: ICON_SIZE,
+      route,
     });
 
-    label = (
-      <View>
+    const activeIcon = customIcon({
+      focused: true,
+      color: activeColor,
+      size: ICON_SIZE,
+      route,
+    });
+
+    return (
+      <View style={styles.icon}>
         <Animated.View style={{ opacity: inactiveOpacity }}>
-          {inactiveLabel}
+          {inactiveIcon}
         </Animated.View>
         <Animated.View
           style={[StyleSheet.absoluteFill, { opacity: activeOpacity }]}
         >
-          {activeLabel}
+          {activeIcon}
         </Animated.View>
       </View>
     );
-  }
+  }, [
+    activeColor,
+    activeOpacity,
+    customIcon,
+    inactiveColor,
+    inactiveOpacity,
+    route,
+  ]);
+
+  const renderLabel = React.useCallback(
+    (focused: boolean) =>
+      customlabel ? (
+        customlabel({
+          focused,
+          color: focused ? activeColor : inactiveColor,
+          style: labelStyle,
+          label: labelText,
+          allowFontScaling: labelAllowFontScaling,
+          route,
+        })
+      ) : (
+        <TabBarItemLabel
+          color={focused ? activeColor : inactiveColor}
+          icon={icon}
+          label={labelText}
+          labelStyle={labelStyle}
+        />
+      ),
+    [
+      customlabel,
+      activeColor,
+      labelStyle,
+      labelText,
+      labelAllowFontScaling,
+      route,
+      inactiveColor,
+      icon,
+    ]
+  );
 
   const tabStyle = StyleSheet.flatten(style);
   const isWidthSet = tabStyle?.width !== undefined;
@@ -219,12 +207,8 @@ const TabBarItemInternal = <T extends Route>({
     ? null
     : { width: defaultTabWidth };
 
-  const scene = { route };
-
   accessibilityLabel =
     typeof accessibilityLabel !== 'undefined' ? accessibilityLabel : labelText;
-
-  const badge = renderBadge ? renderBadge(scene) : null;
 
   return (
     <PlatformPressable
@@ -246,8 +230,19 @@ const TabBarItemInternal = <T extends Route>({
     >
       <View pointerEvents="none" style={[styles.item, tabStyle]}>
         {icon}
-        {label}
-        {badge != null ? <View style={styles.badge}>{badge}</View> : null}
+        <View>
+          <Animated.View style={{ opacity: inactiveOpacity }}>
+            {renderLabel(false)}
+          </Animated.View>
+          <Animated.View
+            style={[StyleSheet.absoluteFill, { opacity: activeOpacity }]}
+          >
+            {renderLabel(true)}
+          </Animated.View>
+        </View>
+        {customBadge != null ? (
+          <View style={styles.badge}>{customBadge()}</View>
+        ) : null}
       </View>
     </PlatformPressable>
   );
@@ -264,10 +259,7 @@ export function TabBarItem<T extends Route>(props: Props<T>) {
     onLayout,
     navigationState,
     route,
-    getAccessibilityLabel,
-    getLabelText,
-    getTestID,
-    getAccessible,
+    options,
     ...rest
   } = props;
   const onPressLatest = useLatestCallback(onPress);
@@ -276,16 +268,10 @@ export function TabBarItem<T extends Route>(props: Props<T>) {
 
   const tabIndex = navigationState.routes.indexOf(route);
 
-  const scene = { route };
-
-  const accessibilityLabel = getAccessibilityLabel(scene);
-  const label = getLabelText(scene);
-  const testID = getTestID(scene);
-  const accessible = getAccessible(scene);
-
   return (
     <MemoizedTabBarItemInternal
       {...rest}
+      {...options}
       onPress={onPressLatest}
       onLayout={onLayoutLatest}
       onLongPress={onLongPressLatest}
@@ -293,10 +279,6 @@ export function TabBarItem<T extends Route>(props: Props<T>) {
       route={route}
       index={tabIndex}
       routesLength={navigationState.routes.length}
-      accessibilityLabel={accessibilityLabel}
-      label={label}
-      testID={testID}
-      accessible={accessible}
     />
   );
 }

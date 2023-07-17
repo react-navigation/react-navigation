@@ -34,9 +34,9 @@ export const TabBarIcon = () => {
     { key: 'article', icon: 'md-list' },
   ]);
 
-  const renderIcon = ({ route, color }: { route: Route; color: string }) => (
-    <Ionicons name={route.icon} size={24} color={color} />
-  );
+  const renderIcon = React.useCallback((props: { route: Route }) => {
+    return <Ionicons name={props.route.icon} {...props} />;
+  }, []);
 
   const renderTabBar = (
     props: SceneRendererProps & { navigationState: State }
@@ -44,7 +44,9 @@ export const TabBarIcon = () => {
     <TabBar
       {...props}
       indicatorStyle={styles.indicator}
-      renderIcon={renderIcon}
+      commonOptions={{
+        icon: renderIcon,
+      }}
       style={styles.tabbar}
       contentContainerStyle={styles.tabbarContentContainer}
       gap={20}

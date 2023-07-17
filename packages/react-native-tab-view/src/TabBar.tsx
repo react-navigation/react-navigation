@@ -25,6 +25,7 @@ import type {
   Route,
   Scene,
   SceneRendererProps,
+  TabDescriptor,
 } from './types';
 import { useAnimatedValue } from './useAnimatedValue';
 
@@ -36,23 +37,8 @@ export type Props<T extends Route> = SceneRendererProps & {
   inactiveColor?: string;
   pressColor?: string;
   pressOpacity?: number;
-  getLabelText?: (scene: Scene<T>) => string | undefined;
-  getAccessible?: (scene: Scene<T>) => boolean | undefined;
-  getAccessibilityLabel?: (scene: Scene<T>) => string | undefined;
-  getTestID?: (scene: Scene<T>) => string | undefined;
-  renderLabel?: (
-    scene: Scene<T> & {
-      focused: boolean;
-      color: string;
-    }
-  ) => React.ReactNode;
-  renderIcon?: (
-    scene: Scene<T> & {
-      focused: boolean;
-      color: string;
-    }
-  ) => React.ReactNode;
-  renderBadge?: (scene: Scene<T>) => React.ReactNode;
+  options?: Record<string, TabDescriptor<T>>;
+  commonOptions?: TabDescriptor<T>;
   renderIndicator?: (props: IndicatorProps<T>) => React.ReactNode;
   renderTabBarItem?: (
     props: TabBarItemProps<T> & { key: string }
@@ -308,7 +294,6 @@ const getScrollAmount = <T extends Route>({
     flattenedPaddingRight,
   });
 };
-
 const getLabelTextDefault = ({ route }: Scene<Route>) => route.title;
 
 const getAccessibleDefault = ({ route }: Scene<Route>) =>
@@ -332,10 +317,6 @@ const getTestIdDefault = ({ route }: Scene<Route>) => route.testID;
 const MEASURE_PER_BATCH = 10;
 
 export function TabBar<T extends Route>({
-  getLabelText = getLabelTextDefault,
-  getAccessible = getAccessibleDefault,
-  getAccessibilityLabel = getAccessibilityLabelDefault,
-  getTestID = getTestIdDefault,
   renderIndicator = renderIndicatorDefault,
   gap = 0,
   scrollEnabled,
@@ -353,15 +334,14 @@ export function TabBar<T extends Route>({
   onTabPress,
   pressColor,
   pressOpacity,
-  renderBadge,
-  renderIcon,
-  renderLabel,
   renderTabBarItem,
   style,
   tabStyle,
   layout: propLayout,
   testID,
   android_ripple,
+  options,
+  commonOptions,
 }: Props<T>) {
   const [layout, setLayout] = React.useState<Layout>(
     propLayout ?? { width: 0, height: 0 }
@@ -456,13 +436,14 @@ export function TabBar<T extends Route>({
         position: position,
         route: route,
         navigationState: navigationState,
-        getAccessibilityLabel: getAccessibilityLabel,
-        getAccessible: getAccessible,
-        getLabelText: getLabelText,
-        getTestID: getTestID,
-        renderBadge: renderBadge,
-        renderIcon: renderIcon,
-        renderLabel: renderLabel,
+        options: {
+          testID: getTestIdDefault({ route }),
+          labelText: getLabelTextDefault({ route }),
+          accessible: getAccessibleDefault({ route }),
+          accessibilityLabel: getAccessibilityLabelDefault({ route }),
+          ...commonOptions,
+          ...options?.[route.key],
+        },
         activeColor: activeColor,
         inactiveColor: inactiveColor,
         pressColor: pressColor,
@@ -544,33 +525,28 @@ export function TabBar<T extends Route>({
       );
     },
     [
-      activeColor,
-      android_ripple,
-      gap,
-      getAccessibilityLabel,
-      getAccessible,
-      getLabelText,
-      getTestID,
-      inactiveColor,
-      isWidthDynamic,
-      jumpTo,
-      labelStyle,
-      layout,
-      navigationState,
-      onTabLongPress,
-      onTabPress,
       position,
+      navigationState,
+      commonOptions,
+      options,
+      activeColor,
+      inactiveColor,
       pressColor,
       pressOpacity,
-      renderBadge,
-      renderIcon,
-      renderLabel,
-      renderTabBarItem,
+      isWidthDynamic,
+      labelStyle,
+      tabStyle,
+      layout,
       routes,
       scrollEnabled,
-      tabStyle,
-      contentContainerStyle,
       tabWidths,
+      contentContainerStyle,
+      gap,
+      android_ripple,
+      renderTabBarItem,
+      onTabPress,
+      jumpTo,
+      onTabLongPress,
     ]
   );
 
