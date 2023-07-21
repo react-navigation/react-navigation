@@ -3,7 +3,7 @@ import {
   LayoutChangeEvent,
   StyleProp,
   StyleSheet,
-  View,
+  SafeAreaView,
   ViewStyle,
 } from 'react-native';
 
@@ -80,7 +80,7 @@ export function TabView<T extends Route>({
   };
 
   return (
-    <View onLayout={handleLayout} style={[styles.pager, style]}>
+    <SafeAreaView onLayout={handleLayout} style={[styles.pager, style]}>
       <Pager
         layout={layout}
         navigationState={navigationState}
@@ -143,7 +143,7 @@ export function TabView<T extends Route>({
           );
         }}
       </Pager>
-    </View>
+    </SafeAreaView>
   );
 }
 
