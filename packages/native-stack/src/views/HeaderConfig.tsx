@@ -196,11 +196,13 @@ export function HeaderConfig({
       ) : null}
       <ScreenStackHeaderConfig
         backButtonInCustomView={backButtonInCustomView}
+        // @ts-expect-error - no PlatformColor support
         backgroundColor={headerBackgroundColor}
         backTitle={headerBackTitleVisible ? headerBackTitle : ' '}
         backTitleFontFamily={backTitleFontFamily}
         backTitleFontSize={backTitleFontSize}
         blurEffect={headerBlurEffect}
+        // @ts-expect-error - no PlatformColor support
         color={tintColor}
         direction={I18nManager.getConstants().isRTL ? 'rtl' : 'ltr'}
         disableBackButtonMenu={headerBackButtonMenuEnabled === false}
@@ -219,6 +221,7 @@ export function HeaderConfig({
         largeTitleFontWeight={largeTitleFontWeight}
         largeTitleHideShadow={headerLargeTitleShadowVisible === false}
         title={titleText}
+        // @ts-expect-error - no PlatformColor support
         titleColor={titleColor}
         titleFontFamily={titleFontFamily}
         titleFontSize={titleFontSize}

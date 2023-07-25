@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   Animated,
+  ColorValue,
   LayoutChangeEvent,
   PressableAndroidRippleConfig,
   StyleProp,
@@ -19,7 +20,7 @@ export type Props<T extends Route> = {
   position: Animated.AnimatedInterpolation<number>;
   route: T;
   navigationState: NavigationState<T>;
-  activeColor?: string;
+  activeColor?: ColorValue;
   inactiveColor?: string;
   pressColor?: string;
   pressOpacity?: number;
@@ -30,12 +31,12 @@ export type Props<T extends Route> = {
   renderLabel?: (scene: {
     route: T;
     focused: boolean;
-    color: string;
+    color: ColorValue;
   }) => React.ReactNode;
   renderIcon?: (scene: {
     route: T;
     focused: boolean;
-    color: string;
+    color: ColorValue;
   }) => React.ReactNode;
   renderBadge?: (scene: Scene<T>) => React.ReactNode;
   onLayout?: (event: LayoutChangeEvent) => void;
@@ -177,7 +178,7 @@ const TabBarItemInternal = <T extends Route>({
 
   const renderLabel = renderLabelCustom
     ? renderLabelCustom
-    : (labelProps: { color: string }) => (
+    : (labelProps: { color: ColorValue }) => (
         <TabBarItemLabel
           {...labelProps}
           icon={icon}
