@@ -30,7 +30,7 @@ export const Overlay = React.forwardRef(function Overlay(
       // We can send the overlay behind the screen to avoid it
       zIndex: progress.value > PROGRESS_EPSILON ? 0 : -1,
     };
-  });
+  }, [progress.value, PROGRESS_EPSILON]);
 
   const animatedProps = useAnimatedProps(() => {
     const active = progress.value > PROGRESS_EPSILON;
@@ -40,7 +40,7 @@ export const Overlay = React.forwardRef(function Overlay(
       accessibilityElementsHidden: !active,
       importantForAccessibility: active ? 'auto' : 'no-hide-descendants',
     } as const;
-  });
+  }, [progress.value, PROGRESS_EPSILON]);
 
   return (
     <Animated.View
