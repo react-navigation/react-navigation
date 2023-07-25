@@ -310,7 +310,7 @@ export function Drawer({
         : minmax(translationX.value - touchDistance, 0, drawerWidth);
 
     return translateX;
-  });
+  }, [touchStartX, drawerWidth, gestureState, drawerPosition, translationX]);
 
   const isRTL = I18nManager.getConstants().isRTL;
   const drawerAnimatedStyle = useAnimatedStyle(() => {
