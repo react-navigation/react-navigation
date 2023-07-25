@@ -1,9 +1,9 @@
 import React from 'react';
-import type { StyleProp, ViewStyle } from 'react-native';
+import type { ColorValue, StyleProp, ViewStyle } from 'react-native';
 import { Animated, StyleSheet } from 'react-native';
 
 interface TabBarItemLabelProps {
-  color: string;
+  color: ColorValue;
   label?: string;
   labelStyle: StyleProp<ViewStyle>;
   icon: React.ReactNode;

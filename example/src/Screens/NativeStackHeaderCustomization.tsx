@@ -140,7 +140,7 @@ export function NativeStackHeaderCustomization({
           headerTintColor: 'white',
           headerTitle: ({ tintColor }) => (
             <Appbar.Action
-              color={tintColor}
+              color={tintColor as string}
               icon="signal-5g"
               onPress={onPress}
             />
@@ -148,13 +148,17 @@ export function NativeStackHeaderCustomization({
           headerLeft: ({ tintColor, canGoBack }) =>
             canGoBack ? (
               <Appbar.Action
-                color={tintColor}
+                color={tintColor as string}
                 icon="arrow-left-thick"
                 onPress={navigation.goBack}
               />
             ) : null,
           headerRight: ({ tintColor }) => (
-            <Appbar.Action color={tintColor} icon="music" onPress={onPress} />
+            <Appbar.Action
+              color={tintColor as string}
+              icon="music"
+              onPress={onPress}
+            />
           ),
           headerBackground: () => (
             <Image
@@ -171,7 +175,11 @@ export function NativeStackHeaderCustomization({
         options={{
           title: 'Feed',
           headerLeft: ({ tintColor }) => (
-            <Appbar.Action color={tintColor} icon="spa" onPress={onPress} />
+            <Appbar.Action
+              color={tintColor as string}
+              icon="spa"
+              onPress={onPress}
+            />
           ),
         }}
       />
@@ -184,7 +192,11 @@ export function NativeStackHeaderCustomization({
           headerStyle: { backgroundColor: 'papayawhip' },
           headerBackVisible: true,
           headerLeft: ({ tintColor }) => (
-            <Appbar.Action color={tintColor} icon="music" onPress={onPress} />
+            <Appbar.Action
+              color={tintColor as string}
+              icon="music"
+              onPress={onPress}
+            />
           ),
         }}
       />
