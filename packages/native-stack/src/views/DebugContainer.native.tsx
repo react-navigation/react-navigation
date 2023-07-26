@@ -12,8 +12,12 @@ type ContainerProps = ViewProps & {
 // This view must *not* be flattened.
 // See https://github.com/software-mansion/react-native-screens/pull/1825
 // for detailed explanation.
-export let DebugContainer = function(props: ContainerProps): React.ComponentType<ContainerProps> {
-  return <View {...props} collapsable={false} /> as unknown as React.ComponentType<ContainerProps>;
+export let DebugContainer = function (
+  props: ContainerProps
+): React.ComponentType<ContainerProps> {
+  return (
+    <View {...props} collapsable={false} />
+  ) as unknown as React.ComponentType<ContainerProps>;
 };
 
 if (process.env.NODE_ENV !== 'production') {
