@@ -13,7 +13,7 @@ type ContainerProps = ViewProps & {
 // See https://github.com/software-mansion/react-native-screens/pull/1825
 // for detailed explanation.
 export let DebugContainer = function(props: ContainerProps): React.ComponentType<ContainerProps> {
-  return <View {...props} collapsable={false} />;
+  return <View {...props} collapsable={false} /> as unknown as React.ComponentType<ContainerProps>;
 };
 
 if (process.env.NODE_ENV !== 'production') {
