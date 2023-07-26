@@ -331,6 +331,10 @@ const SceneView = ({
                * Otherwise dynamically rendering a custom `header` leaves the native header visible
                *
                * https://github.com/software-mansion/react-native-screens/blob/main/guides/GUIDE_FOR_LIBRARY_AUTHORS.md#screenstackheaderconfig
+               *
+               * HeaderConfig must not be first child of a Screen.
+               * See https://github.com/software-mansion/react-native-screens/pull/1825
+               * for detailed explanation
                */}
               <HeaderConfig
                 {...options}
