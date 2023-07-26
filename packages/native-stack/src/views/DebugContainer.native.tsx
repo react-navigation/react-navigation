@@ -9,6 +9,9 @@ type ContainerProps = ViewProps & {
   children: React.ReactNode;
 };
 
+// This view must *not* be flattened.
+// See https://github.com/software-mansion/react-native-screens/pull/1825
+// for detailed explanation.
 let Container = function(props: ContainerProps): React.ComponentType<ContainerProps> {
   return <View {...props} collapsable={false} />
 };
