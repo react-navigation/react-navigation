@@ -14,6 +14,26 @@ export function createMemoryHistory() {
   let index = 0;
   let items: HistoryRecord[] = [];
 
+  // @ts-ignore no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const log = () => {
+    console.log(
+      JSON.stringify(
+        {
+          index,
+          indexGetter: history.index,
+          items: items.map((item, i) => ({
+            selected: history.index === i ? '<<<<<<<' : undefined,
+            path: item.path,
+            id: item.id,
+            state: item.state?.key || null,
+          })),
+        },
+        null,
+        4
+      )
+    );
+  };
   // Pending callbacks for `history.go(n)`
   // We might modify the callback stored if it was interrupted, so we have a ref to identify it
   const pending: { ref: unknown; cb: (interrupted?: boolean) => void }[] = [];
@@ -215,6 +235,7 @@ export function createMemoryHistory() {
         }
 
         listener();
+        // log();
       };
 
       window.addEventListener('popstate', onPopState);
