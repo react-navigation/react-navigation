@@ -14,12 +14,12 @@ type ContainerProps = ViewProps & {
  * See https://github.com/software-mansion/react-native-screens/pull/1825
  * for detailed explanation.
  */
-export let DebugContainer = (props: ContainerProps) => {
+let DebugContainer = (props: ContainerProps) => {
   return <View {...props} collapsable={false} />;
 };
 
 if (process.env.NODE_ENV !== 'production') {
-  const DebugContainer = (props: ContainerProps) => {
+  DebugContainer = (props: ContainerProps) => {
     const { stackPresentation, ...rest } = props;
 
     if (Platform.OS === 'ios' && stackPresentation !== 'push') {
@@ -33,8 +33,6 @@ if (process.env.NODE_ENV !== 'production') {
 
     return <View {...rest} collapsable={false} />;
   };
-
-  Container = DebugContainer;
 }
 
-export default Container;
+export default DebugContainer;
