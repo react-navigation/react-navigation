@@ -21,7 +21,17 @@ type FlatType<T> = { [K in keyof T]: T[K] } & {};
  * keyof T doesn't work for union types. We can use distributive conditional types instead.
  * https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#distributive-conditional-types
  */
-type KeysOf<T> = T extends any ? keyof T : never;
+type KeysOf<T> = T extends {} ? keyof T : never;
+
+/**
+ * We get a union type when using keyof, but we want an intersection instead.
+ * https://stackoverflow.com/a/50375286/1665026
+ */
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+  k: infer I
+) => void
+  ? I
+  : never;
 
 type UnknownToUndefined<T> = unknown extends T ? undefined : T;
 
@@ -39,14 +49,7 @@ type ParamsForScreen<T> = T extends { screen: StaticNavigation<any, any, any> }
   ? NavigatorScreenParams<StaticParamList<T>> | undefined
   : UnknownToUndefined<ParamsForScreenComponent<T>>;
 
-type ParamListForScreens<
-  Screens extends StaticConfigScreens<
-    ParamListBase,
-    NavigationState,
-    {},
-    EventMapBase
-  >
-> = {
+type ParamListForScreens<Screens extends unknown> = {
   [Key in KeysOf<Screens>]: ParamsForScreen<Screens[Key]>;
 };
 
@@ -73,7 +76,7 @@ type ParamListForGroups<
     >;
   };
 }
-  ? ParamListForScreens<Groups[keyof Groups]['screens']>
+  ? ParamListForScreens<UnionToIntersection<Groups[keyof Groups]['screens']>>
   : {};
 
 type StaticConfigScreens<

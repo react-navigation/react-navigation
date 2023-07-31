@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.1...@react-navigation/core@7.0.0-alpha.2) (2023-06-22)
+
+### Bug Fixes
+
+* fix infering params when a screen is in a group ([5e9f001](https://github.com/react-navigation/react-navigation/commit/5e9f001e770637ce8f438da981b5d069aa7a4532)), closes [#11325](https://github.com/react-navigation/react-navigation/issues/11325) - by @satya164
+
+### Code Refactoring
+
+* drop custom fromEntries in favor of Object.fromEntries ([9fe34b4](https://github.com/react-navigation/react-navigation/commit/9fe34b445fcb86e5666f61e144007d7540f014fa)), closes [/reactnative.dev/blog/2022/06/21/version-069#highlights-of-069](https://github.com//reactnative.dev/blog/2022/06/21/version-069/issues/highlights-of-069) - by @satya164
+
+### Features
+
+* support a top-level path configuration in linking config ([1d0297e](https://github.com/react-navigation/react-navigation/commit/1d0297ed17788c01d7b901ad04b63d3f37f47266)) - by @satya164
+
+### BREAKING CHANGES
+
+* this means we now require at least iOS 12.2 and React Native 0.69 whose minimum supported iOS version is 12.4
+
 # [7.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.0...@react-navigation/core@7.0.0-alpha.1) (2023-03-01)
 
 ### Bug Fixes
