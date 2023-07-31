@@ -337,6 +337,7 @@ export class Card extends React.Component<Props> {
         break;
       }
       case GestureState.FAILED: {
+        this.isSwiping.setValue(FALSE);
         this.handleEndInteraction();
         break;
       }
