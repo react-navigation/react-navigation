@@ -221,8 +221,8 @@ const SceneView = ({
       : insets.top;
 
   // On models with Dynamic Island the status bar height is smaller than the safe area top inset.
-  const hasDynamicIsland = Platform.OS === 'ios' && topInset === 59;
-  const statusBarHeight = hasDynamicIsland ? 54 : topInset;
+  const hasDynamicIsland = Platform.OS === 'ios' && topInset > 50;
+  const statusBarHeight = hasDynamicIsland ? topInset - 5 : topInset;
 
   const { preventedRoutes } = usePreventRemoveContext();
 

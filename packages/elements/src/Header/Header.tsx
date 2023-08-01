@@ -49,8 +49,8 @@ export function Header(props: Props) {
   const isParentHeaderShown = React.useContext(HeaderShownContext);
 
   // On models with Dynamic Island the status bar height is smaller than the safe area top inset.
-  const hasDynamicIsland = Platform.OS === 'ios' && insets.top === 59;
-  const statusBarHeight = hasDynamicIsland ? 54 : insets.top;
+  const hasDynamicIsland = Platform.OS === 'ios' && insets.top > 50;
+  const statusBarHeight = hasDynamicIsland ? insets.top - 5 : insets.top;
 
   const {
     layout = frame,
