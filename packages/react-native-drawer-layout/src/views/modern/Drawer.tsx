@@ -367,7 +367,7 @@ export function Drawer({
           [getDrawerTranslationX(false), getDrawerTranslationX(true)],
           [0, 1]
         );
-  });
+  }, [translateX, drawerType]);
 
   return (
     <DrawerProgressContext.Provider value={progress}>

@@ -19,7 +19,7 @@ const RealDrawer = () => {
         },
       ],
     };
-  });
+  }, [progress]);
 
   return (
     <View style={styles.realDrawerWrapper}>
