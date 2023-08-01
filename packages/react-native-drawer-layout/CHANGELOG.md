@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.1](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@3.2.0...react-native-drawer-layout@3.2.1) (2023-06-22)
+
+**Note:** Version bump only for package react-native-drawer-layout
+
 # [3.2.0](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@3.1.0...react-native-drawer-layout@3.2.0) (2023-03-01)
 
 ### Bug Fixes
