@@ -1,1 +1,1 @@
-export function useBackButton() {}
+export default function useBackButton() {}
