@@ -98,6 +98,7 @@ const MaybeNestedStack = ({
     return (
       <ScreenStack style={styles.container}>
         <Screen enabled style={StyleSheet.absoluteFill}>
+          {content}
           <HeaderConfig
             {...options}
             route={route}
@@ -105,7 +106,6 @@ const MaybeNestedStack = ({
             headerTopInsetEnabled={headerTopInsetEnabled}
             canGoBack
           />
-          {content}
         </Screen>
       </ScreenStack>
     );
@@ -291,31 +291,6 @@ const SceneView = ({
                 headerShown !== false ? headerHeight : parentHeaderHeight ?? 0
               }
             >
-              {/**
-               * `HeaderConfig` needs to be the direct child of `Screen` without any intermediate `View`
-               * We don't render it conditionally to make it possible to dynamically render a custom `header`
-               * Otherwise dynamically rendering a custom `header` leaves the native header visible
-               *
-               * https://github.com/software-mansion/react-native-screens/blob/main/guides/GUIDE_FOR_LIBRARY_AUTHORS.md#screenstackheaderconfig
-               */}
-              <HeaderConfig
-                {...options}
-                route={route}
-                headerBackButtonMenuEnabled={
-                  isRemovePrevented !== undefined
-                    ? !isRemovePrevented
-                    : headerBackButtonMenuEnabled
-                }
-                headerShown={header !== undefined ? false : headerShown}
-                headerHeight={headerHeight}
-                headerBackTitle={
-                  options.headerBackTitle !== undefined
-                    ? options.headerBackTitle
-                    : undefined
-                }
-                headerTopInsetEnabled={headerTopInsetEnabled}
-                canGoBack={headerBack !== undefined}
-              />
               <View
                 accessibilityElementsHidden={!focused}
                 importantForAccessibility={
@@ -350,6 +325,35 @@ const SceneView = ({
                   </View>
                 ) : null}
               </View>
+              {/**
+               * `HeaderConfig` needs to be the direct child of `Screen` without any intermediate `View`
+               * We don't render it conditionally to make it possible to dynamically render a custom `header`
+               * Otherwise dynamically rendering a custom `header` leaves the native header visible
+               *
+               * https://github.com/software-mansion/react-native-screens/blob/main/guides/GUIDE_FOR_LIBRARY_AUTHORS.md#screenstackheaderconfig
+               *
+               * HeaderConfig must not be first child of a Screen.
+               * See https://github.com/software-mansion/react-native-screens/pull/1825
+               * for detailed explanation
+               */}
+              <HeaderConfig
+                {...options}
+                route={route}
+                headerBackButtonMenuEnabled={
+                  isRemovePrevented !== undefined
+                    ? !isRemovePrevented
+                    : headerBackButtonMenuEnabled
+                }
+                headerShown={header !== undefined ? false : headerShown}
+                headerHeight={headerHeight}
+                headerBackTitle={
+                  options.headerBackTitle !== undefined
+                    ? options.headerBackTitle
+                    : undefined
+                }
+                headerTopInsetEnabled={headerTopInsetEnabled}
+                canGoBack={headerBack !== undefined}
+              />
             </HeaderHeightContext.Provider>
           </HeaderShownContext.Provider>
         </NavigationRouteContext.Provider>

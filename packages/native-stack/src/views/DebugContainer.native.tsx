@@ -9,25 +9,30 @@ type ContainerProps = ViewProps & {
   children: React.ReactNode;
 };
 
-let Container = View as unknown as React.ComponentType<ContainerProps>;
+/**
+ * This view must *not* be flattened.
+ * See https://github.com/software-mansion/react-native-screens/pull/1825
+ * for detailed explanation.
+ */
+let DebugContainer = (props: ContainerProps) => {
+  return <View {...props} collapsable={false} />;
+};
 
 if (process.env.NODE_ENV !== 'production') {
-  const DebugContainer = (props: ContainerProps) => {
+  DebugContainer = (props: ContainerProps) => {
     const { stackPresentation, ...rest } = props;
 
     if (Platform.OS === 'ios' && stackPresentation !== 'push') {
       // This is necessary for LogBox
       return (
         <AppContainer>
-          <View {...rest} />
+          <View {...rest} collapsable={false} />
         </AppContainer>
       );
     }
 
-    return <View {...rest} />;
+    return <View {...rest} collapsable={false} />;
   };
-
-  Container = DebugContainer;
 }
 
-export default Container;
+export default DebugContainer;
