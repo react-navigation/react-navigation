@@ -5777,7 +5777,7 @@ __metadata:
     react: 18.2.0
     react-native: 0.71.8
     react-native-builder-bob: ^0.20.4
-    react-native-screens: ~3.20.0
+    react-native-screens: ~3.23.0
     typescript: ^4.9.4
     warn-once: ^0.1.0
   peerDependencies:
@@ -21979,6 +21979,19 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 94ab21378ee82765d329ccb8c92f5ca7cb15df916496fac7ce9a03c45e22579715000dae9c16f0a7d734a8fc1c2d0569fd82ecb71119a0b56046b5ea7533e7c2
+  languageName: node
+  linkType: hard
+
+"react-native-screens@npm:~3.23.0":
+  version: 3.23.0
+  resolution: "react-native-screens@npm:3.23.0"
+  dependencies:
+    react-freeze: ^1.0.0
+    warn-once: ^0.1.0
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 7b61f4ab4c041cb77c3223ff334705789b6eef6c57cc9a9a6f9564788976d6a83ddea56e884e1fa4982cd5f7a92f57becb9ae4890a5fbd4183ae3ee89033d244
   languageName: node
   linkType: hard
 
