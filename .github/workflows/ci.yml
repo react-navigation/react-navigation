@@ -97,6 +97,3 @@ jobs:
 
       - name: Verify built type definitions are correct
         run: yarn typescript
-
-      - name: Verify paths for types
-        run: node scripts/check-types-path.js

@@ -154,7 +154,7 @@ export function HeaderBackButton({
       onPress={disabled ? undefined : handlePress}
       pressColor={pressColor}
       pressOpacity={pressOpacity}
-      android_ripple={{ borderless: true }}
+      android_ripple={androidRipple}
       style={[styles.container, disabled && styles.disabled, style]}
       hitSlop={Platform.select({
         ios: undefined,
@@ -168,6 +168,12 @@ export function HeaderBackButton({
     </PlatformPressable>
   );
 }
+
+const androidRipple = {
+  borderless: true,
+  foreground: Platform.OS === 'android' && Platform.Version >= 23,
+  radius: 20,
+};
 
 const styles = StyleSheet.create({
   container: {

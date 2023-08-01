@@ -159,6 +159,13 @@ function DrawerViewBase({
       }
     };
 
+    if (Platform.OS === 'web') {
+      document?.body?.addEventListener?.('keyup', handleEscape);
+      return () => {
+        document?.body?.removeEventListener?.('keyup', handleEscape);
+      };
+    }
+
     // We only add the listeners when drawer opens
     // This way we can make sure that the listener is added as late as possible
     // This will make sure that our handler will run first when back button is pressed
@@ -167,16 +174,8 @@ function DrawerViewBase({
       handleHardwareBack
     );
 
-    if (Platform.OS === 'web') {
-      document?.body?.addEventListener?.('keyup', handleEscape);
-    }
-
     return () => {
-      subscription.remove();
-
-      if (Platform.OS === 'web') {
-        document?.body?.removeEventListener?.('keyup', handleEscape);
-      }
+      subscription?.remove?.();
     };
   }, [
     defaultStatus,
