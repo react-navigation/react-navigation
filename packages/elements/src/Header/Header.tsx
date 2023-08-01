@@ -51,7 +51,7 @@ export function Header(props: Props) {
   // On models with Dynamic Island the status bar height is smaller than the safe area top inset.
   const hasDynamicIsland = Platform.OS === 'ios' && insets.top === 59;
   const statusBarHeight = hasDynamicIsland ? 54 : insets.top;
-  
+
   const {
     layout = frame,
     modal = false,

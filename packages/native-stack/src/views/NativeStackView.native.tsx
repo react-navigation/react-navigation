@@ -226,7 +226,11 @@ const SceneView = ({
 
   const { preventedRoutes } = usePreventRemoveContext();
 
-  const defaultHeaderHeight = getDefaultHeaderHeight(frame, isModal, statusBarHeight);
+  const defaultHeaderHeight = getDefaultHeaderHeight(
+    frame,
+    isModal,
+    statusBarHeight
+  );
 
   const [customHeaderHeight, setCustomHeaderHeight] =
     React.useState(defaultHeaderHeight);
