@@ -310,7 +310,16 @@ export function Drawer({
         : minmax(translationX.value - touchDistance, 0, drawerWidth);
 
     return translateX;
-  }, [touchStartX, drawerWidth, gestureState, drawerPosition, translationX]);
+  }, [
+    drawerType,
+    gestureState,
+    minmax,
+    drawerPosition,
+    touchStartX,
+    drawerWidth,
+    layout,
+    translationX,
+  ]);
 
   const isRTL = I18nManager.getConstants().isRTL;
   const drawerAnimatedStyle = useAnimatedStyle(() => {
@@ -337,7 +346,7 @@ export function Drawer({
               },
             ],
     };
-  }, [touchStartX, drawerWidth, gestureState, drawerPosition, translationX]);
+  }, [layout, drawerWidth, drawerType, translateX, drawerPosition, isRTL]);
 
   const contentAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -357,7 +366,7 @@ export function Drawer({
               },
             ],
     };
-  }, [touchStartX, drawerWidth, gestureState, drawerPosition, translationX]);
+  }, [drawerType, translateX, drawerWidth, drawerPosition]);
 
   const progress = useDerivedValue(() => {
     return drawerType === 'permanent'
@@ -367,7 +376,7 @@ export function Drawer({
           [getDrawerTranslationX(false), getDrawerTranslationX(true)],
           [0, 1]
         );
-  }, [translateX, drawerType]);
+  }, [drawerType, interpolate, translateX, getDrawerTranslationX]);
 
   return (
     <DrawerProgressContext.Provider value={progress}>
