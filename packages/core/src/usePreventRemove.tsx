@@ -32,16 +32,26 @@ export function UNSTABLE_usePreventRemove(
     };
   }, [setPreventRemove, id, routeKey, preventRemove]);
 
+  const preventRemoveRef = React.useRef(preventRemove);
+  React.useEffect(() => {
+    preventRemoveRef.current = preventRemove;
+  });
+
+  const callbackRef = React.useRef(callback);
+  React.useEffect(() => {
+    callbackRef.current = callback;
+  });
+
   const beforeRemoveListener = useLatestCallback<
     EventListenerCallback<EventMapCore<any>, 'beforeRemove'>
   >((e) => {
-    if (!preventRemove) {
+    if (!preventRemoveRef.current) {
       return;
     }
 
     e.preventDefault();
 
-    callback({ data: e.data });
+    callbackRef.current({ data: e.data });
   });
 
   React.useEffect(
