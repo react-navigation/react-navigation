@@ -10,8 +10,10 @@ import type {
 } from '@react-navigation/drawer';
 import type {
   CompositeScreenProps,
+  NavigationContainerRef,
   NavigationHelpers,
   NavigatorScreenParams,
+  Route,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -352,3 +354,36 @@ export const ThirdScreen = ({
   // @ts-expect-error
   if (ScreenName === 'NoParams') navigation.navigate(ScreenName, { id: '123' });
 };
+
+/**
+ * Check for errors on getCurrentRoute
+ */
+declare const navigationRef: NavigationContainerRef<RootStackParamList>;
+const route = navigationRef.getCurrentRoute()!;
+
+switch (route.name) {
+  case 'PostDetails':
+    expectTypeOf(route.params).toMatchTypeOf<{
+      id: string;
+      section?: string;
+    }>();
+    break;
+  case 'Login':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    break;
+  // Checks for nested routes
+  case 'Account':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    break;
+  case 'Popular':
+    expectTypeOf(route.params).toMatchTypeOf<{
+      filter: 'day' | 'week' | 'month';
+    }>();
+    break;
+}
+
+declare const navigationRefUntyped: NavigationContainerRef<string>;
+
+expectTypeOf(navigationRefUntyped.getCurrentRoute()).toMatchTypeOf<
+  Route<string> | undefined
+>();

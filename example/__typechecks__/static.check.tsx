@@ -2,6 +2,7 @@
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import type {
+  NavigationContainerRef,
   NavigationProp,
   StaticParamList,
   StaticScreenProps,
@@ -198,3 +199,37 @@ createStackNavigator({});
 createStackNavigator({
   screens: {},
 });
+
+/**
+ * Check for errors on getCurrentRoute
+ */
+declare const navigationRef: NavigationContainerRef<ParamList>;
+const route = navigationRef.getCurrentRoute()!;
+
+switch (route.name) {
+  case 'Profile':
+    expectTypeOf(route.params).toMatchTypeOf<{
+      user: string;
+    }>();
+    break;
+  case 'Settings':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    break;
+  case 'Login':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    break;
+  case 'Register':
+    expectTypeOf(route.params).toMatchTypeOf<{
+      method: 'email' | 'social';
+    }>();
+    break;
+  // Checks for nested routes
+  case 'Groups':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    break;
+  case 'Chat':
+    expectTypeOf(route.params).toMatchTypeOf<{
+      id: number;
+    }>();
+    break;
+}
