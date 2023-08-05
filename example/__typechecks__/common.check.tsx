@@ -11,8 +11,10 @@ import type {
 import type {
   CompositeScreenProps,
   NavigationAction,
+  NavigationContainerRef,
   NavigationHelpers,
   NavigatorScreenParams,
+  Route,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -498,3 +500,36 @@ const FourthStack = createStackNavigator<FourthParamList, 'MyID'>();
 expectTypeOf(FourthStack.Navigator).parameter(0).toMatchTypeOf<{
   id: 'MyID';
 }>();
+
+/**
+ * Check for errors on getCurrentRoute
+ */
+declare const navigationRef: NavigationContainerRef<RootStackParamList>;
+const route = navigationRef.getCurrentRoute()!;
+
+switch (route.name) {
+  case 'PostDetails':
+    expectTypeOf(route.params).toMatchTypeOf<{
+      id: string;
+      section?: string;
+    }>();
+    break;
+  case 'Login':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    break;
+  // Checks for nested routes
+  case 'Account':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    break;
+  case 'Popular':
+    expectTypeOf(route.params).toMatchTypeOf<{
+      filter: 'day' | 'week' | 'month';
+    }>();
+    break;
+}
+
+declare const navigationRefUntyped: NavigationContainerRef<string>;
+
+expectTypeOf(navigationRefUntyped.getCurrentRoute()).toMatchTypeOf<
+  Route<string> | undefined
+>();
