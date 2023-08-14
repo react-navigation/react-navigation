@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.1...@react-navigation/native@7.0.0-alpha.2) (2023-06-22)
+
+### Features
+
+* support a top-level path configuration in linking config ([1d0297e](https://github.com/react-navigation/react-navigation/commit/1d0297ed17788c01d7b901ad04b63d3f37f47266)) - by @satya164
+
 # [7.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.0...@react-navigation/native@7.0.0-alpha.1) (2023-03-01)
 
 ### Bug Fixes

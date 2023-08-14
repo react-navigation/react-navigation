@@ -42,8 +42,10 @@ export const ScrollableTabBar = () => {
       scrollEnabled
       indicatorStyle={styles.indicator}
       style={styles.tabbar}
+      contentContainerStyle={styles.tabbarContentContainer}
       tabStyle={styles.tab}
       labelStyle={styles.label}
+      gap={20}
     />
   );
 
@@ -73,6 +75,9 @@ ScrollableTabBar.options = {
 const styles = StyleSheet.create({
   tabbar: {
     backgroundColor: '#3f51b5',
+  },
+  tabbarContentContainer: {
+    paddingHorizontal: 10,
   },
   tab: {
     width: 120,
