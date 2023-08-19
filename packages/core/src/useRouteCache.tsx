@@ -30,19 +30,24 @@ export function useRouteCache<State extends NavigationState>(
 
   cache.current = routes.reduce((acc, route) => {
     const previous = cache.current.get(route.key);
-    const { state, ...proxy } = route;
+    const { state, ...routeWithoutState } = route;
 
-    if (previous && isRecordEqual(previous, proxy)) {
+    let proxy;
+
+    if (previous && isRecordEqual(previous, routeWithoutState)) {
       // If a cached route object already exists, reuse it
-      acc.set(route.key, previous);
+      proxy = previous;
     } else {
-      Object.defineProperty(proxy, CHILD_STATE, {
-        enumerable: false,
-        value: state,
-      });
-
-      acc.set(route.key, proxy);
+      proxy = routeWithoutState;
     }
+
+    Object.defineProperty(proxy, CHILD_STATE, {
+      enumerable: false,
+      configurable: true,
+      value: state,
+    });
+
+    acc.set(route.key, proxy);
 
     return acc;
   }, new Map() as RouteCache);
