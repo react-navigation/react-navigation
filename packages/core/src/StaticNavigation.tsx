@@ -117,14 +117,7 @@ type StaticConfigScreens<
          * },
          * ```
          */
-        linking?:
-          | FlatType<
-              Pick<
-                PathConfig<ParamList>,
-                'path' | 'exact' | 'parse' | 'stringify'
-              >
-            >
-          | string;
+        linking?: PathConfig<ParamList> | string;
         /**
          * Static navigation config or Component to render for the screen.
          */
