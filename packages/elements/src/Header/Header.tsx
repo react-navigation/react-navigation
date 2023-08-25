@@ -53,6 +53,7 @@ export function Header(props: Props) {
     modal = false,
     title,
     headerTitle: customTitle,
+    headerTitleTestID,
     headerTitleAlign = Platform.select({
       ios: 'center',
       default: 'left',
@@ -272,6 +273,7 @@ export function Header(props: Props) {
               allowFontScaling: titleAllowFontScaling,
               tintColor: headerTintColor,
               style: titleStyle,
+              testID: headerTitleTestID,
             })}
           </Animated.View>
           <Animated.View
