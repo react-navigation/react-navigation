@@ -20,6 +20,7 @@ export type Props<T extends Route> = SceneRendererProps & {
   style?: StyleProp<ViewStyle>;
   getTabWidth: GetTabWidth;
   gap?: number;
+  children?: React.ReactNode;
 };
 
 const getTranslateX = (
@@ -53,6 +54,7 @@ export function TabBarIndicator<T extends Route>({
   width,
   gap,
   style,
+  children,
 }: Props<T>) {
   const isIndicatorShown = React.useRef(false);
   const isWidthDynamic = width === 'auto';
@@ -136,7 +138,9 @@ export function TabBarIndicator<T extends Route>({
         width === 'auto' ? { opacity: opacity } : null,
         style,
       ]}
-    />
+    >
+      {children}
+    </Animated.View>
   );
 }
 
