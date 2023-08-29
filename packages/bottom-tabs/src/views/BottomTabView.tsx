@@ -32,6 +32,11 @@ type Props = BottomTabNavigationConfig & {
   descriptors: BottomTabDescriptorMap;
 };
 
+const EPSILON = 1e-5;
+const STATE_INACTIVE = 0;
+const STATE_TRANSITIONING_OR_BELOW_TOP = 1;
+const STATE_ON_TOP = 2;
+
 export function BottomTabView(props: Props) {
   const {
     tabBar = (props: BottomTabBarProps) => <BottomTabBar {...props} />,
@@ -44,8 +49,6 @@ export function BottomTabView(props: Props) {
       Platform.OS === 'ios',
     sceneContainerStyle,
   } = props;
-  const [isAnimating, setIsAnimating] = React.useState(false);
-
   const focusedRouteKey = state.routes[state.index].key;
 
   const { animationEnabled, sceneStyleInterpolator, transitionSpec } =
@@ -64,7 +67,9 @@ export function BottomTabView(props: Props) {
   const tabAnims = useAnimatedHashMap(state.routes);
 
   React.useEffect(() => {
-    setIsAnimating((value) => !value);
+    if (!animationEnabled) {
+      return;
+    }
     const animateToIndex = () => {
       Animated.parallel(
         state.routes.map((route) => {
@@ -77,11 +82,7 @@ export function BottomTabView(props: Props) {
             }
           );
         })
-      ).start(({ finished }) => {
-        if (finished) {
-          setIsAnimating(!finished);
-        }
-      });
+      ).start();
     };
 
     animateToIndex();
@@ -91,6 +92,7 @@ export function BottomTabView(props: Props) {
     state.routes,
     tabAnims,
     focusedRouteKey,
+    animationEnabled,
   ]);
 
   const dimensions = SafeAreaProviderCompat.initialMetrics.frame;
@@ -170,11 +172,25 @@ export function BottomTabView(props: Props) {
               current: tabAnims[route.key],
             }) ?? {};
 
+          const activityState = isFocused
+            ? STATE_ON_TOP // the screen is on top after the transition
+            : animationEnabled // is animation is not enabled, immediately move to inactive state
+            ? tabAnims[route.key].interpolate({
+                inputRange: [0, 1 - EPSILON, 1],
+                outputRange: [
+                  STATE_TRANSITIONING_OR_BELOW_TOP, // screen visible during transition
+                  STATE_TRANSITIONING_OR_BELOW_TOP,
+                  STATE_INACTIVE, // the screen is detached after transition
+                ],
+                extrapolate: 'clamp',
+              })
+            : STATE_INACTIVE;
+
           return (
             <MaybeScreen
               key={route.key}
               style={[StyleSheet.absoluteFill, { zIndex: isFocused ? 0 : -1 }]}
-              visible={isAnimating || isFocused}
+              active={activityState}
               enabled={detachInactiveScreens}
               freezeOnBlur={freezeOnBlur}
             >
