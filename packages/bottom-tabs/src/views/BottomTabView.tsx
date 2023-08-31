@@ -135,11 +135,16 @@ export function BottomTabView(props: Props) {
 
   const { routes } = state;
 
+  // not needed if not animation
+  const hasTwoStates = !routes.some(
+    (route) => descriptors[route.key].options.animationEnabled
+  );
+
   return (
     <SafeAreaProviderCompat>
       <MaybeScreenContainer
         enabled={detachInactiveScreens}
-        hasTwoStates={!animationEnabled}
+        hasTwoStates={hasTwoStates}
         style={styles.container}
       >
         {routes.map((route, index) => {
