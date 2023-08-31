@@ -9,8 +9,14 @@ type ContainerProps = ViewProps & {
   children: React.ReactNode;
 };
 
-export let DebugContainer =
-  View as unknown as React.ComponentType<ContainerProps>;
+/**
+ * This view must *not* be flattened.
+ * See https://github.com/software-mansion/react-native-screens/pull/1825
+ * for detailed explanation.
+ */
+export let DebugContainer = (props: ContainerProps) => {
+  return <View {...props} collapsable={false} />;
+};
 
 if (process.env.NODE_ENV !== 'production') {
   DebugContainer = (props: ContainerProps) => {
@@ -20,11 +26,11 @@ if (process.env.NODE_ENV !== 'production') {
       // This is necessary for LogBox
       return (
         <AppContainer>
-          <View {...rest} />
+          <View {...rest} collapsable={false} />
         </AppContainer>
       );
     }
 
-    return <View {...rest} />;
+    return <View {...rest} collapsable={false} />;
   };
 }
