@@ -1,6 +1,7 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
   createBottomTabNavigator,
+  TransitionPresets,
   useBottomTabBarHeight,
 } from '@react-navigation/bottom-tabs';
 import { HeaderBackButton, useHeaderHeight } from '@react-navigation/elements';
@@ -87,9 +88,10 @@ export function BottomTabs({
         name="TabChat"
         component={Chat}
         options={{
-          tabBarLabel: 'Chat',
+          tabBarLabel: 'Chat (Animated)',
           tabBarIcon: getTabBarIcon('message-reply'),
           tabBarBadge: 2,
+          ...TransitionPresets.FadeTransition,
         }}
       />
       <Tab.Screen
