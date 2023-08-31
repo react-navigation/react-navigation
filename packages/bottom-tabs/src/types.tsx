@@ -314,6 +314,23 @@ export type TransitionSpec =
       >;
     };
 
+export type BottomTabTransitionPreset = {
+  /**
+   * Whether transition animations should be enabled when switching tabs.
+   */
+  animationEnabled?: boolean;
+
+  /**
+   * Function which specifies interpolated styles for bottom-tab scenes.
+   */
+  sceneStyleInterpolator?: BottomTabSceneStyleInterpolator;
+
+  /**
+   * Object which specifies the animation type (timing or spring) and their options (such as duration for timing).
+   */
+  transitionSpec?: TransitionSpec;
+};
+
 export type BottomTabNavigationConfig = {
   /**
    * Function that returns a React element to display as the tab bar.

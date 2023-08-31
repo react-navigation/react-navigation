@@ -2,7 +2,6 @@ import type { NavigatorScreenParams } from '@react-navigation/native';
 
 import { AuthFlow } from './Screens/AuthFlow';
 import { BottomTabs } from './Screens/BottomTabs';
-import { BottomTabsAnimated } from './Screens/BottomTabsAnimated';
 import { DrawerView } from './Screens/DrawerView';
 import { DynamicTabs } from './Screens/DynamicTabs';
 import { LinkComponent } from './Screens/LinkComponent';
@@ -66,10 +65,6 @@ export const SCREENS = {
   BottomTabs: {
     title: 'Bottom Tabs',
     component: BottomTabs,
-  },
-  BottomTabsAnimated: {
-    title: 'Bottom Tabs Animated',
-    component: BottomTabsAnimated,
   },
   MaterialTopTabs: {
     title: 'Material Top Tabs',

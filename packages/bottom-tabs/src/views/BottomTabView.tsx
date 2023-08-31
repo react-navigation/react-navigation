@@ -67,10 +67,13 @@ export function BottomTabView(props: Props) {
   const tabAnims = useAnimatedHashMap(state.routes);
 
   React.useEffect(() => {
-    if (!animationEnabled) {
-      return;
-    }
     const animateToIndex = () => {
+      if (!animationEnabled) {
+        for (const route of routes) {
+          tabAnims[route.key].setValue(route.key === focusedRouteKey ? 0 : 1);
+        }
+        return;
+      }
       Animated.parallel(
         state.routes.map((route) => {
           return Animated[transitionSpec?.animation || 'timing'](
@@ -182,7 +185,7 @@ export function BottomTabView(props: Props) {
                   STATE_TRANSITIONING_OR_BELOW_TOP,
                   STATE_INACTIVE, // the screen is detached after transition
                 ],
-                extrapolate: 'clamp',
+                extrapolate: 'extend',
               })
             : STATE_INACTIVE;
 
