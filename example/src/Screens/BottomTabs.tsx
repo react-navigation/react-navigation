@@ -14,7 +14,7 @@ import {
 import type { StackScreenProps } from '@react-navigation/stack';
 import { BlurView } from 'expo-blur';
 import * as React from 'react';
-import { ScrollView, StatusBar, StyleSheet } from 'react-native';
+import { ColorValue, ScrollView, StatusBar, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 
 import { Albums } from '../Shared/Albums';
@@ -24,7 +24,7 @@ import { SimpleStack, SimpleStackParams } from './SimpleStack';
 
 const getTabBarIcon =
   (name: React.ComponentProps<typeof MaterialCommunityIcons>['name']) =>
-  ({ color, size }: { color: string; size: number }) =>
+  ({ color, size }: { color: ColorValue; size: number }) =>
     <MaterialCommunityIcons name={name} color={color} size={size} />;
 
 type BottomTabParams = {
