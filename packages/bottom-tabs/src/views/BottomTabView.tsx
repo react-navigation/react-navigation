@@ -71,7 +71,7 @@ export function BottomTabView(props: Props) {
           .map((route) => {
             const { animationEnabled, transitionSpec } =
               descriptors[route.key].options;
-            if (!animationEnabled) {
+            if (!animationEnabled || !transitionSpec) {
               return false;
             }
             return Animated[transitionSpec?.animation || 'timing'](
