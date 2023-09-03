@@ -1,5 +1,6 @@
 import type {
   Animated,
+  ColorValue,
   LayoutChangeEvent,
   StyleProp,
   TextStyle,
@@ -178,7 +179,7 @@ export type HeaderBackButtonProps = HeaderButtonProps & {
   /**
    * Function which returns a React Element to display custom image in header's back button.
    */
-  backImage?: (props: { tintColor: string }) => React.ReactNode;
+  backImage?: (props: { tintColor: ColorValue }) => React.ReactNode;
   /**
    * Label text for the button. Usually the title of the previous screen.
    * By default, this is only shown on iOS.

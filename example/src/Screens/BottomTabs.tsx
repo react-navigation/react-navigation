@@ -14,7 +14,8 @@ import {
 import type { StackScreenProps } from '@react-navigation/stack';
 import { BlurView } from 'expo-blur';
 import * as React from 'react';
-import { ScrollView, StatusBar, StyleSheet } from 'react-native';
+import { ColorValue, ScrollView, StatusBar, StyleSheet } from 'react-native';
+import { Button } from 'react-native-paper';
 
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
@@ -23,7 +24,7 @@ import { SimpleStack, SimpleStackParams } from './SimpleStack';
 
 const getTabBarIcon =
   (name: React.ComponentProps<typeof MaterialCommunityIcons>['name']) =>
-  ({ color, size }: { color: string; size: number }) =>
+  ({ color, size }: { color: ColorValue; size: number }) =>
     <MaterialCommunityIcons name={name} color={color} size={size} />;
 
 type BottomTabParams = {
@@ -68,12 +69,23 @@ export function BottomTabs({
     });
   }, [navigation, routeName]);
 
+  const [animationEnabled, setAnimationEnabled] = React.useState(false);
   return (
     <Tab.Navigator
       screenOptions={{
         headerLeft: (props) => (
           <HeaderBackButton {...props} onPress={navigation.goBack} />
         ),
+        headerRight: () => (
+          <Button
+            style={styles.leftButton}
+            onPress={() => setAnimationEnabled((prev) => !prev)}
+            icon={animationEnabled ? 'heart' : 'heart-outline'}
+          >
+            Fade {animationEnabled ? 'off' : 'on'}
+          </Button>
+        ),
+        ...(animationEnabled && TransitionPresets.FadeTransition),
       }}
     >
       <Tab.Screen
@@ -91,7 +103,6 @@ export function BottomTabs({
           tabBarLabel: 'Chat (Animated)',
           tabBarIcon: getTabBarIcon('message-reply'),
           tabBarBadge: 2,
-          ...TransitionPresets.FadeTransition,
         }}
       />
       <Tab.Screen
@@ -135,3 +146,9 @@ export function BottomTabs({
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  leftButton: {
+    paddingRight: 8,
+  },
+});

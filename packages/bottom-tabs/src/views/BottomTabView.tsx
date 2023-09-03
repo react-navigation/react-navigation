@@ -25,6 +25,7 @@ import { BottomTabBarHeightContext } from '../utils/BottomTabBarHeightContext';
 import { useAnimatedHashMap } from '../utils/useAnimatedHashMap';
 import { BottomTabBar, getTabBarHeight } from './BottomTabBar';
 import { MaybeScreen, MaybeScreenContainer } from './ScreenFallback';
+import CompositeAnimation = Animated.CompositeAnimation;
 
 type Props = BottomTabNavigationConfig & {
   state: TabNavigationState<ParamListBase>;
@@ -51,9 +52,6 @@ export function BottomTabView(props: Props) {
   } = props;
   const focusedRouteKey = state.routes[state.index].key;
 
-  const { animationEnabled, sceneStyleInterpolator, transitionSpec } =
-    descriptors[focusedRouteKey].options;
-
   /**
    * List of loaded tabs, tabs will be loaded when navigated to.
    */
@@ -68,35 +66,29 @@ export function BottomTabView(props: Props) {
 
   React.useEffect(() => {
     const animateToIndex = () => {
-      if (!animationEnabled) {
-        for (const route of routes) {
-          tabAnims[route.key].setValue(route.key === focusedRouteKey ? 0 : 1);
-        }
-        return;
-      }
       Animated.parallel(
-        state.routes.map((route) => {
-          return Animated[transitionSpec?.animation || 'timing'](
-            tabAnims[route.key],
-            {
-              ...transitionSpec?.config,
-              toValue: route.key === focusedRouteKey ? 0 : 1,
-              useNativeDriver: true,
+        state.routes
+          .map((route) => {
+            const { animationEnabled, transitionSpec } =
+              descriptors[route.key].options;
+            if (!animationEnabled || !transitionSpec) {
+              return false;
             }
-          );
-        })
+            return Animated[transitionSpec?.animation || 'timing'](
+              tabAnims[route.key],
+              {
+                ...transitionSpec?.config,
+                toValue: route.key === focusedRouteKey ? 0 : 1,
+                useNativeDriver: true,
+              }
+            );
+          })
+          .filter(Boolean) as CompositeAnimation[]
       ).start();
     };
 
     animateToIndex();
-  }, [
-    transitionSpec?.animation,
-    transitionSpec?.config,
-    state.routes,
-    tabAnims,
-    focusedRouteKey,
-    animationEnabled,
-  ]);
+  }, [state.routes, tabAnims, focusedRouteKey, descriptors]);
 
   const dimensions = SafeAreaProviderCompat.initialMetrics.frame;
   const [tabBarHeight, setTabBarHeight] = React.useState(() =>
@@ -149,7 +141,12 @@ export function BottomTabView(props: Props) {
       >
         {routes.map((route, index) => {
           const descriptor = descriptors[route.key];
-          const { lazy = true, unmountOnBlur } = descriptor.options;
+          const {
+            lazy = true,
+            unmountOnBlur,
+            animationEnabled,
+            sceneStyleInterpolator,
+          } = descriptor.options;
           const isFocused = state.index === index;
 
           if (unmountOnBlur && !isFocused) {

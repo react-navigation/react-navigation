@@ -2,6 +2,7 @@ import { CommonActions, Link, Route, useTheme } from '@react-navigation/native';
 import Color from 'color';
 import React from 'react';
 import {
+  ColorValue,
   GestureResponderEvent,
   Platform,
   Pressable,
@@ -43,7 +44,7 @@ type Props = {
     | string
     | ((props: {
         focused: boolean;
-        color: string;
+        color: ColorValue;
         position: LabelPosition;
         children: string;
       }) => React.ReactNode);
@@ -53,7 +54,7 @@ type Props = {
   icon: (props: {
     focused: boolean;
     size: number;
-    color: string;
+    color: ColorValue;
   }) => React.ReactNode;
   /**
    * Text to show in a badge on the tab icon.

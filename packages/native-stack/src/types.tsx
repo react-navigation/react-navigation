@@ -11,6 +11,7 @@ import type {
   StackRouterOptions,
 } from '@react-navigation/native';
 import type {
+  ColorValue,
   ImageSourcePropType,
   StyleProp,
   TextStyle,
@@ -92,7 +93,7 @@ export type HeaderButtonProps = {
   /**
    * Tint color for the header.
    */
-  tintColor?: string;
+  tintColor?: ColorValue;
   /**
    * Whether it's possible to navigate back in stack.
    */
@@ -282,10 +283,10 @@ export type NativeStackNavigationOptions = {
         /**
          * Tint color for the header.
          */
-        tintColor?: string;
+        tintColor?: ColorValue;
       }) => React.ReactNode);
   /**
-   * How to align the the header title.
+   * How to align the header title.
    * Defaults to `left` on platforms other than iOS.
    *
    * Not supported on iOS. It's always `center` on iOS and cannot be changed.
