@@ -11,7 +11,6 @@ import type {
 import type * as React from 'react';
 import type {
   Animated,
-  ColorValue,
   GestureResponderEvent,
   StyleProp,
   TextStyle,
@@ -100,7 +99,7 @@ export type BottomTabNavigationOptions = HeaderOptions & {
     | string
     | ((props: {
         focused: boolean;
-        color: ColorValue;
+        color: string;
         position: LabelPosition;
         children: string;
       }) => React.ReactNode);
@@ -135,7 +134,7 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    */
   tabBarIcon?: (props: {
     focused: boolean;
-    color: ColorValue;
+    color: string;
     size: number;
   }) => React.ReactNode;
 

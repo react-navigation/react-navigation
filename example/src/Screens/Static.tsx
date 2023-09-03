@@ -6,13 +6,7 @@ import {
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-import {
-  ColorValue,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 
 import { Albums } from '../Shared/Albums';
@@ -21,7 +15,7 @@ import { Contacts } from '../Shared/Contacts';
 
 const getTabBarIcon =
   (name: React.ComponentProps<typeof MaterialCommunityIcons>['name']) =>
-  ({ color, size }: { color: ColorValue; size: number }) =>
+  ({ color, size }: { color: string; size: number }) =>
     <MaterialCommunityIcons name={name} color={color} size={size} />;
 
 const ChatShownContext = React.createContext({

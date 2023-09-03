@@ -10,7 +10,6 @@ import type {
 } from '@react-navigation/native';
 import type React from 'react';
 import type {
-  ColorValue,
   PressableAndroidRippleConfig,
   StyleProp,
   TextStyle,
@@ -86,7 +85,7 @@ export type MaterialTopTabNavigationOptions = {
     | string
     | ((props: {
         focused: boolean;
-        color: ColorValue;
+        color: string;
         children: string;
       }) => React.ReactNode);
 
@@ -109,10 +108,7 @@ export type MaterialTopTabNavigationOptions = {
   /**
    * A function that given { focused: boolean, color: string } returns a React.Node to display in the tab bar.
    */
-  tabBarIcon?: (props: {
-    focused: boolean;
-    color: ColorValue;
-  }) => React.ReactNode;
+  tabBarIcon?: (props: { focused: boolean; color: string }) => React.ReactNode;
 
   /**
    * Whether the tab icon should be visible. Defaults to `false`.
