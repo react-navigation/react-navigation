@@ -37,7 +37,6 @@ import {
   Divider,
   List,
   Provider as PaperProvider,
-  Theme,
 } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -123,7 +122,7 @@ export function App() {
   const isLargeScreen = dimensions.width >= 1024;
 
   return (
-    <PaperProvider theme={paperTheme as Theme}>
+    <PaperProvider theme={paperTheme}>
       <StatusBar
         translucent
         barStyle={theme.dark ? 'light-content' : 'dark-content'}

@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as React from 'react';
-import { ColorValue, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import {
   NavigationState,
   SceneMap,
@@ -34,13 +34,9 @@ export const TabBarIcon = () => {
     { key: 'article', icon: 'md-list' },
   ]);
 
-  const renderIcon = ({
-    route,
-    color,
-  }: {
-    route: Route;
-    color: ColorValue;
-  }) => <Ionicons name={route.icon} size={24} color={color} />;
+  const renderIcon = ({ route, color }: { route: Route; color: string }) => (
+    <Ionicons name={route.icon} size={24} color={color} />
+  );
 
   const renderTabBar = (
     props: SceneRendererProps & { navigationState: State }
