@@ -735,7 +735,7 @@ export type NavigatorScreenParams<ParamList extends {}> =
           };
     }[keyof ParamList];
 
-export type PathConfig<ParamList extends {}> = {
+export type PathConfig<ParamList = {}> = {
   /**
    * Path string to match against.
    * e.g. `/users/:id` will match `/users/1` and extract `id` param as `1`.
@@ -781,10 +781,10 @@ export type PathConfig<ParamList extends {}> = {
   initialRouteName?: keyof ParamList;
 };
 
-export type PathConfigMap<ParamList extends {}> = {
-  [RouteName in keyof ParamList]?: NonNullable<
-    ParamList[RouteName]
-  > extends NavigatorScreenParams<infer T>
+export type PathConfigMap<ParamList = {}> = {
+  [RouteName in keyof ParamList]?: ParamList[RouteName] extends NavigatorScreenParams<
+    infer T
+  >
     ? string | PathConfig<T>
     : string | Omit<PathConfig<{}>, 'screens' | 'initialRouteName'>;
 };
