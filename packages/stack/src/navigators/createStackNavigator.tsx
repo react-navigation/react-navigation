@@ -8,6 +8,7 @@ import {
   StackNavigationState,
   StackRouter,
   StackRouterOptions,
+  useLocale,
   useNavigationBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -36,6 +37,7 @@ function StackNavigator({
   screenOptions,
   ...rest
 }: Props) {
+  const { direction } = useLocale();
   const { state, descriptors, navigation, NavigationContent } =
     useNavigationBuilder<
       StackNavigationState<ParamListBase>,
@@ -81,6 +83,7 @@ function StackNavigator({
     <NavigationContent>
       <StackView
         {...rest}
+        direction={direction}
         state={state}
         descriptors={descriptors}
         navigation={navigation}

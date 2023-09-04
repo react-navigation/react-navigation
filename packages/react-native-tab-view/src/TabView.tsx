@@ -1,6 +1,8 @@
 import * as React from 'react';
 import {
+  I18nManager,
   LayoutChangeEvent,
+  Platform,
   StyleProp,
   StyleSheet,
   View,
@@ -12,13 +14,14 @@ import { SceneView } from './SceneView';
 import { TabBar } from './TabBar';
 import type {
   Layout,
+  LocaleDirection,
   NavigationState,
   PagerProps,
   Route,
   SceneRendererProps,
 } from './types';
 
-export type Props<T extends Route> = PagerProps & {
+export type Props<T extends Route> = Omit<PagerProps, 'layoutDirection'> & {
   onIndexChange: (index: number) => void;
   navigationState: NavigationState<T>;
   renderScene: (props: SceneRendererProps & { route: T }) => React.ReactNode;
@@ -31,6 +34,7 @@ export type Props<T extends Route> = PagerProps & {
   lazy?: ((props: { route: T }) => boolean) | boolean;
   lazyPreloadDistance?: number;
   sceneContainerStyle?: StyleProp<ViewStyle>;
+  direction?: LocaleDirection;
   pagerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
 };
@@ -50,11 +54,23 @@ export function TabView<T extends Route>({
   sceneContainerStyle,
   pagerStyle,
   style,
+  direction = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr',
   swipeEnabled = true,
   tabBarPosition = 'top',
   animationEnabled = true,
   overScrollMode,
 }: Props<T>) {
+  if (
+    Platform.OS !== 'web' &&
+    direction !== (I18nManager.getConstants().isRTL ? 'rtl' : 'ltr')
+  ) {
+    console.warn(
+      `The 'direction' prop is set to '${direction}' but the effective value is '${
+        I18nManager.getConstants().isRTL ? 'rtl' : 'ltr'
+      }'. This is not supported. Please use I18nManager.forceRTL to change the layout direction.`
+    );
+  }
+
   const [layout, setLayout] = React.useState({
     width: 0,
     height: 0,
@@ -92,6 +108,7 @@ export function TabView<T extends Route>({
         animationEnabled={animationEnabled}
         overScrollMode={overScrollMode}
         style={pagerStyle}
+        layoutDirection={direction}
       >
         {({ position, render, addEnterListener, jumpTo }) => {
           // All of the props here must not change between re-renders

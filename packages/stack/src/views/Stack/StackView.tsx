@@ -4,6 +4,7 @@ import {
 } from '@react-navigation/elements';
 import {
   CommonActions,
+  LocaleDirection,
   ParamListBase,
   Route,
   StackActions,
@@ -11,10 +12,7 @@ import {
 } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import {
-  EdgeInsets,
-  SafeAreaInsetsContext,
-} from 'react-native-safe-area-context';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
 import type {
   StackDescriptorMap,
@@ -30,6 +28,7 @@ import {
 import { CardStack } from './CardStack';
 
 type Props = StackNavigationConfig & {
+  direction: LocaleDirection;
   state: StackNavigationState<ParamListBase>;
   navigation: StackNavigationHelpers;
   descriptors: StackDescriptorMap;
@@ -448,7 +447,7 @@ export class StackView extends React.Component<Props, State> {
                   <HeaderShownContext.Consumer>
                     {(isParentHeaderShown) => (
                       <CardStack
-                        insets={insets as EdgeInsets}
+                        insets={insets!}
                         isParentHeaderShown={isParentHeaderShown}
                         isParentModal={isParentModal}
                         getPreviousRoute={this.getPreviousRoute}

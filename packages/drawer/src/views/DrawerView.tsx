@@ -9,10 +9,11 @@ import {
   DrawerNavigationState,
   DrawerStatus,
   ParamListBase,
+  useLocale,
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { BackHandler, I18nManager, Platform, StyleSheet } from 'react-native';
+import { BackHandler, Platform, StyleSheet } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
 import useLatestCallback from 'use-latest-callback';
@@ -51,10 +52,12 @@ function DrawerViewBase({
     Platform.OS === 'android' ||
     Platform.OS === 'ios',
 }: Props) {
+  const { direction } = useLocale();
+
   const focusedRouteKey = state.routes[state.index].key;
   const {
     drawerHideStatusBarOnOpen,
-    drawerPosition = I18nManager.getConstants().isRTL ? 'right' : 'left',
+    drawerPosition = direction === 'rtl' ? 'right' : 'left',
     drawerStatusBarAnimation,
     drawerStyle,
     drawerType,

@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
@@ -36,6 +37,7 @@ const renderScene = SceneMap({
 });
 
 export const CustomTabBar = () => {
+  const { direction } = useLocale();
   const insets = useSafeAreaInsets();
   const [index, onIndexChange] = React.useState(0);
   const [routes] = React.useState<Route[]>([
@@ -121,6 +123,7 @@ export const CustomTabBar = () => {
         index,
         routes,
       }}
+      direction={direction}
       renderScene={renderScene}
       renderTabBar={renderTabBar}
       tabBarPosition="bottom"

@@ -6,7 +6,6 @@ import {
 } from '@react-navigation/bottom-tabs';
 import { HeaderBackButton, useHeaderHeight } from '@react-navigation/elements';
 import {
-  getFocusedRouteNameFromRoute,
   NavigatorScreenParams,
   ParamListBase,
   useIsFocused,
@@ -58,16 +57,12 @@ const Tab = createBottomTabNavigator<BottomTabParams>();
 
 export function BottomTabs({
   navigation,
-  route,
 }: StackScreenProps<ParamListBase, string>) {
-  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Article';
-
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
-      title: routeName,
     });
-  }, [navigation, routeName]);
+  }, [navigation]);
 
   const [animationEnabled, setAnimationEnabled] = React.useState(false);
   return (

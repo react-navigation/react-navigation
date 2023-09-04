@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   Animated,
   GestureResponderEvent,
-  I18nManager,
   Keyboard,
   PanResponder,
   PanResponderGestureState,
@@ -60,6 +59,7 @@ export function PanResponderAdapter<T extends Route>({
   children,
   style,
   animationEnabled = false,
+  layoutDirection = 'ltr',
 }: Props<T>) {
   const { routes, index } = navigationState;
 
@@ -147,7 +147,8 @@ export function PanResponderAdapter<T extends Route>({
       return false;
     }
 
-    const diffX = I18nManager.isRTL ? -gestureState.dx : gestureState.dx;
+    const diffX =
+      layoutDirection === 'rtl' ? -gestureState.dx : gestureState.dx;
 
     return (
       isMovingHorizontally(event, gestureState) &&
@@ -172,7 +173,8 @@ export function PanResponderAdapter<T extends Route>({
     _: GestureResponderEvent,
     gestureState: PanResponderGestureState
   ) => {
-    const diffX = I18nManager.isRTL ? -gestureState.dx : gestureState.dx;
+    const diffX =
+      layoutDirection === 'rtl' ? -gestureState.dx : gestureState.dx;
 
     if (
       // swiping left
@@ -222,7 +224,7 @@ export function PanResponderAdapter<T extends Route>({
         Math.min(
           Math.max(
             0,
-            I18nManager.isRTL
+            layoutDirection === 'rtl'
               ? currentIndex + gestureState.dx / Math.abs(gestureState.dx)
               : currentIndex - gestureState.dx / Math.abs(gestureState.dx)
           ),
@@ -281,7 +283,7 @@ export function PanResponderAdapter<T extends Route>({
       outputRange: [-maxTranslate, 0],
       extrapolate: 'clamp',
     }),
-    I18nManager.isRTL ? -1 : 1
+    layoutDirection === 'rtl' ? -1 : 1
   );
 
   const position = React.useMemo(

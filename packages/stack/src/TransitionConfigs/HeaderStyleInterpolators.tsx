@@ -1,11 +1,11 @@
-import { Animated, I18nManager } from 'react-native';
+import { Animated } from 'react-native';
 
 import type {
   StackHeaderInterpolatedStyle,
   StackHeaderInterpolationProps,
 } from '../types';
 
-const { add } = Animated;
+const { add, multiply } = Animated;
 
 /**
  * Standard UIKit style animation for the header where the title fades into the back button label.
@@ -13,6 +13,7 @@ const { add } = Animated;
 export function forUIKit({
   current,
   next,
+  direction,
   layouts,
 }: StackHeaderInterpolationProps): StackHeaderInterpolatedStyle {
   const defaultOffset = 100;
@@ -33,6 +34,8 @@ export function forUIKit({
   // When the current title is animating to right, it is centered in the right half of screen in middle of transition
   // The back title also animates in from this position
   const rightOffset = layouts.screen.width / 4;
+
+  const multiplier = direction === 'rtl' ? -1 : 1;
 
   const progress = add(
     current.progress.interpolate({
@@ -59,12 +62,13 @@ export function forUIKit({
     leftLabelStyle: {
       transform: [
         {
-          translateX: progress.interpolate({
-            inputRange: [0, 1, 2],
-            outputRange: I18nManager.getConstants().isRTL
-              ? [-rightOffset, 0, leftLabelOffset]
-              : [leftLabelOffset, 0, -rightOffset],
-          }),
+          translateX: multiply(
+            multiplier,
+            progress.interpolate({
+              inputRange: [0, 1, 2],
+              outputRange: [leftLabelOffset, 0, -rightOffset],
+            })
+          ),
         },
       ],
     },
@@ -81,24 +85,26 @@ export function forUIKit({
       }),
       transform: [
         {
-          translateX: progress.interpolate({
-            inputRange: [0.5, 1, 2],
-            outputRange: I18nManager.getConstants().isRTL
-              ? [-titleLeftOffset, 0, rightOffset]
-              : [rightOffset, 0, -titleLeftOffset],
-          }),
+          translateX: multiply(
+            multiplier,
+            progress.interpolate({
+              inputRange: [0.5, 1, 2],
+              outputRange: [rightOffset, 0, -titleLeftOffset],
+            })
+          ),
         },
       ],
     },
     backgroundStyle: {
       transform: [
         {
-          translateX: progress.interpolate({
-            inputRange: [0, 1, 2],
-            outputRange: I18nManager.getConstants().isRTL
-              ? [-layouts.screen.width, 0, layouts.screen.width]
-              : [layouts.screen.width, 0, -layouts.screen.width],
-          }),
+          translateX: multiply(
+            multiplier,
+            progress.interpolate({
+              inputRange: [0, 1, 2],
+              outputRange: [layouts.screen.width, 0, -layouts.screen.width],
+            })
+          ),
         },
       ],
     },
@@ -151,8 +157,10 @@ export function forFade({
 export function forSlideLeft({
   current,
   next,
+  direction,
   layouts: { screen },
 }: StackHeaderInterpolationProps): StackHeaderInterpolatedStyle {
+  const isRTL = direction === 'rtl';
   const progress = add(
     current.progress.interpolate({
       inputRange: [0, 1],
@@ -170,7 +178,7 @@ export function forSlideLeft({
 
   const translateX = progress.interpolate({
     inputRange: [0, 1, 2],
-    outputRange: I18nManager.getConstants().isRTL
+    outputRange: isRTL
       ? [-screen.width, 0, screen.width]
       : [screen.width, 0, -screen.width],
   });
@@ -191,8 +199,10 @@ export function forSlideLeft({
 export function forSlideRight({
   current,
   next,
+  direction,
   layouts: { screen },
 }: StackHeaderInterpolationProps): StackHeaderInterpolatedStyle {
+  const isRTL = direction === 'rtl';
   const progress = add(
     current.progress.interpolate({
       inputRange: [0, 1],
@@ -210,7 +220,7 @@ export function forSlideRight({
 
   const translateX = progress.interpolate({
     inputRange: [0, 1, 2],
-    outputRange: I18nManager.getConstants().isRTL
+    outputRange: isRTL
       ? [screen.width, 0, -screen.width]
       : [-screen.width, 0, screen.width],
   });
