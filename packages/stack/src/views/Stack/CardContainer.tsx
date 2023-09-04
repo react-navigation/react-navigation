@@ -4,7 +4,7 @@ import {
   HeaderHeightContext,
   HeaderShownContext,
 } from '@react-navigation/elements';
-import { Route, useTheme } from '@react-navigation/native';
+import { Route, useLocale, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 
@@ -89,6 +89,8 @@ function CardContainerInner({
   safeAreaInsetTop,
   scene,
 }: Props) {
+  const { direction } = useLocale();
+
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
 
   const { onPageChangeStart, onPageChangeCancel, onPageChangeConfirm } =
@@ -221,6 +223,7 @@ function CardContainerInner({
       gestureDirection={gestureDirection}
       layout={layout}
       insets={insets}
+      direction={direction}
       gesture={gesture}
       current={scene.progress.current}
       next={scene.progress.next}
