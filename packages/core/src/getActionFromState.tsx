@@ -28,7 +28,7 @@ type NavigateAction<State extends NavigationState> = {
   };
 };
 
-export default function getActionFromState(
+export function getActionFromState(
   state: PartialState<NavigationState>,
   options?: Options
 ): NavigateAction<NavigationState> | CommonActions.Action | undefined {

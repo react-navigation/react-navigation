@@ -21,7 +21,7 @@ import type {
   StackHeaderProps,
   StackNavigationProp,
 } from '../../types';
-import Header from './Header';
+import { Header } from './Header';
 
 export type Props = {
   mode: StackHeaderMode;
@@ -36,7 +36,7 @@ export type Props = {
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 };
 
-export default function HeaderContainer({
+export function HeaderContainer({
   mode,
   scenes,
   layout,

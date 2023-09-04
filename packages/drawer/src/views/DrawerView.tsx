@@ -9,12 +9,14 @@ import {
   DrawerNavigationState,
   DrawerStatus,
   ParamListBase,
+  useLocale,
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { BackHandler, I18nManager, Platform, StyleSheet } from 'react-native';
+import { BackHandler, Platform, StyleSheet } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
+import useLatestCallback from 'use-latest-callback';
 
 import type {
   DrawerContentComponentProps,
@@ -24,11 +26,11 @@ import type {
   DrawerNavigationHelpers,
   DrawerNavigationProp,
 } from '../types';
-import DrawerPositionContext from '../utils/DrawerPositionContext';
-import DrawerStatusContext from '../utils/DrawerStatusContext';
-import getDrawerStatusFromState from '../utils/getDrawerStatusFromState';
-import DrawerContent from './DrawerContent';
-import DrawerToggleButton from './DrawerToggleButton';
+import { DrawerPositionContext } from '../utils/DrawerPositionContext';
+import { DrawerStatusContext } from '../utils/DrawerStatusContext';
+import { getDrawerStatusFromState } from '../utils/getDrawerStatusFromState';
+import { DrawerContent } from './DrawerContent';
+import { DrawerToggleButton } from './DrawerToggleButton';
 import { MaybeScreen, MaybeScreenContainer } from './ScreenFallback';
 
 type Props = DrawerNavigationConfig & {
@@ -50,10 +52,12 @@ function DrawerViewBase({
     Platform.OS === 'android' ||
     Platform.OS === 'ios',
 }: Props) {
+  const { direction } = useLocale();
+
   const focusedRouteKey = state.routes[state.index].key;
   const {
     drawerHideStatusBarOnOpen,
-    drawerPosition = I18nManager.getConstants().isRTL ? 'right' : 'left',
+    drawerPosition = direction === 'rtl' ? 'right' : 'left',
     drawerStatusBarAnimation,
     drawerStyle,
     drawerType,
@@ -80,19 +84,56 @@ function DrawerViewBase({
 
   const drawerStatus = getDrawerStatusFromState(state);
 
-  const handleDrawerOpen = React.useCallback(() => {
+  const handleDrawerOpen = useLatestCallback(() => {
     navigation.dispatch({
       ...DrawerActions.openDrawer(),
       target: state.key,
     });
-  }, [navigation, state.key]);
+  });
 
-  const handleDrawerClose = React.useCallback(() => {
+  const handleDrawerClose = useLatestCallback(() => {
     navigation.dispatch({
       ...DrawerActions.closeDrawer(),
       target: state.key,
     });
-  }, [navigation, state.key]);
+  });
+
+  const handleGestureStart = useLatestCallback(() => {
+    navigation.emit({
+      type: 'gestureStart',
+      target: state.key,
+    });
+  });
+
+  const handleGestureEnd = useLatestCallback(() => {
+    navigation.emit({
+      type: 'gestureEnd',
+      target: state.key,
+    });
+  });
+
+  const handleGestureCancel = useLatestCallback(() => {
+    navigation.emit({
+      type: 'gestureCancel',
+      target: state.key,
+    });
+  });
+
+  const handleTransitionStart = useLatestCallback((closing: boolean) => {
+    navigation.emit({
+      type: 'transitionStart',
+      data: { closing },
+      target: state.key,
+    });
+  });
+
+  const handleTransitionEnd = useLatestCallback((closing: boolean) => {
+    navigation.emit({
+      type: 'transitionEnd',
+      data: { closing },
+      target: state.key,
+    });
+  });
 
   React.useEffect(() => {
     if (drawerStatus === defaultStatus || drawerType === 'permanent') {
@@ -121,6 +162,13 @@ function DrawerViewBase({
       }
     };
 
+    if (Platform.OS === 'web') {
+      document?.body?.addEventListener?.('keyup', handleEscape);
+      return () => {
+        document?.body?.removeEventListener?.('keyup', handleEscape);
+      };
+    }
+
     // We only add the listeners when drawer opens
     // This way we can make sure that the listener is added as late as possible
     // This will make sure that our handler will run first when back button is pressed
@@ -129,16 +177,8 @@ function DrawerViewBase({
       handleHardwareBack
     );
 
-    if (Platform.OS === 'web') {
-      document?.body?.addEventListener?.('keyup', handleEscape);
-    }
-
     return () => {
-      subscription.remove();
-
-      if (Platform.OS === 'web') {
-        document?.body?.removeEventListener?.('keyup', handleEscape);
-      }
+      subscription?.remove?.();
     };
   }, [
     defaultStatus,
@@ -240,6 +280,11 @@ function DrawerViewBase({
         open={drawerStatus !== 'closed'}
         onOpen={handleDrawerOpen}
         onClose={handleDrawerClose}
+        onGestureStart={handleGestureStart}
+        onGestureEnd={handleGestureEnd}
+        onGestureCancel={handleGestureCancel}
+        onTransitionStart={handleTransitionStart}
+        onTransitionEnd={handleTransitionEnd}
         layout={dimensions}
         gestureHandlerProps={gestureHandlerProps}
         swipeEnabled={swipeEnabled}
@@ -274,7 +319,7 @@ function DrawerViewBase({
   );
 }
 
-export default function DrawerView({ navigation, ...rest }: Props) {
+export function DrawerView({ navigation, ...rest }: Props) {
   return (
     <SafeAreaProviderCompat>
       <DrawerViewBase navigation={navigation} {...rest} />

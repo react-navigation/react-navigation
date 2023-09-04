@@ -94,7 +94,7 @@ function parseLine(line: string): HermesStackEntry | undefined {
   return undefined;
 }
 
-export default function parseHermesStack(stack: string): HermesParsedStack {
+export function parseHermesStack(stack: string): HermesParsedStack {
   const lines = stack.split(/\n/);
   let entries = [];
   let lastMessageLine = -1;

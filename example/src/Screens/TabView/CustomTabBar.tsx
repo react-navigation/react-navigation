@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
@@ -15,10 +16,10 @@ import {
   TabView,
 } from 'react-native-tab-view';
 
-import Albums from '../../Shared/Albums';
-import Article from '../../Shared/Article';
-import Chat from '../../Shared/Chat';
-import Contacts from '../../Shared/Contacts';
+import { Albums } from '../../Shared/Albums';
+import { Article } from '../../Shared/Article';
+import { Chat } from '../../Shared/Chat';
+import { Contacts } from '../../Shared/Contacts';
 
 type Route = {
   key: string;
@@ -35,7 +36,8 @@ const renderScene = SceneMap({
   chat: () => <Chat />,
 });
 
-const CustomTabBar = () => {
+export const CustomTabBar = () => {
+  const { direction } = useLocale();
   const insets = useSafeAreaInsets();
   const [index, onIndexChange] = React.useState(0);
   const [routes] = React.useState<Route[]>([
@@ -121,6 +123,7 @@ const CustomTabBar = () => {
         index,
         routes,
       }}
+      direction={direction}
       renderScene={renderScene}
       renderTabBar={renderTabBar}
       tabBarPosition="bottom"
@@ -132,8 +135,6 @@ const CustomTabBar = () => {
 CustomTabBar.options = {
   title: 'Custom tab bar',
 };
-
-export default CustomTabBar;
 
 const styles = StyleSheet.create({
   tabbar: {

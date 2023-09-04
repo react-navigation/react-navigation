@@ -1,1 +1,1 @@
-export { default } from './MaskedViewNative';
+export { MaskedView } from './MaskedViewNative';

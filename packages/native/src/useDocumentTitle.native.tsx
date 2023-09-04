@@ -1,3 +1,3 @@
-export default function useDocumentTitle() {
+export function useDocumentTitle() {
   // Noop for React Native
 }

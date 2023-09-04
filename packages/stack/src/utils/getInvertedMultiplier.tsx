@@ -1,9 +1,8 @@
-import { I18nManager } from 'react-native';
-
 import type { GestureDirection } from '../types';
 
-export default function getInvertedMultiplier(
-  gestureDirection: GestureDirection
+export function getInvertedMultiplier(
+  gestureDirection: GestureDirection,
+  isRTL: boolean
 ): 1 | -1 {
   switch (gestureDirection) {
     case 'vertical':
@@ -11,8 +10,8 @@ export default function getInvertedMultiplier(
     case 'vertical-inverted':
       return -1;
     case 'horizontal':
-      return I18nManager.getConstants().isRTL ? -1 : 1;
+      return isRTL ? -1 : 1;
     case 'horizontal-inverted':
-      return I18nManager.getConstants().isRTL ? 1 : -1;
+      return isRTL ? 1 : -1;
   }
 }

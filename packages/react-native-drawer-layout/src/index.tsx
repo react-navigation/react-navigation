@@ -1,4 +1,4 @@
-export { default as DrawerGestureContext } from './utils/DrawerGestureContext';
-export { default as DrawerProgressContext } from './utils/DrawerProgressContext';
-export { default as useDrawerProgress } from './utils/useDrawerProgress';
-export { default as Drawer } from './views/Drawer';
+export { DrawerGestureContext } from './utils/DrawerGestureContext';
+export { DrawerProgressContext } from './utils/DrawerProgressContext';
+export { useDrawerProgress } from './utils/useDrawerProgress';
+export { Drawer } from './views/Drawer';

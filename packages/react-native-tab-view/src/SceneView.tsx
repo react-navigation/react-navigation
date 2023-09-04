@@ -18,7 +18,7 @@ type Props<T extends Route> = SceneRendererProps &
     style?: StyleProp<ViewStyle>;
   };
 
-export default function SceneView<T extends Route>({
+export function SceneView<T extends Route>({
   children,
   navigationState,
   lazy,
@@ -54,7 +54,7 @@ export default function SceneView<T extends Route>({
     };
 
     let unsubscribe: (() => void) | undefined;
-    let timer: NodeJS.Timeout;
+    let timer: number;
 
     if (lazy && isLoading) {
       // If lazy mode is enabled, listen to when we enter screens

@@ -1,6 +1,7 @@
 import type { ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
+  HeaderStyleInterpolators,
   StackNavigationOptions,
   StackScreenProps,
 } from '@react-navigation/stack';
@@ -8,9 +9,9 @@ import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 
-import Albums from '../Shared/Albums';
-import Article from '../Shared/Article';
-import NewsFeed from '../Shared/NewsFeed';
+import { Albums } from '../Shared/Albums';
+import { Article } from '../Shared/Article';
+import { NewsFeed } from '../Shared/NewsFeed';
 
 export type SimpleStackParams = {
   Article: { author: string } | undefined;
@@ -122,9 +123,9 @@ const AlbumsScreen = ({
   );
 };
 
-const SimpleStack = createStackNavigator<SimpleStackParams>();
+const Stack = createStackNavigator<SimpleStackParams>();
 
-export default function SimpleStackScreen({
+export function SimpleStack({
   navigation,
   screenOptions,
 }: StackScreenProps<ParamListBase> & {
@@ -137,8 +138,13 @@ export default function SimpleStackScreen({
   }, [navigation]);
 
   return (
-    <SimpleStack.Navigator screenOptions={screenOptions}>
-      <SimpleStack.Screen
+    <Stack.Navigator
+      screenOptions={{
+        ...screenOptions,
+        headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
+      }}
+    >
+      <Stack.Screen
         name="Article"
         component={ArticleScreen}
         options={({ route }) => ({
@@ -146,17 +152,17 @@ export default function SimpleStackScreen({
         })}
         initialParams={{ author: 'Gandalf' }}
       />
-      <SimpleStack.Screen
+      <Stack.Screen
         name="NewsFeed"
         component={NewsFeedScreen}
         options={{ title: 'Feed' }}
       />
-      <SimpleStack.Screen
+      <Stack.Screen
         name="Albums"
         component={AlbumsScreen}
         options={{ title: 'Albums' }}
       />
-    </SimpleStack.Navigator>
+    </Stack.Navigator>
   );
 }
 

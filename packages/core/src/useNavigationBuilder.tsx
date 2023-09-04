@@ -13,14 +13,14 @@ import {
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
 
-import Group from './Group';
-import isArrayEqual from './isArrayEqual';
-import isRecordEqual from './isRecordEqual';
-import NavigationHelpersContext from './NavigationHelpersContext';
-import NavigationRouteContext from './NavigationRouteContext';
-import NavigationStateContext from './NavigationStateContext';
-import PreventRemoveProvider from './PreventRemoveProvider';
-import Screen from './Screen';
+import { Group } from './Group';
+import { isArrayEqual } from './isArrayEqual';
+import { isRecordEqual } from './isRecordEqual';
+import { NavigationHelpersContext } from './NavigationHelpersContext';
+import { NavigationRouteContext } from './NavigationRouteContext';
+import { NavigationStateContext } from './NavigationStateContext';
+import { PreventRemoveProvider } from './PreventRemoveProvider';
+import { Screen } from './Screen';
 import {
   DefaultNavigatorOptions,
   EventMapBase,
@@ -30,20 +30,20 @@ import {
   RouteConfig,
   RouteProp,
 } from './types';
-import useChildListeners from './useChildListeners';
-import useComponent from './useComponent';
-import useCurrentRender from './useCurrentRender';
-import useDescriptors, { ScreenConfigWithParent } from './useDescriptors';
-import useEventEmitter from './useEventEmitter';
-import useFocusedListenersChildrenAdapter from './useFocusedListenersChildrenAdapter';
-import useFocusEvents from './useFocusEvents';
-import useKeyedChildListeners from './useKeyedChildListeners';
-import useNavigationHelpers from './useNavigationHelpers';
-import useOnAction from './useOnAction';
-import useOnGetState from './useOnGetState';
-import useOnRouteFocus from './useOnRouteFocus';
-import useRegisterNavigator from './useRegisterNavigator';
-import useScheduleUpdate from './useScheduleUpdate';
+import { useChildListeners } from './useChildListeners';
+import { useComponent } from './useComponent';
+import { useCurrentRender } from './useCurrentRender';
+import { ScreenConfigWithParent, useDescriptors } from './useDescriptors';
+import { useEventEmitter } from './useEventEmitter';
+import { useFocusedListenersChildrenAdapter } from './useFocusedListenersChildrenAdapter';
+import { useFocusEvents } from './useFocusEvents';
+import { useKeyedChildListeners } from './useKeyedChildListeners';
+import { useNavigationHelpers } from './useNavigationHelpers';
+import { useOnAction } from './useOnAction';
+import { useOnGetState } from './useOnGetState';
+import { useOnRouteFocus } from './useOnRouteFocus';
+import { useRegisterNavigator } from './useRegisterNavigator';
+import { useScheduleUpdate } from './useScheduleUpdate';
 
 // This is to make TypeScript compiler happy
 // eslint-disable-next-line babel/no-unused-expressions
@@ -252,7 +252,7 @@ const getRouteConfigsFromChildren = <
  * @param options Options object containing `children` and additional options for the router.
  * @returns An object containing `state`, `navigation`, `descriptors` objects.
  */
-export default function useNavigationBuilder<
+export function useNavigationBuilder<
   State extends NavigationState,
   RouterOptions extends DefaultRouterOptions,
   ActionHelpers extends Record<string, () => void>,

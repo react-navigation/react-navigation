@@ -3,9 +3,9 @@ import type { ParamListBase } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import * as React from 'react';
 
-import Albums from '../Shared/Albums';
-import Chat from '../Shared/Chat';
-import Contacts from '../Shared/Contacts';
+import { Albums } from '../Shared/Albums';
+import { Chat } from '../Shared/Chat';
+import { Contacts } from '../Shared/Contacts';
 
 type MaterialTopTabParams = {
   Albums: undefined;
@@ -17,7 +17,7 @@ const MaterialTopTabs = createMaterialTopTabNavigator<MaterialTopTabParams>();
 
 const ChatScreen = () => <Chat bottom />;
 
-export default function MaterialTopTabsScreen({
+export function MaterialTopTabsScreen({
   navigation,
 }: StackScreenProps<ParamListBase>) {
   React.useLayoutEffect(() => {

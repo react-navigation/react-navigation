@@ -1,3 +1,5 @@
 import * as React from 'react';
 
-export default React.createContext<number | undefined>(undefined);
+export const BottomTabBarHeightContext = React.createContext<
+  number | undefined
+>(undefined);

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import useNavigation from './useNavigation';
+import { useNavigation } from './useNavigation';
 
 type EffectCallback = () => undefined | void | (() => void);
 
@@ -11,7 +11,7 @@ type EffectCallback = () => undefined | void | (() => void);
  *
  * @param callback Memoized callback containing the effect, should optionally return a cleanup function.
  */
-export default function useFocusEffect(effect: EffectCallback) {
+export function useFocusEffect(effect: EffectCallback) {
   const navigation = useNavigation();
 
   if (arguments[1] !== undefined) {

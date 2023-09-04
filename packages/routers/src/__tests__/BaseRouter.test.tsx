@@ -1,4 +1,4 @@
-import BaseRouter from '../BaseRouter';
+import { BaseRouter } from '../BaseRouter';
 import * as CommonActions from '../CommonActions';
 
 jest.mock('nanoid/non-secure', () => ({ nanoid: () => 'test' }));

@@ -22,7 +22,7 @@ type Props = {
   style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
 };
 
-export default function Badge({
+export function Badge({
   children,
   style,
   visible = true,
@@ -32,7 +32,7 @@ export default function Badge({
   const [opacity] = React.useState(() => new Animated.Value(visible ? 1 : 0));
   const [rendered, setRendered] = React.useState(visible);
 
-  const theme = useTheme();
+  const { colors, fonts } = useTheme();
 
   React.useEffect(() => {
     if (!rendered) {
@@ -61,7 +61,7 @@ export default function Badge({
   }
 
   // @ts-expect-error: backgroundColor definitely exists
-  const { backgroundColor = theme.colors.notification, ...restStyle } =
+  const { backgroundColor = colors.notification, ...restStyle } =
     StyleSheet.flatten(style) || {};
   const textColor = color(backgroundColor).isLight() ? 'black' : 'white';
 
@@ -90,6 +90,7 @@ export default function Badge({
           fontSize,
           borderRadius,
         },
+        fonts.regular,
         styles.container,
         restStyle,
       ]}

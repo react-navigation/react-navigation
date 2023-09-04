@@ -4,7 +4,7 @@ import type {
   ParamListBase,
 } from '@react-navigation/native';
 
-export default function getDrawerStatusFromState(
+export function getDrawerStatusFromState(
   state: DrawerNavigationState<ParamListBase>
 ): DrawerStatus {
   if (state.history == null) {

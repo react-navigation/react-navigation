@@ -15,7 +15,7 @@ const SceneComponent = React.memo(
   }
 );
 
-export default function SceneMap<T extends any>(scenes: {
+export function SceneMap<T extends any>(scenes: {
   [key: string]: React.ComponentType<T>;
 }) {
   return ({ route, jumpTo, position }: SceneProps) => (

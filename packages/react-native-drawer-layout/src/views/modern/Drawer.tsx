@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  I18nManager,
   InteractionManager,
   Keyboard,
   Platform,
@@ -17,6 +16,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import useLatestCallback from 'use-latest-callback';
 
 import {
   DEFAULT_DRAWER_WIDTH,
@@ -25,13 +25,13 @@ import {
   SWIPE_MIN_VELOCITY,
 } from '../../constants';
 import type { DrawerProps } from '../../types';
-import DrawerProgressContext from '../../utils/DrawerProgressContext';
+import { DrawerProgressContext } from '../../utils/DrawerProgressContext';
 import {
   GestureState,
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
 } from '../GestureHandler';
-import Overlay from './Overlay';
+import { Overlay } from './Overlay';
 
 const minmax = (value: number, start: number, end: number) => {
   'worklet';
@@ -43,7 +43,7 @@ type Props = DrawerProps & {
   layout: { width: number };
 };
 
-export default function Drawer({
+export function Drawer({
   layout,
   drawerPosition,
   drawerStyle,
@@ -53,6 +53,11 @@ export default function Drawer({
   keyboardDismissMode,
   onClose,
   onOpen,
+  onGestureStart,
+  onGestureCancel,
+  onGestureEnd,
+  onTransitionStart,
+  onTransitionEnd,
   open,
   overlayStyle,
   overlayAccessibilityLabel,
@@ -132,13 +137,15 @@ export default function Drawer({
     }
   };
 
-  const onGestureStart = () => {
+  const onGestureBegin = () => {
+    onGestureStart?.();
     startInteraction();
     hideKeyboard();
     hideStatusBar(true);
   };
 
   const onGestureFinish = () => {
+    onGestureEnd?.();
     endInteraction();
   };
 
@@ -155,23 +162,42 @@ export default function Drawer({
   const translationX = useSharedValue(getDrawerTranslationX(open));
   const gestureState = useSharedValue<GestureState>(GestureState.UNDETERMINED);
 
+  const handleAnimationStart = useLatestCallback((open: boolean) => {
+    onTransitionStart?.(!open);
+  });
+
+  const handleAnimationEnd = useLatestCallback(
+    (open: boolean, finished?: boolean) => {
+      if (!finished) return;
+      onTransitionEnd?.(!open);
+    }
+  );
+
   const toggleDrawer = React.useCallback(
     (open: boolean, velocity?: number) => {
       'worklet';
 
       const translateX = getDrawerTranslationX(open);
 
+      if (velocity === undefined) {
+        runOnJS(handleAnimationStart)(open);
+      }
+
       touchStartX.value = 0;
       touchX.value = 0;
-      translationX.value = withSpring(translateX, {
-        velocity,
-        stiffness: 1000,
-        damping: 500,
-        mass: 3,
-        overshootClamping: true,
-        restDisplacementThreshold: 0.01,
-        restSpeedThreshold: 0.01,
-      });
+      translationX.value = withSpring(
+        translateX,
+        {
+          velocity,
+          stiffness: 1000,
+          damping: 500,
+          mass: 3,
+          overshootClamping: true,
+          restDisplacementThreshold: 0.01,
+          restSpeedThreshold: 0.01,
+        },
+        (finished) => runOnJS(handleAnimationEnd)(open, finished)
+      );
 
       if (open) {
         runOnJS(onOpen)();
@@ -179,7 +205,16 @@ export default function Drawer({
         runOnJS(onClose)();
       }
     },
-    [getDrawerTranslationX, onClose, onOpen, touchStartX, touchX, translationX]
+    [
+      getDrawerTranslationX,
+      handleAnimationEnd,
+      handleAnimationStart,
+      onClose,
+      onOpen,
+      touchStartX,
+      touchX,
+      translationX,
+    ]
   );
 
   React.useEffect(() => toggleDrawer(open), [open, toggleDrawer]);
@@ -194,17 +229,20 @@ export default function Drawer({
       gestureState.value = event.state;
       touchStartX.value = event.x;
     },
+    onCancel: () => {
+      runOnJS(() => onGestureCancel?.())();
+    },
     onActive: (event, ctx) => {
       touchX.value = event.x;
       translationX.value = ctx.startX + event.translationX;
       gestureState.value = event.state;
 
       // onStart will _always_ be called, even when the activation
-      // criteria isn't met yet. This makes sure onGestureStart is only
+      // criteria isn't met yet. This makes sure onGestureBegin is only
       // called when the criteria is really met.
       if (!ctx.hasCalledOnStart) {
         ctx.hasCalledOnStart = true;
-        runOnJS(onGestureStart)();
+        runOnJS(onGestureBegin)();
       }
     },
     onEnd: (event) => {
@@ -273,10 +311,7 @@ export default function Drawer({
     return translateX;
   });
 
-  const isRTL = I18nManager.getConstants().isRTL;
   const drawerAnimatedStyle = useAnimatedStyle(() => {
-    const distanceFromEdge = layout.width - drawerWidth;
-
     return {
       transform:
         drawerType === 'permanent'
@@ -287,14 +322,7 @@ export default function Drawer({
               {
                 translateX:
                   // The drawer stays in place when `drawerType` is `back`
-                  (drawerType === 'back' ? 0 : translateX.value) +
-                  (drawerPosition === 'left'
-                    ? isRTL
-                      ? -distanceFromEdge
-                      : 0
-                    : isRTL
-                    ? 0
-                    : distanceFromEdge),
+                  drawerType === 'back' ? 0 : translateX.value,
               },
             ],
     };

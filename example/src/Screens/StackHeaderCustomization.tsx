@@ -18,9 +18,9 @@ import {
 } from 'react-native';
 import { Appbar, Button } from 'react-native-paper';
 
-import Albums from '../Shared/Albums';
-import Article from '../Shared/Article';
-import BlurView from '../Shared/BlurView';
+import { Albums } from '../Shared/Albums';
+import { Article } from '../Shared/Article';
+import { BlurView } from '../Shared/BlurView';
 
 type SimpleStackParams = {
   Article: { author: string };
@@ -85,7 +85,7 @@ const AlbumsScreen = ({ navigation }: StackScreenProps<SimpleStackParams>) => {
   );
 };
 
-const SimpleStack = createStackNavigator<SimpleStackParams>();
+const Stack = createStackNavigator<SimpleStackParams>();
 
 type Props = StackScreenProps<ParamListBase>;
 
@@ -108,7 +108,7 @@ function CustomHeader(props: StackHeaderProps) {
   );
 }
 
-export default function HeaderCustomizationScreen({ navigation }: Props) {
+export function StackHeaderCustomization({ navigation }: Props) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -119,8 +119,8 @@ export default function HeaderCustomizationScreen({ navigation }: Props) {
   const [headerTitleCentered, setHeaderTitleCentered] = React.useState(true);
 
   return (
-    <SimpleStack.Navigator screenOptions={{ headerMode: 'float' }}>
-      <SimpleStack.Screen
+    <Stack.Navigator screenOptions={{ headerMode: 'float' }}>
+      <Stack.Screen
         name="Article"
         component={ArticleScreen}
         options={({ route }) => ({
@@ -154,7 +154,7 @@ export default function HeaderCustomizationScreen({ navigation }: Props) {
         })}
         initialParams={{ author: 'Gandalf' }}
       />
-      <SimpleStack.Screen
+      <Stack.Screen
         name="Albums"
         component={AlbumsScreen}
         options={{
@@ -178,7 +178,7 @@ export default function HeaderCustomizationScreen({ navigation }: Props) {
           ),
         }}
       />
-    </SimpleStack.Navigator>
+    </Stack.Navigator>
   );
 }
 

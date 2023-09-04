@@ -15,8 +15,8 @@ import {
 } from 'react-native';
 import { Button, Paragraph } from 'react-native-paper';
 
-import Article from '../Shared/Article';
-import NewsFeed from '../Shared/NewsFeed';
+import { Article } from '../Shared/Article';
+import { NewsFeed } from '../Shared/NewsFeed';
 
 type TransparentStackParams = {
   Article: { author: string };
@@ -134,11 +134,11 @@ const DialogScreen = ({
   );
 };
 
-const TransparentStack = createStackNavigator<TransparentStackParams>();
+const Stack = createStackNavigator<TransparentStackParams>();
 
 type Props = StackScreenProps<ParamListBase>;
 
-export default function TransparentStackScreen({ navigation }: Props) {
+export function StackTransparent({ navigation }: Props) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -146,18 +146,18 @@ export default function TransparentStackScreen({ navigation }: Props) {
   }, [navigation]);
 
   return (
-    <TransparentStack.Navigator>
-      <TransparentStack.Screen
+    <Stack.Navigator>
+      <Stack.Screen
         name="Article"
         component={ArticleScreen}
         initialParams={{ author: 'Gandalf' }}
       />
-      <TransparentStack.Screen
+      <Stack.Screen
         name="NewsFeed"
         component={NewsFeedScreen}
         options={{ presentation: 'modal' }}
       />
-      <TransparentStack.Screen
+      <Stack.Screen
         name="Dialog"
         component={DialogScreen}
         options={{
@@ -165,7 +165,7 @@ export default function TransparentStackScreen({ navigation }: Props) {
           presentation: 'transparentModal',
         }}
       />
-    </TransparentStack.Navigator>
+    </Stack.Navigator>
   );
 }
 

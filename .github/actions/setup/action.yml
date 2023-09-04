@@ -21,7 +21,15 @@ runs:
         restore-keys: |
           ${{ runner.os }}-yarn-
 
+    - name: Check for changes
+      uses: dorny/paths-filter@v2
+      id: changes
+      with:
+        filters: |
+          package-json:
+            - '**/package.json'
+
     - name: Install dependencies
-      if: steps.yarn-cache.outputs.cache-hit != 'true'
+      if: steps.yarn-cache.outputs.cache-hit != 'true' || steps.changes.outputs.package-json == 'true'
       run: yarn install --immutable
       shell: bash

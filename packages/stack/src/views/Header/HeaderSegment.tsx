@@ -5,6 +5,7 @@ import {
   HeaderBackButtonProps,
   HeaderTitle,
 } from '@react-navigation/elements';
+import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
@@ -20,7 +21,7 @@ import type {
   StackHeaderOptions,
   StackHeaderStyleInterpolator,
 } from '../../types';
-import memoize from '../../utils/memoize';
+import { memoize } from '../../utils/memoize';
 
 type Props = Omit<StackHeaderOptions, 'headerStatusBarHeight'> & {
   headerStatusBarHeight: number;
@@ -32,7 +33,9 @@ type Props = Omit<StackHeaderOptions, 'headerStatusBarHeight'> & {
   styleInterpolator: StackHeaderStyleInterpolator;
 };
 
-export default function HeaderSegment(props: Props) {
+export function HeaderSegment(props: Props) {
+  const { direction } = useLocale();
+
   const [leftLabelLayout, setLeftLabelLayout] = React.useState<
     Layout | undefined
   >(undefined);
@@ -84,6 +87,7 @@ export default function HeaderSegment(props: Props) {
       styleInterpolator({
         current: { progress: current },
         next: next && { progress: next },
+        direction,
         layouts: {
           header: {
             height: headerHeight,

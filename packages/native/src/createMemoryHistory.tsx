@@ -10,7 +10,7 @@ type HistoryRecord = {
   path: string;
 };
 
-export default function createMemoryHistory() {
+export function createMemoryHistory() {
   let index = 0;
   let items: HistoryRecord[] = [];
 

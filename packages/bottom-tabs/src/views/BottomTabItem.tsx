@@ -17,7 +17,7 @@ import type {
   BottomTabDescriptor,
   LabelPosition,
 } from '../types';
-import TabBarIcon from './TabBarIcon';
+import { TabBarIcon } from './TabBarIcon';
 
 type Props = {
   /**
@@ -128,7 +128,7 @@ type Props = {
   style?: StyleProp<ViewStyle>;
 };
 
-export default function BottomTabItem({
+export function BottomTabItem({
   route,
   href,
   focused,
@@ -195,7 +195,7 @@ export default function BottomTabItem({
   iconStyle,
   style,
 }: Props) {
-  const { colors } = useTheme();
+  const { colors, fonts } = useTheme();
 
   const activeTintColor =
     customActiveTintColor === undefined
@@ -219,8 +219,9 @@ export default function BottomTabItem({
         <Text
           numberOfLines={1}
           style={[
-            styles.label,
             { color },
+            fonts.regular,
+            styles.label,
             horizontal ? styles.labelBeside : styles.labelBeneath,
             labelStyle,
           ]}

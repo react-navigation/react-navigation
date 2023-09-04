@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import HeaderHeightContext from './HeaderHeightContext';
+import { HeaderHeightContext } from './HeaderHeightContext';
 
-export default function useHeaderHeight() {
+export function useHeaderHeight() {
   const height = React.useContext(HeaderHeightContext);
 
   if (height === undefined) {

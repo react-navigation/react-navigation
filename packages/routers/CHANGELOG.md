@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.0.0-alpha.0...@react-navigation/routers@7.0.0-alpha.1) (2023-03-01)
+
+### Bug Fixes
+
+* fix paths in sourcemap files ([368e069](https://github.com/react-navigation/react-navigation/commit/368e0691b9fb07d4b1cbe71cfe4c2f40512f93ad)) - by @satya164
+* handle getId in tab and drawer routers ([7430c72](https://github.com/react-navigation/react-navigation/commit/7430c723ced1101191cfbdf0c26d0b0947602b2b)) - by @satya164
+
 # [7.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@6.1.3...@react-navigation/routers@7.0.0-alpha.0) (2023-02-17)
 
 ### Bug Fixes

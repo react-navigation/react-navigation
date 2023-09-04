@@ -4,15 +4,15 @@ import {
   HeaderHeightContext,
   HeaderShownContext,
 } from '@react-navigation/elements';
-import { Route, useTheme } from '@react-navigation/native';
+import { Route, useLocale, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 
 import type { Layout, Scene } from '../../types';
-import ModalPresentationContext from '../../utils/ModalPresentationContext';
-import useKeyboardManager from '../../utils/useKeyboardManager';
+import { ModalPresentationContext } from '../../utils/ModalPresentationContext';
+import { useKeyboardManager } from '../../utils/useKeyboardManager';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
-import Card from './Card';
+import { Card } from './Card';
 
 type Props = {
   interpolationIndex: number;
@@ -56,7 +56,7 @@ type Props = {
 
 const EPSILON = 0.1;
 
-function CardContainer({
+function CardContainerInner({
   interpolationIndex,
   index,
   active,
@@ -89,6 +89,8 @@ function CardContainer({
   safeAreaInsetTop,
   scene,
 }: Props) {
+  const { direction } = useLocale();
+
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
 
   const { onPageChangeStart, onPageChangeCancel, onPageChangeConfirm } =
@@ -221,6 +223,7 @@ function CardContainer({
       gestureDirection={gestureDirection}
       layout={layout}
       insets={insets}
+      direction={direction}
       gesture={gesture}
       current={scene.progress.current}
       next={scene.progress.next}
@@ -307,7 +310,7 @@ function CardContainer({
   );
 }
 
-export default React.memo(CardContainer);
+export const CardContainer = React.memo(CardContainerInner);
 
 const styles = StyleSheet.create({
   container: {

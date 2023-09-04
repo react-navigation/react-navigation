@@ -21,7 +21,7 @@ export const ScheduleUpdateContext = React.createContext<{
  * It lets all subsequent updates access the latest state so it stays correct.
  * Then we call setState during after the component updates.
  */
-export default function useScheduleUpdate(callback: () => void) {
+export function useScheduleUpdate(callback: () => void) {
   const { scheduleUpdate, flushUpdates } = React.useContext(
     ScheduleUpdateContext
   );

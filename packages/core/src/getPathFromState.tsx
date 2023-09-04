@@ -5,11 +5,11 @@ import type {
 } from '@react-navigation/routers';
 import * as queryString from 'query-string';
 
-import fromEntries from './fromEntries';
 import type { PathConfig, PathConfigMap } from './types';
-import validatePathConfig from './validatePathConfig';
+import { validatePathConfig } from './validatePathConfig';
 
 type Options<ParamList extends {}> = {
+  path?: string;
   initialRouteName?: string;
   screens: PathConfigMap<ParamList>;
 };
@@ -66,7 +66,7 @@ const getActiveRoute = (state: State): { name: string; params?: object } => {
  * @param options Extra options to fine-tune how to serialize the path.
  * @returns Path representing the state, e.g. /foo/bar?count=42.
  */
-export default function getPathFromState<ParamList extends {}>(
+export function getPathFromState<ParamList extends {}>(
   state: State,
   options?: Options<ParamList>
 ): string {
@@ -115,7 +115,7 @@ export default function getPathFromState<ParamList extends {}>(
       if (route.params) {
         const stringify = currentOptions[route.name]?.stringify;
 
-        const currentParams = fromEntries(
+        const currentParams = Object.fromEntries(
           Object.entries(route.params).map(([key, value]) => [
             key,
             stringify?.[key] ? stringify[key](value) : String(value),
@@ -234,6 +234,11 @@ export default function getPathFromState<ParamList extends {}>(
   path = path.replace(/\/+/g, '/');
   path = path.length > 1 ? path.replace(/\/$/, '') : path;
 
+  // Include the root path if specified
+  if (options?.path) {
+    path = joinPaths(options.path, path);
+  }
+
   return path;
 }
 
@@ -288,7 +293,7 @@ const createNormalizedConfigs = (
   options: PathConfigMap<object>,
   pattern?: string
 ): Record<string, ConfigItem> =>
-  fromEntries(
+  Object.fromEntries(
     Object.entries(options).map(([name, c]) => {
       const result = createConfigItem(c, pattern);
 

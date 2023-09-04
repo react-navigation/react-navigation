@@ -1,11 +1,11 @@
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
 
-import BaseNavigationContainer from '../BaseNavigationContainer';
-import Screen from '../Screen';
-import useFocusEffect from '../useFocusEffect';
-import useNavigationBuilder from '../useNavigationBuilder';
-import MockRouter, { MockRouterKey } from './__fixtures__/MockRouter';
+import { BaseNavigationContainer } from '../BaseNavigationContainer';
+import { Screen } from '../Screen';
+import { useFocusEffect } from '../useFocusEffect';
+import { useNavigationBuilder } from '../useNavigationBuilder';
+import { MockRouter, MockRouterKey } from './__fixtures__/MockRouter';
 
 beforeEach(() => {
   MockRouterKey.current = 0;

@@ -12,10 +12,10 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 
-import Background from './Background';
-import getDefaultHeaderHeight from './Header/getDefaultHeaderHeight';
-import HeaderHeightContext from './Header/HeaderHeightContext';
-import HeaderShownContext from './Header/HeaderShownContext';
+import { Background } from './Background';
+import { getDefaultHeaderHeight } from './Header/getDefaultHeaderHeight';
+import { HeaderHeightContext } from './Header/HeaderHeightContext';
+import { HeaderShownContext } from './Header/HeaderShownContext';
 
 type Props = {
   focused: boolean;
@@ -30,7 +30,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-export default function Screen(props: Props) {
+export function Screen(props: Props) {
   const dimensions = useSafeAreaFrame();
   const insets = useSafeAreaInsets();
 

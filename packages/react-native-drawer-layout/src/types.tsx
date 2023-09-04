@@ -20,6 +20,31 @@ export type DrawerProps = {
   onClose: () => void;
 
   /**
+   * Callback which is called when a gesture starts.
+   */
+  onGestureStart?: () => void;
+
+  /**
+   * Callback which is called when a gesture is cancelled.
+   */
+  onGestureCancel?: () => void;
+
+  /**
+   * Callback which is called when a gesture ends.
+   */
+  onGestureEnd?: () => void;
+
+  /**
+   * Callback which is called when the opening/closing transition starts.
+   */
+  onTransitionStart?: (closing: boolean) => void;
+
+  /**
+   * Callback which is called when the opening/closing transition ends.
+   */
+  onTransitionEnd?: (closing: boolean) => void;
+
+  /**
    * Callback which returns a react element to render as the content of the drawer.
    */
   renderDrawerContent: () => React.ReactNode;

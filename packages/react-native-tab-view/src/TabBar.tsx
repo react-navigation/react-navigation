@@ -16,17 +16,18 @@ import {
 } from 'react-native';
 import useLatestCallback from 'use-latest-callback';
 
-import TabBarIndicator, { Props as IndicatorProps } from './TabBarIndicator';
-import TabBarItem, { Props as TabBarItemProps } from './TabBarItem';
+import { Props as IndicatorProps, TabBarIndicator } from './TabBarIndicator';
+import { Props as TabBarItemProps, TabBarItem } from './TabBarItem';
 import type {
   Event,
   Layout,
+  LocaleDirection,
   NavigationState,
   Route,
   Scene,
   SceneRendererProps,
 } from './types';
-import useAnimatedValue from './useAnimatedValue';
+import { useAnimatedValue } from './useAnimatedValue';
 
 export type Props<T extends Route> = SceneRendererProps & {
   navigationState: NavigationState<T>;
@@ -65,12 +66,14 @@ export type Props<T extends Route> = SceneRendererProps & {
   labelStyle?: StyleProp<TextStyle>;
   contentContainerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
+  direction?: LocaleDirection;
   gap?: number;
   testID?: string;
   android_ripple?: PressableAndroidRippleConfig;
 };
 
 type FlattenedTabWidth = string | number | undefined;
+type FlattenedTabPadding = string | number | undefined;
 
 const Separator = ({ width }: { width: number }) => {
   return <View style={{ width }} />;
@@ -82,13 +85,50 @@ const getFlattenedTabWidth = (style: StyleProp<ViewStyle>) => {
   return tabStyle?.width;
 };
 
+const getFlattenedPaddingLeft = (style: StyleProp<ViewStyle>) => {
+  const flattenStyle = StyleSheet.flatten(style);
+
+  return flattenStyle
+    ? flattenStyle.paddingLeft || flattenStyle.paddingHorizontal || 0
+    : 0;
+};
+
+const getFlattenedPaddingRight = (style: StyleProp<ViewStyle>) => {
+  const flattenStyle = StyleSheet.flatten(style);
+
+  return flattenStyle
+    ? flattenStyle.paddingRight || flattenStyle.paddingHorizontal || 0
+    : 0;
+};
+
+const convertPaddingPercentToSize = (
+  value: FlattenedTabPadding,
+  layout: Layout
+): number => {
+  switch (typeof value) {
+    case 'number':
+      return value;
+    case 'string':
+      if (value.endsWith('%')) {
+        const width = parseFloat(value);
+        if (Number.isFinite(width)) {
+          return layout.width * (width / 100);
+        }
+      }
+  }
+  return 0;
+};
+
 const getComputedTabWidth = (
   index: number,
   layout: Layout,
   routes: Route[],
   scrollEnabled: boolean | undefined,
   tabWidths: { [key: string]: number },
-  flattenedWidth: FlattenedTabWidth
+  flattenedWidth: FlattenedTabWidth,
+  flattenedPaddingLeft: FlattenedTabPadding,
+  flattenedPaddingRight: FlattenedTabPadding,
+  gap?: number
 ) => {
   if (flattenedWidth === 'auto') {
     return tabWidths[routes[index].key] || 0;
@@ -109,7 +149,13 @@ const getComputedTabWidth = (
   if (scrollEnabled) {
     return (layout.width / 5) * 2;
   }
-  return layout.width / routes.length;
+
+  const gapTotalWidth = (gap ?? 0) * (routes.length - 1);
+  const paddingTotalWidth =
+    convertPaddingPercentToSize(flattenedPaddingLeft, layout) +
+    convertPaddingPercentToSize(flattenedPaddingRight, layout);
+
+  return (layout.width - gapTotalWidth - paddingTotalWidth) / routes.length;
 };
 
 const getMaxScrollDistance = (tabBarWidth: number, layoutWidth: number) =>
@@ -117,13 +163,14 @@ const getMaxScrollDistance = (tabBarWidth: number, layoutWidth: number) =>
 
 const getTranslateX = (
   scrollAmount: Animated.Value,
-  maxScrollDistance: number
+  maxScrollDistance: number,
+  direction: LocaleDirection
 ) =>
   Animated.multiply(
-    Platform.OS === 'android' && I18nManager.isRTL
+    Platform.OS === 'android' && direction === 'rtl'
       ? Animated.add(maxScrollDistance, Animated.multiply(scrollAmount, -1))
       : scrollAmount,
-    I18nManager.isRTL ? 1 : -1
+    direction === 'rtl' ? 1 : -1
   );
 
 const getTabBarWidth = <T extends Route>({
@@ -132,12 +179,22 @@ const getTabBarWidth = <T extends Route>({
   gap,
   scrollEnabled,
   flattenedTabWidth,
+  flattenedPaddingLeft,
+  flattenedPaddingRight,
   tabWidths,
 }: Pick<Props<T>, 'navigationState' | 'gap' | 'layout' | 'scrollEnabled'> & {
   tabWidths: Record<string, number>;
+  flattenedPaddingLeft: FlattenedTabPadding;
+  flattenedPaddingRight: FlattenedTabPadding;
   flattenedTabWidth: FlattenedTabWidth;
 }) => {
   const { routes } = navigationState;
+
+  const paddingsWidth = Math.max(
+    0,
+    convertPaddingPercentToSize(flattenedPaddingLeft, layout) +
+      convertPaddingPercentToSize(flattenedPaddingRight, layout)
+  );
 
   return routes.reduce<number>(
     (acc, _, i) =>
@@ -149,9 +206,12 @@ const getTabBarWidth = <T extends Route>({
         routes,
         scrollEnabled,
         tabWidths,
-        flattenedTabWidth
+        flattenedTabWidth,
+        flattenedPaddingLeft,
+        flattenedPaddingRight,
+        gap
       ),
-    0
+    paddingsWidth
   );
 };
 
@@ -163,10 +223,16 @@ const normalizeScrollValue = <T extends Route>({
   tabWidths,
   value,
   flattenedTabWidth,
+  flattenedPaddingLeft,
+  flattenedPaddingRight,
+  direction,
 }: Pick<Props<T>, 'layout' | 'navigationState' | 'gap' | 'scrollEnabled'> & {
   tabWidths: Record<string, number>;
   value: number;
   flattenedTabWidth: FlattenedTabWidth;
+  flattenedPaddingLeft: FlattenedTabPadding;
+  flattenedPaddingRight: FlattenedTabPadding;
+  direction: LocaleDirection;
 }) => {
   const tabBarWidth = getTabBarWidth({
     layout,
@@ -175,11 +241,13 @@ const normalizeScrollValue = <T extends Route>({
     gap,
     scrollEnabled,
     flattenedTabWidth,
+    flattenedPaddingLeft,
+    flattenedPaddingRight,
   });
   const maxDistance = getMaxScrollDistance(tabBarWidth, layout.width);
   const scrollValue = Math.max(Math.min(value, maxDistance), 0);
 
-  if (Platform.OS === 'android' && I18nManager.isRTL) {
+  if (Platform.OS === 'android' && direction === 'rtl') {
     // On Android, scroll value is not applied in reverse in RTL
     // so we need to manually adjust it to apply correct value
     return maxDistance - scrollValue;
@@ -195,10 +263,21 @@ const getScrollAmount = <T extends Route>({
   scrollEnabled,
   flattenedTabWidth,
   tabWidths,
+  flattenedPaddingLeft,
+  flattenedPaddingRight,
+  direction,
 }: Pick<Props<T>, 'layout' | 'navigationState' | 'scrollEnabled' | 'gap'> & {
   tabWidths: Record<string, number>;
   flattenedTabWidth: FlattenedTabWidth;
+  flattenedPaddingLeft: FlattenedTabPadding;
+  flattenedPaddingRight: FlattenedTabPadding;
+  direction: LocaleDirection;
 }) => {
+  const paddingInitial =
+    direction === 'rtl'
+      ? convertPaddingPercentToSize(flattenedPaddingRight, layout)
+      : convertPaddingPercentToSize(flattenedPaddingLeft, layout);
+
   const centerDistance = Array.from({
     length: navigationState.index + 1,
   }).reduce<number>((total, _, i) => {
@@ -208,18 +287,20 @@ const getScrollAmount = <T extends Route>({
       navigationState.routes,
       scrollEnabled,
       tabWidths,
-      flattenedTabWidth
+      flattenedTabWidth,
+      flattenedPaddingLeft,
+      flattenedPaddingRight,
+      gap
     );
 
     // To get the current index centered we adjust scroll amount by width of indexes
     // 0 through (i - 1) and add half the width of current index i
     return (
       total +
-      (navigationState.index === i
-        ? (tabWidth + (gap ?? 0)) / 2
-        : tabWidth + (gap ?? 0))
+      (i > 0 ? gap ?? 0 : 0) +
+      (navigationState.index === i ? tabWidth / 2 : tabWidth)
     );
-  }, 0);
+  }, paddingInitial);
 
   const scrollAmount = centerDistance - layout.width / 2;
 
@@ -231,6 +312,9 @@ const getScrollAmount = <T extends Route>({
     gap,
     scrollEnabled,
     flattenedTabWidth,
+    flattenedPaddingLeft,
+    flattenedPaddingRight,
+    direction,
   });
 };
 
@@ -256,7 +340,7 @@ const getTestIdDefault = ({ route }: Scene<Route>) => route.testID;
 // Defaults to 10, since that's whats FlatList is using in initialNumToRender.
 const MEASURE_PER_BATCH = 10;
 
-export default function TabBar<T extends Route>({
+export function TabBar<T extends Route>({
   getLabelText = getLabelTextDefault,
   getAccessible = getAccessibleDefault,
   getAccessibilityLabel = getAccessibilityLabelDefault,
@@ -281,22 +365,27 @@ export default function TabBar<T extends Route>({
   renderBadge,
   renderIcon,
   renderLabel,
+  direction = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr',
   renderTabBarItem,
   style,
   tabStyle,
+  layout: propLayout,
   testID,
   android_ripple,
 }: Props<T>) {
-  const [layout, setLayout] = React.useState<Layout>({ width: 0, height: 0 });
+  const [layout, setLayout] = React.useState<Layout>(
+    propLayout ?? { width: 0, height: 0 }
+  );
   const [tabWidths, setTabWidths] = React.useState<Record<string, number>>({});
   const flatListRef = React.useRef<FlatList | null>(null);
   const isFirst = React.useRef(true);
   const scrollAmount = useAnimatedValue(0);
   const measuredTabWidths = React.useRef<Record<string, number>>({});
-
   const { routes } = navigationState;
   const flattenedTabWidth = getFlattenedTabWidth(tabStyle);
   const isWidthDynamic = flattenedTabWidth === 'auto';
+  const flattenedPaddingRight = getFlattenedPaddingRight(contentContainerStyle);
+  const flattenedPaddingLeft = getFlattenedPaddingLeft(contentContainerStyle);
   const scrollOffset = getScrollAmount({
     layout,
     navigationState,
@@ -304,6 +393,9 @@ export default function TabBar<T extends Route>({
     gap,
     scrollEnabled,
     flattenedTabWidth,
+    flattenedPaddingLeft,
+    flattenedPaddingRight,
+    direction,
   });
 
   const hasMeasuredTabWidths =
@@ -347,19 +439,25 @@ export default function TabBar<T extends Route>({
     gap,
     scrollEnabled,
     flattenedTabWidth,
+    flattenedPaddingLeft,
+    flattenedPaddingRight,
   });
 
   const separatorsWidth = Math.max(0, routes.length - 1) * gap;
-  const separatorPercent = (separatorsWidth / tabBarWidth) * 100;
-  const tabBarWidthPercent = `${routes.length * 40}%`;
+  const paddingsWidth = Math.max(
+    0,
+    convertPaddingPercentToSize(flattenedPaddingLeft, layout) +
+      convertPaddingPercentToSize(flattenedPaddingRight, layout)
+  );
 
   const translateX = React.useMemo(
     () =>
       getTranslateX(
         scrollAmount,
-        getMaxScrollDistance(tabBarWidth, layout.width)
+        getMaxScrollDistance(tabBarWidth, layout.width),
+        direction
       ),
-    [layout.width, scrollAmount, tabBarWidth]
+    [direction, layout.width, scrollAmount, tabBarWidth]
   );
 
   const renderItem = React.useCallback(
@@ -436,7 +534,10 @@ export default function TabBar<T extends Route>({
               routes,
               scrollEnabled,
               tabWidths,
-              getFlattenedTabWidth(tabStyle)
+              getFlattenedTabWidth(tabStyle),
+              getFlattenedPaddingRight(contentContainerStyle),
+              getFlattenedPaddingLeft(contentContainerStyle),
+              gap
             )
           : undefined,
         android_ripple,
@@ -479,6 +580,7 @@ export default function TabBar<T extends Route>({
       routes,
       scrollEnabled,
       tabStyle,
+      contentContainerStyle,
       tabWidths,
     ]
   );
@@ -488,21 +590,10 @@ export default function TabBar<T extends Route>({
   const contentContainerStyleMemoized = React.useMemo(
     () => [
       styles.tabContent,
-      scrollEnabled
-        ? {
-            width:
-              tabBarWidth > separatorsWidth ? tabBarWidth : tabBarWidthPercent,
-          }
-        : styles.container,
+      scrollEnabled ? { width: tabBarWidth } : null,
       contentContainerStyle,
     ],
-    [
-      contentContainerStyle,
-      scrollEnabled,
-      separatorsWidth,
-      tabBarWidth,
-      tabBarWidthPercent,
-    ]
+    [contentContainerStyle, scrollEnabled, tabBarWidth]
   );
 
   const handleScroll = React.useMemo(
@@ -546,11 +637,7 @@ export default function TabBar<T extends Route>({
         style={[
           styles.indicatorContainer,
           scrollEnabled ? { transform: [{ translateX }] as any } : null,
-          tabBarWidth > separatorsWidth
-            ? { width: tabBarWidth - separatorsWidth }
-            : scrollEnabled
-            ? { width: tabBarWidthPercent }
-            : null,
+          scrollEnabled ? { width: tabBarWidth } : null,
           indicatorContainerStyle,
         ]}
       >
@@ -559,10 +646,17 @@ export default function TabBar<T extends Route>({
           layout,
           navigationState,
           jumpTo,
+          direction,
           width: isWidthDynamic
             ? 'auto'
-            : `${(100 - separatorPercent) / routes.length}%`,
-          style: indicatorStyle,
+            : Math.max(
+                0,
+                (tabBarWidth - separatorsWidth - paddingsWidth) / routes.length
+              ),
+          style: [
+            indicatorStyle,
+            { left: flattenedPaddingLeft, right: flattenedPaddingRight },
+          ],
           getTabWidth: (i: number) =>
             getComputedTabWidth(
               i,
@@ -570,7 +664,10 @@ export default function TabBar<T extends Route>({
               routes,
               scrollEnabled,
               tabWidths,
-              flattenedTabWidth
+              flattenedTabWidth,
+              flattenedPaddingRight,
+              flattenedPaddingLeft,
+              gap
             ),
           gap,
         })}
@@ -605,9 +702,6 @@ export default function TabBar<T extends Route>({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   scroll: {
     overflow: Platform.select({ default: 'scroll', web: undefined }),
   },
@@ -624,6 +718,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   tabContent: {
+    flexGrow: 1,
     flexDirection: 'row',
     flexWrap: 'nowrap',
   },

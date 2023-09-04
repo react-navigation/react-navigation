@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.5.2](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@3.5.1...react-native-tab-view@3.5.2) (2023-06-22)
+
+### Bug Fixes
+
+* optimize tabBarItem by memoizing getter functions ([#11427](https://github.com/react-navigation/react-navigation/issues/11427)) ([1f94c8b](https://github.com/react-navigation/react-navigation/commit/1f94c8b7b2e11f09a36001ce7b512ec9468a63b5)) - by @okwasniewski
+
+## [3.5.1](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@3.5.0...react-native-tab-view@3.5.1) (2023-03-01)
+
+### Bug Fixes
+
+* fix paths in sourcemap files ([368e069](https://github.com/react-navigation/react-navigation/commit/368e0691b9fb07d4b1cbe71cfe4c2f40512f93ad)) - by @satya164
+
 # [3.5.0](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@3.3.0...react-native-tab-view@3.5.0) (2023-02-17)
 
 ### Bug Fixes

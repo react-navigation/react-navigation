@@ -6,13 +6,13 @@ import * as TransitionSpecs from './TransitionConfigs/TransitionSpecs';
 /**
  * Navigators
  */
-export { default as createStackNavigator } from './navigators/createStackNavigator';
+export { createStackNavigator } from './navigators/createStackNavigator';
 
 /**
  * Views
  */
-export { default as Header } from './views/Header/Header';
-export { default as StackView } from './views/Stack/StackView';
+export { Header } from './views/Header/Header';
+export { StackView } from './views/Stack/StackView';
 
 /**
  * Transition presets
@@ -27,10 +27,10 @@ export {
 /**
  * Utilities
  */
-export { default as CardAnimationContext } from './utils/CardAnimationContext';
-export { default as GestureHandlerRefContext } from './utils/GestureHandlerRefContext';
-export { default as useCardAnimation } from './utils/useCardAnimation';
-export { default as useGestureHandlerRef } from './utils/useGestureHandlerRef';
+export { CardAnimationContext } from './utils/CardAnimationContext';
+export { GestureHandlerRefContext } from './utils/GestureHandlerRefContext';
+export { useCardAnimation } from './utils/useCardAnimation';
+export { useGestureHandlerRef } from './utils/useGestureHandlerRef';
 
 /**
  * Types

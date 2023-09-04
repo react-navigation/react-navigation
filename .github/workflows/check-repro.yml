@@ -4,6 +4,7 @@ on:
     types:
       - opened
       - edited
+      - labeled
   issue_comment:
     types:
       - created
@@ -12,12 +13,15 @@ on:
 jobs:
   check-repro:
     runs-on: ubuntu-latest
+    if: (github.event.action == 'labeled' && github.event.label.name == 'needs repro') || github.event.action != 'labeled'
     steps:
       - uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const user = context.payload.sender.login;
+            const user = context.payload.comment
+              ? context.payload.comment.user.login
+              : context.payload.issue.user.login;
             const body = context.payload.comment
               ? context.payload.comment.body
               : context.payload.issue.body;
@@ -27,7 +31,7 @@ jobs:
               'gm'
             );
 
-            if (regex.test(body)) {
+            if (context.payload.action != 'labeled' && regex.test(body)) {
               await github.issues.addLabels({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
@@ -52,21 +56,21 @@ jobs:
                 return;
               }
 
-            const body = `Hey @${user}! Thanks for opening the issue. It seems that the issue doesn't contain a link to a repro.
+              const body = `Hey @${user}! Thanks for opening the issue. It seems that the issue doesn't contain a link to a repro.
 
-            **The best way to get attention to your issue is to provide an easy way for a developer to reproduce the issue.**
+              **The best way to get attention to your issue is to provide an easy way for a developer to reproduce the issue.**
 
-            You can provide a repro using any of the following:
+              You can provide a repro using any of the following:
 
-            - [Expo Snack](https://snack.expo.io)
-            - [TypeScript Playground](https://www.typescriptlang.org/play)
-            - GitHub repo under your username
+              - [Expo Snack](https://snack.expo.io)
+              - [TypeScript Playground](https://www.typescriptlang.org/play)
+              - GitHub repo under your username
 
-            A snack link is preferred since it's the easiest way to both create and share a repro. If it's not possible to create a repro using a snack, link to a GitHub repo under your username is a good alternative. **Don't link to a branch or specific file etc.** as it won't be detected.
+              A snack link is preferred since it's the easiest way to both create and share a repro. If it's not possible to create a repro using a snack, link to a GitHub repo under your username is a good alternative. **Don't link to a branch or specific file etc.** as it won't be detected.
 
-            Try to keep the repro as small as possible by narrowing down the minimal amount of code needed to reproduce the issue. **Don't link to your entire project or a project containing code unrelated to the issue.** See ["How to create a Minimal, Reproducible Example"](https://stackoverflow.com/help/minimal-reproducible-example) for more information.
+              Try to keep the repro as small as possible by narrowing down the minimal amount of code needed to reproduce the issue. **Don't link to your entire project or a project containing code unrelated to the issue.** See ["How to create a Minimal, Reproducible Example"](https://stackoverflow.com/help/minimal-reproducible-example) for more information.
 
-            You can edit your original issue to include a link to the repro, or leave it as a comment. **The issue will be closed automatically after a while** if you don't provide a repro.`
+              You can edit your original issue to include a link to the repro, or leave it as a comment. **The issue will be closed automatically after a while** if you don't provide a repro.`
 
               const comments = await github.issues.listComments({
                 issue_number: context.issue.number,

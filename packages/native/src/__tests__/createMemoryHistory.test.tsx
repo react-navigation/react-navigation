@@ -1,7 +1,7 @@
 import type { NavigationState } from '@react-navigation/core';
 
-import window from '../__mocks__/window';
-import createMemoryHistory from '../createMemoryHistory';
+import { window } from '../__mocks__/window';
+import { createMemoryHistory } from '../createMemoryHistory';
 
 Object.assign(global, window);
 

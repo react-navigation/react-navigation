@@ -21,9 +21,9 @@ import {
 import { EdgeInsets, useSafeAreaFrame } from 'react-native-safe-area-context';
 
 import type { BottomTabBarProps, BottomTabDescriptorMap } from '../types';
-import BottomTabBarHeightCallbackContext from '../utils/BottomTabBarHeightCallbackContext';
-import useIsKeyboardShown from '../utils/useIsKeyboardShown';
-import BottomTabItem from './BottomTabItem';
+import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCallbackContext';
+import { useIsKeyboardShown } from '../utils/useIsKeyboardShown';
+import { BottomTabItem } from './BottomTabItem';
 
 type Props = BottomTabBarProps & {
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
@@ -125,7 +125,7 @@ export const getTabBarHeight = ({
   return DEFAULT_TABBAR_HEIGHT + paddingBottom;
 };
 
-export default function BottomTabBar({
+export function BottomTabBar({
   state,
   navigation,
   descriptors,

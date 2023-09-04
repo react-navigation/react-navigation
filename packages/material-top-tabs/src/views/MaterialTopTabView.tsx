@@ -3,6 +3,7 @@ import {
   ParamListBase,
   Route,
   TabNavigationState,
+  useLocale,
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -14,7 +15,7 @@ import type {
   MaterialTopTabNavigationConfig,
   MaterialTopTabNavigationHelpers,
 } from '../types';
-import MaterialTopTabBar from './MaterialTopTabBar';
+import { MaterialTopTabBar } from './MaterialTopTabBar';
 
 type Props = MaterialTopTabNavigationConfig & {
   state: TabNavigationState<ParamListBase>;
@@ -22,7 +23,7 @@ type Props = MaterialTopTabNavigationConfig & {
   descriptors: MaterialTopTabDescriptorMap;
 };
 
-export default function MaterialTopTabView({
+export function MaterialTopTabView({
   tabBar = (props: MaterialTopTabBarProps) => <MaterialTopTabBar {...props} />,
   state,
   navigation,
@@ -31,6 +32,7 @@ export default function MaterialTopTabView({
   ...rest
 }: Props) {
   const { colors } = useTheme();
+  const { direction } = useLocale();
 
   const renderTabBar = (props: SceneRendererProps) => {
     return tabBar({
@@ -70,6 +72,7 @@ export default function MaterialTopTabView({
         { backgroundColor: colors.background },
         sceneContainerStyle,
       ]}
+      direction={direction}
     />
   );
 }

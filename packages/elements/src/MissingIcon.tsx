@@ -7,7 +7,7 @@ type Props = {
   style?: StyleProp<TextStyle>;
 };
 
-export default function MissingIcon({ color, size, style }: Props) {
+export function MissingIcon({ color, size, style }: Props) {
   return <Text style={[styles.icon, { color, fontSize: size }, style]}>⏷</Text>;
 }
 

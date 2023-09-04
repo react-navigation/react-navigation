@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid/non-secure';
 
-import BaseRouter from './BaseRouter';
+import { BaseRouter } from './BaseRouter';
 import type {
   CommonNavigationAction,
   DefaultRouterOptions,
@@ -139,7 +139,7 @@ const changeIndex = (
   };
 };
 
-export default function TabRouter({
+export function TabRouter({
   initialRouteName,
   backBehavior = 'firstRoute',
 }: TabRouterOptions) {

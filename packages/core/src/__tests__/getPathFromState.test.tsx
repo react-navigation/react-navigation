@@ -1,7 +1,7 @@
 import type { NavigationState, PartialState } from '@react-navigation/routers';
 
-import getPathFromState from '../getPathFromState';
-import getStateFromPath from '../getStateFromPath';
+import { getPathFromState } from '../getPathFromState';
+import { getStateFromPath } from '../getStateFromPath';
 
 type State = PartialState<NavigationState>;
 
@@ -1713,4 +1713,39 @@ it('uses nearest parent wildcard match for unmatched paths', () => {
       config
     )
   ).toBe('/404');
+});
+
+it('handles path at top level', () => {
+  const path = 'foo/fruits/apple';
+  const config = {
+    path: 'foo',
+    screens: {
+      Foo: {
+        screens: {
+          Fruits: 'fruits/:fruit',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Fruits',
+              params: { fruit: 'apple' },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toEqual(path);
+  expect(
+    getPathFromState<object>(getStateFromPath<object>(path, config)!, config)
+  ).toEqual(path);
 });

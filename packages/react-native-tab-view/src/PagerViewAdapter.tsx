@@ -11,7 +11,7 @@ import type {
   PagerProps,
   Route,
 } from './types';
-import useAnimatedValue from './useAnimatedValue';
+import { useAnimatedValue } from './useAnimatedValue';
 
 const AnimatedViewPager = Animated.createAnimatedComponent(ViewPager);
 
@@ -33,7 +33,7 @@ type Props<T extends Route> = PagerProps & {
   ) => React.ReactElement;
 };
 
-export default function PagerViewAdapter<T extends Route>({
+export function PagerViewAdapter<T extends Route>({
   keyboardDismissMode = 'auto',
   swipeEnabled = true,
   navigationState,

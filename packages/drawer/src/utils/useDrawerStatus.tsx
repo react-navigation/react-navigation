@@ -1,13 +1,13 @@
 import type { DrawerStatus } from '@react-navigation/native';
 import * as React from 'react';
 
-import DrawerStatusContext from './DrawerStatusContext';
+import { DrawerStatusContext } from './DrawerStatusContext';
 
 /**
  * Hook to detect if the drawer's status in a parent navigator.
  * Returns 'open' if the drawer is open, 'closed' if the drawer is closed.
  */
-export default function useDrawerStatus(): DrawerStatus {
+export function useDrawerStatus(): DrawerStatus {
   const drawerStatus = React.useContext(DrawerStatusContext);
 
   if (drawerStatus === undefined) {

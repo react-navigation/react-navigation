@@ -27,7 +27,7 @@ const ANDROID_SUPPORTS_RIPPLE =
 /**
  * PlatformPressable provides an abstraction on top of Pressable to handle platform differences.
  */
-export default function PlatformPressable({
+export function PlatformPressable({
   onPressIn,
   onPressOut,
   android_ripple,

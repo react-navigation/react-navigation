@@ -7,6 +7,7 @@ import type {
 } from '@react-navigation/elements';
 import type {
   Descriptor,
+  LocaleDirection,
   NavigationHelpers,
   NavigationProp,
   ParamListBase,
@@ -468,6 +469,10 @@ export type StackHeaderInterpolationProps = {
      */
     progress: Animated.AnimatedInterpolation<number>;
   };
+  /**
+   * Writing direction of the layout.
+   */
+  direction: LocaleDirection;
   /**
    * Layout measurements for various items we use for animation.
    */
