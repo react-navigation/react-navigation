@@ -14,7 +14,7 @@ import type {
   MaterialTopTabNavigationConfig,
   MaterialTopTabNavigationHelpers,
 } from '../types';
-import { TabAnimationContext } from '../utils/TabAnimationContext';
+import { CardAnimationContext } from '../utils/CardAnimationContext';
 import { MaterialTopTabBar } from './MaterialTopTabBar';
 
 type Props = MaterialTopTabNavigationConfig & {
@@ -56,9 +56,9 @@ export function MaterialTopTabView({
         });
       }}
       renderScene={({ route, position }) => (
-        <TabAnimationContext.Provider value={position}>
+        <CardAnimationContext.Provider value={{ position }}>
           {descriptors[route.key].render()}
-        </TabAnimationContext.Provider>
+        </CardAnimationContext.Provider>
       )}
       navigationState={state}
       renderTabBar={renderTabBar}

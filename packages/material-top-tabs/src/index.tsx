@@ -12,7 +12,7 @@ export { MaterialTopTabView } from './views/MaterialTopTabView';
 /**
  * Utilities
  */
-export { useTabAnimation } from './utils/useTabAnimation';
+export { useCardAnimation } from './utils/useCardAnimation';
 
 /**
  * Types
