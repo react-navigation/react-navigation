@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   Animated,
-  ColorValue,
   FlatList,
   I18nManager,
   LayoutChangeEvent,
@@ -33,7 +32,7 @@ export type Props<T extends Route> = SceneRendererProps & {
   navigationState: NavigationState<T>;
   scrollEnabled?: boolean;
   bounces?: boolean;
-  activeColor?: ColorValue;
+  activeColor?: string;
   inactiveColor?: string;
   pressColor?: string;
   pressOpacity?: number;
@@ -44,13 +43,13 @@ export type Props<T extends Route> = SceneRendererProps & {
   renderLabel?: (
     scene: Scene<T> & {
       focused: boolean;
-      color: ColorValue;
+      color: string;
     }
   ) => React.ReactNode;
   renderIcon?: (
     scene: Scene<T> & {
       focused: boolean;
-      color: ColorValue;
+      color: string;
     }
   ) => React.ReactNode;
   renderBadge?: (scene: Scene<T>) => React.ReactNode;

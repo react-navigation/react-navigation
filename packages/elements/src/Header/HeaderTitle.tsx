@@ -2,7 +2,6 @@ import { useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
-  ColorValue,
   Platform,
   StyleProp,
   StyleSheet,
@@ -11,7 +10,7 @@ import {
 } from 'react-native';
 
 type Props = Omit<TextProps, 'style'> & {
-  tintColor?: ColorValue;
+  tintColor?: string;
   children?: string;
   style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
 };

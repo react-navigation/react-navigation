@@ -3,7 +3,6 @@ import { CommonActions, Link, Route, useTheme } from '@react-navigation/native';
 import Color from 'color';
 import * as React from 'react';
 import {
-  ColorValue,
   Platform,
   StyleProp,
   StyleSheet,
@@ -27,14 +26,14 @@ type Props = {
    */
   label:
     | string
-    | ((props: { focused: boolean; color: ColorValue }) => React.ReactNode);
+    | ((props: { focused: boolean; color: string }) => React.ReactNode);
   /**
    * Icon to display for the `DrawerItem`.
    */
   icon?: (props: {
     focused: boolean;
     size: number;
-    color: ColorValue;
+    color: string;
   }) => React.ReactNode;
   /**
    * Whether to highlight the drawer item as active.

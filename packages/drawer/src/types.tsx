@@ -9,7 +9,7 @@ import type {
   Route,
   RouteProp,
 } from '@react-navigation/native';
-import type { ColorValue, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 import type {
   PanGestureHandler,
   PanGestureHandlerProperties,
@@ -77,13 +77,13 @@ export type DrawerNavigationOptions = HeaderOptions & {
    */
   drawerLabel?:
     | string
-    | ((props: { color: ColorValue; focused: boolean }) => React.ReactNode);
+    | ((props: { color: string; focused: boolean }) => React.ReactNode);
 
   /**
    * A function that given { focused: boolean, color: string } returns a React.Node to display an icon the drawer.
    */
   drawerIcon?: (props: {
-    color: ColorValue;
+    color: string;
     size: number;
     focused: boolean;
   }) => React.ReactNode;

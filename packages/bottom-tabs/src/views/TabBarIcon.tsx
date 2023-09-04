@@ -1,7 +1,6 @@
 import type { Route } from '@react-navigation/native';
 import React from 'react';
 import {
-  ColorValue,
   StyleProp,
   StyleSheet,
   TextStyle,
@@ -18,11 +17,11 @@ type Props = {
   badgeStyle?: StyleProp<TextStyle>;
   activeOpacity: number;
   inactiveOpacity: number;
-  activeTintColor: ColorValue;
-  inactiveTintColor: ColorValue;
+  activeTintColor: string;
+  inactiveTintColor: string;
   renderIcon: (props: {
     focused: boolean;
-    color: ColorValue;
+    color: string;
     size: number;
   }) => React.ReactNode;
   style: StyleProp<ViewStyle>;
