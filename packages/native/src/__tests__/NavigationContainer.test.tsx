@@ -6,7 +6,7 @@ import {
   TabRouter,
   useNavigationBuilder,
 } from '@react-navigation/core';
-import { act, render } from '@testing-library/react-native';
+import { act, render, waitFor } from '@testing-library/react-native';
 import * as React from 'react';
 
 import { window } from '../__mocks__/window';
@@ -18,9 +18,7 @@ Object.assign(global, window);
 // eslint-disable-next-line import/extensions
 jest.mock('../useLinking', () => require('../useLinking.tsx'));
 
-it('integrates with the history API', () => {
-  jest.useFakeTimers();
-
+it('integrates with the history API', async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -104,51 +102,44 @@ it('integrates with the history API', () => {
 
   act(() => navigation.current?.navigate('Profile', { user: 'jane' }));
 
-  expect(window.location.pathname).toBe('/jane');
+  await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
   act(() => navigation.current?.navigate('Updates'));
 
-  expect(window.location.pathname).toBe('/updates');
+  await waitFor(() => expect(window.location.pathname).toBe('/updates'));
 
   act(() => navigation.current?.goBack());
 
-  jest.runAllTimers();
-
-  expect(window.location.pathname).toBe('/jane');
+  await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
   act(() => {
     window.history.back();
-    jest.runAllTimers();
   });
 
-  expect(window.location.pathname).toBe('/feed');
+  await waitFor(() => expect(window.location.pathname).toBe('/feed'));
 
   act(() => {
     window.history.forward();
-    jest.runAllTimers();
   });
 
-  expect(window.location.pathname).toBe('/jane');
+  await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
   act(() => navigation.current?.navigate('Settings'));
 
-  expect(window.location.pathname).toBe('/edit');
+  await waitFor(() => expect(window.location.pathname).toBe('/edit'));
 
   act(() => {
     window.history.go(-2);
-    jest.runAllTimers();
   });
 
-  expect(window.location.pathname).toBe('/feed');
+  await waitFor(() => expect(window.location.pathname).toBe('/feed'));
 
   act(() => navigation.current?.navigate('Settings'));
   act(() => navigation.current?.navigate('Chat'));
 
-  expect(window.location.pathname).toBe('/chat');
+  await waitFor(() => expect(window.location.pathname).toBe('/chat'));
 
   act(() => navigation.current?.navigate('Home'));
 
-  jest.runAllTimers();
-
-  expect(window.location.pathname).toBe('/edit');
+  await waitFor(() => expect(window.location.pathname).toBe('/edit'));
 });
