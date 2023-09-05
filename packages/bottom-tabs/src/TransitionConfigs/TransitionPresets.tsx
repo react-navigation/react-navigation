@@ -1,9 +1,13 @@
 import type { BottomTabTransitionPreset } from '../types';
-import { forCrossFade } from './SceneStyleInterpolators';
-import { CrossFadeAnimationSpec } from './TransitionSpecs';
+import { forCrossFade, forShifting } from './SceneStyleInterpolators';
+import { CrossFadeSpec, ShiftingSpec } from './TransitionSpecs';
 
 export const FadeTransition: BottomTabTransitionPreset = {
-  animationEnabled: true,
-  transitionSpec: CrossFadeAnimationSpec,
+  transitionSpec: CrossFadeSpec,
   sceneStyleInterpolator: forCrossFade,
+};
+
+export const ShiftingTransition: BottomTabTransitionPreset = {
+  transitionSpec: ShiftingSpec,
+  sceneStyleInterpolator: forShifting,
 };

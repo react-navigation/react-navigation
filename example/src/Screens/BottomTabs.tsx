@@ -1,3 +1,4 @@
+import { useActionSheet } from '@expo/react-native-action-sheet';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
   createBottomTabNavigator,
@@ -14,7 +15,7 @@ import type { StackScreenProps } from '@react-navigation/stack';
 import { BlurView } from 'expo-blur';
 import * as React from 'react';
 import { ScrollView, StatusBar, StyleSheet } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Appbar } from 'react-native-paper';
 
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
@@ -55,6 +56,12 @@ const AlbumsScreen = () => {
 
 const Tab = createBottomTabNavigator<BottomTabParams>();
 
+const animations = {
+  shifting: TransitionPresets.ShiftingTransition,
+  fade: TransitionPresets.FadeTransition,
+  none: null,
+} as const;
+
 export function BottomTabs({
   navigation,
 }: StackScreenProps<ParamListBase, string>) {
@@ -64,23 +71,46 @@ export function BottomTabs({
     });
   }, [navigation]);
 
-  const [animationEnabled, setAnimationEnabled] = React.useState(false);
+  const [animation, setAnimation] =
+    React.useState<keyof typeof animations>('none');
+
+  const { showActionSheetWithOptions } = useActionSheet();
+
   return (
     <Tab.Navigator
       screenOptions={{
         headerLeft: (props) => (
           <HeaderBackButton {...props} onPress={navigation.goBack} />
         ),
-        headerRight: () => (
-          <Button
-            style={styles.leftButton}
-            onPress={() => setAnimationEnabled((prev) => !prev)}
-            icon={animationEnabled ? 'heart' : 'heart-outline'}
-          >
-            Fade {animationEnabled ? 'off' : 'on'}
-          </Button>
+        headerRight: ({ tintColor }) => (
+          <Appbar.Action
+            icon={animation === 'none' ? 'heart-outline' : 'heart'}
+            color={tintColor}
+            onPress={() => {
+              const options = Object.keys(
+                animations
+              ) as (keyof typeof animations)[];
+
+              showActionSheetWithOptions(
+                {
+                  options: options.map((option) => {
+                    if (option === animation) {
+                      return `${option} (current)`;
+                    }
+
+                    return option;
+                  }),
+                },
+                (index) => {
+                  if (index != null) {
+                    setAnimation(options[index]);
+                  }
+                }
+              );
+            }}
+          />
         ),
-        ...(animationEnabled && TransitionPresets.FadeTransition),
+        ...animations[animation],
       }}
     >
       <Tab.Screen
@@ -95,7 +125,7 @@ export function BottomTabs({
         name="TabChat"
         component={Chat}
         options={{
-          tabBarLabel: 'Chat (Animated)',
+          tabBarLabel: 'Chat',
           tabBarIcon: getTabBarIcon('message-reply'),
           tabBarBadge: 2,
         }}
@@ -141,9 +171,3 @@ export function BottomTabs({
     </Tab.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  leftButton: {
-    paddingRight: 8,
-  },
-});
