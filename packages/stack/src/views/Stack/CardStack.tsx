@@ -4,6 +4,7 @@ import {
   SafeAreaProviderCompat,
 } from '@react-navigation/elements';
 import type {
+  LocaleDirection,
   ParamListBase,
   Route,
   StackNavigationState,
@@ -47,6 +48,8 @@ type GestureValues = {
 };
 
 type Props = {
+  // eslint-disable-next-line react/no-unused-prop-types
+  direction: LocaleDirection;
   insets: EdgeInsets;
   state: StackNavigationState<ParamListBase>;
   descriptors: StackDescriptorMap;
@@ -162,7 +165,8 @@ const getHeaderHeights = (
 
 const getDistanceFromOptions = (
   layout: Layout,
-  descriptor?: StackDescriptor
+  descriptor: StackDescriptor,
+  isRTL: boolean
 ) => {
   const {
     presentation,
@@ -171,13 +175,14 @@ const getDistanceFromOptions = (
       : DefaultTransition.gestureDirection,
   } = (descriptor?.options || {}) as StackNavigationOptions;
 
-  return getDistanceForDirection(layout, gestureDirection);
+  return getDistanceForDirection(layout, gestureDirection, isRTL);
 };
 
 const getProgressFromGesture = (
   gesture: Animated.Value,
   layout: Layout,
-  descriptor?: StackDescriptor
+  descriptor: StackDescriptor,
+  isRTL: boolean
 ) => {
   const distance = getDistanceFromOptions(
     {
@@ -186,7 +191,8 @@ const getProgressFromGesture = (
       width: Math.max(1, layout.width),
       height: Math.max(1, layout.height),
     },
-    descriptor
+    descriptor,
+    isRTL
   );
 
   if (distance > 0) {
@@ -223,7 +229,11 @@ export class CardStack extends React.Component<Props, State> {
         new Animated.Value(
           props.openingRouteKeys.includes(curr.key) &&
           animationEnabled !== false
-            ? getDistanceFromOptions(state.layout, descriptor)
+            ? getDistanceFromOptions(
+                state.layout,
+                descriptor,
+                props.direction === 'rtl'
+              )
             : 0
         );
 
@@ -304,6 +314,8 @@ export class CardStack extends React.Component<Props, State> {
           ? 'float'
           : 'screen');
 
+      const isRTL = props.direction === 'rtl';
+
       const scene = {
         route,
         descriptor: {
@@ -324,7 +336,8 @@ export class CardStack extends React.Component<Props, State> {
           current: getProgressFromGesture(
             currentGesture,
             state.layout,
-            descriptor
+            descriptor,
+            isRTL
           ),
           next:
             nextGesture &&
@@ -332,14 +345,16 @@ export class CardStack extends React.Component<Props, State> {
               ? getProgressFromGesture(
                   nextGesture,
                   state.layout,
-                  nextDescriptor
+                  nextDescriptor,
+                  isRTL
                 )
               : undefined,
           previous: previousGesture
             ? getProgressFromGesture(
                 previousGesture,
                 state.layout,
-                previousDescriptor
+                previousDescriptor,
+                isRTL
               )
             : undefined,
         },

@@ -1,6 +1,7 @@
 import type { ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
+  HeaderStyleInterpolators,
   StackNavigationOptions,
   StackScreenProps,
 } from '@react-navigation/stack';
@@ -137,7 +138,12 @@ export function SimpleStack({
   }, [navigation]);
 
   return (
-    <Stack.Navigator screenOptions={screenOptions}>
+    <Stack.Navigator
+      screenOptions={{
+        ...screenOptions,
+        headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
+      }}
+    >
       <Stack.Screen
         name="Article"
         component={ArticleScreen}
