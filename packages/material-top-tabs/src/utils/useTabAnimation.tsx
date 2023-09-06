@@ -7,7 +7,7 @@ export function useTabAnimation() {
 
   if (animation === undefined) {
     throw new Error(
-      "Couldn't find values for card animation. Are you inside a screen in Tab?"
+      "Couldn't find values for tab animation. Are you inside a screen in Material Top Tab navigator?"
     );
   }
 

@@ -1,6 +1,7 @@
 import * as React from 'react';
-import type { Animated } from 'react-native';
+
+import type { MaterialTopTabAnimationContext } from '../types';
 
 export const TabAnimationContext = React.createContext<
-  Animated.AnimatedInterpolation<number> | undefined
+  MaterialTopTabAnimationContext | undefined
 >(undefined);

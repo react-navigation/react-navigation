@@ -56,7 +56,7 @@ export function MaterialTopTabView({
         });
       }}
       renderScene={({ route, position }) => (
-        <TabAnimationContext.Provider value={position}>
+        <TabAnimationContext.Provider value={{ position }}>
           {descriptors[route.key].render()}
         </TabAnimationContext.Provider>
       )}
