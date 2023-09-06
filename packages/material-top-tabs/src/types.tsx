@@ -10,7 +10,6 @@ import type {
 } from '@react-navigation/native';
 import type React from 'react';
 import type {
-  Animated,
   PressableAndroidRippleConfig,
   StyleProp,
   TextStyle,
@@ -299,8 +298,4 @@ export type MaterialTopTabBarProps = SceneRendererProps & {
     MaterialTopTabNavigationEventMap
   >;
   descriptors: MaterialTopTabDescriptorMap;
-};
-
-export type MaterialTopTabCardAnimationContext = {
-  position: Animated.AnimatedInterpolation<number>;
 };
