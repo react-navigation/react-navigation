@@ -1,3 +1,4 @@
+import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import {
@@ -27,6 +28,7 @@ const renderScene = SceneMap({
 
 export const ScrollableTabBar = () => {
   const [index, onIndexChange] = React.useState(1);
+  const { direction } = useLocale();
   const [routes] = React.useState([
     { key: 'article', title: 'Article' },
     { key: 'contacts', title: 'Contacts' },
@@ -46,6 +48,7 @@ export const ScrollableTabBar = () => {
       tabStyle={styles.tab}
       labelStyle={styles.label}
       gap={20}
+      direction={direction}
     />
   );
 
@@ -56,6 +59,7 @@ export const ScrollableTabBar = () => {
         index,
         routes,
       }}
+      direction={direction}
       renderScene={renderScene}
       renderTabBar={renderTabBar}
       onIndexChange={onIndexChange}

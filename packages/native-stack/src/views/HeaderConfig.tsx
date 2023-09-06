@@ -1,13 +1,7 @@
 import { getHeaderTitle, HeaderTitle } from '@react-navigation/elements';
-import { Route, useTheme } from '@react-navigation/native';
+import { Route, useLocale, useTheme } from '@react-navigation/native';
 import * as React from 'react';
-import {
-  I18nManager,
-  Platform,
-  StyleSheet,
-  TextStyle,
-  View,
-} from 'react-native';
+import { Platform, StyleSheet, TextStyle, View } from 'react-native';
 import {
   isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,
@@ -59,6 +53,7 @@ export function HeaderConfig({
   title,
   canGoBack,
 }: Props): JSX.Element {
+  const { direction } = useLocale();
   const { colors, fonts } = useTheme();
   const tintColor =
     headerTintColor ?? (Platform.OS === 'ios' ? colors.primary : colors.text);
@@ -202,7 +197,7 @@ export function HeaderConfig({
         backTitleFontSize={backTitleFontSize}
         blurEffect={headerBlurEffect}
         color={tintColor}
-        direction={I18nManager.getConstants().isRTL ? 'rtl' : 'ltr'}
+        direction={direction}
         disableBackButtonMenu={headerBackButtonMenuEnabled === false}
         hidden={headerShown === false}
         hideBackButton={headerBackVisible === false}

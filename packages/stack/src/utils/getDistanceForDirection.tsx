@@ -3,9 +3,10 @@ import { getInvertedMultiplier } from './getInvertedMultiplier';
 
 export function getDistanceForDirection(
   layout: Layout,
-  gestureDirection: GestureDirection
+  gestureDirection: GestureDirection,
+  isRTL: boolean
 ): number {
-  const multiplier = getInvertedMultiplier(gestureDirection);
+  const multiplier = getInvertedMultiplier(gestureDirection, isRTL);
 
   switch (gestureDirection) {
     case 'vertical':
