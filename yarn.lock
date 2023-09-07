@@ -2964,6 +2964,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo/react-native-action-sheet@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "@expo/react-native-action-sheet@npm:4.0.1"
+  dependencies:
+    "@types/hoist-non-react-statics": ^3.3.1
+    hoist-non-react-statics: ^3.3.0
+  peerDependencies:
+    react: ">=16.3.0"
+  checksum: f33b8a3b7c6ca77a6e05e5b2284c0961cf1e27b954e87b76747afc990a9581b852326e1ab739ac84a2c1afce05a133627c85465418cad5292d162fbcb305d86e
+  languageName: node
+  linkType: hard
+
 "@expo/rudder-sdk-node@npm:1.1.1":
   version: 1.1.1
   resolution: "@expo/rudder-sdk-node@npm:1.1.1"
@@ -4483,6 +4495,7 @@ __metadata:
   dependencies:
     "@babel/core": ^7.20.5
     "@babel/node": ^7.20.5
+    "@expo/react-native-action-sheet": ^4.0.1
     "@expo/vector-icons": ^13.0.0
     "@expo/webpack-config": ^18.0.1
     "@playwright/test": ^1.28.1
@@ -5013,6 +5026,16 @@ __metadata:
   version: 2.0.41
   resolution: "@types/hammerjs@npm:2.0.41"
   checksum: d16fbd688fc9b18cc270abe8dea8d4c50ef7bd8375e593d92c233d299387933a6b003c8db69819344833052458bc5f9ef1b472001277a49f095928d184356006
+  languageName: node
+  linkType: hard
+
+"@types/hoist-non-react-statics@npm:^3.3.1":
+  version: 3.3.1
+  resolution: "@types/hoist-non-react-statics@npm:3.3.1"
+  dependencies:
+    "@types/react": "*"
+    hoist-non-react-statics: ^3.3.0
+  checksum: 2c0778570d9a01d05afabc781b32163f28409bb98f7245c38d5eaf082416fdb73034003f5825eb5e21313044e8d2d9e1f3fe2831e345d3d1b1d20bcd12270719
   languageName: node
   linkType: hard
 

@@ -282,16 +282,19 @@ export type BottomTabDescriptorMap = Record<string, BottomTabDescriptor>;
 
 export type BottomTabSceneInterpolationProps = {
   /**
-   * animation Values for the current screen.
+   * Animated value for the current screen:
+   * - -1 if the index is lower than active tab,
+   * - 0 if they're active,
+   * - 1 if the index is higher than active tab
    */
   current: Animated.Value;
 };
 
 export type BottomTabSceneInterpolatedStyle = {
   /**
-   * Interpolated style for the view representing the Scene (View).
+   * Interpolated style for the view representing the scene containing screen content.
    */
-  sceneStyle: any;
+  sceneStyle: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 };
 
 export type BottomTabSceneStyleInterpolator = (

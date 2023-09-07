@@ -430,19 +430,19 @@ export type StackCardInterpolatedStyle = {
   /**
    * Interpolated style for the container view wrapping the card.
    */
-  containerStyle?: any;
+  containerStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   /**
    * Interpolated style for the view representing the card.
    */
-  cardStyle?: any;
+  cardStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   /**
    * Interpolated style for the view representing the semi-transparent overlay below the card.
    */
-  overlayStyle?: any;
+  overlayStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   /**
    * Interpolated style representing the card shadow.
    */
-  shadowStyle?: any;
+  shadowStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 };
 
 export type StackCardStyleInterpolator = (

@@ -1,3 +1,4 @@
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useReduxDevToolsExtension } from '@react-navigation/devtools';
@@ -38,6 +39,7 @@ import {
   Divider,
   List,
   Provider as PaperProvider,
+  Theme,
 } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -173,7 +175,7 @@ export function App() {
   const isLargeScreen = dimensions.width >= 1024;
 
   return (
-    <PaperProvider theme={paperTheme}>
+    <Providers theme={paperTheme}>
       <StatusBar
         translucent
         barStyle={theme.dark ? 'light-content' : 'dark-content'}
@@ -336,6 +338,22 @@ export function App() {
           ))}
         </Stack.Navigator>
       </NavigationContainer>
-    </PaperProvider>
+    </Providers>
   );
 }
+
+const Providers = ({
+  theme,
+  children,
+}: {
+  theme: Theme;
+  children: React.ReactNode;
+}) => {
+  return (
+    <PaperProvider theme={theme}>
+      <ActionSheetProvider>
+        <>{children}</>
+      </ActionSheetProvider>
+    </PaperProvider>
+  );
+};

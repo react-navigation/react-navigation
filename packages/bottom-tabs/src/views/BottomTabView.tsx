@@ -18,6 +18,7 @@ import type {
   BottomTabHeaderProps,
   BottomTabNavigationConfig,
   BottomTabNavigationHelpers,
+  BottomTabNavigationOptions,
   BottomTabNavigationProp,
 } from '../types';
 import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCallbackContext';
@@ -37,6 +38,16 @@ const EPSILON = 1e-5;
 const STATE_INACTIVE = 0;
 const STATE_TRANSITIONING_OR_BELOW_TOP = 1;
 const STATE_ON_TOP = 2;
+
+const hasAnimation = (options: BottomTabNavigationOptions) => {
+  const { animationEnabled, transitionSpec } = options;
+
+  if (animationEnabled === false || !transitionSpec) {
+    return false;
+  }
+
+  return true;
+};
 
 export function BottomTabView(props: Props) {
   const {
@@ -62,33 +73,41 @@ export function BottomTabView(props: Props) {
     setLoaded([...loaded, focusedRouteKey]);
   }
 
-  const tabAnims = useAnimatedHashMap(state.routes);
+  const tabAnims = useAnimatedHashMap(state);
 
   React.useEffect(() => {
     const animateToIndex = () => {
       Animated.parallel(
         state.routes
-          .map((route) => {
-            const { animationEnabled, transitionSpec } =
-              descriptors[route.key].options;
+          .map((route, index) => {
+            const { options } = descriptors[route.key];
+            const { transitionSpec } = options;
+
+            const animationEnabled = hasAnimation(options);
+
+            const toValue =
+              index === state.index ? 0 : index >= state.index ? 1 : -1;
+
             if (!animationEnabled || !transitionSpec) {
-              return false;
-            }
-            return Animated[transitionSpec?.animation || 'timing'](
-              tabAnims[route.key],
-              {
-                ...transitionSpec?.config,
-                toValue: route.key === focusedRouteKey ? 0 : 1,
+              return Animated.timing(tabAnims[route.key], {
+                toValue,
+                duration: 0,
                 useNativeDriver: true,
-              }
-            );
+              });
+            }
+
+            return Animated[transitionSpec.animation](tabAnims[route.key], {
+              ...transitionSpec.config,
+              toValue,
+              useNativeDriver: true,
+            });
           })
           .filter(Boolean) as CompositeAnimation[]
       ).start();
     };
 
     animateToIndex();
-  }, [state.routes, tabAnims, focusedRouteKey, descriptors]);
+  }, [descriptors, state.index, state.routes, tabAnims]);
 
   const dimensions = SafeAreaProviderCompat.initialMetrics.frame;
   const [tabBarHeight, setTabBarHeight] = React.useState(() =>
@@ -127,9 +146,9 @@ export function BottomTabView(props: Props) {
 
   const { routes } = state;
 
-  // not needed if not animation
-  const hasTwoStates = !routes.some(
-    (route) => descriptors[route.key].options.animationEnabled
+  // If there is no animation, we only have 2 states: visible and invisible
+  const hasTwoStates = !routes.some((route) =>
+    hasAnimation(descriptors[route.key].options)
   );
 
   return (
@@ -144,7 +163,6 @@ export function BottomTabView(props: Props) {
           const {
             lazy = true,
             unmountOnBlur,
-            animationEnabled,
             sceneStyleInterpolator,
           } = descriptor.options;
           const isFocused = state.index === index;
@@ -177,6 +195,7 @@ export function BottomTabView(props: Props) {
               current: tabAnims[route.key],
             }) ?? {};
 
+          const animationEnabled = hasAnimation(descriptor.options);
           const activityState = isFocused
             ? STATE_ON_TOP // the screen is on top after the transition
             : animationEnabled // is animation is not enabled, immediately move to inactive state
