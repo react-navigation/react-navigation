@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-alpha.2...@react-navigation/material-top-tabs@7.0.0-alpha.3) (2023-09-07)
+
+### Bug Fixes
+
+* Allow to use `PlatformColor` in the theme ([#11570](https://github.com/react-navigation/react-navigation/issues/11570)) ([64734e7](https://github.com/react-navigation/react-navigation/commit/64734e7bc0d7f203d8e5db6abcc9a88157a5f16c)) - by @retyui
+
+### Features
+
+* add direction prop to TabView ([#11322](https://github.com/react-navigation/react-navigation/issues/11322)) ([46735a3](https://github.com/react-navigation/react-navigation/commit/46735a38c46ee195da836dadcf58d6a4db7a381b)) - by @okwasniewski
+* add useCardAnimation ([#11568](https://github.com/react-navigation/react-navigation/issues/11568)) ([36d19bd](https://github.com/react-navigation/react-navigation/commit/36d19bdf8c12bc3486a2517f7ebf1ab3f6738345)) - by @adamgrzybowski
+
 # [7.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-alpha.1...@react-navigation/material-top-tabs@7.0.0-alpha.2) (2023-06-22)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

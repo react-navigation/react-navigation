@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.2...@react-navigation/native-stack@7.0.0-alpha.3) (2023-09-07)
+
+### Bug Fixes
+
+* Allow to use `PlatformColor` in the theme ([#11570](https://github.com/react-navigation/react-navigation/issues/11570)) ([64734e7](https://github.com/react-navigation/react-navigation/commit/64734e7bc0d7f203d8e5db6abcc9a88157a5f16c)) - by @retyui
+* buggy behaviour of search bar / large title on Fabric with native stack v7 ([#11501](https://github.com/react-navigation/react-navigation/issues/11501)) ([dcb4e4c](https://github.com/react-navigation/react-navigation/commit/dcb4e4c775b0e22ef84475de350794c21764632e)) - by @kkafar
+
+* feat!: add a direction prop to NavigationContainer to specify rtl (#11393) ([8309636](https://github.com/react-navigation/react-navigation/commit/830963653fb5a489d02f1503222629373319b39e)), closes [#11393](https://github.com/react-navigation/react-navigation/issues/11393) - by @satya164
+
+### BREAKING CHANGES
+
+* Previously the navigators tried to detect RTL automatically and adjust the UI. However this is problematic since we cannot detect RTL in all cases (e.g. on Web).
+
+This adds an optional `direction` prop to `NavigationContainer` instead so that user can specify when React Navigation's UI needs to be adjusted for RTL. It defaults to the value from `I18nManager` on native platforms, however it needs to be explicitly passed for Web.
+
 # [7.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.1...@react-navigation/native-stack@7.0.0-alpha.2) (2023-06-22)
 
 **Note:** Version bump only for package @react-navigation/native-stack

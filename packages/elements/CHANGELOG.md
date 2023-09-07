@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.4.0-alpha.1...@react-navigation/elements@2.0.0-alpha.0) (2023-09-07)
+
+### Bug Fixes
+
+* add default value to labelVisible in HeaderBackBox ([#11308](https://github.com/react-navigation/react-navigation/issues/11308)) ([bd96d89](https://github.com/react-navigation/react-navigation/commit/bd96d896f17a9930bf9c44ec176ab77ac7138bed)) - by @gkasdorf
+* Allow to use `PlatformColor` in the theme ([#11570](https://github.com/react-navigation/react-navigation/issues/11570)) ([64734e7](https://github.com/react-navigation/react-navigation/commit/64734e7bc0d7f203d8e5db6abcc9a88157a5f16c)) - by @retyui
+* make back button ripple visible ([#11386](https://github.com/react-navigation/react-navigation/issues/11386)) ([c43208f](https://github.com/react-navigation/react-navigation/commit/c43208fc196169e2bf5cea9e2530f5a37bf666bb)), closes [#9794](https://github.com/react-navigation/react-navigation/issues/9794) - by @vonovak
+
+* feat!: add a direction prop to NavigationContainer to specify rtl (#11393) ([8309636](https://github.com/react-navigation/react-navigation/commit/830963653fb5a489d02f1503222629373319b39e)), closes [#11393](https://github.com/react-navigation/react-navigation/issues/11393) - by @satya164
+
+### Features
+
+* add animation prop to bottom tab ([#11323](https://github.com/react-navigation/react-navigation/issues/11323)) ([8d2a6d8](https://github.com/react-navigation/react-navigation/commit/8d2a6d8ef642872d3d506dca483b7474471a040c)) - by @teneeto
+* add shifting animation to bottom-tabs and various fixes ([#11581](https://github.com/react-navigation/react-navigation/issues/11581)) ([6d93c2d](https://github.com/react-navigation/react-navigation/commit/6d93c2da661e1991f6e60f25abf137110a005509)) - by @satya164
+
+### BREAKING CHANGES
+
+* Previously the navigators tried to detect RTL automatically and adjust the UI. However this is problematic since we cannot detect RTL in all cases (e.g. on Web).
+
+This adds an optional `direction` prop to `NavigationContainer` instead so that user can specify when React Navigation's UI needs to be adjusted for RTL. It defaults to the value from `I18nManager` on native platforms, however it needs to be explicitly passed for Web.
+
 # [1.4.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.4.0-alpha.0...@react-navigation/elements@1.4.0-alpha.1) (2023-06-22)
 
 **Note:** Version bump only for package @react-navigation/elements

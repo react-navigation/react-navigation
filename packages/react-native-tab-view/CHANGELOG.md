@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@3.5.2...react-native-tab-view@4.0.0-alpha.0) (2023-09-07)
+
+### Bug Fixes
+
+* Allow to use `PlatformColor` in the theme ([#11570](https://github.com/react-navigation/react-navigation/issues/11570)) ([64734e7](https://github.com/react-navigation/react-navigation/commit/64734e7bc0d7f203d8e5db6abcc9a88157a5f16c)) - by @retyui
+* TabBar horizontal padding for contentContainer ([#11408](https://github.com/react-navigation/react-navigation/issues/11408)) ([24c0392](https://github.com/react-navigation/react-navigation/commit/24c03924397a6e59aba9f6b74a9c5cb4b939d9e1)), closes [#8667](https://github.com/react-navigation/react-navigation/issues/8667) - by @Freddy03h
+
+* feat!: add a direction prop to NavigationContainer to specify rtl (#11393) ([8309636](https://github.com/react-navigation/react-navigation/commit/830963653fb5a489d02f1503222629373319b39e)), closes [#11393](https://github.com/react-navigation/react-navigation/issues/11393) - by @satya164
+
+### Features
+
+* add children prop to tab bar indicator component ([#11566](https://github.com/react-navigation/react-navigation/issues/11566)) ([fe3b560](https://github.com/react-navigation/react-navigation/commit/fe3b56072e39a6c7b33747c4d9e3f3d6a52ec60c)) - by @grezxune
+* add direction prop to TabView ([#11322](https://github.com/react-navigation/react-navigation/issues/11322)) ([46735a3](https://github.com/react-navigation/react-navigation/commit/46735a38c46ee195da836dadcf58d6a4db7a381b)) - by @okwasniewski
+
+### BREAKING CHANGES
+
+* Previously the navigators tried to detect RTL automatically and adjust the UI. However this is problematic since we cannot detect RTL in all cases (e.g. on Web).
+
+This adds an optional `direction` prop to `NavigationContainer` instead so that user can specify when React Navigation's UI needs to be adjusted for RTL. It defaults to the value from `I18nManager` on native platforms, however it needs to be explicitly passed for Web.
+
 ## [3.5.2](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@3.5.1...react-native-tab-view@3.5.2) (2023-06-22)
 
 ### Bug Fixes

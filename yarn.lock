@@ -4368,7 +4368,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/bottom-tabs@workspace:packages/bottom-tabs"
   dependencies:
-    "@react-navigation/elements": ^1.4.0-alpha.1
+    "@react-navigation/elements": ^2.0.0-alpha.0
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": ^11.5.0
     "@types/color": ^3.0.3
@@ -4395,7 +4395,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/core@workspace:packages/core"
   dependencies:
-    "@react-navigation/routers": ^7.0.0-alpha.1
+    "@react-navigation/routers": ^7.0.0-alpha.2
     "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.27
     "@types/react-is": ^17.0.3
@@ -4439,7 +4439,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/drawer@workspace:packages/drawer"
   dependencies:
-    "@react-navigation/elements": ^1.4.0-alpha.1
+    "@react-navigation/elements": ^2.0.0-alpha.0
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.27
@@ -4467,7 +4467,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-navigation/elements@^1.4.0-alpha.1, @react-navigation/elements@workspace:packages/elements":
+"@react-navigation/elements@^2.0.0-alpha.0, @react-navigation/elements@workspace:packages/elements":
   version: 0.0.0-use.local
   resolution: "@react-navigation/elements@workspace:packages/elements"
   dependencies:
@@ -4557,7 +4557,7 @@ __metadata:
     react-native: 0.71.8
     react-native-builder-bob: ^0.21.0
     react-native-pager-view: 6.1.2
-    react-native-tab-view: ^3.5.2
+    react-native-tab-view: ^4.0.0-alpha.0
     typescript: ^4.9.4
   peerDependencies:
     "@react-navigation/native": ^6.0.0
@@ -4571,7 +4571,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/native-stack@workspace:packages/native-stack"
   dependencies:
-    "@react-navigation/elements": ^1.4.0-alpha.1
+    "@react-navigation/elements": ^2.0.0-alpha.0
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": ^11.5.0
     "@types/react": ~18.0.27
@@ -4616,7 +4616,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-navigation/routers@^7.0.0-alpha.1, @react-navigation/routers@workspace:packages/routers":
+"@react-navigation/routers@^7.0.0-alpha.2, @react-navigation/routers@workspace:packages/routers":
   version: 0.0.0-use.local
   resolution: "@react-navigation/routers@workspace:packages/routers"
   dependencies:
@@ -4631,7 +4631,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/stack@workspace:packages/stack"
   dependencies:
-    "@react-navigation/elements": ^1.4.0-alpha.1
+    "@react-navigation/elements": ^2.0.0-alpha.0
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": ^11.5.0
     "@types/color": ^3.0.3
@@ -17222,7 +17222,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-tab-view@^3.5.2, react-native-tab-view@workspace:packages/react-native-tab-view":
+"react-native-tab-view@^4.0.0-alpha.0, react-native-tab-view@workspace:packages/react-native-tab-view":
   version: 0.0.0-use.local
   resolution: "react-native-tab-view@workspace:packages/react-native-tab-view"
   dependencies:

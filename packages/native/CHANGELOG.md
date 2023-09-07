@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.2...@react-navigation/native@7.0.0-alpha.3) (2023-09-07)
+
+### Bug Fixes
+
+* Allow to use `PlatformColor` in the theme ([#11570](https://github.com/react-navigation/react-navigation/issues/11570)) ([64734e7](https://github.com/react-navigation/react-navigation/commit/64734e7bc0d7f203d8e5db6abcc9a88157a5f16c)) - by @retyui
+* incorrect url parsing (isssue: [#10924](https://github.com/react-navigation/react-navigation/issues/10924)) ([#11528](https://github.com/react-navigation/react-navigation/issues/11528)) ([fab2cc6](https://github.com/react-navigation/react-navigation/commit/fab2cc6fb03858020808bcb49ede86e0701679e1)) - by @retyui
+* prevent back handler usage on web ([#11458](https://github.com/react-navigation/react-navigation/issues/11458)) ([486ee81](https://github.com/react-navigation/react-navigation/commit/486ee81cac4606949199b91267f7b5a2663a31ec)) - by @EvanBacon
+* replace series function used to queue async callbacks ([#11485](https://github.com/react-navigation/react-navigation/issues/11485)) ([d8dc693](https://github.com/react-navigation/react-navigation/commit/d8dc6934e3aa2099b34b5bf2801c57780e48fc18)) - by @karlsander
+
+* feat!: add a direction prop to NavigationContainer to specify rtl (#11393) ([8309636](https://github.com/react-navigation/react-navigation/commit/830963653fb5a489d02f1503222629373319b39e)), closes [#11393](https://github.com/react-navigation/react-navigation/issues/11393) - by @satya164
+
+### BREAKING CHANGES
+
+* Previously the navigators tried to detect RTL automatically and adjust the UI. However this is problematic since we cannot detect RTL in all cases (e.g. on Web).
+
+This adds an optional `direction` prop to `NavigationContainer` instead so that user can specify when React Navigation's UI needs to be adjusted for RTL. It defaults to the value from `I18nManager` on native platforms, however it needs to be explicitly passed for Web.
+
 # [7.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.1...@react-navigation/native@7.0.0-alpha.2) (2023-06-22)
 
 ### Features
