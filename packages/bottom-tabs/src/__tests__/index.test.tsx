@@ -1,11 +1,16 @@
 import { NavigationContainer, ParamListBase } from '@react-navigation/native';
 import { fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
-import { Button, Text, View } from 'react-native';
+import { Animated, Button, Text, View } from 'react-native';
 
 import { BottomTabScreenProps, createBottomTabNavigator } from '../index';
 
 it('renders a bottom tab navigator with screens', async () => {
+  // @ts-expect-error: incomplete mock for testing
+  jest.spyOn(Animated, 'timing').mockImplementation(() => ({
+    start: (callback) => callback?.({ finished: true }),
+  }));
+
   const Test = ({ route, navigation }: BottomTabScreenProps<ParamListBase>) => (
     <View>
       <Text>Screen {route.name}</Text>

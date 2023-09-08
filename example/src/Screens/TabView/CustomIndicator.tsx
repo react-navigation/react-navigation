@@ -1,8 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
-  I18nManager,
   StyleProp,
   StyleSheet,
   Text,
@@ -36,6 +36,7 @@ const renderScene = SceneMap({
 });
 
 export const CustomIndicator = () => {
+  const { direction } = useLocale();
   const insets = useSafeAreaInsets();
   const [index, onIndexChange] = React.useState(0);
   const [routes] = React.useState<Route[]>([
@@ -85,7 +86,7 @@ export const CustomIndicator = () => {
       outputRange: inputRange.map((x) => {
         const i = Math.round(x);
         return (
-          (i * getTabWidth(i) + i * (gap ?? 0)) * (I18nManager.isRTL ? -1 : 1)
+          (i * getTabWidth(i) + i * (gap ?? 0)) * (direction === 'rtl' ? -1 : 1)
         );
       }),
     });
@@ -129,6 +130,7 @@ export const CustomIndicator = () => {
     <View style={[styles.tabbar, { paddingBottom: insets.bottom }]}>
       <TabBar
         {...props}
+        direction={direction}
         renderIcon={renderIcon}
         renderBadge={renderBadge}
         renderIndicator={renderIndicator}
@@ -145,6 +147,7 @@ export const CustomIndicator = () => {
         index,
         routes,
       }}
+      direction={direction}
       renderScene={renderScene}
       renderTabBar={renderTabBar}
       tabBarPosition="bottom"

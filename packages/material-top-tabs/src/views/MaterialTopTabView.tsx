@@ -3,6 +3,7 @@ import {
   ParamListBase,
   Route,
   TabNavigationState,
+  useLocale,
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -14,6 +15,7 @@ import type {
   MaterialTopTabNavigationConfig,
   MaterialTopTabNavigationHelpers,
 } from '../types';
+import { TabAnimationContext } from '../utils/TabAnimationContext';
 import { MaterialTopTabBar } from './MaterialTopTabBar';
 
 type Props = MaterialTopTabNavigationConfig & {
@@ -31,6 +33,7 @@ export function MaterialTopTabView({
   ...rest
 }: Props) {
   const { colors } = useTheme();
+  const { direction } = useLocale();
 
   const renderTabBar = (props: SceneRendererProps) => {
     return tabBar({
@@ -54,7 +57,11 @@ export function MaterialTopTabView({
           target: state.key,
         });
       }}
-      renderScene={({ route }) => descriptors[route.key].render()}
+      renderScene={({ route, position }) => (
+        <TabAnimationContext.Provider value={{ position }}>
+          {descriptors[route.key].render()}
+        </TabAnimationContext.Provider>
+      )}
       navigationState={state}
       renderTabBar={renderTabBar}
       renderLazyPlaceholder={({ route }) =>
@@ -70,6 +77,7 @@ export function MaterialTopTabView({
         { backgroundColor: colors.background },
         sceneContainerStyle,
       ]}
+      direction={direction}
     />
   );
 }

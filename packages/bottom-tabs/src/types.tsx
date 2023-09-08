@@ -254,6 +254,22 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    * Only supported on iOS and Android.
    */
   freezeOnBlur?: boolean;
+
+  /**
+   * Whether transition animations should be enabled when switching tabs.
+   * Defaults to `false`.
+   */
+  animationEnabled?: boolean;
+
+  /**
+   * Function which specifies interpolated styles for bottom-tab scenes.
+   */
+  sceneStyleInterpolator?: BottomTabSceneStyleInterpolator;
+
+  /**
+   * Object which specifies the animation type (timing or spring) and their options (such as duration for timing).
+   */
+  transitionSpec?: TransitionSpec;
 };
 
 export type BottomTabDescriptor = Descriptor<
@@ -263,6 +279,60 @@ export type BottomTabDescriptor = Descriptor<
 >;
 
 export type BottomTabDescriptorMap = Record<string, BottomTabDescriptor>;
+
+export type BottomTabSceneInterpolationProps = {
+  /**
+   * Animated value for the current screen:
+   * - -1 if the index is lower than active tab,
+   * - 0 if they're active,
+   * - 1 if the index is higher than active tab
+   */
+  current: Animated.Value;
+};
+
+export type BottomTabSceneInterpolatedStyle = {
+  /**
+   * Interpolated style for the view representing the scene containing screen content.
+   */
+  sceneStyle: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+};
+
+export type BottomTabSceneStyleInterpolator = (
+  props: BottomTabSceneInterpolationProps
+) => BottomTabSceneInterpolatedStyle;
+
+export type TransitionSpec =
+  | {
+      animation: 'timing';
+      config: Omit<
+        Animated.TimingAnimationConfig,
+        'toValue' | keyof Animated.AnimationConfig
+      >;
+    }
+  | {
+      animation: 'spring';
+      config: Omit<
+        Animated.SpringAnimationConfig,
+        'toValue' | keyof Animated.AnimationConfig
+      >;
+    };
+
+export type BottomTabTransitionPreset = {
+  /**
+   * Whether transition animations should be enabled when switching tabs.
+   */
+  animationEnabled?: boolean;
+
+  /**
+   * Function which specifies interpolated styles for bottom-tab scenes.
+   */
+  sceneStyleInterpolator?: BottomTabSceneStyleInterpolator;
+
+  /**
+   * Object which specifies the animation type (timing or spring) and their options (such as duration for timing).
+   */
+  transitionSpec?: TransitionSpec;
+};
 
 export type BottomTabNavigationConfig = {
   /**

@@ -21,6 +21,7 @@ import { Props as TabBarItemProps, TabBarItem } from './TabBarItem';
 import type {
   Event,
   Layout,
+  LocaleDirection,
   NavigationState,
   Route,
   Scene,
@@ -65,6 +66,7 @@ export type Props<T extends Route> = SceneRendererProps & {
   labelStyle?: StyleProp<TextStyle>;
   contentContainerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
+  direction?: LocaleDirection;
   gap?: number;
   testID?: string;
   android_ripple?: PressableAndroidRippleConfig;
@@ -161,13 +163,14 @@ const getMaxScrollDistance = (tabBarWidth: number, layoutWidth: number) =>
 
 const getTranslateX = (
   scrollAmount: Animated.Value,
-  maxScrollDistance: number
+  maxScrollDistance: number,
+  direction: LocaleDirection
 ) =>
   Animated.multiply(
-    Platform.OS === 'android' && I18nManager.isRTL
+    Platform.OS === 'android' && direction === 'rtl'
       ? Animated.add(maxScrollDistance, Animated.multiply(scrollAmount, -1))
       : scrollAmount,
-    I18nManager.isRTL ? 1 : -1
+    direction === 'rtl' ? 1 : -1
   );
 
 const getTabBarWidth = <T extends Route>({
@@ -222,12 +225,14 @@ const normalizeScrollValue = <T extends Route>({
   flattenedTabWidth,
   flattenedPaddingLeft,
   flattenedPaddingRight,
+  direction,
 }: Pick<Props<T>, 'layout' | 'navigationState' | 'gap' | 'scrollEnabled'> & {
   tabWidths: Record<string, number>;
   value: number;
   flattenedTabWidth: FlattenedTabWidth;
   flattenedPaddingLeft: FlattenedTabPadding;
   flattenedPaddingRight: FlattenedTabPadding;
+  direction: LocaleDirection;
 }) => {
   const tabBarWidth = getTabBarWidth({
     layout,
@@ -242,7 +247,7 @@ const normalizeScrollValue = <T extends Route>({
   const maxDistance = getMaxScrollDistance(tabBarWidth, layout.width);
   const scrollValue = Math.max(Math.min(value, maxDistance), 0);
 
-  if (Platform.OS === 'android' && I18nManager.isRTL) {
+  if (Platform.OS === 'android' && direction === 'rtl') {
     // On Android, scroll value is not applied in reverse in RTL
     // so we need to manually adjust it to apply correct value
     return maxDistance - scrollValue;
@@ -260,15 +265,18 @@ const getScrollAmount = <T extends Route>({
   tabWidths,
   flattenedPaddingLeft,
   flattenedPaddingRight,
+  direction,
 }: Pick<Props<T>, 'layout' | 'navigationState' | 'scrollEnabled' | 'gap'> & {
   tabWidths: Record<string, number>;
   flattenedTabWidth: FlattenedTabWidth;
   flattenedPaddingLeft: FlattenedTabPadding;
   flattenedPaddingRight: FlattenedTabPadding;
+  direction: LocaleDirection;
 }) => {
-  const paddingInitial = I18nManager.isRTL
-    ? convertPaddingPercentToSize(flattenedPaddingRight, layout)
-    : convertPaddingPercentToSize(flattenedPaddingLeft, layout);
+  const paddingInitial =
+    direction === 'rtl'
+      ? convertPaddingPercentToSize(flattenedPaddingRight, layout)
+      : convertPaddingPercentToSize(flattenedPaddingLeft, layout);
 
   const centerDistance = Array.from({
     length: navigationState.index + 1,
@@ -306,6 +314,7 @@ const getScrollAmount = <T extends Route>({
     flattenedTabWidth,
     flattenedPaddingLeft,
     flattenedPaddingRight,
+    direction,
   });
 };
 
@@ -356,6 +365,7 @@ export function TabBar<T extends Route>({
   renderBadge,
   renderIcon,
   renderLabel,
+  direction = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr',
   renderTabBarItem,
   style,
   tabStyle,
@@ -371,7 +381,6 @@ export function TabBar<T extends Route>({
   const isFirst = React.useRef(true);
   const scrollAmount = useAnimatedValue(0);
   const measuredTabWidths = React.useRef<Record<string, number>>({});
-
   const { routes } = navigationState;
   const flattenedTabWidth = getFlattenedTabWidth(tabStyle);
   const isWidthDynamic = flattenedTabWidth === 'auto';
@@ -386,6 +395,7 @@ export function TabBar<T extends Route>({
     flattenedTabWidth,
     flattenedPaddingLeft,
     flattenedPaddingRight,
+    direction,
   });
 
   const hasMeasuredTabWidths =
@@ -444,9 +454,10 @@ export function TabBar<T extends Route>({
     () =>
       getTranslateX(
         scrollAmount,
-        getMaxScrollDistance(tabBarWidth, layout.width)
+        getMaxScrollDistance(tabBarWidth, layout.width),
+        direction
       ),
-    [layout.width, scrollAmount, tabBarWidth]
+    [direction, layout.width, scrollAmount, tabBarWidth]
   );
 
   const renderItem = React.useCallback(
@@ -635,6 +646,7 @@ export function TabBar<T extends Route>({
           layout,
           navigationState,
           jumpTo,
+          direction,
           width: isWidthDynamic
             ? 'auto'
             : Math.max(

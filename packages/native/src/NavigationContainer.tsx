@@ -9,11 +9,18 @@ import {
   validatePathConfig,
 } from '@react-navigation/core';
 import * as React from 'react';
+import { I18nManager } from 'react-native';
 
 import { LinkingContext } from './LinkingContext';
+import { LocaleDirContext } from './LocaleDirContext';
 import { DefaultTheme } from './theming/DefaultTheme';
 import { ThemeProvider } from './theming/ThemeProvider';
-import type { DocumentTitleOptions, LinkingOptions, Theme } from './types';
+import type {
+  DocumentTitleOptions,
+  LinkingOptions,
+  LocaleDirection,
+  Theme,
+} from './types';
 import { useBackButton } from './useBackButton';
 import { useDocumentTitle } from './useDocumentTitle';
 import { useLinking } from './useLinking';
@@ -29,6 +36,7 @@ declare global {
 global.REACT_NAVIGATION_DEVTOOLS = new WeakMap();
 
 type Props<ParamList extends {}> = NavigationContainerProps & {
+  direction?: LocaleDirection;
   theme?: Theme;
   linking?: LinkingOptions<ParamList>;
   fallback?: React.ReactNode;
@@ -43,6 +51,7 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
  * @param props.onReady Callback which is called after the navigation tree mounts.
  * @param props.onStateChange Callback which is called with the latest navigation state when it changes.
  * @param props.onUnhandledAction Callback which is called when an action is not handled.
+ * @param props.direction Text direction of the components. Defaults to `'ltr'`.
  * @param props.theme Theme object for the navigators.
  * @param props.linking Options for deep linking. Deep link handling is enabled when this prop is provided, unless `linking.enabled` is `false`.
  * @param props.fallback Fallback component to render until we have finished getting initial state when linking is enabled. Defaults to `null`.
@@ -52,6 +61,7 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
  */
 function NavigationContainerInner(
   {
+    direction = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr',
     theme = DefaultTheme,
     linking,
     fallback = null,
@@ -114,17 +124,19 @@ function NavigationContainerInner(
   }
 
   return (
-    <LinkingContext.Provider value={linkingContext}>
-      <ThemeProvider value={theme}>
-        <BaseNavigationContainer
-          {...rest}
-          initialState={
-            rest.initialState == null ? initialState : rest.initialState
-          }
-          ref={refContainer}
-        />
-      </ThemeProvider>
-    </LinkingContext.Provider>
+    <LocaleDirContext.Provider value={direction}>
+      <LinkingContext.Provider value={linkingContext}>
+        <ThemeProvider value={theme}>
+          <BaseNavigationContainer
+            {...rest}
+            initialState={
+              rest.initialState == null ? initialState : rest.initialState
+            }
+            ref={refContainer}
+          />
+        </ThemeProvider>
+      </LinkingContext.Provider>
+    </LocaleDirContext.Provider>
   );
 }
 

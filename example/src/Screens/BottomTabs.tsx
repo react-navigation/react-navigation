@@ -1,11 +1,12 @@
+import { useActionSheet } from '@expo/react-native-action-sheet';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
   createBottomTabNavigator,
+  TransitionPresets,
   useBottomTabBarHeight,
 } from '@react-navigation/bottom-tabs';
 import { HeaderBackButton, useHeaderHeight } from '@react-navigation/elements';
 import {
-  getFocusedRouteNameFromRoute,
   NavigatorScreenParams,
   ParamListBase,
   useIsFocused,
@@ -14,6 +15,7 @@ import type { StackScreenProps } from '@react-navigation/stack';
 import { BlurView } from 'expo-blur';
 import * as React from 'react';
 import { ScrollView, StatusBar, StyleSheet } from 'react-native';
+import { Appbar } from 'react-native-paper';
 
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
@@ -54,18 +56,25 @@ const AlbumsScreen = () => {
 
 const Tab = createBottomTabNavigator<BottomTabParams>();
 
+const animations = {
+  shifting: TransitionPresets.ShiftingTransition,
+  fade: TransitionPresets.FadeTransition,
+  none: null,
+} as const;
+
 export function BottomTabs({
   navigation,
-  route,
 }: StackScreenProps<ParamListBase, string>) {
-  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Article';
-
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
-      title: routeName,
     });
-  }, [navigation, routeName]);
+  }, [navigation]);
+
+  const [animation, setAnimation] =
+    React.useState<keyof typeof animations>('none');
+
+  const { showActionSheetWithOptions } = useActionSheet();
 
   return (
     <Tab.Navigator
@@ -73,6 +82,35 @@ export function BottomTabs({
         headerLeft: (props) => (
           <HeaderBackButton {...props} onPress={navigation.goBack} />
         ),
+        headerRight: ({ tintColor }) => (
+          <Appbar.Action
+            icon={animation === 'none' ? 'heart-outline' : 'heart'}
+            color={tintColor}
+            onPress={() => {
+              const options = Object.keys(
+                animations
+              ) as (keyof typeof animations)[];
+
+              showActionSheetWithOptions(
+                {
+                  options: options.map((option) => {
+                    if (option === animation) {
+                      return `${option} (current)`;
+                    }
+
+                    return option;
+                  }),
+                },
+                (index) => {
+                  if (index != null) {
+                    setAnimation(options[index]);
+                  }
+                }
+              );
+            }}
+          />
+        ),
+        ...animations[animation],
       }}
     >
       <Tab.Screen

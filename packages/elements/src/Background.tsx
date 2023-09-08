@@ -1,8 +1,9 @@
 import { useTheme } from '@react-navigation/native';
 import * as React from 'react';
-import { View, ViewProps } from 'react-native';
+import { Animated, StyleProp, ViewProps, ViewStyle } from 'react-native';
 
-type Props = ViewProps & {
+type Props = Omit<ViewProps, 'style'> & {
+  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   children: React.ReactNode;
 };
 
@@ -10,7 +11,7 @@ export function Background({ style, ...rest }: Props) {
   const { colors } = useTheme();
 
   return (
-    <View
+    <Animated.View
       {...rest}
       style={[{ flex: 1, backgroundColor: colors.background }, style]}
     />

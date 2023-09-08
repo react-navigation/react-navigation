@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.2...@react-navigation/bottom-tabs@7.0.0-alpha.3) (2023-09-07)
+
+### Bug Fixes
+
+* adjust fade animation spec for bottom tabs ([ecd0e66](https://github.com/react-navigation/react-navigation/commit/ecd0e66b5eaf19248629aae06734541a48aa5684)) - by @satya164
+* Allow to use `PlatformColor` in the theme ([#11570](https://github.com/react-navigation/react-navigation/issues/11570)) ([64734e7](https://github.com/react-navigation/react-navigation/commit/64734e7bc0d7f203d8e5db6abcc9a88157a5f16c)) - by @retyui
+* bottom bar animation tied with a screen ([#11572](https://github.com/react-navigation/react-navigation/issues/11572)) ([9ee55bc](https://github.com/react-navigation/react-navigation/commit/9ee55bc0eee9e7257b7dd914ca994c37384877a0)) - by @osdnk
+
+### Features
+
+* add animation prop to bottom tab ([#11323](https://github.com/react-navigation/react-navigation/issues/11323)) ([8d2a6d8](https://github.com/react-navigation/react-navigation/commit/8d2a6d8ef642872d3d506dca483b7474471a040c)) - by @teneeto
+* add shifting animation to bottom-tabs and various fixes ([#11581](https://github.com/react-navigation/react-navigation/issues/11581)) ([6d93c2d](https://github.com/react-navigation/react-navigation/commit/6d93c2da661e1991f6e60f25abf137110a005509)) - by @satya164
+
 # [7.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.1...@react-navigation/bottom-tabs@7.0.0-alpha.2) (2023-06-22)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

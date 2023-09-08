@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.2...@react-navigation/core@7.0.0-alpha.3) (2023-09-07)
+
+### Bug Fixes
+
+* avoid re-rendering screen when nested navigator state changes ([#11547](https://github.com/react-navigation/react-navigation/issues/11547)) ([2c0f604](https://github.com/react-navigation/react-navigation/commit/2c0f604345f01e75ba542fa7422e78c91fc323c0)) - by @okwasniewski
+* PathConfigMap type error: Type 'T' does not satisfy the constrai… ([#11238](https://github.com/react-navigation/react-navigation/issues/11238)) ([8e8ad0c](https://github.com/react-navigation/react-navigation/commit/8e8ad0c6bc6baee3142a6646a2e8a1982ffabd74)) - by @AntonYushkevich
+
+### Features
+
+* allow full linking config in static config ([ba53154](https://github.com/react-navigation/react-navigation/commit/ba53154b51edcdcfcac4cb249c5d93b8e4dc3564)) - by @satya164
+
+### BREAKING CHANGES
+
+* This breaks `getFocusedRouteNameFromRoute` inside components as it requires a re-render to get the new value. However, it still works in `options` callback which is its intended use case.
+
 # [7.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.1...@react-navigation/core@7.0.0-alpha.2) (2023-06-22)
 
 ### Bug Fixes

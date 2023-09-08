@@ -7,6 +7,7 @@ import type {
 } from '@react-navigation/elements';
 import type {
   Descriptor,
+  LocaleDirection,
   NavigationHelpers,
   NavigationProp,
   ParamListBase,
@@ -429,19 +430,19 @@ export type StackCardInterpolatedStyle = {
   /**
    * Interpolated style for the container view wrapping the card.
    */
-  containerStyle?: any;
+  containerStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   /**
    * Interpolated style for the view representing the card.
    */
-  cardStyle?: any;
+  cardStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   /**
    * Interpolated style for the view representing the semi-transparent overlay below the card.
    */
-  overlayStyle?: any;
+  overlayStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   /**
    * Interpolated style representing the card shadow.
    */
-  shadowStyle?: any;
+  shadowStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 };
 
 export type StackCardStyleInterpolator = (
@@ -468,6 +469,10 @@ export type StackHeaderInterpolationProps = {
      */
     progress: Animated.AnimatedInterpolation<number>;
   };
+  /**
+   * Writing direction of the layout.
+   */
+  direction: LocaleDirection;
   /**
    * Layout measurements for various items we use for animation.
    */
