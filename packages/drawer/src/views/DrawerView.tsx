@@ -1,4 +1,5 @@
 import {
+  getDefaultSidebarWidth,
   getHeaderTitle,
   Header,
   SafeAreaProviderCompat,
@@ -297,7 +298,10 @@ function DrawerViewBase({
         overlayAccessibilityLabel={overlayAccessibilityLabel}
         drawerPosition={drawerPosition}
         drawerStyle={[
-          { backgroundColor: colors.card },
+          {
+            backgroundColor: colors.card,
+            width: getDefaultSidebarWidth(dimensions),
+          },
           drawerType === 'permanent' &&
             (drawerPosition === 'left'
               ? {
