@@ -1,6 +1,6 @@
 {
   "description": "React Navigation",
-  "private": true,
+  "private": false,
   "workspaces": {
     "packages": [
       "example",
