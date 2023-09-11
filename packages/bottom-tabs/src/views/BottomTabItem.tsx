@@ -1,3 +1,4 @@
+import { getLabel, Label } from '@react-navigation/elements';
 import { CommonActions, Link, Route, useTheme } from '@react-navigation/native';
 import Color from 'color';
 import React from 'react';
@@ -7,7 +8,6 @@ import {
   Pressable,
   StyleProp,
   StyleSheet,
-  Text,
   TextStyle,
   ViewStyle,
 } from 'react-native';
@@ -195,7 +195,7 @@ export function BottomTabItem({
   iconStyle,
   style,
 }: Props) {
-  const { colors, fonts } = useTheme();
+  const { colors } = useTheme();
 
   const activeTintColor =
     customActiveTintColor === undefined
@@ -214,38 +214,38 @@ export function BottomTabItem({
 
     const color = focused ? activeTintColor : inactiveTintColor;
 
-    if (typeof label === 'string') {
-      return (
-        <Text
-          numberOfLines={1}
-          style={[
-            { color },
-            fonts.regular,
-            styles.label,
-            horizontal ? styles.labelBeside : styles.labelBeneath,
-            labelStyle,
-          ]}
-          allowFontScaling={allowFontScaling}
-        >
-          {label}
-        </Text>
+    if (typeof label !== 'string') {
+      const { options } = descriptor;
+      const children = getLabel(
+        {
+          label:
+            typeof options.tabBarLabel === 'string'
+              ? options.tabBarLabel
+              : undefined,
+          title: options.title,
+        },
+        route.name
       );
+
+      return label({
+        focused,
+        color,
+        position: horizontal ? 'beside-icon' : 'below-icon',
+        children,
+      });
     }
 
-    const { options } = descriptor;
-    const children =
-      typeof options.tabBarLabel === 'string'
-        ? options.tabBarLabel
-        : options.title !== undefined
-        ? options.title
-        : route.name;
-
-    return label({
-      focused,
-      color,
-      position: horizontal ? 'beside-icon' : 'below-icon',
-      children,
-    });
+    return (
+      <Label
+        style={[
+          horizontal ? styles.labelBeside : styles.labelBeneath,
+          labelStyle,
+        ]}
+        allowFontScaling={allowFontScaling}
+      >
+        {label}
+      </Label>
+    );
   };
 
   const renderIcon = ({ focused }: { focused: boolean }) => {
@@ -316,10 +316,6 @@ const styles = StyleSheet.create({
   tabLandscape: {
     justifyContent: 'center',
     flexDirection: 'row',
-  },
-  label: {
-    textAlign: 'center',
-    backgroundColor: 'transparent',
   },
   labelBeneath: {
     fontSize: 10,
