@@ -138,13 +138,17 @@ export type StackHeaderOptions = Omit<
    */
   headerTitle?: string | ((props: HeaderTitleProps) => React.ReactNode);
   /**
-   * Function which returns a React Element to display on the left side of the header.
+   * React Element or function which returns a React Element to display on the left side of the header.
    */
-  headerLeft?: (props: HeaderBackButtonProps) => React.ReactNode;
+  headerLeft?:
+    | React.ReactElement<HeaderBackButtonProps>
+    | ((props: HeaderBackButtonProps) => React.ReactNode);
   /**
-   * Function which returns a React Element to display on the right side of the header.
+   * React Element or function which returns React Element to display on the right side of the header.
    */
-  headerRight?: (props: HeaderButtonProps) => React.ReactNode;
+  headerRight?:
+    | React.ReactElement<HeaderButtonProps>
+    | ((props: HeaderButtonProps) => React.ReactNode);
   /**
    * Whether back button title font should scale to respect Text Size accessibility settings. Defaults to `false`.
    */

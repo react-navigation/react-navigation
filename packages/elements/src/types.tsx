@@ -35,14 +35,21 @@ export type HeaderOptions = {
    */
   headerTitleAllowFontScaling?: boolean;
   /**
-   * Function which returns a React Element to display on the left side of the header.
+   * React Element or function which returns a React Element to display on the left side of the header.
    */
-  headerLeft?: (props: {
-    tintColor?: string;
-    pressColor?: string;
-    pressOpacity?: number;
-    labelVisible?: boolean;
-  }) => React.ReactNode;
+  headerLeft?:
+    | React.ReactElement<{
+        tintColor?: string;
+        pressColor?: string;
+        pressOpacity?: number;
+        labelVisible?: boolean;
+      }>
+    | ((props: {
+        tintColor?: string;
+        pressColor?: string;
+        pressOpacity?: number;
+        labelVisible?: boolean;
+      }) => React.ReactNode);
   /**
    * Whether a label is visible in the left button. Used to add extra padding.
    */
@@ -52,13 +59,19 @@ export type HeaderOptions = {
    */
   headerLeftContainerStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   /**
-   * Function which returns a React Element to display on the right side of the header.
+   * React Element or function which returns a React Element to display on the right side of the header.
    */
-  headerRight?: (props: {
-    tintColor?: string;
-    pressColor?: string;
-    pressOpacity?: number;
-  }) => React.ReactNode;
+  headerRight?:
+    | React.ReactElement<{
+        tintColor?: string;
+        pressColor?: string;
+        pressOpacity?: number;
+      }>
+    | ((props: {
+        tintColor?: string;
+        pressColor?: string;
+        pressOpacity?: number;
+      }) => React.ReactNode);
   /**
    * Style object for the container of the `headerRight` element.
    */

@@ -32,3 +32,63 @@ it('renders a stack navigator with screens', async () => {
 
   expect(queryByText('Screen B')).not.toBeNull();
 });
+
+it("renders header segment's left/right with either functions or jsx elements", async () => {
+  const Stack = createStackNavigator();
+
+  const TestScreen = () => (
+    <View>
+      <Text>Test Screen</Text>
+    </View>
+  );
+
+  let resultWithElems = render(
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="ScreenWithElements">
+        <Stack.Screen
+          name="ScreenWithElements"
+          component={TestScreen}
+          options={{
+            headerLeft: (
+              <View>
+                <Text>Left</Text>
+              </View>
+            ),
+            headerRight: (
+              <View>
+                <Text>Right</Text>
+              </View>
+            ),
+          }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  let resultWithFuncs = render(
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="ScreenWithFunctions">
+        <Stack.Screen
+          name="ScreenWithFunctions"
+          component={TestScreen}
+          options={{
+            headerLeft: () => (
+              <View>
+                <Text>Left</Text>
+              </View>
+            ),
+            headerRight: () => (
+              <View>
+                <Text>Right</Text>
+              </View>
+            ),
+          }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+  expect(resultWithElems.queryByText('Left')).not.toBeNull();
+  expect(resultWithElems.queryByText('Right')).not.toBeNull();
+  expect(resultWithFuncs.queryByText('Left')).not.toBeNull();
+  expect(resultWithFuncs.queryByText('Right')).not.toBeNull();
+});

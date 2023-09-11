@@ -185,22 +185,37 @@ export function Header(props: Props) {
     },
   ];
 
-  const leftButton = headerLeft
-    ? headerLeft({
-        tintColor: headerTintColor,
-        pressColor: headerPressColor,
-        pressOpacity: headerPressOpacity,
-        labelVisible: headerLeftLabelVisible,
-      })
-    : null;
+  const leftButton =
+    typeof headerLeft === 'function'
+      ? headerLeft({
+          tintColor: headerTintColor,
+          pressColor: headerPressColor,
+          pressOpacity: headerPressOpacity,
+          labelVisible: headerLeftLabelVisible,
+        })
+      : React.isValidElement(headerLeft)
+      ? React.cloneElement(headerLeft, {
+          tintColor: headerTintColor,
+          pressColor: headerPressColor,
+          pressOpacity: headerPressOpacity,
+          labelVisible: headerLeftLabelVisible,
+        })
+      : null;
 
-  const rightButton = headerRight
-    ? headerRight({
-        tintColor: headerTintColor,
-        pressColor: headerPressColor,
-        pressOpacity: headerPressOpacity,
-      })
-    : null;
+  const rightButton =
+    typeof headerRight === 'function'
+      ? headerRight({
+          tintColor: headerTintColor,
+          pressColor: headerPressColor,
+          pressOpacity: headerPressOpacity,
+        })
+      : React.isValidElement(headerRight)
+      ? React.cloneElement(headerRight, {
+          tintColor: headerTintColor,
+          pressColor: headerPressColor,
+          pressOpacity: headerPressOpacity,
+        })
+      : null;
 
   const headerTitle =
     typeof customTitle !== 'function'

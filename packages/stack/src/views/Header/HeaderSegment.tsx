@@ -173,22 +173,21 @@ export function HeaderSegment(props: Props) {
         canGoBack: Boolean(onGoBack),
       });
   } else if (React.isValidElement(left)) {
-    headerLeft = (props) =>
-      React.cloneElement(left, {
-        ...props,
-        backImage: headerBackImage,
-        accessibilityLabel: headerBackAccessibilityLabel,
-        testID: headerBackTestID,
-        allowFontScaling: headerBackAllowFontScaling,
-        onPress: onGoBack,
-        label: headerBackTitle,
-        truncatedLabel: headerTruncatedBackTitle,
-        labelStyle: [leftLabelStyle, headerBackTitleStyle],
-        onLabelLayout: handleLeftLabelLayout,
-        screenLayout: layout,
-        titleLayout,
-        canGoBack: Boolean(onGoBack),
-      });
+    headerLeft = React.cloneElement(left, {
+      ...props,
+      backImage: headerBackImage,
+      accessibilityLabel: headerBackAccessibilityLabel,
+      testID: headerBackTestID,
+      allowFontScaling: headerBackAllowFontScaling,
+      onPress: onGoBack,
+      label: headerBackTitle,
+      truncatedLabel: headerTruncatedBackTitle,
+      labelStyle: [leftLabelStyle, headerBackTitleStyle],
+      onLabelLayout: handleLeftLabelLayout,
+      screenLayout: layout,
+      titleLayout,
+      canGoBack: Boolean(onGoBack),
+    });
   }
 
   let headerRight: StackHeaderOptions['headerRight'];
@@ -199,11 +198,9 @@ export function HeaderSegment(props: Props) {
         canGoBack: Boolean(onGoBack),
       });
   } else if (React.isValidElement(right)) {
-    headerRight = (props) =>
-      React.cloneElement(right, {
-        ...props,
-        canGoBack: Boolean(onGoBack),
-      });
+    headerRight = React.cloneElement(right, {
+      canGoBack: Boolean(onGoBack),
+    });
   }
 
   const headerTitle: StackHeaderOptions['headerTitle'] =
