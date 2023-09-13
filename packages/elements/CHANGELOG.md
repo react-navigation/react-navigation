@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.0...@react-navigation/elements@2.0.0-alpha.1) (2023-09-13)
+
+### Features
+
+* add option to show tabs on the side ([#11578](https://github.com/react-navigation/react-navigation/issues/11578)) ([cd15fda](https://github.com/react-navigation/react-navigation/commit/cd15fdafe7acc428826bd5106c7ba62c1b5153ca)) - by @satya164
+
 # [2.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.4.0-alpha.1...@react-navigation/elements@2.0.0-alpha.0) (2023-09-07)
 
 ### Bug Fixes
