@@ -298,7 +298,7 @@ export function BottomTabBar({
                 ],
                 // Absolutely position the tab bar so that the content is below it
                 // This is needed to avoid gap at bottom when the tab bar is hidden
-                position: isTabBarHidden ? 'absolute' : (null as any),
+                position: isTabBarHidden ? 'absolute' : undefined,
               },
               {
                 height: tabBarHeight,

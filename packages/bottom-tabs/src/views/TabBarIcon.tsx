@@ -64,7 +64,7 @@ export function TabBarIcon({
       <Badge
         visible={badge != null}
         style={[styles.badge, badgeStyle]}
-        size={(ICON_SIZE * 3) / 4}
+        size={ICON_SIZE * 0.75}
       >
         {badge}
       </Badge>
