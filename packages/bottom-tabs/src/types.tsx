@@ -224,6 +224,11 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   tabBarBackground?: () => React.ReactNode;
 
   /**
+   * Position of the tab bar on the screen. Defaults to `bottom`.
+   */
+  tabBarPosition?: 'bottom' | 'left' | 'right';
+
+  /**
    * Whether this screens should render the first time it's accessed. Defaults to `true`.
    * Set it to `false` if you want to render the screen on initial render.
    */

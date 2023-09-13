@@ -151,12 +151,22 @@ export function BottomTabView(props: Props) {
     hasAnimation(descriptors[route.key].options)
   );
 
+  const { tabBarPosition = 'bottom' } = descriptors[focusedRouteKey].options;
+
   return (
-    <SafeAreaProviderCompat>
+    <SafeAreaProviderCompat
+      style={
+        tabBarPosition === 'left'
+          ? styles.left
+          : tabBarPosition === 'right'
+          ? styles.right
+          : null
+      }
+    >
       <MaybeScreenContainer
         enabled={detachInactiveScreens}
         hasTwoStates={hasTwoStates}
-        style={styles.container}
+        style={styles.screens}
       >
         {routes.map((route, index) => {
           const descriptor = descriptors[route.key];
@@ -218,7 +228,9 @@ export function BottomTabView(props: Props) {
               enabled={detachInactiveScreens}
               freezeOnBlur={freezeOnBlur}
             >
-              <BottomTabBarHeightContext.Provider value={tabBarHeight}>
+              <BottomTabBarHeightContext.Provider
+                value={tabBarPosition === 'bottom' ? tabBarHeight : 0}
+              >
                 <Screen
                   focused={isFocused}
                   route={descriptor.route}
@@ -250,7 +262,13 @@ export function BottomTabView(props: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  left: {
+    flexDirection: 'row-reverse',
+  },
+  right: {
+    flexDirection: 'row',
+  },
+  screens: {
     flex: 1,
     overflow: 'hidden',
   },

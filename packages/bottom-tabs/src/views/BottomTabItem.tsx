@@ -306,7 +306,6 @@ export function BottomTabItem({
 
 const styles = StyleSheet.create({
   tab: {
-    flex: 1,
     alignItems: 'center',
   },
   tabPortrait: {
@@ -323,7 +322,6 @@ const styles = StyleSheet.create({
   labelBeside: {
     fontSize: 13,
     marginLeft: 20,
-    marginTop: 3,
   },
   button: {
     display: 'flex',

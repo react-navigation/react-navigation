@@ -27,6 +27,8 @@ type Props = {
   style: StyleProp<ViewStyle>;
 };
 
+const ICON_SIZE = 25;
+
 export function TabBarIcon({
   route: _,
   horizontal,
@@ -39,8 +41,6 @@ export function TabBarIcon({
   renderIcon,
   style,
 }: Props) {
-  const size = 25;
-
   // We render the icon twice at the same position on top of each other:
   // active and inactive one, so we can fade between them.
   return (
@@ -50,25 +50,21 @@ export function TabBarIcon({
       <View style={[styles.icon, { opacity: activeOpacity }]}>
         {renderIcon({
           focused: true,
-          size,
+          size: ICON_SIZE,
           color: activeTintColor,
         })}
       </View>
       <View style={[styles.icon, { opacity: inactiveOpacity }]}>
         {renderIcon({
           focused: false,
-          size,
+          size: ICON_SIZE,
           color: inactiveTintColor,
         })}
       </View>
       <Badge
         visible={badge != null}
-        style={[
-          styles.badge,
-          horizontal ? styles.badgeHorizontal : styles.badgeVertical,
-          badgeStyle,
-        ]}
-        size={(size * 3) / 4}
+        style={[styles.badge, badgeStyle]}
+        size={ICON_SIZE * 0.75}
       >
         {badge}
       </Badge>
@@ -88,23 +84,19 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
     // Workaround for react-native >= 0.54 layout bug
-    minWidth: 25,
+    minWidth: ICON_SIZE,
   },
   iconVertical: {
-    flex: 1,
+    width: ICON_SIZE,
+    height: ICON_SIZE,
   },
   iconHorizontal: {
-    height: '100%',
-    marginTop: 3,
+    width: ICON_SIZE,
+    height: ICON_SIZE,
   },
   badge: {
     position: 'absolute',
-    left: 3,
-  },
-  badgeVertical: {
-    top: 3,
-  },
-  badgeHorizontal: {
-    top: 7,
+    right: -5,
+    top: -5,
   },
 });

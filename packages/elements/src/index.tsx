@@ -1,4 +1,5 @@
 export { Background } from './Background';
+export { getDefaultSidebarWidth } from './getDefaultSidebarWidth';
 export { getDefaultHeaderHeight } from './Header/getDefaultHeaderHeight';
 export { getHeaderTitle } from './Header/getHeaderTitle';
 export { Header } from './Header/Header';
