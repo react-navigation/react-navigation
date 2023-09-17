@@ -448,6 +448,16 @@ export function useNavigationBuilder<
 
   const previousRouteKeyList = previousRouteKeyListRef.current;
 
+  // This state gets set on unhandled deep link
+  const stateForNextRouteNamesChange = React.useRef<State | null>(null);
+
+  const setStateForNextRouteNamesChange = React.useCallback(
+    (nextState: State) => {
+      stateForNextRouteNamesChange.current = nextState;
+    },
+    []
+  );
+
   let state =
     // If the state isn't initialized, or stale, use the state we initialized instead
     // The state won't update until there's a change needed in the state we have initalized locally
@@ -463,16 +473,18 @@ export function useNavigationBuilder<
     !isRecordEqual(routeKeyList, previousRouteKeyList)
   ) {
     // When the list of route names change, the router should handle it to remove invalid routes
-    nextState = router.getStateForRouteNamesChange(state, {
-      routeNames,
-      routeParamList,
-      routeGetIdList,
-      routeKeyChanges: Object.keys(routeKeyList).filter(
-        (name) =>
-          previousRouteKeyList.hasOwnProperty(name) &&
-          routeKeyList[name] !== previousRouteKeyList[name]
-      ),
-    });
+    nextState =
+      stateForNextRouteNamesChange.current ??
+      router.getStateForRouteNamesChange(state, {
+        routeNames,
+        routeParamList,
+        routeGetIdList,
+        routeKeyChanges: Object.keys(routeKeyList).filter(
+          (name) =>
+            previousRouteKeyList.hasOwnProperty(name) &&
+            routeKeyList[name] !== previousRouteKeyList[name]
+        ),
+      });
   }
 
   const previousNestedParamsRef = React.useRef(route?.params);
@@ -705,6 +717,7 @@ export function useNavigationBuilder<
     router,
     // @ts-expect-error: this should have both core and custom events, but too much work right now
     emitter,
+    setStateForNextRouteNamesChange,
   });
 
   useCurrentRender({
