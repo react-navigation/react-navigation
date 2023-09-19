@@ -45,9 +45,10 @@ Then follow these steps to publish and install a forked package:
 1. Fork this repo to your account and clone the forked repo to your local machine
 1. Open a Terminal and `cd` to the location of the cloned repo
 1. Run `yarn` to install any dependencies
-1. If you want to make any changes, make them and commit
+1. If you want to make any changes, make them (committing isn't necessary if following steps are followed)
 1. Run `yarn lerna run prepack` to perform the build steps
 1. Now `cd` to the package directory that you want to use (e.g. `cd packages/stack` for `@react-navigation/stack`)
+1. Within the same directory, bump the package's version number (e.g. `7.0.0` to `7.0.1`) in its `package.json` file
 1. Run `gitpkg publish` to publish the package to your repo
 
 After publishing, you should see something like this:
@@ -63,6 +64,11 @@ yarn add <user>/<repo>.git#<name>
 ```
 
 Remember to replace `<user>`, `<repo>` and `<name>` with right values.
+
+Below is an example of how a forked package may appear as a dependency inside `package.json`:
+```
+"@react-navigation/stack": "github:jkhaui/react-navigation#react-navigation-stack-v7.0.0-alpha.6-gitpkg"
+```
 
 <!-- badges -->
 
