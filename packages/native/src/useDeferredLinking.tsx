@@ -46,7 +46,32 @@ export function useDeferredLinking() {
     const getStateFromPathHelper =
       options?.getStateFromPath ?? getStateFromPath;
 
-    const rootState = getStateFromPathHelper(path ?? '', config);
+    let rootState = getStateFromPathHelper(path ?? '', config);
+    if (!rootState) {
+      // is that possible?
+      return;
+    }
+
+    const parent = navigation.getParent();
+    if (parent) {
+      // Then, we consider a portion of the state.
+      const parentState = navigation.getParent()!.getState();
+      const outerRouteName = parentState.routeNames[parentState.index];
+      let state: typeof rootState | undefined = rootState;
+      while (state?.routes[0].name !== outerRouteName && state) {
+        state = state.routes[0].state;
+      }
+      if (!state) {
+        // error?
+        return;
+      }
+      const innerState = state.routes[0].state;
+      if (!innerState) {
+        // error?
+        return;
+      }
+      rootState = innerState;
+    }
 
     // Then we traverse the root state and find the part of the state that corresponds to this navigator
     const routesWithKey =

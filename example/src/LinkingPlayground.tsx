@@ -56,17 +56,23 @@ const SignInScreen = ({ signIn }: any) => {
 };
 
 const Stack = createStackNavigator();
+const OuterStack = createStackNavigator();
 
 const config = {
   screens: {
-    Home: 'home',
-    Details: {
-      path: 'details/:message',
-      parse: {
-        message: (message: string) => `${message}`,
+    Outer: {
+      path: 'outer',
+      screens: {
+        Home: 'home',
+        Details: {
+          path: 'details/:message',
+          parse: {
+            message: (message: string) => `${message}`,
+          },
+        },
+        Profile: 'profile',
       },
     },
-    Profile: 'profile',
   },
 };
 
@@ -82,30 +88,39 @@ export function LinkingPlayground() {
   const [isSignedIn, setSignedIn] = React.useState(false);
   return (
     <NavigationContainer linking={linking}>
-      <Stack.Navigator>
-        {isSignedIn ? (
-          <Stack.Group
-            screenOptions={{
-              headerRight: () => (
-                <Button onPress={() => setSignedIn(false)} title="Sign Out" />
-              ),
-            }}
-          >
-            <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="Details" component={DetailsScreen} />
-            <Stack.Screen name="Profile" component={ProfileScreen} />
-          </Stack.Group>
-        ) : (
-          <Stack.Screen
-            name="SignIn"
-            options={{
-              animationTypeForReplace: !isSignedIn ? 'pop' : 'push',
-            }}
-          >
-            {() => <SignInScreen signIn={() => setSignedIn(true)} />}
-          </Stack.Screen>
-        )}
-      </Stack.Navigator>
+      <OuterStack.Navigator>
+        <OuterStack.Screen name="Outer">
+          {() => (
+            <Stack.Navigator>
+              {isSignedIn ? (
+                <Stack.Group
+                  screenOptions={{
+                    headerRight: () => (
+                      <Button
+                        onPress={() => setSignedIn(false)}
+                        title="Sign Out"
+                      />
+                    ),
+                  }}
+                >
+                  <Stack.Screen name="Home" component={HomeScreen} />
+                  <Stack.Screen name="Details" component={DetailsScreen} />
+                  <Stack.Screen name="Profile" component={ProfileScreen} />
+                </Stack.Group>
+              ) : (
+                <Stack.Screen
+                  name="SignIn"
+                  options={{
+                    animationTypeForReplace: !isSignedIn ? 'pop' : 'push',
+                  }}
+                >
+                  {() => <SignInScreen signIn={() => setSignedIn(true)} />}
+                </Stack.Screen>
+              )}
+            </Stack.Navigator>
+          )}
+        </OuterStack.Screen>
+      </OuterStack.Navigator>
     </NavigationContainer>
   );
 }
