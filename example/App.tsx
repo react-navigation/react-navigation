@@ -7,7 +7,7 @@ import { Asset } from 'expo-asset';
 import { App } from './src/index';
 import { LinkingPlayground } from './src/LinkingPlayground';
 
-const LINKING_EXAMPLE = true;
+const LINKING_EXAMPLE = false;
 
 Asset.loadAsync(Assets);
 
