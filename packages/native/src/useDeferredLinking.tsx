@@ -9,7 +9,7 @@ import React from 'react';
 import { extractPathFromURL } from './extractPathFromURL';
 import { LinkingContext } from './LinkingContext';
 
-export function useLinkingOnConditionalRender() {
+export function useDeferredLinking() {
   const navigation = React.useContext(NavigationContext);
   const linking = React.useContext(LinkingContext);
 

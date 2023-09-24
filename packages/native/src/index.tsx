@@ -8,6 +8,7 @@ export { DefaultTheme } from './theming/DefaultTheme';
 export { ThemeProvider } from './theming/ThemeProvider';
 export { useTheme } from './theming/useTheme';
 export * from './types';
+export { useDeferredLinking } from './useDeferredLinking';
 export { useLinkProps } from './useLinkProps';
 export { useLinkTools } from './useLinkTools';
 export { useLocale } from './useLocale';

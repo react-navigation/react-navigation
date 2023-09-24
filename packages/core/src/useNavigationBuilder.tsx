@@ -485,7 +485,15 @@ export function useNavigationBuilder<
             routeKeyList[name] !== previousRouteKeyList[name]
         ),
       });
+    // Clear scheduled state after it's handled
+    stateForNextRouteNamesChange.current = null;
   }
+
+  React.useEffect(() => {
+    return () => {
+      stateForNextRouteNamesChange.current = null;
+    };
+  }, []);
 
   const previousNestedParamsRef = React.useRef(route?.params);
 
@@ -685,6 +693,7 @@ export function useNavigationBuilder<
     getState,
     emitter,
     router,
+    setStateForNextRouteNamesChange,
   });
 
   useFocusedListenersChildrenAdapter({
