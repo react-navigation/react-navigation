@@ -32,6 +32,7 @@ function DrawerNavigator({
   defaultStatus = 'closed',
   backBehavior,
   children,
+  layout,
   screenListeners,
   screenOptions,
   ...rest
@@ -49,6 +50,7 @@ function DrawerNavigator({
       defaultStatus,
       backBehavior,
       children,
+      layout,
       screenListeners,
       screenOptions,
     });

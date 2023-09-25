@@ -259,7 +259,7 @@ export function useNavigationBuilder<
     | NavigatorRoute
     | undefined;
 
-  const { children, screenListeners, ...rest } = options;
+  const { children, layout, screenOptions, screenListeners, ...rest } = options;
   const { current: router } = React.useRef<Router<State, any>>(
     createRouter({
       ...(rest as unknown as RouterOptions),
@@ -678,7 +678,7 @@ export function useNavigationBuilder<
     state,
     screens,
     navigation,
-    screenOptions: options.screenOptions,
+    screenOptions,
     onAction,
     getState,
     setState,
@@ -696,11 +696,23 @@ export function useNavigationBuilder<
     descriptors,
   });
 
-  const NavigationContent = useComponent((children: React.ReactNode) => (
-    <NavigationHelpersContext.Provider value={navigation}>
-      <PreventRemoveProvider>{children}</PreventRemoveProvider>
-    </NavigationHelpersContext.Provider>
-  ));
+  const NavigationContent = useComponent((children: React.ReactNode) => {
+    const element =
+      layout != null
+        ? layout({
+            state,
+            descriptors,
+            navigation,
+            children,
+          })
+        : children;
+
+    return (
+      <NavigationHelpersContext.Provider value={navigation}>
+        <PreventRemoveProvider>{element}</PreventRemoveProvider>
+      </NavigationHelpersContext.Provider>
+    );
+  });
 
   return {
     state,

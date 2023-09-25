@@ -35,6 +35,30 @@ export type DefaultNavigatorOptions<
    */
   children: React.ReactNode;
   /**
+   * Layout component for the navigator.
+   * Useful for wrapping with a component with access to navigator's state and options.
+   */
+  layout?: (props: {
+    state: State;
+    navigation: NavigationHelpers<ParamList>;
+    descriptors: Record<
+      string,
+      Descriptor<
+        ScreenOptions,
+        NavigationProp<
+          ParamList,
+          keyof ParamList,
+          string | undefined,
+          State,
+          ScreenOptions,
+          EventMap
+        >,
+        RouteProp<ParamList>
+      >
+    >;
+    children: React.ReactNode;
+  }) => React.ReactElement;
+  /**
    * Event listeners for all the screens in the navigator.
    */
   screenListeners?:

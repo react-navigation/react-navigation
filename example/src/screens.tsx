@@ -2,6 +2,7 @@ import type { NavigatorScreenParams } from '@react-navigation/native';
 
 import { AuthFlow } from './Screens/AuthFlow';
 import { BottomTabs } from './Screens/BottomTabs';
+import { CustomLayout } from './Screens/CustomLayout';
 import { DrawerView } from './Screens/DrawerView';
 import { DynamicTabs } from './Screens/DynamicTabs';
 import { LinkComponent } from './Screens/LinkComponent';
@@ -89,6 +90,10 @@ export const SCREENS = {
   NativeStackPreventRemove: {
     title: 'Prevent removing screen in Native Stack',
     component: NativeStackPreventRemove,
+  },
+  CustomLayout: {
+    title: 'Custom Layout',
+    component: CustomLayout,
   },
   LinkComponent: {
     title: '<Link />',

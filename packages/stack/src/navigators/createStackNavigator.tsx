@@ -33,6 +33,7 @@ function StackNavigator({
   id,
   initialRouteName,
   children,
+  layout,
   screenListeners,
   screenOptions,
   ...rest
@@ -49,6 +50,7 @@ function StackNavigator({
       id,
       initialRouteName,
       children,
+      layout,
       screenListeners,
       screenOptions,
     });
