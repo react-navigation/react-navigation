@@ -149,6 +149,11 @@ export function Drawer({
     endInteraction();
   };
 
+  const onGestureAbort = () => {
+    onGestureCancel?.();
+    endInteraction();
+  };
+
   // FIXME: Currently hitSlop is broken when on Android when drawer is on right
   // https://github.com/software-mansion/react-native-gesture-handler/issues/569
   const hitSlop = isRight
@@ -230,7 +235,7 @@ export function Drawer({
       touchStartX.value = event.x;
     },
     onCancel: () => {
-      runOnJS(() => onGestureCancel?.())();
+      runOnJS(onGestureAbort)();
     },
     onActive: (event, ctx) => {
       touchX.value = event.x;
