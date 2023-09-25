@@ -55,13 +55,6 @@ type Options<
   >;
   navigation: NavigationHelpers<ParamListBase>;
   screenOptions?: ScreenOptionsOrCallback<ScreenOptions>;
-  defaultScreenOptions?:
-    | ScreenOptions
-    | ((props: {
-        route: RouteProp<ParamListBase>;
-        navigation: any;
-        options: ScreenOptions;
-      }) => ScreenOptions);
   onAction: (action: NavigationAction) => boolean;
   getState: () => State;
   setState: (state: State) => void;
@@ -90,7 +83,6 @@ export function useDescriptors<
   screens,
   navigation,
   screenOptions,
-  defaultScreenOptions,
   onAction,
   getState,
   setState,
@@ -186,18 +178,6 @@ export function useDescriptors<
       {} as ScreenOptions
     );
 
-    const mergedOptions = {
-      ...(typeof defaultScreenOptions === 'function'
-        ? // @ts-expect-error: ts gives incorrect error here
-          defaultScreenOptions({
-            route,
-            navigation,
-            options: customOptions,
-          })
-        : defaultScreenOptions),
-      ...customOptions,
-    };
-
     const clearOptions = () =>
       setOptions((o) => {
         if (route.key in o) {
@@ -220,7 +200,7 @@ export function useDescriptors<
               routeState={state.routes[i].state}
               getState={getState}
               setState={setState}
-              options={mergedOptions}
+              options={customOptions}
               clearOptions={clearOptions}
             />
           </NavigationRouteContext.Provider>
@@ -235,7 +215,7 @@ export function useDescriptors<
       render() {
         return element;
       },
-      options: mergedOptions as ScreenOptions,
+      options: customOptions as ScreenOptions,
     };
 
     return acc;
