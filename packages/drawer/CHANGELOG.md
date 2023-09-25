@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.6.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.6.3...@react-navigation/drawer@6.6.4) (2023-09-25)
+
+### Bug Fixes
+
+* don't use BackHandler on web for drawer ([be517a0](https://github.com/react-navigation/react-navigation/commit/be517a03b5e3ddeb4254af97904ef5250a714254)) - by @satya164
+* prevent back handler usage on web ([#11458](https://github.com/react-navigation/react-navigation/issues/11458)) ([e5f753f](https://github.com/react-navigation/react-navigation/commit/e5f753f19e1c05251b56b98b645152024318b441)) - by @EvanBacon
+
 ## [6.6.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.6.2...@react-navigation/drawer@6.6.3) (2023-06-22)
 
 **Note:** Version bump only for package @react-navigation/drawer

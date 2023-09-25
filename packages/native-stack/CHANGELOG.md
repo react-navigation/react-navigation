@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.9.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.9.13...@react-navigation/native-stack@6.9.14) (2023-09-25)
+
+### Bug Fixes
+
+* buggy behaviour of search bar / large title on Fabric with native stack v6 ([#11502](https://github.com/react-navigation/react-navigation/issues/11502)) ([cbdcbfb](https://github.com/react-navigation/react-navigation/commit/cbdcbfbf670c30aabc92c6271b8a1de135a54a56)) - by @kkafar
+
 ## [6.9.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.9.12...@react-navigation/native-stack@6.9.13) (2023-06-22)
 
 ### Bug Fixes

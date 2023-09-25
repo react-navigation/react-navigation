@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.2.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.2.16...@react-navigation/material-bottom-tabs@6.2.17) (2023-09-25)
+
+**Note:** Version bump only for package @react-navigation/material-bottom-tabs
+
 ## [6.2.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-bottom-tabs@6.2.15...@react-navigation/material-bottom-tabs@6.2.16) (2023-06-22)
 
 **Note:** Version bump only for package @react-navigation/material-bottom-tabs

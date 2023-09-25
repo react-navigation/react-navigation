@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.3.18...@react-navigation/elements@1.3.19) (2023-09-25)
+
+### Bug Fixes
+
+* add default value to labelVisible in HeaderBackBox ([#11308](https://github.com/react-navigation/react-navigation/issues/11308)) ([5284b5a](https://github.com/react-navigation/react-navigation/commit/5284b5a9c7284b17c5901f74fab06277c83c289e)) - by @gkasdorf
+* make back button ripple visible ([#11386](https://github.com/react-navigation/react-navigation/issues/11386)) ([c6fa588](https://github.com/react-navigation/react-navigation/commit/c6fa58851dc387550cd43f15396d915ff6e5dbdf)), closes [#9794](https://github.com/react-navigation/react-navigation/issues/9794) - by @vonovak
+
 ## [1.3.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.3.17...@react-navigation/elements@1.3.18) (2023-06-22)
 
 **Note:** Version bump only for package @react-navigation/elements
