@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/drawer",
   "description": "Integration for the drawer component from react-native-drawer-layout",
-  "version": "7.0.0-alpha.4",
+  "version": "7.0.0-alpha.5",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -41,7 +41,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/elements": "^2.0.0-alpha.1",
+    "@react-navigation/elements": "^2.0.0-alpha.2",
     "color": "^4.2.3",
     "react-native-drawer-layout": "workspace:^",
     "use-latest-callback": "^0.1.5"

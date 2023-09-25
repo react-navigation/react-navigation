@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.3...@react-navigation/native@7.0.0-alpha.4) (2023-09-25)
+
+### Bug Fixes
+
+* don't use .web extensions ([8dfd9bc](https://github.com/react-navigation/react-navigation/commit/8dfd9bc8efb4e89c7e7bbe9727911cdf148ffa05)) - by @satya164
+
 # [7.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.2...@react-navigation/native@7.0.0-alpha.3) (2023-09-07)
 
 ### Bug Fixes

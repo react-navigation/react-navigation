@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-alpha.0...react-native-drawer-layout@4.0.0-alpha.1) (2023-09-25)
+
+### Bug Fixes
+
+* call onGestureCancel correctly for drawer ([3cfb3e6](https://github.com/react-navigation/react-navigation/commit/3cfb3e63949f0aa6f4b14db02161dd88fd10cb12)) - by @satya164
+
 # [4.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@3.2.1...react-native-drawer-layout@4.0.0-alpha.0) (2023-09-07)
 
 * feat!: add a direction prop to NavigationContainer to specify rtl (#11393) ([8309636](https://github.com/react-navigation/react-navigation/commit/830963653fb5a489d02f1503222629373319b39e)), closes [#11393](https://github.com/react-navigation/react-navigation/issues/11393) - by @satya164
