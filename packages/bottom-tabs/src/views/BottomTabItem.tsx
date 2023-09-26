@@ -242,6 +242,7 @@ export function BottomTabItem({
           labelStyle,
         ]}
         allowFontScaling={allowFontScaling}
+        tintColor={color}
       >
         {label}
       </Label>
