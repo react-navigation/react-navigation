@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.4...@react-navigation/drawer@7.0.0-alpha.5) (2023-09-25)
+
+### Bug Fixes
+
+* don't use BackHandler on web for drawer ([d814a40](https://github.com/react-navigation/react-navigation/commit/d814a40e3e632ca67b1e92ff4f3086a80638cc1a)) - by @satya164
+
 # [7.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.3...@react-navigation/drawer@7.0.0-alpha.4) (2023-09-13)
 
 ### Features
