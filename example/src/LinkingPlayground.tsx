@@ -58,30 +58,25 @@ const SignInScreen = ({ signIn }: any) => {
 const Stack = createStackNavigator();
 const OuterStack = createStackNavigator();
 
-const config = {
-  screens: {
-    Outer: {
-      path: 'outer',
-      screens: {
-        Home: 'home',
-        Details: {
-          path: 'details/:message',
-          parse: {
-            message: (message: string) => `${message}`,
+const linking = {
+  prefixes: [createURL('/')],
+  config: {
+    screens: {
+      Outer: {
+        path: 'outer',
+        screens: {
+          Home: 'home',
+          Details: {
+            path: 'details/:message',
+            parse: {
+              message: (message: string) => `${message}`,
+            },
           },
+          Profile: 'profile',
         },
-        Profile: 'profile',
       },
     },
   },
-};
-
-const linking = {
-  prefixes: [createURL('/')],
-  config,
-  // async getInitialURL() {
-  //   return `${createURL('/')}profile`;
-  // },
 };
 
 export function LinkingPlayground() {

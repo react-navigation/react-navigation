@@ -62,12 +62,10 @@ export function useDeferredLinking() {
         state = state.routes[0].state;
       }
       if (!state) {
-        // error?
         return;
       }
       const innerState = state.routes[0].state;
       if (!innerState) {
-        // error?
         return;
       }
       rootState = innerState;
