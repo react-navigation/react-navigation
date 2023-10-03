@@ -3,7 +3,6 @@ import {
   NavigationContext,
   useRoute,
 } from '@react-navigation/core';
-import { nanoid } from 'nanoid/non-secure';
 import React from 'react';
 
 import { extractPathFromURL } from './extractPathFromURL';
@@ -71,22 +70,8 @@ export function useDeferredLinking() {
       rootState = innerState;
     }
 
-    // Then we traverse the root state and find the part of the state that corresponds to this navigator
-    const routesWithKey =
-      rootState?.routes.map((route) => ({
-        ...route,
-        key: `${route.name}-${nanoid()}`,
-      })) ?? [];
-
-    const state = navigation.getState();
-
-    const nextState = {
-      ...state,
-      routes: routesWithKey,
-    };
-
     // Once we have the state, we can tell React Navigation to use it for next route names change (conditional rendering logic change)
-    navigation.setStateForNextRouteNamesChange(nextState);
+    navigation.setStateForNextRouteNamesChange(rootState);
 
     // Finally, we clear unhandled link after it was handled
     lastUnhandledURL.current = undefined;

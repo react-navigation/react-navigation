@@ -28,5 +28,5 @@ export function useScheduleUpdate(callback: () => void) {
 
   scheduleUpdate(callback);
 
-  React.useEffect(flushUpdates);
+  React.useLayoutEffect(flushUpdates);
 }

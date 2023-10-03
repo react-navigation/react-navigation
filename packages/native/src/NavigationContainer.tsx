@@ -136,6 +136,21 @@ function NavigationContainerInner(
         <ThemeProvider value={theme}>
           <BaseNavigationContainer
             {...rest}
+            onReady={() => {
+              const path = refContainer.current?.getCurrentRoute()?.path;
+              if (path === linkingContext.lastUnhandledURL.current) {
+                linkingContext.lastUnhandledURL.current = undefined;
+              }
+              rest.onReady?.();
+            }}
+            onStateChange={(focusedRoute) => {
+              const path = refContainer.current?.getCurrentRoute()?.path;
+              console.log(path, linkingContext.lastUnhandledURL.current);
+              if (path === linkingContext.lastUnhandledURL.current) {
+                linkingContext.lastUnhandledURL.current = undefined;
+              }
+              rest.onStateChange?.(focusedRoute);
+            }}
             initialState={
               rest.initialState == null ? initialState : rest.initialState
             }

@@ -146,18 +146,13 @@ export function useLinking(
     [ref]
   );
 
-  const saveLastUnhandledUrl = React.useCallback(
-    (url: string | null | undefined) => {
-      // Save last unhandled url for later use in conditional rendering
-      lastUnhandledURL.current = url;
-
-      // TODO: how to silence warning when it may or may not be handled in conditional rendering?
-      console.warn(
-        "The navigation state parsed from the URL contains routes not present in the root navigator. This usually means that the linking configuration doesn't match the navigation structure. See https://reactnavigation.org/docs/configuring-links for more details on how to specify a linking configuration."
-      );
-    },
-    [lastUnhandledURL]
-  );
+  // const saveLastUnhandledUrl = React.useCallback(
+  //   (url: string | null | undefined) => {
+  //     // Save last unhandled url for later use in conditional rendering
+  //     lastUnhandledURL.current = url;
+  //   },
+  //   [lastUnhandledURL]
+  // );
 
   const getInitialState = React.useCallback(() => {
     let state: ResultState | undefined;
@@ -169,14 +164,13 @@ export function useLinking(
         return url.then((url) => {
           const state = getStateFromURL(url);
 
-          if (validateRoutesNotExistInRootState(state)) {
-            saveLastUnhandledUrl(url);
-            return;
-          }
+          // If the link were handled, it gets cleared in NavigationContainer
+          lastUnhandledURL.current = url;
 
           return state;
         });
       }
+      lastUnhandledURL.current = url;
 
       state = getStateFromURL(url);
     }
@@ -193,7 +187,6 @@ export function useLinking(
     return thenable as PromiseLike<ResultState | undefined>;
   }, [
     getStateFromURL,
-    saveLastUnhandledUrl,
     validateRoutesNotExistInRootState,
   ]);
 
@@ -207,8 +200,10 @@ export function useLinking(
       const state = navigation ? getStateFromURL(url) : undefined;
 
       if (navigation && state) {
+        // If the link were handled, it gets cleared in NavigationContainer
+        lastUnhandledURL.current = url;
         if (validateRoutesNotExistInRootState(state)) {
-          saveLastUnhandledUrl(url);
+          return;
         }
 
         const action = getActionFromStateRef.current(state, configRef.current);
@@ -238,7 +233,6 @@ export function useLinking(
     enabled,
     getStateFromURL,
     ref,
-    saveLastUnhandledUrl,
     subscribe,
     validateRoutesNotExistInRootState,
   ]);

@@ -20,6 +20,7 @@ import { NavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationContainerRefContext } from './NavigationContainerRefContext';
 import { NavigationIndependentTreeContext } from './NavigationIndependentTreeContext';
 import { NavigationStateContext } from './NavigationStateContext';
+import { SetNextStateContext } from './SetNextStateContext';
 import type {
   NavigationContainerEventMap,
   NavigationContainerProps,
@@ -68,6 +69,14 @@ const getPartialState = (
     }),
   };
 };
+
+function usePrevious<T>(value: T): T | undefined {
+  const ref = React.useRef<T>();
+  React.useEffect(() => {
+    ref.current = value;
+  }, [value]);
+  return ref.current;
+}
 
 /**
  * Container component which holds the navigation state.
@@ -301,13 +310,14 @@ export const BaseNavigationContainer = React.forwardRef(
       stateRef.current = state;
     });
 
-    const isNavigationReady = isReady();
+    const onReadyCalledRef = React.useRef(false);
 
     React.useEffect(() => {
-      if (isNavigationReady) {
+      if (!onReadyCalledRef.current && isReady()) {
+        onReadyCalledRef.current = true;
         onReadyRef.current?.();
       }
-    }, [isNavigationReady]);
+    }, [state, isReady]);
 
     React.useEffect(() => {
       const hydratedState = getRootState();
@@ -430,21 +440,36 @@ export const BaseNavigationContainer = React.forwardRef(
       }
     );
 
+    const [stateForNextRouteNamesChange, setStateForNextRouteNamesChange] =
+      React.useState<[string, PartialState<NavigationState>] | null>(null);
+
+    const setNextStateContext = React.useMemo(
+      () => ({ stateForNextRouteNamesChange, setStateForNextRouteNamesChange }),
+      [stateForNextRouteNamesChange, setStateForNextRouteNamesChange]
+    );
+
+    const previousState = usePrevious(state);
+
+    if (state !== previousState && stateForNextRouteNamesChange !== null) {
+      setStateForNextRouteNamesChange(null);
+    }
     return (
       <NavigationIndependentTreeContext.Provider value={false}>
         <NavigationContainerRefContext.Provider value={navigation}>
           <ScheduleUpdateContext.Provider value={scheduleContext}>
             <NavigationBuilderContext.Provider value={builderContext}>
               <NavigationStateContext.Provider value={context}>
-                <UnhandledActionContext.Provider
-                  value={onUnhandledAction ?? defaultOnUnhandledAction}
-                >
-                  <DeprecatedNavigationInChildContext.Provider
-                    value={navigationInChildEnabled}
+                <SetNextStateContext.Provider value={setNextStateContext}>
+                  <UnhandledActionContext.Provider
+                    value={onUnhandledAction ?? defaultOnUnhandledAction}
                   >
-                    <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
-                  </DeprecatedNavigationInChildContext.Provider>
-                </UnhandledActionContext.Provider>
+                    <DeprecatedNavigationInChildContext.Provider
+                      value={navigationInChildEnabled}
+                    >
+                      <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
+                    </DeprecatedNavigationInChildContext.Provider>
+                  </UnhandledActionContext.Provider>
+                </SetNextStateContext.Provider>
               </NavigationStateContext.Provider>
             </NavigationBuilderContext.Provider>
           </ScheduleUpdateContext.Provider>

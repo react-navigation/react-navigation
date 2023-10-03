@@ -12,6 +12,7 @@ import {
 } from '@react-navigation/routers';
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
+import useLatestCallback from 'use-latest-callback';
 
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
@@ -21,6 +22,7 @@ import { NavigationRouteContext } from './NavigationRouteContext';
 import { NavigationStateContext } from './NavigationStateContext';
 import { PreventRemoveProvider } from './PreventRemoveProvider';
 import { Screen } from './Screen';
+import { SetNextStateContext } from './SetNextStateContext';
 import {
   DefaultNavigatorOptions,
   EventMapBase,
@@ -433,14 +435,25 @@ export function useNavigationBuilder<
   const previousRouteKeyList = previousRouteKeyListRef.current;
 
   // This state gets set on unhandled deep link
-  const stateForNextRouteNamesChange = React.useRef<State | null>(null);
+  // const stateForNextRouteNamesChange = React.useRef<State | null>(null);
+  // const [stateForNextRouteNamesChange, setStateForNextRouteNamesChange] =
+  //   React.useState<State | null>(null);
 
-  const setStateForNextRouteNamesChange = React.useCallback(
-    (nextState: State) => {
-      stateForNextRouteNamesChange.current = nextState;
-    },
-    []
-  );
+  // const setStateForNextRouteNamesChange = React.useCallback(
+  //   (nextState: State) => {
+  //     console.log("TTTT")
+  //     stateForNextRouteNamesChange.current = nextState;
+  //   },
+  //   []
+  // );
+  const {
+    stateForNextRouteNamesChange: stateForNextRouteNamesChangeWrapped,
+    setStateForNextRouteNamesChange: setStateForNextRouteNamesChangeWrapped,
+  } = React.useContext(SetNextStateContext);
+  const stateForNextRouteNamesChange =
+    stateForNextRouteNamesChangeWrapped?.[0] === navigatorKey
+      ? stateForNextRouteNamesChangeWrapped[1]
+      : null;
 
   let state =
     // If the state isn't initialized, or stale, use the state we initialized instead
@@ -457,27 +470,31 @@ export function useNavigationBuilder<
     !isRecordEqual(routeKeyList, previousRouteKeyList)
   ) {
     // When the list of route names change, the router should handle it to remove invalid routes
-    nextState =
-      stateForNextRouteNamesChange.current ??
-      router.getStateForRouteNamesChange(state, {
-        routeNames,
-        routeParamList,
-        routeGetIdList,
-        routeKeyChanges: Object.keys(routeKeyList).filter(
-          (name) =>
-            previousRouteKeyList.hasOwnProperty(name) &&
-            routeKeyList[name] !== previousRouteKeyList[name]
-        ),
-      });
-    // Clear scheduled state after it's handled
-    stateForNextRouteNamesChange.current = null;
+    nextState = stateForNextRouteNamesChange
+      ? // @ts-expect-error
+        router.getRehydratedState(stateForNextRouteNamesChange, {
+          routeNames,
+          routeParamList,
+          routeGetIdList,
+        })
+      : router.getStateForRouteNamesChange(state, {
+          routeNames,
+          routeParamList,
+          routeGetIdList,
+          routeKeyChanges: Object.keys(routeKeyList).filter(
+            (name) =>
+              previousRouteKeyList.hasOwnProperty(name) &&
+              routeKeyList[name] !== previousRouteKeyList[name]
+          ),
+        });
   }
+  console.log(nextState);
 
-  React.useEffect(() => {
-    return () => {
-      stateForNextRouteNamesChange.current = null;
-    };
-  }, []);
+  // React.useEffect(() => {
+  //   return () => {
+  //     stateForNextRouteNamesChange.current = null;
+  //   };
+  // }, []);
 
   const previousNestedParamsRef = React.useRef(route?.params);
 
@@ -666,6 +683,11 @@ export function useNavigationBuilder<
     setState,
   });
 
+  const setStateForNextRouteNamesChange = useLatestCallback(
+    (state: PartialState<NavigationState>) => {
+      setStateForNextRouteNamesChangeWrapped([navigatorKey, state]);
+    }
+  );
   const navigation = useNavigationHelpers<
     State,
     ActionHelpers,

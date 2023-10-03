@@ -2,7 +2,7 @@ import {
   CommonActions,
   NavigationAction,
   NavigationState,
-  ParamListBase,
+  ParamListBase, PartialState,
   Router,
 } from '@react-navigation/routers';
 import * as React from 'react';
@@ -22,7 +22,9 @@ type Options<State extends NavigationState, Action extends NavigationAction> = {
   getState: () => State;
   emitter: NavigationEventEmitter<any>;
   router: Router<State, Action>;
-  setStateForNextRouteNamesChange: (state: State) => void;
+  setStateForNextRouteNamesChange: (
+    state: PartialState<State>
+  ) => void;
 };
 
 /**
