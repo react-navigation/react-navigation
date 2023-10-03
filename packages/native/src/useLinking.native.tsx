@@ -185,10 +185,7 @@ export function useLinking(
     };
 
     return thenable as PromiseLike<ResultState | undefined>;
-  }, [
-    getStateFromURL,
-    validateRoutesNotExistInRootState,
-  ]);
+  }, [getStateFromURL, validateRoutesNotExistInRootState]);
 
   React.useEffect(() => {
     const listener = (url: string) => {
