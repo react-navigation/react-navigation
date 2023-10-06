@@ -16,27 +16,26 @@ function extractNavigatorSpecifcState(
   navigation: NavigationProp<ReactNavigation.RootParamList>,
   rootState: ResultState
 ) {
-  let resultState = rootState;
+  let state: typeof rootState | undefined = rootState;
 
   const parent = navigation.getParent();
   if (parent) {
     // Then, we consider a portion of the state.
     const parentState = parent.getState();
-    const outerRouteName = parentState.routeNames[parentState.index];
-    let state: typeof rootState | undefined = resultState;
-    while (state?.routes[0].name !== outerRouteName && state) {
-      state = state.routes[0].state;
+    const outerRouteName = parentState.routes[parentState.index].name;
+    while (state && state.routes[state.index ?? 0].name !== outerRouteName) {
+      state = state.routes[state.index ?? 0].state;
     }
     if (!state) {
       return;
     }
-    const innerState = state.routes[0].state;
+    const innerState = state.routes[state.index ?? 0].state;
     if (!innerState) {
       return;
     }
-    resultState = innerState;
+    state = innerState;
   }
-  return resultState;
+  return state;
 }
 
 export function useUnhandledLinking() {

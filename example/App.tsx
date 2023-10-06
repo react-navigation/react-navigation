@@ -5,10 +5,7 @@ import { registerRootComponent } from 'expo';
 import { Asset } from 'expo-asset';
 
 import { App } from './src/index';
-import { LinkingPlayground } from './src/LinkingPlayground';
-
-const LINKING_EXAMPLE = true;
 
 Asset.loadAsync(Assets);
 
-registerRootComponent(LINKING_EXAMPLE ? LinkingPlayground : App);
+registerRootComponent(App);
