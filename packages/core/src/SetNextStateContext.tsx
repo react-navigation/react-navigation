@@ -4,9 +4,12 @@ import * as React from 'react';
 const MISSING_CONTEXT_ERROR = "Couldn't find a SetNextStateContext context.";
 
 export const SetNextStateContext = React.createContext<{
-  stateForNextRouteNamesChange: [string, PartialState<NavigationState>] | null;
+  stateForNextRouteNamesChange: Record<
+    string,
+    PartialState<NavigationState>
+  > | null;
   setStateForNextRouteNamesChange: (
-    state: [string, PartialState<NavigationState>] | null
+    state: Record<string, PartialState<NavigationState>> | null
   ) => void;
 }>({
   get stateForNextRouteNamesChange(): any {

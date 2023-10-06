@@ -441,7 +441,9 @@ export const BaseNavigationContainer = React.forwardRef(
     );
 
     const [stateForNextRouteNamesChange, setStateForNextRouteNamesChange] =
-      React.useState<[string, PartialState<NavigationState>] | null>(null);
+      React.useState<Record<string, PartialState<NavigationState>> | null>(
+        null
+      );
 
     const setNextStateContext = React.useMemo(
       () => ({ stateForNextRouteNamesChange, setStateForNextRouteNamesChange }),

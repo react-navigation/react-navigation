@@ -434,14 +434,16 @@ export function useNavigationBuilder<
 
   const previousRouteKeyList = previousRouteKeyListRef.current;
 
-  const {
-    stateForNextRouteNamesChange: stateForNextRouteNamesChangeWrapped,
-    setStateForNextRouteNamesChange: setStateForNextRouteNamesChangeWrapped,
-  } = React.useContext(SetNextStateContext);
-  const stateForNextRouteNamesChange =
-    stateForNextRouteNamesChangeWrapped?.[0] === navigatorKey
-      ? stateForNextRouteNamesChangeWrapped[1]
-      : null;
+  const { stateForNextRouteNamesChange, setStateForNextRouteNamesChange } =
+    React.useContext(SetNextStateContext);
+  const navigatorStateForNextRouteNamesChange =
+    stateForNextRouteNamesChange?.[navigatorKey] ?? null;
+
+  const setNavigatorStateForNextRouteNamesChange = useLatestCallback(
+    (state: PartialState<NavigationState>) => {
+      setStateForNextRouteNamesChange({ [navigatorKey]: state });
+    }
+  );
 
   let state =
     // If the state isn't initialized, or stale, use the state we initialized instead
@@ -458,9 +460,9 @@ export function useNavigationBuilder<
     !isRecordEqual(routeKeyList, previousRouteKeyList)
   ) {
     // When the list of route names change, the router should handle it to remove invalid routes
-    nextState = stateForNextRouteNamesChange
+    nextState = navigatorStateForNextRouteNamesChange
       ? // @ts-expect-error
-        router.getRehydratedState(stateForNextRouteNamesChange, {
+        router.getRehydratedState(navigatorStateForNextRouteNamesChange, {
           routeNames,
           routeParamList,
           routeGetIdList,
@@ -664,11 +666,6 @@ export function useNavigationBuilder<
     setState,
   });
 
-  const setStateForNextRouteNamesChange = useLatestCallback(
-    (state: PartialState<NavigationState>) => {
-      setStateForNextRouteNamesChangeWrapped([navigatorKey, state]);
-    }
-  );
   const navigation = useNavigationHelpers<
     State,
     ActionHelpers,
@@ -680,7 +677,7 @@ export function useNavigationBuilder<
     getState,
     emitter,
     router,
-    setStateForNextRouteNamesChange,
+    setStateForNextRouteNamesChange: setNavigatorStateForNextRouteNamesChange,
   });
 
   useFocusedListenersChildrenAdapter({
@@ -712,7 +709,7 @@ export function useNavigationBuilder<
     router,
     // @ts-expect-error: this should have both core and custom events, but too much work right now
     emitter,
-    setStateForNextRouteNamesChange,
+    setNavigatorStateForNextRouteNamesChange,
   });
 
   useCurrentRender({
