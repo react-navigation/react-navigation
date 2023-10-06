@@ -146,14 +146,6 @@ export function useLinking(
     [ref]
   );
 
-  // const savelastUnhandledLinking = React.useCallback(
-  //   (url: string | null | undefined) => {
-  //     // Save last unhandled url for later use in conditional rendering
-  //     lastUnhandledLinking.current = url;
-  //   },
-  //   [lastUnhandledLinking]
-  // );
-
   const getInitialState = React.useCallback(() => {
     let state: ResultState | undefined;
 
@@ -185,7 +177,7 @@ export function useLinking(
     };
 
     return thenable as PromiseLike<ResultState | undefined>;
-  }, [getStateFromURL, validateRoutesNotExistInRootState]);
+  }, [getStateFromURL, lastUnhandledLinking]);
 
   React.useEffect(() => {
     const listener = (url: string) => {
@@ -229,6 +221,7 @@ export function useLinking(
   }, [
     enabled,
     getStateFromURL,
+    lastUnhandledLinking,
     ref,
     subscribe,
     validateRoutesNotExistInRootState,

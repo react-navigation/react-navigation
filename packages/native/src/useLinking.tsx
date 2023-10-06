@@ -260,7 +260,13 @@ export function useLinking(
         navigation.resetRoot(state);
       }
     });
-  }, [enabled, history, ref]);
+  }, [
+    enabled,
+    history,
+    lastUnhandledLinking,
+    ref,
+    validateRoutesNotExistInRootState,
+  ]);
 
   React.useEffect(() => {
     if (!enabled) {

@@ -794,3 +794,7 @@ export type PathConfigMap<ParamList extends {}> = {
     ? string | PathConfig<T>
     : string | Omit<PathConfig<{}>, 'screens' | 'initialRouteName'>;
 };
+
+export type ResultState = PartialState<NavigationState> & {
+  state?: ResultState;
+};
