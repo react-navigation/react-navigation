@@ -301,13 +301,14 @@ export const BaseNavigationContainer = React.forwardRef(
       stateRef.current = state;
     });
 
-    const isNavigationReady = isReady();
+    const onReadyCalledRef = React.useRef(false);
 
     React.useEffect(() => {
-      if (isNavigationReady) {
+      if (!onReadyCalledRef.current && isReady()) {
+        onReadyCalledRef.current = true;
         onReadyRef.current?.();
       }
-    }, [isNavigationReady]);
+    }, [state, isReady]);
 
     React.useEffect(() => {
       const hydratedState = getRootState();
