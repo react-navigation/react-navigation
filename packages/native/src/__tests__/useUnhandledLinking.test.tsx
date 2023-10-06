@@ -122,9 +122,7 @@ it('should schedule a state to be handled on conditional linking', async () => {
   expect(queryByText('SignIn')).not.toBeNull();
   expect(queryByText('Home')).toBeNull();
   expect(queryByText('Profile')).toBeNull();
-  //
   fireEvent.press(queryByText(/sign in/i));
-  //
   expect(queryByText('Home')).not.toBeNull();
 });
 
@@ -244,7 +242,7 @@ it('should schedule a state to be handled on conditional linking under nested na
 
   expect(queryByText('SignIn')).toBeNull();
 
-  // expect(queryByText('Profile')).not.toBeNull();
+  expect(queryByText('Profile')).not.toBeNull();
 });
 
 it('should schedule a state to be handled on conditional linking in nested stack', async () => {
@@ -359,7 +357,7 @@ it('should schedule a state to be handled on conditional linking in nested stack
   fireEvent.press(queryByText(/sign in/i));
 
   expect(queryByText('SignIn')).toBeNull();
-  // expect(queryByText('Profile')).not.toBeNull();
+  expect(queryByText('Profile')).not.toBeNull();
 
   fireEvent.press(queryByText(/sign out/i));
 
