@@ -434,18 +434,6 @@ export function useNavigationBuilder<
 
   const previousRouteKeyList = previousRouteKeyListRef.current;
 
-  // This state gets set on unhandled deep link
-  // const stateForNextRouteNamesChange = React.useRef<State | null>(null);
-  // const [stateForNextRouteNamesChange, setStateForNextRouteNamesChange] =
-  //   React.useState<State | null>(null);
-
-  // const setStateForNextRouteNamesChange = React.useCallback(
-  //   (nextState: State) => {
-  //     console.log("TTTT")
-  //     stateForNextRouteNamesChange.current = nextState;
-  //   },
-  //   []
-  // );
   const {
     stateForNextRouteNamesChange: stateForNextRouteNamesChangeWrapped,
     setStateForNextRouteNamesChange: setStateForNextRouteNamesChangeWrapped,

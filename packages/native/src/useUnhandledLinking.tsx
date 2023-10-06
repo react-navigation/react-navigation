@@ -1,16 +1,17 @@
 import {
   getStateFromPath,
-  NavigationContext,
+  useNavigation,
   useRoute,
 } from '@react-navigation/core';
 import React from 'react';
 import { Platform } from 'react-native';
+import useLatestCallback from 'use-latest-callback';
 
 import { extractPathFromURL } from './extractPathFromURL';
 import { LinkingContext } from './LinkingContext';
 
 export function useUnhandledLinking() {
-  const navigation = React.useContext(NavigationContext);
+  const navigation = useNavigation();
   const linking = React.useContext(LinkingContext);
 
   const { name: routeName } = useRoute();
@@ -77,11 +78,16 @@ export function useUnhandledLinking() {
     }
 
     // Once we have the state, we can tell React Navigation to use it for next route names change (conditional rendering logic change)
+    // @ts-expect-error: this is ok
     navigation.setStateForNextRouteNamesChange(rootState);
 
     // Finally, we clear unhandled link after it was handled
     lastUnhandledLinking.current = undefined;
   };
 
-  return { handleLastLinking, lastUnhandledLinking };
+  const getUnhandledLink = useLatestCallback(
+    () => lastUnhandledLinking.current
+  );
+
+  return { handleLastLinking, getUnhandledLink };
 }
