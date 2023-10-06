@@ -477,12 +477,6 @@ export function useNavigationBuilder<
         });
   }
 
-  // React.useEffect(() => {
-  //   return () => {
-  //     stateForNextRouteNamesChange.current = null;
-  //   };
-  // }, []);
-
   const previousNestedParamsRef = React.useRef(route?.params);
 
   React.useEffect(() => {
