@@ -3,7 +3,6 @@ import {
   NavigationProp,
   ResultState,
   useNavigation,
-  useRoute,
 } from '@react-navigation/core';
 import React from 'react';
 import { Platform } from 'react-native';
@@ -42,20 +41,7 @@ export function useUnhandledLinking() {
   const navigation = useNavigation();
   const linking = React.useContext(LinkingContext);
 
-  const { name: routeName } = useRoute();
   const { options, lastUnhandledLinking } = linking;
-
-  if (navigation == null) {
-    throw Error(
-      "Couldn't find a navigation context. Is your component inside NavigationContainer?"
-    );
-  }
-
-  if (options == null) {
-    console.warn(
-      `Looks like you're using 'useLinkingOnConditionalRender' hook inside ${routeName} screen without configured links. This has no effect. Either provide linking configuration to the NavigationContainer or remove this hook to get rid of this warning.`
-    );
-  }
 
   /*
    * Function to handle last unhandled URL. This function has to be called when the conditional
