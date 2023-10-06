@@ -72,8 +72,8 @@ export function useUnhandledLinking() {
 
     // at web, the path is already extracted
     const path = Platform.select({
-      native: extractPathFromURL(prefixes, lastUnhandledLinking.current),
-      default: lastUnhandledLinking.current,
+      default: extractPathFromURL(prefixes, lastUnhandledLinking.current),
+      web: lastUnhandledLinking.current,
     });
 
     // First, we parse the URL to get the desired state
