@@ -488,7 +488,6 @@ export function useNavigationBuilder<
           ),
         });
   }
-  console.log(nextState);
 
   // React.useEffect(() => {
   //   return () => {

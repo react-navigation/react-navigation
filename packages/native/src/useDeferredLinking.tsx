@@ -4,6 +4,7 @@ import {
   useRoute,
 } from '@react-navigation/core';
 import React from 'react';
+import { Platform } from 'react-native';
 
 import { extractPathFromURL } from './extractPathFromURL';
 import { LinkingContext } from './LinkingContext';
@@ -13,7 +14,7 @@ export function useDeferredLinking() {
   const linking = React.useContext(LinkingContext);
 
   const { name: routeName } = useRoute();
-  const { options, lastUnhandledURL } = linking;
+  const { options, lastUnhandledLinking } = linking;
 
   if (navigation == null) {
     throw Error(
@@ -32,20 +33,25 @@ export function useDeferredLinking() {
    * rendering of the navigator is about to happen e.g. in the `onPress` of a log in button.
    */
   const handleLastLinkingUrl = () => {
-    if (options == null || lastUnhandledURL?.current == null) {
+    if (options == null || lastUnhandledLinking?.current == null) {
       // noop, nothing to handle
       return;
     }
 
     const { config, prefixes } = options;
 
-    const path = extractPathFromURL(prefixes, lastUnhandledURL.current);
+    // at web, the path is already extracted
+    const path = Platform.select({
+      native: extractPathFromURL(prefixes, lastUnhandledLinking.current),
+      default: lastUnhandledLinking.current,
+    });
 
     // First, we parse the URL to get the desired state
     const getStateFromPathHelper =
       options?.getStateFromPath ?? getStateFromPath;
 
     let rootState = getStateFromPathHelper(path ?? '', config);
+
     if (!rootState) {
       // is that possible?
       return;
@@ -74,7 +80,7 @@ export function useDeferredLinking() {
     navigation.setStateForNextRouteNamesChange(rootState);
 
     // Finally, we clear unhandled link after it was handled
-    lastUnhandledURL.current = undefined;
+    lastUnhandledLinking.current = undefined;
   };
 
   return handleLastLinkingUrl;

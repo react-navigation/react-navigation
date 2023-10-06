@@ -1,7 +1,4 @@
-import type {
-  NavigationState,
-  PartialState,
-} from '@react-navigation/core';
+import type { NavigationState, PartialState } from '@react-navigation/core';
 import * as React from 'react';
 
 const MISSING_CONTEXT_ERROR = "Couldn't find a SetNextStateContext context.";

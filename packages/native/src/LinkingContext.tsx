@@ -5,7 +5,7 @@ import type { LinkingOptions } from './types';
 
 export const LinkingContext = React.createContext<{
   options: LinkingOptions<ParamListBase> | undefined;
-  lastUnhandledURL?: React.MutableRefObject<string | null | undefined>;
-}>({ options: undefined, lastUnhandledURL: undefined });
+  lastUnhandledLinking?: React.MutableRefObject<string | null | undefined>;
+}>({ options: undefined, lastUnhandledLinking: undefined });
 
 LinkingContext.displayName = 'LinkingContext';

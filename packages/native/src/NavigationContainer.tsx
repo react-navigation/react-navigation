@@ -82,7 +82,7 @@ function NavigationContainerInner(
   useBackButton(refContainer);
   useDocumentTitle(refContainer, documentTitle);
 
-  const lastUnhandledURL = React.useRef<string | undefined>();
+  const lastUnhandledLinking = React.useRef<string | undefined>();
 
   const { getInitialState } = useLinking(
     refContainer,
@@ -91,7 +91,7 @@ function NavigationContainerInner(
       prefixes: [],
       ...linking,
     },
-    lastUnhandledURL
+    lastUnhandledLinking
   );
   // Add additional linking related info to the ref
   // This will be used by the devtools
@@ -118,8 +118,8 @@ function NavigationContainerInner(
   React.useImperativeHandle(ref, () => refContainer.current);
 
   const linkingContext = React.useMemo(
-    () => ({ options: linking, lastUnhandledURL }),
-    [linking, lastUnhandledURL]
+    () => ({ options: linking, lastUnhandledLinking }),
+    [linking, lastUnhandledLinking]
   );
   const isLinkingReady =
     rest.initialState != null || !isLinkingEnabled || isResolved;
@@ -138,16 +138,15 @@ function NavigationContainerInner(
             {...rest}
             onReady={() => {
               const path = refContainer.current?.getCurrentRoute()?.path;
-              if (path === linkingContext.lastUnhandledURL.current) {
-                linkingContext.lastUnhandledURL.current = undefined;
+              if (path === linkingContext.lastUnhandledLinking.current) {
+                linkingContext.lastUnhandledLinking.current = undefined;
               }
               rest.onReady?.();
             }}
             onStateChange={(focusedRoute) => {
               const path = refContainer.current?.getCurrentRoute()?.path;
-              console.log(path, linkingContext.lastUnhandledURL.current);
-              if (path === linkingContext.lastUnhandledURL.current) {
-                linkingContext.lastUnhandledURL.current = undefined;
+              if (path === linkingContext.lastUnhandledLinking.current) {
+                linkingContext.lastUnhandledLinking.current = undefined;
               }
               rest.onStateChange?.(focusedRoute);
             }}

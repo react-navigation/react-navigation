@@ -56,7 +56,7 @@ export function useLinking(
     getStateFromPath = getStateFromPathDefault,
     getActionFromState = getActionFromStateDefault,
   }: Options,
-  lastUnhandledURL: React.MutableRefObject<string | null | undefined>
+  lastUnhandledLinking: React.MutableRefObject<string | null | undefined>
 ) {
   const independent = useNavigationIndependentTree();
 
@@ -146,12 +146,12 @@ export function useLinking(
     [ref]
   );
 
-  // const saveLastUnhandledUrl = React.useCallback(
+  // const savelastUnhandledLinking = React.useCallback(
   //   (url: string | null | undefined) => {
   //     // Save last unhandled url for later use in conditional rendering
-  //     lastUnhandledURL.current = url;
+  //     lastUnhandledLinking.current = url;
   //   },
-  //   [lastUnhandledURL]
+  //   [lastUnhandledLinking]
   // );
 
   const getInitialState = React.useCallback(() => {
@@ -165,12 +165,12 @@ export function useLinking(
           const state = getStateFromURL(url);
 
           // If the link were handled, it gets cleared in NavigationContainer
-          lastUnhandledURL.current = url;
+          lastUnhandledLinking.current = url;
 
           return state;
         });
       }
-      lastUnhandledURL.current = url;
+      lastUnhandledLinking.current = url;
 
       state = getStateFromURL(url);
     }
@@ -185,10 +185,7 @@ export function useLinking(
     };
 
     return thenable as PromiseLike<ResultState | undefined>;
-  }, [
-    getStateFromURL,
-    validateRoutesNotExistInRootState,
-  ]);
+  }, [getStateFromURL, validateRoutesNotExistInRootState]);
 
   React.useEffect(() => {
     const listener = (url: string) => {
@@ -201,7 +198,7 @@ export function useLinking(
 
       if (navigation && state) {
         // If the link were handled, it gets cleared in NavigationContainer
-        lastUnhandledURL.current = url;
+        lastUnhandledLinking.current = url;
         if (validateRoutesNotExistInRootState(state)) {
           return;
         }
