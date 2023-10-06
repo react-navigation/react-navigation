@@ -436,6 +436,7 @@ export function useNavigationBuilder<
 
   const { stateForNextRouteNamesChange, setStateForNextRouteNamesChange } =
     React.useContext(SetNextStateContext);
+
   const navigatorStateForNextRouteNamesChange =
     stateForNextRouteNamesChange?.[navigatorKey] ?? null;
 
@@ -461,7 +462,7 @@ export function useNavigationBuilder<
   ) {
     // When the list of route names change, the router should handle it to remove invalid routes
     nextState = navigatorStateForNextRouteNamesChange
-      ? // @ts-expect-error
+      ? // @ts-expect-error this is ok
         router.getRehydratedState(navigatorStateForNextRouteNamesChange, {
           routeNames,
           routeParamList,

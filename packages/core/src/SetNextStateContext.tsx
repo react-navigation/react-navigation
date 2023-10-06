@@ -1,5 +1,5 @@
-import type { NavigationState, PartialState } from '@react-navigation/core';
 import * as React from 'react';
+import type { NavigationState, PartialState } from '@react-navigation/routers';
 
 const MISSING_CONTEXT_ERROR = "Couldn't find a SetNextStateContext context.";
 
