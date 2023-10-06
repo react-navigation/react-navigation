@@ -40,7 +40,8 @@
     "@react-navigation/core": "workspace:^",
     "escape-string-regexp": "^4.0.0",
     "fast-deep-equal": "^3.1.3",
-    "nanoid": "^3.1.23"
+    "nanoid": "^3.1.23",
+    "use-latest-callback": "^0.1.5"
   },
   "devDependencies": {
     "@testing-library/react-native": "^11.5.0",

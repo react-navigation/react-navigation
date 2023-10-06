@@ -1,6 +1,6 @@
 import {
   NavigationContainer,
-  useDeferredLinking,
+  useUnhandledLinking,
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createURL } from 'expo-linking';
@@ -39,7 +39,7 @@ const ProfileScreen = ({ navigation }: any) => (
 );
 
 const SignInScreen = ({ signIn }: any) => {
-  const scheduleNext = useDeferredLinking();
+  const scheduleNext = useUnhandledLinking();
 
   return (
     <View style={styles.container}>

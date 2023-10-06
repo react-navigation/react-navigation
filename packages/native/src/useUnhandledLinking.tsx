@@ -9,7 +9,7 @@ import { Platform } from 'react-native';
 import { extractPathFromURL } from './extractPathFromURL';
 import { LinkingContext } from './LinkingContext';
 
-export function useDeferredLinking() {
+export function useUnhandledLinking() {
   const navigation = React.useContext(NavigationContext);
   const linking = React.useContext(LinkingContext);
 

@@ -4610,6 +4610,7 @@ __metadata:
     react-native: 0.71.8
     react-native-builder-bob: ^0.21.0
     typescript: ^4.9.4
+    use-latest-callback: ^0.1.5
   peerDependencies:
     react: "*"
     react-native: "*"

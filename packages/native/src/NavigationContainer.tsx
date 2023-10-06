@@ -5,11 +5,13 @@ import {
   getStateFromPath,
   NavigationContainerProps,
   NavigationContainerRef,
+  NavigationState,
   ParamListBase,
   validatePathConfig,
 } from '@react-navigation/core';
 import * as React from 'react';
 import { I18nManager } from 'react-native';
+import useLatestCallback from 'use-latest-callback';
 
 import { LinkingContext } from './LinkingContext';
 import { LocaleDirContext } from './LocaleDirContext';
@@ -66,6 +68,8 @@ function NavigationContainerInner(
     linking,
     fallback = null,
     documentTitle,
+    onReady,
+    onStateChange,
     ...rest
   }: Props<ParamListBase>,
   ref?: React.Ref<NavigationContainerRef<ParamListBase> | null>
@@ -93,6 +97,31 @@ function NavigationContainerInner(
     },
     lastUnhandledLinking
   );
+
+  const linkingContext = React.useMemo(
+    () => ({ options: linking, lastUnhandledLinking }),
+    [linking, lastUnhandledLinking]
+  );
+
+  const onReadyForLinkingHandling = useLatestCallback(() => {
+    // If the screen path matches lastUnhandledLinking, we do not track it
+    const path = refContainer.current?.getCurrentRoute()?.path;
+    if (path === linkingContext.lastUnhandledLinking.current) {
+      linkingContext.lastUnhandledLinking.current = undefined;
+    }
+    onReady?.();
+  });
+
+  const onStateChangeForLinkingHandling = useLatestCallback(
+    (state: Readonly<NavigationState> | undefined) => {
+      // If the screen path matches lastUnhandledLinking, we do not track it
+      const path = refContainer.current?.getCurrentRoute()?.path;
+      if (path === linkingContext.lastUnhandledLinking.current) {
+        linkingContext.lastUnhandledLinking.current = undefined;
+      }
+      onStateChange?.(state);
+    }
+  );
   // Add additional linking related info to the ref
   // This will be used by the devtools
   React.useEffect(() => {
@@ -117,10 +146,6 @@ function NavigationContainerInner(
 
   React.useImperativeHandle(ref, () => refContainer.current);
 
-  const linkingContext = React.useMemo(
-    () => ({ options: linking, lastUnhandledLinking }),
-    [linking, lastUnhandledLinking]
-  );
   const isLinkingReady =
     rest.initialState != null || !isLinkingEnabled || isResolved;
 
@@ -136,20 +161,8 @@ function NavigationContainerInner(
         <ThemeProvider value={theme}>
           <BaseNavigationContainer
             {...rest}
-            onReady={() => {
-              const path = refContainer.current?.getCurrentRoute()?.path;
-              if (path === linkingContext.lastUnhandledLinking.current) {
-                linkingContext.lastUnhandledLinking.current = undefined;
-              }
-              rest.onReady?.();
-            }}
-            onStateChange={(focusedRoute) => {
-              const path = refContainer.current?.getCurrentRoute()?.path;
-              if (path === linkingContext.lastUnhandledLinking.current) {
-                linkingContext.lastUnhandledLinking.current = undefined;
-              }
-              rest.onStateChange?.(focusedRoute);
-            }}
+            onReady={onReadyForLinkingHandling}
+            onStateChange={onStateChangeForLinkingHandling}
             initialState={
               rest.initialState == null ? initialState : rest.initialState
             }

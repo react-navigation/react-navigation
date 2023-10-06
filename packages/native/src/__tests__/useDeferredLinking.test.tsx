@@ -10,7 +10,7 @@ import * as React from 'react';
 import { Button, Text } from 'react-native';
 
 import { NavigationContainer } from '../NavigationContainer';
-import { useDeferredLinking } from '../useDeferredLinking';
+import { useUnhandledLinking } from '../useUnhandledLinking';
 
 it('should schedule a state to be handled on conditional linking', async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
@@ -37,7 +37,7 @@ it('should schedule a state to be handled on conditional linking', async () => {
     </>
   );
   const SignInScreen = ({ route, signIn }: any): any => {
-    const fn = useDeferredLinking();
+    const fn = useUnhandledLinking();
     return (
       <>
         <Text>{route.name}</Text>
@@ -154,7 +154,7 @@ it('should schedule a state to be handled on conditional linking under nested na
     </>
   );
   const SignInScreen = ({ route, signIn }: any): any => {
-    const fn = useDeferredLinking();
+    const fn = useUnhandledLinking();
     return (
       <>
         <Text>{route.name}</Text>
@@ -273,7 +273,7 @@ it('should schedule a state to be handled on conditional linking in nested stack
     </>
   );
   const SignInScreen = ({ route, signIn }: any): any => {
-    const fn = useDeferredLinking();
+    const fn = useUnhandledLinking();
     return (
       <>
         <Text>{route.name}</Text>
