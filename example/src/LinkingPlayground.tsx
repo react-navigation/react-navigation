@@ -39,7 +39,7 @@ const ProfileScreen = ({ navigation }: any) => (
 );
 
 const SignInScreen = ({ signIn }: any) => {
-  const scheduleNext = useUnhandledLinking();
+  const { handleLastLinking: scheduleNext } = useUnhandledLinking();
 
   return (
     <View style={styles.container}>

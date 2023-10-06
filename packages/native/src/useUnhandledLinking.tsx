@@ -32,7 +32,7 @@ export function useUnhandledLinking() {
    * Function to handle last unhandled URL. This function has to be called when the conditional
    * rendering of the navigator is about to happen e.g. in the `onPress` of a log in button.
    */
-  const handleLastLinkingUrl = () => {
+  const handleLastLinking = () => {
     if (options == null || lastUnhandledLinking?.current == null) {
       // noop, nothing to handle
       return;
@@ -83,5 +83,5 @@ export function useUnhandledLinking() {
     lastUnhandledLinking.current = undefined;
   };
 
-  return handleLastLinkingUrl;
+  return { handleLastLinking, lastUnhandledLinking };
 }

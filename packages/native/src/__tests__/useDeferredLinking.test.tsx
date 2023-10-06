@@ -37,14 +37,14 @@ it('should schedule a state to be handled on conditional linking', async () => {
     </>
   );
   const SignInScreen = ({ route, signIn }: any): any => {
-    const fn = useUnhandledLinking();
+    const { handleLastLinking } = useUnhandledLinking();
     return (
       <>
         <Text>{route.name}</Text>
         <Button
           title="sign in"
           onPress={() => {
-            fn();
+            handleLastLinking();
             signIn();
           }}
         />
@@ -154,14 +154,14 @@ it('should schedule a state to be handled on conditional linking under nested na
     </>
   );
   const SignInScreen = ({ route, signIn }: any): any => {
-    const fn = useUnhandledLinking();
+    const { handleLastLinking } = useUnhandledLinking();
     return (
       <>
         <Text>{route.name}</Text>
         <Button
           title="sign in"
           onPress={() => {
-            fn();
+            handleLastLinking();
             signIn();
           }}
         />
@@ -273,14 +273,14 @@ it('should schedule a state to be handled on conditional linking in nested stack
     </>
   );
   const SignInScreen = ({ route, signIn }: any): any => {
-    const fn = useUnhandledLinking();
+    const { handleLastLinking } = useUnhandledLinking();
     return (
       <>
         <Text>{route.name}</Text>
         <Button
           title="sign in"
           onPress={() => {
-            fn();
+            handleLastLinking();
             signIn();
           }}
         />
