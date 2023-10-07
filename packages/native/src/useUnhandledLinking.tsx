@@ -72,6 +72,10 @@ export function useUnhandledLinking() {
     }
     const state = extractNavigatorSpecifcState(navigation, rootState);
 
+    if (!state) {
+      return;
+    }
+
     // Once we have the state, we can tell React Navigation to use it for next route names change (conditional rendering logic change)
     // @ts-expect-error: this is ok
     navigation.setStateForNextRouteNamesChange(state);

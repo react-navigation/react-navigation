@@ -10,6 +10,7 @@ import {
 import * as React from 'react';
 import useLatestCallback from 'use-latest-callback';
 
+import { usePrevious } from '../utils/usePrevious';
 import { checkDuplicateRouteNames } from './checkDuplicateRouteNames';
 import { checkSerializable } from './checkSerializable';
 import { NOT_INITIALIZED_ERROR } from './createNavigationContainerRef';
@@ -69,14 +70,6 @@ const getPartialState = (
     }),
   };
 };
-
-function usePrevious<T>(value: T): T | undefined {
-  const ref = React.useRef<T>();
-  React.useEffect(() => {
-    ref.current = value;
-  }, [value]);
-  return ref.current;
-}
 
 /**
  * Container component which holds the navigation state.
