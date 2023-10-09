@@ -31,6 +31,7 @@ function MaterialTopTabNavigator({
   initialRouteName,
   backBehavior,
   children,
+  layout,
   screenListeners,
   screenOptions,
   ...rest
@@ -47,6 +48,7 @@ function MaterialTopTabNavigator({
       initialRouteName,
       backBehavior,
       children,
+      layout,
       screenListeners,
       screenOptions,
     });

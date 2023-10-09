@@ -31,6 +31,7 @@ function BottomTabNavigator({
   initialRouteName,
   backBehavior,
   children,
+  layout,
   screenListeners,
   screenOptions,
   sceneContainerStyle,
@@ -48,6 +49,7 @@ function BottomTabNavigator({
       initialRouteName,
       backBehavior,
       children,
+      layout,
       screenListeners,
       screenOptions,
     });

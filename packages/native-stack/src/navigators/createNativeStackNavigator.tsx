@@ -22,6 +22,7 @@ function NativeStackNavigator({
   id,
   initialRouteName,
   children,
+  layout,
   screenListeners,
   screenOptions,
   ...rest
@@ -37,6 +38,7 @@ function NativeStackNavigator({
       id,
       initialRouteName,
       children,
+      layout,
       screenListeners,
       screenOptions,
     });
