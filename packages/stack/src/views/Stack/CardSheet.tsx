@@ -41,6 +41,7 @@ export const CardSheet = React.forwardRef<CardSheetRef, Props>(
       // empty space at the bottom of the page (matching the height of the
       // address bar). To fix this, it's necessary to update the height of
       // the DOM with the current height of the window.
+      // See https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
       const vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty('--vh', `${vh}px`);
       document.body.setAttribute(
