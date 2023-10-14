@@ -1,19 +1,18 @@
 import {
   getStateFromPath,
   NavigationProp,
-  ResultState,
+  NavigationState,
+  PartialState,
   useNavigation,
 } from '@react-navigation/core';
 import React from 'react';
-import { Platform } from 'react-native';
 import useLatestCallback from 'use-latest-callback';
 
-import { extractPathFromURL } from './extractPathFromURL';
 import { LinkingContext } from './LinkingContext';
 
-function extractNavigatorSpecifcState(
+function extractNavigatorSpecificState(
   navigation: NavigationProp<ReactNavigation.RootParamList>,
-  rootState: ResultState
+  rootState: PartialState<NavigationState>
 ) {
   let state: typeof rootState | undefined = rootState;
 
@@ -47,30 +46,28 @@ export function useUnhandledLinking() {
    * Function to handle last unhandled URL. This function has to be called when the conditional
    * rendering of the navigator is about to happen e.g. in the `onPress` of a log in button.
    */
-  const handleLastLinking = () => {
-    if (options == null || lastUnhandledLinking?.current == null) {
+  const handleOnNextRouteNamesChange = () => {
+    if (lastUnhandledLinking?.current == null) {
       // noop, nothing to handle
       return;
     }
 
-    const { config, prefixes } = options;
-
     // at web, the path is already extracted
-    const path = Platform.select({
-      default: extractPathFromURL(prefixes, lastUnhandledLinking.current),
-      web: lastUnhandledLinking.current,
-    });
+    const path = lastUnhandledLinking.current;
+    if (!lastUnhandledLinking.current) {
+      return;
+    }
 
     // First, we parse the URL to get the desired state
     const getStateFromPathHelper =
       options?.getStateFromPath ?? getStateFromPath;
 
-    const rootState = getStateFromPathHelper(path ?? '', config);
+    const rootState = getStateFromPathHelper(path, options?.config);
 
     if (!rootState) {
       return;
     }
-    const state = extractNavigatorSpecifcState(navigation, rootState);
+    const state = extractNavigatorSpecificState(navigation, rootState);
 
     if (!state) {
       return;
@@ -88,5 +85,5 @@ export function useUnhandledLinking() {
     () => lastUnhandledLinking.current
   );
 
-  return { handleLastLinking, getUnhandledLink };
+  return { handleOnNextRouteNamesChange, getUnhandledLink };
 }

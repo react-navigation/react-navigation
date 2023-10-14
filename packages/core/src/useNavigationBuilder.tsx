@@ -658,6 +658,7 @@ export function useNavigationBuilder<
       routeGetIdList,
     },
     emitter,
+    stateForNextRouteNamesChange: navigatorStateForNextRouteNamesChange,
   });
 
   const onRouteFocus = useOnRouteFocus({
@@ -710,7 +711,6 @@ export function useNavigationBuilder<
     router,
     // @ts-expect-error: this should have both core and custom events, but too much work right now
     emitter,
-    setNavigatorStateForNextRouteNamesChange,
   });
 
   useCurrentRender({

@@ -298,7 +298,8 @@ type NavigationHelpersCommon<
    */
   getState(): State;
   /**
-   * Schedules the next navigation state on route names change.
+   * Schedules the given state to be used as navigation state when the list of screens defined in the navigator changes
+   * instead of automatically calculating the new state, e.g. due to conditional rendering or dynamically defining screens.
    *
    * @param state Navigation state object.
    */
@@ -793,8 +794,4 @@ export type PathConfigMap<ParamList extends {}> = {
   > extends NavigatorScreenParams<infer T extends {}>
     ? string | PathConfig<T>
     : string | Omit<PathConfig<{}>, 'screens' | 'initialRouteName'>;
-};
-
-export type ResultState = PartialState<NavigationState> & {
-  state?: ResultState;
 };

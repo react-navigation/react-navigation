@@ -135,34 +135,28 @@ export function useLinking(
     []
   );
 
-  const validateRoutesNotExistInRootState = React.useCallback(
-    (state: ResultState) => {
-      const navigation = ref.current;
-      const rootState = navigation?.getRootState();
-      // Make sure that the routes in the state exist in the root navigator
-      // Otherwise there's an error in the linking configuration
-      return state?.routes.some((r) => !rootState?.routeNames.includes(r.name));
-    },
-    [ref]
-  );
-
   const getInitialState = React.useCallback(() => {
     let state: ResultState | undefined;
 
     if (enabledRef.current) {
       const url = getInitialURLRef.current();
 
-      if (url != null && typeof url !== 'string') {
-        return url.then((url) => {
-          const state = getStateFromURL(url);
+      if (url != null) {
+        if (typeof url !== 'string') {
+          return url.then((url) => {
+            const state = getStateFromURL(url);
 
-          // If the link were handled, it gets cleared in NavigationContainer
-          lastUnhandledLinking.current = url;
+            if (typeof url === 'string') {
+              // If the link were handled, it gets cleared in NavigationContainer
+              lastUnhandledLinking.current = extractPathFromURL(prefixes, url);
+            }
 
-          return state;
-        });
+            return state;
+          });
+        } else {
+          lastUnhandledLinking.current = extractPathFromURL(prefixes, url);
+        }
       }
-      lastUnhandledLinking.current = url;
 
       state = getStateFromURL(url);
     }
@@ -177,7 +171,7 @@ export function useLinking(
     };
 
     return thenable as PromiseLike<ResultState | undefined>;
-  }, [getStateFromURL, lastUnhandledLinking]);
+  }, [getStateFromURL, lastUnhandledLinking, prefixes]);
 
   React.useEffect(() => {
     const listener = (url: string) => {
@@ -191,7 +185,8 @@ export function useLinking(
       if (navigation && state) {
         // If the link were handled, it gets cleared in NavigationContainer
         lastUnhandledLinking.current = url;
-        if (validateRoutesNotExistInRootState(state)) {
+        const rootState = navigation.getRootState();
+        if (state.routes.some((r) => !rootState?.routeNames.includes(r.name))) {
           return;
         }
 
@@ -218,14 +213,7 @@ export function useLinking(
     };
 
     return subscribe(listener);
-  }, [
-    enabled,
-    getStateFromURL,
-    lastUnhandledLinking,
-    ref,
-    subscribe,
-    validateRoutesNotExistInRootState,
-  ]);
+  }, [enabled, getStateFromURL, lastUnhandledLinking, ref, subscribe]);
 
   return {
     getInitialState,

@@ -7,7 +7,7 @@ import escape from 'escape-string-regexp';
 import * as queryString from 'query-string';
 
 import { findFocusedRoute } from './findFocusedRoute';
-import type { PathConfigMap, ResultState } from './types';
+import type { PathConfigMap } from './types';
 import { validatePathConfig } from './validatePathConfig';
 
 type Options<ParamList extends {}> = {
@@ -30,6 +30,10 @@ type RouteConfig = {
 type InitialRouteConfig = {
   initialRouteName: string;
   parentScreens: string[];
+};
+
+type ResultState = PartialState<NavigationState> & {
+  state?: ResultState;
 };
 
 type ParsedRoute = {
