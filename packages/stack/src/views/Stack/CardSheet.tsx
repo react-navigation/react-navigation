@@ -18,7 +18,6 @@ export type CardSheetRef = {
 export const CardSheet = React.forwardRef<CardSheetRef, Props>(
   function CardSheet({ enabled, layout, style, ...rest }, ref) {
     const [fill, setFill] = React.useState(false);
-    const workaroundApplied = React.useRef(false);
     // To avoid triggering a rerender in Card during animation we had to move
     // the state to CardSheet. The `setPointerEvents` is then hoisted back to the Card.
     const [pointerEvents, setPointerEvents] =
@@ -28,6 +27,7 @@ export const CardSheet = React.forwardRef<CardSheetRef, Props>(
       return { setPointerEvents };
     });
 
+    const workaroundApplied = React.useRef(false);
     React.useEffect(() => {
       if (typeof document === 'undefined' || !document.body) {
         // Only run when DOM is available
