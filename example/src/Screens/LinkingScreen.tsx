@@ -60,7 +60,7 @@ const HomeScreen = ({
 };
 
 const SignInScreen = () => {
-  const { handleLastLinking: scheduleNext } = useUnhandledLinking();
+  const { handleOnNextRouteNamesChange: scheduleNext } = useUnhandledLinking();
   const { signIn } = useContext(SigningContext)!;
 
   return (
