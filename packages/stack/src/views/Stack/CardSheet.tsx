@@ -27,6 +27,7 @@ export const CardSheet = React.forwardRef<CardSheetRef, Props>(
       return { setPointerEvents };
     });
 
+    const workaroundApplied = React.useRef(false);
     React.useEffect(() => {
       if (typeof document === 'undefined' || !document.body) {
         // Only run when DOM is available
@@ -35,6 +36,29 @@ export const CardSheet = React.forwardRef<CardSheetRef, Props>(
 
       const width = document.body.clientWidth;
       const height = document.body.clientHeight;
+
+      // Workaround for mobile Chrome, necessary when a navigation happens
+      // when the address bar has already collapsed, which resulted in an
+      // empty space at the bottom of the page (matching the height of the
+      // address bar). To fix this, it's necessary to update the height of
+      // the DOM with the current height of the window.
+      // See https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
+      const fillHeight = height === layout.height;
+      if (fillHeight) {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+        document.body.setAttribute(
+          'style',
+          `height: calc(var(--vh, 1vh) * 100);`
+        );
+        workaroundApplied.current = true;
+      } else {
+        // Revert the workaround if the stack does not occupy the whole
+        // height of the page
+        if (workaroundApplied.current) {
+          document.documentElement.style.removeProperty('--vh');
+        }
+      }
 
       setFill(width === layout.width && height === layout.height);
     }, [layout.height, layout.width]);
