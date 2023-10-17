@@ -35,7 +35,7 @@ export function forShifting({
         {
           translateX: current.interpolate({
             inputRange: [-1, 0, 1],
-            outputRange: [-50, 1, 50],
+            outputRange: [-50, 0, 50],
           }),
         },
       ],
