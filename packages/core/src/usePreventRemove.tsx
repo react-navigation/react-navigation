@@ -26,6 +26,14 @@ export function UNSTABLE_usePreventRemove(
   const { setPreventRemove } = usePreventRemoveContext();
 
   React.useEffect(() => {
+    navigation.setOptions({ gestureEnabled: !preventRemove });
+
+    return () => {
+      navigation.setOptions({ gestureEnabled: true });
+    }
+  }, [navigation, preventRemove]);
+
+  React.useEffect(() => {
     setPreventRemove(id, routeKey, preventRemove);
     return () => {
       setPreventRemove(id, routeKey, false);
