@@ -30,7 +30,7 @@ export function UNSTABLE_usePreventRemove(
 
     return () => {
       navigation.setOptions({ gestureEnabled: true });
-    }
+    };
   }, [navigation, preventRemove]);
 
   React.useEffect(() => {
