@@ -1,9 +1,9 @@
-import * as React from 'react';
 import type {
   ParamListBase,
   Route,
   StackNavigationState,
 } from '@react-navigation/native';
+import * as React from 'react';
 
 import type {
   NativeStackDescriptorMap,
@@ -76,6 +76,7 @@ export function useRetainContext(
       },
       release(key) {
         setRetainedScenes((screens) => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { [key]: _, ...rest } = screens;
           return rest;
         });
@@ -91,6 +92,7 @@ export function useRetainContext(
 
         // Remove from retained
         setRetainedScenes((screens) => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { [key]: _, ...rest } = screens;
           return rest;
         });
@@ -108,7 +110,7 @@ export function useRetainContext(
       },
       supported: true,
     }),
-    []
+    [navigation]
   );
 
   const routeKeys = state.routes.reduce((map, route) => {
