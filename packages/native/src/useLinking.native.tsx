@@ -55,7 +55,8 @@ export function useLinking(
     },
     getStateFromPath = getStateFromPathDefault,
     getActionFromState = getActionFromStateDefault,
-  }: Options
+  }: Options,
+  lastUnhandledLinking: React.MutableRefObject<string | null | undefined>
 ) {
   const independent = useNavigationIndependentTree();
 
@@ -140,12 +141,21 @@ export function useLinking(
     if (enabledRef.current) {
       const url = getInitialURLRef.current();
 
-      if (url != null && typeof url !== 'string') {
-        return url.then((url) => {
-          const state = getStateFromURL(url);
+      if (url != null) {
+        if (typeof url !== 'string') {
+          return url.then((url) => {
+            const state = getStateFromURL(url);
 
-          return state;
-        });
+            if (typeof url === 'string') {
+              // If the link were handled, it gets cleared in NavigationContainer
+              lastUnhandledLinking.current = extractPathFromURL(prefixes, url);
+            }
+
+            return state;
+          });
+        } else {
+          lastUnhandledLinking.current = extractPathFromURL(prefixes, url);
+        }
       }
 
       state = getStateFromURL(url);
@@ -161,7 +171,7 @@ export function useLinking(
     };
 
     return thenable as PromiseLike<ResultState | undefined>;
-  }, [getStateFromURL]);
+  }, [getStateFromURL, lastUnhandledLinking, prefixes]);
 
   React.useEffect(() => {
     const listener = (url: string) => {
@@ -173,14 +183,10 @@ export function useLinking(
       const state = navigation ? getStateFromURL(url) : undefined;
 
       if (navigation && state) {
-        // Make sure that the routes in the state exist in the root navigator
-        // Otherwise there's an error in the linking configuration
+        // If the link were handled, it gets cleared in NavigationContainer
+        lastUnhandledLinking.current = url;
         const rootState = navigation.getRootState();
-
         if (state.routes.some((r) => !rootState?.routeNames.includes(r.name))) {
-          console.warn(
-            "The navigation state parsed from the URL contains routes not present in the root navigator. This usually means that the linking configuration doesn't match the navigation structure. See https://reactnavigation.org/docs/configuring-links for more details on how to specify a linking configuration."
-          );
           return;
         }
 
@@ -207,7 +213,7 @@ export function useLinking(
     };
 
     return subscribe(listener);
-  }, [enabled, getStateFromURL, ref, subscribe]);
+  }, [enabled, getStateFromURL, lastUnhandledLinking, ref, subscribe]);
 
   return {
     getInitialState,

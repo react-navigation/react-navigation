@@ -233,6 +233,9 @@ export function App() {
                     Contacts: 'people',
                     NewsFeed: 'feed',
                     Dialog: 'dialog',
+                    SignIn: 'sign-in',
+                    Profile: 'profile',
+                    Home: 'home',
                   },
                 };
 

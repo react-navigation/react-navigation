@@ -12,6 +12,7 @@ import {
 } from '@react-navigation/routers';
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
+import useLatestCallback from 'use-latest-callback';
 
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
@@ -21,6 +22,7 @@ import { NavigationRouteContext } from './NavigationRouteContext';
 import { NavigationStateContext } from './NavigationStateContext';
 import { PreventRemoveProvider } from './PreventRemoveProvider';
 import { Screen } from './Screen';
+import { SetNextStateContext } from './SetNextStateContext';
 import {
   DefaultNavigatorOptions,
   EventMapBase,
@@ -432,6 +434,18 @@ export function useNavigationBuilder<
 
   const previousRouteKeyList = previousRouteKeyListRef.current;
 
+  const { stateForNextRouteNamesChange, setStateForNextRouteNamesChange } =
+    React.useContext(SetNextStateContext);
+
+  const navigatorStateForNextRouteNamesChange =
+    stateForNextRouteNamesChange?.[navigatorKey] ?? null;
+
+  const setNavigatorStateForNextRouteNamesChange = useLatestCallback(
+    (state: PartialState<NavigationState>) => {
+      setStateForNextRouteNamesChange({ [navigatorKey]: state });
+    }
+  );
+
   let state =
     // If the state isn't initialized, or stale, use the state we initialized instead
     // The state won't update until there's a change needed in the state we have initalized locally
@@ -447,16 +461,23 @@ export function useNavigationBuilder<
     !isRecordEqual(routeKeyList, previousRouteKeyList)
   ) {
     // When the list of route names change, the router should handle it to remove invalid routes
-    nextState = router.getStateForRouteNamesChange(state, {
-      routeNames,
-      routeParamList,
-      routeGetIdList,
-      routeKeyChanges: Object.keys(routeKeyList).filter(
-        (name) =>
-          previousRouteKeyList.hasOwnProperty(name) &&
-          routeKeyList[name] !== previousRouteKeyList[name]
-      ),
-    });
+    nextState = navigatorStateForNextRouteNamesChange
+      ? // @ts-expect-error this is ok
+        router.getRehydratedState(navigatorStateForNextRouteNamesChange, {
+          routeNames,
+          routeParamList,
+          routeGetIdList,
+        })
+      : router.getStateForRouteNamesChange(state, {
+          routeNames,
+          routeParamList,
+          routeGetIdList,
+          routeKeyChanges: Object.keys(routeKeyList).filter(
+            (name) =>
+              previousRouteKeyList.hasOwnProperty(name) &&
+              routeKeyList[name] !== previousRouteKeyList[name]
+          ),
+        });
   }
 
   const previousNestedParamsRef = React.useRef(route?.params);
@@ -637,6 +658,7 @@ export function useNavigationBuilder<
       routeGetIdList,
     },
     emitter,
+    stateForNextRouteNamesChange: navigatorStateForNextRouteNamesChange,
   });
 
   const onRouteFocus = useOnRouteFocus({
@@ -657,6 +679,7 @@ export function useNavigationBuilder<
     getState,
     emitter,
     router,
+    setStateForNextRouteNamesChange: setNavigatorStateForNextRouteNamesChange,
   });
 
   useFocusedListenersChildrenAdapter({
