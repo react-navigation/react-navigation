@@ -22,6 +22,14 @@ window.removeEventListener = () => {};
 // eslint-disable-next-line import/extensions
 jest.mock('../useLinking', () => require('../useLinking.tsx').default);
 
+// Since Jest is configured for React Native, the *.native.js file is imported
+// But as we're testing server rendering, we want to use the web version
+// So we mock it to point to the web version
+jest.mock(
+  'use-latest-callback/lib/useIsomorphicLayoutEffect',
+  () => require('react').useEffect
+);
+
 it('renders correct state with location', () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(

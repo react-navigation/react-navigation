@@ -5572,7 +5572,7 @@ __metadata:
     react-native-builder-bob: ^0.20.4
     react-test-renderer: 18.1.0
     typescript: ^4.9.4
-    use-latest-callback: ^0.1.5
+    use-latest-callback: ^0.1.7
   peerDependencies:
     react: "*"
   languageName: unknown
@@ -21992,7 +21992,7 @@ __metadata:
     react-native-builder-bob: ^0.20.4
     react-native-pager-view: 6.1.2
     typescript: ^4.9.4
-    use-latest-callback: ^0.1.5
+    use-latest-callback: ^0.1.7
   peerDependencies:
     react: "*"
     react-native: "*"
@@ -25574,10 +25574,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-latest-callback@npm:^0.1.5":
-  version: 0.1.5
-  resolution: "use-latest-callback@npm:0.1.5"
-  checksum: a7af3275985b7918c3e0e7a57bb5fc8ad678b21673fc618fe778d111992bdabb4f9592cd3e0286e032a7c956ee3c9d1aba39801c13f32d68bc4c4a008e38783b
+"use-latest-callback@npm:^0.1.7":
+  version: 0.1.7
+  resolution: "use-latest-callback@npm:0.1.7"
+  peerDependencies:
+    react: ">=16.8"
+  checksum: 0da07610ed8aa5274a2d1e258a034ca591d7508b5d9f04c3f56cc750d5f6c68f2bb430c346f0a344a46a4a942de21d942e8c175b170c1ea640558bb25071f7fb
   languageName: node
   linkType: hard
 
