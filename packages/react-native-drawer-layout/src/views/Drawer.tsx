@@ -67,6 +67,7 @@ export function Drawer({
   keyboardDismissMode = 'on-drag',
   hideStatusBarOnOpen = false,
   statusBarAnimation = 'slide',
+  overlayEnabled = true,
   style,
   ...rest
 }: Props) {
@@ -107,6 +108,7 @@ export function Drawer({
         keyboardDismissMode={keyboardDismissMode}
         hideStatusBarOnOpen={hideStatusBarOnOpen}
         statusBarAnimation={statusBarAnimation}
+        overlayEnabled={overlayEnabled}
       />
     </GestureHandlerRootView>
   );

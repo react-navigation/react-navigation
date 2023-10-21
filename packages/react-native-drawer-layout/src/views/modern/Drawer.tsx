@@ -59,6 +59,7 @@ export function Drawer({
   onTransitionStart,
   onTransitionEnd,
   open,
+  overlayEnabled,
   overlayStyle,
   overlayAccessibilityLabel,
   statusBarAnimation,
@@ -395,7 +396,7 @@ export function Drawer({
             >
               {children}
             </View>
-            {drawerType !== 'permanent' ? (
+            {drawerType !== 'permanent' && overlayEnabled ? (
               <Overlay
                 progress={progress}
                 onPress={() => toggleDrawer(false)}

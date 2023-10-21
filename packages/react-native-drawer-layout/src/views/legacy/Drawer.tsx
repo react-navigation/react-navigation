@@ -523,6 +523,7 @@ export class Drawer extends React.Component<Props> {
       children,
       gestureHandlerProps,
       overlayAccessibilityLabel,
+      overlayEnabled,
     } = this.props;
 
     const isOpen = drawerType === 'permanent' ? true : open;
@@ -596,8 +597,8 @@ export class Drawer extends React.Component<Props> {
                 {children}
               </View>
               {
-                // Disable overlay if sidebar is permanent
-                drawerType === 'permanent' ? null : (
+                // Disable overlay if sidebar is permanent or not overlayEnabled
+                drawerType === 'permanent' || !overlayEnabled ? null : (
                   <Overlay
                     progress={progress}
                     onPress={() => this.toggleDrawer(false)}
