@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.9.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.9.15...@react-navigation/native-stack@6.9.16) (2023-10-23)
+
+### Bug Fixes
+
+* headerHeight on phones with dynamic island ([#11338](https://github.com/react-navigation/react-navigation/issues/11338)) ([59183da](https://github.com/react-navigation/react-navigation/commit/59183da453b7c94b22e257094916840ce0c56621)), closes [#10989](https://github.com/react-navigation/react-navigation/issues/10989) - by @
+
 ## [6.9.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.9.14...@react-navigation/native-stack@6.9.15) (2023-10-19)
 
 **Note:** Version bump only for package @react-navigation/native-stack
