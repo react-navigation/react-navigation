@@ -22,8 +22,6 @@ export function DrawerToggleButton({ tintColor, ...rest }: Props) {
   return (
     <PlatformPressable
       {...rest}
-      accessible
-      accessibilityRole="button"
       android_ripple={{ borderless: true }}
       onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
       style={styles.touchable}

@@ -148,27 +148,19 @@ export function HeaderBackButton({
     );
   };
 
-  const handlePress = (e: any) => {
-    const ignoreEvents =
-      !(e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) && // ignore clicks with modifier keys
-      (e.button == null || e.button === 0); // ignore everything but left clicks
-
-    if (Platform.OS === 'web' && href && ignoreEvents) {
-      e.preventDefault();
+  const handlePress = () => {
+    if (onPress) {
+      requestAnimationFrame(() => onPress());
     }
-
-    return onPress && requestAnimationFrame(onPress);
   };
 
   return (
     <PlatformPressable
       disabled={disabled}
       href={href}
-      accessible
-      accessibilityRole={Platform.OS === 'web' && href ? 'link' : 'button'}
       accessibilityLabel={accessibilityLabel}
       testID={testID}
-      onPress={disabled ? undefined : handlePress}
+      onPress={handlePress}
       pressColor={pressColor}
       pressOpacity={pressOpacity}
       android_ripple={androidRipple}

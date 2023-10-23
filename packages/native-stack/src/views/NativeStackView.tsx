@@ -130,6 +130,7 @@ export function NativeStackView({ state, descriptors }: Props) {
                                     )
                                   : undefined
                               }
+                              canGoBack={canGoBack}
                               onPress={navigation.goBack}
                               href={headerBack.href}
                             />
