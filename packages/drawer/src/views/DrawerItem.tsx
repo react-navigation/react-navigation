@@ -78,6 +78,10 @@ type Props = {
    */
   labelStyle?: StyleProp<TextStyle>;
   /**
+   * Style object for the wrapper LinkPressable element.
+   */
+  wrapperStyle?: StyleProp<TextStyle>;
+  /**
    * Style object for the wrapper element.
    */
   style?: StyleProp<ViewStyle>;
@@ -167,6 +171,7 @@ export function DrawerItem(props: Props) {
     icon,
     label,
     labelStyle,
+    wrapperStyle,
     focused = false,
     allowFontScaling,
     activeTintColor = colors.primary,
@@ -199,7 +204,7 @@ export function DrawerItem(props: Props) {
       <LinkPressable
         testID={testID}
         onPress={onPress}
-        style={[styles.wrapper, { borderRadius }]}
+        style={[styles.wrapper, { borderRadius }, wrapperStyle]}
         accessibilityLabel={accessibilityLabel}
         accessibilityRole="button"
         accessibilityState={{ selected: focused }}
