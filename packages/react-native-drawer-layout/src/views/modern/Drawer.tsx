@@ -415,6 +415,11 @@ export function Drawer({
               drawerAnimatedStyle,
               drawerStyle as any,
             ]}
+            pointerEvents={
+              Platform.OS === 'macos' && drawerType !== 'permanent' && !isOpen
+                ? 'none'
+                : undefined
+            }
           >
             {renderDrawerContent()}
           </Animated.View>
