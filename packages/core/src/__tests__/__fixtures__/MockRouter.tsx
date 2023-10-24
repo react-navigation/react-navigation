@@ -36,7 +36,7 @@ export function MockRouter(options: DefaultRouterOptions) {
     },
 
     getRehydratedState(partialState, { routeNames, routeParamList }) {
-      let state = partialState;
+      const state = partialState;
 
       if (state.stale === false) {
         return state as NavigationState;
@@ -56,7 +56,7 @@ export function MockRouter(options: DefaultRouterOptions) {
                       ...route.params,
                     }
                   : route.params,
-            } as Route<string>)
+            }) as Route<string>
         );
 
       return {

@@ -29,6 +29,7 @@ import { useLinking } from './useLinking';
 import { useThenable } from './useThenable';
 
 declare global {
+  // eslint-disable-next-line no-var
   var REACT_NAVIGATION_DEVTOOLS: WeakMap<
     NavigationContainerRef<any>,
     { readonly linking: LinkingOptions<any> }

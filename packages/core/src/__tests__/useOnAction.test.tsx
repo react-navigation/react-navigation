@@ -28,6 +28,7 @@ jest.mock('nanoid/non-secure', () => {
 beforeEach(() => {
   MockRouterKey.current = 0;
 
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   require('nanoid/non-secure').__key = 0;
 });
 
@@ -93,8 +94,8 @@ it("lets parent handle the action if child didn't", () => {
     </BaseNavigationContainer>
   );
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).lastCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenLastCalledWith({
     stale: false,
     type: 'test',
     index: 2,
@@ -213,8 +214,8 @@ it("lets children handle the action if parent didn't", () => {
 
   render(element).update(element);
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).lastCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenLastCalledWith({
     stale: false,
     type: 'test',
     index: 0,
@@ -340,8 +341,8 @@ it('action goes to correct parent navigator if target is specified', () => {
 
   render(element).update(element);
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenCalledWith({
     stale: false,
     type: 'test',
     index: 1,
@@ -467,8 +468,8 @@ it('action goes to correct child navigator if target is specified', () => {
     ref.dispatch({ type: 'REVERSE', target: '1' });
   });
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenCalledWith({
     stale: false,
     type: 'test',
     index: 2,
@@ -578,7 +579,7 @@ it("action doesn't bubble if target is specified", () => {
 
   render(element).update(element);
 
-  expect(onStateChange).not.toBeCalled();
+  expect(onStateChange).not.toHaveBeenCalled();
 });
 
 it('logs error if no navigator handled the action', () => {
@@ -706,8 +707,8 @@ it("prevents removing a screen with 'beforeRemove' event", () => {
 
   act(() => ref.current?.navigate('bar'));
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
     key: 'stack-2',
     routeNames: ['foo', 'bar', 'baz'],
@@ -721,8 +722,8 @@ it("prevents removing a screen with 'beforeRemove' event", () => {
 
   act(() => ref.current?.navigate('baz'));
 
-  expect(onStateChange).toBeCalledTimes(2);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(2);
+  expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
     key: 'stack-2',
     routeNames: ['foo', 'bar', 'baz'],
@@ -740,8 +741,8 @@ it("prevents removing a screen with 'beforeRemove' event", () => {
 
   act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
-  expect(onStateChange).toBeCalledTimes(2);
-  expect(onBeforeRemove).toBeCalledTimes(1);
+  expect(onStateChange).toHaveBeenCalledTimes(2);
+  expect(onBeforeRemove).toHaveBeenCalledTimes(1);
 
   expect(ref.current?.getRootState()).toEqual({
     index: 2,
@@ -760,8 +761,8 @@ it("prevents removing a screen with 'beforeRemove' event", () => {
 
   act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
-  expect(onStateChange).toBeCalledTimes(3);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(3);
+  expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
     key: 'stack-2',
     routeNames: ['foo', 'bar', 'baz'],
@@ -776,8 +777,8 @@ it("prevents removing a screen with 'beforeRemove' event", () => {
   act(() => ref.current?.navigate('bar'));
   act(() => ref.current?.navigate('foo'));
 
-  expect(onStateChange).toBeCalledTimes(5);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(5);
+  expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
     key: 'stack-2',
     routeNames: ['foo', 'bar', 'baz'],
@@ -848,8 +849,8 @@ it("prevents removing a child screen with 'beforeRemove' event", () => {
 
   act(() => ref.current?.navigate('bar'));
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
     key: 'stack-2',
     routeNames: ['foo', 'bar', 'baz'],
@@ -863,8 +864,8 @@ it("prevents removing a child screen with 'beforeRemove' event", () => {
 
   act(() => ref.current?.navigate('baz'));
 
-  expect(onStateChange).toBeCalledTimes(2);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(2);
+  expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
     key: 'stack-2',
     routeNames: ['foo', 'bar', 'baz'],
@@ -890,8 +891,8 @@ it("prevents removing a child screen with 'beforeRemove' event", () => {
 
   act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
-  expect(onStateChange).toBeCalledTimes(2);
-  expect(onBeforeRemove).toBeCalledTimes(1);
+  expect(onStateChange).toHaveBeenCalledTimes(2);
+  expect(onBeforeRemove).toHaveBeenCalledTimes(1);
 
   expect(ref.current?.getRootState()).toEqual({
     index: 2,
@@ -921,8 +922,8 @@ it("prevents removing a child screen with 'beforeRemove' event", () => {
 
   act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
-  expect(onStateChange).toBeCalledTimes(3);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(3);
+  expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
     key: 'stack-2',
     routeNames: ['foo', 'bar', 'baz'],
@@ -937,8 +938,8 @@ it("prevents removing a child screen with 'beforeRemove' event", () => {
   act(() => ref.current?.navigate('bar'));
   act(() => ref.current?.navigate('foo'));
 
-  expect(onStateChange).toBeCalledTimes(5);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(5);
+  expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
     key: 'stack-2',
     routeNames: ['foo', 'bar', 'baz'],
@@ -1014,8 +1015,8 @@ it("prevents removing a grand child screen with 'beforeRemove' event", () => {
 
   act(() => ref.current?.navigate('bar'));
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
     key: 'stack-2',
     routeNames: ['foo', 'bar', 'baz'],
@@ -1029,8 +1030,8 @@ it("prevents removing a grand child screen with 'beforeRemove' event", () => {
 
   act(() => ref.current?.navigate('baz'));
 
-  expect(onStateChange).toBeCalledTimes(2);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(2);
+  expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
     key: 'stack-2',
     routeNames: ['foo', 'bar', 'baz'],
@@ -1069,8 +1070,8 @@ it("prevents removing a grand child screen with 'beforeRemove' event", () => {
 
   act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
-  expect(onStateChange).toBeCalledTimes(2);
-  expect(onBeforeRemove).toBeCalledTimes(1);
+  expect(onStateChange).toHaveBeenCalledTimes(2);
+  expect(onBeforeRemove).toHaveBeenCalledTimes(1);
 
   expect(ref.current?.getRootState()).toEqual({
     index: 2,
@@ -1113,8 +1114,8 @@ it("prevents removing a grand child screen with 'beforeRemove' event", () => {
 
   act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
-  expect(onStateChange).toBeCalledTimes(3);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(3);
+  expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
     key: 'stack-2',
     routeNames: ['foo', 'bar', 'baz'],
@@ -1129,8 +1130,8 @@ it("prevents removing a grand child screen with 'beforeRemove' event", () => {
   act(() => ref.current?.navigate('bar'));
   act(() => ref.current?.navigate('foo'));
 
-  expect(onStateChange).toBeCalledTimes(5);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(5);
+  expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
     key: 'stack-2',
     routeNames: ['foo', 'bar', 'baz'],
@@ -1255,13 +1256,13 @@ it("prevents removing by multiple screens with 'beforeRemove' event", () => {
     type: 'stack',
   };
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).toBeCalledWith(preventedState);
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenCalledWith(preventedState);
 
   act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onBeforeRemove.lex).toBeCalledTimes(1);
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onBeforeRemove.lex).toHaveBeenCalledTimes(1);
 
   expect(ref.current?.getRootState()).toEqual(preventedState);
 
@@ -1269,8 +1270,8 @@ it("prevents removing by multiple screens with 'beforeRemove' event", () => {
 
   act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onBeforeRemove.baz).toBeCalledTimes(1);
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onBeforeRemove.baz).toHaveBeenCalledTimes(1);
 
   expect(ref.current?.getRootState()).toEqual(preventedState);
 
@@ -1278,8 +1279,8 @@ it("prevents removing by multiple screens with 'beforeRemove' event", () => {
 
   act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onBeforeRemove.bar).toBeCalledTimes(1);
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onBeforeRemove.bar).toHaveBeenCalledTimes(1);
 
   expect(ref.current?.getRootState()).toEqual(preventedState);
 
@@ -1287,8 +1288,8 @@ it("prevents removing by multiple screens with 'beforeRemove' event", () => {
 
   act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
-  expect(onStateChange).toBeCalledTimes(2);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(2);
+  expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
     key: 'stack-2',
     routeNames: ['foo', 'bar', 'baz', 'bax'],
@@ -1312,7 +1313,7 @@ it("prevents removing a child screen with 'beforeRemove' event with 'resetRoot'"
   const onBeforeRemove = jest.fn();
 
   let shouldPrevent = true;
-  let shouldContinue = false;
+  const shouldContinue = false;
 
   const TestScreen = (props: any) => {
     React.useEffect(
@@ -1359,8 +1360,8 @@ it("prevents removing a child screen with 'beforeRemove' event with 'resetRoot'"
 
   act(() => ref.current?.navigate('baz'));
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
     key: 'stack-2',
     routeNames: ['foo', 'bar', 'baz'],
@@ -1383,19 +1384,20 @@ it("prevents removing a child screen with 'beforeRemove' event with 'resetRoot'"
     type: 'stack',
   });
 
-  act(() =>
-    ref.current?.resetRoot({
-      index: 0,
-      key: 'stack-2',
-      routeNames: ['foo', 'bar', 'baz'],
-      routes: [{ key: 'foo-3', name: 'foo' }],
-      stale: false,
-      type: 'stack',
-    })
+  act(
+    () =>
+      ref.current?.resetRoot({
+        index: 0,
+        key: 'stack-2',
+        routeNames: ['foo', 'bar', 'baz'],
+        routes: [{ key: 'foo-3', name: 'foo' }],
+        stale: false,
+        type: 'stack',
+      })
   );
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onBeforeRemove).toBeCalledTimes(1);
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onBeforeRemove).toHaveBeenCalledTimes(1);
 
   expect(ref.current?.getRootState()).toEqual({
     index: 1,
@@ -1422,19 +1424,20 @@ it("prevents removing a child screen with 'beforeRemove' event with 'resetRoot'"
 
   shouldPrevent = false;
 
-  act(() =>
-    ref.current?.resetRoot({
-      index: 0,
-      key: 'stack-2',
-      routeNames: ['foo', 'bar', 'baz'],
-      routes: [{ key: 'foo-3', name: 'foo' }],
-      stale: false,
-      type: 'stack',
-    })
+  act(
+    () =>
+      ref.current?.resetRoot({
+        index: 0,
+        key: 'stack-2',
+        routeNames: ['foo', 'bar', 'baz'],
+        routes: [{ key: 'foo-3', name: 'foo' }],
+        stale: false,
+        type: 'stack',
+      })
   );
 
-  expect(onStateChange).toBeCalledTimes(2);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(2);
+  expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
     key: 'stack-2',
     routeNames: ['foo', 'bar', 'baz'],

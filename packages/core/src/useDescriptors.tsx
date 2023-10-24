@@ -29,7 +29,7 @@ import { useRouteCache } from './useRouteCache';
 export type ScreenConfigWithParent<
   State extends NavigationState,
   ScreenOptions extends {},
-  EventMap extends EventMapBase
+  EventMap extends EventMapBase,
 > = {
   keys: (string | undefined)[];
   options: (ScreenOptionsOrCallback<ScreenOptions> | undefined)[] | undefined;
@@ -46,7 +46,7 @@ type ScreenOptionsOrCallback<ScreenOptions extends {}> =
 type Options<
   State extends NavigationState,
   ScreenOptions extends {},
-  EventMap extends EventMapBase
+  EventMap extends EventMapBase,
 > = {
   state: State;
   screens: Record<
@@ -77,7 +77,7 @@ export function useDescriptors<
   State extends NavigationState,
   ActionHelpers extends Record<string, () => void>,
   ScreenOptions extends {},
-  EventMap extends EventMapBase
+  EventMap extends EventMapBase,
 >({
   state,
   screens,

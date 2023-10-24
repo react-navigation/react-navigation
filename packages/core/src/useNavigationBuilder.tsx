@@ -47,7 +47,6 @@ import { useRegisterNavigator } from './useRegisterNavigator';
 import { useScheduleUpdate } from './useScheduleUpdate';
 
 // This is to make TypeScript compiler happy
-// eslint-disable-next-line babel/no-unused-expressions
 PrivateValueStore;
 
 type NavigatorRoute = {
@@ -66,7 +65,7 @@ const isValidKey = (key: unknown) =>
 const getRouteConfigsFromChildren = <
   State extends NavigationState,
   ScreenOptions extends {},
-  EventMap extends EventMapBase
+  EventMap extends EventMapBase,
 >(
   children: React.ReactNode,
   groupKey?: string,
@@ -244,7 +243,7 @@ export function useNavigationBuilder<
   RouterOptions extends DefaultRouterOptions,
   ActionHelpers extends Record<string, () => void>,
   ScreenOptions extends {},
-  EventMap extends Record<string, any>
+  EventMap extends Record<string, any>,
 >(
   createRouter: RouterFactory<State, any, RouterOptions>,
   options: DefaultNavigatorOptions<
@@ -474,7 +473,7 @@ export function useNavigationBuilder<
           routeGetIdList,
           routeKeyChanges: Object.keys(routeKeyList).filter(
             (name) =>
-              previousRouteKeyList.hasOwnProperty(name) &&
+              name in previousRouteKeyList &&
               routeKeyList[name] !== previousRouteKeyList[name]
           ),
         });
@@ -583,7 +582,7 @@ export function useNavigationBuilder<
   }, [getCurrentState, isStateInitialized]);
 
   const emitter = useEventEmitter<EventMapCore<State>>((e) => {
-    let routeNames = [];
+    const routeNames = [];
 
     let route: Route<string> | undefined;
 

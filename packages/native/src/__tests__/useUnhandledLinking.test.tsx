@@ -434,6 +434,6 @@ it('warns if other navigation was invoked before we handling the unhandled deepl
 
   const consoleWarnMock = jest.spyOn(console, 'warn').mockImplementation();
   fireEvent.press(queryByText(/navigate/i));
-  expect(consoleWarnMock).toBeCalledTimes(1);
+  expect(consoleWarnMock).toHaveBeenCalledTimes(1);
   consoleWarnMock.mockRestore();
 });

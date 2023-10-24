@@ -49,7 +49,7 @@ type ParamsForScreen<T> = T extends { screen: StaticNavigation<any, any, any> }
   ? NavigatorScreenParams<StaticParamList<T>> | undefined
   : UnknownToUndefined<ParamsForScreenComponent<T>>;
 
-type ParamListForScreens<Screens extends unknown> = {
+type ParamListForScreens<Screens> = {
   [Key in KeysOf<Screens>]: ParamsForScreen<Screens[Key]>;
 };
 
@@ -65,7 +65,7 @@ type ParamListForGroups<
           >;
         };
       }>
-    | undefined
+    | undefined,
 > = Groups extends {
   [key: string]: {
     screens: StaticConfigScreens<
@@ -83,7 +83,7 @@ type StaticConfigScreens<
   ParamList extends ParamListBase,
   State extends NavigationState,
   ScreenOptions extends {},
-  EventMap extends EventMapBase
+  EventMap extends EventMapBase,
 > = {
   [key in keyof ParamList]:
     | React.ComponentType<any>
@@ -129,7 +129,7 @@ type GroupConfig<
   ParamList extends ParamListBase,
   State extends NavigationState,
   ScreenOptions extends {},
-  EventMap extends EventMapBase
+  EventMap extends EventMapBase,
 > = Omit<RouteGroupConfig<ParamList, ScreenOptions>, 'screens' | 'children'> & {
   /**
    * Callback to determine whether the screens in the group should be rendered or not.
@@ -147,7 +147,7 @@ export type StaticConfig<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
-  Navigator extends React.ComponentType<{}>
+  Navigator extends React.ComponentType<{}>,
 > = Omit<
   Omit<
     React.ComponentProps<Navigator>,
@@ -196,7 +196,7 @@ export type StaticParamList<
         };
       };
     };
-  }
+  },
 > = FlatType<
   ParamListForScreens<T['config']['screens']> &
     ParamListForGroups<T['config']['groups']>
@@ -263,7 +263,7 @@ const getItemsFromScreens = (
       );
     }
 
-    let element = isNavigator ? (
+    const element = isNavigator ? (
       React.createElement(component, {})
     ) : (
       <MemoizedScreen component={component} />

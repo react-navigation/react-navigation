@@ -104,8 +104,11 @@ export const getTabBarHeight = ({
   insets: EdgeInsets;
   style: Animated.WithAnimatedValue<StyleProp<ViewStyle>> | undefined;
 }) => {
-  // @ts-ignore
-  const customHeight = StyleSheet.flatten(style)?.height;
+  const flattenedStyle = StyleSheet.flatten(style);
+  const customHeight =
+    flattenedStyle && 'height' in flattenedStyle
+      ? flattenedStyle.height
+      : undefined;
 
   if (typeof customHeight === 'number') {
     return customHeight;

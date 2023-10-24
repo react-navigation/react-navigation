@@ -166,7 +166,7 @@ export function StackRouter(options: StackRouterOptions) {
     },
 
     getRehydratedState(partialState, { routeNames, routeParamList }) {
-      let state = partialState;
+      const state = partialState;
 
       if (state.stale === false) {
         return state;
@@ -186,7 +186,7 @@ export function StackRouter(options: StackRouterOptions) {
                       ...route.params,
                     }
                   : route.params,
-            } as Route<string>)
+            }) as Route<string>
         );
 
       if (routes.length === 0) {

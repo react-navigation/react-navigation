@@ -15,8 +15,9 @@ import { Contacts } from '../Shared/Contacts';
 
 const getTabBarIcon =
   (name: React.ComponentProps<typeof MaterialCommunityIcons>['name']) =>
-  ({ color, size }: { color: string; size: number }) =>
-    <MaterialCommunityIcons name={name} color={color} size={size} />;
+  ({ color, size }: { color: string; size: number }) => (
+    <MaterialCommunityIcons name={name} color={color} size={size} />
+  );
 
 const ChatShownContext = React.createContext({
   isChatShown: false,

@@ -30,8 +30,9 @@ import { SimpleStack, SimpleStackParams } from './SimpleStack';
 
 const getTabBarIcon =
   (name: React.ComponentProps<typeof MaterialCommunityIcons>['name']) =>
-  ({ color, size }: { color: string; size: number }) =>
-    <MaterialCommunityIcons name={name} color={color} size={size} />;
+  ({ color, size }: { color: string; size: number }) => (
+    <MaterialCommunityIcons name={name} color={color} size={size} />
+  );
 
 type BottomTabParams = {
   TabStack: NavigatorScreenParams<SimpleStackParams>;

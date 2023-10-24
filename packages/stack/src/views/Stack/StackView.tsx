@@ -124,12 +124,9 @@ export class StackView extends React.Component<Props, State> {
         : props.state.routes;
 
     // Now we need to determine which routes were added and removed
-    let {
-      openingRouteKeys,
-      closingRouteKeys,
-      replacingRouteKeys,
-      previousRoutes,
-    } = state;
+    const { previousRoutes } = state;
+
+    let { openingRouteKeys, closingRouteKeys, replacingRouteKeys } = state;
 
     const previousFocusedRoute = previousRoutes[previousRoutes.length - 1] as
       | Route<string>

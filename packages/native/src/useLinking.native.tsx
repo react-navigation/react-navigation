@@ -15,7 +15,7 @@ type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
 type Options = LinkingOptions<ParamListBase>;
 
-let linkingHandlers: Symbol[] = [];
+const linkingHandlers: symbol[] = [];
 
 export function useLinking(
   ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
@@ -27,11 +27,11 @@ export function useLinking(
     getInitialURL = () =>
       Promise.race([
         Linking.getInitialURL(),
-        new Promise<undefined>((resolve) =>
+        new Promise<undefined>((resolve) => {
           // Timeout in 150ms if `getInitialState` doesn't resolve
           // Workaround for https://github.com/facebook/react-native/issues/25675
-          setTimeout(resolve, 150)
-        ),
+          setTimeout(resolve, 150);
+        }),
       ]),
     subscribe = (listener) => {
       const callback = ({ url }: { url: string }) => listener(url);

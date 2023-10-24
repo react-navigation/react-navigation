@@ -9,7 +9,7 @@ import {
 import { act, render, waitFor } from '@testing-library/react-native';
 import * as React from 'react';
 
-import { window } from '../__mocks__/window';
+import { window } from '../__stubs__/window';
 import { NavigationContainer } from '../NavigationContainer';
 
 Object.assign(global, window);

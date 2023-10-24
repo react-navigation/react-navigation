@@ -72,6 +72,7 @@ export function Drawer({
 }: Props) {
   // Reanimated v3 dropped legacy v1 API
   const legacyImplemenationNotAvailable =
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     require('react-native-reanimated').abs === undefined;
 
   if (useLegacyImplementation && legacyImplemenationNotAvailable) {
@@ -82,8 +83,10 @@ export function Drawer({
 
   const Drawer: typeof import('./modern/Drawer').Drawer =
     useLegacyImplementation
-      ? require('./legacy/Drawer').Drawer
-      : require('./modern/Drawer').Drawer;
+      ? // eslint-disable-next-line @typescript-eslint/no-var-requires
+        require('./legacy/Drawer').Drawer
+      : // eslint-disable-next-line @typescript-eslint/no-var-requires
+        require('./modern/Drawer').Drawer;
 
   const windowDimensions = useWindowDimensions();
   const layout = customLayout ?? windowDimensions;

@@ -182,7 +182,7 @@ export function TabRouter({
     },
 
     getRehydratedState(partialState, { routeNames, routeParamList }) {
-      let state = partialState;
+      const state = partialState;
 
       if (state.stale === false) {
         return state;
