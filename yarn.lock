@@ -4380,7 +4380,7 @@ __metadata:
     react-native: 0.71.8
     react-native-builder-bob: ^0.21.0
     react-native-safe-area-context: 4.5.0
-    react-native-screens: ~3.20.0
+    react-native-screens: ~3.27.0
     typescript: ^4.9.4
   peerDependencies:
     "@react-navigation/native": ^6.0.0
@@ -4453,7 +4453,7 @@ __metadata:
     react-native-gesture-handler: ~2.9.0
     react-native-reanimated: ~2.14.4
     react-native-safe-area-context: 4.5.0
-    react-native-screens: ~3.20.0
+    react-native-screens: ~3.27.0
     typescript: ^4.9.4
     use-latest-callback: ^0.1.5
   peerDependencies:
@@ -4580,7 +4580,7 @@ __metadata:
     react: 18.2.0
     react-native: 0.71.8
     react-native-builder-bob: ^0.21.0
-    react-native-screens: ~3.20.0
+    react-native-screens: ~3.27.0
     typescript: ^4.9.4
     warn-once: ^0.1.1
   peerDependencies:
@@ -4644,7 +4644,7 @@ __metadata:
     react-native-builder-bob: ^0.21.0
     react-native-gesture-handler: ~2.9.0
     react-native-safe-area-context: 4.5.0
-    react-native-screens: ~3.20.0
+    react-native-screens: ~3.27.0
     typescript: ^4.9.4
   peerDependencies:
     "@react-navigation/native": ^6.0.0
@@ -17219,6 +17219,19 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 94ab21378ee82765d329ccb8c92f5ca7cb15df916496fac7ce9a03c45e22579715000dae9c16f0a7d734a8fc1c2d0569fd82ecb71119a0b56046b5ea7533e7c2
+  languageName: node
+  linkType: hard
+
+"react-native-screens@npm:~3.27.0":
+  version: 3.27.0
+  resolution: "react-native-screens@npm:3.27.0"
+  dependencies:
+    react-freeze: ^1.0.0
+    warn-once: ^0.1.0
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 3a6f54bd755ba8c7909beb4888f96d159639221cbcdb56fccd460cd129ff9b144c7c20dc4c0b7eec23aa38698bbd0cf21bb9b6c99833e9d1399ee75da52f18ed
   languageName: node
   linkType: hard
 
