@@ -9,6 +9,12 @@ export { createNativeStackNavigator } from './navigators/createNativeStackNaviga
 export { NativeStackView } from './views/NativeStackView';
 
 /**
+ * Hooks
+ */
+export { AnimatedHeaderHeightContext } from './utils/AnimatedHeaderHeightContext';
+export { useAnimatedHeaderHeight } from './utils/useAnimatedHeaderHeight';
+
+/**
  * Types
  */
 export type {
