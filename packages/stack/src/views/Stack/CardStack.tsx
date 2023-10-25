@@ -277,7 +277,7 @@ export class CardStack extends React.Component<Props, State> {
           ? nextDescriptor.options
           : descriptor.options;
 
-      let defaultTransitionPreset =
+      const defaultTransitionPreset =
         optionsForTransitionConfig.presentation === 'modal'
           ? ModalTransition
           : optionsForTransitionConfig.presentation === 'transparentModal'

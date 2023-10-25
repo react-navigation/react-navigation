@@ -53,7 +53,7 @@ export function useScrollToTop(ref: React.RefObject<ScrollableWrapper>) {
   const route = useRoute();
 
   React.useEffect(() => {
-    let tabNavigations: NavigationProp<ReactNavigation.RootParamList>[] = [];
+    const tabNavigations: NavigationProp<ReactNavigation.RootParamList>[] = [];
     let currentNavigation = navigation;
 
     // If the screen is nested inside multiple tab navigators, we should scroll to top for any of them
@@ -74,7 +74,7 @@ export function useScrollToTop(ref: React.RefObject<ScrollableWrapper>) {
       return tab.addListener(
         // We don't wanna import tab types here to avoid extra deps
         // in addition, there are multiple tab implementations
-        // @ts-expect-error
+        // @ts-expect-error the `tabPress` event is only available when navigation type is tab
         'tabPress',
         (e: EventArg<'tabPress', true>) => {
           // We should scroll to top only when the screen is focused

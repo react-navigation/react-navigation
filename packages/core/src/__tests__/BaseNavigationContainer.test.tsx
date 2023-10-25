@@ -31,7 +31,6 @@ it('throws when getState is accessed without a container', () => {
   const Test = () => {
     const { getState } = React.useContext(NavigationStateContext);
 
-    // eslint-disable-next-line babel/no-unused-expressions
     getState;
 
     return null;
@@ -39,7 +38,7 @@ it('throws when getState is accessed without a container', () => {
 
   const element = <Test />;
 
-  expect(() => render(element).update(element)).toThrowError(
+  expect(() => render(element).update(element)).toThrow(
     "Couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?"
   );
 });
@@ -50,7 +49,6 @@ it('throws when setState is accessed without a container', () => {
   const Test = () => {
     const { setState } = React.useContext(NavigationStateContext);
 
-    // eslint-disable-next-line babel/no-unused-expressions
     setState;
 
     return null;
@@ -58,7 +56,7 @@ it('throws when setState is accessed without a container', () => {
 
   const element = <Test />;
 
-  expect(() => render(element).update(element)).toThrowError(
+  expect(() => render(element).update(element)).toThrow(
     "Couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?"
   );
 });
@@ -72,7 +70,7 @@ it('throws when nesting containers', () => {
         </BaseNavigationContainer>
       </BaseNavigationContainer>
     )
-  ).toThrowError(
+  ).toThrow(
     "Looks like you have nested a 'NavigationContainer' inside another."
   );
 
@@ -86,7 +84,7 @@ it('throws when nesting containers', () => {
         </NavigationIndependentTree>
       </BaseNavigationContainer>
     )
-  ).not.toThrowError(
+  ).not.toThrow(
     "Looks like you have nested a 'NavigationContainer' inside another."
   );
 });
@@ -163,8 +161,8 @@ it('handle dispatching with ref', () => {
     ref.current?.dispatch({ type: 'REVERSE' });
   });
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).lastCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenLastCalledWith({
     stale: false,
     type: 'test',
     index: 1,
@@ -243,8 +241,8 @@ it('handle resetting state with ref', () => {
     ref.current?.resetRoot(state);
   });
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).lastCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenLastCalledWith({
     index: 1,
     key: '3',
     routeNames: ['foo', 'foo2', 'bar', 'baz'],
@@ -364,7 +362,7 @@ it('emits state events when the state changes', () => {
     ref.current?.navigate('bar');
   });
 
-  expect(listener).toBeCalledTimes(1);
+  expect(listener).toHaveBeenCalledTimes(1);
   expect(listener.mock.calls[0][0].data.state).toEqual({
     type: 'test',
     stale: false,
@@ -382,7 +380,7 @@ it('emits state events when the state changes', () => {
     ref.current?.navigate('baz', { answer: 42 });
   });
 
-  expect(listener).toBeCalledTimes(2);
+  expect(listener).toHaveBeenCalledTimes(2);
   expect(listener.mock.calls[1][0].data.state).toEqual({
     type: 'test',
     stale: false,
@@ -481,11 +479,11 @@ it('emits state events when new navigator mounts', () => {
     ],
   };
 
-  expect(listener).toBeCalledTimes(1);
+  expect(listener).toHaveBeenCalledTimes(1);
   expect(listener.mock.calls[0][0].data.state).toEqual(resultState);
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).lastCalledWith(resultState);
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenLastCalledWith(resultState);
 });
 
 it('emits option events when options change with tab router', () => {
@@ -535,7 +533,7 @@ it('emits option events when options change with tab router', () => {
     ref.current?.navigate('bar');
   });
 
-  expect(listener).toBeCalledTimes(1);
+  expect(listener).toHaveBeenCalledTimes(1);
   expect(listener.mock.calls[0][0].data.options).toEqual({ y: 2 });
   expect(ref.current?.getCurrentOptions()).toEqual({ y: 2 });
 
@@ -549,7 +547,7 @@ it('emits option events when options change with tab router', () => {
     ref.current?.navigate('baz');
   });
 
-  expect(listener2).toBeCalledTimes(1);
+  expect(listener2).toHaveBeenCalledTimes(1);
   expect(listener2.mock.calls[0][0].data.options).toEqual({ g: 5 });
   expect(ref.current?.getCurrentOptions()).toEqual({ g: 5 });
 
@@ -557,7 +555,7 @@ it('emits option events when options change with tab router', () => {
     ref.current?.navigate('quxx');
   });
 
-  expect(listener2).toBeCalledTimes(2);
+  expect(listener2).toHaveBeenCalledTimes(2);
   expect(listener2.mock.calls[1][0].data.options).toEqual({ h: 9 });
   expect(ref.current?.getCurrentOptions()).toEqual({ h: 9 });
 });
@@ -609,7 +607,7 @@ it('emits option events when options change with stack router', () => {
     ref.current?.navigate('bar');
   });
 
-  expect(listener).toBeCalledTimes(1);
+  expect(listener).toHaveBeenCalledTimes(1);
   expect(listener.mock.calls[0][0].data.options).toEqual({ y: 2 });
   expect(ref.current?.getCurrentOptions()).toEqual({ y: 2 });
 
@@ -623,7 +621,7 @@ it('emits option events when options change with stack router', () => {
     ref.current?.navigate('baz');
   });
 
-  expect(listener2).toBeCalledTimes(1);
+  expect(listener2).toHaveBeenCalledTimes(1);
   expect(listener2.mock.calls[0][0].data.options).toEqual({ g: 5 });
   expect(ref.current?.getCurrentOptions()).toEqual({ g: 5 });
 
@@ -631,7 +629,7 @@ it('emits option events when options change with stack router', () => {
     ref.current?.navigate('quxx');
   });
 
-  expect(listener2).toBeCalledTimes(2);
+  expect(listener2).toHaveBeenCalledTimes(2);
   expect(listener2.mock.calls[1][0].data.options).toEqual({ h: 9 });
   expect(ref.current?.getCurrentOptions()).toEqual({ h: 9 });
 });
@@ -641,7 +639,9 @@ it('throws if there is no navigator rendered', () => {
 
   const ref = createNavigationContainerRef<ParamListBase>();
 
-  const element = <BaseNavigationContainer ref={ref} children={null} />;
+  const element = (
+    <BaseNavigationContainer ref={ref}>{null}</BaseNavigationContainer>
+  );
 
   render(element);
 
@@ -713,7 +713,7 @@ it('fires onReady after navigator is rendered', () => {
 
   const root = render(element);
 
-  expect(onReady).not.toBeCalled();
+  expect(onReady).not.toHaveBeenCalled();
   expect(ref.current?.isReady()).toBe(false);
 
   root.rerender(
@@ -801,7 +801,7 @@ it('works with state change events in independent nested container', () => {
 
   act(() => ref.current?.navigate('lex'));
 
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
     key: '1',
     routeNames: ['qux', 'lex'],

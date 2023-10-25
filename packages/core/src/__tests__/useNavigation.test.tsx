@@ -83,9 +83,7 @@ it("gets navigation's parent's parent from context", () => {
     const parent = navigation.getParent();
 
     expect(parent).toBeDefined();
-    if (parent !== undefined) {
-      expect(parent.navigate).toBeDefined();
-    }
+    expect(parent?.navigate).toBeDefined();
 
     return null;
   };

@@ -43,22 +43,22 @@ it('gets the current navigation state', () => {
 
   render(element);
 
-  expect(callback).toBeCalledTimes(1);
+  expect(callback).toHaveBeenCalledTimes(1);
   expect(callback.mock.calls[0][0].index).toBe(0);
 
   act(() => navigation.current.navigate('second'));
 
-  expect(callback).toBeCalledTimes(2);
+  expect(callback).toHaveBeenCalledTimes(2);
   expect(callback.mock.calls[1][0].index).toBe(1);
 
   act(() => navigation.current.navigate('third'));
 
-  expect(callback).toBeCalledTimes(3);
+  expect(callback).toHaveBeenCalledTimes(3);
   expect(callback.mock.calls[2][0].index).toBe(2);
 
   act(() => navigation.current.navigate('second', { answer: 42 }));
 
-  expect(callback).toBeCalledTimes(4);
+  expect(callback).toHaveBeenCalledTimes(4);
   expect(callback.mock.calls[3][0].index).toBe(1);
   expect(callback.mock.calls[3][0].routes[1].params).toEqual({ answer: 42 });
 });
@@ -94,22 +94,22 @@ it('gets the current navigation state with selector', () => {
 
   render(element);
 
-  expect(callback).toBeCalledTimes(1);
+  expect(callback).toHaveBeenCalledTimes(1);
   expect(callback.mock.calls[0][0]).toBe(0);
 
   act(() => navigation.current.navigate('second'));
 
-  expect(callback).toBeCalledTimes(2);
+  expect(callback).toHaveBeenCalledTimes(2);
   expect(callback.mock.calls[1][0]).toBe(1);
 
   act(() => navigation.current.navigate('third'));
 
-  expect(callback).toBeCalledTimes(3);
+  expect(callback).toHaveBeenCalledTimes(3);
   expect(callback.mock.calls[1][0]).toBe(1);
 
   act(() => navigation.current.navigate('second'));
 
-  expect(callback).toBeCalledTimes(4);
+  expect(callback).toHaveBeenCalledTimes(4);
   expect(callback.mock.calls[3][0]).toBe(1);
 });
 
@@ -151,11 +151,11 @@ it('gets the correct value if selector changes', () => {
 
   const root = render(<App selector={(state) => state.index} />);
 
-  expect(callback).toBeCalledTimes(1);
+  expect(callback).toHaveBeenCalledTimes(1);
   expect(callback.mock.calls[0][0]).toBe(0);
 
   root.update(<App selector={(state) => state.routes[state.index].name} />);
 
-  expect(callback).toBeCalledTimes(2);
+  expect(callback).toHaveBeenCalledTimes(2);
   expect(callback.mock.calls[1][0]).toBe('first');
 });

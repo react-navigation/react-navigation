@@ -3,6 +3,7 @@ import {
   NavigationAction,
   NavigationState,
   ParamListBase,
+  PartialState,
   Router,
 } from '@react-navigation/routers';
 import * as React from 'react';
@@ -13,7 +14,6 @@ import { UnhandledActionContext } from './UnhandledActionContext';
 import type { NavigationEventEmitter } from './useEventEmitter';
 
 // This is to make TypeScript compiler happy
-// eslint-disable-next-line babel/no-unused-expressions
 PrivateValueStore;
 
 type Options<State extends NavigationState, Action extends NavigationAction> = {
@@ -22,6 +22,7 @@ type Options<State extends NavigationState, Action extends NavigationAction> = {
   getState: () => State;
   emitter: NavigationEventEmitter<any>;
   router: Router<State, Action>;
+  setStateForNextRouteNamesChange: (state: PartialState<State>) => void;
 };
 
 /**
@@ -32,13 +33,14 @@ export function useNavigationHelpers<
   State extends NavigationState,
   ActionHelpers extends Record<string, () => void>,
   Action extends NavigationAction,
-  EventMap extends Record<string, any>
+  EventMap extends Record<string, any>,
 >({
   id: navigatorId,
   onAction,
   getState,
   emitter,
   router,
+  setStateForNextRouteNamesChange,
 }: Options<State, Action>) {
   const onUnhandledAction = React.useContext(UnhandledActionContext);
   const parentNavigationHelpers = React.useContext(NavigationContext);
@@ -101,6 +103,7 @@ export function useNavigationHelpers<
         return parentNavigationHelpers;
       },
       getState,
+      setStateForNextRouteNamesChange,
     } as NavigationHelpers<ParamListBase, EventMap> & ActionHelpers;
 
     return navigationHelpers;
@@ -112,5 +115,6 @@ export function useNavigationHelpers<
     onUnhandledAction,
     parentNavigationHelpers,
     router,
+    setStateForNextRouteNamesChange,
   ]);
 }

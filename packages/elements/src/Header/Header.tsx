@@ -48,6 +48,10 @@ export function Header(props: Props) {
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);
 
+  // On models with Dynamic Island the status bar height is smaller than the safe area top inset.
+  const hasDynamicIsland = Platform.OS === 'ios' && insets.top > 50;
+  const statusBarHeight = hasDynamicIsland ? insets.top - 5 : insets.top;
+
   const {
     layout = frame,
     modal = false,
@@ -73,7 +77,7 @@ export function Header(props: Props) {
     headerShadowVisible,
     headerPressColor,
     headerPressOpacity,
-    headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
+    headerStatusBarHeight = isParentHeaderShown ? 0 : statusBarHeight,
   } = props;
 
   const defaultHeight = getDefaultHeaderHeight(
@@ -170,7 +174,7 @@ export function Header(props: Props) {
   for (const styleProp in safeStyles) {
     // @ts-expect-error: typescript wrongly complains that styleProp cannot be used to index safeStyles
     if (safeStyles[styleProp] === undefined) {
-      // @ts-expect-error
+      // @ts-expect-error don't need to care about index signature for deletion
       // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete safeStyles[styleProp];
     }

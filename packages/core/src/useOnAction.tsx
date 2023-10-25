@@ -26,6 +26,7 @@ type Options = {
   beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>;
   routerConfigOptions: RouterConfigOptions;
   emitter: NavigationEventEmitter<EventMapCore<any>>;
+  stateForNextRouteNamesChange: PartialState<NavigationState> | null;
 };
 
 /**
@@ -46,6 +47,7 @@ export function useOnAction({
   beforeRemoveListeners,
   routerConfigOptions,
   emitter,
+  stateForNextRouteNamesChange,
 }: Options) {
   const {
     onAction: onActionParent,
@@ -69,6 +71,11 @@ export function useOnAction({
       action: NavigationAction,
       visitedNavigators: Set<string> = new Set<string>()
     ) => {
+      if (stateForNextRouteNamesChange) {
+        console.warn(
+          'Other navigation was invoked before we handling the unhandled deeplink (requested by invoking handleOnNextRouteNamesChange)'
+        );
+      }
       const state = getState();
 
       // Since actions can bubble both up and down, they could come to the same navigator again
@@ -157,6 +164,7 @@ export function useOnAction({
       onRouteFocusParent,
       router,
       setState,
+      stateForNextRouteNamesChange,
     ]
   );
 

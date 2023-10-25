@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import type {
   NavigationProp,

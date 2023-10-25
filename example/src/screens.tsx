@@ -6,6 +6,7 @@ import { CustomLayout } from './Screens/CustomLayout';
 import { DrawerView } from './Screens/DrawerView';
 import { DynamicTabs } from './Screens/DynamicTabs';
 import { LinkComponent } from './Screens/LinkComponent';
+import { LinkingScreen } from './Screens/LinkingScreen';
 import { MasterDetail } from './Screens/MasterDetail';
 import { MaterialTopTabsScreen } from './Screens/MaterialTopTabs';
 import { MixedHeaderMode } from './Screens/MixedHeaderMode';
@@ -110,6 +111,10 @@ export const SCREENS = {
   Static: {
     title: 'Static config',
     component: StaticScreen,
+  },
+  Linking: {
+    title: 'Linking with authentication flow',
+    component: LinkingScreen,
   },
 };
 

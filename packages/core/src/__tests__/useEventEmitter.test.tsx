@@ -78,30 +78,30 @@ it('fires focus and blur events in root navigator', () => {
 
   render(element);
 
-  expect(firstFocusCallback).toBeCalledTimes(1);
-  expect(firstBlurCallback).toBeCalledTimes(0);
-  expect(secondFocusCallback).toBeCalledTimes(0);
-  expect(secondBlurCallback).toBeCalledTimes(0);
-  expect(thirdFocusCallback).toBeCalledTimes(0);
-  expect(thirdBlurCallback).toBeCalledTimes(0);
-  expect(fourthFocusCallback).toBeCalledTimes(0);
-  expect(fourthBlurCallback).toBeCalledTimes(0);
+  expect(firstFocusCallback).toHaveBeenCalledTimes(1);
+  expect(firstBlurCallback).toHaveBeenCalledTimes(0);
+  expect(secondFocusCallback).toHaveBeenCalledTimes(0);
+  expect(secondBlurCallback).toHaveBeenCalledTimes(0);
+  expect(thirdFocusCallback).toHaveBeenCalledTimes(0);
+  expect(thirdBlurCallback).toHaveBeenCalledTimes(0);
+  expect(fourthFocusCallback).toHaveBeenCalledTimes(0);
+  expect(fourthBlurCallback).toHaveBeenCalledTimes(0);
 
   act(() => navigation.current.navigate('second'));
 
-  expect(firstBlurCallback).toBeCalledTimes(1);
-  expect(secondFocusCallback).toBeCalledTimes(1);
+  expect(firstBlurCallback).toHaveBeenCalledTimes(1);
+  expect(secondFocusCallback).toHaveBeenCalledTimes(1);
 
   act(() => navigation.current.navigate('fourth'));
 
-  expect(firstFocusCallback).toBeCalledTimes(1);
-  expect(firstBlurCallback).toBeCalledTimes(1);
-  expect(secondFocusCallback).toBeCalledTimes(1);
-  expect(secondBlurCallback).toBeCalledTimes(1);
-  expect(thirdFocusCallback).toBeCalledTimes(0);
-  expect(thirdBlurCallback).toBeCalledTimes(0);
-  expect(fourthFocusCallback).toBeCalledTimes(1);
-  expect(fourthBlurCallback).toBeCalledTimes(0);
+  expect(firstFocusCallback).toHaveBeenCalledTimes(1);
+  expect(firstBlurCallback).toHaveBeenCalledTimes(1);
+  expect(secondFocusCallback).toHaveBeenCalledTimes(1);
+  expect(secondBlurCallback).toHaveBeenCalledTimes(1);
+  expect(thirdFocusCallback).toHaveBeenCalledTimes(0);
+  expect(thirdBlurCallback).toHaveBeenCalledTimes(0);
+  expect(fourthFocusCallback).toHaveBeenCalledTimes(1);
+  expect(fourthBlurCallback).toHaveBeenCalledTimes(0);
 });
 
 it('fires focus event after blur', () => {
@@ -247,61 +247,61 @@ it('fires focus and blur events in nested navigator', () => {
 
   render(element);
 
-  expect(thirdFocusCallback).toBeCalledTimes(0);
-  expect(firstFocusCallback).toBeCalledTimes(1);
+  expect(thirdFocusCallback).toHaveBeenCalledTimes(0);
+  expect(firstFocusCallback).toHaveBeenCalledTimes(1);
 
   act(() => child.current.navigate('fourth'));
 
-  expect(firstFocusCallback).toBeCalledTimes(1);
-  expect(fourthFocusCallback).toBeCalledTimes(0);
-  expect(thirdFocusCallback).toBeCalledTimes(0);
+  expect(firstFocusCallback).toHaveBeenCalledTimes(1);
+  expect(fourthFocusCallback).toHaveBeenCalledTimes(0);
+  expect(thirdFocusCallback).toHaveBeenCalledTimes(0);
 
   act(() => parent.current.navigate('second'));
 
-  expect(thirdFocusCallback).toBeCalledTimes(0);
-  expect(secondFocusCallback).toBeCalledTimes(1);
-  expect(fourthBlurCallback).toBeCalledTimes(0);
+  expect(thirdFocusCallback).toHaveBeenCalledTimes(0);
+  expect(secondFocusCallback).toHaveBeenCalledTimes(1);
+  expect(fourthBlurCallback).toHaveBeenCalledTimes(0);
 
   act(() => parent.current.navigate('nested'));
 
-  expect(firstBlurCallback).toBeCalledTimes(1);
-  expect(secondBlurCallback).toBeCalledTimes(1);
-  expect(thirdFocusCallback).toBeCalledTimes(0);
-  expect(fourthFocusCallback).toBeCalledTimes(1);
+  expect(firstBlurCallback).toHaveBeenCalledTimes(1);
+  expect(secondBlurCallback).toHaveBeenCalledTimes(1);
+  expect(thirdFocusCallback).toHaveBeenCalledTimes(0);
+  expect(fourthFocusCallback).toHaveBeenCalledTimes(1);
 
   act(() => parent.current.navigate('nested', { screen: 'third' }));
 
-  expect(fourthBlurCallback).toBeCalledTimes(1);
-  expect(thirdFocusCallback).toBeCalledTimes(1);
+  expect(fourthBlurCallback).toHaveBeenCalledTimes(1);
+  expect(thirdFocusCallback).toHaveBeenCalledTimes(1);
 
   act(() => parent.current.navigate('first'));
 
-  expect(firstFocusCallback).toBeCalledTimes(2);
-  expect(thirdBlurCallback).toBeCalledTimes(1);
+  expect(firstFocusCallback).toHaveBeenCalledTimes(2);
+  expect(thirdBlurCallback).toHaveBeenCalledTimes(1);
 
   act(() => parent.current.navigate('nested', { screen: 'fourth' }));
 
-  expect(fourthFocusCallback).toBeCalledTimes(2);
-  expect(thirdBlurCallback).toBeCalledTimes(1);
-  expect(firstBlurCallback).toBeCalledTimes(2);
+  expect(fourthFocusCallback).toHaveBeenCalledTimes(2);
+  expect(thirdBlurCallback).toHaveBeenCalledTimes(1);
+  expect(firstBlurCallback).toHaveBeenCalledTimes(2);
 
   act(() => parent.current.navigate('nested', { screen: 'third' }));
 
-  expect(thirdFocusCallback).toBeCalledTimes(2);
-  expect(fourthBlurCallback).toBeCalledTimes(2);
+  expect(thirdFocusCallback).toHaveBeenCalledTimes(2);
+  expect(fourthBlurCallback).toHaveBeenCalledTimes(2);
 
   // Make sure nothing else has changed
-  expect(firstFocusCallback).toBeCalledTimes(2);
-  expect(firstBlurCallback).toBeCalledTimes(2);
+  expect(firstFocusCallback).toHaveBeenCalledTimes(2);
+  expect(firstBlurCallback).toHaveBeenCalledTimes(2);
 
-  expect(secondFocusCallback).toBeCalledTimes(1);
-  expect(secondBlurCallback).toBeCalledTimes(1);
+  expect(secondFocusCallback).toHaveBeenCalledTimes(1);
+  expect(secondBlurCallback).toHaveBeenCalledTimes(1);
 
-  expect(thirdFocusCallback).toBeCalledTimes(2);
-  expect(thirdBlurCallback).toBeCalledTimes(1);
+  expect(thirdFocusCallback).toHaveBeenCalledTimes(2);
+  expect(thirdBlurCallback).toHaveBeenCalledTimes(1);
 
-  expect(fourthFocusCallback).toBeCalledTimes(2);
-  expect(fourthBlurCallback).toBeCalledTimes(2);
+  expect(fourthFocusCallback).toHaveBeenCalledTimes(2);
+  expect(fourthBlurCallback).toHaveBeenCalledTimes(2);
 });
 
 it('fires blur event when a route is removed with a delay', async () => {
@@ -428,11 +428,11 @@ it('fires blur event when a route is removed with a delay', async () => {
     })
   );
 
-  expect(blurCallback).toBeCalledTimes(0);
+  expect(blurCallback).toHaveBeenCalledTimes(0);
 
   act(() => navigation.current.pop());
 
-  expect(blurCallback).toBeCalledTimes(1);
+  expect(blurCallback).toHaveBeenCalledTimes(1);
 });
 
 it('fires custom events added with addListener', () => {
@@ -481,9 +481,9 @@ it('fires custom events added with addListener', () => {
 
   render(element);
 
-  expect(firstCallback).toBeCalledTimes(0);
-  expect(secondCallback).toBeCalledTimes(0);
-  expect(thirdCallback).toBeCalledTimes(0);
+  expect(firstCallback).toHaveBeenCalledTimes(0);
+  expect(secondCallback).toHaveBeenCalledTimes(0);
+  expect(thirdCallback).toHaveBeenCalledTimes(0);
 
   const target =
     ref.current.state.routes[ref.current.state.routes.length - 1].key;
@@ -496,9 +496,9 @@ it('fires custom events added with addListener', () => {
     });
   });
 
-  expect(firstCallback).toBeCalledTimes(0);
-  expect(secondCallback).toBeCalledTimes(0);
-  expect(thirdCallback).toBeCalledTimes(1);
+  expect(firstCallback).toHaveBeenCalledTimes(0);
+  expect(secondCallback).toHaveBeenCalledTimes(0);
+  expect(thirdCallback).toHaveBeenCalledTimes(1);
   expect(thirdCallback.mock.calls[0][0].type).toBe('someSuperCoolEvent');
   expect(thirdCallback.mock.calls[0][0].data).toBe(42);
   expect(thirdCallback.mock.calls[0][0].target).toBe(target);
@@ -513,9 +513,9 @@ it('fires custom events added with addListener', () => {
   expect(secondCallback.mock.calls[0][0].target).toBeUndefined();
   expect(thirdCallback.mock.calls[1][0].target).toBeUndefined();
 
-  expect(firstCallback).toBeCalledTimes(1);
-  expect(secondCallback).toBeCalledTimes(1);
-  expect(thirdCallback).toBeCalledTimes(2);
+  expect(firstCallback).toHaveBeenCalledTimes(1);
+  expect(secondCallback).toHaveBeenCalledTimes(1);
+  expect(thirdCallback).toHaveBeenCalledTimes(2);
 });
 
 it("doesn't call same listener multiple times with addListener", () => {
@@ -560,13 +560,13 @@ it("doesn't call same listener multiple times with addListener", () => {
 
   render(element);
 
-  expect(callback).toBeCalledTimes(0);
+  expect(callback).toHaveBeenCalledTimes(0);
 
   act(() => {
     ref.current.navigation.emit({ type: eventName });
   });
 
-  expect(callback).toBeCalledTimes(1);
+  expect(callback).toHaveBeenCalledTimes(1);
 });
 
 it('fires custom events added with listeners prop', () => {
@@ -613,9 +613,9 @@ it('fires custom events added with listeners prop', () => {
 
   render(element);
 
-  expect(firstCallback).toBeCalledTimes(0);
-  expect(secondCallback).toBeCalledTimes(0);
-  expect(thirdCallback).toBeCalledTimes(0);
+  expect(firstCallback).toHaveBeenCalledTimes(0);
+  expect(secondCallback).toHaveBeenCalledTimes(0);
+  expect(thirdCallback).toHaveBeenCalledTimes(0);
 
   const target =
     ref.current.state.routes[ref.current.state.routes.length - 1].key;
@@ -628,9 +628,9 @@ it('fires custom events added with listeners prop', () => {
     });
   });
 
-  expect(firstCallback).toBeCalledTimes(0);
-  expect(secondCallback).toBeCalledTimes(0);
-  expect(thirdCallback).toBeCalledTimes(1);
+  expect(firstCallback).toHaveBeenCalledTimes(0);
+  expect(secondCallback).toHaveBeenCalledTimes(0);
+  expect(thirdCallback).toHaveBeenCalledTimes(1);
   expect(thirdCallback.mock.calls[0][0].type).toBe('someSuperCoolEvent');
   expect(thirdCallback.mock.calls[0][0].data).toBe(42);
   expect(thirdCallback.mock.calls[0][0].target).toBe(target);
@@ -643,9 +643,9 @@ it('fires custom events added with listeners prop', () => {
 
   expect(firstCallback.mock.calls[0][0].target).toBeUndefined();
 
-  expect(firstCallback).toBeCalledTimes(1);
-  expect(secondCallback).toBeCalledTimes(0);
-  expect(thirdCallback).toBeCalledTimes(1);
+  expect(firstCallback).toHaveBeenCalledTimes(1);
+  expect(secondCallback).toHaveBeenCalledTimes(0);
+  expect(thirdCallback).toHaveBeenCalledTimes(1);
 });
 
 it("doesn't call same listener multiple times with listeners", () => {
@@ -690,13 +690,13 @@ it("doesn't call same listener multiple times with listeners", () => {
 
   render(element);
 
-  expect(callback).toBeCalledTimes(0);
+  expect(callback).toHaveBeenCalledTimes(0);
 
   act(() => {
     ref.current.navigation.emit({ type: eventName });
   });
 
-  expect(callback).toBeCalledTimes(1);
+  expect(callback).toHaveBeenCalledTimes(1);
 });
 
 it('fires listeners when callback is provided for listeners prop', () => {
@@ -749,9 +749,9 @@ it('fires listeners when callback is provided for listeners prop', () => {
 
   render(element);
 
-  expect(firstCallback).toBeCalledTimes(0);
-  expect(secondCallback).toBeCalledTimes(0);
-  expect(thirdCallback).toBeCalledTimes(0);
+  expect(firstCallback).toHaveBeenCalledTimes(0);
+  expect(secondCallback).toHaveBeenCalledTimes(0);
+  expect(thirdCallback).toHaveBeenCalledTimes(0);
 
   const target =
     ref.current.state.routes[ref.current.state.routes.length - 1].key;
@@ -764,9 +764,9 @@ it('fires listeners when callback is provided for listeners prop', () => {
     });
   });
 
-  expect(firstCallback).toBeCalledTimes(0);
-  expect(secondCallback).toBeCalledTimes(0);
-  expect(thirdCallback).toBeCalledTimes(1);
+  expect(firstCallback).toHaveBeenCalledTimes(0);
+  expect(secondCallback).toHaveBeenCalledTimes(0);
+  expect(thirdCallback).toHaveBeenCalledTimes(1);
   expect(thirdCallback.mock.calls[0][0].type).toBe('someSuperCoolEvent');
   expect(thirdCallback.mock.calls[0][0].data).toBe(42);
   expect(thirdCallback.mock.calls[0][0].target).toBe(target);
@@ -779,9 +779,9 @@ it('fires listeners when callback is provided for listeners prop', () => {
 
   expect(firstCallback.mock.calls[0][0].target).toBeUndefined();
 
-  expect(firstCallback).toBeCalledTimes(1);
-  expect(secondCallback).toBeCalledTimes(0);
-  expect(thirdCallback).toBeCalledTimes(1);
+  expect(firstCallback).toHaveBeenCalledTimes(1);
+  expect(secondCallback).toHaveBeenCalledTimes(0);
+  expect(thirdCallback).toHaveBeenCalledTimes(1);
 });
 
 it('has option to prevent default', () => {
@@ -889,13 +889,13 @@ it('removes only one listener when unsubscribe is called multiple times', () => 
 
   render(element);
 
-  expect(firstCallback).toBeCalledTimes(0);
-  expect(secondCallback).toBeCalledTimes(0);
+  expect(firstCallback).toHaveBeenCalledTimes(0);
+  expect(secondCallback).toHaveBeenCalledTimes(0);
 
   act(() => {
     ref.current.navigation.emit({ type: eventName });
   });
 
-  expect(firstCallback).toBeCalledTimes(0);
-  expect(secondCallback).toBeCalledTimes(1);
+  expect(firstCallback).toHaveBeenCalledTimes(0);
+  expect(secondCallback).toHaveBeenCalledTimes(1);
 });

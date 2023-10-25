@@ -10,7 +10,7 @@ export function Screen<
   RouteName extends keyof ParamList,
   State extends NavigationState,
   ScreenOptions extends {},
-  EventMap extends EventMapBase
+  EventMap extends EventMapBase,
 >(_: RouteConfig<ParamList, RouteName, State, ScreenOptions, EventMap>) {
   /* istanbul ignore next */
   return null;

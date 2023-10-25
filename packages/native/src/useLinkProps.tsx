@@ -14,7 +14,7 @@ import { LinkingContext } from './LinkingContext';
 
 export type Props<
   ParamList extends ReactNavigation.RootParamList,
-  RouteName extends keyof ParamList = keyof ParamList
+  RouteName extends keyof ParamList = keyof ParamList,
 > =
   | ({
       screen: Extract<RouteName, string>;
@@ -43,7 +43,7 @@ const getStateFromParams = (
         {
           name: params.screen,
           params: params.params,
-          // @ts-expect-error
+          // @ts-expect-error this is fine 🔥
           state: params.screen
             ? getStateFromParams(
                 params.params as
@@ -109,7 +109,7 @@ export function useLinkProps<ParamList extends ReactNavigation.RootParamList>({
           );
         }
       } else {
-        // @ts-expect-error: This is already type-checked by the prop types
+        // @ts-expect-error This is already type-checked by the prop types
         navigation?.navigate(screen, params);
       }
     }
@@ -126,9 +126,9 @@ export function useLinkProps<ParamList extends ReactNavigation.RootParamList>({
               routes: [
                 {
                   name: screen,
-                  // @ts-expect-error
+                  // @ts-expect-error this is fine 🔥
                   params: params,
-                  // @ts-expect-error
+                  // @ts-expect-error this is fine 🔥
                   state: getStateFromParams(params),
                 },
               ],

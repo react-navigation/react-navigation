@@ -57,16 +57,16 @@ export function navigate(options: {
   path?: string;
   merge?: boolean;
 }): Action;
-// eslint-disable-next-line no-redeclare
+
 export function navigate(name: string, params?: object): Action;
-// eslint-disable-next-line no-redeclare
+
 export function navigate(...args: any): Action {
   if (typeof args[0] === 'string') {
     return { type: 'NAVIGATE', payload: { name: args[0], params: args[1] } };
   } else {
     const payload = args[0] || {};
 
-    if (!payload.hasOwnProperty('name')) {
+    if (!('name' in payload)) {
       throw new Error(
         'You need to specify a name when calling navigate with an object as the argument. See https://reactnavigation.org/docs/navigation-actions#navigate for usage.'
       );
@@ -90,7 +90,7 @@ export function navigateDeprecated(
   } else {
     const payload = args[0] || {};
 
-    if (!payload.hasOwnProperty('name')) {
+    if (!('name' in payload)) {
       throw new Error(
         'You need to specify a name when calling navigate with an object as the argument. See https://reactnavigation.org/docs/navigation-actions#navigatelegacy for usage.'
       );

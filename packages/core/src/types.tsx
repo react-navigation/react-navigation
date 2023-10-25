@@ -23,7 +23,7 @@ export type DefaultNavigatorOptions<
   ParamList extends ParamListBase,
   State extends NavigationState,
   ScreenOptions extends {},
-  EventMap extends EventMapBase
+  EventMap extends EventMapBase,
 > = DefaultRouterOptions<Keyof<ParamList>> & {
   /**
    * Optional ID for the navigator. Can be used with `navigation.getParent(id)` to refer to a parent.
@@ -93,7 +93,7 @@ export type EventMapCore<State extends NavigationState> = {
 export type EventArg<
   EventName extends string,
   CanPreventDefault extends boolean | undefined = false,
-  Data = undefined
+  Data = undefined,
 > = {
   /**
    * Type of the event (e.g. `focus`, `blur`)
@@ -118,7 +118,7 @@ export type EventArg<
 
 export type EventListenerCallback<
   EventMap extends EventMapBase,
-  EventName extends keyof EventMap
+  EventName extends keyof EventMap,
 > = (
   e: EventArg<
     Extract<EventName, string>,
@@ -186,7 +186,7 @@ export class PrivateValueStore<T extends [any, any, any]> {
 
 type NavigationHelpersCommon<
   ParamList extends ParamListBase,
-  State extends NavigationState = NavigationState
+  State extends NavigationState = NavigationState,
 > = {
   /**
    * Dispatch an action or an update function to the router.
@@ -321,11 +321,18 @@ type NavigationHelpersCommon<
    * Note that this method doesn't re-render screen when the result changes. So don't use it in `render`.
    */
   getState(): State;
+  /**
+   * Schedules the given state to be used as navigation state when the list of screens defined in the navigator changes
+   * instead of automatically calculating the new state, e.g. due to conditional rendering or dynamically defining screens.
+   *
+   * @param state Navigation state object.
+   */
+  setStateForNextRouteNamesChange(state: PartialState<State> | State): void;
 } & PrivateValueStore<[ParamList, unknown, unknown]>;
 
 export type NavigationHelpers<
   ParamList extends ParamListBase,
-  EventMap extends EventMapBase = {}
+  EventMap extends EventMapBase = {},
 > = NavigationHelpersCommon<ParamList> &
   EventEmitter<EventMap> & {
     /**
@@ -378,7 +385,7 @@ export type NavigationProp<
   NavigatorID extends string | undefined = undefined,
   State extends NavigationState = NavigationState<ParamList>,
   ScreenOptions extends {} = {},
-  EventMap extends EventMapBase = {}
+  EventMap extends EventMapBase = {},
 > = Omit<NavigationHelpersCommon<ParamList, State>, 'getParent'> & {
   /**
    * Returns the navigation prop from a parent navigator based on the ID.
@@ -413,12 +420,12 @@ export type NavigationProp<
 
 export type RouteProp<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = Keyof<ParamList>
+  RouteName extends keyof ParamList = Keyof<ParamList>,
 > = Route<Extract<RouteName, string>, ParamList[RouteName]>;
 
 export type CompositeNavigationProp<
   A extends NavigationProp<ParamListBase, string, any, any, any>,
-  B extends NavigationHelpersCommon<ParamListBase, any>
+  B extends NavigationHelpersCommon<ParamListBase, any>,
 > = Omit<A & B, keyof NavigationProp<any>> &
   NavigationProp<
     /**
@@ -466,7 +473,7 @@ export type CompositeScreenProps<
   },
   B extends {
     navigation: NavigationHelpersCommon<any, any>;
-  }
+  },
 > = {
   navigation: CompositeNavigationProp<A['navigation'], B['navigation']>;
   route: A['route'];
@@ -475,7 +482,7 @@ export type CompositeScreenProps<
 export type Descriptor<
   ScreenOptions extends {},
   Navigation extends NavigationProp<any, any, any, any, any, any>,
-  Route extends RouteProp<any, any>
+  Route extends RouteProp<any, any>,
 > = {
   /**
    * Render the component associated with this route.
@@ -500,7 +507,7 @@ export type Descriptor<
 
 export type ScreenListeners<
   State extends NavigationState,
-  EventMap extends EventMapBase
+  EventMap extends EventMapBase,
 > = Partial<{
   [EventName in keyof (EventMap & EventMapCore<State>)]: EventListenerCallback<
     EventMap,
@@ -510,7 +517,7 @@ export type ScreenListeners<
 
 type ScreenComponentType<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList
+  RouteName extends keyof ParamList,
 > =
   | React.ComponentType<{
       route: RouteProp<ParamList, RouteName>;
@@ -520,7 +527,7 @@ type ScreenComponentType<
 
 export type RouteConfigComponent<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList
+  RouteName extends keyof ParamList,
 > =
   | {
       /**
@@ -555,7 +562,7 @@ export type RouteConfig<
   RouteName extends keyof ParamList,
   State extends NavigationState,
   ScreenOptions extends {},
-  EventMap extends EventMapBase
+  EventMap extends EventMapBase,
 > = {
   /**
    * Optional key for this screen. This doesn't need to be unique.
@@ -609,7 +616,7 @@ export type RouteConfig<
 
 export type RouteGroupConfig<
   ParamList extends ParamListBase,
-  ScreenOptions extends {}
+  ScreenOptions extends {},
 > = {
   /**
    * Optional key for the screens in this group.
@@ -709,7 +716,7 @@ export type TypedNavigator<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
-  Navigator extends React.ComponentType<any>
+  Navigator extends React.ComponentType<any>,
 > = {
   /**
    * Navigator component which manages the child screens.
