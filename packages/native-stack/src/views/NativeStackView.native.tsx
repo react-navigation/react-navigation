@@ -294,6 +294,7 @@ const SceneView = ({
       onHeaderBackButtonClicked={onHeaderBackButtonClicked}
       preventNativeDismiss={isRemovePrevented} // on iOS
       onNativeDismissCancelled={onNativeDismissCancelled}
+      // @ts-expect-error this prop is available since rn-screens 3.26
       onHeaderHeightChange={(e) =>
         handleHeaderHeightChangeEvent(
           e.nativeEvent.headerHeight,
