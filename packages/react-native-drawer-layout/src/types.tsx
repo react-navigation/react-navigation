@@ -79,6 +79,13 @@ export type DrawerProps = {
   drawerStyle?: StyleProp<ViewStyle>;
 
   /**
+   * Whether the overlay is enabled.
+   * If false, interaction is possible with the drawer content while drawer is open.
+   * Defaults to `true`.
+   */
+  overlayEnabled?: boolean;
+
+  /**
    * Style object for the drawer overlay.
    */
   overlayStyle?: StyleProp<ViewStyle>;
