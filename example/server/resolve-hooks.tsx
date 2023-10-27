@@ -20,5 +20,5 @@ global.__DEV__ = process.env.NODE_ENV !== 'production';
 mock(
   'react-native-reanimated',
   // eslint-disable-next-line import/no-commonjs, @typescript-eslint/no-var-requires
-  { ...require('react-native-reanimated/mock').default, call() {} }
+  require('react-native-reanimated/mock')
 );
