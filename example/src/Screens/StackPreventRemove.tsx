@@ -1,11 +1,11 @@
 import {
   CommonActions,
-  ParamListBase,
+  type ParamListBase,
   useTheme,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
-  StackScreenProps,
+  type StackScreenProps,
 } from '@react-navigation/stack';
 import * as React from 'react';
 import {

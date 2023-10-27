@@ -32,7 +32,7 @@ import {
   GestureHandlerRootView,
   GestureState,
   PanGestureHandler,
-  PanGestureHandlerGestureEvent,
+  type PanGestureHandlerGestureEvent,
 } from './GestureHandler';
 import { Overlay } from './Overlay';
 

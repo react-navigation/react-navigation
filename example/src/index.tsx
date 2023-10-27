@@ -4,21 +4,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useReduxDevToolsExtension } from '@react-navigation/devtools';
 import {
   createDrawerNavigator,
-  DrawerScreenProps,
+  type DrawerScreenProps,
 } from '@react-navigation/drawer';
 import {
-  CompositeScreenProps,
+  type CompositeScreenProps,
   DarkTheme,
   DefaultTheme,
-  InitialState,
+  type InitialState,
   NavigationContainer,
-  PathConfigMap,
+  type PathConfigMap,
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
   HeaderStyleInterpolators,
-  StackScreenProps,
+  type StackScreenProps,
 } from '@react-navigation/stack';
 import { createURL } from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
@@ -39,11 +39,15 @@ import {
   Divider,
   List,
   Provider as PaperProvider,
-  Theme,
+  type Theme,
 } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { RootDrawerParamList, RootStackParamList, SCREENS } from './screens';
+import {
+  type RootDrawerParamList,
+  type RootStackParamList,
+  SCREENS,
+} from './screens';
 import { NotFound } from './Screens/NotFound';
 import { SettingsItem } from './Shared/SettingsItem';
 

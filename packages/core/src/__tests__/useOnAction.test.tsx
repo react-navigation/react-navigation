@@ -1,8 +1,8 @@
 import {
-  DefaultRouterOptions,
-  NavigationState,
-  ParamListBase,
-  Router,
+  type DefaultRouterOptions,
+  type NavigationState,
+  type ParamListBase,
+  type Router,
   StackActions,
   StackRouter,
 } from '@react-navigation/routers';
@@ -14,7 +14,7 @@ import { createNavigationContainerRef } from '../createNavigationContainerRef';
 import { Screen } from '../Screen';
 import { useNavigationBuilder } from '../useNavigationBuilder';
 import {
-  MockActions,
+  type MockActions,
   MockRouter,
   MockRouterKey,
 } from './__fixtures__/MockRouter';

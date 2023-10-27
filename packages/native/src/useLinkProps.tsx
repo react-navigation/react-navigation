@@ -1,14 +1,14 @@
 import {
   getPathFromState,
-  NavigationAction,
+  type NavigationAction,
   NavigationContainerRefContext,
   NavigationHelpersContext,
-  NavigatorScreenParams,
-  ParamListBase,
+  type NavigatorScreenParams,
+  type ParamListBase,
 } from '@react-navigation/core';
 import type { NavigationState, PartialState } from '@react-navigation/routers';
 import * as React from 'react';
-import { GestureResponderEvent, Platform } from 'react-native';
+import { type GestureResponderEvent, Platform } from 'react-native';
 
 import { LinkingContext } from './LinkingContext';
 

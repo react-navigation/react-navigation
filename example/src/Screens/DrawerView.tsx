@@ -4,7 +4,7 @@ import { Drawer, useDrawerProgress } from 'react-native-drawer-layout';
 import { Button } from 'react-native-paper';
 import Animated, {
   interpolate,
-  SharedValue,
+  type SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated';
 

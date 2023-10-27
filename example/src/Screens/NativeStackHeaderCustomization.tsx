@@ -1,7 +1,7 @@
 import type { ParamListBase } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
-  NativeStackScreenProps,
+  type NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import * as React from 'react';
 import {
@@ -159,6 +159,7 @@ export function NativeStackHeaderCustomization({
           headerBackground: () => (
             <Image
               source={require('../../assets/cpu.jpg')}
+              resizeMode="cover"
               style={styles.headerBackground}
             />
           ),
@@ -205,6 +206,5 @@ const styles = StyleSheet.create({
     height: undefined,
     width: undefined,
     flex: 1,
-    resizeMode: 'cover',
   },
 });

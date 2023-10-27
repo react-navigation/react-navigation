@@ -1,15 +1,15 @@
 import {
   CommonActions,
-  NavigationAction,
-  NavigationState,
-  ParamListBase,
-  PartialState,
-  Router,
+  type NavigationAction,
+  type NavigationState,
+  type ParamListBase,
+  type PartialState,
+  type Router,
 } from '@react-navigation/routers';
 import * as React from 'react';
 
 import { NavigationContext } from './NavigationContext';
-import { NavigationHelpers, PrivateValueStore } from './types';
+import { type NavigationHelpers, PrivateValueStore } from './types';
 import { UnhandledActionContext } from './UnhandledActionContext';
 import type { NavigationEventEmitter } from './useEventEmitter';
 

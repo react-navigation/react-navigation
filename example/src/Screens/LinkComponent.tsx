@@ -1,12 +1,12 @@
 import {
   Link,
-  ParamListBase,
+  type ParamListBase,
   StackActions,
   useLinkProps,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
-  StackScreenProps,
+  type StackScreenProps,
 } from '@react-navigation/stack';
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';

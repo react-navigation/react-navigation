@@ -1,7 +1,12 @@
 import * as React from 'react';
-import { GestureResponderEvent, Platform, Text, TextProps } from 'react-native';
+import {
+  type GestureResponderEvent,
+  Platform,
+  Text,
+  type TextProps,
+} from 'react-native';
 
-import { Props as LinkProps, useLinkProps } from './useLinkProps';
+import { type Props as LinkProps, useLinkProps } from './useLinkProps';
 
 type Props<ParamList extends ReactNavigation.RootParamList> =
   LinkProps<ParamList> &

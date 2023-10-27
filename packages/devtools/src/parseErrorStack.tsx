@@ -7,7 +7,7 @@
 
 import * as stacktraceParser from 'stacktrace-parser';
 
-import { HermesParsedStack, parseHermesStack } from './parseHermesStack';
+import { type HermesParsedStack, parseHermesStack } from './parseHermesStack';
 
 interface StackFrame {
   methodName: string;

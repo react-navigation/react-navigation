@@ -4,11 +4,11 @@ import {
 } from '@react-navigation/elements';
 import {
   CommonActions,
-  LocaleDirection,
-  ParamListBase,
-  Route,
+  type LocaleDirection,
+  type ParamListBase,
+  type Route,
   StackActions,
-  StackNavigationState,
+  type StackNavigationState,
 } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -23,7 +23,7 @@ import { ModalPresentationContext } from '../../utils/ModalPresentationContext';
 import { GestureHandlerRootView } from '../GestureHandler';
 import {
   HeaderContainer,
-  Props as HeaderContainerProps,
+  type Props as HeaderContainerProps,
 } from '../Header/HeaderContainer';
 import { CardStack } from './CardStack';
 

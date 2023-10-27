@@ -6,7 +6,7 @@ import {
   Image,
   Platform,
   ScrollView,
-  ScrollViewProps,
+  type ScrollViewProps,
   StyleSheet,
   useWindowDimensions,
   View,
@@ -62,7 +62,7 @@ export function Albums(props: Partial<ScrollViewProps>) {
             },
           ]}
         >
-          <Image source={source} style={styles.photo} />
+          <Image source={source} resizeMode="cover" style={styles.photo} />
         </View>
       ))}
     </ScrollView>
@@ -89,7 +89,6 @@ const styles = StyleSheet.create({
   }),
   photo: {
     flex: 1,
-    resizeMode: 'cover',
     paddingTop: '100%',
   },
 });

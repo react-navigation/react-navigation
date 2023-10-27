@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, ViewProps } from 'react-native';
+import { View, type ViewProps } from 'react-native';
 
 type Props = ViewProps & {
   tint: 'light' | 'dark';

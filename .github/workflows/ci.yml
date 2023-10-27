@@ -33,7 +33,7 @@ jobs:
         run: yarn lint
 
       - name: Typecheck files
-        run: yarn typescript
+        run: yarn typecheck
 
   unit-test:
     runs-on: ubuntu-latest
@@ -96,4 +96,4 @@ jobs:
         run: yarn lerna run prepack
 
       - name: Verify built type definitions are correct
-        run: yarn typescript
+        run: yarn typecheck

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import {
   I18nManager,
-  LayoutChangeEvent,
+  type LayoutChangeEvent,
   Platform,
-  StyleProp,
+  type StyleProp,
   StyleSheet,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native';
 
 import { Pager } from './Pager';

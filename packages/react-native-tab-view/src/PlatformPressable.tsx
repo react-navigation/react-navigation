@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Platform, Pressable, PressableProps } from 'react-native';
+import { Platform, Pressable, type PressableProps } from 'react-native';
 
 export type Props = PressableProps & {
   pressColor?: string;

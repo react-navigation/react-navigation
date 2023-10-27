@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Platform, View, ViewProps } from 'react-native';
+import { Platform, View, type ViewProps } from 'react-native';
 // @ts-expect-error Getting private component
 import AppContainer from 'react-native/Libraries/ReactNative/AppContainer';
 import type { StackPresentationTypes } from 'react-native-screens';

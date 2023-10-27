@@ -1,7 +1,7 @@
 import {
   createNavigationContainerRef,
   createNavigatorFactory,
-  ParamListBase,
+  type ParamListBase,
   StackRouter,
   TabRouter,
   useNavigationBuilder,

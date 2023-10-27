@@ -1,6 +1,11 @@
 import { useTheme } from '@react-navigation/native';
 import * as React from 'react';
-import { Animated, StyleProp, ViewProps, ViewStyle } from 'react-native';
+import {
+  Animated,
+  type StyleProp,
+  type ViewProps,
+  type ViewStyle,
+} from 'react-native';
 
 type Props = Omit<ViewProps, 'style'> & {
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;

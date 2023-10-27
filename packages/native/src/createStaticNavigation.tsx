@@ -1,8 +1,8 @@
 import {
   createComponentForStaticNavigation,
   createPathConfigForStaticNavigation,
-  ParamListBase,
-  StaticNavigation,
+  type ParamListBase,
+  type StaticNavigation,
 } from '@react-navigation/core';
 import * as React from 'react';
 

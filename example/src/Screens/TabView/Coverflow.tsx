@@ -4,12 +4,12 @@ import * as React from 'react';
 import {
   Animated,
   Image,
-  ImageRequireSource,
+  type ImageRequireSource,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
-import { SceneRendererProps, TabView } from 'react-native-tab-view';
+import { type SceneRendererProps, TabView } from 'react-native-tab-view';
 
 type Route = {
   key: string;

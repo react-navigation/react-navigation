@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {
   Animated,
-  GestureResponderEvent,
+  type GestureResponderEvent,
   Keyboard,
   PanResponder,
-  PanResponderGestureState,
+  type PanResponderGestureState,
   StyleSheet,
   View,
 } from 'react-native';

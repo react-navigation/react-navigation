@@ -1,5 +1,5 @@
 import {
-  ParamListBase,
+  type ParamListBase,
   StackActions,
   StackRouter,
 } from '@react-navigation/routers';
