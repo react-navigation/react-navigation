@@ -271,7 +271,6 @@ export function App() {
           >
             {() => (
               <Drawer.Navigator
-                useLegacyImplementation={false}
                 screenOptions={{
                   drawerType: isLargeScreen ? 'permanent' : undefined,
                 }}

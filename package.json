@@ -58,7 +58,7 @@
       "<rootDir>/jest/setup.js"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!(@react-native|react-native|react-native-iphone-x-helper)/)"
+      "node_modules/(?!(@react-native|react-native|react-native-reanimated)/)"
     ],
     "moduleNameMapper": {
       "@react-navigation/([^/]+)": "<rootDir>/packages/$1/src",
