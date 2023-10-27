@@ -3489,6 +3489,7 @@ __metadata:
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": ^12.3.1
     "@types/react": ~18.2.33
+    color: ^4.2.3
     del-cli: ^5.1.0
     react: 18.2.0
     react-native: 0.72.6
@@ -3559,6 +3560,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/material-top-tabs@workspace:packages/material-top-tabs"
   dependencies:
+    "@react-navigation/elements": ^2.0.0-alpha.2
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": ^12.3.1
     "@types/react": ~18.2.33

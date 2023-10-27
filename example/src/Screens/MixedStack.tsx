@@ -1,3 +1,4 @@
+import { Button } from '@react-navigation/elements';
 import type { ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -5,7 +6,6 @@ import {
 } from '@react-navigation/stack';
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
-import { Button } from 'react-native-paper';
 
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
@@ -24,31 +24,18 @@ const ArticleScreen = ({
   return (
     <ScrollView>
       <View style={styles.buttons}>
-        <View>
-          <Button
-            mode="contained"
-            onPress={() => navigation.push('Article', { author: 'Dalek' })}
-            style={styles.button}
-          >
-            Push article
-          </Button>
-          <Button
-            mode="outlined"
-            onPress={() => navigation.goBack()}
-            style={styles.button}
-          >
-            Go back
-          </Button>
-        </View>
-        <View>
-          <Button
-            mode="contained"
-            onPress={() => navigation.push('Albums')}
-            style={styles.button}
-          >
-            Push album
-          </Button>
-        </View>
+        <Button
+          variant="filled"
+          onPress={() => navigation.push('Article', { author: 'Dalek' })}
+        >
+          Push article
+        </Button>
+        <Button variant="tinted" onPress={() => navigation.goBack()}>
+          Go back
+        </Button>
+        <Button variant="filled" onPress={() => navigation.push('Albums')}>
+          Push album
+        </Button>
       </View>
       <Article
         author={{ name: route.params.author }}
@@ -62,31 +49,18 @@ const AlbumsScreen = ({ navigation }: StackScreenProps<MixedStackParams>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
-        <View>
-          <Button
-            mode="contained"
-            onPress={() => navigation.push('Albums')}
-            style={styles.button}
-          >
-            Push album
-          </Button>
-          <Button
-            mode="outlined"
-            onPress={() => navigation.goBack()}
-            style={styles.button}
-          >
-            Go back
-          </Button>
-        </View>
-        <View>
-          <Button
-            mode="contained"
-            onPress={() => navigation.push('Article', { author: 'The Doctor' })}
-            style={styles.button}
-          >
-            Push article
-          </Button>
-        </View>
+        <Button variant="filled" onPress={() => navigation.push('Albums')}>
+          Push album
+        </Button>
+        <Button variant="tinted" onPress={() => navigation.goBack()}>
+          Go back
+        </Button>
+        <Button
+          variant="filled"
+          onPress={() => navigation.push('Article', { author: 'The Doctor' })}
+        >
+          Push article
+        </Button>
       </View>
       <Albums scrollEnabled={scrollEnabled} />
     </ScrollView>
@@ -130,9 +104,7 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 8,
-  },
-  button: {
-    margin: 8,
+    gap: 12,
+    padding: 12,
   },
 });

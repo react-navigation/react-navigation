@@ -1,3 +1,4 @@
+import { Button } from '@react-navigation/elements';
 import type { ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -7,7 +8,6 @@ import {
 } from '@react-navigation/stack';
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
-import { Button } from 'react-native-paper';
 
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
@@ -29,17 +29,12 @@ const ArticleScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Button
-          mode="contained"
+          variant="filled"
           onPress={() => navigation.push('NewsFeed', { date: Date.now() })}
-          style={styles.button}
         >
           Push feed
         </Button>
-        <Button
-          mode="outlined"
-          onPress={() => navigation.pop()}
-          style={styles.button}
-        >
+        <Button variant="tinted" onPress={() => navigation.pop()}>
           Pop screen
         </Button>
       </View>
@@ -58,18 +53,10 @@ const NewsFeedScreen = ({
   return (
     <ScrollView>
       <View style={styles.buttons}>
-        <Button
-          mode="contained"
-          onPress={() => navigation.push('Albums')}
-          style={styles.button}
-        >
+        <Button variant="filled" onPress={() => navigation.push('Albums')}>
           Navigate to album
         </Button>
-        <Button
-          mode="outlined"
-          onPress={() => navigation.pop()}
-          style={styles.button}
-        >
+        <Button variant="tinted" onPress={() => navigation.pop()}>
           Pop screen
         </Button>
       </View>
@@ -85,17 +72,12 @@ const AlbumsScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Button
-          mode="contained"
+          variant="filled"
           onPress={() => navigation.push('Article', { author: 'Babel fish' })}
-          style={styles.button}
         >
           Push article
         </Button>
-        <Button
-          mode="outlined"
-          onPress={() => navigation.pop()}
-          style={styles.button}
-        >
+        <Button variant="tinted" onPress={() => navigation.pop()}>
           Pop screen
         </Button>
       </View>
@@ -158,9 +140,7 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 8,
-  },
-  button: {
-    margin: 8,
+    gap: 12,
+    padding: 12,
   },
 });

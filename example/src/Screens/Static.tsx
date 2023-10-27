@@ -1,5 +1,6 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Button } from '@react-navigation/elements';
 import {
   createStaticNavigation,
   NavigationIndependentTree,
@@ -7,7 +8,6 @@ import {
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
-import { Button } from 'react-native-paper';
 
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
@@ -38,7 +38,7 @@ const AlbumsScreen = () => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
-        <Button mode="contained" onPress={() => setIsChatShown(!isChatShown)}>
+        <Button variant="filled" onPress={() => setIsChatShown(!isChatShown)}>
           {isChatShown ? 'Hide' : 'Show'} Chat
         </Button>
       </View>
@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 16,
+    gap: 12,
+    padding: 12,
   },
 });

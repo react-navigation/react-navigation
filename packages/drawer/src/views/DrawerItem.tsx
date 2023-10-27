@@ -1,11 +1,10 @@
-import { PlatformPressable } from '@react-navigation/elements';
+import { PlatformPressable, Text } from '@react-navigation/elements';
 import { type Route, useTheme } from '@react-navigation/native';
 import Color from 'color';
 import * as React from 'react';
 import {
   type StyleProp,
   StyleSheet,
-  Text,
   type TextStyle,
   View,
   type ViewStyle,

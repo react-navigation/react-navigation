@@ -1,3 +1,4 @@
+import { Button } from '@react-navigation/elements';
 import { type ParamListBase, useTheme } from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -5,7 +6,7 @@ import {
 } from '@react-navigation/stack';
 import * as React from 'react';
 import { ActivityIndicator, StyleSheet, TextInput, View } from 'react-native';
-import { Button, Title } from 'react-native-paper';
+import { Title } from 'react-native-paper';
 
 type AuthStackParams = {
   Home: undefined;
@@ -63,7 +64,7 @@ const SignInScreen = ({
           { backgroundColor: colors.card, color: colors.text },
         ]}
       />
-      <Button mode="contained" onPress={signIn} style={styles.button}>
+      <Button variant="filled" onPress={signIn} style={styles.button}>
         Sign in
       </Button>
       <Button onPress={() => navigation.navigate('Chat')} style={styles.button}>

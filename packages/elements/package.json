@@ -36,6 +36,9 @@
     "prepack": "bob build",
     "clean": "del lib"
   },
+  "dependencies": {
+    "color": "^4.2.3"
+  },
   "devDependencies": {
     "@react-native-masked-view/masked-view": "0.2.9",
     "@react-navigation/native": "workspace:^",

@@ -92,13 +92,8 @@ export function useLinkProps<ParamList extends ReactNavigation.RootParamList>({
     let shouldHandle = false;
 
     if (Platform.OS !== 'web' || !e) {
-      shouldHandle = e ? !e.defaultPrevented : true;
-    } else if (
-      !e.defaultPrevented && // onPress prevented default
-      !hasModifierKey &&
-      isLeftClick &&
-      isSelfTarget
-    ) {
+      shouldHandle = true;
+    } else if (!hasModifierKey && isLeftClick && isSelfTarget) {
       e.preventDefault();
       shouldHandle = true;
     }

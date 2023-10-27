@@ -1,10 +1,11 @@
+import { Button } from '@react-navigation/elements';
 import { useUnhandledLinking } from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
 } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { Button, Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 
 const info = `
 \u2022 xcrun simctl openurl booted exp://127.0.0.1:19000/--/linking/profile
@@ -32,11 +33,8 @@ const ProfileScreen = ({
       <Text style={{ ...styles.text, ...{ color: 'teal' } }}>
         Profile Screen
       </Text>
-      <Button
-        onPress={() => navigation.popTo('Home')}
-        title="Go back to home"
-      />
-      <Button onPress={signOut} title="Sign out" />
+      <Button onPress={() => navigation.popTo('Home')}>Go back to home</Button>
+      <Button onPress={signOut}>Sign out</Button>
     </View>
   );
 };
@@ -50,11 +48,8 @@ const HomeScreen = ({
       <Text style={{ ...styles.text, ...{ color: 'indianred' } }}>
         Home Screen
       </Text>
-      <Button
-        onPress={() => navigation.popTo('Profile')}
-        title="Go to profile"
-      />
-      <Button onPress={signOut} title="Sign out" />
+      <Button onPress={() => navigation.popTo('Profile')}>Go to profile</Button>
+      <Button onPress={signOut}>Sign out</Button>
     </View>
   );
 };
@@ -73,8 +68,9 @@ const SignInScreen = () => {
           scheduleNext();
           signIn();
         }}
-        title="Sign In"
-      />
+      >
+        Sign in
+      </Button>
     </View>
   );
 };
