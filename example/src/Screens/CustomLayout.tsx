@@ -4,13 +4,13 @@ import {
 } from '@react-navigation/elements';
 import {
   CommonActions,
-  ParamListBase,
+  type ParamListBase,
   useTheme,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
-  StackNavigationOptions,
-  StackScreenProps,
+  type StackNavigationOptions,
+  type StackScreenProps,
 } from '@react-navigation/stack';
 import * as React from 'react';
 import {

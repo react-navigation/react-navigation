@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { Animated, Platform, StyleSheet, View, ViewStyle } from 'react-native';
+import {
+  Animated,
+  Platform,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from 'react-native';
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,

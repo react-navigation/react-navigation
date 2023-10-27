@@ -37,20 +37,20 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "use-latest-callback": "^0.1.5"
+    "use-latest-callback": "^0.1.7"
   },
   "devDependencies": {
-    "del-cli": "^5.0.0",
+    "del-cli": "^5.1.0",
     "react": "18.2.0",
-    "react-native": "0.71.8",
-    "react-native-builder-bob": "^0.21.0",
-    "typescript": "^4.9.4"
+    "react-native": "0.72.6",
+    "react-native-builder-bob": "^0.23.1",
+    "typescript": "^5.2.2"
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*",
-    "react-native-gesture-handler": ">= 1.0.0",
-    "react-native-reanimated": ">= 1.0.0"
+    "react-native": "0.72.6",
+    "react-native-gesture-handler": "~2.12.0",
+    "react-native-reanimated": "~3.3.0"
   },
   "react-native-builder-bob": {
     "source": "src",

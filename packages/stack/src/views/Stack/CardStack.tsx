@@ -13,7 +13,7 @@ import Color from 'color';
 import * as React from 'react';
 import {
   Animated,
-  LayoutChangeEvent,
+  type LayoutChangeEvent,
   Platform,
   StyleSheet,
 } from 'react-native';

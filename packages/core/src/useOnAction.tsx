@@ -9,8 +9,8 @@ import * as React from 'react';
 
 import { DeprecatedNavigationInChildContext } from './DeprecatedNavigationInChildContext';
 import {
-  ChildActionListener,
-  ChildBeforeRemoveListener,
+  type ChildActionListener,
+  type ChildBeforeRemoveListener,
   NavigationBuilderContext,
 } from './NavigationBuilderContext';
 import type { EventMapCore } from './types';

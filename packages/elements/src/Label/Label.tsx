@@ -1,11 +1,11 @@
 import { useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
-  StyleProp,
+  type StyleProp,
   StyleSheet,
   Text,
-  TextProps,
-  TextStyle,
+  type TextProps,
+  type TextStyle,
 } from 'react-native';
 
 type Props = Omit<TextProps, 'style'> & {

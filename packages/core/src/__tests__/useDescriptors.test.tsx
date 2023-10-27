@@ -10,7 +10,7 @@ import { BaseNavigationContainer } from '../BaseNavigationContainer';
 import { Screen } from '../Screen';
 import { useNavigationBuilder } from '../useNavigationBuilder';
 import {
-  MockActions,
+  type MockActions,
   MockRouter,
   MockRouterKey,
 } from './__fixtures__/MockRouter';

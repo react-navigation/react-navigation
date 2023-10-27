@@ -1,23 +1,27 @@
 import * as React from 'react';
 import {
   Animated,
+  type DimensionValue,
   FlatList,
   I18nManager,
-  LayoutChangeEvent,
-  ListRenderItemInfo,
+  type LayoutChangeEvent,
+  type ListRenderItemInfo,
   Platform,
-  PressableAndroidRippleConfig,
-  StyleProp,
+  type PressableAndroidRippleConfig,
+  type StyleProp,
   StyleSheet,
-  TextStyle,
+  type TextStyle,
   View,
-  ViewStyle,
-  ViewToken,
+  type ViewStyle,
+  type ViewToken,
 } from 'react-native';
 import useLatestCallback from 'use-latest-callback';
 
-import { Props as IndicatorProps, TabBarIndicator } from './TabBarIndicator';
-import { Props as TabBarItemProps, TabBarItem } from './TabBarItem';
+import {
+  type Props as IndicatorProps,
+  TabBarIndicator,
+} from './TabBarIndicator';
+import { type Props as TabBarItemProps, TabBarItem } from './TabBarItem';
 import type {
   Event,
   Layout,
@@ -72,9 +76,6 @@ export type Props<T extends Route> = SceneRendererProps & {
   android_ripple?: PressableAndroidRippleConfig;
 };
 
-type FlattenedTabWidth = string | number | undefined;
-type FlattenedTabPadding = string | number | undefined;
-
 const Separator = ({ width }: { width: number }) => {
   return <View style={{ width }} />;
 };
@@ -102,7 +103,7 @@ const getFlattenedPaddingRight = (style: StyleProp<ViewStyle>) => {
 };
 
 const convertPaddingPercentToSize = (
-  value: FlattenedTabPadding,
+  value: DimensionValue | undefined,
   layout: Layout
 ): number => {
   switch (typeof value) {
@@ -125,9 +126,9 @@ const getComputedTabWidth = (
   routes: Route[],
   scrollEnabled: boolean | undefined,
   tabWidths: { [key: string]: number },
-  flattenedWidth: FlattenedTabWidth,
-  flattenedPaddingLeft: FlattenedTabPadding,
-  flattenedPaddingRight: FlattenedTabPadding,
+  flattenedWidth: DimensionValue | undefined,
+  flattenedPaddingLeft: DimensionValue | undefined,
+  flattenedPaddingRight: DimensionValue | undefined,
   gap?: number
 ) => {
   if (flattenedWidth === 'auto') {
@@ -184,9 +185,9 @@ const getTabBarWidth = <T extends Route>({
   tabWidths,
 }: Pick<Props<T>, 'navigationState' | 'gap' | 'layout' | 'scrollEnabled'> & {
   tabWidths: Record<string, number>;
-  flattenedPaddingLeft: FlattenedTabPadding;
-  flattenedPaddingRight: FlattenedTabPadding;
-  flattenedTabWidth: FlattenedTabWidth;
+  flattenedPaddingLeft: DimensionValue | undefined;
+  flattenedPaddingRight: DimensionValue | undefined;
+  flattenedTabWidth: DimensionValue | undefined;
 }) => {
   const { routes } = navigationState;
 
@@ -229,9 +230,9 @@ const normalizeScrollValue = <T extends Route>({
 }: Pick<Props<T>, 'layout' | 'navigationState' | 'gap' | 'scrollEnabled'> & {
   tabWidths: Record<string, number>;
   value: number;
-  flattenedTabWidth: FlattenedTabWidth;
-  flattenedPaddingLeft: FlattenedTabPadding;
-  flattenedPaddingRight: FlattenedTabPadding;
+  flattenedTabWidth: DimensionValue | undefined;
+  flattenedPaddingLeft: DimensionValue | undefined;
+  flattenedPaddingRight: DimensionValue | undefined;
   direction: LocaleDirection;
 }) => {
   const tabBarWidth = getTabBarWidth({
@@ -268,9 +269,9 @@ const getScrollAmount = <T extends Route>({
   direction,
 }: Pick<Props<T>, 'layout' | 'navigationState' | 'scrollEnabled' | 'gap'> & {
   tabWidths: Record<string, number>;
-  flattenedTabWidth: FlattenedTabWidth;
-  flattenedPaddingLeft: FlattenedTabPadding;
-  flattenedPaddingRight: FlattenedTabPadding;
+  flattenedTabWidth: DimensionValue | undefined;
+  flattenedPaddingLeft: DimensionValue | undefined;
+  flattenedPaddingRight: DimensionValue | undefined;
   direction: LocaleDirection;
 }) => {
   const paddingInitial =

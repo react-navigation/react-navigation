@@ -1,11 +1,11 @@
 import {
   createDrawerNavigator,
   DrawerContent,
-  DrawerContentComponentProps,
-  DrawerScreenProps,
+  type DrawerContentComponentProps,
+  type DrawerScreenProps,
 } from '@react-navigation/drawer';
 import {
-  ParamListBase,
+  type ParamListBase,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';

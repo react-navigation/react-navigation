@@ -7,9 +7,9 @@ import {
 } from '@react-navigation/elements';
 import {
   DrawerActions,
-  DrawerNavigationState,
-  DrawerStatus,
-  ParamListBase,
+  type DrawerNavigationState,
+  type DrawerStatus,
+  type ParamListBase,
   useLocale,
   useTheme,
 } from '@react-navigation/native';

@@ -4,7 +4,7 @@ import * as React from 'react';
 import {
   Image,
   ScrollView,
-  ScrollViewProps,
+  type ScrollViewProps,
   StyleSheet,
   Text,
   TextInput,

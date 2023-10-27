@@ -1,12 +1,12 @@
 import { UNSTABLE_usePreventRemove } from '@react-navigation/core';
 import {
   CommonActions,
-  ParamListBase,
+  type ParamListBase,
   useTheme,
 } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
-  NativeStackScreenProps,
+  type NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import * as React from 'react';
 import {

@@ -7,8 +7,8 @@ import {
   Screen,
 } from '@react-navigation/elements';
 import {
-  ParamListBase,
-  StackNavigationState,
+  type ParamListBase,
+  type StackNavigationState,
   useLinkTools,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -122,6 +122,7 @@ export function NativeStackView({ state, descriptors }: Props) {
                                   ? () => (
                                       <Image
                                         source={headerBackImageSource}
+                                        resizeMode="contain"
                                         style={[
                                           styles.backImage,
                                           { tintColor },
@@ -198,6 +199,5 @@ const styles = StyleSheet.create({
     height: 24,
     width: 24,
     margin: 3,
-    resizeMode: 'contain',
   },
 });

@@ -3,12 +3,12 @@ import * as React from 'react';
 import {
   Animated,
   Easing,
-  GestureResponderEvent,
+  type GestureResponderEvent,
   Platform,
   Pressable,
-  PressableProps,
-  StyleProp,
-  ViewStyle,
+  type PressableProps,
+  type StyleProp,
+  type ViewStyle,
 } from 'react-native';
 
 export type Props = Omit<PressableProps, 'style'> & {

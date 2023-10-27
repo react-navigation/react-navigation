@@ -1,8 +1,8 @@
 import {
   getStateFromPath,
-  NavigationProp,
-  NavigationState,
-  PartialState,
+  type NavigationProp,
+  type NavigationState,
+  type PartialState,
   useNavigation,
 } from '@react-navigation/core';
 import React from 'react';

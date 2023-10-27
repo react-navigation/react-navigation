@@ -5,7 +5,7 @@ import {
   HeaderShownContext,
 } from '@react-navigation/elements';
 import {
-  Route,
+  type Route,
   useLinkTools,
   useLocale,
   useTheme,

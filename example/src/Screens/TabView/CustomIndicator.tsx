@@ -1,20 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
-import {
-  Animated,
-  StyleProp,
-  StyleSheet,
-  Text,
-  View,
-  ViewStyle,
-} from 'react-native';
+import { Animated, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-  NavigationState,
+  type NavigationState,
   SceneMap,
-  SceneRendererProps,
+  type SceneRendererProps,
   TabBar,
+  type TabBarIndicatorProps,
   TabView,
 } from 'react-native-tab-view';
 
@@ -54,15 +48,7 @@ export const CustomIndicator = () => {
     },
   ]);
 
-  const renderIndicator = (
-    props: SceneRendererProps & {
-      navigationState: State;
-      getTabWidth: (i: number) => number;
-      gap?: number;
-      width?: number | string;
-      style?: StyleProp<ViewStyle>;
-    }
-  ) => {
+  const renderIndicator = (props: TabBarIndicatorProps<Route>) => {
     const { position, getTabWidth, gap, width, style } = props;
     const inputRange = [
       0, 0.48, 0.49, 0.51, 0.52, 1, 1.48, 1.49, 1.51, 1.52, 2,
@@ -96,10 +82,7 @@ export const CustomIndicator = () => {
         style={[
           style,
           styles.container,
-          {
-            width: width,
-            transform: [{ translateX }] as any,
-          },
+          { width, transform: [{ translateX }] },
         ]}
       >
         <Animated.View

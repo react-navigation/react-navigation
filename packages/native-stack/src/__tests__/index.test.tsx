@@ -1,5 +1,8 @@
 import { useHeaderHeight } from '@react-navigation/elements';
-import { NavigationContainer, ParamListBase } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  type ParamListBase,
+} from '@react-navigation/native';
 import {
   fireEvent,
   isHiddenFromAccessibility,
@@ -8,7 +11,10 @@ import {
 import * as React from 'react';
 import { Button, Platform, Text, View } from 'react-native';
 
-import { createNativeStackNavigator, NativeStackScreenProps } from '../index';
+import {
+  createNativeStackNavigator,
+  type NativeStackScreenProps,
+} from '../index';
 
 jest.mock('react-native/Libraries/Utilities/Platform', () => ({
   ...jest.requireActual('react-native/Libraries/Utilities/Platform'),
@@ -61,7 +67,7 @@ it('renders a native-stack navigator with screens', async () => {
 
   fireEvent.press(getByText(/go to b/i));
 
-  expect(isVisible(getByText('Screen A'))).toBe(false);
+  expect(isVisible(queryByText('Screen A'))).toBe(false);
   expect(isVisible(getByText('Screen B'))).toBe(true);
 });
 

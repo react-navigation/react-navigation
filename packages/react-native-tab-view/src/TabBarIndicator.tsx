@@ -3,9 +3,9 @@ import {
   Animated,
   Easing,
   Platform,
-  StyleProp,
+  type StyleProp,
   StyleSheet,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native';
 
 import type {
@@ -20,7 +20,7 @@ export type GetTabWidth = (index: number) => number;
 
 export type Props<T extends Route> = SceneRendererProps & {
   navigationState: NavigationState<T>;
-  width: string | number;
+  width: 'auto' | `${number}%` | number;
   getTabWidth: GetTabWidth;
   direction: LocaleDirection;
   style?: StyleProp<ViewStyle>;

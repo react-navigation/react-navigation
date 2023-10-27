@@ -1,9 +1,12 @@
-import { NavigationContainer, ParamListBase } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  type ParamListBase,
+} from '@react-navigation/native';
 import { fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
 import { Button, Text, View } from 'react-native';
 
-import { createDrawerNavigator, DrawerScreenProps } from '../index';
+import { createDrawerNavigator, type DrawerScreenProps } from '../index';
 
 it('renders a drawer navigator with screens', async () => {
   const Test = ({ route, navigation }: DrawerScreenProps<ParamListBase>) => (

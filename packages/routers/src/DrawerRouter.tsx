@@ -1,12 +1,12 @@
 import { nanoid } from 'nanoid/non-secure';
 
 import {
-  TabActionHelpers,
+  type TabActionHelpers,
   TabActions,
-  TabActionType,
-  TabNavigationState,
+  type TabActionType,
+  type TabNavigationState,
   TabRouter,
-  TabRouterOptions,
+  type TabRouterOptions,
 } from './TabRouter';
 import type {
   CommonNavigationAction,

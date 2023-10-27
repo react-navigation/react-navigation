@@ -2,17 +2,17 @@ import {
   getDefaultHeaderHeight,
   Header,
   HeaderBackButton,
-  HeaderBackButtonProps,
+  type HeaderBackButtonProps,
   HeaderTitle,
 } from '@react-navigation/elements';
 import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
-  LayoutChangeEvent,
+  type LayoutChangeEvent,
   Platform,
   StyleSheet,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native';
 
 import type {

@@ -2,7 +2,7 @@ import type { ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
   HeaderStyleInterpolators,
-  StackScreenProps,
+  type StackScreenProps,
   TransitionPresets,
 } from '@react-navigation/stack';
 import * as React from 'react';

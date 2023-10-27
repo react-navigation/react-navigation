@@ -59,12 +59,14 @@ it('renders link with href on web', () => {
     </Text>
   `);
 
-  fireEvent.press(getByText('Go to Bar'), {
+  const event = {
     defaultPrevented: false,
     preventDefault() {
-      this.defaultPrevented = true;
+      event.defaultPrevented = true;
     },
-  });
+  };
+
+  fireEvent.press(getByText('Go to Bar'), event);
 
   expect(toJSON()).toMatchInlineSnapshot(`
     <Text
@@ -128,12 +130,14 @@ it("doesn't navigate if default was prevented", () => {
     </Text>
   `);
 
-  fireEvent.press(getByText('Go to Bar'), {
+  const event = {
     defaultPrevented: false,
     preventDefault() {
-      this.defaultPrevented = true;
+      event.defaultPrevented = true;
     },
-  });
+  };
+
+  fireEvent.press(getByText('Go to Bar'), event);
 
   expect(toJSON()).toMatchInlineSnapshot(`
     <Text

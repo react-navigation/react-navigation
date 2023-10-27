@@ -1,7 +1,7 @@
 import {
-  ParamListBase,
-  Route,
-  TabNavigationState,
+  type ParamListBase,
+  type Route,
+  type TabNavigationState,
   useLocale,
   useTheme,
 } from '@react-navigation/native';

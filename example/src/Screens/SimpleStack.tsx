@@ -2,8 +2,8 @@ import type { ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
   HeaderStyleInterpolators,
-  StackNavigationOptions,
-  StackScreenProps,
+  type StackNavigationOptions,
+  type StackScreenProps,
 } from '@react-navigation/stack';
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';

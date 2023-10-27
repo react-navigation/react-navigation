@@ -1,10 +1,10 @@
 import {
   CommonActions,
   DrawerActions,
-  DrawerNavigationState,
+  type DrawerNavigationState,
   DrawerRouter,
-  ParamListBase,
-  RouterConfigOptions,
+  type ParamListBase,
+  type RouterConfigOptions,
 } from '..';
 
 jest.mock('nanoid/non-secure', () => ({ nanoid: () => 'test' }));

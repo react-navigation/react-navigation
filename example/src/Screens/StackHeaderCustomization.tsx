@@ -1,11 +1,11 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { HeaderBackground, useHeaderHeight } from '@react-navigation/elements';
-import { ParamListBase, useTheme } from '@react-navigation/native';
+import { type ParamListBase, useTheme } from '@react-navigation/native';
 import {
   createStackNavigator,
   Header,
-  StackHeaderProps,
-  StackScreenProps,
+  type StackHeaderProps,
+  type StackScreenProps,
 } from '@react-navigation/stack';
 import * as React from 'react';
 import {

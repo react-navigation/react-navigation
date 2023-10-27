@@ -1,9 +1,9 @@
 import {
   CommonActions,
-  ParamListBase,
-  RouterConfigOptions,
+  type ParamListBase,
+  type RouterConfigOptions,
   TabActions,
-  TabNavigationState,
+  type TabNavigationState,
   TabRouter,
 } from '../../src';
 

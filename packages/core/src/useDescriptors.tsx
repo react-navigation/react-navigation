@@ -7,8 +7,8 @@ import type {
 import * as React from 'react';
 
 import {
-  AddKeyedListener,
-  AddListener,
+  type AddKeyedListener,
+  type AddListener,
   NavigationBuilderContext,
 } from './NavigationBuilderContext';
 import { NavigationContext } from './NavigationContext';

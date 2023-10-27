@@ -26,7 +26,6 @@ import { BottomTabBarHeightContext } from '../utils/BottomTabBarHeightContext';
 import { useAnimatedHashMap } from '../utils/useAnimatedHashMap';
 import { BottomTabBar, getTabBarHeight } from './BottomTabBar';
 import { MaybeScreen, MaybeScreenContainer } from './ScreenFallback';
-import CompositeAnimation = Animated.CompositeAnimation;
 
 type Props = BottomTabNavigationConfig & {
   state: TabNavigationState<ParamListBase>;
@@ -102,7 +101,7 @@ export function BottomTabView(props: Props) {
               useNativeDriver: true,
             });
           })
-          .filter(Boolean) as CompositeAnimation[]
+          .filter(Boolean) as Animated.CompositeAnimation[]
       ).start();
     };
 

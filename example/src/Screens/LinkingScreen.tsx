@@ -1,7 +1,7 @@
 import { useUnhandledLinking } from '@react-navigation/native';
 import {
   createStackNavigator,
-  StackScreenProps,
+  type StackScreenProps,
 } from '@react-navigation/stack';
 import React, { useContext } from 'react';
 import { Button, Platform, StyleSheet, Text, View } from 'react-native';

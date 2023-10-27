@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { Animated, StyleProp, View, ViewProps, ViewStyle } from 'react-native';
+import {
+  Animated,
+  type StyleProp,
+  View,
+  type ViewProps,
+  type ViewStyle,
+} from 'react-native';
 
 type Props = {
   enabled: boolean;
