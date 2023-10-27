@@ -197,7 +197,11 @@ export type StackHeaderProps = {
     /**
      * Title of the previous screen.
      */
-    title: string;
+    title: string | undefined;
+    /**
+     * The `href` to use for the anchor tag on web
+     */
+    href: string | undefined;
   };
   /**
    * Animated nodes representing the progress of the animation.

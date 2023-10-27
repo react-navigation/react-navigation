@@ -238,14 +238,19 @@ const SceneView = ({
 
   const headerTopInsetEnabled = topInset !== 0;
   const headerHeight = header ? customHeaderHeight : defaultHeaderHeight;
-  const headerBack = previousDescriptor
-    ? {
-        title: getHeaderTitle(
-          previousDescriptor.options,
-          previousDescriptor.route.name
-        ),
-      }
-    : parentHeaderBack;
+
+  const backTitle = previousDescriptor
+    ? getHeaderTitle(previousDescriptor.options, previousDescriptor.route.name)
+    : parentHeaderBack?.title;
+
+  const headerBack = React.useMemo(
+    () => ({
+      // No href needed for native
+      href: undefined,
+      title: backTitle,
+    }),
+    [backTitle]
+  );
 
   const isRemovePrevented = preventedRoutes[route.key]?.preventRemove;
 

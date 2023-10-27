@@ -72,7 +72,11 @@ export type NativeStackHeaderProps = {
     /**
      * Title of the previous screen.
      */
-    title: string;
+    title: string | undefined;
+    /**
+     * The `href` to use for the anchor tag on web
+     */
+    href: string | undefined;
   };
   /**
    * Options for the current screen.
