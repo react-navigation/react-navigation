@@ -180,6 +180,10 @@ export type HeaderBackButtonProps = HeaderButtonProps & {
    */
   backImage?: (props: { tintColor: string }) => React.ReactNode;
   /**
+   * The `href` to use for the anchor tag on web
+   */
+  href?: string;
+  /**
    * Label text for the button. Usually the title of the previous screen.
    * By default, this is only shown on iOS.
    */

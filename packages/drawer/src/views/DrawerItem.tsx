@@ -1,9 +1,8 @@
 import { PlatformPressable } from '@react-navigation/elements';
-import { CommonActions, Link, Route, useTheme } from '@react-navigation/native';
+import { Route, useTheme } from '@react-navigation/native';
 import Color from 'color';
 import * as React from 'react';
 import {
-  Platform,
   StyleProp,
   StyleSheet,
   Text,
@@ -96,65 +95,6 @@ type Props = {
   testID?: string;
 };
 
-const LinkPressable = ({
-  route,
-  href,
-  children,
-  style,
-  onPress,
-  onLongPress,
-  onPressIn,
-  onPressOut,
-  accessibilityRole,
-  ...rest
-}: Omit<React.ComponentProps<typeof PlatformPressable>, 'style'> & {
-  style: StyleProp<ViewStyle>;
-} & {
-  route: Route<string>;
-  href?: string;
-  children: React.ReactNode;
-  onPress?: () => void;
-}) => {
-  if (Platform.OS === 'web') {
-    // React Native Web doesn't forward `onClick` if we use `TouchableWithoutFeedback`.
-    // We need to use `onClick` to be able to prevent default browser handling of links.
-    return (
-      <Link
-        {...rest}
-        href={href}
-        action={CommonActions.navigate(route.name, route.params)}
-        style={[styles.button, style]}
-        onPress={(e: any) => {
-          if (
-            !(e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) && // ignore clicks with modifier keys
-            (e.button == null || e.button === 0) // ignore everything but left clicks
-          ) {
-            e.preventDefault();
-            onPress?.(e);
-          }
-        }}
-        // types for PressableProps and TextProps are incompatible with each other by `null` so we
-        // can't use {...rest} for these 3 props
-        onLongPress={onLongPress ?? undefined}
-        onPressIn={onPressIn ?? undefined}
-        onPressOut={onPressOut ?? undefined}
-      >
-        {children}
-      </Link>
-    );
-  } else {
-    return (
-      <PlatformPressable
-        {...rest}
-        accessibilityRole={accessibilityRole}
-        onPress={onPress}
-      >
-        <View style={style}>{children}</View>
-      </PlatformPressable>
-    );
-  }
-};
-
 /**
  * A component used to show an action item with an icon and a label in a navigation drawer.
  */
@@ -162,7 +102,6 @@ export function DrawerItem(props: Props) {
   const { colors, fonts } = useTheme();
 
   const {
-    route,
     href,
     icon,
     label,
@@ -196,19 +135,17 @@ export function DrawerItem(props: Props) {
       {...rest}
       style={[styles.container, { borderRadius, backgroundColor }, style]}
     >
-      <LinkPressable
+      <PlatformPressable
         testID={testID}
         onPress={onPress}
-        style={[styles.wrapper, { borderRadius }]}
         accessibilityLabel={accessibilityLabel}
         accessibilityRole="button"
         accessibilityState={{ selected: focused }}
         pressColor={pressColor}
         pressOpacity={pressOpacity}
-        route={route}
         href={href}
       >
-        <React.Fragment>
+        <View style={[styles.wrapper, { borderRadius }]}>
           {iconNode}
           <View
             style={[
@@ -228,8 +165,8 @@ export function DrawerItem(props: Props) {
               label({ color, focused })
             )}
           </View>
-        </React.Fragment>
-      </LinkPressable>
+        </View>
+      </PlatformPressable>
     </View>
   );
 }
@@ -248,8 +185,5 @@ const styles = StyleSheet.create({
   label: {
     marginRight: 32,
     flex: 1,
-  },
-  button: {
-    display: 'flex',
   },
 });

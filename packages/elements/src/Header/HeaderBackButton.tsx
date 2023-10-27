@@ -31,6 +31,7 @@ export function HeaderBackButton({
   accessibilityLabel = label && label !== 'Back' ? `${label}, back` : 'Go back',
   testID,
   style,
+  href,
 }: HeaderBackButtonProps) {
   const { colors, fonts } = useTheme();
   const { direction } = useLocale();
@@ -147,16 +148,19 @@ export function HeaderBackButton({
     );
   };
 
-  const handlePress = () => onPress && requestAnimationFrame(onPress);
+  const handlePress = () => {
+    if (onPress) {
+      requestAnimationFrame(() => onPress());
+    }
+  };
 
   return (
     <PlatformPressable
       disabled={disabled}
-      accessible
-      accessibilityRole="button"
+      href={href}
       accessibilityLabel={accessibilityLabel}
       testID={testID}
-      onPress={disabled ? undefined : handlePress}
+      onPress={handlePress}
       pressColor={pressColor}
       pressOpacity={pressOpacity}
       android_ripple={androidRipple}

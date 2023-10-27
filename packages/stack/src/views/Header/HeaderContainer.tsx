@@ -4,6 +4,7 @@ import {
   NavigationRouteContext,
   ParamListBase,
   Route,
+  useLinkTools,
 } from '@react-navigation/native';
 import * as React from 'react';
 import { Animated, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
@@ -47,6 +48,7 @@ export function HeaderContainer({
 }: Props) {
   const focusedRoute = getFocusedRoute();
   const parentHeaderBack = React.useContext(HeaderBackContext);
+  const { buildHref } = useLinkTools();
 
   return (
     <Animated.View pointerEvents="box-none" style={style}>
@@ -78,7 +80,10 @@ export function HeaderContainer({
           const { options, route } = previousScene.descriptor;
 
           headerBack = previousScene
-            ? { title: getHeaderTitle(options, route.name) }
+            ? {
+                title: getHeaderTitle(options, route.name),
+                href: buildHref(route.name, route.params),
+              }
             : parentHeaderBack;
         }
 

@@ -4,7 +4,12 @@ import {
   HeaderHeightContext,
   HeaderShownContext,
 } from '@react-navigation/elements';
-import { Route, useLocale, useTheme } from '@react-navigation/native';
+import {
+  Route,
+  useLinkTools,
+  useLocale,
+  useTheme,
+} from '@react-navigation/native';
 import * as React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 
@@ -202,19 +207,22 @@ function CardContainerInner({
     transitionSpec,
   } = scene.descriptor.options;
 
+  const { buildHref } = useLinkTools();
   const previousScene = getPreviousScene({ route: scene.descriptor.route });
 
   let backTitle: string | undefined;
+  let href: string | undefined;
 
   if (previousScene) {
     const { options, route } = previousScene.descriptor;
 
     backTitle = getHeaderTitle(options, route.name);
+    href = buildHref(route.name, route.params);
   }
 
   const headerBack = React.useMemo(
-    () => (backTitle !== undefined ? { title: backTitle } : undefined),
-    [backTitle]
+    () => ({ title: backTitle, href }),
+    [backTitle, href]
   );
 
   return (
