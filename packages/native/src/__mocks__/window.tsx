@@ -1,4 +1,4 @@
-const location = new URL('', 'http://example.com');
+let location = new URL('', 'http://example.com');
 
 let listeners: (() => void)[] = [];
 let entries = [{ state: null, href: location.href }];
@@ -12,7 +12,7 @@ const history = {
   },
 
   pushState(state: any, _: string, path: string) {
-    Object.assign(location, new URL(path, location.origin));
+    location = new URL(path, location.origin);
 
     currentState = state;
     entries = entries.slice(0, index + 1);
@@ -21,7 +21,7 @@ const history = {
   },
 
   replaceState(state: any, _: string, path: string) {
-    Object.assign(location, new URL(path, location.origin));
+    location = new URL(path, location.origin);
 
     currentState = state;
     entries[index] = { state, href: location.href };
@@ -35,7 +35,7 @@ const history = {
       ) {
         index += n;
         const entry = entries[index];
-        Object.assign(location, new URL(entry.href));
+        location = new URL(entry.href);
         currentState = entry.state;
         listeners.forEach((cb) => cb());
       }
@@ -65,7 +65,9 @@ const removeEventListener = (type: 'popstate', listener: () => void) => {
 
 const window = {
   document: { title: '' },
-  location,
+  get location() {
+    return location;
+  },
   history,
   addEventListener,
   removeEventListener,
