@@ -2,6 +2,7 @@ import {
   getStateFromPath,
   NavigationProp,
   NavigationState,
+  ParamListBase,
   PartialState,
   useNavigation,
 } from '@react-navigation/core';
@@ -9,6 +10,7 @@ import React from 'react';
 import useLatestCallback from 'use-latest-callback';
 
 import { LinkingContext } from './LinkingContext';
+import type { LinkingOptions } from './types';
 
 function extractNavigatorSpecificState(
   navigation: NavigationProp<ReactNavigation.RootParamList>,
@@ -81,9 +83,49 @@ export function useUnhandledLinking() {
     lastUnhandledLinking.current = undefined;
   };
 
+  const getStateForRouteNamesChange = (
+    options: LinkingOptions<ParamListBase> | undefined,
+    lastUnhandledLinking: React.MutableRefObject<string | null | undefined>,
+    navigation: NavigationProp<ReactNavigation.RootParamList>
+  ): PartialState<NavigationState> | undefined => {
+    if (lastUnhandledLinking?.current == null) {
+      // noop, nothing to handle
+      return;
+    }
+
+    // at web, the path is already extracted
+    const path = lastUnhandledLinking.current;
+    if (!lastUnhandledLinking.current) {
+      return;
+    }
+
+    // First, we parse the URL to get the desired state
+    const getStateFromPathHelper =
+      options?.getStateFromPath ?? getStateFromPath;
+
+    const rootState = getStateFromPathHelper(path, options?.config);
+
+    if (!rootState) {
+      return;
+    }
+    const state = extractNavigatorSpecificState(navigation, rootState);
+
+    if (!state) {
+      return;
+    }
+
+    // Finally, we clear unhandled link after it was handled
+    lastUnhandledLinking.current = undefined;
+    return state;
+  };
+
   const getUnhandledLink = useLatestCallback(
     () => lastUnhandledLinking.current
   );
 
-  return { handleOnNextRouteNamesChange, getUnhandledLink };
+  return {
+    handleOnNextRouteNamesChange,
+    getUnhandledLink,
+    getStateForRouteNamesChange,
+  };
 }

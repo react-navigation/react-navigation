@@ -1,3 +1,6 @@
+// TODO
+import type { LinkingOptions, NavigationProp } from '@react-navigation/native';
+
 import type * as CommonActions from './CommonActions';
 
 export type CommonNavigationAction = CommonActions.Action;
@@ -125,6 +128,14 @@ export type DefaultRouterOptions<RouteName extends string = string> = {
    * If not specified, usually the first route is used.
    */
   initialRouteName?: RouteName;
+  /**
+   * TODO something
+   */
+  getStateForRouteNamesChange?: (
+    options: LinkingOptions<ParamListBase> | undefined,
+    lastUnhandledLinking: React.MutableRefObject<string | null | undefined>,
+    navigation: NavigationProp<ReactNavigation.RootParamList>
+  ) => PartialState<NavigationState> | undefined;
 };
 
 export type RouterFactory<

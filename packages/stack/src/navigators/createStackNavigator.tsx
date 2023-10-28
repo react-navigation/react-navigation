@@ -32,6 +32,7 @@ type Props = DefaultNavigatorOptions<
 function StackNavigator({
   id,
   initialRouteName,
+  getStateForRouteNamesChange,
   children,
   layout,
   screenListeners,
@@ -53,6 +54,7 @@ function StackNavigator({
       layout,
       screenListeners,
       screenOptions,
+      getStateForRouteNamesChange,
     });
 
   React.useEffect(

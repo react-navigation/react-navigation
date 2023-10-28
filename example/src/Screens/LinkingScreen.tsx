@@ -60,7 +60,7 @@ const HomeScreen = ({
 };
 
 const SignInScreen = () => {
-  const { handleOnNextRouteNamesChange: scheduleNext } = useUnhandledLinking();
+  // const { handleOnNextRouteNamesChange: scheduleNext } = useUnhandledLinking();
   const { signIn } = useContext(SigningContext)!;
 
   return (
@@ -70,7 +70,7 @@ const SignInScreen = () => {
       <Text style={styles.code}>{info}</Text>
       <Button
         onPress={() => {
-          scheduleNext();
+          // scheduleNext();
           signIn();
         }}
         title="Sign In"
@@ -83,6 +83,7 @@ const Stack = createStackNavigator<StackParamList>();
 
 export function LinkingScreen() {
   const [isSignedIn, setSignedIn] = React.useState(false);
+  const { getStateForRouteNamesChange } = useUnhandledLinking();
   return (
     <SigningContext.Provider
       value={{
@@ -90,7 +91,10 @@ export function LinkingScreen() {
         signIn: () => setSignedIn(true),
       }}
     >
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+        screenOptions={{ headerShown: false }}
+        getStateForRouteNamesChange={getStateForRouteNamesChange}
+      >
         {isSignedIn ? (
           <Stack.Group>
             <Stack.Screen name="Home" component={HomeScreen} />
