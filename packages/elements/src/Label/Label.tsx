@@ -1,12 +1,12 @@
-import { useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   type StyleProp,
   StyleSheet,
-  Text,
   type TextProps,
   type TextStyle,
 } from 'react-native';
+
+import { Text } from '../Text';
 
 type Props = Omit<TextProps, 'style'> & {
   tintColor?: string;
@@ -15,18 +15,11 @@ type Props = Omit<TextProps, 'style'> & {
 };
 
 export function Label({ tintColor, style, ...rest }: Props) {
-  const { colors, fonts } = useTheme();
-
   return (
     <Text
       numberOfLines={1}
       {...rest}
-      style={[
-        fonts.regular,
-        styles.label,
-        { color: tintColor === undefined ? colors.text : tintColor },
-        style,
-      ]}
+      style={[styles.label, tintColor != null && { color: tintColor }, style]}
     />
   );
 }

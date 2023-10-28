@@ -55,13 +55,14 @@
       "<rootDir>/jest/setup.js"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!(@react-native|react-native|react-native-reanimated|nanoid)/)"
+      "node_modules/(?!(@react-native|react-native|react-native-reanimated)/)"
     ],
     "moduleNameMapper": {
       "@react-navigation/([^/]+)": "<rootDir>/packages/$1/src",
       "react-native-tab-view": "<rootDir>/packages/react-native-tab-view/src",
       "react-native-drawer-layout": "<rootDir>/packages/react-native-drawer-layout/src"
     },
+    "prettierPath": null,
     "preset": "react-native"
   },
   "prettier": {

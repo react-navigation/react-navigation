@@ -6,6 +6,7 @@ import {
   type TextProps,
 } from 'react-native';
 
+import { useTheme } from './theming/useTheme';
 import { type Props as LinkProps, useLinkProps } from './useLinkProps';
 
 type Props<ParamList extends ReactNavigation.RootParamList> =
@@ -36,8 +37,10 @@ export function Link<ParamList extends ReactNavigation.RootParamList>({
   params,
   action,
   href,
+  style,
   ...rest
 }: Props<ParamList>) {
+  const { colors, fonts } = useTheme();
   // @ts-expect-error: This is already type-checked by the prop types
   const props = useLinkProps<ParamList>({ screen, params, action, href });
 
@@ -61,5 +64,6 @@ export function Link<ParamList extends ReactNavigation.RootParamList>({
       web: { onClick: onPress } as any,
       default: { onPress },
     }),
+    style: [{ color: colors.primary }, fonts.regular, style],
   });
 }

@@ -41,6 +41,7 @@
     "clean": "del lib"
   },
   "dependencies": {
+    "@react-navigation/elements": "^2.0.0-alpha.2",
     "color": "^4.2.3",
     "react-native-tab-view": "^4.0.0-alpha.0"
   },

@@ -1,3 +1,4 @@
+import { Text } from '@react-navigation/elements';
 import {
   type ParamListBase,
   type Route,
@@ -7,7 +8,7 @@ import {
 } from '@react-navigation/native';
 import Color from 'color';
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { TabBar, TabBarIndicator } from 'react-native-tab-view';
 
 import type { MaterialTopTabBarProps } from '../types';
@@ -18,7 +19,7 @@ export function MaterialTopTabBar({
   descriptors,
   ...rest
 }: MaterialTopTabBarProps) {
-  const { colors, fonts } = useTheme();
+  const { colors } = useTheme();
   const { direction } = useLocale();
 
   const focusedOptions = descriptors[state.routes[state.index].key].options;
@@ -106,12 +107,7 @@ export function MaterialTopTabBar({
         if (typeof label === 'string') {
           return (
             <Text
-              style={[
-                { color },
-                fonts.regular,
-                styles.label,
-                options.tabBarLabelStyle,
-              ]}
+              style={[{ color }, styles.label, options.tabBarLabelStyle]}
               allowFontScaling={options.tabBarAllowFontScaling}
             >
               {label}

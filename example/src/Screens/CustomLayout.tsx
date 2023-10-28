@@ -1,4 +1,5 @@
 import {
+  Button,
   getDefaultHeaderHeight,
   getHeaderTitle,
 } from '@react-navigation/elements';
@@ -21,7 +22,6 @@ import {
   Text,
   View,
 } from 'react-native';
-import { Button } from 'react-native-paper';
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
@@ -47,17 +47,12 @@ const ArticleScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Button
-          mode="contained"
+          variant="filled"
           onPress={() => navigation.navigate('NewsFeed', { date: Date.now() })}
-          style={styles.button}
         >
           Navigate to feed
         </Button>
-        <Button
-          mode="outlined"
-          onPress={() => navigation.goBack()}
-          style={styles.button}
-        >
+        <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back
         </Button>
       </View>
@@ -76,18 +71,10 @@ const NewsFeedScreen = ({
   return (
     <ScrollView>
       <View style={styles.buttons}>
-        <Button
-          mode="contained"
-          onPress={() => navigation.navigate('Albums')}
-          style={styles.button}
-        >
+        <Button variant="filled" onPress={() => navigation.navigate('Albums')}>
           Navigate to album
         </Button>
-        <Button
-          mode="outlined"
-          onPress={() => navigation.goBack()}
-          style={styles.button}
-        >
+        <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back
         </Button>
       </View>
@@ -103,19 +90,14 @@ const AlbumsScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Button
-          mode="contained"
+          variant="filled"
           onPress={() =>
             navigation.navigate('Article', { author: 'Babel fish' })
           }
-          style={styles.button}
         >
           Navigate to article
         </Button>
-        <Button
-          mode="outlined"
-          onPress={() => navigation.goBack()}
-          style={styles.button}
-        >
+        <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back
         </Button>
       </View>
@@ -229,10 +211,8 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 8,
-  },
-  button: {
-    margin: 8,
+    gap: 12,
+    padding: 12,
   },
   breadcrumbs: {
     alignItems: 'center',
