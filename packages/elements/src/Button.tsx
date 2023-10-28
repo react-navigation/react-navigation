@@ -4,8 +4,8 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
 import {
-  type Props as PlatformPressableProps,
   PlatformPressable,
+  type Props as PlatformPressableProps,
 } from './PlatformPressable';
 import { Text } from './Text';
 
