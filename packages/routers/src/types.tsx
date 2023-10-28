@@ -136,6 +136,7 @@ export type DefaultRouterOptions<RouteName extends string = string> = {
     lastUnhandledLinking: React.MutableRefObject<string | null | undefined>,
     navigation: NavigationProp<ReactNavigation.RootParamList>
   ) => PartialState<NavigationState> | undefined;
+  linking?: any;
 };
 
 export type RouterFactory<

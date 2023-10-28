@@ -45,7 +45,6 @@ import { useOnGetState } from './useOnGetState';
 import { useOnRouteFocus } from './useOnRouteFocus';
 import { useRegisterNavigator } from './useRegisterNavigator';
 import { useScheduleUpdate } from './useScheduleUpdate';
-import { LinkingContext } from '@react-navigation/native';
 
 // This is to make TypeScript compiler happy
 // eslint-disable-next-line babel/no-unused-expressions
@@ -564,9 +563,8 @@ export function useNavigationBuilder<
 
   let nextState: State = state;
 
-  const linking = React.useContext(LinkingContext);
 
-  const { options: linkingOptions, lastUnhandledLinking } = linking;
+  const { options: linkingOptions, lastUnhandledLinking } = options?.linking || {};
 
   if (
     !isArrayEqual(state.routeNames, routeNames) ||
