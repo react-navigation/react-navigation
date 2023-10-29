@@ -81,7 +81,7 @@ export function useLinking(
     getPathFromState = getPathFromStateDefault,
     getActionFromState = getActionFromStateDefault,
   }: Options,
-  lastUnhandledLinking: React.MutableRefObject<string | undefined | null>
+  onUnhandledLinking: (lastUnhandledLining: string | undefined) => void
 ) {
   const independent = useNavigationIndependentTree();
 
@@ -168,7 +168,7 @@ export function useLinking(
       }
 
       // If the link were handled, it gets cleared in NavigationContainer
-      lastUnhandledLinking.current = path;
+      onUnhandledLinking(path);
     }
 
     const thenable = {
@@ -222,7 +222,7 @@ export function useLinking(
       // Otherwise the action will likely add items to history, which would mess things up
       if (state) {
         // If the link were handled, it gets cleared in NavigationContainer
-        lastUnhandledLinking.current = path;
+        onUnhandledLinking(path);
         // Make sure that the routes in the state exist in the root navigator
         // Otherwise there's an error in the linking configuration
         if (validateRoutesNotExistInRootState(state)) {
@@ -263,7 +263,7 @@ export function useLinking(
   }, [
     enabled,
     history,
-    lastUnhandledLinking,
+    onUnhandledLinking,
     ref,
     validateRoutesNotExistInRootState,
   ]);

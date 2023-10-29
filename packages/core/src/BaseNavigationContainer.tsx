@@ -10,7 +10,6 @@ import {
 import * as React from 'react';
 import useLatestCallback from 'use-latest-callback';
 
-import { usePrevious } from '../utils/usePrevious';
 import { checkDuplicateRouteNames } from './checkDuplicateRouteNames';
 import { checkSerializable } from './checkSerializable';
 import { NOT_INITIALIZED_ERROR } from './createNavigationContainerRef';
@@ -432,16 +431,6 @@ export const BaseNavigationContainer = React.forwardRef(
       }
     );
 
-    const [stateForNextRouteNamesChange, setStateForNextRouteNamesChange] =
-      React.useState<Record<string, PartialState<NavigationState>> | null>(
-        null
-      );
-
-    const previousState = usePrevious(state);
-
-    if (state !== previousState && stateForNextRouteNamesChange !== null) {
-      setStateForNextRouteNamesChange(null);
-    }
     return (
       <NavigationIndependentTreeContext.Provider value={false}>
         <NavigationContainerRefContext.Provider value={navigation}>
