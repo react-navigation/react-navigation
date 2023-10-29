@@ -3,7 +3,6 @@ import {
   NavigationAction,
   NavigationState,
   ParamListBase,
-  PartialState,
   Router,
 } from '@react-navigation/routers';
 import * as React from 'react';
@@ -23,7 +22,6 @@ type Options<State extends NavigationState, Action extends NavigationAction> = {
   getState: () => State;
   emitter: NavigationEventEmitter<any>;
   router: Router<State, Action>;
-  setStateForNextRouteNamesChange: (state: PartialState<State>) => void;
 };
 
 /**
@@ -41,7 +39,6 @@ export function useNavigationHelpers<
   getState,
   emitter,
   router,
-  setStateForNextRouteNamesChange,
 }: Options<State, Action>) {
   const onUnhandledAction = React.useContext(UnhandledActionContext);
   const parentNavigationHelpers = React.useContext(NavigationContext);
@@ -104,7 +101,6 @@ export function useNavigationHelpers<
         return parentNavigationHelpers;
       },
       getState,
-      setStateForNextRouteNamesChange,
     } as NavigationHelpers<ParamListBase, EventMap> & ActionHelpers;
 
     return navigationHelpers;
@@ -116,6 +112,5 @@ export function useNavigationHelpers<
     onUnhandledAction,
     parentNavigationHelpers,
     router,
-    setStateForNextRouteNamesChange,
   ]);
 }

@@ -132,9 +132,7 @@ export type DefaultRouterOptions<RouteName extends string = string> = {
    * TODO something
    */
   getStateForRouteNamesChange?: (
-    options: LinkingOptions<ParamListBase> | undefined,
-    lastUnhandledLinking: React.MutableRefObject<string | null | undefined>,
-    navigation: NavigationProp<ReactNavigation.RootParamList>
+    state: NavigationState,
   ) => PartialState<NavigationState> | undefined;
   linking?: any;
 };

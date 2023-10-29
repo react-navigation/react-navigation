@@ -12,7 +12,6 @@ import {
 } from '@react-navigation/routers';
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
-import useLatestCallback from 'use-latest-callback';
 
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
@@ -22,7 +21,6 @@ import { NavigationRouteContext } from './NavigationRouteContext';
 import { NavigationStateContext } from './NavigationStateContext';
 import { PreventRemoveProvider } from './PreventRemoveProvider';
 import { Screen } from './Screen';
-import { SetNextStateContext } from './SetNextStateContext';
 import {
   DefaultNavigatorOptions,
   EventMapBase,
@@ -434,17 +432,6 @@ export function useNavigationBuilder<
 
   const previousRouteKeyList = previousRouteKeyListRef.current;
 
-  const { stateForNextRouteNamesChange, setStateForNextRouteNamesChange } =
-    React.useContext(SetNextStateContext);
-
-  const navigatorStateForNextRouteNamesChange =
-    stateForNextRouteNamesChange?.[navigatorKey] ?? null;
-
-  const setNavigatorStateForNextRouteNamesChange = useLatestCallback(
-    (state: PartialState<NavigationState>) => {
-      setStateForNextRouteNamesChange({ [navigatorKey]: state });
-    }
-  );
 
   let state =
     // If the state isn't initialized, or stale, use the state we initialized instead
@@ -454,133 +441,18 @@ export function useNavigationBuilder<
       ? (currentState as State)
       : (initializedState as State);
 
-  // We initialize this ref here to avoid a new getState getting initialized
-  // whenever initializedState changes. We want getState to have access to the
-  // latest initializedState, but don't need it to change when that happens
-  const initializedStateRef = React.useRef<State>();
-  initializedStateRef.current = initializedState;
-
-  const getState = React.useCallback((): State => {
-    const currentState = getCurrentState();
-
-    return isStateInitialized(currentState)
-      ? (currentState as State)
-      : (initializedStateRef.current as State);
-  }, [getCurrentState, isStateInitialized]);
-
-  const emitter = useEventEmitter<EventMapCore<State>>((e) => {
-    let routeNames = [];
-
-    let route: Route<string> | undefined;
-
-    if (e.target) {
-      route = state.routes.find((route) => route.key === e.target);
-
-      if (route?.name) {
-        routeNames.push(route.name);
-      }
-    } else {
-      route = state.routes[state.index];
-      routeNames.push(
-        ...Object.keys(screens).filter((name) => route?.name === name)
-      );
-    }
-
-    if (route == null) {
-      return;
-    }
-
-    const navigation = descriptors[route.key].navigation;
-
-    const listeners = ([] as (((e: any) => void) | undefined)[])
-      .concat(
-        // Get an array of listeners for all screens + common listeners on navigator
-        ...[
-          screenListeners,
-          ...routeNames.map((name) => {
-            const { listeners } = screens[name].props;
-            return listeners;
-          }),
-        ].map((listeners) => {
-          const map =
-            typeof listeners === 'function'
-              ? listeners({ route: route as any, navigation })
-              : listeners;
-
-          return map
-            ? Object.keys(map)
-                .filter((type) => type === e.type)
-                .map((type) => map?.[type])
-            : undefined;
-        })
-      )
-      // We don't want same listener to be called multiple times for same event
-      // So we remove any duplicate functions from the array
-      .filter((cb, i, self) => cb && self.lastIndexOf(cb) === i);
-
-    listeners.forEach((listener) => listener?.(e));
-  });
-
-  useFocusEvents({ state, emitter });
-
-  React.useEffect(() => {
-    emitter.emit({ type: 'state', data: { state } });
-  }, [emitter, state]);
-
-  const { listeners: childListeners, addListener } = useChildListeners();
-
-  const { keyedListeners, addKeyedListener } = useKeyedChildListeners();
-
-  const onAction = useOnAction({
-    router,
-    getState,
-    setState,
-    key: route?.key,
-    actionListeners: childListeners.action,
-    beforeRemoveListeners: keyedListeners.beforeRemove,
-    routerConfigOptions: {
-      routeNames,
-      routeParamList,
-      routeGetIdList,
-    },
-    emitter,
-    stateForNextRouteNamesChange: navigatorStateForNextRouteNamesChange,
-  });
-
-  const navigation = useNavigationHelpers<
-    State,
-    ActionHelpers,
-    NavigationAction,
-    EventMap
-  >({
-    id: options.id,
-    onAction,
-    getState,
-    emitter,
-    router,
-    setStateForNextRouteNamesChange: setNavigatorStateForNextRouteNamesChange,
-  });
-
   let nextState: State = state;
-
-
-  const { options: linkingOptions, lastUnhandledLinking } = options?.linking || {};
 
   if (
     !isArrayEqual(state.routeNames, routeNames) ||
     !isRecordEqual(routeKeyList, previousRouteKeyList)
   ) {
-    const navigatorStateForNextRouteNamesChange2 =
-      options?.getStateForRouteNamesChange?.(
-        linkingOptions,
-        lastUnhandledLinking,
-        // @ts-ignore
-        navigation
-      );
+    const navigatorStateForNextRouteNamesChange1 =
+      options.getStateForRouteNamesChange?.(state);
     // When the list of route names change, the router should handle it to remove invalid routes
-    nextState = navigatorStateForNextRouteNamesChange2
+    nextState = navigatorStateForNextRouteNamesChange1
       ? // @ts-expect-error this is ok
-        router.getRehydratedState(navigatorStateForNextRouteNamesChange2, {
+        router.getRehydratedState(navigatorStateForNextRouteNamesChange1, {
           routeNames,
           routeParamList,
           routeGetIdList,
@@ -685,11 +557,117 @@ export function useNavigationBuilder<
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // We initialize this ref here to avoid a new getState getting initialized
+  // whenever initializedState changes. We want getState to have access to the
+  // latest initializedState, but don't need it to change when that happens
+  const initializedStateRef = React.useRef<State>();
+  initializedStateRef.current = initializedState;
+
+  const getState = React.useCallback((): State => {
+    const currentState = getCurrentState();
+
+
+    return isStateInitialized(currentState)
+      ? (currentState as State)
+      : (initializedStateRef.current as State);
+  }, [getCurrentState, isStateInitialized]);
+
+  const emitter = useEventEmitter<EventMapCore<State>>((e) => {
+    let routeNames = [];
+
+    let route: Route<string> | undefined;
+
+    if (e.target) {
+      route = state.routes.find((route) => route.key === e.target);
+
+      if (route?.name) {
+        routeNames.push(route.name);
+      }
+    } else {
+      route = state.routes[state.index];
+      routeNames.push(
+        ...Object.keys(screens).filter((name) => route?.name === name)
+      );
+    }
+
+    if (route == null) {
+      return;
+    }
+
+    const navigation = descriptors[route.key].navigation;
+
+    const listeners = ([] as (((e: any) => void) | undefined)[])
+      .concat(
+        // Get an array of listeners for all screens + common listeners on navigator
+        ...[
+          screenListeners,
+          ...routeNames.map((name) => {
+            const { listeners } = screens[name].props;
+            return listeners;
+          }),
+        ].map((listeners) => {
+          const map =
+            typeof listeners === 'function'
+              ? listeners({ route: route as any, navigation })
+              : listeners;
+
+          return map
+            ? Object.keys(map)
+                .filter((type) => type === e.type)
+                .map((type) => map?.[type])
+            : undefined;
+        })
+      )
+      // We don't want same listener to be called multiple times for same event
+      // So we remove any duplicate functions from the array
+      .filter((cb, i, self) => cb && self.lastIndexOf(cb) === i);
+
+    listeners.forEach((listener) => listener?.(e));
+  });
+
+  useFocusEvents({ state, emitter });
+
+  React.useEffect(() => {
+    emitter.emit({ type: 'state', data: { state } });
+  }, [emitter, state]);
+
+  const { listeners: childListeners, addListener } = useChildListeners();
+
+  const { keyedListeners, addKeyedListener } = useKeyedChildListeners();
+
+  const onAction = useOnAction({
+    router,
+    getState,
+    setState,
+    key: route?.key,
+    actionListeners: childListeners.action,
+    beforeRemoveListeners: keyedListeners.beforeRemove,
+    routerConfigOptions: {
+      routeNames,
+      routeParamList,
+      routeGetIdList,
+    },
+    emitter,
+  });
+
   const onRouteFocus = useOnRouteFocus({
     router,
     key: route?.key,
     getState,
     setState,
+  });
+
+  const navigation = useNavigationHelpers<
+    State,
+    ActionHelpers,
+    NavigationAction,
+    EventMap
+  >({
+    id: options.id,
+    onAction,
+    getState,
+    emitter,
+    router,
   });
 
   useFocusedListenersChildrenAdapter({

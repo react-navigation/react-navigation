@@ -8,7 +8,6 @@ import type {
   Route,
 } from '@react-navigation/routers';
 import type * as React from 'react';
-import type { LinkingOptions } from '@react-navigation/native';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -815,9 +814,7 @@ export type PathConfig<ParamList extends {}> = {
    * TODO something
    */
   getStateForRouteNamesChange?: (
-    options: LinkingOptions<ParamListBase> | undefined,
-    lastUnhandledLinking: React.MutableRefObject<string | null | undefined>,
-    navigation: NavigationProp<ReactNavigation.RootParamList>
+    state: NavigationState,
   ) => PartialState<NavigationState> | undefined;
 };
 
