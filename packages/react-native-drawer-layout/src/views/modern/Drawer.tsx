@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  I18nManager,
   InteractionManager,
   Keyboard,
   Platform,
@@ -316,7 +315,6 @@ export function Drawer({
 
     return translateX;
   });
-  const isRTL = I18nManager.getConstants().isRTL;
   const drawerAnimatedStyle = useAnimatedStyle(() => {
     const distanceFromEdge = layout.width - drawerWidth;
     return {
@@ -330,13 +328,7 @@ export function Drawer({
                 translateX:
                   // The drawer stays in place when `drawerType` is `back`
                   (drawerType === 'back' ? 0 : translateX.value) +
-                  (drawerPosition === 'left'
-                    ? isRTL
-                      ? -distanceFromEdge
-                      : 0
-                    : isRTL
-                    ? 0
-                    : distanceFromEdge),
+                  (drawerPosition === 'left' ? 0 : distanceFromEdge),
               },
             ],
     };
