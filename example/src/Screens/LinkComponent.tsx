@@ -25,14 +25,14 @@ const ArticleScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Link screen="LinkComponent" params={{ screen: 'Albums' }}>
-          Go to LinkComponent &gt; Albums
+          Go to Albums
         </Link>
         <Link
           screen="LinkComponent"
           params={{ screen: 'Albums' }}
           action={StackActions.replace('Albums')}
         >
-          Replace with LinkComponent &gt; Albums
+          Replace with Albums
         </Link>
         <Button screen="Home" variant="filled">
           Go to Home
