@@ -315,7 +315,6 @@ export function App() {
                         {SCREEN_NAMES.map((name) => (
                           <List.Item
                             key={name}
-                            testID={name}
                             title={SCREENS[name].title}
                             onPress={() => {
                               navigation.navigate(name);
