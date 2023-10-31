@@ -60,7 +60,6 @@ const HomeScreen = ({
 };
 
 const SignInScreen = () => {
-  // const { handleOnNextRouteNamesChange: scheduleNext } = useUnhandledLinking();
   const { signIn } = useContext(SigningContext)!;
 
   return (
@@ -70,7 +69,6 @@ const SignInScreen = () => {
       <Text style={styles.code}>{info}</Text>
       <Button
         onPress={() => {
-          // scheduleNext();
           signIn();
         }}
         title="Sign In"

@@ -45,7 +45,7 @@ export function useUnhandledLinking() {
     if (lastUnhandledLink == null) {
       // noop, nothing to handle
       return;
-    }
+    };
 
 
     // at web, the path is already extracted
@@ -78,6 +78,7 @@ export function useUnhandledLinking() {
       return;
     }
 
+    console.log(state)
     return state;
   };
 

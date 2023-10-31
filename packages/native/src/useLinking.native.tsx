@@ -184,7 +184,7 @@ export function useLinking(
 
       if (navigation && state) {
         // If the link were handled, it gets cleared in NavigationContainer
-        onUnhandledLinking(url);
+        onUnhandledLinking(extractPathFromURL(prefixes, url));
         const rootState = navigation.getRootState();
         if (state.routes.some((r) => !rootState?.routeNames.includes(r.name))) {
           return;
@@ -213,7 +213,7 @@ export function useLinking(
     };
 
     return subscribe(listener);
-  }, [enabled, getStateFromURL, onUnhandledLinking, ref, subscribe]);
+  }, [enabled, getStateFromURL, onUnhandledLinking, prefixes, ref, subscribe]);
 
   return {
     getInitialState,
