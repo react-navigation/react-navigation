@@ -59,14 +59,24 @@ export function MockRouter(options: DefaultRouterOptions) {
             }) as Route<string>
         );
 
+      const previousIndex = state.index;
+      const index = Math.min(
+        Math.max(
+          previousIndex != null
+            ? routes.findIndex(
+                (route) => route.name === state.routes[previousIndex]?.name
+              )
+            : 0,
+          0
+        ),
+        routes.length - 1
+      );
+
       return {
         stale: false,
         type: 'test',
         key: String(MockRouterKey.current++),
-        index:
-          typeof state.index === 'number' && state.index < routes.length
-            ? state.index
-            : 0,
+        index,
         routeNames,
         routes,
       };
@@ -95,7 +105,7 @@ export function MockRouter(options: DefaultRouterOptions) {
       return { ...state, index };
     },
 
-    getStateForAction(state, action) {
+    getStateForAction(state, action, { routeParamList }) {
       switch (action.type) {
         case 'UPDATE':
           return { ...state };
@@ -104,18 +114,34 @@ export function MockRouter(options: DefaultRouterOptions) {
           return state;
 
         case 'NAVIGATE': {
-          const index = state.routes.findIndex(
-            (route) => route.name === action.payload.name
-          );
-
-          if (index === -1) {
+          if (!state.routeNames.includes(action.payload.name)) {
             return null;
           }
 
-          return {
-            ...state,
-            index,
-            routes:
+          let index = state.routes.findIndex(
+            (route) => route.name === action.payload.name
+          );
+
+          let routes;
+
+          if (index === -1) {
+            routes = [
+              ...state.routes,
+              {
+                name: action.payload.name,
+                key: `${action.payload.name}-${MockRouterKey.current++}`,
+                params:
+                  action.payload.params !== undefined
+                    ? {
+                        ...routeParamList[action.payload.name],
+                        ...action.payload.params,
+                      }
+                    : routeParamList[action.payload.name],
+              },
+            ];
+            index = routes.length - 1;
+          } else {
+            routes =
               action.payload.params !== undefined
                 ? state.routes.map((route, i) =>
                     i === index
@@ -128,7 +154,13 @@ export function MockRouter(options: DefaultRouterOptions) {
                         }
                       : route
                   )
-                : state.routes,
+                : state.routes;
+          }
+
+          return {
+            ...state,
+            index,
+            routes,
           };
         }
 
