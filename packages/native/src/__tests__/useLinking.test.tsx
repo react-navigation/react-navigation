@@ -13,9 +13,8 @@ it('throws if multiple instances of useLinking are used', () => {
   const options = { prefixes: [] };
 
   function Sample() {
-    const lastUnhandledLink = React.useRef<string | undefined>();
-    useLinking(ref, options, lastUnhandledLink);
-    useLinking(ref, options, lastUnhandledLink);
+    useLinking(ref, options, () => {});
+    useLinking(ref, options, () => {});
     return null;
   }
 
@@ -33,14 +32,12 @@ it('throws if multiple instances of useLinking are used', () => {
   element?.unmount();
 
   function A() {
-    const lastUnhandledLink = React.useRef<string | undefined>();
-    useLinking(ref, options, lastUnhandledLink);
+    useLinking(ref, options, () => {});
     return null;
   }
 
   function B() {
-    const lastUnhandledLink = React.useRef<string | undefined>();
-    useLinking(ref, options, lastUnhandledLink);
+    useLinking(ref, options, () => {});
     return null;
   }
 
