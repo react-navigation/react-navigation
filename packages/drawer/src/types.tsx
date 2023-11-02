@@ -35,16 +35,6 @@ export type DrawerNavigationConfig = {
    * Defaults to `true`.
    */
   detachInactiveScreens?: boolean;
-  /**
-   * Whether to use the legacy implementation based on Reanimated 1.
-   * The new implementation based on Reanimated 2 will perform better,
-   * but it's not possible to use Chrome remote debugger.
-   *
-   * This defaults to `true` if Reanimated 2 is not configured.
-   *
-   * Otherwise, it defaults to `false`
-   */
-  useLegacyImplementation?: boolean;
 };
 
 export type DrawerNavigationOptions = HeaderOptions & {

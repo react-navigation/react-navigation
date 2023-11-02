@@ -1,9 +1,9 @@
 import {
   CommonActions,
-  NavigationAction,
-  NavigationState,
-  ParamListBase,
-  Router,
+  type NavigationAction,
+  type NavigationState,
+  type ParamListBase,
+  type Router,
 } from '@react-navigation/routers';
 import * as React from 'react';
 

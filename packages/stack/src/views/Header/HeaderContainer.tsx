@@ -2,12 +2,18 @@ import { getHeaderTitle, HeaderBackContext } from '@react-navigation/elements';
 import {
   NavigationContext,
   NavigationRouteContext,
-  ParamListBase,
-  Route,
+  type ParamListBase,
+  type Route,
   useLinkTools,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Animated, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import {
+  Animated,
+  type StyleProp,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from 'react-native';
 
 import {
   forNoAnimation,

@@ -1,6 +1,6 @@
 import {
   createNavigatorFactory,
-  NavigationProp,
+  type NavigationProp,
   StackRouter,
   useNavigation,
   useNavigationBuilder,

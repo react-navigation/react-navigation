@@ -1,11 +1,11 @@
 import {
   CommonActions,
-  InitialState,
-  NavigationAction,
-  NavigationState,
-  ParamListBase,
-  PartialState,
-  Route,
+  type InitialState,
+  type NavigationAction,
+  type NavigationState,
+  type ParamListBase,
+  type PartialState,
+  type Route,
 } from '@react-navigation/routers';
 import * as React from 'react';
 import useLatestCallback from 'use-latest-callback';

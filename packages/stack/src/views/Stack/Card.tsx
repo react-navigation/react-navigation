@@ -5,11 +5,11 @@ import {
   Animated,
   InteractionManager,
   Platform,
-  StyleProp,
+  type StyleProp,
   StyleSheet,
   View,
-  ViewProps,
-  ViewStyle,
+  type ViewProps,
+  type ViewStyle,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 
@@ -28,10 +28,10 @@ import { memoize } from '../../utils/memoize';
 import {
   GestureState,
   PanGestureHandler,
-  PanGestureHandlerGestureEvent,
+  type PanGestureHandlerGestureEvent,
 } from '../GestureHandler';
 import { ModalStatusBarManager } from '../ModalStatusBarManager';
-import { CardSheet, CardSheetRef } from './CardSheet';
+import { CardSheet, type CardSheetRef } from './CardSheet';
 
 type Props = ViewProps & {
   interpolationIndex: number;

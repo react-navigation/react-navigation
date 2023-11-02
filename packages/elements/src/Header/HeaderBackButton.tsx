@@ -3,7 +3,7 @@ import * as React from 'react';
 import {
   Animated,
   Image,
-  LayoutChangeEvent,
+  type LayoutChangeEvent,
   Platform,
   StyleSheet,
   View,
@@ -80,6 +80,7 @@ export function HeaderBackButton({
             Boolean(labelVisible) && styles.iconWithLabel,
             Boolean(tintColor) && { tintColor },
           ]}
+          resizeMode="contain"
           source={require('../assets/back-icon.png')}
           fadeDuration={0}
         />
@@ -137,6 +138,7 @@ export function HeaderBackButton({
           <View style={styles.iconMaskContainer}>
             <Image
               source={require('../assets/back-icon-mask.png')}
+              resizeMode="contain"
               style={[styles.iconMask, direction === 'rtl' && styles.flip]}
             />
             <View style={styles.iconMaskFillerRect} />
@@ -219,13 +221,11 @@ const styles = StyleSheet.create({
       marginLeft: 8,
       marginRight: 22,
       marginVertical: 12,
-      resizeMode: 'contain',
     },
     default: {
       height: 24,
       width: 24,
       margin: 3,
-      resizeMode: 'contain',
     },
   }),
   iconWithLabel:
@@ -249,7 +249,6 @@ const styles = StyleSheet.create({
     marginLeft: -14.5,
     marginVertical: 12,
     alignSelf: 'center',
-    resizeMode: 'contain',
   },
   flip: {
     transform: [{ scaleX: -1 }],

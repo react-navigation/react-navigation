@@ -1,13 +1,13 @@
 import {
   CommonActions,
-  ParamListBase,
-  Route,
-  TabNavigationState,
+  type ParamListBase,
+  type Route,
+  type TabNavigationState,
   useLocale,
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { SceneRendererProps, TabView } from 'react-native-tab-view';
+import { type SceneRendererProps, TabView } from 'react-native-tab-view';
 
 import type {
   MaterialTopTabBarProps,

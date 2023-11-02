@@ -1,9 +1,12 @@
-import { NavigationContainer, ParamListBase } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  type ParamListBase,
+} from '@react-navigation/native';
 import { fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
 import { Animated, Button, Text, View } from 'react-native';
 
-import { BottomTabScreenProps, createBottomTabNavigator } from '../index';
+import { type BottomTabScreenProps, createBottomTabNavigator } from '../index';
 
 it('renders a bottom tab navigator with screens', async () => {
   // @ts-expect-error: incomplete mock for testing

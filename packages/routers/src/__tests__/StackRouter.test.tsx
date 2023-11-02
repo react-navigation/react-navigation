@@ -1,6 +1,6 @@
 import {
   CommonActions,
-  RouterConfigOptions,
+  type RouterConfigOptions,
   StackActions,
   StackRouter,
 } from '..';

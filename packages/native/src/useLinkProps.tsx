@@ -1,14 +1,14 @@
 import {
   getPathFromState,
-  NavigationAction,
+  type NavigationAction,
   NavigationContainerRefContext,
   NavigationHelpersContext,
-  NavigatorScreenParams,
-  ParamListBase,
+  type NavigatorScreenParams,
+  type ParamListBase,
 } from '@react-navigation/core';
 import type { NavigationState, PartialState } from '@react-navigation/routers';
 import * as React from 'react';
-import { GestureResponderEvent, Platform } from 'react-native';
+import { type GestureResponderEvent, Platform } from 'react-native';
 
 import { LinkingContext } from './LinkingContext';
 
@@ -92,13 +92,8 @@ export function useLinkProps<ParamList extends ReactNavigation.RootParamList>({
     let shouldHandle = false;
 
     if (Platform.OS !== 'web' || !e) {
-      shouldHandle = e ? !e.defaultPrevented : true;
-    } else if (
-      !e.defaultPrevented && // onPress prevented default
-      !hasModifierKey &&
-      isLeftClick &&
-      isSelfTarget
-    ) {
+      shouldHandle = true;
+    } else if (!hasModifierKey && isLeftClick && isSelfTarget) {
       e.preventDefault();
       shouldHandle = true;
     }

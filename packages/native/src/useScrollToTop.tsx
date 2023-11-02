@@ -1,6 +1,6 @@
 import {
-  EventArg,
-  NavigationProp,
+  type EventArg,
+  type NavigationProp,
   useNavigation,
   useRoute,
 } from '@react-navigation/core';

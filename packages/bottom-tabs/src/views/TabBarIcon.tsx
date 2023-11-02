@@ -1,11 +1,11 @@
 import type { Route } from '@react-navigation/native';
 import React from 'react';
 import {
-  StyleProp,
+  type StyleProp,
   StyleSheet,
-  TextStyle,
+  type TextStyle,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native';
 
 import { Badge } from './Badge';

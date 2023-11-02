@@ -1,9 +1,14 @@
-import { NavigationContainer, ParamListBase } from '@react-navigation/native';
-import { fireEvent, render } from '@testing-library/react-native';
+import {
+  NavigationContainer,
+  type ParamListBase,
+} from '@react-navigation/native';
+import { act, fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
 import { Button, Text, View } from 'react-native';
 
-import { createStackNavigator, StackScreenProps } from '../index';
+import { createStackNavigator, type StackScreenProps } from '../index';
+
+jest.useFakeTimers();
 
 it('renders a stack navigator with screens', async () => {
   const Test = ({ route, navigation }: StackScreenProps<ParamListBase>) => (
@@ -29,6 +34,8 @@ it('renders a stack navigator with screens', async () => {
   expect(queryByText('Screen B')).toBeNull();
 
   fireEvent.press(await findByText('Go to B'));
+
+  act(() => jest.runAllTimers());
 
   expect(queryByText('Screen B')).not.toBeNull();
 });

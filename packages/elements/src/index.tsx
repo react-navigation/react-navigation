@@ -1,4 +1,5 @@
 export { Background } from './Background';
+export { Button } from './Button';
 export { getDefaultSidebarWidth } from './getDefaultSidebarWidth';
 export { getDefaultHeaderHeight } from './Header/getDefaultHeaderHeight';
 export { getHeaderTitle } from './Header/getHeaderTitle';
@@ -17,6 +18,7 @@ export { PlatformPressable } from './PlatformPressable';
 export { ResourceSavingView } from './ResourceSavingView';
 export { SafeAreaProviderCompat } from './SafeAreaProviderCompat';
 export { Screen } from './Screen';
+export { Text } from './Text';
 
 export const Assets = [
   // eslint-disable-next-line import/no-commonjs

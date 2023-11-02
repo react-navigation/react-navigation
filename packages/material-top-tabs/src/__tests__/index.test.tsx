@@ -1,11 +1,14 @@
-import { NavigationContainer, ParamListBase } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  type ParamListBase,
+} from '@react-navigation/native';
 import { fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
 import { Button, Text, View } from 'react-native';
 
 import {
   createMaterialTopTabNavigator,
-  MaterialTopTabScreenProps,
+  type MaterialTopTabScreenProps,
 } from '../index';
 
 jest.mock('react-native-pager-view', () => {

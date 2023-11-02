@@ -1,8 +1,8 @@
 import {
   getActionFromState as getActionFromStateDefault,
   getStateFromPath as getStateFromPathDefault,
-  NavigationContainerRef,
-  ParamListBase,
+  type NavigationContainerRef,
+  type ParamListBase,
   useNavigationIndependentTree,
 } from '@react-navigation/core';
 import * as React from 'react';

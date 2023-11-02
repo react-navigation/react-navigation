@@ -1,14 +1,14 @@
 import { getLabel, Label, PlatformPressable } from '@react-navigation/elements';
-import { Route, useTheme } from '@react-navigation/native';
+import { type Route, useTheme } from '@react-navigation/native';
 import Color from 'color';
 import React from 'react';
 import {
-  GestureResponderEvent,
+  type GestureResponderEvent,
   Platform,
-  StyleProp,
+  type StyleProp,
   StyleSheet,
-  TextStyle,
-  ViewStyle,
+  type TextStyle,
+  type ViewStyle,
 } from 'react-native';
 
 import type {
@@ -63,7 +63,7 @@ type Props = {
    */
   badgeStyle?: StyleProp<TextStyle>;
   /**
-   * The button for the tab. Uses a `TouchableWithoutFeedback` by default.
+   * The button for the tab. Uses a `Pressable` by default.
    */
   button?: (props: BottomTabBarButtonProps) => React.ReactNode;
   /**

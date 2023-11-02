@@ -1,8 +1,8 @@
 import {
   CommonActions,
   DrawerActions,
-  DrawerNavigationState,
-  ParamListBase,
+  type DrawerNavigationState,
+  type ParamListBase,
   useLinkTools,
 } from '@react-navigation/native';
 import * as React from 'react';

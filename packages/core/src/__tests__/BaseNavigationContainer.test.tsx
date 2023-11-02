@@ -1,8 +1,8 @@
 import {
-  DefaultRouterOptions,
-  NavigationState,
-  ParamListBase,
-  Router,
+  type DefaultRouterOptions,
+  type NavigationState,
+  type ParamListBase,
+  type Router,
   StackRouter,
   TabRouter,
 } from '@react-navigation/routers';
@@ -16,7 +16,7 @@ import { NavigationStateContext } from '../NavigationStateContext';
 import { Screen } from '../Screen';
 import { useNavigationBuilder } from '../useNavigationBuilder';
 import {
-  MockActions,
+  type MockActions,
   MockRouter,
   MockRouterKey,
 } from './__fixtures__/MockRouter';

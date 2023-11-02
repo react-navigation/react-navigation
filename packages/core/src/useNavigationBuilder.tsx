@@ -1,14 +1,14 @@
 import {
   CommonActions,
-  DefaultRouterOptions,
-  NavigationAction,
-  NavigationState,
-  ParamListBase,
-  PartialState,
-  Route,
-  Router,
-  RouterConfigOptions,
-  RouterFactory,
+  type DefaultRouterOptions,
+  type NavigationAction,
+  type NavigationState,
+  type ParamListBase,
+  type PartialState,
+  type Route,
+  type Router,
+  type RouterConfigOptions,
+  type RouterFactory,
 } from '@react-navigation/routers';
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
@@ -24,17 +24,17 @@ import { PreventRemoveProvider } from './PreventRemoveProvider';
 import { Screen } from './Screen';
 import { SetNextStateContext } from './SetNextStateContext';
 import {
-  DefaultNavigatorOptions,
-  EventMapBase,
-  EventMapCore,
-  NavigatorScreenParams,
+  type DefaultNavigatorOptions,
+  type EventMapBase,
+  type EventMapCore,
+  type NavigatorScreenParams,
   PrivateValueStore,
-  RouteConfig,
+  type RouteConfig,
 } from './types';
 import { useChildListeners } from './useChildListeners';
 import { useComponent } from './useComponent';
 import { useCurrentRender } from './useCurrentRender';
-import { ScreenConfigWithParent, useDescriptors } from './useDescriptors';
+import { type ScreenConfigWithParent, useDescriptors } from './useDescriptors';
 import { useEventEmitter } from './useEventEmitter';
 import { useFocusedListenersChildrenAdapter } from './useFocusedListenersChildrenAdapter';
 import { useFocusEvents } from './useFocusEvents';

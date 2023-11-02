@@ -9,10 +9,10 @@ import {
 import {
   NavigationContext,
   NavigationRouteContext,
-  ParamListBase,
-  Route,
+  type ParamListBase,
+  type Route,
   StackActions,
-  StackNavigationState,
+  type StackNavigationState,
   usePreventRemoveContext,
   useTheme,
 } from '@react-navigation/native';
@@ -22,11 +22,11 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import type { ScreenProps } from 'react-native-screens';
 import {
   Screen,
+  type ScreenProps,
   ScreenStack,
-  StackPresentationTypes,
+  type StackPresentationTypes,
 } from 'react-native-screens';
 import warnOnce from 'warn-once';
 

@@ -3,10 +3,10 @@ import {
   getActionFromState,
   getPathFromState,
   getStateFromPath,
-  NavigationHelpers,
+  type NavigationHelpers,
   NavigationHelpersContext,
-  NavigationProp,
-  ParamListBase,
+  type NavigationProp,
+  type ParamListBase,
 } from '@react-navigation/core';
 import * as React from 'react';
 

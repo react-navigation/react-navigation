@@ -3,9 +3,9 @@ import {
   getActionFromState as getActionFromStateDefault,
   getPathFromState as getPathFromStateDefault,
   getStateFromPath as getStateFromPathDefault,
-  NavigationContainerRef,
-  NavigationState,
-  ParamListBase,
+  type NavigationContainerRef,
+  type NavigationState,
+  type ParamListBase,
   useNavigationIndependentTree,
 } from '@react-navigation/core';
 import isEqual from 'fast-deep-equal';
@@ -198,6 +198,8 @@ export function useLinking(
       if (!navigation || !enabled) {
         return;
       }
+
+      const { location } = window;
 
       const path = location.pathname + location.search;
       const index = history.index;

@@ -1,11 +1,11 @@
 import {
   createNavigatorFactory,
-  DefaultNavigatorOptions,
-  ParamListBase,
-  TabActionHelpers,
-  TabNavigationState,
+  type DefaultNavigatorOptions,
+  type ParamListBase,
+  type TabActionHelpers,
+  type TabNavigationState,
   TabRouter,
-  TabRouterOptions,
+  type TabRouterOptions,
   useNavigationBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';

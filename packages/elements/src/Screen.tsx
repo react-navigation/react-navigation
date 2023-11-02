@@ -1,12 +1,18 @@
 import {
   NavigationContext,
-  NavigationProp,
+  type NavigationProp,
   NavigationRouteContext,
-  ParamListBase,
-  RouteProp,
+  type ParamListBase,
+  type RouteProp,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Animated, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import {
+  Animated,
+  type StyleProp,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from 'react-native';
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
