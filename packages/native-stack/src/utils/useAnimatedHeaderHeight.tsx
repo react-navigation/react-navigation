@@ -1,6 +1,9 @@
 import * as React from 'react';
+import type { Animated } from 'react-native';
 
-import { AnimatedHeaderHeightContext } from './AnimatedHeaderHeightContext';
+export const AnimatedHeaderHeightContext = React.createContext<
+  Animated.Value | undefined
+>(undefined);
 
 export function useAnimatedHeaderHeight() {
   const animatedValue = React.useContext(AnimatedHeaderHeightContext);
