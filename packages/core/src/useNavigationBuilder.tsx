@@ -260,7 +260,15 @@ export function useNavigationBuilder<
 
   const { children, layout, screenOptions, screenListeners, ...rest } = options;
   const { current: router } = React.useRef<Router<State, any>>(
-    createRouter(rest as unknown as RouterOptions)
+    createRouter({
+      ...(rest as unknown as RouterOptions),
+      ...(route?.params &&
+      route.params.state == null &&
+      route.params.initial !== false &&
+      typeof route.params.screen === 'string'
+        ? { initialRouteName: route.params.screen }
+        : null),
+    })
   );
 
   const routeConfigs = getRouteConfigsFromChildren<
@@ -384,11 +392,7 @@ export function useNavigationBuilder<
     // So we need to rehydrate it to make it usable
     if (
       (currentState === undefined || !isStateValid(currentState)) &&
-      route?.params?.state == null &&
-      !(
-        typeof route?.params?.screen === 'string' &&
-        route?.params?.initial !== false
-      )
+      route?.params?.state == null
     ) {
       return [
         router.getInitialState({
@@ -399,29 +403,9 @@ export function useNavigationBuilder<
         true,
       ];
     } else {
-      let stateFromParams;
-
-      if (route?.params?.state != null) {
-        stateFromParams = route.params.state;
-      } else if (
-        typeof route?.params?.screen === 'string' &&
-        route?.params?.initial !== false
-      ) {
-        stateFromParams = {
-          index: 0,
-          routes: [
-            {
-              name: route.params.screen,
-              params: route.params.params,
-              path: route.params.path,
-            },
-          ],
-        };
-      }
-
       return [
         router.getRehydratedState(
-          (stateFromParams ?? currentState) as PartialState<State>,
+          (route?.params?.state ?? currentState) as PartialState<State>,
           {
             routeNames,
             routeParamList: initialRouteParamList,
