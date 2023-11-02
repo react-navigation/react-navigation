@@ -2,7 +2,7 @@ import {
   getStateFromPath,
   NavigationContext,
   type NavigationState,
-  PartialState,
+  type PartialState,
 } from '@react-navigation/core';
 import React from 'react';
 import useLatestCallback from 'use-latest-callback';
