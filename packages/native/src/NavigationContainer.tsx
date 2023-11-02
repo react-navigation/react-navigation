@@ -88,7 +88,7 @@ function NavigationContainerInner(
   useBackButton(refContainer);
   useDocumentTitle(refContainer, documentTitle);
 
-  const [lastUnhandledLink, setlastUnhandledLink] = React.useState<
+  const [lastUnhandledLink, setLastUnhandledLink] = React.useState<
     string | undefined
   >();
 
@@ -99,20 +99,20 @@ function NavigationContainerInner(
       prefixes: [],
       ...linking,
     },
-    setlastUnhandledLink
+    setLastUnhandledLink
   );
 
   const linkingContext = React.useMemo(() => ({ options: linking }), [linking]);
 
   const unhandledLinkingContext = React.useMemo(
-    () => ({ lastUnhandledLink, setlastUnhandledLink }),
-    [lastUnhandledLink, setlastUnhandledLink]
+    () => ({ lastUnhandledLink, setLastUnhandledLink }),
+    [lastUnhandledLink, setLastUnhandledLink]
   );
 
   const onReadyForLinkingHandling = useLatestCallback(() => {
     // If the screen path matches lastUnhandledLink, we do not track it
     const path = refContainer.current?.getCurrentRoute()?.path;
-    setlastUnhandledLink((previousLastUnhandledLink) => {
+    setLastUnhandledLink((previousLastUnhandledLink) => {
       if (previousLastUnhandledLink === path) {
         return undefined;
       }
@@ -125,7 +125,7 @@ function NavigationContainerInner(
     (state: Readonly<NavigationState> | undefined) => {
       // If the screen path matches lastUnhandledLink, we do not track it
       const path = refContainer.current?.getCurrentRoute()?.path;
-      setlastUnhandledLink((previousLastUnhandledLink) => {
+      setLastUnhandledLink((previousLastUnhandledLink) => {
         if (previousLastUnhandledLink === path) {
           return undefined;
         }

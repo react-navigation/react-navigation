@@ -32,7 +32,7 @@ function extractNavigatorSpecificState(
 export function useUnhandledLinking() {
   const navigation = React.useContext(NavigationContext);
   const linking = React.useContext(LinkingContext);
-  const { setlastUnhandledLink, lastUnhandledLink } = React.useContext(
+  const { setLastUnhandledLink, lastUnhandledLink } = React.useContext(
     UnhandledLinkingContext
   );
 
@@ -75,12 +75,11 @@ export function useUnhandledLinking() {
       return;
     }
 
-    console.log(state);
     return state;
   };
 
   const clearUnhandledLink = useLatestCallback(() => {
-    setlastUnhandledLink(undefined);
+    setLastUnhandledLink(undefined);
   });
 
   return {
