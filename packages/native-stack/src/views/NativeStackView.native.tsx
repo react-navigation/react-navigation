@@ -480,9 +480,11 @@ const handleHeaderHeightChangeEvent = (
 ) => {
   if (cachedHeaderHeight.current !== height) {
     // Currently, we're setting value by Animated#setValue, because we want to cache animated value.
-    // Also, in React Native 0.72 there was a bug on Fabric causing a large delay between the screen transition,
-    // which should not occur.
-    // TODO: Check if it's possible to replace animated#setValue to Animated#event.
+    // Unfortunately, because of the bug that exists on Fabric, where native event drivers
+    // for Animated objects are being created after the first notifications about the header height
+    // from the native side, it's not possible to use Animated#event, as
+    // we won't receive initial values on appearing screens.
+    // TODO(tboba): Replace animated#setValue to Animated#event.
     animatedHeaderHeight.setValue(height);
     cachedHeaderHeight.current = height;
   }
