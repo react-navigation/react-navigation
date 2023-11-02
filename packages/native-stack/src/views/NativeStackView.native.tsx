@@ -17,7 +17,7 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Animated, Platform, StyleSheet, View } from 'react-native';
+import { Animated, Platform, StyleSheet, View, useAnimatedValue } from 'react-native';
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
@@ -238,9 +238,7 @@ const SceneView = ({
     React.useState(defaultHeaderHeight);
 
   const cachedAnimatedHeaderHeight = React.useRef(customHeaderHeight);
-  const animatedHeaderHeight = React.useRef(
-    new Animated.Value(customHeaderHeight)
-  ).current;
+  const animatedHeaderHeight = useAnimatedValue(customHeaderHeight);
 
   const headerTopInsetEnabled = topInset !== 0;
   const headerHeight = header ? customHeaderHeight : defaultHeaderHeight;
