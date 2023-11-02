@@ -17,7 +17,13 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Animated, Platform, StyleSheet, View, useAnimatedValue } from 'react-native';
+import {
+  Animated,
+  Platform,
+  StyleSheet,
+  useAnimatedValue,
+  View,
+} from 'react-native';
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
