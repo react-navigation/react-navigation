@@ -239,9 +239,7 @@ const SceneView = ({
 
   const cachedAnimatedHeaderHeight = React.useRef(customHeaderHeight);
   const animatedHeaderHeight = React.useRef(
-    new Animated.Value(customHeaderHeight, {
-      useNativeDriver: true,
-    })
+    new Animated.Value(customHeaderHeight)
   ).current;
 
   const headerTopInsetEnabled = topInset !== 0;
