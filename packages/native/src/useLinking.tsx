@@ -3,9 +3,9 @@ import {
   getActionFromState as getActionFromStateDefault,
   getPathFromState as getPathFromStateDefault,
   getStateFromPath as getStateFromPathDefault,
-  NavigationContainerRef,
-  NavigationState,
-  ParamListBase,
+  type NavigationContainerRef,
+  type NavigationState,
+  type ParamListBase,
   useNavigationIndependentTree,
 } from '@react-navigation/core';
 import isEqual from 'fast-deep-equal';
@@ -63,12 +63,13 @@ const findMatchingState = <T extends NavigationState>(
 export const series = (cb: () => Promise<void>) => {
   let queue = Promise.resolve();
   const callback = () => {
+    // eslint-disable-next-line promise/no-callback-in-promise
     queue = queue.then(cb);
   };
   return callback;
 };
 
-let linkingHandlers: Symbol[] = [];
+const linkingHandlers: symbol[] = [];
 
 type Options = LinkingOptions<ParamListBase>;
 
@@ -197,6 +198,8 @@ export function useLinking(
       if (!navigation || !enabled) {
         return;
       }
+
+      const { location } = window;
 
       const path = location.pathname + location.search;
       const index = history.index;

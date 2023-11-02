@@ -6,9 +6,10 @@ import {
   SafeAreaProviderCompat,
   Screen,
 } from '@react-navigation/elements';
-import type {
-  ParamListBase,
-  StackNavigationState,
+import {
+  type ParamListBase,
+  type StackNavigationState,
+  useLinkTools,
 } from '@react-navigation/native';
 import * as React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
@@ -33,6 +34,7 @@ const TRANSPARENT_PRESENTATIONS = [
 
 export function NativeStackView({ state, descriptors }: Props) {
   const parentHeaderBack = React.useContext(HeaderBackContext);
+  const { buildHref } = useLinkTools();
 
   return (
     <SafeAreaProviderCompat>
@@ -52,6 +54,10 @@ export function NativeStackView({ state, descriptors }: Props) {
                 title: getHeaderTitle(
                   previousDescriptor.options,
                   previousDescriptor.route.name
+                ),
+                href: buildHref(
+                  previousDescriptor.route.name,
+                  previousDescriptor.route.params
                 ),
               }
             : parentHeaderBack;
@@ -116,6 +122,7 @@ export function NativeStackView({ state, descriptors }: Props) {
                                   ? () => (
                                       <Image
                                         source={headerBackImageSource}
+                                        resizeMode="contain"
                                         style={[
                                           styles.backImage,
                                           { tintColor },
@@ -124,8 +131,9 @@ export function NativeStackView({ state, descriptors }: Props) {
                                     )
                                   : undefined
                               }
-                              onPress={navigation.goBack}
                               canGoBack={canGoBack}
+                              onPress={navigation.goBack}
+                              href={headerBack.href}
                             />
                           )
                         : headerLeft
@@ -191,6 +199,5 @@ const styles = StyleSheet.create({
     height: 24,
     width: 24,
     margin: 3,
-    resizeMode: 'contain',
   },
 });

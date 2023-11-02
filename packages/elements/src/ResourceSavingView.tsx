@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { Platform, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import {
+  Platform,
+  type StyleProp,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from 'react-native';
 
 type Props = {
   visible: boolean;

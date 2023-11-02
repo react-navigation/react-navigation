@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, ViewProps } from 'react-native';
+import { View, type ViewProps } from 'react-native';
 import type { StackPresentationTypes } from 'react-native-screens';
 
 type ContainerProps = ViewProps & {

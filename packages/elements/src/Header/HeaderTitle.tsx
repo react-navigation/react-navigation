@@ -3,10 +3,10 @@ import * as React from 'react';
 import {
   Animated,
   Platform,
-  StyleProp,
+  type StyleProp,
   StyleSheet,
-  TextProps,
-  TextStyle,
+  type TextProps,
+  type TextStyle,
 } from 'react-native';
 
 type Props = Omit<TextProps, 'style'> & {

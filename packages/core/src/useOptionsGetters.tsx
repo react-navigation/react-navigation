@@ -39,8 +39,8 @@ export function useOptionsGetters({ key, options, navigation }: Options) {
   }, [navigation, options, optionsChangeListener]);
 
   const getOptionsFromListener = React.useCallback(() => {
-    for (let key in optionsGettersFromChildRef.current) {
-      if (optionsGettersFromChildRef.current.hasOwnProperty(key)) {
+    for (const key in optionsGettersFromChildRef.current) {
+      if (key in optionsGettersFromChildRef.current) {
         const result = optionsGettersFromChildRef.current[key]?.();
 
         // null means unfocused route

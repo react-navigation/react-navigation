@@ -1,7 +1,7 @@
 import {
   getStateFromPath,
   NavigationContext,
-  NavigationState,
+  type NavigationState,
   PartialState,
 } from '@react-navigation/core';
 import React from 'react';

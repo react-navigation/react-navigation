@@ -71,7 +71,7 @@ export function getStateFromPath<ParamList extends {}>(
     validatePathConfig(options);
   }
 
-  let initialRoutes: InitialRouteConfig[] = [];
+  const initialRoutes: InitialRouteConfig[] = [];
 
   if (options?.initialRouteName) {
     initialRoutes.push({
@@ -523,7 +523,6 @@ const createNestedStateObject = (
   initialRoutes: InitialRouteConfig[],
   flatConfig?: RouteConfig[]
 ) => {
-  let state: InitialState;
   let route = routes.shift() as ParsedRoute;
   const parentScreens: string[] = [];
 
@@ -531,7 +530,11 @@ const createNestedStateObject = (
 
   parentScreens.push(route.name);
 
-  state = createStateObject(initialRoute, route, routes.length === 0);
+  const state: InitialState = createStateObject(
+    initialRoute,
+    route,
+    routes.length === 0
+  );
 
   if (routes.length > 0) {
     let nestedState = state;

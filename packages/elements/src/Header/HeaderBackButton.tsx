@@ -3,7 +3,7 @@ import * as React from 'react';
 import {
   Animated,
   Image,
-  LayoutChangeEvent,
+  type LayoutChangeEvent,
   Platform,
   StyleSheet,
   View,
@@ -31,6 +31,7 @@ export function HeaderBackButton({
   accessibilityLabel = label && label !== 'Back' ? `${label}, back` : 'Go back',
   testID,
   style,
+  href,
 }: HeaderBackButtonProps) {
   const { colors, fonts } = useTheme();
   const { direction } = useLocale();
@@ -79,6 +80,7 @@ export function HeaderBackButton({
             Boolean(labelVisible) && styles.iconWithLabel,
             Boolean(tintColor) && { tintColor },
           ]}
+          resizeMode="contain"
           source={require('../assets/back-icon.png')}
           fadeDuration={0}
         />
@@ -136,6 +138,7 @@ export function HeaderBackButton({
           <View style={styles.iconMaskContainer}>
             <Image
               source={require('../assets/back-icon-mask.png')}
+              resizeMode="contain"
               style={[styles.iconMask, direction === 'rtl' && styles.flip]}
             />
             <View style={styles.iconMaskFillerRect} />
@@ -147,16 +150,19 @@ export function HeaderBackButton({
     );
   };
 
-  const handlePress = () => onPress && requestAnimationFrame(onPress);
+  const handlePress = () => {
+    if (onPress) {
+      requestAnimationFrame(() => onPress());
+    }
+  };
 
   return (
     <PlatformPressable
       disabled={disabled}
-      accessible
-      accessibilityRole="button"
+      href={href}
       accessibilityLabel={accessibilityLabel}
       testID={testID}
-      onPress={disabled ? undefined : handlePress}
+      onPress={handlePress}
       pressColor={pressColor}
       pressOpacity={pressOpacity}
       android_ripple={androidRipple}
@@ -215,13 +221,11 @@ const styles = StyleSheet.create({
       marginLeft: 8,
       marginRight: 22,
       marginVertical: 12,
-      resizeMode: 'contain',
     },
     default: {
       height: 24,
       width: 24,
       margin: 3,
-      resizeMode: 'contain',
     },
   }),
   iconWithLabel:
@@ -245,7 +249,6 @@ const styles = StyleSheet.create({
     marginLeft: -14.5,
     marginVertical: 12,
     alignSelf: 'center',
-    resizeMode: 'contain',
   },
   flip: {
     transform: [{ scaleX: -1 }],

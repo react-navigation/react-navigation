@@ -1,6 +1,11 @@
 import { ResourceSavingView } from '@react-navigation/elements';
 import * as React from 'react';
-import { StyleProp, View, ViewProps, ViewStyle } from 'react-native';
+import {
+  type StyleProp,
+  View,
+  type ViewProps,
+  type ViewStyle,
+} from 'react-native';
 
 type Props = {
   visible: boolean;

@@ -1,7 +1,7 @@
 import { getHeaderTitle, HeaderTitle } from '@react-navigation/elements';
-import { Route, useLocale, useTheme } from '@react-navigation/native';
+import { type Route, useLocale, useTheme } from '@react-navigation/native';
 import * as React from 'react';
-import { Platform, StyleSheet, TextStyle, View } from 'react-native';
+import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
 import {
   isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,

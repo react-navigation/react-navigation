@@ -1,13 +1,13 @@
 import * as React from 'react';
 import {
   Animated,
-  LayoutChangeEvent,
-  PressableAndroidRippleConfig,
-  StyleProp,
+  type LayoutChangeEvent,
+  type PressableAndroidRippleConfig,
+  type StyleProp,
   StyleSheet,
-  TextStyle,
+  type TextStyle,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native';
 import useLatestCallback from 'use-latest-callback';
 
@@ -234,11 +234,9 @@ const TabBarItemInternal = <T extends Route>({
       accessibilityLabel={accessibilityLabel}
       accessibilityRole="tab"
       accessibilityState={{ selected: isFocused }}
-      // @ts-ignore: this is to support older React Native versions
-      accessibilityStates={isFocused ? ['selected'] : []}
       pressColor={pressColor}
       pressOpacity={pressOpacity}
-      delayPressIn={0}
+      unstable_pressDelay={0}
       onLayout={onLayout}
       onPress={onPress}
       onLongPress={onLongPress}

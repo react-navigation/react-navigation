@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
 
-import { createStackNavigator } from '../__mocks__/createStackNavigator';
+import { createStackNavigator } from '../__stubs__/createStackNavigator';
 import { Link } from '../Link';
 import { NavigationContainer } from '../NavigationContainer';
 
@@ -50,31 +50,57 @@ it('renders link with href on web', () => {
   );
 
   expect(toJSON()).toMatchInlineSnapshot(`
-    <Text
-      accessibilityRole="link"
-      href="/bar/42"
-      onPress={[Function]}
-    >
-      Go to Bar
-    </Text>
-  `);
+<Text
+  accessibilityRole="link"
+  href="/bar/42"
+  onPress={[Function]}
+  style={
+    [
+      {
+        "color": "rgb(0, 122, 255)",
+      },
+      {
+        "fontFamily": "System",
+        "fontWeight": "400",
+      },
+      undefined,
+    ]
+  }
+>
+  Go to Bar
+</Text>
+`);
 
-  fireEvent.press(getByText('Go to Bar'), {
+  const event = {
     defaultPrevented: false,
     preventDefault() {
-      this.defaultPrevented = true;
+      event.defaultPrevented = true;
     },
-  });
+  };
+
+  fireEvent.press(getByText('Go to Bar'), event);
 
   expect(toJSON()).toMatchInlineSnapshot(`
-    <Text
-      accessibilityRole="link"
-      href="/foo"
-      onPress={[Function]}
-    >
-      Go to Foo
-    </Text>
-  `);
+<Text
+  accessibilityRole="link"
+  href="/foo"
+  onPress={[Function]}
+  style={
+    [
+      {
+        "color": "rgb(0, 122, 255)",
+      },
+      {
+        "fontFamily": "System",
+        "fontWeight": "400",
+      },
+      undefined,
+    ]
+  }
+>
+  Go to Foo
+</Text>
+`);
 });
 
 it("doesn't navigate if default was prevented", () => {
@@ -119,29 +145,55 @@ it("doesn't navigate if default was prevented", () => {
   );
 
   expect(toJSON()).toMatchInlineSnapshot(`
-    <Text
-      accessibilityRole="link"
-      href="/bar/42"
-      onPress={[Function]}
-    >
-      Go to Bar
-    </Text>
-  `);
+<Text
+  accessibilityRole="link"
+  href="/bar/42"
+  onPress={[Function]}
+  style={
+    [
+      {
+        "color": "rgb(0, 122, 255)",
+      },
+      {
+        "fontFamily": "System",
+        "fontWeight": "400",
+      },
+      undefined,
+    ]
+  }
+>
+  Go to Bar
+</Text>
+`);
 
-  fireEvent.press(getByText('Go to Bar'), {
+  const event = {
     defaultPrevented: false,
     preventDefault() {
-      this.defaultPrevented = true;
+      event.defaultPrevented = true;
     },
-  });
+  };
+
+  fireEvent.press(getByText('Go to Bar'), event);
 
   expect(toJSON()).toMatchInlineSnapshot(`
-    <Text
-      accessibilityRole="link"
-      href="/bar/42"
-      onPress={[Function]}
-    >
-      Go to Bar
-    </Text>
-  `);
+<Text
+  accessibilityRole="link"
+  href="/bar/42"
+  onPress={[Function]}
+  style={
+    [
+      {
+        "color": "rgb(0, 122, 255)",
+      },
+      {
+        "fontFamily": "System",
+        "fontWeight": "400",
+      },
+      undefined,
+    ]
+  }
+>
+  Go to Bar
+</Text>
+`);
 });

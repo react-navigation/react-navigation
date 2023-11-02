@@ -89,7 +89,7 @@ Our pre-commit hooks verify that the linter and tests pass when committing.
 The `package.json` file contains various scripts for common tasks:
 
 - `yarn install`: setup project by installing all dependencies and pods.
-- `yarn typescript`: type-check files with TypeScript.
+- `yarn typecheck`: type-check files with TypeScript.
 - `yarn lint`: lint files with ESLint.
 - `yarn test`: run unit tests with Jest.
 - `yarn example start`: run the example app with Expo.

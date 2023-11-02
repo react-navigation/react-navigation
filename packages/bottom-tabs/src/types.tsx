@@ -1,4 +1,7 @@
-import type { HeaderOptions } from '@react-navigation/elements';
+import type {
+  HeaderOptions,
+  PlatformPressable,
+} from '@react-navigation/elements';
 import type {
   Descriptor,
   NavigationHelpers,
@@ -14,7 +17,6 @@ import type {
   GestureResponderEvent,
   StyleProp,
   TextStyle,
-  TouchableWithoutFeedbackProps,
   ViewStyle,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
@@ -43,7 +45,7 @@ export type BottomTabNavigationHelpers = NavigationHelpers<
 export type BottomTabNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined
+  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
@@ -57,7 +59,7 @@ export type BottomTabNavigationProp<
 export type BottomTabScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined
+  NavigatorID extends string | undefined = undefined,
 > = {
   navigation: BottomTabNavigationProp<ParamList, RouteName, NavigatorID>;
   route: RouteProp<ParamList, RouteName>;
@@ -393,7 +395,7 @@ export type BottomTabBarProps = {
 };
 
 export type BottomTabBarButtonProps = Omit<
-  TouchableWithoutFeedbackProps,
+  React.ComponentProps<typeof PlatformPressable>,
   'onPress'
 > & {
   href?: string;

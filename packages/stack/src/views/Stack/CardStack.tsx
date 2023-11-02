@@ -13,7 +13,7 @@ import Color from 'color';
 import * as React from 'react';
 import {
   Animated,
-  LayoutChangeEvent,
+  type LayoutChangeEvent,
   Platform,
   StyleSheet,
 } from 'react-native';
@@ -277,7 +277,7 @@ export class CardStack extends React.Component<Props, State> {
           ? nextDescriptor.options
           : descriptor.options;
 
-      let defaultTransitionPreset =
+      const defaultTransitionPreset =
         optionsForTransitionConfig.presentation === 'modal'
           ? ModalTransition
           : optionsForTransitionConfig.presentation === 'transparentModal'

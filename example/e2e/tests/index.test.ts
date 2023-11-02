@@ -1,6 +1,10 @@
-import { expect, it } from './baseFixture';
+import { expect, test } from '@playwright/test';
 
-it('loads the example app', async ({ page }) => {
+test.beforeEach(async ({ page }) => {
+  await page.goto('http://localhost:3579');
+});
+
+test('loads the example app', async ({ page }) => {
   expect(await page.title()).toBe('Examples - React Navigation Example');
 
   expect(

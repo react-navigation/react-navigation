@@ -9,10 +9,10 @@ import {
 import {
   NavigationContext,
   NavigationRouteContext,
-  ParamListBase,
-  Route,
+  type ParamListBase,
+  type Route,
   StackActions,
-  StackNavigationState,
+  type StackNavigationState,
   usePreventRemoveContext,
   useTheme,
 } from '@react-navigation/native';
@@ -22,11 +22,11 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import type { ScreenProps } from 'react-native-screens';
 import {
   Screen,
+  type ScreenProps,
   ScreenStack,
-  StackPresentationTypes,
+  type StackPresentationTypes,
 } from 'react-native-screens';
 import warnOnce from 'warn-once';
 
@@ -142,10 +142,19 @@ const SceneView = ({
   onNativeDismissCancelled,
 }: SceneViewProps) => {
   const { route, navigation, options, render } = descriptor;
+
+  let {
+    animation,
+    customAnimationOnGesture,
+    fullScreenGestureEnabled,
+    presentation = 'card',
+  } = options;
+
   const {
     animationDuration,
     animationTypeForReplace = 'push',
     gestureEnabled,
+    gestureDirection = presentation === 'card' ? 'horizontal' : 'vertical',
     header,
     headerBackButtonMenuEnabled,
     headerShown,
@@ -160,14 +169,6 @@ const SceneView = ({
     statusBarTranslucent,
     statusBarColor,
     freezeOnBlur,
-  } = options;
-
-  let {
-    animation,
-    customAnimationOnGesture,
-    fullScreenGestureEnabled,
-    presentation = 'card',
-    gestureDirection = presentation === 'card' ? 'horizontal' : 'vertical',
   } = options;
 
   if (gestureDirection === 'vertical' && Platform.OS === 'ios') {
@@ -220,23 +221,36 @@ const SceneView = ({
       ? 0
       : insets.top;
 
+  // On models with Dynamic Island the status bar height is smaller than the safe area top inset.
+  const hasDynamicIsland = Platform.OS === 'ios' && topInset > 50;
+  const statusBarHeight = hasDynamicIsland ? topInset - 5 : topInset;
+
   const { preventedRoutes } = usePreventRemoveContext();
 
-  const defaultHeaderHeight = getDefaultHeaderHeight(frame, isModal, topInset);
+  const defaultHeaderHeight = getDefaultHeaderHeight(
+    frame,
+    isModal,
+    statusBarHeight
+  );
 
   const [customHeaderHeight, setCustomHeaderHeight] =
     React.useState(defaultHeaderHeight);
 
   const headerTopInsetEnabled = topInset !== 0;
   const headerHeight = header ? customHeaderHeight : defaultHeaderHeight;
-  const headerBack = previousDescriptor
-    ? {
-        title: getHeaderTitle(
-          previousDescriptor.options,
-          previousDescriptor.route.name
-        ),
-      }
-    : parentHeaderBack;
+
+  const backTitle = previousDescriptor
+    ? getHeaderTitle(previousDescriptor.options, previousDescriptor.route.name)
+    : parentHeaderBack?.title;
+
+  const headerBack = React.useMemo(
+    () => ({
+      // No href needed for native
+      href: undefined,
+      title: backTitle,
+    }),
+    [backTitle]
+  );
 
   const isRemovePrevented = preventedRoutes[route.key]?.preventRemove;
 
@@ -275,7 +289,6 @@ const SceneView = ({
       isNativeStack
       nativeBackButtonDismissalEnabled={false} // on Android
       onHeaderBackButtonClicked={onHeaderBackButtonClicked}
-      // @ts-ignore props not exported from rn-screens
       preventNativeDismiss={isRemovePrevented} // on iOS
       onNativeDismissCancelled={onNativeDismissCancelled}
       // this prop is available since rn-screens 3.16

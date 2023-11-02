@@ -7,8 +7,8 @@ import {
 } from '@react-navigation/bottom-tabs';
 import { HeaderBackButton, useHeaderHeight } from '@react-navigation/elements';
 import {
-  NavigatorScreenParams,
-  ParamListBase,
+  type NavigatorScreenParams,
+  type ParamListBase,
   useIsFocused,
 } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
@@ -26,12 +26,13 @@ import { Appbar, IconButton } from 'react-native-paper';
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
-import { SimpleStack, SimpleStackParams } from './SimpleStack';
+import { SimpleStack, type SimpleStackParams } from './SimpleStack';
 
 const getTabBarIcon =
   (name: React.ComponentProps<typeof MaterialCommunityIcons>['name']) =>
-  ({ color, size }: { color: string; size: number }) =>
-    <MaterialCommunityIcons name={name} color={color} size={size} />;
+  ({ color, size }: { color: string; size: number }) => (
+    <MaterialCommunityIcons name={name} color={color} size={size} />
+  );
 
 type BottomTabParams = {
   TabStack: NavigatorScreenParams<SimpleStackParams>;
@@ -179,12 +180,12 @@ export function BottomTabs({
                 {isLargeScreen && (
                   <Image
                     source={require('../../assets/album-art-03.jpg')}
+                    resizeMode="cover"
                     style={{
                       ...StyleSheet.absoluteFillObject,
                       // Override default size of the image
                       height: undefined,
                       width: undefined,
-                      resizeMode: 'cover',
                     }}
                   />
                 )}

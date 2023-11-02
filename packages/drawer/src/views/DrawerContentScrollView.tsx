@@ -1,6 +1,6 @@
 import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
-import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native';
+import { ScrollView, type ScrollViewProps, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { DrawerPositionContext } from '../utils/DrawerPositionContext';

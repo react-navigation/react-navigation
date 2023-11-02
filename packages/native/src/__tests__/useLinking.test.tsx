@@ -1,8 +1,8 @@
 import {
   createNavigationContainerRef,
-  ParamListBase,
+  type ParamListBase,
 } from '@react-navigation/core';
-import { render, RenderAPI } from '@testing-library/react-native';
+import { render, type RenderAPI } from '@testing-library/react-native';
 import * as React from 'react';
 
 import { useLinking } from '../useLinking';

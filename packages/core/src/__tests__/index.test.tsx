@@ -54,8 +54,8 @@ it('initializes state for a navigator on navigation', () => {
 
   render(element).update(element);
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenCalledWith({
     stale: false,
     type: 'test',
     index: 0,
@@ -87,7 +87,7 @@ it("doesn't crash when initialState is null", () => {
     </BaseNavigationContainer>
   );
 
-  expect(() => render(element)).not.toThrowError();
+  expect(() => render(element)).not.toThrow();
 });
 
 it('rehydrates state for a navigator on navigation', () => {
@@ -130,7 +130,7 @@ it('rehydrates state for a navigator on navigation', () => {
 
   render(element).update(element);
 
-  expect(onStateChange).lastCalledWith({
+  expect(onStateChange).toHaveBeenLastCalledWith({
     index: 1,
     key: '0',
     routeNames: ['foo', 'bar'],
@@ -188,7 +188,7 @@ it("doesn't rehydrate state if the type of state didn't match router", () => {
 
   render(element).update(element);
 
-  expect(onStateChange).lastCalledWith({
+  expect(onStateChange).toHaveBeenLastCalledWith({
     index: 0,
     key: '0',
     routeNames: ['foo', 'bar'],
@@ -237,8 +237,8 @@ it('initializes state for nested screens in React.Fragment', () => {
 
   render(element).update(element);
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenCalledWith({
     stale: false,
     type: 'test',
     index: 0,
@@ -284,8 +284,8 @@ it('initializes state for nested screens in Group', () => {
 
   render(element).update(element);
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenCalledWith({
     stale: false,
     type: 'test',
     index: 0,
@@ -335,8 +335,8 @@ it('initializes state for nested navigator on navigation', () => {
 
   render(element).update(element);
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenCalledWith({
     stale: false,
     type: 'test',
     index: 2,
@@ -388,7 +388,7 @@ it("doesn't update state if nothing changed", () => {
     </BaseNavigationContainer>
   );
 
-  expect(onStateChange).toBeCalledTimes(0);
+  expect(onStateChange).toHaveBeenCalledTimes(0);
 });
 
 it("doesn't update state if action wasn't handled", () => {
@@ -420,7 +420,7 @@ it("doesn't update state if action wasn't handled", () => {
     </BaseNavigationContainer>
   );
 
-  expect(onStateChange).toBeCalledTimes(0);
+  expect(onStateChange).toHaveBeenCalledTimes(0);
 
   expect(spy.mock.calls[0][0]).toMatch(
     "The action 'INVALID' was not handled by any navigator."
@@ -462,8 +462,8 @@ it('cleans up state when the navigator unmounts', () => {
 
   root.update(element);
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).lastCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenLastCalledWith({
     stale: false,
     type: 'test',
     index: 0,
@@ -476,13 +476,15 @@ it('cleans up state when the navigator unmounts', () => {
   });
 
   root.update(
-    <BaseNavigationContainer onStateChange={onStateChange} children={null} />
+    <BaseNavigationContainer onStateChange={onStateChange}>
+      {null}
+    </BaseNavigationContainer>
   );
 
   act(() => jest.runAllTimers());
 
-  expect(onStateChange).toBeCalledTimes(2);
-  expect(onStateChange).lastCalledWith(undefined);
+  expect(onStateChange).toHaveBeenCalledTimes(2);
+  expect(onStateChange).toHaveBeenLastCalledWith(undefined);
 });
 
 it('allows state updates by dispatching a function returning an action', () => {
@@ -520,8 +522,8 @@ it('allows state updates by dispatching a function returning an action', () => {
 
   render(element).update(element);
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenCalledWith({
     stale: false,
     type: 'test',
     index: 1,
@@ -562,8 +564,8 @@ it('updates route params with setParams', () => {
 
   act(() => setParams({ username: 'alice' }));
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).lastCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenLastCalledWith({
     stale: false,
     type: 'test',
     index: 0,
@@ -577,8 +579,8 @@ it('updates route params with setParams', () => {
 
   act(() => setParams({ age: 25 }));
 
-  expect(onStateChange).toBeCalledTimes(2);
-  expect(onStateChange).lastCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(2);
+  expect(onStateChange).toHaveBeenLastCalledWith({
     stale: false,
     type: 'test',
     index: 0,
@@ -628,8 +630,8 @@ it('updates route params with setParams applied to parent', () => {
 
   act(() => setParams({ username: 'alice' }));
 
-  expect(onStateChange).toBeCalledTimes(1);
-  expect(onStateChange).lastCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenLastCalledWith({
     index: 0,
     key: '0',
     routeNames: ['foo', 'bar'],
@@ -655,8 +657,8 @@ it('updates route params with setParams applied to parent', () => {
 
   act(() => setParams({ age: 25 }));
 
-  expect(onStateChange).toBeCalledTimes(2);
-  expect(onStateChange).lastCalledWith({
+  expect(onStateChange).toHaveBeenCalledTimes(2);
+  expect(onStateChange).toHaveBeenLastCalledWith({
     index: 0,
     key: '0',
     routeNames: ['foo', 'bar'],
@@ -708,7 +710,7 @@ it('handles change in route names', () => {
     </BaseNavigationContainer>
   );
 
-  expect(onStateChange).toBeCalledWith({
+  expect(onStateChange).toHaveBeenCalledWith({
     stale: false,
     type: 'test',
     index: 0,
@@ -1589,7 +1591,7 @@ it("throws if navigator doesn't have any screens", () => {
     </BaseNavigationContainer>
   );
 
-  expect(() => render(element).update(element)).toThrowError(
+  expect(() => render(element).update(element)).toThrow(
     "Couldn't find any screens for the navigator. Have you defined any screens as its children?"
   );
 });
@@ -1606,7 +1608,7 @@ it('throws if navigator is not inside a container', () => {
     </TestNavigator>
   );
 
-  expect(() => render(element).update(element)).toThrowError(
+  expect(() => render(element).update(element)).toThrow(
     "Couldn't register the navigator. Have you wrapped your app with 'NavigationContainer'?"
   );
 });
@@ -1628,7 +1630,7 @@ it('throws if multiple navigators rendered under one container', () => {
     </BaseNavigationContainer>
   );
 
-  expect(() => render(element).update(element)).toThrowError(
+  expect(() => render(element).update(element)).toThrow(
     'Another navigator is already registered for this container'
   );
 });
@@ -1650,7 +1652,7 @@ it('throws when Screen is not the direct children', () => {
     </BaseNavigationContainer>
   );
 
-  expect(() => render(element).update(element)).toThrowError(
+  expect(() => render(element).update(element)).toThrow(
     "A navigator can only contain 'Screen', 'Group' or 'React.Fragment' as its direct children (found 'Bar')"
   );
 });
@@ -1667,7 +1669,7 @@ it('throws when undefined component is a direct children', () => {
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
-        {/* @ts-ignore */}
+        {/* @ts-expect-error testing incorrect usage */}
         <Undefined name="foo" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
@@ -1675,7 +1677,7 @@ it('throws when undefined component is a direct children', () => {
 
   spy.mockRestore();
 
-  expect(() => render(element).update(element)).toThrowError(
+  expect(() => render(element).update(element)).toThrow(
     "A navigator can only contain 'Screen', 'Group' or 'React.Fragment' as its direct children (found 'undefined' for the screen 'foo')"
   );
 });
@@ -1689,7 +1691,7 @@ it('throws when a tag is a direct children', () => {
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
-        {/* @ts-ignore */}
+        {/* @ts-expect-error testing incorrect usage */}
         <screen
           name="foo"
           // eslint-disable-next-line react/no-unknown-property
@@ -1699,7 +1701,7 @@ it('throws when a tag is a direct children', () => {
     </BaseNavigationContainer>
   );
 
-  expect(() => render(element).update(element)).toThrowError(
+  expect(() => render(element).update(element)).toThrow(
     "A navigator can only contain 'Screen', 'Group' or 'React.Fragment' as its direct children (found 'screen' for the screen 'foo')"
   );
 });
@@ -1719,7 +1721,7 @@ it('throws when a React Element is not the direct children', () => {
     </BaseNavigationContainer>
   );
 
-  expect(() => render(element).update(element)).toThrowError(
+  expect(() => render(element).update(element)).toThrow(
     "A navigator can only contain 'Screen', 'Group' or 'React.Fragment' as its direct children (found 'Hello world')"
   );
 });
@@ -1760,7 +1762,7 @@ it('throws when multiple screens with same name are defined', () => {
     </BaseNavigationContainer>
   );
 
-  expect(() => render(element).update(element)).toThrowError(
+  expect(() => render(element).update(element)).toThrow(
     "A navigator cannot contain multiple 'Screen' components with the same name (found duplicate screen named 'foo')"
   );
 });
@@ -1787,9 +1789,7 @@ it('switches rendered navigators', () => {
         </TestNavigator>
       </BaseNavigationContainer>
     )
-  ).not.toThrowError(
-    'Another navigator is already registered for this container.'
-  );
+  ).not.toThrow('Another navigator is already registered for this container.');
 });
 
 it('throws if no name is passed to Screen', () => {
@@ -1806,7 +1806,7 @@ it('throws if no name is passed to Screen', () => {
     </BaseNavigationContainer>
   );
 
-  expect(() => render(element).update(element)).toThrowError(
+  expect(() => render(element).update(element)).toThrow(
     'Got an invalid name (undefined) for the screen. It must be a non-empty string.'
   );
 });
@@ -1825,7 +1825,7 @@ it('throws if invalid name is passed to Screen', () => {
     </BaseNavigationContainer>
   );
 
-  expect(() => render(element).update(element)).toThrowError(
+  expect(() => render(element).update(element)).toThrow(
     'Got an invalid name ([]) for the screen. It must be a non-empty string.'
   );
 });
@@ -1839,7 +1839,7 @@ it('throws if both children and component are passed', () => {
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
-        {/* @ts-ignore */}
+        {/* @ts-expect-error testing incorrect usage */}
         <Screen name="foo" component={React.Fragment}>
           {jest.fn()}
         </Screen>
@@ -1847,7 +1847,7 @@ it('throws if both children and component are passed', () => {
     </BaseNavigationContainer>
   );
 
-  expect(() => render(element).update(element)).toThrowError(
+  expect(() => render(element).update(element)).toThrow(
     "Got both 'component' and 'children' props for the screen 'foo'. You must pass only one of them."
   );
 });
@@ -1863,7 +1863,7 @@ it('throws if both children and getComponent are passed', () => {
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
-        {/* @ts-ignore */}
+        {/* @ts-expect-error testing incorrect usage */}
         <Screen name="foo" getComponent={() => Test}>
           {() => <Test />}
         </Screen>
@@ -1871,7 +1871,7 @@ it('throws if both children and getComponent are passed', () => {
     </BaseNavigationContainer>
   );
 
-  expect(() => render(element).update(element)).toThrowError(
+  expect(() => render(element).update(element)).toThrow(
     "Got both 'getComponent' and 'children' props for the screen 'foo'. You must pass only one of them."
   );
 });
@@ -1887,13 +1887,13 @@ it('throws if both component and getComponent are passed', () => {
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
-        {/* @ts-ignore */}
+        {/* @ts-expect-error testing incorrect usage */}
         <Screen name="foo" component={Test} getComponent={() => Test} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
 
-  expect(() => render(element).update(element)).toThrowError(
+  expect(() => render(element).update(element)).toThrow(
     "Got both 'component' and 'getComponent' props for the screen 'foo'. You must pass only one of them."
   );
 });
@@ -1907,13 +1907,13 @@ it('throws descriptive error for undefined screen component', () => {
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
-        {/* @ts-ignore */}
+        {/* @ts-expect-error testing incorrect usage */}
         <Screen name="foo" component={undefined} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
 
-  expect(() => render(element).update(element)).toThrowError(
+  expect(() => render(element).update(element)).toThrow(
     "Couldn't find a 'component', 'getComponent' or 'children' prop for the screen 'foo'"
   );
 });
@@ -1927,13 +1927,13 @@ it('throws descriptive error for invalid screen component', () => {
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
-        {/* @ts-ignore */}
+        {/* @ts-expect-error testing incorrect usage */}
         <Screen name="foo" component={{}} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
 
-  expect(() => render(element).update(element)).toThrowError(
+  expect(() => render(element).update(element)).toThrow(
     "Got an invalid value for 'component' prop for the screen 'foo'. It must be a valid React Component."
   );
 });
@@ -1947,13 +1947,13 @@ it('throws descriptive error for invalid getComponent prop', () => {
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
-        {/* @ts-ignore */}
+        {/* @ts-expect-error testing incorrect usage */}
         <Screen name="foo" getComponent={{}} />
       </TestNavigator>
     </BaseNavigationContainer>
   );
 
-  expect(() => render(element).update(element)).toThrowError(
+  expect(() => render(element).update(element)).toThrow(
     "Got an invalid value for 'getComponent' prop for the screen 'foo'. It must be a function returning a React Component."
   );
 });
@@ -1972,7 +1972,7 @@ it('throws descriptive error for invalid children', () => {
     </BaseNavigationContainer>
   );
 
-  expect(() => render(element).update(element)).toThrowError(
+  expect(() => render(element).update(element)).toThrow(
     "Got an invalid value for 'children' prop for the screen 'foo'. It must be a function returning a React Element."
   );
 });
@@ -1993,7 +1993,7 @@ it("doesn't throw if children is null", () => {
     </BaseNavigationContainer>
   );
 
-  expect(() => render(element).update(element)).not.toThrowError();
+  expect(() => render(element).update(element)).not.toThrow();
 });
 
 it('returns currently focused route with getCurrentRoute', () => {
@@ -2387,7 +2387,7 @@ it('does not throw if while getting current options with empty container', () =>
   const navigation = createNavigationContainerRef<ParamListBase>();
 
   const container = (
-    <BaseNavigationContainer ref={navigation} children={null} />
+    <BaseNavigationContainer ref={navigation}>{null}</BaseNavigationContainer>
   );
 
   render(container).update(container);

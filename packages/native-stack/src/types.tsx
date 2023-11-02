@@ -36,7 +36,7 @@ export type NativeStackNavigationEventMap = {
 export type NativeStackNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string,
-  NavigatorID extends string | undefined = undefined
+  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
@@ -50,7 +50,7 @@ export type NativeStackNavigationProp<
 export type NativeStackScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string,
-  NavigatorID extends string | undefined = undefined
+  NavigatorID extends string | undefined = undefined,
 > = {
   navigation: NativeStackNavigationProp<ParamList, RouteName, NavigatorID>;
   route: RouteProp<ParamList, RouteName>;
@@ -72,7 +72,11 @@ export type NativeStackHeaderProps = {
     /**
      * Title of the previous screen.
      */
-    title: string;
+    title: string | undefined;
+    /**
+     * The `href` to use for the anchor tag on web
+     */
+    href: string | undefined;
   };
   /**
    * Options for the current screen.

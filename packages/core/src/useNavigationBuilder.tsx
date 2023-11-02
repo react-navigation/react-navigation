@@ -1,14 +1,14 @@
 import {
   CommonActions,
-  DefaultRouterOptions,
-  NavigationAction,
-  NavigationState,
-  ParamListBase,
-  PartialState,
-  Route,
-  Router,
-  RouterConfigOptions,
-  RouterFactory,
+  type DefaultRouterOptions,
+  type NavigationAction,
+  type NavigationState,
+  type ParamListBase,
+  type PartialState,
+  type Route,
+  type Router,
+  type RouterConfigOptions,
+  type RouterFactory,
 } from '@react-navigation/routers';
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
@@ -22,17 +22,17 @@ import { NavigationStateContext } from './NavigationStateContext';
 import { PreventRemoveProvider } from './PreventRemoveProvider';
 import { Screen } from './Screen';
 import {
-  DefaultNavigatorOptions,
-  EventMapBase,
-  EventMapCore,
-  NavigatorScreenParams,
+  type DefaultNavigatorOptions,
+  type EventMapBase,
+  type EventMapCore,
+  type NavigatorScreenParams,
   PrivateValueStore,
-  RouteConfig,
+  type RouteConfig,
 } from './types';
 import { useChildListeners } from './useChildListeners';
 import { useComponent } from './useComponent';
 import { useCurrentRender } from './useCurrentRender';
-import { ScreenConfigWithParent, useDescriptors } from './useDescriptors';
+import { type ScreenConfigWithParent, useDescriptors } from './useDescriptors';
 import { useEventEmitter } from './useEventEmitter';
 import { useFocusedListenersChildrenAdapter } from './useFocusedListenersChildrenAdapter';
 import { useFocusEvents } from './useFocusEvents';
@@ -45,7 +45,6 @@ import { useRegisterNavigator } from './useRegisterNavigator';
 import { useScheduleUpdate } from './useScheduleUpdate';
 
 // This is to make TypeScript compiler happy
-// eslint-disable-next-line babel/no-unused-expressions
 PrivateValueStore;
 
 type NavigatorRoute = {
@@ -64,7 +63,7 @@ const isValidKey = (key: unknown) =>
 const getRouteConfigsFromChildren = <
   State extends NavigationState,
   ScreenOptions extends {},
-  EventMap extends EventMapBase
+  EventMap extends EventMapBase,
 >(
   children: React.ReactNode,
   groupKey?: string,
@@ -242,7 +241,7 @@ export function useNavigationBuilder<
   RouterOptions extends DefaultRouterOptions,
   ActionHelpers extends Record<string, () => void>,
   ScreenOptions extends {},
-  EventMap extends Record<string, any>
+  EventMap extends Record<string, any>,
 >(
   createRouter: RouterFactory<State, any, RouterOptions>,
   options: DefaultNavigatorOptions<
@@ -463,7 +462,7 @@ export function useNavigationBuilder<
           routeGetIdList,
           routeKeyChanges: Object.keys(routeKeyList).filter(
             (name) =>
-              previousRouteKeyList.hasOwnProperty(name) &&
+              name in previousRouteKeyList &&
               routeKeyList[name] !== previousRouteKeyList[name]
           ),
         });
@@ -573,7 +572,7 @@ export function useNavigationBuilder<
   }, [getCurrentState, isStateInitialized]);
 
   const emitter = useEventEmitter<EventMapCore<State>>((e) => {
-    let routeNames = [];
+    const routeNames = [];
 
     let route: Route<string> | undefined;
 

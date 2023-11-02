@@ -3,10 +3,10 @@ import {
   getActionFromState,
   getPathFromState,
   getStateFromPath,
-  NavigationContainerProps,
-  NavigationContainerRef,
-  NavigationState,
-  ParamListBase,
+  type NavigationContainerProps,
+  type NavigationContainerRef,
+  type NavigationState,
+  type ParamListBase,
   validatePathConfig,
 } from '@react-navigation/core';
 import * as React from 'react';
@@ -30,6 +30,7 @@ import { useLinking } from './useLinking';
 import { useThenable } from './useThenable';
 
 declare global {
+  // eslint-disable-next-line no-var
   var REACT_NAVIGATION_DEVTOOLS: WeakMap<
     NavigationContainerRef<any>,
     { readonly linking: LinkingOptions<any> }

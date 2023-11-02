@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { HostComponent, Keyboard, TextInput } from 'react-native';
+import { type HostComponent, Keyboard, TextInput } from 'react-native';
 
 type InputRef = React.ElementRef<HostComponent<unknown>> | undefined;
 

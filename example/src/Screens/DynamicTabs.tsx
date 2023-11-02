@@ -1,8 +1,9 @@
 import Feather from '@expo/vector-icons/Feather';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Button } from '@react-navigation/elements';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Title } from 'react-native-paper';
+import { Title } from 'react-native-paper';
 
 type BottomTabParams = {
   [key: string]: undefined;
@@ -54,5 +55,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 8,
   },
 });

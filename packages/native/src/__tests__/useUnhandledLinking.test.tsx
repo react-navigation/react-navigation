@@ -1,6 +1,5 @@
 import {
   createNavigatorFactory,
-  findFocusedRoute,
   StackRouter,
   useNavigationBuilder,
 } from '@react-navigation/core';

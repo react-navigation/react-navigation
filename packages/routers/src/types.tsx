@@ -7,7 +7,7 @@ export type CommonNavigationAction = CommonActions.Action;
 
 type NavigationRoute<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList
+  RouteName extends keyof ParamList,
 > = Route<Extract<RouteName, string>, ParamList[RouteName]> & {
   state?: NavigationState | PartialState<NavigationState>;
 };
@@ -67,7 +67,7 @@ export type PartialState<State extends NavigationState> = Partial<
 
 export type Route<
   RouteName extends string,
-  Params extends object | undefined = object | undefined
+  Params extends object | undefined = object | undefined,
 > = Readonly<{
   /**
    * Unique key for the route.
@@ -140,7 +140,7 @@ export type DefaultRouterOptions<RouteName extends string = string> = {
 export type RouterFactory<
   State extends NavigationState,
   Action extends NavigationAction,
-  RouterOptions extends DefaultRouterOptions
+  RouterOptions extends DefaultRouterOptions,
 > = (options: RouterOptions) => Router<State, Action>;
 
 export type RouterConfigOptions = {
@@ -155,7 +155,7 @@ export type RouterConfigOptions = {
 
 export type Router<
   State extends NavigationState,
-  Action extends NavigationAction
+  Action extends NavigationAction,
 > = {
   /**
    * Type of the router. Should match the `type` property in state.

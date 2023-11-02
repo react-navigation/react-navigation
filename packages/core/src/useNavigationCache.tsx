@@ -1,9 +1,9 @@
 import {
   CommonActions,
-  NavigationAction,
-  NavigationState,
-  ParamListBase,
-  Router,
+  type NavigationAction,
+  type NavigationState,
+  type ParamListBase,
+  type Router,
 } from '@react-navigation/routers';
 import * as React from 'react';
 
@@ -14,7 +14,7 @@ import type { NavigationEventEmitter } from './useEventEmitter';
 type Options<
   State extends NavigationState,
   ScreenOptions extends {},
-  EventMap extends Record<string, any>
+  EventMap extends Record<string, any>,
 > = {
   state: State;
   getState: () => State;
@@ -32,7 +32,7 @@ type Options<
 type NavigationCache<
   State extends NavigationState,
   ScreenOptions extends {},
-  EventMap extends Record<string, any>
+  EventMap extends Record<string, any>,
 > = Record<
   string,
   NavigationProp<
@@ -53,7 +53,7 @@ type NavigationCache<
 export function useNavigationCache<
   State extends NavigationState,
   ScreenOptions extends {},
-  EventMap extends Record<string, any>
+  EventMap extends Record<string, any>,
 >({
   state,
   getState,

@@ -1,15 +1,14 @@
-import { getLabel, Label } from '@react-navigation/elements';
-import { CommonActions, Link, Route, useTheme } from '@react-navigation/native';
+import { getLabel, Label, PlatformPressable } from '@react-navigation/elements';
+import { type Route, useTheme } from '@react-navigation/native';
 import Color from 'color';
 import React from 'react';
 import {
-  GestureResponderEvent,
+  type GestureResponderEvent,
   Platform,
-  Pressable,
-  StyleProp,
+  type StyleProp,
   StyleSheet,
-  TextStyle,
-  ViewStyle,
+  type TextStyle,
+  type ViewStyle,
 } from 'react-native';
 
 import type {
@@ -64,7 +63,7 @@ type Props = {
    */
   badgeStyle?: StyleProp<TextStyle>;
   /**
-   * The button for the tab. Uses a `TouchableWithoutFeedback` by default.
+   * The button for the tab. Uses a `Pressable` by default.
    */
   button?: (props: BottomTabBarButtonProps) => React.ReactNode;
   /**
@@ -145,40 +144,19 @@ export function BottomTabItem({
     accessibilityRole,
     ...rest
   }: BottomTabBarButtonProps) => {
-    if (Platform.OS === 'web') {
-      // React Native Web doesn't forward `onClick` if we use `TouchableWithoutFeedback`.
-      // We need to use `onClick` to be able to prevent default browser handling of links.
-      return (
-        <Link
-          {...rest}
-          href={href}
-          action={CommonActions.navigate(route.name, route.params)}
-          style={[styles.button, style]}
-          onPress={(e: any) => {
-            if (
-              !(e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) && // ignore clicks with modifier keys
-              (e.button == null || e.button === 0) // ignore everything but left clicks
-            ) {
-              e.preventDefault();
-              onPress?.(e);
-            }
-          }}
-        >
-          {children}
-        </Link>
-      );
-    } else {
-      return (
-        <Pressable
-          {...rest}
-          accessibilityRole={accessibilityRole}
-          onPress={onPress}
-          style={style}
-        >
-          {children}
-        </Pressable>
-      );
-    }
+    return (
+      <PlatformPressable
+        {...rest}
+        android_ripple={{ borderless: true }}
+        pressOpacity={1}
+        href={href}
+        accessibilityRole={accessibilityRole}
+        onPress={onPress}
+        style={style}
+      >
+        {children}
+      </PlatformPressable>
+    );
   },
   accessibilityLabel,
   testID,
@@ -323,8 +301,5 @@ const styles = StyleSheet.create({
   labelBeside: {
     fontSize: 13,
     marginLeft: 20,
-  },
-  button: {
-    display: 'flex',
   },
 });

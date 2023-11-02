@@ -7,8 +7,8 @@ import {
   CommonActions,
   NavigationContext,
   NavigationRouteContext,
-  ParamListBase,
-  TabNavigationState,
+  type ParamListBase,
+  type TabNavigationState,
   useLinkTools,
   useTheme,
 } from '@react-navigation/native';
@@ -16,13 +16,13 @@ import Color from 'color';
 import React from 'react';
 import {
   Animated,
-  LayoutChangeEvent,
+  type LayoutChangeEvent,
   Platform,
-  StyleProp,
+  type StyleProp,
   StyleSheet,
   useWindowDimensions,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 
@@ -104,8 +104,11 @@ export const getTabBarHeight = ({
   insets: EdgeInsets;
   style: Animated.WithAnimatedValue<StyleProp<ViewStyle>> | undefined;
 }) => {
-  // @ts-ignore
-  const customHeight = StyleSheet.flatten(style)?.height;
+  const flattenedStyle = StyleSheet.flatten(style);
+  const customHeight =
+    flattenedStyle && 'height' in flattenedStyle
+      ? flattenedStyle.height
+      : undefined;
 
   if (typeof customHeight === 'number') {
     return customHeight;
