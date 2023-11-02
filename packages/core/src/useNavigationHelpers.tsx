@@ -3,7 +3,6 @@ import {
   type NavigationAction,
   type NavigationState,
   type ParamListBase,
-  type PartialState,
   type Router,
 } from '@react-navigation/routers';
 import * as React from 'react';

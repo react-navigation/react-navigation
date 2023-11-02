@@ -1,6 +1,3 @@
-// TODO
-import type { LinkingOptions, NavigationProp } from '@react-navigation/native';
-
 import type * as CommonActions from './CommonActions';
 
 export type CommonNavigationAction = CommonActions.Action;
@@ -132,7 +129,7 @@ export type DefaultRouterOptions<RouteName extends string = string> = {
    * TODO something
    */
   getStateForRouteNamesChange?: (
-    state: NavigationState,
+    state: NavigationState
   ) => PartialState<NavigationState> | undefined;
   linking?: any;
 };

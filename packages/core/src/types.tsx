@@ -814,7 +814,7 @@ export type PathConfig<ParamList extends {}> = {
    * TODO something
    */
   getStateForRouteNamesChange?: (
-    state: NavigationState,
+    state: NavigationState
   ) => PartialState<NavigationState> | undefined;
 };
 

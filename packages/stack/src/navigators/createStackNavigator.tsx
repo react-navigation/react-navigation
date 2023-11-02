@@ -1,7 +1,8 @@
 import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
-  type EventArg, LinkingContext,
+  type EventArg,
+  LinkingContext,
   type ParamListBase,
   type StackActionHelpers,
   StackActions,
@@ -57,7 +58,7 @@ function StackNavigator({
       screenListeners,
       screenOptions,
       getStateForRouteNamesChange,
-      linking
+      linking,
     });
 
   React.useEffect(

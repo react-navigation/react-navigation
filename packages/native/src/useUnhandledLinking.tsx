@@ -38,15 +38,13 @@ export function useUnhandledLinking() {
 
   const { options } = linking;
 
-
   const getStateForRouteNamesChange = (
     currentState: NavigationState
   ): PartialState<NavigationState> | undefined => {
     if (lastUnhandledLink == null) {
       // noop, nothing to handle
       return;
-    };
-
+    }
 
     // at web, the path is already extracted
     const path = lastUnhandledLink;
@@ -59,7 +57,6 @@ export function useUnhandledLinking() {
       options?.getStateFromPath ?? getStateFromPath;
 
     const pathState = getStateFromPathHelper(path, options?.config);
-
 
     if (!pathState) {
       return;
@@ -78,7 +75,7 @@ export function useUnhandledLinking() {
       return;
     }
 
-    console.log(state)
+    console.log(state);
     return state;
   };
 

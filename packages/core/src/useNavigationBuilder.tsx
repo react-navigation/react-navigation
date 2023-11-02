@@ -431,7 +431,6 @@ export function useNavigationBuilder<
 
   const previousRouteKeyList = previousRouteKeyListRef.current;
 
-
   let state =
     // If the state isn't initialized, or stale, use the state we initialized instead
     // The state won't update until there's a change needed in the state we have initalized locally
@@ -564,7 +563,6 @@ export function useNavigationBuilder<
 
   const getState = React.useCallback((): State => {
     const currentState = getCurrentState();
-
 
     return isStateInitialized(currentState)
       ? (currentState as State)
