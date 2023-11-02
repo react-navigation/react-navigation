@@ -56,8 +56,7 @@ it('throws if multiple instances of useLinking are used', () => {
   element?.unmount();
 
   function Sample2() {
-    const lastUnhandledLink = React.useRef<string | undefined>();
-    useLinking(ref, options, lastUnhandledLink);
+    useLinking(ref, options, () => {});
     return null;
   }
 

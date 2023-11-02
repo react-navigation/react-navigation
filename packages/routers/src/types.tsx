@@ -126,7 +126,7 @@ export type DefaultRouterOptions<RouteName extends string = string> = {
    */
   initialRouteName?: RouteName;
   /**
-   * TODO something
+   A function returning a state, which may be set after modifying the routes name.
    */
   getStateForRouteNamesChange?: (
     state: NavigationState
