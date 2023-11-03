@@ -149,6 +149,7 @@ const SceneView = ({
     header,
     headerBackButtonMenuEnabled,
     headerShown,
+    headerBackground,
     headerTransparent,
     autoHideHomeIndicator,
     navigationBarColor,
@@ -299,6 +300,21 @@ const SceneView = ({
                 headerShown !== false ? headerHeight : parentHeaderHeight ?? 0
               }
             >
+              {headerBackground != null ? (
+                /**
+                 * To show a custom header background, we render it at the top of the screen below the header
+                 * The header also needs to be positioned absolutely (with `translucent` style)
+                 */
+                <View
+                  style={[
+                    styles.background,
+                    headerTransparent ? styles.translucent : null,
+                    { height: headerHeight },
+                  ]}
+                >
+                  {headerBackground()}
+                </View>
+              ) : null}
               <View
                 accessibilityElementsHidden={!focused}
                 importantForAccessibility={
@@ -473,5 +489,16 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
+  },
+  translucent: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1,
+    elevation: 1,
+  },
+  background: {
+    overflow: 'hidden',
   },
 });
