@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.9.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.9.16...@react-navigation/native-stack@6.9.17) (2023-11-03)
+
+### Bug Fixes
+
+* fix custom header background in native stack ([9cfdf53](https://github.com/react-navigation/react-navigation/commit/9cfdf5342c471474983954ae6384a48ac0571b49)) - by @satya164
+
 ## [6.9.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.9.15...@react-navigation/native-stack@6.9.16) (2023-10-23)
 
 ### Bug Fixes
