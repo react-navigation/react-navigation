@@ -430,8 +430,6 @@ it("doesn't update state if action wasn't handled", () => {
 });
 
 it('cleans up state when the navigator unmounts', () => {
-  jest.useFakeTimers();
-
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -480,8 +478,6 @@ it('cleans up state when the navigator unmounts', () => {
       {null}
     </BaseNavigationContainer>
   );
-
-  act(() => jest.runAllTimers());
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenLastCalledWith(undefined);
@@ -532,6 +528,72 @@ it('allows state updates by dispatching a function returning an action', () => {
     routes: [
       { key: 'foo', name: 'foo' },
       { key: 'bar', name: 'bar' },
+    ],
+  });
+});
+
+it('re-initializes state once for conditional rendering', () => {
+  const TestNavigatorA = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestNavigatorB = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const onStateChange = jest.fn();
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const Test = ({ condition }: { condition: boolean }) => {
+    return (
+      <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
+        {condition ? (
+          <TestNavigatorA>
+            <Screen name="foo">{() => null}</Screen>
+            <Screen name="bar">{() => null}</Screen>
+          </TestNavigatorA>
+        ) : (
+          <TestNavigatorB>
+            <Screen name="bar">{() => null}</Screen>
+            <Screen name="baz">{() => null}</Screen>
+          </TestNavigatorB>
+        )}
+      </BaseNavigationContainer>
+    );
+  };
+
+  const root = render(<Test condition />);
+
+  expect(onStateChange).toHaveBeenCalledTimes(0);
+  expect(navigation.getRootState()).toEqual({
+    stale: false,
+    type: 'test',
+    index: 0,
+    key: '0',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+    ],
+  });
+
+  root.update(<Test condition={false} />);
+
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenCalledWith({
+    stale: false,
+    type: 'test',
+    index: 0,
+    key: '1',
+    routeNames: ['bar', 'baz'],
+    routes: [
+      { key: 'bar', name: 'bar' },
+      { key: 'baz', name: 'baz' },
     ],
   });
 });
