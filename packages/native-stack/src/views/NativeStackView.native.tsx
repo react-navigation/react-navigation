@@ -246,7 +246,7 @@ const SceneView = ({
   const [customHeaderHeight, setCustomHeaderHeight] =
     React.useState(defaultHeaderHeight);
 
-  const animatedHeaderHeight = useAnimatedValue(customHeaderHeight);
+  const animatedHeaderHeight = useAnimatedValue(defaultHeaderHeight);
 
   const headerTopInsetEnabled = topInset !== 0;
   const headerHeight = header ? customHeaderHeight : defaultHeaderHeight;
