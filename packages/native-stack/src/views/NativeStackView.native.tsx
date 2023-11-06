@@ -246,7 +246,6 @@ const SceneView = ({
   const [customHeaderHeight, setCustomHeaderHeight] =
     React.useState(defaultHeaderHeight);
 
-  const cachedAnimatedHeaderHeight = React.useRef(customHeaderHeight);
   const animatedHeaderHeight = useAnimatedValue(customHeaderHeight);
 
   const headerTopInsetEnabled = topInset !== 0;
@@ -305,13 +304,20 @@ const SceneView = ({
       preventNativeDismiss={isRemovePrevented} // on iOS
       onNativeDismissCancelled={onNativeDismissCancelled}
       // @ts-expect-error this prop is available since rn-screens 3.26
-      onHeaderHeightChange={(e) =>
-        handleHeaderHeightChangeEvent(
-          e.nativeEvent.headerHeight,
-          cachedAnimatedHeaderHeight,
-          animatedHeaderHeight
-        )
-      }
+      // Unfortunately, because of the bug that exists on Fabric, where native event drivers
+      // for Animated objects are being created after the first notifications about the header height
+      // from the native side, `onHeaderHeightChange` event does not notify
+      // `animatedHeaderHeight` about initial values on appearing screens at the moment.
+      onHeaderHeightChange={Animated.event(
+        [
+          {
+            nativeEvent: {
+              headerHeight: animatedHeaderHeight,
+            },
+          },
+        ],
+        { useNativeDriver: true }
+      )}
       // this prop is available since rn-screens 3.16
       freezeOnBlur={freezeOnBlur}
     >
@@ -494,23 +500,6 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
     </ScreenStack>
   );
 }
-
-const handleHeaderHeightChangeEvent = (
-  height: number,
-  cachedHeaderHeight: React.MutableRefObject<number>,
-  animatedHeaderHeight: Animated.Value
-) => {
-  if (cachedHeaderHeight.current !== height) {
-    // Currently, we're setting value by Animated#setValue, because we want to cache animated value.
-    // Unfortunately, because of the bug that exists on Fabric, where native event drivers
-    // for Animated objects are being created after the first notifications about the header height
-    // from the native side, it's not possible to use Animated#event, as
-    // we won't receive initial values on appearing screens.
-    // TODO(tboba): Replace animated#setValue to Animated#event.
-    animatedHeaderHeight.setValue(height);
-    cachedHeaderHeight.current = height;
-  }
-};
 
 export function NativeStackView(props: Props) {
   return (
