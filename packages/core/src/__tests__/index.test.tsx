@@ -430,8 +430,6 @@ it("doesn't update state if action wasn't handled", () => {
 });
 
 it('cleans up state when the navigator unmounts', () => {
-  jest.useFakeTimers();
-
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -480,8 +478,6 @@ it('cleans up state when the navigator unmounts', () => {
       {null}
     </BaseNavigationContainer>
   );
-
-  act(() => jest.runAllTimers());
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenLastCalledWith(undefined);
@@ -532,6 +528,72 @@ it('allows state updates by dispatching a function returning an action', () => {
     routes: [
       { key: 'foo', name: 'foo' },
       { key: 'bar', name: 'bar' },
+    ],
+  });
+});
+
+it('re-initializes state once for conditional rendering', () => {
+  const TestNavigatorA = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestNavigatorB = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const onStateChange = jest.fn();
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const Test = ({ condition }: { condition: boolean }) => {
+    return (
+      <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
+        {condition ? (
+          <TestNavigatorA>
+            <Screen name="foo">{() => null}</Screen>
+            <Screen name="bar">{() => null}</Screen>
+          </TestNavigatorA>
+        ) : (
+          <TestNavigatorB>
+            <Screen name="bar">{() => null}</Screen>
+            <Screen name="baz">{() => null}</Screen>
+          </TestNavigatorB>
+        )}
+      </BaseNavigationContainer>
+    );
+  };
+
+  const root = render(<Test condition />);
+
+  expect(onStateChange).toHaveBeenCalledTimes(0);
+  expect(navigation.getRootState()).toEqual({
+    stale: false,
+    type: 'test',
+    index: 0,
+    key: '0',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+    ],
+  });
+
+  root.update(<Test condition={false} />);
+
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenCalledWith({
+    stale: false,
+    type: 'test',
+    index: 0,
+    key: '1',
+    routeNames: ['bar', 'baz'],
+    routes: [
+      { key: 'bar', name: 'bar' },
+      { key: 'baz', name: 'baz' },
     ],
   });
 });
@@ -789,18 +851,16 @@ it('navigates to nested child in a navigator', () => {
     `"[bar-a, {"lol":"why","whoa":"test"}]"`
   );
 
-  act(() => navigation.navigate('bar', { screen: 'bar-b' }));
-
   act(() => navigation.goBack());
 
   expect(element).toMatchInlineSnapshot(
-    `"[bar-a, {"lol":"why","whoa":"test"}]"`
+    `"[bar-b, {"some":"stuff","test":42}]"`
   );
 
-  act(() => navigation.navigate('bar', { screen: 'bar-b' }));
+  act(() => navigation.navigate('bar', { screen: 'bar-a' }));
 
   expect(element).toMatchInlineSnapshot(
-    `"[bar-b, {"some":"stuff","test":42,"whoa":"test"}]"`
+    `"[bar-a, {"lol":"why","whoa":"test"}]"`
   );
 });
 
@@ -939,17 +999,12 @@ it('navigates to nested child in a navigator with initial: false', () => {
         name: 'bar',
         params: { params: { test: 42 }, screen: 'bar-b' },
         state: {
-          index: 1,
-          key: '3',
+          index: 0,
+          key: '4',
           routeNames: ['bar-a', 'bar-b'],
           routes: [
             {
-              key: 'bar-a',
-              name: 'bar-a',
-              params: { lol: 'why' },
-            },
-            {
-              key: 'bar-b',
+              key: 'bar-b-3',
               name: 'bar-b',
               params: { some: 'stuff', test: 42 },
             },
@@ -997,7 +1052,7 @@ it('navigates to nested child in a navigator with initial: false', () => {
   expect(second).toMatchInlineSnapshot(`"[foo-a, undefined]"`);
   expect(navigation.getRootState()).toEqual({
     index: 0,
-    key: '4',
+    key: '5',
     routeNames: ['foo', 'bar'],
     routes: [
       {
@@ -1005,7 +1060,7 @@ it('navigates to nested child in a navigator with initial: false', () => {
         name: 'foo',
         state: {
           index: 0,
-          key: '5',
+          key: '6',
           routeNames: ['foo-a', 'foo-b'],
           routes: [
             { key: 'foo-a', name: 'foo-a' },
@@ -1033,18 +1088,18 @@ it('navigates to nested child in a navigator with initial: false', () => {
 
   expect(navigation.getRootState()).toEqual({
     index: 2,
-    key: '4',
+    key: '5',
     routeNames: ['foo', 'bar'],
     routes: [
       { key: 'foo', name: 'foo' },
       { key: 'bar', name: 'bar' },
       {
-        key: '6',
+        key: '7',
         name: 'bar',
         params: { initial: false, params: { test: 42 }, screen: 'bar-b' },
         state: {
           index: 2,
-          key: '7',
+          key: '8',
           routeNames: ['bar-a', 'bar-b'],
           routes: [
             {
@@ -1057,7 +1112,7 @@ it('navigates to nested child in a navigator with initial: false', () => {
               name: 'bar-b',
               params: { some: 'stuff' },
             },
-            { key: '8', name: 'bar-b', params: { test: 42 } },
+            { key: '9', name: 'bar-b', params: { test: 42 } },
           ],
           stale: false,
           type: 'test',
@@ -1124,26 +1179,26 @@ it('navigates to nested child in a navigator with initial: false', () => {
 
   expect(navigation.getRootState()).toEqual({
     index: 1,
-    key: '11',
+    key: '12',
     routeNames: ['foo', 'bar'],
     routes: [
-      { key: 'foo-9', name: 'foo' },
+      { key: 'foo-10', name: 'foo' },
       {
-        key: 'bar-10',
+        key: 'bar-11',
         name: 'bar',
         params: { initial: false, params: { test: 42 }, screen: 'bar-b' },
         state: {
           index: 1,
-          key: '14',
+          key: '15',
           routeNames: ['bar-a', 'bar-b'],
           routes: [
             {
-              key: 'bar-a-12',
+              key: 'bar-a-13',
               name: 'bar-a',
               params: { lol: 'why' },
             },
             {
-              key: 'bar-b-13',
+              key: 'bar-b-14',
               name: 'bar-b',
               params: { some: 'stuff' },
             },

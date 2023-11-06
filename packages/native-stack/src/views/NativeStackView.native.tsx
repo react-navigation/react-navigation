@@ -152,7 +152,7 @@ const SceneView = ({
 
   let {
     animation,
-    customAnimationOnGesture,
+    animationMatchesGesture,
     fullScreenGestureEnabled,
     presentation = 'card',
   } = options;
@@ -165,6 +165,7 @@ const SceneView = ({
     header,
     headerBackButtonMenuEnabled,
     headerShown,
+    headerBackground,
     headerTransparent,
     autoHideHomeIndicator,
     navigationBarColor,
@@ -181,15 +182,17 @@ const SceneView = ({
   if (gestureDirection === 'vertical' && Platform.OS === 'ios') {
     // for `vertical` direction to work, we need to set `fullScreenGestureEnabled` to `true`
     // so the screen can be dismissed from any point on screen.
-    // `customAnimationOnGesture` needs to be set to `true` so the `animation` set by user can be used,
+    // `animationMatchesGesture` needs to be set to `true` so the `animation` set by user can be used,
     // otherwise `simple_push` will be used.
     // Also, the default animation for this direction seems to be `slide_from_bottom`.
     if (fullScreenGestureEnabled === undefined) {
       fullScreenGestureEnabled = true;
     }
-    if (customAnimationOnGesture === undefined) {
-      customAnimationOnGesture = true;
+
+    if (animationMatchesGesture === undefined) {
+      animationMatchesGesture = true;
     }
+
     if (animation === undefined) {
       animation = 'slide_from_bottom';
     }
@@ -269,7 +272,7 @@ const SceneView = ({
       key={route.key}
       enabled
       style={StyleSheet.absoluteFill}
-      customAnimationOnSwipe={customAnimationOnGesture}
+      customAnimationOnSwipe={animationMatchesGesture}
       fullScreenSwipeEnabled={fullScreenGestureEnabled}
       gestureEnabled={
         isAndroid
@@ -323,6 +326,21 @@ const SceneView = ({
                   headerShown !== false ? headerHeight : parentHeaderHeight ?? 0
                 }
               >
+                {headerBackground != null ? (
+                  /**
+                   * To show a custom header background, we render it at the top of the screen below the header
+                   * The header also needs to be positioned absolutely (with `translucent` style)
+                   */
+                  <View
+                    style={[
+                      styles.background,
+                      headerTransparent ? styles.translucent : null,
+                      { height: headerHeight },
+                    ]}
+                  >
+                    {headerBackground()}
+                  </View>
+                ) : null}
                 <View
                   accessibilityElementsHidden={!focused}
                   importantForAccessibility={
@@ -515,5 +533,16 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
+  },
+  translucent: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1,
+    elevation: 1,
+  },
+  background: {
+    overflow: 'hidden',
   },
 });
