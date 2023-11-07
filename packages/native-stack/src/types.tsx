@@ -31,10 +31,6 @@ export type NativeStackNavigationEventMap = {
    * Event which fires when a transition animation ends.
    */
   transitionEnd: { data: { closing: boolean } };
-  /**
-   * Event which fires when a header height gets changed.
-   */
-  headerHeightChange: { data: { headerHeight: number } };
 };
 
 export type NativeStackNavigationProp<
