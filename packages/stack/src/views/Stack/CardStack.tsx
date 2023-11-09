@@ -9,7 +9,6 @@ import type {
   Route,
   StackNavigationState,
 } from '@react-navigation/native';
-import Color from 'color';
 import * as React from 'react';
 import {
   Animated,
@@ -31,6 +30,7 @@ import {
 import type {
   Layout,
   Scene,
+  StackCardStyleInterpolator,
   StackDescriptor,
   StackDescriptorMap,
   StackHeaderMode,
@@ -40,7 +40,6 @@ import { findLastIndex } from '../../utils/findLastIndex';
 import { getDistanceForDirection } from '../../utils/getDistanceForDirection';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import { MaybeScreen, MaybeScreenContainer } from '../Screens';
-import { getIsModalPresentation } from './Card';
 import { CardContainer } from './CardContainer';
 
 type GestureValues = {
@@ -112,6 +111,16 @@ const getInterpolationIndex = (scenes: Scene[], index: number) => {
   }
 
   return interpolationIndex;
+};
+
+const getIsModalPresentation = (
+  cardStyleInterpolator: StackCardStyleInterpolator
+) => {
+  return (
+    cardStyleInterpolator === forModalPresentationIOS ||
+    // Handle custom modal presentation interpolators as well
+    cardStyleInterpolator.name === 'forModalPresentationIOS'
+  );
 };
 
 const getIsModal = (
@@ -628,8 +637,6 @@ export class CardStack extends React.Component<Props, State> {
             const {
               headerShown = true,
               headerTransparent,
-              headerStyle,
-              headerTintColor,
               freezeOnBlur,
             } = scene.descriptor.options;
 
@@ -640,26 +647,6 @@ export class CardStack extends React.Component<Props, State> {
 
             const headerHeight =
               headerShown !== false ? headerHeights[route.key] : 0;
-
-            let headerDarkContent: boolean | undefined;
-
-            if (headerShown) {
-              if (typeof headerTintColor === 'string') {
-                headerDarkContent = Color(headerTintColor).isDark();
-              } else {
-                const flattenedHeaderStyle = StyleSheet.flatten(headerStyle);
-
-                if (
-                  flattenedHeaderStyle &&
-                  'backgroundColor' in flattenedHeaderStyle &&
-                  typeof flattenedHeaderStyle.backgroundColor === 'string'
-                ) {
-                  headerDarkContent = !Color(
-                    flattenedHeaderStyle.backgroundColor
-                  ).isDark();
-                }
-              }
-            }
 
             // Start from current card and count backwards the number of cards with same interpolation
             const interpolationIndex = getInterpolationIndex(scenes, index);
@@ -708,7 +695,6 @@ export class CardStack extends React.Component<Props, State> {
                   onHeaderHeightChange={this.handleHeaderLayout}
                   getPreviousScene={this.getPreviousScene}
                   getFocusedRoute={this.getFocusedRoute}
-                  headerDarkContent={headerDarkContent}
                   hasAbsoluteFloatHeader={
                     isFloatHeaderAbsolute && !headerTransparent
                   }

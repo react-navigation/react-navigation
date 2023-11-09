@@ -180,11 +180,13 @@ export function App() {
 
   return (
     <Providers theme={paperTheme}>
-      <StatusBar
-        translucent
-        barStyle={theme.dark ? 'light-content' : 'dark-content'}
-        backgroundColor="rgba(0, 0, 0, 0.24)"
-      />
+      {Platform.OS === 'android' && (
+        <StatusBar
+          translucent
+          barStyle={theme.dark ? 'light-content' : 'dark-content'}
+          backgroundColor="rgba(0, 0, 0, 0.24)"
+        />
+      )}
       <NavigationContainer
         ref={navigationRef}
         initialState={initialState}

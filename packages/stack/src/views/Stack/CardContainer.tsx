@@ -29,7 +29,6 @@ type Props = {
   layout: Layout;
   gesture: Animated.Value;
   scene: Scene;
-  headerDarkContent: boolean | undefined;
   safeAreaInsetTop: number;
   safeAreaInsetRight: number;
   safeAreaInsetBottom: number;
@@ -71,7 +70,6 @@ function CardContainerInner({
   modal,
   getPreviousScene,
   getFocusedRoute,
-  headerDarkContent,
   hasAbsoluteFloatHeader,
   headerHeight,
   onHeaderHeightChange,
@@ -254,7 +252,6 @@ function CardContainerInner({
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
       pointerEvents={active ? 'box-none' : pointerEvents}
       pageOverflowEnabled={headerMode !== 'float' && presentation !== 'modal'}
-      headerDarkContent={headerDarkContent}
       containerStyle={
         hasAbsoluteFloatHeader && headerMode !== 'screen'
           ? { marginTop: headerHeight }
