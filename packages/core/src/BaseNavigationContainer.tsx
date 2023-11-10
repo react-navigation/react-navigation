@@ -31,7 +31,6 @@ import { useEventEmitter } from './useEventEmitter';
 import { useKeyedChildListeners } from './useKeyedChildListeners';
 import { useNavigationIndependentTree } from './useNavigationIndependentTree';
 import { useOptionsGetters } from './useOptionsGetters';
-import { ScheduleUpdateContext } from './useScheduleUpdate';
 import { useSyncState } from './useSyncState';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
@@ -101,10 +100,9 @@ export const BaseNavigationContainer = React.forwardRef(
       );
     }
 
-    const [state, getState, setState, scheduleUpdate, flushUpdates] =
-      useSyncState<State>(() =>
-        getPartialState(initialState == null ? undefined : initialState)
-      );
+    const [state, getState, setState] = useSyncState<State>(() =>
+      getPartialState(initialState == null ? undefined : initialState)
+    );
 
     const isFirstMountRef = React.useRef<boolean>(true);
 
@@ -203,7 +201,7 @@ export const BaseNavigationContainer = React.forwardRef(
         isFocused: () => true,
         canGoBack,
         getParent: () => undefined,
-        getState: () => stateRef.current,
+        getState,
         getRootState,
         getCurrentRoute,
         getCurrentOptions,
@@ -216,6 +214,7 @@ export const BaseNavigationContainer = React.forwardRef(
         getCurrentOptions,
         getCurrentRoute,
         getRootState,
+        getState,
         isReady,
         resetRoot,
       ]
@@ -260,11 +259,6 @@ export const BaseNavigationContainer = React.forwardRef(
       [addListener, addKeyedListener, onDispatchAction, onOptionsChange]
     );
 
-    const scheduleContext = React.useMemo(
-      () => ({ scheduleUpdate, flushUpdates }),
-      [scheduleUpdate, flushUpdates]
-    );
-
     const isInitialRef = React.useRef(true);
 
     const getIsInitial = React.useCallback(() => isInitialRef.current, []);
@@ -292,13 +286,11 @@ export const BaseNavigationContainer = React.forwardRef(
 
     const onReadyRef = React.useRef(onReady);
     const onStateChangeRef = React.useRef(onStateChange);
-    const stateRef = React.useRef(state);
 
     React.useEffect(() => {
       isInitialRef.current = false;
       onStateChangeRef.current = onStateChange;
       onReadyRef.current = onReady;
-      stateRef.current = state;
     });
 
     const onReadyCalledRef = React.useRef(false);
@@ -434,21 +426,19 @@ export const BaseNavigationContainer = React.forwardRef(
     return (
       <NavigationIndependentTreeContext.Provider value={false}>
         <NavigationContainerRefContext.Provider value={navigation}>
-          <ScheduleUpdateContext.Provider value={scheduleContext}>
-            <NavigationBuilderContext.Provider value={builderContext}>
-              <NavigationStateContext.Provider value={context}>
-                <UnhandledActionContext.Provider
-                  value={onUnhandledAction ?? defaultOnUnhandledAction}
+          <NavigationBuilderContext.Provider value={builderContext}>
+            <NavigationStateContext.Provider value={context}>
+              <UnhandledActionContext.Provider
+                value={onUnhandledAction ?? defaultOnUnhandledAction}
+              >
+                <DeprecatedNavigationInChildContext.Provider
+                  value={navigationInChildEnabled}
                 >
-                  <DeprecatedNavigationInChildContext.Provider
-                    value={navigationInChildEnabled}
-                  >
-                    <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
-                  </DeprecatedNavigationInChildContext.Provider>
-                </UnhandledActionContext.Provider>
-              </NavigationStateContext.Provider>
-            </NavigationBuilderContext.Provider>
-          </ScheduleUpdateContext.Provider>
+                  <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
+                </DeprecatedNavigationInChildContext.Provider>
+              </UnhandledActionContext.Provider>
+            </NavigationStateContext.Provider>
+          </NavigationBuilderContext.Provider>
         </NavigationContainerRefContext.Provider>
       </NavigationIndependentTreeContext.Provider>
     );

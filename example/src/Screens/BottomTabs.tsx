@@ -16,6 +16,7 @@ import { BlurView } from 'expo-blur';
 import * as React from 'react';
 import {
   Image,
+  Platform,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -48,7 +49,9 @@ const AlbumsScreen = () => {
 
   return (
     <>
-      {isFocused && <StatusBar barStyle="light-content" />}
+      {isFocused && Platform.OS === 'android' && (
+        <StatusBar barStyle="light-content" />
+      )}
       <ScrollView
         contentContainerStyle={{
           paddingTop: headerHeight,

@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 
-import { forModalPresentationIOS } from '../../TransitionConfigs/CardStyleInterpolators';
 import type {
   GestureDirection,
   Layout,
@@ -30,7 +29,6 @@ import {
   PanGestureHandler,
   type PanGestureHandlerGestureEvent,
 } from '../GestureHandler';
-import { ModalStatusBarManager } from '../ModalStatusBarManager';
 import { CardSheet, type CardSheetRef } from './CardSheet';
 
 type Props = ViewProps & {
@@ -42,7 +40,6 @@ type Props = ViewProps & {
   layout: Layout;
   insets: EdgeInsets;
   direction: LocaleDirection;
-  headerDarkContent: boolean | undefined;
   pageOverflowEnabled: boolean;
   gestureDirection: GestureDirection;
   onOpen: () => void;
@@ -460,7 +457,6 @@ export class Card extends React.Component<Props> {
       gestureEnabled,
       gestureDirection,
       pageOverflowEnabled,
-      headerDarkContent,
       children,
       containerStyle: customContainerStyle,
       contentStyle,
@@ -522,21 +518,6 @@ export class Card extends React.Component<Props> {
 
     return (
       <CardAnimationContext.Provider value={interpolationProps}>
-        {
-          // StatusBar messes with translucent status bar on Android
-          // So we should only enable it on iOS
-          Platform.OS === 'ios' &&
-          overlayEnabled &&
-          next &&
-          getIsModalPresentation(styleInterpolator) ? (
-            <ModalStatusBarManager
-              dark={headerDarkContent}
-              layout={layout}
-              insets={insets}
-              style={cardStyle}
-            />
-          ) : null
-        }
         <Animated.View
           style={{
             // This is a dummy style that doesn't actually change anything visually.
@@ -601,16 +582,6 @@ export class Card extends React.Component<Props> {
     );
   }
 }
-
-export const getIsModalPresentation = (
-  cardStyleInterpolator: StackCardStyleInterpolator
-) => {
-  return (
-    cardStyleInterpolator === forModalPresentationIOS ||
-    // Handle custom modal presentation interpolators as well
-    cardStyleInterpolator.name === 'forModalPresentationIOS'
-  );
-};
 
 const styles = StyleSheet.create({
   container: {

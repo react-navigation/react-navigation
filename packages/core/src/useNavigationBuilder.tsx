@@ -12,6 +12,7 @@ import {
 } from '@react-navigation/routers';
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
+import useLatestCallback from 'use-latest-callback';
 
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
@@ -36,13 +37,13 @@ import { type ScreenConfigWithParent, useDescriptors } from './useDescriptors';
 import { useEventEmitter } from './useEventEmitter';
 import { useFocusedListenersChildrenAdapter } from './useFocusedListenersChildrenAdapter';
 import { useFocusEvents } from './useFocusEvents';
+import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 import { useKeyedChildListeners } from './useKeyedChildListeners';
 import { useNavigationHelpers } from './useNavigationHelpers';
 import { useOnAction } from './useOnAction';
 import { useOnGetState } from './useOnGetState';
 import { useOnRouteFocus } from './useOnRouteFocus';
 import { useRegisterNavigator } from './useRegisterNavigator';
-import { useScheduleUpdate } from './useScheduleUpdate';
 
 // This is to make TypeScript compiler happy
 PrivateValueStore;
@@ -260,15 +261,7 @@ export function useNavigationBuilder<
 
   const { children, layout, screenOptions, screenListeners, ...rest } = options;
   const { current: router } = React.useRef<Router<State, any>>(
-    createRouter({
-      ...(rest as unknown as RouterOptions),
-      ...(route?.params &&
-      route.params.state == null &&
-      route.params.initial !== false &&
-      typeof route.params.screen === 'string'
-        ? { initialRouteName: route.params.screen }
-        : null),
-    })
+    createRouter(rest as unknown as RouterOptions)
   );
 
   const routeConfigs = getRouteConfigsFromChildren<
@@ -345,12 +338,7 @@ export function useNavigationBuilder<
 
   const stateCleanedUp = React.useRef(false);
 
-  const cleanUpState = React.useCallback(() => {
-    setCurrentState(undefined);
-    stateCleanedUp.current = true;
-  }, [setCurrentState]);
-
-  const setState = React.useCallback(
+  const setState = useLatestCallback(
     (state: NavigationState | PartialState<NavigationState> | undefined) => {
       if (stateCleanedUp.current) {
         // State might have been already cleaned up due to unmount
@@ -358,9 +346,9 @@ export function useNavigationBuilder<
         // This would lead to old data preservation on main navigator unmount
         return;
       }
+
       setCurrentState(state);
-    },
-    [setCurrentState]
+    }
   );
 
   const [initializedState, isFirstStateInitialization] = React.useMemo(() => {
@@ -392,7 +380,11 @@ export function useNavigationBuilder<
     // So we need to rehydrate it to make it usable
     if (
       (currentState === undefined || !isStateValid(currentState)) &&
-      route?.params?.state == null
+      route?.params?.state == null &&
+      !(
+        typeof route?.params?.screen === 'string' &&
+        route?.params?.initial !== false
+      )
     ) {
       return [
         router.getInitialState({
@@ -403,9 +395,29 @@ export function useNavigationBuilder<
         true,
       ];
     } else {
+      let stateFromParams;
+
+      if (route?.params?.state != null) {
+        stateFromParams = route.params.state;
+      } else if (
+        typeof route?.params?.screen === 'string' &&
+        route?.params?.initial !== false
+      ) {
+        stateFromParams = {
+          index: 0,
+          routes: [
+            {
+              name: route.params.screen,
+              params: route.params.params,
+              path: route.params.path,
+            },
+          ],
+        };
+      }
+
       return [
         router.getRehydratedState(
-          (route?.params?.state ?? currentState) as PartialState<State>,
+          (stateFromParams ?? currentState) as PartialState<State>,
           {
             routeNames,
             routeParamList: initialRouteParamList,
@@ -519,7 +531,7 @@ export function useNavigationBuilder<
 
   const shouldUpdate = state !== nextState;
 
-  useScheduleUpdate(() => {
+  useIsomorphicLayoutEffect(() => {
     if (shouldUpdate) {
       // If the state needs to be updated, we'll schedule an update
       setState(nextState);
@@ -543,31 +555,21 @@ export function useNavigationBuilder<
 
     return () => {
       // We need to clean up state for this navigator on unmount
-      // We do it in a timeout because we need to detect if another navigator mounted in the meantime
-      // For example, if another navigator has started rendering, we should skip cleanup
-      // Otherwise, our cleanup step will cleanup state for the other navigator and re-initialize it
-      setTimeout(() => {
-        if (getCurrentState() !== undefined && getKey() === navigatorKey) {
-          cleanUpState();
-        }
-      }, 0);
+      if (getCurrentState() !== undefined && getKey() === navigatorKey) {
+        setCurrentState(undefined);
+        stateCleanedUp.current = true;
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // We initialize this ref here to avoid a new getState getting initialized
-  // whenever initializedState changes. We want getState to have access to the
-  // latest initializedState, but don't need it to change when that happens
-  const initializedStateRef = React.useRef<State>();
-  initializedStateRef.current = initializedState;
+  const getState = useLatestCallback((): State => {
+    const currentState = shouldUpdate ? nextState : getCurrentState();
 
-  const getState = React.useCallback((): State => {
-    const currentState = getCurrentState();
-
-    return isStateInitialized(currentState)
-      ? (currentState as State)
-      : (initializedStateRef.current as State);
-  }, [getCurrentState, isStateInitialized]);
+    return (
+      isStateInitialized(currentState) ? currentState : initializedState
+    ) as State;
+  });
 
   const emitter = useEventEmitter<EventMapCore<State>>((e) => {
     const routeNames = [];
