@@ -22,6 +22,7 @@ export type BackBehavior =
   | 'initialRoute'
   | 'firstRoute'
   | 'history'
+  | 'fullHistory'
   | 'order'
   | 'none';
 
@@ -117,12 +118,18 @@ const changeIndex = (
 ) => {
   let history;
 
-  if (backBehavior === 'history') {
+  if (backBehavior === 'history' || backBehavior === 'fullHistory') {
     const currentKey = state.routes[index].key;
 
-    history = state.history
-      .filter((it) => (it.type === 'route' ? it.key !== currentKey : false))
-      .concat({ type: TYPE_ROUTE, key: currentKey });
+    if (backBehavior === 'history') {
+      history = state.history.filter((it) =>
+        it.type === 'route' ? it.key !== currentKey : false
+      );
+    } else {
+      history = state.history;
+    }
+
+    history = history.concat({ type: TYPE_ROUTE, key: currentKey });
   } else {
     history = getRouteHistory(
       state.routes,
