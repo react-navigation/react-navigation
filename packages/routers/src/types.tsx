@@ -125,13 +125,6 @@ export type DefaultRouterOptions<RouteName extends string = string> = {
    * If not specified, usually the first route is used.
    */
   initialRouteName?: RouteName;
-  /**
-   A function returning a state, which may be set after modifying the routes name.
-   */
-  getStateForRouteNamesChange?: (
-    state: NavigationState
-  ) => PartialState<NavigationState> | undefined;
-  linking?: any;
 };
 
 export type RouterFactory<

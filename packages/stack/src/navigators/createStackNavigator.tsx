@@ -2,7 +2,6 @@ import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
   type EventArg,
-  LinkingContext,
   type ParamListBase,
   type StackActionHelpers,
   StackActions,
@@ -41,7 +40,6 @@ function StackNavigator({
   ...rest
 }: Props) {
   const { direction } = useLocale();
-  const linking = React.useContext(LinkingContext);
 
   const { state, descriptors, navigation, NavigationContent } =
     useNavigationBuilder<
@@ -58,7 +56,6 @@ function StackNavigator({
       screenListeners,
       screenOptions,
       getStateForRouteNamesChange,
-      linking,
     });
 
   React.useEffect(
