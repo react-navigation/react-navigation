@@ -37,7 +37,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "use-latest-callback": "^0.1.7"
+    "use-latest-callback": "^0.1.9"
   },
   "devDependencies": {
     "del-cli": "^5.1.0",
