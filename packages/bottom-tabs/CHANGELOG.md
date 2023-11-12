@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.5...@react-navigation/bottom-tabs@7.0.0-alpha.6) (2023-11-12)
+
+### Bug Fixes
+
+* forShifting bottom-tabs animation ([#11638](https://github.com/react-navigation/react-navigation/issues/11638)) ([27bfc12](https://github.com/react-navigation/react-navigation/commit/27bfc120d2c8be8b205c41917094c7188c0f32a3)) - by @Bowlerr
+* pass `tintColor` to `Label` ([#11617](https://github.com/react-navigation/react-navigation/issues/11617)) ([c2d8aac](https://github.com/react-navigation/react-navigation/commit/c2d8aac84d1d3bf631b72392b3bdae80dc10be5c)), closes [#11246](https://github.com/react-navigation/react-navigation/issues/11246) - by @darshan09200
+
+### Features
+
+* add a layout prop for navigators ([#11614](https://github.com/react-navigation/react-navigation/issues/11614)) ([1f51190](https://github.com/react-navigation/react-navigation/commit/1f511904b9437d1451557147e72962859e97b1ae)) - by @satya164
+
 # [7.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.4...@react-navigation/bottom-tabs@7.0.0-alpha.5) (2023-09-25)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.5...@react-navigation/native-stack@7.0.0-alpha.6) (2023-11-12)
+
+### Bug Fixes
+
+* fix header customization in native stack ([6885210](https://github.com/react-navigation/react-navigation/commit/6885210ec02aabb8c3736517482fc21ac32ca3ab)) - by @satya164
+* headerHeight on phones with dynamic island ([#11338](https://github.com/react-navigation/react-navigation/issues/11338)) ([e4815c5](https://github.com/react-navigation/react-navigation/commit/e4815c538536ddccf4207b87bf3e2f1603dedd84)), closes [#10989](https://github.com/react-navigation/react-navigation/issues/10989) - by @dylancom
+
+### Features
+
+* add a layout prop for navigators ([#11614](https://github.com/react-navigation/react-navigation/issues/11614)) ([1f51190](https://github.com/react-navigation/react-navigation/commit/1f511904b9437d1451557147e72962859e97b1ae)) - by @satya164
+* add useAnimatedHeaderHeight hook ([#11663](https://github.com/react-navigation/react-navigation/issues/11663)) ([5a88c74](https://github.com/react-navigation/react-navigation/commit/5a88c740a6acb022dded823469a347868ef12ad4)), closes [#11338](https://github.com/react-navigation/react-navigation/issues/11338) - by @tboba
+
 # [7.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.4...@react-navigation/native-stack@7.0.0-alpha.5) (2023-09-25)
 
 **Note:** Version bump only for package @react-navigation/native-stack
