@@ -23,6 +23,7 @@ import type {
   LocaleDirection,
   Theme,
 } from './types';
+import { UnhandledLinkingContext } from './UnhandledLinkingContext';
 import { useBackButton } from './useBackButton';
 import { useDocumentTitle } from './useDocumentTitle';
 import { useLinking } from './useLinking';
@@ -87,7 +88,9 @@ function NavigationContainerInner(
   useBackButton(refContainer);
   useDocumentTitle(refContainer, documentTitle);
 
-  const lastUnhandledLinking = React.useRef<string | undefined>();
+  const [lastUnhandledLink, setLastUnhandledLink] = React.useState<
+    string | undefined
+  >();
 
   const { getInitialState } = useLinking(
     refContainer,
@@ -96,30 +99,38 @@ function NavigationContainerInner(
       prefixes: [],
       ...linking,
     },
-    lastUnhandledLinking
+    setLastUnhandledLink
   );
 
-  const linkingContext = React.useMemo(
-    () => ({ options: linking, lastUnhandledLinking }),
-    [linking, lastUnhandledLinking]
+  const linkingContext = React.useMemo(() => ({ options: linking }), [linking]);
+
+  const unhandledLinkingContext = React.useMemo(
+    () => ({ lastUnhandledLink, setLastUnhandledLink }),
+    [lastUnhandledLink, setLastUnhandledLink]
   );
 
   const onReadyForLinkingHandling = useLatestCallback(() => {
-    // If the screen path matches lastUnhandledLinking, we do not track it
+    // If the screen path matches lastUnhandledLink, we do not track it
     const path = refContainer.current?.getCurrentRoute()?.path;
-    if (path === linkingContext.lastUnhandledLinking.current) {
-      linkingContext.lastUnhandledLinking.current = undefined;
-    }
+    setLastUnhandledLink((previousLastUnhandledLink) => {
+      if (previousLastUnhandledLink === path) {
+        return undefined;
+      }
+      return previousLastUnhandledLink;
+    });
     onReady?.();
   });
 
   const onStateChangeForLinkingHandling = useLatestCallback(
     (state: Readonly<NavigationState> | undefined) => {
-      // If the screen path matches lastUnhandledLinking, we do not track it
+      // If the screen path matches lastUnhandledLink, we do not track it
       const path = refContainer.current?.getCurrentRoute()?.path;
-      if (path === linkingContext.lastUnhandledLinking.current) {
-        linkingContext.lastUnhandledLinking.current = undefined;
-      }
+      setLastUnhandledLink((previousLastUnhandledLink) => {
+        if (previousLastUnhandledLink === path) {
+          return undefined;
+        }
+        return previousLastUnhandledLink;
+      });
       onStateChange?.(state);
     }
   );
@@ -158,19 +169,21 @@ function NavigationContainerInner(
 
   return (
     <LocaleDirContext.Provider value={direction}>
-      <LinkingContext.Provider value={linkingContext}>
-        <ThemeProvider value={theme}>
-          <BaseNavigationContainer
-            {...rest}
-            onReady={onReadyForLinkingHandling}
-            onStateChange={onStateChangeForLinkingHandling}
-            initialState={
-              rest.initialState == null ? initialState : rest.initialState
-            }
-            ref={refContainer}
-          />
-        </ThemeProvider>
-      </LinkingContext.Provider>
+      <UnhandledLinkingContext.Provider value={unhandledLinkingContext}>
+        <LinkingContext.Provider value={linkingContext}>
+          <ThemeProvider value={theme}>
+            <BaseNavigationContainer
+              {...rest}
+              onReady={onReadyForLinkingHandling}
+              onStateChange={onStateChangeForLinkingHandling}
+              initialState={
+                rest.initialState == null ? initialState : rest.initialState
+              }
+              ref={refContainer}
+            />
+          </ThemeProvider>
+        </LinkingContext.Provider>
+      </UnhandledLinkingContext.Provider>
     </LocaleDirContext.Provider>
   );
 }

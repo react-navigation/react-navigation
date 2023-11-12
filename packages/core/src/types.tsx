@@ -76,6 +76,12 @@ export type DefaultNavigatorOptions<
         route: RouteProp<ParamList>;
         navigation: any;
       }) => ScreenOptions);
+  /**
+   A function returning a state, which may be set after modifying the routes name.
+   */
+  getStateForRouteNamesChange?: (
+    state: NavigationState
+  ) => PartialState<NavigationState> | undefined;
 };
 
 export type EventMapBase = Record<
@@ -810,6 +816,12 @@ export type PathConfig<ParamList extends {}> = {
    * Name of the initial route to use for the navigator when the path matches.
    */
   initialRouteName?: keyof ParamList;
+  /**
+   * A function returning a state, which may be set after modifying the routes name.
+   */
+  getStateForRouteNamesChange?: (
+    state: NavigationState
+  ) => PartialState<NavigationState> | undefined;
 };
 
 export type PathConfigMap<ParamList extends {}> = {
