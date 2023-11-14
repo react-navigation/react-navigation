@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-alpha.1...react-native-drawer-layout@4.0.0-alpha.2) (2023-11-12)
+
+### Bug Fixes
+
+* cannot resolve use-latest-callback ([#11696](https://github.com/react-navigation/react-navigation/issues/11696)) ([361bc6a](https://github.com/react-navigation/react-navigation/commit/361bc6a3840b37ae082a70e4ff6315280814c7a1)) - by @jkaveri
+
 # [4.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-alpha.0...react-native-drawer-layout@4.0.0-alpha.1) (2023-09-25)
 
 ### Bug Fixes

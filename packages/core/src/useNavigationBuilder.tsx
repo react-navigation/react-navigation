@@ -22,7 +22,6 @@ import { NavigationRouteContext } from './NavigationRouteContext';
 import { NavigationStateContext } from './NavigationStateContext';
 import { PreventRemoveProvider } from './PreventRemoveProvider';
 import { Screen } from './Screen';
-import { SetNextStateContext } from './SetNextStateContext';
 import {
   type DefaultNavigatorOptions,
   type EventMapBase,
@@ -444,18 +443,6 @@ export function useNavigationBuilder<
 
   const previousRouteKeyList = previousRouteKeyListRef.current;
 
-  const { stateForNextRouteNamesChange, setStateForNextRouteNamesChange } =
-    React.useContext(SetNextStateContext);
-
-  const navigatorStateForNextRouteNamesChange =
-    stateForNextRouteNamesChange?.[navigatorKey] ?? null;
-
-  const setNavigatorStateForNextRouteNamesChange = useLatestCallback(
-    (state: PartialState<NavigationState>) => {
-      setStateForNextRouteNamesChange({ [navigatorKey]: state });
-    }
-  );
-
   let state =
     // If the state isn't initialized, or stale, use the state we initialized instead
     // The state won't update until there's a change needed in the state we have initalized locally
@@ -470,6 +457,8 @@ export function useNavigationBuilder<
     !isArrayEqual(state.routeNames, routeNames) ||
     !isRecordEqual(routeKeyList, previousRouteKeyList)
   ) {
+    const navigatorStateForNextRouteNamesChange =
+      options.getStateForRouteNamesChange?.(state);
     // When the list of route names change, the router should handle it to remove invalid routes
     nextState = navigatorStateForNextRouteNamesChange
       ? // @ts-expect-error this is ok
@@ -658,7 +647,6 @@ export function useNavigationBuilder<
       routeGetIdList,
     },
     emitter,
-    stateForNextRouteNamesChange: navigatorStateForNextRouteNamesChange,
   });
 
   const onRouteFocus = useOnRouteFocus({
@@ -679,7 +667,6 @@ export function useNavigationBuilder<
     getState,
     emitter,
     router,
-    setStateForNextRouteNamesChange: setNavigatorStateForNextRouteNamesChange,
   });
 
   useFocusedListenersChildrenAdapter({

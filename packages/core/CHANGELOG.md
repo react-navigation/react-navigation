@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.4...@react-navigation/core@7.0.0-alpha.5) (2023-11-12)
+
+### Bug Fixes
+
+* cannot resolve use-latest-callback ([#11696](https://github.com/react-navigation/react-navigation/issues/11696)) ([361bc6a](https://github.com/react-navigation/react-navigation/commit/361bc6a3840b37ae082a70e4ff6315280814c7a1)) - by @jkaveri
+* onReady not getting called on native ([#11628](https://github.com/react-navigation/react-navigation/issues/11628)) ([67232f1](https://github.com/react-navigation/react-navigation/commit/67232f1367129deb0b118cdbfa06d090eefa60a9)) - by @osdnk
+
+* fix!: don't use screen from params as initialRouteName (#11680) ([4b681a9](https://github.com/react-navigation/react-navigation/commit/4b681a9837d1f7dd221363cc4ba5c94c23dbbfb6)), closes [#11680](https://github.com/react-navigation/react-navigation/issues/11680) - by @satya164
+
+### Features
+
+* add `useUnhandledLinking` for handling deep links behind auth etc. ([#11602](https://github.com/react-navigation/react-navigation/issues/11602)) ([688c43a](https://github.com/react-navigation/react-navigation/commit/688c43af4b27c90d1a99876d6daebbbf69820f56)), closes [#10939](https://github.com/react-navigation/react-navigation/issues/10939) - by @osdnk
+* add a layout prop for navigators ([#11614](https://github.com/react-navigation/react-navigation/issues/11614)) ([1f51190](https://github.com/react-navigation/react-navigation/commit/1f511904b9437d1451557147e72962859e97b1ae)) - by @satya164
+* add API for unhandled linking ([#11672](https://github.com/react-navigation/react-navigation/issues/11672)) ([5758b26](https://github.com/react-navigation/react-navigation/commit/5758b2615e70ce4943b23ead0227507c63b11c7c)) - by @osdnk
+
+### BREAKING CHANGES
+
+* Previously when using nested navigation API, we used that screen as
+`initialRouteName`.
+
+e.g.
+
+```js
+navigation.navigate('MyScreen', { screen: 'NestedScreen' });
+```
+
+Here, the `'NestedScreen'` will be set as `initialRouteName`.
+
+It has the result of rendering the navigator with that screen as focused
+screen. While this behaviour is expected, that screen was also used as
+the `initialRouteName` for every other operation ignoring the
+`initialRouteName` prop - which is not expected.
+
+This change refactors the way the focused screen for initial render is
+set to avoid this behavior.
+
 # [7.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.3...@react-navigation/core@7.0.0-alpha.4) (2023-09-25)
 
 **Note:** Version bump only for package @react-navigation/core

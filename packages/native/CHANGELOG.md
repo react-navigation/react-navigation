@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.4...@react-navigation/native@7.0.0-alpha.5) (2023-11-12)
+
+### Bug Fixes
+
+* cannot resolve use-latest-callback ([#11696](https://github.com/react-navigation/react-navigation/issues/11696)) ([361bc6a](https://github.com/react-navigation/react-navigation/commit/361bc6a3840b37ae082a70e4ff6315280814c7a1)) - by @jkaveri
+
+### Features
+
+* add `useUnhandledLinking` for handling deep links behind auth etc. ([#11602](https://github.com/react-navigation/react-navigation/issues/11602)) ([688c43a](https://github.com/react-navigation/react-navigation/commit/688c43af4b27c90d1a99876d6daebbbf69820f56)), closes [#10939](https://github.com/react-navigation/react-navigation/issues/10939) - by @osdnk
+* add a button element to elements package  ([#11669](https://github.com/react-navigation/react-navigation/issues/11669)) ([25a85c9](https://github.com/react-navigation/react-navigation/commit/25a85c90384ddfb6db946e791c01d8e033e04aa6)) - by @satya164
+* add API for unhandled linking ([#11672](https://github.com/react-navigation/react-navigation/issues/11672)) ([5758b26](https://github.com/react-navigation/react-navigation/commit/5758b2615e70ce4943b23ead0227507c63b11c7c)) - by @osdnk
+
 # [7.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.3...@react-navigation/native@7.0.0-alpha.4) (2023-09-25)
 
 ### Bug Fixes

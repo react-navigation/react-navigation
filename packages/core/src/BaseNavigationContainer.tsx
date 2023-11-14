@@ -10,7 +10,6 @@ import {
 import * as React from 'react';
 import useLatestCallback from 'use-latest-callback';
 
-import { usePrevious } from '../utils/usePrevious';
 import { checkDuplicateRouteNames } from './checkDuplicateRouteNames';
 import { checkSerializable } from './checkSerializable';
 import { NOT_INITIALIZED_ERROR } from './createNavigationContainerRef';
@@ -21,7 +20,6 @@ import { NavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationContainerRefContext } from './NavigationContainerRefContext';
 import { NavigationIndependentTreeContext } from './NavigationIndependentTreeContext';
 import { NavigationStateContext } from './NavigationStateContext';
-import { SetNextStateContext } from './SetNextStateContext';
 import type {
   NavigationContainerEventMap,
   NavigationContainerProps,
@@ -425,38 +423,20 @@ export const BaseNavigationContainer = React.forwardRef(
       }
     );
 
-    const [stateForNextRouteNamesChange, setStateForNextRouteNamesChange] =
-      React.useState<Record<string, PartialState<NavigationState>> | null>(
-        null
-      );
-
-    const setNextStateContext = React.useMemo(
-      () => ({ stateForNextRouteNamesChange, setStateForNextRouteNamesChange }),
-      [stateForNextRouteNamesChange, setStateForNextRouteNamesChange]
-    );
-
-    const previousState = usePrevious(state);
-
-    if (state !== previousState && stateForNextRouteNamesChange !== null) {
-      setStateForNextRouteNamesChange(null);
-    }
-
     return (
       <NavigationIndependentTreeContext.Provider value={false}>
         <NavigationContainerRefContext.Provider value={navigation}>
           <NavigationBuilderContext.Provider value={builderContext}>
             <NavigationStateContext.Provider value={context}>
-              <SetNextStateContext.Provider value={setNextStateContext}>
-                <UnhandledActionContext.Provider
-                  value={onUnhandledAction ?? defaultOnUnhandledAction}
+              <UnhandledActionContext.Provider
+                value={onUnhandledAction ?? defaultOnUnhandledAction}
+              >
+                <DeprecatedNavigationInChildContext.Provider
+                  value={navigationInChildEnabled}
                 >
-                  <DeprecatedNavigationInChildContext.Provider
-                    value={navigationInChildEnabled}
-                  >
-                    <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
-                  </DeprecatedNavigationInChildContext.Provider>
-                </UnhandledActionContext.Provider>
-              </SetNextStateContext.Provider>
+                  <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
+                </DeprecatedNavigationInChildContext.Provider>
+              </UnhandledActionContext.Provider>
             </NavigationStateContext.Provider>
           </NavigationBuilderContext.Provider>
         </NavigationContainerRefContext.Provider>

@@ -1,13 +1,10 @@
 import {
   createNavigatorFactory,
-  type NavigationProp,
   StackRouter,
-  useNavigation,
   useNavigationBuilder,
 } from '@react-navigation/core';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
-import { useEffect } from 'react';
 import { Button, Text } from 'react-native';
 
 import { NavigationContainer } from '../NavigationContainer';
@@ -38,17 +35,10 @@ it('schedules a state to be handled on conditional linking', async () => {
     </>
   );
   const SignInScreen = ({ route, signIn }: any) => {
-    const { handleOnNextRouteNamesChange } = useUnhandledLinking();
     return (
       <>
         <Text>{route.name}</Text>
-        <Button
-          title="sign in"
-          onPress={() => {
-            handleOnNextRouteNamesChange();
-            signIn();
-          }}
-        />
+        <Button title="sign in" onPress={signIn} />
       </>
     );
   };
@@ -66,39 +56,47 @@ it('schedules a state to be handled on conditional linking', async () => {
     },
   };
 
-  const App = () => {
+  const StackNavigator = () => {
     const [isSignedIn, setSignedIn] = React.useState(false);
+    const { getStateForRouteNamesChange } = useUnhandledLinking();
 
     return (
-      <NavigationContainer linking={linking}>
-        <Stack.Navigator>
-          {isSignedIn ? (
-            <>
-              <Stack.Screen name="Home">
-                {(props) => (
-                  <TestScreen
-                    signOut={() => act(() => setSignedIn(false))}
-                    {...props}
-                  />
-                )}
-              </Stack.Screen>
-              <Stack.Screen name="Profile">
-                {(props) => (
-                  <TestScreen
-                    signOut={() => act(() => setSignedIn(false))}
-                    {...props}
-                  />
-                )}
-              </Stack.Screen>
-            </>
-          ) : (
-            <Stack.Screen name="SignIn">
+      <Stack.Navigator
+        getStateForRouteNamesChange={getStateForRouteNamesChange}
+      >
+        {isSignedIn ? (
+          <>
+            <Stack.Screen name="Home">
               {(props) => (
-                <SignInScreen signIn={() => setSignedIn(true)} {...props} />
+                <TestScreen
+                  signOut={() => act(() => setSignedIn(false))}
+                  {...props}
+                />
               )}
             </Stack.Screen>
-          )}
-        </Stack.Navigator>
+            <Stack.Screen name="Profile">
+              {(props) => (
+                <TestScreen
+                  signOut={() => act(() => setSignedIn(false))}
+                  {...props}
+                />
+              )}
+            </Stack.Screen>
+          </>
+        ) : (
+          <Stack.Screen name="SignIn">
+            {(props) => (
+              <SignInScreen signIn={() => setSignedIn(true)} {...props} />
+            )}
+          </Stack.Screen>
+        )}
+      </Stack.Navigator>
+    );
+  };
+  const App = () => {
+    return (
+      <NavigationContainer linking={linking}>
+        <StackNavigator />
       </NavigationContainer>
     );
   };
@@ -133,17 +131,10 @@ it('schedules a state to be handled on conditional linking under nested navigato
     </>
   );
   const SignInScreen = ({ route, signIn }: any) => {
-    const { handleOnNextRouteNamesChange } = useUnhandledLinking();
     return (
       <>
         <Text>{route.name}</Text>
-        <Button
-          title="sign in"
-          onPress={() => {
-            handleOnNextRouteNamesChange();
-            signIn();
-          }}
-        />
+        <Button title="sign in" onPress={signIn} />
       </>
     );
   };
@@ -167,47 +158,51 @@ it('schedules a state to be handled on conditional linking under nested navigato
     },
   };
 
-  const App = () => {
+  const InnerStackNavigator = () => {
+    const { getStateForRouteNamesChange } = useUnhandledLinking();
     const [isSignedIn, setSignedIn] = React.useState(false);
+    return (
+      <Stack.Navigator
+        getStateForRouteNamesChange={getStateForRouteNamesChange}
+      >
+        {isSignedIn ? (
+          <>
+            <Stack.Screen name="Home">
+              {(props) => (
+                <TestScreen
+                  signOut={() => act(() => setSignedIn(false))}
+                  {...props}
+                />
+              )}
+            </Stack.Screen>
+            <Stack.Screen name="Profile">
+              {(props) => (
+                <TestScreen
+                  signOut={() => act(() => setSignedIn(false))}
+                  {...props}
+                />
+              )}
+            </Stack.Screen>
+          </>
+        ) : (
+          <Stack.Screen name="SignIn">
+            {(props) => (
+              <SignInScreen
+                signIn={() => act(() => setSignedIn(true))}
+                {...props}
+              />
+            )}
+          </Stack.Screen>
+        )}
+      </Stack.Navigator>
+    );
+  };
 
+  const App = () => {
     return (
       <NavigationContainer linking={linking}>
         <OuterStack.Navigator>
-          <OuterStack.Screen name="Outer">
-            {() => (
-              <Stack.Navigator>
-                {isSignedIn ? (
-                  <>
-                    <Stack.Screen name="Home">
-                      {(props) => (
-                        <TestScreen
-                          signOut={() => act(() => setSignedIn(false))}
-                          {...props}
-                        />
-                      )}
-                    </Stack.Screen>
-                    <Stack.Screen name="Profile">
-                      {(props) => (
-                        <TestScreen
-                          signOut={() => act(() => setSignedIn(false))}
-                          {...props}
-                        />
-                      )}
-                    </Stack.Screen>
-                  </>
-                ) : (
-                  <Stack.Screen name="SignIn">
-                    {(props) => (
-                      <SignInScreen
-                        signIn={() => act(() => setSignedIn(true))}
-                        {...props}
-                      />
-                    )}
-                  </Stack.Screen>
-                )}
-              </Stack.Navigator>
-            )}
-          </OuterStack.Screen>
+          <OuterStack.Screen name="Outer" component={InnerStackNavigator} />
         </OuterStack.Navigator>
       </NavigationContainer>
     );
@@ -235,17 +230,10 @@ it('schedules a state to be handled on conditional linking in nested stack', asy
     </>
   );
   const SignInScreen = ({ route, signIn }: any) => {
-    const { handleOnNextRouteNamesChange } = useUnhandledLinking();
     return (
       <>
         <Text>{route.name}</Text>
-        <Button
-          title="sign in"
-          onPress={() => {
-            handleOnNextRouteNamesChange();
-            signIn();
-          }}
-        />
+        <Button title="sign in" onPress={signIn} />
       </>
     );
   };
@@ -267,46 +255,55 @@ it('schedules a state to be handled on conditional linking in nested stack', asy
     },
   };
 
-  const App = () => {
+  const StackNavigation = () => {
     const [isSignedIn, setSignedIn] = React.useState(false);
+    const { getStateForRouteNamesChange } = useUnhandledLinking();
 
     return (
+      <Stack.Navigator
+        getStateForRouteNamesChange={getStateForRouteNamesChange}
+      >
+        {isSignedIn ? (
+          <Stack.Screen name="Home">
+            {() => (
+              <NestedStack.Navigator>
+                <NestedStack.Screen name="Details">
+                  {(props) => (
+                    <TestScreen
+                      signOut={() => act(() => setSignedIn(false))}
+                      {...props}
+                    />
+                  )}
+                </NestedStack.Screen>
+                <NestedStack.Screen name="Profile">
+                  {(props) => (
+                    <TestScreen
+                      signOut={() => act(() => setSignedIn(false))}
+                      {...props}
+                    />
+                  )}
+                </NestedStack.Screen>
+              </NestedStack.Navigator>
+            )}
+          </Stack.Screen>
+        ) : (
+          <Stack.Screen name="SignIn">
+            {(props) => (
+              <SignInScreen
+                signIn={() => act(() => setSignedIn(true))}
+                {...props}
+              />
+            )}
+          </Stack.Screen>
+        )}
+      </Stack.Navigator>
+    );
+  };
+
+  const App = () => {
+    return (
       <NavigationContainer linking={linking}>
-        <Stack.Navigator>
-          {isSignedIn ? (
-            <Stack.Screen name="Home">
-              {() => (
-                <NestedStack.Navigator>
-                  <NestedStack.Screen name="Details">
-                    {(props) => (
-                      <TestScreen
-                        signOut={() => act(() => setSignedIn(false))}
-                        {...props}
-                      />
-                    )}
-                  </NestedStack.Screen>
-                  <NestedStack.Screen name="Profile">
-                    {(props) => (
-                      <TestScreen
-                        signOut={() => act(() => setSignedIn(false))}
-                        {...props}
-                      />
-                    )}
-                  </NestedStack.Screen>
-                </NestedStack.Navigator>
-              )}
-            </Stack.Screen>
-          ) : (
-            <Stack.Screen name="SignIn">
-              {(props) => (
-                <SignInScreen
-                  signIn={() => act(() => setSignedIn(true))}
-                  {...props}
-                />
-              )}
-            </Stack.Screen>
-          )}
-        </Stack.Navigator>
+        <StackNavigation />
       </NavigationContainer>
     );
   };
@@ -331,7 +328,7 @@ it('schedules a state to be handled on conditional linking in nested stack', asy
   expect(queryByText('Details')).not.toBeNull();
 });
 
-it('clears lastUnhandledLinking upon successful linking handling', () => {
+it('clears lastUnhandledLink upon successful linking handling', () => {
   const linking = {
     prefixes: ['rn://'],
     config: {
@@ -349,43 +346,64 @@ it('clears lastUnhandledLinking upon successful linking handling', () => {
     },
   };
 
-  let getUnhandledLink: (() => string | null | undefined) | undefined;
   const ProfileScreen = (): any => {
-    getUnhandledLink = useUnhandledLinking().getUnhandledLink;
+    const { lastUnhandledLink } = useUnhandledLinking();
+    return lastUnhandledLink;
+  };
+
+  const InnerStack = createTestNavigator();
+  const Stack = createTestNavigator();
+
+  const InnerStackNavigator = () => {
+    const { getStateForRouteNamesChange } = useUnhandledLinking();
+    return (
+      <InnerStack.Navigator
+        getStateForRouteNamesChange={getStateForRouteNamesChange}
+      >
+        <InnerStack.Screen name="Profile0">{() => null}</InnerStack.Screen>
+        <InnerStack.Screen name="Profile" component={ProfileScreen} />
+      </InnerStack.Navigator>
+    );
   };
 
   const App = () => {
-    const Stack = createTestNavigator();
-    const InnerStack = createTestNavigator();
     return (
       <NavigationContainer linking={linking}>
         <Stack.Navigator>
           <Stack.Screen name="Home0">{() => null}</Stack.Screen>
-          <Stack.Screen name="Home">
-            {() => (
-              <InnerStack.Navigator>
-                <InnerStack.Screen name="Profile0">
-                  {() => null}
-                </InnerStack.Screen>
-                <InnerStack.Screen name="Profile" component={ProfileScreen} />
-              </InnerStack.Navigator>
-            )}
-          </Stack.Screen>
+          <Stack.Screen name="Home" component={InnerStackNavigator} />
         </Stack.Navigator>
       </NavigationContainer>
     );
   };
 
-  render(<App />);
-
-  expect(getUnhandledLink!()).toBeUndefined();
+  const { queryByText } = render(<App />);
+  expect(queryByText('home/profile')).toBeNull();
 });
 
-it('warns if other navigation was invoked before we handling the unhandled deeplink', async () => {
+it('clears lastUnhandledLink upon calling clearUnhandledLink', async () => {
+  const Stack = createTestNavigator();
+
+  const LinkDisplayScreen = (): any => {
+    const { lastUnhandledLink, clearUnhandledLink } = useUnhandledLinking();
+    return (
+      <>
+        <Text>{lastUnhandledLink}</Text>
+        <Button
+          title="clear"
+          onPress={() => {
+            clearUnhandledLink();
+          }}
+        />
+      </>
+    );
+  };
+
   const linking = {
     prefixes: ['rn://'],
     config: {
       screens: {
+        Home: 'home',
         Profile: 'profile',
       },
     },
@@ -394,46 +412,21 @@ it('warns if other navigation was invoked before we handling the unhandled deepl
     },
   };
 
-  type TestNavigatorParams = {
-    SignIn: undefined;
-    Home: undefined;
-    Profile: undefined;
-  };
-
-  const Stack = createTestNavigator<TestNavigatorParams>();
-
-  const TestScreen = () => {
-    const navigation = useNavigation<NavigationProp<TestNavigatorParams>>();
-    const { handleOnNextRouteNamesChange } = useUnhandledLinking();
-    useEffect(handleOnNextRouteNamesChange, [handleOnNextRouteNamesChange]);
-
-    return (
-      <>
-        <Button
-          title="navigate"
-          onPress={() => {
-            navigation.navigate('Home');
-          }}
-        />
-      </>
-    );
-  };
-
   const App = () => {
     return (
       <NavigationContainer linking={linking}>
         <Stack.Navigator>
-          <Stack.Screen name="SignIn" component={TestScreen} />
-          <Stack.Screen name="Home">{() => null}</Stack.Screen>
+          <Stack.Screen name="LinkDisplay" component={LinkDisplayScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     );
   };
 
-  const { queryByText } = await render(<App />);
+  const { queryByText } = render(<App />);
 
-  const consoleWarnMock = jest.spyOn(console, 'warn').mockImplementation();
-  fireEvent.press(queryByText(/navigate/i));
-  expect(consoleWarnMock).toHaveBeenCalledTimes(1);
-  consoleWarnMock.mockRestore();
+  expect(queryByText('profile')).not.toBeNull();
+
+  fireEvent.press(queryByText(/clear/i));
+
+  expect(queryByText('profile')).toBeNull();
 });

@@ -30,11 +30,12 @@
     "yarn": "3.2.2",
     "node": ">=18"
   },
-  "packageManager": "yarn@3.2.2",
+  "packageManager": "yarn@4.0.1",
   "devDependencies": {
     "@commitlint/config-conventional": "^18.1.0",
     "@evilmartians/lefthook": "^1.5.2",
     "@lerna-lite/cli": "^2.6.0",
+    "@lerna-lite/publish": "^2.6.0",
     "@lerna-lite/run": "^2.6.0",
     "@types/jest": "^29.5.6",
     "check-dependency-version-consistency": "^4.1.0",

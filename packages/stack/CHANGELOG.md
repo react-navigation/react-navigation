@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.5...@react-navigation/stack@7.0.0-alpha.6) (2023-11-12)
+
+### Bug Fixes
+
+* workaround for mChrome empty space when navigating after address bar collapses ([#11366](https://github.com/react-navigation/react-navigation/issues/11366)) ([d638454](https://github.com/react-navigation/react-navigation/commit/d638454bec9e3f3bba3a808e13d7d1ae1be26acb)) - by @BeeMargarida
+
+### Features
+
+* add a layout prop for navigators ([#11614](https://github.com/react-navigation/react-navigation/issues/11614)) ([1f51190](https://github.com/react-navigation/react-navigation/commit/1f511904b9437d1451557147e72962859e97b1ae)) - by @satya164
+* add API for unhandled linking ([#11672](https://github.com/react-navigation/react-navigation/issues/11672)) ([5758b26](https://github.com/react-navigation/react-navigation/commit/5758b2615e70ce4943b23ead0227507c63b11c7c)) - by @osdnk
+
 # [7.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.4...@react-navigation/stack@7.0.0-alpha.5) (2023-09-25)
 
 **Note:** Version bump only for package @react-navigation/stack

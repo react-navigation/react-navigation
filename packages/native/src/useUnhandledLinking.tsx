@@ -1,60 +1,54 @@
 import {
   getStateFromPath,
-  type NavigationProp,
+  NavigationContext,
   type NavigationState,
   type PartialState,
-  useNavigation,
 } from '@react-navigation/core';
 import React from 'react';
 import useLatestCallback from 'use-latest-callback';
 
 import { LinkingContext } from './LinkingContext';
+import { UnhandledLinkingContext } from './UnhandledLinkingContext';
 
 function extractNavigatorSpecificState(
-  navigation: NavigationProp<ReactNavigation.RootParamList>,
-  rootState: PartialState<NavigationState>
+  _: NavigationState,
+  pathState: PartialState<NavigationState>,
+  depth: number
 ) {
-  let state: typeof rootState | undefined = rootState;
+  let partialPathState: PartialState<NavigationState> | undefined = pathState;
 
-  const parent = navigation.getParent();
-  if (parent) {
-    // Then, we consider a portion of the state.
-    const parentState = parent.getState();
-    const outerRouteName = parentState.routes[parentState.index].name;
-    while (state && state.routes[state.index ?? 0].name !== outerRouteName) {
-      state = state.routes[state.index ?? 0].state;
+  let currentDepth = depth;
+  while (currentDepth) {
+    if (!partialPathState) {
+      return undefined;
     }
-    if (!state) {
-      return;
-    }
-    const innerState = state.routes[state.index ?? 0].state;
-    if (!innerState) {
-      return;
-    }
-    state = innerState;
+    partialPathState =
+      partialPathState.routes[partialPathState.routes.length - 1].state;
+    currentDepth--;
   }
-  return state;
+  return partialPathState;
 }
 
 export function useUnhandledLinking() {
-  const navigation = useNavigation();
+  const navigation = React.useContext(NavigationContext);
   const linking = React.useContext(LinkingContext);
+  const { setLastUnhandledLink, lastUnhandledLink } = React.useContext(
+    UnhandledLinkingContext
+  );
 
-  const { options, lastUnhandledLinking } = linking;
+  const { options } = linking;
 
-  /*
-   * Function to handle last unhandled URL. This function has to be called when the conditional
-   * rendering of the navigator is about to happen e.g. in the `onPress` of a log in button.
-   */
-  const handleOnNextRouteNamesChange = () => {
-    if (lastUnhandledLinking?.current == null) {
+  const getStateForRouteNamesChange = (
+    currentState: NavigationState
+  ): PartialState<NavigationState> | undefined => {
+    if (lastUnhandledLink == null) {
       // noop, nothing to handle
       return;
     }
 
     // at web, the path is already extracted
-    const path = lastUnhandledLinking.current;
-    if (!lastUnhandledLinking.current) {
+    const path = lastUnhandledLink;
+    if (!lastUnhandledLink) {
       return;
     }
 
@@ -62,28 +56,35 @@ export function useUnhandledLinking() {
     const getStateFromPathHelper =
       options?.getStateFromPath ?? getStateFromPath;
 
-    const rootState = getStateFromPathHelper(path, options?.config);
+    const pathState = getStateFromPathHelper(path, options?.config);
 
-    if (!rootState) {
+    if (!pathState) {
       return;
     }
-    const state = extractNavigatorSpecificState(navigation, rootState);
+
+    let depth = 0;
+    let parent = navigation;
+    while (parent) {
+      depth++;
+      parent = parent.getParent();
+    }
+
+    const state = extractNavigatorSpecificState(currentState, pathState, depth);
 
     if (!state) {
       return;
     }
 
-    // Once we have the state, we can tell React Navigation to use it for next route names change (conditional rendering logic change)
-    // @ts-expect-error: this is ok
-    navigation.setStateForNextRouteNamesChange(state);
-
-    // Finally, we clear unhandled link after it was handled
-    lastUnhandledLinking.current = undefined;
+    return state;
   };
 
-  const getUnhandledLink = useLatestCallback(
-    () => lastUnhandledLinking.current
-  );
+  const clearUnhandledLink = useLatestCallback(() => {
+    setLastUnhandledLink(undefined);
+  });
 
-  return { handleOnNextRouteNamesChange, getUnhandledLink };
+  return {
+    lastUnhandledLink,
+    getStateForRouteNamesChange,
+    clearUnhandledLink,
+  };
 }

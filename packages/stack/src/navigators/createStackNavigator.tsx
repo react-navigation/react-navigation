@@ -32,6 +32,7 @@ type Props = DefaultNavigatorOptions<
 function StackNavigator({
   id,
   initialRouteName,
+  getStateForRouteNamesChange,
   children,
   layout,
   screenListeners,
@@ -39,6 +40,7 @@ function StackNavigator({
   ...rest
 }: Props) {
   const { direction } = useLocale();
+
   const { state, descriptors, navigation, NavigationContent } =
     useNavigationBuilder<
       StackNavigationState<ParamListBase>,
@@ -53,6 +55,7 @@ function StackNavigator({
       layout,
       screenListeners,
       screenOptions,
+      getStateForRouteNamesChange,
     });
 
   React.useEffect(

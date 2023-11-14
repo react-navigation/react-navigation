@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-alpha.4...@react-navigation/material-top-tabs@7.0.0-alpha.5) (2023-11-12)
+
+### Features
+
+* add a button element to elements package  ([#11669](https://github.com/react-navigation/react-navigation/issues/11669)) ([25a85c9](https://github.com/react-navigation/react-navigation/commit/25a85c90384ddfb6db946e791c01d8e033e04aa6)) - by @satya164
+* add a layout prop for navigators ([#11614](https://github.com/react-navigation/react-navigation/issues/11614)) ([1f51190](https://github.com/react-navigation/react-navigation/commit/1f511904b9437d1451557147e72962859e97b1ae)) - by @satya164
+
 # [7.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-alpha.3...@react-navigation/material-top-tabs@7.0.0-alpha.4) (2023-09-25)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
