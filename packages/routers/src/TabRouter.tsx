@@ -41,6 +41,10 @@ export type TabNavigationState<ParamList extends ParamListBase> = Omit<
    * List of previously visited route keys.
    */
   history: { type: 'route'; key: string }[];
+  /**
+   * TODO
+   */
+  preloadedRoutesKeys?: string[];
 };
 
 export type TabActionHelpers<ParamList extends ParamListBase> = {
@@ -230,6 +234,7 @@ export function TabRouter({
           routeNames,
           history,
           routes,
+          preloadedRoutesKeys: state.preloadedRoutesKeys ?? [],
         },
         index,
         backBehavior,
@@ -384,6 +389,12 @@ export function TabRouter({
             index,
           };
         }
+
+        case 'PRELOAD':
+          return {
+            //
+            ...state,
+          };
 
         default:
           return BaseRouter.getStateForAction(state, action);

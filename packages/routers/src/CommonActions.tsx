@@ -45,6 +45,24 @@ export type Action =
       payload: { params?: object };
       source?: string;
       target?: string;
+    }
+  | {
+      type: 'PRELOAD';
+      payload: {
+        name: string;
+        params?: object;
+      };
+      source?: string;
+      target?: string;
+    }
+  | {
+      type: 'DISMISS_PRELOAD';
+      payload: {
+        name: string;
+        params?: object;
+      };
+      source?: string;
+      target?: string;
     };
 
 export function goBack(): Action {
