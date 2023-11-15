@@ -125,3 +125,19 @@ export function reset(state: ResetState | undefined): Action {
 export function setParams(params: object): Action {
   return { type: 'SET_PARAMS', payload: { params } };
 }
+
+export function preload(...args: any): Action {
+  if (typeof args[0] === 'string') {
+    return { type: 'PRELOAD', payload: { name: args[0], params: args[1] } };
+  } else {
+    const payload = args[0] || {};
+
+    if (!('name' in payload)) {
+      throw new Error(
+        'You need to specify a name when calling navigate with an object as the argument. See https://reactnavigation.org/docs/navigation-actions#navigate for usage.'
+      );
+    }
+
+    return { type: 'PRELOAD', payload };
+  }
+}

@@ -44,7 +44,7 @@ export type TabNavigationState<ParamList extends ParamListBase> = Omit<
   /**
    * TODO
    */
-  preloadedRoutesKeys?: string[];
+  preloadedRoutesKeys: string[];
 };
 
 export type TabActionHelpers<ParamList extends ParamListBase> = {
@@ -182,6 +182,7 @@ export function TabRouter({
         routeNames,
         history,
         routes,
+        preloadedRoutesKeys: [],
       };
     },
 
@@ -308,7 +309,7 @@ export function TabRouter({
             return null;
           }
 
-          return changeIndex(
+          const updatedState = changeIndex(
             {
               ...state,
               routes: state.routes.map((route) => {
@@ -367,6 +368,13 @@ export function TabRouter({
             backBehavior,
             initialRouteName
           );
+
+          return {
+            ...updatedState,
+            preloadedRoutesKeys: updatedState.preloadedRoutesKeys.filter(
+              (key) => key !== state.routes[updatedState.index].key
+            ),
+          };
         }
 
         case 'GO_BACK': {
@@ -385,16 +393,87 @@ export function TabRouter({
 
           return {
             ...state,
+            preloadedRoutesKeys: state.preloadedRoutesKeys.filter(
+              (key) => key !== state.routes[index].key
+            ),
             history: state.history.slice(0, -1),
             index,
           };
         }
 
-        case 'PRELOAD':
+        case 'PRELOAD': {
+          const routeIndex = state.routes.findIndex(
+            (route) => route.name === action.payload.name
+          );
+          if (routeIndex === state.index) {
+            console.warn('Cannot preload the focused page.');
+            return state;
+          }
+          if (routeIndex === -1) {
+            return state;
+          }
+          const route = state.routes[routeIndex];
+
+          const getId = routeGetIdList[route.name];
+
+          const currentId = getId?.({ params: route.params });
+          const nextId = getId?.({ params: action.payload.params });
+
+          const key =
+            currentId === nextId ? route.key : `${route.name}-${nanoid()}`;
+
+          let params;
+
+          if (currentId === nextId) {
+            params =
+              action.payload.params !== undefined ||
+              routeParamList[route.name] !== undefined
+                ? {
+                    ...routeParamList[route.name],
+                    ...route.params,
+                    ...action.payload.params,
+                  }
+                : route.params;
+          } else {
+            params =
+              routeParamList[route.name] !== undefined
+                ? {
+                    ...routeParamList[route.name],
+                    ...action.payload.params,
+                  }
+                : action.payload.params;
+          }
+
+          const newRoute =
+            params !== route.params ? { ...route, key, params } : route;
+
           return {
-            //
             ...state,
+            preloadedRoutesKeys: state.preloadedRoutesKeys
+              .filter((key) => ![newRoute.key, route.key].includes(key))
+              .concat(newRoute.key),
+            routes: state.routes.map((route, index) =>
+              index === routeIndex ? newRoute : route
+            ),
           };
+        }
+
+        case 'DISMISS_PRELOAD': {
+          const routeIndex = state.routes.findIndex(
+            (route) => route.name === action.payload.name
+          );
+          if (routeIndex === -1) {
+            return state;
+          }
+          const route = state.routes[routeIndex];
+
+          return {
+            ...state,
+            preloadedRoutesKeys: state.preloadedRoutesKeys.filter(
+              (key) => key !== route.key
+            ),
+          };
+        }
 
         default:
           return BaseRouter.getStateForAction(state, action);
