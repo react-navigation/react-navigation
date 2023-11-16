@@ -450,7 +450,7 @@ export function TabRouter({
           return {
             ...state,
             preloadedRoutesKeys: state.preloadedRoutesKeys
-              .filter((key) => ![newRoute.key, route.key].includes(key))
+              .filter((key) => key !== route.key)
               .concat(newRoute.key),
             routes: state.routes.map((route, index) =>
               index === routeIndex ? newRoute : route
