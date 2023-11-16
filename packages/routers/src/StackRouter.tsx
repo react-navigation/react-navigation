@@ -4,6 +4,7 @@ import { BaseRouter } from './BaseRouter';
 import type {
   CommonNavigationAction,
   DefaultRouterOptions,
+  NavigationRoute,
   NavigationState,
   ParamListBase,
   Route,
@@ -53,6 +54,10 @@ export type StackNavigationState<ParamList extends ParamListBase> =
      * Type of the router, in this case, it's stack.
      */
     type: 'stack';
+    /**
+     * TODO
+     */
+    preloadedRoutes: NavigationRoute<ParamList, keyof ParamList>[];
   };
 
 export type StackActionHelpers<ParamList extends ParamListBase> = {
@@ -155,6 +160,7 @@ export function StackRouter(options: StackRouterOptions) {
         key: `stack-${nanoid()}`,
         index: 0,
         routeNames,
+        preloadedRoutes: [],
         routes: [
           {
             key: `${initialRouteName}-${nanoid()}`,
@@ -209,6 +215,7 @@ export function StackRouter(options: StackRouterOptions) {
         index: routes.length - 1,
         routeNames,
         routes,
+        preloadedRoutes: [], // ?
       };
     },
 
@@ -606,6 +613,77 @@ export function StackRouter(options: StackRouterOptions) {
 
           return null;
 
+        case 'PRELOAD': {
+          const getId = options.routeGetIdList[action.payload.name];
+          const id = getId?.({ params: action.payload.params });
+
+          let route: Route<string> | undefined;
+
+          if (id !== undefined) {
+            route = state.routes.find(
+              (route) =>
+                route.name === action.payload.name &&
+                id === getId?.({ params: route.params })
+            );
+          }
+
+          if (!route) {
+            return {
+              ...state,
+              preloadedRoutes: state.preloadedRoutes
+                .filter((r) => {
+                  if (r.name === action.payload.name) {
+                    if (id === undefined) {
+                      return false;
+                    }
+                    return id !== getId?.({ params: r.params });
+                  }
+                  return true;
+                })
+                .concat({
+                  key: `${action.payload.name}-${nanoid()}`,
+                  name: action.payload.name,
+                  params:
+                    routeParamList[action.payload.name] !== undefined
+                      ? {
+                          ...routeParamList[action.payload.name],
+                          ...action.payload.params,
+                        }
+                      : action.payload.params,
+                }),
+            };
+          } else {
+            return {
+              ...state,
+              preloadedRoutes: state.preloadedRoutes
+                .filter((r) => r.key === route?.key)
+                .concat(
+                  action.payload.params
+                    ? {
+                        ...route,
+                        params: {
+                          ...route.params,
+                          ...action.payload.params,
+                        },
+                      }
+                    : route
+                ),
+            };
+          }
+        }
+        case 'DISMISS_PRELOAD': {
+          const getId = options.routeGetIdList[action.payload.name];
+          const id = getId?.({ params: action.payload.params });
+
+          return {
+            ...state,
+            preloadedRoutes: state.preloadedRoutes.filter(
+              (route) =>
+                route.name !== action.payload.name ||
+                id !== getId?.({ params: route.params })
+            ),
+          };
+        }
         default:
           return BaseRouter.getStateForAction(state, action);
       }

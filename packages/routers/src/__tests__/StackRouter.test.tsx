@@ -22,6 +22,7 @@ it('gets initial state from route names and params with initialRouteName', () =>
   ).toEqual({
     index: 0,
     key: 'stack-test',
+    preloadedRoutes: [],
     routeNames: ['bar', 'baz', 'qux'],
     routes: [{ key: 'baz-test', name: 'baz', params: { answer: 42 } }],
     stale: false,
@@ -44,6 +45,7 @@ it('gets initial state from route names and params without initialRouteName', ()
   ).toEqual({
     index: 0,
     key: 'stack-test',
+    preloadedRoutes: [],
     routeNames: ['bar', 'baz', 'qux'],
     routes: [{ key: 'bar-test', name: 'bar' }],
     stale: false,
@@ -76,6 +78,7 @@ it('gets rehydrated state from partial state', () => {
   ).toEqual({
     index: 1,
     key: 'stack-test',
+    preloadedRoutes: [],
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
       { key: 'bar-0', name: 'bar' },
@@ -100,6 +103,7 @@ it('gets rehydrated state from partial state', () => {
   ).toEqual({
     index: 2,
     key: 'stack-test',
+    preloadedRoutes: [],
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
       { key: 'bar-0', name: 'bar' },
@@ -121,6 +125,7 @@ it('gets rehydrated state from partial state', () => {
   ).toEqual({
     index: 0,
     key: 'stack-test',
+    preloadedRoutes: [],
     routeNames: ['bar', 'baz', 'qux'],
     routes: [{ key: 'bar-test', name: 'bar' }],
     stale: false,
@@ -134,6 +139,7 @@ it("doesn't rehydrate state if it's not stale", () => {
   const state = {
     index: 0,
     key: 'stack-test',
+    preloadedRoutes: [],
     routeNames: ['bar', 'baz', 'qux'],
     routes: [{ key: 'bar-test', name: 'bar' }],
     stale: false as const,
@@ -157,6 +163,7 @@ it('gets state on route names change', () => {
       {
         index: 2,
         key: 'stack-test',
+        preloadedRoutes: [],
         routeNames: ['bar', 'baz', 'qux'],
         routes: [
           { key: 'bar-test', name: 'bar' },
@@ -179,6 +186,7 @@ it('gets state on route names change', () => {
   ).toEqual({
     index: 1,
     key: 'stack-test',
+    preloadedRoutes: [],
     routeNames: ['qux', 'baz', 'foo', 'fiz'],
     routes: [
       { key: 'baz-test', name: 'baz', params: { answer: 42 } },
@@ -193,6 +201,7 @@ it('gets state on route names change', () => {
       {
         index: 1,
         key: 'stack-test',
+        preloadedRoutes: [],
         routeNames: ['foo', 'bar'],
         routes: [
           { key: 'foo-test', name: 'foo' },
@@ -213,6 +222,7 @@ it('gets state on route names change', () => {
   ).toEqual({
     index: 0,
     key: 'stack-test',
+    preloadedRoutes: [],
     routeNames: ['baz', 'qux'],
     routes: [{ key: 'baz-test', name: 'baz', params: { name: 'John' } }],
     stale: false,
@@ -228,6 +238,7 @@ it('gets state on route names change with initialRouteName', () => {
       {
         index: 1,
         key: 'stack-test',
+        preloadedRoutes: [],
         routeNames: ['foo', 'bar'],
         routes: [
           { key: 'foo-test', name: 'foo' },
@@ -248,6 +259,7 @@ it('gets state on route names change with initialRouteName', () => {
   ).toEqual({
     index: 0,
     key: 'stack-test',
+    preloadedRoutes: [],
     routeNames: ['baz', 'qux'],
     routes: [{ key: 'qux-test', name: 'qux' }],
     stale: false,
@@ -270,6 +282,7 @@ it('handles navigate action', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -284,6 +297,7 @@ it('handles navigate action', () => {
     type: 'stack',
     key: 'root',
     index: 2,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
@@ -303,6 +317,7 @@ it('handles navigate action', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -317,6 +332,7 @@ it('handles navigate action', () => {
     type: 'stack',
     key: 'root',
     index: 2,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
@@ -332,6 +348,7 @@ it('handles navigate action', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -346,6 +363,7 @@ it('handles navigate action', () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
@@ -369,6 +387,7 @@ it("doesn't navigate to nonexistent screen", () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -399,6 +418,7 @@ it('ensures unique ID for navigate', () => {
         type: 'stack',
         key: 'root',
         index: 0,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [{ key: 'bar', name: 'bar' }],
       },
@@ -410,6 +430,7 @@ it('ensures unique ID for navigate', () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'bar', name: 'bar' },
@@ -424,6 +445,7 @@ it('ensures unique ID for navigate', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'bar', name: 'bar' },
@@ -438,6 +460,7 @@ it('ensures unique ID for navigate', () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'bar', name: 'bar' },
@@ -452,6 +475,7 @@ it('ensures unique ID for navigate', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'bar', name: 'bar' },
@@ -466,6 +490,7 @@ it('ensures unique ID for navigate', () => {
     type: 'stack',
     key: 'root',
     index: 2,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'bar', name: 'bar' },
@@ -494,6 +519,7 @@ it('ensure unique ID is only per route name for navigate', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'qux-test', name: 'qux', params: { test: 'a' } },
@@ -508,6 +534,7 @@ it('ensure unique ID is only per route name for navigate', () => {
     type: 'stack',
     key: 'root',
     index: 2,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'qux-test', name: 'qux', params: { test: 'a' } },
@@ -532,6 +559,7 @@ it('handles navigate action (legacy)', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -546,6 +574,7 @@ it('handles navigate action (legacy)', () => {
     type: 'stack',
     key: 'root',
     index: 2,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
@@ -565,6 +594,7 @@ it('handles navigate action (legacy)', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -579,6 +609,7 @@ it('handles navigate action (legacy)', () => {
     type: 'stack',
     key: 'root',
     index: 0,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [{ key: 'baz', name: 'baz', params: { answer: 42 } }],
   });
@@ -590,6 +621,7 @@ it('handles navigate action (legacy)', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -604,6 +636,7 @@ it('handles navigate action (legacy)', () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
@@ -618,6 +651,7 @@ it('handles navigate action (legacy)', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -645,6 +679,7 @@ it("doesn't navigate to nonexistent screen (legacy)", () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -663,6 +698,7 @@ it("doesn't navigate to nonexistent screen (legacy)", () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -696,6 +732,7 @@ it('ensures unique ID for navigate (legacy)', () => {
         type: 'stack',
         key: 'root',
         index: 0,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [{ key: 'bar', name: 'bar' }],
       },
@@ -707,6 +744,7 @@ it('ensures unique ID for navigate (legacy)', () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'bar', name: 'bar' },
@@ -721,6 +759,7 @@ it('ensures unique ID for navigate (legacy)', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'bar', name: 'bar' },
@@ -735,6 +774,7 @@ it('ensures unique ID for navigate (legacy)', () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'bar', name: 'bar' },
@@ -749,6 +789,7 @@ it('ensures unique ID for navigate (legacy)', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'bar', name: 'bar' },
@@ -763,6 +804,7 @@ it('ensures unique ID for navigate (legacy)', () => {
     type: 'stack',
     key: 'root',
     index: 2,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'bar', name: 'bar' },
@@ -791,6 +833,7 @@ it('ensure unique ID is only per route name for navigate (legacy)', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'qux-test', name: 'qux', params: { test: 'a' } },
@@ -805,6 +848,7 @@ it('ensure unique ID is only per route name for navigate (legacy)', () => {
     type: 'stack',
     key: 'root',
     index: 2,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'qux-test', name: 'qux', params: { test: 'a' } },
@@ -829,6 +873,7 @@ it('handles go back action', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -843,6 +888,7 @@ it('handles go back action', () => {
     type: 'stack',
     key: 'root',
     index: 0,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [{ key: 'baz', name: 'baz' }],
   });
@@ -854,6 +900,7 @@ it('handles go back action', () => {
         type: 'stack',
         key: 'root',
         index: 0,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [{ key: 'baz', name: 'baz' }],
       },
@@ -878,6 +925,7 @@ it('handles pop action', () => {
         type: 'stack',
         key: 'root',
         index: 2,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -893,6 +941,7 @@ it('handles pop action', () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
@@ -907,6 +956,7 @@ it('handles pop action', () => {
         type: 'stack',
         key: 'root',
         index: 2,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -922,6 +972,7 @@ it('handles pop action', () => {
     type: 'stack',
     key: 'root',
     index: 0,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [{ key: 'baz', name: 'baz' }],
   });
@@ -933,6 +984,7 @@ it('handles pop action', () => {
         type: 'stack',
         key: 'root',
         index: 2,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -948,6 +1000,7 @@ it('handles pop action', () => {
     type: 'stack',
     key: 'root',
     index: 0,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [{ key: 'baz', name: 'baz' }],
   });
@@ -959,6 +1012,7 @@ it('handles pop action', () => {
         type: 'stack',
         key: 'root',
         index: 2,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz-0', name: 'baz' },
@@ -978,6 +1032,7 @@ it('handles pop action', () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz-0', name: 'baz' },
@@ -992,6 +1047,7 @@ it('handles pop action', () => {
         type: 'stack',
         key: 'root',
         index: 4,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz-0', name: 'baz' },
@@ -1013,6 +1069,7 @@ it('handles pop action', () => {
     type: 'stack',
     key: 'root',
     index: 2,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz-0', name: 'baz' },
@@ -1028,6 +1085,7 @@ it('handles pop action', () => {
         type: 'stack',
         key: 'root',
         index: 0,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [{ key: 'baz-0', name: 'baz' }],
       },
@@ -1052,6 +1110,7 @@ it('handles pop to top action', () => {
         type: 'stack',
         key: 'root',
         index: 2,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -1067,6 +1126,7 @@ it('handles pop to top action', () => {
     type: 'stack',
     key: 'root',
     index: 0,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [{ key: 'baz', name: 'baz' }],
   });
@@ -1092,6 +1152,7 @@ it('replaces focused screen with replace', () => {
           { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
           { key: 'baz', name: 'baz' },
         ],
+        preloadedRoutes: [],
         routeNames: ['foo', 'bar', 'baz', 'qux'],
       },
       StackActions.replace('qux', { answer: 42 }),
@@ -1107,6 +1168,7 @@ it('replaces focused screen with replace', () => {
       { key: 'qux-test', name: 'qux', params: { answer: 42 } },
       { key: 'baz', name: 'baz' },
     ],
+    preloadedRoutes: [],
     routeNames: ['foo', 'bar', 'baz', 'qux'],
   });
 });
@@ -1131,6 +1193,7 @@ it('replaces active screen with replace', () => {
           { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
           { key: 'baz', name: 'baz' },
         ],
+        preloadedRoutes: [],
         routeNames: ['foo', 'bar', 'baz', 'qux'],
       },
       {
@@ -1149,6 +1212,7 @@ it('replaces active screen with replace', () => {
       { key: 'qux-test', name: 'qux', params: { answer: 42 } },
       { key: 'baz', name: 'baz' },
     ],
+    preloadedRoutes: [],
     routeNames: ['foo', 'bar', 'baz', 'qux'],
   });
 });
@@ -1173,6 +1237,7 @@ it("doesn't handle replace if source key isn't present", () => {
           { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
           { key: 'baz', name: 'baz' },
         ],
+        preloadedRoutes: [],
         routeNames: ['foo', 'bar', 'baz', 'qux'],
       },
       {
@@ -1205,6 +1270,7 @@ it("doesn't handle replace if screen to replace with isn't present", () => {
           { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
           { key: 'baz', name: 'baz' },
         ],
+        preloadedRoutes: [],
         routeNames: ['foo', 'bar', 'baz', 'qux'],
       },
       {
@@ -1233,6 +1299,7 @@ it('handles push action', () => {
         type: 'stack',
         key: 'root',
         index: 2,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [{ key: 'bar', name: 'bar' }],
       },
@@ -1244,6 +1311,7 @@ it('handles push action', () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'bar', name: 'bar' },
@@ -1258,6 +1326,7 @@ it('handles push action', () => {
         type: 'stack',
         key: 'root',
         index: 2,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [{ key: 'bar', name: 'bar' }],
       },
@@ -1269,6 +1338,7 @@ it('handles push action', () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'bar', name: 'bar' },
@@ -1283,6 +1353,7 @@ it('handles push action', () => {
         type: 'stack',
         key: 'root',
         index: 2,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [{ key: 'bar', name: 'bar' }],
       },
@@ -1307,6 +1378,7 @@ it("doesn't push nonexistent screen", () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -1337,6 +1409,7 @@ it('ensures unique ID for push', () => {
         type: 'stack',
         key: 'root',
         index: 0,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [{ key: 'bar', name: 'bar' }],
       },
@@ -1348,6 +1421,7 @@ it('ensures unique ID for push', () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'bar', name: 'bar' },
@@ -1362,6 +1436,7 @@ it('ensures unique ID for push', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'bar', name: 'bar' },
@@ -1376,6 +1451,7 @@ it('ensures unique ID for push', () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'bar', name: 'bar' },
@@ -1390,6 +1466,7 @@ it('ensures unique ID for push', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'bar', name: 'bar' },
@@ -1404,6 +1481,7 @@ it('ensures unique ID for push', () => {
     type: 'stack',
     key: 'root',
     index: 2,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'bar', name: 'bar' },
@@ -1432,6 +1510,7 @@ it('ensure unique ID is only per route name for push', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'qux-test', name: 'qux', params: { test: 'a' } },
@@ -1446,6 +1525,7 @@ it('ensure unique ID is only per route name for push', () => {
     type: 'stack',
     key: 'root',
     index: 2,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'qux-test', name: 'qux', params: { test: 'a' } },
@@ -1470,6 +1550,7 @@ it('adds path on navigate if provided', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -1488,6 +1569,7 @@ it('adds path on navigate if provided', () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
@@ -1502,6 +1584,7 @@ it('adds path on navigate if provided', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -1520,6 +1603,7 @@ it('adds path on navigate if provided', () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
@@ -1539,6 +1623,7 @@ it('adds path on navigate if provided', () => {
         type: 'stack',
         key: 'root',
         index: 0,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [{ key: 'bar', name: 'bar', params: { answer: 42 } }],
       },
@@ -1553,6 +1638,7 @@ it('adds path on navigate if provided', () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'bar', name: 'bar', params: { answer: 42 } },
@@ -1580,6 +1666,7 @@ it("doesn't remove existing path on navigate if not provided", () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -1598,6 +1685,7 @@ it("doesn't remove existing path on navigate if not provided", () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
@@ -1621,6 +1709,7 @@ it('handles popTo action', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -1635,6 +1724,7 @@ it('handles popTo action', () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
@@ -1653,6 +1743,7 @@ it('handles popTo action', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -1667,6 +1758,7 @@ it('handles popTo action', () => {
     type: 'stack',
     key: 'root',
     index: 0,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [{ key: 'baz', name: 'baz', params: { answer: 42 } }],
   });
@@ -1678,6 +1770,7 @@ it('handles popTo action', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -1692,6 +1785,7 @@ it('handles popTo action', () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
@@ -1715,6 +1809,7 @@ it("doesn't popTo to nonexistent screen", () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -1744,6 +1839,7 @@ it("doesn't merge params on popTo to an existing screen", () => {
         type: 'stack',
         key: 'root',
         index: 2,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -1759,6 +1855,7 @@ it("doesn't merge params on popTo to an existing screen", () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
@@ -1773,6 +1870,7 @@ it("doesn't merge params on popTo to an existing screen", () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -1787,6 +1885,7 @@ it("doesn't merge params on popTo to an existing screen", () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
@@ -1813,6 +1912,7 @@ it('merges params on popTo to an existing screen if merge: true', () => {
         type: 'stack',
         key: 'root',
         index: 2,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -1829,6 +1929,7 @@ it('merges params on popTo to an existing screen if merge: true', () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
@@ -1843,6 +1944,7 @@ it('merges params on popTo to an existing screen if merge: true', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
@@ -1857,6 +1959,7 @@ it('merges params on popTo to an existing screen if merge: true', () => {
     type: 'stack',
     key: 'root',
     index: 1,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
@@ -1875,6 +1978,7 @@ it('merges params on popTo to an existing screen if merge: true', () => {
         type: 'stack',
         key: 'root',
         index: 1,
+        preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz', params: { test: 99 } },
@@ -1889,6 +1993,7 @@ it('merges params on popTo to an existing screen if merge: true', () => {
     type: 'stack',
     key: 'root',
     index: 0,
+    preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       {
@@ -1898,4 +2003,183 @@ it('merges params on popTo to an existing screen if merge: true', () => {
       },
     ],
   });
+});
+
+it('handles screen preloading', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {
+      bar: { color: 'test' },
+      baz: { foo: 12 },
+    },
+    routeGetIdList: {
+      bar: ({ params }) => params?.answer,
+    },
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        preloadedRoutes: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar', params: { answer: 42 } },
+          { key: 'qux', name: 'qux' },
+        ],
+      },
+
+      CommonActions.preload('bar'),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 2,
+    preloadedRoutes: [
+      { key: 'bar-test', name: 'bar', params: { color: 'test' } },
+    ],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar', params: { answer: 42 } },
+      { key: 'qux', name: 'qux' },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        preloadedRoutes: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          {
+            key: 'bar-test',
+            name: 'bar',
+            params: { answer: 42, toBe: 'merged' },
+          },
+          { key: 'baz', name: 'baz' },
+        ],
+      },
+
+      CommonActions.preload('bar', { answer: 42, something: 'else' }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 2,
+    preloadedRoutes: [
+      {
+        key: 'bar-test',
+        name: 'bar',
+        params: { answer: 42, toBe: 'merged', something: 'else' },
+      },
+    ],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'bar-test', name: 'bar', params: { answer: 42, toBe: 'merged' } },
+      { key: 'baz', name: 'baz' },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        preloadedRoutes: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          {
+            key: 'bar-test',
+            name: 'bar',
+            params: { answer: 42, toBe: 'notMerged' },
+          },
+          { key: 'baz', name: 'baz' },
+        ],
+      },
+
+      CommonActions.preload('bar', { answer: 43 }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 2,
+    preloadedRoutes: [
+      { key: 'bar-test', name: 'bar', params: { answer: 43, color: 'test' } },
+    ],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      {
+        key: 'bar-test',
+        name: 'bar',
+        params: { answer: 42, toBe: 'notMerged' },
+      },
+      { key: 'baz', name: 'baz' },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        preloadedRoutes: [
+          {
+            key: 'bar-test',
+            name: 'bar',
+            params: { answer: 43, color: 'test' },
+          },
+        ],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          {
+            key: 'bar-test',
+            name: 'bar',
+            params: { answer: 42, toBe: 'notMerged' },
+          },
+          { key: 'baz', name: 'baz' },
+        ],
+      },
+
+      CommonActions.dismissPreload('bar', { answer: 43 }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 2,
+    preloadedRoutes: [],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      {
+        key: 'bar-test',
+        name: 'bar',
+        params: { answer: 42, toBe: 'notMerged' },
+      },
+      { key: 'baz', name: 'baz' },
+    ],
+  });
+
+  // TODO test navigate
+  // TODO test pop
 });
