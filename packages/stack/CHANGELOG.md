@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.6...@react-navigation/stack@7.0.0-alpha.7) (2023-11-17)
+
+### Bug Fixes
+
+* update peer dependencies when publishing ([c440703](https://github.com/react-navigation/react-navigation/commit/c44070310f875e488708f2a6c52ffddcea05b0e6)) - by @
+
 # [7.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.5...@react-navigation/stack@7.0.0-alpha.6) (2023-11-12)
 
 ### Bug Fixes
