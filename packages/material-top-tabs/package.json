@@ -57,7 +57,7 @@
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
-    "@react-navigation/native": "^6.0.0",
+    "@react-navigation/native": "workspace:^",
     "react": "*",
     "react-native": "0.72.6",
     "react-native-pager-view": "6.2.0"
