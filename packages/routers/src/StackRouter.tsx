@@ -386,6 +386,9 @@ export function StackRouter(options: StackRouterOptions) {
           return {
             ...state,
             index: routes.length - 1,
+            // preloadedRoutes: state.preloadedRoutes.filter(
+            //   (route) => routes[routes.length - 1].key !== route.key
+            // ),
             routes,
           };
         }
@@ -489,10 +492,17 @@ export function StackRouter(options: StackRouterOptions) {
               .slice(0, count)
               .concat(state.routes.slice(index + 1));
 
+            const removedRoutes = state.routes.slice(count, index + 1);
+
             return {
               ...state,
               index: routes.length - 1,
               routes,
+              preloadedRoutes: state.preloadedRoutes.filter(
+                (route) =>
+                  removedRoutes.findIndex((r) => route.key === r.key) === -1 &&
+                  route.key !== routes[routes.length - 1].key
+              ),
             };
           }
 

@@ -2180,6 +2180,138 @@ it('handles screen preloading', () => {
     ],
   });
 
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        preloadedRoutes: [
+          {
+            key: 'bar-test',
+            name: 'bar',
+          },
+        ],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          {
+            key: 'bar-test',
+            name: 'bar',
+          },
+          { key: 'baz', name: 'baz' },
+        ],
+      },
+
+      StackActions.pop(),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 0,
+    preloadedRoutes: [],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      {
+        key: 'bar-test',
+        name: 'bar',
+      },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        preloadedRoutes: [
+          {
+            key: 'bar-test',
+            name: 'bar',
+          },
+          { key: 'baz', name: 'baz' },
+        ],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          {
+            key: 'bar-test',
+            name: 'bar',
+          },
+          { key: 'baz', name: 'baz' },
+          { key: 'qux', name: 'qux' },
+        ],
+      },
+
+      StackActions.pop(2),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 0,
+    preloadedRoutes: [],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      {
+        key: 'bar-test',
+        name: 'bar',
+      },
+    ],
+  });
+
+  // expect(
+  //   router.getStateForAction(
+  //     {
+  //       stale: false,
+  //       type: 'stack',
+  //       key: 'root',
+  //       index: 2,
+  //       preloadedRoutes: [
+  //         {
+  //           key: 'bar-test',
+  //           name: 'bar',
+  //         },
+  //         { key: 'qux', name: 'qux' },
+  //       ],
+  //       routeNames: ['baz', 'bar', 'qux'],
+  //       routes: [
+  //         {
+  //           key: 'bar-test',
+  //           name: 'bar',
+  //         },
+  //         { key: 'baz', name: 'baz' },
+  //       ],
+  //     },
+  //
+  //     StackActions.push('qux'),
+  //     options
+  //   )
+  // ).toEqual({
+  //   stale: false,
+  //   type: 'stack',
+  //   key: 'root',
+  //   index: 0,
+  //   preloadedRoutes: [
+  //     {
+  //       key: 'bar-test',
+  //       name: 'bar',
+  //     },
+  //   ],
+  //   routeNames: ['baz', 'bar', 'qux'],
+  //   routes: [
+  //     {
+  //       key: 'bar-test',
+  //       name: 'bar',
+  //     },
+  //     { key: 'qux-test', name: 'qux' },
+  //   ],
+  // });
+
   // TODO test navigate
-  // TODO test pop
+  // TODO test navigate deprecated
 });
