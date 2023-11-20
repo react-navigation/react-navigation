@@ -4,7 +4,7 @@ import {
   HeaderBackground,
   useHeaderHeight,
 } from '@react-navigation/elements';
-import { type ParamListBase, useTheme } from '@react-navigation/native';
+import { type ParamListBase } from '@react-navigation/native';
 import {
   createStackNavigator,
   Header,
@@ -106,7 +106,6 @@ export function StackHeaderCustomization({ navigation }: Props) {
     });
   }, [navigation]);
 
-  const { colors, dark } = useTheme();
   const [headerTitleCentered, setHeaderTitleCentered] = React.useState(true);
 
   return (
@@ -148,7 +147,7 @@ export function StackHeaderCustomization({ navigation }: Props) {
       <Stack.Screen
         name="Albums"
         component={AlbumsScreen}
-        options={{
+        options={({ theme }) => ({
           title: 'Albums',
           headerBackTitle: 'Back',
           headerTransparent: true,
@@ -157,17 +156,17 @@ export function StackHeaderCustomization({ navigation }: Props) {
               style={{
                 backgroundColor: 'blue',
                 borderBottomWidth: StyleSheet.hairlineWidth,
-                borderBottomColor: colors.border,
+                borderBottomColor: theme.colors.border,
               }}
             >
               <BlurView
-                tint={dark ? 'dark' : 'light'}
+                tint={theme.dark ? 'dark' : 'light'}
                 intensity={75}
                 style={StyleSheet.absoluteFill}
               />
             </HeaderBackground>
           ),
-        }}
+        })}
       />
     </Stack.Navigator>
   );
