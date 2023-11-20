@@ -85,9 +85,10 @@ it('preloads screens', async () => {
 
   expect(renderCallback).not.toHaveBeenCalled();
   fireEvent.press(await findByText('Preload B'));
-  expect(renderCallback).toHaveBeenCalled();
+  expect(renderCallback).toHaveBeenCalledTimes(1);
+  expect(unmountCallback).not.toHaveBeenCalled();
   fireEvent.press(await findByText('Dismiss preload B'));
-  expect(unmountCallback).toHaveBeenCalled();
+  expect(unmountCallback).toHaveBeenCalledTimes(1);
   fireEvent.press(await findByText('Preload B'));
   expect(renderCallback).toHaveBeenCalledTimes(2);
 });
