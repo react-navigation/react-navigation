@@ -30,7 +30,7 @@
     "yarn": "3.2.2",
     "node": ">=18"
   },
-  "packageManager": "yarn@3.2.2",
+  "packageManager": "yarn@4.0.1",
   "devDependencies": {
     "@commitlint/config-conventional": "^18.1.0",
     "@evilmartians/lefthook": "^1.5.2",

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.3...@react-navigation/elements@2.0.0-alpha.4) (2023-11-17)
+
+### Bug Fixes
+
+* darken the tint color for light colored button text ([d5e6b9e](https://github.com/react-navigation/react-navigation/commit/d5e6b9eaa0f3d347e2449ff8459bad8274de653e)) - by @satya164
+* update peer dependencies when publishing ([c440703](https://github.com/react-navigation/react-navigation/commit/c44070310f875e488708f2a6c52ffddcea05b0e6)) - by @
+
 # [2.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.2...@react-navigation/elements@2.0.0-alpha.3) (2023-11-12)
 
 ### Bug Fixes
