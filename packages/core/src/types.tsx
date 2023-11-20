@@ -14,6 +14,9 @@ declare global {
   namespace ReactNavigation {
     // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface RootParamList {}
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface Theme {}
   }
 }
 
@@ -75,6 +78,7 @@ export type DefaultNavigatorOptions<
     | ((props: {
         route: RouteProp<ParamList>;
         navigation: any;
+        theme: ReactNavigation.Theme;
       }) => ScreenOptions);
   /**
    A function returning a state, which may be set after modifying the routes name.
@@ -380,6 +384,10 @@ export type NavigationContainerProps = {
    */
   navigationInChildEnabled?: boolean;
   /**
+   * Theme object for the UI elements.
+   */
+  theme?: ReactNavigation.Theme;
+  /**
    * Children elements to render.
    */
   children: React.ReactNode;
@@ -590,6 +598,7 @@ export type RouteConfig<
     | ((props: {
         route: RouteProp<ParamList, RouteName>;
         navigation: any;
+        theme: ReactNavigation.Theme;
       }) => ScreenOptions);
 
   /**
@@ -638,6 +647,7 @@ export type RouteGroupConfig<
     | ((props: {
         route: RouteProp<ParamList, keyof ParamList>;
         navigation: any;
+        theme: ReactNavigation.Theme;
       }) => ScreenOptions);
   /**
    * Children React Elements to extract the route configuration from.
