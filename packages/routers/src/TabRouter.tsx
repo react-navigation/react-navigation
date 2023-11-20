@@ -42,7 +42,7 @@ export type TabNavigationState<ParamList extends ParamListBase> = Omit<
    */
   history: { type: 'route'; key: string }[];
   /**
-   * TODO
+   * List of routes' key, which are supposed to be preloaded before navigating to.
    */
   preloadedRoutesKeys: string[];
 };

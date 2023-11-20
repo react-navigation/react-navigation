@@ -55,7 +55,7 @@ export type StackNavigationState<ParamList extends ParamListBase> =
      */
     type: 'stack';
     /**
-     * TODO
+     * List of routes, which are supposed to be preloaded before navigating to.
      */
     preloadedRoutes: NavigationRoute<ParamList, keyof ParamList>[];
   };
