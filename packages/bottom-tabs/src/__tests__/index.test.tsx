@@ -65,8 +65,10 @@ it('preloads screens', async () => {
   );
 
   const Screen2 = () => {
-    useEffect(() => unmountCallback);
-    renderCallback();
+    useEffect(() => {
+      renderCallback();
+      return unmountCallback;
+    }, []);
     return null;
   };
 
