@@ -44,12 +44,6 @@ export function MaterialTopTabView({
     });
   };
 
-  if (state.preloadedRoutesKeys.length !== 0) {
-    console.warn(
-      'Preloading routes is not supported in the MaterialTopTabNavigator navigator.'
-    );
-  }
-
   const focusedOptions = descriptors[state.routes[state.index].key].options;
 
   return (
@@ -73,7 +67,10 @@ export function MaterialTopTabView({
       renderLazyPlaceholder={({ route }) =>
         descriptors[route.key].options.lazyPlaceholder?.() ?? null
       }
-      lazy={({ route }) => descriptors[route.key].options.lazy === true}
+      lazy={({ route }) =>
+        descriptors[route.key].options.lazy === true ||
+        state.preloadedRoutesKeys.includes(route.key)
+      }
       lazyPreloadDistance={focusedOptions.lazyPreloadDistance}
       swipeEnabled={focusedOptions.swipeEnabled}
       animationEnabled={focusedOptions.animationEnabled}

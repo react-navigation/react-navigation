@@ -43,11 +43,6 @@ it('renders a bottom tab navigator with screens', async () => {
 });
 
 it('preloads screens', async () => {
-  // @ts-expect-error: incomplete mock for testing
-  jest.spyOn(Animated, 'timing').mockImplementation(() => ({
-    start: (callback) => callback?.({ finished: true }),
-  }));
-
   const renderCallback = jest.fn();
   const unmountCallback = jest.fn();
   const Screen1 = ({
