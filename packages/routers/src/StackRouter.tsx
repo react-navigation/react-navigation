@@ -334,6 +334,14 @@ export function StackRouter(options: StackRouterOptions) {
             }
           }
 
+          if (!route) {
+            route = state.preloadedRoutes.find(
+              (route) =>
+                route.name === action.payload.name &&
+                id === getId?.({ params: route.params })
+            );
+          }
+
           let params;
 
           if (action.type === 'NAVIGATE' && action.payload.merge && route) {
@@ -386,14 +394,19 @@ export function StackRouter(options: StackRouterOptions) {
           return {
             ...state,
             index: routes.length - 1,
-            // preloadedRoutes: state.preloadedRoutes.filter(
-            //   (route) => routes[routes.length - 1].key !== route.key
-            // ),
+            preloadedRoutes: state.preloadedRoutes.filter(
+              (route) => routes[routes.length - 1].key !== route.key
+            ),
             routes,
           };
         }
 
         case 'NAVIGATE_DEPRECATED': {
+          if (state.preloadedRoutes.length !== 0) {
+            console.warn(
+              'Preloading is not supported with navigateDeprecated.'
+            );
+          }
           if (!state.routeNames.includes(action.payload.name)) {
             return null;
           }
