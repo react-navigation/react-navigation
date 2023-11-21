@@ -6,7 +6,6 @@ import {
   ParamListBase,
   PartialState,
   Route,
-  Router,
   RouterConfigOptions,
   RouterFactory,
 } from '@react-navigation/routers';
@@ -276,17 +275,15 @@ export default function useNavigationBuilder<
     | undefined;
 
   const { children, screenListeners, ...rest } = options;
-  const { current: router } = React.useRef<Router<State, any>>(
-    createRouter({
-      ...(rest as unknown as RouterOptions),
-      ...(route?.params &&
-      route.params.state == null &&
-      route.params.initial !== false &&
-      typeof route.params.screen === 'string'
-        ? { initialRouteName: route.params.screen }
-        : null),
-    })
-  );
+  const router = createRouter({
+    ...(rest as unknown as RouterOptions),
+    ...(route?.params &&
+    route.params.state == null &&
+    route.params.initial !== false &&
+    typeof route.params.screen === 'string'
+      ? { initialRouteName: route.params.screen }
+      : null),
+  });
 
   const routeConfigs = getRouteConfigsFromChildren<
     State,
