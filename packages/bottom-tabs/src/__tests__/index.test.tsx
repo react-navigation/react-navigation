@@ -4,7 +4,6 @@ import {
 } from '@react-navigation/native';
 import { fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
-import { useEffect } from 'react';
 import { Animated, Button, Text, View } from 'react-native';
 
 import { type BottomTabScreenProps, createBottomTabNavigator } from '../index';
@@ -43,14 +42,9 @@ it('renders a bottom tab navigator with screens', async () => {
 });
 
 it('preloads screens', async () => {
-  const renderCallback = jest.fn();
-  const unmountCallback = jest.fn();
-  const Screen1 = ({
-    route,
-    navigation,
-  }: BottomTabScreenProps<ParamListBase>) => (
+  const ScreenA = ({ navigation }: BottomTabScreenProps<ParamListBase>) => (
     <View>
-      <Text>Screen {route.name}</Text>
+      <Text>Screen A</Text>
       <Button onPress={() => navigation.preload('B')} title="Preload B" />
       <Button
         onPress={() => navigation.dismissPreload('B')}
@@ -59,31 +53,29 @@ it('preloads screens', async () => {
     </View>
   );
 
-  const Screen2 = () => {
-    useEffect(() => {
-      renderCallback();
-      return unmountCallback;
-    }, []);
-    return null;
+  const ScreenB = () => {
+    return <Text>Screen B</Text>;
   };
 
   const Tab = createBottomTabNavigator();
 
-  const { findByText } = render(
+  const component = (
     <NavigationContainer>
       <Tab.Navigator>
-        <Tab.Screen name="A" component={Screen1} />
-        <Tab.Screen name="B" component={Screen2} />
+        <Tab.Screen name="A" component={ScreenA} />
+        <Tab.Screen name="B" component={ScreenB} />
       </Tab.Navigator>
     </NavigationContainer>
   );
+  const app = render(component);
 
-  expect(renderCallback).not.toHaveBeenCalled();
-  fireEvent.press(await findByText('Preload B'));
-  expect(renderCallback).toHaveBeenCalledTimes(1);
-  expect(unmountCallback).not.toHaveBeenCalled();
-  fireEvent.press(await findByText('Dismiss preload B'));
-  expect(unmountCallback).toHaveBeenCalledTimes(1);
-  fireEvent.press(await findByText('Preload B'));
-  expect(renderCallback).toHaveBeenCalledTimes(2);
+  const { getByText, queryByText } = app;
+
+  expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
+  fireEvent.press(getByText('Preload B'));
+  expect(
+    queryByText('Screen B', { includeHiddenElements: true })
+  ).not.toBeNull();
+  fireEvent.press(getByText('Dismiss preload B'));
+  expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
 });

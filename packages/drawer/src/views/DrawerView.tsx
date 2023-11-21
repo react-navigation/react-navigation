@@ -56,11 +56,6 @@ function DrawerViewBase({
 }: Props) {
   const { direction } = useLocale();
 
-  if (state.preloadedRoutesKeys.length !== 0) {
-    console.warn(
-      'Preloading routes is not supported in the DrawerNavigator navigator.'
-    );
-  }
   const focusedRouteKey = state.routes[state.index].key;
   const {
     drawerHideStatusBarOnOpen,
@@ -204,8 +199,13 @@ function DrawerViewBase({
             return null;
           }
 
-          if (lazy && !loaded.includes(route.key) && !isFocused) {
-            // Don't render a lazy screen if we've never navigated to it
+          if (
+            lazy &&
+            !loaded.includes(route.key) &&
+            !isFocused &&
+            !state.preloadedRoutesKeys.includes(route.key)
+          ) {
+            // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
             return null;
           }
 

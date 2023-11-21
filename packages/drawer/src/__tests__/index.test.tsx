@@ -35,3 +35,42 @@ it('renders a drawer navigator with screens', async () => {
 
   expect(queryByText('Screen B')).not.toBeNull();
 });
+
+it('preloads screens', async () => {
+  const ScreenA = ({ navigation }: DrawerScreenProps<ParamListBase>) => (
+    <View>
+      <Text>Screen A</Text>
+      <Button onPress={() => navigation.preload('B')} title="Preload B" />
+      <Button
+        onPress={() => navigation.dismissPreload('B')}
+        title="Dismiss preload B"
+      />
+    </View>
+  );
+
+  const ScreenB = () => {
+    return <Text>Screen B</Text>;
+  };
+
+  const Tab = createDrawerNavigator();
+
+  const component = (
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen name="A" component={ScreenA} />
+        <Tab.Screen name="B" component={ScreenB} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+  const app = render(component);
+
+  const { getByText, queryByText } = app;
+
+  expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
+  fireEvent.press(getByText('Preload B'));
+  expect(
+    queryByText('Screen B', { includeHiddenElements: true })
+  ).not.toBeNull();
+  fireEvent.press(getByText('Dismiss preload B'));
+  expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
+});
