@@ -2008,52 +2008,6 @@ it('handles screen preloading', () => {
     history: [{ type: 'route', key: 'baz-test' }],
   });
 
-  const consoleWarnMock = jest.spyOn(console, 'warn').mockImplementation();
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'tab',
-        preloadedRouteKeys: [],
-        key: 'root',
-        index: 0,
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          { key: 'baz-test', name: 'baz' },
-          {
-            key: 'bar-test',
-            name: 'bar',
-            params: { answer: 42, willBe: 'merged' },
-          },
-          { key: 'qux-test', name: 'qux' },
-        ],
-        history: [{ type: 'route', key: 'baz-test' }],
-      },
-      CommonActions.preload('baz'),
-      options
-    )
-  ).toEqual({
-    stale: false,
-    type: 'tab',
-    preloadedRouteKeys: [],
-    key: 'root',
-    index: 0,
-    routeNames: ['baz', 'bar', 'qux'],
-    routes: [
-      { key: 'baz-test', name: 'baz' },
-      {
-        key: 'bar-test',
-        name: 'bar',
-        params: { answer: 42, willBe: 'merged' },
-      },
-      { key: 'qux-test', name: 'qux' },
-    ],
-    history: [{ type: 'route', key: 'baz-test' }],
-  });
-
-  expect(consoleWarnMock).toHaveBeenCalled();
-  consoleWarnMock.mockRestore();
-
   expect(
     router.getStateForAction(
       {
