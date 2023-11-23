@@ -1980,7 +1980,7 @@ it('handles screen preloading', () => {
           {
             key: 'bar-test',
             name: 'bar',
-            params: { answer: 42, willBe: 'merged' },
+            params: { answer: 42, willBe: 'overrode' },
           },
           { key: 'qux-test', name: 'qux' },
         ],
@@ -2001,7 +2001,7 @@ it('handles screen preloading', () => {
       {
         key: 'bar-test',
         name: 'bar',
-        params: { answer: 42, willBe: 'merged' },
+        params: { answer: 42 },
       },
       { key: 'qux-test', name: 'qux' },
     ],

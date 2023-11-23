@@ -406,7 +406,7 @@ export function TabRouter({
             (route) => route.name === action.payload.name
           );
           if (routeIndex === -1) {
-            return state;
+            return null;
           }
           const route = state.routes[routeIndex];
 
@@ -418,27 +418,14 @@ export function TabRouter({
           const key =
             currentId === nextId ? route.key : `${route.name}-${nanoid()}`;
 
-          let params;
-
-          if (currentId === nextId) {
-            params =
-              action.payload.params !== undefined ||
-              routeParamList[route.name] !== undefined
-                ? {
-                    ...routeParamList[route.name],
-                    ...route.params,
-                    ...action.payload.params,
-                  }
-                : route.params;
-          } else {
-            params =
-              routeParamList[route.name] !== undefined
-                ? {
-                    ...routeParamList[route.name],
-                    ...action.payload.params,
-                  }
-                : action.payload.params;
-          }
+          const params =
+            action.payload.params !== undefined ||
+            routeParamList[route.name] !== undefined
+              ? {
+                  ...routeParamList[route.name],
+                  ...action.payload.params,
+                }
+              : undefined;
 
           const newRoute =
             params !== route.params ? { ...route, key, params } : route;
