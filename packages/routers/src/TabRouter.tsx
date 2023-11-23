@@ -459,7 +459,7 @@ export function TabRouter({
             (route) => route.name === action.payload.name
           );
           if (routeIndex === -1) {
-            return state;
+            return null;
           }
           const route = state.routes[routeIndex];
 
