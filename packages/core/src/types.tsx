@@ -284,68 +284,30 @@ type NavigationHelpersCommon<
   /**
    * Preloads the route in current navigation tree.
    *
-   * @param route Object with `name` for the route to navigate to, and a `params` object.
-   */
-  preload<RouteName extends keyof ParamList>(
-    options: RouteName extends unknown
-      ? {
-          name: RouteName;
-          params: ParamList[RouteName];
-        }
-      : never
-  ): void;
-
-  /**
-   * Preloads the route in current navigation tree.
-   *
    * @param name Name of the route to navigate to.
    * @param [params] Params object for the route.
    */
   preload<RouteName extends keyof ParamList>(
-    ...args: // This condition allows us to iterate over a union type
-    // This is to avoid getting a union of all the params from `ParamList[RouteName]`,
-    // which will get our types all mixed up if a union RouteName is passed in.
-    RouteName extends unknown
-      ? // This condition checks if the params are optional,
-        // which means it's either undefined or a union with undefined
-        undefined extends ParamList[RouteName]
+    ...args: RouteName extends unknown
+      ? undefined extends ParamList[RouteName]
         ?
-            | [screen: RouteName] // if the params are optional, we don't have to provide it
+            | [screen: RouteName]
             | [screen: RouteName, params: ParamList[RouteName]]
         : [screen: RouteName, params: ParamList[RouteName]]
       : never
   ): void;
 
   /**
-   * Dismiss preloaded route in current navigation tree.
+   * Remove preloaded route in current navigation tree.
    *
-   * @param route Object with `name` for the route to navigate to, and a `params` object.
-   */
-  removePreload<RouteName extends keyof ParamList>(
-    options: RouteName extends unknown
-      ? {
-          name: RouteName;
-          params: ParamList[RouteName];
-        }
-      : never
-  ): void;
-
-  /**
-   * Dismiss preloaded route in current navigation tree.
-   *
-   * @param name Name of the route to navigate to.
+   * @param name Name of the route to remove preload.
    * @param [params] Params object for the route.
    */
   removePreload<RouteName extends keyof ParamList>(
-    ...args: // This condition allows us to iterate over a union type
-    // This is to avoid getting a union of all the params from `ParamList[RouteName]`,
-    // which will get our types all mixed up if a union RouteName is passed in.
-    RouteName extends unknown
-      ? // This condition checks if the params are optional,
-        // which means it's either undefined or a union with undefined
-        undefined extends ParamList[RouteName]
+    ...args: RouteName extends unknown
+      ? undefined extends ParamList[RouteName]
         ?
-            | [screen: RouteName] // if the params are optional, we don't have to provide it
+            | [screen: RouteName]
             | [screen: RouteName, params: ParamList[RouteName]]
         : [screen: RouteName, params: ParamList[RouteName]]
       : never
