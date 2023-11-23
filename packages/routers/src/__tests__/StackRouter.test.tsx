@@ -72,13 +72,14 @@ it('gets rehydrated state from partial state', () => {
           { key: 'bar-0', name: 'bar' },
           { key: 'qux-1', name: 'qux' },
         ],
+        preloadedRoutes: [{ name: 'baz' }],
       },
       options
     )
   ).toEqual({
     index: 1,
     key: 'stack-test',
-    preloadedRoutes: [],
+    preloadedRoutes: [{ name: 'baz', key: 'baz-test', params: { answer: 42 } }],
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
       { key: 'bar-0', name: 'bar' },
