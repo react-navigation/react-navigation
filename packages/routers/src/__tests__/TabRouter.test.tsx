@@ -2097,4 +2097,97 @@ it('handles screen preloading', () => {
     ],
     history: [{ type: 'route', key: 'baz-test' }],
   });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        preloadedRouteKeys: [],
+        key: 'root',
+        index: 2,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz-test', name: 'baz' },
+          {
+            key: 'bar-some',
+            name: 'bar',
+            params: { answer: 42 },
+          },
+          { key: 'qux-test', name: 'qux' },
+        ],
+        history: [
+          { type: 'route', key: 'bar-some' },
+          { type: 'route', key: 'qux-test' },
+        ],
+      },
+      CommonActions.preload('bar', { answer: 42 }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: ['bar-some'],
+    key: 'root',
+    index: 2,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz-test', name: 'baz' },
+      {
+        key: 'bar-some',
+        name: 'bar',
+        params: { answer: 42 },
+      },
+      { key: 'qux-test', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'bar-some' },
+      { type: 'route', key: 'qux-test' },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        preloadedRouteKeys: [],
+        key: 'root',
+        index: 2,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz-test', name: 'baz' },
+          {
+            key: 'bar-some',
+            name: 'bar',
+            params: { answer: 42 },
+          },
+          { key: 'qux-test', name: 'qux' },
+        ],
+        history: [
+          { type: 'route', key: 'bar-some' },
+          { type: 'route', key: 'qux-test' },
+        ],
+      },
+      CommonActions.preload('bar', { answer: 43 }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: ['bar-test'],
+    key: 'root',
+    index: 2,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz-test', name: 'baz' },
+      {
+        key: 'bar-test',
+        name: 'bar',
+        params: { answer: 43 },
+      },
+      { key: 'qux-test', name: 'qux' },
+    ],
+    history: [{ type: 'route', key: 'qux-test' }],
+  });
 });

@@ -438,6 +438,9 @@ export function TabRouter({
             routes: state.routes.map((route, index) =>
               index === routeIndex ? newRoute : route
             ),
+            history: state.history.filter(
+              (record) => key === route.key || record.key !== route.key
+            ),
           };
         }
 
