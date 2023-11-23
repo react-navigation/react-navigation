@@ -402,7 +402,13 @@ export function StackRouter(options: StackRouterOptions) {
         }
 
         case 'NAVIGATE_DEPRECATED': {
-          if (state.preloadedRoutes.length !== 0) {
+          if (
+            state.preloadedRoutes.find(
+              (route) =>
+                route.name === action.payload.name &&
+                id === getId?.({ params: route.params })
+            )
+          ) {
             console.warn(
               'Preloading is not supported with navigateDeprecated.'
             );
@@ -505,17 +511,10 @@ export function StackRouter(options: StackRouterOptions) {
               .slice(0, count)
               .concat(state.routes.slice(index + 1));
 
-            const removedRoutes = state.routes.slice(count, index + 1);
-
             return {
               ...state,
               index: routes.length - 1,
               routes,
-              preloadedRoutes: state.preloadedRoutes.filter(
-                (route) =>
-                  removedRoutes.findIndex((r) => route.key === r.key) === -1 &&
-                  route.key !== routes[routes.length - 1].key
-              ),
             };
           }
 
@@ -650,19 +649,34 @@ export function StackRouter(options: StackRouterOptions) {
             );
           }
 
-          if (!route) {
+          if (route) {
+            return {
+              ...state,
+              routes: state.routes.map((r) => {
+                if (r.key !== route?.key) {
+                  return r;
+                }
+                return {
+                  ...r,
+                  params:
+                    routeParamList[action.payload.name] !== undefined
+                      ? {
+                          ...routeParamList[action.payload.name],
+                          ...action.payload.params,
+                        }
+                      : action.payload.params,
+                };
+              }),
+            };
+          } else {
             return {
               ...state,
               preloadedRoutes: state.preloadedRoutes
-                .filter((r) => {
-                  if (r.name === action.payload.name) {
-                    if (id === undefined) {
-                      return false;
-                    }
-                    return id !== getId?.({ params: r.params });
-                  }
-                  return true;
-                })
+                .filter(
+                  (r) =>
+                    r.name !== action.payload.name ||
+                    id === getId?.({ params: r.params })
+                )
                 .concat({
                   key: `${action.payload.name}-${nanoid()}`,
                   name: action.payload.name,
@@ -674,23 +688,6 @@ export function StackRouter(options: StackRouterOptions) {
                         }
                       : action.payload.params,
                 }),
-            };
-          } else {
-            return {
-              ...state,
-              preloadedRoutes: state.preloadedRoutes
-                .filter((r) => r.key === route?.key)
-                .concat(
-                  action.payload.params
-                    ? {
-                        ...route,
-                        params: {
-                          ...route.params,
-                          ...action.payload.params,
-                        },
-                      }
-                    : route
-                ),
             };
           }
         }

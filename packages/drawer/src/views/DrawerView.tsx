@@ -57,7 +57,7 @@ function DrawerViewBase({
   const { direction } = useLocale();
 
   if (state.preloadedRouteKeys.length !== 0) {
-    console.warn(
+    throw new Error(
       'Preloading routes is not supported in the DrawerNavigator navigator.'
     );
   }

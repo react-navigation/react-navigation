@@ -45,7 +45,7 @@ export function MaterialTopTabView({
   };
 
   if (state.preloadedRouteKeys.length !== 0) {
-    console.warn(
+    throw new Error(
       'Preloading routes is not supported in the MaterialTopTabNavigator navigator.'
     );
   }
