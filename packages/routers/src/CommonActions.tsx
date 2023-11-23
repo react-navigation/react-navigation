@@ -56,7 +56,7 @@ export type Action =
       target?: string;
     }
   | {
-      type: 'DISMISS_PRELOAD';
+      type: 'REMOVE_PRELOAD';
       payload: {
         name: string;
         params?: object;
@@ -142,10 +142,10 @@ export function preload(...args: any): Action {
   }
 }
 
-export function dismissPreload(...args: any): Action {
+export function removePreload(...args: any): Action {
   if (typeof args[0] === 'string') {
     return {
-      type: 'DISMISS_PRELOAD',
+      type: 'REMOVE_PRELOAD',
       payload: { name: args[0], params: args[1] },
     };
   } else {

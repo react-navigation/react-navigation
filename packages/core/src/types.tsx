@@ -321,7 +321,7 @@ type NavigationHelpersCommon<
    *
    * @param route Object with `name` for the route to navigate to, and a `params` object.
    */
-  dismissPreload<RouteName extends keyof ParamList>(
+  removePreload<RouteName extends keyof ParamList>(
     options: RouteName extends unknown
       ? {
           name: RouteName;
@@ -336,7 +336,7 @@ type NavigationHelpersCommon<
    * @param name Name of the route to navigate to.
    * @param [params] Params object for the route.
    */
-  dismissPreload<RouteName extends keyof ParamList>(
+  removePreload<RouteName extends keyof ParamList>(
     ...args: // This condition allows us to iterate over a union type
     // This is to avoid getting a union of all the params from `ParamList[RouteName]`,
     // which will get our types all mixed up if a union RouteName is passed in.

@@ -405,10 +405,6 @@ export function TabRouter({
           const routeIndex = state.routes.findIndex(
             (route) => route.name === action.payload.name
           );
-          if (routeIndex === state.index) {
-            console.warn('Cannot preload the focused page.');
-            return state;
-          }
           if (routeIndex === -1) {
             return state;
           }
@@ -458,7 +454,7 @@ export function TabRouter({
           };
         }
 
-        case 'DISMISS_PRELOAD': {
+        case 'REMOVE_PRELOAD': {
           const routeIndex = state.routes.findIndex(
             (route) => route.name === action.payload.name
           );

@@ -694,7 +694,7 @@ export function StackRouter(options: StackRouterOptions) {
             };
           }
         }
-        case 'DISMISS_PRELOAD': {
+        case 'REMOVE_PRELOAD': {
           const getId = options.routeGetIdList[action.payload.name];
           const id = getId?.({ params: action.payload.params });
 
