@@ -195,6 +195,24 @@ export function StackRouter(options: StackRouterOptions) {
             }) as Route<string>
         );
 
+      const preloadedRoutes =
+        state.preloadedRoutes
+          ?.filter((route) => routeNames.includes(route.name))
+          .map(
+            (route) =>
+              ({
+                ...route,
+                key: route.key || `${route.name}-${nanoid()}`,
+                params:
+                  routeParamList[route.name] !== undefined
+                    ? {
+                        ...routeParamList[route.name],
+                        ...route.params,
+                      }
+                    : route.params,
+              }) as Route<string>
+          ) ?? [];
+
       if (routes.length === 0) {
         const initialRouteName =
           options.initialRouteName !== undefined
@@ -215,7 +233,7 @@ export function StackRouter(options: StackRouterOptions) {
         index: routes.length - 1,
         routeNames,
         routes,
-        preloadedRoutes: [], // ?
+        preloadedRoutes,
       };
     },
 

@@ -235,7 +235,7 @@ export function TabRouter({
           routeNames,
           history,
           routes,
-          preloadedRouteKeys: state.preloadedRouteKeys ?? [],
+          preloadedRouteKeys: state.preloadedRouteKeys ?? [], // FIXME
         },
         index,
         backBehavior,
