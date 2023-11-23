@@ -61,7 +61,7 @@ export function BottomTabView(props: Props) {
     sceneContainerStyle,
   } = props;
 
-  if (state.preloadedRoutesKeys.length !== 0) {
+  if (state.preloadedRouteKeys.length !== 0) {
     console.warn(
       'Preloading routes is not supported in the BottomTabNavigator navigator.'
     );

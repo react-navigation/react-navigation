@@ -44,7 +44,7 @@ export type TabNavigationState<ParamList extends ParamListBase> = Omit<
   /**
    * List of routes' key, which are supposed to be preloaded before navigating to.
    */
-  preloadedRoutesKeys: string[];
+  preloadedRouteKeys: string[];
 };
 
 export type TabActionHelpers<ParamList extends ParamListBase> = {
@@ -182,7 +182,7 @@ export function TabRouter({
         routeNames,
         history,
         routes,
-        preloadedRoutesKeys: [],
+        preloadedRouteKeys: [],
       };
     },
 
@@ -235,7 +235,7 @@ export function TabRouter({
           routeNames,
           history,
           routes,
-          preloadedRoutesKeys: state.preloadedRoutesKeys ?? [],
+          preloadedRouteKeys: state.preloadedRouteKeys ?? [],
         },
         index,
         backBehavior,
@@ -371,7 +371,7 @@ export function TabRouter({
 
           return {
             ...updatedState,
-            preloadedRoutesKeys: updatedState.preloadedRoutesKeys.filter(
+            preloadedRouteKeys: updatedState.preloadedRouteKeys.filter(
               (key) => key !== state.routes[updatedState.index].key
             ),
           };
@@ -393,7 +393,7 @@ export function TabRouter({
 
           return {
             ...state,
-            preloadedRoutesKeys: state.preloadedRoutesKeys.filter(
+            preloadedRouteKeys: state.preloadedRouteKeys.filter(
               (key) => key !== state.routes[index].key
             ),
             history: state.history.slice(0, -1),
@@ -449,7 +449,7 @@ export function TabRouter({
 
           return {
             ...state,
-            preloadedRoutesKeys: state.preloadedRoutesKeys
+            preloadedRouteKeys: state.preloadedRouteKeys
               .filter((key) => key !== route.key)
               .concat(newRoute.key),
             routes: state.routes.map((route, index) =>
@@ -469,7 +469,7 @@ export function TabRouter({
 
           return {
             ...state,
-            preloadedRoutesKeys: state.preloadedRoutesKeys.filter(
+            preloadedRouteKeys: state.preloadedRouteKeys.filter(
               (key) => key !== route.key
             ),
           };

@@ -25,7 +25,7 @@ it('gets initial state from route names and params with initialRouteName', () =>
     index: 1,
     key: 'drawer-test',
     routeNames: ['bar', 'baz', 'qux'],
-    preloadedRoutesKeys: [],
+    preloadedRouteKeys: [],
     routes: [
       { key: 'bar-test', name: 'bar' },
       { key: 'baz-test', name: 'baz', params: { answer: 42 } },
@@ -57,7 +57,7 @@ it('gets initial state from route names and params without initialRouteName', ()
     index: 0,
     key: 'drawer-test',
     routeNames: ['bar', 'baz', 'qux'],
-    preloadedRoutesKeys: [],
+    preloadedRouteKeys: [],
     routes: [
       { key: 'bar-test', name: 'bar' },
       { key: 'baz-test', name: 'baz', params: { answer: 42 } },
@@ -96,7 +96,7 @@ it('gets rehydrated state from partial state', () => {
     index: 0,
     key: 'drawer-test',
     routeNames: ['bar', 'baz', 'qux'],
-    preloadedRoutesKeys: [],
+    preloadedRouteKeys: [],
     routes: [
       { key: 'bar-0', name: 'bar' },
       { key: 'baz-test', name: 'baz', params: { answer: 42 } },
@@ -119,7 +119,7 @@ it('gets rehydrated state from partial state', () => {
     index: 1,
     key: 'drawer-test',
     routeNames: ['bar', 'baz', 'qux'],
-    preloadedRoutesKeys: [],
+    preloadedRouteKeys: [],
     routes: [
       { key: 'bar-test', name: 'bar' },
       { key: 'baz-0', name: 'baz', params: { answer: 42 } },
@@ -150,7 +150,7 @@ it('gets rehydrated state from partial state', () => {
     index: 2,
     key: 'drawer-test',
     routeNames: ['bar', 'baz', 'qux'],
-    preloadedRoutesKeys: [],
+    preloadedRouteKeys: [],
     routes: [
       { key: 'bar-0', name: 'bar' },
       { key: 'baz-1', name: 'baz', params: { answer: 42 } },
@@ -177,7 +177,7 @@ it('gets rehydrated state from partial state', () => {
     index: 0,
     key: 'drawer-test',
     routeNames: ['bar', 'baz', 'qux'],
-    preloadedRoutesKeys: [],
+    preloadedRouteKeys: [],
     routes: [
       { key: 'bar-test', name: 'bar' },
       { key: 'baz-test', name: 'baz', params: { answer: 42 } },
@@ -207,7 +207,7 @@ it('gets rehydrated state from partial state', () => {
     index: 0,
     key: 'drawer-test',
     routeNames: ['bar', 'baz', 'qux'],
-    preloadedRoutesKeys: [],
+    preloadedRouteKeys: [],
     routes: [
       { key: 'bar-test', name: 'bar' },
       { key: 'baz-test', name: 'baz', params: { answer: 42 } },
@@ -230,7 +230,7 @@ it("doesn't rehydrate state if it's not stale", () => {
     index: 0,
     key: 'drawer-test',
     routeNames: ['bar', 'baz', 'qux'],
-    preloadedRoutesKeys: [],
+    preloadedRouteKeys: [],
     routes: [
       { key: 'bar-test', name: 'bar' },
       { key: 'baz-test', name: 'baz', params: { answer: 42 } },
@@ -267,7 +267,7 @@ it('handles navigate action', () => {
       {
         stale: false,
         type: 'drawer',
-        preloadedRoutesKeys: [],
+        preloadedRouteKeys: [],
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar'],
@@ -287,7 +287,7 @@ it('handles navigate action', () => {
     key: 'root',
     index: 0,
     routeNames: ['baz', 'bar'],
-    preloadedRoutesKeys: [],
+    preloadedRouteKeys: [],
     routes: [
       { key: 'baz', name: 'baz', params: { answer: 42 } },
       { key: 'bar', name: 'bar' },
@@ -310,7 +310,7 @@ it('handles navigate action with open drawer', () => {
       {
         stale: false,
         type: 'drawer',
-        preloadedRoutesKeys: [],
+        preloadedRouteKeys: [],
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar'],
@@ -333,7 +333,7 @@ it('handles navigate action with open drawer', () => {
     key: 'root',
     index: 0,
     routeNames: ['baz', 'bar'],
-    preloadedRoutesKeys: [],
+    preloadedRouteKeys: [],
     routes: [
       { key: 'baz', name: 'baz', params: { answer: 42 } },
       { key: 'bar', name: 'bar' },
@@ -356,7 +356,7 @@ it('handles open drawer action', () => {
       {
         stale: false,
         type: 'drawer',
-        preloadedRoutesKeys: [],
+        preloadedRouteKeys: [],
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar'],
@@ -376,7 +376,7 @@ it('handles open drawer action', () => {
     key: 'root',
     index: 1,
     routeNames: ['baz', 'bar'],
-    preloadedRoutesKeys: [],
+    preloadedRouteKeys: [],
     routes: [
       { key: 'baz', name: 'baz' },
       { key: 'bar', name: 'bar' },
@@ -394,7 +394,7 @@ it('handles open drawer action', () => {
     key: 'root',
     index: 1,
     routeNames: ['baz', 'bar'],
-    preloadedRoutesKeys: [],
+    preloadedRouteKeys: [],
     routes: [
       { key: 'baz', name: 'baz' },
       { key: 'bar', name: 'bar' },
@@ -424,7 +424,7 @@ it('handles close drawer action', () => {
       {
         stale: false,
         type: 'drawer',
-        preloadedRoutesKeys: [],
+        preloadedRouteKeys: [],
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar'],
@@ -447,7 +447,7 @@ it('handles close drawer action', () => {
     key: 'root',
     index: 1,
     routeNames: ['baz', 'bar'],
-    preloadedRoutesKeys: [],
+    preloadedRouteKeys: [],
     routes: [
       { key: 'baz', name: 'baz' },
       { key: 'bar', name: 'bar' },
@@ -462,7 +462,7 @@ it('handles close drawer action', () => {
     key: 'root',
     index: 1,
     routeNames: ['baz', 'bar'],
-    preloadedRoutesKeys: [],
+    preloadedRouteKeys: [],
     routes: [
       { key: 'baz', name: 'baz' },
       { key: 'bar', name: 'bar' },
@@ -495,7 +495,7 @@ it('handles toggle drawer action', () => {
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar'],
-        preloadedRoutesKeys: [],
+        preloadedRouteKeys: [],
         routes: [
           { key: 'baz', name: 'baz' },
           { key: 'bar', name: 'bar' },
@@ -515,7 +515,7 @@ it('handles toggle drawer action', () => {
     key: 'root',
     index: 1,
     routeNames: ['baz', 'bar'],
-    preloadedRoutesKeys: [],
+    preloadedRouteKeys: [],
     routes: [
       { key: 'baz', name: 'baz' },
       { key: 'bar', name: 'bar' },
@@ -529,7 +529,7 @@ it('handles toggle drawer action', () => {
       {
         stale: false,
         type: 'drawer',
-        preloadedRoutesKeys: [],
+        preloadedRouteKeys: [],
         key: 'root',
         index: 1,
         routeNames: ['baz', 'bar'],
@@ -549,7 +549,7 @@ it('handles toggle drawer action', () => {
     key: 'root',
     index: 1,
     routeNames: ['baz', 'bar'],
-    preloadedRoutesKeys: [],
+    preloadedRouteKeys: [],
     routes: [
       { key: 'baz', name: 'baz' },
       { key: 'bar', name: 'bar' },
@@ -569,7 +569,7 @@ it('updates history on focus change', () => {
     index: 0,
     key: 'drawer-test',
     routeNames: ['baz', 'bar'],
-    preloadedRoutesKeys: [],
+    preloadedRouteKeys: [],
     routes: [
       { key: 'bar-0', name: 'bar' },
       { key: 'baz-0', name: 'baz', params: { answer: 42 } },
@@ -600,7 +600,7 @@ it('closes drawer on focus change', () => {
         index: 0,
         key: 'drawer-test',
         routeNames: ['bar', 'baz', 'qux'],
-        preloadedRoutesKeys: [],
+        preloadedRouteKeys: [],
         routes: [
           { key: 'bar-0', name: 'bar' },
           { key: 'baz-0', name: 'baz' },
@@ -617,7 +617,7 @@ it('closes drawer on focus change', () => {
     index: 1,
     key: 'drawer-test',
     routeNames: ['bar', 'baz', 'qux'],
-    preloadedRoutesKeys: [],
+    preloadedRouteKeys: [],
     routes: [
       { key: 'bar-0', name: 'bar' },
       { key: 'baz-0', name: 'baz' },
@@ -638,7 +638,7 @@ it('closes drawer on focus change', () => {
         index: 0,
         key: 'drawer-test',
         routeNames: ['bar', 'baz', 'qux'],
-        preloadedRoutesKeys: [],
+        preloadedRouteKeys: [],
         routes: [
           { key: 'bar-0', name: 'bar' },
           { key: 'baz-0', name: 'baz' },
@@ -658,7 +658,7 @@ it('closes drawer on focus change', () => {
     index: 1,
     key: 'drawer-test',
     routeNames: ['bar', 'baz', 'qux'],
-    preloadedRoutesKeys: [],
+    preloadedRouteKeys: [],
     routes: [
       { key: 'bar-0', name: 'bar' },
       { key: 'baz-0', name: 'baz' },
