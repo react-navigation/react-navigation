@@ -4,9 +4,11 @@ import {
 } from '@react-navigation/elements';
 import {
   CommonActions,
+  type Descriptor,
   type LocaleDirection,
   type ParamListBase,
   type Route,
+  type RouteProp,
   StackActions,
   type StackNavigationState,
 } from '@react-navigation/native';
@@ -18,6 +20,8 @@ import type {
   StackDescriptorMap,
   StackNavigationConfig,
   StackNavigationHelpers,
+  StackNavigationOptions,
+  StackNavigationProp,
 } from '../../types';
 import { ModalPresentationContext } from '../../utils/ModalPresentationContext';
 import { GestureHandlerRootView } from '../GestureHandler';
@@ -32,6 +36,14 @@ type Props = StackNavigationConfig & {
   state: StackNavigationState<ParamListBase>;
   navigation: StackNavigationHelpers;
   descriptors: StackDescriptorMap;
+  describe: (
+    route: RouteProp<ParamListBase>,
+    placeholder: boolean
+  ) => Descriptor<
+    StackNavigationOptions,
+    StackNavigationProp<ParamListBase>,
+    RouteProp<ParamListBase>
+  >;
 };
 
 type State = {

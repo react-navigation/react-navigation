@@ -129,7 +129,8 @@ export function useDescriptors<
   const { base, navigations } = useNavigationCache<
     State,
     ScreenOptions,
-    EventMap
+    EventMap,
+    ActionHelpers
   >({
     state,
     getState,
