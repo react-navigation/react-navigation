@@ -20,6 +20,7 @@ import { NavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationContainerRefContext } from './NavigationContainerRefContext';
 import { NavigationIndependentTreeContext } from './NavigationIndependentTreeContext';
 import { NavigationStateContext } from './NavigationStateContext';
+import { ThemeProvider } from './theming/ThemeProvider';
 import type {
   NavigationContainerEventMap,
   NavigationContainerProps,
@@ -76,6 +77,7 @@ const getPartialState = (
  * @param props.onReady Callback which is called after the navigation tree mounts.
  * @param props.onStateChange Callback which is called with the latest navigation state when it changes.
  * @param props.onUnhandledAction Callback which is called when an action is not handled.
+ * @param props.theme Theme object for the UI elements.
  * @param props.children Child elements to render the content.
  * @param props.ref Ref object which refers to the navigation object containing helper methods.
  */
@@ -87,6 +89,7 @@ export const BaseNavigationContainer = React.forwardRef(
       onReady,
       onUnhandledAction,
       navigationInChildEnabled = false,
+      theme,
       children,
     }: NavigationContainerProps,
     ref?: React.Ref<NavigationContainerRef<ParamListBase>>
@@ -434,7 +437,9 @@ export const BaseNavigationContainer = React.forwardRef(
                 <DeprecatedNavigationInChildContext.Provider
                   value={navigationInChildEnabled}
                 >
-                  <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
+                  <EnsureSingleNavigator>
+                    <ThemeProvider value={theme}>{children}</ThemeProvider>
+                  </EnsureSingleNavigator>
                 </DeprecatedNavigationInChildContext.Provider>
               </UnhandledActionContext.Provider>
             </NavigationStateContext.Provider>

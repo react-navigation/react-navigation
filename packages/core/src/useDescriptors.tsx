@@ -14,6 +14,7 @@ import {
 import { NavigationContext } from './NavigationContext';
 import { NavigationRouteContext } from './NavigationRouteContext';
 import { SceneView } from './SceneView';
+import { ThemeContext } from './theming/ThemeContext';
 import type {
   Descriptor,
   EventMapBase,
@@ -41,6 +42,7 @@ type ScreenOptionsOrCallback<ScreenOptions extends {}> =
   | ((props: {
       route: RouteProp<ParamListBase, string>;
       navigation: any;
+      theme: ReactNavigation.Theme;
     }) => ScreenOptions);
 
 type Options<
@@ -92,6 +94,7 @@ export function useDescriptors<
   router,
   emitter,
 }: Options<State, ScreenOptions, EventMap>) {
+  const theme = React.useContext(ThemeContext);
   const [options, setOptions] = React.useState<Record<string, ScreenOptions>>(
     {}
   );
@@ -173,7 +176,7 @@ export function useDescriptors<
         Object.assign(
           acc,
           // @ts-expect-error: we check for function but TS still complains
-          typeof curr !== 'function' ? curr : curr({ route, navigation })
+          typeof curr !== 'function' ? curr : curr({ route, navigation, theme })
         ),
       {} as ScreenOptions
     );
