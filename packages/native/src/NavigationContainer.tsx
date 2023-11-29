@@ -16,12 +16,10 @@ import useLatestCallback from 'use-latest-callback';
 import { LinkingContext } from './LinkingContext';
 import { LocaleDirContext } from './LocaleDirContext';
 import { DefaultTheme } from './theming/DefaultTheme';
-import { ThemeProvider } from './theming/ThemeProvider';
 import type {
   DocumentTitleOptions,
   LinkingOptions,
   LocaleDirection,
-  Theme,
 } from './types';
 import { UnhandledLinkingContext } from './UnhandledLinkingContext';
 import { useBackButton } from './useBackButton';
@@ -41,7 +39,6 @@ global.REACT_NAVIGATION_DEVTOOLS = new WeakMap();
 
 type Props<ParamList extends {}> = NavigationContainerProps & {
   direction?: LocaleDirection;
-  theme?: Theme;
   linking?: LinkingOptions<ParamList>;
   fallback?: React.ReactNode;
   documentTitle?: DocumentTitleOptions;
@@ -56,7 +53,7 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
  * @param props.onStateChange Callback which is called with the latest navigation state when it changes.
  * @param props.onUnhandledAction Callback which is called when an action is not handled.
  * @param props.direction Text direction of the components. Defaults to `'ltr'`.
- * @param props.theme Theme object for the navigators.
+ * @param props.theme Theme object for the UI elements.
  * @param props.linking Options for deep linking. Deep link handling is enabled when this prop is provided, unless `linking.enabled` is `false`.
  * @param props.fallback Fallback component to render until we have finished getting initial state when linking is enabled. Defaults to `null`.
  * @param props.documentTitle Options to configure the document title on Web. Updating document title is handled by default unless `documentTitle.enabled` is `false`.
@@ -171,17 +168,16 @@ function NavigationContainerInner(
     <LocaleDirContext.Provider value={direction}>
       <UnhandledLinkingContext.Provider value={unhandledLinkingContext}>
         <LinkingContext.Provider value={linkingContext}>
-          <ThemeProvider value={theme}>
-            <BaseNavigationContainer
-              {...rest}
-              onReady={onReadyForLinkingHandling}
-              onStateChange={onStateChangeForLinkingHandling}
-              initialState={
-                rest.initialState == null ? initialState : rest.initialState
-              }
-              ref={refContainer}
-            />
-          </ThemeProvider>
+          <BaseNavigationContainer
+            {...rest}
+            theme={theme}
+            onReady={onReadyForLinkingHandling}
+            onStateChange={onStateChangeForLinkingHandling}
+            initialState={
+              rest.initialState == null ? initialState : rest.initialState
+            }
+            ref={refContainer}
+          />
         </LinkingContext.Provider>
       </UnhandledLinkingContext.Provider>
     </LocaleDirContext.Provider>

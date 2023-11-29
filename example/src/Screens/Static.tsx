@@ -48,6 +48,9 @@ const AlbumsScreen = () => {
 };
 
 const HomeTabs = createBottomTabNavigator({
+  screenOptions: ({ theme }) => ({
+    tabBarActiveTintColor: theme.colors.notification,
+  }),
   screens: {
     Albums: {
       screen: AlbumsScreen,

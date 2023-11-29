@@ -1,10 +1,9 @@
 import * as React from 'react';
 
-import type { Theme } from '../types';
 import { ThemeContext } from './ThemeContext';
 
 type Props = {
-  value: Theme;
+  value: ReactNavigation.Theme | undefined;
   children: React.ReactNode;
 };
 
