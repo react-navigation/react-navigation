@@ -52,6 +52,7 @@ type Props = {
   insets: EdgeInsets;
   state: StackNavigationState<ParamListBase>;
   descriptors: StackDescriptorMap;
+  preloadedDescriptors: StackDescriptorMap;
   routes: Route<string>[];
   // eslint-disable-next-line react/no-unused-prop-types
   openingRouteKeys: string[];
@@ -174,7 +175,7 @@ const getHeaderHeights = (
 
 const getDistanceFromOptions = (
   layout: Layout,
-  descriptor: StackDescriptor,
+  descriptor: StackDescriptor | undefined,
   isRTL: boolean
 ) => {
   const {
@@ -187,12 +188,16 @@ const getDistanceFromOptions = (
   return getDistanceForDirection(layout, gestureDirection, isRTL);
 };
 
+const ZERO_PROGRESS = new Animated.Value(0); // TODO
 const getProgressFromGesture = (
   gesture: Animated.Value,
   layout: Layout,
-  descriptor: StackDescriptor,
+  descriptor: StackDescriptor | undefined,
   isRTL: boolean
 ) => {
+  if (!gesture) {
+    return ZERO_PROGRESS;
+  }
   const distance = getDistanceFromOptions(
     {
       // Make sure that we have a non-zero distance, otherwise there will be incorrect progress
@@ -229,8 +234,12 @@ export class CardStack extends React.Component<Props, State> {
       return null;
     }
 
-    const gestures = props.routes.reduce<GestureValues>((acc, curr) => {
-      const descriptor = props.descriptors[curr.key];
+    const gestures = [
+      ...props.state.preloadedRoutes,
+      ...props.routes,
+    ].reduce<GestureValues>((acc, curr) => {
+      const descriptor =
+        props.descriptors[curr.key] || props.preloadedDescriptors[curr.key];
       const { animationEnabled } = descriptor?.options || {};
 
       acc[curr.key] =
@@ -249,147 +258,161 @@ export class CardStack extends React.Component<Props, State> {
       return acc;
     }, {});
 
-    const scenes = props.routes.map((route, index, self) => {
-      const previousRoute = self[index - 1];
-      const nextRoute = self[index + 1];
+    const scenes = [...props.state.preloadedRoutes, ...props.routes].map(
+      (route, index, self) => {
+        // For preloaded screens, we don't care about the previous and the next screen
+        const previousRoute =
+          index <= props.state.preloadedRoutes.length
+            ? undefined
+            : self[index - 1];
+        const nextRoute =
+          index < props.state.preloadedRoutes.length
+            ? undefined
+            : self[index + 1];
 
-      const oldScene = state.scenes[index];
+        const oldScene = state.scenes[index];
 
-      const currentGesture = gestures[route.key];
-      const previousGesture = previousRoute
-        ? gestures[previousRoute.key]
-        : undefined;
-      const nextGesture = nextRoute ? gestures[nextRoute.key] : undefined;
+        const currentGesture = gestures[route.key];
+        const previousGesture = previousRoute
+          ? gestures[previousRoute.key]
+          : undefined;
+        const nextGesture = nextRoute ? gestures[nextRoute.key] : undefined;
 
-      const descriptor =
-        props.descriptors[route.key] ||
-        state.descriptors[route.key] ||
-        (oldScene ? oldScene.descriptor : FALLBACK_DESCRIPTOR);
+        const descriptor =
+          (index < props.state.preloadedRoutes.length
+            ? props.preloadedDescriptors
+            : props.descriptors)[route.key] ||
+          state.descriptors[route.key] ||
+          (oldScene ? oldScene.descriptor : FALLBACK_DESCRIPTOR);
 
-      const nextDescriptor =
-        props.descriptors[nextRoute?.key] || state.descriptors[nextRoute?.key];
+        const nextDescriptor =
+          nextRoute &&
+          (props.descriptors[nextRoute?.key] ||
+            state.descriptors[nextRoute?.key]);
 
-      const previousDescriptor =
-        props.descriptors[previousRoute?.key] ||
-        state.descriptors[previousRoute?.key];
+        const previousDescriptor =
+          previousRoute &&
+          (props.descriptors[previousRoute?.key] ||
+            state.descriptors[previousRoute?.key]);
 
-      // When a screen is not the last, it should use next screen's transition config
-      // Many transitions also animate the previous screen, so using 2 different transitions doesn't look right
-      // For example combining a slide and a modal transition would look wrong otherwise
-      // With this approach, combining different transition styles in the same navigator mostly looks right
-      // This will still be broken when 2 transitions have different idle state (e.g. modal presentation),
-      // but majority of the transitions look alright
-      const optionsForTransitionConfig =
-        index !== self.length - 1 &&
-        nextDescriptor &&
-        nextDescriptor.options.presentation !== 'transparentModal'
-          ? nextDescriptor.options
-          : descriptor.options;
+        // When a screen is not the last, it should use next screen's transition config
+        // Many transitions also animate the previous screen, so using 2 different transitions doesn't look right
+        // For example combining a slide and a modal transition would look wrong otherwise
+        // With this approach, combining different transition styles in the same navigator mostly looks right
+        // This will still be broken when 2 transitions have different idle state (e.g. modal presentation),
+        // but the majority of the transitions look alright
+        const optionsForTransitionConfig =
+          index !== self.length - 1 &&
+          nextDescriptor &&
+          nextDescriptor.options.presentation !== 'transparentModal'
+            ? nextDescriptor.options
+            : descriptor.options;
 
-      const defaultTransitionPreset =
-        optionsForTransitionConfig.presentation === 'modal'
-          ? ModalTransition
-          : optionsForTransitionConfig.presentation === 'transparentModal'
-          ? ModalFadeTransition
-          : DefaultTransition;
+        const defaultTransitionPreset =
+          optionsForTransitionConfig.presentation === 'modal'
+            ? ModalTransition
+            : optionsForTransitionConfig.presentation === 'transparentModal'
+            ? ModalFadeTransition
+            : DefaultTransition;
 
-      const {
-        animationEnabled = Platform.OS !== 'web' &&
-          Platform.OS !== 'windows' &&
-          Platform.OS !== 'macos',
-        gestureEnabled = Platform.OS === 'ios' && animationEnabled,
-        gestureDirection = defaultTransitionPreset.gestureDirection,
-        transitionSpec = defaultTransitionPreset.transitionSpec,
-        cardStyleInterpolator = animationEnabled === false
-          ? forNoAnimationCard
-          : defaultTransitionPreset.cardStyleInterpolator,
-        headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
-        cardOverlayEnabled = (Platform.OS !== 'ios' &&
-          optionsForTransitionConfig.presentation !== 'transparentModal') ||
-          getIsModalPresentation(cardStyleInterpolator),
-      } = optionsForTransitionConfig;
+        const {
+          animationEnabled = Platform.OS !== 'web' &&
+            Platform.OS !== 'windows' &&
+            Platform.OS !== 'macos',
+          gestureEnabled = Platform.OS === 'ios' && animationEnabled,
+          gestureDirection = defaultTransitionPreset.gestureDirection,
+          transitionSpec = defaultTransitionPreset.transitionSpec,
+          cardStyleInterpolator = animationEnabled === false
+            ? forNoAnimationCard
+            : defaultTransitionPreset.cardStyleInterpolator,
+          headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
+          cardOverlayEnabled = (Platform.OS !== 'ios' &&
+            optionsForTransitionConfig.presentation !== 'transparentModal') ||
+            getIsModalPresentation(cardStyleInterpolator),
+        } = optionsForTransitionConfig;
 
-      const headerMode: StackHeaderMode =
-        descriptor.options.headerMode ??
-        (!(
-          optionsForTransitionConfig.presentation === 'modal' ||
-          optionsForTransitionConfig.presentation === 'transparentModal' ||
-          nextDescriptor?.options.presentation === 'modal' ||
-          nextDescriptor?.options.presentation === 'transparentModal' ||
-          getIsModalPresentation(cardStyleInterpolator)
-        ) &&
-        Platform.OS === 'ios' &&
-        descriptor.options.header === undefined
-          ? 'float'
-          : 'screen');
+        const headerMode: StackHeaderMode =
+          descriptor.options.headerMode ??
+          (!(
+            optionsForTransitionConfig.presentation === 'modal' ||
+            optionsForTransitionConfig.presentation === 'transparentModal' ||
+            nextDescriptor?.options.presentation === 'modal' ||
+            nextDescriptor?.options.presentation === 'transparentModal' ||
+            getIsModalPresentation(cardStyleInterpolator)
+          ) &&
+          Platform.OS === 'ios' &&
+          descriptor.options.header === undefined
+            ? 'float'
+            : 'screen');
 
-      const isRTL = props.direction === 'rtl';
+        const isRTL = props.direction === 'rtl';
 
-      const scene = {
-        route,
-        descriptor: {
-          ...descriptor,
-          options: {
-            ...descriptor.options,
-            animationEnabled,
-            cardOverlayEnabled,
-            cardStyleInterpolator,
-            gestureDirection,
-            gestureEnabled,
-            headerStyleInterpolator,
-            transitionSpec,
-            headerMode,
+        const scene = {
+          route,
+          descriptor: {
+            ...descriptor,
+            options: {
+              ...descriptor.options,
+              animationEnabled,
+              cardOverlayEnabled,
+              cardStyleInterpolator,
+              gestureDirection,
+              gestureEnabled,
+              headerStyleInterpolator,
+              transitionSpec,
+              headerMode,
+            },
           },
-        },
-        progress: {
-          current: getProgressFromGesture(
-            currentGesture,
-            state.layout,
-            descriptor,
-            isRTL
-          ),
-          next:
-            nextGesture &&
-            nextDescriptor?.options.presentation !== 'transparentModal'
+          progress: {
+            current: getProgressFromGesture(
+              currentGesture,
+              state.layout,
+              descriptor,
+              isRTL
+            ),
+            next:
+              nextGesture &&
+              nextDescriptor?.options.presentation !== 'transparentModal'
+                ? getProgressFromGesture(
+                    nextGesture,
+                    state.layout,
+                    nextDescriptor,
+                    isRTL
+                  )
+                : undefined,
+            previous: previousGesture
               ? getProgressFromGesture(
-                  nextGesture,
+                  previousGesture,
                   state.layout,
-                  nextDescriptor,
+                  previousDescriptor,
                   isRTL
                 )
               : undefined,
-          previous: previousGesture
-            ? getProgressFromGesture(
-                previousGesture,
-                state.layout,
-                previousDescriptor,
-                isRTL
-              )
-            : undefined,
-        },
-        __memo: [
-          state.layout,
-          descriptor,
-          nextDescriptor,
-          previousDescriptor,
-          currentGesture,
-          nextGesture,
-          previousGesture,
-        ],
-      };
+          },
+          __memo: [
+            state.layout,
+            descriptor,
+            nextDescriptor,
+            previousDescriptor,
+            currentGesture,
+            nextGesture,
+            previousGesture,
+          ],
+        };
 
-      if (
-        oldScene &&
-        scene.__memo.every((it, i) => {
-          // @ts-expect-error: we haven't added __memo to the annotation to prevent usage elsewhere
-          return oldScene.__memo[i] === it;
-        })
-      ) {
-        return oldScene;
+        if (
+          oldScene &&
+          scene.__memo.every((it, i) => {
+            // @ts-expect-error: we haven't added __memo to the annotation to prevent usage elsewhere
+            return oldScene.__memo[i] === it;
+          })
+        ) {
+          return oldScene;
+        }
+
+        return scene;
       }
-
-      return scene;
-    });
+    );
 
     return {
       routes: props.routes,
@@ -599,7 +622,7 @@ export class CardStack extends React.Component<Props, State> {
           style={styles.container}
           onLayout={this.handleLayout}
         >
-          {routes.map((route, index, self) => {
+          {[...state.preloadedRoutes, ...routes].map((route, index, self) => {
             const focused = focusedRoute.key === route.key;
             const gesture = gestures[route.key];
             const scene = scenes[index];
@@ -614,7 +637,10 @@ export class CardStack extends React.Component<Props, State> {
               | 1
               | 2 = 1;
 
-            if (index < self.length - activeScreensLimit - 1) {
+            if (
+              index < self.length - activeScreensLimit - 1 ||
+              index < state.preloadedRoutes.length
+            ) {
               // screen should be inactive because it is too deep in the stack
               isScreenActive = STATE_INACTIVE;
             } else {

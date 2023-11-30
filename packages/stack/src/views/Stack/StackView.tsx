@@ -4,7 +4,6 @@ import {
 } from '@react-navigation/elements';
 import {
   CommonActions,
-  type Descriptor,
   type LocaleDirection,
   type ParamListBase,
   type Route,
@@ -17,11 +16,10 @@ import { StyleSheet, View } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
 import type {
+  StackDescriptor,
   StackDescriptorMap,
   StackNavigationConfig,
   StackNavigationHelpers,
-  StackNavigationOptions,
-  StackNavigationProp,
 } from '../../types';
 import { ModalPresentationContext } from '../../utils/ModalPresentationContext';
 import { GestureHandlerRootView } from '../GestureHandler';
@@ -39,11 +37,7 @@ type Props = StackNavigationConfig & {
   describe: (
     route: RouteProp<ParamListBase>,
     placeholder: boolean
-  ) => Descriptor<
-    StackNavigationOptions,
-    StackNavigationProp<ParamListBase>,
-    RouteProp<ParamListBase>
-  >;
+  ) => StackDescriptor;
 };
 
 type State = {
@@ -62,6 +56,9 @@ type State = {
   // Since the local routes can vary from the routes from props, we need to keep the descriptors for old routes
   // Otherwise we won't be able to access the options for routes that were removed
   descriptors: StackDescriptorMap;
+  // Since the local routes can vary from the routes from props, we need to keep the descriptors for old routes
+  // Otherwise we won't be able to access the options for routes that were removed
+  preloadedDescriptors: StackDescriptorMap;
 };
 
 const GestureHandlerWrapper = GestureHandlerRootView ?? View;
@@ -78,6 +75,11 @@ export class StackView extends React.Component<Props, State> {
     props: Readonly<Props>,
     state: Readonly<State>
   ) {
+    const preloadedDescriptors =
+      props.state.preloadedRoutes.reduce<StackDescriptorMap>((acc, route) => {
+        acc[route.key] = props.describe(route, true); // TODO cache if unchanged params
+        return acc;
+      }, {});
     // If there was no change in routes, we don't need to compute anything
     if (
       (props.state.routes === state.previousRoutes ||
@@ -122,6 +124,7 @@ export class StackView extends React.Component<Props, State> {
         previousRoutes,
         descriptors,
         previousDescriptors,
+        preloadedDescriptors,
       };
     }
 
@@ -284,6 +287,7 @@ export class StackView extends React.Component<Props, State> {
       closingRouteKeys,
       replacingRouteKeys,
       descriptors,
+      preloadedDescriptors,
     };
   }
 
@@ -295,6 +299,7 @@ export class StackView extends React.Component<Props, State> {
     closingRouteKeys: [],
     replacingRouteKeys: [],
     descriptors: {},
+    preloadedDescriptors: {},
   };
 
   private getPreviousRoute = ({ route }: { route: Route<string> }) => {
@@ -443,8 +448,13 @@ export class StackView extends React.Component<Props, State> {
       ...rest
     } = this.props;
 
-    const { routes, descriptors, openingRouteKeys, closingRouteKeys } =
-      this.state;
+    const {
+      routes,
+      preloadedDescriptors,
+      descriptors,
+      openingRouteKeys,
+      closingRouteKeys,
+    } = this.state;
 
     return (
       <GestureHandlerWrapper style={styles.container}>
@@ -474,6 +484,7 @@ export class StackView extends React.Component<Props, State> {
                         onGestureStart={this.handleGestureStart}
                         onGestureEnd={this.handleGestureEnd}
                         onGestureCancel={this.handleGestureCancel}
+                        preloadedDescriptors={preloadedDescriptors}
                         {...rest}
                       />
                     )}
