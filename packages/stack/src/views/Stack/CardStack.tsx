@@ -616,7 +616,7 @@ export class CardStack extends React.Component<Props, State> {
       </React.Fragment>
     );
 
-    console.log(state.preloadedRoutes)
+    console.log([...state.preloadedRoutes, ...routes])
     return (
       <Background>
         {isFloatHeaderAbsolute ? null : floatingHeader}
@@ -696,7 +696,7 @@ export class CardStack extends React.Component<Props, State> {
             return (
               <MaybeScreen
                 key={route.key}
-                style={StyleSheet.absoluteFill}
+                style={[StyleSheet.absoluteFill, { zIndex: index }]} // XD
                 enabled={detachInactiveScreens}
                 active={isScreenActive}
                 freezeOnBlur={freezeOnBlur}
