@@ -318,7 +318,9 @@ export class StackView extends React.Component<Props, State> {
 
   private renderScene = ({ route }: { route: Route<string> }) => {
     const descriptor =
-      this.state.descriptors[route.key] || this.props.descriptors[route.key];
+      this.state.descriptors[route.key] ||
+      this.props.descriptors[route.key] ||
+      this.state.preloadedDescriptors[route.key];
 
     if (!descriptor) {
       return null;
@@ -456,6 +458,7 @@ export class StackView extends React.Component<Props, State> {
       closingRouteKeys,
     } = this.state;
 
+    console.log({ openingRouteKeys })
     return (
       <GestureHandlerWrapper style={styles.container}>
         <SafeAreaProviderCompat>

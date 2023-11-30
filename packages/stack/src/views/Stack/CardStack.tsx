@@ -52,6 +52,7 @@ type Props = {
   insets: EdgeInsets;
   state: StackNavigationState<ParamListBase>;
   descriptors: StackDescriptorMap;
+  // eslint-disable-next-line react/no-unused-prop-types
   preloadedDescriptors: StackDescriptorMap;
   routes: Route<string>[];
   // eslint-disable-next-line react/no-unused-prop-types
@@ -235,11 +236,11 @@ export class CardStack extends React.Component<Props, State> {
     }
 
     const gestures = [
-      ...props.state.preloadedRoutes,
+      // ...props.state.preloadedRoutes,
       ...props.routes,
     ].reduce<GestureValues>((acc, curr) => {
       const descriptor =
-        props.descriptors[curr.key] || props.preloadedDescriptors[curr.key];
+        props.descriptors[curr.key];
       const { animationEnabled } = descriptor?.options || {};
 
       acc[curr.key] =
@@ -258,6 +259,7 @@ export class CardStack extends React.Component<Props, State> {
       return acc;
     }, {});
 
+    console.log("SCNERS", [...props.state.preloadedRoutes, ...props.routes])
     const scenes = [...props.state.preloadedRoutes, ...props.routes].map(
       (route, index, self) => {
         // For preloaded screens, we don't care about the previous and the next screen
@@ -614,6 +616,7 @@ export class CardStack extends React.Component<Props, State> {
       </React.Fragment>
     );
 
+    console.log(state.preloadedRoutes)
     return (
       <Background>
         {isFloatHeaderAbsolute ? null : floatingHeader}

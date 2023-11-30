@@ -103,12 +103,21 @@ export class Card extends React.Component<Props> {
       ) : null,
   };
 
+  // eslint-disable-next-line react/sort-comp
+  private isAnimated = false;
   componentDidMount() {
-    this.animate({ closing: this.props.closing });
+    if (this.props.gesture) {
+      this.isAnimated = true;
+      this.animate({ closing: this.props.closing });
+    }
     this.isCurrentlyMounted = true;
   }
 
   componentDidUpdate(prevProps: Props) {
+    if (this.props.gesture && !this.isAnimated) {
+      this.isAnimated = true;
+      this.animate({ closing: this.props.closing });
+    }
     const { direction, layout, gestureDirection, closing } = this.props;
     const { width, height } = layout;
 
@@ -201,30 +210,31 @@ export class Card extends React.Component<Props> {
     clearTimeout(this.pendingGestureCallback);
 
     onTransition?.({ closing, gesture: velocity !== undefined });
-    animation(gesture, {
-      ...spec.config,
-      velocity,
-      toValue,
-      useNativeDriver,
-      isInteraction: false,
-    }).start(({ finished }) => {
-      this.handleEndInteraction();
+    gesture && // TODO
+      animation(gesture, {
+        ...spec.config,
+        velocity,
+        toValue,
+        useNativeDriver,
+        isInteraction: false,
+      }).start(({ finished }) => {
+        this.handleEndInteraction();
 
-      clearTimeout(this.pendingGestureCallback);
+        clearTimeout(this.pendingGestureCallback);
 
-      if (finished) {
-        if (closing) {
-          onClose();
-        } else {
-          onOpen();
+        if (finished) {
+          if (closing) {
+            onClose();
+          } else {
+            onOpen();
+          }
+
+          if (this.isCurrentlyMounted) {
+            // Make sure to re-open screen if it wasn't removed
+            this.forceUpdate();
+          }
         }
-
-        if (this.isCurrentlyMounted) {
-          // Make sure to re-open screen if it wasn't removed
-          this.forceUpdate();
-        }
-      }
-    });
+      });
   };
 
   private getAnimateToValue = ({
@@ -475,6 +485,8 @@ export class Card extends React.Component<Props> {
       /* eslint-enable @typescript-eslint/no-unused-vars */
       ...rest
     } = this.props;
+
+    console.log(this.props.closing)
 
     const interpolationProps = this.getCardAnimation(
       interpolationIndex,

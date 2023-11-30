@@ -223,6 +223,8 @@ function CardContainerInner({
     [backTitle, href]
   );
 
+
+  console.log(scene.descriptor.route.key, closing)
   return (
     <Card
       interpolationIndex={interpolationIndex}
