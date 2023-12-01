@@ -239,8 +239,7 @@ export class CardStack extends React.Component<Props, State> {
       // ...props.state.preloadedRoutes,
       ...props.routes,
     ].reduce<GestureValues>((acc, curr) => {
-      const descriptor =
-        props.descriptors[curr.key];
+      const descriptor = props.descriptors[curr.key];
       const { animationEnabled } = descriptor?.options || {};
 
       acc[curr.key] =
@@ -259,7 +258,6 @@ export class CardStack extends React.Component<Props, State> {
       return acc;
     }, {});
 
-    console.log("SCNERS", [...props.state.preloadedRoutes])
     const scenes = [...props.state.preloadedRoutes, ...props.routes].map(
       (route, index, self) => {
         // For preloaded screens, we don't care about the previous and the next screen

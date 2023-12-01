@@ -27,7 +27,7 @@ type Props = {
   closing: boolean;
   modal: boolean;
   layout: Layout;
-  gesture: Animated.Value;
+  gesture?: Animated.Value;
   scene: Scene;
   safeAreaInsetTop: number;
   safeAreaInsetRight: number;

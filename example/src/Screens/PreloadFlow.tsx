@@ -15,17 +15,26 @@ type PreloadStackParams = {
 const DetailsScreen = ({
   navigation,
 }: StackScreenProps<PreloadStackParams, 'Details'>) => {
-  const [loaded, setLoaded] = useState(false);
+  const [loadingCountdown, setLoadingCountdown] = useState(3);
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setLoaded(true);
-    }, 3000);
-    return () => clearTimeout(timeout);
+    const interval = setInterval(() => {
+      setLoadingCountdown((loadingCountdown) => {
+        if (loadingCountdown === 1) {
+          clearInterval(interval);
+        }
+        return loadingCountdown - 1;
+      });
+    }, 1000);
   }, []);
 
   return (
     <View style={styles.content}>
-      <Text style={styles.text}>{loaded ? 'Loaded!' : 'Loading...'}</Text>
+      <Text style={[styles.text, styles.countdown]}>
+        {loadingCountdown > 0 && loadingCountdown}
+      </Text>
+      <Text style={styles.text}>
+        {loadingCountdown === 0 ? 'Loaded!' : 'Loading...'}
+      </Text>
       <Button onPress={navigation.goBack} style={styles.button}>
         Back to home
       </Button>
@@ -57,7 +66,7 @@ const SimpleStack = createStackNavigator<PreloadStackParams>();
 
 export function PreloadFlow() {
   return (
-    <SimpleStack.Navigator>
+    <SimpleStack.Navigator screenOptions={{ headerShown: false }}>
       <SimpleStack.Screen name="Home" component={HomeScreen} />
       <SimpleStack.Screen name="Details" component={DetailsScreen} />
     </SimpleStack.Navigator>
@@ -76,5 +85,9 @@ const styles = StyleSheet.create({
   text: {
     textAlign: 'center',
     margin: 8,
+  },
+  countdown: {
+    fontSize: 24,
+    minHeight: 32,
   },
 });

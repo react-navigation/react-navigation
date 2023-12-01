@@ -59,6 +59,8 @@ type State = {
   // Since the local routes can vary from the routes from props, we need to keep the descriptors for old routes
   // Otherwise we won't be able to access the options for routes that were removed
   preloadedDescriptors: StackDescriptorMap;
+  // Previous preloaded routes, to compare whether routes have changed or not.
+  previousPreloadedRoutes: Route<string>[];
 };
 
 const GestureHandlerWrapper = GestureHandlerRootView ?? View;
@@ -75,11 +77,22 @@ export class StackView extends React.Component<Props, State> {
     props: Readonly<Props>,
     state: Readonly<State>
   ) {
-    const preloadedDescriptors =
-      props.state.preloadedRoutes.reduce<StackDescriptorMap>((acc, route) => {
-        acc[route.key] = props.describe(route, true); // TODO cache if unchanged params
-        return acc;
-      }, {});
+    let preloadedDescriptors = state.preloadedDescriptors;
+    if (
+      // Params are not getting updated without updating the key for preloaded routes.
+      !isArrayEqual(
+        props.state.preloadedRoutes.map((r) => r.key),
+        state.previousRoutes.map((r) => r.key)
+      )
+    ) {
+      preloadedDescriptors =
+        props.state.preloadedRoutes.reduce<StackDescriptorMap>((acc, route) => {
+          acc[route.key] = acc[route.key] || props.describe(route, true);
+          return acc;
+        }, {});
+    }
+    const previousPreloadedRoutes = props.state.preloadedRoutes;
+
     // If there was no change in routes, we don't need to compute anything
     if (
       (props.state.routes === state.previousRoutes ||
@@ -125,6 +138,7 @@ export class StackView extends React.Component<Props, State> {
         descriptors,
         previousDescriptors,
         preloadedDescriptors,
+        previousPreloadedRoutes,
       };
     }
 
@@ -288,6 +302,7 @@ export class StackView extends React.Component<Props, State> {
       replacingRouteKeys,
       descriptors,
       preloadedDescriptors,
+      previousPreloadedRoutes,
     };
   }
 
@@ -300,6 +315,7 @@ export class StackView extends React.Component<Props, State> {
     replacingRouteKeys: [],
     descriptors: {},
     preloadedDescriptors: {},
+    previousPreloadedRoutes: [],
   };
 
   private getPreviousRoute = ({ route }: { route: Route<string> }) => {
