@@ -259,7 +259,7 @@ export class CardStack extends React.Component<Props, State> {
       return acc;
     }, {});
 
-    console.log("SCNERS", [...props.state.preloadedRoutes, ...props.routes])
+    console.log("SCNERS", [...props.state.preloadedRoutes])
     const scenes = [...props.state.preloadedRoutes, ...props.routes].map(
       (route, index, self) => {
         // For preloaded screens, we don't care about the previous and the next screen
@@ -616,7 +616,6 @@ export class CardStack extends React.Component<Props, State> {
       </React.Fragment>
     );
 
-    console.log([...state.preloadedRoutes, ...routes])
     return (
       <Background>
         {isFloatHeaderAbsolute ? null : floatingHeader}
@@ -696,7 +695,7 @@ export class CardStack extends React.Component<Props, State> {
             return (
               <MaybeScreen
                 key={route.key}
-                style={[StyleSheet.absoluteFill, { zIndex: index }]} // XD
+                style={[StyleSheet.absoluteFill, { zIndex: index }]}
                 enabled={detachInactiveScreens}
                 active={isScreenActive}
                 freezeOnBlur={freezeOnBlur}

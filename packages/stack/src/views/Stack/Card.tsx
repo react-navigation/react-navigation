@@ -36,7 +36,7 @@ type Props = ViewProps & {
   closing: boolean;
   next?: Animated.AnimatedInterpolation<number>;
   current: Animated.AnimatedInterpolation<number>;
-  gesture: Animated.Value;
+  gesture?: Animated.Value;
   layout: Layout;
   insets: EdgeInsets;
   direction: LocaleDirection;
@@ -103,20 +103,24 @@ export class Card extends React.Component<Props> {
       ) : null,
   };
 
-  // eslint-disable-next-line react/sort-comp
-  private isAnimated = false;
   componentDidMount() {
     if (this.props.gesture) {
-      this.isAnimated = true;
-      this.animate({ closing: this.props.closing });
+      this.didAnimateOnPush = true;
+      this.animate({
+        closing: this.props.closing,
+        gesture: this.props.gesture,
+      });
     }
     this.isCurrentlyMounted = true;
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (this.props.gesture && !this.isAnimated) {
-      this.isAnimated = true;
-      this.animate({ closing: this.props.closing });
+    if (this.props.gesture && !this.didAnimateOnPush) {
+      this.didAnimateOnPush = true;
+      this.animate({
+        closing: this.props.closing,
+        gesture: this.props.gesture,
+      });
     }
     const { direction, layout, gestureDirection, closing } = this.props;
     const { width, height } = layout;
@@ -138,20 +142,21 @@ export class Card extends React.Component<Props> {
     const toValue = this.getAnimateToValue(this.props);
 
     if (
-      this.getAnimateToValue(prevProps) !== toValue ||
-      this.lastToValue !== toValue
+      (this.getAnimateToValue(prevProps) !== toValue ||
+        this.lastToValue !== toValue) &&
+      this.props.gesture
     ) {
       // We need to trigger the animation when route was closed
       // Thr route might have been closed by a `POP` action or by a gesture
       // When route was closed due to a gesture, the animation would've happened already
       // It's still important to trigger the animation so that `onClose` is called
       // If `onClose` is not called, cleanup step won't be performed for gestures
-      this.animate({ closing });
+      this.animate({ closing, gesture: this.props.gesture });
     }
   }
 
   componentWillUnmount() {
-    this.props.gesture.stopAnimation();
+    this.props.gesture?.stopAnimation();
     this.isCurrentlyMounted = false;
     this.handleEndInteraction();
   }
@@ -180,15 +185,18 @@ export class Card extends React.Component<Props> {
 
   private lastToValue: number | undefined;
 
+  private didAnimateOnPush = false;
+
   private animate = ({
     closing,
     velocity,
+    gesture,
   }: {
     closing: boolean;
     velocity?: number;
+    gesture: Animated.Value;
   }) => {
-    const { gesture, transitionSpec, onOpen, onClose, onTransition } =
-      this.props;
+    const { transitionSpec, onOpen, onClose, onTransition } = this.props;
 
     const toValue = this.getAnimateToValue({
       ...this.props,
@@ -210,31 +218,30 @@ export class Card extends React.Component<Props> {
     clearTimeout(this.pendingGestureCallback);
 
     onTransition?.({ closing, gesture: velocity !== undefined });
-    gesture && // TODO
-      animation(gesture, {
-        ...spec.config,
-        velocity,
-        toValue,
-        useNativeDriver,
-        isInteraction: false,
-      }).start(({ finished }) => {
-        this.handleEndInteraction();
+    animation(gesture, {
+      ...spec.config,
+      velocity,
+      toValue,
+      useNativeDriver,
+      isInteraction: false,
+    }).start(({ finished }) => {
+      this.handleEndInteraction();
 
-        clearTimeout(this.pendingGestureCallback);
+      clearTimeout(this.pendingGestureCallback);
 
-        if (finished) {
-          if (closing) {
-            onClose();
-          } else {
-            onOpen();
-          }
-
-          if (this.isCurrentlyMounted) {
-            // Make sure to re-open screen if it wasn't removed
-            this.forceUpdate();
-          }
+      if (finished) {
+        if (closing) {
+          onClose();
+        } else {
+          onOpen();
         }
-      });
+
+        if (this.isCurrentlyMounted) {
+          // Make sure to re-open screen if it wasn't removed
+          this.forceUpdate();
+        }
+      }
+    });
   };
 
   private getAnimateToValue = ({
@@ -308,7 +315,15 @@ export class Card extends React.Component<Props> {
             ? nativeEvent.velocityY
             : nativeEvent.velocityX;
 
-        this.animate({ closing: this.props.closing, velocity });
+        if (!this.props.gesture) {
+          throw new Error('Gesture value undefined.');
+        }
+
+        this.animate({
+          closing: this.props.closing,
+          velocity,
+          gesture: this.props.gesture,
+        });
 
         onGestureCanceled?.();
         break;
@@ -340,7 +355,10 @@ export class Card extends React.Component<Props> {
             ? velocity !== 0 || translation !== 0
             : this.props.closing;
 
-        this.animate({ closing, velocity });
+        if (!this.props.gesture) {
+          throw new Error('Gesture value undefined.');
+        }
+        this.animate({ closing, velocity, gesture: this.props.gesture });
 
         if (closing) {
           // We call onClose with a delay to make sure that the animation has already started
@@ -486,8 +504,6 @@ export class Card extends React.Component<Props> {
       ...rest
     } = this.props;
 
-    console.log(this.props.closing)
-
     const interpolationProps = this.getCardAnimation(
       interpolationIndex,
       current,
@@ -507,20 +523,21 @@ export class Card extends React.Component<Props> {
     const { containerStyle, cardStyle, overlayStyle, shadowStyle } =
       interpolatedStyle;
 
-    const handleGestureEvent = gestureEnabled
-      ? Animated.event(
-          [
-            {
-              nativeEvent:
-                gestureDirection === 'vertical' ||
-                gestureDirection === 'vertical-inverted'
-                  ? { translationY: gesture }
-                  : { translationX: gesture },
-            },
-          ],
-          { useNativeDriver }
-        )
-      : undefined;
+    const handleGestureEvent =
+      gestureEnabled && gesture
+        ? Animated.event(
+            [
+              {
+                nativeEvent:
+                  gestureDirection === 'vertical' ||
+                  gestureDirection === 'vertical-inverted'
+                    ? { translationY: gesture }
+                    : { translationX: gesture },
+              },
+            ],
+            { useNativeDriver }
+          )
+        : undefined;
 
     const { backgroundColor } = StyleSheet.flatten(contentStyle || {});
     const isTransparent =

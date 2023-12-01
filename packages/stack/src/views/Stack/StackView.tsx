@@ -458,7 +458,6 @@ export class StackView extends React.Component<Props, State> {
       closingRouteKeys,
     } = this.state;
 
-    console.log({ openingRouteKeys })
     return (
       <GestureHandlerWrapper style={styles.container}>
         <SafeAreaProviderCompat>

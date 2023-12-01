@@ -17,7 +17,6 @@ const DetailsScreen = ({
 }: StackScreenProps<PreloadStackParams, 'Details'>) => {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
-    console.log('Mounted!');
     const timeout = setTimeout(() => {
       setLoaded(true);
     }, 3000);
