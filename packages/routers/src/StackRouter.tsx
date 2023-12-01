@@ -693,7 +693,7 @@ export function StackRouter(options: StackRouterOptions) {
                 .filter(
                   (r) =>
                     r.name !== action.payload.name ||
-                    id === getId?.({ params: r.params })
+                    id !== getId?.({ params: r.params })
                 )
                 .concat({
                   key: `${action.payload.name}-${nanoid()}`,
