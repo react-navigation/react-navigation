@@ -53,7 +53,7 @@ type Props = {
   state: StackNavigationState<ParamListBase>;
   descriptors: StackDescriptorMap;
   // eslint-disable-next-line react/no-unused-prop-types
-  preloadedDescriptors: StackDescriptorMap;
+  preloadedRoutesDescriptors: StackDescriptorMap;
   routes: Route<string>[];
   // eslint-disable-next-line react/no-unused-prop-types
   openingRouteKeys: string[];
@@ -189,7 +189,7 @@ const getDistanceFromOptions = (
   return getDistanceForDirection(layout, gestureDirection, isRTL);
 };
 
-const ZERO_PROGRESS = new Animated.Value(0); // TODO
+const ZERO_PROGRESS = new Animated.Value(0);
 const getProgressFromGesture = (
   gesture: Animated.Value,
   layout: Layout,
@@ -235,10 +235,7 @@ export class CardStack extends React.Component<Props, State> {
       return null;
     }
 
-    const gestures = [
-      // ...props.state.preloadedRoutes,
-      ...props.routes,
-    ].reduce<GestureValues>((acc, curr) => {
+    const gestures = props.routes.reduce<GestureValues>((acc, curr) => {
       const descriptor = props.descriptors[curr.key];
       const { animationEnabled } = descriptor?.options || {};
 
@@ -280,7 +277,7 @@ export class CardStack extends React.Component<Props, State> {
 
         const descriptor =
           (index < props.state.preloadedRoutes.length
-            ? props.preloadedDescriptors
+            ? props.preloadedRoutesDescriptors
             : props.descriptors)[route.key] ||
           state.descriptors[route.key] ||
           (oldScene ? oldScene.descriptor : FALLBACK_DESCRIPTOR);
