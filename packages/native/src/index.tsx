@@ -5,8 +5,6 @@ export { NavigationContainer } from './NavigationContainer';
 export { ServerContainer } from './ServerContainer';
 export { DarkTheme } from './theming/DarkTheme';
 export { DefaultTheme } from './theming/DefaultTheme';
-export { ThemeProvider } from './theming/ThemeProvider';
-export { useTheme } from './theming/useTheme';
 export * from './types';
 export { useLinkProps } from './useLinkProps';
 export { useLinkTools } from './useLinkTools';

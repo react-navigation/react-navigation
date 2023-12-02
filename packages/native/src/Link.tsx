@@ -1,3 +1,4 @@
+import { useTheme } from '@react-navigation/core';
 import * as React from 'react';
 import {
   type GestureResponderEvent,
@@ -6,7 +7,6 @@ import {
   type TextProps,
 } from 'react-native';
 
-import { useTheme } from './theming/useTheme';
 import { type Props as LinkProps, useLinkProps } from './useLinkProps';
 
 type Props<ParamList extends ReactNavigation.RootParamList> =

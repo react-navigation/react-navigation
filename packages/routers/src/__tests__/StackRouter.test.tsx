@@ -72,13 +72,14 @@ it('gets rehydrated state from partial state', () => {
           { key: 'bar-0', name: 'bar' },
           { key: 'qux-1', name: 'qux' },
         ],
+        preloadedRoutes: [{ name: 'baz' }],
       },
       options
     )
   ).toEqual({
     index: 1,
     key: 'stack-test',
-    preloadedRoutes: [],
+    preloadedRoutes: [{ name: 'baz', key: 'baz-test', params: { answer: 42 } }],
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
       { key: 'bar-0', name: 'bar' },
@@ -2066,7 +2067,7 @@ it('handles screen preloading', () => {
           {
             key: 'bar-test',
             name: 'bar',
-            params: { answer: 42, toBe: 'merged' },
+            params: { answer: 42, toBe: 'overrode' },
           },
           { key: 'baz', name: 'baz' },
         ],
@@ -2080,16 +2081,14 @@ it('handles screen preloading', () => {
     type: 'stack',
     key: 'root',
     index: 1,
-    preloadedRoutes: [
+    preloadedRoutes: [],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
       {
         key: 'bar-test',
         name: 'bar',
-        params: { answer: 42, toBe: 'merged', something: 'else' },
+        params: { answer: 42, color: 'test', something: 'else' },
       },
-    ],
-    routeNames: ['baz', 'bar', 'qux'],
-    routes: [
-      { key: 'bar-test', name: 'bar', params: { answer: 42, toBe: 'merged' } },
       { key: 'baz', name: 'baz' },
     ],
   });
@@ -2160,7 +2159,7 @@ it('handles screen preloading', () => {
         ],
       },
 
-      CommonActions.dismissPreload('bar', { answer: 43 }),
+      CommonActions.removePreload('bar', { answer: 43 }),
       options
     )
   ).toEqual({
@@ -2177,90 +2176,6 @@ it('handles screen preloading', () => {
         params: { answer: 42, toBe: 'notMerged' },
       },
       { key: 'baz', name: 'baz' },
-    ],
-  });
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'stack',
-        key: 'root',
-        index: 1,
-        preloadedRoutes: [
-          {
-            key: 'bar-test',
-            name: 'bar',
-          },
-        ],
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          {
-            key: 'bar-test',
-            name: 'bar',
-          },
-          { key: 'baz', name: 'baz' },
-        ],
-      },
-
-      StackActions.pop(),
-      options
-    )
-  ).toEqual({
-    stale: false,
-    type: 'stack',
-    key: 'root',
-    index: 0,
-    preloadedRoutes: [],
-    routeNames: ['baz', 'bar', 'qux'],
-    routes: [
-      {
-        key: 'bar-test',
-        name: 'bar',
-      },
-    ],
-  });
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'stack',
-        key: 'root',
-        index: 2,
-        preloadedRoutes: [
-          {
-            key: 'bar-test',
-            name: 'bar',
-          },
-          { key: 'baz', name: 'baz' },
-        ],
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          {
-            key: 'bar-test',
-            name: 'bar',
-          },
-          { key: 'baz', name: 'baz' },
-          { key: 'qux', name: 'qux' },
-        ],
-      },
-
-      StackActions.pop(2),
-      options
-    )
-  ).toEqual({
-    stale: false,
-    type: 'stack',
-    key: 'root',
-    index: 0,
-    preloadedRoutes: [],
-    routeNames: ['baz', 'bar', 'qux'],
-    routes: [
-      {
-        key: 'bar-test',
-        name: 'bar',
-      },
     ],
   });
 
@@ -2490,7 +2405,7 @@ it('handles screen preloading', () => {
         ],
       },
 
-      CommonActions.dismissPreload('bar', { answer: 42 }),
+      CommonActions.removePreload('bar', { answer: 42 }),
       options
     )
   ).toEqual({

@@ -114,7 +114,7 @@ export class StackView extends React.Component<Props, State> {
     }
 
     if (props.state.preloadedRoutes.length !== 0) {
-      console.warn(
+      throw new Error(
         'Preloading routes is not supported in the StackNavigator navigator.'
       );
     }

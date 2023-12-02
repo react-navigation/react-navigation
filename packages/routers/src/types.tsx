@@ -55,12 +55,21 @@ export type PartialRoute<R extends Route<string>> = Omit<R, 'key'> & {
 };
 
 export type PartialState<State extends NavigationState> = Partial<
-  Omit<State, 'stale' | 'routes'>
+  Omit<State, 'stale' | 'routes' | 'preloadedRoutes'>
 > &
   Readonly<{
     stale?: true;
     routes: PartialRoute<Route<State['routeNames'][number]>>[];
-  }>;
+  }> &
+  Readonly<
+    State extends { preloadedRoutes: Route<string>[] }
+      ? {
+          preloadedRoutes?:
+            | PartialRoute<Route<State['routeNames'][number]>>[]
+            | undefined;
+        }
+      : {}
+  >;
 
 export type Route<
   RouteName extends string,

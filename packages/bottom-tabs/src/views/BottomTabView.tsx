@@ -185,7 +185,7 @@ export function BottomTabView(props: Props) {
             lazy &&
             !loaded.includes(route.key) &&
             !isFocused &&
-            !state.preloadedRoutesKeys.includes(route.key)
+            !state.preloadedRouteKeys.includes(route.key)
           ) {
             // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
             return null;

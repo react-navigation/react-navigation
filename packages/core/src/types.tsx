@@ -14,6 +14,9 @@ declare global {
   namespace ReactNavigation {
     // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface RootParamList {}
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface Theme {}
   }
 }
 
@@ -75,6 +78,7 @@ export type DefaultNavigatorOptions<
     | ((props: {
         route: RouteProp<ParamList>;
         navigation: any;
+        theme: ReactNavigation.Theme;
       }) => ScreenOptions);
   /**
    A function returning a state, which may be set after modifying the routes name.
@@ -284,68 +288,30 @@ type NavigationHelpersCommon<
   /**
    * Preloads the route in current navigation tree.
    *
-   * @param route Object with `name` for the route to navigate to, and a `params` object.
-   */
-  preload<RouteName extends keyof ParamList>(
-    options: RouteName extends unknown
-      ? {
-          name: RouteName;
-          params: ParamList[RouteName];
-        }
-      : never
-  ): void;
-
-  /**
-   * Preloads the route in current navigation tree.
-   *
    * @param name Name of the route to navigate to.
    * @param [params] Params object for the route.
    */
   preload<RouteName extends keyof ParamList>(
-    ...args: // This condition allows us to iterate over a union type
-    // This is to avoid getting a union of all the params from `ParamList[RouteName]`,
-    // which will get our types all mixed up if a union RouteName is passed in.
-    RouteName extends unknown
-      ? // This condition checks if the params are optional,
-        // which means it's either undefined or a union with undefined
-        undefined extends ParamList[RouteName]
+    ...args: RouteName extends unknown
+      ? undefined extends ParamList[RouteName]
         ?
-            | [screen: RouteName] // if the params are optional, we don't have to provide it
+            | [screen: RouteName]
             | [screen: RouteName, params: ParamList[RouteName]]
         : [screen: RouteName, params: ParamList[RouteName]]
       : never
   ): void;
 
   /**
-   * Dismiss preloaded route in current navigation tree.
+   * Remove preloaded route in current navigation tree.
    *
-   * @param route Object with `name` for the route to navigate to, and a `params` object.
-   */
-  dismissPreload<RouteName extends keyof ParamList>(
-    options: RouteName extends unknown
-      ? {
-          name: RouteName;
-          params: ParamList[RouteName];
-        }
-      : never
-  ): void;
-
-  /**
-   * Dismiss preloaded route in current navigation tree.
-   *
-   * @param name Name of the route to navigate to.
+   * @param name Name of the route to remove preload.
    * @param [params] Params object for the route.
    */
-  dismissPreload<RouteName extends keyof ParamList>(
-    ...args: // This condition allows us to iterate over a union type
-    // This is to avoid getting a union of all the params from `ParamList[RouteName]`,
-    // which will get our types all mixed up if a union RouteName is passed in.
-    RouteName extends unknown
-      ? // This condition checks if the params are optional,
-        // which means it's either undefined or a union with undefined
-        undefined extends ParamList[RouteName]
+  removePreload<RouteName extends keyof ParamList>(
+    ...args: RouteName extends unknown
+      ? undefined extends ParamList[RouteName]
         ?
-            | [screen: RouteName] // if the params are optional, we don't have to provide it
+            | [screen: RouteName]
             | [screen: RouteName, params: ParamList[RouteName]]
         : [screen: RouteName, params: ParamList[RouteName]]
       : never
@@ -449,6 +415,10 @@ export type NavigationContainerProps = {
    * @deprecated Use nested navigation API instead
    */
   navigationInChildEnabled?: boolean;
+  /**
+   * Theme object for the UI elements.
+   */
+  theme?: ReactNavigation.Theme;
   /**
    * Children elements to render.
    */
@@ -660,6 +630,7 @@ export type RouteConfig<
     | ((props: {
         route: RouteProp<ParamList, RouteName>;
         navigation: any;
+        theme: ReactNavigation.Theme;
       }) => ScreenOptions);
 
   /**
@@ -708,6 +679,7 @@ export type RouteGroupConfig<
     | ((props: {
         route: RouteProp<ParamList, keyof ParamList>;
         navigation: any;
+        theme: ReactNavigation.Theme;
       }) => ScreenOptions);
   /**
    * Children React Elements to extract the route configuration from.

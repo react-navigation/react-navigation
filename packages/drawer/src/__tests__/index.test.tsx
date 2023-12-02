@@ -42,7 +42,7 @@ it('preloads screens', async () => {
       <Text>Screen A</Text>
       <Button onPress={() => navigation.preload('B')} title="Preload B" />
       <Button
-        onPress={() => navigation.dismissPreload('B')}
+        onPress={() => navigation.removePreload('B')}
         title="Dismiss preload B"
       />
     </View>

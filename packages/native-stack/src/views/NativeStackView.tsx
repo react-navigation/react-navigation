@@ -37,7 +37,7 @@ export function NativeStackView({ state, descriptors }: Props) {
   const { buildHref } = useLinkTools();
 
   if (state.preloadedRoutes.length !== 0) {
-    console.warn(
+    throw new Error(
       'Preloading routes is not supported in the NativeStackNavigator navigator.'
     );
   }
