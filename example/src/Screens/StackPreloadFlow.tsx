@@ -64,7 +64,7 @@ const HomeScreen = ({
 
 const SimpleStack = createStackNavigator<PreloadStackParams>();
 
-export function PreloadFlow() {
+export function StackPreloadFlow() {
   return (
     <SimpleStack.Navigator screenOptions={{ headerShown: false }}>
       <SimpleStack.Screen name="Home" component={HomeScreen} />

@@ -15,9 +15,9 @@ import { ModalStack } from './Screens/ModalStack';
 import { NativeStack } from './Screens/NativeStack';
 import { NativeStackHeaderCustomization } from './Screens/NativeStackHeaderCustomization';
 import { NativeStackPreventRemove } from './Screens/NativeStackPreventRemove';
-import { PreloadFlow } from './Screens/PreloadFlow';
 import { SimpleStack } from './Screens/SimpleStack';
 import { StackHeaderCustomization } from './Screens/StackHeaderCustomization';
+import { StackPreloadFlow } from './Screens/StackPreloadFlow';
 import { StackPreventRemove } from './Screens/StackPreventRemove';
 import { StackTransparent } from './Screens/StackTransparent';
 import { StaticScreen } from './Screens/Static';
@@ -118,8 +118,8 @@ export const SCREENS = {
     component: LinkingScreen,
   },
   PreloadFlow: {
-    title: 'Preloading flow',
-    component: PreloadFlow,
+    title: 'Preloading flow for Stack',
+    component: StackPreloadFlow,
   },
 };
 
