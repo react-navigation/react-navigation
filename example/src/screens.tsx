@@ -117,7 +117,7 @@ export const SCREENS = {
     title: 'Linking with authentication flow',
     component: LinkingScreen,
   },
-  PreloadFlow: {
+  PreloadFlowStack: {
     title: 'Preloading flow for Stack',
     component: StackPreloadFlow,
   },
