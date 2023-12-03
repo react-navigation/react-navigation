@@ -1,6 +1,8 @@
 import {
   NavigationContainer,
   type ParamListBase,
+  useFocusEffect,
+  useIsFocused,
 } from '@react-navigation/native';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
@@ -41,40 +43,115 @@ it('renders a stack navigator with screens', async () => {
 });
 
 it('preloads screens', async () => {
-  const ScreenA = ({ navigation }: StackScreenProps<ParamListBase>) => (
-    <View>
-      <Text>Screen A</Text>
-      <Button onPress={() => navigation.preload('B')} title="Preload B" />
-      <Button
-        onPress={() => navigation.removePreload('B')}
-        title="Dismiss preload B"
-      />
-    </View>
-  );
+  const Stack = createStackNavigator();
 
-  const ScreenB = () => {
-    return <Text>Screen B</Text>;
-  };
+  const navigation = React.createRef<any>();
 
-  const Tab = createStackNavigator();
-
-  const component = (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="A" component={ScreenA} />
-        <Tab.Screen name="B" component={ScreenB} />
-      </Tab.Navigator>
+  const app = render(
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator>
+        <Stack.Screen name="A" component={() => null} />
+        <Stack.Screen name="B" component={() => <Text>Screen B</Text>} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
-  const app = render(component);
 
-  const { getByText, queryByText } = app;
+  const { queryByText } = app;
 
   expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
-  fireEvent.press(getByText('Preload B'));
+  act(() => navigation.current.preload('B'));
   expect(
     queryByText('Screen B', { includeHiddenElements: true })
   ).not.toBeNull();
-  fireEvent.press(getByText('Dismiss preload B'));
+  act(() => navigation.current.removePreload('B'));
   expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
+});
+
+it('runs focus effect on focus change on preloaded route', () => {
+  const focusEffect = jest.fn();
+  const focusEffectCleanup = jest.fn();
+
+  const Test = () => {
+    const onFocus = React.useCallback(() => {
+      focusEffect();
+
+      return focusEffectCleanup;
+    }, []);
+
+    useFocusEffect(onFocus);
+
+    return null;
+  };
+
+  const Stack = createStackNavigator();
+
+  const navigation = React.createRef<any>();
+
+  render(
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator>
+        <Stack.Screen name="first">{() => null}</Stack.Screen>
+        <Stack.Screen name="second" component={Test} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(focusEffect).not.toHaveBeenCalled();
+  expect(focusEffectCleanup).not.toHaveBeenCalled();
+
+  act(() => navigation.current.preload('second'));
+  act(() => navigation.current.removePreload('second'));
+  act(() => navigation.current.preload('second'));
+
+  expect(focusEffect).not.toHaveBeenCalled();
+  expect(focusEffectCleanup).not.toHaveBeenCalled();
+
+  act(() => navigation.current.navigate('second'));
+
+  expect(focusEffect).toHaveBeenCalledTimes(1);
+  expect(focusEffectCleanup).not.toHaveBeenCalled();
+
+  act(() => navigation.current.navigate('first'));
+
+  expect(focusEffect).toHaveBeenCalledTimes(1);
+  expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
+});
+
+it('renders correct focus state with preloading', () => {
+  const Test = () => {
+    const isFocused = useIsFocused();
+
+    return <Text>{isFocused ? 'focused' : 'unfocused'}</Text>;
+  };
+
+  const Stack = createStackNavigator();
+
+  const navigation = React.createRef<any>();
+
+  const { queryByText } = render(
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator>
+        <Stack.Screen name="first">{() => null}</Stack.Screen>
+        <Stack.Screen name="second" component={Test} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(queryByText('focused', { includeHiddenElements: true })).toBeNull();
+
+  act(() => navigation.current.preload('second'));
+
+  expect(
+    queryByText('unfocused', { includeHiddenElements: true })
+  ).not.toBeNull();
+
+  act(() => navigation.current.navigate('second'));
+
+  expect(
+    queryByText('focused', { includeHiddenElements: true })
+  ).not.toBeNull();
+
+  act(() => navigation.current.navigate('first'));
+
+  expect(queryByText('focused', { includeHiddenElements: true })).toBeNull();
 });
