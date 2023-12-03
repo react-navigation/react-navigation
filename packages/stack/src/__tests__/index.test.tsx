@@ -42,7 +42,7 @@ it('renders a stack navigator with screens', async () => {
   expect(queryByText('Screen B')).not.toBeNull();
 });
 
-it('preloads screens', async () => {
+it('handles screens preloading', async () => {
   const Stack = createStackNavigator();
 
   const navigation = React.createRef<any>();
