@@ -47,7 +47,7 @@ it('handles screens preloading', async () => {
 
   const navigation = React.createRef<any>();
 
-  const app = render(
+  const { queryByText } = render(
     <NavigationContainer ref={navigation}>
       <Stack.Navigator>
         <Stack.Screen name="A" component={() => null} />
@@ -55,8 +55,6 @@ it('handles screens preloading', async () => {
       </Stack.Navigator>
     </NavigationContainer>
   );
-
-  const { queryByText } = app;
 
   expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
   act(() => navigation.current.preload('B'));
@@ -121,7 +119,12 @@ it('renders correct focus state with preloading', () => {
   const Test = () => {
     const isFocused = useIsFocused();
 
-    return <Text>{isFocused ? 'focused' : 'unfocused'}</Text>;
+    return (
+      <>
+        <Text>Test Screen</Text>
+        <Text>{isFocused ? 'focused' : 'unfocused'}</Text>
+      </>
+    );
   };
 
   const Stack = createStackNavigator();
@@ -137,9 +140,15 @@ it('renders correct focus state with preloading', () => {
     </NavigationContainer>
   );
 
-  expect(queryByText('focused', { includeHiddenElements: true })).toBeNull();
+  expect(
+    queryByText('Test Screen', { includeHiddenElements: true })
+  ).toBeNull();
 
   act(() => navigation.current.preload('second'));
+
+  expect(
+    queryByText('Test Screen', { includeHiddenElements: true })
+  ).not.toBeNull();
 
   expect(
     queryByText('unfocused', { includeHiddenElements: true })
