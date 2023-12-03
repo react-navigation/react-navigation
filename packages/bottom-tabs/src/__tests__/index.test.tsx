@@ -2,7 +2,7 @@ import {
   NavigationContainer,
   type ParamListBase,
 } from '@react-navigation/native';
-import { fireEvent, render } from '@testing-library/react-native';
+import { act, fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
 import { Animated, Button, Text, View } from 'react-native';
 
@@ -41,41 +41,25 @@ it('renders a bottom tab navigator with screens', async () => {
   expect(queryByText('Screen B')).not.toBeNull();
 });
 
-it('preloads screens', async () => {
-  const ScreenA = ({ navigation }: BottomTabScreenProps<ParamListBase>) => (
-    <View>
-      <Text>Screen A</Text>
-      <Button onPress={() => navigation.preload('B')} title="Preload B" />
-      <Button
-        onPress={() => navigation.removePreload('B')}
-        title="Dismiss preload B"
-      />
-    </View>
-  );
-
-  const ScreenB = () => {
-    return <Text>Screen B</Text>;
-  };
-
+it('handles screens preloading', async () => {
   const Tab = createBottomTabNavigator();
 
-  const component = (
-    <NavigationContainer>
+  const navigation = React.createRef<any>();
+
+  const { queryByText } = render(
+    <NavigationContainer ref={navigation}>
       <Tab.Navigator>
-        <Tab.Screen name="A" component={ScreenA} />
-        <Tab.Screen name="B" component={ScreenB} />
+        <Tab.Screen name="A" component={() => null} />
+        <Tab.Screen name="B" component={() => <Text>Screen B</Text>} />
       </Tab.Navigator>
     </NavigationContainer>
   );
-  const app = render(component);
-
-  const { getByText, queryByText } = app;
 
   expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
-  fireEvent.press(getByText('Preload B'));
+  act(() => navigation.current.preload('B'));
   expect(
     queryByText('Screen B', { includeHiddenElements: true })
   ).not.toBeNull();
-  fireEvent.press(getByText('Dismiss preload B'));
+  act(() => navigation.current.removePreload('B'));
   expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
 });

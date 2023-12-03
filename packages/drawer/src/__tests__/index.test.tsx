@@ -2,7 +2,7 @@ import {
   NavigationContainer,
   type ParamListBase,
 } from '@react-navigation/native';
-import { fireEvent, render } from '@testing-library/react-native';
+import { act, fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
 import { Button, Text, View } from 'react-native';
 
@@ -36,41 +36,25 @@ it('renders a drawer navigator with screens', async () => {
   expect(queryByText('Screen B')).not.toBeNull();
 });
 
-it('preloads screens', async () => {
-  const ScreenA = ({ navigation }: DrawerScreenProps<ParamListBase>) => (
-    <View>
-      <Text>Screen A</Text>
-      <Button onPress={() => navigation.preload('B')} title="Preload B" />
-      <Button
-        onPress={() => navigation.removePreload('B')}
-        title="Dismiss preload B"
-      />
-    </View>
-  );
+it('handles screens preloading', async () => {
+  const Drawer = createDrawerNavigator();
 
-  const ScreenB = () => {
-    return <Text>Screen B</Text>;
-  };
+  const navigation = React.createRef<any>();
 
-  const Tab = createDrawerNavigator();
-
-  const component = (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="A" component={ScreenA} />
-        <Tab.Screen name="B" component={ScreenB} />
-      </Tab.Navigator>
+  const { queryByText } = render(
+    <NavigationContainer ref={navigation}>
+      <Drawer.Navigator>
+        <Drawer.Screen name="A" component={() => null} />
+        <Drawer.Screen name="B" component={() => <Text>Screen B</Text>} />
+      </Drawer.Navigator>
     </NavigationContainer>
   );
-  const app = render(component);
-
-  const { getByText, queryByText } = app;
 
   expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
-  fireEvent.press(getByText('Preload B'));
+  act(() => navigation.current.preload('B'));
   expect(
     queryByText('Screen B', { includeHiddenElements: true })
   ).not.toBeNull();
-  fireEvent.press(getByText('Dismiss preload B'));
+  act(() => navigation.current.removePreload('B'));
   expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
 });
