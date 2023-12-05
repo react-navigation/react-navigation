@@ -81,7 +81,7 @@ export class StackView extends React.Component<Props, State> {
       // Params are not getting updated without updating the key for preloaded routes.
       !isArrayEqual(
         props.state.preloadedRoutes.map((r) => r.key),
-        state.previousRoutes.map((r) => r.key)
+        state.previousPreloadedRoutes.map((r) => r.key)
       )
     ) {
       preloadedRoutesDescriptors =
