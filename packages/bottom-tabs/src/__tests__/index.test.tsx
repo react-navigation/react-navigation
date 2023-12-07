@@ -55,7 +55,7 @@ it('handles screens preloading', async () => {
   const { queryByText } = render(
     <NavigationContainer ref={navigation}>
       <Tab.Navigator>
-        <Tab.Screen name="A" component={() => null} />
+        <Tab.Screen name="A">{() => null}</Tab.Screen>
         <Tab.Screen name="B">{() => <Text>Screen B</Text>}</Tab.Screen>
       </Tab.Navigator>
     </NavigationContainer>
