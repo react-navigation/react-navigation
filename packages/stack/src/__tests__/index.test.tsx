@@ -1,4 +1,5 @@
 import {
+  createNavigationContainerRef,
   NavigationContainer,
   type ParamListBase,
   useFocusEffect,
@@ -42,26 +43,31 @@ it('renders a stack navigator with screens', async () => {
   expect(queryByText('Screen B')).not.toBeNull();
 });
 
-it('handles screens preloading', async () => {
-  const Stack = createStackNavigator();
+type StackParamList = {
+  A: undefined;
+  B: undefined;
+};
 
-  const navigation = React.createRef<any>();
+it('handles screens preloading', async () => {
+  const Stack = createStackNavigator<StackParamList>();
+
+  const navigation = createNavigationContainerRef<StackParamList>();
 
   const { queryByText } = render(
     <NavigationContainer ref={navigation}>
       <Stack.Navigator>
-        <Stack.Screen name="A" component={() => null} />
-        <Stack.Screen name="B" component={() => <Text>Screen B</Text>} />
+        <Stack.Screen name="A">{() => null}</Stack.Screen>
+        <Stack.Screen name="B">{() => <Text>Screen B</Text>}</Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
 
   expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
-  act(() => navigation.current.preload('B'));
+  act(() => navigation.preload('B'));
   expect(
     queryByText('Screen B', { includeHiddenElements: true })
   ).not.toBeNull();
-  act(() => navigation.current.removePreload('B'));
+  act(() => navigation.removePreload('B'));
   expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
 });
 
