@@ -23,6 +23,7 @@ const DetailsScreen = ({
         return loadingCountdown - 1;
       });
     }, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
