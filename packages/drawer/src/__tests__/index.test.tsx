@@ -1,8 +1,9 @@
 import {
+  createNavigationContainerRef,
   NavigationContainer,
   type ParamListBase,
 } from '@react-navigation/native';
-import { fireEvent, render } from '@testing-library/react-native';
+import { act, fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
 import { Button, Text, View } from 'react-native';
 
@@ -34,4 +35,32 @@ it('renders a drawer navigator with screens', async () => {
   fireEvent(await findByText('Go to B'), 'press');
 
   expect(queryByText('Screen B')).not.toBeNull();
+});
+
+type DrawerParamList = {
+  A: undefined;
+  B: undefined;
+};
+
+it('handles screens preloading', async () => {
+  const Drawer = createDrawerNavigator<DrawerParamList>();
+
+  const navigation = createNavigationContainerRef<DrawerParamList>();
+
+  const { queryByText } = render(
+    <NavigationContainer ref={navigation}>
+      <Drawer.Navigator>
+        <Drawer.Screen name="A">{() => null}</Drawer.Screen>
+        <Drawer.Screen name="B">{() => <Text>Screen B</Text>}</Drawer.Screen>
+      </Drawer.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
+  act(() => navigation.preload('B'));
+  expect(
+    queryByText('Screen B', { includeHiddenElements: true })
+  ).not.toBeNull();
+  act(() => navigation.removePreload('B'));
+  expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
 });

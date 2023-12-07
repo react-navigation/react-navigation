@@ -20,6 +20,7 @@ import { StackHeaderCustomization } from './Screens/StackHeaderCustomization';
 import { StackPreventRemove } from './Screens/StackPreventRemove';
 import { StackTransparent } from './Screens/StackTransparent';
 import { StaticScreen } from './Screens/Static';
+import { TabPreloadFlow } from './Screens/TabPreloadFlow';
 import { TabView } from './Screens/TabView';
 
 export type RootDrawerParamList = {
@@ -115,6 +116,10 @@ export const SCREENS = {
   Linking: {
     title: 'Linking with authentication flow',
     component: LinkingScreen,
+  },
+  PreloadFlowTab: {
+    title: 'Preloading flow for Bottom Tabs',
+    component: TabPreloadFlow,
   },
 };
 
