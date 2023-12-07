@@ -4,6 +4,7 @@ import { BaseRouter } from './BaseRouter';
 import type {
   CommonNavigationAction,
   DefaultRouterOptions,
+  NavigationRoute,
   NavigationState,
   ParamListBase,
   Route,
@@ -53,6 +54,10 @@ export type StackNavigationState<ParamList extends ParamListBase> =
      * Type of the router, in this case, it's stack.
      */
     type: 'stack';
+    /**
+     * List of routes, which are supposed to be preloaded before navigating to.
+     */
+    preloadedRoutes: NavigationRoute<ParamList, keyof ParamList>[];
   };
 
 export type StackActionHelpers<ParamList extends ParamListBase> = {
@@ -155,6 +160,7 @@ export function StackRouter(options: StackRouterOptions) {
         key: `stack-${nanoid()}`,
         index: 0,
         routeNames,
+        preloadedRoutes: [],
         routes: [
           {
             key: `${initialRouteName}-${nanoid()}`,
@@ -174,20 +180,35 @@ export function StackRouter(options: StackRouterOptions) {
 
       const routes = state.routes
         .filter((route) => routeNames.includes(route.name))
-        .map(
-          (route) =>
-            ({
-              ...route,
-              key: route.key || `${route.name}-${nanoid()}`,
-              params:
-                routeParamList[route.name] !== undefined
-                  ? {
-                      ...routeParamList[route.name],
-                      ...route.params,
-                    }
-                  : route.params,
-            }) as Route<string>
-        );
+        .map((route) => ({
+          ...route,
+          key: route.key || `${route.name}-${nanoid()}`,
+          params:
+            routeParamList[route.name] !== undefined
+              ? {
+                  ...routeParamList[route.name],
+                  ...route.params,
+                }
+              : route.params,
+        }));
+
+      const preloadedRoutes =
+        state.preloadedRoutes
+          ?.filter((route) => routeNames.includes(route.name))
+          .map(
+            (route) =>
+              ({
+                ...route,
+                key: route.key || `${route.name}-${nanoid()}`,
+                params:
+                  routeParamList[route.name] !== undefined
+                    ? {
+                        ...routeParamList[route.name],
+                        ...route.params,
+                      }
+                    : route.params,
+              }) as Route<string>
+          ) ?? [];
 
       if (routes.length === 0) {
         const initialRouteName =
@@ -209,6 +230,7 @@ export function StackRouter(options: StackRouterOptions) {
         index: routes.length - 1,
         routeNames,
         routes,
+        preloadedRoutes,
       };
     },
 
@@ -327,6 +349,14 @@ export function StackRouter(options: StackRouterOptions) {
             }
           }
 
+          if (!route) {
+            route = state.preloadedRoutes.find(
+              (route) =>
+                route.name === action.payload.name &&
+                id === getId?.({ params: route.params })
+            );
+          }
+
           let params;
 
           if (action.type === 'NAVIGATE' && action.payload.merge && route) {
@@ -379,11 +409,23 @@ export function StackRouter(options: StackRouterOptions) {
           return {
             ...state,
             index: routes.length - 1,
+            preloadedRoutes: state.preloadedRoutes.filter(
+              (route) => routes[routes.length - 1].key !== route.key
+            ),
             routes,
           };
         }
 
         case 'NAVIGATE_DEPRECATED': {
+          if (
+            state.preloadedRoutes.find(
+              (route) =>
+                route.name === action.payload.name &&
+                id === getId?.({ params: route.params })
+            )
+          ) {
+            return null;
+          }
           if (!state.routeNames.includes(action.payload.name)) {
             return null;
           }
@@ -606,6 +648,75 @@ export function StackRouter(options: StackRouterOptions) {
 
           return null;
 
+        case 'PRELOAD': {
+          const getId = options.routeGetIdList[action.payload.name];
+          const id = getId?.({ params: action.payload.params });
+
+          let route: Route<string> | undefined;
+
+          if (id !== undefined) {
+            route = state.routes.find(
+              (route) =>
+                route.name === action.payload.name &&
+                id === getId?.({ params: route.params })
+            );
+          }
+
+          if (route) {
+            return {
+              ...state,
+              routes: state.routes.map((r) => {
+                if (r.key !== route?.key) {
+                  return r;
+                }
+                return {
+                  ...r,
+                  params:
+                    routeParamList[action.payload.name] !== undefined
+                      ? {
+                          ...routeParamList[action.payload.name],
+                          ...action.payload.params,
+                        }
+                      : action.payload.params,
+                };
+              }),
+            };
+          } else {
+            return {
+              ...state,
+              preloadedRoutes: state.preloadedRoutes
+                .filter(
+                  (r) =>
+                    r.name !== action.payload.name ||
+                    id !== getId?.({ params: r.params })
+                )
+                .concat({
+                  key: `${action.payload.name}-${nanoid()}`,
+                  name: action.payload.name,
+                  params:
+                    routeParamList[action.payload.name] !== undefined
+                      ? {
+                          ...routeParamList[action.payload.name],
+                          ...action.payload.params,
+                        }
+                      : action.payload.params,
+                }),
+            };
+          }
+        }
+        case 'REMOVE_PRELOAD': {
+          const getId = options.routeGetIdList[action.payload.name];
+          const id = getId?.({ params: action.payload.params });
+
+          return {
+            ...state,
+            preloadedRoutes: state.preloadedRoutes.filter(
+              (route) =>
+                route.name !== action.payload.name ||
+                id !== getId?.({ params: route.params })
+            ),
+          };
+        }
         default:
           return BaseRouter.getStateForAction(state, action);
       }

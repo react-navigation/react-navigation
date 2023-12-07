@@ -60,6 +60,13 @@ export function BottomTabView(props: Props) {
       Platform.OS === 'ios',
     sceneContainerStyle,
   } = props;
+
+  if (state.preloadedRouteKeys.length !== 0) {
+    throw new Error(
+      'Preloading routes is not supported in the BottomTabNavigator navigator.'
+    );
+  }
+
   const focusedRouteKey = state.routes[state.index].key;
 
   /**

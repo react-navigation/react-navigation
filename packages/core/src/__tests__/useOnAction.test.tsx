@@ -711,6 +711,7 @@ it("prevents removing a screen with 'beforeRemove' event", () => {
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
     key: 'stack-2',
+    preloadedRoutes: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -726,6 +727,7 @@ it("prevents removing a screen with 'beforeRemove' event", () => {
   expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
     key: 'stack-2',
+    preloadedRoutes: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -747,6 +749,7 @@ it("prevents removing a screen with 'beforeRemove' event", () => {
   expect(ref.current?.getRootState()).toEqual({
     index: 2,
     key: 'stack-2',
+    preloadedRoutes: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -765,6 +768,7 @@ it("prevents removing a screen with 'beforeRemove' event", () => {
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
     key: 'stack-2',
+    preloadedRoutes: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
@@ -781,6 +785,7 @@ it("prevents removing a screen with 'beforeRemove' event", () => {
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
     key: 'stack-2',
+    preloadedRoutes: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
@@ -853,6 +858,7 @@ it("prevents removing a child screen with 'beforeRemove' event", () => {
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
     key: 'stack-2',
+    preloadedRoutes: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -868,6 +874,7 @@ it("prevents removing a child screen with 'beforeRemove' event", () => {
   expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
     key: 'stack-2',
+    preloadedRoutes: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -878,6 +885,7 @@ it("prevents removing a child screen with 'beforeRemove' event", () => {
         state: {
           index: 0,
           key: 'stack-7',
+          preloadedRoutes: [],
           routeNames: ['qux', 'lex'],
           routes: [{ key: 'qux-8', name: 'qux' }],
           stale: false,
@@ -897,6 +905,7 @@ it("prevents removing a child screen with 'beforeRemove' event", () => {
   expect(ref.current?.getRootState()).toEqual({
     index: 2,
     key: 'stack-2',
+    preloadedRoutes: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -907,6 +916,7 @@ it("prevents removing a child screen with 'beforeRemove' event", () => {
         state: {
           index: 0,
           key: 'stack-7',
+          preloadedRoutes: [],
           routeNames: ['qux', 'lex'],
           routes: [{ key: 'qux-8', name: 'qux' }],
           stale: false,
@@ -926,6 +936,7 @@ it("prevents removing a child screen with 'beforeRemove' event", () => {
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
     key: 'stack-2',
+    preloadedRoutes: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
@@ -942,6 +953,7 @@ it("prevents removing a child screen with 'beforeRemove' event", () => {
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
     key: 'stack-2',
+    preloadedRoutes: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
@@ -1019,6 +1031,7 @@ it("prevents removing a grand child screen with 'beforeRemove' event", () => {
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
     key: 'stack-2',
+    preloadedRoutes: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -1034,6 +1047,7 @@ it("prevents removing a grand child screen with 'beforeRemove' event", () => {
   expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
     key: 'stack-2',
+    preloadedRoutes: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -1044,6 +1058,7 @@ it("prevents removing a grand child screen with 'beforeRemove' event", () => {
         state: {
           index: 0,
           key: 'stack-7',
+          preloadedRoutes: [],
           routeNames: ['qux'],
           routes: [
             {
@@ -1052,6 +1067,7 @@ it("prevents removing a grand child screen with 'beforeRemove' event", () => {
               state: {
                 index: 0,
                 key: 'stack-10',
+                preloadedRoutes: [],
                 routeNames: ['lex'],
                 routes: [{ key: 'lex-11', name: 'lex' }],
                 stale: false,
@@ -1076,6 +1092,7 @@ it("prevents removing a grand child screen with 'beforeRemove' event", () => {
   expect(ref.current?.getRootState()).toEqual({
     index: 2,
     key: 'stack-2',
+    preloadedRoutes: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -1086,6 +1103,7 @@ it("prevents removing a grand child screen with 'beforeRemove' event", () => {
         state: {
           index: 0,
           key: 'stack-7',
+          preloadedRoutes: [],
           routeNames: ['qux'],
           routes: [
             {
@@ -1094,6 +1112,7 @@ it("prevents removing a grand child screen with 'beforeRemove' event", () => {
               state: {
                 index: 0,
                 key: 'stack-10',
+                preloadedRoutes: [],
                 routeNames: ['lex'],
                 routes: [{ key: 'lex-11', name: 'lex' }],
                 stale: false,
@@ -1118,6 +1137,7 @@ it("prevents removing a grand child screen with 'beforeRemove' event", () => {
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
     key: 'stack-2',
+    preloadedRoutes: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
@@ -1134,6 +1154,7 @@ it("prevents removing a grand child screen with 'beforeRemove' event", () => {
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
     key: 'stack-2',
+    preloadedRoutes: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
@@ -1221,6 +1242,7 @@ it("prevents removing by multiple screens with 'beforeRemove' event", () => {
   const preventedState = {
     index: 3,
     key: 'stack-2',
+    preloadedRoutes: [],
     routeNames: ['foo', 'bar', 'baz', 'bax'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -1232,6 +1254,7 @@ it("prevents removing by multiple screens with 'beforeRemove' event", () => {
         state: {
           index: 0,
           key: 'stack-8',
+          preloadedRoutes: [],
           routeNames: ['qux'],
           routes: [
             {
@@ -1240,6 +1263,7 @@ it("prevents removing by multiple screens with 'beforeRemove' event", () => {
               state: {
                 index: 0,
                 key: 'stack-11',
+                preloadedRoutes: [],
                 routeNames: ['lex'],
                 routes: [{ key: 'lex-12', name: 'lex' }],
                 stale: false,
@@ -1292,6 +1316,7 @@ it("prevents removing by multiple screens with 'beforeRemove' event", () => {
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
     key: 'stack-2',
+    preloadedRoutes: [],
     routeNames: ['foo', 'bar', 'baz', 'bax'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
@@ -1364,6 +1389,7 @@ it("prevents removing a child screen with 'beforeRemove' event with 'resetRoot'"
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
     key: 'stack-2',
+    preloadedRoutes: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -1373,6 +1399,7 @@ it("prevents removing a child screen with 'beforeRemove' event with 'resetRoot'"
         state: {
           index: 0,
           key: 'stack-6',
+          preloadedRoutes: [],
           routeNames: ['qux', 'lex'],
           routes: [{ key: 'qux-7', name: 'qux' }],
           stale: false,
@@ -1402,6 +1429,7 @@ it("prevents removing a child screen with 'beforeRemove' event with 'resetRoot'"
   expect(ref.current?.getRootState()).toEqual({
     index: 1,
     key: 'stack-2',
+    preloadedRoutes: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -1411,6 +1439,7 @@ it("prevents removing a child screen with 'beforeRemove' event with 'resetRoot'"
         state: {
           index: 0,
           key: 'stack-6',
+          preloadedRoutes: [],
           routeNames: ['qux', 'lex'],
           routes: [{ key: 'qux-7', name: 'qux' }],
           stale: false,

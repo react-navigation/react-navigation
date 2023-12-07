@@ -36,6 +36,12 @@ export function NativeStackView({ state, descriptors }: Props) {
   const parentHeaderBack = React.useContext(HeaderBackContext);
   const { buildHref } = useLinkTools();
 
+  if (state.preloadedRoutes.length !== 0) {
+    throw new Error(
+      'Preloading routes is not supported in the NativeStackNavigator navigator.'
+    );
+  }
+
   return (
     <SafeAreaProviderCompat>
       <View style={styles.container}>

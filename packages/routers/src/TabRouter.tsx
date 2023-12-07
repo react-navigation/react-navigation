@@ -41,6 +41,10 @@ export type TabNavigationState<ParamList extends ParamListBase> = Omit<
    * List of previously visited route keys.
    */
   history: { type: 'route'; key: string }[];
+  /**
+   * List of routes' key, which are supposed to be preloaded before navigating to.
+   */
+  preloadedRouteKeys: string[];
 };
 
 export type TabActionHelpers<ParamList extends ParamListBase> = {
@@ -178,6 +182,7 @@ export function TabRouter({
         routeNames,
         history,
         routes,
+        preloadedRouteKeys: [],
       };
     },
 
@@ -217,9 +222,10 @@ export function TabRouter({
         routes.length - 1
       );
 
+      const routeKeys = routes.map((route) => route.key);
+
       const history =
-        state.history?.filter((it) => routes.find((r) => r.key === it.key)) ??
-        [];
+        state.history?.filter((it) => routeKeys.includes(it.key)) ?? [];
 
       return changeIndex(
         {
@@ -230,6 +236,10 @@ export function TabRouter({
           routeNames,
           history,
           routes,
+          preloadedRouteKeys:
+            state.preloadedRouteKeys?.filter((key) =>
+              routeKeys.includes(key)
+            ) ?? [],
         },
         index,
         backBehavior,
@@ -303,7 +313,7 @@ export function TabRouter({
             return null;
           }
 
-          return changeIndex(
+          const updatedState = changeIndex(
             {
               ...state,
               routes: state.routes.map((route) => {
@@ -362,6 +372,13 @@ export function TabRouter({
             backBehavior,
             initialRouteName
           );
+
+          return {
+            ...updatedState,
+            preloadedRouteKeys: updatedState.preloadedRouteKeys.filter(
+              (key) => key !== state.routes[updatedState.index].key
+            ),
+          };
         }
 
         case 'GO_BACK': {
@@ -380,8 +397,72 @@ export function TabRouter({
 
           return {
             ...state,
+            preloadedRouteKeys: state.preloadedRouteKeys.filter(
+              (key) => key !== state.routes[index].key
+            ),
             history: state.history.slice(0, -1),
             index,
+          };
+        }
+
+        case 'PRELOAD': {
+          const routeIndex = state.routes.findIndex(
+            (route) => route.name === action.payload.name
+          );
+          if (routeIndex === -1) {
+            return null;
+          }
+          const route = state.routes[routeIndex];
+
+          const getId = routeGetIdList[route.name];
+
+          const currentId = getId?.({ params: route.params });
+          const nextId = getId?.({ params: action.payload.params });
+
+          const key =
+            currentId === nextId ? route.key : `${route.name}-${nanoid()}`;
+
+          const params =
+            action.payload.params !== undefined ||
+            routeParamList[route.name] !== undefined
+              ? {
+                  ...routeParamList[route.name],
+                  ...action.payload.params,
+                }
+              : undefined;
+
+          const newRoute =
+            params !== route.params ? { ...route, key, params } : route;
+
+          return {
+            ...state,
+            preloadedRouteKeys: state.preloadedRouteKeys
+              .filter((key) => key !== route.key)
+              .concat(newRoute.key),
+            routes: state.routes.map((route, index) =>
+              index === routeIndex ? newRoute : route
+            ),
+            history:
+              key === route.key
+                ? state.history
+                : state.history.filter((record) => record.key !== route.key),
+          };
+        }
+
+        case 'REMOVE_PRELOAD': {
+          const routeIndex = state.routes.findIndex(
+            (route) => route.name === action.payload.name
+          );
+          if (routeIndex === -1) {
+            return null;
+          }
+          const route = state.routes[routeIndex];
+
+          return {
+            ...state,
+            preloadedRouteKeys: state.preloadedRouteKeys.filter(
+              (key) => key !== route.key
+            ),
           };
         }
 

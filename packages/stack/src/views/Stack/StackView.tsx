@@ -113,6 +113,12 @@ export class StackView extends React.Component<Props, State> {
       };
     }
 
+    if (props.state.preloadedRoutes.length !== 0) {
+      throw new Error(
+        'Preloading routes is not supported in the StackNavigator navigator.'
+      );
+    }
+
     // Here we determine which routes were added or removed to animate them
     // We keep a copy of the route being removed in local state to be able to animate it
 
