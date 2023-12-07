@@ -222,9 +222,10 @@ export function TabRouter({
         routes.length - 1
       );
 
+      const routeKeys = routes.map((route) => route.key);
+
       const history =
-        state.history?.filter((it) => routes.find((r) => r.key === it.key)) ??
-        [];
+        state.history?.filter((it) => routeKeys.includes(it.key)) ?? [];
 
       return changeIndex(
         {
@@ -235,7 +236,10 @@ export function TabRouter({
           routeNames,
           history,
           routes,
-          preloadedRouteKeys: state.preloadedRouteKeys ?? [], // FIXME
+          preloadedRouteKeys:
+            state.preloadedRouteKeys?.filter((key) =>
+              routeKeys.includes(key)
+            ) ?? [],
         },
         index,
         backBehavior,
@@ -438,9 +442,10 @@ export function TabRouter({
             routes: state.routes.map((route, index) =>
               index === routeIndex ? newRoute : route
             ),
-            history: state.history.filter(
-              (record) => key === route.key || record.key !== route.key
-            ),
+            history:
+              key === route.key
+                ? state.history
+                : state.history.filter((record) => record.key !== route.key),
           };
         }
 
