@@ -57,7 +57,7 @@ type State = {
   // Otherwise we won't be able to access the options for routes that were removed
   descriptors: StackDescriptorMap;
   // Descriptors for preloaded routes, crated dynamically
-  preloadedRoutesDescriptors: StackDescriptorMap;
+  preloadedDescriptors: StackDescriptorMap;
   // Previous preloaded routes, to compare whether routes have changed or not.
   previousPreloadedRoutes: Route<string>[];
 };
@@ -76,7 +76,7 @@ export class StackView extends React.Component<Props, State> {
     props: Readonly<Props>,
     state: Readonly<State>
   ) {
-    let preloadedRoutesDescriptors = state.preloadedRoutesDescriptors;
+    let preloadedDescriptors = state.preloadedDescriptors;
     if (
       // Params are not getting updated without updating the key for preloaded routes.
       !isArrayEqual(
@@ -84,7 +84,7 @@ export class StackView extends React.Component<Props, State> {
         state.previousPreloadedRoutes.map((r) => r.key)
       )
     ) {
-      preloadedRoutesDescriptors =
+      preloadedDescriptors =
         props.state.preloadedRoutes.reduce<StackDescriptorMap>((acc, route) => {
           acc[route.key] = acc[route.key] || props.describe(route, true);
           return acc;
@@ -136,7 +136,7 @@ export class StackView extends React.Component<Props, State> {
         previousRoutes,
         descriptors,
         previousDescriptors,
-        preloadedRoutesDescriptors,
+        preloadedDescriptors,
         previousPreloadedRoutes,
       };
     }
@@ -300,7 +300,7 @@ export class StackView extends React.Component<Props, State> {
       closingRouteKeys,
       replacingRouteKeys,
       descriptors,
-      preloadedRoutesDescriptors,
+      preloadedDescriptors,
       previousPreloadedRoutes,
     };
   }
@@ -313,7 +313,7 @@ export class StackView extends React.Component<Props, State> {
     closingRouteKeys: [],
     replacingRouteKeys: [],
     descriptors: {},
-    preloadedRoutesDescriptors: {},
+    preloadedDescriptors: {},
     previousPreloadedRoutes: [],
   };
 
@@ -335,7 +335,7 @@ export class StackView extends React.Component<Props, State> {
     const descriptor =
       this.state.descriptors[route.key] ||
       this.props.descriptors[route.key] ||
-      this.state.preloadedRoutesDescriptors[route.key];
+      this.state.preloadedDescriptors[route.key];
 
     if (!descriptor) {
       return null;
@@ -467,7 +467,7 @@ export class StackView extends React.Component<Props, State> {
 
     const {
       routes,
-      preloadedRoutesDescriptors,
+      preloadedDescriptors,
       descriptors,
       openingRouteKeys,
       closingRouteKeys,
@@ -501,7 +501,7 @@ export class StackView extends React.Component<Props, State> {
                         onGestureStart={this.handleGestureStart}
                         onGestureEnd={this.handleGestureEnd}
                         onGestureCancel={this.handleGestureCancel}
-                        preloadedRoutesDescriptors={preloadedRoutesDescriptors}
+                        preloadedDescriptors={preloadedDescriptors}
                         {...rest}
                       />
                     )}

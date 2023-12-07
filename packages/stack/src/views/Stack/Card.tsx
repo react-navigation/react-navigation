@@ -36,7 +36,7 @@ type Props = ViewProps & {
   closing: boolean;
   next?: Animated.AnimatedInterpolation<number>;
   current: Animated.AnimatedInterpolation<number>;
-  gesture?: Animated.Value;
+  gesture: Animated.Value;
   layout: Layout;
   insets: EdgeInsets;
   direction: LocaleDirection;
@@ -61,6 +61,7 @@ type Props = ViewProps & {
     open: TransitionSpec;
     close: TransitionSpec;
   };
+  preloaded: boolean;
   styleInterpolator: StackCardStyleInterpolator;
   containerStyle?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
@@ -104,24 +105,15 @@ export class Card extends React.Component<Props> {
   };
 
   componentDidMount() {
-    if (this.props.gesture) {
-      this.didAnimateOnPush = true;
+    if (!this.props.preloaded) {
       this.animate({
         closing: this.props.closing,
-        gesture: this.props.gesture,
       });
     }
     this.isCurrentlyMounted = true;
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (this.props.gesture && !this.didAnimateOnPush) {
-      this.didAnimateOnPush = true;
-      this.animate({
-        closing: this.props.closing,
-        gesture: this.props.gesture,
-      });
-    }
     const { direction, layout, gestureDirection, closing } = this.props;
     const { width, height } = layout;
 
@@ -145,16 +137,12 @@ export class Card extends React.Component<Props> {
       this.getAnimateToValue(prevProps) !== toValue ||
       this.lastToValue !== toValue
     ) {
-      if (!this.props.gesture) {
-        throw new Error('Gesture value undefined.');
-      }
-
       // We need to trigger the animation when route was closed
       // The route might have been closed by a `POP` action or by a gesture
       // When route was closed due to a gesture, the animation would've happened already
       // It's still important to trigger the animation so that `onClose` is called
       // If `onClose` is not called, cleanup step won't be performed for gestures
-      this.animate({ closing, gesture: this.props.gesture });
+      this.animate({ closing });
     }
   }
 
@@ -188,18 +176,15 @@ export class Card extends React.Component<Props> {
 
   private lastToValue: number | undefined;
 
-  private didAnimateOnPush = false;
-
   private animate = ({
     closing,
     velocity,
-    gesture,
   }: {
     closing: boolean;
     velocity?: number;
-    gesture: Animated.Value;
   }) => {
-    const { transitionSpec, onOpen, onClose, onTransition } = this.props;
+    const { transitionSpec, onOpen, onClose, onTransition, gesture } =
+      this.props;
 
     const toValue = this.getAnimateToValue({
       ...this.props,
@@ -252,13 +237,15 @@ export class Card extends React.Component<Props> {
     layout,
     gestureDirection,
     direction,
+    preloaded,
   }: {
     closing?: boolean;
     layout: Layout;
     gestureDirection: GestureDirection;
     direction: LocaleDirection;
+    preloaded: boolean;
   }) => {
-    if (!closing) {
+    if (!closing && !preloaded) {
       return 0;
     }
 
@@ -318,14 +305,9 @@ export class Card extends React.Component<Props> {
             ? nativeEvent.velocityY
             : nativeEvent.velocityX;
 
-        if (!this.props.gesture) {
-          throw new Error('Gesture value undefined.');
-        }
-
         this.animate({
           closing: this.props.closing,
           velocity,
-          gesture: this.props.gesture,
         });
 
         onGestureCanceled?.();
@@ -358,10 +340,7 @@ export class Card extends React.Component<Props> {
             ? velocity !== 0 || translation !== 0
             : this.props.closing;
 
-        if (!this.props.gesture) {
-          throw new Error('Gesture value undefined.');
-        }
-        this.animate({ closing, velocity, gesture: this.props.gesture });
+        this.animate({ closing, velocity });
 
         if (closing) {
           // We call onClose with a delay to make sure that the animation has already started

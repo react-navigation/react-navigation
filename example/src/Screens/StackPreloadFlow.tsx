@@ -10,6 +10,7 @@ import { StyleSheet, Text, View } from 'react-native';
 type PreloadStackParams = {
   Home: undefined;
   Details: undefined;
+  Profile: undefined;
 };
 
 const DetailsScreen = ({
@@ -38,6 +39,25 @@ const DetailsScreen = ({
       <Button onPress={navigation.goBack} style={styles.button}>
         Back to home
       </Button>
+      <Button
+        onPress={() => navigation.navigate('Profile')}
+        style={styles.button}
+      >
+        Go to Profile
+      </Button>
+    </View>
+  );
+};
+
+const ProfileScreen = ({
+  navigation,
+}: StackScreenProps<PreloadStackParams, 'Profile'>) => {
+  return (
+    <View style={styles.content}>
+      <Text style={styles.text}>Profile</Text>
+      <Button onPress={navigation.goBack} style={styles.button}>
+        Back to home
+      </Button>
     </View>
   );
 };
@@ -50,13 +70,16 @@ const HomeScreen = ({
   return (
     <View style={styles.content}>
       <Button onPress={() => preload('Details')} style={styles.button}>
-        Preload screen
+        Preload Details
+      </Button>
+      <Button onPress={() => preload('Profile')} style={styles.button}>
+        Preload Profile
       </Button>
       <Button onPress={() => navigate('Details')} style={styles.button}>
-        Navigate
+        Navigate Details
       </Button>
       <Button onPress={() => removePreload('Details')} style={styles.button}>
-        Remove preload
+        Remove Details preload
       </Button>
     </View>
   );
@@ -69,6 +92,7 @@ export function StackPreloadFlow() {
     <SimpleStack.Navigator screenOptions={{ headerShown: false }}>
       <SimpleStack.Screen name="Home" component={HomeScreen} />
       <SimpleStack.Screen name="Details" component={DetailsScreen} />
+      <SimpleStack.Screen name="Profile" component={ProfileScreen} />
     </SimpleStack.Navigator>
   );
 }

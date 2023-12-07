@@ -27,7 +27,8 @@ type Props = {
   closing: boolean;
   modal: boolean;
   layout: Layout;
-  gesture?: Animated.Value;
+  gesture: Animated.Value;
+  preloaded: boolean;
   scene: Scene;
   safeAreaInsetTop: number;
   safeAreaInsetRight: number;
@@ -84,6 +85,7 @@ function CardContainerInner({
   onGestureStart,
   onTransitionEnd,
   onTransitionStart,
+  preloaded,
   renderHeader,
   renderScene,
   safeAreaInsetBottom,
@@ -252,6 +254,7 @@ function CardContainerInner({
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
       pointerEvents={active ? 'box-none' : pointerEvents}
       pageOverflowEnabled={headerMode !== 'float' && presentation !== 'modal'}
+      preloaded={preloaded}
       containerStyle={
         hasAbsoluteFloatHeader && headerMode !== 'screen'
           ? { marginTop: headerHeight }

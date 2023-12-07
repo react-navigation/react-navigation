@@ -53,7 +53,7 @@ type Props = {
   state: StackNavigationState<ParamListBase>;
   descriptors: StackDescriptorMap;
   // eslint-disable-next-line react/no-unused-prop-types
-  preloadedRoutesDescriptors: StackDescriptorMap;
+  preloadedDescriptors: StackDescriptorMap;
   routes: Route<string>[];
   // eslint-disable-next-line react/no-unused-prop-types
   openingRouteKeys: string[];
@@ -189,16 +189,12 @@ const getDistanceFromOptions = (
   return getDistanceForDirection(layout, gestureDirection, isRTL);
 };
 
-const ZERO_PROGRESS = new Animated.Value(0);
 const getProgressFromGesture = (
   gesture: Animated.Value,
   layout: Layout,
   descriptor: StackDescriptor | undefined,
   isRTL: boolean
 ) => {
-  if (!gesture) {
-    return ZERO_PROGRESS;
-  }
   const distance = getDistanceFromOptions(
     {
       // Make sure that we have a non-zero distance, otherwise there will be incorrect progress
@@ -235,15 +231,20 @@ export class CardStack extends React.Component<Props, State> {
       return null;
     }
 
-    const gestures = props.routes.reduce<GestureValues>((acc, curr) => {
-      const descriptor = props.descriptors[curr.key];
+    const gestures = [
+      ...props.routes,
+      ...props.state.preloadedRoutes,
+    ].reduce<GestureValues>((acc, curr) => {
+      const descriptor =
+        props.descriptors[curr.key] || props.preloadedDescriptors[curr.key];
       const { animationEnabled } = descriptor?.options || {};
 
       acc[curr.key] =
         state.gestures[curr.key] ||
         new Animated.Value(
-          props.openingRouteKeys.includes(curr.key) &&
-          animationEnabled !== false
+          (props.openingRouteKeys.includes(curr.key) &&
+            animationEnabled !== false) ||
+          props.state.preloadedRoutes.includes(curr)
             ? getDistanceFromOptions(
                 state.layout,
                 descriptor,
@@ -255,17 +256,12 @@ export class CardStack extends React.Component<Props, State> {
       return acc;
     }, {});
 
-    const scenes = [...props.state.preloadedRoutes, ...props.routes].map(
+    const scenes = [...props.routes, ...props.state.preloadedRoutes].map(
       (route, index, self) => {
         // For preloaded screens, we don't care about the previous and the next screen
-        const previousRoute =
-          index <= props.state.preloadedRoutes.length
-            ? undefined
-            : self[index - 1];
-        const nextRoute =
-          index < props.state.preloadedRoutes.length
-            ? undefined
-            : self[index + 1];
+        const isPreloaded = props.state.preloadedRoutes.includes(route);
+        const previousRoute = isPreloaded ? undefined : self[index - 1];
+        const nextRoute = isPreloaded ? undefined : self[index + 1];
 
         const oldScene = state.scenes[index];
 
@@ -276,9 +272,9 @@ export class CardStack extends React.Component<Props, State> {
         const nextGesture = nextRoute ? gestures[nextRoute.key] : undefined;
 
         const descriptor =
-          (index < props.state.preloadedRoutes.length
-            ? props.preloadedRoutesDescriptors
-            : props.descriptors)[route.key] ||
+          (isPreloaded ? props.preloadedDescriptors : props.descriptors)[
+            route.key
+          ] ||
           state.descriptors[route.key] ||
           (oldScene ? oldScene.descriptor : FALLBACK_DESCRIPTOR);
 
@@ -619,10 +615,11 @@ export class CardStack extends React.Component<Props, State> {
           style={styles.container}
           onLayout={this.handleLayout}
         >
-          {[...state.preloadedRoutes, ...routes].map((route, index, self) => {
+          {[...routes, ...state.preloadedRoutes].map((route, index) => {
             const focused = focusedRoute.key === route.key;
             const gesture = gestures[route.key];
             const scene = scenes[index];
+            const isPreloaded = state.preloadedRoutes.includes(route);
 
             // For the screens that shouldn't be active, the value is 0
             // For those that should be active, but are not the top screen, the value is 1
@@ -634,18 +631,15 @@ export class CardStack extends React.Component<Props, State> {
               | 1
               | 2 = 1;
 
-            if (
-              index < self.length - activeScreensLimit - 1 ||
-              index < state.preloadedRoutes.length
-            ) {
+            if (index < routes.length - activeScreensLimit - 1 || isPreloaded) {
               // screen should be inactive because it is too deep in the stack
               isScreenActive = STATE_INACTIVE;
             } else {
-              const sceneForActivity = scenes[self.length - 1];
+              const sceneForActivity = scenes[routes.length - 1];
               const outputValue =
-                index === self.length - 1
+                index === routes.length - 1
                   ? STATE_ON_TOP // the screen is on top after the transition
-                  : index >= self.length - activeScreensLimit
+                  : index >= routes.length - activeScreensLimit
                   ? STATE_TRANSITIONING_OR_BELOW_TOP // the screen should stay active after the transition, it is not on top but is in activeLimit
                   : STATE_INACTIVE; // the screen should be active only during the transition, it is at the edge of activeLimit
               isScreenActive = sceneForActivity
@@ -690,7 +684,7 @@ export class CardStack extends React.Component<Props, State> {
             return (
               <MaybeScreen
                 key={route.key}
-                style={[StyleSheet.absoluteFill, { zIndex: index }]}
+                style={[StyleSheet.absoluteFill]}
                 enabled={detachInactiveScreens}
                 active={isScreenActive}
                 freezeOnBlur={freezeOnBlur}
@@ -700,7 +694,7 @@ export class CardStack extends React.Component<Props, State> {
                   index={index}
                   interpolationIndex={interpolationIndex}
                   modal={isModal}
-                  active={index === self.length - 1}
+                  active={index === routes.length - 1}
                   focused={focused}
                   closing={closingRouteKeys.includes(route.key)}
                   layout={layout}
@@ -729,6 +723,7 @@ export class CardStack extends React.Component<Props, State> {
                   onTransitionEnd={onTransitionEnd}
                   isNextScreenTransparent={isNextScreenTransparent}
                   detachCurrentScreen={detachCurrentScreen}
+                  preloaded={isPreloaded}
                 />
               </MaybeScreen>
             );
