@@ -1,4 +1,5 @@
 import {
+  createNavigationContainerRef,
   NavigationContainer,
   type ParamListBase,
 } from '@react-navigation/native';
@@ -41,10 +42,15 @@ it('renders a bottom tab navigator with screens', async () => {
   expect(queryByText('Screen B')).not.toBeNull();
 });
 
-it('handles screens preloading', async () => {
-  const Tab = createBottomTabNavigator();
+type BottomTabParamList = {
+  A: undefined;
+  B: undefined;
+};
 
-  const navigation = React.createRef<any>();
+it('handles screens preloading', async () => {
+  const Tab = createBottomTabNavigator<BottomTabParamList>();
+
+  const navigation = createNavigationContainerRef<BottomTabParamList>();
 
   const { queryByText } = render(
     <NavigationContainer ref={navigation}>
@@ -56,10 +62,10 @@ it('handles screens preloading', async () => {
   );
 
   expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
-  act(() => navigation.current.preload('B'));
+  act(() => navigation.preload('B'));
   expect(
     queryByText('Screen B', { includeHiddenElements: true })
   ).not.toBeNull();
-  act(() => navigation.current.removePreload('B'));
+  act(() => navigation.removePreload('B'));
   expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
 });
