@@ -286,6 +286,38 @@ type NavigationHelpersCommon<
   ): void;
 
   /**
+   * Preloads the route in current navigation tree.
+   *
+   * @param name Name of the route to navigate to.
+   * @param [params] Params object for the route.
+   */
+  preload<RouteName extends keyof ParamList>(
+    ...args: RouteName extends unknown
+      ? undefined extends ParamList[RouteName]
+        ?
+            | [screen: RouteName]
+            | [screen: RouteName, params: ParamList[RouteName]]
+        : [screen: RouteName, params: ParamList[RouteName]]
+      : never
+  ): void;
+
+  /**
+   * Remove preloaded route in current navigation tree.
+   *
+   * @param name Name of the route to remove preload.
+   * @param [params] Params object for the route.
+   */
+  removePreload<RouteName extends keyof ParamList>(
+    ...args: RouteName extends unknown
+      ? undefined extends ParamList[RouteName]
+        ?
+            | [screen: RouteName]
+            | [screen: RouteName, params: ParamList[RouteName]]
+        : [screen: RouteName, params: ParamList[RouteName]]
+      : never
+  ): void;
+
+  /**
    * Reset the navigation state to the provided state.
    *
    * @param state Navigation state object.
