@@ -29,21 +29,24 @@ type Options<
   emitter: NavigationEventEmitter<EventMap>;
 };
 
+type NavigationItem<
+  State extends NavigationState,
+  ScreenOptions extends {},
+  EventMap extends Record<string, any>,
+> = NavigationProp<
+  ParamListBase,
+  string,
+  string | undefined,
+  State,
+  ScreenOptions,
+  EventMap
+>;
+
 type NavigationCache<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends Record<string, any>,
-> = Record<
-  string,
-  NavigationProp<
-    ParamListBase,
-    string,
-    string | undefined,
-    State,
-    ScreenOptions,
-    EventMap
-  >
->;
+> = Record<string, NavigationItem<State, ScreenOptions, EventMap>>;
 
 /**
  * Hook to cache navigation objects for each screen in the navigator.
@@ -64,19 +67,71 @@ export function useNavigationCache<
 }: Options<State, ScreenOptions, EventMap>) {
   const { stackRef } = React.useContext(NavigationBuilderContext);
 
+  const base = React.useMemo((): NavigationItem<
+    State,
+    ScreenOptions,
+    EventMap
+  > => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { emit, ...rest } = navigation;
+
+    const actions = {
+      ...router.actionCreators,
+      ...CommonActions,
+    };
+
+    const dispatch = () => {
+      throw new Error(
+        'Actions cannot be dispatched from a placeholder screen.'
+      );
+    };
+
+    const helpers = Object.keys(actions).reduce<Record<string, () => void>>(
+      (acc, name) => {
+        acc[name] = dispatch;
+
+        return acc;
+      },
+      {}
+    );
+
+    return {
+      ...rest,
+      ...helpers,
+      addListener: () => {
+        // Event listeners are not supported for placeholder screens
+
+        return () => {
+          // Empty function
+        };
+      },
+      removeListener: () => {
+        // Event listeners are not supported for placeholder screens
+      },
+      dispatch,
+      // @ts-expect-error: too much work to fix the types for now
+      getParent: (id?: string) => {
+        if (id !== undefined && id === rest.getId()) {
+          return base;
+        }
+
+        return rest.getParent(id);
+      },
+      setOptions: () => {
+        throw new Error('Options cannot be set from a placeholder screen.');
+      },
+      isFocused: () => false,
+    };
+  }, [navigation, router.actionCreators]);
+
   // Cache object which holds navigation objects for each screen
   // We use `React.useMemo` instead of `React.useRef` coz we want to invalidate it when deps change
   // In reality, these deps will rarely change, if ever
   const cache = React.useMemo(
     () => ({ current: {} as NavigationCache<State, ScreenOptions, EventMap> }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [getState, navigation, setOptions, router, emitter]
+    [base, getState, navigation, setOptions, emitter]
   );
-
-  const actions = {
-    ...router.actionCreators,
-    ...CommonActions,
-  };
 
   cache.current = state.routes.reduce<
     NavigationCache<State, ScreenOptions, EventMap>
@@ -91,9 +146,6 @@ export function useNavigationCache<
       // If a cached navigation object already exists, reuse it
       acc[route.key] = previous;
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { emit, ...rest } = navigation;
-
       const dispatch = (thunk: Thunk) => {
         const action = typeof thunk === 'function' ? thunk(getState()) : thunk;
 
@@ -124,6 +176,11 @@ export function useNavigationCache<
         }
       };
 
+      const actions = {
+        ...router.actionCreators,
+        ...CommonActions,
+      };
+
       const helpers = Object.keys(actions).reduce<Record<string, () => void>>(
         (acc, name) => {
           acc[name] = (...args: any) =>
@@ -138,19 +195,19 @@ export function useNavigationCache<
       );
 
       acc[route.key] = {
-        ...rest,
+        ...base,
         ...helpers,
         // FIXME: too much work to fix the types for now
         ...(emitter.create(route.key) as any),
         dispatch: (thunk: Thunk) => withStack(() => dispatch(thunk)),
         getParent: (id?: string) => {
-          if (id !== undefined && id === rest.getId()) {
+          if (id !== undefined && id === base.getId()) {
             // If the passed id is the same as the current navigation id,
             // we return the cached navigation object for the relevant route
             return acc[route.key];
           }
 
-          return rest.getParent(id);
+          return base.getParent(id);
         },
         setOptions: (options: object) => {
           setOptions((o) => ({
@@ -175,5 +232,8 @@ export function useNavigationCache<
     return acc;
   }, {});
 
-  return cache.current;
+  return {
+    base,
+    navigations: cache.current,
+  };
 }
