@@ -275,7 +275,7 @@ export function useDescriptors<
    * @param placeholder Whether the descriptor should be a placeholder, e.g. for a route not yet in the state
    * @returns Descriptor object
    */
-  const create = (route: RouteProp<ParamListBase>, placeholder: boolean) => {
+  const describe = (route: RouteProp<ParamListBase>, placeholder: boolean) => {
     if (!placeholder) {
       if (!(route.key in descriptors)) {
         throw new Error(`Couldn't find a route with the key ${route.key}.`);
@@ -299,7 +299,7 @@ export function useDescriptors<
   };
 
   return {
-    create,
+    describe,
     descriptors,
   };
 }

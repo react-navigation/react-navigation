@@ -74,6 +74,7 @@ export function useNavigationCache<
     EventMap
   > &
     ActionHelpers => {
+  > => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { emit, ...rest } = navigation;
 
@@ -96,6 +97,7 @@ export function useNavigationCache<
       },
       {}
     ) as ActionHelpers;
+    );
 
     return {
       ...rest,

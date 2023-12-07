@@ -72,7 +72,7 @@ it('gets rehydrated state from partial state', () => {
           { key: 'bar-0', name: 'bar' },
           { key: 'qux-1', name: 'qux' },
         ],
-        preloadedRoutes: [{ name: 'baz' }],
+        preloadedRoutes: [{ name: 'baz', key: 'baz-test' }],
       },
       options
     )
