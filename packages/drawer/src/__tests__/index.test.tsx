@@ -51,7 +51,7 @@ it('handles screens preloading', async () => {
     <NavigationContainer ref={navigation}>
       <Drawer.Navigator>
         <Drawer.Screen name="A" component={() => null} />
-        <Drawer.Screen name="B" component={() => <Text>Screen B</Text>} />
+        <Drawer.Screen name="B">{() => <Text>Screen B</Text>}</Drawer.Screen>
       </Drawer.Navigator>
     </NavigationContainer>
   );
