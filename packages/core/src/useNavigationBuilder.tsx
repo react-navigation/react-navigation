@@ -679,7 +679,7 @@ export function useNavigationBuilder<
     getStateListeners: keyedListeners.getState,
   });
 
-  const { create, descriptors } = useDescriptors<
+  const { describe, descriptors } = useDescriptors<
     State,
     ActionHelpers,
     ScreenOptions,
@@ -727,7 +727,7 @@ export function useNavigationBuilder<
   return {
     state,
     navigation,
-    create,
+    describe,
     descriptors,
     NavigationContent,
   };
