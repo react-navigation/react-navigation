@@ -44,6 +44,12 @@ export function MaterialTopTabView({
     });
   };
 
+  if (state.preloadedRouteKeys.length !== 0) {
+    throw new Error(
+      'Preloading routes is not supported in the MaterialTopTabNavigator navigator.'
+    );
+  }
+
   const focusedOptions = descriptors[state.routes[state.index].key].options;
 
   return (

@@ -56,6 +56,11 @@ function DrawerViewBase({
 }: Props) {
   const { direction } = useLocale();
 
+  if (state.preloadedRouteKeys.length !== 0) {
+    throw new Error(
+      'Preloading routes is not supported in the DrawerNavigator navigator.'
+    );
+  }
   const focusedRouteKey = state.routes[state.index].key;
   const {
     drawerHideStatusBarOnOpen,
