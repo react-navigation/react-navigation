@@ -37,7 +37,6 @@ type Props = {
   getPreviousScene: (props: { route: Route<string> }) => Scene | undefined;
   getFocusedRoute: () => Route<string>;
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
-  renderScene: (props: { route: Route<string> }) => React.ReactNode;
   onOpenRoute: (props: { route: Route<string> }) => void;
   onCloseRoute: (props: { route: Route<string> }) => void;
   onTransitionStart: (
@@ -87,7 +86,6 @@ function CardContainerInner({
   onTransitionStart,
   preloaded,
   renderHeader,
-  renderScene,
   safeAreaInsetBottom,
   safeAreaInsetLeft,
   safeAreaInsetRight,
@@ -297,7 +295,7 @@ function CardContainerInner({
                 <HeaderHeightContext.Provider
                   value={headerShown ? headerHeight : parentHeaderHeight ?? 0}
                 >
-                  {renderScene({ route: scene.descriptor.route })}
+                  {scene.descriptor?.render()}
                 </HeaderHeightContext.Provider>
               </HeaderShownContext.Provider>
             </HeaderBackContext.Provider>

@@ -64,7 +64,6 @@ type Props = {
     route: Route<string>;
   }) => Route<string> | undefined;
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
-  renderScene: (props: { route: Route<string> }) => React.ReactNode;
   isParentHeaderShown: boolean;
   isParentModal: boolean;
   onTransitionStart: (
@@ -520,7 +519,6 @@ export class CardStack extends React.Component<Props, State> {
       onOpenRoute,
       onCloseRoute,
       renderHeader,
-      renderScene,
       isParentHeaderShown,
       isParentModal,
       onTransitionStart,
@@ -716,7 +714,6 @@ export class CardStack extends React.Component<Props, State> {
                     isFloatHeaderAbsolute && !headerTransparent
                   }
                   renderHeader={renderHeader}
-                  renderScene={renderScene}
                   onOpenRoute={onOpenRoute}
                   onCloseRoute={onCloseRoute}
                   onTransitionStart={onTransitionStart}
