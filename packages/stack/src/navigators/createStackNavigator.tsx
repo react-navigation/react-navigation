@@ -37,6 +37,7 @@ function StackNavigator({
   layout,
   screenListeners,
   screenOptions,
+  screenLayout,
   ...rest
 }: Props) {
   const { direction } = useLocale();
@@ -55,6 +56,7 @@ function StackNavigator({
       layout,
       screenListeners,
       screenOptions,
+      screenLayout,
       getStateForRouteNamesChange,
     });
 

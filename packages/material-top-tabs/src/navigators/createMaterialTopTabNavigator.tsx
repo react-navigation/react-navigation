@@ -34,6 +34,7 @@ function MaterialTopTabNavigator({
   layout,
   screenListeners,
   screenOptions,
+  screenLayout,
   ...rest
 }: Props) {
   const { state, descriptors, navigation, NavigationContent } =
@@ -51,6 +52,7 @@ function MaterialTopTabNavigator({
       layout,
       screenListeners,
       screenOptions,
+      screenLayout,
     });
 
   return (
