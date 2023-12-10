@@ -106,7 +106,9 @@ export class Card extends React.Component<Props> {
   componentDidMount() {
     this.animate({ closing: this.props.closing });
     this.isCurrentlyMounted = true;
-    this.props.gesture.addListener(() => { return });
+    this.props.gesture.addListener(() => {
+      return;
+    });
   }
 
   componentDidUpdate(prevProps: Props) {
