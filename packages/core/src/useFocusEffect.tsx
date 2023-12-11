@@ -75,8 +75,7 @@ export function useFocusEffect(effect: EffectCallback) {
     let immediateId: NodeJS.Immediate | undefined = setImmediate(() => {
       immediateId = undefined;
 
-      if (!isFocused && navigation.isFocused())
-      {
+      if (!isFocused && navigation.isFocused()) {
         cleanup = callback();
         isFocused = true;
       }
@@ -108,7 +107,7 @@ export function useFocusEffect(effect: EffectCallback) {
 
     return () => {
       if (immediateId !== undefined) clearImmediate(immediateId);
-      
+
       if (cleanup !== undefined) {
         cleanup();
       }
