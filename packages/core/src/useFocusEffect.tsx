@@ -72,10 +72,15 @@ export function useFocusEffect(effect: EffectCallback) {
     };
 
     // We need to run the effect on intial render/dep changes if the screen is focused
-    if (navigation.isFocused()) {
-      cleanup = callback();
-      isFocused = true;
-    }
+    let immediateId: NodeJS.Immediate | undefined = setImmediate(() => {
+      immediateId = undefined;
+
+      if (!isFocused && navigation.isFocused())
+      {
+        cleanup = callback();
+        isFocused = true;
+      }
+    });
 
     const unsubscribeFocus = navigation.addListener('focus', () => {
       // If callback was already called for focus, avoid calling it again
@@ -102,6 +107,8 @@ export function useFocusEffect(effect: EffectCallback) {
     });
 
     return () => {
+      if (immediateId !== undefined) clearImmediate(immediateId);
+      
       if (cleanup !== undefined) {
         cleanup();
       }
