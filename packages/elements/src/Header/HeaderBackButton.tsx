@@ -251,6 +251,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   flip: {
-    transform: [{ scaleX: -1 }],
+    transform: 'scaleX(-1)',
   },
 });
