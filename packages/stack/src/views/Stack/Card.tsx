@@ -505,21 +505,20 @@ export class Card extends React.Component<Props> {
     const { containerStyle, cardStyle, overlayStyle, shadowStyle } =
       interpolatedStyle;
 
-    const handleGestureEvent =
-      gestureEnabled && gesture
-        ? Animated.event(
-            [
-              {
-                nativeEvent:
-                  gestureDirection === 'vertical' ||
-                  gestureDirection === 'vertical-inverted'
-                    ? { translationY: gesture }
-                    : { translationX: gesture },
-              },
-            ],
-            { useNativeDriver }
-          )
-        : undefined;
+    const handleGestureEvent = gestureEnabled
+      ? Animated.event(
+          [
+            {
+              nativeEvent:
+                gestureDirection === 'vertical' ||
+                gestureDirection === 'vertical-inverted'
+                  ? { translationY: gesture }
+                  : { translationX: gesture },
+            },
+          ],
+          { useNativeDriver }
+        )
+      : undefined;
 
     const { backgroundColor } = StyleSheet.flatten(contentStyle || {});
     const isTransparent =
