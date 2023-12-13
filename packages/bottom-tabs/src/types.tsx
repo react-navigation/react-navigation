@@ -148,7 +148,7 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   /**
    * Text to show in a badge on the tab icon.
    */
-  tabBarBadge?: number | string | boolean;
+  tabBarBadge?: number | string | true;
 
   /**
    * Custom style for the tab bar badge.

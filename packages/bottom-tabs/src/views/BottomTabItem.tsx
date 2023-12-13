@@ -57,7 +57,7 @@ type Props = {
   /**
    * Text to show in a badge on the tab icon.
    */
-  badge?: number | string;
+  badge?: number | string | boolean;
   /**
    * Custom style for the badge.
    */
