@@ -138,6 +138,7 @@ export function BottomTabs({
           options={{
             title: 'Article',
             tabBarIcon: getTabBarIcon('file-document'),
+            tabBarBadge: true,
           }}
         />
         <Tab.Screen
