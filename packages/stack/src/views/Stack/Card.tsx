@@ -61,6 +61,7 @@ type Props = ViewProps & {
     open: TransitionSpec;
     close: TransitionSpec;
   };
+  preloaded: boolean;
   styleInterpolator: StackCardStyleInterpolator;
   containerStyle?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
@@ -104,7 +105,11 @@ export class Card extends React.Component<Props> {
   };
 
   componentDidMount() {
-    this.animate({ closing: this.props.closing });
+    if (!this.props.preloaded) {
+      this.animate({
+        closing: this.props.closing,
+      });
+    }
     this.isCurrentlyMounted = true;
   }
 
@@ -133,7 +138,7 @@ export class Card extends React.Component<Props> {
       this.lastToValue !== toValue
     ) {
       // We need to trigger the animation when route was closed
-      // Thr route might have been closed by a `POP` action or by a gesture
+      // The route might have been closed by a `POP` action or by a gesture
       // When route was closed due to a gesture, the animation would've happened already
       // It's still important to trigger the animation so that `onClose` is called
       // If `onClose` is not called, cleanup step won't be performed for gestures
@@ -142,7 +147,7 @@ export class Card extends React.Component<Props> {
   }
 
   componentWillUnmount() {
-    this.props.gesture.stopAnimation();
+    this.props.gesture?.stopAnimation();
     this.isCurrentlyMounted = false;
     this.handleEndInteraction();
   }
@@ -178,7 +183,7 @@ export class Card extends React.Component<Props> {
     closing: boolean;
     velocity?: number;
   }) => {
-    const { gesture, transitionSpec, onOpen, onClose, onTransition } =
+    const { transitionSpec, onOpen, onClose, onTransition, gesture } =
       this.props;
 
     const toValue = this.getAnimateToValue({
@@ -232,13 +237,15 @@ export class Card extends React.Component<Props> {
     layout,
     gestureDirection,
     direction,
+    preloaded,
   }: {
     closing?: boolean;
     layout: Layout;
     gestureDirection: GestureDirection;
     direction: LocaleDirection;
+    preloaded: boolean;
   }) => {
-    if (!closing) {
+    if (!closing && !preloaded) {
       return 0;
     }
 
@@ -298,7 +305,10 @@ export class Card extends React.Component<Props> {
             ? nativeEvent.velocityY
             : nativeEvent.velocityX;
 
-        this.animate({ closing: this.props.closing, velocity });
+        this.animate({
+          closing: this.props.closing,
+          velocity,
+        });
 
         onGestureCanceled?.();
         break;
@@ -495,20 +505,21 @@ export class Card extends React.Component<Props> {
     const { containerStyle, cardStyle, overlayStyle, shadowStyle } =
       interpolatedStyle;
 
-    const handleGestureEvent = gestureEnabled
-      ? Animated.event(
-          [
-            {
-              nativeEvent:
-                gestureDirection === 'vertical' ||
-                gestureDirection === 'vertical-inverted'
-                  ? { translationY: gesture }
-                  : { translationX: gesture },
-            },
-          ],
-          { useNativeDriver }
-        )
-      : undefined;
+    const handleGestureEvent =
+      gestureEnabled && gesture
+        ? Animated.event(
+            [
+              {
+                nativeEvent:
+                  gestureDirection === 'vertical' ||
+                  gestureDirection === 'vertical-inverted'
+                    ? { translationY: gesture }
+                    : { translationX: gesture },
+              },
+            ],
+            { useNativeDriver }
+          )
+        : undefined;
 
     const { backgroundColor } = StyleSheet.flatten(contentStyle || {});
     const isTransparent =

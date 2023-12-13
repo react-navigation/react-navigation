@@ -17,6 +17,7 @@ import { NativeStackHeaderCustomization } from './Screens/NativeStackHeaderCusto
 import { NativeStackPreventRemove } from './Screens/NativeStackPreventRemove';
 import { SimpleStack } from './Screens/SimpleStack';
 import { StackHeaderCustomization } from './Screens/StackHeaderCustomization';
+import { StackPreloadFlow } from './Screens/StackPreloadFlow';
 import { StackPreventRemove } from './Screens/StackPreventRemove';
 import { StackTransparent } from './Screens/StackTransparent';
 import { StaticScreen } from './Screens/Static';
@@ -116,6 +117,10 @@ export const SCREENS = {
   Linking: {
     title: 'Linking with authentication flow',
     component: LinkingScreen,
+  },
+  PreloadFlowStack: {
+    title: 'Preloading flow for Stack',
+    component: StackPreloadFlow,
   },
   PreloadFlowTab: {
     title: 'Preloading flow for Bottom Tabs',
