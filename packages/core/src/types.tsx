@@ -32,13 +32,15 @@ export type DefaultNavigatorOptions<
    * Optional ID for the navigator. Can be used with `navigation.getParent(id)` to refer to a parent.
    */
   id?: string;
+
   /**
    * Children React Elements to extract the route configuration from.
    * Only `Screen`, `Group` and `React.Fragment` are supported as children.
    */
   children: React.ReactNode;
+
   /**
-   * Layout component for the navigator.
+   * Layout for the navigator.
    * Useful for wrapping with a component with access to navigator's state and options.
    */
   layout?: (props: {
@@ -61,6 +63,7 @@ export type DefaultNavigatorOptions<
     >;
     children: React.ReactNode;
   }) => React.ReactElement;
+
   /**
    * Event listeners for all the screens in the navigator.
    */
@@ -70,6 +73,7 @@ export type DefaultNavigatorOptions<
         route: RouteProp<ParamList>;
         navigation: any;
       }) => ScreenListeners<State, EventMap>);
+
   /**
    * Default options for all screens under this navigator.
    */
@@ -80,6 +84,17 @@ export type DefaultNavigatorOptions<
         navigation: any;
         theme: ReactNavigation.Theme;
       }) => ScreenOptions);
+
+  /**
+   * Layout for all screens under this navigator.
+   */
+  screenLayout?: (props: {
+    route: RouteProp<ParamList, keyof ParamList>;
+    navigation: any;
+    theme: ReactNavigation.Theme;
+    children: React.ReactElement;
+  }) => React.ReactElement;
+
   /**
    A function returning a state, which may be set after modifying the routes name.
    */
@@ -644,6 +659,18 @@ export type RouteConfig<
       }) => ScreenListeners<State, EventMap>);
 
   /**
+   * Layout for this screen.
+   * Useful for wrapping the screen with custom containers.
+   * e.g. for styling, error boundaries, suspense, etc.
+   */
+  layout?: (props: {
+    route: RouteProp<ParamList, keyof ParamList>;
+    navigation: any;
+    theme: ReactNavigation.Theme;
+    children: React.ReactElement;
+  }) => React.ReactElement;
+
+  /**
    * Function to return an unique ID for this screen.
    * Receives an object with the route params.
    * For a given screen name, there will always be only one screen corresponding to an ID.
@@ -681,6 +708,18 @@ export type RouteGroupConfig<
         navigation: any;
         theme: ReactNavigation.Theme;
       }) => ScreenOptions);
+
+  /**
+   * Layout for the screens inside the group.
+   * This will override the `screenLayout` of parent group or navigator.
+   */
+  screenLayout?: (props: {
+    route: RouteProp<ParamList, keyof ParamList>;
+    navigation: any;
+    theme: ReactNavigation.Theme;
+    children: React.ReactElement;
+  }) => React.ReactElement;
+
   /**
    * Children React Elements to extract the route configuration from.
    * Only `Screen`, `Group` and `React.Fragment` are supported as children.

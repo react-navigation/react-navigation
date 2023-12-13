@@ -25,6 +25,7 @@ function NativeStackNavigator({
   layout,
   screenListeners,
   screenOptions,
+  screenLayout,
   ...rest
 }: NativeStackNavigatorProps) {
   const { state, descriptors, navigation, NavigationContent } =
@@ -41,6 +42,7 @@ function NativeStackNavigator({
       layout,
       screenListeners,
       screenOptions,
+      screenLayout,
     });
 
   React.useEffect(

@@ -35,8 +35,16 @@ export type ScreenConfigWithParent<
 > = {
   keys: (string | undefined)[];
   options: (ScreenOptionsOrCallback<ScreenOptions> | undefined)[] | undefined;
+  layout: ScreenLayout | undefined;
   props: RouteConfig<ParamListBase, string, State, ScreenOptions, EventMap>;
 };
+
+type ScreenLayout = (props: {
+  route: RouteProp<ParamListBase, string>;
+  navigation: any;
+  theme: ReactNavigation.Theme;
+  children: React.ReactElement;
+}) => React.ReactElement;
 
 type ScreenOptionsOrCallback<ScreenOptions extends {}> =
   | ScreenOptions
@@ -57,7 +65,8 @@ type Options<
     ScreenConfigWithParent<State, ScreenOptions, EventMap>
   >;
   navigation: NavigationHelpers<ParamListBase>;
-  screenOptions?: ScreenOptionsOrCallback<ScreenOptions>;
+  screenOptions: ScreenOptionsOrCallback<ScreenOptions> | undefined;
+  screenLayout: ScreenLayout | undefined;
   onAction: (action: NavigationAction) => boolean;
   getState: () => State;
   setState: (state: State) => void;
@@ -86,6 +95,7 @@ export function useDescriptors<
   screens,
   navigation,
   screenOptions,
+  screenLayout,
   onAction,
   getState,
   setState,
@@ -208,20 +218,42 @@ export function useDescriptors<
         return o;
       });
 
+    const layout =
+      // The `layout` prop passed to `Screen` elements,
+      screen.layout ??
+      // The `screenLayout` props passed to `Group` elements
+      config.layout ??
+      // The default `screenLayout` passed to the navigator
+      screenLayout;
+
+    let element = (
+      <SceneView
+        navigation={navigation}
+        route={route}
+        screen={screen}
+        routeState={routeState}
+        getState={getState}
+        setState={setState}
+        options={customOptions}
+        clearOptions={clearOptions}
+      />
+    );
+
+    if (layout != null) {
+      element = layout({
+        route,
+        navigation,
+        // @ts-expect-error: in practice `theme` will be defined
+        theme,
+        children: element,
+      });
+    }
+
     return (
       <NavigationBuilderContext.Provider key={route.key} value={context}>
         <NavigationContext.Provider value={navigation}>
           <NavigationRouteContext.Provider value={route}>
-            <SceneView
-              navigation={navigation}
-              route={route}
-              screen={screen}
-              routeState={routeState}
-              getState={getState}
-              setState={setState}
-              options={customOptions}
-              clearOptions={clearOptions}
-            />
+            {element}
           </NavigationRouteContext.Provider>
         </NavigationContext.Provider>
       </NavigationBuilderContext.Provider>

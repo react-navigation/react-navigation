@@ -72,7 +72,8 @@ const getRouteConfigsFromChildren = <
     State,
     ScreenOptions,
     EventMap
-  >['options']
+  >['options'],
+  groupLayout?: ScreenConfigWithParent<State, ScreenOptions, EventMap>['layout']
 ) => {
   const configs = React.Children.toArray(children).reduce<
     ScreenConfigWithParent<State, ScreenOptions, EventMap>[]
@@ -95,6 +96,7 @@ const getRouteConfigsFromChildren = <
         acc.push({
           keys: [groupKey, child.props.navigationKey],
           options: groupOptions,
+          layout: groupLayout,
           props: child.props as RouteConfig<
             ParamListBase,
             string,
@@ -103,6 +105,7 @@ const getRouteConfigsFromChildren = <
             EventMap
           >,
         });
+
         return acc;
       }
 
@@ -125,7 +128,8 @@ const getRouteConfigsFromChildren = <
               ? groupOptions
               : groupOptions != null
               ? [...groupOptions, child.props.screenOptions]
-              : [child.props.screenOptions]
+              : [child.props.screenOptions],
+            child.props.screenLayout ?? groupLayout
           )
         );
         return acc;
@@ -259,7 +263,15 @@ export function useNavigationBuilder<
     | NavigatorRoute
     | undefined;
 
-  const { children, layout, screenOptions, screenListeners, ...rest } = options;
+  const {
+    children,
+    layout,
+    screenOptions,
+    screenLayout,
+    screenListeners,
+    ...rest
+  } = options;
+
   const { current: router } = React.useRef<Router<State, any>>(
     createRouter(rest as unknown as RouterOptions)
   );
@@ -689,6 +701,7 @@ export function useNavigationBuilder<
     screens,
     navigation,
     screenOptions,
+    screenLayout,
     onAction,
     getState,
     setState,

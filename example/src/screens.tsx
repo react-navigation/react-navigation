@@ -5,6 +5,7 @@ import { BottomTabs } from './Screens/BottomTabs';
 import { CustomLayout } from './Screens/CustomLayout';
 import { DrawerView } from './Screens/DrawerView';
 import { DynamicTabs } from './Screens/DynamicTabs';
+import { LayoutsStack } from './Screens/Layouts';
 import { LinkComponent } from './Screens/LinkComponent';
 import { LinkingScreen } from './Screens/LinkingScreen';
 import { MasterDetail } from './Screens/MasterDetail';
@@ -85,6 +86,10 @@ export const SCREENS = {
   AuthFlow: {
     title: 'Auth Flow',
     component: AuthFlow,
+  },
+  Layouts: {
+    title: 'Custom Layout',
+    component: LayoutsStack,
   },
   StackPreventRemove: {
     title: 'Prevent removing screen in Stack',
