@@ -113,7 +113,8 @@ export function MockRouter(options: DefaultRouterOptions) {
         case 'NOOP':
           return state;
 
-        case 'NAVIGATE': {
+        case 'NAVIGATE':
+        case 'NAVIGATE_DEPRECATED': {
           if (!state.routeNames.includes(action.payload.name)) {
             return null;
           }
@@ -180,8 +181,10 @@ export function MockRouter(options: DefaultRouterOptions) {
       }
     },
 
-    shouldActionChangeFocus() {
-      return false;
+    shouldActionChangeFocus(action: CommonNavigationAction) {
+      return (
+        action.type === 'NAVIGATE' || action.type === 'NAVIGATE_DEPRECATED'
+      );
     },
   };
 
