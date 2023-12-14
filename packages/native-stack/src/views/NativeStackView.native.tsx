@@ -175,7 +175,7 @@ const SceneView = ({
     statusBarHidden,
     statusBarStyle,
     statusBarTranslucent,
-    statusBarColor,
+    statusBarBackgroundColor,
     freezeOnBlur,
   } = options;
 
@@ -290,7 +290,7 @@ const SceneView = ({
       statusBarAnimation={statusBarAnimation}
       statusBarHidden={statusBarHidden}
       statusBarStyle={statusBarStyle}
-      statusBarColor={statusBarColor}
+      statusBarColor={statusBarBackgroundColor}
       statusBarTranslucent={statusBarTranslucent}
       swipeDirection={gestureDirectionOverride}
       transitionDuration={animationDuration}

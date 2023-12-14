@@ -356,7 +356,7 @@ export type NativeStackNavigationOptions = {
    *
    * @platform android
    */
-  statusBarColor?: string;
+  statusBarBackgroundColor?: string;
   /**
    * Whether the status bar should be hidden on this screen.
    * Requires setting `View controller-based status bar appearance -> YES` in your Info.plist file.
