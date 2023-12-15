@@ -43,6 +43,73 @@ it('renders a stack navigator with screens', async () => {
   expect(queryByText('Screen B')).not.toBeNull();
 });
 
+it('fires transition events on navigation', async () => {
+  const FirstScreen = ({ navigation }: StackScreenProps<ParamListBase>) => (
+    <Button onPress={() => navigation.navigate('B')} title="Go to B" />
+  );
+
+  const onTransitionStart = jest.fn();
+  const onTransitionEnd = jest.fn();
+
+  const SecondScreen = ({ navigation }: StackScreenProps<ParamListBase>) => {
+    React.useLayoutEffect(
+      () => navigation.addListener('transitionStart', onTransitionStart),
+      [navigation]
+    );
+
+    React.useEffect(
+      () => navigation.addListener('transitionEnd', onTransitionEnd),
+      [navigation]
+    );
+
+    return <Button onPress={() => navigation.goBack()} title="Go back" />;
+  };
+
+  const Stack = createStackNavigator();
+
+  const { findByText } = render(
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="A" component={FirstScreen} />
+        <Stack.Screen name="B" component={SecondScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(onTransitionStart).not.toHaveBeenCalled();
+  expect(onTransitionEnd).not.toHaveBeenCalled();
+
+  fireEvent.press(await findByText('Go to B'));
+
+  expect(onTransitionStart).toHaveBeenCalledWith(
+    expect.objectContaining({ data: { closing: false } })
+  );
+
+  expect(onTransitionEnd).not.toHaveBeenCalled();
+
+  act(() => jest.runAllTimers());
+
+  expect(onTransitionEnd).toHaveBeenCalledWith(
+    expect.objectContaining({ data: { closing: false } })
+  );
+
+  fireEvent.press(await findByText('Go back'));
+
+  expect(onTransitionStart).toHaveBeenCalledTimes(2);
+  expect(onTransitionStart).toHaveBeenCalledWith(
+    expect.objectContaining({ data: { closing: true } })
+  );
+
+  expect(onTransitionEnd).toHaveBeenCalledTimes(1);
+
+  act(() => jest.runAllTimers());
+
+  expect(onTransitionEnd).toHaveBeenCalledTimes(2);
+  expect(onTransitionEnd).toHaveBeenCalledWith(
+    expect.objectContaining({ data: { closing: true } })
+  );
+});
+
 type StackParamList = {
   A: undefined;
   B: undefined;
