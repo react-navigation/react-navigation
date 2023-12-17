@@ -44,7 +44,7 @@ const DetailsScreen = ({
 const HomeScreen = ({
   navigation,
 }: BottomTabScreenProps<PreloadBottomTabsParams, 'Home'>) => {
-  const { navigate, preload, removePreload } = navigation;
+  const { navigate, preload } = navigation;
 
   return (
     <View style={styles.content}>
@@ -53,9 +53,6 @@ const HomeScreen = ({
       </Button>
       <Button onPress={() => navigate('Details')} style={styles.button}>
         Navigate
-      </Button>
-      <Button onPress={() => removePreload('Details')} style={styles.button}>
-        Remove preload
       </Button>
     </View>
   );

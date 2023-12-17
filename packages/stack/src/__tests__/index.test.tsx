@@ -2,6 +2,7 @@ import {
   createNavigationContainerRef,
   NavigationContainer,
   type ParamListBase,
+  StackActions,
   useFocusEffect,
   useIsFocused,
 } from '@react-navigation/native';
@@ -134,7 +135,7 @@ it('handles screens preloading', async () => {
   expect(
     queryByText('Screen B', { includeHiddenElements: true })
   ).not.toBeNull();
-  act(() => navigation.removePreload('B'));
+  act(() => navigation.dispatch(StackActions.removePreload('B')));
   expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
 });
 
@@ -154,15 +155,15 @@ it('runs focus effect on focus change on preloaded route', () => {
     return null;
   };
 
-  const Stack = createStackNavigator();
+  const Stack = createStackNavigator<StackParamList>();
 
-  const navigation = React.createRef<any>();
+  const navigation = createNavigationContainerRef<StackParamList>();
 
   render(
     <NavigationContainer ref={navigation}>
       <Stack.Navigator>
-        <Stack.Screen name="first">{() => null}</Stack.Screen>
-        <Stack.Screen name="second" component={Test} />
+        <Stack.Screen name="A">{() => null}</Stack.Screen>
+        <Stack.Screen name="B" component={Test} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -170,19 +171,19 @@ it('runs focus effect on focus change on preloaded route', () => {
   expect(focusEffect).not.toHaveBeenCalled();
   expect(focusEffectCleanup).not.toHaveBeenCalled();
 
-  act(() => navigation.current.preload('second'));
-  act(() => navigation.current.removePreload('second'));
-  act(() => navigation.current.preload('second'));
+  act(() => navigation.preload('A'));
+  act(() => navigation.dispatch(StackActions.removePreload('B')));
+  act(() => navigation.preload('B'));
 
   expect(focusEffect).not.toHaveBeenCalled();
   expect(focusEffectCleanup).not.toHaveBeenCalled();
 
-  act(() => navigation.current.navigate('second'));
+  act(() => navigation.navigate('B'));
 
   expect(focusEffect).toHaveBeenCalledTimes(1);
   expect(focusEffectCleanup).not.toHaveBeenCalled();
 
-  act(() => navigation.current.navigate('first'));
+  act(() => navigation.navigate('A'));
 
   expect(focusEffect).toHaveBeenCalledTimes(1);
   expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
