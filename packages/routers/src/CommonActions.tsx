@@ -129,7 +129,3 @@ export function setParams(params: object): Action {
 export function preload(name: string, params?: object): Action {
   return { type: 'PRELOAD', payload: { name, params } };
 }
-
-export function removePreload(name: string, params?: object): Action {
-  return { type: 'REMOVE_PRELOAD', payload: { name, params } };
-}

@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid/non-secure';
 
 import { BaseRouter } from './BaseRouter';
+import type { Action } from './CommonActions';
 import type {
   CommonNavigationAction,
   DefaultRouterOptions,
@@ -118,6 +119,22 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
             | [screen: RouteName, params: ParamList[RouteName], merge: boolean]
       : never
   ): void;
+
+  /**
+   * Remove a screen from the preloaded list in the navigator.
+   *
+   * @param name Name of the route to remove preload.
+   * @param [params] Params object for the route.
+   */
+  removePreload<RouteName extends keyof ParamList>(
+    ...args: RouteName extends unknown
+      ? undefined extends ParamList[RouteName]
+        ?
+            | [screen: RouteName]
+            | [screen: RouteName, params: ParamList[RouteName]]
+        : [screen: RouteName, params: ParamList[RouteName]]
+      : never
+  ): void;
 };
 
 export const StackActions = {
@@ -135,6 +152,9 @@ export const StackActions = {
   },
   popTo(name: string, params?: object, merge?: boolean): StackActionType {
     return { type: 'POP_TO', payload: { name, params, merge } };
+  },
+  removePreload(name: string, params?: object): Action {
+    return { type: 'REMOVE_PRELOAD', payload: { name, params } };
   },
 };
 

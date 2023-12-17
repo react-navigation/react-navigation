@@ -2159,7 +2159,7 @@ it('handles screen preloading', () => {
         ],
       },
 
-      CommonActions.removePreload('bar', { answer: 43 }),
+      StackActions.removePreload('bar', { answer: 43 }),
       options
     )
   ).toEqual({
@@ -2405,7 +2405,7 @@ it('handles screen preloading', () => {
         ],
       },
 
-      CommonActions.removePreload('bar', { answer: 42 }),
+      StackActions.removePreload('bar', { answer: 42 }),
       options
     )
   ).toEqual({
