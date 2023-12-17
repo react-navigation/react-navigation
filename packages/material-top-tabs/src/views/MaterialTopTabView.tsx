@@ -74,8 +74,8 @@ export function MaterialTopTabView({
         descriptors[route.key].options.lazyPlaceholder?.() ?? null
       }
       lazy={({ route }) =>
-        descriptors[route.key].options.lazy === true ||
-        state.preloadedRouteKeys.includes(route.key)
+        descriptors[route.key].options.lazy === true &&
+        !state.preloadedRouteKeys.includes(route.key)
       }
       lazyPreloadDistance={focusedOptions.lazyPreloadDistance}
       swipeEnabled={focusedOptions.swipeEnabled}
