@@ -121,7 +121,7 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
   ): void;
 
   /**
-   * Remove preloaded route in current navigation tree.
+   * Remove a screen from the preloaded list in the navigator.
    *
    * @param name Name of the route to remove preload.
    * @param [params] Params object for the route.
