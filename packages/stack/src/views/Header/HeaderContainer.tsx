@@ -4,7 +4,7 @@ import {
   NavigationRouteContext,
   type ParamListBase,
   type Route,
-  useLinkTools,
+  useLinkBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
 import {
@@ -54,7 +54,7 @@ export function HeaderContainer({
 }: Props) {
   const focusedRoute = getFocusedRoute();
   const parentHeaderBack = React.useContext(HeaderBackContext);
-  const { buildHref } = useLinkTools();
+  const { buildHref } = useLinkBuilder();
 
   return (
     <Animated.View pointerEvents="box-none" style={style}>

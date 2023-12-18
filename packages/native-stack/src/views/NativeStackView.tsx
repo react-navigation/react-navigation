@@ -9,7 +9,7 @@ import {
 import {
   type ParamListBase,
   type StackNavigationState,
-  useLinkTools,
+  useLinkBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
@@ -34,7 +34,7 @@ const TRANSPARENT_PRESENTATIONS = [
 
 export function NativeStackView({ state, descriptors }: Props) {
   const parentHeaderBack = React.useContext(HeaderBackContext);
-  const { buildHref } = useLinkTools();
+  const { buildHref } = useLinkBuilder();
 
   if (state.preloadedRoutes.length !== 0) {
     throw new Error(

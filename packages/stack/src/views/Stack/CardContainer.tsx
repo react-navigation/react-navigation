@@ -6,7 +6,7 @@ import {
 } from '@react-navigation/elements';
 import {
   type Route,
-  useLinkTools,
+  useLinkBuilder,
   useLocale,
   useTheme,
 } from '@react-navigation/native';
@@ -205,7 +205,7 @@ function CardContainerInner({
     transitionSpec,
   } = scene.descriptor.options;
 
-  const { buildHref } = useLinkTools();
+  const { buildHref } = useLinkBuilder();
   const previousScene = getPreviousScene({ route: scene.descriptor.route });
 
   let backTitle: string | undefined;
