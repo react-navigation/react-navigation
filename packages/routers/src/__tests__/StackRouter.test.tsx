@@ -2159,7 +2159,7 @@ it('handles screen preloading', () => {
         ],
       },
 
-      StackActions.removePreload('bar', { answer: 43 }),
+      StackActions.remove('bar', { answer: 43 }),
       options
     )
   ).toEqual({
@@ -2405,7 +2405,7 @@ it('handles screen preloading', () => {
         ],
       },
 
-      StackActions.removePreload('bar', { answer: 42 }),
+      StackActions.remove('bar', { answer: 42 }),
       options
     )
   ).toEqual({
@@ -2416,5 +2416,44 @@ it('handles screen preloading', () => {
     preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [{ key: 'qux-test', name: 'qux' }],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        preloadedRoutes: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          {
+            key: 'baz-test',
+            name: 'baz',
+          },
+          {
+            key: 'qux-test',
+            name: 'qux',
+          },
+        ],
+      },
+
+      StackActions.retain(),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 0,
+    preloadedRoutes: [{ key: 'qux-test', name: 'qux' }],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      {
+        key: 'baz-test',
+        name: 'baz',
+      },
+    ],
   });
 });

@@ -617,7 +617,15 @@ export class CardStack extends React.Component<Props, State> {
             const focused = focusedRoute.key === route.key;
             const gesture = gestures[route.key];
             const scene = scenes[index];
-            const isPreloaded = state.preloadedRoutes.includes(route);
+            const isPreloaded =
+              state.preloadedRoutes.includes(route) && !routes.includes(route);
+            if (
+              state.preloadedRoutes.includes(route) &&
+              routes.includes(route) &&
+              index >= routes.length
+            ) {
+              return null;
+            }
 
             // For the screens that shouldn't be active, the value is 0
             // For those that should be active, but are not the top screen, the value is 1
