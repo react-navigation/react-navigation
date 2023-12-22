@@ -743,25 +743,20 @@ export function StackRouter(options: StackRouterOptions) {
             };
           }
         }
-        case 'RETAIN':
-          if (state.index > 0) {
-            const route = state.routes[state.index];
-            const newState = router.getStateForAction(
-              state,
-              {
-                type: 'POP',
-                payload: { count: 1 },
-                target: action.target,
-                source: action.source,
-              },
-              options
-            ) as StackNavigationState<ParamListBase>;
-            return {
-              ...newState,
-              preloadedRoutes: newState.preloadedRoutes.concat(route),
-            };
-          }
-          return null;
+        case 'RETAIN': {
+          const index =
+            action.target === state.key && action.source
+              ? state.routes.findIndex((r) => r.key === action.source)
+              : state.index;
+          const route = state.routes[index];
+
+          return {
+            ...state,
+            index: state.index - 1,
+            routes: state.routes.filter((r) => r !== route),
+            preloadedRoutes: state.preloadedRoutes.concat(route),
+          };
+        }
 
         case 'REMOVE': {
           const getId = options.routeGetIdList[action.payload.name];
