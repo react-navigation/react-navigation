@@ -149,7 +149,11 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
       : never
   ): void;
 
-  // TODO
+  /**
+   * Removes a screen from the active routes, at the same time
+   * retaining the screen in the preloaded screens list,
+   * so it is not getting detached.
+   */
   retain(): void;
 };
 
