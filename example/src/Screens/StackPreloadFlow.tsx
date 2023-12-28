@@ -45,6 +45,9 @@ const DetailsScreen = ({
       >
         Go to Profile
       </Button>
+      <Button onPress={navigation.retain} style={styles.button}>
+        Retain
+      </Button>
     </View>
   );
 };
@@ -65,7 +68,7 @@ const ProfileScreen = ({
 const HomeScreen = ({
   navigation,
 }: StackScreenProps<PreloadStackParams, 'Home'>) => {
-  const { navigate, preload, removePreload } = navigation;
+  const { navigate, preload, remove } = navigation;
 
   return (
     <View style={styles.content}>
@@ -78,7 +81,7 @@ const HomeScreen = ({
       <Button onPress={() => navigate('Details')} style={styles.button}>
         Navigate Details
       </Button>
-      <Button onPress={() => removePreload('Details')} style={styles.button}>
+      <Button onPress={() => remove('Details')} style={styles.button}>
         Remove Details preload
       </Button>
     </View>

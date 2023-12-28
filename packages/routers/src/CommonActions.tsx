@@ -54,15 +54,6 @@ export type Action =
       };
       source?: string;
       target?: string;
-    }
-  | {
-      type: 'REMOVE_PRELOAD';
-      payload: {
-        name: string;
-        params?: object;
-      };
-      source?: string;
-      target?: string;
     };
 
 export function goBack(): Action {

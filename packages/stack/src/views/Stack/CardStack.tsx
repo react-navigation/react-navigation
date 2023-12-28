@@ -617,7 +617,19 @@ export class CardStack extends React.Component<Props, State> {
             const focused = focusedRoute.key === route.key;
             const gesture = gestures[route.key];
             const scene = scenes[index];
-            const isPreloaded = state.preloadedRoutes.includes(route);
+            // It is possible that for a short period the route appears in both arrays.
+            // Particularly, if the screen is removed with `retain`, then it needs a moment to execute the animation.
+            // However, due to the router action, it immediately populates the `preloadedRoutes` array.
+            // Practically, the logic below takes care that it is rendered only once.
+            const isPreloaded =
+              state.preloadedRoutes.includes(route) && !routes.includes(route);
+            if (
+              state.preloadedRoutes.includes(route) &&
+              routes.includes(route) &&
+              index >= routes.length
+            ) {
+              return null;
+            }
 
             // For the screens that shouldn't be active, the value is 0
             // For those that should be active, but are not the top screen, the value is 1
