@@ -748,16 +748,21 @@ export function StackRouter(options: StackRouterOptions) {
           }
         }
         case 'RETAIN': {
-          const index =
-            action.target === state.key && action.source
-              ? state.routes.findIndex((r) => r.key === action.source)
-              : state.index;
+          const index = action.source
+            ? state.routes.findIndex((r) => r.key === action.source)
+            : state.index;
+
+          if (index === -1) {
+            return null;
+          }
+
           const route = state.routes[index];
 
+          const routes = state.routes.filter((r) => r !== route);
           return {
             ...state,
-            index: state.index - 1,
-            routes: state.routes.filter((r) => r !== route),
+            index: routes.length - 1,
+            routes,
             preloadedRoutes: state.preloadedRoutes.concat(route),
           };
         }
