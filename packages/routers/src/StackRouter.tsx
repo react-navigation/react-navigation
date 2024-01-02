@@ -748,9 +748,10 @@ export function StackRouter(options: StackRouterOptions) {
           }
         }
         case 'RETAIN': {
-          const index = action.source
-            ? state.routes.findIndex((r) => r.key === action.source)
-            : state.index;
+          const index =
+            action.target === state.key && action.source
+              ? state.routes.findIndex((r) => r.key === action.source)
+              : state.index;
 
           if (index === -1) {
             return null;
