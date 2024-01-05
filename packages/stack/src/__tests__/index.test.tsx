@@ -223,6 +223,8 @@ test('runs focus effect on focus change on preloaded route', () => {
 
   act(() => navigation.navigate('B'));
 
+  act(() => jest.runAllTimers());
+
   expect(focusEffect).toHaveBeenCalledTimes(1);
   expect(focusEffectCleanup).not.toHaveBeenCalled();
 
