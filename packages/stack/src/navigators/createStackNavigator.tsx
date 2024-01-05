@@ -37,11 +37,12 @@ function StackNavigator({
   layout,
   screenListeners,
   screenOptions,
+  screenLayout,
   ...rest
 }: Props) {
   const { direction } = useLocale();
 
-  const { state, descriptors, navigation, NavigationContent } =
+  const { state, describe, descriptors, navigation, NavigationContent } =
     useNavigationBuilder<
       StackNavigationState<ParamListBase>,
       StackRouterOptions,
@@ -55,6 +56,7 @@ function StackNavigator({
       layout,
       screenListeners,
       screenOptions,
+      screenLayout,
       getStateForRouteNamesChange,
     });
 
@@ -90,6 +92,7 @@ function StackNavigator({
         {...rest}
         direction={direction}
         state={state}
+        describe={describe}
         descriptors={descriptors}
         navigation={navigation}
       />

@@ -61,6 +61,4 @@ it('handles screens preloading', async () => {
   expect(
     queryByText('Screen B', { includeHiddenElements: true })
   ).not.toBeNull();
-  act(() => navigation.removePreload('B'));
-  expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
 });

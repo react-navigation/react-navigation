@@ -449,23 +449,6 @@ export function TabRouter({
           };
         }
 
-        case 'REMOVE_PRELOAD': {
-          const routeIndex = state.routes.findIndex(
-            (route) => route.name === action.payload.name
-          );
-          if (routeIndex === -1) {
-            return null;
-          }
-          const route = state.routes[routeIndex];
-
-          return {
-            ...state,
-            preloadedRouteKeys: state.preloadedRouteKeys.filter(
-              (key) => key !== route.key
-            ),
-          };
-        }
-
         default:
           return BaseRouter.getStateForAction(state, action);
       }

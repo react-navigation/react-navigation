@@ -6,7 +6,7 @@ import {
 } from '@react-navigation/elements';
 import {
   type Route,
-  useLinkTools,
+  useLinkBuilder,
   useLocale,
   useTheme,
 } from '@react-navigation/native';
@@ -28,6 +28,7 @@ type Props = {
   modal: boolean;
   layout: Layout;
   gesture: Animated.Value;
+  preloaded: boolean;
   scene: Scene;
   safeAreaInsetTop: number;
   safeAreaInsetRight: number;
@@ -36,7 +37,6 @@ type Props = {
   getPreviousScene: (props: { route: Route<string> }) => Scene | undefined;
   getFocusedRoute: () => Route<string>;
   renderHeader: (props: HeaderContainerProps) => React.ReactNode;
-  renderScene: (props: { route: Route<string> }) => React.ReactNode;
   onOpenRoute: (props: { route: Route<string> }) => void;
   onCloseRoute: (props: { route: Route<string> }) => void;
   onTransitionStart: (
@@ -84,8 +84,8 @@ function CardContainerInner({
   onGestureStart,
   onTransitionEnd,
   onTransitionStart,
+  preloaded,
   renderHeader,
-  renderScene,
   safeAreaInsetBottom,
   safeAreaInsetLeft,
   safeAreaInsetRight,
@@ -205,7 +205,7 @@ function CardContainerInner({
     transitionSpec,
   } = scene.descriptor.options;
 
-  const { buildHref } = useLinkTools();
+  const { buildHref } = useLinkBuilder();
   const previousScene = getPreviousScene({ route: scene.descriptor.route });
 
   let backTitle: string | undefined;
@@ -252,6 +252,7 @@ function CardContainerInner({
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
       pointerEvents={active ? 'box-none' : pointerEvents}
       pageOverflowEnabled={headerMode !== 'float' && presentation !== 'modal'}
+      preloaded={preloaded}
       containerStyle={
         hasAbsoluteFloatHeader && headerMode !== 'screen'
           ? { marginTop: headerHeight }
@@ -294,7 +295,7 @@ function CardContainerInner({
                 <HeaderHeightContext.Provider
                   value={headerShown ? headerHeight : parentHeaderHeight ?? 0}
                 >
-                  {renderScene({ route: scene.descriptor.route })}
+                  {scene.descriptor?.render()}
                 </HeaderHeightContext.Provider>
               </HeaderShownContext.Provider>
             </HeaderBackContext.Provider>

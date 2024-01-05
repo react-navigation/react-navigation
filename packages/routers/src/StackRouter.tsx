@@ -44,6 +44,20 @@ export type StackActionType =
       };
       source?: string;
       target?: string;
+    }
+  | {
+      type: 'REMOVE';
+      payload: {
+        name: string;
+        params?: object;
+      };
+      source?: string;
+      target?: string;
+    }
+  | {
+      type: 'RETAIN';
+      source?: string;
+      target?: string;
     };
 
 export type StackRouterOptions = DefaultRouterOptions;
@@ -118,6 +132,29 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
             | [screen: RouteName, params: ParamList[RouteName], merge: boolean]
       : never
   ): void;
+
+  /**
+   * Remove a screen from the preloaded list in the navigator.
+   *
+   * @param name Name of the route to remove preload.
+   * @param [params] Params object for the route.
+   */
+  remove<RouteName extends keyof ParamList>(
+    ...args: RouteName extends unknown
+      ? undefined extends ParamList[RouteName]
+        ?
+            | [screen: RouteName]
+            | [screen: RouteName, params: ParamList[RouteName]]
+        : [screen: RouteName, params: ParamList[RouteName]]
+      : never
+  ): void;
+
+  /**
+   * Removes a screen from the active routes, at the same time
+   * retaining the screen in the preloaded screens list,
+   * so it is not getting detached.
+   */
+  retain(): void;
 };
 
 export const StackActions = {
@@ -135,6 +172,12 @@ export const StackActions = {
   },
   popTo(name: string, params?: object, merge?: boolean): StackActionType {
     return { type: 'POP_TO', payload: { name, params, merge } };
+  },
+  remove(name: string, params?: object): StackActionType {
+    return { type: 'REMOVE', payload: { name, params } };
+  },
+  retain(): StackActionType {
+    return { type: 'RETAIN' };
   },
 };
 
@@ -704,7 +747,28 @@ export function StackRouter(options: StackRouterOptions) {
             };
           }
         }
-        case 'REMOVE_PRELOAD': {
+        case 'RETAIN': {
+          const index =
+            action.target === state.key && action.source
+              ? state.routes.findIndex((r) => r.key === action.source)
+              : state.index;
+
+          if (index === -1) {
+            return null;
+          }
+
+          const route = state.routes[index];
+
+          const routes = state.routes.filter((r) => r !== route);
+          return {
+            ...state,
+            index: routes.length - 1,
+            routes,
+            preloadedRoutes: state.preloadedRoutes.concat(route),
+          };
+        }
+
+        case 'REMOVE': {
           const getId = options.routeGetIdList[action.payload.name];
           const id = getId?.({ params: action.payload.params });
 

@@ -57,6 +57,7 @@ export function useNavigationCache<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends Record<string, any>,
+  ActionHelpers extends Record<string, () => void>,
 >({
   state,
   getState,
@@ -71,7 +72,8 @@ export function useNavigationCache<
     State,
     ScreenOptions,
     EventMap
-  > => {
+  > &
+    ActionHelpers => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { emit, ...rest } = navigation;
 
@@ -93,7 +95,7 @@ export function useNavigationCache<
         return acc;
       },
       {}
-    );
+    ) as ActionHelpers;
 
     return {
       ...rest,
@@ -109,7 +111,6 @@ export function useNavigationCache<
         // Event listeners are not supported for placeholder screens
       },
       dispatch,
-      // @ts-expect-error: too much work to fix the types for now
       getParent: (id?: string) => {
         if (id !== undefined && id === rest.getId()) {
           return base;

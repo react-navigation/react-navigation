@@ -111,7 +111,7 @@ export function TabView<T extends Route>({
         layoutDirection={direction}
       >
         {({ position, render, addEnterListener, jumpTo }) => {
-          // All of the props here must not change between re-renders
+          // All the props here must not change between re-renders
           // This is crucial to optimizing the routes with PureComponent
           const sceneRendererProps = {
             position,

@@ -1,18 +1,21 @@
-import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Button } from '@react-navigation/elements';
+import {
+  createStackNavigator,
+  type StackScreenProps,
+} from '@react-navigation/stack';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-type PreloadBottomTabsParams = {
+type PreloadStackParams = {
   Home: undefined;
   Details: undefined;
+  Profile: undefined;
 };
 
 const DetailsScreen = ({
   navigation,
-}: BottomTabScreenProps<PreloadBottomTabsParams, 'Details'>) => {
+}: StackScreenProps<PreloadStackParams, 'Details'>) => {
   const [loadingCountdown, setLoadingCountdown] = useState(3);
   useEffect(() => {
     const interval = setInterval(() => {
@@ -23,7 +26,6 @@ const DetailsScreen = ({
         return loadingCountdown - 1;
       });
     }, 1000);
-    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -37,35 +39,64 @@ const DetailsScreen = ({
       <Button onPress={navigation.goBack} style={styles.button}>
         Back to home
       </Button>
+      <Button
+        onPress={() => navigation.navigate('Profile')}
+        style={styles.button}
+      >
+        Go to Profile
+      </Button>
+      <Button onPress={navigation.retain} style={styles.button}>
+        Retain
+      </Button>
+    </View>
+  );
+};
+
+const ProfileScreen = ({
+  navigation,
+}: StackScreenProps<PreloadStackParams, 'Profile'>) => {
+  return (
+    <View style={styles.content}>
+      <Text style={styles.text}>Profile</Text>
+      <Button onPress={navigation.goBack} style={styles.button}>
+        Back to home
+      </Button>
     </View>
   );
 };
 
 const HomeScreen = ({
   navigation,
-}: BottomTabScreenProps<PreloadBottomTabsParams, 'Home'>) => {
-  const { navigate, preload } = navigation;
+}: StackScreenProps<PreloadStackParams, 'Home'>) => {
+  const { navigate, preload, remove } = navigation;
 
   return (
     <View style={styles.content}>
       <Button onPress={() => preload('Details')} style={styles.button}>
-        Preload screen
+        Preload Details
+      </Button>
+      <Button onPress={() => preload('Profile')} style={styles.button}>
+        Preload Profile
       </Button>
       <Button onPress={() => navigate('Details')} style={styles.button}>
-        Navigate
+        Navigate Details
+      </Button>
+      <Button onPress={() => remove('Details')} style={styles.button}>
+        Remove Details preload
       </Button>
     </View>
   );
 };
 
-const BottomsTabs = createBottomTabNavigator<PreloadBottomTabsParams>();
+const SimpleStack = createStackNavigator<PreloadStackParams>();
 
-export function TabPreloadFlow() {
+export function StackPreloadFlow() {
   return (
-    <BottomsTabs.Navigator screenOptions={{ headerShown: false }}>
-      <BottomsTabs.Screen name="Home" component={HomeScreen} />
-      <BottomsTabs.Screen name="Details" component={DetailsScreen} />
-    </BottomsTabs.Navigator>
+    <SimpleStack.Navigator screenOptions={{ headerShown: false }}>
+      <SimpleStack.Screen name="Home" component={HomeScreen} />
+      <SimpleStack.Screen name="Details" component={DetailsScreen} />
+      <SimpleStack.Screen name="Profile" component={ProfileScreen} />
+    </SimpleStack.Navigator>
   );
 }
 

@@ -7,6 +7,7 @@ import {
   type LocaleDirection,
   type ParamListBase,
   type Route,
+  type RouteProp,
   StackActions,
   type StackNavigationState,
 } from '@react-navigation/native';
@@ -15,6 +16,7 @@ import { StyleSheet, View } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
 import type {
+  StackDescriptor,
   StackDescriptorMap,
   StackNavigationConfig,
   StackNavigationHelpers,
@@ -32,6 +34,10 @@ type Props = StackNavigationConfig & {
   state: StackNavigationState<ParamListBase>;
   navigation: StackNavigationHelpers;
   descriptors: StackDescriptorMap;
+  describe: (
+    route: RouteProp<ParamListBase>,
+    placeholder: boolean
+  ) => StackDescriptor;
 };
 
 type State = {
@@ -111,12 +117,6 @@ export class StackView extends React.Component<Props, State> {
         descriptors,
         previousDescriptors,
       };
-    }
-
-    if (props.state.preloadedRoutes.length !== 0) {
-      throw new Error(
-        'Preloading routes is not supported in the StackNavigator navigator.'
-      );
     }
 
     // Here we determine which routes were added or removed to animate them
@@ -305,17 +305,6 @@ export class StackView extends React.Component<Props, State> {
     return routes[index - 1];
   };
 
-  private renderScene = ({ route }: { route: Route<string> }) => {
-    const descriptor =
-      this.state.descriptors[route.key] || this.props.descriptors[route.key];
-
-    if (!descriptor) {
-      return null;
-    }
-
-    return descriptor.render();
-  };
-
   private renderHeader = (props: HeaderContainerProps) => {
     return <HeaderContainer {...props} />;
   };
@@ -440,6 +429,12 @@ export class StackView extends React.Component<Props, State> {
     const { routes, descriptors, openingRouteKeys, closingRouteKeys } =
       this.state;
 
+    const preloadedDescriptors =
+      state.preloadedRoutes.reduce<StackDescriptorMap>((acc, route) => {
+        acc[route.key] = acc[route.key] || this.props.describe(route, true);
+        return acc;
+      }, {});
+
     return (
       <GestureHandlerWrapper style={styles.container}>
         <SafeAreaProviderCompat>
@@ -462,12 +457,12 @@ export class StackView extends React.Component<Props, State> {
                         onTransitionStart={this.handleTransitionStart}
                         onTransitionEnd={this.handleTransitionEnd}
                         renderHeader={this.renderHeader}
-                        renderScene={this.renderScene}
                         state={state}
                         descriptors={descriptors}
                         onGestureStart={this.handleGestureStart}
                         onGestureEnd={this.handleGestureEnd}
                         onGestureCancel={this.handleGestureCancel}
+                        preloadedDescriptors={preloadedDescriptors}
                         {...rest}
                       />
                     )}

@@ -9,7 +9,7 @@ import {
   NavigationRouteContext,
   type ParamListBase,
   type TabNavigationState,
-  useLinkTools,
+  useLinkBuilder,
   useTheme,
 } from '@react-navigation/native';
 import Color from 'color';
@@ -143,7 +143,7 @@ export function BottomTabBar({
   style,
 }: Props) {
   const { colors } = useTheme();
-  const { buildHref } = useLinkTools();
+  const { buildHref } = useLinkBuilder();
 
   const focusedRoute = state.routes[state.index];
   const focusedDescriptor = descriptors[focusedRoute.key];

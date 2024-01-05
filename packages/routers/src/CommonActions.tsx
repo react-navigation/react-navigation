@@ -54,15 +54,6 @@ export type Action =
       };
       source?: string;
       target?: string;
-    }
-  | {
-      type: 'REMOVE_PRELOAD';
-      payload: {
-        name: string;
-        params?: object;
-      };
-      source?: string;
-      target?: string;
     };
 
 export function goBack(): Action {
@@ -128,8 +119,4 @@ export function setParams(params: object): Action {
 
 export function preload(name: string, params?: object): Action {
   return { type: 'PRELOAD', payload: { name, params } };
-}
-
-export function removePreload(name: string, params?: object): Action {
-  return { type: 'REMOVE_PRELOAD', payload: { name, params } };
 }

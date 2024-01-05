@@ -5,6 +5,7 @@ import { BottomTabs } from './Screens/BottomTabs';
 import { CustomLayout } from './Screens/CustomLayout';
 import { DrawerView } from './Screens/DrawerView';
 import { DynamicTabs } from './Screens/DynamicTabs';
+import { LayoutsStack } from './Screens/Layouts';
 import { LinkComponent } from './Screens/LinkComponent';
 import { LinkingScreen } from './Screens/LinkingScreen';
 import { MasterDetail } from './Screens/MasterDetail';
@@ -17,6 +18,7 @@ import { NativeStackHeaderCustomization } from './Screens/NativeStackHeaderCusto
 import { NativeStackPreventRemove } from './Screens/NativeStackPreventRemove';
 import { SimpleStack } from './Screens/SimpleStack';
 import { StackHeaderCustomization } from './Screens/StackHeaderCustomization';
+import { StackPreloadFlow } from './Screens/StackPreloadFlow';
 import { StackPreventRemove } from './Screens/StackPreventRemove';
 import { StackTransparent } from './Screens/StackTransparent';
 import { StaticScreen } from './Screens/Static';
@@ -85,6 +87,10 @@ export const SCREENS = {
     title: 'Auth Flow',
     component: AuthFlow,
   },
+  Layouts: {
+    title: 'Custom Layout',
+    component: LayoutsStack,
+  },
   StackPreventRemove: {
     title: 'Prevent removing screen in Stack',
     component: StackPreventRemove,
@@ -116,6 +122,10 @@ export const SCREENS = {
   Linking: {
     title: 'Linking with authentication flow',
     component: LinkingScreen,
+  },
+  PreloadFlowStack: {
+    title: 'Preloading flow for Stack',
+    component: StackPreloadFlow,
   },
   PreloadFlowTab: {
     title: 'Preloading flow for Bottom Tabs',

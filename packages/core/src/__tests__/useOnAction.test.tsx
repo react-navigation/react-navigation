@@ -109,7 +109,7 @@ it("lets parent handle the action if child didn't", () => {
   });
 });
 
-it("lets children handle the action if parent didn't", () => {
+it("lets children handle the action if parent didn't with navigationInChildEnabled", () => {
   const CurrentParentRouter = MockRouter;
 
   function CurrentChildRouter(options: DefaultRouterOptions) {
@@ -240,6 +240,64 @@ it("lets children handle the action if parent didn't", () => {
       { key: 'bar', name: 'bar' },
     ],
   });
+});
+
+it("lets children handle the action if parent didn't with NAVIGATE_DEPRECATED", () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return <>{state.routes.map((route) => descriptors[route.key].render())}</>;
+  };
+
+  const TestScreen = () => null;
+
+  const onStateChange = jest.fn();
+  const onUnhandledAction = jest.fn();
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const element = (
+    <BaseNavigationContainer
+      ref={navigation}
+      onStateChange={onStateChange}
+      onUnhandledAction={onUnhandledAction}
+    >
+      <TestNavigator>
+        <Screen name="foo" component={TestScreen} />
+        <Screen name="bar" component={TestScreen} />
+        <Screen name="baz">
+          {() => (
+            <TestNavigator>
+              <Screen name="qux" component={TestScreen} />
+              <Screen name="lex" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(element);
+
+  act(() => navigation.navigate('lex'));
+
+  expect(onStateChange).not.toHaveBeenCalled();
+  expect(onUnhandledAction).toHaveBeenCalledTimes(1);
+  expect(onUnhandledAction).toHaveBeenCalledWith(
+    expect.objectContaining({
+      type: 'NAVIGATE',
+      payload: { name: 'lex' },
+    })
+  );
+
+  expect(navigation.getCurrentRoute()?.name).toBe('foo');
+
+  act(() => navigation.navigateDeprecated('lex'));
+
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onUnhandledAction).toHaveBeenCalledTimes(1);
+
+  expect(navigation.getCurrentRoute()?.name).toBe('lex');
 });
 
 it('action goes to correct parent navigator if target is specified', () => {
