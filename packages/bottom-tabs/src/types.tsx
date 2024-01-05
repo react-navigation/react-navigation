@@ -15,6 +15,7 @@ import type * as React from 'react';
 import type {
   Animated,
   GestureResponderEvent,
+  ScaledSize,
   StyleProp,
   TextStyle,
   ViewStyle,
@@ -229,6 +230,11 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    * Position of the tab bar on the screen. Defaults to `bottom`.
    */
   tabBarPosition?: 'bottom' | 'left' | 'right';
+
+  /**
+   * Function which returns the width of the tab bar on the screen.
+   */
+  tabBarWidth?: (dimensions: ScaledSize) => number;
 
   /**
    * Whether this screens should render the first time it's accessed. Defaults to `true`.

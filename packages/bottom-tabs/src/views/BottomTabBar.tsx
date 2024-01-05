@@ -165,6 +165,7 @@ export function BottomTabBar({
           .string()
       : undefined,
     tabBarInactiveBackgroundColor,
+    tabBarWidth,
   } = focusedOptions;
 
   // FIXME: useSafeAreaFrame doesn't update values when window is resized on Web
@@ -270,6 +271,12 @@ export function BottomTabBar({
 
   const tabBarBackgroundElement = tabBarBackground?.();
 
+  const sideBarWidth = tabBarWidth
+    ? tabBarWidth(dimensions)
+    : hasHorizontalLabels
+    ? getDefaultSidebarWidth(dimensions)
+    : 0;
+
   return (
     <Animated.View
       style={[
@@ -314,9 +321,7 @@ export function BottomTabBar({
               paddingBottom: insets.bottom,
               paddingLeft: tabBarPosition === 'left' ? insets.left : 0,
               paddingRight: tabBarPosition === 'right' ? insets.right : 0,
-              minWidth: hasHorizontalLabels
-                ? getDefaultSidebarWidth(dimensions)
-                : 0,
+              minWidth: sideBarWidth,
             },
         tabBarStyle,
       ]}
