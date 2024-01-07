@@ -8,7 +8,7 @@ import * as React from 'react';
 import { Button, Text } from 'react-native';
 
 import { NavigationContainer } from '../NavigationContainer';
-import { useUnhandledLinking } from '../useUnhandledLinking';
+import { UNSTABLE_useUnhandledLinking } from '../useUnhandledLinking';
 
 const createTestNavigator = createNavigatorFactory((props: any) => {
   const { state, descriptors, NavigationContent } = useNavigationBuilder(
@@ -58,7 +58,7 @@ it('schedules a state to be handled on conditional linking', async () => {
 
   const StackNavigator = () => {
     const [isSignedIn, setSignedIn] = React.useState(false);
-    const { getStateForRouteNamesChange } = useUnhandledLinking();
+    const { getStateForRouteNamesChange } = UNSTABLE_useUnhandledLinking();
 
     return (
       <Stack.Navigator
@@ -159,7 +159,7 @@ it('schedules a state to be handled on conditional linking under nested navigato
   };
 
   const InnerStackNavigator = () => {
-    const { getStateForRouteNamesChange } = useUnhandledLinking();
+    const { getStateForRouteNamesChange } = UNSTABLE_useUnhandledLinking();
     const [isSignedIn, setSignedIn] = React.useState(false);
     return (
       <Stack.Navigator
@@ -257,7 +257,7 @@ it('schedules a state to be handled on conditional linking in nested stack', asy
 
   const StackNavigation = () => {
     const [isSignedIn, setSignedIn] = React.useState(false);
-    const { getStateForRouteNamesChange } = useUnhandledLinking();
+    const { getStateForRouteNamesChange } = UNSTABLE_useUnhandledLinking();
 
     return (
       <Stack.Navigator
@@ -347,7 +347,7 @@ it('clears lastUnhandledLink upon successful linking handling', () => {
   };
 
   const ProfileScreen = (): any => {
-    const { lastUnhandledLink } = useUnhandledLinking();
+    const { lastUnhandledLink } = UNSTABLE_useUnhandledLinking();
     return lastUnhandledLink;
   };
 
@@ -355,7 +355,7 @@ it('clears lastUnhandledLink upon successful linking handling', () => {
   const Stack = createTestNavigator();
 
   const InnerStackNavigator = () => {
-    const { getStateForRouteNamesChange } = useUnhandledLinking();
+    const { getStateForRouteNamesChange } = UNSTABLE_useUnhandledLinking();
     return (
       <InnerStack.Navigator
         getStateForRouteNamesChange={getStateForRouteNamesChange}
@@ -385,7 +385,9 @@ it('clears lastUnhandledLink upon calling clearUnhandledLink', async () => {
   const Stack = createTestNavigator();
 
   const LinkDisplayScreen = (): any => {
-    const { lastUnhandledLink, clearUnhandledLink } = useUnhandledLinking();
+    const { lastUnhandledLink, clearUnhandledLink } =
+      UNSTABLE_useUnhandledLinking();
+
     return (
       <>
         <Text>{lastUnhandledLink}</Text>

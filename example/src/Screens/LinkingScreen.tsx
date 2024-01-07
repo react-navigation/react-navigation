@@ -1,5 +1,5 @@
 import { Button } from '@react-navigation/elements';
-import { useUnhandledLinking } from '@react-navigation/native';
+import { UNSTABLE_useUnhandledLinking } from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
@@ -77,7 +77,7 @@ const Stack = createStackNavigator<StackParamList>();
 
 export function LinkingScreen() {
   const [isSignedIn, setSignedIn] = React.useState(false);
-  const { getStateForRouteNamesChange } = useUnhandledLinking();
+  const { getStateForRouteNamesChange } = UNSTABLE_useUnhandledLinking();
   return (
     <SigningContext.Provider
       value={{
