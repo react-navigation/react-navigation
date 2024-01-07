@@ -29,11 +29,9 @@ const MaterialLabel = ({
   labelStyle,
   allowScaling,
 }: MaterialLabelType) => {
-  const { fonts } = useTheme();
-
   return (
     <Text
-      style={[{ color }, fonts.regular, styles.label, labelStyle]}
+      style={[{ color }, styles.label, labelStyle]}
       allowFontScaling={allowScaling}
     >
       {label}
