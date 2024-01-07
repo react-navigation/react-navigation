@@ -7,6 +7,7 @@ import type {
 } from '@react-navigation/elements';
 import type {
   Descriptor,
+  LocaleDirection,
   NavigationHelpers,
   NavigationProp,
   ParamListBase,
@@ -50,7 +51,7 @@ export type StackNavigationHelpers = NavigationHelpers<
 export type StackNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined
+  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
@@ -64,7 +65,7 @@ export type StackNavigationProp<
 export type StackScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined
+  NavigatorID extends string | undefined = undefined,
 > = {
   navigation: StackNavigationProp<ParamList, RouteName, NavigatorID>;
   route: RouteProp<ParamList, RouteName>;
@@ -196,7 +197,11 @@ export type StackHeaderProps = {
     /**
      * Title of the previous screen.
      */
-    title: string;
+    title: string | undefined;
+    /**
+     * The `href` to use for the anchor tag on web
+     */
+    href: string | undefined;
   };
   /**
    * Animated nodes representing the progress of the animation.
@@ -429,19 +434,19 @@ export type StackCardInterpolatedStyle = {
   /**
    * Interpolated style for the container view wrapping the card.
    */
-  containerStyle?: any;
+  containerStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   /**
    * Interpolated style for the view representing the card.
    */
-  cardStyle?: any;
+  cardStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   /**
    * Interpolated style for the view representing the semi-transparent overlay below the card.
    */
-  overlayStyle?: any;
+  overlayStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   /**
    * Interpolated style representing the card shadow.
    */
-  shadowStyle?: any;
+  shadowStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 };
 
 export type StackCardStyleInterpolator = (
@@ -468,6 +473,10 @@ export type StackHeaderInterpolationProps = {
      */
     progress: Animated.AnimatedInterpolation<number>;
   };
+  /**
+   * Writing direction of the layout.
+   */
+  direction: LocaleDirection;
   /**
    * Layout measurements for various items we use for animation.
    */

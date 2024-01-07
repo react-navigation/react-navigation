@@ -1,9 +1,10 @@
+import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import {
-  NavigationState,
+  type NavigationState,
   SceneMap,
-  SceneRendererProps,
+  type SceneRendererProps,
   TabBar,
   TabView,
 } from 'react-native-tab-view';
@@ -28,6 +29,7 @@ const renderScene = SceneMap({
 });
 
 export const AutoWidthTabBar = () => {
+  const { direction } = useLocale();
   const [index, onIndexChange] = React.useState(1);
   const [routes] = React.useState([
     { key: 'article', title: 'Article' },
@@ -50,6 +52,7 @@ export const AutoWidthTabBar = () => {
       labelStyle={styles.label}
       tabStyle={styles.tabStyle}
       gap={20}
+      direction={direction}
     />
   );
 
@@ -59,6 +62,7 @@ export const AutoWidthTabBar = () => {
         index,
         routes,
       }}
+      direction={direction}
       renderScene={renderScene}
       renderTabBar={renderTabBar}
       onIndexChange={onIndexChange}

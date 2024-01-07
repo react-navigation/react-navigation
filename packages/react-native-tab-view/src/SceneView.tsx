@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 
 import type {
   EventEmitterProps,
@@ -54,7 +54,7 @@ export function SceneView<T extends Route>({
     };
 
     let unsubscribe: (() => void) | undefined;
-    let timer: number;
+    let timer: NodeJS.Timeout | undefined;
 
     if (lazy && isLoading) {
       // If lazy mode is enabled, listen to when we enter screens

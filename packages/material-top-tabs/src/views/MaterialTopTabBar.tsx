@@ -1,12 +1,16 @@
+import { Text } from '@react-navigation/elements';
 import {
-  ParamListBase,
-  TabNavigationState,
+  type ParamListBase,
+  type Route,
+  type TabNavigationState,
+  useLocale,
   useTheme,
 } from '@react-navigation/native';
 import Color from 'color';
 import * as React from 'react';
-import { StyleProp, StyleSheet, Text, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, View Text, ViewStyle } from 'react-native';
 import { TabBar, TabBarIndicator, TabDescriptor } from 'react-native-tab-view';
+
 
 import type { MaterialTopTabBarProps } from '../types';
 
@@ -47,6 +51,9 @@ export function MaterialTopTabBar({
 }: MaterialTopTabBarProps) {
   const { colors } = useTheme();
 
+  const { direction } = useLocale();
+
+
   const focusedOptions = descriptors[state.routes[state.index].key].options;
 
   const activeColor = focusedOptions.tabBarActiveTintColor ?? colors.text;
@@ -79,6 +86,7 @@ export function MaterialTopTabBar({
     <TabBar
       {...rest}
       navigationState={state}
+      direction={direction}
       scrollEnabled={focusedOptions.tabBarScrollEnabled}
       bounces={focusedOptions.tabBarBounces}
       activeColor={activeColor}

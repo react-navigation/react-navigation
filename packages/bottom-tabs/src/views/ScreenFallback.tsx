@@ -1,11 +1,16 @@
-import { ResourceSavingView } from '@react-navigation/elements';
 import * as React from 'react';
-import { StyleProp, View, ViewProps, ViewStyle } from 'react-native';
+import {
+  Animated,
+  type StyleProp,
+  View,
+  type ViewProps,
+  type ViewStyle,
+} from 'react-native';
 
 type Props = {
-  visible: boolean;
-  children: React.ReactNode;
   enabled: boolean;
+  active: 0 | 1 | 2 | Animated.AnimatedInterpolation<0 | 1>;
+  children: React.ReactNode;
   freezeOnBlur?: boolean;
   style?: StyleProp<ViewStyle>;
 };
@@ -33,18 +38,12 @@ export const MaybeScreenContainer = ({
   return <View {...rest} />;
 };
 
-export function MaybeScreen({ visible, children, ...rest }: Props) {
+export function MaybeScreen({ enabled, active, ...rest }: ViewProps & Props) {
   if (Screens?.screensEnabled?.()) {
     return (
-      <Screens.Screen activityState={visible ? 2 : 0} {...rest}>
-        {children}
-      </Screens.Screen>
+      <Screens.Screen enabled={enabled} activityState={active} {...rest} />
     );
   }
 
-  return (
-    <ResourceSavingView visible={visible} {...rest}>
-      {children}
-    </ResourceSavingView>
-  );
+  return <View {...rest} />;
 }

@@ -36,7 +36,7 @@ export type NativeStackNavigationEventMap = {
 export type NativeStackNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string,
-  NavigatorID extends string | undefined = undefined
+  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
@@ -50,7 +50,7 @@ export type NativeStackNavigationProp<
 export type NativeStackScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string,
-  NavigatorID extends string | undefined = undefined
+  NavigatorID extends string | undefined = undefined,
 > = {
   navigation: NativeStackNavigationProp<ParamList, RouteName, NavigatorID>;
   route: RouteProp<ParamList, RouteName>;
@@ -72,7 +72,11 @@ export type NativeStackHeaderProps = {
     /**
      * Title of the previous screen.
      */
-    title: string;
+    title: string | undefined;
+    /**
+     * The `href` to use for the anchor tag on web
+     */
+    href: string | undefined;
   };
   /**
    * Options for the current screen.
@@ -352,7 +356,7 @@ export type NativeStackNavigationOptions = {
    *
    * @platform android
    */
-  statusBarColor?: string;
+  statusBarBackgroundColor?: string;
   /**
    * Whether the status bar should be hidden on this screen.
    * Requires setting `View controller-based status bar appearance -> YES` in your Info.plist file.
@@ -379,7 +383,7 @@ export type NativeStackNavigationOptions = {
   statusBarTranslucent?: boolean;
   /**
    * Sets the direction in which you should swipe to dismiss the screen.
-   * When using `vertical` option, options `fullScreenGestureEnabled: true`, `customAnimationOnGesture: true` and `animation: 'slide_from_bottom'` are set by default.
+   * When using `vertical` option, options `fullScreenGestureEnabled: true`, `animationMatchesGesture: true` and `animation: 'slide_from_bottom'` are set by default.
    *
    * Supported values:
    * - `vertical` – dismiss screen vertically
@@ -399,10 +403,10 @@ export type NativeStackNavigationOptions = {
    *
    * @platform ios
    */
-  customAnimationOnGesture?: boolean;
+  animationMatchesGesture?: boolean;
   /**
    * Whether the gesture to dismiss should work on the whole screen. Using gesture to dismiss with this option results in the same
-   * transition animation as `simple_push`. This behavior can be changed by setting `customAnimationOnGesture` prop. Achieving the
+   * transition animation as `simple_push`. This behavior can be changed by setting `animationMatchesGesture` prop. Achieving the
    * default iOS animation isn't possible due to platform limitations. Defaults to `false`.
    *
    * Doesn't affect the behavior of screens presented modally.

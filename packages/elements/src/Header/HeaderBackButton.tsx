@@ -1,10 +1,9 @@
-import { useTheme } from '@react-navigation/native';
+import { useLocale, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
-  I18nManager,
   Image,
-  LayoutChangeEvent,
+  type LayoutChangeEvent,
   Platform,
   StyleSheet,
   View,
@@ -20,7 +19,7 @@ export function HeaderBackButton({
   backImage,
   label,
   labelStyle,
-  labelVisible,
+  labelVisible = Platform.OS === 'ios',
   onLabelLayout,
   onPress,
   pressColor,
@@ -32,8 +31,10 @@ export function HeaderBackButton({
   accessibilityLabel = label && label !== 'Back' ? `${label}, back` : 'Go back',
   testID,
   style,
+  href,
 }: HeaderBackButtonProps) {
   const { colors, fonts } = useTheme();
+  const { direction } = useLocale();
 
   const [initialLabelWidth, setInitialLabelWidth] = React.useState<
     undefined | number
@@ -50,7 +51,11 @@ export function HeaderBackButton({
   const handleLabelLayout = (e: LayoutChangeEvent) => {
     onLabelLayout?.(e);
 
-    setInitialLabelWidth(e.nativeEvent.layout.x + e.nativeEvent.layout.width);
+    const { layout } = e.nativeEvent;
+
+    setInitialLabelWidth(
+      (direction === 'rtl' ? layout.y : layout.x) + layout.width
+    );
   };
 
   const shouldTruncateLabel = () => {
@@ -71,9 +76,11 @@ export function HeaderBackButton({
         <Image
           style={[
             styles.icon,
+            direction === 'rtl' && styles.flip,
             Boolean(labelVisible) && styles.iconWithLabel,
             Boolean(tintColor) && { tintColor },
           ]}
+          resizeMode="contain"
           source={require('../assets/back-icon.png')}
           fadeDuration={0}
         />
@@ -131,7 +138,8 @@ export function HeaderBackButton({
           <View style={styles.iconMaskContainer}>
             <Image
               source={require('../assets/back-icon-mask.png')}
-              style={styles.iconMask}
+              resizeMode="contain"
+              style={[styles.iconMask, direction === 'rtl' && styles.flip]}
             />
             <View style={styles.iconMaskFillerRect} />
           </View>
@@ -142,19 +150,22 @@ export function HeaderBackButton({
     );
   };
 
-  const handlePress = () => onPress && requestAnimationFrame(onPress);
+  const handlePress = () => {
+    if (onPress) {
+      requestAnimationFrame(() => onPress());
+    }
+  };
 
   return (
     <PlatformPressable
       disabled={disabled}
-      accessible
-      accessibilityRole="button"
+      href={href}
       accessibilityLabel={accessibilityLabel}
       testID={testID}
-      onPress={disabled ? undefined : handlePress}
+      onPress={handlePress}
       pressColor={pressColor}
       pressOpacity={pressOpacity}
-      android_ripple={{ borderless: true }}
+      android_ripple={androidRipple}
       style={[styles.container, disabled && styles.disabled, style]}
       hitSlop={Platform.select({
         ios: undefined,
@@ -168,6 +179,12 @@ export function HeaderBackButton({
     </PlatformPressable>
   );
 }
+
+const androidRipple = {
+  borderless: true,
+  foreground: Platform.OS === 'android' && Platform.Version >= 23,
+  radius: 20,
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -204,15 +221,11 @@ const styles = StyleSheet.create({
       marginLeft: 8,
       marginRight: 22,
       marginVertical: 12,
-      resizeMode: 'contain',
-      transform: [{ scaleX: I18nManager.getConstants().isRTL ? -1 : 1 }],
     },
     default: {
       height: 24,
       width: 24,
       margin: 3,
-      resizeMode: 'contain',
-      transform: [{ scaleX: I18nManager.getConstants().isRTL ? -1 : 1 }],
     },
   }),
   iconWithLabel:
@@ -236,7 +249,8 @@ const styles = StyleSheet.create({
     marginLeft: -14.5,
     marginVertical: 12,
     alignSelf: 'center',
-    resizeMode: 'contain',
-    transform: [{ scaleX: I18nManager.getConstants().isRTL ? -1 : 1 }],
+  },
+  flip: {
+    transform: 'scaleX(-1)',
   },
 });

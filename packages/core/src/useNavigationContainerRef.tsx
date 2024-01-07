@@ -4,7 +4,7 @@ import { createNavigationContainerRef } from './createNavigationContainerRef';
 import type { NavigationContainerRefWithCurrent } from './types';
 
 export function useNavigationContainerRef<
-  ParamList extends {} = ReactNavigation.RootParamList
+  ParamList extends {} = ReactNavigation.RootParamList,
 >(): NavigationContainerRefWithCurrent<ParamList> {
   const navigation =
     React.useRef<NavigationContainerRefWithCurrent<ParamList> | null>(null);

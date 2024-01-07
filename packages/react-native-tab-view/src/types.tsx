@@ -1,6 +1,7 @@
 import type { Animated, StyleProp, TextStyle } from 'react-native';
 import type { PagerViewProps } from 'react-native-pager-view';
 
+
 export type TabDescriptor<T extends Route> = {
   accessibilityLabel?: string;
   labelStyle?: StyleProp<TextStyle>;
@@ -24,6 +25,10 @@ export type TabDescriptor<T extends Route> = {
   }) => React.ReactElement;
   badge?: () => React.ReactElement;
 };
+
+
+export type LocaleDirection = 'ltr' | 'rtl';
+
 
 export type Route = {
   key: string;

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 import type {
   BottomTabNavigationOptions,
   BottomTabScreenProps,
@@ -11,10 +13,10 @@ import type {
   NavigationHelpers,
   NavigatorScreenParams,
 } from '@react-navigation/native';
-import type { StackNavigationOptions } from '@react-navigation/stack';
 import {
   createStackNavigator,
-  StackScreenProps,
+  type StackNavigationOptions,
+  type StackScreenProps,
 } from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
 import * as React from 'react';

@@ -9,8 +9,8 @@ import * as React from 'react';
 
 import { DeprecatedNavigationInChildContext } from './DeprecatedNavigationInChildContext';
 import {
-  ChildActionListener,
-  ChildBeforeRemoveListener,
+  type ChildActionListener,
+  type ChildBeforeRemoveListener,
   NavigationBuilderContext,
 } from './NavigationBuilderContext';
 import type { EventMapCore } from './types';
@@ -131,7 +131,12 @@ export function useOnAction({
         }
       }
 
-      if (typeof action.target === 'string' || navigationInChildEnabled) {
+      if (
+        typeof action.target === 'string' ||
+        // For backward compatibility
+        action.type === 'NAVIGATE_DEPRECATED' ||
+        navigationInChildEnabled
+      ) {
         // If the action wasn't handled by current navigator or a parent navigator, let children handle it
         // Handling this when target isn't specified is deprecated and will be removed in the future
         for (let i = actionListeners.length - 1; i >= 0; i--) {

@@ -1,17 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
-import {
-  Animated,
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-  NavigationState,
+  type NavigationState,
   SceneMap,
-  SceneRendererProps,
+  type SceneRendererProps,
   TabView,
 } from 'react-native-tab-view';
 
@@ -36,6 +31,7 @@ const renderScene = SceneMap({
 });
 
 export const CustomTabBar = () => {
+  const { direction } = useLocale();
   const insets = useSafeAreaInsets();
   const [index, onIndexChange] = React.useState(0);
   const [routes] = React.useState<Route[]>([
@@ -104,12 +100,9 @@ export const CustomTabBar = () => {
     >
       {props.navigationState.routes.map((route: Route, index: number) => {
         return (
-          <TouchableWithoutFeedback
-            key={route.key}
-            onPress={() => props.jumpTo(route.key)}
-          >
+          <Pressable key={route.key} onPress={() => props.jumpTo(route.key)}>
             {renderItem(props)({ route, index })}
-          </TouchableWithoutFeedback>
+          </Pressable>
         );
       })}
     </View>
@@ -121,6 +114,7 @@ export const CustomTabBar = () => {
         index,
         routes,
       }}
+      direction={direction}
       renderScene={renderScene}
       renderTabBar={renderTabBar}
       tabBarPosition="bottom"

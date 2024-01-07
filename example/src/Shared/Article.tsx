@@ -3,10 +3,10 @@ import * as React from 'react';
 import {
   Image,
   ScrollView,
-  ScrollViewProps,
+  type ScrollViewProps,
   StyleSheet,
   Text,
-  TextProps,
+  type TextProps,
   View,
 } from 'react-native';
 
@@ -83,7 +83,11 @@ export function Article({
         with desktop publishing software like Aldus PageMaker including versions
         of Lorem Ipsum.
       </Paragraph>
-      <Image style={styles.image} source={require('../../assets/book.jpg')} />
+      <Image
+        style={styles.image}
+        resizeMode="cover"
+        source={require('../../assets/book.jpg')}
+      />
       <Heading>Where does it come from?</Heading>
       <Paragraph>
         Contrary to popular belief, Lorem Ipsum is not simply random text. It
@@ -180,7 +184,6 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: 200,
-    resizeMode: 'cover',
     marginVertical: 8,
   },
 });

@@ -1,26 +1,28 @@
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useReduxDevToolsExtension } from '@react-navigation/devtools';
 import {
   createDrawerNavigator,
-  DrawerScreenProps,
+  type DrawerScreenProps,
 } from '@react-navigation/drawer';
 import {
-  CompositeScreenProps,
+  type CompositeScreenProps,
   DarkTheme,
   DefaultTheme,
-  InitialState,
+  type InitialState,
   NavigationContainer,
-  PathConfigMap,
+  type PathConfigMap,
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
   HeaderStyleInterpolators,
-  StackScreenProps,
+  type StackScreenProps,
 } from '@react-navigation/stack';
 import { createURL } from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
+import { reloadAsync } from 'expo-updates';
 import * as React from 'react';
 import {
   I18nManager,
@@ -37,23 +39,43 @@ import {
   Divider,
   List,
   Provider as PaperProvider,
+  type Theme,
 } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { restartApp } from './Restart';
-import { RootDrawerParamList, RootStackParamList, SCREENS } from './screens';
+import {
+  type RootDrawerParamList,
+  type RootStackParamList,
+  SCREENS,
+} from './screens';
 import { NotFound } from './Screens/NotFound';
 import { SettingsItem } from './Shared/SettingsItem';
-
-SplashScreen.preventAutoHideAsync();
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
 
 const NAVIGATION_PERSISTENCE_KEY = 'NAVIGATION_STATE';
 const THEME_PERSISTENCE_KEY = 'THEME_TYPE';
+const DIRECTION_PERSISTENCE_KEY = 'DIRECTION';
 
 const SCREEN_NAMES = Object.keys(SCREENS) as (keyof typeof SCREENS)[];
+
+let previousDirection = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr';
+
+if (Platform.OS === 'web') {
+  if (
+    typeof localStorage !== 'undefined' &&
+    typeof document !== 'undefined' &&
+    document.documentElement
+  ) {
+    const direction = localStorage.getItem(DIRECTION_PERSISTENCE_KEY);
+
+    if (direction !== null) {
+      previousDirection = direction;
+      document.documentElement.dir = direction;
+    }
+  }
+}
 
 export function App() {
   const [theme, setTheme] = React.useState(DefaultTheme);
@@ -62,6 +84,8 @@ export function App() {
   const [initialState, setInitialState] = React.useState<
     InitialState | undefined
   >();
+
+  const [isRTL, setIsRTL] = React.useState(previousDirection === 'rtl');
 
   React.useEffect(() => {
     const restoreState = async () => {
@@ -88,12 +112,45 @@ export function App() {
           // Ignore
         }
 
+        try {
+          const direction = await AsyncStorage?.getItem(
+            DIRECTION_PERSISTENCE_KEY
+          );
+
+          setIsRTL(direction === 'rtl');
+        } catch (e) {
+          // Ignore
+        }
+
         setIsReady(true);
       }
     };
 
     restoreState();
   }, []);
+
+  React.useEffect(() => {
+    AsyncStorage.setItem(THEME_PERSISTENCE_KEY, theme.dark ? 'dark' : 'light');
+  }, [theme.dark]);
+
+  React.useEffect(() => {
+    const direction = isRTL ? 'rtl' : 'ltr';
+
+    AsyncStorage.setItem(DIRECTION_PERSISTENCE_KEY, direction);
+
+    if (Platform.OS === 'web') {
+      document.documentElement.dir = direction;
+      localStorage.setItem(DIRECTION_PERSISTENCE_KEY, direction);
+    }
+
+    if (isRTL !== I18nManager.getConstants().isRTL) {
+      I18nManager.forceRTL(isRTL);
+
+      if (Platform.OS !== 'web') {
+        reloadAsync();
+      }
+    }
+  }, [isRTL]);
 
   const paperTheme = React.useMemo(() => {
     const t = theme.dark ? PaperDarkTheme : PaperLightTheme;
@@ -122,12 +179,14 @@ export function App() {
   const isLargeScreen = dimensions.width >= 1024;
 
   return (
-    <PaperProvider theme={paperTheme}>
-      <StatusBar
-        translucent
-        barStyle={theme.dark ? 'light-content' : 'dark-content'}
-        backgroundColor="rgba(0, 0, 0, 0.24)"
-      />
+    <Providers theme={paperTheme}>
+      {Platform.OS === 'android' && (
+        <StatusBar
+          translucent
+          barStyle={theme.dark ? 'light-content' : 'dark-content'}
+          backgroundColor="rgba(0, 0, 0, 0.24)"
+        />
+      )}
       <NavigationContainer
         ref={navigationRef}
         initialState={initialState}
@@ -135,12 +194,13 @@ export function App() {
           SplashScreen.hideAsync();
         }}
         onStateChange={(state) =>
-          AsyncStorage?.setItem(
+          AsyncStorage.setItem(
             NAVIGATION_PERSISTENCE_KEY,
             JSON.stringify(state)
           )
         }
         theme={theme}
+        direction={isRTL ? 'rtl' : 'ltr'}
         linking={{
           // To test deep linking on, run the following in the Terminal:
           // Android: adb shell am start -a android.intent.action.VIEW -d "exp://127.0.0.1:19000/--/simple-stack"
@@ -179,6 +239,9 @@ export function App() {
                     Contacts: 'people',
                     NewsFeed: 'feed',
                     Dialog: 'dialog',
+                    SignIn: 'sign-in',
+                    Profile: 'profile',
+                    Home: 'home',
                   },
                 };
 
@@ -239,34 +302,21 @@ export function App() {
                       <SafeAreaView edges={['right', 'bottom', 'left']}>
                         <SettingsItem
                           label="Right to left"
-                          value={I18nManager.getConstants().isRTL}
-                          onValueChange={() => {
-                            I18nManager.forceRTL(
-                              !I18nManager.getConstants().isRTL
-                            );
-                            restartApp();
-                          }}
+                          value={isRTL}
+                          onValueChange={() => setIsRTL((rtl) => !rtl)}
                         />
                         <Divider />
                         <SettingsItem
                           label="Dark theme"
                           value={theme.dark}
-                          onValueChange={() => {
-                            AsyncStorage?.setItem(
-                              THEME_PERSISTENCE_KEY,
-                              theme.dark ? 'light' : 'dark'
-                            );
-
-                            setTheme((t) =>
-                              t.dark ? DefaultTheme : DarkTheme
-                            );
-                          }}
+                          onValueChange={() =>
+                            setTheme((t) => (t.dark ? DefaultTheme : DarkTheme))
+                          }
                         />
                         <Divider />
                         {SCREEN_NAMES.map((name) => (
                           <List.Item
                             key={name}
-                            testID={name}
                             title={SCREENS[name].title}
                             onPress={() => {
                               navigation.navigate(name);
@@ -295,6 +345,22 @@ export function App() {
           ))}
         </Stack.Navigator>
       </NavigationContainer>
-    </PaperProvider>
+    </Providers>
   );
 }
+
+const Providers = ({
+  theme,
+  children,
+}: {
+  theme: Theme;
+  children: React.ReactNode;
+}) => {
+  return (
+    <PaperProvider theme={theme}>
+      <ActionSheetProvider>
+        <>{children}</>
+      </ActionSheetProvider>
+    </PaperProvider>
+  );
+};

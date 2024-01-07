@@ -47,23 +47,23 @@ it('runs focus effect on focus change', () => {
 
   render(element);
 
-  expect(focusEffect).not.toBeCalled();
-  expect(focusEffectCleanup).not.toBeCalled();
+  expect(focusEffect).not.toHaveBeenCalled();
+  expect(focusEffectCleanup).not.toHaveBeenCalled();
 
   act(() => navigation.current.navigate('second'));
 
-  expect(focusEffect).toBeCalledTimes(1);
-  expect(focusEffectCleanup).not.toBeCalled();
+  expect(focusEffect).toHaveBeenCalledTimes(1);
+  expect(focusEffectCleanup).not.toHaveBeenCalled();
 
   act(() => navigation.current.navigate('third'));
 
-  expect(focusEffect).toBeCalledTimes(1);
-  expect(focusEffectCleanup).toBeCalledTimes(1);
+  expect(focusEffect).toHaveBeenCalledTimes(1);
+  expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 
   act(() => navigation.current.navigate('second'));
 
-  expect(focusEffect).toBeCalledTimes(2);
-  expect(focusEffectCleanup).toBeCalledTimes(1);
+  expect(focusEffect).toHaveBeenCalledTimes(2);
+  expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 });
 
 it('runs focus effect on deps change', () => {
@@ -99,13 +99,13 @@ it('runs focus effect on deps change', () => {
 
   const root = render(<App count={1} />);
 
-  expect(focusEffect).toBeCalledTimes(1);
-  expect(focusEffectCleanup).not.toBeCalled();
+  expect(focusEffect).toHaveBeenCalledTimes(1);
+  expect(focusEffectCleanup).not.toHaveBeenCalled();
 
   root.update(<App count={2} />);
 
-  expect(focusEffectCleanup).toBeCalledTimes(1);
-  expect(focusEffect).toBeCalledTimes(2);
+  expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
+  expect(focusEffect).toHaveBeenCalledTimes(2);
 });
 
 it('runs focus effect when initial state is given', () => {
@@ -151,13 +151,13 @@ it('runs focus effect when initial state is given', () => {
 
   render(element);
 
-  expect(focusEffect).toBeCalledTimes(1);
-  expect(focusEffectCleanup).not.toBeCalled();
+  expect(focusEffect).toHaveBeenCalledTimes(1);
+  expect(focusEffectCleanup).not.toHaveBeenCalled();
 
   act(() => navigation.current.navigate('first'));
 
-  expect(focusEffect).toBeCalledTimes(1);
-  expect(focusEffectCleanup).toBeCalledTimes(1);
+  expect(focusEffect).toHaveBeenCalledTimes(1);
+  expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 });
 
 it('runs focus effect when only focused route is rendered', () => {
@@ -194,13 +194,13 @@ it('runs focus effect when only focused route is rendered', () => {
 
   render(element);
 
-  expect(focusEffect).toBeCalledTimes(1);
-  expect(focusEffectCleanup).not.toBeCalled();
+  expect(focusEffect).toHaveBeenCalledTimes(1);
+  expect(focusEffectCleanup).not.toHaveBeenCalled();
 
   act(() => navigation.current.navigate('second'));
 
-  expect(focusEffect).toBeCalledTimes(1);
-  expect(focusEffectCleanup).toBeCalledTimes(1);
+  expect(focusEffect).toHaveBeenCalledTimes(1);
+  expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 });
 
 it('runs cleanup when component is unmounted', () => {
@@ -236,13 +236,13 @@ it('runs cleanup when component is unmounted', () => {
 
   const root = render(<App mounted />);
 
-  expect(focusEffect).toBeCalledTimes(1);
-  expect(focusEffectCleanup).not.toBeCalled();
+  expect(focusEffect).toHaveBeenCalledTimes(1);
+  expect(focusEffectCleanup).not.toHaveBeenCalled();
 
   root.update(<App mounted={false} />);
 
-  expect(focusEffect).toBeCalledTimes(1);
-  expect(focusEffectCleanup).toBeCalledTimes(1);
+  expect(focusEffect).toHaveBeenCalledTimes(1);
+  expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 });
 
 it('prints error when a dependency array is passed', () => {
@@ -253,7 +253,7 @@ it('prints error when a dependency array is passed', () => {
   };
 
   const Test = () => {
-    // @ts-ignore
+    // @ts-expect-error testing incorrect usage
     useFocusEffect(() => {}, []);
 
     return null;
@@ -286,7 +286,7 @@ it('prints error when the effect returns a value', () => {
   };
 
   const Test = () => {
-    // @ts-ignore
+    // @ts-expect-error testing incorrect usage
     useFocusEffect(() => 42);
 
     return null;
@@ -319,7 +319,7 @@ it('prints error when the effect returns null', () => {
   };
 
   const Test = () => {
-    // @ts-ignore
+    // @ts-expect-error testing incorrect usage
     useFocusEffect(() => null);
 
     return null;
@@ -352,7 +352,7 @@ it('prints error when the effect is an async function', () => {
   };
 
   const Test = () => {
-    // @ts-ignore
+    // @ts-expect-error testing incorrect usage
     useFocusEffect(async () => {});
 
     return null;

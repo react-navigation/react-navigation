@@ -1,10 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import {
-  NavigationState,
+  type NavigationState,
   SceneMap,
-  SceneRendererProps,
+  type SceneRendererProps,
   TabBar,
   TabView,
 } from 'react-native-tab-view';
@@ -27,6 +28,7 @@ const renderScene = SceneMap({
 });
 
 export const TabBarIcon = () => {
+  const { direction } = useLocale();
   const [index, onIndexChange] = React.useState(0);
   const [routes] = React.useState<Route[]>([
     { key: 'chat', icon: 'md-chatbubbles' },
@@ -43,6 +45,7 @@ export const TabBarIcon = () => {
   ) => (
     <TabBar
       {...props}
+      direction={direction}
       indicatorStyle={styles.indicator}
       commonOptions={{
         icon: renderIcon,
@@ -60,6 +63,7 @@ export const TabBarIcon = () => {
         index,
         routes,
       }}
+      direction={direction}
       renderScene={renderScene}
       renderTabBar={renderTabBar}
       onIndexChange={onIndexChange}
