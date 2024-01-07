@@ -36,7 +36,7 @@ export type Props<T extends Route> = Omit<PagerProps, 'layoutDirection'> & {
   direction?: LocaleDirection;
   pagerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
-  renderScene?: (props: SceneRendererProps & { route: T }) => React.ReactNode;
+  renderScene: (props: SceneRendererProps & { route: T }) => React.ReactNode;
 };
 
 export function TabView<T extends Route>({
@@ -142,7 +142,7 @@ export function TabView<T extends Route>({
                       {({ loading }) =>
                         loading
                           ? renderLazyPlaceholder({ route })
-                          : renderScene?.({
+                          : renderScene({
                               ...sceneRendererProps,
                               route,
                             })
