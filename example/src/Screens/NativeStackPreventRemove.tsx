@@ -1,4 +1,4 @@
-import { UNSTABLE_usePreventRemove } from '@react-navigation/core';
+import { usePreventRemove } from '@react-navigation/core';
 import { Button } from '@react-navigation/elements';
 import {
   CommonActions,
@@ -58,7 +58,7 @@ const InputScreen = ({
 
   const hasUnsavedChanges = Boolean(text);
 
-  UNSTABLE_usePreventRemove(hasUnsavedChanges, ({ data }) => {
+  usePreventRemove(hasUnsavedChanges, ({ data }) => {
     if (Platform.OS === 'web') {
       const discard = confirm(
         'You have unsaved changes. Discard them and leave the screen?'
