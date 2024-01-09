@@ -1,5 +1,7 @@
 import type { StyleProp, ViewStyle } from 'react-native';
-import type { PanGestureHandler } from 'react-native-gesture-handler';
+import { Gesture } from 'react-native-gesture-handler';
+
+export type PanGestureHandlerConfig = typeof Gesture.Pan.prototype.config;
 
 export type Layout = { width: number; height: number };
 
@@ -138,7 +140,7 @@ export type DrawerProps = {
    * Props to pass to the underlying pan gesture handler.
    * This is not supported on Web.
    */
-  gestureHandlerProps?: React.ComponentProps<typeof PanGestureHandler>;
+  gestureHandlerConfig?: PanGestureHandlerConfig;
 
   /**
    * Style object for the wrapper view.

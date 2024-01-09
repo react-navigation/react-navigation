@@ -63,7 +63,7 @@ function DrawerViewBase({
     drawerStatusBarAnimation,
     drawerStyle,
     drawerType,
-    gestureHandlerProps,
+    gestureHandlerConfig,
     keyboardDismissMode,
     overlayColor = 'rgba(0, 0, 0, 0.5)',
     swipeEdgeWidth,
@@ -273,7 +273,7 @@ function DrawerViewBase({
         onTransitionStart={handleTransitionStart}
         onTransitionEnd={handleTransitionEnd}
         layout={dimensions}
-        gestureHandlerProps={gestureHandlerProps}
+        gestureHandlerConfig={gestureHandlerConfig}
         swipeEnabled={swipeEnabled}
         swipeEdgeWidth={swipeEdgeWidth}
         swipeMinDistance={swipeMinDistance}

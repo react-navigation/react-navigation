@@ -1,19 +1,11 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import type {
-  PanGestureHandlerProperties,
-  TapGestureHandlerProperties,
-} from 'react-native-gesture-handler';
 
 const Dummy: any = ({ children }: { children: React.ReactNode }) => (
   <>{children}</>
 );
 
-export const PanGestureHandler =
-  Dummy as React.ComponentType<PanGestureHandlerProperties>;
-
-export const TapGestureHandler =
-  Dummy as React.ComponentType<TapGestureHandlerProperties>;
+export const GestureDetector = Dummy as any; // awkward, but this is not very important
 
 export const GestureHandlerRootView = View;
 
@@ -25,5 +17,3 @@ export const enum GestureState {
   ACTIVE = 4,
   END = 5,
 }
-
-export type { PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
