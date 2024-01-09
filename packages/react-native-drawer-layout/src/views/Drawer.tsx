@@ -247,7 +247,7 @@ export function Drawer({
   React.useEffect(() => toggleDrawer(open), [open, toggleDrawer]);
 
   const startX = useSharedValue(0);
-  const pan = Gesture.Pan()
+  let pan = Gesture.Pan()
     .onBegin((event) => {
       startX.value = translationX.value;
       gestureState.value = event.state;
@@ -289,9 +289,37 @@ export function Drawer({
 
   // We allow for changing the most essential config of the gesture
   // without using the default factory pattern.
+  // TODO make it nicer
   if (gestureHandlerConfig) {
-    for (const [key, value] of Object.entries(gestureHandlerConfig)) {
-      pan.config[key] = value;
+    if (gestureHandlerConfig.activeOffsetX) {
+      pan = pan.activeOffsetX(gestureHandlerConfig.activeOffsetX);
+    }
+
+    if (gestureHandlerConfig.activeOffsetY) {
+      pan = pan.activeOffsetY(gestureHandlerConfig.activeOffsetY);
+    }
+
+    if (gestureHandlerConfig.failOffsetX) {
+      pan = pan.failOffsetX(gestureHandlerConfig.failOffsetX);
+    }
+
+    if (gestureHandlerConfig.failOffsetY) {
+      pan = pan.failOffsetY(gestureHandlerConfig.failOffsetY);
+    }
+
+    for (const key in gestureHandlerConfig) {
+      if (
+        [
+          'activeOffsetX',
+          'activeOffsetX',
+          'failOffsetY',
+          'failOffsetX',
+        ].includes(key)
+      ) {
+        continue;
+      }
+      pan.config[key] =
+        gestureHandlerConfig[key as keyof typeof gestureHandlerConfig];
     }
   }
 

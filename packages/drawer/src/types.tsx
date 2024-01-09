@@ -10,7 +10,7 @@ import type {
   RouteProp,
 } from '@react-navigation/native';
 import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
-import type { PanGestureHandlerConfig } from 'react-native-drawer-layout';
+import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
 
 export type Scene = {
   route: Route<string>;
@@ -173,7 +173,7 @@ export type DrawerNavigationOptions = HeaderOptions & {
    * Props to pass to the underlying pan gesture handler.
    * Not supported on Web.
    */
-  gestureHandlerConfig?: PanGestureHandlerConfig;
+  gestureHandlerConfig?: PanGestureHandlerProps;
 
   /**
    * Whether you can use swipe gestures to open or close the drawer.
@@ -309,7 +309,7 @@ export type DrawerProps = {
   drawerPosition: 'left' | 'right';
   drawerStyle?: StyleProp<ViewStyle>;
   drawerType: 'front' | 'back' | 'slide' | 'permanent';
-  gestureHandlerConfig?: PanGestureHandlerConfig;
+  gestureHandlerConfig?: PanGestureHandlerProps;
   hideStatusBarOnOpen: boolean;
   keyboardDismissMode: 'none' | 'on-drag';
   onClose: () => void;
