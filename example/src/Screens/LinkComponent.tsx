@@ -3,6 +3,7 @@ import {
   CommonActions,
   Link,
   type ParamListBase,
+  type PathConfigMap,
   StackActions,
 } from '@react-navigation/native';
 import {
@@ -12,9 +13,20 @@ import {
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
-import type { LinkComponentDemoParamList } from '../screens';
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
+
+export type LinkComponentDemoParamList = {
+  Article: { author: string };
+  Albums: undefined;
+};
+
+export const linkComponentDemoLinking: PathConfigMap<LinkComponentDemoParamList> =
+  {
+    Article: COMMON_LINKING_CONFIG.Article,
+    Albums: 'albums',
+  };
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 

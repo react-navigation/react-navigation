@@ -12,7 +12,6 @@ import {
   DefaultTheme,
   type InitialState,
   NavigationContainer,
-  type PathConfigMap,
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import {
@@ -43,6 +42,7 @@ import {
 } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import type { LinkingOptions } from '../../packages/native/src/types';
 import {
   type RootDrawerParamList,
   type RootStackParamList,
@@ -59,6 +59,52 @@ const THEME_PERSISTENCE_KEY = 'THEME_TYPE';
 const DIRECTION_PERSISTENCE_KEY = 'DIRECTION';
 
 const SCREEN_NAMES = Object.keys(SCREENS) as (keyof typeof SCREENS)[];
+
+const linking: LinkingOptions<RootStackParamList> = {
+  // To test deep linking on, run the following in the Terminal:
+  // Android: adb shell am start -a android.intent.action.VIEW -d "exp://127.0.0.1:19000/--/simple-stack"
+  // iOS: xcrun simctl openurl booted exp://127.0.0.1:19000/--/simple-stack
+  // Android (bare): adb shell am start -a android.intent.action.VIEW -d "rne://127.0.0.1:19000/--/simple-stack"
+  // iOS (bare): xcrun simctl openurl booted rne://127.0.0.1:19000/--/simple-stack
+  // The first segment of the link is the the scheme + host (returned by `Linking.makeUrl`)
+  prefixes: [createURL('/')],
+  config: {
+    initialRouteName: 'Home',
+    screens: {
+      Home: {
+        screens: {
+          Examples: '',
+        },
+      },
+      NotFound: '*',
+      ...SCREEN_NAMES.reduce(
+        (acc, name) => {
+          // Convert screen names such as SimpleStack to kebab case (simple-stack)
+          const path = name
+            .replace(/([A-Z]+)/g, '-$1')
+            .replace(/^-/, '')
+            .toLowerCase();
+
+          const config = {
+            path,
+            screens: SCREENS[name].linking,
+          };
+
+          // @ts-expect-error: acc is not readonly
+          acc[name] = config;
+
+          return acc;
+        },
+        {} as {
+          [Key in keyof typeof SCREENS]: {
+            path: string;
+            screens: (typeof SCREENS)[Key]['linking'];
+          };
+        }
+      ),
+    },
+  },
+};
 
 let previousDirection = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr';
 
@@ -201,63 +247,7 @@ export function App() {
         }
         theme={theme}
         direction={isRTL ? 'rtl' : 'ltr'}
-        linking={{
-          // To test deep linking on, run the following in the Terminal:
-          // Android: adb shell am start -a android.intent.action.VIEW -d "exp://127.0.0.1:19000/--/simple-stack"
-          // iOS: xcrun simctl openurl booted exp://127.0.0.1:19000/--/simple-stack
-          // Android (bare): adb shell am start -a android.intent.action.VIEW -d "rne://127.0.0.1:19000/--/simple-stack"
-          // iOS (bare): xcrun simctl openurl booted rne://127.0.0.1:19000/--/simple-stack
-          // The first segment of the link is the the scheme + host (returned by `Linking.makeUrl`)
-          prefixes: [createURL('/')],
-          config: {
-            initialRouteName: 'Home',
-            screens: SCREEN_NAMES.reduce<PathConfigMap<RootStackParamList>>(
-              (acc, name) => {
-                // Convert screen names such as SimpleStack to kebab case (simple-stack)
-                const path = name
-                  .replace(/([A-Z]+)/g, '-$1')
-                  .replace(/^-/, '')
-                  .toLowerCase();
-
-                acc[name] = {
-                  path,
-                  screens: {
-                    Article: {
-                      path: 'article/:author?',
-                      parse: {
-                        author: (author: string) =>
-                          author.charAt(0).toUpperCase() +
-                          author.slice(1).replace(/-/g, ' '),
-                      },
-                      stringify: {
-                        author: (author: string) =>
-                          author.toLowerCase().replace(/\s/g, '-'),
-                      },
-                    },
-                    Albums: 'music',
-                    Chat: 'chat',
-                    Contacts: 'people',
-                    NewsFeed: 'feed',
-                    Dialog: 'dialog',
-                    SignIn: 'sign-in',
-                    Profile: 'profile',
-                    Home: 'home',
-                  },
-                };
-
-                return acc;
-              },
-              {
-                Home: {
-                  screens: {
-                    Examples: '',
-                  },
-                },
-                NotFound: '*',
-              }
-            ),
-          },
-        }}
+        linking={linking}
         fallback={<Text>Loading…</Text>}
         documentTitle={{
           formatter: (options, route) =>

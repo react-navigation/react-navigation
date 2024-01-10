@@ -6,6 +6,7 @@ import {
 import {
   CommonActions,
   type ParamListBase,
+  type PathConfigMap,
   useTheme,
 } from '@react-navigation/native';
 import {
@@ -27,14 +28,21 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type SimpleStackParams = {
+export type CustomLayoutParams = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Albums: undefined;
+};
+
+export const customLayoutLinking: PathConfigMap<CustomLayoutParams> = {
+  Article: COMMON_LINKING_CONFIG.Article,
+  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+  Albums: 'albums',
 };
 
 const scrollEnabled = Platform.select({ web: true, default: false });
@@ -42,7 +50,7 @@ const scrollEnabled = Platform.select({ web: true, default: false });
 const ArticleScreen = ({
   navigation,
   route,
-}: StackScreenProps<SimpleStackParams, 'Article'>) => {
+}: StackScreenProps<CustomLayoutParams, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -67,7 +75,7 @@ const ArticleScreen = ({
 const NewsFeedScreen = ({
   route,
   navigation,
-}: StackScreenProps<SimpleStackParams, 'NewsFeed'>) => {
+}: StackScreenProps<CustomLayoutParams, 'NewsFeed'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -85,7 +93,7 @@ const NewsFeedScreen = ({
 
 const AlbumsScreen = ({
   navigation,
-}: StackScreenProps<SimpleStackParams, 'Albums'>) => {
+}: StackScreenProps<CustomLayoutParams, 'Albums'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -106,7 +114,7 @@ const AlbumsScreen = ({
   );
 };
 
-const Stack = createStackNavigator<SimpleStackParams>();
+const Stack = createStackNavigator<CustomLayoutParams>();
 
 export function CustomLayout({
   navigation,

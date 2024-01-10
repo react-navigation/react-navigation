@@ -57,18 +57,21 @@ const HomeTabs = createBottomTabNavigator({
       options: {
         tabBarIcon: getTabBarIcon('image-album'),
       },
+      linking: 'albums',
     },
     Contacts: {
       screen: Contacts,
       options: {
         tabBarIcon: getTabBarIcon('contacts'),
       },
+      linking: 'contacts',
     },
     Chat: {
       screen: Chat,
       options: {
         tabBarIcon: getTabBarIcon('message-reply'),
       },
+      linking: 'chat',
       if: useIsChatShown,
     },
   },
@@ -79,7 +82,10 @@ const RootStack = createStackNavigator({
     headerShown: false,
   },
   screens: {
-    Home: HomeTabs,
+    Home: {
+      screen: HomeTabs,
+      linking: '',
+    },
   },
 });
 

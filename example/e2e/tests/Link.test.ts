@@ -29,11 +29,11 @@ test('goes to the album screen and goes back', async ({ page }) => {
     name: 'Go to Albums',
   });
 
-  await expect(link).toHaveAttribute('href', '/link-component/music');
+  await expect(link).toHaveAttribute('href', '/link-component/albums');
 
   await link.click();
 
-  await page.waitForURL('**/link-component/music');
+  await page.waitForURL('**/link-component/albums');
 
   await expect(page).toHaveTitle('Albums - React Navigation Example');
 
@@ -61,11 +61,11 @@ test('replaces article with the album screen', async ({ page }) => {
     name: 'Replace with Albums',
   });
 
-  await expect(link).toHaveAttribute('href', '/link-component/music');
+  await expect(link).toHaveAttribute('href', '/link-component/albums');
 
   await link.click();
 
-  await page.waitForURL('**/link-component/music');
+  await page.waitForURL('**/link-component/albums');
 
   await expect(page).toHaveTitle('Albums - React Navigation Example');
 
