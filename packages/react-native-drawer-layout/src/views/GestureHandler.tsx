@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { View } from 'react-native';
-// I think it needs to be imported from compiled types
-export type { PanGesture } from 'react-native-gesture-handler/lib/typescript/handlers/gestures/panGesture';
 
 const Dummy: any = ({ children }: { children: React.ReactNode }) => (
   <>{children}</>
