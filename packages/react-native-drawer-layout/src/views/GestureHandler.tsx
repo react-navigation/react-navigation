@@ -22,15 +22,14 @@ export type MaybeGestureDetectorProps = {
   children?: React.ReactNode;
 };
 
-export const GestureDetector = Dummy as (
-  props: GestureDetectorProps
-) => React.ReactNode;
+export const GestureDetector =
+  Dummy as React.ComponentType<GestureDetectorProps>;
 
 export const GestureHandlerRootView = View;
 
-export const Gesture = undefined as
-  | undefined
-  | typeof import('react-native-gesture-handler').Gesture;
+export const Gesture:
+  | typeof import('react-native-gesture-handler').Gesture
+  | undefined = undefined;
 
 export const enum GestureState {
   UNDETERMINED = 0,
