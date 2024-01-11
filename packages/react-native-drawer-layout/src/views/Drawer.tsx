@@ -9,7 +9,10 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
+import {
+  type PanGesture,
+  type PanGestureHandlerProps,
+} from 'react-native-gesture-handler';
 import Animated, {
   interpolate,
   runOnJS,
@@ -33,8 +36,6 @@ import {
   GestureDetector,
   GestureHandlerRootView,
   GestureState,
-  type MaybeGestureDetectorProps,
-  type PanGesture,
 } from './GestureHandler';
 import { Overlay } from './Overlay';
 
@@ -67,12 +68,15 @@ const getDefaultDrawerWidth = ({
 
 function MaybeGestureDetector({
   gesture,
-  ...props
-}: MaybeGestureDetectorProps) {
+  children,
+}: {
+  gesture?: PanGesture;
+  children: React.ReactNode;
+}) {
   if (!gesture) {
-    return <>{props.children}</>;
+    return children;
   }
-  return <GestureDetector {...props} gesture={gesture} />;
+  return <GestureDetector gesture={gesture}>{children}</GestureDetector>;
 }
 
 function configurePanGesture(
