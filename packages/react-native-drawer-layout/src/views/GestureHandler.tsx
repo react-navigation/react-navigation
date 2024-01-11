@@ -4,7 +4,6 @@ import { View } from 'react-native';
 const Dummy: any = ({ children }: { children: React.ReactNode }) => (
   <>{children}</>
 );
-
 export const GestureDetector =
   Dummy as typeof import('react-native-gesture-handler').GestureDetector;
 export const GestureHandlerRootView = View;
