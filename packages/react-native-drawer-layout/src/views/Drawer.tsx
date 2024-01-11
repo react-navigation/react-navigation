@@ -9,9 +9,9 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import {
-  type PanGesture,
-  type PanGestureHandlerProps,
+import type {
+  PanGesture,
+  PanGestureHandlerProps,
 } from 'react-native-gesture-handler';
 import Animated, {
   interpolate,
