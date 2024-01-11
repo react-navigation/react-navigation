@@ -1,13 +1,36 @@
 import * as React from 'react';
 import { View } from 'react-native';
+// I think it needs to be imported from compiled types
+import type { ComposedGesture } from 'react-native-gesture-handler';
+import type { UserSelect } from 'react-native-gesture-handler/lib/typescript/handlers/gestureHandlerCommon';
+import type { GestureType } from 'react-native-gesture-handler/lib/typescript/handlers/gestures/gesture';
+export type { PanGesture } from 'react-native-gesture-handler/lib/typescript/handlers/gestures/panGesture';
 
 const Dummy: any = ({ children }: { children: React.ReactNode }) => (
   <>{children}</>
 );
 
-export const GestureDetector = Dummy as any; // awkward, but this is not very important
+export type GestureDetectorProps = {
+  gesture: GestureType | ComposedGesture;
+  userSelect?: UserSelect;
+  children?: React.ReactNode;
+};
+
+export type MaybeGestureDetectorProps = {
+  gesture: GestureType | ComposedGesture | undefined;
+  userSelect?: UserSelect;
+  children?: React.ReactNode;
+};
+
+export const GestureDetector = Dummy as (
+  props: GestureDetectorProps
+) => React.ReactNode;
 
 export const GestureHandlerRootView = View;
+
+export const Gesture = undefined as
+  | undefined
+  | typeof import('react-native-gesture-handler').Gesture;
 
 export const enum GestureState {
   UNDETERMINED = 0,

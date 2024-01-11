@@ -9,7 +9,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import { Gesture } from 'react-native-gesture-handler';
+import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
 import Animated, {
   interpolate,
   runOnJS,
@@ -28,8 +28,14 @@ import {
 } from '../constants';
 import type { DrawerProps } from '../types';
 import { DrawerProgressContext } from '../utils/DrawerProgressContext';
-import { GestureHandlerRootView, GestureState } from './GestureHandler';
-import { GestureDetector } from './GestureHandlerNative';
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+  GestureState,
+  type MaybeGestureDetectorProps,
+  type PanGesture,
+} from './GestureHandler';
 import { Overlay } from './Overlay';
 
 const minmax = (value: number, start: number, end: number) => {
@@ -58,6 +64,55 @@ const getDefaultDrawerWidth = ({
 
   return Math.min(smallerAxisSize - appBarHeight, maxWidth);
 };
+
+function MaybeGestureDetector({
+  gesture,
+  ...props
+}: MaybeGestureDetectorProps) {
+  if (!gesture) {
+    return <>{props.children}</>;
+  }
+  return <GestureDetector {...props} gesture={gesture} />;
+}
+
+function configurePanGesture(
+  pan: PanGesture,
+  gestureHandlerConfig: PanGestureHandlerProps
+) {
+  // activeOffsetX, activeOffsetY, failOffsetX, failOffsetY are set
+  // via regular API as they are properly translated into the config.
+  // The remaining params may be safely included directly in the config.
+
+  if (gestureHandlerConfig.activeOffsetX) {
+    pan = pan.activeOffsetX(gestureHandlerConfig.activeOffsetX);
+  }
+
+  if (gestureHandlerConfig.activeOffsetY) {
+    pan = pan.activeOffsetY(gestureHandlerConfig.activeOffsetY);
+  }
+
+  if (gestureHandlerConfig.failOffsetX) {
+    pan = pan.failOffsetX(gestureHandlerConfig.failOffsetX);
+  }
+
+  if (gestureHandlerConfig.failOffsetY) {
+    pan = pan.failOffsetY(gestureHandlerConfig.failOffsetY);
+  }
+
+  for (const key in gestureHandlerConfig) {
+    if (
+      ['activeOffsetX', 'activeOffsetX', 'failOffsetY', 'failOffsetX'].includes(
+        key
+      )
+    ) {
+      continue;
+    }
+    pan.config[key] =
+      gestureHandlerConfig[key as keyof typeof gestureHandlerConfig];
+  }
+
+  return pan;
+}
 
 export function Drawer({
   layout: customLayout,
@@ -204,6 +259,7 @@ export function Drawer({
   const toggleDrawer = React.useCallback(
     (open: boolean, velocity?: number) => {
       'worklet';
+
       const translateX = getDrawerTranslationX(open);
 
       if (velocity === undefined) {
@@ -247,7 +303,8 @@ export function Drawer({
   React.useEffect(() => toggleDrawer(open), [open, toggleDrawer]);
 
   const startX = useSharedValue(0);
-  let pan = Gesture.Pan()
+
+  let pan = Gesture?.Pan()
     .onBegin((event) => {
       startX.value = translationX.value;
       gestureState.value = event.state;
@@ -287,40 +344,8 @@ export function Drawer({
     .hitSlop(hitSlop)
     .enabled(drawerType !== 'permanent' && swipeEnabled);
 
-  // We allow for changing the most essential config of the gesture
-  // without using the default factory pattern.
-  // TODO make it nicer
-  if (gestureHandlerConfig) {
-    if (gestureHandlerConfig.activeOffsetX) {
-      pan = pan.activeOffsetX(gestureHandlerConfig.activeOffsetX);
-    }
-
-    if (gestureHandlerConfig.activeOffsetY) {
-      pan = pan.activeOffsetY(gestureHandlerConfig.activeOffsetY);
-    }
-
-    if (gestureHandlerConfig.failOffsetX) {
-      pan = pan.failOffsetX(gestureHandlerConfig.failOffsetX);
-    }
-
-    if (gestureHandlerConfig.failOffsetY) {
-      pan = pan.failOffsetY(gestureHandlerConfig.failOffsetY);
-    }
-
-    for (const key in gestureHandlerConfig) {
-      if (
-        [
-          'activeOffsetX',
-          'activeOffsetX',
-          'failOffsetY',
-          'failOffsetX',
-        ].includes(key)
-      ) {
-        continue;
-      }
-      pan.config[key] =
-        gestureHandlerConfig[key as keyof typeof gestureHandlerConfig];
-    }
+  if (pan && gestureHandlerConfig) {
+    pan = configurePanGesture(pan, gestureHandlerConfig);
   }
 
   const translateX = useDerivedValue(() => {
@@ -418,7 +443,7 @@ export function Drawer({
   return (
     <GestureHandlerRootView style={[styles.container, style]}>
       <DrawerProgressContext.Provider value={progress}>
-        <GestureDetector gesture={pan}>
+        <MaybeGestureDetector gesture={pan}>
           {/* Immediate child of gesture handler needs to be an Animated.View */}
           <Animated.View
             style={[
@@ -471,7 +496,7 @@ export function Drawer({
               {renderDrawerContent()}
             </Animated.View>
           </Animated.View>
-        </GestureDetector>
+        </MaybeGestureDetector>
       </DrawerProgressContext.Provider>
     </GestureHandlerRootView>
   );
