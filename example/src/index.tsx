@@ -77,30 +77,22 @@ const linking: LinkingOptions<RootStackParamList> = {
         },
       },
       NotFound: '*',
-      ...SCREEN_NAMES.reduce(
-        (acc, name) => {
+      ...Object.fromEntries(
+        Object.entries(SCREENS).map(([name, { linking }]) => {
           // Convert screen names such as SimpleStack to kebab case (simple-stack)
           const path = name
             .replace(/([A-Z]+)/g, '-$1')
             .replace(/^-/, '')
             .toLowerCase();
 
-          const config = {
-            path,
-            screens: SCREENS[name].linking,
-          };
-
-          // @ts-expect-error: acc is not readonly
-          acc[name] = config;
-
-          return acc;
-        },
-        {} as {
-          [Key in keyof typeof SCREENS]: {
-            path: string;
-            screens: (typeof SCREENS)[Key]['linking'];
-          };
-        }
+          return [
+            name,
+            {
+              path,
+              screens: linking,
+            },
+          ];
+        })
       ),
     },
   },
