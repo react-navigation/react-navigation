@@ -10,6 +10,7 @@ import useLatestCallback from 'use-latest-callback';
 import { LinkingContext } from './LinkingContext';
 import { UnhandledLinkingContext } from './UnhandledLinkingContext';
 
+// FIXME: don't rely on depth only to get the navigator state
 function extractNavigatorSpecificState(
   _: NavigationState,
   pathState: PartialState<NavigationState>,
@@ -29,7 +30,7 @@ function extractNavigatorSpecificState(
   return partialPathState;
 }
 
-export function useUnhandledLinking() {
+export function UNSTABLE_useUnhandledLinking() {
   const navigation = React.useContext(NavigationContext);
   const linking = React.useContext(LinkingContext);
   const { setLastUnhandledLink, lastUnhandledLink } = React.useContext(

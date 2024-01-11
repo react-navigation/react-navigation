@@ -1,5 +1,5 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import type { ParamListBase } from '@react-navigation/native';
+import type { ParamListBase, PathConfigMap } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import * as React from 'react';
 
@@ -7,10 +7,16 @@ import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
 
-type MaterialTopTabParams = {
+export type MaterialTopTabParams = {
   Albums: undefined;
   Contacts: undefined;
   Chat: undefined;
+};
+
+export const materialTopTabLinking: PathConfigMap<MaterialTopTabParams> = {
+  Albums: 'albums',
+  Contacts: 'contacts',
+  Chat: 'chat',
 };
 
 const MaterialTopTabs = createMaterialTopTabNavigator<MaterialTopTabParams>();

@@ -1,5 +1,5 @@
 import { Button } from '@react-navigation/elements';
-import type { ParamListBase } from '@react-navigation/native';
+import type { ParamListBase, PathConfigMap } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   type NativeStackScreenProps,
@@ -15,22 +15,30 @@ import {
 } from 'react-native';
 import { Appbar } from 'react-native-paper';
 
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type NativeStackParams = {
+export type NativeHeaderCustomizationStackParams = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Albums: undefined;
 };
+
+export const nativeHeaderCustomizationStackLinking: PathConfigMap<NativeHeaderCustomizationStackParams> =
+  {
+    Article: COMMON_LINKING_CONFIG.Article,
+    NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+    Albums: 'albums',
+  };
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
   route,
-}: NativeStackScreenProps<NativeStackParams, 'Article'>) => {
+}: NativeStackScreenProps<NativeHeaderCustomizationStackParams, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -55,7 +63,10 @@ const ArticleScreen = ({
 const NewsFeedScreen = ({
   route,
   navigation,
-}: NativeStackScreenProps<NativeStackParams, 'NewsFeed'>) => {
+}: NativeStackScreenProps<
+  NativeHeaderCustomizationStackParams,
+  'NewsFeed'
+>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -73,7 +84,7 @@ const NewsFeedScreen = ({
 
 const AlbumsScreen = ({
   navigation,
-}: NativeStackScreenProps<NativeStackParams, 'Albums'>) => {
+}: NativeStackScreenProps<NativeHeaderCustomizationStackParams, 'Albums'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -94,7 +105,8 @@ const AlbumsScreen = ({
   );
 };
 
-const Stack = createNativeStackNavigator<NativeStackParams>();
+const Stack =
+  createNativeStackNavigator<NativeHeaderCustomizationStackParams>();
 
 export function NativeStackHeaderCustomization({
   navigation,

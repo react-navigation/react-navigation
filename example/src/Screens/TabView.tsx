@@ -1,4 +1,4 @@
-import type { ParamListBase } from '@react-navigation/native';
+import type { ParamListBase, PathConfigMap } from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
@@ -31,6 +31,20 @@ export type TabViewStackParams = {
   [Key in keyof typeof EXAMPLE_SCREENS]: undefined;
 } & {
   ExampleList: undefined;
+};
+
+export const tabViewStackLinking: PathConfigMap<TabViewStackParams> = {
+  ExampleList: '',
+  ...EXAMPLE_SCREEN_NAMES.reduce(
+    (acc, name) => ({
+      ...acc,
+      [name]: name
+        .replace(/([A-Z]+)/g, '-$1')
+        .replace(/^-/, '')
+        .toLowerCase(),
+    }),
+    {}
+  ),
 };
 
 const TabViewStack = createStackNavigator<TabViewStackParams>();

@@ -16,13 +16,20 @@ import {
 } from 'react-native';
 import { Paragraph } from 'react-native-paper';
 
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-type TransparentStackParams = {
+export type TransparentStackParams = {
   Article: { author: string };
   NewsFeed: undefined;
   Dialog: undefined;
+};
+
+export const transparentStackLinking = {
+  Article: COMMON_LINKING_CONFIG.Article,
+  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+  Dialog: 'dialog',
 };
 
 const scrollEnabled = Platform.select({ web: true, default: false });
