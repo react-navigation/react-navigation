@@ -1,11 +1,24 @@
 import * as React from 'react';
 import { View } from 'react-native';
+import type { GestureType } from 'react-native-gesture-handler';
 
-const Dummy: any = ({ children }: { children: React.ReactNode }) => (
-  <>{children}</>
-);
-export const GestureDetector =
-  Dummy as typeof import('react-native-gesture-handler').GestureDetector;
+// FIXME: Inline this type instead of getting it from react-native-gesture-handler
+// Otherwise, we get a type error:
+// Exported variable 'GestureDetector' has or is using name 'GestureDetectorProps' from external module ".." but cannot be named.
+type GestureDetectorProps = {
+  gesture: GestureType | undefined;
+  userSelect?: 'none' | 'auto' | 'text';
+  children: React.ReactNode;
+};
+
+export const GestureDetector = ({
+  gesture: _0,
+  userSelect: _1,
+  children,
+}: GestureDetectorProps) => {
+  return <>{children}</>;
+};
+
 export const GestureHandlerRootView = View;
 
 export const Gesture:

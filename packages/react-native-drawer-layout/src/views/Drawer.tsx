@@ -66,19 +66,6 @@ const getDefaultDrawerWidth = ({
   return Math.min(smallerAxisSize - appBarHeight, maxWidth);
 };
 
-function MaybeGestureDetector({
-  gesture,
-  children,
-}: {
-  gesture?: PanGesture;
-  children: React.ReactNode;
-}) {
-  if (!gesture) {
-    return children;
-  }
-  return <GestureDetector gesture={gesture}>{children}</GestureDetector>;
-}
-
 function configurePanGesture(
   pan: PanGesture,
   gestureHandlerConfig: PanGestureHandlerProps
@@ -447,7 +434,7 @@ export function Drawer({
   return (
     <GestureHandlerRootView style={[styles.container, style]}>
       <DrawerProgressContext.Provider value={progress}>
-        <MaybeGestureDetector gesture={pan}>
+        <GestureDetector gesture={pan}>
           {/* Immediate child of gesture handler needs to be an Animated.View */}
           <Animated.View
             style={[
@@ -500,7 +487,7 @@ export function Drawer({
               {renderDrawerContent()}
             </Animated.View>
           </Animated.View>
-        </MaybeGestureDetector>
+        </GestureDetector>
       </DrawerProgressContext.Provider>
     </GestureHandlerRootView>
   );
