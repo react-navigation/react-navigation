@@ -163,6 +163,11 @@ export function BottomTabView(props: Props) {
           : null
       }
     >
+      {tabBarPosition === 'top' ? (
+        <BottomTabBarHeightCallbackContext.Provider value={setTabBarHeight}>
+          {renderTabBar()}
+        </BottomTabBarHeightCallbackContext.Provider>
+      ) : null}
       <MaybeScreenContainer
         enabled={detachInactiveScreens}
         hasTwoStates={hasTwoStates}
@@ -259,9 +264,11 @@ export function BottomTabView(props: Props) {
           );
         })}
       </MaybeScreenContainer>
-      <BottomTabBarHeightCallbackContext.Provider value={setTabBarHeight}>
-        {renderTabBar()}
-      </BottomTabBarHeightCallbackContext.Provider>
+      {tabBarPosition !== 'top' ? (
+        <BottomTabBarHeightCallbackContext.Provider value={setTabBarHeight}>
+          {renderTabBar()}
+        </BottomTabBarHeightCallbackContext.Provider>
+      ) : null}
     </SafeAreaProviderCompat>
   );
 }
