@@ -1,4 +1,4 @@
-import { type PathConfigMap } from '@react-navigation/core';
+import { type PathConfigMap, usePreventRemove } from '@react-navigation/core';
 import { Button } from '@react-navigation/elements';
 import {
   CommonActions,
