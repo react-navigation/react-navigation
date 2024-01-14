@@ -6,6 +6,7 @@ import {
 } from '@react-navigation/drawer';
 import {
   type ParamListBase,
+  type PathConfigMap,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';
@@ -18,10 +19,16 @@ import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-type DrawerParams = {
+export type MasterDetailParams = {
   Article: undefined;
   NewsFeed: undefined;
   Albums: undefined;
+};
+
+export const masterDetailLinking: PathConfigMap<MasterDetailParams> = {
+  Article: 'article',
+  NewsFeed: 'feed',
+  Albums: 'albums',
 };
 
 const useIsLargeScreen = () => {
@@ -50,7 +57,7 @@ const Header = ({
 
 const ArticleScreen = ({
   navigation,
-}: DrawerScreenProps<DrawerParams, 'Article'>) => {
+}: DrawerScreenProps<MasterDetailParams, 'Article'>) => {
   return (
     <>
       <Header title="Article" onGoBack={() => navigation.toggleDrawer()} />
@@ -61,7 +68,7 @@ const ArticleScreen = ({
 
 const NewsFeedScreen = ({
   navigation,
-}: DrawerScreenProps<DrawerParams, 'NewsFeed'>) => {
+}: DrawerScreenProps<MasterDetailParams, 'NewsFeed'>) => {
   return (
     <>
       <Header title="Feed" onGoBack={() => navigation.toggleDrawer()} />
@@ -72,7 +79,7 @@ const NewsFeedScreen = ({
 
 const AlbumsScreen = ({
   navigation,
-}: DrawerScreenProps<DrawerParams, 'Albums'>) => {
+}: DrawerScreenProps<MasterDetailParams, 'Albums'>) => {
   return (
     <>
       <Header title="Albums" onGoBack={() => navigation.toggleDrawer()} />
@@ -96,7 +103,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   );
 };
 
-const Drawer = createDrawerNavigator<DrawerParams>();
+const Drawer = createDrawerNavigator<MasterDetailParams>();
 
 type Props = Partial<React.ComponentProps<typeof Drawer.Navigator>> &
   StackScreenProps<ParamListBase>;

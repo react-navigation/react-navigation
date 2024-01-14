@@ -1,5 +1,5 @@
 import { Button } from '@react-navigation/elements';
-import type { ParamListBase } from '@react-navigation/native';
+import type { ParamListBase, PathConfigMap } from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
@@ -7,12 +7,18 @@ import {
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 
-type MixedStackParams = {
+export type MixedStackParams = {
   Article: { author: string };
   Albums: undefined;
+};
+
+export const mixedStackLinking: PathConfigMap<MixedStackParams> = {
+  Article: COMMON_LINKING_CONFIG.Article,
+  Albums: 'albums',
 };
 
 const scrollEnabled = Platform.select({ web: true, default: false });

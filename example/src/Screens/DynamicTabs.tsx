@@ -5,11 +5,22 @@ import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Title } from 'react-native-paper';
 
-type BottomTabParams = {
-  [key: string]: undefined;
+import type { PathConfigMap } from '../../../packages/core/src/types';
+
+export type DynamicBottomTabParams = {
+  [key: `tab-${number}`]: undefined;
 };
 
-const BottomTabs = createBottomTabNavigator<BottomTabParams>();
+export const dynamicBottomTabLinking: PathConfigMap<DynamicBottomTabParams> = {
+  'tab-0': 'tab/0',
+  'tab-1': 'tab/1',
+  'tab-2': 'tab/2',
+  'tab-3': 'tab/3',
+  'tab-4': 'tab/4',
+  'tab-5': 'tab/5',
+};
+
+const BottomTabs = createBottomTabNavigator<DynamicBottomTabParams>();
 
 export function DynamicTabs() {
   const [tabs, setTabs] = React.useState([0, 1]);
@@ -30,18 +41,36 @@ export function DynamicTabs() {
           {() => (
             <View style={styles.container}>
               <Title>Tab {i}</Title>
-              <Button onPress={() => setTabs((tabs) => [...tabs, tabs.length])}>
-                Add a tab
-              </Button>
-              <Button
-                onPress={() =>
-                  setTabs((tabs) =>
-                    tabs.length > 1 ? tabs.slice(0, -1) : tabs
-                  )
-                }
-              >
-                Remove a tab
-              </Button>
+              {tabs.length < 5 && (
+                <Button
+                  onPress={() =>
+                    setTabs((tabs) => {
+                      if (tabs.length < 5) {
+                        return [...tabs, tabs.length];
+                      } else {
+                        return tabs;
+                      }
+                    })
+                  }
+                >
+                  Add a tab
+                </Button>
+              )}
+              {tabs.length > 1 && (
+                <Button
+                  onPress={() =>
+                    setTabs((tabs) => {
+                      if (tabs.length > 1) {
+                        return tabs.slice(0, -1);
+                      } else {
+                        return tabs;
+                      }
+                    })
+                  }
+                >
+                  Remove a tab
+                </Button>
+              )}
             </View>
           )}
         </BottomTabs.Screen>

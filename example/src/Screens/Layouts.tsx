@@ -1,5 +1,5 @@
 import { Button } from '@react-navigation/elements';
-import type { ParamListBase } from '@react-navigation/native';
+import type { ParamListBase, PathConfigMap } from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackNavigationOptions,
@@ -8,8 +8,12 @@ import {
 import * as React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-export type SimpleStackParams = {
-  SuspenseDemo: { author: string } | undefined;
+export type LayoutsStackParams = {
+  SuspenseDemo: undefined;
+};
+
+export const layoutsStackLinking: PathConfigMap<LayoutsStackParams> = {
+  SuspenseDemo: 'suspense',
 };
 
 let cached: number | undefined;
@@ -24,7 +28,7 @@ const createPromise = () =>
 
 const SuspenseDemoScreen = ({
   navigation,
-}: StackScreenProps<SimpleStackParams, 'SuspenseDemo'>) => {
+}: StackScreenProps<LayoutsStackParams, 'SuspenseDemo'>) => {
   const [promise, setPromise] = React.useState(createPromise);
   const [error, setError] = React.useState<Error | null>(null);
 
@@ -92,7 +96,7 @@ class ErrorBoundary extends React.Component<
   }
 }
 
-const Stack = createStackNavigator<SimpleStackParams>();
+const Stack = createStackNavigator<LayoutsStackParams>();
 
 export function LayoutsStack({
   navigation,

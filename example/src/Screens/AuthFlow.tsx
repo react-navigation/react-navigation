@@ -1,5 +1,9 @@
 import { Button } from '@react-navigation/elements';
-import { type ParamListBase, useTheme } from '@react-navigation/native';
+import {
+  type ParamListBase,
+  type PathConfigMap,
+  useTheme,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
@@ -8,10 +12,16 @@ import * as React from 'react';
 import { ActivityIndicator, StyleSheet, TextInput, View } from 'react-native';
 import { Title } from 'react-native-paper';
 
-type AuthStackParams = {
+export type AuthStackParams = {
   Home: undefined;
   SignIn: undefined;
   Chat: undefined;
+};
+
+export const authLinking: PathConfigMap<AuthStackParams> = {
+  Home: '',
+  SignIn: 'signin',
+  Chat: 'chat',
 };
 
 const AUTH_CONTEXT_ERROR =

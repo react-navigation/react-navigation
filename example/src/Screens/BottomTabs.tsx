@@ -9,6 +9,7 @@ import { HeaderBackButton, useHeaderHeight } from '@react-navigation/elements';
 import {
   type NavigatorScreenParams,
   type ParamListBase,
+  type PathConfigMap,
   useIsFocused,
 } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
@@ -27,7 +28,11 @@ import { Appbar, IconButton } from 'react-native-paper';
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
-import { SimpleStack, type SimpleStackParams } from './SimpleStack';
+import {
+  SimpleStack,
+  simpleStackLinking,
+  type SimpleStackParams,
+} from './SimpleStack';
 
 const getTabBarIcon =
   (name: React.ComponentProps<typeof MaterialCommunityIcons>['name']) =>
@@ -35,11 +40,21 @@ const getTabBarIcon =
     <MaterialCommunityIcons name={name} color={color} size={size} />
   );
 
-type BottomTabParams = {
+export type BottomTabParams = {
   TabStack: NavigatorScreenParams<SimpleStackParams>;
   TabAlbums: undefined;
   TabContacts: undefined;
   TabChat: undefined;
+};
+
+export const bottomTabLinking: PathConfigMap<BottomTabParams> = {
+  TabStack: {
+    path: 'stack',
+    screens: simpleStackLinking,
+  },
+  TabAlbums: 'albums',
+  TabContacts: 'contacts',
+  TabChat: 'chat',
 };
 
 const AlbumsScreen = () => {

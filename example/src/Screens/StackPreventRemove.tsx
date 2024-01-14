@@ -2,6 +2,7 @@ import { Button } from '@react-navigation/elements';
 import {
   CommonActions,
   type ParamListBase,
+  type PathConfigMap,
   useTheme,
 } from '@react-navigation/native';
 import {
@@ -18,11 +19,17 @@ import {
   View,
 } from 'react-native';
 
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Article } from '../Shared/Article';
 
-type PreventRemoveParams = {
+export type PreventRemoveParams = {
   Article: { author: string };
   Input: undefined;
+};
+
+export const preventRemoveLinking: PathConfigMap<PreventRemoveParams> = {
+  Article: COMMON_LINKING_CONFIG.Article,
+  Input: 'input',
 };
 
 const scrollEnabled = Platform.select({ web: true, default: false });

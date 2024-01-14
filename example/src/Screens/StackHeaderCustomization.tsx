@@ -4,7 +4,10 @@ import {
   HeaderBackground,
   useHeaderHeight,
 } from '@react-navigation/elements';
-import { type ParamListBase } from '@react-navigation/native';
+import {
+  type ParamListBase,
+  type PathConfigMap,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   Header,
@@ -22,21 +25,28 @@ import {
 } from 'react-native';
 import { Appbar } from 'react-native-paper';
 
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { BlurView } from '../Shared/BlurView';
 
-type SimpleStackParams = {
+export type HeaderCustomizationStackParams = {
   Article: { author: string };
   Albums: undefined;
 };
+
+export const headerCustomizationStackLinking: PathConfigMap<HeaderCustomizationStackParams> =
+  {
+    Article: COMMON_LINKING_CONFIG.Article,
+    Albums: 'albums',
+  };
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
   route,
-}: StackScreenProps<SimpleStackParams, 'Article'>) => {
+}: StackScreenProps<HeaderCustomizationStackParams, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -55,7 +65,9 @@ const ArticleScreen = ({
   );
 };
 
-const AlbumsScreen = ({ navigation }: StackScreenProps<SimpleStackParams>) => {
+const AlbumsScreen = ({
+  navigation,
+}: StackScreenProps<HeaderCustomizationStackParams>) => {
   const headerHeight = useHeaderHeight();
 
   return (
@@ -76,7 +88,7 @@ const AlbumsScreen = ({ navigation }: StackScreenProps<SimpleStackParams>) => {
   );
 };
 
-const Stack = createStackNavigator<SimpleStackParams>();
+const Stack = createStackNavigator<HeaderCustomizationStackParams>();
 
 type Props = StackScreenProps<ParamListBase>;
 
