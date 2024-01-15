@@ -151,7 +151,6 @@ export function BottomTabBar({
 
   const {
     tabBarPosition = 'bottom',
-    tabBarShowLabel,
     tabBarHideOnKeyboard = false,
     tabBarVisibilityAnimationConfig,
     tabBarStyle,
@@ -406,7 +405,7 @@ export function BottomTabBar({
                   badge={options.tabBarBadge}
                   badgeStyle={options.tabBarBadgeStyle}
                   label={label}
-                  showLabel={tabBarShowLabel}
+                  showLabel={options.tabBarShowLabel}
                   labelStyle={options.tabBarLabelStyle}
                   iconStyle={options.tabBarIconStyle}
                   style={[
