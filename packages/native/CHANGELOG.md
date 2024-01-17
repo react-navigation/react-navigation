@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.6...@react-navigation/native@7.0.0-alpha.7) (2024-01-17)
+
+### Bug Fixes
+
+* fix import for LinkingOptions ([9986736](https://github.com/react-navigation/react-navigation/commit/99867368c36f187a760c00dddb6382e047bf0eed)) - by @satya164
+
+### Features
+
+* move theming to core and pass theme to options ([#11707](https://github.com/react-navigation/react-navigation/issues/11707)) ([8e7ac4f](https://github.com/react-navigation/react-navigation/commit/8e7ac4f18545887b905f921df469dbf69d7951c7)) - by @satya164
+
 # [7.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.5...@react-navigation/native@7.0.0-alpha.6) (2023-11-17)
 
 **Note:** Version bump only for package @react-navigation/native
