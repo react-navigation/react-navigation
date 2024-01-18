@@ -48,24 +48,30 @@ const AlbumsScreen = () => {
 };
 
 const HomeTabs = createBottomTabNavigator({
+  screenOptions: ({ theme }) => ({
+    tabBarActiveTintColor: theme.colors.notification,
+  }),
   screens: {
     Albums: {
       screen: AlbumsScreen,
       options: {
         tabBarIcon: getTabBarIcon('image-album'),
       },
+      linking: 'albums',
     },
     Contacts: {
       screen: Contacts,
       options: {
         tabBarIcon: getTabBarIcon('contacts'),
       },
+      linking: 'contacts',
     },
     Chat: {
       screen: Chat,
       options: {
         tabBarIcon: getTabBarIcon('message-reply'),
       },
+      linking: 'chat',
       if: useIsChatShown,
     },
   },
@@ -76,7 +82,10 @@ const RootStack = createStackNavigator({
     headerShown: false,
   },
   screens: {
-    Home: HomeTabs,
+    Home: {
+      screen: HomeTabs,
+      linking: '',
+    },
   },
 });
 

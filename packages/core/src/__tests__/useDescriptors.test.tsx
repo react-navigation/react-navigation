@@ -7,6 +7,7 @@ import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
+import { Group } from '../Group';
 import { Screen } from '../Screen';
 import { useNavigationBuilder } from '../useNavigationBuilder';
 import {
@@ -381,6 +382,128 @@ it('updates options with setOptions', () => {
               </div>
             </main>
       `);
+});
+
+it('renders layout defined for the screen', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder<
+      NavigationState,
+      any,
+      any,
+      any,
+      any
+    >(MockRouter, props);
+    const { render } = descriptors[state.routes[state.index].key];
+
+    return render();
+  };
+
+  const TestScreen = () => {
+    return <>Test screen</>;
+  };
+
+  const element = (
+    <BaseNavigationContainer>
+      <TestNavigator
+        screenLayout={({ children }: any) => <main>{children}</main>}
+      >
+        <Group screenLayout={({ children }) => <section>{children}</section>}>
+          <Screen
+            name="foo"
+            component={TestScreen}
+            layout={({ children }) => <div>{children}</div>}
+          />
+          <Screen name="bar" component={React.Fragment} />
+        </Group>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const root = render(element);
+
+  expect(root).toMatchInlineSnapshot(`
+<div>
+  Test screen
+</div>
+`);
+});
+
+it('renders layout defined for the group', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder<
+      NavigationState,
+      any,
+      any,
+      any,
+      any
+    >(MockRouter, props);
+    const { render } = descriptors[state.routes[state.index].key];
+
+    return render();
+  };
+
+  const TestScreen = () => {
+    return <>Test screen</>;
+  };
+
+  const element = (
+    <BaseNavigationContainer>
+      <TestNavigator
+        screenLayout={({ children }: any) => <main>{children}</main>}
+      >
+        <Group screenLayout={({ children }) => <section>{children}</section>}>
+          <Screen name="foo" component={TestScreen} />
+          <Screen name="bar" component={React.Fragment} />
+        </Group>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const root = render(element);
+
+  expect(root).toMatchInlineSnapshot(`
+<section>
+  Test screen
+</section>
+`);
+});
+
+it('renders layout defined for the navigator', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder<
+      NavigationState,
+      any,
+      any,
+      any,
+      any
+    >(MockRouter, props);
+    const { render } = descriptors[state.routes[state.index].key];
+
+    return render();
+  };
+
+  const TestScreen = () => {
+    return <>Test screen</>;
+  };
+
+  const element = (
+    <BaseNavigationContainer>
+      <TestNavigator
+        screenLayout={({ children }: any) => <main>{children}</main>}
+      >
+        <Screen name="foo" component={TestScreen} />
+        <Screen name="bar" component={React.Fragment} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const root = render(element);
+
+  expect(root).toMatchInlineSnapshot(`
+<main>
+  Test screen
+</main>
+`);
 });
 
 it("returns correct value for canGoBack when it's not overridden", () => {

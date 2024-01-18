@@ -228,7 +228,7 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   /**
    * Position of the tab bar on the screen. Defaults to `bottom`.
    */
-  tabBarPosition?: 'bottom' | 'left' | 'right';
+  tabBarPosition?: 'bottom' | 'left' | 'right' | 'top';
 
   /**
    * Whether this screens should render the first time it's accessed. Defaults to `true`.

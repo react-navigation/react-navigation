@@ -2,6 +2,7 @@ import type {
   NavigationAction,
   NavigationState,
   ParamListBase,
+  PartialState,
   Router,
 } from '@react-navigation/routers';
 import * as React from 'react';
@@ -14,6 +15,7 @@ import {
 import { NavigationContext } from './NavigationContext';
 import { NavigationRouteContext } from './NavigationRouteContext';
 import { SceneView } from './SceneView';
+import { ThemeContext } from './theming/ThemeContext';
 import type {
   Descriptor,
   EventMapBase,
@@ -33,14 +35,23 @@ export type ScreenConfigWithParent<
 > = {
   keys: (string | undefined)[];
   options: (ScreenOptionsOrCallback<ScreenOptions> | undefined)[] | undefined;
+  layout: ScreenLayout | undefined;
   props: RouteConfig<ParamListBase, string, State, ScreenOptions, EventMap>;
 };
+
+type ScreenLayout = (props: {
+  route: RouteProp<ParamListBase, string>;
+  navigation: any;
+  theme: ReactNavigation.Theme;
+  children: React.ReactElement;
+}) => React.ReactElement;
 
 type ScreenOptionsOrCallback<ScreenOptions extends {}> =
   | ScreenOptions
   | ((props: {
       route: RouteProp<ParamListBase, string>;
       navigation: any;
+      theme: ReactNavigation.Theme;
     }) => ScreenOptions);
 
 type Options<
@@ -54,7 +65,8 @@ type Options<
     ScreenConfigWithParent<State, ScreenOptions, EventMap>
   >;
   navigation: NavigationHelpers<ParamListBase>;
-  screenOptions?: ScreenOptionsOrCallback<ScreenOptions>;
+  screenOptions: ScreenOptionsOrCallback<ScreenOptions> | undefined;
+  screenLayout: ScreenLayout | undefined;
   onAction: (action: NavigationAction) => boolean;
   getState: () => State;
   setState: (state: State) => void;
@@ -83,6 +95,7 @@ export function useDescriptors<
   screens,
   navigation,
   screenOptions,
+  screenLayout,
   onAction,
   getState,
   setState,
@@ -92,6 +105,7 @@ export function useDescriptors<
   router,
   emitter,
 }: Options<State, ScreenOptions, EventMap>) {
+  const theme = React.useContext(ThemeContext);
   const [options, setOptions] = React.useState<Record<string, ScreenOptions>>(
     {}
   );
@@ -122,7 +136,12 @@ export function useDescriptors<
     ]
   );
 
-  const navigations = useNavigationCache<State, ScreenOptions, EventMap>({
+  const { base, navigations } = useNavigationCache<
+    State,
+    ScreenOptions,
+    EventMap,
+    ActionHelpers
+  >({
     state,
     getState,
     navigation,
@@ -133,7 +152,115 @@ export function useDescriptors<
 
   const routes = useRouteCache(state.routes);
 
-  return routes.reduce<
+  const getOptions = (
+    route: RouteProp<ParamListBase, string>,
+    navigation: NavigationProp<
+      ParamListBase,
+      string,
+      string | undefined,
+      State,
+      ScreenOptions,
+      EventMap
+    >,
+    overrides: Record<string, ScreenOptions>
+  ) => {
+    const config = screens[route.name];
+    const screen = config.props;
+
+    const optionsList = [
+      // The default `screenOptions` passed to the navigator
+      screenOptions,
+      // The `screenOptions` props passed to `Group` elements
+      ...((config.options
+        ? config.options.filter(Boolean)
+        : []) as ScreenOptionsOrCallback<ScreenOptions>[]),
+      // The `options` prop passed to `Screen` elements,
+      screen.options,
+      // The options set via `navigation.setOptions`
+      overrides,
+    ];
+
+    return optionsList.reduce<ScreenOptions>(
+      (acc, curr) =>
+        Object.assign(
+          acc,
+          // @ts-expect-error: we check for function but TS still complains
+          typeof curr !== 'function' ? curr : curr({ route, navigation, theme })
+        ),
+      {} as ScreenOptions
+    );
+  };
+
+  const render = (
+    route: RouteProp<ParamListBase, string>,
+    navigation: NavigationProp<
+      ParamListBase,
+      string,
+      string | undefined,
+      State,
+      ScreenOptions,
+      EventMap
+    >,
+    customOptions: ScreenOptions,
+    routeState: NavigationState | PartialState<NavigationState> | undefined
+  ) => {
+    const config = screens[route.name];
+    const screen = config.props;
+
+    const clearOptions = () =>
+      setOptions((o) => {
+        if (route.key in o) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { [route.key]: _, ...rest } = o;
+          return rest;
+        }
+
+        return o;
+      });
+
+    const layout =
+      // The `layout` prop passed to `Screen` elements,
+      screen.layout ??
+      // The `screenLayout` props passed to `Group` elements
+      config.layout ??
+      // The default `screenLayout` passed to the navigator
+      screenLayout;
+
+    let element = (
+      <SceneView
+        navigation={navigation}
+        route={route}
+        screen={screen}
+        routeState={routeState}
+        getState={getState}
+        setState={setState}
+        options={customOptions}
+        clearOptions={clearOptions}
+      />
+    );
+
+    if (layout != null) {
+      element = layout({
+        route,
+        navigation,
+        // @ts-expect-error: in practice `theme` will be defined
+        theme,
+        children: element,
+      });
+    }
+
+    return (
+      <NavigationBuilderContext.Provider key={route.key} value={context}>
+        <NavigationContext.Provider value={navigation}>
+          <NavigationRouteContext.Provider value={route}>
+            {element}
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>
+      </NavigationBuilderContext.Provider>
+    );
+  };
+
+  const descriptors = routes.reduce<
     Record<
       string,
       Descriptor<
@@ -151,61 +278,13 @@ export function useDescriptors<
       >
     >
   >((acc, route, i) => {
-    const config = screens[route.name];
-    const screen = config.props;
     const navigation = navigations[route.key];
-
-    const optionsList = [
-      // The default `screenOptions` passed to the navigator
-      screenOptions,
-      // The `screenOptions` props passed to `Group` elements
-      ...((config.options
-        ? config.options.filter(Boolean)
-        : []) as ScreenOptionsOrCallback<ScreenOptions>[]),
-      // The `options` prop passed to `Screen` elements,
-      screen.options,
-      // The options set via `navigation.setOptions`
-      options[route.key],
-    ];
-
-    const customOptions = optionsList.reduce<ScreenOptions>(
-      (acc, curr) =>
-        Object.assign(
-          acc,
-          // @ts-expect-error: we check for function but TS still complains
-          typeof curr !== 'function' ? curr : curr({ route, navigation })
-        ),
-      {} as ScreenOptions
-    );
-
-    const clearOptions = () =>
-      setOptions((o) => {
-        if (route.key in o) {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { [route.key]: _, ...rest } = o;
-          return rest;
-        }
-
-        return o;
-      });
-
-    const element = (
-      <NavigationBuilderContext.Provider key={route.key} value={context}>
-        <NavigationContext.Provider value={navigation}>
-          <NavigationRouteContext.Provider value={route}>
-            <SceneView
-              navigation={navigation}
-              route={route}
-              screen={screen}
-              routeState={state.routes[i].state}
-              getState={getState}
-              setState={setState}
-              options={customOptions}
-              clearOptions={clearOptions}
-            />
-          </NavigationRouteContext.Provider>
-        </NavigationContext.Provider>
-      </NavigationBuilderContext.Provider>
+    const customOptions = getOptions(route, navigation, options[route.key]);
+    const element = render(
+      route,
+      navigation,
+      customOptions,
+      state.routes[i].state
     );
 
     acc[route.key] = {
@@ -220,4 +299,39 @@ export function useDescriptors<
 
     return acc;
   }, {});
+
+  /**
+   * Create a descriptor object for a route.
+   *
+   * @param route Route object for which the descriptor should be created
+   * @param placeholder Whether the descriptor should be a placeholder, e.g. for a route not yet in the state
+   * @returns Descriptor object
+   */
+  const describe = (route: RouteProp<ParamListBase>, placeholder: boolean) => {
+    if (!placeholder) {
+      if (!(route.key in descriptors)) {
+        throw new Error(`Couldn't find a route with the key ${route.key}.`);
+      }
+
+      return descriptors[route.key];
+    }
+
+    const navigation = base;
+    const customOptions = getOptions(route, navigation, {});
+    const element = render(route, navigation, customOptions, undefined);
+
+    return {
+      route,
+      navigation,
+      render() {
+        return element;
+      },
+      options: customOptions as ScreenOptions,
+    };
+  };
+
+  return {
+    describe,
+    descriptors,
+  };
 }

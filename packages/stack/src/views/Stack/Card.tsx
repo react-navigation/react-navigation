@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 
-import { forModalPresentationIOS } from '../../TransitionConfigs/CardStyleInterpolators';
 import type {
   GestureDirection,
   Layout,
@@ -30,7 +29,6 @@ import {
   PanGestureHandler,
   type PanGestureHandlerGestureEvent,
 } from '../GestureHandler';
-import { ModalStatusBarManager } from '../ModalStatusBarManager';
 import { CardSheet, type CardSheetRef } from './CardSheet';
 
 type Props = ViewProps & {
@@ -42,7 +40,6 @@ type Props = ViewProps & {
   layout: Layout;
   insets: EdgeInsets;
   direction: LocaleDirection;
-  headerDarkContent: boolean | undefined;
   pageOverflowEnabled: boolean;
   gestureDirection: GestureDirection;
   onOpen: () => void;
@@ -64,6 +61,7 @@ type Props = ViewProps & {
     open: TransitionSpec;
     close: TransitionSpec;
   };
+  preloaded: boolean;
   styleInterpolator: StackCardStyleInterpolator;
   containerStyle?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
@@ -107,7 +105,11 @@ export class Card extends React.Component<Props> {
   };
 
   componentDidMount() {
-    this.animate({ closing: this.props.closing });
+    if (!this.props.preloaded) {
+      this.animate({
+        closing: this.props.closing,
+      });
+    }
     this.isCurrentlyMounted = true;
   }
 
@@ -136,7 +138,7 @@ export class Card extends React.Component<Props> {
       this.lastToValue !== toValue
     ) {
       // We need to trigger the animation when route was closed
-      // Thr route might have been closed by a `POP` action or by a gesture
+      // The route might have been closed by a `POP` action or by a gesture
       // When route was closed due to a gesture, the animation would've happened already
       // It's still important to trigger the animation so that `onClose` is called
       // If `onClose` is not called, cleanup step won't be performed for gestures
@@ -145,7 +147,7 @@ export class Card extends React.Component<Props> {
   }
 
   componentWillUnmount() {
-    this.props.gesture.stopAnimation();
+    this.props.gesture?.stopAnimation();
     this.isCurrentlyMounted = false;
     this.handleEndInteraction();
   }
@@ -181,7 +183,7 @@ export class Card extends React.Component<Props> {
     closing: boolean;
     velocity?: number;
   }) => {
-    const { gesture, transitionSpec, onOpen, onClose, onTransition } =
+    const { transitionSpec, onOpen, onClose, onTransition, gesture } =
       this.props;
 
     const toValue = this.getAnimateToValue({
@@ -235,13 +237,15 @@ export class Card extends React.Component<Props> {
     layout,
     gestureDirection,
     direction,
+    preloaded,
   }: {
     closing?: boolean;
     layout: Layout;
     gestureDirection: GestureDirection;
     direction: LocaleDirection;
+    preloaded: boolean;
   }) => {
-    if (!closing) {
+    if (!closing && !preloaded) {
       return 0;
     }
 
@@ -301,7 +305,10 @@ export class Card extends React.Component<Props> {
             ? nativeEvent.velocityY
             : nativeEvent.velocityX;
 
-        this.animate({ closing: this.props.closing, velocity });
+        this.animate({
+          closing: this.props.closing,
+          velocity,
+        });
 
         onGestureCanceled?.();
         break;
@@ -460,7 +467,6 @@ export class Card extends React.Component<Props> {
       gestureEnabled,
       gestureDirection,
       pageOverflowEnabled,
-      headerDarkContent,
       children,
       containerStyle: customContainerStyle,
       contentStyle,
@@ -522,21 +528,6 @@ export class Card extends React.Component<Props> {
 
     return (
       <CardAnimationContext.Provider value={interpolationProps}>
-        {
-          // StatusBar messes with translucent status bar on Android
-          // So we should only enable it on iOS
-          Platform.OS === 'ios' &&
-          overlayEnabled &&
-          next &&
-          getIsModalPresentation(styleInterpolator) ? (
-            <ModalStatusBarManager
-              dark={headerDarkContent}
-              layout={layout}
-              insets={insets}
-              style={cardStyle}
-            />
-          ) : null
-        }
         <Animated.View
           style={{
             // This is a dummy style that doesn't actually change anything visually.
@@ -601,16 +592,6 @@ export class Card extends React.Component<Props> {
     );
   }
 }
-
-export const getIsModalPresentation = (
-  cardStyleInterpolator: StackCardStyleInterpolator
-) => {
-  return (
-    cardStyleInterpolator === forModalPresentationIOS ||
-    // Handle custom modal presentation interpolators as well
-    cardStyleInterpolator.name === 'forModalPresentationIOS'
-  );
-};
 
 const styles = StyleSheet.create({
   container: {

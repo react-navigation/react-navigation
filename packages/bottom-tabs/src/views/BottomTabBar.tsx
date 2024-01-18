@@ -9,7 +9,7 @@ import {
   NavigationRouteContext,
   type ParamListBase,
   type TabNavigationState,
-  useLinkTools,
+  useLinkBuilder,
   useTheme,
 } from '@react-navigation/native';
 import Color from 'color';
@@ -143,7 +143,7 @@ export function BottomTabBar({
   style,
 }: Props) {
   const { colors } = useTheme();
-  const { buildHref } = useLinkTools();
+  const { buildHref } = useLinkBuilder();
 
   const focusedRoute = state.routes[state.index];
   const focusedDescriptor = descriptors[focusedRoute.key];
@@ -158,7 +158,8 @@ export function BottomTabBar({
     tabBarBackground,
     tabBarActiveTintColor,
     tabBarInactiveTintColor,
-    tabBarActiveBackgroundColor = tabBarPosition !== 'bottom'
+    tabBarActiveBackgroundColor = tabBarPosition !== 'bottom' &&
+    tabBarPosition !== 'top'
       ? Color(tabBarActiveTintColor ?? colors.primary)
           .alpha(0.12)
           .rgb()
@@ -270,6 +271,9 @@ export function BottomTabBar({
 
   const tabBarBackgroundElement = tabBarBackground?.();
 
+  const tabBarIsHorizontal =
+    tabBarPosition === 'bottom' || tabBarPosition === 'top';
+
   return (
     <Animated.View
       style={[
@@ -283,7 +287,7 @@ export function BottomTabBar({
             tabBarBackgroundElement != null ? 'transparent' : colors.card,
           borderColor: colors.border,
         },
-        tabBarPosition === 'bottom'
+        tabBarIsHorizontal
           ? [
               {
                 transform: [
@@ -321,18 +325,14 @@ export function BottomTabBar({
         tabBarStyle,
       ]}
       pointerEvents={isTabBarHidden ? 'none' : 'auto'}
-      onLayout={tabBarPosition === 'bottom' ? handleLayout : undefined}
+      onLayout={tabBarIsHorizontal ? handleLayout : undefined}
     >
       <View pointerEvents="none" style={StyleSheet.absoluteFill}>
         {tabBarBackgroundElement}
       </View>
       <View
         accessibilityRole="tablist"
-        style={
-          tabBarPosition === 'bottom'
-            ? styles.bottomContent
-            : styles.sideContent
-        }
+        style={tabBarIsHorizontal ? styles.bottomContent : styles.sideContent}
       >
         {routes.map((route, index) => {
           const focused = index === state.index;
@@ -410,7 +410,7 @@ export function BottomTabBar({
                   labelStyle={options.tabBarLabelStyle}
                   iconStyle={options.tabBarIconStyle}
                   style={[
-                    tabBarPosition === 'bottom'
+                    tabBarIsHorizontal
                       ? styles.bottomItem
                       : [
                           styles.sideItem,

@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { createStackNavigator } from '../__stubs__/createStackNavigator';
 import { NavigationContainer } from '../NavigationContainer';
-import { useLinkTools } from '../useLinkTools';
+import { useLinkBuilder } from '../useLinkBuilder';
 
 it('builds href from name and params', () => {
   expect.assertions(3);
@@ -26,7 +26,7 @@ it('builds href from name and params', () => {
   };
 
   const A = () => {
-    const { buildHref } = useLinkTools();
+    const { buildHref } = useLinkBuilder();
 
     const href = buildHref('Foo');
 
@@ -56,7 +56,7 @@ it('builds href from name and params', () => {
   element.unmount();
 
   const B = () => {
-    const { buildHref } = useLinkTools();
+    const { buildHref } = useLinkBuilder();
 
     const href = buildHref('Bar', { id: '42' });
 
@@ -105,7 +105,7 @@ it('builds action from href', () => {
   };
 
   const A = () => {
-    const { buildAction } = useLinkTools();
+    const { buildAction } = useLinkBuilder();
 
     const action = buildAction('/foo');
 
@@ -138,7 +138,7 @@ it('builds action from href', () => {
   element.unmount();
 
   const B = () => {
-    const { buildAction } = useLinkTools();
+    const { buildAction } = useLinkBuilder();
 
     const action = buildAction('/foo/bar/42');
 

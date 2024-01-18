@@ -45,10 +45,10 @@ const getRootStateForNavigate = (
 };
 
 /**
- * Build destination link for a navigate action.
- * Useful for showing anchor tags on the web for buttons that perform navigation.
+ * Helpers to build href or action based on the linking options.
+ * @returns `buildHref` to build an `href` for screen and `buildAction` to build an action from an `href`.
  */
-export function useLinkTools() {
+export function useLinkBuilder() {
   const navigation = React.useContext(NavigationHelpersContext);
   const linking = React.useContext(LinkingContext);
 
@@ -84,7 +84,7 @@ export function useLinkTools() {
   const buildAction = React.useCallback(
     (href: string) => {
       if (!href.startsWith('/')) {
-        throw new Error(`The path must start with '/' (${href}).`);
+        throw new Error(`The href must start with '/' (${href}).`);
       }
 
       const { options } = linking;
@@ -98,7 +98,7 @@ export function useLinkTools() {
 
         return action ?? CommonActions.reset(state);
       } else {
-        throw new Error('Failed to parse the path to a navigation state.');
+        throw new Error('Failed to parse the href to a navigation state.');
       }
     },
     [linking]

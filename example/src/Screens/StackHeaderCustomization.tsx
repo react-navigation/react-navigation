@@ -4,7 +4,10 @@ import {
   HeaderBackground,
   useHeaderHeight,
 } from '@react-navigation/elements';
-import { type ParamListBase, useTheme } from '@react-navigation/native';
+import {
+  type ParamListBase,
+  type PathConfigMap,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   Header,
@@ -22,21 +25,28 @@ import {
 } from 'react-native';
 import { Appbar } from 'react-native-paper';
 
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { BlurView } from '../Shared/BlurView';
 
-type SimpleStackParams = {
+export type HeaderCustomizationStackParams = {
   Article: { author: string };
   Albums: undefined;
 };
+
+export const headerCustomizationStackLinking: PathConfigMap<HeaderCustomizationStackParams> =
+  {
+    Article: COMMON_LINKING_CONFIG.Article,
+    Albums: 'albums',
+  };
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
   route,
-}: StackScreenProps<SimpleStackParams, 'Article'>) => {
+}: StackScreenProps<HeaderCustomizationStackParams, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -55,7 +65,9 @@ const ArticleScreen = ({
   );
 };
 
-const AlbumsScreen = ({ navigation }: StackScreenProps<SimpleStackParams>) => {
+const AlbumsScreen = ({
+  navigation,
+}: StackScreenProps<HeaderCustomizationStackParams>) => {
   const headerHeight = useHeaderHeight();
 
   return (
@@ -76,7 +88,7 @@ const AlbumsScreen = ({ navigation }: StackScreenProps<SimpleStackParams>) => {
   );
 };
 
-const Stack = createStackNavigator<SimpleStackParams>();
+const Stack = createStackNavigator<HeaderCustomizationStackParams>();
 
 type Props = StackScreenProps<ParamListBase>;
 
@@ -106,7 +118,6 @@ export function StackHeaderCustomization({ navigation }: Props) {
     });
   }, [navigation]);
 
-  const { colors, dark } = useTheme();
   const [headerTitleCentered, setHeaderTitleCentered] = React.useState(true);
 
   return (
@@ -148,7 +159,7 @@ export function StackHeaderCustomization({ navigation }: Props) {
       <Stack.Screen
         name="Albums"
         component={AlbumsScreen}
-        options={{
+        options={({ theme }) => ({
           title: 'Albums',
           headerBackTitle: 'Back',
           headerTransparent: true,
@@ -157,17 +168,17 @@ export function StackHeaderCustomization({ navigation }: Props) {
               style={{
                 backgroundColor: 'blue',
                 borderBottomWidth: StyleSheet.hairlineWidth,
-                borderBottomColor: colors.border,
+                borderBottomColor: theme.colors.border,
               }}
             >
               <BlurView
-                tint={dark ? 'dark' : 'light'}
+                tint={theme.dark ? 'dark' : 'light'}
                 intensity={75}
                 style={StyleSheet.absoluteFill}
               />
             </HeaderBackground>
           ),
-        }}
+        })}
       />
     </Stack.Navigator>
   );

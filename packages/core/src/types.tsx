@@ -14,6 +14,9 @@ declare global {
   namespace ReactNavigation {
     // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface RootParamList {}
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface Theme {}
   }
 }
 
@@ -29,13 +32,15 @@ export type DefaultNavigatorOptions<
    * Optional ID for the navigator. Can be used with `navigation.getParent(id)` to refer to a parent.
    */
   id?: string;
+
   /**
    * Children React Elements to extract the route configuration from.
    * Only `Screen`, `Group` and `React.Fragment` are supported as children.
    */
   children: React.ReactNode;
+
   /**
-   * Layout component for the navigator.
+   * Layout for the navigator.
    * Useful for wrapping with a component with access to navigator's state and options.
    */
   layout?: (props: {
@@ -58,6 +63,7 @@ export type DefaultNavigatorOptions<
     >;
     children: React.ReactNode;
   }) => React.ReactElement;
+
   /**
    * Event listeners for all the screens in the navigator.
    */
@@ -67,6 +73,7 @@ export type DefaultNavigatorOptions<
         route: RouteProp<ParamList>;
         navigation: any;
       }) => ScreenListeners<State, EventMap>);
+
   /**
    * Default options for all screens under this navigator.
    */
@@ -75,7 +82,25 @@ export type DefaultNavigatorOptions<
     | ((props: {
         route: RouteProp<ParamList>;
         navigation: any;
+        theme: ReactNavigation.Theme;
       }) => ScreenOptions);
+
+  /**
+   * Layout for all screens under this navigator.
+   */
+  screenLayout?: (props: {
+    route: RouteProp<ParamList, keyof ParamList>;
+    navigation: any;
+    theme: ReactNavigation.Theme;
+    children: React.ReactElement;
+  }) => React.ReactElement;
+
+  /**
+   A function returning a state, which may be set after modifying the routes name.
+   */
+  getStateForRouteNamesChange?: (
+    state: NavigationState
+  ) => PartialState<NavigationState> | undefined;
 };
 
 export type EventMapBase = Record<
@@ -276,6 +301,22 @@ type NavigationHelpersCommon<
   ): void;
 
   /**
+   * Preloads the route in current navigation tree.
+   *
+   * @param name Name of the route to navigate to.
+   * @param [params] Params object for the route.
+   */
+  preload<RouteName extends keyof ParamList>(
+    ...args: RouteName extends unknown
+      ? undefined extends ParamList[RouteName]
+        ?
+            | [screen: RouteName]
+            | [screen: RouteName, params: ParamList[RouteName]]
+        : [screen: RouteName, params: ParamList[RouteName]]
+      : never
+  ): void;
+
+  /**
    * Reset the navigation state to the provided state.
    *
    * @param state Navigation state object.
@@ -373,6 +414,10 @@ export type NavigationContainerProps = {
    * @deprecated Use nested navigation API instead
    */
   navigationInChildEnabled?: boolean;
+  /**
+   * Theme object for the UI elements.
+   */
+  theme?: ReactNavigation.Theme;
   /**
    * Children elements to render.
    */
@@ -584,6 +629,7 @@ export type RouteConfig<
     | ((props: {
         route: RouteProp<ParamList, RouteName>;
         navigation: any;
+        theme: ReactNavigation.Theme;
       }) => ScreenOptions);
 
   /**
@@ -595,6 +641,18 @@ export type RouteConfig<
         route: RouteProp<ParamList, RouteName>;
         navigation: any;
       }) => ScreenListeners<State, EventMap>);
+
+  /**
+   * Layout for this screen.
+   * Useful for wrapping the screen with custom containers.
+   * e.g. for styling, error boundaries, suspense, etc.
+   */
+  layout?: (props: {
+    route: RouteProp<ParamList, keyof ParamList>;
+    navigation: any;
+    theme: ReactNavigation.Theme;
+    children: React.ReactElement;
+  }) => React.ReactElement;
 
   /**
    * Function to return an unique ID for this screen.
@@ -632,7 +690,20 @@ export type RouteGroupConfig<
     | ((props: {
         route: RouteProp<ParamList, keyof ParamList>;
         navigation: any;
+        theme: ReactNavigation.Theme;
       }) => ScreenOptions);
+
+  /**
+   * Layout for the screens inside the group.
+   * This will override the `screenLayout` of parent group or navigator.
+   */
+  screenLayout?: (props: {
+    route: RouteProp<ParamList, keyof ParamList>;
+    navigation: any;
+    theme: ReactNavigation.Theme;
+    children: React.ReactElement;
+  }) => React.ReactElement;
+
   /**
    * Children React Elements to extract the route configuration from.
    * Only `Screen`, `Group` and `React.Fragment` are supported as children.
@@ -810,6 +881,12 @@ export type PathConfig<ParamList extends {}> = {
    * Name of the initial route to use for the navigator when the path matches.
    */
   initialRouteName?: keyof ParamList;
+  /**
+   * A function returning a state, which may be set after modifying the routes name.
+   */
+  getStateForRouteNamesChange?: (
+    state: NavigationState
+  ) => PartialState<NavigationState> | undefined;
 };
 
 export type PathConfigMap<ParamList extends {}> = {

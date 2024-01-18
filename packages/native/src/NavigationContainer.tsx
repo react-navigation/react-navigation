@@ -16,13 +16,12 @@ import useLatestCallback from 'use-latest-callback';
 import { LinkingContext } from './LinkingContext';
 import { LocaleDirContext } from './LocaleDirContext';
 import { DefaultTheme } from './theming/DefaultTheme';
-import { ThemeProvider } from './theming/ThemeProvider';
 import type {
   DocumentTitleOptions,
   LinkingOptions,
   LocaleDirection,
-  Theme,
 } from './types';
+import { UnhandledLinkingContext } from './UnhandledLinkingContext';
 import { useBackButton } from './useBackButton';
 import { useDocumentTitle } from './useDocumentTitle';
 import { useLinking } from './useLinking';
@@ -40,7 +39,6 @@ global.REACT_NAVIGATION_DEVTOOLS = new WeakMap();
 
 type Props<ParamList extends {}> = NavigationContainerProps & {
   direction?: LocaleDirection;
-  theme?: Theme;
   linking?: LinkingOptions<ParamList>;
   fallback?: React.ReactNode;
   documentTitle?: DocumentTitleOptions;
@@ -55,7 +53,7 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
  * @param props.onStateChange Callback which is called with the latest navigation state when it changes.
  * @param props.onUnhandledAction Callback which is called when an action is not handled.
  * @param props.direction Text direction of the components. Defaults to `'ltr'`.
- * @param props.theme Theme object for the navigators.
+ * @param props.theme Theme object for the UI elements.
  * @param props.linking Options for deep linking. Deep link handling is enabled when this prop is provided, unless `linking.enabled` is `false`.
  * @param props.fallback Fallback component to render until we have finished getting initial state when linking is enabled. Defaults to `null`.
  * @param props.documentTitle Options to configure the document title on Web. Updating document title is handled by default unless `documentTitle.enabled` is `false`.
@@ -87,7 +85,9 @@ function NavigationContainerInner(
   useBackButton(refContainer);
   useDocumentTitle(refContainer, documentTitle);
 
-  const lastUnhandledLinking = React.useRef<string | undefined>();
+  const [lastUnhandledLink, setLastUnhandledLink] = React.useState<
+    string | undefined
+  >();
 
   const { getInitialState } = useLinking(
     refContainer,
@@ -96,30 +96,38 @@ function NavigationContainerInner(
       prefixes: [],
       ...linking,
     },
-    lastUnhandledLinking
+    setLastUnhandledLink
   );
 
-  const linkingContext = React.useMemo(
-    () => ({ options: linking, lastUnhandledLinking }),
-    [linking, lastUnhandledLinking]
+  const linkingContext = React.useMemo(() => ({ options: linking }), [linking]);
+
+  const unhandledLinkingContext = React.useMemo(
+    () => ({ lastUnhandledLink, setLastUnhandledLink }),
+    [lastUnhandledLink, setLastUnhandledLink]
   );
 
   const onReadyForLinkingHandling = useLatestCallback(() => {
-    // If the screen path matches lastUnhandledLinking, we do not track it
+    // If the screen path matches lastUnhandledLink, we do not track it
     const path = refContainer.current?.getCurrentRoute()?.path;
-    if (path === linkingContext.lastUnhandledLinking.current) {
-      linkingContext.lastUnhandledLinking.current = undefined;
-    }
+    setLastUnhandledLink((previousLastUnhandledLink) => {
+      if (previousLastUnhandledLink === path) {
+        return undefined;
+      }
+      return previousLastUnhandledLink;
+    });
     onReady?.();
   });
 
   const onStateChangeForLinkingHandling = useLatestCallback(
     (state: Readonly<NavigationState> | undefined) => {
-      // If the screen path matches lastUnhandledLinking, we do not track it
+      // If the screen path matches lastUnhandledLink, we do not track it
       const path = refContainer.current?.getCurrentRoute()?.path;
-      if (path === linkingContext.lastUnhandledLinking.current) {
-        linkingContext.lastUnhandledLinking.current = undefined;
-      }
+      setLastUnhandledLink((previousLastUnhandledLink) => {
+        if (previousLastUnhandledLink === path) {
+          return undefined;
+        }
+        return previousLastUnhandledLink;
+      });
       onStateChange?.(state);
     }
   );
@@ -158,10 +166,11 @@ function NavigationContainerInner(
 
   return (
     <LocaleDirContext.Provider value={direction}>
-      <LinkingContext.Provider value={linkingContext}>
-        <ThemeProvider value={theme}>
+      <UnhandledLinkingContext.Provider value={unhandledLinkingContext}>
+        <LinkingContext.Provider value={linkingContext}>
           <BaseNavigationContainer
             {...rest}
+            theme={theme}
             onReady={onReadyForLinkingHandling}
             onStateChange={onStateChangeForLinkingHandling}
             initialState={
@@ -169,8 +178,8 @@ function NavigationContainerInner(
             }
             ref={refContainer}
           />
-        </ThemeProvider>
-      </LinkingContext.Provider>
+        </LinkingContext.Provider>
+      </UnhandledLinkingContext.Provider>
     </LocaleDirContext.Provider>
   );
 }

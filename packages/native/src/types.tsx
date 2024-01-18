@@ -6,6 +6,29 @@ import type {
   Route,
 } from '@react-navigation/core';
 
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace ReactNavigation {
+    interface Theme {
+      dark: boolean;
+      colors: {
+        primary: string;
+        background: string;
+        card: string;
+        text: string;
+        border: string;
+        notification: string;
+      };
+      fonts: {
+        regular: FontStyle;
+        medium: FontStyle;
+        bold: FontStyle;
+        heavy: FontStyle;
+      };
+    }
+  }
+}
+
 export type LocaleDirection = 'ltr' | 'rtl';
 
 type FontStyle = {
@@ -24,23 +47,7 @@ type FontStyle = {
     | '900';
 };
 
-export type Theme = {
-  dark: boolean;
-  colors: {
-    primary: string;
-    background: string;
-    card: string;
-    text: string;
-    border: string;
-    notification: string;
-  };
-  fonts: {
-    regular: FontStyle;
-    medium: FontStyle;
-    bold: FontStyle;
-    heavy: FontStyle;
-  };
-};
+export type Theme = ReactNavigation.Theme;
 
 export type LinkingOptions<ParamList extends {}> = {
   /**
