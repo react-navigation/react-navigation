@@ -46,7 +46,7 @@ type ParamsForScreenComponent<T> = T extends {
 type ParamsForScreen<T> = T extends { screen: StaticNavigation<any, any, any> }
   ? NavigatorScreenParams<StaticParamList<T['screen']>> | undefined
   : T extends StaticNavigation<any, any, any>
-  ? NavigatorScreenParams<StaticParamList<T>> | undefined
+  ? NavigatorScreenParams<StaticParamList<T>>
   : UnknownToUndefined<ParamsForScreenComponent<T>>;
 
 type ParamListForScreens<Screens> = {
