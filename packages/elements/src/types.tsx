@@ -18,6 +18,10 @@ export type HeaderOptions = {
    */
   headerTitle?: string | ((props: HeaderTitleProps) => React.ReactNode);
   /**
+   * ID to locate the header in tests.
+   */
+  headerTitleTestID?: string;
+  /**
    * How to align the the header title.
    * Defaults to `center` on iOS and `left` on Android.
    */
@@ -145,6 +149,10 @@ export type HeaderTitleProps = {
    * Style object for the title element.
    */
   style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
+  /**
+   * ID to locate the header title in tests.
+   */
+  testID?: string;
 };
 
 export type HeaderButtonProps = {
