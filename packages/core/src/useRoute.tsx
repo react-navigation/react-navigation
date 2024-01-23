@@ -9,7 +9,10 @@ import type { RouteProp } from './types';
  *
  * @returns Route prop of the parent screen.
  */
-export function useRoute<T extends RouteProp<ParamListBase>>(): T {
+export function useRoute<T extends RouteProp<ParamListBase>>(): Omit<
+  T,
+  'params'
+> & { params?: T['params'] } {
   const route = React.useContext(NavigationRouteContext);
 
   if (route === undefined) {
@@ -18,5 +21,5 @@ export function useRoute<T extends RouteProp<ParamListBase>>(): T {
     );
   }
 
-  return route as T;
+  return route as Omit<T, 'params'> & { params?: T['params'] };
 }
