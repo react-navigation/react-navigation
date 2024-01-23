@@ -84,8 +84,8 @@ export function SceneView<T extends Route>({
         layout.width
           ? { width: layout.width }
           : focused
-          ? StyleSheet.absoluteFill
-          : null,
+            ? StyleSheet.absoluteFill
+            : null,
         style,
       ]}
     >

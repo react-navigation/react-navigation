@@ -303,7 +303,6 @@ const SceneView = ({
       onHeaderBackButtonClicked={onHeaderBackButtonClicked}
       preventNativeDismiss={isRemovePrevented} // on iOS
       onNativeDismissCancelled={onNativeDismissCancelled}
-      // @ts-expect-error this prop is available since rn-screens 3.26
       // Unfortunately, because of the bug that exists on Fabric, where native event drivers
       // for Animated objects are being created after the first notifications about the header height
       // from the native side, `onHeaderHeightChange` event does not notify

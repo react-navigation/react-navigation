@@ -212,8 +212,8 @@ export function TabRouter({
                   ...(route ? route.params : undefined),
                 }
               : route
-              ? route.params
-              : undefined,
+                ? route.params
+                : undefined,
         } as Route<string>;
       });
 

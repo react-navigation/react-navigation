@@ -5,6 +5,6 @@ export function getLabel(
   return options.label !== undefined
     ? options.label
     : options.title !== undefined
-    ? options.title
-    : fallback;
+      ? options.title
+      : fallback;
 }

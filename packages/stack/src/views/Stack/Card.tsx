@@ -407,9 +407,9 @@ export class Card extends React.Component<Props> {
       gestureResponseDistance !== undefined
         ? gestureResponseDistance
         : gestureDirection === 'vertical' ||
-          gestureDirection === 'vertical-inverted'
-        ? GESTURE_RESPONSE_DISTANCE_VERTICAL
-        : GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
+            gestureDirection === 'vertical-inverted'
+          ? GESTURE_RESPONSE_DISTANCE_VERTICAL
+          : GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
 
     if (gestureDirection === 'vertical') {
       return {
@@ -566,10 +566,10 @@ export class Card extends React.Component<Props> {
                       gestureDirection === 'horizontal'
                         ? [styles.shadowHorizontal, styles.shadowLeft]
                         : gestureDirection === 'horizontal-inverted'
-                        ? [styles.shadowHorizontal, styles.shadowRight]
-                        : gestureDirection === 'vertical'
-                        ? [styles.shadowVertical, styles.shadowTop]
-                        : [styles.shadowVertical, styles.shadowBottom],
+                          ? [styles.shadowHorizontal, styles.shadowRight]
+                          : gestureDirection === 'vertical'
+                            ? [styles.shadowVertical, styles.shadowTop]
+                            : [styles.shadowVertical, styles.shadowBottom],
                       { backgroundColor },
                       shadowStyle,
                     ]}

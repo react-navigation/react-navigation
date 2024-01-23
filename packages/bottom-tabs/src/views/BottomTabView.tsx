@@ -159,8 +159,8 @@ export function BottomTabView(props: Props) {
         tabBarPosition === 'left'
           ? styles.left
           : tabBarPosition === 'right'
-          ? styles.right
-          : null
+            ? styles.right
+            : null
       }
     >
       {tabBarPosition === 'top' ? (
@@ -219,16 +219,16 @@ export function BottomTabView(props: Props) {
           const activityState = isFocused
             ? STATE_ON_TOP // the screen is on top after the transition
             : animationEnabled // is animation is not enabled, immediately move to inactive state
-            ? tabAnims[route.key].interpolate({
-                inputRange: [0, 1 - EPSILON, 1],
-                outputRange: [
-                  STATE_TRANSITIONING_OR_BELOW_TOP, // screen visible during transition
-                  STATE_TRANSITIONING_OR_BELOW_TOP,
-                  STATE_INACTIVE, // the screen is detached after transition
-                ],
-                extrapolate: 'extend',
-              })
-            : STATE_INACTIVE;
+              ? tabAnims[route.key].interpolate({
+                  inputRange: [0, 1 - EPSILON, 1],
+                  outputRange: [
+                    STATE_TRANSITIONING_OR_BELOW_TOP, // screen visible during transition
+                    STATE_TRANSITIONING_OR_BELOW_TOP,
+                    STATE_INACTIVE, // the screen is detached after transition
+                  ],
+                  extrapolate: 'extend',
+                })
+              : STATE_INACTIVE;
 
           return (
             <MaybeScreen

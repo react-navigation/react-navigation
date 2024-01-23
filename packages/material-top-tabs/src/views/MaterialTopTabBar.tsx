@@ -101,8 +101,8 @@ export function MaterialTopTabBar({
           options.tabBarLabel !== undefined
             ? options.tabBarLabel
             : options.title !== undefined
-            ? options.title
-            : (route as Route<string>).name;
+              ? options.title
+              : (route as Route<string>).name;
 
         if (typeof label === 'string') {
           return (
@@ -119,8 +119,8 @@ export function MaterialTopTabBar({
           typeof options.tabBarLabel === 'string'
             ? options.tabBarLabel
             : options.title !== undefined
-            ? options.title
-            : route.name;
+              ? options.title
+              : route.name;
 
         return label({ focused, color, children });
       }}
