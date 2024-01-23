@@ -120,29 +120,29 @@ export function NativeStackView({ state, descriptors }: Props) {
                               label: headerBackTitle,
                             })
                         : headerLeft === undefined && canGoBack
-                        ? ({ tintColor }) => (
-                            <HeaderBackButton
-                              tintColor={tintColor}
-                              backImage={
-                                headerBackImageSource !== undefined
-                                  ? () => (
-                                      <Image
-                                        source={headerBackImageSource}
-                                        resizeMode="contain"
-                                        style={[
-                                          styles.backImage,
-                                          { tintColor },
-                                        ]}
-                                      />
-                                    )
-                                  : undefined
-                              }
-                              canGoBack={canGoBack}
-                              onPress={navigation.goBack}
-                              href={headerBack.href}
-                            />
-                          )
-                        : headerLeft
+                          ? ({ tintColor }) => (
+                              <HeaderBackButton
+                                tintColor={tintColor}
+                                backImage={
+                                  headerBackImageSource !== undefined
+                                    ? () => (
+                                        <Image
+                                          source={headerBackImageSource}
+                                          resizeMode="contain"
+                                          style={[
+                                            styles.backImage,
+                                            { tintColor },
+                                          ]}
+                                        />
+                                      )
+                                    : undefined
+                                }
+                                canGoBack={canGoBack}
+                                onPress={navigation.goBack}
+                                href={headerBack.href}
+                              />
+                            )
+                          : headerLeft
                     }
                     headerRight={
                       typeof headerRight === 'function'

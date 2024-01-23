@@ -280,8 +280,8 @@ export function BottomTabBar({
         tabBarPosition === 'left'
           ? styles.left
           : tabBarPosition === 'right'
-          ? styles.right
-          : styles.bottom,
+            ? styles.right
+            : styles.bottom,
         {
           backgroundColor:
             tabBarBackgroundElement != null ? 'transparent' : colors.card,
@@ -372,8 +372,8 @@ export function BottomTabBar({
             options.tabBarAccessibilityLabel !== undefined
               ? options.tabBarAccessibilityLabel
               : typeof label === 'string' && Platform.OS === 'ios'
-              ? `${label}, tab, ${index + 1} of ${routes.length}`
-              : undefined;
+                ? `${label}, tab, ${index + 1} of ${routes.length}`
+                : undefined;
 
           return (
             <NavigationContext.Provider

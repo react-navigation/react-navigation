@@ -20,9 +20,9 @@ export function getFocusedRouteNameFromRoute(
             : state.routes.length - 1)
       ].name
     : // If state doesn't exist, we need to default to `screen` param if available
-    typeof params?.screen === 'string'
-    ? params.screen
-    : undefined;
+      typeof params?.screen === 'string'
+      ? params.screen
+      : undefined;
 
   return routeName;
 }

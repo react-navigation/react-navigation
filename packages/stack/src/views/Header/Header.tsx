@@ -49,8 +49,8 @@ export const Header = React.memo(function Header({
     options.headerStatusBarHeight !== undefined
       ? options.headerStatusBarHeight
       : isModal || isParentHeaderShown
-      ? 0
-      : insets.top;
+        ? 0
+        : insets.top;
 
   return (
     <HeaderSegment

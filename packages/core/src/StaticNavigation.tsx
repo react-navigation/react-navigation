@@ -40,14 +40,14 @@ type ParamsForScreenComponent<T> = T extends {
 }
   ? P
   : T extends React.ComponentType<{ route: { params: infer P } }>
-  ? P
-  : undefined;
+    ? P
+    : undefined;
 
 type ParamsForScreen<T> = T extends { screen: StaticNavigation<any, any, any> }
   ? NavigatorScreenParams<StaticParamList<T['screen']>> | undefined
   : T extends StaticNavigation<any, any, any>
-  ? NavigatorScreenParams<StaticParamList<T>> | undefined
-  : UnknownToUndefined<ParamsForScreenComponent<T>>;
+    ? NavigatorScreenParams<StaticParamList<T>> | undefined
+    : UnknownToUndefined<ParamsForScreenComponent<T>>;
 
 type ParamListForScreens<Screens> = {
   [Key in KeysOf<Screens>]: ParamsForScreen<Screens[Key]>;

@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
@@ -36,15 +36,15 @@ export const CustomIndicator = () => {
   const [routes] = React.useState<Route[]>([
     {
       key: 'article',
-      icon: 'ios-document',
+      icon: 'document',
     },
     {
       key: 'contacts',
-      icon: 'ios-people',
+      icon: 'people',
     },
     {
       key: 'albums',
-      icon: 'ios-albums',
+      icon: 'albums',
     },
   ]);
 
