@@ -445,10 +445,14 @@ type Props = {
 function NativeStackViewInner({ state, navigation, descriptors }: Props) {
   const { setNextDismissedKey } = useDismissedRouteError(state);
 
+  const { colors } = useTheme();
+
   useInvalidPreventRemoveError(descriptors);
 
   return (
-    <ScreenStack style={styles.container}>
+    <ScreenStack
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       {state.routes.map((route, index) => {
         const descriptor = descriptors[route.key];
         const isFocused = state.index === index;
