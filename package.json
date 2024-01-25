@@ -1,13 +1,5 @@
 {
-  "name": "ReactNavigation",
-  "version": "4.4.6",
   "description": "React Navigation",
-  "workspaces": {
-    "packages": [
-      "example",
-      "packages/*"
-    ]
-  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
