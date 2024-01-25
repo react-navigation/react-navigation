@@ -1,6 +1,6 @@
 {
-  "name": "ReactNavigation",
-  "version": "4.4.6",
+  "name": "react-navigation",
+  "version": "4.4.7",
   "description": "React Navigation",
   "workspaces": {
     "packages": [
