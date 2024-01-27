@@ -139,8 +139,8 @@ export function HeaderContainer({
                   nextHeaderlessGestureDirection === 'vertical-inverted'
                   ? forSlideUp
                   : nextHeaderlessGestureDirection === 'horizontal-inverted'
-                  ? forSlideRight
-                  : forSlideLeft
+                    ? forSlideRight
+                    : forSlideLeft
                 : headerStyleInterpolator
               : forNoAnimation,
         };

@@ -1,9 +1,8 @@
 import Feather from '@expo/vector-icons/Feather';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Button } from '@react-navigation/elements';
+import { Button, Text } from '@react-navigation/elements';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Title } from 'react-native-paper';
 
 import type { PathConfigMap } from '../../../packages/core/src/types';
 
@@ -40,37 +39,39 @@ export function DynamicTabs() {
         >
           {() => (
             <View style={styles.container}>
-              <Title>Tab {i}</Title>
-              {tabs.length < 5 && (
-                <Button
-                  onPress={() =>
-                    setTabs((tabs) => {
-                      if (tabs.length < 5) {
-                        return [...tabs, tabs.length];
-                      } else {
-                        return tabs;
-                      }
-                    })
-                  }
-                >
-                  Add a tab
-                </Button>
-              )}
-              {tabs.length > 1 && (
-                <Button
-                  onPress={() =>
-                    setTabs((tabs) => {
-                      if (tabs.length > 1) {
-                        return tabs.slice(0, -1);
-                      } else {
-                        return tabs;
-                      }
-                    })
-                  }
-                >
-                  Remove a tab
-                </Button>
-              )}
+              <Text style={styles.heading}>Tab {i}</Text>
+              <View style={styles.buttons}>
+                {tabs.length < 5 && (
+                  <Button
+                    onPress={() =>
+                      setTabs((tabs) => {
+                        if (tabs.length < 5) {
+                          return [...tabs, tabs.length];
+                        } else {
+                          return tabs;
+                        }
+                      })
+                    }
+                  >
+                    Add a tab
+                  </Button>
+                )}
+                {tabs.length > 1 && (
+                  <Button
+                    onPress={() =>
+                      setTabs((tabs) => {
+                        if (tabs.length > 1) {
+                          return tabs.slice(0, -1);
+                        } else {
+                          return tabs;
+                        }
+                      })
+                    }
+                  >
+                    Remove a tab
+                  </Button>
+                )}
+              </View>
             </View>
           )}
         </BottomTabs.Screen>
@@ -84,6 +85,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 8,
+  },
+  heading: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 12,
+  },
+  buttons: {
     gap: 8,
   },
 });

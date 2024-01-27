@@ -2,6 +2,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
   Button,
   HeaderBackground,
+  HeaderButton,
   useHeaderHeight,
 } from '@react-navigation/elements';
 import {
@@ -23,7 +24,6 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Appbar } from 'react-native-paper';
 
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
@@ -141,9 +141,7 @@ export function StackHeaderCustomization({ navigation }: Props) {
             />
           ),
           headerRight: ({ tintColor }) => (
-            <Appbar.Action
-              color={tintColor}
-              icon="dots-horizontal-circle-outline"
+            <HeaderButton
               onPress={() => {
                 setHeaderTitleCentered((centered) => !centered);
                 Alert.alert(
@@ -151,7 +149,13 @@ export function StackHeaderCustomization({ navigation }: Props) {
                   'Never gonna let you down! Never gonna run around and desert you!'
                 );
               }}
-            />
+            >
+              <MaterialCommunityIcons
+                name="dots-horizontal-circle-outline"
+                size={24}
+                color={tintColor}
+              />
+            </HeaderButton>
           ),
         })}
         initialParams={{ author: 'Gandalf' }}
