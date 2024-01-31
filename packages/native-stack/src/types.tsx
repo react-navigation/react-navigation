@@ -489,7 +489,7 @@ export type NativeStackNavigationOptions = {
   presentation?: Exclude<ScreenProps['stackPresentation'], 'push'> | 'card';
   /**
    * Describes heights where a sheet can rest.
-   * Works only when `stackPresentation` is set to `formSheet`.
+   * Works only when `presentation` is set to `formSheet`.
    * Defaults to `large`.
    *
    * Available values:
@@ -503,7 +503,7 @@ export type NativeStackNavigationOptions = {
   sheetAllowedDetents?: SheetDetentTypes;
   /**
    * Whether the sheet should expand to larger detent when scrolling.
-   * Works only when `stackPresentation` is set to `formSheet`.
+   * Works only when `presentation` is set to `formSheet`.
    * Defaults to `true`.
    *
    * @platform ios
@@ -511,7 +511,7 @@ export type NativeStackNavigationOptions = {
   sheetExpandsWhenScrolledToEdge?: boolean;
   /**
    * The corner radius that the sheet will try to render with.
-   * Works only when `stackPresentation` is set to `formSheet`.
+   * Works only when `presentation` is set to `formSheet`.
    *
    * If set to non-negative value it will try to render sheet with provided radius, else it will apply system default.
    *
@@ -522,7 +522,7 @@ export type NativeStackNavigationOptions = {
   sheetCornerRadius?: number;
   /**
    * Boolean indicating whether the sheet shows a grabber at the top.
-   * Works only when `stackPresentation` is set to `formSheet`.
+   * Works only when `presentation` is set to `formSheet`.
    * Defaults to `false`.
    *
    * @platform ios
@@ -530,7 +530,7 @@ export type NativeStackNavigationOptions = {
   sheetGrabberVisible?: boolean;
   /**
    * The largest sheet detent for which a view underneath won't be dimmed.
-   * Works only when `stackPresentation` is se tto `formSheet`.
+   * Works only when `presentation` is se tto `formSheet`.
    *
    * If this prop is set to:
    *
