@@ -340,7 +340,7 @@ export type NativeStackNavigationOptions = {
    *
    * @platform ios
    */
-  hideKeyboardOnSwipe?: boolean;
+  keyboardHandlingEnabled?: boolean;
   /**
    * Sets the navigation bar color. Defaults to initial navigation bar color.
    *

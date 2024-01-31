@@ -178,7 +178,7 @@ const SceneView = ({
     headerBackground,
     headerTransparent,
     autoHideHomeIndicator,
-    hideKeyboardOnSwipe,
+    keyboardHandlingEnabled,
     navigationBarColor,
     navigationBarHidden,
     orientation,
@@ -299,7 +299,7 @@ const SceneView = ({
           : gestureEnabled
       }
       homeIndicatorHidden={autoHideHomeIndicator}
-      hideKeyboardOnSwipe={hideKeyboardOnSwipe}
+      hideKeyboardOnSwipe={keyboardHandlingEnabled}
       navigationBarColor={navigationBarColor}
       navigationBarHidden={navigationBarHidden}
       replaceAnimation={animationTypeForReplace}
