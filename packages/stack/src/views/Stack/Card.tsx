@@ -517,7 +517,7 @@ export default class Card extends React.Component<Props> {
           // Make sure that this view isn't removed. If this view is removed, our style with animated value won't apply
           collapsable={false}
         />
-        <View pointerEvents="box-none" {...rest}>
+        <View pointerEvents="box-none" collapsable={false} {...rest}>
           {overlayEnabled ? (
             <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
               {overlay({ style: overlayStyle })}
