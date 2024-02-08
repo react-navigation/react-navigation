@@ -299,6 +299,12 @@ export function createComponentForStaticNavigation(
   const { Navigator, Group, Screen, config } = tree;
   const { screens, groups, ...rest } = config;
 
+  if (screens == null) {
+    throw new Error(
+      "Couldn't find a 'screens' property. Make sure to define your screens under a 'screens' property in the configuration."
+    );
+  }
+
   const items = getItemsFromScreens(Screen, screens);
 
   if (groups) {
