@@ -20,7 +20,7 @@ export default function HeaderBackButton({
   backImage,
   label,
   labelStyle,
-  labelVisible,
+  labelVisible = Platform.OS === 'ios',
   onLabelLayout,
   onPress,
   pressColor,

@@ -59,35 +59,11 @@ const findMatchingState = <T extends NavigationState>(
 /**
  * Run async function in series as it's called.
  */
-const series = (cb: () => Promise<void>) => {
-  // Whether we're currently handling a callback
-  let handling = false;
-  let queue: (() => Promise<void>)[] = [];
-
-  const callback = async () => {
-    try {
-      if (handling) {
-        // If we're currently handling a previous event, wait before handling this one
-        // Add the callback to the beginning of the queue
-        queue.unshift(callback);
-        return;
-      }
-
-      handling = true;
-
-      await cb();
-    } finally {
-      handling = false;
-
-      if (queue.length) {
-        // If we have queued items, handle the last one
-        const last = queue.pop();
-
-        last?.();
-      }
-    }
+export const series = (cb: () => Promise<void>) => {
+  let queue = Promise.resolve();
+  const callback = () => {
+    queue = queue.then(cb);
   };
-
   return callback;
 };
 
@@ -206,6 +182,8 @@ export default function useLinking(
       if (!navigation || !enabled) {
         return;
       }
+
+      const { location } = window;
 
       const path = location.pathname + location.search;
       const index = history.index;

@@ -12,13 +12,7 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import {
-  BackHandler,
-  I18nManager,
-  Platform,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { I18nManager, Platform, StyleSheet, View } from 'react-native';
 import * as Reanimated from 'react-native-reanimated';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
 
@@ -31,6 +25,7 @@ import type {
   DrawerNavigationProp,
   DrawerProps,
 } from '../types';
+import { addCancelListener } from '../utils/addCancelListener';
 import DrawerPositionContext from '../utils/DrawerPositionContext';
 import DrawerStatusContext from '../utils/DrawerStatusContext';
 import getDrawerStatusFromState from '../utils/getDrawerStatusFromState';
@@ -163,30 +158,10 @@ function DrawerViewBase({
       return true;
     };
 
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        handleHardwareBack();
-      }
-    };
-
-    if (Platform.OS === 'web') {
-      document?.body?.addEventListener?.('keyup', handleEscape);
-      return () => {
-        document?.body?.removeEventListener?.('keyup', handleEscape);
-      };
-    }
-
     // We only add the listeners when drawer opens
     // This way we can make sure that the listener is added as late as possible
     // This will make sure that our handler will run first when back button is pressed
-    const subscription = BackHandler.addEventListener(
-      'hardwareBackPress',
-      handleHardwareBack
-    );
-
-    return () => {
-      subscription?.remove?.();
-    };
+    return addCancelListener(handleHardwareBack);
   }, [
     defaultStatus,
     drawerStatus,

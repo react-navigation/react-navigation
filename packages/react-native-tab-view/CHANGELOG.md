@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.4.4](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@3.4.3...react-native-tab-view@3.4.4) (2023-10-19)
+
+### Bug Fixes
+
+* bump use-latest-callback to fix callback assignements ([bc30315](https://github.com/react-navigation/react-navigation/commit/bc303159fafd9998a9c516e43943266002d5e4bb)) - by @satya164
+
+## [3.4.3](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@3.4.2...react-native-tab-view@3.4.3) (2023-09-25)
+
+**Note:** Version bump only for package react-native-tab-view
+
 ## [3.4.2](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@3.4.1...react-native-tab-view@3.4.2) (2023-06-22)
 
 **Note:** Version bump only for package react-native-tab-view

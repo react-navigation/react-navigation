@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.4.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.4.9...@react-navigation/core@6.4.10) (2023-10-19)
+
+### Bug Fixes
+
+* bump use-latest-callback to fix callback assignements ([bc30315](https://github.com/react-navigation/react-navigation/commit/bc303159fafd9998a9c516e43943266002d5e4bb)) - by @satya164
+
 ## [6.4.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.4.8...@react-navigation/core@6.4.9) (2023-06-22)
 
 **Note:** Version bump only for package @react-navigation/core

@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.1.9...@react-navigation/native@6.1.10) (2024-02-08)
+
+**Note:** Version bump only for package @react-navigation/native
+
+## [6.1.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.1.8...@react-navigation/native@6.1.9) (2023-10-19)
+
+### Bug Fixes
+
+* bump use-latest-callback to fix callback assignements ([bc30315](https://github.com/react-navigation/react-navigation/commit/bc303159fafd9998a9c516e43943266002d5e4bb)) - by @satya164
+
+## [6.1.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.1.7...@react-navigation/native@6.1.8) (2023-09-25)
+
+### Bug Fixes
+
+* don't use .web extensions ([f8241db](https://github.com/react-navigation/react-navigation/commit/f8241dba4997bde1d082a1ed8475498130818133)) - by @satya164
+* incorrect url parsing (isssue: [#10924](https://github.com/react-navigation/react-navigation/issues/10924)) ([#11528](https://github.com/react-navigation/react-navigation/issues/11528)) ([0b74a0c](https://github.com/react-navigation/react-navigation/commit/0b74a0ce0828749853d59cf34c89ba52d8f5ef74)) - by @retyui
+* prevent back handler usage on web ([#11458](https://github.com/react-navigation/react-navigation/issues/11458)) ([e5f753f](https://github.com/react-navigation/react-navigation/commit/e5f753f19e1c05251b56b98b645152024318b441)) - by @EvanBacon
+* properly import useBackButton on web ([9e37c5d](https://github.com/react-navigation/react-navigation/commit/9e37c5d02da4b5ddab3f64331e59d0cfc01a2cf2)) - by @kacperkapusciak
+* replace series function used to queue async callbacks ([#11485](https://github.com/react-navigation/react-navigation/issues/11485)) ([2ec6f21](https://github.com/react-navigation/react-navigation/commit/2ec6f2193d38611a71cf5fccb9280b5c33d0849d)) - by @karlsander
+
 ## [6.1.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.1.6...@react-navigation/native@6.1.7) (2023-06-22)
 
 **Note:** Version bump only for package @react-navigation/native

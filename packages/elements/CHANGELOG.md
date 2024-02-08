@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.3.21...@react-navigation/elements@1.3.22) (2024-02-08)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [1.3.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.3.20...@react-navigation/elements@1.3.21) (2023-10-23)
+
+### Bug Fixes
+
+* headerHeight on phones with dynamic island ([#11338](https://github.com/react-navigation/react-navigation/issues/11338)) ([59183da](https://github.com/react-navigation/react-navigation/commit/59183da453b7c94b22e257094916840ce0c56621)), closes [#10989](https://github.com/react-navigation/react-navigation/issues/10989) - by @
+
+## [1.3.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.3.19...@react-navigation/elements@1.3.20) (2023-10-19)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [1.3.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.3.18...@react-navigation/elements@1.3.19) (2023-09-25)
+
+### Bug Fixes
+
+* add default value to labelVisible in HeaderBackBox ([#11308](https://github.com/react-navigation/react-navigation/issues/11308)) ([5284b5a](https://github.com/react-navigation/react-navigation/commit/5284b5a9c7284b17c5901f74fab06277c83c289e)) - by @gkasdorf
+* make back button ripple visible ([#11386](https://github.com/react-navigation/react-navigation/issues/11386)) ([c6fa588](https://github.com/react-navigation/react-navigation/commit/c6fa58851dc387550cd43f15396d915ff6e5dbdf)), closes [#9794](https://github.com/react-navigation/react-navigation/issues/9794) - by @vonovak
+
 ## [1.3.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.3.17...@react-navigation/elements@1.3.18) (2023-06-22)
 
 **Note:** Version bump only for package @react-navigation/elements

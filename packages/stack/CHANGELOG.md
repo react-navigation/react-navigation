@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.3.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.3.20...@react-navigation/stack@6.3.21) (2024-02-08)
+
+### Bug Fixes
+
+* don't remount native views on focus change on the new architecture ([#11807](https://github.com/react-navigation/react-navigation/issues/11807)) ([ce2cf9f](https://github.com/react-navigation/react-navigation/commit/ce2cf9ffd14b6434420a331ced80da4f03130327)) - by @j-piasecki
+
+## [6.3.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.3.19...@react-navigation/stack@6.3.20) (2023-10-23)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+## [6.3.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.3.18...@react-navigation/stack@6.3.19) (2023-10-19)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+## [6.3.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.3.17...@react-navigation/stack@6.3.18) (2023-09-25)
+
+**Note:** Version bump only for package @react-navigation/stack
+
 ## [6.3.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.3.16...@react-navigation/stack@6.3.17) (2023-06-22)
 
 **Note:** Version bump only for package @react-navigation/stack

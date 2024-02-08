@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.9.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.9.17...@react-navigation/native-stack@6.9.18) (2024-02-08)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [6.9.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.9.16...@react-navigation/native-stack@6.9.17) (2023-11-03)
+
+### Bug Fixes
+
+* fix custom header background in native stack ([9cfdf53](https://github.com/react-navigation/react-navigation/commit/9cfdf5342c471474983954ae6384a48ac0571b49)) - by @satya164
+
+## [6.9.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.9.15...@react-navigation/native-stack@6.9.16) (2023-10-23)
+
+### Bug Fixes
+
+* headerHeight on phones with dynamic island ([#11338](https://github.com/react-navigation/react-navigation/issues/11338)) ([59183da](https://github.com/react-navigation/react-navigation/commit/59183da453b7c94b22e257094916840ce0c56621)), closes [#10989](https://github.com/react-navigation/react-navigation/issues/10989) - by @
+
+## [6.9.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.9.14...@react-navigation/native-stack@6.9.15) (2023-10-19)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [6.9.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.9.13...@react-navigation/native-stack@6.9.14) (2023-09-25)
+
+### Bug Fixes
+
+* buggy behaviour of search bar / large title on Fabric with native stack v6 ([#11502](https://github.com/react-navigation/react-navigation/issues/11502)) ([cbdcbfb](https://github.com/react-navigation/react-navigation/commit/cbdcbfbf670c30aabc92c6271b8a1de135a54a56)) - by @kkafar
+
 ## [6.9.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.9.12...@react-navigation/native-stack@6.9.13) (2023-06-22)
 
 ### Bug Fixes
