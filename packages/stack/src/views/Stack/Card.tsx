@@ -517,7 +517,13 @@ export default class Card extends React.Component<Props> {
           // Make sure that this view isn't removed. If this view is removed, our style with animated value won't apply
           collapsable={false}
         />
-        <View pointerEvents="box-none" {...rest}>
+        <View
+          pointerEvents="box-none"
+          // Make sure this view is not removed on the new architecture, as it causes focus loss during navigation on Android.
+          // This can happen when the view flattening results in different trees - due to `overflow` style changing in a parent.
+          collapsable={false}
+          {...rest}
+        >
           {overlayEnabled ? (
             <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
               {overlay({ style: overlayStyle })}
