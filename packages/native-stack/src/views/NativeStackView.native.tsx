@@ -247,17 +247,9 @@ const SceneView = ({
       ? 0
       : insets.top;
 
-  // On models with Dynamic Island the status bar height is smaller than the safe area top inset.
-  const hasDynamicIsland = Platform.OS === 'ios' && topInset > 50;
-  const statusBarHeight = hasDynamicIsland ? topInset - 5 : topInset;
-
   const { preventedRoutes } = usePreventRemoveContext();
 
-  const defaultHeaderHeight = getDefaultHeaderHeight(
-    frame,
-    isModal,
-    statusBarHeight
-  );
+  const defaultHeaderHeight = getDefaultHeaderHeight(frame, isModal, topInset);
 
   const [customHeaderHeight, setCustomHeaderHeight] =
     React.useState(defaultHeaderHeight);
