@@ -4,7 +4,10 @@ import useLatestCallback from 'use-latest-callback';
 
 import { NavigationHelpersContext } from './NavigationHelpersContext';
 import { NavigationRouteContext } from './NavigationRouteContext';
-import { PreventedRoutes, PreventRemoveContext } from './PreventRemoveContext';
+import {
+  type PreventedRoutes,
+  PreventRemoveContext,
+} from './PreventRemoveContext';
 
 type Props = {
   children: React.ReactNode;

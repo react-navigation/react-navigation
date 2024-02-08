@@ -1,9 +1,9 @@
 import {
   CommonActions,
   DrawerActions,
-  DrawerNavigationState,
-  ParamListBase,
-  useLinkTools,
+  type DrawerNavigationState,
+  type ParamListBase,
+  useLinkBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
 
@@ -20,7 +20,7 @@ type Props = {
  * Component that renders the navigation list in the drawer.
  */
 export function DrawerItemList({ state, navigation, descriptors }: Props) {
-  const { buildHref } = useLinkTools();
+  const { buildHref } = useLinkBuilder();
 
   const focusedRoute = state.routes[state.index];
   const focusedDescriptor = descriptors[focusedRoute.key];
@@ -71,8 +71,8 @@ export function DrawerItemList({ state, navigation, descriptors }: Props) {
           drawerLabel !== undefined
             ? drawerLabel
             : title !== undefined
-            ? title
-            : route.name
+              ? title
+              : route.name
         }
         icon={drawerIcon}
         focused={focused}

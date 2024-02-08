@@ -1,19 +1,18 @@
 import {
   CommonActions,
-  NavigationAction,
-  NavigationState,
-  ParamListBase,
-  Router,
+  type NavigationAction,
+  type NavigationState,
+  type ParamListBase,
+  type Router,
 } from '@react-navigation/routers';
 import * as React from 'react';
 
 import { NavigationContext } from './NavigationContext';
-import { NavigationHelpers, PrivateValueStore } from './types';
+import { type NavigationHelpers, PrivateValueStore } from './types';
 import { UnhandledActionContext } from './UnhandledActionContext';
 import type { NavigationEventEmitter } from './useEventEmitter';
 
 // This is to make TypeScript compiler happy
-// eslint-disable-next-line babel/no-unused-expressions
 PrivateValueStore;
 
 type Options<State extends NavigationState, Action extends NavigationAction> = {
@@ -32,7 +31,7 @@ export function useNavigationHelpers<
   State extends NavigationState,
   ActionHelpers extends Record<string, () => void>,
   Action extends NavigationAction,
-  EventMap extends Record<string, any>
+  EventMap extends Record<string, any>,
 >({
   id: navigatorId,
   onAction,

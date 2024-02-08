@@ -14,7 +14,7 @@ import { useRoute } from './useRoute';
  * @param preventRemove Boolean indicating whether to prevent screen from being removed.
  * @param callback Function which is executed when screen was prevented from being removed.
  */
-export function UNSTABLE_usePreventRemove(
+export function usePreventRemove(
   preventRemove: boolean,
   callback: (options: { data: { action: NavigationAction } }) => void
 ) {

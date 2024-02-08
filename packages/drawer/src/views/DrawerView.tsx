@@ -1,4 +1,5 @@
 import {
+  getDefaultSidebarWidth,
   getHeaderTitle,
   Header,
   SafeAreaProviderCompat,
@@ -6,13 +7,14 @@ import {
 } from '@react-navigation/elements';
 import {
   DrawerActions,
-  DrawerNavigationState,
-  DrawerStatus,
-  ParamListBase,
+  type DrawerNavigationState,
+  type DrawerStatus,
+  type ParamListBase,
+  useLocale,
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { BackHandler, I18nManager, Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
 import useLatestCallback from 'use-latest-callback';
@@ -25,6 +27,7 @@ import type {
   DrawerNavigationHelpers,
   DrawerNavigationProp,
 } from '../types';
+import { addCancelListener } from '../utils/addCancelListener';
 import { DrawerPositionContext } from '../utils/DrawerPositionContext';
 import { DrawerStatusContext } from '../utils/DrawerStatusContext';
 import { getDrawerStatusFromState } from '../utils/getDrawerStatusFromState';
@@ -51,10 +54,12 @@ function DrawerViewBase({
     Platform.OS === 'android' ||
     Platform.OS === 'ios',
 }: Props) {
+  const { direction } = useLocale();
+
   const focusedRouteKey = state.routes[state.index].key;
   const {
     drawerHideStatusBarOnOpen,
-    drawerPosition = I18nManager.getConstants().isRTL ? 'right' : 'left',
+    drawerPosition = direction === 'rtl' ? 'right' : 'left',
     drawerStatusBarAnimation,
     drawerStyle,
     drawerType,
@@ -153,30 +158,10 @@ function DrawerViewBase({
       return true;
     };
 
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        handleHardwareBack();
-      }
-    };
-
-    if (Platform.OS === 'web') {
-      document?.body?.addEventListener?.('keyup', handleEscape);
-      return () => {
-        document?.body?.removeEventListener?.('keyup', handleEscape);
-      };
-    }
-
     // We only add the listeners when drawer opens
     // This way we can make sure that the listener is added as late as possible
     // This will make sure that our handler will run first when back button is pressed
-    const subscription = BackHandler.addEventListener(
-      'hardwareBackPress',
-      handleHardwareBack
-    );
-
-    return () => {
-      subscription?.remove?.();
-    };
+    return addCancelListener(handleHardwareBack);
   }, [
     defaultStatus,
     drawerStatus,
@@ -214,8 +199,13 @@ function DrawerViewBase({
             return null;
           }
 
-          if (lazy && !loaded.includes(route.key) && !isFocused) {
-            // Don't render a lazy screen if we've never navigated to it
+          if (
+            lazy &&
+            !loaded.includes(route.key) &&
+            !isFocused &&
+            !state.preloadedRouteKeys.includes(route.key)
+          ) {
+            // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
             return null;
           }
 
@@ -294,7 +284,10 @@ function DrawerViewBase({
         overlayAccessibilityLabel={overlayAccessibilityLabel}
         drawerPosition={drawerPosition}
         drawerStyle={[
-          { backgroundColor: colors.card },
+          {
+            backgroundColor: colors.card,
+            width: getDefaultSidebarWidth(dimensions),
+          },
           drawerType === 'permanent' &&
             (drawerPosition === 'left'
               ? {

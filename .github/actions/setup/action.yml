@@ -8,7 +8,6 @@ runs:
       uses: actions/setup-node@v3
       with:
         node-version-file: .nvmrc
-        cache: 'npm'
 
     - name: Cache dependencies
       id: yarn-cache
@@ -17,19 +16,12 @@ runs:
         path: |
           **/node_modules
           .yarn/install-state.gz
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}-${{ hashFiles('**/package.json', '!node_modules/**') }}
         restore-keys: |
+          ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
           ${{ runner.os }}-yarn-
 
-    - name: Check for changes
-      uses: dorny/paths-filter@v2
-      id: changes
-      with:
-        filters: |
-          package-json:
-            - '**/package.json'
-
     - name: Install dependencies
-      if: steps.yarn-cache.outputs.cache-hit != 'true' || steps.changes.outputs.package-json == 'true'
+      if: steps.yarn-cache.outputs.cache-hit != 'true'
       run: yarn install --immutable
       shell: bash

@@ -1,16 +1,26 @@
-import { ParamListBase, useTheme } from '@react-navigation/native';
+import { Button, Text } from '@react-navigation/elements';
+import {
+  type ParamListBase,
+  type PathConfigMap,
+  useTheme,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
-  StackScreenProps,
+  type StackScreenProps,
 } from '@react-navigation/stack';
 import * as React from 'react';
 import { ActivityIndicator, StyleSheet, TextInput, View } from 'react-native';
-import { Button, Title } from 'react-native-paper';
 
-type AuthStackParams = {
+export type AuthStackParams = {
   Home: undefined;
   SignIn: undefined;
   Chat: undefined;
+};
+
+export const authLinking: PathConfigMap<AuthStackParams> = {
+  Home: '',
+  SignIn: 'signin',
+  Chat: 'chat',
 };
 
 const AUTH_CONTEXT_ERROR =
@@ -63,7 +73,7 @@ const SignInScreen = ({
           { backgroundColor: colors.card, color: colors.text },
         ]}
       />
-      <Button mode="contained" onPress={signIn} style={styles.button}>
+      <Button variant="filled" onPress={signIn} style={styles.button}>
         Sign in
       </Button>
       <Button onPress={() => navigation.navigate('Chat')} style={styles.button}>
@@ -80,7 +90,7 @@ const HomeScreen = ({
 
   return (
     <View style={styles.content}>
-      <Title style={styles.text}>Signed in successfully 🎉</Title>
+      <Text style={styles.heading}>Signed in successfully 🎉</Text>
       <Button onPress={signOut} style={styles.button}>
         Sign out
       </Button>
@@ -96,7 +106,7 @@ const ChatScreen = () => {
 
   return (
     <View style={styles.content}>
-      <Title style={styles.text}>What&apos;s up?</Title>
+      <Text style={styles.heading}>What&apos;s up?</Text>
       {isSignedIn ? (
         <Button onPress={signOut} style={styles.button}>
           Sign out
@@ -224,8 +234,10 @@ const styles = StyleSheet.create({
   button: {
     margin: 8,
   },
-  text: {
+  heading: {
     textAlign: 'center',
-    margin: 8,
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 12,
   },
 });

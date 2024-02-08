@@ -1,4 +1,7 @@
-import type { HeaderOptions } from '@react-navigation/elements';
+import type {
+  HeaderOptions,
+  PlatformPressable,
+} from '@react-navigation/elements';
 import type {
   Descriptor,
   NavigationHelpers,
@@ -14,7 +17,6 @@ import type {
   GestureResponderEvent,
   StyleProp,
   TextStyle,
-  TouchableWithoutFeedbackProps,
   ViewStyle,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
@@ -43,7 +45,7 @@ export type BottomTabNavigationHelpers = NavigationHelpers<
 export type BottomTabNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined
+  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
@@ -57,7 +59,7 @@ export type BottomTabNavigationProp<
 export type BottomTabScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined
+  NavigatorID extends string | undefined = undefined,
 > = {
   navigation: BottomTabNavigationProp<ParamList, RouteName, NavigatorID>;
   route: RouteProp<ParamList, RouteName>;
@@ -224,6 +226,11 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   tabBarBackground?: () => React.ReactNode;
 
   /**
+   * Position of the tab bar on the screen. Defaults to `bottom`.
+   */
+  tabBarPosition?: 'bottom' | 'left' | 'right' | 'top';
+
+  /**
    * Whether this screens should render the first time it's accessed. Defaults to `true`.
    * Set it to `false` if you want to render the screen on initial render.
    */
@@ -254,6 +261,22 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    * Only supported on iOS and Android.
    */
   freezeOnBlur?: boolean;
+
+  /**
+   * Whether transition animations should be enabled when switching tabs.
+   * Defaults to `false`.
+   */
+  animationEnabled?: boolean;
+
+  /**
+   * Function which specifies interpolated styles for bottom-tab scenes.
+   */
+  sceneStyleInterpolator?: BottomTabSceneStyleInterpolator;
+
+  /**
+   * Object which specifies the animation type (timing or spring) and their options (such as duration for timing).
+   */
+  transitionSpec?: TransitionSpec;
 };
 
 export type BottomTabDescriptor = Descriptor<
@@ -263,6 +286,60 @@ export type BottomTabDescriptor = Descriptor<
 >;
 
 export type BottomTabDescriptorMap = Record<string, BottomTabDescriptor>;
+
+export type BottomTabSceneInterpolationProps = {
+  /**
+   * Animated value for the current screen:
+   * - -1 if the index is lower than active tab,
+   * - 0 if they're active,
+   * - 1 if the index is higher than active tab
+   */
+  current: Animated.Value;
+};
+
+export type BottomTabSceneInterpolatedStyle = {
+  /**
+   * Interpolated style for the view representing the scene containing screen content.
+   */
+  sceneStyle: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+};
+
+export type BottomTabSceneStyleInterpolator = (
+  props: BottomTabSceneInterpolationProps
+) => BottomTabSceneInterpolatedStyle;
+
+export type TransitionSpec =
+  | {
+      animation: 'timing';
+      config: Omit<
+        Animated.TimingAnimationConfig,
+        'toValue' | keyof Animated.AnimationConfig
+      >;
+    }
+  | {
+      animation: 'spring';
+      config: Omit<
+        Animated.SpringAnimationConfig,
+        'toValue' | keyof Animated.AnimationConfig
+      >;
+    };
+
+export type BottomTabTransitionPreset = {
+  /**
+   * Whether transition animations should be enabled when switching tabs.
+   */
+  animationEnabled?: boolean;
+
+  /**
+   * Function which specifies interpolated styles for bottom-tab scenes.
+   */
+  sceneStyleInterpolator?: BottomTabSceneStyleInterpolator;
+
+  /**
+   * Object which specifies the animation type (timing or spring) and their options (such as duration for timing).
+   */
+  transitionSpec?: TransitionSpec;
+};
 
 export type BottomTabNavigationConfig = {
   /**
@@ -318,7 +395,7 @@ export type BottomTabBarProps = {
 };
 
 export type BottomTabBarButtonProps = Omit<
-  TouchableWithoutFeedbackProps,
+  React.ComponentProps<typeof PlatformPressable>,
   'onPress'
 > & {
   href?: string;

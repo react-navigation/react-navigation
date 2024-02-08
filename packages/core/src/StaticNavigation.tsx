@@ -40,16 +40,16 @@ type ParamsForScreenComponent<T> = T extends {
 }
   ? P
   : T extends React.ComponentType<{ route: { params: infer P } }>
-  ? P
-  : undefined;
+    ? P
+    : undefined;
 
 type ParamsForScreen<T> = T extends { screen: StaticNavigation<any, any, any> }
   ? NavigatorScreenParams<StaticParamList<T['screen']>> | undefined
   : T extends StaticNavigation<any, any, any>
-  ? NavigatorScreenParams<StaticParamList<T>> | undefined
-  : UnknownToUndefined<ParamsForScreenComponent<T>>;
+    ? NavigatorScreenParams<StaticParamList<T>> | undefined
+    : UnknownToUndefined<ParamsForScreenComponent<T>>;
 
-type ParamListForScreens<Screens extends unknown> = {
+type ParamListForScreens<Screens> = {
   [Key in KeysOf<Screens>]: ParamsForScreen<Screens[Key]>;
 };
 
@@ -65,7 +65,7 @@ type ParamListForGroups<
           >;
         };
       }>
-    | undefined
+    | undefined,
 > = Groups extends {
   [key: string]: {
     screens: StaticConfigScreens<
@@ -83,7 +83,7 @@ type StaticConfigScreens<
   ParamList extends ParamListBase,
   State extends NavigationState,
   ScreenOptions extends {},
-  EventMap extends EventMapBase
+  EventMap extends EventMapBase,
 > = {
   [key in keyof ParamList]:
     | React.ComponentType<any>
@@ -117,14 +117,7 @@ type StaticConfigScreens<
          * },
          * ```
          */
-        linking?:
-          | FlatType<
-              Pick<
-                PathConfig<ParamList>,
-                'path' | 'exact' | 'parse' | 'stringify'
-              >
-            >
-          | string;
+        linking?: PathConfig<ParamList> | string;
         /**
          * Static navigation config or Component to render for the screen.
          */
@@ -136,7 +129,7 @@ type GroupConfig<
   ParamList extends ParamListBase,
   State extends NavigationState,
   ScreenOptions extends {},
-  EventMap extends EventMapBase
+  EventMap extends EventMapBase,
 > = Omit<RouteGroupConfig<ParamList, ScreenOptions>, 'screens' | 'children'> & {
   /**
    * Callback to determine whether the screens in the group should be rendered or not.
@@ -154,7 +147,7 @@ export type StaticConfig<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
-  Navigator extends React.ComponentType<{}>
+  Navigator extends React.ComponentType<{}>,
 > = Omit<
   Omit<
     React.ComponentProps<Navigator>,
@@ -203,7 +196,7 @@ export type StaticParamList<
         };
       };
     };
-  }
+  },
 > = FlatType<
   ParamListForScreens<T['config']['screens']> &
     ParamListForGroups<T['config']['groups']>
@@ -270,7 +263,7 @@ const getItemsFromScreens = (
       );
     }
 
-    let element = isNavigator ? (
+    const element = isNavigator ? (
       React.createElement(component, {})
     ) : (
       <MemoizedScreen component={component} />
@@ -305,6 +298,12 @@ export function createComponentForStaticNavigation(
 ): React.ComponentType<{}> {
   const { Navigator, Group, Screen, config } = tree;
   const { screens, groups, ...rest } = config;
+
+  if (screens == null) {
+    throw new Error(
+      "Couldn't find a 'screens' property. Make sure to define your screens under a 'screens' property in the configuration."
+    );
+  }
 
   const items = getItemsFromScreens(Screen, screens);
 

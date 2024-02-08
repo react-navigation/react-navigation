@@ -1,11 +1,11 @@
 import {
   CommonActions,
-  InitialState,
-  NavigationAction,
-  NavigationState,
-  ParamListBase,
-  PartialState,
-  Route,
+  type InitialState,
+  type NavigationAction,
+  type NavigationState,
+  type ParamListBase,
+  type PartialState,
+  type Route,
 } from '@react-navigation/routers';
 import * as React from 'react';
 import useLatestCallback from 'use-latest-callback';
@@ -20,6 +20,7 @@ import { NavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationContainerRefContext } from './NavigationContainerRefContext';
 import { NavigationIndependentTreeContext } from './NavigationIndependentTreeContext';
 import { NavigationStateContext } from './NavigationStateContext';
+import { ThemeProvider } from './theming/ThemeProvider';
 import type {
   NavigationContainerEventMap,
   NavigationContainerProps,
@@ -31,7 +32,6 @@ import { useEventEmitter } from './useEventEmitter';
 import { useKeyedChildListeners } from './useKeyedChildListeners';
 import { useNavigationIndependentTree } from './useNavigationIndependentTree';
 import { useOptionsGetters } from './useOptionsGetters';
-import { ScheduleUpdateContext } from './useScheduleUpdate';
 import { useSyncState } from './useSyncState';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
@@ -77,6 +77,7 @@ const getPartialState = (
  * @param props.onReady Callback which is called after the navigation tree mounts.
  * @param props.onStateChange Callback which is called with the latest navigation state when it changes.
  * @param props.onUnhandledAction Callback which is called when an action is not handled.
+ * @param props.theme Theme object for the UI elements.
  * @param props.children Child elements to render the content.
  * @param props.ref Ref object which refers to the navigation object containing helper methods.
  */
@@ -88,6 +89,7 @@ export const BaseNavigationContainer = React.forwardRef(
       onReady,
       onUnhandledAction,
       navigationInChildEnabled = false,
+      theme,
       children,
     }: NavigationContainerProps,
     ref?: React.Ref<NavigationContainerRef<ParamListBase>>
@@ -101,10 +103,9 @@ export const BaseNavigationContainer = React.forwardRef(
       );
     }
 
-    const [state, getState, setState, scheduleUpdate, flushUpdates] =
-      useSyncState<State>(() =>
-        getPartialState(initialState == null ? undefined : initialState)
-      );
+    const [state, getState, setState] = useSyncState<State>(() =>
+      getPartialState(initialState == null ? undefined : initialState)
+    );
 
     const isFirstMountRef = React.useRef<boolean>(true);
 
@@ -203,7 +204,7 @@ export const BaseNavigationContainer = React.forwardRef(
         isFocused: () => true,
         canGoBack,
         getParent: () => undefined,
-        getState: () => stateRef.current,
+        getState,
         getRootState,
         getCurrentRoute,
         getCurrentOptions,
@@ -216,6 +217,7 @@ export const BaseNavigationContainer = React.forwardRef(
         getCurrentOptions,
         getCurrentRoute,
         getRootState,
+        getState,
         isReady,
         resetRoot,
       ]
@@ -260,11 +262,6 @@ export const BaseNavigationContainer = React.forwardRef(
       [addListener, addKeyedListener, onDispatchAction, onOptionsChange]
     );
 
-    const scheduleContext = React.useMemo(
-      () => ({ scheduleUpdate, flushUpdates }),
-      [scheduleUpdate, flushUpdates]
-    );
-
     const isInitialRef = React.useRef(true);
 
     const getIsInitial = React.useCallback(() => isInitialRef.current, []);
@@ -292,22 +289,21 @@ export const BaseNavigationContainer = React.forwardRef(
 
     const onReadyRef = React.useRef(onReady);
     const onStateChangeRef = React.useRef(onStateChange);
-    const stateRef = React.useRef(state);
 
     React.useEffect(() => {
       isInitialRef.current = false;
       onStateChangeRef.current = onStateChange;
       onReadyRef.current = onReady;
-      stateRef.current = state;
     });
 
-    const isNavigationReady = isReady();
+    const onReadyCalledRef = React.useRef(false);
 
     React.useEffect(() => {
-      if (isNavigationReady) {
+      if (!onReadyCalledRef.current && isReady()) {
+        onReadyCalledRef.current = true;
         onReadyRef.current?.();
       }
-    }, [isNavigationReady]);
+    }, [state, isReady]);
 
     React.useEffect(() => {
       const hydratedState = getRootState();
@@ -433,21 +429,21 @@ export const BaseNavigationContainer = React.forwardRef(
     return (
       <NavigationIndependentTreeContext.Provider value={false}>
         <NavigationContainerRefContext.Provider value={navigation}>
-          <ScheduleUpdateContext.Provider value={scheduleContext}>
-            <NavigationBuilderContext.Provider value={builderContext}>
-              <NavigationStateContext.Provider value={context}>
-                <UnhandledActionContext.Provider
-                  value={onUnhandledAction ?? defaultOnUnhandledAction}
+          <NavigationBuilderContext.Provider value={builderContext}>
+            <NavigationStateContext.Provider value={context}>
+              <UnhandledActionContext.Provider
+                value={onUnhandledAction ?? defaultOnUnhandledAction}
+              >
+                <DeprecatedNavigationInChildContext.Provider
+                  value={navigationInChildEnabled}
                 >
-                  <DeprecatedNavigationInChildContext.Provider
-                    value={navigationInChildEnabled}
-                  >
-                    <EnsureSingleNavigator>{children}</EnsureSingleNavigator>
-                  </DeprecatedNavigationInChildContext.Provider>
-                </UnhandledActionContext.Provider>
-              </NavigationStateContext.Provider>
-            </NavigationBuilderContext.Provider>
-          </ScheduleUpdateContext.Provider>
+                  <EnsureSingleNavigator>
+                    <ThemeProvider value={theme}>{children}</ThemeProvider>
+                  </EnsureSingleNavigator>
+                </DeprecatedNavigationInChildContext.Provider>
+              </UnhandledActionContext.Provider>
+            </NavigationStateContext.Provider>
+          </NavigationBuilderContext.Provider>
         </NavigationContainerRefContext.Provider>
       </NavigationIndependentTreeContext.Provider>
     );

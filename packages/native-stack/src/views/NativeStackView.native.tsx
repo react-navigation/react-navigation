@@ -9,24 +9,30 @@ import {
 import {
   NavigationContext,
   NavigationRouteContext,
-  ParamListBase,
-  Route,
+  type ParamListBase,
+  type Route,
   StackActions,
-  StackNavigationState,
+  type StackNavigationState,
   usePreventRemoveContext,
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import {
+  Animated,
+  Platform,
+  StyleSheet,
+  useAnimatedValue,
+  View,
+} from 'react-native';
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import type { ScreenProps } from 'react-native-screens';
 import {
   Screen,
+  type ScreenProps,
   ScreenStack,
-  StackPresentationTypes,
+  type StackPresentationTypes,
 } from 'react-native-screens';
 import warnOnce from 'warn-once';
 
@@ -36,6 +42,7 @@ import type {
   NativeStackNavigationHelpers,
   NativeStackNavigationOptions,
 } from '../types';
+import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
 import { useDismissedRouteError } from '../utils/useDismissedRouteError';
 import { useInvalidPreventRemoveError } from '../utils/useInvalidPreventRemoveError';
 import { DebugContainer } from './DebugContainer';
@@ -97,7 +104,12 @@ const MaybeNestedStack = ({
   if (isHeaderInModal) {
     return (
       <ScreenStack style={styles.container}>
-        <Screen enabled style={StyleSheet.absoluteFill}>
+        <Screen
+          enabled
+          isNativeStack
+          hasLargeHeader={options.headerLargeTitle ?? false}
+          style={StyleSheet.absoluteFill}
+        >
           {content}
           <HeaderConfig
             {...options}
@@ -121,11 +133,13 @@ type SceneViewProps = {
   previousDescriptor?: NativeStackDescriptor;
   nextDescriptor?: NativeStackDescriptor;
   onWillDisappear: () => void;
+  onWillAppear: () => void;
   onAppear: () => void;
   onDisappear: () => void;
   onDismissed: ScreenProps['onDismissed'];
   onHeaderBackButtonClicked: ScreenProps['onHeaderBackButtonClicked'];
   onNativeDismissCancelled: ScreenProps['onDismissed'];
+  onGestureCancel: ScreenProps['onGestureCancel'];
 };
 
 const SceneView = ({
@@ -135,53 +149,66 @@ const SceneView = ({
   previousDescriptor,
   nextDescriptor,
   onWillDisappear,
+  onWillAppear,
   onAppear,
   onDisappear,
   onDismissed,
   onHeaderBackButtonClicked,
   onNativeDismissCancelled,
+  onGestureCancel,
 }: SceneViewProps) => {
   const { route, navigation, options, render } = descriptor;
+
+  let {
+    animation,
+    animationMatchesGesture,
+    fullScreenGestureEnabled,
+    presentation = 'card',
+  } = options;
+
   const {
     animationDuration,
     animationTypeForReplace = 'push',
     gestureEnabled,
+    gestureDirection = presentation === 'card' ? 'horizontal' : 'vertical',
+    gestureResponseDistance,
     header,
     headerBackButtonMenuEnabled,
     headerShown,
+    headerBackground,
     headerTransparent,
     autoHideHomeIndicator,
+    keyboardHandlingEnabled,
     navigationBarColor,
     navigationBarHidden,
     orientation,
+    sheetAllowedDetents = 'large',
+    sheetLargestUndimmedDetent = 'all',
+    sheetGrabberVisible = false,
+    sheetCornerRadius = -1.0,
+    sheetExpandsWhenScrolledToEdge = true,
     statusBarAnimation,
     statusBarHidden,
     statusBarStyle,
     statusBarTranslucent,
-    statusBarColor,
+    statusBarBackgroundColor,
     freezeOnBlur,
-  } = options;
-
-  let {
-    animation,
-    customAnimationOnGesture,
-    fullScreenGestureEnabled,
-    presentation = 'card',
-    gestureDirection = presentation === 'card' ? 'horizontal' : 'vertical',
   } = options;
 
   if (gestureDirection === 'vertical' && Platform.OS === 'ios') {
     // for `vertical` direction to work, we need to set `fullScreenGestureEnabled` to `true`
     // so the screen can be dismissed from any point on screen.
-    // `customAnimationOnGesture` needs to be set to `true` so the `animation` set by user can be used,
+    // `animationMatchesGesture` needs to be set to `true` so the `animation` set by user can be used,
     // otherwise `simple_push` will be used.
     // Also, the default animation for this direction seems to be `slide_from_bottom`.
     if (fullScreenGestureEnabled === undefined) {
       fullScreenGestureEnabled = true;
     }
-    if (customAnimationOnGesture === undefined) {
-      customAnimationOnGesture = true;
+
+    if (animationMatchesGesture === undefined) {
+      animationMatchesGesture = true;
     }
+
     if (animation === undefined) {
       animation = 'slide_from_bottom';
     }
@@ -227,16 +254,23 @@ const SceneView = ({
   const [customHeaderHeight, setCustomHeaderHeight] =
     React.useState(defaultHeaderHeight);
 
+  const animatedHeaderHeight = useAnimatedValue(defaultHeaderHeight);
+
   const headerTopInsetEnabled = topInset !== 0;
   const headerHeight = header ? customHeaderHeight : defaultHeaderHeight;
-  const headerBack = previousDescriptor
-    ? {
-        title: getHeaderTitle(
-          previousDescriptor.options,
-          previousDescriptor.route.name
-        ),
-      }
-    : parentHeaderBack;
+
+  const backTitle = previousDescriptor
+    ? getHeaderTitle(previousDescriptor.options, previousDescriptor.route.name)
+    : parentHeaderBack?.title;
+
+  const headerBack = React.useMemo(
+    () => ({
+      // No href needed for native
+      href: undefined,
+      title: backTitle,
+    }),
+    [backTitle]
+  );
 
   const isRemovePrevented = preventedRoutes[route.key]?.preventRemove;
 
@@ -244,8 +278,10 @@ const SceneView = ({
     <Screen
       key={route.key}
       enabled
+      isNativeStack
       style={StyleSheet.absoluteFill}
-      customAnimationOnSwipe={customAnimationOnGesture}
+      hasLargeHeader={options.headerLargeTitle ?? false}
+      customAnimationOnSwipe={animationMatchesGesture}
       fullScreenSwipeEnabled={fullScreenGestureEnabled}
       gestureEnabled={
         isAndroid
@@ -255,29 +291,50 @@ const SceneView = ({
           : gestureEnabled
       }
       homeIndicatorHidden={autoHideHomeIndicator}
+      hideKeyboardOnSwipe={keyboardHandlingEnabled}
       navigationBarColor={navigationBarColor}
       navigationBarHidden={navigationBarHidden}
       replaceAnimation={animationTypeForReplace}
       stackPresentation={presentation === 'card' ? 'push' : presentation}
       stackAnimation={animation}
       screenOrientation={orientation}
+      sheetAllowedDetents={sheetAllowedDetents}
+      sheetLargestUndimmedDetent={sheetLargestUndimmedDetent}
+      sheetGrabberVisible={sheetGrabberVisible}
+      sheetCornerRadius={sheetCornerRadius}
+      sheetExpandsWhenScrolledToEdge={sheetExpandsWhenScrolledToEdge}
       statusBarAnimation={statusBarAnimation}
       statusBarHidden={statusBarHidden}
       statusBarStyle={statusBarStyle}
-      statusBarColor={statusBarColor}
+      statusBarColor={statusBarBackgroundColor}
       statusBarTranslucent={statusBarTranslucent}
       swipeDirection={gestureDirectionOverride}
       transitionDuration={animationDuration}
+      onWillAppear={onWillAppear}
       onWillDisappear={onWillDisappear}
       onAppear={onAppear}
       onDisappear={onDisappear}
       onDismissed={onDismissed}
-      isNativeStack
+      onGestureCancel={onGestureCancel}
+      gestureResponseDistance={gestureResponseDistance}
       nativeBackButtonDismissalEnabled={false} // on Android
       onHeaderBackButtonClicked={onHeaderBackButtonClicked}
-      // @ts-ignore props not exported from rn-screens
       preventNativeDismiss={isRemovePrevented} // on iOS
       onNativeDismissCancelled={onNativeDismissCancelled}
+      // Unfortunately, because of the bug that exists on Fabric, where native event drivers
+      // for Animated objects are being created after the first notifications about the header height
+      // from the native side, `onHeaderHeightChange` event does not notify
+      // `animatedHeaderHeight` about initial values on appearing screens at the moment.
+      onHeaderHeightChange={Animated.event(
+        [
+          {
+            nativeEvent: {
+              headerHeight: animatedHeaderHeight,
+            },
+          },
+        ],
+        { useNativeDriver: true }
+      )}
       // this prop is available since rn-screens 3.16
       freezeOnBlur={freezeOnBlur}
     >
@@ -286,75 +343,92 @@ const SceneView = ({
           <HeaderShownContext.Provider
             value={isParentHeaderShown || headerShown !== false}
           >
-            <HeaderHeightContext.Provider
-              value={
-                headerShown !== false ? headerHeight : parentHeaderHeight ?? 0
-              }
-            >
-              <View
-                accessibilityElementsHidden={!focused}
-                importantForAccessibility={
-                  focused ? 'auto' : 'no-hide-descendants'
+            <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
+              <HeaderHeightContext.Provider
+                value={
+                  headerShown !== false ? headerHeight : parentHeaderHeight ?? 0
                 }
-                style={styles.scene}
               >
-                <MaybeNestedStack
-                  options={options}
-                  route={route}
-                  presentation={presentation}
-                  headerHeight={headerHeight}
-                  headerTopInsetEnabled={headerTopInsetEnabled}
-                >
-                  <HeaderBackContext.Provider value={headerBack}>
-                    {render()}
-                  </HeaderBackContext.Provider>
-                </MaybeNestedStack>
-                {header !== undefined && headerShown !== false ? (
+                {headerBackground != null ? (
+                  /**
+                   * To show a custom header background, we render it at the top of the screen below the header
+                   * The header also needs to be positioned absolutely (with `translucent` style)
+                   */
                   <View
-                    onLayout={(e) => {
-                      setCustomHeaderHeight(e.nativeEvent.layout.height);
-                    }}
-                    style={headerTransparent ? styles.absolute : null}
+                    style={[
+                      styles.background,
+                      headerTransparent ? styles.translucent : null,
+                      { height: headerHeight },
+                    ]}
                   >
-                    {header({
-                      back: headerBack,
-                      options,
-                      route,
-                      navigation,
-                    })}
+                    {headerBackground()}
                   </View>
                 ) : null}
-              </View>
-              {/**
-               * `HeaderConfig` needs to be the direct child of `Screen` without any intermediate `View`
-               * We don't render it conditionally to make it possible to dynamically render a custom `header`
-               * Otherwise dynamically rendering a custom `header` leaves the native header visible
-               *
-               * https://github.com/software-mansion/react-native-screens/blob/main/guides/GUIDE_FOR_LIBRARY_AUTHORS.md#screenstackheaderconfig
-               *
-               * HeaderConfig must not be first child of a Screen.
-               * See https://github.com/software-mansion/react-native-screens/pull/1825
-               * for detailed explanation
-               */}
-              <HeaderConfig
-                {...options}
-                route={route}
-                headerBackButtonMenuEnabled={
-                  isRemovePrevented !== undefined
-                    ? !isRemovePrevented
-                    : headerBackButtonMenuEnabled
-                }
-                headerShown={header !== undefined ? false : headerShown}
-                headerHeight={headerHeight}
-                headerBackTitle={
-                  options.headerBackTitle !== undefined
-                    ? options.headerBackTitle
-                    : undefined
-                }
-                headerTopInsetEnabled={headerTopInsetEnabled}
-                canGoBack={headerBack !== undefined}
-              />
-            </HeaderHeightContext.Provider>
+                <View
+                  accessibilityElementsHidden={!focused}
+                  importantForAccessibility={
+                    focused ? 'auto' : 'no-hide-descendants'
+                  }
+                  style={styles.scene}
+                >
+                  <MaybeNestedStack
+                    options={options}
+                    route={route}
+                    presentation={presentation}
+                    headerHeight={headerHeight}
+                    headerTopInsetEnabled={headerTopInsetEnabled}
+                  >
+                    <HeaderBackContext.Provider value={headerBack}>
+                      {render()}
+                    </HeaderBackContext.Provider>
+                  </MaybeNestedStack>
+                  {header !== undefined && headerShown !== false ? (
+                    <View
+                      onLayout={(e) => {
+                        setCustomHeaderHeight(e.nativeEvent.layout.height);
+                      }}
+                      style={headerTransparent ? styles.absolute : null}
+                    >
+                      {header({
+                        back: headerBack,
+                        options,
+                        route,
+                        navigation,
+                      })}
+                    </View>
+                  ) : null}
+                </View>
+                {/**
+                 * `HeaderConfig` needs to be the direct child of `Screen` without any intermediate `View`
+                 * We don't render it conditionally to make it possible to dynamically render a custom `header`
+                 * Otherwise dynamically rendering a custom `header` leaves the native header visible
+                 *
+                 * https://github.com/software-mansion/react-native-screens/blob/main/guides/GUIDE_FOR_LIBRARY_AUTHORS.md#screenstackheaderconfig
+                 *
+                 * HeaderConfig must not be first child of a Screen.
+                 * See https://github.com/software-mansion/react-native-screens/pull/1825
+                 * for detailed explanation
+                 */}
+                <HeaderConfig
+                  {...options}
+                  route={route}
+                  headerBackButtonMenuEnabled={
+                    isRemovePrevented !== undefined
+                      ? !isRemovePrevented
+                      : headerBackButtonMenuEnabled
+                  }
+                  headerShown={header !== undefined ? false : headerShown}
+                  headerHeight={headerHeight}
+                  headerBackTitle={
+                    options.headerBackTitle !== undefined
+                      ? options.headerBackTitle
+                      : undefined
+                  }
+                  headerTopInsetEnabled={headerTopInsetEnabled}
+                  canGoBack={headerBack !== undefined}
+                />
+              </HeaderHeightContext.Provider>
+            </AnimatedHeaderHeightContext.Provider>
           </HeaderShownContext.Provider>
         </NavigationRouteContext.Provider>
       </NavigationContext.Provider>
@@ -400,6 +474,13 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
                 target: route.key,
               });
             }}
+            onWillAppear={() => {
+              navigation.emit({
+                type: 'transitionStart',
+                data: { closing: false },
+                target: route.key,
+              });
+            }}
             onAppear={() => {
               navigation.emit({
                 type: 'transitionEnd',
@@ -437,6 +518,12 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
                 target: state.key,
               });
             }}
+            onGestureCancel={() => {
+              navigation.emit({
+                type: 'gestureCancel',
+                target: route.key,
+              });
+            }}
           />
         );
       })}
@@ -465,5 +552,16 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
+  },
+  translucent: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1,
+    elevation: 1,
+  },
+  background: {
+    overflow: 'hidden',
   },
 });

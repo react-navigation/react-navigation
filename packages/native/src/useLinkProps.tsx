@@ -1,20 +1,20 @@
 import {
   getPathFromState,
-  NavigationAction,
+  type NavigationAction,
   NavigationContainerRefContext,
   NavigationHelpersContext,
-  NavigatorScreenParams,
-  ParamListBase,
+  type NavigatorScreenParams,
+  type ParamListBase,
 } from '@react-navigation/core';
 import type { NavigationState, PartialState } from '@react-navigation/routers';
 import * as React from 'react';
-import { GestureResponderEvent, Platform } from 'react-native';
+import { type GestureResponderEvent, Platform } from 'react-native';
 
 import { LinkingContext } from './LinkingContext';
 
 export type Props<
   ParamList extends ReactNavigation.RootParamList,
-  RouteName extends keyof ParamList = keyof ParamList
+  RouteName extends keyof ParamList = keyof ParamList,
 > =
   | ({
       screen: Extract<RouteName, string>;
@@ -43,7 +43,7 @@ const getStateFromParams = (
         {
           name: params.screen,
           params: params.params,
-          // @ts-expect-error
+          // @ts-expect-error this is fine 🔥
           state: params.screen
             ? getStateFromParams(
                 params.params as
@@ -80,19 +80,20 @@ export function useLinkProps<ParamList extends ReactNavigation.RootParamList>({
   const onPress = (
     e?: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
   ) => {
+    // @ts-expect-error: these properties exist on web, but not in React Native
+    const hasModifierKey = e.metaKey || e.altKey || e.ctrlKey || e.shiftKey; // ignore clicks with modifier keys
+    // @ts-expect-error: these properties exist on web, but not in React Native
+    const isLeftClick = e.button == null || e.button === 0; // only handle left clicks
+    const isSelfTarget = [undefined, null, '', 'self'].includes(
+      // @ts-expect-error: these properties exist on web, but not in React Native
+      e.currentTarget?.target
+    ); // let browser handle "target=_blank" etc.
+
     let shouldHandle = false;
 
     if (Platform.OS !== 'web' || !e) {
-      shouldHandle = e ? !e.defaultPrevented : true;
-    } else if (
-      !e.defaultPrevented && // onPress prevented default
-      // @ts-expect-error: these properties exist on web, but not in React Native
-      !(e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) && // ignore clicks with modifier keys
-      // @ts-expect-error: these properties exist on web, but not in React Native
-      (e.button == null || e.button === 0) && // ignore everything but left clicks
-      // @ts-expect-error: these properties exist on web, but not in React Native
-      [undefined, null, '', 'self'].includes(e.currentTarget?.target) // let browser handle "target=_blank" etc.
-    ) {
+      shouldHandle = true;
+    } else if (!hasModifierKey && isLeftClick && isSelfTarget) {
       e.preventDefault();
       shouldHandle = true;
     }
@@ -109,7 +110,7 @@ export function useLinkProps<ParamList extends ReactNavigation.RootParamList>({
           );
         }
       } else {
-        // @ts-expect-error: This is already type-checked by the prop types
+        // @ts-expect-error This is already type-checked by the prop types
         navigation?.navigate(screen, params);
       }
     }
@@ -126,9 +127,9 @@ export function useLinkProps<ParamList extends ReactNavigation.RootParamList>({
               routes: [
                 {
                   name: screen,
-                  // @ts-expect-error
+                  // @ts-expect-error this is fine 🔥
                   params: params,
-                  // @ts-expect-error
+                  // @ts-expect-error this is fine 🔥
                   state: getStateFromParams(params),
                 },
               ],

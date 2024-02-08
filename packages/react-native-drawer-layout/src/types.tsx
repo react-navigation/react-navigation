@@ -141,6 +141,11 @@ export type DrawerProps = {
   gestureHandlerProps?: React.ComponentProps<typeof PanGestureHandler>;
 
   /**
+   * Style object for the wrapper view.
+   */
+  style?: StyleProp<ViewStyle>;
+
+  /**
    * Content that the drawer should wrap.
    */
   children: React.ReactNode;

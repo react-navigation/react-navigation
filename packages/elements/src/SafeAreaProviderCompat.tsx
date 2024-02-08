@@ -2,10 +2,10 @@ import * as React from 'react';
 import {
   Dimensions,
   Platform,
-  StyleProp,
+  type StyleProp,
   StyleSheet,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native';
 import {
   initialWindowMetrics,

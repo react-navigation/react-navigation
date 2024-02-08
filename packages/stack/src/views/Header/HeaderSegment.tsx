@@ -2,16 +2,17 @@ import {
   getDefaultHeaderHeight,
   Header,
   HeaderBackButton,
-  HeaderBackButtonProps,
+  type HeaderBackButtonProps,
   HeaderTitle,
 } from '@react-navigation/elements';
+import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
-  LayoutChangeEvent,
+  type LayoutChangeEvent,
   Platform,
   StyleSheet,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native';
 
 import type {
@@ -28,11 +29,14 @@ type Props = Omit<StackHeaderOptions, 'headerStatusBarHeight'> & {
   title: string;
   modal: boolean;
   onGoBack?: () => void;
+  backHref?: string;
   progress: SceneProgress;
   styleInterpolator: StackHeaderStyleInterpolator;
 };
 
 export function HeaderSegment(props: Props) {
+  const { direction } = useLocale();
+
   const [leftLabelLayout, setLeftLabelLayout] = React.useState<
     Layout | undefined
   >(undefined);
@@ -84,6 +88,7 @@ export function HeaderSegment(props: Props) {
       styleInterpolator({
         current: { progress: current },
         next: next && { progress: next },
+        direction,
         layouts: {
           header: {
             height: headerHeight,
@@ -101,9 +106,12 @@ export function HeaderSegment(props: Props) {
     layout,
     modal,
     onGoBack,
+    backHref,
     headerTitle: title,
     headerLeft: left = onGoBack
-      ? (props: HeaderBackButtonProps) => <HeaderBackButton {...props} />
+      ? (props: HeaderBackButtonProps) => (
+          <HeaderBackButton {...props} href={backHref} />
+        )
       : undefined,
     headerRight: right,
     headerBackImage,

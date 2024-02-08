@@ -1,12 +1,13 @@
-import type { ParamListBase } from '@react-navigation/native';
+import type { ParamListBase, PathConfigMap } from '@react-navigation/native';
 import {
   createStackNavigator,
-  StackScreenProps,
+  type StackScreenProps,
 } from '@react-navigation/stack';
 import * as React from 'react';
 import { ScrollView } from 'react-native';
-import { List } from 'react-native-paper';
 
+import { Divider } from '../Shared/Divider';
+import { ListItem } from '../Shared/LIstItem';
 import { AutoWidthTabBar } from './TabView/AutoWidthTabBar';
 import { Coverflow } from './TabView/Coverflow';
 import { CustomIndicator } from './TabView/CustomIndicator';
@@ -33,6 +34,20 @@ export type TabViewStackParams = {
   ExampleList: undefined;
 };
 
+export const tabViewStackLinking: PathConfigMap<TabViewStackParams> = {
+  ExampleList: '',
+  ...EXAMPLE_SCREEN_NAMES.reduce(
+    (acc, name) => ({
+      ...acc,
+      [name]: name
+        .replace(/([A-Z]+)/g, '-$1')
+        .replace(/^-/, '')
+        .toLowerCase(),
+    }),
+    {}
+  ),
+};
+
 const TabViewStack = createStackNavigator<TabViewStackParams>();
 
 const ExampleListScreen = ({
@@ -41,14 +56,16 @@ const ExampleListScreen = ({
   return (
     <ScrollView>
       {EXAMPLE_SCREEN_NAMES.map((name) => (
-        <List.Item
-          key={name}
-          testID={name}
-          title={EXAMPLE_SCREENS[name].options.title}
-          onPress={() => {
-            navigation.navigate(name);
-          }}
-        />
+        <React.Fragment key={name}>
+          <ListItem
+            testID={name}
+            title={EXAMPLE_SCREENS[name].options.title}
+            onPress={() => {
+              navigation.navigate(name);
+            }}
+          />
+          <Divider />
+        </React.Fragment>
       ))}
     </ScrollView>
   );

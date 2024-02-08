@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { isArrayEqual } from './isArrayEqual';
 import {
-  GetStateListener,
+  type GetStateListener,
   NavigationBuilderContext,
 } from './NavigationBuilderContext';
 import { NavigationRouteContext } from './NavigationRouteContext';

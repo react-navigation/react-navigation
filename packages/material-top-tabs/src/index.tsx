@@ -10,6 +10,11 @@ export { MaterialTopTabBar } from './views/MaterialTopTabBar';
 export { MaterialTopTabView } from './views/MaterialTopTabView';
 
 /**
+ * Utilities
+ */
+export { useTabAnimation } from './utils/useTabAnimation';
+
+/**
  * Types
  */
 export type {

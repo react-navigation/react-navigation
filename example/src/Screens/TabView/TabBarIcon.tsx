@@ -1,10 +1,11 @@
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import {
-  NavigationState,
+  type NavigationState,
   SceneMap,
-  SceneRendererProps,
+  type SceneRendererProps,
   TabBar,
   TabView,
 } from 'react-native-tab-view';
@@ -27,11 +28,12 @@ const renderScene = SceneMap({
 });
 
 export const TabBarIcon = () => {
+  const { direction } = useLocale();
   const [index, onIndexChange] = React.useState(0);
   const [routes] = React.useState<Route[]>([
-    { key: 'chat', icon: 'md-chatbubbles' },
-    { key: 'contacts', icon: 'md-people' },
-    { key: 'article', icon: 'md-list' },
+    { key: 'chat', icon: 'chatbubbles' },
+    { key: 'contacts', icon: 'people' },
+    { key: 'article', icon: 'list' },
   ]);
 
   const renderIcon = ({ route, color }: { route: Route; color: string }) => (
@@ -43,6 +45,7 @@ export const TabBarIcon = () => {
   ) => (
     <TabBar
       {...props}
+      direction={direction}
       indicatorStyle={styles.indicator}
       renderIcon={renderIcon}
       style={styles.tabbar}
@@ -58,6 +61,7 @@ export const TabBarIcon = () => {
         index,
         routes,
       }}
+      direction={direction}
       renderScene={renderScene}
       renderTabBar={renderTabBar}
       onIndexChange={onIndexChange}
