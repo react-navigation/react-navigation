@@ -295,7 +295,8 @@ export class Card extends React.Component<Props> {
         this.handleStartInteraction();
         onGestureBegin?.();
         break;
-      case GestureState.CANCELLED: {
+      case GestureState.CANCELLED:
+      case GestureState.FAILED: {
         this.isSwiping.setValue(FALSE);
         this.handleEndInteraction();
 
