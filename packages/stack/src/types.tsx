@@ -371,6 +371,12 @@ export type StackNavigationOptions = StackHeaderOptions &
      * Only supported on iOS and Android.
      */
     freezeOnBlur?: boolean;
+    /**
+     * Whether the home indicator should prefer to stay hidden on this screen. Defaults to `false`.
+     *
+     * @platform ios
+     */
+    autoHideHomeIndicator?: boolean;
   };
 
 export type StackNavigationConfig = {

@@ -665,6 +665,7 @@ export class CardStack extends React.Component<Props, State> {
               headerShown = true,
               headerTransparent,
               freezeOnBlur,
+              autoHideHomeIndicator,
             } = scene.descriptor.options;
 
             const safeAreaInsetTop = insets.top;
@@ -698,6 +699,7 @@ export class CardStack extends React.Component<Props, State> {
                 enabled={detachInactiveScreens}
                 active={isScreenActive}
                 freezeOnBlur={freezeOnBlur}
+                homeIndicatorHidden={autoHideHomeIndicator}
                 pointerEvents="box-none"
               >
                 <CardContainer
