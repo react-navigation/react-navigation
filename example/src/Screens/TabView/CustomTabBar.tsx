@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -35,10 +35,10 @@ export const CustomTabBar = () => {
   const insets = useSafeAreaInsets();
   const [index, onIndexChange] = React.useState(0);
   const [routes] = React.useState<Route[]>([
-    { key: 'contacts', title: 'Contacts', icon: 'ios-people' },
-    { key: 'albums', title: 'Albums', icon: 'ios-albums' },
-    { key: 'article', title: 'Article', icon: 'ios-document' },
-    { key: 'chat', title: 'Chat', icon: 'ios-chatbubble' },
+    { key: 'contacts', title: 'Contacts', icon: 'people' },
+    { key: 'albums', title: 'Albums', icon: 'albums' },
+    { key: 'article', title: 'Article', icon: 'document' },
+    { key: 'chat', title: 'Chat', icon: 'chatbubble' },
   ]);
 
   const renderItem =
@@ -62,7 +62,7 @@ export const CustomTabBar = () => {
       });
 
       return (
-        <View style={styles.tab}>
+        <View style={[styles.tab]}>
           <Animated.View style={[styles.item, { opacity: inactiveOpacity }]}>
             <Ionicons
               name={route.icon}

@@ -1,7 +1,6 @@
 import type {
   HeaderBackButton,
   HeaderBackButtonProps,
-  HeaderButtonProps,
   HeaderOptions,
   HeaderTitleProps,
 } from '@react-navigation/elements';
@@ -140,11 +139,11 @@ export type StackHeaderOptions = Omit<
   /**
    * Function which returns a React Element to display on the left side of the header.
    */
-  headerLeft?: (props: HeaderBackButtonProps) => React.ReactNode;
+  headerLeft?: (props: StackHeaderLeftProps) => React.ReactNode;
   /**
    * Function which returns a React Element to display on the right side of the header.
    */
-  headerRight?: (props: HeaderButtonProps) => React.ReactNode;
+  headerRight?: (props: StackHeaderRightProps) => React.ReactNode;
   /**
    * Whether back button title font should scale to respect Text Size accessibility settings. Defaults to `false`.
    */
@@ -223,6 +222,32 @@ export type StackHeaderProps = {
    * Interpolated styles for various elements in the header.
    */
   styleInterpolator: StackHeaderStyleInterpolator;
+};
+
+export type StackHeaderRightProps = {
+  /**
+   * Tint color for the header button.
+   */
+  tintColor?: string;
+  /**
+   * Color for material ripple (Android >= 5.0 only).
+   */
+  pressColor?: string;
+  /**
+   * Opacity when the button is pressed, used when ripple is not supported.
+   */
+  pressOpacity?: number;
+  /**
+   * Whether it's possible to navigate back in stack.
+   */
+  canGoBack?: boolean;
+};
+
+export type StackHeaderLeftProps = HeaderBackButtonProps & {
+  /**
+   * Whether it's possible to navigate back in stack.
+   */
+  canGoBack?: boolean;
 };
 
 export type StackDescriptor = Descriptor<

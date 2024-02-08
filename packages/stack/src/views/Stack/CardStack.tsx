@@ -304,8 +304,8 @@ export class CardStack extends React.Component<Props, State> {
           optionsForTransitionConfig.presentation === 'modal'
             ? ModalTransition
             : optionsForTransitionConfig.presentation === 'transparentModal'
-            ? ModalFadeTransition
-            : DefaultTransition;
+              ? ModalFadeTransition
+              : DefaultTransition;
 
         const {
           animationEnabled = Platform.OS !== 'web' &&
@@ -560,16 +560,16 @@ export class CardStack extends React.Component<Props, State> {
         detachPreviousScreen = options.presentation === 'transparentModal'
           ? false
           : getIsModalPresentation(options.cardStyleInterpolator)
-          ? i !==
-            findLastIndex(scenes, (scene) => {
-              const { cardStyleInterpolator } = scene.descriptor.options;
+            ? i !==
+              findLastIndex(scenes, (scene) => {
+                const { cardStyleInterpolator } = scene.descriptor.options;
 
-              return (
-                cardStyleInterpolator === forModalPresentationIOS ||
-                cardStyleInterpolator?.name === 'forModalPresentationIOS'
-              );
-            })
-          : true,
+                return (
+                  cardStyleInterpolator === forModalPresentationIOS ||
+                  cardStyleInterpolator?.name === 'forModalPresentationIOS'
+                );
+              })
+            : true,
       } = options;
 
       if (detachPreviousScreen === false) {
@@ -650,8 +650,8 @@ export class CardStack extends React.Component<Props, State> {
                 index === routes.length - 1
                   ? STATE_ON_TOP // the screen is on top after the transition
                   : index >= routes.length - activeScreensLimit
-                  ? STATE_TRANSITIONING_OR_BELOW_TOP // the screen should stay active after the transition, it is not on top but is in activeLimit
-                  : STATE_INACTIVE; // the screen should be active only during the transition, it is at the edge of activeLimit
+                    ? STATE_TRANSITIONING_OR_BELOW_TOP // the screen should stay active after the transition, it is not on top but is in activeLimit
+                    : STATE_INACTIVE; // the screen should be active only during the transition, it is at the edge of activeLimit
               isScreenActive = sceneForActivity
                 ? sceneForActivity.progress.current.interpolate({
                     inputRange: [0, 1 - EPSILON, 1],

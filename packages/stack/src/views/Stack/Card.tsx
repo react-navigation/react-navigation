@@ -295,7 +295,8 @@ export class Card extends React.Component<Props> {
         this.handleStartInteraction();
         onGestureBegin?.();
         break;
-      case GestureState.CANCELLED: {
+      case GestureState.CANCELLED:
+      case GestureState.FAILED: {
         this.isSwiping.setValue(FALSE);
         this.handleEndInteraction();
 
@@ -407,9 +408,9 @@ export class Card extends React.Component<Props> {
       gestureResponseDistance !== undefined
         ? gestureResponseDistance
         : gestureDirection === 'vertical' ||
-          gestureDirection === 'vertical-inverted'
-        ? GESTURE_RESPONSE_DISTANCE_VERTICAL
-        : GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
+            gestureDirection === 'vertical-inverted'
+          ? GESTURE_RESPONSE_DISTANCE_VERTICAL
+          : GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
 
     if (gestureDirection === 'vertical') {
       return {
@@ -539,7 +540,13 @@ export class Card extends React.Component<Props> {
           // Make sure that this view isn't removed. If this view is removed, our style with animated value won't apply
           collapsable={false}
         />
-        <View pointerEvents="box-none" {...rest}>
+        <View
+          pointerEvents="box-none"
+          // Make sure this view is not removed on the new architecture, as it causes focus loss during navigation on Android.
+          // This can happen when the view flattening results in different trees - due to `overflow` style changing in a parent.
+          collapsable={false}
+          {...rest}
+        >
           {overlayEnabled ? (
             <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
               {overlay({ style: overlayStyle })}
@@ -566,10 +573,10 @@ export class Card extends React.Component<Props> {
                       gestureDirection === 'horizontal'
                         ? [styles.shadowHorizontal, styles.shadowLeft]
                         : gestureDirection === 'horizontal-inverted'
-                        ? [styles.shadowHorizontal, styles.shadowRight]
-                        : gestureDirection === 'vertical'
-                        ? [styles.shadowVertical, styles.shadowTop]
-                        : [styles.shadowVertical, styles.shadowBottom],
+                          ? [styles.shadowHorizontal, styles.shadowRight]
+                          : gestureDirection === 'vertical'
+                            ? [styles.shadowVertical, styles.shadowTop]
+                            : [styles.shadowVertical, styles.shadowBottom],
                       { backgroundColor },
                       shadowStyle,
                     ]}
