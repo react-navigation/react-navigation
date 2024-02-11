@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.6...@react-navigation/core@7.0.0-alpha.7) (2024-01-17)
+
+### Features
+
+* add a new 'describe' method to create placeholder descriptor ([#11726](https://github.com/react-navigation/react-navigation/issues/11726)) ([0b83a9b](https://github.com/react-navigation/react-navigation/commit/0b83a9b79e92c61b2f547a9e31fb303cc9b07a51)) - by @osdnk
+* add layout and screenLayout props for screens ([#11741](https://github.com/react-navigation/react-navigation/issues/11741)) ([2dc2178](https://github.com/react-navigation/react-navigation/commit/2dc217827a1caa615460563973d3d658be372b29)) - by @satya164
+* move theming to core and pass theme to options ([#11707](https://github.com/react-navigation/react-navigation/issues/11707)) ([8e7ac4f](https://github.com/react-navigation/react-navigation/commit/8e7ac4f18545887b905f921df469dbf69d7951c7)) - by @satya164
+* preloading for stack navigator ([#11733](https://github.com/react-navigation/react-navigation/issues/11733)) ([14fa6df](https://github.com/react-navigation/react-navigation/commit/14fa6dfa4484cf2784f0e5cd0d06252fdf8a4ba5)), closes [#11702](https://github.com/react-navigation/react-navigation/issues/11702) [#11727](https://github.com/react-navigation/react-navigation/issues/11727) - by @osdnk
+* preloading in routers  ([382d6e6](https://github.com/react-navigation/react-navigation/commit/382d6e6f3312630b34332b1ae7d4bd7bf9b4ee60)) - by @osdnk
+
 # [7.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.5...@react-navigation/core@7.0.0-alpha.6) (2023-11-17)
 
 **Note:** Version bump only for package @react-navigation/core

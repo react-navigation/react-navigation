@@ -1469,16 +1469,15 @@ it("prevents removing a child screen with 'beforeRemove' event with 'resetRoot'"
     type: 'stack',
   });
 
-  act(
-    () =>
-      ref.current?.resetRoot({
-        index: 0,
-        key: 'stack-2',
-        routeNames: ['foo', 'bar', 'baz'],
-        routes: [{ key: 'foo-3', name: 'foo' }],
-        stale: false,
-        type: 'stack',
-      })
+  act(() =>
+    ref.current?.resetRoot({
+      index: 0,
+      key: 'stack-2',
+      routeNames: ['foo', 'bar', 'baz'],
+      routes: [{ key: 'foo-3', name: 'foo' }],
+      stale: false,
+      type: 'stack',
+    })
   );
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
@@ -1511,16 +1510,15 @@ it("prevents removing a child screen with 'beforeRemove' event with 'resetRoot'"
 
   shouldPrevent = false;
 
-  act(
-    () =>
-      ref.current?.resetRoot({
-        index: 0,
-        key: 'stack-2',
-        routeNames: ['foo', 'bar', 'baz'],
-        routes: [{ key: 'foo-3', name: 'foo' }],
-        stale: false,
-        type: 'stack',
-      })
+  act(() =>
+    ref.current?.resetRoot({
+      index: 0,
+      key: 'stack-2',
+      routeNames: ['foo', 'bar', 'baz'],
+      routes: [{ key: 'foo-3', name: 'foo' }],
+      stale: false,
+      type: 'stack',
+    })
   );
 
   expect(onStateChange).toHaveBeenCalledTimes(2);

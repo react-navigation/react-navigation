@@ -149,6 +149,26 @@ export type HeaderTitleProps = {
 
 export type HeaderButtonProps = {
   /**
+   * Callback to call when the button is pressed.
+   */
+  onPress?: () => void;
+  /**
+   * The `href` to use for the anchor tag on web
+   */
+  href?: string;
+  /**
+   * Whether the button is disabled.
+   */
+  disabled?: boolean;
+  /**
+   * Accessibility label for the button for screen readers.
+   */
+  accessibilityLabel?: string;
+  /**
+   * ID to locate this button in tests.
+   */
+  testID?: string;
+  /**
    * Tint color for the header button.
    */
   tintColor?: string;
@@ -161,28 +181,20 @@ export type HeaderButtonProps = {
    */
   pressOpacity?: number;
   /**
-   * Whether it's possible to navigate back in stack.
+   * Style object for the button.
    */
-  canGoBack?: boolean;
+  style?: StyleProp<ViewStyle>;
+  /**
+   * Content to render for the button. Usually the icon.
+   */
+  children: React.ReactNode;
 };
 
-export type HeaderBackButtonProps = HeaderButtonProps & {
-  /**
-   * Whether the button is disabled.
-   */
-  disabled?: boolean;
-  /**
-   * Callback to call when the button is pressed.
-   */
-  onPress?: () => void;
+export type HeaderBackButtonProps = Omit<HeaderButtonProps, 'children'> & {
   /**
    * Function which returns a React Element to display custom image in header's back button.
    */
   backImage?: (props: { tintColor: string }) => React.ReactNode;
-  /**
-   * The `href` to use for the anchor tag on web
-   */
-  href?: string;
   /**
    * Label text for the button. Usually the title of the previous screen.
    * By default, this is only shown on iOS.
@@ -217,16 +229,4 @@ export type HeaderBackButtonProps = HeaderButtonProps & {
    * Layout of the title element in the header.
    */
   titleLayout?: Layout;
-  /**
-   * Accessibility label for the button for screen readers.
-   */
-  accessibilityLabel?: string;
-  /**
-   * ID to locate this button in tests.
-   */
-  testID?: string;
-  /**
-   * Style object for the button.
-   */
-  style?: StyleProp<ViewStyle>;
 };

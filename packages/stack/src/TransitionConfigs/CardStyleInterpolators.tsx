@@ -156,11 +156,11 @@ export function forModalPresentationIOS({
   const borderRadius = isLandscape
     ? 0
     : isFirst
-    ? progress.interpolate({
-        inputRange: [0, 1, 1.0001, 2],
-        outputRange: [0, 0, hasNotchIos ? 38 : 0, 10],
-      })
-    : 10;
+      ? progress.interpolate({
+          inputRange: [0, 1, 1.0001, 2],
+          outputRange: [0, 0, hasNotchIos ? 38 : 0, 10],
+        })
+      : 10;
 
   return {
     cardStyle: {

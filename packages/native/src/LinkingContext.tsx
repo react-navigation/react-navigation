@@ -1,6 +1,7 @@
 import type { ParamListBase } from '@react-navigation/core';
-import type { LinkingOptions } from '@react-navigation/native/src/types';
 import * as React from 'react';
+
+import type { LinkingOptions } from './types';
 
 const MISSING_CONTEXT_ERROR = "Couldn't find a LinkingContext context.";
 

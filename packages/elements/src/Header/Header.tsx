@@ -220,14 +220,13 @@ export function Header(props: Props) {
       : customTitle;
 
   return (
-    <React.Fragment>
+    <Animated.View
+      pointerEvents="box-none"
+      style={[{ height, minHeight, maxHeight, opacity, transform }]}
+    >
       <Animated.View
         pointerEvents="box-none"
-        style={[
-          StyleSheet.absoluteFill,
-          { zIndex: 0 },
-          backgroundContainerStyle,
-        ]}
+        style={[StyleSheet.absoluteFill, backgroundContainerStyle]}
       >
         {headerBackground ? (
           headerBackground({ style: backgroundStyle })
@@ -235,69 +234,64 @@ export function Header(props: Props) {
           <HeaderBackground style={backgroundStyle} />
         )}
       </Animated.View>
-      <Animated.View
-        pointerEvents="box-none"
-        style={[{ height, minHeight, maxHeight, opacity, transform }]}
-      >
-        <View pointerEvents="none" style={{ height: headerStatusBarHeight }} />
-        <View pointerEvents="box-none" style={styles.content}>
-          <Animated.View
-            pointerEvents="box-none"
-            style={[
-              styles.left,
-              headerTitleAlign === 'center' && styles.expand,
-              { marginStart: insets.left },
-              leftContainerStyle,
-            ]}
-          >
-            {leftButton}
-          </Animated.View>
-          <Animated.View
-            pointerEvents="box-none"
-            style={[
-              styles.title,
-              {
-                // Avoid the title from going offscreen or overlapping buttons
-                maxWidth:
-                  headerTitleAlign === 'center'
-                    ? layout.width -
-                      ((leftButton
-                        ? headerLeftLabelVisible !== false
-                          ? 80
-                          : 32
-                        : 16) +
-                        Math.max(insets.left, insets.right)) *
-                        2
-                    : layout.width -
-                      ((leftButton ? 72 : 16) +
-                        (rightButton ? 72 : 16) +
-                        insets.left -
-                        insets.right),
-              },
-              titleContainerStyle,
-            ]}
-          >
-            {headerTitle({
-              children: title,
-              allowFontScaling: titleAllowFontScaling,
-              tintColor: headerTintColor,
-              style: titleStyle,
-            })}
-          </Animated.View>
-          <Animated.View
-            pointerEvents="box-none"
-            style={[
-              styles.right,
-              styles.expand,
-              { marginEnd: insets.right },
-              rightContainerStyle,
-            ]}
-          >
-            {rightButton}
-          </Animated.View>
-        </View>
-      </Animated.View>
-    </React.Fragment>
+      <View pointerEvents="none" style={{ height: headerStatusBarHeight }} />
+      <View pointerEvents="box-none" style={styles.content}>
+        <Animated.View
+          pointerEvents="box-none"
+          style={[
+            styles.left,
+            headerTitleAlign === 'center' && styles.expand,
+            { marginStart: insets.left },
+            leftContainerStyle,
+          ]}
+        >
+          {leftButton}
+        </Animated.View>
+        <Animated.View
+          pointerEvents="box-none"
+          style={[
+            styles.title,
+            {
+              // Avoid the title from going offscreen or overlapping buttons
+              maxWidth:
+                headerTitleAlign === 'center'
+                  ? layout.width -
+                    ((leftButton
+                      ? headerLeftLabelVisible !== false
+                        ? 80
+                        : 32
+                      : 16) +
+                      Math.max(insets.left, insets.right)) *
+                      2
+                  : layout.width -
+                    ((leftButton ? 72 : 16) +
+                      (rightButton ? 72 : 16) +
+                      insets.left -
+                      insets.right),
+            },
+            titleContainerStyle,
+          ]}
+        >
+          {headerTitle({
+            children: title,
+            allowFontScaling: titleAllowFontScaling,
+            tintColor: headerTintColor,
+            style: titleStyle,
+          })}
+        </Animated.View>
+        <Animated.View
+          pointerEvents="box-none"
+          style={[
+            styles.right,
+            styles.expand,
+            { marginEnd: insets.right },
+            rightContainerStyle,
+          ]}
+        >
+          {rightButton}
+        </Animated.View>
+      </View>
+    </Animated.View>
   );
 }
 

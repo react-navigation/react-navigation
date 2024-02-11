@@ -138,8 +138,8 @@ export const DefaultTransition = Platform.select({
     Number(Platform.Version) >= ANDROID_VERSION_10
       ? ScaleFromCenterAndroid
       : Number(Platform.Version) >= ANDROID_VERSION_PIE
-      ? RevealFromBottomAndroid
-      : FadeFromBottomAndroid,
+        ? RevealFromBottomAndroid
+        : FadeFromBottomAndroid,
   default: ScaleFromCenterAndroid,
 });
 

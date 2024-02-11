@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 
 import { MaskedView } from '../MaskedView';
-import { PlatformPressable } from '../PlatformPressable';
 import type { HeaderBackButtonProps } from '../types';
+import { HeaderButton } from './HeaderButton';
 
 export function HeaderBackButton({
   disabled,
@@ -157,7 +157,7 @@ export function HeaderBackButton({
   };
 
   return (
-    <PlatformPressable
+    <HeaderButton
       disabled={disabled}
       href={href}
       accessibilityLabel={accessibilityLabel}
@@ -165,31 +165,19 @@ export function HeaderBackButton({
       onPress={handlePress}
       pressColor={pressColor}
       pressOpacity={pressOpacity}
-      android_ripple={androidRipple}
-      style={[styles.container, disabled && styles.disabled, style]}
-      hitSlop={Platform.select({
-        ios: undefined,
-        default: { top: 16, right: 16, bottom: 16, left: 16 },
-      })}
+      style={[styles.container, style]}
     >
       <React.Fragment>
         {renderBackImage()}
         {renderLabel()}
       </React.Fragment>
-    </PlatformPressable>
+    </HeaderButton>
   );
 }
 
-const androidRipple = {
-  borderless: true,
-  foreground: Platform.OS === 'android' && Platform.Version >= 23,
-  radius: 20,
-};
-
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    flexDirection: 'row',
+    paddingHorizontal: 0,
     minWidth: StyleSheet.hairlineWidth, // Avoid collapsing when title is long
     ...Platform.select({
       ios: null,
@@ -198,9 +186,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 11,
       },
     }),
-  },
-  disabled: {
-    opacity: 0.5,
   },
   label: {
     fontSize: 17,

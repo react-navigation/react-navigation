@@ -73,7 +73,8 @@ const styles = StyleSheet.create({
   ...Platform.select({
     web: {
       content: {
-        display: 'grid' as 'none',
+        // FIXME: React Native's types for `display` don't include `grid`.
+        display: 'grid' as any,
         gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
       },
       item: {
@@ -85,6 +86,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
       },
+      item: {},
     },
   }),
   photo: {
