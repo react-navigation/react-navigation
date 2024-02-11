@@ -326,8 +326,6 @@ export function Drawer({
           : open;
 
       toggleDrawer(nextOpen, event.velocityX);
-    })
-    .onFinalize(() => {
       runOnJS(onGestureFinish)();
     })
     .activeOffsetX([-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET])
