@@ -7,10 +7,18 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-type PreloadStackParams = {
+import type { PathConfigMap } from '../../../packages/core/src/types';
+
+export type PreloadStackParams = {
   Home: undefined;
   Details: undefined;
   Profile: undefined;
+};
+
+export const preloadStackLinking: PathConfigMap<PreloadStackParams> = {
+  Home: '',
+  Details: 'details',
+  Profile: 'profile',
 };
 
 const DetailsScreen = ({

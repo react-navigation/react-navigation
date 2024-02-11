@@ -26,5 +26,7 @@ module.exports = async function (env, argv) {
       config.resolve.alias[pak.name] = path.resolve(packages, name, pak.source);
     });
 
+  config.resolve.fallback = { crypto: false };
+
   return config;
 };

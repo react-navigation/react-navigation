@@ -2,9 +2,13 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
   Button,
   HeaderBackground,
+  HeaderButton,
   useHeaderHeight,
 } from '@react-navigation/elements';
-import { type ParamListBase } from '@react-navigation/native';
+import {
+  type ParamListBase,
+  type PathConfigMap,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   Header,
@@ -20,23 +24,29 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Appbar } from 'react-native-paper';
 
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { BlurView } from '../Shared/BlurView';
 
-type SimpleStackParams = {
+export type HeaderCustomizationStackParams = {
   Article: { author: string };
   Albums: undefined;
 };
+
+export const headerCustomizationStackLinking: PathConfigMap<HeaderCustomizationStackParams> =
+  {
+    Article: COMMON_LINKING_CONFIG.Article,
+    Albums: 'albums',
+  };
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
   route,
-}: StackScreenProps<SimpleStackParams, 'Article'>) => {
+}: StackScreenProps<HeaderCustomizationStackParams, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -55,7 +65,9 @@ const ArticleScreen = ({
   );
 };
 
-const AlbumsScreen = ({ navigation }: StackScreenProps<SimpleStackParams>) => {
+const AlbumsScreen = ({
+  navigation,
+}: StackScreenProps<HeaderCustomizationStackParams>) => {
   const headerHeight = useHeaderHeight();
 
   return (
@@ -76,7 +88,7 @@ const AlbumsScreen = ({ navigation }: StackScreenProps<SimpleStackParams>) => {
   );
 };
 
-const Stack = createStackNavigator<SimpleStackParams>();
+const Stack = createStackNavigator<HeaderCustomizationStackParams>();
 
 type Props = StackScreenProps<ParamListBase>;
 
@@ -129,9 +141,7 @@ export function StackHeaderCustomization({ navigation }: Props) {
             />
           ),
           headerRight: ({ tintColor }) => (
-            <Appbar.Action
-              color={tintColor}
-              icon="dots-horizontal-circle-outline"
+            <HeaderButton
               onPress={() => {
                 setHeaderTitleCentered((centered) => !centered);
                 Alert.alert(
@@ -139,7 +149,13 @@ export function StackHeaderCustomization({ navigation }: Props) {
                   'Never gonna let you down! Never gonna run around and desert you!'
                 );
               }}
-            />
+            >
+              <MaterialCommunityIcons
+                name="dots-horizontal-circle-outline"
+                size={24}
+                color={tintColor}
+              />
+            </HeaderButton>
           ),
         })}
         initialParams={{ author: 'Gandalf' }}

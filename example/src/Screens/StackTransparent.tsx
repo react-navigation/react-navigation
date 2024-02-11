@@ -1,4 +1,4 @@
-import { Button } from '@react-navigation/elements';
+import { Button, Text } from '@react-navigation/elements';
 import { type ParamListBase, useTheme } from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -14,15 +14,21 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Paragraph } from 'react-native-paper';
 
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-type TransparentStackParams = {
+export type TransparentStackParams = {
   Article: { author: string };
   NewsFeed: undefined;
   Dialog: undefined;
+};
+
+export const transparentStackLinking = {
+  Article: COMMON_LINKING_CONFIG.Article,
+  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+  Dialog: 'dialog',
 };
 
 const scrollEnabled = Platform.select({ web: true, default: false });
@@ -96,7 +102,7 @@ const DialogScreen = ({
           },
         ]}
       >
-        <Paragraph style={styles.paragraph}>
+        <Text style={styles.paragraph}>
           Mise en place is a French term that literally means “put in place.” It
           also refers to a way cooks in professional kitchens and restaurants
           set up their work stations—first by gathering all ingredients for a
@@ -106,7 +112,7 @@ const DialogScreen = ({
           organization. It’ll pretty much guarantee you never forget to add an
           ingredient and save you time from running back and forth from the
           pantry ten times.
-        </Paragraph>
+        </Text>
         <Button
           variant="plain"
           style={styles.close}

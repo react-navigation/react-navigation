@@ -208,3 +208,12 @@ it('renders the specified nested navigator configuration with groups', () => {
     </main>
   `);
 });
+
+it("throws if screens property isn't specified", () => {
+  expect(() => {
+    // @ts-expect-error: we're testing invalid input here
+    const Root = createTestNavigator({});
+
+    createComponentForStaticNavigation(Root, 'RootNavigator');
+  }).toThrow("Couldn't find a 'screens' property");
+});

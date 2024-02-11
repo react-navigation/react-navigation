@@ -328,8 +328,8 @@ const getAccessibilityLabelDefault = ({ route }: Scene<Route>) =>
   typeof route.accessibilityLabel === 'string'
     ? route.accessibilityLabel
     : typeof route.title === 'string'
-    ? route.title
-    : undefined;
+      ? route.title
+      : undefined;
 
 const renderIndicatorDefault = (props: IndicatorProps<Route>) => (
   <TabBarIndicator {...props} />

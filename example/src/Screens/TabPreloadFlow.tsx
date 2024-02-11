@@ -5,10 +5,18 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-type PreloadBottomTabsParams = {
+import type { PathConfigMap } from '../../../packages/core/src/types';
+
+export type PreloadBottomTabsParams = {
   Home: undefined;
   Details: undefined;
 };
+
+export const preloadBottomTabsLinking: PathConfigMap<PreloadBottomTabsParams> =
+  {
+    Home: '',
+    Details: 'details',
+  };
 
 const DetailsScreen = ({
   navigation,

@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.7...@react-navigation/drawer@7.0.0-alpha.8) (2024-01-17)
+
+### Features
+
+* add layout and screenLayout props for screens ([#11741](https://github.com/react-navigation/react-navigation/issues/11741)) ([2dc2178](https://github.com/react-navigation/react-navigation/commit/2dc217827a1caa615460563973d3d658be372b29)) - by @satya164
+* preloading for simple navigators - tabs, drawer ([#11709](https://github.com/react-navigation/react-navigation/issues/11709)) ([ad7c703](https://github.com/react-navigation/react-navigation/commit/ad7c703f1c0e66d77f0ab235e13fe43ca813ed1d)) - by @osdnk
+* preloading in routers  ([382d6e6](https://github.com/react-navigation/react-navigation/commit/382d6e6f3312630b34332b1ae7d4bd7bf9b4ee60)) - by @osdnk
+
 # [7.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.6...@react-navigation/drawer@7.0.0-alpha.7) (2023-11-17)
 
 ### Bug Fixes
