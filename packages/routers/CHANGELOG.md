@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.0.0-alpha.4...@react-navigation/routers@7.0.0-alpha.5) (2024-01-17)
+
+### Bug Fixes
+
+* follow-up for the retain-related changes in stack router ([#11768](https://github.com/react-navigation/react-navigation/issues/11768)) ([573d0b8](https://github.com/react-navigation/react-navigation/commit/573d0b8d6a1b4990894204f1dcb37cd204f1e74c)) - by @osdnk
+
+### Features
+
+* add retaining of the screen to the stack navigator ([#11765](https://github.com/react-navigation/react-navigation/issues/11765)) ([7fe82f7](https://github.com/react-navigation/react-navigation/commit/7fe82f7217d9d146e5a127bcac921f0c90e2059f)), closes [#11758](https://github.com/react-navigation/react-navigation/issues/11758) - by @osdnk
+* preloading in routers  ([382d6e6](https://github.com/react-navigation/react-navigation/commit/382d6e6f3312630b34332b1ae7d4bd7bf9b4ee60)) - by @osdnk
+
 # [7.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.0.0-alpha.3...@react-navigation/routers@7.0.0-alpha.4) (2023-11-17)
 
 **Note:** Version bump only for package @react-navigation/routers

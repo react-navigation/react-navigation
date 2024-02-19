@@ -320,8 +320,8 @@ export function PanResponderAdapter<T extends Route>({
                 layout.width
                   ? { width: layout.width }
                   : focused
-                  ? StyleSheet.absoluteFill
-                  : null
+                    ? StyleSheet.absoluteFill
+                    : null
               }
             >
               {focused || layout.width ? child : null}

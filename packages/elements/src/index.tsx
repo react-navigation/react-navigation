@@ -7,6 +7,7 @@ export { Header } from './Header/Header';
 export { HeaderBackButton } from './Header/HeaderBackButton';
 export { HeaderBackContext } from './Header/HeaderBackContext';
 export { HeaderBackground } from './Header/HeaderBackground';
+export { HeaderButton } from './Header/HeaderButton';
 export { HeaderHeightContext } from './Header/HeaderHeightContext';
 export { HeaderShownContext } from './Header/HeaderShownContext';
 export { HeaderTitle } from './Header/HeaderTitle';

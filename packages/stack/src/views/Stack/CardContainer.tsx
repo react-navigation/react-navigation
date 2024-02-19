@@ -295,7 +295,7 @@ function CardContainerInner({
                 <HeaderHeightContext.Provider
                   value={headerShown ? headerHeight : parentHeaderHeight ?? 0}
                 >
-                  {scene.descriptor?.render()}
+                  {scene.descriptor.render()}
                 </HeaderHeightContext.Provider>
               </HeaderShownContext.Provider>
             </HeaderBackContext.Provider>

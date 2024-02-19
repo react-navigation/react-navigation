@@ -76,8 +76,8 @@ export function MaterialTopTabBar({
         options.tabBarShowLabel === false
           ? undefined
           : options.title !== undefined
-          ? options.title
-          : route.name,
+            ? options.title
+            : route.name,
     };
   });
 

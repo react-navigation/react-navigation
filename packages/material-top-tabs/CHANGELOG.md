@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-alpha.6...@react-navigation/material-top-tabs@7.0.0-alpha.7) (2024-01-17)
+
+### Bug Fixes
+
+* broken condition in the preloading of material tabs ([#11757](https://github.com/react-navigation/react-navigation/issues/11757)) ([1900747](https://github.com/react-navigation/react-navigation/commit/190074753039a3e0bb19b6afbf164544c7608abc)) - by @osdnk
+
+### Features
+
+* add layout and screenLayout props for screens ([#11741](https://github.com/react-navigation/react-navigation/issues/11741)) ([2dc2178](https://github.com/react-navigation/react-navigation/commit/2dc217827a1caa615460563973d3d658be372b29)) - by @satya164
+* enable preloading at material-top-tabs ([#11755](https://github.com/react-navigation/react-navigation/issues/11755)) ([58691ac](https://github.com/react-navigation/react-navigation/commit/58691ac973b40a93f4433dba0639dc3f45b21250)) - by @osdnk
+* preloading for simple navigators - tabs, drawer ([#11709](https://github.com/react-navigation/react-navigation/issues/11709)) ([ad7c703](https://github.com/react-navigation/react-navigation/commit/ad7c703f1c0e66d77f0ab235e13fe43ca813ed1d)) - by @osdnk
+* preloading in routers  ([382d6e6](https://github.com/react-navigation/react-navigation/commit/382d6e6f3312630b34332b1ae7d4bd7bf9b4ee60)) - by @osdnk
+
+### Reverts
+
+* Revert "feat: enable preloading at material-top-tabs (#11755)" (#11756) ([f8aee7b](https://github.com/react-navigation/react-navigation/commit/f8aee7b3eba73b8b9b9f544bfc6d25e6d32c970a)), closes [#11755](https://github.com/react-navigation/react-navigation/issues/11755) [#11756](https://github.com/react-navigation/react-navigation/issues/11756) - by @osdnk
+
 # [7.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-alpha.5...@react-navigation/material-top-tabs@7.0.0-alpha.6) (2023-11-17)
 
 ### Bug Fixes

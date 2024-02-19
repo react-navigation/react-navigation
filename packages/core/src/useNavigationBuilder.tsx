@@ -127,8 +127,8 @@ const getRouteConfigsFromChildren = <
             child.type !== Group
               ? groupOptions
               : groupOptions != null
-              ? [...groupOptions, child.props.screenOptions]
-              : [child.props.screenOptions],
+                ? [...groupOptions, child.props.screenOptions]
+                : [child.props.screenOptions],
             child.props.screenLayout ?? groupLayout
           )
         );
@@ -150,8 +150,8 @@ const getRouteConfigsFromChildren = <
                 : ''
             }`
           : typeof child === 'object'
-          ? JSON.stringify(child)
-          : `'${String(child)}'`
+            ? JSON.stringify(child)
+            : `'${String(child)}'`
       }). To render this component in the navigator, pass it in the 'component' prop to 'Screen'.`
     );
   }, []);
