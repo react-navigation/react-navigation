@@ -31,7 +31,6 @@
       "**/*"
     ],
     "scheme": "rne",
-    "entryPoint": "App.tsx",
     "android": {
       "package": "org.reactnavigation.example"
     },

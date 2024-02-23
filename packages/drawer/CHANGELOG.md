@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.8...@react-navigation/drawer@7.0.0-alpha.9) (2024-02-23)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+# [7.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.7...@react-navigation/drawer@7.0.0-alpha.8) (2024-01-17)
+
+### Features
+
+* add layout and screenLayout props for screens ([#11741](https://github.com/react-navigation/react-navigation/issues/11741)) ([2dc2178](https://github.com/react-navigation/react-navigation/commit/2dc217827a1caa615460563973d3d658be372b29)) - by @satya164
+* preloading for simple navigators - tabs, drawer ([#11709](https://github.com/react-navigation/react-navigation/issues/11709)) ([ad7c703](https://github.com/react-navigation/react-navigation/commit/ad7c703f1c0e66d77f0ab235e13fe43ca813ed1d)) - by @osdnk
+* preloading in routers  ([382d6e6](https://github.com/react-navigation/react-navigation/commit/382d6e6f3312630b34332b1ae7d4bd7bf9b4ee60)) - by @osdnk
+
+# [7.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.6...@react-navigation/drawer@7.0.0-alpha.7) (2023-11-17)
+
+### Bug Fixes
+
+* update peer dependencies when publishing ([c440703](https://github.com/react-navigation/react-navigation/commit/c44070310f875e488708f2a6c52ffddcea05b0e6)) - by @
+
+# [7.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.5...@react-navigation/drawer@7.0.0-alpha.6) (2023-11-12)
+
+### Bug Fixes
+
+* cannot resolve use-latest-callback ([#11696](https://github.com/react-navigation/react-navigation/issues/11696)) ([361bc6a](https://github.com/react-navigation/react-navigation/commit/361bc6a3840b37ae082a70e4ff6315280814c7a1)) - by @jkaveri
+
+### Features
+
+* add a button element to elements package  ([#11669](https://github.com/react-navigation/react-navigation/issues/11669)) ([25a85c9](https://github.com/react-navigation/react-navigation/commit/25a85c90384ddfb6db946e791c01d8e033e04aa6)) - by @satya164
+* add a layout prop for navigators ([#11614](https://github.com/react-navigation/react-navigation/issues/11614)) ([1f51190](https://github.com/react-navigation/react-navigation/commit/1f511904b9437d1451557147e72962859e97b1ae)) - by @satya164
+
+# [7.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.4...@react-navigation/drawer@7.0.0-alpha.5) (2023-09-25)
+
+### Bug Fixes
+
+* don't use BackHandler on web for drawer ([d814a40](https://github.com/react-navigation/react-navigation/commit/d814a40e3e632ca67b1e92ff4f3086a80638cc1a)) - by @satya164
+
+# [7.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.3...@react-navigation/drawer@7.0.0-alpha.4) (2023-09-13)
+
+### Features
+
+* add option to show tabs on the side ([#11578](https://github.com/react-navigation/react-navigation/issues/11578)) ([cd15fda](https://github.com/react-navigation/react-navigation/commit/cd15fdafe7acc428826bd5106c7ba62c1b5153ca)) - by @satya164
+
+# [7.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.2...@react-navigation/drawer@7.0.0-alpha.3) (2023-09-07)
+
+### Bug Fixes
+
+* Allow to use `PlatformColor` in the theme ([#11570](https://github.com/react-navigation/react-navigation/issues/11570)) ([64734e7](https://github.com/react-navigation/react-navigation/commit/64734e7bc0d7f203d8e5db6abcc9a88157a5f16c)) - by @retyui
+* prevent back handler usage on web ([#11458](https://github.com/react-navigation/react-navigation/issues/11458)) ([486ee81](https://github.com/react-navigation/react-navigation/commit/486ee81cac4606949199b91267f7b5a2663a31ec)) - by @EvanBacon
+
+* feat!: add a direction prop to NavigationContainer to specify rtl (#11393) ([8309636](https://github.com/react-navigation/react-navigation/commit/830963653fb5a489d02f1503222629373319b39e)), closes [#11393](https://github.com/react-navigation/react-navigation/issues/11393) - by @satya164
+
+### BREAKING CHANGES
+
+* Previously the navigators tried to detect RTL automatically and adjust the UI. However this is problematic since we cannot detect RTL in all cases (e.g. on Web).
+
+This adds an optional `direction` prop to `NavigationContainer` instead so that user can specify when React Navigation's UI needs to be adjusted for RTL. It defaults to the value from `I18nManager` on native platforms, however it needs to be explicitly passed for Web.
+
+# [7.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.1...@react-navigation/drawer@7.0.0-alpha.2) (2023-06-22)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
 # [7.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.0...@react-navigation/drawer@7.0.0-alpha.1) (2023-03-01)
 
 ### Bug Fixes

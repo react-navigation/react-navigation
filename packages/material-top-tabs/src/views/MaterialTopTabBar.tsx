@@ -1,12 +1,14 @@
+import { Text } from '@react-navigation/elements';
 import {
-  ParamListBase,
-  Route,
-  TabNavigationState,
+  type ParamListBase,
+  type Route,
+  type TabNavigationState,
+  useLocale,
   useTheme,
 } from '@react-navigation/native';
 import Color from 'color';
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { TabBar, TabBarIndicator } from 'react-native-tab-view';
 
 import type { MaterialTopTabBarProps } from '../types';
@@ -17,7 +19,8 @@ export function MaterialTopTabBar({
   descriptors,
   ...rest
 }: MaterialTopTabBarProps) {
-  const { colors, fonts } = useTheme();
+  const { colors } = useTheme();
+  const { direction } = useLocale();
 
   const focusedOptions = descriptors[state.routes[state.index].key].options;
 
@@ -30,6 +33,7 @@ export function MaterialTopTabBar({
     <TabBar
       {...rest}
       navigationState={state}
+      direction={direction}
       scrollEnabled={focusedOptions.tabBarScrollEnabled}
       bounces={focusedOptions.tabBarBounces}
       activeColor={activeColor}
@@ -97,18 +101,13 @@ export function MaterialTopTabBar({
           options.tabBarLabel !== undefined
             ? options.tabBarLabel
             : options.title !== undefined
-            ? options.title
-            : (route as Route<string>).name;
+              ? options.title
+              : (route as Route<string>).name;
 
         if (typeof label === 'string') {
           return (
             <Text
-              style={[
-                { color },
-                fonts.regular,
-                styles.label,
-                options.tabBarLabelStyle,
-              ]}
+              style={[{ color }, styles.label, options.tabBarLabelStyle]}
               allowFontScaling={options.tabBarAllowFontScaling}
             >
               {label}
@@ -120,8 +119,8 @@ export function MaterialTopTabBar({
           typeof options.tabBarLabel === 'string'
             ? options.tabBarLabel
             : options.title !== undefined
-            ? options.title
-            : route.name;
+              ? options.title
+              : route.name;
 
         return label({ focused, color, children });
       }}

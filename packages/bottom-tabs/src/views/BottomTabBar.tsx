@@ -1,24 +1,30 @@
-import { MissingIcon } from '@react-navigation/elements';
+import {
+  getDefaultSidebarWidth,
+  getLabel,
+  MissingIcon,
+} from '@react-navigation/elements';
 import {
   CommonActions,
   NavigationContext,
   NavigationRouteContext,
-  ParamListBase,
-  TabNavigationState,
-  useLinkTools,
+  type ParamListBase,
+  type TabNavigationState,
+  useLinkBuilder,
   useTheme,
 } from '@react-navigation/native';
+import Color from 'color';
 import React from 'react';
 import {
   Animated,
-  LayoutChangeEvent,
+  type LayoutChangeEvent,
   Platform,
-  StyleProp,
+  type StyleProp,
   StyleSheet,
+  useWindowDimensions,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native';
-import { EdgeInsets, useSafeAreaFrame } from 'react-native-safe-area-context';
+import type { EdgeInsets } from 'react-native-safe-area-context';
 
 import type { BottomTabBarProps, BottomTabDescriptorMap } from '../types';
 import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCallbackContext';
@@ -32,6 +38,7 @@ type Props = BottomTabBarProps & {
 const DEFAULT_TABBAR_HEIGHT = 49;
 const COMPACT_TABBAR_HEIGHT = 32;
 const DEFAULT_MAX_TAB_ITEM_WIDTH = 125;
+const SPACING = 5;
 
 const useNativeDriver = Platform.OS !== 'web';
 
@@ -97,8 +104,11 @@ export const getTabBarHeight = ({
   insets: EdgeInsets;
   style: Animated.WithAnimatedValue<StyleProp<ViewStyle>> | undefined;
 }) => {
-  // @ts-ignore
-  const customHeight = StyleSheet.flatten(style)?.height;
+  const flattenedStyle = StyleSheet.flatten(style);
+  const customHeight =
+    flattenedStyle && 'height' in flattenedStyle
+      ? flattenedStyle.height
+      : undefined;
 
   if (typeof customHeight === 'number') {
     return customHeight;
@@ -133,13 +143,14 @@ export function BottomTabBar({
   style,
 }: Props) {
   const { colors } = useTheme();
-  const { buildHref } = useLinkTools();
+  const { buildHref } = useLinkBuilder();
 
   const focusedRoute = state.routes[state.index];
   const focusedDescriptor = descriptors[focusedRoute.key];
   const focusedOptions = focusedDescriptor.options;
 
   const {
+    tabBarPosition = 'bottom',
     tabBarShowLabel,
     tabBarHideOnKeyboard = false,
     tabBarVisibilityAnimationConfig,
@@ -147,11 +158,18 @@ export function BottomTabBar({
     tabBarBackground,
     tabBarActiveTintColor,
     tabBarInactiveTintColor,
-    tabBarActiveBackgroundColor,
+    tabBarActiveBackgroundColor = tabBarPosition !== 'bottom' &&
+    tabBarPosition !== 'top'
+      ? Color(tabBarActiveTintColor ?? colors.primary)
+          .alpha(0.12)
+          .rgb()
+          .string()
+      : undefined,
     tabBarInactiveBackgroundColor,
   } = focusedOptions;
 
-  const dimensions = useSafeAreaFrame();
+  // FIXME: useSafeAreaFrame doesn't update values when window is resized on Web
+  const dimensions = useWindowDimensions();
   const isKeyboardShown = useIsKeyboardShown();
 
   const onHeightChange = React.useContext(BottomTabBarHeightCallbackContext);
@@ -253,45 +271,69 @@ export function BottomTabBar({
 
   const tabBarBackgroundElement = tabBarBackground?.();
 
+  const tabBarIsHorizontal =
+    tabBarPosition === 'bottom' || tabBarPosition === 'top';
+
   return (
     <Animated.View
       style={[
-        styles.tabBar,
+        tabBarPosition === 'left'
+          ? styles.left
+          : tabBarPosition === 'right'
+            ? styles.right
+            : styles.bottom,
         {
           backgroundColor:
             tabBarBackgroundElement != null ? 'transparent' : colors.card,
-          borderTopColor: colors.border,
+          borderColor: colors.border,
         },
-        {
-          transform: [
-            {
-              translateY: visible.interpolate({
-                inputRange: [0, 1],
-                outputRange: [
-                  layout.height + paddingBottom + StyleSheet.hairlineWidth,
-                  0,
+        tabBarIsHorizontal
+          ? [
+              {
+                transform: [
+                  {
+                    translateY: visible.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [
+                        layout.height +
+                          paddingBottom +
+                          StyleSheet.hairlineWidth,
+                        0,
+                      ],
+                    }),
+                  },
                 ],
-              }),
+                // Absolutely position the tab bar so that the content is below it
+                // This is needed to avoid gap at bottom when the tab bar is hidden
+                position: isTabBarHidden ? 'absolute' : undefined,
+              },
+              {
+                height: tabBarHeight,
+                paddingBottom,
+                paddingHorizontal: Math.max(insets.left, insets.right),
+              },
+            ]
+          : {
+              paddingTop: insets.top,
+              paddingBottom: insets.bottom,
+              paddingLeft: tabBarPosition === 'left' ? insets.left : 0,
+              paddingRight: tabBarPosition === 'right' ? insets.right : 0,
+              minWidth: hasHorizontalLabels
+                ? getDefaultSidebarWidth(dimensions)
+                : 0,
             },
-          ],
-          // Absolutely position the tab bar so that the content is below it
-          // This is needed to avoid gap at bottom when the tab bar is hidden
-          position: isTabBarHidden ? 'absolute' : (null as any),
-        },
-        {
-          height: tabBarHeight,
-          paddingBottom,
-          paddingHorizontal: Math.max(insets.left, insets.right),
-        },
         tabBarStyle,
       ]}
       pointerEvents={isTabBarHidden ? 'none' : 'auto'}
-      onLayout={handleLayout}
+      onLayout={tabBarIsHorizontal ? handleLayout : undefined}
     >
       <View pointerEvents="none" style={StyleSheet.absoluteFill}>
         {tabBarBackgroundElement}
       </View>
-      <View accessibilityRole="tablist" style={styles.content}>
+      <View
+        accessibilityRole="tablist"
+        style={tabBarIsHorizontal ? styles.bottomContent : styles.sideContent}
+      >
         {routes.map((route, index) => {
           const focused = index === state.index;
           const { options } = descriptors[route.key];
@@ -319,18 +361,19 @@ export function BottomTabBar({
           };
 
           const label =
-            options.tabBarLabel !== undefined
+            typeof options.tabBarLabel === 'function'
               ? options.tabBarLabel
-              : options.title !== undefined
-              ? options.title
-              : route.name;
+              : getLabel(
+                  { label: options.tabBarLabel, title: options.title },
+                  route.name
+                );
 
           const accessibilityLabel =
             options.tabBarAccessibilityLabel !== undefined
               ? options.tabBarAccessibilityLabel
               : typeof label === 'string' && Platform.OS === 'ios'
-              ? `${label}, tab, ${index + 1} of ${routes.length}`
-              : undefined;
+                ? `${label}, tab, ${index + 1} of ${routes.length}`
+                : undefined;
 
           return (
             <NavigationContext.Provider
@@ -366,7 +409,17 @@ export function BottomTabBar({
                   showLabel={tabBarShowLabel}
                   labelStyle={options.tabBarLabelStyle}
                   iconStyle={options.tabBarIconStyle}
-                  style={options.tabBarItemStyle}
+                  style={[
+                    tabBarIsHorizontal
+                      ? styles.bottomItem
+                      : [
+                          styles.sideItem,
+                          hasHorizontalLabels
+                            ? { justifyContent: 'flex-start' }
+                            : null,
+                        ],
+                    options.tabBarItemStyle,
+                  ]}
                 />
               </NavigationRouteContext.Provider>
             </NavigationContext.Provider>
@@ -378,15 +431,40 @@ export function BottomTabBar({
 }
 
 const styles = StyleSheet.create({
-  tabBar: {
+  left: {
+    top: 0,
+    bottom: 0,
+    left: 0,
+    borderRightWidth: StyleSheet.hairlineWidth,
+  },
+  right: {
+    top: 0,
+    bottom: 0,
+    right: 0,
+    borderLeftWidth: StyleSheet.hairlineWidth,
+  },
+  bottom: {
     left: 0,
     right: 0,
     bottom: 0,
     borderTopWidth: StyleSheet.hairlineWidth,
     elevation: 8,
   },
-  content: {
+  bottomContent: {
     flex: 1,
     flexDirection: 'row',
+  },
+  sideContent: {
+    flex: 1,
+    flexDirection: 'column',
+    padding: SPACING,
+  },
+  bottomItem: {
+    flex: 1,
+  },
+  sideItem: {
+    margin: SPACING,
+    padding: SPACING * 2,
+    borderRadius: 4,
   },
 });

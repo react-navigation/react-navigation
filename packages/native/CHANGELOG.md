@@ -3,6 +3,67 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.7...@react-navigation/native@7.0.0-alpha.8) (2024-02-23)
+
+### Bug Fixes
+
+* forward ref for static navigation ([f6b99b1](https://github.com/react-navigation/react-navigation/commit/f6b99b168dc6bdff86455b7fd98aa6b19aa1af6a)) - by @satya164
+
+# [7.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.6...@react-navigation/native@7.0.0-alpha.7) (2024-01-17)
+
+### Bug Fixes
+
+* fix import for LinkingOptions ([9986736](https://github.com/react-navigation/react-navigation/commit/99867368c36f187a760c00dddb6382e047bf0eed)) - by @satya164
+
+### Features
+
+* move theming to core and pass theme to options ([#11707](https://github.com/react-navigation/react-navigation/issues/11707)) ([8e7ac4f](https://github.com/react-navigation/react-navigation/commit/8e7ac4f18545887b905f921df469dbf69d7951c7)) - by @satya164
+
+# [7.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.5...@react-navigation/native@7.0.0-alpha.6) (2023-11-17)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [7.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.4...@react-navigation/native@7.0.0-alpha.5) (2023-11-12)
+
+### Bug Fixes
+
+* cannot resolve use-latest-callback ([#11696](https://github.com/react-navigation/react-navigation/issues/11696)) ([361bc6a](https://github.com/react-navigation/react-navigation/commit/361bc6a3840b37ae082a70e4ff6315280814c7a1)) - by @jkaveri
+
+### Features
+
+* add `useUnhandledLinking` for handling deep links behind auth etc. ([#11602](https://github.com/react-navigation/react-navigation/issues/11602)) ([688c43a](https://github.com/react-navigation/react-navigation/commit/688c43af4b27c90d1a99876d6daebbbf69820f56)), closes [#10939](https://github.com/react-navigation/react-navigation/issues/10939) - by @osdnk
+* add a button element to elements package  ([#11669](https://github.com/react-navigation/react-navigation/issues/11669)) ([25a85c9](https://github.com/react-navigation/react-navigation/commit/25a85c90384ddfb6db946e791c01d8e033e04aa6)) - by @satya164
+* add API for unhandled linking ([#11672](https://github.com/react-navigation/react-navigation/issues/11672)) ([5758b26](https://github.com/react-navigation/react-navigation/commit/5758b2615e70ce4943b23ead0227507c63b11c7c)) - by @osdnk
+
+# [7.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.3...@react-navigation/native@7.0.0-alpha.4) (2023-09-25)
+
+### Bug Fixes
+
+* don't use .web extensions ([8dfd9bc](https://github.com/react-navigation/react-navigation/commit/8dfd9bc8efb4e89c7e7bbe9727911cdf148ffa05)) - by @satya164
+
+# [7.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.2...@react-navigation/native@7.0.0-alpha.3) (2023-09-07)
+
+### Bug Fixes
+
+* Allow to use `PlatformColor` in the theme ([#11570](https://github.com/react-navigation/react-navigation/issues/11570)) ([64734e7](https://github.com/react-navigation/react-navigation/commit/64734e7bc0d7f203d8e5db6abcc9a88157a5f16c)) - by @retyui
+* incorrect url parsing (isssue: [#10924](https://github.com/react-navigation/react-navigation/issues/10924)) ([#11528](https://github.com/react-navigation/react-navigation/issues/11528)) ([fab2cc6](https://github.com/react-navigation/react-navigation/commit/fab2cc6fb03858020808bcb49ede86e0701679e1)) - by @retyui
+* prevent back handler usage on web ([#11458](https://github.com/react-navigation/react-navigation/issues/11458)) ([486ee81](https://github.com/react-navigation/react-navigation/commit/486ee81cac4606949199b91267f7b5a2663a31ec)) - by @EvanBacon
+* replace series function used to queue async callbacks ([#11485](https://github.com/react-navigation/react-navigation/issues/11485)) ([d8dc693](https://github.com/react-navigation/react-navigation/commit/d8dc6934e3aa2099b34b5bf2801c57780e48fc18)) - by @karlsander
+
+* feat!: add a direction prop to NavigationContainer to specify rtl (#11393) ([8309636](https://github.com/react-navigation/react-navigation/commit/830963653fb5a489d02f1503222629373319b39e)), closes [#11393](https://github.com/react-navigation/react-navigation/issues/11393) - by @satya164
+
+### BREAKING CHANGES
+
+* Previously the navigators tried to detect RTL automatically and adjust the UI. However this is problematic since we cannot detect RTL in all cases (e.g. on Web).
+
+This adds an optional `direction` prop to `NavigationContainer` instead so that user can specify when React Navigation's UI needs to be adjusted for RTL. It defaults to the value from `I18nManager` on native platforms, however it needs to be explicitly passed for Web.
+
+# [7.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.1...@react-navigation/native@7.0.0-alpha.2) (2023-06-22)
+
+### Features
+
+* support a top-level path configuration in linking config ([1d0297e](https://github.com/react-navigation/react-navigation/commit/1d0297ed17788c01d7b901ad04b63d3f37f47266)) - by @satya164
+
 # [7.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.0...@react-navigation/native@7.0.0-alpha.1) (2023-03-01)
 
 ### Bug Fixes

@@ -1,12 +1,12 @@
 import type {
   HeaderBackButton,
   HeaderBackButtonProps,
-  HeaderButtonProps,
   HeaderOptions,
   HeaderTitleProps,
 } from '@react-navigation/elements';
 import type {
   Descriptor,
+  LocaleDirection,
   NavigationHelpers,
   NavigationProp,
   ParamListBase,
@@ -50,7 +50,7 @@ export type StackNavigationHelpers = NavigationHelpers<
 export type StackNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined
+  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
@@ -64,7 +64,7 @@ export type StackNavigationProp<
 export type StackScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined
+  NavigatorID extends string | undefined = undefined,
 > = {
   navigation: StackNavigationProp<ParamList, RouteName, NavigatorID>;
   route: RouteProp<ParamList, RouteName>;
@@ -139,11 +139,11 @@ export type StackHeaderOptions = Omit<
   /**
    * Function which returns a React Element to display on the left side of the header.
    */
-  headerLeft?: (props: HeaderBackButtonProps) => React.ReactNode;
+  headerLeft?: (props: StackHeaderLeftProps) => React.ReactNode;
   /**
    * Function which returns a React Element to display on the right side of the header.
    */
-  headerRight?: (props: HeaderButtonProps) => React.ReactNode;
+  headerRight?: (props: StackHeaderRightProps) => React.ReactNode;
   /**
    * Whether back button title font should scale to respect Text Size accessibility settings. Defaults to `false`.
    */
@@ -196,7 +196,11 @@ export type StackHeaderProps = {
     /**
      * Title of the previous screen.
      */
-    title: string;
+    title: string | undefined;
+    /**
+     * The `href` to use for the anchor tag on web
+     */
+    href: string | undefined;
   };
   /**
    * Animated nodes representing the progress of the animation.
@@ -218,6 +222,32 @@ export type StackHeaderProps = {
    * Interpolated styles for various elements in the header.
    */
   styleInterpolator: StackHeaderStyleInterpolator;
+};
+
+export type StackHeaderRightProps = {
+  /**
+   * Tint color for the header button.
+   */
+  tintColor?: string;
+  /**
+   * Color for material ripple (Android >= 5.0 only).
+   */
+  pressColor?: string;
+  /**
+   * Opacity when the button is pressed, used when ripple is not supported.
+   */
+  pressOpacity?: number;
+  /**
+   * Whether it's possible to navigate back in stack.
+   */
+  canGoBack?: boolean;
+};
+
+export type StackHeaderLeftProps = HeaderBackButtonProps & {
+  /**
+   * Whether it's possible to navigate back in stack.
+   */
+  canGoBack?: boolean;
 };
 
 export type StackDescriptor = Descriptor<
@@ -341,6 +371,12 @@ export type StackNavigationOptions = StackHeaderOptions &
      * Only supported on iOS and Android.
      */
     freezeOnBlur?: boolean;
+    /**
+     * Whether the home indicator should prefer to stay hidden on this screen. Defaults to `false`.
+     *
+     * @platform ios
+     */
+    autoHideHomeIndicator?: boolean;
   };
 
 export type StackNavigationConfig = {
@@ -429,19 +465,19 @@ export type StackCardInterpolatedStyle = {
   /**
    * Interpolated style for the container view wrapping the card.
    */
-  containerStyle?: any;
+  containerStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   /**
    * Interpolated style for the view representing the card.
    */
-  cardStyle?: any;
+  cardStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   /**
    * Interpolated style for the view representing the semi-transparent overlay below the card.
    */
-  overlayStyle?: any;
+  overlayStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   /**
    * Interpolated style representing the card shadow.
    */
-  shadowStyle?: any;
+  shadowStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 };
 
 export type StackCardStyleInterpolator = (
@@ -468,6 +504,10 @@ export type StackHeaderInterpolationProps = {
      */
     progress: Animated.AnimatedInterpolation<number>;
   };
+  /**
+   * Writing direction of the layout.
+   */
+  direction: LocaleDirection;
   /**
    * Layout measurements for various items we use for animation.
    */

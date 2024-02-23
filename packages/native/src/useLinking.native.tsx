@@ -1,8 +1,8 @@
 import {
   getActionFromState as getActionFromStateDefault,
   getStateFromPath as getStateFromPathDefault,
-  NavigationContainerRef,
-  ParamListBase,
+  type NavigationContainerRef,
+  type ParamListBase,
   useNavigationIndependentTree,
 } from '@react-navigation/core';
 import * as React from 'react';
@@ -15,7 +15,7 @@ type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
 type Options = LinkingOptions<ParamListBase>;
 
-let linkingHandlers: Symbol[] = [];
+const linkingHandlers: symbol[] = [];
 
 export function useLinking(
   ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
@@ -27,11 +27,11 @@ export function useLinking(
     getInitialURL = () =>
       Promise.race([
         Linking.getInitialURL(),
-        new Promise<undefined>((resolve) =>
+        new Promise<undefined>((resolve) => {
           // Timeout in 150ms if `getInitialState` doesn't resolve
           // Workaround for https://github.com/facebook/react-native/issues/25675
-          setTimeout(resolve, 150)
-        ),
+          setTimeout(resolve, 150);
+        }),
       ]),
     subscribe = (listener) => {
       const callback = ({ url }: { url: string }) => listener(url);
@@ -55,7 +55,8 @@ export function useLinking(
     },
     getStateFromPath = getStateFromPathDefault,
     getActionFromState = getActionFromStateDefault,
-  }: Options
+  }: Options,
+  onUnhandledLinking: (lastUnhandledLining: string | undefined) => void
 ) {
   const independent = useNavigationIndependentTree();
 
@@ -140,12 +141,21 @@ export function useLinking(
     if (enabledRef.current) {
       const url = getInitialURLRef.current();
 
-      if (url != null && typeof url !== 'string') {
-        return url.then((url) => {
-          const state = getStateFromURL(url);
+      if (url != null) {
+        if (typeof url !== 'string') {
+          return url.then((url) => {
+            const state = getStateFromURL(url);
 
-          return state;
-        });
+            if (typeof url === 'string') {
+              // If the link were handled, it gets cleared in NavigationContainer
+              onUnhandledLinking(extractPathFromURL(prefixes, url));
+            }
+
+            return state;
+          });
+        } else {
+          onUnhandledLinking(extractPathFromURL(prefixes, url));
+        }
       }
 
       state = getStateFromURL(url);
@@ -161,7 +171,7 @@ export function useLinking(
     };
 
     return thenable as PromiseLike<ResultState | undefined>;
-  }, [getStateFromURL]);
+  }, [getStateFromURL, onUnhandledLinking, prefixes]);
 
   React.useEffect(() => {
     const listener = (url: string) => {
@@ -173,14 +183,10 @@ export function useLinking(
       const state = navigation ? getStateFromURL(url) : undefined;
 
       if (navigation && state) {
-        // Make sure that the routes in the state exist in the root navigator
-        // Otherwise there's an error in the linking configuration
+        // If the link were handled, it gets cleared in NavigationContainer
+        onUnhandledLinking(extractPathFromURL(prefixes, url));
         const rootState = navigation.getRootState();
-
         if (state.routes.some((r) => !rootState?.routeNames.includes(r.name))) {
-          console.warn(
-            "The navigation state parsed from the URL contains routes not present in the root navigator. This usually means that the linking configuration doesn't match the navigation structure. See https://reactnavigation.org/docs/configuring-links for more details on how to specify a linking configuration."
-          );
           return;
         }
 
@@ -207,7 +213,7 @@ export function useLinking(
     };
 
     return subscribe(listener);
-  }, [enabled, getStateFromURL, ref, subscribe]);
+  }, [enabled, getStateFromURL, onUnhandledLinking, prefixes, ref, subscribe]);
 
   return {
     getInitialState,

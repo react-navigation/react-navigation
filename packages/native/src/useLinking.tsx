@@ -3,9 +3,9 @@ import {
   getActionFromState as getActionFromStateDefault,
   getPathFromState as getPathFromStateDefault,
   getStateFromPath as getStateFromPathDefault,
-  NavigationContainerRef,
-  NavigationState,
-  ParamListBase,
+  type NavigationContainerRef,
+  type NavigationState,
+  type ParamListBase,
   useNavigationIndependentTree,
 } from '@react-navigation/core';
 import isEqual from 'fast-deep-equal';
@@ -60,39 +60,16 @@ const findMatchingState = <T extends NavigationState>(
 /**
  * Run async function in series as it's called.
  */
-const series = (cb: () => Promise<void>) => {
-  // Whether we're currently handling a callback
-  let handling = false;
-  let queue: (() => Promise<void>)[] = [];
-
-  const callback = async () => {
-    try {
-      if (handling) {
-        // If we're currently handling a previous event, wait before handling this one
-        // Add the callback to the beginning of the queue
-        queue.unshift(callback);
-        return;
-      }
-
-      handling = true;
-
-      await cb();
-    } finally {
-      handling = false;
-
-      if (queue.length) {
-        // If we have queued items, handle the last one
-        const last = queue.pop();
-
-        last?.();
-      }
-    }
+export const series = (cb: () => Promise<void>) => {
+  let queue = Promise.resolve();
+  const callback = () => {
+    // eslint-disable-next-line promise/no-callback-in-promise
+    queue = queue.then(cb);
   };
-
   return callback;
 };
 
-let linkingHandlers: Symbol[] = [];
+const linkingHandlers: symbol[] = [];
 
 type Options = LinkingOptions<ParamListBase>;
 
@@ -104,7 +81,8 @@ export function useLinking(
     getStateFromPath = getStateFromPathDefault,
     getPathFromState = getPathFromStateDefault,
     getActionFromState = getActionFromStateDefault,
-  }: Options
+  }: Options,
+  onUnhandledLinking: (lastUnhandledLining: string | undefined) => void
 ) {
   const independent = useNavigationIndependentTree();
 
@@ -163,6 +141,17 @@ export function useLinking(
     getActionFromStateRef.current = getActionFromState;
   });
 
+  const validateRoutesNotExistInRootState = React.useCallback(
+    (state: ResultState) => {
+      const navigation = ref.current;
+      const rootState = navigation?.getRootState();
+      // Make sure that the routes in the state exist in the root navigator
+      // Otherwise there's an error in the linking configuration
+      return state?.routes.some((r) => !rootState?.routeNames.includes(r.name));
+    },
+    [ref]
+  );
+
   const server = React.useContext(ServerContext);
 
   const getInitialState = React.useCallback(() => {
@@ -178,6 +167,9 @@ export function useLinking(
       if (path) {
         value = getStateFromPathRef.current(path, configRef.current);
       }
+
+      // If the link were handled, it gets cleared in NavigationContainer
+      onUnhandledLinking(path);
     }
 
     const thenable = {
@@ -207,6 +199,8 @@ export function useLinking(
         return;
       }
 
+      const { location } = window;
+
       const path = location.pathname + location.search;
       const index = history.index;
 
@@ -230,14 +224,11 @@ export function useLinking(
       // We should only dispatch an action when going forward
       // Otherwise the action will likely add items to history, which would mess things up
       if (state) {
+        // If the link were handled, it gets cleared in NavigationContainer
+        onUnhandledLinking(path);
         // Make sure that the routes in the state exist in the root navigator
         // Otherwise there's an error in the linking configuration
-        const rootState = navigation.getRootState();
-
-        if (state.routes.some((r) => !rootState?.routeNames.includes(r.name))) {
-          console.warn(
-            "The navigation state parsed from the URL contains routes not present in the root navigator. This usually means that the linking configuration doesn't match the navigation structure. See https://reactnavigation.org/docs/configuring-links for more details on how to specify a linking configuration."
-          );
+        if (validateRoutesNotExistInRootState(state)) {
           return;
         }
 
@@ -272,7 +263,13 @@ export function useLinking(
         navigation.resetRoot(state);
       }
     });
-  }, [enabled, history, ref]);
+  }, [
+    enabled,
+    history,
+    onUnhandledLinking,
+    ref,
+    validateRoutesNotExistInRootState,
+  ]);
 
   React.useEffect(() => {
     if (!enabled) {

@@ -1,9 +1,10 @@
+import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import {
-  NavigationState,
+  type NavigationState,
   SceneMap,
-  SceneRendererProps,
+  type SceneRendererProps,
   TabBar,
   TabView,
 } from 'react-native-tab-view';
@@ -27,6 +28,7 @@ const renderScene = SceneMap({
 
 export const ScrollableTabBar = () => {
   const [index, onIndexChange] = React.useState(1);
+  const { direction } = useLocale();
   const [routes] = React.useState([
     { key: 'article', title: 'Article' },
     { key: 'contacts', title: 'Contacts' },
@@ -42,8 +44,11 @@ export const ScrollableTabBar = () => {
       scrollEnabled
       indicatorStyle={styles.indicator}
       style={styles.tabbar}
+      contentContainerStyle={styles.tabbarContentContainer}
       tabStyle={styles.tab}
       labelStyle={styles.label}
+      gap={20}
+      direction={direction}
     />
   );
 
@@ -54,6 +59,7 @@ export const ScrollableTabBar = () => {
         index,
         routes,
       }}
+      direction={direction}
       renderScene={renderScene}
       renderTabBar={renderTabBar}
       onIndexChange={onIndexChange}
@@ -73,6 +79,9 @@ ScrollableTabBar.options = {
 const styles = StyleSheet.create({
   tabbar: {
     backgroundColor: '#3f51b5',
+  },
+  tabbarContentContainer: {
+    paddingHorizontal: 10,
   },
   tab: {
     width: 120,

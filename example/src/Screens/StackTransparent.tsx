@@ -1,7 +1,8 @@
-import { ParamListBase, useTheme } from '@react-navigation/native';
+import { Button, Text } from '@react-navigation/elements';
+import { type ParamListBase, useTheme } from '@react-navigation/native';
 import {
   createStackNavigator,
-  StackScreenProps,
+  type StackScreenProps,
   useCardAnimation,
 } from '@react-navigation/stack';
 import * as React from 'react';
@@ -13,15 +14,21 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Button, Paragraph } from 'react-native-paper';
 
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-type TransparentStackParams = {
+export type TransparentStackParams = {
   Article: { author: string };
   NewsFeed: undefined;
   Dialog: undefined;
+};
+
+export const transparentStackLinking = {
+  Article: COMMON_LINKING_CONFIG.Article,
+  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+  Dialog: 'dialog',
 };
 
 const scrollEnabled = Platform.select({ web: true, default: false });
@@ -33,25 +40,13 @@ const ArticleScreen = ({
   return (
     <ScrollView>
       <View style={styles.buttons}>
-        <Button
-          mode="contained"
-          onPress={() => navigation.push('Dialog')}
-          style={styles.button}
-        >
+        <Button variant="filled" onPress={() => navigation.push('Dialog')}>
           Show Dialog
         </Button>
-        <Button
-          mode="contained"
-          onPress={() => navigation.push('NewsFeed')}
-          style={styles.button}
-        >
+        <Button variant="filled" onPress={() => navigation.push('NewsFeed')}>
           Push NewsFeed
         </Button>
-        <Button
-          mode="outlined"
-          onPress={() => navigation.goBack()}
-          style={styles.button}
-        >
+        <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back
         </Button>
       </View>
@@ -69,18 +64,10 @@ const NewsFeedScreen = ({
   return (
     <ScrollView>
       <View style={styles.buttons}>
-        <Button
-          mode="contained"
-          onPress={() => navigation.push('Dialog')}
-          style={styles.button}
-        >
+        <Button variant="filled" onPress={() => navigation.push('Dialog')}>
           Show Dialog
         </Button>
-        <Button
-          mode="outlined"
-          onPress={() => navigation.goBack()}
-          style={styles.button}
-        >
+        <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back
         </Button>
       </View>
@@ -115,7 +102,7 @@ const DialogScreen = ({
           },
         ]}
       >
-        <Paragraph>
+        <Text style={styles.paragraph}>
           Mise en place is a French term that literally means “put in place.” It
           also refers to a way cooks in professional kitchens and restaurants
           set up their work stations—first by gathering all ingredients for a
@@ -125,8 +112,12 @@ const DialogScreen = ({
           organization. It’ll pretty much guarantee you never forget to add an
           ingredient and save you time from running back and forth from the
           pantry ten times.
-        </Paragraph>
-        <Button style={styles.close} compact onPress={navigation.goBack}>
+        </Text>
+        <Button
+          variant="plain"
+          style={styles.close}
+          onPress={navigation.goBack}
+        >
           Okay
         </Button>
       </Animated.View>
@@ -173,10 +164,8 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 8,
-  },
-  button: {
-    margin: 8,
+    gap: 12,
+    padding: 12,
   },
   container: {
     flex: 1,
@@ -184,7 +173,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   dialog: {
-    padding: 16,
+    padding: 8,
     width: '90%',
     maxWidth: 400,
     borderRadius: 3,
@@ -192,6 +181,9 @@ const styles = StyleSheet.create({
   backdrop: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  },
+  paragraph: {
+    padding: 16,
   },
   close: {
     alignSelf: 'flex-end',

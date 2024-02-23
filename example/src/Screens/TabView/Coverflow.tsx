@@ -1,15 +1,15 @@
 /* eslint-disable import/no-commonjs */
-
+import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
   Image,
-  ImageRequireSource,
+  type ImageRequireSource,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
-import { SceneRendererProps, TabView } from 'react-native-tab-view';
+import { type SceneRendererProps, TabView } from 'react-native-tab-view';
 
 type Route = {
   key: string;
@@ -88,6 +88,8 @@ const Scene = ({ route, position, layout, index, length }: Props) => {
 };
 
 export function Coverflow() {
+  const { direction } = useLocale();
+
   const [index, onIndexChange] = React.useState(2);
   const [routes] = React.useState(Object.keys(ALBUMS).map((key) => ({ key })));
 
@@ -100,6 +102,7 @@ export function Coverflow() {
         index,
         routes,
       }}
+      direction={direction}
       onIndexChange={onIndexChange}
       renderTabBar={() => null}
       renderScene={(props: SceneRendererProps & { route: Route }) => (

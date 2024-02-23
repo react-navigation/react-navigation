@@ -1,17 +1,18 @@
 import * as React from 'react';
 import {
   Animated,
-  LayoutChangeEvent,
-  PressableAndroidRippleConfig,
-  StyleProp,
+  type LayoutChangeEvent,
+  type PressableAndroidRippleConfig,
+  type StyleProp,
   StyleSheet,
-  TextStyle,
+  type TextStyle,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native';
 import useLatestCallback from 'use-latest-callback';
 
 import { PlatformPressable } from './PlatformPressable';
+import { TabBarItemLabel } from './TabBarItemLabel';
 import type { NavigationState, Route, Scene } from './types';
 
 export type Props<T extends Route> = {
@@ -85,18 +86,26 @@ const getInactiveOpacity = (
 
 type TabBarItemInternalProps<T extends Route> = Omit<
   Props<T>,
-  'navigationState'
+  | 'navigationState'
+  | 'getAccessibilityLabel'
+  | 'getLabelText'
+  | 'getTestID'
+  | 'getAccessible'
 > & {
   isFocused: boolean;
   index: number;
   routesLength: number;
+  accessibilityLabel?: string;
+  label?: string;
+  testID?: string;
+  accessible?: boolean;
 };
 
 const TabBarItemInternal = <T extends Route>({
-  getAccessibilityLabel,
-  getAccessible,
-  getLabelText,
-  getTestID,
+  accessibilityLabel,
+  accessible,
+  label: labelText,
+  testID,
   onLongPress,
   onPress,
   isFocused,
@@ -123,14 +132,14 @@ const TabBarItemInternal = <T extends Route>({
     activeColorCustom !== undefined
       ? activeColorCustom
       : typeof labelColorFromStyle === 'string'
-      ? labelColorFromStyle
-      : DEFAULT_ACTIVE_COLOR;
+        ? labelColorFromStyle
+        : DEFAULT_ACTIVE_COLOR;
   const inactiveColor =
     inactiveColorCustom !== undefined
       ? inactiveColorCustom
       : typeof labelColorFromStyle === 'string'
-      ? labelColorFromStyle
-      : DEFAULT_INACTIVE_COLOR;
+        ? labelColorFromStyle
+        : DEFAULT_INACTIVE_COLOR;
 
   const activeOpacity = getActiveOpacity(position, routesLength, tabIndex);
   const inactiveOpacity = getInactiveOpacity(position, routesLength, tabIndex);
@@ -166,29 +175,16 @@ const TabBarItemInternal = <T extends Route>({
     }
   }
 
-  const renderLabel =
-    renderLabelCustom !== undefined
-      ? renderLabelCustom
-      : (labelProps: { route: T; color: string }) => {
-          const labelText = getLabelText({ route: labelProps.route });
-
-          if (typeof labelText === 'string') {
-            return (
-              <Animated.Text
-                style={[
-                  styles.label,
-                  icon ? { marginTop: 0 } : null,
-                  labelStyle,
-                  { color: labelProps.color },
-                ]}
-              >
-                {labelText}
-              </Animated.Text>
-            );
-          }
-
-          return labelText;
-        };
+  const renderLabel = renderLabelCustom
+    ? renderLabelCustom
+    : (labelProps: { color: string }) => (
+        <TabBarItemLabel
+          {...labelProps}
+          icon={icon}
+          label={labelText}
+          labelStyle={labelStyle}
+        />
+      );
 
   if (renderLabel) {
     const activeLabel = renderLabel({
@@ -225,28 +221,22 @@ const TabBarItemInternal = <T extends Route>({
 
   const scene = { route };
 
-  let accessibilityLabel = getAccessibilityLabel(scene);
-
   accessibilityLabel =
-    typeof accessibilityLabel !== 'undefined'
-      ? accessibilityLabel
-      : getLabelText(scene);
+    typeof accessibilityLabel !== 'undefined' ? accessibilityLabel : labelText;
 
   const badge = renderBadge ? renderBadge(scene) : null;
 
   return (
     <PlatformPressable
       android_ripple={android_ripple}
-      testID={getTestID(scene)}
-      accessible={getAccessible(scene)}
+      testID={testID}
+      accessible={accessible}
       accessibilityLabel={accessibilityLabel}
       accessibilityRole="tab"
       accessibilityState={{ selected: isFocused }}
-      // @ts-ignore: this is to support older React Native versions
-      accessibilityStates={isFocused ? ['selected'] : []}
       pressColor={pressColor}
       pressOpacity={pressOpacity}
-      delayPressIn={0}
+      unstable_pressDelay={0}
       onLayout={onLayout}
       onPress={onPress}
       onLongPress={onLongPress}
@@ -266,13 +256,30 @@ const MemoizedTabBarItemInternal = React.memo(
 ) as typeof TabBarItemInternal;
 
 export function TabBarItem<T extends Route>(props: Props<T>) {
-  const { onPress, onLongPress, onLayout, navigationState, route, ...rest } =
-    props;
+  const {
+    onPress,
+    onLongPress,
+    onLayout,
+    navigationState,
+    route,
+    getAccessibilityLabel,
+    getLabelText,
+    getTestID,
+    getAccessible,
+    ...rest
+  } = props;
   const onPressLatest = useLatestCallback(onPress);
   const onLongPressLatest = useLatestCallback(onLongPress);
   const onLayoutLatest = useLatestCallback(onLayout ? onLayout : () => {});
 
   const tabIndex = navigationState.routes.indexOf(route);
+
+  const scene = { route };
+
+  const accessibilityLabel = getAccessibilityLabel(scene);
+  const label = getLabelText(scene);
+  const testID = getTestID(scene);
+  const accessible = getAccessible(scene);
 
   return (
     <MemoizedTabBarItemInternal
@@ -284,16 +291,15 @@ export function TabBarItem<T extends Route>(props: Props<T>) {
       route={route}
       index={tabIndex}
       routesLength={navigationState.routes.length}
+      accessibilityLabel={accessibilityLabel}
+      label={label}
+      testID={testID}
+      accessible={accessible}
     />
   );
 }
 
 const styles = StyleSheet.create({
-  label: {
-    margin: 4,
-    backgroundColor: 'transparent',
-    textTransform: 'uppercase',
-  },
   icon: {
     margin: 2,
   },

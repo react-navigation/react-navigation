@@ -11,6 +11,7 @@
       "graphType": "all",
       "syncWorkspaceLock": true,
       "allowBranch": "main",
+      "allowPeerDependenciesUpdate": true,
       "conventionalCommits": true,
       "createRelease": "github",
       "changelogIncludeCommitsClientLogin": " - by @%l",

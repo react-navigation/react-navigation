@@ -7,7 +7,7 @@ import type { RouteGroupConfig } from './types';
  */
 export function Group<
   ParamList extends ParamListBase,
-  ScreenOptions extends {}
+  ScreenOptions extends {},
 >(_: RouteGroupConfig<ParamList, ScreenOptions>) {
   /* istanbul ignore next */
   return null;

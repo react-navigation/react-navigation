@@ -1,6 +1,8 @@
 import type { Animated } from 'react-native';
 import type { PagerViewProps } from 'react-native-pager-view';
 
+export type LocaleDirection = 'ltr' | 'rtl';
+
 export type Route = {
   key: string;
   icon?: string;

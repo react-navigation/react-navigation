@@ -1,18 +1,18 @@
+import type { LocaleDirection } from '@react-navigation/native';
 import Color from 'color';
 import * as React from 'react';
 import {
   Animated,
   InteractionManager,
   Platform,
-  StyleProp,
+  type StyleProp,
   StyleSheet,
   View,
-  ViewProps,
-  ViewStyle,
+  type ViewProps,
+  type ViewStyle,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 
-import { forModalPresentationIOS } from '../../TransitionConfigs/CardStyleInterpolators';
 import type {
   GestureDirection,
   Layout,
@@ -27,10 +27,9 @@ import { memoize } from '../../utils/memoize';
 import {
   GestureState,
   PanGestureHandler,
-  PanGestureHandlerGestureEvent,
+  type PanGestureHandlerGestureEvent,
 } from '../GestureHandler';
-import { ModalStatusBarManager } from '../ModalStatusBarManager';
-import { CardSheet, CardSheetRef } from './CardSheet';
+import { CardSheet, type CardSheetRef } from './CardSheet';
 
 type Props = ViewProps & {
   interpolationIndex: number;
@@ -40,7 +39,7 @@ type Props = ViewProps & {
   gesture: Animated.Value;
   layout: Layout;
   insets: EdgeInsets;
-  headerDarkContent: boolean | undefined;
+  direction: LocaleDirection;
   pageOverflowEnabled: boolean;
   gestureDirection: GestureDirection;
   onOpen: () => void;
@@ -62,6 +61,7 @@ type Props = ViewProps & {
     open: TransitionSpec;
     close: TransitionSpec;
   };
+  preloaded: boolean;
   styleInterpolator: StackCardStyleInterpolator;
   containerStyle?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
@@ -105,12 +105,16 @@ export class Card extends React.Component<Props> {
   };
 
   componentDidMount() {
-    this.animate({ closing: this.props.closing });
+    if (!this.props.preloaded) {
+      this.animate({
+        closing: this.props.closing,
+      });
+    }
     this.isCurrentlyMounted = true;
   }
 
   componentDidUpdate(prevProps: Props) {
-    const { layout, gestureDirection, closing } = this.props;
+    const { direction, layout, gestureDirection, closing } = this.props;
     const { width, height } = layout;
 
     if (width !== prevProps.layout.width) {
@@ -122,7 +126,9 @@ export class Card extends React.Component<Props> {
     }
 
     if (gestureDirection !== prevProps.gestureDirection) {
-      this.inverted.setValue(getInvertedMultiplier(gestureDirection));
+      this.inverted.setValue(
+        getInvertedMultiplier(gestureDirection, direction === 'rtl')
+      );
     }
 
     const toValue = this.getAnimateToValue(this.props);
@@ -132,7 +138,7 @@ export class Card extends React.Component<Props> {
       this.lastToValue !== toValue
     ) {
       // We need to trigger the animation when route was closed
-      // Thr route might have been closed by a `POP` action or by a gesture
+      // The route might have been closed by a `POP` action or by a gesture
       // When route was closed due to a gesture, the animation would've happened already
       // It's still important to trigger the animation so that `onClose` is called
       // If `onClose` is not called, cleanup step won't be performed for gestures
@@ -141,7 +147,7 @@ export class Card extends React.Component<Props> {
   }
 
   componentWillUnmount() {
-    this.props.gesture.stopAnimation();
+    this.props.gesture?.stopAnimation();
     this.isCurrentlyMounted = false;
     this.handleEndInteraction();
   }
@@ -151,7 +157,10 @@ export class Card extends React.Component<Props> {
   private isClosing = new Animated.Value(FALSE);
 
   private inverted = new Animated.Value(
-    getInvertedMultiplier(this.props.gestureDirection)
+    getInvertedMultiplier(
+      this.props.gestureDirection,
+      this.props.direction === 'rtl'
+    )
   );
 
   private layout = {
@@ -174,7 +183,7 @@ export class Card extends React.Component<Props> {
     closing: boolean;
     velocity?: number;
   }) => {
-    const { gesture, transitionSpec, onOpen, onClose, onTransition } =
+    const { transitionSpec, onOpen, onClose, onTransition, gesture } =
       this.props;
 
     const toValue = this.getAnimateToValue({
@@ -227,16 +236,24 @@ export class Card extends React.Component<Props> {
     closing,
     layout,
     gestureDirection,
+    direction,
+    preloaded,
   }: {
     closing?: boolean;
     layout: Layout;
     gestureDirection: GestureDirection;
+    direction: LocaleDirection;
+    preloaded: boolean;
   }) => {
-    if (!closing) {
+    if (!closing && !preloaded) {
       return 0;
     }
 
-    return getDistanceForDirection(layout, gestureDirection);
+    return getDistanceForDirection(
+      layout,
+      gestureDirection,
+      direction === 'rtl'
+    );
   };
 
   private setPointerEventsEnabled = (enabled: boolean) => {
@@ -262,6 +279,7 @@ export class Card extends React.Component<Props> {
     nativeEvent,
   }: PanGestureHandlerGestureEvent) => {
     const {
+      direction,
       layout,
       onClose,
       onGestureBegin,
@@ -277,7 +295,8 @@ export class Card extends React.Component<Props> {
         this.handleStartInteraction();
         onGestureBegin?.();
         break;
-      case GestureState.CANCELLED: {
+      case GestureState.CANCELLED:
+      case GestureState.FAILED: {
         this.isSwiping.setValue(FALSE);
         this.handleEndInteraction();
 
@@ -287,7 +306,10 @@ export class Card extends React.Component<Props> {
             ? nativeEvent.velocityY
             : nativeEvent.velocityX;
 
-        this.animate({ closing: this.props.closing, velocity });
+        this.animate({
+          closing: this.props.closing,
+          velocity,
+        });
 
         onGestureCanceled?.();
         break;
@@ -314,7 +336,7 @@ export class Card extends React.Component<Props> {
 
         const closing =
           (translation + velocity * gestureVelocityImpact) *
-            getInvertedMultiplier(gestureDirection) >
+            getInvertedMultiplier(gestureDirection, direction === 'rtl') >
           distance / 2
             ? velocity !== 0 || translation !== 0
             : this.props.closing;
@@ -378,16 +400,17 @@ export class Card extends React.Component<Props> {
   );
 
   private gestureActivationCriteria() {
-    const { layout, gestureDirection, gestureResponseDistance } = this.props;
+    const { direction, layout, gestureDirection, gestureResponseDistance } =
+      this.props;
     const enableTrackpadTwoFingerGesture = true;
 
     const distance =
       gestureResponseDistance !== undefined
         ? gestureResponseDistance
         : gestureDirection === 'vertical' ||
-          gestureDirection === 'vertical-inverted'
-        ? GESTURE_RESPONSE_DISTANCE_VERTICAL
-        : GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
+            gestureDirection === 'vertical-inverted'
+          ? GESTURE_RESPONSE_DISTANCE_VERTICAL
+          : GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
 
     if (gestureDirection === 'vertical') {
       return {
@@ -405,7 +428,10 @@ export class Card extends React.Component<Props> {
       };
     } else {
       const hitSlop = -layout.width + distance;
-      const invertedMultiplier = getInvertedMultiplier(gestureDirection);
+      const invertedMultiplier = getInvertedMultiplier(
+        gestureDirection,
+        direction === 'rtl'
+      );
 
       if (invertedMultiplier === 1) {
         return {
@@ -442,10 +468,22 @@ export class Card extends React.Component<Props> {
       gestureEnabled,
       gestureDirection,
       pageOverflowEnabled,
-      headerDarkContent,
       children,
       containerStyle: customContainerStyle,
       contentStyle,
+      /* eslint-disable @typescript-eslint/no-unused-vars */
+      closing,
+      direction,
+      gestureResponseDistance,
+      gestureVelocityImpact,
+      onClose,
+      onGestureBegin,
+      onGestureCanceled,
+      onGestureEnd,
+      onOpen,
+      onTransition,
+      transitionSpec,
+      /* eslint-enable @typescript-eslint/no-unused-vars */
       ...rest
     } = this.props;
 
@@ -491,21 +529,6 @@ export class Card extends React.Component<Props> {
 
     return (
       <CardAnimationContext.Provider value={interpolationProps}>
-        {
-          // StatusBar messes with translucent status bar on Android
-          // So we should only enable it on iOS
-          Platform.OS === 'ios' &&
-          overlayEnabled &&
-          next &&
-          getIsModalPresentation(styleInterpolator) ? (
-            <ModalStatusBarManager
-              dark={headerDarkContent}
-              layout={layout}
-              insets={insets}
-              style={cardStyle}
-            />
-          ) : null
-        }
         <Animated.View
           style={{
             // This is a dummy style that doesn't actually change anything visually.
@@ -517,7 +540,13 @@ export class Card extends React.Component<Props> {
           // Make sure that this view isn't removed. If this view is removed, our style with animated value won't apply
           collapsable={false}
         />
-        <View pointerEvents="box-none" {...rest}>
+        <View
+          pointerEvents="box-none"
+          // Make sure this view is not removed on the new architecture, as it causes focus loss during navigation on Android.
+          // This can happen when the view flattening results in different trees - due to `overflow` style changing in a parent.
+          collapsable={false}
+          {...rest}
+        >
           {overlayEnabled ? (
             <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
               {overlay({ style: overlayStyle })}
@@ -544,10 +573,10 @@ export class Card extends React.Component<Props> {
                       gestureDirection === 'horizontal'
                         ? [styles.shadowHorizontal, styles.shadowLeft]
                         : gestureDirection === 'horizontal-inverted'
-                        ? [styles.shadowHorizontal, styles.shadowRight]
-                        : gestureDirection === 'vertical'
-                        ? [styles.shadowVertical, styles.shadowTop]
-                        : [styles.shadowVertical, styles.shadowBottom],
+                          ? [styles.shadowHorizontal, styles.shadowRight]
+                          : gestureDirection === 'vertical'
+                            ? [styles.shadowVertical, styles.shadowTop]
+                            : [styles.shadowVertical, styles.shadowBottom],
                       { backgroundColor },
                       shadowStyle,
                     ]}
@@ -570,16 +599,6 @@ export class Card extends React.Component<Props> {
     );
   }
 }
-
-export const getIsModalPresentation = (
-  cardStyleInterpolator: StackCardStyleInterpolator
-) => {
-  return (
-    cardStyleInterpolator === forModalPresentationIOS ||
-    // Handle custom modal presentation interpolators as well
-    cardStyleInterpolator.name === 'forModalPresentationIOS'
-  );
-};
 
 const styles = StyleSheet.create({
   container: {

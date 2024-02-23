@@ -5,6 +5,7 @@
     { "path": "../routers" }
   ],
   "compilerOptions": {
+    "rootDir": ".",
     "outDir": "./lib/typescript"
   }
 }

@@ -1,15 +1,20 @@
-import { NavigationContainer, ParamListBase } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  type ParamListBase,
+} from '@react-navigation/native';
 import { fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
 import { Button, Text, View } from 'react-native';
 
 import {
   createMaterialTopTabNavigator,
-  MaterialTopTabScreenProps,
+  type MaterialTopTabScreenProps,
 } from '../index';
 
 jest.mock('react-native-pager-view', () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const React = require('react');
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const { View } = require('react-native');
 
   return class ViewPager extends React.Component<React.PropsWithChildren<{}>> {
