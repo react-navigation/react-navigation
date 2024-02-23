@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.7...@react-navigation/core@7.0.0-alpha.8) (2024-02-23)
+
+### Bug Fixes
+
+* handle non-function screens in static navigation ([7ba61f2](https://github.com/react-navigation/react-navigation/commit/7ba61f2a3532ad33b7e12beaec63b646eedeeb5e)) - by @satya164
+* throw if screens property isn't specified in static config ([a5fc69e](https://github.com/react-navigation/react-navigation/commit/a5fc69ed694903dbc4def69e2b60a444ace6e80c)) - by @satya164
+
 # [7.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.6...@react-navigation/core@7.0.0-alpha.7) (2024-01-17)
 
 ### Features

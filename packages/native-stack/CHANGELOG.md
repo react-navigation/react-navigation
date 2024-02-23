@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.8...@react-navigation/native-stack@7.0.0-alpha.9) (2024-02-23)
+
+### Bug Fixes
+
+* fix header height for iOS devices with dynamic island ([#11786](https://github.com/react-navigation/react-navigation/issues/11786)) ([4c521b5](https://github.com/react-navigation/react-navigation/commit/4c521b5c865f2c46d58abb2e9e7fd1b0d2074215)), closes [#11655](https://github.com/react-navigation/react-navigation/issues/11655) - by @gianlucalippolis
+
+### Features
+
+* add a HeaderButton component to elements ([d8de228](https://github.com/react-navigation/react-navigation/commit/d8de228bafc9408855bdfdfcd48bbb10195501fb)) - by @satya164
+* introduce missing props from native-stack v5 ([#11803](https://github.com/react-navigation/react-navigation/issues/11803)) ([90cfbf2](https://github.com/react-navigation/react-navigation/commit/90cfbf23bcc5259f3262691a9eec6c5b906e5262)) - by @tboba
+
 # [7.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.7...@react-navigation/native-stack@7.0.0-alpha.8) (2024-01-17)
 
 ### Features
