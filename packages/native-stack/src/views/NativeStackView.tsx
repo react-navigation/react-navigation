@@ -10,6 +10,7 @@ import {
   type ParamListBase,
   type StackNavigationState,
   useLinkBuilder,
+  useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
@@ -35,6 +36,7 @@ const TRANSPARENT_PRESENTATIONS = [
 export function NativeStackView({ state, descriptors }: Props) {
   const parentHeaderBack = React.useContext(HeaderBackContext);
   const { buildHref } = useLinkBuilder();
+  const { colors } = useTheme();
 
   if (state.preloadedRoutes.length !== 0) {
     throw new Error(
@@ -44,7 +46,7 @@ export function NativeStackView({ state, descriptors }: Props) {
 
   return (
     <SafeAreaProviderCompat>
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
         {state.routes.map((route, i) => {
           const isFocused = state.index === i;
           const previousKey = state.routes[i - 1]?.key;
