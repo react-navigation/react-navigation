@@ -5,15 +5,17 @@ import {
   type DrawerScreenProps,
 } from '@react-navigation/drawer';
 import {
+  Header as NavigationHeader,
+  HeaderBackButton,
+} from '@react-navigation/elements';
+import {
   type ParamListBase,
   type PathConfigMap,
   useNavigation,
-  useTheme,
 } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import * as React from 'react';
 import { useWindowDimensions } from 'react-native';
-import { Appbar } from 'react-native-paper';
 
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
@@ -44,14 +46,17 @@ const Header = ({
   onGoBack: () => void;
   title: string;
 }) => {
-  const { colors } = useTheme();
   const isLargeScreen = useIsLargeScreen();
 
   return (
-    <Appbar.Header style={{ backgroundColor: colors.card, elevation: 1 }}>
-      {isLargeScreen ? null : <Appbar.BackAction onPress={onGoBack} />}
-      <Appbar.Content title={title} />
-    </Appbar.Header>
+    <NavigationHeader
+      title={title}
+      headerLeft={
+        isLargeScreen
+          ? undefined
+          : (props) => <HeaderBackButton {...props} onPress={onGoBack} />
+      }
+    />
   );
 };
 
@@ -89,15 +94,16 @@ const AlbumsScreen = ({
 };
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
-  const { colors } = useTheme();
   const navigation = useNavigation();
 
   return (
     <>
-      <Appbar.Header style={{ backgroundColor: colors.card, elevation: 1 }}>
-        <Appbar.Action icon="close" onPress={() => navigation.goBack()} />
-        <Appbar.Content title="Pages" />
-      </Appbar.Header>
+      <NavigationHeader
+        title="Pages"
+        headerLeft={(props) => (
+          <HeaderBackButton {...props} onPress={() => navigation.goBack()} />
+        )}
+      />
       <DrawerContent {...props} />
     </>
   );

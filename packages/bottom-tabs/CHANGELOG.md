@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.8...@react-navigation/bottom-tabs@7.0.0-alpha.9) (2024-02-23)
+
+### Features
+
+* [bottom-tabs] allow position = top ([#11782](https://github.com/react-navigation/react-navigation/issues/11782)) ([aa5ae17](https://github.com/react-navigation/react-navigation/commit/aa5ae177d4d6b7ea2ae36c194b6a46747c242f9b)) - by @douglowder
+
 # [7.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.7...@react-navigation/bottom-tabs@7.0.0-alpha.8) (2024-01-17)
 
 ### Features

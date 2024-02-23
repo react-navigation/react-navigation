@@ -71,8 +71,8 @@ export function DrawerItemList({ state, navigation, descriptors }: Props) {
           drawerLabel !== undefined
             ? drawerLabel
             : title !== undefined
-            ? title
-            : route.name
+              ? title
+              : route.name
         }
         icon={drawerIcon}
         focused={focused}

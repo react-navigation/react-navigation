@@ -32,14 +32,6 @@ import {
   Text,
   useWindowDimensions,
 } from 'react-native';
-import {
-  DarkTheme as PaperDarkTheme,
-  DefaultTheme as PaperLightTheme,
-  Divider,
-  List,
-  Provider as PaperProvider,
-  type Theme,
-} from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { LinkingOptions } from '../../packages/native/src/types';
@@ -49,6 +41,8 @@ import {
   SCREENS,
 } from './screens';
 import { NotFound } from './Screens/NotFound';
+import { Divider } from './Shared/Divider';
+import { ListItem } from './Shared/LIstItem';
 import { SettingsItem } from './Shared/SettingsItem';
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
@@ -190,20 +184,6 @@ export function App() {
     }
   }, [isRTL]);
 
-  const paperTheme = React.useMemo(() => {
-    const t = theme.dark ? PaperDarkTheme : PaperLightTheme;
-
-    return {
-      ...t,
-      colors: {
-        ...t.colors,
-        ...theme.colors,
-        surface: theme.colors.card,
-        accent: theme.dark ? 'rgb(255, 55, 95)' : 'rgb(255, 45, 85)',
-      },
-    };
-  }, [theme.colors, theme.dark]);
-
   const dimensions = useWindowDimensions();
 
   const navigationRef = useNavigationContainerRef();
@@ -217,7 +197,7 @@ export function App() {
   const isLargeScreen = dimensions.width >= 1024;
 
   return (
-    <Providers theme={paperTheme}>
+    <Providers>
       {Platform.OS === 'android' && (
         <StatusBar
           translucent
@@ -295,15 +275,17 @@ export function App() {
                             setTheme((t) => (t.dark ? DefaultTheme : DarkTheme))
                           }
                         />
-                        <Divider />
                         {SCREEN_NAMES.map((name) => (
-                          <List.Item
-                            key={name}
-                            title={SCREENS[name].title}
-                            onPress={() => {
-                              navigation.navigate(name);
-                            }}
-                          />
+                          <React.Fragment key={name}>
+                            <ListItem
+                              title={SCREENS[name].title}
+                              onPress={() => {
+                                navigation.navigate(name);
+                              }}
+                            />
+
+                            <Divider />
+                          </React.Fragment>
                         ))}
                       </SafeAreaView>
                     </ScrollView>
@@ -331,18 +313,10 @@ export function App() {
   );
 }
 
-const Providers = ({
-  theme,
-  children,
-}: {
-  theme: Theme;
-  children: React.ReactNode;
-}) => {
+const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
-    <PaperProvider theme={theme}>
-      <ActionSheetProvider>
-        <>{children}</>
-      </ActionSheetProvider>
-    </PaperProvider>
+    <ActionSheetProvider>
+      <>{children}</>
+    </ActionSheetProvider>
   );
 };

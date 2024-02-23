@@ -5,7 +5,12 @@ import {
   TransitionPresets,
   useBottomTabBarHeight,
 } from '@react-navigation/bottom-tabs';
-import { HeaderBackButton, useHeaderHeight } from '@react-navigation/elements';
+import {
+  HeaderBackButton,
+  HeaderButton,
+  PlatformPressable,
+  useHeaderHeight,
+} from '@react-navigation/elements';
 import {
   type NavigatorScreenParams,
   type ParamListBase,
@@ -23,7 +28,6 @@ import {
   StyleSheet,
   useWindowDimensions,
 } from 'react-native';
-import { Appbar, IconButton } from 'react-native-paper';
 
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
@@ -114,9 +118,7 @@ export function BottomTabs({
             <HeaderBackButton {...props} onPress={navigation.goBack} />
           ),
           headerRight: ({ tintColor }) => (
-            <Appbar.Action
-              icon={animation === 'none' ? 'heart-outline' : 'heart'}
-              color={tintColor}
+            <HeaderButton
               onPress={() => {
                 const options = Object.keys(
                   animations
@@ -139,7 +141,13 @@ export function BottomTabs({
                   }
                 );
               }}
-            />
+            >
+              <MaterialCommunityIcons
+                name={animation === 'none' ? 'heart-outline' : 'heart'}
+                size={24}
+                color={tintColor}
+              />
+            </HeaderButton>
           ),
           tabBarPosition: isLargeScreen ? 'left' : 'bottom',
           tabBarLabelPosition:
@@ -224,15 +232,21 @@ export function BottomTabs({
         />
       </Tab.Navigator>
       {isLargeScreen ? (
-        <IconButton
-          icon={isCompact ? 'chevron-double-right' : 'chevron-double-left'}
+        <PlatformPressable
           onPress={() => setIsCompact(!isCompact)}
           style={{
             position: 'absolute',
             bottom: 0,
             left: 0,
+            padding: 16,
           }}
-        />
+        >
+          <MaterialCommunityIcons
+            name={isCompact ? 'chevron-double-right' : 'chevron-double-left'}
+            size={24}
+            color="black"
+          />
+        </PlatformPressable>
       ) : null}
     </>
   );

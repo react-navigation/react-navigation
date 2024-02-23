@@ -208,3 +208,35 @@ it('renders the specified nested navigator configuration with groups', () => {
     </main>
   `);
 });
+
+it('handles non-function screens', () => {
+  expect(() => {
+    const TestScreen = React.forwardRef(() => null);
+
+    const Root = createTestNavigator({
+      screens: {
+        Home: TestScreen,
+        Settings: {
+          screen: TestScreen,
+        },
+      },
+    });
+
+    const Component = createComponentForStaticNavigation(Root, 'RootNavigator');
+
+    render(
+      <BaseNavigationContainer>
+        <Component />
+      </BaseNavigationContainer>
+    );
+  }).not.toThrow();
+});
+
+it("throws if screens property isn't specified", () => {
+  expect(() => {
+    // @ts-expect-error: we're testing invalid input here
+    const Root = createTestNavigator({});
+
+    createComponentForStaticNavigation(Root, 'RootNavigator');
+  }).toThrow("Couldn't find a 'screens' property");
+});

@@ -1,5 +1,6 @@
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
+import { isValidElementType } from 'react-is';
 
 import type {
   DefaultNavigatorOptions,
@@ -40,14 +41,14 @@ type ParamsForScreenComponent<T> = T extends {
 }
   ? P
   : T extends React.ComponentType<{ route: { params: infer P } }>
-  ? P
-  : undefined;
+    ? P
+    : undefined;
 
 type ParamsForScreen<T> = T extends { screen: StaticNavigation<any, any, any> }
   ? NavigatorScreenParams<StaticParamList<T['screen']>> | undefined
   : T extends StaticNavigation<any, any, any>
-  ? NavigatorScreenParams<StaticParamList<T>> | undefined
-  : UnknownToUndefined<ParamsForScreenComponent<T>>;
+    ? NavigatorScreenParams<StaticParamList<T>> | undefined
+    : UnknownToUndefined<ParamsForScreenComponent<T>>;
 
 type ParamListForScreens<Screens> = {
   [Key in KeysOf<Screens>]: ParamsForScreen<Screens[Key]>;
@@ -241,7 +242,7 @@ const getItemsFromScreens = (
       useIf = _if;
       props = rest;
 
-      if (typeof screen === 'function') {
+      if (isValidElementType(screen)) {
         component = screen;
       } else if ('config' in screen) {
         isNavigator = true;
@@ -250,7 +251,7 @@ const getItemsFromScreens = (
           `${name}Navigator`
         );
       }
-    } else if (typeof item === 'function') {
+    } else if (isValidElementType(item)) {
       component = item;
     } else if ('config' in item) {
       isNavigator = true;
@@ -298,6 +299,12 @@ export function createComponentForStaticNavigation(
 ): React.ComponentType<{}> {
   const { Navigator, Group, Screen, config } = tree;
   const { screens, groups, ...rest } = config;
+
+  if (screens == null) {
+    throw new Error(
+      "Couldn't find a 'screens' property. Make sure to define your screens under a 'screens' property in the configuration."
+    );
+  }
 
   const items = getItemsFromScreens(Screen, screens);
 

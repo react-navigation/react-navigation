@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.8...@react-navigation/stack@7.0.0-alpha.9) (2024-02-23)
+
+### Bug Fixes
+
+* don't remount native views on focus change on the new architecture ([#11806](https://github.com/react-navigation/react-navigation/issues/11806)) ([aa518f1](https://github.com/react-navigation/react-navigation/commit/aa518f1171d6f4caafa2fe5675eefe55b586fd28)) - by @j-piasecki
+* handle failed gesture state to clear interaction ([#11465](https://github.com/react-navigation/react-navigation/issues/11465)) ([1b56cb5](https://github.com/react-navigation/react-navigation/commit/1b56cb5576599be1e3758b6d898b38c2fedefc37)) - by @Iltimirov
+
+### Features
+
+* add a HeaderButton component to elements ([d8de228](https://github.com/react-navigation/react-navigation/commit/d8de228bafc9408855bdfdfcd48bbb10195501fb)) - by @satya164
+* add autoHideHomeIndicator option for stack ([#11415](https://github.com/react-navigation/react-navigation/issues/11415)) ([8367758](https://github.com/react-navigation/react-navigation/commit/8367758824590b9affd07ce651f8020aca2a88f6)) - by @mortend
+
 # [7.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.7...@react-navigation/stack@7.0.0-alpha.8) (2024-01-17)
 
 ### Bug Fixes

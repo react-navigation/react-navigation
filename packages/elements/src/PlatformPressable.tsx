@@ -101,8 +101,8 @@ export function PlatformPressable({
                 pressColor !== undefined
                   ? pressColor
                   : dark
-                  ? 'rgba(255, 255, 255, .32)'
-                  : 'rgba(0, 0, 0, .32)',
+                    ? 'rgba(255, 255, 255, .32)'
+                    : 'rgba(0, 0, 0, .32)',
               ...android_ripple,
             }
           : undefined

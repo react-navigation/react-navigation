@@ -1,4 +1,5 @@
-import { Button } from '@react-navigation/elements';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { Button, HeaderButton } from '@react-navigation/elements';
 import type { ParamListBase, PathConfigMap } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
@@ -13,7 +14,6 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Appbar } from 'react-native-paper';
 
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
@@ -134,22 +134,32 @@ export function NativeStackHeaderCustomization({
           title: `Article by ${route.params?.author ?? 'Unknown'}`,
           headerTintColor: 'white',
           headerTitle: ({ tintColor }) => (
-            <Appbar.Action
-              color={tintColor}
-              icon="signal-5g"
-              onPress={onPress}
-            />
+            <HeaderButton onPress={onPress}>
+              <MaterialCommunityIcons
+                name="signal-5g"
+                size={24}
+                color={tintColor}
+              />
+            </HeaderButton>
           ),
           headerLeft: ({ tintColor, canGoBack }) =>
             canGoBack ? (
-              <Appbar.Action
-                color={tintColor}
-                icon="arrow-left-thick"
-                onPress={navigation.goBack}
-              />
+              <HeaderButton onPress={navigation.goBack}>
+                <MaterialCommunityIcons
+                  name="arrow-left-thick"
+                  size={24}
+                  color={tintColor}
+                />
+              </HeaderButton>
             ) : null,
           headerRight: ({ tintColor }) => (
-            <Appbar.Action color={tintColor} icon="music" onPress={onPress} />
+            <HeaderButton onPress={onPress}>
+              <MaterialCommunityIcons
+                name="music"
+                size={24}
+                color={tintColor}
+              />
+            </HeaderButton>
           ),
           headerBackground: () => (
             <Image
@@ -167,7 +177,9 @@ export function NativeStackHeaderCustomization({
         options={{
           title: 'Feed',
           headerLeft: ({ tintColor }) => (
-            <Appbar.Action color={tintColor} icon="spa" onPress={onPress} />
+            <HeaderButton onPress={onPress}>
+              <MaterialCommunityIcons name="spa" size={24} color={tintColor} />
+            </HeaderButton>
           ),
         }}
       />
@@ -180,7 +192,13 @@ export function NativeStackHeaderCustomization({
           headerStyle: { backgroundColor: 'papayawhip' },
           headerBackVisible: true,
           headerLeft: ({ tintColor }) => (
-            <Appbar.Action color={tintColor} icon="music" onPress={onPress} />
+            <HeaderButton onPress={onPress}>
+              <MaterialCommunityIcons
+                name="music"
+                size={24}
+                color={tintColor}
+              />
+            </HeaderButton>
           ),
         }}
       />
