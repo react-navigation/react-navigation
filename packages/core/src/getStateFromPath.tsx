@@ -300,8 +300,10 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
         );
 
       routes = config.routeNames.map((name) => {
-        const config = configs.find((c) => c.screen === name);
-        const params = config?.path
+        const routeConfig = configs.find(
+          (c) => c.screen === name && config.pattern.startsWith(c.pattern) // match on intermediary screens so we generate params for them
+        );
+        const params = routeConfig?.path
           ?.split('/')
           .filter((p) => p.startsWith(':'))
           .reduce<Record<string, any>>((acc, p) => {
@@ -309,7 +311,9 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
 
             if (value) {
               const key = p.replace(/^:/, '').replace(/\?$/, '');
-              acc[key] = config.parse?.[key] ? config.parse[key](value) : value;
+              acc[key] = routeConfig.parse?.[key]
+                ? routeConfig.parse[key](value)
+                : value;
             }
 
             return acc;
