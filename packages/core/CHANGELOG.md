@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.8...@react-navigation/core@7.0.0-alpha.9) (2024-02-23)
+
+### Bug Fixes
+
+* type errors when getState used outside of a screen ([#11827](https://github.com/react-navigation/react-navigation/issues/11827)) ([b3512a5](https://github.com/react-navigation/react-navigation/commit/b3512a5aa7fdcdac0ea3f23acda33b0cbce270e1)), closes [#11701](https://github.com/react-navigation/react-navigation/issues/11701) - by @MrRefactor
+
 # [7.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.7...@react-navigation/core@7.0.0-alpha.8) (2024-02-23)
 
 ### Bug Fixes

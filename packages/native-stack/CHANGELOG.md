@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.9...@react-navigation/native-stack@7.0.0-alpha.10) (2024-02-23)
+
+### Bug Fixes
+
+* White flash transitions with DarkTheme ([#11800](https://github.com/react-navigation/react-navigation/issues/11800)) ([1770c96](https://github.com/react-navigation/react-navigation/commit/1770c96834abf8af28aa0f3c6bffb618ea3dcce9)) - by @gianlucalippolis
+
 # [7.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.8...@react-navigation/native-stack@7.0.0-alpha.9) (2024-02-23)
 
 ### Bug Fixes

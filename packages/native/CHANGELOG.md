@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.8...@react-navigation/native@7.0.0-alpha.9) (2024-02-23)
+
+### Bug Fixes
+
+* browser navigating out after using back feature and going home ([#11833](https://github.com/react-navigation/react-navigation/issues/11833)) ([8745ea5](https://github.com/react-navigation/react-navigation/commit/8745ea55dc687a88f741d7f51ea911b891cfd083)), closes [#11832](https://github.com/react-navigation/react-navigation/issues/11832) - by @SlickDomique
+* type errors when getState used outside of a screen ([#11827](https://github.com/react-navigation/react-navigation/issues/11827)) ([b3512a5](https://github.com/react-navigation/react-navigation/commit/b3512a5aa7fdcdac0ea3f23acda33b0cbce270e1)), closes [#11701](https://github.com/react-navigation/react-navigation/issues/11701) - by @MrRefactor
+
 # [7.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.7...@react-navigation/native@7.0.0-alpha.8) (2024-02-23)
 
 ### Bug Fixes

@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.9...@react-navigation/stack@7.0.0-alpha.10) (2024-02-23)
+
+**Note:** Version bump only for package @react-navigation/stack
+
 # [7.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.8...@react-navigation/stack@7.0.0-alpha.9) (2024-02-23)
 
 ### Bug Fixes

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.6...@react-navigation/elements@2.0.0-alpha.7) (2024-02-23)
+
+### Bug Fixes
+
+* **iOS:** disable collapsable option from Background in Screen ([#11840](https://github.com/react-navigation/react-navigation/issues/11840)) ([c1e327c](https://github.com/react-navigation/react-navigation/commit/c1e327ca40679ff9356a38e5ef96e349f323fb94)), closes [#1997](https://github.com/react-navigation/react-navigation/issues/1997) - by @tboba
+
 # [2.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.5...@react-navigation/elements@2.0.0-alpha.6) (2024-02-23)
 
 ### Bug Fixes
