@@ -359,7 +359,12 @@ export default function useLinking(
           const currentIndex = history.index;
 
           try {
-            if (nextIndex !== -1 && nextIndex < currentIndex) {
+            if (
+              nextIndex !== -1 &&
+              nextIndex < currentIndex &&
+              // We should only go back if the entry exists and it's less than current index
+              history.get(nextIndex - currentIndex)
+            ) {
               // An existing entry for this path exists and it's less than current index, go back to that
               await history.go(nextIndex - currentIndex);
             } else {
