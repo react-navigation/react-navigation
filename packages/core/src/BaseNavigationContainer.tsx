@@ -213,7 +213,7 @@ export const BaseNavigationContainer = React.forwardRef(
           throw new Error('Cannot call setParams outside a screen');
         },
         setOptions: () => {
-          throw new Error('Cannot call setOptions when not inside a screen');
+          throw new Error('Cannot call setOptions outside a screen');
         },
       }),
       [
