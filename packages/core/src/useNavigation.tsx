@@ -1,3 +1,4 @@
+import type { NavigationState } from '@react-navigation/routers';
 import * as React from 'react';
 
 import NavigationContainerRefContext from './NavigationContainerRefContext';
@@ -10,7 +11,9 @@ import type { NavigationProp } from './types';
  * @returns Navigation prop of the parent screen.
  */
 export default function useNavigation<
-  T = NavigationProp<ReactNavigation.RootParamList>
+  T = Omit<NavigationProp<ReactNavigation.RootParamList>, 'getState'> & {
+    getState(): NavigationState | undefined;
+  }
 >(): T {
   const root = React.useContext(NavigationContainerRefContext);
   const navigation = React.useContext(NavigationContext);

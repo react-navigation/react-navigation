@@ -1,7 +1,8 @@
 import {
   EventArg,
+  NavigationContext,
   NavigationProp,
-  useNavigation,
+  ParamListBase,
   useRoute,
 } from '@react-navigation/core';
 import * as React from 'react';
@@ -51,13 +52,18 @@ function getScrollableNode(ref: React.RefObject<ScrollableWrapper>) {
 export default function useScrollToTop(
   ref: React.RefObject<ScrollableWrapper>
 ) {
-  const navigation = useNavigation();
+  const navigation = React.useContext(NavigationContext);
   const route = useRoute();
 
-  React.useEffect(() => {
-    let tabNavigations: NavigationProp<ReactNavigation.RootParamList>[] = [];
-    let currentNavigation = navigation;
+  if (navigation === undefined) {
+    throw new Error(
+      "Couldn't find a navigation object. Is your component inside NavigationContainer?"
+    );
+  }
 
+  React.useEffect(() => {
+    const tabNavigations: NavigationProp<ParamListBase>[] = [];
+    let currentNavigation = navigation;
     // If the screen is nested inside multiple tab navigators, we should scroll to top for any of them
     // So we need to find all the parent tab navigators and add the listeners there
     while (currentNavigation) {

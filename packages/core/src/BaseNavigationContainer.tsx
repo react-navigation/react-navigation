@@ -202,6 +202,12 @@ const BaseNavigationContainer = React.forwardRef(
         getCurrentRoute,
         getCurrentOptions,
         isReady: () => listeners.focus[0] != null,
+        setParams: () => {
+          throw new Error('Cannot call setParams outside a screen');
+        },
+        setOptions: () => {
+          throw new Error('Cannot call setOptions outside a screen');
+        },
       }),
       [
         canGoBack,
