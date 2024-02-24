@@ -300,9 +300,10 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
         );
 
       routes = config.routeNames.map((name) => {
-        const routeConfig = configs.find(
-          (c) => c.screen === name && config.pattern.startsWith(c.pattern) // match on intermediary screens so we generate params for them
-        );
+        const routeConfig = configs.find((c) => {
+          // check matching name AND pattern in case same screen is used at different levels in config
+          return c.screen === name && config.pattern.startsWith(c.pattern);
+        });
         const params = routeConfig?.path
           ?.split('/')
           .filter((p) => p.startsWith(':'))
