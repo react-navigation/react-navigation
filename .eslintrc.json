@@ -38,7 +38,7 @@
       "jest/*": "off"
     }
   }, {
-    "files":["scripts/*.js"],
+    "files":["scripts/*.js", "netlify/functions/**/*.js"],
     "rules": {
       "import/no-commonjs": "off"
     }
