@@ -4091,10 +4091,10 @@ __metadata:
     typescript: "npm:^5.3.3"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
-    react: "*"
-    react-native: 0.73.2
-    react-native-safe-area-context: 4.8.2
-    react-native-screens: ~3.29.0
+    react: ">= 18.2.0"
+    react-native: ">= 0.72.0"
+    react-native-safe-area-context: ">= 4.0.0"
+    react-native-screens: ">= 3.0.0"
   languageName: unknown
   linkType: soft
 
@@ -4138,7 +4138,7 @@ __metadata:
     stacktrace-parser: "npm:^0.1.10"
     typescript: "npm:^5.3.3"
   peerDependencies:
-    react: "*"
+    react: ">= 18.2.0"
   languageName: unknown
   linkType: soft
 
@@ -4164,12 +4164,12 @@ __metadata:
     use-latest-callback: "npm:^0.1.9"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
-    react: "*"
-    react-native: 0.73.2
-    react-native-gesture-handler: ~2.14.0
-    react-native-reanimated: ~3.6.0
-    react-native-safe-area-context: 4.8.2
-    react-native-screens: ~3.29.0
+    react: ">= 18.2.0"
+    react-native: ">= 0.72.0"
+    react-native-gesture-handler: ">= 2.0.0"
+    react-native-reanimated: ">= 2.0.0"
+    react-native-safe-area-context: ">= 4.0.0"
+    react-native-screens: ">= 3.0.0"
   languageName: unknown
   linkType: soft
 
@@ -4189,9 +4189,9 @@ __metadata:
     typescript: "npm:^5.3.3"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
-    react: "*"
-    react-native: 0.73.2
-    react-native-safe-area-context: 4.8.2
+    react: ">= 18.2.0"
+    react-native: ">= 0.72.0"
+    react-native-safe-area-context: ">= 4.0.0"
   languageName: unknown
   linkType: soft
 
@@ -4267,9 +4267,9 @@ __metadata:
     typescript: "npm:^5.3.3"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
-    react: "*"
-    react-native: 0.73.2
-    react-native-pager-view: 6.2.3
+    react: ">= 18.2.0"
+    react-native: ">= 0.72.0"
+    react-native-pager-view: ">= 6.0.0"
   languageName: unknown
   linkType: soft
 
@@ -4290,10 +4290,10 @@ __metadata:
     warn-once: "npm:^0.1.1"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
-    react: "*"
-    react-native: 0.73.2
-    react-native-safe-area-context: 4.8.2
-    react-native-screens: ~3.29.0
+    react: ">= 18.2.0"
+    react-native: ">= 0.72.0"
+    react-native-safe-area-context: ">= 4.0.0"
+    react-native-screens: ">= 3.0.0"
   languageName: unknown
   linkType: soft
 
@@ -4316,8 +4316,8 @@ __metadata:
     typescript: "npm:^5.3.3"
     use-latest-callback: "npm:^0.1.9"
   peerDependencies:
-    react: "*"
-    react-native: 0.73.2
+    react: ">= 18.2.0"
+    react-native: ">= 0.72.0"
   languageName: unknown
   linkType: soft
 
@@ -4352,11 +4352,11 @@ __metadata:
     typescript: "npm:^5.3.3"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
-    react: "*"
-    react-native: 0.73.2
-    react-native-gesture-handler: ~2.14.0
-    react-native-safe-area-context: 4.8.2
-    react-native-screens: ~3.29.0
+    react: ">= 18.2.0"
+    react-native: ">= 0.72.0"
+    react-native-gesture-handler: ">= 2.0.0"
+    react-native-safe-area-context: ">= 4.0.0"
+    react-native-screens: ">= 3.0.0"
   languageName: unknown
   linkType: soft
 
@@ -16956,10 +16956,10 @@ __metadata:
     typescript: "npm:^5.3.3"
     use-latest-callback: "npm:^0.1.9"
   peerDependencies:
-    react: "*"
-    react-native: 0.73.2
-    react-native-gesture-handler: ~2.14.0
-    react-native-reanimated: ~3.6.0
+    react: ">= 18.2.0"
+    react-native: ">= 0.72.0"
+    react-native-gesture-handler: ">= 2.0.0"
+    react-native-reanimated: ">= 2.0.0"
   languageName: unknown
   linkType: soft
 
@@ -17045,9 +17045,9 @@ __metadata:
     typescript: "npm:^5.3.3"
     use-latest-callback: "npm:^0.1.9"
   peerDependencies:
-    react: "*"
-    react-native: 0.73.2
-    react-native-pager-view: 6.2.3
+    react: ">= 18.2.0"
+    react-native: ">= 0.72.0"
+    react-native-pager-view: ">= 6.0.0"
   languageName: unknown
   linkType: soft
 

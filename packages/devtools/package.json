@@ -51,7 +51,7 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "react": "*"
+    "react": ">= 18.2.0"
   },
   "react-native-builder-bob": {
     "source": "src",

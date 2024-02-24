@@ -442,7 +442,7 @@ type Props = {
   descriptors: NativeStackDescriptorMap;
 };
 
-function NativeStackViewInner({ state, navigation, descriptors }: Props) {
+export function NativeStackView({ state, navigation, descriptors }: Props) {
   const { setNextDismissedKey } = useDismissedRouteError(state);
 
   const { colors } = useTheme();
@@ -450,95 +450,87 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
   useInvalidPreventRemoveError(descriptors);
 
   return (
-    <ScreenStack
-      style={[styles.container, { backgroundColor: colors.background }]}
-    >
-      {state.routes.map((route, index) => {
-        const descriptor = descriptors[route.key];
-        const isFocused = state.index === index;
-        const previousKey = state.routes[index - 1]?.key;
-        const nextKey = state.routes[index + 1]?.key;
-        const previousDescriptor = previousKey
-          ? descriptors[previousKey]
-          : undefined;
-        const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
+    <SafeAreaProviderCompat style={{ backgroundColor: colors.background }}>
+      <ScreenStack style={styles.container}>
+        {state.routes.map((route, index) => {
+          const descriptor = descriptors[route.key];
+          const isFocused = state.index === index;
+          const previousKey = state.routes[index - 1]?.key;
+          const nextKey = state.routes[index + 1]?.key;
+          const previousDescriptor = previousKey
+            ? descriptors[previousKey]
+            : undefined;
+          const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
 
-        return (
-          <SceneView
-            key={route.key}
-            index={index}
-            focused={isFocused}
-            descriptor={descriptor}
-            previousDescriptor={previousDescriptor}
-            nextDescriptor={nextDescriptor}
-            onWillDisappear={() => {
-              navigation.emit({
-                type: 'transitionStart',
-                data: { closing: true },
-                target: route.key,
-              });
-            }}
-            onWillAppear={() => {
-              navigation.emit({
-                type: 'transitionStart',
-                data: { closing: false },
-                target: route.key,
-              });
-            }}
-            onAppear={() => {
-              navigation.emit({
-                type: 'transitionEnd',
-                data: { closing: false },
-                target: route.key,
-              });
-            }}
-            onDisappear={() => {
-              navigation.emit({
-                type: 'transitionEnd',
-                data: { closing: true },
-                target: route.key,
-              });
-            }}
-            onDismissed={(event) => {
-              navigation.dispatch({
-                ...StackActions.pop(event.nativeEvent.dismissCount),
-                source: route.key,
-                target: state.key,
-              });
+          return (
+            <SceneView
+              key={route.key}
+              index={index}
+              focused={isFocused}
+              descriptor={descriptor}
+              previousDescriptor={previousDescriptor}
+              nextDescriptor={nextDescriptor}
+              onWillDisappear={() => {
+                navigation.emit({
+                  type: 'transitionStart',
+                  data: { closing: true },
+                  target: route.key,
+                });
+              }}
+              onWillAppear={() => {
+                navigation.emit({
+                  type: 'transitionStart',
+                  data: { closing: false },
+                  target: route.key,
+                });
+              }}
+              onAppear={() => {
+                navigation.emit({
+                  type: 'transitionEnd',
+                  data: { closing: false },
+                  target: route.key,
+                });
+              }}
+              onDisappear={() => {
+                navigation.emit({
+                  type: 'transitionEnd',
+                  data: { closing: true },
+                  target: route.key,
+                });
+              }}
+              onDismissed={(event) => {
+                navigation.dispatch({
+                  ...StackActions.pop(event.nativeEvent.dismissCount),
+                  source: route.key,
+                  target: state.key,
+                });
 
-              setNextDismissedKey(route.key);
-            }}
-            onHeaderBackButtonClicked={() => {
-              navigation.dispatch({
-                ...StackActions.pop(),
-                source: route.key,
-                target: state.key,
-              });
-            }}
-            onNativeDismissCancelled={(event) => {
-              navigation.dispatch({
-                ...StackActions.pop(event.nativeEvent.dismissCount),
-                source: route.key,
-                target: state.key,
-              });
-            }}
-            onGestureCancel={() => {
-              navigation.emit({
-                type: 'gestureCancel',
-                target: route.key,
-              });
-            }}
-          />
-        );
-      })}
-    </ScreenStack>
-  );
-}
-
-export function NativeStackView(props: Props) {
-  return (
-    <SafeAreaProviderCompat>
-      <NativeStackViewInner {...props} />
+                setNextDismissedKey(route.key);
+              }}
+              onHeaderBackButtonClicked={() => {
+                navigation.dispatch({
+                  ...StackActions.pop(),
+                  source: route.key,
+                  target: state.key,
+                });
+              }}
+              onNativeDismissCancelled={(event) => {
+                navigation.dispatch({
+                  ...StackActions.pop(event.nativeEvent.dismissCount),
+                  source: route.key,
+                  target: state.key,
+                });
+              }}
+              onGestureCancel={() => {
+                navigation.emit({
+                  type: 'gestureCancel',
+                  target: route.key,
+                });
+              }}
+            />
+          );
+        })}
+      </ScreenStack>
     </SafeAreaProviderCompat>
   );
 }
