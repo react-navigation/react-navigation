@@ -4076,7 +4076,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/bottom-tabs@workspace:packages/bottom-tabs"
   dependencies:
-    "@react-navigation/elements": "npm:^2.0.0-alpha.7"
+    "@react-navigation/elements": "npm:^2.0.0-alpha.8"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
     "@types/color": "npm:^3.0.6"
@@ -4146,7 +4146,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/drawer@workspace:packages/drawer"
   dependencies:
-    "@react-navigation/elements": "npm:^2.0.0-alpha.7"
+    "@react-navigation/elements": "npm:^2.0.0-alpha.8"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
     "@types/react": "npm:~18.2.45"
@@ -4173,7 +4173,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-navigation/elements@npm:^2.0.0-alpha.7, @react-navigation/elements@workspace:packages/elements":
+"@react-navigation/elements@npm:^2.0.0-alpha.8, @react-navigation/elements@workspace:packages/elements":
   version: 0.0.0-use.local
   resolution: "@react-navigation/elements@workspace:packages/elements"
   dependencies:
@@ -4253,7 +4253,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/material-top-tabs@workspace:packages/material-top-tabs"
   dependencies:
-    "@react-navigation/elements": "npm:^2.0.0-alpha.7"
+    "@react-navigation/elements": "npm:^2.0.0-alpha.8"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
     "@types/react": "npm:~18.2.45"
@@ -4263,7 +4263,7 @@ __metadata:
     react-native: "npm:0.73.2"
     react-native-builder-bob: "npm:^0.23.2"
     react-native-pager-view: "npm:6.2.3"
-    react-native-tab-view: "npm:^4.0.0-alpha.4"
+    react-native-tab-view: "npm:^4.0.0-alpha.5"
     typescript: "npm:^5.3.3"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
@@ -4277,7 +4277,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/native-stack@workspace:packages/native-stack"
   dependencies:
-    "@react-navigation/elements": "npm:^2.0.0-alpha.7"
+    "@react-navigation/elements": "npm:^2.0.0-alpha.8"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
     "@types/react": "npm:~18.2.45"
@@ -4336,7 +4336,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/stack@workspace:packages/stack"
   dependencies:
-    "@react-navigation/elements": "npm:^2.0.0-alpha.7"
+    "@react-navigation/elements": "npm:^2.0.0-alpha.8"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
     "@types/color": "npm:^3.0.6"
@@ -17033,7 +17033,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-tab-view@npm:^4.0.0-alpha.4, react-native-tab-view@workspace:packages/react-native-tab-view":
+"react-native-tab-view@npm:^4.0.0-alpha.5, react-native-tab-view@workspace:packages/react-native-tab-view":
   version: 0.0.0-use.local
   resolution: "react-native-tab-view@workspace:packages/react-native-tab-view"
   dependencies:

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.7...@react-navigation/elements@2.0.0-alpha.8) (2024-02-24)
+
+### Bug Fixes
+
+* fix peer dependency versions ([4b93b63](https://github.com/react-navigation/react-navigation/commit/4b93b6335ce180fe879f9fbe8f2400426b5484fb)) - by @
+
 # [2.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.6...@react-navigation/elements@2.0.0-alpha.7) (2024-02-23)
 
 ### Bug Fixes
