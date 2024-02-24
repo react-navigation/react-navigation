@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.5.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.5.12...@react-navigation/bottom-tabs@6.5.13) (2024-02-24)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
 ## [6.5.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.5.11...@react-navigation/bottom-tabs@6.5.12) (2024-02-08)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

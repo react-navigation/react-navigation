@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.1.10...@react-navigation/native@6.1.11) (2024-02-24)
+
+### Bug Fixes
+
+* browser navigating out after using back feature and going home ([#11833](https://github.com/react-navigation/react-navigation/issues/11833)) ([7e5df55](https://github.com/react-navigation/react-navigation/commit/7e5df557182b080fb29faeae78634f7c2f1bcb10)), closes [#11832](https://github.com/react-navigation/react-navigation/issues/11832) - by @SlickDomique
+
 ## [6.1.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@6.1.9...@react-navigation/native@6.1.10) (2024-02-08)
 
 **Note:** Version bump only for package @react-navigation/native
