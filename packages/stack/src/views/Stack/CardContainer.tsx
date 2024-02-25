@@ -258,8 +258,7 @@ function CardContainerInner({
       gestureVelocityImpact={gestureVelocityImpact}
       transitionSpec={transitionSpec}
       styleInterpolator={cardStyleInterpolator}
-      accessibilityElementsHidden={!focused}
-      importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
+      aria-hidden={!focused}
       pointerEvents={active ? 'box-none' : pointerEvents}
       pageOverflowEnabled={headerMode !== 'float' && presentation !== 'modal'}
       preloaded={preloaded}

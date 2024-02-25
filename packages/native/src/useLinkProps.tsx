@@ -150,7 +150,7 @@ export function useLinkProps<ParamList extends ReactNavigation.RootParamList>({
             options?.config
           )
         : undefined),
-    accessibilityRole: 'link' as const,
+    role: 'link' as const,
     onPress,
   };
 }

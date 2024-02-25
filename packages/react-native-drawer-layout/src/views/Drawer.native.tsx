@@ -435,14 +435,7 @@ export function Drawer({
             >
               <Animated.View style={[styles.content, contentAnimatedStyle]}>
                 <View
-                  accessibilityElementsHidden={
-                    isOpen && drawerType !== 'permanent'
-                  }
-                  importantForAccessibility={
-                    isOpen && drawerType !== 'permanent'
-                      ? 'no-hide-descendants'
-                      : 'auto'
-                  }
+                  aria-hidden={isOpen && drawerType !== 'permanent'}
                   style={styles.content}
                 >
                   {children}

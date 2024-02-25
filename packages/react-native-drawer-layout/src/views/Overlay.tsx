@@ -17,14 +17,13 @@ export function Overlay({
         { opacity: open ? 1 : 0, pointerEvents: open ? 'auto' : 'none' },
         style,
       ]}
-      accessibilityElementsHidden={!open}
-      importantForAccessibility={open ? 'auto' : 'no-hide-descendants'}
+      aria-hidden={!open}
     >
       <Pressable
         onPress={onPress}
         style={[styles.pressable, { pointerEvents: open ? 'auto' : 'none' }]}
-        accessibilityRole="button"
-        accessibilityLabel={accessibilityLabel}
+        role="button"
+        aria-label={accessibilityLabel}
       />
     </View>
   );

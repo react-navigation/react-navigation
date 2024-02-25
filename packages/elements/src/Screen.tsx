@@ -62,8 +62,7 @@ export function Screen(props: Props) {
 
   return (
     <Background
-      accessibilityElementsHidden={!focused}
-      importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
+      aria-hidden={!focused}
       style={[styles.container, style]}
       // On Fabric we need to disable collapsing for the background to ensure
       // that we won't render unnecessary views due to the view flattening.

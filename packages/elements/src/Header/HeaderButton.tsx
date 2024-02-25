@@ -23,7 +23,7 @@ function HeaderButtonInternal(
       ref={ref}
       disabled={disabled}
       href={href}
-      accessibilityLabel={accessibilityLabel}
+      aria-label={accessibilityLabel}
       testID={testID}
       onPress={onPress}
       pressColor={pressColor}
