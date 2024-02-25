@@ -22,6 +22,7 @@ type RouteConfig = {
   screen: string;
   regex?: RegExp;
   path: string;
+  normalizedPath: string;
   pattern: string;
   routeNames: string[];
   parse?: ParseConfig;
@@ -289,18 +290,15 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
     if (match) {
       const matchedParams = config.pattern
         ?.split('/')
-        .filter((p) => p.startsWith(':'))
-        .reduce<Record<string, any>>(
-          (acc, p, i) => {
-            const decodedParamSegment = decodeURIComponent(match![(i + 1) * 2]);
-            return Object.assign(acc, {
-              // The param segments appear every second item starting from 2 in the regex match result
-              [p]: decodedParamSegment.replace(/\//, ''),
-            });
-          },
-
-          {}
-        );
+        .map((p, x) => [p, x] as const)
+        .filter(([p]) => p.startsWith(':'))
+        .reduce<Record<string, any>>((acc, [p, x], i) => {
+          const decodedParamSegment = decodeURIComponent(match![(i + 1) * 2]);
+          return Object.assign(acc, {
+            // The param segments appear every second item starting from 2 in the regex match result
+            [p + x]: decodedParamSegment.replace(/\//, ''),
+          });
+        }, {});
 
       routes = config.routeNames.map((name) => {
         const routeConfig = configs.find((c) => {
@@ -308,11 +306,19 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
           return c.screen === name && config.pattern.startsWith(c.pattern);
         });
 
-        const params = routeConfig?.path
+        // Get the number of segments in the initial pattern
+        const initialPartsLength = routeConfig?.pattern
+          .replace(new RegExp(`${escape(routeConfig.normalizedPath)}$`), '')
+          ?.split('/').length;
+
+        const params = routeConfig?.normalizedPath
           ?.split('/')
-          .filter((p) => p.startsWith(':'))
-          .reduce<Record<string, any>>((acc, p) => {
-            const value = matchedParams[p];
+          .map((p, x) => [p, x] as const)
+          .filter(([p]) => p.startsWith(':'))
+          .reduce<Record<string, any>>((acc, [p, x]) => {
+            // Get the position of the param in the matched params based on the parent path segments count
+            x = initialPartsLength ? x + initialPartsLength - 1 : x;
+            const value = matchedParams[p + x];
 
             if (value) {
               const key = p.replace(/^:/, '').replace(/\?$/, '');
@@ -427,8 +433,9 @@ const createConfigItem = (
   path: string,
   parse?: ParseConfig
 ): RouteConfig => {
-  // Normalize pattern to remove any leading, trailing slashes, duplicate slashes etc.
+  // Normalize pattern and path to remove any leading, trailing slashes, duplicate slashes etc.
   pattern = pattern.split('/').filter(Boolean).join('/');
+  const normalizedPath = path.split('/').filter(Boolean).join('/');
 
   const regex = pattern
     ? new RegExp(
@@ -450,6 +457,7 @@ const createConfigItem = (
     regex,
     pattern,
     path,
+    normalizedPath,
     // The routeNames array is mutated, so copy it to keep the current state
     routeNames: [...routeNames],
     parse,
