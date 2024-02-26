@@ -7,7 +7,7 @@ import type { RouteProp } from './types';
 type RouteCache = Map<string, RouteProp<ParamListBase>>;
 
 /**
- * Utilites such as `getFocusedRouteNameFromRoute` need to access state.
+ * Utilities such as `getFocusedRouteNameFromRoute` need to access state.
  * So we need a way to suppress the warning for those use cases.
  * This is fine since they are internal utilities and this is not public API.
  */

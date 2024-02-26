@@ -457,7 +457,7 @@ export function useNavigationBuilder<
 
   let state =
     // If the state isn't initialized, or stale, use the state we initialized instead
-    // The state won't update until there's a change needed in the state we have initalized locally
+    // The state won't update until there's a change needed in the state we have initialized locally
     // So it'll be `undefined` or stale until the first navigation event happens
     isStateInitialized(currentState)
       ? (currentState as State)
