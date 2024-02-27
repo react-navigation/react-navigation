@@ -300,9 +300,15 @@ export class CardStack extends React.Component<Props, State> {
             ? nextDescriptor.options
             : descriptor.options;
 
-        const animation = optionsForTransitionConfig.animation ?? 'default';
-        const isAnimationEnabled = animation !== 'none';
+        const exludedPlatforms =
+          Platform.OS !== 'web' &&
+          Platform.OS !== 'windows' &&
+          Platform.OS !== 'macos';
 
+        const animation =
+          optionsForTransitionConfig.animation ??
+          (exludedPlatforms ? 'default' : 'none');
+        const isAnimationEnabled = animation !== 'none';
         const animationPreset = AnimationTransitions[animation];
 
         const defaultTransitionPreset =
