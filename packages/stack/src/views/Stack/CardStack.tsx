@@ -23,6 +23,7 @@ import {
   forNoAnimation as forNoAnimationCard,
 } from '../../TransitionConfigs/CardStyleInterpolators';
 import {
+  AnimationTransitions,
   DefaultTransition,
   ModalFadeTransition,
   ModalTransition,
@@ -236,13 +237,12 @@ export class CardStack extends React.Component<Props, State> {
     ].reduce<GestureValues>((acc, curr) => {
       const descriptor =
         props.descriptors[curr.key] || props.preloadedDescriptors[curr.key];
-      const { animationEnabled } = descriptor?.options || {};
+      const { animation } = descriptor?.options || {};
 
       acc[curr.key] =
         state.gestures[curr.key] ||
         new Animated.Value(
-          (props.openingRouteKeys.includes(curr.key) &&
-            animationEnabled !== false) ||
+          (props.openingRouteKeys.includes(curr.key) && animation !== 'none') ||
           props.state.preloadedRoutes.includes(curr)
             ? getDistanceFromOptions(
                 state.layout,
@@ -300,23 +300,25 @@ export class CardStack extends React.Component<Props, State> {
             ? nextDescriptor.options
             : descriptor.options;
 
+        const animation = optionsForTransitionConfig.animation ?? 'default';
+        const isAnimationEnabled = animation !== 'none';
+
+        const animationPreset = AnimationTransitions[animation];
+
         const defaultTransitionPreset =
           optionsForTransitionConfig.presentation === 'modal'
             ? ModalTransition
             : optionsForTransitionConfig.presentation === 'transparentModal'
               ? ModalFadeTransition
-              : DefaultTransition;
+              : animationPreset;
 
         const {
-          animationEnabled = Platform.OS !== 'web' &&
-            Platform.OS !== 'windows' &&
-            Platform.OS !== 'macos',
-          gestureEnabled = Platform.OS === 'ios' && animationEnabled,
+          gestureEnabled = Platform.OS === 'ios' && isAnimationEnabled,
           gestureDirection = defaultTransitionPreset.gestureDirection,
           transitionSpec = defaultTransitionPreset.transitionSpec,
-          cardStyleInterpolator = animationEnabled === false
-            ? forNoAnimationCard
-            : defaultTransitionPreset.cardStyleInterpolator,
+          cardStyleInterpolator = isAnimationEnabled
+            ? defaultTransitionPreset.cardStyleInterpolator
+            : forNoAnimationCard,
           headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
           cardOverlayEnabled = (Platform.OS !== 'ios' &&
             optionsForTransitionConfig.presentation !== 'transparentModal') ||
@@ -345,7 +347,7 @@ export class CardStack extends React.Component<Props, State> {
             ...descriptor,
             options: {
               ...descriptor.options,
-              animationEnabled,
+              animation,
               cardOverlayEnabled,
               cardStyleInterpolator,
               gestureDirection,

@@ -64,6 +64,19 @@ export function forHorizontalIOS({
 }
 
 /**
+ * iOS-style slide in from the left.
+ */
+export function forHorizontalIOSInverted({
+  inverted,
+  ...rest
+}: StackCardInterpolationProps): StackCardInterpolatedStyle {
+  return forHorizontalIOS({
+    ...rest,
+    inverted: Animated.multiply(inverted, -1),
+  });
+}
+
+/**
  * Standard iOS-style slide in from the bottom (used for modals).
  */
 export function forVerticalIOS({
