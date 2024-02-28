@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.4.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.4.11...@react-navigation/core@6.4.12) (2024-02-28)
+
+### Bug Fixes
+
+* don't throw on setParams ([9afebe0](https://github.com/react-navigation/react-navigation/commit/9afebe0ea93ac047bb7175129c3b364ecc55e877)) - by @satya164
+
 ## [6.4.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.4.10...@react-navigation/core@6.4.11) (2024-02-24)
 
 ### Bug Fixes
