@@ -159,19 +159,17 @@ const SceneView = ({
 }: SceneViewProps) => {
   const { route, navigation, options, render } = descriptor;
 
-  let {
-    animation,
-    animationMatchesGesture,
-    fullScreenGestureEnabled,
-    presentation = 'card',
-  } = options;
+  let { animation, animationMatchesGesture, fullScreenGestureEnabled } =
+    options;
 
   if (
     !options.presentation &&
     previousDescriptor?.options.presentation === 'modal'
   ) {
-    presentation = 'modal';
+    options.presentation = 'modal';
   }
+
+  let presentation = options.presentation ?? 'card';
 
   const {
     animationDuration,
