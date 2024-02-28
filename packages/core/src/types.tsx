@@ -630,10 +630,6 @@ export type NavigationContainerRef<ParamList extends {}> =
        */
       setOptions(): never;
       /**
-       * Stub function for setParams on navigation object for use with useNavigation.
-       */
-      setParams(): never;
-      /**
        * Stub function for getParent on navigation object for use with useNavigation.
        */
       getParent(): undefined;
