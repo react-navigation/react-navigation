@@ -300,6 +300,13 @@ export class CardStack extends React.Component<Props, State> {
             ? nextDescriptor.options
             : descriptor.options;
 
+        if (
+          previousDescriptor?.options.presentation === 'modal' ||
+          descriptor?.options.presentation === 'modal'
+        ) {
+          optionsForTransitionConfig.presentation = 'modal';
+        }
+
         const defaultTransitionPreset =
           optionsForTransitionConfig.presentation === 'modal'
             ? ModalTransition

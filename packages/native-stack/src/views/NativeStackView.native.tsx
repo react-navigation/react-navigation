@@ -166,6 +166,13 @@ const SceneView = ({
     presentation = 'card',
   } = options;
 
+  if (
+    !options.presentation &&
+    previousDescriptor?.options.presentation === 'modal'
+  ) {
+    presentation = 'modal';
+  }
+
   const {
     animationDuration,
     animationTypeForReplace = 'push',
