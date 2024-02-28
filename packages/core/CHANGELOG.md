@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.4.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.4.12...@react-navigation/core@6.4.13) (2024-02-28)
+
+### Bug Fixes
+
+* fix type for navigation ref ([f703003](https://github.com/react-navigation/react-navigation/commit/f703003c6438e92956860752ee4d5d8f4cda0331)) - by @satya164
+
 ## [6.4.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.4.11...@react-navigation/core@6.4.12) (2024-02-28)
 
 ### Bug Fixes
