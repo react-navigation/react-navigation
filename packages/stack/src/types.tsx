@@ -78,8 +78,9 @@ export type GestureDirection =
   | 'vertical'
   | 'vertical-inverted';
 
-export type StackAnimationTypes =
+export type StackAnimationName =
   | 'default'
+  | 'bottom_sheet'
   | 'fade'
   | 'fade_from_bottom'
   | 'none'
@@ -90,7 +91,7 @@ export type StackAnimationTypes =
   | 'slide_from_left';
 
 type SceneOptionsDefaults = TransitionPreset & {
-  animation: StackAnimationTypes;
+  animation: StackAnimationName;
   gestureEnabled: boolean;
   cardOverlayEnabled: boolean;
   headerMode: StackHeaderMode;
@@ -349,7 +350,7 @@ export type StackNavigationOptions = StackHeaderOptions &
      * - "slide_from_left": slide in the new screen from left
      *
      */
-    animation?: StackAnimationTypes;
+    animation?: StackAnimationName;
     /**
      * The type of animation to use when this screen replaces another screen. Defaults to `push`.
      * When `pop` is used, the `pop` animation is applied to the screen being replaced.
