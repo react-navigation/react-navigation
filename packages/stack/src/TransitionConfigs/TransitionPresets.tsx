@@ -170,7 +170,6 @@ export const AnimationTransitions = {
   none: DefaultTransition,
   reveal_from_bottom: RevealFromBottomAndroid,
   scale_from_center: ScaleFromCenterAndroid,
-  bottom_sheet: BottomSheetAndroid,
   slide_from_left: SlideFromLeftIOS,
   slide_from_right: SlideFromRightIOS,
   slide_from_bottom: ModalSlideFromBottomIOS,

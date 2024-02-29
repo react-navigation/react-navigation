@@ -80,7 +80,6 @@ export type GestureDirection =
 
 export type StackAnimationName =
   | 'default'
-  | 'bottom_sheet'
   | 'fade'
   | 'fade_from_bottom'
   | 'none'
@@ -341,14 +340,15 @@ export type StackNavigationOptions = StackHeaderOptions &
      * How the screen should animate when pushed or popped.
      *
      * Supported values:
-     * - "none": don't animate the screen
-     * - "default": use the platform default animation
-     * - "fade": fade screen in or out
-     * - "fade_from_bottom": fade screen in or out from bottom
-     * - "slide_from_bottom": slide in the new screen from bottom
-     * - "slide_from_right": slide in the new screen from right
-     * - "slide_from_left": slide in the new screen from left
-     *
+     * - 'none': don't animate the screen
+     * - 'default': use the platform default animation
+     * - 'fade': fade screen in or out
+     * - 'fade_from_bottom': fade screen in or out from bottom
+     * - 'slide_from_bottom': slide in the new screen from bottom
+     * - 'slide_from_right': slide in the new screen from right
+     * - 'slide_from_left': slide in the new screen from left
+     * - 'reveal_from_bottom': reveal screen in from bottom to top
+     * - 'scale_from_center': scale screen in from center
      */
     animation?: StackAnimationName;
     /**
