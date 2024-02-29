@@ -255,6 +255,10 @@ export class CardStack extends React.Component<Props, State> {
       return acc;
     }, {});
 
+    // if the is a one screen with modal 'presentation'
+    // then all next screens also should be with the same presentation
+    let isForcedModalStack = false;
+
     const scenes = [...props.routes, ...props.state.preloadedRoutes].map(
       (route, index, self) => {
         // For preloaded screens, we don't care about the previous and the next screen
@@ -304,10 +308,11 @@ export class CardStack extends React.Component<Props, State> {
           previousDescriptor?.options.presentation === 'modal' ||
           descriptor?.options.presentation === 'modal'
         ) {
-          optionsForTransitionConfig.presentation = 'modal';
+          isForcedModalStack = true;
         }
 
         const defaultTransitionPreset =
+          isForcedModalStack ||
           optionsForTransitionConfig.presentation === 'modal'
             ? ModalTransition
             : optionsForTransitionConfig.presentation === 'transparentModal'

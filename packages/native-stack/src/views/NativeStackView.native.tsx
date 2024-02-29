@@ -132,6 +132,7 @@ type SceneViewProps = {
   descriptor: NativeStackDescriptor;
   previousDescriptor?: NativeStackDescriptor;
   nextDescriptor?: NativeStackDescriptor;
+  isForsedModalStack?: boolean;
   onWillDisappear: () => void;
   onWillAppear: () => void;
   onAppear: () => void;
@@ -148,6 +149,7 @@ const SceneView = ({
   descriptor,
   previousDescriptor,
   nextDescriptor,
+  isForsedModalStack,
   onWillDisappear,
   onWillAppear,
   onAppear,
@@ -159,17 +161,12 @@ const SceneView = ({
 }: SceneViewProps) => {
   const { route, navigation, options, render } = descriptor;
 
-  let { animation, animationMatchesGesture, fullScreenGestureEnabled } =
-    options;
-
-  if (
-    !options.presentation &&
-    previousDescriptor?.options.presentation === 'modal'
-  ) {
-    options.presentation = 'modal';
-  }
-
-  let presentation = options.presentation ?? 'card';
+  let {
+    animation,
+    animationMatchesGesture,
+    presentation = isForsedModalStack ? 'modal' : 'card',
+    fullScreenGestureEnabled,
+  } = options;
 
   const {
     animationDuration,
@@ -454,6 +451,10 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
 
   useInvalidPreventRemoveError(descriptors);
 
+  // if the is a one screen with modal 'presentation'
+  // then all next screens also should be with the same presentation
+  let isForsedModalStack = false;
+
   return (
     <SafeAreaProviderCompat style={{ backgroundColor: colors.background }}>
       <ScreenStack style={styles.container}>
@@ -466,6 +467,12 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
             ? descriptors[previousKey]
             : undefined;
           const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
+          if (
+            !descriptor.options.presentation &&
+            previousDescriptor?.options.presentation === 'modal'
+          ) {
+            isForsedModalStack = true;
+          }
 
           return (
             <SceneView
@@ -475,6 +482,7 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
               descriptor={descriptor}
               previousDescriptor={previousDescriptor}
               nextDescriptor={nextDescriptor}
+              isForsedModalStack={isForsedModalStack}
               onWillDisappear={() => {
                 navigation.emit({
                   type: 'transitionStart',
