@@ -83,6 +83,8 @@ export type StackAnimationTypes =
   | 'fade'
   | 'fade_from_bottom'
   | 'none'
+  | 'reveal_from_bottom'
+  | 'scale_from_center'
   | 'slide_from_bottom'
   | 'slide_from_right'
   | 'slide_from_left';
