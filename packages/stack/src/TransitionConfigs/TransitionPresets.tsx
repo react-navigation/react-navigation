@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 
-import type { StackAnimationName, TransitionPreset } from '../types';
+import type { TransitionPreset } from '../types';
 import {
   forBottomSheetAndroid,
   forFadeFromBottomAndroid,
@@ -159,18 +159,3 @@ export const SlideFromLeftIOS: TransitionPreset = {
   ...SlideFromRightIOS,
   cardStyleInterpolator: forHorizontalIOSInverted,
 };
-
-/**
- * Animation presets for the transitions.
- */
-export const AnimationTransitions = {
-  default: DefaultTransition,
-  fade: ModalFadeTransition,
-  fade_from_bottom: FadeFromBottomAndroid,
-  none: DefaultTransition,
-  reveal_from_bottom: RevealFromBottomAndroid,
-  scale_from_center: ScaleFromCenterAndroid,
-  slide_from_left: SlideFromLeftIOS,
-  slide_from_right: SlideFromRightIOS,
-  slide_from_bottom: ModalSlideFromBottomIOS,
-} as const satisfies Record<StackAnimationName, TransitionPreset>;

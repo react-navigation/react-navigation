@@ -23,19 +23,27 @@ import {
   forNoAnimation as forNoAnimationCard,
 } from '../../TransitionConfigs/CardStyleInterpolators';
 import {
-  AnimationTransitions,
+  BottomSheetAndroid,
   DefaultTransition,
+  FadeFromBottomAndroid,
   ModalFadeTransition,
+  ModalSlideFromBottomIOS,
   ModalTransition,
+  RevealFromBottomAndroid,
+  ScaleFromCenterAndroid,
+  SlideFromLeftIOS,
+  SlideFromRightIOS,
 } from '../../TransitionConfigs/TransitionPresets';
 import type {
   Layout,
   Scene,
+  StackAnimationName,
   StackCardStyleInterpolator,
   StackDescriptor,
   StackDescriptorMap,
   StackHeaderMode,
   StackNavigationOptions,
+  TransitionPreset,
 } from '../../types';
 import { findLastIndex } from '../../utils/findLastIndex';
 import { getDistanceForDirection } from '../../utils/getDistanceForDirection';
@@ -86,6 +94,21 @@ type State = {
   layout: Layout;
   headerHeights: Record<string, number>;
 };
+
+const NAMED_TRANSITIONS_PRESETS = {
+  default: DefaultTransition,
+  fade: ModalFadeTransition,
+  fade_from_bottom: FadeFromBottomAndroid,
+  none: DefaultTransition,
+  reveal_from_bottom: RevealFromBottomAndroid,
+  scale_from_center: ScaleFromCenterAndroid,
+  slide_from_left: SlideFromLeftIOS,
+  slide_from_right: SlideFromRightIOS,
+  slide_from_bottom: Platform.select({
+    ios: ModalSlideFromBottomIOS,
+    default: BottomSheetAndroid,
+  }),
+} as const satisfies Record<StackAnimationName, TransitionPreset>;
 
 const EPSILON = 1e-5;
 
@@ -309,7 +332,7 @@ export class CardStack extends React.Component<Props, State> {
           optionsForTransitionConfig.animation ??
           (exludedPlatforms ? 'default' : 'none');
         const isAnimationEnabled = animation !== 'none';
-        const animationPreset = AnimationTransitions[animation];
+        const animationPreset = NAMED_TRANSITIONS_PRESETS[animation];
 
         const defaultTransitionPreset =
           optionsForTransitionConfig.presentation === 'modal'
