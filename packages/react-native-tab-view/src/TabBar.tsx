@@ -373,7 +373,9 @@ export function TabBar<T extends Route>({
   layout: propLayout,
   testID,
   android_ripple,
+  useNativeDriver = true,
 }: Props<T>) {
+  console.log('Tab Bar Mounted', useNativeDriver);
   const [layout, setLayout] = React.useState<Layout>(
     propLayout ?? { width: 0, height: 0 }
   );
@@ -607,9 +609,9 @@ export function TabBar<T extends Route>({
             },
           },
         ],
-        { useNativeDriver: true }
+        { useNativeDriver: useNativeDriver }
       ),
-    [scrollAmount]
+    [scrollAmount, useNativeDriver]
   );
 
   const handleViewableItemsChanged = useLatestCallback(

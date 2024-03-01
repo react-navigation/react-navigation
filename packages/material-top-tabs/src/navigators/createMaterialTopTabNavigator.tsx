@@ -35,6 +35,7 @@ function MaterialTopTabNavigator({
   screenListeners,
   screenOptions,
   screenLayout,
+  useNativeDriver = true,
   ...rest
 }: Props) {
   const { state, descriptors, navigation, NavigationContent } =
@@ -62,6 +63,7 @@ function MaterialTopTabNavigator({
         state={state}
         navigation={navigation}
         descriptors={descriptors}
+        useNativeDriver={useNativeDriver}
       />
     </NavigationContent>
   );

@@ -17,6 +17,7 @@ export function MaterialTopTabBar({
   state,
   navigation,
   descriptors,
+  useNativeDriver = true,
   ...rest
 }: MaterialTopTabBarProps) {
   const { colors } = useTheme();
@@ -38,6 +39,7 @@ export function MaterialTopTabBar({
       bounces={focusedOptions.tabBarBounces}
       activeColor={activeColor}
       inactiveColor={inactiveColor}
+      useNativeDriver={useNativeDriver}
       pressColor={focusedOptions.tabBarPressColor}
       pressOpacity={focusedOptions.tabBarPressOpacity}
       tabStyle={focusedOptions.tabBarItemStyle}

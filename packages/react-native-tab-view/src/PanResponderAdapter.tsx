@@ -60,7 +60,10 @@ export function PanResponderAdapter<T extends Route>({
   style,
   animationEnabled = false,
   layoutDirection = 'ltr',
+  useNativeDriver = true,
 }: Props<T>) {
+  console.log('Pan Responder Mounted', useNativeDriver);
+
   const { routes, index } = navigationState;
 
   const panX = useAnimatedValue(0);
@@ -88,7 +91,7 @@ export function PanResponderAdapter<T extends Route>({
           timing(panX, {
             ...transitionConfig,
             toValue: offset,
-            useNativeDriver: false,
+            useNativeDriver: useNativeDriver,
           }),
         ]).start(({ finished }) => {
           if (finished) {

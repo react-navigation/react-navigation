@@ -59,6 +59,7 @@ export function TabView<T extends Route>({
   tabBarPosition = 'top',
   animationEnabled = true,
   overScrollMode,
+  useNativeDriver = true,
 }: Props<T>) {
   if (
     Platform.OS !== 'web' &&
@@ -109,6 +110,7 @@ export function TabView<T extends Route>({
         overScrollMode={overScrollMode}
         style={pagerStyle}
         layoutDirection={direction}
+        useNativeDriver={useNativeDriver}
       >
         {({ position, render, addEnterListener, jumpTo }) => {
           // All the props here must not change between re-renders
@@ -125,6 +127,7 @@ export function TabView<T extends Route>({
                 renderTabBar({
                   ...sceneRendererProps,
                   navigationState,
+                  useNativeDriver: useNativeDriver,
                 })}
               {render(
                 navigationState.routes.map((route, i) => {
@@ -155,6 +158,7 @@ export function TabView<T extends Route>({
                 renderTabBar({
                   ...sceneRendererProps,
                   navigationState,
+                  useNativeDriver: useNativeDriver,
                 })}
             </React.Fragment>
           );

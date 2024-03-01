@@ -37,6 +37,7 @@ export type SceneRendererProps = {
   layout: Layout;
   position: Animated.AnimatedInterpolation<number>;
   jumpTo: (key: string) => void;
+  useNativeDriver?: boolean;
 };
 
 export type EventEmitterProps = {
@@ -58,4 +59,5 @@ export type PagerProps = Omit<
   animationEnabled?: boolean;
   onSwipeStart?: () => void;
   onSwipeEnd?: () => void;
+  useNativeDriver?: boolean;
 };
