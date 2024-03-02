@@ -120,7 +120,7 @@ export function DrawerItem(props: Props) {
     ...rest
   } = props;
 
-  const { borderRadius = 4 } = StyleSheet.flatten(style || {});
+  const { borderRadius = 56 } = StyleSheet.flatten(style || {});
   const color = focused ? activeTintColor : inactiveTintColor;
   const backgroundColor = focused
     ? activeBackgroundColor
@@ -149,7 +149,7 @@ export function DrawerItem(props: Props) {
           <View
             style={[
               styles.label,
-              { marginLeft: iconNode ? 32 : 0, marginVertical: 5 },
+              { marginLeft: iconNode ? 16 : 0, marginVertical: 5 },
             ]}
           >
             {typeof label === 'string' ? (
@@ -179,10 +179,11 @@ const styles = StyleSheet.create({
   wrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 8,
+    padding: 16,
+    paddingRight: 24,
   },
   label: {
-    marginRight: 32,
+    marginRight: 12,
     flex: 1,
   },
 });

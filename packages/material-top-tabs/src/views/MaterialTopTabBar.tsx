@@ -150,7 +150,6 @@ const styles = StyleSheet.create({
   },
   label: {
     textAlign: 'center',
-    textTransform: 'uppercase',
     fontSize: 13,
     margin: 4,
     backgroundColor: 'transparent',
