@@ -133,7 +133,6 @@ export function DrawerItem(props: Props) {
       collapsable={false}
       {...rest}
       style={[styles.container, { borderRadius, backgroundColor }, style]}
-      onLayout={(e) => console.log(e.nativeEvent.layout)}
     >
       <PlatformPressable
         testID={testID}
