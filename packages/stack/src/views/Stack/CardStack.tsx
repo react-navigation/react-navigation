@@ -323,32 +323,34 @@ export class CardStack extends React.Component<Props, State> {
             ? nextDescriptor.options
             : descriptor.options;
 
-        const exludedPlatforms =
+        // Disable screen transition animation by default on web, windows and macos to match the native behavior
+        const excludedPlatforms =
           Platform.OS !== 'web' &&
           Platform.OS !== 'windows' &&
           Platform.OS !== 'macos';
 
         const animation =
           optionsForTransitionConfig.animation ??
-          (exludedPlatforms ? 'default' : 'none');
+          (excludedPlatforms ? 'default' : 'none');
         const isAnimationEnabled = animation !== 'none';
-        const animationPreset = NAMED_TRANSITIONS_PRESETS[animation];
 
-        const defaultTransitionPreset =
-          optionsForTransitionConfig.presentation === 'modal'
-            ? ModalTransition
-            : optionsForTransitionConfig.presentation === 'transparentModal'
-              ? ModalFadeTransition
-              : animationPreset;
+        const transitionPreset =
+          animation !== 'default'
+            ? NAMED_TRANSITIONS_PRESETS[animation]
+            : optionsForTransitionConfig.presentation === 'modal'
+              ? ModalTransition
+              : optionsForTransitionConfig.presentation === 'transparentModal'
+                ? ModalFadeTransition
+                : DefaultTransition;
 
         const {
           gestureEnabled = Platform.OS === 'ios' && isAnimationEnabled,
-          gestureDirection = defaultTransitionPreset.gestureDirection,
-          transitionSpec = defaultTransitionPreset.transitionSpec,
+          gestureDirection = transitionPreset.gestureDirection,
+          transitionSpec = transitionPreset.transitionSpec,
           cardStyleInterpolator = isAnimationEnabled
-            ? defaultTransitionPreset.cardStyleInterpolator
+            ? transitionPreset.cardStyleInterpolator
             : forNoAnimationCard,
-          headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
+          headerStyleInterpolator = transitionPreset.headerStyleInterpolator,
           cardOverlayEnabled = (Platform.OS !== 'ios' &&
             optionsForTransitionConfig.presentation !== 'transparentModal') ||
             getIsModalPresentation(cardStyleInterpolator),
