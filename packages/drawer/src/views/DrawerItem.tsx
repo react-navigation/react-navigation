@@ -133,6 +133,7 @@ export function DrawerItem(props: Props) {
       collapsable={false}
       {...rest}
       style={[styles.container, { borderRadius, backgroundColor }, style]}
+      onLayout={(e) => console.log(e.nativeEvent.layout)}
     >
       <PlatformPressable
         testID={testID}
@@ -146,17 +147,12 @@ export function DrawerItem(props: Props) {
       >
         <View style={[styles.wrapper, { borderRadius }]}>
           {iconNode}
-          <View
-            style={[
-              styles.label,
-              { marginLeft: iconNode ? 16 : 0, marginVertical: 5 },
-            ]}
-          >
+          <View style={[styles.label, { marginLeft: iconNode ? 16 : 0 }]}>
             {typeof label === 'string' ? (
               <Text
                 numberOfLines={1}
                 allowFontScaling={allowFontScaling}
-                style={[{ color }, fonts.medium, labelStyle]}
+                style={[styles.labelText, { color }, fonts.medium, labelStyle]}
               >
                 {label}
               </Text>
@@ -172,18 +168,24 @@ export function DrawerItem(props: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 10,
-    marginVertical: 4,
+    marginHorizontal: 12,
+    marginVertical: 2,
     overflow: 'hidden',
   },
   wrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
+    paddingVertical: 12,
+    paddingLeft: 16,
     paddingRight: 24,
   },
   label: {
     marginRight: 12,
+    marginVertical: 4,
     flex: 1,
+  },
+  labelText: {
+    lineHeight: 24,
+    textAlignVertical: 'center',
   },
 });
