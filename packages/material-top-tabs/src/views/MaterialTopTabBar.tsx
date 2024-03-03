@@ -19,7 +19,7 @@ export function MaterialTopTabBar({
   descriptors,
   ...rest
 }: MaterialTopTabBarProps) {
-  const { colors } = useTheme();
+  const { colors, fonts } = useTheme();
   const { direction } = useLocale();
 
   const focusedOptions = descriptors[state.routes[state.index].key].options;
@@ -107,7 +107,12 @@ export function MaterialTopTabBar({
         if (typeof label === 'string') {
           return (
             <Text
-              style={[{ color }, styles.label, options.tabBarLabelStyle]}
+              style={[
+                { color },
+                fonts.medium,
+                styles.label,
+                options.tabBarLabelStyle,
+              ]}
               allowFontScaling={options.tabBarAllowFontScaling}
             >
               {label}
@@ -150,8 +155,7 @@ const styles = StyleSheet.create({
   },
   label: {
     textAlign: 'center',
-    textTransform: 'uppercase',
-    fontSize: 13,
+    fontSize: 14,
     margin: 4,
     backgroundColor: 'transparent',
   },
