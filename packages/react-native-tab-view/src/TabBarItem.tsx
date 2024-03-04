@@ -15,7 +15,7 @@ import { PlatformPressable } from './PlatformPressable';
 import { TabBarItemLabel } from './TabBarItemLabel';
 import type { NavigationState, Route, TabDescriptor } from './types';
 
-export type Props<T extends Route> = {
+export type Props<T extends Route> = TabDescriptor<T> & {
   position: Animated.AnimatedInterpolation<number>;
   route: T;
   navigationState: NavigationState<T>;
@@ -23,7 +23,6 @@ export type Props<T extends Route> = {
   inactiveColor?: string;
   pressColor?: string;
   pressOpacity?: number;
-  options?: TabDescriptor<T>;
   onLayout?: (event: LayoutChangeEvent) => void;
   onPress: () => void;
   onLongPress: () => void;
@@ -251,15 +250,9 @@ const MemoizedTabBarItemInternal = React.memo(
 ) as typeof TabBarItemInternal;
 
 export function TabBarItem<T extends Route>(props: Props<T>) {
-  const {
-    onPress,
-    onLongPress,
-    onLayout,
-    navigationState,
-    route,
-    options,
-    ...rest
-  } = props;
+  const { onPress, onLongPress, onLayout, navigationState, route, ...rest } =
+    props;
+
   const onPressLatest = useLatestCallback(onPress);
   const onLongPressLatest = useLatestCallback(onLongPress);
   const onLayoutLatest = useLatestCallback(onLayout ? onLayout : () => {});
@@ -269,7 +262,6 @@ export function TabBarItem<T extends Route>(props: Props<T>) {
   return (
     <MemoizedTabBarItemInternal
       {...rest}
-      {...options}
       onPress={onPressLatest}
       onLayout={onLayoutLatest}
       onLongPress={onLongPressLatest}

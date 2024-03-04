@@ -8,11 +8,7 @@ import {
 import Color from 'color';
 import * as React from 'react';
 import { type StyleProp, StyleSheet, type ViewStyle } from 'react-native';
-import {
-  TabBar,
-  TabBarIndicator,
-  type TabDescriptor,
-} from 'react-native-tab-view';
+import { TabBar, TabBarIndicator } from 'react-native-tab-view';
 
 import type { MaterialTopTabBarProps } from '../types';
 
@@ -59,31 +55,37 @@ export function MaterialTopTabBar({
     focusedOptions.tabBarInactiveTintColor ??
     Color(activeColor).alpha(0.5).rgb().string();
 
-  const tabBarOptions: Record<string, TabDescriptor<{ key: string }>> = {};
+  const tabBarOptions = Object.fromEntries(
+    state.routes.map((route) => {
+      const { options } = descriptors[route.key];
 
-  state.routes.forEach((route) => {
-    const { options } = descriptors[route.key];
-    tabBarOptions[route.key] = {
-      testID: options.tabBarButtonTestID,
-      accessibilityLabel: options.tabBarAccessibilityLabel,
-      badge: options.tabBarBadge,
-      icon: options.tabBarShowIcon === false ? undefined : options.tabBarIcon,
-      label: options.tabBarShowLabel === false ? undefined : renderLabel,
-      labelAllowFontScaling: options.tabBarAllowFontScaling,
-      labelStyle: options.tabBarLabelStyle,
-      labelText:
-        options.tabBarShowLabel === false
-          ? undefined
-          : options.title !== undefined
-            ? options.title
-            : route.name,
-    };
-  });
+      return [
+        route.key,
+        {
+          testID: options.tabBarButtonTestID,
+          accessibilityLabel: options.tabBarAccessibilityLabel,
+          badge: options.tabBarBadge,
+          icon:
+            options.tabBarShowIcon === false ? undefined : options.tabBarIcon,
+          label: options.tabBarShowLabel === false ? undefined : renderLabel,
+          labelAllowFontScaling: options.tabBarAllowFontScaling,
+          labelStyle: options.tabBarLabelStyle,
+          labelText:
+            options.tabBarShowLabel === false
+              ? undefined
+              : options.title !== undefined
+                ? options.title
+                : route.name,
+        },
+      ];
+    })
+  );
 
   return (
     <TabBar
       {...rest}
       navigationState={state}
+      options={tabBarOptions}
       direction={direction}
       scrollEnabled={focusedOptions.tabBarScrollEnabled}
       bounces={focusedOptions.tabBarBounces}
@@ -118,7 +120,6 @@ export function MaterialTopTabBar({
           target: route.key,
         })
       }
-      options={tabBarOptions}
       renderIndicator={({ navigationState: state, ...rest }) => {
         return focusedOptions.tabBarIndicator ? (
           focusedOptions.tabBarIndicator({

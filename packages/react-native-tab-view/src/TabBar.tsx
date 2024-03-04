@@ -443,87 +443,101 @@ export function TabBar<T extends Route>({
 
   const renderItem = React.useCallback(
     ({ item: route, index }: ListRenderItemInfo<T>) => {
-      const props: TabBarItemProps<T> & { key: string } = {
-        key: route.key,
-        position: position,
-        route: route,
-        navigationState: navigationState,
-        options: {
-          testID: getTestIdDefault({ route }),
-          labelText: getLabelTextDefault({ route }),
-          accessible: getAccessibleDefault({ route }),
-          accessibilityLabel: getAccessibilityLabelDefault({ route }),
-          ...commonOptions,
-          ...options?.[route.key],
-        },
-        activeColor: activeColor,
-        inactiveColor: inactiveColor,
-        pressColor: pressColor,
-        pressOpacity: pressOpacity,
-        onLayout: isWidthDynamic
-          ? (e: LayoutChangeEvent) => {
-              measuredTabWidths.current[route.key] = e.nativeEvent.layout.width;
+      const {
+        testID = getTestIdDefault({ route }),
+        labelText = getLabelTextDefault({ route }),
+        accessible = getAccessibleDefault({ route }),
+        accessibilityLabel = getAccessibilityLabelDefault({ route }),
+      } = {
+        ...commonOptions,
+        ...options?.[route.key],
+      };
 
-              // When we have measured widths for all of the tabs, we should updates the state
-              // We avoid doing separate setState for each layout since it triggers multiple renders and slows down app
-              // If we have more than 10 routes divide updating tabWidths into multiple batches. Here we update only first batch of 10 items.
-              if (
-                routes.length > MEASURE_PER_BATCH &&
-                index === MEASURE_PER_BATCH &&
-                routes
-                  .slice(0, MEASURE_PER_BATCH)
-                  .every(
-                    (r) => typeof measuredTabWidths.current[r.key] === 'number'
-                  )
-              ) {
-                setTabWidths({ ...measuredTabWidths.current });
-              } else if (
-                routes.every(
+      const onLayout = isWidthDynamic
+        ? (e: LayoutChangeEvent) => {
+            measuredTabWidths.current[route.key] = e.nativeEvent.layout.width;
+
+            // When we have measured widths for all of the tabs, we should updates the state
+            // We avoid doing separate setState for each layout since it triggers multiple renders and slows down app
+            // If we have more than 10 routes divide updating tabWidths into multiple batches. Here we update only first batch of 10 items.
+            if (
+              routes.length > MEASURE_PER_BATCH &&
+              index === MEASURE_PER_BATCH &&
+              routes
+                .slice(0, MEASURE_PER_BATCH)
+                .every(
                   (r) => typeof measuredTabWidths.current[r.key] === 'number'
                 )
-              ) {
-                // When we have measured widths for all of the tabs, we should updates the state
-                // We avoid doing separate setState for each layout since it triggers multiple renders and slows down app
-                setTabWidths({ ...measuredTabWidths.current });
-              }
+            ) {
+              setTabWidths({ ...measuredTabWidths.current });
+            } else if (
+              routes.every(
+                (r) => typeof measuredTabWidths.current[r.key] === 'number'
+              )
+            ) {
+              // When we have measured widths for all of the tabs, we should updates the state
+              // We avoid doing separate setState for each layout since it triggers multiple renders and slows down app
+              setTabWidths({ ...measuredTabWidths.current });
             }
-          : undefined,
-        onPress: () => {
-          const event: Scene<T> & Event = {
-            route,
-            defaultPrevented: false,
-            preventDefault: () => {
-              event.defaultPrevented = true;
-            },
-          };
-
-          onTabPress?.(event);
-
-          if (event.defaultPrevented) {
-            return;
           }
+        : undefined;
 
-          jumpTo(route.key);
-        },
-        onLongPress: () => onTabLongPress?.({ route }),
-        labelStyle: labelStyle,
-        style: tabStyle,
-        // Calculate the deafult width for tab for FlatList to work
-        defaultTabWidth: !isWidthDynamic
-          ? getComputedTabWidth(
-              index,
-              layout,
-              routes,
-              scrollEnabled,
-              tabWidths,
-              getFlattenedTabWidth(tabStyle),
-              getFlattenedPaddingRight(contentContainerStyle),
-              getFlattenedPaddingLeft(contentContainerStyle),
-              gap
-            )
-          : undefined,
-        android_ripple,
+      const onPress = () => {
+        const event: Scene<T> & Event = {
+          route,
+          defaultPrevented: false,
+          preventDefault: () => {
+            event.defaultPrevented = true;
+          },
+        };
+
+        onTabPress?.(event);
+
+        if (event.defaultPrevented) {
+          return;
+        }
+
+        jumpTo(route.key);
       };
+
+      const onLongPress = () => onTabLongPress?.({ route });
+
+      // Calculate the default width for tab for FlatList to work
+      const defaultTabWidth = !isWidthDynamic
+        ? getComputedTabWidth(
+            index,
+            layout,
+            routes,
+            scrollEnabled,
+            tabWidths,
+            getFlattenedTabWidth(tabStyle),
+            getFlattenedPaddingRight(contentContainerStyle),
+            getFlattenedPaddingLeft(contentContainerStyle),
+            gap
+          )
+        : undefined;
+
+      const props = {
+        key: route.key,
+        position,
+        route,
+        navigationState,
+        testID,
+        labelText,
+        accessible,
+        accessibilityLabel,
+        activeColor,
+        inactiveColor,
+        pressColor,
+        pressOpacity,
+        onLayout,
+        onPress,
+        onLongPress,
+        labelStyle,
+        style: tabStyle,
+        defaultTabWidth,
+        android_ripple,
+      } satisfies TabBarItemProps<T> & { key: string };
 
       return (
         <>
