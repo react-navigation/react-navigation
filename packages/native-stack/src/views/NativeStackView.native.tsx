@@ -42,6 +42,7 @@ import type {
   NativeStackNavigationHelpers,
   NativeStackNavigationOptions,
 } from '../types';
+import { getModalRouteKeys } from '../utils/getModalRoutesKeys';
 import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
 import { useDismissedRouteError } from '../utils/useDismissedRouteError';
 import { useInvalidPreventRemoveError } from '../utils/useInvalidPreventRemoveError';
@@ -132,7 +133,7 @@ type SceneViewProps = {
   descriptor: NativeStackDescriptor;
   previousDescriptor?: NativeStackDescriptor;
   nextDescriptor?: NativeStackDescriptor;
-  isForsedModalStack?: boolean;
+  isPresentationModal?: boolean;
   onWillDisappear: () => void;
   onWillAppear: () => void;
   onAppear: () => void;
@@ -149,7 +150,7 @@ const SceneView = ({
   descriptor,
   previousDescriptor,
   nextDescriptor,
-  isForsedModalStack,
+  isPresentationModal,
   onWillDisappear,
   onWillAppear,
   onAppear,
@@ -164,7 +165,7 @@ const SceneView = ({
   let {
     animation,
     animationMatchesGesture,
-    presentation = isForsedModalStack ? 'modal' : 'card',
+    presentation = isPresentationModal ? 'modal' : 'card',
     fullScreenGestureEnabled,
   } = options;
 
@@ -451,10 +452,6 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
 
   useInvalidPreventRemoveError(descriptors);
 
-  // if the is a one screen with modal 'presentation'
-  // then all next screens also should be with the same presentation
-  let isForsedModalStack = false;
-
   return (
     <SafeAreaProviderCompat style={{ backgroundColor: colors.background }}>
       <ScreenStack style={styles.container}>
@@ -467,12 +464,9 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
             ? descriptors[previousKey]
             : undefined;
           const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
-          if (
-            !descriptor.options.presentation &&
-            previousDescriptor?.options.presentation === 'modal'
-          ) {
-            isForsedModalStack = true;
-          }
+          const isModal = getModalRouteKeys(state.routes, descriptors).includes(
+            route.key
+          );
 
           return (
             <SceneView
@@ -482,7 +476,7 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
               descriptor={descriptor}
               previousDescriptor={previousDescriptor}
               nextDescriptor={nextDescriptor}
-              isForsedModalStack={isForsedModalStack}
+              isPresentationModal={isModal}
               onWillDisappear={() => {
                 navigation.emit({
                   type: 'transitionStart',

@@ -38,6 +38,7 @@ import type {
 } from '../../types';
 import { findLastIndex } from '../../utils/findLastIndex';
 import { getDistanceForDirection } from '../../utils/getDistanceForDirection';
+import { getModalRouteKeys } from '../../utils/getModalRoutesKeys';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import { MaybeScreen, MaybeScreenContainer } from '../Screens';
 import { CardContainer } from './CardContainer';
@@ -255,10 +256,6 @@ export class CardStack extends React.Component<Props, State> {
       return acc;
     }, {});
 
-    // if the is a one screen with modal 'presentation'
-    // then all next screens also should be with the same presentation
-    let isForcedModalStack = false;
-
     const scenes = [...props.routes, ...props.state.preloadedRoutes].map(
       (route, index, self) => {
         // For preloaded screens, we don't care about the previous and the next screen
@@ -304,16 +301,15 @@ export class CardStack extends React.Component<Props, State> {
             ? nextDescriptor.options
             : descriptor.options;
 
-        if (
-          previousDescriptor?.options.presentation === 'modal' ||
-          descriptor?.options.presentation === 'modal'
-        ) {
-          isForcedModalStack = true;
-        }
+        // Assume modal if there are already modal screens in the stack
+        // or current screen is a modal when no presentation is specified
+        const isModal = getModalRouteKeys(
+          props.routes,
+          props.descriptors
+        ).includes(route.key);
 
         const defaultTransitionPreset =
-          isForcedModalStack ||
-          optionsForTransitionConfig.presentation === 'modal'
+          isModal || optionsForTransitionConfig.presentation === 'modal'
             ? ModalTransition
             : optionsForTransitionConfig.presentation === 'transparentModal'
               ? ModalFadeTransition
