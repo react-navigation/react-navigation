@@ -106,7 +106,7 @@ export function PanResponderAdapter<T extends Route>({
         pendingIndexRef.current = undefined;
       }
     },
-    [animationEnabled, panX]
+    [animationEnabled, panX, useNativeDriver]
   );
 
   React.useEffect(() => {
