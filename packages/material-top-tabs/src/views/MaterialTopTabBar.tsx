@@ -1,17 +1,43 @@
 import { Text } from '@react-navigation/elements';
 import {
   type ParamListBase,
-  type Route,
   type TabNavigationState,
   useLocale,
   useTheme,
 } from '@react-navigation/native';
 import Color from 'color';
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { type StyleProp, StyleSheet, type ViewStyle } from 'react-native';
 import { TabBar, TabBarIndicator } from 'react-native-tab-view';
 
 import type { MaterialTopTabBarProps } from '../types';
+
+type MaterialLabelType = {
+  color: string;
+  label?: string;
+  labelStyle?: StyleProp<ViewStyle>;
+  allowScaling?: boolean;
+};
+
+const MaterialLabel = ({
+  color,
+  label,
+  labelStyle,
+  allowScaling,
+}: MaterialLabelType) => {
+  return (
+    <Text
+      style={[{ color }, styles.label, labelStyle]}
+      allowFontScaling={allowScaling}
+    >
+      {label}
+    </Text>
+  );
+};
+
+const renderLabel = (props: MaterialLabelType) => {
+  return <MaterialLabel {...props} />;
+};
 
 export function MaterialTopTabBar({
   state,
@@ -19,7 +45,7 @@ export function MaterialTopTabBar({
   descriptors,
   ...rest
 }: MaterialTopTabBarProps) {
-  const { colors, fonts } = useTheme();
+  const { colors } = useTheme();
   const { direction } = useLocale();
 
   const focusedOptions = descriptors[state.routes[state.index].key].options;
@@ -29,10 +55,37 @@ export function MaterialTopTabBar({
     focusedOptions.tabBarInactiveTintColor ??
     Color(activeColor).alpha(0.5).rgb().string();
 
+  const tabBarOptions = Object.fromEntries(
+    state.routes.map((route) => {
+      const { options } = descriptors[route.key];
+
+      return [
+        route.key,
+        {
+          testID: options.tabBarButtonTestID,
+          accessibilityLabel: options.tabBarAccessibilityLabel,
+          badge: options.tabBarBadge,
+          icon:
+            options.tabBarShowIcon === false ? undefined : options.tabBarIcon,
+          label: options.tabBarShowLabel === false ? undefined : renderLabel,
+          labelAllowFontScaling: options.tabBarAllowFontScaling,
+          labelStyle: options.tabBarLabelStyle,
+          labelText:
+            options.tabBarShowLabel === false
+              ? undefined
+              : options.title !== undefined
+                ? options.title
+                : route.name,
+        },
+      ];
+    })
+  );
+
   return (
     <TabBar
       {...rest}
       navigationState={state}
+      options={tabBarOptions}
       direction={direction}
       scrollEnabled={focusedOptions.tabBarScrollEnabled}
       bounces={focusedOptions.tabBarBounces}
@@ -50,12 +103,6 @@ export function MaterialTopTabBar({
       indicatorContainerStyle={focusedOptions.tabBarIndicatorContainerStyle}
       contentContainerStyle={focusedOptions.tabBarContentContainerStyle}
       style={[{ backgroundColor: colors.card }, focusedOptions.tabBarStyle]}
-      getAccessibilityLabel={({ route }) =>
-        descriptors[route.key].options.tabBarAccessibilityLabel
-      }
-      getTestID={({ route }) =>
-        descriptors[route.key].options.tabBarButtonTestID
-      }
       onTabPress={({ route, preventDefault }) => {
         const event = navigation.emit({
           type: 'tabPress',
@@ -73,67 +120,6 @@ export function MaterialTopTabBar({
           target: route.key,
         })
       }
-      renderIcon={({ route, focused, color }) => {
-        const { options } = descriptors[route.key];
-
-        if (options.tabBarShowIcon === false) {
-          return null;
-        }
-
-        if (options.tabBarIcon !== undefined) {
-          const icon = options.tabBarIcon({ focused, color });
-
-          return (
-            <View style={[styles.icon, options.tabBarIconStyle]}>{icon}</View>
-          );
-        }
-
-        return null;
-      }}
-      renderLabel={({ route, focused, color }) => {
-        const { options } = descriptors[route.key];
-
-        if (options.tabBarShowLabel === false) {
-          return null;
-        }
-
-        const label =
-          options.tabBarLabel !== undefined
-            ? options.tabBarLabel
-            : options.title !== undefined
-              ? options.title
-              : (route as Route<string>).name;
-
-        if (typeof label === 'string') {
-          return (
-            <Text
-              style={[
-                { color },
-                fonts.medium,
-                styles.label,
-                options.tabBarLabelStyle,
-              ]}
-              allowFontScaling={options.tabBarAllowFontScaling}
-            >
-              {label}
-            </Text>
-          );
-        }
-
-        const children =
-          typeof options.tabBarLabel === 'string'
-            ? options.tabBarLabel
-            : options.title !== undefined
-              ? options.title
-              : route.name;
-
-        return label({ focused, color, children });
-      }}
-      renderBadge={({ route }) => {
-        const { tabBarBadge } = descriptors[route.key].options;
-
-        return tabBarBadge?.() ?? null;
-      }}
       renderIndicator={({ navigationState: state, ...rest }) => {
         return focusedOptions.tabBarIndicator ? (
           focusedOptions.tabBarIndicator({
@@ -149,10 +135,6 @@ export function MaterialTopTabBar({
 }
 
 const styles = StyleSheet.create({
-  icon: {
-    height: 24,
-    width: 24,
-  },
   label: {
     textAlign: 'center',
     fontSize: 14,
