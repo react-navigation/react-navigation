@@ -303,10 +303,10 @@ export class CardStack extends React.Component<Props, State> {
 
         // Assume modal if there are already modal screens in the stack
         // or current screen is a modal when no presentation is specified
-        const isModal = getModalRouteKeys(
-          props.routes,
-          props.descriptors
-        ).includes(route.key);
+        const isModal = getModalRouteKeys(props.routes, props.descriptors, [
+          'modal',
+          'transparentModal',
+        ]).includes(route.key);
 
         const defaultTransitionPreset =
           isModal || optionsForTransitionConfig.presentation === 'modal'

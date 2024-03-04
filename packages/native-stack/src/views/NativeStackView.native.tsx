@@ -464,9 +464,10 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
             ? descriptors[previousKey]
             : undefined;
           const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
-          const isModal = getModalRouteKeys(state.routes, descriptors).includes(
-            route.key
-          );
+          const isModal = getModalRouteKeys(state.routes, descriptors, [
+            'modal',
+            'transparentModal',
+          ]).includes(route.key);
 
           return (
             <SceneView
