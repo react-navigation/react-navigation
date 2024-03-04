@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.5...react-native-tab-view@4.0.0-alpha.6) (2024-03-04)
+
+### Bug Fixes
+
+* update drawer and material tab bar to match latest md guidelines ([#11864](https://github.com/react-navigation/react-navigation/issues/11864)) ([8726597](https://github.com/react-navigation/react-navigation/commit/872659710dec1b097ec7c7b1dd59a6174e021b30)) - by @groot007
+
 # [4.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.4...react-native-tab-view@4.0.0-alpha.5) (2024-02-24)
 
 ### Bug Fixes
