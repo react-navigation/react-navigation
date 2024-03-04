@@ -42,7 +42,6 @@ import type {
   StackDescriptor,
   StackDescriptorMap,
   StackHeaderMode,
-  StackNavigationOptions,
   TransitionPreset,
 } from '../../types';
 import { findLastIndex } from '../../utils/findLastIndex';
@@ -202,12 +201,22 @@ const getDistanceFromOptions = (
   descriptor: StackDescriptor | undefined,
   isRTL: boolean
 ) => {
-  const {
-    presentation,
-    gestureDirection = presentation === 'modal'
+  if (descriptor?.options.gestureDirection) {
+    return getDistanceForDirection(
+      layout,
+      descriptor?.options.gestureDirection,
+      isRTL
+    );
+  }
+
+  const defaultGestureDirection =
+    descriptor?.options.presentation === 'modal'
       ? ModalTransition.gestureDirection
-      : DefaultTransition.gestureDirection,
-  } = (descriptor?.options || {}) as StackNavigationOptions;
+      : DefaultTransition.gestureDirection;
+
+  const gestureDirection = descriptor?.options.animation
+    ? NAMED_TRANSITIONS_PRESETS[descriptor?.options.animation]?.gestureDirection
+    : defaultGestureDirection;
 
   return getDistanceForDirection(layout, gestureDirection, isRTL);
 };
