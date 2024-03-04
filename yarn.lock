@@ -4076,7 +4076,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/bottom-tabs@workspace:packages/bottom-tabs"
   dependencies:
-    "@react-navigation/elements": "npm:^2.0.0-alpha.5"
+    "@react-navigation/elements": "npm:^2.0.0-alpha.9"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
     "@types/color": "npm:^3.0.6"
@@ -4091,10 +4091,10 @@ __metadata:
     typescript: "npm:^5.3.3"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
-    react: "*"
-    react-native: 0.73.2
-    react-native-safe-area-context: 4.8.2
-    react-native-screens: ~3.29.0
+    react: ">= 18.2.0"
+    react-native: ">= 0.72.0"
+    react-native-safe-area-context: ">= 4.0.0"
+    react-native-screens: ">= 3.0.0"
   languageName: unknown
   linkType: soft
 
@@ -4102,7 +4102,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/core@workspace:packages/core"
   dependencies:
-    "@react-navigation/routers": "npm:^7.0.0-alpha.5"
+    "@react-navigation/routers": "npm:^7.0.0-alpha.6"
     "@testing-library/react-native": "npm:^12.4.3"
     "@types/react": "npm:~18.2.45"
     "@types/react-is": "npm:^18.2.3"
@@ -4138,7 +4138,7 @@ __metadata:
     stacktrace-parser: "npm:^0.1.10"
     typescript: "npm:^5.3.3"
   peerDependencies:
-    react: "*"
+    react: ">= 18.2.0"
   languageName: unknown
   linkType: soft
 
@@ -4146,7 +4146,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/drawer@workspace:packages/drawer"
   dependencies:
-    "@react-navigation/elements": "npm:^2.0.0-alpha.5"
+    "@react-navigation/elements": "npm:^2.0.0-alpha.9"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
     "@types/react": "npm:~18.2.45"
@@ -4164,16 +4164,16 @@ __metadata:
     use-latest-callback: "npm:^0.1.9"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
-    react: "*"
-    react-native: 0.73.2
-    react-native-gesture-handler: ~2.14.0
-    react-native-reanimated: ~3.6.0
-    react-native-safe-area-context: 4.8.2
-    react-native-screens: ~3.29.0
+    react: ">= 18.2.0"
+    react-native: ">= 0.72.0"
+    react-native-gesture-handler: ">= 2.0.0"
+    react-native-reanimated: ">= 2.0.0"
+    react-native-safe-area-context: ">= 4.0.0"
+    react-native-screens: ">= 3.0.0"
   languageName: unknown
   linkType: soft
 
-"@react-navigation/elements@npm:^2.0.0-alpha.5, @react-navigation/elements@workspace:packages/elements":
+"@react-navigation/elements@npm:^2.0.0-alpha.9, @react-navigation/elements@workspace:packages/elements":
   version: 0.0.0-use.local
   resolution: "@react-navigation/elements@workspace:packages/elements"
   dependencies:
@@ -4189,9 +4189,9 @@ __metadata:
     typescript: "npm:^5.3.3"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
-    react: "*"
-    react-native: 0.73.2
-    react-native-safe-area-context: 4.8.2
+    react: ">= 18.2.0"
+    react-native: ">= 0.72.0"
+    react-native-safe-area-context: ">= 4.0.0"
   languageName: unknown
   linkType: soft
 
@@ -4253,7 +4253,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/material-top-tabs@workspace:packages/material-top-tabs"
   dependencies:
-    "@react-navigation/elements": "npm:^2.0.0-alpha.5"
+    "@react-navigation/elements": "npm:^2.0.0-alpha.9"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
     "@types/react": "npm:~18.2.45"
@@ -4263,13 +4263,13 @@ __metadata:
     react-native: "npm:0.73.2"
     react-native-builder-bob: "npm:^0.23.2"
     react-native-pager-view: "npm:6.2.3"
-    react-native-tab-view: "npm:^4.0.0-alpha.3"
+    react-native-tab-view: "npm:^4.0.0-alpha.6"
     typescript: "npm:^5.3.3"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
-    react: "*"
-    react-native: 0.73.2
-    react-native-pager-view: 6.2.3
+    react: ">= 18.2.0"
+    react-native: ">= 0.72.0"
+    react-native-pager-view: ">= 6.0.0"
   languageName: unknown
   linkType: soft
 
@@ -4277,7 +4277,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/native-stack@workspace:packages/native-stack"
   dependencies:
-    "@react-navigation/elements": "npm:^2.0.0-alpha.5"
+    "@react-navigation/elements": "npm:^2.0.0-alpha.9"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
     "@types/react": "npm:~18.2.45"
@@ -4290,10 +4290,10 @@ __metadata:
     warn-once: "npm:^0.1.1"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
-    react: "*"
-    react-native: 0.73.2
-    react-native-safe-area-context: 4.8.2
-    react-native-screens: ~3.29.0
+    react: ">= 18.2.0"
+    react-native: ">= 0.72.0"
+    react-native-safe-area-context: ">= 4.0.0"
+    react-native-screens: ">= 3.0.0"
   languageName: unknown
   linkType: soft
 
@@ -4316,12 +4316,12 @@ __metadata:
     typescript: "npm:^5.3.3"
     use-latest-callback: "npm:^0.1.9"
   peerDependencies:
-    react: "*"
-    react-native: 0.73.2
+    react: ">= 18.2.0"
+    react-native: ">= 0.72.0"
   languageName: unknown
   linkType: soft
 
-"@react-navigation/routers@npm:^7.0.0-alpha.5, @react-navigation/routers@workspace:packages/routers":
+"@react-navigation/routers@npm:^7.0.0-alpha.6, @react-navigation/routers@workspace:packages/routers":
   version: 0.0.0-use.local
   resolution: "@react-navigation/routers@workspace:packages/routers"
   dependencies:
@@ -4336,7 +4336,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/stack@workspace:packages/stack"
   dependencies:
-    "@react-navigation/elements": "npm:^2.0.0-alpha.5"
+    "@react-navigation/elements": "npm:^2.0.0-alpha.9"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
     "@types/color": "npm:^3.0.6"
@@ -4352,11 +4352,11 @@ __metadata:
     typescript: "npm:^5.3.3"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
-    react: "*"
-    react-native: 0.73.2
-    react-native-gesture-handler: ~2.14.0
-    react-native-safe-area-context: 4.8.2
-    react-native-screens: ~3.29.0
+    react: ">= 18.2.0"
+    react-native: ">= 0.72.0"
+    react-native-gesture-handler: ">= 2.0.0"
+    react-native-safe-area-context: ">= 4.0.0"
+    react-native-screens: ">= 3.0.0"
   languageName: unknown
   linkType: soft
 
@@ -16956,10 +16956,10 @@ __metadata:
     typescript: "npm:^5.3.3"
     use-latest-callback: "npm:^0.1.9"
   peerDependencies:
-    react: "*"
-    react-native: 0.73.2
-    react-native-gesture-handler: ~2.14.0
-    react-native-reanimated: ~3.6.0
+    react: ">= 18.2.0"
+    react-native: ">= 0.72.0"
+    react-native-gesture-handler: ">= 2.0.0"
+    react-native-reanimated: ">= 2.0.0"
   languageName: unknown
   linkType: soft
 
@@ -17033,7 +17033,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-tab-view@npm:^4.0.0-alpha.3, react-native-tab-view@workspace:packages/react-native-tab-view":
+"react-native-tab-view@npm:^4.0.0-alpha.6, react-native-tab-view@workspace:packages/react-native-tab-view":
   version: 0.0.0-use.local
   resolution: "react-native-tab-view@workspace:packages/react-native-tab-view"
   dependencies:
@@ -17045,9 +17045,9 @@ __metadata:
     typescript: "npm:^5.3.3"
     use-latest-callback: "npm:^0.1.9"
   peerDependencies:
-    react: "*"
-    react-native: 0.73.2
-    react-native-pager-view: 6.2.3
+    react: ">= 18.2.0"
+    react-native: ">= 0.72.0"
+    react-native-pager-view: ">= 6.0.0"
   languageName: unknown
   linkType: soft
 

@@ -1,6 +1,7 @@
 import {
   createComponentForStaticNavigation,
   createPathConfigForStaticNavigation,
+  type NavigationContainerRef,
   type ParamListBase,
   type StaticNavigation,
 } from '@react-navigation/core';
@@ -34,14 +35,20 @@ export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
       : {},
   };
 
-  return function Navigation({ linking, ...rest }: Props) {
+  function Navigation(
+    { linking, ...rest }: Props,
+    ref: React.Ref<NavigationContainerRef<ParamListBase>>
+  ) {
     return (
       <NavigationContainer
         {...rest}
+        ref={ref}
         linking={linking ? { ...linking, config: linkingConfig } : undefined}
       >
         <Component />
       </NavigationContainer>
     );
-  };
+  }
+
+  return React.forwardRef(Navigation);
 }

@@ -50,7 +50,6 @@ export function MaterialTopTabBar({
   ...rest
 }: MaterialTopTabBarProps) {
   const { colors } = useTheme();
-
   const { direction } = useLocale();
 
   const focusedOptions = descriptors[state.routes[state.index].key].options;
@@ -137,8 +136,7 @@ export function MaterialTopTabBar({
 const styles = StyleSheet.create({
   label: {
     textAlign: 'center',
-    textTransform: 'uppercase',
-    fontSize: 13,
+    fontSize: 14,
     margin: 4,
     backgroundColor: 'transparent',
   },

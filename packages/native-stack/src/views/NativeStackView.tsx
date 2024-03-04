@@ -10,6 +10,7 @@ import {
   type ParamListBase,
   type StackNavigationState,
   useLinkBuilder,
+  useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
@@ -35,6 +36,7 @@ const TRANSPARENT_PRESENTATIONS = [
 export function NativeStackView({ state, descriptors }: Props) {
   const parentHeaderBack = React.useContext(HeaderBackContext);
   const { buildHref } = useLinkBuilder();
+  const { colors } = useTheme();
 
   if (state.preloadedRoutes.length !== 0) {
     throw new Error(
@@ -43,160 +45,154 @@ export function NativeStackView({ state, descriptors }: Props) {
   }
 
   return (
-    <SafeAreaProviderCompat>
-      <View style={styles.container}>
-        {state.routes.map((route, i) => {
-          const isFocused = state.index === i;
-          const previousKey = state.routes[i - 1]?.key;
-          const nextKey = state.routes[i + 1]?.key;
-          const previousDescriptor = previousKey
-            ? descriptors[previousKey]
-            : undefined;
-          const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
-          const { options, navigation, render } = descriptors[route.key];
+    <SafeAreaProviderCompat style={{ backgroundColor: colors.background }}>
+      {state.routes.map((route, i) => {
+        const isFocused = state.index === i;
+        const previousKey = state.routes[i - 1]?.key;
+        const nextKey = state.routes[i + 1]?.key;
+        const previousDescriptor = previousKey
+          ? descriptors[previousKey]
+          : undefined;
+        const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
+        const { options, navigation, render } = descriptors[route.key];
 
-          const headerBack = previousDescriptor
-            ? {
-                title: getHeaderTitle(
-                  previousDescriptor.options,
-                  previousDescriptor.route.name
-                ),
-                href: buildHref(
-                  previousDescriptor.route.name,
-                  previousDescriptor.route.params
-                ),
-              }
-            : parentHeaderBack;
+        const headerBack = previousDescriptor
+          ? {
+              title: getHeaderTitle(
+                previousDescriptor.options,
+                previousDescriptor.route.name
+              ),
+              href: buildHref(
+                previousDescriptor.route.name,
+                previousDescriptor.route.params
+              ),
+            }
+          : parentHeaderBack;
 
-          const canGoBack = headerBack !== undefined;
+        const canGoBack = headerBack !== undefined;
 
-          const {
-            header,
-            headerShown,
-            headerTintColor,
-            headerBackImageSource,
-            headerLeft,
-            headerRight,
-            headerTitle,
-            headerTitleAlign,
-            headerTitleStyle,
-            headerStyle,
-            headerShadowVisible,
-            headerTransparent,
-            headerBackground,
-            headerBackTitle,
-            presentation,
-            contentStyle,
-          } = options;
+        const {
+          header,
+          headerShown,
+          headerTintColor,
+          headerBackImageSource,
+          headerLeft,
+          headerRight,
+          headerTitle,
+          headerTitleAlign,
+          headerTitleStyle,
+          headerStyle,
+          headerShadowVisible,
+          headerTransparent,
+          headerBackground,
+          headerBackTitle,
+          presentation,
+          contentStyle,
+        } = options;
 
-          const nextPresentation = nextDescriptor?.options.presentation;
+        const nextPresentation = nextDescriptor?.options.presentation;
 
-          return (
-            <Screen
-              key={route.key}
-              focused={isFocused}
-              route={route}
-              navigation={navigation}
-              headerShown={headerShown}
-              headerTransparent={headerTransparent}
-              header={
-                header !== undefined ? (
-                  header({
-                    back: headerBack,
-                    options,
-                    route,
-                    navigation,
-                  })
-                ) : (
-                  <Header
-                    title={getHeaderTitle(options, route.name)}
-                    headerTintColor={headerTintColor}
-                    headerLeft={
-                      typeof headerLeft === 'function'
-                        ? ({ tintColor }) =>
-                            headerLeft({
-                              tintColor,
-                              canGoBack,
-                              label: headerBackTitle,
-                            })
-                        : headerLeft === undefined && canGoBack
-                          ? ({ tintColor }) => (
-                              <HeaderBackButton
-                                tintColor={tintColor}
-                                backImage={
-                                  headerBackImageSource !== undefined
-                                    ? () => (
-                                        <Image
-                                          source={headerBackImageSource}
-                                          resizeMode="contain"
-                                          style={[
-                                            styles.backImage,
-                                            { tintColor },
-                                          ]}
-                                        />
-                                      )
-                                    : undefined
-                                }
-                                onPress={navigation.goBack}
-                                href={headerBack.href}
-                              />
-                            )
-                          : headerLeft
-                    }
-                    headerRight={
-                      typeof headerRight === 'function'
-                        ? ({ tintColor }) =>
-                            headerRight({ tintColor, canGoBack })
-                        : headerRight
-                    }
-                    headerTitle={
-                      typeof headerTitle === 'function'
-                        ? ({ children, tintColor }) =>
-                            headerTitle({ children, tintColor })
-                        : headerTitle
-                    }
-                    headerTitleAlign={headerTitleAlign}
-                    headerTitleStyle={headerTitleStyle}
-                    headerTransparent={headerTransparent}
-                    headerShadowVisible={headerShadowVisible}
-                    headerBackground={headerBackground}
-                    headerStyle={headerStyle}
-                  />
-                )
-              }
-              style={[
-                StyleSheet.absoluteFill,
-                {
-                  display:
-                    isFocused ||
-                    (nextPresentation != null &&
-                      TRANSPARENT_PRESENTATIONS.includes(nextPresentation))
-                      ? 'flex'
-                      : 'none',
-                },
-                presentation != null &&
-                TRANSPARENT_PRESENTATIONS.includes(presentation)
-                  ? { backgroundColor: 'transparent' }
-                  : null,
-              ]}
-            >
-              <HeaderBackContext.Provider value={headerBack}>
-                <View style={[styles.contentContainer, contentStyle]}>
-                  {render()}
-                </View>
-              </HeaderBackContext.Provider>
-            </Screen>
-          );
-        })}
-      </View>
+        return (
+          <Screen
+            key={route.key}
+            focused={isFocused}
+            route={route}
+            navigation={navigation}
+            headerShown={headerShown}
+            headerTransparent={headerTransparent}
+            header={
+              header !== undefined ? (
+                header({
+                  back: headerBack,
+                  options,
+                  route,
+                  navigation,
+                })
+              ) : (
+                <Header
+                  title={getHeaderTitle(options, route.name)}
+                  headerTintColor={headerTintColor}
+                  headerLeft={
+                    typeof headerLeft === 'function'
+                      ? ({ tintColor }) =>
+                          headerLeft({
+                            tintColor,
+                            canGoBack,
+                            label: headerBackTitle,
+                          })
+                      : headerLeft === undefined && canGoBack
+                        ? ({ tintColor }) => (
+                            <HeaderBackButton
+                              tintColor={tintColor}
+                              backImage={
+                                headerBackImageSource !== undefined
+                                  ? () => (
+                                      <Image
+                                        source={headerBackImageSource}
+                                        resizeMode="contain"
+                                        style={[
+                                          styles.backImage,
+                                          { tintColor },
+                                        ]}
+                                      />
+                                    )
+                                  : undefined
+                              }
+                              onPress={navigation.goBack}
+                              href={headerBack.href}
+                            />
+                          )
+                        : headerLeft
+                  }
+                  headerRight={
+                    typeof headerRight === 'function'
+                      ? ({ tintColor }) => headerRight({ tintColor, canGoBack })
+                      : headerRight
+                  }
+                  headerTitle={
+                    typeof headerTitle === 'function'
+                      ? ({ children, tintColor }) =>
+                          headerTitle({ children, tintColor })
+                      : headerTitle
+                  }
+                  headerTitleAlign={headerTitleAlign}
+                  headerTitleStyle={headerTitleStyle}
+                  headerTransparent={headerTransparent}
+                  headerShadowVisible={headerShadowVisible}
+                  headerBackground={headerBackground}
+                  headerStyle={headerStyle}
+                />
+              )
+            }
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                display:
+                  isFocused ||
+                  (nextPresentation != null &&
+                    TRANSPARENT_PRESENTATIONS.includes(nextPresentation))
+                    ? 'flex'
+                    : 'none',
+              },
+              presentation != null &&
+              TRANSPARENT_PRESENTATIONS.includes(presentation)
+                ? { backgroundColor: 'transparent' }
+                : null,
+            ]}
+          >
+            <HeaderBackContext.Provider value={headerBack}>
+              <View style={[styles.contentContainer, contentStyle]}>
+                {render()}
+              </View>
+            </HeaderBackContext.Provider>
+          </Screen>
+        );
+      })}
     </SafeAreaProviderCompat>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   contentContainer: {
     flex: 1,
   },

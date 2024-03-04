@@ -775,6 +775,14 @@ export type NavigationContainerRef<ParamList extends {}> =
        * Whether the navigation container is ready to handle actions.
        */
       isReady(): boolean;
+      /**
+       * Stub function for setOptions on navigation object for use with useNavigation.
+       */
+      setOptions(): never;
+      /**
+       * Stub function for getParent on navigation object for use with useNavigation.
+       */
+      getParent(): undefined;
     };
 
 export type NavigationContainerRefWithCurrent<ParamList extends {}> =
