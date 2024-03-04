@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.9...@react-navigation/core@7.0.0-alpha.10) (2024-03-04)
+
+### Bug Fixes
+
+* don't throw on setParams on ref ([b99d3c3](https://github.com/react-navigation/react-navigation/commit/b99d3c3a94d7f4efe7fb0309d7a41654c21406ea)) - by @satya164
+
 # [7.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.8...@react-navigation/core@7.0.0-alpha.9) (2024-02-23)
 
 ### Bug Fixes
