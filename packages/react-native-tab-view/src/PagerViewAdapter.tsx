@@ -46,8 +46,6 @@ export function PagerViewAdapter<T extends Route>({
   useNativeDriver = true,
   ...rest
 }: Props<T>) {
-  console.log('Pager VAdapter Mounted', useNativeDriver);
-
   const { index } = navigationState;
 
   const listenersRef = React.useRef<Listener[]>([]);
