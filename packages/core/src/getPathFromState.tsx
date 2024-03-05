@@ -5,6 +5,7 @@ import type {
 } from '@react-navigation/routers';
 import * as queryString from 'query-string';
 
+import { encodeParams } from '../utils/encodeParams';
 import type { PathConfig, PathConfigMap } from './types';
 import { validatePathConfig } from './validatePathConfig';
 
@@ -196,7 +197,7 @@ export function getPathFromState<ParamList extends {}>(
               return '';
             }
 
-            return encodeURIComponent(value);
+            return encodeParams(value);
           }
 
           return encodeURIComponent(p);

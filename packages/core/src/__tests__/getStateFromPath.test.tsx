@@ -2605,3 +2605,38 @@ it('throws when invalid properties are specified in the config', () => {
     `"Found invalid path 'foo/:id'. The 'path' in the top-level configuration cannot contain patterns for params."`
   );
 });
+
+it('encoding params correctly', () => {
+  const path = 'users/mail/user_%23_email@gmail.com';
+  const config = {
+    path: 'users',
+    screens: {
+      Users: {
+        screens: {
+          Mail: 'mail/:email',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Users',
+        state: {
+          routes: [
+            {
+              name: 'Mail',
+              params: { email: 'user_#_email@gmail.com' },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toEqual(path);
+  expect(
+    getPathFromState<object>(getStateFromPath<object>(path, config)!, config)
+  ).toEqual(path);
+});

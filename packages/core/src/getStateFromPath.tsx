@@ -291,11 +291,14 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
         ?.split('/')
         .filter((p) => p.startsWith(':'))
         .reduce<Record<string, any>>(
-          (acc, p, i) =>
-            Object.assign(acc, {
+          (acc, p, i) => {
+            const decodedParamSegment = decodeURIComponent(match![(i + 1) * 2]);
+            return Object.assign(acc, {
               // The param segments appear every second item starting from 2 in the regex match result
-              [p]: match![(i + 1) * 2].replace(/\//, ''),
-            }),
+              [p]: decodedParamSegment.replace(/\//, ''),
+            });
+          },
+
           {}
         );
 
