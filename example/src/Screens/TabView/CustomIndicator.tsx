@@ -92,20 +92,18 @@ export const CustomIndicator = () => {
     );
   };
 
-  const renderIcon = ({ route }: { route: Route }) => (
-    <Ionicons name={route.icon} size={24} style={styles.icon} />
+  const renderBadge = React.useCallback(
+    () => (
+      <View style={styles.badge}>
+        <Text style={styles.count}>42</Text>
+      </View>
+    ),
+    []
   );
 
-  const renderBadge = ({ route }: { route: Route }) => {
-    if (route.key === 'albums') {
-      return (
-        <View style={styles.badge}>
-          <Text style={styles.count}>42</Text>
-        </View>
-      );
-    }
-    return null;
-  };
+  const renderIcon = React.useCallback((props: { route: Route }) => {
+    return <Ionicons name={props.route.icon} style={styles.icon} {...props} />;
+  }, []);
 
   const renderTabBar = (
     props: SceneRendererProps & { navigationState: State }
@@ -113,9 +111,15 @@ export const CustomIndicator = () => {
     <View style={[styles.tabbar, { paddingBottom: insets.bottom }]}>
       <TabBar
         {...props}
+        commonOptions={{
+          icon: renderIcon,
+        }}
+        options={{
+          albums: {
+            badge: renderBadge,
+          },
+        }}
         direction={direction}
-        renderIcon={renderIcon}
-        renderBadge={renderBadge}
         renderIndicator={renderIndicator}
         style={styles.tabbar}
         contentContainerStyle={styles.tabbarContentContainer}
