@@ -2606,14 +2606,23 @@ it('throws when invalid properties are specified in the config', () => {
   );
 });
 
+// Valid characters according to
+// https://datatracker.ietf.org/doc/html/rfc3986#section-3.3 (see pchar definition)
+// A–Z, a–z, 0–9, -, ., _, ~, !, $, &, ', (, ), *, +, ,, ;, =, :, @
+// User09-A_Z~!$&'()*+,;=:@__#?# - should encode only last ones #?#
+// query params after '?' should be encoded fully with encodeURIComponent
 it('encoding params correctly', () => {
-  const path = 'users/mail/user_%23_email@gmail.com';
+  const paramWithValidSymbols = `User09-A_Z~!$&'()*+,;=:@__`;
+  const invalidSymbols = '#?[]{}%<>||';
+  const queryString = 'user#email@gmail.com=2&4';
+
+  const path = `users/id/${paramWithValidSymbols}${encodeURIComponent(invalidSymbols)}?query=${encodeURIComponent(queryString)}`;
   const config = {
     path: 'users',
     screens: {
       Users: {
         screens: {
-          Mail: 'mail/:email',
+          User: 'id/:id',
         },
       },
     },
@@ -2626,8 +2635,11 @@ it('encoding params correctly', () => {
         state: {
           routes: [
             {
-              name: 'Mail',
-              params: { email: 'user_#_email@gmail.com' },
+              name: 'User',
+              params: {
+                id: `${paramWithValidSymbols}${invalidSymbols}`,
+                query: queryString,
+              },
             },
           ],
         },

@@ -5,7 +5,6 @@ import type {
 } from '@react-navigation/routers';
 import * as queryString from 'query-string';
 
-import { encodeParams } from '../utils/encodeParams';
 import type { PathConfig, PathConfigMap } from './types';
 import { validatePathConfig } from './validatePathConfig';
 
@@ -197,7 +196,12 @@ export function getPathFromState<ParamList extends {}>(
               return '';
             }
 
-            return encodeParams(value);
+            // Valid characters according to
+            // https://datatracker.ietf.org/doc/html/rfc3986#section-3.3 (see pchar definition)
+            return String(value).replace(
+              /[^A-Za-z0-9\-._~!$&'()*+,;=:@]/g,
+              (char) => encodeURIComponent(char)
+            );
           }
 
           return encodeURIComponent(p);
