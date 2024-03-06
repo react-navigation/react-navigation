@@ -268,6 +268,7 @@ export function Header(props: Props) {
                       (rightButton ? 72 : 16) +
                       insets.left -
                       insets.right),
+              marginLeft: headerTitleAlign === 'center' ? 16 : 4,
             },
             titleContainerStyle,
           ]}

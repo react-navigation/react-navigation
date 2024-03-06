@@ -21,6 +21,7 @@ import Animated, {
 import useLatestCallback from 'use-latest-callback';
 
 import {
+  DRAWER_BORDER_RADIUS,
   SWIPE_EDGE_WIDTH,
   SWIPE_MIN_DISTANCE,
   SWIPE_MIN_OFFSET,
@@ -188,6 +189,15 @@ export function Drawer({
       // This lets the user drag the drawer from the side of the screen
       { right: 0, width: isOpen ? undefined : swipeEdgeWidth }
     : { left: 0, width: isOpen ? undefined : swipeEdgeWidth };
+  const borderRadius = isRight
+    ? {
+        borderTopLeftRadius: DRAWER_BORDER_RADIUS,
+        borderBottomLeftRadius: DRAWER_BORDER_RADIUS,
+      }
+    : {
+        borderTopRightRadius: DRAWER_BORDER_RADIUS,
+        borderBottomRightRadius: DRAWER_BORDER_RADIUS,
+      };
 
   const touchStartX = useSharedValue(0);
   const touchX = useSharedValue(0);
@@ -445,6 +455,7 @@ export function Drawer({
                   position:
                     drawerType === 'permanent' ? 'relative' : 'absolute',
                   zIndex: drawerType === 'back' ? -1 : 0,
+                  ...borderRadius,
                 },
                 drawerAnimatedStyle,
                 drawerStyle,
