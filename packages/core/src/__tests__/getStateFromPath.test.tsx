@@ -48,7 +48,7 @@ it('converts path string to initial state', () => {
   );
 });
 
-it('decode path params correctly', () => {
+it('decodes encoded params in path', () => {
   const path = '/foo/bar/bar_%23_foo';
   const config = {
     screens: {
