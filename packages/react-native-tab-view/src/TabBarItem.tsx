@@ -104,6 +104,7 @@ const TabBarItemInternal = <T extends Route>({
   defaultTabWidth,
   icon: customIcon,
   badge: customBadge,
+  href,
   labelText,
   routesLength,
   android_ripple = { borderless: true },
@@ -223,6 +224,7 @@ const TabBarItemInternal = <T extends Route>({
       onLayout={onLayout}
       onPress={onPress}
       onLongPress={onLongPress}
+      href={href}
       style={[styles.pressable, tabContainerStyle]}
     >
       <View pointerEvents="none" style={[styles.item, tabStyle]}>

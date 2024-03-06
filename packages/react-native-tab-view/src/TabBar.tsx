@@ -448,6 +448,7 @@ export function TabBar<T extends Route>({
         labelText = getLabelTextDefault({ route }),
         accessible = getAccessibleDefault({ route }),
         accessibilityLabel = getAccessibilityLabelDefault({ route }),
+        href,
       } = {
         ...commonOptions,
         ...options?.[route.key],
@@ -518,6 +519,7 @@ export function TabBar<T extends Route>({
         : undefined;
 
       const props = {
+        href,
         key: route.key,
         position,
         route,
