@@ -296,12 +296,14 @@ export function useLinking(
             focusedRoute.name === route.name &&
             isEqual(focusedRoute.params, route.params)
           ) {
-            return route.path;
+            return route.path + location.hash;
           }
         }
       }
+      const path = getPathFromStateRef.current(state, configRef.current);
+      const isSameScreen = path.split('?')[0] === route?.path?.split('?')?.[0];
 
-      return getPathFromStateRef.current(state, configRef.current);
+      return isSameScreen ? path + location.hash : path;
     };
 
     if (ref.current) {
