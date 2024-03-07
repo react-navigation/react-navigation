@@ -2640,3 +2640,50 @@ it('throws when invalid properties are specified in the config', () => {
     `"Found invalid path 'foo/:id'. The 'path' in the top-level configuration cannot contain patterns for params."`
   );
 });
+
+// Valid characters according to
+// https://datatracker.ietf.org/doc/html/rfc3986#section-3.3 (see pchar definition)
+// A–Z, a–z, 0–9, -, ., _, ~, !, $, &, ', (, ), *, +, ,, ;, =, :, @
+// User09-A_Z~!$&'()*+,;=:@__#?# - should encode only last ones #?#
+// query params after '?' should be encoded fully with encodeURIComponent
+it('encoding params correctly', () => {
+  const paramWithValidSymbols = `User09-A_Z~!$&'()*+,;=:@__`;
+  const invalidSymbols = '#?[]{}%<>||';
+  const queryString = 'user#email@gmail.com=2&4';
+
+  const path = `users/id/${paramWithValidSymbols}${encodeURIComponent(invalidSymbols)}?query=${encodeURIComponent(queryString)}`;
+  const config = {
+    path: 'users',
+    screens: {
+      Users: {
+        screens: {
+          User: 'id/:id',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Users',
+        state: {
+          routes: [
+            {
+              name: 'User',
+              params: {
+                id: `${paramWithValidSymbols}${invalidSymbols}`,
+                query: queryString,
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toEqual(path);
+  expect(
+    getPathFromState<object>(getStateFromPath<object>(path, config)!, config)
+  ).toEqual(path);
+});
