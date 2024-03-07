@@ -2384,6 +2384,41 @@ it('uses nearest parent wildcard match for unmatched paths', () => {
   ).toEqual(changePath(state, '/404'));
 });
 
+it('matches screen with overlapping initial path and wildcard', () => {
+  const path = '/bar/42/baz/test/whatever';
+  const config = {
+    screens: {
+      Foo: {
+        screens: {
+          Bar: {
+            path: '/bar/:id/',
+            screens: {
+              Baz: 'baz',
+            },
+          },
+          Baz: '/bar/:id/*',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [{ name: 'Baz', params: { id: '42' }, path }],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/bar/42/Baz'));
+});
+
 it('throws if two screens map to the same pattern', () => {
   const path = '/bar/42/baz/test';
 

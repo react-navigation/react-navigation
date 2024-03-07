@@ -4,7 +4,8 @@
     { "path": "../core" },
     { "path": "../routers" },
     { "path": "../native" },
-    { "path": "../react-native-tab-view" }
+    { "path": "../react-native-tab-view" },
+    { "path": "../elements" }
   ],
   "compilerOptions": {
     "rootDir": ".",
