@@ -12,6 +12,10 @@ import * as React from 'react';
 import { Animated, Platform, StyleSheet } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
+import {
+  FadeTransition,
+  ShiftingTransition,
+} from '../TransitionConfigs/TransitionPresets';
 import type {
   BottomTabBarProps,
   BottomTabDescriptorMap,
@@ -38,14 +42,26 @@ const STATE_INACTIVE = 0;
 const STATE_TRANSITIONING_OR_BELOW_TOP = 1;
 const STATE_ON_TOP = 2;
 
-const hasAnimation = (options: BottomTabNavigationOptions) => {
-  const { animationEnabled, transitionSpec } = options;
+const NAMED_TRANSITIONS_PRESETS = {
+  fade: FadeTransition,
+  shifting: ShiftingTransition,
+  none: {
+    sceneStyleInterpolator: undefined,
+    transitionSpec: {
+      animation: 'timing',
+      config: { duration: 150 },
+    },
+  },
+} as const;
 
-  if (animationEnabled === false || !transitionSpec) {
-    return false;
+const hasAnimation = (options: BottomTabNavigationOptions) => {
+  const { animation, transitionSpec } = options;
+
+  if (animation) {
+    return animation !== 'none';
   }
 
-  return true;
+  return !transitionSpec;
 };
 
 export function BottomTabView(props: Props) {
@@ -81,20 +97,15 @@ export function BottomTabView(props: Props) {
         state.routes
           .map((route, index) => {
             const { options } = descriptors[route.key];
-            const { transitionSpec } = options;
-
-            const animationEnabled = hasAnimation(options);
+            const {
+              animation = 'none',
+              transitionSpec = NAMED_TRANSITIONS_PRESETS[animation]
+                .transitionSpec ??
+                NAMED_TRANSITIONS_PRESETS.none.transitionSpec,
+            } = options;
 
             const toValue =
               index === state.index ? 0 : index >= state.index ? 1 : -1;
-
-            if (!animationEnabled || !transitionSpec) {
-              return Animated.timing(tabAnims[route.key], {
-                toValue,
-                duration: 0,
-                useNativeDriver: true,
-              });
-            }
 
             return Animated[transitionSpec.animation](tabAnims[route.key], {
               ...transitionSpec.config,
@@ -178,7 +189,9 @@ export function BottomTabView(props: Props) {
           const {
             lazy = true,
             unmountOnBlur,
-            sceneStyleInterpolator,
+            animation = 'none',
+            sceneStyleInterpolator = NAMED_TRANSITIONS_PRESETS[animation]
+              .sceneStyleInterpolator,
           } = descriptor.options;
           const isFocused = state.index === index;
 

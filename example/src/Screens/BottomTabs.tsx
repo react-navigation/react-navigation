@@ -2,7 +2,6 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
   createBottomTabNavigator,
-  TransitionPresets,
   useBottomTabBarHeight,
 } from '@react-navigation/bottom-tabs';
 import {
@@ -85,11 +84,7 @@ const AlbumsScreen = () => {
 
 const Tab = createBottomTabNavigator<BottomTabParams>();
 
-const animations = {
-  shifting: TransitionPresets.ShiftingTransition,
-  fade: TransitionPresets.FadeTransition,
-  none: null,
-} as const;
+const animations = ['none', 'fade', 'shifting'] as const;
 
 export function BottomTabs({
   navigation,
@@ -105,7 +100,7 @@ export function BottomTabs({
   const dimensions = useWindowDimensions();
 
   const [animation, setAnimation] =
-    React.useState<keyof typeof animations>('none');
+    React.useState<(typeof animations)[number]>('none');
   const [isCompact, setIsCompact] = React.useState(false);
 
   const isLargeScreen = dimensions.width >= 1024;
@@ -120,13 +115,9 @@ export function BottomTabs({
           headerRight: ({ tintColor }) => (
             <HeaderButton
               onPress={() => {
-                const options = Object.keys(
-                  animations
-                ) as (keyof typeof animations)[];
-
                 showActionSheetWithOptions(
                   {
-                    options: options.map((option) => {
+                    options: animations.map((option) => {
                       if (option === animation) {
                         return `${option} (current)`;
                       }
@@ -136,7 +127,7 @@ export function BottomTabs({
                   },
                   (index) => {
                     if (index != null) {
-                      setAnimation(options[index]);
+                      setAnimation(animations[index]);
                     }
                   }
                 );
@@ -152,7 +143,7 @@ export function BottomTabs({
           tabBarPosition: isLargeScreen ? 'left' : 'bottom',
           tabBarLabelPosition:
             isLargeScreen && isCompact ? 'below-icon' : undefined,
-          ...animations[animation],
+          animation,
         }}
       >
         <Tab.Screen

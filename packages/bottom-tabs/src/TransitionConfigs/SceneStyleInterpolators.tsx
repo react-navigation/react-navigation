@@ -6,7 +6,7 @@ import type {
 /**
  * Simple cross fade animation
  */
-export function forCrossFade({
+export function forFade({
   current,
 }: BottomTabSceneInterpolationProps): BottomTabSceneInterpolatedStyle {
   return {
