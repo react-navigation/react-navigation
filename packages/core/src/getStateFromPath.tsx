@@ -288,23 +288,35 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
 
     // If our regex matches, we need to extract params from the path
     if (match) {
-      const matchedParams = config.pattern
-        ?.split('/')
-        .map((p, index) => [p, index] as const)
-        .filter(([p]) => p.startsWith(':'))
-        .reduce(
-          (acc, [p, index], i) => {
-            // The param segments appear every second item starting from 2 in the regex match result
-            const decodedParamSegment = decodeURIComponent(match![(i + 1) * 2]);
+      const matchResult = config.pattern?.split('/').reduce(
+        (acc, p, index) => {
+          if (!p.startsWith(':')) {
+            return acc;
+          }
 
-            return Object.assign(acc, {
-              [p]: Object.assign(acc[p] || {}, {
-                [index]: decodedParamSegment.replace(/\//, ''),
-              }),
-            });
-          },
-          {} as Record<string, Record<string, string>>
-        );
+          // Next match so increment position for current param. (e.g in `/:id/:name`, `:id` is 0 and `:name` is 1)
+          acc.paramIdx += 1;
+
+          // The param segments appear every second item starting from 2 in the regex match result
+          const decodedParamSegment = decodeURIComponent(
+            match![(acc.paramIdx + 1) * 2]
+          );
+
+          Object.assign(acc.params, {
+            [p]: Object.assign(acc.params[p] || {}, {
+              [index]: decodedParamSegment.replace(/\//, ''),
+            }),
+          });
+
+          return acc;
+        },
+        { paramIdx: -1, params: {} } as {
+          paramIdx: number;
+          params: Record<string, Record<string, string>>;
+        }
+      );
+
+      const matchedParams = matchResult.params || {};
 
       routes = config.routeNames.map((name) => {
         const routeConfig = configs.find((c) => {
