@@ -20,13 +20,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import useLatestCallback from 'use-latest-callback';
 
-import {
-  DRAWER_BORDER_RADIUS,
-  SWIPE_EDGE_WIDTH,
-  SWIPE_MIN_DISTANCE,
-  SWIPE_MIN_OFFSET,
-  SWIPE_MIN_VELOCITY,
-} from '../constants';
 import type { DrawerProps } from '../types';
 import { DrawerProgressContext } from '../utils/DrawerProgressContext';
 import {
@@ -36,6 +29,13 @@ import {
   type PanGestureHandlerGestureEvent,
 } from './GestureHandler';
 import { Overlay } from './Overlay';
+
+export const SWIPE_EDGE_WIDTH = 32;
+export const SWIPE_MIN_OFFSET = 5;
+export const SWIPE_MIN_DISTANCE = 60;
+export const SWIPE_MIN_VELOCITY = 500;
+
+export const DRAWER_BORDER_RADIUS = 16;
 
 const minmax = (value: number, start: number, end: number) => {
   'worklet';
@@ -189,7 +189,8 @@ export function Drawer({
       // This lets the user drag the drawer from the side of the screen
       { right: 0, width: isOpen ? undefined : swipeEdgeWidth }
     : { left: 0, width: isOpen ? undefined : swipeEdgeWidth };
-  const borderRadius = isRight
+
+  const borderRadiiStyle = isRight
     ? {
         borderTopLeftRadius: DRAWER_BORDER_RADIUS,
         borderBottomLeftRadius: DRAWER_BORDER_RADIUS,
@@ -455,8 +456,8 @@ export function Drawer({
                   position:
                     drawerType === 'permanent' ? 'relative' : 'absolute',
                   zIndex: drawerType === 'back' ? -1 : 0,
-                  ...borderRadius,
                 },
+                drawerType === 'permanent' ? null : borderRadiiStyle,
                 drawerAnimatedStyle,
                 drawerStyle,
               ]}
