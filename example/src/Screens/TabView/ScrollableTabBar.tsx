@@ -46,7 +46,6 @@ export const ScrollableTabBar = () => {
       style={styles.tabbar}
       contentContainerStyle={styles.tabbarContentContainer}
       tabStyle={styles.tab}
-      labelStyle={styles.label}
       gap={20}
       direction={direction}
     />
@@ -88,8 +87,5 @@ const styles = StyleSheet.create({
   },
   indicator: {
     backgroundColor: '#ffeb3b',
-  },
-  label: {
-    fontWeight: '400',
   },
 });

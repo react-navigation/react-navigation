@@ -1,10 +1,16 @@
 import * as React from 'react';
-import { Platform, Pressable, type PressableProps } from 'react-native';
+import {
+  type GestureResponderEvent,
+  Platform,
+  Pressable,
+  type PressableProps,
+} from 'react-native';
 
 export type Props = PressableProps & {
+  children: React.ReactNode;
   pressColor?: string;
   pressOpacity?: number;
-  children: React.ReactNode;
+  href?: string;
 };
 
 const ANDROID_VERSION_LOLLIPOP = 21;
@@ -19,12 +25,34 @@ const ANDROID_SUPPORTS_RIPPLE =
  * On other platforms, you can pass the props of TouchableOpacity.
  */
 export function PlatformPressable({
+  disabled,
   android_ripple,
   pressColor = 'rgba(0, 0, 0, .32)',
   pressOpacity,
   style,
+  onPress,
   ...rest
 }: Props) {
+  const handlePress = (e: GestureResponderEvent) => {
+    // @ts-expect-error: these properties exist on web, but not in React Native
+    const hasModifierKey = e.metaKey || e.altKey || e.ctrlKey || e.shiftKey; // ignore clicks with modifier keys
+    // @ts-expect-error: these properties exist on web, but not in React Native
+    const isLeftClick = e.button == null || e.button === 0; // only handle left clicks
+    const isSelfTarget = [undefined, null, '', 'self'].includes(
+      // @ts-expect-error: these properties exist on web, but not in React Native
+      e.currentTarget?.target
+    ); // let browser handle "target=_blank" etc.
+
+    if (Platform.OS === 'web' && rest.href != null) {
+      if (!hasModifierKey && isLeftClick && isSelfTarget) {
+        e.preventDefault();
+        onPress?.(e);
+      }
+    } else {
+      onPress?.(e);
+    }
+  };
+
   return (
     <Pressable
       android_ripple={
@@ -36,6 +64,7 @@ export function PlatformPressable({
         { opacity: pressed && !ANDROID_SUPPORTS_RIPPLE ? pressOpacity : 1 },
         typeof style === 'function' ? style({ pressed }) : style,
       ]}
+      onPress={disabled ? undefined : handlePress}
       {...rest}
     />
   );
