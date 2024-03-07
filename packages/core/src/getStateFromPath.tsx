@@ -325,11 +325,10 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
         });
 
         // Get the number of segments in the initial pattern
-        const pathPrefix = routeConfig?.pattern.replace(
-          new RegExp(`${escape(routeConfig.normalizedPath)}$`),
-          ''
-        );
-        const numPrefixParts = pathPrefix?.split('/').length;
+        const numInitialSegments = routeConfig?.pattern
+          // Extract the prefix from the pattern by removing the ending path pattern (e.g pattern=`a/b/c/d` and normalizedPath=`c/d` becomes `a/b`)
+          .replace(new RegExp(`${escape(routeConfig.normalizedPath)}$`), '')
+          ?.split('/').length;
 
         const params = routeConfig?.normalizedPath
           ?.split('/')
@@ -340,7 +339,7 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
 
             // Get the real index of the path parameter in the matched path
             // by offsetting by the number of segments in the initial pattern
-            const offset = numPrefixParts ? numPrefixParts - 1 : 0;
+            const offset = numInitialSegments ? numInitialSegments - 1 : 0;
             const _index = index + offset;
 
             const value = matchedParams[p]?.[_index];
