@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('http://localhost:19006');
+  await page.goto('http://localhost:3579');
   await page.getByText('<Link />').click();
 });
 
