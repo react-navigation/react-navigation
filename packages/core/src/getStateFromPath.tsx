@@ -290,15 +290,21 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
     if (match) {
       const matchedParams = config.pattern
         ?.split('/')
-        .map((p, x) => [p, x] as const)
+        .map((p, index) => [p, index] as const)
         .filter(([p]) => p.startsWith(':'))
-        .reduce<Record<string, any>>((acc, [p, x], i) => {
-          const decodedParamSegment = decodeURIComponent(match![(i + 1) * 2]);
-          return Object.assign(acc, {
+        .reduce(
+          (acc, [p, index], i) => {
             // The param segments appear every second item starting from 2 in the regex match result
-            [p + x]: decodedParamSegment.replace(/\//, ''),
-          });
-        }, {});
+            const decodedParamSegment = decodeURIComponent(match![(i + 1) * 2]);
+
+            return Object.assign(acc, {
+              [p]: Object.assign(acc[p] || {}, {
+                [index]: decodedParamSegment.replace(/\//, ''),
+              }),
+            });
+          },
+          {} as Record<string, Record<string, string>>
+        );
 
       routes = config.routeNames.map((name) => {
         const routeConfig = configs.find((c) => {
@@ -307,28 +313,34 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
         });
 
         // Get the number of segments in the initial pattern
-        const initialPartsLength = routeConfig?.pattern
-          .replace(new RegExp(`${escape(routeConfig.normalizedPath)}$`), '')
-          ?.split('/').length;
+        const prefix = routeConfig?.pattern.replace(
+          new RegExp(`${escape(routeConfig.normalizedPath)}$`),
+          ''
+        );
+        const prefixPartsLength = prefix?.split('/').length;
 
         const params = routeConfig?.normalizedPath
           ?.split('/')
-          .map((p, x) => [p, x] as const)
+          .map((p, index) => [p, index] as const)
           .filter(([p]) => p.startsWith(':'))
-          .reduce<Record<string, any>>((acc, [p, x]) => {
-            // Get the position of the param in the matched params based on the parent path segments count
-            x = initialPartsLength ? x + initialPartsLength - 1 : x;
-            const value = matchedParams[p + x];
+          .reduce(
+            (acc, [p, index]) => {
+              // Get the position of the param in the matched params based on the parent path segments count
+              index = prefixPartsLength ? index + prefixPartsLength - 1 : index;
 
-            if (value) {
-              const key = p.replace(/^:/, '').replace(/\?$/, '');
-              acc[key] = routeConfig.parse?.[key]
-                ? routeConfig.parse[key](value)
-                : value;
-            }
+              const value = matchedParams[p]?.[index];
 
-            return acc;
-          }, {});
+              if (value) {
+                const key = p.replace(/^:/, '').replace(/\?$/, '');
+                acc[key] = routeConfig.parse?.[key]
+                  ? routeConfig.parse[key](value)
+                  : value;
+              }
+
+              return acc;
+            },
+            {} as Record<string, unknown>
+          );
 
         if (params && Object.keys(params).length) {
           return { name, params };
