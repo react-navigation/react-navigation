@@ -8,6 +8,7 @@ export type TabDescriptor<T extends Route> = {
   testID?: string;
   labelText?: string;
   labelAllowFontScaling?: boolean;
+  href?: string;
   label?: (props: {
     focused: boolean;
     color: string;
