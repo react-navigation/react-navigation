@@ -331,28 +331,30 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
         );
         const prefixPartsLength = prefix?.split('/').length;
 
-        const params = routeConfig?.normalizedPath
-          ?.split('/')
-          .map((p, index) => [p, index] as const)
-          .filter(([p]) => p.startsWith(':'))
-          .reduce(
-            (acc, [p, index]) => {
-              // Get the position of the param in the matched params based on the parent path segments count
-              index = prefixPartsLength ? index + prefixPartsLength - 1 : index;
-
-              const value = matchedParams[p]?.[index];
-
-              if (value) {
-                const key = p.replace(/^:/, '').replace(/\?$/, '');
-                acc[key] = routeConfig.parse?.[key]
-                  ? routeConfig.parse[key](value)
-                  : value;
-              }
-
+        const params = routeConfig?.normalizedPath?.split('/').reduce(
+          (acc, p, index) => {
+            if (!p.startsWith(':')) {
               return acc;
-            },
-            {} as Record<string, unknown>
-          );
+            }
+
+            // Get the position of the param in the matched params based on the parent path segments count
+            const pos = prefixPartsLength
+              ? index + prefixPartsLength - 1
+              : index;
+
+            const value = matchedParams[p]?.[pos];
+
+            if (value) {
+              const key = p.replace(/^:/, '').replace(/\?$/, '');
+              acc[key] = routeConfig.parse?.[key]
+                ? routeConfig.parse[key](value)
+                : value;
+            }
+
+            return acc;
+          },
+          {} as Record<string, unknown>
+        );
 
         if (params && Object.keys(params).length) {
           return { name, params };
