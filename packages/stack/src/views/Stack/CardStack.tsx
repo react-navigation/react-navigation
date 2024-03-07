@@ -23,18 +23,26 @@ import {
   forNoAnimation as forNoAnimationCard,
 } from '../../TransitionConfigs/CardStyleInterpolators';
 import {
+  BottomSheetAndroid,
   DefaultTransition,
+  FadeFromBottomAndroid,
   ModalFadeTransition,
+  ModalSlideFromBottomIOS,
   ModalTransition,
+  RevealFromBottomAndroid,
+  ScaleFromCenterAndroid,
+  SlideFromLeftIOS,
+  SlideFromRightIOS,
 } from '../../TransitionConfigs/TransitionPresets';
 import type {
   Layout,
   Scene,
+  StackAnimationName,
   StackCardStyleInterpolator,
   StackDescriptor,
   StackDescriptorMap,
   StackHeaderMode,
-  StackNavigationOptions,
+  TransitionPreset,
 } from '../../types';
 import { findLastIndex } from '../../utils/findLastIndex';
 import { getDistanceForDirection } from '../../utils/getDistanceForDirection';
@@ -86,6 +94,21 @@ type State = {
   layout: Layout;
   headerHeights: Record<string, number>;
 };
+
+const NAMED_TRANSITIONS_PRESETS = {
+  default: DefaultTransition,
+  fade: ModalFadeTransition,
+  fade_from_bottom: FadeFromBottomAndroid,
+  none: DefaultTransition,
+  reveal_from_bottom: RevealFromBottomAndroid,
+  scale_from_center: ScaleFromCenterAndroid,
+  slide_from_left: SlideFromLeftIOS,
+  slide_from_right: SlideFromRightIOS,
+  slide_from_bottom: Platform.select({
+    ios: ModalSlideFromBottomIOS,
+    default: BottomSheetAndroid,
+  }),
+} as const satisfies Record<StackAnimationName, TransitionPreset>;
 
 const EPSILON = 1e-5;
 
@@ -179,12 +202,22 @@ const getDistanceFromOptions = (
   descriptor: StackDescriptor | undefined,
   isRTL: boolean
 ) => {
-  const {
-    presentation,
-    gestureDirection = presentation === 'modal'
+  if (descriptor?.options.gestureDirection) {
+    return getDistanceForDirection(
+      layout,
+      descriptor?.options.gestureDirection,
+      isRTL
+    );
+  }
+
+  const defaultGestureDirection =
+    descriptor?.options.presentation === 'modal'
       ? ModalTransition.gestureDirection
-      : DefaultTransition.gestureDirection,
-  } = (descriptor?.options || {}) as StackNavigationOptions;
+      : DefaultTransition.gestureDirection;
+
+  const gestureDirection = descriptor?.options.animation
+    ? NAMED_TRANSITIONS_PRESETS[descriptor?.options.animation]?.gestureDirection
+    : defaultGestureDirection;
 
   return getDistanceForDirection(layout, gestureDirection, isRTL);
 };
@@ -237,13 +270,12 @@ export class CardStack extends React.Component<Props, State> {
     ].reduce<GestureValues>((acc, curr) => {
       const descriptor =
         props.descriptors[curr.key] || props.preloadedDescriptors[curr.key];
-      const { animationEnabled } = descriptor?.options || {};
+      const { animation } = descriptor?.options || {};
 
       acc[curr.key] =
         state.gestures[curr.key] ||
         new Animated.Value(
-          (props.openingRouteKeys.includes(curr.key) &&
-            animationEnabled !== false) ||
+          (props.openingRouteKeys.includes(curr.key) && animation !== 'none') ||
           props.state.preloadedRoutes.includes(curr)
             ? getDistanceFromOptions(
                 state.layout,
@@ -308,24 +340,34 @@ export class CardStack extends React.Component<Props, State> {
           'transparentModal',
         ]).includes(route.key);
 
-        const defaultTransitionPreset =
-          isModal || optionsForTransitionConfig.presentation === 'modal'
-            ? ModalTransition
-            : optionsForTransitionConfig.presentation === 'transparentModal'
-              ? ModalFadeTransition
-              : DefaultTransition;
+        // Disable screen transition animation by default on web, windows and macos to match the native behavior
+        const excludedPlatforms =
+          Platform.OS !== 'web' &&
+          Platform.OS !== 'windows' &&
+          Platform.OS !== 'macos';
+
+        const animation =
+          optionsForTransitionConfig.animation ??
+          (excludedPlatforms ? 'default' : 'none');
+        const isAnimationEnabled = animation !== 'none';
+
+        const transitionPreset =
+          animation !== 'default'
+            ? NAMED_TRANSITIONS_PRESETS[animation]
+            : isModal || optionsForTransitionConfig.presentation === 'modal'
+              ? ModalTransition
+              : optionsForTransitionConfig.presentation === 'transparentModal'
+                ? ModalFadeTransition
+                : DefaultTransition;
 
         const {
-          animationEnabled = Platform.OS !== 'web' &&
-            Platform.OS !== 'windows' &&
-            Platform.OS !== 'macos',
-          gestureEnabled = Platform.OS === 'ios' && animationEnabled,
-          gestureDirection = defaultTransitionPreset.gestureDirection,
-          transitionSpec = defaultTransitionPreset.transitionSpec,
-          cardStyleInterpolator = animationEnabled === false
-            ? forNoAnimationCard
-            : defaultTransitionPreset.cardStyleInterpolator,
-          headerStyleInterpolator = defaultTransitionPreset.headerStyleInterpolator,
+          gestureEnabled = Platform.OS === 'ios' && isAnimationEnabled,
+          gestureDirection = transitionPreset.gestureDirection,
+          transitionSpec = transitionPreset.transitionSpec,
+          cardStyleInterpolator = isAnimationEnabled
+            ? transitionPreset.cardStyleInterpolator
+            : forNoAnimationCard,
+          headerStyleInterpolator = transitionPreset.headerStyleInterpolator,
           cardOverlayEnabled = (Platform.OS !== 'ios' &&
             optionsForTransitionConfig.presentation !== 'transparentModal') ||
             getIsModalPresentation(cardStyleInterpolator),
@@ -353,7 +395,7 @@ export class CardStack extends React.Component<Props, State> {
             ...descriptor,
             options: {
               ...descriptor.options,
-              animationEnabled,
+              animation,
               cardOverlayEnabled,
               cardStyleInterpolator,
               gestureDirection,

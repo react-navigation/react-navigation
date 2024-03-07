@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.10...@react-navigation/native@7.0.0-alpha.11) (2024-03-04)
+
+### Bug Fixes
+
+* fix forwarding ref for static navigation ([83921e9](https://github.com/react-navigation/react-navigation/commit/83921e9edfc03d034567456b98fe856f0148f4f4)) - by @satya164
+
 # [7.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.9...@react-navigation/native@7.0.0-alpha.10) (2024-02-24)
 
 ### Bug Fixes

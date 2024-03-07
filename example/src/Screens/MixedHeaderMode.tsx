@@ -4,7 +4,6 @@ import {
   createStackNavigator,
   HeaderStyleInterpolators,
   type StackScreenProps,
-  TransitionPresets,
 } from '@react-navigation/stack';
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
@@ -112,7 +111,7 @@ export function MixedHeaderMode({
     >
       <SimpleStack.Group
         screenOptions={{
-          ...TransitionPresets.SlideFromRightIOS,
+          animation: 'slide_from_right',
           headerMode: 'float',
         }}
       >
@@ -134,7 +133,7 @@ export function MixedHeaderMode({
         name="Albums"
         component={AlbumsScreen}
         options={{
-          ...TransitionPresets.ModalSlideFromBottomIOS,
+          animation: 'slide_from_bottom',
           headerMode: 'screen',
           title: 'Albums',
         }}

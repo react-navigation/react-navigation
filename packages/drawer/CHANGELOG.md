@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.11...@react-navigation/drawer@7.0.0-alpha.12) (2024-03-04)
+
+### Bug Fixes
+
+* update drawer and material tab bar to match latest md guidelines ([#11864](https://github.com/react-navigation/react-navigation/issues/11864)) ([8726597](https://github.com/react-navigation/react-navigation/commit/872659710dec1b097ec7c7b1dd59a6174e021b30)) - by @groot007
+
 # [7.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.10...@react-navigation/drawer@7.0.0-alpha.11) (2024-02-24)
 
 ### Bug Fixes
