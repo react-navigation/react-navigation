@@ -300,8 +300,19 @@ export function useLinking(
           }
         }
       }
+
+      const [previousFocusedState] = findMatchingState(
+        previousStateRef.current,
+        state
+      );
+
+      const lastScreen =
+        previousFocusedState?.routes?.[
+          previousFocusedState?.routes?.length - 1
+        ];
+      // @ts-expect-error key is ommited for focused route
+      const isSameScreen = lastScreen?.key === route?.key;
       const path = getPathFromStateRef.current(state, configRef.current);
-      const isSameScreen = path.split('?')[0] === route?.path?.split('?')?.[0];
 
       return isSameScreen ? path + location.hash : path;
     };

@@ -1,4 +1,4 @@
-import { Button } from '@react-navigation/elements';
+import { Button, Text } from '@react-navigation/elements';
 import {
   CommonActions,
   Link,
@@ -31,6 +31,7 @@ export const linkComponentDemoLinking: PathConfigMap<LinkComponentDemoParamList>
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
+  navigation,
   route,
 }: StackScreenProps<LinkComponentDemoParamList, 'Article'>) => {
   return (
@@ -46,6 +47,27 @@ const ArticleScreen = ({
         >
           Replace with Albums
         </Link>
+        {Platform.OS === 'web' && (
+          <Text
+            onPress={() => {
+              location.hash = 'frodo';
+            }}
+          >
+            Add hash to current URL
+          </Text>
+        )}
+
+        <Button
+          variant="filled"
+          testID="update-author-param"
+          onPress={() => {
+            navigation?.setParams({
+              author: 'Bilbo Baggins',
+            });
+          }}
+        >
+          Update author param
+        </Button>
         <Button screen="Home" variant="filled">
           Go to Home
         </Button>
