@@ -289,12 +289,17 @@ export type BottomTabDescriptorMap = Record<string, BottomTabDescriptor>;
 
 export type BottomTabSceneInterpolationProps = {
   /**
-   * Animated value for the current screen:
-   * - -1 if the index is lower than active tab,
-   * - 0 if they're active,
-   * - 1 if the index is higher than active tab
+   * Values for the current screen.
    */
-  current: Animated.Value;
+  current: {
+    /**
+     * Animated value for the current screen:
+     * - -1 if the index is lower than active tab,
+     * - 0 if they're active,
+     * - 1 if the index is higher than active tab
+     */
+    progress: Animated.Value;
+  };
 };
 
 export type BottomTabSceneInterpolatedStyle = {

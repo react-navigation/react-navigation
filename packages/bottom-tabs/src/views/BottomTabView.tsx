@@ -212,7 +212,9 @@ export function BottomTabView(props: Props) {
 
           const { sceneStyle } =
             sceneStyleInterpolator?.({
-              current: tabAnims[route.key],
+              current: {
+                progress: tabAnims[route.key],
+              },
             }) ?? {};
 
           const animationEnabled = hasAnimation(descriptor.options);

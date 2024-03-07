@@ -11,7 +11,7 @@ export function forCrossFade({
 }: BottomTabSceneInterpolationProps): BottomTabSceneInterpolatedStyle {
   return {
     sceneStyle: {
-      opacity: current.interpolate({
+      opacity: current.progress.interpolate({
         inputRange: [-1, 0, 1],
         outputRange: [0, 1, 0],
       }),
@@ -27,13 +27,13 @@ export function forShifting({
 }: BottomTabSceneInterpolationProps): BottomTabSceneInterpolatedStyle {
   return {
     sceneStyle: {
-      opacity: current.interpolate({
+      opacity: current.progress.interpolate({
         inputRange: [-1, 0, 1],
         outputRange: [0, 1, 0],
       }),
       transform: [
         {
-          translateX: current.interpolate({
+          translateX: current.progress.interpolate({
             inputRange: [-1, 0, 1],
             outputRange: [-50, 0, 50],
           }),
