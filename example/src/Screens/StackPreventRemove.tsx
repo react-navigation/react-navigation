@@ -1,7 +1,6 @@
 import { Button } from '@react-navigation/elements';
 import {
   CommonActions,
-  type ParamListBase,
   type PathConfigMap,
   useTheme,
 } from '@react-navigation/native';
@@ -27,7 +26,7 @@ export type PreventRemoveParams = {
   Input: undefined;
 };
 
-export const preventRemoveLinking: PathConfigMap<PreventRemoveParams> = {
+const linking: PathConfigMap<PreventRemoveParams> = {
   Article: COMMON_LINKING_CONFIG.Article,
   Input: 'input',
 };
@@ -135,15 +134,7 @@ const InputScreen = ({
 
 const Stack = createStackNavigator<PreventRemoveParams>();
 
-type Props = StackScreenProps<ParamListBase>;
-
-export function StackPreventRemove({ navigation }: Props) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function StackPreventRemove() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Input" component={InputScreen} />
@@ -151,6 +142,9 @@ export function StackPreventRemove({ navigation }: Props) {
     </Stack.Navigator>
   );
 }
+
+StackPreventRemove.title = 'Prevent removing screen in Stack';
+StackPreventRemove.linking = linking;
 
 const styles = StyleSheet.create({
   content: {

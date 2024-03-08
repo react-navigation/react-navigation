@@ -1,4 +1,4 @@
-import type { ParamListBase, PathConfigMap } from '@react-navigation/native';
+import type { PathConfigMap } from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
@@ -34,7 +34,7 @@ export type TabViewStackParams = {
   ExampleList: undefined;
 };
 
-export const tabViewStackLinking: PathConfigMap<TabViewStackParams> = {
+const linking: PathConfigMap<TabViewStackParams> = {
   ExampleList: '',
   ...EXAMPLE_SCREEN_NAMES.reduce(
     (acc, name) => ({
@@ -71,13 +71,7 @@ const ExampleListScreen = ({
   );
 };
 
-export function TabView({ navigation }: StackScreenProps<ParamListBase>) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function TabView() {
   return (
     <TabViewStack.Navigator
       screenOptions={{ headerMode: 'screen', cardStyle: { flex: 1 } }}
@@ -102,3 +96,6 @@ export function TabView({ navigation }: StackScreenProps<ParamListBase>) {
     </TabViewStack.Navigator>
   );
 }
+
+TabView.title = 'Tab View';
+TabView.linking = linking;
