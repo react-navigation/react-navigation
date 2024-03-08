@@ -1,9 +1,5 @@
 import { Button, Text } from '@react-navigation/elements';
-import {
-  type ParamListBase,
-  type PathConfigMap,
-  useTheme,
-} from '@react-navigation/native';
+import { type PathConfigMap, useTheme } from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
@@ -17,7 +13,7 @@ export type AuthStackParams = {
   Chat: undefined;
 };
 
-export const authLinking: PathConfigMap<AuthStackParams> = {
+const linking: PathConfigMap<AuthStackParams> = {
   Home: '',
   SignIn: 'signin',
   Chat: 'chat',
@@ -133,7 +129,7 @@ type Action =
   | { type: 'SIGN_IN'; token: string }
   | { type: 'SIGN_OUT' };
 
-export function AuthFlow({ navigation }: StackScreenProps<ParamListBase>) {
+export function AuthFlow() {
   const [state, dispatch] = React.useReducer<React.Reducer<State, Action>>(
     (prevState, action) => {
       switch (action.type) {
@@ -171,12 +167,6 @@ export function AuthFlow({ navigation }: StackScreenProps<ParamListBase>) {
 
     return () => clearTimeout(timer);
   }, []);
-
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
 
   const isSignedIn = state.userToken !== undefined;
 
@@ -217,6 +207,9 @@ export function AuthFlow({ navigation }: StackScreenProps<ParamListBase>) {
     </AuthContext.Provider>
   );
 }
+
+AuthFlow.title = 'Auth Flow';
+AuthFlow.linking = linking;
 
 const styles = StyleSheet.create({
   content: {

@@ -1,6 +1,7 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
+  type BottomTabScreenProps,
   createBottomTabNavigator,
   useBottomTabBarHeight,
 } from '@react-navigation/bottom-tabs';
@@ -12,11 +13,9 @@ import {
 } from '@react-navigation/elements';
 import {
   type NavigatorScreenParams,
-  type ParamListBase,
   type PathConfigMap,
   useIsFocused,
 } from '@react-navigation/native';
-import type { StackScreenProps } from '@react-navigation/stack';
 import { BlurView } from 'expo-blur';
 import * as React from 'react';
 import {
@@ -31,11 +30,7 @@ import {
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
-import {
-  SimpleStack,
-  simpleStackLinking,
-  type SimpleStackParams,
-} from './SimpleStack';
+import { SimpleStack, type SimpleStackParams } from './SimpleStack';
 
 const getTabBarIcon =
   (name: React.ComponentProps<typeof MaterialCommunityIcons>['name']) =>
@@ -50,10 +45,10 @@ export type BottomTabParams = {
   TabChat: undefined;
 };
 
-export const bottomTabLinking: PathConfigMap<BottomTabParams> = {
+const linking: PathConfigMap<BottomTabParams> = {
   TabStack: {
     path: 'stack',
-    screens: simpleStackLinking,
+    screens: SimpleStack.linking,
   },
   TabAlbums: 'albums',
   TabContacts: 'contacts',
@@ -86,15 +81,7 @@ const Tab = createBottomTabNavigator<BottomTabParams>();
 
 const animations = ['none', 'fade', 'shifting'] as const;
 
-export function BottomTabs({
-  navigation,
-}: StackScreenProps<ParamListBase, string>) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function BottomTabs() {
   const { showActionSheetWithOptions } = useActionSheet();
 
   const dimensions = useWindowDimensions();
@@ -108,7 +95,9 @@ export function BottomTabs({
   return (
     <>
       <Tab.Navigator
-        screenOptions={{
+        screenOptions={({
+          navigation,
+        }: BottomTabScreenProps<BottomTabParams>) => ({
           headerLeft: (props) => (
             <HeaderBackButton {...props} onPress={navigation.goBack} />
           ),
@@ -144,13 +133,14 @@ export function BottomTabs({
           tabBarLabelPosition:
             isLargeScreen && isCompact ? 'below-icon' : undefined,
           animation,
-        }}
+        })}
       >
         <Tab.Screen
           name="TabStack"
           component={SimpleStack}
           options={{
             title: 'Article',
+            headerShown: false,
             tabBarIcon: getTabBarIcon('file-document'),
           }}
         />
@@ -242,3 +232,6 @@ export function BottomTabs({
     </>
   );
 }
+
+BottomTabs.title = 'Bottom Tabs';
+BottomTabs.linking = linking;

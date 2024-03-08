@@ -102,6 +102,13 @@ export function StaticScreen() {
     </ChatShownContext.Provider>
   );
 }
+
+StaticScreen.title = 'Static config';
+StaticScreen.linking = {};
+StaticScreen.options = {
+  headerShown: true,
+};
+
 const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',

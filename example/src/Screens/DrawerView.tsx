@@ -55,6 +55,12 @@ export function DrawerView() {
   );
 }
 
+DrawerView.title = 'Drawer Layout';
+DrawerView.linking = {};
+DrawerView.options = {
+  headerShown: true,
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -1,5 +1,5 @@
 import { Button } from '@react-navigation/elements';
-import type { ParamListBase, PathConfigMap } from '@react-navigation/native';
+import type { PathConfigMap } from '@react-navigation/native';
 import {
   createStackNavigator,
   HeaderStyleInterpolators,
@@ -19,7 +19,7 @@ export type MixedHeaderStackParams = {
   Albums: undefined;
 };
 
-export const mixedHeaderStackLinking: PathConfigMap<MixedHeaderStackParams> = {
+const linking: PathConfigMap<MixedHeaderStackParams> = {
   Article: COMMON_LINKING_CONFIG.Article,
   NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
   Albums: 'albums',
@@ -94,15 +94,7 @@ const AlbumsScreen = ({
 
 const SimpleStack = createStackNavigator<MixedHeaderStackParams>();
 
-export function MixedHeaderMode({
-  navigation,
-}: StackScreenProps<ParamListBase>) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function MixedHeaderMode() {
   return (
     <SimpleStack.Navigator
       screenOptions={{
@@ -141,6 +133,9 @@ export function MixedHeaderMode({
     </SimpleStack.Navigator>
   );
 }
+
+MixedHeaderMode.title = 'Float + Screen Header Stack';
+MixedHeaderMode.linking = linking;
 
 const styles = StyleSheet.create({
   buttons: {
