@@ -79,7 +79,7 @@ const AlbumsScreen = () => {
 
 const Tab = createBottomTabNavigator<BottomTabParams>();
 
-const animations = ['none', 'fade', 'shifting'] as const;
+const animations = ['none', 'fade', 'shift'] as const;
 
 export function BottomTabs() {
   const { showActionSheetWithOptions } = useActionSheet();

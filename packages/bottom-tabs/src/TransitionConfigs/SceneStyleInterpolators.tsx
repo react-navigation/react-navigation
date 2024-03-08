@@ -22,7 +22,7 @@ export function forFade({
 /**
  * Animation where the screens slightly shift to left/right
  */
-export function forShifting({
+export function forShift({
   current,
 }: BottomTabSceneInterpolationProps): BottomTabSceneInterpolatedStyle {
   return {

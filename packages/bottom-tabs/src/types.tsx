@@ -85,7 +85,7 @@ export type TabBarVisibilityAnimationConfig =
   | TimingKeyboardAnimationConfig
   | SpringKeyboardAnimationConfig;
 
-export type TabAnimationName = 'none' | 'fade' | 'shifting';
+export type TabAnimationName = 'none' | 'fade' | 'shift';
 
 export type BottomTabNavigationOptions = HeaderOptions & {
   /**
@@ -270,7 +270,7 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    * Supported values:
    * - 'none': don't animate the screen (default)
    * - 'fade': cross-fade the screens.
-   * - 'shifting': shift the screens slightly shift to left/right.
+   * - 'shift': shift the screens slightly shift to left/right.
    */
   animation?: TabAnimationName;
 

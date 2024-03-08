@@ -10,7 +10,7 @@ export const CrossFadeSpec: TransitionSpec = {
   },
 };
 
-export const ShiftingSpec: TransitionSpec = {
+export const ShiftSpec: TransitionSpec = {
   animation: 'timing',
   config: {
     duration: 150,

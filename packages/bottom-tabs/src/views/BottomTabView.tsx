@@ -14,7 +14,7 @@ import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
 import {
   FadeTransition,
-  ShiftingTransition,
+  ShiftTransition,
 } from '../TransitionConfigs/TransitionPresets';
 import type {
   BottomTabBarProps,
@@ -44,7 +44,7 @@ const STATE_ON_TOP = 2;
 
 const NAMED_TRANSITIONS_PRESETS = {
   fade: FadeTransition,
-  shifting: ShiftingTransition,
+  shift: ShiftTransition,
   none: {
     sceneStyleInterpolator: undefined,
     transitionSpec: {
