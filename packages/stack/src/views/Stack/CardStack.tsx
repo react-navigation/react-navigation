@@ -46,6 +46,7 @@ import type {
 } from '../../types';
 import { findLastIndex } from '../../utils/findLastIndex';
 import { getDistanceForDirection } from '../../utils/getDistanceForDirection';
+import { getModalRouteKeys } from '../../utils/getModalRoutesKeys';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import { MaybeScreen, MaybeScreenContainer } from '../Screens';
 import { CardContainer } from './CardContainer';
@@ -287,6 +288,14 @@ export class CardStack extends React.Component<Props, State> {
       return acc;
     }, {});
 
+    const modalRouteKeys = getModalRouteKeys(
+      [...props.routes, ...props.state.preloadedRoutes],
+      {
+        ...props.descriptors,
+        ...props.preloadedDescriptors,
+      }
+    );
+
     const scenes = [...props.routes, ...props.state.preloadedRoutes].map(
       (route, index, self) => {
         // For preloaded screens, we don't care about the previous and the next screen
@@ -332,6 +341,10 @@ export class CardStack extends React.Component<Props, State> {
             ? nextDescriptor.options
             : descriptor.options;
 
+        // Assume modal if there are already modal screens in the stack
+        // or current screen is a modal when no presentation is specified
+        const isModal = modalRouteKeys.includes(route.key);
+
         // Disable screen transition animation by default on web, windows and macos to match the native behavior
         const excludedPlatforms =
           Platform.OS !== 'web' &&
@@ -346,7 +359,7 @@ export class CardStack extends React.Component<Props, State> {
         const transitionPreset =
           animation !== 'default'
             ? NAMED_TRANSITIONS_PRESETS[animation]
-            : optionsForTransitionConfig.presentation === 'modal'
+            : isModal || optionsForTransitionConfig.presentation === 'modal'
               ? ModalTransition
               : optionsForTransitionConfig.presentation === 'transparentModal'
                 ? ModalFadeTransition

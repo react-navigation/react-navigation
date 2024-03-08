@@ -14,6 +14,7 @@ import { LinkingScreen } from './Screens/LinkingScreen';
 import { MasterDetail } from './Screens/MasterDetail';
 import { MaterialTopTabsScreen } from './Screens/MaterialTopTabs';
 import { MixedHeaderMode } from './Screens/MixedHeaderMode';
+import { MixedNativeStack } from './Screens/MixedNativeStack';
 import { MixedStack } from './Screens/MixedStack';
 import { ModalStack } from './Screens/ModalStack';
 import { NativeStack } from './Screens/NativeStack';
@@ -33,6 +34,7 @@ export const SCREENS = {
   SimpleStack,
   ModalStack,
   MixedStack,
+  MixedNativeStack,
   MixedHeaderMode,
   StackTransparent,
   StackHeaderCustomization,
