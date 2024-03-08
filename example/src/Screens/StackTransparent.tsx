@@ -1,5 +1,5 @@
 import { Button, Text } from '@react-navigation/elements';
-import { type ParamListBase, useTheme } from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
@@ -25,7 +25,7 @@ export type TransparentStackParams = {
   Dialog: undefined;
 };
 
-export const transparentStackLinking = {
+const linking = {
   Article: COMMON_LINKING_CONFIG.Article,
   NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
   Dialog: 'dialog',
@@ -127,15 +127,7 @@ const DialogScreen = ({
 
 const Stack = createStackNavigator<TransparentStackParams>();
 
-type Props = StackScreenProps<ParamListBase>;
-
-export function StackTransparent({ navigation }: Props) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function StackTransparent() {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -159,6 +151,9 @@ export function StackTransparent({ navigation }: Props) {
     </Stack.Navigator>
   );
 }
+
+StackTransparent.title = 'Transparent Stack';
+StackTransparent.linking = linking;
 
 const styles = StyleSheet.create({
   buttons: {

@@ -22,7 +22,7 @@ export type LinkingStackParams = {
   SignIn: undefined;
 };
 
-export const linkingStackLinking: PathConfigMap<LinkingStackParams> = {
+const linking: PathConfigMap<LinkingStackParams> = {
   Home: '',
   Profile: 'profile',
   SignIn: 'sign-in',
@@ -95,7 +95,6 @@ export function LinkingScreen() {
       }}
     >
       <Stack.Navigator
-        screenOptions={{ headerShown: false }}
         getStateForRouteNamesChange={getStateForRouteNamesChange}
       >
         {isSignedIn ? (
@@ -116,6 +115,9 @@ export function LinkingScreen() {
     </SigningContext.Provider>
   );
 }
+
+LinkingScreen.title = 'Linking with authentication flow';
+LinkingScreen.linking = linking;
 
 const styles = StyleSheet.create({
   container: {

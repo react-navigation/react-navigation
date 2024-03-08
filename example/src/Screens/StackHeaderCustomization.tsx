@@ -5,10 +5,7 @@ import {
   HeaderButton,
   useHeaderHeight,
 } from '@react-navigation/elements';
-import {
-  type ParamListBase,
-  type PathConfigMap,
-} from '@react-navigation/native';
+import { type PathConfigMap } from '@react-navigation/native';
 import {
   createStackNavigator,
   Header,
@@ -35,11 +32,10 @@ export type HeaderCustomizationStackParams = {
   Albums: undefined;
 };
 
-export const headerCustomizationStackLinking: PathConfigMap<HeaderCustomizationStackParams> =
-  {
-    Article: COMMON_LINKING_CONFIG.Article,
-    Albums: 'albums',
-  };
+const linking: PathConfigMap<HeaderCustomizationStackParams> = {
+  Article: COMMON_LINKING_CONFIG.Article,
+  Albums: 'albums',
+};
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
@@ -90,8 +86,6 @@ const AlbumsScreen = ({
 
 const Stack = createStackNavigator<HeaderCustomizationStackParams>();
 
-type Props = StackScreenProps<ParamListBase>;
-
 function CustomHeader(props: StackHeaderProps) {
   const { current, next } = props.progress;
 
@@ -111,13 +105,7 @@ function CustomHeader(props: StackHeaderProps) {
   );
 }
 
-export function StackHeaderCustomization({ navigation }: Props) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function StackHeaderCustomization() {
   const [headerTitleCentered, setHeaderTitleCentered] = React.useState(true);
 
   return (
@@ -187,6 +175,9 @@ export function StackHeaderCustomization({ navigation }: Props) {
     </Stack.Navigator>
   );
 }
+
+StackHeaderCustomization.title = 'Header Customization in Stack';
+StackHeaderCustomization.linking = linking;
 
 const styles = StyleSheet.create({
   buttons: {

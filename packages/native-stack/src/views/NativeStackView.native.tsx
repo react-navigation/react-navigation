@@ -42,6 +42,7 @@ import type {
   NativeStackNavigationHelpers,
   NativeStackNavigationOptions,
 } from '../types';
+import { getModalRouteKeys } from '../utils/getModalRoutesKeys';
 import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
 import { useDismissedRouteError } from '../utils/useDismissedRouteError';
 import { useInvalidPreventRemoveError } from '../utils/useInvalidPreventRemoveError';
@@ -132,6 +133,7 @@ type SceneViewProps = {
   descriptor: NativeStackDescriptor;
   previousDescriptor?: NativeStackDescriptor;
   nextDescriptor?: NativeStackDescriptor;
+  isPresentationModal?: boolean;
   onWillDisappear: () => void;
   onWillAppear: () => void;
   onAppear: () => void;
@@ -148,6 +150,7 @@ const SceneView = ({
   descriptor,
   previousDescriptor,
   nextDescriptor,
+  isPresentationModal,
   onWillDisappear,
   onWillAppear,
   onAppear,
@@ -162,8 +165,8 @@ const SceneView = ({
   let {
     animation,
     animationMatchesGesture,
+    presentation = isPresentationModal ? 'modal' : 'card',
     fullScreenGestureEnabled,
-    presentation = 'card',
   } = options;
 
   const {
@@ -449,6 +452,8 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
 
   useInvalidPreventRemoveError(descriptors);
 
+  const modalRouteKeys = getModalRouteKeys(state.routes, descriptors);
+
   return (
     <SafeAreaProviderCompat style={{ backgroundColor: colors.background }}>
       <ScreenStack style={styles.container}>
@@ -462,6 +467,8 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
             : undefined;
           const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
 
+          const isModal = modalRouteKeys.includes(route.key);
+
           return (
             <SceneView
               key={route.key}
@@ -470,6 +477,7 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
               descriptor={descriptor}
               previousDescriptor={previousDescriptor}
               nextDescriptor={nextDescriptor}
+              isPresentationModal={isModal}
               onWillDisappear={() => {
                 navigation.emit({
                   type: 'transitionStart',

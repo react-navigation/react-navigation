@@ -287,20 +287,35 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
 
     // If our regex matches, we need to extract params from the path
     if (match) {
-      const matchedParams = config.pattern
-        ?.split('/')
-        .filter((p) => p.startsWith(':'))
-        .reduce<Record<string, any>>(
-          (acc, p, i) => {
-            const decodedParamSegment = decodeURIComponent(match![(i + 1) * 2]);
-            return Object.assign(acc, {
-              // The param segments appear every second item starting from 2 in the regex match result
-              [p]: decodedParamSegment.replace(/\//, ''),
-            });
-          },
+      const matchResult = config.pattern?.split('/').reduce<{
+        pos: number; // Position of the current path param segment in the path (e.g in pattern `a/:b/:c`, `:a` is 0 and `:b` is 1)
+        matchedParams: Record<string, Record<string, string>>; // The extracted params
+      }>(
+        (acc, p, index) => {
+          if (!p.startsWith(':')) {
+            return acc;
+          }
 
-          {}
-        );
+          // Path parameter so increment position for the segment
+          acc.pos += 1;
+
+          const decodedParamSegment = decodeURIComponent(
+            // The param segments appear every second item starting from 2 in the regex match result
+            match![(acc.pos + 1) * 2]
+          );
+
+          Object.assign(acc.matchedParams, {
+            [p]: Object.assign(acc.matchedParams[p] || {}, {
+              [index]: decodedParamSegment.replace(/\//, ''),
+            }),
+          });
+
+          return acc;
+        },
+        { pos: -1, matchedParams: {} }
+      );
+
+      const matchedParams = matchResult.matchedParams || {};
 
       routes = config.routeNames.map((name) => {
         const routeConfig = configs.find((c) => {
@@ -308,15 +323,33 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
           return c.screen === name && config.pattern.startsWith(c.pattern);
         });
 
-        const params = routeConfig?.path
+        // Normalize pattern to remove any leading, trailing slashes, duplicate slashes etc.
+        const normalizedPath = routeConfig?.path
+          .split('/')
+          .filter(Boolean)
+          .join('/');
+
+        // Get the number of segments in the initial pattern
+        const numInitialSegments = routeConfig?.pattern
+          // Extract the prefix from the pattern by removing the ending path pattern (e.g pattern=`a/b/c/d` and normalizedPath=`c/d` becomes `a/b`)
+          .replace(new RegExp(`${escape(normalizedPath!)}$`), '')
+          ?.split('/').length;
+
+        const params = normalizedPath
           ?.split('/')
-          .filter((p) => p.startsWith(':'))
-          .reduce<Record<string, any>>((acc, p) => {
-            const value = matchedParams[p];
+          .reduce<Record<string, unknown>>((acc, p, index) => {
+            if (!p.startsWith(':')) {
+              return acc;
+            }
+
+            // Get the real index of the path parameter in the matched path
+            // by offsetting by the number of segments in the initial pattern
+            const offset = numInitialSegments ? numInitialSegments - 1 : 0;
+            const value = matchedParams[p]?.[index + offset];
 
             if (value) {
               const key = p.replace(/^:/, '').replace(/\?$/, '');
-              acc[key] = routeConfig.parse?.[key]
+              acc[key] = routeConfig?.parse?.[key]
                 ? routeConfig.parse[key](value)
                 : value;
             }
