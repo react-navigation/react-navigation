@@ -49,7 +49,7 @@ const NAMED_TRANSITIONS_PRESETS = {
     sceneStyleInterpolator: undefined,
     transitionSpec: {
       animation: 'timing',
-      config: { duration: 150 },
+      config: { duration: 0 },
     },
   },
 } as const;
@@ -89,9 +89,14 @@ export function BottomTabView(props: Props) {
     setLoaded([...loaded, focusedRouteKey]);
   }
 
+  const previousRouteKeyRef = React.useRef(focusedRouteKey);
   const tabAnims = useAnimatedHashMap(state);
 
   React.useEffect(() => {
+    const previousRouteKey = previousRouteKeyRef.current;
+
+    previousRouteKeyRef.current = focusedRouteKey;
+
     const animateToIndex = () => {
       Animated.parallel(
         state.routes
@@ -100,15 +105,27 @@ export function BottomTabView(props: Props) {
             const {
               animation = 'none',
               transitionSpec = NAMED_TRANSITIONS_PRESETS[animation]
-                .transitionSpec ??
-                NAMED_TRANSITIONS_PRESETS.none.transitionSpec,
+                .transitionSpec,
             } = options;
+
+            let spec = transitionSpec;
+
+            if (
+              route.key !== previousRouteKey &&
+              route.key !== focusedRouteKey
+            ) {
+              // Don't animate if the screen is not previous one or new one
+              // This will avoid flicker for screens not involved in the transition
+              spec = NAMED_TRANSITIONS_PRESETS.none.transitionSpec;
+            }
+
+            spec = spec ?? NAMED_TRANSITIONS_PRESETS.none.transitionSpec;
 
             const toValue =
               index === state.index ? 0 : index >= state.index ? 1 : -1;
 
-            return Animated[transitionSpec.animation](tabAnims[route.key], {
-              ...transitionSpec.config,
+            return Animated[spec.animation](tabAnims[route.key], {
+              ...spec.config,
               toValue,
               useNativeDriver: true,
             });
@@ -118,7 +135,7 @@ export function BottomTabView(props: Props) {
     };
 
     animateToIndex();
-  }, [descriptors, state.index, state.routes, tabAnims]);
+  }, [descriptors, focusedRouteKey, state.index, state.routes, tabAnims]);
 
   const dimensions = SafeAreaProviderCompat.initialMetrics.frame;
   const [tabBarHeight, setTabBarHeight] = React.useState(() =>
