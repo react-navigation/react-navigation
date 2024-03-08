@@ -1,9 +1,9 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Button } from '@react-navigation/elements';
+import { Button, HeaderBackButton } from '@react-navigation/elements';
 import {
-  createStaticNavigation,
-  NavigationIndependentTree,
+  createComponentForStaticNavigation,
+  createPathConfigForStaticNavigation,
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
@@ -48,7 +48,10 @@ const AlbumsScreen = () => {
 };
 
 const HomeTabs = createBottomTabNavigator({
-  screenOptions: ({ theme }) => ({
+  screenOptions: ({ theme, navigation }) => ({
+    headerLeft: (props) => (
+      <HeaderBackButton {...props} onPress={navigation.goBack} />
+    ),
     tabBarActiveTintColor: theme.colors.notification,
   }),
   screens: {
@@ -89,25 +92,20 @@ const RootStack = createStackNavigator({
   },
 });
 
-const Navigation = createStaticNavigation(RootStack);
+const Navigation = createComponentForStaticNavigation(RootStack, 'Root');
 
 export function StaticScreen() {
   const [isChatShown, setIsChatShown] = React.useState(false);
 
   return (
     <ChatShownContext.Provider value={{ isChatShown, setIsChatShown }}>
-      <NavigationIndependentTree>
-        <Navigation />
-      </NavigationIndependentTree>
+      <Navigation />
     </ChatShownContext.Provider>
   );
 }
 
 StaticScreen.title = 'Static config';
-StaticScreen.linking = {};
-StaticScreen.options = {
-  headerShown: true,
-};
+StaticScreen.linking = createPathConfigForStaticNavigation(RootStack);
 
 const styles = StyleSheet.create({
   buttons: {
