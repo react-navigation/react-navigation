@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.12...@react-navigation/native-stack@7.0.0-alpha.13) (2024-03-08)
+
+### Bug Fixes
+
+* update drawer and header styles according to material design 3 ([#11872](https://github.com/react-navigation/react-navigation/issues/11872)) ([bfa5689](https://github.com/react-navigation/react-navigation/commit/bfa568995940f956c9ec5944f2b0543eca5da546)) - by @groot007
+
+### Features
+
+* make all screens after presentation: 'modal' as modal unless specified ([#11860](https://github.com/react-navigation/react-navigation/issues/11860)) ([f16216c](https://github.com/react-navigation/react-navigation/commit/f16216c65740c2795cdef6c2249edffa9e9416ae)) - by @groot007
+
 # [7.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.11...@react-navigation/native-stack@7.0.0-alpha.12) (2024-03-04)
 
 **Note:** Version bump only for package @react-navigation/native-stack

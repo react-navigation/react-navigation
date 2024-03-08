@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.11...@react-navigation/native@7.0.0-alpha.12) (2024-03-08)
+
+### Bug Fixes
+
+* preserve # in the URL if the screen hasn't changed ([#11876](https://github.com/react-navigation/react-navigation/issues/11876)) ([66cc899](https://github.com/react-navigation/react-navigation/commit/66cc899e2d9264903ed8800980711c619bb3b499)) - by @groot007
+
 # [7.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.10...@react-navigation/native@7.0.0-alpha.11) (2024-03-04)
 
 ### Bug Fixes

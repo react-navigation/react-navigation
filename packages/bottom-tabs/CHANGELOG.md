@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.12...@react-navigation/bottom-tabs@7.0.0-alpha.13) (2024-03-08)
+
+### Bug Fixes
+
+* align animation APIs for stack and bottom tabs ([2599bc2](https://github.com/react-navigation/react-navigation/commit/2599bc2cf176118ff910610facd443d2e7232d77)) - by @satya164
+* fix typo ([4101318](https://github.com/react-navigation/react-navigation/commit/4101318ac68c239ac6963c35bb045e96938fb62e)) - by @satya164
+
+### Features
+
+* add an animation option to customize animations ([f0b7e6f](https://github.com/react-navigation/react-navigation/commit/f0b7e6f3343b4bc61ebd695accd0965b4d5e34fd)) - by @satya164
+
 # [7.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.11...@react-navigation/bottom-tabs@7.0.0-alpha.12) (2024-03-04)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

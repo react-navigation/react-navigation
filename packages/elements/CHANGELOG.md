@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.9...@react-navigation/elements@2.0.0-alpha.10) (2024-03-08)
+
+### Bug Fixes
+
+* update drawer and header styles according to material design 3 ([#11872](https://github.com/react-navigation/react-navigation/issues/11872)) ([bfa5689](https://github.com/react-navigation/react-navigation/commit/bfa568995940f956c9ec5944f2b0543eca5da546)) - by @groot007
+
 # [2.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.8...@react-navigation/elements@2.0.0-alpha.9) (2024-03-04)
 
 **Note:** Version bump only for package @react-navigation/elements

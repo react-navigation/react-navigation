@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.12...@react-navigation/stack@7.0.0-alpha.13) (2024-03-08)
+
+### Features
+
+* add animation option for js stack ([#11854](https://github.com/react-navigation/react-navigation/issues/11854)) ([1843675](https://github.com/react-navigation/react-navigation/commit/18436751750ddb26671a07b04451ef16355f6792)) - by @groot007
+* make all screens after presentation: 'modal' as modal unless specified ([#11860](https://github.com/react-navigation/react-navigation/issues/11860)) ([f16216c](https://github.com/react-navigation/react-navigation/commit/f16216c65740c2795cdef6c2249edffa9e9416ae)) - by @groot007
+
 # [7.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.11...@react-navigation/stack@7.0.0-alpha.12) (2024-03-04)
 
 **Note:** Version bump only for package @react-navigation/stack

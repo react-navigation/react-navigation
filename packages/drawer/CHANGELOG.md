@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.12...@react-navigation/drawer@7.0.0-alpha.13) (2024-03-08)
+
+### Bug Fixes
+
+* adjust drawer content styling ([b146aed](https://github.com/react-navigation/react-navigation/commit/b146aedcd87f26159388d42d62b8bed34ab16305)) - by @satya164
+
 # [7.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.11...@react-navigation/drawer@7.0.0-alpha.12) (2024-03-04)
 
 ### Bug Fixes

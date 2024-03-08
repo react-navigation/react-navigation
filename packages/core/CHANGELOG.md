@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.10...@react-navigation/core@7.0.0-alpha.11) (2024-03-08)
+
+### Bug Fixes
+
+* adjust URL encoding to avoid encoding unnecessarily ([#11867](https://github.com/react-navigation/react-navigation/issues/11867)) ([7991ce8](https://github.com/react-navigation/react-navigation/commit/7991ce8fd17e0823287ecc0eed7c0efb1ac4869e)) - by @groot007
+* fix navigation not working in strict mode ([11dbba9](https://github.com/react-navigation/react-navigation/commit/11dbba92ce6f91b3664ae3c856ab1ad67f333030)) - by @satya164
+* handle conflicting nested path params for linking ([#11849](https://github.com/react-navigation/react-navigation/issues/11849)) ([aeaadd6](https://github.com/react-navigation/react-navigation/commit/aeaadd63349216a1fb1bc3cfb4ba4a5f33ad2c5a)) - by @rexfordessilfie
+* linking on initial path plus wildcard ([#11844](https://github.com/react-navigation/react-navigation/issues/11844)) ([2c2881f](https://github.com/react-navigation/react-navigation/commit/2c2881fde0a188e2cf4480f7ecf00e6b07e5d07f)), closes [/github.com/react-navigation/react-navigation/blob/fe4d4289e2bdec7614c6f2e5ca95d9b8f714af39/packages/core/src/getStateFromPath.tsx#L138](https://github.com//github.com/react-navigation/react-navigation/blob/fe4d4289e2bdec7614c6f2e5ca95d9b8f714af39/packages/core/src/getStateFromPath.tsx/issues/L138) - by @rexfordessilfie
+
 # [7.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.9...@react-navigation/core@7.0.0-alpha.10) (2024-03-04)
 
 ### Bug Fixes
