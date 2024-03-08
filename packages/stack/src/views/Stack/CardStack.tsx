@@ -288,6 +288,14 @@ export class CardStack extends React.Component<Props, State> {
       return acc;
     }, {});
 
+    const modalRouteKeys = getModalRouteKeys(
+      [...props.routes, ...props.state.preloadedRoutes],
+      {
+        ...props.descriptors,
+        ...props.preloadedDescriptors,
+      }
+    );
+
     const scenes = [...props.routes, ...props.state.preloadedRoutes].map(
       (route, index, self) => {
         // For preloaded screens, we don't care about the previous and the next screen
@@ -335,10 +343,7 @@ export class CardStack extends React.Component<Props, State> {
 
         // Assume modal if there are already modal screens in the stack
         // or current screen is a modal when no presentation is specified
-        const isModal = getModalRouteKeys(props.routes, props.descriptors, [
-          'modal',
-          'transparentModal',
-        ]).includes(route.key);
+        const isModal = modalRouteKeys.includes(route.key);
 
         // Disable screen transition animation by default on web, windows and macos to match the native behavior
         const excludedPlatforms =

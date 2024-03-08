@@ -452,6 +452,8 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
 
   useInvalidPreventRemoveError(descriptors);
 
+  const modalRouteKeys = getModalRouteKeys(state.routes, descriptors);
+
   return (
     <SafeAreaProviderCompat style={{ backgroundColor: colors.background }}>
       <ScreenStack style={styles.container}>
@@ -464,10 +466,8 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
             ? descriptors[previousKey]
             : undefined;
           const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
-          const isModal = getModalRouteKeys(state.routes, descriptors, [
-            'modal',
-            'transparentModal',
-          ]).includes(route.key);
+
+          const isModal = modalRouteKeys.includes(route.key);
 
           return (
             <SceneView
