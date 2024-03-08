@@ -556,6 +556,10 @@ export function useNavigationBuilder<
   state = nextState;
 
   React.useEffect(() => {
+    // In strict mode, React will double-invoke effects.
+    // So we need to reset the flag if component was not unmounted
+    stateCleanedUp.current = false;
+
     setKey(navigatorKey);
 
     if (!getIsInitial()) {

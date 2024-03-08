@@ -2,7 +2,6 @@ import { Button } from '@react-navigation/elements';
 import {
   CommonActions,
   Link,
-  type ParamListBase,
   type PathConfigMap,
   StackActions,
 } from '@react-navigation/native';
@@ -22,11 +21,10 @@ export type LinkComponentDemoParamList = {
   Albums: undefined;
 };
 
-export const linkComponentDemoLinking: PathConfigMap<LinkComponentDemoParamList> =
-  {
-    Article: COMMON_LINKING_CONFIG.Article,
-    Albums: 'albums',
-  };
+const linking: PathConfigMap<LinkComponentDemoParamList> = {
+  Article: COMMON_LINKING_CONFIG.Article,
+  Albums: 'albums',
+};
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
@@ -91,18 +89,9 @@ const AlbumsScreen = ({
 
 const SimpleStack = createStackNavigator<LinkComponentDemoParamList>();
 
-type Props = Partial<React.ComponentProps<typeof SimpleStack.Navigator>> &
-  StackScreenProps<ParamListBase>;
-
-export function LinkComponent({ navigation, ...rest }: Props) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function LinkComponent() {
   return (
-    <SimpleStack.Navigator {...rest}>
+    <SimpleStack.Navigator>
       <SimpleStack.Screen
         name="Article"
         component={ArticleScreen}
@@ -119,6 +108,9 @@ export function LinkComponent({ navigation, ...rest }: Props) {
     </SimpleStack.Navigator>
   );
 }
+
+LinkComponent.title = '<Link /> ';
+LinkComponent.linking = linking;
 
 const styles = StyleSheet.create({
   buttons: {

@@ -355,6 +355,8 @@ export function Drawer({
   });
 
   const drawerAnimatedStyle = useAnimatedStyle(() => {
+    const distanceFromEdge = layout.width - drawerWidth;
+
     return {
       transform:
         drawerType === 'permanent'
@@ -365,7 +367,8 @@ export function Drawer({
               {
                 translateX:
                   // The drawer stays in place when `drawerType` is `back`
-                  drawerType === 'back' ? 0 : translateX.value,
+                  (drawerType === 'back' ? 0 : translateX.value) +
+                  (drawerPosition === 'left' ? 0 : distanceFromEdge),
               },
             ],
     };

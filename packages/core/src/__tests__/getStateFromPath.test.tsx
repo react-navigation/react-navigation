@@ -2687,3 +2687,41 @@ it('encoding params correctly', () => {
     getPathFromState<object>(getStateFromPath<object>(path, config)!, config)
   ).toEqual(path);
 });
+
+it('resolves nested path params with same name to correct screen', () => {
+  const path = '/foo/42/bar/43';
+
+  const config = {
+    initialRouteName: 'Foo',
+    screens: {
+      Foo: {
+        path: 'foo/:id',
+        screens: {
+          Bar: {
+            path: 'bar/:id',
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: '42' },
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              params: { id: '43' },
+              path,
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+});

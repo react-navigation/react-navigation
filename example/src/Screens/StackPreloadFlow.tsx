@@ -15,7 +15,7 @@ export type PreloadStackParams = {
   Profile: undefined;
 };
 
-export const preloadStackLinking: PathConfigMap<PreloadStackParams> = {
+const linking: PathConfigMap<PreloadStackParams> = {
   Home: '',
   Details: 'details',
   Profile: 'profile',
@@ -100,13 +100,16 @@ const SimpleStack = createStackNavigator<PreloadStackParams>();
 
 export function StackPreloadFlow() {
   return (
-    <SimpleStack.Navigator screenOptions={{ headerShown: false }}>
+    <SimpleStack.Navigator>
       <SimpleStack.Screen name="Home" component={HomeScreen} />
       <SimpleStack.Screen name="Details" component={DetailsScreen} />
       <SimpleStack.Screen name="Profile" component={ProfileScreen} />
     </SimpleStack.Navigator>
   );
 }
+
+StackPreloadFlow.title = 'Preloading flow for Stack';
+StackPreloadFlow.linking = linking;
 
 const styles = StyleSheet.create({
   content: {
