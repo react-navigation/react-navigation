@@ -2590,3 +2590,41 @@ it('throws when invalid properties are specified in the config', () => {
     See https://reactnavigation.org/docs/configuring-links for more details on how to specify a linking configuration."
   `);
 });
+
+it('resolves nested path params with same name to correct screen', () => {
+  const path = '/foo/42/bar/43';
+
+  const config = {
+    initialRouteName: 'Foo',
+    screens: {
+      Foo: {
+        path: 'foo/:id',
+        screens: {
+          Bar: {
+            path: 'bar/:id',
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: '42' },
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              params: { id: '43' },
+              path,
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+});
