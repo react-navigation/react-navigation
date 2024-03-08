@@ -2,7 +2,7 @@ import { Easing } from 'react-native';
 
 import type { TransitionSpec } from '../types';
 
-export const CrossFadeSpec: TransitionSpec = {
+export const FadeSpec: TransitionSpec = {
   animation: 'timing',
   config: {
     duration: 150,
