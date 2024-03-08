@@ -1,4 +1,4 @@
-import { Button, Text } from '@react-navigation/elements';
+import { Button } from '@react-navigation/elements';
 import {
   CommonActions,
   Link,
@@ -47,33 +47,35 @@ const ArticleScreen = ({
         >
           Replace with Albums
         </Link>
-        {Platform.OS === 'web' && (
-          <Text
-            onPress={() => {
-              location.hash = 'frodo';
-            }}
-          >
-            Add hash to current URL
-          </Text>
-        )}
 
-        <Button
-          variant="filled"
-          testID="update-author-param"
-          onPress={() => {
-            navigation?.setParams({
-              author: 'Bilbo Baggins',
-            });
-          }}
-        >
-          Update author param
-        </Button>
         <Button screen="Home" variant="filled">
           Go to Home
         </Button>
         <Button variant="tinted" action={CommonActions.goBack()}>
           Go back
         </Button>
+
+        <Button
+          variant="tinted"
+          onPress={() =>
+            navigation.setParams({
+              author:
+                route.params?.author === 'Gandalf' ? 'Babel fish' : 'Gandalf',
+            })
+          }
+        >
+          Update params
+        </Button>
+
+        {Platform.OS === 'web' && (
+          <Button
+            onPress={() => {
+              location.hash = 'frodo';
+            }}
+          >
+            Add hash to URL
+          </Button>
+        )}
       </View>
       <Article
         author={{ name: route.params.author }}
