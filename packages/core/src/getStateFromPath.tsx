@@ -22,7 +22,6 @@ type RouteConfig = {
   screen: string;
   regex?: RegExp;
   path: string;
-  normalizedPath: string;
   pattern: string;
   routeNames: string[];
   parse?: ParseConfig;
@@ -324,13 +323,19 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
           return c.screen === name && config.pattern.startsWith(c.pattern);
         });
 
+        // Normalize pattern to remove any leading, trailing slashes, duplicate slashes etc.
+        const normalizedPath = routeConfig?.path
+          .split('/')
+          .filter(Boolean)
+          .join('/');
+
         // Get the number of segments in the initial pattern
         const numInitialSegments = routeConfig?.pattern
           // Extract the prefix from the pattern by removing the ending path pattern (e.g pattern=`a/b/c/d` and normalizedPath=`c/d` becomes `a/b`)
-          .replace(new RegExp(`${escape(routeConfig.normalizedPath)}$`), '')
+          .replace(new RegExp(`${escape(normalizedPath!)}$`), '')
           ?.split('/').length;
 
-        const params = routeConfig?.normalizedPath
+        const params = normalizedPath
           ?.split('/')
           .reduce<Record<string, unknown>>((acc, p, index) => {
             if (!p.startsWith(':')) {
@@ -340,13 +345,11 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
             // Get the real index of the path parameter in the matched path
             // by offsetting by the number of segments in the initial pattern
             const offset = numInitialSegments ? numInitialSegments - 1 : 0;
-            const _index = index + offset;
-
-            const value = matchedParams[p]?.[_index];
+            const value = matchedParams[p]?.[index + offset];
 
             if (value) {
               const key = p.replace(/^:/, '').replace(/\?$/, '');
-              acc[key] = routeConfig.parse?.[key]
+              acc[key] = routeConfig?.parse?.[key]
                 ? routeConfig.parse[key](value)
                 : value;
             }
@@ -457,9 +460,8 @@ const createConfigItem = (
   path: string,
   parse?: ParseConfig
 ): RouteConfig => {
-  // Normalize pattern and path to remove any leading, trailing slashes, duplicate slashes etc.
+  // Normalize pattern to remove any leading, trailing slashes, duplicate slashes etc.
   pattern = pattern.split('/').filter(Boolean).join('/');
-  const normalizedPath = path.split('/').filter(Boolean).join('/');
 
   const regex = pattern
     ? new RegExp(
@@ -481,7 +483,6 @@ const createConfigItem = (
     regex,
     pattern,
     path,
-    normalizedPath,
     // The routeNames array is mutated, so copy it to keep the current state
     routeNames: [...routeNames],
     parse,
