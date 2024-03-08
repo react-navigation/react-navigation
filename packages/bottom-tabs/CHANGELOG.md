@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.13...@react-navigation/bottom-tabs@7.0.0-alpha.14) (2024-03-08)
+
+### Bug Fixes
+
+* fix flicker for intermediate screens for tab animation ([9d54040](https://github.com/react-navigation/react-navigation/commit/9d540409d0d324027b6196f756cb98de6eb52f1f)) - by @satya164
+
 # [7.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.12...@react-navigation/bottom-tabs@7.0.0-alpha.13) (2024-03-08)
 
 ### Bug Fixes
