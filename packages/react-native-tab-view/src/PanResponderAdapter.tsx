@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {
   Animated,
-  GestureResponderEvent,
+  type GestureResponderEvent,
   Keyboard,
   PanResponder,
-  PanResponderGestureState,
+  type PanResponderGestureState,
   StyleSheet,
   View,
 } from 'react-native';
@@ -320,8 +320,8 @@ export function PanResponderAdapter<T extends Route>({
                 layout.width
                   ? { width: layout.width }
                   : focused
-                  ? StyleSheet.absoluteFill
-                  : null
+                    ? StyleSheet.absoluteFill
+                    : null
               }
             >
               {focused || layout.width ? child : null}

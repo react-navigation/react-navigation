@@ -3,9 +3,9 @@ import {
   getActionFromState as getActionFromStateDefault,
   getPathFromState as getPathFromStateDefault,
   getStateFromPath as getStateFromPathDefault,
-  NavigationContainerRef,
-  NavigationState,
-  ParamListBase,
+  type NavigationContainerRef,
+  type NavigationState,
+  type ParamListBase,
   useNavigationIndependentTree,
 } from '@react-navigation/core';
 import isEqual from 'fast-deep-equal';
@@ -63,12 +63,13 @@ const findMatchingState = <T extends NavigationState>(
 export const series = (cb: () => Promise<void>) => {
   let queue = Promise.resolve();
   const callback = () => {
+    // eslint-disable-next-line promise/no-callback-in-promise
     queue = queue.then(cb);
   };
   return callback;
 };
 
-let linkingHandlers: Symbol[] = [];
+const linkingHandlers: symbol[] = [];
 
 type Options = LinkingOptions<ParamListBase>;
 
@@ -81,7 +82,7 @@ export function useLinking(
     getPathFromState = getPathFromStateDefault,
     getActionFromState = getActionFromStateDefault,
   }: Options,
-  lastUnhandledLinking: React.MutableRefObject<string | undefined | null>
+  onUnhandledLinking: (lastUnhandledLining: string | undefined) => void
 ) {
   const independent = useNavigationIndependentTree();
 
@@ -168,7 +169,7 @@ export function useLinking(
       }
 
       // If the link were handled, it gets cleared in NavigationContainer
-      lastUnhandledLinking.current = path;
+      onUnhandledLinking(path);
     }
 
     const thenable = {
@@ -198,6 +199,8 @@ export function useLinking(
         return;
       }
 
+      const { location } = window;
+
       const path = location.pathname + location.search;
       const index = history.index;
 
@@ -222,7 +225,7 @@ export function useLinking(
       // Otherwise the action will likely add items to history, which would mess things up
       if (state) {
         // If the link were handled, it gets cleared in NavigationContainer
-        lastUnhandledLinking.current = path;
+        onUnhandledLinking(path);
         // Make sure that the routes in the state exist in the root navigator
         // Otherwise there's an error in the linking configuration
         if (validateRoutesNotExistInRootState(state)) {
@@ -263,7 +266,7 @@ export function useLinking(
   }, [
     enabled,
     history,
-    lastUnhandledLinking,
+    onUnhandledLinking,
     ref,
     validateRoutesNotExistInRootState,
   ]);
@@ -375,7 +378,12 @@ export function useLinking(
           const currentIndex = history.index;
 
           try {
-            if (nextIndex !== -1 && nextIndex < currentIndex) {
+            if (
+              nextIndex !== -1 &&
+              nextIndex < currentIndex &&
+              // We should only go back if the entry exists and it's less than current index
+              history.get(nextIndex - currentIndex)
+            ) {
               // An existing entry for this path exists and it's less than current index, go back to that
               await history.go(nextIndex - currentIndex);
             } else {

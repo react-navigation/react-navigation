@@ -1,13 +1,13 @@
 import {
   CommonActions,
-  ParamListBase,
-  Route,
-  TabNavigationState,
+  type ParamListBase,
+  type Route,
+  type TabNavigationState,
   useLocale,
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { SceneRendererProps, TabView } from 'react-native-tab-view';
+import { type SceneRendererProps, TabView } from 'react-native-tab-view';
 
 import type {
   MaterialTopTabBarProps,
@@ -67,7 +67,10 @@ export function MaterialTopTabView({
       renderLazyPlaceholder={({ route }) =>
         descriptors[route.key].options.lazyPlaceholder?.() ?? null
       }
-      lazy={({ route }) => descriptors[route.key].options.lazy === true}
+      lazy={({ route }) =>
+        descriptors[route.key].options.lazy === true &&
+        !state.preloadedRouteKeys.includes(route.key)
+      }
       lazyPreloadDistance={focusedOptions.lazyPreloadDistance}
       swipeEnabled={focusedOptions.swipeEnabled}
       animationEnabled={focusedOptions.animationEnabled}

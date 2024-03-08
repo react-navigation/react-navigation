@@ -3,15 +3,15 @@ import * as React from 'react';
 import {
   Animated,
   Image,
-  LayoutChangeEvent,
+  type LayoutChangeEvent,
   Platform,
   StyleSheet,
   View,
 } from 'react-native';
 
 import { MaskedView } from '../MaskedView';
-import { PlatformPressable } from '../PlatformPressable';
 import type { HeaderBackButtonProps } from '../types';
+import { HeaderButton } from './HeaderButton';
 
 export function HeaderBackButton({
   disabled,
@@ -31,6 +31,7 @@ export function HeaderBackButton({
   accessibilityLabel = label && label !== 'Back' ? `${label}, back` : 'Go back',
   testID,
   style,
+  href,
 }: HeaderBackButtonProps) {
   const { colors, fonts } = useTheme();
   const { direction } = useLocale();
@@ -79,6 +80,7 @@ export function HeaderBackButton({
             Boolean(labelVisible) && styles.iconWithLabel,
             Boolean(tintColor) && { tintColor },
           ]}
+          resizeMode="contain"
           source={require('../assets/back-icon.png')}
           fadeDuration={0}
         />
@@ -136,6 +138,7 @@ export function HeaderBackButton({
           <View style={styles.iconMaskContainer}>
             <Image
               source={require('../assets/back-icon-mask.png')}
+              resizeMode="contain"
               style={[styles.iconMask, direction === 'rtl' && styles.flip]}
             />
             <View style={styles.iconMaskFillerRect} />
@@ -147,43 +150,34 @@ export function HeaderBackButton({
     );
   };
 
-  const handlePress = () => onPress && requestAnimationFrame(onPress);
+  const handlePress = () => {
+    if (onPress) {
+      requestAnimationFrame(() => onPress());
+    }
+  };
 
   return (
-    <PlatformPressable
+    <HeaderButton
       disabled={disabled}
-      accessible
-      accessibilityRole="button"
+      href={href}
       accessibilityLabel={accessibilityLabel}
       testID={testID}
-      onPress={disabled ? undefined : handlePress}
+      onPress={handlePress}
       pressColor={pressColor}
       pressOpacity={pressOpacity}
-      android_ripple={androidRipple}
-      style={[styles.container, disabled && styles.disabled, style]}
-      hitSlop={Platform.select({
-        ios: undefined,
-        default: { top: 16, right: 16, bottom: 16, left: 16 },
-      })}
+      style={[styles.container, style]}
     >
       <React.Fragment>
         {renderBackImage()}
         {renderLabel()}
       </React.Fragment>
-    </PlatformPressable>
+    </HeaderButton>
   );
 }
 
-const androidRipple = {
-  borderless: true,
-  foreground: Platform.OS === 'android' && Platform.Version >= 23,
-  radius: 20,
-};
-
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    flexDirection: 'row',
+    paddingHorizontal: 0,
     minWidth: StyleSheet.hairlineWidth, // Avoid collapsing when title is long
     ...Platform.select({
       ios: null,
@@ -192,9 +186,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 11,
       },
     }),
-  },
-  disabled: {
-    opacity: 0.5,
   },
   label: {
     fontSize: 17,
@@ -215,13 +206,11 @@ const styles = StyleSheet.create({
       marginLeft: 8,
       marginRight: 22,
       marginVertical: 12,
-      resizeMode: 'contain',
     },
     default: {
       height: 24,
       width: 24,
       margin: 3,
-      resizeMode: 'contain',
     },
   }),
   iconWithLabel:
@@ -245,9 +234,8 @@ const styles = StyleSheet.create({
     marginLeft: -14.5,
     marginVertical: 12,
     alignSelf: 'center',
-    resizeMode: 'contain',
   },
   flip: {
-    transform: [{ scaleX: -1 }],
+    transform: 'scaleX(-1)',
   },
 });

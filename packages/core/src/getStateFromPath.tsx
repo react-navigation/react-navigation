@@ -71,7 +71,7 @@ export function getStateFromPath<ParamList extends {}>(
     validatePathConfig(options);
   }
 
-  let initialRoutes: InitialRouteConfig[] = [];
+  const initialRoutes: InitialRouteConfig[] = [];
 
   if (options?.initialRouteName) {
     initialRoutes.push({
@@ -291,17 +291,24 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
         ?.split('/')
         .filter((p) => p.startsWith(':'))
         .reduce<Record<string, any>>(
-          (acc, p, i) =>
-            Object.assign(acc, {
+          (acc, p, i) => {
+            const decodedParamSegment = decodeURIComponent(match![(i + 1) * 2]);
+            return Object.assign(acc, {
               // The param segments appear every second item starting from 2 in the regex match result
-              [p]: match![(i + 1) * 2].replace(/\//, ''),
-            }),
+              [p]: decodedParamSegment.replace(/\//, ''),
+            });
+          },
+
           {}
         );
 
       routes = config.routeNames.map((name) => {
-        const config = configs.find((c) => c.screen === name);
-        const params = config?.path
+        const routeConfig = configs.find((c) => {
+          // Check matching name AND pattern in case same screen is used at different levels in config
+          return c.screen === name && config.pattern.startsWith(c.pattern);
+        });
+
+        const params = routeConfig?.path
           ?.split('/')
           .filter((p) => p.startsWith(':'))
           .reduce<Record<string, any>>((acc, p) => {
@@ -309,7 +316,9 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
 
             if (value) {
               const key = p.replace(/^:/, '').replace(/\?$/, '');
-              acc[key] = config.parse?.[key] ? config.parse[key](value) : value;
+              acc[key] = routeConfig.parse?.[key]
+                ? routeConfig.parse[key](value)
+                : value;
             }
 
             return acc;
@@ -523,7 +532,6 @@ const createNestedStateObject = (
   initialRoutes: InitialRouteConfig[],
   flatConfig?: RouteConfig[]
 ) => {
-  let state: InitialState;
   let route = routes.shift() as ParsedRoute;
   const parentScreens: string[] = [];
 
@@ -531,7 +539,11 @@ const createNestedStateObject = (
 
   parentScreens.push(route.name);
 
-  state = createStateObject(initialRoute, route, routes.length === 0);
+  const state: InitialState = createStateObject(
+    initialRoute,
+    route,
+    routes.length === 0
+  );
 
   if (routes.length > 0) {
     let nestedState = state;

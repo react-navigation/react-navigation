@@ -1,15 +1,13 @@
-import { PlatformPressable } from '@react-navigation/elements';
-import { CommonActions, Link, Route, useTheme } from '@react-navigation/native';
+import { PlatformPressable, Text } from '@react-navigation/elements';
+import { type Route, useTheme } from '@react-navigation/native';
 import Color from 'color';
 import * as React from 'react';
 import {
-  Platform,
-  StyleProp,
+  type StyleProp,
   StyleSheet,
-  Text,
-  TextStyle,
+  type TextStyle,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native';
 
 type Props = {
@@ -96,65 +94,6 @@ type Props = {
   testID?: string;
 };
 
-const LinkPressable = ({
-  route,
-  href,
-  children,
-  style,
-  onPress,
-  onLongPress,
-  onPressIn,
-  onPressOut,
-  accessibilityRole,
-  ...rest
-}: Omit<React.ComponentProps<typeof PlatformPressable>, 'style'> & {
-  style: StyleProp<ViewStyle>;
-} & {
-  route: Route<string>;
-  href?: string;
-  children: React.ReactNode;
-  onPress?: () => void;
-}) => {
-  if (Platform.OS === 'web') {
-    // React Native Web doesn't forward `onClick` if we use `TouchableWithoutFeedback`.
-    // We need to use `onClick` to be able to prevent default browser handling of links.
-    return (
-      <Link
-        {...rest}
-        href={href}
-        action={CommonActions.navigate(route.name, route.params)}
-        style={[styles.button, style]}
-        onPress={(e: any) => {
-          if (
-            !(e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) && // ignore clicks with modifier keys
-            (e.button == null || e.button === 0) // ignore everything but left clicks
-          ) {
-            e.preventDefault();
-            onPress?.(e);
-          }
-        }}
-        // types for PressableProps and TextProps are incompatible with each other by `null` so we
-        // can't use {...rest} for these 3 props
-        onLongPress={onLongPress ?? undefined}
-        onPressIn={onPressIn ?? undefined}
-        onPressOut={onPressOut ?? undefined}
-      >
-        {children}
-      </Link>
-    );
-  } else {
-    return (
-      <PlatformPressable
-        {...rest}
-        accessibilityRole={accessibilityRole}
-        onPress={onPress}
-      >
-        <View style={style}>{children}</View>
-      </PlatformPressable>
-    );
-  }
-};
-
 /**
  * A component used to show an action item with an icon and a label in a navigation drawer.
  */
@@ -162,7 +101,6 @@ export function DrawerItem(props: Props) {
   const { colors, fonts } = useTheme();
 
   const {
-    route,
     href,
     icon,
     label,
@@ -182,7 +120,7 @@ export function DrawerItem(props: Props) {
     ...rest
   } = props;
 
-  const { borderRadius = 4 } = StyleSheet.flatten(style || {});
+  const { borderRadius = 56 } = StyleSheet.flatten(style || {});
   const color = focused ? activeTintColor : inactiveTintColor;
   const backgroundColor = focused
     ? activeBackgroundColor
@@ -196,31 +134,24 @@ export function DrawerItem(props: Props) {
       {...rest}
       style={[styles.container, { borderRadius, backgroundColor }, style]}
     >
-      <LinkPressable
+      <PlatformPressable
         testID={testID}
         onPress={onPress}
-        style={[styles.wrapper, { borderRadius }]}
         accessibilityLabel={accessibilityLabel}
         accessibilityRole="button"
         accessibilityState={{ selected: focused }}
         pressColor={pressColor}
         pressOpacity={pressOpacity}
-        route={route}
         href={href}
       >
-        <React.Fragment>
+        <View style={[styles.wrapper, { borderRadius }]}>
           {iconNode}
-          <View
-            style={[
-              styles.label,
-              { marginLeft: iconNode ? 32 : 0, marginVertical: 5 },
-            ]}
-          >
+          <View style={[styles.label, { marginLeft: iconNode ? 16 : 0 }]}>
             {typeof label === 'string' ? (
               <Text
                 numberOfLines={1}
                 allowFontScaling={allowFontScaling}
-                style={[{ color }, fonts.medium, labelStyle]}
+                style={[styles.labelText, { color }, fonts.medium, labelStyle]}
               >
                 {label}
               </Text>
@@ -228,28 +159,32 @@ export function DrawerItem(props: Props) {
               label({ color, focused })
             )}
           </View>
-        </React.Fragment>
-      </LinkPressable>
+        </View>
+      </PlatformPressable>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 10,
-    marginVertical: 4,
+    marginHorizontal: 12,
+    marginVertical: 2,
     overflow: 'hidden',
   },
   wrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 8,
+    paddingVertical: 12,
+    paddingLeft: 16,
+    paddingRight: 24,
   },
   label: {
-    marginRight: 32,
+    marginRight: 12,
+    marginVertical: 4,
     flex: 1,
   },
-  button: {
-    display: 'flex',
+  labelText: {
+    lineHeight: 24,
+    textAlignVertical: 'center',
   },
 });

@@ -7,6 +7,6 @@ export function getHeaderTitle(
   return typeof options.headerTitle === 'string'
     ? options.headerTitle
     : options.title !== undefined
-    ? options.title
-    : fallback;
+      ? options.title
+      : fallback;
 }

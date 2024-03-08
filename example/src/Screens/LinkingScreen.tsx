@@ -1,10 +1,14 @@
-import { useUnhandledLinking } from '@react-navigation/native';
+import { Button } from '@react-navigation/elements';
+import {
+  type PathConfigMap,
+  UNSTABLE_useUnhandledLinking,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
-  StackScreenProps,
+  type StackScreenProps,
 } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { Button, Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 
 const info = `
 \u2022 xcrun simctl openurl booted exp://127.0.0.1:19000/--/linking/profile
@@ -12,10 +16,16 @@ const info = `
 \u2022 http://localhost:19006/linking/profile
 `.trim();
 
-type StackParamList = {
+export type LinkingStackParams = {
   Home: undefined;
   Profile: undefined;
   SignIn: undefined;
+};
+
+const linking: PathConfigMap<LinkingStackParams> = {
+  Home: '',
+  Profile: 'profile',
+  SignIn: 'sign-in',
 };
 
 const SigningContext = React.createContext<{
@@ -25,42 +35,35 @@ const SigningContext = React.createContext<{
 
 const ProfileScreen = ({
   navigation,
-}: StackScreenProps<StackParamList, 'Profile'>) => {
+}: StackScreenProps<LinkingStackParams, 'Profile'>) => {
   const { signOut } = useContext(SigningContext)!;
   return (
     <View style={styles.container}>
       <Text style={{ ...styles.text, ...{ color: 'teal' } }}>
         Profile Screen
       </Text>
-      <Button
-        onPress={() => navigation.popTo('Home')}
-        title="Go back to home"
-      />
-      <Button onPress={signOut} title="Sign out" />
+      <Button onPress={() => navigation.popTo('Home')}>Go back to home</Button>
+      <Button onPress={signOut}>Sign out</Button>
     </View>
   );
 };
 
 const HomeScreen = ({
   navigation,
-}: StackScreenProps<StackParamList, 'Home'>) => {
+}: StackScreenProps<LinkingStackParams, 'Home'>) => {
   const { signOut } = useContext(SigningContext)!;
   return (
     <View style={styles.container}>
       <Text style={{ ...styles.text, ...{ color: 'indianred' } }}>
         Home Screen
       </Text>
-      <Button
-        onPress={() => navigation.popTo('Profile')}
-        title="Go to profile"
-      />
-      <Button onPress={signOut} title="Sign out" />
+      <Button onPress={() => navigation.popTo('Profile')}>Go to profile</Button>
+      <Button onPress={signOut}>Sign out</Button>
     </View>
   );
 };
 
 const SignInScreen = () => {
-  const { handleOnNextRouteNamesChange: scheduleNext } = useUnhandledLinking();
   const { signIn } = useContext(SigningContext)!;
 
   return (
@@ -70,19 +73,20 @@ const SignInScreen = () => {
       <Text style={styles.code}>{info}</Text>
       <Button
         onPress={() => {
-          scheduleNext();
           signIn();
         }}
-        title="Sign In"
-      />
+      >
+        Sign in
+      </Button>
     </View>
   );
 };
 
-const Stack = createStackNavigator<StackParamList>();
+const Stack = createStackNavigator<LinkingStackParams>();
 
 export function LinkingScreen() {
   const [isSignedIn, setSignedIn] = React.useState(false);
+  const { getStateForRouteNamesChange } = UNSTABLE_useUnhandledLinking();
   return (
     <SigningContext.Provider
       value={{
@@ -90,7 +94,9 @@ export function LinkingScreen() {
         signIn: () => setSignedIn(true),
       }}
     >
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+        getStateForRouteNamesChange={getStateForRouteNamesChange}
+      >
         {isSignedIn ? (
           <Stack.Group>
             <Stack.Screen name="Home" component={HomeScreen} />
@@ -109,6 +115,9 @@ export function LinkingScreen() {
     </SigningContext.Provider>
   );
 }
+
+LinkingScreen.title = 'Linking with authentication flow';
+LinkingScreen.linking = linking;
 
 const styles = StyleSheet.create({
   container: {

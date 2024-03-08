@@ -2,11 +2,18 @@ import { getHeaderTitle, HeaderBackContext } from '@react-navigation/elements';
 import {
   NavigationContext,
   NavigationRouteContext,
-  ParamListBase,
-  Route,
+  type ParamListBase,
+  type Route,
+  useLinkBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Animated, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import {
+  Animated,
+  type StyleProp,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from 'react-native';
 
 import {
   forNoAnimation,
@@ -47,6 +54,7 @@ export function HeaderContainer({
 }: Props) {
   const focusedRoute = getFocusedRoute();
   const parentHeaderBack = React.useContext(HeaderBackContext);
+  const { buildHref } = useLinkBuilder();
 
   return (
     <Animated.View pointerEvents="box-none" style={style}>
@@ -78,7 +86,10 @@ export function HeaderContainer({
           const { options, route } = previousScene.descriptor;
 
           headerBack = previousScene
-            ? { title: getHeaderTitle(options, route.name) }
+            ? {
+                title: getHeaderTitle(options, route.name),
+                href: buildHref(route.name, route.params),
+              }
             : parentHeaderBack;
         }
 
@@ -128,8 +139,8 @@ export function HeaderContainer({
                   nextHeaderlessGestureDirection === 'vertical-inverted'
                   ? forSlideUp
                   : nextHeaderlessGestureDirection === 'horizontal-inverted'
-                  ? forSlideRight
-                  : forSlideLeft
+                    ? forSlideRight
+                    : forSlideLeft
                 : headerStyleInterpolator
               : forNoAnimation,
         };

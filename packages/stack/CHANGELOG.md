@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.11...@react-navigation/stack@7.0.0-alpha.12) (2024-03-04)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+# [7.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.10...@react-navigation/stack@7.0.0-alpha.11) (2024-02-24)
+
+### Bug Fixes
+
+* fix peer dependency versions ([4b93b63](https://github.com/react-navigation/react-navigation/commit/4b93b6335ce180fe879f9fbe8f2400426b5484fb)) - by @
+
+# [7.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.9...@react-navigation/stack@7.0.0-alpha.10) (2024-02-23)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+# [7.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.8...@react-navigation/stack@7.0.0-alpha.9) (2024-02-23)
+
+### Bug Fixes
+
+* don't remount native views on focus change on the new architecture ([#11806](https://github.com/react-navigation/react-navigation/issues/11806)) ([aa518f1](https://github.com/react-navigation/react-navigation/commit/aa518f1171d6f4caafa2fe5675eefe55b586fd28)) - by @j-piasecki
+* handle failed gesture state to clear interaction ([#11465](https://github.com/react-navigation/react-navigation/issues/11465)) ([1b56cb5](https://github.com/react-navigation/react-navigation/commit/1b56cb5576599be1e3758b6d898b38c2fedefc37)) - by @Iltimirov
+
+### Features
+
+* add a HeaderButton component to elements ([d8de228](https://github.com/react-navigation/react-navigation/commit/d8de228bafc9408855bdfdfcd48bbb10195501fb)) - by @satya164
+* add autoHideHomeIndicator option for stack ([#11415](https://github.com/react-navigation/react-navigation/issues/11415)) ([8367758](https://github.com/react-navigation/react-navigation/commit/8367758824590b9affd07ce651f8020aca2a88f6)) - by @mortend
+
+# [7.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.7...@react-navigation/stack@7.0.0-alpha.8) (2024-01-17)
+
+### Bug Fixes
+
+* remove optional check in CardContainer ([#11772](https://github.com/react-navigation/react-navigation/issues/11772)) ([e73551a](https://github.com/react-navigation/react-navigation/commit/e73551a237f36e3242b329b71322e22d0190af74)) - by @osdnk
+* remove unnecessary check in the stack navigator ([#11747](https://github.com/react-navigation/react-navigation/issues/11747)) ([02ec21b](https://github.com/react-navigation/react-navigation/commit/02ec21b0b5660ff17758b596852a7d7dc06ff69e)), closes [#11733](https://github.com/react-navigation/react-navigation/issues/11733) - by @osdnk
+
+### Features
+
+* add layout and screenLayout props for screens ([#11741](https://github.com/react-navigation/react-navigation/issues/11741)) ([2dc2178](https://github.com/react-navigation/react-navigation/commit/2dc217827a1caa615460563973d3d658be372b29)) - by @satya164
+* add retaining of the screen to the stack navigator ([#11765](https://github.com/react-navigation/react-navigation/issues/11765)) ([7fe82f7](https://github.com/react-navigation/react-navigation/commit/7fe82f7217d9d146e5a127bcac921f0c90e2059f)), closes [#11758](https://github.com/react-navigation/react-navigation/issues/11758) - by @osdnk
+* preloading for stack navigator ([#11733](https://github.com/react-navigation/react-navigation/issues/11733)) ([14fa6df](https://github.com/react-navigation/react-navigation/commit/14fa6dfa4484cf2784f0e5cd0d06252fdf8a4ba5)), closes [#11702](https://github.com/react-navigation/react-navigation/issues/11702) [#11727](https://github.com/react-navigation/react-navigation/issues/11727) - by @osdnk
+* preloading in routers  ([382d6e6](https://github.com/react-navigation/react-navigation/commit/382d6e6f3312630b34332b1ae7d4bd7bf9b4ee60)) - by @osdnk
+
+# [7.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.6...@react-navigation/stack@7.0.0-alpha.7) (2023-11-17)
+
+### Bug Fixes
+
+* update peer dependencies when publishing ([c440703](https://github.com/react-navigation/react-navigation/commit/c44070310f875e488708f2a6c52ffddcea05b0e6)) - by @
+
+# [7.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.5...@react-navigation/stack@7.0.0-alpha.6) (2023-11-12)
+
+### Bug Fixes
+
+* workaround for mChrome empty space when navigating after address bar collapses ([#11366](https://github.com/react-navigation/react-navigation/issues/11366)) ([d638454](https://github.com/react-navigation/react-navigation/commit/d638454bec9e3f3bba3a808e13d7d1ae1be26acb)) - by @BeeMargarida
+
+### Features
+
+* add a layout prop for navigators ([#11614](https://github.com/react-navigation/react-navigation/issues/11614)) ([1f51190](https://github.com/react-navigation/react-navigation/commit/1f511904b9437d1451557147e72962859e97b1ae)) - by @satya164
+* add API for unhandled linking ([#11672](https://github.com/react-navigation/react-navigation/issues/11672)) ([5758b26](https://github.com/react-navigation/react-navigation/commit/5758b2615e70ce4943b23ead0227507c63b11c7c)) - by @osdnk
+
 # [7.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.4...@react-navigation/stack@7.0.0-alpha.5) (2023-09-25)
 
 **Note:** Version bump only for package @react-navigation/stack

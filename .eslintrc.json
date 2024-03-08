@@ -25,7 +25,10 @@
     "node": true
   },
   "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/ban-types": "off",
     "import/no-default-export": "error",
+    "react/display-name": "off",
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error"
   },
@@ -35,7 +38,7 @@
       "jest/*": "off"
     }
   }, {
-    "files":["scripts/*.js"],
+    "files":["scripts/*.js", "netlify/functions/**/*.js"],
     "rules": {
       "import/no-commonjs": "off"
     }

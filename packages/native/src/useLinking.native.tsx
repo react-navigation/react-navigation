@@ -1,8 +1,8 @@
 import {
   getActionFromState as getActionFromStateDefault,
   getStateFromPath as getStateFromPathDefault,
-  NavigationContainerRef,
-  ParamListBase,
+  type NavigationContainerRef,
+  type ParamListBase,
   useNavigationIndependentTree,
 } from '@react-navigation/core';
 import * as React from 'react';
@@ -15,7 +15,7 @@ type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
 type Options = LinkingOptions<ParamListBase>;
 
-let linkingHandlers: Symbol[] = [];
+const linkingHandlers: symbol[] = [];
 
 export function useLinking(
   ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
@@ -27,11 +27,11 @@ export function useLinking(
     getInitialURL = () =>
       Promise.race([
         Linking.getInitialURL(),
-        new Promise<undefined>((resolve) =>
+        new Promise<undefined>((resolve) => {
           // Timeout in 150ms if `getInitialState` doesn't resolve
           // Workaround for https://github.com/facebook/react-native/issues/25675
-          setTimeout(resolve, 150)
-        ),
+          setTimeout(resolve, 150);
+        }),
       ]),
     subscribe = (listener) => {
       const callback = ({ url }: { url: string }) => listener(url);
@@ -56,7 +56,7 @@ export function useLinking(
     getStateFromPath = getStateFromPathDefault,
     getActionFromState = getActionFromStateDefault,
   }: Options,
-  lastUnhandledLinking: React.MutableRefObject<string | null | undefined>
+  onUnhandledLinking: (lastUnhandledLining: string | undefined) => void
 ) {
   const independent = useNavigationIndependentTree();
 
@@ -148,13 +148,13 @@ export function useLinking(
 
             if (typeof url === 'string') {
               // If the link were handled, it gets cleared in NavigationContainer
-              lastUnhandledLinking.current = extractPathFromURL(prefixes, url);
+              onUnhandledLinking(extractPathFromURL(prefixes, url));
             }
 
             return state;
           });
         } else {
-          lastUnhandledLinking.current = extractPathFromURL(prefixes, url);
+          onUnhandledLinking(extractPathFromURL(prefixes, url));
         }
       }
 
@@ -171,7 +171,7 @@ export function useLinking(
     };
 
     return thenable as PromiseLike<ResultState | undefined>;
-  }, [getStateFromURL, lastUnhandledLinking, prefixes]);
+  }, [getStateFromURL, onUnhandledLinking, prefixes]);
 
   React.useEffect(() => {
     const listener = (url: string) => {
@@ -184,7 +184,7 @@ export function useLinking(
 
       if (navigation && state) {
         // If the link were handled, it gets cleared in NavigationContainer
-        lastUnhandledLinking.current = url;
+        onUnhandledLinking(extractPathFromURL(prefixes, url));
         const rootState = navigation.getRootState();
         if (state.routes.some((r) => !rootState?.routeNames.includes(r.name))) {
           return;
@@ -213,7 +213,7 @@ export function useLinking(
     };
 
     return subscribe(listener);
-  }, [enabled, getStateFromURL, lastUnhandledLinking, ref, subscribe]);
+  }, [enabled, getStateFromURL, onUnhandledLinking, prefixes, ref, subscribe]);
 
   return {
     getInitialState,

@@ -2,9 +2,9 @@ import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import {
-  NavigationState,
+  type NavigationState,
   SceneMap,
-  SceneRendererProps,
+  type SceneRendererProps,
   TabBar,
   TabView,
 } from 'react-native-tab-view';
@@ -49,7 +49,6 @@ export const AutoWidthTabBar = () => {
       indicatorStyle={styles.indicator}
       style={styles.tabbar}
       contentContainerStyle={styles.tabbarContentContainer}
-      labelStyle={styles.label}
       tabStyle={styles.tabStyle}
       gap={20}
       direction={direction}
@@ -88,9 +87,6 @@ const styles = StyleSheet.create({
   },
   indicator: {
     backgroundColor: '#ffeb3b',
-  },
-  label: {
-    fontWeight: '400',
   },
   tabStyle: {
     width: 'auto',

@@ -3,6 +3,53 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.8...@react-navigation/elements@2.0.0-alpha.9) (2024-03-04)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [2.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.7...@react-navigation/elements@2.0.0-alpha.8) (2024-02-24)
+
+### Bug Fixes
+
+* fix peer dependency versions ([4b93b63](https://github.com/react-navigation/react-navigation/commit/4b93b6335ce180fe879f9fbe8f2400426b5484fb)) - by @
+
+# [2.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.6...@react-navigation/elements@2.0.0-alpha.7) (2024-02-23)
+
+### Bug Fixes
+
+* **iOS:** disable collapsable option from Background in Screen ([#11840](https://github.com/react-navigation/react-navigation/issues/11840)) ([c1e327c](https://github.com/react-navigation/react-navigation/commit/c1e327ca40679ff9356a38e5ef96e349f323fb94)), closes [#1997](https://github.com/react-navigation/react-navigation/issues/1997) - by @tboba
+
+# [2.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.5...@react-navigation/elements@2.0.0-alpha.6) (2024-02-23)
+
+### Bug Fixes
+
+* fix header height for iOS devices with dynamic island ([#11786](https://github.com/react-navigation/react-navigation/issues/11786)) ([4c521b5](https://github.com/react-navigation/react-navigation/commit/4c521b5c865f2c46d58abb2e9e7fd1b0d2074215)), closes [#11655](https://github.com/react-navigation/react-navigation/issues/11655) - by @gianlucalippolis
+
+### Features
+
+* add a HeaderButton component to elements ([d8de228](https://github.com/react-navigation/react-navigation/commit/d8de228bafc9408855bdfdfcd48bbb10195501fb)) - by @satya164
+
+# [2.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.4...@react-navigation/elements@2.0.0-alpha.5) (2024-01-17)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [2.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.3...@react-navigation/elements@2.0.0-alpha.4) (2023-11-17)
+
+### Bug Fixes
+
+* darken the tint color for light colored button text ([d5e6b9e](https://github.com/react-navigation/react-navigation/commit/d5e6b9eaa0f3d347e2449ff8459bad8274de653e)) - by @satya164
+* update peer dependencies when publishing ([c440703](https://github.com/react-navigation/react-navigation/commit/c44070310f875e488708f2a6c52ffddcea05b0e6)) - by @
+
+# [2.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.2...@react-navigation/elements@2.0.0-alpha.3) (2023-11-12)
+
+### Bug Fixes
+
+* headerHeight on phones with dynamic island ([#11338](https://github.com/react-navigation/react-navigation/issues/11338)) ([e4815c5](https://github.com/react-navigation/react-navigation/commit/e4815c538536ddccf4207b87bf3e2f1603dedd84)), closes [#10989](https://github.com/react-navigation/react-navigation/issues/10989) - by @dylancom
+
+### Features
+
+* add a button element to elements package  ([#11669](https://github.com/react-navigation/react-navigation/issues/11669)) ([25a85c9](https://github.com/react-navigation/react-navigation/commit/25a85c90384ddfb6db946e791c01d8e033e04aa6)) - by @satya164
+
 # [2.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.1...@react-navigation/elements@2.0.0-alpha.2) (2023-09-25)
 
 **Note:** Version bump only for package @react-navigation/elements

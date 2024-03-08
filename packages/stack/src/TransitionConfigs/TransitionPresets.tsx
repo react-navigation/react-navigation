@@ -6,6 +6,7 @@ import {
   forFadeFromBottomAndroid,
   forFadeFromCenter as forFadeCard,
   forHorizontalIOS,
+  forHorizontalIOSInverted,
   forModalPresentationIOS,
   forRevealFromBottomAndroid,
   forScaleFromCenterAndroid,
@@ -135,11 +136,11 @@ export const ModalFadeTransition: TransitionPreset = {
 export const DefaultTransition = Platform.select({
   ios: SlideFromRightIOS,
   android:
-    Platform.Version >= ANDROID_VERSION_10
+    Number(Platform.Version) >= ANDROID_VERSION_10
       ? ScaleFromCenterAndroid
-      : Platform.Version >= ANDROID_VERSION_PIE
-      ? RevealFromBottomAndroid
-      : FadeFromBottomAndroid,
+      : Number(Platform.Version) >= ANDROID_VERSION_PIE
+        ? RevealFromBottomAndroid
+        : FadeFromBottomAndroid,
   default: ScaleFromCenterAndroid,
 });
 
@@ -150,3 +151,11 @@ export const ModalTransition = Platform.select({
   ios: ModalPresentationIOS,
   default: BottomSheetAndroid,
 });
+
+/**
+ * Slide from left transition.
+ */
+export const SlideFromLeftIOS: TransitionPreset = {
+  ...SlideFromRightIOS,
+  cardStyleInterpolator: forHorizontalIOSInverted,
+};

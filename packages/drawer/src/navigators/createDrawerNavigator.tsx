@@ -1,11 +1,11 @@
 import {
   createNavigatorFactory,
-  DefaultNavigatorOptions,
-  DrawerActionHelpers,
-  DrawerNavigationState,
+  type DefaultNavigatorOptions,
+  type DrawerActionHelpers,
+  type DrawerNavigationState,
   DrawerRouter,
-  DrawerRouterOptions,
-  ParamListBase,
+  type DrawerRouterOptions,
+  type ParamListBase,
   useNavigationBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -35,6 +35,7 @@ function DrawerNavigator({
   layout,
   screenListeners,
   screenOptions,
+  screenLayout,
   ...rest
 }: Props) {
   const { state, descriptors, navigation, NavigationContent } =
@@ -53,6 +54,7 @@ function DrawerNavigator({
       layout,
       screenListeners,
       screenOptions,
+      screenLayout,
     });
 
   return (

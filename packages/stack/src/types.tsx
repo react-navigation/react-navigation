@@ -1,7 +1,6 @@
 import type {
   HeaderBackButton,
   HeaderBackButtonProps,
-  HeaderButtonProps,
   HeaderOptions,
   HeaderTitleProps,
 } from '@react-navigation/elements';
@@ -51,7 +50,7 @@ export type StackNavigationHelpers = NavigationHelpers<
 export type StackNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined
+  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
@@ -65,7 +64,7 @@ export type StackNavigationProp<
 export type StackScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined
+  NavigatorID extends string | undefined = undefined,
 > = {
   navigation: StackNavigationProp<ParamList, RouteName, NavigatorID>;
   route: RouteProp<ParamList, RouteName>;
@@ -79,8 +78,19 @@ export type GestureDirection =
   | 'vertical'
   | 'vertical-inverted';
 
+export type StackAnimationName =
+  | 'default'
+  | 'fade'
+  | 'fade_from_bottom'
+  | 'none'
+  | 'reveal_from_bottom'
+  | 'scale_from_center'
+  | 'slide_from_bottom'
+  | 'slide_from_right'
+  | 'slide_from_left';
+
 type SceneOptionsDefaults = TransitionPreset & {
-  animationEnabled: boolean;
+  animation: StackAnimationName;
   gestureEnabled: boolean;
   cardOverlayEnabled: boolean;
   headerMode: StackHeaderMode;
@@ -140,11 +150,11 @@ export type StackHeaderOptions = Omit<
   /**
    * Function which returns a React Element to display on the left side of the header.
    */
-  headerLeft?: (props: HeaderBackButtonProps) => React.ReactNode;
+  headerLeft?: (props: StackHeaderLeftProps) => React.ReactNode;
   /**
    * Function which returns a React Element to display on the right side of the header.
    */
-  headerRight?: (props: HeaderButtonProps) => React.ReactNode;
+  headerRight?: (props: StackHeaderRightProps) => React.ReactNode;
   /**
    * Whether back button title font should scale to respect Text Size accessibility settings. Defaults to `false`.
    */
@@ -197,7 +207,11 @@ export type StackHeaderProps = {
     /**
      * Title of the previous screen.
      */
-    title: string;
+    title: string | undefined;
+    /**
+     * The `href` to use for the anchor tag on web
+     */
+    href: string | undefined;
   };
   /**
    * Animated nodes representing the progress of the animation.
@@ -219,6 +233,32 @@ export type StackHeaderProps = {
    * Interpolated styles for various elements in the header.
    */
   styleInterpolator: StackHeaderStyleInterpolator;
+};
+
+export type StackHeaderRightProps = {
+  /**
+   * Tint color for the header button.
+   */
+  tintColor?: string;
+  /**
+   * Color for material ripple (Android >= 5.0 only).
+   */
+  pressColor?: string;
+  /**
+   * Opacity when the button is pressed, used when ripple is not supported.
+   */
+  pressOpacity?: number;
+  /**
+   * Whether it's possible to navigate back in stack.
+   */
+  canGoBack?: boolean;
+};
+
+export type StackHeaderLeftProps = HeaderBackButtonProps & {
+  /**
+   * Whether it's possible to navigate back in stack.
+   */
+  canGoBack?: boolean;
 };
 
 export type StackDescriptor = Descriptor<
@@ -297,11 +337,20 @@ export type StackNavigationOptions = StackHeaderOptions &
      */
     presentation?: 'card' | 'modal' | 'transparentModal';
     /**
-     * Whether transition animation should be enabled the screen.
-     * If you set it to `false`, the screen won't animate when pushing or popping.
-     * Defaults to `true` on Android and iOS, `false` on Web.
+     * How the screen should animate when pushed or popped.
+     *
+     * Supported values:
+     * - 'none': don't animate the screen
+     * - 'default': use the platform default animation
+     * - 'fade': fade screen in or out
+     * - 'fade_from_bottom': fade screen in or out from bottom
+     * - 'slide_from_bottom': slide in the new screen from bottom
+     * - 'slide_from_right': slide in the new screen from right
+     * - 'slide_from_left': slide in the new screen from left
+     * - 'reveal_from_bottom': reveal screen in from bottom to top
+     * - 'scale_from_center': scale screen in from center
      */
-    animationEnabled?: boolean;
+    animation?: StackAnimationName;
     /**
      * The type of animation to use when this screen replaces another screen. Defaults to `push`.
      * When `pop` is used, the `pop` animation is applied to the screen being replaced.
@@ -342,6 +391,12 @@ export type StackNavigationOptions = StackHeaderOptions &
      * Only supported on iOS and Android.
      */
     freezeOnBlur?: boolean;
+    /**
+     * Whether the home indicator should prefer to stay hidden on this screen. Defaults to `false`.
+     *
+     * @platform ios
+     */
+    autoHideHomeIndicator?: boolean;
   };
 
 export type StackNavigationConfig = {

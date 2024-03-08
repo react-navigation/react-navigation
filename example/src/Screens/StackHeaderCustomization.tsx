@@ -1,11 +1,16 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { HeaderBackground, useHeaderHeight } from '@react-navigation/elements';
-import { ParamListBase, useTheme } from '@react-navigation/native';
+import {
+  Button,
+  HeaderBackground,
+  HeaderButton,
+  useHeaderHeight,
+} from '@react-navigation/elements';
+import { type PathConfigMap } from '@react-navigation/native';
 import {
   createStackNavigator,
   Header,
-  StackHeaderProps,
-  StackScreenProps,
+  type StackHeaderProps,
+  type StackScreenProps,
 } from '@react-navigation/stack';
 import * as React from 'react';
 import {
@@ -16,15 +21,20 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Appbar, Button } from 'react-native-paper';
 
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { BlurView } from '../Shared/BlurView';
 
-type SimpleStackParams = {
+export type HeaderCustomizationStackParams = {
   Article: { author: string };
   Albums: undefined;
+};
+
+const linking: PathConfigMap<HeaderCustomizationStackParams> = {
+  Article: COMMON_LINKING_CONFIG.Article,
+  Albums: 'albums',
 };
 
 const scrollEnabled = Platform.select({ web: true, default: false });
@@ -32,22 +42,14 @@ const scrollEnabled = Platform.select({ web: true, default: false });
 const ArticleScreen = ({
   navigation,
   route,
-}: StackScreenProps<SimpleStackParams, 'Article'>) => {
+}: StackScreenProps<HeaderCustomizationStackParams, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
-        <Button
-          mode="contained"
-          onPress={() => navigation.push('Albums')}
-          style={styles.button}
-        >
+        <Button variant="filled" onPress={() => navigation.push('Albums')}>
           Push album
         </Button>
-        <Button
-          mode="outlined"
-          onPress={() => navigation.goBack()}
-          style={styles.button}
-        >
+        <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back
         </Button>
       </View>
@@ -59,24 +61,21 @@ const ArticleScreen = ({
   );
 };
 
-const AlbumsScreen = ({ navigation }: StackScreenProps<SimpleStackParams>) => {
+const AlbumsScreen = ({
+  navigation,
+}: StackScreenProps<HeaderCustomizationStackParams>) => {
   const headerHeight = useHeaderHeight();
 
   return (
     <ScrollView contentContainerStyle={{ paddingTop: headerHeight }}>
       <View style={styles.buttons}>
         <Button
-          mode="contained"
+          variant="filled"
           onPress={() => navigation.push('Article', { author: 'Babel fish' })}
-          style={styles.button}
         >
           Push article
         </Button>
-        <Button
-          mode="outlined"
-          onPress={() => navigation.goBack()}
-          style={styles.button}
-        >
+        <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back
         </Button>
       </View>
@@ -85,9 +84,7 @@ const AlbumsScreen = ({ navigation }: StackScreenProps<SimpleStackParams>) => {
   );
 };
 
-const Stack = createStackNavigator<SimpleStackParams>();
-
-type Props = StackScreenProps<ParamListBase>;
+const Stack = createStackNavigator<HeaderCustomizationStackParams>();
 
 function CustomHeader(props: StackHeaderProps) {
   const { current, next } = props.progress;
@@ -108,14 +105,7 @@ function CustomHeader(props: StackHeaderProps) {
   );
 }
 
-export function StackHeaderCustomization({ navigation }: Props) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
-  const { colors, dark } = useTheme();
+export function StackHeaderCustomization() {
   const [headerTitleCentered, setHeaderTitleCentered] = React.useState(true);
 
   return (
@@ -139,9 +129,7 @@ export function StackHeaderCustomization({ navigation }: Props) {
             />
           ),
           headerRight: ({ tintColor }) => (
-            <Appbar.Action
-              color={tintColor}
-              icon="dots-horizontal-circle-outline"
+            <HeaderButton
               onPress={() => {
                 setHeaderTitleCentered((centered) => !centered);
                 Alert.alert(
@@ -149,7 +137,13 @@ export function StackHeaderCustomization({ navigation }: Props) {
                   'Never gonna let you down! Never gonna run around and desert you!'
                 );
               }}
-            />
+            >
+              <MaterialCommunityIcons
+                name="dots-horizontal-circle-outline"
+                size={24}
+                color={tintColor}
+              />
+            </HeaderButton>
           ),
         })}
         initialParams={{ author: 'Gandalf' }}
@@ -157,7 +151,7 @@ export function StackHeaderCustomization({ navigation }: Props) {
       <Stack.Screen
         name="Albums"
         component={AlbumsScreen}
-        options={{
+        options={({ theme }) => ({
           title: 'Albums',
           headerBackTitle: 'Back',
           headerTransparent: true,
@@ -166,30 +160,31 @@ export function StackHeaderCustomization({ navigation }: Props) {
               style={{
                 backgroundColor: 'blue',
                 borderBottomWidth: StyleSheet.hairlineWidth,
-                borderBottomColor: colors.border,
+                borderBottomColor: theme.colors.border,
               }}
             >
               <BlurView
-                tint={dark ? 'dark' : 'light'}
+                tint={theme.dark ? 'dark' : 'light'}
                 intensity={75}
                 style={StyleSheet.absoluteFill}
               />
             </HeaderBackground>
           ),
-        }}
+        })}
       />
     </Stack.Navigator>
   );
 }
 
+StackHeaderCustomization.title = 'Header Customization in Stack';
+StackHeaderCustomization.linking = linking;
+
 const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 8,
-  },
-  button: {
-    margin: 8,
+    gap: 12,
+    padding: 12,
   },
   banner: {
     textAlign: 'center',

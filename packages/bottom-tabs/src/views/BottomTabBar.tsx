@@ -7,22 +7,22 @@ import {
   CommonActions,
   NavigationContext,
   NavigationRouteContext,
-  ParamListBase,
-  TabNavigationState,
-  useLinkTools,
+  type ParamListBase,
+  type TabNavigationState,
+  useLinkBuilder,
   useTheme,
 } from '@react-navigation/native';
 import Color from 'color';
 import React from 'react';
 import {
   Animated,
-  LayoutChangeEvent,
+  type LayoutChangeEvent,
   Platform,
-  StyleProp,
+  type StyleProp,
   StyleSheet,
   useWindowDimensions,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 
@@ -104,8 +104,11 @@ export const getTabBarHeight = ({
   insets: EdgeInsets;
   style: Animated.WithAnimatedValue<StyleProp<ViewStyle>> | undefined;
 }) => {
-  // @ts-ignore
-  const customHeight = StyleSheet.flatten(style)?.height;
+  const flattenedStyle = StyleSheet.flatten(style);
+  const customHeight =
+    flattenedStyle && 'height' in flattenedStyle
+      ? flattenedStyle.height
+      : undefined;
 
   if (typeof customHeight === 'number') {
     return customHeight;
@@ -140,7 +143,7 @@ export function BottomTabBar({
   style,
 }: Props) {
   const { colors } = useTheme();
-  const { buildHref } = useLinkTools();
+  const { buildHref } = useLinkBuilder();
 
   const focusedRoute = state.routes[state.index];
   const focusedDescriptor = descriptors[focusedRoute.key];
@@ -155,7 +158,8 @@ export function BottomTabBar({
     tabBarBackground,
     tabBarActiveTintColor,
     tabBarInactiveTintColor,
-    tabBarActiveBackgroundColor = tabBarPosition !== 'bottom'
+    tabBarActiveBackgroundColor = tabBarPosition !== 'bottom' &&
+    tabBarPosition !== 'top'
       ? Color(tabBarActiveTintColor ?? colors.primary)
           .alpha(0.12)
           .rgb()
@@ -267,20 +271,23 @@ export function BottomTabBar({
 
   const tabBarBackgroundElement = tabBarBackground?.();
 
+  const tabBarIsHorizontal =
+    tabBarPosition === 'bottom' || tabBarPosition === 'top';
+
   return (
     <Animated.View
       style={[
         tabBarPosition === 'left'
           ? styles.left
           : tabBarPosition === 'right'
-          ? styles.right
-          : styles.bottom,
+            ? styles.right
+            : styles.bottom,
         {
           backgroundColor:
             tabBarBackgroundElement != null ? 'transparent' : colors.card,
           borderColor: colors.border,
         },
-        tabBarPosition === 'bottom'
+        tabBarIsHorizontal
           ? [
               {
                 transform: [
@@ -318,18 +325,14 @@ export function BottomTabBar({
         tabBarStyle,
       ]}
       pointerEvents={isTabBarHidden ? 'none' : 'auto'}
-      onLayout={tabBarPosition === 'bottom' ? handleLayout : undefined}
+      onLayout={tabBarIsHorizontal ? handleLayout : undefined}
     >
       <View pointerEvents="none" style={StyleSheet.absoluteFill}>
         {tabBarBackgroundElement}
       </View>
       <View
         accessibilityRole="tablist"
-        style={
-          tabBarPosition === 'bottom'
-            ? styles.bottomContent
-            : styles.sideContent
-        }
+        style={tabBarIsHorizontal ? styles.bottomContent : styles.sideContent}
       >
         {routes.map((route, index) => {
           const focused = index === state.index;
@@ -369,8 +372,8 @@ export function BottomTabBar({
             options.tabBarAccessibilityLabel !== undefined
               ? options.tabBarAccessibilityLabel
               : typeof label === 'string' && Platform.OS === 'ios'
-              ? `${label}, tab, ${index + 1} of ${routes.length}`
-              : undefined;
+                ? `${label}, tab, ${index + 1} of ${routes.length}`
+                : undefined;
 
           return (
             <NavigationContext.Provider
@@ -407,7 +410,7 @@ export function BottomTabBar({
                   labelStyle={options.tabBarLabelStyle}
                   iconStyle={options.tabBarIconStyle}
                   style={[
-                    tabBarPosition === 'bottom'
+                    tabBarIsHorizontal
                       ? styles.bottomItem
                       : [
                           styles.sideItem,

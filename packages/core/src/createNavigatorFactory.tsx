@@ -17,7 +17,7 @@ export function createNavigatorFactory<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
-  NavigatorComponent extends React.ComponentType<any>
+  NavigatorComponent extends React.ComponentType<any>,
 >(Navigator: NavigatorComponent) {
   function createNavigator<ParamList extends ParamListBase>(): TypedNavigator<
     ParamList,
@@ -27,7 +27,6 @@ export function createNavigatorFactory<
     typeof Navigator
   >;
 
-  // eslint-disable-next-line no-redeclare
   function createNavigator<
     ParamList extends ParamListBase,
     Config extends StaticConfig<
@@ -36,7 +35,7 @@ export function createNavigatorFactory<
       ScreenOptions,
       EventMap,
       typeof Navigator
-    >
+    >,
   >(
     config: Config
   ): TypedNavigator<
@@ -47,7 +46,6 @@ export function createNavigatorFactory<
     typeof Navigator
   > & { config: Config };
 
-  // eslint-disable-next-line no-redeclare
   function createNavigator(config?: any): any {
     if (config != null) {
       return {

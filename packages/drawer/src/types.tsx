@@ -35,16 +35,6 @@ export type DrawerNavigationConfig = {
    * Defaults to `true`.
    */
   detachInactiveScreens?: boolean;
-  /**
-   * Whether to use the legacy implementation based on Reanimated 1.
-   * The new implementation based on Reanimated 2 will perform better,
-   * but it's not possible to use Chrome remote debugger.
-   *
-   * This defaults to `true` if Reanimated 2 is not configured.
-   *
-   * Otherwise, it defaults to `false`
-   */
-  useLegacyImplementation?: boolean;
 };
 
 export type DrawerNavigationOptions = HeaderOptions & {
@@ -289,7 +279,7 @@ export type DrawerNavigationHelpers = NavigationHelpers<
 export type DrawerNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined
+  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
@@ -303,7 +293,7 @@ export type DrawerNavigationProp<
 export type DrawerScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined
+  NavigatorID extends string | undefined = undefined,
 > = {
   navigation: DrawerNavigationProp<ParamList, RouteName, NavigatorID>;
   route: RouteProp<ParamList, RouteName>;

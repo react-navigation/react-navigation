@@ -1,11 +1,11 @@
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import {
-  NavigationState,
+  type NavigationState,
   SceneMap,
-  SceneRendererProps,
+  type SceneRendererProps,
   TabBar,
   TabView,
 } from 'react-native-tab-view';
@@ -31,14 +31,14 @@ export const TabBarIcon = () => {
   const { direction } = useLocale();
   const [index, onIndexChange] = React.useState(0);
   const [routes] = React.useState<Route[]>([
-    { key: 'chat', icon: 'md-chatbubbles' },
-    { key: 'contacts', icon: 'md-people' },
-    { key: 'article', icon: 'md-list' },
+    { key: 'chat', icon: 'chatbubbles' },
+    { key: 'contacts', icon: 'people' },
+    { key: 'article', icon: 'list' },
   ]);
 
-  const renderIcon = ({ route, color }: { route: Route; color: string }) => (
-    <Ionicons name={route.icon} size={24} color={color} />
-  );
+  const renderIcon = React.useCallback((props: { route: Route }) => {
+    return <Ionicons name={props.route.icon} {...props} />;
+  }, []);
 
   const renderTabBar = (
     props: SceneRendererProps & { navigationState: State }
@@ -47,7 +47,9 @@ export const TabBarIcon = () => {
       {...props}
       direction={direction}
       indicatorStyle={styles.indicator}
-      renderIcon={renderIcon}
+      commonOptions={{
+        icon: renderIcon,
+      }}
       style={styles.tabbar}
       contentContainerStyle={styles.tabbarContentContainer}
       gap={20}

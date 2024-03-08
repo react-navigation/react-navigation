@@ -1,20 +1,14 @@
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
-import {
-  Animated,
-  StyleProp,
-  StyleSheet,
-  Text,
-  View,
-  ViewStyle,
-} from 'react-native';
+import { Animated, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-  NavigationState,
+  type NavigationState,
   SceneMap,
-  SceneRendererProps,
+  type SceneRendererProps,
   TabBar,
+  type TabBarIndicatorProps,
   TabView,
 } from 'react-native-tab-view';
 
@@ -42,27 +36,19 @@ export const CustomIndicator = () => {
   const [routes] = React.useState<Route[]>([
     {
       key: 'article',
-      icon: 'ios-document',
+      icon: 'document',
     },
     {
       key: 'contacts',
-      icon: 'ios-people',
+      icon: 'people',
     },
     {
       key: 'albums',
-      icon: 'ios-albums',
+      icon: 'albums',
     },
   ]);
 
-  const renderIndicator = (
-    props: SceneRendererProps & {
-      navigationState: State;
-      getTabWidth: (i: number) => number;
-      gap?: number;
-      width?: number | string;
-      style?: StyleProp<ViewStyle>;
-    }
-  ) => {
+  const renderIndicator = (props: TabBarIndicatorProps<Route>) => {
     const { position, getTabWidth, gap, width, style } = props;
     const inputRange = [
       0, 0.48, 0.49, 0.51, 0.52, 1, 1.48, 1.49, 1.51, 1.52, 2,
@@ -96,10 +82,7 @@ export const CustomIndicator = () => {
         style={[
           style,
           styles.container,
-          {
-            width: width,
-            transform: [{ translateX }] as any,
-          },
+          { width, transform: [{ translateX }] },
         ]}
       >
         <Animated.View
@@ -109,20 +92,18 @@ export const CustomIndicator = () => {
     );
   };
 
-  const renderIcon = ({ route }: { route: Route }) => (
-    <Ionicons name={route.icon} size={24} style={styles.icon} />
+  const renderBadge = React.useCallback(
+    () => (
+      <View style={styles.badge}>
+        <Text style={styles.count}>42</Text>
+      </View>
+    ),
+    []
   );
 
-  const renderBadge = ({ route }: { route: Route }) => {
-    if (route.key === 'albums') {
-      return (
-        <View style={styles.badge}>
-          <Text style={styles.count}>42</Text>
-        </View>
-      );
-    }
-    return null;
-  };
+  const renderIcon = React.useCallback((props: { route: Route }) => {
+    return <Ionicons name={props.route.icon} style={styles.icon} {...props} />;
+  }, []);
 
   const renderTabBar = (
     props: SceneRendererProps & { navigationState: State }
@@ -130,9 +111,15 @@ export const CustomIndicator = () => {
     <View style={[styles.tabbar, { paddingBottom: insets.bottom }]}>
       <TabBar
         {...props}
+        commonOptions={{
+          icon: renderIcon,
+        }}
+        options={{
+          albums: {
+            badge: renderBadge,
+          },
+        }}
         direction={direction}
-        renderIcon={renderIcon}
-        renderBadge={renderBadge}
         renderIndicator={renderIndicator}
         style={styles.tabbar}
         contentContainerStyle={styles.tabbarContentContainer}

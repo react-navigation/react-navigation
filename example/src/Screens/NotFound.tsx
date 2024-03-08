@@ -1,7 +1,7 @@
+import { Button } from '@react-navigation/elements';
 import type { StackScreenProps } from '@react-navigation/stack';
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Button } from 'react-native-paper';
 
 import type { RootStackParamList } from '../screens';
 
@@ -13,7 +13,7 @@ export const NotFound = ({
     <View style={styles.container}>
       <Text style={styles.title}>404 Not Found ({route.path})</Text>
       <Button
-        mode="contained"
+        variant="filled"
         onPress={() => navigation.navigate('Home')}
         style={styles.button}
       >

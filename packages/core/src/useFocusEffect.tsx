@@ -14,6 +14,7 @@ type EffectCallback = () => undefined | void | (() => void);
 export function useFocusEffect(effect: EffectCallback) {
   const navigation = useNavigation();
 
+  // eslint-disable-next-line prefer-rest-params
   if (arguments[1] !== undefined) {
     const message =
       "You passed a second argument to 'useFocusEffect', but it only accepts one argument. " +

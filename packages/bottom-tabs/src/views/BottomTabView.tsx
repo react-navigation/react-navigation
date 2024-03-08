@@ -12,6 +12,10 @@ import * as React from 'react';
 import { Animated, Platform, StyleSheet } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
+import {
+  FadeTransition,
+  ShiftingTransition,
+} from '../TransitionConfigs/TransitionPresets';
 import type {
   BottomTabBarProps,
   BottomTabDescriptorMap,
@@ -26,7 +30,6 @@ import { BottomTabBarHeightContext } from '../utils/BottomTabBarHeightContext';
 import { useAnimatedHashMap } from '../utils/useAnimatedHashMap';
 import { BottomTabBar, getTabBarHeight } from './BottomTabBar';
 import { MaybeScreen, MaybeScreenContainer } from './ScreenFallback';
-import CompositeAnimation = Animated.CompositeAnimation;
 
 type Props = BottomTabNavigationConfig & {
   state: TabNavigationState<ParamListBase>;
@@ -39,14 +42,26 @@ const STATE_INACTIVE = 0;
 const STATE_TRANSITIONING_OR_BELOW_TOP = 1;
 const STATE_ON_TOP = 2;
 
-const hasAnimation = (options: BottomTabNavigationOptions) => {
-  const { animationEnabled, transitionSpec } = options;
+const NAMED_TRANSITIONS_PRESETS = {
+  fade: FadeTransition,
+  shifting: ShiftingTransition,
+  none: {
+    sceneStyleInterpolator: undefined,
+    transitionSpec: {
+      animation: 'timing',
+      config: { duration: 150 },
+    },
+  },
+} as const;
 
-  if (animationEnabled === false || !transitionSpec) {
-    return false;
+const hasAnimation = (options: BottomTabNavigationOptions) => {
+  const { animation, transitionSpec } = options;
+
+  if (animation) {
+    return animation !== 'none';
   }
 
-  return true;
+  return !transitionSpec;
 };
 
 export function BottomTabView(props: Props) {
@@ -61,6 +76,7 @@ export function BottomTabView(props: Props) {
       Platform.OS === 'ios',
     sceneContainerStyle,
   } = props;
+
   const focusedRouteKey = state.routes[state.index].key;
 
   /**
@@ -81,20 +97,15 @@ export function BottomTabView(props: Props) {
         state.routes
           .map((route, index) => {
             const { options } = descriptors[route.key];
-            const { transitionSpec } = options;
-
-            const animationEnabled = hasAnimation(options);
+            const {
+              animation = 'none',
+              transitionSpec = NAMED_TRANSITIONS_PRESETS[animation]
+                .transitionSpec ??
+                NAMED_TRANSITIONS_PRESETS.none.transitionSpec,
+            } = options;
 
             const toValue =
               index === state.index ? 0 : index >= state.index ? 1 : -1;
-
-            if (!animationEnabled || !transitionSpec) {
-              return Animated.timing(tabAnims[route.key], {
-                toValue,
-                duration: 0,
-                useNativeDriver: true,
-              });
-            }
 
             return Animated[transitionSpec.animation](tabAnims[route.key], {
               ...transitionSpec.config,
@@ -102,7 +113,7 @@ export function BottomTabView(props: Props) {
               useNativeDriver: true,
             });
           })
-          .filter(Boolean) as CompositeAnimation[]
+          .filter(Boolean) as Animated.CompositeAnimation[]
       ).start();
     };
 
@@ -159,10 +170,15 @@ export function BottomTabView(props: Props) {
         tabBarPosition === 'left'
           ? styles.left
           : tabBarPosition === 'right'
-          ? styles.right
-          : null
+            ? styles.right
+            : null
       }
     >
+      {tabBarPosition === 'top' ? (
+        <BottomTabBarHeightCallbackContext.Provider value={setTabBarHeight}>
+          {renderTabBar()}
+        </BottomTabBarHeightCallbackContext.Provider>
+      ) : null}
       <MaybeScreenContainer
         enabled={detachInactiveScreens}
         hasTwoStates={hasTwoStates}
@@ -173,7 +189,9 @@ export function BottomTabView(props: Props) {
           const {
             lazy = true,
             unmountOnBlur,
-            sceneStyleInterpolator,
+            animation = 'none',
+            sceneStyleInterpolator = NAMED_TRANSITIONS_PRESETS[animation]
+              .sceneStyleInterpolator,
           } = descriptor.options;
           const isFocused = state.index === index;
 
@@ -181,8 +199,13 @@ export function BottomTabView(props: Props) {
             return null;
           }
 
-          if (lazy && !loaded.includes(route.key) && !isFocused) {
-            // Don't render a lazy screen if we've never navigated to it
+          if (
+            lazy &&
+            !loaded.includes(route.key) &&
+            !isFocused &&
+            !state.preloadedRouteKeys.includes(route.key)
+          ) {
+            // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
             return null;
           }
 
@@ -202,23 +225,25 @@ export function BottomTabView(props: Props) {
 
           const { sceneStyle } =
             sceneStyleInterpolator?.({
-              current: tabAnims[route.key],
+              current: {
+                progress: tabAnims[route.key],
+              },
             }) ?? {};
 
           const animationEnabled = hasAnimation(descriptor.options);
           const activityState = isFocused
             ? STATE_ON_TOP // the screen is on top after the transition
             : animationEnabled // is animation is not enabled, immediately move to inactive state
-            ? tabAnims[route.key].interpolate({
-                inputRange: [0, 1 - EPSILON, 1],
-                outputRange: [
-                  STATE_TRANSITIONING_OR_BELOW_TOP, // screen visible during transition
-                  STATE_TRANSITIONING_OR_BELOW_TOP,
-                  STATE_INACTIVE, // the screen is detached after transition
-                ],
-                extrapolate: 'extend',
-              })
-            : STATE_INACTIVE;
+              ? tabAnims[route.key].interpolate({
+                  inputRange: [0, 1 - EPSILON, 1],
+                  outputRange: [
+                    STATE_TRANSITIONING_OR_BELOW_TOP, // screen visible during transition
+                    STATE_TRANSITIONING_OR_BELOW_TOP,
+                    STATE_INACTIVE, // the screen is detached after transition
+                  ],
+                  extrapolate: 'extend',
+                })
+              : STATE_INACTIVE;
 
           return (
             <MaybeScreen
@@ -254,9 +279,11 @@ export function BottomTabView(props: Props) {
           );
         })}
       </MaybeScreenContainer>
-      <BottomTabBarHeightCallbackContext.Provider value={setTabBarHeight}>
-        {renderTabBar()}
-      </BottomTabBarHeightCallbackContext.Provider>
+      {tabBarPosition !== 'top' ? (
+        <BottomTabBarHeightCallbackContext.Provider value={setTabBarHeight}>
+          {renderTabBar()}
+        </BottomTabBarHeightCallbackContext.Provider>
+      ) : null}
     </SafeAreaProviderCompat>
   );
 }

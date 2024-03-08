@@ -49,8 +49,8 @@ export const Header = React.memo(function Header({
     options.headerStatusBarHeight !== undefined
       ? options.headerStatusBarHeight
       : isModal || isParentHeaderShown
-      ? 0
-      : insets.top;
+        ? 0
+        : insets.top;
 
   return (
     <HeaderSegment
@@ -66,6 +66,7 @@ export const Header = React.memo(function Header({
       }
       headerStatusBarHeight={statusBarHeight}
       onGoBack={back ? goBack : undefined}
+      backHref={back ? back.href : undefined}
       styleInterpolator={styleInterpolator}
     />
   );

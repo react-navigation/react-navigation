@@ -35,7 +35,7 @@ type Props<State extends NavigationState, ScreenOptions extends {}> = {
  */
 export function SceneView<
   State extends NavigationState,
-  ScreenOptions extends {}
+  ScreenOptions extends {},
 >({
   screen,
   route,

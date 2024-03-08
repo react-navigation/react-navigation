@@ -1,13 +1,13 @@
 import {
   createNavigatorFactory,
-  DefaultNavigatorOptions,
-  EventArg,
-  ParamListBase,
-  StackActionHelpers,
+  type DefaultNavigatorOptions,
+  type EventArg,
+  type ParamListBase,
+  type StackActionHelpers,
   StackActions,
-  StackNavigationState,
+  type StackNavigationState,
   StackRouter,
-  StackRouterOptions,
+  type StackRouterOptions,
   useLocale,
   useNavigationBuilder,
 } from '@react-navigation/native';
@@ -32,14 +32,17 @@ type Props = DefaultNavigatorOptions<
 function StackNavigator({
   id,
   initialRouteName,
+  getStateForRouteNamesChange,
   children,
   layout,
   screenListeners,
   screenOptions,
+  screenLayout,
   ...rest
 }: Props) {
   const { direction } = useLocale();
-  const { state, descriptors, navigation, NavigationContent } =
+
+  const { state, describe, descriptors, navigation, NavigationContent } =
     useNavigationBuilder<
       StackNavigationState<ParamListBase>,
       StackRouterOptions,
@@ -53,6 +56,8 @@ function StackNavigator({
       layout,
       screenListeners,
       screenOptions,
+      screenLayout,
+      getStateForRouteNamesChange,
     });
 
   React.useEffect(
@@ -87,6 +92,7 @@ function StackNavigator({
         {...rest}
         direction={direction}
         state={state}
+        describe={describe}
         descriptors={descriptors}
         navigation={navigation}
       />

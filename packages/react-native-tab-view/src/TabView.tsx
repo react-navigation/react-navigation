@@ -1,12 +1,12 @@
 import * as React from 'react';
 import {
   I18nManager,
-  LayoutChangeEvent,
+  type LayoutChangeEvent,
   Platform,
-  StyleProp,
+  type StyleProp,
   StyleSheet,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native';
 
 import { Pager } from './Pager';
@@ -24,7 +24,6 @@ import type {
 export type Props<T extends Route> = Omit<PagerProps, 'layoutDirection'> & {
   onIndexChange: (index: number) => void;
   navigationState: NavigationState<T>;
-  renderScene: (props: SceneRendererProps & { route: T }) => React.ReactNode;
   renderLazyPlaceholder?: (props: { route: T }) => React.ReactNode;
   renderTabBar?: (
     props: SceneRendererProps & { navigationState: NavigationState<T> }
@@ -37,6 +36,7 @@ export type Props<T extends Route> = Omit<PagerProps, 'layoutDirection'> & {
   direction?: LocaleDirection;
   pagerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
+  renderScene: (props: SceneRendererProps & { route: T }) => React.ReactNode;
 };
 
 export function TabView<T extends Route>({
@@ -111,7 +111,7 @@ export function TabView<T extends Route>({
         layoutDirection={direction}
       >
         {({ position, render, addEnterListener, jumpTo }) => {
-          // All of the props here must not change between re-renders
+          // All the props here must not change between re-renders
           // This is crucial to optimizing the routes with PureComponent
           const sceneRendererProps = {
             position,

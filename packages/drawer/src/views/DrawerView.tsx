@@ -7,9 +7,9 @@ import {
 } from '@react-navigation/elements';
 import {
   DrawerActions,
-  DrawerNavigationState,
-  DrawerStatus,
-  ParamListBase,
+  type DrawerNavigationState,
+  type DrawerStatus,
+  type ParamListBase,
   useLocale,
   useTheme,
 } from '@react-navigation/native';
@@ -199,8 +199,13 @@ function DrawerViewBase({
             return null;
           }
 
-          if (lazy && !loaded.includes(route.key) && !isFocused) {
-            // Don't render a lazy screen if we've never navigated to it
+          if (
+            lazy &&
+            !loaded.includes(route.key) &&
+            !isFocused &&
+            !state.preloadedRouteKeys.includes(route.key)
+          ) {
+            // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
             return null;
           }
 
