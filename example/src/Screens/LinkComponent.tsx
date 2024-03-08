@@ -29,6 +29,7 @@ const linking: PathConfigMap<LinkComponentDemoParamList> = {
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
+  navigation,
   route,
 }: StackScreenProps<LinkComponentDemoParamList, 'Article'>) => {
   return (
@@ -44,12 +45,35 @@ const ArticleScreen = ({
         >
           Replace with Albums
         </Link>
+
         <Button screen="Home" variant="filled">
           Go to Home
         </Button>
         <Button variant="tinted" action={CommonActions.goBack()}>
           Go back
         </Button>
+
+        <Button
+          variant="tinted"
+          onPress={() =>
+            navigation.setParams({
+              author:
+                route.params?.author === 'Gandalf' ? 'Babel fish' : 'Gandalf',
+            })
+          }
+        >
+          Update params
+        </Button>
+
+        {Platform.OS === 'web' && (
+          <Button
+            onPress={() => {
+              location.hash = 'frodo';
+            }}
+          >
+            Add hash to URL
+          </Button>
+        )}
       </View>
       <Article
         author={{ name: route.params.author }}
