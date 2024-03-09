@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.11...@react-navigation/core@7.0.0-alpha.12) (2024-03-09)
+
+### Bug Fixes
+
+* fix handling groups with linking config and types ([a847715](https://github.com/react-navigation/react-navigation/commit/a84771541f97cc207d0529ecffd5980da342096a)) - by @satya164
+* fix incomplete types for screen listeners ([5f0e2aa](https://github.com/react-navigation/react-navigation/commit/5f0e2aa8dfbb662a6ec8ce9fba54f89aedb8703f)), closes [#11293](https://github.com/react-navigation/react-navigation/issues/11293) - by @satya164
+
 # [7.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.10...@react-navigation/core@7.0.0-alpha.11) (2024-03-08)
 
 ### Bug Fixes
