@@ -435,7 +435,7 @@ export type ScreenListeners<
   EventMap extends EventMapBase
 > = Partial<{
   [EventName in keyof (EventMap & EventMapCore<State>)]: EventListenerCallback<
-    EventMap,
+    EventMap & EventMapCore<State>,
     EventName
   >;
 }>;
