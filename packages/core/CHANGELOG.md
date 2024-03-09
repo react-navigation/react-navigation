@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.4.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.4.13...@react-navigation/core@6.4.14) (2024-03-09)
+
+### Bug Fixes
+
+* decodes encoded params in path when parsing it to state  ([#11869](https://github.com/react-navigation/react-navigation/issues/11869)) ([b07f0e2](https://github.com/react-navigation/react-navigation/commit/b07f0e2d02c2ca56232aa87afd4826bc513f3120)) - by @groot007
+* fix incomplete types for screen listeners ([9d73335](https://github.com/react-navigation/react-navigation/commit/9d73335db1dd5fa5253adb2e1876ed4248b6d368)), closes [#11293](https://github.com/react-navigation/react-navigation/issues/11293) - by @
+* handle conflicting nested path params for linking ([#11849](https://github.com/react-navigation/react-navigation/issues/11849)) ([1cb3b5a](https://github.com/react-navigation/react-navigation/commit/1cb3b5ad0563373abe1aef9b764adc6ed6b9b4b9)) - by @
+* linking on initial path plus wildcard ([#11844](https://github.com/react-navigation/react-navigation/issues/11844)) ([12624a2](https://github.com/react-navigation/react-navigation/commit/12624a2646c26cef9367c4ed93ff88040dc31a43)), closes [/github.com/react-navigation/react-navigation/blob/fe4d4289e2bdec7614c6f2e5ca95d9b8f714af39/packages/core/src/getStateFromPath.tsx#L138](https://github.com//github.com/react-navigation/react-navigation/blob/fe4d4289e2bdec7614c6f2e5ca95d9b8f714af39/packages/core/src/getStateFromPath.tsx/issues/L138) - by @rexfordessilfie
+
 ## [6.4.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.4.12...@react-navigation/core@6.4.13) (2024-02-28)
 
 ### Bug Fixes
