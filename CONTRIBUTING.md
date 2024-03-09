@@ -45,12 +45,6 @@ Remember to add tests for your change if possible. Run the unit tests by:
 yarn test
 ```
 
-Running the e2e tests with Playwright requires building the [example app](/example/) for web:
-
-```sh
-yarn example expo export:web
-```
-
 Before running tests configure Playwright with:
 
 ```sh
@@ -60,7 +54,19 @@ npx playwright install
 Run the e2e tests by:
 
 ```sh
-yarn example test:e2e
+yarn example test --ui
+```
+
+By default, this will use the local dev server for the app. If you want to test a production build, first build the [example app](/example/) for web:
+
+```sh
+yarn example expo export:web
+```
+
+Then run the tests with the `CI` environment variable:
+
+```sh
+CI=1 yarn example test
 ```
 
 ### Commit message convention
