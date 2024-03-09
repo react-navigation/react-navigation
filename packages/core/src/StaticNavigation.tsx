@@ -161,18 +161,38 @@ export type StaticConfig<
   > &
     DefaultNavigatorOptions<ParamList, State, ScreenOptions, EventMap>,
   'screens' | 'children'
-> & {
-  /**
-   * Screens to render in the navigator and their configuration.
-   */
-  screens: StaticConfigScreens<ParamList, State, ScreenOptions, EventMap>;
-  /**
-   * Groups of screens to render in the navigator and their configuration.
-   */
-  groups?: {
-    [key: string]: GroupConfig<ParamList, State, ScreenOptions, EventMap>;
-  };
-};
+> &
+  (
+    | {
+        /**
+         * Screens to render in the navigator and their configuration.
+         */
+        screens: StaticConfigScreens<ParamList, State, ScreenOptions, EventMap>;
+        /**
+         * Groups of screens to render in the navigator and their configuration.
+         */
+        groups?: {
+          [key: string]: GroupConfig<ParamList, State, ScreenOptions, EventMap>;
+        };
+      }
+    | {
+        /**
+         * Screens to render in the navigator and their configuration.
+         */
+        screens?: StaticConfigScreens<
+          ParamList,
+          State,
+          ScreenOptions,
+          EventMap
+        >;
+        /**
+         * Groups of screens to render in the navigator and their configuration.
+         */
+        groups: {
+          [key: string]: GroupConfig<ParamList, State, ScreenOptions, EventMap>;
+        };
+      }
+  );
 
 /**
  * Props for a screen component which is rendered by a static navigator.
@@ -190,7 +210,7 @@ export type StaticScreenProps<T extends Record<string, unknown> | undefined> = {
 export type StaticParamList<
   T extends {
     readonly config: {
-      readonly screens: Record<string, any>;
+      readonly screens?: Record<string, any>;
       readonly groups?: {
         [key: string]: {
           screens: Record<string, any>;
@@ -300,13 +320,13 @@ export function createComponentForStaticNavigation(
   const { Navigator, Group, Screen, config } = tree;
   const { screens, groups, ...rest } = config;
 
-  if (screens == null) {
+  if (screens == null && groups == null) {
     throw new Error(
-      "Couldn't find a 'screens' property. Make sure to define your screens under a 'screens' property in the configuration."
+      "Couldn't find a 'screens' or 'groups' property. Make sure to define your screens under a 'screens' property in the configuration."
     );
   }
 
-  const items = getItemsFromScreens(Screen, screens);
+  const items = screens ? getItemsFromScreens(Screen, screens) : [];
 
   if (groups) {
     items.push(
@@ -363,41 +383,72 @@ export function createComponentForStaticNavigation(
  */
 export function createPathConfigForStaticNavigation(tree: {
   config: {
-    screens: StaticConfigScreens<
+    screens?: StaticConfigScreens<
       ParamListBase,
       NavigationState,
       {},
       EventMapBase
     >;
+    groups?: {
+      [key: string]: {
+        screens: StaticConfigScreens<
+          ParamListBase,
+          NavigationState,
+          {},
+          EventMapBase
+        >;
+      };
+    };
   };
 }) {
-  return Object.fromEntries(
-    Object.entries(tree.config.screens)
-      .map(([key, item]) => {
-        const screenConfig: PathConfig<ParamListBase> = {};
+  function createPathConfigForScreens(
+    screens: StaticConfigScreens<
+      ParamListBase,
+      NavigationState,
+      {},
+      EventMapBase
+    >
+  ) {
+    return Object.fromEntries(
+      Object.entries(screens)
+        .map(([key, item]) => {
+          const screenConfig: PathConfig<ParamListBase> = {};
 
-        if ('linking' in item) {
-          if (typeof item.linking === 'string') {
-            screenConfig.path = item.linking;
-          } else {
-            Object.assign(screenConfig, item.linking);
+          if ('linking' in item) {
+            if (typeof item.linking === 'string') {
+              screenConfig.path = item.linking;
+            } else {
+              Object.assign(screenConfig, item.linking);
+            }
           }
-        }
 
-        if ('config' in item) {
-          screenConfig.screens = createPathConfigForStaticNavigation(item);
-        } else if (
-          'screen' in item &&
-          'config' in item.screen &&
-          item.screen.config.screens
-        ) {
-          screenConfig.screens = createPathConfigForStaticNavigation(
-            item.screen
-          );
-        }
+          if ('config' in item) {
+            screenConfig.screens = createPathConfigForStaticNavigation(item);
+          } else if (
+            'screen' in item &&
+            'config' in item.screen &&
+            (item.screen.config.screens || item.screen.config.groups)
+          ) {
+            screenConfig.screens = createPathConfigForStaticNavigation(
+              item.screen
+            );
+          }
 
-        return [key, screenConfig] as const;
-      })
-      .filter(([, screen]) => Object.keys(screen).length > 0)
-  );
+          return [key, screenConfig] as const;
+        })
+        .filter(([, screen]) => Object.keys(screen).length > 0)
+    );
+  }
+
+  const config = tree.config.screens
+    ? createPathConfigForScreens(tree.config.screens)
+    : {};
+
+  if (tree.config.groups) {
+    Object.entries(tree.config.groups).forEach(([, group]) => {
+      Object.assign(config, createPathConfigForScreens(group.screens));
+    });
+  }
+
+  return config;
 }
