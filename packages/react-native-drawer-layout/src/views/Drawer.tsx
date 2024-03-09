@@ -20,12 +20,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import useLatestCallback from 'use-latest-callback';
 
-import {
-  SWIPE_EDGE_WIDTH,
-  SWIPE_MIN_DISTANCE,
-  SWIPE_MIN_OFFSET,
-  SWIPE_MIN_VELOCITY,
-} from '../constants';
 import type { DrawerProps } from '../types';
 import { DrawerProgressContext } from '../utils/DrawerProgressContext';
 import {
@@ -35,6 +29,13 @@ import {
   type PanGestureHandlerGestureEvent,
 } from './GestureHandler';
 import { Overlay } from './Overlay';
+
+export const SWIPE_EDGE_WIDTH = 32;
+export const SWIPE_MIN_OFFSET = 5;
+export const SWIPE_MIN_DISTANCE = 60;
+export const SWIPE_MIN_VELOCITY = 500;
+
+export const DRAWER_BORDER_RADIUS = 16;
 
 const minmax = (value: number, start: number, end: number) => {
   'worklet';
@@ -188,6 +189,16 @@ export function Drawer({
       // This lets the user drag the drawer from the side of the screen
       { right: 0, width: isOpen ? undefined : swipeEdgeWidth }
     : { left: 0, width: isOpen ? undefined : swipeEdgeWidth };
+
+  const borderRadiiStyle = isRight
+    ? {
+        borderTopLeftRadius: DRAWER_BORDER_RADIUS,
+        borderBottomLeftRadius: DRAWER_BORDER_RADIUS,
+      }
+    : {
+        borderTopRightRadius: DRAWER_BORDER_RADIUS,
+        borderBottomRightRadius: DRAWER_BORDER_RADIUS,
+      };
 
   const touchStartX = useSharedValue(0);
   const touchX = useSharedValue(0);
@@ -344,6 +355,8 @@ export function Drawer({
   });
 
   const drawerAnimatedStyle = useAnimatedStyle(() => {
+    const distanceFromEdge = layout.width - drawerWidth;
+
     return {
       transform:
         drawerType === 'permanent'
@@ -354,7 +367,8 @@ export function Drawer({
               {
                 translateX:
                   // The drawer stays in place when `drawerType` is `back`
-                  drawerType === 'back' ? 0 : translateX.value,
+                  (drawerType === 'back' ? 0 : translateX.value) +
+                  (drawerPosition === 'left' ? 0 : distanceFromEdge),
               },
             ],
     };
@@ -446,6 +460,7 @@ export function Drawer({
                     drawerType === 'permanent' ? 'relative' : 'absolute',
                   zIndex: drawerType === 'back' ? -1 : 0,
                 },
+                drawerType === 'permanent' ? null : borderRadiiStyle,
                 drawerAnimatedStyle,
                 drawerStyle,
               ]}

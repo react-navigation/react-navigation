@@ -12,6 +12,10 @@ import * as React from 'react';
 import { Animated, Platform, StyleSheet } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
+import {
+  FadeTransition,
+  ShiftTransition,
+} from '../TransitionConfigs/TransitionPresets';
 import type {
   BottomTabBarProps,
   BottomTabDescriptorMap,
@@ -38,14 +42,26 @@ const STATE_INACTIVE = 0;
 const STATE_TRANSITIONING_OR_BELOW_TOP = 1;
 const STATE_ON_TOP = 2;
 
-const hasAnimation = (options: BottomTabNavigationOptions) => {
-  const { animationEnabled, transitionSpec } = options;
+const NAMED_TRANSITIONS_PRESETS = {
+  fade: FadeTransition,
+  shift: ShiftTransition,
+  none: {
+    sceneStyleInterpolator: undefined,
+    transitionSpec: {
+      animation: 'timing',
+      config: { duration: 0 },
+    },
+  },
+} as const;
 
-  if (animationEnabled === false || !transitionSpec) {
-    return false;
+const hasAnimation = (options: BottomTabNavigationOptions) => {
+  const { animation, transitionSpec } = options;
+
+  if (animation) {
+    return animation !== 'none';
   }
 
-  return true;
+  return !transitionSpec;
 };
 
 export function BottomTabView(props: Props) {
@@ -73,31 +89,43 @@ export function BottomTabView(props: Props) {
     setLoaded([...loaded, focusedRouteKey]);
   }
 
+  const previousRouteKeyRef = React.useRef(focusedRouteKey);
   const tabAnims = useAnimatedHashMap(state);
 
   React.useEffect(() => {
+    const previousRouteKey = previousRouteKeyRef.current;
+
+    previousRouteKeyRef.current = focusedRouteKey;
+
     const animateToIndex = () => {
       Animated.parallel(
         state.routes
           .map((route, index) => {
             const { options } = descriptors[route.key];
-            const { transitionSpec } = options;
+            const {
+              animation = 'none',
+              transitionSpec = NAMED_TRANSITIONS_PRESETS[animation]
+                .transitionSpec,
+            } = options;
 
-            const animationEnabled = hasAnimation(options);
+            let spec = transitionSpec;
+
+            if (
+              route.key !== previousRouteKey &&
+              route.key !== focusedRouteKey
+            ) {
+              // Don't animate if the screen is not previous one or new one
+              // This will avoid flicker for screens not involved in the transition
+              spec = NAMED_TRANSITIONS_PRESETS.none.transitionSpec;
+            }
+
+            spec = spec ?? NAMED_TRANSITIONS_PRESETS.none.transitionSpec;
 
             const toValue =
               index === state.index ? 0 : index >= state.index ? 1 : -1;
 
-            if (!animationEnabled || !transitionSpec) {
-              return Animated.timing(tabAnims[route.key], {
-                toValue,
-                duration: 0,
-                useNativeDriver: true,
-              });
-            }
-
-            return Animated[transitionSpec.animation](tabAnims[route.key], {
-              ...transitionSpec.config,
+            return Animated[spec.animation](tabAnims[route.key], {
+              ...spec.config,
               toValue,
               useNativeDriver: true,
             });
@@ -107,7 +135,7 @@ export function BottomTabView(props: Props) {
     };
 
     animateToIndex();
-  }, [descriptors, state.index, state.routes, tabAnims]);
+  }, [descriptors, focusedRouteKey, state.index, state.routes, tabAnims]);
 
   const dimensions = SafeAreaProviderCompat.initialMetrics.frame;
   const [tabBarHeight, setTabBarHeight] = React.useState(() =>
@@ -178,7 +206,9 @@ export function BottomTabView(props: Props) {
           const {
             lazy = true,
             unmountOnBlur,
-            sceneStyleInterpolator,
+            animation = 'none',
+            sceneStyleInterpolator = NAMED_TRANSITIONS_PRESETS[animation]
+              .sceneStyleInterpolator,
           } = descriptor.options;
           const isFocused = state.index === index;
 
@@ -212,7 +242,9 @@ export function BottomTabView(props: Props) {
 
           const { sceneStyle } =
             sceneStyleInterpolator?.({
-              current: tabAnims[route.key],
+              current: {
+                progress: tabAnims[route.key],
+              },
             }) ?? {};
 
           const animationEnabled = hasAnimation(descriptor.options);

@@ -3,6 +3,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import type {
   NavigationProp,
+  NavigatorScreenParams,
   StaticParamList,
   StaticScreenProps,
 } from '@react-navigation/native';
@@ -58,9 +59,9 @@ const RootStack = createStackNavigator({
   },
 });
 
-type ParamList = StaticParamList<typeof RootStack>;
+type RootParamList = StaticParamList<typeof RootStack>;
 
-declare const navigation: NavigationProp<ParamList>;
+declare let navigation: NavigationProp<RootParamList>;
 
 /**
  * Infer screen names from config
@@ -198,3 +199,46 @@ createStackNavigator({});
 createStackNavigator({
   screens: {},
 });
+
+/**
+ * Infer types from group without screens
+ */
+const MyTabs = createBottomTabNavigator({
+  groups: {
+    Test: {
+      screens: {
+        Test: (_: StaticScreenProps<{ foo: string }>) => null,
+      },
+    },
+  },
+});
+
+const MyStack = createStackNavigator({
+  groups: {
+    Guest: {
+      screens: {
+        Login: () => null,
+      },
+    },
+    User: {
+      screens: {
+        Home: () => null,
+        Profile: (_: StaticScreenProps<{ id: number }>) => null,
+        Forum: MyTabs,
+      },
+    },
+  },
+});
+
+type MyParamList = StaticParamList<typeof MyStack>;
+
+expectTypeOf<MyParamList>().toMatchTypeOf<{
+  Login: undefined;
+  Home: undefined;
+  Profile: { id: number };
+  Forum:
+    | NavigatorScreenParams<{
+        Test: { foo: string };
+      }>
+    | undefined;
+}>();

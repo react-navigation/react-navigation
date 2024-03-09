@@ -1,12 +1,14 @@
-import type { PlaywrightTestConfig } from '@playwright/test';
+import { defineConfig } from '@playwright/test';
 import path from 'path';
 
-const config: PlaywrightTestConfig = {
+const PORT = process.env.CI ? 3579 : 19006;
+
+export default defineConfig({
   testDir: path.join(__dirname, 'tests'),
-  globalSetup: require.resolve('./config/setup-server.ts'),
-  globalTeardown: require.resolve('./config/teardown-server.ts'),
-  workers: 1,
-  reporter: 'list',
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
   projects: [
     {
       name: 'Chromium',
@@ -17,6 +19,25 @@ const config: PlaywrightTestConfig = {
       use: { browserName: 'firefox' },
     },
   ],
-};
-
-export default config;
+  use: {
+    baseURL: `http://127.0.0.1:${PORT}`,
+    trace: 'on-first-retry',
+  },
+  webServer: [
+    {
+      cwd: path.join(__dirname, '..'),
+      command: process.env.CI
+        ? `yarn serve --no-port-switching --single --listen ${PORT} web-build`
+        : `yarn start --web --port 19000`,
+      url: `http://127.0.0.1:${PORT}`,
+      timeout: 120 * 1000,
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'yarn server',
+      url: 'http://127.0.0.1:3275',
+      timeout: 120 * 1000,
+      reuseExistingServer: !process.env.CI,
+    },
+  ],
+});

@@ -109,7 +109,10 @@ export type MaterialTopTabNavigationOptions = {
   /**
    * A function that given { focused: boolean, color: string } returns a React.Node to display in the tab bar.
    */
-  tabBarIcon?: (props: { focused: boolean; color: string }) => React.ReactNode;
+  tabBarIcon?: (props: {
+    focused: boolean;
+    color: string;
+  }) => React.ReactElement;
 
   /**
    * Whether the tab icon should be visible. Defaults to `false`.
@@ -119,7 +122,7 @@ export type MaterialTopTabNavigationOptions = {
   /**
    * Function that returns a React element to use as a badge for the tab.
    */
-  tabBarBadge?: () => React.ReactNode;
+  tabBarBadge?: () => React.ReactElement;
 
   /**
    * Function that returns a React element as the tab bar indicator.
@@ -179,11 +182,6 @@ export type MaterialTopTabNavigationOptions = {
    * If you set this to `true`, you should also specify a width in `tabBarItemStyle` to improve the performance of initial render.
    */
   tabBarScrollEnabled?: boolean;
-
-  /**
-   * Style object for the tab icon container.
-   */
-  tabBarIconStyle?: StyleProp<ViewStyle>;
 
   /**
    * Style object for the tab label.

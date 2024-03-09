@@ -1,9 +1,9 @@
 import { Button } from '@react-navigation/elements';
 import type { PathConfigMap } from '@react-navigation/native';
 import {
-  createStackNavigator,
-  type StackScreenProps,
-} from '@react-navigation/stack';
+  createNativeStackNavigator,
+  type NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
@@ -11,12 +11,12 @@ import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 
-export type ModalStackParams = {
+export type MixedNativeStackParams = {
   Article: { author: string };
   Albums: undefined;
 };
 
-const linking: PathConfigMap<ModalStackParams> = {
+const linking: PathConfigMap<MixedNativeStackParams> = {
   Article: COMMON_LINKING_CONFIG.Article,
   Albums: 'albums',
 };
@@ -26,15 +26,21 @@ const scrollEnabled = Platform.select({ web: true, default: false });
 const ArticleScreen = ({
   navigation,
   route,
-}: StackScreenProps<ModalStackParams, 'Article'>) => {
+}: NativeStackScreenProps<MixedNativeStackParams, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
-        <Button variant="filled" onPress={() => navigation.push('Albums')}>
-          Push album
+        <Button
+          variant="filled"
+          onPress={() => navigation.push('Article', { author: 'Dalek' })}
+        >
+          Push article
         </Button>
         <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back
+        </Button>
+        <Button variant="filled" onPress={() => navigation.push('Albums')}>
+          Push album
         </Button>
       </View>
       <Article
@@ -45,18 +51,23 @@ const ArticleScreen = ({
   );
 };
 
-const AlbumsScreen = ({ navigation }: StackScreenProps<ModalStackParams>) => {
+const AlbumsScreen = ({
+  navigation,
+}: NativeStackScreenProps<MixedNativeStackParams>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
-        <Button
-          variant="filled"
-          onPress={() => navigation.push('Article', { author: 'Babel fish' })}
-        >
-          Push article
+        <Button variant="filled" onPress={() => navigation.push('Albums')}>
+          Push album
         </Button>
         <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back
+        </Button>
+        <Button
+          variant="filled"
+          onPress={() => navigation.push('Article', { author: 'The Doctor' })}
+        >
+          Push article
         </Button>
       </View>
       <Albums scrollEnabled={scrollEnabled} />
@@ -64,11 +75,11 @@ const AlbumsScreen = ({ navigation }: StackScreenProps<ModalStackParams>) => {
   );
 };
 
-const Stack = createStackNavigator<ModalStackParams>();
+const Stack = createNativeStackNavigator<MixedNativeStackParams>();
 
-export function ModalStack() {
+export function MixedNativeStack() {
   return (
-    <Stack.Navigator screenOptions={{ presentation: 'modal' }}>
+    <Stack.Navigator>
       <Stack.Screen
         name="Article"
         component={ArticleScreen}
@@ -80,14 +91,17 @@ export function ModalStack() {
       <Stack.Screen
         name="Albums"
         component={AlbumsScreen}
-        options={{ title: 'Albums' }}
+        options={{
+          title: 'Albums',
+          presentation: 'modal',
+        }}
       />
     </Stack.Navigator>
   );
 }
 
-ModalStack.title = 'Modal Stack';
-ModalStack.linking = linking;
+MixedNativeStack.title = 'Native + Modal Stack';
+MixedNativeStack.linking = linking;
 
 const styles = StyleSheet.create({
   buttons: {

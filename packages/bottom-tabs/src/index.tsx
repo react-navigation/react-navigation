@@ -1,11 +1,11 @@
-import * as SceneStyleInterpolator from './TransitionConfigs/SceneStyleInterpolators';
+import * as SceneStyleInterpolators from './TransitionConfigs/SceneStyleInterpolators';
 import * as TransitionPresets from './TransitionConfigs/TransitionPresets';
 import * as TransitionSpecs from './TransitionConfigs/TransitionSpecs';
 
 /**
  * Transition Presets
  */
-export { SceneStyleInterpolator, TransitionPresets, TransitionSpecs };
+export { SceneStyleInterpolators, TransitionPresets, TransitionSpecs };
 
 /**
  * Navigators

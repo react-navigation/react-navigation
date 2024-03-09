@@ -190,7 +190,7 @@ function CardContainerInner({
 
   const {
     presentation,
-    animationEnabled,
+    animation,
     cardOverlay,
     cardOverlayEnabled,
     cardShadowEnabled,
@@ -275,7 +275,7 @@ function CardContainerInner({
           display:
             // Hide unfocused screens when animation isn't enabled
             // This is also necessary for a11y on web
-            animationEnabled === false &&
+            animation === 'none' &&
             isNextScreenTransparent === false &&
             detachCurrentScreen !== false &&
             !focused

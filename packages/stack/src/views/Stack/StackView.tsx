@@ -142,7 +142,7 @@ export class StackView extends React.Component<Props, State> {
     const isAnimationEnabled = (key: string) => {
       const descriptor = props.descriptors[key] || state.descriptors[key];
 
-      return descriptor ? descriptor.options.animationEnabled !== false : true;
+      return descriptor ? descriptor.options.animation !== 'none' : true;
     };
 
     const getAnimationTypeForReplace = (key: string) => {

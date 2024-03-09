@@ -299,14 +299,22 @@ export function App() {
             component={NotFound}
             options={{ title: 'Oops!' }}
           />
-          {SCREEN_NAMES.map((name) => (
-            <Stack.Screen
-              key={name}
-              name={name}
-              getComponent={() => SCREENS[name].component}
-              options={{ title: SCREENS[name].title }}
-            />
-          ))}
+          {SCREEN_NAMES.map((name) => {
+            const screen = SCREENS[name];
+
+            return (
+              <Stack.Screen
+                key={name}
+                name={name}
+                component={screen}
+                options={{
+                  headerShown: false,
+                  title: screen.title,
+                  ...('options' in screen ? screen.options : null),
+                }}
+              />
+            );
+          })}
         </Stack.Navigator>
       </NavigationContainer>
     </Providers>

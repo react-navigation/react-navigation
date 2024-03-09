@@ -5,13 +5,11 @@ import {
 } from '@react-navigation/elements';
 import {
   CommonActions,
-  type ParamListBase,
   type PathConfigMap,
   useTheme,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
-  type StackNavigationOptions,
   type StackScreenProps,
 } from '@react-navigation/stack';
 import * as React from 'react';
@@ -39,7 +37,7 @@ export type CustomLayoutParams = {
   Albums: undefined;
 };
 
-export const customLayoutLinking: PathConfigMap<CustomLayoutParams> = {
+const linking: PathConfigMap<CustomLayoutParams> = {
   Article: COMMON_LINKING_CONFIG.Article,
   NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
   Albums: 'albums',
@@ -116,18 +114,7 @@ const AlbumsScreen = ({
 
 const Stack = createStackNavigator<CustomLayoutParams>();
 
-export function CustomLayout({
-  navigation,
-  screenOptions,
-}: StackScreenProps<ParamListBase> & {
-  screenOptions?: StackNavigationOptions;
-}) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function NavigatorLayout() {
   const { colors } = useTheme();
 
   const frame = useSafeAreaFrame();
@@ -186,7 +173,6 @@ export function CustomLayout({
         );
       }}
       screenOptions={{
-        ...screenOptions,
         headerShown: false,
       }}
     >
@@ -212,6 +198,9 @@ export function CustomLayout({
   );
 }
 
+NavigatorLayout.title = 'Navigator Layout';
+NavigatorLayout.linking = linking;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -223,6 +212,7 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   breadcrumbs: {
+    flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 8,
   },
@@ -236,6 +226,7 @@ const styles = StyleSheet.create({
   arrow: {
     fontSize: 14,
     lineHeight: 14,
+    paddingVertical: 16,
     opacity: 0.3,
   },
 });

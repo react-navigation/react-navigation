@@ -2384,6 +2384,41 @@ it('uses nearest parent wildcard match for unmatched paths', () => {
   ).toEqual(changePath(state, '/404'));
 });
 
+it('matches screen with overlapping initial path and wildcard', () => {
+  const path = '/bar/42/baz/test/whatever';
+  const config = {
+    screens: {
+      Foo: {
+        screens: {
+          Bar: {
+            path: '/bar/:id/',
+            screens: {
+              Baz: 'baz',
+            },
+          },
+          Baz: '/bar/:id/*',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [{ name: 'Baz', params: { id: '42' }, path }],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/bar/42/Baz'));
+});
+
 it('throws if two screens map to the same pattern', () => {
   const path = '/bar/42/baz/test';
 
@@ -2604,4 +2639,89 @@ it('throws when invalid properties are specified in the config', () => {
   ).toThrowErrorMatchingInlineSnapshot(
     `"Found invalid path 'foo/:id'. The 'path' in the top-level configuration cannot contain patterns for params."`
   );
+});
+
+// Valid characters according to
+// https://datatracker.ietf.org/doc/html/rfc3986#section-3.3 (see pchar definition)
+// A–Z, a–z, 0–9, -, ., _, ~, !, $, &, ', (, ), *, +, ,, ;, =, :, @
+// User09-A_Z~!$&'()*+,;=:@__#?# - should encode only last ones #?#
+// query params after '?' should be encoded fully with encodeURIComponent
+it('encoding params correctly', () => {
+  const paramWithValidSymbols = `User09-A_Z~!$&'()*+,;=:@__`;
+  const invalidSymbols = '#?[]{}%<>||';
+  const queryString = 'user#email@gmail.com=2&4';
+
+  const path = `users/id/${paramWithValidSymbols}${encodeURIComponent(invalidSymbols)}?query=${encodeURIComponent(queryString)}`;
+  const config = {
+    path: 'users',
+    screens: {
+      Users: {
+        screens: {
+          User: 'id/:id',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Users',
+        state: {
+          routes: [
+            {
+              name: 'User',
+              params: {
+                id: `${paramWithValidSymbols}${invalidSymbols}`,
+                query: queryString,
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toEqual(path);
+  expect(
+    getPathFromState<object>(getStateFromPath<object>(path, config)!, config)
+  ).toEqual(path);
+});
+
+it('resolves nested path params with same name to correct screen', () => {
+  const path = '/foo/42/bar/43';
+
+  const config = {
+    initialRouteName: 'Foo',
+    screens: {
+      Foo: {
+        path: 'foo/:id',
+        screens: {
+          Bar: {
+            path: 'bar/:id',
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: '42' },
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              params: { id: '43' },
+              path,
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
 });

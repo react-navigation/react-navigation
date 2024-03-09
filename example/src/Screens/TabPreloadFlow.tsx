@@ -1,6 +1,6 @@
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Button } from '@react-navigation/elements';
+import { Button, HeaderBackButton } from '@react-navigation/elements';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -12,11 +12,10 @@ export type PreloadBottomTabsParams = {
   Details: undefined;
 };
 
-export const preloadBottomTabsLinking: PathConfigMap<PreloadBottomTabsParams> =
-  {
-    Home: '',
-    Details: 'details',
-  };
+const linking: PathConfigMap<PreloadBottomTabsParams> = {
+  Home: '',
+  Details: 'details',
+};
 
 const DetailsScreen = ({
   navigation,
@@ -70,12 +69,23 @@ const BottomsTabs = createBottomTabNavigator<PreloadBottomTabsParams>();
 
 export function TabPreloadFlow() {
   return (
-    <BottomsTabs.Navigator screenOptions={{ headerShown: false }}>
+    <BottomsTabs.Navigator
+      screenOptions={({
+        navigation,
+      }: BottomTabScreenProps<PreloadBottomTabsParams>) => ({
+        headerLeft: (props) => (
+          <HeaderBackButton {...props} onPress={navigation.goBack} />
+        ),
+      })}
+    >
       <BottomsTabs.Screen name="Home" component={HomeScreen} />
       <BottomsTabs.Screen name="Details" component={DetailsScreen} />
     </BottomsTabs.Navigator>
   );
 }
+
+TabPreloadFlow.title = 'Preloading flow for Bottom Tabs';
+TabPreloadFlow.linking = linking;
 
 const styles = StyleSheet.create({
   content: {

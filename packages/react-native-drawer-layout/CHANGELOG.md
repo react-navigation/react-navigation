@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-alpha.5...react-native-drawer-layout@4.0.0-alpha.6) (2024-03-08)
+
+### Bug Fixes
+
+* fix right drawer layouts display over content ([#11651](https://github.com/react-navigation/react-navigation/issues/11651)) ([f6772c6](https://github.com/react-navigation/react-navigation/commit/f6772c6c2f95ed2c94c10c9632c8534fe59853b7)) - by @brannonvann
+* update drawer and header styles according to material design 3 ([#11872](https://github.com/react-navigation/react-navigation/issues/11872)) ([bfa5689](https://github.com/react-navigation/react-navigation/commit/bfa568995940f956c9ec5944f2b0543eca5da546)) - by @groot007
+
 # [4.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-alpha.4...react-native-drawer-layout@4.0.0-alpha.5) (2024-02-24)
 
 ### Bug Fixes

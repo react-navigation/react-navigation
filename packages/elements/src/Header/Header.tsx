@@ -269,6 +269,9 @@ export function Header(props: Props) {
                       insets.left -
                       insets.right),
             },
+            headerTitleAlign === 'left' && leftButton
+              ? { marginLeft: 4 }
+              : null,
             titleContainerStyle,
           ]}
         >

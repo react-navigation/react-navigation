@@ -78,8 +78,19 @@ export type GestureDirection =
   | 'vertical'
   | 'vertical-inverted';
 
+export type StackAnimationName =
+  | 'default'
+  | 'fade'
+  | 'fade_from_bottom'
+  | 'none'
+  | 'reveal_from_bottom'
+  | 'scale_from_center'
+  | 'slide_from_bottom'
+  | 'slide_from_right'
+  | 'slide_from_left';
+
 type SceneOptionsDefaults = TransitionPreset & {
-  animationEnabled: boolean;
+  animation: StackAnimationName;
   gestureEnabled: boolean;
   cardOverlayEnabled: boolean;
   headerMode: StackHeaderMode;
@@ -326,11 +337,20 @@ export type StackNavigationOptions = StackHeaderOptions &
      */
     presentation?: 'card' | 'modal' | 'transparentModal';
     /**
-     * Whether transition animation should be enabled the screen.
-     * If you set it to `false`, the screen won't animate when pushing or popping.
-     * Defaults to `true` on Android and iOS, `false` on Web.
+     * How the screen should animate when pushed or popped.
+     *
+     * Supported values:
+     * - 'none': don't animate the screen
+     * - 'default': use the platform default animation
+     * - 'fade': fade screen in or out
+     * - 'fade_from_bottom': fade screen in or out from bottom
+     * - 'slide_from_bottom': slide in the new screen from bottom
+     * - 'slide_from_right': slide in the new screen from right
+     * - 'slide_from_left': slide in the new screen from left
+     * - 'reveal_from_bottom': reveal screen in from bottom to top
+     * - 'scale_from_center': scale screen in from center
      */
-    animationEnabled?: boolean;
+    animation?: StackAnimationName;
     /**
      * The type of animation to use when this screen replaces another screen. Defaults to `push`.
      * When `pop` is used, the `pop` animation is applied to the screen being replaced.

@@ -6,12 +6,12 @@ import type {
 /**
  * Simple cross fade animation
  */
-export function forCrossFade({
+export function forFade({
   current,
 }: BottomTabSceneInterpolationProps): BottomTabSceneInterpolatedStyle {
   return {
     sceneStyle: {
-      opacity: current.interpolate({
+      opacity: current.progress.interpolate({
         inputRange: [-1, 0, 1],
         outputRange: [0, 1, 0],
       }),
@@ -22,18 +22,18 @@ export function forCrossFade({
 /**
  * Animation where the screens slightly shift to left/right
  */
-export function forShifting({
+export function forShift({
   current,
 }: BottomTabSceneInterpolationProps): BottomTabSceneInterpolatedStyle {
   return {
     sceneStyle: {
-      opacity: current.interpolate({
+      opacity: current.progress.interpolate({
         inputRange: [-1, 0, 1],
         outputRange: [0, 1, 0],
       }),
       transform: [
         {
-          translateX: current.interpolate({
+          translateX: current.progress.interpolate({
             inputRange: [-1, 0, 1],
             outputRange: [-50, 0, 50],
           }),

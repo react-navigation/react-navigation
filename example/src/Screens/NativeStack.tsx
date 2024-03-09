@@ -1,5 +1,5 @@
 import { Button, useHeaderHeight } from '@react-navigation/elements';
-import type { ParamListBase, PathConfigMap } from '@react-navigation/native';
+import type { PathConfigMap } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   type NativeStackScreenProps,
@@ -18,7 +18,7 @@ export type NativeStackParams = {
   Albums: undefined;
 };
 
-export const nativeStackLinking: PathConfigMap<NativeStackParams> = {
+const linking: PathConfigMap<NativeStackParams> = {
   Article: COMMON_LINKING_CONFIG.Article,
   NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
   Albums: 'albums',
@@ -114,16 +114,7 @@ const AlbumsScreen = ({
 
 const Stack = createNativeStackNavigator<NativeStackParams>();
 
-export function NativeStack({
-  navigation,
-}: NativeStackScreenProps<ParamListBase>) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-      gestureEnabled: false,
-    });
-  }, [navigation]);
-
+export function NativeStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -157,6 +148,12 @@ export function NativeStack({
     </Stack.Navigator>
   );
 }
+
+NativeStack.title = 'Native Stack';
+NativeStack.linking = linking;
+NativeStack.options = {
+  gestureEnabled: false,
+};
 
 const styles = StyleSheet.create({
   buttons: {
