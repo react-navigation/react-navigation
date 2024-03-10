@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Platform, Pressable, StyleSheet } from 'react-native';
 import Animated, {
+  type SharedValue,
   useAnimatedProps,
   useAnimatedStyle,
 } from 'react-native-reanimated';
@@ -8,7 +9,7 @@ import Animated, {
 const PROGRESS_EPSILON = 0.05;
 
 type Props = React.ComponentProps<typeof Animated.View> & {
-  progress: Animated.SharedValue<number>;
+  progress: SharedValue<number>;
   onPress: () => void;
   accessibilityLabel?: string;
 };
@@ -19,7 +20,7 @@ export const Overlay = React.forwardRef(function Overlay(
     onPress,
     style,
     accessibilityLabel = 'Close drawer',
-    ...props
+    ...rest
   }: Props,
   ref: React.Ref<Animated.View>
 ) {
@@ -44,7 +45,7 @@ export const Overlay = React.forwardRef(function Overlay(
 
   return (
     <Animated.View
-      {...props}
+      {...rest}
       ref={ref}
       style={[styles.overlay, overlayStyle, animatedStyle, style]}
       animatedProps={animatedProps}

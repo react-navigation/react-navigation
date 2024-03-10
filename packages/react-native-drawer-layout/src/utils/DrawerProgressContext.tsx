@@ -1,6 +1,6 @@
 import * as React from 'react';
-import type Animated from 'react-native-reanimated';
+import type { SharedValue } from 'react-native-reanimated';
 
 export const DrawerProgressContext = React.createContext<
-  Readonly<Animated.SharedValue<number>> | undefined
+  Readonly<SharedValue<number>> | undefined
 >(undefined);
