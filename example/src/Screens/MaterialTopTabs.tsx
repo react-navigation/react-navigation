@@ -1,31 +1,28 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import type { ParamListBase } from '@react-navigation/native';
-import type { StackScreenProps } from '@react-navigation/stack';
+import type { PathConfigMap } from '@react-navigation/native';
 import * as React from 'react';
 
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
 
-type MaterialTopTabParams = {
+export type MaterialTopTabParams = {
   Albums: undefined;
   Contacts: undefined;
   Chat: undefined;
+};
+
+const linking: PathConfigMap<MaterialTopTabParams> = {
+  Albums: 'albums',
+  Contacts: 'contacts',
+  Chat: 'chat',
 };
 
 const MaterialTopTabs = createMaterialTopTabNavigator<MaterialTopTabParams>();
 
 const ChatScreen = () => <Chat bottom />;
 
-export function MaterialTopTabsScreen({
-  navigation,
-}: StackScreenProps<ParamListBase>) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      cardStyle: { flex: 1 },
-    });
-  }, [navigation]);
-
+export function MaterialTopTabsScreen() {
   return (
     <MaterialTopTabs.Navigator>
       <MaterialTopTabs.Screen
@@ -46,3 +43,10 @@ export function MaterialTopTabsScreen({
     </MaterialTopTabs.Navigator>
   );
 }
+
+MaterialTopTabsScreen.title = 'Material Top Tabs';
+MaterialTopTabsScreen.linking = linking;
+MaterialTopTabsScreen.options = {
+  headerShown: true,
+  cardStyle: { flex: 1 },
+};

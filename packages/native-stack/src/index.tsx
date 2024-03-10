@@ -9,6 +9,11 @@ export { createNativeStackNavigator } from './navigators/createNativeStackNaviga
 export { NativeStackView } from './views/NativeStackView';
 
 /**
+ * Hooks
+ */
+export { useAnimatedHeaderHeight } from './utils/useAnimatedHeaderHeight';
+
+/**
  * Types
  */
 export type {
@@ -16,5 +21,6 @@ export type {
   NativeStackNavigationEventMap,
   NativeStackNavigationOptions,
   NativeStackNavigationProp,
+  NativeStackScreenOptions,
   NativeStackScreenProps,
 } from './types';

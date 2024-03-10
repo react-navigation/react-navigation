@@ -1,12 +1,18 @@
 import {
   NavigationContext,
-  NavigationProp,
+  type NavigationProp,
   NavigationRouteContext,
-  ParamListBase,
-  RouteProp,
+  type ParamListBase,
+  type RouteProp,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import {
+  Animated,
+  type StyleProp,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from 'react-native';
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
@@ -26,7 +32,7 @@ type Props = {
   headerShown?: boolean;
   headerStatusBarHeight?: number;
   headerTransparent?: boolean;
-  style?: StyleProp<ViewStyle>;
+  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   children: React.ReactNode;
 };
 
@@ -59,6 +65,9 @@ export function Screen(props: Props) {
       accessibilityElementsHidden={!focused}
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
       style={[styles.container, style]}
+      // On Fabric we need to disable collapsing for the background to ensure
+      // that we won't render unnecessary views due to the view flattening.
+      collapsable={false}
     >
       <View style={styles.content}>
         <HeaderShownContext.Provider
@@ -103,7 +112,7 @@ const styles = StyleSheet.create({
   absolute: {
     position: 'absolute',
     top: 0,
-    left: 0,
-    right: 0,
+    start: 0,
+    end: 0,
   },
 });

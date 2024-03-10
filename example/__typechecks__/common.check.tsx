@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 import type {
   BottomTabNavigationOptions,
   BottomTabScreenProps,
@@ -8,13 +10,14 @@ import type {
 } from '@react-navigation/drawer';
 import type {
   CompositeScreenProps,
+  NavigationAction,
   NavigationHelpers,
   NavigatorScreenParams,
 } from '@react-navigation/native';
-import type { StackNavigationOptions } from '@react-navigation/stack';
 import {
   createStackNavigator,
-  StackScreenProps,
+  type StackNavigationOptions,
+  type StackScreenProps,
 } from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
 import * as React from 'react';
@@ -306,6 +309,29 @@ const SecondStack = createStackNavigator<SecondParamList>();
   name="NoParams"
   // @ts-expect-error
   component={(_: { foo: number }) => <></>}
+/>;
+
+/**
+ * Check for listeners type in Screen config
+ */
+<SecondStack.Screen
+  name="HasParams1"
+  component={(_: StackScreenProps<SecondParamList, 'HasParams1'>) => <></>}
+  listeners={{
+    focus: (e) => {
+      expectTypeOf(e.type).toEqualTypeOf<'focus'>();
+      expectTypeOf(e.data).toEqualTypeOf<undefined>();
+    },
+    beforeRemove: (e) => {
+      expectTypeOf(e.type).toEqualTypeOf<'beforeRemove'>();
+      expectTypeOf(e.data.action).toEqualTypeOf<NavigationAction>();
+      expectTypeOf(e.preventDefault).toEqualTypeOf<() => void>();
+    },
+    transitionStart: (e) => {
+      expectTypeOf(e.type).toEqualTypeOf<'transitionStart'>();
+      expectTypeOf(e.data.closing).toEqualTypeOf<boolean>();
+    },
+  }}
 />;
 
 /**

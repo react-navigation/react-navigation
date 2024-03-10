@@ -1,7 +1,12 @@
 import { useTheme } from '@react-navigation/native';
 import color from 'color';
 import * as React from 'react';
-import { Animated, StyleProp, StyleSheet, TextStyle } from 'react-native';
+import {
+  Animated,
+  type StyleProp,
+  StyleSheet,
+  type TextStyle,
+} from 'react-native';
 
 type Props = {
   /**

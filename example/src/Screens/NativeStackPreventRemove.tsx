@@ -1,12 +1,9 @@
-import { UNSTABLE_usePreventRemove } from '@react-navigation/core';
-import {
-  CommonActions,
-  ParamListBase,
-  useTheme,
-} from '@react-navigation/native';
+import { type PathConfigMap, usePreventRemove } from '@react-navigation/core';
+import { Button } from '@react-navigation/elements';
+import { CommonActions, useTheme } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
-  NativeStackScreenProps,
+  type NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import * as React from 'react';
 import {
@@ -17,13 +14,18 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { Button } from 'react-native-paper';
 
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Article } from '../Shared/Article';
 
-type PreventRemoveParams = {
+export type NativePreventRemoveParams = {
   Article: { author: string };
   Input: undefined;
+};
+
+const linking: PathConfigMap<NativePreventRemoveParams> = {
+  Article: COMMON_LINKING_CONFIG.Article,
+  Input: 'input',
 };
 
 const scrollEnabled = Platform.select({ web: true, default: false });
@@ -31,22 +33,14 @@ const scrollEnabled = Platform.select({ web: true, default: false });
 const ArticleScreen = ({
   navigation,
   route,
-}: NativeStackScreenProps<PreventRemoveParams, 'Article'>) => {
+}: NativeStackScreenProps<NativePreventRemoveParams, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
-        <Button
-          mode="contained"
-          onPress={() => navigation.push('Input')}
-          style={styles.button}
-        >
+        <Button variant="filled" onPress={() => navigation.push('Input')}>
           Push Input
         </Button>
-        <Button
-          mode="outlined"
-          onPress={() => navigation.popToTop()}
-          style={styles.button}
-        >
+        <Button variant="tinted" onPress={() => navigation.popToTop()}>
           Pop to top
         </Button>
       </View>
@@ -60,13 +54,13 @@ const ArticleScreen = ({
 
 const InputScreen = ({
   navigation,
-}: NativeStackScreenProps<PreventRemoveParams, 'Input'>) => {
+}: NativeStackScreenProps<NativePreventRemoveParams, 'Input'>) => {
   const [text, setText] = React.useState('');
   const { colors } = useTheme();
 
   const hasUnsavedChanges = Boolean(text);
 
-  UNSTABLE_usePreventRemove(hasUnsavedChanges, ({ data }) => {
+  usePreventRemove(hasUnsavedChanges, ({ data }) => {
     if (Platform.OS === 'web') {
       const discard = confirm(
         'You have unsaved changes. Discard them and leave the screen?'
@@ -103,7 +97,7 @@ const InputScreen = ({
         onChangeText={setText}
       />
       <Button
-        mode="outlined"
+        variant="tinted"
         color="tomato"
         onPress={() =>
           navigation.dispatch({
@@ -111,14 +105,12 @@ const InputScreen = ({
             payload: { confirmed: true },
           })
         }
-        style={styles.button}
       >
         Discard and go back
       </Button>
       <Button
-        mode="outlined"
+        variant="tinted"
         onPress={() => navigation.push('Article', { author: text })}
-        style={styles.button}
       >
         Push Article
       </Button>
@@ -126,17 +118,9 @@ const InputScreen = ({
   );
 };
 
-const Stack = createNativeStackNavigator<PreventRemoveParams>();
+const Stack = createNativeStackNavigator<NativePreventRemoveParams>();
 
-type Props = NativeStackScreenProps<ParamListBase>;
-
-export function NativeStackPreventRemove({ navigation }: Props) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function NativeStackPreventRemove() {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -151,14 +135,17 @@ export function NativeStackPreventRemove({ navigation }: Props) {
   );
 }
 
+NativeStackPreventRemove.title = 'Prevent removing screen in Native Stack';
+NativeStackPreventRemove.linking = linking;
+
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    padding: 16,
+    gap: 12,
+    padding: 12,
   },
   input: {
-    margin: 8,
-    padding: 10,
+    padding: 12,
     borderRadius: 3,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: 'rgba(0, 0, 0, 0.08)',
@@ -166,9 +153,7 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 8,
-  },
-  button: {
-    margin: 8,
+    gap: 12,
+    padding: 12,
   },
 });

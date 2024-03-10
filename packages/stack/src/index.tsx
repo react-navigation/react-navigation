@@ -36,6 +36,7 @@ export { useGestureHandlerRef } from './utils/useGestureHandlerRef';
  * Types
  */
 export type {
+  StackAnimationName,
   StackCardInterpolatedStyle,
   StackCardInterpolationProps,
   StackCardStyleInterpolator,
@@ -46,6 +47,7 @@ export type {
   StackNavigationEventMap,
   StackNavigationOptions,
   StackNavigationProp,
+  StackScreenOptions,
   StackScreenProps,
   TransitionPreset,
 } from './types';

@@ -1,114 +1,166 @@
 import * as React from 'react';
-import {
-  I18nManager,
-  Platform,
-  StyleProp,
-  StyleSheet,
-  useWindowDimensions,
-  ViewStyle,
-} from 'react-native';
-import * as Reanimated from 'react-native-reanimated';
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import useLatestCallback from 'use-latest-callback';
 
-import { SWIPE_MIN_DISTANCE, SWIPE_MIN_VELOCITY } from '../constants';
 import type { DrawerProps } from '../types';
-import { GestureHandlerRootView } from './GestureHandler';
+import { DrawerProgressContext } from '../utils/DrawerProgressContext';
+import { getDrawerWidth } from '../utils/getDrawerWidth';
+import { useFakeSharedValue } from '../utils/useFakeSharedValue';
+import { Overlay } from './Overlay';
 
-type Props = DrawerProps & {
-  /**
-   * Whether to use the legacy implementation of the drawer.
-   * The legacy implementation uses v1 of Reanimated.
-   * The modern implementation uses v2 of Reanimated.
-   *
-   * By default, the appropriate implementation is used based on whether Reanimated v2 is configured.
-   */
-  useLegacyImplementation?: boolean;
-
-  /**
-   * Style object for the wrapper view.
-   */
-  style?: StyleProp<ViewStyle>;
-};
-
-const getDefaultDrawerWidth = ({
-  height,
-  width,
-}: {
-  height: number;
-  width: number;
-}) => {
-  /*
-   * Default drawer width is screen width - header height
-   * with a max width of 280 on mobile and 320 on tablet
-   * https://material.io/components/navigation-drawer
-   */
-  const smallerAxisSize = Math.min(height, width);
-  const isLandscape = width > height;
-  const isTablet = smallerAxisSize >= 600;
-  const appBarHeight = Platform.OS === 'ios' ? (isLandscape ? 32 : 44) : 56;
-  const maxWidth = isTablet ? 320 : 280;
-
-  return Math.min(smallerAxisSize - appBarHeight, maxWidth);
-};
+const DRAWER_BORDER_RADIUS = 16;
 
 export function Drawer({
-  // Reanimated 2 is not configured
-  // @ts-expect-error: the type definitions are incomplete
-  useLegacyImplementation = !Reanimated.isConfigured?.(),
   layout: customLayout,
-  drawerType = Platform.select({ ios: 'slide', default: 'front' }),
-  drawerPosition = I18nManager.getConstants().isRTL ? 'right' : 'left',
+  drawerPosition = 'left',
   drawerStyle,
-  swipeEnabled = Platform.OS !== 'web' &&
-    Platform.OS !== 'windows' &&
-    Platform.OS !== 'macos',
-  swipeEdgeWidth = 32,
-  swipeMinDistance = SWIPE_MIN_DISTANCE,
-  swipeMinVelocity = SWIPE_MIN_VELOCITY,
-  keyboardDismissMode = 'on-drag',
-  hideStatusBarOnOpen = false,
-  statusBarAnimation = 'slide',
+  drawerType = 'front',
+  onClose,
+  onTransitionStart,
+  onTransitionEnd,
+  open,
+  overlayStyle,
+  overlayAccessibilityLabel,
+  renderDrawerContent,
+  children,
   style,
-  ...rest
-}: Props) {
-  // Reanimated v3 dropped legacy v1 API
-  const legacyImplemenationNotAvailable =
-    require('react-native-reanimated').abs === undefined;
-
-  if (useLegacyImplementation && legacyImplemenationNotAvailable) {
-    throw new Error(
-      'The `useLegacyImplementation` prop is not available with Reanimated 3 as it no longer includes support for Reanimated 1 legacy API. Remove the `useLegacyImplementation` prop from `Drawer.Navigator` to be able to use it.'
-    );
-  }
-
-  const Drawer: typeof import('./modern/Drawer').Drawer =
-    useLegacyImplementation
-      ? require('./legacy/Drawer').Drawer
-      : require('./modern/Drawer').Drawer;
-
+}: DrawerProps) {
   const windowDimensions = useWindowDimensions();
+
   const layout = customLayout ?? windowDimensions;
+  const drawerWidth = getDrawerWidth({ layout, drawerStyle });
+
+  const progress = useFakeSharedValue(open ? 1 : 0);
+
+  React.useEffect(() => {
+    progress.value = open ? 1 : 0;
+  }, [open, progress]);
+
+  const drawerRef = React.useRef<View>(null);
+
+  const onTransitionStartLatest = useLatestCallback(() => {
+    onTransitionStart?.(open === false);
+  });
+
+  const onTransitionEndLatest = useLatestCallback(() => {
+    onTransitionEnd?.(open === false);
+  });
+
+  React.useEffect(() => {
+    const element = drawerRef.current as HTMLDivElement | null;
+
+    if (element) {
+      element.addEventListener('transitionstart', onTransitionStartLatest);
+      element.addEventListener('transitionend', onTransitionEndLatest);
+    }
+  }, [onTransitionEndLatest, onTransitionStartLatest]);
+
+  const isOpen = drawerType === 'permanent' ? true : open;
+  const isRight = drawerPosition === 'right';
+
+  const borderRadiiStyle =
+    drawerType !== 'permanent'
+      ? isRight
+        ? {
+            borderTopLeftRadius: DRAWER_BORDER_RADIUS,
+            borderBottomLeftRadius: DRAWER_BORDER_RADIUS,
+          }
+        : {
+            borderTopRightRadius: DRAWER_BORDER_RADIUS,
+            borderBottomRightRadius: DRAWER_BORDER_RADIUS,
+          }
+      : null;
+
+  const drawerAnimatedStyle =
+    drawerType !== 'permanent'
+      ? {
+          transition: 'transform 0.3s',
+          transform: [
+            {
+              // The drawer stays in place at open position when `drawerType` is `back`
+              translateX:
+                open || drawerType === 'back'
+                  ? drawerPosition === 'left'
+                    ? 0
+                    : layout.width - drawerWidth
+                  : drawerPosition === 'left'
+                    ? -drawerWidth
+                    : layout.width,
+            },
+          ],
+        }
+      : null;
+
+  const contentAnimatedStyle =
+    drawerType !== 'permanent'
+      ? {
+          transition: 'transform 0.3s',
+          transform: [
+            {
+              translateX: open
+                ? // The screen content stays in place when `drawerType` is `front`
+                  drawerType === 'front'
+                  ? 0
+                  : drawerWidth * (drawerPosition === 'left' ? 1 : -1)
+                : 0,
+            },
+          ],
+        }
+      : null;
 
   return (
-    <GestureHandlerRootView style={[styles.container, style]}>
-      <Drawer
-        {...rest}
-        layout={layout}
-        drawerType={drawerType}
-        drawerPosition={drawerPosition}
-        drawerStyle={[
-          { width: getDefaultDrawerWidth(layout) },
-          styles.drawer,
-          drawerStyle,
-        ]}
-        swipeEnabled={swipeEnabled}
-        swipeEdgeWidth={swipeEdgeWidth}
-        swipeMinDistance={swipeMinDistance}
-        swipeMinVelocity={swipeMinVelocity}
-        keyboardDismissMode={keyboardDismissMode}
-        hideStatusBarOnOpen={hideStatusBarOnOpen}
-        statusBarAnimation={statusBarAnimation}
-      />
-    </GestureHandlerRootView>
+    <View style={[styles.container, style]}>
+      <DrawerProgressContext.Provider value={progress}>
+        <View
+          style={[
+            styles.main,
+            {
+              flexDirection:
+                drawerType === 'permanent' && !isRight ? 'row-reverse' : 'row',
+            },
+          ]}
+        >
+          <View style={[styles.content, contentAnimatedStyle]}>
+            <View
+              accessibilityElementsHidden={isOpen && drawerType !== 'permanent'}
+              importantForAccessibility={
+                isOpen && drawerType !== 'permanent'
+                  ? 'no-hide-descendants'
+                  : 'auto'
+              }
+              style={styles.content}
+            >
+              {children}
+            </View>
+            {drawerType !== 'permanent' ? (
+              <Overlay
+                open={open}
+                progress={progress}
+                onPress={() => onClose()}
+                style={overlayStyle}
+                accessibilityLabel={overlayAccessibilityLabel}
+              />
+            ) : null}
+          </View>
+          <View
+            ref={drawerRef}
+            style={[
+              styles.drawer,
+              {
+                width: drawerWidth,
+                position: drawerType === 'permanent' ? 'relative' : 'absolute',
+                zIndex: drawerType === 'back' ? -1 : 0,
+              },
+              borderRadiiStyle,
+              drawerAnimatedStyle,
+              drawerStyle,
+            ]}
+          >
+            {renderDrawerContent()}
+          </View>
+        </View>
+      </DrawerProgressContext.Provider>
+    </View>
   );
 }
 
@@ -117,6 +169,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   drawer: {
+    top: 0,
+    bottom: 0,
+    maxWidth: '100%',
     backgroundColor: 'white',
+  },
+  content: {
+    flex: 1,
+  },
+  main: {
+    flex: 1,
   },
 });

@@ -1,6 +1,6 @@
 import {
   createNavigatorFactory,
-  NavigatorScreenParams,
+  type NavigatorScreenParams,
   StackRouter,
   TabRouter,
   useNavigationBuilder,
@@ -21,6 +21,21 @@ window.removeEventListener = () => {};
 // We want to use the web version of useLinking
 // eslint-disable-next-line import/extensions
 jest.mock('../useLinking', () => require('../useLinking.tsx'));
+
+// Since Jest is configured for React Native, the *.native.js file is imported
+// Causing the wrong useIsomorphicLayoutEffect to be imported
+// It causes "Warning: useLayoutEffect does nothing on the server"
+// So we explicitly silence it here
+// This warning is being removed in React: https://github.com/facebook/react/pull/26395
+const error = console.error;
+
+jest.spyOn(console, 'error').mockImplementation((...args) => {
+  if (/Warning: useLayoutEffect does nothing on the server/m.test(args[0])) {
+    return;
+  }
+
+  error(...args);
+});
 
 it('renders correct state with location', () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {

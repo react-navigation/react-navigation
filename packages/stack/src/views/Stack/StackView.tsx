@@ -4,19 +4,19 @@ import {
 } from '@react-navigation/elements';
 import {
   CommonActions,
-  ParamListBase,
-  Route,
+  type LocaleDirection,
+  type ParamListBase,
+  type Route,
+  type RouteProp,
   StackActions,
-  StackNavigationState,
+  type StackNavigationState,
 } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import {
-  EdgeInsets,
-  SafeAreaInsetsContext,
-} from 'react-native-safe-area-context';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
 import type {
+  StackDescriptor,
   StackDescriptorMap,
   StackNavigationConfig,
   StackNavigationHelpers,
@@ -25,14 +25,19 @@ import { ModalPresentationContext } from '../../utils/ModalPresentationContext';
 import { GestureHandlerRootView } from '../GestureHandler';
 import {
   HeaderContainer,
-  Props as HeaderContainerProps,
+  type Props as HeaderContainerProps,
 } from '../Header/HeaderContainer';
 import { CardStack } from './CardStack';
 
 type Props = StackNavigationConfig & {
+  direction: LocaleDirection;
   state: StackNavigationState<ParamListBase>;
   navigation: StackNavigationHelpers;
   descriptors: StackDescriptorMap;
+  describe: (
+    route: RouteProp<ParamListBase>,
+    placeholder: boolean
+  ) => StackDescriptor;
 };
 
 type State = {
@@ -125,12 +130,9 @@ export class StackView extends React.Component<Props, State> {
         : props.state.routes;
 
     // Now we need to determine which routes were added and removed
-    let {
-      openingRouteKeys,
-      closingRouteKeys,
-      replacingRouteKeys,
-      previousRoutes,
-    } = state;
+    const { previousRoutes } = state;
+
+    let { openingRouteKeys, closingRouteKeys, replacingRouteKeys } = state;
 
     const previousFocusedRoute = previousRoutes[previousRoutes.length - 1] as
       | Route<string>
@@ -140,7 +142,7 @@ export class StackView extends React.Component<Props, State> {
     const isAnimationEnabled = (key: string) => {
       const descriptor = props.descriptors[key] || state.descriptors[key];
 
-      return descriptor ? descriptor.options.animationEnabled !== false : true;
+      return descriptor ? descriptor.options.animation !== 'none' : true;
     };
 
     const getAnimationTypeForReplace = (key: string) => {
@@ -303,17 +305,6 @@ export class StackView extends React.Component<Props, State> {
     return routes[index - 1];
   };
 
-  private renderScene = ({ route }: { route: Route<string> }) => {
-    const descriptor =
-      this.state.descriptors[route.key] || this.props.descriptors[route.key];
-
-    if (!descriptor) {
-      return null;
-    }
-
-    return descriptor.render();
-  };
-
   private renderHeader = (props: HeaderContainerProps) => {
     return <HeaderContainer {...props} />;
   };
@@ -438,6 +429,12 @@ export class StackView extends React.Component<Props, State> {
     const { routes, descriptors, openingRouteKeys, closingRouteKeys } =
       this.state;
 
+    const preloadedDescriptors =
+      state.preloadedRoutes.reduce<StackDescriptorMap>((acc, route) => {
+        acc[route.key] = acc[route.key] || this.props.describe(route, true);
+        return acc;
+      }, {});
+
     return (
       <GestureHandlerWrapper style={styles.container}>
         <SafeAreaProviderCompat>
@@ -448,7 +445,7 @@ export class StackView extends React.Component<Props, State> {
                   <HeaderShownContext.Consumer>
                     {(isParentHeaderShown) => (
                       <CardStack
-                        insets={insets as EdgeInsets}
+                        insets={insets!}
                         isParentHeaderShown={isParentHeaderShown}
                         isParentModal={isParentModal}
                         getPreviousRoute={this.getPreviousRoute}
@@ -460,12 +457,12 @@ export class StackView extends React.Component<Props, State> {
                         onTransitionStart={this.handleTransitionStart}
                         onTransitionEnd={this.handleTransitionEnd}
                         renderHeader={this.renderHeader}
-                        renderScene={this.renderScene}
                         state={state}
                         descriptors={descriptors}
                         onGestureStart={this.handleGestureStart}
                         onGestureEnd={this.handleGestureEnd}
                         onGestureCancel={this.handleGestureCancel}
+                        preloadedDescriptors={preloadedDescriptors}
                         {...rest}
                       />
                     )}

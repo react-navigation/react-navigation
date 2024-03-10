@@ -1,13 +1,13 @@
-import { useHeaderHeight } from '@react-navigation/elements';
-import type { ParamListBase } from '@react-navigation/native';
+import { Button, useHeaderHeight } from '@react-navigation/elements';
+import type { PathConfigMap } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
-  NativeStackScreenProps,
+  type NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
-import { Button } from 'react-native-paper';
 
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
@@ -16,6 +16,12 @@ export type NativeStackParams = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Albums: undefined;
+};
+
+const linking: PathConfigMap<NativeStackParams> = {
+  Article: COMMON_LINKING_CONFIG.Article,
+  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+  Albums: 'albums',
 };
 
 const scrollEnabled = Platform.select({ web: true, default: false });
@@ -28,31 +34,21 @@ const ArticleScreen = ({
     <ScrollView contentInsetAdjustmentBehavior="automatic">
       <View style={styles.buttons}>
         <Button
-          mode="contained"
+          variant="filled"
           onPress={() => navigation.push('NewsFeed', { date: Date.now() })}
-          style={styles.button}
         >
           Push feed
         </Button>
         <Button
-          mode="contained"
+          variant="filled"
           onPress={() => navigation.replace('NewsFeed', { date: Date.now() })}
-          style={styles.button}
         >
           Replace with feed
         </Button>
-        <Button
-          mode="contained"
-          onPress={() => navigation.popTo('Albums')}
-          style={styles.button}
-        >
+        <Button variant="filled" onPress={() => navigation.popTo('Albums')}>
           Pop to Albums
         </Button>
-        <Button
-          mode="outlined"
-          onPress={() => navigation.pop()}
-          style={styles.button}
-        >
+        <Button variant="tinted" onPress={() => navigation.pop()}>
           Pop screen
         </Button>
       </View>
@@ -79,18 +75,10 @@ const NewsFeedScreen = ({
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic">
       <View style={styles.buttons}>
-        <Button
-          mode="contained"
-          onPress={() => navigation.push('Albums')}
-          style={styles.button}
-        >
+        <Button variant="filled" onPress={() => navigation.push('Albums')}>
           Push Albums
         </Button>
-        <Button
-          mode="outlined"
-          onPress={() => navigation.goBack()}
-          style={styles.button}
-        >
+        <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back
         </Button>
       </View>
@@ -108,19 +96,14 @@ const AlbumsScreen = ({
     <ScrollView contentContainerStyle={{ paddingTop: headerHeight }}>
       <View style={styles.buttons}>
         <Button
-          mode="contained"
+          variant="filled"
           onPress={() =>
             navigation.navigate('Article', { author: 'Babel fish' })
           }
-          style={styles.button}
         >
           Navigate to article
         </Button>
-        <Button
-          mode="outlined"
-          onPress={() => navigation.pop(2)}
-          style={styles.button}
-        >
+        <Button variant="tinted" onPress={() => navigation.pop(2)}>
           Pop by 2
         </Button>
       </View>
@@ -131,16 +114,7 @@ const AlbumsScreen = ({
 
 const Stack = createNativeStackNavigator<NativeStackParams>();
 
-export function NativeStack({
-  navigation,
-}: NativeStackScreenProps<ParamListBase>) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-      gestureEnabled: false,
-    });
-  }, [navigation]);
-
+export function NativeStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -175,13 +149,17 @@ export function NativeStack({
   );
 }
 
+NativeStack.title = 'Native Stack';
+NativeStack.linking = linking;
+NativeStack.options = {
+  gestureEnabled: false,
+};
+
 const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 8,
-  },
-  button: {
-    margin: 8,
+    gap: 12,
+    padding: 12,
   },
 });

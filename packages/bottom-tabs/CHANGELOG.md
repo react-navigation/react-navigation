@@ -3,6 +3,98 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.15...@react-navigation/bottom-tabs@7.0.0-alpha.16) (2024-03-09)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-alpha.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.14...@react-navigation/bottom-tabs@7.0.0-alpha.15) (2024-03-08)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-alpha.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.13...@react-navigation/bottom-tabs@7.0.0-alpha.14) (2024-03-08)
+
+### Bug Fixes
+
+* fix flicker for intermediate screens for tab animation ([9d54040](https://github.com/react-navigation/react-navigation/commit/9d540409d0d324027b6196f756cb98de6eb52f1f)) - by @satya164
+
+# [7.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.12...@react-navigation/bottom-tabs@7.0.0-alpha.13) (2024-03-08)
+
+### Bug Fixes
+
+* align animation APIs for stack and bottom tabs ([2599bc2](https://github.com/react-navigation/react-navigation/commit/2599bc2cf176118ff910610facd443d2e7232d77)) - by @satya164
+* fix typo ([4101318](https://github.com/react-navigation/react-navigation/commit/4101318ac68c239ac6963c35bb045e96938fb62e)) - by @satya164
+
+### Features
+
+* add an animation option to customize animations ([f0b7e6f](https://github.com/react-navigation/react-navigation/commit/f0b7e6f3343b4bc61ebd695accd0965b4d5e34fd)) - by @satya164
+
+# [7.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.11...@react-navigation/bottom-tabs@7.0.0-alpha.12) (2024-03-04)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.10...@react-navigation/bottom-tabs@7.0.0-alpha.11) (2024-02-24)
+
+### Bug Fixes
+
+* fix peer dependency versions ([4b93b63](https://github.com/react-navigation/react-navigation/commit/4b93b6335ce180fe879f9fbe8f2400426b5484fb)) - by @
+
+# [7.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.9...@react-navigation/bottom-tabs@7.0.0-alpha.10) (2024-02-23)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.8...@react-navigation/bottom-tabs@7.0.0-alpha.9) (2024-02-23)
+
+### Features
+
+* [bottom-tabs] allow position = top ([#11782](https://github.com/react-navigation/react-navigation/issues/11782)) ([aa5ae17](https://github.com/react-navigation/react-navigation/commit/aa5ae177d4d6b7ea2ae36c194b6a46747c242f9b)) - by @douglowder
+
+# [7.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.7...@react-navigation/bottom-tabs@7.0.0-alpha.8) (2024-01-17)
+
+### Features
+
+* preloading for simple navigators - tabs, drawer ([#11709](https://github.com/react-navigation/react-navigation/issues/11709)) ([ad7c703](https://github.com/react-navigation/react-navigation/commit/ad7c703f1c0e66d77f0ab235e13fe43ca813ed1d)) - by @osdnk
+* preloading in routers  ([382d6e6](https://github.com/react-navigation/react-navigation/commit/382d6e6f3312630b34332b1ae7d4bd7bf9b4ee60)) - by @osdnk
+
+# [7.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.6...@react-navigation/bottom-tabs@7.0.0-alpha.7) (2023-11-17)
+
+### Bug Fixes
+
+* update peer dependencies when publishing ([c440703](https://github.com/react-navigation/react-navigation/commit/c44070310f875e488708f2a6c52ffddcea05b0e6)) - by @
+
+# [7.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.5...@react-navigation/bottom-tabs@7.0.0-alpha.6) (2023-11-12)
+
+### Bug Fixes
+
+* forShifting bottom-tabs animation ([#11638](https://github.com/react-navigation/react-navigation/issues/11638)) ([27bfc12](https://github.com/react-navigation/react-navigation/commit/27bfc120d2c8be8b205c41917094c7188c0f32a3)) - by @Bowlerr
+* pass `tintColor` to `Label` ([#11617](https://github.com/react-navigation/react-navigation/issues/11617)) ([c2d8aac](https://github.com/react-navigation/react-navigation/commit/c2d8aac84d1d3bf631b72392b3bdae80dc10be5c)), closes [#11246](https://github.com/react-navigation/react-navigation/issues/11246) - by @darshan09200
+
+### Features
+
+* add a layout prop for navigators ([#11614](https://github.com/react-navigation/react-navigation/issues/11614)) ([1f51190](https://github.com/react-navigation/react-navigation/commit/1f511904b9437d1451557147e72962859e97b1ae)) - by @satya164
+
+# [7.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.4...@react-navigation/bottom-tabs@7.0.0-alpha.5) (2023-09-25)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.3...@react-navigation/bottom-tabs@7.0.0-alpha.4) (2023-09-13)
+
+### Features
+
+* add option to show tabs on the side ([#11578](https://github.com/react-navigation/react-navigation/issues/11578)) ([cd15fda](https://github.com/react-navigation/react-navigation/commit/cd15fdafe7acc428826bd5106c7ba62c1b5153ca)) - by @satya164
+
+# [7.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.2...@react-navigation/bottom-tabs@7.0.0-alpha.3) (2023-09-07)
+
+### Bug Fixes
+
+* adjust fade animation spec for bottom tabs ([ecd0e66](https://github.com/react-navigation/react-navigation/commit/ecd0e66b5eaf19248629aae06734541a48aa5684)) - by @satya164
+* Allow to use `PlatformColor` in the theme ([#11570](https://github.com/react-navigation/react-navigation/issues/11570)) ([64734e7](https://github.com/react-navigation/react-navigation/commit/64734e7bc0d7f203d8e5db6abcc9a88157a5f16c)) - by @retyui
+* bottom bar animation tied with a screen ([#11572](https://github.com/react-navigation/react-navigation/issues/11572)) ([9ee55bc](https://github.com/react-navigation/react-navigation/commit/9ee55bc0eee9e7257b7dd914ca994c37384877a0)) - by @osdnk
+
+### Features
+
+* add animation prop to bottom tab ([#11323](https://github.com/react-navigation/react-navigation/issues/11323)) ([8d2a6d8](https://github.com/react-navigation/react-navigation/commit/8d2a6d8ef642872d3d506dca483b7474471a040c)) - by @teneeto
+* add shifting animation to bottom-tabs and various fixes ([#11581](https://github.com/react-navigation/react-navigation/issues/11581)) ([6d93c2d](https://github.com/react-navigation/react-navigation/commit/6d93c2da661e1991f6e60f25abf137110a005509)) - by @satya164
+
 # [7.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.1...@react-navigation/bottom-tabs@7.0.0-alpha.2) (2023-06-22)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

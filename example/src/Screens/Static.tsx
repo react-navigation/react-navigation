@@ -1,13 +1,13 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Button, HeaderBackButton } from '@react-navigation/elements';
 import {
-  createStaticNavigation,
-  NavigationIndependentTree,
+  createComponentForStaticNavigation,
+  createPathConfigForStaticNavigation,
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
-import { Button } from 'react-native-paper';
 
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
@@ -15,8 +15,9 @@ import { Contacts } from '../Shared/Contacts';
 
 const getTabBarIcon =
   (name: React.ComponentProps<typeof MaterialCommunityIcons>['name']) =>
-  ({ color, size }: { color: string; size: number }) =>
-    <MaterialCommunityIcons name={name} color={color} size={size} />;
+  ({ color, size }: { color: string; size: number }) => (
+    <MaterialCommunityIcons name={name} color={color} size={size} />
+  );
 
 const ChatShownContext = React.createContext({
   isChatShown: false,
@@ -37,7 +38,7 @@ const AlbumsScreen = () => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
-        <Button mode="contained" onPress={() => setIsChatShown(!isChatShown)}>
+        <Button variant="filled" onPress={() => setIsChatShown(!isChatShown)}>
           {isChatShown ? 'Hide' : 'Show'} Chat
         </Button>
       </View>
@@ -47,24 +48,33 @@ const AlbumsScreen = () => {
 };
 
 const HomeTabs = createBottomTabNavigator({
+  screenOptions: ({ theme, navigation }) => ({
+    headerLeft: (props) => (
+      <HeaderBackButton {...props} onPress={navigation.goBack} />
+    ),
+    tabBarActiveTintColor: theme.colors.notification,
+  }),
   screens: {
     Albums: {
       screen: AlbumsScreen,
       options: {
         tabBarIcon: getTabBarIcon('image-album'),
       },
+      linking: 'albums',
     },
     Contacts: {
       screen: Contacts,
       options: {
         tabBarIcon: getTabBarIcon('contacts'),
       },
+      linking: 'contacts',
     },
     Chat: {
       screen: Chat,
       options: {
         tabBarIcon: getTabBarIcon('message-reply'),
       },
+      linking: 'chat',
       if: useIsChatShown,
     },
   },
@@ -75,27 +85,33 @@ const RootStack = createStackNavigator({
     headerShown: false,
   },
   screens: {
-    Home: HomeTabs,
+    Home: {
+      screen: HomeTabs,
+      linking: '',
+    },
   },
 });
 
-const Navigation = createStaticNavigation(RootStack);
+const Navigation = createComponentForStaticNavigation(RootStack, 'Root');
 
 export function StaticScreen() {
   const [isChatShown, setIsChatShown] = React.useState(false);
 
   return (
     <ChatShownContext.Provider value={{ isChatShown, setIsChatShown }}>
-      <NavigationIndependentTree>
-        <Navigation />
-      </NavigationIndependentTree>
+      <Navigation />
     </ChatShownContext.Provider>
   );
 }
+
+StaticScreen.title = 'Static config';
+StaticScreen.linking = createPathConfigForStaticNavigation(RootStack);
+
 const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 16,
+    gap: 12,
+    padding: 12,
   },
 });

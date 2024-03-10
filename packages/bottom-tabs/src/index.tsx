@@ -1,3 +1,12 @@
+import * as SceneStyleInterpolators from './TransitionConfigs/SceneStyleInterpolators';
+import * as TransitionPresets from './TransitionConfigs/TransitionPresets';
+import * as TransitionSpecs from './TransitionConfigs/TransitionSpecs';
+
+/**
+ * Transition Presets
+ */
+export { SceneStyleInterpolators, TransitionPresets, TransitionSpecs };
+
 /**
  * Navigators
  */
@@ -26,5 +35,6 @@ export type {
   BottomTabNavigationEventMap,
   BottomTabNavigationOptions,
   BottomTabNavigationProp,
+  BottomTabScreenOptions,
   BottomTabScreenProps,
 } from './types';

@@ -3,6 +3,95 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.13...@react-navigation/native-stack@7.0.0-alpha.14) (2024-03-09)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [7.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.12...@react-navigation/native-stack@7.0.0-alpha.13) (2024-03-08)
+
+### Bug Fixes
+
+* update drawer and header styles according to material design 3 ([#11872](https://github.com/react-navigation/react-navigation/issues/11872)) ([bfa5689](https://github.com/react-navigation/react-navigation/commit/bfa568995940f956c9ec5944f2b0543eca5da546)) - by @groot007
+
+### Features
+
+* make all screens after presentation: 'modal' as modal unless specified ([#11860](https://github.com/react-navigation/react-navigation/issues/11860)) ([f16216c](https://github.com/react-navigation/react-navigation/commit/f16216c65740c2795cdef6c2249edffa9e9416ae)) - by @groot007
+
+# [7.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.11...@react-navigation/native-stack@7.0.0-alpha.12) (2024-03-04)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [7.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.10...@react-navigation/native-stack@7.0.0-alpha.11) (2024-02-24)
+
+### Bug Fixes
+
+* fix peer dependency versions ([4b93b63](https://github.com/react-navigation/react-navigation/commit/4b93b6335ce180fe879f9fbe8f2400426b5484fb)) - by @
+
+# [7.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.9...@react-navigation/native-stack@7.0.0-alpha.10) (2024-02-23)
+
+### Bug Fixes
+
+* White flash transitions with DarkTheme ([#11800](https://github.com/react-navigation/react-navigation/issues/11800)) ([1770c96](https://github.com/react-navigation/react-navigation/commit/1770c96834abf8af28aa0f3c6bffb618ea3dcce9)) - by @gianlucalippolis
+
+# [7.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.8...@react-navigation/native-stack@7.0.0-alpha.9) (2024-02-23)
+
+### Bug Fixes
+
+* fix header height for iOS devices with dynamic island ([#11786](https://github.com/react-navigation/react-navigation/issues/11786)) ([4c521b5](https://github.com/react-navigation/react-navigation/commit/4c521b5c865f2c46d58abb2e9e7fd1b0d2074215)), closes [#11655](https://github.com/react-navigation/react-navigation/issues/11655) - by @gianlucalippolis
+
+### Features
+
+* add a HeaderButton component to elements ([d8de228](https://github.com/react-navigation/react-navigation/commit/d8de228bafc9408855bdfdfcd48bbb10195501fb)) - by @satya164
+* introduce missing props from native-stack v5 ([#11803](https://github.com/react-navigation/react-navigation/issues/11803)) ([90cfbf2](https://github.com/react-navigation/react-navigation/commit/90cfbf23bcc5259f3262691a9eec6c5b906e5262)) - by @tboba
+
+# [7.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.7...@react-navigation/native-stack@7.0.0-alpha.8) (2024-01-17)
+
+### Features
+
+* add layout and screenLayout props for screens ([#11741](https://github.com/react-navigation/react-navigation/issues/11741)) ([2dc2178](https://github.com/react-navigation/react-navigation/commit/2dc217827a1caa615460563973d3d658be372b29)) - by @satya164
+* preloading in routers  ([382d6e6](https://github.com/react-navigation/react-navigation/commit/382d6e6f3312630b34332b1ae7d4bd7bf9b4ee60)) - by @osdnk
+
+# [7.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.6...@react-navigation/native-stack@7.0.0-alpha.7) (2023-11-17)
+
+### Bug Fixes
+
+* update peer dependencies when publishing ([c440703](https://github.com/react-navigation/react-navigation/commit/c44070310f875e488708f2a6c52ffddcea05b0e6)) - by @
+
+# [7.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.5...@react-navigation/native-stack@7.0.0-alpha.6) (2023-11-12)
+
+### Bug Fixes
+
+* fix header customization in native stack ([6885210](https://github.com/react-navigation/react-navigation/commit/6885210ec02aabb8c3736517482fc21ac32ca3ab)) - by @satya164
+* headerHeight on phones with dynamic island ([#11338](https://github.com/react-navigation/react-navigation/issues/11338)) ([e4815c5](https://github.com/react-navigation/react-navigation/commit/e4815c538536ddccf4207b87bf3e2f1603dedd84)), closes [#10989](https://github.com/react-navigation/react-navigation/issues/10989) - by @dylancom
+
+### Features
+
+* add a layout prop for navigators ([#11614](https://github.com/react-navigation/react-navigation/issues/11614)) ([1f51190](https://github.com/react-navigation/react-navigation/commit/1f511904b9437d1451557147e72962859e97b1ae)) - by @satya164
+* add useAnimatedHeaderHeight hook ([#11663](https://github.com/react-navigation/react-navigation/issues/11663)) ([5a88c74](https://github.com/react-navigation/react-navigation/commit/5a88c740a6acb022dded823469a347868ef12ad4)), closes [#11338](https://github.com/react-navigation/react-navigation/issues/11338) - by @tboba
+
+# [7.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.4...@react-navigation/native-stack@7.0.0-alpha.5) (2023-09-25)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [7.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.3...@react-navigation/native-stack@7.0.0-alpha.4) (2023-09-13)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [7.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.2...@react-navigation/native-stack@7.0.0-alpha.3) (2023-09-07)
+
+### Bug Fixes
+
+* Allow to use `PlatformColor` in the theme ([#11570](https://github.com/react-navigation/react-navigation/issues/11570)) ([64734e7](https://github.com/react-navigation/react-navigation/commit/64734e7bc0d7f203d8e5db6abcc9a88157a5f16c)) - by @retyui
+* buggy behaviour of search bar / large title on Fabric with native stack v7 ([#11501](https://github.com/react-navigation/react-navigation/issues/11501)) ([dcb4e4c](https://github.com/react-navigation/react-navigation/commit/dcb4e4c775b0e22ef84475de350794c21764632e)) - by @kkafar
+
+* feat!: add a direction prop to NavigationContainer to specify rtl (#11393) ([8309636](https://github.com/react-navigation/react-navigation/commit/830963653fb5a489d02f1503222629373319b39e)), closes [#11393](https://github.com/react-navigation/react-navigation/issues/11393) - by @satya164
+
+### BREAKING CHANGES
+
+* Previously the navigators tried to detect RTL automatically and adjust the UI. However this is problematic since we cannot detect RTL in all cases (e.g. on Web).
+
+This adds an optional `direction` prop to `NavigationContainer` instead so that user can specify when React Navigation's UI needs to be adjusted for RTL. It defaults to the value from `I18nManager` on native platforms, however it needs to be explicitly passed for Web.
+
 # [7.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.1...@react-navigation/native-stack@7.0.0-alpha.2) (2023-06-22)
 
 **Note:** Version bump only for package @react-navigation/native-stack

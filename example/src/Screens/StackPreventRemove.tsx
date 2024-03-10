@@ -1,11 +1,12 @@
+import { Button } from '@react-navigation/elements';
 import {
   CommonActions,
-  ParamListBase,
+  type PathConfigMap,
   useTheme,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
-  StackScreenProps,
+  type StackScreenProps,
 } from '@react-navigation/stack';
 import * as React from 'react';
 import {
@@ -16,13 +17,18 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { Button } from 'react-native-paper';
 
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Article } from '../Shared/Article';
 
-type PreventRemoveParams = {
+export type PreventRemoveParams = {
   Article: { author: string };
   Input: undefined;
+};
+
+const linking: PathConfigMap<PreventRemoveParams> = {
+  Article: COMMON_LINKING_CONFIG.Article,
+  Input: 'input',
 };
 
 const scrollEnabled = Platform.select({ web: true, default: false });
@@ -34,18 +40,10 @@ const ArticleScreen = ({
   return (
     <ScrollView>
       <View style={styles.buttons}>
-        <Button
-          mode="contained"
-          onPress={() => navigation.push('Input')}
-          style={styles.button}
-        >
+        <Button variant="filled" onPress={() => navigation.push('Input')}>
           Push Input
         </Button>
-        <Button
-          mode="outlined"
-          onPress={() => navigation.popToTop()}
-          style={styles.button}
-        >
+        <Button variant="tinted" onPress={() => navigation.popToTop()}>
           Pop to top
         </Button>
       </View>
@@ -113,7 +111,7 @@ const InputScreen = ({
         onChangeText={setText}
       />
       <Button
-        mode="outlined"
+        variant="tinted"
         color="tomato"
         onPress={() =>
           navigation.dispatch({
@@ -121,14 +119,12 @@ const InputScreen = ({
             payload: { confirmed: true },
           })
         }
-        style={styles.button}
       >
         Discard and go back
       </Button>
       <Button
-        mode="outlined"
+        variant="tinted"
         onPress={() => navigation.push('Article', { author: text })}
-        style={styles.button}
       >
         Push Article
       </Button>
@@ -138,15 +134,7 @@ const InputScreen = ({
 
 const Stack = createStackNavigator<PreventRemoveParams>();
 
-type Props = StackScreenProps<ParamListBase>;
-
-export function StackPreventRemove({ navigation }: Props) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function StackPreventRemove() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Input" component={InputScreen} />
@@ -155,14 +143,17 @@ export function StackPreventRemove({ navigation }: Props) {
   );
 }
 
+StackPreventRemove.title = 'Prevent removing screen in Stack';
+StackPreventRemove.linking = linking;
+
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    padding: 16,
+    gap: 12,
+    padding: 12,
   },
   input: {
-    margin: 8,
-    padding: 10,
+    padding: 12,
     borderRadius: 3,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: 'rgba(0, 0, 0, 0.08)',
@@ -170,9 +161,7 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 8,
-  },
-  button: {
-    margin: 8,
+    gap: 12,
+    padding: 12,
   },
 });

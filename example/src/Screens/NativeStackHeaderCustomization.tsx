@@ -1,7 +1,9 @@
-import type { ParamListBase } from '@react-navigation/native';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { Button, HeaderButton } from '@react-navigation/elements';
+import type { PathConfigMap } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
-  NativeStackScreenProps,
+  type NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import * as React from 'react';
 import {
@@ -12,16 +14,22 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Appbar, Button } from 'react-native-paper';
 
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type NativeStackParams = {
+export type NativeHeaderCustomizationStackParams = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Albums: undefined;
+};
+
+const linking: PathConfigMap<NativeHeaderCustomizationStackParams> = {
+  Article: COMMON_LINKING_CONFIG.Article,
+  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+  Albums: 'albums',
 };
 
 const scrollEnabled = Platform.select({ web: true, default: false });
@@ -29,22 +37,17 @@ const scrollEnabled = Platform.select({ web: true, default: false });
 const ArticleScreen = ({
   navigation,
   route,
-}: NativeStackScreenProps<NativeStackParams, 'Article'>) => {
+}: NativeStackScreenProps<NativeHeaderCustomizationStackParams, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
         <Button
-          mode="contained"
+          variant="filled"
           onPress={() => navigation.push('NewsFeed', { date: Date.now() })}
-          style={styles.button}
         >
           Push feed
         </Button>
-        <Button
-          mode="outlined"
-          onPress={() => navigation.pop()}
-          style={styles.button}
-        >
+        <Button variant="tinted" onPress={() => navigation.pop()}>
           Pop screen
         </Button>
       </View>
@@ -59,22 +62,17 @@ const ArticleScreen = ({
 const NewsFeedScreen = ({
   route,
   navigation,
-}: NativeStackScreenProps<NativeStackParams, 'NewsFeed'>) => {
+}: NativeStackScreenProps<
+  NativeHeaderCustomizationStackParams,
+  'NewsFeed'
+>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
-        <Button
-          mode="contained"
-          onPress={() => navigation.push('Albums')}
-          style={styles.button}
-        >
+        <Button variant="filled" onPress={() => navigation.push('Albums')}>
           Push Albums
         </Button>
-        <Button
-          mode="outlined"
-          onPress={() => navigation.goBack()}
-          style={styles.button}
-        >
+        <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back
         </Button>
       </View>
@@ -85,24 +83,19 @@ const NewsFeedScreen = ({
 
 const AlbumsScreen = ({
   navigation,
-}: NativeStackScreenProps<NativeStackParams, 'Albums'>) => {
+}: NativeStackScreenProps<NativeHeaderCustomizationStackParams, 'Albums'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
         <Button
-          mode="contained"
+          variant="filled"
           onPress={() =>
             navigation.navigate('Article', { author: 'Babel fish' })
           }
-          style={styles.button}
         >
           Navigate to article
         </Button>
-        <Button
-          mode="outlined"
-          onPress={() => navigation.pop(2)}
-          style={styles.button}
-        >
+        <Button variant="tinted" onPress={() => navigation.pop(2)}>
           Pop by 2
         </Button>
       </View>
@@ -111,18 +104,10 @@ const AlbumsScreen = ({
   );
 };
 
-const Stack = createNativeStackNavigator<NativeStackParams>();
+const Stack =
+  createNativeStackNavigator<NativeHeaderCustomizationStackParams>();
 
-export function NativeStackHeaderCustomization({
-  navigation,
-}: NativeStackScreenProps<ParamListBase>) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-      gestureEnabled: false,
-    });
-  }, [navigation]);
-
+export function NativeStackHeaderCustomization() {
   const onPress = () => {
     Alert.alert(
       'Never gonna give you up!',
@@ -139,26 +124,37 @@ export function NativeStackHeaderCustomization({
           title: `Article by ${route.params?.author ?? 'Unknown'}`,
           headerTintColor: 'white',
           headerTitle: ({ tintColor }) => (
-            <Appbar.Action
-              color={tintColor}
-              icon="signal-5g"
-              onPress={onPress}
-            />
+            <HeaderButton onPress={onPress}>
+              <MaterialCommunityIcons
+                name="signal-5g"
+                size={24}
+                color={tintColor}
+              />
+            </HeaderButton>
           ),
           headerLeft: ({ tintColor, canGoBack }) =>
             canGoBack ? (
-              <Appbar.Action
-                color={tintColor}
-                icon="arrow-left-thick"
-                onPress={navigation.goBack}
-              />
+              <HeaderButton onPress={navigation.goBack}>
+                <MaterialCommunityIcons
+                  name="arrow-left-thick"
+                  size={24}
+                  color={tintColor}
+                />
+              </HeaderButton>
             ) : null,
           headerRight: ({ tintColor }) => (
-            <Appbar.Action color={tintColor} icon="music" onPress={onPress} />
+            <HeaderButton onPress={onPress}>
+              <MaterialCommunityIcons
+                name="music"
+                size={24}
+                color={tintColor}
+              />
+            </HeaderButton>
           ),
           headerBackground: () => (
             <Image
               source={require('../../assets/cpu.jpg')}
+              resizeMode="cover"
               style={styles.headerBackground}
             />
           ),
@@ -171,7 +167,9 @@ export function NativeStackHeaderCustomization({
         options={{
           title: 'Feed',
           headerLeft: ({ tintColor }) => (
-            <Appbar.Action color={tintColor} icon="spa" onPress={onPress} />
+            <HeaderButton onPress={onPress}>
+              <MaterialCommunityIcons name="spa" size={24} color={tintColor} />
+            </HeaderButton>
           ),
         }}
       />
@@ -184,7 +182,13 @@ export function NativeStackHeaderCustomization({
           headerStyle: { backgroundColor: 'papayawhip' },
           headerBackVisible: true,
           headerLeft: ({ tintColor }) => (
-            <Appbar.Action color={tintColor} icon="music" onPress={onPress} />
+            <HeaderButton onPress={onPress}>
+              <MaterialCommunityIcons
+                name="music"
+                size={24}
+                color={tintColor}
+              />
+            </HeaderButton>
           ),
         }}
       />
@@ -192,19 +196,22 @@ export function NativeStackHeaderCustomization({
   );
 }
 
+NativeStackHeaderCustomization.title = 'Header Customization in Native Stack';
+NativeStackHeaderCustomization.linking = linking;
+NativeStackHeaderCustomization.options = {
+  gestureEnabled: false,
+};
+
 const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 8,
-  },
-  button: {
-    margin: 8,
+    gap: 12,
+    padding: 12,
   },
   headerBackground: {
     height: undefined,
     width: undefined,
     flex: 1,
-    resizeMode: 'cover',
   },
 });

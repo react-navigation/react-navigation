@@ -1,6 +1,9 @@
 import './resolve-hooks';
 
-import { ServerContainer, ServerContainerRef } from '@react-navigation/native';
+import {
+  ServerContainer,
+  type ServerContainerRef,
+} from '@react-navigation/native';
 import Koa from 'koa';
 import * as React from 'react';
 import ReactDOMServer from 'react-dom/server';

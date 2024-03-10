@@ -65,7 +65,7 @@ export function getActionFromState(
   let config: ConfigItem | undefined = normalizedConfig?.screens?.[route?.name];
   let params = { ...route.params } as NavigatorScreenParams<ParamListBase>;
 
-  let payload = route
+  const payload = route
     ? { name: route.name, path: route.path, params }
     : undefined;
 

@@ -3,6 +3,74 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.6...react-native-tab-view@4.0.0-alpha.7) (2024-03-08)
+
+### Bug Fixes
+
+* add href to tabs in material top tabs ([#11873](https://github.com/react-navigation/react-navigation/issues/11873)) ([c3459e1](https://github.com/react-navigation/react-navigation/commit/c3459e10e56446554d45130b28b232f08f491c4b)) - by @groot007
+
+### Features
+
+* implement tab-view new api ([#11548](https://github.com/react-navigation/react-navigation/issues/11548)) ([dca15c9](https://github.com/react-navigation/react-navigation/commit/dca15c9126f8751cfea43edc80c51d28de8f6fa6)) - by @okwasniewski
+
+### BREAKING CHANGES
+
+* react-native-tab-view now has a new API to address performance issues with current
+implementation.
+
+Co-authored-by: Michał Osadnik <micosa97@gmail.com>
+Co-authored-by: Satyajit Sahoo <satyajit.happy@gmail.com>
+
+# [4.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.5...react-native-tab-view@4.0.0-alpha.6) (2024-03-04)
+
+### Bug Fixes
+
+* update drawer and material tab bar to match latest md guidelines ([#11864](https://github.com/react-navigation/react-navigation/issues/11864)) ([8726597](https://github.com/react-navigation/react-navigation/commit/872659710dec1b097ec7c7b1dd59a6174e021b30)) - by @groot007
+
+# [4.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.4...react-native-tab-view@4.0.0-alpha.5) (2024-02-24)
+
+### Bug Fixes
+
+* fix peer dependency versions ([4b93b63](https://github.com/react-navigation/react-navigation/commit/4b93b6335ce180fe879f9fbe8f2400426b5484fb)) - by @
+
+# [4.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.3...react-native-tab-view@4.0.0-alpha.4) (2024-02-23)
+
+**Note:** Version bump only for package react-native-tab-view
+
+# [4.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.2...react-native-tab-view@4.0.0-alpha.3) (2024-01-17)
+
+**Note:** Version bump only for package react-native-tab-view
+
+# [4.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.1...react-native-tab-view@4.0.0-alpha.2) (2023-11-17)
+
+**Note:** Version bump only for package react-native-tab-view
+
+# [4.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.0...react-native-tab-view@4.0.0-alpha.1) (2023-11-12)
+
+### Bug Fixes
+
+* cannot resolve use-latest-callback ([#11696](https://github.com/react-navigation/react-navigation/issues/11696)) ([361bc6a](https://github.com/react-navigation/react-navigation/commit/361bc6a3840b37ae082a70e4ff6315280814c7a1)) - by @jkaveri
+
+# [4.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@3.5.2...react-native-tab-view@4.0.0-alpha.0) (2023-09-07)
+
+### Bug Fixes
+
+* Allow to use `PlatformColor` in the theme ([#11570](https://github.com/react-navigation/react-navigation/issues/11570)) ([64734e7](https://github.com/react-navigation/react-navigation/commit/64734e7bc0d7f203d8e5db6abcc9a88157a5f16c)) - by @retyui
+* TabBar horizontal padding for contentContainer ([#11408](https://github.com/react-navigation/react-navigation/issues/11408)) ([24c0392](https://github.com/react-navigation/react-navigation/commit/24c03924397a6e59aba9f6b74a9c5cb4b939d9e1)), closes [#8667](https://github.com/react-navigation/react-navigation/issues/8667) - by @Freddy03h
+
+* feat!: add a direction prop to NavigationContainer to specify rtl (#11393) ([8309636](https://github.com/react-navigation/react-navigation/commit/830963653fb5a489d02f1503222629373319b39e)), closes [#11393](https://github.com/react-navigation/react-navigation/issues/11393) - by @satya164
+
+### Features
+
+* add children prop to tab bar indicator component ([#11566](https://github.com/react-navigation/react-navigation/issues/11566)) ([fe3b560](https://github.com/react-navigation/react-navigation/commit/fe3b56072e39a6c7b33747c4d9e3f3d6a52ec60c)) - by @grezxune
+* add direction prop to TabView ([#11322](https://github.com/react-navigation/react-navigation/issues/11322)) ([46735a3](https://github.com/react-navigation/react-navigation/commit/46735a38c46ee195da836dadcf58d6a4db7a381b)) - by @okwasniewski
+
+### BREAKING CHANGES
+
+* Previously the navigators tried to detect RTL automatically and adjust the UI. However this is problematic since we cannot detect RTL in all cases (e.g. on Web).
+
+This adds an optional `direction` prop to `NavigationContainer` instead so that user can specify when React Navigation's UI needs to be adjusted for RTL. It defaults to the value from `I18nManager` on native platforms, however it needs to be explicitly passed for Web.
+
 ## [3.5.2](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@3.5.1...react-native-tab-view@3.5.2) (2023-06-22)
 
 ### Bug Fixes

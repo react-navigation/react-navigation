@@ -1,5 +1,8 @@
 import { useHeaderHeight } from '@react-navigation/elements';
-import { NavigationContainer, ParamListBase } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  type ParamListBase,
+} from '@react-navigation/native';
 import {
   fireEvent,
   isHiddenFromAccessibility,
@@ -8,7 +11,10 @@ import {
 import * as React from 'react';
 import { Button, Platform, Text, View } from 'react-native';
 
-import { createNativeStackNavigator, NativeStackScreenProps } from '../index';
+import {
+  createNativeStackNavigator,
+  type NativeStackScreenProps,
+} from '../index';
 
 jest.mock('react-native/Libraries/Utilities/Platform', () => ({
   ...jest.requireActual('react-native/Libraries/Utilities/Platform'),
@@ -61,7 +67,7 @@ it('renders a native-stack navigator with screens', async () => {
 
   fireEvent.press(getByText(/go to b/i));
 
-  expect(isVisible(getByText('Screen A'))).toBe(false);
+  expect(isVisible(queryByText('Screen A'))).toBe(false);
   expect(isVisible(getByText('Screen B'))).toBe(true);
 });
 
@@ -88,9 +94,9 @@ describe('useHeaderHeight in native-stack', () => {
       </NavigationContainer>
     );
 
-    expect(headerHeight).toBe(56);
+    expect(headerHeight).toBe(64);
     fireEvent.press(await findByText(/go to b/i));
-    expect(headerHeight).toBe(56);
+    expect(headerHeight).toBe(64);
   });
 
   it('returns header height on iOS', async () => {
@@ -255,9 +261,9 @@ describe('useHeaderHeight in native-stack', () => {
       </NavigationContainer>
     );
 
-    expect(headerHeight).toBe(56);
+    expect(headerHeight).toBe(64);
     fireEvent.press(await findByText(/go to b/i));
-    expect(headerHeight).toBe(56);
+    expect(headerHeight).toBe(64);
   });
 
   it("doesn't return header height with headerShown: false on iOS", async () => {
@@ -319,7 +325,7 @@ describe('useHeaderHeight in native-stack', () => {
 
     expect(headerHeight).toBe(0);
     fireEvent.press(await findByText(/go to b/i));
-    expect(headerHeight).toBe(56);
+    expect(headerHeight).toBe(64);
   });
 
   it("doesn't return header height with headerShown: false on Web", async () => {
@@ -488,9 +494,9 @@ describe('useHeaderHeight in native-stack', () => {
       </NavigationContainer>
     );
 
-    expect(headerHeight).toBe(56);
+    expect(headerHeight).toBe(64);
     fireEvent.press(await findByText(/go to b/i));
-    expect(headerHeight).toBe(56);
+    expect(headerHeight).toBe(64);
   });
 
   it('returns parent header height in nested stack when headerShown: false on Android', async () => {
@@ -526,9 +532,9 @@ describe('useHeaderHeight in native-stack', () => {
       </NavigationContainer>
     );
 
-    expect(headerHeight).toBe(56);
+    expect(headerHeight).toBe(64);
     fireEvent.press(await findByText(/go to b/i));
-    expect(headerHeight).toBe(56);
+    expect(headerHeight).toBe(64);
   });
 
   it('returns header height 0 in nested stack when headerShown: false on both screens on Android', async () => {

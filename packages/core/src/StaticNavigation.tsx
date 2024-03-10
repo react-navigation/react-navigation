@@ -1,5 +1,6 @@
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
+import { isValidElementType } from 'react-is';
 
 import type {
   DefaultNavigatorOptions,
@@ -40,16 +41,16 @@ type ParamsForScreenComponent<T> = T extends {
 }
   ? P
   : T extends React.ComponentType<{ route: { params: infer P } }>
-  ? P
-  : undefined;
+    ? P
+    : undefined;
 
 type ParamsForScreen<T> = T extends { screen: StaticNavigation<any, any, any> }
   ? NavigatorScreenParams<StaticParamList<T['screen']>> | undefined
   : T extends StaticNavigation<any, any, any>
-  ? NavigatorScreenParams<StaticParamList<T>> | undefined
-  : UnknownToUndefined<ParamsForScreenComponent<T>>;
+    ? NavigatorScreenParams<StaticParamList<T>> | undefined
+    : UnknownToUndefined<ParamsForScreenComponent<T>>;
 
-type ParamListForScreens<Screens extends unknown> = {
+type ParamListForScreens<Screens> = {
   [Key in KeysOf<Screens>]: ParamsForScreen<Screens[Key]>;
 };
 
@@ -65,7 +66,7 @@ type ParamListForGroups<
           >;
         };
       }>
-    | undefined
+    | undefined,
 > = Groups extends {
   [key: string]: {
     screens: StaticConfigScreens<
@@ -83,7 +84,7 @@ type StaticConfigScreens<
   ParamList extends ParamListBase,
   State extends NavigationState,
   ScreenOptions extends {},
-  EventMap extends EventMapBase
+  EventMap extends EventMapBase,
 > = {
   [key in keyof ParamList]:
     | React.ComponentType<any>
@@ -117,14 +118,7 @@ type StaticConfigScreens<
          * },
          * ```
          */
-        linking?:
-          | FlatType<
-              Pick<
-                PathConfig<ParamList>,
-                'path' | 'exact' | 'parse' | 'stringify'
-              >
-            >
-          | string;
+        linking?: PathConfig<ParamList> | string;
         /**
          * Static navigation config or Component to render for the screen.
          */
@@ -136,7 +130,7 @@ type GroupConfig<
   ParamList extends ParamListBase,
   State extends NavigationState,
   ScreenOptions extends {},
-  EventMap extends EventMapBase
+  EventMap extends EventMapBase,
 > = Omit<RouteGroupConfig<ParamList, ScreenOptions>, 'screens' | 'children'> & {
   /**
    * Callback to determine whether the screens in the group should be rendered or not.
@@ -154,7 +148,7 @@ export type StaticConfig<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
-  Navigator extends React.ComponentType<{}>
+  Navigator extends React.ComponentType<{}>,
 > = Omit<
   Omit<
     React.ComponentProps<Navigator>,
@@ -167,18 +161,38 @@ export type StaticConfig<
   > &
     DefaultNavigatorOptions<ParamList, State, ScreenOptions, EventMap>,
   'screens' | 'children'
-> & {
-  /**
-   * Screens to render in the navigator and their configuration.
-   */
-  screens: StaticConfigScreens<ParamList, State, ScreenOptions, EventMap>;
-  /**
-   * Groups of screens to render in the navigator and their configuration.
-   */
-  groups?: {
-    [key: string]: GroupConfig<ParamList, State, ScreenOptions, EventMap>;
-  };
-};
+> &
+  (
+    | {
+        /**
+         * Screens to render in the navigator and their configuration.
+         */
+        screens: StaticConfigScreens<ParamList, State, ScreenOptions, EventMap>;
+        /**
+         * Groups of screens to render in the navigator and their configuration.
+         */
+        groups?: {
+          [key: string]: GroupConfig<ParamList, State, ScreenOptions, EventMap>;
+        };
+      }
+    | {
+        /**
+         * Screens to render in the navigator and their configuration.
+         */
+        screens?: StaticConfigScreens<
+          ParamList,
+          State,
+          ScreenOptions,
+          EventMap
+        >;
+        /**
+         * Groups of screens to render in the navigator and their configuration.
+         */
+        groups: {
+          [key: string]: GroupConfig<ParamList, State, ScreenOptions, EventMap>;
+        };
+      }
+  );
 
 /**
  * Props for a screen component which is rendered by a static navigator.
@@ -196,14 +210,14 @@ export type StaticScreenProps<T extends Record<string, unknown> | undefined> = {
 export type StaticParamList<
   T extends {
     readonly config: {
-      readonly screens: Record<string, any>;
+      readonly screens?: Record<string, any>;
       readonly groups?: {
         [key: string]: {
           screens: Record<string, any>;
         };
       };
     };
-  }
+  },
 > = FlatType<
   ParamListForScreens<T['config']['screens']> &
     ParamListForGroups<T['config']['groups']>
@@ -248,7 +262,7 @@ const getItemsFromScreens = (
       useIf = _if;
       props = rest;
 
-      if (typeof screen === 'function') {
+      if (isValidElementType(screen)) {
         component = screen;
       } else if ('config' in screen) {
         isNavigator = true;
@@ -257,7 +271,7 @@ const getItemsFromScreens = (
           `${name}Navigator`
         );
       }
-    } else if (typeof item === 'function') {
+    } else if (isValidElementType(item)) {
       component = item;
     } else if ('config' in item) {
       isNavigator = true;
@@ -270,7 +284,7 @@ const getItemsFromScreens = (
       );
     }
 
-    let element = isNavigator ? (
+    const element = isNavigator ? (
       React.createElement(component, {})
     ) : (
       <MemoizedScreen component={component} />
@@ -306,7 +320,13 @@ export function createComponentForStaticNavigation(
   const { Navigator, Group, Screen, config } = tree;
   const { screens, groups, ...rest } = config;
 
-  const items = getItemsFromScreens(Screen, screens);
+  if (screens == null && groups == null) {
+    throw new Error(
+      "Couldn't find a 'screens' or 'groups' property. Make sure to define your screens under a 'screens' property in the configuration."
+    );
+  }
+
+  const items = screens ? getItemsFromScreens(Screen, screens) : [];
 
   if (groups) {
     items.push(
@@ -363,41 +383,72 @@ export function createComponentForStaticNavigation(
  */
 export function createPathConfigForStaticNavigation(tree: {
   config: {
-    screens: StaticConfigScreens<
+    screens?: StaticConfigScreens<
       ParamListBase,
       NavigationState,
       {},
       EventMapBase
     >;
+    groups?: {
+      [key: string]: {
+        screens: StaticConfigScreens<
+          ParamListBase,
+          NavigationState,
+          {},
+          EventMapBase
+        >;
+      };
+    };
   };
 }) {
-  return Object.fromEntries(
-    Object.entries(tree.config.screens)
-      .map(([key, item]) => {
-        const screenConfig: PathConfig<ParamListBase> = {};
+  function createPathConfigForScreens(
+    screens: StaticConfigScreens<
+      ParamListBase,
+      NavigationState,
+      {},
+      EventMapBase
+    >
+  ) {
+    return Object.fromEntries(
+      Object.entries(screens)
+        .map(([key, item]) => {
+          const screenConfig: PathConfig<ParamListBase> = {};
 
-        if ('linking' in item) {
-          if (typeof item.linking === 'string') {
-            screenConfig.path = item.linking;
-          } else {
-            Object.assign(screenConfig, item.linking);
+          if ('linking' in item) {
+            if (typeof item.linking === 'string') {
+              screenConfig.path = item.linking;
+            } else {
+              Object.assign(screenConfig, item.linking);
+            }
           }
-        }
 
-        if ('config' in item) {
-          screenConfig.screens = createPathConfigForStaticNavigation(item);
-        } else if (
-          'screen' in item &&
-          'config' in item.screen &&
-          item.screen.config.screens
-        ) {
-          screenConfig.screens = createPathConfigForStaticNavigation(
-            item.screen
-          );
-        }
+          if ('config' in item) {
+            screenConfig.screens = createPathConfigForStaticNavigation(item);
+          } else if (
+            'screen' in item &&
+            'config' in item.screen &&
+            (item.screen.config.screens || item.screen.config.groups)
+          ) {
+            screenConfig.screens = createPathConfigForStaticNavigation(
+              item.screen
+            );
+          }
 
-        return [key, screenConfig] as const;
-      })
-      .filter(([, screen]) => Object.keys(screen).length > 0)
-  );
+          return [key, screenConfig] as const;
+        })
+        .filter(([, screen]) => Object.keys(screen).length > 0)
+    );
+  }
+
+  const config = tree.config.screens
+    ? createPathConfigForScreens(tree.config.screens)
+    : {};
+
+  if (tree.config.groups) {
+    Object.entries(tree.config.groups).forEach(([, group]) => {
+      Object.assign(config, createPathConfigForScreens(group.screens));
+    });
+  }
+
+  return config;
 }
