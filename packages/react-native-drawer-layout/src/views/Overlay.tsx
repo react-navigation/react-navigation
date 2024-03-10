@@ -1,81 +1,47 @@
 import * as React from 'react';
-import { Platform, Pressable, StyleSheet } from 'react-native';
-import Animated, {
-  type SharedValue,
-  useAnimatedProps,
-  useAnimatedStyle,
-} from 'react-native-reanimated';
+import { Pressable, StyleSheet, View } from 'react-native';
 
-const PROGRESS_EPSILON = 0.05;
+import type { OverlayProps } from '../types';
 
-type Props = React.ComponentProps<typeof Animated.View> & {
-  progress: SharedValue<number>;
-  onPress: () => void;
-  accessibilityLabel?: string;
-};
-
-export const Overlay = React.forwardRef(function Overlay(
-  {
-    progress,
-    onPress,
-    style,
-    accessibilityLabel = 'Close drawer',
-    ...rest
-  }: Props,
-  ref: React.Ref<Animated.View>
-) {
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity: progress.value,
-      // We don't want the user to be able to press through the overlay when drawer is open
-      // We can send the overlay behind the screen to avoid it
-      zIndex: progress.value > PROGRESS_EPSILON ? 0 : -1,
-    };
-  });
-
-  const animatedProps = useAnimatedProps(() => {
-    const active = progress.value > PROGRESS_EPSILON;
-
-    return {
-      pointerEvents: active ? 'auto' : 'none',
-      accessibilityElementsHidden: !active,
-      importantForAccessibility: active ? 'auto' : 'no-hide-descendants',
-    } as const;
-  });
-
+export function Overlay({
+  open,
+  onPress,
+  style,
+  accessibilityLabel = 'Close drawer',
+  ...rest
+}: OverlayProps) {
   return (
-    <Animated.View
+    <View
       {...rest}
-      ref={ref}
-      style={[styles.overlay, overlayStyle, animatedStyle, style]}
-      animatedProps={animatedProps}
+      style={[
+        styles.overlay,
+        { opacity: open ? 1 : 0, pointerEvents: open ? 'auto' : 'none' },
+        style,
+      ]}
+      accessibilityElementsHidden={!open}
+      importantForAccessibility={open ? 'auto' : 'no-hide-descendants'}
     >
       <Pressable
         onPress={onPress}
-        style={styles.pressable}
+        style={[styles.pressable, { pointerEvents: open ? 'auto' : 'none' }]}
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel}
       />
-    </Animated.View>
+    </View>
   );
-});
-
-const overlayStyle = Platform.select<Record<string, string>>({
-  web: {
-    // Disable touch highlight on mobile Safari.
-    // WebkitTapHighlightColor must be used outside of StyleSheet.create because react-native-web will omit the property.
-    WebkitTapHighlightColor: 'transparent',
-  },
-  default: {},
-});
+}
 
 const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    // Disable touch highlight on mobile Safari.
+    // WebkitTapHighlightColor must be used outside of StyleSheet.create because react-native-web will omit the property.
+    // @ts-expect-error: WebkitTapHighlightColor is web only
+    WebkitTapHighlightColor: 'transparent',
+    transition: 'opacity 0.3s',
   },
   pressable: {
     flex: 1,
-    pointerEvents: 'auto',
   },
 });
