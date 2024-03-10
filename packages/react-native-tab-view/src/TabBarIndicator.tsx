@@ -65,6 +65,14 @@ export function TabBarIndicator<T extends Route>({
 }: Props<T>) {
   const isIndicatorShown = React.useRef(false);
   const isWidthDynamic = width === 'auto';
+  const initialWidth = Platform.OS === 'android' ? 70 : 1;
+
+  const getShiftAfterScale = (modif: number, coef: number) => {
+    if (modif > 0) {
+      return ((initialWidth * (modif - 1)) / (2 * modif)) * coef;
+    }
+    return 1;
+  };
 
   const opacity = useAnimatedValue(isWidthDynamic ? 0 : 1);
 
@@ -114,7 +122,10 @@ export function TabBarIndicator<T extends Route>({
 
   if (width === 'auto') {
     const inputRange = routes.map((_, i) => i);
-    const outputRange = inputRange.map(getTabWidth);
+    const outputRange = inputRange.map((i) => getTabWidth(i) / initialWidth);
+    const outputShiftRange = inputRange.map((i) =>
+      getShiftAfterScale(outputRange[i], direction === 'rtl' ? -1 : 1)
+    );
 
     transform.push(
       {
@@ -127,7 +138,16 @@ export function TabBarIndicator<T extends Route>({
               })
             : outputRange[0],
       },
-      { translateX: direction === 'rtl' ? -0.5 : 0.5 }
+      {
+        translateX:
+          routes.length > 1
+            ? position.interpolate({
+                inputRange,
+                outputRange: outputShiftRange,
+                extrapolate: 'clamp',
+              })
+            : 0,
+      }
     );
   }
 
@@ -135,7 +155,7 @@ export function TabBarIndicator<T extends Route>({
     <Animated.View
       style={[
         styles.indicator,
-        { width: width === 'auto' ? 1 : width },
+        { width: width === 'auto' ? initialWidth : width },
         // If layout is not available, use `left` property for positioning the indicator
         // This avoids rendering delay until we are able to calculate translateX
         // If platform is macos use `left` property as `transform` is broken at the moment.
