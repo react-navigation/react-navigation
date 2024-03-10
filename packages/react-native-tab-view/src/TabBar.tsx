@@ -72,19 +72,25 @@ const getFlattenedTabWidth = (style: StyleProp<ViewStyle>) => {
   return tabStyle?.width;
 };
 
-const getFlattenedPaddingLeft = (style: StyleProp<ViewStyle>) => {
+const getFlattenedPaddingStart = (style: StyleProp<ViewStyle>) => {
   const flattenStyle = StyleSheet.flatten(style);
 
   return flattenStyle
-    ? flattenStyle.paddingLeft || flattenStyle.paddingHorizontal || 0
+    ? flattenStyle.paddingLeft ||
+        flattenStyle.paddingStart ||
+        flattenStyle.paddingHorizontal ||
+        0
     : 0;
 };
 
-const getFlattenedPaddingRight = (style: StyleProp<ViewStyle>) => {
+const getFlattenedPaddingEnd = (style: StyleProp<ViewStyle>) => {
   const flattenStyle = StyleSheet.flatten(style);
 
   return flattenStyle
-    ? flattenStyle.paddingRight || flattenStyle.paddingHorizontal || 0
+    ? flattenStyle.paddingRight ||
+        flattenStyle.paddingEnd ||
+        flattenStyle.paddingHorizontal ||
+        0
     : 0;
 };
 
@@ -113,8 +119,8 @@ const getComputedTabWidth = (
   scrollEnabled: boolean | undefined,
   tabWidths: { [key: string]: number },
   flattenedWidth: DimensionValue | undefined,
-  flattenedPaddingLeft: DimensionValue | undefined,
-  flattenedPaddingRight: DimensionValue | undefined,
+  flattenedPaddingStart: DimensionValue | undefined,
+  flattenedPaddingEnd: DimensionValue | undefined,
   gap?: number
 ) => {
   if (flattenedWidth === 'auto') {
@@ -139,8 +145,8 @@ const getComputedTabWidth = (
 
   const gapTotalWidth = (gap ?? 0) * (routes.length - 1);
   const paddingTotalWidth =
-    convertPaddingPercentToSize(flattenedPaddingLeft, layout) +
-    convertPaddingPercentToSize(flattenedPaddingRight, layout);
+    convertPaddingPercentToSize(flattenedPaddingStart, layout) +
+    convertPaddingPercentToSize(flattenedPaddingEnd, layout);
 
   return (layout.width - gapTotalWidth - paddingTotalWidth) / routes.length;
 };
@@ -166,21 +172,21 @@ const getTabBarWidth = <T extends Route>({
   gap,
   scrollEnabled,
   flattenedTabWidth,
-  flattenedPaddingLeft,
-  flattenedPaddingRight,
+  flattenedPaddingStart,
+  flattenedPaddingEnd,
   tabWidths,
 }: Pick<Props<T>, 'navigationState' | 'gap' | 'layout' | 'scrollEnabled'> & {
   tabWidths: Record<string, number>;
-  flattenedPaddingLeft: DimensionValue | undefined;
-  flattenedPaddingRight: DimensionValue | undefined;
+  flattenedPaddingStart: DimensionValue | undefined;
+  flattenedPaddingEnd: DimensionValue | undefined;
   flattenedTabWidth: DimensionValue | undefined;
 }) => {
   const { routes } = navigationState;
 
   const paddingsWidth = Math.max(
     0,
-    convertPaddingPercentToSize(flattenedPaddingLeft, layout) +
-      convertPaddingPercentToSize(flattenedPaddingRight, layout)
+    convertPaddingPercentToSize(flattenedPaddingStart, layout) +
+      convertPaddingPercentToSize(flattenedPaddingEnd, layout)
   );
 
   return routes.reduce<number>(
@@ -194,8 +200,8 @@ const getTabBarWidth = <T extends Route>({
         scrollEnabled,
         tabWidths,
         flattenedTabWidth,
-        flattenedPaddingLeft,
-        flattenedPaddingRight,
+        flattenedPaddingStart,
+        flattenedPaddingEnd,
         gap
       ),
     paddingsWidth
@@ -210,15 +216,15 @@ const normalizeScrollValue = <T extends Route>({
   tabWidths,
   value,
   flattenedTabWidth,
-  flattenedPaddingLeft,
-  flattenedPaddingRight,
+  flattenedPaddingStart,
+  flattenedPaddingEnd,
   direction,
 }: Pick<Props<T>, 'layout' | 'navigationState' | 'gap' | 'scrollEnabled'> & {
   tabWidths: Record<string, number>;
   value: number;
   flattenedTabWidth: DimensionValue | undefined;
-  flattenedPaddingLeft: DimensionValue | undefined;
-  flattenedPaddingRight: DimensionValue | undefined;
+  flattenedPaddingStart: DimensionValue | undefined;
+  flattenedPaddingEnd: DimensionValue | undefined;
   direction: LocaleDirection;
 }) => {
   const tabBarWidth = getTabBarWidth({
@@ -228,8 +234,8 @@ const normalizeScrollValue = <T extends Route>({
     gap,
     scrollEnabled,
     flattenedTabWidth,
-    flattenedPaddingLeft,
-    flattenedPaddingRight,
+    flattenedPaddingStart,
+    flattenedPaddingEnd,
   });
   const maxDistance = getMaxScrollDistance(tabBarWidth, layout.width);
   const scrollValue = Math.max(Math.min(value, maxDistance), 0);
@@ -250,20 +256,20 @@ const getScrollAmount = <T extends Route>({
   scrollEnabled,
   flattenedTabWidth,
   tabWidths,
-  flattenedPaddingLeft,
-  flattenedPaddingRight,
+  flattenedPaddingStart,
+  flattenedPaddingEnd,
   direction,
 }: Pick<Props<T>, 'layout' | 'navigationState' | 'scrollEnabled' | 'gap'> & {
   tabWidths: Record<string, number>;
   flattenedTabWidth: DimensionValue | undefined;
-  flattenedPaddingLeft: DimensionValue | undefined;
-  flattenedPaddingRight: DimensionValue | undefined;
+  flattenedPaddingStart: DimensionValue | undefined;
+  flattenedPaddingEnd: DimensionValue | undefined;
   direction: LocaleDirection;
 }) => {
   const paddingInitial =
     direction === 'rtl'
-      ? convertPaddingPercentToSize(flattenedPaddingRight, layout)
-      : convertPaddingPercentToSize(flattenedPaddingLeft, layout);
+      ? convertPaddingPercentToSize(flattenedPaddingEnd, layout)
+      : convertPaddingPercentToSize(flattenedPaddingStart, layout);
 
   const centerDistance = Array.from({
     length: navigationState.index + 1,
@@ -275,8 +281,8 @@ const getScrollAmount = <T extends Route>({
       scrollEnabled,
       tabWidths,
       flattenedTabWidth,
-      flattenedPaddingLeft,
-      flattenedPaddingRight,
+      flattenedPaddingStart,
+      flattenedPaddingEnd,
       gap
     );
 
@@ -299,8 +305,8 @@ const getScrollAmount = <T extends Route>({
     gap,
     scrollEnabled,
     flattenedTabWidth,
-    flattenedPaddingLeft,
-    flattenedPaddingRight,
+    flattenedPaddingStart,
+    flattenedPaddingEnd,
     direction,
   });
 };
@@ -365,8 +371,8 @@ export function TabBar<T extends Route>({
   const { routes } = navigationState;
   const flattenedTabWidth = getFlattenedTabWidth(tabStyle);
   const isWidthDynamic = flattenedTabWidth === 'auto';
-  const flattenedPaddingRight = getFlattenedPaddingRight(contentContainerStyle);
-  const flattenedPaddingLeft = getFlattenedPaddingLeft(contentContainerStyle);
+  const flattenedPaddingEnd = getFlattenedPaddingEnd(contentContainerStyle);
+  const flattenedPaddingStart = getFlattenedPaddingStart(contentContainerStyle);
   const scrollOffset = getScrollAmount({
     layout,
     navigationState,
@@ -374,8 +380,8 @@ export function TabBar<T extends Route>({
     gap,
     scrollEnabled,
     flattenedTabWidth,
-    flattenedPaddingLeft,
-    flattenedPaddingRight,
+    flattenedPaddingStart,
+    flattenedPaddingEnd,
     direction,
   });
 
@@ -420,15 +426,15 @@ export function TabBar<T extends Route>({
     gap,
     scrollEnabled,
     flattenedTabWidth,
-    flattenedPaddingLeft,
-    flattenedPaddingRight,
+    flattenedPaddingStart,
+    flattenedPaddingEnd,
   });
 
   const separatorsWidth = Math.max(0, routes.length - 1) * gap;
   const paddingsWidth = Math.max(
     0,
-    convertPaddingPercentToSize(flattenedPaddingLeft, layout) +
-      convertPaddingPercentToSize(flattenedPaddingRight, layout)
+    convertPaddingPercentToSize(flattenedPaddingStart, layout) +
+      convertPaddingPercentToSize(flattenedPaddingEnd, layout)
   );
 
   const translateX = React.useMemo(
@@ -512,8 +518,8 @@ export function TabBar<T extends Route>({
             scrollEnabled,
             tabWidths,
             getFlattenedTabWidth(tabStyle),
-            getFlattenedPaddingRight(contentContainerStyle),
-            getFlattenedPaddingLeft(contentContainerStyle),
+            getFlattenedPaddingEnd(contentContainerStyle),
+            getFlattenedPaddingStart(contentContainerStyle),
             gap
           )
         : undefined;
@@ -648,7 +654,7 @@ export function TabBar<T extends Route>({
               ),
           style: [
             indicatorStyle,
-            { left: flattenedPaddingLeft, right: flattenedPaddingRight },
+            { start: flattenedPaddingStart, end: flattenedPaddingEnd },
           ],
           getTabWidth: (i: number) =>
             getComputedTabWidth(
@@ -658,8 +664,8 @@ export function TabBar<T extends Route>({
               scrollEnabled,
               tabWidths,
               flattenedTabWidth,
-              flattenedPaddingRight,
-              flattenedPaddingLeft,
+              flattenedPaddingEnd,
+              flattenedPaddingStart,
               gap
             ),
           gap,
@@ -718,8 +724,8 @@ const styles = StyleSheet.create({
   indicatorContainer: {
     position: 'absolute',
     top: 0,
-    left: 0,
-    right: 0,
+    start: 0,
+    end: 0,
     bottom: 0,
   },
 });

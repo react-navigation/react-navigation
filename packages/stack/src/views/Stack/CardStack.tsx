@@ -808,8 +808,8 @@ const styles = StyleSheet.create({
   absolute: {
     position: 'absolute',
     top: 0,
-    left: 0,
-    right: 0,
+    start: 0,
+    end: 0,
   },
   floating: {
     zIndex: 1,

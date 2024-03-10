@@ -291,12 +291,12 @@ function DrawerViewBase({
           drawerType === 'permanent' &&
             (drawerPosition === 'left'
               ? {
-                  borderRightColor: colors.border,
-                  borderRightWidth: StyleSheet.hairlineWidth,
+                  borderEndColor: colors.border,
+                  borderEndWidth: StyleSheet.hairlineWidth,
                 }
               : {
-                  borderLeftColor: colors.border,
-                  borderLeftWidth: StyleSheet.hairlineWidth,
+                  borderStartColor: colors.border,
+                  borderStartWidth: StyleSheet.hairlineWidth,
                 }),
           drawerStyle,
         ]}

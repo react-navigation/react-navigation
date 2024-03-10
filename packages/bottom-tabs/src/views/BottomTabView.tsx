@@ -185,9 +185,9 @@ export function BottomTabView(props: Props) {
     <SafeAreaProviderCompat
       style={
         tabBarPosition === 'left'
-          ? styles.left
+          ? styles.start
           : tabBarPosition === 'right'
-            ? styles.right
+            ? styles.end
             : null
       }
     >
@@ -306,10 +306,10 @@ export function BottomTabView(props: Props) {
 }
 
 const styles = StyleSheet.create({
-  left: {
+  start: {
     flexDirection: 'row-reverse',
   },
-  right: {
+  end: {
     flexDirection: 'row',
   },
   screens: {

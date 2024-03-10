@@ -15,6 +15,7 @@ import {
   type NavigatorScreenParams,
   type PathConfigMap,
   useIsFocused,
+  useLocale,
 } from '@react-navigation/native';
 import { BlurView } from 'expo-blur';
 import * as React from 'react';
@@ -83,6 +84,7 @@ const animations = ['none', 'fade', 'shift'] as const;
 
 export function BottomTabs() {
   const { showActionSheetWithOptions } = useActionSheet();
+  const { direction } = useLocale();
 
   const dimensions = useWindowDimensions();
 
@@ -129,7 +131,11 @@ export function BottomTabs() {
               />
             </HeaderButton>
           ),
-          tabBarPosition: isLargeScreen ? 'left' : 'bottom',
+          tabBarPosition: isLargeScreen
+            ? direction === 'ltr'
+              ? 'left'
+              : 'right'
+            : 'bottom',
           tabBarLabelPosition:
             isLargeScreen && isCompact ? 'below-icon' : undefined,
           animation,
@@ -201,7 +207,7 @@ export function BottomTabs() {
                   intensity={100}
                   style={{
                     ...StyleSheet.absoluteFillObject,
-                    right: isLargeScreen
+                    end: isLargeScreen
                       ? // Offset for right border of the sidebar
                         -StyleSheet.hairlineWidth
                       : 0,
@@ -218,7 +224,7 @@ export function BottomTabs() {
           style={{
             position: 'absolute',
             bottom: 0,
-            left: 0,
+            start: 0,
             padding: 16,
           }}
         >
