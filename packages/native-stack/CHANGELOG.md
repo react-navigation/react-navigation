@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.14...@react-navigation/native-stack@7.0.0-alpha.15) (2024-03-10)
+
+### Bug Fixes
+
+* support custom fontFamily configurations in headerTitleStyle ([#11880](https://github.com/react-navigation/react-navigation/issues/11880)) ([1e9e838](https://github.com/react-navigation/react-navigation/commit/1e9e8385f2677a363d2e7416f5c3acda0c43d517)), closes [#11429](https://github.com/react-navigation/react-navigation/issues/11429) - by @Kasendwa
+
+### Features
+
+* add a type for options arguments ([8e719e0](https://github.com/react-navigation/react-navigation/commit/8e719e0faefbd1eed9f7122a3d8e2c617d5f8254)) - by @satya164
+
 # [7.0.0-alpha.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.13...@react-navigation/native-stack@7.0.0-alpha.14) (2024-03-09)
 
 **Note:** Version bump only for package @react-navigation/native-stack

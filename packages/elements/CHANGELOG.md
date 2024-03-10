@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.11...@react-navigation/elements@2.0.0-alpha.12) (2024-03-10)
+
+### Bug Fixes
+
+* add a workaround for safe area frame not updating on web ([3799b16](https://github.com/react-navigation/react-navigation/commit/3799b1637067ba69983a8ab7b94f63bffb024d20)), closes [#8551](https://github.com/react-navigation/react-navigation/issues/8551) [#11398](https://github.com/react-navigation/react-navigation/issues/11398) - by @satya164
+
 # [2.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.10...@react-navigation/elements@2.0.0-alpha.11) (2024-03-09)
 
 **Note:** Version bump only for package @react-navigation/elements

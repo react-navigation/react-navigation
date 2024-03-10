@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.12...@react-navigation/core@7.0.0-alpha.13) (2024-03-10)
+
+### Features
+
+* deep freeze state to avoid issues due to mutation ([2a5721b](https://github.com/react-navigation/react-navigation/commit/2a5721b3a3560b76192d3aa46a4ea3be9a50db7d)) - by @satya164
+
 # [7.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.11...@react-navigation/core@7.0.0-alpha.12) (2024-03-09)
 
 ### Bug Fixes
