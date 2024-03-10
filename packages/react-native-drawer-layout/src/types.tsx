@@ -1,5 +1,7 @@
-import type { StyleProp, ViewStyle } from 'react-native';
+import * as React from 'react';
+import type { StyleProp, View, ViewStyle } from 'react-native';
 import type { PanGestureHandler } from 'react-native-gesture-handler';
+import type { SharedValue } from 'react-native-reanimated';
 
 export type Layout = { width: number; height: number };
 
@@ -149,4 +151,11 @@ export type DrawerProps = {
    * Content that the drawer should wrap.
    */
   children: React.ReactNode;
+};
+
+export type OverlayProps = React.ComponentProps<typeof View> & {
+  open: boolean;
+  progress: SharedValue<number>;
+  onPress: () => void;
+  accessibilityLabel?: string;
 };
