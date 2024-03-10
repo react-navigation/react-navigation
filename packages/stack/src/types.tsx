@@ -14,6 +14,7 @@ import type {
   RouteProp,
   StackActionHelpers,
   StackNavigationState,
+  Theme,
 } from '@react-navigation/native';
 import type * as React from 'react';
 import type { Animated, StyleProp, TextStyle, ViewStyle } from 'react-native';
@@ -68,6 +69,14 @@ export type StackScreenProps<
 > = {
   navigation: StackNavigationProp<ParamList, RouteName, NavigatorID>;
   route: RouteProp<ParamList, RouteName>;
+};
+
+export type StackScreenOptions<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = keyof ParamList,
+  NavigatorID extends string | undefined = undefined,
+> = StackScreenProps<ParamList, RouteName, NavigatorID> & {
+  theme: Theme;
 };
 
 export type Layout = { width: number; height: number };

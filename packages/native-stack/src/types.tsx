@@ -9,6 +9,7 @@ import type {
   StackActionHelpers,
   StackNavigationState,
   StackRouterOptions,
+  Theme,
 } from '@react-navigation/native';
 import type {
   ImageSourcePropType,
@@ -59,6 +60,14 @@ export type NativeStackScreenProps<
 > = {
   navigation: NativeStackNavigationProp<ParamList, RouteName, NavigatorID>;
   route: RouteProp<ParamList, RouteName>;
+};
+
+export type NativeStackScreenOptions<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = keyof ParamList,
+  NavigatorID extends string | undefined = undefined,
+> = NativeStackScreenProps<ParamList, RouteName, NavigatorID> & {
+  theme: Theme;
 };
 
 export type NativeStackNavigationHelpers = NavigationHelpers<

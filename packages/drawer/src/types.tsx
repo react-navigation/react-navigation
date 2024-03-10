@@ -8,6 +8,7 @@ import type {
   ParamListBase,
   Route,
   RouteProp,
+  Theme,
 } from '@react-navigation/native';
 import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 import type {
@@ -297,6 +298,14 @@ export type DrawerScreenProps<
 > = {
   navigation: DrawerNavigationProp<ParamList, RouteName, NavigatorID>;
   route: RouteProp<ParamList, RouteName>;
+};
+
+export type DrawerScreenOptions<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = keyof ParamList,
+  NavigatorID extends string | undefined = undefined,
+> = DrawerScreenProps<ParamList, RouteName, NavigatorID> & {
+  theme: Theme;
 };
 
 export type DrawerDescriptor = Descriptor<

@@ -47,6 +47,7 @@ export type {
   StackNavigationEventMap,
   StackNavigationOptions,
   StackNavigationProp,
+  StackScreenOptions,
   StackScreenProps,
   TransitionPreset,
 } from './types';

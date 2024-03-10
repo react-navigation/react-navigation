@@ -10,6 +10,7 @@ import type {
   RouteProp,
   TabActionHelpers,
   TabNavigationState,
+  Theme,
 } from '@react-navigation/native';
 import type * as React from 'react';
 import type {
@@ -63,6 +64,14 @@ export type BottomTabScreenProps<
 > = {
   navigation: BottomTabNavigationProp<ParamList, RouteName, NavigatorID>;
   route: RouteProp<ParamList, RouteName>;
+};
+
+export type BottomTabScreenOptions<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = keyof ParamList,
+  NavigatorID extends string | undefined = undefined,
+> = BottomTabScreenProps<ParamList, RouteName, NavigatorID> & {
+  theme: Theme;
 };
 
 export type TimingKeyboardAnimationConfig = {
