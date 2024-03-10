@@ -146,7 +146,7 @@ export function DrawerItem(props: Props) {
       >
         <View style={[styles.wrapper, { borderRadius }]}>
           {iconNode}
-          <View style={[styles.label, { marginLeft: iconNode ? 16 : 0 }]}>
+          <View style={[styles.label, { marginStart: iconNode ? 16 : 0 }]}>
             {typeof label === 'string' ? (
               <Text
                 numberOfLines={1}
@@ -175,11 +175,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 12,
-    paddingLeft: 16,
-    paddingRight: 24,
+    paddingStart: 16,
+    paddingEnd: 24,
   },
   label: {
-    marginRight: 12,
+    marginEnd: 12,
     marginVertical: 4,
     flex: 1,
   },

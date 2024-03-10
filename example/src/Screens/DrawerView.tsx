@@ -131,8 +131,8 @@ const styles = StyleSheet.create({
   realDrawer: {
     position: 'absolute',
     top: 0,
-    left: 0,
-    right: 8,
+    start: 0,
+    end: 8,
     bottom: 0,
     backgroundColor: '#ebdec1',
     borderColor: '#3e3a3a',

@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   },
   badge: {
     marginTop: 4,
-    marginRight: 32,
+    marginEnd: 32,
     backgroundColor: '#f44336',
     height: 24,
     width: 24,
