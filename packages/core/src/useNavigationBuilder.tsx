@@ -14,6 +14,7 @@ import * as React from 'react';
 import { isValidElementType } from 'react-is';
 import useLatestCallback from 'use-latest-callback';
 
+import { deepFreeze } from './deepFreeze';
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
 import { isRecordEqual } from './isRecordEqual';
@@ -582,9 +583,11 @@ export function useNavigationBuilder<
   const getState = useLatestCallback((): State => {
     const currentState = shouldUpdate ? nextState : getCurrentState();
 
-    return (
-      isStateInitialized(currentState) ? currentState : initializedState
-    ) as State;
+    return deepFreeze(
+      (isStateInitialized(currentState)
+        ? currentState
+        : initializedState) as State
+    );
   });
 
   const emitter = useEventEmitter<EventMapCore<State>>((e) => {
