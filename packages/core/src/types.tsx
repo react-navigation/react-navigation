@@ -27,6 +27,7 @@ export type DefaultNavigatorOptions<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
+  Navigation,
 > = DefaultRouterOptions<Keyof<ParamList>> & {
   /**
    * Optional ID for the navigator. Can be used with `navigation.getParent(id)` to refer to a parent.
@@ -71,7 +72,7 @@ export type DefaultNavigatorOptions<
     | ScreenListeners<State, EventMap>
     | ((props: {
         route: RouteProp<ParamList>;
-        navigation: any;
+        navigation: Navigation;
       }) => ScreenListeners<State, EventMap>);
 
   /**
@@ -81,7 +82,7 @@ export type DefaultNavigatorOptions<
     | ScreenOptions
     | ((props: {
         route: RouteProp<ParamList>;
-        navigation: any;
+        navigation: Navigation;
         theme: ReactNavigation.Theme;
       }) => ScreenOptions);
 
@@ -90,7 +91,7 @@ export type DefaultNavigatorOptions<
    */
   screenLayout?: (props: {
     route: RouteProp<ParamList, keyof ParamList>;
-    navigation: any;
+    navigation: Navigation;
     theme: ReactNavigation.Theme;
     children: React.ReactElement;
   }) => React.ReactElement;
@@ -676,6 +677,7 @@ export type RouteConfig<
 export type RouteGroupConfig<
   ParamList extends ParamListBase,
   ScreenOptions extends {},
+  Navigation,
 > = {
   /**
    * Optional key for the screens in this group.
@@ -690,7 +692,7 @@ export type RouteGroupConfig<
     | ScreenOptions
     | ((props: {
         route: RouteProp<ParamList, keyof ParamList>;
-        navigation: any;
+        navigation: Navigation;
         theme: ReactNavigation.Theme;
       }) => ScreenOptions);
 
@@ -700,7 +702,7 @@ export type RouteGroupConfig<
    */
   screenLayout?: (props: {
     route: RouteProp<ParamList, keyof ParamList>;
-    navigation: any;
+    navigation: Navigation;
     theme: ReactNavigation.Theme;
     children: React.ReactElement;
   }) => React.ReactElement;
@@ -805,14 +807,26 @@ export type TypedNavigator<
   Navigator: React.ComponentType<
     Omit<
       React.ComponentProps<Navigator>,
-      keyof DefaultNavigatorOptions<any, any, any, any>
+      keyof DefaultNavigatorOptions<any, any, any, any, any>
     > &
-      DefaultNavigatorOptions<ParamList, State, ScreenOptions, EventMap>
+      DefaultNavigatorOptions<
+        ParamList,
+        State,
+        ScreenOptions,
+        EventMap,
+        NavigationPropList[keyof ParamList]
+      >
   >;
   /**
    * Component used for grouping multiple route configuration.
    */
-  Group: React.ComponentType<RouteGroupConfig<ParamList, ScreenOptions>>;
+  Group: React.ComponentType<
+    RouteGroupConfig<
+      ParamList,
+      ScreenOptions,
+      NavigationPropList[keyof ParamList]
+    >
+  >;
   /**
    * Component used for specifying route configuration.
    */

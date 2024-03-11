@@ -48,7 +48,8 @@ it('renders correct state with location', () => {
       ParamListBase,
       StackNavigationState<ParamListBase>,
       {},
-      {}
+      {},
+      unknown
     >
   ) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(

@@ -22,7 +22,8 @@ type Props = DefaultNavigatorOptions<
   ParamListBase,
   DrawerNavigationState<ParamListBase>,
   DrawerNavigationOptions,
-  DrawerNavigationEventMap
+  DrawerNavigationEventMap,
+  DrawerNavigationProp<ParamListBase>
 > &
   DrawerRouterOptions &
   DrawerNavigationConfig;

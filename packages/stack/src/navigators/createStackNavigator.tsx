@@ -25,7 +25,8 @@ type Props = DefaultNavigatorOptions<
   ParamListBase,
   StackNavigationState<ParamListBase>,
   StackNavigationOptions,
-  StackNavigationEventMap
+  StackNavigationEventMap,
+  StackNavigationProp<ParamListBase>
 > &
   StackRouterOptions &
   StackNavigationConfig;

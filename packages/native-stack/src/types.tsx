@@ -582,7 +582,8 @@ export type NativeStackNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
   StackNavigationState<ParamListBase>,
   NativeStackNavigationOptions,
-  NativeStackNavigationEventMap
+  NativeStackNavigationEventMap,
+  NativeStackNavigationProp<ParamListBase>
 > &
   StackRouterOptions &
   NativeStackNavigationConfig;

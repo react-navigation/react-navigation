@@ -22,7 +22,8 @@ type Props = DefaultNavigatorOptions<
   ParamListBase,
   TabNavigationState<ParamListBase>,
   BottomTabNavigationOptions,
-  BottomTabNavigationEventMap
+  BottomTabNavigationEventMap,
+  BottomTabNavigationProp<ParamListBase>
 > &
   TabRouterOptions &
   BottomTabNavigationConfig;

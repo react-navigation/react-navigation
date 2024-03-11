@@ -15,7 +15,8 @@ const StackNavigator = (
     ParamListBase,
     StackNavigationState<ParamListBase>,
     {},
-    {}
+    {},
+    unknown
   >
 ) => {
   const { state, descriptors, NavigationContent } = useNavigationBuilder(

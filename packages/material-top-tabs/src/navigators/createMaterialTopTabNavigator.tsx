@@ -22,7 +22,8 @@ type Props = DefaultNavigatorOptions<
   ParamListBase,
   TabNavigationState<ParamListBase>,
   MaterialTopTabNavigationOptions,
-  MaterialTopTabNavigationEventMap
+  MaterialTopTabNavigationEventMap,
+  MaterialTopTabNavigationProp<ParamListBase>
 > &
   TabRouterOptions &
   MaterialTopTabNavigationConfig;

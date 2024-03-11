@@ -255,7 +255,8 @@ export function useNavigationBuilder<
     ParamListBase,
     State,
     ScreenOptions,
-    EventMap
+    EventMap,
+    any
   > &
     RouterOptions
 ) {
