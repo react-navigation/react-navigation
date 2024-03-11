@@ -103,7 +103,8 @@ const getRouteConfigsFromChildren = <
             string,
             State,
             ScreenOptions,
-            EventMap
+            EventMap,
+            unknown
           >,
         });
 

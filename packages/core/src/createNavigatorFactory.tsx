@@ -14,21 +14,23 @@ import type { EventMapBase, TypedNavigator } from './types';
  * @returns Factory method to create a `Navigator` and `Screen` pair.
  */
 export function createNavigatorFactory<
+  ParamList extends ParamListBase,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
+  NavigationPropList extends { [RouteName in keyof ParamList]: any },
   NavigatorComponent extends React.ComponentType<any>,
 >(Navigator: NavigatorComponent) {
-  function createNavigator<ParamList extends ParamListBase>(): TypedNavigator<
+  function createNavigator(): TypedNavigator<
     ParamList,
     State,
     ScreenOptions,
     EventMap,
+    NavigationPropList,
     typeof Navigator
   >;
 
   function createNavigator<
-    ParamList extends ParamListBase,
     Config extends StaticConfig<
       ParamList,
       State,
@@ -43,6 +45,7 @@ export function createNavigatorFactory<
     State,
     ScreenOptions,
     EventMap,
+    NavigationPropList,
     typeof Navigator
   > & { config: Config };
 

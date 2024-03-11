@@ -17,6 +17,7 @@ import type {
   StackNavigationConfig,
   StackNavigationEventMap,
   StackNavigationOptions,
+  StackNavigationProp,
 } from '../types';
 import { StackView } from '../views/Stack/StackView';
 
@@ -100,9 +101,21 @@ function StackNavigator({
   );
 }
 
-export const createStackNavigator = createNavigatorFactory<
-  StackNavigationState<ParamListBase>,
-  StackNavigationOptions,
-  StackNavigationEventMap,
-  typeof StackNavigator
->(StackNavigator);
+export const createStackNavigator = <
+  ParamList extends {},
+  NavigatorID extends string | undefined = undefined,
+>() =>
+  createNavigatorFactory<
+    ParamList,
+    StackNavigationState<ParamList>,
+    StackNavigationOptions,
+    StackNavigationEventMap,
+    {
+      [RouteName in keyof ParamList]: StackNavigationProp<
+        ParamList,
+        RouteName,
+        NavigatorID
+      >;
+    },
+    typeof StackNavigator
+  >(StackNavigator)();

@@ -14,6 +14,7 @@ import type {
   BottomTabNavigationConfig,
   BottomTabNavigationEventMap,
   BottomTabNavigationOptions,
+  BottomTabNavigationProp,
 } from '../types';
 import { BottomTabView } from '../views/BottomTabView';
 
@@ -67,9 +68,21 @@ function BottomTabNavigator({
   );
 }
 
-export const createBottomTabNavigator = createNavigatorFactory<
-  TabNavigationState<ParamListBase>,
-  BottomTabNavigationOptions,
-  BottomTabNavigationEventMap,
-  typeof BottomTabNavigator
->(BottomTabNavigator);
+export const createBottomTabNavigator = <
+  ParamList extends {},
+  NavigatorID extends string | undefined = undefined,
+>() =>
+  createNavigatorFactory<
+    ParamList,
+    TabNavigationState<ParamList>,
+    BottomTabNavigationOptions,
+    BottomTabNavigationEventMap,
+    {
+      [RouteName in keyof ParamList]: BottomTabNavigationProp<
+        ParamList,
+        RouteName,
+        NavigatorID
+      >;
+    },
+    typeof BottomTabNavigator
+  >(BottomTabNavigator)();

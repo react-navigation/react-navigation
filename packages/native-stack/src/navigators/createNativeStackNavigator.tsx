@@ -14,6 +14,7 @@ import * as React from 'react';
 import type {
   NativeStackNavigationEventMap,
   NativeStackNavigationOptions,
+  NativeStackNavigationProp,
   NativeStackNavigatorProps,
 } from '../types';
 import { NativeStackView } from '../views/NativeStackView';
@@ -83,9 +84,21 @@ function NativeStackNavigator({
   );
 }
 
-export const createNativeStackNavigator = createNavigatorFactory<
-  StackNavigationState<ParamListBase>,
-  NativeStackNavigationOptions,
-  NativeStackNavigationEventMap,
-  typeof NativeStackNavigator
->(NativeStackNavigator);
+export const createNativeStackNavigator = <
+  ParamList extends {},
+  NavigatorID extends string | undefined = undefined,
+>() =>
+  createNavigatorFactory<
+    ParamList,
+    StackNavigationState<ParamList>,
+    NativeStackNavigationOptions,
+    NativeStackNavigationEventMap,
+    {
+      [RouteName in keyof ParamList]: NativeStackNavigationProp<
+        ParamList,
+        RouteName,
+        NavigatorID
+      >;
+    },
+    typeof NativeStackNavigator
+  >(NativeStackNavigator)();

@@ -425,7 +425,7 @@ export type NavigationContainerProps = {
 };
 
 export type NavigationProp<
-  ParamList extends {},
+  ParamList extends ParamListBase,
   RouteName extends keyof ParamList = Keyof<ParamList>,
   NavigatorID extends string | undefined = undefined,
   State extends NavigationState = NavigationState<ParamList>,
@@ -608,6 +608,7 @@ export type RouteConfig<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
+  Navigation,
 > = {
   /**
    * Optional key for this screen. This doesn't need to be unique.
@@ -628,7 +629,7 @@ export type RouteConfig<
     | ScreenOptions
     | ((props: {
         route: RouteProp<ParamList, RouteName>;
-        navigation: any;
+        navigation: Navigation;
         theme: ReactNavigation.Theme;
       }) => ScreenOptions);
 
@@ -795,6 +796,7 @@ export type TypedNavigator<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
+  NavigationPropList extends { [key in keyof ParamList]: unknown },
   Navigator extends React.ComponentType<any>,
 > = {
   /**
@@ -815,7 +817,14 @@ export type TypedNavigator<
    * Component used for specifying route configuration.
    */
   Screen: <RouteName extends keyof ParamList>(
-    _: RouteConfig<ParamList, RouteName, State, ScreenOptions, EventMap>
+    _: RouteConfig<
+      ParamList,
+      RouteName,
+      State,
+      ScreenOptions,
+      EventMap,
+      NavigationPropList[RouteName]
+    >
   ) => null;
 };
 

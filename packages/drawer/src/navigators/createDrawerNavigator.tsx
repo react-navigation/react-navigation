@@ -14,6 +14,7 @@ import type {
   DrawerNavigationConfig,
   DrawerNavigationEventMap,
   DrawerNavigationOptions,
+  DrawerNavigationProp,
 } from '../types';
 import { DrawerView } from '../views/DrawerView';
 
@@ -70,9 +71,21 @@ function DrawerNavigator({
   );
 }
 
-export const createDrawerNavigator = createNavigatorFactory<
-  DrawerNavigationState<ParamListBase>,
-  DrawerNavigationOptions,
-  DrawerNavigationEventMap,
-  typeof DrawerNavigator
->(DrawerNavigator);
+export const createDrawerNavigator = <
+  ParamList extends {},
+  NavigatorID extends string | undefined = undefined,
+>() =>
+  createNavigatorFactory<
+    ParamList,
+    DrawerNavigationState<ParamList>,
+    DrawerNavigationOptions,
+    DrawerNavigationEventMap,
+    {
+      [RouteName in keyof ParamList]: DrawerNavigationProp<
+        ParamList,
+        RouteName,
+        NavigatorID
+      >;
+    },
+    typeof DrawerNavigator
+  >(DrawerNavigator)();

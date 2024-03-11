@@ -14,6 +14,7 @@ import type {
   MaterialTopTabNavigationConfig,
   MaterialTopTabNavigationEventMap,
   MaterialTopTabNavigationOptions,
+  MaterialTopTabNavigationProp,
 } from '../types';
 import { MaterialTopTabView } from '../views/MaterialTopTabView';
 
@@ -67,9 +68,21 @@ function MaterialTopTabNavigator({
   );
 }
 
-export const createMaterialTopTabNavigator = createNavigatorFactory<
-  TabNavigationState<ParamListBase>,
-  MaterialTopTabNavigationOptions,
-  MaterialTopTabNavigationEventMap,
-  typeof MaterialTopTabNavigator
->(MaterialTopTabNavigator);
+export const createMaterialTopTabNavigator = <
+  ParamList extends {},
+  NavigatorID extends string | undefined = undefined,
+>() =>
+  createNavigatorFactory<
+    ParamList,
+    TabNavigationState<ParamList>,
+    MaterialTopTabNavigationOptions,
+    MaterialTopTabNavigationEventMap,
+    {
+      [RouteName in keyof ParamList]: MaterialTopTabNavigationProp<
+        ParamList,
+        RouteName,
+        NavigatorID
+      >;
+    },
+    typeof MaterialTopTabNavigator
+  >(MaterialTopTabNavigator)();
