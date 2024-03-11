@@ -127,24 +127,6 @@ export function createMaterialTopTabNavigator<
   typeof MaterialTopTabNavigator
 > & { config: Config };
 
-export function createMaterialTopTabNavigator<
-  ParamList extends ParamListBase,
-  NavigatorID extends string | undefined,
-  Config extends StaticConfig<
-    ParamList,
-    NavigatorID,
-    TabNavigationState<ParamList>,
-    MaterialTopTabNavigationOptions,
-    MaterialTopTabNavigationEventMap,
-    {
-      [RouteName in keyof ParamList]: MaterialTopTabNavigationProp<
-        ParamList,
-        RouteName,
-        NavigatorID
-      >;
-    },
-    typeof MaterialTopTabNavigator
-  >,
->(config?: Config): any {
+export function createMaterialTopTabNavigator(config?: any): any {
   return createNavigatorFactory(MaterialTopTabNavigator)(config);
 }

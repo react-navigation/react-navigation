@@ -141,24 +141,6 @@ export function createNativeStackNavigator<
   typeof NativeStackNavigator
 > & { config: Config };
 
-export function createNativeStackNavigator<
-  ParamList extends ParamListBase,
-  NavigatorID extends string | undefined,
-  Config extends StaticConfig<
-    ParamList,
-    NavigatorID,
-    StackNavigationState<ParamList>,
-    NativeStackNavigationOptions,
-    NativeStackNavigationEventMap,
-    {
-      [RouteName in keyof ParamList]: NativeStackNavigationProp<
-        ParamList,
-        RouteName,
-        NavigatorID
-      >;
-    },
-    typeof NativeStackNavigator
-  >,
->(config?: Config): any {
+export function createNativeStackNavigator(config?: any): any {
   return createNavigatorFactory(NativeStackNavigator)(config);
 }
