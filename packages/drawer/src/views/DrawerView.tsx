@@ -42,6 +42,8 @@ type Props = DrawerNavigationConfig & {
   descriptors: DrawerDescriptorMap;
 };
 
+const DRAWER_BORDER_RADIUS = 16;
+
 function DrawerViewBase({
   state,
   navigation,
@@ -62,7 +64,7 @@ function DrawerViewBase({
     drawerPosition = direction === 'rtl' ? 'right' : 'left',
     drawerStatusBarAnimation,
     drawerStyle,
-    drawerType,
+    drawerType = Platform.select({ ios: 'slide', default: 'front' }),
     gestureHandlerProps,
     keyboardDismissMode,
     overlayColor = 'rgba(0, 0, 0, 0.5)',
@@ -297,6 +299,17 @@ function DrawerViewBase({
               : {
                   borderStartColor: colors.border,
                   borderStartWidth: StyleSheet.hairlineWidth,
+                }),
+
+          drawerType === 'front' &&
+            (drawerPosition === 'left'
+              ? {
+                  borderTopRightRadius: DRAWER_BORDER_RADIUS,
+                  borderBottomRightRadius: DRAWER_BORDER_RADIUS,
+                }
+              : {
+                  borderTopLeftRadius: DRAWER_BORDER_RADIUS,
+                  borderBottomLeftRadius: DRAWER_BORDER_RADIUS,
                 }),
           drawerStyle,
         ]}

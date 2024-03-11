@@ -8,8 +8,6 @@ import { getDrawerWidth } from '../utils/getDrawerWidth';
 import { useFakeSharedValue } from '../utils/useFakeSharedValue';
 import { Overlay } from './Overlay';
 
-const DRAWER_BORDER_RADIUS = 16;
-
 export function Drawer({
   layout: customLayout,
   drawerPosition = 'left',
@@ -57,19 +55,6 @@ export function Drawer({
 
   const isOpen = drawerType === 'permanent' ? true : open;
   const isRight = drawerPosition === 'right';
-
-  const borderRadiiStyle =
-    drawerType !== 'permanent'
-      ? isRight
-        ? {
-            borderTopLeftRadius: DRAWER_BORDER_RADIUS,
-            borderBottomLeftRadius: DRAWER_BORDER_RADIUS,
-          }
-        : {
-            borderTopRightRadius: DRAWER_BORDER_RADIUS,
-            borderBottomRightRadius: DRAWER_BORDER_RADIUS,
-          }
-      : null;
 
   const drawerAnimatedStyle =
     drawerType !== 'permanent'
@@ -151,7 +136,6 @@ export function Drawer({
                 position: drawerType === 'permanent' ? 'relative' : 'absolute',
                 zIndex: drawerType === 'back' ? -1 : 0,
               },
-              borderRadiiStyle,
               drawerAnimatedStyle,
               drawerStyle,
             ]}

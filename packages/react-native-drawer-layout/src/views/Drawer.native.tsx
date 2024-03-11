@@ -36,8 +36,6 @@ const SWIPE_MIN_OFFSET = 5;
 const SWIPE_MIN_DISTANCE = 60;
 const SWIPE_MIN_VELOCITY = 500;
 
-const DRAWER_BORDER_RADIUS = 16;
-
 const minmax = (value: number, start: number, end: number) => {
   'worklet';
 
@@ -48,7 +46,7 @@ export function Drawer({
   layout: customLayout,
   drawerPosition = I18nManager.getConstants().isRTL ? 'right' : 'left',
   drawerStyle,
-  drawerType = Platform.select({ ios: 'slide', default: 'front' }),
+  drawerType = 'front',
   gestureHandlerProps,
   hideStatusBarOnOpen = false,
   keyboardDismissMode = 'on-drag',
@@ -152,19 +150,6 @@ export function Drawer({
       // This lets the user drag the drawer from the side of the screen
       { right: 0, width: isOpen ? undefined : swipeEdgeWidth }
     : { left: 0, width: isOpen ? undefined : swipeEdgeWidth };
-
-  const borderRadiiStyle =
-    drawerType !== 'permanent'
-      ? isRight
-        ? {
-            borderTopLeftRadius: DRAWER_BORDER_RADIUS,
-            borderBottomLeftRadius: DRAWER_BORDER_RADIUS,
-          }
-        : {
-            borderTopRightRadius: DRAWER_BORDER_RADIUS,
-            borderBottomRightRadius: DRAWER_BORDER_RADIUS,
-          }
-      : null;
 
   const touchStartX = useSharedValue(0);
   const touchX = useSharedValue(0);
@@ -427,7 +412,6 @@ export function Drawer({
                     drawerType === 'permanent' ? 'relative' : 'absolute',
                   zIndex: drawerType === 'back' ? -1 : 0,
                 },
-                borderRadiiStyle,
                 drawerAnimatedStyle,
                 drawerStyle,
               ]}
