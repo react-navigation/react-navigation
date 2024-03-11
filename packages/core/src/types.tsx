@@ -427,7 +427,7 @@ export type NavigationContainerProps = {
 };
 
 export type NavigationProp<
-  ParamList extends ParamListBase,
+  ParamList extends {},
   RouteName extends keyof ParamList = Keyof<ParamList>,
   NavigatorID extends string | undefined = undefined,
   State extends NavigationState = NavigationState<ParamList>,
