@@ -7,7 +7,8 @@ import type {
   EventMapBase,
   NavigatorScreenParams,
   PathConfig,
-  RouteConfig,
+  RouteConfigComponent,
+  RouteConfigProps,
   RouteGroupConfig,
 } from './types';
 import { useRoute } from './useRoute';
@@ -82,6 +83,26 @@ type ParamListForGroups<
   ? ParamListForScreens<UnionToIntersection<Groups[keyof Groups]['screens']>>
   : {};
 
+type StaticRouteConfig<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList,
+  State extends NavigationState,
+  ScreenOptions extends {},
+  EventMap extends EventMapBase,
+  Navigation,
+> = RouteConfigProps<
+  // FIXME: the param list is inferred from the screen component
+  // So we can't use the type here
+  // Fallback to ParamListBase for now
+  ParamListBase,
+  string,
+  State,
+  ScreenOptions,
+  EventMap,
+  Navigation
+> &
+  RouteConfigComponent<ParamList, RouteName>;
+
 type StaticConfigScreens<
   ParamList extends ParamListBase,
   State extends NavigationState,
@@ -93,7 +114,7 @@ type StaticConfigScreens<
     | React.ComponentType<any>
     | StaticNavigation<any, any, any>
     | (Omit<
-        RouteConfig<
+        StaticRouteConfig<
           ParamList,
           RouteName,
           State,

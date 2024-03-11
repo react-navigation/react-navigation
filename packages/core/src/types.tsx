@@ -604,7 +604,7 @@ export type RouteConfigComponent<
       getComponent?: never;
     };
 
-export type RouteConfig<
+export type RouteConfigProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList,
   State extends NavigationState,
@@ -651,7 +651,7 @@ export type RouteConfig<
    * e.g. for styling, error boundaries, suspense, etc.
    */
   layout?: (props: {
-    route: RouteProp<ParamList, keyof ParamList>;
+    route: RouteProp<ParamList, RouteName>;
     navigation: Navigation;
     theme: ReactNavigation.Theme;
     children: React.ReactElement;
@@ -673,7 +673,24 @@ export type RouteConfig<
    * Initial params object for the route.
    */
   initialParams?: Partial<ParamList[RouteName]>;
-} & RouteConfigComponent<ParamList, RouteName>;
+};
+
+export type RouteConfig<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList,
+  State extends NavigationState,
+  ScreenOptions extends {},
+  EventMap extends EventMapBase,
+  Navigation,
+> = RouteConfigProps<
+  ParamList,
+  RouteName,
+  State,
+  ScreenOptions,
+  EventMap,
+  Navigation
+> &
+  RouteConfigComponent<ParamList, RouteName>;
 
 export type RouteGroupConfig<
   ParamList extends ParamListBase,

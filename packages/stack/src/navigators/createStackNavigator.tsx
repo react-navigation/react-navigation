@@ -160,6 +160,24 @@ export function createStackNavigator<
   typeof StackNavigator
 > & { config: Config };
 
-export function createStackNavigator(config?: any): any {
+export function createStackNavigator<
+  ParamList extends ParamListBase,
+  NavigatorID extends string | undefined,
+  Config extends StaticConfig<
+    ParamList,
+    NavigatorID,
+    StackNavigationState<ParamList>,
+    StackNavigationOptions,
+    StackNavigationEventMap,
+    {
+      [RouteName in keyof ParamList]: StackNavigationProp<
+        ParamList,
+        RouteName,
+        NavigatorID
+      >;
+    },
+    typeof StackNavigator
+  >,
+>(config?: Config): any {
   return createNavigatorFactory(StackNavigator)(config);
 }
