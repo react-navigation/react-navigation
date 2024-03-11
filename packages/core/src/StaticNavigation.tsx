@@ -87,7 +87,7 @@ type StaticConfigScreens<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
-  NavigationList extends { [key in keyof ParamList]: unknown },
+  NavigationList extends { [RouteName in keyof ParamList]: any },
 > = {
   [RouteName in keyof ParamList]:
     | React.ComponentType<any>
@@ -141,7 +141,7 @@ type GroupConfig<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
-  NavigationList extends { [key in keyof ParamList]: unknown },
+  NavigationList extends { [RouteName in keyof ParamList]: any },
 > = Omit<
   RouteGroupConfig<ParamList, ScreenOptions, NavigationList[keyof ParamList]>,
   'screens' | 'children'
@@ -169,7 +169,7 @@ export type StaticConfig<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
-  NavigationList extends { [key in keyof ParamList]: unknown },
+  NavigationList extends { [RouteName in keyof ParamList]: any },
   Navigator extends React.ComponentType<any>,
 > = Omit<
   Omit<

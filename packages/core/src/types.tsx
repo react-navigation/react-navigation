@@ -642,7 +642,7 @@ export type RouteConfig<
     | ScreenListeners<State, EventMap>
     | ((props: {
         route: RouteProp<ParamList, RouteName>;
-        navigation: any;
+        navigation: Navigation;
       }) => ScreenListeners<State, EventMap>);
 
   /**
@@ -652,7 +652,7 @@ export type RouteConfig<
    */
   layout?: (props: {
     route: RouteProp<ParamList, keyof ParamList>;
-    navigation: any;
+    navigation: Navigation;
     theme: ReactNavigation.Theme;
     children: React.ReactElement;
   }) => React.ReactElement;
@@ -800,7 +800,7 @@ export type TypedNavigator<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
-  NavigationList extends { [key in keyof ParamList]: unknown },
+  NavigationList extends { [RouteName in keyof ParamList]: any },
   Navigator extends React.ComponentType<any>,
 > = {
   /**
