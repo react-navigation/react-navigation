@@ -95,7 +95,7 @@ type StaticConfigScreens<
     | (Omit<
         RouteConfig<
           ParamList,
-          keyof ParamList,
+          RouteName,
           State,
           ScreenOptions,
           EventMap,
