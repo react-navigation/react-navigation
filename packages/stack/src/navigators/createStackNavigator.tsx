@@ -105,6 +105,17 @@ function StackNavigator({
   );
 }
 
+type StackNavigationList<
+  ParamList extends ParamListBase,
+  NavigatorID extends string | undefined,
+> = {
+  [RouteName in keyof ParamList]: StackNavigationProp<
+    ParamList,
+    RouteName,
+    NavigatorID
+  >;
+};
+
 export function createStackNavigator<
   ParamList extends ParamListBase,
   NavigatorID extends string | undefined = undefined,
@@ -114,13 +125,7 @@ export function createStackNavigator<
   StackNavigationState<ParamList>,
   StackNavigationOptions,
   StackNavigationEventMap,
-  {
-    [RouteName in keyof ParamList]: StackNavigationProp<
-      ParamList,
-      RouteName,
-      NavigatorID
-    >;
-  },
+  StackNavigationList<ParamList, NavigatorID>,
   typeof StackNavigator
 >;
 
@@ -133,13 +138,7 @@ export function createStackNavigator<
     StackNavigationState<ParamList>,
     StackNavigationOptions,
     StackNavigationEventMap,
-    {
-      [RouteName in keyof ParamList]: StackNavigationProp<
-        ParamList,
-        RouteName,
-        NavigatorID
-      >;
-    },
+    StackNavigationList<ParamList, NavigatorID>,
     typeof StackNavigator
   >,
 >(
@@ -150,13 +149,7 @@ export function createStackNavigator<
   StackNavigationState<ParamList>,
   StackNavigationOptions,
   StackNavigationEventMap,
-  {
-    [RouteName in keyof ParamList]: StackNavigationProp<
-      ParamList,
-      RouteName,
-      NavigatorID
-    >;
-  },
+  StackNavigationList<ParamList, NavigatorID>,
   typeof StackNavigator
 > & { config: Config };
 

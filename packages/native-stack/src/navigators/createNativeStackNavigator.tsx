@@ -86,6 +86,17 @@ function NativeStackNavigator({
   );
 }
 
+type NativeStackNavigationList<
+  ParamList extends ParamListBase,
+  NavigatorID extends string | undefined,
+> = {
+  [RouteName in keyof ParamList]: NativeStackNavigationProp<
+    ParamList,
+    RouteName,
+    NavigatorID
+  >;
+};
+
 export function createNativeStackNavigator<
   ParamList extends ParamListBase,
   NavigatorID extends string | undefined = undefined,
@@ -95,13 +106,7 @@ export function createNativeStackNavigator<
   StackNavigationState<ParamList>,
   NativeStackNavigationOptions,
   NativeStackNavigationEventMap,
-  {
-    [RouteName in keyof ParamList]: NativeStackNavigationProp<
-      ParamList,
-      RouteName,
-      NavigatorID
-    >;
-  },
+  NativeStackNavigationList<ParamList, NavigatorID>,
   typeof NativeStackNavigator
 >;
 
@@ -114,13 +119,7 @@ export function createNativeStackNavigator<
     StackNavigationState<ParamList>,
     NativeStackNavigationOptions,
     NativeStackNavigationEventMap,
-    {
-      [RouteName in keyof ParamList]: NativeStackNavigationProp<
-        ParamList,
-        RouteName,
-        NavigatorID
-      >;
-    },
+    NativeStackNavigationList<ParamList, NavigatorID>,
     typeof NativeStackNavigator
   >,
 >(
@@ -131,13 +130,7 @@ export function createNativeStackNavigator<
   StackNavigationState<ParamList>,
   NativeStackNavigationOptions,
   NativeStackNavigationEventMap,
-  {
-    [RouteName in keyof ParamList]: NativeStackNavigationProp<
-      ParamList,
-      RouteName,
-      NavigatorID
-    >;
-  },
+  NativeStackNavigationList<ParamList, NavigatorID>,
   typeof NativeStackNavigator
 > & { config: Config };
 

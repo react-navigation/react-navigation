@@ -72,6 +72,17 @@ function BottomTabNavigator({
   );
 }
 
+type BottomTabNavigationList<
+  ParamList extends ParamListBase,
+  NavigatorID extends string | undefined,
+> = {
+  [RouteName in keyof ParamList]: BottomTabNavigationProp<
+    ParamList,
+    RouteName,
+    NavigatorID
+  >;
+};
+
 export function createBottomTabNavigator<
   ParamList extends ParamListBase,
   NavigatorID extends string | undefined = undefined,
@@ -81,13 +92,7 @@ export function createBottomTabNavigator<
   TabNavigationState<ParamList>,
   BottomTabNavigationOptions,
   BottomTabNavigationEventMap,
-  {
-    [RouteName in keyof ParamList]: BottomTabNavigationProp<
-      ParamList,
-      RouteName,
-      NavigatorID
-    >;
-  },
+  BottomTabNavigationList<ParamList, NavigatorID>,
   typeof BottomTabNavigator
 >;
 
@@ -100,13 +105,7 @@ export function createBottomTabNavigator<
     TabNavigationState<ParamList>,
     BottomTabNavigationOptions,
     BottomTabNavigationEventMap,
-    {
-      [RouteName in keyof ParamList]: BottomTabNavigationProp<
-        ParamList,
-        RouteName,
-        NavigatorID
-      >;
-    },
+    BottomTabNavigationList<ParamList, NavigatorID>,
     typeof BottomTabNavigator
   >,
 >(
@@ -117,13 +116,7 @@ export function createBottomTabNavigator<
   TabNavigationState<ParamList>,
   BottomTabNavigationOptions,
   BottomTabNavigationEventMap,
-  {
-    [RouteName in keyof ParamList]: BottomTabNavigationProp<
-      ParamList,
-      RouteName,
-      NavigatorID
-    >;
-  },
+  BottomTabNavigationList<ParamList, NavigatorID>,
   typeof BottomTabNavigator
 > & { config: Config };
 

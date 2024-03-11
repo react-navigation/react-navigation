@@ -72,6 +72,17 @@ function MaterialTopTabNavigator({
   );
 }
 
+type MaterialTopTabStackNavigationList<
+  ParamList extends ParamListBase,
+  NavigatorID extends string | undefined,
+> = {
+  [RouteName in keyof ParamList]: MaterialTopTabNavigationProp<
+    ParamList,
+    RouteName,
+    NavigatorID
+  >;
+};
+
 export function createMaterialTopTabNavigator<
   ParamList extends ParamListBase,
   NavigatorID extends string | undefined = undefined,
@@ -81,13 +92,7 @@ export function createMaterialTopTabNavigator<
   TabNavigationState<ParamList>,
   MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationEventMap,
-  {
-    [RouteName in keyof ParamList]: MaterialTopTabNavigationProp<
-      ParamList,
-      RouteName,
-      NavigatorID
-    >;
-  },
+  MaterialTopTabStackNavigationList<ParamList, NavigatorID>,
   typeof MaterialTopTabNavigator
 >;
 
@@ -100,13 +105,7 @@ export function createMaterialTopTabNavigator<
     TabNavigationState<ParamList>,
     MaterialTopTabNavigationOptions,
     MaterialTopTabNavigationEventMap,
-    {
-      [RouteName in keyof ParamList]: MaterialTopTabNavigationProp<
-        ParamList,
-        RouteName,
-        NavigatorID
-      >;
-    },
+    MaterialTopTabStackNavigationList<ParamList, NavigatorID>,
     typeof MaterialTopTabNavigator
   >,
 >(
@@ -117,13 +116,7 @@ export function createMaterialTopTabNavigator<
   TabNavigationState<ParamList>,
   MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationEventMap,
-  {
-    [RouteName in keyof ParamList]: MaterialTopTabNavigationProp<
-      ParamList,
-      RouteName,
-      NavigatorID
-    >;
-  },
+  MaterialTopTabStackNavigationList<ParamList, NavigatorID>,
   typeof MaterialTopTabNavigator
 > & { config: Config };
 

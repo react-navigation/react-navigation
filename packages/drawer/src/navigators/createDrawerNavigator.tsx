@@ -75,6 +75,17 @@ function DrawerNavigator({
   );
 }
 
+type DrawerNavigationList<
+  ParamList extends ParamListBase,
+  NavigatorID extends string | undefined,
+> = {
+  [RouteName in keyof ParamList]: DrawerNavigationProp<
+    ParamList,
+    RouteName,
+    NavigatorID
+  >;
+};
+
 export function createDrawerNavigator<
   ParamList extends ParamListBase,
   NavigatorID extends string | undefined = undefined,
@@ -84,13 +95,7 @@ export function createDrawerNavigator<
   DrawerNavigationState<ParamList>,
   DrawerNavigationOptions,
   DrawerNavigationEventMap,
-  {
-    [RouteName in keyof ParamList]: DrawerNavigationProp<
-      ParamList,
-      RouteName,
-      NavigatorID
-    >;
-  },
+  DrawerNavigationList<ParamList, NavigatorID>,
   typeof DrawerNavigator
 >;
 
@@ -103,13 +108,7 @@ export function createDrawerNavigator<
     DrawerNavigationState<ParamList>,
     DrawerNavigationOptions,
     DrawerNavigationEventMap,
-    {
-      [RouteName in keyof ParamList]: DrawerNavigationProp<
-        ParamList,
-        RouteName,
-        NavigatorID
-      >;
-    },
+    DrawerNavigationList<ParamList, NavigatorID>,
     typeof DrawerNavigator
   >,
 >(
@@ -120,13 +119,7 @@ export function createDrawerNavigator<
   DrawerNavigationState<ParamList>,
   DrawerNavigationOptions,
   DrawerNavigationEventMap,
-  {
-    [RouteName in keyof ParamList]: DrawerNavigationProp<
-      ParamList,
-      RouteName,
-      NavigatorID
-    >;
-  },
+  DrawerNavigationList<ParamList, NavigatorID>,
   typeof DrawerNavigator
 > & { config: Config };
 
