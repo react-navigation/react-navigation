@@ -87,7 +87,7 @@ function NativeStackNavigator({
 }
 
 export function createNativeStackNavigator<
-  ParamList extends {},
+  ParamList extends ParamListBase,
   NavigatorID extends string | undefined = undefined,
 >(): TypedNavigator<
   ParamList,
@@ -106,7 +106,7 @@ export function createNativeStackNavigator<
 >;
 
 export function createNativeStackNavigator<
-  ParamList extends {},
+  ParamList extends ParamListBase,
   NavigatorID extends string | undefined,
   Config extends StaticConfig<
     ParamList,

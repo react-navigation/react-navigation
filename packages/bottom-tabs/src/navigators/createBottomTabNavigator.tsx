@@ -73,7 +73,7 @@ function BottomTabNavigator({
 }
 
 export function createBottomTabNavigator<
-  ParamList extends {},
+  ParamList extends ParamListBase,
   NavigatorID extends string | undefined = undefined,
 >(): TypedNavigator<
   ParamList,
@@ -92,7 +92,7 @@ export function createBottomTabNavigator<
 >;
 
 export function createBottomTabNavigator<
-  ParamList extends {},
+  ParamList extends ParamListBase,
   NavigatorID extends string | undefined,
   Config extends StaticConfig<
     ParamList,

@@ -76,7 +76,7 @@ function DrawerNavigator({
 }
 
 export function createDrawerNavigator<
-  ParamList extends {},
+  ParamList extends ParamListBase,
   NavigatorID extends string | undefined = undefined,
 >(): TypedNavigator<
   ParamList,
@@ -95,7 +95,7 @@ export function createDrawerNavigator<
 >;
 
 export function createDrawerNavigator<
-  ParamList extends {},
+  ParamList extends ParamListBase,
   NavigatorID extends string | undefined,
   Config extends StaticConfig<
     ParamList,

@@ -106,7 +106,7 @@ function StackNavigator({
 }
 
 export function createStackNavigator<
-  ParamList extends {},
+  ParamList extends ParamListBase,
   NavigatorID extends string | undefined = undefined,
 >(): TypedNavigator<
   ParamList,
@@ -125,7 +125,7 @@ export function createStackNavigator<
 >;
 
 export function createStackNavigator<
-  ParamList extends {},
+  ParamList extends ParamListBase,
   NavigatorID extends string | undefined,
   Config extends StaticConfig<
     ParamList,

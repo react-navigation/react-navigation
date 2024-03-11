@@ -73,7 +73,7 @@ function MaterialTopTabNavigator({
 }
 
 export function createMaterialTopTabNavigator<
-  ParamList extends {},
+  ParamList extends ParamListBase,
   NavigatorID extends string | undefined = undefined,
 >(): TypedNavigator<
   ParamList,
@@ -92,7 +92,7 @@ export function createMaterialTopTabNavigator<
 >;
 
 export function createMaterialTopTabNavigator<
-  ParamList extends {},
+  ParamList extends ParamListBase,
   NavigatorID extends string | undefined,
   Config extends StaticConfig<
     ParamList,
