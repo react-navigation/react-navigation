@@ -2,10 +2,12 @@ import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
   type ParamListBase,
+  type StaticConfig,
   type TabActionHelpers,
   type TabNavigationState,
   TabRouter,
   type TabRouterOptions,
+  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -20,6 +22,7 @@ import { MaterialTopTabView } from '../views/MaterialTopTabView';
 
 type Props = DefaultNavigatorOptions<
   ParamListBase,
+  string | undefined,
   TabNavigationState<ParamListBase>,
   MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationEventMap,
@@ -69,12 +72,31 @@ function MaterialTopTabNavigator({
   );
 }
 
-export const createMaterialTopTabNavigator = <
+export function createMaterialTopTabNavigator<
   ParamList extends {},
   NavigatorID extends string | undefined = undefined,
->() =>
-  createNavigatorFactory<
+>(): TypedNavigator<
+  ParamList,
+  NavigatorID,
+  TabNavigationState<ParamList>,
+  MaterialTopTabNavigationOptions,
+  MaterialTopTabNavigationEventMap,
+  {
+    [RouteName in keyof ParamList]: MaterialTopTabNavigationProp<
+      ParamList,
+      RouteName,
+      NavigatorID
+    >;
+  },
+  typeof MaterialTopTabNavigator
+>;
+
+export function createMaterialTopTabNavigator<
+  ParamList extends {},
+  NavigatorID extends string | undefined,
+  Config extends StaticConfig<
     ParamList,
+    NavigatorID,
     TabNavigationState<ParamList>,
     MaterialTopTabNavigationOptions,
     MaterialTopTabNavigationEventMap,
@@ -82,8 +104,13 @@ export const createMaterialTopTabNavigator = <
       [RouteName in keyof ParamList]: MaterialTopTabNavigationProp<
         ParamList,
         RouteName,
-        NavigatorID
+        string | undefined
       >;
     },
     typeof MaterialTopTabNavigator
-  >(MaterialTopTabNavigator)();
+  >,
+>(config: Config): { config: Config };
+
+export function createMaterialTopTabNavigator(config?: any): any {
+  return createNavigatorFactory(MaterialTopTabNavigator)(config);
+}

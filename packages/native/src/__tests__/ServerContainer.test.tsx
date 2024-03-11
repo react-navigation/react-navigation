@@ -1,13 +1,13 @@
 import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
-  type NavigationProp,
   type NavigationState,
   type NavigatorScreenParams,
   type ParamListBase,
   type StackNavigationState,
   StackRouter,
   TabRouter,
+  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/core';
 import * as React from 'react';
@@ -46,6 +46,7 @@ it('renders correct state with location', () => {
   const StackNavigator = (
     props: DefaultNavigatorOptions<
       ParamListBase,
+      string | undefined,
       StackNavigationState<ParamListBase>,
       {},
       {},
@@ -66,24 +67,17 @@ it('renders correct state with location', () => {
     );
   };
 
-  const createStackNavigator = <
-    ParamList extends {},
-    NavigatorID extends string | undefined = undefined,
-  >() =>
-    createNavigatorFactory<
-      ParamList,
-      NavigationState<ParamList>,
-      {},
-      {},
-      {
-        [RouteName in keyof ParamList]: NavigationProp<
-          ParamList,
-          RouteName,
-          NavigatorID
-        >;
-      },
-      typeof StackNavigator
-    >(StackNavigator)();
+  function createStackNavigator<ParamList extends {}>(): TypedNavigator<
+    ParamList,
+    string | undefined,
+    NavigationState<ParamList>,
+    {},
+    {},
+    Record<keyof ParamList, unknown>,
+    typeof StackNavigator
+  > {
+    return createNavigatorFactory(StackNavigator)();
+  }
 
   type StackAParamList = {
     Home: NavigatorScreenParams<StackBParamList>;

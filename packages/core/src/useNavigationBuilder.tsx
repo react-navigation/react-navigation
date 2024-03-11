@@ -253,6 +253,7 @@ export function useNavigationBuilder<
   createRouter: RouterFactory<State, any, RouterOptions>,
   options: DefaultNavigatorOptions<
     ParamListBase,
+    string | undefined,
     State,
     ScreenOptions,
     EventMap,

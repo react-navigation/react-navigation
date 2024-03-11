@@ -1,11 +1,10 @@
 import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
-  type NavigationProp,
-  type NavigationState,
   type ParamListBase,
   type StackNavigationState,
   StackRouter,
+  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/core';
 import * as React from 'react';
@@ -13,6 +12,7 @@ import * as React from 'react';
 const StackNavigator = (
   props: DefaultNavigatorOptions<
     ParamListBase,
+    string | undefined,
     StackNavigationState<ParamListBase>,
     {},
     {},
@@ -31,21 +31,14 @@ const StackNavigator = (
   );
 };
 
-export const createStackNavigator = <
-  ParamList extends {},
-  NavigatorID extends string | undefined = undefined,
->() =>
-  createNavigatorFactory<
-    ParamList,
-    NavigationState<ParamList>,
-    {},
-    {},
-    {
-      [RouteName in keyof ParamList]: NavigationProp<
-        ParamList,
-        RouteName,
-        NavigatorID
-      >;
-    },
-    typeof StackNavigator
-  >(StackNavigator)();
+export function createStackNavigator<ParamList extends {}>(): TypedNavigator<
+  ParamList,
+  string | undefined,
+  StackNavigationState<ParamList>,
+  {},
+  {},
+  Record<keyof ParamList, unknown>,
+  typeof StackNavigator
+> {
+  return createNavigatorFactory(StackNavigator)();
+}

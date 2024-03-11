@@ -62,7 +62,8 @@ type ParamListForGroups<
             ParamListBase,
             NavigationState,
             {},
-            EventMapBase
+            EventMapBase,
+            any
           >;
         };
       }>
@@ -73,7 +74,8 @@ type ParamListForGroups<
       ParamListBase,
       NavigationState,
       {},
-      EventMapBase
+      EventMapBase,
+      any
     >;
   };
 }
@@ -85,12 +87,20 @@ type StaticConfigScreens<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
+  NavigationList extends { [key in keyof ParamList]: unknown },
 > = {
-  [key in keyof ParamList]:
+  [RouteName in keyof ParamList]:
     | React.ComponentType<any>
     | StaticNavigation<any, any, any>
     | (Omit<
-        RouteConfig<ParamList, keyof ParamList, State, ScreenOptions, EventMap>,
+        RouteConfig<
+          ParamList,
+          keyof ParamList,
+          State,
+          ScreenOptions,
+          EventMap,
+          NavigationList[RouteName]
+        >,
         'name' | 'component' | 'getComponent' | 'children'
       > & {
         /**
@@ -131,7 +141,11 @@ type GroupConfig<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
-> = Omit<RouteGroupConfig<ParamList, ScreenOptions>, 'screens' | 'children'> & {
+  NavigationList extends { [key in keyof ParamList]: unknown },
+> = Omit<
+  RouteGroupConfig<ParamList, ScreenOptions, NavigationList[keyof ParamList]>,
+  'screens' | 'children'
+> & {
   /**
    * Callback to determine whether the screens in the group should be rendered or not.
    * This can be useful for conditional rendering of group of screens.
@@ -140,26 +154,43 @@ type GroupConfig<
   /**
    * Static navigation config or Component to render for the screen.
    */
-  screens: StaticConfigScreens<ParamList, State, ScreenOptions, EventMap>;
+  screens: StaticConfigScreens<
+    ParamList,
+    State,
+    ScreenOptions,
+    EventMap,
+    NavigationList
+  >;
 };
 
 export type StaticConfig<
   ParamList extends ParamListBase,
+  NavigatorID extends string | undefined,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
-  Navigator extends React.ComponentType<{}>,
+  NavigationList extends { [key in keyof ParamList]: unknown },
+  Navigator extends React.ComponentType<any>,
 > = Omit<
   Omit<
     React.ComponentProps<Navigator>,
     keyof DefaultNavigatorOptions<
       ParamListBase,
+      string | undefined,
       NavigationState,
       {},
-      EventMapBase
+      EventMapBase,
+      NavigationList[keyof ParamList]
     >
   > &
-    DefaultNavigatorOptions<ParamList, State, ScreenOptions, EventMap>,
+    DefaultNavigatorOptions<
+      ParamList,
+      NavigatorID,
+      State,
+      ScreenOptions,
+      EventMap,
+      NavigationList[keyof ParamList]
+    >,
   'screens' | 'children'
 > &
   (
@@ -167,12 +198,24 @@ export type StaticConfig<
         /**
          * Screens to render in the navigator and their configuration.
          */
-        screens: StaticConfigScreens<ParamList, State, ScreenOptions, EventMap>;
+        screens: StaticConfigScreens<
+          ParamList,
+          State,
+          ScreenOptions,
+          EventMap,
+          NavigationList
+        >;
         /**
          * Groups of screens to render in the navigator and their configuration.
          */
         groups?: {
-          [key: string]: GroupConfig<ParamList, State, ScreenOptions, EventMap>;
+          [key: string]: GroupConfig<
+            ParamList,
+            State,
+            ScreenOptions,
+            EventMap,
+            NavigationList
+          >;
         };
       }
     | {
@@ -183,13 +226,20 @@ export type StaticConfig<
           ParamList,
           State,
           ScreenOptions,
-          EventMap
+          EventMap,
+          NavigationList
         >;
         /**
          * Groups of screens to render in the navigator and their configuration.
          */
         groups: {
-          [key: string]: GroupConfig<ParamList, State, ScreenOptions, EventMap>;
+          [key: string]: GroupConfig<
+            ParamList,
+            State,
+            ScreenOptions,
+            EventMap,
+            NavigationList
+          >;
         };
       }
   );
@@ -229,9 +279,11 @@ export type StaticNavigation<NavigatorProps, GroupProps, ScreenProps> = {
   Screen: React.ComponentType<ScreenProps>;
   config: StaticConfig<
     ParamListBase,
+    string | undefined,
     NavigationState,
     {},
     EventMapBase,
+    Record<string, unknown>,
     React.ComponentType<any>
   >;
 };
@@ -247,7 +299,7 @@ const MemoizedScreen = React.memo(
 
 const getItemsFromScreens = (
   Screen: React.ComponentType<any>,
-  screens: StaticConfigScreens<any, any, any, any>
+  screens: StaticConfigScreens<any, any, any, any, any>
 ) => {
   return Object.entries(screens).map(([name, item]) => {
     let component: React.ComponentType<any> | undefined;
@@ -387,7 +439,8 @@ export function createPathConfigForStaticNavigation(tree: {
       ParamListBase,
       NavigationState,
       {},
-      EventMapBase
+      EventMapBase,
+      Record<string, unknown>
     >;
     groups?: {
       [key: string]: {
@@ -395,7 +448,8 @@ export function createPathConfigForStaticNavigation(tree: {
           ParamListBase,
           NavigationState,
           {},
-          EventMapBase
+          EventMapBase,
+          Record<string, unknown>
         >;
       };
     };
@@ -406,7 +460,8 @@ export function createPathConfigForStaticNavigation(tree: {
       ParamListBase,
       NavigationState,
       {},
-      EventMapBase
+      EventMapBase,
+      Record<string, unknown>
     >
   ) {
     return Object.fromEntries(

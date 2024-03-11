@@ -580,6 +580,7 @@ export type NativeStackNavigationOptions = {
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
+  string | undefined,
   StackNavigationState<ParamListBase>,
   NativeStackNavigationOptions,
   NativeStackNavigationEventMap,

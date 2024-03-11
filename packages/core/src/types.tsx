@@ -24,6 +24,7 @@ type Keyof<T extends {}> = Extract<keyof T, string>;
 
 export type DefaultNavigatorOptions<
   ParamList extends ParamListBase,
+  NavigatorID extends string | undefined,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
@@ -32,7 +33,7 @@ export type DefaultNavigatorOptions<
   /**
    * Optional ID for the navigator. Can be used with `navigation.getParent(id)` to refer to a parent.
    */
-  id?: string;
+  id?: NavigatorID;
 
   /**
    * Children React Elements to extract the route configuration from.
@@ -795,10 +796,11 @@ export type NavigationContainerRefWithCurrent<ParamList extends {}> =
 
 export type TypedNavigator<
   ParamList extends ParamListBase,
+  NavigatorID extends string | undefined,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
-  NavigationPropList extends { [key in keyof ParamList]: unknown },
+  NavigationList extends { [key in keyof ParamList]: unknown },
   Navigator extends React.ComponentType<any>,
 > = {
   /**
@@ -807,25 +809,22 @@ export type TypedNavigator<
   Navigator: React.ComponentType<
     Omit<
       React.ComponentProps<Navigator>,
-      keyof DefaultNavigatorOptions<any, any, any, any, any>
+      keyof DefaultNavigatorOptions<any, any, any, any, any, any>
     > &
       DefaultNavigatorOptions<
         ParamList,
+        NavigatorID,
         State,
         ScreenOptions,
         EventMap,
-        NavigationPropList[keyof ParamList]
+        NavigationList[keyof ParamList]
       >
   >;
   /**
    * Component used for grouping multiple route configuration.
    */
   Group: React.ComponentType<
-    RouteGroupConfig<
-      ParamList,
-      ScreenOptions,
-      NavigationPropList[keyof ParamList]
-    >
+    RouteGroupConfig<ParamList, ScreenOptions, NavigationList[keyof ParamList]>
   >;
   /**
    * Component used for specifying route configuration.
@@ -837,7 +836,7 @@ export type TypedNavigator<
       State,
       ScreenOptions,
       EventMap,
-      NavigationPropList[RouteName]
+      NavigationList[RouteName]
     >
   ) => null;
 };

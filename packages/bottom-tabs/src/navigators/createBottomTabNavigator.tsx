@@ -2,10 +2,12 @@ import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
   type ParamListBase,
+  type StaticConfig,
   type TabActionHelpers,
   type TabNavigationState,
   TabRouter,
   type TabRouterOptions,
+  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -20,6 +22,7 @@ import { BottomTabView } from '../views/BottomTabView';
 
 type Props = DefaultNavigatorOptions<
   ParamListBase,
+  string | undefined,
   TabNavigationState<ParamListBase>,
   BottomTabNavigationOptions,
   BottomTabNavigationEventMap,
@@ -69,12 +72,31 @@ function BottomTabNavigator({
   );
 }
 
-export const createBottomTabNavigator = <
+export function createBottomTabNavigator<
   ParamList extends {},
   NavigatorID extends string | undefined = undefined,
->() =>
-  createNavigatorFactory<
+>(): TypedNavigator<
+  ParamList,
+  NavigatorID,
+  TabNavigationState<ParamList>,
+  BottomTabNavigationOptions,
+  BottomTabNavigationEventMap,
+  {
+    [RouteName in keyof ParamList]: BottomTabNavigationProp<
+      ParamList,
+      RouteName,
+      NavigatorID
+    >;
+  },
+  typeof BottomTabNavigator
+>;
+
+export function createBottomTabNavigator<
+  ParamList extends {},
+  NavigatorID extends string | undefined,
+  Config extends StaticConfig<
     ParamList,
+    NavigatorID,
     TabNavigationState<ParamList>,
     BottomTabNavigationOptions,
     BottomTabNavigationEventMap,
@@ -82,8 +104,13 @@ export const createBottomTabNavigator = <
       [RouteName in keyof ParamList]: BottomTabNavigationProp<
         ParamList,
         RouteName,
-        NavigatorID
+        string | undefined
       >;
     },
     typeof BottomTabNavigator
-  >(BottomTabNavigator)();
+  >,
+>(config: Config): { config: Config };
+
+export function createBottomTabNavigator(config?: any): any {
+  return createNavigatorFactory(BottomTabNavigator)(config);
+}

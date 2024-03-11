@@ -8,6 +8,8 @@ import {
   type StackNavigationState,
   StackRouter,
   type StackRouterOptions,
+  type StaticConfig,
+  type TypedNavigator,
   useLocale,
   useNavigationBuilder,
 } from '@react-navigation/native';
@@ -23,6 +25,7 @@ import { StackView } from '../views/Stack/StackView';
 
 type Props = DefaultNavigatorOptions<
   ParamListBase,
+  string | undefined,
   StackNavigationState<ParamListBase>,
   StackNavigationOptions,
   StackNavigationEventMap,
@@ -102,12 +105,31 @@ function StackNavigator({
   );
 }
 
-export const createStackNavigator = <
+export function createStackNavigator<
   ParamList extends {},
   NavigatorID extends string | undefined = undefined,
->() =>
-  createNavigatorFactory<
+>(): TypedNavigator<
+  ParamList,
+  NavigatorID,
+  StackNavigationState<ParamList>,
+  StackNavigationOptions,
+  StackNavigationEventMap,
+  {
+    [RouteName in keyof ParamList]: StackNavigationProp<
+      ParamList,
+      RouteName,
+      NavigatorID
+    >;
+  },
+  typeof StackNavigator
+>;
+
+export function createStackNavigator<
+  ParamList extends {},
+  NavigatorID extends string | undefined,
+  Config extends StaticConfig<
     ParamList,
+    NavigatorID,
     StackNavigationState<ParamList>,
     StackNavigationOptions,
     StackNavigationEventMap,
@@ -115,8 +137,13 @@ export const createStackNavigator = <
       [RouteName in keyof ParamList]: StackNavigationProp<
         ParamList,
         RouteName,
-        NavigatorID
+        string | undefined
       >;
     },
     typeof StackNavigator
-  >(StackNavigator)();
+  >,
+>(config: Config): { config: Config };
+
+export function createStackNavigator(config?: any): any {
+  return createNavigatorFactory(StackNavigator)(config);
+}

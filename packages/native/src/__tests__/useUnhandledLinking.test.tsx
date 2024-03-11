@@ -1,6 +1,9 @@
 import {
   createNavigatorFactory,
+  type ParamListBase,
+  type StackNavigationState,
   StackRouter,
+  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/core';
 import { act, fireEvent, render } from '@testing-library/react-native';
@@ -10,7 +13,7 @@ import { Button, Text } from 'react-native';
 import { NavigationContainer } from '../NavigationContainer';
 import { UNSTABLE_useUnhandledLinking } from '../useUnhandledLinking';
 
-const createTestNavigator = createNavigatorFactory((props: any) => {
+const StackNavigator = (props: any) => {
   const { state, descriptors, NavigationContent } = useNavigationBuilder(
     StackRouter,
     props
@@ -23,7 +26,19 @@ const createTestNavigator = createNavigatorFactory((props: any) => {
       ))}
     </NavigationContent>
   );
-});
+};
+
+function createTestNavigator(): TypedNavigator<
+  ParamListBase,
+  string | undefined,
+  StackNavigationState<ParamListBase>,
+  {},
+  {},
+  Record<string, unknown>,
+  typeof StackNavigator
+> {
+  return createNavigatorFactory(StackNavigator)();
+}
 
 it('schedules a state to be handled on conditional linking', async () => {
   const Stack = createTestNavigator();

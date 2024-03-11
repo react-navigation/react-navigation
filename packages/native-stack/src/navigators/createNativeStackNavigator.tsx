@@ -7,6 +7,8 @@ import {
   type StackNavigationState,
   StackRouter,
   type StackRouterOptions,
+  type StaticConfig,
+  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -84,12 +86,31 @@ function NativeStackNavigator({
   );
 }
 
-export const createNativeStackNavigator = <
+export function createNativeStackNavigator<
   ParamList extends {},
   NavigatorID extends string | undefined = undefined,
->() =>
-  createNavigatorFactory<
+>(): TypedNavigator<
+  ParamList,
+  NavigatorID,
+  StackNavigationState<ParamList>,
+  NativeStackNavigationOptions,
+  NativeStackNavigationEventMap,
+  {
+    [RouteName in keyof ParamList]: NativeStackNavigationProp<
+      ParamList,
+      RouteName,
+      NavigatorID
+    >;
+  },
+  typeof NativeStackNavigator
+>;
+
+export function createNativeStackNavigator<
+  ParamList extends {},
+  NavigatorID extends string | undefined,
+  Config extends StaticConfig<
     ParamList,
+    NavigatorID,
     StackNavigationState<ParamList>,
     NativeStackNavigationOptions,
     NativeStackNavigationEventMap,
@@ -97,8 +118,13 @@ export const createNativeStackNavigator = <
       [RouteName in keyof ParamList]: NativeStackNavigationProp<
         ParamList,
         RouteName,
-        NavigatorID
+        string | undefined
       >;
     },
     typeof NativeStackNavigator
-  >(NativeStackNavigator)();
+  >,
+>(config: Config): { config: Config };
+
+export function createNativeStackNavigator(config?: any): any {
+  return createNavigatorFactory(NativeStackNavigator)(config);
+}

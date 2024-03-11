@@ -6,6 +6,8 @@ import {
   DrawerRouter,
   type DrawerRouterOptions,
   type ParamListBase,
+  type StaticConfig,
+  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -20,6 +22,7 @@ import { DrawerView } from '../views/DrawerView';
 
 type Props = DefaultNavigatorOptions<
   ParamListBase,
+  string | undefined,
   DrawerNavigationState<ParamListBase>,
   DrawerNavigationOptions,
   DrawerNavigationEventMap,
@@ -72,12 +75,31 @@ function DrawerNavigator({
   );
 }
 
-export const createDrawerNavigator = <
+export function createDrawerNavigator<
   ParamList extends {},
   NavigatorID extends string | undefined = undefined,
->() =>
-  createNavigatorFactory<
+>(): TypedNavigator<
+  ParamList,
+  NavigatorID,
+  DrawerNavigationState<ParamList>,
+  DrawerNavigationOptions,
+  DrawerNavigationEventMap,
+  {
+    [RouteName in keyof ParamList]: DrawerNavigationProp<
+      ParamList,
+      RouteName,
+      NavigatorID
+    >;
+  },
+  typeof DrawerNavigator
+>;
+
+export function createDrawerNavigator<
+  ParamList extends {},
+  NavigatorID extends string | undefined,
+  Config extends StaticConfig<
     ParamList,
+    NavigatorID,
     DrawerNavigationState<ParamList>,
     DrawerNavigationOptions,
     DrawerNavigationEventMap,
@@ -85,8 +107,13 @@ export const createDrawerNavigator = <
       [RouteName in keyof ParamList]: DrawerNavigationProp<
         ParamList,
         RouteName,
-        NavigatorID
+        string | undefined
       >;
     },
     typeof DrawerNavigator
-  >(DrawerNavigator)();
+  >,
+>(config: Config): { config: Config };
+
+export function createDrawerNavigator(config?: any): any {
+  return createNavigatorFactory(DrawerNavigator)(config);
+}
