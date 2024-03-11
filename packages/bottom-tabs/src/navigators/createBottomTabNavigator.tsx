@@ -104,12 +104,28 @@ export function createBottomTabNavigator<
       [RouteName in keyof ParamList]: BottomTabNavigationProp<
         ParamList,
         RouteName,
-        string | undefined
+        NavigatorID
       >;
     },
     typeof BottomTabNavigator
   >,
->(config: Config): { config: Config };
+>(
+  config: Config
+): TypedNavigator<
+  ParamList,
+  NavigatorID,
+  TabNavigationState<ParamList>,
+  BottomTabNavigationOptions,
+  BottomTabNavigationEventMap,
+  {
+    [RouteName in keyof ParamList]: BottomTabNavigationProp<
+      ParamList,
+      RouteName,
+      NavigatorID
+    >;
+  },
+  typeof BottomTabNavigator
+> & { config: Config };
 
 export function createBottomTabNavigator(config?: any): any {
   return createNavigatorFactory(BottomTabNavigator)(config);

@@ -14,6 +14,9 @@ export function createNavigatorFactory(Navigator: React.ComponentType<any>) {
   function createNavigator(config?: any): any {
     if (config != null) {
       return {
+        Navigator,
+        Screen,
+        Group,
         config,
       };
     }

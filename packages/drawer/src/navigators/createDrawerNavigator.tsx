@@ -107,12 +107,28 @@ export function createDrawerNavigator<
       [RouteName in keyof ParamList]: DrawerNavigationProp<
         ParamList,
         RouteName,
-        string | undefined
+        NavigatorID
       >;
     },
     typeof DrawerNavigator
   >,
->(config: Config): { config: Config };
+>(
+  config: Config
+): TypedNavigator<
+  ParamList,
+  NavigatorID,
+  DrawerNavigationState<ParamList>,
+  DrawerNavigationOptions,
+  DrawerNavigationEventMap,
+  {
+    [RouteName in keyof ParamList]: DrawerNavigationProp<
+      ParamList,
+      RouteName,
+      NavigatorID
+    >;
+  },
+  typeof DrawerNavigator
+> & { config: Config };
 
 export function createDrawerNavigator(config?: any): any {
   return createNavigatorFactory(DrawerNavigator)(config);

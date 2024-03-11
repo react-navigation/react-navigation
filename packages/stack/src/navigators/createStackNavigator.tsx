@@ -137,12 +137,28 @@ export function createStackNavigator<
       [RouteName in keyof ParamList]: StackNavigationProp<
         ParamList,
         RouteName,
-        string | undefined
+        NavigatorID
       >;
     },
     typeof StackNavigator
   >,
->(config: Config): { config: Config };
+>(
+  config: Config
+): TypedNavigator<
+  ParamList,
+  NavigatorID,
+  StackNavigationState<ParamList>,
+  StackNavigationOptions,
+  StackNavigationEventMap,
+  {
+    [RouteName in keyof ParamList]: StackNavigationProp<
+      ParamList,
+      RouteName,
+      NavigatorID
+    >;
+  },
+  typeof StackNavigator
+> & { config: Config };
 
 export function createStackNavigator(config?: any): any {
   return createNavigatorFactory(StackNavigator)(config);
