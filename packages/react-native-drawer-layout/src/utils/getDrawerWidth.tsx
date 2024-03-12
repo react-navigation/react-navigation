@@ -1,29 +1,19 @@
-import {
-  Platform,
-  type StyleProp,
-  StyleSheet,
-  type ViewStyle,
-} from 'react-native';
+import { type StyleProp, StyleSheet, type ViewStyle } from 'react-native';
 
-const getDefaultDrawerWidth = ({
-  height,
-  width,
-}: {
-  height: number;
-  width: number;
-}) => {
+const APPROX_APP_BAR_HEIGHT = 56;
+const DEFAULT_DRAWER_WIDTH = 360;
+
+const getDefaultDrawerWidth = ({ width }: { width: number }) => {
   /**
-   * Default drawer width is screen width - header height
-   * with a max width of 280 on mobile and 320 on tablet
-   * https://material.io/components/navigation-drawer
+   * Default drawer width is 360dp
+   * On screens smaller than 320dp, ideally the drawer would collapse to a navigation bar
+   * https://m3.material.io/components/navigation-drawer/specs
    */
-  const smallerAxisSize = Math.min(height, width);
-  const isLandscape = width > height;
-  const isTablet = smallerAxisSize >= 600;
-  const appBarHeight = Platform.OS === 'ios' ? (isLandscape ? 32 : 44) : 56;
-  const maxWidth = isTablet ? 320 : 280;
+  if (width - APPROX_APP_BAR_HEIGHT <= 360) {
+    return width - APPROX_APP_BAR_HEIGHT;
+  }
 
-  return Math.min(smallerAxisSize - appBarHeight, maxWidth);
+  return DEFAULT_DRAWER_WIDTH;
 };
 
 export function getDrawerWidth({

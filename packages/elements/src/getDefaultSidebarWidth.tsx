@@ -1,22 +1,15 @@
-import { Platform } from 'react-native';
+const APPROX_APP_BAR_HEIGHT = 56;
+const DEFAULT_DRAWER_WIDTH = 360;
 
-export const getDefaultSidebarWidth = ({
-  height,
-  width,
-}: {
-  height: number;
-  width: number;
-}) => {
-  /*
-   * Default sidebar width is screen width - header height
-   * with a max width of 280 on mobile and 320 on tablet
-   * https://material.io/components/navigation-drawer
+export const getDefaultSidebarWidth = ({ width }: { width: number }) => {
+  /**
+   * Default sidebar width is 360dp
+   * On screens smaller than 320dp, ideally the drawer would collapse to a tab bar
+   * https://m3.material.io/components/navigation-drawer/specs
    */
-  const smallerAxisSize = Math.min(height, width);
-  const isLandscape = width > height;
-  const isTablet = smallerAxisSize >= 600;
-  const appBarHeight = Platform.OS === 'ios' ? (isLandscape ? 32 : 44) : 56;
-  const maxWidth = isTablet ? 320 : 280;
+  if (width - APPROX_APP_BAR_HEIGHT <= 360) {
+    return width - APPROX_APP_BAR_HEIGHT;
+  }
 
-  return Math.min(smallerAxisSize - appBarHeight, maxWidth);
+  return DEFAULT_DRAWER_WIDTH;
 };
