@@ -62,7 +62,7 @@ export type NativeStackScreenProps<
   route: RouteProp<ParamList, RouteName>;
 };
 
-export type NativeStackScreenOptions<
+export type NativeStackOptionsArgs<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
   NavigatorID extends string | undefined = undefined,
@@ -580,9 +580,11 @@ export type NativeStackNavigationOptions = {
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
+  string | undefined,
   StackNavigationState<ParamListBase>,
   NativeStackNavigationOptions,
-  NativeStackNavigationEventMap
+  NativeStackNavigationEventMap,
+  NativeStackNavigationProp<ParamListBase>
 > &
   StackRouterOptions &
   NativeStackNavigationConfig;

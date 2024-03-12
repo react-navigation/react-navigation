@@ -1,8 +1,5 @@
 import { useHeaderHeight } from '@react-navigation/elements';
-import {
-  NavigationContainer,
-  type ParamListBase,
-} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import {
   fireEvent,
   isHiddenFromAccessibility,
@@ -15,6 +12,15 @@ import {
   createNativeStackNavigator,
   type NativeStackScreenProps,
 } from '../index';
+
+type StackParamList = {
+  A: undefined;
+  B: undefined;
+};
+
+type NestedStackParamList = {
+  C: undefined;
+};
 
 jest.mock('react-native/Libraries/Utilities/Platform', () => ({
   ...jest.requireActual('react-native/Libraries/Utilities/Platform'),
@@ -43,7 +49,7 @@ it('renders a native-stack navigator with screens', async () => {
   const Test = ({
     route,
     navigation,
-  }: NativeStackScreenProps<ParamListBase>) => (
+  }: NativeStackScreenProps<StackParamList>) => (
     <View>
       <Text>Screen {route.name}</Text>
       <Button onPress={() => navigation.navigate('A')} title="Go to A" />
@@ -51,7 +57,7 @@ it('renders a native-stack navigator with screens', async () => {
     </View>
   );
 
-  const Stack = createNativeStackNavigator();
+  const Stack = createNativeStackNavigator<StackParamList>();
 
   const { getByText, queryByText } = render(
     <NavigationContainer>
@@ -76,14 +82,14 @@ describe('useHeaderHeight in native-stack', () => {
     Platform.OS = 'android';
 
     let headerHeight;
-    const Test = ({ navigation }: NativeStackScreenProps<ParamListBase>) => {
+    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
         <Button onPress={() => navigation.navigate('B')} title="Go to B" />
       );
     };
 
-    const Stack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator<StackParamList>();
 
     const { findByText } = render(
       <NavigationContainer>
@@ -103,14 +109,14 @@ describe('useHeaderHeight in native-stack', () => {
     Platform.OS = 'ios';
 
     let headerHeight;
-    const Test = ({ navigation }: NativeStackScreenProps<ParamListBase>) => {
+    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
         <Button onPress={() => navigation.navigate('B')} title="Go to B" />
       );
     };
 
-    const Stack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator<StackParamList>();
 
     const { findByText } = render(
       <NavigationContainer>
@@ -130,14 +136,14 @@ describe('useHeaderHeight in native-stack', () => {
     Platform.OS = 'web';
 
     let headerHeight;
-    const Test = ({ navigation }: NativeStackScreenProps<ParamListBase>) => {
+    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
         <Button onPress={() => navigation.navigate('B')} title="Go to B" />
       );
     };
 
-    const Stack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator<StackParamList>();
 
     const { findByText } = render(
       <NavigationContainer>
@@ -157,14 +163,14 @@ describe('useHeaderHeight in native-stack', () => {
     Platform.OS = 'ios';
 
     let headerHeight;
-    const Test = ({ navigation }: NativeStackScreenProps<ParamListBase>) => {
+    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
         <Button onPress={() => navigation.navigate('B')} title="Go to B" />
       );
     };
 
-    const Stack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator<StackParamList>();
 
     const { findByText } = render(
       <NavigationContainer>
@@ -190,14 +196,14 @@ describe('useHeaderHeight in native-stack', () => {
     Platform.OS = 'ios';
 
     let headerHeight;
-    const Test = ({ navigation }: NativeStackScreenProps<ParamListBase>) => {
+    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
         <Button onPress={() => navigation.navigate('B')} title="Go to B" />
       );
     };
 
-    const Stack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator<StackParamList>();
 
     const { findByText } = render(
       <NavigationContainer>
@@ -230,14 +236,14 @@ describe('useHeaderHeight in native-stack', () => {
     Platform.OS = 'android';
 
     let headerHeight;
-    const Test = ({ navigation }: NativeStackScreenProps<ParamListBase>) => {
+    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
         <Button onPress={() => navigation.navigate('B')} title="Go to B" />
       );
     };
 
-    const Stack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator<StackParamList>();
 
     const { findByText } = render(
       <NavigationContainer>
@@ -270,14 +276,14 @@ describe('useHeaderHeight in native-stack', () => {
     Platform.OS = 'ios';
 
     let headerHeight;
-    const Test = ({ navigation }: NativeStackScreenProps<ParamListBase>) => {
+    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
         <Button onPress={() => navigation.navigate('B')} title="Go to B" />
       );
     };
 
-    const Stack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator<StackParamList>();
 
     const { findByText } = render(
       <NavigationContainer>
@@ -301,14 +307,14 @@ describe('useHeaderHeight in native-stack', () => {
     Platform.OS = 'android';
 
     let headerHeight;
-    const Test = ({ navigation }: NativeStackScreenProps<ParamListBase>) => {
+    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
         <Button onPress={() => navigation.navigate('B')} title="Go to B" />
       );
     };
 
-    const Stack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator<StackParamList>();
 
     const { findByText } = render(
       <NavigationContainer>
@@ -332,14 +338,14 @@ describe('useHeaderHeight in native-stack', () => {
     Platform.OS = 'web';
 
     let headerHeight;
-    const Test = ({ navigation }: NativeStackScreenProps<ParamListBase>) => {
+    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
         <Button onPress={() => navigation.navigate('B')} title="Go to B" />
       );
     };
 
-    const Stack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator<StackParamList>();
 
     const { findByText } = render(
       <NavigationContainer>
@@ -363,15 +369,15 @@ describe('useHeaderHeight in native-stack', () => {
     Platform.OS = 'ios';
 
     let headerHeight;
-    const Test = ({ navigation }: NativeStackScreenProps<ParamListBase>) => {
+    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
         <Button onPress={() => navigation.navigate('B')} title="Go to B" />
       );
     };
 
-    const Stack = createNativeStackNavigator();
-    const NestedStack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator<StackParamList>();
+    const NestedStack = createNativeStackNavigator<NestedStackParamList>();
 
     const { findByText } = render(
       <NavigationContainer>
@@ -397,15 +403,15 @@ describe('useHeaderHeight in native-stack', () => {
     Platform.OS = 'ios';
 
     let headerHeight;
-    const Test = ({ navigation }: NativeStackScreenProps<ParamListBase>) => {
+    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
         <Button onPress={() => navigation.navigate('B')} title="Go to B" />
       );
     };
 
-    const Stack = createNativeStackNavigator();
-    const NestedStack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator<StackParamList>();
+    const NestedStack = createNativeStackNavigator<NestedStackParamList>();
 
     const { findByText } = render(
       <NavigationContainer>
@@ -415,7 +421,7 @@ describe('useHeaderHeight in native-stack', () => {
             {() => (
               <NestedStack.Navigator>
                 <NestedStack.Screen
-                  name="third"
+                  name="C"
                   component={Test}
                   options={{ headerShown: false }}
                 />
@@ -435,15 +441,15 @@ describe('useHeaderHeight in native-stack', () => {
     Platform.OS = 'ios';
 
     let headerHeight;
-    const Test = ({ navigation }: NativeStackScreenProps<ParamListBase>) => {
+    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
         <Button onPress={() => navigation.navigate('B')} title="Go to B" />
       );
     };
 
-    const Stack = createNativeStackNavigator();
-    const NestedStack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator<StackParamList>();
+    const NestedStack = createNativeStackNavigator<NestedStackParamList>();
 
     const { findByText } = render(
       <NavigationContainer>
@@ -469,15 +475,15 @@ describe('useHeaderHeight in native-stack', () => {
     Platform.OS = 'android';
 
     let headerHeight;
-    const Test = ({ navigation }: NativeStackScreenProps<ParamListBase>) => {
+    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
         <Button onPress={() => navigation.navigate('B')} title="Go to B" />
       );
     };
 
-    const Stack = createNativeStackNavigator();
-    const NestedStack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator<StackParamList>();
+    const NestedStack = createNativeStackNavigator<NestedStackParamList>();
 
     const { findByText } = render(
       <NavigationContainer>
@@ -503,15 +509,15 @@ describe('useHeaderHeight in native-stack', () => {
     Platform.OS = 'android';
 
     let headerHeight;
-    const Test = ({ navigation }: NativeStackScreenProps<ParamListBase>) => {
+    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
         <Button onPress={() => navigation.navigate('B')} title="Go to B" />
       );
     };
 
-    const Stack = createNativeStackNavigator();
-    const NestedStack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator<StackParamList>();
+    const NestedStack = createNativeStackNavigator<NestedStackParamList>();
 
     const { findByText } = render(
       <NavigationContainer>
@@ -521,7 +527,7 @@ describe('useHeaderHeight in native-stack', () => {
             {() => (
               <NestedStack.Navigator>
                 <NestedStack.Screen
-                  name="third"
+                  name="C"
                   component={Test}
                   options={{ headerShown: false }}
                 />
@@ -541,15 +547,15 @@ describe('useHeaderHeight in native-stack', () => {
     Platform.OS = 'android';
 
     let headerHeight;
-    const Test = ({ navigation }: NativeStackScreenProps<ParamListBase>) => {
+    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
         <Button onPress={() => navigation.navigate('B')} title="Go to B" />
       );
     };
 
-    const Stack = createNativeStackNavigator();
-    const NestedStack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator<StackParamList>();
+    const NestedStack = createNativeStackNavigator<NestedStackParamList>();
 
     const { findByText } = render(
       <NavigationContainer>
@@ -575,15 +581,15 @@ describe('useHeaderHeight in native-stack', () => {
     Platform.OS = 'web';
 
     let headerHeight;
-    const Test = ({ navigation }: NativeStackScreenProps<ParamListBase>) => {
+    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
         <Button onPress={() => navigation.navigate('B')} title="Go to B" />
       );
     };
 
-    const Stack = createNativeStackNavigator();
-    const NestedStack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator<StackParamList>();
+    const NestedStack = createNativeStackNavigator<NestedStackParamList>();
 
     const { findByText } = render(
       <NavigationContainer>
@@ -609,15 +615,15 @@ describe('useHeaderHeight in native-stack', () => {
     Platform.OS = 'web';
 
     let headerHeight;
-    const Test = ({ navigation }: NativeStackScreenProps<ParamListBase>) => {
+    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
         <Button onPress={() => navigation.navigate('B')} title="Go to B" />
       );
     };
 
-    const Stack = createNativeStackNavigator();
-    const NestedStack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator<StackParamList>();
+    const NestedStack = createNativeStackNavigator<NestedStackParamList>();
 
     const { findByText } = render(
       <NavigationContainer>
@@ -627,7 +633,7 @@ describe('useHeaderHeight in native-stack', () => {
             {() => (
               <NestedStack.Navigator>
                 <NestedStack.Screen
-                  name="third"
+                  name="C"
                   component={Test}
                   options={{ headerShown: false }}
                 />
@@ -647,15 +653,15 @@ describe('useHeaderHeight in native-stack', () => {
     Platform.OS = 'web';
 
     let headerHeight;
-    const Test = ({ navigation }: NativeStackScreenProps<ParamListBase>) => {
+    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
         <Button onPress={() => navigation.navigate('B')} title="Go to B" />
       );
     };
 
-    const Stack = createNativeStackNavigator();
-    const NestedStack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator<StackParamList>();
+    const NestedStack = createNativeStackNavigator<NestedStackParamList>();
 
     const { findByText } = render(
       <NavigationContainer>

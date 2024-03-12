@@ -153,6 +153,21 @@ createBottomTabNavigator({
   screens: {},
 });
 
+createBottomTabNavigator({
+  screenOptions: () => ({
+    tabBarActiveTintColor: 'tomato',
+  }),
+  screens: {},
+});
+
+createBottomTabNavigator({
+  // @ts-expect-error
+  screenOptions: () => ({
+    tabBarActiveTintColor: 42,
+  }),
+  screens: {},
+});
+
 /**
  * Infer screen  options
  */
@@ -182,9 +197,92 @@ createBottomTabNavigator({
 createBottomTabNavigator({
   screens: {
     Test: {
+      screen: () => null,
+      options: () => ({
+        tabBarActiveTintColor: 'tomato',
+      }),
+    },
+  },
+});
+
+createBottomTabNavigator({
+  screens: {
+    Test: {
+      screen: () => null,
+      // @ts-expect-error
+      options: () => ({
+        tabBarActiveTintColor: 42,
+      }),
+    },
+  },
+});
+
+createBottomTabNavigator({
+  screens: {
+    Test: {
       screen: (_: { foo: number }) => null,
       initialParams: {
         foo: 'test',
+      },
+    },
+  },
+});
+
+/**
+ * Have correct type for screen options callback
+ */
+createBottomTabNavigator({
+  screenOptions: ({ route, navigation, theme }) => {
+    expectTypeOf(route.name).toMatchTypeOf<string>();
+    expectTypeOf(navigation.getState().type).toMatchTypeOf<'tab'>();
+    expectTypeOf(navigation.jumpTo).toMatchTypeOf<Function>();
+    expectTypeOf(theme).toMatchTypeOf<ReactNavigation.Theme>();
+
+    return {};
+  },
+  screens: {},
+});
+
+createBottomTabNavigator({
+  screens: {
+    Test: {
+      screen: () => null,
+      options: ({ route, navigation, theme }) => {
+        expectTypeOf(route.name).toMatchTypeOf<string>();
+        expectTypeOf(navigation.getState().type).toMatchTypeOf<'tab'>();
+        expectTypeOf(navigation.jumpTo).toMatchTypeOf<Function>();
+        expectTypeOf(theme).toMatchTypeOf<ReactNavigation.Theme>();
+
+        return {};
+      },
+    },
+  },
+});
+
+/**
+ * Have correct type for listeners callback
+ */
+createBottomTabNavigator({
+  screenListeners: ({ route, navigation }) => {
+    expectTypeOf(route.name).toMatchTypeOf<string>();
+    expectTypeOf(navigation.getState().type).toMatchTypeOf<'tab'>();
+    expectTypeOf(navigation.jumpTo).toMatchTypeOf<Function>();
+
+    return {};
+  },
+  screens: {},
+});
+
+createBottomTabNavigator({
+  screens: {
+    Test: {
+      screen: () => null,
+      listeners: ({ navigation, route }) => {
+        expectTypeOf(route.name).toMatchTypeOf<string>();
+        expectTypeOf(navigation.getState().type).toMatchTypeOf<'tab'>();
+        expectTypeOf(navigation.jumpTo).toMatchTypeOf<Function>();
+
+        return {};
       },
     },
   },

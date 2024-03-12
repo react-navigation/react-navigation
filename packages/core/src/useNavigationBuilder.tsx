@@ -103,7 +103,8 @@ const getRouteConfigsFromChildren = <
             string,
             State,
             ScreenOptions,
-            EventMap
+            EventMap,
+            unknown
           >,
         });
 
@@ -252,9 +253,11 @@ export function useNavigationBuilder<
   createRouter: RouterFactory<State, any, RouterOptions>,
   options: DefaultNavigatorOptions<
     ParamListBase,
+    string | undefined,
     State,
     ScreenOptions,
-    EventMap
+    EventMap,
+    any
   > &
     RouterOptions
 ) {

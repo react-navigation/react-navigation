@@ -238,7 +238,6 @@ it('handles non-function screens', () => {
 
 it("throws if screens or groups property isn't specified", () => {
   expect(() => {
-    // @ts-expect-error: we're testing invalid input here
     const Root = createTestNavigator({});
 
     createComponentForStaticNavigation(Root, 'RootNavigator');

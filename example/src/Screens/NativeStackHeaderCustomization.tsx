@@ -3,6 +3,7 @@ import { Button, HeaderButton } from '@react-navigation/elements';
 import type { PathConfigMap } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
+  type NativeStackOptionsArgs,
   type NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import * as React from 'react';
@@ -120,7 +121,13 @@ export function NativeStackHeaderCustomization() {
       <Stack.Screen
         name="Article"
         component={ArticleScreen}
-        options={({ route, navigation }) => ({
+        options={({
+          route,
+          navigation,
+        }: NativeStackOptionsArgs<
+          NativeHeaderCustomizationStackParams,
+          'Article'
+        >) => ({
           title: `Article by ${route.params?.author ?? 'Unknown'}`,
           headerTintColor: 'white',
           headerTitle: ({ tintColor }) => (
