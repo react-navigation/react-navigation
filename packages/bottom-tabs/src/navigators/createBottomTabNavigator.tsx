@@ -1,6 +1,7 @@
 import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
+  type NavigationListBase,
   type ParamListBase,
   type StaticConfig,
   type TabActionHelpers,
@@ -72,54 +73,44 @@ function BottomTabNavigator({
   );
 }
 
-type BottomTabNavigationList<
-  ParamList extends ParamListBase,
-  NavigatorID extends string | undefined,
-> = {
-  [RouteName in keyof ParamList]: BottomTabNavigationProp<
-    ParamList,
-    RouteName,
-    NavigatorID
-  >;
-};
-
 export function createBottomTabNavigator<
   ParamList extends ParamListBase,
   NavigatorID extends string | undefined = undefined,
->(): TypedNavigator<
-  ParamList,
-  NavigatorID,
-  TabNavigationState<ParamList>,
-  BottomTabNavigationOptions,
-  BottomTabNavigationEventMap,
-  BottomTabNavigationList<ParamList, NavigatorID>,
-  typeof BottomTabNavigator
->;
-
-export function createBottomTabNavigator<
-  ParamList extends ParamListBase,
-  NavigatorID extends string | undefined,
+  NavigationList extends NavigationListBase<ParamList> = {
+    [RouteName in keyof ParamList]: BottomTabNavigationProp<
+      ParamList,
+      RouteName,
+      NavigatorID
+    >;
+  },
   Config extends StaticConfig<
     ParamList,
     NavigatorID,
     TabNavigationState<ParamList>,
     BottomTabNavigationOptions,
     BottomTabNavigationEventMap,
-    BottomTabNavigationList<ParamList, NavigatorID>,
+    NavigationList,
+    typeof BottomTabNavigator
+  > = StaticConfig<
+    ParamList,
+    NavigatorID,
+    TabNavigationState<ParamList>,
+    BottomTabNavigationOptions,
+    BottomTabNavigationEventMap,
+    NavigationList,
     typeof BottomTabNavigator
   >,
 >(
-  config: Config
+  config?: Config
 ): TypedNavigator<
   ParamList,
   NavigatorID,
   TabNavigationState<ParamList>,
   BottomTabNavigationOptions,
   BottomTabNavigationEventMap,
-  BottomTabNavigationList<ParamList, NavigatorID>,
+  NavigationList,
   typeof BottomTabNavigator
-> & { config: Config };
-
-export function createBottomTabNavigator(config?: any): any {
+> &
+  (typeof config extends undefined ? {} : { config: Config }) {
   return createNavigatorFactory(BottomTabNavigator)(config);
 }

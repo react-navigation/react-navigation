@@ -1,6 +1,7 @@
 import {
   createNavigatorFactory,
   type EventArg,
+  type NavigationListBase,
   type ParamListBase,
   type StackActionHelpers,
   StackActions,
@@ -86,54 +87,44 @@ function NativeStackNavigator({
   );
 }
 
-type NativeStackNavigationList<
-  ParamList extends ParamListBase,
-  NavigatorID extends string | undefined,
-> = {
-  [RouteName in keyof ParamList]: NativeStackNavigationProp<
-    ParamList,
-    RouteName,
-    NavigatorID
-  >;
-};
-
 export function createNativeStackNavigator<
   ParamList extends ParamListBase,
   NavigatorID extends string | undefined = undefined,
->(): TypedNavigator<
-  ParamList,
-  NavigatorID,
-  StackNavigationState<ParamList>,
-  NativeStackNavigationOptions,
-  NativeStackNavigationEventMap,
-  NativeStackNavigationList<ParamList, NavigatorID>,
-  typeof NativeStackNavigator
->;
-
-export function createNativeStackNavigator<
-  ParamList extends ParamListBase,
-  NavigatorID extends string | undefined,
+  NavigationList extends NavigationListBase<ParamList> = {
+    [RouteName in keyof ParamList]: NativeStackNavigationProp<
+      ParamList,
+      RouteName,
+      NavigatorID
+    >;
+  },
   Config extends StaticConfig<
     ParamList,
     NavigatorID,
     StackNavigationState<ParamList>,
     NativeStackNavigationOptions,
     NativeStackNavigationEventMap,
-    NativeStackNavigationList<ParamList, NavigatorID>,
+    NavigationList,
+    typeof NativeStackNavigator
+  > = StaticConfig<
+    ParamList,
+    NavigatorID,
+    StackNavigationState<ParamList>,
+    NativeStackNavigationOptions,
+    NativeStackNavigationEventMap,
+    NavigationList,
     typeof NativeStackNavigator
   >,
 >(
-  config: Config
+  config?: Config
 ): TypedNavigator<
   ParamList,
   NavigatorID,
   StackNavigationState<ParamList>,
   NativeStackNavigationOptions,
   NativeStackNavigationEventMap,
-  NativeStackNavigationList<ParamList, NavigatorID>,
+  NavigationList,
   typeof NativeStackNavigator
-> & { config: Config };
-
-export function createNativeStackNavigator(config?: any): any {
+> &
+  (typeof config extends undefined ? {} : { config: Config }) {
   return createNavigatorFactory(NativeStackNavigator)(config);
 }

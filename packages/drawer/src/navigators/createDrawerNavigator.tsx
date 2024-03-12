@@ -5,6 +5,7 @@ import {
   type DrawerNavigationState,
   DrawerRouter,
   type DrawerRouterOptions,
+  type NavigationListBase,
   type ParamListBase,
   type StaticConfig,
   type TypedNavigator,
@@ -75,54 +76,44 @@ function DrawerNavigator({
   );
 }
 
-type DrawerNavigationList<
-  ParamList extends ParamListBase,
-  NavigatorID extends string | undefined,
-> = {
-  [RouteName in keyof ParamList]: DrawerNavigationProp<
-    ParamList,
-    RouteName,
-    NavigatorID
-  >;
-};
-
 export function createDrawerNavigator<
   ParamList extends ParamListBase,
   NavigatorID extends string | undefined = undefined,
->(): TypedNavigator<
-  ParamList,
-  NavigatorID,
-  DrawerNavigationState<ParamList>,
-  DrawerNavigationOptions,
-  DrawerNavigationEventMap,
-  DrawerNavigationList<ParamList, NavigatorID>,
-  typeof DrawerNavigator
->;
-
-export function createDrawerNavigator<
-  ParamList extends ParamListBase,
-  NavigatorID extends string | undefined,
+  NavigationList extends NavigationListBase<ParamList> = {
+    [RouteName in keyof ParamList]: DrawerNavigationProp<
+      ParamList,
+      RouteName,
+      NavigatorID
+    >;
+  },
   Config extends StaticConfig<
     ParamList,
     NavigatorID,
     DrawerNavigationState<ParamList>,
     DrawerNavigationOptions,
     DrawerNavigationEventMap,
-    DrawerNavigationList<ParamList, NavigatorID>,
+    NavigationList,
+    typeof DrawerNavigator
+  > = StaticConfig<
+    ParamList,
+    NavigatorID,
+    DrawerNavigationState<ParamList>,
+    DrawerNavigationOptions,
+    DrawerNavigationEventMap,
+    NavigationList,
     typeof DrawerNavigator
   >,
 >(
-  config: Config
+  config?: Config
 ): TypedNavigator<
   ParamList,
   NavigatorID,
   DrawerNavigationState<ParamList>,
   DrawerNavigationOptions,
   DrawerNavigationEventMap,
-  DrawerNavigationList<ParamList, NavigatorID>,
+  NavigationList,
   typeof DrawerNavigator
-> & { config: Config };
-
-export function createDrawerNavigator(config?: any): any {
+> &
+  (typeof config extends undefined ? {} : { config: Config }) {
   return createNavigatorFactory(DrawerNavigator)(config);
 }

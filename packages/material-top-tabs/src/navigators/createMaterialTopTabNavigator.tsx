@@ -1,6 +1,7 @@
 import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
+  type NavigationListBase,
   type ParamListBase,
   type StaticConfig,
   type TabActionHelpers,
@@ -72,54 +73,44 @@ function MaterialTopTabNavigator({
   );
 }
 
-type MaterialTopTabStackNavigationList<
-  ParamList extends ParamListBase,
-  NavigatorID extends string | undefined,
-> = {
-  [RouteName in keyof ParamList]: MaterialTopTabNavigationProp<
-    ParamList,
-    RouteName,
-    NavigatorID
-  >;
-};
-
 export function createMaterialTopTabNavigator<
   ParamList extends ParamListBase,
   NavigatorID extends string | undefined = undefined,
->(): TypedNavigator<
-  ParamList,
-  NavigatorID,
-  TabNavigationState<ParamList>,
-  MaterialTopTabNavigationOptions,
-  MaterialTopTabNavigationEventMap,
-  MaterialTopTabStackNavigationList<ParamList, NavigatorID>,
-  typeof MaterialTopTabNavigator
->;
-
-export function createMaterialTopTabNavigator<
-  ParamList extends ParamListBase,
-  NavigatorID extends string | undefined,
+  NavigationList extends NavigationListBase<ParamList> = {
+    [RouteName in keyof ParamList]: MaterialTopTabNavigationProp<
+      ParamList,
+      RouteName,
+      NavigatorID
+    >;
+  },
   Config extends StaticConfig<
     ParamList,
     NavigatorID,
     TabNavigationState<ParamList>,
     MaterialTopTabNavigationOptions,
     MaterialTopTabNavigationEventMap,
-    MaterialTopTabStackNavigationList<ParamList, NavigatorID>,
+    NavigationList,
+    typeof MaterialTopTabNavigator
+  > = StaticConfig<
+    ParamList,
+    NavigatorID,
+    TabNavigationState<ParamList>,
+    MaterialTopTabNavigationOptions,
+    MaterialTopTabNavigationEventMap,
+    NavigationList,
     typeof MaterialTopTabNavigator
   >,
 >(
-  config: Config
+  config?: Config
 ): TypedNavigator<
   ParamList,
   NavigatorID,
   TabNavigationState<ParamList>,
   MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationEventMap,
-  MaterialTopTabStackNavigationList<ParamList, NavigatorID>,
+  NavigationList,
   typeof MaterialTopTabNavigator
-> & { config: Config };
-
-export function createMaterialTopTabNavigator(config?: any): any {
+> &
+  (typeof config extends undefined ? {} : { config: Config }) {
   return createNavigatorFactory(MaterialTopTabNavigator)(config);
 }

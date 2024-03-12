@@ -2,6 +2,7 @@ import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
   type EventArg,
+  type NavigationListBase,
   type ParamListBase,
   type StackActionHelpers,
   StackActions,
@@ -105,54 +106,44 @@ function StackNavigator({
   );
 }
 
-type StackNavigationList<
-  ParamList extends ParamListBase,
-  NavigatorID extends string | undefined,
-> = {
-  [RouteName in keyof ParamList]: StackNavigationProp<
-    ParamList,
-    RouteName,
-    NavigatorID
-  >;
-};
-
 export function createStackNavigator<
   ParamList extends ParamListBase,
   NavigatorID extends string | undefined = undefined,
->(): TypedNavigator<
-  ParamList,
-  NavigatorID,
-  StackNavigationState<ParamList>,
-  StackNavigationOptions,
-  StackNavigationEventMap,
-  StackNavigationList<ParamList, NavigatorID>,
-  typeof StackNavigator
->;
-
-export function createStackNavigator<
-  ParamList extends ParamListBase,
-  NavigatorID extends string | undefined,
+  NavigationList extends NavigationListBase<ParamList> = {
+    [RouteName in keyof ParamList]: StackNavigationProp<
+      ParamList,
+      RouteName,
+      NavigatorID
+    >;
+  },
   Config extends StaticConfig<
     ParamList,
     NavigatorID,
     StackNavigationState<ParamList>,
     StackNavigationOptions,
     StackNavigationEventMap,
-    StackNavigationList<ParamList, NavigatorID>,
+    NavigationList,
+    typeof StackNavigator
+  > = StaticConfig<
+    ParamList,
+    NavigatorID,
+    StackNavigationState<ParamList>,
+    StackNavigationOptions,
+    StackNavigationEventMap,
+    NavigationList,
     typeof StackNavigator
   >,
 >(
-  config: Config
+  config?: Config
 ): TypedNavigator<
   ParamList,
   NavigatorID,
   StackNavigationState<ParamList>,
   StackNavigationOptions,
   StackNavigationEventMap,
-  StackNavigationList<ParamList, NavigatorID>,
+  NavigationList,
   typeof StackNavigator
-> & { config: Config };
-
-export function createStackNavigator(config?: any): any {
+> &
+  (typeof config extends undefined ? {} : { config: Config }) {
   return createNavigatorFactory(StackNavigator)(config);
 }

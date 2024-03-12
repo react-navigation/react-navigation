@@ -811,13 +811,17 @@ export type NavigationContainerRefWithCurrent<ParamList extends {}> =
     current: NavigationContainerRef<ParamList> | null;
   };
 
+export type NavigationListBase<ParamList extends ParamListBase> = {
+  [RouteName in keyof ParamList]: unknown;
+};
+
 export type TypedNavigator<
   ParamList extends ParamListBase,
   NavigatorID extends string | undefined,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
-  NavigationList extends { [RouteName in keyof ParamList]: any },
+  NavigationList extends NavigationListBase<ParamList>,
   Navigator extends React.ComponentType<any>,
 > = {
   /**
