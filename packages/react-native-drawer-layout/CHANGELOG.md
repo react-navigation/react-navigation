@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 3.3.0 (2024-03-12)
+
+### Bug Fixes
+
+* added close drawer accessibility tap area ([#11184](https://github.com/react-navigation/react-navigation/issues/11184)) ([e3621e0](https://github.com/react-navigation/react-navigation/commit/e3621e0900672cfa200fdd8e65bfc6172b43186f)) - by @mikegarfinkle
+* call onGestureCancel correctly for drawer ([747508d](https://github.com/react-navigation/react-navigation/commit/747508d2a0d988fbde3bee42590d07fd99ac8601)) - by @satya164
+* fix paths in sourcemap files ([2d03159](https://github.com/react-navigation/react-navigation/commit/2d03159a0a5c5cc7002530813c478479b293226b)) - by @satya164
+
+### Features
+
+* add gesture and transition events to drawer ([#11240](https://github.com/react-navigation/react-navigation/issues/11240)) ([5eecd95](https://github.com/react-navigation/react-navigation/commit/5eecd956a8a174a601e16b01dce73b9574476864)) - by @BeeMargarida
+* extract drawer to a separate package ([d50116c](https://github.com/react-navigation/react-navigation/commit/d50116c6cb19585840d1ac1c218f7a58e5ea175e)) - by @satya164
+
 ## [3.2.1](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@3.2.0...react-native-drawer-layout@3.2.1) (2023-06-22)
 
 **Note:** Version bump only for package react-native-drawer-layout

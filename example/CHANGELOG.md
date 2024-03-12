@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/example@6.0.7...@react-navigation/example@6.0.8) (2024-03-12)
+
+### Bug Fixes
+
+* fix incomplete types for screen listeners ([9d73335](https://github.com/react-navigation/react-navigation/commit/9d73335db1dd5fa5253adb2e1876ed4248b6d368)), closes [#11293](https://github.com/react-navigation/react-navigation/issues/11293) - by @satya164
+
 ## [6.0.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/example@6.0.6...@react-navigation/example@6.0.7) (2023-10-19)
 
 **Note:** Version bump only for package @react-navigation/example
