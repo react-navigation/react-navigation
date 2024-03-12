@@ -1,7 +1,7 @@
 import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
-  type NavigationListBase,
+  type NavigatorTypeBagBase,
   type ParamListBase,
   type StaticConfig,
   type TabActionHelpers,
@@ -76,41 +76,25 @@ function MaterialTopTabNavigator({
 export function createMaterialTopTabNavigator<
   ParamList extends ParamListBase,
   NavigatorID extends string | undefined = undefined,
-  NavigationList extends NavigationListBase<ParamList> = {
-    [RouteName in keyof ParamList]: MaterialTopTabNavigationProp<
-      ParamList,
-      RouteName,
-      NavigatorID
-    >;
+  TypeBag extends NavigatorTypeBagBase = {
+    ParamList: ParamList;
+    NavigatorID: NavigatorID;
+    State: TabNavigationState<ParamList>;
+    ScreenOptions: MaterialTopTabNavigationOptions;
+    EventMap: MaterialTopTabNavigationEventMap;
+    NavigationList: {
+      [RouteName in keyof ParamList]: MaterialTopTabNavigationProp<
+        ParamList,
+        RouteName,
+        NavigatorID
+      >;
+    };
+    Navigator: typeof MaterialTopTabNavigator;
   },
-  Config extends StaticConfig<
-    ParamList,
-    NavigatorID,
-    TabNavigationState<ParamList>,
-    MaterialTopTabNavigationOptions,
-    MaterialTopTabNavigationEventMap,
-    NavigationList,
-    typeof MaterialTopTabNavigator
-  > = StaticConfig<
-    ParamList,
-    NavigatorID,
-    TabNavigationState<ParamList>,
-    MaterialTopTabNavigationOptions,
-    MaterialTopTabNavigationEventMap,
-    NavigationList,
-    typeof MaterialTopTabNavigator
-  >,
+  Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
 >(
   config?: Config
-): TypedNavigator<
-  ParamList,
-  NavigatorID,
-  TabNavigationState<ParamList>,
-  MaterialTopTabNavigationOptions,
-  MaterialTopTabNavigationEventMap,
-  NavigationList,
-  typeof MaterialTopTabNavigator
-> &
+): TypedNavigator<TypeBag> &
   (typeof config extends undefined ? {} : { config: Config }) {
   return createNavigatorFactory(MaterialTopTabNavigator)(config);
 }

@@ -1,7 +1,7 @@
 import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
-  type NavigationState,
+  type NavigationListBase,
   type NavigatorScreenParams,
   type ParamListBase,
   type StackNavigationState,
@@ -67,15 +67,15 @@ it('renders correct state with location', () => {
     );
   };
 
-  function createStackNavigator<ParamList extends {}>(): TypedNavigator<
-    ParamList,
-    string | undefined,
-    NavigationState<ParamList>,
-    {},
-    {},
-    Record<keyof ParamList, unknown>,
-    typeof StackNavigator
-  > {
+  function createStackNavigator<ParamList extends {}>(): TypedNavigator<{
+    ParamList: ParamList;
+    NavigatorID: string | undefined;
+    State: StackNavigationState<ParamList>;
+    ScreenOptions: {};
+    EventMap: {};
+    NavigationList: NavigationListBase<ParamList>;
+    Navigator: typeof StackNavigator;
+  }> {
     return createNavigatorFactory(StackNavigator)();
   }
 

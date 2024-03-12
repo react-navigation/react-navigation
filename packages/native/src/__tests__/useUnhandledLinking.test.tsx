@@ -1,5 +1,6 @@
 import {
   createNavigatorFactory,
+  type NavigationListBase,
   type ParamListBase,
   type StackNavigationState,
   StackRouter,
@@ -28,15 +29,17 @@ const StackNavigator = (props: any) => {
   );
 };
 
-function createTestNavigator(): TypedNavigator<
-  ParamListBase,
-  string | undefined,
-  StackNavigationState<ParamListBase>,
-  {},
-  {},
-  Record<string, unknown>,
-  typeof StackNavigator
-> {
+function createTestNavigator<
+  ParamList extends ParamListBase,
+>(): TypedNavigator<{
+  ParamList: ParamList;
+  NavigatorID: string | undefined;
+  State: StackNavigationState<ParamList>;
+  ScreenOptions: {};
+  EventMap: {};
+  NavigationList: NavigationListBase<ParamList>;
+  Navigator: typeof StackNavigator;
+}> {
   return createNavigatorFactory(StackNavigator)();
 }
 

@@ -5,7 +5,9 @@ import { isValidElementType } from 'react-is';
 import type {
   DefaultNavigatorOptions,
   EventMapBase,
+  NavigationListBase,
   NavigatorScreenParams,
+  NavigatorTypeBagBase,
   PathConfig,
   RouteConfigComponent,
   RouteConfigProps,
@@ -108,7 +110,7 @@ type StaticConfigScreens<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
-  NavigationList extends { [RouteName in keyof ParamList]: any },
+  NavigationList extends NavigationListBase<ParamList>,
 > = {
   [RouteName in keyof ParamList]:
     | React.ComponentType<any>
@@ -162,7 +164,7 @@ type GroupConfig<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
-  NavigationList extends { [RouteName in keyof ParamList]: any },
+  NavigationList extends NavigationListBase<ParamList>,
 > = Omit<
   RouteGroupConfig<ParamList, ScreenOptions, NavigationList[keyof ParamList]>,
   'screens' | 'children'
@@ -184,13 +186,24 @@ type GroupConfig<
   >;
 };
 
-export type StaticConfig<
+export type StaticConfig<Bag extends NavigatorTypeBagBase> =
+  StaticConfigInternal<
+    Bag['ParamList'],
+    Bag['NavigatorID'],
+    Bag['State'],
+    Bag['ScreenOptions'],
+    Bag['EventMap'],
+    Bag['NavigationList'],
+    Bag['Navigator']
+  >;
+
+type StaticConfigInternal<
   ParamList extends ParamListBase,
   NavigatorID extends string | undefined,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
-  NavigationList extends { [RouteName in keyof ParamList]: any },
+  NavigationList extends NavigationListBase<ParamList>,
   Navigator extends React.ComponentType<any>,
 > = Omit<
   Omit<
@@ -298,15 +311,7 @@ export type StaticNavigation<NavigatorProps, GroupProps, ScreenProps> = {
   Navigator: React.ComponentType<NavigatorProps>;
   Group: React.ComponentType<GroupProps>;
   Screen: React.ComponentType<ScreenProps>;
-  config: StaticConfig<
-    ParamListBase,
-    string | undefined,
-    NavigationState,
-    {},
-    EventMapBase,
-    Record<string, unknown>,
-    React.ComponentType<any>
-  >;
+  config: StaticConfig<NavigatorTypeBagBase>;
 };
 
 const MemoizedScreen = React.memo(

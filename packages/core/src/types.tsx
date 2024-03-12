@@ -815,7 +815,64 @@ export type NavigationListBase<ParamList extends ParamListBase> = {
   [RouteName in keyof ParamList]: unknown;
 };
 
-export type TypedNavigator<
+export type TypeBag<
+  ParamList extends ParamListBase,
+  NavigatorID extends string | undefined,
+  State extends NavigationState,
+  ScreenOptions extends {},
+  EventMap extends EventMapBase,
+  NavigationList extends NavigationListBase<ParamList>,
+  Navigator extends React.ComponentType<any>,
+> = {
+  ParamList: ParamList;
+  NavigatorID: NavigatorID;
+  State: State;
+  ScreenOptions: ScreenOptions;
+  EventMap: EventMap;
+  NavigationList: NavigationList;
+  Navigator: Navigator;
+};
+
+export type NavigatorTypeBagBase = {
+  ParamList: ParamListBase;
+  NavigatorID: string | undefined;
+  State: NavigationState;
+  ScreenOptions: {};
+  EventMap: EventMapBase;
+  NavigationList: NavigationListBase<ParamListBase>;
+  Navigator: React.ComponentType<any>;
+};
+
+export type NavigatorTypeBag<
+  ParamList extends ParamListBase,
+  NavigatorID extends string | undefined,
+  State extends NavigationState,
+  ScreenOptions extends {},
+  EventMap extends EventMapBase,
+  NavigationList extends NavigationListBase<ParamList>,
+  Navigator extends React.ComponentType<any>,
+> = {
+  ParamList: ParamList;
+  NavigatorID: NavigatorID;
+  State: State;
+  ScreenOptions: ScreenOptions;
+  EventMap: EventMap;
+  NavigationList: NavigationList;
+  Navigator: Navigator;
+};
+
+export type TypedNavigator<Bag extends NavigatorTypeBagBase> =
+  TypedNavigatorInternal<
+    Bag['ParamList'],
+    Bag['NavigatorID'],
+    Bag['State'],
+    Bag['ScreenOptions'],
+    Bag['EventMap'],
+    Bag['NavigationList'],
+    Bag['Navigator']
+  >;
+
+type TypedNavigatorInternal<
   ParamList extends ParamListBase,
   NavigatorID extends string | undefined,
   State extends NavigationState,

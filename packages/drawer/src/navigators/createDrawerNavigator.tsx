@@ -5,7 +5,7 @@ import {
   type DrawerNavigationState,
   DrawerRouter,
   type DrawerRouterOptions,
-  type NavigationListBase,
+  type NavigatorTypeBagBase,
   type ParamListBase,
   type StaticConfig,
   type TypedNavigator,
@@ -79,41 +79,25 @@ function DrawerNavigator({
 export function createDrawerNavigator<
   ParamList extends ParamListBase,
   NavigatorID extends string | undefined = undefined,
-  NavigationList extends NavigationListBase<ParamList> = {
-    [RouteName in keyof ParamList]: DrawerNavigationProp<
-      ParamList,
-      RouteName,
-      NavigatorID
-    >;
+  TypeBag extends NavigatorTypeBagBase = {
+    ParamList: ParamList;
+    NavigatorID: NavigatorID;
+    State: DrawerNavigationState<ParamList>;
+    ScreenOptions: DrawerNavigationOptions;
+    EventMap: DrawerNavigationEventMap;
+    NavigationList: {
+      [RouteName in keyof ParamList]: DrawerNavigationProp<
+        ParamList,
+        RouteName,
+        NavigatorID
+      >;
+    };
+    Navigator: typeof DrawerNavigator;
   },
-  Config extends StaticConfig<
-    ParamList,
-    NavigatorID,
-    DrawerNavigationState<ParamList>,
-    DrawerNavigationOptions,
-    DrawerNavigationEventMap,
-    NavigationList,
-    typeof DrawerNavigator
-  > = StaticConfig<
-    ParamList,
-    NavigatorID,
-    DrawerNavigationState<ParamList>,
-    DrawerNavigationOptions,
-    DrawerNavigationEventMap,
-    NavigationList,
-    typeof DrawerNavigator
-  >,
+  Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
 >(
   config?: Config
-): TypedNavigator<
-  ParamList,
-  NavigatorID,
-  DrawerNavigationState<ParamList>,
-  DrawerNavigationOptions,
-  DrawerNavigationEventMap,
-  NavigationList,
-  typeof DrawerNavigator
-> &
+): TypedNavigator<TypeBag> &
   (typeof config extends undefined ? {} : { config: Config }) {
   return createNavigatorFactory(DrawerNavigator)(config);
 }

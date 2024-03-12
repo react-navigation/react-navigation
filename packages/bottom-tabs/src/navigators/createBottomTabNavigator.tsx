@@ -1,7 +1,7 @@
 import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
-  type NavigationListBase,
+  type NavigatorTypeBagBase,
   type ParamListBase,
   type StaticConfig,
   type TabActionHelpers,
@@ -76,41 +76,25 @@ function BottomTabNavigator({
 export function createBottomTabNavigator<
   ParamList extends ParamListBase,
   NavigatorID extends string | undefined = undefined,
-  NavigationList extends NavigationListBase<ParamList> = {
-    [RouteName in keyof ParamList]: BottomTabNavigationProp<
-      ParamList,
-      RouteName,
-      NavigatorID
-    >;
+  TypeBag extends NavigatorTypeBagBase = {
+    ParamList: ParamList;
+    NavigatorID: NavigatorID;
+    State: TabNavigationState<ParamList>;
+    ScreenOptions: BottomTabNavigationOptions;
+    EventMap: BottomTabNavigationEventMap;
+    NavigationList: {
+      [RouteName in keyof ParamList]: BottomTabNavigationProp<
+        ParamList,
+        RouteName,
+        NavigatorID
+      >;
+    };
+    Navigator: typeof BottomTabNavigator;
   },
-  Config extends StaticConfig<
-    ParamList,
-    NavigatorID,
-    TabNavigationState<ParamList>,
-    BottomTabNavigationOptions,
-    BottomTabNavigationEventMap,
-    NavigationList,
-    typeof BottomTabNavigator
-  > = StaticConfig<
-    ParamList,
-    NavigatorID,
-    TabNavigationState<ParamList>,
-    BottomTabNavigationOptions,
-    BottomTabNavigationEventMap,
-    NavigationList,
-    typeof BottomTabNavigator
-  >,
+  Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
 >(
   config?: Config
-): TypedNavigator<
-  ParamList,
-  NavigatorID,
-  TabNavigationState<ParamList>,
-  BottomTabNavigationOptions,
-  BottomTabNavigationEventMap,
-  NavigationList,
-  typeof BottomTabNavigator
-> &
+): TypedNavigator<TypeBag> &
   (typeof config extends undefined ? {} : { config: Config }) {
   return createNavigatorFactory(BottomTabNavigator)(config);
 }
