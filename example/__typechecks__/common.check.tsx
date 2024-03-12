@@ -408,6 +408,39 @@ const SecondStack = createStackNavigator<SecondParamList>();
   }}
 />;
 
+<SecondStack.Screen
+  name="HasParams1"
+  component={() => <></>}
+  listeners={({ route, navigation }) => {
+    expectTypeOf(route.name).toEqualTypeOf<'HasParams1'>();
+    expectTypeOf(route.params).toEqualTypeOf<Readonly<{ id: string }>>();
+    expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();
+    expectTypeOf(navigation.push)
+      .parameter(0)
+      .toEqualTypeOf<keyof SecondParamList>();
+
+    return {};
+  }}
+/>;
+
+<SecondStack.Screen
+  name="HasParams1"
+  component={() => <></>}
+  listeners={({
+    route,
+    navigation,
+  }: StackScreenProps<SecondParamList, 'HasParams1'>) => {
+    expectTypeOf(route.name).toEqualTypeOf<'HasParams1'>();
+    expectTypeOf(route.params).toEqualTypeOf<Readonly<{ id: string }>>();
+    expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();
+    expectTypeOf(navigation.push)
+      .parameter(0)
+      .toEqualTypeOf<keyof SecondParamList>();
+
+    return {};
+  }}
+/>;
+
 /**
  * Check for errors with `navigation.navigate`
  */
