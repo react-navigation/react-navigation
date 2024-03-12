@@ -861,16 +861,20 @@ export type NavigatorTypeBag<
   Navigator: Navigator;
 };
 
-export type TypedNavigator<Bag extends NavigatorTypeBagBase> =
-  TypedNavigatorInternal<
-    Bag['ParamList'],
-    Bag['NavigatorID'],
-    Bag['State'],
-    Bag['ScreenOptions'],
-    Bag['EventMap'],
-    Bag['NavigationList'],
-    Bag['Navigator']
-  >;
+export type TypedNavigator<
+  Bag extends NavigatorTypeBagBase,
+  Config = unknown,
+> = TypedNavigatorInternal<
+  Bag['ParamList'],
+  Bag['NavigatorID'],
+  Bag['State'],
+  Bag['ScreenOptions'],
+  Bag['EventMap'],
+  Bag['NavigationList'],
+  Bag['Navigator']
+> & {
+  config: undefined extends Config ? unknown : Config;
+};
 
 type TypedNavigatorInternal<
   ParamList extends ParamListBase,

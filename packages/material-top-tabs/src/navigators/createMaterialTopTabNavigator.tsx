@@ -91,10 +91,9 @@ export function createMaterialTopTabNavigator<
     };
     Navigator: typeof MaterialTopTabNavigator;
   },
-  Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
->(
-  config?: Config
-): TypedNavigator<TypeBag> &
-  (typeof config extends undefined ? {} : { config: Config }) {
+  Config extends StaticConfig<TypeBag> | undefined =
+    | StaticConfig<TypeBag>
+    | undefined,
+>(config?: Config): TypedNavigator<TypeBag, Config> {
   return createNavigatorFactory(MaterialTopTabNavigator)(config);
 }
