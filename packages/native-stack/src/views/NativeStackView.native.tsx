@@ -264,18 +264,24 @@ const SceneView = ({
         InteractionManager.createInteractionHandle();
     }
   }, [focused]);
+  const finishInteraction = React.useCallback(() => {
+    if (interactionHandleRef.current !== undefined) {
+      InteractionManager.clearInteractionHandle(interactionHandleRef.current);
+      interactionHandleRef.current = undefined;
+    }
+  }, []);
+  // in case if screen is unmounted faster than transition finishes, then `onAppear` will not be fired
+  // so we clean up an interaction here
+  React.useEffect(() => finishInteraction, [finishInteraction]);
   const onAppearCallback = React.useCallback<
     NonNullable<ScreenProps['onAppear']>
   >(
     (e) => {
       onAppear?.(e);
 
-      if (interactionHandleRef.current !== undefined) {
-        InteractionManager.clearInteractionHandle(interactionHandleRef.current);
-        interactionHandleRef.current = undefined;
-      }
+      finishInteraction();
     },
-    [onAppear]
+    [onAppear, finishInteraction]
   );
 
   const [customHeaderHeight, setCustomHeaderHeight] =
