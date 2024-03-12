@@ -17,6 +17,7 @@ import type {
 import {
   createStackNavigator,
   type StackNavigationOptions,
+  type StackScreenOptions,
   type StackScreenProps,
 } from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
@@ -312,6 +313,79 @@ const SecondStack = createStackNavigator<SecondParamList>();
 />;
 
 /**
+ * Check for options type in Screen config
+ */
+<SecondStack.Screen
+  name="HasParams1"
+  component={() => <></>}
+  options={{
+    headerShown: false,
+  }}
+/>;
+
+<SecondStack.Screen
+  name="HasParams1"
+  component={() => <></>}
+  options={{
+    // @ts-expect-error
+    headerShown: 13,
+  }}
+/>;
+
+<SecondStack.Screen
+  name="HasParams1"
+  component={() => <></>}
+  options={() => ({
+    headerShown: false,
+  })}
+/>;
+
+<SecondStack.Screen
+  name="HasParams1"
+  component={() => <></>}
+  // @ts-expect-error
+  options={() => ({
+    headerShown: 13,
+  })}
+/>;
+
+<SecondStack.Screen
+  name="HasParams1"
+  component={() => <></>}
+  options={({ route, navigation, theme }) => {
+    expectTypeOf(route.name).toEqualTypeOf<'HasParams1'>();
+    expectTypeOf(route.params).toEqualTypeOf<Readonly<{ id: string }>>();
+    expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();
+    expectTypeOf(navigation.push)
+      .parameter(0)
+      .toEqualTypeOf<keyof SecondParamList>();
+    expectTypeOf(theme).toMatchTypeOf<ReactNavigation.Theme>();
+
+    return {};
+  }}
+/>;
+
+<SecondStack.Screen
+  name="HasParams1"
+  component={() => <></>}
+  options={({
+    route,
+    navigation,
+    theme,
+  }: StackScreenOptions<SecondParamList, 'HasParams1'>) => {
+    expectTypeOf(route.name).toEqualTypeOf<'HasParams1'>();
+    expectTypeOf(route.params).toEqualTypeOf<Readonly<{ id: string }>>();
+    expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();
+    expectTypeOf(navigation.push)
+      .parameter(0)
+      .toEqualTypeOf<keyof SecondParamList>();
+    expectTypeOf(theme).toMatchTypeOf<ReactNavigation.Theme>();
+
+    return {};
+  }}
+/>;
+
+/**
  * Check for listeners type in Screen config
  */
 <SecondStack.Screen
@@ -376,3 +450,18 @@ export const ThirdScreen = ({
   // @ts-expect-error
   if (ScreenName === 'NoParams') navigation.navigate(ScreenName, { id: '123' });
 };
+
+/**
+ * Check for navigator ID
+ */
+type FourthParamList = {
+  HasParams1: { id: string };
+  HasParams2: { user: string };
+  NoParams: undefined;
+};
+
+const FourthStack = createStackNavigator<FourthParamList, 'MyID'>();
+
+expectTypeOf(FourthStack.Navigator).parameter(0).toMatchTypeOf<{
+  id: 'MyID';
+}>();

@@ -31,11 +31,6 @@ export type DefaultNavigatorOptions<
   Navigation,
 > = DefaultRouterOptions<Keyof<ParamList>> & {
   /**
-   * Optional ID for the navigator. Can be used with `navigation.getParent(id)` to refer to a parent.
-   */
-  id?: NavigatorID;
-
-  /**
    * Children React Elements to extract the route configuration from.
    * Only `Screen`, `Group` and `React.Fragment` are supported as children.
    */
@@ -103,7 +98,16 @@ export type DefaultNavigatorOptions<
   getStateForRouteNamesChange?: (
     state: NavigationState
   ) => PartialState<NavigationState> | undefined;
-};
+} & (NavigatorID extends string
+    ? {
+        /**
+         * Optional ID for the navigator. Can be used with `navigation.getParent(id)` to refer to a parent.
+         */
+        id: NavigatorID;
+      }
+    : {
+        id?: undefined;
+      });
 
 export type EventMapBase = Record<
   string,
