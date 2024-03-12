@@ -1,3 +1,4 @@
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   useFlipper,
@@ -128,7 +129,7 @@ export default function App() {
   const isLargeScreen = dimensions.width >= 1024;
 
   return (
-    <PaperProvider theme={paperTheme}>
+    <Providers theme={paperTheme}>
       <StatusBar
         translucent
         barStyle={theme.dark ? 'light-content' : 'dark-content'}
@@ -299,6 +300,22 @@ export default function App() {
           ))}
         </Stack.Navigator>
       </NavigationContainer>
-    </PaperProvider>
+    </Providers>
   );
 }
+
+const Providers = ({
+  theme,
+  children,
+}: {
+  theme: ReactNativePaper.Theme;
+  children: React.ReactNode;
+}) => {
+  return (
+    <PaperProvider theme={theme}>
+      <ActionSheetProvider>
+        <>{children}</>
+      </ActionSheetProvider>
+    </PaperProvider>
+  );
+};
