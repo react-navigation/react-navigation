@@ -17,7 +17,7 @@ import type {
 import {
   createStackNavigator,
   type StackNavigationOptions,
-  type StackScreenOptions,
+  type StackOptionsArgs,
   type StackScreenProps,
 } from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
@@ -372,7 +372,7 @@ const SecondStack = createStackNavigator<SecondParamList>();
     route,
     navigation,
     theme,
-  }: StackScreenOptions<SecondParamList, 'HasParams1'>) => {
+  }: StackOptionsArgs<SecondParamList, 'HasParams1'>) => {
     expectTypeOf(route.name).toEqualTypeOf<'HasParams1'>();
     expectTypeOf(route.params).toEqualTypeOf<Readonly<{ id: string }>>();
     expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();

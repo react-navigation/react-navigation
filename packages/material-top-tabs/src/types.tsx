@@ -71,7 +71,7 @@ export type MaterialTopTabScreenProps<
   route: RouteProp<ParamList, RouteName>;
 };
 
-export type MaterialTopTabScreenOptions<
+export type MaterialTopTabOptionsArgs<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
   NavigatorID extends string | undefined = undefined,

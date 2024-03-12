@@ -66,7 +66,7 @@ export type BottomTabScreenProps<
   route: RouteProp<ParamList, RouteName>;
 };
 
-export type BottomTabScreenOptions<
+export type BottomTabOptionsArgs<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
   NavigatorID extends string | undefined = undefined,

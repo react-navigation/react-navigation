@@ -71,7 +71,7 @@ export type StackScreenProps<
   route: RouteProp<ParamList, RouteName>;
 };
 
-export type StackScreenOptions<
+export type StackOptionsArgs<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
   NavigatorID extends string | undefined = undefined,

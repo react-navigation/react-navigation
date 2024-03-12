@@ -300,7 +300,7 @@ export type DrawerScreenProps<
   route: RouteProp<ParamList, RouteName>;
 };
 
-export type DrawerScreenOptions<
+export type DrawerOptionsArgs<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
   NavigatorID extends string | undefined = undefined,

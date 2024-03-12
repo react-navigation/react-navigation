@@ -3,7 +3,7 @@ import { Button, HeaderButton } from '@react-navigation/elements';
 import type { PathConfigMap } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
-  type NativeStackScreenOptions,
+  type NativeStackOptionsArgs,
   type NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import * as React from 'react';
@@ -124,7 +124,7 @@ export function NativeStackHeaderCustomization() {
         options={({
           route,
           navigation,
-        }: NativeStackScreenOptions<
+        }: NativeStackOptionsArgs<
           NativeHeaderCustomizationStackParams,
           'Article'
         >) => ({
