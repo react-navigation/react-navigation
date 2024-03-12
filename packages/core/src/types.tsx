@@ -876,9 +876,8 @@ export type TypedNavigator<
   Bag['EventMap'],
   Bag['NavigationList'],
   Bag['Navigator']
-> & {
-  config: undefined extends Config ? unknown : Config;
-};
+> &
+  (undefined extends Config ? {} : { config: Config });
 
 type TypedNavigatorInternal<
   ParamList extends ParamListBase,
