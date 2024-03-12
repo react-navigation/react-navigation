@@ -19,6 +19,7 @@ import {
 import * as React from 'react';
 import {
   Animated,
+  InteractionManager,
   Platform,
   StyleSheet,
   useAnimatedValue,
@@ -136,7 +137,7 @@ type SceneViewProps = {
   isPresentationModal?: boolean;
   onWillDisappear: () => void;
   onWillAppear: () => void;
-  onAppear: () => void;
+  onAppear: ScreenProps['onAppear'];
   onDisappear: () => void;
   onDismissed: ScreenProps['onDismissed'];
   onHeaderBackButtonClicked: ScreenProps['onHeaderBackButtonClicked'];
@@ -254,6 +255,29 @@ const SceneView = ({
 
   const defaultHeaderHeight = getDefaultHeaderHeight(frame, isModal, topInset);
 
+  const interactionHandleRef = React.useRef<number>();
+
+  // this memo acts as a synchronous `useEffect`
+  React.useMemo(() => {
+    if (focused && interactionHandleRef.current === undefined) {
+      interactionHandleRef.current =
+        InteractionManager.createInteractionHandle();
+    }
+  }, [focused]);
+  const onAppearCallback = React.useCallback<
+    NonNullable<ScreenProps['onAppear']>
+  >(
+    (e) => {
+      onAppear?.(e);
+
+      if (interactionHandleRef.current !== undefined) {
+        InteractionManager.clearInteractionHandle(interactionHandleRef.current);
+        interactionHandleRef.current = undefined;
+      }
+    },
+    [onAppear]
+  );
+
   const [customHeaderHeight, setCustomHeaderHeight] =
     React.useState(defaultHeaderHeight);
 
@@ -315,7 +339,7 @@ const SceneView = ({
       transitionDuration={animationDuration}
       onWillAppear={onWillAppear}
       onWillDisappear={onWillDisappear}
-      onAppear={onAppear}
+      onAppear={onAppearCallback}
       onDisappear={onDisappear}
       onDismissed={onDismissed}
       onGestureCancel={onGestureCancel}
