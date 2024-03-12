@@ -1,7 +1,7 @@
 {
   "name": "react-native-drawer-layout",
   "description": "Drawer component for React Native",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -37,7 +37,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "use-latest-callback": "^0.1.5"
+    "use-latest-callback": "^0.1.9"
   },
   "devDependencies": {
     "del-cli": "^5.0.0",
