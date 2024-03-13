@@ -7,4 +7,9 @@ export type { Props as TabBarItemProps } from './TabBarItem';
 export { TabBarItem } from './TabBarItem';
 export type { Props as TabViewProps } from './TabView';
 export { TabView } from './TabView';
-export type { NavigationState, Route, SceneRendererProps } from './types';
+export type {
+  NavigationState,
+  Route,
+  SceneRendererProps,
+  TabDescriptor,
+} from './types';

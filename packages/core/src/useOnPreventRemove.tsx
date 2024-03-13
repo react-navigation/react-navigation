@@ -5,7 +5,7 @@ import type {
 import * as React from 'react';
 
 import {
-  ChildBeforeRemoveListener,
+  type ChildBeforeRemoveListener,
   NavigationBuilderContext,
 } from './NavigationBuilderContext';
 import { NavigationRouteContext } from './NavigationRouteContext';

@@ -324,3 +324,12 @@ it('returns undefined for non-matching host with wildcard', () => {
     )
   ).toBeUndefined();
 });
+
+it('returns a valid search query when it has a url as param', () => {
+  expect(
+    extractPathFromURL(
+      ['https://mysite.com'],
+      'https://mysite.com/readPolicy?url=https://test.com'
+    )
+  ).toBe('/readPolicy?url=https://test.com');
+});

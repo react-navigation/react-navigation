@@ -1,12 +1,13 @@
 import {
   CommonActions,
-  ParamListBase,
-  Route,
-  TabNavigationState,
+  type ParamListBase,
+  type Route,
+  type TabNavigationState,
+  useLocale,
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { SceneRendererProps, TabView } from 'react-native-tab-view';
+import { type SceneRendererProps, TabView } from 'react-native-tab-view';
 
 import type {
   MaterialTopTabBarProps,
@@ -14,6 +15,7 @@ import type {
   MaterialTopTabNavigationConfig,
   MaterialTopTabNavigationHelpers,
 } from '../types';
+import { TabAnimationContext } from '../utils/TabAnimationContext';
 import { MaterialTopTabBar } from './MaterialTopTabBar';
 
 type Props = MaterialTopTabNavigationConfig & {
@@ -31,6 +33,7 @@ export function MaterialTopTabView({
   ...rest
 }: Props) {
   const { colors } = useTheme();
+  const { direction } = useLocale();
 
   const renderTabBar = (props: SceneRendererProps) => {
     return tabBar({
@@ -54,13 +57,20 @@ export function MaterialTopTabView({
           target: state.key,
         });
       }}
-      renderScene={({ route }) => descriptors[route.key].render()}
+      renderScene={({ route, position }) => (
+        <TabAnimationContext.Provider value={{ position }}>
+          {descriptors[route.key].render()}
+        </TabAnimationContext.Provider>
+      )}
       navigationState={state}
       renderTabBar={renderTabBar}
       renderLazyPlaceholder={({ route }) =>
         descriptors[route.key].options.lazyPlaceholder?.() ?? null
       }
-      lazy={({ route }) => descriptors[route.key].options.lazy === true}
+      lazy={({ route }) =>
+        descriptors[route.key].options.lazy === true &&
+        !state.preloadedRouteKeys.includes(route.key)
+      }
       lazyPreloadDistance={focusedOptions.lazyPreloadDistance}
       swipeEnabled={focusedOptions.swipeEnabled}
       animationEnabled={focusedOptions.animationEnabled}
@@ -70,6 +80,7 @@ export function MaterialTopTabView({
         { backgroundColor: colors.background },
         sceneContainerStyle,
       ]}
+      direction={direction}
     />
   );
 }

@@ -14,6 +14,7 @@ type EffectCallback = () => undefined | void | (() => void);
 export function useFocusEffect(effect: EffectCallback) {
   const navigation = useNavigation();
 
+  // eslint-disable-next-line prefer-rest-params
   if (arguments[1] !== undefined) {
     const message =
       "You passed a second argument to 'useFocusEffect', but it only accepts one argument. " +
@@ -70,7 +71,7 @@ export function useFocusEffect(effect: EffectCallback) {
       }
     };
 
-    // We need to run the effect on intial render/dep changes if the screen is focused
+    // We need to run the effect on initial render/dep changes if the screen is focused
     if (navigation.isFocused()) {
       cleanup = callback();
       isFocused = true;
@@ -78,7 +79,7 @@ export function useFocusEffect(effect: EffectCallback) {
 
     const unsubscribeFocus = navigation.addListener('focus', () => {
       // If callback was already called for focus, avoid calling it again
-      // The focus event may also fire on intial render, so we guard against runing the effect twice
+      // The focus event may also fire on initial render, so we guard against running the effect twice
       if (isFocused) {
         return;
       }

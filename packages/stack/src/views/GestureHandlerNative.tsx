@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   PanGestureHandler as PanGestureHandlerNative,
-  PanGestureHandlerProperties,
+  type PanGestureHandlerProperties,
 } from 'react-native-gesture-handler';
 
 import { GestureHandlerRefContext } from '../utils/GestureHandlerRefContext';

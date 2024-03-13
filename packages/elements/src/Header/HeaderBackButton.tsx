@@ -1,18 +1,17 @@
-import { useTheme } from '@react-navigation/native';
+import { useLocale, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
-  I18nManager,
   Image,
-  LayoutChangeEvent,
+  type LayoutChangeEvent,
   Platform,
   StyleSheet,
   View,
 } from 'react-native';
 
 import { MaskedView } from '../MaskedView';
-import { PlatformPressable } from '../PlatformPressable';
 import type { HeaderBackButtonProps } from '../types';
+import { HeaderButton } from './HeaderButton';
 
 export function HeaderBackButton({
   disabled,
@@ -20,7 +19,7 @@ export function HeaderBackButton({
   backImage,
   label,
   labelStyle,
-  labelVisible,
+  labelVisible = Platform.OS === 'ios',
   onLabelLayout,
   onPress,
   pressColor,
@@ -32,8 +31,10 @@ export function HeaderBackButton({
   accessibilityLabel = label && label !== 'Back' ? `${label}, back` : 'Go back',
   testID,
   style,
+  href,
 }: HeaderBackButtonProps) {
   const { colors, fonts } = useTheme();
+  const { direction } = useLocale();
 
   const [initialLabelWidth, setInitialLabelWidth] = React.useState<
     undefined | number
@@ -50,7 +51,11 @@ export function HeaderBackButton({
   const handleLabelLayout = (e: LayoutChangeEvent) => {
     onLabelLayout?.(e);
 
-    setInitialLabelWidth(e.nativeEvent.layout.x + e.nativeEvent.layout.width);
+    const { layout } = e.nativeEvent;
+
+    setInitialLabelWidth(
+      (direction === 'rtl' ? layout.y : layout.x) + layout.width
+    );
   };
 
   const shouldTruncateLabel = () => {
@@ -71,9 +76,11 @@ export function HeaderBackButton({
         <Image
           style={[
             styles.icon,
+            direction === 'rtl' && styles.flip,
             Boolean(labelVisible) && styles.iconWithLabel,
             Boolean(tintColor) && { tintColor },
           ]}
+          resizeMode="contain"
           source={require('../assets/back-icon.png')}
           fadeDuration={0}
         />
@@ -131,7 +138,8 @@ export function HeaderBackButton({
           <View style={styles.iconMaskContainer}>
             <Image
               source={require('../assets/back-icon-mask.png')}
-              style={styles.iconMask}
+              resizeMode="contain"
+              style={[styles.iconMask, direction === 'rtl' && styles.flip]}
             />
             <View style={styles.iconMaskFillerRect} />
           </View>
@@ -142,37 +150,34 @@ export function HeaderBackButton({
     );
   };
 
-  const handlePress = () => onPress && requestAnimationFrame(onPress);
+  const handlePress = () => {
+    if (onPress) {
+      requestAnimationFrame(() => onPress());
+    }
+  };
 
   return (
-    <PlatformPressable
+    <HeaderButton
       disabled={disabled}
-      accessible
-      accessibilityRole="button"
+      href={href}
       accessibilityLabel={accessibilityLabel}
       testID={testID}
-      onPress={disabled ? undefined : handlePress}
+      onPress={handlePress}
       pressColor={pressColor}
       pressOpacity={pressOpacity}
-      android_ripple={{ borderless: true }}
-      style={[styles.container, disabled && styles.disabled, style]}
-      hitSlop={Platform.select({
-        ios: undefined,
-        default: { top: 16, right: 16, bottom: 16, left: 16 },
-      })}
+      style={[styles.container, style]}
     >
       <React.Fragment>
         {renderBackImage()}
         {renderLabel()}
       </React.Fragment>
-    </PlatformPressable>
+    </HeaderButton>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    flexDirection: 'row',
+    paddingHorizontal: 0,
     minWidth: StyleSheet.hairlineWidth, // Avoid collapsing when title is long
     ...Platform.select({
       ios: null,
@@ -181,9 +186,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 11,
       },
     }),
-  },
-  disabled: {
-    opacity: 0.5,
   },
   label: {
     fontSize: 17,
@@ -201,24 +203,20 @@ const styles = StyleSheet.create({
     ios: {
       height: 21,
       width: 13,
-      marginLeft: 8,
-      marginRight: 22,
+      marginStart: 8,
+      marginEnd: 22,
       marginVertical: 12,
-      resizeMode: 'contain',
-      transform: [{ scaleX: I18nManager.getConstants().isRTL ? -1 : 1 }],
     },
     default: {
       height: 24,
       width: 24,
       margin: 3,
-      resizeMode: 'contain',
-      transform: [{ scaleX: I18nManager.getConstants().isRTL ? -1 : 1 }],
     },
   }),
   iconWithLabel:
     Platform.OS === 'ios'
       ? {
-          marginRight: 6,
+          marginEnd: 6,
         }
       : {},
   iconMaskContainer: {
@@ -233,10 +231,11 @@ const styles = StyleSheet.create({
   iconMask: {
     height: 21,
     width: 13,
-    marginLeft: -14.5,
+    marginStart: -14.5,
     marginVertical: 12,
     alignSelf: 'center',
-    resizeMode: 'contain',
-    transform: [{ scaleX: I18nManager.getConstants().isRTL ? -1 : 1 }],
+  },
+  flip: {
+    transform: 'scaleX(-1)',
   },
 });

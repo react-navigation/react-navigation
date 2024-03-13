@@ -3,6 +3,100 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.11...@react-navigation/elements@2.0.0-alpha.12) (2024-03-10)
+
+### Bug Fixes
+
+* add a workaround for safe area frame not updating on web ([3799b16](https://github.com/react-navigation/react-navigation/commit/3799b1637067ba69983a8ab7b94f63bffb024d20)), closes [#8551](https://github.com/react-navigation/react-navigation/issues/8551) [#11398](https://github.com/react-navigation/react-navigation/issues/11398) - by @satya164
+
+# [2.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.10...@react-navigation/elements@2.0.0-alpha.11) (2024-03-09)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [2.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.9...@react-navigation/elements@2.0.0-alpha.10) (2024-03-08)
+
+### Bug Fixes
+
+* update drawer and header styles according to material design 3 ([#11872](https://github.com/react-navigation/react-navigation/issues/11872)) ([bfa5689](https://github.com/react-navigation/react-navigation/commit/bfa568995940f956c9ec5944f2b0543eca5da546)) - by @groot007
+
+# [2.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.8...@react-navigation/elements@2.0.0-alpha.9) (2024-03-04)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [2.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.7...@react-navigation/elements@2.0.0-alpha.8) (2024-02-24)
+
+### Bug Fixes
+
+* fix peer dependency versions ([4b93b63](https://github.com/react-navigation/react-navigation/commit/4b93b6335ce180fe879f9fbe8f2400426b5484fb)) - by @
+
+# [2.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.6...@react-navigation/elements@2.0.0-alpha.7) (2024-02-23)
+
+### Bug Fixes
+
+* **iOS:** disable collapsable option from Background in Screen ([#11840](https://github.com/react-navigation/react-navigation/issues/11840)) ([c1e327c](https://github.com/react-navigation/react-navigation/commit/c1e327ca40679ff9356a38e5ef96e349f323fb94)), closes [#1997](https://github.com/react-navigation/react-navigation/issues/1997) - by @tboba
+
+# [2.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.5...@react-navigation/elements@2.0.0-alpha.6) (2024-02-23)
+
+### Bug Fixes
+
+* fix header height for iOS devices with dynamic island ([#11786](https://github.com/react-navigation/react-navigation/issues/11786)) ([4c521b5](https://github.com/react-navigation/react-navigation/commit/4c521b5c865f2c46d58abb2e9e7fd1b0d2074215)), closes [#11655](https://github.com/react-navigation/react-navigation/issues/11655) - by @gianlucalippolis
+
+### Features
+
+* add a HeaderButton component to elements ([d8de228](https://github.com/react-navigation/react-navigation/commit/d8de228bafc9408855bdfdfcd48bbb10195501fb)) - by @satya164
+
+# [2.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.4...@react-navigation/elements@2.0.0-alpha.5) (2024-01-17)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [2.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.3...@react-navigation/elements@2.0.0-alpha.4) (2023-11-17)
+
+### Bug Fixes
+
+* darken the tint color for light colored button text ([d5e6b9e](https://github.com/react-navigation/react-navigation/commit/d5e6b9eaa0f3d347e2449ff8459bad8274de653e)) - by @satya164
+* update peer dependencies when publishing ([c440703](https://github.com/react-navigation/react-navigation/commit/c44070310f875e488708f2a6c52ffddcea05b0e6)) - by @
+
+# [2.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.2...@react-navigation/elements@2.0.0-alpha.3) (2023-11-12)
+
+### Bug Fixes
+
+* headerHeight on phones with dynamic island ([#11338](https://github.com/react-navigation/react-navigation/issues/11338)) ([e4815c5](https://github.com/react-navigation/react-navigation/commit/e4815c538536ddccf4207b87bf3e2f1603dedd84)), closes [#10989](https://github.com/react-navigation/react-navigation/issues/10989) - by @dylancom
+
+### Features
+
+* add a button element to elements package  ([#11669](https://github.com/react-navigation/react-navigation/issues/11669)) ([25a85c9](https://github.com/react-navigation/react-navigation/commit/25a85c90384ddfb6db946e791c01d8e033e04aa6)) - by @satya164
+
+# [2.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.1...@react-navigation/elements@2.0.0-alpha.2) (2023-09-25)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [2.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.0...@react-navigation/elements@2.0.0-alpha.1) (2023-09-13)
+
+### Features
+
+* add option to show tabs on the side ([#11578](https://github.com/react-navigation/react-navigation/issues/11578)) ([cd15fda](https://github.com/react-navigation/react-navigation/commit/cd15fdafe7acc428826bd5106c7ba62c1b5153ca)) - by @satya164
+
+# [2.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.4.0-alpha.1...@react-navigation/elements@2.0.0-alpha.0) (2023-09-07)
+
+### Bug Fixes
+
+* add default value to labelVisible in HeaderBackBox ([#11308](https://github.com/react-navigation/react-navigation/issues/11308)) ([bd96d89](https://github.com/react-navigation/react-navigation/commit/bd96d896f17a9930bf9c44ec176ab77ac7138bed)) - by @gkasdorf
+* Allow to use `PlatformColor` in the theme ([#11570](https://github.com/react-navigation/react-navigation/issues/11570)) ([64734e7](https://github.com/react-navigation/react-navigation/commit/64734e7bc0d7f203d8e5db6abcc9a88157a5f16c)) - by @retyui
+* make back button ripple visible ([#11386](https://github.com/react-navigation/react-navigation/issues/11386)) ([c43208f](https://github.com/react-navigation/react-navigation/commit/c43208fc196169e2bf5cea9e2530f5a37bf666bb)), closes [#9794](https://github.com/react-navigation/react-navigation/issues/9794) - by @vonovak
+
+* feat!: add a direction prop to NavigationContainer to specify rtl (#11393) ([8309636](https://github.com/react-navigation/react-navigation/commit/830963653fb5a489d02f1503222629373319b39e)), closes [#11393](https://github.com/react-navigation/react-navigation/issues/11393) - by @satya164
+
+### Features
+
+* add animation prop to bottom tab ([#11323](https://github.com/react-navigation/react-navigation/issues/11323)) ([8d2a6d8](https://github.com/react-navigation/react-navigation/commit/8d2a6d8ef642872d3d506dca483b7474471a040c)) - by @teneeto
+* add shifting animation to bottom-tabs and various fixes ([#11581](https://github.com/react-navigation/react-navigation/issues/11581)) ([6d93c2d](https://github.com/react-navigation/react-navigation/commit/6d93c2da661e1991f6e60f25abf137110a005509)) - by @satya164
+
+### BREAKING CHANGES
+
+* Previously the navigators tried to detect RTL automatically and adjust the UI. However this is problematic since we cannot detect RTL in all cases (e.g. on Web).
+
+This adds an optional `direction` prop to `NavigationContainer` instead so that user can specify when React Navigation's UI needs to be adjusted for RTL. It defaults to the value from `I18nManager` on native platforms, however it needs to be explicitly passed for Web.
+
 # [1.4.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@1.4.0-alpha.0...@react-navigation/elements@1.4.0-alpha.1) (2023-06-22)
 
 **Note:** Version bump only for package @react-navigation/elements

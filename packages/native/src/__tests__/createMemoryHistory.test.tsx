@@ -1,6 +1,6 @@
 import type { NavigationState } from '@react-navigation/core';
 
-import { window } from '../__mocks__/window';
+import { window } from '../__stubs__/window';
 import { createMemoryHistory } from '../createMemoryHistory';
 
 Object.assign(global, window);
@@ -39,7 +39,7 @@ it('will not attempt to navigate beyond whatever browser history it is possible 
   // Then window.history.go() should not be called at all
   history.go(-1);
   jest.runAllTimers();
-  expect(windowGoSpy).not.toBeCalled();
+  expect(windowGoSpy).not.toHaveBeenCalled();
   expect(history.index).toBe(0);
 
   // When we push another item then window history should stay synced with memory history and our index should advance

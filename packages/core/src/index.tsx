@@ -15,12 +15,16 @@ export { NavigationRouteContext } from './NavigationRouteContext';
 export { PreventRemoveContext } from './PreventRemoveContext';
 export { PreventRemoveProvider } from './PreventRemoveProvider';
 export {
+  createComponentForStaticNavigation,
+  createPathConfigForStaticNavigation,
+  type StaticConfig,
   type StaticNavigation,
   type StaticParamList,
   type StaticScreenProps,
-  createComponentForStaticNavigation,
-  createPathConfigForStaticNavigation,
 } from './StaticNavigation';
+export { ThemeContext } from './theming/ThemeContext';
+export { ThemeProvider } from './theming/ThemeProvider';
+export { useTheme } from './theming/useTheme';
 export * from './types';
 export { useFocusEffect } from './useFocusEffect';
 export { useIsFocused } from './useIsFocused';
@@ -29,7 +33,7 @@ export { useNavigationBuilder } from './useNavigationBuilder';
 export { useNavigationContainerRef } from './useNavigationContainerRef';
 export { useNavigationIndependentTree } from './useNavigationIndependentTree';
 export { useNavigationState } from './useNavigationState';
-export { UNSTABLE_usePreventRemove } from './usePreventRemove';
+export { usePreventRemove } from './usePreventRemove';
 export { usePreventRemoveContext } from './usePreventRemoveContext';
 export { useRoute } from './useRoute';
 export { validatePathConfig } from './validatePathConfig';

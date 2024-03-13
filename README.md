@@ -1,4 +1,4 @@
-# React Navigation 6
+# React Navigation 7
 
 [![Build Status][build-badge]][build]
 [![Code Coverage][coverage-badge]][coverage]
@@ -8,7 +8,7 @@ Routing and navigation for your React Native apps.
 
 Documentation can be found at [reactnavigation.org](https://reactnavigation.org/).
 
-If you are looking for version 4, the code can be found in the [4.x branch](https://github.com/react-navigation/react-navigation/tree/4.x).
+This branch contains the code for the pre-release version of React Navigation 7. You can find the code for the latest stable version in the [6.x branch](https://github.com/react-navigation/react-navigation/tree/6.x).
 
 ## Package Versions
 
@@ -20,7 +20,7 @@ If you are looking for version 4, the code can be found in the [4.x branch](http
 | [@react-navigation/drawer](/packages/drawer)                                 |               [![badge](https://img.shields.io/npm/v/@react-navigation/drawer.svg)](https://www.npmjs.com/package/@react-navigation/drawer)               |
 | [@react-navigation/elements](/packages/elements)                             |             [![badge](https://img.shields.io/npm/v/@react-navigation/elements.svg)](https://www.npmjs.com/package/@react-navigation/elements)             |
 | [@react-navigation/material-top-tabs](/packages/material-top-tabs)           |    [![badge](https://img.shields.io/npm/v/@react-navigation/material-top-tabs.svg)](https://www.npmjs.com/package/@react-navigation/material-top-tabs)    |
-| [@react-navigation/native-stack](/packages/native-stack)                     |            [![badge](https://img.shields.io/npm/v/@react-navigation/stack.svg)](https://www.npmjs.com/package/@react-navigation/native-stack)             |
+| [@react-navigation/native-stack](/packages/native-stack)                     |            [![badge](https://img.shields.io/npm/v/@react-navigation/native-stack.svg)](https://www.npmjs.com/package/@react-navigation/native-stack)             |
 | [@react-navigation/native](/packages/native)                                 |               [![badge](https://img.shields.io/npm/v/@react-navigation/native.svg)](https://www.npmjs.com/package/@react-navigation/native)               |
 | [@react-navigation/routers](/packages/routers)                               |              [![badge](https://img.shields.io/npm/v/@react-navigation/routers.svg)](https://www.npmjs.com/package/@react-navigation/routers)              |
 | [@react-navigation/stack](/packages/stack)                                   |                [![badge](https://img.shields.io/npm/v/@react-navigation/stack.svg)](https://www.npmjs.com/package/@react-navigation/stack)                |

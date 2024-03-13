@@ -1,8 +1,13 @@
 import {
   createNavigatorFactory,
-  NavigatorScreenParams,
+  type DefaultNavigatorOptions,
+  type NavigationListBase,
+  type NavigatorScreenParams,
+  type ParamListBase,
+  type StackNavigationState,
   StackRouter,
   TabRouter,
+  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/core';
 import * as React from 'react';
@@ -22,8 +27,32 @@ window.removeEventListener = () => {};
 // eslint-disable-next-line import/extensions
 jest.mock('../useLinking', () => require('../useLinking.tsx'));
 
+// Since Jest is configured for React Native, the *.native.js file is imported
+// Causing the wrong useIsomorphicLayoutEffect to be imported
+// It causes "Warning: useLayoutEffect does nothing on the server"
+// So we explicitly silence it here
+// This warning is being removed in React: https://github.com/facebook/react/pull/26395
+const error = console.error;
+
+jest.spyOn(console, 'error').mockImplementation((...args) => {
+  if (/Warning: useLayoutEffect does nothing on the server/m.test(args[0])) {
+    return;
+  }
+
+  error(...args);
+});
+
 it('renders correct state with location', () => {
-  const createStackNavigator = createNavigatorFactory((props: any) => {
+  const StackNavigator = (
+    props: DefaultNavigatorOptions<
+      ParamListBase,
+      string | undefined,
+      StackNavigationState<ParamListBase>,
+      {},
+      {},
+      unknown
+    >
+  ) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
       props
@@ -36,7 +65,19 @@ it('renders correct state with location', () => {
         ))}
       </NavigationContent>
     );
-  });
+  };
+
+  function createStackNavigator<ParamList extends {}>(): TypedNavigator<{
+    ParamList: ParamList;
+    NavigatorID: string | undefined;
+    State: StackNavigationState<ParamList>;
+    ScreenOptions: {};
+    EventMap: {};
+    NavigationList: NavigationListBase<ParamList>;
+    Navigator: typeof StackNavigator;
+  }> {
+    return createNavigatorFactory(StackNavigator)();
+  }
 
   type StackAParamList = {
     Home: NavigatorScreenParams<StackBParamList>;

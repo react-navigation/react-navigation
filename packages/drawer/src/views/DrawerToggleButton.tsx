@@ -1,7 +1,7 @@
 import { PlatformPressable } from '@react-navigation/elements';
 import {
   DrawerActions,
-  ParamListBase,
+  type ParamListBase,
   useNavigation,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -22,8 +22,6 @@ export function DrawerToggleButton({ tintColor, ...rest }: Props) {
   return (
     <PlatformPressable
       {...rest}
-      accessible
-      accessibilityRole="button"
       android_ripple={{ borderless: true }}
       onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
       style={styles.touchable}
@@ -34,6 +32,7 @@ export function DrawerToggleButton({ tintColor, ...rest }: Props) {
     >
       <Image
         style={[styles.icon, tintColor ? { tintColor } : null]}
+        resizeMode="contain"
         source={require('./assets/toggle-drawer-icon.png')}
         fadeDuration={0}
       />
@@ -46,7 +45,6 @@ const styles = StyleSheet.create({
     height: 24,
     width: 24,
     margin: 3,
-    resizeMode: 'contain',
   },
   touchable: {
     marginHorizontal: 11,
