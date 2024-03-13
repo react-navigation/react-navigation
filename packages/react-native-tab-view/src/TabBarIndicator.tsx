@@ -142,7 +142,7 @@ export function TabBarIndicator<T extends Route>({
     styleList.push(
       { width: width === 'auto' ? 1 : width },
       { start: `${(100 / routes.length) * navigationState.index}%` },
-      { transform },
+      { transform }
     );
   }
 
