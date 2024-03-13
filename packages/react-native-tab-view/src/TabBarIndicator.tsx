@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   Animated,
   Easing,
+  Platform,
   type StyleProp,
   StyleSheet,
   type ViewStyle,
@@ -130,13 +131,27 @@ export function TabBarIndicator<T extends Route>({
     );
   }
 
+  const styleList: StyleProp<ViewStyle> = [];
+
+  // scaleX doesn't work properly on chrome and opera for linux and android
+  if (Platform.OS === 'web' && width === 'auto') {
+    styleList.push(
+      { width: transform[1].scaleX },
+      { left: transform[0].translateX }
+    );
+  } else {
+    styleList.push(
+      { width: width === 'auto' ? 1 : width },
+      { start: `${(100 / routes.length) * navigationState.index}%` },
+      { transform }
+    );
+  }
+
   return (
     <Animated.View
       style={[
         styles.indicator,
-        { width: width === 'auto' ? 1 : width },
-        { start: `${(100 / routes.length) * navigationState.index}%` },
-        { transform },
+        styleList,
         width === 'auto' ? { opacity: opacity } : null,
         style,
       ]}
