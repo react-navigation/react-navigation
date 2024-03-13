@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   Animated,
   Easing,
+  Platform,
   type StyleProp,
   StyleSheet,
   type ViewStyle,
