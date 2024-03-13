@@ -122,8 +122,7 @@ export function TabBarIndicator<T extends Route>({
 
   const styleList = [];
 
-  // scaleX doesn't work on chrome and opera for linux, including their
-  // versions for android
+  // scaleX doesn't work properly on chrome and opera for linux and android
   if (Platform.OS === 'web' && width === 'auto') {
     styleList.push(
       { width: transform[1].scaleX },
