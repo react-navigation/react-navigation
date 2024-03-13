@@ -146,7 +146,7 @@ export function TabBarIndicator<T extends Route>({
     <Animated.View
       style={[
         styles.indicator,
-        ...styleList,
+        styleList,
         width === 'auto' ? { opacity: opacity } : null,
         style,
       ]}
