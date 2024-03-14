@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.8...react-native-tab-view@4.0.0-alpha.9) (2024-03-14)
+
+### Bug Fixes
+
+* fix tab auto width on chrome & opera on android & linux ([#11440](https://github.com/react-navigation/react-navigation/issues/11440)) ([1ef7ed1](https://github.com/react-navigation/react-navigation/commit/1ef7ed1dcd4c8927109c62bd16ab4c9d55648d6e)), closes [#f00](https://github.com/react-navigation/react-navigation/issues/f00) [#00](https://github.com/react-navigation/react-navigation/issues/00) - by @souzabrs
+
 # [4.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.7...react-native-tab-view@4.0.0-alpha.8) (2024-03-10)
 
 **Note:** Version bump only for package react-native-tab-view

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.15...@react-navigation/native-stack@7.0.0-alpha.16) (2024-03-14)
+
+### Features
+
+* automatically infer types for navigation in options, listeners etc. ([#11883](https://github.com/react-navigation/react-navigation/issues/11883)) ([c54baf1](https://github.com/react-navigation/react-navigation/commit/c54baf14640e567be10cb8a5f68e5cbf0b35f120)) - by @satya164
+
 # [7.0.0-alpha.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.14...@react-navigation/native-stack@7.0.0-alpha.15) (2024-03-10)
 
 ### Bug Fixes

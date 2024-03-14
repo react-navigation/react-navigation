@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.12...@react-navigation/elements@2.0.0-alpha.13) (2024-03-14)
+
+### Bug Fixes
+
+* adjust drawer width according to md3 ([a88b2ea](https://github.com/react-navigation/react-navigation/commit/a88b2ea90f56d8dafbd5e1bae6a42fd9b0c73431)) - by @satya164
+
 # [2.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.11...@react-navigation/elements@2.0.0-alpha.12) (2024-03-10)
 
 ### Bug Fixes
