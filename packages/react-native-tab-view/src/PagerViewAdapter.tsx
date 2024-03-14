@@ -43,6 +43,7 @@ export function PagerViewAdapter<T extends Route>({
   children,
   style,
   animationEnabled,
+  useNativeDriver = true,
   ...rest
 }: Props<T>) {
   const { index } = navigationState;
@@ -157,7 +158,7 @@ export function PagerViewAdapter<T extends Route>({
               },
             },
           ],
-          { useNativeDriver: true }
+          { useNativeDriver: useNativeDriver }
         )}
         onPageSelected={(e) => {
           const index = e.nativeEvent.position;

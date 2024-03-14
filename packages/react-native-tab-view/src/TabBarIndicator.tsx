@@ -62,6 +62,7 @@ export function TabBarIndicator<T extends Route>({
   gap,
   style,
   children,
+  useNativeDriver = true,
 }: Props<T>) {
   const isIndicatorShown = React.useRef(false);
   const isWidthDynamic = width === 'auto';
@@ -89,7 +90,7 @@ export function TabBarIndicator<T extends Route>({
           toValue: 1,
           duration: 150,
           easing: Easing.in(Easing.linear),
-          useNativeDriver: true,
+          useNativeDriver: useNativeDriver,
         }).start();
       }
     };
@@ -97,7 +98,7 @@ export function TabBarIndicator<T extends Route>({
     fadeInIndicator();
 
     return () => opacity.stopAnimation();
-  }, [indicatorVisible, isWidthDynamic, opacity]);
+  }, [indicatorVisible, isWidthDynamic, opacity, useNativeDriver]);
 
   const { routes } = navigationState;
 

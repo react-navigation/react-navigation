@@ -60,6 +60,7 @@ export function PanResponderAdapter<T extends Route>({
   style,
   animationEnabled = false,
   layoutDirection = 'ltr',
+  useNativeDriver = true,
 }: Props<T>) {
   const { routes, index } = navigationState;
 
@@ -88,7 +89,7 @@ export function PanResponderAdapter<T extends Route>({
           timing(panX, {
             ...transitionConfig,
             toValue: offset,
-            useNativeDriver: false,
+            useNativeDriver: useNativeDriver,
           }),
         ]).start(({ finished }) => {
           if (finished) {
@@ -103,7 +104,7 @@ export function PanResponderAdapter<T extends Route>({
         pendingIndexRef.current = undefined;
       }
     },
-    [animationEnabled, panX]
+    [animationEnabled, panX, useNativeDriver]
   );
 
   React.useEffect(() => {
