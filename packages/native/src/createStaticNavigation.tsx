@@ -34,7 +34,7 @@ export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
       : {},
   };
 
-  return function Navigation({ linking, ...rest }: Props) {
+  function Navigation({ linking, ...rest }: Props) {
     return (
       <NavigationContainer
         {...rest}
@@ -43,5 +43,7 @@ export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
         <Component />
       </NavigationContainer>
     );
-  };
+  }
+
+  return React.forwardRef(Navigation);
 }

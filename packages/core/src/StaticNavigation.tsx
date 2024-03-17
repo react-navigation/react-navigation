@@ -1,5 +1,6 @@
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
+import { isValidElementType } from 'react-is';
 
 import type {
   DefaultNavigatorOptions,
@@ -241,7 +242,7 @@ const getItemsFromScreens = (
       useIf = _if;
       props = rest;
 
-      if (typeof screen === 'function') {
+      if (isValidElementType(screen)) {
         component = screen;
       } else if ('config' in screen) {
         isNavigator = true;
@@ -250,7 +251,7 @@ const getItemsFromScreens = (
           `${name}Navigator`
         );
       }
-    } else if (typeof item === 'function') {
+    } else if (isValidElementType(item)) {
       component = item;
     } else if ('config' in item) {
       isNavigator = true;

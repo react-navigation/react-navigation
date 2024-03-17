@@ -8,5 +8,5 @@ If you want to run the example from the repo,
 
 You can also run the currently published app:
 
-- For iOS simulator & Android device with [Expo Go](https://expo.dev/client): <https://expo.dev/@react-navigation/react-navigation-example?serviceType=eas&distribution=expo-go&scheme=exp+react-navigation-example&channel=main>
+- For iOS simulator & Android device with [Expo Go](https://expo.dev/client): <https://expo.dev/@react-navigation/react-navigation-example?serviceType=eas&distribution=expo-go&scheme=exp+react-navigation-example&channel=main&sdkVersion=50.0.0>
 - For web: <https://react-navigation-example.netlify.com/>
