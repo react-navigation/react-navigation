@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-alpha.7...react-native-drawer-layout@4.0.0-alpha.8) (2024-03-14)
+
+### Bug Fixes
+
+* adjust drawer width according to md3 ([a88b2ea](https://github.com/react-navigation/react-navigation/commit/a88b2ea90f56d8dafbd5e1bae6a42fd9b0c73431)) - by @satya164
+
+# [4.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-alpha.6...react-native-drawer-layout@4.0.0-alpha.7) (2024-03-10)
+
+**Note:** Version bump only for package react-native-drawer-layout
+
+# [4.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-alpha.5...react-native-drawer-layout@4.0.0-alpha.6) (2024-03-08)
+
+### Bug Fixes
+
+* fix right drawer layouts display over content ([#11651](https://github.com/react-navigation/react-navigation/issues/11651)) ([f6772c6](https://github.com/react-navigation/react-navigation/commit/f6772c6c2f95ed2c94c10c9632c8534fe59853b7)) - by @brannonvann
+* update drawer and header styles according to material design 3 ([#11872](https://github.com/react-navigation/react-navigation/issues/11872)) ([bfa5689](https://github.com/react-navigation/react-navigation/commit/bfa568995940f956c9ec5944f2b0543eca5da546)) - by @groot007
+
+# [4.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-alpha.4...react-native-drawer-layout@4.0.0-alpha.5) (2024-02-24)
+
+### Bug Fixes
+
+* fix peer dependency versions ([4b93b63](https://github.com/react-navigation/react-navigation/commit/4b93b6335ce180fe879f9fbe8f2400426b5484fb)) - by @
+
 # [4.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-alpha.3...react-native-drawer-layout@4.0.0-alpha.4) (2024-02-23)
 
 **Note:** Version bump only for package react-native-drawer-layout

@@ -42,6 +42,7 @@ import type {
   NativeStackNavigationHelpers,
   NativeStackNavigationOptions,
 } from '../types';
+import { getModalRouteKeys } from '../utils/getModalRoutesKeys';
 import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
 import { useDismissedRouteError } from '../utils/useDismissedRouteError';
 import { useInvalidPreventRemoveError } from '../utils/useInvalidPreventRemoveError';
@@ -132,6 +133,7 @@ type SceneViewProps = {
   descriptor: NativeStackDescriptor;
   previousDescriptor?: NativeStackDescriptor;
   nextDescriptor?: NativeStackDescriptor;
+  isPresentationModal?: boolean;
   onWillDisappear: () => void;
   onWillAppear: () => void;
   onAppear: () => void;
@@ -148,6 +150,7 @@ const SceneView = ({
   descriptor,
   previousDescriptor,
   nextDescriptor,
+  isPresentationModal,
   onWillDisappear,
   onWillAppear,
   onAppear,
@@ -162,8 +165,8 @@ const SceneView = ({
   let {
     animation,
     animationMatchesGesture,
+    presentation = isPresentationModal ? 'modal' : 'card',
     fullScreenGestureEnabled,
-    presentation = 'card',
   } = options;
 
   const {
@@ -442,103 +445,100 @@ type Props = {
   descriptors: NativeStackDescriptorMap;
 };
 
-function NativeStackViewInner({ state, navigation, descriptors }: Props) {
+export function NativeStackView({ state, navigation, descriptors }: Props) {
   const { setNextDismissedKey } = useDismissedRouteError(state);
 
   const { colors } = useTheme();
 
   useInvalidPreventRemoveError(descriptors);
 
+  const modalRouteKeys = getModalRouteKeys(state.routes, descriptors);
+
   return (
-    <ScreenStack
-      style={[styles.container, { backgroundColor: colors.background }]}
-    >
-      {state.routes.map((route, index) => {
-        const descriptor = descriptors[route.key];
-        const isFocused = state.index === index;
-        const previousKey = state.routes[index - 1]?.key;
-        const nextKey = state.routes[index + 1]?.key;
-        const previousDescriptor = previousKey
-          ? descriptors[previousKey]
-          : undefined;
-        const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
+    <SafeAreaProviderCompat style={{ backgroundColor: colors.background }}>
+      <ScreenStack style={styles.container}>
+        {state.routes.map((route, index) => {
+          const descriptor = descriptors[route.key];
+          const isFocused = state.index === index;
+          const previousKey = state.routes[index - 1]?.key;
+          const nextKey = state.routes[index + 1]?.key;
+          const previousDescriptor = previousKey
+            ? descriptors[previousKey]
+            : undefined;
+          const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
 
-        return (
-          <SceneView
-            key={route.key}
-            index={index}
-            focused={isFocused}
-            descriptor={descriptor}
-            previousDescriptor={previousDescriptor}
-            nextDescriptor={nextDescriptor}
-            onWillDisappear={() => {
-              navigation.emit({
-                type: 'transitionStart',
-                data: { closing: true },
-                target: route.key,
-              });
-            }}
-            onWillAppear={() => {
-              navigation.emit({
-                type: 'transitionStart',
-                data: { closing: false },
-                target: route.key,
-              });
-            }}
-            onAppear={() => {
-              navigation.emit({
-                type: 'transitionEnd',
-                data: { closing: false },
-                target: route.key,
-              });
-            }}
-            onDisappear={() => {
-              navigation.emit({
-                type: 'transitionEnd',
-                data: { closing: true },
-                target: route.key,
-              });
-            }}
-            onDismissed={(event) => {
-              navigation.dispatch({
-                ...StackActions.pop(event.nativeEvent.dismissCount),
-                source: route.key,
-                target: state.key,
-              });
+          const isModal = modalRouteKeys.includes(route.key);
 
-              setNextDismissedKey(route.key);
-            }}
-            onHeaderBackButtonClicked={() => {
-              navigation.dispatch({
-                ...StackActions.pop(),
-                source: route.key,
-                target: state.key,
-              });
-            }}
-            onNativeDismissCancelled={(event) => {
-              navigation.dispatch({
-                ...StackActions.pop(event.nativeEvent.dismissCount),
-                source: route.key,
-                target: state.key,
-              });
-            }}
-            onGestureCancel={() => {
-              navigation.emit({
-                type: 'gestureCancel',
-                target: route.key,
-              });
-            }}
-          />
-        );
-      })}
-    </ScreenStack>
-  );
-}
+          return (
+            <SceneView
+              key={route.key}
+              index={index}
+              focused={isFocused}
+              descriptor={descriptor}
+              previousDescriptor={previousDescriptor}
+              nextDescriptor={nextDescriptor}
+              isPresentationModal={isModal}
+              onWillDisappear={() => {
+                navigation.emit({
+                  type: 'transitionStart',
+                  data: { closing: true },
+                  target: route.key,
+                });
+              }}
+              onWillAppear={() => {
+                navigation.emit({
+                  type: 'transitionStart',
+                  data: { closing: false },
+                  target: route.key,
+                });
+              }}
+              onAppear={() => {
+                navigation.emit({
+                  type: 'transitionEnd',
+                  data: { closing: false },
+                  target: route.key,
+                });
+              }}
+              onDisappear={() => {
+                navigation.emit({
+                  type: 'transitionEnd',
+                  data: { closing: true },
+                  target: route.key,
+                });
+              }}
+              onDismissed={(event) => {
+                navigation.dispatch({
+                  ...StackActions.pop(event.nativeEvent.dismissCount),
+                  source: route.key,
+                  target: state.key,
+                });
 
-export function NativeStackView(props: Props) {
-  return (
-    <SafeAreaProviderCompat>
-      <NativeStackViewInner {...props} />
+                setNextDismissedKey(route.key);
+              }}
+              onHeaderBackButtonClicked={() => {
+                navigation.dispatch({
+                  ...StackActions.pop(),
+                  source: route.key,
+                  target: state.key,
+                });
+              }}
+              onNativeDismissCancelled={(event) => {
+                navigation.dispatch({
+                  ...StackActions.pop(event.nativeEvent.dismissCount),
+                  source: route.key,
+                  target: state.key,
+                });
+              }}
+              onGestureCancel={() => {
+                navigation.emit({
+                  type: 'gestureCancel',
+                  target: route.key,
+                });
+              }}
+            />
+          );
+        })}
+      </ScreenStack>
     </SafeAreaProviderCompat>
   );
 }
@@ -554,14 +554,14 @@ const styles = StyleSheet.create({
   absolute: {
     position: 'absolute',
     top: 0,
-    left: 0,
-    right: 0,
+    start: 0,
+    end: 0,
   },
   translucent: {
     position: 'absolute',
     top: 0,
-    left: 0,
-    right: 0,
+    start: 0,
+    end: 0,
     zIndex: 1,
     elevation: 1,
   },

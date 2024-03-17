@@ -33,5 +33,6 @@ export type {
   DrawerNavigationEventMap,
   DrawerNavigationOptions,
   DrawerNavigationProp,
+  DrawerOptionsArgs,
   DrawerScreenProps,
 } from './types';

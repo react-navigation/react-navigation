@@ -300,6 +300,6 @@ const styles = StyleSheet.create({
   },
   labelBeside: {
     fontSize: 13,
-    marginLeft: 20,
+    marginStart: 20,
   },
 });

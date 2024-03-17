@@ -58,16 +58,16 @@ export function HeaderConfig({
     headerTintColor ?? (Platform.OS === 'ios' ? colors.primary : colors.text);
 
   const headerBackTitleStyleFlattened =
-    StyleSheet.flatten([headerBackTitleStyle, fonts.regular]) || {};
+    StyleSheet.flatten([fonts.regular, headerBackTitleStyle]) || {};
   const headerLargeTitleStyleFlattened =
     StyleSheet.flatten([
-      headerLargeTitleStyle,
       Platform.select({ ios: fonts.heavy, default: fonts.medium }),
+      headerLargeTitleStyle,
     ]) || {};
   const headerTitleStyleFlattened =
     StyleSheet.flatten([
-      headerTitleStyle,
       Platform.select({ ios: fonts.bold, default: fonts.medium }),
+      headerTitleStyle,
     ]) || {};
   const headerStyleFlattened = StyleSheet.flatten(headerStyle) || {};
   const headerLargeStyleFlattened = StyleSheet.flatten(headerLargeStyle) || {};

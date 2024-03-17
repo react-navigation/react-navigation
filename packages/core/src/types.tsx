@@ -24,15 +24,12 @@ type Keyof<T extends {}> = Extract<keyof T, string>;
 
 export type DefaultNavigatorOptions<
   ParamList extends ParamListBase,
+  NavigatorID extends string | undefined,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
+  Navigation,
 > = DefaultRouterOptions<Keyof<ParamList>> & {
-  /**
-   * Optional ID for the navigator. Can be used with `navigation.getParent(id)` to refer to a parent.
-   */
-  id?: string;
-
   /**
    * Children React Elements to extract the route configuration from.
    * Only `Screen`, `Group` and `React.Fragment` are supported as children.
@@ -71,7 +68,7 @@ export type DefaultNavigatorOptions<
     | ScreenListeners<State, EventMap>
     | ((props: {
         route: RouteProp<ParamList>;
-        navigation: any;
+        navigation: Navigation;
       }) => ScreenListeners<State, EventMap>);
 
   /**
@@ -81,7 +78,7 @@ export type DefaultNavigatorOptions<
     | ScreenOptions
     | ((props: {
         route: RouteProp<ParamList>;
-        navigation: any;
+        navigation: Navigation;
         theme: ReactNavigation.Theme;
       }) => ScreenOptions);
 
@@ -90,7 +87,7 @@ export type DefaultNavigatorOptions<
    */
   screenLayout?: (props: {
     route: RouteProp<ParamList, keyof ParamList>;
-    navigation: any;
+    navigation: Navigation;
     theme: ReactNavigation.Theme;
     children: React.ReactElement;
   }) => React.ReactElement;
@@ -101,7 +98,16 @@ export type DefaultNavigatorOptions<
   getStateForRouteNamesChange?: (
     state: NavigationState
   ) => PartialState<NavigationState> | undefined;
-};
+} & (NavigatorID extends string
+    ? {
+        /**
+         * Optional ID for the navigator. Can be used with `navigation.getParent(id)` to refer to a parent.
+         */
+        id: NavigatorID;
+      }
+    : {
+        id?: undefined;
+      });
 
 export type EventMapBase = Record<
   string,
@@ -555,7 +561,7 @@ export type ScreenListeners<
   EventMap extends EventMapBase,
 > = Partial<{
   [EventName in keyof (EventMap & EventMapCore<State>)]: EventListenerCallback<
-    EventMap,
+    EventMap & EventMapCore<State>,
     EventName
   >;
 }>;
@@ -602,12 +608,13 @@ export type RouteConfigComponent<
       getComponent?: never;
     };
 
-export type RouteConfig<
+export type RouteConfigProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
+  Navigation,
 > = {
   /**
    * Optional key for this screen. This doesn't need to be unique.
@@ -628,7 +635,7 @@ export type RouteConfig<
     | ScreenOptions
     | ((props: {
         route: RouteProp<ParamList, RouteName>;
-        navigation: any;
+        navigation: Navigation;
         theme: ReactNavigation.Theme;
       }) => ScreenOptions);
 
@@ -639,7 +646,7 @@ export type RouteConfig<
     | ScreenListeners<State, EventMap>
     | ((props: {
         route: RouteProp<ParamList, RouteName>;
-        navigation: any;
+        navigation: Navigation;
       }) => ScreenListeners<State, EventMap>);
 
   /**
@@ -648,8 +655,8 @@ export type RouteConfig<
    * e.g. for styling, error boundaries, suspense, etc.
    */
   layout?: (props: {
-    route: RouteProp<ParamList, keyof ParamList>;
-    navigation: any;
+    route: RouteProp<ParamList, RouteName>;
+    navigation: Navigation;
     theme: ReactNavigation.Theme;
     children: React.ReactElement;
   }) => React.ReactElement;
@@ -670,11 +677,29 @@ export type RouteConfig<
    * Initial params object for the route.
    */
   initialParams?: Partial<ParamList[RouteName]>;
-} & RouteConfigComponent<ParamList, RouteName>;
+};
+
+export type RouteConfig<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList,
+  State extends NavigationState,
+  ScreenOptions extends {},
+  EventMap extends EventMapBase,
+  Navigation,
+> = RouteConfigProps<
+  ParamList,
+  RouteName,
+  State,
+  ScreenOptions,
+  EventMap,
+  Navigation
+> &
+  RouteConfigComponent<ParamList, RouteName>;
 
 export type RouteGroupConfig<
   ParamList extends ParamListBase,
   ScreenOptions extends {},
+  Navigation,
 > = {
   /**
    * Optional key for the screens in this group.
@@ -689,7 +714,7 @@ export type RouteGroupConfig<
     | ScreenOptions
     | ((props: {
         route: RouteProp<ParamList, keyof ParamList>;
-        navigation: any;
+        navigation: Navigation;
         theme: ReactNavigation.Theme;
       }) => ScreenOptions);
 
@@ -699,7 +724,7 @@ export type RouteGroupConfig<
    */
   screenLayout?: (props: {
     route: RouteProp<ParamList, keyof ParamList>;
-    navigation: any;
+    navigation: Navigation;
     theme: ReactNavigation.Theme;
     children: React.ReactElement;
   }) => React.ReactElement;
@@ -780,10 +805,6 @@ export type NavigationContainerRef<ParamList extends {}> =
        */
       setOptions(): never;
       /**
-       * Stub function for setParams on navigation object for use with useNavigation.
-       */
-      setParams(): never;
-      /**
        * Stub function for getParent on navigation object for use with useNavigation.
        */
       getParent(): undefined;
@@ -794,11 +815,77 @@ export type NavigationContainerRefWithCurrent<ParamList extends {}> =
     current: NavigationContainerRef<ParamList> | null;
   };
 
-export type TypedNavigator<
+export type NavigationListBase<ParamList extends ParamListBase> = {
+  [RouteName in keyof ParamList]: unknown;
+};
+
+export type TypeBag<
   ParamList extends ParamListBase,
+  NavigatorID extends string | undefined,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
+  NavigationList extends NavigationListBase<ParamList>,
+  Navigator extends React.ComponentType<any>,
+> = {
+  ParamList: ParamList;
+  NavigatorID: NavigatorID;
+  State: State;
+  ScreenOptions: ScreenOptions;
+  EventMap: EventMap;
+  NavigationList: NavigationList;
+  Navigator: Navigator;
+};
+
+export type NavigatorTypeBagBase = {
+  ParamList: ParamListBase;
+  NavigatorID: string | undefined;
+  State: NavigationState;
+  ScreenOptions: {};
+  EventMap: EventMapBase;
+  NavigationList: NavigationListBase<ParamListBase>;
+  Navigator: React.ComponentType<any>;
+};
+
+export type NavigatorTypeBag<
+  ParamList extends ParamListBase,
+  NavigatorID extends string | undefined,
+  State extends NavigationState,
+  ScreenOptions extends {},
+  EventMap extends EventMapBase,
+  NavigationList extends NavigationListBase<ParamList>,
+  Navigator extends React.ComponentType<any>,
+> = {
+  ParamList: ParamList;
+  NavigatorID: NavigatorID;
+  State: State;
+  ScreenOptions: ScreenOptions;
+  EventMap: EventMap;
+  NavigationList: NavigationList;
+  Navigator: Navigator;
+};
+
+export type TypedNavigator<
+  Bag extends NavigatorTypeBagBase,
+  Config = unknown,
+> = TypedNavigatorInternal<
+  Bag['ParamList'],
+  Bag['NavigatorID'],
+  Bag['State'],
+  Bag['ScreenOptions'],
+  Bag['EventMap'],
+  Bag['NavigationList'],
+  Bag['Navigator']
+> &
+  (undefined extends Config ? {} : { config: Config });
+
+type TypedNavigatorInternal<
+  ParamList extends ParamListBase,
+  NavigatorID extends string | undefined,
+  State extends NavigationState,
+  ScreenOptions extends {},
+  EventMap extends EventMapBase,
+  NavigationList extends NavigationListBase<ParamList>,
   Navigator extends React.ComponentType<any>,
 > = {
   /**
@@ -807,19 +894,35 @@ export type TypedNavigator<
   Navigator: React.ComponentType<
     Omit<
       React.ComponentProps<Navigator>,
-      keyof DefaultNavigatorOptions<any, any, any, any>
+      keyof DefaultNavigatorOptions<any, any, any, any, any, any>
     > &
-      DefaultNavigatorOptions<ParamList, State, ScreenOptions, EventMap>
+      DefaultNavigatorOptions<
+        ParamList,
+        NavigatorID,
+        State,
+        ScreenOptions,
+        EventMap,
+        NavigationList[keyof ParamList]
+      >
   >;
   /**
    * Component used for grouping multiple route configuration.
    */
-  Group: React.ComponentType<RouteGroupConfig<ParamList, ScreenOptions>>;
+  Group: React.ComponentType<
+    RouteGroupConfig<ParamList, ScreenOptions, NavigationList[keyof ParamList]>
+  >;
   /**
    * Component used for specifying route configuration.
    */
   Screen: <RouteName extends keyof ParamList>(
-    _: RouteConfig<ParamList, RouteName, State, ScreenOptions, EventMap>
+    _: RouteConfig<
+      ParamList,
+      RouteName,
+      State,
+      ScreenOptions,
+      EventMap,
+      NavigationList[RouteName]
+    >
   ) => null;
 };
 

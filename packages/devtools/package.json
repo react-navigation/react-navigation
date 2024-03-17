@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/devtools",
   "description": "Developer tools for React Navigation",
-  "version": "7.0.0-alpha.9",
+  "version": "7.0.0-alpha.15",
   "keywords": [
     "react",
     "react-native",
@@ -51,7 +51,7 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "react": "*"
+    "react": ">= 18.2.0"
   },
   "react-native-builder-bob": {
     "source": "src",

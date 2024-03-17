@@ -120,7 +120,7 @@ export function DrawerItem(props: Props) {
     ...rest
   } = props;
 
-  const { borderRadius = 4 } = StyleSheet.flatten(style || {});
+  const { borderRadius = 56 } = StyleSheet.flatten(style || {});
   const color = focused ? activeTintColor : inactiveTintColor;
   const backgroundColor = focused
     ? activeBackgroundColor
@@ -146,17 +146,12 @@ export function DrawerItem(props: Props) {
       >
         <View style={[styles.wrapper, { borderRadius }]}>
           {iconNode}
-          <View
-            style={[
-              styles.label,
-              { marginLeft: iconNode ? 32 : 0, marginVertical: 5 },
-            ]}
-          >
+          <View style={[styles.label, { marginStart: iconNode ? 16 : 0 }]}>
             {typeof label === 'string' ? (
               <Text
                 numberOfLines={1}
                 allowFontScaling={allowFontScaling}
-                style={[{ color }, fonts.medium, labelStyle]}
+                style={[styles.labelText, { color }, fonts.medium, labelStyle]}
               >
                 {label}
               </Text>
@@ -172,17 +167,24 @@ export function DrawerItem(props: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 10,
-    marginVertical: 4,
+    marginHorizontal: 12,
+    marginVertical: 2,
     overflow: 'hidden',
   },
   wrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 8,
+    paddingVertical: 12,
+    paddingStart: 16,
+    paddingEnd: 24,
   },
   label: {
-    marginRight: 32,
+    marginEnd: 12,
+    marginVertical: 4,
     flex: 1,
+  },
+  labelText: {
+    lineHeight: 24,
+    textAlignVertical: 'center',
   },
 });

@@ -239,7 +239,7 @@ export function Header(props: Props) {
         <Animated.View
           pointerEvents="box-none"
           style={[
-            styles.left,
+            styles.start,
             headerTitleAlign === 'center' && styles.expand,
             { marginStart: insets.left },
             leftContainerStyle,
@@ -269,6 +269,9 @@ export function Header(props: Props) {
                       insets.left -
                       insets.right),
             },
+            headerTitleAlign === 'left' && leftButton
+              ? { marginStart: 4 }
+              : null,
             titleContainerStyle,
           ]}
         >
@@ -282,7 +285,7 @@ export function Header(props: Props) {
         <Animated.View
           pointerEvents="box-none"
           style={[
-            styles.right,
+            styles.end,
             styles.expand,
             { marginEnd: insets.right },
             rightContainerStyle,
@@ -305,11 +308,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     justifyContent: 'center',
   },
-  left: {
+  start: {
     justifyContent: 'center',
     alignItems: 'flex-start',
   },
-  right: {
+  end: {
     justifyContent: 'center',
     alignItems: 'flex-end',
   },

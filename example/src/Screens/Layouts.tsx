@@ -1,8 +1,7 @@
 import { Button } from '@react-navigation/elements';
-import type { ParamListBase, PathConfigMap } from '@react-navigation/native';
+import type { PathConfigMap } from '@react-navigation/native';
 import {
   createStackNavigator,
-  type StackNavigationOptions,
   type StackScreenProps,
 } from '@react-navigation/stack';
 import * as React from 'react';
@@ -12,7 +11,7 @@ export type LayoutsStackParams = {
   SuspenseDemo: undefined;
 };
 
-export const layoutsStackLinking: PathConfigMap<LayoutsStackParams> = {
+const linking: PathConfigMap<LayoutsStackParams> = {
   SuspenseDemo: 'suspense',
 };
 
@@ -98,20 +97,9 @@ class ErrorBoundary extends React.Component<
 
 const Stack = createStackNavigator<LayoutsStackParams>();
 
-export function LayoutsStack({
-  navigation,
-  screenOptions,
-}: StackScreenProps<ParamListBase> & {
-  screenOptions?: StackNavigationOptions;
-}) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function ScreenLayout() {
   return (
-    <Stack.Navigator screenOptions={screenOptions}>
+    <Stack.Navigator>
       <Stack.Screen
         name="SuspenseDemo"
         component={SuspenseDemoScreen}
@@ -133,6 +121,9 @@ export function LayoutsStack({
     </Stack.Navigator>
   );
 }
+
+ScreenLayout.title = 'Screen Layout';
+ScreenLayout.linking = linking;
 
 const styles = StyleSheet.create({
   buttons: {

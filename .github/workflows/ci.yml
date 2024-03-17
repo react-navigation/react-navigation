@@ -78,10 +78,10 @@ jobs:
       - name: Build example for web
         run: |
           npm install -g sharp-cli@^2.1.0
-          yarn example web:export
+          yarn example expo export:web
 
       - name: Run integration tests
-        run: yarn example test:e2e
+        run: yarn example test
 
   build:
     runs-on: ubuntu-latest

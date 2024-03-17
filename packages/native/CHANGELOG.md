@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.14...@react-navigation/native@7.0.0-alpha.15) (2024-03-14)
+
+### Features
+
+* automatically infer types for navigation in options, listeners etc. ([#11883](https://github.com/react-navigation/react-navigation/issues/11883)) ([c54baf1](https://github.com/react-navigation/react-navigation/commit/c54baf14640e567be10cb8a5f68e5cbf0b35f120)) - by @satya164
+
+# [7.0.0-alpha.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.13...@react-navigation/native@7.0.0-alpha.14) (2024-03-10)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [7.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.12...@react-navigation/native@7.0.0-alpha.13) (2024-03-09)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [7.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.11...@react-navigation/native@7.0.0-alpha.12) (2024-03-08)
+
+### Bug Fixes
+
+* preserve # in the URL if the screen hasn't changed ([#11876](https://github.com/react-navigation/react-navigation/issues/11876)) ([66cc899](https://github.com/react-navigation/react-navigation/commit/66cc899e2d9264903ed8800980711c619bb3b499)) - by @groot007
+
+# [7.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.10...@react-navigation/native@7.0.0-alpha.11) (2024-03-04)
+
+### Bug Fixes
+
+* fix forwarding ref for static navigation ([83921e9](https://github.com/react-navigation/react-navigation/commit/83921e9edfc03d034567456b98fe856f0148f4f4)) - by @satya164
+
+# [7.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.9...@react-navigation/native@7.0.0-alpha.10) (2024-02-24)
+
+### Bug Fixes
+
+* fix peer dependency versions ([4b93b63](https://github.com/react-navigation/react-navigation/commit/4b93b6335ce180fe879f9fbe8f2400426b5484fb)) - by @
+
 # [7.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.8...@react-navigation/native@7.0.0-alpha.9) (2024-02-23)
 
 ### Bug Fixes
