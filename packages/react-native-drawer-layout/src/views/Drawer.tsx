@@ -9,10 +9,6 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import type {
-  PanGesture,
-  PanGestureHandlerProps,
-} from 'react-native-gesture-handler';
 import Animated, {
   interpolate,
   runOnJS,
@@ -66,51 +62,12 @@ const getDefaultDrawerWidth = ({
   return Math.min(smallerAxisSize - appBarHeight, maxWidth);
 };
 
-function configurePanGesture(
-  pan: PanGesture,
-  gestureHandlerConfig: PanGestureHandlerProps
-) {
-  // activeOffsetX, activeOffsetY, failOffsetX, failOffsetY are set
-  // via regular API as they are properly translated into the config.
-  // The remaining params may be safely included directly in the config.
-
-  if (gestureHandlerConfig.activeOffsetX) {
-    pan = pan.activeOffsetX(gestureHandlerConfig.activeOffsetX);
-  }
-
-  if (gestureHandlerConfig.activeOffsetY) {
-    pan = pan.activeOffsetY(gestureHandlerConfig.activeOffsetY);
-  }
-
-  if (gestureHandlerConfig.failOffsetX) {
-    pan = pan.failOffsetX(gestureHandlerConfig.failOffsetX);
-  }
-
-  if (gestureHandlerConfig.failOffsetY) {
-    pan = pan.failOffsetY(gestureHandlerConfig.failOffsetY);
-  }
-
-  for (const key in gestureHandlerConfig) {
-    if (
-      ['activeOffsetX', 'activeOffsetX', 'failOffsetY', 'failOffsetX'].includes(
-        key
-      )
-    ) {
-      continue;
-    }
-    pan.config[key] =
-      gestureHandlerConfig[key as keyof typeof gestureHandlerConfig];
-  }
-
-  return pan;
-}
-
 export function Drawer({
   layout: customLayout,
   drawerPosition = I18nManager.getConstants().isRTL ? 'right' : 'left',
   drawerStyle,
   drawerType = Platform.select({ ios: 'slide', default: 'front' }),
-  gestureHandlerConfig,
+  configureGestureHandler,
   hideStatusBarOnOpen = false,
   keyboardDismissMode = 'on-drag',
   onClose,
@@ -333,8 +290,8 @@ export function Drawer({
     .hitSlop(hitSlop)
     .enabled(drawerType !== 'permanent' && swipeEnabled);
 
-  if (pan && gestureHandlerConfig) {
-    pan = configurePanGesture(pan, gestureHandlerConfig);
+  if (pan && configureGestureHandler) {
+    pan = configureGestureHandler(pan);
   }
 
   const translateX = useDerivedValue(() => {
