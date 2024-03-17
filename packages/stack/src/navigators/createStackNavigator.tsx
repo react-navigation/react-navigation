@@ -38,12 +38,12 @@ type Props = DefaultNavigatorOptions<
 function StackNavigator({
   id,
   initialRouteName,
-  getStateForRouteNamesChange,
   children,
   layout,
   screenListeners,
   screenOptions,
   screenLayout,
+  UNSTABLE_getStateForRouteNamesChange,
   ...rest
 }: Props) {
   const { direction } = useLocale();
@@ -63,7 +63,7 @@ function StackNavigator({
       screenListeners,
       screenOptions,
       screenLayout,
-      getStateForRouteNamesChange,
+      UNSTABLE_getStateForRouteNamesChange,
     });
 
   React.useEffect(

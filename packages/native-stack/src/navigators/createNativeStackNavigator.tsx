@@ -30,6 +30,7 @@ function NativeStackNavigator({
   screenListeners,
   screenOptions,
   screenLayout,
+  UNSTABLE_getStateForRouteNamesChange,
   ...rest
 }: NativeStackNavigatorProps) {
   const { state, descriptors, navigation, NavigationContent } =
@@ -47,6 +48,7 @@ function NativeStackNavigator({
       screenListeners,
       screenOptions,
       screenLayout,
+      UNSTABLE_getStateForRouteNamesChange,
     });
 
   React.useEffect(

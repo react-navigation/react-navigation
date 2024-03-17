@@ -95,7 +95,7 @@ export function LinkingScreen() {
       }}
     >
       <Stack.Navigator
-        getStateForRouteNamesChange={getStateForRouteNamesChange}
+        UNSTABLE_getStateForRouteNamesChange={getStateForRouteNamesChange}
       >
         {isSignedIn ? (
           <Stack.Group>

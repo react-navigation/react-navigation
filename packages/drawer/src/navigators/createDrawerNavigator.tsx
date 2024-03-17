@@ -42,6 +42,7 @@ function DrawerNavigator({
   screenListeners,
   screenOptions,
   screenLayout,
+  UNSTABLE_getStateForRouteNamesChange,
   ...rest
 }: Props) {
   const { state, descriptors, navigation, NavigationContent } =
@@ -61,6 +62,7 @@ function DrawerNavigator({
       screenListeners,
       screenOptions,
       screenLayout,
+      UNSTABLE_getStateForRouteNamesChange,
     });
 
   return (
