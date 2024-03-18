@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.4.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.4.15...@react-navigation/core@6.4.16) (2024-03-18)
+
+### Bug Fixes
+
+* only replace trailing slash on decode ([#11899](https://github.com/react-navigation/react-navigation/issues/11899)) ([4c99019](https://github.com/react-navigation/react-navigation/commit/4c990194c068a3602b55e95607df0b8a0b7c84d4)) - by @cranberyxl
+
 ## [6.4.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.4.14...@react-navigation/core@6.4.15) (2024-03-12)
 
 **Note:** Version bump only for package @react-navigation/core
