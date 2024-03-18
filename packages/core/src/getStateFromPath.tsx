@@ -286,11 +286,13 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
           const decodedParamSegment = decodeURIComponent(
             // The param segments appear every second item starting from 2 in the regex match result
             match![(acc.pos + 1) * 2]
+              // Remove trailing slash
+              .replace(/\/$/, '')
           );
 
           Object.assign(acc.matchedParams, {
             [p]: Object.assign(acc.matchedParams[p] || {}, {
-              [index]: decodedParamSegment.replace(/\//, ''),
+              [index]: decodedParamSegment,
             }),
           });
 
