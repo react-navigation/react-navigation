@@ -9,6 +9,11 @@ export { default as createNativeStackNavigator } from './navigators/createNative
 export { default as NativeStackView } from './views/NativeStackView';
 
 /**
+ * Contexts
+ */
+export { RetainContext } from './views/RetainContext';
+
+/**
  * Types
  */
 export type {
