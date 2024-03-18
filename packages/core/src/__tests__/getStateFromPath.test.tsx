@@ -86,6 +86,44 @@ it('decodes encoded params in path', () => {
   ).toEqual(path);
 });
 
+it('decodes encoded params in path that have encoded /', () => {
+  const path = '/foo/bar/bar_%2F_foo';
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Bar: {
+            path: '/bar/:id',
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Bar',
+              params: { id: 'bar_/_foo' },
+              path,
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getPathFromState<object>(getStateFromPath<object>(path, config)!, config)
+  ).toEqual(path);
+});
+
 it('converts path string to initial state with config', () => {
   const path = '/foo/bar/sweet/apple/baz/jane?count=10&answer=42&valid=true';
   const config = {
