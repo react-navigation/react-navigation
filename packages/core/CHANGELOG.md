@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.14...@react-navigation/core@7.0.0-alpha.15) (2024-03-20)
+
+### Bug Fixes
+
+* only replace trailing slash on decode ([#11899](https://github.com/react-navigation/react-navigation/issues/11899)) ([31bb8a1](https://github.com/react-navigation/react-navigation/commit/31bb8a1d7d4bd7eddfff6a5f9f552951f5fc6caa)) - by @cranberyxl
+
+### Features
+
+* add getStateForRouteNamesChange to all navigators and mark it as unstable ([4edbb07](https://github.com/react-navigation/react-navigation/commit/4edbb071163742b60499178271fd3e3e92fb4002)) - by @satya164
+
 # [7.0.0-alpha.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.13...@react-navigation/core@7.0.0-alpha.14) (2024-03-14)
 
 ### Features

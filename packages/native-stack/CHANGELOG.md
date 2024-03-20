@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.16...@react-navigation/native-stack@7.0.0-alpha.17) (2024-03-20)
+
+### Features
+
+* add getStateForRouteNamesChange to all navigators and mark it as unstable ([4edbb07](https://github.com/react-navigation/react-navigation/commit/4edbb071163742b60499178271fd3e3e92fb4002)) - by @satya164
+
 # [7.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.15...@react-navigation/native-stack@7.0.0-alpha.16) (2024-03-14)
 
 ### Features
