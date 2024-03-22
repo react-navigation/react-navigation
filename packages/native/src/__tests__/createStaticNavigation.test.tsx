@@ -188,10 +188,12 @@ it("throws if linking is enabled but there's no linking configuration", () => {
   );
 
   expect(() => {
+    render(<Navigation linking={{ enabled: false, prefixes: ['myapp://'] }} />);
+  }).not.toThrow();
+
+  expect(() => {
     render(
-      <Navigation
-        linking={{ enabled: true, prefixes: ['myapp://'], config: 'auto' }}
-      />
+      <Navigation linking={{ enabled: 'auto', prefixes: ['myapp://'] }} />
     );
   }).not.toThrow();
 });
