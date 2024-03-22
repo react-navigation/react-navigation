@@ -444,6 +444,7 @@ export function createComponentForStaticNavigation(
 
 type TreeForPathConfig = {
   config: {
+    initialRouteName?: string;
     screens?: StaticConfigScreens<
       ParamListBase,
       NavigationState,
@@ -588,21 +589,15 @@ export function createPathConfigForStaticNavigation(
       );
     };
 
-    const initialRouteName =
-      'initialRouteName' in t.config &&
-      typeof t.config.initialRouteName === 'string'
-        ? t.config.initialRouteName
-        : undefined;
-
     const screens = t.config.screens
-      ? createPathConfigForScreens(t.config.screens, initialRouteName)
+      ? createPathConfigForScreens(t.config.screens, t.config.initialRouteName)
       : {};
 
     if (t.config.groups) {
       Object.entries(t.config.groups).forEach(([, group]) => {
         Object.assign(
           screens,
-          createPathConfigForScreens(group.screens, initialRouteName)
+          createPathConfigForScreens(group.screens, t.config.initialRouteName)
         );
       });
     }

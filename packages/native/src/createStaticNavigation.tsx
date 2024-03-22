@@ -27,6 +27,13 @@ type Props = Omit<
      * This can be overridden for specific screens by specifying `linking` for the screen.
      */
     enabled?: 'auto' | true | false;
+    /**
+     * Additional configuration
+     */
+    config?: Omit<
+      NonNullable<LinkingOptions<ParamListBase>['config']>,
+      'screens'
+    >;
   };
 };
 
@@ -47,14 +54,25 @@ export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
     const screens = React.useMemo(() => {
       if (tree.config.screens) {
         return createPathConfigForStaticNavigation(
-          tree,
+          {
+            ...tree,
+            ...{
+              config: {
+                ...tree.config,
+                initialRouteName:
+                  linking?.config?.initialRouteName ??
+                  typeof tree.config.initialRouteName,
+                screens: tree.config.screens,
+              },
+            },
+          },
           linking?.enabled === 'auto',
           true
         );
       }
 
       return undefined;
-    }, [linking?.enabled]);
+    }, [linking?.config?.initialRouteName, linking?.enabled]);
 
     if (linking?.enabled === true && screens == null) {
       throw new Error(
@@ -78,7 +96,7 @@ export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
                   typeof linking.enabled === 'boolean'
                     ? linking.enabled
                     : screens != null,
-                config: screens ? { screens } : undefined,
+                config: screens ? { ...linking.config, screens } : undefined,
               }
             : undefined
         }
