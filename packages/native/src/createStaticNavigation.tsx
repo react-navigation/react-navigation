@@ -46,7 +46,8 @@ export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
       if (tree.config.screens) {
         return createPathConfigForStaticNavigation(
           tree,
-          linking?.config === 'auto'
+          linking?.config === 'auto',
+          true
         );
       }
 
