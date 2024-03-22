@@ -17,7 +17,15 @@ type Props = Omit<
   /**
    * Options for deep linking.
    */
-  linking?: Omit<LinkingOptions<ParamListBase>, 'config'>;
+  linking?: Omit<LinkingOptions<ParamListBase>, 'config'> & {
+    /**
+     * Configure automatic linking for the screens in the tree.
+     * When 'auto' is specified, all leaf screens will automatically have a path.
+     * The generated path will be a kebab-case version of the screen name.
+     * This can be overridden for specific screens by specifying `linking` for the screen.
+     */
+    config?: 'auto';
+  };
 };
 
 /**
@@ -30,14 +38,31 @@ type Props = Omit<
 export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
   const Component = createComponentForStaticNavigation(tree, 'RootNavigator');
 
-  const screens = tree.config.screens
-    ? createPathConfigForStaticNavigation(tree)
-    : undefined;
-
   function Navigation(
     { linking, ...rest }: Props,
     ref: React.Ref<NavigationContainerRef<ParamListBase>>
   ) {
+    const screens = React.useMemo(() => {
+      if (tree.config.screens) {
+        return createPathConfigForStaticNavigation(
+          tree,
+          linking?.config === 'auto'
+        );
+      }
+
+      return undefined;
+    }, [linking?.config]);
+
+    if (linking?.enabled && screens == null) {
+      throw new Error(
+        'Linking is enabled but no linking configuration was found for the screens.\n\n' +
+          'To solve this:\n' +
+          "- Specify a 'linking' property for the screens you want to link to.\n" +
+          "- Or set 'linking.config' to 'auto' to generate paths automatically.\n\n" +
+          'See usage guide: https://reactnavigation.org/docs/7.x/static-configuration#linking'
+      );
+    }
+
     return (
       <NavigationContainer
         {...rest}
@@ -45,8 +70,11 @@ export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
         linking={
           linking
             ? {
-                enabled: screens != null,
                 ...linking,
+                enabled:
+                  typeof linking.enabled === 'boolean'
+                    ? linking.enabled
+                    : screens != null,
                 config: screens ? { screens } : undefined,
               }
             : undefined

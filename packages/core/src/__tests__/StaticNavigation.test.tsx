@@ -429,7 +429,7 @@ it('returns undefined if there is no linking configuration', () => {
         options: {
           testId: 'settings',
         },
-        linking: {},
+        linking: undefined,
       },
     },
     groups: {
@@ -476,4 +476,113 @@ it('returns undefined if there is no linking configuration', () => {
   const screens = createPathConfigForStaticNavigation(Root);
 
   expect(screens).toBeUndefined();
+});
+
+it('automatically generates paths if auto is specified', () => {
+  const Nested = createTestNavigator({
+    screens: {
+      Profile: {
+        screen: TestScreen,
+      },
+      Settings: {
+        screen: TestScreen,
+        options: {
+          testId: 'settings',
+        },
+      },
+    },
+    groups: {
+      Auth: {
+        screens: {
+          Login: {
+            screen: TestScreen,
+            linking: {},
+          },
+          Register: {
+            screen: TestScreen,
+          },
+          Forgot: {
+            screen: TestScreen,
+            linking: 'forgot-password',
+          },
+        },
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    screens: {
+      Home: TestScreen,
+      Feed: {
+        screen: TestScreen,
+      },
+      Nested: {
+        screen: Nested,
+      },
+    },
+    groups: {
+      Support: {
+        screens: {
+          Contact: {
+            screen: TestScreen,
+          },
+          FAQ: {
+            screen: TestScreen,
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, true);
+
+  assert.ok(screens);
+
+  expect(getStateFromPath('login', { screens })).toBeUndefined();
+
+  expect(getStateFromPath('forgot-password', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Nested',
+        state: { routes: [{ name: 'Forgot', path: 'forgot-password' }] },
+      },
+    ],
+  });
+
+  expect(getStateFromPath('contact', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Contact',
+        path: 'contact',
+      },
+    ],
+  });
+
+  expect(getStateFromPath('settings', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Nested',
+        state: {
+          routes: [{ name: 'Settings', path: 'settings' }],
+        },
+      },
+    ],
+  });
+
+  expect(getStateFromPath('profile?id=123', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Nested',
+        state: {
+          routes: [
+            {
+              name: 'Profile',
+              path: 'profile?id=123',
+              params: { id: '123' },
+            },
+          ],
+        },
+      },
+    ],
+  });
 });

@@ -459,28 +459,31 @@ export function createComponentForStaticNavigation(
  * };
  * ```
  */
-export function createPathConfigForStaticNavigation(tree: {
-  config: {
-    screens?: StaticConfigScreens<
-      ParamListBase,
-      NavigationState,
-      {},
-      EventMapBase,
-      Record<string, unknown>
-    >;
-    groups?: {
-      [key: string]: {
-        screens: StaticConfigScreens<
-          ParamListBase,
-          NavigationState,
-          {},
-          EventMapBase,
-          Record<string, unknown>
-        >;
+export function createPathConfigForStaticNavigation(
+  tree: {
+    config: {
+      screens?: StaticConfigScreens<
+        ParamListBase,
+        NavigationState,
+        {},
+        EventMapBase,
+        Record<string, unknown>
+      >;
+      groups?: {
+        [key: string]: {
+          screens: StaticConfigScreens<
+            ParamListBase,
+            NavigationState,
+            {},
+            EventMapBase,
+            Record<string, unknown>
+          >;
+        };
       };
     };
-  };
-}) {
+  },
+  auto?: boolean
+) {
   function createPathConfigForScreens(
     screens: StaticConfigScreens<
       ParamListBase,
@@ -503,18 +506,27 @@ export function createPathConfigForStaticNavigation(tree: {
             }
           }
 
+          let screens;
+
           if ('config' in item) {
-            screenConfig.screens = createPathConfigForStaticNavigation(item);
+            screens = createPathConfigForStaticNavigation(item, auto);
           } else if (
             'screen' in item &&
             'config' in item.screen &&
             (item.screen.config.screens || item.screen.config.groups)
           ) {
-            const screens = createPathConfigForStaticNavigation(item.screen);
+            screens = createPathConfigForStaticNavigation(item.screen, auto);
+          }
 
-            if (screens) {
-              screenConfig.screens = screens;
-            }
+          if (screens) {
+            screenConfig.screens = screens;
+          }
+
+          if (auto && !('linking' in item) && !screenConfig.screens) {
+            screenConfig.path = key
+              .replace(/([A-Z]+)/g, '-$1')
+              .replace(/^-/, '')
+              .toLowerCase();
           }
 
           return [key, screenConfig] as const;
