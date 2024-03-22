@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.16...@react-navigation/core@7.0.0-alpha.17) (2024-03-22)
+
+### Bug Fixes
+
+* accept partial linking.config for static navigation ([3825046](https://github.com/react-navigation/react-navigation/commit/3825046a2320b721b7458dcc5441807bf57ea091)) - by @satya164
+
+### Features
+
+* add automatic home screen detection for auto linking ([b0bec6f](https://github.com/react-navigation/react-navigation/commit/b0bec6fb3eda83f145d123f02fb2096fa2300658)) - by @satya164
+
 # [7.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.15...@react-navigation/core@7.0.0-alpha.16) (2024-03-22)
 
 ### Features
