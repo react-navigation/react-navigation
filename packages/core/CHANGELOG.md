@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.15...@react-navigation/core@7.0.0-alpha.16) (2024-03-22)
+
+### Features
+
+* add a way to automatically generate linking config ([d090836](https://github.com/react-navigation/react-navigation/commit/d090836f34bee659f4ea08176d6840703ef7247f)) - by @satya164
+* automatically enable linking if any config is specified ([c91d247](https://github.com/react-navigation/react-navigation/commit/c91d247e62d8b30d8f55abff784df81616e70580)) - by @satya164
+
 # [7.0.0-alpha.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.14...@react-navigation/core@7.0.0-alpha.15) (2024-03-20)
 
 ### Bug Fixes
