@@ -479,7 +479,7 @@ it('returns undefined if there is no linking configuration', () => {
 });
 
 it('automatically generates paths if auto is specified', () => {
-  const Nested = createTestNavigator({
+  const NestedA = createTestNavigator({
     screens: {
       Profile: {
         screen: TestScreen,
@@ -496,7 +496,7 @@ it('automatically generates paths if auto is specified', () => {
         screens: {
           Login: {
             screen: TestScreen,
-            linking: {},
+            linking: undefined,
           },
           Register: {
             screen: TestScreen,
@@ -510,14 +510,25 @@ it('automatically generates paths if auto is specified', () => {
     },
   });
 
+  const NestedB = createTestNavigator({
+    screens: {
+      Library: TestScreen,
+      Wishlist: {
+        screen: TestScreen,
+      },
+    },
+  });
+
   const Root = createTestNavigator({
     screens: {
       Home: TestScreen,
       Feed: {
         screen: TestScreen,
       },
-      Nested: {
-        screen: Nested,
+      NestedA,
+      NestedB: {
+        screen: NestedB,
+        linking: 'store/:type',
       },
     },
     groups: {
@@ -543,17 +554,8 @@ it('automatically generates paths if auto is specified', () => {
   expect(getStateFromPath('forgot-password', { screens })).toEqual({
     routes: [
       {
-        name: 'Nested',
+        name: 'NestedA',
         state: { routes: [{ name: 'Forgot', path: 'forgot-password' }] },
-      },
-    ],
-  });
-
-  expect(getStateFromPath('contact', { screens })).toEqual({
-    routes: [
-      {
-        name: 'Contact',
-        path: 'contact',
       },
     ],
   });
@@ -561,7 +563,7 @@ it('automatically generates paths if auto is specified', () => {
   expect(getStateFromPath('settings', { screens })).toEqual({
     routes: [
       {
-        name: 'Nested',
+        name: 'NestedA',
         state: {
           routes: [{ name: 'Settings', path: 'settings' }],
         },
@@ -572,7 +574,7 @@ it('automatically generates paths if auto is specified', () => {
   expect(getStateFromPath('profile?id=123', { screens })).toEqual({
     routes: [
       {
-        name: 'Nested',
+        name: 'NestedA',
         state: {
           routes: [
             {
@@ -582,6 +584,35 @@ it('automatically generates paths if auto is specified', () => {
             },
           ],
         },
+      },
+    ],
+  });
+
+  expect(getStateFromPath('store/furniture', { screens })).toEqual({
+    routes: [
+      {
+        name: 'NestedB',
+        params: { type: 'furniture' },
+        path: 'store/furniture',
+      },
+    ],
+  });
+
+  expect(getStateFromPath('store/digital/library', { screens })).toEqual({
+    routes: [
+      {
+        name: 'NestedB',
+        params: { type: 'digital' },
+        state: { routes: [{ name: 'Library', path: 'store/digital/library' }] },
+      },
+    ],
+  });
+
+  expect(getStateFromPath('contact', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Contact',
+        path: 'contact',
       },
     ],
   });
