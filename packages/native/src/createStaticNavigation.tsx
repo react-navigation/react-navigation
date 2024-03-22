@@ -29,11 +29,10 @@ type Props = Omit<
  */
 export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
   const Component = createComponentForStaticNavigation(tree, 'RootNavigator');
-  const linkingConfig = {
-    screens: tree.config.screens
-      ? createPathConfigForStaticNavigation(tree)
-      : {},
-  };
+
+  const screens = tree.config.screens
+    ? createPathConfigForStaticNavigation(tree)
+    : undefined;
 
   function Navigation(
     { linking, ...rest }: Props,
@@ -43,7 +42,15 @@ export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
       <NavigationContainer
         {...rest}
         ref={ref}
-        linking={linking ? { ...linking, config: linkingConfig } : undefined}
+        linking={
+          linking
+            ? {
+                enabled: screens != null,
+                ...linking,
+                config: screens ? { screens } : undefined,
+              }
+            : undefined
+        }
       >
         <Component />
       </NavigationContainer>

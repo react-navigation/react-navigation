@@ -510,9 +510,11 @@ export function createPathConfigForStaticNavigation(tree: {
             'config' in item.screen &&
             (item.screen.config.screens || item.screen.config.groups)
           ) {
-            screenConfig.screens = createPathConfigForStaticNavigation(
-              item.screen
-            );
+            const screens = createPathConfigForStaticNavigation(item.screen);
+
+            if (screens) {
+              screenConfig.screens = screens;
+            }
           }
 
           return [key, screenConfig] as const;
@@ -521,15 +523,19 @@ export function createPathConfigForStaticNavigation(tree: {
     );
   }
 
-  const config = tree.config.screens
+  const screens = tree.config.screens
     ? createPathConfigForScreens(tree.config.screens)
     : {};
 
   if (tree.config.groups) {
     Object.entries(tree.config.groups).forEach(([, group]) => {
-      Object.assign(config, createPathConfigForScreens(group.screens));
+      Object.assign(screens, createPathConfigForScreens(group.screens));
     });
   }
 
-  return config;
+  if (Object.keys(screens).length === 0) {
+    return undefined;
+  }
+
+  return screens;
 }

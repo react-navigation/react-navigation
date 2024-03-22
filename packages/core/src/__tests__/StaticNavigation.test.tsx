@@ -3,6 +3,7 @@ import type {
   NavigationState,
 } from '@react-navigation/routers';
 import { render } from '@testing-library/react-native';
+import assert from 'assert';
 import * as React from 'react';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
@@ -377,6 +378,8 @@ it('creates linking configuration for static config', () => {
 }
 `);
 
+  assert.ok(screens);
+
   expect(getStateFromPath('contact', { screens })).toEqual({
     routes: [
       {
@@ -413,4 +416,64 @@ it('creates linking configuration for static config', () => {
       },
     ],
   });
+});
+
+it('returns undefined if there is no linking configuration', () => {
+  const Nested = createTestNavigator({
+    screens: {
+      Profile: {
+        screen: TestScreen,
+      },
+      Settings: {
+        screen: TestScreen,
+        options: {
+          testId: 'settings',
+        },
+        linking: {},
+      },
+    },
+    groups: {
+      Auth: {
+        screens: {
+          Login: {
+            screen: TestScreen,
+          },
+          Register: {
+            screen: TestScreen,
+          },
+          Forgot: {
+            screen: TestScreen,
+          },
+        },
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    screens: {
+      Home: TestScreen,
+      Feed: {
+        screen: TestScreen,
+      },
+      Nested: {
+        screen: Nested,
+      },
+    },
+    groups: {
+      Support: {
+        screens: {
+          Contact: {
+            screen: TestScreen,
+          },
+          FAQ: {
+            screen: TestScreen,
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root);
+
+  expect(screens).toBeUndefined();
 });
