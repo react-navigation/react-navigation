@@ -337,7 +337,7 @@ it('creates linking configuration for static config', () => {
     },
   });
 
-  const screens = createPathConfigForStaticNavigation(Root);
+  const screens = createPathConfigForStaticNavigation(Root, {});
 
   expect(screens).toMatchInlineSnapshot(`
 {
@@ -473,7 +473,7 @@ it('returns undefined if there is no linking configuration', () => {
     },
   });
 
-  const screens = createPathConfigForStaticNavigation(Root);
+  const screens = createPathConfigForStaticNavigation(Root, {});
 
   expect(screens).toBeUndefined();
 });
@@ -553,7 +553,7 @@ it('automatically generates paths if auto is specified', () => {
     },
   });
 
-  const screens = createPathConfigForStaticNavigation(Root, true, true);
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
 
   assert.ok(screens);
 
@@ -764,7 +764,7 @@ it('use initialRouteName for the automatic home screen', () => {
     },
   });
 
-  const screens = createPathConfigForStaticNavigation(Root, true, true);
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
 
   assert.ok(screens);
 

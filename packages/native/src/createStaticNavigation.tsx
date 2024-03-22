@@ -54,25 +54,14 @@ export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
     const screens = React.useMemo(() => {
       if (tree.config.screens) {
         return createPathConfigForStaticNavigation(
-          {
-            ...tree,
-            ...{
-              config: {
-                ...tree.config,
-                initialRouteName:
-                  linking?.config?.initialRouteName ??
-                  typeof tree.config.initialRouteName,
-                screens: tree.config.screens,
-              },
-            },
-          },
-          linking?.enabled === 'auto',
-          true
+          tree,
+          { initialRouteName: linking?.config?.initialRouteName },
+          linking?.enabled === 'auto'
         );
       }
 
       return undefined;
-    }, [linking?.config?.initialRouteName, linking?.enabled]);
+    }, [linking?.config, linking?.enabled]);
 
     if (linking?.enabled === true && screens == null) {
       throw new Error(

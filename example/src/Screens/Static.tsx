@@ -105,7 +105,7 @@ export function StaticScreen() {
 }
 
 StaticScreen.title = 'Static config';
-StaticScreen.linking = createPathConfigForStaticNavigation(RootStack);
+StaticScreen.linking = createPathConfigForStaticNavigation(RootStack, {});
 
 const styles = StyleSheet.create({
   buttons: {
