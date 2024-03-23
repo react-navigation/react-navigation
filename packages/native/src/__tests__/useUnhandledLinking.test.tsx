@@ -80,7 +80,7 @@ it('schedules a state to be handled on conditional linking', async () => {
 
     return (
       <Stack.Navigator
-        getStateForRouteNamesChange={getStateForRouteNamesChange}
+        UNSTABLE_getStateForRouteNamesChange={getStateForRouteNamesChange}
       >
         {isSignedIn ? (
           <>
@@ -181,7 +181,7 @@ it('schedules a state to be handled on conditional linking under nested navigato
     const [isSignedIn, setSignedIn] = React.useState(false);
     return (
       <Stack.Navigator
-        getStateForRouteNamesChange={getStateForRouteNamesChange}
+        UNSTABLE_getStateForRouteNamesChange={getStateForRouteNamesChange}
       >
         {isSignedIn ? (
           <>
@@ -279,7 +279,7 @@ it('schedules a state to be handled on conditional linking in nested stack', asy
 
     return (
       <Stack.Navigator
-        getStateForRouteNamesChange={getStateForRouteNamesChange}
+        UNSTABLE_getStateForRouteNamesChange={getStateForRouteNamesChange}
       >
         {isSignedIn ? (
           <Stack.Screen name="Home">
@@ -376,7 +376,7 @@ it('clears lastUnhandledLink upon successful linking handling', () => {
     const { getStateForRouteNamesChange } = UNSTABLE_useUnhandledLinking();
     return (
       <InnerStack.Navigator
-        getStateForRouteNamesChange={getStateForRouteNamesChange}
+        UNSTABLE_getStateForRouteNamesChange={getStateForRouteNamesChange}
       >
         <InnerStack.Screen name="Profile0">{() => null}</InnerStack.Screen>
         <InnerStack.Screen name="Profile" component={ProfileScreen} />

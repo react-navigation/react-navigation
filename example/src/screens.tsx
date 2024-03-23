@@ -58,7 +58,7 @@ export const SCREENS = {
 } as const satisfies {
   [key: string]: React.ComponentType<{}> & {
     title: string;
-    linking: object;
+    linking: object | undefined;
     options?: object;
   };
 };

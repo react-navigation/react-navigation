@@ -9,27 +9,9 @@ import type {
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace ReactNavigation {
-    interface Theme {
-      dark: boolean;
-      colors: {
-        primary: string;
-        background: string;
-        card: string;
-        text: string;
-        border: string;
-        notification: string;
-      };
-      fonts: {
-        regular: FontStyle;
-        medium: FontStyle;
-        bold: FontStyle;
-        heavy: FontStyle;
-      };
-    }
+    interface Theme extends NativeTheme {}
   }
 }
-
-export type LocaleDirection = 'ltr' | 'rtl';
 
 type FontStyle = {
   fontFamily: string;
@@ -47,7 +29,27 @@ type FontStyle = {
     | '900';
 };
 
-export type Theme = ReactNavigation.Theme;
+interface NativeTheme {
+  dark: boolean;
+  colors: {
+    primary: string;
+    background: string;
+    card: string;
+    text: string;
+    border: string;
+    notification: string;
+  };
+  fonts: {
+    regular: FontStyle;
+    medium: FontStyle;
+    bold: FontStyle;
+    heavy: FontStyle;
+  };
+}
+
+export type Theme = NativeTheme;
+
+export type LocaleDirection = 'ltr' | 'rtl';
 
 export type LinkingOptions<ParamList extends {}> = {
   /**

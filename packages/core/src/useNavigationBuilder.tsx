@@ -474,7 +474,7 @@ export function useNavigationBuilder<
     !isRecordEqual(routeKeyList, previousRouteKeyList)
   ) {
     const navigatorStateForNextRouteNamesChange =
-      options.getStateForRouteNamesChange?.(state);
+      options.UNSTABLE_getStateForRouteNamesChange?.(state);
     // When the list of route names change, the router should handle it to remove invalid routes
     nextState = navigatorStateForNextRouteNamesChange
       ? // @ts-expect-error this is ok

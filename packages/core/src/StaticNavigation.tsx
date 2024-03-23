@@ -442,25 +442,9 @@ export function createComponentForStaticNavigation(
   return NavigatorComponent;
 }
 
-/**
- * Create a path config object from a static navigation config for deep linking.
- *
- * @param tree Static navigation config.
- * @returns Path config object to use in linking config.
- *
- * @example
- * ```js
- * const config = {
- *   screens: {
- *     Home: {
- *       screens: createPathConfigForStaticNavigation(HomeTabs),
- *     },
- *   },
- * };
- * ```
- */
-export function createPathConfigForStaticNavigation(tree: {
+type TreeForPathConfig = {
   config: {
+    initialRouteName?: string;
     screens?: StaticConfigScreens<
       ParamListBase,
       NavigationState,
@@ -480,56 +464,167 @@ export function createPathConfigForStaticNavigation(tree: {
       };
     };
   };
-}) {
-  function createPathConfigForScreens(
-    screens: StaticConfigScreens<
-      ParamListBase,
-      NavigationState,
-      {},
-      EventMapBase,
-      Record<string, unknown>
-    >
-  ) {
-    return Object.fromEntries(
-      Object.entries(screens)
-        .map(([key, item]) => {
-          const screenConfig: PathConfig<ParamListBase> = {};
+};
 
-          if ('linking' in item) {
-            if (typeof item.linking === 'string') {
-              screenConfig.path = item.linking;
-            } else {
-              Object.assign(screenConfig, item.linking);
+/**
+ * Create a path config object from a static navigation config for deep linking.
+ *
+ * @param tree Static navigation config.
+ * @param options Additional options from `linking.config`.
+ * @param auto Whether to automatically generate paths for leaf screens.
+ * @returns Path config object to use in linking config.
+ *
+ * @example
+ * ```js
+ * const config = {
+ *   screens: {
+ *     Home: {
+ *       screens: createPathConfigForStaticNavigation(HomeTabs),
+ *     },
+ *   },
+ * };
+ * ```
+ */
+export function createPathConfigForStaticNavigation(
+  tree: TreeForPathConfig,
+  options?: {
+    initialRouteName?: string;
+  },
+  auto?: boolean
+) {
+  let initialScreenConfig: PathConfig<ParamListBase> | undefined;
+
+  const createPathConfigForTree = (
+    t: TreeForPathConfig,
+    o: { initialRouteName?: string } | undefined,
+    // If a screen is a leaf node, but inside a screen with path,
+    // It should not be used for initial detection
+    skipInitialDetection: boolean
+  ) => {
+    const createPathConfigForScreens = (
+      screens: StaticConfigScreens<
+        ParamListBase,
+        NavigationState,
+        {},
+        EventMapBase,
+        Record<string, unknown>
+      >,
+      initialRouteName: string | undefined
+    ) => {
+      return Object.fromEntries(
+        Object.entries(screens)
+          // Re-order to move the initial route to the front
+          // This way we can detect the initial route correctly
+          .sort(([a], [b]) => {
+            if (a === initialRouteName) {
+              return -1;
             }
-          }
 
-          if ('config' in item) {
-            screenConfig.screens = createPathConfigForStaticNavigation(item);
-          } else if (
-            'screen' in item &&
-            'config' in item.screen &&
-            (item.screen.config.screens || item.screen.config.groups)
-          ) {
-            screenConfig.screens = createPathConfigForStaticNavigation(
-              item.screen
-            );
-          }
+            if (b === initialRouteName) {
+              return 1;
+            }
 
-          return [key, screenConfig] as const;
-        })
-        .filter(([, screen]) => Object.keys(screen).length > 0)
-    );
+            return 0;
+          })
+          .map(([key, item]) => {
+            const screenConfig: PathConfig<ParamListBase> = {};
+
+            if ('linking' in item) {
+              if (typeof item.linking === 'string') {
+                screenConfig.path = item.linking;
+              } else {
+                Object.assign(screenConfig, item.linking);
+              }
+            }
+
+            let screens;
+
+            if ('config' in item) {
+              screens = createPathConfigForTree(
+                item,
+                undefined,
+                skipInitialDetection || screenConfig.path != null
+              );
+            } else if (
+              'screen' in item &&
+              'config' in item.screen &&
+              (item.screen.config.screens || item.screen.config.groups)
+            ) {
+              screens = createPathConfigForTree(
+                item.screen,
+                undefined,
+                skipInitialDetection || screenConfig.path != null
+              );
+            }
+
+            if (screens) {
+              screenConfig.screens = screens;
+            }
+
+            if (auto && !screenConfig.screens && !('linking' in item)) {
+              if (screenConfig.path) {
+                if (!skipInitialDetection) {
+                  // Normalize the path to remove leading and trailing slashes
+                  const path = screenConfig.path
+                    ?.split('/')
+                    .filter(Boolean)
+                    .join('/');
+
+                  // We encounter a leaf screen with empty path,
+                  // Clear the initial screen config as it's not needed anymore
+                  if (!skipInitialDetection && path === '') {
+                    initialScreenConfig = undefined;
+                  }
+                }
+              } else {
+                if (!skipInitialDetection && initialScreenConfig == null) {
+                  initialScreenConfig = screenConfig;
+                }
+
+                screenConfig.path = key
+                  .replace(/([A-Z]+)/g, '-$1')
+                  .replace(/^-/, '')
+                  .toLowerCase();
+              }
+            }
+
+            return [key, screenConfig] as const;
+          })
+          .filter(([, screen]) => Object.keys(screen).length > 0)
+      );
+    };
+
+    const screens = t.config.screens
+      ? createPathConfigForScreens(
+          t.config.screens,
+          o?.initialRouteName ?? t.config.initialRouteName
+        )
+      : {};
+
+    if (t.config.groups) {
+      Object.entries(t.config.groups).forEach(([, group]) => {
+        Object.assign(
+          screens,
+          createPathConfigForScreens(
+            group.screens,
+            o?.initialRouteName ?? t.config.initialRouteName
+          )
+        );
+      });
+    }
+
+    if (Object.keys(screens).length === 0) {
+      return undefined;
+    }
+
+    return screens;
+  };
+
+  const screens = createPathConfigForTree(tree, options, false);
+
+  if (auto && initialScreenConfig) {
+    initialScreenConfig.path = '';
   }
 
-  const config = tree.config.screens
-    ? createPathConfigForScreens(tree.config.screens)
-    : {};
-
-  if (tree.config.groups) {
-    Object.entries(tree.config.groups).forEach(([, group]) => {
-      Object.assign(config, createPathConfigForScreens(group.screens));
-    });
-  }
-
-  return config;
+  return screens;
 }

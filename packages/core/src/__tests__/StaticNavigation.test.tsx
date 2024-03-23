@@ -3,6 +3,7 @@ import type {
   NavigationState,
 } from '@react-navigation/routers';
 import { render } from '@testing-library/react-native';
+import assert from 'assert';
 import * as React from 'react';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
@@ -336,7 +337,7 @@ it('creates linking configuration for static config', () => {
     },
   });
 
-  const screens = createPathConfigForStaticNavigation(Root);
+  const screens = createPathConfigForStaticNavigation(Root, {});
 
   expect(screens).toMatchInlineSnapshot(`
 {
@@ -377,6 +378,8 @@ it('creates linking configuration for static config', () => {
 }
 `);
 
+  assert.ok(screens);
+
   expect(getStateFromPath('contact', { screens })).toEqual({
     routes: [
       {
@@ -410,6 +413,468 @@ it('creates linking configuration for static config', () => {
             },
           ],
         },
+      },
+    ],
+  });
+});
+
+it('returns undefined if there is no linking configuration', () => {
+  const Nested = createTestNavigator({
+    screens: {
+      Profile: {
+        screen: TestScreen,
+      },
+      Settings: {
+        screen: TestScreen,
+        options: {
+          testId: 'settings',
+        },
+        linking: undefined,
+      },
+    },
+    groups: {
+      Auth: {
+        screens: {
+          Login: {
+            screen: TestScreen,
+          },
+          Register: {
+            screen: TestScreen,
+          },
+          Forgot: {
+            screen: TestScreen,
+          },
+        },
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    screens: {
+      Home: TestScreen,
+      Feed: {
+        screen: TestScreen,
+      },
+      Nested: {
+        screen: Nested,
+      },
+    },
+    groups: {
+      Support: {
+        screens: {
+          Contact: {
+            screen: TestScreen,
+          },
+          FAQ: {
+            screen: TestScreen,
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {});
+
+  expect(screens).toBeUndefined();
+});
+
+it('automatically generates paths if auto is specified', () => {
+  const NestedA = createTestNavigator({
+    screens: {
+      Home: TestScreen,
+      Profile: {
+        screen: TestScreen,
+      },
+      Settings: {
+        screen: TestScreen,
+        options: {
+          testId: 'settings',
+        },
+      },
+    },
+    groups: {
+      Auth: {
+        screens: {
+          Login: {
+            screen: TestScreen,
+            linking: undefined,
+          },
+          Register: {
+            screen: TestScreen,
+          },
+          Forgot: {
+            screen: TestScreen,
+            linking: 'forgot-password',
+          },
+        },
+      },
+    },
+  });
+
+  const NestedB = createTestNavigator({
+    screens: {
+      Library: TestScreen,
+      Wishlist: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const NestedC = createTestNavigator({
+    screens: {
+      Categories: TestScreen,
+      Misc: TestScreen,
+    },
+  });
+
+  const Root = createTestNavigator({
+    screens: {
+      NestedA,
+      NestedB: {
+        screen: NestedB,
+        linking: 'store/:type',
+      },
+      NestedC,
+      Feed: {
+        screen: TestScreen,
+      },
+    },
+    groups: {
+      Support: {
+        screens: {
+          Contact: {
+            screen: TestScreen,
+          },
+          FAQ: {
+            screen: TestScreen,
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
+
+  assert.ok(screens);
+
+  expect(screens).toMatchInlineSnapshot(`
+{
+  "Contact": {
+    "path": "contact",
+  },
+  "FAQ": {
+    "path": "faq",
+  },
+  "Feed": {
+    "path": "feed",
+  },
+  "NestedA": {
+    "screens": {
+      "Forgot": {
+        "path": "forgot-password",
+      },
+      "Home": {
+        "path": "",
+      },
+      "Profile": {
+        "path": "profile",
+      },
+      "Register": {
+        "path": "register",
+      },
+      "Settings": {
+        "path": "settings",
+      },
+    },
+  },
+  "NestedB": {
+    "path": "store/:type",
+    "screens": {
+      "Library": {
+        "path": "library",
+      },
+      "Wishlist": {
+        "path": "wishlist",
+      },
+    },
+  },
+  "NestedC": {
+    "screens": {
+      "Categories": {
+        "path": "categories",
+      },
+      "Misc": {
+        "path": "misc",
+      },
+    },
+  },
+}
+`);
+
+  expect(getStateFromPath('/', { screens })).toEqual({
+    routes: [
+      { name: 'NestedA', state: { routes: [{ name: 'Home', path: '/' }] } },
+    ],
+  });
+
+  expect(getStateFromPath('login', { screens })).toBeUndefined();
+
+  expect(getStateFromPath('forgot-password', { screens })).toEqual({
+    routes: [
+      {
+        name: 'NestedA',
+        state: { routes: [{ name: 'Forgot', path: 'forgot-password' }] },
+      },
+    ],
+  });
+
+  expect(getStateFromPath('settings', { screens })).toEqual({
+    routes: [
+      {
+        name: 'NestedA',
+        state: {
+          routes: [{ name: 'Settings', path: 'settings' }],
+        },
+      },
+    ],
+  });
+
+  expect(getStateFromPath('profile?id=123', { screens })).toEqual({
+    routes: [
+      {
+        name: 'NestedA',
+        state: {
+          routes: [
+            {
+              name: 'Profile',
+              path: 'profile?id=123',
+              params: { id: '123' },
+            },
+          ],
+        },
+      },
+    ],
+  });
+
+  expect(getStateFromPath('store/furniture', { screens })).toEqual({
+    routes: [
+      {
+        name: 'NestedB',
+        params: { type: 'furniture' },
+        path: 'store/furniture',
+      },
+    ],
+  });
+
+  expect(getStateFromPath('store/digital/library', { screens })).toEqual({
+    routes: [
+      {
+        name: 'NestedB',
+        params: { type: 'digital' },
+        state: { routes: [{ name: 'Library', path: 'store/digital/library' }] },
+      },
+    ],
+  });
+
+  expect(getStateFromPath('contact', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Contact',
+        path: 'contact',
+      },
+    ],
+  });
+});
+
+it('use initialRouteName for the automatic home screen', () => {
+  const NestedA = createTestNavigator({
+    initialRouteName: 'Profile',
+    screens: {
+      Home: TestScreen,
+      Profile: {
+        screen: TestScreen,
+      },
+      Settings: {
+        screen: TestScreen,
+        options: {
+          testId: 'settings',
+        },
+      },
+    },
+    groups: {
+      Auth: {
+        screens: {
+          Login: {
+            screen: TestScreen,
+            linking: undefined,
+          },
+          Register: {
+            screen: TestScreen,
+          },
+          Forgot: {
+            screen: TestScreen,
+            linking: 'forgot-password',
+          },
+        },
+      },
+    },
+  });
+
+  const NestedB = createTestNavigator({
+    initialRouteName: 'Wishlist',
+    screens: {
+      Library: TestScreen,
+      Wishlist: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const NestedC = createTestNavigator({
+    initialRouteName: 'Misc',
+    screens: {
+      Categories: TestScreen,
+      Misc: TestScreen,
+    },
+  });
+
+  const Root = createTestNavigator({
+    screens: {
+      NestedA,
+      NestedB: {
+        screen: NestedB,
+        linking: 'store/:type',
+      },
+      NestedC,
+      Feed: {
+        screen: TestScreen,
+      },
+    },
+    groups: {
+      Support: {
+        screens: {
+          Contact: {
+            screen: TestScreen,
+          },
+          FAQ: {
+            screen: TestScreen,
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
+
+  assert.ok(screens);
+
+  expect(screens).toMatchInlineSnapshot(`
+{
+  "Contact": {
+    "path": "contact",
+  },
+  "FAQ": {
+    "path": "faq",
+  },
+  "Feed": {
+    "path": "feed",
+  },
+  "NestedA": {
+    "screens": {
+      "Forgot": {
+        "path": "forgot-password",
+      },
+      "Home": {
+        "path": "home",
+      },
+      "Profile": {
+        "path": "",
+      },
+      "Register": {
+        "path": "register",
+      },
+      "Settings": {
+        "path": "settings",
+      },
+    },
+  },
+  "NestedB": {
+    "path": "store/:type",
+    "screens": {
+      "Library": {
+        "path": "library",
+      },
+      "Wishlist": {
+        "path": "wishlist",
+      },
+    },
+  },
+  "NestedC": {
+    "screens": {
+      "Categories": {
+        "path": "categories",
+      },
+      "Misc": {
+        "path": "misc",
+      },
+    },
+  },
+}
+`);
+
+  expect(getStateFromPath('/', { screens })).toEqual({
+    routes: [
+      { name: 'NestedA', state: { routes: [{ name: 'Profile', path: '/' }] } },
+    ],
+  });
+
+  expect(getStateFromPath('login', { screens })).toBeUndefined();
+
+  expect(getStateFromPath('forgot-password', { screens })).toEqual({
+    routes: [
+      {
+        name: 'NestedA',
+        state: { routes: [{ name: 'Forgot', path: 'forgot-password' }] },
+      },
+    ],
+  });
+
+  expect(getStateFromPath('settings', { screens })).toEqual({
+    routes: [
+      {
+        name: 'NestedA',
+        state: {
+          routes: [{ name: 'Settings', path: 'settings' }],
+        },
+      },
+    ],
+  });
+
+  expect(getStateFromPath('store/furniture', { screens })).toEqual({
+    routes: [
+      {
+        name: 'NestedB',
+        params: { type: 'furniture' },
+        path: 'store/furniture',
+      },
+    ],
+  });
+
+  expect(getStateFromPath('store/digital/library', { screens })).toEqual({
+    routes: [
+      {
+        name: 'NestedB',
+        params: { type: 'digital' },
+        state: { routes: [{ name: 'Library', path: 'store/digital/library' }] },
+      },
+    ],
+  });
+
+  expect(getStateFromPath('contact', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Contact',
+        path: 'contact',
       },
     ],
   });

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.9...react-native-tab-view@4.0.0-alpha.10) (2024-03-20)
+
+### Bug Fixes
+
+* fix some options not being passed to tab-view. fixes [#11904](https://github.com/react-navigation/react-navigation/issues/11904) ([8fcf215](https://github.com/react-navigation/react-navigation/commit/8fcf21520729f6a4485ffd247e4fa5ee78e20c81)) - by @satya164
+
 # [4.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.8...react-native-tab-view@4.0.0-alpha.9) (2024-03-14)
 
 ### Bug Fixes

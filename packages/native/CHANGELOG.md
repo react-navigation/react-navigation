@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.17...@react-navigation/native@7.0.0-alpha.18) (2024-03-22)
+
+### Bug Fixes
+
+* accept partial linking.config for static navigation ([3825046](https://github.com/react-navigation/react-navigation/commit/3825046a2320b721b7458dcc5441807bf57ea091)) - by @satya164
+
+### Features
+
+* add automatic home screen detection for auto linking ([b0bec6f](https://github.com/react-navigation/react-navigation/commit/b0bec6fb3eda83f145d123f02fb2096fa2300658)) - by @satya164
+
+# [7.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.16...@react-navigation/native@7.0.0-alpha.17) (2024-03-22)
+
+### Features
+
+* add a way to automatically generate linking config ([d090836](https://github.com/react-navigation/react-navigation/commit/d090836f34bee659f4ea08176d6840703ef7247f)) - by @satya164
+* automatically enable linking if any config is specified ([c91d247](https://github.com/react-navigation/react-navigation/commit/c91d247e62d8b30d8f55abff784df81616e70580)) - by @satya164
+
+# [7.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.15...@react-navigation/native@7.0.0-alpha.16) (2024-03-20)
+
+### Features
+
+* add getStateForRouteNamesChange to all navigators and mark it as unstable ([4edbb07](https://github.com/react-navigation/react-navigation/commit/4edbb071163742b60499178271fd3e3e92fb4002)) - by @satya164
+
 # [7.0.0-alpha.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.14...@react-navigation/native@7.0.0-alpha.15) (2024-03-14)
 
 ### Features

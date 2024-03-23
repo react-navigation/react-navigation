@@ -41,6 +41,7 @@ function MaterialTopTabNavigator({
   screenListeners,
   screenOptions,
   screenLayout,
+  UNSTABLE_getStateForRouteNamesChange,
   ...rest
 }: Props) {
   const { state, descriptors, navigation, NavigationContent } =
@@ -59,6 +60,7 @@ function MaterialTopTabNavigator({
       screenListeners,
       screenOptions,
       screenLayout,
+      UNSTABLE_getStateForRouteNamesChange,
     });
 
   return (

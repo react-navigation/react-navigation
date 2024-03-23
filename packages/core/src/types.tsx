@@ -95,7 +95,7 @@ export type DefaultNavigatorOptions<
   /**
    A function returning a state, which may be set after modifying the routes name.
    */
-  getStateForRouteNamesChange?: (
+  UNSTABLE_getStateForRouteNamesChange?: (
     state: NavigationState
   ) => PartialState<NavigationState> | undefined;
 } & (NavigatorID extends string

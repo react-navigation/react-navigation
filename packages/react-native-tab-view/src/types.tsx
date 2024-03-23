@@ -3,7 +3,6 @@ import type { PagerViewProps } from 'react-native-pager-view';
 
 export type TabDescriptor<T extends Route> = {
   accessibilityLabel?: string;
-  labelStyle?: StyleProp<TextStyle>;
   accessible?: boolean;
   testID?: string;
   labelText?: string;
