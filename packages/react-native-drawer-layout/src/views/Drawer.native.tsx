@@ -224,13 +224,13 @@ export function Drawer({
       runOnJS(onGestureBegin)();
     })
     .onChange((event) => {
-      gestureState.value = event.state;
       touchX.value = event.x;
       translationX.value = startX.value + event.translationX;
       gestureState.value = event.state;
     })
     .onEnd((event, success) => {
       gestureState.value = event.state;
+
       if (!success) {
         runOnJS(onGestureAbort)();
       }
