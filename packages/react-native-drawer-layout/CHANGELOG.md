@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-alpha.8...react-native-drawer-layout@4.0.0-alpha.9) (2024-03-25)
+
+### Features
+
+* migrate drawer to new RNGH API ([#11776](https://github.com/react-navigation/react-navigation/issues/11776)) ([5d7d81e](https://github.com/react-navigation/react-navigation/commit/5d7d81e633896b3a58e86d8ab9ca0a36dcad3ab6)) - by @osdnk
+
 # [4.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-alpha.7...react-native-drawer-layout@4.0.0-alpha.8) (2024-03-14)
 
 ### Bug Fixes
