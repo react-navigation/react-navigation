@@ -676,7 +676,7 @@ export function TabBar<T extends Route>({
           data={routes as Animated.WithAnimatedValue<T>[]}
           keyExtractor={keyExtractor}
           horizontal
-          accessibilityRole="tablist"
+          role="tablist"
           keyboardShouldPersistTaps="handled"
           scrollEnabled={scrollEnabled}
           bounces={bounces}

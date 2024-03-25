@@ -367,13 +367,7 @@ const SceneView = ({
                     {headerBackground()}
                   </View>
                 ) : null}
-                <View
-                  accessibilityElementsHidden={!focused}
-                  importantForAccessibility={
-                    focused ? 'auto' : 'no-hide-descendants'
-                  }
-                  style={styles.scene}
-                >
+                <View aria-hidden={!focused} style={styles.scene}>
                   <MaybeNestedStack
                     options={options}
                     route={route}
