@@ -42,6 +42,7 @@ export type HeaderOptions = {
     pressColor?: string;
     pressOpacity?: number;
     labelVisible?: boolean;
+    href?: undefined;
   }) => React.ReactNode;
   /**
    * Whether a label is visible in the left button. Used to add extra padding.

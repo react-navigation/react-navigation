@@ -123,6 +123,10 @@ export type NativeStackHeaderLeftProps = NativeStackHeaderRightProps & {
    * By default, this is only shown on iOS.
    */
   label?: string;
+  /**
+   * The `href` to use for the anchor tag on web
+   */
+  href?: string;
 };
 
 export type NativeStackNavigationOptions = {

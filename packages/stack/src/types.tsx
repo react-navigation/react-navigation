@@ -265,6 +265,10 @@ export type StackHeaderRightProps = {
 
 export type StackHeaderLeftProps = HeaderBackButtonProps & {
   /**
+   * The `href` to use for the anchor tag on web
+   */
+  href?: string;
+  /**
    * Whether it's possible to navigate back in stack.
    */
   canGoBack?: boolean;

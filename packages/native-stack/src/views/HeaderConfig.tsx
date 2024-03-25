@@ -130,6 +130,8 @@ export function HeaderConfig({
     tintColor,
     canGoBack,
     label: headerBackTitle,
+    // `href` is only applicable to web
+    href: undefined,
   });
   const headerRightElement = headerRight?.({
     tintColor,
