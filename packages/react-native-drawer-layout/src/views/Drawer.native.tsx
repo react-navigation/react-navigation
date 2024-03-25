@@ -12,7 +12,6 @@ import {
 import Animated, {
   interpolate,
   runOnJS,
-  useAnimatedGestureHandler,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -24,10 +23,10 @@ import type { DrawerProps } from '../types';
 import { DrawerProgressContext } from '../utils/DrawerProgressContext';
 import { getDrawerWidth } from '../utils/getDrawerWidth';
 import {
+  Gesture,
+  GestureDetector,
   GestureHandlerRootView,
   GestureState,
-  PanGestureHandler,
-  type PanGestureHandlerGestureEvent,
 } from './GestureHandler';
 import { Overlay } from './Overlay';
 
@@ -47,7 +46,7 @@ export function Drawer({
   drawerPosition = I18nManager.getConstants().isRTL ? 'right' : 'left',
   drawerStyle,
   drawerType = 'front',
-  gestureHandlerProps,
+  configureGestureHandler,
   hideStatusBarOnOpen = false,
   keyboardDismissMode = 'on-drag',
   onClose,
@@ -213,34 +212,28 @@ export function Drawer({
 
   React.useEffect(() => toggleDrawer(open), [open, toggleDrawer]);
 
-  const onGestureEvent = useAnimatedGestureHandler<
-    PanGestureHandlerGestureEvent,
-    { startX: number; hasCalledOnStart: boolean }
-  >({
-    onStart: (event, ctx) => {
-      ctx.hasCalledOnStart = false;
-      ctx.startX = translationX.value;
+  const startX = useSharedValue(0);
+
+  let pan = Gesture?.Pan()
+    .onBegin((event) => {
+      startX.value = translationX.value;
       gestureState.value = event.state;
       touchStartX.value = event.x;
-    },
-    onCancel: () => {
-      runOnJS(onGestureAbort)();
-    },
-    onActive: (event, ctx) => {
+    })
+    .onStart(() => {
+      runOnJS(onGestureBegin)();
+    })
+    .onChange((event) => {
       touchX.value = event.x;
-      translationX.value = ctx.startX + event.translationX;
+      translationX.value = startX.value + event.translationX;
+      gestureState.value = event.state;
+    })
+    .onEnd((event, success) => {
       gestureState.value = event.state;
 
-      // onStart will _always_ be called, even when the activation
-      // criteria isn't met yet. This makes sure onGestureBegin is only
-      // called when the criteria is really met.
-      if (!ctx.hasCalledOnStart) {
-        ctx.hasCalledOnStart = true;
-        runOnJS(onGestureBegin)();
+      if (!success) {
+        runOnJS(onGestureAbort)();
       }
-    },
-    onEnd: (event) => {
-      gestureState.value = event.state;
 
       const nextOpen =
         (Math.abs(event.translationX) > SWIPE_MIN_OFFSET &&
@@ -254,11 +247,16 @@ export function Drawer({
           : open;
 
       toggleDrawer(nextOpen, event.velocityX);
-    },
-    onFinish: () => {
       runOnJS(onGestureFinish)();
-    },
-  });
+    })
+    .activeOffsetX([-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET])
+    .failOffsetY([-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET])
+    .hitSlop(hitSlop)
+    .enabled(drawerType !== 'permanent' && swipeEnabled);
+
+  if (pan && configureGestureHandler) {
+    pan = configureGestureHandler(pan);
+  }
 
   const translateX = useDerivedValue(() => {
     // Comment stolen from react-native-gesture-handler/DrawerLayout
@@ -358,14 +356,7 @@ export function Drawer({
   return (
     <GestureHandlerRootView style={[styles.container, style]}>
       <DrawerProgressContext.Provider value={progress}>
-        <PanGestureHandler
-          activeOffsetX={[-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET]}
-          failOffsetY={[-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET]}
-          hitSlop={hitSlop}
-          enabled={drawerType !== 'permanent' && swipeEnabled}
-          onGestureEvent={onGestureEvent}
-          {...gestureHandlerProps}
-        >
+        <GestureDetector gesture={pan}>
           {/* Immediate child of gesture handler needs to be an Animated.View */}
           <Animated.View
             style={[
@@ -419,7 +410,7 @@ export function Drawer({
               {renderDrawerContent()}
             </Animated.View>
           </Animated.View>
-        </PanGestureHandler>
+        </GestureDetector>
       </DrawerProgressContext.Provider>
     </GestureHandlerRootView>
   );
