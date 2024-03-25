@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.19...@react-navigation/stack@7.0.0-alpha.20) (2024-03-25)
+
+### Features
+
+* pass href to headerLeft function ([ce6d885](https://github.com/react-navigation/react-navigation/commit/ce6d88559e4a1afeafa84fc839892bb846349d67)) - by @satya164
+
 # [7.0.0-alpha.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.18...@react-navigation/stack@7.0.0-alpha.19) (2024-03-22)
 
 **Note:** Version bump only for package @react-navigation/stack

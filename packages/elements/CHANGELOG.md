@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.16...@react-navigation/elements@2.0.0-alpha.17) (2024-03-25)
+
+### Features
+
+* pass href to headerLeft function ([ce6d885](https://github.com/react-navigation/react-navigation/commit/ce6d88559e4a1afeafa84fc839892bb846349d67)) - by @satya164
+
 # [2.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.15...@react-navigation/elements@2.0.0-alpha.16) (2024-03-22)
 
 **Note:** Version bump only for package @react-navigation/elements
