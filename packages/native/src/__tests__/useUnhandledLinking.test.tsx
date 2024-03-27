@@ -119,22 +119,22 @@ it('schedules a state to be handled on conditional linking', async () => {
     );
   };
 
-  const { queryByText } = render(<App />);
+  const { queryByText, getByText } = render(<App />);
 
   expect(queryByText('SignIn')).not.toBeNull();
 
-  fireEvent.press(queryByText(/sign in/i));
+  fireEvent.press(getByText(/sign in/i));
 
   expect(queryByText('SignIn')).toBeNull();
 
   expect(queryByText('Profile')).not.toBeNull();
 
-  fireEvent.press(queryByText(/sign out/i));
+  fireEvent.press(getByText(/sign out/i));
 
   expect(queryByText('SignIn')).not.toBeNull();
   expect(queryByText('Home')).toBeNull();
   expect(queryByText('Profile')).toBeNull();
-  fireEvent.press(queryByText(/sign in/i));
+  fireEvent.press(getByText(/sign in/i));
   expect(queryByText('Home')).not.toBeNull();
 });
 
@@ -226,11 +226,11 @@ it('schedules a state to be handled on conditional linking under nested navigato
     );
   };
 
-  const { queryByText } = render(<App />);
+  const { queryByText, getByText } = render(<App />);
 
   expect(queryByText('SignIn')).not.toBeNull();
 
-  fireEvent.press(queryByText(/sign in/i));
+  fireEvent.press(getByText(/sign in/i));
 
   expect(queryByText('SignIn')).toBeNull();
 
@@ -326,22 +326,22 @@ it('schedules a state to be handled on conditional linking in nested stack', asy
     );
   };
 
-  const { queryByText } = await render(<App />);
+  const { queryByText, getByText } = await render(<App />);
 
   expect(queryByText('SignIn')).not.toBeNull();
 
-  fireEvent.press(queryByText(/sign in/i));
+  fireEvent.press(getByText(/sign in/i));
 
   expect(queryByText('SignIn')).toBeNull();
   expect(queryByText('Profile')).not.toBeNull();
 
-  fireEvent.press(queryByText(/sign out/i));
+  fireEvent.press(getByText(/sign out/i));
 
   expect(queryByText('SignIn')).not.toBeNull();
   expect(queryByText('Details')).toBeNull();
   expect(queryByText('Profile')).toBeNull();
 
-  fireEvent.press(queryByText(/sign in/i));
+  fireEvent.press(getByText(/sign in/i));
 
   expect(queryByText('Details')).not.toBeNull();
 });
@@ -442,11 +442,11 @@ it('clears lastUnhandledLink upon calling clearUnhandledLink', async () => {
     );
   };
 
-  const { queryByText } = render(<App />);
+  const { queryByText, getByText } = render(<App />);
 
   expect(queryByText('profile')).not.toBeNull();
 
-  fireEvent.press(queryByText(/clear/i));
+  fireEvent.press(getByText(/clear/i));
 
   expect(queryByText('profile')).toBeNull();
 });
