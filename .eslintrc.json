@@ -33,24 +33,20 @@
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error"
   },
-  "overrides": [
-    {
-      "files": ["example/e2e/tests/*.ts"],
-      "rules": {
-        "jest/*": "off"
-      }
-    },
-    {
-      "files": ["scripts/*.js", "netlify/functions/**/*.js"],
-      "rules": {
-        "import/no-commonjs": "off"
-      }
-    },
-    {
-      "files": ["**/config/*.{ts,js}", "*.config.{ts,js}"],
-      "rules": {
-        "import/no-default-export": "off"
-      }
+  "overrides": [{
+    "files":["example/e2e/tests/*.ts"],
+    "rules": {
+      "jest/*": "off"
     }
-  ]
+  }, {
+    "files":["scripts/*.js", "netlify/functions/**/*.js"],
+    "rules": {
+      "import/no-commonjs": "off"
+    }
+  }, {
+    "files":["**/config/*.{ts,js}", "*.config.{ts,js}"],
+    "rules": {
+      "import/no-default-export": "off"
+    }
+  }]
 }
