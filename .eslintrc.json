@@ -1,4 +1,5 @@
 {
+  "root": true,
   "extends": "satya164",
   "plugins": ["simple-import-sort"],
   "settings": {
