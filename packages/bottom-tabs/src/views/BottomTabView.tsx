@@ -4,9 +4,10 @@ import {
   SafeAreaProviderCompat,
   Screen,
 } from '@react-navigation/elements';
-import type {
-  ParamListBase,
-  TabNavigationState,
+import {
+  type ParamListBase,
+  StackActions,
+  type TabNavigationState,
 } from '@react-navigation/native';
 import * as React from 'react';
 import { Animated, Platform, StyleSheet } from 'react-native';
@@ -137,6 +138,28 @@ export function BottomTabView(props: Props) {
     animateToIndex();
   }, [descriptors, focusedRouteKey, state.index, state.routes, tabAnims]);
 
+  // TODO: make sure this looks right of tab switching has animations
+  React.useEffect(() => {
+    const previousRouteKey = previousRouteKeyRef.current;
+    const popToTopOnBlur =
+      descriptors[previousRouteKey]?.options.popToTopOnBlur;
+
+    if (previousRouteKey !== focusedRouteKey && popToTopOnBlur) {
+      const prevRoute = state.routes.find(
+        (route) => route.key === previousRouteKey
+      );
+
+      if (prevRoute?.state?.type === 'stack' && prevRoute.state.key) {
+        navigation.dispatch({
+          ...StackActions.popToTop(),
+          target: prevRoute.state.key,
+        });
+      }
+    }
+
+    previousRouteKeyRef.current = focusedRouteKey;
+  }, [descriptors, focusedRouteKey, navigation, state.routes]);
+
   const dimensions = SafeAreaProviderCompat.initialMetrics.frame;
   const [tabBarHeight, setTabBarHeight] = React.useState(() =>
     getTabBarHeight({
@@ -205,16 +228,11 @@ export function BottomTabView(props: Props) {
           const descriptor = descriptors[route.key];
           const {
             lazy = true,
-            unmountOnBlur,
             animation = 'none',
             sceneStyleInterpolator = NAMED_TRANSITIONS_PRESETS[animation]
               .sceneStyleInterpolator,
           } = descriptor.options;
           const isFocused = state.index === index;
-
-          if (unmountOnBlur && !isFocused) {
-            return null;
-          }
 
           if (
             lazy &&

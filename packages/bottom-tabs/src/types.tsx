@@ -259,10 +259,10 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   headerShown?: boolean;
 
   /**
-   * Whether this screen should be unmounted when navigating away from it.
+   * Whether any nested stack should be popped to top when navigating away from it.
    * Defaults to `false`.
    */
-  unmountOnBlur?: boolean;
+  popToTopOnBlur?: boolean;
 
   /**
    * Whether inactive screens should be suspended from re-rendering. Defaults to `false`.
