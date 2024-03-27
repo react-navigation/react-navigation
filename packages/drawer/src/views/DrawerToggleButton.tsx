@@ -5,7 +5,7 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Image, Platform, StyleSheet } from 'react-native';
+import { Image, type Insets, Platform, StyleSheet } from 'react-native';
 
 import type { DrawerNavigationProp } from '../types';
 
@@ -14,6 +14,7 @@ type Props = {
   pressColor?: string;
   pressOpacity?: number;
   tintColor?: string;
+  hitSlop?: null | Insets | number | undefined;
 };
 
 export function DrawerToggleButton({ tintColor, ...rest }: Props) {
@@ -25,10 +26,13 @@ export function DrawerToggleButton({ tintColor, ...rest }: Props) {
       android_ripple={{ borderless: true }}
       onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
       style={styles.touchable}
-      hitSlop={Platform.select({
-        ios: undefined,
-        default: { top: 16, right: 16, bottom: 16, left: 16 },
-      })}
+      hitSlop={
+        rest?.hitSlop ||
+        Platform.select({
+          ios: undefined,
+          default: { top: 16, right: 16, bottom: 16, left: 16 },
+        })
+      }
     >
       <Image
         style={[styles.icon, tintColor ? { tintColor } : null]}
