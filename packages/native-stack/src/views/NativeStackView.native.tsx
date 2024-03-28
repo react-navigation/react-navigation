@@ -42,6 +42,7 @@ import type {
   NativeStackNavigationHelpers,
   NativeStackNavigationOptions,
 } from '../types';
+import { debounce } from '../utils/debounce';
 import { getModalRouteKeys } from '../utils/getModalRoutesKeys';
 import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
 import { useDismissedRouteError } from '../utils/useDismissedRouteError';
@@ -254,13 +255,18 @@ const SceneView = ({
 
   const defaultHeaderHeight = getDefaultHeaderHeight(frame, isModal, topInset);
 
-  const [customHeaderHeight, setCustomHeaderHeight] =
-    React.useState(defaultHeaderHeight);
+  const [headerHeight, setHeaderHeight] = React.useState(defaultHeaderHeight);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const setHeaderHeightDebounced = React.useCallback(
+    // Debounce the header height updates to avoid excessive re-renders
+    debounce(setHeaderHeight, 100),
+    []
+  );
 
   const animatedHeaderHeight = useAnimatedValue(defaultHeaderHeight);
 
   const headerTopInsetEnabled = topInset !== 0;
-  const headerHeight = header ? customHeaderHeight : defaultHeaderHeight;
 
   const backTitle = previousDescriptor
     ? getHeaderTitle(previousDescriptor.options, previousDescriptor.route.name)
@@ -336,7 +342,25 @@ const SceneView = ({
             },
           },
         ],
-        { useNativeDriver: true }
+        {
+          useNativeDriver: true,
+          listener: (e) => {
+            if (
+              e.nativeEvent &&
+              typeof e.nativeEvent === 'object' &&
+              'headerHeight' in e.nativeEvent &&
+              typeof e.nativeEvent.headerHeight === 'number'
+            ) {
+              // Only debounce if header has large title or search bar
+              // As it's the only case where the header height can change frequently
+              if (options.headerLargeTitle || options.headerSearchBarOptions) {
+                setHeaderHeightDebounced(e.nativeEvent.headerHeight);
+              } else {
+                setHeaderHeight(e.nativeEvent.headerHeight);
+              }
+            }
+          },
+        }
       )}
       // this prop is available since rn-screens 3.16
       freezeOnBlur={freezeOnBlur}
@@ -388,7 +412,7 @@ const SceneView = ({
                   {header !== undefined && headerShown !== false ? (
                     <View
                       onLayout={(e) => {
-                        setCustomHeaderHeight(e.nativeEvent.layout.height);
+                        setHeaderHeight(e.nativeEvent.layout.height);
                       }}
                       style={headerTransparent ? styles.absolute : null}
                     >
