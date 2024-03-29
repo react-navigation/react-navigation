@@ -20,6 +20,7 @@ import * as React from 'react';
 import {
   Animated,
   Platform,
+  StatusBar,
   StyleSheet,
   useAnimatedValue,
   View,
@@ -42,6 +43,7 @@ import type {
   NativeStackNavigationHelpers,
   NativeStackNavigationOptions,
 } from '../types';
+import { debounce } from '../utils/debounce';
 import { getModalRouteKeys } from '../utils/getModalRoutesKeys';
 import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
 import { useDismissedRouteError } from '../utils/useDismissedRouteError';
@@ -252,15 +254,48 @@ const SceneView = ({
 
   const { preventedRoutes } = usePreventRemoveContext();
 
-  const defaultHeaderHeight = getDefaultHeaderHeight(frame, isModal, topInset);
+  const defaultHeaderHeight = Platform.select({
+    // FIXME: Currently screens isn't using Material 3
+    // So our `getDefaultHeaderHeight` doesn't return the correct value
+    // So we hardcode the value here for now until screens is updated
+    android: 56 + topInset,
+    default: getDefaultHeaderHeight(frame, isModal, topInset),
+  });
 
-  const [customHeaderHeight, setCustomHeaderHeight] =
-    React.useState(defaultHeaderHeight);
+  const [headerHeight, setHeaderHeight] = React.useState(defaultHeaderHeight);
 
-  const animatedHeaderHeight = useAnimatedValue(defaultHeaderHeight);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const setHeaderHeightDebounced = React.useCallback(
+    // Debounce the header height updates to avoid excessive re-renders
+    debounce(setHeaderHeight, 100),
+    []
+  );
+
+  const hasCustomHeader = header !== undefined;
+
+  let headerHeightCorrectionOffset = 0;
+
+  if (isAndroid && !hasCustomHeader) {
+    const statusBarHeight = StatusBar.currentHeight ?? 0;
+
+    // FIXME: On Android, the native header height is not correctly calculated
+    // It includes status bar height even if statusbar is not translucent
+    // And the statusbar value itself doesn't match the actual status bar height
+    // So we subtract the bogus status bar height and add the actual top inset
+    headerHeightCorrectionOffset = -statusBarHeight + topInset;
+  }
+
+  const rawAnimatedHeaderHeight = useAnimatedValue(defaultHeaderHeight);
+  const animatedHeaderHeight = React.useMemo(
+    () =>
+      Animated.add<number>(
+        rawAnimatedHeaderHeight,
+        headerHeightCorrectionOffset
+      ),
+    [headerHeightCorrectionOffset, rawAnimatedHeaderHeight]
+  );
 
   const headerTopInsetEnabled = topInset !== 0;
-  const headerHeight = header ? customHeaderHeight : defaultHeaderHeight;
 
   const backTitle = previousDescriptor
     ? getHeaderTitle(previousDescriptor.options, previousDescriptor.route.name)
@@ -332,11 +367,36 @@ const SceneView = ({
         [
           {
             nativeEvent: {
-              headerHeight: animatedHeaderHeight,
+              headerHeight: rawAnimatedHeaderHeight,
             },
           },
         ],
-        { useNativeDriver: true }
+        {
+          useNativeDriver: true,
+          listener: (e) => {
+            if (
+              e.nativeEvent &&
+              typeof e.nativeEvent === 'object' &&
+              'headerHeight' in e.nativeEvent &&
+              typeof e.nativeEvent.headerHeight === 'number'
+            ) {
+              const headerHeight =
+                e.nativeEvent.headerHeight + headerHeightCorrectionOffset;
+
+              // Only debounce if header has large title or search bar
+              // As it's the only case where the header height can change frequently
+              const doesHeaderAnimate =
+                Platform.OS === 'ios' &&
+                (options.headerLargeTitle || options.headerSearchBarOptions);
+
+              if (doesHeaderAnimate) {
+                setHeaderHeightDebounced(headerHeight);
+              } else {
+                setHeaderHeight(headerHeight);
+              }
+            }
+          },
+        }
       )}
       // this prop is available since rn-screens 3.16
       freezeOnBlur={freezeOnBlur}
@@ -388,7 +448,10 @@ const SceneView = ({
                   {header !== undefined && headerShown !== false ? (
                     <View
                       onLayout={(e) => {
-                        setCustomHeaderHeight(e.nativeEvent.layout.height);
+                        const headerHeight = e.nativeEvent.layout.height;
+
+                        setHeaderHeight(headerHeight);
+                        rawAnimatedHeaderHeight.setValue(headerHeight);
                       }}
                       style={headerTransparent ? styles.absolute : null}
                     >
