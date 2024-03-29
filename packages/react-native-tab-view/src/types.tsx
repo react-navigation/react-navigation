@@ -9,18 +9,18 @@ export type TabDescriptor<T extends Route> = {
   labelAllowFontScaling?: boolean;
   href?: string;
   label?: (props: {
+    route: T;
+    labelText?: string;
     focused: boolean;
     color: string;
-    style?: StyleProp<TextStyle>;
     allowFontScaling?: boolean;
-    label?: string;
-    route: T;
+    style?: StyleProp<TextStyle>;
   }) => React.ReactElement;
   icon?: (props: {
+    route: T;
     focused: boolean;
     color: string;
     size: number;
-    route: T;
   }) => React.ReactElement;
   badge?: () => React.ReactElement;
 };

@@ -176,7 +176,7 @@ const TabBarItemInternal = <T extends Route>({
           focused,
           color: focused ? activeColor : inactiveColor,
           style: labelStyle,
-          label: labelText,
+          labelText,
           allowFontScaling: labelAllowFontScaling,
           route,
         })
