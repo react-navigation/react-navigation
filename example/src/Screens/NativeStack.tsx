@@ -117,12 +117,16 @@ const AlbumsScreen = ({
         </View>
         <Albums scrollEnabled={scrollEnabled} />
       </ScrollView>
-      <HeaderHeightView />
+      <HeaderHeightView hasOffset />
     </View>
   );
 };
 
-const HeaderHeightView = () => {
+const HeaderHeightView = ({
+  hasOffset = Platform.OS === 'ios',
+}: {
+  hasOffset?: boolean;
+}) => {
   const { colors } = useTheme();
 
   const animatedHeaderHeight = useAnimatedHeaderHeight();
@@ -137,7 +141,7 @@ const HeaderHeightView = () => {
           borderColor: colors.border,
           shadowColor: colors.border,
         },
-        Platform.OS === 'ios' && {
+        hasOffset && {
           transform: [{ translateY: animatedHeaderHeight }],
         },
       ]}
@@ -150,6 +154,8 @@ const HeaderHeightView = () => {
 const Stack = createNativeStackNavigator<NativeStackParams>();
 
 export function NativeStack() {
+  const { colors } = useTheme();
+
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -178,6 +184,10 @@ export function NativeStack() {
           presentation: 'modal',
           headerTransparent: true,
           headerBlurEffect: 'light',
+          headerStyle: {
+            // Add a background color since Android doesn't support blur effect
+            backgroundColor: colors.card,
+          },
         }}
       />
     </Stack.Navigator>

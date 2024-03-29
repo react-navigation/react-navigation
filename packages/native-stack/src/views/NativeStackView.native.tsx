@@ -271,7 +271,29 @@ const SceneView = ({
     []
   );
 
-  const animatedHeaderHeight = useAnimatedValue(defaultHeaderHeight);
+  const hasCustomHeader = header !== undefined;
+
+  let headerHeightCorrectionOffset = 0;
+
+  if (isAndroid && !hasCustomHeader) {
+    const statusBarHeight = StatusBar.currentHeight ?? 0;
+
+    // FIXME: On Android, the native header height is not correctly calculated
+    // It includes status bar height even if statusbar is not translucent
+    // And the statusbar value itself doesn't match the actual status bar height
+    // So we subtract the bogus status bar height and add the actual top inset
+    headerHeightCorrectionOffset = -statusBarHeight + topInset;
+  }
+
+  const rawAnimatedHeaderHeight = useAnimatedValue(defaultHeaderHeight);
+  const animatedHeaderHeight = React.useMemo(
+    () =>
+      Animated.add<number>(
+        rawAnimatedHeaderHeight,
+        headerHeightCorrectionOffset
+      ),
+    [headerHeightCorrectionOffset, rawAnimatedHeaderHeight]
+  );
 
   const headerTopInsetEnabled = topInset !== 0;
 
@@ -345,7 +367,7 @@ const SceneView = ({
         [
           {
             nativeEvent: {
-              headerHeight: animatedHeaderHeight,
+              headerHeight: rawAnimatedHeaderHeight,
             },
           },
         ],
@@ -358,16 +380,8 @@ const SceneView = ({
               'headerHeight' in e.nativeEvent &&
               typeof e.nativeEvent.headerHeight === 'number'
             ) {
-              let headerHeight = e.nativeEvent.headerHeight;
-
-              if (isAndroid) {
-                // FIXME: On Android, the header height is not correctly calculated
-                // It includes status bar height even if statusbar is not translucent
-                // And the statusbar value itself doesn't match the actual status bar height
-                // So we subtract the bogus status bar height and add the actual top inset
-                headerHeight =
-                  headerHeight - (StatusBar.currentHeight ?? 0) + topInset;
-              }
+              const headerHeight =
+                e.nativeEvent.headerHeight + headerHeightCorrectionOffset;
 
               // Only debounce if header has large title or search bar
               // As it's the only case where the header height can change frequently
@@ -434,7 +448,10 @@ const SceneView = ({
                   {header !== undefined && headerShown !== false ? (
                     <View
                       onLayout={(e) => {
-                        setHeaderHeight(e.nativeEvent.layout.height);
+                        const headerHeight = e.nativeEvent.layout.height;
+
+                        setHeaderHeight(headerHeight);
+                        rawAnimatedHeaderHeight.setValue(headerHeight);
                       }}
                       style={headerTransparent ? styles.absolute : null}
                     >
