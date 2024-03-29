@@ -20,6 +20,7 @@ import * as React from 'react';
 import {
   Animated,
   Platform,
+  StatusBar,
   StyleSheet,
   useAnimatedValue,
   View,
@@ -253,7 +254,13 @@ const SceneView = ({
 
   const { preventedRoutes } = usePreventRemoveContext();
 
-  const defaultHeaderHeight = getDefaultHeaderHeight(frame, isModal, topInset);
+  const defaultHeaderHeight = Platform.select({
+    // FIXME: Currently screens isn't using Material 3
+    // So our `getDefaultHeaderHeight` doesn't return the correct value
+    // So we hardcode the value here for now until screens is updated
+    android: 56 + topInset,
+    default: getDefaultHeaderHeight(frame, isModal, topInset),
+  });
 
   const [headerHeight, setHeaderHeight] = React.useState(defaultHeaderHeight);
 
@@ -351,12 +358,27 @@ const SceneView = ({
               'headerHeight' in e.nativeEvent &&
               typeof e.nativeEvent.headerHeight === 'number'
             ) {
+              let headerHeight = e.nativeEvent.headerHeight;
+
+              if (isAndroid) {
+                // FIXME: On Android, the header height is not correctly calculated
+                // It includes status bar height even if statusbar is not translucent
+                // And the statusbar value itself doesn't match the actual status bar height
+                // So we subtract the bogus status bar height and add the actual top inset
+                headerHeight =
+                  headerHeight - (StatusBar.currentHeight ?? 0) + topInset;
+              }
+
               // Only debounce if header has large title or search bar
               // As it's the only case where the header height can change frequently
-              if (options.headerLargeTitle || options.headerSearchBarOptions) {
-                setHeaderHeightDebounced(e.nativeEvent.headerHeight);
+              const doesHeaderAnimate =
+                Platform.OS === 'ios' &&
+                (options.headerLargeTitle || options.headerSearchBarOptions);
+
+              if (doesHeaderAnimate) {
+                setHeaderHeightDebounced(headerHeight);
               } else {
-                setHeaderHeight(e.nativeEvent.headerHeight);
+                setHeaderHeight(headerHeight);
               }
             }
           },
