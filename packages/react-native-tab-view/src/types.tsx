@@ -22,7 +22,7 @@ export type TabDescriptor<T extends Route> = {
     color: string;
     size: number;
   }) => React.ReactElement;
-  badge?: () => React.ReactElement;
+  badge?: (props: { route: T }) => React.ReactElement;
 };
 
 export type LocaleDirection = 'ltr' | 'rtl';

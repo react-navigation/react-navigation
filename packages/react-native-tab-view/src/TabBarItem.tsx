@@ -240,7 +240,7 @@ const TabBarItemInternal = <T extends Route>({
           </Animated.View>
         </View>
         {customBadge != null ? (
-          <View style={styles.badge}>{customBadge()}</View>
+          <View style={styles.badge}>{customBadge({ route })}</View>
         ) : null}
       </View>
     </PlatformPressable>
