@@ -155,6 +155,7 @@ export function BottomTabBar({
     tabBarHideOnKeyboard = false,
     tabBarVisibilityAnimationConfig,
     tabBarStyle,
+    tabBarContentStyle,
     tabBarBackground,
     tabBarActiveTintColor,
     tabBarInactiveTintColor,
@@ -332,7 +333,10 @@ export function BottomTabBar({
       </View>
       <View
         accessibilityRole="tablist"
-        style={tabBarIsHorizontal ? styles.bottomContent : styles.sideContent}
+        style={[
+          tabBarIsHorizontal ? styles.bottomContent : styles.sideContent,
+          tabBarContentStyle,
+        ]}
       >
         {routes.map((route, index) => {
           const focused = index === state.index;

@@ -228,6 +228,11 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   tabBarStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 
   /**
+   * Style object for the tab bar content container.
+   */
+  tabBarContentStyle?: StyleProp<ViewStyle>;
+
+  /**
    * Function which returns a React Element to use as background for the tab bar.
    * You could render an image, a gradient, blur view etc.
    *
