@@ -2722,7 +2722,7 @@ it('throws when invalid properties are specified in the config', () => {
 // A–Z, a–z, 0–9, -, ., _, ~, !, $, &, ', (, ), *, +, ,, ;, =, :, @
 // User09-A_Z~!$&'()*+,;=:@__#?# - should encode only last ones #?#
 // query params after '?' should be encoded fully with encodeURIComponent
-it('encoding params correctly', () => {
+it('encodes special characters in params', () => {
   const paramWithValidSymbols = `User09-A_Z~!$&'()*+,;=:@__`;
   const invalidSymbols = '#?[]{}%<>||';
   const queryString = 'user#email@gmail.com=2&4';
