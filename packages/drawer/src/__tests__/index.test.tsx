@@ -1,7 +1,6 @@
 import {
   createNavigationContainerRef,
   NavigationContainer,
-  type ParamListBase,
 } from '@react-navigation/native';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
@@ -9,8 +8,13 @@ import { Button, Text, View } from 'react-native';
 
 import { createDrawerNavigator, type DrawerScreenProps } from '../index';
 
+type DrawerParamList = {
+  A: undefined;
+  B: undefined;
+};
+
 it('renders a drawer navigator with screens', async () => {
-  const Test = ({ route, navigation }: DrawerScreenProps<ParamListBase>) => (
+  const Test = ({ route, navigation }: DrawerScreenProps<DrawerParamList>) => (
     <View>
       <Text>Screen {route.name}</Text>
       <Button onPress={() => navigation.navigate('A')} title="Go to A" />
@@ -18,7 +22,7 @@ it('renders a drawer navigator with screens', async () => {
     </View>
   );
 
-  const Drawer = createDrawerNavigator();
+  const Drawer = createDrawerNavigator<DrawerParamList>();
 
   const { findByText, queryByText } = render(
     <NavigationContainer>
@@ -36,11 +40,6 @@ it('renders a drawer navigator with screens', async () => {
 
   expect(queryByText('Screen B')).not.toBeNull();
 });
-
-type DrawerParamList = {
-  A: undefined;
-  B: undefined;
-};
 
 it('handles screens preloading', async () => {
   const Drawer = createDrawerNavigator<DrawerParamList>();

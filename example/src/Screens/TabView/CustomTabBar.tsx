@@ -93,8 +93,8 @@ export const CustomTabBar = () => {
         styles.tabbar,
         {
           paddingBottom: insets.bottom,
-          paddingLeft: insets.left,
-          paddingRight: insets.right,
+          paddingStart: insets.left,
+          paddingEnd: insets.right,
         },
       ]}
     >
@@ -147,8 +147,8 @@ const styles = StyleSheet.create({
   activeItem: {
     position: 'absolute',
     top: 0,
-    left: 0,
-    right: 0,
+    start: 0,
+    end: 0,
     bottom: 0,
   },
   active: {

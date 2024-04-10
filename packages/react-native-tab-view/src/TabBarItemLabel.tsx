@@ -33,7 +33,8 @@ export const TabBarItemLabel = React.memo(
 const styles = StyleSheet.create({
   label: {
     margin: 4,
+    fontSize: 14,
+    fontWeight: '500',
     backgroundColor: 'transparent',
-    textTransform: 'uppercase',
   },
 });

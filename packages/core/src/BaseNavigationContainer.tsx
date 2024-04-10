@@ -209,6 +209,9 @@ export const BaseNavigationContainer = React.forwardRef(
         getCurrentRoute,
         getCurrentOptions,
         isReady,
+        setOptions: () => {
+          throw new Error('Cannot call setOptions outside a screen');
+        },
       }),
       [
         canGoBack,

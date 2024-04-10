@@ -1,8 +1,8 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
+  type BottomTabScreenProps,
   createBottomTabNavigator,
-  TransitionPresets,
   useBottomTabBarHeight,
 } from '@react-navigation/bottom-tabs';
 import {
@@ -13,11 +13,10 @@ import {
 } from '@react-navigation/elements';
 import {
   type NavigatorScreenParams,
-  type ParamListBase,
   type PathConfigMap,
   useIsFocused,
+  useLocale,
 } from '@react-navigation/native';
-import type { StackScreenProps } from '@react-navigation/stack';
 import { BlurView } from 'expo-blur';
 import * as React from 'react';
 import {
@@ -32,11 +31,7 @@ import {
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
-import {
-  SimpleStack,
-  simpleStackLinking,
-  type SimpleStackParams,
-} from './SimpleStack';
+import { SimpleStack, type SimpleStackParams } from './SimpleStack';
 
 const getTabBarIcon =
   (name: React.ComponentProps<typeof MaterialCommunityIcons>['name']) =>
@@ -51,10 +46,10 @@ export type BottomTabParams = {
   TabChat: undefined;
 };
 
-export const bottomTabLinking: PathConfigMap<BottomTabParams> = {
+const linking: PathConfigMap<BottomTabParams> = {
   TabStack: {
     path: 'stack',
-    screens: simpleStackLinking,
+    screens: SimpleStack.linking,
   },
   TabAlbums: 'albums',
   TabContacts: 'contacts',
@@ -85,27 +80,16 @@ const AlbumsScreen = () => {
 
 const Tab = createBottomTabNavigator<BottomTabParams>();
 
-const animations = {
-  shifting: TransitionPresets.ShiftingTransition,
-  fade: TransitionPresets.FadeTransition,
-  none: null,
-} as const;
+const animations = ['none', 'fade', 'shift'] as const;
 
-export function BottomTabs({
-  navigation,
-}: StackScreenProps<ParamListBase, string>) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function BottomTabs() {
   const { showActionSheetWithOptions } = useActionSheet();
+  const { direction } = useLocale();
 
   const dimensions = useWindowDimensions();
 
   const [animation, setAnimation] =
-    React.useState<keyof typeof animations>('none');
+    React.useState<(typeof animations)[number]>('none');
   const [isCompact, setIsCompact] = React.useState(false);
 
   const isLargeScreen = dimensions.width >= 1024;
@@ -113,20 +97,18 @@ export function BottomTabs({
   return (
     <>
       <Tab.Navigator
-        screenOptions={{
+        screenOptions={({
+          navigation,
+        }: BottomTabScreenProps<BottomTabParams>) => ({
           headerLeft: (props) => (
             <HeaderBackButton {...props} onPress={navigation.goBack} />
           ),
           headerRight: ({ tintColor }) => (
             <HeaderButton
               onPress={() => {
-                const options = Object.keys(
-                  animations
-                ) as (keyof typeof animations)[];
-
                 showActionSheetWithOptions(
                   {
-                    options: options.map((option) => {
+                    options: animations.map((option) => {
                       if (option === animation) {
                         return `${option} (current)`;
                       }
@@ -136,7 +118,7 @@ export function BottomTabs({
                   },
                   (index) => {
                     if (index != null) {
-                      setAnimation(options[index]);
+                      setAnimation(animations[index]);
                     }
                   }
                 );
@@ -149,17 +131,22 @@ export function BottomTabs({
               />
             </HeaderButton>
           ),
-          tabBarPosition: isLargeScreen ? 'left' : 'bottom',
+          tabBarPosition: isLargeScreen
+            ? direction === 'ltr'
+              ? 'left'
+              : 'right'
+            : 'bottom',
           tabBarLabelPosition:
             isLargeScreen && isCompact ? 'below-icon' : undefined,
-          ...animations[animation],
-        }}
+          animation,
+        })}
       >
         <Tab.Screen
           name="TabStack"
           component={SimpleStack}
           options={{
             title: 'Article',
+            headerShown: false,
             tabBarIcon: getTabBarIcon('file-document'),
           }}
         />
@@ -220,7 +207,7 @@ export function BottomTabs({
                   intensity={100}
                   style={{
                     ...StyleSheet.absoluteFillObject,
-                    right: isLargeScreen
+                    end: isLargeScreen
                       ? // Offset for right border of the sidebar
                         -StyleSheet.hairlineWidth
                       : 0,
@@ -237,7 +224,7 @@ export function BottomTabs({
           style={{
             position: 'absolute',
             bottom: 0,
-            left: 0,
+            start: 0,
             padding: 16,
           }}
         >
@@ -251,3 +238,6 @@ export function BottomTabs({
     </>
   );
 }
+
+BottomTabs.title = 'Bottom Tabs';
+BottomTabs.linking = linking;

@@ -1,5 +1,5 @@
 import { Button } from '@react-navigation/elements';
-import type { ParamListBase, PathConfigMap } from '@react-navigation/native';
+import type { PathConfigMap } from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
@@ -16,7 +16,7 @@ export type MixedStackParams = {
   Albums: undefined;
 };
 
-export const mixedStackLinking: PathConfigMap<MixedStackParams> = {
+const linking: PathConfigMap<MixedStackParams> = {
   Article: COMMON_LINKING_CONFIG.Article,
   Albums: 'albums',
 };
@@ -75,15 +75,7 @@ const AlbumsScreen = ({ navigation }: StackScreenProps<MixedStackParams>) => {
 
 const Stack = createStackNavigator<MixedStackParams>();
 
-type Props = StackScreenProps<ParamListBase>;
-
-export function MixedStack({ navigation }: Props) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function MixedStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -105,6 +97,9 @@ export function MixedStack({ navigation }: Props) {
     </Stack.Navigator>
   );
 }
+
+MixedStack.title = 'Regular + Modal Stack';
+MixedStack.linking = linking;
 
 const styles = StyleSheet.create({
   buttons: {

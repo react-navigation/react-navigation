@@ -22,5 +22,6 @@ export type {
   MaterialTopTabNavigationEventMap,
   MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationProp,
+  MaterialTopTabOptionsArgs,
   MaterialTopTabScreenProps,
 } from './types';

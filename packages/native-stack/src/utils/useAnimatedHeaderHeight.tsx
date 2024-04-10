@@ -2,7 +2,7 @@ import * as React from 'react';
 import type { Animated } from 'react-native';
 
 export const AnimatedHeaderHeightContext = React.createContext<
-  Animated.Value | undefined
+  Animated.AnimatedInterpolation<number> | undefined
 >(undefined);
 
 export function useAnimatedHeaderHeight() {

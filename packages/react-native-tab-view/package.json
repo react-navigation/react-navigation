@@ -1,7 +1,7 @@
 {
   "name": "react-native-tab-view",
   "description": "Tab view component for React Native",
-  "version": "4.0.0-alpha.3",
+  "version": "4.0.0-alpha.10",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -50,9 +50,9 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-native": "0.73.2",
-    "react-native-pager-view": "6.2.3"
+    "react": ">= 18.2.0",
+    "react-native": ">= 0.72.0",
+    "react-native-pager-view": ">= 6.0.0"
   },
   "react-native-builder-bob": {
     "source": "src",

@@ -3,6 +3,72 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.16...@react-navigation/elements@2.0.0-alpha.17) (2024-03-25)
+
+### Features
+
+* pass href to headerLeft function ([ce6d885](https://github.com/react-navigation/react-navigation/commit/ce6d88559e4a1afeafa84fc839892bb846349d67)) - by @satya164
+
+# [2.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.15...@react-navigation/elements@2.0.0-alpha.16) (2024-03-22)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [2.0.0-alpha.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.14...@react-navigation/elements@2.0.0-alpha.15) (2024-03-22)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [2.0.0-alpha.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.13...@react-navigation/elements@2.0.0-alpha.14) (2024-03-20)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [2.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.12...@react-navigation/elements@2.0.0-alpha.13) (2024-03-14)
+
+### Bug Fixes
+
+* adjust drawer width according to md3 ([a88b2ea](https://github.com/react-navigation/react-navigation/commit/a88b2ea90f56d8dafbd5e1bae6a42fd9b0c73431)) - by @satya164
+
+# [2.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.11...@react-navigation/elements@2.0.0-alpha.12) (2024-03-10)
+
+### Bug Fixes
+
+* add a workaround for safe area frame not updating on web ([3799b16](https://github.com/react-navigation/react-navigation/commit/3799b1637067ba69983a8ab7b94f63bffb024d20)), closes [#8551](https://github.com/react-navigation/react-navigation/issues/8551) [#11398](https://github.com/react-navigation/react-navigation/issues/11398) - by @satya164
+
+# [2.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.10...@react-navigation/elements@2.0.0-alpha.11) (2024-03-09)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [2.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.9...@react-navigation/elements@2.0.0-alpha.10) (2024-03-08)
+
+### Bug Fixes
+
+* update drawer and header styles according to material design 3 ([#11872](https://github.com/react-navigation/react-navigation/issues/11872)) ([bfa5689](https://github.com/react-navigation/react-navigation/commit/bfa568995940f956c9ec5944f2b0543eca5da546)) - by @groot007
+
+# [2.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.8...@react-navigation/elements@2.0.0-alpha.9) (2024-03-04)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [2.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.7...@react-navigation/elements@2.0.0-alpha.8) (2024-02-24)
+
+### Bug Fixes
+
+* fix peer dependency versions ([4b93b63](https://github.com/react-navigation/react-navigation/commit/4b93b6335ce180fe879f9fbe8f2400426b5484fb)) - by @
+
+# [2.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.6...@react-navigation/elements@2.0.0-alpha.7) (2024-02-23)
+
+### Bug Fixes
+
+* **iOS:** disable collapsable option from Background in Screen ([#11840](https://github.com/react-navigation/react-navigation/issues/11840)) ([c1e327c](https://github.com/react-navigation/react-navigation/commit/c1e327ca40679ff9356a38e5ef96e349f323fb94)), closes [#1997](https://github.com/react-navigation/react-navigation/issues/1997) - by @tboba
+
+# [2.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.5...@react-navigation/elements@2.0.0-alpha.6) (2024-02-23)
+
+### Bug Fixes
+
+* fix header height for iOS devices with dynamic island ([#11786](https://github.com/react-navigation/react-navigation/issues/11786)) ([4c521b5](https://github.com/react-navigation/react-navigation/commit/4c521b5c865f2c46d58abb2e9e7fd1b0d2074215)), closes [#11655](https://github.com/react-navigation/react-navigation/issues/11655) - by @gianlucalippolis
+
+### Features
+
+* add a HeaderButton component to elements ([d8de228](https://github.com/react-navigation/react-navigation/commit/d8de228bafc9408855bdfdfcd48bbb10195501fb)) - by @satya164
+
 # [2.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.4...@react-navigation/elements@2.0.0-alpha.5) (2024-01-17)
 
 **Note:** Version bump only for package @react-navigation/elements

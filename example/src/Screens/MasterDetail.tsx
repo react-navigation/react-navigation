@@ -8,12 +8,7 @@ import {
   Header as NavigationHeader,
   HeaderBackButton,
 } from '@react-navigation/elements';
-import {
-  type ParamListBase,
-  type PathConfigMap,
-  useNavigation,
-} from '@react-navigation/native';
-import type { StackScreenProps } from '@react-navigation/stack';
+import { type PathConfigMap, useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { useWindowDimensions } from 'react-native';
 
@@ -27,7 +22,7 @@ export type MasterDetailParams = {
   Albums: undefined;
 };
 
-export const masterDetailLinking: PathConfigMap<MasterDetailParams> = {
+const linking: PathConfigMap<MasterDetailParams> = {
   Article: 'article',
   NewsFeed: 'feed',
   Albums: 'albums',
@@ -111,17 +106,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 
 const Drawer = createDrawerNavigator<MasterDetailParams>();
 
-type Props = Partial<React.ComponentProps<typeof Drawer.Navigator>> &
-  StackScreenProps<ParamListBase>;
-
-export function MasterDetail({ navigation, ...rest }: Props) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-      gestureEnabled: false,
-    });
-  }, [navigation]);
-
+export function MasterDetail() {
   const isLargeScreen = useIsLargeScreen();
 
   return (
@@ -136,7 +121,6 @@ export function MasterDetail({ navigation, ...rest }: Props) {
         drawerContentContainerStyle: { paddingTop: 4 },
         overlayColor: 'transparent',
       }}
-      {...rest}
     >
       <Drawer.Screen name="Article" component={ArticleScreen} />
       <Drawer.Screen
@@ -152,3 +136,6 @@ export function MasterDetail({ navigation, ...rest }: Props) {
     </Drawer.Navigator>
   );
 }
+
+MasterDetail.title = 'Master Detail';
+MasterDetail.linking = linking;

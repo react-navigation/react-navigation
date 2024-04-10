@@ -1,4 +1,5 @@
 {
+  "root": true,
   "extends": "satya164",
   "plugins": ["simple-import-sort"],
   "settings": {
@@ -38,7 +39,7 @@
       "jest/*": "off"
     }
   }, {
-    "files":["scripts/*.js"],
+    "files":["scripts/*.js", "netlify/functions/**/*.js"],
     "rules": {
       "import/no-commonjs": "off"
     }

@@ -17,6 +17,7 @@ export { PreventRemoveProvider } from './PreventRemoveProvider';
 export {
   createComponentForStaticNavigation,
   createPathConfigForStaticNavigation,
+  type StaticConfig,
   type StaticNavigation,
   type StaticParamList,
   type StaticScreenProps,

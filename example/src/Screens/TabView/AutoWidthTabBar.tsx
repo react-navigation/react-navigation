@@ -49,7 +49,6 @@ export const AutoWidthTabBar = () => {
       indicatorStyle={styles.indicator}
       style={styles.tabbar}
       contentContainerStyle={styles.tabbarContentContainer}
-      labelStyle={styles.label}
       tabStyle={styles.tabStyle}
       gap={20}
       direction={direction}
@@ -88,9 +87,6 @@ const styles = StyleSheet.create({
   },
   indicator: {
     backgroundColor: '#ffeb3b',
-  },
-  label: {
-    fontWeight: '400',
   },
   tabStyle: {
     width: 'auto',

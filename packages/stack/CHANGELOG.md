@@ -3,6 +3,75 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.19...@react-navigation/stack@7.0.0-alpha.20) (2024-03-25)
+
+### Features
+
+* pass href to headerLeft function ([ce6d885](https://github.com/react-navigation/react-navigation/commit/ce6d88559e4a1afeafa84fc839892bb846349d67)) - by @satya164
+
+# [7.0.0-alpha.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.18...@react-navigation/stack@7.0.0-alpha.19) (2024-03-22)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+# [7.0.0-alpha.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.17...@react-navigation/stack@7.0.0-alpha.18) (2024-03-22)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+# [7.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.16...@react-navigation/stack@7.0.0-alpha.17) (2024-03-20)
+
+### Features
+
+* add getStateForRouteNamesChange to all navigators and mark it as unstable ([4edbb07](https://github.com/react-navigation/react-navigation/commit/4edbb071163742b60499178271fd3e3e92fb4002)) - by @satya164
+
+# [7.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.15...@react-navigation/stack@7.0.0-alpha.16) (2024-03-14)
+
+### Features
+
+* automatically infer types for navigation in options, listeners etc. ([#11883](https://github.com/react-navigation/react-navigation/issues/11883)) ([c54baf1](https://github.com/react-navigation/react-navigation/commit/c54baf14640e567be10cb8a5f68e5cbf0b35f120)) - by @satya164
+
+# [7.0.0-alpha.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.14...@react-navigation/stack@7.0.0-alpha.15) (2024-03-10)
+
+### Features
+
+* add a type for options arguments ([8e719e0](https://github.com/react-navigation/react-navigation/commit/8e719e0faefbd1eed9f7122a3d8e2c617d5f8254)) - by @satya164
+
+# [7.0.0-alpha.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.13...@react-navigation/stack@7.0.0-alpha.14) (2024-03-09)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+# [7.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.12...@react-navigation/stack@7.0.0-alpha.13) (2024-03-08)
+
+### Features
+
+* add animation option for js stack ([#11854](https://github.com/react-navigation/react-navigation/issues/11854)) ([1843675](https://github.com/react-navigation/react-navigation/commit/18436751750ddb26671a07b04451ef16355f6792)) - by @groot007
+* make all screens after presentation: 'modal' as modal unless specified ([#11860](https://github.com/react-navigation/react-navigation/issues/11860)) ([f16216c](https://github.com/react-navigation/react-navigation/commit/f16216c65740c2795cdef6c2249edffa9e9416ae)) - by @groot007
+
+# [7.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.11...@react-navigation/stack@7.0.0-alpha.12) (2024-03-04)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+# [7.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.10...@react-navigation/stack@7.0.0-alpha.11) (2024-02-24)
+
+### Bug Fixes
+
+* fix peer dependency versions ([4b93b63](https://github.com/react-navigation/react-navigation/commit/4b93b6335ce180fe879f9fbe8f2400426b5484fb)) - by @
+
+# [7.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.9...@react-navigation/stack@7.0.0-alpha.10) (2024-02-23)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+# [7.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.8...@react-navigation/stack@7.0.0-alpha.9) (2024-02-23)
+
+### Bug Fixes
+
+* don't remount native views on focus change on the new architecture ([#11806](https://github.com/react-navigation/react-navigation/issues/11806)) ([aa518f1](https://github.com/react-navigation/react-navigation/commit/aa518f1171d6f4caafa2fe5675eefe55b586fd28)) - by @j-piasecki
+* handle failed gesture state to clear interaction ([#11465](https://github.com/react-navigation/react-navigation/issues/11465)) ([1b56cb5](https://github.com/react-navigation/react-navigation/commit/1b56cb5576599be1e3758b6d898b38c2fedefc37)) - by @Iltimirov
+
+### Features
+
+* add a HeaderButton component to elements ([d8de228](https://github.com/react-navigation/react-navigation/commit/d8de228bafc9408855bdfdfcd48bbb10195501fb)) - by @satya164
+* add autoHideHomeIndicator option for stack ([#11415](https://github.com/react-navigation/react-navigation/issues/11415)) ([8367758](https://github.com/react-navigation/react-navigation/commit/8367758824590b9affd07ce651f8020aca2a88f6)) - by @mortend
+
 # [7.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.7...@react-navigation/stack@7.0.0-alpha.8) (2024-01-17)
 
 ### Bug Fixes

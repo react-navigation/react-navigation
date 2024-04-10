@@ -1,5 +1,5 @@
 import { Button } from '@react-navigation/elements';
-import type { ParamListBase, PathConfigMap } from '@react-navigation/native';
+import type { PathConfigMap } from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
@@ -16,7 +16,7 @@ export type ModalStackParams = {
   Albums: undefined;
 };
 
-export const modalStackLinking: PathConfigMap<ModalStackParams> = {
+const linking: PathConfigMap<ModalStackParams> = {
   Article: COMMON_LINKING_CONFIG.Article,
   Albums: 'albums',
 };
@@ -66,15 +66,7 @@ const AlbumsScreen = ({ navigation }: StackScreenProps<ModalStackParams>) => {
 
 const Stack = createStackNavigator<ModalStackParams>();
 
-type Props = StackScreenProps<ParamListBase>;
-
-export function ModalStack({ navigation }: Props) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function ModalStack() {
   return (
     <Stack.Navigator screenOptions={{ presentation: 'modal' }}>
       <Stack.Screen
@@ -93,6 +85,9 @@ export function ModalStack({ navigation }: Props) {
     </Stack.Navigator>
   );
 }
+
+ModalStack.title = 'Modal Stack';
+ModalStack.linking = linking;
 
 const styles = StyleSheet.create({
   buttons: {
