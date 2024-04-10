@@ -29,7 +29,7 @@ export function DrawerToggleButton({ tintColor, ...rest }: Props) {
       hitSlop={
         rest?.hitSlop ||
         Platform.select({
-          ios: undefined,
+          ios: { top: 16, right: 16, bottom: 0, left: 0 },
           default: { top: 16, right: 16, bottom: 16, left: 16 },
         })
       }
