@@ -182,6 +182,7 @@ export function HeaderConfig({
       backButtonInCustomView={backButtonInCustomView}
       backgroundColor={headerBackgroundColor}
       backTitle={headerBackTitleVisible ? headerBackTitle : ' '}
+      backTitleVisible={headerBackTitleVisible}
       backTitleFontFamily={backTitleFontFamily}
       backTitleFontSize={backTitleFontSize}
       blurEffect={headerBlurEffect}
