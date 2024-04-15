@@ -109,9 +109,7 @@ export function HeaderSegment(props: Props) {
     backHref,
     headerTitle: title,
     headerLeft: left = onGoBack
-      ? (props: HeaderBackButtonProps) => (
-          <HeaderBackButton {...props} href={backHref} />
-        )
+      ? (props: HeaderBackButtonProps) => <HeaderBackButton {...props} />
       : undefined,
     headerRight: right,
     headerBackImage,
@@ -162,6 +160,7 @@ export function HeaderSegment(props: Props) {
     ? (props) =>
         left({
           ...props,
+          href: backHref,
           backImage: headerBackImage,
           accessibilityLabel: headerBackAccessibilityLabel,
           testID: headerBackTestID,

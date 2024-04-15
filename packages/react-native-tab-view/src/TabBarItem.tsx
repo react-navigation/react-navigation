@@ -104,6 +104,7 @@ const TabBarItemInternal = <T extends Route>({
   defaultTabWidth,
   icon: customIcon,
   badge: customBadge,
+  href,
   labelText,
   routesLength,
   android_ripple = { borderless: true },
@@ -175,7 +176,7 @@ const TabBarItemInternal = <T extends Route>({
           focused,
           color: focused ? activeColor : inactiveColor,
           style: labelStyle,
-          label: labelText,
+          labelText,
           allowFontScaling: labelAllowFontScaling,
           route,
         })
@@ -223,6 +224,7 @@ const TabBarItemInternal = <T extends Route>({
       onLayout={onLayout}
       onPress={onPress}
       onLongPress={onLongPress}
+      href={href}
       style={[styles.pressable, tabContainerStyle]}
     >
       <View pointerEvents="none" style={[styles.item, tabStyle]}>
@@ -238,7 +240,7 @@ const TabBarItemInternal = <T extends Route>({
           </Animated.View>
         </View>
         {customBadge != null ? (
-          <View style={styles.badge}>{customBadge()}</View>
+          <View style={styles.badge}>{customBadge({ route })}</View>
         ) : null}
       </View>
     </PlatformPressable>
@@ -287,7 +289,7 @@ const styles = StyleSheet.create({
   badge: {
     position: 'absolute',
     top: 0,
-    right: 0,
+    end: 0,
   },
   pressable: {
     // The label is not pressable on Windows

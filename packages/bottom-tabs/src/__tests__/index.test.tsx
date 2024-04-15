@@ -1,7 +1,6 @@
 import {
   createNavigationContainerRef,
   NavigationContainer,
-  type ParamListBase,
 } from '@react-navigation/native';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
@@ -9,13 +8,21 @@ import { Animated, Button, Text, View } from 'react-native';
 
 import { type BottomTabScreenProps, createBottomTabNavigator } from '../index';
 
+type BottomTabParamList = {
+  A: undefined;
+  B: undefined;
+};
+
 it('renders a bottom tab navigator with screens', async () => {
   // @ts-expect-error: incomplete mock for testing
   jest.spyOn(Animated, 'timing').mockImplementation(() => ({
     start: (callback) => callback?.({ finished: true }),
   }));
 
-  const Test = ({ route, navigation }: BottomTabScreenProps<ParamListBase>) => (
+  const Test = ({
+    route,
+    navigation,
+  }: BottomTabScreenProps<BottomTabParamList>) => (
     <View>
       <Text>Screen {route.name}</Text>
       <Button onPress={() => navigation.navigate('A')} title="Go to A" />
@@ -23,7 +30,7 @@ it('renders a bottom tab navigator with screens', async () => {
     </View>
   );
 
-  const Tab = createBottomTabNavigator();
+  const Tab = createBottomTabNavigator<BottomTabParamList>();
 
   const { findByText, queryByText } = render(
     <NavigationContainer>
@@ -41,11 +48,6 @@ it('renders a bottom tab navigator with screens', async () => {
 
   expect(queryByText('Screen B')).not.toBeNull();
 });
-
-type BottomTabParamList = {
-  A: undefined;
-  B: undefined;
-};
 
 it('handles screens preloading', async () => {
   const Tab = createBottomTabNavigator<BottomTabParamList>();

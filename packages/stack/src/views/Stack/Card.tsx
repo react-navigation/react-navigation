@@ -571,9 +571,9 @@ export class Card extends React.Component<Props> {
                     style={[
                       styles.shadow,
                       gestureDirection === 'horizontal'
-                        ? [styles.shadowHorizontal, styles.shadowLeft]
+                        ? [styles.shadowHorizontal, styles.shadowStart]
                         : gestureDirection === 'horizontal-inverted'
-                          ? [styles.shadowHorizontal, styles.shadowRight]
+                          ? [styles.shadowHorizontal, styles.shadowEnd]
                           : gestureDirection === 'vertical'
                             ? [styles.shadowVertical, styles.shadowTop]
                             : [styles.shadowVertical, styles.shadowBottom],
@@ -620,15 +620,15 @@ const styles = StyleSheet.create({
     width: 3,
     shadowOffset: { width: -1, height: 1 },
   },
-  shadowLeft: {
-    left: 0,
+  shadowStart: {
+    start: 0,
   },
-  shadowRight: {
-    right: 0,
+  shadowEnd: {
+    end: 0,
   },
   shadowVertical: {
-    left: 0,
-    right: 0,
+    start: 0,
+    end: 0,
     height: 3,
     shadowOffset: { width: 1, height: -1 },
   },

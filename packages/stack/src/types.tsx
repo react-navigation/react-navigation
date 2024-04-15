@@ -14,6 +14,7 @@ import type {
   RouteProp,
   StackActionHelpers,
   StackNavigationState,
+  Theme,
 } from '@react-navigation/native';
 import type * as React from 'react';
 import type { Animated, StyleProp, TextStyle, ViewStyle } from 'react-native';
@@ -70,6 +71,14 @@ export type StackScreenProps<
   route: RouteProp<ParamList, RouteName>;
 };
 
+export type StackOptionsArgs<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = keyof ParamList,
+  NavigatorID extends string | undefined = undefined,
+> = StackScreenProps<ParamList, RouteName, NavigatorID> & {
+  theme: Theme;
+};
+
 export type Layout = { width: number; height: number };
 
 export type GestureDirection =
@@ -78,8 +87,19 @@ export type GestureDirection =
   | 'vertical'
   | 'vertical-inverted';
 
+export type StackAnimationName =
+  | 'default'
+  | 'fade'
+  | 'fade_from_bottom'
+  | 'none'
+  | 'reveal_from_bottom'
+  | 'scale_from_center'
+  | 'slide_from_bottom'
+  | 'slide_from_right'
+  | 'slide_from_left';
+
 type SceneOptionsDefaults = TransitionPreset & {
-  animationEnabled: boolean;
+  animation: StackAnimationName;
   gestureEnabled: boolean;
   cardOverlayEnabled: boolean;
   headerMode: StackHeaderMode;
@@ -245,6 +265,10 @@ export type StackHeaderRightProps = {
 
 export type StackHeaderLeftProps = HeaderBackButtonProps & {
   /**
+   * The `href` to use for the anchor tag on web
+   */
+  href?: string;
+  /**
    * Whether it's possible to navigate back in stack.
    */
   canGoBack?: boolean;
@@ -326,11 +350,20 @@ export type StackNavigationOptions = StackHeaderOptions &
      */
     presentation?: 'card' | 'modal' | 'transparentModal';
     /**
-     * Whether transition animation should be enabled the screen.
-     * If you set it to `false`, the screen won't animate when pushing or popping.
-     * Defaults to `true` on Android and iOS, `false` on Web.
+     * How the screen should animate when pushed or popped.
+     *
+     * Supported values:
+     * - 'none': don't animate the screen
+     * - 'default': use the platform default animation
+     * - 'fade': fade screen in or out
+     * - 'fade_from_bottom': fade screen in or out from bottom
+     * - 'slide_from_bottom': slide in the new screen from bottom
+     * - 'slide_from_right': slide in the new screen from right
+     * - 'slide_from_left': slide in the new screen from left
+     * - 'reveal_from_bottom': reveal screen in from bottom to top
+     * - 'scale_from_center': scale screen in from center
      */
-    animationEnabled?: boolean;
+    animation?: StackAnimationName;
     /**
      * The type of animation to use when this screen replaces another screen. Defaults to `push`.
      * When `pop` is used, the `pop` animation is applied to the screen being replaced.

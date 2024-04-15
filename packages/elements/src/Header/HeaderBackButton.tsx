@@ -203,8 +203,8 @@ const styles = StyleSheet.create({
     ios: {
       height: 21,
       width: 13,
-      marginLeft: 8,
-      marginRight: 22,
+      marginStart: 8,
+      marginEnd: 22,
       marginVertical: 12,
     },
     default: {
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   iconWithLabel:
     Platform.OS === 'ios'
       ? {
-          marginRight: 6,
+          marginEnd: 6,
         }
       : {},
   iconMaskContainer: {
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
   iconMask: {
     height: 21,
     width: 13,
-    marginLeft: -14.5,
+    marginStart: -14.5,
     marginVertical: 12,
     alignSelf: 'center',
   },

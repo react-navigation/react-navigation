@@ -2,6 +2,7 @@ import { Text } from '@react-navigation/elements';
 import {
   type ParamListBase,
   type TabNavigationState,
+  useLinkBuilder,
   useLocale,
   useTheme,
 } from '@react-navigation/native';
@@ -48,6 +49,7 @@ export function MaterialTopTabBar({
 }: MaterialTopTabBarProps) {
   const { colors } = useTheme();
   const { direction } = useLocale();
+  const { buildHref } = useLinkBuilder();
 
   const focusedOptions = descriptors[state.routes[state.index].key].options;
 
@@ -63,6 +65,7 @@ export function MaterialTopTabBar({
       return [
         route.key,
         {
+          href: buildHref(route.name, route.params),
           testID: options.tabBarButtonTestID,
           accessibilityLabel: options.tabBarAccessibilityLabel,
           badge: options.tabBarBadge,

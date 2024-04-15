@@ -35,8 +35,6 @@ export function getDefaultHeaderHeight(
         }
       }
     }
-  } else if (Platform.OS === 'android') {
-    headerHeight = 56;
   } else {
     headerHeight = 64;
   }

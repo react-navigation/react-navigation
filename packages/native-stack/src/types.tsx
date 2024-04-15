@@ -9,6 +9,7 @@ import type {
   StackActionHelpers,
   StackNavigationState,
   StackRouterOptions,
+  Theme,
 } from '@react-navigation/native';
 import type {
   ImageSourcePropType,
@@ -59,6 +60,14 @@ export type NativeStackScreenProps<
 > = {
   navigation: NativeStackNavigationProp<ParamList, RouteName, NavigatorID>;
   route: RouteProp<ParamList, RouteName>;
+};
+
+export type NativeStackOptionsArgs<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = keyof ParamList,
+  NavigatorID extends string | undefined = undefined,
+> = NativeStackScreenProps<ParamList, RouteName, NavigatorID> & {
+  theme: Theme;
 };
 
 export type NativeStackNavigationHelpers = NavigationHelpers<
@@ -114,6 +123,10 @@ export type NativeStackHeaderLeftProps = NativeStackHeaderRightProps & {
    * By default, this is only shown on iOS.
    */
   label?: string;
+  /**
+   * The `href` to use for the anchor tag on web
+   */
+  href?: string;
 };
 
 export type NativeStackNavigationOptions = {
@@ -571,9 +584,11 @@ export type NativeStackNavigationOptions = {
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
+  string | undefined,
   StackNavigationState<ParamListBase>,
   NativeStackNavigationOptions,
-  NativeStackNavigationEventMap
+  NativeStackNavigationEventMap,
+  NativeStackNavigationProp<ParamListBase>
 > &
   StackRouterOptions &
   NativeStackNavigationConfig;

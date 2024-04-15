@@ -146,3 +146,54 @@ it('integrates with the history API', async () => {
 
   await waitFor(() => expect(window.location.pathname).toBe('/edit'));
 });
+
+it("throws if linking is enabled but there's no linking configuration", () => {
+  const createTestNavigator = createNavigatorFactory(() => null);
+
+  const TestScreen = () => null;
+
+  const Stack = createTestNavigator({
+    initialRouteName: 'Feed',
+    screens: {
+      Profile: {
+        screen: TestScreen,
+      },
+      Settings: {
+        screen: TestScreen,
+      },
+      Updates: {
+        screen: TestScreen,
+      },
+      Feed: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const Tab = createTestNavigator({
+    screens: {
+      Home: Stack,
+      Chat: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const Navigation = createStaticNavigation(Tab);
+
+  expect(() => {
+    render(<Navigation linking={{ enabled: true, prefixes: ['myapp://'] }} />);
+  }).toThrow(
+    'Linking is enabled but no linking configuration was found for the screens.'
+  );
+
+  expect(() => {
+    render(<Navigation linking={{ enabled: false, prefixes: ['myapp://'] }} />);
+  }).not.toThrow();
+
+  expect(() => {
+    render(
+      <Navigation linking={{ enabled: 'auto', prefixes: ['myapp://'] }} />
+    );
+  }).not.toThrow();
+});

@@ -1,9 +1,8 @@
 import { Button } from '@react-navigation/elements';
-import type { ParamListBase, PathConfigMap } from '@react-navigation/native';
+import type { PathConfigMap } from '@react-navigation/native';
 import {
   createStackNavigator,
   HeaderStyleInterpolators,
-  type StackNavigationOptions,
   type StackScreenProps,
 } from '@react-navigation/stack';
 import * as React from 'react';
@@ -20,7 +19,7 @@ export type SimpleStackParams = {
   Albums: undefined;
 };
 
-export const simpleStackLinking: PathConfigMap<SimpleStackParams> = {
+const linking: PathConfigMap<SimpleStackParams> = {
   Article: COMMON_LINKING_CONFIG.Article,
   NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
   Albums: 'albums',
@@ -109,22 +108,10 @@ const AlbumsScreen = ({
 
 const Stack = createStackNavigator<SimpleStackParams>();
 
-export function SimpleStack({
-  navigation,
-  screenOptions,
-}: StackScreenProps<ParamListBase> & {
-  screenOptions?: StackNavigationOptions;
-}) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function SimpleStack() {
   return (
     <Stack.Navigator
       screenOptions={{
-        ...screenOptions,
         headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
       }}
     >
@@ -149,6 +136,9 @@ export function SimpleStack({
     </Stack.Navigator>
   );
 }
+
+SimpleStack.title = 'Simple Stack';
+SimpleStack.linking = linking;
 
 const styles = StyleSheet.create({
   buttons: {

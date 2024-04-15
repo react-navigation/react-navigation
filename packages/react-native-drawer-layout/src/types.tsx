@@ -1,5 +1,7 @@
-import type { StyleProp, ViewStyle } from 'react-native';
-import type { PanGestureHandler } from 'react-native-gesture-handler';
+import * as React from 'react';
+import type { StyleProp, View, ViewStyle } from 'react-native';
+import type { PanGesture } from 'react-native-gesture-handler';
+import type { SharedValue } from 'react-native-reanimated';
 
 export type Layout = { width: number; height: number };
 
@@ -135,10 +137,9 @@ export type DrawerProps = {
   swipeMinVelocity?: number;
 
   /**
-   * Props to pass to the underlying pan gesture handler.
-   * This is not supported on Web.
+   * Function to modify the pan gesture handler via RNGH properties API.
    */
-  gestureHandlerProps?: React.ComponentProps<typeof PanGestureHandler>;
+  configureGestureHandler?: (gesture: PanGesture) => PanGesture;
 
   /**
    * Style object for the wrapper view.
@@ -149,4 +150,11 @@ export type DrawerProps = {
    * Content that the drawer should wrap.
    */
   children: React.ReactNode;
+};
+
+export type OverlayProps = React.ComponentProps<typeof View> & {
+  open: boolean;
+  progress: SharedValue<number>;
+  onPress: () => void;
+  accessibilityLabel?: string;
 };

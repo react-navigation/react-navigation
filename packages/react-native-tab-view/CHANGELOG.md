@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.9...react-native-tab-view@4.0.0-alpha.10) (2024-03-20)
+
+### Bug Fixes
+
+* fix some options not being passed to tab-view. fixes [#11904](https://github.com/react-navigation/react-navigation/issues/11904) ([8fcf215](https://github.com/react-navigation/react-navigation/commit/8fcf21520729f6a4485ffd247e4fa5ee78e20c81)) - by @satya164
+
+# [4.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.8...react-native-tab-view@4.0.0-alpha.9) (2024-03-14)
+
+### Bug Fixes
+
+* fix tab auto width on chrome & opera on android & linux ([#11440](https://github.com/react-navigation/react-navigation/issues/11440)) ([1ef7ed1](https://github.com/react-navigation/react-navigation/commit/1ef7ed1dcd4c8927109c62bd16ab4c9d55648d6e)), closes [#f00](https://github.com/react-navigation/react-navigation/issues/f00) [#00](https://github.com/react-navigation/react-navigation/issues/00) - by @souzabrs
+
+# [4.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.7...react-native-tab-view@4.0.0-alpha.8) (2024-03-10)
+
+**Note:** Version bump only for package react-native-tab-view
+
+# [4.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.6...react-native-tab-view@4.0.0-alpha.7) (2024-03-08)
+
+### Bug Fixes
+
+* add href to tabs in material top tabs ([#11873](https://github.com/react-navigation/react-navigation/issues/11873)) ([c3459e1](https://github.com/react-navigation/react-navigation/commit/c3459e10e56446554d45130b28b232f08f491c4b)) - by @groot007
+
+### Features
+
+* implement tab-view new api ([#11548](https://github.com/react-navigation/react-navigation/issues/11548)) ([dca15c9](https://github.com/react-navigation/react-navigation/commit/dca15c9126f8751cfea43edc80c51d28de8f6fa6)) - by @okwasniewski
+
+### BREAKING CHANGES
+
+* react-native-tab-view now has a new API to address performance issues with current
+implementation.
+
+Co-authored-by: Michał Osadnik <micosa97@gmail.com>
+Co-authored-by: Satyajit Sahoo <satyajit.happy@gmail.com>
+
 # [4.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.5...react-native-tab-view@4.0.0-alpha.6) (2024-03-04)
 
 ### Bug Fixes
