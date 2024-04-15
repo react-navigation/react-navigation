@@ -1,11 +1,14 @@
 import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
+  type NavigatorTypeBagBase,
   type ParamListBase,
+  type StaticConfig,
   type TabActionHelpers,
   type TabNavigationState,
   TabRouter,
   type TabRouterOptions,
+  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -14,14 +17,17 @@ import type {
   MaterialTopTabNavigationConfig,
   MaterialTopTabNavigationEventMap,
   MaterialTopTabNavigationOptions,
+  MaterialTopTabNavigationProp,
 } from '../types';
 import { MaterialTopTabView } from '../views/MaterialTopTabView';
 
 type Props = DefaultNavigatorOptions<
   ParamListBase,
+  string | undefined,
   TabNavigationState<ParamListBase>,
   MaterialTopTabNavigationOptions,
-  MaterialTopTabNavigationEventMap
+  MaterialTopTabNavigationEventMap,
+  MaterialTopTabNavigationProp<ParamListBase>
 > &
   TabRouterOptions &
   MaterialTopTabNavigationConfig;
@@ -36,6 +42,7 @@ function MaterialTopTabNavigator({
   screenOptions,
   screenLayout,
   useNativeDriver = true,
+  UNSTABLE_getStateForRouteNamesChange,
   ...rest
 }: Props) {
   const { state, descriptors, navigation, NavigationContent } =
@@ -54,6 +61,7 @@ function MaterialTopTabNavigator({
       screenListeners,
       screenOptions,
       screenLayout,
+      UNSTABLE_getStateForRouteNamesChange,
     });
 
   return (
@@ -69,9 +77,27 @@ function MaterialTopTabNavigator({
   );
 }
 
-export const createMaterialTopTabNavigator = createNavigatorFactory<
-  TabNavigationState<ParamListBase>,
-  MaterialTopTabNavigationOptions,
-  MaterialTopTabNavigationEventMap,
-  typeof MaterialTopTabNavigator
->(MaterialTopTabNavigator);
+export function createMaterialTopTabNavigator<
+  ParamList extends ParamListBase,
+  NavigatorID extends string | undefined = undefined,
+  TypeBag extends NavigatorTypeBagBase = {
+    ParamList: ParamList;
+    NavigatorID: NavigatorID;
+    State: TabNavigationState<ParamList>;
+    ScreenOptions: MaterialTopTabNavigationOptions;
+    EventMap: MaterialTopTabNavigationEventMap;
+    NavigationList: {
+      [RouteName in keyof ParamList]: MaterialTopTabNavigationProp<
+        ParamList,
+        RouteName,
+        NavigatorID
+      >;
+    };
+    Navigator: typeof MaterialTopTabNavigator;
+  },
+  Config extends StaticConfig<TypeBag> | undefined =
+    | StaticConfig<TypeBag>
+    | undefined,
+>(config?: Config): TypedNavigator<TypeBag, Config> {
+  return createNavigatorFactory(MaterialTopTabNavigator)(config);
+}

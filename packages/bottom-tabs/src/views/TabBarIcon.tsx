@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   },
   badge: {
     position: 'absolute',
-    right: -5,
+    end: -5,
     top: -5,
   },
 });

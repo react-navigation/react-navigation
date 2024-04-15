@@ -42,6 +42,8 @@ type Props = DrawerNavigationConfig & {
   descriptors: DrawerDescriptorMap;
 };
 
+const DRAWER_BORDER_RADIUS = 16;
+
 function DrawerViewBase({
   state,
   navigation,
@@ -62,8 +64,8 @@ function DrawerViewBase({
     drawerPosition = direction === 'rtl' ? 'right' : 'left',
     drawerStatusBarAnimation,
     drawerStyle,
-    drawerType,
-    gestureHandlerProps,
+    drawerType = Platform.select({ ios: 'slide', default: 'front' }),
+    configureGestureHandler,
     keyboardDismissMode,
     overlayColor = 'rgba(0, 0, 0, 0.5)',
     swipeEdgeWidth,
@@ -273,7 +275,7 @@ function DrawerViewBase({
         onTransitionStart={handleTransitionStart}
         onTransitionEnd={handleTransitionEnd}
         layout={dimensions}
-        gestureHandlerProps={gestureHandlerProps}
+        configureGestureHandler={configureGestureHandler}
         swipeEnabled={swipeEnabled}
         swipeEdgeWidth={swipeEdgeWidth}
         swipeMinDistance={swipeMinDistance}
@@ -291,12 +293,23 @@ function DrawerViewBase({
           drawerType === 'permanent' &&
             (drawerPosition === 'left'
               ? {
-                  borderRightColor: colors.border,
-                  borderRightWidth: StyleSheet.hairlineWidth,
+                  borderEndColor: colors.border,
+                  borderEndWidth: StyleSheet.hairlineWidth,
                 }
               : {
-                  borderLeftColor: colors.border,
-                  borderLeftWidth: StyleSheet.hairlineWidth,
+                  borderStartColor: colors.border,
+                  borderStartWidth: StyleSheet.hairlineWidth,
+                }),
+
+          drawerType === 'front' &&
+            (drawerPosition === 'left'
+              ? {
+                  borderTopRightRadius: DRAWER_BORDER_RADIUS,
+                  borderBottomRightRadius: DRAWER_BORDER_RADIUS,
+                }
+              : {
+                  borderTopLeftRadius: DRAWER_BORDER_RADIUS,
+                  borderBottomLeftRadius: DRAWER_BORDER_RADIUS,
                 }),
           drawerStyle,
         ]}

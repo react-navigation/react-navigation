@@ -278,9 +278,9 @@ export function BottomTabBar({
     <Animated.View
       style={[
         tabBarPosition === 'left'
-          ? styles.left
+          ? styles.start
           : tabBarPosition === 'right'
-            ? styles.right
+            ? styles.end
             : styles.bottom,
         {
           backgroundColor:
@@ -316,8 +316,8 @@ export function BottomTabBar({
           : {
               paddingTop: insets.top,
               paddingBottom: insets.bottom,
-              paddingLeft: tabBarPosition === 'left' ? insets.left : 0,
-              paddingRight: tabBarPosition === 'right' ? insets.right : 0,
+              paddingStart: tabBarPosition === 'left' ? insets.left : 0,
+              paddingEnd: tabBarPosition === 'right' ? insets.right : 0,
               minWidth: hasHorizontalLabels
                 ? getDefaultSidebarWidth(dimensions)
                 : 0,
@@ -431,21 +431,21 @@ export function BottomTabBar({
 }
 
 const styles = StyleSheet.create({
-  left: {
+  start: {
     top: 0,
     bottom: 0,
-    left: 0,
-    borderRightWidth: StyleSheet.hairlineWidth,
+    start: 0,
+    borderEndWidth: StyleSheet.hairlineWidth,
   },
-  right: {
+  end: {
     top: 0,
     bottom: 0,
-    right: 0,
-    borderLeftWidth: StyleSheet.hairlineWidth,
+    end: 0,
+    borderStartWidth: StyleSheet.hairlineWidth,
   },
   bottom: {
-    left: 0,
-    right: 0,
+    start: 0,
+    end: 0,
     bottom: 0,
     borderTopWidth: StyleSheet.hairlineWidth,
     elevation: 8,

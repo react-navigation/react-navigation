@@ -14,6 +14,7 @@ import * as React from 'react';
 import { isValidElementType } from 'react-is';
 import useLatestCallback from 'use-latest-callback';
 
+import { deepFreeze } from './deepFreeze';
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
 import { isRecordEqual } from './isRecordEqual';
@@ -102,7 +103,8 @@ const getRouteConfigsFromChildren = <
             string,
             State,
             ScreenOptions,
-            EventMap
+            EventMap,
+            unknown
           >,
         });
 
@@ -251,9 +253,11 @@ export function useNavigationBuilder<
   createRouter: RouterFactory<State, any, RouterOptions>,
   options: DefaultNavigatorOptions<
     ParamListBase,
+    string | undefined,
     State,
     ScreenOptions,
-    EventMap
+    EventMap,
+    any
   > &
     RouterOptions
 ) {
@@ -457,7 +461,7 @@ export function useNavigationBuilder<
 
   let state =
     // If the state isn't initialized, or stale, use the state we initialized instead
-    // The state won't update until there's a change needed in the state we have initalized locally
+    // The state won't update until there's a change needed in the state we have initialized locally
     // So it'll be `undefined` or stale until the first navigation event happens
     isStateInitialized(currentState)
       ? (currentState as State)
@@ -470,7 +474,7 @@ export function useNavigationBuilder<
     !isRecordEqual(routeKeyList, previousRouteKeyList)
   ) {
     const navigatorStateForNextRouteNamesChange =
-      options.getStateForRouteNamesChange?.(state);
+      options.UNSTABLE_getStateForRouteNamesChange?.(state);
     // When the list of route names change, the router should handle it to remove invalid routes
     nextState = navigatorStateForNextRouteNamesChange
       ? // @ts-expect-error this is ok
@@ -556,6 +560,10 @@ export function useNavigationBuilder<
   state = nextState;
 
   React.useEffect(() => {
+    // In strict mode, React will double-invoke effects.
+    // So we need to reset the flag if component was not unmounted
+    stateCleanedUp.current = false;
+
     setKey(navigatorKey);
 
     if (!getIsInitial()) {
@@ -578,9 +586,11 @@ export function useNavigationBuilder<
   const getState = useLatestCallback((): State => {
     const currentState = shouldUpdate ? nextState : getCurrentState();
 
-    return (
-      isStateInitialized(currentState) ? currentState : initializedState
-    ) as State;
+    return deepFreeze(
+      (isStateInitialized(currentState)
+        ? currentState
+        : initializedState) as State
+    );
   });
 
   const emitter = useEventEmitter<EventMapCore<State>>((e) => {

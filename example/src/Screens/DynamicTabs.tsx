@@ -1,6 +1,9 @@
 import Feather from '@expo/vector-icons/Feather';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Button, Text } from '@react-navigation/elements';
+import {
+  type BottomTabScreenProps,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
+import { Button, HeaderBackButton, Text } from '@react-navigation/elements';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -10,7 +13,7 @@ export type DynamicBottomTabParams = {
   [key: `tab-${number}`]: undefined;
 };
 
-export const dynamicBottomTabLinking: PathConfigMap<DynamicBottomTabParams> = {
+const linking: PathConfigMap<DynamicBottomTabParams> = {
   'tab-0': 'tab/0',
   'tab-1': 'tab/1',
   'tab-2': 'tab/2',
@@ -25,7 +28,15 @@ export function DynamicTabs() {
   const [tabs, setTabs] = React.useState([0, 1]);
 
   return (
-    <BottomTabs.Navigator>
+    <BottomTabs.Navigator
+      screenOptions={({
+        navigation,
+      }: BottomTabScreenProps<DynamicBottomTabParams>) => ({
+        headerLeft: (props) => (
+          <HeaderBackButton {...props} onPress={navigation.goBack} />
+        ),
+      })}
+    >
       {tabs.map((i) => (
         <BottomTabs.Screen
           key={i}
@@ -79,6 +90,9 @@ export function DynamicTabs() {
     </BottomTabs.Navigator>
   );
 }
+
+DynamicTabs.title = 'Dynamic Tabs';
+DynamicTabs.linking = linking;
 
 const styles = StyleSheet.create({
   container: {

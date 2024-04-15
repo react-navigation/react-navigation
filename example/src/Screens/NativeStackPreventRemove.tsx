@@ -1,10 +1,6 @@
 import { type PathConfigMap, usePreventRemove } from '@react-navigation/core';
 import { Button } from '@react-navigation/elements';
-import {
-  CommonActions,
-  type ParamListBase,
-  useTheme,
-} from '@react-navigation/native';
+import { CommonActions, useTheme } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   type NativeStackScreenProps,
@@ -27,11 +23,10 @@ export type NativePreventRemoveParams = {
   Input: undefined;
 };
 
-export const nativePreventRemoveLinking: PathConfigMap<NativePreventRemoveParams> =
-  {
-    Article: COMMON_LINKING_CONFIG.Article,
-    Input: 'input',
-  };
+const linking: PathConfigMap<NativePreventRemoveParams> = {
+  Article: COMMON_LINKING_CONFIG.Article,
+  Input: 'input',
+};
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
@@ -125,15 +120,7 @@ const InputScreen = ({
 
 const Stack = createNativeStackNavigator<NativePreventRemoveParams>();
 
-type Props = NativeStackScreenProps<ParamListBase>;
-
-export function NativeStackPreventRemove({ navigation }: Props) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function NativeStackPreventRemove() {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -147,6 +134,9 @@ export function NativeStackPreventRemove({ navigation }: Props) {
     </Stack.Navigator>
   );
 }
+
+NativeStackPreventRemove.title = 'Prevent removing screen in Native Stack';
+NativeStackPreventRemove.linking = linking;
 
 const styles = StyleSheet.create({
   content: {

@@ -119,6 +119,7 @@ export function NativeStackView({ state, descriptors }: Props) {
                             tintColor,
                             canGoBack,
                             label: headerBackTitle,
+                            href: headerBack?.href,
                           })
                       : headerLeft === undefined && canGoBack
                         ? ({ tintColor }) => (

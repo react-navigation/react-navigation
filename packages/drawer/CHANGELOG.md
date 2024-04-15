@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.20...@react-navigation/drawer@7.0.0-alpha.21) (2024-03-25)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+# [7.0.0-alpha.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.19...@react-navigation/drawer@7.0.0-alpha.20) (2024-03-25)
+
+### Features
+
+* migrate drawer to new RNGH API ([#11776](https://github.com/react-navigation/react-navigation/issues/11776)) ([5d7d81e](https://github.com/react-navigation/react-navigation/commit/5d7d81e633896b3a58e86d8ab9ca0a36dcad3ab6)) - by @osdnk
+
+# [7.0.0-alpha.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.18...@react-navigation/drawer@7.0.0-alpha.19) (2024-03-22)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+# [7.0.0-alpha.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.17...@react-navigation/drawer@7.0.0-alpha.18) (2024-03-22)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+# [7.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.16...@react-navigation/drawer@7.0.0-alpha.17) (2024-03-20)
+
+### Features
+
+* add getStateForRouteNamesChange to all navigators and mark it as unstable ([4edbb07](https://github.com/react-navigation/react-navigation/commit/4edbb071163742b60499178271fd3e3e92fb4002)) - by @satya164
+
+# [7.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.15...@react-navigation/drawer@7.0.0-alpha.16) (2024-03-14)
+
+### Features
+
+* automatically infer types for navigation in options, listeners etc. ([#11883](https://github.com/react-navigation/react-navigation/issues/11883)) ([c54baf1](https://github.com/react-navigation/react-navigation/commit/c54baf14640e567be10cb8a5f68e5cbf0b35f120)) - by @satya164
+
+# [7.0.0-alpha.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.14...@react-navigation/drawer@7.0.0-alpha.15) (2024-03-10)
+
+### Features
+
+* add a type for options arguments ([8e719e0](https://github.com/react-navigation/react-navigation/commit/8e719e0faefbd1eed9f7122a3d8e2c617d5f8254)) - by @satya164
+
+# [7.0.0-alpha.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.13...@react-navigation/drawer@7.0.0-alpha.14) (2024-03-09)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+# [7.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.12...@react-navigation/drawer@7.0.0-alpha.13) (2024-03-08)
+
+### Bug Fixes
+
+* adjust drawer content styling ([b146aed](https://github.com/react-navigation/react-navigation/commit/b146aedcd87f26159388d42d62b8bed34ab16305)) - by @satya164
+
 # [7.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.11...@react-navigation/drawer@7.0.0-alpha.12) (2024-03-04)
 
 ### Bug Fixes

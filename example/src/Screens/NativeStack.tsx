@@ -1,11 +1,12 @@
-import { Button, useHeaderHeight } from '@react-navigation/elements';
-import type { ParamListBase, PathConfigMap } from '@react-navigation/native';
+import { Button, Text, useHeaderHeight } from '@react-navigation/elements';
+import { type PathConfigMap, useTheme } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   type NativeStackScreenProps,
+  useAnimatedHeaderHeight,
 } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Animated, Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
@@ -18,7 +19,7 @@ export type NativeStackParams = {
   Albums: undefined;
 };
 
-export const nativeStackLinking: PathConfigMap<NativeStackParams> = {
+const linking: PathConfigMap<NativeStackParams> = {
   Article: COMMON_LINKING_CONFIG.Article,
   NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
   Albums: 'albums',
@@ -31,32 +32,35 @@ const ArticleScreen = ({
   route,
 }: NativeStackScreenProps<NativeStackParams, 'Article'>) => {
   return (
-    <ScrollView contentInsetAdjustmentBehavior="automatic">
-      <View style={styles.buttons}>
-        <Button
-          variant="filled"
-          onPress={() => navigation.push('NewsFeed', { date: Date.now() })}
-        >
-          Push feed
-        </Button>
-        <Button
-          variant="filled"
-          onPress={() => navigation.replace('NewsFeed', { date: Date.now() })}
-        >
-          Replace with feed
-        </Button>
-        <Button variant="filled" onPress={() => navigation.popTo('Albums')}>
-          Pop to Albums
-        </Button>
-        <Button variant="tinted" onPress={() => navigation.pop()}>
-          Pop screen
-        </Button>
-      </View>
-      <Article
-        author={{ name: route.params?.author ?? 'Unknown' }}
-        scrollEnabled={scrollEnabled}
-      />
-    </ScrollView>
+    <View>
+      <ScrollView contentInsetAdjustmentBehavior="automatic">
+        <View style={styles.buttons}>
+          <Button
+            variant="filled"
+            onPress={() => navigation.push('NewsFeed', { date: Date.now() })}
+          >
+            Push feed
+          </Button>
+          <Button
+            variant="filled"
+            onPress={() => navigation.replace('NewsFeed', { date: Date.now() })}
+          >
+            Replace with feed
+          </Button>
+          <Button variant="filled" onPress={() => navigation.popTo('Albums')}>
+            Pop to Albums
+          </Button>
+          <Button variant="tinted" onPress={() => navigation.pop()}>
+            Pop screen
+          </Button>
+        </View>
+        <Article
+          author={{ name: route.params?.author ?? 'Unknown' }}
+          scrollEnabled={scrollEnabled}
+        />
+      </ScrollView>
+      <HeaderHeightView />
+    </View>
   );
 };
 
@@ -73,17 +77,20 @@ const NewsFeedScreen = ({
   }, [navigation]);
 
   return (
-    <ScrollView contentInsetAdjustmentBehavior="automatic">
-      <View style={styles.buttons}>
-        <Button variant="filled" onPress={() => navigation.push('Albums')}>
-          Push Albums
-        </Button>
-        <Button variant="tinted" onPress={() => navigation.goBack()}>
-          Go back
-        </Button>
-      </View>
-      <NewsFeed scrollEnabled={scrollEnabled} date={route.params.date} />
-    </ScrollView>
+    <View>
+      <ScrollView contentInsetAdjustmentBehavior="automatic">
+        <View style={styles.buttons}>
+          <Button variant="filled" onPress={() => navigation.push('Albums')}>
+            Push Albums
+          </Button>
+          <Button variant="tinted" onPress={() => navigation.goBack()}>
+            Go back
+          </Button>
+        </View>
+        <NewsFeed scrollEnabled={scrollEnabled} date={route.params.date} />
+      </ScrollView>
+      <HeaderHeightView />
+    </View>
   );
 };
 
@@ -93,36 +100,61 @@ const AlbumsScreen = ({
   const headerHeight = useHeaderHeight();
 
   return (
-    <ScrollView contentContainerStyle={{ paddingTop: headerHeight }}>
-      <View style={styles.buttons}>
-        <Button
-          variant="filled"
-          onPress={() =>
-            navigation.navigate('Article', { author: 'Babel fish' })
-          }
-        >
-          Navigate to article
-        </Button>
-        <Button variant="tinted" onPress={() => navigation.pop(2)}>
-          Pop by 2
-        </Button>
-      </View>
-      <Albums scrollEnabled={scrollEnabled} />
-    </ScrollView>
+    <View>
+      <ScrollView contentContainerStyle={{ paddingTop: headerHeight }}>
+        <View style={styles.buttons}>
+          <Button
+            variant="filled"
+            onPress={() =>
+              navigation.navigate('Article', { author: 'Babel fish' })
+            }
+          >
+            Navigate to article
+          </Button>
+          <Button variant="tinted" onPress={() => navigation.pop(2)}>
+            Pop by 2
+          </Button>
+        </View>
+        <Albums scrollEnabled={scrollEnabled} />
+      </ScrollView>
+      <HeaderHeightView hasOffset />
+    </View>
+  );
+};
+
+const HeaderHeightView = ({
+  hasOffset = Platform.OS === 'ios',
+}: {
+  hasOffset?: boolean;
+}) => {
+  const { colors } = useTheme();
+
+  const animatedHeaderHeight = useAnimatedHeaderHeight();
+  const headerHeight = useHeaderHeight();
+
+  return (
+    <Animated.View
+      style={[
+        styles.headerHeight,
+        {
+          backgroundColor: colors.card,
+          borderColor: colors.border,
+          shadowColor: colors.border,
+        },
+        hasOffset && {
+          transform: [{ translateY: animatedHeaderHeight }],
+        },
+      ]}
+    >
+      <Text>{headerHeight.toFixed(2)}</Text>
+    </Animated.View>
   );
 };
 
 const Stack = createNativeStackNavigator<NativeStackParams>();
 
-export function NativeStack({
-  navigation,
-}: NativeStackScreenProps<ParamListBase>) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-      gestureEnabled: false,
-    });
-  }, [navigation]);
+export function NativeStack() {
+  const { colors } = useTheme();
 
   return (
     <Stack.Navigator>
@@ -152,11 +184,21 @@ export function NativeStack({
           presentation: 'modal',
           headerTransparent: true,
           headerBlurEffect: 'light',
+          headerStyle: {
+            // Add a background color since Android doesn't support blur effect
+            backgroundColor: colors.card,
+          },
         }}
       />
     </Stack.Navigator>
   );
 }
+
+NativeStack.title = 'Native Stack';
+NativeStack.linking = linking;
+NativeStack.options = {
+  gestureEnabled: false,
+};
 
 const styles = StyleSheet.create({
   buttons: {
@@ -164,5 +206,15 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 12,
     padding: 12,
+  },
+  headerHeight: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    padding: 12,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRightWidth: 0,
+    borderTopWidth: 0,
+    borderBottomLeftRadius: 3,
   },
 });

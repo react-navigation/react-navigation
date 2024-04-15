@@ -1,7 +1,4 @@
-import {
-  NavigationContainer,
-  type ParamListBase,
-} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
 import { Button, Text, View } from 'react-native';
@@ -10,6 +7,11 @@ import {
   createMaterialTopTabNavigator,
   type MaterialTopTabScreenProps,
 } from '../index';
+
+type TopTabParamList = {
+  A: undefined;
+  B: undefined;
+};
 
 jest.mock('react-native-pager-view', () => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -30,7 +32,7 @@ it('renders a material top tab navigator with screens', async () => {
   const Test = ({
     route,
     navigation,
-  }: MaterialTopTabScreenProps<ParamListBase>) => (
+  }: MaterialTopTabScreenProps<TopTabParamList>) => (
     <View>
       <Text>Screen {route.name}</Text>
       <Button onPress={() => navigation.navigate('A')} title="Go to A" />
@@ -38,7 +40,7 @@ it('renders a material top tab navigator with screens', async () => {
     </View>
   );
 
-  const Tab = createMaterialTopTabNavigator();
+  const Tab = createMaterialTopTabNavigator<TopTabParamList>();
 
   const { findByText, queryByText } = render(
     <NavigationContainer>

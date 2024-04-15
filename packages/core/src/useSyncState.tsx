@@ -1,14 +1,27 @@
 import * as React from 'react';
 
+import { deepFreeze } from './deepFreeze';
+
 const createStore = <T,>(getInitialState: () => T) => {
   const listeners: (() => void)[] = [];
 
-  let state: T = getInitialState();
+  let initialized = false;
+  let state: T;
 
-  const getState = () => state;
+  const getState = () => {
+    if (initialized) {
+      return state;
+    }
+
+    initialized = true;
+    state = deepFreeze(getInitialState());
+
+    return state;
+  };
 
   const setState = (newState: T) => {
-    state = newState;
+    state = deepFreeze(newState);
+
     listeners.forEach((listener) => listener());
   };
 

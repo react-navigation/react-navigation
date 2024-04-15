@@ -1,8 +1,13 @@
 import {
   createNavigatorFactory,
+  type DefaultNavigatorOptions,
+  type NavigationListBase,
   type NavigatorScreenParams,
+  type ParamListBase,
+  type StackNavigationState,
   StackRouter,
   TabRouter,
+  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/core';
 import * as React from 'react';
@@ -38,7 +43,16 @@ jest.spyOn(console, 'error').mockImplementation((...args) => {
 });
 
 it('renders correct state with location', () => {
-  const createStackNavigator = createNavigatorFactory((props: any) => {
+  const StackNavigator = (
+    props: DefaultNavigatorOptions<
+      ParamListBase,
+      string | undefined,
+      StackNavigationState<ParamListBase>,
+      {},
+      {},
+      unknown
+    >
+  ) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
       props
@@ -51,7 +65,19 @@ it('renders correct state with location', () => {
         ))}
       </NavigationContent>
     );
-  });
+  };
+
+  function createStackNavigator<ParamList extends {}>(): TypedNavigator<{
+    ParamList: ParamList;
+    NavigatorID: string | undefined;
+    State: StackNavigationState<ParamList>;
+    ScreenOptions: {};
+    EventMap: {};
+    NavigationList: NavigationListBase<ParamList>;
+    Navigator: typeof StackNavigator;
+  }> {
+    return createNavigatorFactory(StackNavigator)();
+  }
 
   type StackAParamList = {
     Home: NavigatorScreenParams<StackBParamList>;

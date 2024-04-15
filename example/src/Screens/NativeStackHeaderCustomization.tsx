@@ -1,8 +1,9 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Button, HeaderButton } from '@react-navigation/elements';
-import type { ParamListBase, PathConfigMap } from '@react-navigation/native';
+import type { PathConfigMap } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
+  type NativeStackOptionsArgs,
   type NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import * as React from 'react';
@@ -26,12 +27,11 @@ export type NativeHeaderCustomizationStackParams = {
   Albums: undefined;
 };
 
-export const nativeHeaderCustomizationStackLinking: PathConfigMap<NativeHeaderCustomizationStackParams> =
-  {
-    Article: COMMON_LINKING_CONFIG.Article,
-    NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
-    Albums: 'albums',
-  };
+const linking: PathConfigMap<NativeHeaderCustomizationStackParams> = {
+  Article: COMMON_LINKING_CONFIG.Article,
+  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+  Albums: 'albums',
+};
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
@@ -108,16 +108,7 @@ const AlbumsScreen = ({
 const Stack =
   createNativeStackNavigator<NativeHeaderCustomizationStackParams>();
 
-export function NativeStackHeaderCustomization({
-  navigation,
-}: NativeStackScreenProps<ParamListBase>) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-      gestureEnabled: false,
-    });
-  }, [navigation]);
-
+export function NativeStackHeaderCustomization() {
   const onPress = () => {
     Alert.alert(
       'Never gonna give you up!',
@@ -130,7 +121,13 @@ export function NativeStackHeaderCustomization({
       <Stack.Screen
         name="Article"
         component={ArticleScreen}
-        options={({ route, navigation }) => ({
+        options={({
+          route,
+          navigation,
+        }: NativeStackOptionsArgs<
+          NativeHeaderCustomizationStackParams,
+          'Article'
+        >) => ({
           title: `Article by ${route.params?.author ?? 'Unknown'}`,
           headerTintColor: 'white',
           headerTitle: ({ tintColor }) => (
@@ -205,6 +202,12 @@ export function NativeStackHeaderCustomization({
     </Stack.Navigator>
   );
 }
+
+NativeStackHeaderCustomization.title = 'Header Customization in Native Stack';
+NativeStackHeaderCustomization.linking = linking;
+NativeStackHeaderCustomization.options = {
+  gestureEnabled: false,
+};
 
 const styles = StyleSheet.create({
   buttons: {

@@ -36,7 +36,14 @@ export type ScreenConfigWithParent<
   keys: (string | undefined)[];
   options: (ScreenOptionsOrCallback<ScreenOptions> | undefined)[] | undefined;
   layout: ScreenLayout | undefined;
-  props: RouteConfig<ParamListBase, string, State, ScreenOptions, EventMap>;
+  props: RouteConfig<
+    ParamListBase,
+    string,
+    State,
+    ScreenOptions,
+    EventMap,
+    unknown
+  >;
 };
 
 type ScreenLayout = (props: {
