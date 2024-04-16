@@ -30,6 +30,8 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import {
+  type GestureDetectorBridge,
+  GHContext,
   Screen,
   type ScreenProps,
   ScreenStack,
@@ -42,6 +44,8 @@ import type {
   NativeStackDescriptorMap,
   NativeStackNavigationHelpers,
   NativeStackNavigationOptions,
+  NativeStackNavigatorProps,
+  ScreensRefsHolder,
 } from '../types';
 import { debounce } from '../utils/debounce';
 import { getModalRouteKeys } from '../utils/getModalRoutesKeys';
@@ -135,6 +139,7 @@ type SceneViewProps = {
   descriptor: NativeStackDescriptor;
   previousDescriptor?: NativeStackDescriptor;
   nextDescriptor?: NativeStackDescriptor;
+  screenRefs: ScreensRefsHolder;
   isPresentationModal?: boolean;
   onWillDisappear: () => void;
   onWillAppear: () => void;
@@ -152,6 +157,7 @@ const SceneView = ({
   descriptor,
   previousDescriptor,
   nextDescriptor,
+  screenRefs,
   isPresentationModal,
   onWillDisappear,
   onWillAppear,
@@ -199,6 +205,17 @@ const SceneView = ({
     statusBarBackgroundColor,
     freezeOnBlur,
   } = options;
+
+  const screenRef = React.useRef(null);
+  React.useEffect(() => {
+    const currentRefs = screenRefs.current;
+    currentRefs[route.key] = screenRef;
+
+    return () => {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+      delete currentRefs[route.key];
+    };
+  });
 
   if (gestureDirection === 'vertical' && Platform.OS === 'ios') {
     // for `vertical` direction to work, we need to set `fullScreenGestureEnabled` to `true`
@@ -315,6 +332,7 @@ const SceneView = ({
   return (
     <Screen
       key={route.key}
+      ref={screenRef}
       enabled
       isNativeStack
       style={StyleSheet.absoluteFill}
@@ -513,95 +531,122 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
 
   const { colors } = useTheme();
 
+  const currentRouteKey = state.routes[state.index].key;
+  const topScreenOptions = descriptors[currentRouteKey].options;
+  const gestureDetectorBridge = React.useRef<GestureDetectorBridge>({
+    stackUseEffectCallback: (_stackRef) => {
+      // this method will be overriden in GestureDetector
+    },
+  });
+  type RefHolder = Record<
+    string,
+    React.MutableRefObject<React.Ref<NativeStackNavigatorProps>>
+  >;
+  const screensRefs = React.useRef<RefHolder>({});
+  const ScreenGestureDetector = React.useContext(GHContext);
+
   useInvalidPreventRemoveError(descriptors);
 
   const modalRouteKeys = getModalRouteKeys(state.routes, descriptors);
 
   return (
     <SafeAreaProviderCompat style={{ backgroundColor: colors.background }}>
-      <ScreenStack style={styles.container}>
-        {state.routes.map((route, index) => {
-          const descriptor = descriptors[route.key];
-          const isFocused = state.index === index;
-          const previousKey = state.routes[index - 1]?.key;
-          const nextKey = state.routes[index + 1]?.key;
-          const previousDescriptor = previousKey
-            ? descriptors[previousKey]
-            : undefined;
-          const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
+      <ScreenGestureDetector
+        gestureDetectorBridge={gestureDetectorBridge}
+        goBackGesture={topScreenOptions?.goBackGesture}
+        transitionAnimation={topScreenOptions?.transitionAnimation}
+        screenEdgeGesture={topScreenOptions?.screenEdgeGesture ?? false}
+        screensRefs={screensRefs}
+        currentRouteKey={currentRouteKey}
+      >
+        <ScreenStack
+          style={styles.container}
+          gestureDetectorBridge={gestureDetectorBridge}
+        >
+          {state.routes.map((route, index) => {
+            const descriptor = descriptors[route.key];
+            const isFocused = state.index === index;
+            const previousKey = state.routes[index - 1]?.key;
+            const nextKey = state.routes[index + 1]?.key;
+            const previousDescriptor = previousKey
+              ? descriptors[previousKey]
+              : undefined;
+            const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
 
-          const isModal = modalRouteKeys.includes(route.key);
+            const isModal = modalRouteKeys.includes(route.key);
 
-          return (
-            <SceneView
-              key={route.key}
-              index={index}
-              focused={isFocused}
-              descriptor={descriptor}
-              previousDescriptor={previousDescriptor}
-              nextDescriptor={nextDescriptor}
-              isPresentationModal={isModal}
-              onWillDisappear={() => {
-                navigation.emit({
-                  type: 'transitionStart',
-                  data: { closing: true },
-                  target: route.key,
-                });
-              }}
-              onWillAppear={() => {
-                navigation.emit({
-                  type: 'transitionStart',
-                  data: { closing: false },
-                  target: route.key,
-                });
-              }}
-              onAppear={() => {
-                navigation.emit({
-                  type: 'transitionEnd',
-                  data: { closing: false },
-                  target: route.key,
-                });
-              }}
-              onDisappear={() => {
-                navigation.emit({
-                  type: 'transitionEnd',
-                  data: { closing: true },
-                  target: route.key,
-                });
-              }}
-              onDismissed={(event) => {
-                navigation.dispatch({
-                  ...StackActions.pop(event.nativeEvent.dismissCount),
-                  source: route.key,
-                  target: state.key,
-                });
+            return (
+              <SceneView
+                key={route.key}
+                index={index}
+                focused={isFocused}
+                descriptor={descriptor}
+                previousDescriptor={previousDescriptor}
+                nextDescriptor={nextDescriptor}
+                screenRefs={screensRefs}
+                isPresentationModal={isModal}
+                onWillDisappear={() => {
+                  navigation.emit({
+                    type: 'transitionStart',
+                    data: { closing: true },
+                    target: route.key,
+                  });
+                }}
+                onWillAppear={() => {
+                  navigation.emit({
+                    type: 'transitionStart',
+                    data: { closing: false },
+                    target: route.key,
+                  });
+                }}
+                onAppear={() => {
+                  navigation.emit({
+                    type: 'transitionEnd',
+                    data: { closing: false },
+                    target: route.key,
+                  });
+                }}
+                onDisappear={() => {
+                  navigation.emit({
+                    type: 'transitionEnd',
+                    data: { closing: true },
+                    target: route.key,
+                  });
+                }}
+                onDismissed={(event) => {
+                  navigation.dispatch({
+                    ...StackActions.pop(event.nativeEvent.dismissCount),
+                    source: route.key,
+                    target: state.key,
+                  });
 
-                setNextDismissedKey(route.key);
-              }}
-              onHeaderBackButtonClicked={() => {
-                navigation.dispatch({
-                  ...StackActions.pop(),
-                  source: route.key,
-                  target: state.key,
-                });
-              }}
-              onNativeDismissCancelled={(event) => {
-                navigation.dispatch({
-                  ...StackActions.pop(event.nativeEvent.dismissCount),
-                  source: route.key,
-                  target: state.key,
-                });
-              }}
-              onGestureCancel={() => {
-                navigation.emit({
-                  type: 'gestureCancel',
-                  target: route.key,
-                });
-              }}
-            />
-          );
-        })}
-      </ScreenStack>
+                  setNextDismissedKey(route.key);
+                }}
+                onHeaderBackButtonClicked={() => {
+                  navigation.dispatch({
+                    ...StackActions.pop(),
+                    source: route.key,
+                    target: state.key,
+                  });
+                }}
+                onNativeDismissCancelled={(event) => {
+                  navigation.dispatch({
+                    ...StackActions.pop(event.nativeEvent.dismissCount),
+                    source: route.key,
+                    target: state.key,
+                  });
+                }}
+                onGestureCancel={() => {
+                  navigation.emit({
+                    type: 'gestureCancel',
+                    target: route.key,
+                  });
+                }}
+              />
+            );
+          })}
+        </ScreenStack>
+      </ScreenGestureDetector>
     </SafeAreaProviderCompat>
   );
 }
