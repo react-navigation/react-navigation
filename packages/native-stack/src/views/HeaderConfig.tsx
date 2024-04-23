@@ -9,7 +9,6 @@ import {
   View,
 } from 'react-native';
 import {
-  // @ts-expect-error: Available since react-native-screens v3.21
   isNewBackTitleImplementation,
   isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,
@@ -162,7 +161,6 @@ export default function HeaderConfig({
           ? headerBackTitle
           : ' '
       }
-      // @ts-expect-error: Available since react-native-screens v3.21
       backTitleVisible={headerBackTitleVisible}
       backTitleFontFamily={backTitleFontFamily}
       backTitleFontSize={headerBackTitleStyleFlattened.fontSize}
@@ -255,6 +253,7 @@ export default function HeaderConfig({
       ) : null}
       {hasHeaderSearchBar ? (
         <ScreenStackHeaderSearchBarView>
+          {/* @ts-expect-error: it's not possible to retype `ref` for now. */}
           <SearchBar {...headerSearchBarOptions} />
         </ScreenStackHeaderSearchBarView>
       ) : null}
