@@ -253,7 +253,6 @@ export default function HeaderConfig({
       ) : null}
       {hasHeaderSearchBar ? (
         <ScreenStackHeaderSearchBarView>
-          {/* @ts-expect-error: it's not possible to retype `ref` for now. */}
           <SearchBar {...headerSearchBarOptions} />
         </ScreenStackHeaderSearchBarView>
       ) : null}

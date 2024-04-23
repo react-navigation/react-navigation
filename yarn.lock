@@ -5554,7 +5554,7 @@ __metadata:
     react-native: 0.71.8
     react-native-builder-bob: ^0.20.4
     react-native-safe-area-context: 4.5.0
-    react-native-screens: ~3.20.0
+    react-native-screens: ~3.29.0
     typescript: ^4.9.4
     warn-once: ^0.1.0
   peerDependencies:
@@ -5628,7 +5628,7 @@ __metadata:
     react-native-gesture-handler: ~2.9.0
     react-native-reanimated: ~2.14.4
     react-native-safe-area-context: 4.5.0
-    react-native-screens: ~3.20.0
+    react-native-screens: ~3.29.0
     typescript: ^4.9.4
     warn-once: ^0.1.0
   peerDependencies:
@@ -5713,7 +5713,7 @@ __metadata:
     react-native-paper: ^4.12.1
     react-native-reanimated: ~2.14.4
     react-native-safe-area-context: 4.5.0
-    react-native-screens: ~3.20.0
+    react-native-screens: ~3.29.0
     react-native-tab-view: "workspace:^"
     react-native-vector-icons: ^9.1.0
     react-native-web: ~0.18.7
@@ -5790,7 +5790,7 @@ __metadata:
     react: 18.2.0
     react-native: 0.71.8
     react-native-builder-bob: ^0.20.4
-    react-native-screens: ~3.30.1
+    react-native-screens: ~3.29.0
     typescript: ^4.9.4
     warn-once: ^0.1.0
   peerDependencies:
@@ -5854,7 +5854,7 @@ __metadata:
     react-native-builder-bob: ^0.20.4
     react-native-gesture-handler: ~2.9.0
     react-native-safe-area-context: 4.5.0
-    react-native-screens: ~3.20.0
+    react-native-screens: ~3.29.0
     typescript: ^4.9.4
     warn-once: ^0.1.0
   peerDependencies:
@@ -22010,29 +22010,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-screens@npm:~3.20.0":
-  version: 3.20.0
-  resolution: "react-native-screens@npm:3.20.0"
+"react-native-screens@npm:~3.29.0":
+  version: 3.29.0
+  resolution: "react-native-screens@npm:3.29.0"
   dependencies:
     react-freeze: ^1.0.0
     warn-once: ^0.1.0
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 94ab21378ee82765d329ccb8c92f5ca7cb15df916496fac7ce9a03c45e22579715000dae9c16f0a7d734a8fc1c2d0569fd82ecb71119a0b56046b5ea7533e7c2
-  languageName: node
-  linkType: hard
-
-"react-native-screens@npm:~3.30.1":
-  version: 3.30.1
-  resolution: "react-native-screens@npm:3.30.1"
-  dependencies:
-    react-freeze: ^1.0.0
-    warn-once: ^0.1.0
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: e6c9b69ec97a4e46dd335ed25312c3621546bf0959754338aabbd4a16cc9cfb259548c996d2d737ea772a7b2ce7f198ffcd2977673e74c141334ce94fa3861c6
+  checksum: c1879eea8386f32c2655fedd79d41d8e25d2f4e7f883abbcad2c747ea7ac859f4a7f469475a519948e7c5ea317a7ebd8df92c6365627f6a5da1e4a208cece7e1
   languageName: node
   linkType: hard
 
