@@ -14,7 +14,7 @@ export const NotFound = ({
       <Text style={styles.title}>404 Not Found ({route.path})</Text>
       <Button
         variant="filled"
-        onPress={() => navigation.navigate('Home')}
+        onPress={() => navigation.navigate('Home', { screen: 'Examples' })}
         style={styles.button}
       >
         Go to home

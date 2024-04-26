@@ -76,7 +76,7 @@ export type RootDrawerParamList = {
 };
 
 export type RootStackParamList = ExampleScreensParamList & {
-  Home: NavigatorScreenParams<RootDrawerParamList> | undefined;
+  Home: NavigatorScreenParams<RootDrawerParamList>;
   NotFound: undefined;
 };
 

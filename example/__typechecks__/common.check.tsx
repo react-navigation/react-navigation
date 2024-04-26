@@ -8,11 +8,12 @@ import type {
   DrawerNavigationOptions,
   DrawerScreenProps,
 } from '@react-navigation/drawer';
-import type {
-  CompositeScreenProps,
-  NavigationAction,
-  NavigationHelpers,
-  NavigatorScreenParams,
+import {
+  type CompositeScreenProps,
+  type LinkingOptions,
+  type NavigationAction,
+  type NavigationHelpers,
+  type NavigatorScreenParams,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -498,3 +499,34 @@ const FourthStack = createStackNavigator<FourthParamList, 'MyID'>();
 expectTypeOf(FourthStack.Navigator).parameter(0).toMatchTypeOf<{
   id: 'MyID';
 }>();
+
+/**
+ * Infer correct LinkingOptions
+ */
+export const linkingOptions: LinkingOptions<RootStackParamList> = {
+  prefixes: ['reactnavigation://'],
+  config: {
+    screens: {
+      Home: {
+        screens: {
+          Feed: {
+            screens: {
+              Popular: 'popular',
+              Latest: 'latest',
+              // @ts-expect-error "NonExistingRoute" does not exist in the FeedTabParamList
+              NonExistingRoute: 'non-existing',
+            },
+          },
+          Account: 'account',
+        },
+      },
+      PostDetails: 'post/:id',
+      Login: {
+        path: 'login',
+        // @ts-expect-error The Login route is not a nested navigator and should not have a screens object
+        screens: {},
+      },
+      NotFound: '*',
+    },
+  },
+};
