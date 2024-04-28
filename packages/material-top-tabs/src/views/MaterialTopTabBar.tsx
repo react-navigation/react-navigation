@@ -76,7 +76,9 @@ export function MaterialTopTabBar({
           labelText:
             options.tabBarShowLabel === false
               ? undefined
-              : options.title !== undefined
+              : options.tabBarLabel !== undefined && typeof options.tabBarLabel === "string"
+                ? options.tabBarLabel
+                : options.title !== undefined
                 ? options.title
                 : route.name,
         },
