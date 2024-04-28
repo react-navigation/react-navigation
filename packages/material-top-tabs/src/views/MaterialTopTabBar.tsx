@@ -16,19 +16,19 @@ import type { MaterialTopTabBarProps } from '../types';
 type MaterialLabelType = {
   color: string;
   label?: string;
-  labelStyle?: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
   allowScaling?: boolean;
 };
 
 const MaterialLabel = ({
   color,
   label,
-  labelStyle,
+  style,
   allowScaling,
 }: MaterialLabelType) => {
   return (
     <Text
-      style={[{ color }, styles.label, labelStyle]}
+      style={[{ color }, styles.label, style]}
       allowFontScaling={allowScaling}
     >
       {label}
