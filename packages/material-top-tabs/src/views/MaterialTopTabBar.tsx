@@ -76,11 +76,12 @@ export function MaterialTopTabBar({
           labelText:
             options.tabBarShowLabel === false
               ? undefined
-              : options.tabBarLabel !== undefined && typeof options.tabBarLabel === "string"
+              : options.tabBarLabel !== undefined &&
+                  typeof options.tabBarLabel === 'string'
                 ? options.tabBarLabel
                 : options.title !== undefined
-                ? options.title
-                : route.name,
+                  ? options.title
+                  : route.name,
         },
       ];
     })
