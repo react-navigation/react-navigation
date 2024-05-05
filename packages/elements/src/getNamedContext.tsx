@@ -8,7 +8,8 @@ declare global {
 }
 
 // We use a global variable to keep our contexts so that we can reuse same contexts across packages
-globalThis[contexts] = globalThis[contexts] ?? new Map<string, React.Context<any>>();
+globalThis[contexts] =
+  globalThis[contexts] ?? new Map<string, React.Context<any>>();
 
 export function getNamedContext<T>(
   name: string,
