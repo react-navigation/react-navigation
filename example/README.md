@@ -9,4 +9,4 @@ If you want to run the example from the repo,
 You can also run the currently published app:
 
 - For iOS simulator & Android device with [Expo Go](https://expo.dev/client): <https://react-navigation-example.netlify.app/.netlify/functions/expo>
-- For web: <https://react-navigation-example.netlify.com/>
+- For web: <https://react-navigation-example.netlify.app>
