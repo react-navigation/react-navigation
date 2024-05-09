@@ -525,7 +525,6 @@ export function TabBar<T extends Route>({
         : undefined;
 
       const props = {
-        ...rest,
         key: route.key,
         position,
         route,
@@ -545,6 +544,7 @@ export function TabBar<T extends Route>({
         style: tabStyle,
         defaultTabWidth,
         android_ripple,
+        ...rest,
       } satisfies TabBarItemProps<T> & { key: string };
 
       return (
