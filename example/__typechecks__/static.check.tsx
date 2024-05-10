@@ -120,6 +120,7 @@ navigation.navigate('Register', { method: 'token' });
 /**
  * Infer params from nested navigator
  */
+navigation.navigate('Home'); // Navigate to screen without specifying a child screen
 navigation.navigate('Home', { screen: 'Groups' });
 navigation.navigate('Home', { screen: 'Chat', params: { id: 123 } });
 
