@@ -185,6 +185,7 @@ const SceneView = ({
     autoHideHomeIndicator,
     keyboardHandlingEnabled,
     navigationBarColor,
+    navigationBarTranslucent,
     navigationBarHidden,
     orientation,
     sheetAllowedDetents = 'large',
@@ -331,6 +332,7 @@ const SceneView = ({
       homeIndicatorHidden={autoHideHomeIndicator}
       hideKeyboardOnSwipe={keyboardHandlingEnabled}
       navigationBarColor={navigationBarColor}
+      navigationBarTranslucent={navigationBarTranslucent}
       navigationBarHidden={navigationBarHidden}
       replaceAnimation={animationTypeForReplace}
       stackPresentation={presentation === 'card' ? 'push' : presentation}
