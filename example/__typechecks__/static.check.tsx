@@ -355,6 +355,11 @@ switch (route.name) {
       user: string;
     }>();
     break;
+  case 'Feed':
+    expectTypeOf(route.params).toMatchTypeOf<{
+      sort: 'hot' | 'recent';
+    }>();
+    break;
   case 'Settings':
     expectTypeOf(route.params).toMatchTypeOf<undefined>();
     break;
@@ -365,6 +370,9 @@ switch (route.name) {
     expectTypeOf(route.params).toMatchTypeOf<{
       method: 'email' | 'social';
     }>();
+    break;
+  case 'Account':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
     break;
   // Checks for nested routes
   case 'Groups':

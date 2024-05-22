@@ -517,6 +517,9 @@ switch (route.name) {
   case 'Login':
     expectTypeOf(route.params).toMatchTypeOf<undefined>();
     break;
+  case 'NotFound':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    break;
   // Checks for nested routes
   case 'Account':
     expectTypeOf(route.params).toMatchTypeOf<undefined>();
@@ -525,6 +528,9 @@ switch (route.name) {
     expectTypeOf(route.params).toMatchTypeOf<{
       filter: 'day' | 'week' | 'month';
     }>();
+    break;
+  case 'Latest':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
     break;
 }
 
