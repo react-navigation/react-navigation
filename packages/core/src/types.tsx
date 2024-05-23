@@ -781,7 +781,7 @@ export type ParamListRoute<ParamList extends ParamListBase> = {
   [RouteName in keyof ParamList]: NavigatorScreenParams<{}> extends ParamList[RouteName]
     ? NotUndefined<ParamList[RouteName]> extends NavigatorScreenParams<infer T>
       ? ParamListRoute<T>
-      : never
+      : Route<Extract<RouteName, string>, ParamList[RouteName]>
     : Route<Extract<RouteName, string>, ParamList[RouteName]>;
 }[keyof ParamList];
 
