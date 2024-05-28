@@ -464,7 +464,6 @@ const styles = StyleSheet.create({
   },
   sideItem: {
     margin: SPACING,
-    padding: SPACING * 2,
-    borderRadius: 4,
+    borderRadius: 56,
   },
 });

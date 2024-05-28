@@ -173,7 +173,7 @@ export function BottomTabItem({
   iconStyle,
   style,
 }: Props) {
-  const { colors } = useTheme();
+  const { colors, fonts } = useTheme();
 
   const activeTintColor =
     customActiveTintColor === undefined
@@ -216,8 +216,11 @@ export function BottomTabItem({
     return (
       <Label
         style={[
-          horizontal ? styles.labelBeside : styles.labelBeneath,
+          horizontal
+            ? [styles.labelBeside, { marginStart: icon !== undefined ? 16 : 0 }]
+            : styles.labelBeneath,
           labelStyle,
+          fonts.medium,
         ]}
         allowFontScaling={allowFontScaling}
         tintColor={color}
@@ -290,16 +293,22 @@ const styles = StyleSheet.create({
   tabPortrait: {
     justifyContent: 'flex-end',
     flexDirection: 'column',
+    padding: 12,
   },
   tabLandscape: {
     justifyContent: 'center',
     flexDirection: 'row',
+    paddingVertical: 12,
+    paddingStart: 16,
+    paddingEnd: 24,
   },
   labelBeneath: {
     fontSize: 10,
   },
   labelBeside: {
-    fontSize: 13,
+    marginEnd: 12,
+    marginVertical: 4,
+    lineHeight: 24,
     marginStart: 20,
   },
 });
