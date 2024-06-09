@@ -46,16 +46,10 @@ export type StackActionType =
       target?: string;
     }
   | {
-      type: 'REMOVE';
-      payload: {
-        name: string;
-        params?: object;
-      };
-      source?: string;
-      target?: string;
-    }
-  | {
       type: 'RETAIN';
+      payload: {
+        mark: boolean;
+      };
       source?: string;
       target?: string;
     };
@@ -72,6 +66,10 @@ export type StackNavigationState<ParamList extends ParamListBase> =
      * List of routes, which are supposed to be preloaded before navigating to.
      */
     preloadedRoutes: NavigationRoute<ParamList, keyof ParamList>[];
+    /**
+     * Routes to retain in the navigator.
+     */
+    retainedRouteKeys: string[];
   };
 
 export type StackActionHelpers<ParamList extends ParamListBase> = {
@@ -173,12 +171,30 @@ export const StackActions = {
   popTo(name: string, params?: object, merge?: boolean): StackActionType {
     return { type: 'POP_TO', payload: { name, params, merge } };
   },
-  remove(name: string, params?: object): StackActionType {
-    return { type: 'REMOVE', payload: { name, params } };
+  retain(mark: boolean): StackActionType {
+    return { type: 'RETAIN', payload: { mark } };
   },
-  retain(): StackActionType {
-    return { type: 'RETAIN' };
-  },
+};
+
+const retainRoutes = (
+  prevState: StackNavigationState<ParamListBase>,
+  nextState: Partial<StackNavigationState<ParamListBase>>
+) => {
+  const updatedState = { ...prevState, ...nextState };
+
+  const retainedRoutes = prevState.routes.filter(
+    (r) =>
+      !updatedState.routes.includes(r) &&
+      !updatedState.retainedRouteKeys.includes(r.key)
+  );
+
+  const preloadedRoutes = updatedState.preloadedRoutes.concat(retainedRoutes);
+
+  return {
+    ...updatedState,
+    preloadedRoutes,
+    index: updatedState.routes.length - 1,
+  };
 };
 
 export function StackRouter(options: StackRouterOptions) {
@@ -204,6 +220,7 @@ export function StackRouter(options: StackRouterOptions) {
         index: 0,
         routeNames,
         preloadedRoutes: [],
+        retainedRouteKeys: [],
         routes: [
           {
             key: `${initialRouteName}-${nanoid()}`,
@@ -274,6 +291,7 @@ export function StackRouter(options: StackRouterOptions) {
         routeNames,
         routes,
         preloadedRoutes,
+        retainedRouteKeys: [],
       };
     },
 
@@ -316,11 +334,9 @@ export function StackRouter(options: StackRouterOptions) {
         return state;
       }
 
-      return {
-        ...state,
-        index,
+      return retainRoutes(state, {
         routes: state.routes.slice(0, index + 1),
-      };
+      });
     },
 
     getStateForAction(state, action, options) {
@@ -343,8 +359,7 @@ export function StackRouter(options: StackRouterOptions) {
             return null;
           }
 
-          return {
-            ...state,
+          return retainRoutes(state, {
             routes: state.routes.map((route, i) =>
               i === index
                 ? {
@@ -360,7 +375,7 @@ export function StackRouter(options: StackRouterOptions) {
                   }
                 : route
             ),
-          };
+          });
         }
 
         case 'PUSH':
@@ -449,14 +464,12 @@ export function StackRouter(options: StackRouterOptions) {
             ];
           }
 
-          return {
-            ...state,
-            index: routes.length - 1,
+          return retainRoutes(state, {
             preloadedRoutes: state.preloadedRoutes.filter(
               (route) => routes[routes.length - 1].key !== route.key
             ),
             routes,
-          };
+          });
         }
 
         case 'NAVIGATE_DEPRECATED': {
@@ -512,11 +525,9 @@ export function StackRouter(options: StackRouterOptions) {
               },
             ];
 
-            return {
-              ...state,
+            return retainRoutes(state, {
               routes,
-              index: routes.length - 1,
-            };
+            });
           }
 
           const route = state.routes[index];
@@ -543,16 +554,14 @@ export function StackRouter(options: StackRouterOptions) {
                 : action.payload.params;
           }
 
-          return {
-            ...state,
-            index,
+          return retainRoutes(state, {
             routes: [
               ...state.routes.slice(0, index),
               params !== route.params
                 ? { ...route, params }
                 : state.routes[index],
             ],
-          };
+          });
         }
 
         case 'POP': {
@@ -567,11 +576,9 @@ export function StackRouter(options: StackRouterOptions) {
               .slice(0, count)
               .concat(state.routes.slice(index + 1));
 
-            return {
-              ...state,
-              index: routes.length - 1,
+            return retainRoutes(state, {
               routes,
-            };
+            });
           }
 
           return null;
@@ -632,11 +639,9 @@ export function StackRouter(options: StackRouterOptions) {
               },
             ];
 
-            return {
-              ...state,
+            return retainRoutes(state, {
               routes,
-              index: routes.length - 1,
-            };
+            });
           }
 
           const route = state.routes[index];
@@ -663,16 +668,14 @@ export function StackRouter(options: StackRouterOptions) {
                 : action.payload.params;
           }
 
-          return {
-            ...state,
-            index,
+          return retainRoutes(state, {
             routes: [
               ...state.routes.slice(0, index),
               params !== route.params
                 ? { ...route, params }
                 : state.routes[index],
             ],
-          };
+          });
         }
 
         case 'GO_BACK':
@@ -747,6 +750,7 @@ export function StackRouter(options: StackRouterOptions) {
             };
           }
         }
+
         case 'RETAIN': {
           const index =
             action.target === state.key && action.source
@@ -759,28 +763,36 @@ export function StackRouter(options: StackRouterOptions) {
 
           const route = state.routes[index];
 
-          const routes = state.routes.filter((r) => r !== route);
-          return {
-            ...state,
-            index: routes.length - 1,
-            routes,
-            preloadedRoutes: state.preloadedRoutes.concat(route),
-          };
+          if (action.payload.mark) {
+            if (state.retainedRouteKeys.includes(route.key)) {
+              return state;
+            }
+
+            return {
+              ...state,
+              retainedRouteKeys: state.retainedRouteKeys.concat(route.key),
+            };
+          } else {
+            if (!state.retainedRouteKeys.includes(route.key)) {
+              return state;
+            }
+
+            const retainedRouteKeys = state.retainedRouteKeys.filter(
+              (key) => key !== route.key
+            );
+
+            const preloadedRoutes = state.preloadedRoutes.filter(
+              (r) => r.key !== route.key
+            );
+
+            return {
+              ...state,
+              retainedRouteKeys,
+              preloadedRoutes,
+            };
+          }
         }
 
-        case 'REMOVE': {
-          const getId = options.routeGetIdList[action.payload.name];
-          const id = getId?.({ params: action.payload.params });
-
-          return {
-            ...state,
-            preloadedRoutes: state.preloadedRoutes.filter(
-              (route) =>
-                route.name !== action.payload.name ||
-                id !== getId?.({ params: route.params })
-            ),
-          };
-        }
         default:
           return BaseRouter.getStateForAction(state, action);
       }
