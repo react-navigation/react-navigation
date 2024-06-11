@@ -295,7 +295,10 @@ const SceneView = ({
     [headerHeightCorrectionOffset, rawAnimatedHeaderHeight]
   );
 
-  const headerTopInsetEnabled = topInset !== 0;
+  const headerTopInsetEnabled =
+    typeof statusBarTranslucent === 'boolean'
+      ? statusBarTranslucent
+      : topInset !== 0;
 
   const backTitle = previousDescriptor
     ? getHeaderTitle(previousDescriptor.options, previousDescriptor.route.name)
