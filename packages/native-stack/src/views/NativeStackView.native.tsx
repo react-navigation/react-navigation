@@ -295,6 +295,8 @@ const SceneView = ({
     [headerHeightCorrectionOffset, rawAnimatedHeaderHeight]
   );
 
+  // See https://github.com/react-navigation/react-navigation/pull/12014
+  // for explanation.
   const headerTopInsetEnabled =
     typeof statusBarTranslucent === 'boolean'
       ? statusBarTranslucent
