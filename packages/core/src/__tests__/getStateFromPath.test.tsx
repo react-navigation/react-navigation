@@ -2801,3 +2801,20 @@ it('resolves nested path params with same name to correct screen', () => {
 
   expect(getStateFromPath<object>(path, config)).toEqual(state);
 });
+
+it('parses / same as empty string', () => {
+  const config = {
+    screens: {
+      Foo: {
+        path: '/',
+      },
+      Bar: {
+        path: 'bar',
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('/', config)).toEqual(
+    getStateFromPath<object>('', config)
+  );
+});
