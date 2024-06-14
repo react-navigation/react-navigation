@@ -90,6 +90,10 @@ type Props = {
    */
   horizontal: boolean;
   /**
+   * Variant of navigation bar styling ('OS' for mobile view or 'Material' for web view).
+   */
+  variant: 'OS' | 'Material';
+  /**
    * Color for the icon and label when the item is active.
    */
   activeTintColor?: string;
@@ -163,6 +167,7 @@ export function BottomTabItem({
   onPress,
   onLongPress,
   horizontal,
+  variant,
   activeTintColor: customActiveTintColor,
   inactiveTintColor: customInactiveTintColor,
   activeBackgroundColor = 'transparent',
@@ -217,10 +222,14 @@ export function BottomTabItem({
       <Label
         style={[
           horizontal
-            ? [styles.labelBeside, { marginStart: icon !== undefined ? 16 : 0 }]
+            ? [
+                styles.labelBeside,
+                { marginStart: icon !== undefined ? 16 : 0 },
+                variant === 'OS' && styles.labelBesideForOsVariant,
+              ]
             : styles.labelBeneath,
+          variant === 'Material' && fonts.medium,
           labelStyle,
-          fonts.medium,
         ]}
         allowFontScaling={allowFontScaling}
         tintColor={color}
@@ -293,7 +302,6 @@ const styles = StyleSheet.create({
   tabPortrait: {
     justifyContent: 'flex-end',
     flexDirection: 'column',
-    padding: 12,
   },
   tabLandscape: {
     justifyContent: 'center',
@@ -310,5 +318,8 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     lineHeight: 24,
     marginStart: 20,
+  },
+  labelBesideForOsVariant: {
+    fontSize: 13,
   },
 });

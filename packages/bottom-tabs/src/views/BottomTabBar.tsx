@@ -387,6 +387,7 @@ export function BottomTabBar({
                   descriptor={descriptors[route.key]}
                   focused={focused}
                   horizontal={hasHorizontalLabels}
+                  variant={tabBarIsHorizontal ? 'OS' : 'Material'}
                   onPress={onPress}
                   onLongPress={onLongPress}
                   accessibilityLabel={accessibilityLabel}
@@ -464,6 +465,7 @@ const styles = StyleSheet.create({
   },
   sideItem: {
     margin: SPACING,
+    padding: SPACING * 2,
     borderRadius: 56,
   },
 });
