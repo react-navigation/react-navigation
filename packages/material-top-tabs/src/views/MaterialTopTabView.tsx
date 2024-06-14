@@ -38,6 +38,22 @@ export function MaterialTopTabView({
   const renderTabBar = (props: SceneRendererProps) => {
     return tabBar({
       ...props,
+      jumpTo: (key: string) => {
+        const route = state.routes.find((route) => route.key === key);
+
+        if (route) {
+          navigation.dispatch({
+            ...CommonActions.navigate({
+              name: route.name,
+              params: route.params,
+              path: route.path,
+            }),
+            target: state.key,
+          });
+        } else {
+          throw new Error(`Could not find the route with the key: ${key}`);
+        }
+      },
       state: state,
       navigation: navigation,
       descriptors: descriptors,
