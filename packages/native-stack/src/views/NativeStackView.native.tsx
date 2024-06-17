@@ -160,6 +160,11 @@ const SceneView = ({
     statusBarStyle,
     statusBarTranslucent,
     statusBarColor,
+    sheetAllowedDetents,
+    sheetLargestUndimmedDetent,
+    sheetGrabberVisible,
+    sheetCornerRadius,
+    sheetExpandsWhenScrolledToEdge,
     freezeOnBlur,
   } = options;
 
@@ -285,6 +290,11 @@ const SceneView = ({
       statusBarStyle={statusBarStyle}
       statusBarColor={statusBarColor}
       statusBarTranslucent={statusBarTranslucent}
+      sheetAllowedDetents={sheetAllowedDetents}
+      sheetLargestUndimmedDetent={sheetLargestUndimmedDetent}
+      sheetGrabberVisible={sheetGrabberVisible}
+      sheetCornerRadius={sheetCornerRadius}
+      sheetExpandsWhenScrolledToEdge={sheetExpandsWhenScrolledToEdge}
       swipeDirection={gestureDirectionOverride}
       transitionDuration={animationDuration}
       onWillDisappear={onWillDisappear}

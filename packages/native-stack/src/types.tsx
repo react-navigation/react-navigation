@@ -339,6 +339,72 @@ export type NativeStackNavigationOptions = {
    */
   navigationBarHidden?: boolean;
   /**
+   * Describes heights where a sheet can rest.
+   * Works only when `stackPresentation` is set to `formSheet`.
+   * Defaults to `large`.
+   *
+   * Available values:
+   *
+   * - `large` - only large detent level will be allowed
+   * - `medium` - only medium detent level will be allowed
+   * - `all` - all detent levels will be allowed
+   *
+   * Requires `react-native-screens` version >=3.21.0
+   *
+   * @platform ios
+   */
+  sheetAllowedDetents?: ScreenProps['sheetAllowedDetents'];
+  /**
+   * Whether the sheet should expand to larger detent when scrolling.
+   * Works only when `stackPresentation` is set to `formSheet`.
+   * Defaults to `true`.
+   *
+   * Requires `react-native-screens` version >=3.21.0
+   *
+   * @platform ios
+   */
+  sheetExpandsWhenScrolledToEdge?: ScreenProps['sheetExpandsWhenScrolledToEdge'];
+  /**
+   * The corner radius that the sheet will try to render with.
+   * Works only when `stackPresentation` is set to `formSheet`.
+   *
+   * If set to non-negative value it will try to render sheet with provided radius, else ti will apply system default.
+   *
+   * If left unset system default is used.
+   *
+   * Requires `react-native-screens` version >=3.21.0
+   *
+   * @platform ios
+   */
+  sheetCornerRadius?: ScreenProps['sheetCornerRadius'];
+  /**
+   * Boolean indicating whether the sheet shows a grabber at the top.
+   * Works only when `stackPresentation` is set to `formSheet`.
+   * Defaults to `false`.
+   *
+   * Requires `react-native-screens` version >=3.21.0
+   *
+   * @platform ios
+   */
+  sheetGrabberVisible?: ScreenProps['sheetGrabberVisible'];
+  /**
+   * The largest sheet detent for which a view underneath won't be dimmed.
+   * Works only when `stackPresentation` is set to `formSheet`.
+   *
+   * If this prop is set to:
+   *
+   * - `large` - the view underneath won't be dimmed at any detent level
+   * - `medium` - the view underneath will be dimmed only when detent level is `large`
+   * - `all` - the view underneath will be dimmed for any detent level
+   *
+   * Defaults to `all`.
+   *
+   * Requires `react-native-screens` version >=3.21.0
+   *
+   * @platform ios
+   */
+  sheetLargestUndimmedDetent?: ScreenProps['sheetLargestUndimmedDetent'];
+  /**
    * Sets the status bar animation (similar to the `StatusBar` component).
    * Requires setting `View controller-based status bar appearance -> YES` (or removing the config) in your `Info.plist` file.
    *
