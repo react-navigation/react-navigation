@@ -185,6 +185,7 @@ const SceneView = ({
     autoHideHomeIndicator,
     keyboardHandlingEnabled,
     navigationBarColor,
+    navigationBarTranslucent,
     navigationBarHidden,
     orientation,
     sheetAllowedDetents = 'large',
@@ -340,6 +341,8 @@ const SceneView = ({
       homeIndicatorHidden={autoHideHomeIndicator}
       hideKeyboardOnSwipe={keyboardHandlingEnabled}
       navigationBarColor={navigationBarColor}
+      // @ts-expect-error prop supported from react-native-screens 3.32.0 onwards
+      navigationBarTranslucent={navigationBarTranslucent}
       navigationBarHidden={navigationBarHidden}
       replaceAnimation={animationTypeForReplace}
       stackPresentation={presentation === 'card' ? 'push' : presentation}
