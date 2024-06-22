@@ -34,7 +34,7 @@ import {
   type ScreenProps,
   ScreenStack,
   type StackPresentationTypes,
-  FooterComponent,
+  // FooterComponent,
 } from 'react-native-screens';
 import warnOnce from 'warn-once';
 
@@ -113,6 +113,8 @@ const MaybeNestedStack = ({
       {children}
     </DebugContainer>
   );
+
+  console.log(`Render MaybeNestedStack ${isHeaderInModal}`);
 
   if (isHeaderInModal) {
     return (
@@ -346,6 +348,8 @@ const SceneView = ({
 
   const isRemovePrevented = preventedRoutes[route.key]?.preventRemove;
 
+  console.log('Render SceneView');
+
   return (
     <Screen
       key={route.key}
@@ -468,43 +472,35 @@ const SceneView = ({
                     {headerBackground()}
                   </View>
                 ) : null}
-                <View
-                  accessibilityElementsHidden={!focused}
-                  importantForAccessibility={
-                    focused ? 'auto' : 'no-hide-descendants'
-                  }
-                  style={styles.scene}
+                <MaybeNestedStack
+                  options={options}
+                  route={route}
+                  presentation={presentation}
+                  headerHeight={headerHeight}
+                  headerTopInsetEnabled={headerTopInsetEnabled}
                 >
-                  <MaybeNestedStack
-                    options={options}
-                    route={route}
-                    presentation={presentation}
-                    headerHeight={headerHeight}
-                    headerTopInsetEnabled={headerTopInsetEnabled}
-                  >
-                    <HeaderBackContext.Provider value={headerBack}>
-                      {render()}
-                    </HeaderBackContext.Provider>
-                  </MaybeNestedStack>
-                  {header !== undefined && headerShown !== false ? (
-                    <View
-                      onLayout={(e) => {
-                        const headerHeight = e.nativeEvent.layout.height;
+                  <HeaderBackContext.Provider value={headerBack}>
+                    {render()}
+                  </HeaderBackContext.Provider>
+                </MaybeNestedStack>
+                {header !== undefined && headerShown !== false ? (
+                  <View
+                    onLayout={(e) => {
+                      const headerHeight = e.nativeEvent.layout.height;
 
-                        setHeaderHeight(headerHeight);
-                        rawAnimatedHeaderHeight.setValue(headerHeight);
-                      }}
-                      style={headerTransparent ? styles.absolute : null}
-                    >
-                      {header({
-                        back: headerBack,
-                        options,
-                        route,
-                        navigation,
-                      })}
-                    </View>
-                  ) : null}
-                </View>
+                      setHeaderHeight(headerHeight);
+                      rawAnimatedHeaderHeight.setValue(headerHeight);
+                    }}
+                    style={headerTransparent ? styles.absolute : null}
+                  >
+                    {header({
+                      back: headerBack,
+                      options,
+                      route,
+                      navigation,
+                    })}
+                  </View>
+                ) : null}
                 {/**
                  * `HeaderConfig` needs to be the direct child of `Screen` without any intermediate `View`
                  * We don't render it conditionally to make it possible to dynamically render a custom `header`
@@ -534,9 +530,9 @@ const SceneView = ({
                   headerTopInsetEnabled={headerTopInsetEnabled}
                   canGoBack={headerBack !== undefined}
                 />
-                {footerComponent && (
+                {/*footerComponent && (
                   <FooterComponent>{footerComponent}</FooterComponent>
-                )}
+                )*/}
               </HeaderHeightContext.Provider>
             </AnimatedHeaderHeightContext.Provider>
           </HeaderShownContext.Provider>
