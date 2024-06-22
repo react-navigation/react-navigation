@@ -598,6 +598,7 @@ export type NativeStackNavigationOptions = {
    * TODO: Describe this
    */
   footerComponent?: React.ReactNode;
+  onSheetDetentChanged?: ScreenProps['onSheetDetentChanged'];
 };
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<
