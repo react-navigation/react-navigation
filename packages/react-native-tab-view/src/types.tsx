@@ -61,6 +61,13 @@ export type SceneRendererProps = {
   layout: Layout;
   position: Animated.AnimatedInterpolation<number>;
   jumpTo: (key: string) => void;
+
+  /**
+   * Whether to use js thread or native UI thread for running animations.
+   * Setting it true will run animations on UI thread else will run on js thread.
+   * Deafult value is set to true.
+   */
+  useNativeDriver?: boolean;
 };
 
 export type EventEmitterProps = {
@@ -82,4 +89,11 @@ export type PagerProps = Omit<
   animationEnabled?: boolean;
   onSwipeStart?: () => void;
   onSwipeEnd?: () => void;
+
+  /**
+   * Whether to use js thread or native UI thread for running animations.
+   * Setting it true will run animations on UI thread else will run on js thread.
+   * Deafult value is set to true.
+   */
+  useNativeDriver?: boolean;
 };

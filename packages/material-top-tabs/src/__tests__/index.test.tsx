@@ -44,7 +44,7 @@ it('renders a material top tab navigator with screens', async () => {
 
   const { findByText, queryByText } = render(
     <NavigationContainer>
-      <Tab.Navigator>
+      <Tab.Navigator useNativeDriver={false}>
         <Tab.Screen name="A" component={Test} />
         <Tab.Screen name="B" component={Test} />
       </Tab.Navigator>

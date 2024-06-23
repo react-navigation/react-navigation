@@ -41,6 +41,7 @@ function MaterialTopTabNavigator({
   screenListeners,
   screenOptions,
   screenLayout,
+  useNativeDriver = true,
   UNSTABLE_getStateForRouteNamesChange,
   ...rest
 }: Props) {
@@ -70,6 +71,7 @@ function MaterialTopTabNavigator({
         state={state}
         navigation={navigation}
         descriptors={descriptors}
+        useNativeDriver={useNativeDriver}
       />
     </NavigationContent>
   );

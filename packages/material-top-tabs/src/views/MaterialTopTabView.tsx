@@ -30,6 +30,7 @@ export function MaterialTopTabView({
   navigation,
   descriptors,
   sceneContainerStyle,
+  useNativeDriver = true,
   ...rest
 }: Props) {
   const { colors } = useTheme();
@@ -57,6 +58,7 @@ export function MaterialTopTabView({
       state: state,
       navigation: navigation,
       descriptors: descriptors,
+      useNativeDriver: useNativeDriver,
     });
   };
 
@@ -80,6 +82,7 @@ export function MaterialTopTabView({
       )}
       navigationState={state}
       renderTabBar={renderTabBar}
+      useNativeDriver={useNativeDriver}
       renderLazyPlaceholder={({ route }) =>
         descriptors[route.key].options.lazyPlaceholder?.() ?? null
       }
