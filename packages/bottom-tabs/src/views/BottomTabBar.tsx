@@ -331,7 +331,7 @@ export function BottomTabBar({
         {tabBarBackgroundElement}
       </View>
       <View
-        accessibilityRole="tablist"
+        role="tablist"
         style={tabBarIsHorizontal ? styles.bottomContent : styles.sideContent}
       >
         {routes.map((route, index) => {

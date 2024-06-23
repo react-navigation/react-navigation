@@ -165,10 +165,7 @@ export function HeaderContainer({
                     : undefined
                 }
                 pointerEvents={isFocused ? 'box-none' : 'none'}
-                accessibilityElementsHidden={!isFocused}
-                importantForAccessibility={
-                  isFocused ? 'auto' : 'no-hide-descendants'
-                }
+                aria-hidden={!isFocused}
                 style={
                   // Avoid positioning the focused header absolutely
                   // Otherwise accessibility tools don't seem to be able to find it

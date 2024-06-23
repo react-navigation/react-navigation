@@ -51,9 +51,9 @@ it('renders link with href on web', () => {
 
   expect(toJSON()).toMatchInlineSnapshot(`
 <Text
-  accessibilityRole="link"
   href="/bar/42"
   onPress={[Function]}
+  role="link"
   style={
     [
       {
@@ -82,9 +82,9 @@ it('renders link with href on web', () => {
 
   expect(toJSON()).toMatchInlineSnapshot(`
 <Text
-  accessibilityRole="link"
   href="/foo"
   onPress={[Function]}
+  role="link"
   style={
     [
       {
@@ -146,9 +146,9 @@ it("doesn't navigate if default was prevented", () => {
 
   expect(toJSON()).toMatchInlineSnapshot(`
 <Text
-  accessibilityRole="link"
   href="/bar/42"
   onPress={[Function]}
+  role="link"
   style={
     [
       {
@@ -177,9 +177,9 @@ it("doesn't navigate if default was prevented", () => {
 
   expect(toJSON()).toMatchInlineSnapshot(`
 <Text
-  accessibilityRole="link"
   href="/bar/42"
   onPress={[Function]}
+  role="link"
   style={
     [
       {

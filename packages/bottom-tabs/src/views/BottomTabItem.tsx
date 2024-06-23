@@ -141,7 +141,7 @@ export function BottomTabItem({
     children,
     style,
     onPress,
-    accessibilityRole,
+    role,
     ...rest
   }: BottomTabBarButtonProps) => {
     return (
@@ -150,7 +150,7 @@ export function BottomTabItem({
         android_ripple={{ borderless: true }}
         pressOpacity={1}
         href={href}
-        accessibilityRole={accessibilityRole}
+        role={role}
         onPress={onPress}
         style={style}
       >
@@ -263,8 +263,8 @@ export function BottomTabItem({
     onLongPress,
     testID,
     accessibilityLabel,
-    // FIXME: accessibilityRole: 'tab' doesn't seem to work as expected on iOS
-    accessibilityRole: Platform.select({ ios: 'button', default: 'tab' }),
+    // FIXME: role: 'tab' doesn't seem to work as expected on iOS
+    role: Platform.select({ ios: 'button', default: 'tab' }),
     accessibilityState: { selected: focused },
     // @ts-expect-error: keep for compatibility with older React Native versions
     accessibilityStates: focused ? ['selected'] : [],
