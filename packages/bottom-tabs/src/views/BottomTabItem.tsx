@@ -90,9 +90,11 @@ type Props = {
    */
   horizontal: boolean;
   /**
-   * Variant of navigation bar styling ('OS' for mobile view or 'Material' for web view).
+   * Variant of navigation bar styling
+   * - `uikit`: iOS UIKit style
+   * - `material`: Material Design style
    */
-  variant: 'OS' | 'Material';
+  variant: 'uikit' | 'material';
   /**
    * Color for the icon and label when the item is active.
    */
@@ -225,10 +227,10 @@ export function BottomTabItem({
             ? [
                 styles.labelBeside,
                 { marginStart: icon !== undefined ? 16 : 0 },
-                variant === 'OS' && styles.labelBesideForOsVariant,
+                variant === 'uikit' && styles.labelBesideUikit,
               ]
             : styles.labelBeneath,
-          variant === 'Material' && fonts.medium,
+          variant === 'material' && fonts.medium,
           labelStyle,
         ]}
         allowFontScaling={allowFontScaling}
@@ -319,7 +321,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     marginStart: 20,
   },
-  labelBesideForOsVariant: {
+  labelBesideUikit: {
     fontSize: 13,
   },
 });
