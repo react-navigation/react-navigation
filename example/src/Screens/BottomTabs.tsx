@@ -184,10 +184,10 @@ export function BottomTabs() {
             tabBarIcon: getTabBarIcon('image-album'),
             tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.5)',
             tabBarActiveTintColor: '#fff',
-            tabBarStyle: {
-              position: isLargeScreen ? undefined : 'absolute',
-              borderColor: 'rgba(0, 0, 0, .2)',
-            },
+            tabBarStyle: [
+              { borderWidth: 0 },
+              isLargeScreen ? null : { position: 'absolute' },
+            ],
             tabBarBackground: () => (
               <>
                 {isLargeScreen && (
