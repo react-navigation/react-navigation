@@ -269,10 +269,9 @@ export function BottomTabBar({
     layout,
   });
 
-  const tabBarBackgroundElement = tabBarBackground?.();
+  const isSidebar = tabBarPosition === 'left' || tabBarPosition === 'right';
 
-  const tabBarIsHorizontal =
-    tabBarPosition === 'bottom' || tabBarPosition === 'top';
+  const tabBarBackgroundElement = tabBarBackground?.();
 
   return (
     <Animated.View
@@ -287,8 +286,17 @@ export function BottomTabBar({
             tabBarBackgroundElement != null ? 'transparent' : colors.card,
           borderColor: colors.border,
         },
-        tabBarIsHorizontal
-          ? [
+        isSidebar
+          ? {
+              paddingTop: insets.top,
+              paddingBottom: insets.bottom,
+              paddingStart: tabBarPosition === 'left' ? insets.left : 0,
+              paddingEnd: tabBarPosition === 'right' ? insets.right : 0,
+              minWidth: hasHorizontalLabels
+                ? getDefaultSidebarWidth(dimensions)
+                : 0,
+            }
+          : [
               {
                 transform: [
                   {
@@ -312,27 +320,18 @@ export function BottomTabBar({
                 paddingBottom,
                 paddingHorizontal: Math.max(insets.left, insets.right),
               },
-            ]
-          : {
-              paddingTop: insets.top,
-              paddingBottom: insets.bottom,
-              paddingStart: tabBarPosition === 'left' ? insets.left : 0,
-              paddingEnd: tabBarPosition === 'right' ? insets.right : 0,
-              minWidth: hasHorizontalLabels
-                ? getDefaultSidebarWidth(dimensions)
-                : 0,
-            },
+            ],
         tabBarStyle,
       ]}
       pointerEvents={isTabBarHidden ? 'none' : 'auto'}
-      onLayout={tabBarIsHorizontal ? handleLayout : undefined}
+      onLayout={isSidebar ? undefined : handleLayout}
     >
       <View pointerEvents="none" style={StyleSheet.absoluteFill}>
         {tabBarBackgroundElement}
       </View>
       <View
         accessibilityRole="tablist"
-        style={tabBarIsHorizontal ? styles.bottomContent : styles.sideContent}
+        style={isSidebar ? styles.sideContent : styles.bottomContent}
       >
         {routes.map((route, index) => {
           const focused = index === state.index;
@@ -387,6 +386,7 @@ export function BottomTabBar({
                   descriptor={descriptors[route.key]}
                   focused={focused}
                   horizontal={hasHorizontalLabels}
+                  variant={isSidebar ? 'material' : 'uikit'}
                   onPress={onPress}
                   onLongPress={onLongPress}
                   accessibilityLabel={accessibilityLabel}
@@ -410,14 +410,14 @@ export function BottomTabBar({
                   labelStyle={options.tabBarLabelStyle}
                   iconStyle={options.tabBarIconStyle}
                   style={[
-                    tabBarIsHorizontal
-                      ? styles.bottomItem
-                      : [
+                    isSidebar
+                      ? [
                           styles.sideItem,
                           hasHorizontalLabels
-                            ? { justifyContent: 'flex-start' }
-                            : null,
-                        ],
+                            ? styles.sideItemHorizontal
+                            : styles.sideItemVertical,
+                        ]
+                      : styles.bottomItem,
                     options.tabBarItemStyle,
                   ]}
                 />
@@ -465,6 +465,12 @@ const styles = StyleSheet.create({
   sideItem: {
     margin: SPACING,
     padding: SPACING * 2,
-    borderRadius: 4,
+  },
+  sideItemHorizontal: {
+    borderRadius: 56,
+    justifyContent: 'flex-start',
+  },
+  sideItemVertical: {
+    borderRadius: 16,
   },
 });
