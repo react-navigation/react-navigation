@@ -1,6 +1,4 @@
 {
-  "name": "ReactNavigationExample",
-  "displayName": "React Navigation Example",
   "expo": {
     "name": "React Navigation",
     "owner": "react-navigation",
@@ -41,6 +39,9 @@
     },
     "runtimeVersion": {
       "policy": "sdkVersion"
-    }
+    },
+    "plugins": [
+      "expo-asset"
+    ]
   }
 }
