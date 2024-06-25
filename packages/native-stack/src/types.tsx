@@ -425,7 +425,7 @@ export type NativeStackNavigationOptions = {
    *
    * Only `backgroundColor` is accepted.
    */
-  screenStyle?: { backgroundColor: ViewStyle['backgroundColor'] };
+  screenStyle?: ScreenProps['screenStyle'];
   /**
    * Whether the gesture to dismiss should use animation provided to `animation` prop. Defaults to `false`.
    *
