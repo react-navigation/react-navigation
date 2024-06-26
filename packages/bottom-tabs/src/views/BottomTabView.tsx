@@ -9,6 +9,7 @@ import {
   type ParamListBase,
   StackActions,
   type TabNavigationState,
+  useLocale,
 } from '@react-navigation/native';
 import * as React from 'react';
 import { Animated, Platform, StyleSheet } from 'react-native';
@@ -80,6 +81,8 @@ export function BottomTabView(props: Props) {
   } = props;
 
   const focusedRouteKey = state.routes[state.index].key;
+
+  const { direction } = useLocale();
 
   /**
    * List of loaded tabs, tabs will be loaded when navigated to.
@@ -213,13 +216,13 @@ export function BottomTabView(props: Props) {
 
   return (
     <SafeAreaProviderCompat
-      style={
-        tabBarPosition === 'left'
-          ? styles.start
-          : tabBarPosition === 'right'
-            ? styles.end
-            : null
-      }
+      style={{
+        flexDirection:
+          (tabBarPosition === 'left' && direction === 'ltr') ||
+          (tabBarPosition === 'right' && direction === 'rtl')
+            ? 'row-reverse'
+            : 'row',
+      }}
     >
       {tabBarPosition === 'top' ? (
         <BottomTabBarHeightCallbackContext.Provider value={setTabBarHeight}>
@@ -331,12 +334,6 @@ export function BottomTabView(props: Props) {
 }
 
 const styles = StyleSheet.create({
-  start: {
-    flexDirection: 'row-reverse',
-  },
-  end: {
-    flexDirection: 'row',
-  },
   screens: {
     flex: 1,
     overflow: 'hidden',

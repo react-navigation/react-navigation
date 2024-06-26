@@ -10,6 +10,7 @@ import {
   type ParamListBase,
   type TabNavigationState,
   useLinkBuilder,
+  useLocale,
   useTheme,
 } from '@react-navigation/native';
 import Color from 'color';
@@ -143,6 +144,7 @@ export function BottomTabBar({
   style,
 }: Props) {
   const { colors } = useTheme();
+  const { direction } = useLocale();
   const { buildHref } = useLinkBuilder();
 
   const focusedRoute = state.routes[state.index];
@@ -274,6 +276,23 @@ export function BottomTabBar({
           : tabBarPosition === 'right'
             ? styles.end
             : styles.bottom,
+        (
+          Platform.OS === 'web'
+            ? tabBarPosition === 'right'
+            : (direction === 'rtl' && tabBarPosition === 'left') ||
+              (direction !== 'rtl' && tabBarPosition === 'right')
+        )
+          ? { borderLeftWidth: StyleSheet.hairlineWidth }
+          : (
+                Platform.OS === 'web'
+                  ? tabBarPosition === 'left'
+                  : (direction === 'rtl' && tabBarPosition === 'right') ||
+                    (direction !== 'rtl' && tabBarPosition === 'left')
+              )
+            ? { borderRightWidth: StyleSheet.hairlineWidth }
+            : tabBarPosition === 'top'
+              ? { borderBottomWidth: StyleSheet.hairlineWidth }
+              : { borderTopWidth: StyleSheet.hairlineWidth },
         {
           backgroundColor:
             tabBarBackgroundElement != null ? 'transparent' : colors.card,
@@ -428,19 +447,16 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     start: 0,
-    borderEndWidth: StyleSheet.hairlineWidth,
   },
   end: {
     top: 0,
     bottom: 0,
     end: 0,
-    borderStartWidth: StyleSheet.hairlineWidth,
   },
   bottom: {
     start: 0,
     end: 0,
     bottom: 0,
-    borderTopWidth: StyleSheet.hairlineWidth,
     elevation: 8,
   },
   bottomContent: {
