@@ -317,7 +317,13 @@ export function Drawer({
                 translateX:
                   // The drawer stays in place when `drawerType` is `back`
                   (drawerType === 'back' ? 0 : translateX.value) +
-                  (drawerPosition === 'left' ? 0 : distanceFromEdge),
+                  (I18nManager.isRTL
+                    ? drawerPosition === 'left'
+                      ? -distanceFromEdge
+                      : 0
+                    : drawerPosition === 'left'
+                      ? 0
+                      : distanceFromEdge),
               },
             ],
     };
@@ -363,8 +369,11 @@ export function Drawer({
               styles.main,
               {
                 flexDirection:
-                  drawerType === 'permanent' && !isRight
-                    ? 'row-reverse'
+                  drawerType === 'permanent'
+                    ? (isRight && direction === 'ltr') ||
+                      (!isRight && direction === 'rtl')
+                      ? 'row'
+                      : 'row-reverse'
                     : 'row',
               },
             ]}

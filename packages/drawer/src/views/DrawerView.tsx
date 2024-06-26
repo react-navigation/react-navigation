@@ -312,14 +312,19 @@ function DrawerViewBase({
             width: getDefaultSidebarWidth(dimensions),
           },
           drawerType === 'permanent' &&
-            (drawerPosition === 'left'
+            ((
+              Platform.OS === 'web'
+                ? drawerPosition === 'right'
+                : (direction === 'rtl' && drawerPosition !== 'right') ||
+                  (direction !== 'rtl' && drawerPosition === 'right')
+            )
               ? {
-                  borderEndColor: colors.border,
-                  borderEndWidth: StyleSheet.hairlineWidth,
+                  borderLeftColor: colors.border,
+                  borderLeftWidth: StyleSheet.hairlineWidth,
                 }
               : {
-                  borderStartColor: colors.border,
-                  borderStartWidth: StyleSheet.hairlineWidth,
+                  borderRightColor: colors.border,
+                  borderRightWidth: StyleSheet.hairlineWidth,
                 }),
 
           drawerType === 'front' &&

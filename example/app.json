@@ -33,6 +33,8 @@
       "package": "org.reactnavigation.example"
     },
     "extra": {
+      "supportsRTL": true,
+      "forcesRTL": false,
       "eas": {
         "projectId": "a7070fc4-41f3-403d-826d-292b5d868327"
       }
@@ -41,7 +43,8 @@
       "policy": "sdkVersion"
     },
     "plugins": [
-      "expo-asset"
+      "expo-asset",
+      "expo-localization"
     ]
   }
 }

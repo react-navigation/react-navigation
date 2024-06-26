@@ -266,6 +266,10 @@ export function App() {
                           label="Right to left"
                           value={isRTL}
                           onValueChange={() => setIsRTL((rtl) => !rtl)}
+                          disabled={
+                            // Set expo.extra.forcesRTL: true in app.json to enable RTL in Expo Go
+                            Platform.OS !== 'web'
+                          }
                         />
                         <Divider />
                         <SettingsItem
