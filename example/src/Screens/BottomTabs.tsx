@@ -145,6 +145,7 @@ export function BottomTabs() {
           name="TabStack"
           component={SimpleStack}
           options={{
+            popToTopOnBlur: true,
             title: 'Article',
             headerShown: false,
             tabBarIcon: getTabBarIcon('file-document'),
@@ -154,7 +155,7 @@ export function BottomTabs() {
           name="TabChat"
           component={Chat}
           options={{
-            tabBarLabel: 'Chat',
+            title: 'Chat',
             tabBarIcon: getTabBarIcon('message-reply'),
             tabBarBadge: 2,
           }}
@@ -184,10 +185,10 @@ export function BottomTabs() {
             tabBarIcon: getTabBarIcon('image-album'),
             tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.5)',
             tabBarActiveTintColor: '#fff',
-            tabBarStyle: {
-              position: isLargeScreen ? undefined : 'absolute',
-              borderColor: 'rgba(0, 0, 0, .2)',
-            },
+            tabBarStyle: [
+              { borderWidth: 0 },
+              isLargeScreen ? null : { position: 'absolute' },
+            ],
             tabBarBackground: () => (
               <>
                 {isLargeScreen && (
