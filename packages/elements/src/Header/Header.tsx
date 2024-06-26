@@ -17,6 +17,9 @@ import { HeaderBackground } from './HeaderBackground';
 import { HeaderShownContext } from './HeaderShownContext';
 import { HeaderTitle } from './HeaderTitle';
 
+// Width of the screen in split layout on portrait mode on iPad Mini
+const IPAD_MINI_MEDIUM_WIDTH = 414;
+
 type Props = HeaderOptions & {
   /**
    * Whether the header is in a modal
@@ -231,7 +234,15 @@ export function Header(props: Props) {
         )}
       </Animated.View>
       <View pointerEvents="none" style={{ height: headerStatusBarHeight }} />
-      <View pointerEvents="box-none" style={styles.content}>
+      <View
+        pointerEvents="box-none"
+        style={[
+          styles.content,
+          Platform.OS === 'ios' && frame.width >= IPAD_MINI_MEDIUM_WIDTH
+            ? styles.large
+            : null,
+        ]}
+      >
         <Animated.View
           pointerEvents="box-none"
           style={[
@@ -299,6 +310,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'stretch',
+  },
+  large: {
+    marginHorizontal: 5,
   },
   title: {
     marginHorizontal: 16,

@@ -44,9 +44,11 @@ const styles = StyleSheet.create({
   icon: {
     height: 24,
     width: 24,
-    margin: 3,
+    marginVertical: 8,
+    marginHorizontal: 13,
   },
   touchable: {
-    marginHorizontal: 11,
+    // Roundness for iPad hover effect
+    borderRadius: 10,
   },
 });

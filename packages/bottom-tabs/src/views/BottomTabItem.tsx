@@ -300,6 +300,8 @@ export function BottomTabItem({
 const styles = StyleSheet.create({
   tab: {
     alignItems: 'center',
+    // Roundness for iPad hover effect
+    borderRadius: 10,
   },
   tabPortrait: {
     justifyContent: 'flex-end',
