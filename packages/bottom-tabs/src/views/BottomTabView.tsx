@@ -174,7 +174,6 @@ export function BottomTabView(props: Props) {
       state,
       descriptors,
       dimensions,
-      layout: { width: dimensions.width, height: 0 },
       insets: {
         ...SafeAreaProviderCompat.initialMetrics.insets,
         ...props.safeAreaInsets,

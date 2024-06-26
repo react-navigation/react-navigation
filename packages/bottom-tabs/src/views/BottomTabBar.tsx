@@ -20,11 +20,13 @@ import {
   Platform,
   type StyleProp,
   StyleSheet,
-  useWindowDimensions,
   View,
   type ViewStyle,
 } from 'react-native';
-import type { EdgeInsets } from 'react-native-safe-area-context';
+import {
+  type EdgeInsets,
+  useSafeAreaFrame,
+} from 'react-native-safe-area-context';
 
 import type { BottomTabBarProps, BottomTabDescriptorMap } from '../types';
 import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCallbackContext';
@@ -45,14 +47,12 @@ const useNativeDriver = Platform.OS !== 'web';
 type Options = {
   state: TabNavigationState<ParamListBase>;
   descriptors: BottomTabDescriptorMap;
-  layout: { height: number; width: number };
   dimensions: { height: number; width: number };
 };
 
 const shouldUseHorizontalLabels = ({
   state,
   descriptors,
-  layout,
   dimensions,
 }: Options) => {
   const { tabBarLabelPosition } =
@@ -67,7 +67,7 @@ const shouldUseHorizontalLabels = ({
     }
   }
 
-  if (layout.width >= 768) {
+  if (dimensions.width >= 768) {
     // Screen size matches a tablet
     const maxTabWidth = state.routes.reduce((acc, route) => {
       const { tabBarItemStyle } = descriptors[route.key].options;
@@ -84,7 +84,7 @@ const shouldUseHorizontalLabels = ({
       return acc + DEFAULT_MAX_TAB_ITEM_WIDTH;
     }, 0);
 
-    return maxTabWidth <= layout.width;
+    return maxTabWidth <= dimensions.width;
   } else {
     return dimensions.width > dimensions.height;
   }
@@ -168,8 +168,7 @@ export function BottomTabBar({
     tabBarInactiveBackgroundColor,
   } = focusedOptions;
 
-  // FIXME: useSafeAreaFrame doesn't update values when window is resized on Web
-  const dimensions = useWindowDimensions();
+  const dimensions = useSafeAreaFrame();
   const isKeyboardShown = useIsKeyboardShown();
 
   const onHeightChange = React.useContext(BottomTabBarHeightCallbackContext);
@@ -230,22 +229,18 @@ export function BottomTabBar({
 
   const [layout, setLayout] = React.useState({
     height: 0,
-    width: dimensions.width,
   });
 
   const handleLayout = (e: LayoutChangeEvent) => {
-    const { height, width } = e.nativeEvent.layout;
+    const { height } = e.nativeEvent.layout;
 
     onHeightChange?.(height);
 
     setLayout((layout) => {
-      if (height === layout.height && width === layout.width) {
+      if (height === layout.height) {
         return layout;
       } else {
-        return {
-          height,
-          width,
-        };
+        return { height };
       }
     });
   };
@@ -258,7 +253,6 @@ export function BottomTabBar({
     descriptors,
     insets,
     dimensions,
-    layout,
     style: [tabBarStyle, style],
   });
 
@@ -266,7 +260,6 @@ export function BottomTabBar({
     state,
     descriptors,
     dimensions,
-    layout,
   });
 
   const isSidebar = tabBarPosition === 'left' || tabBarPosition === 'right';
