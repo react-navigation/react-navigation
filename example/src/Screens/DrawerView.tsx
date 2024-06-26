@@ -1,6 +1,6 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { Button } from '@react-navigation/elements';
-import { useTheme } from '@react-navigation/native';
+import { useLocale, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Drawer, useDrawerProgress } from 'react-native-drawer-layout';
@@ -35,6 +35,7 @@ const DRAWER_TYPES = ['front', 'back', 'slide'] as const;
 export function DrawerView() {
   const { showActionSheetWithOptions } = useActionSheet();
   const { colors } = useTheme();
+  const { direction } = useLocale();
 
   const [open, setOpen] = React.useState(false);
   const [drawerType, setDrawerType] =
@@ -48,6 +49,7 @@ export function DrawerView() {
       open={open}
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
+      direction={direction}
       drawerType={drawerType}
       drawerPosition={drawerPosition}
       renderDrawerContent={() => {

@@ -58,6 +58,12 @@ export type DrawerProps = {
   layout?: { width: number; height: number };
 
   /**
+   * Locale direction of the drawer.
+   * Defaults to `rtl` when `I18nManager.isRTL` is `true` on Android & iOS, otherwise `ltr`.
+   */
+  direction?: 'ltr' | 'rtl';
+
+  /**
    * Position of the drawer on the screen.
    * Defaults to `right` in RTL mode, otherwise `left`.
    */
