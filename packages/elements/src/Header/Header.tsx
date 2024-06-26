@@ -268,11 +268,12 @@ export function Header(props: Props) {
                         ? 80
                         : 32
                       : 16) +
+                      (rightButton ? 16 : 0) +
                       Math.max(insets.left, insets.right)) *
                       2
                   : layout.width -
-                    ((leftButton ? 72 : 16) +
-                      (rightButton ? 72 : 16) +
+                    ((leftButton ? 52 : 16) +
+                      (rightButton ? 52 : 16) +
                       insets.left -
                       insets.right),
             },
@@ -315,7 +316,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   title: {
-    marginHorizontal: 16,
     justifyContent: 'center',
   },
   start: {
