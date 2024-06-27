@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.0.0-alpha.6...@react-navigation/routers@7.0.0-rc.0) (2024-06-27)
+
+### Bug Fixes
+
+* Invalid Property Access on non existent entry ([#11990](https://github.com/react-navigation/react-navigation/issues/11990)) ([dadd650](https://github.com/react-navigation/react-navigation/commit/dadd6505ca881032700ba37ee65c6ce69006d448)) - by @braandl
+
 # [7.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.0.0-alpha.5...@react-navigation/routers@7.0.0-alpha.6) (2024-02-23)
 
 **Note:** Version bump only for package @react-navigation/routers

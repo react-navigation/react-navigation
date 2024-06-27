@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-alpha.19...@react-navigation/material-top-tabs@7.0.0-rc.0) (2024-06-27)
+
+### Bug Fixes
+
+* fix showing text in material top tabs ([7d65803](https://github.com/react-navigation/react-navigation/commit/7d6580396a27e90d7f911f94522623e0dcbf31da)) - by @satya164
+* immediately update state after tapping tab on material top tabs ([#12020](https://github.com/react-navigation/react-navigation/issues/12020)) ([e177181](https://github.com/react-navigation/react-navigation/commit/e1771812c7bdf8f0199a51d1fb443323ebfaa4ff)) - by @Piotrfj
+* update state on tab press for tab-view ([feb82e6](https://github.com/react-navigation/react-navigation/commit/feb82e62f8ed8df1fc1add00020a696c06a11e01)) - by @satya164
+
 # [7.0.0-alpha.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-alpha.18...@react-navigation/material-top-tabs@7.0.0-alpha.19) (2024-03-25)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

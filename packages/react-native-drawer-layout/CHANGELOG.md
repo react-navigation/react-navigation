@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-alpha.9...react-native-drawer-layout@4.0.0-rc.0) (2024-06-27)
+
+### Bug Fixes
+
+* fix drawer rtl on ios & android ([6fba631](https://github.com/react-navigation/react-navigation/commit/6fba631b588d83be0a731017adb46ce79ca9b2ec)) - by @satya164
+* fix drawer rtl on web ([06209b9](https://github.com/react-navigation/react-navigation/commit/06209b9f04171c18b51638593d3f0fd5028a97f8)) - by @satya164
+
 # [4.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-alpha.8...react-native-drawer-layout@4.0.0-alpha.9) (2024-03-25)
 
 ### Features

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.10...react-native-tab-view@4.0.0-rc.0) (2024-06-27)
+
+### Bug Fixes
+
+* add hover effect to buttons on iPad & VisionOS ([2cb77c0](https://github.com/react-navigation/react-navigation/commit/2cb77c0ce42575275dd723555d0ec9ae7be32c66)) - by @satya164
+* center align TabBarIndicator when width is specified ([#12030](https://github.com/react-navigation/react-navigation/issues/12030)) ([7df62fc](https://github.com/react-navigation/react-navigation/commit/7df62fcd24f13bf11d4ca08c21857c8ef57cb4aa)) - by @JAE-GYU
+* update state on tab press for tab-view ([feb82e6](https://github.com/react-navigation/react-navigation/commit/feb82e62f8ed8df1fc1add00020a696c06a11e01)) - by @satya164
+
+### Features
+
+* pass route to badge function ([f040776](https://github.com/react-navigation/react-navigation/commit/f04077604b875da9171485c94ff977eb24da5ced)) - by @satya164
+
 # [4.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.9...react-native-tab-view@4.0.0-alpha.10) (2024-03-20)
 
 ### Bug Fixes

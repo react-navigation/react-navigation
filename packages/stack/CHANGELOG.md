@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.20...@react-navigation/stack@7.0.0-rc.0) (2024-06-27)
+
+### Bug Fixes
+
+* add hover effect to buttons on iPad & VisionOS ([2cb77c0](https://github.com/react-navigation/react-navigation/commit/2cb77c0ce42575275dd723555d0ec9ae7be32c66)) - by @satya164
+
+### Features
+
+* add a horizontal fade animation for android 14 ([0722900](https://github.com/react-navigation/react-navigation/commit/07229006c6b28d7225f57e5150914a1426071f4e)) - by @satya164
+
 # [7.0.0-alpha.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-alpha.19...@react-navigation/stack@7.0.0-alpha.20) (2024-03-25)
 
 ### Features

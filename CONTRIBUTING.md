@@ -121,3 +121,21 @@ yarn release
 ```
 
 This will automatically bump the version and publish the packages. It'll also publish the changelogs on GitHub for each package.
+
+When releasing a pre-release version, we need to:
+
+- Update `lerna.json` to set the `preId` (e.g. `alpha`) and `preDistTag` (e.g. `next`) fields, and potentially the `allowBranch` field.
+- Run the following command:
+
+```sh
+yarn lerna publish --preid alpha
+```
+
+When releasing a stable version, we need to:
+
+- Remove the `preId` and `preDistTag` fields from `lerna.json`.
+- Run the following command:
+
+```sh
+yarn lerna publish --conventional-commits --conventional-graduate
+```

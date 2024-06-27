@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.0...@react-navigation/bottom-tabs@7.0.0-rc.1) (2024-06-27)
+
+### Bug Fixes
+
+* fix bottom tab bar layout ([054e1dc](https://github.com/react-navigation/react-navigation/commit/054e1dcfa94368ef8b22cf45b96c907c1d3fb573)) - by @
+
+# [7.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.22...@react-navigation/bottom-tabs@7.0.0-rc.0) (2024-06-27)
+
+### Bug Fixes
+
+* add hover effect to buttons on iPad & VisionOS ([2cb77c0](https://github.com/react-navigation/react-navigation/commit/2cb77c0ce42575275dd723555d0ec9ae7be32c66)) - by @satya164
+* adjust bottom tabs sidebar for rtl ([480ab04](https://github.com/react-navigation/react-navigation/commit/480ab045906eb455f12182372f20be7584e0c327)) - by @satya164
+* adjust sidebar styling in bottom tabs to match drawer ([#12008](https://github.com/react-navigation/react-navigation/issues/12008)) ([a1e0499](https://github.com/react-navigation/react-navigation/commit/a1e049958cbcb157ffaf4fa80976cb30b0567ba9)) - by @Piotrfj
+* move sidebar paddings to the wrapper view so it's customizable. closes [#11927](https://github.com/react-navigation/react-navigation/issues/11927) ([4761440](https://github.com/react-navigation/react-navigation/commit/4761440146e1c3381390822b167d319e0a4abb7e)) - by @satya164
+* use useSafeAreaFrame in bottom tabs as we now have a workaround ([92dc079](https://github.com/react-navigation/react-navigation/commit/92dc07962495f2765676613d841e61ff3d1685e2)) - by @satya164
+
 # [7.0.0-alpha.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.21...@react-navigation/bottom-tabs@7.0.0-alpha.22) (2024-03-25)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

@@ -218,10 +218,12 @@ export function BottomTabView(props: Props) {
     <SafeAreaProviderCompat
       style={{
         flexDirection:
-          (tabBarPosition === 'left' && direction === 'ltr') ||
-          (tabBarPosition === 'right' && direction === 'rtl')
-            ? 'row-reverse'
-            : 'row',
+          tabBarPosition === 'left' || tabBarPosition === 'right'
+            ? (tabBarPosition === 'left' && direction === 'ltr') ||
+              (tabBarPosition === 'right' && direction === 'rtl')
+              ? 'row-reverse'
+              : 'row'
+            : 'column',
       }}
     >
       {tabBarPosition === 'top' ? (
