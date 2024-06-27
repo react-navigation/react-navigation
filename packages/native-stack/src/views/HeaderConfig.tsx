@@ -9,7 +9,6 @@ import {
   View,
 } from 'react-native';
 import {
-  // @ts-expect-error: Available since react-native-screens v3.21
   isNewBackTitleImplementation,
   isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,
@@ -162,7 +161,6 @@ export default function HeaderConfig({
           ? headerBackTitle
           : ' '
       }
-      // @ts-expect-error: Available since react-native-screens v3.21
       backTitleVisible={headerBackTitleVisible}
       backTitleFontFamily={backTitleFontFamily}
       backTitleFontSize={headerBackTitleStyleFlattened.fontSize}

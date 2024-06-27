@@ -97,7 +97,12 @@ const MaybeNestedStack = ({
   if (isHeaderInModal) {
     return (
       <ScreenStack style={styles.container}>
-        <Screen enabled style={StyleSheet.absoluteFill}>
+        <Screen
+          enabled
+          isNativeStack
+          hasLargeHeader={options.headerLargeTitle ?? false}
+          style={StyleSheet.absoluteFill}
+        >
           {content}
           <HeaderConfig
             {...options}
@@ -121,11 +126,13 @@ type SceneViewProps = {
   previousDescriptor?: NativeStackDescriptor;
   nextDescriptor?: NativeStackDescriptor;
   onWillDisappear: () => void;
+  onWillAppear: () => void;
   onAppear: () => void;
   onDisappear: () => void;
   onDismissed: ScreenProps['onDismissed'];
   onHeaderBackButtonClicked: ScreenProps['onHeaderBackButtonClicked'];
   onNativeDismissCancelled: ScreenProps['onDismissed'];
+  onGestureCancel: ScreenProps['onGestureCancel'];
 };
 
 const SceneView = ({
@@ -135,26 +142,35 @@ const SceneView = ({
   previousDescriptor,
   nextDescriptor,
   onWillDisappear,
+  onWillAppear,
   onAppear,
   onDisappear,
   onDismissed,
   onHeaderBackButtonClicked,
   onNativeDismissCancelled,
+  onGestureCancel,
 }: SceneViewProps) => {
   const { route, navigation, options, render } = descriptor;
   const {
     animationDuration,
     animationTypeForReplace = 'push',
     gestureEnabled,
+    gestureResponseDistance,
     header,
     headerBackButtonMenuEnabled,
     headerShown,
     headerBackground,
     headerTransparent,
     autoHideHomeIndicator,
+    keyboardHandlingEnabled,
     navigationBarColor,
     navigationBarHidden,
     orientation,
+    sheetAllowedDetents = 'large',
+    sheetLargestUndimmedDetent = 'all',
+    sheetGrabberVisible = false,
+    sheetCornerRadius = -1.0,
+    sheetExpandsWhenScrolledToEdge = true,
     statusBarAnimation,
     statusBarHidden,
     statusBarStyle,
@@ -263,7 +279,9 @@ const SceneView = ({
     <Screen
       key={route.key}
       enabled
+      isNativeStack
       style={StyleSheet.absoluteFill}
+      hasLargeHeader={options.headerLargeTitle ?? false}
       customAnimationOnSwipe={customAnimationOnGesture}
       fullScreenSwipeEnabled={fullScreenGestureEnabled}
       gestureEnabled={
@@ -274,12 +292,18 @@ const SceneView = ({
           : gestureEnabled
       }
       homeIndicatorHidden={autoHideHomeIndicator}
+      hideKeyboardOnSwipe={keyboardHandlingEnabled}
       navigationBarColor={navigationBarColor}
       navigationBarHidden={navigationBarHidden}
       replaceAnimation={animationTypeForReplace}
       stackPresentation={presentation === 'card' ? 'push' : presentation}
       stackAnimation={animation}
       screenOrientation={orientation}
+      sheetAllowedDetents={sheetAllowedDetents}
+      sheetLargestUndimmedDetent={sheetLargestUndimmedDetent}
+      sheetGrabberVisible={sheetGrabberVisible}
+      sheetCornerRadius={sheetCornerRadius}
+      sheetExpandsWhenScrolledToEdge={sheetExpandsWhenScrolledToEdge}
       statusBarAnimation={statusBarAnimation}
       statusBarHidden={statusBarHidden}
       statusBarStyle={statusBarStyle}
@@ -288,10 +312,12 @@ const SceneView = ({
       swipeDirection={gestureDirectionOverride}
       transitionDuration={animationDuration}
       onWillDisappear={onWillDisappear}
+      onWillAppear={onWillAppear}
       onAppear={onAppear}
       onDisappear={onDisappear}
       onDismissed={onDismissed}
-      isNativeStack
+      onGestureCancel={onGestureCancel}
+      gestureResponseDistance={gestureResponseDistance}
       nativeBackButtonDismissalEnabled={false} // on Android
       onHeaderBackButtonClicked={onHeaderBackButtonClicked}
       // @ts-ignore props not exported from rn-screens
@@ -434,6 +460,13 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
                 target: route.key,
               });
             }}
+            onWillAppear={() => {
+              navigation.emit({
+                type: 'transitionStart',
+                data: { closing: false },
+                target: route.key,
+              });
+            }}
             onAppear={() => {
               navigation.emit({
                 type: 'transitionEnd',
@@ -469,6 +502,12 @@ function NativeStackViewInner({ state, navigation, descriptors }: Props) {
                 ...StackActions.pop(event.nativeEvent.dismissCount),
                 source: route.key,
                 target: state.key,
+              });
+            }}
+            onGestureCancel={() => {
+              navigation.emit({
+                type: 'gestureCancel',
+                target: route.key,
               });
             }}
           />
