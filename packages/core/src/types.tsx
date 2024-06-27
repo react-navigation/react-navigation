@@ -775,6 +775,20 @@ export type NavigationContainerEventMap = {
   };
 };
 
+type NotUndefined<T> = T extends undefined ? never : T;
+
+export type ParamListRoute<ParamList extends ParamListBase> = {
+  [RouteName in keyof ParamList]: NavigatorScreenParams<{}> extends ParamList[RouteName]
+    ? NotUndefined<ParamList[RouteName]> extends NavigatorScreenParams<infer T>
+      ? ParamListRoute<T>
+      : Route<Extract<RouteName, string>, ParamList[RouteName]>
+    : Route<Extract<RouteName, string>, ParamList[RouteName]>;
+}[keyof ParamList];
+
+type MaybeParamListRoute<ParamList extends {}> = ParamList extends ParamListBase
+  ? ParamListRoute<ParamList>
+  : Route<string>;
+
 export type NavigationContainerRef<ParamList extends {}> =
   NavigationHelpers<ParamList> &
     EventConsumer<NavigationContainerEventMap> & {
@@ -791,7 +805,7 @@ export type NavigationContainerRef<ParamList extends {}> =
       /**
        * Get the currently focused navigation route.
        */
-      getCurrentRoute(): Route<string> | undefined;
+      getCurrentRoute(): MaybeParamListRoute<ParamList> | undefined;
       /**
        * Get the currently focused route's options.
        */

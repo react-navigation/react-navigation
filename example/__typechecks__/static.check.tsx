@@ -2,6 +2,7 @@
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import type {
+  NavigationContainerRef,
   NavigationProp,
   NavigatorScreenParams,
   StaticParamList,
@@ -119,6 +120,7 @@ navigation.navigate('Register', { method: 'token' });
 /**
  * Infer params from nested navigator
  */
+navigation.navigate('Home'); // Navigate to screen without specifying a child screen
 navigation.navigate('Home', { screen: 'Groups' });
 navigation.navigate('Home', { screen: 'Chat', params: { id: 123 } });
 
@@ -340,3 +342,45 @@ expectTypeOf<MyParamList>().toMatchTypeOf<{
       }>
     | undefined;
 }>();
+
+/**
+ * Check for errors on getCurrentRoute
+ */
+declare const navigationRef: NavigationContainerRef<RootParamList>;
+const route = navigationRef.getCurrentRoute()!;
+
+switch (route.name) {
+  case 'Profile':
+    expectTypeOf(route.params).toMatchTypeOf<{
+      user: string;
+    }>();
+    break;
+  case 'Feed':
+    expectTypeOf(route.params).toMatchTypeOf<{
+      sort: 'hot' | 'recent';
+    }>();
+    break;
+  case 'Settings':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    break;
+  case 'Login':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    break;
+  case 'Register':
+    expectTypeOf(route.params).toMatchTypeOf<{
+      method: 'email' | 'social';
+    }>();
+    break;
+  case 'Account':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    break;
+  // Checks for nested routes
+  case 'Groups':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    break;
+  case 'Chat':
+    expectTypeOf(route.params).toMatchTypeOf<{
+      id: number;
+    }>();
+    break;
+}
