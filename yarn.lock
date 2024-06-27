@@ -2898,7 +2898,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/cli@npm:3.5.1, @lerna-lite/cli@npm:^3.2.1":
+"@lerna-lite/cli@npm:3.5.1, @lerna-lite/cli@npm:^3.5.1":
   version: 3.5.1
   resolution: "@lerna-lite/cli@npm:3.5.1"
   dependencies:
@@ -2998,7 +2998,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/publish@npm:^3.2.1":
+"@lerna-lite/publish@npm:^3.5.2":
   version: 3.5.2
   resolution: "@lerna-lite/publish@npm:3.5.2"
   dependencies:
@@ -3031,7 +3031,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna-lite/run@npm:^3.2.1":
+"@lerna-lite/run@npm:^3.5.1":
   version: 3.5.1
   resolution: "@lerna-lite/run@npm:3.5.1"
   dependencies:
@@ -16823,9 +16823,9 @@ __metadata:
   dependencies:
     "@commitlint/config-conventional": "npm:^18.5.0"
     "@evilmartians/lefthook": "npm:^1.6.0"
-    "@lerna-lite/cli": "npm:^3.2.1"
-    "@lerna-lite/publish": "npm:^3.2.1"
-    "@lerna-lite/run": "npm:^3.2.1"
+    "@lerna-lite/cli": "npm:^3.5.1"
+    "@lerna-lite/publish": "npm:^3.5.2"
+    "@lerna-lite/run": "npm:^3.5.1"
     "@react-native/babel-preset": "npm:^0.74.84"
     "@types/jest": "npm:^29.5.11"
     check-dependency-version-consistency: "npm:^4.1.0"
