@@ -2140,51 +2140,6 @@ it('handles screen preloading', () => {
         stale: false,
         type: 'stack',
         key: 'root',
-        index: 1,
-        preloadedRoutes: [
-          {
-            key: 'bar-test',
-            name: 'bar',
-            params: { answer: 43, color: 'test' },
-          },
-        ],
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          {
-            key: 'bar-test',
-            name: 'bar',
-            params: { answer: 42, toBe: 'notMerged' },
-          },
-          { key: 'baz', name: 'baz' },
-        ],
-      },
-
-      StackActions.remove('bar', { answer: 43 }),
-      options
-    )
-  ).toEqual({
-    stale: false,
-    type: 'stack',
-    key: 'root',
-    index: 1,
-    preloadedRoutes: [],
-    routeNames: ['baz', 'bar', 'qux'],
-    routes: [
-      {
-        key: 'bar-test',
-        name: 'bar',
-        params: { answer: 42, toBe: 'notMerged' },
-      },
-      { key: 'baz', name: 'baz' },
-    ],
-  });
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'stack',
-        key: 'root',
         index: 0,
         preloadedRoutes: [
           {
@@ -2376,83 +2331,6 @@ it('handles screen preloading', () => {
           answer: 41,
         },
         name: 'bar',
-      },
-    ],
-  });
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'stack',
-        key: 'root',
-        index: 0,
-        preloadedRoutes: [
-          {
-            key: 'bar-some',
-            params: {
-              answer: 42,
-            },
-            name: 'bar',
-          },
-        ],
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          {
-            key: 'qux-test',
-            name: 'qux',
-          },
-        ],
-      },
-
-      StackActions.remove('bar', { answer: 42 }),
-      options
-    )
-  ).toEqual({
-    stale: false,
-    type: 'stack',
-    key: 'root',
-    index: 0,
-    preloadedRoutes: [],
-    routeNames: ['baz', 'bar', 'qux'],
-    routes: [{ key: 'qux-test', name: 'qux' }],
-  });
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'stack',
-        key: 'root',
-        index: 1,
-        preloadedRoutes: [],
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          {
-            key: 'baz-test',
-            name: 'baz',
-          },
-          {
-            key: 'qux-test',
-            name: 'qux',
-          },
-        ],
-      },
-
-      StackActions.retain(),
-      options
-    )
-  ).toEqual({
-    stale: false,
-    type: 'stack',
-    key: 'root',
-    index: 0,
-    preloadedRoutes: [{ key: 'qux-test', name: 'qux' }],
-    routeNames: ['baz', 'bar', 'qux'],
-    routes: [
-      {
-        key: 'baz-test',
-        name: 'baz',
       },
     ],
   });

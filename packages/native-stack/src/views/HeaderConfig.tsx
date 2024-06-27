@@ -181,7 +181,12 @@ export function HeaderConfig({
     <ScreenStackHeaderConfig
       backButtonInCustomView={backButtonInCustomView}
       backgroundColor={headerBackgroundColor}
-      backTitle={headerBackTitleVisible ? headerBackTitle : ' '}
+      backTitle={
+        headerBackTitleVisible
+          ? headerBackTitle
+          : ' ' /* For backward compatibility with react-native-screens versions <3.21.0, where `backTitleVisible` is not available */
+      }
+      backTitleVisible={headerBackTitleVisible}
       backTitleFontFamily={backTitleFontFamily}
       backTitleFontSize={backTitleFontSize}
       blurEffect={headerBlurEffect}
@@ -206,7 +211,7 @@ export function HeaderConfig({
       titleColor={titleColor}
       titleFontFamily={titleFontFamily}
       titleFontSize={titleFontSize}
-      titleFontWeight={titleFontWeight}
+      titleFontWeight={String(titleFontWeight)}
       topInsetEnabled={headerTopInsetEnabled}
       translucent={
         // This defaults to `true`, so we can't pass `undefined`

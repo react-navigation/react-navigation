@@ -14,6 +14,7 @@
     { "path": "../packages/react-native-tab-view" },
   ],
   "compilerOptions": {
+    "rootDir": ".",
     // Avoid expo-cli auto-generating a tsconfig
   }
 }

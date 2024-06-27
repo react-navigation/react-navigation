@@ -3,6 +3,7 @@ import { Animated, Keyboard, StyleSheet } from 'react-native';
 import ViewPager, {
   type PageScrollStateChangedNativeEvent,
 } from 'react-native-pager-view';
+import useLatestCallback from 'use-latest-callback';
 
 import type {
   EventEmitterProps,
@@ -60,21 +61,20 @@ export function PagerViewAdapter<T extends Route>({
     navigationStateRef.current = navigationState;
   });
 
-  const jumpTo = React.useCallback(
-    (key: string) => {
-      const index = navigationStateRef.current.routes.findIndex(
-        (route: { key: string }) => route.key === key
-      );
+  const jumpTo = useLatestCallback((key: string) => {
+    const index = navigationStateRef.current.routes.findIndex(
+      (route: { key: string }) => route.key === key
+    );
 
-      if (animationEnabled) {
-        pagerRef.current?.setPage(index);
-      } else {
-        pagerRef.current?.setPageWithoutAnimation(index);
-        position.setValue(index);
-      }
-    },
-    [animationEnabled, position]
-  );
+    if (animationEnabled) {
+      pagerRef.current?.setPage(index);
+    } else {
+      pagerRef.current?.setPageWithoutAnimation(index);
+      position.setValue(index);
+    }
+
+    onIndexChange(index);
+  });
 
   React.useEffect(() => {
     if (keyboardDismissMode === 'auto') {
@@ -118,7 +118,7 @@ export function PagerViewAdapter<T extends Route>({
     }
   };
 
-  const addEnterListener = React.useCallback((listener: Listener) => {
+  const addEnterListener = useLatestCallback((listener: Listener) => {
     listenersRef.current.push(listener);
 
     return () => {
@@ -128,7 +128,7 @@ export function PagerViewAdapter<T extends Route>({
         listenersRef.current.splice(index, 1);
       }
     };
-  }, []);
+  });
 
   const memoizedPosition = React.useMemo(
     () => Animated.add(position, offset),

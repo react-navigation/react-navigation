@@ -337,6 +337,58 @@ export function forScaleFromCenterAndroid({
 }
 
 /**
+ * Standard Android-style fade from right for Android 14.
+ */
+export function forFadeFromRightAndroid({
+  current,
+  next,
+  inverted,
+  closing,
+}: StackCardInterpolationProps): StackCardInterpolatedStyle {
+  const translateFocused = multiply(
+    current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [96, 0],
+      extrapolate: 'clamp',
+    }),
+    inverted
+  );
+
+  const translateUnfocused = next
+    ? multiply(
+        next.progress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -96],
+          extrapolate: 'clamp',
+        }),
+        inverted
+      )
+    : 0;
+
+  const opacity = conditional(
+    closing,
+    current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    }),
+    current.progress
+  );
+
+  return {
+    cardStyle: {
+      opacity,
+      transform: [
+        // Translation for the animation of the current card
+        { translateX: translateFocused },
+        // Translation for the animation of the card on top of this
+        { translateX: translateUnfocused },
+      ],
+    },
+  };
+}
+
+/**
  * Standard bottom sheet slide in from the bottom for Android.
  */
 export function forBottomSheetAndroid({
