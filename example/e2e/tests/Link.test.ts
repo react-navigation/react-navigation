@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('http://localhost:3579');
+  await page.goto('/');
   await page.getByText('<Link />').click();
 });
 
@@ -29,11 +29,11 @@ test('goes to the album screen and goes back', async ({ page }) => {
     name: 'Go to Albums',
   });
 
-  await expect(link).toHaveAttribute('href', '/link-component/music');
+  await expect(link).toHaveAttribute('href', '/link-component/albums');
 
   await link.click();
 
-  await page.waitForURL('**/link-component/music');
+  await page.waitForURL('**/link-component/albums');
 
   await expect(page).toHaveTitle('Albums - React Navigation Example');
 
@@ -61,11 +61,11 @@ test('replaces article with the album screen', async ({ page }) => {
     name: 'Replace with Albums',
   });
 
-  await expect(link).toHaveAttribute('href', '/link-component/music');
+  await expect(link).toHaveAttribute('href', '/link-component/albums');
 
   await link.click();
 
-  await page.waitForURL('**/link-component/music');
+  await page.waitForURL('**/link-component/albums');
 
   await expect(page).toHaveTitle('Albums - React Navigation Example');
 
@@ -81,4 +81,28 @@ test('replaces article with the album screen', async ({ page }) => {
   await page.getByLabel('Home, back').click();
 
   await page.waitForURL('**/');
+});
+
+test('preserves hash for navigation', async ({ page }) => {
+  await page.waitForURL('**/link-component/article/gandalf');
+
+  await page.getByText('Add hash to URL').click();
+
+  await page.waitForURL('**/link-component/article/gandalf#frodo');
+
+  await page.getByRole('button', { name: 'Update params' }).click();
+
+  await page.waitForURL('**/link-component/article/babel-fish#frodo');
+
+  await page.reload();
+
+  await page.waitForURL('**/link-component/article/babel-fish#frodo');
+
+  await expect(page).toHaveTitle(
+    'Article by Babel fish - React Navigation Example'
+  );
+
+  await page.getByRole('link', { name: 'Replace with Albums' }).click();
+
+  await page.waitForURL('**/link-component/albums');
 });

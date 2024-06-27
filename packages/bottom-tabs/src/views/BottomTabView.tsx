@@ -4,14 +4,21 @@ import {
   SafeAreaProviderCompat,
   Screen,
 } from '@react-navigation/elements';
-import type {
-  ParamListBase,
-  TabNavigationState,
+import {
+  type NavigationAction,
+  type ParamListBase,
+  StackActions,
+  type TabNavigationState,
+  useLocale,
 } from '@react-navigation/native';
 import * as React from 'react';
 import { Animated, Platform, StyleSheet } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
+import {
+  FadeTransition,
+  ShiftTransition,
+} from '../TransitionConfigs/TransitionPresets';
 import type {
   BottomTabBarProps,
   BottomTabDescriptorMap,
@@ -38,14 +45,26 @@ const STATE_INACTIVE = 0;
 const STATE_TRANSITIONING_OR_BELOW_TOP = 1;
 const STATE_ON_TOP = 2;
 
-const hasAnimation = (options: BottomTabNavigationOptions) => {
-  const { animationEnabled, transitionSpec } = options;
+const NAMED_TRANSITIONS_PRESETS = {
+  fade: FadeTransition,
+  shift: ShiftTransition,
+  none: {
+    sceneStyleInterpolator: undefined,
+    transitionSpec: {
+      animation: 'timing',
+      config: { duration: 0 },
+    },
+  },
+} as const;
 
-  if (animationEnabled === false || !transitionSpec) {
-    return false;
+const hasAnimation = (options: BottomTabNavigationOptions) => {
+  const { animation, transitionSpec } = options;
+
+  if (animation) {
+    return animation !== 'none';
   }
 
-  return true;
+  return !transitionSpec;
 };
 
 export function BottomTabView(props: Props) {
@@ -60,7 +79,10 @@ export function BottomTabView(props: Props) {
       Platform.OS === 'ios',
     sceneContainerStyle,
   } = props;
+
   const focusedRouteKey = state.routes[state.index].key;
+
+  const { direction } = useLocale();
 
   /**
    * List of loaded tabs, tabs will be loaded when navigated to.
@@ -72,41 +94,82 @@ export function BottomTabView(props: Props) {
     setLoaded([...loaded, focusedRouteKey]);
   }
 
+  const previousRouteKeyRef = React.useRef(focusedRouteKey);
   const tabAnims = useAnimatedHashMap(state);
 
   React.useEffect(() => {
+    const previousRouteKey = previousRouteKeyRef.current;
+
+    let popToTopAction: NavigationAction | undefined;
+
+    if (
+      previousRouteKey !== focusedRouteKey &&
+      descriptors[previousRouteKey]?.options.popToTopOnBlur
+    ) {
+      const prevRoute = state.routes.find(
+        (route) => route.key === previousRouteKey
+      );
+
+      if (prevRoute?.state?.type === 'stack' && prevRoute.state.key) {
+        popToTopAction = {
+          ...StackActions.popToTop(),
+          target: prevRoute.state.key,
+        };
+      }
+    }
+
     const animateToIndex = () => {
       Animated.parallel(
         state.routes
           .map((route, index) => {
             const { options } = descriptors[route.key];
-            const { transitionSpec } = options;
+            const {
+              animation = 'none',
+              transitionSpec = NAMED_TRANSITIONS_PRESETS[animation]
+                .transitionSpec,
+            } = options;
 
-            const animationEnabled = hasAnimation(options);
+            let spec = transitionSpec;
+
+            if (
+              route.key !== previousRouteKey &&
+              route.key !== focusedRouteKey
+            ) {
+              // Don't animate if the screen is not previous one or new one
+              // This will avoid flicker for screens not involved in the transition
+              spec = NAMED_TRANSITIONS_PRESETS.none.transitionSpec;
+            }
+
+            spec = spec ?? NAMED_TRANSITIONS_PRESETS.none.transitionSpec;
 
             const toValue =
               index === state.index ? 0 : index >= state.index ? 1 : -1;
 
-            if (!animationEnabled || !transitionSpec) {
-              return Animated.timing(tabAnims[route.key], {
-                toValue,
-                duration: 0,
-                useNativeDriver: true,
-              });
-            }
-
-            return Animated[transitionSpec.animation](tabAnims[route.key], {
-              ...transitionSpec.config,
+            return Animated[spec.animation](tabAnims[route.key], {
+              ...spec.config,
               toValue,
               useNativeDriver: true,
             });
           })
           .filter(Boolean) as Animated.CompositeAnimation[]
-      ).start();
+      ).start(({ finished }) => {
+        if (finished && popToTopAction) {
+          navigation.dispatch(popToTopAction);
+        }
+      });
     };
 
     animateToIndex();
-  }, [descriptors, state.index, state.routes, tabAnims]);
+
+    previousRouteKeyRef.current = focusedRouteKey;
+  }, [
+    descriptors,
+    focusedRouteKey,
+    navigation,
+    state.index,
+    state.routes,
+    tabAnims,
+  ]);
 
   const dimensions = SafeAreaProviderCompat.initialMetrics.frame;
   const [tabBarHeight, setTabBarHeight] = React.useState(() =>
@@ -114,7 +177,6 @@ export function BottomTabView(props: Props) {
       state,
       descriptors,
       dimensions,
-      layout: { width: dimensions.width, height: 0 },
       insets: {
         ...SafeAreaProviderCompat.initialMetrics.insets,
         ...props.safeAreaInsets,
@@ -154,14 +216,19 @@ export function BottomTabView(props: Props) {
 
   return (
     <SafeAreaProviderCompat
-      style={
-        tabBarPosition === 'left'
-          ? styles.left
-          : tabBarPosition === 'right'
-          ? styles.right
-          : null
-      }
+      style={{
+        flexDirection:
+          (tabBarPosition === 'left' && direction === 'ltr') ||
+          (tabBarPosition === 'right' && direction === 'rtl')
+            ? 'row-reverse'
+            : 'row',
+      }}
     >
+      {tabBarPosition === 'top' ? (
+        <BottomTabBarHeightCallbackContext.Provider value={setTabBarHeight}>
+          {renderTabBar()}
+        </BottomTabBarHeightCallbackContext.Provider>
+      ) : null}
       <MaybeScreenContainer
         enabled={detachInactiveScreens}
         hasTwoStates={hasTwoStates}
@@ -171,17 +238,19 @@ export function BottomTabView(props: Props) {
           const descriptor = descriptors[route.key];
           const {
             lazy = true,
-            unmountOnBlur,
-            sceneStyleInterpolator,
+            animation = 'none',
+            sceneStyleInterpolator = NAMED_TRANSITIONS_PRESETS[animation]
+              .sceneStyleInterpolator,
           } = descriptor.options;
           const isFocused = state.index === index;
 
-          if (unmountOnBlur && !isFocused) {
-            return null;
-          }
-
-          if (lazy && !loaded.includes(route.key) && !isFocused) {
-            // Don't render a lazy screen if we've never navigated to it
+          if (
+            lazy &&
+            !loaded.includes(route.key) &&
+            !isFocused &&
+            !state.preloadedRouteKeys.includes(route.key)
+          ) {
+            // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
             return null;
           }
 
@@ -201,23 +270,25 @@ export function BottomTabView(props: Props) {
 
           const { sceneStyle } =
             sceneStyleInterpolator?.({
-              current: tabAnims[route.key],
+              current: {
+                progress: tabAnims[route.key],
+              },
             }) ?? {};
 
           const animationEnabled = hasAnimation(descriptor.options);
           const activityState = isFocused
             ? STATE_ON_TOP // the screen is on top after the transition
             : animationEnabled // is animation is not enabled, immediately move to inactive state
-            ? tabAnims[route.key].interpolate({
-                inputRange: [0, 1 - EPSILON, 1],
-                outputRange: [
-                  STATE_TRANSITIONING_OR_BELOW_TOP, // screen visible during transition
-                  STATE_TRANSITIONING_OR_BELOW_TOP,
-                  STATE_INACTIVE, // the screen is detached after transition
-                ],
-                extrapolate: 'extend',
-              })
-            : STATE_INACTIVE;
+              ? tabAnims[route.key].interpolate({
+                  inputRange: [0, 1 - EPSILON, 1],
+                  outputRange: [
+                    STATE_TRANSITIONING_OR_BELOW_TOP, // screen visible during transition
+                    STATE_TRANSITIONING_OR_BELOW_TOP,
+                    STATE_INACTIVE, // the screen is detached after transition
+                  ],
+                  extrapolate: 'extend',
+                })
+              : STATE_INACTIVE;
 
           return (
             <MaybeScreen
@@ -253,20 +324,16 @@ export function BottomTabView(props: Props) {
           );
         })}
       </MaybeScreenContainer>
-      <BottomTabBarHeightCallbackContext.Provider value={setTabBarHeight}>
-        {renderTabBar()}
-      </BottomTabBarHeightCallbackContext.Provider>
+      {tabBarPosition !== 'top' ? (
+        <BottomTabBarHeightCallbackContext.Provider value={setTabBarHeight}>
+          {renderTabBar()}
+        </BottomTabBarHeightCallbackContext.Provider>
+      ) : null}
     </SafeAreaProviderCompat>
   );
 }
 
 const styles = StyleSheet.create({
-  left: {
-    flexDirection: 'row-reverse',
-  },
-  right: {
-    flexDirection: 'row',
-  },
   screens: {
     flex: 1,
     overflow: 'hidden',

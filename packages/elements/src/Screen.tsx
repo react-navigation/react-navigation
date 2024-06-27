@@ -65,6 +65,9 @@ export function Screen(props: Props) {
       accessibilityElementsHidden={!focused}
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
       style={[styles.container, style]}
+      // On Fabric we need to disable collapsing for the background to ensure
+      // that we won't render unnecessary views due to the view flattening.
+      collapsable={false}
     >
       <View style={styles.content}>
         <HeaderShownContext.Provider
@@ -109,7 +112,7 @@ const styles = StyleSheet.create({
   absolute: {
     position: 'absolute',
     top: 0,
-    left: 0,
-    right: 0,
+    start: 0,
+    end: 0,
   },
 });

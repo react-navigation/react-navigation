@@ -5,7 +5,9 @@ import {
   forBottomSheetAndroid,
   forFadeFromBottomAndroid,
   forFadeFromCenter as forFadeCard,
+  forFadeFromRightAndroid,
   forHorizontalIOS,
+  forHorizontalIOSInverted,
   forModalPresentationIOS,
   forRevealFromBottomAndroid,
   forScaleFromCenterAndroid,
@@ -24,6 +26,7 @@ import {
 
 const ANDROID_VERSION_PIE = 28;
 const ANDROID_VERSION_10 = 29;
+const ANDROID_VERSION_14 = 34;
 
 /**
  * Standard iOS navigation transition.
@@ -104,6 +107,19 @@ export const ScaleFromCenterAndroid: TransitionPreset = {
 };
 
 /**
+ * Standard Android navigation transition when opening or closing an Activity on Android 14.
+ */
+export const FadeFromRightAndroid: TransitionPreset = {
+  gestureDirection: 'horizontal',
+  transitionSpec: {
+    open: FadeInFromBottomAndroidSpec,
+    close: FadeOutToBottomAndroidSpec,
+  },
+  cardStyleInterpolator: forFadeFromRightAndroid,
+  headerStyleInterpolator: forFade,
+};
+
+/**
  * Standard bottom sheet slide transition for Android 10.
  */
 export const BottomSheetAndroid: TransitionPreset = {
@@ -135,11 +151,13 @@ export const ModalFadeTransition: TransitionPreset = {
 export const DefaultTransition = Platform.select({
   ios: SlideFromRightIOS,
   android:
-    Number(Platform.Version) >= ANDROID_VERSION_10
-      ? ScaleFromCenterAndroid
-      : Number(Platform.Version) >= ANDROID_VERSION_PIE
-      ? RevealFromBottomAndroid
-      : FadeFromBottomAndroid,
+    Number(Platform.Version) >= ANDROID_VERSION_14
+      ? FadeFromRightAndroid
+      : Number(Platform.Version) >= ANDROID_VERSION_10
+        ? ScaleFromCenterAndroid
+        : Number(Platform.Version) >= ANDROID_VERSION_PIE
+          ? RevealFromBottomAndroid
+          : FadeFromBottomAndroid,
   default: ScaleFromCenterAndroid,
 });
 
@@ -150,3 +168,11 @@ export const ModalTransition = Platform.select({
   ios: ModalPresentationIOS,
   default: BottomSheetAndroid,
 });
+
+/**
+ * Slide from left transition.
+ */
+export const SlideFromLeftIOS: TransitionPreset = {
+  ...SlideFromRightIOS,
+  cardStyleInterpolator: forHorizontalIOSInverted,
+};

@@ -4,7 +4,7 @@ import {
   NavigationRouteContext,
   type ParamListBase,
   type Route,
-  useLinkTools,
+  useLinkBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
 import {
@@ -54,7 +54,7 @@ export function HeaderContainer({
 }: Props) {
   const focusedRoute = getFocusedRoute();
   const parentHeaderBack = React.useContext(HeaderBackContext);
-  const { buildHref } = useLinkTools();
+  const { buildHref } = useLinkBuilder();
 
   return (
     <Animated.View pointerEvents="box-none" style={style}>
@@ -139,8 +139,8 @@ export function HeaderContainer({
                   nextHeaderlessGestureDirection === 'vertical-inverted'
                   ? forSlideUp
                   : nextHeaderlessGestureDirection === 'horizontal-inverted'
-                  ? forSlideRight
-                  : forSlideLeft
+                    ? forSlideRight
+                    : forSlideLeft
                 : headerStyleInterpolator
               : forNoAnimation,
         };
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   header: {
     position: 'absolute',
     top: 0,
-    left: 0,
-    right: 0,
+    start: 0,
+    end: 0,
   },
 });

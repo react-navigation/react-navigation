@@ -3,6 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.16...@react-navigation/core@7.0.0-alpha.17) (2024-03-22)
+
+### Bug Fixes
+
+* accept partial linking.config for static navigation ([3825046](https://github.com/react-navigation/react-navigation/commit/3825046a2320b721b7458dcc5441807bf57ea091)) - by @satya164
+
+### Features
+
+* add automatic home screen detection for auto linking ([b0bec6f](https://github.com/react-navigation/react-navigation/commit/b0bec6fb3eda83f145d123f02fb2096fa2300658)) - by @satya164
+
+# [7.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.15...@react-navigation/core@7.0.0-alpha.16) (2024-03-22)
+
+### Features
+
+* add a way to automatically generate linking config ([d090836](https://github.com/react-navigation/react-navigation/commit/d090836f34bee659f4ea08176d6840703ef7247f)) - by @satya164
+* automatically enable linking if any config is specified ([c91d247](https://github.com/react-navigation/react-navigation/commit/c91d247e62d8b30d8f55abff784df81616e70580)) - by @satya164
+
+# [7.0.0-alpha.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.14...@react-navigation/core@7.0.0-alpha.15) (2024-03-20)
+
+### Bug Fixes
+
+* only replace trailing slash on decode ([#11899](https://github.com/react-navigation/react-navigation/issues/11899)) ([31bb8a1](https://github.com/react-navigation/react-navigation/commit/31bb8a1d7d4bd7eddfff6a5f9f552951f5fc6caa)) - by @cranberyxl
+
+### Features
+
+* add getStateForRouteNamesChange to all navigators and mark it as unstable ([4edbb07](https://github.com/react-navigation/react-navigation/commit/4edbb071163742b60499178271fd3e3e92fb4002)) - by @satya164
+
+# [7.0.0-alpha.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.13...@react-navigation/core@7.0.0-alpha.14) (2024-03-14)
+
+### Features
+
+* automatically infer types for navigation in options, listeners etc. ([#11883](https://github.com/react-navigation/react-navigation/issues/11883)) ([c54baf1](https://github.com/react-navigation/react-navigation/commit/c54baf14640e567be10cb8a5f68e5cbf0b35f120)) - by @satya164
+
+# [7.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.12...@react-navigation/core@7.0.0-alpha.13) (2024-03-10)
+
+### Features
+
+* deep freeze state to avoid issues due to mutation ([2a5721b](https://github.com/react-navigation/react-navigation/commit/2a5721b3a3560b76192d3aa46a4ea3be9a50db7d)) - by @satya164
+
+# [7.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.11...@react-navigation/core@7.0.0-alpha.12) (2024-03-09)
+
+### Bug Fixes
+
+* fix handling groups with linking config and types ([a847715](https://github.com/react-navigation/react-navigation/commit/a84771541f97cc207d0529ecffd5980da342096a)) - by @satya164
+* fix incomplete types for screen listeners ([5f0e2aa](https://github.com/react-navigation/react-navigation/commit/5f0e2aa8dfbb662a6ec8ce9fba54f89aedb8703f)), closes [#11293](https://github.com/react-navigation/react-navigation/issues/11293) - by @satya164
+
+# [7.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.10...@react-navigation/core@7.0.0-alpha.11) (2024-03-08)
+
+### Bug Fixes
+
+* adjust URL encoding to avoid encoding unnecessarily ([#11867](https://github.com/react-navigation/react-navigation/issues/11867)) ([7991ce8](https://github.com/react-navigation/react-navigation/commit/7991ce8fd17e0823287ecc0eed7c0efb1ac4869e)) - by @groot007
+* fix navigation not working in strict mode ([11dbba9](https://github.com/react-navigation/react-navigation/commit/11dbba92ce6f91b3664ae3c856ab1ad67f333030)) - by @satya164
+* handle conflicting nested path params for linking ([#11849](https://github.com/react-navigation/react-navigation/issues/11849)) ([aeaadd6](https://github.com/react-navigation/react-navigation/commit/aeaadd63349216a1fb1bc3cfb4ba4a5f33ad2c5a)) - by @rexfordessilfie
+* linking on initial path plus wildcard ([#11844](https://github.com/react-navigation/react-navigation/issues/11844)) ([2c2881f](https://github.com/react-navigation/react-navigation/commit/2c2881fde0a188e2cf4480f7ecf00e6b07e5d07f)), closes [/github.com/react-navigation/react-navigation/blob/fe4d4289e2bdec7614c6f2e5ca95d9b8f714af39/packages/core/src/getStateFromPath.tsx#L138](https://github.com//github.com/react-navigation/react-navigation/blob/fe4d4289e2bdec7614c6f2e5ca95d9b8f714af39/packages/core/src/getStateFromPath.tsx/issues/L138) - by @rexfordessilfie
+
+# [7.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.9...@react-navigation/core@7.0.0-alpha.10) (2024-03-04)
+
+### Bug Fixes
+
+* don't throw on setParams on ref ([b99d3c3](https://github.com/react-navigation/react-navigation/commit/b99d3c3a94d7f4efe7fb0309d7a41654c21406ea)) - by @satya164
+
+# [7.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.8...@react-navigation/core@7.0.0-alpha.9) (2024-02-23)
+
+### Bug Fixes
+
+* type errors when getState used outside of a screen ([#11827](https://github.com/react-navigation/react-navigation/issues/11827)) ([b3512a5](https://github.com/react-navigation/react-navigation/commit/b3512a5aa7fdcdac0ea3f23acda33b0cbce270e1)), closes [#11701](https://github.com/react-navigation/react-navigation/issues/11701) - by @MrRefactor
+
+# [7.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.7...@react-navigation/core@7.0.0-alpha.8) (2024-02-23)
+
+### Bug Fixes
+
+* handle non-function screens in static navigation ([7ba61f2](https://github.com/react-navigation/react-navigation/commit/7ba61f2a3532ad33b7e12beaec63b646eedeeb5e)) - by @satya164
+* throw if screens property isn't specified in static config ([a5fc69e](https://github.com/react-navigation/react-navigation/commit/a5fc69ed694903dbc4def69e2b60a444ace6e80c)) - by @satya164
+
+# [7.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.6...@react-navigation/core@7.0.0-alpha.7) (2024-01-17)
+
+### Features
+
+* add a new 'describe' method to create placeholder descriptor ([#11726](https://github.com/react-navigation/react-navigation/issues/11726)) ([0b83a9b](https://github.com/react-navigation/react-navigation/commit/0b83a9b79e92c61b2f547a9e31fb303cc9b07a51)) - by @osdnk
+* add layout and screenLayout props for screens ([#11741](https://github.com/react-navigation/react-navigation/issues/11741)) ([2dc2178](https://github.com/react-navigation/react-navigation/commit/2dc217827a1caa615460563973d3d658be372b29)) - by @satya164
+* move theming to core and pass theme to options ([#11707](https://github.com/react-navigation/react-navigation/issues/11707)) ([8e7ac4f](https://github.com/react-navigation/react-navigation/commit/8e7ac4f18545887b905f921df469dbf69d7951c7)) - by @satya164
+* preloading for stack navigator ([#11733](https://github.com/react-navigation/react-navigation/issues/11733)) ([14fa6df](https://github.com/react-navigation/react-navigation/commit/14fa6dfa4484cf2784f0e5cd0d06252fdf8a4ba5)), closes [#11702](https://github.com/react-navigation/react-navigation/issues/11702) [#11727](https://github.com/react-navigation/react-navigation/issues/11727) - by @osdnk
+* preloading in routers  ([382d6e6](https://github.com/react-navigation/react-navigation/commit/382d6e6f3312630b34332b1ae7d4bd7bf9b4ee60)) - by @osdnk
+
 # [7.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.5...@react-navigation/core@7.0.0-alpha.6) (2023-11-17)
 
 **Note:** Version bump only for package @react-navigation/core

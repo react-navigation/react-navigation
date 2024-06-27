@@ -1,12 +1,16 @@
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
+import { isValidElementType } from 'react-is';
 
 import type {
   DefaultNavigatorOptions,
   EventMapBase,
+  NavigationListBase,
   NavigatorScreenParams,
+  NavigatorTypeBagBase,
   PathConfig,
-  RouteConfig,
+  RouteConfigComponent,
+  RouteConfigProps,
   RouteGroupConfig,
 } from './types';
 import { useRoute } from './useRoute';
@@ -40,14 +44,14 @@ type ParamsForScreenComponent<T> = T extends {
 }
   ? P
   : T extends React.ComponentType<{ route: { params: infer P } }>
-  ? P
-  : undefined;
+    ? P
+    : undefined;
 
 type ParamsForScreen<T> = T extends { screen: StaticNavigation<any, any, any> }
   ? NavigatorScreenParams<StaticParamList<T['screen']>> | undefined
   : T extends StaticNavigation<any, any, any>
-  ? NavigatorScreenParams<StaticParamList<T>> | undefined
-  : UnknownToUndefined<ParamsForScreenComponent<T>>;
+    ? NavigatorScreenParams<StaticParamList<T>> | undefined
+    : UnknownToUndefined<ParamsForScreenComponent<T>>;
 
 type ParamListForScreens<Screens> = {
   [Key in KeysOf<Screens>]: ParamsForScreen<Screens[Key]>;
@@ -61,7 +65,8 @@ type ParamListForGroups<
             ParamListBase,
             NavigationState,
             {},
-            EventMapBase
+            EventMapBase,
+            any
           >;
         };
       }>
@@ -72,24 +77,53 @@ type ParamListForGroups<
       ParamListBase,
       NavigationState,
       {},
-      EventMapBase
+      EventMapBase,
+      any
     >;
   };
 }
   ? ParamListForScreens<UnionToIntersection<Groups[keyof Groups]['screens']>>
   : {};
 
+type StaticRouteConfig<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList,
+  State extends NavigationState,
+  ScreenOptions extends {},
+  EventMap extends EventMapBase,
+  Navigation,
+> = RouteConfigProps<
+  // FIXME: the param list is inferred from the screen component
+  // So we can't use the type here
+  // Fallback to ParamListBase for now
+  ParamListBase,
+  string,
+  State,
+  ScreenOptions,
+  EventMap,
+  Navigation
+> &
+  RouteConfigComponent<ParamList, RouteName>;
+
 type StaticConfigScreens<
   ParamList extends ParamListBase,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
+  NavigationList extends NavigationListBase<ParamList>,
 > = {
-  [key in keyof ParamList]:
+  [RouteName in keyof ParamList]:
     | React.ComponentType<any>
     | StaticNavigation<any, any, any>
     | (Omit<
-        RouteConfig<ParamList, keyof ParamList, State, ScreenOptions, EventMap>,
+        StaticRouteConfig<
+          ParamList,
+          RouteName,
+          State,
+          ScreenOptions,
+          EventMap,
+          NavigationList[RouteName]
+        >,
         'name' | 'component' | 'getComponent' | 'children'
       > & {
         /**
@@ -130,7 +164,11 @@ type GroupConfig<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
-> = Omit<RouteGroupConfig<ParamList, ScreenOptions>, 'screens' | 'children'> & {
+  NavigationList extends NavigationListBase<ParamList>,
+> = Omit<
+  RouteGroupConfig<ParamList, ScreenOptions, NavigationList[keyof ParamList]>,
+  'screens' | 'children'
+> & {
   /**
    * Callback to determine whether the screens in the group should be rendered or not.
    * This can be useful for conditional rendering of group of screens.
@@ -139,39 +177,106 @@ type GroupConfig<
   /**
    * Static navigation config or Component to render for the screen.
    */
-  screens: StaticConfigScreens<ParamList, State, ScreenOptions, EventMap>;
+  screens: StaticConfigScreens<
+    ParamList,
+    State,
+    ScreenOptions,
+    EventMap,
+    NavigationList
+  >;
 };
 
-export type StaticConfig<
+export type StaticConfig<Bag extends NavigatorTypeBagBase> =
+  StaticConfigInternal<
+    Bag['ParamList'],
+    Bag['NavigatorID'],
+    Bag['State'],
+    Bag['ScreenOptions'],
+    Bag['EventMap'],
+    Bag['NavigationList'],
+    Bag['Navigator']
+  >;
+
+type StaticConfigInternal<
   ParamList extends ParamListBase,
+  NavigatorID extends string | undefined,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
-  Navigator extends React.ComponentType<{}>,
+  NavigationList extends NavigationListBase<ParamList>,
+  Navigator extends React.ComponentType<any>,
 > = Omit<
   Omit<
     React.ComponentProps<Navigator>,
     keyof DefaultNavigatorOptions<
       ParamListBase,
+      string | undefined,
       NavigationState,
       {},
-      EventMapBase
+      EventMapBase,
+      NavigationList[keyof ParamList]
     >
   > &
-    DefaultNavigatorOptions<ParamList, State, ScreenOptions, EventMap>,
+    DefaultNavigatorOptions<
+      ParamList,
+      NavigatorID,
+      State,
+      ScreenOptions,
+      EventMap,
+      NavigationList[keyof ParamList]
+    >,
   'screens' | 'children'
-> & {
-  /**
-   * Screens to render in the navigator and their configuration.
-   */
-  screens: StaticConfigScreens<ParamList, State, ScreenOptions, EventMap>;
-  /**
-   * Groups of screens to render in the navigator and their configuration.
-   */
-  groups?: {
-    [key: string]: GroupConfig<ParamList, State, ScreenOptions, EventMap>;
-  };
-};
+> &
+  (
+    | {
+        /**
+         * Screens to render in the navigator and their configuration.
+         */
+        screens: StaticConfigScreens<
+          ParamList,
+          State,
+          ScreenOptions,
+          EventMap,
+          NavigationList
+        >;
+        /**
+         * Groups of screens to render in the navigator and their configuration.
+         */
+        groups?: {
+          [key: string]: GroupConfig<
+            ParamList,
+            State,
+            ScreenOptions,
+            EventMap,
+            NavigationList
+          >;
+        };
+      }
+    | {
+        /**
+         * Screens to render in the navigator and their configuration.
+         */
+        screens?: StaticConfigScreens<
+          ParamList,
+          State,
+          ScreenOptions,
+          EventMap,
+          NavigationList
+        >;
+        /**
+         * Groups of screens to render in the navigator and their configuration.
+         */
+        groups: {
+          [key: string]: GroupConfig<
+            ParamList,
+            State,
+            ScreenOptions,
+            EventMap,
+            NavigationList
+          >;
+        };
+      }
+  );
 
 /**
  * Props for a screen component which is rendered by a static navigator.
@@ -189,7 +294,7 @@ export type StaticScreenProps<T extends Record<string, unknown> | undefined> = {
 export type StaticParamList<
   T extends {
     readonly config: {
-      readonly screens: Record<string, any>;
+      readonly screens?: Record<string, any>;
       readonly groups?: {
         [key: string]: {
           screens: Record<string, any>;
@@ -206,13 +311,7 @@ export type StaticNavigation<NavigatorProps, GroupProps, ScreenProps> = {
   Navigator: React.ComponentType<NavigatorProps>;
   Group: React.ComponentType<GroupProps>;
   Screen: React.ComponentType<ScreenProps>;
-  config: StaticConfig<
-    ParamListBase,
-    NavigationState,
-    {},
-    EventMapBase,
-    React.ComponentType<any>
-  >;
+  config: StaticConfig<NavigatorTypeBagBase>;
 };
 
 const MemoizedScreen = React.memo(
@@ -226,7 +325,7 @@ const MemoizedScreen = React.memo(
 
 const getItemsFromScreens = (
   Screen: React.ComponentType<any>,
-  screens: StaticConfigScreens<any, any, any, any>
+  screens: StaticConfigScreens<any, any, any, any, any>
 ) => {
   return Object.entries(screens).map(([name, item]) => {
     let component: React.ComponentType<any> | undefined;
@@ -241,7 +340,7 @@ const getItemsFromScreens = (
       useIf = _if;
       props = rest;
 
-      if (typeof screen === 'function') {
+      if (isValidElementType(screen)) {
         component = screen;
       } else if ('config' in screen) {
         isNavigator = true;
@@ -250,7 +349,7 @@ const getItemsFromScreens = (
           `${name}Navigator`
         );
       }
-    } else if (typeof item === 'function') {
+    } else if (isValidElementType(item)) {
       component = item;
     } else if ('config' in item) {
       isNavigator = true;
@@ -299,7 +398,13 @@ export function createComponentForStaticNavigation(
   const { Navigator, Group, Screen, config } = tree;
   const { screens, groups, ...rest } = config;
 
-  const items = getItemsFromScreens(Screen, screens);
+  if (screens == null && groups == null) {
+    throw new Error(
+      "Couldn't find a 'screens' or 'groups' property. Make sure to define your screens under a 'screens' property in the configuration."
+    );
+  }
+
+  const items = screens ? getItemsFromScreens(Screen, screens) : [];
 
   if (groups) {
     items.push(
@@ -337,10 +442,36 @@ export function createComponentForStaticNavigation(
   return NavigatorComponent;
 }
 
+type TreeForPathConfig = {
+  config: {
+    initialRouteName?: string;
+    screens?: StaticConfigScreens<
+      ParamListBase,
+      NavigationState,
+      {},
+      EventMapBase,
+      Record<string, unknown>
+    >;
+    groups?: {
+      [key: string]: {
+        screens: StaticConfigScreens<
+          ParamListBase,
+          NavigationState,
+          {},
+          EventMapBase,
+          Record<string, unknown>
+        >;
+      };
+    };
+  };
+};
+
 /**
  * Create a path config object from a static navigation config for deep linking.
  *
  * @param tree Static navigation config.
+ * @param options Additional options from `linking.config`.
+ * @param auto Whether to automatically generate paths for leaf screens.
  * @returns Path config object to use in linking config.
  *
  * @example
@@ -354,43 +485,146 @@ export function createComponentForStaticNavigation(
  * };
  * ```
  */
-export function createPathConfigForStaticNavigation(tree: {
-  config: {
-    screens: StaticConfigScreens<
-      ParamListBase,
-      NavigationState,
-      {},
-      EventMapBase
-    >;
+export function createPathConfigForStaticNavigation(
+  tree: TreeForPathConfig,
+  options?: {
+    initialRouteName?: string;
+  },
+  auto?: boolean
+) {
+  let initialScreenConfig: PathConfig<ParamListBase> | undefined;
+
+  const createPathConfigForTree = (
+    t: TreeForPathConfig,
+    o: { initialRouteName?: string } | undefined,
+    // If a screen is a leaf node, but inside a screen with path,
+    // It should not be used for initial detection
+    skipInitialDetection: boolean
+  ) => {
+    const createPathConfigForScreens = (
+      screens: StaticConfigScreens<
+        ParamListBase,
+        NavigationState,
+        {},
+        EventMapBase,
+        Record<string, unknown>
+      >,
+      initialRouteName: string | undefined
+    ) => {
+      return Object.fromEntries(
+        Object.entries(screens)
+          // Re-order to move the initial route to the front
+          // This way we can detect the initial route correctly
+          .sort(([a], [b]) => {
+            if (a === initialRouteName) {
+              return -1;
+            }
+
+            if (b === initialRouteName) {
+              return 1;
+            }
+
+            return 0;
+          })
+          .map(([key, item]) => {
+            const screenConfig: PathConfig<ParamListBase> = {};
+
+            if ('linking' in item) {
+              if (typeof item.linking === 'string') {
+                screenConfig.path = item.linking;
+              } else {
+                Object.assign(screenConfig, item.linking);
+              }
+            }
+
+            let screens;
+
+            if ('config' in item) {
+              screens = createPathConfigForTree(
+                item,
+                undefined,
+                skipInitialDetection || screenConfig.path != null
+              );
+            } else if (
+              'screen' in item &&
+              'config' in item.screen &&
+              (item.screen.config.screens || item.screen.config.groups)
+            ) {
+              screens = createPathConfigForTree(
+                item.screen,
+                undefined,
+                skipInitialDetection || screenConfig.path != null
+              );
+            }
+
+            if (screens) {
+              screenConfig.screens = screens;
+            }
+
+            if (auto && !screenConfig.screens && !('linking' in item)) {
+              if (screenConfig.path) {
+                if (!skipInitialDetection) {
+                  // Normalize the path to remove leading and trailing slashes
+                  const path = screenConfig.path
+                    ?.split('/')
+                    .filter(Boolean)
+                    .join('/');
+
+                  // We encounter a leaf screen with empty path,
+                  // Clear the initial screen config as it's not needed anymore
+                  if (!skipInitialDetection && path === '') {
+                    initialScreenConfig = undefined;
+                  }
+                }
+              } else {
+                if (!skipInitialDetection && initialScreenConfig == null) {
+                  initialScreenConfig = screenConfig;
+                }
+
+                screenConfig.path = key
+                  .replace(/([A-Z]+)/g, '-$1')
+                  .replace(/^-/, '')
+                  .toLowerCase();
+              }
+            }
+
+            return [key, screenConfig] as const;
+          })
+          .filter(([, screen]) => Object.keys(screen).length > 0)
+      );
+    };
+
+    const screens = t.config.screens
+      ? createPathConfigForScreens(
+          t.config.screens,
+          o?.initialRouteName ?? t.config.initialRouteName
+        )
+      : {};
+
+    if (t.config.groups) {
+      Object.entries(t.config.groups).forEach(([, group]) => {
+        Object.assign(
+          screens,
+          createPathConfigForScreens(
+            group.screens,
+            o?.initialRouteName ?? t.config.initialRouteName
+          )
+        );
+      });
+    }
+
+    if (Object.keys(screens).length === 0) {
+      return undefined;
+    }
+
+    return screens;
   };
-}) {
-  return Object.fromEntries(
-    Object.entries(tree.config.screens)
-      .map(([key, item]) => {
-        const screenConfig: PathConfig<ParamListBase> = {};
 
-        if ('linking' in item) {
-          if (typeof item.linking === 'string') {
-            screenConfig.path = item.linking;
-          } else {
-            Object.assign(screenConfig, item.linking);
-          }
-        }
+  const screens = createPathConfigForTree(tree, options, false);
 
-        if ('config' in item) {
-          screenConfig.screens = createPathConfigForStaticNavigation(item);
-        } else if (
-          'screen' in item &&
-          'config' in item.screen &&
-          item.screen.config.screens
-        ) {
-          screenConfig.screens = createPathConfigForStaticNavigation(
-            item.screen
-          );
-        }
+  if (auto && initialScreenConfig) {
+    initialScreenConfig.path = '';
+  }
 
-        return [key, screenConfig] as const;
-      })
-      .filter(([, screen]) => Object.keys(screen).length > 0)
-  );
+  return screens;
 }

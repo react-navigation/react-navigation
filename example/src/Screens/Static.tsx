@@ -1,9 +1,9 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Button } from '@react-navigation/elements';
+import { Button, HeaderBackButton } from '@react-navigation/elements';
 import {
-  createStaticNavigation,
-  NavigationIndependentTree,
+  createComponentForStaticNavigation,
+  createPathConfigForStaticNavigation,
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
@@ -48,7 +48,10 @@ const AlbumsScreen = () => {
 };
 
 const HomeTabs = createBottomTabNavigator({
-  screenOptions: ({ theme }) => ({
+  screenOptions: ({ theme, navigation }) => ({
+    headerLeft: (props) => (
+      <HeaderBackButton {...props} onPress={navigation.goBack} />
+    ),
     tabBarActiveTintColor: theme.colors.notification,
   }),
   screens: {
@@ -57,18 +60,21 @@ const HomeTabs = createBottomTabNavigator({
       options: {
         tabBarIcon: getTabBarIcon('image-album'),
       },
+      linking: 'albums',
     },
     Contacts: {
       screen: Contacts,
       options: {
         tabBarIcon: getTabBarIcon('contacts'),
       },
+      linking: 'contacts',
     },
     Chat: {
       screen: Chat,
       options: {
         tabBarIcon: getTabBarIcon('message-reply'),
       },
+      linking: 'chat',
       if: useIsChatShown,
     },
   },
@@ -79,23 +85,28 @@ const RootStack = createStackNavigator({
     headerShown: false,
   },
   screens: {
-    Home: HomeTabs,
+    Home: {
+      screen: HomeTabs,
+      linking: '',
+    },
   },
 });
 
-const Navigation = createStaticNavigation(RootStack);
+const Navigation = createComponentForStaticNavigation(RootStack, 'Root');
 
 export function StaticScreen() {
   const [isChatShown, setIsChatShown] = React.useState(false);
 
   return (
     <ChatShownContext.Provider value={{ isChatShown, setIsChatShown }}>
-      <NavigationIndependentTree>
-        <Navigation />
-      </NavigationIndependentTree>
+      <Navigation />
     </ChatShownContext.Provider>
   );
 }
+
+StaticScreen.title = 'Static config';
+StaticScreen.linking = createPathConfigForStaticNavigation(RootStack, {});
+
 const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',

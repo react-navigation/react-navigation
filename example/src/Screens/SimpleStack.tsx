@@ -1,14 +1,14 @@
 import { Button } from '@react-navigation/elements';
-import type { ParamListBase } from '@react-navigation/native';
+import type { PathConfigMap } from '@react-navigation/native';
 import {
   createStackNavigator,
   HeaderStyleInterpolators,
-  type StackNavigationOptions,
   type StackScreenProps,
 } from '@react-navigation/stack';
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
@@ -17,6 +17,12 @@ export type SimpleStackParams = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Albums: undefined;
+};
+
+const linking: PathConfigMap<SimpleStackParams> = {
+  Article: COMMON_LINKING_CONFIG.Article,
+  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+  Albums: 'albums',
 };
 
 const scrollEnabled = Platform.select({ web: true, default: false });
@@ -102,22 +108,10 @@ const AlbumsScreen = ({
 
 const Stack = createStackNavigator<SimpleStackParams>();
 
-export function SimpleStack({
-  navigation,
-  screenOptions,
-}: StackScreenProps<ParamListBase> & {
-  screenOptions?: StackNavigationOptions;
-}) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function SimpleStack() {
   return (
     <Stack.Navigator
       screenOptions={{
-        ...screenOptions,
         headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
       }}
     >
@@ -142,6 +136,9 @@ export function SimpleStack({
     </Stack.Navigator>
   );
 }
+
+SimpleStack.title = 'Simple Stack';
+SimpleStack.linking = linking;
 
 const styles = StyleSheet.create({
   buttons: {

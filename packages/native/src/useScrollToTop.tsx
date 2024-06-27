@@ -1,7 +1,8 @@
 import {
   type EventArg,
+  NavigationContext,
   type NavigationProp,
-  useNavigation,
+  type ParamListBase,
   useRoute,
 } from '@react-navigation/core';
 import * as React from 'react';
@@ -38,7 +39,7 @@ function getScrollableNode(ref: React.RefObject<ScrollableWrapper>) {
     // We need to use `getScrollResponder` to get access to the scroll responder
     return ref.current.getScrollResponder();
   } else if ('getNode' in ref.current) {
-    // When a `ScrollView` is wraped in `Animated.createAnimatedComponent`
+    // When a `ScrollView` is wrapped in `Animated.createAnimatedComponent`
     // we need to use `getNode` to get the ref to the actual scrollview.
     // Note that `getNode` is deprecated in newer versions of react-native
     // this is why we check if we already have a scrollable node above.
@@ -49,13 +50,18 @@ function getScrollableNode(ref: React.RefObject<ScrollableWrapper>) {
 }
 
 export function useScrollToTop(ref: React.RefObject<ScrollableWrapper>) {
-  const navigation = useNavigation();
+  const navigation = React.useContext(NavigationContext);
   const route = useRoute();
 
-  React.useEffect(() => {
-    const tabNavigations: NavigationProp<ReactNavigation.RootParamList>[] = [];
-    let currentNavigation = navigation;
+  if (navigation === undefined) {
+    throw new Error(
+      "Couldn't find a navigation object. Is your component inside NavigationContainer?"
+    );
+  }
 
+  React.useEffect(() => {
+    const tabNavigations: NavigationProp<ParamListBase>[] = [];
+    let currentNavigation = navigation;
     // If the screen is nested inside multiple tab navigators, we should scroll to top for any of them
     // So we need to find all the parent tab navigators and add the listeners there
     while (currentNavigation) {

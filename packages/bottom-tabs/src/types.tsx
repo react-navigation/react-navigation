@@ -10,6 +10,7 @@ import type {
   RouteProp,
   TabActionHelpers,
   TabNavigationState,
+  Theme,
 } from '@react-navigation/native';
 import type * as React from 'react';
 import type {
@@ -65,6 +66,14 @@ export type BottomTabScreenProps<
   route: RouteProp<ParamList, RouteName>;
 };
 
+export type BottomTabOptionsArgs<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = keyof ParamList,
+  NavigatorID extends string | undefined = undefined,
+> = BottomTabScreenProps<ParamList, RouteName, NavigatorID> & {
+  theme: Theme;
+};
+
 export type TimingKeyboardAnimationConfig = {
   animation: 'timing';
   config?: Omit<
@@ -84,6 +93,8 @@ export type SpringKeyboardAnimationConfig = {
 export type TabBarVisibilityAnimationConfig =
   | TimingKeyboardAnimationConfig
   | SpringKeyboardAnimationConfig;
+
+export type TabAnimationName = 'none' | 'fade' | 'shift';
 
 export type BottomTabNavigationOptions = HeaderOptions & {
   /**
@@ -228,7 +239,7 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   /**
    * Position of the tab bar on the screen. Defaults to `bottom`.
    */
-  tabBarPosition?: 'bottom' | 'left' | 'right';
+  tabBarPosition?: 'bottom' | 'left' | 'right' | 'top';
 
   /**
    * Whether this screens should render the first time it's accessed. Defaults to `true`.
@@ -248,10 +259,10 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   headerShown?: boolean;
 
   /**
-   * Whether this screen should be unmounted when navigating away from it.
+   * Whether any nested stack should be popped to top when navigating away from the tab.
    * Defaults to `false`.
    */
-  unmountOnBlur?: boolean;
+  popToTopOnBlur?: boolean;
 
   /**
    * Whether inactive screens should be suspended from re-rendering. Defaults to `false`.
@@ -263,10 +274,14 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   freezeOnBlur?: boolean;
 
   /**
-   * Whether transition animations should be enabled when switching tabs.
-   * Defaults to `false`.
+   * How the screen should animate when switching tabs.
+   *
+   * Supported values:
+   * - 'none': don't animate the screen (default)
+   * - 'fade': cross-fade the screens.
+   * - 'shift': shift the screens slightly shift to left/right.
    */
-  animationEnabled?: boolean;
+  animation?: TabAnimationName;
 
   /**
    * Function which specifies interpolated styles for bottom-tab scenes.
@@ -289,12 +304,17 @@ export type BottomTabDescriptorMap = Record<string, BottomTabDescriptor>;
 
 export type BottomTabSceneInterpolationProps = {
   /**
-   * Animated value for the current screen:
-   * - -1 if the index is lower than active tab,
-   * - 0 if they're active,
-   * - 1 if the index is higher than active tab
+   * Values for the current screen.
    */
-  current: Animated.Value;
+  current: {
+    /**
+     * Animated value for the current screen:
+     * - -1 if the index is lower than active tab,
+     * - 0 if they're active,
+     * - 1 if the index is higher than active tab
+     */
+    progress: Animated.Value;
+  };
 };
 
 export type BottomTabSceneInterpolatedStyle = {

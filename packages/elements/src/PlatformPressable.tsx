@@ -101,13 +101,19 @@ export function PlatformPressable({
                 pressColor !== undefined
                   ? pressColor
                   : dark
-                  ? 'rgba(255, 255, 255, .32)'
-                  : 'rgba(0, 0, 0, .32)',
+                    ? 'rgba(255, 255, 255, .32)'
+                    : 'rgba(0, 0, 0, .32)',
               ...android_ripple,
             }
           : undefined
       }
-      style={[{ opacity: !ANDROID_SUPPORTS_RIPPLE ? opacity : 1 }, style]}
+      style={[
+        {
+          cursor: 'pointer', // Add hover effect on iPad and VisionOS
+          opacity: !ANDROID_SUPPORTS_RIPPLE ? opacity : 1,
+        },
+        style,
+      ]}
       {...rest}
     />
   );

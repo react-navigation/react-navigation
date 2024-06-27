@@ -9,6 +9,7 @@ import type {
   StackActionHelpers,
   StackNavigationState,
   StackRouterOptions,
+  Theme,
 } from '@react-navigation/native';
 import type {
   ImageSourcePropType,
@@ -20,6 +21,7 @@ import type {
   ScreenProps,
   ScreenStackHeaderConfigProps,
   SearchBarProps,
+  SheetDetentTypes,
 } from 'react-native-screens';
 
 export type NativeStackNavigationEventMap = {
@@ -31,6 +33,10 @@ export type NativeStackNavigationEventMap = {
    * Event which fires when a transition animation ends.
    */
   transitionEnd: { data: { closing: boolean } };
+  /**
+   * Event which fires when a swipe back is canceled on iOS.
+   */
+  gestureCancel: { data: undefined };
 };
 
 export type NativeStackNavigationProp<
@@ -54,6 +60,14 @@ export type NativeStackScreenProps<
 > = {
   navigation: NativeStackNavigationProp<ParamList, RouteName, NavigatorID>;
   route: RouteProp<ParamList, RouteName>;
+};
+
+export type NativeStackOptionsArgs<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = keyof ParamList,
+  NavigatorID extends string | undefined = undefined,
+> = NativeStackScreenProps<ParamList, RouteName, NavigatorID> & {
+  theme: Theme;
 };
 
 export type NativeStackNavigationHelpers = NavigationHelpers<
@@ -92,7 +106,7 @@ export type NativeStackHeaderProps = {
   navigation: NativeStackNavigationProp<ParamListBase>;
 };
 
-export type HeaderButtonProps = {
+export type NativeStackHeaderRightProps = {
   /**
    * Tint color for the header.
    */
@@ -103,12 +117,16 @@ export type HeaderButtonProps = {
   canGoBack: boolean;
 };
 
-export type HeaderBackButtonProps = HeaderButtonProps & {
+export type NativeStackHeaderLeftProps = NativeStackHeaderRightProps & {
   /**
    * Label text for the button. Usually the title of the previous screen.
    * By default, this is only shown on iOS.
    */
   label?: string;
+  /**
+   * The `href` to use for the anchor tag on web
+   */
+  href?: string;
 };
 
 export type NativeStackNavigationOptions = {
@@ -262,11 +280,11 @@ export type NativeStackNavigationOptions = {
    * Function which returns a React Element to display on the left side of the header.
    * This replaces the back button. See `headerBackVisible` to show the back button along side left element.
    */
-  headerLeft?: (props: HeaderBackButtonProps) => React.ReactNode;
+  headerLeft?: (props: NativeStackHeaderLeftProps) => React.ReactNode;
   /**
    * Function which returns a React Element to display on the right side of the header.
    */
-  headerRight?: (props: HeaderButtonProps) => React.ReactNode;
+  headerRight?: (props: NativeStackHeaderRightProps) => React.ReactNode;
   /**
    * String or a function that returns a React Element to be used by the header.
    * Defaults to screen `title` or route name.
@@ -314,7 +332,7 @@ export type NativeStackNavigationOptions = {
    *
    * Only supported on iOS and Android.
    */
-  headerSearchBarOptions?: SearchBarProps;
+  headerSearchBarOptions?: Omit<SearchBarProps, 'ref'>;
   /**
    * Boolean indicating whether to show the menu on longPress of iOS >= 14 back button. Defaults to `true`.
    * Requires `react-native-screens` version >=3.3.0.
@@ -331,11 +349,23 @@ export type NativeStackNavigationOptions = {
    */
   autoHideHomeIndicator?: boolean;
   /**
+   * Whether the keyboard should hide when swiping to the previous screen. Defaults to `false`.
+   *
+   * @platform ios
+   */
+  keyboardHandlingEnabled?: boolean;
+  /**
    * Sets the navigation bar color. Defaults to initial navigation bar color.
    *
    * @platform android
    */
   navigationBarColor?: string;
+  /**
+   * Boolean indicating whether the content should be visible behind the navigation bar. Defaults to `false`.
+   *
+   * @platform android
+   */
+  navigationBarTranslucent?: boolean;
   /**
    * Sets the visibility of the navigation bar. Defaults to `false`.
    *
@@ -356,7 +386,7 @@ export type NativeStackNavigationOptions = {
    *
    * @platform android
    */
-  statusBarColor?: string;
+  statusBarBackgroundColor?: string;
   /**
    * Whether the status bar should be hidden on this screen.
    * Requires setting `View controller-based status bar appearance -> YES` in your Info.plist file.
@@ -423,6 +453,12 @@ export type NativeStackNavigationOptions = {
    */
   gestureEnabled?: boolean;
   /**
+   * Use it to restrict the distance from the edges of screen in which the gesture should be recognized. To be used alongside `fullScreenGestureEnabled`.
+   *
+   * @platform ios
+   */
+  gestureResponseDistance?: ScreenProps['gestureResponseDistance'];
+  /**
    * The type of animation to use when this screen replaces another screen. Defaults to `pop`.
    *
    * Supported values:
@@ -471,6 +507,62 @@ export type NativeStackNavigationOptions = {
    */
   presentation?: Exclude<ScreenProps['stackPresentation'], 'push'> | 'card';
   /**
+   * Describes heights where a sheet can rest.
+   * Works only when `presentation` is set to `formSheet`.
+   * Defaults to `large`.
+   *
+   * Available values:
+   *
+   * - `large` - only large detent level will be allowed
+   * - `medium` - only medium detent level will be allowed
+   * - `all` - all detent levels will be allowed
+   *
+   * @platform ios
+   */
+  sheetAllowedDetents?: SheetDetentTypes;
+  /**
+   * Whether the sheet should expand to larger detent when scrolling.
+   * Works only when `presentation` is set to `formSheet`.
+   * Defaults to `true`.
+   *
+   * @platform ios
+   */
+  sheetExpandsWhenScrolledToEdge?: boolean;
+  /**
+   * The corner radius that the sheet will try to render with.
+   * Works only when `presentation` is set to `formSheet`.
+   *
+   * If set to non-negative value it will try to render sheet with provided radius, else it will apply system default.
+   *
+   * If left unset system default is used.
+   *
+   * @platform ios
+   */
+  sheetCornerRadius?: number;
+  /**
+   * Boolean indicating whether the sheet shows a grabber at the top.
+   * Works only when `presentation` is set to `formSheet`.
+   * Defaults to `false`.
+   *
+   * @platform ios
+   */
+  sheetGrabberVisible?: boolean;
+  /**
+   * The largest sheet detent for which a view underneath won't be dimmed.
+   * Works only when `presentation` is se tto `formSheet`.
+   *
+   * If this prop is set to:
+   *
+   * - `large` - the view underneath won't be dimmed at any detent level
+   * - `medium` - the view underneath will be dimmed only when detent level is `large`
+   * - `all` - the view underneath will be dimmed for any detent level
+   *
+   * Defaults to `all`.
+   *
+   * @platform ios
+   */
+  sheetLargestUndimmedDetent?: SheetDetentTypes;
+  /**
    * The display orientation to use for the screen.
    *
    * Supported values:
@@ -498,9 +590,11 @@ export type NativeStackNavigationOptions = {
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
+  string | undefined,
   StackNavigationState<ParamListBase>,
   NativeStackNavigationOptions,
-  NativeStackNavigationEventMap
+  NativeStackNavigationEventMap,
+  NativeStackNavigationProp<ParamListBase>
 > &
   StackRouterOptions &
   NativeStackNavigationConfig;

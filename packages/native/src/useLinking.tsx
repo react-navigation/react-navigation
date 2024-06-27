@@ -280,6 +280,8 @@ export function useLinking(
       route: ReturnType<typeof findFocusedRoute>,
       state: NavigationState
     ): string => {
+      let path;
+
       // If the `route` object contains a `path`, use that path as long as `route.name` and `params` still match
       // This makes sure that we preserve the original URL for wildcard routes
       if (route?.path) {
@@ -296,12 +298,31 @@ export function useLinking(
             focusedRoute.name === route.name &&
             isEqual(focusedRoute.params, route.params)
           ) {
-            return route.path;
+            path = route.path;
           }
         }
       }
 
-      return getPathFromStateRef.current(state, configRef.current);
+      if (path == null) {
+        path = getPathFromStateRef.current(state, configRef.current);
+      }
+
+      const previousRoute = previousStateRef.current
+        ? findFocusedRoute(previousStateRef.current)
+        : undefined;
+
+      // Preserve the hash if the route didn't change
+      if (
+        previousRoute &&
+        route &&
+        'key' in previousRoute &&
+        'key' in route &&
+        previousRoute.key === route.key
+      ) {
+        path = path + location.hash;
+      }
+
+      return path;
     };
 
     if (ref.current) {
@@ -378,7 +399,12 @@ export function useLinking(
           const currentIndex = history.index;
 
           try {
-            if (nextIndex !== -1 && nextIndex < currentIndex) {
+            if (
+              nextIndex !== -1 &&
+              nextIndex < currentIndex &&
+              // We should only go back if the entry exists and it's less than current index
+              history.get(nextIndex - currentIndex)
+            ) {
               // An existing entry for this path exists and it's less than current index, go back to that
               await history.go(nextIndex - currentIndex);
             } else {

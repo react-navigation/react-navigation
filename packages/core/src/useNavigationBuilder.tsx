@@ -14,6 +14,7 @@ import * as React from 'react';
 import { isValidElementType } from 'react-is';
 import useLatestCallback from 'use-latest-callback';
 
+import { deepFreeze } from './deepFreeze';
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
 import { isRecordEqual } from './isRecordEqual';
@@ -39,6 +40,7 @@ import { useFocusedListenersChildrenAdapter } from './useFocusedListenersChildre
 import { useFocusEvents } from './useFocusEvents';
 import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 import { useKeyedChildListeners } from './useKeyedChildListeners';
+import { useLazyValue } from './useLazyValue';
 import { useNavigationHelpers } from './useNavigationHelpers';
 import { useOnAction } from './useOnAction';
 import { useOnGetState } from './useOnGetState';
@@ -72,7 +74,8 @@ const getRouteConfigsFromChildren = <
     State,
     ScreenOptions,
     EventMap
-  >['options']
+  >['options'],
+  groupLayout?: ScreenConfigWithParent<State, ScreenOptions, EventMap>['layout']
 ) => {
   const configs = React.Children.toArray(children).reduce<
     ScreenConfigWithParent<State, ScreenOptions, EventMap>[]
@@ -95,14 +98,17 @@ const getRouteConfigsFromChildren = <
         acc.push({
           keys: [groupKey, child.props.navigationKey],
           options: groupOptions,
+          layout: groupLayout,
           props: child.props as RouteConfig<
             ParamListBase,
             string,
             State,
             ScreenOptions,
-            EventMap
+            EventMap,
+            unknown
           >,
         });
+
         return acc;
       }
 
@@ -124,8 +130,9 @@ const getRouteConfigsFromChildren = <
             child.type !== Group
               ? groupOptions
               : groupOptions != null
-              ? [...groupOptions, child.props.screenOptions]
-              : [child.props.screenOptions]
+                ? [...groupOptions, child.props.screenOptions]
+                : [child.props.screenOptions],
+            child.props.screenLayout ?? groupLayout
           )
         );
         return acc;
@@ -146,8 +153,8 @@ const getRouteConfigsFromChildren = <
                 : ''
             }`
           : typeof child === 'object'
-          ? JSON.stringify(child)
-          : `'${String(child)}'`
+            ? JSON.stringify(child)
+            : `'${String(child)}'`
       }). To render this component in the navigator, pass it in the 'component' prop to 'Screen'.`
     );
   }, []);
@@ -247,9 +254,11 @@ export function useNavigationBuilder<
   createRouter: RouterFactory<State, any, RouterOptions>,
   options: DefaultNavigatorOptions<
     ParamListBase,
+    string | undefined,
     State,
     ScreenOptions,
-    EventMap
+    EventMap,
+    any
   > &
     RouterOptions
 ) {
@@ -259,16 +268,35 @@ export function useNavigationBuilder<
     | NavigatorRoute
     | undefined;
 
-  const { children, layout, screenOptions, screenListeners, ...rest } = options;
-  const { current: router } = React.useRef<Router<State, any>>(
-    createRouter(rest as unknown as RouterOptions)
-  );
+  const {
+    children,
+    layout,
+    screenOptions,
+    screenLayout,
+    screenListeners,
+    ...rest
+  } = options;
 
   const routeConfigs = getRouteConfigsFromChildren<
     State,
     ScreenOptions,
     EventMap
   >(children);
+
+  const router = useLazyValue<Router<State, any>>(() => {
+    if (
+      rest.initialRouteName != null &&
+      routeConfigs.every(
+        (config) => config.props.name !== rest.initialRouteName
+      )
+    ) {
+      throw new Error(
+        `Couldn't find a screen named '${rest.initialRouteName}' to use as 'initialRouteName'.`
+      );
+    }
+
+    return createRouter(rest as unknown as RouterOptions);
+  });
 
   const screens = routeConfigs.reduce<
     Record<string, ScreenConfigWithParent<State, ScreenOptions, EventMap>>
@@ -445,7 +473,7 @@ export function useNavigationBuilder<
 
   let state =
     // If the state isn't initialized, or stale, use the state we initialized instead
-    // The state won't update until there's a change needed in the state we have initalized locally
+    // The state won't update until there's a change needed in the state we have initialized locally
     // So it'll be `undefined` or stale until the first navigation event happens
     isStateInitialized(currentState)
       ? (currentState as State)
@@ -458,7 +486,7 @@ export function useNavigationBuilder<
     !isRecordEqual(routeKeyList, previousRouteKeyList)
   ) {
     const navigatorStateForNextRouteNamesChange =
-      options.getStateForRouteNamesChange?.(state);
+      options.UNSTABLE_getStateForRouteNamesChange?.(state);
     // When the list of route names change, the router should handle it to remove invalid routes
     nextState = navigatorStateForNextRouteNamesChange
       ? // @ts-expect-error this is ok
@@ -544,6 +572,10 @@ export function useNavigationBuilder<
   state = nextState;
 
   React.useEffect(() => {
+    // In strict mode, React will double-invoke effects.
+    // So we need to reset the flag if component was not unmounted
+    stateCleanedUp.current = false;
+
     setKey(navigatorKey);
 
     if (!getIsInitial()) {
@@ -566,9 +598,11 @@ export function useNavigationBuilder<
   const getState = useLatestCallback((): State => {
     const currentState = shouldUpdate ? nextState : getCurrentState();
 
-    return (
-      isStateInitialized(currentState) ? currentState : initializedState
-    ) as State;
+    return deepFreeze(
+      (isStateInitialized(currentState)
+        ? currentState
+        : initializedState) as State
+    );
   });
 
   const emitter = useEventEmitter<EventMapCore<State>>((e) => {
@@ -679,7 +713,7 @@ export function useNavigationBuilder<
     getStateListeners: keyedListeners.getState,
   });
 
-  const descriptors = useDescriptors<
+  const { describe, descriptors } = useDescriptors<
     State,
     ActionHelpers,
     ScreenOptions,
@@ -689,6 +723,7 @@ export function useNavigationBuilder<
     screens,
     navigation,
     screenOptions,
+    screenLayout,
     onAction,
     getState,
     setState,
@@ -727,6 +762,7 @@ export function useNavigationBuilder<
   return {
     state,
     navigation,
+    describe,
     descriptors,
     NavigationContent,
   };

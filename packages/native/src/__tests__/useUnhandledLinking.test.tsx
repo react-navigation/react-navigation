@@ -1,6 +1,10 @@
 import {
   createNavigatorFactory,
+  type NavigationListBase,
+  type ParamListBase,
+  type StackNavigationState,
   StackRouter,
+  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/core';
 import { act, fireEvent, render } from '@testing-library/react-native';
@@ -8,9 +12,9 @@ import * as React from 'react';
 import { Button, Text } from 'react-native';
 
 import { NavigationContainer } from '../NavigationContainer';
-import { useUnhandledLinking } from '../useUnhandledLinking';
+import { UNSTABLE_useUnhandledLinking } from '../useUnhandledLinking';
 
-const createTestNavigator = createNavigatorFactory((props: any) => {
+const StackNavigator = (props: any) => {
   const { state, descriptors, NavigationContent } = useNavigationBuilder(
     StackRouter,
     props
@@ -23,7 +27,21 @@ const createTestNavigator = createNavigatorFactory((props: any) => {
       ))}
     </NavigationContent>
   );
-});
+};
+
+function createTestNavigator<
+  ParamList extends ParamListBase,
+>(): TypedNavigator<{
+  ParamList: ParamList;
+  NavigatorID: string | undefined;
+  State: StackNavigationState<ParamList>;
+  ScreenOptions: {};
+  EventMap: {};
+  NavigationList: NavigationListBase<ParamList>;
+  Navigator: typeof StackNavigator;
+}> {
+  return createNavigatorFactory(StackNavigator)();
+}
 
 it('schedules a state to be handled on conditional linking', async () => {
   const Stack = createTestNavigator();
@@ -58,11 +76,11 @@ it('schedules a state to be handled on conditional linking', async () => {
 
   const StackNavigator = () => {
     const [isSignedIn, setSignedIn] = React.useState(false);
-    const { getStateForRouteNamesChange } = useUnhandledLinking();
+    const { getStateForRouteNamesChange } = UNSTABLE_useUnhandledLinking();
 
     return (
       <Stack.Navigator
-        getStateForRouteNamesChange={getStateForRouteNamesChange}
+        UNSTABLE_getStateForRouteNamesChange={getStateForRouteNamesChange}
       >
         {isSignedIn ? (
           <>
@@ -101,22 +119,22 @@ it('schedules a state to be handled on conditional linking', async () => {
     );
   };
 
-  const { queryByText } = render(<App />);
+  const { queryByText, getByText } = render(<App />);
 
   expect(queryByText('SignIn')).not.toBeNull();
 
-  fireEvent.press(queryByText(/sign in/i));
+  fireEvent.press(getByText(/sign in/i));
 
   expect(queryByText('SignIn')).toBeNull();
 
   expect(queryByText('Profile')).not.toBeNull();
 
-  fireEvent.press(queryByText(/sign out/i));
+  fireEvent.press(getByText(/sign out/i));
 
   expect(queryByText('SignIn')).not.toBeNull();
   expect(queryByText('Home')).toBeNull();
   expect(queryByText('Profile')).toBeNull();
-  fireEvent.press(queryByText(/sign in/i));
+  fireEvent.press(getByText(/sign in/i));
   expect(queryByText('Home')).not.toBeNull();
 });
 
@@ -159,11 +177,11 @@ it('schedules a state to be handled on conditional linking under nested navigato
   };
 
   const InnerStackNavigator = () => {
-    const { getStateForRouteNamesChange } = useUnhandledLinking();
+    const { getStateForRouteNamesChange } = UNSTABLE_useUnhandledLinking();
     const [isSignedIn, setSignedIn] = React.useState(false);
     return (
       <Stack.Navigator
-        getStateForRouteNamesChange={getStateForRouteNamesChange}
+        UNSTABLE_getStateForRouteNamesChange={getStateForRouteNamesChange}
       >
         {isSignedIn ? (
           <>
@@ -208,11 +226,11 @@ it('schedules a state to be handled on conditional linking under nested navigato
     );
   };
 
-  const { queryByText } = render(<App />);
+  const { queryByText, getByText } = render(<App />);
 
   expect(queryByText('SignIn')).not.toBeNull();
 
-  fireEvent.press(queryByText(/sign in/i));
+  fireEvent.press(getByText(/sign in/i));
 
   expect(queryByText('SignIn')).toBeNull();
 
@@ -257,11 +275,11 @@ it('schedules a state to be handled on conditional linking in nested stack', asy
 
   const StackNavigation = () => {
     const [isSignedIn, setSignedIn] = React.useState(false);
-    const { getStateForRouteNamesChange } = useUnhandledLinking();
+    const { getStateForRouteNamesChange } = UNSTABLE_useUnhandledLinking();
 
     return (
       <Stack.Navigator
-        getStateForRouteNamesChange={getStateForRouteNamesChange}
+        UNSTABLE_getStateForRouteNamesChange={getStateForRouteNamesChange}
       >
         {isSignedIn ? (
           <Stack.Screen name="Home">
@@ -308,22 +326,22 @@ it('schedules a state to be handled on conditional linking in nested stack', asy
     );
   };
 
-  const { queryByText } = await render(<App />);
+  const { queryByText, getByText } = await render(<App />);
 
   expect(queryByText('SignIn')).not.toBeNull();
 
-  fireEvent.press(queryByText(/sign in/i));
+  fireEvent.press(getByText(/sign in/i));
 
   expect(queryByText('SignIn')).toBeNull();
   expect(queryByText('Profile')).not.toBeNull();
 
-  fireEvent.press(queryByText(/sign out/i));
+  fireEvent.press(getByText(/sign out/i));
 
   expect(queryByText('SignIn')).not.toBeNull();
   expect(queryByText('Details')).toBeNull();
   expect(queryByText('Profile')).toBeNull();
 
-  fireEvent.press(queryByText(/sign in/i));
+  fireEvent.press(getByText(/sign in/i));
 
   expect(queryByText('Details')).not.toBeNull();
 });
@@ -347,7 +365,7 @@ it('clears lastUnhandledLink upon successful linking handling', () => {
   };
 
   const ProfileScreen = (): any => {
-    const { lastUnhandledLink } = useUnhandledLinking();
+    const { lastUnhandledLink } = UNSTABLE_useUnhandledLinking();
     return lastUnhandledLink;
   };
 
@@ -355,10 +373,10 @@ it('clears lastUnhandledLink upon successful linking handling', () => {
   const Stack = createTestNavigator();
 
   const InnerStackNavigator = () => {
-    const { getStateForRouteNamesChange } = useUnhandledLinking();
+    const { getStateForRouteNamesChange } = UNSTABLE_useUnhandledLinking();
     return (
       <InnerStack.Navigator
-        getStateForRouteNamesChange={getStateForRouteNamesChange}
+        UNSTABLE_getStateForRouteNamesChange={getStateForRouteNamesChange}
       >
         <InnerStack.Screen name="Profile0">{() => null}</InnerStack.Screen>
         <InnerStack.Screen name="Profile" component={ProfileScreen} />
@@ -385,7 +403,9 @@ it('clears lastUnhandledLink upon calling clearUnhandledLink', async () => {
   const Stack = createTestNavigator();
 
   const LinkDisplayScreen = (): any => {
-    const { lastUnhandledLink, clearUnhandledLink } = useUnhandledLinking();
+    const { lastUnhandledLink, clearUnhandledLink } =
+      UNSTABLE_useUnhandledLinking();
+
     return (
       <>
         <Text>{lastUnhandledLink}</Text>
@@ -422,11 +442,11 @@ it('clears lastUnhandledLink upon calling clearUnhandledLink', async () => {
     );
   };
 
-  const { queryByText } = render(<App />);
+  const { queryByText, getByText } = render(<App />);
 
   expect(queryByText('profile')).not.toBeNull();
 
-  fireEvent.press(queryByText(/clear/i));
+  fireEvent.press(getByText(/clear/i));
 
   expect(queryByText('profile')).toBeNull();
 });

@@ -61,6 +61,7 @@ type Props = ViewProps & {
     open: TransitionSpec;
     close: TransitionSpec;
   };
+  preloaded: boolean;
   styleInterpolator: StackCardStyleInterpolator;
   containerStyle?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
@@ -104,7 +105,11 @@ export class Card extends React.Component<Props> {
   };
 
   componentDidMount() {
-    this.animate({ closing: this.props.closing });
+    if (!this.props.preloaded) {
+      this.animate({
+        closing: this.props.closing,
+      });
+    }
     this.isCurrentlyMounted = true;
   }
 
@@ -133,7 +138,7 @@ export class Card extends React.Component<Props> {
       this.lastToValue !== toValue
     ) {
       // We need to trigger the animation when route was closed
-      // Thr route might have been closed by a `POP` action or by a gesture
+      // The route might have been closed by a `POP` action or by a gesture
       // When route was closed due to a gesture, the animation would've happened already
       // It's still important to trigger the animation so that `onClose` is called
       // If `onClose` is not called, cleanup step won't be performed for gestures
@@ -142,7 +147,7 @@ export class Card extends React.Component<Props> {
   }
 
   componentWillUnmount() {
-    this.props.gesture.stopAnimation();
+    this.props.gesture?.stopAnimation();
     this.isCurrentlyMounted = false;
     this.handleEndInteraction();
   }
@@ -178,7 +183,7 @@ export class Card extends React.Component<Props> {
     closing: boolean;
     velocity?: number;
   }) => {
-    const { gesture, transitionSpec, onOpen, onClose, onTransition } =
+    const { transitionSpec, onOpen, onClose, onTransition, gesture } =
       this.props;
 
     const toValue = this.getAnimateToValue({
@@ -232,13 +237,15 @@ export class Card extends React.Component<Props> {
     layout,
     gestureDirection,
     direction,
+    preloaded,
   }: {
     closing?: boolean;
     layout: Layout;
     gestureDirection: GestureDirection;
     direction: LocaleDirection;
+    preloaded: boolean;
   }) => {
-    if (!closing) {
+    if (!closing && !preloaded) {
       return 0;
     }
 
@@ -288,7 +295,8 @@ export class Card extends React.Component<Props> {
         this.handleStartInteraction();
         onGestureBegin?.();
         break;
-      case GestureState.CANCELLED: {
+      case GestureState.CANCELLED:
+      case GestureState.FAILED: {
         this.isSwiping.setValue(FALSE);
         this.handleEndInteraction();
 
@@ -298,7 +306,10 @@ export class Card extends React.Component<Props> {
             ? nativeEvent.velocityY
             : nativeEvent.velocityX;
 
-        this.animate({ closing: this.props.closing, velocity });
+        this.animate({
+          closing: this.props.closing,
+          velocity,
+        });
 
         onGestureCanceled?.();
         break;
@@ -397,9 +408,9 @@ export class Card extends React.Component<Props> {
       gestureResponseDistance !== undefined
         ? gestureResponseDistance
         : gestureDirection === 'vertical' ||
-          gestureDirection === 'vertical-inverted'
-        ? GESTURE_RESPONSE_DISTANCE_VERTICAL
-        : GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
+            gestureDirection === 'vertical-inverted'
+          ? GESTURE_RESPONSE_DISTANCE_VERTICAL
+          : GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
 
     if (gestureDirection === 'vertical') {
       return {
@@ -529,7 +540,13 @@ export class Card extends React.Component<Props> {
           // Make sure that this view isn't removed. If this view is removed, our style with animated value won't apply
           collapsable={false}
         />
-        <View pointerEvents="box-none" {...rest}>
+        <View
+          pointerEvents="box-none"
+          // Make sure this view is not removed on the new architecture, as it causes focus loss during navigation on Android.
+          // This can happen when the view flattening results in different trees - due to `overflow` style changing in a parent.
+          collapsable={false}
+          {...rest}
+        >
           {overlayEnabled ? (
             <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
               {overlay({ style: overlayStyle })}
@@ -554,12 +571,12 @@ export class Card extends React.Component<Props> {
                     style={[
                       styles.shadow,
                       gestureDirection === 'horizontal'
-                        ? [styles.shadowHorizontal, styles.shadowLeft]
+                        ? [styles.shadowHorizontal, styles.shadowStart]
                         : gestureDirection === 'horizontal-inverted'
-                        ? [styles.shadowHorizontal, styles.shadowRight]
-                        : gestureDirection === 'vertical'
-                        ? [styles.shadowVertical, styles.shadowTop]
-                        : [styles.shadowVertical, styles.shadowBottom],
+                          ? [styles.shadowHorizontal, styles.shadowEnd]
+                          : gestureDirection === 'vertical'
+                            ? [styles.shadowVertical, styles.shadowTop]
+                            : [styles.shadowVertical, styles.shadowBottom],
                       { backgroundColor },
                       shadowStyle,
                     ]}
@@ -603,15 +620,15 @@ const styles = StyleSheet.create({
     width: 3,
     shadowOffset: { width: -1, height: 1 },
   },
-  shadowLeft: {
-    left: 0,
+  shadowStart: {
+    start: 0,
   },
-  shadowRight: {
-    right: 0,
+  shadowEnd: {
+    end: 0,
   },
   shadowVertical: {
-    left: 0,
-    right: 0,
+    start: 0,
+    end: 0,
     height: 3,
     shadowOffset: { width: 1, height: -1 },
   },

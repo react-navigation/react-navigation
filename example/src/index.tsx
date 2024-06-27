@@ -12,7 +12,6 @@ import {
   DefaultTheme,
   type InitialState,
   NavigationContainer,
-  type PathConfigMap,
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import {
@@ -33,22 +32,17 @@ import {
   Text,
   useWindowDimensions,
 } from 'react-native';
-import {
-  DarkTheme as PaperDarkTheme,
-  DefaultTheme as PaperLightTheme,
-  Divider,
-  List,
-  Provider as PaperProvider,
-  type Theme,
-} from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import type { LinkingOptions } from '../../packages/native/src/types';
 import {
   type RootDrawerParamList,
   type RootStackParamList,
   SCREENS,
 } from './screens';
 import { NotFound } from './Screens/NotFound';
+import { Divider } from './Shared/Divider';
+import { ListItem } from './Shared/LIstItem';
 import { SettingsItem } from './Shared/SettingsItem';
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
@@ -59,6 +53,44 @@ const THEME_PERSISTENCE_KEY = 'THEME_TYPE';
 const DIRECTION_PERSISTENCE_KEY = 'DIRECTION';
 
 const SCREEN_NAMES = Object.keys(SCREENS) as (keyof typeof SCREENS)[];
+
+const linking: LinkingOptions<RootStackParamList> = {
+  // To test deep linking on, run the following in the Terminal:
+  // Android: adb shell am start -a android.intent.action.VIEW -d "exp://127.0.0.1:19000/--/simple-stack"
+  // iOS: xcrun simctl openurl booted exp://127.0.0.1:19000/--/simple-stack
+  // Android (bare): adb shell am start -a android.intent.action.VIEW -d "rne://127.0.0.1:19000/--/simple-stack"
+  // iOS (bare): xcrun simctl openurl booted rne://127.0.0.1:19000/--/simple-stack
+  // The first segment of the link is the the scheme + host (returned by `Linking.makeUrl`)
+  prefixes: [createURL('/')],
+  config: {
+    initialRouteName: 'Home',
+    screens: {
+      Home: {
+        screens: {
+          Examples: '',
+        },
+      },
+      NotFound: '*',
+      ...Object.fromEntries(
+        Object.entries(SCREENS).map(([name, { linking }]) => {
+          // Convert screen names such as SimpleStack to kebab case (simple-stack)
+          const path = name
+            .replace(/([A-Z]+)/g, '-$1')
+            .replace(/^-/, '')
+            .toLowerCase();
+
+          return [
+            name,
+            {
+              path,
+              screens: linking,
+            },
+          ];
+        })
+      ),
+    },
+  },
+};
 
 let previousDirection = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr';
 
@@ -152,20 +184,6 @@ export function App() {
     }
   }, [isRTL]);
 
-  const paperTheme = React.useMemo(() => {
-    const t = theme.dark ? PaperDarkTheme : PaperLightTheme;
-
-    return {
-      ...t,
-      colors: {
-        ...t.colors,
-        ...theme.colors,
-        surface: theme.colors.card,
-        accent: theme.dark ? 'rgb(255, 55, 95)' : 'rgb(255, 45, 85)',
-      },
-    };
-  }, [theme.colors, theme.dark]);
-
   const dimensions = useWindowDimensions();
 
   const navigationRef = useNavigationContainerRef();
@@ -179,7 +197,7 @@ export function App() {
   const isLargeScreen = dimensions.width >= 1024;
 
   return (
-    <Providers theme={paperTheme}>
+    <Providers>
       {Platform.OS === 'android' && (
         <StatusBar
           translucent
@@ -201,63 +219,7 @@ export function App() {
         }
         theme={theme}
         direction={isRTL ? 'rtl' : 'ltr'}
-        linking={{
-          // To test deep linking on, run the following in the Terminal:
-          // Android: adb shell am start -a android.intent.action.VIEW -d "exp://127.0.0.1:19000/--/simple-stack"
-          // iOS: xcrun simctl openurl booted exp://127.0.0.1:19000/--/simple-stack
-          // Android (bare): adb shell am start -a android.intent.action.VIEW -d "rne://127.0.0.1:19000/--/simple-stack"
-          // iOS (bare): xcrun simctl openurl booted rne://127.0.0.1:19000/--/simple-stack
-          // The first segment of the link is the the scheme + host (returned by `Linking.makeUrl`)
-          prefixes: [createURL('/')],
-          config: {
-            initialRouteName: 'Home',
-            screens: SCREEN_NAMES.reduce<PathConfigMap<RootStackParamList>>(
-              (acc, name) => {
-                // Convert screen names such as SimpleStack to kebab case (simple-stack)
-                const path = name
-                  .replace(/([A-Z]+)/g, '-$1')
-                  .replace(/^-/, '')
-                  .toLowerCase();
-
-                acc[name] = {
-                  path,
-                  screens: {
-                    Article: {
-                      path: 'article/:author?',
-                      parse: {
-                        author: (author: string) =>
-                          author.charAt(0).toUpperCase() +
-                          author.slice(1).replace(/-/g, ' '),
-                      },
-                      stringify: {
-                        author: (author: string) =>
-                          author.toLowerCase().replace(/\s/g, '-'),
-                      },
-                    },
-                    Albums: 'music',
-                    Chat: 'chat',
-                    Contacts: 'people',
-                    NewsFeed: 'feed',
-                    Dialog: 'dialog',
-                    SignIn: 'sign-in',
-                    Profile: 'profile',
-                    Home: 'home',
-                  },
-                };
-
-                return acc;
-              },
-              {
-                Home: {
-                  screens: {
-                    Examples: '',
-                  },
-                },
-                NotFound: '*',
-              }
-            ),
-          },
-        }}
+        linking={linking}
         fallback={<Text>Loading…</Text>}
         documentTitle={{
           formatter: (options, route) =>
@@ -304,6 +266,10 @@ export function App() {
                           label="Right to left"
                           value={isRTL}
                           onValueChange={() => setIsRTL((rtl) => !rtl)}
+                          disabled={
+                            // Set expo.extra.forcesRTL: true in app.json to enable RTL in Expo Go
+                            Platform.OS !== 'web'
+                          }
                         />
                         <Divider />
                         <SettingsItem
@@ -313,15 +279,17 @@ export function App() {
                             setTheme((t) => (t.dark ? DefaultTheme : DarkTheme))
                           }
                         />
-                        <Divider />
                         {SCREEN_NAMES.map((name) => (
-                          <List.Item
-                            key={name}
-                            title={SCREENS[name].title}
-                            onPress={() => {
-                              navigation.navigate(name);
-                            }}
-                          />
+                          <React.Fragment key={name}>
+                            <ListItem
+                              title={SCREENS[name].title}
+                              onPress={() => {
+                                navigation.navigate(name);
+                              }}
+                            />
+
+                            <Divider />
+                          </React.Fragment>
                         ))}
                       </SafeAreaView>
                     </ScrollView>
@@ -335,32 +303,32 @@ export function App() {
             component={NotFound}
             options={{ title: 'Oops!' }}
           />
-          {SCREEN_NAMES.map((name) => (
-            <Stack.Screen
-              key={name}
-              name={name}
-              getComponent={() => SCREENS[name].component}
-              options={{ title: SCREENS[name].title }}
-            />
-          ))}
+          {SCREEN_NAMES.map((name) => {
+            const screen = SCREENS[name];
+
+            return (
+              <Stack.Screen
+                key={name}
+                name={name}
+                component={screen}
+                options={{
+                  headerShown: false,
+                  title: screen.title,
+                  ...('options' in screen ? screen.options : null),
+                }}
+              />
+            );
+          })}
         </Stack.Navigator>
       </NavigationContainer>
     </Providers>
   );
 }
 
-const Providers = ({
-  theme,
-  children,
-}: {
-  theme: Theme;
-  children: React.ReactNode;
-}) => {
+const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
-    <PaperProvider theme={theme}>
-      <ActionSheetProvider>
-        <>{children}</>
-      </ActionSheetProvider>
-    </PaperProvider>
+    <ActionSheetProvider>
+      <>{children}</>
+    </ActionSheetProvider>
   );
 };

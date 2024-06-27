@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 
 import { MaskedView } from '../MaskedView';
-import { PlatformPressable } from '../PlatformPressable';
 import type { HeaderBackButtonProps } from '../types';
+import { HeaderButton } from './HeaderButton';
 
 export function HeaderBackButton({
   disabled,
@@ -96,15 +96,7 @@ export function HeaderBackButton({
     }
 
     const labelElement = (
-      <View
-        style={
-          screenLayout
-            ? // We make the button extend till the middle of the screen
-              // Otherwise it appears to cut off when translating
-              [styles.labelWrapper, { minWidth: screenLayout.width / 2 - 27 }]
-            : null
-        }
-      >
+      <View style={styles.labelWrapper}>
         <Animated.Text
           accessible={false}
           onLayout={
@@ -135,7 +127,13 @@ export function HeaderBackButton({
     return (
       <MaskedView
         maskElement={
-          <View style={styles.iconMaskContainer}>
+          <View
+            style={[
+              styles.iconMaskContainer,
+              // Extend the mask to the center of the screen so that label isn't clipped during animation
+              screenLayout ? { minWidth: screenLayout.width / 2 - 27 } : null,
+            ]}
+          >
             <Image
               source={require('../assets/back-icon-mask.png')}
               resizeMode="contain"
@@ -157,7 +155,7 @@ export function HeaderBackButton({
   };
 
   return (
-    <PlatformPressable
+    <HeaderButton
       disabled={disabled}
       href={href}
       accessibilityLabel={accessibilityLabel}
@@ -165,31 +163,19 @@ export function HeaderBackButton({
       onPress={handlePress}
       pressColor={pressColor}
       pressOpacity={pressOpacity}
-      android_ripple={androidRipple}
-      style={[styles.container, disabled && styles.disabled, style]}
-      hitSlop={Platform.select({
-        ios: undefined,
-        default: { top: 16, right: 16, bottom: 16, left: 16 },
-      })}
+      style={[styles.container, style]}
     >
       <React.Fragment>
         {renderBackImage()}
         {renderLabel()}
       </React.Fragment>
-    </PlatformPressable>
+    </HeaderButton>
   );
 }
 
-const androidRipple = {
-  borderless: true,
-  foreground: Platform.OS === 'android' && Platform.Version >= 23,
-  radius: 20,
-};
-
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    flexDirection: 'row',
+    paddingHorizontal: 0,
     minWidth: StyleSheet.hairlineWidth, // Avoid collapsing when title is long
     ...Platform.select({
       ios: null,
@@ -198,9 +184,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 11,
       },
     }),
-  },
-  disabled: {
-    opacity: 0.5,
   },
   label: {
     fontSize: 17,
@@ -213,14 +196,18 @@ const styles = StyleSheet.create({
     // Otherwise it messes with the measurement of the label
     flexDirection: 'row',
     alignItems: 'flex-start',
+    ...Platform.select({
+      ios: { marginEnd: 8 },
+      default: { marginEnd: 3 },
+    }),
   },
   icon: Platform.select({
     ios: {
       height: 21,
       width: 13,
-      marginLeft: 8,
-      marginRight: 22,
-      marginVertical: 12,
+      marginStart: 8,
+      marginEnd: 22,
+      marginVertical: 8,
     },
     default: {
       height: 24,
@@ -231,7 +218,7 @@ const styles = StyleSheet.create({
   iconWithLabel:
     Platform.OS === 'ios'
       ? {
-          marginRight: 6,
+          marginEnd: 6,
         }
       : {},
   iconMaskContainer: {
@@ -246,11 +233,11 @@ const styles = StyleSheet.create({
   iconMask: {
     height: 21,
     width: 13,
-    marginLeft: -14.5,
+    marginStart: -14.5,
     marginVertical: 12,
     alignSelf: 'center',
   },
   flip: {
-    transform: [{ scaleX: -1 }],
+    transform: 'scaleX(-1)',
   },
 });

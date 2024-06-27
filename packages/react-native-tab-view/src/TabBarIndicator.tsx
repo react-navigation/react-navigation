@@ -33,14 +33,29 @@ const getTranslateX = (
   routes: Route[],
   getTabWidth: GetTabWidth,
   direction: LocaleDirection,
-  gap?: number
+  gap?: number,
+  width?: number | string
 ) => {
   const inputRange = routes.map((_, i) => i);
 
   // every index contains widths at all previous indices
   const outputRange = routes.reduce<number[]>((acc, _, i) => {
-    if (i === 0) return [0];
-    return [...acc, acc[i - 1] + getTabWidth(i - 1) + (gap ?? 0)];
+    if (typeof width === 'number') {
+      if (i === 0) return [getTabWidth(i) / 2 - width / 2];
+
+      let sumTabWidth = 0;
+      for (let j = 0; j < i; j++) {
+        sumTabWidth += getTabWidth(j);
+      }
+
+      return [
+        ...acc,
+        sumTabWidth + getTabWidth(i) / 2 + (gap ? gap * i : 0) - width / 2,
+      ];
+    } else {
+      if (i === 0) return [0];
+      return [...acc, acc[i - 1] + getTabWidth(i - 1) + (gap ?? 0)];
+    }
   }, []);
 
   const translateX = position.interpolate({
@@ -114,7 +129,7 @@ export function TabBarIndicator<T extends Route>({
   if (layout.width) {
     const translateX =
       routes.length > 1
-        ? getTranslateX(position, routes, getTabWidth, direction, gap)
+        ? getTranslateX(position, routes, getTabWidth, direction, gap, width)
         : 0;
 
     transform.push({ translateX });
@@ -151,19 +166,33 @@ export function TabBarIndicator<T extends Route>({
     );
   }
 
+  const styleList: StyleProp<ViewStyle> = [];
+
+  // scaleX doesn't work properly on chrome and opera for linux and android
+  if (Platform.OS === 'web' && width === 'auto') {
+    styleList.push(
+      { width: transform[1].scaleX },
+      { left: transform[0].translateX }
+    );
+  } else {
+    styleList.push(
+      { width: width === 'auto' ? initialWidth : width },
+      // If layout is not available, use `left` property for positioning the indicator
+      // This avoids rendering delay until we are able to calculate translateX
+      // If platform is macos use `left` property as `transform` is broken at the moment.
+      // See: https://github.com/microsoft/react-native-macos/issues/280
+      layout.width && Platform.OS !== 'macos'
+        ? { left: 0 }
+        : { left: `${(100 / routes.length) * navigationState.index}%` },
+      { transform },
+    );
+  }
+
   return (
     <Animated.View
       style={[
         styles.indicator,
-        { width: width === 'auto' ? initialWidth : width },
-        // If layout is not available, use `left` property for positioning the indicator
-        // This avoids rendering delay until we are able to calculate translateX
-        // If platform is macos use `left` property as `transform` is broken at the moment.
-        // See: https://github.com/microsoft/react-native-macos/issues/280
-        layout.width && Platform.OS !== 'macos'
-          ? { left: 0 }
-          : { left: `${(100 / routes.length) * navigationState.index}%` },
-        { transform },
+        styleList,
         width === 'auto' ? { opacity: opacity } : null,
         style,
       ]}
@@ -177,9 +206,9 @@ const styles = StyleSheet.create({
   indicator: {
     backgroundColor: '#ffeb3b',
     position: 'absolute',
-    left: 0,
+    start: 0,
     bottom: 0,
-    right: 0,
+    end: 0,
     height: 2,
   },
 });

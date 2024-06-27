@@ -1,9 +1,9 @@
 import * as React from 'react';
-import type Animated from 'react-native-reanimated';
+import type { SharedValue } from 'react-native-reanimated';
 
 import { DrawerProgressContext } from './DrawerProgressContext';
 
-export function useDrawerProgress(): Readonly<Animated.SharedValue<number>> {
+export function useDrawerProgress(): Readonly<SharedValue<number>> {
   const progress = React.useContext(DrawerProgressContext);
 
   if (progress === undefined) {

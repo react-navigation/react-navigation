@@ -1,5 +1,29 @@
-import type { Animated } from 'react-native';
+import type { Animated, StyleProp, TextStyle } from 'react-native';
 import type { PagerViewProps } from 'react-native-pager-view';
+
+export type TabDescriptor<T extends Route> = {
+  accessibilityLabel?: string;
+  accessible?: boolean;
+  testID?: string;
+  labelText?: string;
+  labelAllowFontScaling?: boolean;
+  href?: string;
+  label?: (props: {
+    route: T;
+    labelText?: string;
+    focused: boolean;
+    color: string;
+    allowFontScaling?: boolean;
+    style?: StyleProp<TextStyle>;
+  }) => React.ReactElement;
+  icon?: (props: {
+    route: T;
+    focused: boolean;
+    color: string;
+    size: number;
+  }) => React.ReactElement;
+  badge?: (props: { route: T }) => React.ReactElement;
+};
 
 export type LocaleDirection = 'ltr' | 'rtl';
 

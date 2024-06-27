@@ -5,12 +5,11 @@ import {
 } from '@react-navigation/elements';
 import {
   CommonActions,
-  type ParamListBase,
+  type PathConfigMap,
   useTheme,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
-  type StackNavigationOptions,
   type StackScreenProps,
 } from '@react-navigation/stack';
 import * as React from 'react';
@@ -27,14 +26,21 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type SimpleStackParams = {
+export type CustomLayoutParams = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Albums: undefined;
+};
+
+const linking: PathConfigMap<CustomLayoutParams> = {
+  Article: COMMON_LINKING_CONFIG.Article,
+  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+  Albums: 'albums',
 };
 
 const scrollEnabled = Platform.select({ web: true, default: false });
@@ -42,7 +48,7 @@ const scrollEnabled = Platform.select({ web: true, default: false });
 const ArticleScreen = ({
   navigation,
   route,
-}: StackScreenProps<SimpleStackParams, 'Article'>) => {
+}: StackScreenProps<CustomLayoutParams, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -67,7 +73,7 @@ const ArticleScreen = ({
 const NewsFeedScreen = ({
   route,
   navigation,
-}: StackScreenProps<SimpleStackParams, 'NewsFeed'>) => {
+}: StackScreenProps<CustomLayoutParams, 'NewsFeed'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -85,7 +91,7 @@ const NewsFeedScreen = ({
 
 const AlbumsScreen = ({
   navigation,
-}: StackScreenProps<SimpleStackParams, 'Albums'>) => {
+}: StackScreenProps<CustomLayoutParams, 'Albums'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -106,20 +112,9 @@ const AlbumsScreen = ({
   );
 };
 
-const Stack = createStackNavigator<SimpleStackParams>();
+const Stack = createStackNavigator<CustomLayoutParams>();
 
-export function CustomLayout({
-  navigation,
-  screenOptions,
-}: StackScreenProps<ParamListBase> & {
-  screenOptions?: StackNavigationOptions;
-}) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function NavigatorLayout() {
   const { colors } = useTheme();
 
   const frame = useSafeAreaFrame();
@@ -178,7 +173,6 @@ export function CustomLayout({
         );
       }}
       screenOptions={{
-        ...screenOptions,
         headerShown: false,
       }}
     >
@@ -204,6 +198,9 @@ export function CustomLayout({
   );
 }
 
+NavigatorLayout.title = 'Navigator Layout';
+NavigatorLayout.linking = linking;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -215,6 +212,7 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   breadcrumbs: {
+    flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 8,
   },
@@ -228,6 +226,7 @@ const styles = StyleSheet.create({
   arrow: {
     fontSize: 14,
     lineHeight: 14,
+    paddingVertical: 16,
     opacity: 0.3,
   },
 });

@@ -90,6 +90,12 @@ type Props = {
    */
   horizontal: boolean;
   /**
+   * Variant of navigation bar styling
+   * - `uikit`: iOS UIKit style
+   * - `material`: Material Design style
+   */
+  variant: 'uikit' | 'material';
+  /**
    * Color for the icon and label when the item is active.
    */
   activeTintColor?: string;
@@ -163,6 +169,7 @@ export function BottomTabItem({
   onPress,
   onLongPress,
   horizontal,
+  variant,
   activeTintColor: customActiveTintColor,
   inactiveTintColor: customInactiveTintColor,
   activeBackgroundColor = 'transparent',
@@ -173,7 +180,7 @@ export function BottomTabItem({
   iconStyle,
   style,
 }: Props) {
-  const { colors } = useTheme();
+  const { colors, fonts } = useTheme();
 
   const activeTintColor =
     customActiveTintColor === undefined
@@ -216,7 +223,14 @@ export function BottomTabItem({
     return (
       <Label
         style={[
-          horizontal ? styles.labelBeside : styles.labelBeneath,
+          horizontal
+            ? [
+                styles.labelBeside,
+                { marginStart: icon !== undefined ? 16 : 0 },
+                variant === 'uikit' && styles.labelBesideUikit,
+              ]
+            : styles.labelBeneath,
+          variant === 'material' && fonts.medium,
           labelStyle,
         ]}
         allowFontScaling={allowFontScaling}
@@ -286,6 +300,8 @@ export function BottomTabItem({
 const styles = StyleSheet.create({
   tab: {
     alignItems: 'center',
+    // Roundness for iPad hover effect
+    borderRadius: 10,
   },
   tabPortrait: {
     justifyContent: 'flex-end',
@@ -294,12 +310,20 @@ const styles = StyleSheet.create({
   tabLandscape: {
     justifyContent: 'center',
     flexDirection: 'row',
+    paddingVertical: 12,
+    paddingStart: 16,
+    paddingEnd: 24,
   },
   labelBeneath: {
     fontSize: 10,
   },
   labelBeside: {
+    marginEnd: 12,
+    marginVertical: 4,
+    lineHeight: 24,
+    marginStart: 20,
+  },
+  labelBesideUikit: {
     fontSize: 13,
-    marginLeft: 20,
   },
 });

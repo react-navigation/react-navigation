@@ -1,5 +1,8 @@
 import { Button } from '@react-navigation/elements';
-import { useUnhandledLinking } from '@react-navigation/native';
+import {
+  type PathConfigMap,
+  UNSTABLE_useUnhandledLinking,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
@@ -13,10 +16,16 @@ const info = `
 \u2022 http://localhost:19006/linking/profile
 `.trim();
 
-type StackParamList = {
+export type LinkingStackParams = {
   Home: undefined;
   Profile: undefined;
   SignIn: undefined;
+};
+
+const linking: PathConfigMap<LinkingStackParams> = {
+  Home: '',
+  Profile: 'profile',
+  SignIn: 'sign-in',
 };
 
 const SigningContext = React.createContext<{
@@ -26,7 +35,7 @@ const SigningContext = React.createContext<{
 
 const ProfileScreen = ({
   navigation,
-}: StackScreenProps<StackParamList, 'Profile'>) => {
+}: StackScreenProps<LinkingStackParams, 'Profile'>) => {
   const { signOut } = useContext(SigningContext)!;
   return (
     <View style={styles.container}>
@@ -41,7 +50,7 @@ const ProfileScreen = ({
 
 const HomeScreen = ({
   navigation,
-}: StackScreenProps<StackParamList, 'Home'>) => {
+}: StackScreenProps<LinkingStackParams, 'Home'>) => {
   const { signOut } = useContext(SigningContext)!;
   return (
     <View style={styles.container}>
@@ -73,11 +82,11 @@ const SignInScreen = () => {
   );
 };
 
-const Stack = createStackNavigator<StackParamList>();
+const Stack = createStackNavigator<LinkingStackParams>();
 
 export function LinkingScreen() {
   const [isSignedIn, setSignedIn] = React.useState(false);
-  const { getStateForRouteNamesChange } = useUnhandledLinking();
+  const { getStateForRouteNamesChange } = UNSTABLE_useUnhandledLinking();
   return (
     <SigningContext.Provider
       value={{
@@ -86,8 +95,7 @@ export function LinkingScreen() {
       }}
     >
       <Stack.Navigator
-        screenOptions={{ headerShown: false }}
-        getStateForRouteNamesChange={getStateForRouteNamesChange}
+        UNSTABLE_getStateForRouteNamesChange={getStateForRouteNamesChange}
       >
         {isSignedIn ? (
           <Stack.Group>
@@ -107,6 +115,9 @@ export function LinkingScreen() {
     </SigningContext.Provider>
   );
 }
+
+LinkingScreen.title = 'Linking with authentication flow';
+LinkingScreen.linking = linking;
 
 const styles = StyleSheet.create({
   container: {

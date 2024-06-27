@@ -1,4 +1,4 @@
-# React Navigation 6
+# React Navigation 7
 
 [![Build Status][build-badge]][build]
 [![Code Coverage][coverage-badge]][coverage]
@@ -8,7 +8,7 @@ Routing and navigation for your React Native apps.
 
 Documentation can be found at [reactnavigation.org](https://reactnavigation.org/).
 
-If you are looking for version 4, the code can be found in the [4.x branch](https://github.com/react-navigation/react-navigation/tree/4.x).
+This branch contains the code for the pre-release version of React Navigation 7. You can find the code for the latest stable version in the [6.x branch](https://github.com/react-navigation/react-navigation/tree/6.x).
 
 ## Package Versions
 

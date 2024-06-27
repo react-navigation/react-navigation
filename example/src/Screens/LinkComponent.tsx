@@ -2,7 +2,7 @@ import { Button } from '@react-navigation/elements';
 import {
   CommonActions,
   Link,
-  type ParamListBase,
+  type PathConfigMap,
   StackActions,
 } from '@react-navigation/native';
 import {
@@ -12,13 +12,24 @@ import {
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
-import type { LinkComponentDemoParamList } from '../screens';
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
+
+export type LinkComponentDemoParamList = {
+  Article: { author: string };
+  Albums: undefined;
+};
+
+const linking: PathConfigMap<LinkComponentDemoParamList> = {
+  Article: COMMON_LINKING_CONFIG.Article,
+  Albums: 'albums',
+};
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
+  navigation,
   route,
 }: StackScreenProps<LinkComponentDemoParamList, 'Article'>) => {
   return (
@@ -34,12 +45,35 @@ const ArticleScreen = ({
         >
           Replace with Albums
         </Link>
+
         <Button screen="Home" variant="filled">
           Go to Home
         </Button>
         <Button variant="tinted" action={CommonActions.goBack()}>
           Go back
         </Button>
+
+        <Button
+          variant="tinted"
+          onPress={() =>
+            navigation.setParams({
+              author:
+                route.params?.author === 'Gandalf' ? 'Babel fish' : 'Gandalf',
+            })
+          }
+        >
+          Update params
+        </Button>
+
+        {Platform.OS === 'web' && (
+          <Button
+            onPress={() => {
+              location.hash = 'frodo';
+            }}
+          >
+            Add hash to URL
+          </Button>
+        )}
       </View>
       <Article
         author={{ name: route.params.author }}
@@ -79,18 +113,9 @@ const AlbumsScreen = ({
 
 const SimpleStack = createStackNavigator<LinkComponentDemoParamList>();
 
-type Props = Partial<React.ComponentProps<typeof SimpleStack.Navigator>> &
-  StackScreenProps<ParamListBase>;
-
-export function LinkComponent({ navigation, ...rest }: Props) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function LinkComponent() {
   return (
-    <SimpleStack.Navigator {...rest}>
+    <SimpleStack.Navigator>
       <SimpleStack.Screen
         name="Article"
         component={ArticleScreen}
@@ -107,6 +132,9 @@ export function LinkComponent({ navigation, ...rest }: Props) {
     </SimpleStack.Navigator>
   );
 }
+
+LinkComponent.title = '<Link /> ';
+LinkComponent.linking = linking;
 
 const styles = StyleSheet.create({
   buttons: {

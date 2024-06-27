@@ -1,5 +1,5 @@
 import { Button } from '@react-navigation/elements';
-import type { ParamListBase } from '@react-navigation/native';
+import type { PathConfigMap } from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
@@ -7,12 +7,18 @@ import {
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 
-type ModalStackParams = {
+export type ModalStackParams = {
   Article: { author: string };
   Albums: undefined;
+};
+
+const linking: PathConfigMap<ModalStackParams> = {
+  Article: COMMON_LINKING_CONFIG.Article,
+  Albums: 'albums',
 };
 
 const scrollEnabled = Platform.select({ web: true, default: false });
@@ -60,15 +66,7 @@ const AlbumsScreen = ({ navigation }: StackScreenProps<ModalStackParams>) => {
 
 const Stack = createStackNavigator<ModalStackParams>();
 
-type Props = StackScreenProps<ParamListBase>;
-
-export function ModalStack({ navigation }: Props) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function ModalStack() {
   return (
     <Stack.Navigator screenOptions={{ presentation: 'modal' }}>
       <Stack.Screen
@@ -87,6 +85,9 @@ export function ModalStack({ navigation }: Props) {
     </Stack.Navigator>
   );
 }
+
+ModalStack.title = 'Modal Stack';
+ModalStack.linking = linking;
 
 const styles = StyleSheet.create({
   buttons: {

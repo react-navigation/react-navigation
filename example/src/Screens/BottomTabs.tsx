@@ -1,17 +1,22 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
+  type BottomTabScreenProps,
   createBottomTabNavigator,
-  TransitionPresets,
   useBottomTabBarHeight,
 } from '@react-navigation/bottom-tabs';
-import { HeaderBackButton, useHeaderHeight } from '@react-navigation/elements';
+import {
+  HeaderBackButton,
+  HeaderButton,
+  PlatformPressable,
+  useHeaderHeight,
+} from '@react-navigation/elements';
 import {
   type NavigatorScreenParams,
-  type ParamListBase,
+  type PathConfigMap,
   useIsFocused,
+  useLocale,
 } from '@react-navigation/native';
-import type { StackScreenProps } from '@react-navigation/stack';
 import { BlurView } from 'expo-blur';
 import * as React from 'react';
 import {
@@ -22,7 +27,6 @@ import {
   StyleSheet,
   useWindowDimensions,
 } from 'react-native';
-import { Appbar, IconButton } from 'react-native-paper';
 
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
@@ -35,11 +39,21 @@ const getTabBarIcon =
     <MaterialCommunityIcons name={name} color={color} size={size} />
   );
 
-type BottomTabParams = {
+export type BottomTabParams = {
   TabStack: NavigatorScreenParams<SimpleStackParams>;
   TabAlbums: undefined;
   TabContacts: undefined;
   TabChat: undefined;
+};
+
+const linking: PathConfigMap<BottomTabParams> = {
+  TabStack: {
+    path: 'stack',
+    screens: SimpleStack.linking,
+  },
+  TabAlbums: 'albums',
+  TabContacts: 'contacts',
+  TabChat: 'chat',
 };
 
 const AlbumsScreen = () => {
@@ -66,27 +80,16 @@ const AlbumsScreen = () => {
 
 const Tab = createBottomTabNavigator<BottomTabParams>();
 
-const animations = {
-  shifting: TransitionPresets.ShiftingTransition,
-  fade: TransitionPresets.FadeTransition,
-  none: null,
-} as const;
+const animations = ['none', 'fade', 'shift'] as const;
 
-export function BottomTabs({
-  navigation,
-}: StackScreenProps<ParamListBase, string>) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function BottomTabs() {
   const { showActionSheetWithOptions } = useActionSheet();
+  const { direction } = useLocale();
 
   const dimensions = useWindowDimensions();
 
   const [animation, setAnimation] =
-    React.useState<keyof typeof animations>('none');
+    React.useState<(typeof animations)[number]>('none');
   const [isCompact, setIsCompact] = React.useState(false);
 
   const isLargeScreen = dimensions.width >= 1024;
@@ -94,22 +97,18 @@ export function BottomTabs({
   return (
     <>
       <Tab.Navigator
-        screenOptions={{
+        screenOptions={({
+          navigation,
+        }: BottomTabScreenProps<BottomTabParams>) => ({
           headerLeft: (props) => (
             <HeaderBackButton {...props} onPress={navigation.goBack} />
           ),
           headerRight: ({ tintColor }) => (
-            <Appbar.Action
-              icon={animation === 'none' ? 'heart-outline' : 'heart'}
-              color={tintColor}
+            <HeaderButton
               onPress={() => {
-                const options = Object.keys(
-                  animations
-                ) as (keyof typeof animations)[];
-
                 showActionSheetWithOptions(
                   {
-                    options: options.map((option) => {
+                    options: animations.map((option) => {
                       if (option === animation) {
                         return `${option} (current)`;
                       }
@@ -119,24 +118,36 @@ export function BottomTabs({
                   },
                   (index) => {
                     if (index != null) {
-                      setAnimation(options[index]);
+                      setAnimation(animations[index]);
                     }
                   }
                 );
               }}
-            />
+            >
+              <MaterialCommunityIcons
+                name={animation === 'none' ? 'heart-outline' : 'heart'}
+                size={24}
+                color={tintColor}
+              />
+            </HeaderButton>
           ),
-          tabBarPosition: isLargeScreen ? 'left' : 'bottom',
+          tabBarPosition: isLargeScreen
+            ? direction === 'ltr'
+              ? 'left'
+              : 'right'
+            : 'bottom',
           tabBarLabelPosition:
             isLargeScreen && isCompact ? 'below-icon' : undefined,
-          ...animations[animation],
-        }}
+          animation,
+        })}
       >
         <Tab.Screen
           name="TabStack"
           component={SimpleStack}
           options={{
+            popToTopOnBlur: true,
             title: 'Article',
+            headerShown: false,
             tabBarIcon: getTabBarIcon('file-document'),
           }}
         />
@@ -144,7 +155,7 @@ export function BottomTabs({
           name="TabChat"
           component={Chat}
           options={{
-            tabBarLabel: 'Chat',
+            title: 'Chat',
             tabBarIcon: getTabBarIcon('message-reply'),
             tabBarBadge: 2,
           }}
@@ -174,10 +185,10 @@ export function BottomTabs({
             tabBarIcon: getTabBarIcon('image-album'),
             tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.5)',
             tabBarActiveTintColor: '#fff',
-            tabBarStyle: {
-              position: isLargeScreen ? undefined : 'absolute',
-              borderColor: 'rgba(0, 0, 0, .2)',
-            },
+            tabBarStyle: [
+              { borderWidth: 0 },
+              isLargeScreen ? null : { position: 'absolute' },
+            ],
             tabBarBackground: () => (
               <>
                 {isLargeScreen && (
@@ -197,7 +208,7 @@ export function BottomTabs({
                   intensity={100}
                   style={{
                     ...StyleSheet.absoluteFillObject,
-                    right: isLargeScreen
+                    end: isLargeScreen
                       ? // Offset for right border of the sidebar
                         -StyleSheet.hairlineWidth
                       : 0,
@@ -209,16 +220,25 @@ export function BottomTabs({
         />
       </Tab.Navigator>
       {isLargeScreen ? (
-        <IconButton
-          icon={isCompact ? 'chevron-double-right' : 'chevron-double-left'}
+        <PlatformPressable
           onPress={() => setIsCompact(!isCompact)}
           style={{
             position: 'absolute',
             bottom: 0,
-            left: 0,
+            start: 0,
+            padding: 16,
           }}
-        />
+        >
+          <MaterialCommunityIcons
+            name={isCompact ? 'chevron-double-right' : 'chevron-double-left'}
+            size={24}
+            color="black"
+          />
+        </PlatformPressable>
       ) : null}
     </>
   );
 }
+
+BottomTabs.title = 'Bottom Tabs';
+BottomTabs.linking = linking;

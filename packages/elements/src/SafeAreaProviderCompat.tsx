@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import {
   initialWindowMetrics,
+  type Metrics,
+  SafeAreaFrameContext,
   SafeAreaInsetsContext,
   SafeAreaProvider,
 } from 'react-native-safe-area-context';
@@ -41,12 +43,85 @@ export function SafeAreaProviderCompat({ children, style }: Props) {
     return <View style={[styles.container, style]}>{children}</View>;
   }
 
+  if (Platform.OS === 'web') {
+    children = (
+      <SafeAreaFrameProvider initialMetrics={initialMetrics}>
+        {children}
+      </SafeAreaFrameProvider>
+    );
+  }
+
   return (
     <SafeAreaProvider initialMetrics={initialMetrics} style={style}>
       {children}
     </SafeAreaProvider>
   );
 }
+
+// FIXME: On the Web, the safe area frame value doesn't update on resize
+// So we workaround this by measuring the frame on resize
+const SafeAreaFrameProvider = ({
+  initialMetrics,
+  children,
+}: {
+  initialMetrics: Metrics;
+  children: React.ReactNode;
+}) => {
+  const element = React.useRef<HTMLDivElement>(null);
+  const [frame, setFrame] = React.useState(initialMetrics.frame);
+
+  React.useEffect(() => {
+    if (element.current == null) {
+      return;
+    }
+
+    const rect = element.current.getBoundingClientRect();
+
+    setFrame({
+      x: rect.x,
+      y: rect.y,
+      width: rect.width,
+      height: rect.height,
+    });
+
+    let timeout: NodeJS.Timeout;
+
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+
+      if (entry) {
+        const { x, y, width, height } = entry.contentRect;
+
+        // Debounce the frame updates to avoid too many updates in a short time
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          setFrame({ x, y, width, height });
+        }, 100);
+      }
+    });
+
+    observer.observe(element.current);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  return (
+    <SafeAreaFrameContext.Provider value={frame}>
+      <div
+        ref={element}
+        style={{
+          ...StyleSheet.absoluteFillObject,
+          pointerEvents: 'none',
+          visibility: 'hidden',
+        }}
+      />
+      {children}
+    </SafeAreaFrameContext.Provider>
+  );
+};
 
 SafeAreaProviderCompat.initialMetrics = initialMetrics;
 

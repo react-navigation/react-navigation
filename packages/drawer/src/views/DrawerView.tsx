@@ -10,6 +10,7 @@ import {
   type DrawerNavigationState,
   type DrawerStatus,
   type ParamListBase,
+  StackActions,
   useLocale,
   useTheme,
 } from '@react-navigation/native';
@@ -42,6 +43,8 @@ type Props = DrawerNavigationConfig & {
   descriptors: DrawerDescriptorMap;
 };
 
+const DRAWER_BORDER_RADIUS = 16;
+
 function DrawerViewBase({
   state,
   navigation,
@@ -62,8 +65,8 @@ function DrawerViewBase({
     drawerPosition = direction === 'rtl' ? 'right' : 'left',
     drawerStatusBarAnimation,
     drawerStyle,
-    drawerType,
-    gestureHandlerProps,
+    drawerType = Platform.select({ ios: 'slide', default: 'front' }),
+    configureGestureHandler,
     keyboardDismissMode,
     overlayColor = 'rgba(0, 0, 0, 0.5)',
     swipeEdgeWidth,
@@ -79,6 +82,30 @@ function DrawerViewBase({
   if (!loaded.includes(focusedRouteKey)) {
     setLoaded([...loaded, focusedRouteKey]);
   }
+
+  const previousRouteKeyRef = React.useRef(focusedRouteKey);
+
+  React.useEffect(() => {
+    const previousRouteKey = previousRouteKeyRef.current;
+
+    if (
+      previousRouteKey !== focusedRouteKey &&
+      descriptors[previousRouteKey]?.options.popToTopOnBlur
+    ) {
+      const prevRoute = state.routes.find(
+        (route) => route.key === previousRouteKey
+      );
+
+      if (prevRoute?.state?.type === 'stack' && prevRoute.state.key) {
+        navigation.dispatch({
+          ...StackActions.popToTop(),
+          target: prevRoute.state.key,
+        });
+      }
+    }
+
+    previousRouteKeyRef.current = focusedRouteKey;
+  }, [descriptors, focusedRouteKey, navigation, state.routes]);
 
   const dimensions = useSafeAreaFrame();
 
@@ -192,15 +219,16 @@ function DrawerViewBase({
       >
         {state.routes.map((route, index) => {
           const descriptor = descriptors[route.key];
-          const { lazy = true, unmountOnBlur } = descriptor.options;
+          const { lazy = true } = descriptor.options;
           const isFocused = state.index === index;
 
-          if (unmountOnBlur && !isFocused) {
-            return null;
-          }
-
-          if (lazy && !loaded.includes(route.key) && !isFocused) {
-            // Don't render a lazy screen if we've never navigated to it
+          if (
+            lazy &&
+            !loaded.includes(route.key) &&
+            !isFocused &&
+            !state.preloadedRouteKeys.includes(route.key)
+          ) {
+            // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
             return null;
           }
 
@@ -268,7 +296,8 @@ function DrawerViewBase({
         onTransitionStart={handleTransitionStart}
         onTransitionEnd={handleTransitionEnd}
         layout={dimensions}
-        gestureHandlerProps={gestureHandlerProps}
+        direction={direction}
+        configureGestureHandler={configureGestureHandler}
         swipeEnabled={swipeEnabled}
         swipeEdgeWidth={swipeEdgeWidth}
         swipeMinDistance={swipeMinDistance}
@@ -284,14 +313,30 @@ function DrawerViewBase({
             width: getDefaultSidebarWidth(dimensions),
           },
           drawerType === 'permanent' &&
-            (drawerPosition === 'left'
+            ((
+              Platform.OS === 'web'
+                ? drawerPosition === 'right'
+                : (direction === 'rtl' && drawerPosition !== 'right') ||
+                  (direction !== 'rtl' && drawerPosition === 'right')
+            )
               ? {
-                  borderRightColor: colors.border,
-                  borderRightWidth: StyleSheet.hairlineWidth,
-                }
-              : {
                   borderLeftColor: colors.border,
                   borderLeftWidth: StyleSheet.hairlineWidth,
+                }
+              : {
+                  borderRightColor: colors.border,
+                  borderRightWidth: StyleSheet.hairlineWidth,
+                }),
+
+          drawerType === 'front' &&
+            (drawerPosition === 'left'
+              ? {
+                  borderTopRightRadius: DRAWER_BORDER_RADIUS,
+                  borderBottomRightRadius: DRAWER_BORDER_RADIUS,
+                }
+              : {
+                  borderTopLeftRadius: DRAWER_BORDER_RADIUS,
+                  borderBottomLeftRadius: DRAWER_BORDER_RADIUS,
                 }),
           drawerStyle,
         ]}

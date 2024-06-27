@@ -1,7 +1,7 @@
 import { Button } from '@react-navigation/elements';
 import {
   CommonActions,
-  type ParamListBase,
+  type PathConfigMap,
   useTheme,
 } from '@react-navigation/native';
 import {
@@ -18,11 +18,17 @@ import {
   View,
 } from 'react-native';
 
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Article } from '../Shared/Article';
 
-type PreventRemoveParams = {
+export type PreventRemoveParams = {
   Article: { author: string };
   Input: undefined;
+};
+
+const linking: PathConfigMap<PreventRemoveParams> = {
+  Article: COMMON_LINKING_CONFIG.Article,
+  Input: 'input',
 };
 
 const scrollEnabled = Platform.select({ web: true, default: false });
@@ -128,15 +134,7 @@ const InputScreen = ({
 
 const Stack = createStackNavigator<PreventRemoveParams>();
 
-type Props = StackScreenProps<ParamListBase>;
-
-export function StackPreventRemove({ navigation }: Props) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
-
+export function StackPreventRemove() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Input" component={InputScreen} />
@@ -144,6 +142,9 @@ export function StackPreventRemove({ navigation }: Props) {
     </Stack.Navigator>
   );
 }
+
+StackPreventRemove.title = 'Prevent removing screen in Stack';
+StackPreventRemove.linking = linking;
 
 const styles = StyleSheet.create({
   content: {

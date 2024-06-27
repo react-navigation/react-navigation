@@ -4,8 +4,8 @@ import * as React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { StackHeaderProps } from '../../types';
-import { debounce } from '../../utils/debounce';
 import { ModalPresentationContext } from '../../utils/ModalPresentationContext';
+import { throttle } from '../../utils/throttle';
 import { HeaderSegment } from './HeaderSegment';
 
 export const Header = React.memo(function Header({
@@ -31,7 +31,7 @@ export const Header = React.memo(function Header({
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const goBack = React.useCallback(
-    debounce(() => {
+    throttle(() => {
       if (navigation.isFocused() && navigation.canGoBack()) {
         navigation.dispatch({
           ...StackActions.pop(),
@@ -49,8 +49,8 @@ export const Header = React.memo(function Header({
     options.headerStatusBarHeight !== undefined
       ? options.headerStatusBarHeight
       : isModal || isParentHeaderShown
-      ? 0
-      : insets.top;
+        ? 0
+        : insets.top;
 
   return (
     <HeaderSegment

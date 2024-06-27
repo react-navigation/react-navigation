@@ -17,6 +17,9 @@ import { HeaderBackground } from './HeaderBackground';
 import { HeaderShownContext } from './HeaderShownContext';
 import { HeaderTitle } from './HeaderTitle';
 
+// Width of the screen in split layout on portrait mode on iPad Mini
+const IPAD_MINI_MEDIUM_WIDTH = 414;
+
 type Props = HeaderOptions & {
   /**
    * Whether the header is in a modal
@@ -54,10 +57,6 @@ export function Header(props: Props) {
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);
 
-  // On models with Dynamic Island the status bar height is smaller than the safe area top inset.
-  const hasDynamicIsland = Platform.OS === 'ios' && insets.top > 50;
-  const statusBarHeight = hasDynamicIsland ? insets.top - 5 : insets.top;
-
   const {
     layout = frame,
     modal = false,
@@ -83,7 +82,7 @@ export function Header(props: Props) {
     headerShadowVisible,
     headerPressColor,
     headerPressOpacity,
-    headerStatusBarHeight = isParentHeaderShown ? 0 : statusBarHeight,
+    headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
   } = props;
 
   const defaultHeight = getDefaultHeaderHeight(
@@ -220,14 +219,13 @@ export function Header(props: Props) {
       : customTitle;
 
   return (
-    <React.Fragment>
+    <Animated.View
+      pointerEvents="box-none"
+      style={[{ height, minHeight, maxHeight, opacity, transform }]}
+    >
       <Animated.View
         pointerEvents="box-none"
-        style={[
-          StyleSheet.absoluteFill,
-          { zIndex: 0 },
-          backgroundContainerStyle,
-        ]}
+        style={[StyleSheet.absoluteFill, backgroundContainerStyle]}
       >
         {headerBackground ? (
           headerBackground({ style: backgroundStyle })
@@ -235,69 +233,76 @@ export function Header(props: Props) {
           <HeaderBackground style={backgroundStyle} />
         )}
       </Animated.View>
-      <Animated.View
+      <View pointerEvents="none" style={{ height: headerStatusBarHeight }} />
+      <View
         pointerEvents="box-none"
-        style={[{ height, minHeight, maxHeight, opacity, transform }]}
+        style={[
+          styles.content,
+          Platform.OS === 'ios' && frame.width >= IPAD_MINI_MEDIUM_WIDTH
+            ? styles.large
+            : null,
+        ]}
       >
-        <View pointerEvents="none" style={{ height: headerStatusBarHeight }} />
-        <View pointerEvents="box-none" style={styles.content}>
-          <Animated.View
-            pointerEvents="box-none"
-            style={[
-              styles.left,
-              headerTitleAlign === 'center' && styles.expand,
-              { marginStart: insets.left },
-              leftContainerStyle,
-            ]}
-          >
-            {leftButton}
-          </Animated.View>
-          <Animated.View
-            pointerEvents="box-none"
-            style={[
-              styles.title,
-              {
-                // Avoid the title from going offscreen or overlapping buttons
-                maxWidth:
-                  headerTitleAlign === 'center'
-                    ? layout.width -
-                      ((leftButton
-                        ? headerLeftLabelVisible !== false
-                          ? 80
-                          : 32
-                        : 16) +
-                        Math.max(insets.left, insets.right)) *
-                        2
-                    : layout.width -
-                      ((leftButton ? 72 : 16) +
-                        (rightButton ? 72 : 16) +
-                        insets.left -
-                        insets.right),
-              },
-              titleContainerStyle,
-            ]}
-          >
-            {headerTitle({
-              children: title,
-              allowFontScaling: titleAllowFontScaling,
-              tintColor: headerTintColor,
-              style: titleStyle,
-            })}
-          </Animated.View>
-          <Animated.View
-            pointerEvents="box-none"
-            style={[
-              styles.right,
-              styles.expand,
-              { marginEnd: insets.right },
-              rightContainerStyle,
-            ]}
-          >
-            {rightButton}
-          </Animated.View>
-        </View>
-      </Animated.View>
-    </React.Fragment>
+        <Animated.View
+          pointerEvents="box-none"
+          style={[
+            styles.start,
+            headerTitleAlign === 'center' && styles.expand,
+            { marginStart: insets.left },
+            leftContainerStyle,
+          ]}
+        >
+          {leftButton}
+        </Animated.View>
+        <Animated.View
+          pointerEvents="box-none"
+          style={[
+            styles.title,
+            {
+              // Avoid the title from going offscreen or overlapping buttons
+              maxWidth:
+                headerTitleAlign === 'center'
+                  ? layout.width -
+                    ((leftButton
+                      ? headerLeftLabelVisible !== false
+                        ? 80
+                        : 32
+                      : 16) +
+                      (rightButton ? 16 : 0) +
+                      Math.max(insets.left, insets.right)) *
+                      2
+                  : layout.width -
+                    ((leftButton ? 52 : 16) +
+                      (rightButton ? 52 : 16) +
+                      insets.left -
+                      insets.right),
+            },
+            headerTitleAlign === 'left' && leftButton
+              ? { marginStart: 4 }
+              : null,
+            titleContainerStyle,
+          ]}
+        >
+          {headerTitle({
+            children: title,
+            allowFontScaling: titleAllowFontScaling,
+            tintColor: headerTintColor,
+            style: titleStyle,
+          })}
+        </Animated.View>
+        <Animated.View
+          pointerEvents="box-none"
+          style={[
+            styles.end,
+            styles.expand,
+            { marginEnd: insets.right },
+            rightContainerStyle,
+          ]}
+        >
+          {rightButton}
+        </Animated.View>
+      </View>
+    </Animated.View>
   );
 }
 
@@ -307,15 +312,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'stretch',
   },
+  large: {
+    marginHorizontal: 5,
+  },
   title: {
-    marginHorizontal: 16,
     justifyContent: 'center',
   },
-  left: {
+  start: {
     justifyContent: 'center',
     alignItems: 'flex-start',
   },
-  right: {
+  end: {
     justifyContent: 'center',
     alignItems: 'flex-end',
   },

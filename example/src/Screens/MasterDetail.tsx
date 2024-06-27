@@ -5,23 +5,27 @@ import {
   type DrawerScreenProps,
 } from '@react-navigation/drawer';
 import {
-  type ParamListBase,
-  useNavigation,
-  useTheme,
-} from '@react-navigation/native';
-import type { StackScreenProps } from '@react-navigation/stack';
+  Header as NavigationHeader,
+  HeaderBackButton,
+} from '@react-navigation/elements';
+import { type PathConfigMap, useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { useWindowDimensions } from 'react-native';
-import { Appbar } from 'react-native-paper';
 
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-type DrawerParams = {
+export type MasterDetailParams = {
   Article: undefined;
   NewsFeed: undefined;
   Albums: undefined;
+};
+
+const linking: PathConfigMap<MasterDetailParams> = {
+  Article: 'article',
+  NewsFeed: 'feed',
+  Albums: 'albums',
 };
 
 const useIsLargeScreen = () => {
@@ -37,20 +41,23 @@ const Header = ({
   onGoBack: () => void;
   title: string;
 }) => {
-  const { colors } = useTheme();
   const isLargeScreen = useIsLargeScreen();
 
   return (
-    <Appbar.Header style={{ backgroundColor: colors.card, elevation: 1 }}>
-      {isLargeScreen ? null : <Appbar.BackAction onPress={onGoBack} />}
-      <Appbar.Content title={title} />
-    </Appbar.Header>
+    <NavigationHeader
+      title={title}
+      headerLeft={
+        isLargeScreen
+          ? undefined
+          : (props) => <HeaderBackButton {...props} onPress={onGoBack} />
+      }
+    />
   );
 };
 
 const ArticleScreen = ({
   navigation,
-}: DrawerScreenProps<DrawerParams, 'Article'>) => {
+}: DrawerScreenProps<MasterDetailParams, 'Article'>) => {
   return (
     <>
       <Header title="Article" onGoBack={() => navigation.toggleDrawer()} />
@@ -61,7 +68,7 @@ const ArticleScreen = ({
 
 const NewsFeedScreen = ({
   navigation,
-}: DrawerScreenProps<DrawerParams, 'NewsFeed'>) => {
+}: DrawerScreenProps<MasterDetailParams, 'NewsFeed'>) => {
   return (
     <>
       <Header title="Feed" onGoBack={() => navigation.toggleDrawer()} />
@@ -72,7 +79,7 @@ const NewsFeedScreen = ({
 
 const AlbumsScreen = ({
   navigation,
-}: DrawerScreenProps<DrawerParams, 'Albums'>) => {
+}: DrawerScreenProps<MasterDetailParams, 'Albums'>) => {
   return (
     <>
       <Header title="Albums" onGoBack={() => navigation.toggleDrawer()} />
@@ -82,33 +89,24 @@ const AlbumsScreen = ({
 };
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
-  const { colors } = useTheme();
   const navigation = useNavigation();
 
   return (
     <>
-      <Appbar.Header style={{ backgroundColor: colors.card, elevation: 1 }}>
-        <Appbar.Action icon="close" onPress={() => navigation.goBack()} />
-        <Appbar.Content title="Pages" />
-      </Appbar.Header>
+      <NavigationHeader
+        title="Pages"
+        headerLeft={(props) => (
+          <HeaderBackButton {...props} onPress={() => navigation.goBack()} />
+        )}
+      />
       <DrawerContent {...props} />
     </>
   );
 };
 
-const Drawer = createDrawerNavigator<DrawerParams>();
+const Drawer = createDrawerNavigator<MasterDetailParams>();
 
-type Props = Partial<React.ComponentProps<typeof Drawer.Navigator>> &
-  StackScreenProps<ParamListBase>;
-
-export function MasterDetail({ navigation, ...rest }: Props) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-      gestureEnabled: false,
-    });
-  }, [navigation]);
-
+export function MasterDetail() {
   const isLargeScreen = useIsLargeScreen();
 
   return (
@@ -123,7 +121,6 @@ export function MasterDetail({ navigation, ...rest }: Props) {
         drawerContentContainerStyle: { paddingTop: 4 },
         overlayColor: 'transparent',
       }}
-      {...rest}
     >
       <Drawer.Screen name="Article" component={ArticleScreen} />
       <Drawer.Screen
@@ -139,3 +136,6 @@ export function MasterDetail({ navigation, ...rest }: Props) {
     </Drawer.Navigator>
   );
 }
+
+MasterDetail.title = 'Master Detail';
+MasterDetail.linking = linking;
