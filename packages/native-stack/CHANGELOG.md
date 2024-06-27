@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.20...@react-navigation/native-stack@7.0.0-rc.0) (2024-06-27)
+
+### Bug Fixes
+
+* **native-stack:**  set `headerTopInstetEnabled` to the same value as `statusBarTranslucent` to prevent header content jump ([#12014](https://github.com/react-navigation/react-navigation/issues/12014)) ([7791191](https://github.com/react-navigation/react-navigation/commit/77911917bb4d1137be267a321fb8a20bba772a06)), closes [/github.com/react-navigation/react-navigation/blob/25e834b4f330fb05b4ecdbe81ef7f2f065fd26c8/packages/elements/src/SafeAreaProviderCompat.tsx#L55](https://github.com//github.com/react-navigation/react-navigation/blob/25e834b4f330fb05b4ecdbe81ef7f2f065fd26c8/packages/elements/src/SafeAreaProviderCompat.tsx/issues/L55) [#10827](https://github.com/react-navigation/react-navigation/issues/10827) - by @kkafar
+* setting headerBackTitleVisible to false not working on iOS ([#11937](https://github.com/react-navigation/react-navigation/issues/11937)) ([52a3234](https://github.com/react-navigation/react-navigation/commit/52a3234b7aaf4d4fcc9c0155f44f3ea2233f0f40)), closes [/github.com/software-mansion/react-native-screens/blob/d54a19a/ios/RNSScreenStackHeaderConfig.mm#L506](https://github.com//github.com/software-mansion/react-native-screens/blob/d54a19a/ios/RNSScreenStackHeaderConfig.mm/issues/L506) [/github.com/software-mansion/react-native-screens/blob/d54a19a9789b799566da16a89e2cd8d8f1ad0ba7/ios/RNSScreenStackHeaderConfig.h#L42](https://github.com//github.com/software-mansion/react-native-screens/blob/d54a19a9789b799566da16a89e2cd8d8f1ad0ba7/ios/RNSScreenStackHeaderConfig.h/issues/L42) [/github.com/software-mansion/react-native-screens/blob/d54a19a/ios/RNSScreenStackHeaderConfig.mm#L514-L539](https://github.com//github.com/software-mansion/react-native-screens/blob/d54a19a/ios/RNSScreenStackHeaderConfig.mm/issues/L514-L539) - by @zetavg
+* use measured header height when exposing it ([#11917](https://github.com/react-navigation/react-navigation/issues/11917)) ([d90ed76](https://github.com/react-navigation/react-navigation/commit/d90ed7665be74c570ed2a6a4da612230fcf6a01c)) - by @satya164
+
+### Features
+
+* add navigationBarTranslucent option to native stack ([#11998](https://github.com/react-navigation/react-navigation/issues/11998)) ([2864b6c](https://github.com/react-navigation/react-navigation/commit/2864b6cc5b776c86ae23218464e379a3705700bb)) - by @alduzy
+
 # [7.0.0-alpha.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.19...@react-navigation/native-stack@7.0.0-alpha.20) (2024-03-25)
 
 ### Features

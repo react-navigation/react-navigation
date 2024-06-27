@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.18...@react-navigation/native@7.0.0-rc.0) (2024-06-27)
+
+### Bug Fixes
+
+* remove global in favor of globalThis for better compatibility ([#11976](https://github.com/react-navigation/react-navigation/issues/11976)) ([f497491](https://github.com/react-navigation/react-navigation/commit/f4974919242e7531ddd16da7b6bbf5e9ecfddc4c)) - by @natew
+
 # [7.0.0-alpha.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.17...@react-navigation/native@7.0.0-alpha.18) (2024-03-22)
 
 ### Bug Fixes

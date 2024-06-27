@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.21...@react-navigation/drawer@7.0.0-rc.0) (2024-06-27)
+
+### Bug Fixes
+
+* add hover effect to buttons on iPad & VisionOS ([2cb77c0](https://github.com/react-navigation/react-navigation/commit/2cb77c0ce42575275dd723555d0ec9ae7be32c66)) - by @satya164
+* fix drawer rtl on ios & android ([6fba631](https://github.com/react-navigation/react-navigation/commit/6fba631b588d83be0a731017adb46ce79ca9b2ec)) - by @satya164
+* fix drawer rtl on web ([06209b9](https://github.com/react-navigation/react-navigation/commit/06209b9f04171c18b51638593d3f0fd5028a97f8)) - by @satya164
+
 # [7.0.0-alpha.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-alpha.20...@react-navigation/drawer@7.0.0-alpha.21) (2024-03-25)
 
 **Note:** Version bump only for package @react-navigation/drawer

@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.17...@react-navigation/elements@2.0.0-rc.0) (2024-06-27)
+
+### Bug Fixes
+
+* add hover effect to buttons on iPad & VisionOS ([2cb77c0](https://github.com/react-navigation/react-navigation/commit/2cb77c0ce42575275dd723555d0ec9ae7be32c66)) - by @satya164
+* fix back icon not showing in iOS production builds in Expo, fixes [#11792](https://github.com/react-navigation/react-navigation/issues/11792) ([#12019](https://github.com/react-navigation/react-navigation/issues/12019)) ([5e297a0](https://github.com/react-navigation/react-navigation/commit/5e297a05d7457336ef8f8d1bddaa486b5d8ab4e1)) - by @sparkertime
+* fix incorrect header height in bottom tabs ([144f1ac](https://github.com/react-navigation/react-navigation/commit/144f1ac074102c6bae0db9dde5d11c5035b5ec53)) - by @satya164
+* remove global in favor of globalThis for better compatibility ([#11976](https://github.com/react-navigation/react-navigation/issues/11976)) ([f497491](https://github.com/react-navigation/react-navigation/commit/f4974919242e7531ddd16da7b6bbf5e9ecfddc4c)) - by @natew
+* tweak header so title takes more space ([ee4f516](https://github.com/react-navigation/react-navigation/commit/ee4f516839e99032d2f5b6d4a1f711a7ab5f7da4)) - by @satya164
+
 # [2.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.16...@react-navigation/elements@2.0.0-alpha.17) (2024-03-25)
 
 ### Features

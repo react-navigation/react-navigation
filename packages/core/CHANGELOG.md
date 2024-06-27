@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.17...@react-navigation/core@7.0.0-rc.0) (2024-06-27)
+
+### Bug Fixes
+
+* throw proper error if invalid initialRouteName is passed ([e86f3b4](https://github.com/react-navigation/react-navigation/commit/e86f3b4ece709c1b0c51a0bc722a5b87931ab5a9)) - by @satya164
+
 # [7.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.16...@react-navigation/core@7.0.0-alpha.17) (2024-03-22)
 
 ### Bug Fixes
