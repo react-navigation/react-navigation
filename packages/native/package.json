@@ -45,14 +45,14 @@
   },
   "devDependencies": {
     "@testing-library/react-native": "^12.4.3",
-    "@types/react": "~18.2.45",
-    "@types/react-dom": "~18.0.11",
+    "@types/react": "~18.2.79",
+    "@types/react-dom": "~18.2.25",
     "del-cli": "^5.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "0.73.2",
+    "react-native": "0.74.2",
     "react-native-builder-bob": "^0.23.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.5.2"
   },
   "peerDependencies": {
     "react": ">= 18.2.0",

@@ -91,6 +91,7 @@ export type StackAnimationName =
   | 'default'
   | 'fade'
   | 'fade_from_bottom'
+  | 'fade_from_right'
   | 'none'
   | 'reveal_from_bottom'
   | 'scale_from_center'

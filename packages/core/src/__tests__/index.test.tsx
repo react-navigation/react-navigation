@@ -90,6 +90,40 @@ it("doesn't crash when initialState is null", () => {
   expect(() => render(element)).not.toThrow();
 });
 
+it('throws for incorrect initialRouteName', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestScreen = () => null;
+
+  expect(() =>
+    render(
+      <BaseNavigationContainer>
+        <TestNavigator initialRouteName="qux">
+          <Screen name="foo" component={TestScreen} />
+          <Screen name="bar" component={TestScreen} />
+          <Screen name="baz" component={TestScreen} />
+        </TestNavigator>
+      </BaseNavigationContainer>
+    )
+  ).toThrow("Couldn't find a screen named 'qux' to use as 'initialRouteName'");
+
+  expect(() =>
+    render(
+      <BaseNavigationContainer>
+        <TestNavigator initialRouteName="bar">
+          <Screen name="foo" component={TestScreen} />
+          <Screen name="bar" component={TestScreen} />
+          <Screen name="baz" component={TestScreen} />
+        </TestNavigator>
+      </BaseNavigationContainer>
+    )
+  ).not.toThrow();
+});
+
 it('rehydrates state for a navigator on navigation', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);

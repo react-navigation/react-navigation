@@ -107,7 +107,13 @@ export function PlatformPressable({
             }
           : undefined
       }
-      style={[{ opacity: !ANDROID_SUPPORTS_RIPPLE ? opacity : 1 }, style]}
+      style={[
+        {
+          cursor: 'pointer', // Add hover effect on iPad and VisionOS
+          opacity: !ANDROID_SUPPORTS_RIPPLE ? opacity : 1,
+        },
+        style,
+      ]}
       {...rest}
     />
   );

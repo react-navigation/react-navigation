@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   Animated,
   type LayoutChangeEvent,
+  Platform,
   type PressableAndroidRippleConfig,
   type StyleProp,
   StyleSheet,
@@ -295,5 +296,10 @@ const styles = StyleSheet.create({
     // The label is not pressable on Windows
     // Adding backgroundColor: 'transparent' seems to fix it
     backgroundColor: 'transparent',
+    ...Platform.select({
+      // Roundness for iPad hover effect
+      ios: { borderRadius: 10 },
+      default: null,
+    }),
   },
 });

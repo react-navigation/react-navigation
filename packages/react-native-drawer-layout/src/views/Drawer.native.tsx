@@ -43,7 +43,8 @@ const minmax = (value: number, start: number, end: number) => {
 
 export function Drawer({
   layout: customLayout,
-  drawerPosition = I18nManager.getConstants().isRTL ? 'right' : 'left',
+  direction = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr',
+  drawerPosition = direction === 'rtl' ? 'right' : 'left',
   drawerStyle,
   drawerType = 'front',
   configureGestureHandler,
@@ -317,7 +318,13 @@ export function Drawer({
                 translateX:
                   // The drawer stays in place when `drawerType` is `back`
                   (drawerType === 'back' ? 0 : translateX.value) +
-                  (drawerPosition === 'left' ? 0 : distanceFromEdge),
+                  (direction === 'rtl'
+                    ? drawerPosition === 'left'
+                      ? -distanceFromEdge
+                      : 0
+                    : drawerPosition === 'left'
+                      ? 0
+                      : distanceFromEdge),
               },
             ],
     };
@@ -363,8 +370,11 @@ export function Drawer({
               styles.main,
               {
                 flexDirection:
-                  drawerType === 'permanent' && !isRight
-                    ? 'row-reverse'
+                  drawerType === 'permanent'
+                    ? (isRight && direction === 'ltr') ||
+                      (!isRight && direction === 'rtl')
+                      ? 'row'
+                      : 'row-reverse'
                     : 'row',
               },
             ]}
