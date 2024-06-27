@@ -186,7 +186,7 @@ export function BottomTabs() {
             tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.5)',
             tabBarActiveTintColor: '#fff',
             tabBarStyle: [
-              { borderWidth: 0 },
+              { borderRightWidth: 0, borderLeftWidth: 0, borderTopWidth: 0 },
               isLargeScreen ? null : { position: 'absolute' },
             ],
             tabBarBackground: () => (
