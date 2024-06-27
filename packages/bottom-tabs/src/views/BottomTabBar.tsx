@@ -300,10 +300,12 @@ export function BottomTabBar({
         },
         isSidebar
           ? {
-              paddingTop: insets.top,
-              paddingBottom: insets.bottom,
-              paddingStart: tabBarPosition === 'left' ? insets.left : 0,
-              paddingEnd: tabBarPosition === 'right' ? insets.right : 0,
+              paddingTop: SPACING + insets.top,
+              paddingBottom: SPACING + insets.bottom,
+              paddingStart:
+                SPACING + (tabBarPosition === 'left' ? insets.left : 0),
+              paddingEnd:
+                SPACING + (tabBarPosition === 'right' ? insets.right : 0),
               minWidth: hasHorizontalLabels
                 ? getDefaultSidebarWidth(dimensions)
                 : 0,
@@ -466,7 +468,6 @@ const styles = StyleSheet.create({
   sideContent: {
     flex: 1,
     flexDirection: 'column',
-    padding: SPACING,
   },
   bottomItem: {
     flex: 1,
