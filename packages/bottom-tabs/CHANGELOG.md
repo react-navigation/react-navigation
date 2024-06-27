@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.0...@react-navigation/bottom-tabs@7.0.0-rc.1) (2024-06-27)
+
+### Bug Fixes
+
+* fix bottom tab bar layout ([054e1dc](https://github.com/react-navigation/react-navigation/commit/054e1dcfa94368ef8b22cf45b96c907c1d3fb573)) - by @
+
 # [7.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.22...@react-navigation/bottom-tabs@7.0.0-rc.0) (2024-06-27)
 
 ### Bug Fixes
