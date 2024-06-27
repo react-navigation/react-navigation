@@ -96,15 +96,7 @@ export function HeaderBackButton({
     }
 
     const labelElement = (
-      <View
-        style={
-          screenLayout
-            ? // We make the button extend till the middle of the screen
-              // Otherwise it appears to cut off when translating
-              [styles.labelWrapper, { minWidth: screenLayout.width / 2 - 27 }]
-            : null
-        }
-      >
+      <View style={styles.labelWrapper}>
         <Animated.Text
           accessible={false}
           onLayout={
@@ -135,7 +127,13 @@ export function HeaderBackButton({
     return (
       <MaskedView
         maskElement={
-          <View style={styles.iconMaskContainer}>
+          <View
+            style={[
+              styles.iconMaskContainer,
+              // Extend the mask to the center of the screen so that label isn't clipped during animation
+              screenLayout ? { minWidth: screenLayout.width / 2 - 27 } : null,
+            ]}
+          >
             <Image
               source={require('../assets/back-icon-mask.png')}
               resizeMode="contain"
@@ -198,6 +196,10 @@ const styles = StyleSheet.create({
     // Otherwise it messes with the measurement of the label
     flexDirection: 'row',
     alignItems: 'flex-start',
+    ...Platform.select({
+      ios: { marginEnd: 8 },
+      default: { marginEnd: 3 },
+    }),
   },
   icon: Platform.select({
     ios: {
@@ -205,7 +207,7 @@ const styles = StyleSheet.create({
       width: 13,
       marginStart: 8,
       marginEnd: 22,
-      marginVertical: 12,
+      marginVertical: 8,
     },
     default: {
       height: 24,

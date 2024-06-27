@@ -211,7 +211,7 @@ export function HeaderConfig({
       titleColor={titleColor}
       titleFontFamily={titleFontFamily}
       titleFontSize={titleFontSize}
-      titleFontWeight={titleFontWeight}
+      titleFontWeight={String(titleFontWeight)}
       topInsetEnabled={headerTopInsetEnabled}
       translucent={
         // This defaults to `true`, so we can't pass `undefined`
