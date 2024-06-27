@@ -61,7 +61,10 @@ export function PlatformPressable({
           : undefined
       }
       style={({ pressed }) => [
-        { opacity: pressed && !ANDROID_SUPPORTS_RIPPLE ? pressOpacity : 1 },
+        {
+          cursor: 'pointer', // Add hover effect on iPad and VisionOS,
+          opacity: pressed && !ANDROID_SUPPORTS_RIPPLE ? pressOpacity : 1,
+        },
         typeof style === 'function' ? style({ pressed }) : style,
       ]}
       onPress={disabled ? undefined : handlePress}

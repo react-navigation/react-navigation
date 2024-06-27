@@ -8,6 +8,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import useLatestCallback from 'use-latest-callback';
 
 import type {
   EventEmitterProps,
@@ -77,7 +78,7 @@ export function PanResponderAdapter<T extends Route>({
   const swipeVelocityThreshold = 0.15;
   const swipeDistanceThreshold = layout.width / 1.75;
 
-  const jumpToIndex = React.useCallback(
+  const jumpToIndex = useLatestCallback(
     (index: number, animate = animationEnabled) => {
       const offset = -index * layoutRef.current.width;
 
@@ -102,8 +103,7 @@ export function PanResponderAdapter<T extends Route>({
         onIndexChangeRef.current(index);
         pendingIndexRef.current = undefined;
       }
-    },
-    [animationEnabled, panX]
+    }
   );
 
   React.useEffect(() => {
@@ -242,8 +242,7 @@ export function PanResponderAdapter<T extends Route>({
     jumpToIndex(nextIndex, true);
   };
 
-  // TODO: use the listeners
-  const addEnterListener = React.useCallback((listener: Listener) => {
+  const addEnterListener = useLatestCallback((listener: Listener) => {
     listenersRef.current.push(listener);
 
     return () => {
@@ -253,18 +252,16 @@ export function PanResponderAdapter<T extends Route>({
         listenersRef.current.splice(index, 1);
       }
     };
-  }, []);
+  });
 
-  const jumpTo = React.useCallback(
-    (key: string) => {
-      const index = navigationStateRef.current.routes.findIndex(
-        (route: { key: string }) => route.key === key
-      );
+  const jumpTo = useLatestCallback((key: string) => {
+    const index = navigationStateRef.current.routes.findIndex(
+      (route: { key: string }) => route.key === key
+    );
 
-      jumpToIndex(index);
-    },
-    [jumpToIndex]
-  );
+    jumpToIndex(index);
+    onIndexChange(index);
+  });
 
   const panResponder = PanResponder.create({
     onMoveShouldSetPanResponder: canMoveScreen,

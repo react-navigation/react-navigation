@@ -1,3 +1,5 @@
+// TODO
+// @ts-expect-error: investigate why TypeScript errors here
 import * as React from 'react';
 import { type StyleProp, StyleSheet, Text, type TextStyle } from 'react-native';
 

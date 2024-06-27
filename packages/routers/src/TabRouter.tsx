@@ -386,7 +386,7 @@ export function TabRouter({
             return null;
           }
 
-          const previousKey = state.history[state.history.length - 2].key;
+          const previousKey = state.history[state.history.length - 2]?.key;
           const index = state.routes.findIndex(
             (route) => route.key === previousKey
           );

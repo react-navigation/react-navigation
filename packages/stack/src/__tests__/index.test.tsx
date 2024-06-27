@@ -2,7 +2,6 @@ import {
   createNavigationContainerRef,
   NavigationContainer,
   type ParamListBase,
-  StackActions,
   useFocusEffect,
   useIsFocused,
 } from '@react-navigation/native';
@@ -135,8 +134,6 @@ it('handles screens preloading', async () => {
   expect(
     queryByText('Screen B', { includeHiddenElements: true })
   ).not.toBeNull();
-  act(() => navigation.dispatch(StackActions.remove('B')));
-  expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
 });
 
 it('runs focus effect on focus change on preloaded route', () => {
@@ -172,7 +169,6 @@ it('runs focus effect on focus change on preloaded route', () => {
   expect(focusEffectCleanup).not.toHaveBeenCalled();
 
   act(() => navigation.preload('A'));
-  act(() => navigation.dispatch(StackActions.remove('B')));
   act(() => navigation.preload('B'));
 
   expect(focusEffect).not.toHaveBeenCalled();

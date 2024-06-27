@@ -47,6 +47,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 8,
+    // Roundness for iPad hover effect
+    borderRadius: 10,
   },
   disabled: {
     opacity: 0.5,
