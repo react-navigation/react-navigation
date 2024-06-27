@@ -184,7 +184,7 @@ export function TabBarIndicator<T extends Route>({
       layout.width && Platform.OS !== 'macos'
         ? { left: 0 }
         : { left: `${(100 / routes.length) * navigationState.index}%` },
-      { transform },
+      { transform }
     );
   }
 
