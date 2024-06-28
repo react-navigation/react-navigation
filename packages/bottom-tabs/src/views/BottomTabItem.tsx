@@ -277,6 +277,8 @@ export function BottomTabItem({
         // @ts-expect-error: keep for compatibility with older React Native versions
         accessibilityStates: focused ? ['selected'] : [],
         android_ripple: { borderless: true },
+        hoverEffect:
+          variant === 'material' ? { color: colors.text } : undefined,
         pressOpacity: 1,
         style: [
           styles.tab,

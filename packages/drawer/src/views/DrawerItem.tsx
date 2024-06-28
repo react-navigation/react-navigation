@@ -114,7 +114,7 @@ export function DrawerItem(props: Props) {
     style,
     onPress,
     pressColor,
-    pressOpacity,
+    pressOpacity = 1,
     testID,
     accessibilityLabel,
     ...rest
@@ -142,6 +142,7 @@ export function DrawerItem(props: Props) {
         accessibilityState={{ selected: focused }}
         pressColor={pressColor}
         pressOpacity={pressOpacity}
+        hoverEffect={{ color }}
         href={href}
       >
         <View style={[styles.wrapper, { borderRadius }]}>
