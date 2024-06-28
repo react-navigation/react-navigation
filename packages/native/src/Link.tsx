@@ -7,7 +7,7 @@ import {
   type TextProps,
 } from 'react-native';
 
-import { type Props as LinkProps, useLinkProps } from './useLinkProps';
+import { type LinkProps, useLinkProps } from './useLinkProps';
 
 type Props<ParamList extends ReactNavigation.RootParamList> =
   LinkProps<ParamList> &

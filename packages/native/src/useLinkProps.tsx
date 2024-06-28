@@ -12,17 +12,18 @@ import { type GestureResponderEvent, Platform } from 'react-native';
 
 import { LinkingContext } from './LinkingContext';
 
-export type Props<
+export type LinkProps<
   ParamList extends ReactNavigation.RootParamList,
   RouteName extends keyof ParamList = keyof ParamList,
 > =
   | ({
-      screen: Extract<RouteName, string>;
       href?: string;
       action?: NavigationAction;
-    } & (undefined extends ParamList[RouteName]
-      ? { params?: ParamList[RouteName] }
-      : { params: ParamList[RouteName] }))
+    } & (RouteName extends unknown // Similar conditional to navigation.navigate
+      ? undefined extends ParamList[RouteName]
+        ? { screen: RouteName; params?: ParamList[RouteName] }
+        : { screen: RouteName; params: ParamList[RouteName] }
+      : never))
   | {
       href?: string;
       action: NavigationAction;
@@ -72,7 +73,7 @@ export function useLinkProps<ParamList extends ReactNavigation.RootParamList>({
   params,
   href,
   action,
-}: Props<ParamList>) {
+}: LinkProps<ParamList>) {
   const root = React.useContext(NavigationContainerRefContext);
   const navigation = React.useContext(NavigationHelpersContext);
   const { options } = React.useContext(LinkingContext);
@@ -126,6 +127,7 @@ export function useLinkProps<ParamList extends ReactNavigation.RootParamList>({
             {
               routes: [
                 {
+                  // @ts-expect-error this is fine 🔥
                   name: screen,
                   // @ts-expect-error this is fine 🔥
                   params: params,
