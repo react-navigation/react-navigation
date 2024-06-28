@@ -285,7 +285,12 @@ export function BottomTabItem({
     style: [
       styles.tab,
       { backgroundColor },
-      horizontal ? styles.tabLandscape : styles.tabPortrait,
+      horizontal
+        ? styles.tabHorizontal
+        : [
+            styles.tabVertical,
+            variant === 'material' && styles.tabVerticalMaterial,
+          ],
       style,
     ],
     children: (
@@ -303,14 +308,17 @@ const styles = StyleSheet.create({
     // Roundness for iPad hover effect
     borderRadius: 10,
   },
-  tabPortrait: {
+  tabVertical: {
     justifyContent: 'flex-end',
     flexDirection: 'column',
   },
-  tabLandscape: {
+  tabVerticalMaterial: {
+    padding: 10,
+  },
+  tabHorizontal: {
     justifyContent: 'center',
     flexDirection: 'row',
-    paddingVertical: 12,
+    paddingVertical: 11,
     paddingStart: 16,
     paddingEnd: 24,
   },

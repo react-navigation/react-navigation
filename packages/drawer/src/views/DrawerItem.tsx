@@ -167,14 +167,12 @@ export function DrawerItem(props: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 12,
-    marginVertical: 2,
     overflow: 'hidden',
   },
   wrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 11,
     paddingStart: 16,
     paddingEnd: 24,
   },

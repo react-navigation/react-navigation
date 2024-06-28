@@ -41,7 +41,7 @@ type Props = BottomTabBarProps & {
 const DEFAULT_TABBAR_HEIGHT = 49;
 const COMPACT_TABBAR_HEIGHT = 32;
 const DEFAULT_MAX_TAB_ITEM_WIDTH = 125;
-const SPACING = 5;
+const SPACING = 12;
 
 const useNativeDriver = Platform.OS !== 'web';
 
@@ -300,8 +300,10 @@ export function BottomTabBar({
         },
         isSidebar
           ? {
-              paddingTop: SPACING + insets.top,
-              paddingBottom: SPACING + insets.bottom,
+              paddingTop:
+                (hasHorizontalLabels ? SPACING : SPACING / 2) + insets.top,
+              paddingBottom:
+                (hasHorizontalLabels ? SPACING : SPACING / 2) + insets.bottom,
               paddingStart:
                 SPACING + (tabBarPosition === 'left' ? insets.left : 0),
               paddingEnd:
@@ -425,12 +427,9 @@ export function BottomTabBar({
                   iconStyle={options.tabBarIconStyle}
                   style={[
                     isSidebar
-                      ? [
-                          styles.sideItem,
-                          hasHorizontalLabels
-                            ? styles.sideItemHorizontal
-                            : styles.sideItemVertical,
-                        ]
+                      ? hasHorizontalLabels
+                        ? styles.sideItemHorizontal
+                        : styles.sideItemVertical
                       : styles.bottomItem,
                     options.tabBarItemStyle,
                   ]}
@@ -472,15 +471,12 @@ const styles = StyleSheet.create({
   bottomItem: {
     flex: 1,
   },
-  sideItem: {
-    margin: SPACING,
-    padding: SPACING * 2,
-  },
   sideItemHorizontal: {
     borderRadius: 56,
     justifyContent: 'flex-start',
   },
   sideItemVertical: {
     borderRadius: 16,
+    marginVertical: SPACING / 2,
   },
 });
