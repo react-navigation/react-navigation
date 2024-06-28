@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-rc.2...@react-navigation/drawer@7.0.0-rc.3) (2024-06-28)
+
+### Bug Fixes
+
+* tweak spacing for drawer & bottom tabs sidebar ([e33f78f](https://github.com/react-navigation/react-navigation/commit/e33f78faf3ecc3ff84001f56fcbd5cdb1c7cb164)) - by @
+
 # [7.0.0-rc.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-rc.1...@react-navigation/drawer@7.0.0-rc.2) (2024-06-28)
 
 **Note:** Version bump only for package @react-navigation/drawer
