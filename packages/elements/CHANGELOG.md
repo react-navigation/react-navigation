@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-rc.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.2...@react-navigation/elements@2.0.0-rc.3) (2024-06-28)
+
+### Features
+
+* add hoverEffect prop to Pressable ([c02689a](https://github.com/react-navigation/react-navigation/commit/c02689aef97af89b66f627d2c8b4ba46cb1de9c8)) - by @
+
 # [2.0.0-rc.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.1...@react-navigation/elements@2.0.0-rc.2) (2024-06-28)
 
 ### Bug Fixes

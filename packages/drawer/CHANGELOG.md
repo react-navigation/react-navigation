@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-rc.3...@react-navigation/drawer@7.0.0-rc.4) (2024-06-28)
+
+### Bug Fixes
+
+* add hover effect to drawer and tab sidebar on web ([fa2280d](https://github.com/react-navigation/react-navigation/commit/fa2280d3633cfdb492f9cdb06d8dd331d3e34c71)) - by @
+
 # [7.0.0-rc.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-rc.2...@react-navigation/drawer@7.0.0-rc.3) (2024-06-28)
 
 ### Bug Fixes

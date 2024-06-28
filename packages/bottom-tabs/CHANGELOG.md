@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.4...@react-navigation/bottom-tabs@7.0.0-rc.5) (2024-06-28)
+
+### Bug Fixes
+
+* add hover effect to drawer and tab sidebar on web ([fa2280d](https://github.com/react-navigation/react-navigation/commit/fa2280d3633cfdb492f9cdb06d8dd331d3e34c71)) - by @
+* fix ripple effect overflow in tab bar on Android ([5ae1047](https://github.com/react-navigation/react-navigation/commit/5ae1047114724705f8026db6be0f0452e92e89e0)) - by @satya164
+
 # [7.0.0-rc.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.3...@react-navigation/bottom-tabs@7.0.0-rc.4) (2024-06-28)
 
 ### Bug Fixes
