@@ -89,58 +89,21 @@ function ButtonBase({
   return (
     <PlatformPressable
       {...rest}
-      pressOpacity={Platform.OS === 'ios' ? undefined : 1}
-      style={[{ backgroundColor }, styles.button, style]}
       android_ripple={{
         radius: BUTTON_RADIUS,
         color: Color(textColor).fade(0.85).string(),
         ...android_ripple,
       }}
+      pressOpacity={Platform.OS === 'ios' ? undefined : 1}
+      hoverEffect={{ color: textColor }}
+      style={[{ backgroundColor }, styles.button, style]}
     >
-      {Platform.OS === 'web' ? <HoverEffect color={textColor} /> : null}
       <Text style={[{ color: textColor }, fonts.regular, styles.text]}>
         {children}
       </Text>
     </PlatformPressable>
   );
 }
-
-const CLASS_NAME = '__react-navigation_elements_Button_hover';
-
-const css = String.raw;
-const cssText = css`
-  .${CLASS_NAME} {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: ${BUTTON_RADIUS}px;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.15s;
-  }
-
-  button:hover > .${CLASS_NAME} {
-    opacity: 0.08;
-  }
-
-  button:active > .${CLASS_NAME} {
-    opacity: 0.15;
-  }
-`;
-
-const HoverEffect = ({ color }: { color: string }) => {
-  return (
-    <>
-      <style
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: cssText }}
-      />
-      <div className={CLASS_NAME} style={{ backgroundColor: color }} />
-    </>
-  );
-};
 
 const styles = StyleSheet.create({
   button: {
