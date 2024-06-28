@@ -279,7 +279,7 @@ export function Header(props: Props) {
             },
             headerTitleAlign === 'left' && leftButton
               ? { marginStart: 4 }
-              : null,
+              : { marginStart: 16 },
             titleContainerStyle,
           ]}
         >
