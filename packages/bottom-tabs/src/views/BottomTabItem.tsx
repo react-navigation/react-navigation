@@ -8,6 +8,7 @@ import {
   type StyleProp,
   StyleSheet,
   type TextStyle,
+  View,
   type ViewStyle,
 } from 'react-native';
 
@@ -142,28 +143,7 @@ export function BottomTabItem({
   icon,
   badge,
   badgeStyle,
-  button = ({
-    href,
-    children,
-    style,
-    onPress,
-    accessibilityRole,
-    ...rest
-  }: BottomTabBarButtonProps) => {
-    return (
-      <PlatformPressable
-        {...rest}
-        android_ripple={{ borderless: true }}
-        pressOpacity={1}
-        href={href}
-        accessibilityRole={accessibilityRole}
-        onPress={onPress}
-        style={style}
-      >
-        {children}
-      </PlatformPressable>
-    );
-  },
+  button = (props: BottomTabBarButtonProps) => <PlatformPressable {...props} />,
   accessibilityLabel,
   testID,
   onPress,
@@ -271,35 +251,55 @@ export function BottomTabItem({
     ? activeBackgroundColor
     : inactiveBackgroundColor;
 
-  return button({
-    href,
-    onPress,
-    onLongPress,
-    testID,
-    accessibilityLabel,
-    // FIXME: accessibilityRole: 'tab' doesn't seem to work as expected on iOS
-    accessibilityRole: Platform.select({ ios: 'button', default: 'tab' }),
-    accessibilityState: { selected: focused },
-    // @ts-expect-error: keep for compatibility with older React Native versions
-    accessibilityStates: focused ? ['selected'] : [],
-    style: [
-      styles.tab,
-      { backgroundColor },
-      horizontal
-        ? styles.tabHorizontal
-        : [
-            styles.tabVertical,
-            variant === 'material' && styles.tabVerticalMaterial,
-          ],
-      style,
-    ],
-    children: (
-      <React.Fragment>
-        {renderIcon(scene)}
-        {renderLabel(scene)}
-      </React.Fragment>
-    ),
-  }) as React.ReactElement;
+  const { flex } = StyleSheet.flatten(style || {});
+  const borderRadius = variant === 'material' ? (horizontal ? 56 : 16) : 0;
+
+  return (
+    <View
+      style={[
+        // Clip ripple effect on Android
+        {
+          borderRadius,
+          overflow: variant === 'material' ? 'hidden' : 'visible',
+        },
+        style,
+      ]}
+    >
+      {button({
+        href,
+        onPress,
+        onLongPress,
+        testID,
+        accessibilityLabel,
+        // FIXME: accessibilityRole: 'tab' doesn't seem to work as expected on iOS
+        accessibilityRole: Platform.select({ ios: 'button', default: 'tab' }),
+        accessibilityState: { selected: focused },
+        // @ts-expect-error: keep for compatibility with older React Native versions
+        accessibilityStates: focused ? ['selected'] : [],
+        android_ripple: { borderless: true },
+        pressOpacity: 1,
+        style: [
+          styles.tab,
+          { flex, backgroundColor, borderRadius },
+          horizontal
+            ? [
+                styles.tabHorizontal,
+                variant === 'material' && styles.tabHorizontalMaterial,
+              ]
+            : [
+                styles.tabVertical,
+                variant === 'material' && styles.tabVerticalMaterial,
+              ],
+        ],
+        children: (
+          <React.Fragment>
+            {renderIcon(scene)}
+            {renderLabel(scene)}
+          </React.Fragment>
+        ),
+      })}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -321,6 +321,9 @@ const styles = StyleSheet.create({
     paddingVertical: 11,
     paddingStart: 16,
     paddingEnd: 24,
+  },
+  tabHorizontalMaterial: {
+    justifyContent: 'flex-start',
   },
   labelBeneath: {
     fontSize: 10,

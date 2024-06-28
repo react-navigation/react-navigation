@@ -427,9 +427,7 @@ export function BottomTabBar({
                   iconStyle={options.tabBarIconStyle}
                   style={[
                     isSidebar
-                      ? hasHorizontalLabels
-                        ? styles.sideItemHorizontal
-                        : styles.sideItemVertical
+                      ? !hasHorizontalLabels && styles.sideItemVertical
                       : styles.bottomItem,
                     options.tabBarItemStyle,
                   ]}
@@ -471,12 +469,7 @@ const styles = StyleSheet.create({
   bottomItem: {
     flex: 1,
   },
-  sideItemHorizontal: {
-    borderRadius: 56,
-    justifyContent: 'flex-start',
-  },
   sideItemVertical: {
-    borderRadius: 16,
     marginVertical: SPACING / 2,
   },
 });
