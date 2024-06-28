@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.1...@react-navigation/native@7.0.0-rc.2) (2024-06-28)
+
+### Bug Fixes
+
+* fix types for Link & Button components ([bc9d628](https://github.com/react-navigation/react-navigation/commit/bc9d628efab9ab9986dc38a0ba2868d0fbe64b49)) - by @
+
 # [7.0.0-rc.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.0...@react-navigation/native@7.0.0-rc.1) (2024-06-28)
 
 **Note:** Version bump only for package @react-navigation/native
