@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-rc.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.0...@react-navigation/elements@2.0.0-rc.1) (2024-06-28)
+
+### Bug Fixes
+
+* fix header title margin if there's no left button ([ee8bc91](https://github.com/react-navigation/react-navigation/commit/ee8bc911ddc6328d674af1b9e0f27bad31b11b74)) - by @satya164
+
 # [2.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.17...@react-navigation/elements@2.0.0-rc.0) (2024-06-27)
 
 ### Bug Fixes

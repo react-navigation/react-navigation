@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.0...@react-navigation/core@7.0.0-rc.1) (2024-06-28)
+
+### Features
+
+* make NavigationContainerRef.getCurrentRoute type safe ([#11525](https://github.com/react-navigation/react-navigation/issues/11525)) ([9bedc0c](https://github.com/react-navigation/react-navigation/commit/9bedc0cc29287689881e43aa88de9ef9fe853109)) - by @lucasloisp
+
 # [7.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.17...@react-navigation/core@7.0.0-rc.0) (2024-06-27)
 
 ### Bug Fixes
