@@ -132,7 +132,9 @@ const getRouteConfigsFromChildren = <
               : groupOptions != null
                 ? [...groupOptions, child.props.screenOptions]
                 : [child.props.screenOptions],
-            child.props.screenLayout ?? groupLayout
+            typeof child.props.screenLayout === 'function'
+              ? child.props.screenLayout
+              : groupLayout
           )
         );
         return acc;

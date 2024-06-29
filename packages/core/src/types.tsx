@@ -725,12 +725,16 @@ export type RouteGroupConfig<
    * Layout for the screens inside the group.
    * This will override the `screenLayout` of parent group or navigator.
    */
-  screenLayout?: (props: {
-    route: RouteProp<ParamList, keyof ParamList>;
-    navigation: Navigation;
-    theme: ReactNavigation.Theme;
-    children: React.ReactElement;
-  }) => React.ReactElement;
+  screenLayout?:
+    | ((props: {
+        route: RouteProp<ParamList, keyof ParamList>;
+        navigation: Navigation;
+        theme: ReactNavigation.Theme;
+        children: React.ReactElement;
+      }) => React.ReactElement)
+    | {
+        // FIXME: TypeScript doesn't seem to infer `navigation` correctly without this
+      };
 
   /**
    * Children React Elements to extract the route configuration from.

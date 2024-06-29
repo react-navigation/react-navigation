@@ -9,9 +9,31 @@ import {
   type StaticParamList,
   type StaticScreenProps,
 } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createStackNavigator } from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
 import * as React from 'react';
+
+const NativeStack = createNativeStackNavigator({
+  groups: {
+    GroupA: {
+      screenLayout: ({ navigation, children }) => {
+        expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();
+        expectTypeOf(navigation.push).toMatchTypeOf<Function>();
+
+        return <>{children}</>;
+      },
+      screens: {
+        Foo: {
+          screen: () => <></>,
+          options: { presentation: 'modal' },
+        },
+      },
+    },
+  },
+});
+
+createStaticNavigation(NativeStack);
 
 const HomeTabs = createBottomTabNavigator({
   screens: {
@@ -297,13 +319,17 @@ createBottomTabNavigator({
 });
 
 /**
- * Requires `screens` to be defined
+ * Requires `screens` or `groups` to be defined
  */
 // @ts-expect-error
 createStackNavigator({});
 
 createStackNavigator({
   screens: {},
+});
+
+createStackNavigator({
+  groups: {},
 });
 
 /**

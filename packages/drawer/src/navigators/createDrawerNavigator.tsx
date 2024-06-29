@@ -96,9 +96,7 @@ export function createDrawerNavigator<
     };
     Navigator: typeof DrawerNavigator;
   },
-  Config extends StaticConfig<TypeBag> | undefined =
-    | StaticConfig<TypeBag>
-    | undefined,
+  Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
 >(config?: Config): TypedNavigator<TypeBag, Config> {
   return createNavigatorFactory(DrawerNavigator)(config);
 }
