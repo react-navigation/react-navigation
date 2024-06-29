@@ -1,15 +1,17 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import type {
-  NavigationContainerRef,
-  NavigationProp,
-  NavigatorScreenParams,
-  StaticParamList,
-  StaticScreenProps,
+import {
+  createStaticNavigation,
+  type NavigationContainerRef,
+  type NavigationProp,
+  type NavigatorScreenParams,
+  type StaticParamList,
+  type StaticScreenProps,
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
+import * as React from 'react';
 
 const HomeTabs = createBottomTabNavigator({
   screens: {
@@ -59,6 +61,10 @@ const RootStack = createStackNavigator({
     },
   },
 });
+
+const Navigation = createStaticNavigation(RootStack);
+
+<Navigation />;
 
 type RootParamList = StaticParamList<typeof RootStack>;
 

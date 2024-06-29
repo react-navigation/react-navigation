@@ -93,10 +93,7 @@ type StaticRouteConfig<
   EventMap extends EventMapBase,
   Navigation,
 > = RouteConfigProps<
-  // FIXME: the param list is inferred from the screen component
-  // So we can't use the type here
-  // Fallback to ParamListBase for now
-  ParamListBase,
+  ParamList,
   string,
   State,
   ScreenOptions,

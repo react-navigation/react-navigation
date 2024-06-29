@@ -122,7 +122,7 @@ export type EventMapCore<State extends NavigationState> = {
 };
 
 export type EventArg<
-  EventName extends string,
+  EventName,
   CanPreventDefault extends boolean | undefined = false,
   Data = undefined,
 > = {
@@ -150,10 +150,13 @@ export type EventArg<
 export type EventListenerCallback<
   EventMap extends EventMapBase,
   EventName extends keyof EventMap,
+  EventCanPreventDefault extends
+    | boolean
+    | undefined = EventMap[EventName]['canPreventDefault'],
 > = (
   e: EventArg<
-    Extract<EventName, string>,
-    EventMap[EventName]['canPreventDefault'],
+    EventName,
+    undefined extends EventCanPreventDefault ? false : EventCanPreventDefault,
     EventMap[EventName]['data']
   >
 ) => void;
@@ -852,11 +855,11 @@ export type TypeBag<
 };
 
 export type NavigatorTypeBagBase = {
-  ParamList: ParamListBase;
+  ParamList: {};
   NavigatorID: string | undefined;
   State: NavigationState;
   ScreenOptions: {};
-  EventMap: EventMapBase;
+  EventMap: {};
   NavigationList: NavigationListBase<ParamListBase>;
   Navigator: React.ComponentType<any>;
 };
