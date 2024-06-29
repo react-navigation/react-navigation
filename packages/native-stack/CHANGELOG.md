@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.3...@react-navigation/native-stack@7.0.0-rc.4) (2024-06-29)
+
+### Bug Fixes
+
+* add a workaround for incorrect inference [#12041](https://github.com/react-navigation/react-navigation/issues/12041) ([85c4bbb](https://github.com/react-navigation/react-navigation/commit/85c4bbbf535cde2ba9cd537a2a5ce34f060d32b9)) - by @
+
 # [7.0.0-rc.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.2...@react-navigation/native-stack@7.0.0-rc.3) (2024-06-28)
 
 **Note:** Version bump only for package @react-navigation/native-stack

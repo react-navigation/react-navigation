@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.1...@react-navigation/core@7.0.0-rc.2) (2024-06-29)
+
+### Bug Fixes
+
+* add a workaround for incorrect inference [#12041](https://github.com/react-navigation/react-navigation/issues/12041) ([85c4bbb](https://github.com/react-navigation/react-navigation/commit/85c4bbbf535cde2ba9cd537a2a5ce34f060d32b9)) - by @
+* fix type error with listeners for static config ([54437e2](https://github.com/react-navigation/react-navigation/commit/54437e29aa81c34e2cb3ea1de45e182eac74cfb4)) - by @satya164
+
 # [7.0.0-rc.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.0...@react-navigation/core@7.0.0-rc.1) (2024-06-28)
 
 ### Features
