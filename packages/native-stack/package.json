@@ -22,9 +22,8 @@
     "url": "https://github.com/software-mansion/react-native-screens/issues"
   },
   "homepage": "https://github.com/software-mansion/react-native-screens#readme",
-  "main": "lib/commonjs/index.js",
-  "react-native": "src/index.tsx",
   "source": "src/index.tsx",
+  "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
   "types": "lib/typescript/src/index.d.ts",
   "files": [
