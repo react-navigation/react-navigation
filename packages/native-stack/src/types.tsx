@@ -78,7 +78,10 @@ export type NativeStackNavigationHelpers = NavigationHelpers<
 // We want it to be an empty object because navigator does not have any additional props
 export type NativeStackNavigationConfig = {};
 
-export type NativeStackHeaderProps = {
+export type NativeStackHeaderProps<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = string,
+> = {
   /**
    * Options for the back button.
    */
@@ -99,11 +102,11 @@ export type NativeStackHeaderProps = {
   /**
    * Route object for the current screen.
    */
-  route: Route<string>;
+  route: RouteProp<ParamList, RouteName>;
   /**
    * Navigation prop for the header.
    */
-  navigation: NativeStackNavigationProp<ParamListBase>;
+  navigation: NativeStackNavigationProp<ParamList, RouteName>;
 };
 
 export type NativeStackHeaderRightProps = {
