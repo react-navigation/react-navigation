@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.4.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.3.29...@react-navigation/stack@6.4.0) (2024-07-01)
+
+### Features
+
+* introduce missing props from native-stack v5 (v6) ([#11958](https://github.com/react-navigation/react-navigation/issues/11958)) ([0b26090](https://github.com/react-navigation/react-navigation/commit/0b260907a81afaaaf4bee6ffcf94626aae96b9a4)), closes [#11803](https://github.com/react-navigation/react-navigation/issues/11803) - by @tboba
+
 ## [6.3.29](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.3.28...@react-navigation/stack@6.3.29) (2024-03-18)
 
 **Note:** Version bump only for package @react-navigation/stack

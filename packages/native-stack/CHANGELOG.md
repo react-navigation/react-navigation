@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.10.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.9.26...@react-navigation/native-stack@6.10.0) (2024-07-01)
+
+### Bug Fixes
+
+* **native-stack, v6:** set `headerTopInsetEnabled` to the same value as `statusBarTranslucent` to prevent header content jump ([#12018](https://github.com/react-navigation/react-navigation/issues/12018)) ([2b7ac2b](https://github.com/react-navigation/react-navigation/commit/2b7ac2b835b72a1476f6cfe13b4521de290315b6)), closes [#12014](https://github.com/react-navigation/react-navigation/issues/12014) [#12014](https://github.com/react-navigation/react-navigation/issues/12014) - by @kkafar
+
+### Features
+
+* introduce missing props from native-stack v5 (v6) ([#11958](https://github.com/react-navigation/react-navigation/issues/11958)) ([0b26090](https://github.com/react-navigation/react-navigation/commit/0b260907a81afaaaf4bee6ffcf94626aae96b9a4)), closes [#11803](https://github.com/react-navigation/react-navigation/issues/11803) - by @tboba
+
 ## [6.9.26](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.9.25...@react-navigation/native-stack@6.9.26) (2024-03-18)
 
 **Note:** Version bump only for package @react-navigation/native-stack
