@@ -51,6 +51,7 @@ export function HeaderConfig({
   route,
   title,
   canGoBack,
+  backButtonDisplayMode,
 }: Props): JSX.Element {
   const { direction } = useLocale();
   const { colors, fonts } = useTheme();
@@ -195,6 +196,7 @@ export function HeaderConfig({
       disableBackButtonMenu={headerBackButtonMenuEnabled === false}
       hidden={headerShown === false}
       hideBackButton={headerBackVisible === false}
+      backButtonDisplayMode={backButtonDisplayMode}
       hideShadow={
         headerShadowVisible === false ||
         headerBackground != null ||
