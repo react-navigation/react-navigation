@@ -60,7 +60,7 @@ yarn example test --ui
 By default, this will use the local dev server for the app. If you want to test a production build, first build the [example app](/example/) for web:
 
 ```sh
-yarn example expo export:web
+yarn example expo export --platform web
 ```
 
 Then run the tests with the `CI` environment variable:
