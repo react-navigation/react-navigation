@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.1](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.0...react-native-drawer-layout@4.0.0-rc.1) (2024-07-01)
+
+### Bug Fixes
+
+* stop using react-native field in package.json ([efc33cb](https://github.com/react-navigation/react-navigation/commit/efc33cb0c4830a84ceae034dc1278c54f1faf32d)) - by @
+
 # [4.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-alpha.9...react-native-drawer-layout@4.0.0-rc.0) (2024-06-27)
 
 ### Bug Fixes

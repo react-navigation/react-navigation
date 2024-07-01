@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-rc.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.4...@react-navigation/elements@2.0.0-rc.5) (2024-07-01)
+
+### Bug Fixes
+
+* adjust header shadow color on iOS ([9dc2aca](https://github.com/react-navigation/react-navigation/commit/9dc2acacd4ef52e5dc4ef7d8aebab162f761d74c)) - by @
+* stop using react-native field in package.json ([efc33cb](https://github.com/react-navigation/react-navigation/commit/efc33cb0c4830a84ceae034dc1278c54f1faf32d)) - by @
+
 # [2.0.0-rc.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.3...@react-navigation/elements@2.0.0-rc.4) (2024-06-29)
 
 **Note:** Version bump only for package @react-navigation/elements

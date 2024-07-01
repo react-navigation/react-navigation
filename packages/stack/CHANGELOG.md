@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-rc.4...@react-navigation/stack@7.0.0-rc.5) (2024-07-01)
+
+### Bug Fixes
+
+* fix UIKit interpolation style for header ([61c1c9a](https://github.com/react-navigation/react-navigation/commit/61c1c9a873334e803d152f2295beca58bb785c47)) - by @
+* stop using react-native field in package.json ([efc33cb](https://github.com/react-navigation/react-navigation/commit/efc33cb0c4830a84ceae034dc1278c54f1faf32d)) - by @
+
 # [7.0.0-rc.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-rc.3...@react-navigation/stack@7.0.0-rc.4) (2024-06-29)
 
 ### Bug Fixes

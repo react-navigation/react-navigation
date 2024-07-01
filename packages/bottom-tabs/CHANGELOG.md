@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.6...@react-navigation/bottom-tabs@7.0.0-rc.7) (2024-07-01)
+
+### Bug Fixes
+
+* stop using react-native field in package.json ([efc33cb](https://github.com/react-navigation/react-navigation/commit/efc33cb0c4830a84ceae034dc1278c54f1faf32d)) - by @
+
 # [7.0.0-rc.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.5...@react-navigation/bottom-tabs@7.0.0-rc.6) (2024-06-29)
 
 ### Bug Fixes

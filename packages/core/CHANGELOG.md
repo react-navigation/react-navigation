@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.2...@react-navigation/core@7.0.0-rc.3) (2024-07-01)
+
+### Bug Fixes
+
+* stop using react-native field in package.json ([efc33cb](https://github.com/react-navigation/react-navigation/commit/efc33cb0c4830a84ceae034dc1278c54f1faf32d)) - by @
+
 # [7.0.0-rc.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.1...@react-navigation/core@7.0.0-rc.2) (2024-06-29)
 
 ### Bug Fixes
