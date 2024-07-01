@@ -198,13 +198,11 @@ export function App() {
 
   return (
     <Providers>
-      {Platform.OS === 'android' && (
-        <StatusBar
-          translucent
-          barStyle={theme.dark ? 'light-content' : 'dark-content'}
-          backgroundColor="rgba(0, 0, 0, 0.24)"
-        />
-      )}
+      <StatusBar
+        translucent
+        barStyle={theme.dark ? 'light-content' : 'dark-content'}
+        backgroundColor="rgba(0, 0, 0, 0.24)"
+      />
       <NavigationContainer
         ref={navigationRef}
         initialState={initialState}
