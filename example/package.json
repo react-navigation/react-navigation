@@ -9,6 +9,7 @@
     "test": "npx playwright test --config=e2e/playwright.config.ts"
   },
   "dependencies": {
+    "@expo/metro-runtime": "~3.2.1",
     "@expo/react-native-action-sheet": "^4.0.1",
     "@expo/vector-icons": "^14.0.0",
     "@react-native-async-storage/async-storage": "1.23.1",
@@ -36,7 +37,6 @@
   "devDependencies": {
     "@babel/core": "^7.24.0",
     "@babel/node": "^7.22.19",
-    "@expo/webpack-config": "^19.0.1",
     "@playwright/test": "^1.41.1",
     "@types/cheerio": "^0.22.35",
     "@types/koa": "^2.14.0",

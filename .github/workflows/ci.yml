@@ -76,9 +76,7 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Build example for web
-        run: |
-          npm install -g sharp-cli@^2.1.0
-          yarn example expo export:web
+        run: yarn example expo export --platform web
 
       - name: Run integration tests
         run: yarn example test
