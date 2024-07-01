@@ -34,6 +34,7 @@ import {
   type ScreenProps,
   ScreenStack,
   type StackPresentationTypes,
+  // FooterComponent,
 } from 'react-native-screens';
 import warnOnce from 'warn-once';
 
@@ -69,7 +70,12 @@ const MaybeNestedStack = ({
   children: React.ReactNode;
 }) => {
   const { colors } = useTheme();
-  const { header, headerShown = true, contentStyle } = options;
+  const {
+    header,
+    headerShown = true,
+    contentStyle,
+    screenStyle = null,
+  } = options;
 
   const isHeaderInModal = isAndroid
     ? false
@@ -91,7 +97,11 @@ const MaybeNestedStack = ({
   const content = (
     <DebugContainer
       style={[
-        styles.container,
+        presentation === 'formSheet'
+          ? Platform.OS === 'ios'
+            ? styles.absolute
+            : null
+          : styles.container,
         presentation !== 'transparentModal' &&
           presentation !== 'containedTransparentModal' && {
             backgroundColor: colors.background,
@@ -104,6 +114,8 @@ const MaybeNestedStack = ({
     </DebugContainer>
   );
 
+  console.log(`Render MaybeNestedStack ${isHeaderInModal}`);
+
   if (isHeaderInModal) {
     return (
       <ScreenStack style={styles.container}>
@@ -111,7 +123,7 @@ const MaybeNestedStack = ({
           enabled
           isNativeStack
           hasLargeHeader={options.headerLargeTitle ?? false}
-          style={StyleSheet.absoluteFill}
+          style={[StyleSheet.absoluteFill, screenStyle]}
         >
           {content}
           <HeaderConfig
@@ -169,6 +181,8 @@ const SceneView = ({
     animationMatchesGesture,
     presentation = isPresentationModal ? 'modal' : 'card',
     fullScreenGestureEnabled,
+    screenStyle = null,
+    sheetAllowedDetents = [1.0],
   } = options;
 
   const {
@@ -187,19 +201,32 @@ const SceneView = ({
     navigationBarColor,
     navigationBarTranslucent,
     navigationBarHidden,
+    onSheetDetentChanged = null,
     orientation,
-    sheetAllowedDetents = 'large',
-    sheetLargestUndimmedDetent = 'all',
+    sheetLargestUndimmedDetent = -1,
     sheetGrabberVisible = false,
     sheetCornerRadius = -1.0,
+    sheetElevation = 24,
     sheetExpandsWhenScrolledToEdge = true,
+    sheetInitialDetent = 0,
     statusBarAnimation,
     statusBarHidden,
     statusBarStyle,
     statusBarTranslucent,
     statusBarBackgroundColor,
+    footerComponent,
     freezeOnBlur,
   } = options;
+
+  // This is workaround for... find the commit here
+  // We want to allow only backgroundColor setting for now
+  screenStyle = screenStyle
+    ? { backgroundColor: screenStyle.backgroundColor }
+    : null;
+
+  if (sheetAllowedDetents === 'fitToContents') {
+    sheetAllowedDetents = [-1];
+  }
 
   if (gestureDirection === 'vertical' && Platform.OS === 'ios') {
     // for `vertical` direction to work, we need to set `fullScreenGestureEnabled` to `true`
@@ -322,12 +349,14 @@ const SceneView = ({
 
   const isRemovePrevented = preventedRoutes[route.key]?.preventRemove;
 
+  console.log('Render SceneView');
+
   return (
     <Screen
       key={route.key}
       enabled
       isNativeStack
-      style={StyleSheet.absoluteFill}
+      style={[StyleSheet.absoluteFill, screenStyle]}
       hasLargeHeader={options.headerLargeTitle ?? false}
       customAnimationOnSwipe={animationMatchesGesture}
       fullScreenSwipeEnabled={fullScreenGestureEnabled}
@@ -351,7 +380,9 @@ const SceneView = ({
       sheetAllowedDetents={sheetAllowedDetents}
       sheetLargestUndimmedDetent={sheetLargestUndimmedDetent}
       sheetGrabberVisible={sheetGrabberVisible}
+      sheetInitialDetent={sheetInitialDetent}
       sheetCornerRadius={sheetCornerRadius}
+      sheetElevation={sheetElevation}
       sheetExpandsWhenScrolledToEdge={sheetExpandsWhenScrolledToEdge}
       statusBarAnimation={statusBarAnimation}
       statusBarHidden={statusBarHidden}
@@ -366,6 +397,11 @@ const SceneView = ({
       onDisappear={onDisappear}
       onDismissed={onDismissed}
       onGestureCancel={onGestureCancel}
+      onSheetDetentChanged={(event) => {
+        if (onSheetDetentChanged) {
+          onSheetDetentChanged(event);
+        }
+      }}
       gestureResponseDistance={gestureResponseDistance}
       nativeBackButtonDismissalEnabled={false} // on Android
       onHeaderBackButtonClicked={onHeaderBackButtonClicked}
@@ -439,43 +475,35 @@ const SceneView = ({
                     {headerBackground()}
                   </View>
                 ) : null}
-                <View
-                  accessibilityElementsHidden={!focused}
-                  importantForAccessibility={
-                    focused ? 'auto' : 'no-hide-descendants'
-                  }
-                  style={styles.scene}
+                <MaybeNestedStack
+                  options={options}
+                  route={route}
+                  presentation={presentation}
+                  headerHeight={headerHeight}
+                  headerTopInsetEnabled={headerTopInsetEnabled}
                 >
-                  <MaybeNestedStack
-                    options={options}
-                    route={route}
-                    presentation={presentation}
-                    headerHeight={headerHeight}
-                    headerTopInsetEnabled={headerTopInsetEnabled}
-                  >
-                    <HeaderBackContext.Provider value={headerBack}>
-                      {render()}
-                    </HeaderBackContext.Provider>
-                  </MaybeNestedStack>
-                  {header !== undefined && headerShown !== false ? (
-                    <View
-                      onLayout={(e) => {
-                        const headerHeight = e.nativeEvent.layout.height;
+                  <HeaderBackContext.Provider value={headerBack}>
+                    {render()}
+                  </HeaderBackContext.Provider>
+                </MaybeNestedStack>
+                {header !== undefined && headerShown !== false ? (
+                  <View
+                    onLayout={(e) => {
+                      const headerHeight = e.nativeEvent.layout.height;
 
-                        setHeaderHeight(headerHeight);
-                        rawAnimatedHeaderHeight.setValue(headerHeight);
-                      }}
-                      style={headerTransparent ? styles.absolute : null}
-                    >
-                      {header({
-                        back: headerBack,
-                        options,
-                        route,
-                        navigation,
-                      })}
-                    </View>
-                  ) : null}
-                </View>
+                      setHeaderHeight(headerHeight);
+                      rawAnimatedHeaderHeight.setValue(headerHeight);
+                    }}
+                    style={headerTransparent ? styles.absolute : null}
+                  >
+                    {header({
+                      back: headerBack,
+                      options,
+                      route,
+                      navigation,
+                    })}
+                  </View>
+                ) : null}
                 {/**
                  * `HeaderConfig` needs to be the direct child of `Screen` without any intermediate `View`
                  * We don't render it conditionally to make it possible to dynamically render a custom `header`
@@ -505,6 +533,9 @@ const SceneView = ({
                   headerTopInsetEnabled={headerTopInsetEnabled}
                   canGoBack={headerBack !== undefined}
                 />
+                {/*footerComponent && (
+                  <FooterComponent>{footerComponent}</FooterComponent>
+                )*/}
               </HeaderHeightContext.Provider>
             </AnimatedHeaderHeightContext.Provider>
           </HeaderShownContext.Provider>
