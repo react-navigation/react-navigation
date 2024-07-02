@@ -92,5 +92,7 @@ const styles = StyleSheet.create({
   photo: {
     flex: 1,
     paddingTop: '100%',
+    height: 'auto',
+    width: 'auto',
   },
 });

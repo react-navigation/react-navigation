@@ -161,6 +161,7 @@ const styles = StyleSheet.create({
   },
   avatar: {
     width: 32,
+    height: 'auto',
     aspectRatio: 1,
     borderRadius: 16,
   },
