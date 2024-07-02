@@ -181,11 +181,7 @@ export function HeaderConfig({
     <ScreenStackHeaderConfig
       backButtonInCustomView={backButtonInCustomView}
       backgroundColor={headerBackgroundColor}
-      backTitle={
-        headerBackTitleVisible
-          ? headerBackTitle
-          : ' ' /* For backward compatibility with react-native-screens versions <3.21.0, where `backTitleVisible` is not available */
-      }
+      backTitle={headerBackTitle}
       backTitleVisible={headerBackTitleVisible}
       backTitleFontFamily={backTitleFontFamily}
       backTitleFontSize={backTitleFontSize}
