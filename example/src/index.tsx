@@ -95,6 +95,12 @@ const linking: LinkingOptions<RootStackParamList> = {
 let previousDirection = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr';
 
 if (Platform.OS === 'web') {
+  if (typeof document !== 'undefined' && document.documentElement) {
+    document
+      .getElementById('root')
+      ?.setAttribute('style', 'height: 100vh; overflow: auto;');
+  }
+
   if (
     typeof localStorage !== 'undefined' &&
     typeof document !== 'undefined' &&
