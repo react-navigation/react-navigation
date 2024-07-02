@@ -3734,7 +3734,7 @@ __metadata:
     react: ">= 18.2.0"
     react-native: ">= 0.72.0"
     react-native-safe-area-context: ">= 4.0.0"
-    react-native-screens: ">= 3.0.0"
+    react-native-screens: ">= 3.21.0"
   languageName: unknown
   linkType: soft
 
@@ -3809,7 +3809,7 @@ __metadata:
     react-native-gesture-handler: ">= 2.0.0"
     react-native-reanimated: ">= 2.0.0"
     react-native-safe-area-context: ">= 4.0.0"
-    react-native-screens: ">= 3.0.0"
+    react-native-screens: ">= 3.21.0"
   languageName: unknown
   linkType: soft
 
@@ -3930,7 +3930,7 @@ __metadata:
     react: ">= 18.2.0"
     react-native: ">= 0.72.0"
     react-native-safe-area-context: ">= 4.0.0"
-    react-native-screens: ">= 3.0.0"
+    react-native-screens: ">= 3.21.0"
   languageName: unknown
   linkType: soft
 
@@ -3993,7 +3993,7 @@ __metadata:
     react-native: ">= 0.72.0"
     react-native-gesture-handler: ">= 2.0.0"
     react-native-safe-area-context: ">= 4.0.0"
-    react-native-screens: ">= 3.0.0"
+    react-native-screens: ">= 3.21.0"
   languageName: unknown
   linkType: soft
 

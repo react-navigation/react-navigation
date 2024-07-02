@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-rc.6...@react-navigation/drawer@7.0.0-rc.7) (2024-07-02)
+
+### Bug Fixes
+
+* drop leftover empty string for headerBackTitleVisible ([b93f861](https://github.com/react-navigation/react-navigation/commit/b93f86155fe9185c5197cd6d44b625aabb8ca4a7)) - by @satya164
+
 # [7.0.0-rc.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-rc.5...@react-navigation/drawer@7.0.0-rc.6) (2024-07-01)
 
 ### Bug Fixes
