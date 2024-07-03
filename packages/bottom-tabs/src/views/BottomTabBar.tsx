@@ -38,10 +38,11 @@ type Props = BottomTabBarProps & {
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 };
 
-const DEFAULT_TABBAR_HEIGHT = 49;
-const COMPACT_TABBAR_HEIGHT = 32;
+const TABBAR_HEIGHT_UIKIT = 49;
+const TABBAR_HEIGHT_UIKIT_COMPACT = 32;
+const SPACING_UIKIT = 15;
+const SPACING_MATERIAL = 12;
 const DEFAULT_MAX_TAB_ITEM_WIDTH = 125;
-const SPACING = 12;
 
 const useNativeDriver = Platform.OS !== 'web';
 
@@ -92,6 +93,17 @@ const shouldUseHorizontalLabels = ({
 };
 
 const isCompact = ({ state, descriptors, dimensions }: Options): boolean => {
+  const { tabBarPosition, tabBarVariant } =
+    descriptors[state.routes[state.index].key].options;
+
+  if (
+    tabBarPosition === 'left' ||
+    tabBarPosition === 'right' ||
+    tabBarVariant === 'material'
+  ) {
+    return false;
+  }
+
   const isLandscape = dimensions.width > dimensions.height;
   const horizontalLabels = shouldUseHorizontalLabels({
     state,
@@ -136,10 +148,10 @@ export const getTabBarHeight = ({
   const inset = insets[tabBarPosition === 'top' ? 'top' : 'bottom'];
 
   if (isCompact({ state, descriptors, dimensions })) {
-    return COMPACT_TABBAR_HEIGHT + inset;
+    return TABBAR_HEIGHT_UIKIT_COMPACT + inset;
   }
 
-  return DEFAULT_TABBAR_HEIGHT + inset;
+  return TABBAR_HEIGHT_UIKIT + inset;
 };
 
 export function BottomTabBar({
@@ -160,21 +172,37 @@ export function BottomTabBar({
   const {
     tabBarPosition = 'bottom',
     tabBarShowLabel,
+    tabBarLabelPosition,
     tabBarHideOnKeyboard = false,
     tabBarVisibilityAnimationConfig,
+    tabBarVariant = 'uikit',
     tabBarStyle,
     tabBarBackground,
-    tabBarActiveTintColor,
+    tabBarActiveTintColor: customActiveTintColor,
     tabBarInactiveTintColor,
-    tabBarActiveBackgroundColor = tabBarPosition !== 'bottom' &&
-    tabBarPosition !== 'top'
-      ? Color(tabBarActiveTintColor ?? colors.primary)
-          .alpha(0.12)
-          .rgb()
-          .string()
-      : undefined,
+    tabBarActiveBackgroundColor: customActiveBackgroundColor,
     tabBarInactiveBackgroundColor,
   } = focusedOptions;
+
+  if (
+    tabBarVariant === 'material' &&
+    tabBarPosition !== 'left' &&
+    tabBarPosition !== 'right'
+  ) {
+    throw new Error(
+      "The 'material' variant for tab bar is only supported when 'tabBarPosition' is set to 'left' or 'right'."
+    );
+  }
+
+  if (
+    tabBarLabelPosition === 'below-icon' &&
+    tabBarVariant === 'uikit' &&
+    (tabBarPosition === 'left' || tabBarPosition === 'right')
+  ) {
+    throw new Error(
+      "The 'below-icon' label position for tab bar is only supported when 'tabBarPosition' is set to 'top' or 'bottom' when using the 'uikit' variant."
+    );
+  }
 
   const dimensions = useSafeAreaFrame();
   const isKeyboardShown = useIsKeyboardShown();
@@ -271,6 +299,27 @@ export function BottomTabBar({
 
   const compact = isCompact({ state, descriptors, dimensions });
   const sidebar = tabBarPosition === 'left' || tabBarPosition === 'right';
+  const spacing =
+    tabBarVariant === 'material' ? SPACING_MATERIAL : SPACING_UIKIT;
+
+  const tabBarActiveTintColor =
+    customActiveTintColor ??
+    (tabBarVariant === 'uikit' && sidebar && hasHorizontalLabels
+      ? Color(colors.primary).isDark()
+        ? 'white'
+        : Color(colors.primary).darken(0.71).string()
+      : undefined);
+
+  const tabBarActiveBackgroundColor =
+    customActiveBackgroundColor ??
+    (tabBarVariant === 'material'
+      ? Color(customActiveTintColor ?? colors.primary)
+          .alpha(0.12)
+          .rgb()
+          .string()
+      : sidebar && hasHorizontalLabels && !customActiveTintColor
+        ? colors.primary
+        : undefined);
 
   const tabBarBackgroundElement = tabBarBackground?.();
 
@@ -307,13 +356,13 @@ export function BottomTabBar({
         sidebar
           ? {
               paddingTop:
-                (hasHorizontalLabels ? SPACING : SPACING / 2) + insets.top,
+                (hasHorizontalLabels ? spacing : spacing / 2) + insets.top,
               paddingBottom:
-                (hasHorizontalLabels ? SPACING : SPACING / 2) + insets.bottom,
+                (hasHorizontalLabels ? spacing : spacing / 2) + insets.bottom,
               paddingStart:
-                SPACING + (tabBarPosition === 'left' ? insets.left : 0),
+                spacing + (tabBarPosition === 'left' ? insets.left : 0),
               paddingEnd:
-                SPACING + (tabBarPosition === 'right' ? insets.right : 0),
+                spacing + (tabBarPosition === 'right' ? insets.right : 0),
               minWidth: hasHorizontalLabels
                 ? getDefaultSidebarWidth(dimensions)
                 : 0,
@@ -410,7 +459,8 @@ export function BottomTabBar({
                   focused={focused}
                   horizontal={hasHorizontalLabels}
                   compact={compact}
-                  variant={sidebar ? 'material' : 'uikit'}
+                  sidebar={sidebar}
+                  variant={tabBarVariant}
                   onPress={onPress}
                   onLongPress={onLongPress}
                   accessibilityLabel={accessibilityLabel}
@@ -435,7 +485,13 @@ export function BottomTabBar({
                   iconStyle={options.tabBarIconStyle}
                   style={[
                     sidebar
-                      ? !hasHorizontalLabels && styles.sideItemVertical
+                      ? {
+                          marginVertical: hasHorizontalLabels
+                            ? tabBarVariant === 'material'
+                              ? 0
+                              : 1
+                            : spacing / 2,
+                        }
                       : styles.bottomItem,
                     options.tabBarItemStyle,
                   ]}
@@ -476,8 +532,5 @@ const styles = StyleSheet.create({
   },
   bottomItem: {
     flex: 1,
-  },
-  sideItemVertical: {
-    marginVertical: SPACING / 2,
   },
 });
