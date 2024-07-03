@@ -13,7 +13,6 @@ import {
   useLocale,
   useTheme,
 } from '@react-navigation/native';
-import Color from 'color';
 import React from 'react';
 import {
   Animated,
@@ -178,9 +177,9 @@ export function BottomTabBar({
     tabBarVariant = 'uikit',
     tabBarStyle,
     tabBarBackground,
-    tabBarActiveTintColor: customActiveTintColor,
+    tabBarActiveTintColor,
     tabBarInactiveTintColor,
-    tabBarActiveBackgroundColor: customActiveBackgroundColor,
+    tabBarActiveBackgroundColor,
     tabBarInactiveBackgroundColor,
   } = focusedOptions;
 
@@ -301,25 +300,6 @@ export function BottomTabBar({
   const sidebar = tabBarPosition === 'left' || tabBarPosition === 'right';
   const spacing =
     tabBarVariant === 'material' ? SPACING_MATERIAL : SPACING_UIKIT;
-
-  const tabBarActiveTintColor =
-    customActiveTintColor ??
-    (tabBarVariant === 'uikit' && sidebar && hasHorizontalLabels
-      ? Color(colors.primary).isDark()
-        ? 'white'
-        : Color(colors.primary).darken(0.71).string()
-      : undefined);
-
-  const tabBarActiveBackgroundColor =
-    customActiveBackgroundColor ??
-    (tabBarVariant === 'material'
-      ? Color(customActiveTintColor ?? colors.primary)
-          .alpha(0.12)
-          .rgb()
-          .string()
-      : sidebar && hasHorizontalLabels && !customActiveTintColor
-        ? colors.primary
-        : undefined);
 
   const tabBarBackgroundElement = tabBarBackground?.();
 

@@ -162,7 +162,7 @@ export function BottomTabItem({
   variant,
   activeTintColor: customActiveTintColor,
   inactiveTintColor: customInactiveTintColor,
-  activeBackgroundColor = 'transparent',
+  activeBackgroundColor: customActiveBackgroundColor,
   inactiveBackgroundColor = 'transparent',
   showLabel = true,
   allowFontScaling,
@@ -173,21 +173,47 @@ export function BottomTabItem({
   const { colors, fonts } = useTheme();
 
   const activeTintColor =
-    customActiveTintColor === undefined
-      ? colors.primary
-      : customActiveTintColor;
+    customActiveTintColor ??
+    (variant === 'uikit' && sidebar && horizontal
+      ? Color(colors.primary).isDark()
+        ? 'white'
+        : Color(colors.primary).darken(0.71).string()
+      : colors.primary);
 
   const inactiveTintColor =
     customInactiveTintColor === undefined
-      ? Color(colors.text).mix(Color(colors.card), 0.5).hex()
+      ? variant === 'material'
+        ? Color(colors.text).alpha(0.68).rgb().string()
+        : Color(colors.text).mix(Color(colors.card), 0.5).hex()
       : customInactiveTintColor;
+
+  const activeBackgroundColor =
+    customActiveBackgroundColor ??
+    (variant === 'material'
+      ? Color(activeTintColor).alpha(0.12).rgb().string()
+      : sidebar && horizontal
+        ? colors.primary
+        : 'transparent');
+
+  let labelInactiveTintColor = inactiveTintColor;
+  let iconInactiveTintColor = inactiveTintColor;
+
+  if (
+    variant === 'uikit' &&
+    sidebar &&
+    horizontal &&
+    customInactiveTintColor === undefined
+  ) {
+    iconInactiveTintColor = colors.primary;
+    labelInactiveTintColor = colors.text;
+  }
 
   const renderLabel = ({ focused }: { focused: boolean }) => {
     if (showLabel === false) {
       return null;
     }
 
-    const color = focused ? activeTintColor : inactiveTintColor;
+    const color = focused ? activeTintColor : labelInactiveTintColor;
 
     if (typeof label !== 'string') {
       const { options } = descriptor;
@@ -257,7 +283,7 @@ export function BottomTabItem({
         activeOpacity={activeOpacity}
         inactiveOpacity={inactiveOpacity}
         activeTintColor={activeTintColor}
-        inactiveTintColor={inactiveTintColor}
+        inactiveTintColor={iconInactiveTintColor}
         renderIcon={icon}
         style={iconStyle}
       />
