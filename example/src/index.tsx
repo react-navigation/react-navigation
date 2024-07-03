@@ -1,9 +1,14 @@
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useReduxDevToolsExtension } from '@react-navigation/devtools';
 import {
   createDrawerNavigator,
+  type DrawerContentComponentProps,
+  DrawerContentScrollView,
+  DrawerItem,
+  DrawerItemList,
   type DrawerScreenProps,
 } from '@react-navigation/drawer';
 import {
@@ -243,6 +248,7 @@ export function App() {
           >
             {() => (
               <Drawer.Navigator
+                drawerContent={(props) => <CustomDrawerContent {...props} />}
                 screenOptions={{
                   drawerType: isLargeScreen ? 'permanent' : undefined,
                 }}
@@ -335,5 +341,44 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
     <ActionSheetProvider>
       <>{children}</>
     </ActionSheetProvider>
+  );
+};
+
+const DRAWER_ITEMS = [
+  {
+    icon: 'message-reply',
+    label: 'Chat',
+  },
+  {
+    icon: 'contacts',
+    label: 'Contacts',
+  },
+  {
+    icon: 'image-album',
+    label: 'Albums',
+  },
+] as const;
+
+const CustomDrawerContent = (props: DrawerContentComponentProps) => {
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList {...props} />
+      {DRAWER_ITEMS.map((item) => (
+        <DrawerItem
+          key={item.label}
+          label={item.label}
+          icon={({ color, size }) => (
+            <MaterialCommunityIcons
+              name={item.icon}
+              color={color}
+              size={size}
+            />
+          )}
+          onPress={() => {
+            // Do nothing for now
+          }}
+        />
+      ))}
+    </DrawerContentScrollView>
   );
 };
