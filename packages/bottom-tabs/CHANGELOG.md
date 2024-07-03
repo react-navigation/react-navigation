@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.10...@react-navigation/bottom-tabs@7.0.0-rc.11) (2024-07-03)
+
+### Bug Fixes
+
+* adjust tab bar colors ([dafef7a](https://github.com/react-navigation/react-navigation/commit/dafef7ac0f5fc133eaa152b150d1755f7f115c04)) - by @satya164
+
 # [7.0.0-rc.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.9...@react-navigation/bottom-tabs@7.0.0-rc.10) (2024-07-03)
 
 ### Features
