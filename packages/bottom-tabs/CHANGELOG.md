@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.8...@react-navigation/bottom-tabs@7.0.0-rc.9) (2024-07-03)
+
+### Bug Fixes
+
+* fix tab bar styling for compact, material, ipad etc. ([2e7c377](https://github.com/react-navigation/react-navigation/commit/2e7c37791947d765ed0a9cddff51cbf1fdb1f2f2)) - by @
+
 # [7.0.0-rc.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.7...@react-navigation/bottom-tabs@7.0.0-rc.8) (2024-07-02)
 
 ### Bug Fixes
