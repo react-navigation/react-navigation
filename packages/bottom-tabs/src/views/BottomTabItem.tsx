@@ -91,6 +91,10 @@ type Props = {
    */
   horizontal: boolean;
   /**
+   * Whether to render the icon and label in compact mode.
+   */
+  compact: boolean;
+  /**
    * Variant of navigation bar styling
    * - `uikit`: iOS UIKit style
    * - `material`: Material Design style
@@ -149,6 +153,7 @@ export function BottomTabItem({
   onPress,
   onLongPress,
   horizontal,
+  compact,
   variant,
   activeTintColor: customActiveTintColor,
   inactiveTintColor: customInactiveTintColor,
@@ -207,10 +212,14 @@ export function BottomTabItem({
             ? [
                 styles.labelBeside,
                 { marginStart: icon !== undefined ? 16 : 0 },
-                variant === 'uikit' && styles.labelBesideUikit,
+                variant === 'material'
+                  ? styles.labelBesideMaterial
+                  : compact
+                    ? styles.labelBesideUikitCompact
+                    : styles.labelBesideUikit,
               ]
             : styles.labelBeneath,
-          variant === 'material' && fonts.medium,
+          compact ? fonts.regular : fonts.medium,
           labelStyle,
         ]}
         allowFontScaling={allowFontScaling}
@@ -232,7 +241,8 @@ export function BottomTabItem({
     return (
       <TabBarIcon
         route={route}
-        horizontal={horizontal}
+        variant={variant}
+        compact={compact}
         badge={badge}
         badgeStyle={badgeStyle}
         activeOpacity={activeOpacity}
@@ -284,14 +294,12 @@ export function BottomTabItem({
           styles.tab,
           { flex, backgroundColor, borderRadius },
           horizontal
-            ? [
-                styles.tabHorizontal,
-                variant === 'material' && styles.tabHorizontalMaterial,
-              ]
-            : [
-                styles.tabVertical,
-                variant === 'material' && styles.tabVerticalMaterial,
-              ],
+            ? variant === 'material'
+              ? styles.tabHorizontalMaterial
+              : styles.tabHorizontalUiKit
+            : variant === 'material'
+              ? styles.tabVerticalMaterial
+              : styles.tabVerticalUiKit,
         ],
         children: (
           <React.Fragment>
@@ -310,33 +318,44 @@ const styles = StyleSheet.create({
     // Roundness for iPad hover effect
     borderRadius: 10,
   },
-  tabVertical: {
-    justifyContent: 'flex-end',
+  tabVerticalUiKit: {
+    justifyContent: 'flex-start',
     flexDirection: 'column',
+    padding: 5,
   },
   tabVerticalMaterial: {
     padding: 10,
   },
-  tabHorizontal: {
+  tabHorizontalUiKit: {
     justifyContent: 'center',
+    alignItems: 'center',
     flexDirection: 'row',
-    paddingVertical: 11,
-    paddingStart: 16,
-    paddingEnd: 24,
+    padding: 5,
   },
   tabHorizontalMaterial: {
     justifyContent: 'flex-start',
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingVertical: 15,
+    paddingStart: 16,
+    paddingEnd: 24,
   },
   labelBeneath: {
     fontSize: 10,
   },
   labelBeside: {
     marginEnd: 12,
-    marginVertical: 4,
     lineHeight: 24,
-    marginStart: 20,
+  },
+  labelBesideMaterial: {
+    marginStart: 12,
   },
   labelBesideUikit: {
     fontSize: 13,
+    marginStart: 5,
+  },
+  labelBesideUikitCompact: {
+    fontSize: 12,
+    marginStart: 5,
   },
 });

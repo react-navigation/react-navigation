@@ -91,8 +91,25 @@ const shouldUseHorizontalLabels = ({
   }
 };
 
-const getPaddingBottom = (insets: EdgeInsets) =>
-  Math.max(insets.bottom - Platform.select({ ios: 4, default: 0 }), 0);
+const isCompact = ({ state, descriptors, dimensions }: Options): boolean => {
+  const isLandscape = dimensions.width > dimensions.height;
+  const horizontalLabels = shouldUseHorizontalLabels({
+    state,
+    descriptors,
+    dimensions,
+  });
+
+  if (
+    Platform.OS === 'ios' &&
+    !Platform.isPad &&
+    isLandscape &&
+    horizontalLabels
+  ) {
+    return true;
+  }
+
+  return false;
+};
 
 export const getTabBarHeight = ({
   state,
@@ -100,11 +117,12 @@ export const getTabBarHeight = ({
   dimensions,
   insets,
   style,
-  ...rest
 }: Options & {
   insets: EdgeInsets;
   style: Animated.WithAnimatedValue<StyleProp<ViewStyle>> | undefined;
 }) => {
+  const { tabBarPosition } = descriptors[state.routes[state.index].key].options;
+
   const flattenedStyle = StyleSheet.flatten(style);
   const customHeight =
     flattenedStyle && 'height' in flattenedStyle
@@ -115,25 +133,13 @@ export const getTabBarHeight = ({
     return customHeight;
   }
 
-  const isLandscape = dimensions.width > dimensions.height;
-  const horizontalLabels = shouldUseHorizontalLabels({
-    state,
-    descriptors,
-    dimensions,
-    ...rest,
-  });
-  const paddingBottom = getPaddingBottom(insets);
+  const inset = insets[tabBarPosition === 'top' ? 'top' : 'bottom'];
 
-  if (
-    Platform.OS === 'ios' &&
-    !Platform.isPad &&
-    isLandscape &&
-    horizontalLabels
-  ) {
-    return COMPACT_TABBAR_HEIGHT + paddingBottom;
+  if (isCompact({ state, descriptors, dimensions })) {
+    return COMPACT_TABBAR_HEIGHT + inset;
   }
 
-  return DEFAULT_TABBAR_HEIGHT + paddingBottom;
+  return DEFAULT_TABBAR_HEIGHT + inset;
 };
 
 export function BottomTabBar({
@@ -249,7 +255,6 @@ export function BottomTabBar({
 
   const { routes } = state;
 
-  const paddingBottom = getPaddingBottom(insets);
   const tabBarHeight = getTabBarHeight({
     state,
     descriptors,
@@ -264,7 +269,8 @@ export function BottomTabBar({
     dimensions,
   });
 
-  const isSidebar = tabBarPosition === 'left' || tabBarPosition === 'right';
+  const compact = isCompact({ state, descriptors, dimensions });
+  const sidebar = tabBarPosition === 'left' || tabBarPosition === 'right';
 
   const tabBarBackgroundElement = tabBarBackground?.();
 
@@ -298,7 +304,7 @@ export function BottomTabBar({
             tabBarBackgroundElement != null ? 'transparent' : colors.card,
           borderColor: colors.border,
         },
-        isSidebar
+        sidebar
           ? {
               paddingTop:
                 (hasHorizontalLabels ? SPACING : SPACING / 2) + insets.top,
@@ -320,7 +326,7 @@ export function BottomTabBar({
                       inputRange: [0, 1],
                       outputRange: [
                         layout.height +
-                          paddingBottom +
+                          insets[tabBarPosition === 'top' ? 'top' : 'bottom'] +
                           StyleSheet.hairlineWidth,
                         0,
                       ],
@@ -333,21 +339,22 @@ export function BottomTabBar({
               },
               {
                 height: tabBarHeight,
-                paddingBottom,
+                paddingBottom: tabBarPosition === 'bottom' ? insets.bottom : 0,
+                paddingTop: tabBarPosition === 'top' ? insets.top : 0,
                 paddingHorizontal: Math.max(insets.left, insets.right),
               },
             ],
         tabBarStyle,
       ]}
       pointerEvents={isTabBarHidden ? 'none' : 'auto'}
-      onLayout={isSidebar ? undefined : handleLayout}
+      onLayout={sidebar ? undefined : handleLayout}
     >
       <View pointerEvents="none" style={StyleSheet.absoluteFill}>
         {tabBarBackgroundElement}
       </View>
       <View
         accessibilityRole="tablist"
-        style={isSidebar ? styles.sideContent : styles.bottomContent}
+        style={sidebar ? styles.sideContent : styles.bottomContent}
       >
         {routes.map((route, index) => {
           const focused = index === state.index;
@@ -402,7 +409,8 @@ export function BottomTabBar({
                   descriptor={descriptors[route.key]}
                   focused={focused}
                   horizontal={hasHorizontalLabels}
-                  variant={isSidebar ? 'material' : 'uikit'}
+                  compact={compact}
+                  variant={sidebar ? 'material' : 'uikit'}
                   onPress={onPress}
                   onLongPress={onLongPress}
                   accessibilityLabel={accessibilityLabel}
@@ -426,7 +434,7 @@ export function BottomTabBar({
                   labelStyle={options.tabBarLabelStyle}
                   iconStyle={options.tabBarIconStyle}
                   style={[
-                    isSidebar
+                    sidebar
                       ? !hasHorizontalLabels && styles.sideItemVertical
                       : styles.bottomItem,
                     options.tabBarItemStyle,
