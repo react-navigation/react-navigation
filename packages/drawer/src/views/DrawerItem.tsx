@@ -14,7 +14,7 @@ type Props = {
   /**
    * The route object which should be specified by the drawer item.
    */
-  route: Route<string>;
+  route?: Route<string>;
   /**
    * The `href` to use for the anchor tag on web
    */
