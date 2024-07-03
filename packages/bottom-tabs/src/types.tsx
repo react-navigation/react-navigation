@@ -24,6 +24,8 @@ import type { EdgeInsets } from 'react-native-safe-area-context';
 
 export type Layout = { width: number; height: number };
 
+export type Variant = 'uikit' | 'material';
+
 export type BottomTabNavigationEventMap = {
   /**
    * Event which fires on tapping on the tab in the tab bar.
@@ -221,6 +223,11 @@ export type BottomTabNavigationOptions = HeaderOptions & {
     show?: TabBarVisibilityAnimationConfig;
     hide?: TabBarVisibilityAnimationConfig;
   };
+
+  /**
+   * Variant of the tab bar. Defaults to `uikit`.
+   */
+  tabBarVariant?: Variant;
 
   /**
    * Style object for the tab bar container.

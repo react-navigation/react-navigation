@@ -95,6 +95,10 @@ type Props = {
    */
   compact: boolean;
   /**
+   * Whether the tab is an item in a side bar.
+   */
+  sidebar: boolean;
+  /**
    * Variant of navigation bar styling
    * - `uikit`: iOS UIKit style
    * - `material`: Material Design style
@@ -154,6 +158,7 @@ export function BottomTabItem({
   onLongPress,
   horizontal,
   compact,
+  sidebar,
   variant,
   activeTintColor: customActiveTintColor,
   inactiveTintColor: customInactiveTintColor,
@@ -211,15 +216,19 @@ export function BottomTabItem({
           horizontal
             ? [
                 styles.labelBeside,
-                { marginStart: icon !== undefined ? 16 : 0 },
                 variant === 'material'
-                  ? styles.labelBesideMaterial
-                  : compact
-                    ? styles.labelBesideUikitCompact
-                    : styles.labelBesideUikit,
+                  ? styles.labelSidebarMaterial
+                  : sidebar
+                    ? styles.labelSidebarUiKit
+                    : compact
+                      ? styles.labelBesideUikitCompact
+                      : styles.labelBesideUikit,
+                icon == null && { marginStart: 0 },
               ]
             : styles.labelBeneath,
-          compact ? fonts.regular : fonts.medium,
+          compact || (variant === 'uikit' && sidebar && horizontal)
+            ? fonts.regular
+            : fonts.medium,
           labelStyle,
         ]}
         allowFontScaling={allowFontScaling}
@@ -242,7 +251,7 @@ export function BottomTabItem({
       <TabBarIcon
         route={route}
         variant={variant}
-        compact={compact}
+        size={compact ? 'compact' : 'regular'}
         badge={badge}
         badgeStyle={badgeStyle}
         activeOpacity={activeOpacity}
@@ -262,7 +271,14 @@ export function BottomTabItem({
     : inactiveBackgroundColor;
 
   const { flex } = StyleSheet.flatten(style || {});
-  const borderRadius = variant === 'material' ? (horizontal ? 56 : 16) : 0;
+  const borderRadius =
+    variant === 'material'
+      ? horizontal
+        ? 56
+        : 16
+      : sidebar && horizontal
+        ? 10
+        : 0;
 
   return (
     <View
@@ -288,18 +304,26 @@ export function BottomTabItem({
         accessibilityStates: focused ? ['selected'] : [],
         android_ripple: { borderless: true },
         hoverEffect:
-          variant === 'material' ? { color: colors.text } : undefined,
+          variant === 'material' || (sidebar && horizontal)
+            ? { color: colors.text }
+            : undefined,
         pressOpacity: 1,
         style: [
           styles.tab,
           { flex, backgroundColor, borderRadius },
-          horizontal
+          sidebar
             ? variant === 'material'
-              ? styles.tabHorizontalMaterial
-              : styles.tabHorizontalUiKit
+              ? horizontal
+                ? styles.tabBarSidebarMaterial
+                : styles.tabVerticalMaterial
+              : horizontal
+                ? styles.tabBarSidebarUiKit
+                : styles.tabVerticalUiKit
             : variant === 'material'
               ? styles.tabVerticalMaterial
-              : styles.tabVerticalUiKit,
+              : horizontal
+                ? styles.tabHorizontalUiKit
+                : styles.tabVerticalUiKit,
         ],
         children: (
           <React.Fragment>
@@ -332,7 +356,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 5,
   },
-  tabHorizontalMaterial: {
+  tabBarSidebarUiKit: {
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingVertical: 7,
+    paddingHorizontal: 5,
+  },
+  tabBarSidebarMaterial: {
     justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row',
@@ -340,15 +371,19 @@ const styles = StyleSheet.create({
     paddingStart: 16,
     paddingEnd: 24,
   },
+  labelSidebarMaterial: {
+    marginStart: 12,
+  },
+  labelSidebarUiKit: {
+    fontSize: 17,
+    marginStart: 10,
+  },
   labelBeneath: {
     fontSize: 10,
   },
   labelBeside: {
     marginEnd: 12,
     lineHeight: 24,
-  },
-  labelBesideMaterial: {
-    marginStart: 12,
   },
   labelBesideUikit: {
     fontSize: 13,

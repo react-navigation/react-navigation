@@ -13,7 +13,7 @@ import { Badge } from './Badge';
 type Props = {
   route: Route<string>;
   variant: 'uikit' | 'material';
-  compact: boolean;
+  size: 'compact' | 'regular';
   badge?: string | number;
   badgeStyle?: StyleProp<TextStyle>;
   activeOpacity: number;
@@ -43,7 +43,7 @@ const ICON_SIZE_MATERIAL = 24;
 export function TabBarIcon({
   route: _,
   variant,
-  compact,
+  size,
   badge,
   badgeStyle,
   activeOpacity,
@@ -53,11 +53,12 @@ export function TabBarIcon({
   renderIcon,
   style,
 }: Props) {
-  const size = compact
-    ? ICON_SIZE_ROUND_COMPACT
-    : variant === 'material'
+  const iconSize =
+    variant === 'material'
       ? ICON_SIZE_MATERIAL
-      : ICON_SIZE_ROUND;
+      : size === 'compact'
+        ? ICON_SIZE_ROUND_COMPACT
+        : ICON_SIZE_ROUND;
 
   // We render the icon twice at the same position on top of each other:
   // active and inactive one, so we can fade between them.
@@ -66,7 +67,7 @@ export function TabBarIcon({
       style={[
         variant === 'material'
           ? styles.wrapperMaterial
-          : compact
+          : size === 'compact'
             ? styles.wrapperUikitCompact
             : styles.wrapperUikit,
         style,
@@ -78,27 +79,27 @@ export function TabBarIcon({
           {
             opacity: activeOpacity,
             // Workaround for react-native >= 0.54 layout bug
-            minWidth: size,
+            minWidth: iconSize,
           },
         ]}
       >
         {renderIcon({
           focused: true,
-          size,
+          size: iconSize,
           color: activeTintColor,
         })}
       </View>
       <View style={[styles.icon, { opacity: inactiveOpacity }]}>
         {renderIcon({
           focused: false,
-          size,
+          size: iconSize,
           color: inactiveTintColor,
         })}
       </View>
       <Badge
         visible={badge != null}
         style={[styles.badge, badgeStyle]}
-        size={size * 0.75}
+        size={iconSize * 0.75}
       >
         {badge}
       </Badge>

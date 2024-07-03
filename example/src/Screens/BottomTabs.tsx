@@ -26,6 +26,7 @@ import {
   StatusBar,
   StyleSheet,
   useWindowDimensions,
+  View,
 } from 'react-native';
 
 import { Albums } from '../Shared/Albums';
@@ -81,6 +82,7 @@ const AlbumsScreen = () => {
 const Tab = createBottomTabNavigator<BottomTabParams>();
 
 const animations = ['none', 'fade', 'shift'] as const;
+const variants = ['material', 'uikit'] as const;
 
 export function BottomTabs() {
   const { showActionSheetWithOptions } = useActionSheet();
@@ -88,8 +90,11 @@ export function BottomTabs() {
 
   const dimensions = useWindowDimensions();
 
+  const [variant, setVariant] =
+    React.useState<(typeof variants)[number]>('material');
   const [animation, setAnimation] =
     React.useState<(typeof animations)[number]>('none');
+
   const [isCompact, setIsCompact] = React.useState(false);
 
   const isLargeScreen = dimensions.width >= 1024;
@@ -104,40 +109,73 @@ export function BottomTabs() {
             <HeaderBackButton {...props} onPress={navigation.goBack} />
           ),
           headerRight: ({ tintColor }) => (
-            <HeaderButton
-              onPress={() => {
-                showActionSheetWithOptions(
-                  {
-                    options: animations.map((option) => {
-                      if (option === animation) {
-                        return `${option} (current)`;
-                      }
+            <View style={styles.buttons}>
+              <HeaderButton
+                onPress={() => {
+                  showActionSheetWithOptions(
+                    {
+                      options: variants.map((option) => {
+                        if (option === variant) {
+                          return `${option} (current)`;
+                        }
 
-                      return option;
-                    }),
-                  },
-                  (index) => {
-                    if (index != null) {
-                      setAnimation(animations[index]);
+                        return option;
+                      }),
+                    },
+                    (index) => {
+                      if (index != null) {
+                        setVariant(variants[index]);
+                      }
                     }
+                  );
+                }}
+              >
+                <MaterialCommunityIcons
+                  name={variant === 'uikit' ? 'ballot-outline' : 'ballot'}
+                  size={24}
+                  color={tintColor}
+                />
+              </HeaderButton>
+              <HeaderButton
+                onPress={() => {
+                  showActionSheetWithOptions(
+                    {
+                      options: animations.map((option) => {
+                        if (option === animation) {
+                          return `${option} (current)`;
+                        }
+
+                        return option;
+                      }),
+                    },
+                    (index) => {
+                      if (index != null) {
+                        setAnimation(animations[index]);
+                      }
+                    }
+                  );
+                }}
+              >
+                <MaterialCommunityIcons
+                  name={
+                    animation === 'none' ? 'movie-open-outline' : 'movie-open'
                   }
-                );
-              }}
-            >
-              <MaterialCommunityIcons
-                name={animation === 'none' ? 'heart-outline' : 'heart'}
-                size={24}
-                color={tintColor}
-              />
-            </HeaderButton>
+                  size={24}
+                  color={tintColor}
+                />
+              </HeaderButton>
+            </View>
           ),
           tabBarPosition: isLargeScreen
             ? direction === 'ltr'
               ? 'left'
               : 'right'
             : 'bottom',
+          tabBarVariant: isLargeScreen ? variant : 'uikit',
           tabBarLabelPosition:
-            isLargeScreen && isCompact ? 'below-icon' : undefined,
+            isLargeScreen && isCompact && variant !== 'uikit'
+              ? 'below-icon'
+              : undefined,
           animation,
         })}
       >
@@ -242,3 +280,12 @@ export function BottomTabs() {
 
 BottomTabs.title = 'Bottom Tabs';
 BottomTabs.linking = linking;
+
+const styles = StyleSheet.create({
+  buttons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    marginEnd: 16,
+  },
+});
