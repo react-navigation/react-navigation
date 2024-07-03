@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.9...@react-navigation/bottom-tabs@7.0.0-rc.10) (2024-07-03)
+
+### Features
+
+* add a tabBarVariant option ([#12045](https://github.com/react-navigation/react-navigation/issues/12045)) ([9e43db5](https://github.com/react-navigation/react-navigation/commit/9e43db5e888489a283babfdbfe8cda77aba1b88d)) - by @satya164
+
 # [7.0.0-rc.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.8...@react-navigation/bottom-tabs@7.0.0-rc.9) (2024-07-03)
 
 ### Bug Fixes
