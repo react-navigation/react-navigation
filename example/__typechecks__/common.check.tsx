@@ -27,7 +27,6 @@ import {
   type StackScreenProps,
 } from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
-import * as React from 'react';
 
 /**
  * Check for the type of the `navigation` and `route` objects with regular usage

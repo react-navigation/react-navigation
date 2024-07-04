@@ -5,7 +5,6 @@ import {
   HeaderStyleInterpolators,
   type StackScreenProps,
 } from '@react-navigation/stack';
-import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { COMMON_LINKING_CONFIG } from '../constants';

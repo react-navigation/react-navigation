@@ -12,7 +12,6 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createStackNavigator } from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
-import * as React from 'react';
 
 const NativeStack = createNativeStackNavigator({
   groups: {

@@ -11,7 +11,6 @@ import {
   type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
-import * as React from 'react';
 
 import type {
   BottomTabNavigationConfig,

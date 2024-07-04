@@ -8,7 +8,6 @@ import {
   type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/core';
-import * as React from 'react';
 
 const StackNavigator = (
   props: DefaultNavigatorOptions<

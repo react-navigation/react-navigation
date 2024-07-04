@@ -1,6 +1,5 @@
 import { Button } from '@react-navigation/elements';
 import type { StackScreenProps } from '@react-navigation/stack';
-import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import type { RootStackParamList } from '../screens';

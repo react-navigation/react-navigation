@@ -17,10 +17,10 @@
     "url": "https://github.com/react-navigation/react-navigation.git",
     "directory": "packages/bottom-tabs"
   },
-  "source": "src/index.tsx",
+  "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.cjs",
-  "module": "lib/module/index.mjs",
-  "types": "lib/typescript/src/index.d.ts",
+  "module": "./lib/module/index.mjs",
+  "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
       "types": "./lib/typescript/src/index.d.ts",

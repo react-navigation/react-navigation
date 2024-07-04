@@ -4,7 +4,6 @@ import {
   type ParamListBase,
   useNavigation,
 } from '@react-navigation/native';
-import * as React from 'react';
 import { Image, Platform, StyleSheet } from 'react-native';
 
 import type { DrawerNavigationProp } from '../types';

@@ -1,6 +1,5 @@
 import { getHeaderTitle, HeaderTitle } from '@react-navigation/elements';
 import { type Route, useLocale, useTheme } from '@react-navigation/native';
-import * as React from 'react';
 import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
 import {
   isSearchBarAvailableForCurrentPlatform,

@@ -5,7 +5,6 @@ import {
   isHiddenFromAccessibility,
   render,
 } from '@testing-library/react-native';
-import * as React from 'react';
 import { Button, Platform, Text, View } from 'react-native';
 
 import {

@@ -30,6 +30,7 @@
     "@typescript-eslint/ban-types": "off",
     "import/no-default-export": "error",
     "react/display-name": "off",
+    "react/react-in-jsx-scope": "off",
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error"
   },

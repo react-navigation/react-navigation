@@ -7,7 +7,6 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import Color from 'color';
-import * as React from 'react';
 import { type StyleProp, StyleSheet, type ViewStyle } from 'react-native';
 import { TabBar, TabBarIndicator } from 'react-native-tab-view';
 

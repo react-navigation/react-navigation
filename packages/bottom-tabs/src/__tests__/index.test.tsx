@@ -3,7 +3,6 @@ import {
   NavigationContainer,
 } from '@react-navigation/native';
 import { act, fireEvent, render } from '@testing-library/react-native';
-import * as React from 'react';
 import { Animated, Button, Text, View } from 'react-native';
 
 import { type BottomTabScreenProps, createBottomTabNavigator } from '../index';

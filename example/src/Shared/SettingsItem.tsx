@@ -1,6 +1,5 @@
 import { Text } from '@react-navigation/elements';
 import { useTheme } from '@react-navigation/native';
-import * as React from 'react';
 import { StyleSheet, Switch, View } from 'react-native';
 
 type Props = {

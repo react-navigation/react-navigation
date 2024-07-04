@@ -1,6 +1,3 @@
-// TODO
-// @ts-expect-error: investigate why TypeScript errors here
-import * as React from 'react';
 import { View, type ViewProps } from 'react-native';
 
 type Props = ViewProps & {
