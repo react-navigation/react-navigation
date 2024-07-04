@@ -18,9 +18,16 @@
   },
   "homepage": "https://reactnavigation.org",
   "source": "src/index.tsx",
-  "main": "lib/commonjs/index.js",
-  "module": "lib/module/index.js",
+  "main": "./lib/commonjs/index.cjs",
+  "module": "lib/module/index.mjs",
   "types": "lib/typescript/src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/typescript/src/index.d.ts",
+      "import": "./lib/module/index.mjs",
+      "require": "./lib/commonjs/index.cjs"
+    }
+  },
   "files": [
     "src",
     "lib",
@@ -46,7 +53,7 @@
     "@types/react": "~18.2.79",
     "del-cli": "^5.1.0",
     "react": "18.2.0",
-    "react-native-builder-bob": "^0.23.2",
+    "react-native-builder-bob": "^0.25.0-next.0",
     "typescript": "^5.5.2"
   },
   "peerDependencies": {
