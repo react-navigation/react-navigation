@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-rc.9...@react-navigation/drawer@7.0.0-rc.10) (2024-07-04)
+
+### Features
+
+* add package.json exports field ([1435cfe](https://github.com/react-navigation/react-navigation/commit/1435cfe3300767c221ebd4613479ad662d61efee)) - by @
+
 # [7.0.0-rc.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-rc.8...@react-navigation/drawer@7.0.0-rc.9) (2024-07-03)
 
 ### Bug Fixes

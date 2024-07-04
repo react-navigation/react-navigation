@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-rc.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.5...@react-navigation/elements@2.0.0-rc.6) (2024-07-04)
+
+### Features
+
+* add package.json exports field ([1435cfe](https://github.com/react-navigation/react-navigation/commit/1435cfe3300767c221ebd4613479ad662d61efee)) - by @
+
 # [2.0.0-rc.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.4...@react-navigation/elements@2.0.0-rc.5) (2024-07-01)
 
 ### Bug Fixes

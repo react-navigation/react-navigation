@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.6...@react-navigation/native-stack@7.0.0-rc.7) (2024-07-04)
+
+### Features
+
+* add package.json exports field ([1435cfe](https://github.com/react-navigation/react-navigation/commit/1435cfe3300767c221ebd4613479ad662d61efee)) - by @
+
 # [7.0.0-rc.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.5...@react-navigation/native-stack@7.0.0-rc.6) (2024-07-02)
 
 ### Bug Fixes

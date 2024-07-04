@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.0-rc.3...@react-navigation/devtools@7.0.0-rc.4) (2024-07-04)
+
+### Features
+
+* add package.json exports field ([1435cfe](https://github.com/react-navigation/react-navigation/commit/1435cfe3300767c221ebd4613479ad662d61efee)) - by @
+
 # [7.0.0-rc.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.0-rc.2...@react-navigation/devtools@7.0.0-rc.3) (2024-07-01)
 
 ### Bug Fixes
