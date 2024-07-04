@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.5...@react-navigation/core@7.0.0-rc.6) (2024-07-04)
+
+### Bug Fixes
+
+* fix published files ([829caa0](https://github.com/react-navigation/react-navigation/commit/829caa019e125811eea5213fd380e8e1bdbe7030)) - by @
+
 # [7.0.0-rc.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.4...@react-navigation/core@7.0.0-rc.5) (2024-07-04)
 
 **Note:** Version bump only for package @react-navigation/core

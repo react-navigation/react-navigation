@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-rc.8...@react-navigation/stack@7.0.0-rc.9) (2024-07-04)
+
+### Bug Fixes
+
+* fix published files ([829caa0](https://github.com/react-navigation/react-navigation/commit/829caa019e125811eea5213fd380e8e1bdbe7030)) - by @
+
 # [7.0.0-rc.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-rc.7...@react-navigation/stack@7.0.0-rc.8) (2024-07-04)
 
 **Note:** Version bump only for package @react-navigation/stack
