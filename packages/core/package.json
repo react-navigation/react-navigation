@@ -55,7 +55,7 @@
     "del-cli": "^5.1.0",
     "immer": "^10.0.3",
     "react": "18.2.0",
-    "react-native-builder-bob": "^0.25.0-next.1",
+    "react-native-builder-bob": "^0.25.0",
     "react-test-renderer": "18.2.0",
     "typescript": "^5.5.2"
   },
@@ -66,8 +66,18 @@
     "source": "src",
     "output": "lib",
     "targets": [
-      "commonjs",
-      "module",
+      [
+        "commonjs",
+        {
+          "esm": true
+        }
+      ],
+      [
+        "module",
+        {
+          "esm": true
+        }
+      ],
       [
         "typescript",
         {

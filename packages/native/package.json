@@ -57,7 +57,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.74.2",
-    "react-native-builder-bob": "^0.25.0-next.1",
+    "react-native-builder-bob": "^0.25.0",
     "typescript": "^5.5.2"
   },
   "peerDependencies": {
@@ -68,8 +68,18 @@
     "source": "src",
     "output": "lib",
     "targets": [
-      "commonjs",
-      "module",
+      [
+        "commonjs",
+        {
+          "esm": true
+        }
+      ],
+      [
+        "module",
+        {
+          "esm": true
+        }
+      ],
       [
         "typescript",
         {
