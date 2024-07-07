@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.5](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.4...react-native-tab-view@4.0.0-rc.5) (2024-07-07)
+
+### Bug Fixes
+
+* upgrade use-latest-callback for esm compat ([187d41b](https://github.com/react-navigation/react-navigation/commit/187d41b3a139fe2a075a7809c0c4088cbd2fafdb)) - by @satya164
+
 # [4.0.0-rc.4](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.3...react-native-tab-view@4.0.0-rc.4) (2024-07-04)
 
 ### Bug Fixes

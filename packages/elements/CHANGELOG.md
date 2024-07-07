@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-rc.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.8...@react-navigation/elements@2.0.0-rc.9) (2024-07-07)
+
+### Bug Fixes
+
+* add missing exports entry to package.json ([ae16f52](https://github.com/react-navigation/react-navigation/commit/ae16f52adcfb58c59e5735b9caea79b1c2bfa94b)) - by @satya164
+* use imports for assets for esm support ([0c37f65](https://github.com/react-navigation/react-navigation/commit/0c37f6517c6cfc224129ad3156bb7db443f265fd)) - by @satya164
+
 # [2.0.0-rc.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.7...@react-navigation/elements@2.0.0-rc.8) (2024-07-04)
 
 ### Bug Fixes

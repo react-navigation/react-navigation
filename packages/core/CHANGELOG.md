@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.6...@react-navigation/core@7.0.0-rc.7) (2024-07-07)
+
+### Bug Fixes
+
+* upgrade use-latest-callback for esm compat ([187d41b](https://github.com/react-navigation/react-navigation/commit/187d41b3a139fe2a075a7809c0c4088cbd2fafdb)) - by @satya164
+
 # [7.0.0-rc.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.5...@react-navigation/core@7.0.0-rc.6) (2024-07-04)
 
 ### Bug Fixes

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-rc.12...@react-navigation/drawer@7.0.0-rc.13) (2024-07-07)
+
+### Bug Fixes
+
+* upgrade use-latest-callback for esm compat ([187d41b](https://github.com/react-navigation/react-navigation/commit/187d41b3a139fe2a075a7809c0c4088cbd2fafdb)) - by @satya164
+* use imports for assets for esm support ([0c37f65](https://github.com/react-navigation/react-navigation/commit/0c37f6517c6cfc224129ad3156bb7db443f265fd)) - by @satya164
+
 # [7.0.0-rc.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-rc.11...@react-navigation/drawer@7.0.0-rc.12) (2024-07-04)
 
 ### Bug Fixes

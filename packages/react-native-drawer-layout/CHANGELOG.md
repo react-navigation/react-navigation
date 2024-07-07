@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.5](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.4...react-native-drawer-layout@4.0.0-rc.5) (2024-07-07)
+
+### Bug Fixes
+
+* add missing exports entry to package.json ([ae16f52](https://github.com/react-navigation/react-navigation/commit/ae16f52adcfb58c59e5735b9caea79b1c2bfa94b)) - by @satya164
+* upgrade use-latest-callback for esm compat ([187d41b](https://github.com/react-navigation/react-navigation/commit/187d41b3a139fe2a075a7809c0c4088cbd2fafdb)) - by @satya164
+
 # [4.0.0-rc.4](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.3...react-native-drawer-layout@4.0.0-rc.4) (2024-07-04)
 
 ### Bug Fixes
