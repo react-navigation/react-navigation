@@ -12,7 +12,6 @@
 local.properties
 
 /coverage/
-/types/
 /dist/
 /lib/
 

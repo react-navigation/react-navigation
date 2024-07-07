@@ -7,6 +7,7 @@ import {
 import { Image, Platform, StyleSheet } from 'react-native';
 
 import type { DrawerNavigationProp } from '../types';
+import toggleDrawerIcon from './assets/toggle-drawer-icon.png';
 
 type Props = {
   accessibilityLabel?: string;
@@ -32,7 +33,7 @@ export function DrawerToggleButton({ tintColor, ...rest }: Props) {
       <Image
         style={[styles.icon, tintColor ? { tintColor } : null]}
         resizeMode="contain"
-        source={require('./assets/toggle-drawer-icon.png')}
+        source={toggleDrawerIcon}
         fadeDuration={0}
       />
     </PlatformPressable>

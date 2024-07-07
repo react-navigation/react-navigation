@@ -9,6 +9,8 @@ import {
   View,
 } from 'react-native';
 
+import backIcon from '../assets/back-icon.png';
+import backIconMask from '../assets/back-icon-mask.png';
 import { MaskedView } from '../MaskedView';
 import type { HeaderBackButtonProps } from '../types';
 import { HeaderButton } from './HeaderButton';
@@ -81,7 +83,7 @@ export function HeaderBackButton({
             Boolean(tintColor) && { tintColor },
           ]}
           resizeMode="contain"
-          source={require('../assets/back-icon.png')}
+          source={backIcon}
           fadeDuration={0}
         />
       );
@@ -135,7 +137,7 @@ export function HeaderBackButton({
             ]}
           >
             <Image
-              source={require('../assets/back-icon-mask.png')}
+              source={backIconMask}
               resizeMode="contain"
               style={[styles.iconMask, direction === 'rtl' && styles.flip]}
             />
