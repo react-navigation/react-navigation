@@ -29,6 +29,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { reloadAsync } from 'expo-updates';
 import * as React from 'react';
 import {
+  Appearance,
   I18nManager,
   Linking,
   Platform,
@@ -136,7 +137,7 @@ export function App() {
         const initialUrl = await Linking.getInitialURL();
 
         if (Platform.OS !== 'web' || initialUrl === null) {
-          const savedState = await AsyncStorage?.getItem(
+          const savedState = await AsyncStorage.getItem(
             NAVIGATION_PERSISTENCE_KEY
           );
 
@@ -148,7 +149,7 @@ export function App() {
         }
       } finally {
         try {
-          const themeName = await AsyncStorage?.getItem(THEME_PERSISTENCE_KEY);
+          const themeName = await AsyncStorage.getItem(THEME_PERSISTENCE_KEY);
 
           setTheme(themeName === 'dark' ? DarkTheme : DefaultTheme);
         } catch (e) {
@@ -156,7 +157,7 @@ export function App() {
         }
 
         try {
-          const direction = await AsyncStorage?.getItem(
+          const direction = await AsyncStorage.getItem(
             DIRECTION_PERSISTENCE_KEY
           );
 
@@ -173,8 +174,20 @@ export function App() {
   }, []);
 
   React.useEffect(() => {
-    AsyncStorage.setItem(THEME_PERSISTENCE_KEY, theme.dark ? 'dark' : 'light');
-  }, [theme.dark]);
+    if (!isReady) {
+      return;
+    }
+
+    const name = theme.dark ? 'dark' : 'light';
+
+    AsyncStorage.setItem(THEME_PERSISTENCE_KEY, name);
+
+    if (Platform.OS === 'web') {
+      document.documentElement.style.colorScheme = name;
+    } else {
+      Appearance.setColorScheme(name);
+    }
+  }, [isReady, theme.dark]);
 
   React.useEffect(() => {
     const direction = isRTL ? 'rtl' : 'ltr';
