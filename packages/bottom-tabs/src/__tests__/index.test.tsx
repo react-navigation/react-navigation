@@ -1,9 +1,10 @@
+import { Text } from '@react-navigation/elements';
 import {
   createNavigationContainerRef,
   NavigationContainer,
 } from '@react-navigation/native';
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { Animated, Button, Text, View } from 'react-native';
+import { Animated, Button, View } from 'react-native';
 
 import { type BottomTabScreenProps, createBottomTabNavigator } from '../index';
 

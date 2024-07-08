@@ -1,3 +1,4 @@
+import { Text } from '@react-navigation/elements';
 import {
   createNavigationContainerRef,
   NavigationContainer,
@@ -7,7 +8,7 @@ import {
 } from '@react-navigation/native';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
-import { Button, Text, View } from 'react-native';
+import { Button, View } from 'react-native';
 
 import { createStackNavigator, type StackScreenProps } from '../index';
 

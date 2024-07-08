@@ -1,11 +1,11 @@
-import { useHeaderHeight } from '@react-navigation/elements';
+import { Text, useHeaderHeight } from '@react-navigation/elements';
 import { NavigationContainer } from '@react-navigation/native';
 import {
   fireEvent,
   isHiddenFromAccessibility,
   render,
 } from '@testing-library/react-native';
-import { Button, Platform, Text, View } from 'react-native';
+import { Button, Platform, View } from 'react-native';
 
 import {
   createNativeStackNavigator,

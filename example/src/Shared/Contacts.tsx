@@ -1,6 +1,7 @@
+import { Text } from '@react-navigation/elements';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
 import * as React from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 
 type Item = { name: string; number: number };
 
@@ -69,10 +70,8 @@ const ContactItem = React.memo(
           </Text>
         </View>
         <View style={styles.details}>
-          <Text style={[styles.name, { color: colors.text }]}>{item.name}</Text>
-          <Text style={[styles.number, { color: colors.text, opacity: 0.5 }]}>
-            {item.number}
-          </Text>
+          <Text style={styles.name}>{item.name}</Text>
+          <Text style={[styles.number, { opacity: 0.5 }]}>{item.number}</Text>
         </View>
       </View>
     );

@@ -1,8 +1,8 @@
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Button, HeaderBackButton } from '@react-navigation/elements';
+import { Button, HeaderBackButton, Text } from '@react-navigation/elements';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import type { PathConfigMap } from '../../../packages/core/src/types';
 

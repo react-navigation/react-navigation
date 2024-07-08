@@ -1,5 +1,5 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { PlatformPressable } from '@react-navigation/elements';
+import { PlatformPressable, Text } from '@react-navigation/elements';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
 import Color from 'color';
 import * as React from 'react';
@@ -8,7 +8,6 @@ import {
   ScrollView,
   type ScrollViewProps,
   StyleSheet,
-  Text,
   TextInput,
   View,
 } from 'react-native';

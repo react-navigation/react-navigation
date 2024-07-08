@@ -11,6 +11,7 @@ import {
   DrawerItemList,
   type DrawerScreenProps,
 } from '@react-navigation/drawer';
+import { Text } from '@react-navigation/elements';
 import {
   type CompositeScreenProps,
   DarkTheme,
@@ -35,7 +36,6 @@ import {
   Platform,
   ScrollView,
   StatusBar,
-  Text,
   useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

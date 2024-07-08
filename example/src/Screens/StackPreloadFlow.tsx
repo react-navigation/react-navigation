@@ -1,10 +1,10 @@
-import { Button } from '@react-navigation/elements';
+import { Button, Text } from '@react-navigation/elements';
 import {
   createStackNavigator,
   type StackScreenProps,
 } from '@react-navigation/stack';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import type { PathConfigMap } from '../../../packages/core/src/types';
 
