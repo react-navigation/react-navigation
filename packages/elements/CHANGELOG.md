@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-rc.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.9...@react-navigation/elements@2.0.0-rc.10) (2024-07-08)
+
+### Bug Fixes
+
+* pass correct tint color to header icons ([3c78290](https://github.com/react-navigation/react-navigation/commit/3c7829094760e361b8a6266ccaaa379422779935)) - by @satya164
+
 # [2.0.0-rc.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.8...@react-navigation/elements@2.0.0-rc.9) (2024-07-07)
 
 ### Bug Fixes
