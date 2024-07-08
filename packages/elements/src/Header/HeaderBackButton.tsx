@@ -27,7 +27,7 @@ export function HeaderBackButton({
   pressColor,
   pressOpacity,
   screenLayout,
-  tintColor: customTintColor,
+  tintColor,
   titleLayout,
   truncatedLabel = 'Back',
   accessibilityLabel = label && label !== 'Back' ? `${label}, back` : 'Go back',
@@ -41,14 +41,6 @@ export function HeaderBackButton({
   const [initialLabelWidth, setInitialLabelWidth] = React.useState<
     undefined | number
   >(undefined);
-
-  const tintColor =
-    customTintColor !== undefined
-      ? customTintColor
-      : Platform.select({
-          ios: colors.primary,
-          default: colors.text,
-        });
 
   const handleLabelLayout = (e: LayoutChangeEvent) => {
     onLabelLayout?.(e);
@@ -72,7 +64,7 @@ export function HeaderBackButton({
 
   const renderBackImage = () => {
     if (backImage) {
-      return backImage({ tintColor });
+      return backImage({ tintColor: tintColor ?? colors.text });
     } else {
       return (
         <Image

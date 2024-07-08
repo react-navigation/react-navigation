@@ -1,3 +1,4 @@
+import { useTheme } from '@react-navigation/core';
 import * as React from 'react';
 import {
   Animated,
@@ -54,6 +55,7 @@ const warnIfHeaderStylesDefined = (styles: Record<string, any>) => {
 export function Header(props: Props) {
   const insets = useSafeAreaInsets();
   const frame = useSafeAreaFrame();
+  const { colors } = useTheme();
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);
 
@@ -194,9 +196,16 @@ export function Header(props: Props) {
     },
   ];
 
+  const iconTintColor =
+    headerTintColor ??
+    Platform.select({
+      ios: colors.primary,
+      default: colors.text,
+    });
+
   const leftButton = headerLeft
     ? headerLeft({
-        tintColor: headerTintColor,
+        tintColor: iconTintColor,
         pressColor: headerPressColor,
         pressOpacity: headerPressOpacity,
         labelVisible: headerLeftLabelVisible,
@@ -205,7 +214,7 @@ export function Header(props: Props) {
 
   const rightButton = headerRight
     ? headerRight({
-        tintColor: headerTintColor,
+        tintColor: iconTintColor,
         pressColor: headerPressColor,
         pressOpacity: headerPressOpacity,
       })
