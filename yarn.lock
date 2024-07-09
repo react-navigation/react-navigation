@@ -3727,7 +3727,7 @@ __metadata:
     react-native: "npm:0.74.2"
     react-native-builder-bob: "npm:^0.25.0"
     react-native-safe-area-context: "npm:4.10.1"
-    react-native-screens: "npm:~3.32.0"
+    react-native-screens: "npm:3.31.1"
     typescript: "npm:^5.5.2"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
@@ -3799,7 +3799,7 @@ __metadata:
     react-native-gesture-handler: "npm:~2.16.1"
     react-native-reanimated: "npm:~3.10.1"
     react-native-safe-area-context: "npm:4.10.1"
-    react-native-screens: "npm:~3.32.0"
+    react-native-screens: "npm:3.31.1"
     typescript: "npm:^5.5.2"
     use-latest-callback: "npm:^0.1.11"
   peerDependencies:
@@ -3876,9 +3876,9 @@ __metadata:
     react-native: "npm:0.74.2"
     react-native-gesture-handler: "npm:~2.16.1"
     react-native-pager-view: "npm:6.3.0"
-    react-native-reanimated: "npm:~3.13.0"
+    react-native-reanimated: "npm:~3.10.1"
     react-native-safe-area-context: "npm:4.10.1"
-    react-native-screens: "npm:~3.32.0"
+    react-native-screens: "npm:3.31.1"
     react-native-web: "npm:~0.19.10"
     react-test-renderer: "npm:18.2.0"
     serve: "npm:^14.2.1"
@@ -3922,7 +3922,7 @@ __metadata:
     react: "npm:18.2.0"
     react-native: "npm:0.74.2"
     react-native-builder-bob: "npm:^0.25.0"
-    react-native-screens: "npm:~3.32.0"
+    react-native-screens: "npm:3.31.1"
     typescript: "npm:^5.5.2"
     warn-once: "npm:^0.1.1"
   peerDependencies:
@@ -3985,7 +3985,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.25.0"
     react-native-gesture-handler: "npm:~2.16.1"
     react-native-safe-area-context: "npm:4.10.1"
-    react-native-screens: "npm:~3.32.0"
+    react-native-screens: "npm:3.31.1"
     typescript: "npm:^5.5.2"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
@@ -14239,26 +14239,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-reanimated@npm:~3.13.0":
-  version: 3.13.0
-  resolution: "react-native-reanimated@npm:3.13.0"
-  dependencies:
-    "@babel/plugin-transform-arrow-functions": "npm:^7.0.0-0"
-    "@babel/plugin-transform-nullish-coalescing-operator": "npm:^7.0.0-0"
-    "@babel/plugin-transform-optional-chaining": "npm:^7.0.0-0"
-    "@babel/plugin-transform-shorthand-properties": "npm:^7.0.0-0"
-    "@babel/plugin-transform-template-literals": "npm:^7.0.0-0"
-    "@babel/preset-typescript": "npm:^7.16.7"
-    convert-source-map: "npm:^2.0.0"
-    invariant: "npm:^2.2.4"
-  peerDependencies:
-    "@babel/core": ^7.0.0-0
-    react: "*"
-    react-native: "*"
-  checksum: 3213305d5b5f137ad9fb02700acba35aba76648c1bcc6341e372e6e37cc1d002f6eb0fc6dbbe04b01192406be3ae2d480203321eb9bc255cef8d2e393f8a61ad
-  languageName: node
-  linkType: hard
-
 "react-native-safe-area-context@npm:4.10.1":
   version: 4.10.1
   resolution: "react-native-safe-area-context@npm:4.10.1"
@@ -14269,16 +14249,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-screens@npm:~3.32.0":
-  version: 3.32.0
-  resolution: "react-native-screens@npm:3.32.0"
+"react-native-screens@npm:3.31.1":
+  version: 3.31.1
+  resolution: "react-native-screens@npm:3.31.1"
   dependencies:
     react-freeze: "npm:^1.0.0"
     warn-once: "npm:^0.1.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 22f27b2082e0c8d70165c8a26dcf55b4da2a18166d4b9a0b434f558edea57d71458800d5086940fe7cabe8b7e28c8614cf227f35152171d08583f4ef6f6f3a35
+  checksum: 54a44fc5a34848195a8e004b9ee2269e8a3560c5fa7922d80eaa1fc6283990d6ef77b3d3ec6004d7df2ad95279d486faf25bb68a82a0e958493891adb7dbac9c
   languageName: node
   linkType: hard
 
