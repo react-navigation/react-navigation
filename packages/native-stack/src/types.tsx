@@ -11,7 +11,6 @@ import type {
   StackRouterOptions,
   Theme,
 } from '@react-navigation/native';
-import type { PropsWithChildren } from 'react';
 import type {
   ImageSourcePropType,
   StyleProp,
@@ -19,7 +18,6 @@ import type {
   ViewStyle,
 } from 'react-native';
 import type {
-  GestureDetectorBridge,
   ScreenProps,
   ScreenStackHeaderConfigProps,
   SearchBarProps,
@@ -694,12 +692,3 @@ export type ScreensRefsHolder = Record<
   string,
   React.MutableRefObject<React.Ref<NativeStackNavigatorProps>>
 >;
-
-export type GestureProviderProps = PropsWithChildren<{
-  gestureDetectorBridge: React.MutableRefObject<GestureDetectorBridge>;
-  screensRefs: React.MutableRefObject<ScreensRefsHolder>;
-  currentRouteKey: string;
-  gestureType: GestureType | undefined;
-  animationForGesture: AnimatedScreenTransition | undefined;
-  gestureFromEdgeEnabled: boolean | undefined;
-}>;
