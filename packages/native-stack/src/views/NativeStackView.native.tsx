@@ -169,6 +169,7 @@ const SceneView = ({
     animationMatchesGesture,
     presentation = isPresentationModal ? 'modal' : 'card',
     fullScreenGestureEnabled,
+    fullScreenGestureShadowEnabled,
   } = options;
 
   const {
@@ -208,6 +209,10 @@ const SceneView = ({
     // Also, the default animation for this direction seems to be `slide_from_bottom`.
     if (fullScreenGestureEnabled === undefined) {
       fullScreenGestureEnabled = true;
+    }
+
+    if (fullScreenGestureShadowEnabled === undefined) {
+      fullScreenGestureShadowEnabled = true;
     }
 
     if (animationMatchesGesture === undefined) {
@@ -330,6 +335,7 @@ const SceneView = ({
       hasLargeHeader={options.headerLargeTitle ?? false}
       customAnimationOnSwipe={animationMatchesGesture}
       fullScreenSwipeEnabled={fullScreenGestureEnabled}
+      fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled}
       gestureEnabled={
         isAndroid
           ? // This prop enables handling of system back gestures on Android
