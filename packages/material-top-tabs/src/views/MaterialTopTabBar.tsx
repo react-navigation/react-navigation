@@ -7,7 +7,6 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import Color from 'color';
-import * as React from 'react';
 import { type StyleProp, StyleSheet, type ViewStyle } from 'react-native';
 import { TabBar, TabBarIndicator } from 'react-native-tab-view';
 
@@ -15,14 +14,14 @@ import type { MaterialTopTabBarProps } from '../types';
 
 type MaterialLabelType = {
   color: string;
-  label?: string;
+  labelText?: string;
   labelStyle?: StyleProp<ViewStyle>;
   allowScaling?: boolean;
 };
 
 const MaterialLabel = ({
   color,
-  label,
+  labelText,
   labelStyle,
   allowScaling,
 }: MaterialLabelType) => {
@@ -31,7 +30,7 @@ const MaterialLabel = ({
       style={[{ color }, styles.label, labelStyle]}
       allowFontScaling={allowScaling}
     >
-      {label}
+      {labelText}
     </Text>
   );
 };

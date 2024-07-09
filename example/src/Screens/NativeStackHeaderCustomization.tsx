@@ -6,7 +6,6 @@ import {
   type NativeStackOptionsArgs,
   type NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import * as React from 'react';
 import {
   Alert,
   Image,

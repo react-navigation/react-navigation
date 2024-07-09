@@ -6,7 +6,6 @@ import {
   useLocale,
   useTheme,
 } from '@react-navigation/native';
-import * as React from 'react';
 import { type SceneRendererProps, TabView } from 'react-native-tab-view';
 
 import type {

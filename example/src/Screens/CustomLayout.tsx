@@ -2,6 +2,7 @@ import {
   Button,
   getDefaultHeaderHeight,
   getHeaderTitle,
+  Text,
 } from '@react-navigation/elements';
 import {
   CommonActions,
@@ -18,7 +19,6 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import {

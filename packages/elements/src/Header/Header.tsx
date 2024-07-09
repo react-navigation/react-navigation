@@ -1,3 +1,4 @@
+import { useTheme } from '@react-navigation/core';
 import * as React from 'react';
 import {
   Animated,
@@ -16,6 +17,9 @@ import { getDefaultHeaderHeight } from './getDefaultHeaderHeight';
 import { HeaderBackground } from './HeaderBackground';
 import { HeaderShownContext } from './HeaderShownContext';
 import { HeaderTitle } from './HeaderTitle';
+
+// Width of the screen in split layout on portrait mode on iPad Mini
+const IPAD_MINI_MEDIUM_WIDTH = 414;
 
 type Props = HeaderOptions & {
   /**
@@ -51,12 +55,9 @@ const warnIfHeaderStylesDefined = (styles: Record<string, any>) => {
 export function Header(props: Props) {
   const insets = useSafeAreaInsets();
   const frame = useSafeAreaFrame();
+  const { colors } = useTheme();
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);
-
-  // On models with Dynamic Island the status bar height is smaller than the safe area top inset.
-  const hasDynamicIsland = Platform.OS === 'ios' && insets.top > 50;
-  const statusBarHeight = hasDynamicIsland ? insets.top - 5 : insets.top;
 
   const {
     layout = frame,
@@ -83,7 +84,7 @@ export function Header(props: Props) {
     headerShadowVisible,
     headerPressColor,
     headerPressOpacity,
-    headerStatusBarHeight = isParentHeaderShown ? 0 : statusBarHeight,
+    headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
   } = props;
 
   const defaultHeight = getDefaultHeaderHeight(
@@ -195,9 +196,16 @@ export function Header(props: Props) {
     },
   ];
 
+  const iconTintColor =
+    headerTintColor ??
+    Platform.select({
+      ios: colors.primary,
+      default: colors.text,
+    });
+
   const leftButton = headerLeft
     ? headerLeft({
-        tintColor: headerTintColor,
+        tintColor: iconTintColor,
         pressColor: headerPressColor,
         pressOpacity: headerPressOpacity,
         labelVisible: headerLeftLabelVisible,
@@ -206,7 +214,7 @@ export function Header(props: Props) {
 
   const rightButton = headerRight
     ? headerRight({
-        tintColor: headerTintColor,
+        tintColor: iconTintColor,
         pressColor: headerPressColor,
         pressOpacity: headerPressOpacity,
       })
@@ -235,7 +243,15 @@ export function Header(props: Props) {
         )}
       </Animated.View>
       <View pointerEvents="none" style={{ height: headerStatusBarHeight }} />
-      <View pointerEvents="box-none" style={styles.content}>
+      <View
+        pointerEvents="box-none"
+        style={[
+          styles.content,
+          Platform.OS === 'ios' && frame.width >= IPAD_MINI_MEDIUM_WIDTH
+            ? styles.large
+            : null,
+        ]}
+      >
         <Animated.View
           pointerEvents="box-none"
           style={[
@@ -261,17 +277,18 @@ export function Header(props: Props) {
                         ? 80
                         : 32
                       : 16) +
+                      (rightButton ? 16 : 0) +
                       Math.max(insets.left, insets.right)) *
                       2
                   : layout.width -
-                    ((leftButton ? 72 : 16) +
-                      (rightButton ? 72 : 16) +
+                    ((leftButton ? 52 : 16) +
+                      (rightButton ? 52 : 16) +
                       insets.left -
                       insets.right),
             },
             headerTitleAlign === 'left' && leftButton
               ? { marginStart: 4 }
-              : null,
+              : { marginStart: 16 },
             titleContainerStyle,
           ]}
         >
@@ -304,8 +321,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'stretch',
   },
+  large: {
+    marginHorizontal: 5,
+  },
   title: {
-    marginHorizontal: 16,
     justifyContent: 'center',
   },
   start: {

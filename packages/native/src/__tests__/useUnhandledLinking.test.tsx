@@ -9,6 +9,7 @@ import {
 } from '@react-navigation/core';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
+// eslint-disable-next-line no-restricted-imports
 import { Button, Text } from 'react-native';
 
 import { NavigationContainer } from '../NavigationContainer';

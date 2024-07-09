@@ -1,4 +1,4 @@
-import { Button } from '@react-navigation/elements';
+import { Button, Text } from '@react-navigation/elements';
 import {
   type PathConfigMap,
   UNSTABLE_useUnhandledLinking,
@@ -8,7 +8,7 @@ import {
   type StackScreenProps,
 } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 const info = `
 \u2022 xcrun simctl openurl booted exp://127.0.0.1:19000/--/linking/profile

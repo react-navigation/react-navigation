@@ -60,7 +60,7 @@ yarn example test --ui
 By default, this will use the local dev server for the app. If you want to test a production build, first build the [example app](/example/) for web:
 
 ```sh
-yarn example expo export:web
+yarn example expo export --platform web
 ```
 
 Then run the tests with the `CI` environment variable:
@@ -121,3 +121,21 @@ yarn release
 ```
 
 This will automatically bump the version and publish the packages. It'll also publish the changelogs on GitHub for each package.
+
+When releasing a pre-release version, we need to:
+
+- Update `lerna.json` to set the `preId` (e.g. `alpha`) and `preDistTag` (e.g. `next`) fields, and potentially the `allowBranch` field.
+- Run the following command:
+
+```sh
+yarn lerna publish --conventional-commits --conventional-prerelease --preid alpha
+```
+
+When releasing a stable version, we need to:
+
+- Remove the `preId` and `preDistTag` fields from `lerna.json`.
+- Run the following command:
+
+```sh
+yarn lerna publish --conventional-commits --conventional-graduate
+```

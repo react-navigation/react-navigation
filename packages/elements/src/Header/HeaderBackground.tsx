@@ -15,7 +15,7 @@ type Props = Omit<ViewProps, 'style'> & {
 };
 
 export function HeaderBackground({ style, ...rest }: Props) {
-  const { colors } = useTheme();
+  const { colors, dark } = useTheme();
 
   return (
     <Animated.View
@@ -24,7 +24,7 @@ export function HeaderBackground({ style, ...rest }: Props) {
         {
           backgroundColor: colors.card,
           borderBottomColor: colors.border,
-          shadowColor: colors.border,
+          shadowColor: dark ? 'rgba(255, 255, 255, 0.45)' : 'rgba(0, 0, 0, 1)',
         },
         style,
       ]}
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         elevation: 4,
       },
       ios: {
-        shadowOpacity: 0.85,
+        shadowOpacity: 0.3,
         shadowRadius: 0,
         shadowOffset: {
           width: 0,

@@ -11,9 +11,16 @@ import {
   type ViewStyle,
 } from 'react-native';
 
+type HoverEffectProps = {
+  color?: string;
+  hoverOpacity?: number;
+  activeOpacity?: number;
+};
+
 export type Props = Omit<PressableProps, 'style'> & {
   pressColor?: string;
   pressOpacity?: number;
+  hoverEffect?: HoverEffectProps;
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   href?: string;
   children: React.ReactNode;
@@ -36,7 +43,9 @@ export function PlatformPressable({
   android_ripple,
   pressColor,
   pressOpacity = 0.3,
+  hoverEffect,
   style,
+  children,
   ...rest
 }: Props) {
   const { dark } = useTheme();
@@ -107,8 +116,71 @@ export function PlatformPressable({
             }
           : undefined
       }
-      style={[{ opacity: !ANDROID_SUPPORTS_RIPPLE ? opacity : 1 }, style]}
+      style={[
+        {
+          cursor: 'pointer', // Add hover effect on iPad and VisionOS
+          opacity: !ANDROID_SUPPORTS_RIPPLE ? opacity : 1,
+        },
+        style,
+      ]}
       {...rest}
-    />
+    >
+      <HoverEffect {...hoverEffect} />
+      {children}
+    </AnimatedPressable>
   );
 }
+
+const css = String.raw;
+
+const CLASS_NAME = `__react-navigation_elements_Pressable_hover`;
+
+const CSS_TEXT = css`
+  .${CLASS_NAME} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    background-color: var(--overlay-color);
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+
+  a:hover > .${CLASS_NAME}, button:hover > .${CLASS_NAME} {
+    opacity: var(--overlay-hover-opacity);
+  }
+
+  a:active > .${CLASS_NAME}, button:active > .${CLASS_NAME} {
+    opacity: var(--overlay-active-opacity);
+  }
+`;
+
+const HoverEffect = ({
+  color,
+  hoverOpacity = 0.08,
+  activeOpacity = 0.16,
+}: HoverEffectProps) => {
+  if (Platform.OS !== 'web' || color == null) {
+    return null;
+  }
+
+  return (
+    <>
+      <style
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: CSS_TEXT }}
+      />
+      <div
+        className={CLASS_NAME}
+        style={{
+          // @ts-expect-error: CSS variables are not typed
+          '--overlay-color': color,
+          '--overlay-hover-opacity': hoverOpacity,
+          '--overlay-active-opacity': activeOpacity,
+        }}
+      />
+    </>
+  );
+};

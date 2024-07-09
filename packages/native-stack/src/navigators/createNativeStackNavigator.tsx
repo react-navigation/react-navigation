@@ -107,9 +107,7 @@ export function createNativeStackNavigator<
     };
     Navigator: typeof NativeStackNavigator;
   },
-  Config extends StaticConfig<TypeBag> | undefined =
-    | StaticConfig<TypeBag>
-    | undefined,
+  Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
 >(config?: Config): TypedNavigator<TypeBag, Config> {
   return createNavigatorFactory(NativeStackNavigator)(config);
 }

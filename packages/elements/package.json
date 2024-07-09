@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/elements",
   "description": "UI Components for React Navigation",
-  "version": "2.0.0-alpha.17",
+  "version": "2.0.0-rc.10",
   "keywords": [
     "react-native",
     "react-navigation",
@@ -18,11 +18,17 @@
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
   "homepage": "https://reactnavigation.org",
-  "main": "lib/commonjs/index.js",
-  "react-native": "src/index.tsx",
-  "source": "src/index.tsx",
-  "module": "lib/module/index.js",
-  "types": "lib/typescript/src/index.d.ts",
+  "source": "./src/index.tsx",
+  "main": "./lib/commonjs/index.cjs",
+  "module": "./lib/module/index.mjs",
+  "types": "./lib/typescript/src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/typescript/src/index.d.ts",
+      "import": "./lib/module/index.mjs",
+      "require": "./lib/commonjs/index.cjs"
+    }
+  },
   "files": [
     "src",
     "lib",
@@ -40,15 +46,15 @@
     "color": "^4.2.3"
   },
   "devDependencies": {
-    "@react-native-masked-view/masked-view": "0.3.0",
+    "@react-native-masked-view/masked-view": "0.3.1",
     "@react-navigation/native": "workspace:^",
     "@testing-library/react-native": "^12.4.3",
-    "@types/react": "~18.2.45",
+    "@types/react": "~18.2.79",
     "del-cli": "^5.1.0",
     "react": "18.2.0",
-    "react-native": "0.73.2",
-    "react-native-builder-bob": "^0.23.2",
-    "typescript": "^5.3.3"
+    "react-native": "0.74.2",
+    "react-native-builder-bob": "^0.25.0",
+    "typescript": "^5.5.2"
   },
   "peerDependencies": {
     "@react-navigation/native": "workspace:^",
@@ -60,8 +66,18 @@
     "source": "src",
     "output": "lib",
     "targets": [
-      "commonjs",
-      "module",
+      [
+        "commonjs",
+        {
+          "esm": true
+        }
+      ],
+      [
+        "module",
+        {
+          "esm": true
+        }
+      ],
       [
         "typescript",
         {

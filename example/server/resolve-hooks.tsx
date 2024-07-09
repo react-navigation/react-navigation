@@ -14,7 +14,7 @@ Module._extensions = Object.fromEntries(
 
 // Set __DEV__ that expo needs
 // @ts-expect-error __DEV__ doesn't exist in the type definitions
-global.__DEV__ = process.env.NODE_ENV !== 'production';
+globalThis.__DEV__ = process.env.NODE_ENV !== 'production';
 
 // Reanimated doesn't support SSR :(
 mock(

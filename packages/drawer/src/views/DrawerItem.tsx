@@ -14,7 +14,7 @@ type Props = {
   /**
    * The route object which should be specified by the drawer item.
    */
-  route: Route<string>;
+  route?: Route<string>;
   /**
    * The `href` to use for the anchor tag on web
    */
@@ -114,7 +114,7 @@ export function DrawerItem(props: Props) {
     style,
     onPress,
     pressColor,
-    pressOpacity,
+    pressOpacity = 1,
     testID,
     accessibilityLabel,
     ...rest
@@ -142,11 +142,12 @@ export function DrawerItem(props: Props) {
         accessibilityState={{ selected: focused }}
         pressColor={pressColor}
         pressOpacity={pressOpacity}
+        hoverEffect={{ color }}
         href={href}
       >
         <View style={[styles.wrapper, { borderRadius }]}>
           {iconNode}
-          <View style={[styles.label, { marginStart: iconNode ? 16 : 0 }]}>
+          <View style={[styles.label, { marginStart: iconNode ? 12 : 0 }]}>
             {typeof label === 'string' ? (
               <Text
                 numberOfLines={1}
@@ -167,14 +168,12 @@ export function DrawerItem(props: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 12,
-    marginVertical: 2,
     overflow: 'hidden',
   },
   wrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 11,
     paddingStart: 16,
     paddingEnd: 24,
   },

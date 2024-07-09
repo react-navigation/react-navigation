@@ -16,7 +16,7 @@
       "createRelease": "github",
       "changelogIncludeCommitsClientLogin": " - by @%l",
       "message": "chore: publish",
-      "preId": "alpha",
+      "preId": "rc",
       "preDistTag": "next",
       "ignoreChanges": [
         "**/__fixtures__/**",

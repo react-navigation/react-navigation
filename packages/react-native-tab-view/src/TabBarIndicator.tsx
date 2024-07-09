@@ -33,14 +33,29 @@ const getTranslateX = (
   routes: Route[],
   getTabWidth: GetTabWidth,
   direction: LocaleDirection,
-  gap?: number
+  gap?: number,
+  width?: number | string
 ) => {
   const inputRange = routes.map((_, i) => i);
 
   // every index contains widths at all previous indices
   const outputRange = routes.reduce<number[]>((acc, _, i) => {
-    if (i === 0) return [0];
-    return [...acc, acc[i - 1] + getTabWidth(i - 1) + (gap ?? 0)];
+    if (typeof width === 'number') {
+      if (i === 0) return [getTabWidth(i) / 2 - width / 2];
+
+      let sumTabWidth = 0;
+      for (let j = 0; j < i; j++) {
+        sumTabWidth += getTabWidth(j);
+      }
+
+      return [
+        ...acc,
+        sumTabWidth + getTabWidth(i) / 2 + (gap ? gap * i : 0) - width / 2,
+      ];
+    } else {
+      if (i === 0) return [0];
+      return [...acc, acc[i - 1] + getTabWidth(i - 1) + (gap ?? 0)];
+    }
   }, []);
 
   const translateX = position.interpolate({
@@ -106,7 +121,7 @@ export function TabBarIndicator<T extends Route>({
   if (layout.width) {
     const translateX =
       routes.length > 1
-        ? getTranslateX(position, routes, getTabWidth, direction, gap)
+        ? getTranslateX(position, routes, getTabWidth, direction, gap, width)
         : 0;
 
     transform.push({ translateX });

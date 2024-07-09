@@ -9,6 +9,8 @@ import {
   View,
 } from 'react-native';
 
+import backIcon from '../assets/back-icon.png';
+import backIconMask from '../assets/back-icon-mask.png';
 import { MaskedView } from '../MaskedView';
 import type { HeaderBackButtonProps } from '../types';
 import { HeaderButton } from './HeaderButton';
@@ -25,7 +27,7 @@ export function HeaderBackButton({
   pressColor,
   pressOpacity,
   screenLayout,
-  tintColor: customTintColor,
+  tintColor,
   titleLayout,
   truncatedLabel = 'Back',
   accessibilityLabel = label && label !== 'Back' ? `${label}, back` : 'Go back',
@@ -39,14 +41,6 @@ export function HeaderBackButton({
   const [initialLabelWidth, setInitialLabelWidth] = React.useState<
     undefined | number
   >(undefined);
-
-  const tintColor =
-    customTintColor !== undefined
-      ? customTintColor
-      : Platform.select({
-          ios: colors.primary,
-          default: colors.text,
-        });
 
   const handleLabelLayout = (e: LayoutChangeEvent) => {
     onLabelLayout?.(e);
@@ -70,7 +64,7 @@ export function HeaderBackButton({
 
   const renderBackImage = () => {
     if (backImage) {
-      return backImage({ tintColor });
+      return backImage({ tintColor: tintColor ?? colors.text });
     } else {
       return (
         <Image
@@ -81,7 +75,7 @@ export function HeaderBackButton({
             Boolean(tintColor) && { tintColor },
           ]}
           resizeMode="contain"
-          source={require('../assets/back-icon.png')}
+          source={backIcon}
           fadeDuration={0}
         />
       );
@@ -96,15 +90,7 @@ export function HeaderBackButton({
     }
 
     const labelElement = (
-      <View
-        style={
-          screenLayout
-            ? // We make the button extend till the middle of the screen
-              // Otherwise it appears to cut off when translating
-              [styles.labelWrapper, { minWidth: screenLayout.width / 2 - 27 }]
-            : null
-        }
-      >
+      <View style={styles.labelWrapper}>
         <Animated.Text
           accessible={false}
           onLayout={
@@ -135,9 +121,15 @@ export function HeaderBackButton({
     return (
       <MaskedView
         maskElement={
-          <View style={styles.iconMaskContainer}>
+          <View
+            style={[
+              styles.iconMaskContainer,
+              // Extend the mask to the center of the screen so that label isn't clipped during animation
+              screenLayout ? { minWidth: screenLayout.width / 2 - 27 } : null,
+            ]}
+          >
             <Image
-              source={require('../assets/back-icon-mask.png')}
+              source={backIconMask}
               resizeMode="contain"
               style={[styles.iconMask, direction === 'rtl' && styles.flip]}
             />
@@ -198,6 +190,10 @@ const styles = StyleSheet.create({
     // Otherwise it messes with the measurement of the label
     flexDirection: 'row',
     alignItems: 'flex-start',
+    ...Platform.select({
+      ios: { marginEnd: 8 },
+      default: { marginEnd: 3 },
+    }),
   },
   icon: Platform.select({
     ios: {
@@ -205,7 +201,7 @@ const styles = StyleSheet.create({
       width: 13,
       marginStart: 8,
       marginEnd: 22,
-      marginVertical: 12,
+      marginVertical: 8,
     },
     default: {
       height: 24,

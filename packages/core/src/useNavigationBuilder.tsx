@@ -40,6 +40,7 @@ import { useFocusedListenersChildrenAdapter } from './useFocusedListenersChildre
 import { useFocusEvents } from './useFocusEvents';
 import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 import { useKeyedChildListeners } from './useKeyedChildListeners';
+import { useLazyValue } from './useLazyValue';
 import { useNavigationHelpers } from './useNavigationHelpers';
 import { useOnAction } from './useOnAction';
 import { useOnGetState } from './useOnGetState';
@@ -131,7 +132,9 @@ const getRouteConfigsFromChildren = <
               : groupOptions != null
                 ? [...groupOptions, child.props.screenOptions]
                 : [child.props.screenOptions],
-            child.props.screenLayout ?? groupLayout
+            typeof child.props.screenLayout === 'function'
+              ? child.props.screenLayout
+              : groupLayout
           )
         );
         return acc;
@@ -276,15 +279,26 @@ export function useNavigationBuilder<
     ...rest
   } = options;
 
-  const { current: router } = React.useRef<Router<State, any>>(
-    createRouter(rest as unknown as RouterOptions)
-  );
-
   const routeConfigs = getRouteConfigsFromChildren<
     State,
     ScreenOptions,
     EventMap
   >(children);
+
+  const router = useLazyValue<Router<State, any>>(() => {
+    if (
+      rest.initialRouteName != null &&
+      routeConfigs.every(
+        (config) => config.props.name !== rest.initialRouteName
+      )
+    ) {
+      throw new Error(
+        `Couldn't find a screen named '${rest.initialRouteName}' to use as 'initialRouteName'.`
+      );
+    }
+
+    return createRouter(rest as unknown as RouterOptions);
+  });
 
   const screens = routeConfigs.reduce<
     Record<string, ScreenConfigWithParent<State, ScreenOptions, EventMap>>

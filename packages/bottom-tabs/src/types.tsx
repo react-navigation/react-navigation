@@ -24,6 +24,8 @@ import type { EdgeInsets } from 'react-native-safe-area-context';
 
 export type Layout = { width: number; height: number };
 
+export type Variant = 'uikit' | 'material';
+
 export type BottomTabNavigationEventMap = {
   /**
    * Event which fires on tapping on the tab in the tab bar.
@@ -223,6 +225,11 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   };
 
   /**
+   * Variant of the tab bar. Defaults to `uikit`.
+   */
+  tabBarVariant?: Variant;
+
+  /**
    * Style object for the tab bar container.
    */
   tabBarStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
@@ -259,10 +266,10 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   headerShown?: boolean;
 
   /**
-   * Whether this screen should be unmounted when navigating away from it.
+   * Whether any nested stack should be popped to top when navigating away from the tab.
    * Defaults to `false`.
    */
-  unmountOnBlur?: boolean;
+  popToTopOnBlur?: boolean;
 
   /**
    * Whether inactive screens should be suspended from re-rendering. Defaults to `false`.

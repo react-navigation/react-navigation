@@ -3,6 +3,75 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-rc.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.9...@react-navigation/elements@2.0.0-rc.10) (2024-07-08)
+
+### Bug Fixes
+
+* pass correct tint color to header icons ([3c78290](https://github.com/react-navigation/react-navigation/commit/3c7829094760e361b8a6266ccaaa379422779935)) - by @satya164
+
+# [2.0.0-rc.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.8...@react-navigation/elements@2.0.0-rc.9) (2024-07-07)
+
+### Bug Fixes
+
+* add missing exports entry to package.json ([ae16f52](https://github.com/react-navigation/react-navigation/commit/ae16f52adcfb58c59e5735b9caea79b1c2bfa94b)) - by @satya164
+* use imports for assets for esm support ([0c37f65](https://github.com/react-navigation/react-navigation/commit/0c37f6517c6cfc224129ad3156bb7db443f265fd)) - by @satya164
+
+# [2.0.0-rc.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.7...@react-navigation/elements@2.0.0-rc.8) (2024-07-04)
+
+### Bug Fixes
+
+* fix published files ([829caa0](https://github.com/react-navigation/react-navigation/commit/829caa019e125811eea5213fd380e8e1bdbe7030)) - by @
+
+# [2.0.0-rc.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.6...@react-navigation/elements@2.0.0-rc.7) (2024-07-04)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [2.0.0-rc.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.5...@react-navigation/elements@2.0.0-rc.6) (2024-07-04)
+
+### Features
+
+* add package.json exports field ([1435cfe](https://github.com/react-navigation/react-navigation/commit/1435cfe3300767c221ebd4613479ad662d61efee)) - by @
+
+# [2.0.0-rc.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.4...@react-navigation/elements@2.0.0-rc.5) (2024-07-01)
+
+### Bug Fixes
+
+* adjust header shadow color on iOS ([9dc2aca](https://github.com/react-navigation/react-navigation/commit/9dc2acacd4ef52e5dc4ef7d8aebab162f761d74c)) - by @
+* stop using react-native field in package.json ([efc33cb](https://github.com/react-navigation/react-navigation/commit/efc33cb0c4830a84ceae034dc1278c54f1faf32d)) - by @
+
+# [2.0.0-rc.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.3...@react-navigation/elements@2.0.0-rc.4) (2024-06-29)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [2.0.0-rc.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.2...@react-navigation/elements@2.0.0-rc.3) (2024-06-28)
+
+### Features
+
+* add hoverEffect prop to Pressable ([c02689a](https://github.com/react-navigation/react-navigation/commit/c02689aef97af89b66f627d2c8b4ba46cb1de9c8)) - by @
+
+# [2.0.0-rc.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.1...@react-navigation/elements@2.0.0-rc.2) (2024-06-28)
+
+### Bug Fixes
+
+* fix types for Link & Button components ([bc9d628](https://github.com/react-navigation/react-navigation/commit/bc9d628efab9ab9986dc38a0ba2868d0fbe64b49)) - by @
+* tweak button effects on android & web ([65fa934](https://github.com/react-navigation/react-navigation/commit/65fa9344e57fc7d6602f4b52af7e2cf1e4838ffb)) - by @
+
+# [2.0.0-rc.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.0...@react-navigation/elements@2.0.0-rc.1) (2024-06-28)
+
+### Bug Fixes
+
+* fix header title margin if there's no left button ([ee8bc91](https://github.com/react-navigation/react-navigation/commit/ee8bc911ddc6328d674af1b9e0f27bad31b11b74)) - by @satya164
+
+# [2.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.17...@react-navigation/elements@2.0.0-rc.0) (2024-06-27)
+
+### Bug Fixes
+
+* add hover effect to buttons on iPad & VisionOS ([2cb77c0](https://github.com/react-navigation/react-navigation/commit/2cb77c0ce42575275dd723555d0ec9ae7be32c66)) - by @satya164
+* fix back icon not showing in iOS production builds in Expo, fixes [#11792](https://github.com/react-navigation/react-navigation/issues/11792) ([#12019](https://github.com/react-navigation/react-navigation/issues/12019)) ([5e297a0](https://github.com/react-navigation/react-navigation/commit/5e297a05d7457336ef8f8d1bddaa486b5d8ab4e1)) - by @sparkertime
+* fix incorrect header height in bottom tabs ([144f1ac](https://github.com/react-navigation/react-navigation/commit/144f1ac074102c6bae0db9dde5d11c5035b5ec53)) - by @satya164
+* remove global in favor of globalThis for better compatibility ([#11976](https://github.com/react-navigation/react-navigation/issues/11976)) ([f497491](https://github.com/react-navigation/react-navigation/commit/f4974919242e7531ddd16da7b6bbf5e9ecfddc4c)) - by @natew
+* tweak header so title takes more space ([ee4f516](https://github.com/react-navigation/react-navigation/commit/ee4f516839e99032d2f5b6d4a1f711a7ab5f7da4)) - by @satya164
+
 # [2.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-alpha.16...@react-navigation/elements@2.0.0-alpha.17) (2024-03-25)
 
 ### Features
