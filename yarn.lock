@@ -4141,7 +4141,7 @@ __metadata:
     react-native: "npm:0.73.2"
     react-native-builder-bob: "npm:^0.23.2"
     react-native-safe-area-context: "npm:4.8.2"
-    react-native-screens: "npm:~3.30.1"
+    react-native-screens: "npm:^3.32.0"
     typescript: "npm:^5.3.3"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
@@ -4213,7 +4213,7 @@ __metadata:
     react-native-gesture-handler: "npm:~2.14.0"
     react-native-reanimated: "npm:~3.9.0-rc.0"
     react-native-safe-area-context: "npm:4.8.2"
-    react-native-screens: "npm:~3.30.1"
+    react-native-screens: "npm:^3.32.0"
     typescript: "npm:^5.3.3"
     use-latest-callback: "npm:^0.1.9"
   peerDependencies:
@@ -4291,9 +4291,9 @@ __metadata:
     react-native: "npm:0.73.2"
     react-native-gesture-handler: "npm:~2.14.0"
     react-native-pager-view: "npm:6.2.3"
-    react-native-reanimated: "npm:~3.9.0-rc.0"
+    react-native-reanimated: "npm:^3.13.0"
     react-native-safe-area-context: "npm:4.8.2"
-    react-native-screens: "npm:~3.30.1"
+    react-native-screens: "npm:^3.32.0"
     react-native-web: "npm:~0.19.9"
     react-test-renderer: "npm:18.2.0"
     serve: "npm:^14.2.1"
@@ -16858,6 +16858,26 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 9c08c9ffc27f3b6069f23d24ba5c1073a55fb67db4a45bcf490e544a37f26a9cfe7ad72259543f71f3f78a1fb26c78f711c076d905389d599c69c43fe29b7a67
+  languageName: node
+  linkType: hard
+
+"react-native-reanimated@npm:^3.13.0":
+  version: 3.13.0
+  resolution: "react-native-reanimated@npm:3.13.0"
+  dependencies:
+    "@babel/plugin-transform-arrow-functions": "npm:^7.0.0-0"
+    "@babel/plugin-transform-nullish-coalescing-operator": "npm:^7.0.0-0"
+    "@babel/plugin-transform-optional-chaining": "npm:^7.0.0-0"
+    "@babel/plugin-transform-shorthand-properties": "npm:^7.0.0-0"
+    "@babel/plugin-transform-template-literals": "npm:^7.0.0-0"
+    "@babel/preset-typescript": "npm:^7.16.7"
+    convert-source-map: "npm:^2.0.0"
+    invariant: "npm:^2.2.4"
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+    react: "*"
+    react-native: "*"
+  checksum: 3213305d5b5f137ad9fb02700acba35aba76648c1bcc6341e372e6e37cc1d002f6eb0fc6dbbe04b01192406be3ae2d480203321eb9bc255cef8d2e393f8a61ad
   languageName: node
   linkType: hard
 
