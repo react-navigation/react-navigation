@@ -33,6 +33,7 @@ import {
   type GestureDetectorBridge,
   GHContext,
   Screen,
+  ScreenContext,
   type ScreenProps,
   ScreenStack,
   type StackPresentationTypes,
@@ -44,7 +45,6 @@ import type {
   NativeStackDescriptorMap,
   NativeStackNavigationHelpers,
   NativeStackNavigationOptions,
-  NativeStackNavigatorProps,
   ScreensRefsHolder,
 } from '../types';
 import { debounce } from '../utils/debounce';
@@ -139,7 +139,7 @@ type SceneViewProps = {
   descriptor: NativeStackDescriptor;
   previousDescriptor?: NativeStackDescriptor;
   nextDescriptor?: NativeStackDescriptor;
-  screenRefs: ScreensRefsHolder;
+  screenRefs: React.MutableRefObject<ScreensRefsHolder>;
   isPresentationModal?: boolean;
   onWillDisappear: () => void;
   onWillAppear: () => void;
@@ -206,8 +206,10 @@ const SceneView = ({
     freezeOnBlur,
   } = options;
 
+  const Screen = React.useContext(ScreenContext);
+
   const screenRef = React.useRef(null);
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     const currentRefs = screenRefs.current;
     currentRefs[route.key] = screenRef;
 
@@ -538,11 +540,9 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
       // this method will be overriden in GestureDetector
     },
   });
-  type RefHolder = Record<
-    string,
-    React.MutableRefObject<React.Ref<NativeStackNavigatorProps>>
-  >;
-  const screensRefs = React.useRef<RefHolder>({});
+
+  const screensRefs = React.useRef<ScreensRefsHolder>({});
+
   const ScreenGestureDetector = React.useContext(GHContext);
 
   useInvalidPreventRemoveError(descriptors);
@@ -553,9 +553,9 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
     <SafeAreaProviderCompat style={{ backgroundColor: colors.background }}>
       <ScreenGestureDetector
         gestureDetectorBridge={gestureDetectorBridge}
-        goBackGesture={topScreenOptions?.goBackGesture}
-        transitionAnimation={topScreenOptions?.transitionAnimation}
-        screenEdgeGesture={topScreenOptions?.screenEdgeGesture ?? false}
+        goBackGesture={topScreenOptions?.gestureType}
+        transitionAnimation={topScreenOptions?.animationForGesture}
+        screenEdgeGesture={topScreenOptions?.gestureFromEdgeEnabled ?? false}
         screensRefs={screensRefs}
         currentRouteKey={currentRouteKey}
       >

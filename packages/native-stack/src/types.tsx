@@ -468,7 +468,7 @@ export type NativeStackNavigationOptions = {
    *
    * Only supported on iOS and Android.
    */
-  goBackGesture?: GoBackGesture;
+  gestureType?: GestureType;
   /**
    * Changes the animation for dismissing the screen when making a swipe gesture.
    * You can choose one of the built-in transition presets, by using `ScreenTransition` from `react-native-reanimated`.
@@ -486,11 +486,11 @@ export type NativeStackNavigationOptions = {
    * You can also construct custom screen transition by providing an object with `topScreenFrame` and `belowTopScreenFrame` properties.
    * Only supported on iOS and Android.
    */
-  transitionAnimation?: AnimatedScreenTransition;
+  animationForGesture?: AnimatedScreenTransition;
   /**
    * Whether the screen should allow for making a swipe gesture from screen edges. Defaults to `true`.
    */
-  screenEdgeGesture?: boolean;
+  gestureFromEdgeEnabled?: boolean;
   /**
    * The type of animation to use when this screen replaces another screen. Defaults to `pop`.
    *
@@ -655,7 +655,7 @@ export type PanGestureHandlerEventPayload = {
 };
 
 // copy from Reanimated to avoid strong dependency
-export type GoBackGesture =
+export type GestureType =
   | 'swipeRight'
   | 'swipeLeft'
   | 'swipeUp'
@@ -674,25 +674,26 @@ export interface MeasuredDimensions {
 }
 
 export type AnimatedScreenTransition = {
-  topScreenFrame: (
+  topScreenStyle: (
     event: PanGestureHandlerEventPayload,
     screenSize: MeasuredDimensions
   ) => Record<string, unknown>;
-  belowTopScreenFrame: (
+  belowTopScreenStyle: (
     event: PanGestureHandlerEventPayload,
     screenSize: MeasuredDimensions
   ) => Record<string, unknown>;
 };
 
-export type ScreensRefsHolder = React.MutableRefObject<
-  Record<string, React.MutableRefObject<React.Ref<NativeStackNavigatorProps>>>
+export type ScreensRefsHolder = Record<
+  string,
+  React.MutableRefObject<React.Ref<NativeStackNavigatorProps>>
 >;
 
 export type GestureProviderProps = PropsWithChildren<{
   gestureDetectorBridge: React.MutableRefObject<GestureDetectorBridge>;
-  screensRefs: ScreensRefsHolder;
+  screensRefs: React.MutableRefObject<ScreensRefsHolder>;
   currentRouteKey: string;
-  goBackGesture: GoBackGesture | undefined;
-  transitionAnimation: AnimatedScreenTransition | undefined;
-  screenEdgeGesture: boolean | undefined;
+  gestureType: GestureType | undefined;
+  animationForGesture: AnimatedScreenTransition | undefined;
+  gestureFromEdgeEnabled: boolean | undefined;
 }>;
