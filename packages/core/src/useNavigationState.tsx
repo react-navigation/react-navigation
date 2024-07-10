@@ -1,5 +1,6 @@
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
+import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
 
 import type { NavigationProp } from './types';
 import { useNavigation } from './useNavigation';
@@ -18,24 +19,21 @@ export function useNavigationState<ParamList extends ParamListBase, T>(
 ): T {
   const navigation = useNavigation<NavigationProp<ParamList>>();
 
-  // We don't care about the state value, we run the selector again at the end
-  // The state is only to make sure that there's a re-render when we have a new value
-  const [, setResult] = React.useState(() => selector(navigation.getState()));
+  const subscribe = React.useCallback(
+    (callback: () => void) => {
+      const unsubscribe = navigation.addListener('state', callback);
 
-  // We store the selector in a ref to avoid re-subscribing listeners every render
-  const selectorRef = React.useRef(selector);
+      return unsubscribe;
+    },
+    [navigation]
+  );
 
-  React.useEffect(() => {
-    selectorRef.current = selector;
-  });
+  const value = useSyncExternalStoreWithSelector(
+    subscribe,
+    navigation.getState,
+    navigation.getState,
+    selector
+  );
 
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('state', (e) => {
-      setResult(selectorRef.current(e.data.state));
-    });
-
-    return unsubscribe;
-  }, [navigation]);
-
-  return selector(navigation.getState());
+  return value;
 }
