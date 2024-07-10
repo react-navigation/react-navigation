@@ -3756,7 +3756,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.25.0"
     react-test-renderer: "npm:18.2.0"
     typescript: "npm:^5.5.2"
-    use-latest-callback: "npm:^0.1.11"
+    use-latest-callback: "npm:^0.2.1"
   peerDependencies:
     react: "*"
   languageName: unknown
@@ -3801,7 +3801,7 @@ __metadata:
     react-native-safe-area-context: "npm:4.10.1"
     react-native-screens: "npm:3.31.1"
     typescript: "npm:^5.5.2"
-    use-latest-callback: "npm:^0.1.11"
+    use-latest-callback: "npm:^0.2.1"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
     react: ">= 18.2.0"
@@ -3951,7 +3951,7 @@ __metadata:
     react-native: "npm:0.74.2"
     react-native-builder-bob: "npm:^0.25.0"
     typescript: "npm:^5.5.2"
-    use-latest-callback: "npm:^0.1.11"
+    use-latest-callback: "npm:^0.2.1"
   peerDependencies:
     react: ">= 18.2.0"
     react-native: ">= 0.72.0"
@@ -14184,7 +14184,7 @@ __metadata:
     react-native: "npm:0.74.2"
     react-native-builder-bob: "npm:^0.25.0"
     typescript: "npm:^5.5.2"
-    use-latest-callback: "npm:^0.1.11"
+    use-latest-callback: "npm:^0.2.1"
   peerDependencies:
     react: ">= 18.2.0"
     react-native: ">= 0.72.0"
@@ -14272,7 +14272,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.25.0"
     react-native-pager-view: "npm:6.3.0"
     typescript: "npm:^5.5.2"
-    use-latest-callback: "npm:^0.1.11"
+    use-latest-callback: "npm:^0.2.1"
   peerDependencies:
     react: ">= 18.2.0"
     react-native: ">= 0.72.0"
@@ -16743,12 +16743,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-latest-callback@npm:^0.1.11":
-  version: 0.1.11
-  resolution: "use-latest-callback@npm:0.1.11"
+"use-latest-callback@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "use-latest-callback@npm:0.2.1"
   peerDependencies:
     react: ">=16.8"
-  checksum: cc6df404a4ed3a39d0eb014a815c2e568a6abbe8c5ff09f9205a08bf68e86201826ed633865a6056ca0fd9581e0e7e70f18ca26c592a9eaccea5d244cf283b1f
+  checksum: da5718eda625738cc7dac8fb502d0f8f2039435eb71203565a72c32e0f5769e7b8ddac074e650066636e7f4b29b45524f751cb18a2b430856d98879bbb10d274
   languageName: node
   linkType: hard
 
