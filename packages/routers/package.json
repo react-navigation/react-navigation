@@ -18,14 +18,14 @@
   },
   "homepage": "https://reactnavigation.org/docs/custom-routers/",
   "source": "./src/index.tsx",
-  "main": "./lib/commonjs/index.cjs",
-  "module": "./lib/module/index.mjs",
+  "main": "./lib/commonjs/index.js",
+  "module": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
       "types": "./lib/typescript/src/index.d.ts",
-      "import": "./lib/module/index.mjs",
-      "require": "./lib/commonjs/index.cjs"
+      "import": "./lib/module/index.js",
+      "require": "./lib/commonjs/index.js"
     }
   },
   "files": [
@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "del-cli": "^5.1.0",
-    "react-native-builder-bob": "^0.25.0",
+    "react-native-builder-bob": "^0.26.0",
     "typescript": "^5.5.2"
   },
   "react-native-builder-bob": {

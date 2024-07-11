@@ -3725,7 +3725,7 @@ __metadata:
     del-cli: "npm:^5.1.0"
     react: "npm:18.2.0"
     react-native: "npm:0.74.2"
-    react-native-builder-bob: "npm:^0.25.0"
+    react-native-builder-bob: "npm:^0.26.0"
     react-native-safe-area-context: "npm:4.10.1"
     react-native-screens: "npm:3.31.1"
     typescript: "npm:^5.5.2"
@@ -3754,7 +3754,7 @@ __metadata:
     query-string: "npm:^7.1.3"
     react: "npm:18.2.0"
     react-is: "npm:^18.2.0"
-    react-native-builder-bob: "npm:^0.25.0"
+    react-native-builder-bob: "npm:^0.26.0"
     react-test-renderer: "npm:18.2.0"
     typescript: "npm:^5.5.2"
     use-latest-callback: "npm:^0.2.1"
@@ -3776,7 +3776,7 @@ __metadata:
     del-cli: "npm:^5.1.0"
     nanoid: "npm:3.3.7"
     react: "npm:18.2.0"
-    react-native-builder-bob: "npm:^0.25.0"
+    react-native-builder-bob: "npm:^0.26.0"
     stacktrace-parser: "npm:^0.1.10"
     typescript: "npm:^5.5.2"
   peerDependencies:
@@ -3796,7 +3796,7 @@ __metadata:
     del-cli: "npm:^5.1.0"
     react: "npm:18.2.0"
     react-native: "npm:0.74.2"
-    react-native-builder-bob: "npm:^0.25.0"
+    react-native-builder-bob: "npm:^0.26.0"
     react-native-drawer-layout: "workspace:^"
     react-native-gesture-handler: "npm:~2.16.1"
     react-native-reanimated: "npm:~3.10.1"
@@ -3827,7 +3827,7 @@ __metadata:
     del-cli: "npm:^5.1.0"
     react: "npm:18.2.0"
     react-native: "npm:0.74.2"
-    react-native-builder-bob: "npm:^0.25.0"
+    react-native-builder-bob: "npm:^0.26.0"
     typescript: "npm:^5.5.2"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
@@ -3900,7 +3900,7 @@ __metadata:
     del-cli: "npm:^5.1.0"
     react: "npm:18.2.0"
     react-native: "npm:0.74.2"
-    react-native-builder-bob: "npm:^0.25.0"
+    react-native-builder-bob: "npm:^0.26.0"
     react-native-pager-view: "npm:6.3.0"
     react-native-tab-view: "npm:^4.0.0-rc.6"
     typescript: "npm:^5.5.2"
@@ -3923,7 +3923,7 @@ __metadata:
     del-cli: "npm:^5.1.0"
     react: "npm:18.2.0"
     react-native: "npm:0.74.2"
-    react-native-builder-bob: "npm:^0.25.0"
+    react-native-builder-bob: "npm:^0.26.0"
     react-native-screens: "npm:3.31.1"
     typescript: "npm:^5.5.2"
     warn-once: "npm:^0.1.1"
@@ -3951,7 +3951,7 @@ __metadata:
     react: "npm:18.2.0"
     react-dom: "npm:18.2.0"
     react-native: "npm:0.74.2"
-    react-native-builder-bob: "npm:^0.25.0"
+    react-native-builder-bob: "npm:^0.26.0"
     typescript: "npm:^5.5.2"
     use-latest-callback: "npm:^0.2.1"
   peerDependencies:
@@ -3966,7 +3966,7 @@ __metadata:
   dependencies:
     del-cli: "npm:^5.1.0"
     nanoid: "npm:3.3.7"
-    react-native-builder-bob: "npm:^0.25.0"
+    react-native-builder-bob: "npm:^0.26.0"
     typescript: "npm:^5.5.2"
   languageName: unknown
   linkType: soft
@@ -3984,7 +3984,7 @@ __metadata:
     del-cli: "npm:^5.1.0"
     react: "npm:18.2.0"
     react-native: "npm:0.74.2"
-    react-native-builder-bob: "npm:^0.25.0"
+    react-native-builder-bob: "npm:^0.26.0"
     react-native-gesture-handler: "npm:~2.16.1"
     react-native-safe-area-context: "npm:4.10.1"
     react-native-screens: "npm:3.31.1"
@@ -4514,13 +4514,6 @@ __metadata:
   version: 2.4.4
   resolution: "@types/normalize-package-data@npm:2.4.4"
   checksum: 65dff72b543997b7be8b0265eca7ace0e34b75c3e5fee31de11179d08fa7124a7a5587265d53d0409532ecb7f7fba662c2012807963e1f9b059653ec2c83ee05
-  languageName: node
-  linkType: hard
-
-"@types/parse-json@npm:^4.0.0":
-  version: 4.0.2
-  resolution: "@types/parse-json@npm:4.0.2"
-  checksum: 5bf62eec37c332ad10059252fc0dab7e7da730764869c980b0714777ad3d065e490627be9f40fc52f238ffa3ac4199b19de4127196910576c2fe34dd47c7a470
   languageName: node
   linkType: hard
 
@@ -6710,19 +6703,6 @@ __metadata:
     js-yaml: "npm:^3.13.1"
     parse-json: "npm:^4.0.0"
   checksum: 1d617668e1367b8d66617fb8a1bd8c13e9598534959ac0cc86195b1b0cbe7afbba2b9faa300c60b9d9d35409cf4f064b0f6e377f4ea036434e5250c69c76932f
-  languageName: node
-  linkType: hard
-
-"cosmiconfig@npm:^7.0.1":
-  version: 7.1.0
-  resolution: "cosmiconfig@npm:7.1.0"
-  dependencies:
-    "@types/parse-json": "npm:^4.0.0"
-    import-fresh: "npm:^3.2.1"
-    parse-json: "npm:^5.0.0"
-    path-type: "npm:^4.0.0"
-    yaml: "npm:^1.10.0"
-  checksum: 03600bb3870c80ed151b7b706b99a1f6d78df8f4bdad9c95485072ea13358ef294b13dd99f9e7bf4cc0b43bcd3599d40df7e648750d21c2f6817ca2cd687e071
   languageName: node
   linkType: hard
 
@@ -14155,9 +14135,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-builder-bob@npm:^0.25.0":
-  version: 0.25.0
-  resolution: "react-native-builder-bob@npm:0.25.0"
+"react-native-builder-bob@npm:^0.26.0":
+  version: 0.26.0
+  resolution: "react-native-builder-bob@npm:0.26.0"
   dependencies:
     "@babel/core": "npm:^7.18.5"
     "@babel/plugin-proposal-class-properties": "npm:^7.17.12"
@@ -14166,7 +14146,7 @@ __metadata:
     "@babel/preset-react": "npm:^7.17.12"
     "@babel/preset-typescript": "npm:^7.17.12"
     browserslist: "npm:^4.20.4"
-    cosmiconfig: "npm:^7.0.1"
+    cosmiconfig: "npm:^9.0.0"
     cross-spawn: "npm:^7.0.3"
     dedent: "npm:^0.7.0"
     del: "npm:^6.1.1"
@@ -14180,7 +14160,7 @@ __metadata:
     yargs: "npm:^17.5.1"
   bin:
     bob: bin/bob
-  checksum: 580ef14d8e029a7cf89350947ee0eed632a7871a50a3b2c3169805df8a58521c275c8b62484a514931f1e16244c4e93da3484a5b1bd03f43522fd1aa93009ec0
+  checksum: 092d02bb89c71cb46f2fe32a63ca6746808b434b53cf64e1ca4745c7a727e765b566586505762c817befb6e630636769a5e791dbe17503be4c0bc60b0416e7a8
   languageName: node
   linkType: hard
 
@@ -14191,7 +14171,7 @@ __metadata:
     del-cli: "npm:^5.1.0"
     react: "npm:18.2.0"
     react-native: "npm:0.74.2"
-    react-native-builder-bob: "npm:^0.25.0"
+    react-native-builder-bob: "npm:^0.26.0"
     typescript: "npm:^5.5.2"
     use-latest-callback: "npm:^0.2.1"
   peerDependencies:
@@ -14278,7 +14258,7 @@ __metadata:
     del-cli: "npm:^5.1.0"
     react: "npm:18.2.0"
     react-native: "npm:0.74.2"
-    react-native-builder-bob: "npm:^0.25.0"
+    react-native-builder-bob: "npm:^0.26.0"
     react-native-pager-view: "npm:6.3.0"
     typescript: "npm:^5.5.2"
     use-latest-callback: "npm:^0.2.1"
@@ -17323,13 +17303,6 @@ __metadata:
   version: 4.0.0
   resolution: "yallist@npm:4.0.0"
   checksum: 4cb02b42b8a93b5cf50caf5d8e9beb409400a8a4d85e83bb0685c1457e9ac0b7a00819e9f5991ac25ffabb56a78e2f017c1acc010b3a1babfe6de690ba531abd
-  languageName: node
-  linkType: hard
-
-"yaml@npm:^1.10.0":
-  version: 1.10.2
-  resolution: "yaml@npm:1.10.2"
-  checksum: e088b37b4d4885b70b50c9fa1b7e54bd2e27f5c87205f9deaffd1fb293ab263d9c964feadb9817a7b129a5bf30a06582cb08750f810568ecc14f3cdbabb79cb3
   languageName: node
   linkType: hard
 
