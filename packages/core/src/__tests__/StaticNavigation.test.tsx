@@ -263,6 +263,78 @@ it("doesn't throw if either screens or groups property is specified", () => {
   }).not.toThrow();
 });
 
+it('renders the initial screen based on the order of screens', () => {
+  const A = createTestNavigator({
+    screens: {
+      Home: TestScreen,
+    },
+    groups: {
+      Help: {
+        screens: {
+          Help: TestScreen,
+        },
+      },
+    },
+  });
+
+  const AComponent = createComponentForStaticNavigation(A, 'A');
+
+  expect(
+    render(
+      <BaseNavigationContainer>
+        <AComponent />
+      </BaseNavigationContainer>
+    )
+  ).toMatchInlineSnapshot(`
+<main>
+  <div>
+    Screen:
+    Home
+    (focused)
+  </div>
+  <div>
+    Screen:
+    Help
+  </div>
+</main>
+`);
+
+  const B = createTestNavigator({
+    groups: {
+      Help: {
+        screens: {
+          Help: TestScreen,
+        },
+      },
+    },
+    screens: {
+      Home: TestScreen,
+    },
+  });
+
+  const BComponent = createComponentForStaticNavigation(B, 'B');
+
+  expect(
+    render(
+      <BaseNavigationContainer>
+        <BComponent />
+      </BaseNavigationContainer>
+    )
+  ).toMatchInlineSnapshot(`
+<main>
+  <div>
+    Screen:
+    Help
+    (focused)
+  </div>
+  <div>
+    Screen:
+    Home
+  </div>
+</main>
+`);
+});
+
 it('creates linking configuration for static config', () => {
   const Nested = createTestNavigator({
     screens: {
