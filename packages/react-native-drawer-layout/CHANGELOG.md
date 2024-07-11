@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.7](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.6...react-native-drawer-layout@4.0.0-rc.7) (2024-07-11)
+
+### Bug Fixes
+
+* upgrade react-native-builder-bob ([1575287](https://github.com/react-navigation/react-navigation/commit/1575287d40fadb97f33eb19c2914d8be3066b47a)) - by @
+
 # [4.0.0-rc.6](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.5...react-native-drawer-layout@4.0.0-rc.6) (2024-07-10)
 
 ### Bug Fixes
