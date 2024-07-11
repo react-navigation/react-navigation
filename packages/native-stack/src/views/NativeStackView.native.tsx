@@ -211,10 +211,6 @@ const SceneView = ({
       fullScreenGestureEnabled = true;
     }
 
-    if (fullScreenGestureShadowEnabled === undefined) {
-      fullScreenGestureShadowEnabled = true;
-    }
-
     if (animationMatchesGesture === undefined) {
       animationMatchesGesture = true;
     }
@@ -222,6 +218,10 @@ const SceneView = ({
     if (animation === undefined) {
       animation = 'slide_from_bottom';
     }
+  }
+
+  if (fullScreenGestureShadowEnabled === undefined) {
+    fullScreenGestureShadowEnabled = false;
   }
 
   // workaround for rn-screens where gestureDirection has to be set on both
@@ -335,6 +335,7 @@ const SceneView = ({
       hasLargeHeader={options.headerLargeTitle ?? false}
       customAnimationOnSwipe={animationMatchesGesture}
       fullScreenSwipeEnabled={fullScreenGestureEnabled}
+      // @ts-expect-error prop supported from react-native-screens 3.33.0 onwards
       fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled}
       gestureEnabled={
         isAndroid
