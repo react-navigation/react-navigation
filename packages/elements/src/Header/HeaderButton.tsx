@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Platform, StyleSheet } from 'react-native';
 
 import { PlatformPressable } from '../PlatformPressable';
@@ -47,6 +46,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 8,
+    // Roundness for iPad hover effect
+    borderRadius: 10,
   },
   disabled: {
     opacity: 0.5,

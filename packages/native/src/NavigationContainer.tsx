@@ -35,7 +35,7 @@ declare global {
   >;
 }
 
-global.REACT_NAVIGATION_DEVTOOLS = new WeakMap();
+globalThis.REACT_NAVIGATION_DEVTOOLS = new WeakMap();
 
 type Props<ParamList extends {}> = NavigationContainerProps & {
   direction?: LocaleDirection;

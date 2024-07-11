@@ -9,6 +9,8 @@ type Props = ScrollViewProps & {
   children: React.ReactNode;
 };
 
+const SPACING = 12;
+
 function DrawerContentScrollViewInner(
   { contentContainerStyle, style, children, ...rest }: Props,
   ref?: React.Ref<ScrollView>
@@ -28,10 +30,10 @@ function DrawerContentScrollViewInner(
       ref={ref}
       contentContainerStyle={[
         {
-          paddingTop: insets.top + 10,
-          paddingBottom: insets.bottom + 10,
-          paddingStart: !isRight ? insets.left : 0,
-          paddingEnd: isRight ? insets.right : 0,
+          paddingTop: SPACING + insets.top,
+          paddingBottom: SPACING + insets.bottom,
+          paddingStart: SPACING + (!isRight ? insets.left : 0),
+          paddingEnd: SPACING + (isRight ? insets.right : 0),
         },
         contentContainerStyle,
       ]}

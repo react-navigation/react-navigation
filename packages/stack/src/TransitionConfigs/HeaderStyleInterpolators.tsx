@@ -1,4 +1,4 @@
-import { Animated } from 'react-native';
+import { Animated, Platform } from 'react-native';
 
 import type {
   StackHeaderInterpolatedStyle,
@@ -6,6 +6,10 @@ import type {
 } from '../types';
 
 const { add, multiply } = Animated;
+
+// Width of the screen in split layout on portrait mode on iPad Mini
+// Keep in sync with HeaderBackButton.tsx
+const IPAD_MINI_MEDIUM_WIDTH = 414;
 
 /**
  * Standard UIKit style animation for the header where the title fades into the back button label.
@@ -17,7 +21,12 @@ export function forUIKit({
   layouts,
 }: StackHeaderInterpolationProps): StackHeaderInterpolatedStyle {
   const defaultOffset = 100;
-  const leftSpacing = 27;
+  const titleLeftMargin = 16;
+  const leftSpacing =
+    27 +
+    (Platform.OS === 'ios' && layouts.screen.width >= IPAD_MINI_MEDIUM_WIDTH
+      ? 5 // Additional padding on iPad specified in Header.tsx
+      : 0);
 
   // The title and back button title should cross-fade to each other
   // When screen is fully open, the title should be in center, and back title should be on left
@@ -28,7 +37,9 @@ export function forUIKit({
     ? (layouts.screen.width - layouts.leftLabel.width) / 2 - leftSpacing
     : defaultOffset;
   const titleLeftOffset = layouts.title
-    ? (layouts.screen.width - layouts.title.width) / 2 - leftSpacing
+    ? (layouts.screen.width - layouts.title.width) / 2 -
+      leftSpacing +
+      titleLeftMargin
     : defaultOffset;
 
   // When the current title is animating to right, it is centered in the right half of screen in middle of transition

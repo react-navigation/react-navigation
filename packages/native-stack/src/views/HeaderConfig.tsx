@@ -1,6 +1,5 @@
 import { getHeaderTitle, HeaderTitle } from '@react-navigation/elements';
 import { type Route, useLocale, useTheme } from '@react-navigation/native';
-import * as React from 'react';
 import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
 import {
   isSearchBarAvailableForCurrentPlatform,
@@ -181,11 +180,7 @@ export function HeaderConfig({
     <ScreenStackHeaderConfig
       backButtonInCustomView={backButtonInCustomView}
       backgroundColor={headerBackgroundColor}
-      backTitle={
-        headerBackTitleVisible
-          ? headerBackTitle
-          : ' ' /* For backward compatibility with react-native-screens versions <3.21.0, where `backTitleVisible` is not available */
-      }
+      backTitle={headerBackTitle}
       backTitleVisible={headerBackTitleVisible}
       backTitleFontFamily={backTitleFontFamily}
       backTitleFontSize={backTitleFontSize}
@@ -211,7 +206,7 @@ export function HeaderConfig({
       titleColor={titleColor}
       titleFontFamily={titleFontFamily}
       titleFontSize={titleFontSize}
-      titleFontWeight={titleFontWeight}
+      titleFontWeight={String(titleFontWeight)}
       topInsetEnabled={headerTopInsetEnabled}
       translucent={
         // This defaults to `true`, so we can't pass `undefined`

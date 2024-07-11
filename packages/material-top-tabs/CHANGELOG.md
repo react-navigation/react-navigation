@@ -3,6 +3,70 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.11...@react-navigation/material-top-tabs@7.0.0-rc.12) (2024-07-11)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.10...@react-navigation/material-top-tabs@7.0.0-rc.11) (2024-07-10)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.9...@react-navigation/material-top-tabs@7.0.0-rc.10) (2024-07-08)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.8...@react-navigation/material-top-tabs@7.0.0-rc.9) (2024-07-07)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.7...@react-navigation/material-top-tabs@7.0.0-rc.8) (2024-07-04)
+
+### Bug Fixes
+
+* fix published files ([829caa0](https://github.com/react-navigation/react-navigation/commit/829caa019e125811eea5213fd380e8e1bdbe7030)) - by @
+
+# [7.0.0-rc.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.6...@react-navigation/material-top-tabs@7.0.0-rc.7) (2024-07-04)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.5...@react-navigation/material-top-tabs@7.0.0-rc.6) (2024-07-04)
+
+### Features
+
+* add package.json exports field ([1435cfe](https://github.com/react-navigation/react-navigation/commit/1435cfe3300767c221ebd4613479ad662d61efee)) - by @
+
+# [7.0.0-rc.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.4...@react-navigation/material-top-tabs@7.0.0-rc.5) (2024-07-01)
+
+### Bug Fixes
+
+* stop using react-native field in package.json ([efc33cb](https://github.com/react-navigation/react-navigation/commit/efc33cb0c4830a84ceae034dc1278c54f1faf32d)) - by @
+
+# [7.0.0-rc.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.3...@react-navigation/material-top-tabs@7.0.0-rc.4) (2024-06-29)
+
+### Bug Fixes
+
+* add a workaround for incorrect inference [#12041](https://github.com/react-navigation/react-navigation/issues/12041) ([85c4bbb](https://github.com/react-navigation/react-navigation/commit/85c4bbbf535cde2ba9cd537a2a5ce34f060d32b9)) - by @
+
+# [7.0.0-rc.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.2...@react-navigation/material-top-tabs@7.0.0-rc.3) (2024-06-28)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.1...@react-navigation/material-top-tabs@7.0.0-rc.2) (2024-06-28)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.0...@react-navigation/material-top-tabs@7.0.0-rc.1) (2024-06-28)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-alpha.19...@react-navigation/material-top-tabs@7.0.0-rc.0) (2024-06-27)
+
+### Bug Fixes
+
+* fix showing text in material top tabs ([7d65803](https://github.com/react-navigation/react-navigation/commit/7d6580396a27e90d7f911f94522623e0dcbf31da)) - by @satya164
+* immediately update state after tapping tab on material top tabs ([#12020](https://github.com/react-navigation/react-navigation/issues/12020)) ([e177181](https://github.com/react-navigation/react-navigation/commit/e1771812c7bdf8f0199a51d1fb443323ebfaa4ff)) - by @Piotrfj
+* update state on tab press for tab-view ([feb82e6](https://github.com/react-navigation/react-navigation/commit/feb82e62f8ed8df1fc1add00020a696c06a11e01)) - by @satya164
+
 # [7.0.0-alpha.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-alpha.18...@react-navigation/material-top-tabs@7.0.0-alpha.19) (2024-03-25)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

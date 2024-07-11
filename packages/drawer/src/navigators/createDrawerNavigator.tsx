@@ -11,7 +11,6 @@ import {
   type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
-import * as React from 'react';
 
 import type {
   DrawerNavigationConfig,
@@ -96,9 +95,7 @@ export function createDrawerNavigator<
     };
     Navigator: typeof DrawerNavigator;
   },
-  Config extends StaticConfig<TypeBag> | undefined =
-    | StaticConfig<TypeBag>
-    | undefined,
+  Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
 >(config?: Config): TypedNavigator<TypeBag, Config> {
   return createNavigatorFactory(DrawerNavigator)(config);
 }

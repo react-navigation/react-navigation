@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import type {
@@ -8,11 +9,16 @@ import type {
   DrawerNavigationOptions,
   DrawerScreenProps,
 } from '@react-navigation/drawer';
-import type {
-  CompositeScreenProps,
-  NavigationAction,
-  NavigationHelpers,
-  NavigatorScreenParams,
+import { Button } from '@react-navigation/elements';
+import {
+  type CompositeScreenProps,
+  Link,
+  type NavigationAction,
+  type NavigationContainerRef,
+  type NavigationHelpers,
+  type NavigatorScreenParams,
+  type Route,
+  useLinkProps,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -21,14 +27,15 @@ import {
   type StackScreenProps,
 } from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
-import * as React from 'react';
 
 /**
  * Check for the type of the `navigation` and `route` objects with regular usage
  */
 type RootStackParamList = {
   Home: NavigatorScreenParams<HomeDrawerParamList>;
+  Albums: NavigatorScreenParams<AlbumTabParamList>;
   PostDetails: { id: string; section?: string };
+  Settings: { path: string } | undefined;
   Login: undefined;
   NotFound: undefined;
 };
@@ -39,6 +46,11 @@ type RootStackScreenProps<T extends keyof RootStackParamList> =
 type HomeDrawerParamList = {
   Feed: NavigatorScreenParams<FeedTabParamList>;
   Account: undefined;
+};
+
+type AlbumTabParamList = {
+  Playlist: undefined;
+  Artist: { id: string };
 };
 
 type HomeDrawerScreenProps<T extends keyof HomeDrawerParamList> =
@@ -498,3 +510,197 @@ const FourthStack = createStackNavigator<FourthParamList, 'MyID'>();
 expectTypeOf(FourthStack.Navigator).parameter(0).toMatchTypeOf<{
   id: 'MyID';
 }>();
+
+/**
+ * Check for errors on getCurrentRoute
+ */
+declare const navigationRef: NavigationContainerRef<RootStackParamList>;
+const route = navigationRef.getCurrentRoute()!;
+
+switch (route.name) {
+  case 'PostDetails':
+    expectTypeOf(route.params).toMatchTypeOf<{
+      id: string;
+      section?: string;
+    }>();
+    break;
+  case 'Login':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    break;
+  case 'NotFound':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    break;
+  // Checks for nested routes
+  case 'Account':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    break;
+  case 'Popular':
+    expectTypeOf(route.params).toMatchTypeOf<{
+      filter: 'day' | 'week' | 'month';
+    }>();
+    break;
+  case 'Latest':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    break;
+}
+
+declare const navigationRefUntyped: NavigationContainerRef<string>;
+
+expectTypeOf(navigationRefUntyped.getCurrentRoute()).toMatchTypeOf<
+  Route<string> | undefined
+>();
+
+/**
+ * Screen and params for Link, Button, etc.
+ */
+type LinkParamList = ReactNavigation.RootParamList & RootStackParamList;
+
+// @ts-expect-error
+useLinkProps<LinkParamList>({ screen: 'Albums' });
+// @ts-expect-error
+useLinkProps<LinkParamList>({ screen: 'Album' });
+useLinkProps<LinkParamList>({
+  screen: 'Albums',
+  params: { screen: 'Playlist' },
+});
+useLinkProps<LinkParamList>({ screen: 'Settings' });
+useLinkProps<LinkParamList>({
+  screen: 'Settings',
+  params: { path: '123' },
+});
+// @ts-expect-error
+useLinkProps<LinkParamList>({ screen: 'PostDetails' });
+useLinkProps<LinkParamList>({
+  screen: 'PostDetails',
+  params: { id: '123' },
+});
+
+useLinkProps<LinkParamList>({
+  screen: 'PostDetails',
+  params: { id: '123', section: '123' },
+});
+useLinkProps<LinkParamList>({
+  screen: 'PostDetails',
+  // @ts-expect-error
+  params: { id: 123 },
+});
+useLinkProps<LinkParamList>({
+  screen: 'PostDetails',
+  // @ts-expect-error
+  params: { id: '123', section: 123 },
+});
+useLinkProps<LinkParamList>({
+  screen: 'PostDetails',
+  // @ts-expect-error
+  params: { ids: '123' },
+});
+useLinkProps<LinkParamList>({
+  screen: 'PostDetails',
+  // @ts-expect-error
+  params: {},
+});
+useLinkProps<LinkParamList>({ screen: 'Login' });
+
+// @ts-expect-error
+<Link<LinkParamList> screen="Album">Albums</Link>;
+// @ts-expect-error
+<Link<LinkParamList> screen="Albums">Albums</Link>;
+<Link<LinkParamList> screen="Albums" params={{ screen: 'Playlist' }}>
+  Albums
+</Link>;
+<Link<LinkParamList> screen="Settings">Settings</Link>;
+<Link<LinkParamList> screen="Settings" params={{ path: '123' }}>
+  Settings
+</Link>;
+// @ts-expect-error
+<Link<LinkParamList> screen="PostDetails">PostDetails</Link>;
+<Link<LinkParamList> screen="PostDetails" params={{ id: '123' }}>
+  PostDetails
+</Link>;
+<Link<LinkParamList>
+  screen="PostDetails"
+  params={{ id: '123', section: '123' }}
+>
+  PostDetails
+</Link>;
+<Link<LinkParamList>
+  screen="PostDetails"
+  // @ts-expect-error
+  params={{ id: 123 }}
+>
+  PostDetails
+</Link>;
+<Link<LinkParamList>
+  screen="PostDetails"
+  // @ts-expect-error
+  params={{ id: '123', section: 123 }}
+>
+  PostDetails
+</Link>;
+<Link<LinkParamList>
+  screen="PostDetails"
+  // @ts-expect-error
+  params={{ ids: '123' }}
+>
+  PostDetails
+</Link>;
+<Link<LinkParamList>
+  screen="PostDetails"
+  // @ts-expect-error
+  params={{}}
+>
+  PostDetails
+</Link>;
+<Link<LinkParamList> screen="Login">Albums</Link>;
+
+// @ts-expect-error
+<Button<LinkParamList> screen="Album">Albums</Button>;
+// @ts-expect-error
+<Button<LinkParamList> screen="Albums">Albums</Button>;
+<Button<LinkParamList> screen="Albums" params={{ screen: 'Playlist' }}>
+  Albums
+</Button>;
+<Button<LinkParamList> screen="Settings">Settings</Button>;
+<Button<LinkParamList> screen="Settings" params={{ path: '123' }}>
+  Settings
+</Button>;
+// @ts-expect-error
+<Button<LinkParamList> screen="PostDetails">PostDetails</Button>;
+<Button<LinkParamList> screen="PostDetails" params={{ id: '123' }}>
+  PostDetails
+</Button>;
+<Button<LinkParamList>
+  screen="PostDetails"
+  params={{ id: '123', section: '123' }}
+>
+  PostDetails
+</Button>;
+<Button<LinkParamList>
+  screen="PostDetails"
+  // @ts-expect-error
+  params={{ id: 123 }}
+>
+  PostDetails
+</Button>;
+<Button<LinkParamList>
+  screen="PostDetails"
+  // @ts-expect-error
+  params={{ id: '123', section: 123 }}
+>
+  PostDetails
+</Button>;
+<Button<LinkParamList>
+  screen="PostDetails"
+  // @ts-expect-error
+  params={{ ids: '123' }}
+>
+  PostDetails
+</Button>;
+<Button<LinkParamList>
+  screen="PostDetails"
+  // @ts-expect-error
+  params={{}}
+>
+  PostDetails
+</Button>;
+<Button<LinkParamList> screen="Login">Albums</Button>;

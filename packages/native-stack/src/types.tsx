@@ -332,7 +332,7 @@ export type NativeStackNavigationOptions = {
    *
    * Only supported on iOS and Android.
    */
-  headerSearchBarOptions?: SearchBarProps;
+  headerSearchBarOptions?: Omit<SearchBarProps, 'ref'>;
   /**
    * Boolean indicating whether to show the menu on longPress of iOS >= 14 back button. Defaults to `true`.
    * Requires `react-native-screens` version >=3.3.0.
@@ -360,6 +360,12 @@ export type NativeStackNavigationOptions = {
    * @platform android
    */
   navigationBarColor?: string;
+  /**
+   * Boolean indicating whether the content should be visible behind the navigation bar. Defaults to `false`.
+   *
+   * @platform android
+   */
+  navigationBarTranslucent?: boolean;
   /**
    * Sets the visibility of the navigation bar. Defaults to `false`.
    *

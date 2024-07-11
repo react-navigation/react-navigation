@@ -1,3 +1,4 @@
+import { Text } from '@react-navigation/elements';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
@@ -5,7 +6,6 @@ import {
   ScrollView,
   type ScrollViewProps,
   StyleSheet,
-  Text,
   type TextProps,
   View,
 } from 'react-native';

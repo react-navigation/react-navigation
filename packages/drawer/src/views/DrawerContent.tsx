@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import type { DrawerContentComponentProps } from '../types';
 import { DrawerContentScrollView } from './DrawerContentScrollView';
 import { DrawerItemList } from './DrawerItemList';

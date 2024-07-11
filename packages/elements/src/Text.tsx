@@ -1,5 +1,5 @@
 import { useTheme } from '@react-navigation/native';
-import * as React from 'react';
+// eslint-disable-next-line no-restricted-imports
 import { Text as NativeText, type TextProps } from 'react-native';
 
 export function Text({ style, ...rest }: TextProps) {

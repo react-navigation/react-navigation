@@ -26,27 +26,44 @@
     "node": true
   },
   "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "react-native",
+            "importNames": ["Text"],
+            "message": "Please use `Text` from `@react-navigation/elements` instead."
+          }
+        ]
+      }
+    ],
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-types": "off",
     "import/no-default-export": "error",
     "react/display-name": "off",
+    "react/react-in-jsx-scope": "off",
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error"
   },
-  "overrides": [{
-    "files":["example/e2e/tests/*.ts"],
-    "rules": {
-      "jest/*": "off"
+  "overrides": [
+    {
+      "files": ["example/e2e/tests/*.ts"],
+      "rules": {
+        "jest/*": "off"
+      }
+    },
+    {
+      "files": ["scripts/*.js", "netlify/functions/**/*.js"],
+      "rules": {
+        "import/no-commonjs": "off"
+      }
+    },
+    {
+      "files": ["**/config/*.{ts,js}", "*.config.{ts,js}"],
+      "rules": {
+        "import/no-default-export": "off"
+      }
     }
-  }, {
-    "files":["scripts/*.js", "netlify/functions/**/*.js"],
-    "rules": {
-      "import/no-commonjs": "off"
-    }
-  }, {
-    "files":["**/config/*.{ts,js}", "*.config.{ts,js}"],
-    "rules": {
-      "import/no-default-export": "off"
-    }
-  }]
+  ]
 }

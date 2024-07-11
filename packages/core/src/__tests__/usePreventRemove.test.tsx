@@ -4,7 +4,6 @@ import {
   StackRouter,
 } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
-import * as React from 'react';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
 import { createNavigationContainerRef } from '../createNavigationContainerRef';

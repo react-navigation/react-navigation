@@ -3,6 +3,65 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.8...@react-navigation/core@7.0.0-rc.9) (2024-07-11)
+
+### Bug Fixes
+
+* preserve order when reading screens and groups ([4a928f9](https://github.com/react-navigation/react-navigation/commit/4a928f943da8ecbcb6658d7c2ccebefd7816c6bd)) - by @
+
+# [7.0.0-rc.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.7...@react-navigation/core@7.0.0-rc.8) (2024-07-10)
+
+### Bug Fixes
+
+* bump use-latest-callback to fix require ([40ddae9](https://github.com/react-navigation/react-navigation/commit/40ddae95fbbf84ff47f3447eef50ed9ddb66cab8)) - by @satya164
+
+# [7.0.0-rc.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.6...@react-navigation/core@7.0.0-rc.7) (2024-07-07)
+
+### Bug Fixes
+
+* upgrade use-latest-callback for esm compat ([187d41b](https://github.com/react-navigation/react-navigation/commit/187d41b3a139fe2a075a7809c0c4088cbd2fafdb)) - by @satya164
+
+# [7.0.0-rc.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.5...@react-navigation/core@7.0.0-rc.6) (2024-07-04)
+
+### Bug Fixes
+
+* fix published files ([829caa0](https://github.com/react-navigation/react-navigation/commit/829caa019e125811eea5213fd380e8e1bdbe7030)) - by @
+
+# [7.0.0-rc.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.4...@react-navigation/core@7.0.0-rc.5) (2024-07-04)
+
+**Note:** Version bump only for package @react-navigation/core
+
+# [7.0.0-rc.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.3...@react-navigation/core@7.0.0-rc.4) (2024-07-04)
+
+### Features
+
+* add package.json exports field ([1435cfe](https://github.com/react-navigation/react-navigation/commit/1435cfe3300767c221ebd4613479ad662d61efee)) - by @
+
+# [7.0.0-rc.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.2...@react-navigation/core@7.0.0-rc.3) (2024-07-01)
+
+### Bug Fixes
+
+* stop using react-native field in package.json ([efc33cb](https://github.com/react-navigation/react-navigation/commit/efc33cb0c4830a84ceae034dc1278c54f1faf32d)) - by @
+
+# [7.0.0-rc.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.1...@react-navigation/core@7.0.0-rc.2) (2024-06-29)
+
+### Bug Fixes
+
+* add a workaround for incorrect inference [#12041](https://github.com/react-navigation/react-navigation/issues/12041) ([85c4bbb](https://github.com/react-navigation/react-navigation/commit/85c4bbbf535cde2ba9cd537a2a5ce34f060d32b9)) - by @
+* fix type error with listeners for static config ([54437e2](https://github.com/react-navigation/react-navigation/commit/54437e29aa81c34e2cb3ea1de45e182eac74cfb4)) - by @satya164
+
+# [7.0.0-rc.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.0...@react-navigation/core@7.0.0-rc.1) (2024-06-28)
+
+### Features
+
+* make NavigationContainerRef.getCurrentRoute type safe ([#11525](https://github.com/react-navigation/react-navigation/issues/11525)) ([9bedc0c](https://github.com/react-navigation/react-navigation/commit/9bedc0cc29287689881e43aa88de9ef9fe853109)) - by @lucasloisp
+
+# [7.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.17...@react-navigation/core@7.0.0-rc.0) (2024-06-27)
+
+### Bug Fixes
+
+* throw proper error if invalid initialRouteName is passed ([e86f3b4](https://github.com/react-navigation/react-navigation/commit/e86f3b4ece709c1b0c51a0bc722a5b87931ab5a9)) - by @satya164
+
 # [7.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-alpha.16...@react-navigation/core@7.0.0-alpha.17) (2024-03-22)
 
 ### Bug Fixes

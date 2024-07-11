@@ -7,7 +7,6 @@ import {
   useNavigationBuilder,
 } from '@react-navigation/core';
 import { act, render, waitFor } from '@testing-library/react-native';
-import * as React from 'react';
 
 import { window } from '../__stubs__/window';
 import { createStaticNavigation } from '../createStaticNavigation';

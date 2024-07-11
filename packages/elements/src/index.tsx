@@ -1,3 +1,6 @@
+import backIcon from './assets/back-icon.png';
+import backIconMask from './assets/back-icon-mask.png';
+
 export { Background } from './Background';
 export { Button } from './Button';
 export { getDefaultSidebarWidth } from './getDefaultSidebarWidth';
@@ -21,11 +24,6 @@ export { SafeAreaProviderCompat } from './SafeAreaProviderCompat';
 export { Screen } from './Screen';
 export { Text } from './Text';
 
-export const Assets = [
-  // eslint-disable-next-line import/no-commonjs
-  require('./assets/back-icon.png'),
-  // eslint-disable-next-line import/no-commonjs
-  require('./assets/back-icon-mask.png'),
-];
+export const Assets = [backIcon, backIconMask];
 
 export * from './types';

@@ -1,6 +1,4 @@
 {
-  "name": "ReactNavigationExample",
-  "displayName": "React Navigation Example",
   "expo": {
     "name": "React Navigation",
     "owner": "react-navigation",
@@ -19,9 +17,16 @@
       "android",
       "web"
     ],
+    "scheme": "rne",
+    "android": {
+      "package": "org.reactnavigation.example"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "org.reactnavigation.example"
+    },
+    "web": {
+      "bundler": "metro"
     },
     "updates": {
       "fallbackToCacheTimeout": 0,
@@ -30,17 +35,19 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "scheme": "rne",
-    "android": {
-      "package": "org.reactnavigation.example"
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     },
+    "plugins": [
+      "expo-asset",
+      "expo-localization"
+    ],
     "extra": {
+      "supportsRTL": true,
+      "forcesRTL": false,
       "eas": {
         "projectId": "a7070fc4-41f3-403d-826d-292b5d868327"
       }
-    },
-    "runtimeVersion": {
-      "policy": "sdkVersion"
     }
   }
 }

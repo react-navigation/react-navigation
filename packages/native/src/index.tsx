@@ -7,7 +7,7 @@ export { DarkTheme } from './theming/DarkTheme';
 export { DefaultTheme } from './theming/DefaultTheme';
 export * from './types';
 export { useLinkBuilder } from './useLinkBuilder';
-export { useLinkProps } from './useLinkProps';
+export { type LinkProps, useLinkProps } from './useLinkProps';
 export { useLocale } from './useLocale';
 export { useScrollToTop } from './useScrollToTop';
 export { UNSTABLE_useUnhandledLinking } from './useUnhandledLinking';

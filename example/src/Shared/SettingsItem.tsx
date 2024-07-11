@@ -1,21 +1,22 @@
 import { Text } from '@react-navigation/elements';
 import { useTheme } from '@react-navigation/native';
-import * as React from 'react';
 import { StyleSheet, Switch, View } from 'react-native';
 
 type Props = {
   label: string;
   value: boolean;
+  disabled?: boolean;
   onValueChange: () => void;
 };
 
-export function SettingsItem({ label, value, onValueChange }: Props) {
+export function SettingsItem({ label, value, disabled, onValueChange }: Props) {
   const { colors } = useTheme();
 
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{label}</Text>
       <Switch
+        disabled={disabled}
         value={value}
         onValueChange={onValueChange}
         trackColor={{ true: colors.primary }}

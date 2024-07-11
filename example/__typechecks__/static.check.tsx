@@ -1,14 +1,38 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import type {
-  NavigationProp,
-  NavigatorScreenParams,
-  StaticParamList,
-  StaticScreenProps,
+import {
+  createStaticNavigation,
+  type NavigationContainerRef,
+  type NavigationProp,
+  type NavigatorScreenParams,
+  type StaticParamList,
+  type StaticScreenProps,
 } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createStackNavigator } from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
+
+const NativeStack = createNativeStackNavigator({
+  groups: {
+    GroupA: {
+      screenLayout: ({ navigation, children }) => {
+        expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();
+        expectTypeOf(navigation.push).toMatchTypeOf<Function>();
+
+        return <>{children}</>;
+      },
+      screens: {
+        Foo: {
+          screen: () => <></>,
+          options: { presentation: 'modal' },
+        },
+      },
+    },
+  },
+});
+
+createStaticNavigation(NativeStack);
 
 const HomeTabs = createBottomTabNavigator({
   screens: {
@@ -58,6 +82,10 @@ const RootStack = createStackNavigator({
     },
   },
 });
+
+const Navigation = createStaticNavigation(RootStack);
+
+<Navigation />;
 
 type RootParamList = StaticParamList<typeof RootStack>;
 
@@ -119,6 +147,7 @@ navigation.navigate('Register', { method: 'token' });
 /**
  * Infer params from nested navigator
  */
+navigation.navigate('Home'); // Navigate to screen without specifying a child screen
 navigation.navigate('Home', { screen: 'Groups' });
 navigation.navigate('Home', { screen: 'Chat', params: { id: 123 } });
 
@@ -289,13 +318,17 @@ createBottomTabNavigator({
 });
 
 /**
- * Requires `screens` to be defined
+ * Requires `screens` or `groups` to be defined
  */
 // @ts-expect-error
 createStackNavigator({});
 
 createStackNavigator({
   screens: {},
+});
+
+createStackNavigator({
+  groups: {},
 });
 
 /**
@@ -340,3 +373,45 @@ expectTypeOf<MyParamList>().toMatchTypeOf<{
       }>
     | undefined;
 }>();
+
+/**
+ * Check for errors on getCurrentRoute
+ */
+declare const navigationRef: NavigationContainerRef<RootParamList>;
+const route = navigationRef.getCurrentRoute()!;
+
+switch (route.name) {
+  case 'Profile':
+    expectTypeOf(route.params).toMatchTypeOf<{
+      user: string;
+    }>();
+    break;
+  case 'Feed':
+    expectTypeOf(route.params).toMatchTypeOf<{
+      sort: 'hot' | 'recent';
+    }>();
+    break;
+  case 'Settings':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    break;
+  case 'Login':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    break;
+  case 'Register':
+    expectTypeOf(route.params).toMatchTypeOf<{
+      method: 'email' | 'social';
+    }>();
+    break;
+  case 'Account':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    break;
+  // Checks for nested routes
+  case 'Groups':
+    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    break;
+  case 'Chat':
+    expectTypeOf(route.params).toMatchTypeOf<{
+      id: number;
+    }>();
+    break;
+}

@@ -9,7 +9,6 @@ import {
   HeaderBackButton,
 } from '@react-navigation/elements';
 import { type PathConfigMap, useNavigation } from '@react-navigation/native';
-import * as React from 'react';
 import { useWindowDimensions } from 'react-native';
 
 import { Albums } from '../Shared/Albums';

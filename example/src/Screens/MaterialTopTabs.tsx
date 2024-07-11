@@ -1,6 +1,5 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import type { PathConfigMap } from '@react-navigation/native';
-import * as React from 'react';
 
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';

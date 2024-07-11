@@ -3,7 +3,6 @@ import {
   type ParamListBase,
 } from '@react-navigation/core';
 import { render, type RenderAPI } from '@testing-library/react-native';
-import * as React from 'react';
 
 import { useLinking } from '../useLinking';
 

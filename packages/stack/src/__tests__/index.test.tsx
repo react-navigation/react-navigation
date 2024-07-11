@@ -1,14 +1,14 @@
+import { Text } from '@react-navigation/elements';
 import {
   createNavigationContainerRef,
   NavigationContainer,
   type ParamListBase,
-  StackActions,
   useFocusEffect,
   useIsFocused,
 } from '@react-navigation/native';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
-import { Button, Text, View } from 'react-native';
+import { Button, View } from 'react-native';
 
 import { createStackNavigator, type StackScreenProps } from '../index';
 
@@ -135,8 +135,6 @@ it('handles screens preloading', async () => {
   expect(
     queryByText('Screen B', { includeHiddenElements: true })
   ).not.toBeNull();
-  act(() => navigation.dispatch(StackActions.remove('B')));
-  expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
 });
 
 it('runs focus effect on focus change on preloaded route', () => {
@@ -172,7 +170,6 @@ it('runs focus effect on focus change on preloaded route', () => {
   expect(focusEffectCleanup).not.toHaveBeenCalled();
 
   act(() => navigation.preload('A'));
-  act(() => navigation.dispatch(StackActions.remove('B')));
   act(() => navigation.preload('B'));
 
   expect(focusEffect).not.toHaveBeenCalled();
