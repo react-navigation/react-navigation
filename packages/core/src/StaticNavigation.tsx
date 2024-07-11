@@ -401,31 +401,39 @@ export function createComponentForStaticNavigation(
     );
   }
 
-  const items = screens ? getItemsFromScreens(Screen, screens) : [];
+  const items: (() => JSX.Element | null)[] = [];
 
-  if (groups) {
-    items.push(
-      ...Object.entries(groups).map(([key, { if: useIf, ...group }]) => {
-        const groupItems = getItemsFromScreens(Screen, group.screens);
+  // Loop through the config to find screens and groups
+  // So we add the screens and groups in the same order as they are defined
+  for (const key in config) {
+    if (key === 'screens' && screens) {
+      items.push(...getItemsFromScreens(Screen, screens));
+    }
 
-        return () => {
-          // Call unconditionally since screen configs may contain `useIf` hooks
-          const children = groupItems.map((item) => item());
+    if (key === 'groups' && groups) {
+      items.push(
+        ...Object.entries(groups).map(([key, { if: useIf, ...group }]) => {
+          const groupItems = getItemsFromScreens(Screen, group.screens);
 
-          const shouldRender = useIf == null || useIf();
+          return () => {
+            // Call unconditionally since screen configs may contain `useIf` hooks
+            const children = groupItems.map((item) => item());
 
-          if (!shouldRender) {
-            return null;
-          }
+            const shouldRender = useIf == null || useIf();
 
-          return (
-            <Group navigationKey={key} {...group} key={key}>
-              {children}
-            </Group>
-          );
-        };
-      })
-    );
+            if (!shouldRender) {
+              return null;
+            }
+
+            return (
+              <Group navigationKey={key} {...group} key={key}>
+                {children}
+              </Group>
+            );
+          };
+        })
+      );
+    }
   }
 
   const NavigatorComponent = () => {
@@ -591,23 +599,32 @@ export function createPathConfigForStaticNavigation(
       );
     };
 
-    const screens = t.config.screens
-      ? createPathConfigForScreens(
-          t.config.screens,
-          o?.initialRouteName ?? t.config.initialRouteName
-        )
-      : {};
+    const screens = {};
 
-    if (t.config.groups) {
-      Object.entries(t.config.groups).forEach(([, group]) => {
+    // Loop through the config to find screens and groups
+    // So we add the screens and groups in the same order as they are defined
+    for (const key in t.config) {
+      if (key === 'screens' && t.config.screens) {
         Object.assign(
           screens,
           createPathConfigForScreens(
-            group.screens,
+            t.config.screens,
             o?.initialRouteName ?? t.config.initialRouteName
           )
         );
-      });
+      }
+
+      if (key === 'groups' && t.config.groups) {
+        Object.entries(t.config.groups).forEach(([, group]) => {
+          Object.assign(
+            screens,
+            createPathConfigForScreens(
+              group.screens,
+              o?.initialRouteName ?? t.config.initialRouteName
+            )
+          );
+        });
+      }
     }
 
     if (Object.keys(screens).length === 0) {

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.8...@react-navigation/core@7.0.0-rc.9) (2024-07-11)
+
+### Bug Fixes
+
+* preserve order when reading screens and groups ([4a928f9](https://github.com/react-navigation/react-navigation/commit/4a928f943da8ecbcb6658d7c2ccebefd7816c6bd)) - by @
+
+# [7.0.0-rc.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.7...@react-navigation/core@7.0.0-rc.8) (2024-07-10)
+
+### Bug Fixes
+
+* bump use-latest-callback to fix require ([40ddae9](https://github.com/react-navigation/react-navigation/commit/40ddae95fbbf84ff47f3447eef50ed9ddb66cab8)) - by @satya164
+
 # [7.0.0-rc.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.6...@react-navigation/core@7.0.0-rc.7) (2024-07-07)
 
 ### Bug Fixes

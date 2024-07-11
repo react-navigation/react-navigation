@@ -3716,7 +3716,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/bottom-tabs@workspace:packages/bottom-tabs"
   dependencies:
-    "@react-navigation/elements": "npm:^2.0.0-rc.10"
+    "@react-navigation/elements": "npm:^2.0.0-rc.12"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
     "@types/color": "npm:^3.0.6"
@@ -3746,6 +3746,7 @@ __metadata:
     "@testing-library/react-native": "npm:^12.4.3"
     "@types/react": "npm:~18.2.79"
     "@types/react-is": "npm:^18.2.3"
+    "@types/use-sync-external-store": "npm:^0.0.6"
     del-cli: "npm:^5.1.0"
     escape-string-regexp: "npm:^4.0.0"
     immer: "npm:^10.0.3"
@@ -3756,7 +3757,8 @@ __metadata:
     react-native-builder-bob: "npm:^0.25.0"
     react-test-renderer: "npm:18.2.0"
     typescript: "npm:^5.5.2"
-    use-latest-callback: "npm:^0.1.11"
+    use-latest-callback: "npm:^0.2.1"
+    use-sync-external-store: "npm:^1.2.2"
   peerDependencies:
     react: "*"
   languageName: unknown
@@ -3786,7 +3788,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/drawer@workspace:packages/drawer"
   dependencies:
-    "@react-navigation/elements": "npm:^2.0.0-rc.10"
+    "@react-navigation/elements": "npm:^2.0.0-rc.12"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
     "@types/react": "npm:~18.2.79"
@@ -3801,7 +3803,7 @@ __metadata:
     react-native-safe-area-context: "npm:4.10.1"
     react-native-screens: "npm:3.31.1"
     typescript: "npm:^5.5.2"
-    use-latest-callback: "npm:^0.1.11"
+    use-latest-callback: "npm:^0.2.1"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
     react: ">= 18.2.0"
@@ -3813,7 +3815,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-navigation/elements@npm:^2.0.0-rc.10, @react-navigation/elements@workspace:packages/elements":
+"@react-navigation/elements@npm:^2.0.0-rc.12, @react-navigation/elements@workspace:packages/elements":
   version: 0.0.0-use.local
   resolution: "@react-navigation/elements@workspace:packages/elements"
   dependencies:
@@ -3890,7 +3892,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/material-top-tabs@workspace:packages/material-top-tabs"
   dependencies:
-    "@react-navigation/elements": "npm:^2.0.0-rc.10"
+    "@react-navigation/elements": "npm:^2.0.0-rc.12"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
     "@types/react": "npm:~18.2.79"
@@ -3900,7 +3902,7 @@ __metadata:
     react-native: "npm:0.74.2"
     react-native-builder-bob: "npm:^0.25.0"
     react-native-pager-view: "npm:6.3.0"
-    react-native-tab-view: "npm:^4.0.0-rc.5"
+    react-native-tab-view: "npm:^4.0.0-rc.6"
     typescript: "npm:^5.5.2"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
@@ -3914,7 +3916,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/native-stack@workspace:packages/native-stack"
   dependencies:
-    "@react-navigation/elements": "npm:^2.0.0-rc.10"
+    "@react-navigation/elements": "npm:^2.0.0-rc.12"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
     "@types/react": "npm:~18.2.79"
@@ -3951,7 +3953,7 @@ __metadata:
     react-native: "npm:0.74.2"
     react-native-builder-bob: "npm:^0.25.0"
     typescript: "npm:^5.5.2"
-    use-latest-callback: "npm:^0.1.11"
+    use-latest-callback: "npm:^0.2.1"
   peerDependencies:
     react: ">= 18.2.0"
     react-native: ">= 0.72.0"
@@ -3973,7 +3975,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/stack@workspace:packages/stack"
   dependencies:
-    "@react-navigation/elements": "npm:^2.0.0-rc.10"
+    "@react-navigation/elements": "npm:^2.0.0-rc.12"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
     "@types/color": "npm:^3.0.6"
@@ -4613,6 +4615,13 @@ __metadata:
   version: 2.0.3
   resolution: "@types/stack-utils@npm:2.0.3"
   checksum: 72576cc1522090fe497337c2b99d9838e320659ac57fa5560fcbdcbafcf5d0216c6b3a0a8a4ee4fdb3b1f5e3420aa4f6223ab57b82fef3578bec3206425c6cf5
+  languageName: node
+  linkType: hard
+
+"@types/use-sync-external-store@npm:^0.0.6":
+  version: 0.0.6
+  resolution: "@types/use-sync-external-store@npm:0.0.6"
+  checksum: a95ce330668501ad9b1c5b7f2b14872ad201e552a0e567787b8f1588b22c7040c7c3d80f142cbb9f92d13c4ea41c46af57a20f2af4edf27f224d352abcfe4049
   languageName: node
   linkType: hard
 
@@ -14184,7 +14193,7 @@ __metadata:
     react-native: "npm:0.74.2"
     react-native-builder-bob: "npm:^0.25.0"
     typescript: "npm:^5.5.2"
-    use-latest-callback: "npm:^0.1.11"
+    use-latest-callback: "npm:^0.2.1"
   peerDependencies:
     react: ">= 18.2.0"
     react-native: ">= 0.72.0"
@@ -14262,7 +14271,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-tab-view@npm:^4.0.0-rc.5, react-native-tab-view@workspace:packages/react-native-tab-view":
+"react-native-tab-view@npm:^4.0.0-rc.6, react-native-tab-view@workspace:packages/react-native-tab-view":
   version: 0.0.0-use.local
   resolution: "react-native-tab-view@workspace:packages/react-native-tab-view"
   dependencies:
@@ -14272,7 +14281,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.25.0"
     react-native-pager-view: "npm:6.3.0"
     typescript: "npm:^5.5.2"
-    use-latest-callback: "npm:^0.1.11"
+    use-latest-callback: "npm:^0.2.1"
   peerDependencies:
     react: ">= 18.2.0"
     react-native: ">= 0.72.0"
@@ -16743,12 +16752,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-latest-callback@npm:^0.1.11":
-  version: 0.1.11
-  resolution: "use-latest-callback@npm:0.1.11"
+"use-latest-callback@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "use-latest-callback@npm:0.2.1"
   peerDependencies:
     react: ">=16.8"
-  checksum: cc6df404a4ed3a39d0eb014a815c2e568a6abbe8c5ff09f9205a08bf68e86201826ed633865a6056ca0fd9581e0e7e70f18ca26c592a9eaccea5d244cf283b1f
+  checksum: da5718eda625738cc7dac8fb502d0f8f2039435eb71203565a72c32e0f5769e7b8ddac074e650066636e7f4b29b45524f751cb18a2b430856d98879bbb10d274
+  languageName: node
+  linkType: hard
+
+"use-sync-external-store@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "use-sync-external-store@npm:1.2.2"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: 671e9c190aab9a8374a5d468c6ba17f52c38b6fae970110bc196fc1e2b57204149aea9619be49a1bb5207fb6e51d8afd19c3bcb94afe61813fed039821461dc0
   languageName: node
   linkType: hard
 
