@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-rc.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.14...@react-navigation/elements@2.0.0-rc.15) (2024-07-12)
+
+### Bug Fixes
+
+* add masked-view to peerDependencies ([08b3ef1](https://github.com/react-navigation/react-navigation/commit/08b3ef1e16dd85d12f4c75753a7a02774d5f9abf)) - by @
+
 # [2.0.0-rc.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.13...@react-navigation/elements@2.0.0-rc.14) (2024-07-12)
 
 ### Bug Fixes
