@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-rc.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.13...@react-navigation/elements@2.0.0-rc.14) (2024-07-12)
+
+### Bug Fixes
+
+* import from /native instead of /core ([66d5f45](https://github.com/react-navigation/react-navigation/commit/66d5f455b4a09b76c8f06690c1b01e4797eba393)) - by @
+
 # [2.0.0-rc.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.12...@react-navigation/elements@2.0.0-rc.13) (2024-07-11)
 
 ### Bug Fixes
