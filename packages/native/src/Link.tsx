@@ -3,7 +3,6 @@ import * as React from 'react';
 import {
   type GestureResponderEvent,
   Platform,
-  // eslint-disable-next-line no-restricted-imports
   Text,
   type TextProps,
 } from 'react-native';
