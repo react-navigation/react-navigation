@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.8](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.7...react-native-drawer-layout@4.0.0-rc.8) (2024-07-14)
+
+### Bug Fixes
+
+* fix drawer animation when reduceMotion enabled. closes [#1198](https://github.com/react-navigation/react-navigation/issues/1198) ([c2caf87](https://github.com/react-navigation/react-navigation/commit/c2caf87bc5df50f665442fbb0c42794cad793a3a)) - by @satya164
+
 # [4.0.0-rc.7](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.6...react-native-drawer-layout@4.0.0-rc.7) (2024-07-11)
 
 ### Bug Fixes
