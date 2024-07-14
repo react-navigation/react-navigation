@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.3.1](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@3.3.0...react-native-drawer-layout@3.3.1) (2024-07-14)
+
+### Bug Fixes
+
+* fix drawer animation when reduceMotion enabled. closes [#1198](https://github.com/react-navigation/react-navigation/issues/1198) ([16e28ce](https://github.com/react-navigation/react-navigation/commit/16e28ce8ce816afeef2e3531e765d740fc1f4f2e)) - by @
+
 # 3.3.0 (2024-03-12)
 
 ### Bug Fixes

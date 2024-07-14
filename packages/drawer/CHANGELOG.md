@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.7.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.7.0...@react-navigation/drawer@6.7.1) (2024-07-14)
+
+### Bug Fixes
+
+* fix drawer animation when reduceMotion enabled. closes [#1198](https://github.com/react-navigation/react-navigation/issues/1198) ([16e28ce](https://github.com/react-navigation/react-navigation/commit/16e28ce8ce816afeef2e3531e765d740fc1f4f2e)) - by @
+* fix incorrect import from gesture handler ([49d5a3e](https://github.com/react-navigation/react-navigation/commit/49d5a3e554dc79c7b159902dd07ee1d471ef3ab7)) - by @
+
 # [6.7.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@6.6.15...@react-navigation/drawer@6.7.0) (2024-07-01)
 
 ### Features
