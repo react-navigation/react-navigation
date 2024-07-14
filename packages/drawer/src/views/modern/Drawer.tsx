@@ -170,6 +170,8 @@ export default function Drawer({
         overshootClamping: true,
         restDisplacementThreshold: 0.01,
         restSpeedThreshold: 0.01,
+        // @ts-expect-error: This is available in newer reanimated versions
+        reduceMotion: 'never',
       });
 
       if (!isUserInitiated) {
