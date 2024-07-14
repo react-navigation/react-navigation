@@ -8,11 +8,6 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {
-  PanGestureHandler,
-  PanGestureHandlerGestureEvent,
-  State as GestureState,
-} from 'react-native-gesture-handler';
 import Animated, {
   interpolate,
   runOnJS,
@@ -25,6 +20,11 @@ import Animated, {
 
 import type { DrawerProps } from '../../types';
 import DrawerProgressContext from '../../utils/DrawerProgressContext';
+import {
+  GestureState,
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+} from '../GestureHandler';
 import Overlay from './Overlay';
 
 const SWIPE_DISTANCE_MINIMUM = 5;

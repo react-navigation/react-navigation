@@ -17,13 +17,13 @@ export const TapGestureHandler =
 
 export const GestureHandlerRootView = View;
 
-export const GestureState = {
-  UNDETERMINED: 0,
-  FAILED: 1,
-  BEGAN: 2,
-  CANCELLED: 3,
-  ACTIVE: 4,
-  END: 5,
-};
+export const enum GestureState {
+  UNDETERMINED = 0,
+  FAILED = 1,
+  BEGAN = 2,
+  CANCELLED = 3,
+  ACTIVE = 4,
+  END = 5,
+}
 
 export type { PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
