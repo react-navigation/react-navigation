@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/example",
   "description": "Demo app to showcase various functionality of React Navigation",
-  "version": "6.0.8",
+  "version": "6.1.0",
   "private": true,
   "scripts": {
     "start": "NODE_OPTIONS=--openssl-legacy-provider expo start",

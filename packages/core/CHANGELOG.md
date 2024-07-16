@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.4.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.4.16...@react-navigation/core@6.4.17) (2024-07-16)
+
+### Bug Fixes
+
+* bump use-latest-callback to fix require ([66b5457](https://github.com/react-navigation/react-navigation/commit/66b54574f0a68b98702c0c6b4a35dc42959941d1)) - by @
+
 ## [6.4.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.4.15...@react-navigation/core@6.4.16) (2024-03-18)
 
 ### Bug Fixes

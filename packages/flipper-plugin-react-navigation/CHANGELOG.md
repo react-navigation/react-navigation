@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.32](https://github.com/react-navigation/react-navigation/compare/flipper-plugin-react-navigation@1.3.31...flipper-plugin-react-navigation@1.3.32) (2024-07-16)
+
+**Note:** Version bump only for package flipper-plugin-react-navigation
+
 ## [1.3.31](https://github.com/react-navigation/react-navigation/compare/flipper-plugin-react-navigation@1.3.30...flipper-plugin-react-navigation@1.3.31) (2024-03-18)
 
 **Note:** Version bump only for package flipper-plugin-react-navigation

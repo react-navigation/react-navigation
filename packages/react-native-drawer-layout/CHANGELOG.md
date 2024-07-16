@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.3.2](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@3.3.1...react-native-drawer-layout@3.3.2) (2024-07-16)
+
+### Bug Fixes
+
+* bump use-latest-callback to fix require ([66b5457](https://github.com/react-navigation/react-navigation/commit/66b54574f0a68b98702c0c6b4a35dc42959941d1)) - by @
+
 ## [3.3.1](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@3.3.0...react-native-drawer-layout@3.3.1) (2024-07-14)
 
 ### Bug Fixes
