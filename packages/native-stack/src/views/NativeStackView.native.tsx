@@ -156,6 +156,7 @@ type SceneViewProps = {
   onHeaderBackButtonClicked: ScreenProps['onHeaderBackButtonClicked'];
   onNativeDismissCancelled: ScreenProps['onDismissed'];
   onGestureCancel: ScreenProps['onGestureCancel'];
+  onSheetDetentChanged: ScreenProps['onSheetDetentChanged'];
 };
 
 const SceneView = ({
@@ -173,6 +174,7 @@ const SceneView = ({
   onHeaderBackButtonClicked,
   onNativeDismissCancelled,
   onGestureCancel,
+  onSheetDetentChanged,
 }: SceneViewProps) => {
   const { route, navigation, options, render } = descriptor;
 
@@ -200,7 +202,6 @@ const SceneView = ({
     keyboardHandlingEnabled,
     navigationBarColor,
     navigationBarHidden,
-    onSheetDetentChanged = null,
     orientation,
     sheetLargestUndimmedDetent = -1,
     sheetGrabberVisible = false,
@@ -394,11 +395,7 @@ const SceneView = ({
       onDisappear={onDisappear}
       onDismissed={onDismissed}
       onGestureCancel={onGestureCancel}
-      onSheetDetentChanged={(event) => {
-        if (onSheetDetentChanged) {
-          onSheetDetentChanged(event);
-        }
-      }}
+      onSheetDetentChanged={onSheetDetentChanged}
       gestureResponseDistance={gestureResponseDistance}
       nativeBackButtonDismissalEnabled={false} // on Android
       onHeaderBackButtonClicked={onHeaderBackButtonClicked}
@@ -636,6 +633,16 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
                 navigation.emit({
                   type: 'gestureCancel',
                   target: route.key,
+                });
+              }}
+              onSheetDetentChanged={(event) => {
+                navigation.emit({
+                  type: 'sheetDetentChange',
+                  target: route.key,
+                  data: {
+                    index: event.nativeEvent.index,
+                    isStable: event.nativeEvent.isStable,
+                  },
                 });
               }}
             />
