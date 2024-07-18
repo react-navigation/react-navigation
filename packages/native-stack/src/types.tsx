@@ -36,6 +36,15 @@ export type NativeStackNavigationEventMap = {
    * Event which fires when a swipe back is canceled on iOS.
    */
   gestureCancel: { data: undefined };
+  /**
+   * Event which fires when screen is in sheet presentation & it's detent changes.
+   *
+   * In payload it caries two fields:
+   *
+   * * index - current detent index in the `sheetAllowedDetents` array,
+   * * isStable - on Android `false` value means that the user is dragging the sheet or it is settling; on iOS it is always `true`.
+   */
+  sheetDetentChange: { data: { index: number; isStable: boolean } };
 };
 
 export type NativeStackNavigationProp<
