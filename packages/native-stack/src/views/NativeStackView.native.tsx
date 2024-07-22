@@ -174,6 +174,7 @@ const SceneView = ({
   const {
     animationDuration,
     animationTypeForReplace = 'push',
+    fullScreenGestureShadowEnabled = false,
     gestureEnabled,
     gestureDirection = presentation === 'card' ? 'horizontal' : 'vertical',
     gestureResponseDistance,
@@ -331,6 +332,8 @@ const SceneView = ({
       hasLargeHeader={options.headerLargeTitle ?? false}
       customAnimationOnSwipe={animationMatchesGesture}
       fullScreenSwipeEnabled={fullScreenGestureEnabled}
+      // @ts-expect-error prop supported from react-native-screens 3.33.0 onwards
+      fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled}
       gestureEnabled={
         isAndroid
           ? // This prop enables handling of system back gestures on Android
@@ -341,7 +344,6 @@ const SceneView = ({
       homeIndicatorHidden={autoHideHomeIndicator}
       hideKeyboardOnSwipe={keyboardHandlingEnabled}
       navigationBarColor={navigationBarColor}
-      // @ts-expect-error prop supported from react-native-screens 3.32.0 onwards
       navigationBarTranslucent={navigationBarTranslucent}
       navigationBarHidden={navigationBarHidden}
       replaceAnimation={animationTypeForReplace}
