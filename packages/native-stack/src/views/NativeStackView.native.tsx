@@ -169,12 +169,12 @@ const SceneView = ({
     animationMatchesGesture,
     presentation = isPresentationModal ? 'modal' : 'card',
     fullScreenGestureEnabled,
-    fullScreenGestureShadowEnabled,
   } = options;
 
   const {
     animationDuration,
     animationTypeForReplace = 'push',
+    fullScreenGestureShadowEnabled = false,
     gestureEnabled,
     gestureDirection = presentation === 'card' ? 'horizontal' : 'vertical',
     gestureResponseDistance,
@@ -219,10 +219,6 @@ const SceneView = ({
     if (animation === undefined) {
       animation = 'slide_from_bottom';
     }
-  }
-
-  if (fullScreenGestureShadowEnabled === undefined) {
-    fullScreenGestureShadowEnabled = false;
   }
 
   // workaround for rn-screens where gestureDirection has to be set on both
