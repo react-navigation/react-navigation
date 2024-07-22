@@ -332,8 +332,6 @@ const SceneView = ({
       hasLargeHeader={options.headerLargeTitle ?? false}
       customAnimationOnSwipe={animationMatchesGesture}
       fullScreenSwipeEnabled={fullScreenGestureEnabled}
-      // @ts-expect-error prop supported from react-native-screens 3.33.0 onwards
-      fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled}
       gestureEnabled={
         isAndroid
           ? // This prop enables handling of system back gestures on Android
@@ -344,7 +342,6 @@ const SceneView = ({
       homeIndicatorHidden={autoHideHomeIndicator}
       hideKeyboardOnSwipe={keyboardHandlingEnabled}
       navigationBarColor={navigationBarColor}
-      navigationBarTranslucent={navigationBarTranslucent}
       navigationBarHidden={navigationBarHidden}
       replaceAnimation={animationTypeForReplace}
       stackPresentation={presentation === 'card' ? 'push' : presentation}
@@ -412,8 +409,13 @@ const SceneView = ({
           },
         }
       )}
-      // this prop is available since rn-screens 3.16
       freezeOnBlur={freezeOnBlur}
+      // When ts-expect-error is added, it affects all the props below it
+      // So we keep any props that need it at the end
+      // Otherwise invalid props may not be caught by TypeScript
+      // @ts-expect-error Props available in newer versions of `react-native-screens`
+      navigationBarTranslucent={navigationBarTranslucent}
+      fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled} // 3.33.0 onwards
     >
       <NavigationContext.Provider value={navigation}>
         <NavigationRouteContext.Provider value={route}>
