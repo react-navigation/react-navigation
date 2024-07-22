@@ -48,10 +48,13 @@ export function Drawer({
   React.useEffect(() => {
     const element = drawerRef.current as HTMLDivElement | null;
 
-    if (element) {
-      element.addEventListener('transitionstart', onTransitionStartLatest);
-      element.addEventListener('transitionend', onTransitionEndLatest);
-    }
+    element?.addEventListener('transitionstart', onTransitionStartLatest);
+    element?.addEventListener('transitionend', onTransitionEndLatest);
+
+    return () => {
+      element?.removeEventListener('transitionstart', onTransitionStartLatest);
+      element?.removeEventListener('transitionend', onTransitionEndLatest);
+    };
   }, [onTransitionEndLatest, onTransitionStartLatest]);
 
   const isOpen = drawerType === 'permanent' ? true : open;
