@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-rc.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.15...@react-navigation/elements@2.0.0-rc.16) (2024-07-19)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [2.0.0-rc.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.14...@react-navigation/elements@2.0.0-rc.15) (2024-07-12)
+
+### Bug Fixes
+
+* add masked-view to peerDependencies ([08b3ef1](https://github.com/react-navigation/react-navigation/commit/08b3ef1e16dd85d12f4c75753a7a02774d5f9abf)) - by @
+
+# [2.0.0-rc.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.13...@react-navigation/elements@2.0.0-rc.14) (2024-07-12)
+
+### Bug Fixes
+
+* import from /native instead of /core ([66d5f45](https://github.com/react-navigation/react-navigation/commit/66d5f455b4a09b76c8f06690c1b01e4797eba393)) - by @
+
+# [2.0.0-rc.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.12...@react-navigation/elements@2.0.0-rc.13) (2024-07-11)
+
+### Bug Fixes
+
+* upgrade react-native-builder-bob ([1575287](https://github.com/react-navigation/react-navigation/commit/1575287d40fadb97f33eb19c2914d8be3066b47a)) - by @
+
 # [2.0.0-rc.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.11...@react-navigation/elements@2.0.0-rc.12) (2024-07-11)
 
 **Note:** Version bump only for package @react-navigation/elements

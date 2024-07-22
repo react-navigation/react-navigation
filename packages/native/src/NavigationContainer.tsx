@@ -7,6 +7,7 @@ import {
   type NavigationContainerRef,
   type NavigationState,
   type ParamListBase,
+  ThemeProvider,
   validatePathConfig,
 } from '@react-navigation/core';
 import * as React from 'react';
@@ -161,7 +162,7 @@ function NavigationContainerInner(
   if (!isLinkingReady) {
     // This is temporary until we have Suspense for data-fetching
     // Then the fallback will be handled by a parent `Suspense` component
-    return fallback as React.ReactElement;
+    return <ThemeProvider value={theme}>{fallback}</ThemeProvider>;
   }
 
   return (

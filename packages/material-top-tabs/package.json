@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/material-top-tabs",
   "description": "Integration for the animated tab view component from react-native-tab-view",
-  "version": "7.0.0-rc.12",
+  "version": "7.0.0-rc.16",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -23,14 +23,14 @@
   },
   "homepage": "https://reactnavigation.org/docs/material-top-tab-navigator/",
   "source": "./src/index.tsx",
-  "main": "./lib/commonjs/index.cjs",
-  "module": "./lib/module/index.mjs",
+  "main": "./lib/commonjs/index.js",
+  "module": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
       "types": "./lib/typescript/src/index.d.ts",
-      "import": "./lib/module/index.mjs",
-      "require": "./lib/commonjs/index.cjs"
+      "import": "./lib/module/index.js",
+      "require": "./lib/commonjs/index.js"
     }
   },
   "files": [
@@ -47,9 +47,9 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/elements": "^2.0.0-rc.12",
+    "@react-navigation/elements": "^2.0.0-rc.16",
     "color": "^4.2.3",
-    "react-native-tab-view": "^4.0.0-rc.6"
+    "react-native-tab-view": "^4.0.0-rc.7"
   },
   "devDependencies": {
     "@react-navigation/native": "workspace:^",
@@ -58,7 +58,7 @@
     "del-cli": "^5.1.0",
     "react": "18.2.0",
     "react-native": "0.74.2",
-    "react-native-builder-bob": "^0.25.0",
+    "react-native-builder-bob": "^0.26.0",
     "react-native-pager-view": "6.3.0",
     "typescript": "^5.5.2"
   },

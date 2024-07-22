@@ -1,7 +1,7 @@
 {
   "name": "react-native-tab-view",
   "description": "Tab view component for React Native",
-  "version": "4.0.0-rc.6",
+  "version": "4.0.0-rc.7",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -24,14 +24,14 @@
   },
   "homepage": "https://reactnavigation.org/docs/tab-view/",
   "source": "./src/index.tsx",
-  "main": "./lib/commonjs/index.cjs",
-  "module": "./lib/module/index.mjs",
+  "main": "./lib/commonjs/index.js",
+  "module": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
       "types": "./lib/typescript/src/index.d.ts",
-      "import": "./lib/module/index.mjs",
-      "require": "./lib/commonjs/index.cjs"
+      "import": "./lib/module/index.js",
+      "require": "./lib/commonjs/index.js"
     }
   },
   "files": [
@@ -51,7 +51,7 @@
     "del-cli": "^5.1.0",
     "react": "18.2.0",
     "react-native": "0.74.2",
-    "react-native-builder-bob": "^0.25.0",
+    "react-native-builder-bob": "^0.26.0",
     "react-native-pager-view": "6.3.0",
     "typescript": "^5.5.2"
   },

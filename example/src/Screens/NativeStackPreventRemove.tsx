@@ -1,5 +1,5 @@
-import { type PathConfigMap, usePreventRemove } from '@react-navigation/core';
 import { Button } from '@react-navigation/elements';
+import { type PathConfigMap, usePreventRemove } from '@react-navigation/native';
 import { CommonActions, useTheme } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
