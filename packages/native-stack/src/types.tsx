@@ -422,6 +422,16 @@ export type NativeStackNavigationOptions = {
    */
   fullScreenGestureEnabled?: boolean;
   /**
+   * Whether the full screen dismiss gesture has shadow under view during transition. The gesture uses custom transition and thus
+   * doesn't have a shadow by default. When enabled, a custom shadow view is added during the transition which tries to mimic the
+   * default iOS shadow. Defaults to `false`.
+   *
+   * This does not affect the behavior of transitions that don't use gestures, enabled by `fullScreenGestureEnabled` prop.
+   *
+   * @platform ios
+   */
+  fullScreenGestureShadowEnabled?: boolean;
+  /**
    * Whether you can use gestures to dismiss this screen. Defaults to `true`.
    *
    * Only supported on iOS.
