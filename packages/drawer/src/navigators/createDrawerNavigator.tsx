@@ -78,9 +78,9 @@ function DrawerNavigator({
 }
 
 export function createDrawerNavigator<
-  ParamList extends ParamListBase,
-  NavigatorID extends string | undefined = undefined,
-  TypeBag extends NavigatorTypeBagBase = {
+  const ParamList extends ParamListBase,
+  const NavigatorID extends string | undefined = undefined,
+  const TypeBag extends NavigatorTypeBagBase = {
     ParamList: ParamList;
     NavigatorID: NavigatorID;
     State: DrawerNavigationState<ParamList>;
@@ -95,7 +95,7 @@ export function createDrawerNavigator<
     };
     Navigator: typeof DrawerNavigator;
   },
-  Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
+  const Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
 >(config?: Config): TypedNavigator<TypeBag, Config> {
   return createNavigatorFactory(DrawerNavigator)(config);
 }

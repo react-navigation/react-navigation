@@ -34,6 +34,10 @@ const NativeStack = createNativeStackNavigator({
 
 createStaticNavigation(NativeStack);
 
+expectTypeOf<StaticParamList<typeof NativeStack>>().toMatchTypeOf<{
+  Foo: undefined;
+}>();
+
 const HomeTabs = createBottomTabNavigator({
   screens: {
     Groups: () => null,
@@ -80,6 +84,9 @@ const RootStack = createStackNavigator({
         Account: () => null,
       },
     },
+  },
+  screenOptions: {
+    animationTypeForReplace: 'pop',
   },
 });
 
