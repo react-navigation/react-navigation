@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.9](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.8...react-native-drawer-layout@4.0.0-rc.9) (2024-07-25)
+
+### Bug Fixes
+
+* remove transition listeners in effect cleanup ([000f7ba](https://github.com/react-navigation/react-navigation/commit/000f7ba4311364907d6efc1ed4a662c9b462e733)) - by @satya164
+
 # [4.0.0-rc.8](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.7...react-native-drawer-layout@4.0.0-rc.8) (2024-07-14)
 
 ### Bug Fixes

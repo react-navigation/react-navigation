@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/material-top-tabs",
   "description": "Integration for the animated tab view component from react-native-tab-view",
-  "version": "7.0.0-rc.16",
+  "version": "7.0.0-rc.17",
   "keywords": [
     "react-native-component",
     "react-component",

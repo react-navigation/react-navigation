@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-rc.21...@react-navigation/drawer@7.0.0-rc.22) (2024-07-25)
+
+### Bug Fixes
+
+* fix type inference for params. closes [#12071](https://github.com/react-navigation/react-navigation/issues/12071) ([3299b70](https://github.com/react-navigation/react-navigation/commit/3299b70682adbf55811369535cca1cdd0dc59860)) - by @
+
 # [7.0.0-rc.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-rc.20...@react-navigation/drawer@7.0.0-rc.21) (2024-07-19)
 
 **Note:** Version bump only for package @react-navigation/drawer
