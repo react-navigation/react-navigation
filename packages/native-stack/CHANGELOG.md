@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.11.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.10.1...@react-navigation/native-stack@6.11.0) (2024-07-25)
+
+### Features
+
+* add fullScreenSwipeShadowEnabled prop to NativeStackView ([#12070](https://github.com/react-navigation/react-navigation/issues/12070)) ([d2eb14a](https://github.com/react-navigation/react-navigation/commit/d2eb14a33091d729697071b3cc64084057767051)), closes [software-mansion/react-native-screens#2239](https://github.com/software-mansion/react-native-screens/issues/2239) - by @maksg
+
 ## [6.10.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@6.10.0...@react-navigation/native-stack@6.10.1) (2024-07-16)
 
 **Note:** Version bump only for package @react-navigation/native-stack
