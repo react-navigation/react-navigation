@@ -154,6 +154,7 @@ const SceneView = ({
   const {
     animationDuration,
     animationTypeForReplace = 'push',
+    fullScreenGestureShadowEnabled = false,
     gestureEnabled,
     gestureResponseDistance,
     header,
@@ -284,6 +285,8 @@ const SceneView = ({
       hasLargeHeader={options.headerLargeTitle ?? false}
       customAnimationOnSwipe={customAnimationOnGesture}
       fullScreenSwipeEnabled={fullScreenGestureEnabled}
+      // @ts-expect-error prop supported from react-native-screens 3.33.0 onwards
+      fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled}
       gestureEnabled={
         isAndroid
           ? // This prop enables handling of system back gestures on Android
