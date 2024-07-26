@@ -1,3 +1,4 @@
+import { beforeEach, expect, jest, test } from '@jest/globals';
 import type { NavigationState } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
@@ -12,14 +13,14 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-it('gets the current navigation state', () => {
+test('gets the current navigation state', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
     return state.routes.map((route) => descriptors[route.key].render());
   };
 
-  const callback = jest.fn();
+  const callback = jest.fn<(state: NavigationState) => void>();
 
   const Test = () => {
     const state = useNavigationState((state) => state);
@@ -63,7 +64,7 @@ it('gets the current navigation state', () => {
   expect(callback.mock.calls[3][0].routes[1].params).toEqual({ answer: 42 });
 });
 
-it('gets the current navigation state with selector', () => {
+test('gets the current navigation state with selector', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -113,7 +114,7 @@ it('gets the current navigation state with selector', () => {
   expect(callback.mock.calls[3][0]).toBe(1);
 });
 
-it('gets the correct value if selector changes', () => {
+test('gets the correct value if selector changes', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 

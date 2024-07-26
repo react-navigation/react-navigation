@@ -3850,6 +3850,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/bottom-tabs@workspace:packages/bottom-tabs"
   dependencies:
+    "@jest/globals": "npm:^29.7.0"
     "@react-navigation/elements": "npm:^2.0.0-rc.16"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
@@ -3876,6 +3877,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/core@workspace:packages/core"
   dependencies:
+    "@jest/globals": "npm:^29.7.0"
     "@react-navigation/routers": "npm:^7.0.0-rc.6"
     "@testing-library/react-native": "npm:^12.4.3"
     "@types/react": "npm:~18.2.79"
@@ -3903,7 +3905,6 @@ __metadata:
   resolution: "@react-navigation/devtools@workspace:packages/devtools"
   dependencies:
     "@react-navigation/core": "workspace:^"
-    "@testing-library/react-native": "npm:^12.4.3"
     "@types/deep-equal": "npm:^1.0.4"
     "@types/react": "npm:~18.2.79"
     deep-equal: "npm:^2.2.3"
@@ -3922,6 +3923,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/drawer@workspace:packages/drawer"
   dependencies:
+    "@jest/globals": "npm:^29.7.0"
     "@react-navigation/elements": "npm:^2.0.0-rc.16"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
@@ -3953,6 +3955,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/elements@workspace:packages/elements"
   dependencies:
+    "@jest/globals": "npm:^29.7.0"
     "@react-native-masked-view/masked-view": "npm:0.3.1"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
@@ -4030,6 +4033,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/material-top-tabs@workspace:packages/material-top-tabs"
   dependencies:
+    "@jest/globals": "npm:^29.7.0"
     "@react-navigation/elements": "npm:^2.0.0-rc.16"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
@@ -4054,6 +4058,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/native-stack@workspace:packages/native-stack"
   dependencies:
+    "@jest/globals": "npm:^29.7.0"
     "@react-navigation/elements": "npm:^2.0.0-rc.16"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
@@ -4078,6 +4083,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/native@workspace:packages/native"
   dependencies:
+    "@jest/globals": "npm:^29.7.0"
     "@react-navigation/core": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
     "@types/react": "npm:~18.2.79"
@@ -4102,6 +4108,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/routers@workspace:packages/routers"
   dependencies:
+    "@jest/globals": "npm:^29.7.0"
     del-cli: "npm:^5.1.0"
     nanoid: "npm:3.3.7"
     react-native-builder-bob: "npm:^0.26.0"
@@ -4113,6 +4120,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/stack@workspace:packages/stack"
   dependencies:
+    "@jest/globals": "npm:^29.7.0"
     "@react-navigation/elements": "npm:^2.0.0-rc.16"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.4.3"
@@ -4532,16 +4540,6 @@ __metadata:
   dependencies:
     "@types/istanbul-lib-report": "npm:*"
   checksum: 93eb18835770b3431f68ae9ac1ca91741ab85f7606f310a34b3586b5a34450ec038c3eed7ab19266635499594de52ff73723a54a72a75b9f7d6a956f01edee95
-  languageName: node
-  linkType: hard
-
-"@types/jest@npm:^29.5.11":
-  version: 29.5.12
-  resolution: "@types/jest@npm:29.5.12"
-  dependencies:
-    expect: "npm:^29.0.0"
-    pretty-format: "npm:^29.0.0"
-  checksum: 312e8dcf92cdd5a5847d6426f0940829bca6fe6b5a917248f3d7f7ef5d85c9ce78ef05e47d2bbabc40d41a930e0e36db2d443d2610a9e3db9062da2d5c904211
   languageName: node
   linkType: hard
 
@@ -8295,7 +8293,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expect@npm:^29.0.0, expect@npm:^29.7.0":
+"expect@npm:^29.7.0":
   version: 29.7.0
   resolution: "expect@npm:29.7.0"
   dependencies:
@@ -13884,7 +13882,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pretty-format@npm:^29.0.0, pretty-format@npm:^29.7.0":
+"pretty-format@npm:^29.7.0":
   version: 29.7.0
   resolution: "pretty-format@npm:29.7.0"
   dependencies:
@@ -14936,7 +14934,6 @@ __metadata:
     "@lerna-lite/publish": "npm:^3.5.2"
     "@lerna-lite/run": "npm:^3.5.1"
     "@react-native/babel-preset": "npm:^0.74.84"
-    "@types/jest": "npm:^29.5.11"
     check-dependency-version-consistency: "npm:^4.1.0"
     commitlint: "npm:^18.5.0"
     eslint: "npm:^8.56.0"

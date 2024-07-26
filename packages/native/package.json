@@ -50,6 +50,7 @@
     "use-latest-callback": "^0.2.1"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "@testing-library/react-native": "^12.4.3",
     "@types/react": "~18.2.79",
     "@types/react-dom": "~18.2.25",

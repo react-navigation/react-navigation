@@ -48,7 +48,6 @@
   },
   "devDependencies": {
     "@react-navigation/core": "workspace:^",
-    "@testing-library/react-native": "^12.4.3",
     "@types/deep-equal": "^1.0.4",
     "@types/react": "~18.2.79",
     "del-cli": "^5.1.0",

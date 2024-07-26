@@ -1,3 +1,4 @@
+import { expect, jest, test } from '@jest/globals';
 import { Text } from '@react-navigation/elements';
 import { NavigationContainer } from '@react-navigation/native';
 import { fireEvent, render } from '@testing-library/react-native';
@@ -30,7 +31,7 @@ jest.mock('react-native-pager-view', () => {
   };
 });
 
-it('renders a material top tab navigator with screens', async () => {
+test('renders a material top tab navigator with screens', async () => {
   const Test = ({
     route,
     navigation,

@@ -1,3 +1,4 @@
+import { expect, jest, test } from '@jest/globals';
 import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
@@ -42,7 +43,7 @@ jest.spyOn(console, 'error').mockImplementation((...args) => {
   error(...args);
 });
 
-it('renders correct state with location', () => {
+test('renders correct state with location', () => {
   const StackNavigator = (
     props: DefaultNavigatorOptions<
       ParamListBase,
@@ -156,7 +157,7 @@ it('renders correct state with location', () => {
   );
 });
 
-it('gets the current options', () => {
+test('gets the current options', () => {
   const createTabNavigator = createNavigatorFactory((props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       TabRouter,

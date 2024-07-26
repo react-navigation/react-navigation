@@ -1,3 +1,4 @@
+import { beforeEach, expect, jest, test } from '@jest/globals';
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import { render } from '@testing-library/react-native';
 
@@ -11,7 +12,7 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-it('adds the listener even if container is mounted later', () => {
+test('adds the listener even if container is mounted later', () => {
   const ref = createNavigationContainerRef<ParamListBase>();
   const listener = jest.fn();
 
@@ -49,7 +50,7 @@ it('adds the listener even if container is mounted later', () => {
   expect(listener).toHaveBeenCalledTimes(1);
 });
 
-it('removal of non-existing listener should not break updating ref', () => {
+test('removal of non-existing listener should not break updating ref', () => {
   const ref = createNavigationContainerRef<ParamListBase>();
   ref.removeListener('state', jest.fn());
   expect(() => {

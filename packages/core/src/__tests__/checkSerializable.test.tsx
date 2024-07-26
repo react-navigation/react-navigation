@@ -1,6 +1,8 @@
+import { expect, test } from '@jest/globals';
+
 import { checkSerializable } from '../checkSerializable';
 
-it('returns true for serializable object', () => {
+test('returns true for serializable object', () => {
   expect(
     checkSerializable({
       index: 0,
@@ -25,7 +27,7 @@ it('returns true for serializable object', () => {
   ).toEqual({ serializable: true });
 });
 
-it('returns false for non-serializable object', () => {
+test('returns false for non-serializable object', () => {
   expect(
     checkSerializable({
       index: 0,
@@ -81,7 +83,7 @@ it('returns false for non-serializable object', () => {
   });
 });
 
-it('returns false for circular references', () => {
+test('returns false for circular references', () => {
   const x: any = {
     a: 1,
     b: { b1: 1 },
@@ -127,7 +129,7 @@ it('returns false for circular references', () => {
   });
 });
 
-it("doesn't fail if same object used multiple times", () => {
+test("doesn't fail if same object used multiple times", () => {
   const o = { foo: 'bar' };
 
   expect(

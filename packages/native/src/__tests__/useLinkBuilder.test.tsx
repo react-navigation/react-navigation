@@ -1,10 +1,11 @@
+import { expect, test } from '@jest/globals';
 import { render } from '@testing-library/react-native';
 
 import { createStackNavigator } from '../__stubs__/createStackNavigator';
 import { NavigationContainer } from '../NavigationContainer';
 import { useLinkBuilder } from '../useLinkBuilder';
 
-it('builds href from name and params', () => {
+test('builds href from name and params', () => {
   expect.assertions(3);
 
   const config = {
@@ -83,7 +84,7 @@ it('builds href from name and params', () => {
   element.unmount();
 });
 
-it('builds action from href', () => {
+test('builds action from href', () => {
   expect.assertions(3);
 
   const config = {

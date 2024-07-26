@@ -51,6 +51,7 @@
     "warn-once": "^0.1.1"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "@react-navigation/native": "workspace:^",
     "@testing-library/react-native": "^12.4.3",
     "@types/react": "~18.2.79",

@@ -68,12 +68,6 @@ module.exports = {
       },
     },
     {
-      files: ['*.{spec,test}.{js,ts,tsx}', '**/__tests__/**/*.{js,ts,tsx}'],
-      rules: {
-        'jest/consistent-test-it': ['error', { fn: 'it' }],
-      },
-    },
-    {
       files: ['*.config.{ts,mts,js,cjs,mjs}', '.*rc.{ts,mts,js,cjs,mjs}'],
       rules: {
         'import-x/no-default-export': 'off',

@@ -1,6 +1,8 @@
+import { expect, test } from '@jest/globals';
+
 import { getActionFromState } from '../getActionFromState';
 
-it('gets navigate action from state', () => {
+test('gets navigate action from state', () => {
   const state = {
     routes: [
       {
@@ -47,7 +49,7 @@ it('gets navigate action from state', () => {
   });
 });
 
-it('gets navigate action from state for top-level screen', () => {
+test('gets navigate action from state for top-level screen', () => {
   const state = {
     routes: [
       {
@@ -68,7 +70,7 @@ it('gets navigate action from state for top-level screen', () => {
   });
 });
 
-it('gets reset action from state with 1 route with key at root', () => {
+test('gets reset action from state with 1 route with key at root', () => {
   const state = {
     routes: [
       {
@@ -125,7 +127,7 @@ it('gets reset action from state with 1 route with key at root', () => {
   });
 });
 
-it('gets reset action from state for top-level screen with 2 screens', () => {
+test('gets reset action from state for top-level screen with 2 screens', () => {
   const state = {
     routes: [
       {
@@ -158,7 +160,7 @@ it('gets reset action from state for top-level screen with 2 screens', () => {
   });
 });
 
-it('gets reset action from state for top-level screen with more than 2 screens with config', () => {
+test('gets reset action from state for top-level screen with more than 2 screens with config', () => {
   const state = {
     routes: [
       {
@@ -198,7 +200,7 @@ it('gets reset action from state for top-level screen with more than 2 screens w
   });
 });
 
-it('gets reset action from state for top-level screen with 2 screens with config', () => {
+test('gets reset action from state for top-level screen with 2 screens with config', () => {
   const state = {
     routes: [
       {
@@ -240,7 +242,7 @@ it('gets reset action from state for top-level screen with 2 screens with config
   });
 });
 
-it('gets navigate action from state for top-level screen with 2 screens with config', () => {
+test('gets navigate action from state for top-level screen with 2 screens with config', () => {
   const state = {
     routes: [
       {
@@ -272,7 +274,7 @@ it('gets navigate action from state for top-level screen with 2 screens with con
   });
 });
 
-it('gets navigate action from state for top-level screen with more than 2 screens with config with lower index', () => {
+test('gets navigate action from state for top-level screen with more than 2 screens with config with lower index', () => {
   const state = {
     index: 1,
     routes: [
@@ -306,7 +308,7 @@ it('gets navigate action from state for top-level screen with more than 2 screen
   });
 });
 
-it('gets navigate action from state with 2 screens', () => {
+test('gets navigate action from state with 2 screens', () => {
   const state = {
     routes: [
       {
@@ -356,7 +358,7 @@ it('gets navigate action from state with 2 screens', () => {
   });
 });
 
-it('gets navigate action from state with 2 screens with lower index', () => {
+test('gets navigate action from state with 2 screens with lower index', () => {
   const state = {
     routes: [
       {
@@ -403,7 +405,7 @@ it('gets navigate action from state with 2 screens with lower index', () => {
   });
 });
 
-it('gets navigate action from state with more than 2 screens', () => {
+test('gets navigate action from state with more than 2 screens', () => {
   const state = {
     routes: [
       {
@@ -455,7 +457,7 @@ it('gets navigate action from state with more than 2 screens', () => {
   });
 });
 
-it('gets navigate action from state with config', () => {
+test('gets navigate action from state with config', () => {
   const state = {
     routes: [
       {
@@ -515,7 +517,7 @@ it('gets navigate action from state with config', () => {
   });
 });
 
-it('gets navigate action from state for top-level screen with config', () => {
+test('gets navigate action from state for top-level screen with config', () => {
   const state = {
     routes: [
       {
@@ -548,7 +550,7 @@ it('gets navigate action from state for top-level screen with config', () => {
   });
 });
 
-it('gets navigate action from state with 2 screens including initial route and with config', () => {
+test('gets navigate action from state with 2 screens including initial route and with config', () => {
   const state = {
     routes: [
       {
@@ -603,7 +605,7 @@ it('gets navigate action from state with 2 screens including initial route and w
   });
 });
 
-it('gets navigate action from state with 2 screens without initial route and with config', () => {
+test('gets navigate action from state with 2 screens without initial route and with config', () => {
   const state = {
     routes: [
       {
@@ -666,7 +668,7 @@ it('gets navigate action from state with 2 screens without initial route and wit
   });
 });
 
-it('gets navigate action from state with 2 screens including route with key on initial route and with config', () => {
+test('gets navigate action from state with 2 screens including route with key on initial route and with config', () => {
   const state = {
     routes: [
       {
@@ -731,7 +733,7 @@ it('gets navigate action from state with 2 screens including route with key on i
   });
 });
 
-it('gets navigate action from state with 2 screens including route with key on 2nd route and with config', () => {
+test('gets navigate action from state with 2 screens including route with key on 2nd route and with config', () => {
   const state = {
     routes: [
       {
@@ -800,7 +802,7 @@ it('gets navigate action from state with 2 screens including route with key on 2
   });
 });
 
-it('gets navigate action from state with more than 2 screens and with config', () => {
+test('gets navigate action from state with more than 2 screens and with config', () => {
   const state = {
     routes: [
       {
@@ -865,7 +867,7 @@ it('gets navigate action from state with more than 2 screens and with config', (
   });
 });
 
-it('gets navigate action from state with more than 2 screens with lower index', () => {
+test('gets navigate action from state with more than 2 screens with lower index', () => {
   const state = {
     routes: [
       {
@@ -926,11 +928,11 @@ it('gets navigate action from state with more than 2 screens with lower index', 
   });
 });
 
-it("doesn't return action if no routes are provided'", () => {
+test("doesn't return action if no routes are provided'", () => {
   expect(getActionFromState({ routes: [] })).toBeUndefined();
 });
 
-it('gets undefined action from state', () => {
+test('gets undefined action from state', () => {
   const state = {
     routes: [
       {

@@ -1,8 +1,9 @@
+import { expect, test } from '@jest/globals';
 import { render } from '@testing-library/react-native';
 
 import { StaticContainer } from '../StaticContainer';
 
-it("doesn't update element if no props changed", () => {
+test("doesn't update element if no props changed", () => {
   expect.assertions(2);
 
   const Test = ({ label }: any) => {
@@ -26,7 +27,7 @@ it("doesn't update element if no props changed", () => {
   expect(root).toMatchInlineSnapshot(`"first"`);
 });
 
-it('updates element if any props changed', () => {
+test('updates element if any props changed', () => {
   expect.assertions(2);
 
   const Test = ({ label }: any) => {
@@ -50,7 +51,7 @@ it('updates element if any props changed', () => {
   expect(root).toMatchInlineSnapshot(`"second"`);
 });
 
-it('updates element if any props are added', () => {
+test('updates element if any props are added', () => {
   expect.assertions(2);
 
   const Test = ({ label }: any) => {

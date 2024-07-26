@@ -46,6 +46,7 @@
     "color": "^4.2.3"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "@react-navigation/native": "workspace:^",
     "@testing-library/react-native": "^12.4.3",
     "@types/color": "^3.0.6",

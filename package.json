@@ -38,7 +38,6 @@
     "@lerna-lite/publish": "^3.5.2",
     "@lerna-lite/run": "^3.5.1",
     "@react-native/babel-preset": "^0.74.84",
-    "@types/jest": "^29.5.11",
     "check-dependency-version-consistency": "^4.1.0",
     "commitlint": "^18.5.0",
     "eslint": "^8.56.0",
