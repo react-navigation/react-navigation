@@ -58,7 +58,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.74.2",
-    "react-native-builder-bob": "^0.26.0",
+    "react-native-builder-bob": "^0.28.1",
     "typescript": "^5.5.2"
   },
   "peerDependencies": {
