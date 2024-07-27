@@ -5,7 +5,7 @@ import {
   TabActions,
   type TabNavigationState,
   TabRouter,
-} from '../../src';
+} from '../index';
 
 jest.mock('nanoid/non-secure', () => ({ nanoid: () => 'test' }));
 

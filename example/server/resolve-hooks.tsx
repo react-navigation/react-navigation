@@ -19,13 +19,13 @@ globalThis.__DEV__ = process.env.NODE_ENV !== 'production';
 // Reanimated doesn't support SSR :(
 mock(
   'react-native-reanimated',
-  // eslint-disable-next-line import/no-commonjs, @typescript-eslint/no-var-requires
+  // eslint-disable-next-line import-x/no-commonjs, @typescript-eslint/no-var-requires
   require('react-native-reanimated/mock')
 );
 
 // expo-asset breaks because it imports internals :()
 mock(
   'react-native-web/Libraries/Image/AssetRegistry',
-  // eslint-disable-next-line import/no-commonjs, @typescript-eslint/no-var-requires
+  // eslint-disable-next-line import-x/no-commonjs, @typescript-eslint/no-var-requires
   require('react-native-web/dist/modules/AssetRegistry')
 );

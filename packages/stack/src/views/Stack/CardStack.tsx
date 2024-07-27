@@ -57,15 +57,12 @@ type GestureValues = {
 };
 
 type Props = {
-  // eslint-disable-next-line react/no-unused-prop-types
   direction: LocaleDirection;
   insets: EdgeInsets;
   state: StackNavigationState<ParamListBase>;
   descriptors: StackDescriptorMap;
-  // eslint-disable-next-line react/no-unused-prop-types
   preloadedDescriptors: StackDescriptorMap;
   routes: Route<string>[];
-  // eslint-disable-next-line react/no-unused-prop-types
   openingRouteKeys: string[];
   closingRouteKeys: string[];
   onOpenRoute: (props: { route: Route<string> }) => void;

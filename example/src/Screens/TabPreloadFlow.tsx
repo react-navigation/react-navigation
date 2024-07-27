@@ -1,10 +1,9 @@
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import type { PathConfigMap } from '@react-navigation/core/src/types';
 import { Button, HeaderBackButton, Text } from '@react-navigation/elements';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-
-import type { PathConfigMap } from '../../../packages/core/src/types';
 
 export type PreloadBottomTabsParams = {
   Home: undefined;

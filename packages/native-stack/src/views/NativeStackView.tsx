@@ -23,7 +23,6 @@ import type {
 type Props = {
   state: StackNavigationState<ParamListBase>;
   // This is used for the native implementation of the stack.
-  // eslint-disable-next-line react/no-unused-prop-types
   navigation: NativeStackNavigationHelpers;
   descriptors: NativeStackDescriptorMap;
 };

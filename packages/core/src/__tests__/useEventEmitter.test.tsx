@@ -576,6 +576,7 @@ it("doesn't call same listener multiple times with addListener", () => {
 it('fires custom events added with listeners prop', () => {
   const eventName = 'someSuperCoolEvent';
 
+  // eslint-disable-next-line @eslint-react/no-missing-component-display-name
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
     const { state, navigation } = useNavigationBuilder(MockRouter, props);
 
@@ -655,6 +656,7 @@ it('fires custom events added with listeners prop', () => {
 it("doesn't call same listener multiple times with listeners", () => {
   const eventName = 'someSuperCoolEvent';
 
+  // eslint-disable-next-line @eslint-react/no-missing-component-display-name
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
     const { state, navigation } = useNavigationBuilder(MockRouter, props);
 
@@ -706,6 +708,7 @@ it("doesn't call same listener multiple times with listeners", () => {
 it('fires listeners when callback is provided for listeners prop', () => {
   const eventName = 'someSuperCoolEvent';
 
+  // eslint-disable-next-line @eslint-react/no-missing-component-display-name
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
     const { state, navigation } = useNavigationBuilder(MockRouter, props);
 

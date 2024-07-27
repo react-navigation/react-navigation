@@ -85,6 +85,8 @@ type TabBarItemInternalProps<T extends Route> = Omit<
   routesLength: number;
 } & TabDescriptor<T>;
 
+const ANDROID_RIPPLE_DEFAULT = { borderless: true };
+
 const TabBarItemInternal = <T extends Route>({
   accessibilityLabel,
   accessible,
@@ -108,7 +110,7 @@ const TabBarItemInternal = <T extends Route>({
   href,
   labelText,
   routesLength,
-  android_ripple = { borderless: true },
+  android_ripple = ANDROID_RIPPLE_DEFAULT,
   labelAllowFontScaling,
   route,
 }: TabBarItemInternalProps<T>) => {

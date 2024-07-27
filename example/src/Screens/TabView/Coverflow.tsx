@@ -1,4 +1,4 @@
-/* eslint-disable import/no-commonjs */
+/* eslint-disable import-x/no-commonjs */
 import { Text } from '@react-navigation/elements';
 import { useLocale } from '@react-navigation/native';
 import * as React from 'react';

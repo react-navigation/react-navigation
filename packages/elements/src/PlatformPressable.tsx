@@ -168,10 +168,8 @@ const HoverEffect = ({
 
   return (
     <>
-      <style
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: CSS_TEXT }}
-      />
+      {/* eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml */}
+      <style dangerouslySetInnerHTML={{ __html: CSS_TEXT }} />
       <div
         className={CLASS_NAME}
         style={{

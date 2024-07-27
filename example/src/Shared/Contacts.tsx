@@ -78,6 +78,8 @@ const ContactItem = React.memo(
   }
 );
 
+ContactItem.displayName = 'ContactItem';
+
 const ItemSeparator = () => {
   const { colors } = useTheme();
 

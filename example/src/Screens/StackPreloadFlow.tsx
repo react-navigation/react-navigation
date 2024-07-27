@@ -1,3 +1,4 @@
+import type { PathConfigMap } from '@react-navigation/core/src/types';
 import { Button, Text } from '@react-navigation/elements';
 import {
   createStackNavigator,
@@ -5,8 +6,6 @@ import {
 } from '@react-navigation/stack';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-
-import type { PathConfigMap } from '../../../packages/core/src/types';
 
 export type PreloadStackParams = {
   Home: undefined;

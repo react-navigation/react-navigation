@@ -320,6 +320,8 @@ const MemoizedScreen = React.memo(
   }
 );
 
+MemoizedScreen.displayName = 'Memo(Screen)';
+
 const getItemsFromScreens = (
   Screen: React.ComponentType<any>,
   screens: StaticConfigScreens<any, any, any, any, any>

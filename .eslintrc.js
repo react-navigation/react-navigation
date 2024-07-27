@@ -6,7 +6,7 @@ module.exports = {
     'react': {
       version: '16',
     },
-    'import/core-modules': [
+    'import-x/core-modules': [
       '@react-navigation/core',
       '@react-navigation/native',
       '@react-navigation/routers',
@@ -44,9 +44,7 @@ module.exports = {
     ],
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/ban-types': 'off',
-    'import/no-default-export': 'error',
-    'react/display-name': 'off',
-    'react/react-in-jsx-scope': 'off',
+    'import-x/no-default-export': 'error',
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
   },
@@ -66,13 +64,19 @@ module.exports = {
     {
       files: ['scripts/*.js', 'netlify/functions/**/*.js'],
       rules: {
-        'import/no-commonjs': 'off',
+        'import-x/no-commonjs': 'off',
       },
     },
     {
-      files: ['**/config/*.{ts,js}', '*.config.{ts,js}'],
+      files: ['*.{spec,test}.{js,ts,tsx}', '**/__tests__/**/*.{js,ts,tsx}'],
       rules: {
-        'import/no-default-export': 'off',
+        'jest/consistent-test-it': ['error', { fn: 'it' }],
+      },
+    },
+    {
+      files: ['*.config.{ts,mts,js,cjs,mjs}', '.*rc.{ts,mts,js,cjs,mjs}'],
+      rules: {
+        'import-x/no-default-export': 'off',
       },
     },
   ],

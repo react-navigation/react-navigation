@@ -24,7 +24,7 @@ window.addEventListener = () => {};
 window.removeEventListener = () => {};
 
 // We want to use the web version of useLinking
-// eslint-disable-next-line import/extensions
+// eslint-disable-next-line import-x/extensions
 jest.mock('../useLinking', () => require('../useLinking.tsx'));
 
 // Since Jest is configured for React Native, the *.native.js file is imported

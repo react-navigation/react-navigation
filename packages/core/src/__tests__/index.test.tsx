@@ -1781,11 +1781,7 @@ it('throws when a tag is a direct children', () => {
     <BaseNavigationContainer>
       <TestNavigator>
         {/* @ts-expect-error testing incorrect usage */}
-        <screen
-          name="foo"
-          // eslint-disable-next-line react/no-unknown-property
-          component={React.Fragment}
-        />
+        <screen name="foo" component={React.Fragment} />
       </TestNavigator>
     </BaseNavigationContainer>
   );

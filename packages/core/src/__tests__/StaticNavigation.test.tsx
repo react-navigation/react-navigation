@@ -216,6 +216,7 @@ it('renders the specified nested navigator configuration with groups', () => {
 
 it('handles non-function screens', () => {
   expect(() => {
+    // eslint-disable-next-line @eslint-react/ensure-forward-ref-using-ref, @eslint-react/no-missing-component-display-name
     const TestScreen = React.forwardRef(() => null);
 
     const Root = createTestNavigator({

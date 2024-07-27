@@ -60,10 +60,12 @@ export function Header(props: Props) {
   const isParentHeaderShown = React.useContext(HeaderShownContext);
 
   const {
+    // eslint-disable-next-line @eslint-react/no-unstable-default-props
     layout = frame,
     modal = false,
     title,
     headerTitle: customTitle,
+    // eslint-disable-next-line @eslint-react/no-unstable-default-props
     headerTitleAlign = Platform.select({
       ios: 'center',
       default: 'left',
@@ -84,6 +86,7 @@ export function Header(props: Props) {
     headerShadowVisible,
     headerPressColor,
     headerPressOpacity,
+    // eslint-disable-next-line @eslint-react/no-unstable-default-props
     headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
   } = props;
 

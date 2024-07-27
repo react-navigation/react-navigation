@@ -28,6 +28,7 @@ jest.mock('react-native/Libraries/Utilities/Platform', () => ({
 
 jest.mock('react-native-safe-area-context', () => ({
   ...jest.requireActual('react-native-safe-area-context'),
+  // eslint-disable-next-line @eslint-react/hooks-extra/ensure-custom-hooks-using-other-hooks
   useSafeAreaInsets: () => ({
     top: 0,
   }),

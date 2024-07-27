@@ -20,6 +20,7 @@ import {
   NavigationContainer,
   useNavigationContainerRef,
 } from '@react-navigation/native';
+import type { LinkingOptions } from '@react-navigation/native/src/types';
 import {
   createStackNavigator,
   HeaderStyleInterpolators,
@@ -40,7 +41,6 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import type { LinkingOptions } from '../../packages/native/src/types';
 import {
   type RootDrawerParamList,
   type RootStackParamList,

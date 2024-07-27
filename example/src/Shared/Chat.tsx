@@ -42,7 +42,7 @@ export function Chat({
 
           return (
             <View
-              // eslint-disable-next-line react/no-array-index-key
+              // eslint-disable-next-line @eslint-react/no-array-index-key
               key={i}
               style={[odd ? styles.odd : styles.even, styles.inverted]}
             >

@@ -15,6 +15,8 @@ const SceneComponent = React.memo(
   }
 );
 
+SceneComponent.displayName = 'SceneComponent';
+
 export function SceneMap<T>(scenes: { [key: string]: React.ComponentType<T> }) {
   return ({ route, jumpTo, position }: SceneProps) => (
     <SceneComponent
