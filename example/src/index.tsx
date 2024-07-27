@@ -17,10 +17,10 @@ import {
   DarkTheme,
   DefaultTheme,
   type InitialState,
+  type LinkingOptions,
   NavigationContainer,
   useNavigationContainerRef,
 } from '@react-navigation/native';
-import type { LinkingOptions } from '@react-navigation/native/src/types';
 import {
   createStackNavigator,
   HeaderStyleInterpolators,

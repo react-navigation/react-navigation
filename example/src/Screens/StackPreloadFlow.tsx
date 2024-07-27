@@ -1,5 +1,5 @@
-import type { PathConfigMap } from '@react-navigation/core/src/types';
 import { Button, Text } from '@react-navigation/elements';
+import type { PathConfigMap } from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
