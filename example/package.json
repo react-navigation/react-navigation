@@ -37,6 +37,7 @@
   "devDependencies": {
     "@babel/core": "^7.24.0",
     "@babel/node": "^7.22.19",
+    "@babel/plugin-transform-strict-mode": "^7.24.7",
     "@playwright/test": "^1.41.1",
     "@types/cheerio": "^0.22.35",
     "@types/koa": "^2.14.0",
@@ -52,6 +53,7 @@
     "mock-require-assets": "^0.0.3",
     "nodemon": "^3.0.3",
     "npm-run-all2": "^6.2.2",
+    "react-native-builder-bob": "^0.28.1",
     "react-test-renderer": "18.2.0",
     "serve": "^14.2.1",
     "typescript": "^5.5.2"

@@ -3995,6 +3995,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.24.0"
     "@babel/node": "npm:^7.22.19"
+    "@babel/plugin-transform-strict-mode": "npm:^7.24.7"
     "@expo/metro-runtime": "npm:~3.2.1"
     "@expo/react-native-action-sheet": "npm:^4.0.1"
     "@expo/vector-icons": "npm:^14.0.0"
@@ -4028,6 +4029,7 @@ __metadata:
     react: "npm:18.2.0"
     react-dom: "npm:18.2.0"
     react-native: "npm:0.74.2"
+    react-native-builder-bob: "npm:^0.28.1"
     react-native-gesture-handler: "npm:~2.16.1"
     react-native-pager-view: "npm:6.3.0"
     react-native-reanimated: "npm:~3.10.1"

@@ -41,6 +41,7 @@ const modules = ['@expo/vector-icons']
       self.lastIndexOf(m) === i && !m.startsWith('@react-navigation/')
   );
 
+/** @type {import('metro-config').MetroConfig} */
 module.exports = {
   ...defaultConfig,
 
