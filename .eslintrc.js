@@ -63,12 +63,6 @@ module.exports = {
       },
     },
     {
-      files: ['example/e2e/tests/*.ts'],
-      rules: {
-        'jest/*': 'off',
-      },
-    },
-    {
       files: ['scripts/*.js', 'netlify/functions/**/*.js'],
       rules: {
         'import-x/no-commonjs': 'off',
