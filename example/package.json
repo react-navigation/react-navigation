@@ -3,6 +3,7 @@
   "description": "Demo app to showcase various functionality of React Navigation",
   "version": "5.1.0",
   "private": true,
+  "main": "./App.tsx",
   "scripts": {
     "start": "expo start",
     "server": "nodemon -e '.js,.ts,.tsx' --exec \"babel-node -i '/node_modules[/\\](?react-native)/' -x '.web.tsx,.web.ts,.web.js,.tsx,.ts,.js' --config-file ./server/babel.config.js server\"",
@@ -49,7 +50,6 @@
     "babel-preset-expo": "~11.0.0",
     "cheerio": "^1.0.0-rc.12",
     "expect-type": "^0.17.3",
-    "mock-require": "^3.0.3",
     "mock-require-assets": "^0.0.3",
     "nodemon": "^3.0.3",
     "npm-run-all2": "^6.2.2",
