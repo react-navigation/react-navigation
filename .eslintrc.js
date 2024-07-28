@@ -29,6 +29,7 @@ module.exports = {
     'no-restricted-imports': [
       'error',
       {
+        patterns: ['@react-navigation/*/*'],
         paths: [
           {
             name: 'react-native',
@@ -52,7 +53,13 @@ module.exports = {
     {
       files: ['packages/{native,devtools}/src/**'],
       rules: {
-        'no-restricted-imports': ['error', { paths: [] }],
+        'no-restricted-imports': [
+          'error',
+          {
+            patterns: ['@react-navigation/*/*'],
+            paths: [],
+          },
+        ],
       },
     },
     {
