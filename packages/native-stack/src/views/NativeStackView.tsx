@@ -5,6 +5,7 @@ import {
   HeaderBackContext,
   SafeAreaProviderCompat,
   Screen,
+  useHeaderHeight,
 } from '@react-navigation/elements';
 import {
   type ParamListBase,
@@ -13,12 +14,13 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Animated, Image, StyleSheet, View } from 'react-native';
 
 import type {
   NativeStackDescriptorMap,
   NativeStackNavigationHelpers,
 } from '../types';
+import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
 
 type Props = {
   state: StackNavigationState<ParamListBase>;
@@ -181,9 +183,11 @@ export function NativeStackView({ state, descriptors }: Props) {
             ]}
           >
             <HeaderBackContext.Provider value={headerBack}>
-              <View style={[styles.contentContainer, contentStyle]}>
-                {render()}
-              </View>
+              <AnimatedHeaderHeightProvider>
+                <View style={[styles.contentContainer, contentStyle]}>
+                  {render()}
+                </View>
+              </AnimatedHeaderHeightProvider>
             </HeaderBackContext.Provider>
           </Screen>
         );
@@ -191,6 +195,27 @@ export function NativeStackView({ state, descriptors }: Props) {
     </SafeAreaProviderCompat>
   );
 }
+
+const AnimatedHeaderHeightProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const headerHeight = useHeaderHeight();
+  const [animatedHeaderHeight] = React.useState(
+    () => new Animated.Value(headerHeight)
+  );
+
+  React.useEffect(() => {
+    animatedHeaderHeight.setValue(headerHeight);
+  }, [animatedHeaderHeight, headerHeight]);
+
+  return (
+    <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
+      {children}
+    </AnimatedHeaderHeightContext.Provider>
+  );
+};
 
 const styles = StyleSheet.create({
   contentContainer: {
