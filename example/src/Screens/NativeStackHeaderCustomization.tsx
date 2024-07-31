@@ -70,7 +70,7 @@ const NewsFeedScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Button variant="filled" onPress={() => navigation.push('Albums')}>
-          Push Albums
+          Push albums
         </Button>
         <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back

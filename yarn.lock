@@ -4038,6 +4038,7 @@ __metadata:
     react-test-renderer: "npm:18.2.0"
     serve: "npm:^14.2.1"
     typescript: "npm:^5.5.2"
+    yaml: "npm:^2.5.0"
   languageName: unknown
   linkType: soft
 
@@ -17270,6 +17271,15 @@ __metadata:
   bin:
     yaml: bin.mjs
   checksum: b09bf5a615a65276d433d76b8e34ad6b4c0320b85eb3f1a39da132c61ae6e2ff34eff4624e6458d96d49566c93cf43408ba5e568218293a8c6541a2006883f64
+  languageName: node
+  linkType: hard
+
+"yaml@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "yaml@npm:2.5.0"
+  bin:
+    yaml: bin.mjs
+  checksum: 72e903fdbe3742058885205db4a6c9ff38e5f497f4e05e631264f7756083c05e7d10dfb5e4ce9d7a95de95338f9b20d19dd0b91c60c65f7d7608b6b3929820ad
   languageName: node
   linkType: hard
 

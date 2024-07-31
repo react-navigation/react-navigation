@@ -48,7 +48,7 @@ const ArticleScreen = ({
             Replace with feed
           </Button>
           <Button variant="filled" onPress={() => navigation.popTo('Albums')}>
-            Pop to Albums
+            Pop to albums
           </Button>
           <Button variant="tinted" onPress={() => navigation.pop()}>
             Pop screen
@@ -81,7 +81,7 @@ const NewsFeedScreen = ({
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <View style={styles.buttons}>
           <Button variant="filled" onPress={() => navigation.push('Albums')}>
-            Push Albums
+            Push albums
           </Button>
           <Button variant="tinted" onPress={() => navigation.goBack()}>
             Go back

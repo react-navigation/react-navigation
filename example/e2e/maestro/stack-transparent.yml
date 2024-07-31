@@ -1,0 +1,7 @@
+appId: ${APP_ID}
+name: Stack Transparent
+---
+- openLink:
+    link: exp://127.0.0.1:8081/--/stack-transparent
+- assertVisible:
+    text: 'Article'

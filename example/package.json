@@ -7,7 +7,8 @@
   "scripts": {
     "start": "expo start",
     "server": "nodemon -e '.js,.ts,.tsx' --exec \"babel-node -i '/node_modules[/\\](?react-native)/' -x '.web.tsx,.web.ts,.web.js,.tsx,.ts,.js' --config-file ./server/babel.config.js server\"",
-    "test": "npx playwright test --config=e2e/playwright.config.ts"
+    "e2e:web": "npx playwright test --config=e2e/playwright.config.ts",
+    "e2e:native": "maestro test -e APP_ID=host.exp.exponent e2e/maestro"
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.2.1",
@@ -56,6 +57,7 @@
     "react-native-builder-bob": "^0.28.1",
     "react-test-renderer": "18.2.0",
     "serve": "^14.2.1",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.2",
+    "yaml": "^2.5.0"
   }
 }
