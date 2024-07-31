@@ -1,0 +1,7 @@
+appId: ${APP_ID}
+name: Static Screen
+---
+- openLink:
+    link: exp://127.0.0.1:8081/--/static-screen
+- assertVisible:
+    text: 'Albums'

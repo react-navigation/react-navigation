@@ -30,7 +30,7 @@ const ArticleScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Button variant="filled" onPress={() => navigation.push('Albums')}>
-          Push album
+          Push albums
         </Button>
         <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back

@@ -136,7 +136,7 @@ export function App() {
       try {
         const initialUrl = await Linking.getInitialURL();
 
-        if (Platform.OS !== 'web' || initialUrl === null) {
+        if (Platform.OS !== 'web' && initialUrl === null) {
           const savedState = await AsyncStorage.getItem(
             NAVIGATION_PERSISTENCE_KEY
           );

@@ -112,6 +112,7 @@ export function LinkingScreen() {
             component={SignInScreen}
             options={{
               animationTypeForReplace: !isSignedIn ? 'pop' : 'push',
+              title: 'Sign In',
             }}
           />
         )}

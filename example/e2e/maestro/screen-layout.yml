@@ -1,0 +1,7 @@
+appId: ${APP_ID}
+name: Screen Layout
+---
+- openLink:
+    link: exp://127.0.0.1:8081/--/screen-layout
+- assertVisible:
+    text: 'Suspense & ErrorBoundary'
