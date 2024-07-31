@@ -1,0 +1,159 @@
+name: E2E
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  ANDROID_API_LEVEL: 31 # Android 12
+
+jobs:
+  test-web:
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-web
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Get Playwright version
+        id: playwright
+        run: echo "VERSION=$(node --print 'require(`@playwright/test/package.json`).version')" >> $GITHUB_OUTPUT
+
+      - name: Cache Playwright
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright.outputs.VERSION }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+
+      - name: Build example for web
+        run: yarn example expo export --platform web
+
+      - name: Run integration tests
+        run: yarn example e2e:web
+
+  test-ios:
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-ios
+      cancel-in-progress: true
+    runs-on: macos-12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Install Maestro
+        run: |
+          export MAESTRO_VERSION=1.37.4
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Setup Metro
+        run: |
+          # Remove EAS project ID to remove login requirement
+          sed -i '' 's/.*projectId.*//' example/app.json
+
+          # Start Metro
+          yarn example start --ios &
+          sleep 10
+
+          # Preload bundle
+          curl --silent --output /dev/null --show-error --fail $(echo $(curl --silent --show-error --fail -H "Content-Type: multipart/mixed" -H "expo-platform: ios" "http://localhost:8081") | jq -r ".launchAsset.url")
+
+      - name: Run tests
+        env:
+          MAESTRO_DRIVER_STARTUP_TIMEOUT: 60000
+        run: |
+          maestro test -e APP_ID=host.exp.Exponent --debug-output maestro-debug-output example/e2e/maestro
+
+      - name: Store debug output
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ runner.os }}-ios-debug-output
+          path: maestro-debug-output
+
+  test-android:
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-android
+      cancel-in-progress: true
+    runs-on: macos-12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Install Maestro
+        run: |
+          export MAESTRO_VERSION=1.37.4
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: AVD cache
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ runner.os }}-${{ env.ANDROID_API_LEVEL }}
+
+      - name: Create AVD and generate snapshot
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ env.ANDROID_API_LEVEL }}
+          arch: x86_64
+          target: aosp_atd
+          profile: pixel_2
+          emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: Run tests
+        env:
+          MAESTRO_DRIVER_STARTUP_TIMEOUT: 60000
+          ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL: 300
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ env.ANDROID_API_LEVEL }}
+          arch: x86_64
+          target: aosp_atd
+          profile: pixel_2
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: |
+            # Remove EAS project ID to remove login requirement
+            sed -i '' 's/.*projectId.*//' example/app.json
+
+            # Start Metro
+            yarn example start --android &
+            sleep 10
+
+            # Preload bundle
+            curl --silent --output /dev/null --show-error --fail $(echo $(curl --silent --show-error --fail -H "Content-Type: multipart/mixed" -H "expo-platform: android" "http://localhost:8081") | jq -r ".launchAsset.url")
+
+            # Run Maestro tests
+            maestro test -e APP_ID=host.exp.exponent --debug-output maestro-debug-output example/e2e/maestro
+
+      - name: Store debug output
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ runner.os }}-android-debug-output
+          path: maestro-debug-output
