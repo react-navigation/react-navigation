@@ -51,7 +51,7 @@ import { useInvalidPreventRemoveError } from '../utils/useInvalidPreventRemoveEr
 import { DebugContainer } from './DebugContainer';
 import { HeaderConfig } from './HeaderConfig';
 
-const isAndroid = Platform.OS === 'android';
+const ANDROID_DEFAULT_HEADER_HEIGHT = 56;
 
 const MaybeNestedStack = ({
   options,
@@ -71,15 +71,16 @@ const MaybeNestedStack = ({
   const { colors } = useTheme();
   const { header, headerShown = true, contentStyle } = options;
 
-  const isHeaderInModal = isAndroid
-    ? false
-    : presentation !== 'card' && headerShown === true && header === undefined;
+  const isHeaderInModal =
+    Platform.OS === 'android'
+      ? false
+      : presentation !== 'card' && headerShown === true && header === undefined;
 
   const headerShownPreviousRef = React.useRef(headerShown);
 
   React.useEffect(() => {
     warnOnce(
-      !isAndroid &&
+      Platform.OS !== 'android' &&
         presentation !== 'card' &&
         headerShownPreviousRef.current !== headerShown,
       `Dynamically changing 'headerShown' in modals will result in remounting the screen and losing all local state. See options for the screen '${route.name}'.`
@@ -260,7 +261,7 @@ const SceneView = ({
     // FIXME: Currently screens isn't using Material 3
     // So our `getDefaultHeaderHeight` doesn't return the correct value
     // So we hardcode the value here for now until screens is updated
-    android: 56 + topInset,
+    android: ANDROID_DEFAULT_HEADER_HEIGHT + topInset,
     default: getDefaultHeaderHeight(frame, isModal, topInset),
   });
 
@@ -277,7 +278,7 @@ const SceneView = ({
 
   let headerHeightCorrectionOffset = 0;
 
-  if (isAndroid && !hasCustomHeader) {
+  if (Platform.OS === 'android' && !hasCustomHeader) {
     const statusBarHeight = StatusBar.currentHeight ?? 0;
 
     // FIXME: On Android, the native header height is not correctly calculated
@@ -333,7 +334,7 @@ const SceneView = ({
       customAnimationOnSwipe={animationMatchesGesture}
       fullScreenSwipeEnabled={fullScreenGestureEnabled}
       gestureEnabled={
-        isAndroid
+        Platform.OS === 'android'
           ? // This prop enables handling of system back gestures on Android
             // Since we handle them in JS side, we disable this
             false
@@ -385,6 +386,16 @@ const SceneView = ({
         {
           useNativeDriver: true,
           listener: (e) => {
+            if (
+              Platform.OS === 'android' &&
+              (options.headerBackground != null || options.headerTransparent)
+            ) {
+              // FIXME: On Android, we get 0 if the header is translucent
+              // So we set a default height in that case
+              setHeaderHeight(ANDROID_DEFAULT_HEADER_HEIGHT + topInset);
+              return;
+            }
+
             if (
               e.nativeEvent &&
               typeof e.nativeEvent === 'object' &&
