@@ -147,7 +147,7 @@ const createNormalizedConfigItem = (config: PathConfig<object> | string) =>
       }
     : {};
 
-const createNormalizedConfigs = (options: PathConfigMap<object>) =>
+export const createNormalizedConfigs = (options: PathConfigMap<object>) =>
   Object.entries(options).reduce<Record<string, ConfigItem>>((acc, [k, v]) => {
     acc[k] = createNormalizedConfigItem(v);
     return acc;

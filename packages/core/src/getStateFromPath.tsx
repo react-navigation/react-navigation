@@ -359,7 +359,7 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
   return { routes, remainingPath };
 };
 
-const createNormalizedConfigs = (
+export const createNormalizedConfigs = (
   screen: string,
   routeConfig: PathConfigMap<object>,
   routeNames: string[] = [],
