@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.18...@react-navigation/native-stack@7.0.0-rc.19) (2024-08-01)
+
+### Bug Fixes
+
+* fix useAnimatedHeaderHeight on web for native stack ([03b39d6](https://github.com/react-navigation/react-navigation/commit/03b39d66d8bdb2c87997ad6f3e7551aead7a25ae)) - by @satya164
+* fix wrong header height for translucent header on Android ([ca64015](https://github.com/react-navigation/react-navigation/commit/ca64015a9526bb1eed14ef31453abba04ca5508b)) - by @satya164
+
 # [7.0.0-rc.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.17...@react-navigation/native-stack@7.0.0-rc.18) (2024-07-25)
 
 ### Bug Fixes
