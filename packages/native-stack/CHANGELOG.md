@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.19...@react-navigation/native-stack@7.0.0-rc.20) (2024-08-01)
+
+### Bug Fixes
+
+* fix incorrect condition due to bad merge ([3a0b0b5](https://github.com/react-navigation/react-navigation/commit/3a0b0b5e264defaed261864cf09de93c591ac2d7)) - by @satya164
+
 # [7.0.0-rc.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.18...@react-navigation/native-stack@7.0.0-rc.19) (2024-08-01)
 
 ### Bug Fixes
