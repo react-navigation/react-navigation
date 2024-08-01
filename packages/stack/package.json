@@ -24,12 +24,17 @@
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",
-  "types": "./lib/typescript/src/index.d.ts",
+  "types": "./lib/typescript/commonjs/src/index.d.ts",
   "exports": {
     ".": {
-      "types": "./lib/typescript/src/index.d.ts",
-      "import": "./lib/module/index.js",
-      "require": "./lib/commonjs/index.js"
+      "import": {
+        "types": "./lib/typescript/module/src/index.d.ts",
+        "default": "./lib/module/index.js"
+      },
+      "require": {
+        "types": "./lib/typescript/commonjs/src/index.d.ts",
+        "default": "./lib/commonjs/index.js"
+      }
     }
   },
   "files": [
@@ -58,7 +63,7 @@
     "del-cli": "^5.1.0",
     "react": "18.2.0",
     "react-native": "0.74.2",
-    "react-native-builder-bob": "^0.28.1",
+    "react-native-builder-bob": "^0.29.0",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-safe-area-context": "4.10.1",
     "react-native-screens": "3.31.1",
@@ -91,7 +96,8 @@
       [
         "typescript",
         {
-          "project": "tsconfig.build.json"
+          "project": "tsconfig.build.json",
+          "esm": true
         }
       ]
     ]
