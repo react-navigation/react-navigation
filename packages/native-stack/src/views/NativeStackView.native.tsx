@@ -386,11 +386,6 @@ const SceneView = ({
         {
           useNativeDriver: true,
           listener: (e) => {
-            // FIXME: On Android, we get 0 if the header is transparent
-            if (options.headerTransparent && Platform.OS === 'android') {
-              return;
-            }
-
             if (
               Platform.OS === 'android' &&
               (options.headerBackground != null || options.headerTransparent)
