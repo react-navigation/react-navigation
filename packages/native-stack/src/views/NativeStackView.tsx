@@ -9,6 +9,7 @@ import {
 } from '@react-navigation/elements';
 import {
   type ParamListBase,
+  type RouteProp,
   type StackNavigationState,
   useLinkBuilder,
   useTheme,
@@ -17,6 +18,7 @@ import * as React from 'react';
 import { Animated, Image, StyleSheet, View } from 'react-native';
 
 import type {
+  NativeStackDescriptor,
   NativeStackDescriptorMap,
   NativeStackNavigationHelpers,
 } from '../types';
@@ -27,6 +29,10 @@ type Props = {
   // This is used for the native implementation of the stack.
   navigation: NativeStackNavigationHelpers;
   descriptors: NativeStackDescriptorMap;
+  describe: (
+    route: RouteProp<ParamListBase>,
+    placeholder: boolean
+  ) => NativeStackDescriptor;
 };
 
 const TRANSPARENT_PRESENTATIONS = [
