@@ -8,6 +8,7 @@ export { DefaultTheme } from './theming/DefaultTheme';
 export * from './types';
 export { useLinkBuilder } from './useLinkBuilder';
 export { type LinkProps, useLinkProps } from './useLinkProps';
+export { useLinkTo } from './useLinkTo';
 export { useLocale } from './useLocale';
 export { useScrollToTop } from './useScrollToTop';
 export { UNSTABLE_useUnhandledLinking } from './useUnhandledLinking';
