@@ -9,6 +9,7 @@ export * from './types';
 export { useLinkBuilder } from './useLinkBuilder';
 export { type LinkProps, useLinkProps } from './useLinkProps';
 export { useLocale } from './useLocale';
+export { useLinkTo } from './useLinkTo';
 export { useScrollToTop } from './useScrollToTop';
 export { UNSTABLE_useUnhandledLinking } from './useUnhandledLinking';
 export * from '@react-navigation/core';
