@@ -541,7 +541,12 @@ type Props = {
   ) => NativeStackDescriptor;
 };
 
-export function NativeStackView({ state, navigation, descriptors, describe }: Props) {
+export function NativeStackView({
+  state,
+  navigation,
+  descriptors,
+  describe,
+}: Props) {
   const { setNextDismissedKey } = useDismissedRouteError(state);
 
   const { colors } = useTheme();
@@ -560,7 +565,8 @@ export function NativeStackView({ state, navigation, descriptors, describe }: Pr
     <SafeAreaProviderCompat style={{ backgroundColor: colors.background }}>
       <ScreenStack style={styles.container}>
         {state.routes.concat(state.preloadedRoutes).map((route, index) => {
-          const descriptor = descriptors[route.key] ?? preloadedDescriptors[route.key];
+          const descriptor =
+            descriptors[route.key] ?? preloadedDescriptors[route.key];
           const isFocused = state.index === index;
           const previousKey = state.routes[index - 1]?.key;
           const nextKey = state.routes[index + 1]?.key;
@@ -571,7 +577,9 @@ export function NativeStackView({ state, navigation, descriptors, describe }: Pr
 
           const isModal = modalRouteKeys.includes(route.key);
 
-          const shouldBePreloaded = preloadedDescriptors[route.key] !== undefined && descriptors[route.key] === undefined;
+          const shouldBePreloaded =
+            preloadedDescriptors[route.key] !== undefined &&
+            descriptors[route.key] === undefined;
 
           return (
             <SceneView
