@@ -216,8 +216,8 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   headerBackground: {
-    height: undefined,
-    width: undefined,
+    height: 'auto',
+    width: 'auto',
     flex: 1,
   },
 });

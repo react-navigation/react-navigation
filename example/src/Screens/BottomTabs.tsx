@@ -236,8 +236,8 @@ export function BottomTabs() {
                     style={{
                       ...StyleSheet.absoluteFillObject,
                       // Override default size of the image
-                      height: undefined,
-                      width: undefined,
+                      height: 'auto',
+                      width: 'auto',
                     }}
                   />
                 )}
