@@ -28,7 +28,6 @@ export function HeaderConfig({
   headerBackButtonMenuEnabled,
   headerBackTitle,
   headerBackTitleStyle,
-  headerBackTitleVisible = true,
   headerBackVisible,
   headerShadowVisible,
   headerLargeStyle,
@@ -177,12 +176,19 @@ export function HeaderConfig({
       Platform.OS === 'ios' &&
       headerTransparent !== false);
 
+  const isBackButtonDisplayModeAvailableForCurrentPlatform =
+    Platform.OS === 'ios' && parseInt(Platform.Version, 10) >= 14;
+
   return (
     <ScreenStackHeaderConfig
       backButtonInCustomView={backButtonInCustomView}
       backgroundColor={headerBackgroundColor}
       backTitle={headerBackTitle}
-      backTitleVisible={headerBackTitleVisible}
+      backTitleVisible={
+        isBackButtonDisplayModeAvailableForCurrentPlatform
+          ? undefined
+          : headerBackButtonDisplayMode !== 'minimal'
+      }
       backTitleFontFamily={backTitleFontFamily}
       backTitleFontSize={backTitleFontSize}
       blurEffect={headerBlurEffect}
@@ -191,7 +197,11 @@ export function HeaderConfig({
       disableBackButtonMenu={headerBackButtonMenuEnabled === false}
       hidden={headerShown === false}
       hideBackButton={headerBackVisible === false}
-      backButtonDisplayMode={headerBackButtonDisplayMode}
+      backButtonDisplayMode={
+        isBackButtonDisplayModeAvailableForCurrentPlatform
+          ? headerBackButtonDisplayMode
+          : undefined
+      }
       hideShadow={
         headerShadowVisible === false ||
         headerBackground != null ||
