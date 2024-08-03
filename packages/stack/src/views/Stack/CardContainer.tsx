@@ -293,7 +293,11 @@ function CardContainerInner({
                 value={isParentHeaderShown || headerShown !== false}
               >
                 <HeaderHeightContext.Provider
-                  value={headerShown ? headerHeight : parentHeaderHeight ?? 0}
+                  value={
+                    headerShown !== false
+                      ? headerHeight
+                      : parentHeaderHeight ?? 0
+                  }
                 >
                   {scene.descriptor.render()}
                 </HeaderHeightContext.Provider>
