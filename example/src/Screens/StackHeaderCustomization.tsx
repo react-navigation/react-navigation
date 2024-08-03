@@ -1,7 +1,6 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
   Button,
-  HeaderBackground,
   HeaderButton,
   useHeaderHeight,
 } from '@react-navigation/elements';
@@ -12,6 +11,7 @@ import {
   type StackHeaderProps,
   type StackScreenProps,
 } from '@react-navigation/stack';
+import { BlurView } from 'expo-blur';
 import * as React from 'react';
 import {
   Alert,
@@ -25,7 +25,6 @@ import {
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
-import { BlurView } from '../Shared/BlurView';
 
 export type HeaderCustomizationStackParams = {
   Article: { author: string };
@@ -156,19 +155,11 @@ export function StackHeaderCustomization() {
           headerBackTitle: 'Back',
           headerTransparent: true,
           headerBackground: () => (
-            <HeaderBackground
-              style={{
-                backgroundColor: 'blue',
-                borderBottomWidth: StyleSheet.hairlineWidth,
-                borderBottomColor: theme.colors.border,
-              }}
-            >
-              <BlurView
-                tint={theme.dark ? 'dark' : 'light'}
-                intensity={75}
-                style={StyleSheet.absoluteFill}
-              />
-            </HeaderBackground>
+            <BlurView
+              tint={theme.dark ? 'dark' : 'light'}
+              intensity={100}
+              style={StyleSheet.absoluteFill}
+            />
           ),
         })}
       />

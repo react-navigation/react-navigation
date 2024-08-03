@@ -185,8 +185,11 @@ export function NativeStack() {
           headerTransparent: true,
           headerBlurEffect: 'light',
           headerStyle: {
-            // Add a background color since Android doesn't support blur effect
-            backgroundColor: colors.card,
+            backgroundColor: Platform.select({
+              // Add a background color since Android doesn't support blur effect
+              android: colors.card,
+              default: 'transparent',
+            }),
           },
         }}
       />
