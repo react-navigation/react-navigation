@@ -189,6 +189,11 @@ export function HeaderConfig({
           ? undefined
           : headerBackButtonDisplayMode !== 'minimal'
       }
+      backButtonDisplayMode={
+        isBackButtonDisplayModeAvailableForCurrentPlatform
+          ? headerBackButtonDisplayMode
+          : undefined
+      }
       backTitleFontFamily={backTitleFontFamily}
       backTitleFontSize={backTitleFontSize}
       blurEffect={headerBlurEffect}
@@ -197,11 +202,6 @@ export function HeaderConfig({
       disableBackButtonMenu={headerBackButtonMenuEnabled === false}
       hidden={headerShown === false}
       hideBackButton={headerBackVisible === false}
-      backButtonDisplayMode={
-        isBackButtonDisplayModeAvailableForCurrentPlatform
-          ? headerBackButtonDisplayMode
-          : undefined
-      }
       hideShadow={
         headerShadowVisible === false ||
         headerBackground != null ||
