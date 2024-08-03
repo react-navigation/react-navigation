@@ -148,21 +148,13 @@ export type NativeStackNavigationOptions = {
   /**
    * Title string used by the back button on iOS.
    * Defaults to the previous scene's title, or "Back" if there's not enough space.
-   * Use `headerBackTitleVisible: false` to hide it.
+   * Use `headerBackButtonDisplayMode: "minimal"` to hide it.
    *
    * Only supported on iOS.
    *
    * @platform ios
    */
   headerBackTitle?: string;
-  /**
-   * Whether the back button title should be visible or not.
-   *
-   * Only supported on iOS.
-   *
-   * @platform ios
-   */
-  headerBackTitleVisible?: boolean;
   /**
    * Style object for header back title. Supported properties:
    * - fontFamily
