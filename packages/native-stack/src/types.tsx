@@ -343,6 +343,15 @@ export type NativeStackNavigationOptions = {
    */
   headerBackButtonMenuEnabled?: boolean;
   /**
+   * How the back button behaves by default (when not customized). Available on iOS>=14.
+   * The following values are currently supported:
+   * - "default" – Attempts to display an appropriate title, followed by 'Back' or no title, depending on the space available.
+   * - "generic" – Attempts to display 'Back' or no title, depending on the space available.
+   * - "minimal" – Displays the Back button icon instead of a title.
+   * @platform ios
+   */
+  headerBackButtonDisplayMode?: ScreenStackHeaderConfigProps['backButtonDisplayMode'];
+  /**
    * Whether the home indicator should prefer to stay hidden on this screen. Defaults to `false`.
    *
    * @platform ios

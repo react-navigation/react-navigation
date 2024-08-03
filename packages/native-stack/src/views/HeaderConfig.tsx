@@ -24,6 +24,7 @@ type Props = NativeStackNavigationOptions & {
 
 export function HeaderConfig({
   headerBackImageSource,
+  headerBackButtonDisplayMode,
   headerBackButtonMenuEnabled,
   headerBackTitle,
   headerBackTitleStyle,
@@ -190,6 +191,7 @@ export function HeaderConfig({
       disableBackButtonMenu={headerBackButtonMenuEnabled === false}
       hidden={headerShown === false}
       hideBackButton={headerBackVisible === false}
+      backButtonDisplayMode={headerBackButtonDisplayMode}
       hideShadow={
         headerShadowVisible === false ||
         headerBackground != null ||
