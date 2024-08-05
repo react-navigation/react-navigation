@@ -61,7 +61,8 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
           ? descriptors[previousKey]
           : undefined;
         const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
-        const { options, navigation, render } = descriptors[route.key] ?? preloadedDescriptors[route.key];
+        const { options, navigation, render } =
+          descriptors[route.key] ?? preloadedDescriptors[route.key];
 
         const headerBack = previousDescriptor
           ? {
@@ -92,7 +93,9 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
 
         const nextPresentation = nextDescriptor?.options.presentation;
 
-        const shouldBePreloaded = preloadedDescriptors[route.key] !== undefined && descriptors[route.key] === undefined;
+        const shouldBePreloaded =
+          preloadedDescriptors[route.key] !== undefined &&
+          descriptors[route.key] === undefined;
 
         return (
           <Screen
@@ -155,9 +158,9 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
               {
                 display:
                   (isFocused ||
-                  (nextPresentation != null &&
-                    TRANSPARENT_PRESENTATIONS.includes(nextPresentation))) &&
-                      !shouldBePreloaded
+                    (nextPresentation != null &&
+                      TRANSPARENT_PRESENTATIONS.includes(nextPresentation))) &&
+                  !shouldBePreloaded
                     ? 'flex'
                     : 'none',
               },
