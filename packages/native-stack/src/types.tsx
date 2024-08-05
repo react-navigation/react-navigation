@@ -335,11 +335,11 @@ export type NativeStackNavigationOptions = {
    */
   headerBackButtonMenuEnabled?: boolean;
   /**
-   * How the back button title behaves. Available on iOS >= 14.
+   * How the back button displays icon and title.
    *
    * Supported values:
    * - "default" - Displays one of the following depending on the available space: previous screen's title, generic title (e.g. 'Back') or no title (only icon).
-   * - "generic" – Displays one of the following depending on the available space: generic title (e.g. 'Back') or no title (only icon).
+   * - "generic" – Displays one of the following depending on the available space: generic title (e.g. 'Back') or no title (only icon). iOS >= 14 only, falls back to "default" on older iOS versions.
    * - "minimal" – Always displays only the icon without a title.
    *
    * @platform ios
