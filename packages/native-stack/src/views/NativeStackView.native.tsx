@@ -343,6 +343,7 @@ const SceneView = ({
       homeIndicatorHidden={autoHideHomeIndicator}
       hideKeyboardOnSwipe={keyboardHandlingEnabled}
       navigationBarColor={navigationBarColor}
+      navigationBarTranslucent={navigationBarTranslucent}
       navigationBarHidden={navigationBarHidden}
       replaceAnimation={animationTypeForReplace}
       stackPresentation={presentation === 'card' ? 'push' : presentation}
@@ -425,7 +426,6 @@ const SceneView = ({
       // So we keep any props that need it at the end
       // Otherwise invalid props may not be caught by TypeScript
       // @ts-expect-error Props available in newer versions of `react-native-screens`
-      navigationBarTranslucent={navigationBarTranslucent}
       fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled} // 3.33.0 onwards
     >
       <NavigationContext.Provider value={navigation}>

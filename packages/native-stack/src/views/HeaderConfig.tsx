@@ -24,10 +24,10 @@ type Props = NativeStackNavigationOptions & {
 
 export function HeaderConfig({
   headerBackImageSource,
+  headerBackButtonDisplayMode,
   headerBackButtonMenuEnabled,
   headerBackTitle,
   headerBackTitleStyle,
-  headerBackTitleVisible = true,
   headerBackVisible,
   headerShadowVisible,
   headerLargeStyle,
@@ -176,12 +176,24 @@ export function HeaderConfig({
       Platform.OS === 'ios' &&
       headerTransparent !== false);
 
+  const isBackButtonDisplayModeAvailableForCurrentPlatform =
+    Platform.OS === 'ios' && parseInt(Platform.Version, 10) >= 14;
+
   return (
     <ScreenStackHeaderConfig
       backButtonInCustomView={backButtonInCustomView}
       backgroundColor={headerBackgroundColor}
       backTitle={headerBackTitle}
-      backTitleVisible={headerBackTitleVisible}
+      backTitleVisible={
+        isBackButtonDisplayModeAvailableForCurrentPlatform
+          ? undefined
+          : headerBackButtonDisplayMode !== 'minimal'
+      }
+      backButtonDisplayMode={
+        isBackButtonDisplayModeAvailableForCurrentPlatform
+          ? headerBackButtonDisplayMode
+          : undefined
+      }
       backTitleFontFamily={backTitleFontFamily}
       backTitleFontSize={backTitleFontSize}
       blurEffect={headerBlurEffect}

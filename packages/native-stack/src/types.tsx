@@ -148,21 +148,13 @@ export type NativeStackNavigationOptions = {
   /**
    * Title string used by the back button on iOS.
    * Defaults to the previous scene's title, or "Back" if there's not enough space.
-   * Use `headerBackTitleVisible: false` to hide it.
+   * Use `headerBackButtonDisplayMode: "minimal"` to hide it.
    *
    * Only supported on iOS.
    *
    * @platform ios
    */
   headerBackTitle?: string;
-  /**
-   * Whether the back button title should be visible or not.
-   *
-   * Only supported on iOS.
-   *
-   * @platform ios
-   */
-  headerBackTitleVisible?: boolean;
   /**
    * Style object for header back title. Supported properties:
    * - fontFamily
@@ -342,6 +334,17 @@ export type NativeStackNavigationOptions = {
    * @platform ios
    */
   headerBackButtonMenuEnabled?: boolean;
+  /**
+   * How the back button displays icon and title.
+   *
+   * Supported values:
+   * - "default" - Displays one of the following depending on the available space: previous screen's title, generic title (e.g. 'Back') or no title (only icon).
+   * - "generic" – Displays one of the following depending on the available space: generic title (e.g. 'Back') or no title (only icon). iOS >= 14 only, falls back to "default" on older iOS versions.
+   * - "minimal" – Always displays only the icon without a title.
+   *
+   * @platform ios
+   */
+  headerBackButtonDisplayMode?: ScreenStackHeaderConfigProps['backButtonDisplayMode'];
   /**
    * Whether the home indicator should prefer to stay hidden on this screen. Defaults to `false`.
    *
