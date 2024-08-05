@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-rc.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.18...@react-navigation/elements@2.0.0-rc.19) (2024-08-05)
+
+### Features
+
+* add headerBackButtonDisplayMode for stack ([#12090](https://github.com/react-navigation/react-navigation/issues/12090)) ([35cd213](https://github.com/react-navigation/react-navigation/commit/35cd213d366a60afe9955cf10dffb83d9006ce73)) - by @satya164
+
+### BREAKING CHANGES
+
+* This removes the `headerBackTitleVisible` option, and
+changes `headerTruncatedBackTitle` to `headerBackTruncatedTitle`.
+
+Similarly, `headerLeft` now receives `displayMode` instead of
+`labelVisible`, and `HeaderBackButton` accepts `displayMode` instead of
+`labelVisible`
+
 # [2.0.0-rc.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.17...@react-navigation/elements@2.0.0-rc.18) (2024-08-02)
 
 **Note:** Version bump only for package @react-navigation/elements

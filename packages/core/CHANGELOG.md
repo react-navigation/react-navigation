@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.11...@react-navigation/core@7.0.0-rc.12) (2024-08-05)
+
+### Bug Fixes
+
+* allow undefined in path config validation ([#12085](https://github.com/react-navigation/react-navigation/issues/12085)) ([4f20056](https://github.com/react-navigation/react-navigation/commit/4f2005621e3cacdbf9871b5cdbee3d992e67ae04)) - by @janicduplessis
+
 # [7.0.0-rc.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.10...@react-navigation/core@7.0.0-rc.11) (2024-08-01)
 
 **Note:** Version bump only for package @react-navigation/core

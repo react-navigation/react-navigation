@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-rc.20...@react-navigation/stack@7.0.0-rc.21) (2024-08-05)
+
+### Bug Fixes
+
+* fix incorrect value from useHeaderHeight for stack ([add9a17](https://github.com/react-navigation/react-navigation/commit/add9a17f0c91191c9347e59449d304f7f85239ab)) - by @satya164
+
+### Features
+
+* add headerBackButtonDisplayMode for native stack ([#12089](https://github.com/react-navigation/react-navigation/issues/12089)) ([89ffa1b](https://github.com/react-navigation/react-navigation/commit/89ffa1baa1dc3ad8260361a3f84aa21d24c1643e)), closes [#11980](https://github.com/react-navigation/react-navigation/issues/11980) - by @dylancom
+* add headerBackButtonDisplayMode for stack ([#12090](https://github.com/react-navigation/react-navigation/issues/12090)) ([35cd213](https://github.com/react-navigation/react-navigation/commit/35cd213d366a60afe9955cf10dffb83d9006ce73)) - by @satya164
+
+### BREAKING CHANGES
+
+* This removes the `headerBackTitleVisible` option, and
+changes `headerTruncatedBackTitle` to `headerBackTruncatedTitle`.
+
+Similarly, `headerLeft` now receives `displayMode` instead of
+`labelVisible`, and `HeaderBackButton` accepts `displayMode` instead of
+`labelVisible`
+* This removes the `headerBackTitleVisible` option,
+
+Adds corresponding functionality from
+https://github.com/software-mansion/react-native-screens/pull/2123.
+
 # [7.0.0-rc.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-rc.19...@react-navigation/stack@7.0.0-rc.20) (2024-08-02)
 
 **Note:** Version bump only for package @react-navigation/stack

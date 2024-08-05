@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.21...@react-navigation/native-stack@7.0.0-rc.22) (2024-08-05)
+
+### Features
+
+* add headerBackButtonDisplayMode for native stack ([#12089](https://github.com/react-navigation/react-navigation/issues/12089)) ([89ffa1b](https://github.com/react-navigation/react-navigation/commit/89ffa1baa1dc3ad8260361a3f84aa21d24c1643e)), closes [#11980](https://github.com/react-navigation/react-navigation/issues/11980) - by @dylancom
+
+### BREAKING CHANGES
+
+* This removes the `headerBackTitleVisible` option,
+
+Adds corresponding functionality from
+https://github.com/software-mansion/react-native-screens/pull/2123.
+
 # [7.0.0-rc.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.20...@react-navigation/native-stack@7.0.0-rc.21) (2024-08-02)
 
 **Note:** Version bump only for package @react-navigation/native-stack
