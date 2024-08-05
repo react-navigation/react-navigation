@@ -117,7 +117,7 @@ export function StackHeaderCustomization() {
           header: (props) => <CustomHeader {...props} />,
           headerTintColor: '#fff',
           headerStyle: { backgroundColor: '#ff005d' },
-          headerBackTitleVisible: false,
+          headerBackButtonDisplayMode: 'minimal',
           headerTitleAlign: headerTitleCentered ? 'center' : 'left',
           headerBackImage: ({ tintColor }) => (
             <MaterialCommunityIcons

@@ -6,6 +6,8 @@ import type {
   ViewStyle,
 } from 'react-native';
 
+export type HeaderBackButtonDisplayMode = 'default' | 'generic' | 'minimal';
+
 export type Layout = { width: number; height: number };
 
 export type HeaderOptions = {
@@ -41,13 +43,20 @@ export type HeaderOptions = {
     tintColor?: string;
     pressColor?: string;
     pressOpacity?: number;
-    labelVisible?: boolean;
+    displayMode?: HeaderBackButtonDisplayMode;
     href?: undefined;
   }) => React.ReactNode;
   /**
-   * Whether a label is visible in the left button. Used to add extra padding.
+   * How the back button displays icon and title.
+   *
+   * Supported values:
+   * - "default" - Displays one of the following depending on the available space: previous screen's title, truncated title (e.g. 'Back') or no title (only icon).
+   * - "generic" – Displays one of the following depending on the available space: truncated title (e.g. 'Back') or no title (only icon).
+   * - "minimal" – Always displays only the icon without a title.
+   *
+   * Defaults to "default" on iOS, and "minimal" on Android.
    */
-  headerLeftLabelVisible?: boolean;
+  headerBackButtonDisplayMode?: HeaderBackButtonDisplayMode;
   /**
    * Style object for the container of the `headerLeft` element`.
    */
@@ -209,7 +218,7 @@ export type HeaderBackButtonProps = Omit<HeaderButtonProps, 'children'> & {
    * Whether the label text is visible.
    * Defaults to `true` on iOS and `false` on Android.
    */
-  labelVisible?: boolean;
+  displayMode?: HeaderBackButtonDisplayMode;
   /**
    * Style object for the label.
    */

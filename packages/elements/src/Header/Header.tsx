@@ -65,13 +65,8 @@ export function Header(props: Props) {
     modal = false,
     title,
     headerTitle: customTitle,
-    // eslint-disable-next-line @eslint-react/no-unstable-default-props
-    headerTitleAlign = Platform.select({
-      ios: 'center',
-      default: 'left',
-    }),
+    headerTitleAlign = Platform.OS === 'ios' ? 'center' : 'left',
     headerLeft,
-    headerLeftLabelVisible,
     headerTransparent,
     headerTintColor,
     headerBackground,
@@ -81,6 +76,7 @@ export function Header(props: Props) {
     headerLeftContainerStyle: leftContainerStyle,
     headerRightContainerStyle: rightContainerStyle,
     headerTitleContainerStyle: titleContainerStyle,
+    headerBackButtonDisplayMode = Platform.OS === 'ios' ? 'default' : 'minimal',
     headerBackgroundContainerStyle: backgroundContainerStyle,
     headerStyle: customHeaderStyle,
     headerShadowVisible,
@@ -211,7 +207,7 @@ export function Header(props: Props) {
         tintColor: iconTintColor,
         pressColor: headerPressColor,
         pressOpacity: headerPressOpacity,
-        labelVisible: headerLeftLabelVisible,
+        displayMode: headerBackButtonDisplayMode,
       })
     : null;
 
@@ -276,7 +272,7 @@ export function Header(props: Props) {
                 headerTitleAlign === 'center'
                   ? layout.width -
                     ((leftButton
-                      ? headerLeftLabelVisible !== false
+                      ? headerBackButtonDisplayMode !== 'minimal'
                         ? 80
                         : 32
                       : 16) +

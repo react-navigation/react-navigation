@@ -3,9 +3,10 @@ import * as React from 'react';
 import {
   Animated,
   Image,
-  type LayoutChangeEvent,
   Platform,
+  type StyleProp,
   StyleSheet,
+  type TextStyle,
   View,
 } from 'react-native';
 
@@ -21,7 +22,7 @@ export function HeaderBackButton({
   backImage,
   label,
   labelStyle,
-  labelVisible = Platform.OS === 'ios',
+  displayMode = Platform.OS === 'ios' ? 'default' : 'minimal',
   onLabelLayout,
   onPress,
   pressColor,
@@ -38,29 +39,10 @@ export function HeaderBackButton({
   const { colors, fonts } = useTheme();
   const { direction } = useLocale();
 
-  const [initialLabelWidth, setInitialLabelWidth] = React.useState<
-    undefined | number
-  >(undefined);
-
-  const handleLabelLayout = (e: LayoutChangeEvent) => {
-    onLabelLayout?.(e);
-
-    const { layout } = e.nativeEvent;
-
-    setInitialLabelWidth(
-      (direction === 'rtl' ? layout.y : layout.x) + layout.width
-    );
-  };
-
-  const shouldTruncateLabel = () => {
-    return (
-      !label ||
-      (initialLabelWidth &&
-        titleLayout &&
-        screenLayout &&
-        (screenLayout.width - titleLayout.width) / 2 < initialLabelWidth + 26)
-    );
-  };
+  const [labelWidth, setLabelWidth] = React.useState<number | null>(null);
+  const [truncatedLabelWidth, setTruncatedLabelWidth] = React.useState<
+    number | null
+  >(null);
 
   const renderBackImage = () => {
     if (backImage) {
@@ -71,7 +53,7 @@ export function HeaderBackButton({
           style={[
             styles.icon,
             direction === 'rtl' && styles.flip,
-            Boolean(labelVisible) && styles.iconWithLabel,
+            displayMode !== 'minimal' && styles.iconWithLabel,
             Boolean(tintColor) && { tintColor },
           ]}
           resizeMode="contain"
@@ -83,32 +65,74 @@ export function HeaderBackButton({
   };
 
   const renderLabel = () => {
-    const leftLabelText = shouldTruncateLabel() ? truncatedLabel : label;
-
-    if (!labelVisible || leftLabelText === undefined) {
+    if (displayMode === 'minimal') {
       return null;
     }
 
+    const availableSpace =
+      titleLayout && screenLayout
+        ? (screenLayout.width - titleLayout.width) / 2 -
+          (ICON_WIDTH + ICON_MARGIN_START)
+        : null;
+
+    const potentialLabelText =
+      displayMode === 'default' ? label : truncatedLabel;
+    const finalLabelText =
+      availableSpace && labelWidth && truncatedLabelWidth
+        ? availableSpace > labelWidth
+          ? potentialLabelText
+          : availableSpace > truncatedLabelWidth
+            ? truncatedLabel
+            : null
+        : potentialLabelText;
+
+    const commonStyle: Animated.WithAnimatedValue<StyleProp<TextStyle>> = [
+      fonts.regular,
+      styles.label,
+      labelStyle,
+    ];
+
+    const hiddenStyle: Animated.WithAnimatedValue<StyleProp<TextStyle>> = [
+      commonStyle,
+      {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        opacity: 0,
+      },
+    ];
+
     const labelElement = (
       <View style={styles.labelWrapper}>
-        <Animated.Text
-          accessible={false}
-          onLayout={
-            // This measurement is used to determine if we should truncate the label when it doesn't fit
-            // Only measure it when label is not truncated because we want the measurement of full label
-            leftLabelText === label ? handleLabelLayout : undefined
-          }
-          style={[
-            tintColor ? { color: tintColor } : null,
-            fonts.regular,
-            styles.label,
-            labelStyle,
-          ]}
-          numberOfLines={1}
-          allowFontScaling={!!allowFontScaling}
-        >
-          {leftLabelText}
-        </Animated.Text>
+        {label && displayMode === 'default' ? (
+          <Animated.Text
+            style={hiddenStyle}
+            numberOfLines={1}
+            onLayout={(e) => setLabelWidth(e.nativeEvent.layout.width)}
+          >
+            {label}
+          </Animated.Text>
+        ) : null}
+        {truncatedLabel ? (
+          <Animated.Text
+            style={hiddenStyle}
+            numberOfLines={1}
+            onLayout={(e) => setTruncatedLabelWidth(e.nativeEvent.layout.width)}
+          >
+            {truncatedLabel}
+          </Animated.Text>
+        ) : null}
+        {finalLabelText ? (
+          <Animated.Text
+            accessible={false}
+            onLayout={onLabelLayout}
+            style={[tintColor ? { color: tintColor } : null, commonStyle]}
+            numberOfLines={1}
+            allowFontScaling={!!allowFontScaling}
+          >
+            {finalLabelText}
+          </Animated.Text>
+        ) : null}
       </View>
     );
 
@@ -167,6 +191,12 @@ export function HeaderBackButton({
   );
 }
 
+const ICON_WIDTH = Platform.OS === 'ios' ? 13 : 24;
+const ICON_HEIGHT = Platform.OS === 'ios' ? 21 : 24;
+const ICON_MARGIN_START = Platform.OS === 'ios' ? 8 : 3;
+const ICON_MARGIN_END = Platform.OS === 'ios' ? 22 : 3;
+const ICON_MARGIN_VERTICAL = Platform.OS === 'ios' ? 8 : 3;
+
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 0,
@@ -195,20 +225,13 @@ const styles = StyleSheet.create({
       default: { marginEnd: 3 },
     }),
   },
-  icon: Platform.select({
-    ios: {
-      height: 21,
-      width: 13,
-      marginStart: 8,
-      marginEnd: 22,
-      marginVertical: 8,
-    },
-    default: {
-      height: 24,
-      width: 24,
-      margin: 3,
-    },
-  }),
+  icon: {
+    height: ICON_HEIGHT,
+    width: ICON_WIDTH,
+    marginStart: ICON_MARGIN_START,
+    marginEnd: ICON_MARGIN_END,
+    marginVertical: ICON_MARGIN_VERTICAL,
+  },
   iconWithLabel:
     Platform.OS === 'ios'
       ? {
