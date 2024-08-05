@@ -609,17 +609,6 @@ export type NativeStackNavigationOptions = {
    * Only supported on iOS and Android.
    */
   freezeOnBlur?: boolean;
-  /**
-   * If a screen is marked `hidden`, the resources will be retained, but it will not be rendered
-   * in the stack. This is used when preloading screen but can also be used as a way to support
-   * iOS picture-in-picture, where you have a video overlay originating on a screen, and even
-   * when popping the screen off the stack the resources need to be retained (not garbage collected),
-   * so that the video can continue playing. Additionally, this allows the screen to be "un-hidden"
-   * (visually, pushed back onto the stack) when the user taps on the overlay video.
-   *
-   * Only supported on iOS and Android.
-   */
-  hiddenFromStack?: boolean;
 };
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<

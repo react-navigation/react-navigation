@@ -187,7 +187,6 @@ const SceneView = ({
     headerShown,
     headerBackground,
     headerTransparent,
-    hiddenFromStack = false,
     autoHideHomeIndicator,
     keyboardHandlingEnabled,
     navigationBarColor,
@@ -433,7 +432,7 @@ const SceneView = ({
       // Otherwise invalid props may not be caught by TypeScript
       // @ts-expect-error Props available in newer versions of `react-native-screens`
       fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled} // 3.33.0 onwards
-      hiddenFromStack={shouldBePreloaded || hiddenFromStack} // 3.34.0 onwards
+      hiddenFromStack={shouldBePreloaded} // 3.35.0 onwards
     >
       <NavigationContext.Provider value={navigation}>
         <NavigationRouteContext.Provider value={route}>
