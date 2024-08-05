@@ -40,20 +40,20 @@ const TRANSPARENT_PRESENTATIONS = [
   'containedTransparentModal',
 ];
 
-export function NativeStackView({ state, descriptors }: Props) {
+export function NativeStackView({ state, descriptors, describe }: Props) {
   const parentHeaderBack = React.useContext(HeaderBackContext);
   const { buildHref } = useLinkBuilder();
   const { colors } = useTheme();
 
-  if (state.preloadedRoutes.length !== 0) {
-    throw new Error(
-      'Preloading routes is not supported in the NativeStackNavigator navigator.'
-    );
-  }
+  const preloadedDescriptors =
+    state.preloadedRoutes.reduce<NativeStackDescriptorMap>((acc, route) => {
+      acc[route.key] = acc[route.key] || describe(route, true);
+      return acc;
+    }, {});
 
   return (
     <SafeAreaProviderCompat style={{ backgroundColor: colors.background }}>
-      {state.routes.map((route, i) => {
+      {state.routes.concat(state.preloadedRoutes).map((route, i) => {
         const isFocused = state.index === i;
         const previousKey = state.routes[i - 1]?.key;
         const nextKey = state.routes[i + 1]?.key;
@@ -61,7 +61,7 @@ export function NativeStackView({ state, descriptors }: Props) {
           ? descriptors[previousKey]
           : undefined;
         const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
-        const { options, navigation, render } = descriptors[route.key];
+        const { options, navigation, render } = descriptors[route.key] ?? preloadedDescriptors[route.key];
 
         const headerBack = previousDescriptor
           ? {
@@ -98,6 +98,8 @@ export function NativeStackView({ state, descriptors }: Props) {
         } = options;
 
         const nextPresentation = nextDescriptor?.options.presentation;
+
+        const shouldBePreloaded = preloadedDescriptors[route.key] !== undefined && descriptors[route.key] === undefined;
 
         return (
           <Screen
@@ -176,9 +178,10 @@ export function NativeStackView({ state, descriptors }: Props) {
               StyleSheet.absoluteFill,
               {
                 display:
-                  isFocused ||
+                  (isFocused ||
                   (nextPresentation != null &&
-                    TRANSPARENT_PRESENTATIONS.includes(nextPresentation))
+                    TRANSPARENT_PRESENTATIONS.includes(nextPresentation))) &&
+                      !shouldBePreloaded
                     ? 'flex'
                     : 'none',
               },
