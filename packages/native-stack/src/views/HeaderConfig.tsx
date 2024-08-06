@@ -176,8 +176,17 @@ export function HeaderConfig({
       Platform.OS === 'ios' &&
       headerTransparent !== false);
 
-  const isBackButtonDisplayModeAvailableForCurrentPlatform =
-    Platform.OS === 'ios' && parseInt(Platform.Version, 10) >= 14;
+  const isBackButtonDisplayModeAvailable =
+    // On iOS 14+
+    Platform.OS === 'ios' &&
+    parseInt(Platform.Version, 10) >= 14 &&
+    // Doesn't have custom back title
+    headerBackTitle == null &&
+    // Doesn't have custom styling
+    backTitleFontFamily == null &&
+    backTitleFontSize == null &&
+    // Back button menu is not disabled
+    headerBackButtonMenuEnabled === false;
 
   return (
     <ScreenStackHeaderConfig
@@ -185,12 +194,12 @@ export function HeaderConfig({
       backgroundColor={headerBackgroundColor}
       backTitle={headerBackTitle}
       backTitleVisible={
-        isBackButtonDisplayModeAvailableForCurrentPlatform
+        isBackButtonDisplayModeAvailable
           ? undefined
           : headerBackButtonDisplayMode !== 'minimal'
       }
       backButtonDisplayMode={
-        isBackButtonDisplayModeAvailableForCurrentPlatform
+        isBackButtonDisplayModeAvailable
           ? headerBackButtonDisplayMode
           : undefined
       }
