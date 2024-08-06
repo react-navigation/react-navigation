@@ -249,7 +249,7 @@ const getRouteConfigsFromChildren = <
 export function useNavigationBuilder<
   State extends NavigationState,
   RouterOptions extends DefaultRouterOptions,
-  ActionHelpers extends Record<string, () => void>,
+  ActionHelpers extends Record<string, (...args: any) => void>,
   ScreenOptions extends {},
   EventMap extends Record<string, any>,
 >(

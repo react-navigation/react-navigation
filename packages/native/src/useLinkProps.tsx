@@ -19,11 +19,11 @@ export type LinkProps<
   | ({
       href?: string;
       action?: NavigationAction;
-    } & (RouteName extends unknown // Similar conditional to navigation.navigate
-      ? undefined extends ParamList[RouteName]
-        ? { screen: RouteName; params?: ParamList[RouteName] }
-        : { screen: RouteName; params: ParamList[RouteName] }
-      : never))
+    } & {
+      [Screen in keyof ParamList]: undefined extends ParamList[Screen]
+        ? { screen: Screen; params?: ParamList[Screen] }
+        : { screen: Screen; params: ParamList[Screen] };
+    }[RouteName])
   | {
       href?: string;
       action: NavigationAction;
