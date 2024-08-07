@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.22...@react-navigation/native-stack@7.0.0-rc.23) (2024-08-07)
+
+### Bug Fixes
+
+* add more fallbacks for headerBackButtonDisplayMode ([#12094](https://github.com/react-navigation/react-navigation/issues/12094)) ([bc01c15](https://github.com/react-navigation/react-navigation/commit/bc01c15e6e4b5f225b6204f42ac1fc61478bfb65)) - by @satya164
+
 # [7.0.0-rc.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.21...@react-navigation/native-stack@7.0.0-rc.22) (2024-08-05)
 
 ### Features

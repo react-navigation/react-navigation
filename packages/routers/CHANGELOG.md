@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.0.0-rc.7...@react-navigation/routers@7.0.0-rc.8) (2024-08-07)
+
+### Bug Fixes
+
+* improve how navigate and other methods are typed ([#12093](https://github.com/react-navigation/react-navigation/issues/12093)) ([a528b9b](https://github.com/react-navigation/react-navigation/commit/a528b9b407dbaeaac0caae8edcb5b3c6840144fa)) - by @satya164
+* match push and jumpTo types to navigate ([23d9f2e](https://github.com/react-navigation/react-navigation/commit/23d9f2e2b03123cc2a5c984afc60c5276fee5c84)) - by @satya164
+
 # [7.0.0-rc.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.0.0-rc.6...@react-navigation/routers@7.0.0-rc.7) (2024-08-01)
 
 **Note:** Version bump only for package @react-navigation/routers

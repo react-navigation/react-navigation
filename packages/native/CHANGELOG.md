@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.17...@react-navigation/native@7.0.0-rc.18) (2024-08-07)
+
+### Bug Fixes
+
+* improve how navigate and other methods are typed ([#12093](https://github.com/react-navigation/react-navigation/issues/12093)) ([a528b9b](https://github.com/react-navigation/react-navigation/commit/a528b9b407dbaeaac0caae8edcb5b3c6840144fa)) - by @satya164
+
 # [7.0.0-rc.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.16...@react-navigation/native@7.0.0-rc.17) (2024-08-05)
 
 **Note:** Version bump only for package @react-navigation/native
