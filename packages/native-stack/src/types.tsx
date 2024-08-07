@@ -339,8 +339,16 @@ export type NativeStackNavigationOptions = {
    *
    * Supported values:
    * - "default" - Displays one of the following depending on the available space: previous screen's title, generic title (e.g. 'Back') or no title (only icon).
-   * - "generic" – Displays one of the following depending on the available space: generic title (e.g. 'Back') or no title (only icon). iOS >= 14 only, falls back to "default" on older iOS versions.
+   * - "generic" – Displays one of the following depending on the available space: generic title (e.g. 'Back') or no title (only icon).
    * - "minimal" – Always displays only the icon without a title.
+   *
+   * The "generic" mode is not supported when:
+   * - The iOS version is lower than 14
+   * - Custom back title is set
+   * - Custom back title style is set
+   * - Back button menu is disabled
+   *
+   * In such cases, the "default" mode will be used instead.
    *
    * @platform ios
    */
