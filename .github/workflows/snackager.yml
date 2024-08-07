@@ -1,8 +1,8 @@
 name: Snackager
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - main
 
 jobs:
   bundle:
