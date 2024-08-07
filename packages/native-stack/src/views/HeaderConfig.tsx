@@ -186,7 +186,7 @@ export function HeaderConfig({
     backTitleFontFamily == null &&
     backTitleFontSize == null &&
     // Back button menu is not disabled
-    headerBackButtonMenuEnabled === false;
+    headerBackButtonMenuEnabled !== false;
 
   return (
     <ScreenStackHeaderConfig
