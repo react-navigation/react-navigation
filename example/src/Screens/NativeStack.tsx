@@ -97,12 +97,10 @@ const ContactsScreen = ({
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerSearchBarOptions: {
-        placeholder: 'Search',
+        placeholder: 'Filter contacts',
+        placement: 'inline',
         onChangeText: (e) => {
           setQuery(e.nativeEvent.text);
-        },
-        onClose: () => {
-          setQuery('');
         },
       },
     });
@@ -212,9 +210,8 @@ export function NativeStack() {
         name="Contacts"
         component={ContactsScreen}
         options={{
-          title: 'Contacts',
           headerSearchBarOptions: {
-            placeholder: 'Search',
+            placeholder: 'Filter contacts',
           },
         }}
       />
