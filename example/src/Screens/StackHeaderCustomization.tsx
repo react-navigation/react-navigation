@@ -181,6 +181,7 @@ export function StackHeaderCustomization() {
         component={NewsFeedScreen}
         options={{
           title: 'Feed',
+          headerMode: 'screen',
           header: ({ options, route, back }) => (
             <ElementsHeader
               {...options}

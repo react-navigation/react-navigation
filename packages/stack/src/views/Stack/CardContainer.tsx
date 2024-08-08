@@ -287,6 +287,17 @@ function CardContainerInner({
     >
       <View style={styles.container}>
         <ModalPresentationContext.Provider value={modal}>
+          {headerMode !== 'float'
+            ? renderHeader({
+                mode: 'screen',
+                layout,
+                scenes: [previousScene, scene],
+                getPreviousScene,
+                getFocusedRoute,
+                onContentHeightChange: onHeaderHeightChange,
+                style: styles.header,
+              })
+            : null}
           <View style={styles.scene}>
             <HeaderBackContext.Provider value={headerBack}>
               <HeaderShownContext.Provider
@@ -304,16 +315,6 @@ function CardContainerInner({
               </HeaderShownContext.Provider>
             </HeaderBackContext.Provider>
           </View>
-          {headerMode !== 'float'
-            ? renderHeader({
-                mode: 'screen',
-                layout,
-                scenes: [previousScene, scene],
-                getPreviousScene,
-                getFocusedRoute,
-                onContentHeightChange: onHeaderHeightChange,
-              })
-            : null}
         </ModalPresentationContext.Provider>
       </View>
     </Card>
@@ -325,7 +326,9 @@ export const CardContainer = React.memo(CardContainerInner);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column-reverse',
+  },
+  header: {
+    zIndex: 1,
   },
   scene: {
     flex: 1,

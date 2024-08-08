@@ -329,6 +329,8 @@ const SceneView = ({
       key={route.key}
       enabled
       isNativeStack
+      accessibilityElementsHidden={!focused}
+      importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
       style={StyleSheet.absoluteFill}
       hasLargeHeader={options.headerLargeTitle ?? false}
       customAnimationOnSwipe={animationMatchesGesture}
@@ -451,47 +453,42 @@ const SceneView = ({
                   {headerBackground()}
                 </View>
               ) : null}
-              <View
-                accessibilityElementsHidden={!focused}
-                importantForAccessibility={
-                  focused ? 'auto' : 'no-hide-descendants'
-                }
-                style={styles.scene}
-              >
-                <HeaderShownContext.Provider
-                  value={isParentHeaderShown || headerShown !== false}
-                >
-                  <MaybeNestedStack
-                    options={options}
-                    route={route}
-                    presentation={presentation}
-                    headerHeight={headerHeight}
-                    headerTopInsetEnabled={headerTopInsetEnabled}
-                  >
-                    <HeaderBackContext.Provider value={headerBack}>
-                      {render()}
-                    </HeaderBackContext.Provider>
-                  </MaybeNestedStack>
-                </HeaderShownContext.Provider>
-                {header !== undefined && headerShown !== false ? (
-                  <View
-                    onLayout={(e) => {
-                      const headerHeight = e.nativeEvent.layout.height;
+              {header !== undefined && headerShown !== false ? (
+                <View
+                  onLayout={(e) => {
+                    const headerHeight = e.nativeEvent.layout.height;
 
-                      setHeaderHeight(headerHeight);
-                      rawAnimatedHeaderHeight.setValue(headerHeight);
-                    }}
-                    style={headerTransparent ? styles.absolute : null}
-                  >
-                    {header({
-                      back: headerBack,
-                      options,
-                      route,
-                      navigation,
-                    })}
-                  </View>
-                ) : null}
-              </View>
+                    setHeaderHeight(headerHeight);
+                    rawAnimatedHeaderHeight.setValue(headerHeight);
+                  }}
+                  style={[
+                    styles.header,
+                    headerTransparent ? styles.absolute : null,
+                  ]}
+                >
+                  {header({
+                    back: headerBack,
+                    options,
+                    route,
+                    navigation,
+                  })}
+                </View>
+              ) : null}
+              <HeaderShownContext.Provider
+                value={isParentHeaderShown || headerShown !== false}
+              >
+                <MaybeNestedStack
+                  options={options}
+                  route={route}
+                  presentation={presentation}
+                  headerHeight={headerHeight}
+                  headerTopInsetEnabled={headerTopInsetEnabled}
+                >
+                  <HeaderBackContext.Provider value={headerBack}>
+                    {render()}
+                  </HeaderBackContext.Provider>
+                </MaybeNestedStack>
+              </HeaderShownContext.Provider>
               {/**
                * `HeaderConfig` needs to be the direct child of `Screen` without any intermediate `View`
                * We don't render it conditionally to make it possible to dynamically render a custom `header`
@@ -637,9 +634,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  scene: {
-    flex: 1,
-    flexDirection: 'column-reverse',
+  header: {
+    zIndex: 1,
   },
   absolute: {
     position: 'absolute',
