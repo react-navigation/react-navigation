@@ -1,0 +1,283 @@
+import { useNavigation, useTheme } from '@react-navigation/native';
+import Color from 'color';
+import * as React from 'react';
+import {
+  Animated,
+  Image,
+  Platform,
+  type StyleProp,
+  StyleSheet,
+  TextInput,
+  View,
+  type ViewStyle,
+} from 'react-native';
+
+import clearIcon from '../assets/clear-icon.png';
+import closeIcon from '../assets/close-icon.png';
+import searchIcon from '../assets/search-icon.png';
+import { PlatformPressable } from '../PlatformPressable';
+import { Text } from '../Text';
+import type { HeaderOptions } from '../types';
+import { HeaderButton } from './HeaderButton';
+import { HeaderIcon } from './HeaderIcon';
+
+type Props = HeaderOptions['headerSearchBarOptions'] & {
+  visible: boolean;
+  onClose: () => void;
+  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+};
+
+const INPUT_TYPE_TO_MODE = {
+  text: 'text',
+  number: 'numeric',
+  phone: 'tel',
+  email: 'email',
+} as const;
+
+export function HeaderSearchBar({
+  visible,
+  inputType,
+  autoFocus = true,
+  placeholder = 'Search',
+  cancelButtonText = 'Cancel',
+  onChangeText,
+  onClose,
+  style,
+  ...rest
+}: Props) {
+  const navigation = useNavigation();
+  const { dark, colors, fonts } = useTheme();
+  const [value, setValue] = React.useState('');
+  const [rendered, setRendered] = React.useState(visible);
+  const [visibleAnim] = React.useState(
+    () => new Animated.Value(visible ? 1 : 0)
+  );
+  const [clearVisibleAnim] = React.useState(() => new Animated.Value(0));
+
+  const visibleValueRef = React.useRef(visible);
+  const clearVisibleValueRef = React.useRef(false);
+  const inputRef = React.useRef<TextInput>(null);
+
+  React.useEffect(() => {
+    // Avoid act warning in tests just by rendering header
+    if (visible === visibleValueRef.current) {
+      return;
+    }
+
+    Animated.timing(visibleAnim, {
+      toValue: visible ? 1 : 0,
+      duration: 100,
+      useNativeDriver: true,
+    }).start(({ finished }) => {
+      if (finished) {
+        setRendered(visible);
+        visibleValueRef.current = visible;
+      }
+    });
+
+    return () => {
+      visibleAnim.stopAnimation();
+    };
+  }, [visible, visibleAnim]);
+
+  const hasText = value !== '';
+
+  React.useEffect(() => {
+    if (clearVisibleValueRef.current === hasText) {
+      return;
+    }
+
+    Animated.timing(clearVisibleAnim, {
+      toValue: hasText ? 1 : 0,
+      duration: 100,
+      useNativeDriver: true,
+    }).start(({ finished }) => {
+      if (finished) {
+        clearVisibleValueRef.current = hasText;
+      }
+    });
+  }, [clearVisibleAnim, hasText]);
+
+  const onClear = React.useCallback(() => {
+    inputRef.current?.clear();
+    inputRef.current?.focus();
+    setValue('');
+    // FIXME: figure out how to create a SyntheticEvent
+    // @ts-expect-error: we don't have the native event here
+    onChangeText?.({ nativeEvent: { text: '' } });
+  }, [onChangeText]);
+
+  React.useEffect(
+    () =>
+      navigation?.addListener('blur', () => {
+        onClear();
+        onClose();
+      }),
+    [navigation, onClear, onClose]
+  );
+
+  if (!visible && !rendered) {
+    return null;
+  }
+
+  return (
+    <Animated.View
+      pointerEvents={visible ? 'auto' : 'none'}
+      accessibilityLiveRegion="polite"
+      accessibilityElementsHidden={!visible}
+      importantForAccessibility={visible ? 'auto' : 'no-hide-descendants'}
+      style={[styles.container, { opacity: visibleAnim }, style]}
+    >
+      <View style={styles.searchbarContainer}>
+        <HeaderIcon source={searchIcon} style={styles.inputSearchIcon} />
+        <TextInput
+          {...rest}
+          ref={inputRef}
+          onChange={onChangeText}
+          onChangeText={setValue}
+          autoFocus={autoFocus}
+          inputMode={INPUT_TYPE_TO_MODE[inputType ?? 'text']}
+          placeholder={placeholder}
+          placeholderTextColor={Color(colors.text).alpha(0.5).string()}
+          cursorColor={colors.primary}
+          selectionHandleColor={colors.primary}
+          selectionColor={Color(colors.primary).alpha(0.3).string()}
+          style={[
+            fonts.regular,
+            styles.searchbar,
+            {
+              backgroundColor: Platform.select({
+                ios: dark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+                default: 'transparent',
+              }),
+              color: colors.text,
+              borderBottomColor: colors.border,
+            },
+          ]}
+        />
+        {Platform.OS === 'ios' ? (
+          <PlatformPressable
+            onPress={onClear}
+            style={[
+              {
+                opacity: clearVisibleAnim,
+                transform: [{ scale: clearVisibleAnim }],
+              },
+              styles.clearButton,
+            ]}
+          >
+            <Image
+              source={clearIcon}
+              resizeMode="contain"
+              style={[styles.clearIcon, { tintColor: colors.text }]}
+            />
+          </PlatformPressable>
+        ) : null}
+      </View>
+      {Platform.OS !== 'ios' ? (
+        <HeaderButton
+          onPress={() => {
+            if (value) {
+              onClear();
+            } else {
+              onClose();
+            }
+          }}
+          style={styles.closeButton}
+        >
+          <HeaderIcon source={closeIcon} />
+        </HeaderButton>
+      ) : null}
+      {Platform.OS === 'ios' ? (
+        <PlatformPressable
+          onPress={() => {
+            onClear();
+            onClose();
+          }}
+          style={styles.cancelButton}
+        >
+          <Text
+            style={[
+              fonts.regular,
+              { color: colors.primary },
+              styles.cancelText,
+            ]}
+          >
+            {cancelButtonText}
+          </Text>
+        </PlatformPressable>
+      ) : null}
+    </Animated.View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'stretch',
+  },
+  inputSearchIcon: {
+    position: 'absolute',
+    opacity: 0.5,
+    left: Platform.select({ ios: 16, default: 4 }),
+    top: Platform.select({ ios: -1, default: 17 }),
+    ...Platform.select({
+      ios: {
+        height: 18,
+        width: 18,
+      },
+      default: {},
+    }),
+  },
+  closeButton: {
+    position: 'absolute',
+    opacity: 0.5,
+    right: Platform.select({ ios: 0, default: 8 }),
+    top: Platform.select({ ios: -2, default: 17 }),
+  },
+  clearButton: {
+    position: 'absolute',
+    right: 0,
+    top: -7,
+    bottom: 0,
+    justifyContent: 'center',
+    padding: 8,
+  },
+  clearIcon: {
+    height: 16,
+    width: 16,
+    opacity: 0.5,
+  },
+  cancelButton: {
+    alignSelf: 'center',
+    top: -4,
+  },
+  cancelText: {
+    fontSize: 17,
+    marginHorizontal: 12,
+  },
+  searchbarContainer: {
+    flex: 1,
+  },
+  searchbar: Platform.select({
+    ios: {
+      flex: 1,
+      fontSize: 17,
+      paddingHorizontal: 32,
+      marginLeft: 16,
+      marginTop: -2,
+      marginBottom: 5,
+      borderRadius: 8,
+    },
+    default: {
+      flex: 1,
+      fontSize: 18,
+      paddingHorizontal: 36,
+      marginRight: 8,
+      marginTop: 8,
+      marginBottom: 8,
+      borderBottomWidth: 1,
+    },
+  }),
+});

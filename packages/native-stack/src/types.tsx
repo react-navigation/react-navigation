@@ -321,8 +321,6 @@ export type NativeStackNavigationOptions = {
    * Options to render a native search bar.
    * You also need to specify `contentInsetAdjustmentBehavior="automatic"` in your `ScrollView`, `FlatList` etc.
    * If you don't have a `ScrollView`, specify `headerTransparent: false`.
-   *
-   * Only supported on iOS and Android.
    */
   headerSearchBarOptions?: Omit<SearchBarProps, 'ref'>;
   /**

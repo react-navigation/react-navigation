@@ -1,4 +1,4 @@
-import { NavigationContext, useTheme } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
@@ -13,10 +13,14 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 
+import searchIcon from '../assets/search-icon.png';
 import type { HeaderOptions, Layout } from '../types';
 import { getDefaultHeaderHeight } from './getDefaultHeaderHeight';
 import { HeaderBackButton } from './HeaderBackButton';
 import { HeaderBackground } from './HeaderBackground';
+import { HeaderButton } from './HeaderButton';
+import { HeaderIcon } from './HeaderIcon';
+import { HeaderSearchBar } from './HeaderSearchBar';
 import { HeaderShownContext } from './HeaderShownContext';
 import { HeaderTitle } from './HeaderTitle';
 
@@ -72,9 +76,10 @@ export function Header(props: Props) {
   const frame = useSafeAreaFrame();
   const { colors } = useTheme();
 
-  const navigation = React.useContext(NavigationContext);
+  const navigation = useNavigation();
   const isParentHeaderShown = React.useContext(HeaderShownContext);
 
+  const [searchBarVisible, setSearchBarVisible] = React.useState(false);
   const [titleLayout, setTitleLayout] = React.useState<Layout | undefined>(
     undefined
   );
@@ -104,6 +109,7 @@ export function Header(props: Props) {
     headerTitle: customTitle,
     headerTitleAlign = Platform.OS === 'ios' ? 'center' : 'left',
     headerLeft = back ? (props) => <HeaderBackButton {...props} /> : undefined,
+    headerSearchBarOptions,
     headerTransparent,
     headerTintColor,
     headerBackground,
@@ -249,17 +255,7 @@ export function Header(props: Props) {
         titleLayout,
         screenLayout: layout,
         canGoBack: Boolean(back),
-        onPress: back
-          ? () => {
-              if (navigation) {
-                navigation.goBack();
-              } else {
-                throw new Error(
-                  "Couldn't find a navigation object. Is your component inside NavigationContainer?"
-                );
-              }
-            }
-          : undefined,
+        onPress: back ? navigation.goBack : undefined,
         label: back?.title,
         labelStyle: headerBackTitleStyle,
         href: back?.href,
@@ -318,54 +314,88 @@ export function Header(props: Props) {
         >
           {leftButton}
         </Animated.View>
-        <Animated.View
-          pointerEvents="box-none"
-          style={[
-            styles.title,
-            {
-              // Avoid the title from going offscreen or overlapping buttons
-              maxWidth:
-                headerTitleAlign === 'center'
-                  ? layout.width -
-                    ((leftButton
-                      ? headerBackButtonDisplayMode !== 'minimal'
-                        ? 80
-                        : 32
-                      : 16) +
-                      (rightButton ? 16 : 0) +
-                      Math.max(insets.left, insets.right)) *
-                      2
-                  : layout.width -
-                    ((leftButton ? 52 : 16) +
-                      (rightButton ? 52 : 16) +
-                      insets.left -
-                      insets.right),
-            },
-            headerTitleAlign === 'left' && leftButton
-              ? { marginStart: 4 }
-              : { marginStart: 16 },
-            titleContainerStyle,
-          ]}
-        >
-          {headerTitle({
-            children: title,
-            allowFontScaling: titleAllowFontScaling,
-            tintColor: headerTintColor,
-            onLayout: onTitleLayout,
-            style: titleStyle,
-          })}
-        </Animated.View>
-        <Animated.View
-          pointerEvents="box-none"
-          style={[
-            styles.end,
-            styles.expand,
-            { marginEnd: insets.right },
-            rightContainerStyle,
-          ]}
-        >
-          {rightButton}
-        </Animated.View>
+        {Platform.OS === 'ios' || !searchBarVisible ? (
+          <>
+            <Animated.View
+              pointerEvents="box-none"
+              style={[
+                styles.title,
+                {
+                  // Avoid the title from going offscreen or overlapping buttons
+                  maxWidth:
+                    headerTitleAlign === 'center'
+                      ? layout.width -
+                        ((leftButton
+                          ? headerBackButtonDisplayMode !== 'minimal'
+                            ? 80
+                            : 32
+                          : 16) +
+                          (rightButton ? 16 : 0) +
+                          Math.max(insets.left, insets.right)) *
+                          2
+                      : layout.width -
+                        ((leftButton ? 52 : 16) +
+                          (rightButton ? 52 : 16) +
+                          insets.left -
+                          insets.right),
+                },
+                headerTitleAlign === 'left' && leftButton
+                  ? { marginStart: 4 }
+                  : { marginStart: 16 },
+                titleContainerStyle,
+              ]}
+            >
+              {headerTitle({
+                children: title,
+                allowFontScaling: titleAllowFontScaling,
+                tintColor: headerTintColor,
+                onLayout: onTitleLayout,
+                style: titleStyle,
+              })}
+            </Animated.View>
+            <Animated.View
+              pointerEvents="box-none"
+              style={[
+                styles.end,
+                styles.expand,
+                { marginEnd: insets.right },
+                rightContainerStyle,
+              ]}
+            >
+              {rightButton}
+              {headerSearchBarOptions ? (
+                <HeaderButton
+                  tintColor={iconTintColor}
+                  pressColor={headerPressColor}
+                  pressOpacity={headerPressOpacity}
+                  onPress={() => setSearchBarVisible(true)}
+                >
+                  <HeaderIcon
+                    style={
+                      Boolean(iconTintColor) && { tintColor: iconTintColor }
+                    }
+                    source={searchIcon}
+                  />
+                </HeaderButton>
+              ) : null}
+            </Animated.View>
+          </>
+        ) : null}
+        {Platform.OS === 'ios' || searchBarVisible ? (
+          <HeaderSearchBar
+            {...headerSearchBarOptions}
+            visible={searchBarVisible}
+            onClose={() => {
+              setSearchBarVisible(false);
+              headerSearchBarOptions?.onClose?.();
+            }}
+            style={[
+              Platform.OS === 'ios'
+                ? [StyleSheet.absoluteFill, { backgroundColor: colors.card }]
+                : !leftButton && { marginStart: 8 },
+            ]}
+          />
+        ) : null}
       </View>
     </Animated.View>
   );
@@ -384,12 +414,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   start: {
-    justifyContent: 'center',
-    alignItems: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
   },
   end: {
-    justifyContent: 'center',
-    alignItems: 'flex-end',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
   expand: {
     flexGrow: 1,

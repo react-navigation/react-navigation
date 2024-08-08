@@ -15,6 +15,7 @@ import backIconMask from '../assets/back-icon-mask.png';
 import { MaskedView } from '../MaskedView';
 import type { HeaderBackButtonProps } from '../types';
 import { HeaderButton } from './HeaderButton';
+import { HeaderIcon, ICON_MARGIN } from './HeaderIcon';
 
 export function HeaderBackButton({
   disabled,
@@ -49,16 +50,13 @@ export function HeaderBackButton({
       return backImage({ tintColor: tintColor ?? colors.text });
     } else {
       return (
-        <Image
+        <HeaderIcon
           style={[
             styles.icon,
-            direction === 'rtl' && styles.flip,
             displayMode !== 'minimal' && styles.iconWithLabel,
             Boolean(tintColor) && { tintColor },
           ]}
-          resizeMode="contain"
           source={backIcon}
-          fadeDuration={0}
         />
       );
     }
@@ -72,7 +70,7 @@ export function HeaderBackButton({
     const availableSpace =
       titleLayout && screenLayout
         ? (screenLayout.width - titleLayout.width) / 2 -
-          (ICON_WIDTH + ICON_MARGIN_START)
+          (ICON_WIDTH + ICON_MARGIN)
         : null;
 
     const potentialLabelText =
@@ -192,10 +190,7 @@ export function HeaderBackButton({
 }
 
 const ICON_WIDTH = Platform.OS === 'ios' ? 13 : 24;
-const ICON_HEIGHT = Platform.OS === 'ios' ? 21 : 24;
-const ICON_MARGIN_START = Platform.OS === 'ios' ? 8 : 3;
 const ICON_MARGIN_END = Platform.OS === 'ios' ? 22 : 3;
-const ICON_MARGIN_VERTICAL = Platform.OS === 'ios' ? 8 : 3;
 
 const styles = StyleSheet.create({
   container: {
@@ -220,17 +215,11 @@ const styles = StyleSheet.create({
     // Otherwise it messes with the measurement of the label
     flexDirection: 'row',
     alignItems: 'flex-start',
-    ...Platform.select({
-      ios: { marginEnd: 8 },
-      default: { marginEnd: 3 },
-    }),
+    marginEnd: ICON_MARGIN,
   },
   icon: {
-    height: ICON_HEIGHT,
     width: ICON_WIDTH,
-    marginStart: ICON_MARGIN_START,
     marginEnd: ICON_MARGIN_END,
-    marginVertical: ICON_MARGIN_VERTICAL,
   },
   iconWithLabel:
     Platform.OS === 'ios'

@@ -2,6 +2,7 @@ import type {
   Animated,
   LayoutChangeEvent,
   StyleProp,
+  TextInputProps,
   TextStyle,
   ViewStyle,
 } from 'react-native';
@@ -9,6 +10,48 @@ import type {
 export type HeaderBackButtonDisplayMode = 'default' | 'generic' | 'minimal';
 
 export type Layout = { width: number; height: number };
+
+type HeaderSearchBarOptions = {
+  /**
+   * The auto-capitalization behavior
+   */
+  autoCapitalize?: 'none' | 'words' | 'sentences' | 'characters';
+  /**
+   * Automatically focuses search input on mount
+   */
+  autoFocus?: boolean;
+  /**
+   * The text to be used instead of default `Cancel` button text
+   *
+   * @platform ios
+   */
+  cancelButtonText?: string;
+  /**
+   * Sets type of the input. Defaults to `text`.
+   */
+  inputType?: 'text' | 'phone' | 'number' | 'email';
+  /**
+   * A callback that gets called when search input has lost focus
+   */
+  onBlur?: TextInputProps['onBlur'];
+  /**
+   * A callback that gets called when the text changes.
+   * It receives the current text value of the search input.
+   */
+  onChangeText?: TextInputProps['onChange'];
+  /**
+   * A callback that gets called when search input is closed
+   */
+  onClose?: () => void;
+  /**
+   * A callback that gets called when search input has received focus
+   */
+  onFocus?: TextInputProps['onFocus'];
+  /**
+   * Text displayed when search field is empty
+   */
+  placeholder?: string;
+};
 
 export type HeaderOptions = {
   /**
@@ -36,6 +79,10 @@ export type HeaderOptions = {
    * Whether header title font should scale to respect Text Size accessibility settings. Defaults to `false`.
    */
   headerTitleAllowFontScaling?: boolean;
+  /**
+   * Options to render a search bar.
+   */
+  headerSearchBarOptions?: HeaderSearchBarOptions;
   /**
    * Function which returns a React Element to display on the left side of the header.
    */
