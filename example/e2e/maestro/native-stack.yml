@@ -11,6 +11,11 @@ name: Native Stack
 - assertVisible:
     text: 'Feed'
 - tapOn:
+    text: 'Push contacts'
+    retryTapIfNoChange: false
+- assertVisible:
+    text: 'Contacts'
+- tapOn:
     text: 'Push albums'
     retryTapIfNoChange: false
 - assertVisible:
@@ -32,6 +37,11 @@ name: Native Stack
     text: 'Albums'
 - tapOn:
     text: 'Pop by 2'
+    retryTapIfNoChange: false
+- assertVisible:
+    text: 'Feed'
+- tapOn:
+    text: 'Go back'
     retryTapIfNoChange: false
 - assertVisible:
     text: 'Article by Gandalf'
