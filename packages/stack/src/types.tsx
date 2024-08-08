@@ -199,7 +199,7 @@ export type StackHeaderOptions = Omit<
    * - "generic" – Displays one of the following depending on the available space: truncated title (e.g. 'Back') or no title (only icon).
    * - "minimal" – Always displays only the icon without a title.
    *
-   * Defaults to "default" on iOS, and "minimal" on Android.
+   * Defaults to "default" on iOS, and "minimal" on other platforms.
    */
   headerBackButtonDisplayMode?: HeaderBackButtonDisplayMode;
   /**
@@ -274,10 +274,6 @@ export type StackHeaderRightProps = {
 };
 
 export type StackHeaderLeftProps = HeaderBackButtonProps & {
-  /**
-   * The `href` to use for the anchor tag on web
-   */
-  href?: string;
   /**
    * Whether it's possible to navigate back in stack.
    */

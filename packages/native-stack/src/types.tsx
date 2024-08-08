@@ -114,7 +114,7 @@ export type NativeStackHeaderRightProps = {
   /**
    * Whether it's possible to navigate back in stack.
    */
-  canGoBack: boolean;
+  canGoBack?: boolean;
 };
 
 export type NativeStackHeaderLeftProps = NativeStackHeaderRightProps & {
@@ -150,9 +150,9 @@ export type NativeStackNavigationOptions = {
    * Defaults to the previous scene's title, or "Back" if there's not enough space.
    * Use `headerBackButtonDisplayMode: "minimal"` to hide it.
    *
-   * Only supported on iOS.
+   * Only supported on iOS and Web.
    *
-   * @platform ios
+   * @platform ios, web
    */
   headerBackTitle?: string;
   /**
@@ -160,9 +160,9 @@ export type NativeStackNavigationOptions = {
    * - fontFamily
    * - fontSize
    *
-   * Only supported on iOS.
+   * Only supported on iOS and Web.
    *
-   * @platform ios
+   * @platform ios, web
    */
   headerBackTitleStyle?: StyleProp<{
     fontFamily?: string;
@@ -350,7 +350,11 @@ export type NativeStackNavigationOptions = {
    *
    * In such cases, the "default" mode will be used instead.
    *
-   * @platform ios
+   * Defaults to "default" on iOS, and "minimal" on other platforms.
+   *
+   * Only supported on iOS and Web.
+   *
+   * @platform ios, web
    */
   headerBackButtonDisplayMode?: ScreenStackHeaderConfigProps['backButtonDisplayMode'];
   /**

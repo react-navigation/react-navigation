@@ -1,7 +1,8 @@
-import { useTheme } from '@react-navigation/native';
+import { NavigationContext, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
+  type LayoutChangeEvent,
   Platform,
   StyleSheet,
   View,
@@ -14,6 +15,7 @@ import {
 
 import type { HeaderOptions, Layout } from '../types';
 import { getDefaultHeaderHeight } from './getDefaultHeaderHeight';
+import { HeaderBackButton } from './HeaderBackButton';
 import { HeaderBackground } from './HeaderBackground';
 import { HeaderShownContext } from './HeaderShownContext';
 import { HeaderTitle } from './HeaderTitle';
@@ -22,6 +24,19 @@ import { HeaderTitle } from './HeaderTitle';
 const IPAD_MINI_MEDIUM_WIDTH = 414;
 
 type Props = HeaderOptions & {
+  /**
+   * Options for the back button.
+   */
+  back?: {
+    /**
+     * Title of the previous screen.
+     */
+    title: string | undefined;
+    /**
+     * The `href` to use for the anchor tag on web
+     */
+    href: string | undefined;
+  };
   /**
    * Whether the header is in a modal
    */
@@ -57,16 +72,38 @@ export function Header(props: Props) {
   const frame = useSafeAreaFrame();
   const { colors } = useTheme();
 
+  const navigation = React.useContext(NavigationContext);
   const isParentHeaderShown = React.useContext(HeaderShownContext);
+
+  const [titleLayout, setTitleLayout] = React.useState<Layout | undefined>(
+    undefined
+  );
+
+  const onTitleLayout = (e: LayoutChangeEvent) => {
+    const { height, width } = e.nativeEvent.layout;
+
+    setTitleLayout((titleLayout) => {
+      if (
+        titleLayout &&
+        height === titleLayout.height &&
+        width === titleLayout.width
+      ) {
+        return titleLayout;
+      }
+
+      return { height, width };
+    });
+  };
 
   const {
     // eslint-disable-next-line @eslint-react/no-unstable-default-props
     layout = frame,
     modal = false,
+    back,
     title,
     headerTitle: customTitle,
     headerTitleAlign = Platform.OS === 'ios' ? 'center' : 'left',
-    headerLeft,
+    headerLeft = back ? (props) => <HeaderBackButton {...props} /> : undefined,
     headerTransparent,
     headerTintColor,
     headerBackground,
@@ -77,6 +114,7 @@ export function Header(props: Props) {
     headerRightContainerStyle: rightContainerStyle,
     headerTitleContainerStyle: titleContainerStyle,
     headerBackButtonDisplayMode = Platform.OS === 'ios' ? 'default' : 'minimal',
+    headerBackTitleStyle,
     headerBackgroundContainerStyle: backgroundContainerStyle,
     headerStyle: customHeaderStyle,
     headerShadowVisible,
@@ -208,6 +246,23 @@ export function Header(props: Props) {
         pressColor: headerPressColor,
         pressOpacity: headerPressOpacity,
         displayMode: headerBackButtonDisplayMode,
+        titleLayout,
+        screenLayout: layout,
+        canGoBack: Boolean(back),
+        onPress: back
+          ? () => {
+              if (navigation) {
+                navigation.goBack();
+              } else {
+                throw new Error(
+                  "Couldn't find a navigation object. Is your component inside NavigationContainer?"
+                );
+              }
+            }
+          : undefined,
+        label: back?.title,
+        labelStyle: headerBackTitleStyle,
+        href: back?.href,
       })
     : null;
 
@@ -216,6 +271,7 @@ export function Header(props: Props) {
         tintColor: iconTintColor,
         pressColor: headerPressColor,
         pressOpacity: headerPressOpacity,
+        canGoBack: Boolean(back),
       })
     : null;
 
@@ -295,6 +351,7 @@ export function Header(props: Props) {
             children: title,
             allowFontScaling: titleAllowFontScaling,
             tintColor: headerTintColor,
+            onLayout: onTitleLayout,
             style: titleStyle,
           })}
         </Animated.View>
