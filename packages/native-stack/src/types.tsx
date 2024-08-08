@@ -482,6 +482,43 @@ export type NativeStackNavigationOptions = {
    */
   gestureResponseDistance?: ScreenProps['gestureResponseDistance'];
   /**
+   * Changes the gesture for dismissing the screen to the previous one.
+   *
+   * Supported values:
+   * - "swipeRight": swipe right to dismiss the screen
+   * - "swipeLeft": swipe left to dismiss the screen
+   * - "swipeUp": swipe up to dismiss the screen
+   * - "swipeDown": swipe down to dismiss the screen
+   * - "verticalSwipe": swipe up or down to dismiss the screen
+   * - "horizontalSwipe": swipe left or right to dismiss the screen
+   * - "twoDimensionalSwipe": swipe in any direction to dismiss the screen
+   *
+   * Only supported on iOS and Android.
+   */
+  gestureType?: GestureType;
+  /**
+   * Changes the animation for dismissing the screen when making a swipe gesture.
+   * You can choose one of the built-in transition presets, by using `ScreenTransition` from `react-native-reanimated`.
+   *
+   * Supported values:
+   * - ScreenTransition.SwipeRight
+   * - ScreenTransition.SwipeLeft
+   * - ScreenTransition.SwipeUp
+   * - ScreenTransition.SwipeDown
+   * - ScreenTransition.Horizontal
+   * - ScreenTransition.Vertical
+   * - ScreenTransition.TwoDimensional
+   * - ScreenTransition.SwipeRightFade
+   *
+   * You can also construct custom screen transition by providing an object with `topScreenFrame` and `belowTopScreenFrame` properties.
+   * Only supported on iOS and Android.
+   */
+  animationForGesture?: AnimatedScreenTransition;
+  /**
+   * Whether the screen should allow for making a swipe gesture from screen edges. Defaults to `true`.
+   */
+  gestureFromEdgeEnabled?: boolean;
+  /**
    * The type of animation to use when this screen replaces another screen. Defaults to `pop`.
    *
    * Supported values:
@@ -631,3 +668,50 @@ export type NativeStackDescriptor = Descriptor<
 export type NativeStackDescriptorMap = {
   [key: string]: NativeStackDescriptor;
 };
+
+// copy from GestureHandler to avoid strong dependency
+export type PanGestureHandlerEventPayload = {
+  x: number;
+  y: number;
+  absoluteX: number;
+  absoluteY: number;
+  translationX: number;
+  translationY: number;
+  velocityX: number;
+  velocityY: number;
+};
+
+// copy from Reanimated to avoid strong dependency
+export type GestureType =
+  | 'swipeRight'
+  | 'swipeLeft'
+  | 'swipeUp'
+  | 'swipeDown'
+  | 'verticalSwipe'
+  | 'horizontalSwipe'
+  | 'twoDimensionalSwipe';
+
+export interface MeasuredDimensions {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  pageX: number;
+  pageY: number;
+}
+
+export type AnimatedScreenTransition = {
+  topScreenStyle: (
+    event: PanGestureHandlerEventPayload,
+    screenSize: MeasuredDimensions
+  ) => Record<string, unknown>;
+  belowTopScreenStyle: (
+    event: PanGestureHandlerEventPayload,
+    screenSize: MeasuredDimensions
+  ) => Record<string, unknown>;
+};
+
+export type ScreensRefsHolder = Record<
+  string,
+  React.MutableRefObject<React.Ref<NativeStackNavigatorProps>>
+>;
