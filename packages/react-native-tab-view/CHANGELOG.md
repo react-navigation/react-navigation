@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.9](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.8...react-native-tab-view@4.0.0-rc.9) (2024-08-08)
+
+### Bug Fixes
+
+* use pointer cursor only on web & iOS ([ce1ce06](https://github.com/react-navigation/react-navigation/commit/ce1ce06df75991cb25f3647bcb3e52e08dfff145)) - by @satya164
+
 # [4.0.0-rc.8](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.7...react-native-tab-view@4.0.0-rc.8) (2024-08-01)
 
 **Note:** Version bump only for package react-native-tab-view

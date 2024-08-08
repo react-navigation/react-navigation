@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-rc.22...@react-navigation/stack@7.0.0-rc.23) (2024-08-08)
+
+### Bug Fixes
+
+* avoid using column-reverse for header for a11y on web ([3101d04](https://github.com/react-navigation/react-navigation/commit/3101d0406c32163c0576cb5c4712755c01b1a17c)) - by @satya164
+* improve custom header in native stack & stack ([7e6b666](https://github.com/react-navigation/react-navigation/commit/7e6b6662342e63d241c1a2e8f57c56a3b5b0cef5)) - by @satya164
+
 # [7.0.0-rc.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-rc.21...@react-navigation/stack@7.0.0-rc.22) (2024-08-07)
 
 **Note:** Version bump only for package @react-navigation/stack
