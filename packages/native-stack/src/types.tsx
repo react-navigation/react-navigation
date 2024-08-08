@@ -114,7 +114,7 @@ export type NativeStackHeaderRightProps = {
   /**
    * Whether it's possible to navigate back in stack.
    */
-  canGoBack: boolean;
+  canGoBack?: boolean;
 };
 
 export type NativeStackHeaderLeftProps = NativeStackHeaderRightProps & {

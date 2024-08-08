@@ -1,13 +1,15 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
   Button,
+  getHeaderTitle,
+  Header as ElementsHeader,
   HeaderButton,
   useHeaderHeight,
 } from '@react-navigation/elements';
 import { type PathConfigMap } from '@react-navigation/native';
 import {
   createStackNavigator,
-  Header,
+  Header as StackHeader,
   type StackHeaderProps,
   type StackScreenProps,
 } from '@react-navigation/stack';
@@ -25,14 +27,17 @@ import {
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
+import { NewsFeed } from '../Shared/NewsFeed';
 
 export type HeaderCustomizationStackParams = {
   Article: { author: string };
+  NewsFeed: { date: number };
   Albums: undefined;
 };
 
 const linking: PathConfigMap<HeaderCustomizationStackParams> = {
   Article: COMMON_LINKING_CONFIG.Article,
+  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
   Albums: 'albums',
 };
 
@@ -45,6 +50,31 @@ const ArticleScreen = ({
   return (
     <ScrollView>
       <View style={styles.buttons}>
+        <Button
+          variant="filled"
+          onPress={() => navigation.push('NewsFeed', { date: Date.now() })}
+        >
+          Push feed
+        </Button>
+        <Button variant="tinted" onPress={() => navigation.pop()}>
+          Pop screen
+        </Button>
+      </View>
+      <Article
+        author={{ name: route.params?.author ?? 'Unknown' }}
+        scrollEnabled={scrollEnabled}
+      />
+    </ScrollView>
+  );
+};
+
+const NewsFeedScreen = ({
+  route,
+  navigation,
+}: StackScreenProps<HeaderCustomizationStackParams, 'NewsFeed'>) => {
+  return (
+    <ScrollView>
+      <View style={styles.buttons}>
         <Button variant="filled" onPress={() => navigation.push('Albums')}>
           Push albums
         </Button>
@@ -52,10 +82,7 @@ const ArticleScreen = ({
           Go back
         </Button>
       </View>
-      <Article
-        author={{ name: route.params.author }}
-        scrollEnabled={scrollEnabled}
-      />
+      <NewsFeed scrollEnabled={scrollEnabled} date={route.params.date} />
     </ScrollView>
   );
 };
@@ -70,12 +97,14 @@ const AlbumsScreen = ({
       <View style={styles.buttons}>
         <Button
           variant="filled"
-          onPress={() => navigation.push('Article', { author: 'Babel fish' })}
+          onPress={() =>
+            navigation.navigate('Article', { author: 'Babel fish' })
+          }
         >
-          Push article
+          Navigate to article
         </Button>
-        <Button variant="tinted" onPress={() => navigation.goBack()}>
-          Go back
+        <Button variant="tinted" onPress={() => navigation.pop(2)}>
+          Pop by 2
         </Button>
       </View>
       <Albums scrollEnabled={scrollEnabled} />
@@ -96,7 +125,7 @@ function CustomHeader(props: StackHeaderProps) {
 
   return (
     <>
-      <Header {...props} />
+      <StackHeader {...props} />
       <Animated.Text style={[styles.banner, { opacity }]}>
         Why hello there, pardner!
       </Animated.Text>
@@ -146,6 +175,20 @@ export function StackHeaderCustomization() {
           ),
         })}
         initialParams={{ author: 'Gandalf' }}
+      />
+      <Stack.Screen
+        name="NewsFeed"
+        component={NewsFeedScreen}
+        options={{
+          title: 'Feed',
+          header: ({ options, route, back }) => (
+            <ElementsHeader
+              {...options}
+              back={back}
+              title={getHeaderTitle(options, route.name)}
+            />
+          ),
+        }}
       />
       <Stack.Screen
         name="Albums"

@@ -39,13 +39,14 @@ export type HeaderOptions = {
   /**
    * Function which returns a React Element to display on the left side of the header.
    */
-  headerLeft?: (props: {
-    tintColor?: string;
-    pressColor?: string;
-    pressOpacity?: number;
-    displayMode?: HeaderBackButtonDisplayMode;
-    href?: undefined;
-  }) => React.ReactNode;
+  headerLeft?: (
+    props: HeaderBackButtonProps & {
+      /**
+       * Whether it's possible to navigate back.
+       */
+      canGoBack?: boolean;
+    }
+  ) => React.ReactNode;
   /**
    * How the back button displays icon and title.
    *
@@ -58,6 +59,15 @@ export type HeaderOptions = {
    */
   headerBackButtonDisplayMode?: HeaderBackButtonDisplayMode;
   /**
+   * Style object for header back title. Supported properties:
+   * - fontFamily
+   * - fontSize
+   */
+  headerBackTitleStyle?: StyleProp<{
+    fontFamily?: string;
+    fontSize?: number;
+  }>;
+  /**
    * Style object for the container of the `headerLeft` element`.
    */
   headerLeftContainerStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
@@ -68,6 +78,7 @@ export type HeaderOptions = {
     tintColor?: string;
     pressColor?: string;
     pressOpacity?: number;
+    canGoBack: boolean;
   }) => React.ReactNode;
   /**
    * Style object for the container of the `headerRight` element.

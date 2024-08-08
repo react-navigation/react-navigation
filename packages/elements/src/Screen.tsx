@@ -106,7 +106,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column-reverse',
   },
-  // This is necessary to avoid applying 'column-reverse' to screen content
   content: {
     flex: 1,
   },
