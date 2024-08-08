@@ -118,7 +118,12 @@ export function PlatformPressable({
       }
       style={[
         {
-          cursor: 'pointer', // Add hover effect on iPad and VisionOS
+          cursor:
+            Platform.OS === 'web' || Platform.OS === 'ios'
+              ? // Pointer cursor on web
+                // Hover effect on iPad and visionOS
+                'pointer'
+              : 'auto',
           opacity: !ANDROID_SUPPORTS_RIPPLE ? opacity : 1,
         },
         style,

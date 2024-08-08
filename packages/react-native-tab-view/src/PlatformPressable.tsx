@@ -18,11 +18,7 @@ const ANDROID_SUPPORTS_RIPPLE =
   Platform.OS === 'android' && Platform.Version >= ANDROID_VERSION_LOLLIPOP;
 
 /**
- * PlatformPressable provides an abstraction on top of TouchableNativeFeedback and
- * TouchableOpacity to handle platform differences.
- *
- * On Android, you can pass the props of TouchableNativeFeedback.
- * On other platforms, you can pass the props of TouchableOpacity.
+ * PlatformPressable provides an abstraction on top of Pressable to handle platform differences.
  */
 export function PlatformPressable({
   disabled,
@@ -62,7 +58,12 @@ export function PlatformPressable({
       }
       style={({ pressed }) => [
         {
-          cursor: 'pointer', // Add hover effect on iPad and VisionOS,
+          cursor:
+            Platform.OS === 'web' || Platform.OS === 'ios'
+              ? // Pointer cursor on web
+                // Hover effect on iPad and visionOS
+                'pointer'
+              : 'auto',
           opacity: pressed && !ANDROID_SUPPORTS_RIPPLE ? pressOpacity : 1,
         },
         typeof style === 'function' ? style({ pressed }) : style,
