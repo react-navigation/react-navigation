@@ -88,8 +88,8 @@ export function forUIKit({
     },
     titleStyle: {
       opacity: progress.interpolate({
-        inputRange: [0, 0.4, 1, 1.5],
-        outputRange: [0, 0.1, 1, 0],
+        inputRange: [0, 0.5, 0.75, 1, 1.5],
+        outputRange: [0, 0, 0.1, 1, 0],
       }),
       transform: [
         {
