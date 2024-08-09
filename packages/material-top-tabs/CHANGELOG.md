@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.22...@react-navigation/material-top-tabs@7.0.0-rc.23) (2024-08-09)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
 # [7.0.0-rc.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.21...@react-navigation/material-top-tabs@7.0.0-rc.22) (2024-08-08)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

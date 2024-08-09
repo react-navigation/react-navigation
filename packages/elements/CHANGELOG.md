@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-rc.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.21...@react-navigation/elements@2.0.0-rc.22) (2024-08-09)
+
+### Bug Fixes
+
+* fix alignment for center aligned title ([6e22370](https://github.com/react-navigation/react-navigation/commit/6e223705b8d8cf98b2e6e7fd8119571bffb11c61)) - by @satya164
+
 # [2.0.0-rc.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.20...@react-navigation/elements@2.0.0-rc.21) (2024-08-08)
 
 ### Bug Fixes

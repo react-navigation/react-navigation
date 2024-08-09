@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-rc.23...@react-navigation/stack@7.0.0-rc.24) (2024-08-09)
+
+### Bug Fixes
+
+* fix alignment for center aligned title ([6e22370](https://github.com/react-navigation/react-navigation/commit/6e223705b8d8cf98b2e6e7fd8119571bffb11c61)) - by @satya164
+* tweak UIKit header animation ([f6a3ef7](https://github.com/react-navigation/react-navigation/commit/f6a3ef7d7a9014b7008361b07dda73e5e1f24f01)) - by @satya164
+
 # [7.0.0-rc.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-rc.22...@react-navigation/stack@7.0.0-rc.23) (2024-08-08)
 
 ### Bug Fixes
