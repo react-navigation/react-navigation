@@ -330,18 +330,18 @@ export function Header(props: Props) {
                             ? 80
                             : 32
                           : 16) +
-                          (rightButton ? 16 : 0) +
+                          (rightButton || headerSearchBarOptions ? 16 : 0) +
                           Math.max(insets.left, insets.right)) *
                           2
                       : layout.width -
                         ((leftButton ? 52 : 16) +
-                          (rightButton ? 52 : 16) +
+                          (rightButton || headerSearchBarOptions ? 52 : 16) +
                           insets.left -
                           insets.right),
                 },
                 headerTitleAlign === 'left' && leftButton
                   ? { marginStart: 4 }
-                  : { marginStart: 16 },
+                  : { marginHorizontal: 16 },
                 titleContainerStyle,
               ]}
             >
