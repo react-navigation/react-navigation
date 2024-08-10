@@ -52,7 +52,7 @@ import { useInvalidPreventRemoveError } from '../utils/useInvalidPreventRemoveEr
 import { DebugContainer } from './DebugContainer';
 import { HeaderConfig } from './HeaderConfig';
 
-const isAndroid = Platform.OS === 'android';
+const ANDROID_DEFAULT_HEADER_HEIGHT = 56;
 
 const MaybeNestedStack = ({
   options,
@@ -77,15 +77,16 @@ const MaybeNestedStack = ({
     unstable_screenStyle = null,
   } = options;
 
-  const isHeaderInModal = isAndroid
-    ? false
-    : presentation !== 'card' && headerShown === true && header === undefined;
+  const isHeaderInModal =
+    Platform.OS === 'android'
+      ? false
+      : presentation !== 'card' && headerShown === true && header === undefined;
 
   const headerShownPreviousRef = React.useRef(headerShown);
 
   React.useEffect(() => {
     warnOnce(
-      !isAndroid &&
+      Platform.OS !== 'android' &&
         presentation !== 'card' &&
         headerShownPreviousRef.current !== headerShown,
       `Dynamically changing 'headerShown' in modals will result in remounting the screen and losing all local state. See options for the screen '${route.name}'.`
@@ -113,8 +114,6 @@ const MaybeNestedStack = ({
       {children}
     </DebugContainer>
   );
-
-  console.log(`Render MaybeNestedStack ${isHeaderInModal}`);
 
   if (isHeaderInModal) {
     return (
@@ -190,6 +189,7 @@ const SceneView = ({
   const {
     animationDuration,
     animationTypeForReplace = 'push',
+    fullScreenGestureShadowEnabled = false,
     gestureEnabled,
     gestureDirection = presentation === 'card' ? 'horizontal' : 'vertical',
     gestureResponseDistance,
@@ -201,6 +201,7 @@ const SceneView = ({
     autoHideHomeIndicator,
     keyboardHandlingEnabled,
     navigationBarColor,
+    navigationBarTranslucent,
     navigationBarHidden,
     orientation,
     sheetLargestUndimmedDetent = -1,
@@ -286,7 +287,7 @@ const SceneView = ({
     // FIXME: Currently screens isn't using Material 3
     // So our `getDefaultHeaderHeight` doesn't return the correct value
     // So we hardcode the value here for now until screens is updated
-    android: 56 + topInset,
+    android: ANDROID_DEFAULT_HEADER_HEIGHT + topInset,
     default: getDefaultHeaderHeight(frame, isModal, topInset),
   });
 
@@ -303,7 +304,7 @@ const SceneView = ({
 
   let headerHeightCorrectionOffset = 0;
 
-  if (isAndroid && !hasCustomHeader) {
+  if (Platform.OS === 'android' && !hasCustomHeader) {
     const statusBarHeight = StatusBar.currentHeight ?? 0;
 
     // FIXME: On Android, the native header height is not correctly calculated
@@ -349,19 +350,19 @@ const SceneView = ({
 
   const isRemovePrevented = preventedRoutes[route.key]?.preventRemove;
 
-  console.log('Render SceneView');
-
   return (
     <Screen
       key={route.key}
       enabled
       isNativeStack
       style={[StyleSheet.absoluteFill, unstable_screenStyle]}
+      accessibilityElementsHidden={!focused}
+      importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
       hasLargeHeader={options.headerLargeTitle ?? false}
       customAnimationOnSwipe={animationMatchesGesture}
       fullScreenSwipeEnabled={fullScreenGestureEnabled}
       gestureEnabled={
-        isAndroid
+        Platform.OS === 'android'
           ? // This prop enables handling of system back gestures on Android
             // Since we handle them in JS side, we disable this
             false
@@ -370,6 +371,7 @@ const SceneView = ({
       homeIndicatorHidden={autoHideHomeIndicator}
       hideKeyboardOnSwipe={keyboardHandlingEnabled}
       navigationBarColor={navigationBarColor}
+      navigationBarTranslucent={navigationBarTranslucent}
       navigationBarHidden={navigationBarHidden}
       replaceAnimation={animationTypeForReplace}
       stackPresentation={presentation === 'card' ? 'push' : presentation}
@@ -417,6 +419,16 @@ const SceneView = ({
           useNativeDriver: true,
           listener: (e) => {
             if (
+              Platform.OS === 'android' &&
+              (options.headerBackground != null || options.headerTransparent)
+            ) {
+              // FIXME: On Android, we get 0 if the header is translucent
+              // So we set a default height in that case
+              setHeaderHeight(ANDROID_DEFAULT_HEADER_HEIGHT + topInset);
+              return;
+            }
+
+            if (
               e.nativeEvent &&
               typeof e.nativeEvent === 'object' &&
               'headerHeight' in e.nativeEvent &&
@@ -440,8 +452,12 @@ const SceneView = ({
           },
         }
       )}
-      // this prop is available since rn-screens 3.16
       freezeOnBlur={freezeOnBlur}
+      // When ts-expect-error is added, it affects all the props below it
+      // So we keep any props that need it at the end
+      // Otherwise invalid props may not be caught by TypeScript
+      // @ts-expect-error Props available in newer versions of `react-native-screens`
+      fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled} // 3.33.0 onwards
     >
       <NavigationContext.Provider value={navigation}>
         <NavigationRouteContext.Provider value={route}>
@@ -512,18 +528,8 @@ const SceneView = ({
                 <HeaderConfig
                   {...options}
                   route={route}
-                  headerBackButtonMenuEnabled={
-                    isRemovePrevented !== undefined
-                      ? !isRemovePrevented
-                      : headerBackButtonMenuEnabled
-                  }
-                  headerShown={header !== undefined ? false : headerShown}
+                  presentation={presentation}
                   headerHeight={headerHeight}
-                  headerBackTitle={
-                    options.headerBackTitle !== undefined
-                      ? options.headerBackTitle
-                      : undefined
-                  }
                   headerTopInsetEnabled={headerTopInsetEnabled}
                   canGoBack={headerBack !== undefined}
                 />
@@ -657,9 +663,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  scene: {
-    flex: 1,
-    flexDirection: 'column-reverse',
+  header: {
+    zIndex: 1,
   },
   absolute: {
     position: 'absolute',

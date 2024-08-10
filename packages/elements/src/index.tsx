@@ -1,3 +1,9 @@
+import backIcon from './assets/back-icon.png';
+import backIconMask from './assets/back-icon-mask.png';
+import clearIcon from './assets/clear-icon.png';
+import closeIcon from './assets/close-icon.png';
+import searchIcon from './assets/search-icon.png';
+
 export { Background } from './Background';
 export { Button } from './Button';
 export { getDefaultSidebarWidth } from './getDefaultSidebarWidth';
@@ -22,10 +28,11 @@ export { Screen } from './Screen';
 export { Text } from './Text';
 
 export const Assets = [
-  // eslint-disable-next-line import/no-commonjs
-  require('./assets/back-icon.png'),
-  // eslint-disable-next-line import/no-commonjs
-  require('./assets/back-icon-mask.png'),
+  backIcon,
+  backIconMask,
+  searchIcon,
+  closeIcon,
+  clearIcon,
 ];
 
 export * from './types';

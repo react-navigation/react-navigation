@@ -11,7 +11,6 @@ import {
   type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
-import * as React from 'react';
 
 import type {
   MaterialTopTabNavigationConfig,
@@ -76,9 +75,9 @@ function MaterialTopTabNavigator({
 }
 
 export function createMaterialTopTabNavigator<
-  ParamList extends ParamListBase,
-  NavigatorID extends string | undefined = undefined,
-  TypeBag extends NavigatorTypeBagBase = {
+  const ParamList extends ParamListBase,
+  const NavigatorID extends string | undefined = undefined,
+  const TypeBag extends NavigatorTypeBagBase = {
     ParamList: ParamList;
     NavigatorID: NavigatorID;
     State: TabNavigationState<ParamList>;
@@ -93,9 +92,7 @@ export function createMaterialTopTabNavigator<
     };
     Navigator: typeof MaterialTopTabNavigator;
   },
-  Config extends StaticConfig<TypeBag> | undefined =
-    | StaticConfig<TypeBag>
-    | undefined,
+  const Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
 >(config?: Config): TypedNavigator<TypeBag, Config> {
   return createNavigatorFactory(MaterialTopTabNavigator)(config);
 }

@@ -8,6 +8,7 @@ import {
   type StyleProp,
   StyleSheet,
   type TextStyle,
+  View,
   type ViewStyle,
 } from 'react-native';
 
@@ -90,6 +91,20 @@ type Props = {
    */
   horizontal: boolean;
   /**
+   * Whether to render the icon and label in compact mode.
+   */
+  compact: boolean;
+  /**
+   * Whether the tab is an item in a side bar.
+   */
+  sidebar: boolean;
+  /**
+   * Variant of navigation bar styling
+   * - `uikit`: iOS UIKit style
+   * - `material`: Material Design style
+   */
+  variant: 'uikit' | 'material';
+  /**
    * Color for the icon and label when the item is active.
    */
   activeTintColor?: string;
@@ -127,6 +142,10 @@ type Props = {
   style?: StyleProp<ViewStyle>;
 };
 
+const renderButtonDefault = (props: BottomTabBarButtonProps) => (
+  <PlatformPressable {...props} />
+);
+
 export function BottomTabItem({
   route,
   href,
@@ -136,36 +155,18 @@ export function BottomTabItem({
   icon,
   badge,
   badgeStyle,
-  button = ({
-    href,
-    children,
-    style,
-    onPress,
-    accessibilityRole,
-    ...rest
-  }: BottomTabBarButtonProps) => {
-    return (
-      <PlatformPressable
-        {...rest}
-        android_ripple={{ borderless: true }}
-        pressOpacity={1}
-        href={href}
-        accessibilityRole={accessibilityRole}
-        onPress={onPress}
-        style={style}
-      >
-        {children}
-      </PlatformPressable>
-    );
-  },
+  button = renderButtonDefault,
   accessibilityLabel,
   testID,
   onPress,
   onLongPress,
   horizontal,
+  compact,
+  sidebar,
+  variant,
   activeTintColor: customActiveTintColor,
   inactiveTintColor: customInactiveTintColor,
-  activeBackgroundColor = 'transparent',
+  activeBackgroundColor: customActiveBackgroundColor,
   inactiveBackgroundColor = 'transparent',
   showLabel = true,
   allowFontScaling,
@@ -173,24 +174,50 @@ export function BottomTabItem({
   iconStyle,
   style,
 }: Props) {
-  const { colors } = useTheme();
+  const { colors, fonts } = useTheme();
 
   const activeTintColor =
-    customActiveTintColor === undefined
-      ? colors.primary
-      : customActiveTintColor;
+    customActiveTintColor ??
+    (variant === 'uikit' && sidebar && horizontal
+      ? Color(colors.primary).isDark()
+        ? 'white'
+        : Color(colors.primary).darken(0.71).string()
+      : colors.primary);
 
   const inactiveTintColor =
     customInactiveTintColor === undefined
-      ? Color(colors.text).mix(Color(colors.card), 0.5).hex()
+      ? variant === 'material'
+        ? Color(colors.text).alpha(0.68).rgb().string()
+        : Color(colors.text).mix(Color(colors.card), 0.5).hex()
       : customInactiveTintColor;
+
+  const activeBackgroundColor =
+    customActiveBackgroundColor ??
+    (variant === 'material'
+      ? Color(activeTintColor).alpha(0.12).rgb().string()
+      : sidebar && horizontal
+        ? colors.primary
+        : 'transparent');
+
+  let labelInactiveTintColor = inactiveTintColor;
+  let iconInactiveTintColor = inactiveTintColor;
+
+  if (
+    variant === 'uikit' &&
+    sidebar &&
+    horizontal &&
+    customInactiveTintColor === undefined
+  ) {
+    iconInactiveTintColor = colors.primary;
+    labelInactiveTintColor = colors.text;
+  }
 
   const renderLabel = ({ focused }: { focused: boolean }) => {
     if (showLabel === false) {
       return null;
     }
 
-    const color = focused ? activeTintColor : inactiveTintColor;
+    const color = focused ? activeTintColor : labelInactiveTintColor;
 
     if (typeof label !== 'string') {
       const { options } = descriptor;
@@ -216,7 +243,22 @@ export function BottomTabItem({
     return (
       <Label
         style={[
-          horizontal ? styles.labelBeside : styles.labelBeneath,
+          horizontal
+            ? [
+                styles.labelBeside,
+                variant === 'material'
+                  ? styles.labelSidebarMaterial
+                  : sidebar
+                    ? styles.labelSidebarUiKit
+                    : compact
+                      ? styles.labelBesideUikitCompact
+                      : styles.labelBesideUikit,
+                icon == null && { marginStart: 0 },
+              ]
+            : styles.labelBeneath,
+          compact || (variant === 'uikit' && sidebar && horizontal)
+            ? fonts.regular
+            : fonts.medium,
           labelStyle,
         ]}
         allowFontScaling={allowFontScaling}
@@ -238,13 +280,14 @@ export function BottomTabItem({
     return (
       <TabBarIcon
         route={route}
-        horizontal={horizontal}
+        variant={variant}
+        size={compact ? 'compact' : 'regular'}
         badge={badge}
         badgeStyle={badgeStyle}
         activeOpacity={activeOpacity}
         inactiveOpacity={inactiveOpacity}
         activeTintColor={activeTintColor}
-        inactiveTintColor={inactiveTintColor}
+        inactiveTintColor={iconInactiveTintColor}
         renderIcon={icon}
         style={iconStyle}
       />
@@ -257,49 +300,127 @@ export function BottomTabItem({
     ? activeBackgroundColor
     : inactiveBackgroundColor;
 
-  return button({
-    href,
-    onPress,
-    onLongPress,
-    testID,
-    accessibilityLabel,
-    // FIXME: accessibilityRole: 'tab' doesn't seem to work as expected on iOS
-    accessibilityRole: Platform.select({ ios: 'button', default: 'tab' }),
-    accessibilityState: { selected: focused },
-    // @ts-expect-error: keep for compatibility with older React Native versions
-    accessibilityStates: focused ? ['selected'] : [],
-    style: [
-      styles.tab,
-      { backgroundColor },
-      horizontal ? styles.tabLandscape : styles.tabPortrait,
-      style,
-    ],
-    children: (
-      <React.Fragment>
-        {renderIcon(scene)}
-        {renderLabel(scene)}
-      </React.Fragment>
-    ),
-  }) as React.ReactElement;
+  const { flex } = StyleSheet.flatten(style || {});
+  const borderRadius =
+    variant === 'material'
+      ? horizontal
+        ? 56
+        : 16
+      : sidebar && horizontal
+        ? 10
+        : 0;
+
+  return (
+    <View
+      style={[
+        // Clip ripple effect on Android
+        {
+          borderRadius,
+          overflow: variant === 'material' ? 'hidden' : 'visible',
+        },
+        style,
+      ]}
+    >
+      {button({
+        href,
+        onPress,
+        onLongPress,
+        testID,
+        accessibilityLabel,
+        // FIXME: accessibilityRole: 'tab' doesn't seem to work as expected on iOS
+        accessibilityRole: Platform.select({ ios: 'button', default: 'tab' }),
+        accessibilityState: { selected: focused },
+        // @ts-expect-error: keep for compatibility with older React Native versions
+        accessibilityStates: focused ? ['selected'] : [],
+        android_ripple: { borderless: true },
+        hoverEffect:
+          variant === 'material' || (sidebar && horizontal)
+            ? { color: colors.text }
+            : undefined,
+        pressOpacity: 1,
+        style: [
+          styles.tab,
+          { flex, backgroundColor, borderRadius },
+          sidebar
+            ? variant === 'material'
+              ? horizontal
+                ? styles.tabBarSidebarMaterial
+                : styles.tabVerticalMaterial
+              : horizontal
+                ? styles.tabBarSidebarUiKit
+                : styles.tabVerticalUiKit
+            : variant === 'material'
+              ? styles.tabVerticalMaterial
+              : horizontal
+                ? styles.tabHorizontalUiKit
+                : styles.tabVerticalUiKit,
+        ],
+        children: (
+          <React.Fragment>
+            {renderIcon(scene)}
+            {renderLabel(scene)}
+          </React.Fragment>
+        ),
+      })}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   tab: {
     alignItems: 'center',
+    // Roundness for iPad hover effect
+    borderRadius: 10,
   },
-  tabPortrait: {
-    justifyContent: 'flex-end',
+  tabVerticalUiKit: {
+    justifyContent: 'flex-start',
     flexDirection: 'column',
+    padding: 5,
   },
-  tabLandscape: {
+  tabVerticalMaterial: {
+    padding: 10,
+  },
+  tabHorizontalUiKit: {
     justifyContent: 'center',
+    alignItems: 'center',
     flexDirection: 'row',
+    padding: 5,
+  },
+  tabBarSidebarUiKit: {
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingVertical: 7,
+    paddingHorizontal: 5,
+  },
+  tabBarSidebarMaterial: {
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingVertical: 15,
+    paddingStart: 16,
+    paddingEnd: 24,
+  },
+  labelSidebarMaterial: {
+    marginStart: 12,
+  },
+  labelSidebarUiKit: {
+    fontSize: 17,
+    marginStart: 10,
   },
   labelBeneath: {
     fontSize: 10,
   },
   labelBeside: {
+    marginEnd: 12,
+    lineHeight: 24,
+  },
+  labelBesideUikit: {
     fontSize: 13,
-    marginStart: 20,
+    marginStart: 5,
+  },
+  labelBesideUikitCompact: {
+    fontSize: 12,
+    marginStart: 5,
   },
 });

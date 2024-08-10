@@ -4,10 +4,10 @@ import {
   type ParamListBase,
   useNavigation,
 } from '@react-navigation/native';
-import * as React from 'react';
 import { Image, Platform, StyleSheet } from 'react-native';
 
 import type { DrawerNavigationProp } from '../types';
+import toggleDrawerIcon from './assets/toggle-drawer-icon.png';
 
 type Props = {
   accessibilityLabel?: string;
@@ -33,7 +33,7 @@ export function DrawerToggleButton({ tintColor, ...rest }: Props) {
       <Image
         style={[styles.icon, tintColor ? { tintColor } : null]}
         resizeMode="contain"
-        source={require('./assets/toggle-drawer-icon.png')}
+        source={toggleDrawerIcon}
         fadeDuration={0}
       />
     </PlatformPressable>
@@ -44,9 +44,11 @@ const styles = StyleSheet.create({
   icon: {
     height: 24,
     width: 24,
-    margin: 3,
+    marginVertical: 8,
+    marginHorizontal: 13,
   },
   touchable: {
-    marginHorizontal: 11,
+    // Roundness for iPad hover effect
+    borderRadius: 10,
   },
 });

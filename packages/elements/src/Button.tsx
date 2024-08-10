@@ -1,7 +1,11 @@
-import { useLinkProps, useTheme } from '@react-navigation/native';
+import {
+  type LinkProps,
+  useLinkProps,
+  useTheme,
+} from '@react-navigation/native';
 import Color from 'color';
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 import {
   PlatformPressable,
@@ -9,26 +13,41 @@ import {
 } from './PlatformPressable';
 import { Text } from './Text';
 
-type BaseProps = Omit<PlatformPressableProps, 'children'> & {
+type ButtonBaseProps = Omit<PlatformPressableProps, 'children'> & {
   variant?: 'plain' | 'tinted' | 'filled';
   color?: string;
   children: string | string[];
 };
 
-type LinkProps = Omit<BaseProps, 'onPress'> &
-  Parameters<typeof useLinkProps>[0];
+type ButtonLinkProps<ParamList extends ReactNavigation.RootParamList> =
+  LinkProps<ParamList> & Omit<ButtonBaseProps, 'onPress'>;
 
 const BUTTON_RADIUS = 40;
 
-export function Button(props: BaseProps | LinkProps) {
+export function Button<ParamList extends ReactNavigation.RootParamList>(
+  props: ButtonLinkProps<ParamList>
+): React.JSX.Element;
+
+export function Button(props: ButtonBaseProps): React.JSX.Element;
+
+export function Button<ParamList extends ReactNavigation.RootParamList>(
+  props: ButtonBaseProps | ButtonLinkProps<ParamList>
+) {
   if ('screen' in props || 'action' in props) {
+    // @ts-expect-error: This is already type-checked by the prop types
     return <ButtonLink {...props} />;
   } else {
     return <ButtonBase {...props} />;
   }
 }
 
-function ButtonLink({ screen, params, action, href, ...rest }: LinkProps) {
+function ButtonLink<ParamList extends ReactNavigation.RootParamList>({
+  screen,
+  params,
+  action,
+  href,
+  ...rest
+}: ButtonLinkProps<ParamList>) {
   // @ts-expect-error: This is already type-checked by the prop types
   const props = useLinkProps({ screen, params, action, href });
 
@@ -42,7 +61,7 @@ function ButtonBase({
   style,
   children,
   ...rest
-}: BaseProps) {
+}: ButtonBaseProps) {
   const { colors, fonts } = useTheme();
 
   const color = customColor ?? colors.primary;
@@ -70,12 +89,14 @@ function ButtonBase({
   return (
     <PlatformPressable
       {...rest}
-      style={[{ backgroundColor }, styles.button, style]}
       android_ripple={{
         radius: BUTTON_RADIUS,
         color: Color(textColor).fade(0.85).string(),
         ...android_ripple,
       }}
+      pressOpacity={Platform.OS === 'ios' ? undefined : 1}
+      hoverEffect={{ color: textColor }}
+      style={[{ backgroundColor }, styles.button, style]}
     >
       <Text style={[{ color: textColor }, fonts.regular, styles.text]}>
         {children}

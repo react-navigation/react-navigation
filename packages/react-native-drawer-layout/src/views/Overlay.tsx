@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import type { OverlayProps } from '../types';

@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/native-stack",
   "description": "Native stack navigator using react-native-screens",
-  "version": "7.0.0-alpha.20",
+  "version": "7.0.0-rc.25",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -22,11 +22,22 @@
     "url": "https://github.com/software-mansion/react-native-screens/issues"
   },
   "homepage": "https://github.com/software-mansion/react-native-screens#readme",
-  "main": "lib/commonjs/index.js",
-  "react-native": "src/index.tsx",
-  "source": "src/index.tsx",
-  "module": "lib/module/index.js",
-  "types": "lib/typescript/src/index.d.ts",
+  "source": "./src/index.tsx",
+  "main": "./lib/commonjs/index.js",
+  "module": "./lib/module/index.js",
+  "types": "./lib/typescript/commonjs/src/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/typescript/module/src/index.d.ts",
+        "default": "./lib/module/index.js"
+      },
+      "require": {
+        "types": "./lib/typescript/commonjs/src/index.d.ts",
+        "default": "./lib/commonjs/index.js"
+      }
+    }
+  },
   "files": [
     "src",
     "lib",
@@ -41,37 +52,49 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/elements": "^2.0.0-alpha.17",
+    "@react-navigation/elements": "^2.0.0-rc.22",
     "warn-once": "^0.1.1"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "@react-navigation/native": "workspace:^",
     "@testing-library/react-native": "^12.4.3",
-    "@types/react": "~18.2.45",
+    "@types/react": "~18.2.79",
     "del-cli": "^5.1.0",
     "react": "18.2.0",
-    "react-native": "0.73.2",
-    "react-native-builder-bob": "^0.23.2",
-    "react-native-screens": "~3.29.0",
-    "typescript": "^5.3.3"
+    "react-native": "0.74.2",
+    "react-native-builder-bob": "^0.29.0",
+    "react-native-screens": "3.32.0",
+    "typescript": "^5.5.2"
   },
   "peerDependencies": {
     "@react-navigation/native": "workspace:^",
     "react": ">= 18.2.0",
     "react-native": ">= 0.72.0",
     "react-native-safe-area-context": ">= 4.0.0",
-    "react-native-screens": ">= 3.0.0"
+    "react-native-screens": ">= 3.21.0"
   },
   "react-native-builder-bob": {
     "source": "src",
     "output": "lib",
     "targets": [
-      "commonjs",
-      "module",
+      [
+        "commonjs",
+        {
+          "esm": true
+        }
+      ],
+      [
+        "module",
+        {
+          "esm": true
+        }
+      ],
       [
         "typescript",
         {
-          "project": "tsconfig.build.json"
+          "project": "tsconfig.build.json",
+          "esm": true
         }
       ]
     ]

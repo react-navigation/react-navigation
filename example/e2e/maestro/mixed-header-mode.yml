@@ -1,0 +1,7 @@
+appId: ${APP_ID}
+name: Mixed Header Mode
+---
+- openLink:
+    link: exp://127.0.0.1:8081/--/mixed-header-mode
+- assertVisible:
+    text: 'Article by Gandalf'

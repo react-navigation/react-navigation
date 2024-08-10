@@ -55,9 +55,11 @@ export type TabActionHelpers<ParamList extends ParamListBase> = {
    * @param [params] Params object for the route.
    */
   jumpTo<RouteName extends Extract<keyof ParamList, string>>(
-    ...args: undefined extends ParamList[RouteName]
-      ? [screen: RouteName] | [screen: RouteName, params: ParamList[RouteName]]
-      : [screen: RouteName, params: ParamList[RouteName]]
+    ...args: {
+      [Screen in keyof ParamList]: undefined extends ParamList[Screen]
+        ? [screen: Screen] | [screen: Screen, params: ParamList[Screen]]
+        : [screen: Screen, params: ParamList[Screen]];
+    }[RouteName]
   ): void;
 };
 
@@ -386,7 +388,7 @@ export function TabRouter({
             return null;
           }
 
-          const previousKey = state.history[state.history.length - 2].key;
+          const previousKey = state.history[state.history.length - 2]?.key;
           const index = state.routes.findIndex(
             (route) => route.key === previousKey
           );

@@ -5,7 +5,6 @@ import {
   type StackScreenProps,
   useCardAnimation,
 } from '@react-navigation/stack';
-import * as React from 'react';
 import {
   Animated,
   Platform,

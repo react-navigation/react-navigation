@@ -3,6 +3,159 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.25](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.24...@react-navigation/native-stack@7.0.0-rc.25) (2024-08-09)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [7.0.0-rc.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.23...@react-navigation/native-stack@7.0.0-rc.24) (2024-08-08)
+
+### Bug Fixes
+
+* avoid using column-reverse for header for a11y on web ([3101d04](https://github.com/react-navigation/react-navigation/commit/3101d0406c32163c0576cb5c4712755c01b1a17c)) - by @satya164
+* improve custom header in native stack & stack ([7e6b666](https://github.com/react-navigation/react-navigation/commit/7e6b6662342e63d241c1a2e8f57c56a3b5b0cef5)) - by @satya164
+
+### Features
+
+* implement search bar in elements header ([#12097](https://github.com/react-navigation/react-navigation/issues/12097)) ([78b1535](https://github.com/react-navigation/react-navigation/commit/78b1535e01de1b4a1dc462c0690d69d3d39ab964)) - by @satya164
+
+# [7.0.0-rc.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.22...@react-navigation/native-stack@7.0.0-rc.23) (2024-08-07)
+
+### Bug Fixes
+
+* add more fallbacks for headerBackButtonDisplayMode ([#12094](https://github.com/react-navigation/react-navigation/issues/12094)) ([bc01c15](https://github.com/react-navigation/react-navigation/commit/bc01c15e6e4b5f225b6204f42ac1fc61478bfb65)) - by @satya164
+
+# [7.0.0-rc.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.21...@react-navigation/native-stack@7.0.0-rc.22) (2024-08-05)
+
+### Features
+
+* add headerBackButtonDisplayMode for native stack ([#12089](https://github.com/react-navigation/react-navigation/issues/12089)) ([89ffa1b](https://github.com/react-navigation/react-navigation/commit/89ffa1baa1dc3ad8260361a3f84aa21d24c1643e)), closes [#11980](https://github.com/react-navigation/react-navigation/issues/11980) - by @dylancom
+
+### BREAKING CHANGES
+
+* This removes the `headerBackTitleVisible` option,
+
+Adds corresponding functionality from
+https://github.com/software-mansion/react-native-screens/pull/2123.
+
+# [7.0.0-rc.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.20...@react-navigation/native-stack@7.0.0-rc.21) (2024-08-02)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [7.0.0-rc.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.19...@react-navigation/native-stack@7.0.0-rc.20) (2024-08-01)
+
+### Bug Fixes
+
+* fix incorrect condition due to bad merge ([3a0b0b5](https://github.com/react-navigation/react-navigation/commit/3a0b0b5e264defaed261864cf09de93c591ac2d7)) - by @satya164
+
+# [7.0.0-rc.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.18...@react-navigation/native-stack@7.0.0-rc.19) (2024-08-01)
+
+### Bug Fixes
+
+* fix useAnimatedHeaderHeight on web for native stack ([03b39d6](https://github.com/react-navigation/react-navigation/commit/03b39d66d8bdb2c87997ad6f3e7551aead7a25ae)) - by @satya164
+* fix wrong header height for translucent header on Android ([ca64015](https://github.com/react-navigation/react-navigation/commit/ca64015a9526bb1eed14ef31453abba04ca5508b)) - by @satya164
+
+# [7.0.0-rc.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.17...@react-navigation/native-stack@7.0.0-rc.18) (2024-07-25)
+
+### Bug Fixes
+
+* fix type inference for params. closes [#12071](https://github.com/react-navigation/react-navigation/issues/12071) ([3299b70](https://github.com/react-navigation/react-navigation/commit/3299b70682adbf55811369535cca1cdd0dc59860)) - by @
+
+### Features
+
+* add fullScreenSwipeShadowEnabled prop to NativeStackView ([#12053](https://github.com/react-navigation/react-navigation/issues/12053)) ([da34512](https://github.com/react-navigation/react-navigation/commit/da34512873604f83bda7d9c1db5f500d3447364d)) - by @maksg
+
+# [7.0.0-rc.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.16...@react-navigation/native-stack@7.0.0-rc.17) (2024-07-19)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [7.0.0-rc.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.15...@react-navigation/native-stack@7.0.0-rc.16) (2024-07-12)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [7.0.0-rc.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.14...@react-navigation/native-stack@7.0.0-rc.15) (2024-07-12)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [7.0.0-rc.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.13...@react-navigation/native-stack@7.0.0-rc.14) (2024-07-11)
+
+### Bug Fixes
+
+* upgrade react-native-builder-bob ([1575287](https://github.com/react-navigation/react-navigation/commit/1575287d40fadb97f33eb19c2914d8be3066b47a)) - by @
+
+# [7.0.0-rc.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.12...@react-navigation/native-stack@7.0.0-rc.13) (2024-07-11)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [7.0.0-rc.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.11...@react-navigation/native-stack@7.0.0-rc.12) (2024-07-10)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [7.0.0-rc.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.10...@react-navigation/native-stack@7.0.0-rc.11) (2024-07-08)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [7.0.0-rc.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.9...@react-navigation/native-stack@7.0.0-rc.10) (2024-07-07)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [7.0.0-rc.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.8...@react-navigation/native-stack@7.0.0-rc.9) (2024-07-04)
+
+### Bug Fixes
+
+* fix published files ([829caa0](https://github.com/react-navigation/react-navigation/commit/829caa019e125811eea5213fd380e8e1bdbe7030)) - by @
+
+# [7.0.0-rc.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.7...@react-navigation/native-stack@7.0.0-rc.8) (2024-07-04)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [7.0.0-rc.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.6...@react-navigation/native-stack@7.0.0-rc.7) (2024-07-04)
+
+### Features
+
+* add package.json exports field ([1435cfe](https://github.com/react-navigation/react-navigation/commit/1435cfe3300767c221ebd4613479ad662d61efee)) - by @
+
+# [7.0.0-rc.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.5...@react-navigation/native-stack@7.0.0-rc.6) (2024-07-02)
+
+### Bug Fixes
+
+* drop leftover empty string for headerBackTitleVisible ([b93f861](https://github.com/react-navigation/react-navigation/commit/b93f86155fe9185c5197cd6d44b625aabb8ca4a7)) - by @satya164
+
+# [7.0.0-rc.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.4...@react-navigation/native-stack@7.0.0-rc.5) (2024-07-01)
+
+### Bug Fixes
+
+* stop using react-native field in package.json ([efc33cb](https://github.com/react-navigation/react-navigation/commit/efc33cb0c4830a84ceae034dc1278c54f1faf32d)) - by @
+
+# [7.0.0-rc.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.3...@react-navigation/native-stack@7.0.0-rc.4) (2024-06-29)
+
+### Bug Fixes
+
+* add a workaround for incorrect inference [#12041](https://github.com/react-navigation/react-navigation/issues/12041) ([85c4bbb](https://github.com/react-navigation/react-navigation/commit/85c4bbbf535cde2ba9cd537a2a5ce34f060d32b9)) - by @
+
+# [7.0.0-rc.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.2...@react-navigation/native-stack@7.0.0-rc.3) (2024-06-28)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [7.0.0-rc.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.1...@react-navigation/native-stack@7.0.0-rc.2) (2024-06-28)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [7.0.0-rc.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.0...@react-navigation/native-stack@7.0.0-rc.1) (2024-06-28)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [7.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.20...@react-navigation/native-stack@7.0.0-rc.0) (2024-06-27)
+
+### Bug Fixes
+
+* **native-stack:**  set `headerTopInstetEnabled` to the same value as `statusBarTranslucent` to prevent header content jump ([#12014](https://github.com/react-navigation/react-navigation/issues/12014)) ([7791191](https://github.com/react-navigation/react-navigation/commit/77911917bb4d1137be267a321fb8a20bba772a06)), closes [/github.com/react-navigation/react-navigation/blob/25e834b4f330fb05b4ecdbe81ef7f2f065fd26c8/packages/elements/src/SafeAreaProviderCompat.tsx#L55](https://github.com//github.com/react-navigation/react-navigation/blob/25e834b4f330fb05b4ecdbe81ef7f2f065fd26c8/packages/elements/src/SafeAreaProviderCompat.tsx/issues/L55) [#10827](https://github.com/react-navigation/react-navigation/issues/10827) - by @kkafar
+* setting headerBackTitleVisible to false not working on iOS ([#11937](https://github.com/react-navigation/react-navigation/issues/11937)) ([52a3234](https://github.com/react-navigation/react-navigation/commit/52a3234b7aaf4d4fcc9c0155f44f3ea2233f0f40)), closes [/github.com/software-mansion/react-native-screens/blob/d54a19a/ios/RNSScreenStackHeaderConfig.mm#L506](https://github.com//github.com/software-mansion/react-native-screens/blob/d54a19a/ios/RNSScreenStackHeaderConfig.mm/issues/L506) [/github.com/software-mansion/react-native-screens/blob/d54a19a9789b799566da16a89e2cd8d8f1ad0ba7/ios/RNSScreenStackHeaderConfig.h#L42](https://github.com//github.com/software-mansion/react-native-screens/blob/d54a19a9789b799566da16a89e2cd8d8f1ad0ba7/ios/RNSScreenStackHeaderConfig.h/issues/L42) [/github.com/software-mansion/react-native-screens/blob/d54a19a/ios/RNSScreenStackHeaderConfig.mm#L514-L539](https://github.com//github.com/software-mansion/react-native-screens/blob/d54a19a/ios/RNSScreenStackHeaderConfig.mm/issues/L514-L539) - by @zetavg
+* use measured header height when exposing it ([#11917](https://github.com/react-navigation/react-navigation/issues/11917)) ([d90ed76](https://github.com/react-navigation/react-navigation/commit/d90ed7665be74c570ed2a6a4da612230fcf6a01c)) - by @satya164
+
+### Features
+
+* add navigationBarTranslucent option to native stack ([#11998](https://github.com/react-navigation/react-navigation/issues/11998)) ([2864b6c](https://github.com/react-navigation/react-navigation/commit/2864b6cc5b776c86ae23218464e379a3705700bb)) - by @alduzy
+
 # [7.0.0-alpha.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-alpha.19...@react-navigation/native-stack@7.0.0-alpha.20) (2024-03-25)
 
 ### Features

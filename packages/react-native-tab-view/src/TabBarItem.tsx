@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   Animated,
   type LayoutChangeEvent,
+  Platform,
   type PressableAndroidRippleConfig,
   type StyleProp,
   StyleSheet,
@@ -84,6 +85,8 @@ type TabBarItemInternalProps<T extends Route> = Omit<
   routesLength: number;
 } & TabDescriptor<T>;
 
+const ANDROID_RIPPLE_DEFAULT = { borderless: true };
+
 const TabBarItemInternal = <T extends Route>({
   accessibilityLabel,
   accessible,
@@ -107,7 +110,7 @@ const TabBarItemInternal = <T extends Route>({
   href,
   labelText,
   routesLength,
-  android_ripple = { borderless: true },
+  android_ripple = ANDROID_RIPPLE_DEFAULT,
   labelAllowFontScaling,
   route,
 }: TabBarItemInternalProps<T>) => {
@@ -295,5 +298,10 @@ const styles = StyleSheet.create({
     // The label is not pressable on Windows
     // Adding backgroundColor: 'transparent' seems to fix it
     backgroundColor: 'transparent',
+    ...Platform.select({
+      // Roundness for iPad hover effect
+      ios: { borderRadius: 10 },
+      default: null,
+    }),
   },
 });

@@ -1,5 +1,5 @@
+import { beforeEach, expect, test } from '@jest/globals';
 import { render } from '@testing-library/react-native';
-import * as React from 'react';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
 import { Screen } from '../Screen';
@@ -12,7 +12,7 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-it('gets route prop from context', () => {
+test('gets route prop from context', () => {
   expect.assertions(1);
 
   const TestNavigator = (props: any): any => {

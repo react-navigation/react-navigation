@@ -1,16 +1,23 @@
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useReduxDevToolsExtension } from '@react-navigation/devtools';
 import {
   createDrawerNavigator,
+  type DrawerContentComponentProps,
+  DrawerContentScrollView,
+  DrawerItem,
+  DrawerItemList,
   type DrawerScreenProps,
 } from '@react-navigation/drawer';
+import { Text } from '@react-navigation/elements';
 import {
   type CompositeScreenProps,
   DarkTheme,
   DefaultTheme,
   type InitialState,
+  type LinkingOptions,
   NavigationContainer,
   useNavigationContainerRef,
 } from '@react-navigation/native';
@@ -24,17 +31,16 @@ import * as SplashScreen from 'expo-splash-screen';
 import { reloadAsync } from 'expo-updates';
 import * as React from 'react';
 import {
+  Appearance,
   I18nManager,
   Linking,
   Platform,
   ScrollView,
   StatusBar,
-  Text,
   useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import type { LinkingOptions } from '../../packages/native/src/types';
 import {
   type RootDrawerParamList,
   type RootStackParamList,
@@ -95,6 +101,12 @@ const linking: LinkingOptions<RootStackParamList> = {
 let previousDirection = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr';
 
 if (Platform.OS === 'web') {
+  if (typeof document !== 'undefined' && document.documentElement) {
+    document
+      .getElementById('root')
+      ?.setAttribute('style', 'height: 100vh; overflow: auto;');
+  }
+
   if (
     typeof localStorage !== 'undefined' &&
     typeof document !== 'undefined' &&
@@ -124,8 +136,8 @@ export function App() {
       try {
         const initialUrl = await Linking.getInitialURL();
 
-        if (Platform.OS !== 'web' || initialUrl === null) {
-          const savedState = await AsyncStorage?.getItem(
+        if (Platform.OS !== 'web' && initialUrl === null) {
+          const savedState = await AsyncStorage.getItem(
             NAVIGATION_PERSISTENCE_KEY
           );
 
@@ -137,7 +149,7 @@ export function App() {
         }
       } finally {
         try {
-          const themeName = await AsyncStorage?.getItem(THEME_PERSISTENCE_KEY);
+          const themeName = await AsyncStorage.getItem(THEME_PERSISTENCE_KEY);
 
           setTheme(themeName === 'dark' ? DarkTheme : DefaultTheme);
         } catch (e) {
@@ -145,7 +157,7 @@ export function App() {
         }
 
         try {
-          const direction = await AsyncStorage?.getItem(
+          const direction = await AsyncStorage.getItem(
             DIRECTION_PERSISTENCE_KEY
           );
 
@@ -162,8 +174,20 @@ export function App() {
   }, []);
 
   React.useEffect(() => {
-    AsyncStorage.setItem(THEME_PERSISTENCE_KEY, theme.dark ? 'dark' : 'light');
-  }, [theme.dark]);
+    if (!isReady) {
+      return;
+    }
+
+    const name = theme.dark ? 'dark' : 'light';
+
+    AsyncStorage.setItem(THEME_PERSISTENCE_KEY, name);
+
+    if (Platform.OS === 'web') {
+      document.documentElement.style.colorScheme = name;
+    } else {
+      Appearance.setColorScheme(name);
+    }
+  }, [isReady, theme.dark]);
 
   React.useEffect(() => {
     const direction = isRTL ? 'rtl' : 'ltr';
@@ -198,13 +222,11 @@ export function App() {
 
   return (
     <Providers>
-      {Platform.OS === 'android' && (
-        <StatusBar
-          translucent
-          barStyle={theme.dark ? 'light-content' : 'dark-content'}
-          backgroundColor="rgba(0, 0, 0, 0.24)"
-        />
-      )}
+      <StatusBar
+        translucent
+        barStyle={theme.dark ? 'light-content' : 'dark-content'}
+        backgroundColor="rgba(0, 0, 0, 0.24)"
+      />
       <NavigationContainer
         ref={navigationRef}
         initialState={initialState}
@@ -239,6 +261,7 @@ export function App() {
           >
             {() => (
               <Drawer.Navigator
+                drawerContent={(props) => <CustomDrawerContent {...props} />}
                 screenOptions={{
                   drawerType: isLargeScreen ? 'permanent' : undefined,
                 }}
@@ -247,6 +270,7 @@ export function App() {
                   name="Examples"
                   options={{
                     title: 'Examples',
+                    headerLeft: isLargeScreen ? () => null : undefined,
                     drawerIcon: ({ size, color }) => (
                       <MaterialIcons size={size} color={color} name="folder" />
                     ),
@@ -266,6 +290,10 @@ export function App() {
                           label="Right to left"
                           value={isRTL}
                           onValueChange={() => setIsRTL((rtl) => !rtl)}
+                          disabled={
+                            // Set expo.extra.forcesRTL: true in app.json to enable RTL in Expo Go
+                            Platform.OS !== 'web'
+                          }
                         />
                         <Divider />
                         <SettingsItem
@@ -326,5 +354,44 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
     <ActionSheetProvider>
       <>{children}</>
     </ActionSheetProvider>
+  );
+};
+
+const DRAWER_ITEMS = [
+  {
+    icon: 'message-reply',
+    label: 'Chat',
+  },
+  {
+    icon: 'contacts',
+    label: 'Contacts',
+  },
+  {
+    icon: 'image-album',
+    label: 'Albums',
+  },
+] as const;
+
+const CustomDrawerContent = (props: DrawerContentComponentProps) => {
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList {...props} />
+      {DRAWER_ITEMS.map((item) => (
+        <DrawerItem
+          key={item.label}
+          label={item.label}
+          icon={({ color, size }) => (
+            <MaterialCommunityIcons
+              name={item.icon}
+              color={color}
+              size={size}
+            />
+          )}
+          onPress={() => {
+            // Do nothing for now
+          }}
+        />
+      ))}
+    </DrawerContentScrollView>
   );
 };

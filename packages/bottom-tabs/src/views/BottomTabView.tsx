@@ -4,9 +4,12 @@ import {
   SafeAreaProviderCompat,
   Screen,
 } from '@react-navigation/elements';
-import type {
-  ParamListBase,
-  TabNavigationState,
+import {
+  type NavigationAction,
+  type ParamListBase,
+  StackActions,
+  type TabNavigationState,
+  useLocale,
 } from '@react-navigation/native';
 import * as React from 'react';
 import { Animated, Platform, StyleSheet } from 'react-native';
@@ -64,9 +67,13 @@ const hasAnimation = (options: BottomTabNavigationOptions) => {
   return !transitionSpec;
 };
 
+const renderTabBarDefault = (props: BottomTabBarProps) => (
+  <BottomTabBar {...props} />
+);
+
 export function BottomTabView(props: Props) {
   const {
-    tabBar = (props: BottomTabBarProps) => <BottomTabBar {...props} />,
+    tabBar = renderTabBarDefault,
     state,
     navigation,
     descriptors,
@@ -78,6 +85,8 @@ export function BottomTabView(props: Props) {
   } = props;
 
   const focusedRouteKey = state.routes[state.index].key;
+
+  const { direction } = useLocale();
 
   /**
    * List of loaded tabs, tabs will be loaded when navigated to.
@@ -95,7 +104,23 @@ export function BottomTabView(props: Props) {
   React.useEffect(() => {
     const previousRouteKey = previousRouteKeyRef.current;
 
-    previousRouteKeyRef.current = focusedRouteKey;
+    let popToTopAction: NavigationAction | undefined;
+
+    if (
+      previousRouteKey !== focusedRouteKey &&
+      descriptors[previousRouteKey]?.options.popToTopOnBlur
+    ) {
+      const prevRoute = state.routes.find(
+        (route) => route.key === previousRouteKey
+      );
+
+      if (prevRoute?.state?.type === 'stack' && prevRoute.state.key) {
+        popToTopAction = {
+          ...StackActions.popToTop(),
+          target: prevRoute.state.key,
+        };
+      }
+    }
 
     const animateToIndex = () => {
       Animated.parallel(
@@ -131,11 +156,24 @@ export function BottomTabView(props: Props) {
             });
           })
           .filter(Boolean) as Animated.CompositeAnimation[]
-      ).start();
+      ).start(({ finished }) => {
+        if (finished && popToTopAction) {
+          navigation.dispatch(popToTopAction);
+        }
+      });
     };
 
     animateToIndex();
-  }, [descriptors, focusedRouteKey, state.index, state.routes, tabAnims]);
+
+    previousRouteKeyRef.current = focusedRouteKey;
+  }, [
+    descriptors,
+    focusedRouteKey,
+    navigation,
+    state.index,
+    state.routes,
+    tabAnims,
+  ]);
 
   const dimensions = SafeAreaProviderCompat.initialMetrics.frame;
   const [tabBarHeight, setTabBarHeight] = React.useState(() =>
@@ -143,7 +181,6 @@ export function BottomTabView(props: Props) {
       state,
       descriptors,
       dimensions,
-      layout: { width: dimensions.width, height: 0 },
       insets: {
         ...SafeAreaProviderCompat.initialMetrics.insets,
         ...props.safeAreaInsets,
@@ -183,13 +220,15 @@ export function BottomTabView(props: Props) {
 
   return (
     <SafeAreaProviderCompat
-      style={
-        tabBarPosition === 'left'
-          ? styles.start
-          : tabBarPosition === 'right'
-            ? styles.end
-            : null
-      }
+      style={{
+        flexDirection:
+          tabBarPosition === 'left' || tabBarPosition === 'right'
+            ? (tabBarPosition === 'left' && direction === 'ltr') ||
+              (tabBarPosition === 'right' && direction === 'rtl')
+              ? 'row-reverse'
+              : 'row'
+            : 'column',
+      }}
     >
       {tabBarPosition === 'top' ? (
         <BottomTabBarHeightCallbackContext.Provider value={setTabBarHeight}>
@@ -205,16 +244,11 @@ export function BottomTabView(props: Props) {
           const descriptor = descriptors[route.key];
           const {
             lazy = true,
-            unmountOnBlur,
             animation = 'none',
             sceneStyleInterpolator = NAMED_TRANSITIONS_PRESETS[animation]
               .sceneStyleInterpolator,
           } = descriptor.options;
           const isFocused = state.index === index;
-
-          if (unmountOnBlur && !isFocused) {
-            return null;
-          }
 
           if (
             lazy &&
@@ -306,12 +340,6 @@ export function BottomTabView(props: Props) {
 }
 
 const styles = StyleSheet.create({
-  start: {
-    flexDirection: 'row-reverse',
-  },
-  end: {
-    flexDirection: 'row',
-  },
   screens: {
     flex: 1,
     overflow: 'hidden',

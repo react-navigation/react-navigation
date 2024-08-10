@@ -30,6 +30,8 @@ export const TabBarItemLabel = React.memo(
   }
 );
 
+TabBarItemLabel.displayName = 'TabBarItemLabel';
+
 const styles = StyleSheet.create({
   label: {
     margin: 4,

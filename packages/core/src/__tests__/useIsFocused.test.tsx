@@ -1,3 +1,4 @@
+import { beforeEach, expect, test } from '@jest/globals';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
 
@@ -11,7 +12,7 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-it('renders correct focus state', () => {
+test('renders correct focus state', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 

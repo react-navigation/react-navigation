@@ -1,0 +1,52 @@
+appId: ${APP_ID}
+name: Native Stack
+---
+- openLink:
+    link: exp://127.0.0.1:8081/--/native-stack
+- assertVisible:
+    text: 'Article by Gandalf'
+- tapOn:
+    text: 'Push feed'
+    retryTapIfNoChange: false
+- assertVisible:
+    text: 'Feed'
+- tapOn:
+    text: 'Push contacts'
+    retryTapIfNoChange: false
+- assertVisible:
+    text: 'Contacts'
+- tapOn:
+    text: 'Push albums'
+    retryTapIfNoChange: false
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Navigate to article'
+    retryTapIfNoChange: false
+- assertVisible:
+    text: 'Article by Babel fish'
+- tapOn:
+    text: 'Replace with feed'
+    retryTapIfNoChange: false
+- assertVisible:
+    text: 'Feed'
+- tapOn:
+    text: 'Go back'
+    retryTapIfNoChange: false
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Pop by 2'
+    retryTapIfNoChange: false
+- assertVisible:
+    text: 'Feed'
+- tapOn:
+    text: 'Go back'
+    retryTapIfNoChange: false
+- assertVisible:
+    text: 'Article by Gandalf'
+- tapOn:
+    text: 'Pop to albums'
+    retryTapIfNoChange: false
+- assertVisible:
+    text: 'Albums'

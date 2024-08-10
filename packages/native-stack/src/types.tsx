@@ -122,7 +122,7 @@ export type NativeStackHeaderRightProps = {
   /**
    * Whether it's possible to navigate back in stack.
    */
-  canGoBack: boolean;
+  canGoBack?: boolean;
 };
 
 export type NativeStackHeaderLeftProps = NativeStackHeaderRightProps & {
@@ -156,29 +156,21 @@ export type NativeStackNavigationOptions = {
   /**
    * Title string used by the back button on iOS.
    * Defaults to the previous scene's title, or "Back" if there's not enough space.
-   * Use `headerBackTitleVisible: false` to hide it.
+   * Use `headerBackButtonDisplayMode: "minimal"` to hide it.
    *
-   * Only supported on iOS.
+   * Only supported on iOS and Web.
    *
-   * @platform ios
+   * @platform ios, web
    */
   headerBackTitle?: string;
-  /**
-   * Whether the back button title should be visible or not.
-   *
-   * Only supported on iOS.
-   *
-   * @platform ios
-   */
-  headerBackTitleVisible?: boolean;
   /**
    * Style object for header back title. Supported properties:
    * - fontFamily
    * - fontSize
    *
-   * Only supported on iOS.
+   * Only supported on iOS and Web.
    *
-   * @platform ios
+   * @platform ios, web
    */
   headerBackTitleStyle?: StyleProp<{
     fontFamily?: string;
@@ -337,10 +329,8 @@ export type NativeStackNavigationOptions = {
    * Options to render a native search bar.
    * You also need to specify `contentInsetAdjustmentBehavior="automatic"` in your `ScrollView`, `FlatList` etc.
    * If you don't have a `ScrollView`, specify `headerTransparent: false`.
-   *
-   * Only supported on iOS and Android.
    */
-  headerSearchBarOptions?: SearchBarProps;
+  headerSearchBarOptions?: Omit<SearchBarProps, 'ref'>;
   /**
    * Boolean indicating whether to show the menu on longPress of iOS >= 14 back button. Defaults to `true`.
    * Requires `react-native-screens` version >=3.3.0.
@@ -350,6 +340,29 @@ export type NativeStackNavigationOptions = {
    * @platform ios
    */
   headerBackButtonMenuEnabled?: boolean;
+  /**
+   * How the back button displays icon and title.
+   *
+   * Supported values:
+   * - "default" - Displays one of the following depending on the available space: previous screen's title, generic title (e.g. 'Back') or no title (only icon).
+   * - "generic" – Displays one of the following depending on the available space: generic title (e.g. 'Back') or no title (only icon).
+   * - "minimal" – Always displays only the icon without a title.
+   *
+   * The "generic" mode is not supported when:
+   * - The iOS version is lower than 14
+   * - Custom back title is set
+   * - Custom back title style is set
+   * - Back button menu is disabled
+   *
+   * In such cases, the "default" mode will be used instead.
+   *
+   * Defaults to "default" on iOS, and "minimal" on other platforms.
+   *
+   * Only supported on iOS and Web.
+   *
+   * @platform ios, web
+   */
+  headerBackButtonDisplayMode?: ScreenStackHeaderConfigProps['backButtonDisplayMode'];
   /**
    * Whether the home indicator should prefer to stay hidden on this screen. Defaults to `false`.
    *
@@ -368,6 +381,12 @@ export type NativeStackNavigationOptions = {
    * @platform android
    */
   navigationBarColor?: string;
+  /**
+   * Boolean indicating whether the content should be visible behind the navigation bar. Defaults to `false`.
+   *
+   * @platform android
+   */
+  navigationBarTranslucent?: boolean;
   /**
    * Sets the visibility of the navigation bar. Defaults to `false`.
    *
@@ -453,6 +472,16 @@ export type NativeStackNavigationOptions = {
    * @platform ios
    */
   fullScreenGestureEnabled?: boolean;
+  /**
+   * Whether the full screen dismiss gesture has shadow under view during transition. The gesture uses custom transition and thus
+   * doesn't have a shadow by default. When enabled, a custom shadow view is added during the transition which tries to mimic the
+   * default iOS shadow. Defaults to `false`.
+   *
+   * This does not affect the behavior of transitions that don't use gestures, enabled by `fullScreenGestureEnabled` prop.
+   *
+   * @platform ios
+   */
+  fullScreenGestureShadowEnabled?: boolean;
   /**
    * Whether you can use gestures to dismiss this screen. Defaults to `true`.
    *

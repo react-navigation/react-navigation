@@ -1,6 +1,5 @@
 import { getHeaderTitle, HeaderTitle } from '@react-navigation/elements';
 import { type Route, useLocale, useTheme } from '@react-navigation/native';
-import * as React from 'react';
 import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
 import {
   isSearchBarAvailableForCurrentPlatform,
@@ -25,10 +24,10 @@ type Props = NativeStackNavigationOptions & {
 
 export function HeaderConfig({
   headerBackImageSource,
+  headerBackButtonDisplayMode,
   headerBackButtonMenuEnabled,
   headerBackTitle,
   headerBackTitleStyle,
-  headerBackTitleVisible = true,
   headerBackVisible,
   headerShadowVisible,
   headerLargeStyle,
@@ -177,16 +176,33 @@ export function HeaderConfig({
       Platform.OS === 'ios' &&
       headerTransparent !== false);
 
+  const isBackButtonDisplayModeAvailable =
+    // On iOS 14+
+    Platform.OS === 'ios' &&
+    parseInt(Platform.Version, 10) >= 14 &&
+    // Doesn't have custom back title
+    headerBackTitle == null &&
+    // Doesn't have custom styling
+    backTitleFontFamily == null &&
+    backTitleFontSize == null &&
+    // Back button menu is not disabled
+    headerBackButtonMenuEnabled !== false;
+
   return (
     <ScreenStackHeaderConfig
       backButtonInCustomView={backButtonInCustomView}
       backgroundColor={headerBackgroundColor}
-      backTitle={
-        headerBackTitleVisible
-          ? headerBackTitle
-          : ' ' /* For backward compatibility with react-native-screens versions <3.21.0, where `backTitleVisible` is not available */
+      backTitle={headerBackTitle}
+      backTitleVisible={
+        isBackButtonDisplayModeAvailable
+          ? undefined
+          : headerBackButtonDisplayMode !== 'minimal'
       }
-      backTitleVisible={headerBackTitleVisible}
+      backButtonDisplayMode={
+        isBackButtonDisplayModeAvailable
+          ? headerBackButtonDisplayMode
+          : undefined
+      }
       backTitleFontFamily={backTitleFontFamily}
       backTitleFontSize={backTitleFontSize}
       blurEffect={headerBlurEffect}
@@ -211,7 +227,7 @@ export function HeaderConfig({
       titleColor={titleColor}
       titleFontFamily={titleFontFamily}
       titleFontSize={titleFontSize}
-      titleFontWeight={titleFontWeight}
+      titleFontWeight={String(titleFontWeight)}
       topInsetEnabled={headerTopInsetEnabled}
       translucent={
         // This defaults to `true`, so we can't pass `undefined`

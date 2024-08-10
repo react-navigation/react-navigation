@@ -1,3 +1,4 @@
+import { Text } from '@react-navigation/elements';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
 import Color from 'color';
 import * as React from 'react';
@@ -6,7 +7,6 @@ import {
   ScrollView,
   type ScrollViewProps,
   StyleSheet,
-  Text,
   TextInput,
   View,
 } from 'react-native';
@@ -42,7 +42,7 @@ export function Chat({
 
           return (
             <View
-              // eslint-disable-next-line react/no-array-index-key
+              // eslint-disable-next-line @eslint-react/no-array-index-key
               key={i}
               style={[odd ? styles.odd : styles.even, styles.inverted]}
             >

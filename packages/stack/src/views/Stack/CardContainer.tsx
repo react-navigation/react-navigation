@@ -287,19 +287,6 @@ function CardContainerInner({
     >
       <View style={styles.container}>
         <ModalPresentationContext.Provider value={modal}>
-          <View style={styles.scene}>
-            <HeaderBackContext.Provider value={headerBack}>
-              <HeaderShownContext.Provider
-                value={isParentHeaderShown || headerShown !== false}
-              >
-                <HeaderHeightContext.Provider
-                  value={headerShown ? headerHeight : parentHeaderHeight ?? 0}
-                >
-                  {scene.descriptor.render()}
-                </HeaderHeightContext.Provider>
-              </HeaderShownContext.Provider>
-            </HeaderBackContext.Provider>
-          </View>
           {headerMode !== 'float'
             ? renderHeader({
                 mode: 'screen',
@@ -308,8 +295,26 @@ function CardContainerInner({
                 getPreviousScene,
                 getFocusedRoute,
                 onContentHeightChange: onHeaderHeightChange,
+                style: styles.header,
               })
             : null}
+          <View style={styles.scene}>
+            <HeaderBackContext.Provider value={headerBack}>
+              <HeaderShownContext.Provider
+                value={isParentHeaderShown || headerShown !== false}
+              >
+                <HeaderHeightContext.Provider
+                  value={
+                    headerShown !== false
+                      ? headerHeight
+                      : parentHeaderHeight ?? 0
+                  }
+                >
+                  {scene.descriptor.render()}
+                </HeaderHeightContext.Provider>
+              </HeaderShownContext.Provider>
+            </HeaderBackContext.Provider>
+          </View>
         </ModalPresentationContext.Provider>
       </View>
     </Card>
@@ -321,7 +326,9 @@ export const CardContainer = React.memo(CardContainerInner);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column-reverse',
+  },
+  header: {
+    zIndex: 1,
   },
   scene: {
     flex: 1,

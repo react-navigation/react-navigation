@@ -1,7 +1,9 @@
+import { expect, jest, test } from '@jest/globals';
+import { Text } from '@react-navigation/elements';
 import { NavigationContainer } from '@react-navigation/native';
 import { fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
-import { Button, Text, View } from 'react-native';
+import { Button, View } from 'react-native';
 
 import {
   createMaterialTopTabNavigator,
@@ -20,6 +22,7 @@ jest.mock('react-native-pager-view', () => {
   const { View } = require('react-native');
 
   return class ViewPager extends React.Component<React.PropsWithChildren<{}>> {
+    // eslint-disable-next-line @eslint-react/no-unused-class-component-members
     setPage() {}
 
     render() {
@@ -28,7 +31,7 @@ jest.mock('react-native-pager-view', () => {
   };
 });
 
-it('renders a material top tab navigator with screens', async () => {
+test('renders a material top tab navigator with screens', async () => {
   const Test = ({
     route,
     navigation,

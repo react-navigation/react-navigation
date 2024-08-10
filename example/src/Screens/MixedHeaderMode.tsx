@@ -5,7 +5,6 @@ import {
   HeaderStyleInterpolators,
   type StackScreenProps,
 } from '@react-navigation/stack';
-import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { COMMON_LINKING_CONFIG } from '../constants';
@@ -60,7 +59,7 @@ const NewsFeedScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Button variant="filled" onPress={() => navigation.push('Albums')}>
-          Navigate to album
+          Navigate to albums
         </Button>
         <Button variant="tinted" onPress={() => navigation.pop()}>
           Pop screen

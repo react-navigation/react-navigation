@@ -2,6 +2,7 @@ import {
   Button,
   getDefaultHeaderHeight,
   getHeaderTitle,
+  Text,
 } from '@react-navigation/elements';
 import {
   CommonActions,
@@ -18,7 +19,6 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import {
@@ -78,7 +78,7 @@ const NewsFeedScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Button variant="filled" onPress={() => navigation.navigate('Albums')}>
-          Navigate to album
+          Navigate to albums
         </Button>
         <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back

@@ -27,7 +27,6 @@ export const CardSheet = React.forwardRef<CardSheetRef, Props>(
       return { setPointerEvents };
     });
 
-    const workaroundApplied = React.useRef(false);
     React.useEffect(() => {
       if (typeof document === 'undefined' || !document.body) {
         // Only run when DOM is available
@@ -43,23 +42,30 @@ export const CardSheet = React.forwardRef<CardSheetRef, Props>(
       // address bar). To fix this, it's necessary to update the height of
       // the DOM with the current height of the window.
       // See https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
-      const fillHeight = height === layout.height;
-      if (fillHeight) {
+      const isFullHeight = height === layout.height;
+      const id = '__react-navigation-stack-mobile-chrome-viewport-fix';
+
+      if (isFullHeight) {
         const vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-        document.body.setAttribute(
-          'style',
-          `height: calc(var(--vh, 1vh) * 100);`
-        );
-        workaroundApplied.current = true;
-      } else {
-        // Revert the workaround if the stack does not occupy the whole
-        // height of the page
-        if (workaroundApplied.current) {
-          document.documentElement.style.removeProperty('--vh');
+        const style =
+          document.getElementById(id) ?? document.createElement('style');
+
+        style.id = id;
+        style.innerHTML = [
+          `:root { --vh: ${vh}px; }`,
+          `body { height: calc(var(--vh, 1vh) * 100); }`,
+        ].join('\n');
+
+        if (!document.head.contains(style)) {
+          document.head.appendChild(style);
         }
+      } else {
+        // Remove the workaround if the stack does not occupy the whole
+        // height of the page
+        document.getElementById(id)?.remove();
       }
 
+      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
       setFill(width === layout.width && height === layout.height);
     }, [layout.height, layout.width]);
 

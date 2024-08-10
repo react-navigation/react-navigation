@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/routers",
   "description": "Routers to help build custom navigators",
-  "version": "7.0.0-alpha.6",
+  "version": "7.0.0-rc.8",
   "keywords": [
     "react",
     "react-native",
@@ -17,11 +17,22 @@
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
   "homepage": "https://reactnavigation.org/docs/custom-routers/",
-  "main": "lib/commonjs/index.js",
-  "react-native": "src/index.tsx",
-  "source": "src/index.tsx",
-  "module": "lib/module/index.js",
-  "types": "lib/typescript/src/index.d.ts",
+  "source": "./src/index.tsx",
+  "main": "./lib/commonjs/index.js",
+  "module": "./lib/module/index.js",
+  "types": "./lib/typescript/commonjs/src/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/typescript/module/src/index.d.ts",
+        "default": "./lib/module/index.js"
+      },
+      "require": {
+        "types": "./lib/typescript/commonjs/src/index.d.ts",
+        "default": "./lib/commonjs/index.js"
+      }
+    }
+  },
   "files": [
     "src",
     "lib",
@@ -39,20 +50,32 @@
     "nanoid": "3.3.7"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "del-cli": "^5.1.0",
-    "react-native-builder-bob": "^0.23.2",
-    "typescript": "^5.3.3"
+    "react-native-builder-bob": "^0.29.0",
+    "typescript": "^5.5.2"
   },
   "react-native-builder-bob": {
     "source": "src",
     "output": "lib",
     "targets": [
-      "commonjs",
-      "module",
+      [
+        "commonjs",
+        {
+          "esm": true
+        }
+      ],
+      [
+        "module",
+        {
+          "esm": true
+        }
+      ],
       [
         "typescript",
         {
-          "project": "tsconfig.build.json"
+          "project": "tsconfig.build.json",
+          "esm": true
         }
       ]
     ]

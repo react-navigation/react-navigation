@@ -5,6 +5,7 @@ import {
   HeaderBackContext,
   SafeAreaProviderCompat,
   Screen,
+  useHeaderHeight,
 } from '@react-navigation/elements';
 import {
   type ParamListBase,
@@ -13,17 +14,17 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Animated, Image, StyleSheet, View } from 'react-native';
 
 import type {
   NativeStackDescriptorMap,
   NativeStackNavigationHelpers,
 } from '../types';
+import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
 
 type Props = {
   state: StackNavigationState<ParamListBase>;
   // This is used for the native implementation of the stack.
-  // eslint-disable-next-line react/no-unused-prop-types
   navigation: NativeStackNavigationHelpers;
   descriptors: NativeStackDescriptorMap;
 };
@@ -74,20 +75,13 @@ export function NativeStackView({ state, descriptors }: Props) {
         const {
           header,
           headerShown,
-          headerTintColor,
           headerBackImageSource,
           headerLeft,
-          headerRight,
-          headerTitle,
-          headerTitleAlign,
-          headerTitleStyle,
-          headerStyle,
-          headerShadowVisible,
           headerTransparent,
-          headerBackground,
           headerBackTitle,
           presentation,
           contentStyle,
+          ...rest
         } = options;
 
         const nextPresentation = nextDescriptor?.options.presentation;
@@ -110,20 +104,21 @@ export function NativeStackView({ state, descriptors }: Props) {
                 })
               ) : (
                 <Header
+                  {...rest}
+                  back={headerBack}
                   title={getHeaderTitle(options, route.name)}
-                  headerTintColor={headerTintColor}
                   headerLeft={
                     typeof headerLeft === 'function'
-                      ? ({ tintColor }) =>
+                      ? ({ label, ...rest }) =>
                           headerLeft({
-                            tintColor,
-                            canGoBack,
-                            label: headerBackTitle,
-                            href: headerBack?.href,
+                            ...rest,
+                            label: headerBackTitle ?? label,
                           })
                       : headerLeft === undefined && canGoBack
-                        ? ({ tintColor }) => (
+                        ? ({ tintColor, label, ...rest }) => (
                             <HeaderBackButton
+                              {...rest}
+                              label={headerBackTitle ?? label}
                               tintColor={tintColor}
                               backImage={
                                 headerBackImageSource !== undefined
@@ -140,28 +135,10 @@ export function NativeStackView({ state, descriptors }: Props) {
                                   : undefined
                               }
                               onPress={navigation.goBack}
-                              href={headerBack.href}
                             />
                           )
                         : headerLeft
                   }
-                  headerRight={
-                    typeof headerRight === 'function'
-                      ? ({ tintColor }) => headerRight({ tintColor, canGoBack })
-                      : headerRight
-                  }
-                  headerTitle={
-                    typeof headerTitle === 'function'
-                      ? ({ children, tintColor }) =>
-                          headerTitle({ children, tintColor })
-                      : headerTitle
-                  }
-                  headerTitleAlign={headerTitleAlign}
-                  headerTitleStyle={headerTitleStyle}
-                  headerTransparent={headerTransparent}
-                  headerShadowVisible={headerShadowVisible}
-                  headerBackground={headerBackground}
-                  headerStyle={headerStyle}
                 />
               )
             }
@@ -182,9 +159,11 @@ export function NativeStackView({ state, descriptors }: Props) {
             ]}
           >
             <HeaderBackContext.Provider value={headerBack}>
-              <View style={[styles.contentContainer, contentStyle]}>
-                {render()}
-              </View>
+              <AnimatedHeaderHeightProvider>
+                <View style={[styles.contentContainer, contentStyle]}>
+                  {render()}
+                </View>
+              </AnimatedHeaderHeightProvider>
             </HeaderBackContext.Provider>
           </Screen>
         );
@@ -192,6 +171,27 @@ export function NativeStackView({ state, descriptors }: Props) {
     </SafeAreaProviderCompat>
   );
 }
+
+const AnimatedHeaderHeightProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const headerHeight = useHeaderHeight();
+  const [animatedHeaderHeight] = React.useState(
+    () => new Animated.Value(headerHeight)
+  );
+
+  React.useEffect(() => {
+    animatedHeaderHeight.setValue(headerHeight);
+  }, [animatedHeaderHeight, headerHeight]);
+
+  return (
+    <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
+      {children}
+    </AnimatedHeaderHeightContext.Provider>
+  );
+};
 
 const styles = StyleSheet.create({
   contentContainer: {

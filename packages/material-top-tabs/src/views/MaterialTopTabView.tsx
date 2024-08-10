@@ -6,7 +6,6 @@ import {
   useLocale,
   useTheme,
 } from '@react-navigation/native';
-import * as React from 'react';
 import { type SceneRendererProps, TabView } from 'react-native-tab-view';
 
 import type {
@@ -24,8 +23,12 @@ type Props = MaterialTopTabNavigationConfig & {
   descriptors: MaterialTopTabDescriptorMap;
 };
 
+const renderTabBarDefault = (props: MaterialTopTabBarProps) => (
+  <MaterialTopTabBar {...props} />
+);
+
 export function MaterialTopTabView({
-  tabBar = (props: MaterialTopTabBarProps) => <MaterialTopTabBar {...props} />,
+  tabBar = renderTabBarDefault,
   state,
   navigation,
   descriptors,

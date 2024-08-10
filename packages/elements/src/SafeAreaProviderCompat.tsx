@@ -77,6 +77,7 @@ const SafeAreaFrameProvider = ({
 
     const rect = element.current.getBoundingClientRect();
 
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
     setFrame({
       x: rect.x,
       y: rect.y,

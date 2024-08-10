@@ -1,5 +1,4 @@
 import { useTheme } from '@react-navigation/native';
-import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 export function Divider() {

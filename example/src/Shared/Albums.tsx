@@ -1,5 +1,3 @@
-/* eslint-disable import/no-commonjs */
-
 import { useScrollToTop } from '@react-navigation/native';
 import * as React from 'react';
 import {
@@ -12,6 +10,7 @@ import {
   View,
 } from 'react-native';
 
+/* eslint-disable import-x/no-commonjs */
 const COVERS = [
   require('../../assets/album-art-01.jpg'),
   require('../../assets/album-art-02.jpg'),
@@ -38,6 +37,7 @@ const COVERS = [
   require('../../assets/album-art-23.jpg'),
   require('../../assets/album-art-24.jpg'),
 ];
+/* eslint-enable import-x/no-commonjs */
 
 export function Albums(props: Partial<ScrollViewProps>) {
   const dimensions = useWindowDimensions();
@@ -52,7 +52,7 @@ export function Albums(props: Partial<ScrollViewProps>) {
     <ScrollView ref={ref} contentContainerStyle={styles.content} {...props}>
       {COVERS.map((source, i) => (
         <View
-          // eslint-disable-next-line react/no-array-index-key
+          // eslint-disable-next-line @eslint-react/no-array-index-key
           key={i}
           style={[
             styles.item,
@@ -92,5 +92,7 @@ const styles = StyleSheet.create({
   photo: {
     flex: 1,
     paddingTop: '100%',
+    height: 'auto',
+    width: 'auto',
   },
 });

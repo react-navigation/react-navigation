@@ -1,5 +1,5 @@
+import { beforeEach, expect, test } from '@jest/globals';
 import { render } from '@testing-library/react-native';
-import * as React from 'react';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
 import { Screen } from '../Screen';
@@ -11,7 +11,7 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-it('gets navigation prop from context', () => {
+test('gets navigation prop from context', () => {
   expect.assertions(1);
 
   const TestNavigator = (props: any): any => {
@@ -37,7 +37,7 @@ it('gets navigation prop from context', () => {
   );
 });
 
-it("gets navigation's parent from context", () => {
+test("gets navigation's parent from context", () => {
   expect.assertions(1);
 
   const TestNavigator = (props: any): any => {
@@ -69,7 +69,7 @@ it("gets navigation's parent from context", () => {
   );
 });
 
-it("gets navigation's parent's parent from context", () => {
+test("gets navigation's parent's parent from context", () => {
   expect.assertions(2);
 
   const TestNavigator = (props: any): any => {
@@ -109,7 +109,7 @@ it("gets navigation's parent's parent from context", () => {
   );
 });
 
-it('gets navigation from container from context', () => {
+test('gets navigation from container from context', () => {
   expect.assertions(1);
 
   const TestNavigator = (props: any): any => {
@@ -136,7 +136,7 @@ it('gets navigation from container from context', () => {
   );
 });
 
-it('throws if called outside a navigation context', () => {
+test('throws if called outside a navigation context', () => {
   expect.assertions(1);
 
   const Test = () => {

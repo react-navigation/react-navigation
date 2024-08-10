@@ -26,6 +26,7 @@ import {
   BottomSheetAndroid,
   DefaultTransition,
   FadeFromBottomAndroid,
+  FadeFromRightAndroid,
   ModalFadeTransition,
   ModalSlideFromBottomIOS,
   ModalTransition,
@@ -56,15 +57,12 @@ type GestureValues = {
 };
 
 type Props = {
-  // eslint-disable-next-line react/no-unused-prop-types
   direction: LocaleDirection;
   insets: EdgeInsets;
   state: StackNavigationState<ParamListBase>;
   descriptors: StackDescriptorMap;
-  // eslint-disable-next-line react/no-unused-prop-types
   preloadedDescriptors: StackDescriptorMap;
   routes: Route<string>[];
-  // eslint-disable-next-line react/no-unused-prop-types
   openingRouteKeys: string[];
   closingRouteKeys: string[];
   onOpenRoute: (props: { route: Route<string> }) => void;
@@ -99,6 +97,7 @@ const NAMED_TRANSITIONS_PRESETS = {
   default: DefaultTransition,
   fade: ModalFadeTransition,
   fade_from_bottom: FadeFromBottomAndroid,
+  fade_from_right: FadeFromRightAndroid,
   none: DefaultTransition,
   reveal_from_bottom: RevealFromBottomAndroid,
   scale_from_center: ScaleFromCenterAndroid,

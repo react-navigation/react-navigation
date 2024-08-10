@@ -3,6 +3,104 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.17...@react-navigation/native@7.0.0-rc.18) (2024-08-07)
+
+### Bug Fixes
+
+* improve how navigate and other methods are typed ([#12093](https://github.com/react-navigation/react-navigation/issues/12093)) ([a528b9b](https://github.com/react-navigation/react-navigation/commit/a528b9b407dbaeaac0caae8edcb5b3c6840144fa)) - by @satya164
+
+# [7.0.0-rc.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.16...@react-navigation/native@7.0.0-rc.17) (2024-08-05)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [7.0.0-rc.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.15...@react-navigation/native@7.0.0-rc.16) (2024-08-02)
+
+### Bug Fixes
+
+* add missing useLinkTo export ([#12081](https://github.com/react-navigation/react-navigation/issues/12081)) ([17e2777](https://github.com/react-navigation/react-navigation/commit/17e277794c8364eb3c262a824156a9753a4a6457)) - by @export-mike
+
+# [7.0.0-rc.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.14...@react-navigation/native@7.0.0-rc.15) (2024-08-01)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [7.0.0-rc.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.13...@react-navigation/native@7.0.0-rc.14) (2024-07-19)
+
+### Bug Fixes
+
+* support theming in NavigationContainer fallback ([71e02f5](https://github.com/react-navigation/react-navigation/commit/71e02f52a7945c8ac6b77da67352e227367663d4)) - by @satya164
+
+# [7.0.0-rc.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.12...@react-navigation/native@7.0.0-rc.13) (2024-07-12)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [7.0.0-rc.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.11...@react-navigation/native@7.0.0-rc.12) (2024-07-11)
+
+### Bug Fixes
+
+* upgrade react-native-builder-bob ([1575287](https://github.com/react-navigation/react-navigation/commit/1575287d40fadb97f33eb19c2914d8be3066b47a)) - by @
+
+# [7.0.0-rc.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.10...@react-navigation/native@7.0.0-rc.11) (2024-07-11)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [7.0.0-rc.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.9...@react-navigation/native@7.0.0-rc.10) (2024-07-10)
+
+### Bug Fixes
+
+* bump use-latest-callback to fix require ([40ddae9](https://github.com/react-navigation/react-navigation/commit/40ddae95fbbf84ff47f3447eef50ed9ddb66cab8)) - by @satya164
+
+# [7.0.0-rc.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.8...@react-navigation/native@7.0.0-rc.9) (2024-07-08)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [7.0.0-rc.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.7...@react-navigation/native@7.0.0-rc.8) (2024-07-07)
+
+### Bug Fixes
+
+* upgrade use-latest-callback for esm compat ([187d41b](https://github.com/react-navigation/react-navigation/commit/187d41b3a139fe2a075a7809c0c4088cbd2fafdb)) - by @satya164
+
+# [7.0.0-rc.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.6...@react-navigation/native@7.0.0-rc.7) (2024-07-04)
+
+### Bug Fixes
+
+* fix published files ([829caa0](https://github.com/react-navigation/react-navigation/commit/829caa019e125811eea5213fd380e8e1bdbe7030)) - by @
+
+# [7.0.0-rc.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.5...@react-navigation/native@7.0.0-rc.6) (2024-07-04)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [7.0.0-rc.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.4...@react-navigation/native@7.0.0-rc.5) (2024-07-04)
+
+### Features
+
+* add package.json exports field ([1435cfe](https://github.com/react-navigation/react-navigation/commit/1435cfe3300767c221ebd4613479ad662d61efee)) - by @
+
+# [7.0.0-rc.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.3...@react-navigation/native@7.0.0-rc.4) (2024-07-01)
+
+### Bug Fixes
+
+* stop using react-native field in package.json ([efc33cb](https://github.com/react-navigation/react-navigation/commit/efc33cb0c4830a84ceae034dc1278c54f1faf32d)) - by @
+
+# [7.0.0-rc.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.2...@react-navigation/native@7.0.0-rc.3) (2024-06-29)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [7.0.0-rc.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.1...@react-navigation/native@7.0.0-rc.2) (2024-06-28)
+
+### Bug Fixes
+
+* fix types for Link & Button components ([bc9d628](https://github.com/react-navigation/react-navigation/commit/bc9d628efab9ab9986dc38a0ba2868d0fbe64b49)) - by @
+
+# [7.0.0-rc.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.0...@react-navigation/native@7.0.0-rc.1) (2024-06-28)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [7.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.18...@react-navigation/native@7.0.0-rc.0) (2024-06-27)
+
+### Bug Fixes
+
+* remove global in favor of globalThis for better compatibility ([#11976](https://github.com/react-navigation/react-navigation/issues/11976)) ([f497491](https://github.com/react-navigation/react-navigation/commit/f4974919242e7531ddd16da7b6bbf5e9ecfddc4c)) - by @natew
+
 # [7.0.0-alpha.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-alpha.17...@react-navigation/native@7.0.0-alpha.18) (2024-03-22)
 
 ### Bug Fixes

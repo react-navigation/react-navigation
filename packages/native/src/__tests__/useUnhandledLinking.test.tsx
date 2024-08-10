@@ -1,3 +1,4 @@
+import { expect, test } from '@jest/globals';
 import {
   createNavigatorFactory,
   type NavigationListBase,
@@ -43,7 +44,7 @@ function createTestNavigator<
   return createNavigatorFactory(StackNavigator)();
 }
 
-it('schedules a state to be handled on conditional linking', async () => {
+test('schedules a state to be handled on conditional linking', async () => {
   const Stack = createTestNavigator();
 
   const TestScreen = ({ route, signOut }: any) => (
@@ -138,7 +139,7 @@ it('schedules a state to be handled on conditional linking', async () => {
   expect(queryByText('Home')).not.toBeNull();
 });
 
-it('schedules a state to be handled on conditional linking under nested navigator', async () => {
+test('schedules a state to be handled on conditional linking under nested navigator', async () => {
   const OuterStack = createTestNavigator();
   const Stack = createTestNavigator();
 
@@ -237,7 +238,7 @@ it('schedules a state to be handled on conditional linking under nested navigato
   expect(queryByText('Profile')).not.toBeNull();
 });
 
-it('schedules a state to be handled on conditional linking in nested stack', async () => {
+test('schedules a state to be handled on conditional linking in nested stack', async () => {
   const Stack = createTestNavigator();
   const NestedStack = createTestNavigator();
 
@@ -346,7 +347,7 @@ it('schedules a state to be handled on conditional linking in nested stack', asy
   expect(queryByText('Details')).not.toBeNull();
 });
 
-it('clears lastUnhandledLink upon successful linking handling', () => {
+test('clears lastUnhandledLink upon successful linking handling', () => {
   const linking = {
     prefixes: ['rn://'],
     config: {
@@ -399,7 +400,7 @@ it('clears lastUnhandledLink upon successful linking handling', () => {
   expect(queryByText('home/profile')).toBeNull();
 });
 
-it('clears lastUnhandledLink upon calling clearUnhandledLink', async () => {
+test('clears lastUnhandledLink upon calling clearUnhandledLink', async () => {
   const Stack = createTestNavigator();
 
   const LinkDisplayScreen = (): any => {

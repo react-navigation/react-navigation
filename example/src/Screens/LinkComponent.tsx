@@ -9,7 +9,6 @@ import {
   createStackNavigator,
   type StackScreenProps,
 } from '@react-navigation/stack';
-import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { COMMON_LINKING_CONFIG } from '../constants';
@@ -36,14 +35,14 @@ const ArticleScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Link screen="LinkComponent" params={{ screen: 'Albums' }}>
-          Go to Albums
+          Go to albums
         </Link>
         <Link
           screen="LinkComponent"
           params={{ screen: 'Albums' }}
           action={StackActions.replace('Albums')}
         >
-          Replace with Albums
+          Replace with albums
         </Link>
 
         <Button screen="Home" variant="filled">

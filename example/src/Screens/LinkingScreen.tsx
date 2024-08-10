@@ -1,4 +1,4 @@
-import { Button } from '@react-navigation/elements';
+import { Button, Text } from '@react-navigation/elements';
 import {
   type PathConfigMap,
   UNSTABLE_useUnhandledLinking,
@@ -8,7 +8,7 @@ import {
   type StackScreenProps,
 } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 const info = `
 \u2022 xcrun simctl openurl booted exp://127.0.0.1:19000/--/linking/profile
@@ -87,13 +87,17 @@ const Stack = createStackNavigator<LinkingStackParams>();
 export function LinkingScreen() {
   const [isSignedIn, setSignedIn] = React.useState(false);
   const { getStateForRouteNamesChange } = UNSTABLE_useUnhandledLinking();
+
+  const context = React.useMemo(
+    () => ({
+      signIn: () => setSignedIn(true),
+      signOut: () => setSignedIn(false),
+    }),
+    []
+  );
+
   return (
-    <SigningContext.Provider
-      value={{
-        signOut: () => setSignedIn(false),
-        signIn: () => setSignedIn(true),
-      }}
-    >
+    <SigningContext.Provider value={context}>
       <Stack.Navigator
         UNSTABLE_getStateForRouteNamesChange={getStateForRouteNamesChange}
       >
@@ -108,6 +112,7 @@ export function LinkingScreen() {
             component={SignInScreen}
             options={{
               animationTypeForReplace: !isSignedIn ? 'pop' : 'push',
+              title: 'Sign In',
             }}
           />
         )}

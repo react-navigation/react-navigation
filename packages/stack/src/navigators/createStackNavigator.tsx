@@ -107,9 +107,9 @@ function StackNavigator({
 }
 
 export function createStackNavigator<
-  ParamList extends ParamListBase,
-  NavigatorID extends string | undefined = undefined,
-  TypeBag extends NavigatorTypeBagBase = {
+  const ParamList extends ParamListBase,
+  const NavigatorID extends string | undefined = undefined,
+  const TypeBag extends NavigatorTypeBagBase = {
     ParamList: ParamList;
     NavigatorID: NavigatorID;
     State: StackNavigationState<ParamList>;
@@ -124,9 +124,7 @@ export function createStackNavigator<
     };
     Navigator: typeof StackNavigator;
   },
-  Config extends StaticConfig<TypeBag> | undefined =
-    | StaticConfig<TypeBag>
-    | undefined,
+  const Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
 >(config?: Config): TypedNavigator<TypeBag, Config> {
   return createNavigatorFactory(StackNavigator)(config);
 }

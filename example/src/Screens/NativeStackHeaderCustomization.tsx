@@ -1,12 +1,16 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Button, HeaderButton } from '@react-navigation/elements';
+import {
+  Button,
+  getHeaderTitle,
+  Header,
+  HeaderButton,
+} from '@react-navigation/elements';
 import type { PathConfigMap } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   type NativeStackOptionsArgs,
   type NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import * as React from 'react';
 import {
   Alert,
   Image,
@@ -71,7 +75,7 @@ const NewsFeedScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Button variant="filled" onPress={() => navigation.push('Albums')}>
-          Push Albums
+          Push albums
         </Button>
         <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back
@@ -128,7 +132,7 @@ export function NativeStackHeaderCustomization() {
           NativeHeaderCustomizationStackParams,
           'Article'
         >) => ({
-          title: `Article by ${route.params?.author ?? 'Unknown'}`,
+          title: `Article byyyy ${route.params?.author ?? 'Unknown'}`,
           headerTintColor: 'white',
           headerTitle: ({ tintColor }) => (
             <HeaderButton onPress={onPress}>
@@ -173,10 +177,12 @@ export function NativeStackHeaderCustomization() {
         component={NewsFeedScreen}
         options={{
           title: 'Feed',
-          headerLeft: ({ tintColor }) => (
-            <HeaderButton onPress={onPress}>
-              <MaterialCommunityIcons name="spa" size={24} color={tintColor} />
-            </HeaderButton>
+          header: ({ options, route, back }) => (
+            <Header
+              {...options}
+              back={back}
+              title={getHeaderTitle(options, route.name)}
+            />
           ),
         }}
       />
@@ -217,8 +223,8 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   headerBackground: {
-    height: undefined,
-    width: undefined,
+    height: 'auto',
+    width: 'auto',
     flex: 1,
   },
 });

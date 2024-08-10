@@ -11,7 +11,6 @@ import {
   type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
-import * as React from 'react';
 
 import type {
   BottomTabNavigationConfig,
@@ -76,9 +75,9 @@ function BottomTabNavigator({
 }
 
 export function createBottomTabNavigator<
-  ParamList extends ParamListBase,
-  NavigatorID extends string | undefined = undefined,
-  TypeBag extends NavigatorTypeBagBase = {
+  const ParamList extends ParamListBase,
+  const NavigatorID extends string | undefined = undefined,
+  const TypeBag extends NavigatorTypeBagBase = {
     ParamList: ParamList;
     NavigatorID: NavigatorID;
     State: TabNavigationState<ParamList>;
@@ -93,9 +92,7 @@ export function createBottomTabNavigator<
     };
     Navigator: typeof BottomTabNavigator;
   },
-  Config extends StaticConfig<TypeBag> | undefined =
-    | StaticConfig<TypeBag>
-    | undefined,
+  const Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
 >(config?: Config): TypedNavigator<TypeBag, Config> {
   return createNavigatorFactory(BottomTabNavigator)(config);
 }

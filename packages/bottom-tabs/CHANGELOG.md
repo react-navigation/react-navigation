@@ -3,6 +3,168 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.29](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.28...@react-navigation/bottom-tabs@7.0.0-rc.29) (2024-08-09)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-rc.28](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.27...@react-navigation/bottom-tabs@7.0.0-rc.28) (2024-08-08)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-rc.27](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.26...@react-navigation/bottom-tabs@7.0.0-rc.27) (2024-08-07)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-rc.26](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.25...@react-navigation/bottom-tabs@7.0.0-rc.26) (2024-08-05)
+
+### Features
+
+* add headerBackButtonDisplayMode for native stack ([#12089](https://github.com/react-navigation/react-navigation/issues/12089)) ([89ffa1b](https://github.com/react-navigation/react-navigation/commit/89ffa1baa1dc3ad8260361a3f84aa21d24c1643e)), closes [#11980](https://github.com/react-navigation/react-navigation/issues/11980) - by @dylancom
+
+### BREAKING CHANGES
+
+* This removes the `headerBackTitleVisible` option,
+
+Adds corresponding functionality from
+https://github.com/software-mansion/react-native-screens/pull/2123.
+
+# [7.0.0-rc.25](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.24...@react-navigation/bottom-tabs@7.0.0-rc.25) (2024-08-02)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-rc.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.23...@react-navigation/bottom-tabs@7.0.0-rc.24) (2024-08-01)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-rc.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.22...@react-navigation/bottom-tabs@7.0.0-rc.23) (2024-07-25)
+
+### Bug Fixes
+
+* fix type inference for params. closes [#12071](https://github.com/react-navigation/react-navigation/issues/12071) ([3299b70](https://github.com/react-navigation/react-navigation/commit/3299b70682adbf55811369535cca1cdd0dc59860)) - by @
+
+# [7.0.0-rc.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.21...@react-navigation/bottom-tabs@7.0.0-rc.22) (2024-07-19)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-rc.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.20...@react-navigation/bottom-tabs@7.0.0-rc.21) (2024-07-12)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-rc.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.19...@react-navigation/bottom-tabs@7.0.0-rc.20) (2024-07-12)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-rc.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.18...@react-navigation/bottom-tabs@7.0.0-rc.19) (2024-07-11)
+
+### Bug Fixes
+
+* upgrade react-native-builder-bob ([1575287](https://github.com/react-navigation/react-navigation/commit/1575287d40fadb97f33eb19c2914d8be3066b47a)) - by @
+
+# [7.0.0-rc.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.17...@react-navigation/bottom-tabs@7.0.0-rc.18) (2024-07-11)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-rc.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.16...@react-navigation/bottom-tabs@7.0.0-rc.17) (2024-07-10)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-rc.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.15...@react-navigation/bottom-tabs@7.0.0-rc.16) (2024-07-08)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-rc.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.14...@react-navigation/bottom-tabs@7.0.0-rc.15) (2024-07-07)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-rc.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.13...@react-navigation/bottom-tabs@7.0.0-rc.14) (2024-07-04)
+
+### Bug Fixes
+
+* fix published files ([829caa0](https://github.com/react-navigation/react-navigation/commit/829caa019e125811eea5213fd380e8e1bdbe7030)) - by @
+
+# [7.0.0-rc.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.12...@react-navigation/bottom-tabs@7.0.0-rc.13) (2024-07-04)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-rc.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.11...@react-navigation/bottom-tabs@7.0.0-rc.12) (2024-07-04)
+
+### Features
+
+* add package.json exports field ([1435cfe](https://github.com/react-navigation/react-navigation/commit/1435cfe3300767c221ebd4613479ad662d61efee)) - by @
+
+# [7.0.0-rc.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.10...@react-navigation/bottom-tabs@7.0.0-rc.11) (2024-07-03)
+
+### Bug Fixes
+
+* adjust tab bar colors ([dafef7a](https://github.com/react-navigation/react-navigation/commit/dafef7ac0f5fc133eaa152b150d1755f7f115c04)) - by @satya164
+
+# [7.0.0-rc.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.9...@react-navigation/bottom-tabs@7.0.0-rc.10) (2024-07-03)
+
+### Features
+
+* add a tabBarVariant option ([#12045](https://github.com/react-navigation/react-navigation/issues/12045)) ([9e43db5](https://github.com/react-navigation/react-navigation/commit/9e43db5e888489a283babfdbfe8cda77aba1b88d)) - by @satya164
+
+# [7.0.0-rc.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.8...@react-navigation/bottom-tabs@7.0.0-rc.9) (2024-07-03)
+
+### Bug Fixes
+
+* fix tab bar styling for compact, material, ipad etc. ([2e7c377](https://github.com/react-navigation/react-navigation/commit/2e7c37791947d765ed0a9cddff51cbf1fdb1f2f2)) - by @
+
+# [7.0.0-rc.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.7...@react-navigation/bottom-tabs@7.0.0-rc.8) (2024-07-02)
+
+### Bug Fixes
+
+* drop leftover empty string for headerBackTitleVisible ([b93f861](https://github.com/react-navigation/react-navigation/commit/b93f86155fe9185c5197cd6d44b625aabb8ca4a7)) - by @satya164
+
+# [7.0.0-rc.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.6...@react-navigation/bottom-tabs@7.0.0-rc.7) (2024-07-01)
+
+### Bug Fixes
+
+* stop using react-native field in package.json ([efc33cb](https://github.com/react-navigation/react-navigation/commit/efc33cb0c4830a84ceae034dc1278c54f1faf32d)) - by @
+
+# [7.0.0-rc.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.5...@react-navigation/bottom-tabs@7.0.0-rc.6) (2024-06-29)
+
+### Bug Fixes
+
+* add a workaround for incorrect inference [#12041](https://github.com/react-navigation/react-navigation/issues/12041) ([85c4bbb](https://github.com/react-navigation/react-navigation/commit/85c4bbbf535cde2ba9cd537a2a5ce34f060d32b9)) - by @
+
+# [7.0.0-rc.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.4...@react-navigation/bottom-tabs@7.0.0-rc.5) (2024-06-28)
+
+### Bug Fixes
+
+* add hover effect to drawer and tab sidebar on web ([fa2280d](https://github.com/react-navigation/react-navigation/commit/fa2280d3633cfdb492f9cdb06d8dd331d3e34c71)) - by @
+* fix ripple effect overflow in tab bar on Android ([5ae1047](https://github.com/react-navigation/react-navigation/commit/5ae1047114724705f8026db6be0f0452e92e89e0)) - by @satya164
+
+# [7.0.0-rc.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.3...@react-navigation/bottom-tabs@7.0.0-rc.4) (2024-06-28)
+
+### Bug Fixes
+
+* tweak spacing for drawer & bottom tabs sidebar ([e33f78f](https://github.com/react-navigation/react-navigation/commit/e33f78faf3ecc3ff84001f56fcbd5cdb1c7cb164)) - by @
+
+# [7.0.0-rc.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.2...@react-navigation/bottom-tabs@7.0.0-rc.3) (2024-06-28)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-rc.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.1...@react-navigation/bottom-tabs@7.0.0-rc.2) (2024-06-28)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-rc.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.0...@react-navigation/bottom-tabs@7.0.0-rc.1) (2024-06-27)
+
+### Bug Fixes
+
+* fix bottom tab bar layout ([054e1dc](https://github.com/react-navigation/react-navigation/commit/054e1dcfa94368ef8b22cf45b96c907c1d3fb573)) - by @
+
+# [7.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.22...@react-navigation/bottom-tabs@7.0.0-rc.0) (2024-06-27)
+
+### Bug Fixes
+
+* add hover effect to buttons on iPad & VisionOS ([2cb77c0](https://github.com/react-navigation/react-navigation/commit/2cb77c0ce42575275dd723555d0ec9ae7be32c66)) - by @satya164
+* adjust bottom tabs sidebar for rtl ([480ab04](https://github.com/react-navigation/react-navigation/commit/480ab045906eb455f12182372f20be7584e0c327)) - by @satya164
+* adjust sidebar styling in bottom tabs to match drawer ([#12008](https://github.com/react-navigation/react-navigation/issues/12008)) ([a1e0499](https://github.com/react-navigation/react-navigation/commit/a1e049958cbcb157ffaf4fa80976cb30b0567ba9)) - by @Piotrfj
+* move sidebar paddings to the wrapper view so it's customizable. closes [#11927](https://github.com/react-navigation/react-navigation/issues/11927) ([4761440](https://github.com/react-navigation/react-navigation/commit/4761440146e1c3381390822b167d319e0a4abb7e)) - by @satya164
+* use useSafeAreaFrame in bottom tabs as we now have a workaround ([92dc079](https://github.com/react-navigation/react-navigation/commit/92dc07962495f2765676613d841e61ff3d1685e2)) - by @satya164
+
 # [7.0.0-alpha.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-alpha.21...@react-navigation/bottom-tabs@7.0.0-alpha.22) (2024-03-25)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
