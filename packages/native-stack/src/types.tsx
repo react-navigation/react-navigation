@@ -434,7 +434,7 @@ export type NativeStackNavigationOptions = {
    *
    * Only `backgroundColor` is accepted.
    */
-  screenStyle?: ScreenProps['screenStyle'];
+  unstable_screenStyle?: ScreenProps['unstable_screenStyle'];
   /**
    * Whether the gesture to dismiss should use animation provided to `animation` prop. Defaults to `false`.
    *
@@ -603,11 +603,15 @@ export type NativeStackNavigationOptions = {
    */
   freezeOnBlur?: boolean;
   /**
-   * footer
-   * TODO: Describe this
+   * Footer component that can be used alongside form sheet stack presentation style.
+   *
+   * This option is provided, because due to implementation details it might be problematic
+   * to implement such layout with JS-only code.
+   *
+   * Please note that this prop is marked as unstable and might be subject of breaking changes,
+   * including removal.
    */
-  footerComponent?: React.ReactNode;
-  onSheetDetentChanged?: ScreenProps['onSheetDetentChanged'];
+  unstable_footerComponent?: React.ReactNode;
 };
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<

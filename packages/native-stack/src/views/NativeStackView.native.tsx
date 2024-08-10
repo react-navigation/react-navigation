@@ -74,7 +74,7 @@ const MaybeNestedStack = ({
     header,
     headerShown = true,
     contentStyle,
-    screenStyle = null,
+    unstable_screenStyle = null,
   } = options;
 
   const isHeaderInModal = isAndroid
@@ -123,7 +123,7 @@ const MaybeNestedStack = ({
           enabled
           isNativeStack
           hasLargeHeader={options.headerLargeTitle ?? false}
-          style={[StyleSheet.absoluteFill, screenStyle]}
+          style={[StyleSheet.absoluteFill, unstable_screenStyle]}
         >
           {content}
           <HeaderConfig
@@ -183,7 +183,7 @@ const SceneView = ({
     animationMatchesGesture,
     presentation = isPresentationModal ? 'modal' : 'card',
     fullScreenGestureEnabled,
-    screenStyle = null,
+    unstable_screenStyle = null,
     sheetAllowedDetents = [1.0],
   } = options;
 
@@ -214,14 +214,14 @@ const SceneView = ({
     statusBarStyle,
     statusBarTranslucent,
     statusBarBackgroundColor,
-    footerComponent,
+    unstable_footerComponent = null,
     freezeOnBlur,
   } = options;
 
   // This is workaround for... find the commit here
   // We want to allow only backgroundColor setting for now
-  screenStyle = screenStyle
-    ? { backgroundColor: screenStyle.backgroundColor }
+  unstable_screenStyle = unstable_screenStyle
+    ? { backgroundColor: unstable_screenStyle.backgroundColor }
     : null;
 
   if (sheetAllowedDetents === 'fitToContents') {
@@ -356,7 +356,7 @@ const SceneView = ({
       key={route.key}
       enabled
       isNativeStack
-      style={[StyleSheet.absoluteFill, screenStyle]}
+      style={[StyleSheet.absoluteFill, unstable_screenStyle]}
       hasLargeHeader={options.headerLargeTitle ?? false}
       customAnimationOnSwipe={animationMatchesGesture}
       fullScreenSwipeEnabled={fullScreenGestureEnabled}
@@ -527,8 +527,8 @@ const SceneView = ({
                   headerTopInsetEnabled={headerTopInsetEnabled}
                   canGoBack={headerBack !== undefined}
                 />
-                {/*footerComponent && (
-                  <FooterComponent>{footerComponent}</FooterComponent>
+                {/*unstable_footerComponent && (
+                  <FooterComponent>{unstable_footerComponent}</FooterComponent>
                 )*/}
               </HeaderHeightContext.Provider>
             </AnimatedHeaderHeightContext.Provider>
