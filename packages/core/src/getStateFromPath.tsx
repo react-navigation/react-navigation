@@ -166,6 +166,9 @@ export function getStateFromPath<ParamList extends {}>(
   return result;
 }
 
+/**
+ * Reference to the last used config resources. This is used to avoid recomputing the config resources when the options are the same.
+ */
 let cachedConfigResources: [Options<{}> | undefined, ConfigResources] = [
   undefined,
   prepareConfigResources(),
