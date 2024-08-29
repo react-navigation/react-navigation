@@ -147,8 +147,11 @@ export default function HeaderConfig({
       Platform.OS === 'ios' &&
       headerTransparent !== false);
 
+  const isThereCenterView = headerTitleAlign === 'center';
+
   return (
     <ScreenStackHeaderConfig
+      style={{ flexDirection: 'row', width: '100%' }}
       backButtonInCustomView={backButtonInCustomView}
       backgroundColor={
         headerStyleFlattened.backgroundColor ??
@@ -209,8 +212,8 @@ export default function HeaderConfig({
       ) : (
         <>
           {headerLeftElement != null || typeof headerTitle === 'function' ? (
-            <ScreenStackHeaderLeftView>
-              <View style={styles.row}>
+            <ScreenStackHeaderLeftView style={ !isThereCenterView ? { flex: 1 } : null}>
+              <View style={[styles.row, { flex: 1 }]}>
                 {headerLeftElement}
                 {headerTitleAlign !== 'center' ? (
                   typeof headerTitle === 'function' ? (
@@ -228,7 +231,7 @@ export default function HeaderConfig({
             </ScreenStackHeaderLeftView>
           ) : null}
           {headerTitleAlign === 'center' ? (
-            <ScreenStackHeaderCenterView>
+            <ScreenStackHeaderCenterView style={{ flex: 1 }}>
               {typeof headerTitle === 'function' ? (
                 headerTitleElement
               ) : (
