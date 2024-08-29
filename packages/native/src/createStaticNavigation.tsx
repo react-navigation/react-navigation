@@ -51,32 +51,46 @@ export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
     { linking, ...rest }: Props,
     ref: React.Ref<NavigationContainerRef<ParamListBase>>
   ) {
-    const screens = React.useMemo(() => {
-      if (tree.config.screens) {
-        return createPathConfigForStaticNavigation(
-          tree,
-          { initialRouteName: linking?.config?.initialRouteName },
-          linking?.enabled === 'auto'
-        );
+    const linkingConfig = React.useMemo(() => {
+      if (!tree.config.screens) return;
+
+      const screens = createPathConfigForStaticNavigation(
+        tree,
+        { initialRouteName: linking?.config?.initialRouteName },
+        linking?.enabled === 'auto'
+      );
+
+      if (!screens) return;
+
+      return {
+        path: linking?.config?.path,
+        initialRouteName: linking?.config?.initialRouteName,
+        screens,
+      };
+    }, [
+      linking?.enabled,
+      linking?.config?.path,
+      linking?.config?.initialRouteName,
+    ]);
+
+    const memoizedLinking = React.useMemo(() => {
+      if (!linking) {
+        return undefined;
       }
 
-      return undefined;
-    }, [linking?.config, linking?.enabled]);
-
-    const transformedLinking = React.useMemo(() => {
-      if (!linking) return undefined;
+      const enabled =
+        typeof linking.enabled === 'boolean'
+          ? linking.enabled
+          : linkingConfig?.screens != null;
 
       return {
         ...linking,
-        enabled:
-          typeof linking.enabled === 'boolean'
-            ? linking.enabled
-            : screens != null,
-        config: screens ? { ...linking.config, screens } : undefined,
+        enabled,
+        config: linkingConfig,
       };
-    }, [linking, screens]);
+    }, [linking, linkingConfig]);
 
-    if (linking?.enabled === true && screens == null) {
+    if (linking?.enabled === true && linkingConfig?.screens == null) {
       throw new Error(
         'Linking is enabled but no linking configuration was found for the screens.\n\n' +
           'To solve this:\n' +
@@ -87,7 +101,7 @@ export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
     }
 
     return (
-      <NavigationContainer {...rest} ref={ref} linking={transformedLinking}>
+      <NavigationContainer {...rest} ref={ref} linking={memoizedLinking}>
         <Component />
       </NavigationContainer>
     );
