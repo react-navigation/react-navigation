@@ -63,6 +63,19 @@ export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
       return undefined;
     }, [linking?.config, linking?.enabled]);
 
+    const transformedLinking = React.useMemo(() => {
+      if (!linking) return undefined;
+
+      return {
+        ...linking,
+        enabled:
+          typeof linking.enabled === 'boolean'
+            ? linking.enabled
+            : screens != null,
+        config: screens ? { ...linking.config, screens } : undefined,
+      };
+    }, [linking, screens]);
+
     if (linking?.enabled === true && screens == null) {
       throw new Error(
         'Linking is enabled but no linking configuration was found for the screens.\n\n' +
@@ -74,22 +87,7 @@ export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
     }
 
     return (
-      <NavigationContainer
-        {...rest}
-        ref={ref}
-        linking={
-          linking
-            ? {
-                ...linking,
-                enabled:
-                  typeof linking.enabled === 'boolean'
-                    ? linking.enabled
-                    : screens != null,
-                config: screens ? { ...linking.config, screens } : undefined,
-              }
-            : undefined
-        }
-      >
+      <NavigationContainer {...rest} ref={ref} linking={transformedLinking}>
         <Component />
       </NavigationContainer>
     );
