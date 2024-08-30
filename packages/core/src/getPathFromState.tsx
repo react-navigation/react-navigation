@@ -37,6 +37,11 @@ const getActiveRoute = (state: State): { name: string; params?: object } => {
   return route;
 };
 
+let cachedNormalizedConfigs: [
+  PathConfigMap<{}> | undefined,
+  Record<string, ConfigItem>,
+] = [undefined, {}];
+
 /**
  * Utility to serialize a navigation state object to a path string.
  *
@@ -81,9 +86,13 @@ export function getPathFromState<ParamList extends {}>(
   }
 
   // Create a normalized configs object which will be easier to use
-  const configs: Record<string, ConfigItem> = options?.screens
-    ? createNormalizedConfigs(options?.screens)
-    : {};
+  if (cachedNormalizedConfigs[0] !== options?.screens) {
+    cachedNormalizedConfigs = [
+      options?.screens,
+      options?.screens ? createNormalizedConfigs(options.screens) : {},
+    ];
+  }
+  const configs: Record<string, ConfigItem> = cachedNormalizedConfigs[1];
 
   let path = '/';
   let current: State | undefined = state;
