@@ -213,7 +213,7 @@ export default function HeaderConfig({
         <>
           {headerLeftElement != null || typeof headerTitle === 'function' ? (
             <ScreenStackHeaderLeftView style={ !isThereCenterView ? { flex: 1 } : null}>
-              <View style={[styles.row, { flex: 1 }]}>
+              <View style={styles.row}>
                 {headerLeftElement}
                 {headerTitleAlign !== 'center' ? (
                   typeof headerTitle === 'function' ? (
