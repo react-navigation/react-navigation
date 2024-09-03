@@ -190,7 +190,12 @@ export function HeaderConfig({
     // Back button menu is not disabled
     headerBackButtonMenuEnabled !== false;
 
-  const isThereCenterView = headerTitleAlign === 'center';
+  const isThereCenterView = Platform.select({
+    ios: headerTitleElement !== null,
+    android: headerTitleAlign === 'center',
+    default: false,
+  })
+  // const isThereCenterView = headerTitleAlign === 'center';
 
   return (
     <ScreenStackHeaderConfig
@@ -247,7 +252,7 @@ export function HeaderConfig({
             </ScreenStackHeaderLeftView>
           ) : null}
           {headerTitleElement != null ? (
-            <ScreenStackHeaderCenterView>
+            <ScreenStackHeaderCenterView style={{ flex: 1 }}>
               {headerTitleElement}
             </ScreenStackHeaderCenterView>
           ) : null}
