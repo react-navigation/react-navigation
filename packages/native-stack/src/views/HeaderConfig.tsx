@@ -147,7 +147,11 @@ export default function HeaderConfig({
       Platform.OS === 'ios' &&
       headerTransparent !== false);
 
-  const isThereCenterView = headerTitleAlign === 'center';
+  const isThereCenterView = Platform.select({
+    ios: headerTitleElement !== null,
+    android: headerTitleAlign === 'center',
+    default: false,
+  })
 
   return (
     <ScreenStackHeaderConfig
@@ -204,7 +208,7 @@ export default function HeaderConfig({
             </ScreenStackHeaderLeftView>
           ) : null}
           {headerTitleElement != null ? (
-            <ScreenStackHeaderCenterView>
+            <ScreenStackHeaderCenterView style={{ flex: 1 }}>
               {headerTitleElement}
             </ScreenStackHeaderCenterView>
           ) : null}
