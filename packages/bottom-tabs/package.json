@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/bottom-tabs",
   "description": "Bottom tab navigator following iOS design guidelines",
-  "version": "7.0.0-rc.30",
+  "version": "7.0.0-rc.31",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -47,7 +47,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/elements": "^2.0.0-rc.22",
+    "@react-navigation/elements": "^2.0.0-rc.23",
     "color": "^4.2.3"
   },
   "devDependencies": {

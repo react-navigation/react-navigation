@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.13...@react-navigation/core@7.0.0-rc.14) (2024-09-08)
+
+### Bug Fixes
+
+* improve error message when navigating with invalid screen name ([9f2c310](https://github.com/react-navigation/react-navigation/commit/9f2c31020a7f39494de4b22d2fb591273ece1fd3)) - by @satya164
+
 # [7.0.0-rc.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.12...@react-navigation/core@7.0.0-rc.13) (2024-08-07)
 
 ### Bug Fixes
