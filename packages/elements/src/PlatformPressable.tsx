@@ -173,8 +173,13 @@ const HoverEffect = ({
 
   return (
     <>
-      {/* eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml */}
-      <style dangerouslySetInnerHTML={{ __html: CSS_TEXT }} />
+      <style
+        // @ts-expect-error: href and precedence are only available on React 19
+        href={CLASS_NAME}
+        precedence="elements"
+      >
+        {CSS_TEXT}
+      </style>
       <div
         className={CLASS_NAME}
         style={{
