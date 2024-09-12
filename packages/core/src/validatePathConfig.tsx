@@ -33,7 +33,7 @@ export function validatePathConfig(config: unknown, root = true) {
           // @ts-expect-error: we know the key exists
           const value = config[key];
 
-          if (typeof value !== type) {
+          if (value !== undefined && typeof value !== type) {
             return [key, `expected '${type}', got '${typeof value}'`];
           }
         } else {

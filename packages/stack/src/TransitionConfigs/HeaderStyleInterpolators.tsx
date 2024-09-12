@@ -21,7 +21,6 @@ export function forUIKit({
   layouts,
 }: StackHeaderInterpolationProps): StackHeaderInterpolatedStyle {
   const defaultOffset = 100;
-  const titleLeftMargin = 16;
   const leftSpacing =
     27 +
     (Platform.OS === 'ios' && layouts.screen.width >= IPAD_MINI_MEDIUM_WIDTH
@@ -37,9 +36,7 @@ export function forUIKit({
     ? (layouts.screen.width - layouts.leftLabel.width) / 2 - leftSpacing
     : defaultOffset;
   const titleLeftOffset = layouts.title
-    ? (layouts.screen.width - layouts.title.width) / 2 -
-      leftSpacing +
-      titleLeftMargin
+    ? (layouts.screen.width - layouts.title.width) / 2 - leftSpacing
     : defaultOffset;
 
   // When the current title is animating to right, it is centered in the right half of screen in middle of transition
@@ -91,8 +88,8 @@ export function forUIKit({
     },
     titleStyle: {
       opacity: progress.interpolate({
-        inputRange: [0, 0.4, 1, 1.5],
-        outputRange: [0, 0.1, 1, 0],
+        inputRange: [0, 0.5, 0.75, 1, 1.5],
+        outputRange: [0, 0, 0.1, 1, 0],
       }),
       transform: [
         {

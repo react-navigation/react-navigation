@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.25](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.24...@react-navigation/material-top-tabs@7.0.0-rc.25) (2024-09-10)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.23...@react-navigation/material-top-tabs@7.0.0-rc.24) (2024-09-08)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.22...@react-navigation/material-top-tabs@7.0.0-rc.23) (2024-08-09)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.21...@react-navigation/material-top-tabs@7.0.0-rc.22) (2024-08-08)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.20...@react-navigation/material-top-tabs@7.0.0-rc.21) (2024-08-07)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.19...@react-navigation/material-top-tabs@7.0.0-rc.20) (2024-08-05)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
 # [7.0.0-rc.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.18...@react-navigation/material-top-tabs@7.0.0-rc.19) (2024-08-02)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

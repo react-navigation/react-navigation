@@ -1,9 +1,13 @@
 import { Text } from '@react-navigation/elements';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
 import * as React from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, type FlatListProps, StyleSheet, View } from 'react-native';
 
 type Item = { name: string; number: number };
+
+type Props = Partial<FlatListProps<Item>> & {
+  query?: string;
+};
 
 const CONTACTS: Item[] = [
   { name: 'Marissa Castillo', number: 7766398169 },
@@ -88,7 +92,7 @@ const ItemSeparator = () => {
   );
 };
 
-export function Contacts() {
+export function Contacts({ query, ...rest }: Props) {
   const ref = React.useRef<FlatList<Item>>(null);
 
   useScrollToTop(ref);
@@ -97,8 +101,15 @@ export function Contacts() {
 
   return (
     <FlatList
+      {...rest}
       ref={ref}
-      data={CONTACTS}
+      data={
+        query
+          ? CONTACTS.filter((c) =>
+              c.name.toLowerCase().includes(query.toLowerCase())
+            )
+          : CONTACTS
+      }
       keyExtractor={(_, i) => String(i)}
       renderItem={renderItem}
       ItemSeparatorComponent={ItemSeparator}

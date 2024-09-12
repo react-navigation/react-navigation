@@ -332,6 +332,8 @@ const SceneView = ({
       key={route.key}
       enabled
       isNativeStack
+      accessibilityElementsHidden={!focused}
+      importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
       style={StyleSheet.absoluteFill}
       hasLargeHeader={options.headerLargeTitle ?? false}
       customAnimationOnSwipe={animationMatchesGesture}
@@ -346,6 +348,7 @@ const SceneView = ({
       homeIndicatorHidden={autoHideHomeIndicator}
       hideKeyboardOnSwipe={keyboardHandlingEnabled}
       navigationBarColor={navigationBarColor}
+      navigationBarTranslucent={navigationBarTranslucent}
       navigationBarHidden={navigationBarHidden}
       replaceAnimation={animationTypeForReplace}
       stackPresentation={presentation === 'card' ? 'push' : presentation}
@@ -428,105 +431,99 @@ const SceneView = ({
       // So we keep any props that need it at the end
       // Otherwise invalid props may not be caught by TypeScript
       // @ts-expect-error Props available in newer versions of `react-native-screens`
-      navigationBarTranslucent={navigationBarTranslucent}
       fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled} // 3.33.0 onwards
       hiddenFromStack={shouldBePreloaded} // 3.35.0 onwards
     >
       <NavigationContext.Provider value={navigation}>
         <NavigationRouteContext.Provider value={route}>
-          <HeaderShownContext.Provider
-            value={isParentHeaderShown || headerShown !== false}
-          >
-            <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
-              <HeaderHeightContext.Provider
-                value={
-                  headerShown !== false ? headerHeight : parentHeaderHeight ?? 0
-                }
-              >
-                {headerBackground != null ? (
-                  /**
-                   * To show a custom header background, we render it at the top of the screen below the header
-                   * The header also needs to be positioned absolutely (with `translucent` style)
-                   */
-                  <View
-                    style={[
-                      styles.background,
-                      headerTransparent ? styles.translucent : null,
-                      { height: headerHeight },
-                    ]}
-                  >
-                    {headerBackground()}
-                  </View>
-                ) : null}
+          <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
+            <HeaderHeightContext.Provider
+              value={
+                headerShown !== false ? headerHeight : parentHeaderHeight ?? 0
+              }
+            >
+              {headerBackground != null ? (
+                /**
+                 * To show a custom header background, we render it at the top of the screen below the header
+                 * The header also needs to be positioned absolutely (with `translucent` style)
+                 */
                 <View
-                  accessibilityElementsHidden={!focused}
-                  importantForAccessibility={
-                    focused ? 'auto' : 'no-hide-descendants'
-                  }
-                  style={styles.scene}
+                  style={[
+                    styles.background,
+                    headerTransparent ? styles.translucent : null,
+                    { height: headerHeight },
+                  ]}
                 >
-                  <MaybeNestedStack
-                    options={options}
-                    route={route}
-                    presentation={presentation}
-                    headerHeight={headerHeight}
-                    headerTopInsetEnabled={headerTopInsetEnabled}
-                  >
-                    <HeaderBackContext.Provider value={headerBack}>
-                      {render()}
-                    </HeaderBackContext.Provider>
-                  </MaybeNestedStack>
-                  {header !== undefined && headerShown !== false ? (
-                    <View
-                      onLayout={(e) => {
-                        const headerHeight = e.nativeEvent.layout.height;
-
-                        setHeaderHeight(headerHeight);
-                        rawAnimatedHeaderHeight.setValue(headerHeight);
-                      }}
-                      style={headerTransparent ? styles.absolute : null}
-                    >
-                      {header({
-                        back: headerBack,
-                        options,
-                        route,
-                        navigation,
-                      })}
-                    </View>
-                  ) : null}
+                  {headerBackground()}
                 </View>
-                {/**
-                 * `HeaderConfig` needs to be the direct child of `Screen` without any intermediate `View`
-                 * We don't render it conditionally to make it possible to dynamically render a custom `header`
-                 * Otherwise dynamically rendering a custom `header` leaves the native header visible
-                 *
-                 * https://github.com/software-mansion/react-native-screens/blob/main/guides/GUIDE_FOR_LIBRARY_AUTHORS.md#screenstackheaderconfig
-                 *
-                 * HeaderConfig must not be first child of a Screen.
-                 * See https://github.com/software-mansion/react-native-screens/pull/1825
-                 * for detailed explanation
-                 */}
-                <HeaderConfig
-                  {...options}
+              ) : null}
+              {header !== undefined && headerShown !== false ? (
+                <View
+                  onLayout={(e) => {
+                    const headerHeight = e.nativeEvent.layout.height;
+
+                    setHeaderHeight(headerHeight);
+                    rawAnimatedHeaderHeight.setValue(headerHeight);
+                  }}
+                  style={[
+                    styles.header,
+                    headerTransparent ? styles.absolute : null,
+                  ]}
+                >
+                  {header({
+                    back: headerBack,
+                    options,
+                    route,
+                    navigation,
+                  })}
+                </View>
+              ) : null}
+              <HeaderShownContext.Provider
+                value={isParentHeaderShown || headerShown !== false}
+              >
+                <MaybeNestedStack
+                  options={options}
                   route={route}
-                  headerBackButtonMenuEnabled={
-                    isRemovePrevented !== undefined
-                      ? !isRemovePrevented
-                      : headerBackButtonMenuEnabled
-                  }
-                  headerShown={header !== undefined ? false : headerShown}
+                  presentation={presentation}
                   headerHeight={headerHeight}
-                  headerBackTitle={
-                    options.headerBackTitle !== undefined
-                      ? options.headerBackTitle
-                      : undefined
-                  }
                   headerTopInsetEnabled={headerTopInsetEnabled}
-                  canGoBack={headerBack !== undefined}
-                />
-              </HeaderHeightContext.Provider>
-            </AnimatedHeaderHeightContext.Provider>
-          </HeaderShownContext.Provider>
+                >
+                  <HeaderBackContext.Provider value={headerBack}>
+                    {render()}
+                  </HeaderBackContext.Provider>
+                </MaybeNestedStack>
+              </HeaderShownContext.Provider>
+              {/**
+               * `HeaderConfig` needs to be the direct child of `Screen` without any intermediate `View`
+               * We don't render it conditionally to make it possible to dynamically render a custom `header`
+               * Otherwise dynamically rendering a custom `header` leaves the native header visible
+               *
+               * https://github.com/software-mansion/react-native-screens/blob/main/guides/GUIDE_FOR_LIBRARY_AUTHORS.md#screenstackheaderconfig
+               *
+               * HeaderConfig must not be first child of a Screen.
+               * See https://github.com/software-mansion/react-native-screens/pull/1825
+               * for detailed explanation
+               */}
+              <HeaderConfig
+                {...options}
+                route={route}
+                headerBackButtonMenuEnabled={
+                  isRemovePrevented !== undefined
+                    ? !isRemovePrevented
+                    : headerBackButtonMenuEnabled
+                }
+                headerShown={header !== undefined ? false : headerShown}
+                headerHeight={headerHeight}
+                headerBackTitle={
+                  options.headerBackTitle !== undefined
+                    ? options.headerBackTitle
+                    : undefined
+                }
+                headerTopInsetEnabled={headerTopInsetEnabled}
+                canGoBack={headerBack !== undefined}
+              />
+            </HeaderHeightContext.Provider>
+          </AnimatedHeaderHeightContext.Provider>
         </NavigationRouteContext.Provider>
       </NavigationContext.Provider>
     </Screen>
@@ -662,9 +659,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  scene: {
-    flex: 1,
-    flexDirection: 'column-reverse',
+  header: {
+    zIndex: 1,
   },
   absolute: {
     position: 'absolute',

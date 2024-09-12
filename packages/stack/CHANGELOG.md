@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.26](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-rc.25...@react-navigation/stack@7.0.0-rc.26) (2024-09-10)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+# [7.0.0-rc.25](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-rc.24...@react-navigation/stack@7.0.0-rc.25) (2024-09-08)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+# [7.0.0-rc.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-rc.23...@react-navigation/stack@7.0.0-rc.24) (2024-08-09)
+
+### Bug Fixes
+
+* fix alignment for center aligned title ([6e22370](https://github.com/react-navigation/react-navigation/commit/6e223705b8d8cf98b2e6e7fd8119571bffb11c61)) - by @satya164
+* tweak UIKit header animation ([f6a3ef7](https://github.com/react-navigation/react-navigation/commit/f6a3ef7d7a9014b7008361b07dda73e5e1f24f01)) - by @satya164
+
+# [7.0.0-rc.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-rc.22...@react-navigation/stack@7.0.0-rc.23) (2024-08-08)
+
+### Bug Fixes
+
+* avoid using column-reverse for header for a11y on web ([3101d04](https://github.com/react-navigation/react-navigation/commit/3101d0406c32163c0576cb5c4712755c01b1a17c)) - by @satya164
+* improve custom header in native stack & stack ([7e6b666](https://github.com/react-navigation/react-navigation/commit/7e6b6662342e63d241c1a2e8f57c56a3b5b0cef5)) - by @satya164
+
+# [7.0.0-rc.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-rc.21...@react-navigation/stack@7.0.0-rc.22) (2024-08-07)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+# [7.0.0-rc.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-rc.20...@react-navigation/stack@7.0.0-rc.21) (2024-08-05)
+
+### Bug Fixes
+
+* fix incorrect value from useHeaderHeight for stack ([add9a17](https://github.com/react-navigation/react-navigation/commit/add9a17f0c91191c9347e59449d304f7f85239ab)) - by @satya164
+
+### Features
+
+* add headerBackButtonDisplayMode for native stack ([#12089](https://github.com/react-navigation/react-navigation/issues/12089)) ([89ffa1b](https://github.com/react-navigation/react-navigation/commit/89ffa1baa1dc3ad8260361a3f84aa21d24c1643e)), closes [#11980](https://github.com/react-navigation/react-navigation/issues/11980) - by @dylancom
+* add headerBackButtonDisplayMode for stack ([#12090](https://github.com/react-navigation/react-navigation/issues/12090)) ([35cd213](https://github.com/react-navigation/react-navigation/commit/35cd213d366a60afe9955cf10dffb83d9006ce73)) - by @satya164
+
+### BREAKING CHANGES
+
+* This removes the `headerBackTitleVisible` option, and
+changes `headerTruncatedBackTitle` to `headerBackTruncatedTitle`.
+
+Similarly, `headerLeft` now receives `displayMode` instead of
+`labelVisible`, and `HeaderBackButton` accepts `displayMode` instead of
+`labelVisible`
+* This removes the `headerBackTitleVisible` option,
+
+Adds corresponding functionality from
+https://github.com/software-mansion/react-native-screens/pull/2123.
+
 # [7.0.0-rc.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.0-rc.19...@react-navigation/stack@7.0.0-rc.20) (2024-08-02)
 
 **Note:** Version bump only for package @react-navigation/stack

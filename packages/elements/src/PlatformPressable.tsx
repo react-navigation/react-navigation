@@ -118,7 +118,12 @@ export function PlatformPressable({
       }
       style={[
         {
-          cursor: 'pointer', // Add hover effect on iPad and VisionOS
+          cursor:
+            Platform.OS === 'web' || Platform.OS === 'ios'
+              ? // Pointer cursor on web
+                // Hover effect on iPad and visionOS
+                'pointer'
+              : 'auto',
           opacity: !ANDROID_SUPPORTS_RIPPLE ? opacity : 1,
         },
         style,
@@ -168,8 +173,13 @@ const HoverEffect = ({
 
   return (
     <>
-      {/* eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml */}
-      <style dangerouslySetInnerHTML={{ __html: CSS_TEXT }} />
+      <style
+        // @ts-expect-error: href and precedence are only available on React 19
+        href={CLASS_NAME}
+        precedence="elements"
+      >
+        {CSS_TEXT}
+      </style>
       <div
         className={CLASS_NAME}
         style={{

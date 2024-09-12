@@ -16,7 +16,12 @@ name: Simple Stack
 - assertVisible:
     text: 'Feed'
 - tapOn:
-    text: 'Navigate to albums'
+    text: 'Navigate to contacts'
+    retryTapIfNoChange: false
+- assertVisible:
+    text: 'Contacts'
+- tapOn:
+    text: 'Push albums'
     retryTapIfNoChange: false
 - assertVisible:
     text: 'Albums'

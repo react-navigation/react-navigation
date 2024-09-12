@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.32](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.31...@react-navigation/bottom-tabs@7.0.0-rc.32) (2024-09-10)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-rc.31](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.30...@react-navigation/bottom-tabs@7.0.0-rc.31) (2024-09-08)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-rc.30](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.29...@react-navigation/bottom-tabs@7.0.0-rc.30) (2024-08-13)
+
+### Bug Fixes
+
+* fix detecting animation in bottom tabs ([d24496b](https://github.com/react-navigation/react-navigation/commit/d24496beac90862ea6d91329bfec42aa5dd40076)) - by @satya164
+
+# [7.0.0-rc.29](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.28...@react-navigation/bottom-tabs@7.0.0-rc.29) (2024-08-09)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-rc.28](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.27...@react-navigation/bottom-tabs@7.0.0-rc.28) (2024-08-08)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-rc.27](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.26...@react-navigation/bottom-tabs@7.0.0-rc.27) (2024-08-07)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.0.0-rc.26](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.25...@react-navigation/bottom-tabs@7.0.0-rc.26) (2024-08-05)
+
+### Features
+
+* add headerBackButtonDisplayMode for native stack ([#12089](https://github.com/react-navigation/react-navigation/issues/12089)) ([89ffa1b](https://github.com/react-navigation/react-navigation/commit/89ffa1baa1dc3ad8260361a3f84aa21d24c1643e)), closes [#11980](https://github.com/react-navigation/react-navigation/issues/11980) - by @dylancom
+
+### BREAKING CHANGES
+
+* This removes the `headerBackTitleVisible` option,
+
+Adds corresponding functionality from
+https://github.com/software-mansion/react-native-screens/pull/2123.
+
 # [7.0.0-rc.25](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.24...@react-navigation/bottom-tabs@7.0.0-rc.25) (2024-08-02)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

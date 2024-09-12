@@ -64,7 +64,7 @@ const hasAnimation = (options: BottomTabNavigationOptions) => {
     return animation !== 'none';
   }
 
-  return !transitionSpec;
+  return Boolean(transitionSpec);
 };
 
 const renderTabBarDefault = (props: BottomTabBarProps) => (

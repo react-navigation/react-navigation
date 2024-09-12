@@ -70,6 +70,25 @@ export function Screen(props: Props) {
       // that we won't render unnecessary views due to the view flattening.
       collapsable={false}
     >
+      {headerShown ? (
+        <NavigationContext.Provider value={navigation}>
+          <NavigationRouteContext.Provider value={route}>
+            <View
+              onLayout={(e) => {
+                const { height } = e.nativeEvent.layout;
+
+                setHeaderHeight(height);
+              }}
+              style={[
+                styles.header,
+                headerTransparent ? styles.absolute : null,
+              ]}
+            >
+              {header}
+            </View>
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>
+      ) : null}
       <View style={styles.content}>
         <HeaderShownContext.Provider
           value={isParentHeaderShown || headerShown !== false}
@@ -81,22 +100,6 @@ export function Screen(props: Props) {
           </HeaderHeightContext.Provider>
         </HeaderShownContext.Provider>
       </View>
-      {headerShown ? (
-        <NavigationContext.Provider value={navigation}>
-          <NavigationRouteContext.Provider value={route}>
-            <View
-              onLayout={(e) => {
-                const { height } = e.nativeEvent.layout;
-
-                setHeaderHeight(height);
-              }}
-              style={headerTransparent ? styles.absolute : null}
-            >
-              {header}
-            </View>
-          </NavigationRouteContext.Provider>
-        </NavigationContext.Provider>
-      ) : null}
     </Background>
   );
 }
@@ -104,11 +107,12 @@ export function Screen(props: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column-reverse',
   },
-  // This is necessary to avoid applying 'column-reverse' to screen content
   content: {
     flex: 1,
+  },
+  header: {
+    zIndex: 1,
   },
   absolute: {
     position: 'absolute',

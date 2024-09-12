@@ -2,11 +2,56 @@ import type {
   Animated,
   LayoutChangeEvent,
   StyleProp,
+  TextInputProps,
   TextStyle,
   ViewStyle,
 } from 'react-native';
 
+export type HeaderBackButtonDisplayMode = 'default' | 'generic' | 'minimal';
+
 export type Layout = { width: number; height: number };
+
+type HeaderSearchBarOptions = {
+  /**
+   * The auto-capitalization behavior
+   */
+  autoCapitalize?: 'none' | 'words' | 'sentences' | 'characters';
+  /**
+   * Automatically focuses search input on mount
+   */
+  autoFocus?: boolean;
+  /**
+   * The text to be used instead of default `Cancel` button text
+   *
+   * @platform ios
+   */
+  cancelButtonText?: string;
+  /**
+   * Sets type of the input. Defaults to `text`.
+   */
+  inputType?: 'text' | 'phone' | 'number' | 'email';
+  /**
+   * A callback that gets called when search input has lost focus
+   */
+  onBlur?: TextInputProps['onBlur'];
+  /**
+   * A callback that gets called when the text changes.
+   * It receives the current text value of the search input.
+   */
+  onChangeText?: TextInputProps['onChange'];
+  /**
+   * A callback that gets called when search input is closed
+   */
+  onClose?: () => void;
+  /**
+   * A callback that gets called when search input has received focus
+   */
+  onFocus?: TextInputProps['onFocus'];
+  /**
+   * Text displayed when search field is empty
+   */
+  placeholder?: string;
+};
 
 export type HeaderOptions = {
   /**
@@ -35,19 +80,40 @@ export type HeaderOptions = {
    */
   headerTitleAllowFontScaling?: boolean;
   /**
+   * Options to render a search bar.
+   */
+  headerSearchBarOptions?: HeaderSearchBarOptions;
+  /**
    * Function which returns a React Element to display on the left side of the header.
    */
-  headerLeft?: (props: {
-    tintColor?: string;
-    pressColor?: string;
-    pressOpacity?: number;
-    labelVisible?: boolean;
-    href?: undefined;
-  }) => React.ReactNode;
+  headerLeft?: (
+    props: HeaderBackButtonProps & {
+      /**
+       * Whether it's possible to navigate back.
+       */
+      canGoBack?: boolean;
+    }
+  ) => React.ReactNode;
   /**
-   * Whether a label is visible in the left button. Used to add extra padding.
+   * How the back button displays icon and title.
+   *
+   * Supported values:
+   * - "default" - Displays one of the following depending on the available space: previous screen's title, truncated title (e.g. 'Back') or no title (only icon).
+   * - "generic" – Displays one of the following depending on the available space: truncated title (e.g. 'Back') or no title (only icon).
+   * - "minimal" – Always displays only the icon without a title.
+   *
+   * Defaults to "default" on iOS, and "minimal" on other platforms.
    */
-  headerLeftLabelVisible?: boolean;
+  headerBackButtonDisplayMode?: HeaderBackButtonDisplayMode;
+  /**
+   * Style object for header back title. Supported properties:
+   * - fontFamily
+   * - fontSize
+   */
+  headerBackTitleStyle?: StyleProp<{
+    fontFamily?: string;
+    fontSize?: number;
+  }>;
   /**
    * Style object for the container of the `headerLeft` element`.
    */
@@ -59,6 +125,7 @@ export type HeaderOptions = {
     tintColor?: string;
     pressColor?: string;
     pressOpacity?: number;
+    canGoBack: boolean;
   }) => React.ReactNode;
   /**
    * Style object for the container of the `headerRight` element.
@@ -209,7 +276,7 @@ export type HeaderBackButtonProps = Omit<HeaderButtonProps, 'children'> & {
    * Whether the label text is visible.
    * Defaults to `true` on iOS and `false` on Android.
    */
-  labelVisible?: boolean;
+  displayMode?: HeaderBackButtonDisplayMode;
   /**
    * Style object for the label.
    */

@@ -70,6 +70,34 @@ const RootStack = createStackNavigator({
       },
     },
     Settings: () => null,
+    // TypeScript has a limit of 24 items in mapped types
+    // So we add more items to make sure we don't hit the issue
+    A: () => null,
+    B: () => null,
+    C: () => null,
+    D: () => null,
+    E: () => null,
+    F: () => null,
+    G: () => null,
+    H: () => null,
+    I: () => null,
+    J: () => null,
+    K: () => null,
+    L: () => null,
+    M: () => null,
+    N: () => null,
+    O: () => null,
+    P: () => null,
+    Q: () => null,
+    R: () => null,
+    S: () => null,
+    T: () => null,
+    U: () => null,
+    V: () => null,
+    W: () => null,
+    X: () => null,
+    Y: () => null,
+    Z: () => null,
   },
   groups: {
     Guest: {
@@ -99,10 +127,86 @@ type RootParamList = StaticParamList<typeof RootStack>;
 declare let navigation: NavigationProp<RootParamList>;
 
 /**
+ * Infer param list from navigator
+ */
+expectTypeOf<RootParamList>().toMatchTypeOf<{
+  Home:
+    | NavigatorScreenParams<{
+        Groups: undefined;
+        Chat: { id: number };
+      }>
+    | undefined;
+  Profile: { user: string };
+  Feed: { sort: 'hot' | 'recent' };
+  Settings: undefined;
+  Login: undefined;
+  Register: { method: 'email' | 'social' };
+  Account: undefined;
+  A: undefined;
+  B: undefined;
+  C: undefined;
+  D: undefined;
+  E: undefined;
+  F: undefined;
+  G: undefined;
+  H: undefined;
+  I: undefined;
+  J: undefined;
+  K: undefined;
+  L: undefined;
+  M: undefined;
+  N: undefined;
+  O: undefined;
+  P: undefined;
+  Q: undefined;
+  R: undefined;
+  S: undefined;
+  T: undefined;
+  U: undefined;
+  V: undefined;
+  W: undefined;
+  X: undefined;
+  Y: undefined;
+  Z: undefined;
+}>();
+
+/**
  * Infer screen names from config
  */
 expectTypeOf(navigation.getState().routes[0].name).toEqualTypeOf<
-  'Home' | 'Profile' | 'Feed' | 'Settings' | 'Login' | 'Register' | 'Account'
+  | 'Home'
+  | 'Profile'
+  | 'Feed'
+  | 'Settings'
+  | 'Login'
+  | 'Register'
+  | 'Account'
+  | 'A'
+  | 'B'
+  | 'C'
+  | 'D'
+  | 'E'
+  | 'F'
+  | 'G'
+  | 'H'
+  | 'I'
+  | 'J'
+  | 'K'
+  | 'L'
+  | 'M'
+  | 'N'
+  | 'O'
+  | 'P'
+  | 'Q'
+  | 'R'
+  | 'S'
+  | 'T'
+  | 'U'
+  | 'V'
+  | 'W'
+  | 'X'
+  | 'Y'
+  | 'Z'
 >();
 
 /**

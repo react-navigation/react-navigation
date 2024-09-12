@@ -85,7 +85,7 @@ const SafeAreaFrameProvider = ({
       height: rect.height,
     });
 
-    let timeout: NodeJS.Timeout;
+    let timeout: ReturnType<typeof setTimeout>;
 
     const observer = new ResizeObserver((entries) => {
       const entry = entries[0];

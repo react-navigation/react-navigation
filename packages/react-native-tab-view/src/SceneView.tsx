@@ -54,7 +54,7 @@ export function SceneView<T extends Route>({
     };
 
     let unsubscribe: (() => void) | undefined;
-    let timer: NodeJS.Timeout | undefined;
+    let timer: ReturnType<typeof setTimeout> | undefined;
 
     if (lazy && isLoading) {
       // If lazy mode is enabled, listen to when we enter screens

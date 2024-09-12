@@ -82,20 +82,13 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
         const {
           header,
           headerShown,
-          headerTintColor,
           headerBackImageSource,
           headerLeft,
-          headerRight,
-          headerTitle,
-          headerTitleAlign,
-          headerTitleStyle,
-          headerStyle,
-          headerShadowVisible,
           headerTransparent,
-          headerBackground,
           headerBackTitle,
           presentation,
           contentStyle,
+          ...rest
         } = options;
 
         const nextPresentation = nextDescriptor?.options.presentation;
@@ -122,20 +115,21 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
                 })
               ) : (
                 <Header
+                  {...rest}
+                  back={headerBack}
                   title={getHeaderTitle(options, route.name)}
-                  headerTintColor={headerTintColor}
                   headerLeft={
                     typeof headerLeft === 'function'
-                      ? ({ tintColor }) =>
+                      ? ({ label, ...rest }) =>
                           headerLeft({
-                            tintColor,
-                            canGoBack,
-                            label: headerBackTitle,
-                            href: headerBack?.href,
+                            ...rest,
+                            label: headerBackTitle ?? label,
                           })
                       : headerLeft === undefined && canGoBack
-                        ? ({ tintColor }) => (
+                        ? ({ tintColor, label, ...rest }) => (
                             <HeaderBackButton
+                              {...rest}
+                              label={headerBackTitle ?? label}
                               tintColor={tintColor}
                               backImage={
                                 headerBackImageSource !== undefined
@@ -152,28 +146,10 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
                                   : undefined
                               }
                               onPress={navigation.goBack}
-                              href={headerBack.href}
                             />
                           )
                         : headerLeft
                   }
-                  headerRight={
-                    typeof headerRight === 'function'
-                      ? ({ tintColor }) => headerRight({ tintColor, canGoBack })
-                      : headerRight
-                  }
-                  headerTitle={
-                    typeof headerTitle === 'function'
-                      ? ({ children, tintColor }) =>
-                          headerTitle({ children, tintColor })
-                      : headerTitle
-                  }
-                  headerTitleAlign={headerTitleAlign}
-                  headerTitleStyle={headerTitleStyle}
-                  headerTransparent={headerTransparent}
-                  headerShadowVisible={headerShadowVisible}
-                  headerBackground={headerBackground}
-                  headerStyle={headerStyle}
                 />
               )
             }
