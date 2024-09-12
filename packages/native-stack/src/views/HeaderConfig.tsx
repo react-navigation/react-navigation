@@ -217,25 +217,27 @@ export default function HeaderConfig({
         <>
           {headerLeftElement != null || typeof headerTitle === 'function' ? (
             <ScreenStackHeaderLeftView style={ !isThereCenterView ? { flex: 1 } : null}>
-              <View style={styles.row}>
                 {headerLeftElement}
                 {headerTitleAlign !== 'center' ? (
                   typeof headerTitle === 'function' ? (
-                    headerTitleElement
+                      <View style={{ flex: 1 }}>
+                          {headerTitleElement}
+                      </View>
                   ) : (
-                    <HeaderTitle
-                      tintColor={tintColor}
-                      style={headerTitleStyleSupported}
-                    >
-                      {titleText}
-                    </HeaderTitle>
+                    <View style={{ flex: 1 }}>
+                      <HeaderTitle
+                        tintColor={tintColor}
+                        style={headerTitleStyleSupported}
+                      >
+                        {titleText}
+                      </HeaderTitle>
+                    </View>
                   )
                 ) : null}
-              </View>
             </ScreenStackHeaderLeftView>
           ) : null}
           {headerTitleAlign === 'center' ? (
-            <ScreenStackHeaderCenterView style={{ flex: 1 }}>
+            <ScreenStackHeaderCenterView style={{ flexShrink: 1 }}>
               {typeof headerTitle === 'function' ? (
                 headerTitleElement
               ) : (
