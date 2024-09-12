@@ -45,6 +45,9 @@ export type Props<T extends Route> = SceneRendererProps & {
   options?: Record<string, TabDescriptor<T>>;
   commonOptions?: TabDescriptor<T>;
   renderIndicator?: (props: IndicatorProps<T>) => React.ReactNode;
+  renderTabBarItem?: (
+    props: TabBarItemProps<T> & { key: string }
+  ) => React.ReactElement;
   onTabPress?: (scene: Scene<T> & Event) => void;
   onTabLongPress?: (scene: Scene<T>) => void;
   tabStyle?: StyleProp<ViewStyle>;
@@ -348,6 +351,7 @@ export function TabBar<T extends Route>({
   pressColor,
   pressOpacity,
   direction = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr',
+  renderTabBarItem,
   style,
   tabStyle,
   layout: propLayout,
@@ -522,6 +526,7 @@ export function TabBar<T extends Route>({
 
       const props = {
         ...rest,
+        key: route.key,
         position,
         route,
         navigationState,
@@ -540,12 +545,16 @@ export function TabBar<T extends Route>({
         style: tabStyle,
         defaultTabWidth,
         android_ripple,
-      } satisfies TabBarItemProps<T>;
+      } satisfies TabBarItemProps<T> & { key: string };
 
       return (
         <>
           {gap > 0 && index > 0 ? <Separator width={gap} /> : null}
-          <TabBarItem key={route.key} {...props} />
+          {renderTabBarItem ? (
+            renderTabBarItem(props)
+          ) : (
+            <TabBarItem {...props} key={props.key} />
+          )}
         </>
       );
     },
@@ -568,6 +577,7 @@ export function TabBar<T extends Route>({
       contentContainerStyle,
       gap,
       android_ripple,
+      renderTabBarItem,
       onTabPress,
       jumpTo,
       onTabLongPress,
