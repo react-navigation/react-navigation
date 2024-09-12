@@ -155,7 +155,7 @@ export default function HeaderConfig({
 
   return (
     <ScreenStackHeaderConfig
-      style={{ flexDirection: 'row', width: '100%' }}
+      style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}
       backButtonInCustomView={backButtonInCustomView}
       backgroundColor={
         headerStyleFlattened.backgroundColor ??
@@ -208,7 +208,7 @@ export default function HeaderConfig({
             </ScreenStackHeaderLeftView>
           ) : null}
           {headerTitleElement != null ? (
-            <ScreenStackHeaderCenterView style={{ flex: 1 }}>
+            <ScreenStackHeaderCenterView style={{ flexShrink: 1 }}>
               {headerTitleElement}
             </ScreenStackHeaderCenterView>
           ) : null}
