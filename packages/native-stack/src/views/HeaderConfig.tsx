@@ -153,6 +153,8 @@ export default function HeaderConfig({
     default: false,
   })
 
+  console.log(`isThereCenterView: ${isThereCenterView}`);
+
   return (
     <ScreenStackHeaderConfig
       style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}
