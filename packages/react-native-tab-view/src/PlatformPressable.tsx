@@ -30,7 +30,7 @@ export function PlatformPressable({
   ...rest
 }: Props) {
   const handlePress = (e: GestureResponderEvent) => {
-    if (Platform.OS === 'web' && rest.href != null) {
+    if (Platform.OS === 'web' && rest.href !== null) {
       // @ts-expect-error: these properties exist on web, but not in React Native
       const hasModifierKey = e.metaKey || e.altKey || e.ctrlKey || e.shiftKey; // ignore clicks with modifier keys
       // @ts-expect-error: these properties exist on web, but not in React Native
