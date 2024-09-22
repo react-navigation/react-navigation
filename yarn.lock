@@ -14537,6 +14537,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "react-native-tab-view@workspace:packages/react-native-tab-view"
   dependencies:
+    "@jest/globals": "npm:^29.7.0"
+    "@testing-library/react-native": "npm:^12.4.3"
     del-cli: "npm:^5.1.0"
     react: "npm:18.2.0"
     react-native: "npm:0.74.2"
