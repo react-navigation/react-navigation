@@ -2,7 +2,8 @@ import { describe, expect, test } from '@jest/globals';
 import { fireEvent, render } from '@testing-library/react-native';
 import React from 'react';
 import { type GestureResponderEvent, View } from 'react-native';
-import { SceneMap, TabView } from 'react-native-tab-view';
+
+import { SceneMap, TabView } from '../index';
 
 const FirstRoute = () => (
   <View style={{ flex: 1, backgroundColor: '#ff4081' }} testID={'route1'} />
