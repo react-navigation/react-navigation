@@ -9,22 +9,34 @@ export default function useIsKeyboardShown() {
     const handleKeyboardHide = () => setIsKeyboardShown(false);
 
     if (Platform.OS === 'ios') {
-      Keyboard.addListener('keyboardWillShow', handleKeyboardShow);
-      Keyboard.addListener('keyboardWillHide', handleKeyboardHide);
-    } else {
-      Keyboard.addListener('keyboardDidShow', handleKeyboardShow);
-      Keyboard.addListener('keyboardDidHide', handleKeyboardHide);
-    }
+      const subscrA = Keyboard.addListener(
+        'keyboardWillShow',
+        handleKeyboardShow
+      );
+      const subscrB = Keyboard.addListener(
+        'keyboardWillHide',
+        handleKeyboardHide
+      );
 
-    return () => {
-      if (Platform.OS === 'ios') {
-        Keyboard.removeListener('keyboardWillShow', handleKeyboardShow);
-        Keyboard.removeListener('keyboardWillHide', handleKeyboardHide);
-      } else {
-        Keyboard.removeListener('keyboardDidShow', handleKeyboardShow);
-        Keyboard.removeListener('keyboardDidHide', handleKeyboardHide);
-      }
-    };
+      return () => {
+        subscrA?.remove();
+        subscrB?.remove();
+      };
+    } else {
+      const subscrA = Keyboard.addListener(
+        'keyboardDidShow',
+        handleKeyboardShow
+      );
+      const subscrB = Keyboard.addListener(
+        'keyboardDidHide',
+        handleKeyboardHide
+      );
+
+      return () => {
+        subscrA?.remove();
+        subscrB?.remove();
+      };
+    }
   }, []);
 
   return isKeyboardShown;
