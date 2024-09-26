@@ -1,4 +1,4 @@
-import { describe, expect, test } from '@jest/globals';
+import { expect, test } from '@jest/globals';
 import { fireEvent, render } from '@testing-library/react-native';
 import React from 'react';
 import { type GestureResponderEvent, View } from 'react-native';
@@ -34,20 +34,18 @@ const ComponentWithTabView = () => {
   );
 };
 
-describe('react-native-tab-view', () => {
-  test('renders using the scene for the initial index', () => {
-    const { getByTestId, queryByTestId } = render(<ComponentWithTabView />);
+test('renders using the scene for the initial index', () => {
+  const { getByTestId, queryByTestId } = render(<ComponentWithTabView />);
 
-    expect(getByTestId('route1')).toBeTruthy();
-    expect(queryByTestId('route2')).toBeNull();
-  });
+  expect(getByTestId('route1')).toBeTruthy();
+  expect(queryByTestId('route2')).toBeNull();
+});
 
-  test('switches tabs when the tab header for another route is pressed', () => {
-    const { getByTestId, getByLabelText } = render(<ComponentWithTabView />);
+test('switches tabs when the tab header for another route is pressed', () => {
+  const { getByTestId, getByLabelText } = render(<ComponentWithTabView />);
 
-    expect(getByTestId('route1')).toBeTruthy();
+  expect(getByTestId('route1')).toBeTruthy();
 
-    fireEvent.press(getByLabelText('Second'), {} as GestureResponderEvent);
-    expect(getByTestId('route2')).toBeTruthy();
-  });
+  fireEvent.press(getByLabelText('Second'), {} as GestureResponderEvent);
+  expect(getByTestId('route2')).toBeTruthy();
 });
