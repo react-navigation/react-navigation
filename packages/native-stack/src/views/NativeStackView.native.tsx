@@ -35,7 +35,7 @@ import {
   ScreenStack,
   type StackPresentationTypes,
 } from 'react-native-screens';
-import FooterComponent from './FooterComponent';
+import { FooterComponent } from './FooterComponent';
 import warnOnce from 'warn-once';
 
 import type {
