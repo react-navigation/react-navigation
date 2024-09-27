@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/devtools",
   "description": "Developer tools for React Navigation",
-  "version": "7.0.0-rc.13",
+  "version": "7.0.0-rc.14",
   "keywords": [
     "react",
     "react-native",
@@ -47,13 +47,12 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "deep-equal": "^2.2.3",
+    "fast-deep-equal": "^3.1.3",
     "nanoid": "3.3.7",
     "stacktrace-parser": "^0.1.10"
   },
   "devDependencies": {
     "@react-navigation/core": "workspace:^",
-    "@types/deep-equal": "^1.0.4",
     "@types/react": "~18.2.79",
     "del-cli": "^5.1.0",
     "react": "18.2.0",
