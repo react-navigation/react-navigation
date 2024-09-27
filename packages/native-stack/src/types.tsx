@@ -643,15 +643,16 @@ export type NativeStackNavigationOptions = {
    */
   freezeOnBlur?: boolean;
   /**
-   * Footer component that can be used alongside form sheet stack presentation style.
+   * Footer component that can be used alongside formSheet stack presentation style.
    *
    * This option is provided, because due to implementation details it might be problematic
    * to implement such layout with JS-only code.
    *
    * Please note that this prop is marked as unstable and might be subject of breaking changes,
-   * including removal.
+   * including removal, in particular when we find solution that will make implementing it with JS
+   * straightforward.
    */
-  unstable_footerComponent?: React.ReactNode;
+  unstable_sheetFooter?: () => React.ReactNode;
 };
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<

@@ -34,8 +34,8 @@ import {
   type ScreenProps,
   ScreenStack,
   type StackPresentationTypes,
-  // FooterComponent,
 } from 'react-native-screens';
+import FooterComponent from './FooterComponent';
 import warnOnce from 'warn-once';
 
 import type {
@@ -215,7 +215,7 @@ const SceneView = ({
     statusBarStyle,
     statusBarTranslucent,
     statusBarBackgroundColor,
-    unstable_footerComponent = null,
+    unstable_sheetFooter = null,
     freezeOnBlur,
   } = options;
 
@@ -533,9 +533,9 @@ const SceneView = ({
                   headerTopInsetEnabled={headerTopInsetEnabled}
                   canGoBack={headerBack !== undefined}
                 />
-                {/*unstable_footerComponent && (
-                  <FooterComponent>{unstable_footerComponent}</FooterComponent>
-                )*/}
+                {unstable_sheetFooter && (
+                  <FooterComponent>{unstable_sheetFooter()}</FooterComponent>
+                )}
               </HeaderHeightContext.Provider>
             </AnimatedHeaderHeightContext.Provider>
           </HeaderShownContext.Provider>
