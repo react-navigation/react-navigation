@@ -533,7 +533,7 @@ const SceneView = ({
                   headerTopInsetEnabled={headerTopInsetEnabled}
                   canGoBack={headerBack !== undefined}
                 />
-                {unstable_sheetFooter && (
+                {presentation === 'formSheet' && unstable_sheetFooter && (
                   <FooterComponent>{unstable_sheetFooter()}</FooterComponent>
                 )}
               </HeaderHeightContext.Provider>
