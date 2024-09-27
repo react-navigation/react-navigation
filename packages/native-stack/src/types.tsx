@@ -546,7 +546,7 @@ export type NativeStackNavigationOptions = {
   presentation?: Exclude<ScreenProps['stackPresentation'], 'push'> | 'card';
   /**
    * Describes heights where a sheet can rest.
-   * Works only when `stackPresentation` is set to `formSheet`.
+   * Works only when `presentation` is set to `formSheet`.
    *
    * Heights should be described as fraction (a number from [0, 1] interval) of screen height / maximum detent height.
    * There is also possibility to specify `fitToContents` literal, which intents to set the sheet height
@@ -554,9 +554,20 @@ export type NativeStackNavigationOptions = {
    *
    * Please note that the array **must** be sorted in ascending order.
    *
+   * There are also legacy & **deprecated** options available:
+   *
+   * * 'medium' - corresponds to `[0.5]` detent value, around half of the screen height,
+   * * 'large' - corresponds to `[1.0]` detent value, maximum height,
+   * * 'all' - corresponds to `[0.5, 1.0]` value, the name is deceiving due to compatibility reasons.
+   *
    * Defaults to `[1.0]` literal.
    */
-  sheetAllowedDetents?: ScreenProps['sheetAllowedDetents'] | 'fitToContents';
+  sheetAllowedDetents?:
+    | ScreenProps['sheetAllowedDetents']
+    | 'fitToContents'
+    | 'medium'
+    | 'large'
+    | 'all';
   /**
    * Integer value describing elevation of the sheet, impacting shadow on the top edge of the sheet.
    *
