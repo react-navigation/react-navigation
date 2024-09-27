@@ -219,11 +219,13 @@ const SceneView = ({
     freezeOnBlur,
   } = options;
 
-  // This is workaround for... find the commit here
-  // We want to allow only backgroundColor setting for now
-  unstable_screenStyle = unstable_screenStyle
-    ? { backgroundColor: unstable_screenStyle.backgroundColor }
-    : null;
+  // We want to allow only backgroundColor setting for now.
+  // This allows to workaround one issue with truncated
+  // content with formSheet presentation.
+  unstable_screenStyle =
+    unstable_screenStyle && presentation === 'formSheet'
+      ? { backgroundColor: unstable_screenStyle.backgroundColor }
+      : null;
 
   if (sheetAllowedDetents === 'fitToContents') {
     sheetAllowedDetents = [-1];

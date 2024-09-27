@@ -5,6 +5,6 @@ type FooterProps = {
   children?: React.ReactNode;
 };
 
-export default function FooterComponent({ children }: FooterProps) {
+export function FooterComponent({ children }: FooterProps) {
   return <ScreenFooter collapsable={false}>{children}</ScreenFooter>;
 }
