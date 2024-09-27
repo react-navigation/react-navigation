@@ -548,7 +548,7 @@ export type NativeStackNavigationOptions = {
    * Describes heights where a sheet can rest.
    * Works only when `presentation` is set to `formSheet`.
    *
-   * Heights should be described as fraction (a number from [0, 1] interval) of screen height / maximum detent height.
+   * Heights should be described as fraction (a number from `[0, 1]` interval) of screen height / maximum detent height.
    * There is also possibility to specify `fitToContents` literal, which intents to set the sheet height
    * to the height of its contents.
    *
@@ -562,22 +562,17 @@ export type NativeStackNavigationOptions = {
    *
    * Defaults to `[1.0]` literal.
    */
-  sheetAllowedDetents?:
-    | ScreenProps['sheetAllowedDetents']
-    | 'fitToContents'
-    | 'medium'
-    | 'large'
-    | 'all';
+  sheetAllowedDetents?: number[] | 'fitToContents' | 'medium' | 'large' | 'all';
   /**
    * Integer value describing elevation of the sheet, impacting shadow on the top edge of the sheet.
    *
-   * Not dynamic.
+   * Not dynamic - changing it after the component is rendered won't have an effect.
    *
    * Defaults to `24`.
    *
    * @platform Android
    */
-  sheetElevation?: ScreenProps['sheetElevation'];
+  sheetElevation?: number;
   /**
    * Whether the sheet should expand to larger detent when scrolling.
    * Works only when `presentation` is set to `formSheet`.
@@ -596,10 +591,12 @@ export type NativeStackNavigationOptions = {
    */
   sheetCornerRadius?: number;
   /**
-   * Initial detent for the sheet.
-   * Works only when `presentation` is set to `formSheet`.
+   * Index of the detent the sheet should expand to after being opened.
+   * Works only when `stackPresentation` is set to `formSheet`.
+   *
+   * Defaults to `0` - which represents first detent in the detents array.
    */
-  sheetInitialDetent?: ScreenProps['sheetInitialDetent'];
+  sheetInitialDetent?: number;
   /**
    * Boolean indicating whether the sheet shows a grabber at the top.
    * Works only when `presentation` is set to `formSheet`.
@@ -610,14 +607,17 @@ export type NativeStackNavigationOptions = {
   sheetGrabberVisible?: boolean;
   /**
    * The largest sheet detent for which a view underneath won't be dimmed.
-   * Works only when `stackPresentation` is set to `formSheet`.
+   * Works only when `presentation` is set to `formSheet`.
    *
    * This prop can be set to an number, which indicates index of detent in `sheetAllowedDetents` array for which
    * there won't be a dimming view beneath the sheet.
    *
+   * There also legacy & **deprecated** prop values available, which work in tandem with
+   * corresponding legacy proop values for `sheetAllowedDetents` prop.
+   *
    * Defaults to `-1`, indicating that the dimming view should be always present.
    */
-  sheetLargestUndimmedDetent?: ScreenProps['sheetLargestUndimmedDetent'];
+  sheetLargestUndimmedDetent?: number | 'medium' | 'large' | 'all';
   /**
    * The display orientation to use for the screen.
    *
