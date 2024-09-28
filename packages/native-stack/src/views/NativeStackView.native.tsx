@@ -480,6 +480,27 @@ const SceneView = ({
                   {headerBackground()}
                 </View>
               ) : null}
+              {header !== undefined && headerShown !== false ? (
+                <View
+                  onLayout={(e) => {
+                    const headerHeight = e.nativeEvent.layout.height;
+
+                    setHeaderHeight(headerHeight);
+                    rawAnimatedHeaderHeight.setValue(headerHeight);
+                  }}
+                  style={[
+                    styles.header,
+                    headerTransparent ? styles.absolute : null,
+                  ]}
+                >
+                  {header({
+                    back: headerBack,
+                    options,
+                    route,
+                    navigation,
+                  })}
+                </View>
+              ) : null}
               <HeaderShownContext.Provider
                 value={isParentHeaderShown || headerShown !== false}
               >
@@ -503,7 +524,10 @@ const SceneView = ({
                     setHeaderHeight(headerHeight);
                     rawAnimatedHeaderHeight.setValue(headerHeight);
                   }}
-                  style={headerTransparent ? styles.absolute : null}
+                  style={[
+                    styles.header,
+                    headerTransparent ? styles.absolute : null,
+                  ]}
                 >
                   {header({
                     back: headerBack,
