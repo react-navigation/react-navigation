@@ -8,6 +8,7 @@ import { act, fireEvent, render } from '@testing-library/react-native';
 import { Animated, View } from 'react-native';
 
 import { type BottomTabScreenProps, createBottomTabNavigator } from '../index';
+import * as keyboardHook from '../utils/useIsKeyboardShown';
 
 type BottomTabParamList = {
   A: undefined;
@@ -68,4 +69,40 @@ test('handles screens preloading', async () => {
   expect(
     queryByText('Screen B', { includeHiddenElements: true })
   ).not.toBeNull();
+});
+
+test('ignores pointerEvents when hidden', async () => {
+  // @ts-expect-error: incomplete mock for testing
+  jest.spyOn(Animated, 'timing').mockImplementation(() => ({
+    start: (callback) => callback?.({ finished: true }),
+  }));
+  jest.spyOn(keyboardHook, 'useIsKeyboardShown').mockReturnValue(true);
+
+  const Test = ({ route }: BottomTabScreenProps<BottomTabParamList>) => (
+    <View>
+      <Text>Screen{route.name}</Text>
+    </View>
+  );
+
+  const Tab = createBottomTabNavigator<BottomTabParamList>();
+
+  const { queryByText, getByRole } = render(
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarHideOnKeyboard: true,
+        }}
+      >
+        <Tab.Screen name="A" component={Test} />
+        <Tab.Screen name="B" component={Test} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(queryByText('ScreenB')).toBeNull();
+
+  fireEvent.press(getByRole('button', { name: 'B, tab, 2 of 2' }), {});
+
+  expect(queryByText('ScreenA')).not.toBeNull();
+  expect(queryByText('ScreenB')).toBeNull();
 });
