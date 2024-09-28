@@ -183,7 +183,6 @@ const SceneView = ({
     presentation = isPresentationModal ? 'modal' : 'card',
     fullScreenGestureEnabled,
     unstable_screenStyle = null,
-    sheetAllowedDetents = [1.0],
   } = options;
 
   const {
@@ -204,6 +203,7 @@ const SceneView = ({
     navigationBarTranslucent,
     navigationBarHidden,
     orientation,
+    sheetAllowedDetents = [1.0],
     sheetLargestUndimmedDetent = -1,
     sheetGrabberVisible = false,
     sheetCornerRadius = -1.0,
@@ -226,10 +226,6 @@ const SceneView = ({
     unstable_screenStyle && presentation === 'formSheet'
       ? { backgroundColor: unstable_screenStyle.backgroundColor }
       : null;
-
-  if (sheetAllowedDetents === 'fitToContents') {
-    sheetAllowedDetents = [-1];
-  }
 
   if (gestureDirection === 'vertical' && Platform.OS === 'ios') {
     // for `vertical` direction to work, we need to set `fullScreenGestureEnabled` to `true`
