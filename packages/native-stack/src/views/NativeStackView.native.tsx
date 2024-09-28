@@ -522,13 +522,24 @@ const SceneView = ({
                *
                * HeaderConfig must not be first child of a Screen.
                * See https://github.com/software-mansion/react-native-screens/pull/1825
-               * for detailed explanation
+               * for detailed explanation.
                */}
               <HeaderConfig
                 {...options}
                 route={route}
                 presentation={presentation}
+                headerBackButtonMenuEnabled={
+                  isRemovePrevented !== undefined
+                    ? !isRemovePrevented
+                    : headerBackButtonMenuEnabled
+                }
+                headerShown={header !== undefined ? false : headerShown}
                 headerHeight={headerHeight}
+                headerBackTitle={
+                  options.headerBackTitle !== undefined
+                    ? options.headerBackTitle
+                    : undefined
+                }
                 headerTopInsetEnabled={headerTopInsetEnabled}
                 canGoBack={headerBack !== undefined}
               />
