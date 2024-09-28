@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Platform, View, type ViewProps } from 'react-native';
+import { Platform, type ViewProps } from 'react-native';
 // @ts-expect-error Getting private component
 import AppContainer from 'react-native/Libraries/ReactNative/AppContainer';
 import {
-  type StackPresentationTypes,
   ScreenContentWrapper,
+  type StackPresentationTypes,
 } from 'react-native-screens';
 
 type ContainerProps = ViewProps & {

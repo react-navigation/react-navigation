@@ -35,7 +35,6 @@ import {
   ScreenStack,
   type StackPresentationTypes,
 } from 'react-native-screens';
-import { FooterComponent } from './FooterComponent';
 import warnOnce from 'warn-once';
 
 import type {
@@ -50,6 +49,7 @@ import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
 import { useDismissedRouteError } from '../utils/useDismissedRouteError';
 import { useInvalidPreventRemoveError } from '../utils/useInvalidPreventRemoveError';
 import { DebugContainer } from './DebugContainer';
+import { FooterComponent } from './FooterComponent';
 import { HeaderConfig } from './HeaderConfig';
 
 const ANDROID_DEFAULT_HEADER_HEIGHT = 56;
