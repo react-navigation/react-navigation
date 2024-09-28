@@ -480,21 +480,6 @@ const SceneView = ({
                   {headerBackground()}
                 </View>
               ) : null}
-              <HeaderShownContext.Provider
-                value={isParentHeaderShown || headerShown !== false}
-              >
-                <MaybeNestedStack
-                  options={options}
-                  route={route}
-                  presentation={presentation}
-                  headerHeight={headerHeight}
-                  headerTopInsetEnabled={headerTopInsetEnabled}
-                >
-                  <HeaderBackContext.Provider value={headerBack}>
-                    {render()}
-                  </HeaderBackContext.Provider>
-                </MaybeNestedStack>
-              </HeaderShownContext.Provider>
               {header !== undefined && headerShown !== false ? (
                 <View
                   onLayout={(e) => {
@@ -516,6 +501,21 @@ const SceneView = ({
                   })}
                 </View>
               ) : null}
+              <HeaderShownContext.Provider
+                value={isParentHeaderShown || headerShown !== false}
+              >
+                <MaybeNestedStack
+                  options={options}
+                  route={route}
+                  presentation={presentation}
+                  headerHeight={headerHeight}
+                  headerTopInsetEnabled={headerTopInsetEnabled}
+                >
+                  <HeaderBackContext.Provider value={headerBack}>
+                    {render()}
+                  </HeaderBackContext.Provider>
+                </MaybeNestedStack>
+              </HeaderShownContext.Provider>
               {/**
                * `HeaderConfig` needs to be the direct child of `Screen` without any intermediate `View`
                * We don't render it conditionally to make it possible to dynamically render a custom `header`
