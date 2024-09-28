@@ -81,7 +81,7 @@ test('ignores pointerEvents when hidden', async () => {
 
   const Test = ({ route }: BottomTabScreenProps<BottomTabParamList>) => (
     <View>
-      <Text>Screen{route.name}</Text>
+      <Text>Screen {route.name}</Text>
     </View>
   );
 
@@ -100,10 +100,10 @@ test('ignores pointerEvents when hidden', async () => {
     </NavigationContainer>
   );
 
-  expect(queryByText('ScreenB')).toBeNull();
+  expect(queryByText('Screen B')).toBeNull();
 
   fireEvent.press(getByRole('button', { name: 'B, tab, 2 of 2' }), {});
 
-  expect(queryByText('ScreenA')).not.toBeNull();
-  expect(queryByText('ScreenB')).toBeNull();
+  expect(queryByText('Screen A')).not.toBeNull();
+  expect(queryByText('Screen B')).toBeNull();
 });
