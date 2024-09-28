@@ -480,27 +480,6 @@ const SceneView = ({
                   {headerBackground()}
                 </View>
               ) : null}
-              {header !== undefined && headerShown !== false ? (
-                <View
-                  onLayout={(e) => {
-                    const headerHeight = e.nativeEvent.layout.height;
-
-                    setHeaderHeight(headerHeight);
-                    rawAnimatedHeaderHeight.setValue(headerHeight);
-                  }}
-                  style={[
-                    styles.header,
-                    headerTransparent ? styles.absolute : null,
-                  ]}
-                >
-                  {header({
-                    back: headerBack,
-                    options,
-                    route,
-                    navigation,
-                  })}
-                </View>
-              ) : null}
               <HeaderShownContext.Provider
                 value={isParentHeaderShown || headerShown !== false}
               >
@@ -551,7 +530,6 @@ const SceneView = ({
               <HeaderConfig
                 {...options}
                 route={route}
-                presentation={presentation}
                 headerBackButtonMenuEnabled={
                   isRemovePrevented !== undefined
                     ? !isRemovePrevented
