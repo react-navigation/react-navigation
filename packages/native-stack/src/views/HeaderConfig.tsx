@@ -165,8 +165,11 @@ export function HeaderConfig({
    * - If `headerTitle` for Android is specified, so we only need to remove the title and keep the back button
    */
   const backButtonInCustomView = headerBackVisible
-    ? headerLeftElement != null
-    : Platform.OS === 'android' && headerTitleElement != null;
+    ? headerLeftElement !== undefined ||
+      (Platform.OS === 'android' && headerTitleElement !== null)
+    : Platform.OS === 'android' &&
+      headerTitleElement !== null &&
+      headerLeftElement === undefined;
 
   const translucent =
     headerBackground != null ||
