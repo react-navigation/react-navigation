@@ -503,10 +503,9 @@ export type NativeStackNavigationOptions = {
    * - "slide_from_bottom": slide in the new screen from bottom
    * - "slide_from_right": slide in the new screen from right (Android only, uses default animation on iOS)
    * - "slide_from_left": slide in the new screen from left (Android only, uses default animation on iOS)
-   * - "none": don't animate the screen
    * - "ios_from_right" - iOS like slide in animation. pushes in the new screen from right to left (Android only, resolves to default transition on iOS)
    * - "ios_from_left" - iOS like slide in animation. pushes in the new screen from left to right (Android only, resolves to default transition on iOS)
-   * - "none" – the screen appears/dissapears without an animation
+   * - "none": don't animate the screen
    *
    * Only supported on iOS and Android.
    */
