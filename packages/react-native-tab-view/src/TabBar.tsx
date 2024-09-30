@@ -553,7 +553,7 @@ export function TabBar<T extends Route>({
           {renderTabBarItem ? (
             renderTabBarItem(props)
           ) : (
-            <TabBarItem {...props} />
+            <TabBarItem {...props} key={props.key} />
           )}
         </>
       );
