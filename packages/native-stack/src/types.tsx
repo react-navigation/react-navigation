@@ -549,10 +549,14 @@ export type NativeStackNavigationOptions = {
    * Works only when `presentation` is set to `formSheet`.
    *
    * Heights should be described as fraction (a number from `[0, 1]` interval) of screen height / maximum detent height.
+   * You can pass an array of ascending values each defining allowed sheet detent. iOS accepts any number of detents,
+   * while **Android is limited to three**.
+   *
    * There is also possibility to specify `fitToContents` literal, which intents to set the sheet height
    * to the height of its contents.
    *
    * Please note that the array **must** be sorted in ascending order.
+   * Android is limited to up 3 values in the array.
    *
    * There are also legacy & **deprecated** options available:
    *
@@ -560,7 +564,7 @@ export type NativeStackNavigationOptions = {
    * * 'large' - corresponds to `[1.0]` detent value, maximum height,
    * * 'all' - corresponds to `[0.5, 1.0]` value, the name is deceiving due to compatibility reasons.
    *
-   * Defaults to `[1.0]` literal.
+   * Defaults to `[1.0]`.
    */
   sheetAllowedDetents?: number[] | 'fitToContents' | 'medium' | 'large' | 'all';
   /**
