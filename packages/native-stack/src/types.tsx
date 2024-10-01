@@ -21,7 +21,6 @@ import type {
   ScreenProps,
   ScreenStackHeaderConfigProps,
   SearchBarProps,
-  SheetDetentTypes,
 } from 'react-native-screens';
 
 export type NativeStackNavigationEventMap = {
@@ -545,7 +544,7 @@ export type NativeStackNavigationOptions = {
    *
    * @platform ios
    */
-  sheetAllowedDetents?: SheetDetentTypes;
+  sheetAllowedDetents?: number[] | 'fitToContents';
   /**
    * Whether the sheet should expand to larger detent when scrolling.
    * Works only when `presentation` is set to `formSheet`.
@@ -587,7 +586,7 @@ export type NativeStackNavigationOptions = {
    *
    * @platform ios
    */
-  sheetLargestUndimmedDetent?: SheetDetentTypes;
+  sheetLargestUndimmedDetent?: number;
   /**
    * The display orientation to use for the screen.
    *
