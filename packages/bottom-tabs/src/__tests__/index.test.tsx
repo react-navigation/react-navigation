@@ -97,7 +97,7 @@ test('tab bar cannot be tapped when hidden', async () => {
   // start at Screen A
   expect(queryByText('Screen B')).toBeNull();
 
-  // move to Screen B
+  // switch to Screen B
   fireEvent.press(getByRole('button', { name: 'B, tab, 2 of 2' }), {});
   jest.runAllTimers();
   expect(queryByText('Screen B')).not.toBeNull();
@@ -108,7 +108,7 @@ test('tab bar cannot be tapped when hidden', async () => {
     Keyboard._emitter.emit?.('keyboardWillShow');
   });
 
-  // attempt to move to Screen A
+  // attempt to switch to Screen A
   fireEvent.press(getByRole('button', { name: 'A, tab, 1 of 2' }), {});
   jest.runAllTimers();
   expect(queryByText('Screen A')).toBeNull();
