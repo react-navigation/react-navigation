@@ -71,7 +71,7 @@ test('handles screens preloading', async () => {
   ).not.toBeNull();
 });
 
-test('ignores pointerEvents when hidden', async () => {
+test('tab bar cannot be tapped when hidden', async () => {
   // @ts-expect-error: incomplete mock for testing
   jest.spyOn(Animated, 'timing').mockImplementation(() => ({
     start: (callback) => callback?.({ finished: true }),
