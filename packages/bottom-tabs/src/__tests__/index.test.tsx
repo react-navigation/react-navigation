@@ -5,10 +5,9 @@ import {
   NavigationContainer,
 } from '@react-navigation/native';
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { Animated, View } from 'react-native';
+import { Animated, Keyboard, View } from 'react-native';
 
 import { type BottomTabScreenProps, createBottomTabNavigator } from '../index';
-import * as keyboardHook from '../utils/useIsKeyboardShown';
 
 type BottomTabParamList = {
   A: undefined;
@@ -72,11 +71,7 @@ test('handles screens preloading', async () => {
 });
 
 test('tab bar cannot be tapped when hidden', async () => {
-  // @ts-expect-error: incomplete mock for testing
-  jest.spyOn(Animated, 'timing').mockImplementation(() => ({
-    start: (callback) => callback?.({ finished: true }),
-  }));
-  jest.spyOn(keyboardHook, 'useIsKeyboardShown').mockReturnValue(true);
+  jest.useFakeTimers();
 
   const Test = ({ route }: BottomTabScreenProps<BottomTabParamList>) => (
     <View>
@@ -99,10 +94,23 @@ test('tab bar cannot be tapped when hidden', async () => {
     </NavigationContainer>
   );
 
+  // start at Screen A
   expect(queryByText('Screen B')).toBeNull();
 
+  // move to Screen B
   fireEvent.press(getByRole('button', { name: 'B, tab, 2 of 2' }), {});
+  jest.runAllTimers();
+  expect(queryByText('Screen B')).not.toBeNull();
 
-  expect(queryByText('Screen A')).not.toBeNull();
-  expect(queryByText('Screen B')).toBeNull();
+  // show the keyboard to hide the tab bar
+  act(() => {
+    // @ts-expect-error: React Native does not expose the emit method on Keyboard
+    Keyboard._emitter.emit?.('keyboardWillShow');
+  });
+
+  // attempt to move to Screen A
+  fireEvent.press(getByRole('button', { name: 'A, tab, 1 of 2' }), {});
+  jest.runAllTimers();
+  expect(queryByText('Screen A')).toBeNull();
+  expect(queryByText('Screen B')).not.toBeNull();
 });
