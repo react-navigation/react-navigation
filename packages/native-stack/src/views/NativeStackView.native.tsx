@@ -335,6 +335,8 @@ const SceneView = ({
       hasLargeHeader={options.headerLargeTitle ?? false}
       customAnimationOnSwipe={animationMatchesGesture}
       fullScreenSwipeEnabled={fullScreenGestureEnabled}
+      fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled}
+      freezeOnBlur={freezeOnBlur}
       gestureEnabled={
         Platform.OS === 'android'
           ? // This prop enables handling of system back gestures on Android
@@ -423,12 +425,9 @@ const SceneView = ({
           },
         }
       )}
-      freezeOnBlur={freezeOnBlur}
       // When ts-expect-error is added, it affects all the props below it
       // So we keep any props that need it at the end
       // Otherwise invalid props may not be caught by TypeScript
-      // @ts-expect-error Props available in newer versions of `react-native-screens`
-      fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled} // 3.33.0 onwards
     >
       <NavigationContext.Provider value={navigation}>
         <NavigationRouteContext.Provider value={route}>

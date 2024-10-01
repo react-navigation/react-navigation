@@ -21,7 +21,6 @@ import type {
   ScreenProps,
   ScreenStackHeaderConfigProps,
   SearchBarProps,
-  SheetDetentTypes,
 } from 'react-native-screens';
 
 export type NativeStackNavigationEventMap = {
@@ -497,11 +496,14 @@ export type NativeStackNavigationOptions = {
    * Supported values:
    * - "default": use the platform default animation
    * - "fade": fade screen in or out
+   * - "fade_from_bottom" – performs a fade from bottom animation
    * - "flip": flip the screen, requires presentation: "modal" (iOS only)
    * - "simple_push": use the platform default animation, but without shadow and native header transition (iOS only)
    * - "slide_from_bottom": slide in the new screen from bottom
    * - "slide_from_right": slide in the new screen from right (Android only, uses default animation on iOS)
    * - "slide_from_left": slide in the new screen from left (Android only, uses default animation on iOS)
+   * - "ios_from_right" - iOS like slide in animation. pushes in the new screen from right to left (Android only, resolves to default transition on iOS)
+   * - "ios_from_left" - iOS like slide in animation. pushes in the new screen from left to right (Android only, resolves to default transition on iOS)
    * - "none": don't animate the screen
    *
    * Only supported on iOS and Android.
@@ -542,7 +544,7 @@ export type NativeStackNavigationOptions = {
    *
    * @platform ios
    */
-  sheetAllowedDetents?: SheetDetentTypes;
+  sheetAllowedDetents?: number[] | 'fitToContents';
   /**
    * Whether the sheet should expand to larger detent when scrolling.
    * Works only when `presentation` is set to `formSheet`.
@@ -584,7 +586,7 @@ export type NativeStackNavigationOptions = {
    *
    * @platform ios
    */
-  sheetLargestUndimmedDetent?: SheetDetentTypes;
+  sheetLargestUndimmedDetent?: number;
   /**
    * The display orientation to use for the screen.
    *

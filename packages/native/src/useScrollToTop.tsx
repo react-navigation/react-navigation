@@ -13,7 +13,7 @@ type ScrollOptions = { x?: number; y?: number; animated?: boolean };
 type ScrollableView =
   | { scrollToTop(): void }
   | { scrollTo(options: ScrollOptions): void }
-  | { scrollToOffset(options: { offset?: number; animated?: boolean }): void }
+  | { scrollToOffset(options: { offset: number; animated?: boolean }): void }
   | { scrollResponderScrollTo(options: ScrollOptions): void };
 
 type ScrollableWrapper =

@@ -3,7 +3,7 @@ import type {
   NavigationContainerRef,
   NavigationState,
 } from '@react-navigation/core';
-import deepEqual from 'deep-equal';
+import deepEqual from 'fast-deep-equal';
 import * as React from 'react';
 
 import { parseErrorStack } from './parseErrorStack';

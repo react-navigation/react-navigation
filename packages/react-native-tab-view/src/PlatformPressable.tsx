@@ -30,16 +30,16 @@ export function PlatformPressable({
   ...rest
 }: Props) {
   const handlePress = (e: GestureResponderEvent) => {
-    // @ts-expect-error: these properties exist on web, but not in React Native
-    const hasModifierKey = e.metaKey || e.altKey || e.ctrlKey || e.shiftKey; // ignore clicks with modifier keys
-    // @ts-expect-error: these properties exist on web, but not in React Native
-    const isLeftClick = e.button == null || e.button === 0; // only handle left clicks
-    const isSelfTarget = [undefined, null, '', 'self'].includes(
+    if (Platform.OS === 'web' && rest.href !== null) {
       // @ts-expect-error: these properties exist on web, but not in React Native
-      e.currentTarget?.target
-    ); // let browser handle "target=_blank" etc.
+      const hasModifierKey = e.metaKey || e.altKey || e.ctrlKey || e.shiftKey; // ignore clicks with modifier keys
+      // @ts-expect-error: these properties exist on web, but not in React Native
+      const isLeftClick = e.button === null || e.button === 0; // only handle left clicks
+      const isSelfTarget = [undefined, null, '', 'self'].includes(
+        // @ts-expect-error: these properties exist on web, but not in React Native
+        e.currentTarget?.target
+      ); // let browser handle "target=_blank" etc.
 
-    if (Platform.OS === 'web' && rest.href != null) {
       if (!hasModifierKey && isLeftClick && isSelfTarget) {
         e.preventDefault();
         onPress?.(e);
