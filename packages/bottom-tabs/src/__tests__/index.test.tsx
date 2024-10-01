@@ -40,7 +40,6 @@ test('renders a bottom tab navigator with screens', async () => {
   expect(queryByText('Screen A')).not.toBeNull();
   expect(queryByText('Screen B')).toBeNull();
 
-  // The tab bar should be rendered
   expect(
     getAllByRole('button', { name: /(A|B), tab, (1|2) of 2/ })
   ).toHaveLength(2);
