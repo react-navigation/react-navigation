@@ -592,7 +592,7 @@ export type NativeStackNavigationOptions = {
   sheetCornerRadius?: number;
   /**
    * Index of the detent the sheet should expand to after being opened.
-   * Works only when `stackPresentation` is set to `formSheet`.
+   * Works only when `presentation` is set to `formSheet`.
    *
    * Defaults to `0` - which represents first detent in the detents array.
    */
@@ -607,7 +607,7 @@ export type NativeStackNavigationOptions = {
   sheetGrabberVisible?: boolean;
   /**
    * The largest sheet detent for which a view underneath won't be dimmed.
-   * Works only when `stackPresentation` is set to `formSheet`.
+   * Works only when `presentation` is set to `formSheet`.
    *
    * This prop can be set to an number, which indicates index of detent in `sheetAllowedDetents` array for which
    * there won't be a dimming view beneath the sheet.
