@@ -33,7 +33,7 @@ function NativeStackNavigator({
   UNSTABLE_getStateForRouteNamesChange,
   ...rest
 }: NativeStackNavigatorProps) {
-  const { state, descriptors, navigation, NavigationContent } =
+  const { state, describe, descriptors, navigation, NavigationContent } =
     useNavigationBuilder<
       StackNavigationState<ParamListBase>,
       StackRouterOptions,
@@ -84,6 +84,7 @@ function NativeStackNavigator({
         state={state}
         navigation={navigation}
         descriptors={descriptors}
+        describe={describe}
       />
     </NavigationContent>
   );

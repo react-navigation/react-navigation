@@ -19,6 +19,7 @@ import { MixedStack } from './Screens/MixedStack';
 import { ModalStack } from './Screens/ModalStack';
 import { NativeStack } from './Screens/NativeStack';
 import { NativeStackHeaderCustomization } from './Screens/NativeStackHeaderCustomization';
+import { NativeStackPreloadFlow } from './Screens/NativeStackPreloadFlow';
 import { NativeStackPreventRemove } from './Screens/NativeStackPreventRemove';
 import { SimpleStack } from './Screens/SimpleStack';
 import { StackHeaderCustomization } from './Screens/StackHeaderCustomization';
@@ -55,6 +56,7 @@ export const SCREENS = {
   LinkingScreen,
   StackPreloadFlow,
   TabPreloadFlow,
+  NativeStackPreloadFlow,
 } as const satisfies {
   [key: string]: React.ComponentType<{}> & {
     title: string;
