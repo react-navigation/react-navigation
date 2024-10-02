@@ -559,17 +559,11 @@ export type NativeStackNavigationOptions = {
    * to the height of its contents.
    *
    * Please note that the array **must** be sorted in ascending order.
-   * Android is limited to up 3 values in the array.
-   *
-   * There are also legacy & **deprecated** options available:
-   *
-   * * 'medium' - corresponds to `[0.5]` detent value, around half of the screen height,
-   * * 'large' - corresponds to `[1.0]` detent value, maximum height,
-   * * 'all' - corresponds to `[0.5, 1.0]` value, the name is deceiving due to compatibility reasons.
+   * **Android is limited to up 3 values in the array** -- any surplus values, beside first three are ignored.
    *
    * Defaults to `[1.0]`.
    */
-  sheetAllowedDetents?: number[] | 'fitToContents' | 'medium' | 'large' | 'all';
+  sheetAllowedDetents?: number[] | 'fitToContents';
   /**
    * Integer value describing elevation of the sheet, impacting shadow on the top edge of the sheet.
    *
@@ -624,18 +618,9 @@ export type NativeStackNavigationOptions = {
    * * `none` - there will be dimming view for all detents levels,
    * * `largest` - there won't be a dimming view for any detent level.
    *
-   * There also legacy & **deprecated** prop values available: `medium`, `large` (don't confuse with `largest`), `all`, which work in tandem with
-   * corresponding legacy prop values for `sheetAllowedDetents` prop.
-   *
    * Defaults to `none`, indicating that the dimming view should be always present.
    */
-  sheetLargestUndimmedDetent?:
-    | number
-    | 'none'
-    | 'largest'
-    | 'medium'
-    | 'large'
-    | 'all';
+  sheetLargestUndimmedDetent?: number | 'none' | 'largest';
   /**
    * The display orientation to use for the screen.
    *
