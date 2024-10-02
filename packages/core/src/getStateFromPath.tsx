@@ -169,19 +169,22 @@ export function getStateFromPath<ParamList extends {}>(
 /**
  * Reference to the last used config resources. This is used to avoid recomputing the config resources when the options are the same.
  */
-let cachedConfigResources: [Options<{}> | undefined, ConfigResources] = [
-  undefined,
-  prepareConfigResources(),
-];
+const cachedConfigResources = new WeakMap<Options<{}>, ConfigResources>();
 
 function getConfigResources<ParamList extends {}>(
   options: Options<ParamList> | undefined
 ) {
-  if (cachedConfigResources[0] !== options) {
-    cachedConfigResources = [options, prepareConfigResources(options)];
-  }
+  if (!options) return prepareConfigResources();
 
-  return cachedConfigResources[1];
+  const cached = cachedConfigResources.get(options);
+
+  if (cached) return cached;
+
+  const resources = prepareConfigResources(options);
+
+  cachedConfigResources.set(options, resources);
+
+  return resources;
 }
 
 function prepareConfigResources(options?: Options<{}>) {

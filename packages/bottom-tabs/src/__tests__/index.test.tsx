@@ -5,7 +5,7 @@ import {
   NavigationContainer,
 } from '@react-navigation/native';
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { Animated, Button, View } from 'react-native';
+import { Animated, View } from 'react-native';
 
 import { type BottomTabScreenProps, createBottomTabNavigator } from '../index';
 
@@ -20,20 +20,15 @@ test('renders a bottom tab navigator with screens', async () => {
     start: (callback) => callback?.({ finished: true }),
   }));
 
-  const Test = ({
-    route,
-    navigation,
-  }: BottomTabScreenProps<BottomTabParamList>) => (
+  const Test = ({ route }: BottomTabScreenProps<BottomTabParamList>) => (
     <View>
       <Text>Screen {route.name}</Text>
-      <Button onPress={() => navigation.navigate('A')} title="Go to A" />
-      <Button onPress={() => navigation.navigate('B')} title="Go to B" />
     </View>
   );
 
   const Tab = createBottomTabNavigator<BottomTabParamList>();
 
-  const { findByText, queryByText } = render(
+  const { queryByText, getAllByRole, getByRole } = render(
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen name="A" component={Test} />
@@ -45,7 +40,11 @@ test('renders a bottom tab navigator with screens', async () => {
   expect(queryByText('Screen A')).not.toBeNull();
   expect(queryByText('Screen B')).toBeNull();
 
-  fireEvent.press(await findByText('Go to B'));
+  expect(
+    getAllByRole('button', { name: /(A|B), tab, (1|2) of 2/ })
+  ).toHaveLength(2);
+
+  fireEvent.press(getByRole('button', { name: 'B, tab, 2 of 2' }), {});
 
   expect(queryByText('Screen B')).not.toBeNull();
 });

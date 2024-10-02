@@ -53,6 +53,8 @@
     "use-latest-callback": "^0.2.1"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@testing-library/react-native": "^12.4.3",
     "del-cli": "^5.1.0",
     "react": "18.2.0",
     "react-native": "0.74.2",
