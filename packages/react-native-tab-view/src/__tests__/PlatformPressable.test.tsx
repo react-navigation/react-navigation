@@ -26,6 +26,8 @@ describe('on native', () => {
   });
 
   test('should be pressable using with UserEvent', async () => {
+    jest.useFakeTimers();
+
     const onPress = jest.fn();
     const { getByTestId } = render(
       <PlatformPressable onPress={onPress} testID={'Pressable'}>
@@ -35,6 +37,7 @@ describe('on native', () => {
 
     const user = userEvent.setup();
     await user.press(getByTestId('Pressable'));
+    jest.runAllTimers();
 
     expect(onPress).toHaveBeenCalled();
   });
@@ -71,13 +74,15 @@ describe('on web', () => {
 
   test('should be pressable with a left click', () => {
     const onPress = jest.fn();
+    const preventDefault = jest.fn();
     const { getByTestId } = renderWebUI(onPress);
 
     fireEvent.press(getByTestId('Pressable'), {
       button: 0,
-      preventDefault: jest.fn(),
+      preventDefault,
     });
 
+    expect(preventDefault).toHaveBeenCalled();
     expect(onPress).toHaveBeenCalled();
   });
 });
