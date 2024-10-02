@@ -78,7 +78,6 @@ describe('on web', () => {
     const { getByTestId } = renderWebUI(onPress);
 
     fireEvent.press(getByTestId('Pressable'), {
-      button: 0,
       preventDefault,
     });
 
