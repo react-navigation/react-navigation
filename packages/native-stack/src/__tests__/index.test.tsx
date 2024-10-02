@@ -39,27 +39,6 @@ jest.mock('react-native-safe-area-context', () => ({
   }),
 }));
 
-jest.mock('react-native-screens', () => {
-  let screens = jest.requireActual<typeof import('react-native-screens')>(
-    'react-native-screens'
-  );
-
-  // All exports in react-native-screens are getters
-  // We cannot use spread for cloning as it will call the getters
-  // So we need to clone it with Object.create
-  screens = Object.create(
-    Object.getPrototypeOf(screens),
-    Object.getOwnPropertyDescriptors(screens)
-  );
-
-  Object.defineProperty(screens, 'ScreenContentWrapper', {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    value: require('react-native').View,
-  });
-
-  return screens;
-});
-
 /**
  * Check if the element is "visible" (not hidden) from accessibility.
  */
