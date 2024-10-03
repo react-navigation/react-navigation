@@ -194,7 +194,7 @@ export function HeaderConfig({
     ios: headerTitleElement !== null,
     android: headerTitleAlign === 'center',
     default: false,
-  })
+  });
   // const isThereCenterView = headerTitleAlign === 'center';
 
   return (
@@ -260,7 +260,9 @@ export function HeaderConfig({
       ) : (
         <>
           {headerLeftElement != null || typeof headerTitle === 'function' ? (
-            <ScreenStackHeaderLeftView style={ !isThereCenterView ? { flex: 1 } : null}>
+            <ScreenStackHeaderLeftView
+              style={!isThereCenterView ? { flex: 1 } : null}
+            >
               <View style={styles.row}>
                 {headerLeftElement}
                 {headerTitleAlign !== 'center' ? (
