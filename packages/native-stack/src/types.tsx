@@ -593,11 +593,16 @@ export type NativeStackNavigationOptions = {
   sheetCornerRadius?: number;
   /**
    * Index of the detent the sheet should expand to after being opened.
-   * Works only when `presentation` is set to `formSheet`.
+   * Works only when `stackPresentation` is set to `formSheet`.
+   *
+   * If the specified index is out of bounds of `sheetAllowedDetents` array, in dev environment more error will be thrown,
+   * in production the value will be reset to default value.
+   *
+   * Additionaly there is `last` value available, when set the sheet will expand initially to last (largest) detent.
    *
    * Defaults to `0` - which represents first detent in the detents array.
    */
-  sheetInitialDetent?: number;
+  sheetInitialDetentIndex?: number | 'last';
   /**
    * Boolean indicating whether the sheet shows a grabber at the top.
    * Works only when `presentation` is set to `formSheet`.
@@ -616,11 +621,11 @@ export type NativeStackNavigationOptions = {
    * Additionaly there are following options available:
    *
    * * `none` - there will be dimming view for all detents levels,
-   * * `largest` - there won't be a dimming view for any detent level.
+   * * `last` - there won't be a dimming view for any detent level.
    *
    * Defaults to `none`, indicating that the dimming view should be always present.
    */
-  sheetLargestUndimmedDetent?: number | 'none' | 'largest';
+  sheetLargestUndimmedDetentIndex?: number | 'none' | 'last';
   /**
    * The display orientation to use for the screen.
    *
