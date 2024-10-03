@@ -558,7 +558,9 @@ export type NativeStackNavigationOptions = {
    * There is also possibility to specify `fitToContents` literal, which intents to set the sheet height
    * to the height of its contents.
    *
-   * Please note that the array **must** be sorted in ascending order.
+   * Please note that the array **must** be sorted in ascending order. This invariant is verified only in developement mode,
+   * where violation results in error.
+   *
    * **Android is limited to up 3 values in the array** -- any surplus values, beside first three are ignored.
    *
    * Defaults to `[1.0]`.
