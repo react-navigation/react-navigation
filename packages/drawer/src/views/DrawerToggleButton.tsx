@@ -22,6 +22,7 @@ export function DrawerToggleButton({ tintColor, ...rest }: Props) {
   return (
     <PlatformPressable
       {...rest}
+      accessibilityLabel="Open navigation menu"
       android_ripple={{ borderless: true }}
       onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
       style={styles.touchable}
