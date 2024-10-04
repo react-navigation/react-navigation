@@ -199,7 +199,11 @@ export function HeaderConfig({
 
   return (
     <ScreenStackHeaderConfig
-      style={{ flexDirection: 'row', width: '100%' }}
+      style={{
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'space-between',
+      }}
       backButtonInCustomView={backButtonInCustomView}
       backgroundColor={headerBackgroundColor}
       backTitle={headerBackTitle}
@@ -252,7 +256,7 @@ export function HeaderConfig({
             </ScreenStackHeaderLeftView>
           ) : null}
           {headerTitleElement != null ? (
-            <ScreenStackHeaderCenterView style={{ flex: 1 }}>
+            <ScreenStackHeaderCenterView style={{ flexShrink: 1 }}>
               {headerTitleElement}
             </ScreenStackHeaderCenterView>
           ) : null}
@@ -263,25 +267,25 @@ export function HeaderConfig({
             <ScreenStackHeaderLeftView
               style={!isThereCenterView ? { flex: 1 } : null}
             >
-              <View style={styles.row}>
-                {headerLeftElement}
-                {headerTitleAlign !== 'center' ? (
-                  typeof headerTitle === 'function' ? (
-                    headerTitleElement
-                  ) : (
+              {headerLeftElement}
+              {headerTitleAlign !== 'center' ? (
+                typeof headerTitle === 'function' ? (
+                  <View style={{ flex: 1 }}>{headerTitleElement}</View>
+                ) : (
+                  <View style={{ flex: 1 }}>
                     <HeaderTitle
                       tintColor={tintColor}
                       style={headerTitleStyleSupported}
                     >
                       {titleText}
                     </HeaderTitle>
-                  )
-                ) : null}
-              </View>
+                  </View>
+                )
+              ) : null}
             </ScreenStackHeaderLeftView>
           ) : null}
           {headerTitleAlign === 'center' ? (
-            <ScreenStackHeaderCenterView style={{ flex: 1 }}>
+            <ScreenStackHeaderCenterView style={{ flexShrink: 1 }}>
               {typeof headerTitle === 'function' ? (
                 headerTitleElement
               ) : (
@@ -312,10 +316,3 @@ export function HeaderConfig({
     </ScreenStackHeaderConfig>
   );
 }
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-});
