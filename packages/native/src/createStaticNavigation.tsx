@@ -96,7 +96,7 @@ export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
           'To solve this:\n' +
           "- Specify a 'linking' property for the screens you want to link to.\n" +
           "- Or set 'linking.enabled' to 'auto' to generate paths automatically.\n\n" +
-          'See usage guide: https://reactnavigation.org/docs/7.x/static-configuration#linking'
+          'See usage guide: https://reactnavigation.org/docs/static-configuration#linking'
       );
     }
 
