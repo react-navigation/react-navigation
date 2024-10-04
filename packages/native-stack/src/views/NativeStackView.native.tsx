@@ -657,7 +657,7 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
                   target: route.key,
                   data: {
                     index: event.nativeEvent.index,
-                    isStable: event.nativeEvent.isStable,
+                    stable: event.nativeEvent.isStable,
                   },
                 });
               }}

@@ -41,10 +41,10 @@ export type NativeStackNavigationEventMap = {
    *
    * In payload it caries two fields:
    *
-   * * index - current detent index in the `sheetAllowedDetents` array,
-   * * isStable - on Android `false` value means that the user is dragging the sheet or it is settling; on iOS it is always `true`.
+   * * `index` - current detent index in the `sheetAllowedDetents` array,
+   * * `stable` - on Android `false` value means that the user is dragging the sheet or it is settling; on iOS it is always `true`.
    */
-  sheetDetentChange: { data: { index: number; isStable: boolean } };
+  sheetDetentChange: { data: { index: number; stable: boolean } };
 };
 
 export type NativeStackNavigationProp<
