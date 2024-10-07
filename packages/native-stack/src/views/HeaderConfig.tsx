@@ -195,7 +195,6 @@ export function HeaderConfig({
     android: headerTitleAlign === 'center',
     default: false,
   });
-  // const isThereCenterView = headerTitleAlign === 'center';
 
   return (
     <ScreenStackHeaderConfig
