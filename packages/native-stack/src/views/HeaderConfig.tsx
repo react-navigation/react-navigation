@@ -190,11 +190,7 @@ export function HeaderConfig({
     // Back button menu is not disabled
     headerBackButtonMenuEnabled !== false;
 
-  const isCenterViewRendered = Platform.select({
-    ios: headerTitleElement !== null,
-    android: headerTitleAlign === 'center',
-    default: false,
-  });
+  const isCenterViewRenderedAndroid = headerTitleAlign === 'center';
 
   return (
     <ScreenStackHeaderConfig
@@ -259,7 +255,7 @@ export function HeaderConfig({
         <>
           {headerLeftElement != null || typeof headerTitle === 'function' ? (
             <ScreenStackHeaderLeftView
-              style={!isCenterViewRendered ? { flex: 1 } : null}
+              style={!isCenterViewRenderedAndroid ? { flex: 1 } : null}
             >
               {headerLeftElement}
               {headerTitleAlign !== 'center' ? (
@@ -278,7 +274,7 @@ export function HeaderConfig({
               ) : null}
             </ScreenStackHeaderLeftView>
           ) : null}
-          {headerTitleAlign === 'center' ? (
+          {isCenterViewRenderedAndroid ? (
             <ScreenStackHeaderCenterView>
               {typeof headerTitle === 'function' ? (
                 headerTitleElement
