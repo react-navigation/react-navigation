@@ -198,11 +198,6 @@ export function HeaderConfig({
 
   return (
     <ScreenStackHeaderConfig
-      style={{
-        flexDirection: 'row',
-        width: '100%',
-        justifyContent: 'space-between',
-      }}
       backButtonInCustomView={backButtonInCustomView}
       backgroundColor={headerBackgroundColor}
       backTitle={headerBackTitle}
