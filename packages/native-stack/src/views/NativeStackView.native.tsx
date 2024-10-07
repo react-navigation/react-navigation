@@ -50,6 +50,7 @@ import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
 import { useDismissedRouteError } from '../utils/useDismissedRouteError';
 import { useInvalidPreventRemoveError } from '../utils/useInvalidPreventRemoveError';
 import { DebugContainer } from './DebugContainer';
+import { FooterComponent } from './FooterComponent';
 import { HeaderConfig } from './HeaderConfig';
 
 const ANDROID_DEFAULT_HEADER_HEIGHT = 56;
@@ -72,7 +73,12 @@ const MaybeNestedStack = ({
   isPreloaded?: boolean;
 }) => {
   const { colors } = useTheme();
-  const { header, headerShown = true, contentStyle } = options;
+  const {
+    header,
+    headerShown = true,
+    contentStyle,
+    unstable_screenStyle = null,
+  } = options;
 
   const isHeaderInModal =
     Platform.OS === 'android'
@@ -95,7 +101,11 @@ const MaybeNestedStack = ({
   const content = (
     <DebugContainer
       style={[
-        styles.container,
+        presentation === 'formSheet'
+          ? Platform.OS === 'ios'
+            ? styles.absolute
+            : null
+          : styles.container,
         presentation !== 'transparentModal' &&
           presentation !== 'containedTransparentModal' && {
             backgroundColor: colors.background,
@@ -115,7 +125,7 @@ const MaybeNestedStack = ({
           enabled
           isNativeStack
           hasLargeHeader={options.headerLargeTitle ?? false}
-          style={StyleSheet.absoluteFill}
+          style={[StyleSheet.absoluteFill, unstable_screenStyle]}
           activityState={isPreloaded ? 0 : 2}
         >
           {content}
@@ -150,6 +160,7 @@ type SceneViewProps = {
   onHeaderBackButtonClicked: ScreenProps['onHeaderBackButtonClicked'];
   onNativeDismissCancelled: ScreenProps['onDismissed'];
   onGestureCancel: ScreenProps['onGestureCancel'];
+  onSheetDetentChanged: ScreenProps['onSheetDetentChanged'];
 };
 
 const SceneView = ({
@@ -168,6 +179,7 @@ const SceneView = ({
   onHeaderBackButtonClicked,
   onNativeDismissCancelled,
   onGestureCancel,
+  onSheetDetentChanged,
 }: SceneViewProps) => {
   const { route, navigation, options, render } = descriptor;
 
@@ -176,6 +188,7 @@ const SceneView = ({
     animationMatchesGesture,
     presentation = isPresentationModal ? 'modal' : 'card',
     fullScreenGestureEnabled,
+    unstable_screenStyle = null,
   } = options;
 
   const {
@@ -196,18 +209,29 @@ const SceneView = ({
     navigationBarTranslucent,
     navigationBarHidden,
     orientation,
-    sheetAllowedDetents = 'large',
-    sheetLargestUndimmedDetent = 'all',
+    sheetAllowedDetents = [1.0],
+    sheetLargestUndimmedDetentIndex = -1,
     sheetGrabberVisible = false,
     sheetCornerRadius = -1.0,
+    sheetElevation = 24,
     sheetExpandsWhenScrolledToEdge = true,
+    sheetInitialDetentIndex = 0,
     statusBarAnimation,
     statusBarHidden,
     statusBarStyle,
     statusBarTranslucent,
     statusBarBackgroundColor,
+    unstable_sheetFooter = null,
     freezeOnBlur,
   } = options;
+
+  // We want to allow only backgroundColor setting for now.
+  // This allows to workaround one issue with truncated
+  // content with formSheet presentation.
+  unstable_screenStyle =
+    unstable_screenStyle && presentation === 'formSheet'
+      ? { backgroundColor: unstable_screenStyle.backgroundColor }
+      : null;
 
   if (gestureDirection === 'vertical' && Platform.OS === 'ios') {
     // for `vertical` direction to work, we need to set `fullScreenGestureEnabled` to `true`
@@ -336,12 +360,14 @@ const SceneView = ({
       enabled
       isNativeStack
       activityState={isPreloaded ? 0 : 2}
+      style={[StyleSheet.absoluteFill, unstable_screenStyle]}
       accessibilityElementsHidden={!focused}
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
-      style={StyleSheet.absoluteFill}
       hasLargeHeader={options.headerLargeTitle ?? false}
       customAnimationOnSwipe={animationMatchesGesture}
       fullScreenSwipeEnabled={fullScreenGestureEnabled}
+      fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled}
+      freezeOnBlur={freezeOnBlur}
       gestureEnabled={
         Platform.OS === 'android'
           ? // This prop enables handling of system back gestures on Android
@@ -359,9 +385,11 @@ const SceneView = ({
       stackAnimation={animation}
       screenOrientation={orientation}
       sheetAllowedDetents={sheetAllowedDetents}
-      sheetLargestUndimmedDetent={sheetLargestUndimmedDetent}
+      sheetLargestUndimmedDetentIndex={sheetLargestUndimmedDetentIndex}
       sheetGrabberVisible={sheetGrabberVisible}
+      sheetInitialDetentIndex={sheetInitialDetentIndex}
       sheetCornerRadius={sheetCornerRadius}
+      sheetElevation={sheetElevation}
       sheetExpandsWhenScrolledToEdge={sheetExpandsWhenScrolledToEdge}
       statusBarAnimation={statusBarAnimation}
       statusBarHidden={statusBarHidden}
@@ -376,6 +404,7 @@ const SceneView = ({
       onDisappear={onDisappear}
       onDismissed={onDismissed}
       onGestureCancel={onGestureCancel}
+      onSheetDetentChanged={onSheetDetentChanged}
       gestureResponseDistance={gestureResponseDistance}
       nativeBackButtonDismissalEnabled={false} // on Android
       onHeaderBackButtonClicked={onHeaderBackButtonClicked}
@@ -430,12 +459,9 @@ const SceneView = ({
           },
         }
       )}
-      freezeOnBlur={freezeOnBlur}
       // When ts-expect-error is added, it affects all the props below it
       // So we keep any props that need it at the end
       // Otherwise invalid props may not be caught by TypeScript
-      // @ts-expect-error Props available in newer versions of `react-native-screens`
-      fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled} // 3.33.0 onwards
     >
       <NavigationContext.Provider value={navigation}>
         <NavigationRouteContext.Provider value={route}>
@@ -505,7 +531,7 @@ const SceneView = ({
                *
                * HeaderConfig must not be first child of a Screen.
                * See https://github.com/software-mansion/react-native-screens/pull/1825
-               * for detailed explanation
+               * for detailed explanation.
                */}
               <HeaderConfig
                 {...options}
@@ -525,6 +551,9 @@ const SceneView = ({
                 headerTopInsetEnabled={headerTopInsetEnabled}
                 canGoBack={headerBack !== undefined}
               />
+              {presentation === 'formSheet' && unstable_sheetFooter && (
+                <FooterComponent>{unstable_sheetFooter()}</FooterComponent>
+              )}
             </HeaderHeightContext.Provider>
           </AnimatedHeaderHeightContext.Provider>
         </NavigationRouteContext.Provider>
@@ -648,6 +677,16 @@ export function NativeStackView({
                 navigation.emit({
                   type: 'gestureCancel',
                   target: route.key,
+                });
+              }}
+              onSheetDetentChanged={(event) => {
+                navigation.emit({
+                  type: 'sheetDetentChange',
+                  target: route.key,
+                  data: {
+                    index: event.nativeEvent.index,
+                    stable: event.nativeEvent.isStable,
+                  },
                 });
               }}
             />
