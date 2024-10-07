@@ -93,7 +93,7 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
 
         const nextPresentation = nextDescriptor?.options.presentation;
 
-        const shouldBePreloaded =
+        const isPreloaded =
           preloadedDescriptors[route.key] !== undefined &&
           descriptors[route.key] === undefined;
 
@@ -160,7 +160,7 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
                   (isFocused ||
                     (nextPresentation != null &&
                       TRANSPARENT_PRESENTATIONS.includes(nextPresentation))) &&
-                  !shouldBePreloaded
+                  !isPreloaded
                     ? 'flex'
                     : 'none',
               },

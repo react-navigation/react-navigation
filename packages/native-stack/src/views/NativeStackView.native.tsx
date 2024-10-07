@@ -61,6 +61,7 @@ const MaybeNestedStack = ({
   headerHeight,
   headerTopInsetEnabled,
   children,
+  isPreloaded,
 }: {
   options: NativeStackNavigationOptions;
   route: Route<string>;
@@ -68,6 +69,7 @@ const MaybeNestedStack = ({
   headerHeight: number;
   headerTopInsetEnabled: boolean;
   children: React.ReactNode;
+  isPreloaded?: boolean;
 }) => {
   const { colors } = useTheme();
   const { header, headerShown = true, contentStyle } = options;
@@ -114,6 +116,7 @@ const MaybeNestedStack = ({
           isNativeStack
           hasLargeHeader={options.headerLargeTitle ?? false}
           style={StyleSheet.absoluteFill}
+          activityState={isPreloaded ? 0 : 2}
         >
           {content}
           <HeaderConfig
@@ -138,7 +141,7 @@ type SceneViewProps = {
   previousDescriptor?: NativeStackDescriptor;
   nextDescriptor?: NativeStackDescriptor;
   isPresentationModal?: boolean;
-  shouldBePreloaded?: boolean;
+  isPreloaded?: boolean;
   onWillDisappear: () => void;
   onWillAppear: () => void;
   onAppear: () => void;
@@ -156,7 +159,7 @@ const SceneView = ({
   previousDescriptor,
   nextDescriptor,
   isPresentationModal,
-  shouldBePreloaded,
+  isPreloaded,
   onWillDisappear,
   onWillAppear,
   onAppear,
@@ -332,6 +335,7 @@ const SceneView = ({
       key={route.key}
       enabled
       isNativeStack
+      activityState={isPreloaded ? 0 : 2}
       accessibilityElementsHidden={!focused}
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
       style={StyleSheet.absoluteFill}
@@ -432,7 +436,6 @@ const SceneView = ({
       // Otherwise invalid props may not be caught by TypeScript
       // @ts-expect-error Props available in newer versions of `react-native-screens`
       fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled} // 3.33.0 onwards
-      hiddenFromStack={shouldBePreloaded} // 3.35.0 onwards
     >
       <NavigationContext.Provider value={navigation}>
         <NavigationRouteContext.Provider value={route}>
@@ -576,7 +579,7 @@ export function NativeStackView({
 
           const isModal = modalRouteKeys.includes(route.key);
 
-          const shouldBePreloaded =
+          const isPreloaded =
             preloadedDescriptors[route.key] !== undefined &&
             descriptors[route.key] === undefined;
 
@@ -589,7 +592,7 @@ export function NativeStackView({
               previousDescriptor={previousDescriptor}
               nextDescriptor={nextDescriptor}
               isPresentationModal={isModal}
-              shouldBePreloaded={shouldBePreloaded}
+              isPreloaded={isPreloaded}
               onWillDisappear={() => {
                 navigation.emit({
                   type: 'transitionStart',
