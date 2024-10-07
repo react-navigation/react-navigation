@@ -190,6 +190,8 @@ export function HeaderConfig({
     // Back button menu is not disabled
     headerBackButtonMenuEnabled !== false;
 
+  const isCenterViewRenderedAndroid = headerTitleAlign === 'center';
+
   return (
     <ScreenStackHeaderConfig
       backButtonInCustomView={backButtonInCustomView}
@@ -252,25 +254,30 @@ export function HeaderConfig({
       ) : (
         <>
           {headerLeftElement != null || typeof headerTitle === 'function' ? (
-            <ScreenStackHeaderLeftView>
-              <View style={styles.row}>
-                {headerLeftElement}
-                {headerTitleAlign !== 'center' ? (
-                  typeof headerTitle === 'function' ? (
-                    headerTitleElement
-                  ) : (
+            // The style passed to header left, together with title element being wrapped
+            // in flex view is reqruied for proper header layout, in particular,
+            // for the text truncation to work.
+            <ScreenStackHeaderLeftView
+              style={!isCenterViewRenderedAndroid ? { flex: 1 } : null}
+            >
+              {headerLeftElement}
+              {headerTitleAlign !== 'center' ? (
+                typeof headerTitle === 'function' ? (
+                  <View style={{ flex: 1 }}>{headerTitleElement}</View>
+                ) : (
+                  <View style={{ flex: 1 }}>
                     <HeaderTitle
                       tintColor={tintColor}
                       style={headerTitleStyleSupported}
                     >
                       {titleText}
                     </HeaderTitle>
-                  )
-                ) : null}
-              </View>
+                  </View>
+                )
+              ) : null}
             </ScreenStackHeaderLeftView>
           ) : null}
-          {headerTitleAlign === 'center' ? (
+          {isCenterViewRenderedAndroid ? (
             <ScreenStackHeaderCenterView>
               {typeof headerTitle === 'function' ? (
                 headerTitleElement
@@ -302,10 +309,3 @@ export function HeaderConfig({
     </ScreenStackHeaderConfig>
   );
 }
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-});
