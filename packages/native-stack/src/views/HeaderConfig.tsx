@@ -250,7 +250,7 @@ export function HeaderConfig({
             </ScreenStackHeaderLeftView>
           ) : null}
           {headerTitleElement != null ? (
-            <ScreenStackHeaderCenterView style={{ flexShrink: 1 }}>
+            <ScreenStackHeaderCenterView>
               {headerTitleElement}
             </ScreenStackHeaderCenterView>
           ) : null}
@@ -279,7 +279,7 @@ export function HeaderConfig({
             </ScreenStackHeaderLeftView>
           ) : null}
           {headerTitleAlign === 'center' ? (
-            <ScreenStackHeaderCenterView style={{ flexShrink: 1 }}>
+            <ScreenStackHeaderCenterView>
               {typeof headerTitle === 'function' ? (
                 headerTitleElement
               ) : (
