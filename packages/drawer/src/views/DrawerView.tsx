@@ -77,6 +77,7 @@ function DrawerViewBase({
       Platform.OS !== 'windows' &&
       Platform.OS !== 'macos',
     swipeMinDistance,
+    overlayAccessibilityLabel,
   } = descriptors[focusedRouteKey].options;
 
   const [loaded, setLoaded] = React.useState([focusedRouteKey]);
@@ -312,6 +313,7 @@ function DrawerViewBase({
         statusBarAnimation={drawerStatusBarAnimation}
         keyboardDismissMode={keyboardDismissMode}
         drawerType={drawerType}
+        overlayAccessibilityLabel={overlayAccessibilityLabel}
         drawerPosition={drawerPosition}
         drawerStyle={[
           {
