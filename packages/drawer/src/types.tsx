@@ -30,7 +30,7 @@ export type DrawerNavigationConfig = {
 
   /**
    * Accessibility label for the drawer toggle button. This is read by the screen reader when the user taps the button.
-   * Defaults to "Open drawer menu".
+   * Defaults to "Open navigation menu".
    */
   drawerToggleButtonAccessibilityLabel?: string;
   /**
@@ -173,7 +173,7 @@ export type DrawerNavigationOptions = HeaderOptions & {
 
   /**
    * Accessibility label for the drawer toggle button. This is read by the screen reader when the user taps the button.
-   * Defaults to "Open drawer menu".
+   * Defaults to "Open navigation menu".
    */
   drawerToggleButtonAccessibilityLabel?: string;
 
