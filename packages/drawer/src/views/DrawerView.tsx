@@ -55,6 +55,7 @@ function DrawerViewBase({
   descriptors,
   defaultStatus,
   drawerContent = renderDrawerContentDefault,
+  drawerToggleButtonAccessibilityLabel,
   detachInactiveScreens = Platform.OS === 'web' ||
     Platform.OS === 'android' ||
     Platform.OS === 'ios',
@@ -76,7 +77,6 @@ function DrawerViewBase({
       Platform.OS !== 'windows' &&
       Platform.OS !== 'macos',
     swipeMinDistance,
-    overlayAccessibilityLabel,
   } = descriptors[focusedRouteKey].options;
 
   const [loaded, setLoaded] = React.useState([focusedRouteKey]);
@@ -243,7 +243,12 @@ function DrawerViewBase({
                 title={getHeaderTitle(options, route.name)}
                 headerLeft={
                   options.headerLeft ??
-                  ((props) => <DrawerToggleButton {...props} />)
+                  ((props) => (
+                    <DrawerToggleButton
+                      accessibilityLabel={drawerToggleButtonAccessibilityLabel}
+                      {...props}
+                    />
+                  ))
                 }
               />
             ),
@@ -307,7 +312,6 @@ function DrawerViewBase({
         statusBarAnimation={drawerStatusBarAnimation}
         keyboardDismissMode={keyboardDismissMode}
         drawerType={drawerType}
-        overlayAccessibilityLabel={overlayAccessibilityLabel}
         drawerPosition={drawerPosition}
         drawerStyle={[
           {

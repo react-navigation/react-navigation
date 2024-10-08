@@ -262,6 +262,7 @@ export function App() {
             {() => (
               <Drawer.Navigator
                 drawerContent={(props) => <CustomDrawerContent {...props} />}
+                drawerToggleButtonAccessibilityLabel="Open navigation menu"
                 screenOptions={{
                   drawerType: isLargeScreen ? 'permanent' : undefined,
                 }}
@@ -272,7 +273,7 @@ export function App() {
                     title: 'Examples',
                     headerLeft: isLargeScreen ? () => null : undefined,
                     drawerIcon: ({ size, color }) => (
-                      <MaterialIcons size={size} color={color} name="folder" />
+                      <MaterialIcons size={size} color={color} name="13mp" />
                     ),
                   }}
                 >
