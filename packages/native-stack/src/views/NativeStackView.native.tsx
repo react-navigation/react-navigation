@@ -11,6 +11,7 @@ import {
   NavigationRouteContext,
   type ParamListBase,
   type Route,
+  type RouteProp,
   StackActions,
   type StackNavigationState,
   usePreventRemoveContext,
@@ -61,6 +62,7 @@ const MaybeNestedStack = ({
   headerHeight,
   headerTopInsetEnabled,
   children,
+  isPreloaded,
 }: {
   options: NativeStackNavigationOptions;
   route: Route<string>;
@@ -68,6 +70,7 @@ const MaybeNestedStack = ({
   headerHeight: number;
   headerTopInsetEnabled: boolean;
   children: React.ReactNode;
+  isPreloaded?: boolean;
 }) => {
   const { colors } = useTheme();
   const {
@@ -123,6 +126,7 @@ const MaybeNestedStack = ({
           isNativeStack
           hasLargeHeader={options.headerLargeTitle ?? false}
           style={[StyleSheet.absoluteFill, unstable_screenStyle]}
+          activityState={isPreloaded ? 0 : 2}
         >
           {content}
           <HeaderConfig
@@ -147,6 +151,7 @@ type SceneViewProps = {
   previousDescriptor?: NativeStackDescriptor;
   nextDescriptor?: NativeStackDescriptor;
   isPresentationModal?: boolean;
+  isPreloaded?: boolean;
   onWillDisappear: () => void;
   onWillAppear: () => void;
   onAppear: () => void;
@@ -165,6 +170,7 @@ const SceneView = ({
   previousDescriptor,
   nextDescriptor,
   isPresentationModal,
+  isPreloaded,
   onWillDisappear,
   onWillAppear,
   onAppear,
@@ -353,6 +359,7 @@ const SceneView = ({
       key={route.key}
       enabled
       isNativeStack
+      activityState={isPreloaded ? 0 : 2}
       style={[StyleSheet.absoluteFill, unstable_screenStyle]}
       accessibilityElementsHidden={!focused}
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
@@ -559,9 +566,18 @@ type Props = {
   state: StackNavigationState<ParamListBase>;
   navigation: NativeStackNavigationHelpers;
   descriptors: NativeStackDescriptorMap;
+  describe: (
+    route: RouteProp<ParamListBase>,
+    placeholder: boolean
+  ) => NativeStackDescriptor;
 };
 
-export function NativeStackView({ state, navigation, descriptors }: Props) {
+export function NativeStackView({
+  state,
+  navigation,
+  descriptors,
+  describe,
+}: Props) {
   const { setNextDismissedKey } = useDismissedRouteError(state);
 
   const { colors } = useTheme();
@@ -570,11 +586,18 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
 
   const modalRouteKeys = getModalRouteKeys(state.routes, descriptors);
 
+  const preloadedDescriptors =
+    state.preloadedRoutes.reduce<NativeStackDescriptorMap>((acc, route) => {
+      acc[route.key] = acc[route.key] || describe(route, true);
+      return acc;
+    }, {});
+
   return (
     <SafeAreaProviderCompat style={{ backgroundColor: colors.background }}>
       <ScreenStack style={styles.container}>
-        {state.routes.map((route, index) => {
-          const descriptor = descriptors[route.key];
+        {state.routes.concat(state.preloadedRoutes).map((route, index) => {
+          const descriptor =
+            descriptors[route.key] ?? preloadedDescriptors[route.key];
           const isFocused = state.index === index;
           const previousKey = state.routes[index - 1]?.key;
           const nextKey = state.routes[index + 1]?.key;
@@ -585,6 +608,10 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
 
           const isModal = modalRouteKeys.includes(route.key);
 
+          const isPreloaded =
+            preloadedDescriptors[route.key] !== undefined &&
+            descriptors[route.key] === undefined;
+
           return (
             <SceneView
               key={route.key}
@@ -594,6 +621,7 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
               previousDescriptor={previousDescriptor}
               nextDescriptor={nextDescriptor}
               isPresentationModal={isModal}
+              isPreloaded={isPreloaded}
               onWillDisappear={() => {
                 navigation.emit({
                   type: 'transitionStart',
