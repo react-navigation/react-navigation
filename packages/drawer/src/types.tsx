@@ -27,6 +27,11 @@ export type DrawerNavigationConfig = {
    * Defaults to `DrawerContent`.
    */
   drawerContent?: (props: DrawerContentComponentProps) => React.ReactNode;
+
+  /**
+   * Accessibility label for the drawer toggle button. This is read by the screen reader when the user taps the button.
+   * Defaults to "Open drawer menu".
+   */
   drawerToggleButtonAccessibilityLabel?: string;
   /**
    * Whether inactive screens should be detached from the view hierarchy to save memory.
