@@ -273,7 +273,7 @@ export function App() {
                     title: 'Examples',
                     headerLeft: isLargeScreen ? () => null : undefined,
                     drawerIcon: ({ size, color }) => (
-                      <MaterialIcons size={size} color={color} name="13mp" />
+                      <MaterialIcons size={size} color={color} name="folder" />
                     ),
                   }}
                 >
